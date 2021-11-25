@@ -53,8 +53,8 @@ class Tri3SkeletonUI : public PacketTabbedViewerTab {
         /**
          * Constructor.
          */
-        Tri3SkeletonUI(regina::Triangulation<3>* packet,
-                PacketTabbedUI* useParentUI);
+        Tri3SkeletonUI(regina::Triangulation<3>* tri,
+            regina::Packet* triAsPacket, PacketTabbedUI* useParentUI);
 };
 
 /**
@@ -65,9 +65,12 @@ class Tri3SkelCompUI : public QObject, public PacketViewerTab {
 
     private:
         /**
-         * Packet details
+         * Packet details:
+         * - tri_ and triAsPacket_ are the same object, which may be either
+         *   a Triangulation<3> or a SnapPeaTriangulation packet.
          */
-        regina::Triangulation<3>* tri;
+        regina::Triangulation<3>* tri_;
+        regina::Packet* triAsPacket_;
 
         /**
          * Internal components
@@ -91,15 +94,15 @@ class Tri3SkelCompUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        Tri3SkelCompUI(regina::Triangulation<3>* packet,
-                PacketTabbedViewerTab* useParentUI);
+        Tri3SkelCompUI(regina::Triangulation<3>* tri,
+            regina::Packet* triAsPacket, PacketTabbedViewerTab* useParentUI);
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     public slots:
         /**

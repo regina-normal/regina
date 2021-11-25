@@ -53,21 +53,21 @@ namespace {
 
 const PythonHandler PythonHandler::instance;
 
-regina::Packet* PythonHandler::importData(const QString& fileName,
-        ReginaMain* parentWidget) const {
+std::shared_ptr<regina::Packet> PythonHandler::importData(
+        const QString& fileName, ReginaMain* parentWidget) const {
     QFile f(fileName);
     if (! f.open(QIODevice::ReadOnly)) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The import failed."), 
             QObject::tr("<qt>I could not read from the file <tt>%1</tt>.</qt>").
                 arg(fileName.toHtmlEscaped()));
-        return 0;
+        return nullptr;
     }
     QTextStream in(&f);
 
     in.setCodec(ReginaPrefSet::importExportCodec());
 
-    regina::Script* ans = new regina::Script();
+    std::shared_ptr<regina::Script> ans = std::make_shared<regina::Script>();
     ans->setLabel(QObject::tr("Imported Script").toUtf8().constData());
 
     // Read in the script.
@@ -130,9 +130,9 @@ PacketFilter* PythonHandler::canExport() const {
     return new SingleTypeFilter<regina::Script>();
 }
 
-bool PythonHandler::exportData(regina::Packet* data, const QString& fileName,
-        QWidget* parentWidget) const {
-    regina::Script* script = dynamic_cast<regina::Script*>(data);
+bool PythonHandler::exportData(std::shared_ptr<regina::Packet> data,
+        const QString& fileName, QWidget* parentWidget) const {
+    auto script = std::dynamic_pointer_cast<regina::Script>(data);
 
     QFile f(fileName);
     if (! f.open(QIODevice::WriteOnly)) {
@@ -161,9 +161,8 @@ bool PythonHandler::exportData(regina::Packet* data, const QString& fileName,
 
     // Output the value of each variable.
     unsigned long i;
-    regina::Packet* value;
     for (i = 0; i < script->countVariables(); i++) {
-        value = script->variableValue(i);
+        auto value = script->variableValue(i);
         out << "### " << varMarker
             << QString(script->variableName(i).c_str())
             << ": " << (value ? QString(value->label().c_str()) : "");

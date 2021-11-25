@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file subcomplex/layeredtorusbundle.h
- *  \brief Deals with layered surface bundle triangulations.
+ *  \brief Deals with layered torus bundle triangulations.
  */
 
 #ifndef __REGINA_LAYEREDTORUSBUNDLE_H
@@ -39,7 +39,6 @@
 #define __REGINA_LAYEREDTORUSBUNDLE_H
 #endif
 
-#include <memory>
 #include "regina-core.h"
 #include "maths/matrix2.h"
 #include "subcomplex/standardtri.h"
@@ -48,11 +47,6 @@
 namespace regina {
 
 class TxICore;
-
-/**
- * \weakgroup subcomplex
- * @{
- */
 
 /**
  * Describes a layered torus bundle.  This is a triangulation of a
@@ -70,20 +64,29 @@ class TxICore;
  * boundary edges accordingly.  Layerings are described in more detail
  * in the Layering class.
  *
- * Given the parameters of the core <tt>T x I</tt> and the specific
- * layering, the monodromy for this torus bundle over the circle can be
- * calculated.  The manifold() routine returns details of the
- * corresponding 3-manifold.
+ * Given the parameters of the core <tt>T x I</tt> and the specific layering,
+ * the monodromy for this torus bundle over the circle can be calculated.
+ * The manifold() routine returns details of the corresponding 3-manifold.
  *
- * All optional StandardTriangulation routines are implemented for this
- * class.
+ * All optional StandardTriangulation routines are implemented for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class LayeredTorusBundle : public StandardTriangulation {
     private:
-        const TxICore& core_;
+        const TxICore* core_;
             /**< The core <tt>T x I</tt> triangulation whose boundaries
-                 are joined (possibly via a layering of tetrahedra). */
-        Isomorphism<3>* coreIso_;
+                 are joined (possibly via a layering of tetrahedra).
+                 This is never \c null; we keep it as a pointer (not a
+                 reference) mainly to support the assignment operator. */
+        Isomorphism<3> coreIso_;
             /**< Describes how the tetrahedra and vertices of the core
                  <tt>T x I</tt> triangulation returned by TxICore::core()
                  map to the tetrahedra and vertices of the larger layered
@@ -95,14 +98,28 @@ class LayeredTorusBundle : public StandardTriangulation {
 
     public:
         /**
-         * Destroys this layered torus bundle and all of its internal
-         * components.
+         * Creates a new copy of this structure.
          */
-        virtual ~LayeredTorusBundle();
+        LayeredTorusBundle(const LayeredTorusBundle&) = default;
+
+        /**
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        LayeredTorusBundle& operator = (const LayeredTorusBundle&) = default;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(LayeredTorusBundle& other) noexcept;
 
         /**
          * Returns the <tt>T x I</tt> triangulation at the core of this
-         * layered surface bundle.  This is the product <tt>T x I</tt>
+         * layered torus bundle.  This is the product <tt>T x I</tt>
          * whose boundaries are joined (possibly via some layering of
          * tetrahedra).
          *
@@ -120,25 +137,22 @@ class LayeredTorusBundle : public StandardTriangulation {
 
         /**
          * Returns the isomorphism describing how the core <tt>T x I</tt>
-         * appears as a subcomplex of this layered surface bundle.
+         * appears as a subcomplex of this layered torus bundle.
          *
          * As described in the core() notes, the core <tt>T x I</tt>
          * triangulation returned by TxICore::core() appears within this
-         * layered surface bundle, but not necessarily with the same
+         * layered torus bundle, but not necessarily with the same
          * tetrahedron or vertex numbers.
          *
          * This routine returns an isomorphism that maps the tetrahedra
          * and vertices of the core <tt>T x I</tt> triangulation (as
          * returned by LayeredTorusBundle::core().core()) to the
-         * tetrahedra and vertices of this overall layered surface bundle.
-         *
-         * The isomorphism that is returned belongs to this object, and
-         * should not be modified or destroyed.
+         * tetrahedra and vertices of this overall layered torus bundle.
          *
          * @return the isomorphism from the core <tt>T x I</tt> to this
-         * layered surface bundle.
+         * layered torus bundle.
          */
-        const Isomorphism<3>* coreIso() const;
+        const Isomorphism<3>& coreIso() const;
 
         /**
          * Returns a 2-by-2 matrix describing how the layering of
@@ -204,17 +218,30 @@ class LayeredTorusBundle : public StandardTriangulation {
         const Matrix2& layeringReln() const;
 
         /**
-         * Determines if the given triangulation is a layered surface bundle.
+         * Determines if the given triangulation is a layered torus bundle.
+         *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * @param tri the triangulation to examine.
-         * @return a newly created structure containing details of the
-         * layered surface bundle, or \c null if the given triangulation
-         * is not a layered surface bundle.
+         * @return a structure containing details of the layered torus bundle,
+         * or \c null if the given triangulation is not a layered torus bundle.
          */
-        static LayeredTorusBundle* isLayeredTorusBundle(Triangulation<3>* tri);
+        static std::unique_ptr<LayeredTorusBundle> recognise(
+            const Triangulation<3>& tri);
+        /**
+         * A deprecated alias to recognise if a triangulation is a
+         * layered torus bundle.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<LayeredTorusBundle>
+            isLayeredTorusBundle(const Triangulation<3>& tri);
 
-        Manifold* manifold() const override;
-        std::optional<AbelianGroup> homology() const override;
+        std::unique_ptr<Manifold> manifold() const override;
+        AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
@@ -222,19 +249,20 @@ class LayeredTorusBundle : public StandardTriangulation {
     private:
         /**
          * Creates a new structure based upon the given core <tt>T x I</tt>
-         * triangulation.  Aside from this core, the structure will
-         * remain uninitialised.
+         * triangulation, and initialised with the given additional data.
          *
-         * Note that only a reference to the core <tt>T x I</tt> is stored.
+         * \warning Only a pointer to the core <tt>T x I</tt> is stored.
          * This class does not manage the life span of the core; it is
          * assumed that the core will remain in existence for at least
-         * as long as this object does.  (Usually the core is a static or
-         * global variable that is not destroyed until the program exits.)
+         * as long as this object (and any objects copied or moved from it).
+         * Typically the core would be a static or global variable that is
+         * not destroyed until the program exits.
          *
          * @param whichCore a reference to the core <tt>T x I</tt>
-         * triangulation upon which this layered surface bundle is based.
+         * triangulation upon which this layered torus bundle is based.
          */
-        LayeredTorusBundle(const TxICore& whichCore);
+        LayeredTorusBundle(const TxICore& whichCore,
+            const Isomorphism<3>& coreIso, const Matrix2& reln);
 
         /**
          * Contains code common to both writeName() and writeTeXName().
@@ -247,33 +275,60 @@ class LayeredTorusBundle : public StandardTriangulation {
         std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 
         /**
-         * Internal to isLayeredTorusBundle().  Determines if the given
-         * triangulation is a layered surface bundle with the given core
+         * Internal to recognise().  Determines if the given
+         * triangulation is a layered torus bundle with the given core
          * <tt>T x I</tt> triangulation (up to isomorphism).
+         *
+         * \warning If this routine is successful and a value is returned,
+         * this returned object (and any objects copied or moved from it)
+         * must not outlive the given core (since the returned object
+         * will in fact contain a direct reference to this core).
          *
          * @param tri the triangulation to examine.
          * @param core the core <tt>T x I</tt> to search for.
-         * @return a newly created structure containing details of the
-         * layered surface bundle, or \c null if the given triangulation is
-         * not a layered surface bundle with the given <tt>T x I</tt> core.
+         * @return a structure containing details of the layered torus bundle,
+         * or \c null if the given triangulation is
+         * not a layered torus bundle with the given <tt>T x I</tt> core.
          */
-        static LayeredTorusBundle* hunt(Triangulation<3>* tri,
-            const TxICore& core);
+        static std::unique_ptr<LayeredTorusBundle> hunt(
+            const Triangulation<3>& tri, const TxICore& core);
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls LayeredTorusBundle::swap(); it is provided
+ * so that LayeredTorusBundle meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(LayeredTorusBundle& a, LayeredTorusBundle& b) noexcept;
 
 // Inline functions for LayeredTorusBundle
 
-inline LayeredTorusBundle::LayeredTorusBundle(const TxICore& whichCore) :
-        core_(whichCore), coreIso_(0) {
+inline LayeredTorusBundle::LayeredTorusBundle(const TxICore& whichCore,
+        const Isomorphism<3>& coreIso, const Matrix2& reln) :
+        core_(&whichCore), coreIso_(coreIso), reln_(reln) {
+    // Note above that we cannot move coreIso, since where it comes from
+    // (via recognise()) is Triangulation<3>::findAllSubcomplexesIn(),
+    // which only lets us access the isomorphism as a const reference.
+    // Therefore we don't worry about move operations here.
+}
+
+inline void LayeredTorusBundle::swap(LayeredTorusBundle& other) noexcept {
+    std::swap(core_, other.core_); // pointers
+    coreIso_.swap(other.coreIso_);
+    reln_.swap(other.reln_);
 }
 
 inline const TxICore& LayeredTorusBundle::core() const {
-    return core_;
+    return *core_;
 }
 
-inline const Isomorphism<3>* LayeredTorusBundle::coreIso() const {
+inline const Isomorphism<3>& LayeredTorusBundle::coreIso() const {
     return coreIso_;
 }
 
@@ -288,6 +343,15 @@ inline std::ostream& LayeredTorusBundle::writeName(std::ostream& out) const {
 inline std::ostream& LayeredTorusBundle::writeTeXName(std::ostream& out)
         const {
     return writeCommonName(out, true);
+}
+
+inline std::unique_ptr<LayeredTorusBundle>
+        LayeredTorusBundle::isLayeredTorusBundle(const Triangulation<3>& tri) {
+    return recognise(tri);
+}
+
+inline void swap(LayeredTorusBundle& a, LayeredTorusBundle& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

@@ -49,71 +49,74 @@
 
 namespace regina {
 
+AbelianGroup StandardTriangulation::homology() const {
+    throw NotImplemented("The homology() routine is currently not "
+        "implemented for this particular standard triangulation");
+}
+
 std::string StandardTriangulation::name() const {
     std::ostringstream ans;
     writeName(ans);
     return ans.str();
 }
 
-std::string StandardTriangulation::TeXName() const {
+std::string StandardTriangulation::texName() const {
     std::ostringstream ans;
     writeTeXName(ans);
     return ans.str();
 }
 
-StandardTriangulation* StandardTriangulation::isStandardTriangulation(
+std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
         Component<3>* comp) {
-    StandardTriangulation* ans;
-    if ((ans = TrivialTri::isTrivialTriangulation(comp)))
+    if (auto ans = TrivialTri::recognise(comp))
         return ans;
-    if ((ans = L31Pillow::isL31Pillow(comp)))
+    if (auto ans = L31Pillow::recognise(comp))
         return ans;
-    if ((ans = LayeredLensSpace::isLayeredLensSpace(comp)))
+    if (auto ans = LayeredLensSpace::recognise(comp))
         return ans;
-    if ((ans = LayeredLoop::isLayeredLoop(comp)))
+    if (auto ans = LayeredLoop::recognise(comp))
         return ans;
-    if ((ans = LayeredChainPair::isLayeredChainPair(comp)))
+    if (auto ans = LayeredChainPair::recognise(comp))
         return ans;
-    if ((ans = AugTriSolidTorus::isAugTriSolidTorus(comp)))
+    if (auto ans = AugTriSolidTorus::recognise(comp))
         return ans;
-    if ((ans = PlugTriSolidTorus::isPlugTriSolidTorus(comp)))
+    if (auto ans = PlugTriSolidTorus::recognise(comp))
         return ans;
-    if ((ans = LayeredSolidTorus::isLayeredSolidTorus(comp)))
+    if (auto ans = LayeredSolidTorus::recognise(comp))
         return ans;
-    if ((ans = SnapPeaCensusTri::isSmallSnapPeaCensusTri(comp)))
+    if (auto ans = SnapPeaCensusTri::recognise(comp))
         return ans;
 
-    return 0;
+    return nullptr;
 }
 
-StandardTriangulation* StandardTriangulation::isStandardTriangulation(
-        Triangulation<3>* tri) {
-    if (tri->countComponents() != 1)
-        return 0;
+std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
+        const Triangulation<3>& tri) {
+    if (tri.countComponents() != 1)
+        return nullptr;
 
     // Do what we can through components.
-    StandardTriangulation* ans;
-    if ((ans = isStandardTriangulation(tri->component(0))))
+    if (auto ans = recognise(tri.component(0)))
         return ans;
 
     // Run tests that require entire triangulations.
-    if ((ans = BlockedSFS::isBlockedSFS(tri)))
+    if (auto ans = BlockedSFS::recognise(tri))
         return ans;
-    if ((ans = LayeredTorusBundle::isLayeredTorusBundle(tri)))
+    if (auto ans = LayeredTorusBundle::recognise(tri))
         return ans;
 
     // Save non-geometric graph manifolds until last.
-    if ((ans = BlockedSFSLoop::isBlockedSFSLoop(tri)))
+    if (auto ans = BlockedSFSLoop::recognise(tri))
         return ans;
-    if ((ans = BlockedSFSPair::isBlockedSFSPair(tri)))
+    if (auto ans = BlockedSFSPair::recognise(tri))
         return ans;
-    if ((ans = BlockedSFSTriple::isBlockedSFSTriple(tri)))
+    if (auto ans = BlockedSFSTriple::recognise(tri))
         return ans;
-    if ((ans = PluggedTorusBundle::isPluggedTorusBundle(tri)))
+    if (auto ans = PluggedTorusBundle::recognise(tri))
         return ans;
 
     // Nup.
-    return 0;
+    return nullptr;
 }
 
 } // namespace regina

@@ -45,7 +45,7 @@ ColumnLayout::ColumnLayout(QWidget* widget) :
 
 void ColumnLayout::addLayout(QLayout* layout, const QString& title) {
     if (! empty_) {
-        QFrame* divider = new QFrame();
+        auto* divider = new QFrame();
         divider->setFrameStyle(QFrame::VLine | QFrame::Sunken);
         addWidget(divider);
     } else
@@ -53,7 +53,7 @@ void ColumnLayout::addLayout(QLayout* layout, const QString& title) {
 
     QBoxLayout* col = new QVBoxLayout();
 
-    QLabel* label = new QLabel(QString("<qt><b>%1</b></qt>")
+    auto* label = new QLabel(QString("<qt><b>%1</b></qt>")
         .arg(title.toHtmlEscaped()));
     label->setAlignment(Qt::AlignCenter);
     col->addWidget(label);

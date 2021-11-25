@@ -38,8 +38,11 @@ void usage(const char* progName, const std::string& error = std::string()) {
         std::cerr << error << "\n\n";
 
     std::cerr << "Usage:\n";
-    std::cerr << "    " << progName << " [ -x | -u ]"
+    std::cerr << "    " << progName << " [ -2 | -3 ] [ -x | -u ]"
         << " <old-file> [ <new-file> ]\n";
+    std::cerr << std::endl;
+    std::cerr << "    -2 : Convert to the old second-generation format used by Regina 3.0-6.0.1\n";
+    std::cerr << "    -3 : Convert to the current third-generation file format (default)\n";
     std::cerr << std::endl;
     std::cerr << "    -x : Convert to compressed XML (default)\n";
     std::cerr << "    -u : Convert to uncompressed XML\n";
@@ -52,6 +55,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
 int main(int argc, char* argv[]) {
     std::string oldFile, newFile;
     char typeOpt = 0;
+    char versionOpt = 0;
 
     // Parse command line.
     char optChar;
@@ -71,6 +75,12 @@ int main(int argc, char* argv[]) {
                         "More than one file type has been specified.");
                 else
                     typeOpt = optChar;
+            } else if (optChar == '2' || optChar == '3') {
+                if (versionOpt)
+                    usage(argv[0],
+                        "More than one file format version has been specified.");
+                else
+                    versionOpt = optChar;
             } else
                 usage(argv[0], std::string("Invalid option: ") + argv[i]);
         } else if (*argv[i]) {
@@ -91,6 +101,8 @@ int main(int argc, char* argv[]) {
     // Add default options.
     if (! typeOpt)
         typeOpt = (newFile.empty() ? 'u' : 'x');
+    regina::FileFormat version = (versionOpt == '2' ?
+        regina::REGINA_XML_GEN_2 : regina::REGINA_XML_GEN_3);
 
     // Check we're allowed to use stdout if we've asked for it.
     if (newFile.empty() && typeOpt != 'u')
@@ -98,7 +110,7 @@ int main(int argc, char* argv[]) {
             "Only uncompressed XML can be written to standard output.");
 
     // Read the old file.
-    regina::Packet* tree = regina::open(oldFile.c_str());
+    std::shared_ptr<regina::Packet> tree = regina::open(oldFile.c_str());
     if (! tree) {
         std::cerr << "File " << oldFile << " could not be read.\n";
         return 1;
@@ -109,7 +121,7 @@ int main(int argc, char* argv[]) {
     if (newFile.empty()) {
         // Standard output
         if (typeOpt == 'u') {
-            tree->writeXMLFile(std::cout);
+            tree->writeXMLFile(std::cout, version);
             result = true;
         } else
             result = false;
@@ -117,16 +129,14 @@ int main(int argc, char* argv[]) {
     } else {
         // Real output file.
         // Use compressed / uncompressed XML
-        result = tree->save(newFile.c_str(), typeOpt == 'x');
+        result = tree->save(newFile.c_str(), typeOpt == 'x', version);
     }
 
     if (! result) {
         std::cerr << "File " << newFile << " could not be written.\n";
-        delete tree;
         return 1;
     }
 
-    delete tree;
     return 0;
 }
 

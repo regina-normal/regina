@@ -45,7 +45,7 @@ MessageLayer::MessageLayer(const char* iconName, const QString& defaultText) {
     int iconSize = QApplication::style()->pixelMetric(
         QStyle::PM_MessageBoxIconSize);
 
-    QLabel* icon = new QLabel(this);
+    auto* icon = new QLabel(this);
     icon->setPixmap(ReginaSupport::themeIcon(iconName).pixmap(
         iconSize, iconSize));
     layout->addWidget(icon, 0);

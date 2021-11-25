@@ -33,31 +33,25 @@
 #include "algebra/abeliangroup.h"
 #include "manifold/graphtriple.h"
 #include "manifold/sfs.h"
-#include "manifold/sfsaltset.h"
+#include "manifold/sfsalt.h"
 #include "maths/matrix.h"
 
 namespace regina {
 
-GraphTriple::~GraphTriple() {
-    delete end_[0];
-    delete end_[1];
-    delete centre_;
-}
-
 bool GraphTriple::operator < (const GraphTriple& compare) const {
-    if (*centre_ < *compare.centre_)
+    if (centre_ < compare.centre_)
         return true;
-    if (*compare.centre_ < *centre_)
+    if (compare.centre_ < centre_)
         return false;
 
-    if (*end_[0] < *compare.end_[0])
+    if (end_[0] < compare.end_[0])
         return true;
-    if (*compare.end_[0] < *end_[0])
+    if (compare.end_[0] < end_[0])
         return false;
 
-    if (*end_[1] < *compare.end_[1])
+    if (end_[1] < compare.end_[1])
         return true;
-    if (*compare.end_[1] < *end_[1])
+    if (compare.end_[1] < end_[1])
         return false;
 
     if (simpler(matchingReln_[0], compare.matchingReln_[0]))
@@ -68,15 +62,7 @@ bool GraphTriple::operator < (const GraphTriple& compare) const {
     return simpler(matchingReln_[1], compare.matchingReln_[1]);
 }
 
-std::optional<AbelianGroup> GraphTriple::homology() const {
-    // Just for safety (this should always be true anyway):
-    if (end_[0]->punctures(false) != 1 || end_[0]->punctures(true) != 0)
-        return std::nullopt;
-    if (end_[1]->punctures(false) != 1 || end_[1]->punctures(true) != 0)
-        return std::nullopt;
-    if (centre_->punctures(false) != 2 || centre_->punctures(true) != 0)
-        return std::nullopt;
-
+AbelianGroup GraphTriple::homology() const {
     // Construct a matrix.
     // Generators:
     //     - Spaces are ordered centre, end 0, end 1.
@@ -96,13 +82,9 @@ std::optional<AbelianGroup> GraphTriple::homology() const {
     //           - reflector relations
     //           - fibre constraint
     //     - Plus two boundary joinings.
-    SFSpace* sfs[3];
+    const SFSpace* sfs[3] = { &centre_, &end_[0], &end_[1] };
     unsigned long genus[3], punc[3], fibres[3], ref[3], gens[3];
     unsigned long start[3];
-
-    sfs[0] = centre_;
-    sfs[1] = end_[0];
-    sfs[2] = end_[1];
 
     punc[0] = 2;
     punc[1] = 1;
@@ -201,11 +183,11 @@ std::optional<AbelianGroup> GraphTriple::homology() const {
 }
 
 std::ostream& GraphTriple::writeName(std::ostream& out) const {
-    end_[0]->writeName(out);
+    end_[0].writeName(out);
     out << " U/m ";
-    centre_->writeName(out);
+    centre_.writeName(out);
     out << " U/n ";
-    end_[1]->writeName(out);
+    end_[1].writeName(out);
 
     Matrix2 m0 = matchingReln_[0].inverse();
     out << ", m = [ " <<
@@ -218,16 +200,16 @@ std::ostream& GraphTriple::writeName(std::ostream& out) const {
 }
 
 std::ostream& GraphTriple::writeTeXName(std::ostream& out) const {
-    end_[0]->writeTeXName(out);
+    end_[0].writeTeXName(out);
     Matrix2 m0 = matchingReln_[0].inverse();
     out << " \\bigcup_{\\homtwo{" <<
         m0[0][0] << "}{" << m0[0][1] << "}{" <<
         m0[1][0] << "}{" << m0[1][1] << "}} ";
-    centre_->writeTeXName(out);
+    centre_.writeTeXName(out);
     out << " \\bigcup_{\\homtwo{" <<
         matchingReln_[1][0][0] << "}{" << matchingReln_[1][0][1] << "}{" <<
         matchingReln_[1][1][0] << "}{" << matchingReln_[1][1][1] << "}} ";
-    end_[1]->writeTeXName(out);
+    end_[1].writeTeXName(out);
     return out;
 }
 
@@ -257,37 +239,30 @@ void GraphTriple::reduce() {
 
     // Simplify each space and build a list of possible reflections and
     // other representations that we wish to experiment with using.
-    SFSAltSet alt0(end_[0]);
-    SFSAltSet alt1(end_[1]);
-    SFSAltSet altCentre(centre_);
-
-    delete end_[0];
-    delete end_[1];
-    delete centre_;
+    std::vector<SFSAlt> alt0 = SFSAlt::altSet(end_[0]);
+    std::vector<SFSAlt> alt1 = SFSAlt::altSet(end_[1]);
+    std::vector<SFSAlt> altCentre = SFSAlt::altSet(centre_);
 
     // Decide which of these possible representations gives the nicest
     // matching relations.
-    SFSpace* use0 = 0;
-    SFSpace* use1 = 0;
-    SFSpace* useCentre = 0;
+    std::vector<SFSAlt>::iterator use0, use1, useCentre;
     Matrix2 useReln[2];
 
+    bool first = true;
     Matrix2 tryReln[2], tmpReln;
-    unsigned i0, i1, c;
-
-    for (i0 = 0; i0 < alt0.size(); i0++)
-        for (i1 = 0; i1 < alt1.size(); i1++)
-            for (c = 0; c < altCentre.size(); c++) {
-                // See if (i0, i1, c) gives us a combination better than
+    for (auto it0 = alt0.begin(); it0 != alt0.end(); ++it0) {
+        for (auto it1 = alt1.begin(); it1 != alt1.end(); ++it1) {
+            for (auto itC = altCentre.begin(); itC != altCentre.end(); ++itC) {
+                // See if (it0, it1, itC) gives us a combination better than
                 // anything we've seen so far.
-                tryReln[0] = alt0.conversion(i0) * matchingReln_[0] *
-                    altCentre.conversion(c).inverse();
+                tryReln[0] = it0->conversion() * matchingReln_[0] *
+                    itC->conversion().inverse();
 
-                if (altCentre.reflected(c))
-                    tryReln[1] = alt1.conversion(i1) * matchingReln_[1] *
+                if (itC->reflected())
+                    tryReln[1] = it1->conversion() * matchingReln_[1] *
                         Matrix2(1, 0, 0, -1);
                 else
-                    tryReln[1] = alt1.conversion(i1) * matchingReln_[1];
+                    tryReln[1] = it1->conversion() * matchingReln_[1];
 
                 reduceBasis(tryReln[0], tryReln[1]);
 
@@ -295,27 +270,28 @@ void GraphTriple::reduce() {
                 // simple as the second.
 
                 // First try without end space swapping.
-                if (! (*alt1[i1] < *alt0[i0])) {
-                    if ((! use0) || simpler(tryReln[0], tryReln[1],
+                if (! (it1->alt() < it0->alt())) {
+                    if (first || simpler(tryReln[0], tryReln[1],
                             useReln[0], useReln[1])) {
-                        use0 = alt0[i0];
-                        use1 = alt1[i1];
-                        useCentre = altCentre[c];
+                        use0 = it0;
+                        use1 = it1;
+                        useCentre = itC;
                         useReln[0] = tryReln[0];
                         useReln[1] = tryReln[1];
+                        first = false;
                     } else if (! simpler(useReln[0], useReln[1],
                             tryReln[0], tryReln[1])) {
                         // The matrices are the same as our best.
                         // Compare spaces.
-                        if (*altCentre[c] < *useCentre ||
-                                (*altCentre[c] == *useCentre &&
-                                    *alt0[i0] < *use0) ||
-                                (*altCentre[c] == *useCentre &&
-                                    *alt0[i0] == *use0 &&
-                                    *alt1[i1] < *use1)) {
-                            use0 = alt0[i0];
-                            use1 = alt1[i1];
-                            useCentre = altCentre[c];
+                        if (itC->alt() < useCentre->alt() ||
+                                (itC->alt() == useCentre->alt() &&
+                                    it0->alt() < use0->alt()) ||
+                                (itC->alt() == useCentre->alt() &&
+                                    it0->alt() == use0->alt() &&
+                                    it1->alt() < use1->alt())) {
+                            use0 = it0;
+                            use1 = it1;
+                            useCentre = itC;
                             useReln[0] = tryReln[0];
                             useReln[1] = tryReln[1];
                         }
@@ -323,60 +299,45 @@ void GraphTriple::reduce() {
                 }
 
                 // Now try with end space swapping.
-                if (! (*alt0[i0] < *alt1[i1])) {
+                if (! (it0->alt() < it1->alt())) {
                     reduceBasis(tryReln[1], tryReln[0]);
 
-                    if ((! use0) || simpler(tryReln[1], tryReln[0],
+                    if (first || simpler(tryReln[1], tryReln[0],
                             useReln[0], useReln[1])) {
-                        use0 = alt1[i1];
-                        use1 = alt0[i0];
-                        useCentre = altCentre[c];
+                        use0 = it1;
+                        use1 = it0;
+                        useCentre = itC;
                         useReln[0] = tryReln[1];
                         useReln[1] = tryReln[0];
+                        first = false;
                     } else if (! simpler(useReln[0], useReln[1],
                             tryReln[1], tryReln[0])) {
                         // The matrices are the same as our best.
                         // Compare spaces.
-                        if (*altCentre[c] < *useCentre ||
-                                (*altCentre[c] == *useCentre &&
-                                    *alt1[i1] < *use0) ||
-                                (*altCentre[c] == *useCentre &&
-                                    *alt1[i1] == *use0 &&
-                                    *alt0[i0] < *use1)) {
-                            use0 = alt1[i1];
-                            use1 = alt0[i0];
-                            useCentre = altCentre[c];
+                        if (itC->alt() < useCentre->alt() ||
+                                (itC->alt() == useCentre->alt() &&
+                                    it1->alt() < use0->alt()) ||
+                                (itC->alt() == useCentre->alt() &&
+                                    it1->alt() == use0->alt() &&
+                                    it0->alt() < use1->alt())) {
+                            use0 = it1;
+                            use1 = it0;
+                            useCentre = itC;
                             useReln[0] = tryReln[1];
                             useReln[1] = tryReln[0];
                         }
                     }
                 }
             }
-
-    // This should never happen, but just in case... let's not crash.
-    if (! (use0 && use1 && useCentre)) {
-        use0 = alt0[0];
-        use1 = alt1[0];
-        useCentre = altCentre[0];
-
-        useReln[0] = alt0.conversion(0) * matchingReln_[0] *
-            altCentre.conversion(0).inverse();
-        useReln[1] = alt1.conversion(0) * matchingReln_[1] *
-            altCentre.conversion(0).inverse();
-        reduceBasis(useReln[0], useReln[1]);
+        }
     }
 
     // Use what we found.
-    end_[0] = use0;
-    end_[1] = use1;
-    centre_ = useCentre;
+    end_[0] = std::move(use0->alt());
+    end_[1] = std::move(use1->alt());
+    centre_ = std::move(useCentre->alt());
     matchingReln_[0] = useReln[0];
     matchingReln_[1] = useReln[1];
-
-    // And what we don't use, delete.
-    alt0.deleteAll(use0, use1);
-    alt1.deleteAll(use0, use1);
-    altCentre.deleteAll(useCentre);
 
     // TODO: More reductions!
 }

@@ -64,9 +64,8 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
         Triangulation<3> baseKB;
 
     public:
-        void setUp() {
-            Tetrahedron<3>* r = base.newTetrahedron();
-            Tetrahedron<3>* s = base.newTetrahedron();
+        void setUp() override {
+            auto [r, s] = base.newTetrahedra<2>();
             r->join(0, s, Perm<4>());
             r->join(1, s, Perm<4>());
 
@@ -75,32 +74,34 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 baseKB.tetrahedron(1), Perm<4>(1, 2, 3, 0));
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
-        void verify20Edge(Triangulation<3>* tri, long whichEdge,
-                Triangulation<3>* result, const std::string& caseName) {
-            bool done = tri->twoZeroMove(tri->edge(whichEdge));
+        void verify20Edge(Triangulation<3> tri, long whichEdge,
+                const Triangulation<3>& result, const std::string& caseName) {
+            bool done = tri.twoZeroMove(tri.edge(whichEdge));
             CPPUNIT_ASSERT_MESSAGE(
                 "A 2-0 edge move was incorrectly disallowed for the " +
                 caseName + " case", done);
             CPPUNIT_ASSERT_MESSAGE(
                 "A 2-0 edge move produced an incorrect result for the " +
-                caseName + " case", tri->isIsomorphicTo(*result));
+                caseName + " case", tri.isIsomorphicTo(result));
         }
 
-        void verify20EdgeInvalid(Triangulation<3>* tri,
+        void verify20EdgeInvalid(const Triangulation<3>& tri,
                 const std::string& caseName) {
             bool found = false;
             Edge<3>* edge;
-            for (unsigned long e = 0; e < tri->countEdges(); e++) {
-                edge = tri->edge(e);
+            for (unsigned long e = 0; e < tri.countEdges(); e++) {
+                edge = tri.edge(e);
                 if (edge->degree() == 2 && ! edge->isBoundary())
                     found = true;
                 CPPUNIT_ASSERT_MESSAGE(
                     "An illegal 2-0 edge move was allowed for the " +
                     caseName + " case",
-                    ! tri->twoZeroMove(tri->edge(e)));
+                    // meh, const_cast for now: the move should be illegal.
+                    ! const_cast<Triangulation<3>&>(tri).twoZeroMove(
+                        tri.edge(e)));
             }
             CPPUNIT_ASSERT_MESSAGE(
                 "No degree two edge was found for the " + caseName + " case.",
@@ -108,48 +109,20 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
         }
 
         void twoZeroEdgeResult() {
-            {
-                // A one-bdry-face case that Regina 4.1 used to crash on.
-                const int adjOrig[5][4] = {
-                    { -1, 2, 4, 4},
-                    { -1, -1, 2, 4},
-                    { 0, 3, 3, 1},
-                    { 2, -1, 2, 4},
-                    { 1, 0, 0, 3}
-                };
-
-                const int gluOrig[5][4][4] = {
-                    { { 0,0,0,0 }, { 3,0,1,2 }, { 3,0,2,1 }, { 3,0,2,1 } },
-                    { { 0,0,0,0 }, { 0,0,0,0 }, { 0,1,3,2 }, { 2,1,3,0 } },
-                    { { 1,2,3,0 }, { 0,2,3,1 }, { 2,1,0,3 }, { 0,1,3,2 } },
-                    { { 2,1,0,3 }, { 0,0,0,0 }, { 0,3,1,2 }, { 0,1,2,3 } },
-                    { { 3,1,0,2 }, { 1,3,2,0 }, { 1,3,2,0 }, { 0,1,2,3 } }
-                };
-
-                const int adjResult[3][4] = {
-                    { -1, -1, 1, 1},
-                    { 0, 2, 2, 0},
-                    { 1, -1, 1, -1}
-                };
-
-                const int gluResult[3][4][4] = {
-                    { { 0,0,0,0 }, { 0,0,0,0 }, { 0,1,3,2 }, { 1,2,3,0 } },
-                    { { 3,0,1,2 }, { 0,2,3,1 }, { 2,1,0,3 }, { 0,1,3,2 } },
-                    { { 2,1,0,3 }, { 0,0,0,0 }, { 0,3,1,2 }, { 0,0,0,0 } }
-                };
-
-                Triangulation<3> orig;
-                orig.insertConstruction(5, adjOrig, gluOrig);
-                Triangulation<3> result;
-                result.insertConstruction(3, adjResult, gluResult);
-
-                verify20Edge(&orig, 0, &result, "one-boundary-face");
-            }
+            // A one-bdry-face case that Regina 4.1 used to crash on.
+            verify20Edge(Triangulation<3>::fromGluings(5, {
+                    { 0, 1, 2, {3,0,1,2} }, { 0, 2, 4, {3,0,2,1} },
+                    { 0, 3, 4, {3,0,2,1} }, { 1, 2, 2, {0,1,3,2} },
+                    { 1, 3, 4, {2,1,3,0} }, { 2, 1, 3, {0,2,3,1} },
+                    { 2, 2, 3, {2,1,0,3} }, { 3, 3, 4, {0,1,2,3} }}),
+                0, Triangulation<3>::fromGluings(3, {
+                    { 0, 2, 1, {0,1,3,2} }, { 0, 3, 1, {1,2,3,0} },
+                    { 1, 1, 2, {0,2,3,1} }, { 1, 2, 2, {2,1,0,3} }}),
+                "one-boundary-face");
 
             {
                 // One face boundary, two more joined in a loop.
-                Triangulation<3> t;
-                t.insertTriangulation(base);
+                Triangulation<3> t = base;
                 Tetrahedron<3>* tet = t.tetrahedron(0);
                 tet->join(2, tet, Perm<4>(2, 3));
                 Tetrahedron<3>* tet2 = t.newTetrahedron();
@@ -161,192 +134,107 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     (! e->isBoundary()) && e->degree() == 1 &&
                         t.isOrientable());
 
-                Triangulation<3> ball;
-                ball.newTetrahedron();
-
-                verify20Edge(&t, 3, &ball, "boundary-loop-tet");
+                verify20Edge(std::move(t), 3,
+                    Triangulation<3>::fromGluings(1, {}), "boundary-loop-tet");
             }
 
             {
-                // Two boundary faces, the others attached to the top of
-                // an LST.
-                Triangulation<3> orig;
-                orig.insertLayeredSolidTorus(4, 7);
+                // Two boundary faces, the others attached to the top of an LST.
+                Triangulation<3> orig = regina::Example<3>::lst(4, 7);
                 Tetrahedron<3>* top = orig.newTetrahedron();
                 orig.tetrahedron(0)->join(2, top, Perm<4>(2, 3, 0, 1));
                 orig.tetrahedron(0)->join(3, top, Perm<4>(2, 3, 0, 1));
 
-                Triangulation<3> lst;
-                lst.insertLayeredSolidTorus(3, 4);
-
-                verify20Edge(&orig, 0, &lst, "boundary-layer");
+                verify20Edge(std::move(orig), 0,
+                    regina::Example<3>::lst(3, 4), "boundary-layer");
             }
 
-            {
-                // Wedged in between two adjacent internal faces in an
-                // LST(3,4,7).
-                const int adj[5][4] = {
-                    { 1, 1, -1, -1},
-                    { 4, 4, 0, 0},
-                    { 2, 2, 3, 3},
-                    { 4, 4, 2, 2},
-                    { 3, 3, 1, 1}
-                };
-
-                const int glu[5][4][4] = {
-                    { { 2,1,3,0 }, { 0,3,1,2 }, { 0,0,0,0 }, { 0,0,0,0 } },
-                    { { 3,1,2,0 }, { 0,2,1,3 }, { 3,1,0,2 }, { 0,2,3,1 } },
-                    { { 1,2,3,0 }, { 3,0,1,2 }, { 0,1,2,3 }, { 0,1,2,3 } },
-                    { { 0,1,2,3 }, { 0,1,2,3 }, { 0,1,2,3 }, { 0,1,2,3 } },
-                    { { 0,1,2,3 }, { 0,1,2,3 }, { 0,2,1,3 }, { 3,1,2,0 } }
-                };
-
-                Triangulation<3> orig;
-                orig.insertConstruction(5, adj, glu);
-                Triangulation<3> lst;
-                lst.insertLayeredSolidTorus(3, 4);
-
-                verify20Edge(&orig, 5, &lst, "internal-flat");
-            }
+            // Wedged in between two adjacent internal faces in an
+            // LST(3,4,7).
+            verify20Edge(Triangulation<3>::fromGluings(5, {
+                    { 0, 0, 1, {2,1,3,0} }, { 0, 1, 1, {0,3,1,2} },
+                    { 1, 0, 4, {3,1,2,0} }, { 1, 1, 4, {0,2,1,3} },
+                    { 2, 0, 2, {1,2,3,0} }, { 2, 2, 3, {0,1,2,3} },
+                    { 2, 3, 3, {0,1,2,3} }, { 3, 0, 4, {0,1,2,3} },
+                    { 3, 1, 4, {0,1,2,3} }}),
+                5, regina::Example<3>::lst(3, 4), "internal-flat");
 
             {
                 // Wedged into the tip of a layered L(10,3), with two
                 // faces joined in a loop.
-                const int adj[5][4] = {
-                    { 1, 1, 3, 3},
-                    { 2, 2, 0, 0},
-                    { 2, 2, 1, 1},
-                    { 4, 4, 0, 0},
-                    { 3, 3, 4, 4}
-                };
+                Triangulation<3> orig = Triangulation<3>::fromGluings(5, {
+                    { 0, 0, 1, {2,1,3,0} }, { 0, 1, 1, {0,3,1,2} },
+                    { 0, 2, 3, {0,1,2,3} }, { 0, 3, 3, {0,1,2,3} },
+                    { 1, 0, 2, {3,1,2,0} }, { 1, 1, 2, {0,2,1,3} },
+                    { 2, 0, 2, {1,2,3,0} }, { 3, 0, 4, {0,1,2,3} },
+                    { 3, 1, 4, {0,1,2,3} }, { 4, 2, 4, {1,2,3,0} }});
+                Triangulation<3> lens = regina::Example<3>::lens(10, 3);
 
-                const int glu[5][4][4] = {
-                    { { 2,1,3,0 }, { 0,3,1,2 }, { 0,1,2,3 }, { 0,1,2,3 } },
-                    { { 3,1,2,0 }, { 0,2,1,3 }, { 3,1,0,2 }, { 0,2,3,1 } },
-                    { { 1,2,3,0 }, { 3,0,1,2 }, { 0,2,1,3 }, { 3,1,2,0 } },
-                    { { 0,1,2,3 }, { 0,1,2,3 }, { 0,1,2,3 }, { 0,1,2,3 } },
-                    { { 0,1,2,3 }, { 0,1,2,3 }, { 1,2,3,0 }, { 3,0,1,2 } }
-                };
-
-                Triangulation<3> orig;
-                orig.insertConstruction(5, adj, glu);
-                Triangulation<3> lens;
-                lens.insertLayeredLensSpace(10, 3);
-                Triangulation<3> copy(orig);
-
-                verify20Edge(&orig, 5, &lens, "internal-loop-twist");
-                verify20Edge(&copy, 0, &lens, "internal-flat-lens");
+                verify20Edge(orig, 5, lens, "internal-loop-twist");
+                verify20Edge(std::move(orig), 0, lens, "internal-flat-lens");
             }
 
-            {
-                // A hand-constructed example formed by squeezing baseKB
-                // into a two-sided Mobius band face in K(iii | 1,0 | 0,1)
-                // from the 6-tetrahedron non-orientable census.
-                const int adjOrig[8][4] = {
-                    { 1, 1, 2, 2},
-                    { 0, 0, 6, 3},
-                    { 0, 0, 7, 4},
-                    { 1, 4, 5, 5},
-                    { 2, 3, 5, 5},
-                    { 3, 3, 4, 4},
-                    { 7, 7, 7, 1},
-                    { 6, 6, 2, 6}
-                };
-
-                const int gluOrig[8][4][4] = {
-                    { { 0,2,1,3 }, { 2,1,3,0 }, { 1,3,0,2 }, { 3,0,2,1 } },
-                    { { 0,2,1,3 }, { 3,1,0,2 }, { 2,0,3,1 }, { 2,3,1,0 } },
-                    { { 2,0,3,1 }, { 1,3,2,0 }, { 1,3,2,0 }, { 2,3,1,0 } },
-                    { { 3,2,0,1 }, { 0,1,2,3 }, { 3,1,0,2 }, { 2,0,3,1 } },
-                    { { 3,2,0,1 }, { 0,1,2,3 }, { 1,3,2,0 }, { 0,2,1,3 } },
-                    { { 2,1,3,0 }, { 1,3,0,2 }, { 3,0,2,1 }, { 0,2,1,3 } },
-                    { { 0,1,2,3 }, { 0,1,2,3 }, { 1,2,3,0 }, { 1,3,0,2 } },
-                    { { 0,1,2,3 }, { 0,1,2,3 }, { 3,0,2,1 }, { 3,0,1,2 } }
-                };
-
-                Triangulation<3> orig;
-                orig.insertConstruction(8, adjOrig, gluOrig);
-
-                const int adjResult[6][4] = {
-                    { 1, 1, 2, 2},
-                    { 0, 0, 2, 3},
-                    { 0, 0, 1, 4},
-                    { 1, 4, 5, 5},
-                    { 2, 3, 5, 5},
-                    { 3, 3, 4, 4}
-                };
-
-                const int gluResult[6][4][4] = {
-                    { { 0,2,1,3 }, { 2,1,3,0 }, { 1,3,0,2 }, { 3,0,2,1 } },
-                    { { 0,2,1,3 }, { 3,1,0,2 }, { 0,1,2,3 }, { 2,3,1,0 } },
-                    { { 2,0,3,1 }, { 1,3,2,0 }, { 0,1,2,3 }, { 2,3,1,0 } },
-                    { { 3,2,0,1 }, { 0,1,2,3 }, { 3,1,0,2 }, { 2,0,3,1 } },
-                    { { 3,2,0,1 }, { 0,1,2,3 }, { 1,3,2,0 }, { 0,2,1,3 } },
-                    { { 2,1,3,0 }, { 1,3,0,2 }, { 3,0,2,1 }, { 0,2,1,3 } }
-                };
-
-                Triangulation<3> result;
-                result.insertConstruction(6, adjResult, gluResult);
-
-                verify20Edge(&orig, 8, &result, "internal-cross");
-            }
+            // A hand-constructed example formed by squeezing baseKB
+            // into a two-sided Mobius band face in K(iii | 1,0 | 0,1)
+            // from the 6-tetrahedron non-orientable census.
+            verify20Edge(Triangulation<3>::fromGluings(8, {
+                    { 0, 0, 1, {0,2,1,3} }, { 0, 1, 1, {2,1,3,0} },
+                    { 0, 2, 2, {1,3,0,2} }, { 0, 3, 2, {3,0,2,1} },
+                    { 1, 2, 6, {2,0,3,1} }, { 1, 3, 3, {2,3,1,0} },
+                    { 2, 2, 7, {1,3,2,0} }, { 2, 3, 4, {2,3,1,0} },
+                    { 3, 1, 4, {0,1,2,3} }, { 3, 2, 5, {3,1,0,2} },
+                    { 3, 3, 5, {2,0,3,1} }, { 4, 2, 5, {1,3,2,0} },
+                    { 4, 3, 5, {0,2,1,3} }, { 6, 0, 7, {0,1,2,3} },
+                    { 6, 1, 7, {0,1,2,3} }, { 6, 2, 7, {1,2,3,0} }}),
+                8, Triangulation<3>::fromGluings(6, {
+                    { 0, 0, 1, {0,2,1,3} }, { 0, 1, 1, {2,1,3,0} },
+                    { 0, 2, 2, {1,3,0,2} }, { 0, 3, 2, {3,0,2,1} },
+                    { 1, 2, 2, {0,1,2,3} }, { 1, 3, 3, {2,3,1,0} },
+                    { 2, 3, 4, {2,3,1,0} }, { 3, 1, 4, {0,1,2,3} },
+                    { 3, 2, 5, {3,1,0,2} }, { 3, 3, 5, {2,0,3,1} },
+                    { 4, 2, 5, {1,3,2,0} }, { 4, 3, 5, {0,2,1,3} }}),
+                "internal-cross");
 
             {
                 // Two copies of baseKB glued along a single face.
-                Triangulation<3> t;
-                t.insertTriangulation(baseKB);
+                Triangulation<3> t = baseKB;
                 t.insertTriangulation(baseKB);
                 t.tetrahedron(0)->join(3, t.tetrahedron(2), Perm<4>());
 
-                verify20Edge(&t, 3, &baseKB, "bdry-cross-tet");
+                verify20Edge(std::move(t), 3, baseKB, "bdry-cross-tet");
             }
         }
 
         void twoZeroEdgeInvalid() {
-            {
-                // All four faces joined together in a simple loop.
-                Triangulation<3>* s2xs1 =
-                    SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1)
-                    .construct();
-                verify20EdgeInvalid(s2xs1, "round-loop");
-                delete s2xs1;
-            }
+            // All four faces joined together in a simple loop.
+            verify20EdgeInvalid(
+                SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1).construct(),
+                "round-loop");
 
-            {
-                // All four faces joined together in a crossed loop.
-                Triangulation<3>* s2xs1Twisted =
-                    SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1_TWISTED)
-                    .construct();
-                verify20EdgeInvalid(s2xs1Twisted, "crossed-loop");
-                delete s2xs1Twisted;
-            }
+            // All four faces joined together in a crossed loop.
+            verify20EdgeInvalid(
+                SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1_TWISTED)
+                    .construct(),
+                "crossed-loop");
 
             {
                 // All four faces internal, but the two equatorial edges
                 // both boundary.
-                Triangulation<3> t;
-                t.insertTriangulation(base);
-                Tetrahedron<3>* p = t.newTetrahedron();
-                Tetrahedron<3>* q = t.newTetrahedron();
-                Tetrahedron<3>* r = t.newTetrahedron();
-                Tetrahedron<3>* s = t.newTetrahedron();
+                Triangulation<3> t = base;
+                auto [p, q, r, s] = t.newTetrahedra<4>();
                 t.tetrahedron(0)->join(2, p, Perm<4>());
                 t.tetrahedron(0)->join(3, q, Perm<4>());
                 t.tetrahedron(1)->join(2, r, Perm<4>());
                 t.tetrahedron(1)->join(3, s, Perm<4>());
 
-                verify20EdgeInvalid(&t, "boundary-edges");
+                verify20EdgeInvalid(t, "boundary-edges");
             }
 
             {
                 // All four faces internal, and the two equatorial edges
                 // internal but identified (sphere).
-                Triangulation<3> t;
-                t.insertTriangulation(base);
-                Tetrahedron<3>* p = t.newTetrahedron();
-                Tetrahedron<3>* q = t.newTetrahedron();
-                Tetrahedron<3>* r = t.newTetrahedron();
-                Tetrahedron<3>* s = t.newTetrahedron();
+                Triangulation<3> t = base;
+                auto [p, q, r, s] = t.newTetrahedra<4>();
                 t.tetrahedron(0)->join(2, p, Perm<4>());
                 t.tetrahedron(0)->join(3, q, Perm<4>());
                 t.tetrahedron(1)->join(2, r, Perm<4>());
@@ -361,18 +249,14 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     (! e->isBoundary()) && e->degree() == 6 &&
                         t.isOrientable());
 
-                verify20EdgeInvalid(&t, "identified-edges-S2");
+                verify20EdgeInvalid(t, "identified-edges-S2");
             }
 
             {
                 // All four faces internal, and the two equatorial edges
                 // internal but identified (RP2).
-                Triangulation<3> t;
-                t.insertTriangulation(base);
-                Tetrahedron<3>* p = t.newTetrahedron();
-                Tetrahedron<3>* q = t.newTetrahedron();
-                Tetrahedron<3>* r = t.newTetrahedron();
-                Tetrahedron<3>* s = t.newTetrahedron();
+                Triangulation<3> t = base;
+                auto [p, q, r, s] = t.newTetrahedra<4>();
                 t.tetrahedron(0)->join(2, p, Perm<4>());
                 t.tetrahedron(0)->join(3, q, Perm<4>());
                 t.tetrahedron(1)->join(2, r, Perm<4>());
@@ -387,13 +271,12 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     (! e->isBoundary()) && e->degree() == 6 &&
                         ! t.isOrientable());
 
-                verify20EdgeInvalid(&t, "identified-edges-RP2");
+                verify20EdgeInvalid(t, "identified-edges-RP2");
             }
 
             {
                 // Two faces boundary, the other joined in a loop.
-                Triangulation<3> t;
-                t.insertTriangulation(base);
+                Triangulation<3> t = base;
                 Tetrahedron<3>* tet = t.tetrahedron(0);
                 tet->join(2, tet, Perm<4>(2, 3));
 
@@ -403,13 +286,12 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     (! e->isBoundary()) && e->degree() == 1 &&
                         t.isOrientable());
 
-                verify20EdgeInvalid(&t, "boundary-loop-boundary");
+                verify20EdgeInvalid(t, "boundary-loop-boundary");
             }
 
             {
                 // Two faces boundary, the other joined in a cross.
-                Triangulation<3> t;
-                t.insertTriangulation(baseKB);
+                Triangulation<3> t = baseKB;
 
                 Edge<3>* e = t.tetrahedron(0)->
                     edge(Edge<3>::edgeNumber[0][1]);
@@ -418,45 +300,29 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     e->isBoundary() && e->degree() == 3 &&
                         ! t.isOrientable());
 
-                verify20EdgeInvalid(&t, "boundary-cross-boundary");
+                verify20EdgeInvalid(t, "boundary-cross-boundary");
             }
 
-            {
-                // Two opposite faces boundary, the other two wedged
-                // inside an LST(3,4,7).
-                const int adj[5][4] = {
-                    { 1, 1, -1, -1},
-                    { 4, 2, 0, 0},
-                    { 2, 2, 1, 3},
-                    { 4, 4, -1, 2},
-                    { 3, 3, -1, 1}
-                };
-
-                const int glu[5][4][4] = {
-                    { { 2,1,3,0 }, { 0,3,1,2 }, { 0,0,0,0 }, { 0,0,0,0 } },
-                    { { 3,1,2,0 }, { 0,2,1,3 }, { 3,1,0,2 }, { 0,2,3,1 } },
-                    { { 1,2,3,0 }, { 3,0,1,2 }, { 0,2,1,3 }, { 0,1,2,3 } },
-                    { { 0,1,2,3 }, { 0,1,2,3 }, { 0,0,0,0 }, { 0,1,2,3 } },
-                    { { 0,1,2,3 }, { 0,1,2,3 }, { 0,0,0,0 }, { 3,1,2,0 } }
-                };
-
-                Triangulation<3> orig;
-                orig.insertConstruction(5, adj, glu);
-                verify20EdgeInvalid(&orig, "boundary-opposite-wedge");
-            }
+            // Two opposite faces boundary, the other two wedged
+            // inside an LST(3,4,7).
+            verify20EdgeInvalid(Triangulation<3>::fromGluings(5, {
+                    { 0, 0, 1, {2,1,3,0} }, { 0, 1, 1, {0,3,1,2} },
+                    { 1, 0, 4, {3,1,2,0} }, { 1, 1, 2, {0,2,1,3} },
+                    { 2, 0, 2, {1,2,3,0} }, { 2, 3, 3, {0,1,2,3} },
+                    { 3, 0, 4, {0,1,2,3} }, { 3, 1, 4, {0,1,2,3} }}),
+                "boundary-opposite-wedge");
 
             {
                 // Two diagonally opposite faces boundary, the other two
                 // glued to an LST boundary.  Doesn't really matter how.
-                Triangulation<3> orig;
-                orig.insertLayeredSolidTorus(3,4);
+                Triangulation<3> orig = regina::Example<3>::lst(3, 4);
                 orig.insertTriangulation(base);
 
                 Tetrahedron<3>* top = orig.tetrahedron(0);
                 orig.tetrahedron(3)->join(3, top, Perm<4>(1,2,0,3));
                 orig.tetrahedron(4)->join(2, top, Perm<4>(0,3,2,1));
 
-                verify20EdgeInvalid(&orig, "boundary-diag");
+                verify20EdgeInvalid(orig, "boundary-diag");
             }
         }
 };

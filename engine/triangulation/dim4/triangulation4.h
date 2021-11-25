@@ -46,6 +46,7 @@
 #include <memory>
 #include <vector>
 #include "regina-core.h"
+#include "progress/progresstracker.h"
 #include "triangulation/detail/retriangulate.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/markedvector.h"
@@ -57,23 +58,13 @@ namespace regina {
 
 class ProgressTracker;
 class ProgressTrackerOpen;
-class XMLPacketReader;
 
 template <int> class XMLTriangulationReader;
 
 /**
- * \addtogroup dim4 4-Manifold Triangulations
+ * \defgroup dim4 4-Manifold Triangulations
  * Details for implementing triangulations of 4-manifolds.
- * @{
  */
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_TRIANGULATION4> {
-    typedef Triangulation <4>Class;
-    static constexpr const char* name = "4-Manifold Triangulation";
-};
-#endif
 
 /**
  * Represents a 4-dimensional triangulation, typically of a 4-manifold.
@@ -88,37 +79,18 @@ struct PacketInfo<PACKET_TRIANGULATION4> {
  * A 4-manifold triangulation is built from pentachora: a \e pentachoron is a
  * 4-dimensional simplex, with five vertices.
  *
- * This class implements the C++ Swappable requirement by providing member
- * and global swap() functions.  However, like all packet types, it does
- * \e not implement a move constructor or move assignment, since this would
- * interfere with the structure of the packet tree.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \headerfile triangulation/dim4.h
+ *
+ * \ingroup dim4
  */
 template <>
-class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
-    REGINA_PACKET(Triangulation<4>, PACKET_TRIANGULATION4)
-
-    public:
-        typedef std::vector<Pentachoron<4>*>::const_iterator
-                PentachoronIterator;
-            /**< A dimension-specific alias for SimplexIterator, used to
-                 iterate through pentachora. */
-        typedef decltype(detail::TriangulationBase<4>().faces<3>().begin())
-                TetrahedronIterator;
-            /**< Used to iterate through tetrahedra. */
-        typedef decltype(detail::TriangulationBase<4>().faces<2>().begin())
-                TriangleIterator;
-            /**< Used to iterate through triangles. */
-        typedef decltype(detail::TriangulationBase<4>().faces<1>().begin())
-                EdgeIterator;
-            /**< Used to iterate through edges. */
-        typedef decltype(detail::TriangulationBase<4>().faces<0>().begin())
-                VertexIterator;
-            /**< Used to iterate through vertices. */
-
+class Triangulation<4> : public detail::TriangulationBase<4> {
     private:
-        bool knownSimpleLinks_;
+        bool knownSimpleLinks_ { false };
             /**< Is it known that all vertex links are 3-spheres or 3-balls?
                  This may be \c true even if the skeleton has not yet been
                  calculated (thereby allowing us to avoid costly 3-sphere or
@@ -130,8 +102,19 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
         bool ideal_;
             /**< Is the triangulation ideal? */
 
-        mutable std::optional<AbelianGroup> H2_;
-            /**< Second homology group of the triangulation. */
+        /**
+         * A struct that holds all of our calculated properties.
+         * This is a convenience so we can use its implicitly defined
+         * assignment operators and copy constructors.  It is mutable so that
+         * expensive read-only calculations can cache their results.
+         *
+         * All std::optional properties are std::nullopt if they have
+         * not yet been computed.
+         */
+        mutable struct {
+            std::optional<AbelianGroup> H2_;
+                /**< Second homology group of the triangulation. */
+        } prop_;
 
     public:
         /**
@@ -144,10 +127,9 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          *
          * Creates an empty triangulation.
          */
-        Triangulation();
+        Triangulation() = default;
         /**
          * Creates a copy of the given triangulation.
-         * The packet tree structure and packet label are \e not copied.
          *
          * This will clone any computed properties (such as homology,
          * fundamental group, and so on) of the given triangulation also.
@@ -156,7 +138,7 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          *
          * @param copy the triangulation to copy.
          */
-        Triangulation(const Triangulation& copy);
+        Triangulation(const Triangulation& copy) = default;
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
@@ -173,6 +155,31 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          */
         Triangulation(const Triangulation& copy, bool cloneProps);
         /**
+         * Moves the given triangulation into this new triangulation.
+         *
+         * This is much faster than the copy constructor, but is still linear
+         * time.  This is because every pentachoron must be adjusted to point
+         * back to this new triangulation instead of \a src.
+         *
+         * All pentachora and skeletal objects (faces, components and
+         * boundary components) that belong to \a src will be moved into
+         * this triangulation, and so any pointers or references to
+         * Pentachoron<4>, Face<4, subdim>, Component<4> or
+         * BoundaryComponent<4> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this triangulation
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the triangulation to move.
+         */
+        Triangulation(Triangulation&& src) noexcept = default;
+        /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
          *
@@ -182,8 +189,6 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * - isomorphism signatures (see fromIsoSig()).
          *
          * This list may grow in future versions of Regina.
-         *
-         * Regina will also set the packet label accordingly.
          *
          * If Regina cannot interpret the given string, this will be
          * left as the empty triangulation.
@@ -198,17 +203,9 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * The constituent pentachora, the cellular structure and all other
          * properties will also be deallocated.
          */
-        virtual ~Triangulation();
+        ~Triangulation();
 
-        /*@}*/
-        /**
-         * \name Packet Administration
-         */
-        /*@{*/
-
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
-        virtual bool dependsOnParent() const override;
+        using Snapshottable<Triangulation<4>>::isReadOnlySnapshot;
 
         /*@}*/
         /**
@@ -216,6 +213,30 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          */
         /*@{*/
 
+        /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countPentachora() const;
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        auto pentachora() const;
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        Pentachoron<4>* pentachoron(size_t index);
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        const Pentachoron<4>* pentachoron(size_t index) const;
         /**
          * A dimension-specific alias for newSimplex().
          *
@@ -228,6 +249,19 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * See newSimplex() for further information.
          */
         Pentachoron<4>* newPentachoron(const std::string& desc);
+        /**
+         * A dimension-specific alias for newSimplices().
+         *
+         * See newSimplices() for further information.
+         */
+        template <int k>
+        std::array<Pentachoron<4>*, k> newPentachora();
+        /**
+         * A dimension-specific alias for newSimplices().
+         *
+         * See newSimplices() for further information.
+         */
+        void newPentachora(size_t k);
         /**
          * A dimension-specific alias for removeSimplex().
          *
@@ -248,6 +282,42 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
         void removeAllPentachora();
 
         /**
+         * Sets this to be a (deep) copy of the given triangulation.
+         *
+         * @param src the triangulation to copy.
+         * @return a reference to this triangulation.
+         */
+        Triangulation& operator = (const Triangulation& src);
+
+        /**
+         * Moves the contents of the given triangulation into this
+         * triangulation.
+         *
+         * This is much faster than copy assignment, but is still linear
+         * time.  This is because every pentachoron must be adjusted to point
+         * back to this triangulation instead of \a src.
+         *
+         * All pentachora and skeletal objects (faces, components and
+         * boundary components) that belong to \a src will be moved into
+         * this triangulation, and so any pointers or references to
+         * Pentachoron<4>, Face<4, subdim>, Component<4> or
+         * BoundaryComponent<4> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this triangulation which may in turn call arbitrary
+         * code via any registered packet listeners.  It deliberately does
+         * \e not fire change events on \a src, since it assumes that \a src is
+         * about to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the triangulation to move.
+         * @return a reference to this triangulation.
+         */
+        Triangulation& operator = (Triangulation&& src);
+
+        /**
          * Swaps the contents of this and the given triangulation.
          *
          * All pentachora that belong to this triangulation
@@ -260,16 +330,12 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * In particular, any pointers or references to Pentachoron<4> and/or
          * Face<4, subdim> objects will remain valid.
          *
-         * The structure of the packet tree will \e not be swapped:
-         * both packets being swapped will remain with their original parents,
-         * and their original children will remain with them.
-         *
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
          * \note This swap function is \e not marked \c noexcept, since it
-         * fires packet change events which may in turn call arbitrary
-         * code via any registered packet listeners.
+         * fires change events on both triangulations which may in turn call
+         * arbitrary code via any registered packet listeners.
          *
          * @param other the triangulation whose contents should be
          * swapped with this.
@@ -285,6 +351,26 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * swapped with this.
          */
         [[deprecated]] void swapContents(Triangulation<4>& other);
+
+        /*@}*/
+        /**
+         * \name Skeletal Queries
+         */
+        /*@{*/
+
+        /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryTetrahedra() const;
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryTetrahedra() const;
 
         /*@}*/
         /**
@@ -471,28 +557,27 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
          * to "climb out" of such wells.
          *
-         * If a progress tracker is passed, then the exhaustive simplification
-         * will take place in a new thread and this routine will return
-         * immediately.  In this case, you will need to use some other
-         * means to determine whether the triangulation was eventually
-         * simplified (e.g., by examining size() after the tracker
-         * indicates that the operation has finished).
+         * Since Regina 7.0, this routine will not return until either the
+         * triangulation is simplified or the exhaustive search is complete,
+         * regardless of whether a progress tracker was passed.  If you
+         * need the old behaviour (where passing a progress tracker caused
+         * the exhaustive search to start in the background), simply call
+         * this routine in a new detached thread.
          *
          * To assist with performance, this routine can run in parallel
          * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, if no
-         * progress tracker is passed then this routine will not return until
-         * processing has finished (i.e., either the triangulation was
-         * simplified or the search was exhausted).
+         * in the argument \a nThreads.  Even in multithreaded mode, this
+         * routine will not return until processing has finished (i.e., either
+         * the triangulation was simplified or the search was exhausted).
          *
          * If this routine is unable to simplify the triangulation, then
          * the triangulation will not be changed.
          *
-         * If no progress tracker was passed then it will immediately return
-         * \c false; otherwise the progress tracker will immediately be
-         * marked as finished.
-         *
          * \pre This triangulation is connected.
+         *
+         * \exception FailedPrecondition this triangulation has more
+         * than one connected component.  If a progress tracker was passed,
+         * it will be marked as finished before the exception is thrown.
          *
          * @param height the maximum number of \e additional pentachora to
          * allow beyond the number of pentachora originally present in the
@@ -500,13 +585,9 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
-         * be reported, or 0 if no progress reporting is required.
-         * @return If a progress tracker is passed, then this routine
-         * will return \c true or \c false immediately according to
-         * whether a new thread could or could not be started.  If no
-         * progress tracker is passed, then this routine will return \c true
-         * if and only if the triangulation was successfully simplified to
-         * fewer pentachora.
+         * be reported, or \c null if no progress reporting is required.
+         * @return \c true if and only if the triangulation was successfully
+         * simplified to fewer pentachora.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
             ProgressTrackerOpen* tracker = nullptr);
@@ -528,14 +609,22 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * be a function or some other callable object).
          *
          * - \a action must take the following initial argument(s).
-         *   Either (a) the first argument must be of type Triangulation<4>&,
-         *   representing the triangulation that has been found; or else
-         *   (b) the first two arguments must be of types const std::string&
-         *   and Triangulation<4>&, representing both the triangulation and its
-         *   isomorphism signature.  The second form is offered in order to
-         *   avoid unnecessarily recomputation within the \a action function.
+         *   Either (a) the first argument must be a triangulation (the precise
+         *   type is discussed below), representing the triangluation that has
+         *   been found; or else (b) the first two arguments must be of types
+         *   const std::string& followed by a triangulation, representing both
+         *   the triangulation and its isomorphism signature.
+         *   The second form is offered in order to avoid unnecessary
+         *   recomputation within the \a action function; however, note that
+         *   the signature might not be of the IsoSigClassic type (i.e., it
+         *   might not match the output from the default version of isoSig()).
          *   If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - The triangulation argument will be passed as an rvalue; a typical
+         *   action could (for example) take it by const reference and query it,
+         *   or take it by value and modify it, or take it by rvalue reference
+         *   and move it into more permanent storage.
          *
          * - \a action must return a boolean.  If \a action ever returns
          *   \c true, then this indicates that processing should stop
@@ -547,12 +636,6 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          *   that this routine visits will be obtained via Pachner moves
          *   from the original form of this triangulation, before any
          *   subsequent changes (if any) were made.
-         *
-         * - \a action may, if it chooses, make changes to the triangulation
-         *   that is passed in its initial arguemt(s) (though it must not
-         *   delete it).  This will likewise not affect the search, since
-         *   the triangulation that is passed to \a action will be destroyed
-         *   immediately after \a action is called.
          *
          * - \a action will only be called once for each triangulation
          *   (including this starting triangulation).  In other words, no
@@ -572,31 +655,31 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * routine will <i>never terminate</i>, unless \a action returns
          * \c true for some triangulation that is passed to it.
          *
-         * If a progress tracker is passed, then the exploration of
-         * triangulations will take place in a new thread and this
-         * routine will return immediately.
+         * Since Regina 7.0, this routine will not return until the exploration
+         * of triangulations is complete, regardless of whether a progress
+         * tracker was passed.  If you need the old behaviour (where passing a
+         * progress tracker caused the enumeration to start in the background),
+         * simply call this routine in a new detached thread.
          *
          * To assist with performance, this routine can run in parallel
-         * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, if no
-         * progress tracker is passed then this routine will not return until
-         * processing has finished (i.e., either \a action returned \c true,
-         * or the search was exhausted).  All calls to \a action will be
-         * protected by a mutex (i.e., different threads will never be
-         * calling \a action at the same time); as a corollary, the action
-         * should avoid expensive operations where possible (otherwise
+         * (multithreaded) mode; simply pass the number of parallel threads in
+         * the argument \a nThreads.  Even in multithreaded mode, this routine
+         * will not return until processing has finished (i.e., either \a action
+         * returned \c true, or the search was exhausted).  All calls to
+         * \a action will be protected by a mutex (i.e., different threads will
+         * never be calling \a action at the same time); as a corollary, the
+         * action should avoid expensive operations where possible (otherwise
          * it will become a serialisation bottleneck in the multithreading).
          *
-         * If no progress tracker was passed then it will immediately return
-         * \c false; otherwise the progress tracker will immediately be
-         * marked as finished.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap them in std::ref or
-         * std::cref.
+         * If this triangulation is not connected, then this routine will do
+         * nothing: it will immediately return \c false, and if a progress
+         * tracker was passed then it will be immediately marked as finished.
          *
          * \pre This triangulation is connected.
+         *
+         * \exception FailedPrecondition this triangulation has more
+         * than one connected component.  If a progress tracker was passed,
+         * it will be marked as finished before the exception is thrown.
          *
          * \apinotfinal
          *
@@ -605,7 +688,7 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * form is more restricted: the arguments \a tracker and \a args are
          * removed, so you call it as retriangulate(height, threads, action).
          * Moreover, \a action must take exactly two arguments
-         * (const std::string&, Triangulation<4>&) representing the signature
+         * (const std::string&, Triangulation<4>&&) representing a signature
          * and the triangulation, as described in option (b) above.
          *
          * @param height the maximum number of \e additional pentachora to
@@ -619,12 +702,9 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * for each triangulation that is found.
          * @param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument(s).
-         * @return If a progress tracker is passed, then this routine
-         * will return \c true or \c false immediately according to
-         * whether a new thread could or could not be started.  If no
-         * progress tracker is passed, then this routine will return \c true
-         * if some call to \a action returned \c true (thereby terminating
-         * the search early), or \c false if the search ran to completion.
+         * @return \c true if some call to \a action returned \c true (thereby
+         * terminating the search early), or \c false if the search ran to
+         * completion.
          */
         template <typename Action, typename... Args>
         bool retriangulate(int height, unsigned nThreads,
@@ -913,13 +993,6 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
 
         /*@}*/
 
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
-
-    protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
-
     private:
         /**
          * Clears any calculated properties, including skeletal data,
@@ -927,7 +1000,7 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * internal function that changes the triangulation.
          *
          * In most cases this routine is followed immediately by firing
-         * a packet change event.
+         * a change event.
          */
         void clearAllProperties();
 
@@ -944,30 +1017,12 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          */
         void calculateEdgeLinks();
 
-        /**
-         * A much less templated version of retriangulate().
-         *
-         * This is identical to retriangulate(), except that the type
-         * of the action function is now known precisely.  This means that
-         * the implementation can be kept out of the main headers.
-         *
-         * \tparam withSig \c true if the action function includes an
-         * isomorphism signature before the triangulation in its
-         * initial argument(s).
-         */
-        template <bool withSig>
-        bool retriangulateInternal(int height, unsigned nThreads,
-            ProgressTrackerOpen* tracker,
-            regina::detail::RetriangulateActionFunc<
-                Triangulation<4>, withSig>&& action) const;
-
     friend class regina::Face<4, 4>;
     friend class regina::detail::SimplexBase<4>;
     friend class regina::detail::TriangulationBase<4>;
     friend class regina::XMLTriangulationReader<4>;
+    friend class regina::XMLWriter<Triangulation<4>>;
 };
-
-/*@}*/
 
 } // namespace regina
 // Some more headers that are required for inline functions:
@@ -979,20 +1034,25 @@ namespace regina {
 
 // Inline functions for Triangulation<4>
 
-inline Triangulation<4>::Triangulation() : knownSimpleLinks_(false) {
-}
-
 inline Triangulation<4>::~Triangulation() {
+    Snapshottable<Triangulation<4>>::takeSnapshot();
     clearAllProperties();
 }
 
-inline void Triangulation<4>::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << size()
-        << (size() == 1 ? " pentachoron" : " pentachora");
+inline size_t Triangulation<4>::countPentachora() const {
+    return size();
 }
 
-inline bool Triangulation<4>::dependsOnParent() const {
-    return false;
+inline auto Triangulation<4>::pentachora() const {
+    return simplices();
+}
+
+inline Pentachoron<4>* Triangulation<4>::pentachoron(size_t index) {
+    return simplex(index);
+}
+
+inline const Pentachoron<4>* Triangulation<4>::pentachoron(size_t index) const {
+    return simplex(index);
 }
 
 inline Pentachoron<4>* Triangulation<4>::newPentachoron() {
@@ -1002,6 +1062,15 @@ inline Pentachoron<4>* Triangulation<4>::newPentachoron() {
 inline Pentachoron<4>* Triangulation<4>::newPentachoron(
         const std::string& desc) {
     return newSimplex(desc);
+}
+
+template <int k>
+inline std::array<Pentachoron<4>*, k> Triangulation<4>::newPentachora() {
+    return newSimplices<k>();
+}
+
+inline void Triangulation<4>::newPentachora(size_t k) {
+    newSimplices(k);
 }
 
 inline void Triangulation<4>::removePentachoron(Pentachoron<4>* pent) {
@@ -1014,6 +1083,47 @@ inline void Triangulation<4>::removePentachoronAt(size_t index) {
 
 inline void Triangulation<4>::removeAllPentachora() {
     removeAllSimplices();
+}
+
+inline Triangulation<4>& Triangulation<4>::operator = (
+        const Triangulation<4>& src) {
+    // We need to implement copy assignment ourselves because it all
+    // needs to be wrapped in a ChangeEventSpan.  This is so that the
+    // final packetWasChanged event is fired *after* we modify the
+    // properties specific to dimension 4.
+
+    ChangeEventSpan span(*this);
+
+    TriangulationBase<4>::operator = (src);
+
+    knownSimpleLinks_ = src.knownSimpleLinks_;
+    ideal_ = src.ideal_;
+    prop_ = src.prop_;
+
+    return *this;
+}
+
+inline Triangulation<4>& Triangulation<4>::operator = (Triangulation<4>&& src) {
+    // Like copy assignment, we implement this ourselves because it all
+    // needs to be wrapped in a ChangeEventSpan.
+
+    ChangeEventSpan span(*this);
+
+    TriangulationBase<4>::operator = (std::move(src));
+
+    knownSimpleLinks_ = src.knownSimpleLinks_;
+    ideal_ = src.ideal_;
+    prop_ = std::move(src.prop_);
+
+    return *this;
+}
+
+inline bool Triangulation<4>::hasBoundaryTetrahedra() const {
+    return hasBoundaryFacets();
+}
+
+inline size_t Triangulation<4>::countBoundaryTetrahedra() const {
+    return countBoundaryFacets();
 }
 
 inline bool Triangulation<4>::isIdeal() const {
@@ -1029,20 +1139,47 @@ inline bool Triangulation<4>::isClosed() const {
 template <typename Action, typename... Args>
 inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
+    if (countComponents() != 1) {
+        if (tracker)
+            tracker->setFinished();
+        throw FailedPrecondition(
+            "retriangulate() requires a connected triangulation");
+    }
+
     // Use RetriangulateActionTraits to deduce whether the given action
     // takes a triangulation or both an isomorphism signature and triangulation
     // as its initial argument(s).
-    typedef regina::detail::RetriangulateActionTraits<
-        Triangulation<4>, Action> Traits;
+    using Traits =
+        regina::detail::RetriangulateActionTraits<Triangulation<4>, Action>;
     static_assert(Traits::valid,
         "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
-    return retriangulateInternal<Traits::withSig>(height, nThreads, tracker,
-        Traits::convert(std::forward<Action>(action),
-            std::forward<Args>(args)...));
+    if constexpr (Traits::withSig) {
+        return regina::detail::retriangulateInternal<Triangulation<4>, true>(
+            *this, height, nThreads, tracker,
+            [&](const std::string& sig, Triangulation<4>&& obj) {
+                return action(sig, std::move(obj), std::forward<Args>(args)...);
+            });
+    } else {
+        return regina::detail::retriangulateInternal<Triangulation<4>, false>(
+            *this, height, nThreads, tracker,
+            [&](Triangulation<4>&& obj) {
+                return action(std::move(obj), std::forward<Args>(args)...);
+            });
+    }
 }
 
-inline Packet* Triangulation<4>::internalClonePacket(Packet*) const {
-    return new Triangulation<4>(*this);
+inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned nThreads,
+        ProgressTrackerOpen* tracker) {
+    return retriangulate(height, nThreads, tracker,
+        [](Triangulation<4>&& alt, Triangulation<4>& original, size_t minSimp) {
+            if (alt.size() < minSimp) {
+                ChangeEventSpan span(original);
+                original = std::move(alt);
+                original.intelligentSimplify();
+                return true;
+            } else
+                return false;
+        }, *this, size());
 }
 
 inline void Triangulation<4>::swapContents(Triangulation<4>& other) {

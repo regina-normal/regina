@@ -37,6 +37,7 @@
 #ifndef __GROUPWIDGET_H
 #define __GROUPWIDGET_H
 
+#include "algebra/grouppresentation.h"
 #include <QWidget>
 
 class QLabel;
@@ -44,7 +45,6 @@ class QListWidget;
 
 namespace regina {
     class Packet;
-    class GroupPresentation;
 };
 
 /**
@@ -55,7 +55,7 @@ class GroupWidget : public QWidget {
 
     private:
         const regina::GroupPresentation* group_;
-        regina::GroupPresentation* simplified_;
+        std::optional<regina::GroupPresentation> simplified_;
 
         QWidget* ui_;
         QLabel* fundName_;
@@ -68,19 +68,17 @@ class GroupWidget : public QWidget {
          * Constructor.
          */
         GroupWidget(bool allowSimplify, bool paddingStretch);
-        ~GroupWidget();
 
         /**
          * Refresh the contents of the widget.
          */
-        void refresh(const regina::GroupPresentation* group);
+        void refresh(const regina::GroupPresentation& group);
 
         /**
-         * The following routine drops ownership of simplified_ (it is
-         * assumed that the caller will claim ownership instead), and
-         * sets simplified_ to null.
+         * The following routine moves data out of simplified_, and
+         * resets simplified_ to no value.
          */
-        regina::GroupPresentation* takeSimplifiedGroup();
+        std::optional<regina::GroupPresentation> takeSimplifiedGroup();
 
     signals:
         /**
@@ -112,9 +110,10 @@ class GroupWidget : public QWidget {
         QString verifyGAPExec();
 };
 
-inline regina::GroupPresentation* GroupWidget::takeSimplifiedGroup() {
-    regina::GroupPresentation* ans = simplified_;
-    simplified_ = 0;
+inline std::optional<regina::GroupPresentation>
+        GroupWidget::takeSimplifiedGroup() {
+    std::optional<regina::GroupPresentation> ans; // no value
+    ans.swap(simplified_);
     return ans;
 }
 

@@ -45,7 +45,7 @@ namespace regina {
      */
     class Matrix2Row {
         private:
-            long* row;
+            std::array<long, 2>& row;
 
         public:
             Matrix2Row(Matrix2& matrix, int whichRow) :
@@ -93,6 +93,7 @@ void addMatrix2(pybind11::module_& m) {
         .def(pybind11::init<>())
         .def(pybind11::init<const Matrix2&>())
         .def(pybind11::init<long, long, long, long>())
+        .def("swap", &Matrix2::swap)
         .def("__getitem__", [](Matrix2& m, int row) {
             if (row < 0 || row > 1)
                 throw pybind11::index_error(
@@ -122,6 +123,7 @@ void addMatrix2(pybind11::module_& m) {
     regina::python::add_eq_operators(c2);
     regina::python::add_output_ostream(c2);
 
+    m.def("swap", (void(*)(Matrix2&, Matrix2&))(regina::swap));
     m.def("simpler", overload_cast<const Matrix2&, const Matrix2&>(
         &regina::simpler));
     m.def("simpler", overload_cast<const Matrix2&, const Matrix2&,

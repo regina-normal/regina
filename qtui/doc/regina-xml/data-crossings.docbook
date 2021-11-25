@@ -66,7 +66,7 @@ crossings ::= (#PCDATA)</synopsis>
    <para>
     The following elements contain <sgmltag>crossings</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-link;</member>
+     <member>&xml-link;</member>
     </simplelist>.
    </para>
   </refsect2>

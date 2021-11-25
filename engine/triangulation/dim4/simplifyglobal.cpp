@@ -43,7 +43,8 @@ bool Triangulation<4>::intelligentSimplify() {
     bool changed;
 
     { // Begin scope for change event span.
-        ChangeEventSpan span(this);
+        // Ensure only one event pair is fired in this sequence of changes.
+        ChangeEventSpan span(*this);
 
         // Reduce to a local minimum.
         changed = simplifyToLocalMinimum(true);
@@ -169,7 +170,8 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
     bool changedNow = true; // Did we just change something (for loop control)?
 
     { // Begin scope for change event span.
-        ChangeEventSpan span(this);
+        // Ensure only one event pair is fired in this sequence of changes.
+        ChangeEventSpan span(*this);
 
         while (changedNow) {
             changedNow = false;

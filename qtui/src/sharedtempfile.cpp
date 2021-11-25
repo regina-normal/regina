@@ -45,7 +45,7 @@ SharedTempFile::SharedTempFile(const QString& templateFileName,
         localFileName_ = tmp_->fileName();
     } else {
         delete tmp_;
-        tmp_ = 0;
+        tmp_ = nullptr;
         localFileName_ = QString();
     }
 }
@@ -60,7 +60,7 @@ SharedTempFile::~SharedTempFile() {
 
 void SharedTempFile::share() {
     delete tmp_;
-    tmp_ = 0;
+    tmp_ = nullptr;
 }
 
 QUrl SharedTempFile::url() const {

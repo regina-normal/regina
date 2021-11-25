@@ -43,10 +43,6 @@
 #define __REGINA_TRIANGULATION_H
 #endif
 
-namespace regina {
-    template <int> class XMLTriangulationReader;
-}
-
 #include "packet/packet.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
@@ -55,9 +51,8 @@ namespace regina {
 #include "triangulation/detail/triangulation.h"
 
 /**
- * \addtogroup generic Generic triangulations
+ * \defgroup generic Generic triangulations
  * Details for implementing triangulations in arbitrary dimensions.
- * @{
  */
 
 namespace regina {
@@ -94,9 +89,9 @@ namespace regina {
  *
  * You can construct a triangulation from scratch using routines such as
  * newSimplex() and Simplex<dim>::join().  There are also routines for
- * importing and exporting triangulations in bulk, such as isoSig() and
- * fromIsoSig() (which uses <em>isomorphism signatures</em>), or
- * insertConstruction() and dumpConstruction() (which exports C++ code).
+ * exporting and importing triangulations in bulk, such as isoSig() and
+ * fromIsoSig() (which use <em>isomorphism signatures</em>), or
+ * dumpConstruction() and fromGluings() (which use C++ code).
  *
  * In additional to top-dimensional simplices, this class also tracks:
  *
@@ -112,10 +107,30 @@ namespace regina {
  * Likewise, if the triangulation is deleted then all component objects
  * will be deleted alongside it.
  *
- * This class implements the C++ Swappable requirement by providing member
- * and global swap() functions.  However, like all packet types, it does
- * \e not implement a move constructor or move assignment, since this would
- * interfere with the structure of the packet tree.
+ * Since Regina 7.0, this is no longer a "packet type" that can be
+ * inserted directly into the packet tree.  Instead a Triangulation is now a
+ * standalone mathematatical object, which makes it slimmer and faster
+ * for ad-hoc use.  The consequences of this are:
+ *
+ * - If you create your own Triangulation, it will not have any of the usual
+ *   packet infrastructure.  You cannot add it into the packet tree, and it will
+ *   not support a label, tags, child/parent packets, and/or event listeners.
+ *
+ * - To include a Triangulation in the packet tree, you must create a new
+ *   PacketOf<Triangulation>.  This \e is a packet type, and supports labels,
+ *   tags, child/parent packets, and event listeners.  It derives from
+ *   Triangulation, and so inherits the full Triangulation interface.
+ *
+ * - If you are adding new functions to this class that edit the triangulation,
+ *   you must still remember to create a ChangeEventSpan.  This will ensure
+ *   that, if the triangulation is being managed by a PacketOf<Triangulation>,
+ *   then the appropriate packet change events will be fired.  All other events
+ *   (aside from packetToBeChanged() and packetWasChanged() are managed
+ *   directly by the PacketOf<Triangulation> wrapper class.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * For Regina's \ref stddim "standard dimensions", this template is specialised
  * and offers \e much more functionality.  In order to use these specialised
@@ -131,41 +146,14 @@ namespace regina {
  * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
+ *
+ * \ingroup generic
  */
 template <int dim>
-class Triangulation :
-        public Packet,
-        public detail::TriangulationBase<dim> {
+class Triangulation : public detail::TriangulationBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of Triangulation<dim> "
         "should not be used for Regina's standard dimensions.");
-
-    private:
-        /**
-         * Provides implementation details for REGINA_PACKET_FROM.
-         *
-         * We do not provide the specialisation PacketInfo<typeID> in this
-         * header, since this would force an instantiation of every class
-         * Triangulation<dim> every time this header is included.  Instead,
-         * PacketInfo<typeID> is specialised in packet/packetregistry-impl.h.
-         *
-         * As a result, we cannot use REGINA_PACKET (which requires
-         * PacketInfo<typeID> for its implementation details).  Instead we
-         * use REGINA_PACKET_FROM, which allows us to pass our own helper class
-         * for the implementation.  PacketTypeInfo is that helper class.
-         *
-         * See the documentation for REGINA_PACKET_FROM for further details.
-         */
-        struct PacketTypeInfo {
-            static constexpr const PacketType typeID = PacketType(100 + dim);
-            static std::string name() {
-                std::ostringstream s;
-                s << dim << "-Manifold Triangulation";
-                return s.str();
-            }
-        };
-
-    REGINA_PACKET_FROM(Triangulation<dim>, Triangulation<dim>::PacketTypeInfo);
 
     protected:
         using detail::TriangulationBase<dim>::simplices_;
@@ -184,7 +172,6 @@ class Triangulation :
         Triangulation();
         /**
          * Creates a new copy of the given triangulation.
-         * The packet tree structure and packet label are \e not copied.
          *
          * This will clone any computed properties (such as homology,
          * fundamental group, and so on) of the given triangulation also.
@@ -206,28 +193,80 @@ class Triangulation :
          */
         Triangulation(const Triangulation& copy, bool cloneProps);
         /**
+         * Moves the given triangulation into this new triangulation.
+         *
+         * This is much faster than the copy constructor, but is still linear
+         * time.  This is because every top-dimensional simplex must be
+         * adjusted to point back to this new triangulation instead of \a src.
+         *
+         * All top-dimensional simplices and skeletal objects (faces,
+         * components and boundary components) that belong to \a src will be
+         * moved into this triangulation, and so any pointers or references to
+         * Simplex<dim>, Face<dim, subdim>, Component<dim> or
+         * BoundaryComponent<dim> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this triangulation
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the triangulation to move.
+         */
+        Triangulation(Triangulation&& src) noexcept = default;
+        /**
          * Destroys this triangulation.
          *
          * The constituent simplices, the cellular structure and all other
          * properties will also be destroyed.
          */
-        virtual ~Triangulation();
+        ~Triangulation();
 
-        /*@}*/
-        /**
-         * \name Packet Administration
-         */
-        /*@{*/
-
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
-        virtual bool dependsOnParent() const override;
+        using Snapshottable<Triangulation<dim>>::isReadOnlySnapshot;
 
         /*@}*/
         /**
          * \name Simplices
          */
         /*@{*/
+
+        /**
+         * Sets this to be a (deep) copy of the given triangulation.
+         *
+         * @return a reference to this triangulation.
+         */
+        Triangulation& operator = (const Triangulation&) = default;
+
+        /**
+         * Moves the contents of the given triangulation into this
+         * triangulation.
+         *
+         * This is much faster than copy assignment, but is still linear
+         * time.  This is because every top-dimensional simplex must be
+         * adjusted to point back to this triangulation instead of \a src.
+         *
+         * All top-dimensional simplices and skeletal objects (faces,
+         * components and boundary components) that belong to \a src will be
+         * moved into this triangulation, and so any pointers or references to
+         * Simplex<dim>, Face<dim, subdim>, Component<dim> or
+         * BoundaryComponent<dim> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this triangulation which may in turn call arbitrary
+         * code via any registered packet listeners.  It deliberately does
+         * \e not fire change events on \a src, since it assumes that \a src is
+         * about to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the triangulation to move.
+         * @return a reference to this triangulation.
+         */
+        Triangulation& operator = (Triangulation&& src) = default;
 
         /**
          * Swaps the contents of this and the given triangulation.
@@ -242,16 +281,12 @@ class Triangulation :
          * In particular, any pointers or references to Simplex<dim> and/or
          * Face<dim, subdim> objects will remain valid.
          *
-         * The structure of the packet tree will \e not be swapped:
-         * both packets being swapped will remain with their original parents,
-         * and their original children will remain with them.
-         *
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
          * \note This swap function is \e not marked \c noexcept, since it
-         * fires packet change events which may in turn call arbitrary
-         * code via any registered packet listeners.
+         * fires change events on both triangulations which may in turn call
+         * arbitrary code via any registered packet listeners.
          *
          * @param other the triangulation whose contents should be
          * swapped with this.
@@ -270,13 +305,6 @@ class Triangulation :
 
         /*@}*/
 
-        static XMLPacketReader* xmlReader(Packet* parent,
-                XMLTreeResolver& resolver);
-
-    protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
-
     private:
         /**
          * Clears any calculated properties, including skeletal data,
@@ -284,7 +312,7 @@ class Triangulation :
          * internal function that changes the triangulation.
          *
          * In most cases this routine is followed immediately by firing
-         * a packet change event.
+         * a change event.
          */
         void clearAllProperties();
 
@@ -305,8 +333,13 @@ class Triangulation :
  * A single instance of this class works with faces of a single
  * fixed triangulation (which is passed to the class constructor).
  *
+ * An object of this class behaves like a reference: it is lightweight and can
+ * be copy-constructed cheaply, but it does not support assignments or swaps.
+ *
  * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
  * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim, int subdim>
 class DegreeLessThan {
@@ -365,8 +398,13 @@ class DegreeLessThan {
  * A single instance of this class works with faces of a single
  * fixed triangulation (which is passed to the class constructor).
  *
+ * An object of this class behaves like a reference: it is lightweight and can
+ * be copy-constructed cheaply, but it does not support assignments or swaps.
+ *
  * \pre \a dim is one of Regina's \ref stddim "standard dimensions".
  * \pre \a subdim is between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim, int subdim>
 class DegreeGreaterThan {
@@ -412,8 +450,6 @@ class DegreeGreaterThan {
         DegreeGreaterThan& operator = (const DegreeGreaterThan&) = delete;
 };
 
-/*@}*/
-
 // Inline functions for Triangulation
 
 template <int dim>
@@ -434,6 +470,7 @@ inline Triangulation<dim>::Triangulation(const Triangulation& copy,
 
 template <int dim>
 inline Triangulation<dim>::~Triangulation() {
+    Snapshottable<Triangulation<dim>>::takeSnapshot();
     clearAllProperties();
 }
 
@@ -447,135 +484,16 @@ void Triangulation<dim>::swap(Triangulation<dim>& other) {
     if (&other == this)
         return;
 
-    ChangeEventSpan span1(this);
-    ChangeEventSpan span2(&other);
+    typename Triangulation<dim>::ChangeEventSpan span1(*this);
+    typename Triangulation<dim>::ChangeEventSpan span2(other);
 
+    // Note: swapBaseData() calls Snapshottable::swap().
     this->swapBaseData(other);
 }
 
 template <int dim>
 inline void Triangulation<dim>::swapContents(Triangulation<dim>& other) {
     swap(other);
-}
-
-template <int dim>
-inline void Triangulation<dim>::writeTextShort(std::ostream& out) const {
-    if (simplices_.size() == 0)
-        out << "Empty " << dim << "-dimensional triangulation";
-    else
-        out << "Triangulation with " << simplices_.size() << ' ' << dim << '-'
-            << (simplices_.size() == 1 ? "simplex" : "simplices");
-}
-
-template <int dim>
-void Triangulation<dim>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << "\n\n";
-
-    out << "f-vector: ";
-    int i;
-    {
-        std::vector<size_t> f = detail::TriangulationBase<dim>::fVector();
-        for (i = 0; i < dim; ++i)
-            out << f[i] << ", ";
-        out << f[dim] << "\n\n";
-    }
-
-    Simplex<dim>* simp;
-    Simplex<dim>* adj;
-    size_t pos;
-    int j;
-    Perm<dim+1> gluing;
-
-    out << "  Simplex  |  glued to:";
-    for (i = dim; i >= 0; --i) {
-        out << "     (";
-        for (j = 0; j <= dim; ++j)
-            if (j != i)
-                out << regina::digit(j);
-        out << ')';
-    }
-    out << '\n';
-    out << "  ---------+-----------";
-    for (i = dim; i >= 0; --i)
-        for (j = 0; j < 7 + dim; ++j)
-            out << '-';
-    out << '\n';
-    for (pos=0; pos < simplices_.size(); pos++) {
-        simp = simplices_[pos];
-        out << "     " << std::setw(4) << pos << "  |           ";
-        for (i = dim; i >= 0; --i) {
-            adj = simp->adjacentSimplex(i);
-            if (! adj) {
-                for (j = 0; j < dim - 1; ++j)
-                    out << ' ';
-                out << "boundary";
-            } else {
-                gluing = simp->adjacentGluing(i);
-                out << std::setw(4) << adj->index() << " (";
-                for (j = 0; j <= dim; ++j) {
-                    if (j != i)
-                        out << regina::digit(gluing[j]);
-                }
-                out << ")";
-            }
-        }
-        out << '\n';
-    }
-    out << '\n';
-}
-
-template <int dim>
-inline bool Triangulation<dim>::dependsOnParent() const {
-    return false;
-}
-
-template <int dim>
-inline Packet* Triangulation<dim>::internalClonePacket(Packet* parent) const {
-    return new Triangulation<dim>(*this);
-}
-
-template <int dim>
-void Triangulation<dim>::writeXMLPacketData(std::ostream& out) const {
-    using regina::xml::xmlEncodeSpecialChars;
-    using regina::xml::xmlValueTag;
-
-    // Write the simplex gluings.
-    Simplex<dim>* adj;
-    int facet;
-
-    // We will send permutation codes directly to the output stream.
-    // This requires them to be numeric types (not character types).
-    static_assert(! (
-            std::is_same<typename Perm<dim + 1>::Code, char>::value ||
-            std::is_same<typename Perm<dim + 1>::Code, unsigned char>::value
-        ),
-        "The generic implementation of Triangulation<dim>::writeXMLPacketData "
-        "requires permutation codes to be numeric types.");
-
-    out << "  <simplices size=\"" << simplices_.size() << "\">\n";
-    for (auto s : simplices_) {
-        out << "    <simplex desc=\"" <<
-            xmlEncodeSpecialChars(s->description()) << "\"> ";
-        for (facet = 0; facet <= dim; ++facet) {
-            adj = s->adjacentSimplex(facet);
-            if (adj) {
-                out << adj->index() << ' '
-                    << s->adjacentGluing(facet).imagePack() << ' ';
-            } else
-                out << "-1 -1 ";
-        }
-        out << "</simplex>\n";
-    }
-    out << "  </simplices>\n";
-
-    detail::TriangulationBase<dim>::writeXMLBaseProperties(out);
-}
-
-template <int dim>
-inline XMLPacketReader* Triangulation<dim>::xmlReader(Packet*,
-        XMLTreeResolver& resolver) {
-    return new XMLTriangulationReader<dim>(resolver);
 }
 
 // Inline functions for DegreeLessThan / DegreeGreaterThan

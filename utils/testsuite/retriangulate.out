@@ -9,6 +9,7 @@ Usage: retriangulate <isosig>
   -3, --dim3                  Input is a 3-manifold signature (default)
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot signature
+  -a, --anysig                Output does not need to use classic signature(s)
 
 Help options:
   -?, --help                  Show this help message
@@ -26,6 +27,7 @@ Usage: retriangulate <isosig>
   -3, --dim3                  Input is a 3-manifold signature (default)
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot signature
+  -a, --anysig                Output does not need to use classic signature(s)
 
 Help options:
   -?, --help                  Show this help message
@@ -43,6 +45,7 @@ Usage: retriangulate <isosig>
   -3, --dim3                  Input is a 3-manifold signature (default)
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot signature
+  -a, --anysig                Output does not need to use classic signature(s)
 
 Help options:
   -?, --help                  Show this help message
@@ -60,6 +63,7 @@ Usage: retriangulate <isosig>
   -3, --dim3                  Input is a 3-manifold signature (default)
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot signature
+  -a, --anysig                Output does not need to use classic signature(s)
 
 Help options:
   -?, --help                  Show this help message
@@ -77,6 +81,7 @@ Usage: retriangulate <isosig>
   -3, --dim3                  Input is a 3-manifold signature (default)
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot signature
+  -a, --anysig                Output does not need to use classic signature(s)
 
 Help options:
   -?, --help                  Show this help message
@@ -94,6 +99,7 @@ Usage: retriangulate <isosig>
   -3, --dim3                  Input is a 3-manifold signature (default)
   -4, --dim4                  Input is a 4-manifold signature
   -k, --knot                  Input is a knot signature
+  -a, --anysig                Output does not need to use classic signature(s)
 
 Help options:
   -?, --help                  Show this help message
@@ -138,12 +144,11 @@ Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================
-TEST: retriangulate hLLMAkacdefeggjkaknkxn
+TEST: retriangulate gLLMQacdefefjkaknrr
 --------------------
-hLLMAkacdefeggjkaknkxn
-hLLAAkcdecefggqsmjqsqw
-hLALMkbcbeffgghxwnddjn
-Found 3 triangulation(s).
+gLLMQacdefefjkaknrr
+gLLAQaceefefjkuxxnn
+Found 2 triangulation(s).
 --------------------
 Exit code: 0
 ============================================================

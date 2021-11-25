@@ -35,7 +35,8 @@
 
 namespace regina {
 
-SatBlock::SatBlock(const SatBlock& cloneMe) : nAnnuli_(cloneMe.nAnnuli_),
+SatBlock::SatBlock(const SatBlock& cloneMe) :
+        nAnnuli_(cloneMe.nAnnuli_),
         annulus_(new SatAnnulus[cloneMe.nAnnuli_]),
         twistedBoundary_(cloneMe.twistedBoundary_),
         adjBlock_(new SatBlock*[cloneMe.nAnnuli_]),
@@ -51,24 +52,26 @@ SatBlock::SatBlock(const SatBlock& cloneMe) : nAnnuli_(cloneMe.nAnnuli_),
     }
 }
 
-void SatBlock::transform(const Triangulation<3>* originalTri,
-        const Isomorphism<3>* iso, Triangulation<3>* newTri) {
+void SatBlock::transform(const Triangulation<3>& originalTri,
+        const Isomorphism<3>& iso, const Triangulation<3>& newTri) {
     for (unsigned i = 0; i < nAnnuli_; i++)
         annulus_[i].transform(originalTri, iso, newTri);
 }
 
-void SatBlock::nextBoundaryAnnulus(unsigned thisAnnulus,
-        SatBlock*& nextBlock, unsigned& nextAnnulus, bool& refVert,
-        bool& refHoriz, bool followPrev) {
+std::tuple<const SatBlock*, unsigned, bool, bool>
+        SatBlock::nextBoundaryAnnulus(unsigned thisAnnulus, bool followPrev)
+        const {
     // Don't worry about testing the precondition (this annulus has no
     // adjacency) -- things won't break even if it's false.
 
-    nextBlock = this;
+    const SatBlock* nextBlock = this;
+    unsigned nextAnnulus;
     if (followPrev)
         nextAnnulus = (thisAnnulus == 0 ? nAnnuli_ - 1 : thisAnnulus - 1);
     else
         nextAnnulus = (thisAnnulus + 1 == nAnnuli_ ? 0 : thisAnnulus + 1);
-    refVert = refHoriz = false;
+    bool refVert = false;
+    bool refHoriz = false;
 
     unsigned tmp;
     while (nextBlock->hasAdjacentBlock(nextAnnulus)) {
@@ -91,6 +94,8 @@ void SatBlock::nextBoundaryAnnulus(unsigned thisAnnulus,
                 nextAnnulus - 1);
         }
     }
+
+    return { nextBlock, nextAnnulus, refVert, refHoriz };
 }
 
 std::string SatBlock::abbr(bool tex) const {
@@ -99,7 +104,7 @@ std::string SatBlock::abbr(bool tex) const {
     return s.str();
 }
 
-bool SatBlock::isBad(Tetrahedron<3>* t, const TetList& list) {
+bool SatBlock::isBad(const Tetrahedron<3>* t, const TetList& list) {
     if (list.find(t) != list.end())
         return true;
     return false;

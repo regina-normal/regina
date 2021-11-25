@@ -6,10 +6,16 @@
 <!ENTITY data-allowstrict SYSTEM "data-allowstrict.docbook">
 <!ENTITY data-allowtaut SYSTEM "data-allowtaut.docbook">
 <!ENTITY data-angleparams SYSTEM "data-angleparams.docbook">
+<!ENTITY data-angles SYSTEM "data-angles.docbook">
+<!ENTITY data-anon SYSTEM "data-anon.docbook">
+<!ENTITY data-anonref SYSTEM "data-anonref.docbook">
+<!ENTITY data-attachment SYSTEM "data-attachment.docbook">
+<!ENTITY data-code SYSTEM "data-code.docbook">
 <!ENTITY data-compact-filter SYSTEM "data-compact-filter.docbook">
 <!ENTITY data-compact-surface SYSTEM "data-compact-surface.docbook">
 <!ENTITY data-components SYSTEM "data-components.docbook">
 <!ENTITY data-compressingdisc SYSTEM "data-compressingdisc.docbook">
+<!ENTITY data-container SYSTEM "data-container.docbook">
 <!ENTITY data-connected SYSTEM "data-connected.docbook">
 <!ENTITY data-connections SYSTEM "data-connections.docbook">
 <!ENTITY data-crossings SYSTEM "data-crossings.docbook">
@@ -18,6 +24,9 @@
 <!ENTITY data-filter SYSTEM "data-filter.docbook">
 <!ENTITY data-filter-combination SYSTEM "data-filter-combination.docbook">
 <!ENTITY data-filter-properties SYSTEM "data-filter-properties.docbook">
+<!ENTITY data-filtercomb SYSTEM "data-filtercomb.docbook">
+<!ENTITY data-filterprop SYSTEM "data-filterprop.docbook">
+<!ENTITY data-filtertrivial SYSTEM "data-filtertrivial.docbook">
 <!ENTITY data-flags SYSTEM "data-flags.docbook">
 <!ENTITY data-fundgroup SYSTEM "data-fundgroup.docbook">
 <!ENTITY data-group SYSTEM "data-group.docbook">
@@ -27,8 +36,10 @@
 <!ENTITY data-H2 SYSTEM "data-H2.docbook">
 <!ENTITY data-haken SYSTEM "data-haken.docbook">
 <!ENTITY data-hypersurface SYSTEM "data-hypersurface.docbook">
+<!ENTITY data-hypersurfaces SYSTEM "data-hypersurfaces.docbook">
 <!ENTITY data-irreducible SYSTEM "data-irreducible.docbook">
 <!ENTITY data-line SYSTEM "data-line.docbook">
+<!ENTITY data-link SYSTEM "data-link.docbook">
 <!ENTITY data-op SYSTEM "data-op.docbook">
 <!ENTITY data-orbl-filter SYSTEM "data-orbl-filter.docbook">
 <!ENTITY data-orbl-surface SYSTEM "data-orbl-surface.docbook">
@@ -53,23 +64,29 @@
 <!ENTITY data-pdf SYSTEM "data-pdf.docbook">
 <!ENTITY data-realbdry-filter SYSTEM "data-realbdry-filter.docbook">
 <!ENTITY data-realbdry-surface SYSTEM "data-realbdry-surface.docbook">
+<!ENTITY data-regina SYSTEM "data-regina.docbook">
 <!ENTITY data-reginadata SYSTEM "data-reginadata.docbook">
 <!ENTITY data-reln SYSTEM "data-reln.docbook">
+<!ENTITY data-script SYSTEM "data-script.docbook">
 <!ENTITY data-simplex SYSTEM "data-simplex.docbook">
 <!ENTITY data-simplices SYSTEM "data-simplices.docbook">
 <!ENTITY data-snappea SYSTEM "data-snappea.docbook">
+<!ENTITY data-snappeadata SYSTEM "data-snappeadata.docbook">
 <!ENTITY data-solidtorus SYSTEM "data-solidtorus.docbook">
 <!ENTITY data-spanstrict SYSTEM "data-spanstrict.docbook">
 <!ENTITY data-spantaut SYSTEM "data-spantaut.docbook">
 <!ENTITY data-splitsfce SYSTEM "data-splitsfce.docbook">
 <!ENTITY data-struct SYSTEM "data-struct.docbook">
 <!ENTITY data-surface SYSTEM "data-surface.docbook">
+<!ENTITY data-surfaces SYSTEM "data-surfaces.docbook">
 <!ENTITY data-tag SYSTEM "data-tag.docbook">
 <!ENTITY data-tet SYSTEM "data-tet.docbook">
 <!ENTITY data-tetrahedra SYSTEM "data-tetrahedra.docbook">
 <!ENTITY data-text SYSTEM "data-text.docbook">
+<!ENTITY data-textdata SYSTEM "data-textdata.docbook">
 <!ENTITY data-threeball SYSTEM "data-threeball.docbook">
 <!ENTITY data-threesphere SYSTEM "data-threesphere.docbook">
+<!ENTITY data-tri SYSTEM "data-tri.docbook">
 <!ENTITY data-triangles SYSTEM "data-triangles.docbook">
 <!ENTITY data-triangle SYSTEM "data-triangle.docbook">
 <!ENTITY data-turaevviro SYSTEM "data-turaevviro.docbook">
@@ -86,10 +103,18 @@
  '<link linkend="data-allowtaut"><sgmltag>allowtaut</sgmltag></link>'>
 <!ENTITY xml-angleparams
  '<link linkend="data-angleparams"><sgmltag>angleparams</sgmltag></link>'>
+<!ENTITY xml-angles
+ '<link linkend="data-angles"><sgmltag>angles</sgmltag></link>'>
+<!ENTITY xml-anon
+ '<link linkend="data-anon"><sgmltag>anon</sgmltag></link>'>
+<!ENTITY xml-anonref
+ '<link linkend="data-anonref"><sgmltag>anonref</sgmltag></link>'>
+<!ENTITY xml-code
+ '<link linkend="data-code"><sgmltag>code</sgmltag></link>'>
 <!ENTITY xml-compact-filter
  '<link linkend="data-compact-filter"><sgmltag>compact</sgmltag> (filter)</link>'>
 <!ENTITY xml-compact-surface
- '<link linkend="data-compact-surface"><sgmltag>compact</sgmltag> (surface)</link>'>
+ '<link linkend="data-compact-surface"><sgmltag>compact</sgmltag></link>'>
 <!ENTITY xml-components
  '<link linkend="data-components"><sgmltag>components</sgmltag></link>'>
 <!ENTITY xml-compressingdisc
@@ -98,18 +123,26 @@
  '<link linkend="data-connected"><sgmltag>connected</sgmltag></link>'>
 <!ENTITY xml-connections
  '<link linkend="data-connections"><sgmltag>connections</sgmltag></link>'>
+<!ENTITY xml-container
+ '<link linkend="data-container"><sgmltag>container</sgmltag></link>'>
 <!ENTITY xml-crossings
  '<link linkend="data-crossings"><sgmltag>crossings</sgmltag></link>'>
 <!ENTITY xml-euler-filter
  '<link linkend="data-euler-filter"><sgmltag>euler</sgmltag> (filter)</link>'>
 <!ENTITY xml-euler-surface
- '<link linkend="data-euler-surface"><sgmltag>euler</sgmltag> (surface)</link>'>
+ '<link linkend="data-euler-surface"><sgmltag>euler</sgmltag></link>'>
 <!ENTITY xml-filter
  '<link linkend="data-filter"><sgmltag>filter</sgmltag></link>'>
 <!ENTITY xml-filter-combination
  '<link linkend="data-filter-combination"><sgmltag>filter</sgmltag> (combination)</link>'>
 <!ENTITY xml-filter-properties
  '<link linkend="data-filter-properties"><sgmltag>filter</sgmltag> (properties)</link>'>
+<!ENTITY xml-filtercomb
+ '<link linkend="data-filtercomb"><sgmltag>filtercomb</sgmltag></link>'>
+<!ENTITY xml-filterprop
+ '<link linkend="data-filterprop"><sgmltag>filterprop</sgmltag></link>'>
+<!ENTITY xml-filtertrivial
+ '<link linkend="data-filtertrivial"><sgmltag>filtertrivial</sgmltag></link>'>
 <!ENTITY xml-flags
  '<link linkend="data-flags"><sgmltag>flags</sgmltag></link>'>
 <!ENTITY xml-fundgroup
@@ -128,16 +161,20 @@
  '<link linkend="data-haken"><sgmltag>haken</sgmltag></link>'>
 <!ENTITY xml-hypersurface
  '<link linkend="data-hypersurface"><sgmltag>hypersurface</sgmltag></link>'>
+<!ENTITY xml-hypersurfaces
+ '<link linkend="data-hypersurfaces"><sgmltag>hypersurfaces</sgmltag></link>'>
 <!ENTITY xml-irreducible
  '<link linkend="data-irreducible"><sgmltag>irreducible</sgmltag></link>'>
 <!ENTITY xml-line
  '<link linkend="data-line"><sgmltag>line</sgmltag></link>'>
+<!ENTITY xml-link
+ '<link linkend="data-link"><sgmltag>link</sgmltag></link>'>
 <!ENTITY xml-op
  '<link linkend="data-op"><sgmltag>op</sgmltag></link>'>
 <!ENTITY xml-orbl-filter
  '<link linkend="data-orbl-filter"><sgmltag>orbl</sgmltag> (filter)</link>'>
 <!ENTITY xml-orbl-surface
- '<link linkend="data-orbl-surface"><sgmltag>orbl</sgmltag> (surface)</link>'>
+ '<link linkend="data-orbl-surface"><sgmltag>orbl</sgmltag></link>'>
 <!ENTITY xml-packet
  '<link linkend="data-packet"><sgmltag>packet</sgmltag></link>'>
 <!ENTITY xml-packet-anglestructurelist
@@ -176,20 +213,28 @@
  '<link linkend="data-pentachora"><sgmltag>pentachora</sgmltag></link>'>
 <!ENTITY xml-pdf
  '<link linkend="data-pdf"><sgmltag>pdf</sgmltag></link>'>
+<!ENTITY xml-attachment
+ '<link linkend="data-attachment"><sgmltag>attachment</sgmltag></link>'>
 <!ENTITY xml-realbdry-filter
  '<link linkend="data-realbdry-filter"><sgmltag>realbdry</sgmltag> (filter)</link>'>
 <!ENTITY xml-realbdry-surface
- '<link linkend="data-realbdry-surface"><sgmltag>realbdry</sgmltag> (surface)</link>'>
+ '<link linkend="data-realbdry-surface"><sgmltag>realbdry</sgmltag></link>'>
+<!ENTITY xml-regina
+ '<link linkend="data-regina"><sgmltag>regina</sgmltag></link>'>
 <!ENTITY xml-reginadata
  '<link linkend="data-reginadata"><sgmltag>reginadata</sgmltag></link>'>
 <!ENTITY xml-reln
  '<link linkend="data-reln"><sgmltag>reln</sgmltag></link>'>
+<!ENTITY xml-script
+ '<link linkend="data-script"><sgmltag>script</sgmltag></link>'>
 <!ENTITY xml-simplex
  '<link linkend="data-simplex"><sgmltag>simplex</sgmltag></link>'>
 <!ENTITY xml-simplices
  '<link linkend="data-simplices"><sgmltag>simplices</sgmltag></link>'>
 <!ENTITY xml-snappea
  '<link linkend="data-snappea"><sgmltag>snappea</sgmltag></link>'>
+<!ENTITY xml-snappeadata
+ '<link linkend="data-snappeadata"><sgmltag>snappeadata</sgmltag></link>'>
 <!ENTITY xml-solidtorus
  '<link linkend="data-solidtorus"><sgmltag>solidtorus</sgmltag></link>'>
 <!ENTITY xml-spanstrict
@@ -202,6 +247,8 @@
  '<link linkend="data-struct"><sgmltag>struct</sgmltag></link>'>
 <!ENTITY xml-surface
  '<link linkend="data-surface"><sgmltag>surface</sgmltag></link>'>
+<!ENTITY xml-surfaces
+ '<link linkend="data-surfaces"><sgmltag>surfaces</sgmltag></link>'>
 <!ENTITY xml-tet
  '<link linkend="data-tet"><sgmltag>tet</sgmltag></link>'>
 <!ENTITY xml-tag
@@ -210,10 +257,14 @@
  '<link linkend="data-tetrahedra"><sgmltag>tetrahedra</sgmltag></link>'>
 <!ENTITY xml-text
  '<link linkend="data-text"><sgmltag>text</sgmltag></link>'>
+<!ENTITY xml-textdata
+ '<link linkend="data-textdata"><sgmltag>textdata</sgmltag></link>'>
 <!ENTITY xml-threeball
  '<link linkend="data-threeball"><sgmltag>threeball</sgmltag></link>'>
 <!ENTITY xml-threesphere
  '<link linkend="data-threesphere"><sgmltag>threesphere</sgmltag></link>'>
+<!ENTITY xml-tri
+ '<link linkend="data-tri"><sgmltag>tri</sgmltag></link>'>
 <!ENTITY xml-triangles
  '<link linkend="data-triangles"><sgmltag>triangles</sgmltag></link>'>
 <!ENTITY xml-triangle

@@ -34,118 +34,95 @@
 #include "triangulation/dim3.h"
 #include <set>
 
-#define NO_EDGES std::make_pair(static_cast<Edge<3>*>(0), static_cast<Edge<3>*>(0))
-
 namespace regina {
 
-bool NormalSurfaceVector::isVertexLinking(const Triangulation<3>& triang) const {
-    unsigned long nTets = triang.size();
-    unsigned long tet;
-    int type;
-    for (tet = 0; tet < nTets; tet++) {
-        for (type = 0; type < 3; type++)
-            if (quads(tet, type, triang) != 0)
+bool NormalSurface::isVertexLinking() const {
+    if (! enc_.couldBeVertexLink())
+        return false;
+
+    size_t nTets = triangulation_->size();
+    for (size_t tet = 0; tet < nTets; tet++) {
+        for (int type = 0; type < 3; type++)
+            if (quads(tet, type) != 0)
                 return false;
     }
-    if (allowsAlmostNormal())
-        for (tet = 0; tet < nTets; tet++)
-            for (type = 0; type < 3; type++)
-                if (octs(tet, type, triang) != 0)
+    if (enc_.storesOctagons())
+        for (size_t tet = 0; tet < nTets; tet++)
+            for (int type = 0; type < 3; type++)
+                if (octs(tet, type) != 0)
                     return false;
     return true;
 }
 
-const Vertex<3>* NormalSurfaceVector::isVertexLink(const Triangulation<3>& triang)
-        const {
-    unsigned long nTets = triang.size();
-    unsigned long tet;
-    int type;
+const Vertex<3>* NormalSurface::isVertexLink() const {
+    if (! enc_.couldBeVertexLink())
+        return nullptr;
+
+    // Get a local reference to the triangulation so we do not have to
+    // repeatedly bounce through the snapshot.
+    const Triangulation<3>& tri(*triangulation_);
+    size_t nTets = tri.size();
 
     // Check that there are no quad/oct discs.
-    for (tet = 0; tet < nTets; tet++) {
-        for (type = 0; type < 3; type++)
-            if (quads(tet, type, triang) != 0)
-                return 0;
+    for (size_t tet = 0; tet < nTets; tet++) {
+        for (int type = 0; type < 3; type++)
+            if (quads(tet, type) != 0)
+                return nullptr;
     }
-    if (allowsAlmostNormal())
-        for (tet = 0; tet < nTets; tet++)
-            for (type = 0; type < 3; type++)
-                if (octs(tet, type, triang) != 0)
-                    return 0;
+    if (enc_.storesOctagons())
+        for (size_t tet = 0; tet < nTets; tet++)
+            for (int type = 0; type < 3; type++)
+                if (octs(tet, type) != 0)
+                    return nullptr;
 
-    // Now examine the triangle to see if we link only a single vertex.
-    std::set<Vertex<3>*> notAns;
-        /**< We will ignore notAns once ans != 0. */
-    Vertex<3>* ans = 0;
+    // It follows from the matching equations that what we have is a
+    // union of vertex links.  Make sure we are linking just the one vertex.
+
+    Vertex<3>* ans = nullptr;
     LargeInteger ansMult;
 
-    const Tetrahedron<3>* t;
-    Vertex<3>* v;
-    LargeInteger coord;
-
-    for (tet = 0; tet < nTets; tet++) {
-        t = triang.tetrahedron(tet);
-        for (type = 0; type < 4; type++) {
-            v = t->vertex(type);
-            coord = triangles(tet, type, triang);
-
-            if (coord == 0) {
-                // No discs in this coordinate.
-                // Do we have a candidate vertex yet?
-                if (! ans) {
-                    // Still haven't found a candidate.
-                    notAns.insert(v);
-                } else if (ans == v) {
-                    // This is our only candidate vertex.
-                    return 0;
-                }
-            }
+    for (size_t tet = 0; tet < nTets; tet++) {
+        const Tetrahedron<3>* t = tri.tetrahedron(tet);
+        for (int type = 0; type < 4; type++) {
+            LargeInteger coord = triangles(tet, type);
 
             if (coord != 0) {
-                // Some discs in this coordinate.
-                // Do we have a candidate vertex?
+                // Some triangle discs of this type.
                 if (! ans) {
                     // We've found our first and only possible candidate.
-                    if (notAns.count(v))
-                        return 0;
-                    ans = v;
+                    ans = t->vertex(type);
                     ansMult = coord;
-                } else if (ans == v) {
-                    // This vertex matches our current candidate.
-                    if (ansMult != coord)
-                        return 0;
-                } else {
-                    // This vertex does not match our current candidate.
-                    return 0;
+                } else if (ans != t->vertex(type)) {
+                    // We seem to be linking more than one vertex.
+                    return nullptr;
                 }
-            } else {
-                // No discs in this coordinate.
-                if (ans == v)
-                    return 0;
             }
         }
     }
 
+    // Either we are linking exactly one vertex (ans != null), or we
+    // have the empty vector (ans == null).
     return ans;
 }
 
-std::pair<const Edge<3>*, const Edge<3>*> NormalSurfaceVector::isThinEdgeLink(
-        const Triangulation<3>& triang) const {
-    unsigned long nTets = triang.size();
-    unsigned long tet;
-    int type;
+std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const {
+    // Get a local reference to the triangulation so we do not have to
+    // repeatedly bounce through the snapshot.
+    const Triangulation<3>& tri(*triangulation_);
+    size_t nTets = tri.size();
 
     // Check that there are no octagonal discs.
-    if (allowsAlmostNormal())
-        for (tet = 0; tet < nTets; tet++)
-            for (type = 0; type < 3; type++)
-                if (octs(tet, type, triang) != 0)
-                    return NO_EDGES;
+    if (enc_.storesOctagons())
+        for (size_t tet = 0; tet < nTets; tet++)
+            for (int type = 0; type < 3; type++)
+                if (octs(tet, type) != 0)
+                    return { nullptr, nullptr };
 
     // Run through the quadrilateral discs and work out if there are any
     // valid candidates.
     std::set<Edge<3>*> notAns;
-        /**< We will ignore notAns once ans != 0. */
+        /**< Edges that we know the answer *isn't*.
+             We will stop updating this set once foundQuads is true. */
     bool foundQuads = false;
     const Edge<3>* ans[2];
     LargeInteger ansMultDouble;
@@ -155,10 +132,10 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurfaceVector::isThinEdgeLink(
     LargeInteger coord;
     int i;
 
-    for (tet = 0; tet < nTets; tet++) {
-        t = triang.tetrahedron(tet);
-        for (type = 0; type < 3; type++) {
-            coord = quads(tet, type, triang);
+    for (size_t tet = 0; tet < nTets; tet++) {
+        t = tri.tetrahedron(tet);
+        for (int type = 0; type < 3; type++) {
+            coord = quads(tet, type);
             e[0] = t->edge(Edge<3>::edgeNumber[quadDefn[type][0]]
                 [quadDefn[type][1]]);
             e[1] = t->edge(Edge<3>::edgeNumber[quadDefn[type][2]]
@@ -179,7 +156,7 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurfaceVector::isThinEdgeLink(
                     // Rule out any candidates that should have discs here.
                     for (i = 0; i < 2; i++)
                         if (ans[i] == e[0] || ans[i] == e[1])
-                            ans[i] = 0;
+                            ans[i] = nullptr;
                 } else {
                     // Still haven't found any candidates.
                     notAns.insert(e[0]);
@@ -194,39 +171,39 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurfaceVector::isThinEdgeLink(
                         // Same edge on both sides of the quad.
                         // Note that there can only be one candidate now.
                         if (e[0] == ans[0])
-                            ans[1] = 0;
+                            ans[1] = nullptr;
                         else if (e[0] == ans[1]) {
                             ans[0] = ans[1];
-                            ans[1] = 0;
+                            ans[1] = nullptr;
                         } else
-                            return NO_EDGES;
+                            return { nullptr, nullptr };
 
                         // The only possible candidate is ans[0].
-                        if (ans[0] == 0 || ansMultDouble != coord)
-                            return NO_EDGES;
+                        if (ans[0] == nullptr || ansMultDouble != coord)
+                            return { nullptr, nullptr };
                     } else {
                         // Different edges on both sides of the quad.
                         // Check each candidate in turn.
                         for (i = 0; i < 2; i++)
                             if (ans[i] != e[0] && ans[i] != e[1])
-                                ans[i] = 0;
+                                ans[i] = nullptr;
                         if (ansMultDouble != coord * 2)
-                            return NO_EDGES;
+                            return { nullptr, nullptr };
                     }
                 } else {
                     // We've found our first and only possible candidates.
                     if (e[0] == e[1]) {
                         // Same edge on both sides of the quad.
-                        if (notAns.count(e[0]))
-                            return NO_EDGES;
+                        if (notAns.find(e[0]) != notAns.end())
+                            return { nullptr, nullptr };
                         ans[0] = e[0];
-                        ans[1] = 0;
+                        ans[1] = nullptr;
                         ansMultDouble = coord;
                     } else {
                         // Different edges on both sides of the quad.
                         for (i = 0; i < 2; i++) {
-                            if (notAns.count(e[i]))
-                                ans[i] = 0;
+                            if (notAns.find(e[i]) != notAns.end())
+                                ans[i] = nullptr;
                             else {
                                 ans[i] = e[i];
                                 ansMultDouble = coord;
@@ -242,33 +219,33 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurfaceVector::isThinEdgeLink(
                 // intersect the new quads.
                 for (i = 2; i < 6; i++) {
                     if (ans[0] == e[i])
-                        ans[0] = 0;
+                        ans[0] = nullptr;
                     if (ans[1] == e[i])
-                        ans[1] = 0;
+                        ans[1] = nullptr;
                 }
             }
 
             // Have we ruled out all the candidates we ever had?
             if (foundQuads && (! ans[0]) && (! ans[1]))
-                return NO_EDGES;
+                return { nullptr, nullptr };
         }
     }
 
     // So did we actually find anything?
     if (! foundQuads)
-        return NO_EDGES;
+        return { nullptr, nullptr };
     if ((! ans[0]) && (! ans[1]))
-        return NO_EDGES;
+        return { nullptr, nullptr };
 
     // Finally check the triangular discs.
     Vertex<3>* v;
     bool expectZero[2];
     int j;
-    for (tet = 0; tet < nTets; tet++) {
-        t = triang.tetrahedron(tet);
-        for (type = 0; type < 4; type++) {
+    for (size_t tet = 0; tet < nTets; tet++) {
+        t = tri.tetrahedron(tet);
+        for (int type = 0; type < 4; type++) {
             v = t->vertex(type);
-            coord = triangles(tet, type, triang);
+            coord = triangles(tet, type);
 
             // Should we actually see any discs?
             for (i = 0; i < 2; i++) {
@@ -293,24 +270,24 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurfaceVector::isThinEdgeLink(
                 // So did we get the right triangular coordinate?
                 if (expectZero[i]) {
                     if (coord != 0)
-                        ans[i] = 0;
+                        ans[i] = nullptr;
                 } else {
                     if (ansMultDouble != coord * 2)
-                        ans[i] = 0;
+                        ans[i] = nullptr;
                 }
             }
 
             // Have we ruled out all possibilities?
             if ((! ans[0]) && (! ans[1]))
-                return NO_EDGES;
+                return { nullptr, nullptr };
         }
     }
 
     // Return whatever candidates have survived.
     if (ans[0])
-        return std::make_pair(ans[0], ans[1]);
+        return { ans[0], ans[1] };
     else
-        return std::make_pair(ans[1], ans[0]);
+        return { ans[1], ans[0] };
 }
 
 } // namespace regina

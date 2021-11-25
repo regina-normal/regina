@@ -41,6 +41,7 @@
 #include "reginasupport.h"
 #include "reginaprefset.h"
 
+#include <thread>
 #include <QCheckBox>
 #include <QLabel>
 #include <QLayout>
@@ -73,40 +74,45 @@ QString AngleStructureCreator::parentWhatsThis() {
     return ui->tr("The triangulation that will contain your angle structures.");
 }
 
-regina::Packet* AngleStructureCreator::createPacket(
-        regina::Packet* parentPacket, QWidget* parentWidget) {
+std::shared_ptr<regina::Packet> AngleStructureCreator::createPacket(
+        std::shared_ptr<regina::Packet> parentPacket, QWidget* parentWidget) {
     // Note that parent may be either Triangulation<3> or SnapPeaTriangulation.
-    if (! dynamic_cast<regina::Triangulation<3>*>(parentPacket)) {
+    auto tri = std::dynamic_pointer_cast<regina::Triangulation<3>>(
+        parentPacket);
+    if (! tri) {
         ReginaSupport::sorry(ui,
             ui->tr("The selected parent is not a 3-manifold triangulation."),
             ui->tr("Angle structures must live within a 3-manifold "
             "triangulation.  Please select the corresponding triangulation "
             "as the location in the tree for your new angle structure list."));
-        return 0;
+        return nullptr;
     }
 
     // Remember our options for next time.
     ReginaPrefSet::global().anglesCreationTaut = tautOnly->isChecked();
 
+    std::shared_ptr<regina::Packet> ans;
     regina::ProgressTracker tracker;
+
     ProgressDialogNumeric dlg(&tracker,
         ui->tr("Enumerating vertex angle structures..."), parentWidget);
 
-    regina::AngleStructures* ans = regina::AngleStructures::enumerate(
-            *dynamic_cast<regina::Triangulation<3>*>(parentPacket),
-            tautOnly->isChecked(), &tracker);
+    std::thread([&, this]() {
+        ans = regina::makePacket<regina::AngleStructures>(std::in_place,
+            *tri, tautOnly->isChecked(), regina::AS_ALG_DEFAULT, &tracker);
+    }).detach();
 
     if (dlg.run()) {
         if (tautOnly->isChecked())
             ans->setLabel("Taut angle structures");
         else
             ans->setLabel("Vertex angle structures");
+        parentPacket->insertChildLast(ans);
         return ans;
     } else {
-        delete ans;
         ReginaSupport::info(parentWidget,
             ui->tr("The angle structure enumeration was cancelled."));
-        return 0;
+        return nullptr;
     }
 }
 

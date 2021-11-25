@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "manifold/snappeacensusmfd.h"
 #include "../helpers.h"
 
@@ -41,29 +42,20 @@ void addSnapPeaCensusManifold(pybind11::module_& m) {
             (m, "SnapPeaCensusManifold")
         .def(pybind11::init<char, unsigned long>())
         .def(pybind11::init<const SnapPeaCensusManifold&>())
+        .def("swap", &SnapPeaCensusManifold::swap)
         .def("section", &SnapPeaCensusManifold::section)
         .def("index", &SnapPeaCensusManifold::index)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("SEC_5", [](pybind11::object) {
-            return SnapPeaCensusManifold::SEC_5;
-        })
-        .def_property_readonly_static("SEC_6_OR", [](pybind11::object) {
-            return SnapPeaCensusManifold::SEC_6_OR;
-        })
-        .def_property_readonly_static("SEC_6_NOR", [](pybind11::object) {
-            return SnapPeaCensusManifold::SEC_6_NOR;
-        })
-        .def_property_readonly_static("SEC_7_OR", [](pybind11::object) {
-            return SnapPeaCensusManifold::SEC_7_OR;
-        })
-        .def_property_readonly_static("SEC_7_NOR", [](pybind11::object) {
-            return SnapPeaCensusManifold::SEC_7_NOR;
-        })
+        .def_readonly_static("SEC_5", &SnapPeaCensusManifold::SEC_5)
+        .def_readonly_static("SEC_6_OR", &SnapPeaCensusManifold::SEC_6_OR)
+        .def_readonly_static("SEC_6_NOR", &SnapPeaCensusManifold::SEC_6_NOR)
+        .def_readonly_static("SEC_7_OR", &SnapPeaCensusManifold::SEC_7_OR)
+        .def_readonly_static("SEC_7_NOR", &SnapPeaCensusManifold::SEC_7_NOR)
     ;
     // The SnappeaCensusManifold subclass defines its own equality tests, so we
     // should not just inherit the compare-by-pointer test from Manifold.
     regina::python::add_eq_operators(c);
+
+    m.def("swap",
+        (void(*)(SnapPeaCensusManifold&, SnapPeaCensusManifold&))(regina::swap));
 }
 

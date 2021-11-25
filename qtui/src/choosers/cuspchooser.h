@@ -53,7 +53,7 @@ namespace regina {
  * A filter function, used to determine whether a given cusp
  * should appear in the list.
  */
-typedef bool (*CuspFilterFunc)(const regina::Cusp*);
+using CuspFilterFunc = bool (*)(const regina::Cusp&);
 
 /**
  * A widget through which a single cusp of some SnapPea triangulation
@@ -80,7 +80,7 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
             /**< The triangulation whose cusps we are choosing from. */
         CuspFilterFunc filter_;
             /**< A filter to restrict the available selections, or
-                 0 if no filter is necessary. */
+                 \c null if no filter is necessary. */
         std::vector<int> options_;
             /**< A list of the available options to choose from. */
 
@@ -100,7 +100,7 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
          * The given filter may be 0, in which case every cusp
          * will be offered.
          */
-        CuspChooser(regina::SnapPeaTriangulation* tri,
+        CuspChooser(regina::PacketOf<regina::SnapPeaTriangulation>* tri,
                 CuspFilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
 
@@ -135,15 +135,15 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::Packet*) override;
-        void packetWasChanged(regina::Packet*) override;
-        void packetToBeDestroyed(regina::PacketShell) override;
+        void packetToBeChanged(regina::Packet&) override;
+        void packetWasChanged(regina::Packet&) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
 
         /**
          * Some ready-made cusp filters.
          */
-        static bool filterFilled(const regina::Cusp*);
-        static bool filterComplete(const regina::Cusp*);
+        static bool filterFilled(const regina::Cusp&);
+        static bool filterComplete(const regina::Cusp&);
 
     private:
         /**
@@ -177,14 +177,14 @@ class CuspDialog : public QDialog {
          * Constructor and destructor.
          */
         CuspDialog(QWidget* parent,
-            regina::SnapPeaTriangulation* tri,
+            regina::PacketOf<regina::SnapPeaTriangulation>* tri,
             CuspFilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static int choose(QWidget* parent,
-            regina::SnapPeaTriangulation* tri,
+            regina::PacketOf<regina::SnapPeaTriangulation>* tri,
             CuspFilterFunc filter,
             const QString& title,
             const QString& message,
@@ -198,16 +198,16 @@ inline bool CuspChooser::refresh() {
     return (count() > 0);
 }
 
-inline void CuspChooser::packetToBeChanged(regina::Packet*) {
+inline void CuspChooser::packetToBeChanged(regina::Packet&) {
     clear();
     options_.clear();
 }
 
-inline void CuspChooser::packetWasChanged(regina::Packet*) {
+inline void CuspChooser::packetWasChanged(regina::Packet&) {
     fill();
 }
 
-inline void CuspChooser::packetToBeDestroyed(regina::PacketShell) {
+inline void CuspChooser::packetBeingDestroyed(regina::PacketShell) {
     clear();
     options_.clear();
 }

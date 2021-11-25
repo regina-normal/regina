@@ -53,11 +53,6 @@
 
 namespace regina {
 
-/**
- * \weakgroup triangulation
- * @{
- */
-
 template <int> class BoundaryComponent;
 
 template <int> class Component;
@@ -102,8 +97,6 @@ template <int> class Triangulation;
 template <> class Triangulation<2>;
 template <> class Triangulation<3>;
 template <> class Triangulation<4>;
-
-/*@}*/
 
 } // namespace regina
 

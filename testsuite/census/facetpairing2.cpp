@@ -39,15 +39,6 @@
 using regina::FacetPairing;
 using regina::BoolSet;
 
-/**
- * Simply increment the given count when a face pairing is found.
- */
-void countEdgePairings(const FacetPairing<2>* pair,
-        const FacetPairing<2>::IsoList*, void* count) {
-    if (pair)
-        (*(unsigned*)count)++;
-}
-
 class FacetPairing2Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(FacetPairing2Test);
 
@@ -60,10 +51,10 @@ class FacetPairing2Test : public CppUnit::TestFixture {
             /**< Used to hold arbitrary totals. */
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void rawCounts() {
@@ -75,8 +66,11 @@ class FacetPairing2Test : public CppUnit::TestFixture {
             unsigned nTri;
             for (nTri = 0; nTri <= 12; nTri++) {
                 count = 0;
-                FacetPairing<2>::findAllPairings(nTri, false,
-                    0, countEdgePairings, &count);
+                FacetPairing<2>::findAllPairings(nTri, false, 0,
+                        [this](const FacetPairing<2>&,
+                               FacetPairing<2>::IsoList) {
+                    ++count;
+                });
 
                 std::ostringstream msg;
                 msg << "Edge pairing count for " << nTri

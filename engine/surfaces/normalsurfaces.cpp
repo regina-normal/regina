@@ -30,19 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/coordregistry.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
-
-namespace {
-    // Since legacy coordinate systems don't appear in the coordinate system
-    // registry, give them a consistent name here.
-    constexpr const char* AN_LEGACY_NAME =
-        "Legacy standard almost normal (pruned tri-quad-oct)";
-}
 
 // This should really be inline.  However, when inline, it seems to
 // trigger an instantiation of the generic Triangulation<3> as opposed
@@ -50,9 +42,23 @@ namespace {
 // specialisation is not enough to stop it.  I wish I understood how to
 // avoid this, but in the meantime, here we are.
 MatrixInt NormalSurfaces::recreateMatchingEquations() const {
-    // Although makeMatchingEquations() returns a std::optional, we are
-    // guaranteed in our scenario here that this will always contain a value.
-    return *makeMatchingEquations(triangulation(), coords_);
+    // Although makeMatchingEquations() could throw an exception, we are
+    // guaranteed in our scenario here that this will always succeed.
+    return makeMatchingEquations(triangulation(), coords_);
+}
+
+void NormalSurfaces::swap(NormalSurfaces& other) {
+    if (std::addressof(other) == this)
+        return;
+
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
+
+    surfaces_.swap(other.surfaces_);
+    triangulation_.swap(other.triangulation_);
+    std::swap(coords_, other.coords_);
+    std::swap(which_, other.which_);
+    std::swap(algorithm_, other.algorithm_);
 }
 
 void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
@@ -61,47 +67,6 @@ void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
         s.writeTextShort(out);
         out << '\n';
     }
-}
-
-std::optional<MatrixInt> makeMatchingEquations(
-        const Triangulation<3>& triangulation, NormalCoords coords) {
-    return forCoords(coords, [&](auto info) {
-        return decltype(info)::Class::makeMatchingEquations(triangulation);
-    }, std::nullopt);
-}
-
-EnumConstraints makeEmbeddedConstraints(
-        const Triangulation<3>& triangulation, NormalCoords coords) {
-    return forCoords(coords, [&](auto info) {
-        return decltype(info)::Class::makeEmbeddedConstraints(triangulation);
-    });
-}
-
-const Triangulation<3>& NormalSurfaces::triangulation() const {
-    return *dynamic_cast<Triangulation<3>*>(parent());
-}
-
-bool NormalSurfaces::allowsAlmostNormal() const {
-    if (coords_ == NS_AN_LEGACY)
-        return true;
-    else
-        return forCoords(coords_, [](auto info) {
-            return decltype(info)::almostNormal;
-        }, false);
-}
-
-bool NormalSurfaces::allowsSpun() const {
-    // Both the default and the NS_AN_LEGACY cases should return false.
-    return forCoords(coords_, [](auto info) {
-        return decltype(info)::spun;
-    }, false);
-}
-
-bool NormalSurfaces::allowsOriented() const {
-    // Both the default and the NS_AN_LEGACY cases should return false.
-    return forCoords(coords_, [](auto info) {
-        return decltype(info)::oriented;
-    }, false);
 }
 
 void NormalSurfaces::writeTextShort(std::ostream& out) const {
@@ -129,14 +94,7 @@ void NormalSurfaces::writeTextShort(std::ostream& out) const {
     if (surfaces_.size() != 1)
         out << 's';
 
-    out << " (";
-    if (coords_ == NS_AN_LEGACY)
-        out << AN_LEGACY_NAME;
-    else
-        out << forCoords(coords_, [](auto info) {
-            return decltype(info)::name;
-        }, "Unknown");
-    out << ')';
+    out << " (" << NormalInfo::name(coords_) << ')';
 }
 
 void NormalSurfaces::writeTextLong(std::ostream& out) const {
@@ -160,46 +118,135 @@ void NormalSurfaces::writeTextLong(std::ostream& out) const {
 
     out << " surfaces\n";
 
-    out << "Coordinates: ";
-    if (coords_ == NS_AN_LEGACY)
-        out << AN_LEGACY_NAME << '\n';
-    else
-        out << forCoords(coords_, [](auto info) {
-                    return decltype(info)::name;
-                }, "Unknown")
-            << '\n';
+    out << "Coordinates: " << NormalInfo::name(coords_) << '\n';
 
-    writeAllSurfaces(out);
-}
-
-void NormalSurfaces::writeXMLPacketData(std::ostream& out) const {
-    // Write the surface list parameters.
-    out << "  <params "
-        << "type=\"" << which_.intValue() << "\" "
-        << "algorithm=\"" << algorithm_.intValue() << "\" "
-        << "flavourid=\"" << coords_ << "\"\n";
-    out << "\tflavour=\"";
-    if (coords_ == NS_AN_LEGACY)
-        out << regina::xml::xmlEncodeSpecialChars(AN_LEGACY_NAME);
-    else
-        out << regina::xml::xmlEncodeSpecialChars(
-            forCoords(coords_, [](auto info) {
-                return decltype(info)::name;
-            }, "Unknown"));
-    out << "\"/>\n";
-
-    // Write the individual surfaces.
-    for (const NormalSurface& s : surfaces_)
-        s.writeXMLData(out);
-}
-
-Packet* NormalSurfaces::internalClonePacket(Packet* parent) const {
-    NormalSurfaces* ans = new NormalSurfaces(
-        coords_, which_, algorithm_);
+    out << "Number of surfaces is " << size() << '\n';
     for (const NormalSurface& s : surfaces_) {
-        ans->surfaces_.push_back(NormalSurface(s,
-            *static_cast<Triangulation<3>*>(parent)));
+        s.writeTextShort(out);
+        out << '\n';
     }
+}
+
+std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::quadToStandard()
+        const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    try {
+        auto ans = makePacket<NormalSurfaces>(
+            std::in_place, *this, NS_CONV_REDUCED_TO_STD);
+        if (parent)
+            parent->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
+}
+
+std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::quadOctToStandardAN()
+        const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    try {
+        auto ans = makePacket<NormalSurfaces>(
+            std::in_place, *this, NS_CONV_REDUCED_TO_STD);
+        if (parent)
+            parent->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
+}
+
+std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::standardToQuad()
+        const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    try {
+        auto ans = makePacket<NormalSurfaces>(
+            std::in_place, *this, NS_CONV_STD_TO_REDUCED);
+        if (parent)
+            parent->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
+}
+
+std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::standardANToQuadOct()
+        const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    try {
+        auto ans = makePacket<NormalSurfaces>(
+            std::in_place, *this, NS_CONV_STD_TO_REDUCED);
+        if (parent)
+            parent->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
+}
+
+std::shared_ptr<PacketOf<NormalSurfaces>>
+        NormalSurfaces::filterForLocallyCompatiblePairs() const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    try {
+        auto ans = makePacket<NormalSurfaces>(std::in_place, *this,
+            NS_FILTER_COMPATIBLE);
+        if (parent)
+            parent->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
+}
+
+std::shared_ptr<PacketOf<NormalSurfaces>>
+        NormalSurfaces::filterForDisjointPairs() const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    try {
+        auto ans = makePacket<NormalSurfaces>(std::in_place, *this,
+            NS_FILTER_DISJOINT);
+        if (parent)
+            parent->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
+}
+
+std::shared_ptr<PacketOf<NormalSurfaces>>
+        NormalSurfaces::filterForPotentiallyIncompressible() const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    try {
+        auto ans = makePacket<NormalSurfaces>(std::in_place, *this,
+            NS_FILTER_INCOMPRESSIBLE);
+        if (parent)
+            parent->insertChildLast(ans);
+        return ans;
+    } catch (const FailedPrecondition&) {
+        return nullptr;
+    }
+}
+
+std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::filter(
+        const SurfaceFilter& filter) const {
+    auto p = packet();
+    auto parent = (p ? p->parent() : nullptr);
+
+    auto ans = makePacket<NormalSurfaces>(std::in_place, *this, filter);
+    if (parent)
+        parent->insertChildLast(ans);
     return ans;
 }
 

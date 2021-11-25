@@ -30,11 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
+#include <cctype>
 #include <cerrno>
 #include <cstdlib>
+#include <cstring>
 #include <mutex>
 #include "maths/integer.h"
 #include "maths/numbertheory.h"
+#include "utilities/exception.h"
 
 // We instantiate both variants of the IntegerBase template at the bottom
 // of this file.
@@ -95,58 +98,33 @@ namespace {
 // I could be wrong about this.
 
 template <bool supportInfinity>
-IntegerBase<supportInfinity>::IntegerBase(
-        const char* value, int base, bool* valid) :
+IntegerBase<supportInfinity>::IntegerBase(const char* value, int base) :
         large_(nullptr) {
     char* endptr;
     errno = 0;
     small_ = strtol(value, &endptr, base);
     if (errno || *endptr) {
-        // Something went wrong.  Try again with large integers.
+        // Something went wrong.  Try again with large integers and/or infinity.
         // Note that in the case of overflow, we may have errno != 0 but
         // *endptr == 0.
         bool maybeTrailingWhitespace = (*endptr && ! errno);
+        if constexpr (supportInfinity) {
+            // Skip initial whitespace now and look for infinity.
+            while (*value && isspace(*value))
+                ++value;
+            if (strncmp(value, "inf", 3) == 0) {
+                makeInfinite();
+                return;
+            }
+        }
         large_ = new __mpz_struct[1];
-        if (valid)
-            *valid = (mpz_init_set_str(large_, value, base) == 0);
-        else
-            mpz_init_set_str(large_, value, base);
-        // If the error was just trailing whitespace, we might still fit
-        // into a native long.
+        if (mpz_init_set_str(large_, value, base) != 0)
+            throw InvalidArgument("Could not parse the given string "
+                "as an arbitrary-precision integer");
+        // If the strtol() error was just trailing whitespace, we might still
+        // fit into a native long.
         if (maybeTrailingWhitespace)
             tryReduce();
-    } else {
-        // All good.
-        if (valid)
-            *valid = true;
-    }
-}
-
-template <bool supportInfinity>
-IntegerBase<supportInfinity>::IntegerBase(
-        const std::string& value, int base, bool* valid) :
-        large_(nullptr) {
-    char* endptr;
-    errno = 0;
-    small_ = strtol(value.c_str(), &endptr, base);
-    if (errno || *endptr) {
-        // Something went wrong.  Try again with large integers.
-        // Note that in the case of overflow, we may have errno != 0 but
-        // *endptr == 0.
-        bool maybeTrailingWhitespace = (*endptr && ! errno);
-        large_ = new __mpz_struct[1];
-        if (valid)
-            *valid = (mpz_init_set_str(large_, value.c_str(), base) == 0);
-        else
-            mpz_init_set_str(large_, value.c_str(), base);
-        // If the error was just trailing whitespace, we might still fit
-        // into a native long.
-        if (maybeTrailingWhitespace)
-            tryReduce();
-    } else {
-        // All good.
-        if (valid)
-            *valid = true;
     }
 }
 
@@ -183,18 +161,31 @@ IntegerBase<supportInfinity>& IntegerBase<supportInfinity>::operator =(
     errno = 0;
     small_ = strtol(value, &endptr, 10 /* base */);
     if (errno || *endptr) {
-        // Something went wrong.  Try again with large integers.
+        // Something went wrong.  Try again with large integers and/or infinity.
         // Note that in the case of overflow, we may have errno != 0 but
         // *endptr == 0.
         bool maybeTrailingWhitespace = (*endptr && ! errno);
-        if (large_)
-            mpz_set_str(large_, value, 10 /* base */);
-        else {
-            large_ = new __mpz_struct[1];
-            mpz_init_set_str(large_, value, 10 /* base */);
+        if constexpr (supportInfinity) {
+            // Skip initial whitespace now and look for infinity.
+            while (*value && isspace(*value))
+                ++value;
+            if (strncmp(value, "inf", 3) == 0) {
+                makeInfinite();
+                return *this;
+            }
         }
-        // If the error was just trailing whitespace, we might still fit
-        // into a native long.
+        if (large_) {
+            if (mpz_set_str(large_, value, 10 /* base */) != 0)
+                throw InvalidArgument("Could not parse the given string "
+                    "as an arbitrary-precision integer");
+        } else {
+            large_ = new __mpz_struct[1];
+            if (mpz_init_set_str(large_, value, 10 /* base */) != 0)
+                throw InvalidArgument("Could not parse the given string "
+                    "as an arbitrary-precision integer");
+        }
+        // If the strtol() error was just trailing whitespace, we might still
+        // fit into a native long.
         if (maybeTrailingWhitespace)
             tryReduce();
     } else if (large_) {
@@ -301,7 +292,7 @@ IntegerBase<supportInfinity>& IntegerBase<supportInfinity>::operator *=(
         // a native integer type that is twice the size of a long.
         // Currently this is enforced through a static_assert at the
         // top of this file.
-        typedef typename IntOfSize<2 * sizeof(long)>::type Wide;
+        using Wide = typename IntOfSize<2 * sizeof(long)>::type;
         Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other.small_);
         if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
@@ -321,7 +312,7 @@ IntegerBase<supportInfinity>& IntegerBase<supportInfinity>::operator *=(long oth
     if (large_)
         mpz_mul_si(large_, large_, other);
     else {
-        typedef IntOfSize<2 * sizeof(long)>::type Wide;
+        using Wide = IntOfSize<2 * sizeof(long)>::type;
         Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other);
         if (ans > LONG_MAX || ans < LONG_MIN) {
             // Overflow.
@@ -823,16 +814,13 @@ IntegerBase<supportInfinity> IntegerBase<supportInfinity>::gcdWithCoeffs(
 }
 
 template <bool supportInfinity>
-IntegerBase<supportInfinity> IntegerBase<supportInfinity>::divisionAlg(
-        const IntegerBase<supportInfinity>& divisor,
-        IntegerBase<supportInfinity>& remainder) const {
-    if (divisor.isZero()) {
-        remainder = *this;
-        return zero;
-    }
+std::pair<IntegerBase<supportInfinity>, IntegerBase<supportInfinity>>
+        IntegerBase<supportInfinity>::divisionAlg(
+        const IntegerBase<supportInfinity>& divisor) const {
+    if (divisor.isZero())
+        return { 0, *this };
 
     // Preconditions state that nothing is infinite, and we've dealt with d=0.
-    IntegerBase<supportInfinity> quotient;
 
     // Throughout the following code:
     // - GMP mpz_fdiv_qr() could give a negative remainder, but that this
@@ -841,32 +829,34 @@ IntegerBase<supportInfinity> IntegerBase<supportInfinity>::divisionAlg(
     //   regardless of the sign of the divisor (I think the standard
     //   indicates that the decision is based on the sign of *this?).
 
+    std::pair<IntegerBase, IntegerBase> ans;
+
     if (large_) {
         // We will have to use GMP routines.
-        quotient.makeLarge();
-        remainder.makeLarge();
+        ans.first.makeLarge();
+        ans.second.makeLarge();
 
         if (divisor.large_) {
             // Just pass everything straight through to GMP.
-            mpz_fdiv_qr(quotient.large_, remainder.large_, large_,
+            mpz_fdiv_qr(ans.first.large_, ans.second.large_, large_,
                 divisor.large_);
-            if (remainder < 0) {
-                remainder -= divisor;
-                ++quotient;
+            if (ans.second < 0) {
+                ans.second -= divisor;
+                ++ans.first;
             }
         } else {
             // Put the divisor in GMP format for the GMP routines to use.
             mpz_t divisorGMP;
             mpz_init_set_si(divisorGMP, divisor.small_);
-            mpz_fdiv_qr(quotient.large_, remainder.large_, large_, divisorGMP);
+            mpz_fdiv_qr(ans.first.large_, ans.second.large_, large_, divisorGMP);
             mpz_clear(divisorGMP);
 
             // The remainder must fit into a long, since
             // 0 <= remainder < |divisor|.
-            remainder.forceReduce();
-            if (remainder.small_ < 0) {
-                remainder.small_ -= divisor.small_;
-                ++quotient;
+            ans.second.forceReduce();
+            if (ans.second.small_ < 0) {
+                ans.second.small_ -= divisor.small_;
+                ++ans.first;
             }
         }
     } else {
@@ -886,19 +876,19 @@ IntegerBase<supportInfinity> IntegerBase<supportInfinity>::divisionAlg(
             //
             // NOTE: Be careful not to take -small_ when small_ is negative!
             if (small_ >= 0 && (divisor > small_ || divisor < -small_)) {
-                quotient = 0;
-                remainder = small_;
+                // quotient is already initialised to 0
+                ans.second.small_ = small_;
             } else if (small_ < 0 && divisor < small_) {
-                quotient = 1;
-                remainder = small_;
-                remainder -= divisor;
+                ans.first.small_ = 1;
+                ans.second.small_ = small_;
+                ans.second -= divisor;
             } else if (small_ < 0 && -divisor < small_) {
-                quotient = -1;
-                remainder = small_;
-                remainder += divisor;
+                ans.first.small_ = -1;
+                ans.second.small_ = small_;
+                ans.second += divisor;
             } else if (small_ == LONG_MIN && -divisor == small_) {
-                quotient = -1;
-                remainder = 0;
+                ans.first.small_ = -1;
+                // remainder is already initialised to 0
             } else {
                 // Since we know we can reduce divisor to a native integer,
                 // be kind: cast away the const and reduce it.
@@ -916,26 +906,27 @@ IntegerBase<supportInfinity> IntegerBase<supportInfinity>::divisionAlg(
             // Only happens if this = LONG_MIN, divisor = -1.
             // 2) |quotient| < |LONG_MIN| --> quotient fits into a long also.
             if (small_ == LONG_MIN && divisor.small_ == -1) {
-                quotient = LONG_MIN;
-                quotient.negate();
-                remainder = 0;
+                ans.first = LONG_MIN;
+                ans.first.negate();
+                // remainder is already initialised to 0
             } else {
-                quotient = small_ / divisor.small_;
-                remainder = small_ - (quotient.small_ * divisor.small_);
-                if (remainder.small_ < 0) {
+                ans.first.small_ = small_ / divisor.small_;
+                ans.second.small_ =
+                    small_ - (ans.first.small_ * divisor.small_);
+                if (ans.second.small_ < 0) {
                     if (divisor.small_ > 0) {
-                        remainder.small_ += divisor.small_;
-                        --quotient;
+                        ans.second.small_ += divisor.small_;
+                        --ans.first;
                     } else {
-                        remainder.small_ -= divisor.small_;
-                        ++quotient;
+                        ans.second.small_ -= divisor.small_;
+                        ++ans.first;
                     }
                 }
             }
         }
     }
 
-    return quotient;
+    return ans;
 }
 
 template <bool supportInfinity>

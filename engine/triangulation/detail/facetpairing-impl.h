@@ -49,17 +49,10 @@
 #include <vector>
 #include "triangulation/generic/facetpairing.h"
 #include "maths/perm.h"
+#include "utilities/exception.h"
 #include "utilities/stringutils.h"
 
 namespace regina::detail {
-
-template <int dim>
-FacetPairingBase<dim>::FacetPairingBase(
-        const FacetPairingBase<dim>& cloneMe) :
-        size_(cloneMe.size_),
-        pairs_(new FacetSpec<dim>[cloneMe.size_ * (dim + 1)]) {
-    std::copy(cloneMe.pairs_, cloneMe.pairs_ + (size_ * (dim + 1)), pairs_);
-}
 
 template <int dim>
 FacetPairingBase<dim>::FacetPairingBase(const Triangulation<dim>& tri) :
@@ -80,6 +73,30 @@ FacetPairingBase<dim>::FacetPairingBase(const Triangulation<dim>& tri) :
 
             ++index;
         }
+    }
+}
+
+template <int dim>
+FacetPairingBase<dim>::FacetPairingBase(std::istream& in) :
+        size_(0), pairs_(nullptr) {
+    // Skip initial whitespace to find the facet pairing.
+    std::string line;
+    while (true) {
+        std::getline(in, line);
+        if (in.eof()) {
+            throw InvalidInput("Unexpected end of input stream "
+                "while attempting to read a FacetPairing");
+        }
+        line = regina::stripWhitespace(line);
+        if (line.length() > 0)
+            break;
+    }
+
+    try {
+        *this = fromTextRep(line);
+    } catch (const InvalidArgument& exc) {
+        throw InvalidInput(
+            "Incorrect formatted FacetPairing text representation");
     }
 }
 
@@ -123,7 +140,7 @@ void FacetPairingBase<dim>::writeDotHeader(
 
     out << "graph " << graphName << " {" << std::endl;
     out << "edge [color=black];" << std::endl;
-    out << "node [shape=circle,style=filled,height=0.15,fixedsize=true,label=\"\",fontsize=9,fontcolor=\"#751010\"];" << std::endl;
+    out << R"(node [shape=circle,style=filled,height=0.15,fixedsize=true,label="",fontsize=9,fontcolor="#751010"];)" << std::endl;
 }
 
 template <int dim>
@@ -189,59 +206,49 @@ std::string FacetPairingBase<dim>::toTextRep() const {
 }
 
 template <int dim>
-FacetPairing<dim>* FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
-    std::vector<std::string> tokens;
-    unsigned nTokens = basicTokenise(back_inserter(tokens), rep);
+FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
+    std::vector<std::string> tokens = basicTokenise(rep);
 
-    if (nTokens == 0 || nTokens % (2 * (dim + 1)) != 0)
-        return 0;
+    if (tokens.empty() || tokens.size() % (2 * (dim + 1)) != 0)
+        throw InvalidArgument("fromTextRep(): invalid number of tokens");
 
-    long nSimp = nTokens / (2 * (dim + 1));
-    FacetPairing<dim>* ans = new FacetPairing<dim>(nSimp);
+    long nSimp = tokens.size() / (2 * (dim + 1));
+    FacetPairing<dim> ans(nSimp);
 
     // Read the raw values.
     // Check the range of each value while we're at it.
     long val;
     for (long i = 0; i < nSimp * (dim + 1); ++i) {
-        if (! valueOf(tokens[2 * i], val)) {
-            delete ans;
-            return 0;
-        }
-        if (val < 0 || val > nSimp) {
-            delete ans;
-            return 0;
-        }
-        ans->pairs_[i].simp = val;
+        if (! valueOf(tokens[2 * i], val))
+            throw InvalidArgument(
+                "fromTextRep(): contains non-integer simplex");
+        if (val < 0 || val > nSimp)
+            throw InvalidArgument("fromTextRep(): simplex out of range");
+        ans.pairs_[i].simp = val;
 
-        if (! valueOf(tokens[2 * i + 1], val)) {
-            delete ans;
-            return 0;
-        }
-        if (val < 0 || val >= (dim + 1)) {
-            delete ans;
-            return 0;
-        }
-        ans->pairs_[i].facet = val;
+        if (! valueOf(tokens[2 * i + 1], val))
+            throw InvalidArgument("fromTextRep(): contains non-integer facet");
+        if (val < 0 || val >= (dim + 1))
+            throw InvalidArgument("fromTextRep(): facet out of range");
+        ans.pairs_[i].facet = val;
     }
 
     // Run a sanity check.
     FacetSpec<dim> destFacet;
     bool broken = false;
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(nSimp, true); ++f) {
-        destFacet = ans->dest(f);
+        destFacet = ans.dest(f);
         if (destFacet.simp == nSimp && destFacet.facet != 0)
             broken = true;
-        else if (destFacet.simp < nSimp && ! (ans->dest(destFacet) == f))
+        else if (destFacet.simp < nSimp && ! (ans.dest(destFacet) == f))
             broken = true;
         else
             continue;
         break;
     }
 
-    if (broken) {
-        delete ans;
-        return 0;
-    }
+    if (broken)
+        throw InvalidArgument("fromTextRep(): mismatched facet pairings");
 
     // All is well.
     return ans;
@@ -281,21 +288,20 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
     // special-case the situation in which there are no facet gluings at all.
     if (isUnmatched(0, 0)) {
         // We must have just one simplex with no facet gluings at all.
-        Isomorphism<dim>* ans;
         for (int i = 0; i < Perm<dim+1>::nPerms; ++i) {
-            ans = new Isomorphism<dim>(1);
-            ans->simpImage(0) = 0;
-            ans->facetPerm(0) = Perm<dim+1>::orderedSn[i];
-            list.push_back(ans);
+            Isomorphism<dim> ans(1);
+            ans.simpImage(0) = 0;
+            ans.facetPerm(0) = Perm<dim+1>::orderedSn[i];
+            list.push_back(std::move(ans));
         }
         return true;
     }
 
     // Now we know that facet 0 of simplex 0 is glued to something.
 
-    FacetSpec<dim>* image = new FacetSpec<dim>[size_ * (dim + 1)];
+    auto* image = new FacetSpec<dim>[size_ * (dim + 1)];
         /**< The automorphism currently under construction. */
-    FacetSpec<dim>* preImage = new FacetSpec<dim>[size_ * (dim + 1)];
+    auto* preImage = new FacetSpec<dim>[size_ * (dim + 1)];
         /**< The inverse of this automorphism. */
 
     size_t i, j;
@@ -314,7 +320,6 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
     FacetSpec<dim> fImg, fPre;
     bool stepDown;
     int simp, facet;
-    int permImg[dim + 1];
     for (preImage[0] = firstFace ; ! preImage[0].isPastEnd(size_, true);
             ++preImage[0]) {
         // Note that we know firstFace is not unmatched.
@@ -330,8 +335,6 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
         // If firstFace doesn't glue to the same simplex but this
         // facet does, we're not in canonical form.
         if (firstFaceDest.simp != 0 && firstDestPre.simp == preImage[0].simp) {
-            for (auto iso : list)
-                delete iso;
             list.clear();
             delete[] image;
             delete[] preImage;
@@ -367,14 +370,15 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
 
             if (trying.isPastEnd(size_, true)) {
                 // We have a complete automorphism!
-                Isomorphism<dim>* ans = new Isomorphism<dim>(size_);
+                Isomorphism<dim> ans(size_);
                 for (i = 0; i < size_; i++) {
-                    ans->simpImage(i) = image[i * (dim + 1)].simp;
+                    ans.simpImage(i) = image[i * (dim + 1)].simp;
+                    std::array<int, dim+1> permImg;
                     for (j = 0; j <= dim; ++j)
                         permImg[j] = image[i * (dim + 1) + j].facet;
-                    ans->facetPerm(i) = Perm<dim+1>(permImg);
+                    ans.facetPerm(i) = Perm<dim+1>(permImg);
                 }
-                list.push_back(ans);
+                list.push_back(std::move(ans));
                 stepDown = true;
             } else {
                 // Move to the next candidate.
@@ -406,8 +410,6 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
                             continue;
                         if (isUnmatched(trying) && (! isUnmatched(pre))) {
                             // We're not in canonical form.
-                            for (auto iso : list)
-                                delete iso;
                             list.clear();
                             delete[] image;
                             delete[] preImage;
@@ -497,8 +499,6 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
                         stepDown = true;
                     } else if (fPre < fImg) {
                         // Whapow, we're not in canonical form.
-                        for (auto iso : list)
-                            delete iso;
                         list.clear();
                         delete[] image;
                         delete[] preImage;
@@ -553,18 +553,17 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
 }
 
 template <int dim>
+template <typename Action, typename... Args>
 void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
-        int nBdryFacets, Use use, void* useArgs) {
+        int nBdryFacets, Action&& action, Args&&... args) {
     // Bail if it's obvious that nothing will happen.
     if (boundary == BoolSet() || size_ == 0) {
-        use(0, 0, useArgs);
         return;
     }
     if (boundary.hasTrue() && nBdryFacets >= 0 &&
             (nBdryFacets % 2 != ((dim+1) * static_cast<int>(size_)) % 2 ||
             nBdryFacets > (dim - 1) * static_cast<int>(size_) + 2
             || (nBdryFacets == 0 && ! boundary.hasFalse()))) {
-        use(0, 0, useArgs);
         return;
     }
 
@@ -579,10 +578,6 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         /**< How many (deliberately) unmatched facets do we currently have? */
     int usedFacets = 0;
         /**< How many facets have we already determined matchings for? */
-    IsoList allAutomorphisms;
-        /**< The set of all automorphisms of the current facet pairing.
-             This is only ever used when we find a candidate face pairing,
-             and it is cleared immediately after use() is called. */
 
     // Run through and find all possible matchings.
     FacetSpec<dim> oldTrying, tmpFacet;
@@ -737,12 +732,10 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // Have we got a solution?
         if (trying.simp == static_cast<int>(size_)) {
             // Deal with the solution!
+            IsoList allAutomorphisms;
             if (isCanonicalInternal(allAutomorphisms)) {
-                use(static_cast<FacetPairing<dim>*>(this),
-                    &allAutomorphisms, useArgs);
-                for (auto a : allAutomorphisms)
-                    delete a;
-                allAutomorphisms.clear();
+                action(static_cast<FacetPairing<dim>&>(*this),
+                    std::move(allAutomorphisms), std::forward<Args>(args)...);
             }
 
             // Head back down to the previous gluing and undo it, ready
@@ -797,7 +790,6 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         }
     }
 
-    use(0, 0, useArgs);
     return;
 }
 

@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Provides a triangulation of the product <tt>T x I</tt> (the
  * product of the torus and the interval).  Generally these
  * triangulations are only one tetrahedron thick (i.e., a "thin I-bundle"),
@@ -77,6 +72,12 @@ namespace regina {
  * that it describes (so you should not create excessive objects of this
  * class without reason).  This triangulation can be accessed through the
  * core() routine.
+ *
+ * This is an abstract base class; however, the concrete subclasses
+ * offer all of the usual copy, move and swap operations.  See each
+ * subclass for details.
+ *
+ * \ingroup subcomplex
  */
 class TxICore : public Output<TxICore> {
     protected:
@@ -106,18 +107,14 @@ class TxICore : public Output<TxICore> {
         /**
          * Destroys this object.
          */
-        virtual ~TxICore();
+        virtual ~TxICore() = default;
         /**
          * Returns a full copy of the <tt>T x I</tt> triangulation that
          * this object describes.
          *
-         * Successive calls to this routine will returns the same
-         * triangulation (i.e., it is not recreated each time).  The
-         * triangulation that is returned may not be modified or destroyed.
-         *
-         * \ifacespython This routine returns a new clone of the triangulation
-         * each time it is called, since Python will claim ownership of the
-         * triangulation that is returned.
+         * Successive calls to this routine will return a reference to the
+         * same triangulation (i.e., it is not recreated each time this
+         * function is called).
          *
          * @return the full triangulation.
          */
@@ -259,16 +256,24 @@ class TxICore : public Output<TxICore> {
          *
          * @return the name of this triangulation in TeX format.
          */
-        std::string TeXName() const;
+        std::string texName() const;
+        /**
+         * Deprecated routine that returns the name of this specific
+         * triangulation of <tt>T x I</tt> in TeX format.
+         *
+         * \deprecated This routine has been renamed to texName().
+         *
+         * @return the name of this triangulation in TeX format.
+         */
+        [[deprecated]] std::string TeXName() const;
 
         /**
          * Writes the name of this specific triangulation of
          * <tt>T x I</tt> to the given output stream.  The name will be
          * written as a human-readable string.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present; instead use the variant name()
+         * that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -279,9 +284,8 @@ class TxICore : public Output<TxICore> {
          * <tt>T x I</tt> in TeX format to the given output stream.
          * No leading or trailing dollar signs will be written.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present; instead use the variant texName()
+         * that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -292,7 +296,7 @@ class TxICore : public Output<TxICore> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -301,21 +305,61 @@ class TxICore : public Output<TxICore> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
-        // Mark this class as non-copyable.
-        TxICore(const TxICore&) = delete;
-        TxICore& operator = (const TxICore&) = delete;
-
     protected:
         /**
          * Default constructor that performs no initialisation.
          */
-        TxICore();
+        TxICore() = default;
+        /**
+         * Copy constructor.
+         *
+         * This induces a deep copy of the underlying triangulation.
+         */
+        TxICore(const TxICore& src) = default;
+        /**
+         * Move constructor.
+         */
+        TxICore(TxICore&& src) = default;
+        /**
+         * Copy assignment operator.
+         *
+         * This is provided here so that subclasses can use it
+         * implicitly in their own assignment operators.
+         */
+        TxICore& operator = (const TxICore&) = default;
+        /**
+         * Move assignment operator.
+         *
+         * This is provided here so that subclasses can use it
+         * implicitly in their own assignment operators.
+         *
+         * \note This operator is marked \c noexcept, even though it calls
+         * the Triangulation<3> assignment operator which is not \c noexcept.
+         * This is because the only potential cause of exceptions comes from
+         * packet event listeners, and the internal triangulation here does
+         * not belong to a packet.
+         */
+        TxICore& operator = (TxICore&&) = default;
+        /**
+         * Swaps all data that is managed by this base class with the
+         * given triangulation.
+         *
+         * \note This function is marked \c noexcept, even though it calls
+         * Triangulation<3>::swap() which is not \c noexcept.  This is because
+         * the only potential cause of exceptions comes from packet event
+         * listeners, and the internal triangulation here does not belong to a
+         * packet.
+         *
+         * @param other the triangulation whose data should be swapped
+         * with this.
+         */
+        void swapBaseData(TxICore& other) noexcept;
 };
 
 /**
@@ -376,6 +420,12 @@ class TxICore : public Output<TxICore> {
  * the case (\a n, \a k) = (9, 2).
  *
  * \image html diag92.png
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
+ * \ingroup subcomplex
  */
 class TxIDiagonalCore : public TxICore {
     private:
@@ -400,6 +450,37 @@ class TxIDiagonalCore : public TxICore {
         TxIDiagonalCore(unsigned long newSize, unsigned long newK);
 
         /**
+         * Creates a new copy of the given <tt>T x I</tt> triangulation.
+         */
+        TxIDiagonalCore(const TxIDiagonalCore&) = default;
+
+        /**
+         * Moves the contents of the given <tt>T x I</tt> triangulation
+         * into this new triangulation.
+         *
+         * The triangulation that was passed will no longer be usable.
+         */
+        TxIDiagonalCore(TxIDiagonalCore&&) noexcept = default;
+
+        /**
+         * Sets this to be a copy of the given <tt>T x I</tt> triangulation.
+         * This will induce a deep copy.
+         *
+         * @return a reference to this triangulation.
+         */
+        TxIDiagonalCore& operator = (const TxIDiagonalCore& src) = default;
+
+        /**
+         * Moves the contents of the given <tt>T x I</tt> triangulation
+         * into this triangulation.
+         *
+         * The triangulation that was passed will no longer be usable.
+         *
+         * @return a reference to this triangulation.
+         */
+        TxIDiagonalCore& operator = (TxIDiagonalCore&& src) noexcept = default;
+
+        /**
          * Returns the total number of tetrahedra in this <tt>T x I</tt>
          * triangulation.
          *
@@ -415,9 +496,33 @@ class TxIDiagonalCore : public TxICore {
          */
         unsigned long k() const;
 
+        /**
+         * Swaps the contents of this and the given
+         * <tt>T x I</tt> triangulation.
+         *
+         * @param other the triangulation whose contents should be swapped
+         * with this.
+         */
+        void swap(TxIDiagonalCore& other) noexcept;
+
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
+
+/**
+ * Swaps the contents of the two given <tt>T x I</tt> triangulations.
+ *
+ * This global routine simply calls TxIDiagonalCore::swap(); it is
+ * provided so that TxIDiagonalCore meets the C++ Swappable requirements.
+ *
+ * See TxIDiagonalCore::swap() for more details.
+ *
+ * @param lhs the triangulation whose contents should be swapped with \a rhs.
+ * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ *
+ * \ingroup subcomplex
+ */
+void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs);
 
 /**
  * A specific six-tetrahedron TxICore triangulation that does not fit
@@ -446,6 +551,12 @@ class TxIDiagonalCore : public TxICore {
  * are also included.
  *
  * \image html parallel.png
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
+ * \ingroup subcomplex
  */
 class TxIParallelCore : public TxICore {
     public:
@@ -454,19 +565,70 @@ class TxIParallelCore : public TxICore {
          */
         TxIParallelCore();
 
+        /**
+         * Creates a new copy of the given <tt>T x I</tt> triangulation.
+         *
+         * Since there is only one triangulation of this type, the copy
+         * constructor will give the same end result as the default constructor
+         * (but using a different algorithm).
+         */
+        TxIParallelCore(const TxIParallelCore&) = default;
+
+        /**
+         * Moves the contents of the given <tt>T x I</tt> triangulation
+         * into this new triangulation.
+         *
+         * The triangulation that was passed will no longer be usable.
+         */
+        TxIParallelCore(TxIParallelCore&&) noexcept = default;
+
+        /**
+         * Sets this to be a copy of the given <tt>T x I</tt> triangulation.
+         * This will induce a deep copy.
+         *
+         * @return a reference to this triangulation.
+         */
+        TxIParallelCore& operator = (const TxIParallelCore& src) = default;
+
+        /**
+         * Moves the contents of the given <tt>T x I</tt> triangulation
+         * into this triangulation.
+         *
+         * The triangulation that was passed will no longer be usable.
+         *
+         * @return a reference to this triangulation.
+         */
+        TxIParallelCore& operator = (TxIParallelCore&& src) noexcept = default;
+
+        /**
+         * Swaps the contents of this and the given
+         * <tt>T x I</tt> triangulation.
+         *
+         * @param other the triangulation whose contents should be swapped
+         * with this.
+         */
+        void swap(TxIParallelCore& other) noexcept;
+
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given <tt>T x I</tt> triangulations.
+ *
+ * This global routine simply calls TxIParallelCore::swap(); it is
+ * provided so that TxIParallelCore meets the C++ Swappable requirements.
+ *
+ * See TxIParallelCore::swap() for more details.
+ *
+ * @param lhs the triangulation whose contents should be swapped with \a rhs.
+ * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ *
+ * \ingroup subcomplex
+ */
+void swap(TxIParallelCore& lhs, TxIParallelCore& rhs);
 
 // Inline functions for TxICore
-
-inline TxICore::TxICore() {
-}
-
-inline TxICore::~TxICore() {
-}
 
 inline const Triangulation<3>& TxICore::core() const {
     return core_;
@@ -490,6 +652,10 @@ inline const Matrix2& TxICore::parallelReln() const {
     return parallelReln_;
 }
 
+inline std::string TxICore::TeXName() const {
+    return texName();
+}
+
 inline void TxICore::writeTextShort(std::ostream& out) const {
     writeName(out);
 }
@@ -501,6 +667,12 @@ inline void TxICore::writeTextLong(std::ostream& out) const {
 }
 
 // Inline functions for TxIDiagonalCore
+
+inline void TxIDiagonalCore::swap(TxIDiagonalCore& other) noexcept {
+    swapBaseData(other);
+    std::swap(size_, other.size_);
+    std::swap(k_, other.k_);
+}
 
 inline unsigned long TxIDiagonalCore::size() const {
     return size_;
@@ -518,12 +690,24 @@ inline std::ostream& TxIDiagonalCore::writeTeXName(std::ostream& out) const {
     return out << "T_{" << size_ << ':' << k_ << '}';
 }
 
+inline void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs) {
+    lhs.swap(rhs);
+}
+
+inline void TxIParallelCore::swap(TxIParallelCore& other) noexcept {
+    swapBaseData(other);
+}
+
 inline std::ostream& TxIParallelCore::writeName(std::ostream& out) const {
     return out << "T6*";
 }
 
 inline std::ostream& TxIParallelCore::writeTeXName(std::ostream& out) const {
     return out << "T_{6\\ast}";
+}
+
+inline void swap(TxIParallelCore& lhs, TxIParallelCore& rhs) {
+    lhs.swap(rhs);
 }
 
 } // namespace regina

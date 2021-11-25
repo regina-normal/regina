@@ -40,22 +40,16 @@ namespace {
      * Stores orientation and sides A/B for a normal disc.
      */
     struct OrientData {
-        int orient;
+        int orient { 0 };
             /**< Specifies the orientation of the disc.
                  1 represents with the natural boundary orientation.
                  -1 represents against the natural boundary orientation.
                  0 means orientation is not yet determined. */
-        int sides;
+        int sides { 0 };
             /**< Specifies which sides of the disc are sides A/B.
                  If sides is 1, discs are numbered from side A to B.
                  If sides is -1, discs are numbered from side B to A.
                  A value of 0 means sides are not yet determined. */
-
-        /**
-         * Create a new structure with all values initialised to 0.
-         */
-        OrientData() : orient(0), sides(0) {
-        }
     };
 }
 
@@ -85,11 +79,7 @@ void NormalSurface::calculateOrientable() const {
 
     int nGluingArcs;     // The number of arcs on the current disc to
                          //     which an adjacent disc might may be glued.
-
-    DiscSpec* adjDisc;  // The disc to which the current disc is glued.
     Perm<4> arc[8];       // Holds each gluing arc for the current disc.
-    Perm<4> adjArc;       // Represents the corresponding gluing arc on the
-                         //     adjacent disc.
 
     bool myOrient, yourOrient, sameOrient;
     bool mySides, yourSides, sameSides;
@@ -142,17 +132,18 @@ void NormalSurface::calculateOrientable() const {
         // gluing arcs.
         for (i = 0; i < nGluingArcs; i++) {
             // Establish which is the adjacent disc.
-            adjDisc = orients.adjacentDisc(use, arc[i], adjArc);
-            if (adjDisc == 0)
+            auto adjDisc = orients.adjacentDisc(use, arc[i]);
+            if (! adjDisc)
                 continue;
 
             // There is actually a disc glued along this arc.
             // Determine the desired properties of the adjacent disc.
+            Perm<4> adjArc = adjDisc->second;
 
             if (! orientable_.has_value()) {
                 myOrient = discOrientationFollowsEdge(use.type,
                     arc[i][0], arc[i][1], arc[i][2]);
-                yourOrient = discOrientationFollowsEdge(adjDisc->type,
+                yourOrient = discOrientationFollowsEdge(adjDisc->first.type,
                     adjArc[0], adjArc[2], adjArc[1]);
                 sameOrient = (myOrient && yourOrient) ||
                     ((! myOrient) && (! yourOrient));
@@ -162,7 +153,7 @@ void NormalSurface::calculateOrientable() const {
             if (! twoSided_.has_value()) {
                 mySides = numberDiscsAwayFromVertex(use.type, arc[i][0]);
                 yourSides = numberDiscsAwayFromVertex(
-                    adjDisc->type, adjArc[0]);
+                    adjDisc->first.type, adjArc[0]);
                 sameSides = (mySides && yourSides) ||
                     ((! mySides) && (! yourSides));
             } else
@@ -170,39 +161,36 @@ void NormalSurface::calculateOrientable() const {
 
             // Propagate these properties.
 
-            if (orients.data(*adjDisc).orient == 0) {
-                orients.data(*adjDisc).orient = (sameOrient ?
+            if (orients.data(adjDisc->first).orient == 0) {
+                orients.data(adjDisc->first).orient = (sameOrient ?
                     orients.data(use).orient : -orients.data(use).orient);
-                orients.data(*adjDisc).sides = (sameSides ?
+                orients.data(adjDisc->first).sides = (sameSides ?
                     orients.data(use).sides : -orients.data(use).sides);
-                discQueue.push(*adjDisc);
+                discQueue.push(adjDisc->first);
             } else {
                 if (! orientable_.has_value()) {
                     if (sameOrient) {
-                        if (orients.data(*adjDisc).orient !=
+                        if (orients.data(adjDisc->first).orient !=
                                 orients.data(use).orient)
                             orientable_ = false;
                     } else {
-                        if (orients.data(*adjDisc).orient ==
+                        if (orients.data(adjDisc->first).orient ==
                                 orients.data(use).orient)
                             orientable_ = false;
                     }
                 }
                 if (! twoSided_.has_value()) {
                     if (sameSides) {
-                        if (orients.data(*adjDisc).sides !=
+                        if (orients.data(adjDisc->first).sides !=
                                 orients.data(use).sides)
                             twoSided_ = false;
                     } else {
-                        if (orients.data(*adjDisc).sides ==
+                        if (orients.data(adjDisc->first).sides ==
                                 orients.data(use).sides)
                             twoSided_ = false;
                     }
                 }
             }
-
-            // Tidy up.
-            delete adjDisc;
             if (orientable_.has_value() && twoSided_.has_value() &&
                     connected_.has_value())
                 return;

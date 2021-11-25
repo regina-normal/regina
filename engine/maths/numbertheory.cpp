@@ -116,6 +116,18 @@ long gcdWithCoeffs(long a, long b, long& u, long& v) {
     return ans;
 }
 
+std::tuple<long, long, long> gcdWithCoeffs(long a, long b) {
+    long signA = (a > 0 ? 1 : a == 0 ? 0 : -1);
+    long signB = (b > 0 ? 1 : b == 0 ? 0 : -1);
+
+    std::tuple<long, long, long> ans;
+    std::get<0>(ans) = gcdWithCoeffsInternal(a >= 0 ? a : -a,
+        b >= 0 ? b : -b, std::get<1>(ans), std::get<2>(ans));
+    std::get<1>(ans) *= signA;
+    std::get<2>(ans) *= signB;
+    return ans;
+}
+
 long lcm(long a, long b) {
     if (a == 0 || b == 0)
         return 0;
@@ -129,12 +141,13 @@ unsigned long modularInverse(unsigned long n, unsigned long k) {
     if (n == 1)
         return 0;
 
-    long u, v;
-    gcdWithCoeffs(n, k % n, u, v);
+    // Compute (d, u, v).
+    auto ans = gcdWithCoeffs(n, k % n);
+
     // GCD should equal 1, so u*n + k*v = 1.
     // Inverse is v; note that -n < v <= 0.
     // Since n >= 2 now and (n,k) = 1, we know v != 0.
-    return v + n;
+    return std::get<2>(ans) + n;
 }
 
 } // namespace regina

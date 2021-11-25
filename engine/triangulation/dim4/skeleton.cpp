@@ -88,7 +88,7 @@ void Triangulation<4>::calculateVertexLinks() {
     // Construct the vertex linking tetrahedra, and insert them into each
     // vertex link in the correct order as described by the
     // Vertex<4>::buildLink() docs.
-    Tetrahedron<3>** tet = new Tetrahedron<3>*[5 * n];
+    auto* tet = new Tetrahedron<3>*[5 * n];
 
     for (Vertex<4>* vertex : vertices()) {
         vertex->link_ = new Triangulation<3>();
@@ -129,8 +129,7 @@ void Triangulation<4>::calculateVertexLinks() {
                 // tetrahedron.  Make the gluing.
                 adjVertexIdx = pent->adjacentGluing(exitFacet)[vertexIdx];
                 tet[index]->join(
-                    std::get<3>(pent->mappings_)[vertexIdx].
-                        preImageOf(exitFacet),
+                    std::get<3>(pent->mappings_)[vertexIdx].pre(exitFacet),
                     tet[5 * adjPentIdx + adjVertexIdx],
                     Perm<4>::contract(
                         std::get<3>(adjPent->mappings_)[adjVertexIdx].inverse() *
@@ -168,7 +167,7 @@ void Triangulation<4>::calculateVertexLinks() {
                 vertex->boundaryComponent_->push_back(vertex);
                 boundaryComponents_.push_back(vertex->boundaryComponent_);
             } else if ((! knownSimpleLinks_) &&
-                    ! vertex->link_->isThreeSphere()) {
+                    ! vertex->link_->isSphere()) {
                 // The vertex is fine but it's not a 3-sphere.
                 // We have an ideal triangulation.
                 ideal_ = vertex->component()->ideal_ = vertex->ideal_ = true;
@@ -196,7 +195,7 @@ void Triangulation<4>::calculateVertexLinks() {
         if (! vertex->isValid()) {
             int type;
             for (Vertex<3>* v : vertex->link_->vertices()) {
-                type = v->link();
+                type = v->linkType();
                 if (type != Vertex<3>::SPHERE && type != Vertex<3>::DISC) {
                     // This 3-manifold vertex is at the end of an
                     // invalid 4-manifold edge.
@@ -238,9 +237,9 @@ void Triangulation<4>::calculateEdgeLinks() {
         if (e->hasBadIdentification() && ! e->hasBadLink()) {
             // Calling buildLink() causes the edge link to be cached by
             // Edge<4>.
-            const Triangulation<2>* link = e->buildLink();
-            if ((link->isClosed() && link->eulerChar() != 2) ||
-                    ((! link->isClosed()) && link->eulerChar() != 1))
+            const Triangulation<2>& link = e->buildLink();
+            if ((link.isClosed() && link.eulerChar() != 2) ||
+                    ((! link.isClosed()) && link.eulerChar() != 1))
                 e->whyInvalid_.value |= Edge<4>::INVALID_LINK;
         }
 }

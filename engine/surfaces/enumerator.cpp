@@ -40,7 +40,6 @@
 #include "maths/matrixops.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
-#include "surfaces/coordregistry.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
 
@@ -54,67 +53,101 @@ const Integer maxSigned128(NativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
 #endif
 
 namespace {
-    // The linear programming arguments to use with the tree traversal
-    // enumeration algorithm for each coordinate system.
-    template <class Coords>
-    struct LPArgs;
+    /**
+     * A class that makes a vector appear as though it uses a different
+     * encoding.
+     *
+     * This can only be used when the desired encoding stores a subset of the
+     * coordinates that the source encoding stores.  In other words, it can
+     * hide unwanted coordinates but it cannot reconstruct missing coordinates.
+     *
+     * This is (in particular) used by the two-pass primal Hilbert basis
+     * algorithm, where the second pass needs to "forget" any reconstructed
+     * triangle coordinates that were added by the NormalSurface
+     * constructor at the end of the first pass.
+     */
+    class NSShadowVector {
+        private:
+            const Vector<LargeInteger>& source_;
+            NormalEncoding srcEnc_;
+            NormalEncoding destEnc_;
+            size_t destSize_;
 
-    template <NormalCoords coords>
-    struct LPArgs<NormalInfo<coords>> {
-        typedef LPConstraintNone Constraint;
-        static constexpr NormalCoords coords_ = coords;
+        public:
+            NSShadowVector(const Vector<LargeInteger>& source,
+                    NormalEncoding srcEnc, NormalEncoding destEnc) :
+                    source_(source), srcEnc_(srcEnc), destEnc_(destEnc),
+                    destSize_((source_.size() / srcEnc.block()) *
+                        destEnc_.block()) {
+            }
+
+            size_t size() const {
+                return destSize_;
+            }
+
+            const LargeInteger& operator [] (size_t destIndex) const {
+                if (srcEnc_.block() == destEnc_.block())
+                    return source_[destIndex];
+
+                size_t block_ = destIndex / destEnc_.block();
+                size_t type_ = (srcEnc_.storesTriangles() &&
+                        ! destEnc_.storesTriangles()) ?
+                    (destIndex % destEnc_.block() + 4) :
+                    (destIndex % destEnc_.block());
+                return source_[srcEnc_.block() * block_ + type_];
+            }
     };
 
-    template <>
-    struct LPArgs<NormalInfo<NS_QUAD_CLOSED>> {
-        // LPConstraintNonSpun can fail to construct the tableaux constraints,
-        // but only in scenarios where NS_QUAD_CLOSED fails to construct the
-        // matching equations.  Since we explicitly construct the matching
-        // equations as the first step of the enumeration process, we are
-        // assured that LPConstraintNonSpun can be used without problems.
-        typedef LPConstraintNonSpun Constraint;
-        static constexpr NormalCoords coords_ = NS_QUAD;
-    };
-
-    template <>
-    struct LPArgs<NormalInfo<NS_AN_QUAD_OCT_CLOSED>> {
-        // See comment for LPArgs<NormalInfo<NS_QUAD_CLOSED>>
-        typedef LPConstraintNonSpun Constraint;
-        static constexpr NormalCoords coords_ = NS_AN_QUAD_OCT;
-    };
+    /**
+     * Determines whether we will need to add the LPConstraintNonSpun
+     * constraint to our linear programming machinery, or whether we can
+     * just use the default LPConstraintNone.
+     */
+    inline constexpr bool useNonSpunConstraint(NormalCoords coords) {
+        return (coords == NS_QUAD_CLOSED || coords == NS_AN_QUAD_OCT_CLOSED);
+    }
 }
 
-NormalSurfaces* NormalSurfaces::enumerate(
-        Triangulation<3>& owner, NormalCoords coords,
-        NormalList which, NormalAlg algHints,
-        ProgressTracker* tracker) {
-    std::optional<MatrixInt> eqns = makeMatchingEquations(owner, coords);
-    if (! eqns) {
+std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::enumerate(
+        Triangulation<3>& owner, NormalCoords coords, NormalList which,
+        NormalAlg algHints, ProgressTracker* tracker) {
+    // Like the constructor, but (1) we have tree insertion; and (2) we
+    // need to convert exceptions to null returns.
+    MatrixInt eqns;
+    try {
+        eqns = makeMatchingEquations(owner, coords);
+    } catch (const ReginaException&) {
         if (tracker)
             tracker->setFinished();
         return nullptr;
     }
 
-    NormalSurfaces* list = new NormalSurfaces(coords, which, algHints);
+    auto ans = makePacket<NormalSurfaces>(std::in_place, coords, which,
+        algHints, owner);
+    auto treeParent = owner.inAnyPacket();
 
     if (tracker) {
         // We pass the matching equations as an argument to the thread
         // function so we can be sure that the equations are moved into
         // the thread before they are destroyed.
-        std::thread([=, &owner](MatrixInt e) {
-            forCoords(coords, [=, &e, &owner](auto info) {
-                Enumerator<decltype(info)>(list, &owner, e, tracker).enumerate();
-            });
-        }, std::move(*eqns)).detach();
+        //
+        // Likewise, passing the shared pointers ans and treeParent into the
+        // thread ensures that they survive for the lifetime of the thread.
+        std::thread([tracker](
+                // NOLINTNEXTLINE(performance-unnecessary-value-param)
+                MatrixInt e,
+                // NOLINTNEXTLINE(performance-unnecessary-value-param)
+                std::shared_ptr<NormalSurfaces> s,
+                // NOLINTNEXTLINE(performance-unnecessary-value-param)
+                std::shared_ptr<Packet> p) {
+            Enumerator(s.get(), e, tracker, p.get()).enumerate();
+        }, std::move(eqns), ans, std::move(treeParent)).detach();
     } else
-        forCoords(coords, [=, &eqns, &owner](auto info) {
-            Enumerator<decltype(info)>(list, &owner, *eqns, tracker).enumerate();
-        });
-    return list;
+        Enumerator(ans.get(), eqns, tracker, treeParent.get()).enumerate();
+    return ans;
 }
 
-template <typename Coords>
-void NormalSurfaces::Enumerator<Coords>::enumerate() {
+void NormalSurfaces::Enumerator::enumerate() {
     // Clean up the "type of list" flag.
     list_->which_ &= (
         NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR | NS_VERTEX | NS_FUNDAMENTAL);
@@ -129,18 +162,23 @@ void NormalSurfaces::Enumerator<Coords>::enumerate() {
         fillFundamental();
 
     // Insert the results into the packet tree, but only once they are ready.
-    if (! (tracker_ && tracker_->isCancelled()))
-        triang_->insertChildLast(list_);
+    if (treeParent_ && ! (tracker_ && tracker_->isCancelled()))
+        treeParent_->insertChildLast(
+            static_cast<PacketOf<NormalSurfaces>*>(list_)->
+            shared_from_this());
 
     if (tracker_)
         tracker_->setFinished();
 }
 
-template <typename Coords>
-void NormalSurfaces::Enumerator<Coords>::fillVertex() {
+void NormalSurfaces::Enumerator::fillVertex() {
     // ----- Decide which algorithm to use -----
 
     // Here we will set the algorithm_ flag to precisely what we plan to do.
+
+    // Get a local reference to the triangulation so we do not have to
+    // repeatedly bounce through the snapshot.
+    const Triangulation<3>& triang(*list_->triangulation_);
 
     // First clear out all irrelevant options.
     list_->algorithm_ &= (
@@ -157,8 +195,8 @@ void NormalSurfaces::Enumerator<Coords>::fillVertex() {
         // If not, switch back to standard-direct.
         if (list_->algorithm_.has(NS_VERTEX_VIA_REDUCED) &&
                 ! (list_->which_.has(NS_EMBEDDED_ONLY) &&
-                    triang_->isValid() &&
-                    (! triang_->isIdeal())))
+                    triang.isValid() &&
+                    (! triang.isIdeal())))
                 list_->algorithm_ ^=
                     (NS_VERTEX_VIA_REDUCED | NS_VERTEX_STD_DIRECT);
     } else {
@@ -183,15 +221,24 @@ void NormalSurfaces::Enumerator<Coords>::fillVertex() {
     // If not, switch back to double description.
     // The integer template argument for TreeTraversal::supported()
     // is unimportant here; we just use Integer.
-    if (list_->algorithm_.has(NS_VERTEX_TREE) &&
-            ! (list_->which_.has(NS_EMBEDDED_ONLY) &&
-                TreeTraversal<typename LPArgs<Coords>::Constraint,
-                    BanNone, Integer>::supported(LPArgs<Coords>::coords_)))
-        list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
+    if (list_->algorithm_.has(NS_VERTEX_TREE)) {
+        if (! list_->which_.has(NS_EMBEDDED_ONLY)) {
+            // Tree traversal is not supported for immersed/singular surfaces.
+            list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
+        } else if (useNonSpunConstraint(list_->coords_)) {
+            if (! TreeTraversal<LPConstraintNonSpun, BanNone, Integer>::
+                    supported(list_->coords_))
+                list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
+        } else {
+            if (! TreeTraversal<LPConstraintNone, BanNone, Integer>::
+                    supported(list_->coords_))
+                list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
+        }
+    }
 
     // ----- Run the enumeration algorithm -----
 
-    if (triang_->isEmpty()) {
+    if (triang.isEmpty()) {
         // Handle the empty triangulation separately.
         list_->algorithm_ = NS_VERTEX_DD; /* shrug */
         // Nothing to do.
@@ -211,20 +258,21 @@ void NormalSurfaces::Enumerator<Coords>::fillVertex() {
     } else {
         // Enumerate in the reduced coordinate system, and then convert
         // the solution set to the standard coordinate system.
-
-        // Since there are currently only two systems in which we can do
-        // this (NS_STANDARD and NS_AN_STANDARD), we hard-code these
-        // cases in if() statements to avoid generating template code
-        // for other, unsupported coordinate systems.
+        //
+        // If we reach this point, then (from the algorithm flag cleanup
+        // above) it is guaranteed that list_->coords_ is either
+        // NS_STANDARD or NS_AN_STANDARD.
 
         // Enumerate in reduced (quad / quad-oct) form.
-        Enumerator<typename Coords::Reduced> e(new NormalSurfaces(
-                (list_->coords_ == NS_STANDARD ? NS_QUAD : NS_AN_QUAD_OCT),
-                list_->which_, list_->algorithm_ ^ NS_VERTEX_VIA_REDUCED),
-            triang_,
-            *makeMatchingEquations(*triang_,
-                list_->coords_ == NS_STANDARD ? NS_QUAD : NS_AN_QUAD_OCT),
-            tracker_);
+        NormalCoords small = (list_->coords_ == NS_STANDARD ?  NS_QUAD :
+            NS_AN_QUAD_OCT);
+        Enumerator e(
+            new NormalSurfaces(small, list_->which_,
+                list_->algorithm_ ^ NS_VERTEX_VIA_REDUCED,
+                list_->triangulation_),
+            makeMatchingEquations(triang, small) /* always succeeds */,
+            tracker_,
+            nullptr);
         if (list_->algorithm_.has(NS_VERTEX_TREE)) {
             if (tracker_)
                 tracker_->newStage("Enumerating reduced solution set\n"
@@ -245,32 +293,32 @@ void NormalSurfaces::Enumerator<Coords>::fillVertex() {
         // Expand to the standard the solution set.
         if (tracker_)
             tracker_->newStage("Expanding to standard solution set", 0.1);
-        if (list_->coords_ == NS_STANDARD)
-            list_->buildStandardFromReduced<NormalSpec>(*triang_,
-                e.list_->surfaces_, tracker_);
-        else
-            list_->buildStandardFromReduced<AlmostNormalSpec>(*triang_,
-                e.list_->surfaces_, tracker_);
+        list_->buildStandardFromReduced(e.list_->surfaces_, tracker_);
 
         // Clean up.
         delete e.list_;
     }
 }
 
-template <typename Coords>
-void NormalSurfaces::Enumerator<Coords>::fillVertexDD() {
+void NormalSurfaces::Enumerator::fillVertexDD() {
     if (list_->which_.has(NS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
-        DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
-            SurfaceInserter(*list_, *triang_), eqns_, &c, tracker_);
+        ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+            list_->coords_);
+        DoubleDescription::enumerate<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>&& v) {
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
+            }, eqns_, c, tracker_);
     } else {
-        DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
-            SurfaceInserter(*list_, *triang_), eqns_, nullptr, tracker_);
+        DoubleDescription::enumerate<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>&& v) {
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
+            }, eqns_, ValidityConstraints::none, tracker_);
     }
 }
 
-template <typename Coords>
-void NormalSurfaces::Enumerator<Coords>::fillVertexTree() {
+void NormalSurfaces::Enumerator::fillVertexTree() {
     // We can always do this with the arbitrary-precision Integer,
     // but it will be much faster if we can get away with native
     // integers instead.  To do this, though, we need to be able to
@@ -303,28 +351,31 @@ void NormalSurfaces::Enumerator<Coords>::fillVertexTree() {
 
     switch (list_->coords_) {
         case NS_STANDARD:
-            eqns = *makeMatchingEquations(*triang_, NS_STANDARD);
-            maxColsRHS = triang_->size() * 5;
+            eqns = makeMatchingEquations(*list_->triangulation_, NS_STANDARD);
+            maxColsRHS = list_->triangulation_->size() * 5;
             break;
         case NS_QUAD:
-            eqns = *makeMatchingEquations(*triang_, NS_QUAD);
-            maxColsRHS = triang_->size();
+            eqns = makeMatchingEquations(*list_->triangulation_, NS_QUAD);
+            maxColsRHS = list_->triangulation_->size();
             break;
         case NS_AN_STANDARD:
-            eqns = *makeMatchingEquations(*triang_, NS_STANDARD);
-            maxColsRHS = triang_->size() * 5 + 1;
+            eqns = makeMatchingEquations(*list_->triangulation_, NS_STANDARD);
+            maxColsRHS = list_->triangulation_->size() * 5 + 1;
             break;
         case NS_AN_QUAD_OCT:
-            eqns = *makeMatchingEquations(*triang_, NS_QUAD);
-            maxColsRHS = triang_->size() + 1;
+            eqns = makeMatchingEquations(*list_->triangulation_, NS_QUAD);
+            maxColsRHS = list_->triangulation_->size() + 1;
             break;
         // TODO: Support NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED here.
+        // When doing this, be careful about exceptions.
         default:
             // NS_QUAD_CLOSED / NS_AN_QUAD_OCT_CLOSED fall through to here.
             // Just use arbitrary precision arithmetic.
             fillVertexTreeWith<Integer>();
             return;
     }
+
+    NormalEncoding enc(list_->coords_);
 
     size_t i, j;
     Integer tmp;
@@ -356,12 +407,12 @@ void NormalSurfaces::Enumerator<Coords>::fillVertexTree() {
         if (tmp > maxOrigColSum)
             maxOrigColSum = tmp;
     }
-    if (Coords::almostNormal)
+    if (enc.storesOctagons())
         maxOrigColSum *= 2;
 
     // The square of the Hadamard bound for the original tableaux:
     Integer hadamardSquare = 1;
-    Integer* colNorm = new Integer[eqns.columns()];
+    auto* colNorm = new Integer[eqns.columns()];
     for (i = 0; i < eqns.columns(); ++i) {
         colNorm[i] = 0;
         for (j = 0; j < rank; ++j)
@@ -372,7 +423,7 @@ void NormalSurfaces::Enumerator<Coords>::fillVertexTree() {
         hadamardSquare *= colNorm[eqns.columns() - 1 - i];
     delete[] colNorm;
 
-    if (Coords::almostNormal) {
+    if (enc.storesOctagons()) {
         // The octagon column is the sum of two quadrilateral columns.
         // This is no worse than doubling the Euclidean norm of the
         // largest column.
@@ -415,8 +466,8 @@ void NormalSurfaces::Enumerator<Coords>::fillVertexTree() {
 
     // Now we can select an appropriate integer type.
     if (worst <= LONG_MAX) {
-        // std::cerr << "Using NNativeLong." << std::endl;
-        fillVertexTreeWith<NNativeLong>();
+        // std::cerr << "Using NativeLong." << std::endl;
+        fillVertexTreeWith<NativeLong>();
 #ifdef INT128_AVAILABLE
     } else if (worst <= maxSigned128) {
         // std::cerr << "Using NativeInteger<16>." << std::endl;
@@ -428,22 +479,37 @@ void NormalSurfaces::Enumerator<Coords>::fillVertexTree() {
     }
 }
 
-template <typename Coords>
 template <typename Integer>
-void NormalSurfaces::Enumerator<Coords>::fillVertexTreeWith() {
-    TreeEnumeration<typename LPArgs<Coords>::Constraint,
-        BanNone, Integer> search(*triang_, LPArgs<Coords>::coords_);
-    while (search.next(tracker_)) {
-        list_->surfaces_.push_back(search.buildSurface());
-        if (tracker_ && tracker_->isCancelled())
-            break;
+void NormalSurfaces::Enumerator::fillVertexTreeWith() {
+    if (useNonSpunConstraint(list_->coords_)) {
+        // LPConstraintNonSpun can fail to construct the tableaux constraints,
+        // but only in scenarios where NS_QUAD_CLOSED fails to construct the
+        // matching equations.  Since we explicitly constructed the matching
+        // equations as the first step of the enumeration process, we are
+        // assured that LPConstraintNonSpun can be used without problems.
+        // TODO: Convert TreeEnumeration to use SnapshotRef
+        TreeEnumeration<LPConstraintNonSpun, BanNone, Integer> search(
+            *list_->triangulation_, list_->coords_);
+        while (search.next(tracker_)) {
+            list_->surfaces_.push_back(search.buildSurface());
+            if (tracker_ && tracker_->isCancelled())
+                break;
+        }
+    } else {
+        // TODO: Convert TreeEnumeration to use SnapshotRef
+        TreeEnumeration<LPConstraintNone, BanNone, Integer> search(
+            *list_->triangulation_, list_->coords_);
+        while (search.next(tracker_)) {
+            list_->surfaces_.push_back(search.buildSurface());
+            if (tracker_ && tracker_->isCancelled())
+                break;
+        }
     }
 }
 
-template <typename Coords>
-void NormalSurfaces::Enumerator<Coords>::fillFundamental() {
+void NormalSurfaces::Enumerator::fillFundamental() {
     // Get the empty triangulation out of the way separately.
-    if (triang_->isEmpty()) {
+    if (list_->triangulation_->isEmpty()) {
         list_->algorithm_ = NS_HILBERT_DUAL; /* shrug */
         return;
     }
@@ -472,25 +538,30 @@ void NormalSurfaces::Enumerator<Coords>::fillFundamental() {
         fillFundamentalFullCone();
 }
 
-template <typename Coords>
-void NormalSurfaces::Enumerator<Coords>::fillFundamentalDual() {
+void NormalSurfaces::Enumerator::fillFundamentalDual() {
     list_->algorithm_ = NS_HILBERT_DUAL;
 
     if (tracker_)
         tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
     if (list_->which_.has(NS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
-        HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
-            SurfaceInserter(*list_, *triang_), eqns_, &c, tracker_);
+        ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+            list_->coords_);
+        HilbertDual::enumerate<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>&& v) {
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
+            }, eqns_, c, tracker_);
     } else {
-        HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
-            SurfaceInserter(*list_, *triang_), eqns_, nullptr, tracker_);
+        HilbertDual::enumerate<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>&& v) {
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
+            }, eqns_, ValidityConstraints::none, tracker_);
     }
 }
 
-template <typename Coords>
-void NormalSurfaces::Enumerator<Coords>::fillFundamentalCD() {
+void NormalSurfaces::Enumerator::fillFundamentalCD() {
     list_->algorithm_ = NS_HILBERT_CD;
 
     if (tracker_)
@@ -498,17 +569,23 @@ void NormalSurfaces::Enumerator<Coords>::fillFundamentalCD() {
             "Enumerating Hilbert basis\n(Contejean-Devie method)");
 
     if (list_->which_.has(NS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
-        HilbertCD::enumerateHilbertBasis<typename Coords::Class>(
-            SurfaceInserter(*list_, *triang_), eqns_, &c);
+        ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+            list_->coords_);
+        HilbertCD::enumerate<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>&& v) {
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
+            }, eqns_, c);
     } else {
-        HilbertCD::enumerateHilbertBasis<typename Coords::Class>(
-            SurfaceInserter(*list_, *triang_), eqns_, nullptr);
+        HilbertCD::enumerate<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>&& v) {
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
+            }, eqns_, ValidityConstraints::none);
     }
 }
 
-template <typename Coords>
-void NormalSurfaces::Enumerator<Coords>::fillFundamentalPrimal() {
+void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
     // We will not set algorithm_ until after the extremal ray
     // enumeration has finished (since we might want to pass additional flags
     // to and/or from that routine).
@@ -520,14 +597,25 @@ void NormalSurfaces::Enumerator<Coords>::fillFundamentalPrimal() {
     if (tracker_)
         tracker_->newStage("Enumerating extremal rays", 0.4);
 
-    NormalSurfaces* vtx = new NormalSurfaces(list_->coords_,
+    NormalSurfaces vtx(list_->coords_,
         NS_VERTEX | (list_->which_.has(NS_EMBEDDED_ONLY) ?
             NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
-        list_->algorithm_ /* passes through any vertex enumeration flags */);
-    Enumerator e(vtx, triang_, std::move(eqns_), nullptr);
+        list_->algorithm_ /* passes through any vertex enumeration flags */,
+        list_->triangulation_);
+    Enumerator e(&vtx, eqns_, nullptr, nullptr);
     e.fillVertex();
 
     // We cannot use eqns below here, since we moved it into e.
+
+    // The next pass, through HilbertPrimal, will need the vertex vectors
+    // to appears as though they use the original coordinate system.
+    // In particular, we must hide any triangle coordinates that were
+    // reconstructed by NormalSurface at the end of the first pass above.
+    std::vector<NSShadowVector> shadows;
+    shadows.reserve(vtx.size());
+    for (const NormalSurface& s : vtx)
+        shadows.emplace_back(s.vector(), s.encoding(),
+            NormalEncoding(list_->coords_));
 
     // Finalise the algorithm flags for this list: combine NS_HILBERT_PRIMAL
     // with whatever vertex enumeration flags were used.
@@ -538,48 +626,49 @@ void NormalSurfaces::Enumerator<Coords>::fillFundamentalPrimal() {
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
     if (list_->which_.has(NS_EMBEDDED_ONLY)) {
-        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
-        HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
-            SurfaceInserter(*list_, *triang_),
-            vtx->beginVectors(), vtx->endVectors(), &c, tracker_);
+        ValidityConstraints c = makeEmbeddedConstraints(*list_->triangulation_,
+            list_->coords_);
+        HilbertPrimal::enumerate<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>&& v) {
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
+            }, shadows.begin(), shadows.end(), c, tracker_);
     } else {
-        HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
-            SurfaceInserter(*list_, *triang_),
-            vtx->beginVectors(), vtx->endVectors(), nullptr, tracker_);
+        HilbertPrimal::enumerate<Vector<LargeInteger>>(
+            [this](Vector<LargeInteger>&& v) {
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
+            }, shadows.begin(), shadows.end(), ValidityConstraints::none,
+                tracker_);
     }
-
-    delete vtx;
 }
 
-template <typename Coords>
-void NormalSurfaces::Enumerator<Coords>::fillFundamentalFullCone() {
+void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
     list_->algorithm_ = NS_HILBERT_FULLCONE;
 
     if (tracker_)
-        tracker_->newStage(
-            "Enumerating Hilbert basis of full cone", 0.8);
+        tracker_->newStage("Enumerating Hilbert basis of full cone", 0.8);
 
     // NOTE: Calling rowBasis() will change the matching equation matrix.
     // This is okay, since fillFundamentalFullCone() is only used as a
     // top-level enumeration routine (and is never used at all unless
     // the user explicitly chooses this algorithm).
     unsigned rank = rowBasis(const_cast<MatrixInt&>(eqns_));
-    unsigned long dim = eqns_.columns();
+    size_t dim = eqns_.columns();
 
-    std::vector<std::vector<mpz_class> > input;
-    unsigned r, c;
+    std::vector<std::vector<mpz_class>> input;
     input.reserve(rank);
-    for (r = 0; r < rank; ++r) {
-        input.push_back(std::vector<mpz_class>());
-        std::vector<mpz_class>& v(input.back());
+    for (unsigned r = 0; r < rank; ++r) {
+        std::vector<mpz_class> v;
         v.reserve(eqns_.columns());
-        for (c = 0; c < eqns_.columns(); ++c) {
+        for (unsigned c = 0; c < eqns_.columns(); ++c) {
             const Integer& entry(eqns_.entry(r, c));
             if (entry.isNative())
-                v.push_back(mpz_class(entry.longValue()));
+                v.emplace_back(entry.longValue());
             else
-                v.push_back(mpz_class(entry.rawData()));
+                v.emplace_back(entry.rawData());
         }
+        input.push_back(std::move(v));
     }
 
     libnormaliz::Cone<mpz_class> cone(libnormaliz::Type::equations, input);
@@ -596,32 +685,27 @@ void NormalSurfaces::Enumerator<Coords>::fillFundamentalFullCone() {
             tracker_->newStage("Extracting relevant solutions", 0.2);
 
         // Fetch validity constraints from the registry.
-        EnumConstraints* constraints =
+        std::unique_ptr<ValidityConstraints> constraints =
             (list_->which_.has(NS_EMBEDDED_ONLY) ?
-            new EnumConstraints(
-                makeEmbeddedConstraints(*triang_, list_->coords_)) :
+            std::make_unique<ValidityConstraints>(makeEmbeddedConstraints(
+                *list_->triangulation_, list_->coords_)) :
             nullptr);
 
-        bool broken;
-        int nonZero;
-        int i;
-        std::vector<std::vector<mpz_class> >::const_iterator hlit;
-        NormalSurfaceVector* v;
-        LargeInteger tmpInt;
-
-        const std::vector<std::vector<mpz_class> > basis =
+        const std::vector<std::vector<mpz_class>> basis =
             cone.getHilbertBasis();
-        for (hlit = basis.begin(); hlit != basis.end(); ++hlit) {
-            broken = false;
+        for (const auto& b : basis) {
+            bool broken = false;
             if (constraints) {
-                for (const auto& posSet : *constraints) {
-                    nonZero = 0;
-                    for (auto pos : posSet) {
-                        if ((*hlit)[pos] != 0) {
+                // This algorithm is about correctness, not efficiency.
+                // Just use the unbounded-size bitmask class.
+                auto constraintMasks = constraints->bitmasks<Bitmask>(dim);
+
+                for (const Bitmask& constraint : constraintMasks) {
+                    int nonZero = 0;
+                    for (size_t i = 0; i < dim; ++i)
+                        if (constraint.get(i) && (b[i] != 0))
                             if (++nonZero > 1)
                                 break;
-                        }
-                    }
                     if (nonZero > 1) {
                         broken = true;
                         break;
@@ -630,29 +714,15 @@ void NormalSurfaces::Enumerator<Coords>::fillFundamentalFullCone() {
             }
             if (! broken) {
                 // Insert a new surface.
-                v = forCoords(list_->coords_, [=](auto info) {
-                    return static_cast<NormalSurfaceVector*>(
-                        new typename decltype(info)::Class(dim));
-                }, nullptr);
-                if (! v) {
-                    // Coordinate system not recognised.
-                    // Return an empty list to indicate that something broke.
-                    list_->surfaces_.clear();
-                    break;
+                Vector<LargeInteger> v(dim);
+                for (size_t i = 0; i < dim; ++i) {
+                    v[i].setRaw(b[i].get_mpz_t());
+                    v[i].tryReduce();
                 }
-                for (i = 0; i < dim; ++i) {
-                    // Inefficiency: We make two copies of the GMP integer
-                    // here instead of one, since Vector does not give
-                    // us direct non-const access to its elements.
-                    tmpInt.setRaw((*hlit)[i].get_mpz_t());
-                    tmpInt.tryReduce();
-                    v->set(i, tmpInt);
-                }
-                list_->surfaces_.push_back(NormalSurface(*triang_, v));
+                list_->surfaces_.emplace_back(list_->triangulation_,
+                    list_->coords_, std::move(v));
             }
         }
-
-        delete constraints;
     }
 }
 

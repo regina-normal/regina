@@ -44,7 +44,7 @@ retriangulate cPcbbbadu
 retriangulate -h 2 cPcbbbadu
 retriangulate -h 3 cPcbbbadu
 retriangulate -h 3 -t 2 cPcbbbadu
-retriangulate hLLMAkacdefeggjkaknkxn
+retriangulate gLLMQacdefefjkaknrr
 retriangulate -h 2 -t 2 hLLAAkbdceefggdonxdjxn
 # testutil retriangulate -h 3 -t 2 hLLAAkbdceefggdonxdjxn
 retriangulate -4 eLMQcbcddcddaaaa8a8a8a8a8a

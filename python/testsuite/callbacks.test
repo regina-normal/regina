@@ -66,25 +66,41 @@ def displayCover(tri, type):
     print('    ' + str(type) + ': ' + t.homology().str())
 
 ########################################################################
+# Callback actions that we pass to isomorphism searches:
+########################################################################
+
+isoCount = None
+def stopAfter5Iso(iso):
+    # A callback that uses a global variable, and that also uses the
+    # return value to terminate the search.
+    global isoCount
+    isoCount = isoCount + 1
+    return (isoCount >= 5)
+
+def displayIso(iso):
+    print(iso.detail())
+    return False
+
+########################################################################
 # Full tests that we can run on a triangulation or link:
 ########################################################################
 
-def printBanner(obj, test, height, threads):
-    print(obj.label() + ' -> ' + test + ', height = ' + str(height) + \
+def printBanner(name, test, height, threads):
+    print(name + ' -> ' + test + ', height = ' + str(height) + \
         ', threads = ' + str(threads))
 
-def testDisplay(obj, height, threads):
-    printBanner(obj, 'display', height, threads)
-    if obj.type() == PACKET_LINK:
+def testDisplay(obj, name, height, threads):
+    printBanner(name, 'display', height, threads)
+    if obj.__class__ == Link:
         obj.rewrite(height, threads, display)
     else:
         obj.retriangulate(height, threads, display)
 
-def testStopAfter10(obj, height, threads):
-    printBanner(obj, 'stop after 10', height, threads)
+def testStopAfter10(obj, name, height, threads):
+    printBanner(name, 'stop after 10', height, threads)
     global count
     count = 0
-    if obj.type() == PACKET_LINK:
+    if obj.__class__ == Link:
         ans = obj.rewrite(height, threads, stopAfter10)
     else:
         ans = obj.retriangulate(height, threads, stopAfter10)
@@ -93,11 +109,11 @@ def testStopAfter10(obj, height, threads):
     else:
         print('    search ran to completion, count:', count)
 
-def testCollect(obj, height, threads):
-    printBanner(obj, 'collect', height, threads)
+def testCollect(obj, name, height, threads):
+    printBanner(name, 'collect', height, threads)
     global sigs
     sigs = []
-    if obj.type() == PACKET_LINK:
+    if obj.__class__ == Link:
         ans = obj.rewrite(height, threads, collect)
     else:
         ans = obj.retriangulate(height, threads, collect)
@@ -105,63 +121,162 @@ def testCollect(obj, height, threads):
     for i in sigs:
         print('    ' + i)
 
-def testCovers(link, sheets):
-    print(link.label() + ' -> all covers, sheets = ' + str(sheets))
+def testCovers(link, name, sheets):
+    print(name + ' -> all covers, sheets = ' + str(sheets))
     tri = SnapPeaTriangulation(link.complement())
     tri.enumerateCovers(sheets, SnapPeaTriangulation.all_covers, displayCover)
+
+def testIso(inner, innerName, outer, outerName, countOnly = False):
+    comp = innerName + ' vs ' + outerName
+    if not countOnly:
+        print(comp + ' -> isomorphisms, display')
+        inner.findAllIsomorphisms(outer, displayIso)
+        print(comp + ' -> subcomplexes, display')
+        inner.findAllSubcomplexesIn(outer, displayIso)
+
+    global isoCount
+    print(comp + ' -> isomorphisms, stop after 5')
+    isoCount = 0
+    ans = inner.findAllIsomorphisms(outer, stopAfter5Iso)
+    if ans:
+        print('    search terminated early, count:', isoCount)
+    else:
+        print('    search ran to completion, count:', isoCount)
+    print(comp + ' -> subcomplexes, stop after 5')
+
+    isoCount = 0
+    ans = inner.findAllSubcomplexesIn(outer, stopAfter5Iso)
+    if ans:
+        print('    search terminated early, count:', isoCount)
+    else:
+        print('    search ran to completion, count:', isoCount)
 
 ########################################################################
 # Individual test cases:
 ########################################################################
 
-tri = Example3.poincareHomologySphere()
-testDisplay(tri, 1, 1)
-testDisplay(tri, 1, 2)
-testStopAfter10(tri, 1, 1)
-testStopAfter10(tri, 1, 2)
-testCollect(tri, 1, 1)
-testCollect(tri, 1, 2)
+tri = Example3.poincare()
+testDisplay(tri, 'Poincare homology sphere', 1, 1)
+testDisplay(tri, 'Poincare homology sphere', 1, 2)
+testStopAfter10(tri, 'Poincare homology sphere', 1, 1)
+testStopAfter10(tri, 'Poincare homology sphere', 1, 2)
+testCollect(tri, 'Poincare homology sphere', 1, 1)
+testCollect(tri, 'Poincare homology sphere', 1, 2)
+testIso(tri, 'Poincare homology sphere', tri, 'Poincare homology sphere', True)
 print()
 
 tri = Example3.weeks()
-testDisplay(tri, 0, 1)
-testDisplay(tri, 0, 2)
-testStopAfter10(tri, 1, 1)
-testStopAfter10(tri, 1, 2)
-testCollect(tri, 0, 1)
-testCollect(tri, 0, 2)
+testDisplay(tri, 'Weeks manifold', 0, 1)
+testDisplay(tri, 'Weeks manifold', 0, 2)
+testStopAfter10(tri, 'Weeks manifold', 1, 1)
+testStopAfter10(tri, 'Weeks manifold', 1, 2)
+testCollect(tri, 'Weeks manifold', 0, 1)
+testCollect(tri, 'Weeks manifold', 0, 2)
+testIso(tri, 'Weeks manifold', tri, 'Weeks manifold')
 print()
 
 tri = Example4.cappellShaneson()
-testDisplay(tri, 0, 1)
-testDisplay(tri, 0, 2)
-testStopAfter10(tri, 2, 1)
-testStopAfter10(tri, 2, 2)
-testCollect(tri, 2, 1)
-testCollect(tri, 2, 2)
+testDisplay(tri, 'Cappell-Shaneson knot complement', 0, 1)
+testDisplay(tri, 'Cappell-Shaneson knot complement', 0, 2)
+testStopAfter10(tri, 'Cappell-Shaneson knot complement', 2, 1)
+testStopAfter10(tri, 'Cappell-Shaneson knot complement', 2, 2)
+testCollect(tri, 'Cappell-Shaneson knot complement', 2, 1)
+testCollect(tri, 'Cappell-Shaneson knot complement', 2, 2)
+testIso(tri, 'Cappell-Shaneson knot complement', tri, 'Cappell-Shaneson knot complement')
+print()
+
+inner = Example3.lst(1,2)
+outer = Example3.lens(8,3)
+testIso(inner, 'LST(1,2,3)', outer, 'L(8,3)')
 print()
 
 link = ExampleLink.trefoil()
-testDisplay(link, 0, 1)
-testDisplay(link, 0, 2)
+testDisplay(link, 'Trefoil', 0, 1)
+testDisplay(link, 'Trefoil', 0, 2)
 print()
 
 link = ExampleLink.figureEight()
-testStopAfter10(link, 1, 1)
-testStopAfter10(link, 1, 2)
-testCollect(link, 1, 1)
-testCollect(link, 1, 2)
+testStopAfter10(link, 'Figure eight knot', 1, 1)
+testStopAfter10(link, 'Figure eight knot', 1, 2)
+testCollect(link, 'Figure eight knot', 1, 1)
+testCollect(link, 'Figure eight knot', 1, 2)
 print()
 
 link = ExampleLink.monster()
-testStopAfter10(link, 1, 1)
-testStopAfter10(link, 1, 2)
+testStopAfter10(link, 'Monster unknot', 1, 1)
+testStopAfter10(link, 'Monster unknot', 1, 2)
 print()
 
 link = ExampleLink.trefoil()
-testCovers(link, 2)
-testCovers(link, 3)
-testCovers(link, 4)
-testCovers(link, 5)
+testCovers(link, 'Trefoil', 2)
+testCovers(link, 'Trefoil', 3)
+testCovers(link, 'Trefoil', 4)
+testCovers(link, 'Trefoil', 5)
 print()
 
+########################################################################
+# Test facet pairing enumeration:
+########################################################################
+
+def displayPairing(f, autos):
+    print('    ' + f.str(), ' -> automorphisms: ', len(autos))
+
+print('Enumerating facet pairings:')
+FacetPairing3.findAllPairings(3, BoolSet(False), 0, displayPairing)
+FacetPairing5.findAllPairings(2, BoolSet(False), 0, displayPairing)
+print()
+
+########################################################################
+# Test splitting surface signature enumeration:
+########################################################################
+
+def displaySig(s, autos):
+    print('    ' + s.str(), ' -> automorphisms: ', len(autos))
+
+print('Enumerating splitting surface signatures:')
+SigCensus.formCensus(3, displaySig)
+print()
+
+########################################################################
+# Test enumeration of knots:
+########################################################################
+
+def displayKnot(k):
+    print('    ' + k.brief())
+
+print('Enumerating knots:')
+g = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
+g.generateMinimalLinks(displayKnot)
+print()
+
+########################################################################
+# Test location of saturated regions:
+########################################################################
+
+def displayRegion(r):
+    print(r.detail())
+    s = SatRegion(r) # this is a non-trivial copy constructor
+    if r.detail() != s.detail():
+        print('ERROR - Does not match:\n' + s.detail())
+
+print('Finding regions:')
+t = Triangulation3.rehydrate('jofdiaabcceffhiiiedkgiilpsw')
+SatRegion.find(t, False, displayRegion)
+print()
+
+########################################################################
+# Test the non-callback version of SnapPeaTriangulation::enumerateCovers():
+########################################################################
+
+# Now that triangulations are not packets, we cannot use packet listeners
+# to verify the lifetimes of the covers that are returned.  For now just
+# test that the routine seems to do the right thing.
+
+print('Enumerating covers:')
+c = [ (a[0].isoSig(), a[1]) for a in \
+    ExampleSnapPea.whiteheadLink().enumerateCovers(3, \
+    SnapPeaTriangulation.CoverEnumerationType.all_covers) ]
+c.sort()
+for i in c:
+    print('  ' + i[0], i[1])
+print()

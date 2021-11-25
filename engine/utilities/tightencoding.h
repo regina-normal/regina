@@ -49,11 +49,6 @@ namespace regina {
 template <bool>
 class IntegerBase;
 
-/**
- * \weakgroup utilities
- * @{
- */
-
 /*! \page tight Tight encodings of data
  *
  * Regina includes support for <i>tight encodings</i>, which are
@@ -122,6 +117,8 @@ class IntegerBase;
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
+ *
+ * \ingroup utilities
  */
 void tightEncode(std::ostream& out, int value);
 
@@ -131,6 +128,8 @@ void tightEncode(std::ostream& out, int value);
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.
+ *
+ * \ingroup utilities
  */
 std::string tightEncoding(int value);
 
@@ -142,6 +141,8 @@ std::string tightEncoding(int value);
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
+ *
+ * \ingroup utilities
  */
 void tightEncode(std::ostream& out, long value);
 
@@ -151,6 +152,8 @@ void tightEncode(std::ostream& out, long value);
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.
+ *
+ * \ingroup utilities
  */
 std::string tightEncoding(long value);
 
@@ -162,6 +165,8 @@ std::string tightEncoding(long value);
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
+ *
+ * \ingroup utilities
  */
 void tightEncode(std::ostream& out, long long value);
 
@@ -171,6 +176,8 @@ void tightEncode(std::ostream& out, long long value);
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.
+ *
+ * \ingroup utilities
  */
 std::string tightEncoding(long long value);
 
@@ -182,6 +189,8 @@ std::string tightEncoding(long long value);
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
+ *
+ * \ingroup utilities
  */
 void tightEncode(std::ostream& out, unsigned value);
 
@@ -191,6 +200,8 @@ void tightEncode(std::ostream& out, unsigned value);
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.
+ *
+ * \ingroup utilities
  */
 std::string tightEncoding(unsigned value);
 
@@ -202,6 +213,8 @@ std::string tightEncoding(unsigned value);
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
+ *
+ * \ingroup utilities
  */
 void tightEncode(std::ostream& out, unsigned long value);
 
@@ -211,6 +224,8 @@ void tightEncode(std::ostream& out, unsigned long value);
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.
+ *
+ * \ingroup utilities
  */
 std::string tightEncoding(unsigned long value);
 
@@ -222,6 +237,8 @@ std::string tightEncoding(unsigned long value);
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
+ *
+ * \ingroup utilities
  */
 void tightEncode(std::ostream& out, unsigned long long value);
 
@@ -231,6 +248,8 @@ void tightEncode(std::ostream& out, unsigned long long value);
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.
+ *
+ * \ingroup utilities
  */
 std::string tightEncoding(unsigned long long value);
 
@@ -244,7 +263,7 @@ namespace detail {
      * This routine does support passing infinity as the given value (which is
      * only relevant when the integer type \a Int is regina::LargeInteger).
      *
-     * \ifacespython not present.
+     * \ifacespython Not present; use regina::tightEncoding(...) instead.
      *
      * \tparam Int The type of integer to encode; this must be either
      * (i) a native C++ integer type, or (ii) one of Regina's arbitrary
@@ -252,12 +271,12 @@ namespace detail {
      *
      * @param out the output stream to which the encoded string will be written.
      * @param value the integer to encode.
+     *
+     * \ingroup utilities
      */
     template <typename Int>
     void tightEncodeInteger(std::ostream& out, Int value);
 }
-
-/*@}*/
 
 // Inline functions:
 

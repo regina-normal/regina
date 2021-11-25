@@ -33,9 +33,10 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/complex.h"
 #include "../pybind11/functional.h"
+#include "../pybind11/stl.h"
+#include "link/link.h"
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
-#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
@@ -55,23 +56,21 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
     regina::python::add_eq_operators(c1);
 
     auto c2 = pybind11::class_<SnapPeaTriangulation, regina::Triangulation<3>,
-            regina::SafePtr<SnapPeaTriangulation>>(m, "SnapPeaTriangulation")
+            std::shared_ptr<SnapPeaTriangulation>>(
+            m, "SnapPeaTriangulation")
         .def(pybind11::init<>())
         .def(pybind11::init<const std::string&>())
         .def(pybind11::init<const SnapPeaTriangulation&>())
         .def(pybind11::init<const Triangulation<3>&, bool>(),
             pybind11::arg(), pybind11::arg("ignored") = false)
+        .def(pybind11::init<const regina::Link&>())
         .def("swap", &SnapPeaTriangulation::swap)
+        .def("nullify", &SnapPeaTriangulation::nullify)
         .def("isNull", &SnapPeaTriangulation::isNull)
         .def("name", &SnapPeaTriangulation::name)
         .def("solutionType", &SnapPeaTriangulation::solutionType)
-        .def("volume", overload_cast<>(
-            &SnapPeaTriangulation::volume, pybind11::const_))
-        .def("volumeWithPrecision", [](const SnapPeaTriangulation& t) {
-            int precision;
-            double volume = t.volume(precision);
-            return pybind11::make_tuple(volume, precision);
-        })
+        .def("volume", &SnapPeaTriangulation::volume)
+        .def("volumeWithPrecision", &SnapPeaTriangulation::volumeWithPrecision)
         .def("volumeZero", &SnapPeaTriangulation::volumeZero)
         .def("shape", &SnapPeaTriangulation::shape)
         .def("minImaginaryShape", &SnapPeaTriangulation::minImaginaryShape)
@@ -85,14 +84,17 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def("cusp", &SnapPeaTriangulation::cusp,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("whichCusp") = 0)
+        .def("cusps", &SnapPeaTriangulation::cusps,
+            pybind11::keep_alive<0, 1>())
         .def("fill", &SnapPeaTriangulation::fill,
             pybind11::arg(), pybind11::arg(), pybind11::arg("whichCusp")= 0)
         .def("unfill", &SnapPeaTriangulation::unfill,
             pybind11::arg("whichCusp")= 0)
-        .def("filledTriangulation", overload_cast<>(
-            &SnapPeaTriangulation::filledTriangulation, pybind11::const_))
-        .def("filledTriangulation", overload_cast<unsigned>(
-            &SnapPeaTriangulation::filledTriangulation, pybind11::const_))
+        .def("filledPartial", overload_cast<>(
+            &SnapPeaTriangulation::filledPartial, pybind11::const_))
+        .def("filledPartial", overload_cast<unsigned>(
+            &SnapPeaTriangulation::filledPartial, pybind11::const_))
+        .def("filledAll", &SnapPeaTriangulation::filledAll)
         .def("slopeEquations", &SnapPeaTriangulation::slopeEquations)
         .def("fundamentalGroupFilled",
             &SnapPeaTriangulation::fundamentalGroupFilled,
@@ -109,11 +111,20 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def("canonise", &SnapPeaTriangulation::canonise)
         .def("randomize", &SnapPeaTriangulation::randomize)
         .def("randomise", &SnapPeaTriangulation::randomise)
+        .def("enumerateCovers", &SnapPeaTriangulation::enumerateCovers<
+                const std::function<void(SnapPeaTriangulation&&,
+                    SnapPeaTriangulation::CoverType)>&>)
         .def("enumerateCovers", [](const SnapPeaTriangulation& tri,
-                int sheets, SnapPeaTriangulation::CoverEnumerationType type,
-                const std::function<void(SnapPeaTriangulation&,
-                    SnapPeaTriangulation::CoverType)>& action) {
-            return tri.enumerateCovers(sheets, type, action);
+                int sheets, SnapPeaTriangulation::CoverEnumerationType type) {
+            pybind11::list ans;
+            tri.enumerateCovers(sheets, type, [&](SnapPeaTriangulation&& c,
+                    SnapPeaTriangulation::CoverType t) {
+                pybind11::tuple pair(2);
+                pair[0] = pybind11::cast(new SnapPeaTriangulation(std::move(c)));
+                pair[1] = t;
+                ans.append(pair);
+            });
+            return ans;
         })
         .def_static("kernelMessagesEnabled",
             &SnapPeaTriangulation::kernelMessagesEnabled)
@@ -122,11 +133,17 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
             pybind11::arg("enabled") = true)
         .def_static("disableKernelMessages",
             &SnapPeaTriangulation::disableKernelMessages)
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return SnapPeaTriangulation::typeID;
-        })
     ;
+
+    regina::python::addListView<decltype(SnapPeaTriangulation().cusps())>(m);
+
+    auto wrap = regina::python::add_packet_wrapper<SnapPeaTriangulation>(
+        m, "PacketOfSnapPeaTriangulation");
+    regina::python::add_packet_constructor<>(wrap);
+    regina::python::add_packet_constructor<const std::string&>(wrap);
+    regina::python::add_packet_constructor<const Triangulation<3>&, bool>(wrap,
+        pybind11::arg(), pybind11::arg("ignored") = false);
+    regina::python::add_packet_constructor<const regina::Link&>(wrap);
 
     auto st = pybind11::enum_<SnapPeaTriangulation::SolutionType>(
             c2, "SolutionType")

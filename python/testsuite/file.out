@@ -24,12 +24,12 @@ which Regina can work.
 ************************************************************
 *
 * Label: LaTeX Document
-* Type: PDF
+* Type: Attachment
 * Parent: Container
 *
 ************************************************************
 
-PDF packet (36228 bytes)
+Attachment (36228 bytes): attachment.pdf
 
 
 ************************************************************
@@ -46,7 +46,7 @@ Container
 ************************************************************
 *
 * Label: Figure 8 Knot Complement
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: Triangulations
 *
 ************************************************************
@@ -86,7 +86,7 @@ Triangles:
 ************************************************************
 *
 * Label: Tri-Quad Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -100,7 +100,7 @@ Number of surfaces is 1
 ************************************************************
 *
 * Label: Quad Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -117,7 +117,7 @@ inf inf inf inf ; 0 0 1 || inf inf inf inf ; 0 2 0
 ************************************************************
 *
 * Label: Angle Structures
-* Type: Angle Structure List
+* Type: Angle structure list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -133,7 +133,7 @@ inf inf inf inf ; 0 0 1 || inf inf inf inf ; 0 2 0
 ************************************************************
 *
 * Label: Layered Solid Torus
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: Triangulations
 *
 ************************************************************
@@ -181,7 +181,7 @@ Triangles:
 ************************************************************
 *
 * Label: Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Layered Solid Torus
 *
 ************************************************************
@@ -206,7 +206,7 @@ Number of surfaces is 12
 ************************************************************
 *
 * Label: Almost Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Layered Solid Torus
 *
 ************************************************************
@@ -252,7 +252,7 @@ Number of surfaces is 33
 ************************************************************
 *
 * Label: Poincaré Homology Sphere
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: Triangulations
 *
 ************************************************************
@@ -304,7 +304,7 @@ Triangles:
 ************************************************************
 *
 * Label: RP2xS1
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: Triangulations
 *
 ************************************************************
@@ -359,7 +359,7 @@ There are in fact two triangulations of this 3-manifold with three tetrahedra.
 ************************************************************
 *
 * Label: Tori, Annuli and Discs
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Container
 *
 ************************************************************
@@ -370,7 +370,7 @@ OR combination normal surface filter
 ************************************************************
 *
 * Label: Tori and Annuli
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Tori, Annuli and Discs
 *
 ************************************************************
@@ -384,7 +384,7 @@ Filter normal surfaces with restrictions:
 ************************************************************
 *
 * Label: Discs
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Tori, Annuli and Discs
 *
 ************************************************************
@@ -457,12 +457,12 @@ Enjoy!
 ************************************************************
 *
 * Label: LaTeX Document
-* Type: PDF
+* Type: Attachment
 * Parent: Sample Data File
 *
 ************************************************************
 
-PDF packet (36228 bytes)
+Attachment (36228 bytes): attachment.pdf
 
 
 ************************************************************
@@ -479,7 +479,7 @@ Container
 ************************************************************
 *
 * Label: Figure 8 Knot Complement
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: 3-Manifolds
 *
 ************************************************************
@@ -519,7 +519,7 @@ Triangles:
 ************************************************************
 *
 * Label: Vertex Link
-* Type: 2-Manifold Triangulation
+* Type: 2-D triangulation
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -570,7 +570,7 @@ Edges:
 ************************************************************
 *
 * Label: Tri-Quad Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -584,7 +584,7 @@ Number of surfaces is 1
 ************************************************************
 *
 * Label: Quad Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -601,7 +601,7 @@ inf inf inf inf ; 0 2 0 || inf inf inf inf ; 0 0 1
 ************************************************************
 *
 * Label: Angle Structures
-* Type: Angle Structure List
+* Type: Angle structure list
 * Parent: Figure 8 Knot Complement
 *
 ************************************************************
@@ -617,7 +617,7 @@ inf inf inf inf ; 0 2 0 || inf inf inf inf ; 0 0 1
 ************************************************************
 *
 * Label: Layered Solid Torus
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: 3-Manifolds
 *
 ************************************************************
@@ -665,7 +665,7 @@ Triangles:
 ************************************************************
 *
 * Label: Almost Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Layered Solid Torus
 *
 ************************************************************
@@ -711,7 +711,7 @@ Number of surfaces is 33
 ************************************************************
 *
 * Label: Fundamental Normal Surfaces
-* Type: Normal Surface List
+* Type: Normal surface list
 * Parent: Layered Solid Torus
 *
 ************************************************************
@@ -737,7 +737,7 @@ Number of surfaces is 13
 ************************************************************
 *
 * Label: Poincaré Homology Sphere
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: 3-Manifolds
 *
 ************************************************************
@@ -789,7 +789,7 @@ Triangles:
 ************************************************************
 *
 * Label: RP2xS1
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: 3-Manifolds
 *
 ************************************************************
@@ -855,7 +855,7 @@ Container
 ************************************************************
 *
 * Label: Octahedron Boundary
-* Type: 2-Manifold Triangulation
+* Type: 2-D triangulation
 * Parent: 2-Manifolds
 *
 ************************************************************
@@ -906,7 +906,7 @@ Edges:
 ************************************************************
 *
 * Label: Klein Bottle, version 1
-* Type: 2-Manifold Triangulation
+* Type: 2-D triangulation
 * Parent: 2-Manifolds
 *
 ************************************************************
@@ -939,7 +939,7 @@ Edges:
 ************************************************************
 *
 * Label: Klein Bottle, version 2
-* Type: 2-Manifold Triangulation
+* Type: 2-D triangulation
 * Parent: 2-Manifolds
 *
 ************************************************************
@@ -983,7 +983,7 @@ Container
 ************************************************************
 *
 * Label: Tori, Annuli and Discs
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Normal Surface Filters
 *
 ************************************************************
@@ -994,7 +994,7 @@ OR combination normal surface filter
 ************************************************************
 *
 * Label: Tori and Annuli
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Tori, Annuli and Discs
 *
 ************************************************************
@@ -1008,7 +1008,7 @@ Filter normal surfaces with restrictions:
 ************************************************************
 *
 * Label: Discs
-* Type: Surface Filter
+* Type: Surface filter
 * Parent: Tori, Annuli and Discs
 *
 ************************************************************
@@ -1056,7 +1056,7 @@ Container
 ************************************************************
 *
 * Label: 2-D
-* Type: 2-Manifold Triangulation
+* Type: 2-D triangulation
 * Parent: Root
 *
 ************************************************************
@@ -1089,7 +1089,7 @@ Edges:
 ************************************************************
 *
 * Label: 3-D
-* Type: 3-Manifold Triangulation
+* Type: 3-D triangulation
 * Parent: Root
 *
 ************************************************************
@@ -1129,7 +1129,7 @@ Triangles:
 ************************************************************
 *
 * Label: 4-D
-* Type: 4-Manifold Triangulation
+* Type: 4-D triangulation
 * Parent: Root
 *
 ************************************************************
@@ -1176,7 +1176,7 @@ Tetrahedra:
 ************************************************************
 *
 * Label: 5-D
-* Type: 5-Manifold Triangulation
+* Type: 5-D triangulation
 * Parent: Root
 *
 ************************************************************
@@ -1195,7 +1195,7 @@ f-vector: 2, 10, 20, 20, 10, 2
 ************************************************************
 *
 * Label: 6-D
-* Type: 6-Manifold Triangulation
+* Type: 6-D triangulation
 * Parent: Root
 *
 ************************************************************
@@ -1214,7 +1214,7 @@ f-vector: 2, 12, 30, 40, 30, 12, 2
 ************************************************************
 *
 * Label: 7-D
-* Type: 7-Manifold Triangulation
+* Type: 7-D triangulation
 * Parent: Root
 *
 ************************************************************
@@ -1233,7 +1233,7 @@ f-vector: 2, 14, 42, 70, 70, 42, 14, 2
 ************************************************************
 *
 * Label: 8-D
-* Type: 8-Manifold Triangulation
+* Type: 8-D triangulation
 * Parent: Root
 *
 ************************************************************
@@ -1252,7 +1252,7 @@ f-vector: 2, 16, 56, 112, 140, 112, 56, 16, 2
 ************************************************************
 *
 * Label: 9-D
-* Type: 9-Manifold Triangulation
+* Type: 9-D triangulation
 * Parent: Root
 *
 ************************************************************
@@ -1271,7 +1271,7 @@ f-vector: 2, 18, 72, 168, 252, 252, 168, 72, 18, 2
 ************************************************************
 *
 * Label: 10-D
-* Type: 10-Manifold Triangulation
+* Type: 10-D triangulation
 * Parent: Root
 *
 ************************************************************
@@ -1290,7 +1290,7 @@ f-vector: 2, 20, 90, 240, 420, 504, 420, 240, 90, 20, 2
 ************************************************************
 *
 * Label: 11-D
-* Type: 11-Manifold Triangulation
+* Type: 11-D triangulation
 * Parent: Root
 *
 ************************************************************
@@ -1309,7 +1309,7 @@ f-vector: 2, 22, 110, 330, 660, 924, 924, 660, 330, 110, 22, 2
 ************************************************************
 *
 * Label: 12-D
-* Type: 12-Manifold Triangulation
+* Type: 12-D triangulation
 * Parent: Root
 *
 ************************************************************
@@ -1328,7 +1328,7 @@ f-vector: 2, 24, 132, 440, 990, 1584, 1848, 1584, 990, 440, 132, 24, 2
 ************************************************************
 *
 * Label: 13-D
-* Type: 13-Manifold Triangulation
+* Type: 13-D triangulation
 * Parent: Root
 *
 ************************************************************
@@ -1347,7 +1347,7 @@ f-vector: 2, 26, 156, 572, 1430, 2574, 3432, 3432, 2574, 1430, 572, 156, 26, 2
 ************************************************************
 *
 * Label: 14-D
-* Type: 14-Manifold Triangulation
+* Type: 14-D triangulation
 * Parent: Root
 *
 ************************************************************
@@ -1366,7 +1366,7 @@ f-vector: 2, 28, 182, 728, 2002, 4004, 6006, 6864, 6006, 4004, 2002, 728, 182, 2
 ************************************************************
 *
 * Label: 15-D
-* Type: 15-Manifold Triangulation
+* Type: 15-D triangulation
 * Parent: Root
 *
 ************************************************************

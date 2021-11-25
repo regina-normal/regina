@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "manifold/sfs.h"
 #include "subcomplex/augtrisolidtorus.h"
 #include "triangulation/dim3.h"
@@ -41,7 +42,11 @@ using regina::AugTriSolidTorus;
 void addAugTriSolidTorus(pybind11::module_& m) {
     pybind11::class_<AugTriSolidTorus, regina::StandardTriangulation>
             (m, "AugTriSolidTorus")
-        .def("clone", &AugTriSolidTorus::clone)
+        .def(pybind11::init<const AugTriSolidTorus&>())
+        .def("clone", [](const AugTriSolidTorus& s) { // deprecated
+            return AugTriSolidTorus(s);
+        })
+        .def("swap", &AugTriSolidTorus::swap)
         .def("core", &AugTriSolidTorus::core,
             pybind11::return_value_policy::reference_internal)
         .def("augTorus", &AugTriSolidTorus::augTorus,
@@ -51,19 +56,12 @@ void addAugTriSolidTorus(pybind11::module_& m) {
         .def("chainType", &AugTriSolidTorus::chainType)
         .def("torusAnnulus", &AugTriSolidTorus::torusAnnulus)
         .def("hasLayeredChain", &AugTriSolidTorus::hasLayeredChain)
-        .def_static("isAugTriSolidTorus", &AugTriSolidTorus::isAugTriSolidTorus)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("CHAIN_NONE", [](pybind11::object) {
-            return AugTriSolidTorus::CHAIN_NONE;
-        })
-        .def_property_readonly_static("CHAIN_MAJOR", [](pybind11::object) {
-            return AugTriSolidTorus::CHAIN_MAJOR;
-        })
-        .def_property_readonly_static("CHAIN_AXIS", [](pybind11::object) {
-            return AugTriSolidTorus::CHAIN_AXIS;
-        })
+        .def_static("recognise", &AugTriSolidTorus::recognise)
+        .def_static("isAugTriSolidTorus", // deprecated
+            &AugTriSolidTorus::recognise)
+        .def_readonly_static("CHAIN_NONE", &AugTriSolidTorus::CHAIN_NONE)
+        .def_readonly_static("CHAIN_MAJOR", &AugTriSolidTorus::CHAIN_MAJOR)
+        .def_readonly_static("CHAIN_AXIS", &AugTriSolidTorus::CHAIN_AXIS)
     ;
 }
 

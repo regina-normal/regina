@@ -490,8 +490,8 @@ void Tangle::box(const Tangle& topLeft, const Tangle& topRight,
     }
 }
 
-Link* Tangle::numClosure() const {
-    Link* ans = new Link();
+Link Tangle::numClosure() const {
+    Link ans;
 
     // Make a clone of this tangle, which as a side-effect also clones
     // the crossings.
@@ -504,7 +504,7 @@ Link* Tangle::numClosure() const {
         for (i = 0; i < 2; ++i) {
             if (clone.end_[i][0])
                 Link::join(clone.end_[i][1], clone.end_[i][0]);
-            ans->components_.push_back(clone.end_[i][0]);
+            ans.components_.push_back(clone.end_[i][0]);
         }
     } else if (type_ == 'x') {
         // We have just one component, and the orientations of the two
@@ -516,7 +516,7 @@ Link* Tangle::numClosure() const {
 
         for (i = 0; i < 2; ++i)
             Link::join(clone.end_[i][1], clone.end_[i ^ 1][0]);
-        ans->components_.push_back(clone.end_[0][0]);
+        ans.components_.push_back(clone.end_[0][0]);
     } else {
         // The vertical case.
         // We have just one component, and the orientations of the two
@@ -525,28 +525,28 @@ Link* Tangle::numClosure() const {
             clone.reverse(1);
             for (i = 0; i < 2; ++i)
                 Link::join(clone.end_[i ^ 1][i], clone.end_[i][i]);
-            ans->components_.push_back(clone.end_[0][0]);
+            ans.components_.push_back(clone.end_[0][0]);
         } else if (clone.end_[0][0]) {
             // Just connect the ends of the left-hand string.
             Link::join(clone.end_[0][1], clone.end_[0][0]);
-            ans->components_.push_back(clone.end_[0][0]);
+            ans.components_.push_back(clone.end_[0][0]);
         } else if (clone.end_[1][0]) {
             // Just connect the ends of the right-hand string.
             Link::join(clone.end_[1][1], clone.end_[1][0]);
-            ans->components_.push_back(clone.end_[1][0]);
+            ans.components_.push_back(clone.end_[1][0]);
         } else {
-            ans->components_.push_back(StrandRef());
+            ans.components_.emplace_back();
         }
     }
 
     // Transfer all the crossings directly to the new link.
-    ans->crossings_.swap(clone.crossings_);
+    ans.crossings_.swap(clone.crossings_);
 
     return ans;
 }
 
-Link* Tangle::denClosure() const {
-    Link* ans = new Link();
+Link Tangle::denClosure() const {
+    Link ans;
 
     // Make a clone of this tangle, which as a side-effect also clones
     // the crossings.
@@ -559,7 +559,7 @@ Link* Tangle::denClosure() const {
         for (i = 0; i < 2; ++i) {
             if (clone.end_[i][0])
                 Link::join(clone.end_[i][1], clone.end_[i][0]);
-            ans->components_.push_back(clone.end_[i][0]);
+            ans.components_.push_back(clone.end_[i][0]);
         }
     } else if (type_ == 'x') {
         // We have just one component, and the orientations of the two
@@ -572,7 +572,7 @@ Link* Tangle::denClosure() const {
         clone.reverse(1);
         for (i = 0; i < 2; ++i)
             Link::join(clone.end_[i ^ 1][i], clone.end_[i][i]);
-        ans->components_.push_back(clone.end_[0][0]);
+        ans.components_.push_back(clone.end_[0][0]);
     } else {
         // The horizontal case.
         // We have just one component, and the orientations of the two
@@ -581,22 +581,22 @@ Link* Tangle::denClosure() const {
             clone.reverse(1);
             for (i = 0; i < 2; ++i)
                 Link::join(clone.end_[i ^ 1][i], clone.end_[i][i]);
-            ans->components_.push_back(clone.end_[0][0]);
+            ans.components_.push_back(clone.end_[0][0]);
         } else if (clone.end_[0][0]) {
             // Just connect the ends of the top string.
             Link::join(clone.end_[0][1], clone.end_[0][0]);
-            ans->components_.push_back(clone.end_[0][0]);
+            ans.components_.push_back(clone.end_[0][0]);
         } else if (clone.end_[1][0]) {
             // Just connect the ends of the bottom string.
             Link::join(clone.end_[1][1], clone.end_[1][0]);
-            ans->components_.push_back(clone.end_[1][0]);
+            ans.components_.push_back(clone.end_[1][0]);
         } else {
-            ans->components_.push_back(StrandRef());
+            ans.components_.emplace_back();
         }
     }
 
     // Transfer all the crossings directly to the new link.
-    ans->crossings_.swap(clone.crossings_);
+    ans.crossings_.swap(clone.crossings_);
 
     return ans;
 }

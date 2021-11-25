@@ -58,9 +58,15 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Triangulation<3>* tri;
+        /**
+         * Packet details:
+         * - tri_ and triAsPacket_ are the same object, which may be either
+         *   a Triangulation<3> or a SnapPeaTriangulation packet.
+         */
+        regina::Triangulation<3>* tri_;
+        regina::Packet* triAsPacket_;
         std::string name;
-        std::unique_ptr<regina::CensusHits> hits;
+        std::list<regina::CensusHit> hits;
 
         /**
          * Internal components
@@ -102,15 +108,15 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        Tri3SurfacesUI(regina::Triangulation<3>* packet,
-            PacketTabbedUI* useParentUI);
+        Tri3SurfacesUI(regina::Triangulation<3>* tri,
+            regina::Packet* triAsPacket, PacketTabbedUI* useParentUI);
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     public slots:
         /**

@@ -50,7 +50,7 @@ Integer Primes::prime(unsigned long which, bool autoGrow) {
         if (autoGrow)
             growPrimeList(which - numPrimeSeeds - largePrimes.size() + 1);
         else
-            return Integer::zero;
+            return {}; // zero
     }
 
     // Got it.
@@ -77,21 +77,17 @@ void Primes::growPrimeList(unsigned long extras) {
 }
 
 std::vector<Integer> Primes::primeDecomp(const Integer& n) {
-    std::vector<Integer> retval;
-
     // Deal with n=0 first.
-    if (n == Integer::zero) {
-        retval.push_back(Integer::zero);
-        return retval;
-    }
+    if (n == 0)
+        return { 0 };
 
+    std::vector<Integer> retval;
     Integer temp(n);
-    Integer r,q;
 
     // if the number is negative, put -1 as first factor.
-    if (temp < Integer::zero) {
+    if (temp < 0) {
         temp.negate();
-        retval.push_back(Integer(-1));
+        retval.emplace_back(-1);
     }
 
     // repeatedly divide the number by the smallest primes until no
@@ -107,10 +103,10 @@ std::vector<Integer> Primes::primeDecomp(const Integer& n) {
     unsigned long iterSinceDivision=0; // keeps track of how many iterations
                                        // since the last successful division
 
-    while ( temp != Integer::one ) {
+    while ( temp != 1 ) {
         // now cpi<size(), check to see if temp % prime(cpi) == 0
-        q = temp.divisionAlg(prime(cpi), r); // means temp = q*prime(cpi) + r
-        if (r == Integer::zero) {
+        auto [q, r] = temp.divisionAlg(prime(cpi)); // temp = q*prime(cpi) + r
+        if (r == 0) {
             temp=q;
             retval.push_back(prime(cpi));
             iterSinceDivision=0;
@@ -152,18 +148,18 @@ std::vector<std::pair<Integer, unsigned long> >
     if (! list1.empty()) {
         Integer cp(list1.front()); // current prime
         unsigned long cc(1); // current count
-        std::vector<Integer>::const_iterator it = list1.begin();
+        auto it = list1.begin();
         for (++it; it != list1.end(); ++it) {
             if (*it == cp)
                 cc++;
             else {
                 // a new prime is coming up.
-                retlist.push_back(std::make_pair( cp, cc ) );
+                retlist.emplace_back(cp, cc);
                 cp = *it;
                 cc = 1;
             }
         }
-        retlist.push_back(std::make_pair( cp, cc ) );
+        retlist.emplace_back(cp, cc);
     }
 
     return retlist;

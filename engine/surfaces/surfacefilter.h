@@ -52,37 +52,6 @@ class NormalSurface;
 class SurfaceFilter;
 class SurfaceFilterCombination;
 class SurfaceFilterProperties;
-class XMLPacketReader;
-class XMLFilterReader;
-
-/**
- * \weakgroup surfaces
- * @{
- */
-
-/**
- * A template that stores information about a particular type of normal
- * surface filter.  Much of this information is given in the
- * form of compile-time constants and types.
- *
- * To iterate through cases for a given value of SurfaceFilterInfo that is not
- * known until runtime, see the various forFilter() routines defined in
- * filterregistry.h.
- *
- * At a bare minimum, each specialisation of this template must provide:
- *
- * - a typedef \a Class that represents the corresponding
- *   SurfaceFilter descendant class;
- * - a static constexpr member <tt>const char* name</tt>, which gives
- *   the human-readable name of the filter type.
- *
- * \ifacespython Not present.
- *
- * \tparam filterType one of the #SurfaceFilterType constants, indicating
- * which type of filter we are querying.
- */
-template <SurfaceFilterType filterType>
-struct SurfaceFilterInfo;
 
 /**
  * Defines various constants, types and virtual functions for a
@@ -100,101 +69,53 @@ struct SurfaceFilterInfo;
  *
  * @param class_ the name of this descendant class of SurfaceFilter.
  * @param id the corresponding SurfaceFilterType constant.
+ * @param name a human-readable name for this filter type.
+ *
+ * \ingroup surfaces
  */
-#define REGINA_SURFACE_FILTER(class_, id) \
+#define REGINA_SURFACE_FILTER(class_, id, name) \
     public: \
         static constexpr const SurfaceFilterType filterTypeID = id; \
-        inline virtual SurfaceFilterType filterType() const override { \
+        inline SurfaceFilterType filterType() const override { \
             return id; \
         } \
-        inline virtual std::string filterTypeName() const override { \
-            return SurfaceFilterInfo<id>::name; \
+        inline std::string filterTypeName() const override { \
+            return name; \
         }
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_SURFACEFILTER> {
-    typedef SurfaceFilter Class;
-    static constexpr const char* name = "Surface Filter";
-};
-
-template <>
-struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
-    typedef SurfaceFilter Class;
-    static constexpr const char* name = "Default filter";
-};
-
-template <>
-struct SurfaceFilterInfo<NS_FILTER_COMBINATION> {
-    typedef SurfaceFilterCombination Class;
-    static constexpr const char* name = "Combination filter";
-};
-
-template <>
-struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
-    typedef SurfaceFilterProperties Class;
-    static constexpr const char* name = "Filter by basic properties";
-};
-#endif
 
 /**
  * A packet that accepts or rejects normal surfaces.
  * Different subclasses of SurfaceFilter represent different filtering
  * methods.
  *
- * <b>When deriving classes from SurfaceFilter:</b>
- * <ul>
- *   <li>A new value must be added to the SurfaceFilterType enum in
- *   surfacefiltertype.h to represent the new filter type.</li>
- *   <li>The file filterregistry-impl.h must be updated to reflect the new
- *   filter type (the file itself contains instructions on how to do this).</li>
- *   <li>A corresponding specialisation of SurfaceFilterInfo<> must be
- *   defined, typically in the same header as the new filter class.</li>
- *   <li>The macro REGINA_SURFACE_FILTER must be added to the beginning
- *   of the new filter class.  This will declare and define various
- *   constants, typedefs and virtual functions (see the REGINA_SURFACE_FILTER
- *   macro documentation for details).</li>
- *   <li>A copy constructor <tt>class(const class& cloneMe)</tt> must
- *   be declared and implemented.  You may assume that parameter
- *   \a cloneMe is of the same class as that whose constructor you are
- *   writing.</li>
- *   <li>Virtual functions accept(), internalClonePacket(), writeTextLong() and
- *   writeXMLFilterData() must be overridden.</li>
- *   <li>Static function xmlFilterReader() must be declared and
- *   implemented as described in the documentation below.</li>
- * </ul>
+ * When deriving classes from SurfaceFilter:
  *
- * \todo \feature Implement property \a lastAppliedTo.
+ * - Add a new filter constant to the SurfaceFilterType enum;
+ *
+ * - Create a new subclass \a C of SurfaceFilter, which begins with the
+ *   REGINA_SURFACE_FILTER macro;
+ *
+ * - Perform all tasks required for this new innate packet type \a C, as
+ *   outlined in the Packet class documentation;
+ *
+ * - Override the virtual function writeTextLong(), as well as all pure virtual
+ *   functions from both the Packet and SurfaceFilter base classes (except
+ *   for those already provided by REGINA_PACKET and REGINA_SURFACE_FILTER).
+ *
+ * Like all packet types, Regina's filter types do not support C++ move
+ * semantics, since this would interfere with the structure of the packet tree.
+ * They do support copy construction, copy assignment and swaps, but only in
+ * the derived filter classes (e.g., you cannot assign from the polymorphic
+ * base class SurfaceFilter).  Moreover, these operations only copy/swap the
+ * filter content, not the packet infrastructure (e.g., they do not touch
+ * packet labels, or the packet tree, or event listeners).
+ *
+ * \ingroup surfaces
  */
 class SurfaceFilter : public Packet {
-    REGINA_PACKET(SurfaceFilter, PACKET_SURFACEFILTER)
+    REGINA_PACKET(PACKET_SURFACEFILTER, "Surface filter")
 
     public:
-        /**
-         * A compile-time constant that identifies this type of surface filter.
-         */
-        static constexpr const SurfaceFilterType filterTypeID =
-            NS_FILTER_DEFAULT;
-
-    public:
-        /**
-         * Creates a new default surface filter.  This will simply accept
-         * all normal surfaces.
-         */
-        SurfaceFilter();
-        /**
-         * Creates a new default surface filter.  This will simply accept
-         * all normal surfaces.  Note that the given parameter is
-         * ignored.
-         *
-         * @param cloneMe this parameter is ignored.
-         */
-        SurfaceFilter(const SurfaceFilter& cloneMe);
-        /**
-         * Destroys this surface filter.
-         */
-        virtual ~SurfaceFilter();
-
         /**
          * Decides whether or not the given normal surface is accepted by this
          * filter.
@@ -205,7 +126,7 @@ class SurfaceFilter : public Packet {
          * @return \c true if and only if the given surface is accepted
          * by this filter.
          */
-        virtual bool accept(const NormalSurface& surface) const;
+        virtual bool accept(const NormalSurface& surface) const = 0;
 
         /**
          * Returns the unique integer ID corresponding to the filtering
@@ -213,59 +134,29 @@ class SurfaceFilter : public Packet {
          *
          * @return the unique integer filtering method ID.
          */
-        virtual SurfaceFilterType filterType() const;
+        virtual SurfaceFilterType filterType() const = 0;
         /**
          * Returns a string description of the filtering method that is
          * this particular subclass of SurfaceFilter.
          *
          * @return a string description of this filtering method.
          */
-        virtual std::string filterTypeName() const;
+        virtual std::string filterTypeName() const = 0;
 
-        /**
-         * Returns a newly created XML filter reader that will read the
-         * details of a particular type of surface filter.  You may
-         * assume that the filter to be read is of the same type as the
-         * class in which you are implementing this routine.
-         *
-         * The XML filter reader should read exactly what
-         * writeXMLFilterData() writes, and vice versa.
-         *
-         * \a parent represents the packet which will become the new
-         * filter's parent in the tree structure.  This information is
-         * for reference only, and need not be used.
-         * See the description of parameter \a parent in
-         * Packet::xmlReader() for further details.
-         *
-         * \ifacespython Not present.
-         *
-         * @param parent the packet which will become the new filter's
-         * parent in the tree structure, or 0 if the new filter is to be
-         * tree matriarch.
-         * @return the newly created XML filter reader.
-         */
-        static XMLFilterReader* xmlFilterReader(Packet* parent);
-
-        virtual void writeTextShort(std::ostream& out) const override;
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const override;
+        void writeTextShort(std::ostream& out) const override;
 
     protected:
         /**
-         * Writes a chunk of XML containing the details of this filter.
-         *
-         * You may assume that the filter opening tag (including the
-         * filter type) has already been written, and that the filter
-         * closing tag will be written immediately after this routine is
-         * called.  This routine need only write the additional details
-         * corresponding to this particular subclass of SurfaceFilter.
-         *
-         * @param out the output stream to which the XML should be written.
+         * Default constructor.
          */
-        virtual void writeXMLFilterData(std::ostream& out) const;
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
+        SurfaceFilter() = default;
+        /**
+         * Copy constructor that does not actually copy anything.
+         *
+         * This is provided so that derived classes can use it implicitly
+         * in their own copy constructors.
+         */
+        SurfaceFilter(const SurfaceFilter&) = default;
 };
 
 /**
@@ -278,9 +169,19 @@ class SurfaceFilter : public Packet {
  * If there are no immediate child filters, a normal surface will be
  * accepted if this is an \a and filter and rejected if this is an \a or
  * filter.
+ *
+ * Like all packet types, this class does not support C++ move semantics
+ * since this would interfere with the structure of the packet tree.
+ * It does support copy construction, copy assignment and swaps; however,
+ * these operations only copy/swap the mathematical content, not the packet
+ * infrastructure (e.g., they do not touch packet labels, or the packet
+ * tree, or event listeners).
+ *
+ * \ingroup surfaces
  */
 class SurfaceFilterCombination : public SurfaceFilter {
-    REGINA_SURFACE_FILTER(SurfaceFilterCombination, NS_FILTER_COMBINATION)
+    REGINA_SURFACE_FILTER(SurfaceFilterCombination, NS_FILTER_COMBINATION,
+        "Combination filter")
 
     private:
         bool usesAnd_;
@@ -293,13 +194,40 @@ class SurfaceFilterCombination : public SurfaceFilter {
          * This will be an \a and filter.
          */
         SurfaceFilterCombination();
+
         /**
-         * Creates a new surface filter that is a clone of the given
-         * surface filter.
+         * Creates a new copy of the given filter.
          *
-         * @param cloneMe the surface filter to clone.
+         * Like all packet types, this only copies the filter content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * it will not clone the given packet's children, and it will not
+         * insert the new packet into any packet tree).
          */
-        SurfaceFilterCombination(const SurfaceFilterCombination& cloneMe);
+        SurfaceFilterCombination(const SurfaceFilterCombination&) = default;
+
+        /**
+         * Sets this to be a copy of the given filter.
+         *
+         * Like all packet types, this only copies the filter content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * or change this packet's location in any packet tree).
+         *
+         * @param src the filter whose contents should be copied.
+         * @return a reference to this filter.
+         */
+        SurfaceFilterCombination& operator = (
+            const SurfaceFilterCombination& src);
+
+        /**
+         * Swaps the contents of this and the given filter.
+         *
+         * Like all packet types, this only swaps the filter content, not
+         * the packet infrastructure (e.g., it will not swap packet labels,
+         * or change either packet's location in any packet tree).
+         *
+         * @other the filter whose contents should be swapped with this.
+         */
+        void swap(SurfaceFilterCombination& other);
 
         /**
          * Determines whether this is an \a and or an \a or combination.
@@ -316,14 +244,28 @@ class SurfaceFilterCombination : public SurfaceFilter {
          */
         void setUsesAnd(bool value);
 
-        virtual bool accept(const NormalSurface& surface) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
-        static XMLFilterReader* xmlFilterReader(Packet* parent);
+        bool accept(const NormalSurface& surface) const override;
+        void writeTextLong(std::ostream& out) const override;
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLFilterData(std::ostream& out) const override;
+        std::shared_ptr<Packet> internalClonePacket() const override;
+        void writeXMLPacketData(std::ostream& out, FileFormat format,
+            bool anon, PacketRefs& refs) const override;
 };
+
+/**
+ * Swaps the contents of the given combination filters.
+ *
+ * This global routine simply calls SurfaceFilterCombination::swap(); it is
+ * provided so that SurfaceFilterCombination meets the C++ Swappable
+ * requirements.
+ *
+ * @param a the first filter whose contents should be swapped.
+ * @param b the second filter whose contents should be swapped.
+ *
+ * \ingroup surfaces
+ */
+void swap(SurfaceFilterCombination& a, SurfaceFilterCombination& b);
 
 /**
  * A normal surface filter that filters by basic properties of the normal
@@ -335,9 +277,19 @@ class SurfaceFilterCombination : public SurfaceFilter {
  * required to be both orientable and compact, and say that orientability
  * cannot be determined.  Then the surface will be accepted solely on the
  * basis of whether or not it is compact.
+ *
+ * Like all packet types, this class does not support C++ move semantics
+ * since this would interfere with the structure of the packet tree.
+ * It does support copy construction, copy assignment and swaps; however,
+ * these operations only copy/swap the mathematical content, not the packet
+ * infrastructure (e.g., they do not touch packet labels, or the packet
+ * tree, or event listeners).
+ *
+ * \ingroup surfaces
  */
 class SurfaceFilterProperties : public SurfaceFilter {
-    REGINA_SURFACE_FILTER(SurfaceFilterProperties, NS_FILTER_PROPERTIES)
+    REGINA_SURFACE_FILTER(SurfaceFilterProperties, NS_FILTER_PROPERTIES,
+        "Filter by basic properties")
 
     private:
         std::set<LargeInteger> eulerChar_;
@@ -355,13 +307,40 @@ class SurfaceFilterProperties : public SurfaceFilter {
          * Creates a new surface filter that accepts all normal surfaces.
          */
         SurfaceFilterProperties();
+
         /**
-         * Creates a new surface filter that is a clone of the given
-         * surface filter.
+         * Creates a new copy of the given filter.
          *
-         * @param cloneMe the surface filter to clone.
+         * Like all packet types, this only copies the filter content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * it will not clone the given packet's children, and it will not
+         * insert the new packet into any packet tree).
          */
-        SurfaceFilterProperties(const SurfaceFilterProperties& cloneMe);
+        SurfaceFilterProperties(const SurfaceFilterProperties&) = default;
+
+        /**
+         * Sets this to be a copy of the given filter.
+         *
+         * Like all packet types, this only copies the filter content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * or change this packet's location in any packet tree).
+         *
+         * @param src the filter whose contents should be copied.
+         * @return a reference to this filter.
+         */
+        SurfaceFilterProperties& operator = (
+            const SurfaceFilterProperties& src);
+
+        /**
+         * Swaps the contents of this and the given filter.
+         *
+         * Like all packet types, this only swaps the filter content, not
+         * the packet infrastructure (e.g., it will not swap packet labels,
+         * or change either packet's location in any packet tree).
+         *
+         * @other the filter whose contents should be swapped with this.
+         */
+        void swap(SurfaceFilterProperties& other);
 
         /**
          * Returns the set of allowable Euler characteristics.  Any
@@ -481,60 +460,51 @@ class SurfaceFilterProperties : public SurfaceFilter {
          */
         void setRealBoundary(BoolSet value);
 
-        virtual bool accept(const NormalSurface& surface) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
-        static XMLFilterReader* xmlFilterReader(Packet* parent);
+        bool accept(const NormalSurface& surface) const override;
+        void writeTextLong(std::ostream& out) const override;
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLFilterData(std::ostream& out) const override;
+        std::shared_ptr<Packet> internalClonePacket() const override;
+        void writeXMLPacketData(std::ostream& out, FileFormat format,
+            bool anon, PacketRefs& refs) const override;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the given property-based filters.
+ *
+ * This global routine simply calls SurfaceFilterProperties::swap(); it is
+ * provided so that SurfaceFilterProperties meets the C++ Swappable
+ * requirements.
+ *
+ * @param a the first filter whose contents should be swapped.
+ * @param b the second filter whose contents should be swapped.
+ *
+ * \ingroup surfaces
+ */
+void swap(SurfaceFilterProperties& a, SurfaceFilterProperties& b);
 
 // Inline functions for SurfaceFilter
 
-inline SurfaceFilter::SurfaceFilter() {
-}
-inline SurfaceFilter::SurfaceFilter(const SurfaceFilter&) : Packet() {
-}
-inline SurfaceFilter::~SurfaceFilter() {
-}
-
-inline bool SurfaceFilter::accept(const NormalSurface&) const {
-    return true;
-}
-
-inline SurfaceFilterType SurfaceFilter::filterType() const {
-    return NS_FILTER_DEFAULT;
-}
-
-inline std::string SurfaceFilter::filterTypeName() const {
-    return SurfaceFilterInfo<NS_FILTER_DEFAULT>::name;
-}
-
-inline void SurfaceFilter::writeXMLFilterData(std::ostream&) const {
-}
-
 inline void SurfaceFilter::writeTextShort(std::ostream& o) const {
     o << filterTypeName();
-}
-
-inline bool SurfaceFilter::dependsOnParent() const {
-    return false;
-}
-
-inline Packet* SurfaceFilter::internalClonePacket(Packet*) const {
-    return new SurfaceFilter();
 }
 
 // Inline functions for SurfaceFilterCombination
 
 inline SurfaceFilterCombination::SurfaceFilterCombination() : usesAnd_(true) {
 }
-inline SurfaceFilterCombination::SurfaceFilterCombination(
-        const SurfaceFilterCombination& cloneMe) : SurfaceFilter(),
-        usesAnd_(cloneMe.usesAnd_) {
+
+inline SurfaceFilterCombination& SurfaceFilterCombination::operator = (
+        const SurfaceFilterCombination& src) {
+    ChangeEventSpan span(*this);
+    usesAnd_ = src.usesAnd_;
+    return *this;
+}
+
+inline void SurfaceFilterCombination::swap(SurfaceFilterCombination& other) {
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
+    std::swap(usesAnd_, other.usesAnd_);
 }
 
 inline bool SurfaceFilterCombination::usesAnd() const {
@@ -542,7 +512,7 @@ inline bool SurfaceFilterCombination::usesAnd() const {
 }
 inline void SurfaceFilterCombination::setUsesAnd(bool value) {
     if (usesAnd_ != value) {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         usesAnd_ = value;
     }
 }
@@ -551,8 +521,13 @@ inline void SurfaceFilterCombination::writeTextLong(std::ostream& o) const {
     o << (usesAnd_ ? "AND" : "OR") << " combination normal surface filter\n";
 }
 
-inline Packet* SurfaceFilterCombination::internalClonePacket(Packet*) const {
-    return new SurfaceFilterCombination(*this);
+inline std::shared_ptr<Packet> SurfaceFilterCombination::internalClonePacket()
+        const {
+    return std::make_shared<SurfaceFilterCombination>(*this);
+}
+
+inline void swap(SurfaceFilterCombination& a, SurfaceFilterCombination& b) {
+    a.swap(b);
 }
 
 // Inline functions for SurfaceFilterProperties
@@ -562,13 +537,27 @@ inline SurfaceFilterProperties::SurfaceFilterProperties() :
         compactness_(true, true),
         realBoundary_(true, true) {
 }
-inline SurfaceFilterProperties::SurfaceFilterProperties(
-        const SurfaceFilterProperties& cloneMe) :
-        SurfaceFilter(),
-        eulerChar_(cloneMe.eulerChar_),
-        orientability_(cloneMe.orientability_),
-        compactness_(cloneMe.compactness_),
-        realBoundary_(cloneMe.realBoundary_) {
+
+inline SurfaceFilterProperties& SurfaceFilterProperties::operator = (
+        const SurfaceFilterProperties& src) {
+    ChangeEventSpan span(*this);
+
+    eulerChar_ = src.eulerChar_;
+    orientability_ = src.orientability_;
+    compactness_ = src.compactness_;
+    realBoundary_ = src.realBoundary_;
+
+    return *this;
+}
+
+inline void SurfaceFilterProperties::swap(SurfaceFilterProperties& other) {
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
+
+    eulerChar_.swap(other.eulerChar_);
+    std::swap(orientability_, other.orientability_);
+    std::swap(compactness_, other.compactness_);
+    std::swap(realBoundary_, other.realBoundary_);
 }
 
 inline const std::set<LargeInteger>& SurfaceFilterProperties::eulerChars()
@@ -591,43 +580,48 @@ inline BoolSet SurfaceFilterProperties::realBoundary() const {
 inline void SurfaceFilterProperties::setEulerChars(
         const std::set<LargeInteger>& s) {
     if (eulerChar_ != s) {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         eulerChar_ = s;
     }
 }
 inline void SurfaceFilterProperties::addEulerChar(const LargeInteger& ec) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     eulerChar_.insert(ec);
 }
 inline void SurfaceFilterProperties::removeEulerChar(const LargeInteger& ec) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     eulerChar_.erase(ec);
 }
 inline void SurfaceFilterProperties::removeAllEulerChars() {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     eulerChar_.clear();
 }
 inline void SurfaceFilterProperties::setOrientability(BoolSet value) {
     if (orientability_ != value) {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         orientability_ = value;
     }
 }
 inline void SurfaceFilterProperties::setCompactness(BoolSet value) {
     if (compactness_ != value) {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         compactness_ = value;
     }
 }
 inline void SurfaceFilterProperties::setRealBoundary(BoolSet value) {
     if (realBoundary_ != value) {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         realBoundary_ = value;
     }
 }
 
-inline Packet* SurfaceFilterProperties::internalClonePacket(Packet*) const {
-    return new SurfaceFilterProperties(*this);
+inline std::shared_ptr<Packet> SurfaceFilterProperties::internalClonePacket()
+        const {
+    return std::make_shared<SurfaceFilterProperties>(*this);
+}
+
+inline void swap(SurfaceFilterProperties& a, SurfaceFilterProperties& b) {
+    a.swap(b);
 }
 
 } // namespace regina

@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup manifold
- * @{
- */
-
-/**
  * Represents a 3-manifold from the SnapPea cusped census.
  *
  * The SnapPea cusped census is the census of cusped hyperbolic 3-manifolds
@@ -78,6 +73,13 @@ namespace regina {
  * are identical to those of its corresponding SnapPeaCensusManifold.
  *
  * All of the optional Manifold routines are implemented for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other manifold classes.
+ *
+ * \ingroup manifold
  */
 class SnapPeaCensusManifold : public Manifold {
     public:
@@ -127,15 +129,9 @@ class SnapPeaCensusManifold : public Manifold {
          */
         SnapPeaCensusManifold(char newSection, unsigned long newIndex);
         /**
-         * Creates a clone of the given SnapPea census manifold.
-         *
-         * @param cloneMe the census manifold to clone.
+         * Creates a new copy of the given SnapPea census manifold.
          */
-        SnapPeaCensusManifold(const SnapPeaCensusManifold& cloneMe) = default;
-        /**
-         * Destroys this structure.
-         */
-        virtual ~SnapPeaCensusManifold();
+        SnapPeaCensusManifold(const SnapPeaCensusManifold&) = default;
         /**
          * Returns the section of the SnapPea census to which this
          * manifold belongs.  This will be one of the section constants
@@ -182,30 +178,47 @@ class SnapPeaCensusManifold : public Manifold {
         bool operator != (const SnapPeaCensusManifold& compare) const;
 
         /**
-         * Sets this to be a clone of the given SnapPea census manifold.
+         * Sets this to be a copy of the given SnapPea census manifold.
          *
-         * @param cloneMe the census manifold to clone.
+         * @return a reference to this SnapPea census manifold.
          */
-        SnapPeaCensusManifold& operator = (
-            const SnapPeaCensusManifold& cloneMe) = default;
+        SnapPeaCensusManifold& operator = (const SnapPeaCensusManifold&) =
+            default;
 
-        Triangulation<3>* construct() const override;
-        std::optional<AbelianGroup> homology() const override;
+        /**
+         * Swaps the contents of this and the given SnapPea census manifold.
+         *
+         * @param other the census manifold whose contents should be swapped
+         * with this.
+         */
+        void swap(SnapPeaCensusManifold& other) noexcept;
+
+        Triangulation<3> construct() const override;
+        AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         std::ostream& writeStructure(std::ostream& out) const override;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given SnapPea census manifolds.
+ *
+ * This global routine simply calls SnapPeaCensusManifold::swap(); it is
+ * provided so that SnapPeaCensusManifold meets the C++ Swappable requirements.
+ *
+ * @param a the first census manifold whose contents should be swapped.
+ * @param b the second census manifold whose contents should be swapped.
+ *
+ * \ingroup manifold
+ */
+void swap(SnapPeaCensusManifold& a, SnapPeaCensusManifold& b) noexcept;
 
 // Inline functions for SnapPeaCensusManifold
 
 inline SnapPeaCensusManifold::SnapPeaCensusManifold(char newSection,
         unsigned long newIndex) :
         section_(newSection), index_(newIndex) {
-}
-inline SnapPeaCensusManifold::~SnapPeaCensusManifold() {
 }
 inline char SnapPeaCensusManifold::section() const {
     return section_;
@@ -231,6 +244,15 @@ inline bool SnapPeaCensusManifold::operator != (
 }
 inline bool SnapPeaCensusManifold::isHyperbolic() const {
     return true;
+}
+
+inline void SnapPeaCensusManifold::swap(SnapPeaCensusManifold& other) noexcept {
+    std::swap(section_, other.section_);
+    std::swap(index_, other.index_);
+}
+
+inline void swap(SnapPeaCensusManifold& a, SnapPeaCensusManifold& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

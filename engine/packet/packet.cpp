@@ -36,6 +36,7 @@
 #include "packet/packet.h"
 #include "packet/script.h"
 #include "utilities/base64.h"
+#include "utilities/exception.h"
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 #include "utilities/zstr.h"
@@ -43,75 +44,32 @@
 namespace regina {
 
 Packet::~Packet() {
-    inDestructor_ = true;
+    // Note: this packet must already be orphaned, since to have entered
+    // the destructor there cannot be any remaining shared pointers to it.
 
-    // Orphan this packet before doing anything else.
-    // The destructor can lead to callbacks for packet listeners, which
-    // might in turn involve tree traversal.  It can't be good for
-    // anyone to start querying packets whose destructors are already
-    // being carried out.
-    if (treeParent_) {
-        // Instead of calling makeOrphan(), we reimplement it here so that
-        // the PacketListener callbacks pass null instead of the child packet.
-        treeParent_->fireEvent(&PacketListener::childToBeRemoved,
-            nullptr /* child already being destroyed */, false);
-
-        if (treeParent_->firstTreeChild_ == this)
-            treeParent_->firstTreeChild_ = nextTreeSibling_;
-        else
-            prevTreeSibling_->nextTreeSibling_ = nextTreeSibling_;
-
-        if (treeParent_->lastTreeChild_ == this)
-            treeParent_->lastTreeChild_ = prevTreeSibling_;
-        else
-            nextTreeSibling_->prevTreeSibling_ = prevTreeSibling_;
-
-        Packet* oldParent = treeParent_;
-        treeParent_ = nullptr;
-
-        oldParent->fireEvent(&PacketListener::childWasRemoved,
-            nullptr /* child already being destroyed */, false);
-    }
-
-    // Destroy all descendants.
-    while(firstTreeChild_) {
-        Packet* tmp = firstTreeChild_;
-
-        // Cleanly orphan the packet and fire all remove-child events
-        // *before* we destroy the child.
-        fireEvent(&PacketListener::childToBeRemoved, tmp, true);
+    // Orphan (and thus potentially destroy) all descendants.
+    while (auto tmp = firstTreeChild_) {
+        // Cleanly orphan the first child packet, leaving the tree in a
+        // consistent state with respect to its other children (in case our
+        // event listeners need this).
 
         if (tmp->nextTreeSibling_) {
             firstTreeChild_ = tmp->nextTreeSibling_;
-            firstTreeChild_->prevTreeSibling_ = nullptr;
+            firstTreeChild_->prevTreeSibling_.reset();
+            tmp->nextTreeSibling_.reset();
         } else {
-            firstTreeChild_ = lastTreeChild_ = nullptr;
+            // tmp is an only child.
+            firstTreeChild_.reset();
+            lastTreeChild_.reset();
         }
-        tmp->treeParent_ = nullptr;
+        tmp->treeParent_.reset();
 
-        fireEvent(&PacketListener::childWasRemoved, tmp, true);
-
-        // Now we can destroy the child.
-        // We would normally call safeDelete(tmp) here, but since the
-        // old child packet is already known to be non-null and orphaned,
-        // we can reimplement a more streamlined version of safeDelete():
-        if (! tmp->hasSafePtr())
-            delete tmp;
+        // If there are no other shared pointers to it, then the child
+        // should now be destroyed as tmp goes out of scope.
     }
 
     // Fire a packet event and unregister all listeners.
     fireDestructionEvent();
-}
-
-void Packet::safeDelete(Packet* p) {
-    if (! p)
-        return;
-    if (p->hasSafePtr()) {
-        // Leave it to the safe pointer(s) to delete p when they are
-        // finished with it.
-        p->makeOrphan();
-    } else
-        delete p;
 }
 
 std::string Packet::fullName() const {
@@ -131,19 +89,21 @@ std::string Packet::adornedLabel(const std::string& adornment) const {
 
 void Packet::setLabel(const std::string& label) {
     fireEvent(&PacketListener::packetToBeRenamed);
-    if (treeParent_)
-        treeParent_->fireEvent(&PacketListener::childToBeRenamed, this);
+
+    auto parent = treeParent_.lock();
+    if (parent)
+        parent->fireEvent(&PacketListener::childToBeRenamed, *this);
 
     label_ = label;
 
     fireEvent(&PacketListener::packetWasRenamed);
-    if (treeParent_)
-        treeParent_->fireEvent(&PacketListener::childWasRenamed, this);
+    if (parent)
+        parent->fireEvent(&PacketListener::childWasRenamed, *this);
 }
 
 bool Packet::listen(PacketListener* listener) {
     if (! listeners_.get())
-        listeners_.reset(new std::set<PacketListener*>());
+        listeners_ = std::make_unique<std::set<PacketListener*>>();
 
     listener->packets.insert(this);
     return listeners_->insert(listener).second;
@@ -157,18 +117,21 @@ bool Packet::unlisten(PacketListener* listener) {
     return listeners_->erase(listener);
 }
 
-Packet* Packet::root() const {
-    Packet* p = const_cast<Packet*>(this);
-    while (p->treeParent_)
-        p = p->treeParent_;
-    return p;
+std::shared_ptr<Packet> Packet::root() const {
+    if (hasParent()) {
+        auto ans = treeParent_.lock();
+        while (auto parent = ans->treeParent_.lock())
+            ans = parent;
+        return ans;
+    } else
+        return const_cast<Packet*>(this)->shared_from_this();
 }
 
-void Packet::insertChildFirst(Packet* child) {
-    fireEvent(&PacketListener::childToBeAdded, child);
+void Packet::insertChildFirst(std::shared_ptr<Packet> child) {
+    fireEvent(&PacketListener::childToBeAdded, *child);
 
-    child->treeParent_ = this;
-    child->prevTreeSibling_ = 0;
+    child->treeParent_ = weak_from_this();
+    child->prevTreeSibling_.reset();
     child->nextTreeSibling_ = firstTreeChild_;
 
     if (firstTreeChild_) {
@@ -179,15 +142,15 @@ void Packet::insertChildFirst(Packet* child) {
         lastTreeChild_ = child;
     }
 
-    fireEvent(&PacketListener::childWasAdded, child);
+    fireEvent(&PacketListener::childWasAdded, *child);
 }
 
-void Packet::insertChildLast(Packet* child) {
-    fireEvent(&PacketListener::childToBeAdded, child);
+void Packet::insertChildLast(std::shared_ptr<Packet> child) {
+    fireEvent(&PacketListener::childToBeAdded, *child);
 
-    child->treeParent_ = this;
+    child->treeParent_ = weak_from_this();
     child->prevTreeSibling_ = lastTreeChild_;
-    child->nextTreeSibling_ = 0;
+    child->nextTreeSibling_.reset();
 
     if (lastTreeChild_) {
         lastTreeChild_->nextTreeSibling_ = child;
@@ -197,16 +160,17 @@ void Packet::insertChildLast(Packet* child) {
         lastTreeChild_ = child;
     }
 
-    fireEvent(&PacketListener::childWasAdded, child);
+    fireEvent(&PacketListener::childWasAdded, *child);
 }
 
-void Packet::insertChildAfter(Packet* newChild, Packet* prevChild) {
-    fireEvent(&PacketListener::childToBeAdded, newChild);
+void Packet::insertChildAfter(std::shared_ptr<Packet> newChild,
+        std::shared_ptr<Packet> prevChild) {
+    fireEvent(&PacketListener::childToBeAdded, *newChild);
 
-    if (prevChild == 0)
+    if (! prevChild)
         insertChildFirst(newChild);
     else {
-        newChild->treeParent_ = this;
+        newChild->treeParent_ = weak_from_this();
         newChild->nextTreeSibling_ = prevChild->nextTreeSibling_;
         newChild->prevTreeSibling_ = prevChild;
         prevChild->nextTreeSibling_ = newChild;
@@ -216,197 +180,253 @@ void Packet::insertChildAfter(Packet* newChild, Packet* prevChild) {
             lastTreeChild_ = newChild;
     }
 
-    fireEvent(&PacketListener::childWasAdded, newChild);
+    fireEvent(&PacketListener::childWasAdded, *newChild);
 }
 
 void Packet::makeOrphan() {
-    if (! treeParent_)
+    auto parent = treeParent_.lock();
+    if (! parent)
         return;
-    Packet* oldParent = treeParent_;
 
-    oldParent->fireEvent(&PacketListener::childToBeRemoved,
-        this, oldParent->inDestructor_);
+    // Guard against this object being destroyed mid-flight as we clear
+    // out the shared_ptr that its old parent or previous sibling holds.
+    auto guard = shared_from_this();
 
-    if (treeParent_->firstTreeChild_ == this)
-        treeParent_->firstTreeChild_ = nextTreeSibling_;
+    parent->fireEvent(&PacketListener::childToBeRemoved, *this);
+
+    if (prevTreeSibling_.expired())
+        parent->firstTreeChild_ = nextTreeSibling_;
     else
-        prevTreeSibling_->nextTreeSibling_ = nextTreeSibling_;
+        prevTreeSibling_.lock()->nextTreeSibling_ = nextTreeSibling_;
 
-    if (treeParent_->lastTreeChild_ == this)
-        treeParent_->lastTreeChild_ = prevTreeSibling_;
+    if (! nextTreeSibling_)
+        parent->lastTreeChild_ = prevTreeSibling_.lock();
     else
         nextTreeSibling_->prevTreeSibling_ = prevTreeSibling_;
 
-    treeParent_ = 0;
+    treeParent_.reset();
+    prevTreeSibling_.reset();
+    nextTreeSibling_.reset();
 
-    oldParent->fireEvent(&PacketListener::childWasRemoved,
-        this, oldParent->inDestructor_);
+    parent->fireEvent(&PacketListener::childWasRemoved, *this);
 }
 
-void Packet::reparent(Packet* newParent, bool first) {
-    if (treeParent_)
+void Packet::reparent(std::shared_ptr<Packet> newParent, bool first) {
+    if (! newParent) {
+        makeOrphan();
+        return;
+    }
+
+    // Get ourselves a fresh shared_ptr now, to guard against destruction
+    // while the packet is momentarily orphaned:
+    auto me = shared_from_this();
+
+    if (hasParent())
         makeOrphan();
 
     if (first)
-        newParent->insertChildFirst(this);
+        newParent->insertChildFirst(me);
     else
-        newParent->insertChildLast(this);
+        newParent->insertChildLast(me);
 }
 
-void Packet::transferChildren(Packet* newParent) {
+void Packet::transferChildren(std::shared_ptr<Packet> newParent) {
     if (! firstTreeChild_)
         return;
 
-    Packet* start = firstTreeChild_;
-    Packet* child;
+    if (newParent) {
+        // This shared pointer also protects the children from being
+        // destroyed while the transfer takes place.
+        auto start = firstTreeChild_;
 
-    for (child = start; child; child = child->nextTreeSibling_)
-        fireEvent(&PacketListener::childToBeRemoved, child, false);
-    for (child = start; child; child = child->nextTreeSibling_)
-        newParent->fireEvent(&PacketListener::childToBeAdded, child);
+        for (auto child = start; child; child = child->nextTreeSibling_)
+            fireEvent(&PacketListener::childToBeRemoved, *child);
+        for (auto child = start; child; child = child->nextTreeSibling_)
+            newParent->fireEvent(&PacketListener::childToBeAdded, *child);
 
-    start->prevTreeSibling_ = newParent->lastTreeChild_;
-    if (newParent->lastTreeChild_)
-        newParent->lastTreeChild_->nextTreeSibling_ = start;
-    else
-        newParent->firstTreeChild_ = start;
-    newParent->lastTreeChild_ = lastTreeChild_;
-    firstTreeChild_ = lastTreeChild_ = 0;
+        start->prevTreeSibling_ = newParent->lastTreeChild_;
+        if (newParent->lastTreeChild_)
+            newParent->lastTreeChild_->nextTreeSibling_ = start;
+        else
+            newParent->firstTreeChild_ = start;
+        newParent->lastTreeChild_ = lastTreeChild_;
+        firstTreeChild_.reset();
+        lastTreeChild_.reset();
 
-    for (child = start; child; child = child->nextTreeSibling_)
-        child->treeParent_ = newParent;
+        for (auto child = start; child; child = child->nextTreeSibling_)
+            child->treeParent_ = newParent;
 
-    for (child = start; child; child = child->nextTreeSibling_)
-        fireEvent(&PacketListener::childWasRemoved, child, false);
-    for (child = start; child; child = child->nextTreeSibling_)
-        newParent->fireEvent(&PacketListener::childWasAdded, child);
+        for (auto child = start; child; child = child->nextTreeSibling_)
+            fireEvent(&PacketListener::childWasRemoved, *child);
+        for (auto child = start; child; child = child->nextTreeSibling_)
+            newParent->fireEvent(&PacketListener::childWasAdded, *child);
+    } else {
+        // Orphan the children.
+        // We do this carefully, one at a time, since each child may be
+        // destroyed after it is orphaned - we need each callback to
+        // happen before the relevant child is destroyed, and to have
+        // the packet tree in a consistent state.
+        while (auto tmp = firstTreeChild_) {
+            fireEvent(&PacketListener::childToBeRemoved, *tmp);
+
+            if (tmp->nextTreeSibling_) {
+                firstTreeChild_ = tmp->nextTreeSibling_;
+                firstTreeChild_->prevTreeSibling_.reset();
+                tmp->nextTreeSibling_.reset();
+            } else {
+                // tmp is an only child.
+                firstTreeChild_.reset();
+                lastTreeChild_.reset();
+            }
+            tmp->treeParent_.reset();
+
+            fireEvent(&PacketListener::childWasRemoved, *tmp);
+
+            // If there are no other shared pointers to it, then the child
+            // should now be destroyed as tmp goes out of scope.
+        }
+    }
 }
 
 void Packet::moveUp(unsigned steps) {
-    if (steps == 0 || ! prevTreeSibling_)
+    if (steps == 0)
         return;
 
-    // This packet is not the first packet in the child list.
-    treeParent_->fireEvent(&PacketListener::childrenToBeReordered);
+    auto currPrev = prevTreeSibling_.lock();
+    if (! currPrev)
+        return;
 
-    Packet* prev = prevTreeSibling_;
-    while (prev && steps) {
-        prev = prev->prevTreeSibling_;
-        steps--;
+    // This packet will genuinely need to move.
+    auto parent = treeParent_.lock();
+    parent->fireEvent(&PacketListener::childrenToBeReordered);
+
+    auto newPrev = currPrev;
+    while (newPrev && steps) {
+        newPrev = newPrev->prevTreeSibling_.lock();
+        --steps;
     }
 
     // Pull us out of the tree.
-    if (nextTreeSibling_)
-        nextTreeSibling_->prevTreeSibling_ = prevTreeSibling_;
-    else
-        treeParent_->lastTreeChild_ = prevTreeSibling_;
+    auto me = shared_from_this(); // guards against destruction
 
-    prevTreeSibling_->nextTreeSibling_ = nextTreeSibling_;
+    if (nextTreeSibling_)
+        nextTreeSibling_->prevTreeSibling_ = prevTreeSibling_; // weak_ptr
+    else
+        parent->lastTreeChild_ = currPrev; // shared_ptr
+    currPrev->nextTreeSibling_ = nextTreeSibling_;
 
     // Reinsert ourselves into the tree.
-    prevTreeSibling_ = prev;
+    prevTreeSibling_ = newPrev;
     nextTreeSibling_ =
-        (prev ? prev->nextTreeSibling_ : treeParent_->firstTreeChild_);
-    nextTreeSibling_->prevTreeSibling_ = this;
-    if (prev)
-        prev->nextTreeSibling_ = this;
+        (newPrev ? newPrev->nextTreeSibling_ : parent->firstTreeChild_);
+    nextTreeSibling_->prevTreeSibling_ = me;
+    if (newPrev)
+        newPrev->nextTreeSibling_ = me;
     else
-        treeParent_->firstTreeChild_ = this;
+        parent->firstTreeChild_ = me;
 
-    treeParent_->fireEvent(&PacketListener::childrenWereReordered);
+    parent->fireEvent(&PacketListener::childrenWereReordered);
 }
 
 void Packet::moveDown(unsigned steps) {
     if (steps == 0 || ! nextTreeSibling_)
         return;
 
-    // This packet is not the last packet in the child list.
-    treeParent_->fireEvent(&PacketListener::childrenToBeReordered);
+    // This packet will genuinely need to move.
+    auto parent = treeParent_.lock();
+    parent->fireEvent(&PacketListener::childrenToBeReordered);
 
-    Packet* next = nextTreeSibling_;
-    while (next && steps) {
-        next = next->nextTreeSibling_;
-        steps--;
+    auto newNext = nextTreeSibling_;
+    while (newNext && steps) {
+        newNext = newNext->nextTreeSibling_;
+        --steps;
     }
 
     // Pull us out of the tree.
-    if (prevTreeSibling_)
-        prevTreeSibling_->nextTreeSibling_ = nextTreeSibling_;
-    else
-        treeParent_->firstTreeChild_ = nextTreeSibling_;
+    auto me = shared_from_this(); // guards against destruction
 
+    if (auto prev = prevTreeSibling_.lock())
+        prev->nextTreeSibling_ = nextTreeSibling_;
+    else
+        parent->firstTreeChild_ = nextTreeSibling_;
     nextTreeSibling_->prevTreeSibling_ = prevTreeSibling_;
 
     // Reinsert ourselves into the tree.
-    nextTreeSibling_ = next;
+    nextTreeSibling_ = newNext;
     prevTreeSibling_ =
-        (next ? next->prevTreeSibling_ : treeParent_->lastTreeChild_);
-    prevTreeSibling_->nextTreeSibling_ = this;
-    if (next)
-        next->prevTreeSibling_ = this;
+        (newNext ? newNext->prevTreeSibling_ : parent->lastTreeChild_);
+    prevTreeSibling_.lock()->nextTreeSibling_ = me;
+    if (newNext)
+        newNext->prevTreeSibling_ = me;
     else
-        treeParent_->lastTreeChild_ = this;
+        parent->lastTreeChild_ = me;
 
-    treeParent_->fireEvent(&PacketListener::childrenWereReordered);
+    parent->fireEvent(&PacketListener::childrenWereReordered);
 }
 
 void Packet::moveToFirst() {
-    if (! prevTreeSibling_)
+    auto currPrev = prevTreeSibling_.lock();
+    if (! currPrev)
         return;
 
-    // This packet is not the first packet in the child list.
-    treeParent_->fireEvent(&PacketListener::childrenToBeReordered);
+    // This packet will genuinely need to move.
+    auto parent = treeParent_.lock();
+    parent->fireEvent(&PacketListener::childrenToBeReordered);
 
     // Pull us out of the tree.
-    if (nextTreeSibling_)
-        nextTreeSibling_->prevTreeSibling_ = prevTreeSibling_;
-    else
-        treeParent_->lastTreeChild_ = prevTreeSibling_;
+    auto me = shared_from_this(); // guards against destruction
 
-    prevTreeSibling_->nextTreeSibling_ = nextTreeSibling_;
+    if (nextTreeSibling_)
+        nextTreeSibling_->prevTreeSibling_ = prevTreeSibling_; // weak_ptr
+    else
+        parent->lastTreeChild_ = currPrev; // shared_ptr
+    currPrev->nextTreeSibling_ = nextTreeSibling_;
 
     // Reinsert ourselves into the tree.
-    treeParent_->firstTreeChild_->prevTreeSibling_ = this;
-    nextTreeSibling_ = treeParent_->firstTreeChild_;
-    prevTreeSibling_ = 0;
-    treeParent_->firstTreeChild_ = this;
+    parent->firstTreeChild_->prevTreeSibling_ = me;
+    nextTreeSibling_ = parent->firstTreeChild_;
+    prevTreeSibling_.reset();
+    parent->firstTreeChild_ = me;
 
-    treeParent_->fireEvent(&PacketListener::childrenWereReordered);
+    parent->fireEvent(&PacketListener::childrenWereReordered);
 }
 
 void Packet::moveToLast() {
     if (! nextTreeSibling_)
         return;
 
-    // This packet is not the last packet in the child list.
-    treeParent_->fireEvent(&PacketListener::childrenToBeReordered);
+    // This packet will genuinely need to move.
+    auto parent = treeParent_.lock();
+    parent->fireEvent(&PacketListener::childrenToBeReordered);
 
     // Pull us out of the tree.
-    if (prevTreeSibling_)
-        prevTreeSibling_->nextTreeSibling_ = nextTreeSibling_;
-    else
-        treeParent_->firstTreeChild_ = nextTreeSibling_;
+    auto me = shared_from_this(); // guards against destruction
 
+    if (auto prev = prevTreeSibling_.lock())
+        prev->nextTreeSibling_ = nextTreeSibling_;
+    else
+        parent->firstTreeChild_ = nextTreeSibling_;
     nextTreeSibling_->prevTreeSibling_ = prevTreeSibling_;
 
     // Reinsert ourselves into the tree.
-    treeParent_->lastTreeChild_->nextTreeSibling_ = this;
-    prevTreeSibling_ = treeParent_->lastTreeChild_;
-    nextTreeSibling_ = 0;
-    treeParent_->lastTreeChild_ = this;
+    parent->lastTreeChild_->nextTreeSibling_ = me;
+    prevTreeSibling_ = parent->lastTreeChild_;
+    nextTreeSibling_.reset();
+    parent->lastTreeChild_ = me;
 
-    treeParent_->fireEvent(&PacketListener::childrenWereReordered);
+    parent->fireEvent(&PacketListener::childrenWereReordered);
 }
 
 void Packet::sortChildren() {
     // Run through the packets from largest to smallest, moving each to
     // the beginning of the child list in turn.
-    Packet* endpoint = 0;
-    Packet* current;
-    Packet* largest;
+    std::shared_ptr<Packet> endpoint;
+    std::shared_ptr<Packet> current;
+    std::shared_ptr<Packet> largest;
 
     fireEvent(&PacketListener::childrenToBeReordered);
-    while (1) {
+
+    while (true) {
         // Put current at the beginning of the clump of yet-unsorted children.
         if (! endpoint)
             current = firstTreeChild_;
@@ -427,18 +447,17 @@ void Packet::sortChildren() {
         // Move the largest to the front of the list.
         if (firstTreeChild_ != largest) {
             // We know that largest has a previous sibling.
-            largest->prevTreeSibling_->nextTreeSibling_ =
-                largest->nextTreeSibling_;
+            auto prev = largest->prevTreeSibling_.lock();
+            prev->nextTreeSibling_ = largest->nextTreeSibling_;
 
             if (largest->nextTreeSibling_)
-                largest->nextTreeSibling_->prevTreeSibling_ =
-                    largest->prevTreeSibling_;
+                largest->nextTreeSibling_->prevTreeSibling_ = prev;
             else
-                lastTreeChild_ = largest->prevTreeSibling_;
+                lastTreeChild_ = prev;
 
             firstTreeChild_->prevTreeSibling_ = largest;
             largest->nextTreeSibling_ = firstTreeChild_;
-            largest->prevTreeSibling_ = 0;
+            largest->prevTreeSibling_.reset();
             firstTreeChild_ = largest;
         }
 
@@ -453,180 +472,158 @@ void Packet::swapWithNextSibling() {
     if (! nextTreeSibling_)
         return;
 
-    treeParent_->fireEvent(&PacketListener::childrenToBeReordered);
+    // Since there is a sibling, there must be a parent.
 
-    if (prevTreeSibling_)
-        prevTreeSibling_->nextTreeSibling_ = nextTreeSibling_;
+    auto parent = treeParent_.lock();
+    parent->fireEvent(&PacketListener::childrenToBeReordered);
+
+    // We need to order things very carefully here, so that every packet
+    // always has some shared_ptr (either direct or indirect) to keep it alive.
+
+    auto swapWith = nextTreeSibling_;
+
+    nextTreeSibling_ = swapWith->nextTreeSibling_;
+    swapWith->nextTreeSibling_ = shared_from_this();
+    if (auto prev = prevTreeSibling_.lock())
+        prev->nextTreeSibling_ = swapWith;
     else
-        treeParent_->firstTreeChild_ = nextTreeSibling_;
+        parent->firstTreeChild_ = swapWith;
 
-    if (nextTreeSibling_->nextTreeSibling_)
-        nextTreeSibling_->nextTreeSibling_->prevTreeSibling_ = this;
+    // At this point, all the forward links have been correctly adjusted.
+
+    if (nextTreeSibling_)
+        nextTreeSibling_->prevTreeSibling_ = weak_from_this();
     else
-        treeParent_->lastTreeChild_ = this;
+        parent->lastTreeChild_ = shared_from_this();
+    swapWith->prevTreeSibling_ = prevTreeSibling_;
+    prevTreeSibling_ = swapWith;
 
-    Packet* other = nextTreeSibling_;
-
-    nextTreeSibling_ = other->nextTreeSibling_;
-    other->prevTreeSibling_ = prevTreeSibling_;
-    prevTreeSibling_ = other;
-    other->nextTreeSibling_ = this;
-
-    treeParent_->fireEvent(&PacketListener::childrenWereReordered);
+    parent->fireEvent(&PacketListener::childrenWereReordered);
 }
 
-Packet* Packet::nextTreePacket() {
+std::shared_ptr<Packet> Packet::nextTreePacket() {
     if (firstTreeChild_)
         return firstTreeChild_;
     if (nextTreeSibling_)
         return nextTreeSibling_;
-    Packet* tmp = treeParent_;
-    while (tmp) {
-        if (tmp->nextTreeSibling_)
-            return tmp->nextTreeSibling_;
-        tmp = tmp->treeParent_;
+    auto tmp = treeParent_;
+    while (auto p = tmp.lock()) {
+        if (p->nextTreeSibling_)
+            return p->nextTreeSibling_;
+        tmp = p->treeParent_;
     }
-    return 0;
+    return nullptr;
 }
 
-const Packet* Packet::nextTreePacket() const {
+std::shared_ptr<const Packet> Packet::nextTreePacket() const {
     if (firstTreeChild_)
         return firstTreeChild_;
     if (nextTreeSibling_)
         return nextTreeSibling_;
-    Packet* tmp = treeParent_;
-    while (tmp) {
-        if (tmp->nextTreeSibling_)
-            return tmp->nextTreeSibling_;
-        tmp = tmp->treeParent_;
+    auto tmp = treeParent_;
+    while (auto p = tmp.lock()) {
+        if (p->nextTreeSibling_)
+            return p->nextTreeSibling_;
+        tmp = p->treeParent_;
     }
-    return 0;
+    return nullptr;
 }
 
-Packet* Packet::firstTreePacket(const std::string& type) {
-    if (typeName() == type)
-        return this;
-    return nextTreePacket(type);
-}
-
-const Packet* Packet::firstTreePacket(const std::string& type) const {
-    if (typeName() == type)
-        return this;
-    return nextTreePacket(type);
-}
-
-Packet* Packet::nextTreePacket(const std::string& type) {
-    Packet* ans = nextTreePacket();
-    while (ans) {
-        if (ans->typeName() == type)
-            return ans;
-        ans = ans->nextTreePacket();
-    }
-    return 0;
-}
-
-const Packet* Packet::nextTreePacket(const std::string& type) const {
-    const Packet* ans = nextTreePacket();
-    while (ans) {
-        if (ans->typeName() == type)
-            return ans;
-        ans = ans->nextTreePacket();
-    }
-    return 0;
-}
-
-Packet* Packet::findPacketLabel(const std::string& label) {
+std::shared_ptr<Packet> Packet::findPacketLabel(const std::string& label) {
     if (label_ == label)
-        return this;
-    Packet* tmp = firstTreeChild_;
-    Packet* ans;
+        return shared_from_this();
+    auto tmp = firstTreeChild_;
     while (tmp) {
-        ans = tmp->findPacketLabel(label);
-        if (ans)
+        if (auto ans = tmp->findPacketLabel(label))
             return ans;
         tmp = tmp->nextTreeSibling_;
     }
-    return 0;
+    return nullptr;
 }
 
-const Packet* Packet::findPacketLabel(const std::string& label) const {
+std::shared_ptr<const Packet> Packet::findPacketLabel(const std::string& label)
+        const {
     if (label_ == label)
-        return this;
-    Packet* tmp = firstTreeChild_;
-    Packet* ans;
+        return shared_from_this();
+    auto tmp = firstTreeChild_;
     while (tmp) {
-        ans = tmp->findPacketLabel(label);
-        if (ans)
+        if (auto ans = tmp->findPacketLabel(label))
             return ans;
         tmp = tmp->nextTreeSibling_;
     }
-    return 0;
+    return nullptr;
 }
 
-unsigned Packet::levelsDownTo(const Packet* descendant) const {
-    unsigned levels = 0;
-    while (descendant != this) {
-        descendant = descendant->treeParent_;
-        levels++;
+unsigned Packet::levelsDownTo(const Packet& descendant) const {
+    if (std::addressof(descendant) == this)
+        return 0;
+
+    std::shared_ptr<Packet> p = descendant.treeParent_.lock();
+    unsigned levels = 1;
+    while (p) {
+        if (p.get() == this)
+            return levels;
+        p = p->treeParent_.lock();
+        ++levels;
     }
-    return levels;
+    throw FailedPrecondition("This and the given packet do not have "
+        "the expected ancestor/descendant relationship");
 }
 
-bool Packet::isGrandparentOf(const Packet* descendant) const {
-    while (descendant) {
-        if (descendant == this)
+bool Packet::isAncestorOf(const Packet& descendant) const {
+    if (std::addressof(descendant) == this)
+        return true;
+
+    std::shared_ptr<Packet> p = descendant.treeParent_.lock();
+    while (p) {
+        if (p.get() == this)
             return true;
-        descendant = descendant->treeParent_;
+        p = p->treeParent_.lock();
     }
     return false;
 }
 
 size_t Packet::countChildren() const {
     size_t tot = 0;
-    for (Packet* tmp = firstTreeChild_; tmp; tmp = tmp->nextTreeSibling_)
-        tot++;
+    for (auto tmp = firstTreeChild_; tmp; tmp = tmp->nextTreeSibling_)
+        ++tot;
     return tot;
 }
 
 size_t Packet::totalTreeSize() const {
     size_t tot = 1;
-    for (Packet* tmp = firstTreeChild_; tmp; tmp = tmp->nextTreeSibling_)
+    for (auto tmp = firstTreeChild_; tmp; tmp = tmp->nextTreeSibling_)
         tot += tmp->totalTreeSize();
     return tot;
 }
 
-bool Packet::isPacketEditable() const {
-    Packet* tmp = firstTreeChild_;
-    while (tmp) {
-        if (tmp->dependsOnParent())
-            return false;
-        tmp = tmp->nextTreeSibling_;
-    }
-    return true;
-}
+std::shared_ptr<Packet> Packet::cloneAsSibling(bool cloneDescendants,
+        bool end) const {
+    auto parent = treeParent_.lock();
 
-Packet* Packet::clone(bool cloneDescendants, bool end) const {
-    if (treeParent_ == 0)
-        return 0;
-    Packet* ans = internalClonePacket(treeParent_);
+    if (! parent)
+        return nullptr;
+    auto ans = internalClonePacket();
     ans->setLabel(adornedLabel("Clone"));
     if (end)
-        treeParent_->insertChildLast(ans);
+        parent->insertChildLast(ans);
     else
-        treeParent_->insertChildAfter(ans, const_cast<Packet*>(this));
+        parent->insertChildAfter(ans,
+            const_cast<Packet*>(this)->shared_from_this());
     if (cloneDescendants)
         internalCloneDescendants(ans);
     return ans;
 }
 
-bool Packet::save(const char* filename, bool compressed) const {
+bool Packet::save(const char* filename, bool compressed, FileFormat format)
+        const {
     std::ofstream out(filename, std::ios_base::out | std::ios_base::binary);
     // We don't test whether the file was opened, since
     // save(std::ostream&, bool) tests this for us as the first thing it does.
-    return save(out, compressed);
+    return save(out, compressed, format);
 }
 
-bool Packet::save(std::ostream& s, bool compressed) const {
+bool Packet::save(std::ostream& s, bool compressed, FileFormat format) const {
     // Note: save(const char*, bool) relies on us testing here whether s
     // was successfully opened.  If anyone removes this test, then they
     // should add a corresponding test to save(const char*, bool) instead.
@@ -636,42 +633,41 @@ bool Packet::save(std::ostream& s, bool compressed) const {
     if (compressed) {
         try {
             zstr::ostream out(s);
-            writeXMLFile(out);
+            writeXMLFile(out, format);
         } catch (const zstr::Exception& e) {
             std::cerr << "ERROR: Could not save with compression: "
                 << e.what() << std::endl;
             return false;
         }
     } else {
-        writeXMLFile(s);
+        writeXMLFile(s, format);
     }
     return true;
 }
 
-void Packet::internalCloneDescendants(Packet* parent) const {
-    Packet* child = firstTreeChild_;
-    Packet* clone;
-    while (child) {
-        clone = child->internalClonePacket(parent);
+void Packet::internalCloneDescendants(std::shared_ptr<Packet> parent) const {
+    for (auto child = firstTreeChild_; child; child = child->nextTreeSibling_) {
+        auto clone = child->internalClonePacket();
         clone->setLabel(child->label_);
         parent->insertChildLast(clone);
         child->internalCloneDescendants(clone);
-        child = child->nextTreeSibling_;
     }
 }
 
 bool Packet::addTag(const std::string& tag) {
+    auto parent = treeParent_.lock();
+
     fireEvent(&PacketListener::packetToBeRenamed);
-    if (treeParent_)
-        treeParent_->fireEvent(&PacketListener::childToBeRenamed, this);
+    if (parent)
+        parent->fireEvent(&PacketListener::childToBeRenamed, *this);
 
     if (! tags_.get())
-        tags_.reset(new std::set<std::string>());
+        tags_ = std::make_unique<std::set<std::string>>();
     bool ans = tags_->insert(tag).second;
 
     fireEvent(&PacketListener::packetWasRenamed);
-    if (treeParent_)
-        treeParent_->fireEvent(&PacketListener::childWasRenamed, this);
+    if (parent)
+        parent->fireEvent(&PacketListener::childWasRenamed, *this);
 
     return ans;
 }
@@ -680,80 +676,84 @@ bool Packet::removeTag(const std::string& tag) {
     if (! tags_.get())
         return false;
 
+    auto parent = treeParent_.lock();
+
     fireEvent(&PacketListener::packetToBeRenamed);
-    if (treeParent_)
-        treeParent_->fireEvent(&PacketListener::childToBeRenamed, this);
+    if (parent)
+        parent->fireEvent(&PacketListener::childToBeRenamed, *this);
 
     bool ans = tags_->erase(tag);
 
     fireEvent(&PacketListener::packetWasRenamed);
-    if (treeParent_)
-        treeParent_->fireEvent(&PacketListener::childWasRenamed, this);
+    if (parent)
+        parent->fireEvent(&PacketListener::childWasRenamed, *this);
 
     return ans;
 }
 
 void Packet::removeAllTags() {
     if (tags_.get() && ! tags_->empty()) {
+        auto parent = treeParent_.lock();
+
         fireEvent(&PacketListener::packetToBeRenamed);
-        if (treeParent_)
-            treeParent_->fireEvent(&PacketListener::childToBeRenamed, this);
+        if (parent)
+            parent->fireEvent(&PacketListener::childToBeRenamed, *this);
 
         tags_->clear();
 
         fireEvent(&PacketListener::packetWasRenamed);
-        if (treeParent_)
-            treeParent_->fireEvent(&PacketListener::childWasRenamed, this);
+        if (parent)
+            parent->fireEvent(&PacketListener::childWasRenamed, *this);
     }
 }
 
-void Packet::writeXMLFile(std::ostream& out) const {
+void Packet::writeXMLFile(std::ostream& out, FileFormat format) const {
     // Write the XML header.
     out << "<?xml version=\"1.0\"?>\n";
 
-    // Write the regina data opening tag including engine version.
-    out << "<reginadata engine=\"" << regina::versionString() << "\">\n";
+    // Do a first pass through the tree to work out what packets
+    // need to be referenced by others.
+    std::map<const Packet*, bool> refs;
+    for (const auto& p : *this)
+        p.addPacketRefs(refs);
 
-    // Write the packet tree.
-    writeXMLPacketTree(out);
-
-    // Write the regina data closing tag.
-    out << "</reginadata>\n";
-}
-
-void Packet::fireEvent(void (PacketListener::*event)(Packet*)) {
-    if (listeners_.get()) {
-        std::set<PacketListener*>::const_iterator it = listeners_->begin();
-        while (it != listeners_->end())
-            ((*it++)->*event)(this);
+    // Now write the full packet tree.
+    if (format == REGINA_XML_GEN_2) {
+        out << "<reginadata engine=\"" << regina::versionString() << "\">\n";
+        writeXMLPacketData(out, format, false /* anon */, refs);
+        out << "</reginadata>\n";
+    } else {
+        out << "<regina engine=\"" << regina::versionString() << "\">\n";
+        writeXMLPacketData(out, format, false /* anon */, refs);
+        out << "</regina>\n";
     }
 }
 
-void Packet::fireEvent(void (PacketListener::*event)(Packet*, Packet*),
-        Packet* arg2) {
+void Packet::fireEvent(void (PacketListener::*event)(Packet&)) {
     if (listeners_.get()) {
-        std::set<PacketListener*>::const_iterator it = listeners_->begin();
+        auto it = listeners_->begin();
         while (it != listeners_->end())
-            ((*it++)->*event)(this, arg2);
+            ((*it++)->*event)(*this);
     }
 }
 
-void Packet::fireEvent(void (PacketListener::*event)(Packet*, Packet*),
-        Packet* arg2, bool makeMeNull) {
+void Packet::fireEvent(void (PacketListener::*event)(Packet&, Packet&),
+        Packet& arg2) {
     if (listeners_.get()) {
-        std::set<PacketListener*>::const_iterator it = listeners_->begin();
+        auto it = listeners_->begin();
         while (it != listeners_->end())
-            ((*it++)->*event)((makeMeNull ? nullptr : this), arg2);
+            ((*it++)->*event)(*this, arg2);
     }
 }
 
 void Packet::fireDestructionEvent() {
     if (listeners_.get()) {
-        std::set<PacketListener*>::const_iterator it;
-        PacketListener* tmp;
+        // TODO: Think about whether we'd rather clear out listeners_ now
+        // (i.e., swap it into a local temporary set instead) instead of
+        // erasing its elements one at a time in the loop below.
         while (! listeners_->empty()) {
-            it = listeners_->begin();
-            tmp = *it;
+            auto it = listeners_->begin();
+            PacketListener* tmp = *it;
 
             // Unregister *before* we fire the event for each listener.
             // If we have a listener that deletes itself (or other listeners),
@@ -761,57 +761,76 @@ void Packet::fireDestructionEvent() {
             listeners_->erase(it);
             tmp->packets.erase(this);
 
-            tmp->packetToBeDestroyed(this);
+            tmp->packetBeingDestroyed(this);
         }
     }
 }
 
-void Packet::writeXMLPacketTree(std::ostream& out) const {
-    using regina::xml::xmlEncodeSpecialChars;
-    using regina::xml::xmlEncodeComment;
+void Packet::writeXMLPacketAttributes(std::ostream& out, bool anon,
+        PacketRefs& refs) const {
+    out << "label=\"" << regina::xml::xmlEncodeSpecialChars(label_) << "\"";
 
-    // Write the packet opening tag including packet label and type.
-    out << "<packet label=\"" << xmlEncodeSpecialChars(label_) << "\"\n";
-    out << "\ttype=\"" << typeName() << "\" typeid=\"" << type() << "\"\n";
+    auto pos = refs.find(this);
+    if (pos != refs.end()) {
+        out << " id=\"" << internalID() << "\"";
+        pos->second = true; // Indicate that the packet is now being written
+    } else if (anon) {
+        // Although nobody *asked* for this packet to be referred to,
+        // it is still being written as anonymous block.  It's not clear
+        // how such a situation could arise in practice, but regardless,
+        // we should note that the packet has been "written ahead" so
+        // that we correctly use an anonref when we see it in the packet tree.
+        out << " id=\"" << internalID() << "\"";
+        refs.insert({ this, true });
+    }
+}
 
-    // If we appear as a variable in a script packet, then write an ID that the
-    // script can reference.  We can look through our packet listeners to see
-    // if this is necessary, since a Script always listens to its variables.
-    if (listeners_.get())
-        for (auto it = listeners_->begin(); it != listeners_->end(); ++it)
-            if (dynamic_cast<Script*>(*it)) {
-                out << "\tid=\"" << internalID() << "\"\n";
-                break;
-            }
-
-    out << "\tparent=\"";
-    if (treeParent_)
-        out << xmlEncodeSpecialChars(treeParent_->label_);
-    out << "\">\n";
-
-    // Write the internal packet data.
-    writeXMLPacketData(out);
-
+void Packet::writeXMLTreeData(std::ostream& out, FileFormat format,
+        PacketRefs& refs) const {
     // Write any packet tags.
     if (tags_.get())
-        for (std::set<std::string>::const_iterator it = tags_->begin();
-                it != tags_->end(); it++)
-            out << "  <tag name=\"" << xmlEncodeSpecialChars(*it) << "\"/>\n";
+        for (const auto& t : *tags_)
+            out << "<tag name=\"" << regina::xml::xmlEncodeSpecialChars(t)
+                << "\"/>\n";
 
     // Write the child packets.
-    for (Packet* p = firstTreeChild_; p; p = p->nextTreeSibling_)
-        p->writeXMLPacketTree(out);
+    for (auto p = firstTreeChild_; p; p = p->nextTreeSibling_) {
+        auto pos = refs.find(p.get());
+        if (pos != refs.end() && pos->second) {
+            // This packet has already been written.
+            out << "<anonref id=\"" << p->internalID() << "\">\n";
+            p->writeXMLTreeData(out, format, refs);
+            out << "</anonref>\n";
+        } else
+            p->writeXMLPacketData(out, format, false, refs);
+    }
+}
 
-    // Write the packet closing tag.
-    out << "</packet> <!-- " << xmlEncodeComment(label_)
-        << " (" << xmlEncodeComment(typeName()) << ") -->\n";
+void Packet::writeXMLFooter(std::ostream& out, const char* element,
+        FileFormat format) const {
+    // Finish with the closing XML tag.
+    if (format != REGINA_XML_GEN_2) {
+        out << "</" << element << ">\n";
+    } else {
+        out << "</packet> <!-- " << regina::xml::xmlEncodeComment(label_)
+            << " (" << regina::xml::xmlEncodeComment(typeName()) << ") -->\n";
+    }
+}
+
+void Packet::writeXMLAnon(std::ostream& out, FileFormat format,
+        PacketRefs& refs, const Packet& p) const {
+    out << "<anon>\n";
+    p.writeXMLPacketData(out, format, true /* anon */, refs);
+    out << "</anon>\n";
 }
 
 std::string Packet::internalID() const {
+    // NOLINTNEXTLINE(bugprone-sizeof-expression)
     char ptrAsBytes[sizeof(Packet*)];
     *(reinterpret_cast<const Packet**>(&ptrAsBytes)) = this;
 
-    char* id = 0;
+    char* id = nullptr;
+    // NOLINTNEXTLINE(bugprone-sizeof-expression)
     base64Encode(ptrAsBytes, sizeof(Packet*), &id);
 
     std::string ans = id;
@@ -819,29 +838,82 @@ std::string Packet::internalID() const {
     return ans;
 }
 
-PacketListener::~PacketListener() {
-    unregisterFromAllPackets();
+void PacketListener::unlisten() {
+    // This code relies on the fact that Packet::unlisten() behaves
+    // correctly even if we preemptively removed the packet from the
+    // listener's internal set (essentially, there is a harmless no-op
+    // call to std::set::erase()).
+
+    std::set<Packet*> tmp;
+    tmp.swap(packets);
+
+    // Now our set of packets is empty, and we can run through tmp to
+    // call unlisten() on each packet without either the cost of a set
+    // erasure *or* having to juggle around invalidated iterators.
+
+    for (Packet* p : tmp)
+        p->unlisten(this); // here is our no-op std::set::erase()
+
+    // Note: the old implementation of this function did not create a
+    // temporary set, which avoided some overhead; however, it instead
+    // unlistened from each packet one at time, and each such operation
+    // involved a logarithmic time call to packets.erase().
+    //
+    // Probably each listener only had a small number of packets it was
+    // listening to, and so probably the temporary set is more costly,
+    // but I haven't actually measured this, and probably it doesn't
+    // actually matter in practice.
 }
 
-void PacketListener::unregisterFromAllPackets() {
-    std::set<Packet*>::iterator it, next;
+PacketListener::PacketListener(const PacketListener& src) {
+    // Note: listen() will fill the set of packets.
+    for (Packet* p : src.packets)
+        p->listen(this);
+}
 
-    it = packets.begin();
-    next = it;
-    while (it != packets.end()) {
-        // INV: next == it.
+PacketListener& PacketListener::operator = (const PacketListener& src) {
+    // The unregister-then-listen process below breaks with self-assignment.
+    if (this != std::addressof(src)) {
+        // Note: listen() and unlisten() will update the set of packets.
+        unlisten();
 
-        // Step forwards before we actually deregister (*it), since
-        // the deregistration will remove (*it) from the set and
-        // invalidate the iterator.
-        next++;
-
-        // This deregistration removes (*it) from the set, but other
-        // iterators (i.e., next) are not invalidated.
-        (*it)->unlisten(this);
-
-        it = next;
+        for (Packet* p : src.packets)
+            p->listen(this);
     }
+    return *this;
+}
+
+void PacketListener::swapListeners(PacketListener& other) {
+    // The listen/unlisten operations will get messy if we are swapping
+    // this with itself.
+    if (this == std::addressof(other))
+        return;
+
+    // This gets messy, because listen() and unlisten() will change each
+    // listener's packets member.
+    //
+    // The code below relies on the fact that Packet::unlisten() behaves
+    // correctly even if we preemptively removed the packet from the
+    // listener's internal set (essentially, there is a harmless no-op
+    // call to std::set::erase()).
+
+    std::set<Packet*> tmp;
+    tmp.swap(packets);
+
+    for (Packet* p : tmp)
+        p->unlisten(this); // here is our no-op std::set::erase()
+
+    for (Packet* p : other.packets)
+        p->listen(this);
+
+    // Now tmp contains the original list from this listener,
+    // and both this and other contain the original list from other.
+
+    for (Packet* p : packets)
+        p->unlisten(std::addressof(other));
+
+    for (Packet* p : tmp)
+        p->listen(std::addressof(other));
 }
 
 } // namespace regina

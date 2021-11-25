@@ -40,13 +40,9 @@
 #endif
 
 #include "link/link.h"
+#include "utilities/listview.h"
 
 namespace regina {
-
-/**
- * \weakgroup link
- * @{
- */
 
 /**
  * Represents a 2-tangle in the 3-ball.  Regina does not allow closed
@@ -84,6 +80,8 @@ namespace regina {
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup link
  */
 class Tangle : public Output<Tangle> {
     private:
@@ -189,7 +187,7 @@ class Tangle : public Output<Tangle> {
          *
          * The tangle that is passed (\a src) will no longer be usable.
          *
-         * @param src the integer to move.
+         * @param src the tangle to move.
          */
         Tangle(Tangle&& src) noexcept;
 
@@ -241,6 +239,33 @@ class Tangle : public Output<Tangle> {
          * @return the crossing at the given index.
          */
         Crossing* crossing(size_t index) const;
+
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all crossings within this tangle.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (Crossing* c : tangle.crossings()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for as
+         * long as the tangle exists: even as crossings are added and/or
+         * removed, it will always reflect the crossings that are currently in
+         * the tangle.  Nevertheless, it is recommended to treat this object as
+         * temporary only, and to call crossings() again each time you need it.
+         *
+         * @return access to the list of all crossings.
+         */
+        auto crossings() const;
 
         /**
          * Returns the crossing closest to the beginning of the given string.
@@ -560,10 +585,9 @@ class Tangle : public Output<Tangle> {
          * This is the link created by joining the two top endpoints of
          * this tangle, and also joining the two bottom endpoints.
          *
-         * @return a newly created link that is the numerator closure of
-         * this tangle.
+         * @return the numerator closure of this tangle.
          */
-        Link* numClosure() const;
+        Link numClosure() const;
 
         /**
          * Forms the denominator closure of this tangle.
@@ -571,10 +595,9 @@ class Tangle : public Output<Tangle> {
          * This is the link created by joining the two left endpoints of
          * this tangle, and also joining the two right endpoints.
          *
-         * @return a newly created link that is the denominator closure of
-         * this tangle.
+         * @return the denominator closure of this tangle.
          */
-        Link* denClosure() const;
+        Link denClosure() const;
 
         /*@}*/
         /**
@@ -586,7 +609,7 @@ class Tangle : public Output<Tangle> {
          * Writes a short text representation of this tangle to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -595,7 +618,7 @@ class Tangle : public Output<Tangle> {
          * Writes a detailed text representation of this tangle to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -721,18 +744,21 @@ class Tangle : public Output<Tangle> {
          * In this variant (the string variant), the given string may
          * contain additional leading or trailing whitespace.
          *
-         * \warning While this routine does some error checking on the
-         * input, it does \e not test for the viability of the diagram
-         * (i.e., whether the given crossings with the given signs actually
-         * produce a tangle of the given type with the correct endpoints).
-         * Of course non-viable inputs are not allowed, and it is currently
-         * up to the user to enforce this.
+         * \warning While this routine does some error checking on the input,
+         * these checks are not exhaustive.  In particular, it does \e not test
+         * for the viability of the diagram (i.e., whether the given crossings
+         * with the given signs actually produce a tangle of the given type
+         * with the correct endpoints).  Of course non-viable inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the input was not a valid oriented
+         * Gauss code.  As noted above, the checks performed here are
+         * not exhaustive.
          *
          * @param str an oriented Gauss code for a tangle, as described above.
-         * @return a newly constructed tangle, or \c null if the input was
-         * found to be invalid.
+         * @return the resulting tangle.
          */
-        static Tangle* fromOrientedGauss(const std::string& str);
+        static Tangle fromOrientedGauss(const std::string& str);
 
         /**
          * Creates a new tangle from an oriented Gauss code.
@@ -760,12 +786,16 @@ class Tangle : public Output<Tangle> {
          *
          * \pre The tokens in the input sequence do not contain any whitespace.
          *
-         * \warning While this routine does some error checking on the
-         * input, it does \e not test for the viability of the diagram
-         * (i.e., whether the given crossings with the given signs actually
-         * produce a tangle of the given type with the correct endpoints).
-         * Of course non-viable inputs are not allowed, and it is currently
-         * up to the user to enforce this.
+         * \warning While this routine does some error checking on the input,
+         * these checks are not exhaustive.  In particular, it does \e not test
+         * for the viability of the diagram (i.e., whether the given crossings
+         * with the given signs actually produce a tangle of the given type
+         * with the correct endpoints).  Of course non-viable inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the input did not describe a valid
+         * oriented Gauss code.  As noted above, the checks performed here
+         * are not exhaustive.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of strings.
@@ -774,11 +804,10 @@ class Tangle : public Output<Tangle> {
          * sequence of tokens for an oriented Gauss code.
          * @param end an iterator that points past the end of the
          * sequence of tokens for an oriented Gauss code.
-         * @return a newly constructed tangle, or \c null if the input was
-         * found to be invalid.
+         * @return the resulting tangle.
          */
         template <typename Iterator>
-        static Tangle* fromOrientedGauss(Iterator begin, Iterator end);
+        static Tangle fromOrientedGauss(Iterator begin, Iterator end);
 
         /*@}*/
 
@@ -863,10 +892,10 @@ class Tangle : public Output<Tangle> {
  *
  * @param lhs the tangle whose contents should be swapped with \a rhs.
  * @param rhs the tangle whose contents should be swapped with \a lhs.
+ *
+ * \ingroup link
  */
 void swap(Tangle& lhs, Tangle& rhs) noexcept;
-
-/*@}*/
 
 // Inline functions for Tangle
 
@@ -893,6 +922,10 @@ inline size_t Tangle::size() const {
 
 inline Crossing* Tangle::crossing(size_t index) const {
     return crossings_[index];
+}
+
+inline auto Tangle::crossings() const {
+    return ListView(crossings_);
 }
 
 inline StrandRef Tangle::begin(int string) const {

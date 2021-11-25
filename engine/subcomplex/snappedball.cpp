@@ -37,14 +37,7 @@
 
 namespace regina {
 
-SnappedBall* SnappedBall::clone() const {
-    SnappedBall* ans = new SnappedBall();
-    ans->tet = tet;
-    ans->equator = equator;
-    return ans;
-}
-
-SnappedBall* SnappedBall::formsSnappedBall(Tetrahedron<3>* tet) {
+std::unique_ptr<SnappedBall> SnappedBall::recognise(Tetrahedron<3>* tet) {
     int inFace1, inFace2;
     Perm<4> perm;
     for (inFace1 = 0; inFace1 < 3; inFace1++)
@@ -53,21 +46,19 @@ SnappedBall* SnappedBall::formsSnappedBall(Tetrahedron<3>* tet) {
             inFace2 = perm[inFace1];
             if (perm == Perm<4>(inFace1, inFace2)) {
                 // This is it!
-                SnappedBall* ans = new SnappedBall();
-                ans->tet = tet;
-                ans->equator = Edge<3>::edgeNumber[inFace1][inFace2];
-                return ans;
+                return std::unique_ptr<SnappedBall>(new SnappedBall(
+                    tet, Edge<3>::edgeNumber[inFace1][inFace2]));
             }
         }
 
-    return 0;
+    return nullptr;
 }
 
-Manifold* SnappedBall::manifold() const {
-    return new Handlebody(0, true);
+std::unique_ptr<Manifold> SnappedBall::manifold() const {
+    return std::make_unique<Handlebody>(0, true);
 }
 
-std::optional<AbelianGroup> SnappedBall::homology() const {
+AbelianGroup SnappedBall::homology() const {
     return AbelianGroup();
 }
 

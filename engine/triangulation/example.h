@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
- * @{
- */
-
-/**
  * This class offers static routines for constructing a variety of sample
  * <i>dim</i>-dimensional triangulations.  These triangulations may be useful
  * for testing new code, or for simply getting a feel for how Regina works.
@@ -64,13 +59,6 @@ namespace regina {
  * The sample triangulations offered here may prove especially useful in
  * Regina's scripting interface, where working with pre-existing files
  * is more complicated than in the GUI.
- *
- * All of the methods in this class will assign an appropriate packet label
- * to the triangulation that they return.
- *
- * Note that each of these routines constructs a new triangulation from
- * scratch.  It is up to the caller of each routine to destroy the
- * triangulation that is returned.
  *
  * For Regina's \ref stddim "standard dimensions", this template is
  * specialised and offers many more example triangulations.  In order to
@@ -86,6 +74,8 @@ namespace regina {
  * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
+ *
+ * \ingroup triangulation
  */
 template <int dim>
 class Example : public detail::ExampleBase<dim> {
@@ -93,8 +83,6 @@ class Example : public detail::ExampleBase<dim> {
         "The generic implementation of Example<dim> "
         "should not be used for Regina's standard dimensions.");
 };
-
-/*@}*/
 
 } // namespace regina
 

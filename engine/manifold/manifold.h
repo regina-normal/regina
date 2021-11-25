@@ -39,37 +39,50 @@
 #define __REGINA_MANIFOLD_H
 #endif
 
-#include <optional>
 #include "regina-core.h"
 #include "algebra/abeliangroup.h"
 #include "triangulation/forward.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
 class AbelianGroup;
 
 /**
- * \addtogroup manifold Standard 3-Manifolds
+ * \defgroup manifold Standard 3-Manifolds
  * Standard 3-manifolds whose structures are well-understood.
- * @{
  */
 
 /**
- * Represents a particular 3-manifold.  The triangulation of this
- * 3-manifold that may be in use is not of interest.
+ * Represents a particular 3-manifold, independent of how it might be
+ * triangulated.  This is an abstract base class: its subclasses correspond
+ * to different families of 3-manifolds.
  *
- * Subclasses corresponding to the different types of 3-manifold must
- * (of course) override all pure virtual functions.  They must also provide
- * a copy constructor and assignment operator.  They must not override
- * writeTextShort() or writeTextLong(), since these routines are \e not virtual,
- * and are provided by the base class Manifold.
+ * Each subclass:
+ *
+ * - must override all pure virtual functions (of course);
+ *
+ * - may optionally override construct(), homology() and/or writeStructure(),
+ *   if they are able to provide this functionality;
+ *
+ * - must \e not override writeTextShort() or writeTextLong(), since these
+ *   routines are not virtual, and are provided directly by the Manifold base
+ *   class;
+ *
+ * - must provide value semantics (including at least a copy constructor and
+ *   assignment operator);
+ *
+ * - must provide member and global swap functions, for consistency across all
+ *   Manifold subclasses.
+ *
+ * \ingroup manifold
  */
 class Manifold : public Output<Manifold> {
     public:
         /**
          * A destructor that does nothing.
          */
-        virtual ~Manifold();
+        virtual ~Manifold() = default;
 
         /**
          * Returns the common name of this 3-manifold as a
@@ -88,7 +101,16 @@ class Manifold : public Output<Manifold> {
          *
          * @return the common name of this 3-manifold in TeX format.
          */
-        std::string TeXName() const;
+        std::string texName() const;
+        /**
+         * Deprecated routine that returns the common name of this 3-manifold
+         * in TeX format.
+         *
+         * \deprecated This routine has been renamed to texName().
+         *
+         * @return the common name of this 3-manifold in TeX format.
+         */
+        [[deprecated]] std::string TeXName() const;
         /**
          * Returns details of the structure of this 3-manifold that
          * might not be evident from its common name.  For instance, for
@@ -103,44 +125,68 @@ class Manifold : public Output<Manifold> {
         std::string structure() const;
         /**
          * Returns a triangulation of this 3-manifold, if such a
-         * construction has been implemented.  If no construction routine
-         * has yet been implemented for this 3-manifold (for instance,
-         * if this 3-manifold is a Seifert fibred space with
-         * sufficiently many exceptional fibres) then this routine will
-         * return \c null.
+         * construction has been implemented.  For details of which types of
+         * 3-manifolds have implemented this routine, see the class notes
+         * for each corresponding subclasses of Manifold.
          *
-         * The details of which 3-manifolds have construction routines
-         * can be found in the notes for the corresponding subclasses of
-         * Manifold.  The default implemention of this routine returns \c null.
+         * The default implemention of this routine just throws a
+         * NotImplemented exception.
          *
-         * @return a triangulation of this 3-manifold, or \c null if the
-         * appropriate construction routine has not yet been implemented.
+         * \exception NotImplemented explicit construction has not yet been
+         * implemented for this particular 3-manifold.
+         *
+         * \exception FileError the construction needs to be read from file (as
+         * opposed to computed on the fly), but the file is inaccessible or its
+         * contents cannot be read and parsed correctly.  Currently this can
+         * only happen for the subclass SnapPeaCensusManifold, which reads its
+         * triangulations from the SnapPea census databases that are installed
+         * with Regina.
+         *
+         * @return a triangulation of this 3-manifold, if this
+         * construction has been implemented.
          */
-        virtual Triangulation<3>* construct() const;
+        virtual Triangulation<3> construct() const;
         /**
          * Returns the first homology group of this 3-manifold, if such
-         * a routine has been implemented.  If the calculation of
-         * homology has not yet been implemented for this 3-manifold
-         * then this routine will return no value.
+         * a routine has been implemented.  For details of which types of
+         * 3-manifolds have implemented this routine, see the class notes
+         * for each corresponding subclasses of Manifold.
          *
-         * The details of which 3-manifolds have homology calculation routines
-         * can be found in the notes for the corresponding subclasses of
-         * Manifold.  The default implemention of this routine returns no value.
+         * The default implemention of this routine just throws a
+         * NotImplemented exception.
          *
          * This routine can also be accessed via the alias homologyH1()
          * (a name that is more specific, but a little longer to type).
          *
-         * @return the first homology group of this 3-manifold, or no value if
-         * the appropriate calculation routine has not yet been implemented.
+         * \exception NotImplemented homology calculation has not yet been
+         * implemented for this particular 3-manifold.
+         *
+         * \exception FileError the homology needs to be read from file (as
+         * opposed to computed), but the file is inaccessible or its contents
+         * cannot be read and parsed correctly.  Currently this can only happen
+         * for the subclass SnapPeaCensusManifold, which reads its results from
+         * the SnapPea census databases that are installed with Regina.
+         *
+         * @return the first homology group of this 3-manifold, if this
+         * functionality has been implemented.
          */
-        virtual std::optional<AbelianGroup> homology() const;
+        virtual AbelianGroup homology() const;
         /**
          * An alias for homology().  See homology() for further details.
          *
-         * @return the first homology group of this 3-manifold, or no value if
-         * the appropriate calculation routine has not yet been implemented.
+         * \exception NotImplemented homology calculation has not yet been
+         * implemented for this particular 3-manifold.
+         *
+         * \exception the homology needs to be read from file (as opposed to
+         * computed), but the file is inaccessible or its contents cannot be
+         * read and parsed correctly.  Currently this can only happen for the
+         * subclass SnapPeaCensusManifold, which reads its results from the
+         * SnapPea census databases that are installed with Regina.
+         *
+         * @return the first homology group of this 3-manifold, if this
+         * functionality has been implemented.
          */
-        std::optional<AbelianGroup> homologyH1() const;
+        AbelianGroup homologyH1() const;
 
         /**
          * Returns whether or not this is a finite-volume hyperbolic manifold.
@@ -182,9 +228,8 @@ class Manifold : public Output<Manifold> {
          * Writes the common name of this 3-manifold as a
          * human-readable string to the given output stream.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present; instead use the variant name()
+         * that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -199,9 +244,8 @@ class Manifold : public Output<Manifold> {
          * Regina 4.3; in earlier versions, leading and trailing dollar
          * signs were provided.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present; instead use the variant texName()
+         * that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -217,9 +261,8 @@ class Manifold : public Output<Manifold> {
          * details are deemed necessary.  The default implementation of
          * this routine behaves in this way.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present; instead use the variant structure()
+         * that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -233,7 +276,7 @@ class Manifold : public Output<Manifold> {
          * Subclasses must not override this routine.  They should
          * override writeName() instead.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -245,7 +288,7 @@ class Manifold : public Output<Manifold> {
          * Subclasses must not override this routine.  They should
          * override writeName() and writeStructure() instead.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -253,35 +296,38 @@ class Manifold : public Output<Manifold> {
 
     protected:
         /**
-         * The default assignment operator.
+         * A default constructor.
          *
-         * For the base Manifold class, this operator does nothing.  It is
-         * provided so that derived classes can, if they wish, declare a default
-         * assignment operator (whereupon the compiler will automatically
-         * include a call to this base class operator).  It is protected
-         * so that external users do not accidentally call it (since every
-         * Manifold really belongs to a subclass of Manifold, but this operator
-         * does not copy any subclass data).
+         * This does nothing in the base Manifold class, and is not for
+         * public use.  It is declared here so that subclasses can use it
+         * implicitly in their own default constructors.
+         */
+        Manifold() = default;
+        /**
+         * A copy constructor.
+         *
+         * This does nothing in the base Manifold class, and is not for
+         * public use.  It is declared here so that subclasses can use it
+         * implicitly in their own copy constructors.
+         */
+        Manifold(const Manifold&) = default;
+        /**
+         * A copy assignment operator.
+         *
+         * This does nothing in the base Manifold class, and is not for
+         * public use.  It is declared here so that subclasses can use it
+         * implicitly in their own copy assignment operators.
          */
         Manifold& operator = (const Manifold&) = default;
 };
 
-/*@}*/
-
 // Inline functions for Manifold
 
-inline Manifold::~Manifold() {
+inline std::string Manifold::TeXName() const {
+    return texName();
 }
 
-inline Triangulation<3>* Manifold::construct() const {
-    return nullptr;
-}
-
-inline std::optional<AbelianGroup> Manifold::homology() const {
-    return std::nullopt;
-}
-
-inline std::optional<AbelianGroup> Manifold::homologyH1() const {
+inline AbelianGroup Manifold::homologyH1() const {
     return homology();
 }
 

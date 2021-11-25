@@ -86,7 +86,7 @@
 
 #pragma mark - Example triangulation
 
-typedef regina::Triangulation<3>* (*Tri3Creator)();
+using Tri3Creator = regina::Triangulation<3>* (*)();
 
 /**
  * Represents a single option in the examples picker.
@@ -144,7 +144,7 @@ typedef regina::Triangulation<3>* (*Tri3Creator)();
                 [Example3 exampleWithName:@"Figure eight knot complement" creator:&regina::Example<3>::figureEight],
                 [Example3 exampleWithName:@"Gieseking manifold" creator:&regina::Example<3>::gieseking],
                 [Example3 exampleWithName:@"Lens space L(8,3)" creator:[](){ return regina::Example<3>::lens(8, 3); }],
-                [Example3 exampleWithName:@"Poincaré homology sphere" creator:&regina::Example<3>::poincareHomologySphere],
+                [Example3 exampleWithName:@"Poincaré homology sphere" creator:&regina::Example<3>::poincare],
                 [Example3 exampleWithName:@"Product ℝP² × S¹" creator:&regina::Example<3>::rp2xs1],
                 [Example3 exampleWithName:@"Product S² × S¹" creator:&regina::Example<3>::s2xs1],
                 [Example3 exampleWithName:@"ℝP³" creator:[](){ return regina::Example<3>::lens(2, 1); }],

@@ -40,12 +40,56 @@ using regina::MatrixInt;
 
 void addMatrixInt(pybind11::module_& m) {
     auto c = pybind11::class_<MatrixInt>(m, "MatrixInt")
+        .def(pybind11::init<unsigned long>())
         .def(pybind11::init<unsigned long, unsigned long>())
         .def(pybind11::init<const MatrixInt&>())
+        .def(pybind11::init([](pybind11::list l) {
+            size_t rows = l.size();
+            if (rows == 0)
+                throw regina::InvalidArgument(
+                    "The number of rows must be strictly positive");
+
+            MatrixInt* m = nullptr;
+            size_t cols;
+
+            pybind11::list row;
+            for (size_t i = 0; i < rows; ++i) {
+                try {
+                    row = l[i].cast<pybind11::list>();
+                } catch (const pybind11::cast_error&) {
+                    delete m;
+                    throw regina::InvalidArgument(
+                        "Each row must be given as a separate Python list");
+                }
+                if (i == 0) {
+                    cols = row.size();
+                    if (cols == 0)
+                        throw regina::InvalidArgument(
+                            "The number of columns must be strictly positive");
+                    m = new MatrixInt(rows, cols);
+                } else if (row.size() != cols) {
+                    delete m;
+                    throw regina::InvalidArgument(
+                        "All rows must be given as lists of the same size");
+                }
+                for (size_t j = 0; j < cols; ++j) {
+                    try {
+                        m->entry(i, j) = row[j].cast<regina::Integer>();
+                    } catch (const pybind11::cast_error&) {
+                        delete m;
+                        throw regina::InvalidArgument(
+                            "Matrix element not convertible to Integer");
+                    }
+                }
+            }
+
+            return m;
+        }))
         .def("initialise", &MatrixInt::initialise)
         .def("initialise", [](MatrixInt& matrix, pybind11::list values) {
+            // Note: this routine is deprecated.
             if (values.size() != matrix.rows() * matrix.columns())
-                throw pybind11::index_error(
+                throw regina::InvalidArgument(
                     "Initialisation list has the wrong length");
             unsigned long r, c;
             unsigned i = 0;
@@ -59,7 +103,7 @@ void addMatrixInt(pybind11::module_& m) {
                         ++i;
                         continue;
                     } catch (pybind11::cast_error const &) {
-                        throw std::invalid_argument(
+                        throw regina::InvalidArgument(
                             "List element not convertible to Integer");
                     }
                 }

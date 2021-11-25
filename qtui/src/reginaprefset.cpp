@@ -329,7 +329,6 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("Tools");
-    pdfExternalViewer = settings.value("PDFViewer").toString().trimmed();
     triGAPExec = settings.value("GAPExec", defaultGAPExec).toString().trimmed();
     settings.endGroup();
 
@@ -473,7 +472,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("Tools");
-    settings.setValue("PDFViewer", pdfExternalViewer);
     settings.setValue("GAPExec", triGAPExec);
     settings.endGroup();
 

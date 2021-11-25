@@ -55,20 +55,16 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents a permutation of {0,1}.
  * This is a specialisation of the generic Perm template: it is highly
  * optimised, but also somewhat trivial (since there are only two
  * possible permutations).  It is provided simply to optimise the general
  * Perm<n> template for this trivial case.
  *
- * As with all Perm template classes, these objects are small enough to
- * pass about by value instead of by reference.  Moreover, Perm<2> in
- * particular is extremely fast to work with.
+ * As with all Perm template classes, these objects are small enough to pass
+ * by value and swap with std::swap(), with no need for any specialised move
+ * operations or swap functions.  Moreover, Perm<2> in particular is extremely
+ * fast to work with.
  *
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the permutation.
@@ -76,7 +72,7 @@ namespace regina {
  * objects to and from the engine.  For Perm<2>, the internal code is 0 for
  * the identity permutation, or 1 for the (unique) non-identity permutation.
  * This is consistent with the second-generation codes used in classes
- * Perm<4>, Perm<5> and Perm<6>.
+ * Perm<4>,...,Perm<7>.
  *
  * To use this class, simply include the main permutation header maths/perm.h.
  *
@@ -93,6 +89,8 @@ namespace regina {
  *
  * \ifacespython Since Python does not support templates, this class is
  * made available under the name Perm2.
+ *
+ * \ingroup maths
  */
 template <>
 class Perm<2> {
@@ -119,7 +117,7 @@ class Perm<2> {
          * permutations on two elements.  In other words, this is a
          * native signed integer type large enough to store (2!).
          */
-        typedef int Index;
+        using Index = int;
 
         /**
          * Indicates what type of internal permutation code is used by
@@ -143,7 +141,7 @@ class Perm<2> {
          * Indicates the native unsigned integer type used to store the
          * internal permutation code.
          */
-        typedef uint8_t Code;
+        using Code = uint8_t;
 
         /**
          * Gives array-like access to all possible permutations of
@@ -153,8 +151,8 @@ class Perm<2> {
          * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
          * between 0 and 1 inclusive.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -199,8 +197,8 @@ class Perm<2> {
          * Therefore the identity permutation has index 0, and the
          * (unique) non-identity permutation has index 1.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -235,8 +233,8 @@ class Perm<2> {
          * To access the permutation at index \a i, you simply use the
          * square bracket operator: <tt>Sn_1[i]</tt>.  The index \a i must be 0.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -276,27 +274,43 @@ class Perm<2> {
          * Creates a permutation mapping \a i to \a image[i] for each
          * \a i = 0,1.
          *
+         * \pre The elements of \a image are 0 and 1 in some order.
+         *
+         * @param image the array of images.
+         */
+        constexpr Perm(const std::array<int, 2>& image);
+
+        /**
+         * Deprecated constructor that creates a permutation mapping
+         * \a i to \a image[i] for each \a i = 0,1.
+         *
+         * \deprecated Use the two-integer constructor or the
+         * std::array constructor instead.
+         *
          * \pre The array \a image contains two elements, which are
          * 0 and 1 in some order.
          *
          * @param image the array of images.
          */
-        constexpr Perm(const int* image);
+        [[deprecated]] constexpr Perm(const int* image);
 
         /**
-         * Creates a permutation mapping (\a a[0], \a a[1]) to
-         * (\a b[0], \a b[1]) respectively.
+         * Deprecated constructor that creates a permutation mapping
+         * (\a a[0], \a a[1]) to (\a b[0], \a b[1]) respectively.
+         *
+         * \deprecated Use the four-integer constructor or the
+         * std::array constructor instead.
          *
          * \pre Both arrays \a a and \a b contain two elements, which
          * are 0 and 1 in some order.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use the single-array constructor instead.
          *
          * @param a the array of preimages; this must have length 2.
          * @param b the corresponding array of images; this must also have
          * length 2.
          */
-        constexpr Perm(const int* a, const int* b);
+        [[deprecated]] constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -432,7 +446,19 @@ class Perm<2> {
          * should be 0 or 1.
          * @return the preimage of \a image.
          */
-        constexpr int preImageOf(int image) const;
+        constexpr int pre(int image) const;
+
+        /**
+         * Deprecated routine that determines the preimage of the given
+         * integer under this permutation.
+         *
+         * \deprecated This routine has been renamed to pre().
+         *
+         * @param image the integer whose preimage we wish to find.  This
+         * should be 0 or 1.
+         * @return the preimage of \a image.
+         */
+        [[deprecated]] constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -481,7 +507,8 @@ class Perm<2> {
          * then this will wrap around to become the first permutation in
          * Perm<2>::Sn, which is the identity.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, although the postincrement operator is
+         * present in python as the member function inc().
          *
          * @return a reference to this permutation after the increment.
          */
@@ -493,7 +520,8 @@ class Perm<2> {
          * then this will wrap around to become the first permutation in
          * Perm<2>::Sn, which is the identity.
          *
-         * \ifacespython Not present.
+         * \ifacespython This routine is named inc() since python does
+         * not support the increment operator.
          *
          * @return a copy of this permutation before the increment took place.
          */
@@ -722,8 +750,6 @@ class Perm<2> {
         constexpr Perm<2>(Code code);
 };
 
-/*@}*/
-
 // Inline functions for Perm<2>
 
 inline constexpr Perm<2> Perm<2>::S2Lookup::operator[] (int index) const {
@@ -737,6 +763,10 @@ inline constexpr Perm<2>::Perm(Code code) : code_(code) {
 }
 
 inline constexpr Perm<2>::Perm(int a, int b) : code_(a == b ? 0 : 1) {
+}
+
+inline constexpr Perm<2>::Perm(const std::array<int, 2>& image) :
+        code_(image[0]) {
 }
 
 inline constexpr Perm<2>::Perm(const int* image) : code_(image[0]) {
@@ -789,6 +819,10 @@ inline constexpr int Perm<2>::sign() const {
 
 inline constexpr int Perm<2>::operator[](int source) const {
     return source ^ code_;
+}
+
+inline constexpr int Perm<2>::pre(int image) const {
+    return image ^ code_;
 }
 
 inline constexpr int Perm<2>::preImageOf(int image) const {

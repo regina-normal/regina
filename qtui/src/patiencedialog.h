@@ -61,13 +61,13 @@ class PatienceDialog : public QDialog {
          * returned by this routine) needs to be destroyed.
          */
         static PatienceDialog* warn(const QString& message,
-            QWidget* parent = 0);
+            QWidget* parent = nullptr);
 
     protected:
         /**
          * Disable the window-close event.
          */
-        virtual void closeEvent(QCloseEvent* e);
+        void closeEvent(QCloseEvent* e) override;
 
     private:
         /**

@@ -102,8 +102,8 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     setWindowTitle(tr("Python Console"));
 
     // Set up the main widgets.
-    QWidget* box = new QWidget(this);
-    QVBoxLayout* layout = new QVBoxLayout;
+    auto* box = new QWidget(this);
+    auto* layout = new QVBoxLayout;
     session = new QTextEdit();
     session->setReadOnly(true);
     session->setAutoFormatting(QTextEdit::AutoNone);
@@ -113,8 +113,8 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
         "output they have produced."));
     layout->addWidget(session, 1);
 
-    QHBoxLayout *inputAreaLayout = new QHBoxLayout;
-    
+    auto *inputAreaLayout = new QHBoxLayout;
+
     QString inputMsg = tr("Type your Python commands into this box.");
     prompt = new QLabel();
     prompt->setWhatsThis(inputMsg);
@@ -140,11 +140,11 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     // Set up the actions.
     // Don't use XML files since we don't know whether we're in the shell or
     // the part.
-    QMenu* menuConsole = new QMenu(this);
-    QMenu* menuEdit = new QMenu(this);
-    QMenu* menuHelp = new QMenu(this);
+    auto* menuConsole = new QMenu(this);
+    auto* menuEdit = new QMenu(this);
+    auto* menuHelp = new QMenu(this);
 
-    QAction* act = new QAction(this);
+    auto* act = new QAction(this);
     act->setText(tr("&Save Session"));
     act->setIcon(ReginaSupport::themeIcon("document-save"));
     act->setShortcuts(QKeySequence::Save);
@@ -253,7 +253,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     act->setIcon(ReginaSupport::themeIcon("help-contextual"));
     connect(act, SIGNAL(triggered()), this, SLOT(contextHelpActivated()));
     menuHelp->addAction(act);
-    
+
     menuConsole->setTitle(tr("&Console"));
     menuEdit->setTitle(tr("&Edit"));
     menuHelp->setTitle(tr("&Help"));
@@ -375,7 +375,7 @@ bool PythonConsole::importRegina() {
     }
 }
 
-void PythonConsole::setRootPacket(regina::Packet* packet) {
+void PythonConsole::setRootPacket(std::shared_ptr<regina::Packet> packet) {
     if (interpreter->setVar("root", packet)) {
         if (packet)
             addInfo(tr("The (invisible) root of the packet tree is in the "
@@ -389,7 +389,7 @@ void PythonConsole::setRootPacket(regina::Packet* packet) {
     }
 }
 
-void PythonConsole::setSelectedPacket(regina::Packet* packet) {
+void PythonConsole::setSelectedPacket(std::shared_ptr<regina::Packet> packet) {
     // Set the variable.
     if (interpreter->setVar("item", packet)) {
         if (packet)
@@ -407,7 +407,8 @@ void PythonConsole::setSelectedPacket(regina::Packet* packet) {
     }
 }
 
-void PythonConsole::setVar(const QString& name, regina::Packet* value) {
+void PythonConsole::setVar(const QString& name,
+        std::shared_ptr<regina::Packet> value) {
     if (! interpreter->setVar(name.toUtf8(), value)) {
         QString pktName;
         if (value)
@@ -434,7 +435,7 @@ void PythonConsole::executeLine(const char* line) {
 
 void PythonConsole::runScript(regina::Script* script) {
     interpreter->runScript(script);
-    
+
     if (interpreter->exitAttempted())
         close();
 }
@@ -465,7 +466,7 @@ void PythonConsole::saveLog() {
 }
 
 void PythonConsole::scriptingOverview() {
-    ReginaPrefSet::openHandbook("python", 0, this);
+    ReginaPrefSet::openHandbook("python", nullptr, this);
 }
 
 void PythonConsole::pythonReference() {
@@ -533,7 +534,7 @@ void PythonConsole::processCommand() {
 
     // Finish the output.
     interpreter->flush();
-    
+
     // Prepare for a new command.
     if (interpreter->exitAttempted()) {
         close();
@@ -554,7 +555,7 @@ void PythonConsole::processCompletion(int start, int end) {
     // We only send the last "word" before the cursor / selected block, where
     // a "word" starts with a character or underscore, and only contains
     // letters, numbers, underscores and/or the dot.
-    QRegularExpression re("[\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}_][\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Nd}_.]*$");
+    QRegularExpression re(R"([\p{Ll}\p{Lu}\p{Lt}\p{Lo}_][\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}_.]*$)");
     QRegularExpressionMatch m;
     if (start == input->text().length())
         m = re.match(input->text());

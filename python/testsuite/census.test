@@ -4,7 +4,7 @@
 # Copyright (c) 2007-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Tests the census database lookup routines.
+# Tests the census generation code.
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -33,14 +33,125 @@
 
 from __future__ import print_function
 
-def search(sig):
-	print('SEARCH:', sig)
-	hits = Census.lookup(sig)
-	print('Hits:', hits.count())
-	for h in hits:
-		print('  ' + h.db().desc() + '  -  ' + h.name())
-	print()
+s = None
+partial = None
 
-search('foo')
-search('cPcbbbiht')
-search('nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng')
+#######################################################################
+
+def foundGluings2(g):
+	print(g.triangulate().isoSig())
+
+def auto2(p, isos):
+	print(p.str())
+	GluingPermSearcher2.findAllPerms(p, isos, False, foundGluings2)
+
+def best2(p, isos):
+	print(p.str())
+	b = GluingPermSearcher2.bestSearcher(p, isos, False)
+	b.runSearch(foundGluings2)
+
+FacetPairing2.findAllPairings(2, False, 0, auto2)
+print()
+FacetPairing2.findAllPairings(2, False, 0, best2)
+print()
+
+def foundPartial2(g):
+	if s.isComplete():
+		print('Depth too large: found complete set')
+	partial.append(s.taggedData())
+
+def partial2(p, isos):
+	global s, partial
+	print(p.str())
+
+	partial = []
+	s = GluingPermSearcher2(p, isos, False)
+	s.partialSearch(2, foundPartial2)
+	for i in partial:
+		s = GluingPermSearcher2.fromTaggedData(i)
+		s.runSearch(foundGluings2)
+
+FacetPairing2.findAllPairings(2, False, 0, partial2)
+print()
+
+#######################################################################
+
+def foundGluings3(g):
+	t = g.triangulate()
+	if not t.intelligentSimplify():
+		print(t.isoSig())
+
+def auto3(p, isos):
+	print(p.str())
+	GluingPermSearcher3.findAllPerms(p, isos, True, True, PURGE_NON_MINIMAL, \
+		foundGluings3)
+
+def best3(p, isos):
+	print(p.str())
+	b = GluingPermSearcher3.bestSearcher(p, isos, True, True, PURGE_NON_MINIMAL)
+	b.runSearch(foundGluings3)
+
+FacetPairing3.findAllPairings(2, False, 0, auto3)
+print()
+FacetPairing3.findAllPairings(2, False, 0, best3)
+print()
+
+def foundPartial3(g):
+	if s.isComplete():
+		print('Depth too large: found complete set')
+	partial.append(s.taggedData())
+
+def partial3(p, isos):
+	global s, partial
+	print(p.str())
+
+	partial = []
+	s = CompactSearcher(p, isos, True, PURGE_NON_MINIMAL)
+	s.partialSearch(2, foundPartial3)
+	for i in partial:
+		s = GluingPermSearcher3.fromTaggedData(i)
+		s.runSearch(foundGluings3)
+
+FacetPairing3.findAllPairings(2, False, 0, partial3)
+print()
+
+#######################################################################
+
+def foundGluings4(g):
+	print(g.triangulate().isoSig())
+
+def auto4(p, isos):
+	print(p.str())
+	GluingPermSearcher4.findAllPerms(p, isos, True, True, foundGluings4)
+
+def best4(p, isos):
+	print(p.str())
+	b = GluingPermSearcher4.bestSearcher(p, isos, True, True)
+	b.runSearch(foundGluings4)
+
+FacetPairing4.findAllPairings(2, False, 0, auto4)
+print()
+FacetPairing4.findAllPairings(2, False, 0, best4)
+print()
+
+def foundPartial4(g):
+	if s.isComplete():
+		print('Depth too large: found complete set')
+	partial.append(s.taggedData())
+
+def partial4(p, isos):
+	global s, partial
+	print(p.str())
+
+	partial = []
+	s = GluingPermSearcher4(p, isos, True, True)
+	s.partialSearch(2, foundPartial4)
+	for i in partial:
+		s = GluingPermSearcher4.fromTaggedData(i)
+		s.runSearch(foundGluings4)
+
+FacetPairing4.findAllPairings(2, False, 0, partial4)
+print()
+
+#######################################################################
+

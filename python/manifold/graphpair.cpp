@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "manifold/graphpair.h"
 #include "manifold/sfs.h"
 #include "../helpers.h"
@@ -41,16 +42,9 @@ using regina::SFSpace;
 
 void addGraphPair(pybind11::module_& m) {
     pybind11::class_<GraphPair, regina::Manifold>(m, "GraphPair")
-        .def(pybind11::init([](const SFSpace& s1, const SFSpace& s2,
-                long a, long b, long c, long d) {
-            // Clone the given SFSs to avoid claiming ownership of them.
-            return new GraphPair(new SFSpace(s1), new SFSpace(s2), a, b, c, d);
-        }))
-        .def(pybind11::init([](const SFSpace& s1, const SFSpace& s2,
-                const Matrix2& m) {
-            // Clone the given SFSs to avoid claiming ownership of them.
-            return new GraphPair(new SFSpace(s1), new SFSpace(s2), m);
-        }))
+        .def(pybind11::init<const SFSpace&, const SFSpace&,
+            long, long, long, long>())
+        .def(pybind11::init<const SFSpace&, const SFSpace&, const Matrix2&>())
         .def(pybind11::init<const GraphPair&>())
         .def("sfs", &GraphPair::sfs,
             pybind11::return_value_policy::reference_internal)

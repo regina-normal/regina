@@ -40,7 +40,7 @@ void smithNormalForm(MatrixInt& matrix) {
     unsigned long nonEmptyRows = matrix.rows();
     unsigned long nonEmptyCols = matrix.columns();
     bool flag;
-    unsigned long i, j, k;
+    unsigned long i, j;
     unsigned long pivotRow, pivotCol;
     Integer d, u, v, a, b;
     Integer tmp;
@@ -141,7 +141,8 @@ void smithNormalForm(MatrixInt& matrix,
     unsigned long nonEmptyRows = matrix.rows();
     unsigned long nonEmptyCols = matrix.columns();
     bool flag;
-    unsigned long i, j, k;
+    unsigned long i, j;
+    unsigned long pivotRow, pivotCol;
     Integer d, u, v, a, b;
     Integer tmp;
 
@@ -153,48 +154,38 @@ void smithNormalForm(MatrixInt& matrix,
     while ((currStage < nonEmptyRows) && (currStage < nonEmptyCols)) {
         loopStart:
 
-        // Have we got an empty row?
-        flag = true;
-        for (i=currStage; i<nonEmptyCols; i++)
-            if (matrix.entry(currStage, i) != 0) {
-                flag = false;
-                break;
+        // Find a good pivot.
+        // For now we just take the non-zero entry with smallest absolute value.
+        tmp = 0;
+        // TODO: Adjust nonEmptyRows and nonEmptyCols as we iterate here.
+        for (i = currStage; i < nonEmptyRows; ++i)
+            for (j = currStage; j < nonEmptyCols; ++j) {
+                Integer pivotVal = matrix.entry(i, j).abs();
+                if (pivotVal > 0)
+                    if (tmp == 0 || pivotVal < tmp) {
+                        tmp = pivotVal;
+                        pivotRow = i;
+                        pivotCol = j;
+                    }
             }
-        if (flag) {
-            // Empty row!
-            // Switch it with a row at the bottom.
-            if (currStage != nonEmptyRows-1) {
-                matrix.swapRows(currStage, nonEmptyRows - 1);
-                colSpaceBasis.swapRows(currStage, nonEmptyRows - 1);
-                colSpaceBasisInv.swapCols(currStage, nonEmptyRows - 1);
-            }
-            --nonEmptyRows;
-            continue;
+
+        if (tmp == 0) {
+            // The matrix is zero from here on - which means we are done!
+            break;
         }
 
-        // Have we got an empty column?
-        flag = true;
-        for (i=currStage; i<nonEmptyRows; i++)
-            if (matrix.entry(i, currStage) != 0) {
-                flag = false;
-                break;
-            }
-        if (flag) {
-            // Empty column!
-            // Switch it with a column on the end.
-            if (currStage != nonEmptyCols-1) {
-                for (i=currStage; i<nonEmptyRows; i++) {
-                    matrix.entry(i, currStage).swap(
-                        matrix.entry(i, nonEmptyCols-1));
-                }
-                rowSpaceBasis.swapCols(currStage, nonEmptyCols - 1);
-                rowSpaceBasisInv.swapRows(currStage, nonEmptyCols - 1);
-            }
-            --nonEmptyCols;
-            continue;
+        if (pivotRow != currStage) {
+            matrix.swapRows(currStage, pivotRow);
+            colSpaceBasis.swapRows(currStage, pivotRow);
+            colSpaceBasisInv.swapCols(currStage, pivotRow);
+        }
+        if (pivotCol != currStage) {
+            matrix.swapCols(currStage, pivotCol, currStage);
+            rowSpaceBasis.swapCols(currStage, pivotCol);
+            rowSpaceBasisInv.swapRows(currStage, pivotCol);
         }
 
-        // Get zeros in the current row.
+        // Make zeros for the remainder of the current row.
         for (i=currStage+1; i<nonEmptyCols; i++) {
             if (matrix.entry(currStage, i) == 0)
                 continue;
@@ -205,30 +196,12 @@ void smithNormalForm(MatrixInt& matrix,
             a.divByExact(d);
             b.divByExact(d);
             // Do a modification to columns currStage and i.
-            for (j=currStage; j<nonEmptyRows; j++) {
-                tmp = u * matrix.entry(j, currStage) +
-                    v * matrix.entry(j, i);
-                matrix.entry(j, i) = a * matrix.entry(j, i) -
-                    b * matrix.entry(j, currStage);
-                matrix.entry(j, currStage) = tmp;
-            }
-            for (j=0; j<matrix.columns(); j++) {
-                tmp = u * rowSpaceBasis.entry(j, currStage) +
-                    v * rowSpaceBasis.entry(j, i);
-                rowSpaceBasis.entry(j, i) = a * rowSpaceBasis.entry(j, i) -
-                    b * rowSpaceBasis.entry(j, currStage);
-                rowSpaceBasis.entry(j, currStage) = tmp;
-
-                tmp = a * rowSpaceBasisInv.entry(currStage, j) +
-                    b * rowSpaceBasisInv.entry(i, j);
-                rowSpaceBasisInv.entry(i, j) =
-                    u * rowSpaceBasisInv.entry(i, j) -
-                    v * rowSpaceBasisInv.entry(currStage, j);
-                rowSpaceBasisInv.entry(currStage, j) = tmp;
-            }
+            matrix.combCols(currStage, i, u, v, -b, a, currStage);
+            rowSpaceBasis.combCols(currStage, i, u, v, -b, a);
+            rowSpaceBasisInv.combRows(currStage, i, a, b, -v, u);
         }
 
-        // Get zeros in the current column.
+        // Make zeros for the remainder of the current column.
         // Check to see if we change anything and thus muck up the row.
         flag = false;
         for (i=currStage+1; i<nonEmptyRows; i++) {
@@ -242,74 +215,59 @@ void smithNormalForm(MatrixInt& matrix,
             a.divByExact(d);
             b.divByExact(d);
             // Do a modification to rows currStage and i.
-            for (j=currStage; j<nonEmptyCols; j++) {
-                tmp = u * matrix.entry(currStage, j) +
-                    v * matrix.entry(i, j);
-                matrix.entry(i, j) = a * matrix.entry(i, j) -
-                    b * matrix.entry(currStage, j);
-                matrix.entry(currStage, j) = tmp;
-            }
-            for (j=0; j<matrix.rows(); j++) {
-                tmp = u * colSpaceBasis.entry(currStage, j) +
-                    v * colSpaceBasis.entry(i, j);
-                colSpaceBasis.entry(i, j) = a * colSpaceBasis.entry(i, j) -
-                    b * colSpaceBasis.entry(currStage, j);
-                colSpaceBasis.entry(currStage, j) = tmp;
-
-                tmp = a * colSpaceBasisInv.entry(j, currStage) +
-                    b * colSpaceBasisInv.entry(j, i);
-                colSpaceBasisInv.entry(j, i) =
-                    u * colSpaceBasisInv.entry(j, i) -
-                    v * colSpaceBasisInv.entry(j, currStage);
-                colSpaceBasisInv.entry(j, currStage) = tmp;
-            }
+            matrix.combRows(currStage, i, u, v, -b, a, currStage);
+            colSpaceBasis.combRows(currStage, i, u, v, -b, a);
+            colSpaceBasisInv.combCols(currStage, i, a, b, -v, u);
         }
         if (flag) {
-            // The clean row was mucked up.
-            continue;
+            flag = false;
+            for (i=currStage+1; i<nonEmptyCols; i++)
+                if (matrix.entry(currStage, i) != 0) {
+                    flag = true;
+                    break;
+                }
+            if (flag) {
+                // The clean row was mucked up.
+                continue;
+            }
         }
 
-        // Check that entry (currStage, currStage) divides everything
-        // else.
+        // Check that entry (currStage, currStage) divides everything else.
+        Integer& diag = matrix.entry(currStage, currStage);
         for (i=currStage+1; i<nonEmptyRows; i++)
             for (j=currStage+1; j<nonEmptyCols; j++)
-                if ((matrix.entry(i, j) % matrix.entry(currStage, currStage))
-                        != 0) {
+                if ((matrix.entry(i, j) % diag) != 0) {
                     // Add row i to the current stage row and start this
                     // stage over.
-                    for (k=currStage+1; k<nonEmptyCols; k++)
-                        matrix.entry(currStage, k) += matrix.entry(i, k);
+                    matrix.addRowFrom(i, currStage, currStage + 1);
                     colSpaceBasis.addRow(i, currStage);
                     colSpaceBasisInv.addCol(currStage, i, -1);
-
                     goto loopStart;
                 }
 
         // This stage is complete!
         // Make sure the diagonal entry is positive before leaving it.
-        if (matrix.entry(currStage, currStage) < 0) {
-            matrix.entry(currStage, currStage).negate();
-            for (j=0; j<matrix.rows(); j++) {
-                // we're thinking of this as a row op
-                colSpaceBasis.entry( currStage, j ).negate();
-                colSpaceBasisInv.entry( j,currStage ).negate();
-            }
+        if (diag < 0) {
+            diag.negate();
+            // we're thinking of this as a row op
+            colSpaceBasis.multRow(currStage, -1);
+            colSpaceBasisInv.multCol(currStage, -1);
         }
-        currStage++;
+        ++currStage;
     }
 }
 
-unsigned rowBasis(MatrixInt& matrix) {
-    unsigned n = matrix.columns();
+unsigned long rowBasis(MatrixInt& matrix) {
+    unsigned long n = matrix.columns();
 
     // Make a copy of the input matrix, and reduce it to row echelon form.
     MatrixInt echelon(matrix);
 
-    unsigned doneRows = 0;
-    unsigned rank = echelon.rows();
+    unsigned long doneRows = 0;
+    unsigned long rank = echelon.rows();
 
-    unsigned* lead = new unsigned[n];
-    unsigned r, c, tmp;
+    auto* lead = new unsigned long[n];
+    unsigned long r, c, tmp;
     for (c = 0; c < n; ++c)
         lead[c] = c;
 
@@ -369,7 +327,7 @@ unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
     unsigned doneRows = 0;
     unsigned rank = echelon.rows();
 
-    unsigned* lead = new unsigned[n];
+    auto* lead = new unsigned[n];
     unsigned r, c, tmp;
     for (c = 0; c < n; ++c)
         lead[c] = c;
@@ -470,8 +428,6 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
                                      // list of column coordinates
                                      // for the non-zero entries.
 
-    Integer d,r; // given two Integers a and b, we will represent
-                 // a/b by d and a % b by r in the algorithm.
     Integer u,v,gcd, a,b; // for column operations u,v,a,b represent
                           // a 2x2 matrix.
     Integer tmp;
@@ -509,8 +465,8 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
                 }
                 // step 2: reduce entries(CR,i) for i<CC
                 for (i=0;i<CC;i++) { // write entry(CR,i) as d*entry(CR,CC) + r.
-                    d = M.entry(rowList[CR],i).divisionAlg(
-                        M.entry(rowList[CR],CC), r );
+                    auto [d, r] = M.entry(rowList[CR],i).divisionAlg(
+                        M.entry(rowList[CR],CC) );
                     // perform reduction on column i. this is subtracting
                     // d times column CC from column i.
                     for (j=0;j<M.rows();j++)
@@ -801,12 +757,10 @@ MatrixInt torsionAutInverse(const MatrixInt& input,
         wRow--;
         // step 1 modular reduction on the current row. And find last non-zero 
         // entry in this row up to wRow column
-        Integer R; // divisionAlg needs a remainder so we give it one, 
-                   //  although we discard it.
         unsigned long pivCol=0; 
         for (unsigned long i=0; i<=wRow; i++)
         {
-            workMat.entry(wRow, i).divisionAlg(invF[wRow], R);
+            auto [Q, R] = workMat.entry(wRow, i).divisionAlg(invF[wRow]);
             workMat.entry(wRow, i) = R;
             if (R!=0) pivCol=i;
         } // now pivCol is the last non-zero entry in the 0..wRow square smatrix 
@@ -858,7 +812,7 @@ MatrixInt torsionAutInverse(const MatrixInt& input,
 
         // step 4 mod reduce the only entry left, 
         //  recurse back to step 1 on the next row up. 
-        workMat.entry(wRow, pivCol).divisionAlg(invF[wRow], R); 
+        auto [Q, R] = workMat.entry(wRow, pivCol).divisionAlg(invF[wRow]);
         workMat.entry(wRow, pivCol) = R;
         // so we should have 1's down the diagonal now as long 
         //  as I haven't screwed up.
@@ -950,27 +904,27 @@ bool metricFindPivot(const unsigned long &currStage, const MatrixInt &matrix,
 }
 
 // switch rows i and j in matrix.  Keep track of change-of-basis
-void metricSwitchRows(const unsigned long &currStage, const unsigned long &i, 
-                      const unsigned long &j, 
-        MatrixInt &matrix, MatrixInt *colBasis, MatrixInt *colBasisInv, 
+void metricSwitchRows(const unsigned long &currStage, const unsigned long &i,
+                      const unsigned long &j,
+        MatrixInt &matrix, MatrixInt& colBasis, MatrixInt& colBasisInv,
         std::vector<Integer> &rowNorm, std::vector<Integer> &rowGCD)
 {
     rowNorm[i].swap(rowNorm[j]); rowGCD[i].swap(rowGCD[j]);
-    if (colBasis) colBasis->swapRows(i, j); 
-    if (colBasisInv) colBasisInv->swapCols(i, j);
+    colBasis.swapRows(i, j);
+    colBasisInv.swapCols(i, j);
     for (unsigned long k=currStage; k<matrix.columns(); k++)
         matrix.entry(i, k).swap(matrix.entry(j,k));
 }
 
 // switch columns i and j in matrix.  Keep track of change-of-basis matrix
-void metricSwitchCols(const unsigned long &currStage, const unsigned long &i, 
-        const unsigned long &j, 
-        MatrixInt &matrix, MatrixInt *rowBasis, MatrixInt *rowBasisInv, 
+void metricSwitchCols(const unsigned long &currStage, const unsigned long &i,
+        const unsigned long &j,
+        MatrixInt &matrix, MatrixInt& rowBasis, MatrixInt& rowBasisInv, 
         std::vector<Integer> &colNorm)
 {
-    colNorm[i].swap(colNorm[j]); 
-    if (rowBasis) rowBasis->swapCols(i, j); 
-    if (rowBasisInv) rowBasisInv->swapRows(i, j);
+    colNorm[i].swap(colNorm[j]);
+    rowBasis.swapCols(i, j);
+    rowBasisInv.swapRows(i, j);
     for (unsigned long k=currStage; k<matrix.rows(); k++)
         matrix.entry(k, i).swap(matrix.entry(k, j));
 }
@@ -978,9 +932,9 @@ void metricSwitchCols(const unsigned long &currStage, const unsigned long &i,
 // columns operation using 2x2-matrix [a b|c d] on columns i, j resp.
 void metricColOp(const unsigned long &currStage, const unsigned long &i,
         const unsigned long &j, MatrixInt &matrix, 
-        const Integer a, const Integer b, 
-        const Integer c, const Integer d, 
-        MatrixInt *rowBasis, MatrixInt *rowBasisInv, 
+        const Integer& a, const Integer& b, 
+        const Integer& c, const Integer& d, 
+        MatrixInt& rowBasis, MatrixInt& rowBasisInv, 
         std::vector<Integer> &rowNorm, 
         std::vector<Integer> &colNorm)
 {
@@ -996,27 +950,26 @@ void metricColOp(const unsigned long &currStage, const unsigned long &i,
         matrix.entry(k, i) = t1;    matrix.entry(k, j) = t2; 
         colNorm[i] += t1.abs();    colNorm[j] += t2.abs();
     } // now modify rowBasis and rowBasisInv
-    if (rowBasis) for (unsigned long k=0; k<matrix.columns(); k++)
-    {
+    for (unsigned long k=0; k<matrix.columns(); k++) {
         // apply same column op to rowBasis
-        t1 = a*rowBasis->entry(k, i) + c*rowBasis->entry(k, j);
-        t2 = b*rowBasis->entry(k, i) + d*rowBasis->entry(k, j);
-        rowBasis->entry(k, i) = t1;  rowBasis->entry(k, j) = t2;
+        t1 = a*rowBasis.entry(k, i) + c*rowBasis.entry(k, j);
+        t2 = b*rowBasis.entry(k, i) + d*rowBasis.entry(k, j);
+        rowBasis.entry(k, i) = t1;  rowBasis.entry(k, j) = t2;
     }
-    if (rowBasisInv) for (unsigned long k=0; k<matrix.columns(); k++)
-    {  // apply inverse row op to rowBasisInv
-        t1 = d*rowBasisInv->entry(i, k) - b*rowBasisInv->entry(j, k);
-        t2 = -c*rowBasisInv->entry(i, k) + a*rowBasisInv->entry(j, k);
-        rowBasisInv->entry(i, k) = t1; rowBasisInv->entry(j, k) = t2;
+    for (unsigned long k=0; k<matrix.columns(); k++) {
+        // apply inverse row op to rowBasisInv
+        t1 = d*rowBasisInv.entry(i, k) - b*rowBasisInv.entry(j, k);
+        t2 = -c*rowBasisInv.entry(i, k) + a*rowBasisInv.entry(j, k);
+        rowBasisInv.entry(i, k) = t1; rowBasisInv.entry(j, k) = t2;
     }
 }
 
 // row operation using 2x2-matrix [a b|c d] on rows i, j resp.
 void metricRowOp(const unsigned long &currStage, const unsigned long &i, 
     const unsigned long &j, MatrixInt &matrix, 
-    const Integer a, const Integer b, 
-    const Integer c, const Integer d, 
-    MatrixInt *colBasis, MatrixInt *colBasisInv, 
+    const Integer& a, const Integer& b, 
+    const Integer& c, const Integer& d, 
+    MatrixInt& colBasis, MatrixInt& colBasisInv, 
     std::vector<Integer> &rowNorm, std::vector<Integer> &colNorm,
     std::vector<Integer> &rowGCD)
 {
@@ -1024,8 +977,7 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i,
     // smart norm recomputation and transformation
     rowNorm[i] = Integer::zero; rowNorm[j] = Integer::zero;
     rowGCD[i] = Integer::zero;  rowGCD[j] = Integer::zero;
-    for (unsigned long k=currStage; k<matrix.columns(); k++)
-    {
+    for (unsigned long k=currStage; k<matrix.columns(); k++) {
         t1 = a*matrix.entry(i, k) + b*matrix.entry(j, k);
         t2 = c*matrix.entry(i, k) + d*matrix.entry(j, k);
         colNorm[k] += t1.abs() + t2.abs() - matrix.entry(i, k).abs() 
@@ -1034,19 +986,17 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i,
         rowNorm[i] += t1.abs();    rowNorm[j] += t2.abs();
         rowGCD[i] = rowGCD[i].gcd(t1);  rowGCD[j] = rowGCD[j].gcd(t2);
     } // now modify colBasis and colBasisInv
-    if (colBasis) for (unsigned long k=0; k<matrix.rows(); k++)
-    {
+    for (unsigned long k=0; k<matrix.rows(); k++) {
         // apply same row op to colBasis
-        t1 = a*colBasis->entry(i, k) + b*colBasis->entry(j, k);
-        t2 = c*colBasis->entry(i, k) + d*colBasis->entry(j, k);
-        colBasis->entry(i, k) = t1;  colBasis->entry(j, k) = t2;
+        t1 = a*colBasis.entry(i, k) + b*colBasis.entry(j, k);
+        t2 = c*colBasis.entry(i, k) + d*colBasis.entry(j, k);
+        colBasis.entry(i, k) = t1;  colBasis.entry(j, k) = t2;
     }
-    if (colBasisInv) for (unsigned long k=0; k<matrix.rows(); k++)
-    {
+    for (unsigned long k=0; k<matrix.rows(); k++) {
         // apply inverse column op to colBasisInv
-        t1 =  d*colBasisInv->entry(k, i) - c*colBasisInv->entry(k, j);
-        t2 = -b*colBasisInv->entry(k, i) + a*colBasisInv->entry(k, j);
-        colBasisInv->entry(k, i) = t1; colBasisInv->entry(k, j) = t2;
+        t1 =  d*colBasisInv.entry(k, i) - c*colBasisInv.entry(k, j);
+        t2 = -b*colBasisInv.entry(k, i) + a*colBasisInv.entry(k, j);
+        colBasisInv.entry(k, i) = t1; colBasisInv.entry(k, j) = t2;
     }
 }
 
@@ -1065,7 +1015,7 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i,
  *    (*colSpaceBasisInv) * after_matrix * (*rowSpaceBasisInv) == orig_matrix
  *
  * If any of rowSpaceBasis, colSpaceBasis or rowSpaceBasisInv or
- * colSpaceBasisInv are not allocated, this algotithm does not bother to
+ * colSpaceBasisInv are \c null, this algorithm does not bother to
  * compute them (and is correspondingly faster).
  *
  * This routine uses a first-order technique to intelligently choose the
@@ -1080,16 +1030,12 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i,
  * programming. Management Sci. 3:255--269 (1957).
  */
 void metricalSmithNormalForm(MatrixInt& matrix,
-        MatrixInt *rowSpaceBasis, MatrixInt *rowSpaceBasisInv,
-        MatrixInt *colSpaceBasis, MatrixInt *colSpaceBasisInv) {
-    if (rowSpaceBasis)
-        *rowSpaceBasis = MatrixInt::identity(matrix.columns());
-    if (rowSpaceBasisInv)
-        *rowSpaceBasisInv = MatrixInt::identity(matrix.columns());
-    if (colSpaceBasis)
-        *colSpaceBasis = MatrixInt::identity(matrix.rows());
-    if (colSpaceBasisInv)
-        *colSpaceBasisInv = MatrixInt::identity(matrix.rows());
+        MatrixInt &rowSpaceBasis, MatrixInt &rowSpaceBasisInv,
+        MatrixInt &colSpaceBasis, MatrixInt &colSpaceBasisInv) {
+    rowSpaceBasis = MatrixInt::identity(matrix.columns());
+    rowSpaceBasisInv = MatrixInt::identity(matrix.columns());
+    colSpaceBasis = MatrixInt::identity(matrix.rows());
+    colSpaceBasisInv = MatrixInt::identity(matrix.rows());
 
     // set up metrics.
     std::vector<Integer> rowNorm(matrix.rows(), Integer::zero);
@@ -1145,12 +1091,10 @@ rowMuckerLoop:
             // we'll make it a column operation
             for (i=currStage; i<matrix.rows(); i++)
                 matrix.entry(i, currStage).negate();
-            if (rowSpaceBasis)
-                for (i=0; i<matrix.columns(); i++)
-                    rowSpaceBasis->entry( i, currStage ).negate();
-            if (rowSpaceBasisInv)
-                for (i=0; i<matrix.columns(); i++)
-                    rowSpaceBasisInv->entry( currStage, i ).negate();
+            for (i=0; i<matrix.columns(); i++)
+                rowSpaceBasis.entry( i, currStage ).negate();
+            for (i=0; i<matrix.columns(); i++)
+                rowSpaceBasisInv.entry( currStage, i ).negate();
         }
         // run through rows currStage+1 to bottom, check if divisible by
         // matrix.entry(cs,cs). if not, record row and gcd(matrix.entry(cs,cs),

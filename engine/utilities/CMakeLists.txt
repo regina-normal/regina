@@ -9,6 +9,7 @@ SET ( FILES
   osutils.cpp
   randutils.cpp
   stringutils.cpp
+  trieset.cpp
   xmlutils.cpp
   )
 
@@ -30,24 +31,20 @@ if (${REGINA_INSTALL_DEV})
     flags.h
     i18nutils.h
     intutils.h
-    listoncall.h
     listview.h
     markedvector.h
     memstream.h
-    memutils.h
     osutils.h
-    ptrutils.h
     qitmask.h
     randutils.h
-    safepointeebase.h
-    safeptr.h
     sequence.h
+    shortarray.h
     sigutils.h
+    snapshot.h
     stringutils.h
     stringutils-impl.h
     tightencoding.h
     trieset.h
-    tritmask.h
     typeutils.h
     xmlutils.h
     DESTINATION "${INCLUDEDIR}/utilities" COMPONENT Development)

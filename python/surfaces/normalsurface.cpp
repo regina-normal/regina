@@ -31,16 +31,16 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/iostream.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/matrix.h"
-#include "surfaces/coordregistry.h"
-#include "surfaces/normalsurface.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "../globalarray.h"
 #include "../helpers.h"
 
 using regina::NormalSurface;
-using regina::NormalSurfaceVector;
 using regina::Triangulation;
 using regina::python::GlobalArray;
 using regina::python::GlobalArray2D;
@@ -64,67 +64,43 @@ namespace {
 }
 
 void addNormalSurface(pybind11::module_& m) {
-    auto v = pybind11::class_<NormalSurfaceVector>(m, "NormalSurfaceVector")
-        .def("coords", &NormalSurfaceVector::coords)
-        .def("clone", &NormalSurfaceVector::clone)
-        .def("size", &NormalSurfaceVector::size)
-        .def("__getitem__", [](const NormalSurfaceVector& v, size_t index) {
-            return v[index];
-        }, pybind11::return_value_policy::reference_internal)
-        .def("set", &NormalSurfaceVector::set)
-        // We cannot just use pybind11::self += pybind11:;self, because
-        // in that case pybind11 seems to want to return by value.
-        .def("__iadd__", &NormalSurfaceVector::operator +=,
-            pybind11::return_value_policy::reference_internal)
-        .def("scaleDown", &NormalSurfaceVector::scaleDown)
-        .def("allowsAlmostNormal", &NormalSurfaceVector::allowsAlmostNormal)
-        .def("allowsSpun", &NormalSurfaceVector::allowsSpun)
-        .def("allowsOriented", &NormalSurfaceVector::allowsOriented)
-        .def("hasMultipleOctDiscs", &NormalSurfaceVector::hasMultipleOctDiscs)
-        .def("isCompact", &NormalSurfaceVector::isCompact)
-        .def("isVertexLinking", &NormalSurfaceVector::isVertexLinking)
-        .def("isVertexLink", &NormalSurfaceVector::isVertexLink)
-        .def("isThinEdgeLink", &NormalSurfaceVector::isThinEdgeLink)
-        .def("isSplitting", &NormalSurfaceVector::isSplitting)
-        .def("isCentral", &NormalSurfaceVector::isCentral)
-        .def("triangles", &NormalSurfaceVector::triangles)
-        .def("orientedTriangles",
-        &NormalSurfaceVector::orientedTriangles)
-        .def("quads", &NormalSurfaceVector::quads)
-        .def("orientedQuads", &NormalSurfaceVector::orientedQuads)
-        .def("octs", &NormalSurfaceVector::octs)
-        .def("edgeWeight", &NormalSurfaceVector::edgeWeight)
-        .def("arcs", &NormalSurfaceVector::arcs)
-    ;
-    regina::python::add_output(v, true /* __repr__ */);
-    regina::python::add_eq_operators(v);
-
     auto c = pybind11::class_<NormalSurface>(m, "NormalSurface")
         .def(pybind11::init<const NormalSurface&>())
         .def(pybind11::init<const NormalSurface&, const Triangulation<3>&>())
-        .def(pybind11::init([](Triangulation<3>& t, regina::NormalCoords coords,
-                pybind11::list values) {
-            regina::NormalSurfaceVector* v = forCoords(coords, [&](auto info) {
-                typedef decltype(info) Coords;
-                return static_cast<NormalSurfaceVector*>(
-                    new typename Coords::Class(Coords::dimension(t.size())));
-            }, nullptr);
-            if (values.size() != v->size()) {
-                delete v;
+        .def(pybind11::init<const Triangulation<3>&, regina::NormalEncoding,
+            const regina::Vector<regina::LargeInteger>&>())
+        .def(pybind11::init<const Triangulation<3>&, regina::NormalCoords,
+            const regina::Vector<regina::LargeInteger>&>())
+        .def(pybind11::init([](const Triangulation<3>& t,
+                regina::NormalEncoding enc, pybind11::list values) {
+            regina::Vector<regina::LargeInteger> v(enc.block() * t.size());
+            if (values.size() != v.size())
                 throw pybind11::index_error(
                     "Incorrect number of normal coordinates");
-            }
             try {
-                // Accept any types that we know how to convert to a large
-                // integer.
-                for (size_t i = 0; i < v->size(); ++i)
-                    v->set(i, values[i].cast<regina::LargeInteger>());
+                for (size_t i = 0; i < v.size(); ++i)
+                    v[i] = values[i].cast<regina::LargeInteger>();
             } catch (pybind11::cast_error const &) {
-                delete v;
-                throw std::invalid_argument(
+                throw regina::InvalidArgument(
                     "List element not convertible to LargeInteger");
             }
-            return new NormalSurface(t, v);
+            return new NormalSurface(t, enc, std::move(v));
+        }))
+        .def(pybind11::init([](const Triangulation<3>& t,
+                regina::NormalCoords coords, pybind11::list values) {
+            regina::NormalEncoding enc(coords);
+            regina::Vector<regina::LargeInteger> v(enc.block() * t.size());
+            if (values.size() != v.size())
+                throw pybind11::index_error(
+                    "Incorrect number of normal coordinates");
+            try {
+                for (size_t i = 0; i < v.size(); ++i)
+                    v[i] = values[i].cast<regina::LargeInteger>();
+            } catch (pybind11::cast_error const &) {
+                throw regina::InvalidArgument(
+                    "List element not convertible to LargeInteger");
+            }
+            return new NormalSurface(t, enc, std::move(v));
         }))
         .def("clone", [](const NormalSurface& s) {
             // Since clone() is deprecated, we reimplement it here to
@@ -132,26 +108,26 @@ void addNormalSurface(pybind11::module_& m) {
             // Here we use the copy constructor, which has the side-effect of
             // cloning the surface name also (which the C++ clone() does not).
             // To ensure no change in behaviour, we revert the name change here.
-            NormalSurface* ans = new NormalSurface(s);
+            auto* ans = new NormalSurface(s);
             ans->setName(std::string());
             return ans;
         })
         .def("swap", &NormalSurface::swap)
         .def("doubleSurface", &NormalSurface::doubleSurface)
         .def("triangles", &NormalSurface::triangles)
-        .def("orientedTriangles", &NormalSurface::orientedTriangles)
         .def("quads", &NormalSurface::quads)
-        .def("orientedQuads", &NormalSurface::orientedQuads)
         .def("octs", &NormalSurface::octs)
         .def("edgeWeight", &NormalSurface::edgeWeight)
         .def("arcs", &NormalSurface::arcs)
         .def("octPosition", &NormalSurface::octPosition)
-        .def("countCoords", &NormalSurface::countCoords)
-        .def("triangulation", &NormalSurface::triangulation)
+        .def("triangulation", &NormalSurface::triangulation,
+            pybind11::return_value_policy::reference_internal)
         .def("name", &NormalSurface::name)
         .def("setName", &NormalSurface::setName)
-        .def("writeRawVector", [](const NormalSurface& s) {
-            s.writeRawVector(std::cout);
+        .def("writeXMLData", [](const NormalSurface& s, pybind11::object file,
+                regina::FileFormat f, const regina::NormalSurfaces* list) {
+            pybind11::scoped_ostream_redirect stream(std::cout, file);
+            s.writeXMLData(std::cout, f, list);
         })
         .def("isEmpty", &NormalSurface::isEmpty)
         .def("isCompact", &NormalSurface::isCompact)
@@ -160,6 +136,7 @@ void addNormalSurface(pybind11::module_& m) {
         .def("isTwoSided", &NormalSurface::isTwoSided)
         .def("isConnected", &NormalSurface::isConnected)
         .def("hasRealBoundary", &NormalSurface::hasRealBoundary)
+        .def("components", &NormalSurface::components)
         .def("isVertexLinking", &NormalSurface::isVertexLinking)
         .def("isVertexLink", &NormalSurface::isVertexLink,
             pybind11::return_value_policy::reference)
@@ -181,15 +158,13 @@ void addNormalSurface(pybind11::module_& m) {
         .def("boundaryIntersections", &NormalSurface::boundaryIntersections)
         .def("vector", &NormalSurface::vector,
             pybind11::return_value_policy::reference_internal)
-        .def("rawVector", [](const NormalSurface& s) {
-            // Since rawVector() is deprecated, we reimplement it
-            // ourselves here to avoid noisy compiler warnings.
-            return s.vector().coords();
-        }, pybind11::return_value_policy::reference_internal)
-        .def("systemAllowsAlmostNormal",
-            &NormalSurface::systemAllowsAlmostNormal)
-        .def("systemAllowsSpun", &NormalSurface::systemAllowsSpun)
-        .def("systemAllowsOriented", &NormalSurface::systemAllowsOriented)
+        .def("rawVector", &NormalSurface::vector, // deprecated
+            pybind11::return_value_policy::reference_internal)
+        .def("couldBeAlmostNormal", &NormalSurface::couldBeAlmostNormal)
+        .def("couldBeNonCompact", &NormalSurface::couldBeNonCompact)
+        .def_static("reconstructTriangles",
+            &NormalSurface::reconstructTriangles)
+        .def(pybind11::self + pybind11::self)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

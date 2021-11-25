@@ -42,6 +42,7 @@
 #include <vector>
 #include <QWidget>
 
+class ElidedLabel;
 class PacketEditIface;
 class PacketPane;
 class PacketWindow;
@@ -65,10 +66,6 @@ namespace regina {
  * user interaction.  The PacketManager class is responsible for
  * creating an interface component appropriate for a given packet.
  *
- * Each packet interface is either in read-write mode or in read-only
- * mode, and may be required to change modes throughout its life span.
- * See setReadWrite() for details.
- *
  * Subclasses will generally wish to override many of the PacketUI virtual
  * functions.
  */
@@ -84,7 +81,7 @@ class PacketUI {
          * Constructor and destructor.
          */
         PacketUI(PacketPane* newEnclosingPane);
-        virtual ~PacketUI();
+        virtual ~PacketUI() = default;
 
         /**
          * Return the packet that this pane is managing.
@@ -102,10 +99,10 @@ class PacketUI {
 
         /**
          * Return details of the interface's interaction with standard
-         * edit and clipboard operations.  This may be 0 if there is no
+         * edit and clipboard operations.  This may be \c null if there is no
          * such interaction.
          *
-         * The default implementation simply returns 0.
+         * The default implementation simply returns \c null.
          */
         virtual PacketEditIface* getEditIface();
 
@@ -183,19 +180,6 @@ class PacketUI {
          */
         virtual void endEdit();
 
-        /**
-         * Modify this interface to be read-write or read-only according
-         * to the given argument.
-         *
-         * This routine should never be called directly; instead
-         * PacketPane::setReadWrite() should be used.
-         *
-         * If this interface is incapable of editing packets (e.g.,
-         * interfaces for packet types that are inherently read-only
-         * such as containers), this routine need not do anything.
-         */
-        virtual void setReadWrite(bool readWrite) = 0;
-
     private:
         /**
          * An empty action list.
@@ -215,12 +199,6 @@ class PacketReadOnlyUI : public PacketUI {
          * Constructor.
          */
         PacketReadOnlyUI(PacketPane* newEnclosingPane);
-
-        /**
-         * An implementation of setReadWrite() that does nothing
-         * whatsoever.
-         */
-        virtual void setReadWrite(bool readWrite);
 };
 
 /**
@@ -243,10 +221,10 @@ class DefaultPacketUI : public PacketReadOnlyUI {
         /**
          * Implementations of PacketUI virtual functions.
          */
-        virtual regina::Packet* getPacket();
-        virtual QWidget* getInterface();
-        virtual QString getPacketMenuText() const;
-        virtual void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        QString getPacketMenuText() const override;
+        void refresh() override;
 };
 
 /**
@@ -269,13 +247,8 @@ class PacketPane : public QWidget, public regina::PacketListener {
          * Internal components
          */
         QLabel* headerIcon;
-        QLabel* headerTitle;
+        ElidedLabel* headerTitle;
         PacketUI* mainUI;
-
-        /**
-         * Properties
-         */
-        bool readWrite;
 
         /**
          * Internal actions
@@ -298,8 +271,8 @@ class PacketPane : public QWidget, public regina::PacketListener {
          * by way of the PacketManager class.
          */
         PacketPane(ReginaMain* newMainWindow, regina::Packet* newPacket,
-            QWidget* parent = 0);
-        ~PacketPane();
+            QWidget* parent = nullptr);
+        ~PacketPane() override;
 
         /**
          * Query components and actions.
@@ -315,25 +288,6 @@ class PacketPane : public QWidget, public regina::PacketListener {
          * It is assumed that the given menu is empty.
          */
         void fillPacketTypeMenu(QMenu* menu);
-
-        /**
-         * Is this packet pane currently in read-write (as opposed to
-         * read-only) mode?
-         */
-        bool isReadWrite();
-
-        /**
-         * Attempts to put this pane into read-write or read-only mode
-         * as signalled by the \a allowReadWrite parameter.
-         *
-         * If \a allowReadWrite is \c true but nevertheless the pane
-         * cannot be put into read-write mode, i.e., if
-         * Packet::isPacketEditable() returns \c false or the
-         * underlying file is in read-only mode, then this routine will
-         * do nothing and return \c false.  Otherwise this routine will
-         * set the read-write status as requested and return \c true.
-         */
-        bool setReadWrite(bool allowReadWrite);
 
         /**
          * Are we allowed to close this packet pane?
@@ -372,13 +326,9 @@ class PacketPane : public QWidget, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetWasChanged(regina::Packet* packet) override;
-        void packetWasRenamed(regina::Packet* packet) override;
-        void packetToBeDestroyed(regina::PacketShell packet) override;
-        void childWasAdded(regina::Packet* packet, regina::Packet* child)
-            override;
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
-            override;
+        void packetWasChanged(regina::Packet& packet) override;
+        void packetWasRenamed(regina::Packet& packet) override;
+        void packetBeingDestroyed(regina::PacketShell packet) override;
 
     public slots:
         /**
@@ -413,33 +363,24 @@ class PacketPane : public QWidget, public regina::PacketListener {
          * actions.  These slots are for internal use.
          */
         void updateClipboardActions();
-
-    protected:
-        /**
-         * Allow GUI updates from within a non-GUI thread.
-         */
-        void customEvent(QEvent* evt) override;
 };
 
 /**
  * A packet-specific interface for opening a packet using an external
  * viewer.
  */
-typedef void (*PacketExternalViewer)(regina::Packet* /* packet */,
+using PacketExternalViewer = void (*)(regina::Packet* /* packet */,
     QWidget* /* parentWidget */);
 
 inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
         enclosingPane(newEnclosingPane) {
 }
 
-inline PacketUI::~PacketUI() {
-}
-
 inline void PacketUI::endEdit() {
 }
 
 inline PacketEditIface* PacketUI::getEditIface() {
-    return 0;
+    return nullptr;
 }
 
 inline const std::vector<QAction*>& PacketUI::getPacketTypeActions() {
@@ -448,9 +389,6 @@ inline const std::vector<QAction*>& PacketUI::getPacketTypeActions() {
 
 inline PacketReadOnlyUI::PacketReadOnlyUI(PacketPane* newEnclosingPane) :
         PacketUI(newEnclosingPane) {
-}
-
-inline void PacketReadOnlyUI::setReadWrite(bool) {
 }
 
 inline regina::Packet* PacketPane::getPacket() {
@@ -463,10 +401,6 @@ inline ReginaMain* PacketPane::getMainWindow() {
 
 inline PacketUI* PacketPane::getUI() {
     return mainUI;
-}
-
-inline bool PacketPane::isReadWrite() {
-    return readWrite;
 }
 
 inline void PacketPane::refresh() {

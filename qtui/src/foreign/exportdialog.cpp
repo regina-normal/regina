@@ -47,19 +47,19 @@
 #include <QTextDocument>
 #include <QWhatsThis>
 
-ExportDialog::ExportDialog(QWidget* parent, regina::Packet* packetTree,
-        regina::Packet* defaultSelection, PacketFilter* useFilter,
-        bool useCodec, const QString& dialogTitle) :
-        QDialog(parent),
-        tree(packetTree), chosenPacket(0) {
+ExportDialog::ExportDialog(QWidget* parent,
+        std::shared_ptr<regina::Packet> packetTree,
+        std::shared_ptr<regina::Packet> defaultSelection,
+        PacketFilter* useFilter, bool useCodec, const QString& dialogTitle) :
+        QDialog(parent), tree(std::move(packetTree)) {
     setWindowTitle(dialogTitle);
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
-    QHBoxLayout* hStrip = new QHBoxLayout;
-    QLabel* label = new QLabel(tr("Data to export:"));
+    auto* hStrip = new QHBoxLayout;
+    auto* label = new QLabel(tr("Data to export:"));
     hStrip->addWidget(label);
     chooser = new PacketChooser(tree, useFilter,
-        PacketChooser::ROOT_AS_SUBTREE, false, defaultSelection);
+        PacketChooser::ROOT_AS_SUBTREE, false, std::move(defaultSelection));
     hStrip->addWidget(chooser, 1);
     QString expln = tr("Select the piece of data that you wish to export.");
     label->setWhatsThis(expln);
@@ -71,7 +71,7 @@ ExportDialog::ExportDialog(QWidget* parent, regina::Packet* packetTree,
         label = new QLabel(tr("<qt>Text encoding: %1</qt>").
             arg(QString(ReginaPrefSet::global().fileImportExportCodec)));
         hStrip->addWidget(label);
-        QPushButton* btn = new QPushButton(tr("Learn more..."));
+        auto* btn = new QPushButton(tr("Learn more..."));
         hStrip->addWidget(btn);
         hStrip->addStretch(1);
         layout->addLayout(hStrip);
@@ -81,7 +81,7 @@ ExportDialog::ExportDialog(QWidget* parent, regina::Packet* packetTree,
 
     layout->addStretch(1);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(
+    auto* buttonBox = new QDialogButtonBox(
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
@@ -107,7 +107,7 @@ void ExportDialog::slotOk() {
         return;
     }
     PacketFilter* filter = chooser->getFilter();
-    if (filter && ! filter->accept(chosenPacket)) {
+    if (filter && ! filter->accept(*chosenPacket)) {
         ReginaSupport::sorry(this,
             tr("Please select a different packet."),
             tr("<qt>The packet <i>%1</i> cannot "

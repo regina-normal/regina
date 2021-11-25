@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup file
- * @{
- */
-
-/**
  * Used to read the contents of a single XML element.  Specifically, this
  * class concerns itself with reading and storing the contents between a
  * single opening tag and the corresponding closing tag.  It is not concerned
@@ -91,13 +86,13 @@ class XMLElementReader {
         /**
          * Creates a new element reader.
          */
-        XMLElementReader();
+        XMLElementReader() = default;
         /**
          * Destroys this element reader.
          *
          * The default implementation does nothing.
          */
-        virtual ~XMLElementReader();
+        virtual ~XMLElementReader() = default;
 
         /**
          * Signifies that parsing of this XML element is beginning.
@@ -107,8 +102,8 @@ class XMLElementReader {
          * @param tagName the name of the opening tag for this element.
          * @param tagProps the properties associated with the opening tag.
          * @param parentReader the reader currently parsing the parent XML
-         * element, or 0 if this is the top-level element.  If this
-         * paraneter is non-zero, it is guaranteed that startSubElement()
+         * element, or \c null if this is the top-level element.  If this
+         * paraneter is non-null, it is guaranteed that startSubElement()
          * has already been called upon the parent reader.
          */
         virtual void startElement(const std::string& tagName,
@@ -184,8 +179,8 @@ class XMLElementReader {
          * The default implementation does nothing.
          *
          * @param subReader the corresponding child reader if a
-         * subelement is currently being parsed, or 0 otherwise.  If this
-         * parameter is non-zero, it is guaranteed that abort() has
+         * subelement is currently being parsed, or \c null otherwise.
+         * If this parameter is non-zero, it is guaranteed that abort() has
          * already been called upon the child reader and that the child
          * reader has not yet been destroyed.
          */
@@ -212,7 +207,7 @@ class XMLCharsReader : public XMLElementReader {
         /**
          * Creates a new XML element reader.
          */
-        XMLCharsReader();
+        XMLCharsReader() = default;
 
         /**
          * Returns the characters stored in the XML element that has
@@ -222,18 +217,10 @@ class XMLCharsReader : public XMLElementReader {
          */
         const std::string& chars();
 
-        virtual void initialChars(const std::string& chars) override;
+        void initialChars(const std::string& chars) override;
 };
 
-/*@}*/
-
 // Inline functions for XMLElementReader
-
-inline XMLElementReader::XMLElementReader() {
-}
-
-inline XMLElementReader::~XMLElementReader() {
-}
 
 inline void XMLElementReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict&, XMLElementReader*) {
@@ -261,9 +248,6 @@ inline void XMLElementReader::abort(XMLElementReader*) {
 }
 
 // Inline functions for XMLCharsReader
-
-inline XMLCharsReader::XMLCharsReader() {
-}
 
 inline const std::string& XMLCharsReader::chars() {
     return readChars;

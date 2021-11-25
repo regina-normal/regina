@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "algebra/abeliangroup.h"
 #include "manifold/manifold.h"
 #include "subcomplex/standardtri.h"
@@ -43,22 +44,23 @@ using regina::StandardTriangulation;
 void addStandardTriangulation(pybind11::module_& m) {
     auto c = pybind11::class_<StandardTriangulation>(m, "StandardTriangulation")
         .def("name", &StandardTriangulation::name)
-        .def("TeXName", &StandardTriangulation::TeXName)
+        .def("texName", &StandardTriangulation::texName)
+        .def("TeXName", &StandardTriangulation::texName) // deprecated
         .def("manifold", &StandardTriangulation::manifold)
         .def("homology", &StandardTriangulation::homology)
-        .def("homologyH1", &StandardTriangulation::homologyH1)
-        .def("writeName", [](const StandardTriangulation& t) {
-            t.writeName(std::cout);
-        })
-        .def("writeTeXName", [](const StandardTriangulation& t) {
-            t.writeTeXName(std::cout);
-        })
-        .def_static("isStandardTriangulation",
+        .def("homologyH1", &StandardTriangulation::homology) // deprecated
+        .def_static("recognise",
             overload_cast<regina::Component<3>*>(
-            &StandardTriangulation::isStandardTriangulation))
-        .def_static("isStandardTriangulation",
-            overload_cast<regina::Triangulation<3>*>(
-            &StandardTriangulation::isStandardTriangulation))
+            &StandardTriangulation::recognise))
+        .def_static("isStandardTriangulation", // deprecated
+            overload_cast<regina::Component<3>*>(
+            &StandardTriangulation::recognise))
+        .def_static("recognise", // deprecated
+            overload_cast<const regina::Triangulation<3>&>(
+            &StandardTriangulation::recognise))
+        .def_static("isStandardTriangulation", // deprecated
+            overload_cast<const regina::Triangulation<3>&>(
+            &StandardTriangulation::recognise))
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

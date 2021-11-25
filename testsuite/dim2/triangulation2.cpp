@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "triangulation/example2.h"
 #include "triangulation/dim2.h"
+#include "triangulation/example2.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/generic/triangulationtest.h"
@@ -45,6 +45,7 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST_SUITE(Triangulation2Test);
 
     // Generic tests:
+    CPPUNIT_TEST(copyMove);
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
@@ -83,54 +84,47 @@ class Triangulation2Test : public TriangulationTest<2> {
             /**< A disjoint union of three triangulations. */
 
     public:
-        void copyAndDelete(Triangulation<2>& dest, Triangulation<2>* source) {
-            dest.insertTriangulation(*source);
-            dest.setLabel(source->label());
-            delete source;
-        }
-
-        void setUp() {
+        void setUp() override {
             TriangulationTest<2>::setUp();
 
-            copyAndDelete(s2Oct, Example<2>::sphereOctahedron());
-            s2Oct.setLabel("Octahedron boundary");
+            s2Oct = Example<2>::sphereOctahedron();
 
-            copyAndDelete(torus2, Example<2>::orientable(2, 0));
-            torus2.setLabel("Genus 2 torus");
+            torus2 = Example<2>::orientable(2, 0);
 
-            copyAndDelete(rp2, Example<2>::rp2());
-            rp2.setLabel("RP^2");
+            rp2 = Example<2>::rp2();
 
             disjoint2.insertTriangulation(sphereBundle);
             disjoint2.insertTriangulation(twistedBallBundle);
-            disjoint2.setLabel("Torus U Mobius");
 
             disjoint3.insertTriangulation(twistedSphereBundle);
             disjoint3.insertTriangulation(ballBundle);
             disjoint3.insertTriangulation(sphere);
-            disjoint3.setLabel("KB U Annulus U S^2");
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         /**
          * Run a given test over all hand-coded cases.
          */
         void testManualAll(Triangulation2TestFunction f) {
-            f(&empty);
-            f(&sphere);
-            f(&simplicialSphere);
-            f(&s2Oct);
-            f(&sphereBundle);
-            f(&torus2);
-            f(&rp2);
-            f(&twistedSphereBundle);
-            f(&ball);
-            f(&ballBundle);
-            f(&twistedBallBundle);
-            f(&disjoint2);
-            f(&disjoint3);
+            f(empty, "Empty");
+            f(sphere, "Sphere");
+            f(simplicialSphere, "Simplicial sphere");
+            f(s2Oct, "Octahedron boundary");
+            f(sphereBundle, "Torus");
+            f(torus2, "Genus 2 torus");
+            f(rp2, "RP^2");
+            f(twistedSphereBundle, "Klein bottle");
+            f(ball, "Ball");
+            f(ballBundle, "Annulus");
+            f(twistedBallBundle, "Mobius band");
+            f(disjoint2, "Torus U Mobius");
+            f(disjoint3, "KB U Annulus U S^2");
+        }
+
+        void copyMove() {
+            testManualAll(verifyCopyMove);
         }
 
         void makeCanonical() {
@@ -154,11 +148,11 @@ class Triangulation2Test : public TriangulationTest<2> {
         }
 
         void boundaryEuler() {
-            testManualAll([](Triangulation<2>* tri) {
-                for (auto bc : tri->boundaryComponents())
+            testManualAll([](const Triangulation<2>& tri, const char* name) {
+                for (auto bc : tri.boundaryComponents())
                     if (bc->eulerChar() != 0) {
                         std::ostringstream msg;
-                        msg << tri->label() << ": Contains boundary component "
+                        msg << name << ": Contains boundary component "
                             "with non-zero Euler characteristic.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -172,136 +166,136 @@ class Triangulation2Test : public TriangulationTest<2> {
         }
 
         void validity() {
-            verifyValid(empty);
-            verifyValid(sphere);
-            verifyValid(simplicialSphere);
-            verifyValid(sphereBundle);
-            verifyValid(twistedSphereBundle);
-            verifyValid(ball);
-            verifyValid(ballBundle);
-            verifyValid(twistedBallBundle);
-            verifyValid(s2Oct);
-            verifyValid(torus2);
-            verifyValid(rp2);
-            verifyValid(disjoint2);
-            verifyValid(disjoint3);
+            verifyValid(empty, true, "Empty");
+            verifyValid(sphere, true, "Sphere");
+            verifyValid(simplicialSphere, true, "Simplicial sphere");
+            verifyValid(sphereBundle, true, "Torus");
+            verifyValid(twistedSphereBundle, true, "Klein bottle");
+            verifyValid(ball, true, "Ball");
+            verifyValid(ballBundle, true, "Annulus");
+            verifyValid(twistedBallBundle, true, "Mobius band");
+            verifyValid(s2Oct, true, "Octahedron boundary");
+            verifyValid(torus2, true, "Genus 2 torus");
+            verifyValid(rp2, true, "RP^2");
+            verifyValid(disjoint2, true, "Torus U Mobius");
+            verifyValid(disjoint3, true, "KB U Annulus U S^2");
         }
 
         void connectedness() {
-            verifyConnected(empty);
-            verifyConnected(sphere);
-            verifyConnected(simplicialSphere);
-            verifyConnected(sphereBundle);
-            verifyConnected(twistedSphereBundle);
-            verifyConnected(ball);
-            verifyConnected(ballBundle);
-            verifyConnected(twistedBallBundle);
-            verifyConnected(s2Oct);
-            verifyConnected(torus2);
-            verifyConnected(rp2);
-            verifyConnected(disjoint2, false);
-            verifyConnected(disjoint3, false);
+            verifyConnected(empty, true, "Empty");
+            verifyConnected(sphere, true, "Sphere");
+            verifyConnected(simplicialSphere, true, "Simplicial sphere");
+            verifyConnected(sphereBundle, true, "Torus");
+            verifyConnected(twistedSphereBundle, true, "Klein bottle");
+            verifyConnected(ball, true, "Ball");
+            verifyConnected(ballBundle, true, "Annulus");
+            verifyConnected(twistedBallBundle, true, "Mobius band");
+            verifyConnected(s2Oct, true, "Octahedron boundary");
+            verifyConnected(torus2, true, "Genus 2 torus");
+            verifyConnected(rp2, true, "RP^2");
+            verifyConnected(disjoint2, false, "Torus U Mobius");
+            verifyConnected(disjoint3, false, "KB U Annulus U S^2");
         }
 
         void orientability() {
-            verifyOrientable(empty);
-            verifyOrientable(sphere);
-            verifyOrientable(simplicialSphere);
-            verifyOrientable(sphereBundle);
-            verifyOrientable(twistedSphereBundle, false);
-            verifyOrientable(ball);
-            verifyOrientable(ballBundle);
-            verifyOrientable(twistedBallBundle, false);
-            verifyOrientable(s2Oct);
-            verifyOrientable(torus2);
-            verifyOrientable(rp2, false);
-            verifyOrientable(disjoint2, false);
-            verifyOrientable(disjoint3, false);
+            verifyOrientable(empty, true, "Empty");
+            verifyOrientable(sphere, true, "Sphere");
+            verifyOrientable(simplicialSphere, true, "Simplicial sphere");
+            verifyOrientable(sphereBundle, true, "Torus");
+            verifyOrientable(twistedSphereBundle, false, "Klein bottle");
+            verifyOrientable(ball, true, "Ball");
+            verifyOrientable(ballBundle, true, "Annulus");
+            verifyOrientable(twistedBallBundle, false, "Mobius band");
+            verifyOrientable(s2Oct, true, "Octahedron boundary");
+            verifyOrientable(torus2, true, "Genus 2 torus");
+            verifyOrientable(rp2, false, "RP^2");
+            verifyOrientable(disjoint2, false, "Torus U Mobius");
+            verifyOrientable(disjoint3, false, "KB U Annulus U S^2");
         }
 
         void eulerChar() {
-            verifyEulerCharTri(empty, 0);
-            verifyEulerCharTri(sphere, 2);
-            verifyEulerCharTri(simplicialSphere, 2);
-            verifyEulerCharTri(sphereBundle, 0);
-            verifyEulerCharTri(twistedSphereBundle, 0);
-            verifyEulerCharTri(ball, 1);
-            verifyEulerCharTri(ballBundle, 0);
-            verifyEulerCharTri(twistedBallBundle, 0);
-            verifyEulerCharTri(s2Oct, 2);
-            verifyEulerCharTri(torus2, -2);
-            verifyEulerCharTri(rp2, 1);
-            verifyEulerCharTri(disjoint2, 0);
-            verifyEulerCharTri(disjoint3, 2);
+            verifyEulerCharTri(empty, 0, "Empty");
+            verifyEulerCharTri(sphere, 2, "Sphere");
+            verifyEulerCharTri(simplicialSphere, 2, "Simplicial sphere");
+            verifyEulerCharTri(sphereBundle, 0, "Torus");
+            verifyEulerCharTri(twistedSphereBundle, 0, "Klein bottle");
+            verifyEulerCharTri(ball, 1, "Ball");
+            verifyEulerCharTri(ballBundle, 0, "Annulus");
+            verifyEulerCharTri(twistedBallBundle, 0, "Mobius band");
+            verifyEulerCharTri(s2Oct, 2, "Octahedron boundary");
+            verifyEulerCharTri(torus2, -2, "Genus 2 torus");
+            verifyEulerCharTri(rp2, 1, "RP^2");
+            verifyEulerCharTri(disjoint2, 0, "Torus U Mobius");
+            verifyEulerCharTri(disjoint3, 2, "KB U Annulus U S^2");
         }
 
-        static void verifyBary(Triangulation<2>* tri) {
-            Triangulation<2> b(*tri);
+        static void verifyBary(const Triangulation<2>& tri, const char* name) {
+            Triangulation<2> b(tri);
             if (b.isOrientable())
                 b.orient();
 
             b.barycentricSubdivision();
             clearProperties(b);
 
-            if (tri->hasBoundaryEdges() != b.hasBoundaryEdges()) {
+            if (tri.hasBoundaryEdges() != b.hasBoundaryEdges()) {
                 std::ostringstream msg;
-                msg << tri->label()
+                msg << name
                     << ": Barycentric subdivision breaks boundary edges.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isClosed() != b.isClosed()) {
+            if (tri.isClosed() != b.isClosed()) {
                 std::ostringstream msg;
-                msg << tri->label()
+                msg << name
                     << ": Barycentric subdivision breaks closedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isOrientable() != b.isOrientable()) {
+            if (tri.isOrientable() != b.isOrientable()) {
                 std::ostringstream msg;
-                msg << tri->label()
+                msg << name
                     << ": Barycentric subdivision breaks orientability.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isOrientable() != b.isOriented()) {
+            if (tri.isOrientable() != b.isOriented()) {
                 std::ostringstream msg;
-                msg << tri->label()
+                msg << name
                     << ": Barycentric subdivision breaks orientation.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->isConnected() != b.isConnected()) {
+            if (tri.isConnected() != b.isConnected()) {
                 std::ostringstream msg;
-                msg << tri->label()
+                msg << name
                     << ": Barycentric subdivision breaks connectedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->countComponents() != b.countComponents()) {
+            if (tri.countComponents() != b.countComponents()) {
                 std::ostringstream msg;
-                msg << tri->label()
+                msg << name
                     << ": Barycentric subdivision breaks connected components.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->countBoundaryComponents() != b.countBoundaryComponents()) {
+            if (tri.countBoundaryComponents() != b.countBoundaryComponents()) {
                 std::ostringstream msg;
-                msg << tri->label()
+                msg << name
                     << ": Barycentric subdivision breaks boundary components.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->eulerCharTri() != b.eulerCharTri()) {
+            if (tri.eulerCharTri() != b.eulerCharTri()) {
                 std::ostringstream msg;
-                msg << tri->label()
+                msg << name
                     << ": Barycentric subdivision breaks Euler char (tri).";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri->homology() == b.homology())) {
+            if (! (tri.homology() == b.homology())) {
                 std::ostringstream msg;
-                msg << tri->label()
+                msg << name
                     << ": Barycentric subdivision breaks H1.";
                 CPPUNIT_FAIL(msg.str());
             }

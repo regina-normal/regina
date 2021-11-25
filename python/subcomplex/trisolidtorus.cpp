@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/trisolidtorus.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -40,15 +41,22 @@ using regina::TriSolidTorus;
 void addTriSolidTorus(pybind11::module_& m) {
     pybind11::class_<TriSolidTorus, regina::StandardTriangulation>
             (m, "TriSolidTorus")
-        .def("clone", &TriSolidTorus::clone)
+        .def(pybind11::init<const TriSolidTorus&>())
+        .def("clone", [](const TriSolidTorus& s) { // deprecated
+            return TriSolidTorus(s);
+        })
+        .def("swap", &TriSolidTorus::swap)
         .def("tetrahedron", &TriSolidTorus::tetrahedron,
             pybind11::return_value_policy::reference)
         .def("vertexRoles", &TriSolidTorus::vertexRoles)
-        .def("isAnnulusSelfIdentified",
-            &TriSolidTorus::isAnnulusSelfIdentified)
+        .def("isAnnulusSelfIdentified", &TriSolidTorus::isAnnulusSelfIdentified)
         .def("areAnnuliLinkedMajor", &TriSolidTorus::areAnnuliLinkedMajor)
         .def("areAnnuliLinkedAxis", &TriSolidTorus::areAnnuliLinkedAxis)
-        .def_static("formsTriSolidTorus", &TriSolidTorus::formsTriSolidTorus)
+        .def_static("recognise", &TriSolidTorus::recognise)
+        .def_static("formsTriSolidTorus", // deprecated
+            &TriSolidTorus::recognise)
     ;
+
+    m.def("swap", (void(*)(TriSolidTorus&, TriSolidTorus&))(regina::swap));
 }
 

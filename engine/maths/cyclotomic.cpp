@@ -77,7 +77,7 @@ Cyclotomic Cyclotomic::inverse() const {
 
     self.gcdWithCoeffs(cyclotomic(field_), gcd, u, v);
 
-    Rational* coeff = new Rational[degree_]; // initialises to zero
+    auto* coeff = new Rational[degree_]; // initialises to zero
     for (size_t i = 0; i < degree_ && i <= u.degree(); ++i)
         coeff[i] = u[i];
 
@@ -88,7 +88,7 @@ Cyclotomic& Cyclotomic::operator *= (const Cyclotomic& other) {
     const Polynomial<Integer>& cyc = cyclotomic(field_);
 
     size_t i, j;
-    Rational* tmp = new Rational[degree_ * 2 - 1];
+    auto* tmp = new Rational[degree_ * 2 - 1];
     for (i = 0; i < degree_; ++i)
         for (j = 0; j < degree_; ++j)
             tmp[i + j] += (coeff_[i] * other.coeff_[j]);
@@ -107,7 +107,7 @@ Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs) {
     const Polynomial<Integer>& cyc = Cyclotomic::cyclotomic(lhs.field_);
 
     size_t i, j;
-    Rational* tmp = new Rational[lhs.degree_ * 2 - 1];
+    auto* tmp = new Rational[lhs.degree_ * 2 - 1];
     for (i = 0; i < lhs.degree_; ++i)
         for (j = 0; j < lhs.degree_; ++j)
             tmp[i + j] += (lhs.coeff_[i] * rhs.coeff_[j]);
@@ -116,7 +116,7 @@ Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs) {
             for (j = 0; j < lhs.degree_; ++j)
                 tmp[i + j - lhs.degree_] -= (tmp[i] * cyc[j]);
 
-    Rational* coeff = new Rational[lhs.degree_];
+    auto* coeff = new Rational[lhs.degree_];
     std::copy(tmp, tmp + lhs.degree_, coeff);
 
     delete[] tmp;
@@ -136,7 +136,7 @@ const Polynomial<Integer>& Cyclotomic::cyclotomic(size_t n) {
         // (for now) that n will be small.
 
         // Build a list of all divisors of n.
-        size_t* div = new size_t[n];
+        auto* div = new size_t[n];
         size_t nDiv = 0;
         size_t i, j;
         for (i = 1; i <= n; ++i)

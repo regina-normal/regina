@@ -81,7 +81,7 @@ components ::= (#PCDATA)</synopsis>
    <para>
     The following elements contain <sgmltag>components</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-link;</member>
+     <member>&xml-link;</member>
     </simplelist>.
    </para>
   </refsect2>

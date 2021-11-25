@@ -38,8 +38,8 @@
 namespace regina {
 
 Rational AngleStructure::angle(size_t tetIndex, int edgePair) const {
-    const Integer& num = (*vector_)[3 * tetIndex + edgePair];
-    const Integer& den = (*vector_)[3 * triangulation_->size()];
+    const Integer& num = vector_[3 * tetIndex + edgePair];
+    const Integer& den = vector_[3 * triangulation_->size()];
 
     Integer gcd = den.gcd(num); // Guaranteed non-negative
     return Rational(num.divExact(gcd), den.divExact(gcd));
@@ -61,13 +61,13 @@ void AngleStructure::writeTextShort(std::ostream& out) const {
 
 void AngleStructure::writeXMLData(std::ostream& out) const {
     // Write the vector length.
-    size_t vecLen = vector_->size();
+    size_t vecLen = vector_.size();
     out << "  <struct len=\"" << vecLen << "\"> ";
 
     // Write the non-zero elements.
     Integer entry;
     for (size_t i = 0; i < vecLen; i++) {
-        entry = (*vector_)[i];
+        entry = vector_[i];
         if (entry != 0)
             out << i << ' ' << entry << ' ';
     }
@@ -77,7 +77,7 @@ void AngleStructure::writeXMLData(std::ostream& out) const {
 }
 
 void AngleStructure::calculateType() const {
-    size_t size = vector_->size();
+    size_t size = vector_.size();
     if (size == 1) {
         // We have no tetrahedra, which means this angle structure has it all:
         // strict, taut and veering.
@@ -92,16 +92,16 @@ void AngleStructure::calculateType() const {
     bool strict = true;
 
     // Run through the tetrahedra one by one.
-    const Integer& scale = (*vector_)[size - 1];
+    const Integer& scale = vector_[size - 1];
     size_t pair;
     for (size_t base = 0; base < size - 1; base += 3) {
         for (pair = 0; pair < 3; pair++) {
-            if ((*vector_)[base + pair] == scale) {
+            if (vector_[base + pair] == scale) {
                 // We have a pi; thus all three angles in this
                 // tetrahedron are pi or zero.
                 strict = false;
                 break;
-            } else if ((*vector_)[base + pair] == 0)
+            } else if (vector_[base + pair] == 0)
                 strict = false;
             else
                 taut = false;
@@ -120,20 +120,24 @@ void AngleStructure::calculateType() const {
         // This structure is taut.
         flags_ |= flagTaut;
 
+        // Get a local reference to the triangulation so we do not have
+        // to repeatedly bounce through the snapshot.
+        const Triangulation<3>& tri(*triangulation_);
+
         // Is it veering also?
         bool veering = true;
-        if (triangulation_->isOrientable()) {
-            long nEdges = triangulation_->countEdges();
+        if (tri.isOrientable()) {
+            long nEdges = tri.countEdges();
             int* edgeColour = new int[nEdges];
             std::fill(edgeColour, edgeColour + nEdges, (int)0);
             const Tetrahedron<3>* tet;
             int orient;
             long e;
-            for (unsigned i = 0; i < triangulation_->size();
+            for (unsigned i = 0; i < tri.size();
                     ++i) {
-                tet = triangulation_->tetrahedron(i);
+                tet = tri.tetrahedron(i);
                 orient = tet->orientation();
-                if ((*vector_)[3 * i] > 0) {
+                if (vector_[3 * i] > 0) {
                     // Edges 0,5 are marked as pi.
                     // For a positively oriented tetrahedron:
                     // Edges 1,4 vs 2,3 are of colour +1 vs -1.
@@ -160,7 +164,7 @@ void AngleStructure::calculateType() const {
                         veering = false;
                     else
                         edgeColour[e] = -orient;
-                } else if ((*vector_)[3 * i + 1] > 0) {
+                } else if (vector_[3 * i + 1] > 0) {
                     // Edges 1,4 are marked as pi.
                     // For a positively oriented tetrahedron:
                     // Edges 2,3 vs 0,5 are of colour +1 vs -1.
@@ -187,7 +191,7 @@ void AngleStructure::calculateType() const {
                         veering = false;
                     else
                         edgeColour[e] = -orient;
-                } else if ((*vector_)[3 * i + 2] > 0) {
+                } else if (vector_[3 * i + 2] > 0) {
                     // Edges 2,3 are marked as pi.
                     // For a positively oriented tetrahedron:
                     // Edges 0,5 vs 1,4 are of colour +1 vs -1.

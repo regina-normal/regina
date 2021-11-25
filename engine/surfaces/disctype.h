@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup surfaces
- * @{
- */
-
-/**
  * Identifies a single normal or almost normal disc type within a
  * triangulation.
  *
@@ -71,6 +66,11 @@ namespace regina {
  *
  * Note that this class tracks disc \a types, not discs themselves.
  * To track individual normal discs, see the DiscSpec class instead.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup surfaces
  */
 struct DiscType {
     /**
@@ -171,10 +171,10 @@ struct DiscType {
  * @param out the output stream to which to write.
  * @param type the disc type to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup surfaces
  */
 std::ostream& operator << (std::ostream& out, const DiscType& type);
-
-/*@}*/
 
 // Inline functions for DiscType
 

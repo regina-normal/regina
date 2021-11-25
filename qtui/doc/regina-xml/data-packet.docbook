@@ -10,19 +10,21 @@
 
  <refnamediv>
   <refname>packet</refname>
-  <refpurpose>A single packet in a data file</refpurpose>
+  <refpurpose>Replaced by different elements for different
+   packet types</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
   <informaltable frame="all">
-   <tgroup cols="2">
+   <tgroup cols="3">
     <colspec colname="c1"/>
     <colspec colname="c2"/>
+    <colspec colname="c3"/>
     <tbody>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
       <emphasis role="bold">Content Model</emphasis>
      </entry></row>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
 <synopsis>
 packet ::= (<replaceable>type-specific content</replaceable>,
             &xml-tag;*, &xml-packet;*)</synopsis>
@@ -32,40 +34,54 @@ packet ::= (<replaceable>type-specific content</replaceable>,
       packet type is documented on its own reference page; see below for
       details.
      </entry></row>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
       <emphasis role="bold">Attributes</emphasis>
      </entry></row>
      <row>
       <entry><emphasis role="bold">Name</emphasis></entry>
       <entry><emphasis role="bold">Type</emphasis></entry>
+      <entry><emphasis role="bold">Version</emphasis></entry>
      </row>
      <row>
       <entry><sgmltag>label</sgmltag></entry>
       <entry><type>CDATA</type> (required)</entry>
+      <entry></entry>
      </row>
      <row>
       <entry><sgmltag>parent</sgmltag></entry>
       <entry><type>CDATA</type></entry>
+      <entry></entry>
      </row>
      <row>
       <entry><sgmltag>type</sgmltag></entry>
       <entry><type>CDATA</type></entry>
+      <entry></entry>
      </row>
      <row>
       <entry><sgmltag>typeid</sgmltag></entry>
       <entry><type>NUMBER</type> (required)</entry>
+      <entry></entry>
      </row>
      <row>
       <entry><sgmltag>id</sgmltag></entry>
       <entry><type>CDATA</type></entry>
+      <entry>&attraddedver;4.95</entry>
      </row>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   In &regina;&nbsp;6.0.1 and earlier, the &xml-packet; element was used
+   to store every packet in the entire packet tree that makes up a
+   &regina; data file.
+   Since &regina;&nbsp;7.0, each packet type has its own &xml; element,
+   and &xml-packet; is no longer used.
+  </para>
   <para>
    A &xml-packet; element represents a single packet in a &regina; data
    file.  A packet is a single data object, such as a triangulation, a
@@ -88,6 +104,7 @@ packet ::= (<replaceable>type-specific content</replaceable>,
     <listitem><para>&xml-packet-normalhypersurfacelist;</para></listitem>
     <listitem><para>&xml-packet-pdf;</para></listitem>
     <listitem><para>&xml-packet-script;</para></listitem>
+    <listitem><para>&xml-packet-snappea;</para></listitem>
     <listitem><para>&xml-packet-surfacefilter;</para></listitem>
     <listitem><para>&xml-packet-text;</para></listitem>
    </itemizedlist>
@@ -174,7 +191,7 @@ packet ::= (<replaceable>type-specific content</replaceable>,
       no packets in the same file may share the same ID).  IDs do not need to
       be human-readable, must not contain leading or trailing whitespace,
       and must not be empty strings.
-      As of &regina;&nbsp;4.95, IDs are built from base&nbsp;64 hashes
+      Currently, IDs are built from base&nbsp;64 hashes
       of the underlying <application>C++</application> pointers.
      </para>
      <para>

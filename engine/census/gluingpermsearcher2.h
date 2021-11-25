@@ -40,17 +40,16 @@
 #define __REGINA_GLUINGPERMSEARCHER2_H
 #endif
 
+#include <functional>
+#include <memory>
+#include <sstream>
 #include "regina-core.h"
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
 #include "triangulation/facetpairing.h"
+#include "utilities/exception.h"
 
 namespace regina {
-
-/**
- * \weakgroup census
- * @{
- */
 
 /**
  * A utility class for searching through all possible gluing permutation
@@ -70,55 +69,32 @@ namespace regina {
  * constructing an object of the corresponding class (and again
  * calling runSearch() on that object directly).
  *
- * Note that this class derives from GluingPerms<2>.  The search will
- * involve building and repeatedly modifying the inherited GluingPerms<2>
- * data in-place.
+ * This class is designed to manage the construction of a large census of
+ * triangulations, and so it does not support copying, moving or swapping.
  *
- * \ifacespython Not present.
+ * \ingroup census
  */
 template <>
-class GluingPermSearcher<2> : public GluingPerms<2> {
+class GluingPermSearcher<2> {
     public:
-        /**
-         * A routine that can do arbitrary processing upon a set of gluing
-         * permutations.  Such routines are used to process permutation
-         * sets that are found when running census-building routines such as
-         * findAllPerms().
-         *
-         * The first parameter passed will be a set of gluing permutations
-         * (as this class derives from GluingPerms<2>).  This set of gluing
-         * permutations must not be deallocated by this routine, since it may
-         * be used again later by the caller.  The second parameter may contain
-         * arbitrary data; typically this will be the data passed to the
-         * relevant search routine, such as findAllPerms() or the
-         * GluingPermSearcher class constructor.
-         *
-         * Note that the first parameter passed might be \c null to signal that
-         * gluing permutation generation has finished.
-         */
-        typedef void (*Use)(const GluingPermSearcher<2>*, void*);
-
-        static constexpr char dataTag_ = 'g';
+        static constexpr char dataTag = 'g';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
     protected:
-        const FacetPairing<2>::IsoList* autos_;
+        using ActionWrapper = std::function<void(const GluingPerms<2>&)>;
+            /**< The type used to hold the user's action function and
+                 arguments when enumerating gluing permutations. */
+
+        GluingPerms<2> perms_;
+            /**< The set of gluing permutations under construction. */
+        const FacetPairing<2>::IsoList autos_;
             /**< The set of isomorphisms that define equivalence of
                  gluing permutation sets.  Generally this is the set of all
                  automorphisms of the underlying edge pairing. */
-        bool autosNew;
-            /**< Did we create the isomorphism list autos_ ourselves (in
-                 which case we must destroy it also)? */
         bool orientableOnly_;
             /**< Are we only searching for gluing permutations that
                  correspond to orientable triangulations? */
-        GluingPermSearcher<2>::Use use_;
-            /**< A routine to call each time a gluing permutation set is
-                 found during the search. */
-        void* useArgs_;
-            /**< Additional user-supplied data to be passed as the second
-                 argument to the \a use_ routine. */
 
         bool started;
             /**< Has the search started yet?  This helps distinguish
@@ -164,8 +140,7 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * searching, and is the preferred entry point for end users.
          *
          * The arguments to this constructor describe the search
-         * parameters in detail, as well as what should be done with
-         * each gluing permutation set that is found.
+         * parameters in detail.
          *
          * \pre The given edge pairing is connected, i.e., it is possible
          * to reach any triangle from any other triangle via a
@@ -180,24 +155,14 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * of permutation sets.  These are used by runSearch(), which produces
          * each permutation set precisely once up to equivalence.  These
          * isomorphisms must all be automorphisms of the given edge pairing,
-         * and will generally be the set of all such automorphisms.  This
-         * parameter may be 0, in which case the set of all automorphisms
-         * of the given edge pairing will be generated and used.
+         * and will generally be the set of all such automorphisms (which
+         * you can generate via <tt>pairing.findAutomorphisms()</tt>).
          * @param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
-         * @param use the function to call upon each permutation set that
-         * is found.  The first parameter passed to this function will be
-         * a gluing permutation set.  The second parameter will be
-         * parameter \a useArgs as was passed to this routine.
-         * @param useArgs the pointer to pass as the final parameter for
-         * the function \a use which will be called upon each permutation
-         * set found.
          */
-        GluingPermSearcher(const FacetPairing<2>* pairing,
-                const FacetPairing<2>::IsoList* autos,
-                bool orientableOnly, GluingPermSearcher<2>::Use use,
-                void* useArgs = nullptr);
+        GluingPermSearcher(FacetPairing<2> pairing,
+                FacetPairing<2>::IsoList autos, bool orientableOnly);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -206,26 +171,28 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          *
          * This routine reads data in the format written by dumpData().
          * If you wish to read data whose precise class is unknown,
-         * consider using dumpTaggedData() and readTaggedData() instead.
-         *
-         * If the data found in the input stream is invalid or incorrectly
-         * formatted, the routine inputError() will return \c true but
-         * the contents of this object will be otherwise undefined.
+         * consider using dumpTaggedData() and fromTaggedData() instead.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
+         *
+         * \ifacespython Not present, since this constructor is fundamentally
+         * designed around working through a single input stream as we make
+         * our way from base class constructors down to subclass constructors.
+         * Python users should use taggedData() and fromTaggedData() instead,
+         * which incorporate this same text data as part of their richer text
+         * format.
+         *
          * @param in the input stream from which to read.
-         * @param use as for the main GluingPermSearcher<2> constructor.
-         * @param useArgs as for the main GluingPermSearcher<2> constructor.
          */
-        GluingPermSearcher(std::istream& in,
-            GluingPermSearcher<2>::Use use, void* useArgs = nullptr);
+        GluingPermSearcher(std::istream& in);
 
         /**
-         * Destroys this search manager and all supporting data
-         * structures.
+         * Destroys this search manager and all supporting data structures.
          */
         virtual ~GluingPermSearcher();
 
@@ -239,27 +206,59 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * once up to equivalence, where equivalence is defined by the
          * given set of automorphisms of the given edge pairing.
          *
-         * For each permutation set that is generated, routine \a use_ (as
-         * passed to the class constructor) will be called with that
-         * permutation set as an argument.
+         * For each permutation set that is generated, this routine will call
+         * \a action (which must be a function or some other callable object).
          *
-         * Once the generation of permutation sets has finished, routine
-         * \a use_ will be called once more, this time with \c null as its
-         * first (permutation set) argument.
+         * - The first argument to \a action must be a const reference to a
+         *   GluingPerms<2>.  This will be the permutation set that was found.
+         *   If \a action wishes to keep the permutation set, it should take a
+         *   deep copy (not a reference), since the permutation set may be
+         *   changed and reused after \a action returns.
          *
-         * Subclasses corresponding to more specialised search criteria
-         * should override this routine to use a better optimised algorithm
-         * where possible.
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return \c void.
          *
          * It is possible to run only a partial search, branching to a
-         * given depth but no further.  In this case, rather than
-         * producing complete gluing permutation sets, the search will
-         * produce a series of partially-complete GluingPermSearcher<2>
-         * objects.  These partial searches may then be restarted by
-         * calling runSearch() once more (usually after being frozen or
-         * passed on to a different processor).  If necessary, the \a use_
-         * routine may call completePermSet() to distinguish between
-         * a complete set of gluing permutations and a partial search state.
+         * given depth but no further; for this you should use the
+         * separate routine partialSearch(), not runSearch().
+         *
+         * \todo \feature Allow cancellation of permutation set generation.
+         *
+         * \ifacespython This function is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial gluing permutation set
+         * (and therefore the additional \a args list is omitted here).
+         *
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
+         */
+        template <typename Action, typename... Args>
+        void runSearch(Action&& action, Args&&... args);
+
+        /**
+         * Runs a partial search for all possible gluing permutations
+         * that satisfy the search criteria, branching only to the
+         * given depth and no further.
+         *
+         * This routine essentially does some but not all of the work of
+         * runSearch().  See the runSearch() documentation for a detailed
+         * overview of what the full search aims to achieve.
+         *
+         * If runSearch() enumerates an entire search tree, then you can
+         * think of partialSearch() as only enumerating the first
+         * \a maxDepth levels of this search tree.  Rather than
+         * producing complete gluing permutation sets, this search will
+         * produce a series of partially-constructed permutation sets.
+         * A partial searche can be continued by calling runSearch()
+         * again on the underlying GluingPermSearcher (perhaps after being
+         * frozen, or passed on to a different processor via taggedData() and
+         * fromTaggedData()).  If necessary, the \a action routine may call
+         * isComplete() to distinguish between a complete set of
+         * gluing permutations and a partial search state.
          *
          * Note that a restarted search will never drop below its
          * initial depth.  That is, calling runSearch() with a fixed
@@ -267,43 +266,156 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * many branches, and then calling runSearch() on each resulting
          * partial search will complete each of these branches without overlap.
          *
-         * \todo \feature Allow cancellation of permutation set generation.
+         * If the search tree is shallow enough (or if \a maxDepth is
+         * large enough), it is possible that this routine will produce
+         * complete gluing permutation sets.
          *
-         * @param maxDepth the depth of the partial search to run, or a
-         * negative number if a full search should be run (the default).
+         * @param maxDepth the depth of the partial search to run.
+         * A negative number indicates that a full search should be run.
+         * @param action a function (or other callable object) to call
+         * for each permutation set (partial or complete) that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
          */
-        virtual void runSearch(long maxDepth = -1);
+        template <typename Action, typename... Args>
+        void partialSearch(long maxDepth, Action&& action, Args&&... args);
 
         /**
          * Determines whether this search manager holds a complete
          * gluing permutation set or just a partially completed search
          * state.
          *
-         * This may assist the \a use_ routine when running partial
-         * depth-based searches.  See runSearch() for further details.
+         * This may assist the \a action routine when running partial
+         * depth-based searches.  See partialSearch() for further details.
          *
          * @return \c true if a complete gluing permutation set is held,
          * or \c false otherwise.
          */
-        bool completePermSet() const;
+        bool isComplete() const;
+
+        /**
+         * Deprecated function that determines whether this search manager
+         * holds a complete gluing permutation set or just a partially
+         * completed search state.
+         *
+         * \deprecated This routine has been renamed to isComplete().
+         *
+         * @return \c true if a complete gluing permutation set is held,
+         * or \c false otherwise.
+         */
+        [[deprecated]] bool completePermSet() const;
 
         /**
          * Dumps all internal data in a plain text format, along with a
          * marker to signify which precise class the data belongs to.
-         * This routine can be used with readTaggedData() to transport
+         * This routine can be used with fromTaggedData() to transport
          * objects from place to place whose precise class is unknown.
+         *
+         * This routine outputs the same information that taggedData() returns.
+         *
+         * The key difference between dumpData() and dumpTaggedData() is that
+         * dumpTaggedData() preserves all internal information even if this
+         * object belongs to a subclass of GluingPermSearcher, whereas
+         * dumpData() only writes information pertaining to this base class.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
+         *
+         * \ifacespython Not present; instead use taggedData(), which
+         * returns this same information as a string.
          *
          * @param out the output stream to which the data should be
          * written.
          */
         void dumpTaggedData(std::ostream& out) const;
 
-        // Overridden methods:
-        virtual void dumpData(std::ostream& out) const override;
+        /**
+         * Returns all internal data in a plain text format, along with a
+         * marker to signify which precise class the data belongs to.
+         * This routine can be used with fromTaggedData() to transport
+         * objects from place to place whose precise class is unknown.
+         *
+         * This routine returns the same information that dumpTaggedData()
+         * writes.
+         *
+         * The key difference between data() and taggedData() is that
+         * taggedData() preserves all internal information even if this
+         * object belongs to a subclass of GluingPermSearcher, whereas
+         * data() only writes information pertaining to this base class.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * @return all of this object's internal data in plain text format.
+         */
+        std::string taggedData() const;
+
+        /**
+         * Dumps all internal data in a plain text format to the given
+         * output stream.  This object can be recreated from this text data
+         * by calling the input stream constructor for the appropriate class.
+         *
+         * This routine may be useful for transferring objects from
+         * one processor to another.
+         *
+         * If subclasses override this function, they should write subclass
+         * data after superclass data.  This means it is safe to dump data
+         * from a subclass and then recreate a new superclass object from
+         * that data (though subclass-specific information will be lost).
+         *
+         * This routine outputs the same information that data() returns.
+         *
+         * The key difference between dumpData() and dumpTaggedData() is that
+         * dumpTaggedData() preserves all internal information even if this
+         * object belongs to a subclass of GluingPermSearcher, whereas
+         * dumpData() only writes information pertaining to this base class.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * \ifacespython Not present; instead use data(), which returns this
+         * same information as a string.  However, the matching input stream
+         * constructor is not available in Python either, so it is recommended
+         * that Python users use taggedData() and fromTaggedData() instead.
+         *
+         * @param out the output stream to which the data should be written.
+         */
+        virtual void dumpData(std::ostream& out) const;
+
+        /**
+         * Returns all internal data in a plain text format.
+         * This object can be recreated from this text data by calling the
+         * input stream constructor for the appropriate class.
+         *
+         * This routine may be useful for transferring objects from
+         * one processor to another.
+         *
+         * If subclasses override this function, they should write subclass
+         * data after superclass data.  This means it is safe to dump data
+         * from a subclass and then recreate a new superclass object from
+         * that data (though subclass-specific information will be lost).
+         *
+         * This routine returns the same information that dumpData() writes.
+         *
+         * The key difference between data() and taggedData() is that
+         * taggedData() preserves all internal information even if this
+         * object belongs to a subclass of GluingPermSearcher, whereas
+         * data() only writes information pertaining to this base class.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * \ifacespython This routine is available, but the matching
+         * input stream constructor is not.  Python users should use
+         * taggedData() and fromTaggedData() instead.
+         *
+         * @param all of this object's internal data in plain text format.
+         */
+        std::string data() const;
 
         /**
          * The main entry routine for running a search for all gluing
@@ -317,7 +429,7 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * See the GluingPermSearcher<2> constructor for documentation on
          * the arguments to this routine.  See the runSearch() method
          * for documentation on how the search runs and returns its
-         * results.
+         * results via \a action and \a args.
          *
          * \pre The given edge pairing is connected, i.e., it is possible
          * to reach any triangle from any other triangle via a
@@ -325,11 +437,16 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * \pre The given edge pairing is in canonical form as described
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
+         *
+         * \ifacespython This function is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial gluing permutation set
+         * (and therefore the additional \a args list is omitted here).
          */
-        static void findAllPerms(const FacetPairing<2>* pairing,
-                const FacetPairing<2>::IsoList* autos,
-                bool orientableOnly, GluingPermSearcher<2>::Use use,
-                void* useArgs = nullptr);
+        template <typename Action, typename... Args>
+        static void findAllPerms(FacetPairing<2> pairing,
+                FacetPairing<2>::IsoList autos, bool orientableOnly,
+                Action&& action, Args&&... args);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -343,9 +460,6 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * (such as partial searching), you are probably better calling
          * findAllPerms() instead.
          *
-         * The resulting object is newly created, and must be destroyed
-         * by the caller of this routine.
-         *
          * See the GluingPermSearcher<2> constructor for documentation on
          * the arguments to this routine.
          *
@@ -356,13 +470,11 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * by FacetPairing<2>::isCanonical().  Note that all edge pairings
          * constructed by FacetPairing<2>::findAllPairings() are of this form.
          *
-         * @return the newly created search manager.
+         * @return the new search manager.
          */
-        static GluingPermSearcher<2>* bestSearcher(
-                const FacetPairing<2>* pairing,
-                const FacetPairing<2>::IsoList* autos,
-                bool orientableOnly, GluingPermSearcher<2>::Use use,
-                void* useArgs = nullptr);
+        static std::unique_ptr<GluingPermSearcher<2>> bestSearcher(
+                FacetPairing<2> pairing, FacetPairing<2>::IsoList autos,
+                bool orientableOnly);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -376,29 +488,69 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * the input stream constructors, where the class of the data being
          * read must be known at compile time.
          *
-         * If the data found in the input stream is invalid or
-         * incorrectly formatted, a null pointer will be returned.
-         * Otherwise a newly constructed search manager will be returned,
-         * and it is the responsibility of the caller of this routine to
-         * destroy it after use.
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
          *
-         * The arguments \a use and \a useArgs are the same as for the
-         * GluingPermSearcher<2> constructor.
+         * \exception InvalidInput the data found in the given input stream
+         * is invalid, incomplete, or incorrectly formatted.
+         *
+         * \ifacespython Not present; instead you can use the variant of
+         * fromTaggedData() that takes its input as a string.
+         *
+         * @param in the input stream from which to read.
+         * @return the new search manager, or \c null if the data in the
+         * input stream was invalid or incorrectly formatted.
+         */
+        static std::unique_ptr<GluingPermSearcher<2>> fromTaggedData(
+                std::istream& in);
+
+        /**
+         * Creates a new search manager based on tagged data stored in
+         * the given string.  This may be a new search or a
+         * partially completed search.
+         *
+         * The tagged data should be in the format returned by taggedData().
+         * The precise class of the search manager
+         * will be determined from the tagged data, and does not need to
+         * be known in advance.  This is in contrast to dumpData() and
+         * the input stream constructors, where the class of the data being
+         * read must be known at compile time.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * @param in the input stream from which to read.
+         * \exception InvalidArgument the data found in the given string
+         * is invalid, incomplete, or incorrectly formatted.
+         *
+         * @param data the tagged data from which to reconstruct a
+         * search manager.
+         * @return the new search manager, or \c null if the data in the
+         * given string was invalid or incorrectly formatted.
          */
-        static GluingPermSearcher<2>* readTaggedData(std::istream& in,
-                GluingPermSearcher<2>::Use use, void* useArgs = nullptr);
+        static std::unique_ptr<GluingPermSearcher<2>> fromTaggedData(
+                const std::string& data);
 
         // Make this class non-copyable.
-        // The base class GluingPerms already makes it non-assignable.
         GluingPermSearcher(const GluingPermSearcher&) = delete;
+        GluingPermSearcher& operator = (const GluingPermSearcher&) = delete;
 
     protected:
+        /**
+         * A de-templatised implementation of runSearch() and partialSearch().
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * Subclasses corresponding to more specialised search criteria
+         * should override this routine to use a better optimised algorithm
+         * where possible.
+         *
+         * See runSearch() and partialSearch() for further details.
+         */
+        virtual void searchImpl(long maxDepth, ActionWrapper&& action);
+
         /**
          * Compares the current set of gluing permutations with its
          * preimage under each automorphism of the underlying edge pairing,
@@ -416,19 +568,106 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          *
          * @return the class tag.
          */
-        virtual char dataTag() const;
+        virtual char dataTagInternal() const;
 };
 
-/*@}*/
-
 // Inline functions for GluingPermSearcher<2>
+
+template <typename Action, typename... Args>
+inline void GluingPermSearcher<2>::runSearch(Action&& action, Args&&... args) {
+    // Delegate to a de-templatised function.
+    searchImpl(-1, ActionWrapper([&](const regina::GluingPerms<2>& p) {
+        action(p, std::forward<Args>(args)...);
+    }));
+}
+
+template <typename Action, typename... Args>
+inline void GluingPermSearcher<2>::partialSearch(long maxDepth,
+        Action&& action, Args&&... args) {
+    // Delegate to a de-templatised function.
+    searchImpl(maxDepth, ActionWrapper([&](const regina::GluingPerms<2>& p) {
+        action(p, std::forward<Args>(args)...);
+    }));
+}
+
+inline bool GluingPermSearcher<2>::isComplete() const {
+    return (orderElt == orderSize);
+}
 
 inline bool GluingPermSearcher<2>::completePermSet() const {
     return (orderElt == orderSize);
 }
 
-inline char GluingPermSearcher<2>::dataTag() const {
-    return GluingPermSearcher<2>::dataTag_;
+inline void GluingPermSearcher<2>::dumpTaggedData(std::ostream& out) const {
+    out << dataTagInternal() << std::endl;
+    dumpData(out);
+}
+
+inline std::string GluingPermSearcher<2>::taggedData() const {
+    std::ostringstream out;
+    dumpTaggedData(out);
+    return out.str();
+}
+
+inline std::string GluingPermSearcher<2>::data() const {
+    std::ostringstream out;
+    dumpData(out);
+    return out.str();
+}
+
+inline char GluingPermSearcher<2>::dataTagInternal() const {
+    return GluingPermSearcher<2>::dataTag;
+}
+
+inline std::unique_ptr<GluingPermSearcher<2>>
+        GluingPermSearcher<2>::fromTaggedData(std::istream& in) {
+    // Read the class marker.
+    char c;
+    in >> c;
+    if (in.eof())
+        throw InvalidInput("Missing class marker "
+            "when reading tagged GluingPermSearcher<2> data");
+
+    switch (c) {
+        case GluingPermSearcher<2>::dataTag:
+            return std::make_unique<GluingPermSearcher<2>>(in);
+        default:
+            throw InvalidInput("Invalid class marker "
+                "when reading tagged GluingPermSearcher<2> data");
+    }
+}
+
+inline std::unique_ptr<GluingPermSearcher<2>>
+        GluingPermSearcher<2>::fromTaggedData(const std::string& data) {
+    // With C++20 we will be able to move the string into the input stream,
+    // which means the argument should become a string (not const string&).
+    try {
+        std::istringstream in(data);
+        return fromTaggedData(in);
+    } catch (const InvalidInput& exc) {
+        throw InvalidArgument(exc.what());
+    }
+}
+
+inline std::unique_ptr<GluingPermSearcher<2>>
+        GluingPermSearcher<2>::bestSearcher(
+        FacetPairing<2> pairing, FacetPairing<2>::IsoList autos,
+        bool orientableOnly) {
+    // We only have one algorithm for now.
+    // If we ever get to the point of choosing, we should change
+    // findAllPerms() to call bestSearcher() also.
+    return std::make_unique<GluingPermSearcher<2>>(std::move(pairing),
+        std::move(autos), orientableOnly);
+}
+
+template <typename Action, typename... Args>
+void GluingPermSearcher<2>::findAllPerms(FacetPairing<2> pairing,
+        FacetPairing<2>::IsoList autos, bool orientableOnly,
+        Action&& action, Args&&... args) {
+    // We don't call bestSearcher() because at present there is only one
+    // algorithm.  Just use it.
+    GluingPermSearcher<2>(std::move(pairing), std::move(autos), orientableOnly).
+        runSearch(std::forward<Action>(action), std::forward<Args>(args)...);
 }
 
 } // namespace regina

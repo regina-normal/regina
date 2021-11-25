@@ -37,13 +37,6 @@
 
 namespace regina {
 
-namespace {
-    const int upperOutArc[2 /* 0,1 for -,+ */][13 /* dir */] = {
-        { -1, -1, -1, 0, -1, -1, 1, -1, -1, 3, -1, -1, 2 },
-        { -1, -1, -1, 1, -1, -1, 2, -1, -1, 0, -1, -1, 3 }
-    };
-}
-
 ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) :
         cells_(nullptr) {
     nodes_.reserve(cloneMe.nodes_.size());
@@ -65,6 +58,9 @@ ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) :
 }
 
 ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
+    if (std::addressof(src) == this)
+        return *this;
+
     for (ModelLinkGraphNode* n : nodes_)
         delete n;
     nodes_.clear();
@@ -96,9 +92,9 @@ ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
 void ModelLinkGraph::reflect() {
     for (ModelLinkGraphNode* n : nodes_) {
         std::swap(n->adj_[1], n->adj_[3]);
-        for (int i = 0; i < 4; ++i)
-            if (n->adj_[i].arc_ % 2)
-                n->adj_[i].arc_ ^= 2;
+        for (auto& a : n->adj_)
+            if (a.arc_ % 2)
+                a.arc_ ^= 2;
     }
 
     if (cells_) {
@@ -149,8 +145,8 @@ std::string ModelLinkGraph::plantri() const {
     for (auto it = nodes_.begin(); it != nodes_.end(); ++it) {
         if (it != nodes_.begin())
             ans += ',';
-        for (int arc = 0; arc < 4; ++arc)
-            ans += ('a' + (*it)->adj_[arc].node()->index());
+        for (const auto& arc : (*it)->adj_)
+            ans += static_cast<char>('a' + arc.node()->index());
     }
     return ans;
 }
@@ -161,8 +157,8 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
 
     // The image and preimage for each node, and the image of arc 0
     // for each node:
-    ptrdiff_t* image = new ptrdiff_t[size()];
-    ptrdiff_t* preimage = new ptrdiff_t[size()];
+    auto* image = new ptrdiff_t[size()];
+    auto* preimage = new ptrdiff_t[size()];
     int* arcOffset = new int[size()];
 
     size_t nextUnusedNode, nodeImg, nodeSrc, adjSrcNode;
@@ -218,7 +214,7 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
                             continue;
                         }
 
-                        curr += ('a' + image[adjSrcNode]);
+                        curr += static_cast<char>('a' + image[adjSrcNode]);
 
                         if (! currBetter) {
                             // curr == best for the characters seen so far.
@@ -252,7 +248,7 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
     return best;
 }
 
-ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
+ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
     bool tight = plantri.size() == 3 ||
         (plantri.size() > 4 && plantri[4] != ',');
 
@@ -260,64 +256,66 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
     size_t n;
     if (tight) {
         if (plantri.size() % 3 != 0)
-            return 0;
+            throw InvalidArgument("fromPlantri(): "
+                "invalid string length for a tight encoding");
         n = plantri.size() / 3;
     } else {
         if (plantri.size() % 5 != 4)
-            return 0;
+            throw InvalidArgument("fromPlantri(): "
+                "invalid string length for a standard encoding");
         n = (plantri.size() + 1) / 5;
     }
     if (n > 26)
-        return 0;
+        throw InvalidArgument("fromPlantri(): more than 26 nodes");
 
     size_t i, j;
     for (i = 0; i < plantri.size(); ++i)
         if ((! tight) && i % 5 == 4) {
             if (plantri[i] != ',')
-                return 0;
+                throw InvalidArgument("fromPlantri(): missing comma");
         } else {
             if (plantri[i] < 'a' || plantri[i] >= ('a' + n))
-                return 0;
+                throw InvalidArgument("fromPlantri(): invalid node letter");
         }
 
-    ModelLinkGraph* g = new ModelLinkGraph();
+    ModelLinkGraph g;
     for (i = 0; i < n; ++i)
-        g->nodes_.push_back(new ModelLinkGraphNode());
+        g.nodes_.push_back(new ModelLinkGraphNode());
 
     // First set up adj_[..].node_.
     if (tight) {
         // Node 0, arc 0 is a special case.
         if (n == 1) {
             // (0, 0) links to node 0 - there is no other option.
-            g->nodes_[0]->adj_[0].node_ = g->nodes_[0];
+            g.nodes_[0]->adj_[0].node_ = g.nodes_[0];
         } else {
             // The dual quadrangulation is simple, and this means we
             // cannot have loops for n > 1.  Therefore (0, 0) links to node 1.
             // Since node 1 is new, make the link in both directions.
-            g->nodes_[0]->adj_[0].node_ = g->nodes_[1];
-            g->nodes_[1]->adj_[0].node_ = g->nodes_[0];
-            g->nodes_[1]->adj_[0].arc_ = -1;
+            g.nodes_[0]->adj_[0].node_ = g.nodes_[1];
+            g.nodes_[1]->adj_[0].node_ = g.nodes_[0];
+            g.nodes_[1]->adj_[0].arc_ = -1;
         }
-        g->nodes_[0]->adj_[0].arc_ = -1;
+        g.nodes_[0]->adj_[0].arc_ = -1;
 
         for (i = 0; i < n; ++i)
             for (j = 1; j < 4; ++j) {
-                g->nodes_[i]->adj_[j].node_ =
-                    g->nodes_[plantri[3 * i + j - 1] - 'a'];
-                if (! g->nodes_[i]->adj_[j].node_->adj_[0].node_) {
+                g.nodes_[i]->adj_[j].node_ =
+                    g.nodes_[plantri[3 * i + j - 1] - 'a'];
+                if (! g.nodes_[i]->adj_[j].node_->adj_[0].node_) {
                     // This is the first time we've seen this adjacent node.
                     // Make the link in the reverse direction also.
-                    g->nodes_[i]->adj_[j].node_->adj_[0].node_ = g->nodes_[i];
-                    g->nodes_[i]->adj_[j].node_->adj_[0].arc_ = -1;
+                    g.nodes_[i]->adj_[j].node_->adj_[0].node_ = g.nodes_[i];
+                    g.nodes_[i]->adj_[j].node_->adj_[0].arc_ = -1;
                 }
-                g->nodes_[i]->adj_[j].arc_ = -1;
+                g.nodes_[i]->adj_[j].arc_ = -1;
             }
     } else {
         for (i = 0; i < n; ++i)
             for (j = 0; j < 4; ++j) {
-                g->nodes_[i]->adj_[j].node_ =
-                    g->nodes_[plantri[5 * i + j] - 'a'];
-                g->nodes_[i]->adj_[j].arc_ = -1;
+                g.nodes_[i]->adj_[j].node_ =
+                    g.nodes_[plantri[5 * i + j] - 'a'];
+                g.nodes_[i]->adj_[j].arc_ = -1;
             }
     }
 
@@ -328,7 +326,7 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
     int k;
     ModelLinkGraphNode *src, *dest;
     for (i = 0; i < n; ++i) {
-        src = g->nodes_[i];
+        src = g.nodes_[i];
         for (j = 0; j < 4; ++j) {
             if (src->adj_[j].arc_ >= 0)
                 continue;
@@ -343,10 +341,8 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
                     ++count;
 
             // Be careful about when we can have loops.
-            if (src == dest && count % 2 != 0) {
-                delete g;
-                return 0;
-            }
+            if (src == dest && count % 2 != 0)
+                throw InvalidArgument("fromPlantri(): invalid loop");
 
             // In the code below, we use the fact that plantri only produces
             // 4-valent graphs whose dual quadrangulations are simple.
@@ -355,18 +351,16 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
                 // from dest.
                 for (k = 0; k < 4; ++k)
                     if (dest->adj_[k].node_ == src) {
-                        if (dest->adj_[k].arc_ >= 0) {
-                            delete g;
-                            return 0;
-                        }
+                        if (dest->adj_[k].arc_ >= 0)
+                            throw InvalidArgument("fromPlantri(): "
+                                "single edge has multiple endpoints");
                         src->adj_[j].arc_ = k;
                         dest->adj_[k].arc_ = j;
                         break;
                     }
-                if (k == 4) {
-                    delete g;
-                    return 0;
-                }
+                if (k == 4)
+                    throw InvalidArgument("fromPlantri(): single edge "
+                        "has no endpoint");
             } else if (count == 2) {
                 if (src->adj_[j ^ 2].node_ == dest) {
                     // We have two parallel edges that are not adjacent
@@ -375,8 +369,8 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
                     // Because the dual quadrangulation must be simple,
                     // it follows that any double edge of this type must
                     // actually be part of a quadruple edge.
-                    delete g;
-                    return 0;
+                    throw InvalidArgument("fromPlantri(): invalid "
+                        "non-adjacent double edge");
                 } else {
                     // We have two parallel edges that are adjacent around src.
                     //
@@ -392,16 +386,14 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
                         if (dest->adj_[k].node_ == src &&
                                 dest->adj_[(k + 1) % 4].node_ == src) {
                             if (dest->adj_[k].arc_ >= 0 ||
-                                    dest->adj_[(k + 1) % 4].arc_ >= 0) {
-                                delete g;
-                                return 0;
-                            }
+                                    dest->adj_[(k + 1) % 4].arc_ >= 0)
+                                throw InvalidArgument("fromPlantri(): "
+                                    "double edge has too many endpoints");
                             break;
                         }
-                    if (k == 4) {
-                        delete g;
-                        return 0;
-                    }
+                    if (k == 4)
+                        throw InvalidArgument("fromPlantri(): double edge "
+                            "missing its endpoints");
 
                     if (j < 3 && src->adj_[j + 1].node_ == dest) {
                         src->adj_[j].arc_ = (k + 1) % 4;
@@ -420,8 +412,7 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
                 // Because the dual quadrangulation must be simple, it
                 // follows that any triple edge must actually be part
                 // of a quadruple edge.
-                delete g;
-                return 0;
+                throw InvalidArgument("fromPlantri(): invalid triple edge");
             } else {
                 // A quadruple edge.
                 // As we walk clockwise around one node, we must walk
@@ -430,14 +421,12 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
                 // We will match up (0,1,2,3) <-> (3,2,1,0).
                 // Note that this scheme also works if src == dest.
                 for (k = 0; k < 4; ++k) {
-                    if (dest->adj_[3 - k].node_ != src) {
-                        delete g;
-                        return 0;
-                    }
-                    if (dest != src && dest->adj_[3 - k].arc_ >= 0) {
-                        delete g;
-                        return 0;
-                    }
+                    if (dest->adj_[3 - k].node_ != src)
+                        throw InvalidArgument("fromPlantri(): "
+                            "quadruple edge has a missing endpoint");
+                    if (dest != src && dest->adj_[3 - k].arc_ >= 0)
+                        throw InvalidArgument("fromPlantri(): "
+                            "quadruple edge has too many endpoints");
                     src->adj_[k].arc_ = 3 - k;
                     dest->adj_[3 - k].arc_ = k;
                 }
@@ -446,209 +435,6 @@ ModelLinkGraph* ModelLinkGraph::fromPlantri(const std::string& plantri) {
     }
 
     return g;
-}
-
-void ModelLinkGraph::generateMinimalLinks(Use use, void* useArgs) const {
-    if (size() == 0) {
-        // Generate a single empty link.
-        use(new Link(), useArgs);
-        use(nullptr, useArgs);
-        return;
-    }
-
-    // First work out the orientation of the knot as it passes through
-    // each node.
-    char* dir = new char[size()]; // Bits 0,1,2,3 are 1/0 for forward/backward.
-    std::fill(dir, dir + size(), 0);
-
-    size_t steps = 0;
-    ModelLinkGraphArc a(nodes_[0], 0);
-    do {
-        dir[a.node()->index()] |= (1 << a.arc());
-        a = a.next();
-        ++steps;
-    } while (a.node()->index() != 0 || a.arc() != 0);
-
-    if (steps != 2 * size()) {
-        std::cerr << "ERROR: Not a knot graph!" << std::endl;
-        use(nullptr, useArgs);
-        delete[] dir;
-        return;
-    }
-
-    // Next work out which relationships we may assume between different
-    // crossing signs.  This will be a quadratic-time "poor man's union-find" -
-    // the criterion for how to join subtrees is not depth (to keep the
-    // worst-case depth logarithmic), but rather the insistence that
-    // parent[i] < i (so we can easily choose the parent sign before the child).
-
-    cells(); // force computation of cell structure
-
-    // If parent[i] >= 0, then the sign of crossing i is tied to the
-    // sign of crossing parent[i].  The signs are the same if flip[i] is false,
-    // and the signs are different if flip[i] is true.
-    // We guarantee for all nodes that parent[i] < i.
-    int* parent = new int[size()];
-    bool* flip = new bool[size()];
-
-    std::fill(parent, parent + size(), -1);
-
-    int i;
-    ModelLinkGraphArc a1, a2;
-    int n1, n2, n3;
-    bool flip1, flip2, flip3;
-    for (i = 0; i < cells_->nCells_; ++i)
-        if (cells_->size(i) == 2) {
-            // Both crossings on the bigon should have the same sign.
-            a1 = cells_->arc(i, 0);
-            a2 = cells_->arc(i, 1);
-            n1 = a1.node()->index();
-            n2 = a2.node()->index();
-            flip1 = flip2 = false;
-            while (parent[n1] >= 0) {
-                if (flip[n1])
-                    flip1 = ! flip1;
-                n1 = parent[n1];
-            }
-            while (parent[n2] >= 0) {
-                if (flip[n2])
-                    flip2 = ! flip2;
-                n2 = parent[n2];
-            }
-            if (n1 < n2) {
-                parent[n2] = n1;
-                flip[n2] = (flip1 != flip2);
-            } else if (n2 < n1) {
-                parent[n1] = n2;
-                flip[n1] = (flip1 != flip2);
-            }
-
-            // At this point we will modify arcs a1 and a2, but not their nodes.
-            ++a1;
-            ++a2;
-            if (cells_->size(cells_->cell(a1)) == 3) {
-                // We have a triangle beside the original arc a1.
-                // The third crossing of the triangle has its sign forced also.
-                n3 = a1.traverse().node()->index();
-                flip3 = (
-                    ((dir[a1.node()->index()] >> a1.arc()) & 1) ==
-                    ((dir[a2.node()->index()] >> a2.arc()) & 1));
-                while (parent[n3] >= 0) {
-                    if (flip[n3])
-                        flip3 = ! flip3;
-                    n3 = parent[n3];
-                }
-                if (n1 < n3) {
-                    parent[n3] = n1;
-                    flip[n3] = (flip1 != flip3);
-                } else if (n3 < n1) {
-                    parent[n1] = n3;
-                    flip[n1] = (flip1 != flip3);
-                }
-            }
-            if (cells_->size(cells_->cell(a2)) == 3) {
-                // We have a triangle beside the original arc a2.
-                // As above.
-                n3 = a2.traverse().node()->index();
-                flip3 = (
-                    ((dir[a1.node()->index()] >> a1.arc()) & 1) ==
-                    ((dir[a2.node()->index()] >> a2.arc()) & 1));
-                while (parent[n3] >= 0) {
-                    if (flip[n3])
-                        flip3 = ! flip3;
-                    n3 = parent[n3];
-                }
-                if (n2 < n3) {
-                    parent[n3] = n2;
-                    flip[n3] = (flip2 != flip3);
-                } else if (n3 < n2) {
-                    parent[n2] = n3;
-                    flip[n2] = (flip2 != flip3);
-                }
-            }
-        }
-
-    // Now choose the signs of the crossings!
-    int* sign = new int[size()];
-    std::fill(sign, sign + size(), 0);
-
-    int curr = 0;
-    int adj;
-    int adjStrand;
-    while (curr >= 0) {
-        // We have selected the signs for all crossings < curr, and we
-        // need to move to the next available sign at crossing curr.
-        if (curr == size()) {
-            // We have a complete selection of crossings.
-            Link* l = new Link;
-            for (i = 0; i < size(); ++i)
-                l->crossings_.push_back(new Crossing(sign[i]));
-            for (i = 0; i < size(); ++i) {
-                // Upper outgoing arc:
-                a = nodes_[i]->adj_[upperOutArc[sign[i] > 0 ? 1 : 0][dir[i]]];
-                adj = a.node_->index();
-                adjStrand = (a.arc_ ==
-                    (upperOutArc[sign[adj] > 0 ? 1 : 0][dir[adj]] ^ 2) ? 1 : 0);
-                l->crossings_[i]->next_[1].crossing_ = l->crossings_[adj];
-                l->crossings_[i]->next_[1].strand_ = adjStrand;
-
-                l->crossings_[adj]->prev_[adjStrand].crossing_ =
-                    l->crossings_[i];
-                l->crossings_[adj]->prev_[adjStrand].strand_ = 1;
-
-                // Lower outgoing arc:
-                a = nodes_[i]->adj_[upperOutArc[sign[i] > 0 ? 0 : 1][dir[i]]];
-                adj = a.node_->index();
-                adjStrand = (a.arc_ ==
-                    (upperOutArc[sign[adj] > 0 ? 1 : 0][dir[adj]] ^ 2) ? 1 : 0);
-                l->crossings_[i]->next_[0].crossing_ = l->crossings_[adj];
-                l->crossings_[i]->next_[0].strand_ = adjStrand;
-
-                l->crossings_[adj]->prev_[adjStrand].crossing_ =
-                    l->crossings_[i];
-                l->crossings_[adj]->prev_[adjStrand].strand_ = 0;
-            }
-            l->components_.push_back(StrandRef(*l->crossings_.begin(), 1));
-
-            use(l, useArgs);
-
-            // Backtrack!
-            --curr;
-            // Here: 0 <= curr < size (since the model graph is non-empty).
-            while (parent[curr] >= 0)
-                --curr;
-            // Here also: 0 <= curr < size (since parent[0] == -1 always).
-        }
-
-        // Here: 0 <= curr < size.
-        if (parent[curr] >= 0)
-            sign[curr] =
-                (flip[curr] ? -sign[parent[curr]] : sign[parent[curr]]);
-        else if (sign[curr] == 0)
-            sign[curr] = 1;
-        else if (curr > 0 /* WLOG, sign[0] = 1 */ && sign[curr] == 1)
-            sign[curr] = -1;
-        else {
-            // We have exhausted our options here.
-            sign[curr] = 0;
-            --curr;
-            if (curr >= 0)
-                while (parent[curr] >= 0)
-                    --curr;
-            continue;
-        }
-
-        // Move on to the next crossing.
-        ++curr;
-    }
-
-    // All done!
-    use(nullptr, useArgs);
-
-    delete[] sign;
-    delete[] flip;
-    delete[] parent;
-    delete[] dir;
 }
 
 ModelLinkGraphCells::ModelLinkGraphCells(const ModelLinkGraphCells& c) :

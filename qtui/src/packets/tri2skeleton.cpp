@@ -49,7 +49,8 @@
 using regina::Triangulation;
 using regina::Packet;
 
-Tri2SkeletonUI::Tri2SkeletonUI(regina::Triangulation<2>* packet,
+Tri2SkeletonUI::Tri2SkeletonUI(
+        regina::PacketOf<regina::Triangulation<2>>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim2TriSkeleton) {
@@ -58,14 +59,15 @@ Tri2SkeletonUI::Tri2SkeletonUI(regina::Triangulation<2>* packet,
         tr("&Graphs"));
 }
 
-Tri2SkelCompUI::Tri2SkelCompUI(regina::Triangulation<2>* packet,
+Tri2SkelCompUI::Tri2SkelCompUI(
+        regina::PacketOf<regina::Triangulation<2>>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
     layout->addStretch(1);
 
-    QGridLayout* grid = new QGridLayout();
+    auto* grid = new QGridLayout();
     layout->addLayout(grid);
     grid->setColumnStretch(0, 1);
     grid->setColumnMinimumWidth(2, 5);
@@ -200,26 +202,25 @@ void Tri2SkelCompUI::viewVertices() {
     // guaranteed that the window will be closed and deleted
     // automatically if the packet pane is closed.
     // Similarly for edges, triangles, etc.
-    SkeletonWindow* win = new SkeletonWindow(this, new Vertex2Model(tri));
+    auto* win = new SkeletonWindow(this, new Vertex2Model(tri));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri2SkelCompUI::viewEdges() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Edge2Model(tri));
+    auto* win = new SkeletonWindow(this, new Edge2Model(tri));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri2SkelCompUI::viewComponents() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Component2Model(tri));
+    auto* win = new SkeletonWindow(this, new Component2Model(tri));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri2SkelCompUI::viewBoundaryComponents() {
-    SkeletonWindow* win = new SkeletonWindow(this,
-        new BoundaryComponent2Model(tri));
+    auto* win = new SkeletonWindow(this, new BoundaryComponent2Model(tri));
     win->show();
     viewers.push_back(win);
 }

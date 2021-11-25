@@ -43,34 +43,31 @@
 using regina::BoundaryComponent;
 
 BoundaryComponent3Chooser::BoundaryComponent3Chooser(
-        regina::Triangulation<3>* tri,
+        regina::PacketOf<regina::Triangulation<3>>* tri,
         BoundaryComponentFilterFunc filter, QWidget* parent,
         bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     if (autoUpdate)
-        tri_->listen(this);
+        tri->listen(this);
     fill();
 }
 
 BoundaryComponent<3>* BoundaryComponent3Chooser::selected() {
     if (count() == 0)
-        return 0;
+        return nullptr;
     int curr = currentIndex();
-    return (curr < 0 ? 0 : options_[curr]);
+    return (curr < 0 ? nullptr : options_[curr]);
 }
 
 void BoundaryComponent3Chooser::select(regina::BoundaryComponent<3>* option) {
     int index = 0;
-    std::vector<regina::BoundaryComponent<3>*>::const_iterator it =
-        options_.begin();
-    while (it != options_.end()) {
-        if ((*it) == option) {
+    for (regina::BoundaryComponent<3>* bc : options_) {
+        if (bc == option) {
             setCurrentIndex(index);
             return;
         }
-        ++it;
         ++index;
     }
 
@@ -119,7 +116,7 @@ void BoundaryComponent3Chooser::fill() {
 }
 
 BoundaryComponent3Dialog::BoundaryComponent3Dialog(QWidget* parent,
-        regina::Triangulation<3>* tri,
+        regina::PacketOf<regina::Triangulation<3>>* tri,
         BoundaryComponentFilterFunc filter,
         const QString& title,
         const QString& message,
@@ -127,15 +124,15 @@ BoundaryComponent3Dialog::BoundaryComponent3Dialog(QWidget* parent,
         QDialog(parent) {
     setWindowTitle(title);
     setWhatsThis(whatsThis);
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
-    QLabel* label = new QLabel(message);
+    auto* label = new QLabel(message);
     layout->addWidget(label);
 
     chooser = new BoundaryComponent3Chooser(tri, filter, this);
     layout->addWidget(chooser);
 
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(
+    auto* buttonBox = new QDialogButtonBox(
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
@@ -144,7 +141,7 @@ BoundaryComponent3Dialog::BoundaryComponent3Dialog(QWidget* parent,
 }
 
 regina::BoundaryComponent<3>* BoundaryComponent3Dialog::choose(QWidget* parent,
-        regina::Triangulation<3>* tri,
+        regina::PacketOf<regina::Triangulation<3>>* tri,
         BoundaryComponentFilterFunc filter,
         const QString& title,
         const QString& message,
@@ -153,6 +150,6 @@ regina::BoundaryComponent<3>* BoundaryComponent3Dialog::choose(QWidget* parent,
     if (dlg.exec())
         return dlg.chooser->selected();
     else
-        return 0;
+        return nullptr;
 }
 

@@ -40,6 +40,7 @@
 #endif
 
 #include <set>
+#include <vector>
 #include "regina-core.h"
 #include "maths/integer.h"
 #include "core/output.h"
@@ -47,12 +48,11 @@
 namespace regina {
 
 template <typename, bool> class Matrix;
-typedef Matrix<Integer, true> MatrixInt;
+using MatrixInt = Matrix<Integer, true>;
 
 /**
- * \addtogroup algebra Algebraic Structures
+ * \defgroup algebra Algebraic Structures
  * Various algebraic structures.
- * @{
  */
 
 /**
@@ -73,14 +73,21 @@ typedef Matrix<Integer, true> MatrixInt;
  *
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
+ *
+ * \ingroup algebra
  */
 class AbelianGroup : public ShortOutput<AbelianGroup, true> {
     protected:
         unsigned rank_;
             /**< The rank of the group (the number of Z components). */
-        std::multiset<Integer> invariantFactors;
+        std::vector<Integer> revInvFactors_;
             /**< The invariant factors <i>d0</i>,...,<i>dn</i> as
-             *   described in the AbelianGroup notes. */
+                 described in the AbelianGroup notes.
+                 These are stored in reverse order, since addTorsion()
+                 always extends the vector on the \a d0 end.
+                 Note that we cannot use std::deque (which does support
+                 pushing to the front), since older gcc versions do not
+                 have a noexcept std::deque move constructor. */
 
     public:
         /**
@@ -108,10 +115,8 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * the matrix that one takes the kernel of when computing homology.
          * @param N the `left' matrix in the chain complex; that is, the
          * matrix that one takes the image of when computing homology.
-         *
-         * @author Ryan Budney
          */
-        AbelianGroup(const MatrixInt& M, const MatrixInt& N);
+        AbelianGroup(MatrixInt M, MatrixInt N);
         /**
          * Creates an abelian group as the homology of a chain complex,
          * using mod-\a p coefficients.
@@ -126,13 +131,11 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * @param p the modulus, which may be any Integer.
          * Zero is interpreted as a request for integer coefficents,
          * which will give the same result as the
-         * AbelianGroup(const MatrixInt&, const MatrixInt&) constructor.
+         * AbelianGroup(MatrixInt, MatrixInt) constructor.
          *
          * @author Ryan Budney
          */
-        AbelianGroup(const MatrixInt& M, const MatrixInt& N,
-            const Integer &p);
-
+        AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p);
         /**
          * Increments the rank of the group by the given integer.
          * This integer may be positive, negative or zero.
@@ -146,16 +149,34 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
         void addRank(int extraRank = 1);
         /**
          * Adds the given torsion element to the group.
-         * Note that this routine might be slow since calculating the
-         * new invariant factors is not trivial.  If many different
-         * torsion elements are to be added, consider using
-         * addTorsionElements() instead so the invariant factors need
-         * only be calculated once.
+         *
+         * As of Regina 7.0, this routine is much faster than it used to be.
+         * In particular, if you have many torsion elements to add, it is now
+         * efficient just to call addTorsion() for each new torsion element,
+         * one at a time.
+         *
+         * In this routine we add a single copy of Z_<i>d</i>, where \a d is
+         * the given degree.
+         *
+         * @param degree the degree of the new torsion element; this
+         * must be strictly positive.
+         */
+        void addTorsion(Integer degree);
+        /**
+         * Deprecated routine that adds the given torsion element to the group.
+         *
+         * As of Regina 7.0, this routine is much faster than it used to be.
+         * In particular, if you have many torsion elements to add, it is now
+         * efficient just to call addTorsion() for each new torsion element,
+         * one at a time.
          *
          * In this routine we add a specified number of copies of
          * Z_<i>d</i>, where <i>d</i> is some given degree.
          *
-         * \pre The given degree is at least 2 and the
+         * \deprecated Use addTorsion() instead, multiple times if
+         * necessary (which is exactly how this routine is implemented).
+         *
+         * \pre The given degree is strictly positive, and the
          * given multiplicity is at least 1.
          *
          * @param degree <i>d</i>, where we are adding copies of
@@ -163,19 +184,23 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * @param mult the multiplicity <i>m</i>, where we are adding
          * precisely <i>m</i> copies of <i>Z_d</i>; this defaults to 1.
          */
-        void addTorsionElement(const Integer& degree, unsigned mult = 1);
+        [[deprecated]] void addTorsionElement(const Integer& degree,
+            unsigned mult = 1);
         /**
-         * Adds the given torsion element to the group.
-         * Note that this routine might be slow since calculating the
-         * new invariant factors is not trivial.  If many different
-         * torsion elements are to be added, consider using
-         * addTorsionElements() instead so the invariant factors need
-         * only be calculated once.
+         * Deprecated routine that adds the given torsion element to the group.
+         *
+         * As of Regina 7.0, this routine is much faster than it used to be.
+         * In particular, if you have many torsion elements to add, it is now
+         * efficient just to call addTorsion() for each new torsion element,
+         * one at a time.
          *
          * In this routine we add a specified number of copies of
          * Z_<i>d</i>, where <i>d</i> is some given degree.
          *
-         * \pre The given degree is at least 2 and the
+         * \deprecated Use addTorsion() instead, multiple times if
+         * necessary (which is exactly how this routine is implemented).
+         *
+         * \pre The given degree is strictly positive, and the
          * given multiplicity is at least 1.
          *
          * @param degree <i>d</i>, where we are adding copies of
@@ -183,16 +208,20 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * @param mult the multiplicity <i>m</i>, where we are adding
          * precisely <i>m</i> copies of <i>Z_d</i>; this defaults to 1.
          */
-        void addTorsionElement(unsigned long degree, unsigned mult = 1);
+        [[deprecated]] void addTorsionElement(unsigned long degree,
+            unsigned mult = 1);
         /**
-         * Adds the given set of torsion elements to this group.
-         * Note that this routine might be slow since calculating the
-         * new invariant factors is not trivial.
+         * Deprecated routine that adds the given set of torsion elements to
+         * this group.
          *
          * The torsion elements to add are described by a list of
          * integers <i>k1</i>,...,<i>km</i>, where we are adding
          * Z_<i>k1</i>,...,Z_<i>km</i>.  Unlike invariant factors, the
          * <i>ki</i> are not required to divide each other.
+         *
+         * \deprecated This routine uses an old implementation, and it is now
+         * much faster just to add each torsion element one at a time using
+         * addTorsion().
          *
          * \pre Each integer in the given list is strictly greater than 1.
          *
@@ -201,22 +230,20 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * @param torsion a list containing the torsion elements to add,
          * as described above.
          */
-        void addTorsionElements(const std::multiset<Integer>& torsion);
+        [[deprecated]] void addTorsionElements(
+            const std::multiset<Integer>& torsion);
         /**
          * Adds the abelian group defined by the given presentation to this
-         * group.
-         * Note that this routine might be slow since calculating the
+         * group.  Note that this routine might be slow since calculating the
          * new invariant factors is not trivial.
          *
          * @param presentation a presentation matrix for the group to be
          * added to this group, where each column represents a generator
          * and each row a relation.
          */
-        void addGroup(const MatrixInt& presentation);
+        void addGroup(MatrixInt presentation);
         /**
          * Adds the given abelian group to this group.
-         * Note that this routine might be slow since calculating the
-         * new invariant factors is not trivial.
          *
          * @param group the group to add to this one.
          */
@@ -390,7 +417,8 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
         /**
          * Writes a chunk of XML containing this abelian group.
          *
-         * \ifacespython Not present.
+         * \ifacespython The argument \a out should be an open Python file
+         * object.
          *
          * @param out the output stream to which the XML should be written.
          */
@@ -406,7 +434,7 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * invariant factors of the group, as described in the
          * AbelianGroup notes.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
          * @param utf8 if \c true, then richer unicode characters will
@@ -414,26 +442,6 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * the output will use subscript digits and the blackboard bold Z.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false) const;
-
-    protected:
-        /**
-         * Replaces the torsion elements of this group with those
-         * in the abelian group represented by the given Smith normal
-         * form presentation matrix.  Any zero columns in the matrix
-         * will also be added to the rank as additional copies of Z.
-         * Note that preexisting torsion elements will be deleted, but
-         * preexisting rank will not.
-         *
-         * \pre The given matrix is in Smith normal
-         * form, with the diagonal consisting of a series of positive,
-         * non-decreasing integers followed by zeroes.
-         *
-         * @param matrix a matrix containing the Smith normal form
-         * presentation matrix for the new torsion elements,
-         * where each column represents a generator
-         * and each row a relation.
-         */
-        void replaceTorsion(const MatrixInt& matrix);
 };
 
 /**
@@ -444,10 +452,10 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
  *
  * @param lhs the group whose contents should be swapped with \a rhs.
  * @param rhs the group whose contents should be swapped with \a lhs.
+ *
+ * \ingroup algebra
  */
 void swap(AbelianGroup& lhs, AbelianGroup& rhs) noexcept;
-
-/*@}*/
 
 // Inline functions for AbelianGroup
 
@@ -456,16 +464,24 @@ inline AbelianGroup::AbelianGroup() : rank_(0) {
 
 inline void AbelianGroup::swap(AbelianGroup& other) noexcept {
     std::swap(rank_, other.rank_);
-    invariantFactors.swap(other.invariantFactors);
+    revInvFactors_.swap(other.revInvFactors_);
 }
 
 inline void AbelianGroup::addRank(int extraRank) {
     rank_ += extraRank;
 }
 
+inline void AbelianGroup::addTorsionElement(const Integer& degree,
+        unsigned mult) {
+    for ( ; mult > 0; --mult)
+        addTorsion(degree);
+}
+
 inline void AbelianGroup::addTorsionElement(unsigned long degree,
         unsigned mult) {
-    addTorsionElement(Integer(degree), mult);
+    Integer d(degree);
+    for ( ; mult > 0; --mult)
+        addTorsion(d);
 }
 
 inline unsigned AbelianGroup::rank() const {
@@ -477,39 +493,43 @@ inline unsigned AbelianGroup::torsionRank(unsigned long degree) const {
 }
 
 inline size_t AbelianGroup::countInvariantFactors() const {
-    return invariantFactors.size();
+    return revInvFactors_.size();
+}
+
+inline const Integer& AbelianGroup::invariantFactor(size_t index) const {
+    return revInvFactors_[revInvFactors_.size() - index - 1];
 }
 
 inline bool AbelianGroup::isTrivial() const {
-    return (rank_ == 0 && invariantFactors.empty());
+    return (rank_ == 0 && revInvFactors_.empty());
 }
 
 inline bool AbelianGroup::isZ() const {
-    return (rank_ == 1 && invariantFactors.empty());
+    return (rank_ == 1 && revInvFactors_.empty());
 }
 
 inline bool AbelianGroup::isFree(unsigned r) const {
-    return (rank_ == r && invariantFactors.empty());
+    return (rank_ == r && revInvFactors_.empty());
 }
 
 inline bool AbelianGroup::isZn(unsigned long n) const {
     return (n == 0 ? isZ() : n == 1 ? isTrivial() :
-        (rank_ == 0 && invariantFactors.size() == 1 &&
-            *invariantFactors.begin() == n));
+        (rank_ == 0 && revInvFactors_.size() == 1 &&
+            revInvFactors_.front() == n));
 }
 
 inline bool AbelianGroup::operator == (const AbelianGroup& other) const {
-    return (rank_ == other.rank_ && invariantFactors == other.invariantFactors);
+    return (rank_ == other.rank_ && revInvFactors_ == other.revInvFactors_);
 }
 
 inline bool AbelianGroup::operator != (const AbelianGroup& other) const {
-    return (rank_ != other.rank_ || invariantFactors != other.invariantFactors);
+    return (rank_ != other.rank_ || revInvFactors_ != other.revInvFactors_);
 }
 
 inline void AbelianGroup::tightEncode(std::ostream& out) const {
     regina::tightEncode(out, rank_);
-    for (const auto& i : invariantFactors)
-        regina::tightEncode(out, i);
+    for (auto it = revInvFactors_.rbegin(); it != revInvFactors_.rend(); ++it)
+        regina::tightEncode(out, *it);
     regina::tightEncode(out, 0);
 }
 

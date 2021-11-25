@@ -68,7 +68,7 @@ class NoSnapPea : public QLabel {
          * instance).
          */
         NoSnapPea(regina::Triangulation<3>* useTri,
-            QWidget* parent = 0, bool delayedRefresh = false);
+            QWidget* parent = nullptr, bool delayedRefresh = false);
 
         /**
          * Updates the explanation in case the triangulation (or the

@@ -86,7 +86,7 @@ class LinkGraphTest : public CppUnit::TestFixture {
         Link *adams6_28; // Figure 6.28 from Adams
 
     public:
-        void setUp() {
+        void setUp() override {
             empty = new Link();
             empty->setLabel("Empty link");
 
@@ -143,7 +143,7 @@ class LinkGraphTest : public CppUnit::TestFixture {
             adams6_28->setLabel("Adams, Figure 6.28");
         }
 
-        void tearDown() {
+        void tearDown() override {
             delete empty;
             delete unknot0;
             delete unknot1;

@@ -139,10 +139,10 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
             case PROP_BDRY:
                 if (self.packet->triangulation().isClosed())
                     tmp = (self.compact.on ? [RegularSpreadViewCell cellSizeFor:@"—"] : [RegularSpreadHeaderCell cellSizeFor:@"Bdry"]).width;
-                else // TODO: fix this when we support prism coordinates: if (! self.packet->allowsSpun())
+                else if (! self.packet->allowsNonCompact())
                     tmp = [RegularSpreadViewCell cellSizeFor:@"Real"].width;
-                // else
-                //    tmp = [RegularSpreadViewCell cellSizeFor:@"Non-compact"].width;
+                else
+                    tmp = [RegularSpreadViewCell cellSizeFor:@"Non-compact"].width;
                 break;
             case PROP_LINK:
                 tmp = [RegularSpreadViewCell cellSizeFor:@"Vertex 99"].width;
@@ -225,7 +225,7 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
     
     regina::Triangulation<3>* ans = s->triangulate();
     ans->intelligentSimplify();
-    ans->setLabel(self.packet->triangulation().adornedLabel("Hypersurface #" + std::to_string(selectedRow - 1)));
+    ans->setLabel("Hypersurface #" + std::to_string(selectedRow - 1));
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }

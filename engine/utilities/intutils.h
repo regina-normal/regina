@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "regina-config.h"
-#include <stdint.h>
+#include <cstdint>
 #include <type_traits>
 
 namespace regina {
@@ -54,11 +54,6 @@ template <int bytes>
 class NativeInteger;
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * Determines if the type \a T is one of Regina's own integer types
  * (either arbitrary precision or fixed size).
  *
@@ -67,6 +62,10 @@ class NativeInteger;
  *
  * The result will be available through the compile-time boolean constant
  * IsReginaInteger<T>::value.
+ *
+ * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 struct IsReginaInteger : public std::false_type {};
@@ -87,6 +86,10 @@ struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
  *
  * The result will be available through the compile-time boolean constant
  * IsReginaArbitraryPrecisionInteger<T>::value.
+ *
+ * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 struct IsReginaArbitraryPrecisionInteger : public std::false_type {};
@@ -118,6 +121,8 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public 
  * silently make it one).
  *
  * \apinotfinal
+ *
+ * \ingroup utilities
  */
 #define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) \
     template <typename... Args, typename Return = returnType> \
@@ -137,6 +142,8 @@ struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public 
  * \return the number of bits required to store 0,...,<i>n</i>-1.
  *
  * \tparam IntType any integer type, such as \c int, \c long, and so on.
+ *
+ * \ingroup utilities
  */
 template <typename IntType>
 constexpr int bitsRequired(IntType n) {
@@ -162,6 +169,8 @@ constexpr int bitsRequired(IntType n) {
  * \return the smallest integer power of two that is &ge; \a n.
  *
  * \tparam IntType any integer type, such as \c int, \c long, and so on.
+ *
+ * \ingroup utilities
  */
 template <typename IntType>
 constexpr IntType nextPowerOfTwo(IntType n) {
@@ -178,6 +187,8 @@ constexpr IntType nextPowerOfTwo(IntType n) {
  * \ifacespython Not present.
  *
  * @see IntOfMinSize
+ *
+ * \ingroup utilities
  */
 template <int bytes>
 struct IntOfSize {
@@ -188,7 +199,7 @@ struct IntOfSize {
      * The default is \c void, which indicates that Regina does not know
      * how to access an integer type of the requested size.
      */
-    typedef void type;
+    using type = void;
 
     /**
      * A native unsigned integer type with exactly \a k bytes, where \a k is the
@@ -197,7 +208,7 @@ struct IntOfSize {
      * The default is \c void, which indicates that Regina does not know
      * how to access an integer type of the requested size.
      */
-    typedef void utype;
+    using utype = void;
 };
 
 /**
@@ -210,6 +221,8 @@ struct IntOfSize {
  * \ifacespython Not present.
  *
  * @see IntOfSize
+ *
+ * \ingroup utilities
  */
 template <int bytes>
 struct IntOfMinSize {
@@ -220,7 +233,7 @@ struct IntOfMinSize {
      * The default is \c void, which indicates that Regina does not know
      * how to access an integer type of the requested size.
      */
-    typedef typename IntOfSize<nextPowerOfTwo(bytes)>::type type;
+    using type = typename IntOfSize<nextPowerOfTwo(bytes)>::type;
 
     /**
      * A native unsigned integer type with at least \a k bytes, where \a k is
@@ -229,7 +242,7 @@ struct IntOfMinSize {
      * The default is \c void, which indicates that Regina does not know
      * how to access an integer type of the requested size.
      */
-    typedef typename IntOfSize<nextPowerOfTwo(bytes)>::utype utype;
+    using utype = typename IntOfSize<nextPowerOfTwo(bytes)>::utype;
 };
 
 #ifdef __DOXYGEN
@@ -248,55 +261,55 @@ struct IntOfMinSize {
 #else
 template <>
 struct IntOfSize<1> {
-    typedef int8_t type;
-    typedef uint8_t utype;
+    using type = int8_t;
+    using utype = uint8_t;
 };
 
 template <>
 struct IntOfSize<2> {
-    typedef int16_t type;
-    typedef uint16_t utype;
+    using type = int16_t;
+    using utype = uint16_t;
 };
 
 template <>
 struct IntOfSize<4> {
-    typedef int32_t type;
-    typedef uint32_t utype;
+    using type = int32_t;
+    using utype = uint32_t;
 };
 
 template <>
 struct IntOfSize<8> {
-    typedef int64_t type;
-    typedef uint64_t utype;
+    using type = int64_t;
+    using utype = uint64_t;
 };
 
 #if defined(INTERNAL___INT128_FOUND)
     #define INT128_AVAILABLE
     template <>
     struct IntOfSize<16> {
-        typedef __int128 type;
-        typedef __uint128 utype;
+        using type = __int128;
+        using utype = __uint128;
     };
 #elif defined(INTERNAL___INT128_T_FOUND)
     #define INT128_AVAILABLE
     template <>
     struct IntOfSize<16> {
-        typedef __int128_t type;
-        typedef __uint128_t utype;
+        using type = __int128_t;
+        using utype = __uint128_t;
     };
 #elif defined(INTERNAL_INT128_T_FOUND)
     #define INT128_AVAILABLE
     template <>
     struct IntOfSize<16> {
-        typedef int128_t type;
-        typedef uint128_t utype;
+        using type = int128_t;
+        using utype = uint128_t;
     };
 #else
     #undef INT128_AVAILABLE
     template <>
     struct IntOfSize<16> {
-        typedef void type;
-        typedef void utype;
+        using type = void;
+        using utype = void;
     };
 #endif
 
@@ -312,6 +325,10 @@ struct IntOfSize<8> {
  * Currently this is only implemented for Regina's own integer types
  * (Integer, LargeInteger and NativeInteger).  If you attempt to use this
  * with other types (e.g., int or long), this struct will be undefined.
+ *
+ * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <typename From, typename To>
 struct FaithfulAssignment;
@@ -334,8 +351,6 @@ struct FaithfulAssignment<IntegerBase<supportInfinity>, NativeInteger<bytes>> :
     public std::false_type {};
 
 #endif // __DOXYGEN
-
-/*@}*/
 
 } // namespace regina
 

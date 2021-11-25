@@ -59,11 +59,6 @@
 namespace regina::xml {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * Returns the given string with special characters converted to XML
  * entities.  For instance, the string <tt>"a \< b"</tt> would be
  * converted to <tt>"a \&lt; b"</tt>.
@@ -72,6 +67,8 @@ namespace regina::xml {
  * changed.
  * @return the converted string with special characters replaced by
  * XML entities.
+ *
+ * \ingroup utilities
  */
 std::string xmlEncodeSpecialChars(const std::string& original);
 
@@ -84,6 +81,8 @@ std::string xmlEncodeSpecialChars(const std::string& original);
  * @param comment the string to convert; this string will not be
  * changed.
  * @return the string converted to be usable inside an XML comment.
+ *
+ * \ingroup utilities
  */
 std::string xmlEncodeComment(const std::string& comment);
 
@@ -103,6 +102,8 @@ std::string xmlEncodeComment(const std::string& comment);
  * @param tagName the name of the XML tag to create.
  * @param value the value to assign to the <i>value</i> property of the tag.
  * @return the corresponding XML tag.
+ *
+ * \ingroup utilities
  */
 template <class T>
 inline std::string xmlValueTag(const std::string& tagName, const T& value) {
@@ -124,13 +125,9 @@ inline std::string xmlValueTag(const std::string& tagName, const T& value) {
     template <>
     inline std::string xmlValueTag<BoolSet>(const std::string& tagName,
             const BoolSet& value) {
-        return '<' + tagName + " value=\"" +
-            (value.hasTrue() ? 'T' : '-') +
-            (value.hasFalse() ? 'F' : '-') + "\"/>";
+        return '<' + tagName + " value=\"" + value.stringCode() + "\"/>";
     }
 #endif
-
-/*@}*/
 
 } // namespace regina::xml
 

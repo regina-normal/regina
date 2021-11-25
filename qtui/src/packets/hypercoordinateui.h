@@ -63,16 +63,11 @@ class HyperModel : public QAbstractItemModel {
         regina::NormalHypersurfaces* surfaces_;
         regina::HyperCoords coordSystem_;
 
-        /**
-         * Internal status
-         */
-        bool isReadWrite;
-
     public:
         /**
          * Constructor and destructor.
          */
-        HyperModel(regina::NormalHypersurfaces* surfaces, bool readWrite);
+        HyperModel(regina::NormalHypersurfaces* surfaces);
 
         /**
          * Data retrieval.
@@ -87,23 +82,19 @@ class HyperModel : public QAbstractItemModel {
         void rebuildUnicode();
 
         /**
-         * Updating read/write status.
-         */
-        void setReadWrite(bool readWrite);
-
-        /**
          * Overrides for describing and editing data in the model.
          */
         QModelIndex index(int row, int column,
-                const QModelIndex& parent) const;
-        QModelIndex parent(const QModelIndex& index) const;
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+                const QModelIndex& parent) const override;
+        QModelIndex parent(const QModelIndex& index) const override;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
-        Qt::ItemFlags flags(const QModelIndex& index) const;
-        bool setData(const QModelIndex& index, const QVariant& value, int role);
+            int role) const override;
+        Qt::ItemFlags flags(const QModelIndex& index) const override;
+        bool setData(const QModelIndex& index, const QVariant& value,
+            int role) override;
 
         /**
          * Information on the property (non-coordinate) columns.
@@ -124,7 +115,7 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
          * Packet details
          */
         HyperModel* model;
-        regina::NormalHypersurfaces* surfaces;
+        regina::PacketOf<regina::NormalHypersurfaces>* surfaces;
 
         /**
          * Internal components
@@ -142,31 +133,29 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
         /**
          * Internal status
          */
-        bool isReadWrite;
         bool currentlyResizing;
 
     public:
         /**
          * Constructor and destructor.
          */
-        HyperCoordinateUI(regina::NormalHypersurfaces* packet,
-            PacketTabbedUI* useParentUI, bool readWrite);
-        ~HyperCoordinateUI();
+        HyperCoordinateUI(regina::PacketOf<regina::NormalHypersurfaces>* packet,
+            PacketTabbedUI* useParentUI);
+        ~HyperCoordinateUI() override;
 
         /**
          * PacketEditorTab overrides.
          * Note that refresh() is a slot now.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        const std::vector<QAction*>& getPacketTypeActions();
-        void setReadWrite(bool readWrite);
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        const std::vector<QAction*>& getPacketTypeActions() override;
 
     public slots:
         /**
          * More PacketEditorTab overrides.
          */
-        void refresh();
+        void refresh() override;
 
         /**
          * Hypersurface list actions.
@@ -189,11 +178,8 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
         void updatePreferences();
 };
 
-inline HyperModel::HyperModel(regina::NormalHypersurfaces* surfaces,
-        bool readWrite) :
-        surfaces_(surfaces),
-        coordSystem_(surfaces->coords()),
-        isReadWrite(readWrite) {
+inline HyperModel::HyperModel(regina::NormalHypersurfaces* surfaces) :
+        surfaces_(surfaces), coordSystem_(surfaces->coords()) {
 }
 
 inline regina::NormalHypersurfaces* HyperModel::surfaces() const {

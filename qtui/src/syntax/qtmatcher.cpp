@@ -127,7 +127,7 @@ regina::syntax::MatchResult QtMatcher::match(regina::syntax::Detect2Char& rule, 
 }
 
 
-regina::syntax::MatchResult QtMatcher::match(regina::syntax::DetectIdentifier& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::DetectIdentifier& /* rule */, int offset)
 {
     if (!m_text.at(offset).isLetter() && m_text.at(offset) != QLatin1Char('_'))
         return offset;
@@ -142,7 +142,7 @@ regina::syntax::MatchResult QtMatcher::match(regina::syntax::DetectIdentifier& r
 }
 
 
-regina::syntax::MatchResult QtMatcher::match(regina::syntax::DetectSpaces& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::DetectSpaces& /* rule */, int offset)
 {
     while(offset < m_text.size() && m_text.at(offset).isSpace())
         ++offset;
@@ -188,7 +188,7 @@ regina::syntax::MatchResult QtMatcher::match(regina::syntax::Float& rule, int of
 }
 
 
-regina::syntax::MatchResult QtMatcher::match(regina::syntax::HlCChar& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::HlCChar& /* rule */, int offset)
 {
     if (m_text.size() < offset + 3)
         return offset;
@@ -259,7 +259,7 @@ regina::syntax::MatchResult QtMatcher::match(regina::syntax::HlCOct& rule, int o
 }
 
 
-regina::syntax::MatchResult QtMatcher::match(regina::syntax::HlCStringChar& rule, int offset)
+regina::syntax::MatchResult QtMatcher::match(regina::syntax::HlCStringChar& /* rule */, int offset)
 {
     return matchEscapedChar(m_text, offset);
 }
@@ -332,7 +332,7 @@ regina::syntax::MatchResult QtMatcher::match(regina::syntax::RegExpr& rule, int 
 {
     regina::syntax::RegEx* re = rule.regex();
     if (! (re && dynamic_cast<QtRegEx*>(re))) {
-        QtRegEx* qre = new QtRegEx;
+        auto* qre = new QtRegEx;
 
         qre->setPattern(QString::fromUtf8(rule.pattern().c_str()));
         qre->setPatternOptions(

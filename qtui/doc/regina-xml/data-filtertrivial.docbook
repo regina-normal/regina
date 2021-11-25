@@ -1,0 +1,82 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-filtertrivial">
+ <refmeta>
+  <refentrytitle>filtertrivial</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>filtertrivial</refname>
+  <refpurpose>A trivial surface filter</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+filtertrivial ::= (&xml-tag;*,
+                   &packetsyn1;
+                   &packetsyn2;
+                   &packetsyn3;
+                   &packetsyn4;
+                   &packetsyn5;*)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     &packetattrlist2col;
+    </tbody>
+   </tgroup>
+  </informaltable>
+  <para>&eltaddedver;7.0</para>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   This represents a <emphasis>trivial filter packet</emphasis>,
+   one of the many types of packet that together form the
+   <emphasis>packet tree</emphasis> that a user sees when they open a
+   &regina; data file, and also one of the different types of filter
+   that users can create to refine a set of normal surfaces.
+  </para>
+  <para>
+   A <emphasis>trivial filter</emphasis> accepts every surface.
+   There is little reason to use such a filter in practice.
+  </para>
+  &packetchilddesc;
+
+  <refsect2>
+   <title>Parents</title>
+   &packetparents;
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>filtertrivial</sgmltag> has no children that are
+    specific to trivial filters.
+   </para>
+   &packetchildren;
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  &packetattrdesc;
+ </refsect1>
+</refentry>

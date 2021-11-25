@@ -44,39 +44,15 @@ Vertex link #1
 Step 1
 Step 2
 Step 3
-Step 4
 Destroying: t1
-Step 5
-Triangulation with 16 triangles
-v1
-None
+Step 4
+qvLLMvvMQegfhlnpopaabcbcaeb
 Vertex link #2
 Step 1
 Step 2
-Destroying: v1
 Step 3
 Destroying: t2
 Step 4
-Destroying: v2
-Step 5
-Vertex link detailed #1
-Step 1
-Step 2
-Step 3
-Step 4
-Destroying: t3
-Step 5
-Triangulation with 16 triangles
-v3
-None
-Vertex link detailed #2
-Step 1
-Step 2
-Destroying: v3
-Step 3
-Destroying: t4
-Step 4
-Destroying: v4
 Step 5
 Triangulation with 1 tetrahedron
 b2

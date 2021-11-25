@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/pluggedtorusbundle.h"
 #include "subcomplex/satregion.h"
 #include "subcomplex/txicore.h"
@@ -42,6 +43,8 @@ using regina::PluggedTorusBundle;
 void addPluggedTorusBundle(pybind11::module_& m) {
     pybind11::class_<PluggedTorusBundle, regina::StandardTriangulation>
             (m, "PluggedTorusBundle")
+        .def(pybind11::init<const PluggedTorusBundle&>())
+        .def("swap", &PluggedTorusBundle::swap)
         .def("bundle", &PluggedTorusBundle::bundle,
             pybind11::return_value_policy::reference)
         .def("bundleIso", &PluggedTorusBundle::bundleIso,
@@ -50,8 +53,12 @@ void addPluggedTorusBundle(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &PluggedTorusBundle::matchingReln,
             pybind11::return_value_policy::reference_internal)
-        .def_static("isPluggedTorusBundle",
-            &PluggedTorusBundle::isPluggedTorusBundle)
+        .def_static("recognise", &PluggedTorusBundle::recognise)
+        .def_static("isPluggedTorusBundle", // deprecated
+            &PluggedTorusBundle::recognise)
     ;
+
+    m.def("swap",
+        (void(*)(PluggedTorusBundle&, PluggedTorusBundle&))(regina::swap));
 }
 

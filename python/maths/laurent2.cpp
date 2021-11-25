@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/integer.h"
 #include "maths/laurent2.h"
 #include "../helpers.h"
@@ -45,6 +46,10 @@ void addLaurent2(pybind11::module_& m) {
         .def(pybind11::init<long, long>())
         .def(pybind11::init<const Laurent2<regina::Integer>&>())
         .def(pybind11::init<const Laurent2<regina::Integer>&, long, long>())
+        .def(pybind11::init([](const std::vector<
+                std::tuple<long, long, regina::Integer>>& coeffs) {
+            return new Laurent2<regina::Integer>(coeffs.begin(), coeffs.end());
+        }))
         .def("init", overload_cast<>(
             &Laurent2<regina::Integer>::init))
         .def("init", overload_cast<long, long>(
@@ -65,7 +70,7 @@ void addLaurent2(pybind11::module_& m) {
         .def("__getitem__", [](const Laurent2<regina::Integer>& p,
                 std::pair<long, long> exponents) {
             return p(exponents.first, exponents.second);
-        }, pybind11::return_value_policy::reference_internal)
+        }, pybind11::return_value_policy::copy) // to enforce constness
         .def("__setitem__", [](Laurent2<regina::Integer>& p,
                 std::pair<long, long> exponents, const regina::Integer& value) {
             p.set(exponents.first, exponents.second, value);

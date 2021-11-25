@@ -46,105 +46,234 @@
 namespace regina {
 
 /**
- * \weakgroup surfaces
- * @{
- */
-
-/**
- * An XML element reader that reads the specific details of a normal
- * surface filter.  These details are generally contained within a
- * <tt>\<filter\></tt> ... <tt>\</filter\></tt> pair.
- *
- * Generally a subclass of XMLFilterReader will be used to receive and
- * store filters that you care about.  However, if you simply wish to
- * ignore a particular filter (and all of its descendants), you can use
- * class XMLFilterReader itself for the filter(s) you wish to ignore.
- *
- * Routine filter() is used to return the filter that was read; see
- * its documentation for further notes on how the filter should be
- * constructed.
- *
- * \ifacespython Not present.
- */
-class XMLFilterReader : public XMLElementReader {
-    public:
-        /**
-         * Creates a new filter element reader.
-         */
-        XMLFilterReader();
-
-        /**
-         * Returns the newly allocated filter that has been read by
-         * this element reader.
-         *
-         * Deallocation of this new filter is not the responsibility of
-         * this class.  Once this routine gives a non-zero return value,
-         * it should continue to give the same non-zero return value
-         * from this point onwards.
-         *
-         * The default implementation returns 0.
-         *
-         * @return the filter that has been read, or 0 if filter reading
-         * is incomplete, the filter should be ignored or an error
-         * occurred.
-         */
-        virtual SurfaceFilter* filter();
-};
-
-/**
- * An XML packet reader that reads a single surface filter.
+ * An XML packet reader that reads a single surface filter using the
+ * older second-generation file format.
  * The filter type will be determined by this class and an appropriate
- * XMLFilterReader will be used to process the type-specific details.
- *
- * \pre The parent XML element reader is in fact an XMLPacketReader.
+ * subclassed filter reader will be used to process the type-specific details.
  *
  * \ifacespython Not present.
  */
-class XMLFilterPacketReader : public XMLPacketReader {
+class XMLLegacyFilterReader : public XMLPacketReader {
     private:
-        SurfaceFilter* filter_;
-            /**< The surface filter currently being read. */
-        Packet* parent_;
-            /**< The parent packet of the filter currently being read. */
+        XMLPacketReader* dataReader_;
+            /**< The subclassed filter reader responsible for reading
+                 the "real" content. */
+        std::shared_ptr<Packet> filter_;
+            /**< The filter that was read by \a dataReader_. */
 
     public:
         /**
          * Creates a new surface filter packet reader.
          *
-         * @param newParent the parent packet of the filter to be read,
-         * or 0 if this filter is to be tree matriarch.
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLFilterPacketReader(Packet* newParent, XMLTreeResolver& resolver);
+        XMLLegacyFilterReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
-        virtual Packet* packet() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
-/*@}*/
+/**
+ * An XML packet reader that reads a plain (non-subclassed) SurfaceFilter.
+ *
+ * \ifacespython Not present.
+ */
+class XMLPlainFilterReader : public XMLPacketReader {
+    private:
+        std::shared_ptr<SurfaceFilter> filter_;
+            /**< The filter currently being read. */
 
-// Inline functions for XMLFilterReader
+    public:
+        /**
+         * Creates a new surface filter packet reader.
+         *
+         * All parameters are the same as for the parent class XMLPacketReader.
+         */
+        XMLPlainFilterReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
-inline XMLFilterReader::XMLFilterReader() {
+        std::shared_ptr<Packet> packetToCommit() override;
+};
+
+/**
+ * An XML packet reader that reads a single SurfaceFilterCombination filter.
+ *
+ * \ifacespython Not present.
+ */
+class XMLCombinationFilterReader : public XMLPacketReader {
+    private:
+        std::shared_ptr<SurfaceFilterCombination> filter_;
+            /**< The filter currently being read. */
+
+    public:
+        /**
+         * Creates a new surface filter packet reader.
+         *
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
+         * @param props the attributes of the \c surfaces XML element.
+         */
+        XMLCombinationFilterReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, const regina::xml::XMLPropertyDict& props);
+
+        std::shared_ptr<Packet> packetToCommit() override;
+};
+
+/**
+ * An XML packet reader that reads a single SurfaceFilterCombination filter
+ * using the older second-generation file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacyCombinationFilterReader : public XMLPacketReader {
+    private:
+        std::shared_ptr<SurfaceFilterCombination> filter_;
+            /**< The filter currently being read. */
+
+    public:
+        /**
+         * Creates a new surface filter packet reader.
+         *
+         * All parameters are the same as for the parent class XMLPacketReader.
+         */
+        XMLLegacyCombinationFilterReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
+
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
+                const regina::xml::XMLPropertyDict& props) override;
+};
+
+/**
+ * An XML packet reader that reads a single SurfaceFilterProperties filter.
+ *
+ * \ifacespython Not present.
+ */
+class XMLPropertiesFilterReader : public XMLPacketReader {
+    private:
+        std::shared_ptr<SurfaceFilterProperties> filter_;
+            /**< The filter currently being read. */
+
+    public:
+        /**
+         * Creates a new surface filter packet reader.
+         *
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
+         * @param props the attributes of the \c surfaces XML element.
+         */
+        XMLPropertiesFilterReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, const regina::xml::XMLPropertyDict& props);
+
+        std::shared_ptr<Packet> packetToCommit() override;
+};
+
+/**
+ * An XML packet reader that reads a single SurfaceFilterProperties filter
+ * using the older second-generation file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacyPropertiesFilterReader : public XMLPacketReader {
+    private:
+        std::shared_ptr<SurfaceFilterProperties> filter_;
+            /**< The filter currently being read. */
+
+    public:
+        /**
+         * Creates a new surface filter packet reader.
+         *
+         * All parameters are the same as for the parent class XMLPacketReader.
+         */
+        XMLLegacyPropertiesFilterReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
+
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
+                const regina::xml::XMLPropertyDict& props) override;
+        void endContentSubElement(const std::string& subTagName,
+                XMLElementReader* subReader) override;
+};
+
+// Inline functions for XMLLegacyFilterReader
+
+inline XMLLegacyFilterReader::XMLLegacyFilterReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        filter_(nullptr) {
 }
 
-inline SurfaceFilter* XMLFilterReader::filter() {
-    return 0;
+inline std::shared_ptr<Packet> XMLLegacyFilterReader::packetToCommit() {
+    return filter_;
 }
 
-// Inline functions for XMLFilterPacketReader
+// Inline functions for XMLPlainFilterReader:
 
-inline XMLFilterPacketReader::XMLFilterPacketReader(Packet* newParent,
-        XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), filter_(0), parent_(newParent) {
+inline XMLPlainFilterReader::XMLPlainFilterReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        filter_(new SurfaceFilterProperties()) {
 }
 
-inline Packet* XMLFilterPacketReader::packet() {
+inline std::shared_ptr<Packet> XMLPlainFilterReader::packetToCommit() {
+    return filter_;
+}
+
+// Inline functions for XMLCombinationFilterReader:
+
+inline std::shared_ptr<Packet> XMLCombinationFilterReader::packetToCommit() {
+    return filter_;
+}
+
+// Inline functions for XMLLegacyCombinationFilterReader:
+
+inline XMLLegacyCombinationFilterReader::XMLLegacyCombinationFilterReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        filter_(nullptr) {
+}
+
+inline std::shared_ptr<Packet>
+        XMLLegacyCombinationFilterReader::packetToCommit() {
+    return filter_;
+}
+
+// Inline functions for XMLPropertiesFilterReader:
+
+inline std::shared_ptr<Packet> XMLPropertiesFilterReader::packetToCommit() {
+    return filter_;
+}
+
+// Inline functions for XMLLegacyPropertiesFilterReader:
+
+inline XMLLegacyPropertiesFilterReader::XMLLegacyPropertiesFilterReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        filter_(new SurfaceFilterProperties()) {
+}
+
+inline std::shared_ptr<Packet>
+        XMLLegacyPropertiesFilterReader::packetToCommit() {
     return filter_;
 }
 

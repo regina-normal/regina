@@ -48,11 +48,6 @@ namespace regina {
 class FacePair;
 
 /**
- * \weakgroup triangulation
- * @{
- */
-
-/**
  * Represents the dual graph of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic FacetPairing class template;
@@ -61,17 +56,32 @@ class FacePair;
  * This 3-dimensional specialisation contains some extra functionality.
  * In particular, it provides routines for finding informative subgraphs
  * within the dual graph.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
+ * \ingroup triangulation
  */
 template <>
 class FacetPairing<3> : public detail::FacetPairingBase<3> {
     public:
         /**
-         * Creates a new face pairing that is a clone of the given face
-         * pairing.
+         * Creates a new copy of the given face pairing.
          *
-         * @param cloneMe the face pairing to clone.
+         * @param src the face pairing to clone.
          */
-        FacetPairing(const FacetPairing& cloneMe);
+        FacetPairing(const FacetPairing& src) = default;
+
+        /**
+         * Moves the given face pairing into this face pairing.
+         * This is a fast (constant time) operation.
+         *
+         * The face pairing that is passed (\a src) will no longer be usable.
+         *
+         * @param src the face pairing to move.
+         */
+        FacetPairing(FacetPairing&& src) noexcept = default;
 
         /**
          * Creates the face pairing of the given 3-manifold triangulation.
@@ -84,6 +94,58 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * constructed.
          */
         FacetPairing(const Triangulation<3>& tri);
+
+        /**
+         * Reads a new facet pairing from the given input stream.  This
+         * routine reads data in the format written by toTextRep().
+         *
+         * This routine will skip any initial whitespace in the given input
+         * stream.  Once it finds its first non-whitespace character,
+         * it will read the \e entire line from the input stream and expect
+         * that line to containin the text representation of a facet pairing.
+         *
+         * If the data found in the input stream is invalid, incomplete or
+         * incorrectly formatted, this constructor will throw an InvalidInput
+         * exception.
+         *
+         * \ifacespython Not present; instead you can use fromTextRep(), which
+         * reads this same text format in string form.  The main differences
+         * between this constructor and fromTextRep() are: (i) fromTextRep()
+         * does not skip over initial whitespace; and (ii) fromTextRep()
+         * throws InvalidArgument exceptions on error (not InvalidInput).
+         *
+         * @param in the input stream from which to read.
+         */
+        FacetPairing(std::istream& in);
+
+        /**
+         * Copies the given face pairing into this face pairing.
+         *
+         * It does not matter if this and the given face pairing use
+         * different numbers of tetrahedra; if they do then this
+         * face pairing will be resized accordingly.
+         *
+         * This operator induces a deep copy of \a src.
+         *
+         * @param src the facet pairing to copy.
+         * @return a reference to this face pairing.
+         */
+        FacetPairing& operator = (const FacetPairing& src) = default;
+
+        /**
+         * Moves the given face pairing into this facet pairing.
+         * This is a fast (constant time) operation.
+         *
+         * It does not matter if this and the given face pairing use
+         * different numbers of tetrahedra; if they do then this
+         * face pairing will be resized accordingly.
+         *
+         * The face pairing that is passed (\a src) will no longer be usable.
+         *
+         * @param src the face pairing to move.
+         * @return a reference to this face pairing.
+         */
+        FacetPairing& operator = (FacetPairing&& src) noexcept = default;
 
         /**
          * Follows a chain as far as possible from the given point.
@@ -507,16 +569,14 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
     friend class detail::FacetPairingBase<3>;
 };
 
-/*@}*/
-
 // Inline functions for FacetPairing<3>
-
-inline FacetPairing<3>::FacetPairing(const FacetPairing& cloneMe) :
-        detail::FacetPairingBase<3>(cloneMe) {
-}
 
 inline FacetPairing<3>::FacetPairing(const Triangulation<3>& tri) :
         detail::FacetPairingBase<3>(tri) {
+}
+
+inline FacetPairing<3>::FacetPairing(std::istream& in) :
+        detail::FacetPairingBase<3>(in) {
 }
 
 inline FacetPairing<3>::FacetPairing(size_t size) :

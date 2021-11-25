@@ -76,9 +76,10 @@ class Tri2Creator : public PacketCreator {
         /**
          * PacketCreator overrides.
          */
-        QWidget* getInterface();
-        regina::Packet* createPacket(regina::Packet* parentPacket,
-            QWidget* parentWidget);
+        QWidget* getInterface() override;
+        std::shared_ptr<regina::Packet> createPacket(
+            std::shared_ptr<regina::Packet> parentPacket,
+            QWidget* parentWidget) override;
 };
 
 #endif

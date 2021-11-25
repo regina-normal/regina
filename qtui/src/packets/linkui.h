@@ -66,15 +66,16 @@ class LinkUI : public PacketTabbedUI {
         /**
          * Constructor and destructor.
          */
-        LinkUI(regina::Link* packet, PacketPane* newEnclosingPane);
-        ~LinkUI();
+        LinkUI(regina::PacketOf<regina::Link>* packet,
+            PacketPane* newEnclosingPane);
+        ~LinkUI() override;
 
         /**
          * PacketUI overrides.
          */
-        PacketEditIface* getEditIface();
-        const std::vector<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
+        PacketEditIface* getEditIface() override;
+        const std::vector<QAction*>& getPacketTypeActions() override;
+        QString getPacketMenuText() const override;
 };
 
 /**
@@ -85,7 +86,7 @@ class LinkHeaderUI : public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Link* link;
+        regina::PacketOf<regina::Link>* link;
 
         /**
          * Internal components
@@ -98,7 +99,8 @@ class LinkHeaderUI : public PacketViewerTab {
         /**
          * Constructor.
          */
-        LinkHeaderUI(regina::Link* packet, PacketTabbedUI* useParentUI);
+        LinkHeaderUI(regina::PacketOf<regina::Link>* packet,
+            PacketTabbedUI* useParentUI);
 
         /**
          * Component queries.
@@ -108,14 +110,14 @@ class LinkHeaderUI : public PacketViewerTab {
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
         /**
          * Allow other UIs to access the summary information.
          */
-        static QString summaryInfo(regina::Link* tri);
+        static QString summaryInfo(const regina::Link& link);
 };
 
 inline PacketEditIface* LinkUI::getEditIface() {

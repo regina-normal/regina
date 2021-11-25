@@ -43,34 +43,25 @@ void addComponent4(pybind11::module_& m) {
         .def("index", &Component<4>::index)
         .def("size", &Component<4>::size)
         .def("countPentachora", &Component<4>::countPentachora)
-        .def("countFaces", &regina::python::countFaces<Component<4>, 4>)
+        .def("countFaces", &regina::python::countFaces<Component<4>, 4, 4>)
         .def("countTetrahedra", &Component<4>::countTetrahedra)
         .def("countTriangles", &Component<4>::countTriangles)
         .def("countEdges", &Component<4>::countEdges)
         .def("countVertices", &Component<4>::countVertices)
         .def("countBoundaryComponents", &Component<4>::countBoundaryComponents)
-        .def("simplices", &Component<4>::simplices,
-            pybind11::return_value_policy::reference)
-        .def("pentachora", &Component<4>::pentachora,
-            pybind11::return_value_policy::reference)
-        .def("faces", &regina::python::faces<Component<4>, 4,
-            pybind11::return_value_policy::reference>)
-        .def("vertices", &Component<4>::vertices,
-            pybind11::return_value_policy::reference)
-        .def("edges", &Component<4>::edges,
-            pybind11::return_value_policy::reference)
-        .def("triangles", &Component<4>::triangles,
-            pybind11::return_value_policy::reference)
-        .def("tetrahedra", &Component<4>::tetrahedra,
-            pybind11::return_value_policy::reference)
-        .def("boundaryComponents", &Component<4>::boundaryComponents,
-            pybind11::return_value_policy::reference)
+        .def("simplices", &Component<4>::simplices)
+        .def("pentachora", &Component<4>::pentachora)
+        .def("faces", &regina::python::faces<Component<4>, 4>)
+        .def("vertices", &Component<4>::vertices)
+        .def("edges", &Component<4>::edges)
+        .def("triangles", &Component<4>::triangles)
+        .def("tetrahedra", &Component<4>::tetrahedra)
+        .def("boundaryComponents", &Component<4>::boundaryComponents)
         .def("simplex", &Component<4>::simplex,
             pybind11::return_value_policy::reference)
         .def("pentachoron", &Component<4>::pentachoron,
             pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Component<4>, 4, size_t,
-            pybind11::return_value_policy::reference>)
+        .def("face", &regina::python::face<Component<4>, 4, size_t>)
         .def("tetrahedron", &Component<4>::tetrahedron,
             pybind11::return_value_policy::reference)
         .def("triangle", &Component<4>::triangle,
@@ -89,14 +80,16 @@ void addComponent4(pybind11::module_& m) {
         .def("hasBoundaryTetrahedra", &Component<4>::hasBoundaryTetrahedra)
         .def("countBoundaryFacets", &Component<4>::countBoundaryFacets)
         .def("countBoundaryTetrahedra", &Component<4>::countBoundaryTetrahedra)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Component<4>::dimension;
-        })
+        .def_readonly_static("dimension", &Component<4>::dimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    // No need for lower-dimensional faces here, since these reuse the same
+    // ListView classes as Triangulation2.
+    regina::python::addListView<
+        decltype(std::declval<Component<4>>().pentachora())>(m);
+    regina::python::addListView<
+        decltype(std::declval<Component<4>>().boundaryComponents())>(m);
 }
 

@@ -54,7 +54,7 @@ template <int dim>
 TreeDecomposition::TreeDecomposition(
         const Triangulation<dim>& triangulation,
         TreeDecompositionAlg alg) :
-        width_(0), root_(0) {
+        width_(0), root_(nullptr) {
     Graph g(triangulation.size());
 
     int i, j;
@@ -73,7 +73,7 @@ template <int dim>
 TreeDecomposition::TreeDecomposition(
         const FacetPairing<dim>& pairing,
         TreeDecompositionAlg alg) :
-        width_(0), root_(0) {
+        width_(0), root_(nullptr) {
     Graph g(pairing.size());
 
     int i, j;
@@ -81,20 +81,6 @@ TreeDecomposition::TreeDecomposition(
         for (j = 0; j <= dim; ++j)
             if (! pairing.isUnmatched(i, j))
                 g.adj_[i][pairing.dest(i, j).simp] = true;
-
-    construct(g, alg);
-}
-
-template <typename T>
-TreeDecomposition::TreeDecomposition(unsigned order, T const** graph,
-        TreeDecompositionAlg alg) :
-        width_(0), root_(0) {
-    Graph g(order);
-
-    int i, j;
-    for (i = 0; i < order; ++i)
-        for (j = 0; j < order; ++j)
-            g.adj_[i][j] = graph[i][j] || graph[j][i];
 
     construct(g, alg);
 }
@@ -108,7 +94,7 @@ void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
     const TreeBag *b, *c;
 
     // Cost = (max cost of any tree edge, number of times that cost appears)
-    typedef std::pair<T, int> Cost;
+    using Cost = std::pair<T, int>;
 
     // For each bag, work out the maximum cost of all links *below* that
     // bag if the root is located at or *above* that bag.
@@ -180,11 +166,13 @@ void TreeDecomposition::reroot(const T* costSame, const T* costReverse,
         else if (maxAbove[b->index()].first == maxBelow[b->index()].first)
             maxBelow[b->index()].second += maxAbove[b->index()].second;
 
-        if (costRoot && costRoot[b->index()] > maxBelow[b->index()].first) {
-            maxBelow[b->index()].first = costRoot[b->index()];
-            maxBelow[b->index()].second = 1;
-        } else if (costRoot[b->index()] == maxBelow[b->index()].first)
-            ++maxBelow[b->index()].second;
+        if (costRoot) {
+            if (costRoot[b->index()] > maxBelow[b->index()].first) {
+                maxBelow[b->index()].first = costRoot[b->index()];
+                maxBelow[b->index()].second = 1;
+            } else if (costRoot[b->index()] == maxBelow[b->index()].first)
+                ++maxBelow[b->index()].second;
+        }
 
         /*
         std::cerr << "Bag " << b->index() << ": "

@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>allowtaut</refname>
-  <refpurpose>Deprecated: see &xml-spantaut;</refpurpose>
+  <refpurpose>Replaced by &xml-spantaut;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,6 +40,7 @@ allowtaut ::=</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;4.90</para>
  </refsynopsisdiv>
 
  <refsect1>

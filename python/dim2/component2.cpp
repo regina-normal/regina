@@ -43,28 +43,21 @@ void addComponent2(pybind11::module_& m) {
         .def("index", &Component<2>::index)
         .def("size", &Component<2>::size)
         .def("countTriangles", &Component<2>::countTriangles)
-        .def("countFaces", &regina::python::countFaces<Component<2>, 2>)
+        .def("countFaces", &regina::python::countFaces<Component<2>, 2, 2>)
         .def("countEdges", &Component<2>::countEdges)
         .def("countVertices", &Component<2>::countVertices)
         .def("countBoundaryComponents", &Component<2>::countBoundaryComponents)
-        .def("simplices", &Component<2>::simplices,
-            pybind11::return_value_policy::reference)
-        .def("triangles", &Component<2>::triangles,
-            pybind11::return_value_policy::reference)
-        .def("faces", &regina::python::faces<Component<2>, 2,
-            pybind11::return_value_policy::reference>)
-        .def("vertices", &Component<2>::vertices,
-            pybind11::return_value_policy::reference)
-        .def("edges", &Component<2>::edges,
-            pybind11::return_value_policy::reference)
-        .def("boundaryComponents", &Component<2>::boundaryComponents,
-            pybind11::return_value_policy::reference)
+        .def("simplices", &Component<2>::simplices)
+        .def("triangles", &Component<2>::triangles)
+        .def("faces", &regina::python::faces<Component<2>, 2>)
+        .def("vertices", &Component<2>::vertices)
+        .def("edges", &Component<2>::edges)
+        .def("boundaryComponents", &Component<2>::boundaryComponents)
         .def("triangle", &Component<2>::triangle,
             pybind11::return_value_policy::reference)
         .def("simplex", &Component<2>::simplex,
             pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Component<2>, 2, size_t,
-            pybind11::return_value_policy::reference>)
+        .def("face", &regina::python::face<Component<2>, 2, size_t>)
         .def("edge", &Component<2>::edge,
             pybind11::return_value_policy::reference)
         .def("vertex", &Component<2>::vertex,
@@ -78,14 +71,16 @@ void addComponent2(pybind11::module_& m) {
         .def("hasBoundaryEdges", &Component<2>::hasBoundaryEdges)
         .def("countBoundaryFacets", &Component<2>::countBoundaryFacets)
         .def("countBoundaryEdges", &Component<2>::countBoundaryEdges)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Component<2>::dimension;
-        })
+        .def_readonly_static("dimension", &Component<2>::dimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    // No need for lower-dimensional faces here, since these reuse the same
+    // ListView classes as Triangulation2.
+    regina::python::addListView<
+        decltype(std::declval<Component<2>>().triangles())>(m);
+    regina::python::addListView<
+        decltype(std::declval<Component<2>>().boundaryComponents())>(m);
 }
 

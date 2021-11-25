@@ -38,7 +38,6 @@
 #define __REGINAMAIN_H_
 
 #include "packet/packet.h"
-#include "utilities/safeptr.h"
 #include "pythonmanager.h"
 #include "reginaprefset.h"
 #include "reginaabout.h"
@@ -86,12 +85,8 @@ class ReginaMain : public QMainWindow {
         /**
          * Current data file
          */
-        regina::SafePtr<regina::Packet> packetTree;
-            /**< The current working packet tree.
-                 We keep this as a SafePtr so that python consoles are
-                 not holding the only safe pointers to the root packet
-                 (and therefore python consoles do not have the side-effect
-                 of deleting the root packet when they close). */
+        std::shared_ptr<regina::Packet> packetTree;
+            /**< The current working packet tree. */
         QString localFile;
             /**< Current filename, or null if we don't have one (or if we are
                  trying to hide it from the user, e.g., for census data). */
@@ -163,7 +158,7 @@ class ReginaMain : public QMainWindow {
          * Constructors and destructors.
          */
         ReginaMain(ReginaManager *useManager, bool starterWindow);
-        virtual ~ReginaMain();
+        ~ReginaMain() override;
 
         /**
          * Plug in a new packet specific menu
@@ -194,13 +189,13 @@ class ReginaMain : public QMainWindow {
         /**
          * Allow access to the packet tree that this window manages.
          */
-        regina::Packet* getPacketTree();
+        std::shared_ptr<regina::Packet> getPacketTree();
 
         /**
          * Return the currently selected packet in the packet tree,
-         * or 0 if nothing is selected.
+         * or null if nothing is selected.
          */
-        regina::Packet* selectedPacket();
+        std::shared_ptr<regina::Packet> selectedPacket();
 
         /**
          * Indicate that the file is dirty.
@@ -210,13 +205,13 @@ class ReginaMain : public QMainWindow {
         /**
          * View the given packet.
          */
-        void packetView(regina::Packet*, bool makeVisibleInTree = true,
-            bool selectInTree = false);
+        void packetView(std::shared_ptr<regina::Packet> packet,
+            bool makeVisibleInTree = true, bool selectInTree = false);
 
         /**
          * Ensure that the given packet is visible in the packet tree.
          */
-        void ensureVisibleInTree(regina::Packet* packet);
+        void ensureVisibleInTree(std::shared_ptr<regina::Packet> packet);
 
         /**
          * Handles the deregistration of a packet pane from the list of
@@ -234,23 +229,23 @@ class ReginaMain : public QMainWindow {
         /**
          * Overridden for drag-and-drop implementation.
          */
-        virtual void dragEnterEvent(QDragEnterEvent *event);
-        virtual void dropEvent(QDropEvent *event);
+        void dragEnterEvent(QDragEnterEvent *event) override;
+        void dropEvent(QDropEvent *event) override;
 
         /**
          * Overridden to handle window closing.
          */
-        virtual void closeEvent(QCloseEvent *event);
+        void closeEvent(QCloseEvent *event) override;
 
         /**
          * Qt override to set preferred size of the window.
          */
-        virtual QSize sizeHint() const;
+        QSize sizeHint() const override;
 
         /**
          * Qt override to allow postponing actions.
          */
-        void customEvent(QEvent* evt);
+        void customEvent(QEvent* evt) override;
 
     public slots:
         /**
@@ -299,12 +294,12 @@ class ReginaMain : public QMainWindow {
          * New packet routines.
          */
         void newAngleStructures();
+        void newAttachment();
         void newContainer();
         void newFilter();
         void newLink();
         void newNormalSurfaces();
         void newNormalHypersurfaces();
-        void newPDF();
         void newSnapPeaTriangulation();
         void newScript();
         void newText();
@@ -315,12 +310,12 @@ class ReginaMain : public QMainWindow {
         /**
          * Packet import routines.
          */
+        void importAttachment();
         void importDehydration();
         void importIsoSig2();
         void importIsoSig3();
         void importIsoSig4();
         void importKnotSig();
-        void importPDF();
         void importPython();
         void importRegina();
         void importSnapPea();
@@ -329,8 +324,8 @@ class ReginaMain : public QMainWindow {
         /**
          * Packet export routines.
          */
+        void exportAttachment();
         void exportCSVSurfaceList();
-        void exportPDF();
         void exportPython();
         void exportRecogniser();
         void exportRegina();
@@ -404,8 +399,8 @@ class ReginaMain : public QMainWindow {
          * visible to the user.  These routines guarantee that the root
          * packet will not be returned.
          */
-        regina::Packet* checkPacketSelected();
-        regina::Packet* checkSubtreeSelected();
+        std::shared_ptr<regina::Packet> checkPacketSelected();
+        std::shared_ptr<regina::Packet> checkSubtreeSelected();
 
         /**
          * Generic packet operations.
@@ -421,9 +416,8 @@ class ReginaMain : public QMainWindow {
         /**
          * Open, save and rename files.
          */
-        bool initData(regina::Packet* usePacketTree,
-            const QString& useLocalFilename,
-            const QString& useDisplayName);
+        bool initData(std::shared_ptr<regina::Packet> usePacketTree,
+            QString useLocalFilename, QString useDisplayName);
         bool saveFile();
         void renameWindow(const QString& newName);
 
@@ -438,8 +432,8 @@ inline PythonManager& ReginaMain::getPythonManager() {
     return consoles;
 }
 
-inline regina::Packet* ReginaMain::getPacketTree() {
-    return packetTree.get();
+inline std::shared_ptr<regina::Packet> ReginaMain::getPacketTree() {
+    return packetTree;
 }
 
 inline QMenu* ReginaMain::getWindowMenu() {

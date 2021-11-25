@@ -39,16 +39,12 @@
 #define __REGINA_XMLSURFACEREADER_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "file/xml/xmlpacketreader.h"
 #include "surfaces/normalsurfaces.h"
 
 namespace regina {
-
-/**
- * \weakgroup surfaces
- * @{
- */
 
 /**
  * An XML element reader that reads a single normal surface.
@@ -57,100 +53,140 @@ namespace regina {
  */
 class XMLNormalSurfaceReader : public XMLElementReader {
     private:
-        NormalSurface* surface_;
+        std::optional<NormalSurface> surface_;
             /**< The normal surface currently being read. */
-        const Triangulation<3>* tri;
+        SnapshotRef<Triangulation<3>> tri_;
             /**< The triangulation in which this surface lives. */
-        NormalCoords coords;
+        NormalCoords coords_;
             /**< The coordinate system used by this surface. */
-        long vecLen;
-            /**< The length of corresponding normal surface vector. */
-        std::string name;
+        int vecEnc_;
+            /**< The integer encoding used for the normal surface vector,
+                 or 0 if this is unknown. */
+        long vecLen_;
+            /**< The length of the normal surface vector, or -1 if this
+                 is unknown (since 0 is a valid vector length). */
+        std::string name_;
             /**< The optional name associated with this normal surface. */
 
     public:
         /**
          * Creates a new normal surface reader.
          *
-         * @param newTri the triangulation in which this normal surface lives.
-         * @param newCoords the coordinate system used by this normal surface.
+         * @param tri the triangulation in which this normal surface lives.
+         * @param coords the coordinate system used by this normal surface.
          */
-        XMLNormalSurfaceReader(const Triangulation<3>* newTri,
-            NormalCoords newCoords);
+        XMLNormalSurfaceReader(const SnapshotRef<Triangulation<3>>& tri,
+            NormalCoords coords);
 
         /**
-         * Returns the normal surface that has been read.
+         * Returns a reference to the normal surface that has been read.
          *
-         * @return the newly allocated normal surface, or 0 if an error
-         * occurred.
+         * @return the normal surface, or no value if an error occurred.
          */
-        NormalSurface* surface();
+        std::optional<NormalSurface>& surface();
 
-        virtual void startElement(const std::string& tagName,
+        void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
             XMLElementReader* parentReader) override;
-        virtual void initialChars(const std::string& chars) override;
-        virtual XMLElementReader* startSubElement(
-            const std::string& subTagName,
+        void initialChars(const std::string& chars) override;
+        XMLElementReader* startSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
 };
 
 /**
  * An XML packet reader that reads a single normal surface list.
  *
- * \pre The parent XML element reader is in fact an
- * XMLTriangulationReader<3>.
- *
  * \ifacespython Not present.
  */
 class XMLNormalSurfacesReader : public XMLPacketReader {
     private:
-        NormalSurfaces* list;
+        std::shared_ptr<PacketOf<NormalSurfaces>> list_;
             /**< The normal surface list currently being read. */
-        const Triangulation<3>* tri;
+        const Triangulation<3>* tri_;
             /**< The triangulation in which these normal surfaces live. */
 
     public:
         /**
          * Creates a new normal surface list reader.
          *
-         * @param newTri the triangulation in which these normal surfaces live.
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
+         * @param props the attributes of the \c surfaces XML element.
          */
-        XMLNormalSurfacesReader(const Triangulation<3>* newTri,
-            XMLTreeResolver& resolver);
+        XMLNormalSurfacesReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, const regina::xml::XMLPropertyDict& props);
 
-        virtual Packet* packet() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
-/*@}*/
+/**
+ * An XML packet reader that reads a single normal surface list using
+ * the older second-generation file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacyNormalSurfacesReader : public XMLPacketReader {
+    private:
+        std::shared_ptr<PacketOf<NormalSurfaces>> list_;
+            /**< The normal surface list currently being read. */
+        const Triangulation<3>& tri_;
+            /**< The triangulation in which these normal surfaces live. */
+
+    public:
+        /**
+         * Creates a new normal surface list reader.
+         *
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
+         * @param tri the triangulation in which these normal surfaces live.
+         */
+        XMLLegacyNormalSurfacesReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, const Triangulation<3>& tri);
+
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
+            const regina::xml::XMLPropertyDict& subTagProps) override;
+        void endContentSubElement(const std::string& subTagName,
+            XMLElementReader* subReader) override;
+};
 
 // Inline functions for XMLNormalSurfaceReader
 
 inline XMLNormalSurfaceReader::XMLNormalSurfaceReader(
-        const Triangulation<3>* newTri, NormalCoords newCoords) :
-        surface_(0), tri(newTri), coords(newCoords), vecLen(-1) {
+        const SnapshotRef<Triangulation<3>>& tri, NormalCoords coords) :
+        tri_(tri), coords_(coords), vecLen_(-1), vecEnc_(0) {
 }
 
-inline NormalSurface* XMLNormalSurfaceReader::surface() {
+inline std::optional<NormalSurface>& XMLNormalSurfaceReader::surface() {
     return surface_;
 }
 
 // Inline functions for XMLNormalSurfacesReader
 
-inline XMLNormalSurfacesReader::XMLNormalSurfacesReader(
-        const Triangulation<3>* newTri, XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), list(0), tri(newTri) {
+inline std::shared_ptr<Packet> XMLNormalSurfacesReader::packetToCommit() {
+    return list_;
 }
 
-inline Packet* XMLNormalSurfacesReader::packet() {
-    return list;
+// Inline functions for XMLLegacyNormalSurfacesReader
+
+inline XMLLegacyNormalSurfacesReader::XMLLegacyNormalSurfacesReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id, const Triangulation<3>& tri) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        list_(nullptr), tri_(tri) {
+}
+
+inline std::shared_ptr<Packet> XMLLegacyNormalSurfacesReader::packetToCommit() {
+    return list_;
 }
 
 } // namespace regina

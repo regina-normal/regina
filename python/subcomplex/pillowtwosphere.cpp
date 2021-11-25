@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/pillowtwosphere.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -39,12 +40,16 @@ using regina::PillowTwoSphere;
 
 void addPillowTwoSphere(pybind11::module_& m) {
     auto c = pybind11::class_<PillowTwoSphere>(m, "PillowTwoSphere")
-        .def("clone", &PillowTwoSphere::clone)
+        .def(pybind11::init<const PillowTwoSphere&>())
+        .def("clone", [](const PillowTwoSphere& s) { // deprecated
+            return PillowTwoSphere(s);
+        })
         .def("triangle", &PillowTwoSphere::triangle,
             pybind11::return_value_policy::reference)
         .def("triangleMapping", &PillowTwoSphere::triangleMapping)
-        .def_static("formsPillowTwoSphere",
-            &PillowTwoSphere::formsPillowTwoSphere)
+        .def_static("recognise", &PillowTwoSphere::recognise)
+        .def_static("formsPillowTwoSphere", // deprecated
+            &PillowTwoSphere::recognise)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

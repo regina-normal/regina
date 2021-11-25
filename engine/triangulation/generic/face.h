@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup generic
- * @{
- */
-
-/**
  * Details how a <i>subdim</i>-face of a <i>dim</i>-dimensional triangulation
  * appears within each top-dimensional simplex.
  *
@@ -67,11 +62,23 @@ namespace regina {
  * FaceEmbedding objects correspond to the top-dimensional simplices of the
  * link of \a F (which is a (\a dim - \a subdim - 1)-dimensional triangulation).
  *
+ * As of Regina 7.0, a FaceEmbedding can happily outlive its face - even if the
+ * underlying Face object is destroyed (e.g., because the triangulation
+ * changed), if you made a local copy of a FaceEmbedding beforehand then its
+ * simplex(), face() and vertices() routines will continue to return the same
+ * values as they did before, back when the underlying Face still existed.
+ * A FaceEmbedding cannot, however, outlive its top-dimensional simplex,
+ * because internally a FaceEmbedding references the Simplex object in which
+ * it lives (i.e., it does not just store an integer simplex index).
+ *
  * If \a dim is one of Regina's \ref stddim "standard dimensions", then
  * this template is specialised to offer additional dimension-specific aliases.
  * In order to use these specialised classes, you will need to include the
  * corresponding triangulation headers (e.g., triangulation/dim2.h for
  * \a dim = 2, or triangulation/dim3.h for \a dim = 3).
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
  *
  * \ifacespython Python does not support templates.  Instead this class
  * can be used by appending dimensions \a dim and \a subdim as suffices
@@ -83,6 +90,8 @@ namespace regina {
  * This must be between 0 and <i>dim</i>-1 inclusive.
  *
  * \headerfile triangulation/generic.h
+ *
+ * \ingroup generic
  */
 template <int dim, int subdim>
 class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
@@ -91,7 +100,8 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
          * Default constructor.  This object is unusable until it has
          * some data assigned to it using <tt>operator =</tt>.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, since the C++ assignment operators
+         * are not accessible to Python.
          */
         FaceEmbedding() = default;
 
@@ -100,11 +110,12 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
          *
          * @param simplex the top-dimensional simplex in which the
          * underlying <i>subdim</i>-face of the triangulation is contained.
-         * @param face the corresponding face number of \a simplex.
-         * This must be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
-         * inclusive.
+         * @param vertices a mapping from the vertices of the underlying
+         * <i>subdim</i>-face of the triangulation to the corresponding
+         * vertex numbers of \a simplex.  See FaceEmbeddingBase::vertices()
+         * for details of how this permutation should be structured.
          */
-        FaceEmbedding(Simplex<dim>* simplex, int face);
+        FaceEmbedding(Simplex<dim>* simplex, Perm<dim + 1> vertices);
 
         /**
          * Creates a new copy of the given object.
@@ -119,6 +130,18 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
          * @param cloneMe the object to copy.
          */
         FaceEmbedding& operator = (const FaceEmbedding& cloneMe) = default;
+
+    private:
+        /**
+         * Explicitly disable the old (\a simplex, \a face) constructor from
+         * Regina 6.0.1 and earlier.
+         *
+         * This is so that, if the user unintentionally calls the old
+         * (\a simplex, \a face) constructor, the face argument will not be
+         * silently converted to a permutation and passed to the new
+         * (\a simplex, \a vertices) constructor instead.
+         */
+        FaceEmbedding(Simplex<dim>*, int);
 };
 
 /**
@@ -169,6 +192,12 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * specialised classes, you will need to include the corresponding triangulation
  * headers (triangulation/dim3.h or triangulation/dim4.h respectively).
  *
+ * Faces do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending dimensions \a dim and \a subdim as
  * suffices (e.g., Face2_1 and Face3_0 for the two examples above).
@@ -179,6 +208,8 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * This must be between 0 and <i>dim</i> inclusive.
  *
  * \headerfile triangulation/generic.h
+ *
+ * \ingroup generic
  */
 template <int dim, int subdim>
 class Face : public detail::FaceBase<dim, subdim> {
@@ -220,6 +251,8 @@ class Face : public detail::FaceBase<dim, subdim> {
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim>
 using VertexEmbedding = FaceEmbedding<dim, 0>;
@@ -237,6 +270,8 @@ using VertexEmbedding = FaceEmbedding<dim, 0>;
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim>
 using EdgeEmbedding = FaceEmbedding<dim, 1>;
@@ -254,6 +289,8 @@ using EdgeEmbedding = FaceEmbedding<dim, 1>;
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 3 and 15 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim>
 using TriangleEmbedding = FaceEmbedding<dim, 2>;
@@ -271,6 +308,8 @@ using TriangleEmbedding = FaceEmbedding<dim, 2>;
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 4 and 15 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim>
 using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
@@ -288,6 +327,8 @@ using TetrahedronEmbedding = FaceEmbedding<dim, 3>;
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 5 and 15 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim>
 using PentachoronEmbedding = FaceEmbedding<dim, 4>;
@@ -303,6 +344,8 @@ using PentachoronEmbedding = FaceEmbedding<dim, 4>;
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim>
 using Vertex = Face<dim, 0>;
@@ -318,6 +361,8 @@ using Vertex = Face<dim, 0>;
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim>
 using Edge = Face<dim, 1>;
@@ -335,6 +380,8 @@ using Edge = Face<dim, 1>;
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim>
 using Triangle = Face<dim, 2>;
@@ -353,6 +400,8 @@ using Triangle = Face<dim, 2>;
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 3 and 15 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim>
 using Tetrahedron = Face<dim, 3>;
@@ -371,19 +420,19 @@ using Tetrahedron = Face<dim, 3>;
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 4 and 15 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim>
 using Pentachoron = Face<dim, 4>;
 #endif // __DOXYGEN
 
-/*@}*/
-
 // Inline functions for FaceEmbedding
 
 template <int dim, int subdim>
 inline FaceEmbedding<dim, subdim>::FaceEmbedding(
-        Simplex<dim>* simplex, int face) :
-        detail::FaceEmbeddingBase<dim, subdim>(simplex, face) {
+        Simplex<dim>* simplex, Perm<dim + 1> vertices) :
+        detail::FaceEmbeddingBase<dim, subdim>(simplex, vertices) {
 }
 
 // Inline functions for Face

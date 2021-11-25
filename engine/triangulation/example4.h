@@ -41,15 +41,10 @@
 #endif
 
 #include "regina-core.h"
-#include "triangulation/forward.h"
+#include "triangulation/dim4.h"
 #include "triangulation/detail/example.h"
 
 namespace regina {
-
-/**
- * \weakgroup triangulation
- * @{
- */
 
 /**
  * Offers routines for constructing a variety of sample 4-dimensional
@@ -61,6 +56,8 @@ namespace regina {
  *
  * This 4-dimensional specialisation offers significant extra functionality,
  * by providing several more hard-coded and parameterised constructions.
+ *
+ * \ingroup triangulation
  */
 template <>
 class Example<4> : public detail::ExampleBase<4> {
@@ -74,50 +71,45 @@ class Example<4> : public detail::ExampleBase<4> {
          * Returns a two-pentachoron triangulation of the 4-sphere.
          * This is identical to calling the generic routine sphere().
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return a two-pentachoron 4-sphere.
          */
-        static Triangulation<4>* fourSphere();
+        static Triangulation<4> fourSphere();
 
         /**
          * Returns the standard six-pentachoron triangulation of the 4-sphere
          * as the boundary of a 5-simplex.
          * This is identical to calling the generic routine simplicialSphere().
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the standard simplicial 4-sphere.
          */
-        static Triangulation<4>* simplicialFourSphere();
+        static Triangulation<4> simplicialFourSphere();
 
         /**
          * Returns a four-pentachoron triangulation of real projective
          * 4-space.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return real projective 4-space.
          * @author Ryan Budney
          */
-        static Triangulation<4>* rp4();
+        static Triangulation<4> rp4();
 
         /**
          * Returns a two-pentachoron triangulation of the product space
          * <tt>S^3 x S^1</tt>.  This is identical to calling the
          * generic routine sphereBundle().
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the product <tt>S^3 x S^1</tt>.
          */
-        static Triangulation<4>* s3xs1();
+        static Triangulation<4> s3xs1();
 
         /**
          * Returns a two-pentachoron triangulation of the twisted product
          * space <tt>S^3 x~ S^1</tt>.  This is identical to calling the
          * generic routine twistedSphereBundle().
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the twisted product <tt>S^3 x~ S^1</tt>.
          */
-        static Triangulation<4>* s3xs1Twisted();
+        static Triangulation<4> s3xs1Twisted();
 
         /*@}*/
         /**
@@ -136,10 +128,9 @@ class Example<4> : public detail::ExampleBase<4> {
          * Budney, Burton and Hillman, Mathematical Research Letters 19 (2012),
          * no. 5, 1117-1126.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return a Cappell-Shaneson 2-knot complement.
          */
-        static Triangulation<4>* cappellShaneson();
+        static Triangulation<4> cappellShaneson();
 
         /*@}*/
         /**
@@ -173,10 +164,9 @@ class Example<4> : public detail::ExampleBase<4> {
          * then you will obtain an invalid 4-manifold triangulation as a result.
          *
          * @param base the 3-manifold triangulation \a M, as described above.
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the product <tt>M x I</tt>.
          */
-        static Triangulation<4>* iBundle(const Triangulation<3>& base);
+        static Triangulation<4> iBundle(const Triangulation<3>& base);
 
         /**
          * Returns a triangulation of the product <tt>M x S1</tt>,
@@ -194,10 +184,9 @@ class Example<4> : public detail::ExampleBase<4> {
          * then you will obtain an invalid 4-manifold triangulation as a result.
          *
          * @param base the 3-manifold triangulation \a M, as described above.
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the product <tt>M x S1</tt>.
          */
-        static Triangulation<4>* s1Bundle(const Triangulation<3>& base);
+        static Triangulation<4> s1Bundle(const Triangulation<3>& base);
 
         /**
          * Returns a bundle formed from a given 3-manifold and a given
@@ -227,10 +216,9 @@ class Example<4> : public detail::ExampleBase<4> {
          * @param base the 3-manifold triangulation \a M, as described above.
          * @param monodromy the homeomorphism from \a M to itself, as
          * described above.
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the requested bundle.
          */
-        static Triangulation<4>* bundleWithMonodromy(
+        static Triangulation<4> bundleWithMonodromy(
             const Triangulation<3>& base,
             const Isomorphism<3>& monodromy);
 
@@ -240,21 +228,19 @@ class Example<4> : public detail::ExampleBase<4> {
          */
 };
 
-/*@}*/
-
-inline Triangulation<4>* Example<4>::fourSphere() {
+inline Triangulation<4> Example<4>::fourSphere() {
     return sphere();
 }
 
-inline Triangulation<4>* Example<4>::simplicialFourSphere() {
+inline Triangulation<4> Example<4>::simplicialFourSphere() {
     return simplicialSphere();
 }
 
-inline Triangulation<4>* Example<4>::s3xs1() {
+inline Triangulation<4> Example<4>::s3xs1() {
     return sphereBundle();
 }
 
-inline Triangulation<4>* Example<4>::s3xs1Twisted() {
+inline Triangulation<4> Example<4>::s3xs1Twisted() {
     return twistedSphereBundle();
 }
 

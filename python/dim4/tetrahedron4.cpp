@@ -42,7 +42,7 @@ using regina::FaceEmbedding;
 
 void addTetrahedron4(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<4, 3>>(m, "FaceEmbedding4_3")
-        .def(pybind11::init<regina::Pentachoron<4>*, int>())
+        .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>())
         .def(pybind11::init<const TetrahedronEmbedding<4>&>())
         .def("simplex", &TetrahedronEmbedding<4>::simplex,
             pybind11::return_value_policy::reference)
@@ -58,25 +58,16 @@ void addTetrahedron4(pybind11::module_& m) {
     auto c = pybind11::class_<Face<4, 3>>(m, "Face4_3")
         .def("index", &Tetrahedron<4>::index)
         .def("degree", &Tetrahedron<4>::degree)
-        .def("embeddings", [](const Tetrahedron<4>& t) {
-            pybind11::list ans;
-            for (const auto& emb : t)
-                ans.append(emb);
-            return ans;
-        })
-        .def("embedding", &Tetrahedron<4>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Tetrahedron<4>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Tetrahedron<4>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Tetrahedron<4>::embedding)
+        .def("embeddings", &Tetrahedron<4>::embeddings)
+        .def("front", &Tetrahedron<4>::front)
+        .def("back", &Tetrahedron<4>::back)
         .def("triangulation", &Tetrahedron<4>::triangulation)
         .def("component", &Tetrahedron<4>::component,
             pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Tetrahedron<4>::boundaryComponent,
             pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Tetrahedron<4>, 3, int,
-            pybind11::return_value_policy::reference>)
+        .def("face", &regina::python::face<Tetrahedron<4>, 3, int>)
         .def("vertex", &Tetrahedron<4>::vertex,
             pybind11::return_value_policy::reference)
         .def("edge", &Tetrahedron<4>::edge,
@@ -96,27 +87,17 @@ void addTetrahedron4(pybind11::module_& m) {
         .def_static("ordering", &Tetrahedron<4>::ordering)
         .def_static("faceNumber", &Tetrahedron<4>::faceNumber)
         .def_static("containsVertex", &Tetrahedron<4>::containsVertex)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("nFaces", [](pybind11::object) {
-            return Tetrahedron<4>::nFaces;
-        })
-        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
-            return Tetrahedron<4>::lexNumbering;
-        })
-        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
-            return Tetrahedron<4>::oppositeDim;
-        })
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Tetrahedron<4>::dimension;
-        })
-        .def_property_readonly_static("subdimension", [](pybind11::object) {
-            return Tetrahedron<4>::subdimension;
-        })
+        .def_readonly_static("nFaces", &Tetrahedron<4>::nFaces)
+        .def_readonly_static("lexNumbering", &Tetrahedron<4>::lexNumbering)
+        .def_readonly_static("oppositeDim", &Tetrahedron<4>::oppositeDim)
+        .def_readonly_static("dimension", &Tetrahedron<4>::dimension)
+        .def_readonly_static("subdimension", &Tetrahedron<4>::subdimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<
+        decltype(std::declval<Tetrahedron<4>>().embeddings())>(m);
 
     m.attr("TetrahedronEmbedding4") = m.attr("FaceEmbedding4_3");
     m.attr("Tetrahedron4") = m.attr("Face4_3");

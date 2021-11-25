@@ -39,17 +39,6 @@
 
 namespace regina {
 
-char* duplicate(const std::string& str) {
-    char* ans = new char[str.length() + 1];
-
-    char* pos = ans;
-    for (std::string::const_iterator it = str.begin(); it != str.end(); it++)
-        *(pos++) = *it;
-    *pos = 0;
-
-    return ans;
-}
-
 bool startsWith(const std::string& str, const std::string& prefix) {
     if (str.length() < prefix.length())
         return false;
@@ -67,9 +56,9 @@ std::string stripWhitespace(const std::string& str) {
     std::string::size_type end = str.length();
 
     while (start < end && isspace(str[start]))
-        start++;
+        ++start;
     while (start < end && isspace(str[end - 1]))
-        end--;
+        --end;
 
     return str.substr(start, end - start);
 }
@@ -179,19 +168,40 @@ bool valueOf(const std::string& str, BoolSet& dest) {
     return true;
 }
 
-std::string stringToToken(const char* str) {
-    std::string ans(str);
-    for (std::string::iterator it = ans.begin(); it != ans.end(); it++)
-        if (isspace(*it))
-            *it = '_';
-    return ans;
+std::string stringToToken(std::string str) {
+    for (auto& c : str)
+        if (isspace(c))
+            c = '_';
+    return str; // I *believe* this is a move, not a copy (C++ Core Issue 1148).
 }
 
-std::string stringToToken(const std::string& str) {
-    std::string ans(str);
-    for (std::string::iterator it = ans.begin(); it != ans.end(); it++)
-        if (isspace(*it))
-            *it = '_';
+std::vector<std::string> basicTokenise(const std::string& str) {
+    std::vector<std::string> ans;
+
+    std::string::size_type len = str.length();
+    std::string::size_type pos = 0;
+
+    // Skip initial whitespace.
+    while (pos < len && isspace(str[pos]))
+        ++pos;
+
+    if (pos == len)
+        return {};
+
+    // Extract each token.
+    std::string::size_type tokStart;
+    while (pos < len) {
+        // Find the characters making up this token.
+        tokStart = pos;
+        while (pos < len && ! isspace(str[pos]))
+            ++pos;
+        ans.push_back(str.substr(tokStart, pos - tokStart));
+
+        // Skip the subsequent whitespace.
+        while (pos < len && isspace(str[pos]))
+            ++pos;
+    }
+
     return ans;
 }
 

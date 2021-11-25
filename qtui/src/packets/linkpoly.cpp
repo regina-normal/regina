@@ -42,6 +42,7 @@
 #include "reginamain.h"
 #include "reginasupport.h"
 
+#include <thread>
 #include <QAction>
 #include <QApplication>
 #include <QClipboard>
@@ -55,15 +56,16 @@
 
 #define MAX_LINK_AUTO_POLYNOMIALS 6
 
+using regina::Link;
 using regina::Packet;
 
-LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
+LinkPolynomialUI::LinkPolynomialUI(regina::PacketOf<regina::Link>* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), link(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
-    QLabel* label = new QLabel(tr("<b>Jones</b>"), ui);
+    auto* label = new QLabel(tr("<b>Jones</b>"), ui);
     QString msg = tr("The Jones polynomial of this link.<p>"
         "The Jones polynomial is a Laurent polynomial "
         "in the square root of <i>t</i>, and Regina will try to "
@@ -77,7 +79,7 @@ LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
 
     layout->addSpacing(5);
 
-    QHBoxLayout* sublayout = new QHBoxLayout();
+    auto* sublayout = new QHBoxLayout();
     sublayout->setContentsMargins(0, 0, 0, 0);
     sublayout->setSpacing(0);
     jones = new QLabel(ui);
@@ -300,7 +302,7 @@ void LinkPolynomialUI::refresh() {
 void LinkPolynomialUI::calculateJones() {
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing Jones polynomial"), ui);
-    link->jones(regina::ALG_DEFAULT, &tracker);
+    std::thread(&Link::jones, link, regina::ALG_DEFAULT, &tracker).detach();
     if (! dlg.run())
         return;
     dlg.hide();
@@ -313,7 +315,7 @@ void LinkPolynomialUI::calculateHomfly() {
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing HOMFLY-PT polynomial"),
         ui);
-    link->homfly(regina::ALG_DEFAULT, &tracker);
+    std::thread(&Link::homfly, link, regina::ALG_DEFAULT, &tracker).detach();
     if (! dlg.run())
         return;
     dlg.hide();
@@ -325,7 +327,7 @@ void LinkPolynomialUI::calculateHomfly() {
 void LinkPolynomialUI::calculateBracket() {
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing Kauffman bracket"), ui);
-    link->jones(regina::ALG_DEFAULT, &tracker);
+    std::thread(&Link::jones, link, regina::ALG_DEFAULT, &tracker).detach();
     if (! dlg.run())
         return;
     dlg.hide();
@@ -409,11 +411,11 @@ void LinkPolynomialUI::copyJonesPlain() {
 
 void LinkPolynomialUI::copyHomflyPlain() {
     if (! btnLM->isChecked())
-        QApplication::clipboard()->setText(link->homflyAZ().str("a", "z").
-            c_str());
+        QApplication::clipboard()->setText(
+            link->homflyAZ().str("a", "z").c_str());
     else
-        QApplication::clipboard()->setText(link->homflyLM().str("l", "m").
-            c_str());
+        QApplication::clipboard()->setText(
+            link->homflyLM().str("l", "m").c_str());
 }
 
 void LinkPolynomialUI::copyBracketPlain() {

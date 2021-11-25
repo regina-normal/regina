@@ -69,7 +69,7 @@ int dim2 = 0;
 int dim4 = 0;
 int usePairs = 0;
 int sigs = 0;
-int whichPurge = 0;
+regina::CensusPurge whichPurge;
 int genPairs = 0;
 int subContainers = 0;
 std::string outFile;
@@ -84,56 +84,56 @@ std::ofstream sigStream;
 
 // Forward declarations:
 template <int dim>
-void foundGluingPerms(const regina::GluingPermSearcher<dim>*, void*);
+void foundGluingPerms(const regina::GluingPerms<dim>&, regina::Packet&);
 
 template <int dim>
-void findAllPerms(const regina::FacetPairing<dim>*,
-    const typename regina::FacetPairing<dim>::IsoList*,
-    bool, bool, int, regina::Packet*);
+void findAllPerms(const regina::FacetPairing<dim>&,
+    typename regina::FacetPairing<dim>::IsoList,
+    bool, bool, regina::CensusPurge, regina::Packet&);
 
 template <int dim>
-bool mightBeMinimal(regina::Triangulation<dim>*);
+bool mightBeMinimal(regina::Triangulation<dim>&);
 
 template <int dim>
 int runCensus();
 
 // Differences between censuses of 2, 3 and 4-manifolds:
 template <>
-inline void findAllPerms<2>(const regina::FacetPairing<2>* p,
-        const regina::FacetPairing<2>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, int /* usePurge */, regina::Packet* dest) {
-    regina::GluingPermSearcher<2>::findAllPerms(p, autos,
+inline void findAllPerms<2>(const regina::FacetPairing<2>& p,
+        regina::FacetPairing<2>::IsoList autos, bool orientableOnly,
+        bool /* finiteOnly */, regina::CensusPurge, regina::Packet& dest) {
+    regina::GluingPermSearcher<2>::findAllPerms(p, std::move(autos),
         orientableOnly, foundGluingPerms<2>, dest);
 }
 
 template <>
-inline bool mightBeMinimal<2>(regina::Triangulation<2>* tri) {
-    return tri->isMinimal();
+inline bool mightBeMinimal<2>(regina::Triangulation<2>& tri) {
+    return tri.isMinimal();
 }
 
 template <>
-inline void findAllPerms<3>(const regina::FacetPairing<3>* p,
-        const regina::FacetPairing<3>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, int usePurge, regina::Packet* dest) {
-    regina::GluingPermSearcher<3>::findAllPerms(p, autos,
+inline void findAllPerms<3>(const regina::FacetPairing<3>& p,
+        regina::FacetPairing<3>::IsoList autos, bool orientableOnly,
+        bool finiteOnly, regina::CensusPurge usePurge, regina::Packet& dest) {
+    regina::GluingPermSearcher<3>::findAllPerms(p, std::move(autos),
         orientableOnly, finiteOnly, usePurge, foundGluingPerms<3>, dest);
 }
 
 template <>
-inline bool mightBeMinimal<3>(regina::Triangulation<3>* tri) {
-    return ! tri->simplifyToLocalMinimum(false);
+inline bool mightBeMinimal<3>(regina::Triangulation<3>& tri) {
+    return ! tri.simplifyToLocalMinimum(false);
 }
 
 template <>
-inline void findAllPerms<4>(const regina::FacetPairing<4>* p,
-        const regina::FacetPairing<4>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, int /* usePurge */, regina::Packet* dest) {
-    regina::GluingPermSearcher<4>::findAllPerms(p, autos,
+inline void findAllPerms<4>(const regina::FacetPairing<4>& p,
+        regina::FacetPairing<4>::IsoList autos, bool orientableOnly,
+        bool finiteOnly, regina::CensusPurge, regina::Packet& dest) {
+    regina::GluingPermSearcher<4>::findAllPerms(p, std::move(autos),
         orientableOnly, finiteOnly, foundGluingPerms<4>, dest);
 }
 
 template <>
-inline bool mightBeMinimal<4>(regina::Triangulation<4>*) {
+inline bool mightBeMinimal<4>(regina::Triangulation<4>&) {
     return true;
 }
 
@@ -141,99 +141,72 @@ inline bool mightBeMinimal<4>(regina::Triangulation<4>*) {
  * What to do with each complete triangulation that is generated.
  */
 template <int dim>
-void foundGluingPerms(const regina::GluingPermSearcher<dim>* perms,
-        void* container) {
-    if (perms) {
-        regina::Triangulation<dim>* tri = perms->triangulate();
+void foundGluingPerms(const regina::GluingPerms<dim>& perms,
+        regina::Packet& container) {
+    regina::Triangulation<dim> tri = perms.triangulate();
 
-        // For minimalHyp, we don't run mightBeMinimal<dim>().
-        // This is because mightBeMinimal() only tests for immediate
-        // reductions (i.e., it doesn't use 4-4 moves or well-climbing
-        // techniques), and HyperbolicMinSearcher already ensures that
-        // no such moves are possible (since it ensures no internal vertices
-        // and no low-degree edges).
+    // For minimalHyp, we don't run mightBeMinimal<dim>().
+    // This is because mightBeMinimal() only tests for immediate
+    // reductions (i.e., it doesn't use 4-4 moves or well-climbing
+    // techniques), and HyperbolicMinSearcher already ensures that
+    // no such moves are possible (since it ensures no internal vertices
+    // and no low-degree edges).
 
-        bool ok = true;
-        if (! tri->isValid())
-            ok = false;
-        else if ((! finiteness.hasFalse()) && tri->isIdeal())
-            ok = false;
-        else if ((! finiteness.hasTrue()) && (! tri->isIdeal()))
-            ok = false;
-        else if ((! orientability.hasTrue()) && tri->isOrientable())
-            ok = false;
-        else if ((minimal || minimalPrime || minimalPrimeP2) &&
-                ! mightBeMinimal<dim>(tri))
-            ok = false;
+    if (! tri.isValid())
+        return;
+    if ((! finiteness.hasFalse()) && tri.isIdeal())
+        return;
+    if ((! finiteness.hasTrue()) && (! tri.isIdeal()))
+        return;
+    if ((! orientability.hasTrue()) && tri.isOrientable())
+        return;
+    if ((minimal || minimalPrime || minimalPrimeP2) &&
+            ! mightBeMinimal<dim>(tri))
+        return;
 
-        if (ok) {
-            // Put it in the census!
-            if (sigs) {
-                sigStream << tri->isoSig() << std::endl;
-                delete tri;
-            } else {
-                regina::Packet* dest =
-                    static_cast<regina::Packet*>(container);
+    // Put it in the census!
+    if (sigs) {
+        sigStream << tri.isoSig() << std::endl;
+    } else {
+        std::ostringstream out;
+        out << "Item " << (nSolns + 1);
 
-                std::ostringstream out;
-                out << "Item " << (nSolns + 1);
-                tri->setLabel(out.str());
-
-                dest->insertChildLast(tri);
-            }
-            nSolns++;
-        } else {
-            // The fish that John West reject.
-            delete tri;
-        }
+        container.insertChildLast(
+            regina::makePacket(std::move(tri), out.str()));
     }
+    ++nSolns;
 }
 
 /**
  * What to do with each face/facet pairing that is generated.
  */
 template <int dim>
-void foundFacePairing(const regina::FacetPairing<dim>* pairing,
-        const typename regina::FacetPairing<dim>::IsoList* autos,
-        void* container) {
-    if (pairing) {
-        std::cout << pairing->str() << std::endl;
-        regina::Packet* subContainer;
-        // If creating a full .rga file, store triangulations for each face
-        // pairing in a different container.
-        if (subContainers) {
-            subContainer = new regina::Container();
-            subContainer->setLabel(pairing->str());
-            static_cast<regina::Packet*>(container)->insertChildLast(subContainer);
-        } else {
-            subContainer = static_cast<regina::Packet*>(container);
-        }
-        findAllPerms<dim>(pairing, autos,
-            ! orientability.hasFalse(), ! finiteness.hasFalse(),
-            whichPurge, subContainer);
-    }
-}
+void foundFacePairing(const regina::FacetPairing<dim>& pairing,
+        typename regina::FacetPairing<dim>::IsoList autos,
+        regina::Packet& container) {
+    std::cout << pairing.str() << std::endl;
+    // If creating a full .rga file, store triangulations for each face
+    // pairing in a different container.
+    if (subContainers) {
+        auto subContainer = std::make_shared<regina::Container>();
+        subContainer->setLabel(pairing.str());
+        container.insertChildLast(subContainer);
 
-/**
- * Dump the given face/facet pairing to dumpStream.
- */
-template <int dim>
-void dumpPairing(const regina::FacetPairing<dim>* pair,
-        const typename regina::FacetPairing<dim>::IsoList*, void*) {
-    if (pair) {
-        if (dumpStream.get())
-            (*dumpStream) << (*pair).toTextRep() << std::endl;
-        else
-            std::cout << (*pair).toTextRep() << std::endl;
-        totPairings++;
+        findAllPerms<dim>(pairing, std::move(autos),
+            ! orientability.hasFalse(), ! finiteness.hasFalse(),
+            whichPurge, *subContainer);
+    } else {
+        findAllPerms<dim>(pairing, std::move(autos),
+            ! orientability.hasFalse(), ! finiteness.hasFalse(),
+            whichPurge, container);
     }
 }
 
 /**
  * Return a new text packet storing the census parameters.
  */
-regina::Text* parameterPacket() {
-    regina::Text* desc = new regina::Text();
+std::shared_ptr<regina::Text> parameterPacket() {
+    std::shared_ptr<regina::Text> desc = std::make_shared<regina::Text>();
     desc->setLabel("Parameters");
     std::ostringstream descStream;
 
@@ -310,52 +283,52 @@ int main(int argc, const char* argv[]) {
         { "tetrahedra", 't', POPT_ARG_LONG, &nTet, 0,
             "Number of tetrahedra.", "<tetrahedra>" },
         { "boundary", 'b', POPT_ARG_NONE, &argBdry, 0,
-            "Must have at least one boundary face.", 0 },
+            "Must have at least one boundary face.", nullptr },
         { "internal", 'i', POPT_ARG_NONE, &argNoBdry, 0,
-            "Must have all faces internal (no boundary faces).", 0 },
+            "Must have all faces internal (no boundary faces).", nullptr },
         { "bdryfaces", 'B', POPT_ARG_LONG, &nBdryFaces, 0,
             "Must have fixed number (>= 1) of boundary faces.", "<faces>" },
         { "orientable", 'o', POPT_ARG_NONE, &argOr, 0,
-            "Must be orientable.", 0 },
+            "Must be orientable.", nullptr },
         { "nonorientable", 'n', POPT_ARG_NONE, &argNor, 0,
-            "Must be non-orientable.", 0 },
+            "Must be non-orientable.", nullptr },
         { "finite", 'f', POPT_ARG_NONE, &argFinite, 0,
-            "Must be finite (no ideal vertices).", 0 },
+            "Must be finite (no ideal vertices).", nullptr },
         { "ideal", 'd', POPT_ARG_NONE, &argIdeal, 0,
-            "Must have at least one ideal vertex.", 0 },
+            "Must have at least one ideal vertex.", nullptr },
         { "minimal", 'm', POPT_ARG_NONE, &minimal, 0,
-            "Ignore obviously non-minimal triangulations.", 0 },
+            "Ignore obviously non-minimal triangulations.", nullptr },
         { "minprime", 'M', POPT_ARG_NONE, &minimalPrime, 0,
-            "Ignore obviously non-minimal, non-prime and/or disc-reducible triangulations.", 0 },
+            "Ignore obviously non-minimal, non-prime and/or disc-reducible triangulations.", nullptr },
         { "minprimep2", 'N', POPT_ARG_NONE, &minimalPrimeP2, 0,
-            "Ignore obviously non-minimal, non-prime, disc-reducible and/or P2-reducible triangulations.", 0 },
+            "Ignore obviously non-minimal, non-prime, disc-reducible and/or P2-reducible triangulations.", nullptr },
         { "minhyp", 'h', POPT_ARG_NONE, &minimalHyp, 0,
             "Ignore triangulations that are obviously not minimal ideal "
             "triangulations of cusped finite-volume hyperbolic 3-manifolds.  "
-            "Implies --internal and --ideal.", 0 },
+            "Implies --internal and --ideal.", nullptr },
         { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
-            "triangles, and --bdryfaces counts boundary edges.", 0 },
+            "triangles, and --bdryfaces counts boundary edges.", nullptr },
         { "dim4", '4', POPT_ARG_NONE, &dim4, 0,
             "Run a census of 4-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
-            "pentachora, and --bdryfaces counts boundary facets.", 0 },
+            "pentachora, and --bdryfaces counts boundary facets.", nullptr },
         { "sigs", 's', POPT_ARG_NONE, &sigs, 0,
             "Write isomorphism signatures only, not full Regina data files.",
-            0 },
+            nullptr },
         { "subcontainers", 'c', POPT_ARG_NONE, &subContainers, 0,
             "For each face pairing, place resulting triangulations into different subcontainers",
-            0 },
+            nullptr },
         { "genpairs", 'p', POPT_ARG_NONE, &genPairs, 0,
-            "Only generate face pairings, not triangulations.", 0 },
+            "Only generate face pairings, not triangulations.", nullptr },
         { "usepairs", 'P', POPT_ARG_NONE, &usePairs, 0,
-            "Only use face pairings read from standard input.", 0 },
+            "Only use face pairings read from standard input.", nullptr },
         POPT_AUTOHELP
-        { 0, 0, 0, 0, 0, 0, 0 }
+        { nullptr, 0, 0, nullptr, 0, nullptr, nullptr }
     };
 
-    poptContext optCon = poptGetContext(0, argc, argv, opts, 0);
+    poptContext optCon = poptGetContext(nullptr, argc, argv, opts, 0);
     poptSetOtherOptionHelp(optCon, "<output-file>");
 
     // Parse the command-line arguments.
@@ -553,15 +526,22 @@ int runCensus() {
     // Are we only dumping face pairings?
     if (genPairs) {
         if (! outFile.empty()) {
-            dumpStream.reset(new std::ofstream(outFile.c_str()));
+            dumpStream = std::make_unique<std::ofstream>(outFile.c_str());
             if ((! dumpStream.get()) || (! *dumpStream)) {
                 std::cerr << "Could not write to file " << outFile << ".\n";
                 return 1;
             }
         }
 
-        regina::FacetPairing<dim>::findAllPairings(nTet, boundary,
-            nBdryFaces, dumpPairing<dim>, 0);
+        regina::FacetPairing<dim>::findAllPairings(nTet, boundary, nBdryFaces,
+                [](const regina::FacetPairing<dim>& pair,
+                   typename regina::FacetPairing<dim>::IsoList) {
+            if (dumpStream.get())
+                (*dumpStream) << pair.toTextRep() << std::endl;
+            else
+                std::cout << pair.toTextRep() << std::endl;
+            totPairings++;
+        });
         std::cerr << "Total " << WORD_face << " pairings: "
             << totPairings << std::endl;
         return 0;
@@ -571,9 +551,9 @@ int runCensus() {
     nSolns = 0;
 
     // Prepare the packet tree (or signature file) for output.
-    regina::Packet* parent = 0;
-    regina::Packet* census = 0;
-    regina::Packet* desc = 0;
+    std::shared_ptr<regina::Packet> parent;
+    std::shared_ptr<regina::Packet> census;
+    std::shared_ptr<regina::Packet> desc;
     if (sigs) {
         sigStream.open(outFile.c_str());
         if (! sigStream) {
@@ -582,7 +562,7 @@ int runCensus() {
             return 1;
         }
     } else {
-        parent = new regina::Container();
+        parent = std::make_shared<regina::Container>();
         if (usePairs)
             parent->setLabel("Partial command-line census");
         else
@@ -590,7 +570,7 @@ int runCensus() {
 
         desc = parameterPacket();
 
-        census = new regina::Container();
+        census = std::make_shared<regina::Container>();
         census->setLabel("Triangulations");
 
         parent->insertChildLast(desc);
@@ -599,14 +579,14 @@ int runCensus() {
 
     // Start the census running.
     if (minimalPrimeP2)
-        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME |
-            regina::GluingPermSearcher<3>::PURGE_P2_REDUCIBLE;
+        whichPurge = regina::PURGE_NON_MINIMAL_PRIME |
+            regina::PURGE_P2_REDUCIBLE;
     else if (minimalPrime)
-        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME;
+        whichPurge = regina::PURGE_NON_MINIMAL_PRIME;
     else if (minimalHyp)
-        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP;
+        whichPurge = regina::PURGE_NON_MINIMAL_HYP;
     else if (minimal)
-        whichPurge = regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL;
+        whichPurge = regina::PURGE_NON_MINIMAL;
 
     if (usePairs) {
         // Only use the face pairings read from standard input.
@@ -615,40 +595,41 @@ int runCensus() {
         pairingList += " pairings:\n\n";
 
         std::string pairingRep;
-        while (true) {
+        while (! std::cin.eof()) {
             std::getline(std::cin, pairingRep);
 
             if (pairingRep.length() > 0) {
-                regina::FacetPairing<dim>* pairing =
-                    regina::FacetPairing<dim>::fromTextRep(pairingRep);
-                if (! pairing) {
+                // We use a std::optional here because FacetPairing has
+                // no default constructor.
+                std::optional<regina::FacetPairing<dim>> p;
+                try {
+                    p = regina::FacetPairing<dim>::fromTextRep(pairingRep);
+                } catch (const regina::InvalidArgument&) {
                     std::cerr << "Invalid " << WORD_face << " pairing: "
                         << pairingRep << std::endl;
                     pairingList += "INVALID: ";
                     pairingList += pairingRep;
                     pairingList += '\n';
-                } else if (! pairing->isCanonical()) {
+                    continue;
+                }
+
+                if (! p->isCanonical()) {
                     std::cerr << "Non-canonical " << WORD_face
                         << " pairing: " << pairingRep << std::endl;
                     pairingList += "NON-CANONICAL: ";
                     pairingList += pairingRep;
                     pairingList += '\n';
                 } else {
-                    // TODO: Explicitly generate automorphisms here.
-                    foundFacePairing<dim>(pairing, 0, census);
-                    pairingList += pairing->str();
+                    foundFacePairing<dim>(*p, p->findAutomorphisms(), *census);
+                    pairingList += p->str();
                     pairingList += '\n';
                 }
-                delete pairing;
             }
-
-            if (std::cin.eof())
-                break;
         }
 
         // Store the face pairings used with the census.
         if (! sigs) {
-            regina::Text* pairingPacket = new regina::Text(pairingList);
+            auto pairingPacket = std::make_shared<regina::Text>(pairingList);
             pairingPacket->setLabel(
                 dim4 ? "Facet Pairings" : dim2 ? "Edge Pairings" :
                 "Face Pairings");
@@ -659,7 +640,7 @@ int runCensus() {
         std::cout << "Starting census generation..." << std::endl;
 
         regina::FacetPairing<dim>::findAllPairings(nTet, boundary, nBdryFaces,
-            foundFacePairing<dim>, census /* dest */);
+            foundFacePairing<dim>, *census /* dest */);
 
         std::cout << "Finished." << std::endl;
     }

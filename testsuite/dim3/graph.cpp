@@ -90,13 +90,13 @@ class DualGraph3Test : public CppUnit::TestFixture {
             delete source;
         }
 
-        void setUp() {
+        void setUp() override {
             empty.setLabel("Empty");
 
-            lens13_3.insertLayeredLensSpace(13, 3);
+            lens13_3 = Example<3>::lens(13, 3);
             lens13_3.setLabel("L(13,3)");
 
-            aug.insertAugTriSolidTorus(3, -1, 5, -3, 2, -1);
+            aug = Example<3>::augTriSolidTorus(3, -1, 5, -3, 2, -1);
             aug.setLabel("Aug((3,-1), (5,-3), (2,-1))");
 
             copyAndDelete(weeks, regina::Example<3>::weeks());
@@ -106,11 +106,11 @@ class DualGraph3Test : public CppUnit::TestFixture {
 
             disconnected.insertLayeredSolidTorus(4, 7);
             disconnected.tetrahedron(disconnected.size() - 1)->unjoin(0);
-            disconnected.insertLayeredLoop(6, true);
+            disconnected.insertTriangulation(Example<3>::layeredLoop(6, true));
             disconnected.setLabel("Loop(6) U Chain(4)");
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void testBandwidth(const Triangulation<3>& t, long expected) {

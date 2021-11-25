@@ -52,9 +52,9 @@ def makeGroup(rowsM, colsM, valuesM, rowsN, colsN, valuesN):
 		makeMatrix(rowsM, colsM, valuesM),
 		makeMatrix(rowsN, colsN, valuesN))
 
-def makeHom(domain, range, rows, cols, values):
+def makeHom(domain, codomain, rows, cols, values):
 	return regina.HomMarkedAbelianGroup(
-		domain, range, makeMatrix(rows, cols, values))
+		domain, codomain, makeMatrix(rows, cols, values))
 
 def groupStats(g):
 	print("------------------------")
@@ -78,14 +78,7 @@ def homStats(h):
 	print("New homomorphism")
 	print("----------------")
 	print()
-	print('Domain:', h.domain())
-	print('Range:', h.range())
-	print('Kernel:', h.kernel())
-	print('Cokernel:', h.cokernel())
-	print('Image:', h.image())
-
-	# Nothing else to say.
-	print()
+	print(h.detail())
 
 
 # Z + Z_6:

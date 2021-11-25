@@ -53,11 +53,6 @@
 
 namespace regina::xml {
 
-/**
- * \weakgroup utilities
- * @{
- */
-
 class XMLParser;
 
 /**
@@ -70,7 +65,7 @@ class XMLPropertyDict : private std::map<std::string, std::string> {
         /**
          * Create a new map.
          */
-        XMLPropertyDict();
+        XMLPropertyDict() = default;
 
         /**
          * Return a value for the given key, or the empty string if the
@@ -116,7 +111,7 @@ class XMLParserCallback {
         /**
          * Default destructor that does nothing.
          */
-        virtual ~XMLParserCallback();
+        virtual ~XMLParserCallback() = default;
 
         /**
          * Called at the start of the document.
@@ -303,23 +298,16 @@ class XMLParser {
  */
 std::string xmlString(xmlChar* str, bool free = true);
 
-/*@}*/
-
 // Inline functions for XMLPropertyDict
-
-inline XMLPropertyDict::XMLPropertyDict() {
-}
 
 inline const std::string& XMLPropertyDict::lookup(const std::string& key)
         const {
-    const_iterator it = find(key);
+    auto it = find(key);
     return (it == end() ? empty_ : (*it).second);
 }
 
 // Inline functions for XMLParserCallback
 
-inline XMLParserCallback::~XMLParserCallback() {
-}
 inline void XMLParserCallback::start_document(XMLParser*) {
 }
 inline void XMLParserCallback::end_document() {
@@ -352,7 +340,7 @@ inline void XMLParser::parse_chunk(const std::string& s) {
 }
 
 inline void XMLParser::finish() {
-    xmlParseChunk(_context, 0, 0, 1);
+    xmlParseChunk(_context, nullptr, 0, 1);
 }
 
 // Inline global functions

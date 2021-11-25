@@ -38,21 +38,13 @@
 
 namespace regina {
 
-LayeredLoop* LayeredLoop::clone() const {
-    LayeredLoop* ans = new LayeredLoop();
-    ans->length_ = length_;
-    ans->hinge_[0] = hinge_[0];
-    ans->hinge_[1] = hinge_[1];
-    return ans;
-}
-
-Manifold* LayeredLoop::manifold() const {
+std::unique_ptr<Manifold> LayeredLoop::manifold() const {
     if (hinge_[1]) {
         // Not twisted.
-        return new LensSpace(length_, 1);
+        return std::make_unique<LensSpace>(length_, 1);
     } else {
         // Twisted.
-        SFSpace* ans = new SFSpace();
+        std::unique_ptr<SFSpace> ans(new SFSpace());
         ans->insertFibre(2, -1);
         ans->insertFibre(2, 1);
         ans->insertFibre(length_, 1);
@@ -61,17 +53,17 @@ Manifold* LayeredLoop::manifold() const {
     }
 }
 
-LayeredLoop* LayeredLoop::isLayeredLoop(const Component<3>* comp) {
+std::unique_ptr<LayeredLoop> LayeredLoop::recognise(const Component<3>* comp) {
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
-        return 0;
+        return nullptr;
 
     unsigned long nTet = comp->size();
     if (nTet == 0)
-        return 0;
+        return nullptr;
     unsigned long nVertices = comp->countVertices();
     if (nVertices > 2)
-        return 0;
+        return nullptr;
     bool twisted = (nVertices == 1);
 
     // We have at least 1 tetrahedron and precisely 1 or 2 vertices.
@@ -129,7 +121,7 @@ LayeredLoop* LayeredLoop::isLayeredLoop(const Component<3>* comp) {
             ok = true;
             while (true) {
                 // Already set: tet, next, topi, bottomi.
-                
+
                 // Check that both steps up lead to the same tetrahedron.
                 // Note that this check has already been done for the first
                 // iteration of this loop; never mind, no big loss.
@@ -187,31 +179,30 @@ LayeredLoop* LayeredLoop::isLayeredLoop(const Component<3>* comp) {
                 }
 
                 // We have a solution!
-                LayeredLoop* ans = new LayeredLoop();
-                ans->length_ = nTet;
-                ans->hinge_[0] = base->edge(hinge0);
-                ans->hinge_[1] = (twisted ? 0 : base->edge(hinge1));
-                return ans;
+                return std::unique_ptr<LayeredLoop>(new LayeredLoop(
+                    nTet, base->edge(hinge0),
+                    (twisted ? nullptr : base->edge(hinge1))));
             }
         }
     }
 
     // Nothing found.
-    return 0;
+    return nullptr;
 }
 
-std::optional<AbelianGroup> LayeredLoop::homology() const {
+AbelianGroup LayeredLoop::homology() const {
     AbelianGroup ans;
     if (hinge_[1]) {
         // Untwisted.
         if (length_ > 1)
-            ans.addTorsionElement(length_);
+            ans.addTorsion(length_);
     } else {
         // Twisted.
-        if (length_ % 2 == 0)
-            ans.addTorsionElement(2, 2);
-        else
-            ans.addTorsionElement(4);
+        if (length_ % 2 == 0) {
+            ans.addTorsion(2);
+            ans.addTorsion(2);
+        } else
+            ans.addTorsion(4);
     }
     return ans;
 }

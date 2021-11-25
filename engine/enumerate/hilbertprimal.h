@@ -47,11 +47,7 @@
 namespace regina {
 
 class ProgressTracker;
-
-/**
- * \weakgroup enumerate
- * @{
- */
+class ValidityConstraints;
 
 /**
  * Implements a modified primal algorithm for enumerating Hilbert bases.
@@ -71,7 +67,7 @@ class ProgressTracker;
  * All routines of interest within this class are static; no object of
  * this class should ever be created.
  *
- * \ifacespython Not present.
+ * \ingroup enumerate
  */
 class HilbertPrimal {
     public:
@@ -80,9 +76,7 @@ class HilbertPrimal {
          * points in the intersection of the <i>n</i>-dimensional
          * non-negative orthant with some linear subspace.
          * The resulting basis elements will be of the class \a RayClass,
-         * will be newly allocated, and will be written to the given output
-         * iterator.  Their deallocation is the responsibility of whoever
-         * called this routine.
+         * and will be passed into the given action function one at a time.
          *
          * The intersection of the non-negative orthant with this linear
          * subspace is a pointed polyhedral cone with apex at the origin,
@@ -100,7 +94,7 @@ class HilbertPrimal {
          * constraints, in which case this routine will only return \e valid
          * basis elements.  Each validity constraint is of the form "at
          * most one of these coordinates may be non-zero"; see the
-         * EnumConstraints class for details.  These contraints have the
+         * ValidityConstraints class for details.  These contraints have the
          * important property that, although validity is not preserved under
          * addition, \e invalidity is.
          *
@@ -110,6 +104,14 @@ class HilbertPrimal {
          * been declared via ProgressTracker::newStage() before this routine
          * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns.
+         *
+         * For each of the resulting basis elements, this routine will call
+         * \a action (which must be a function or some other callable object).
+         * This action should return \c void, and must take exactly one
+         * argument, which will be the basis element stored using \a RayClass.
+         * The argument will be passed as an rvalue; a typical \a action
+         * would take it as an rvalue reference (RayClass&&) and move its
+         * contents into some other more permanent storage.
          *
          * \pre If \a constraints is passed, then the given list of
          * extremal rays contains \e only those extremal rays that satisfy
@@ -131,22 +133,33 @@ class HilbertPrimal {
          * present implementation updates percentage progress very infrequently,
          * and may take a very long time to honour cancellation requests.
          *
-         * @param results the output iterator to which the resulting basis
-         * elements will be written; this must accept objects of type
-         * <tt>RayClass*</tt>.
+         * \ifacespython There are two versions of this function available
+         * in Python.  The first version is
+         * <tt>enumerate(action, rays, constraints, tracker)</tt>, which
+         * mirrors the C++ function; here \a action may be a pure Python
+         * function.  The second version does not have an \a action argument;
+         * instead you call <tt>enumerate(rays, constraints, tracker)</tt>,
+         * and it returns a Python list containing all Hilbert basis elements.
+         * In both versions, the extremal rays must be passed as a Python list
+         * of VectorInt objects, and the output type \a RayClass is likewise
+         * fixed as VectorInt.
+         *
+         * @param action a function (or other callable object) that will be
+         * called for each basis element.  This function must take a single
+         * argument, which will be passed as an rvalue of type RayClass.
          * @param raysBegin an iterator pointing to the beginning of the
          * list of extremal rays.
          * @param raysEnd an iterator pointing past the end of the
          * list of extremal rays.
-         * @param constraints a set of validity constraints as described
-         * above, or \c null if no additional constraints should be imposed.
+         * @param constraints a set of validity constraints as described above,
+         * or ValidityConstraints::none if none should be imposed.
          * @param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
          */
-        template <class RayClass, class RayIterator, class OutputIterator>
-        static void enumerateHilbertBasis(OutputIterator results,
+        template <class RayClass, class RayIterator, typename Action>
+        static void enumerate(Action&& action,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
-            const EnumConstraints* constraints,
+            const ValidityConstraints& constraints,
             ProgressTracker* tracker = nullptr);
 
         // Mark this class as non-constructible.
@@ -154,13 +167,13 @@ class HilbertPrimal {
 
     private:
         /**
-         * Identical to the public routine enumerateHilbertBasis(),
+         * Identical to the public routine enumerate(),
          * except that there is an extra template parameter \a BitmaskType.
          * This describes what type should be used for bitmasks that
          * represent maximal admissible faces.
          *
          * All arguments to this function are identical to those for the
-         * public routine enumerateHilbertBasis().
+         * public routine enumerate().
          *
          * \pre The bitmask type is one of Regina's bitmask types, such
          * as Bitmask, Bitmask1 or Bitmask2.
@@ -169,10 +182,10 @@ class HilbertPrimal {
          * number of columns in \a subspace).
          */
         template <class RayClass, class BitmaskType,
-            class RayIterator, class OutputIterator>
-        static void enumerateUsingBitmask(OutputIterator results,
+            class RayIterator, typename Action>
+        static void enumerateUsingBitmask(Action&& action,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
-            const EnumConstraints* constraints, ProgressTracker* tracker);
+            const ValidityConstraints& constraints, ProgressTracker* tracker);
 
         /**
          * Determines whether the given ray lies in the face specified
@@ -192,8 +205,6 @@ class HilbertPrimal {
         template <class VectorClass, class BitmaskType>
         static bool inFace(const VectorClass& ray, const BitmaskType& face);
 };
-
-/*@}*/
 
 } // namespace regina
 

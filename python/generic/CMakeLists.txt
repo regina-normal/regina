@@ -13,28 +13,6 @@ FOREACH ( SOURCE_FILE ${FILES} )
 ENDFOREACH(SOURCE_FILE)
 
 SET ( FILES
-  boundarycomponent5.cpp
-  boundarycomponent6.cpp
-  boundarycomponent7.cpp
-  boundarycomponent8.cpp
-  boundarycomponent9.cpp
-  boundarycomponent10.cpp
-  boundarycomponent11.cpp
-  boundarycomponent12.cpp
-  boundarycomponent13.cpp
-  boundarycomponent14.cpp
-  boundarycomponent15.cpp
-  component5.cpp
-  component6.cpp
-  component7.cpp
-  component8.cpp
-  component9.cpp
-  component10.cpp
-  component11.cpp
-  component12.cpp
-  component13.cpp
-  component14.cpp
-  component15.cpp
   example5.cpp
   example6.cpp
   example7.cpp
@@ -79,17 +57,6 @@ SET ( FILES
   isomorphism13.cpp
   isomorphism14.cpp
   isomorphism15.cpp
-  simplex5.cpp
-  simplex6.cpp
-  simplex7.cpp
-  simplex8.cpp
-  simplex9.cpp
-  simplex10.cpp
-  simplex11.cpp
-  simplex12.cpp
-  simplex13.cpp
-  simplex14.cpp
-  simplex15.cpp
   triangulation5.cpp
   triangulation6.cpp
   triangulation7.cpp

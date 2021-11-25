@@ -452,7 +452,8 @@ bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace) {
     }
 }
 
-bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
+bool PythonInterpreter::setVar(const char* name,
+        std::shared_ptr<Packet> value) {
     PyEval_RestoreThread(state);
 
     bool ok = false;
@@ -526,10 +527,10 @@ bool PythonInterpreter::runScript(const regina::Script* script) {
 }
 
 bool PythonInterpreter::isEmptyCommand(const std::string& command) {
-    for (auto it = command.begin(); it != command.end(); it++) {
-        if (isspace(*it))
+    for (char c : command) {
+        if (isspace(c))
             continue;
-        else if (*it == '#')
+        else if (c == '#')
             return true;
         else
             return false;

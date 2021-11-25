@@ -32,12 +32,14 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/functional.h"
+#include "../pybind11/iostream.h"
 #include "../pybind11/operators.h"
 #include "../pybind11/stl.h"
 #include "algebra/abeliangroup.h"
 #include "algebra/grouppresentation.h"
 #include "algebra/homgrouppresentation.h"
 #include "algebra/markedabeliangroup.h"
+#include "utilities/exception.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
@@ -64,12 +66,10 @@ void addGroupPresentation(pybind11::module_& m) {
         .def(pybind11::init<const GroupExpressionTerm&>())
         .def(pybind11::init<unsigned long, long>())
         .def(pybind11::init<const GroupExpression&>())
-        .def(pybind11::init([](const std::string& str) {
-            return new GroupExpression(str, nullptr);
-        }))
+        .def(pybind11::init<const std::string&>())
         .def("swap", &GroupExpression::swap)
-        .def("terms", overload_cast<>(
-            &GroupExpression::terms, pybind11::const_))
+        .def("terms", overload_cast<>(&GroupExpression::terms),
+            pybind11::return_value_policy::reference_internal)
         .def("countTerms", &GroupExpression::countTerms)
         .def("wordLength", &GroupExpression::wordLength)
         .def("isTrivial", &GroupExpression::isTrivial)
@@ -88,8 +88,24 @@ void addGroupPresentation(pybind11::module_& m) {
             &GroupExpression::addTermLast))
         .def("addTermsFirst", &GroupExpression::addTermsFirst)
         .def("addTermsLast", &GroupExpression::addTermsLast)
-        .def("addStringFirst", &GroupExpression::addStringFirst)
-        .def("addStringLast", &GroupExpression::addStringLast)
+        .def("addStringFirst", [](GroupExpression& g, const std::string& s) {
+            // This is deprecated, so we reimplement it here.
+            try {
+                g.addTermsFirst(s);
+            } catch (const regina::InvalidArgument&) {
+                return false;
+            }
+            return true;
+        })
+        .def("addStringLast", [](GroupExpression& g, const std::string& s) {
+            // This is deprecated, so we reimplement it here.
+            try {
+                g.addTermsLast(s);
+            } catch (const regina::InvalidArgument&) {
+                return false;
+            }
+            return true;
+        })
         .def("cycleLeft", &GroupExpression::cycleLeft)
         .def("cycleRight", &GroupExpression::cycleRight)
         .def("inverse", &GroupExpression::inverse)
@@ -105,13 +121,17 @@ void addGroupPresentation(pybind11::module_& m) {
             overload_cast<const std::vector<GroupExpression>&, bool>(
                 &GroupExpression::substitute),
             pybind11::arg(), pybind11::arg("cyclic") = false)
-        .def("toTeX", &GroupExpression::toTeX)
-        .def("writeText", [](const GroupExpression& e, bool sw, bool utf8) {
-            e.writeText(std::cout, sw, utf8);
-        }, pybind11::arg("shortword") = false, pybind11::arg("utf8") = false)
-        .def("writeTeX", [](const GroupExpression& e) {
-            e.writeTeX(std::cout);
+        .def("writeXMLData", [](const GroupExpression& e,
+                pybind11::object file) {
+            pybind11::scoped_ostream_redirect stream(std::cout, file);
+            e.writeXMLData(std::cout);
         })
+        .def("tex", &GroupExpression::tex)
+        .def("toTeX", &GroupExpression::tex) // deprecated
+        .def("str",
+            overload_cast<bool>(&GroupExpression::str, pybind11::const_))
+        .def("utf8",
+            overload_cast<bool>(&GroupExpression::utf8, pybind11::const_))
     ;
     regina::python::add_output(c2);
     regina::python::add_eq_operators(c2);
@@ -121,6 +141,7 @@ void addGroupPresentation(pybind11::module_& m) {
     auto c3 = pybind11::class_<GroupPresentation>(m, "GroupPresentation")
         .def(pybind11::init<>())
         .def(pybind11::init<unsigned long>())
+        .def(pybind11::init<unsigned long, const std::vector<std::string>&>())
         .def(pybind11::init<const GroupPresentation&>())
         .def("swap", &GroupPresentation::swap)
         .def("addGenerator", &GroupPresentation::addGenerator,
@@ -129,6 +150,8 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("countGenerators", &GroupPresentation::countGenerators)
         .def("countRelations", &GroupPresentation::countRelations)
         .def("relation", &GroupPresentation::relation,
+            pybind11::return_value_policy::reference_internal)
+        .def("relations", &GroupPresentation::relations,
             pybind11::return_value_policy::reference_internal)
         .def("isValid", &GroupPresentation::isValid)
         .def("intelligentSimplify", &GroupPresentation::intelligentSimplify)
@@ -159,11 +182,36 @@ void addGroupPresentation(pybind11::module_& m) {
             &GroupPresentation::identifySimplyIsomorphicTo)
         .def("recogniseGroup", &GroupPresentation::recogniseGroup,
             pybind11::arg("moreUtf8") = false)
+        .def("writeXMLData", [](const GroupPresentation& p,
+                pybind11::object file) {
+            pybind11::scoped_ostream_redirect stream(std::cout, file);
+            p.writeXMLData(std::cout);
+        })
         .def("relatorLength", &GroupPresentation::relatorLength)
         .def("abelianisation", &GroupPresentation::abelianisation)
+        .def("abelianRank", &GroupPresentation::abelianRank)
         .def("markedAbelianisation", &GroupPresentation::markedAbelianisation)
+        .def("enumerateCovers", [](const GroupPresentation& p, int index) {
+            std::vector<GroupPresentation> ans;
+            auto push = [&](GroupPresentation&& result) {
+                ans.push_back(std::move(result));
+            };
+            switch (index) {
+                case 2: p.enumerateCovers<2>(push); break;
+                case 3: p.enumerateCovers<3>(push); break;
+                case 4: p.enumerateCovers<4>(push); break;
+                case 5: p.enumerateCovers<5>(push); break;
+                case 6: p.enumerateCovers<6>(push); break;
+                case 7: p.enumerateCovers<7>(push); break;
+                default:
+                    PyErr_SetString(PyExc_ValueError,
+                        "The index passed to enumerateCovers() must be between "
+                        "2 and 7 inclusive.");
+            }
+            return ans;
+        })
         .def("enumerateCovers", [](const GroupPresentation& p, int index,
-                const std::function<void(GroupPresentation&)>& action)
+                const std::function<void(GroupPresentation&&)>& action)
                 -> size_t {
             switch (index) {
                 case 2: return p.enumerateCovers<2>(action);
@@ -171,20 +219,19 @@ void addGroupPresentation(pybind11::module_& m) {
                 case 4: return p.enumerateCovers<4>(action);
                 case 5: return p.enumerateCovers<5>(action);
                 case 6: return p.enumerateCovers<6>(action);
+                case 7: return p.enumerateCovers<7>(action);
             }
             PyErr_SetString(PyExc_ValueError,
                 "The index passed to enumerateCovers() must be between "
-                "2 and 6 inclusive.");
+                "2 and 7 inclusive.");
             return 0;
         })
-        .def("toTeX", &GroupPresentation::toTeX)
+        .def("incidence", &GroupPresentation::incidence)
+        .def("tex", &GroupPresentation::tex)
+        .def("toTeX", &GroupPresentation::tex) // deprecated
         .def("compact", &GroupPresentation::compact)
-        .def("writeTeX", [](const GroupPresentation& p) {
-            p.writeTeX(std::cout);
-        })
-        .def("writeTextCompact", [](const GroupPresentation& p) {
-            p.writeTextCompact(std::cout);
-        })
+        .def("gap", &GroupPresentation::gap,
+            pybind11::arg("groupVariable") = "g")
     ;
     regina::python::add_output(c3);
     regina::python::add_eq_operators(c3);

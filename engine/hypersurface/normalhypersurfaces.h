@@ -31,8 +31,8 @@
  **************************************************************************/
 
 /*! \file hypersurface/normalhypersurfaces.h
- *  \brief Contains a packet representing a collection of normal
- *  hypersurfaces in a 4-manifold triangulation.
+ *  \brief Implements a collection of normal hypersurfaces in a
+ *  4-manifold triangulation.
  */
 
 #ifndef __REGINA_NORMALHYPERSURFACES_H
@@ -45,74 +45,106 @@
 #include <optional>
 #include <vector>
 #include "regina-core.h"
-#include "enumerate/enumconstraints.h"
+#include "enumerate/validityconstraints.h"
 #include "hypersurface/hypercoords.h"
 #include "hypersurface/hyperflags.h"
 #include "hypersurface/normalhypersurface.h"
 #include "maths/matrix.h"
 #include "packet/packet.h"
-#include "utilities/listview.h"
+#include "progress/progresstracker.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
 class NormalHypersurface;
 class NormalHypersurfaces;
 class ProgressTracker;
-class XMLPacketReader;
 
 /**
- * \weakgroup hypersurface
- * @{
- */
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_NORMALHYPERSURFACES> {
-    typedef NormalHypersurfaces Class;
-    static constexpr const char* name = "Normal Hypersurface List";
-};
-#endif
-
-/**
- * A packet representing a collection of normal hypersurfaces in a 4-manifold
- * triangulation.  Such a packet must always be a child packet of the
- * triangulation from which the surfaces were obtained.  If this triangulation
- * changes, the information contained in this packet will become invalid.
+ * A collection of normal hypersurfaces in a 4-manifold triangulation.
  *
- * See the NormalHypersurfaceVector class notes for details of what to do
+ * There are some important changes to this class as of Regina 7.0:
+ *
+ * - A normal hypersurface list does \e not need to be a child packet of the
+ *   underlying triangulation, and indeed does not need to interact with
+ *   the packet tree at all.
+ *
+ * - You are welcome to modify or even destroy the original triangulation;
+ *   if you do then this list will automatically make a private copy of the
+ *   original triangulation as an ongoing reference.  Different normal
+ *   hypersurface lists can all share the same private copy, so this is
+ *   not an expensive process.
+ *
+ * - You should now create normal hypersurface lists using the class constructor
+ *   (but which, unlike the old enumerate(), does not insert the list
+ *   into the packet tree).  There is no need to use enumerate() any more.
+ *
+ * Since Regina 7.0, this is no longer a "packet type" that can be
+ * inserted directly into the packet tree.  Instead a normal hypersurface list
+ * is now a standalone mathematatical object, which makes it slimmer and
+ * faster for ad-hoc use.  The consequences of this are:
+ *
+ * - If you create your own NormalHypersurfaces object, it will not have any of
+ *   the usual packet infrastructure.  You cannot add it into the packet tree,
+ *   and it will not support a label, tags, child/parent packets, and/or
+ *   event listeners.
+ *
+ * - To include an NormalHypersurfaces object in the packet tree, you must
+ *   create a new PacketOf<NormalHypersurfaces>.  This \e is a packet type,
+ *   and supports labels, tags, child/parent packets, and event listeners.
+ *   It derives from NormalHypersurfaces, and so inherits the full
+ *   NormalHypersurfaces interface.
+ *
+ * - If you are adding new functions to this class that edit the list,
+ *   you must still remember to create a ChangeEventSpan.  This will ensure
+ *   that, if the list is being managed by a PacketOf<NormalHypersurfaces>,
+ *   then the appropriate packet change events will be fired.
+ *   All other events (aside from packetToBeChanged() and packetWasChanged()
+ *   are managed directly by the PacketOf<NormalHypersurfaces> wrapper class.
+ *
+ * See the NormalHypersurface class notes for details of what to do
  * when introducing a new coordinate system.
  *
- * Normal hypersurface lists should be created using the routine enumerate().
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
+ * \ingroup hypersurface
  */
-class NormalHypersurfaces : public Packet {
-    REGINA_PACKET(NormalHypersurfaces, PACKET_NORMALHYPERSURFACES)
-
+class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
+        public Output<NormalHypersurfaces> {
     public:
         class VectorIterator;
 
     protected:
         std::vector<NormalHypersurface> surfaces_;
-            /**< Contains the normal hypersurfaces stored in this packet. */
+            /**< Contains all normal hypersurfaces in this list. */
+        SnapshotRef<Triangulation<4>> triangulation_;
+            /**< The triangulation in which these normal hypersurfaces lie. */
         HyperCoords coords_;
-            /**< Stores which coordinate system is being
-                 used by the normal hypersurfaces in this packet. */
+            /**< The coordinate system that was originally used to enumerate
+                 the normal hypersurfaces in this list. */
         HyperList which_;
             /**< Indicates which normal hypersurfaces these represent
                  within the underlying triangulation. */
         HyperAlg algorithm_;
             /**< Stores the details of the enumeration algorithm that
                  was used to generate this list.  This might not be the
-                 same as the \a algorithmHints flag passed to the
-                 corresponding enumeration routine (e.g., if invalid or
+                 same as the \a algorithmHints flag that was originally
+                 passed to the enumeration routine (e.g., if invalid or
                  inappropriate flags were passed). */
 
     public:
         /**
-         * A unified routine for enumerating various classes of normal
+         * A unified constructor for enumerating various classes of normal
          * hypersurfaces within a given triangulation.
          *
          * The HyperCoords argument allows you to specify an underlying
-         * coordinate system.
+         * coordinate system in which to do the enumeration (e.g., standard
+         * coordinates or prism coordinates).
+         * This choice of coordinate system will affect which surfaces are
+         * produced, since vertex/fundamental surfaces in one system are not
+         * necessarily vertex/fundamental in another.
          *
          * The HyperList argument is a combination of flags that
          * allows you to specify exactly which normal hypersurfaces you require.
@@ -120,7 +152,7 @@ class NormalHypersurfaces : public Packet {
          * or all fundamental hypersurfaces, which defaults to HS_VERTEX
          * if you specify neither or both; and (ii) whether you want only
          * properly embedded surfaces or you also wish to include
-         * immersed and/or singular surfaces, which defaults to
+         * immersed and/or singular hypersurfaces, which defaults to
          * HS_EMBEDDED_ONLY if you specify neither or both.
          *
          * The HyperAlg argument is a combination of flags that allows
@@ -132,40 +164,163 @@ class NormalHypersurfaces : public Packet {
          * makes no hints at all) will allow Regina to choose what it
          * thinks will be the most efficient method.
          *
-         * The enumerated hypersurfaces will be stored in a new normal
+         * The enumerated hypersurfaces will be stored in this new normal
          * hypersurface list, and their representations will be scaled down
          * to use the smallest possible integer coordinates.
-         * This normal hypersurface list will be inserted into the packet tree
-         * as the last child of the given triangulation.  This triangulation
-         * \b must remain the parent of this normal hypersurface list, and must
-         * not change while this normal hypersurface list remains in existence.
          *
-         * If a progress tracker is passed, the normal hypersurface
-         * enumeration will take place in a new thread and this routine
-         * will return immediately.  If the user cancels the operation
-         * from another thread, then the normal surface list will \e not
-         * be inserted into the packet tree (but the caller of this
-         * routine will still need to delete it).  Regarding progress tracking,
-         * this routine will declare and work through a series of stages
-         * whose combined weights sum to 1; typically this means that the
-         * given tracker must not have been used before.
+         * Unlike the old enumerate() function, the new normal hypersurface
+         * list will \e not be inserted into the packet tree.  Moreover,
+         * the given triangulation may change or even be destroyed
+         * without causing problems.  See the class notes for details.
          *
-         * If no progress tracker is passed, the enumeration will run
-         * in the current thread and this routine will return only when
-         * the enumeration is complete.  Note that this enumeration can
-         * be extremely slow for larger triangulations.
+         * If a progress tracker is passed, this routine will declare and
+         * work through a series of stages whose combined weights sum to 1;
+         * typically this means that the given tracker must not have been
+         * used before.
          *
-         * If an error occurs, then this routine will return \c null,
-         * no normal hypersurface list will be created, and the progress
-         * tracker (if passed) will be marked as finished.  Errors can occur
-         * in the following scenarios:
+         * This constructor will not return until the enumeration of
+         * hypersurfaces is complete, regardless of whether a progress tracker
+         * was passed.  If you need the behaviour of the old enumerate() (where
+         * passing a progress tracker caused the enumeration to start in the
+         * background), simply call this constructor in a new detached thread.
+         * Note that this enumeration can be extremely slow for larger
+         * triangulations, and so there could be good reasons to do this.
          *
-         * - Regina could not create the matching equations for the given
-         *   triangulation in the given coordinate system.  This is only
-         *   possible in certain coordinate systems, and all such coordinate
-         *   systems are marked as such in the HyperCoords enum documentation.
+         * If an error occurs, then this routine will thrown an exception.
+         * In this case, no normal hypersurface list will be created, and the
+         * progress tracker (if passed) will be marked as finished.
+         * See the exception specifications below for details.
          *
-         * - A progress tracker is passed but a new thread could not be started.
+         * \exception InvalidArgument the matching equations could not
+         * be created for the given triangulation in the given coordinate
+         * system, due to an error that should have been preventable
+         * with the right checks in advance.  This can only happen in certain
+         * coordinate systems, and for all such coordinate systems this is
+         * explicitly described in the HyperCoords enum documentation.
+         *
+         * \exception UnsolvedCase the matching equations could not
+         * be created for the given triangulation in the given coordinate
+         * system, due to an error that was "genuinely" unforseeable.
+         * Again this can only happen in certain coordinate systems, where
+         * this is explicitly described in the HyperCoords enum documentation.
+         *
+         * @param triangulation the triangulation upon which this list of
+         * normal hypersurfaces will be based.
+         * @param coords the coordinate system to be used.  This must be
+         * one of the system that Regina is able to use for enumeration;
+         * this is documented alongside each HyperCoords enum value.
+         * @param which indicates which normal hypersurfaces should be
+         * enumerated.
+         * @param algHints passes requests to Regina for which specific
+         * enumeration algorithm should be used.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         */
+        NormalHypersurfaces(
+            const Triangulation<4>& triangulation,
+            HyperCoords coords,
+            HyperList which = HS_LIST_DEFAULT,
+            HyperAlg algHints = HS_ALG_DEFAULT,
+            ProgressTracker* tracker = nullptr);
+
+        /**
+         * Constructs a new copy of the given list.
+         */
+        NormalHypersurfaces(const NormalHypersurfaces&) = default;
+
+        /**
+         * Moves the given list into this new list.
+         * This is a fast (constant time) operation.
+         *
+         * The list that is passed will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this list
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the list to move.
+         */
+        NormalHypersurfaces(NormalHypersurfaces&&) noexcept = default;
+
+        /**
+         * Sets this to be a (deep) copy of the given list.
+         *
+         * @param copy the list to copy.
+         * @return a reference to this list.
+         */
+        NormalHypersurfaces& operator = (const NormalHypersurfaces& src);
+
+        /**
+         * Moves the contents of the given list into this list.
+         * This is a fast (constant time) operation.
+         *
+         * The list that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this list which may in turn call arbitrary code
+         * via any registered packet listeners.  It deliberately does \e not
+         * fire change events on \a src, since it assumes that \a src is about
+         * to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the list to move.
+         * @return a reference to this list.
+         */
+        NormalHypersurfaces& operator = (NormalHypersurfaces&& src);
+
+        /**
+         * Swaps the contents of this and the given list.
+         *
+         * This routine will behave correctly if \a other is in fact
+         * this list.
+         *
+         * \note This swap function is \e not marked \c noexcept, since it
+         * fires change events on both lists which may in turn call arbitrary
+         * code via any registered packet listeners.
+         *
+         * @param other the list whose contents should be swapped with this.
+         */
+        void swap(NormalHypersurfaces& other);
+
+        /**
+         * Deprecated routine to enumerate normal hypersurfaces within a
+         * given triangulation.
+         *
+         * This static routine is identical to calling the class
+         * constructor with the given arguments, but with three differences:
+         *
+         * - If a progress tracker is passed, this routine will start the
+         *   enumeration in a detached background thread and return immediately
+         *   (unlike the class constructor, which does not return until the
+         *   enumeration is finished).
+         *
+         * - This routine wraps the new normal hypersurface list in a packet and
+         *   inserts it beneath \a owner in the packet tree (unlike the class
+         *   constructor, which creates a plain NormalHypersurfaces object).
+         *   If a progress tracker is passed (i.e., the enumeration runs in a
+         *   background thread) then this tree insertion will not happen until
+         *   the enumeration has finished, and if the user cancels the
+         *   operation then the insertion will not happen at all.
+         *
+         * - If there is an error, this routine will return \c null (unlike
+         *   the class constructor, which throws an exception).
+         *
+         * This function is safe to use even if \a owner is a "pure"
+         * Triangulation<4>, not a packet type.  In such a scenario, this
+         * routine will still build the normal hypersurface list, but the
+         * resulting packet will be orphaned.
+         *
+         * See the class constructor for details on how this routine works
+         * and what the arguments mean.
+         *
+         * \deprecated Just call the NormalHypersurfaces constructor.
+         *
+         * \ifacespython For this deprecated function, the progress tracker
+         * argument is omitted.  It is still possible to enumerate in
+         * the background with a progress tracker, but for that you will
+         * need to call the class constructor instead and create the new
+         * thread yourself.
          *
          * @param owner the triangulation upon which this list of normal
          * hypersurfaces will be based.
@@ -176,20 +331,20 @@ class NormalHypersurfaces : public Packet {
          * enumeration algorithm should be used.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the newly created normal hypersurface list.  Note that if
-         * a progress tracker is passed then this list may not be completely
-         * filled when this routine returns.  If an error occurs (as
-         * described above) then this routine will return \c null instead.
+         * @return the new normal hypersurface list, or \c null if an error
+         * occured.
          */
-        static NormalHypersurfaces* enumerate(Triangulation<4>& owner,
-            HyperCoords coords,
-            HyperList which = HS_LIST_DEFAULT,
-            HyperAlg algHints = HS_ALG_DEFAULT,
-            ProgressTracker* tracker = nullptr);
+        [[deprecated]] static std::shared_ptr<PacketOf<NormalHypersurfaces>>
+            enumerate(
+                Triangulation<4>& owner,
+                HyperCoords coords,
+                HyperList which = HS_LIST_DEFAULT,
+                HyperAlg algHints = HS_ALG_DEFAULT,
+                ProgressTracker* tracker = nullptr);
 
         /**
-         * Returns the coordinate system being used by the
-         * hypersurfaces stored in this set.
+         * Returns the coordinate system that was originally used to enumerate
+         * the hypersurfaces in this list.
          *
          * @return the coordinate system used.
          */
@@ -198,8 +353,8 @@ class NormalHypersurfaces : public Packet {
          * Returns details of which normal hypersurfaces this list represents
          * within the underlying triangulation.
          *
-         * This may not be the same HyperList that was passed to enumerate().
-         * In particular, default values will have been explicitly
+         * This may not be the same HyperList that was passed to the class
+         * constructor.  In particular, default values will have been explicitly
          * filled in (such as HS_VERTEX and/or HS_EMBEDDED_ONLY), and
          * invalid and/or redundant values will have been removed.
          *
@@ -210,8 +365,8 @@ class NormalHypersurfaces : public Packet {
          * Returns details of the algorithm that was used to enumerate
          * this list.
          *
-         * These may not be the same HyperAlg flags that were passed to
-         * enumerate().  In particular, default values will have been
+         * These may not be the same HyperAlg flags that were passed to the
+         * class constructor.  In particular, default values will have been
          * explicitly filled in, invalid and/or redundant values will have
          * been removed, and unavailable and/or unsupported combinations
          * of algorithm flags will be replaced with whatever algorithm
@@ -221,7 +376,19 @@ class NormalHypersurfaces : public Packet {
          */
         HyperAlg algorithm() const;
         /**
-         * Returns whether this set is known to contain only embedded normal
+         * Determines if the coordinate system that was used for enumeration
+         * allows for non-compact hypersurfaces.
+         *
+         * This does not test whether any of the hypersurfaces in this
+         * list are actually non-compact; it simply returns a basic
+         * property of the coordinate system that was used for enumeration.
+         *
+         * @return \c true if and only if non-compact normal hypersurfaces
+         * are supported.
+         */
+        bool allowsNonCompact() const;
+        /**
+         * Returns whether this list is known to contain only embedded normal
          * hypersurfaces.
          *
          * If this returns \c false, it does not guarantee that immersed
@@ -236,17 +403,31 @@ class NormalHypersurfaces : public Packet {
         /**
          * Returns the triangulation in which these normal hypersurfaces live.
          *
-         * The triangulation is also accessible via the packet tree as
-         * parent(); this routine simply adds the convenience of casting
-         * down to the correct triangulation class.
+         * This will be a snapshot frozen in time of the triangulation
+         * that was originally passed to the NormalHypersurfaces constructor.
          *
-         * If you need non-const access to the triangulation (e.g., to
-         * rename the packet), use parent(); however, remember that a
-         * triangulation that owns normal hypersurfaces must \e not change
-         * its tetrahedra or their gluings.
+         * This will return a correct result even if the original triangulation
+         * has since been modified or destroyed.  However, in order to ensure
+         * this behaviour, it is possible that at different points in time
+         * this function may return references to different C++ objects.
          *
-         * @return a reference to the triangulation in which these
-         * hypersurfaces live.
+         * The rules for using the triangulation() reference are:
+         *
+         * - Do not keep the resulting reference as a long-term reference or
+         *   pointer of your own, since in time you may find yourself referring
+         *   to the wrong object (see above).  Just call this function again.
+         *
+         * - You must respect the read-only nature of the result (i.e.,
+         *   you must not cast the constness away).  The snapshotting
+         *   process detects modifications, and modifying the frozen
+         *   snapshot may result in an exception being thrown.
+         *
+         * \warning As of Regina 7.0, you \e cannot access this triangulation
+         * via the packet tree as Packet::parent().  This is because normal
+         * hypersurface lists can now be kept anywhere in the packet tree, or
+         * can be kept as standalone objects outside the packet tree entirely.
+         *
+         * @return a reference to the underlying triangulation.
          */
         const Triangulation<4>& triangulation() const;
 
@@ -257,31 +438,6 @@ class NormalHypersurfaces : public Packet {
          */
         size_t size() const;
         /**
-         * Returns an object that allows iteration through and random access
-         * to all normal hypersurfaces in this list.
-         *
-         * The object that is returned is lightweight, and can be happily
-         * copied by value.  The C++ type of the object is subject to change,
-         * so C++ users should use \c auto (just like this declaration does).
-         *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
-         *
-         * \code{.cpp}
-         * for (const NormalHypersurface* s : list.hypersurfaces()) { ... }
-         * \endcode
-         *
-         * The object that is returned will remain valid only for as
-         * long as this normal hypersurface list exists.
-         *
-         * \ifacespython This routine returns a Python list.
-         *
-         * @return access to the list of all normal hypersurfaces.
-         */
-        auto hypersurfaces() const;
-        /**
          * Returns the hypersurface at the requested index in this list.
          *
          * @param index the index of the requested hypersurface in this list;
@@ -290,12 +446,66 @@ class NormalHypersurfaces : public Packet {
          * @return the normal hypersurface at the requested index in this list.
          */
         const NormalHypersurface& hypersurface(size_t index) const;
+        /**
+         * Returns an iterator at the beginning of this list of hypersurfaces.
+         *
+         * The begin() and end() functions allow you to iterate through all
+         * hypersurfaces in this list using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * NormalHypersurfaces list(...);
+         * for (const NormalHypersurface& s : list) { ... }
+         * \endcode
+         *
+         * In Python, a normal hypersurface list can be treated as an iterable
+         * object:
+         *
+         * \code{.py}
+         * list = NormalHypersurfaces(...)
+         * for s in list:
+         *     ...
+         * \endcode
+         *
+         * The type that is returned will be a lightweight iterator type,
+         * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
+         * The precise C++ type of the iterator is subject to change, so
+         * C++ users should use \c auto (just like this declaration does).
+         *
+         * @return an iterator at the beginning of this list.
+         */
+        auto begin() const;
+        /**
+         * Returns an iterator beyond the end of this list of hypersurfaces.
+         *
+         * In C++, the begin() and end() routines allow you to iterate through
+         * all hypersurfaces in this list using C++11 range-based \c for loops.
+         * In Python, a normal hypersurface list can be treated as an iterable
+         * object.
+         *
+         * See the begin() documentation for further details.
+         *
+         * @return an iterator beyond the end of this list.
+         */
+        auto end() const;
 
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const override;
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
         /**
          * Sorts the hypersurfaces in this list according to the given
@@ -306,9 +516,10 @@ class NormalHypersurfaces : public Packet {
          *
          * The implementation of this routine uses std::stable_sort.
          *
-         * \ifacespython Not present.
+         * \ifacespython This is available in Python, and \a comp may be
+         * a pure Python function.
          *
-         * @param comp a binary function (or function object) that
+         * @param comp a binary function (or other callable object) that
          * accepts two const HyperSurface references, and returns \c true
          * if and only if the first hypersurface should appear before the
          * second in the sorted list.
@@ -328,11 +539,11 @@ class NormalHypersurfaces : public Packet {
          * makeMatchingEquations().
          *
          * Note that there are situations in which makeMatchingEquations()
-         * returns no value (because the triangulation is not supported
+         * throws an exception (because the triangulation is not supported
          * by the chosen coordinate system).  However, this routine will
-         * always return a value, because if makeMatchingEquations() had
-         * returned no value then this normal hypersurface list would not have
-         * been created in the first place.
+         * always succeed, because if makeMatchingEquations() had failed
+         * then this normal hypersurface list would not have been created
+         * in the first place.
          *
          * @return the matching equations used to create this normal
          * hypersurface list.
@@ -343,7 +554,16 @@ class NormalHypersurfaces : public Packet {
          * An iterator that gives access to the raw vectors for hypersurfaces
          * in this list, pointing to the beginning of this hypersurface list.
          *
-         * \ifacespython Not present.
+         * In Python, beginVectors() and endVectors() are replaced
+         * by a single routine vectors(), which returns an iterable object:
+         *
+         * \code{.py}
+         * list = NormalHypersurfaces(...)
+         * for v in list.vectors():
+         *     ...
+         * \endcode
+         *
+         * \ifacespython Not present; use vectors() instead.
          *
          * @return an iterator at the beginning of this hypersurface list.
          */
@@ -354,7 +574,11 @@ class NormalHypersurfaces : public Packet {
          * in this list, pointing past the end of this hypersurface list.
          * This iterator is not dereferenceable.
          *
-         * \ifacespython Not present.
+         * In Python, beginVectors() and endVectors() are replaced
+         * by a single routine vectors(), which returns an iterable object;
+         * see the beginVectors() documentation for further details.
+         *
+         * \ifacespython Not present; use vectors() instead.
          *
          * @return an iterator past the end of this hypersurface list.
          */
@@ -364,10 +588,23 @@ class NormalHypersurfaces : public Packet {
          * A bidirectional iterator that runs through the raw vectors for
          * hypersurfaces in this list.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present.  Instead NormalHypersurfaces::vectors()
+         * returns an object of a different (hidden) class that supports
+         * the Python iterable/iterator interface.
          */
-        class VectorIterator : public std::iterator<
-                std::bidirectional_iterator_tag, Vector<LargeInteger>> {
+        class VectorIterator {
+            public:
+                using iterator_category = std::bidirectional_iterator_tag;
+                    /**< Declares this to be a bidirectional iterator type. */
+                using value_type = Vector<LargeInteger>;
+                    /**< Indicates what type the iterator points to. */
+                using difference_type = ptrdiff_t;
+                    /**< The type obtained by subtracting iterators. */
+                using pointer = const Vector<LargeInteger>*;
+                    /**< A pointer to \a value_type. */
+                using reference = const Vector<LargeInteger>&;
+                    /**< The type obtained when dereferencing iterators. */
+
             private:
                 std::vector<NormalHypersurface>::const_iterator it_;
                     /**< An iterator into the underlying list of
@@ -377,7 +614,7 @@ class NormalHypersurfaces : public Packet {
                 /**
                  * Creates a new uninitialised iterator.
                  */
-                VectorIterator();
+                VectorIterator() = default;
 
                 /**
                  * Creates a copy of the given iterator.
@@ -471,108 +708,27 @@ class NormalHypersurfaces : public Packet {
         /**
          * Creates an empty list of normal hypersurfaces with the given
          * parameters.
-         *
-         * @param coords the coordinate system to be used for filling
-         * this list.
-         * @param which indicates which normal hypersurfaces these will
-         * represent within the underlying triangulation.
-         * @param algorithm details of the enumeration algorithm that
-         * will be used to fill this list.
          */
         NormalHypersurfaces(HyperCoords coords, HyperList which,
-            HyperAlg algorithm);
-
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
+            HyperAlg algorithm, const Triangulation<4>& triangulation);
 
         /**
-         * An output iterator used to insert hypersurfaces into an
-         * NormalHypersurfaces.
-         *
-         * Objects of type <tt>NormalHypersurfaceVector*</tt> can be assigned
-         * to this iterator, whereupon a surrounding NormalHypersurface
-         * will be automatically created.
+         * Creates an empty list of normal hypersurfaces with the given
+         * parameters.
          */
-        struct HypersurfaceInserter : public std::iterator<
-                std::output_iterator_tag, NormalHypersurfaceVector*> {
-            NormalHypersurfaces* list_;
-                /**< The list into which hypersurfaces will be inserted. */
-            const Triangulation<4>& owner_;
-                /**< The triangulation in which the hypersurfaces to be
-                 *   inserted are contained. */
-
-            /**
-             * Creates a new output iterator.  The member variables of
-             * this iterator will be initialised according to the
-             * parameters passed to this constructor.
-             *
-             * @param list the list into which hypersurfaces will be inserted.
-             * @param owner the triangulation in which the hypersurfaces
-             * to be inserted are contained.
-             */
-            HypersurfaceInserter(NormalHypersurfaces& list,
-                const Triangulation<4>& owner);
-            /**
-             * Creates a new output iterator that is a clone of the
-             * given iterator.
-             *
-             * @param cloneMe the output iterator to clone.
-             */
-            HypersurfaceInserter(const HypersurfaceInserter& cloneMe) = default;
-
-            /**
-             * Appends the normal hypersurface corresponding to the given
-             * vector to the end of the appropriate hypersurface list.
-             *
-             * The given vector will be owned by the newly created
-             * normal hypersurface and will be deallocated with the other
-             * hypersurfaces in this list when the list is eventually
-             * destroyed.
-             *
-             * @param vector the vector of the normal hypersurface to insert.
-             * @return this output iterator.
-             */
-            HypersurfaceInserter& operator = (
-                NormalHypersurfaceVector* vector);
-
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            HypersurfaceInserter& operator *();
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            HypersurfaceInserter& operator ++();
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            HypersurfaceInserter& operator ++(int);
-
-            HypersurfaceInserter& operator = (
-                const HypersurfaceInserter& cloneMe) = delete;
-        };
+        NormalHypersurfaces(HyperCoords coords, HyperList which,
+            HyperAlg algorithm,
+            const SnapshotRef<Triangulation<4>>& triangulation);
 
     private:
         /**
          * Contains the code responsible for all normal hypersurface
-         * enumeration, in a setting where the underlying coordinate system
-         * is known at compile time.
-         *
-         * \tparam Coords an instance of the HyperInfo<> template class.
+         * enumeration.
          */
-        template <typename Coords>
         class Enumerator {
             private:
                 NormalHypersurfaces* list_;
                     /**< The hypersurface list to be filled. */
-                Triangulation<4>* triang_;
-                    /**< The triangulation in which these hypersurfaces lie. */
                 const MatrixInt& eqns_;
                     /**< The matching equations for the given triangulation in
                          the coordinate system corresponding to \a list_. */
@@ -580,23 +736,20 @@ class NormalHypersurfaces : public Packet {
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
                          or \c null if no progress tracker is in use. */
+                Packet* treeParent_;
+                    /**< The parent packet in the tree, if we should insert the
+                         finished list into the packet tree once enumeration
+                         has finished, or \c null if we should not. */
 
             public:
                 /**
                  * Creates a new functor with the given parameters.
                  *
-                 * @param list the hypersurface list to be filled.
-                 * @param triang the triangulation in which these
-                 * hypersurfaces lie.
-                 * @param eqns the matching equations for the given
-                 * triangulation in the coordinate system corresponding to
-                 * \a list.
-                 * @param tracker the progress tracker to use for
-                 * progress reporting and cancellation polling, or \c null if
-                 * these capabilities are not required.
+                 * \pre If \a treeParent is non-null, then list is actually
+                 * the inherited interface of a PacketOf<NormalHypersurfaces>.
                  */
-                Enumerator(NormalHypersurfaces* list, Triangulation<4>* triang,
-                    const MatrixInt& eqns, ProgressTracker* tracker);
+                Enumerator(NormalHypersurfaces* list, const MatrixInt& eqns,
+                    ProgressTracker* tracker, Packet* treeParent);
 
                 /**
                  * Default move constructor.
@@ -610,8 +763,8 @@ class NormalHypersurfaces : public Packet {
                  * list_->algorithm_ have been sanity-checked.
                  *
                  * This routine fills \a list_ with surfaces, and then once
-                 * this is finished it inserts \a list_ into the packet
-                 * tree as a child of \a triang_.
+                 * this is finished it inserts \a list_ beneath \a treeParent_
+                 * if treeParent_ is non-null.
                  */
                 void enumerate();
 
@@ -712,39 +865,71 @@ class NormalHypersurfaces : public Packet {
         };
 
     friend class XMLNormalHypersurfacesReader;
+    friend class XMLLegacyNormalHypersurfacesReader;
+    friend class XMLWriter<NormalHypersurfaces>;
 };
+
+/**
+ * Swaps the contents of the two given lists.
+ *
+ * This global routine simply calls NormalHypersurfaces::swap(); it is
+ * provided so that NormalHypersurfaces meets the C++ Swappable requirements.
+ *
+ * See NormalHypersurfaces::swap() for more details.
+ *
+ * \note This swap function is \e not marked \c noexcept, since it
+ * fires change events on both lists which may in turn call arbitrary
+ * code via any registered packet listeners.
+ *
+ * @param lhs the list whose contents should be swapped with \a rhs.
+ * @param rhs the list whose contents should be swapped with \a lhs.
+ *
+ * \ingroup hypersurface
+ */
+void swap(NormalHypersurfaces& lhs, NormalHypersurfaces& rhs);
 
 /**
  * Generates the set of normal hypersurface matching equations for the
  * given triangulation using the given coordinate system.
  *
+ * These are the matching equations that will be used when enumerating
+ * normal hypersurfaces in the coordinate system \a coords.
+ *
  * Each equation will be represented as a row of the resulting matrix.
  * Each column of the matrix represents a coordinate in the given
  * coordinate system.
  *
- * For some coordinate systems, Regina may not be able to create matching
- * equations for all triangulations (any such coordinate systems will be
- * explicitly mentioned as such in the HyperCoords enum documentation).  If
- * Regina cannot create the matching equations as requested, this routine will
- * return no value instead.
+ * \exception InvalidArgument the matching equations could not be created for
+ * the given triangulation in the given coordinate system, due to an error
+ * that should have been preventable with the right checks in advance.  This
+ * can only happen in certain coordinate systems, and for all such coordinate
+ * systems this is explicitly described in the HyperCoords enum documentation.
+ *
+ * \exception UnsolvedCase the matching equations could not be created for the
+ * given triangulation in the given coordinate system, due to an error that was
+ * "genuinely" unforseeable.  Again this can only happen in certain coordinate
+ * systems, where this is explicitly described in the HyperCoords enum
+ * documentation.
  *
  * @param triangulation the triangulation upon which these matching equations
  * will be based.
- * @param coords the coordinate system to be used;
- * this must be one of the predefined coordinate system
- * constants in NormalHypersurfaces.
- * @return the resulting set of matching equations, or no value if
- * Regina is not able to construct them for the given combination of
- * triangulation and coordinate system.
+ * @param coords the coordinate system to be used.
+ * @return the resulting set of matching equations.
+ *
+ * \ingroup hypersurface
  */
-std::optional<MatrixInt> makeMatchingEquations(
-    const Triangulation<4>& triangulation, HyperCoords coords);
+MatrixInt makeMatchingEquations(const Triangulation<4>& triangulation,
+    HyperCoords coords);
+
 /**
  * Generates the validity constraints representing the condition that
  * normal hypersurfaces be embedded.  The validity constraints will be expressed
  * relative to the given coordinate system.
  *
- * \ifacespython Not present.
+ * These are the constraints that will be used when enumerating embedded
+ * hypersurfaces in the given coordinate system (i.e., when the default
+ * HS_EMBEDDED_ONLY flag is used).  They will not be used when the enumeration
+ * allows for immersed and/or singular hypersurfaces.
  *
  * @param triangulation the triangulation upon which these validity constraints
  * will be based.
@@ -752,13 +937,57 @@ std::optional<MatrixInt> makeMatchingEquations(
  * this must be one of the predefined coordinate system
  * constants in NormalHypersurfaces.
  * @return the set of validity constraints.
+ *
+ * \ingroup hypersurface
  */
-EnumConstraints makeEmbeddedConstraints(const Triangulation<4>& triangulation,
-    HyperCoords coords);
-
-/*@}*/
+ValidityConstraints makeEmbeddedConstraints(
+    const Triangulation<4>& triangulation, HyperCoords coords);
 
 // Inline functions for NormalHypersurfaces
+
+inline NormalHypersurfaces::NormalHypersurfaces(
+        const Triangulation<4>& triangulation,
+        HyperCoords coords, HyperList which, HyperAlg algHints,
+        ProgressTracker* tracker) :
+        triangulation_(triangulation), coords_(coords), which_(which),
+        algorithm_(algHints) {
+    try {
+        Enumerator(this, makeMatchingEquations(triangulation, coords),
+            tracker, nullptr).enumerate();
+    } catch (const ReginaException&) {
+        if (tracker)
+            tracker->setFinished();
+        throw;
+    }
+}
+
+inline NormalHypersurfaces& NormalHypersurfaces::operator = (
+        const NormalHypersurfaces& src) {
+    ChangeEventSpan span(*this);
+
+    surfaces_ = src.surfaces_;
+    triangulation_ = src.triangulation_;
+    coords_ = src.coords_;
+    which_ = src.which_;
+    algorithm_ = src.algorithm_;
+
+    return *this;
+}
+
+inline NormalHypersurfaces& NormalHypersurfaces::operator = (
+        NormalHypersurfaces&& src) {
+    ChangeEventSpan span(*this);
+
+    surfaces_ = std::move(src.surfaces_);
+    triangulation_ = std::move(src.triangulation_);
+
+    // Trivial data members:
+    coords_ = src.coords_;
+    which_ = src.which_;
+    algorithm_ = src.algorithm_;
+
+    return *this;
+}
 
 inline HyperCoords NormalHypersurfaces::coords() const {
     return coords_;
@@ -776,12 +1005,12 @@ inline bool NormalHypersurfaces::isEmbeddedOnly() const {
     return which_.has(HS_EMBEDDED_ONLY);
 }
 
-inline size_t NormalHypersurfaces::size() const {
-    return surfaces_.size();
+inline const Triangulation<4>& NormalHypersurfaces::triangulation() const {
+    return *triangulation_;
 }
 
-inline auto NormalHypersurfaces::hypersurfaces() const {
-    return ListView(surfaces_);
+inline size_t NormalHypersurfaces::size() const {
+    return surfaces_.size();
 }
 
 inline const NormalHypersurface& NormalHypersurfaces::hypersurface(
@@ -789,23 +1018,32 @@ inline const NormalHypersurface& NormalHypersurfaces::hypersurface(
     return surfaces_[index];
 }
 
-inline bool NormalHypersurfaces::dependsOnParent() const {
-    return true;
+inline auto NormalHypersurfaces::begin() const {
+    return surfaces_.begin();
+}
+
+inline auto NormalHypersurfaces::end() const {
+    return surfaces_.end();
+}
+
+inline bool NormalHypersurfaces::allowsNonCompact() const {
+    return HyperEncoding(coords_).couldBeNonCompact();
 }
 
 template <typename Comparison>
 inline void NormalHypersurfaces::sort(Comparison&& comp) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
 }
 
-inline MatrixInt NormalHypersurfaces::recreateMatchingEquations() const {
-    // Although makeMatchingEquations() returns a std::optional, we are
-    // guaranteed in our scenario here that this will always contain a value.
-    return *makeMatchingEquations(triangulation(), coords_);
+inline void swap(NormalHypersurfaces& lhs, NormalHypersurfaces& rhs) {
+    lhs.swap(rhs);
 }
 
-inline NormalHypersurfaces::VectorIterator::VectorIterator() {
+inline MatrixInt NormalHypersurfaces::recreateMatchingEquations() const {
+    // Although makeMatchingEquations() could throw an exception, we are
+    // guaranteed in our scenario here that this will always succeed.
+    return makeMatchingEquations(triangulation(), coords_);
 }
 
 inline bool NormalHypersurfaces::VectorIterator::operator ==(
@@ -820,7 +1058,7 @@ inline bool NormalHypersurfaces::VectorIterator::operator !=(
 
 inline const Vector<LargeInteger>&
         NormalHypersurfaces::VectorIterator::operator *() const {
-    return it_->vector().coords();
+    return it_->vector();
 }
 
 inline NormalHypersurfaces::VectorIterator&
@@ -859,44 +1097,23 @@ inline NormalHypersurfaces::VectorIterator
     return VectorIterator(surfaces_.end());
 }
 
-inline NormalHypersurfaces::HypersurfaceInserter::HypersurfaceInserter(
-        NormalHypersurfaces& list, const Triangulation<4>& owner) :
-        list_(&list), owner_(owner) {
-}
-
-inline NormalHypersurfaces::HypersurfaceInserter&
-        NormalHypersurfaces::HypersurfaceInserter::operator =(
-        NormalHypersurfaceVector* vector) {
-    list_->surfaces_.push_back(NormalHypersurface(owner_, vector));
-    return *this;
-}
-
-inline NormalHypersurfaces::HypersurfaceInserter&
-        NormalHypersurfaces::HypersurfaceInserter::operator *() {
-    return *this;
-}
-
-inline NormalHypersurfaces::HypersurfaceInserter&
-        NormalHypersurfaces::HypersurfaceInserter::operator ++() {
-    return *this;
-}
-
-inline NormalHypersurfaces::HypersurfaceInserter&
-        NormalHypersurfaces::HypersurfaceInserter::operator ++(int) {
-    return *this;
+inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,
+        HyperList which, HyperAlg algorithm,
+        const Triangulation<4>& triangulation) :
+        triangulation_(triangulation), coords_(coords), which_(which),
+        algorithm_(algorithm) {
 }
 
 inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,
-        HyperList which, HyperAlg algorithm) :
-        coords_(coords), which_(which), algorithm_(algorithm) {
+        HyperList which, HyperAlg algorithm,
+        const SnapshotRef<Triangulation<4>>& triangulation) :
+        triangulation_(triangulation), coords_(coords), which_(which),
+        algorithm_(algorithm) {
 }
 
-template <typename Coords>
-inline NormalHypersurfaces::Enumerator<Coords>::Enumerator(
-        NormalHypersurfaces* list, Triangulation<4>* triang,
-        const MatrixInt& eqns, ProgressTracker* tracker) :
-        list_(list), triang_(triang), eqns_(eqns),
-        tracker_(tracker) {
+inline NormalHypersurfaces::Enumerator::Enumerator(NormalHypersurfaces* list,
+        const MatrixInt& eqns, ProgressTracker* tracker, Packet* treeParent) :
+        list_(list), eqns_(eqns), tracker_(tracker), treeParent_(treeParent) {
 }
 
 } // namespace regina

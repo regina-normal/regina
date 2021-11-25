@@ -57,18 +57,13 @@ class MatchingModel : public QAbstractItemModel {
          * Details of the matching equations being displayed
          */
         std::optional<regina::MatrixInt> eqns_;
-        regina::NormalSurfaces* surfaces_;
+        const regina::NormalSurfaces* surfaces_;
 
     public:
         /**
          * Constructor.
          */
-        MatchingModel(regina::NormalSurfaces* surfaces);
-
-        /**
-         * Data retrieval.
-         */
-        regina::NormalSurfaces* surfaces() const;
+        MatchingModel(const regina::NormalSurfaces* surfaces);
 
         /**
          * Rebuild the model from scratch.
@@ -79,13 +74,13 @@ class MatchingModel : public QAbstractItemModel {
          * Overrides for describing data in the model.
          */
         QModelIndex index(int row, int column,
-                const QModelIndex& parent) const;
-        QModelIndex parent(const QModelIndex& index) const;
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+                const QModelIndex& parent) const override;
+        QModelIndex parent(const QModelIndex& index) const override;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 };
 
 /**
@@ -96,8 +91,9 @@ class SurfacesMatchingUI : public QObject, public PacketViewerTab {
 
     private:
         /**
-         * Matrix details
+         * Packet details
          */
+        regina::PacketOf<regina::NormalSurfaces>* surfaces;
         MatchingModel* model;
 
         /**
@@ -116,16 +112,16 @@ class SurfacesMatchingUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        SurfacesMatchingUI(regina::NormalSurfaces* packet,
+        SurfacesMatchingUI(regina::PacketOf<regina::NormalSurfaces>* packet,
                 PacketTabbedUI* useParentUI);
-        ~SurfacesMatchingUI();
+        ~SurfacesMatchingUI() override;
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     protected slots:
         /**
@@ -134,19 +130,15 @@ class SurfacesMatchingUI : public QObject, public PacketViewerTab {
         void columnResized(int section, int oldSize, int newSize);
 };
 
-inline MatchingModel::MatchingModel(regina::NormalSurfaces* surfaces) :
+inline MatchingModel::MatchingModel(const regina::NormalSurfaces* surfaces) :
         surfaces_(surfaces) {
-}
-
-inline regina::NormalSurfaces* MatchingModel::surfaces() const {
-    return surfaces_;
 }
 
 inline QModelIndex MatchingModel::index(int row, int column,
         const QModelIndex& /* unused parent */) const {
     if (eqns_)
         return createIndex(row, column,
-            quintptr(eqns_->columns() * row + column));
+            quintptr(eqns_->columns()) * row + column);
     else
         return createIndex(row, column, quintptr(0));
 }

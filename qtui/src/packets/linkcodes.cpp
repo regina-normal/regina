@@ -44,14 +44,14 @@
 #include <QTextEdit>
 #include <QWhatsThis>
 
-LinkCodesUI::LinkCodesUI(regina::Link* packet,
+LinkCodesUI::LinkCodesUI(regina::PacketOf<regina::Link>* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), link(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
-    QHBoxLayout* sublayout = new QHBoxLayout();
-    QLabel* label = new QLabel(tr("Display code:"));
+    auto* sublayout = new QHBoxLayout();
+    auto* label = new QLabel(tr("Display code:"));
     QString msg = tr("Allows you to switch between different text-based "
         "codes for this link.<p>"
         "The <i>Gauss codes</i> include the <i>classical Gauss code</i>, "

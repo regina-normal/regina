@@ -57,7 +57,7 @@ using regina::Packet;
 using regina::SnapPeaTriangulation;
 
 namespace {
-    QRegExp reIntPair("^[^0-9\\-]*(-?\\d+)[^0-9\\-]+(-?\\d+)[^0-9\\-]*$");
+    QRegExp reIntPair(R"(^[^0-9\-]*(-?\d+)[^0-9\-]+(-?\d+)[^0-9\-]*$)");
 }
 
 void CuspModel::rebuild() {
@@ -66,7 +66,7 @@ void CuspModel::rebuild() {
 }
 
 QModelIndex CuspModel::index(int row, int column,
-        const QModelIndex& parent) const {
+        const QModelIndex& /* parent */) const {
     return createIndex(row, column, quint32(3 * row + column));
 }
 
@@ -80,27 +80,27 @@ int CuspModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant CuspModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        const regina::Cusp* cusp = tri_->cusp(index.row());
+        const regina::Cusp& cusp = tri_->cusp(index.row());
         switch (index.column()) {
             case 0:
                 return QString::number(index.row());
             case 1:
-                return QString::number(cusp->vertex()->markedIndex());
+                return QString::number(cusp.vertex()->markedIndex());
             case 2:
-                if (cusp->complete())
+                if (cusp.complete())
                     return QString(QChar(0x2014 /* emdash */));
                 else
-                    return tr("%1, %2").arg(cusp->m()).arg(cusp->l());
+                    return tr("%1, %2").arg(cusp.m()).arg(cusp.l());
             default:
                 return QVariant();
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 2) {
-            const regina::Cusp* cusp = tri_->cusp(index.row());
-            if (cusp->complete())
+            const regina::Cusp& cusp = tri_->cusp(index.row());
+            if (cusp.complete())
                 return QString();
             else
-                return tr("%1, %2").arg(cusp->m()).arg(cusp->l());
+                return tr("%1, %2").arg(cusp.m()).arg(cusp.l());
         } else
             return QVariant();
     } else if (role == Qt::ToolTipRole) {
@@ -144,7 +144,7 @@ Qt::ItemFlags CuspModel::flags(const QModelIndex& index) const {
 }
 
 bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
-        int role) {
+        int /* role */) {
     if (index.column() == 2) {
         QString data = value.toString().trimmed();
         if (data.isEmpty() || data == "-") {
@@ -152,7 +152,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
             return true;
         }
         if (! reIntPair.exactMatch(data)) {
-            ReginaSupport::info(0,
+            ReginaSupport::info(nullptr,
                 tr("Please enter a pair of filling coefficients."),
                 tr("<qt>This should be a pair of integers, such as "
                     "<i>3, 2</i>."));
@@ -163,7 +163,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
         int m = reIntPair.cap(1).toInt(&mOk);
         int l = reIntPair.cap(2).toInt(&lOk);
         if (! (mOk && lOk)) {
-            ReginaSupport::sorry(0,
+            ReginaSupport::sorry(nullptr,
                 tr("The filling coefficients are too large."),
                 tr("The coefficients you provided are too large for "
                     "this machine to store using its native integer type."));
@@ -176,16 +176,16 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
         }
 
         if (regina::gcd(m, l) != 1) {
-            ReginaSupport::sorry(0,
+            ReginaSupport::sorry(nullptr,
                 tr("The filling coefficients must be coprime."),
                 tr("Although SnapPea can handle more general filling "
                     "coefficients, Regina insists that the filling "
                     "coefficients be relatively prime."));
             return false;
         }
-        if ((! tri_->cusp(index.row())->vertex()->isLinkOrientable()) &&
+        if ((! tri_->cusp(index.row()).vertex()->isLinkOrientable()) &&
                 l != 0) {
-            ReginaSupport::sorry(0,
+            ReginaSupport::sorry(nullptr,
                 tr("For non-orientable cusps, the filling coefficients "
                     "must be (±1, 0)."),
                 tr("Although SnapPea can handle more general filling "
@@ -195,7 +195,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
         }
         if (tri_->fill(m, l, index.row()))
             return true;
-        ReginaSupport::info(0,
+        ReginaSupport::info(nullptr,
             tr("I could not use these filling coefficients."),
             tr("<qt>SnapPea rejected them, and I'm not sure why.  "
                 "This could happen (for instance) if the coefficients "
@@ -208,13 +208,14 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
 }
 
-SnapPeaShapesUI::SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
-        PacketTabbedUI* useParentUI, bool readWrite) :
+SnapPeaShapesUI::SnapPeaShapesUI(
+        regina::PacketOf<regina::SnapPeaTriangulation>* packet,
+        PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
-    QLabel* label = new QLabel(tr("Cusps:"));
+    auto* label = new QLabel(tr("Cusps:"));
     layout->addWidget(label);
 
     model = new CuspModel(packet);
@@ -259,16 +260,14 @@ SnapPeaShapesUI::SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
     actRandomise->setIcon(ReginaSupport::regIcon("randomise"));
     actRandomise->setToolTip(tr(
         "Randomise this triangulation"));
-    actRandomise->setEnabled(readWrite);
     actRandomise->setWhatsThis(tr("Randomise this triangulation.  "
         "The manifold will be randomly retriangulated using local moves "
         "that preserve the topology."));
-    enableWhenWritable.push_back(actRandomise);
     triActionList.push_back(actRandomise);
     requiresNonNull.push_back(actRandomise);
     connect(actRandomise, SIGNAL(triggered()), this, SLOT(randomise()));
 
-    QAction* actCanonise = new QAction(this);
+    auto* actCanonise = new QAction(this);
     actCanonise->setText(tr("&Canonical Retriangulation"));
     actCanonise->setIcon(ReginaSupport::regIcon("canonical"));
     actCanonise->setToolTip(tr(
@@ -289,7 +288,7 @@ SnapPeaShapesUI::SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
     requiresNonNull.push_back(actCanonise);
     connect(actCanonise, SIGNAL(triggered()), this, SLOT(canonise()));
 
-    QAction* actVertexLinks = new QAction(this);
+    auto* actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
     actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
     actVertexLinks->setToolTip(tr(
@@ -414,18 +413,6 @@ void SnapPeaShapesUI::endEdit() {
     cusps->endEdit();
 }
 
-void SnapPeaShapesUI::setReadWrite(bool readWrite) {
-    // Regardless of whether we allow edits, we can do nothing with a
-    // null triangulation.
-    if (tri->isNull())
-        readWrite = false;
-
-    for (auto action : enableWhenWritable)
-        action->setEnabled(readWrite);
-
-    updateNonNullActions();
-}
-
 void SnapPeaShapesUI::vertexLinks() {
     endEdit();
 
@@ -434,7 +421,7 @@ void SnapPeaShapesUI::vertexLinks() {
             tr("This triangulation does not have any vertices."));
     else {
         regina::Vertex<3>* chosen =
-            FaceDialog<3, 0>::choose(ui, tri, 0 /* filter */,
+            FaceDialog<3, 0>::choose(ui, tri, nullptr /* filter */,
             tr("Vertex Links"),
             tr("Triangulate the link of which vertex?"),
             tr("<qt>Regina will triangulate the link of whichever "
@@ -446,8 +433,8 @@ void SnapPeaShapesUI::vertexLinks() {
                 "the tetrahedron corners that meet together at "
                 "<i>V</i>.</qt>"));
         if (chosen) {
-            regina::Triangulation<2>* ans = new regina::Triangulation<2>(
-                *chosen->buildLink());
+            auto ans = regina::makePacket<regina::Triangulation<2>>(
+                std::in_place, chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
@@ -464,7 +451,8 @@ void SnapPeaShapesUI::toRegina() {
             tr("This is a null triangulation: there is no SnapPea "
             "triangulation for me to convert."));
     else {
-        regina::Triangulation<3>* ans = new regina::Triangulation<3>(*tri);
+        auto ans = regina::makePacket<regina::Triangulation<3>>(
+            std::in_place, *tri);
         ans->setLabel(tri->label());
         tri->insertChildLast(ans);
         enclosingPane->getMainWindow()->packetView(ans, true, true);
@@ -484,10 +472,13 @@ void SnapPeaShapesUI::fill() {
             tr("You can enter filling coefficients on the "
                 "<i>Shapes & Cusps</i> tab."));
     } else {
-        regina::Triangulation<3>* ans;
-        if (tri->countFilledCusps() == 1)
-            ans = tri->filledTriangulation();
-        else {
+        std::shared_ptr<regina::Packet> ans;
+        if (tri->countFilledCusps() == 1) {
+            if (tri->countCompleteCusps() == 0)
+                ans = regina::makePacket(tri->filledAll());
+            else
+                ans = regina::makePacket(tri->filledPartial());
+        } else {
             int chosen = CuspDialog::choose(ui, tri, CuspChooser::filterFilled,
                 tr("Permanently Fill Cusps"),
                 tr("Permanently fill which cusp(s)?"),
@@ -495,10 +486,14 @@ void SnapPeaShapesUI::fill() {
                     "whatever cusp you choose."));
             if (chosen == CuspChooser::CUSP_NO_SELECTION)
                 return;
-            else if (chosen == CuspChooser::CUSP_ALL)
-                ans = tri->filledTriangulation();
-            else
-                ans = tri->filledTriangulation(chosen);
+            else if (chosen == CuspChooser::CUSP_ALL) {
+                if (tri->countCompleteCusps() == 0)
+                    ans = regina::makePacket(tri->filledAll());
+                else
+                    ans = regina::makePacket(tri->filledPartial());
+            } else {
+                ans = regina::makePacket(tri->filledPartial(chosen));
+            }
         }
         if (! ans) {
             ReginaSupport::sorry(ui,
@@ -527,17 +522,15 @@ void SnapPeaShapesUI::canonise() {
             tr("This is a null triangulation: there is no SnapPea "
             "triangulation for me to canonise."));
     else {
-        regina::Triangulation<3>* ans = tri->canonise();
-        if (! ans) {
+        try {
+            auto ans = makePacket(tri->canonise(), "Canonical retriangulation");
+            tri->insertChildLast(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
+        } catch (const regina::UnsolvedCase&) {
             ReginaSupport::sorry(ui,
                 tr("The SnapPea kernel was not able to build the "
                 "canonical retriangulation of the "
                 "canonical cell decomposition."));
-        } else {
-            ans->setLabel(tr("Canonical retriangulation").
-                toUtf8().constData());
-            tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
     }
 }

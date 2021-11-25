@@ -1,0 +1,99 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2019-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests involving SnapPea triangulations.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+from __future__ import print_function
+
+class Watcher(PacketListener):
+    def packetToBeChanged(self, packet):
+        print('To be changed:')
+        if packet.isNull():
+            print('    Null')
+        else:
+            print('    Size:', packet.size())
+            print('    Homology:', packet.homologyFilled())
+    def packetWasChanged(self, packet):
+        print('Was changed:')
+        if packet.isNull():
+            print('    Null')
+        else:
+            print('    Size:', packet.size())
+            print('    Homology:', packet.homologyFilled())
+
+w = Watcher()
+
+# Without a packet:
+
+t = SnapPeaTriangulation(Example3.whiteheadLink())
+
+print(t.homologyFilled())
+t.fill(3, 4, 0)
+print(t.homologyFilled())
+t.unfill()
+print(t.homologyFilled())
+t.pachner(t.triangle(0))
+print(t.isNull())
+
+print()
+
+# With a packet, but without a listener:
+
+t = PacketOfSnapPeaTriangulation(Example3.whiteheadLink())
+
+print(t.homologyFilled())
+t.fill(3, 4, 0)
+print(t.homologyFilled())
+t.unfill()
+print(t.homologyFilled())
+t.pachner(t.triangle(0))
+print(t.isNull())
+
+print()
+
+# With a packet and a listener:
+
+t = PacketOfSnapPeaTriangulation(Example3.whiteheadLink())
+t.listen(w)
+
+print(t.homologyFilled())
+t.fill(3, 4, 0)
+print(t.homologyFilled())
+t.unfill()
+print(t.homologyFilled())
+t.pachner(t.triangle(0))
+# The watcher should have given incorrect output at this point, since
+# packetToBeChanged is currently called too late (after the Regina
+# changes but before the SnapPea triangulation is nullified).
+# Specifically, we should see the wrong size() being output.
+# See the SnapPeaTriangulation class notes for details on this issue.
+print(t.isNull())
+

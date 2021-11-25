@@ -32,159 +32,165 @@
 
 #include <list>
 #include "file/xml/xmlfilterreader.h"
-#include "surfaces/filterregistry.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
 
-/**
- * A unique namespace containing XML readers for specific filter types.
- */
-namespace {
-    /**
-     * Reads a plain (non-subclassed) SurfaceFilter.
-     */
-    class PlainFilterReader : public XMLFilterReader {
-        private:
-            SurfaceFilter* filter_;
-
-        public:
-            PlainFilterReader() : filter_(new SurfaceFilter()) {
-            }
-
-            virtual SurfaceFilter* filter() override {
-                return filter_;
-            }
-    };
-
-    /**
-     * Reads a SurfaceFilterCombination filter.
-     */
-    class CombinationReader : public XMLFilterReader {
-        private:
-            SurfaceFilterCombination* filter_;
-
-        public:
-            CombinationReader() : filter_(0) {
-            }
-
-            virtual SurfaceFilter* filter() override {
-                return filter_;
-            }
-
-            XMLElementReader* startSubElement(const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict& props) override {
-                if (! filter_)
-                    if (subTagName == "op") {
-                        std::string type = props.lookup("type");
-                        if (type == "and") {
-                            filter_ = new SurfaceFilterCombination();
-                            filter_->setUsesAnd(true);
-                        } else if (type == "or") {
-                            filter_ = new SurfaceFilterCombination();
-                            filter_->setUsesAnd(false);
-                        }
-                    }
-                return new XMLElementReader();
-            }
-    };
-
-    /**
-     * Reads a SurfaceFilterProperties filter.
-     */
-    class PropertiesReader : public XMLFilterReader {
-        private:
-            SurfaceFilterProperties* filter_;
-
-        public:
-            PropertiesReader() : filter_(new SurfaceFilterProperties()) {
-            }
-
-            virtual SurfaceFilter* filter() override {
-                return filter_;
-            }
-
-            XMLElementReader* startSubElement(const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict& props) override {
-                if (subTagName == "euler") {
-                    return new XMLCharsReader();
-                } else if (subTagName == "orbl") {
-                    BoolSet b;
-                    if (valueOf(props.lookup("value"), b))
-                        filter_->setOrientability(b);
-                } else if (subTagName == "compact") {
-                    BoolSet b;
-                    if (valueOf(props.lookup("value"), b))
-                        filter_->setCompactness(b);
-                } else if (subTagName == "realbdry") {
-                    BoolSet b;
-                    if (valueOf(props.lookup("value"), b))
-                        filter_->setRealBoundary(b);
-                }
-                return new XMLElementReader();
-            }
-
-            void endSubElement(
-                    const std::string& subTagName,
-                    XMLElementReader* subReader) override {
-                if (subTagName == "euler") {
-                    std::list<std::string> tokens;
-                    basicTokenise(back_inserter(tokens),
-                        dynamic_cast<XMLCharsReader*>(subReader)->chars());
-
-                    LargeInteger val;
-                    for (std::list<std::string>::const_iterator it =
-                            tokens.begin(); it != tokens.end(); it++)
-                        if (valueOf(*it, val))
-                            filter_->addEulerChar(val);
-                }
-            }
-    };
-}
-
-XMLElementReader* XMLFilterPacketReader::startContentSubElement(
+XMLElementReader* XMLLegacyFilterReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (! filter_)
         if (subTagName == "filter") {
             int type;
+            // Run through all the filter types that the file format supports.
             if (valueOf(props.lookup("typeid"), type)) {
-                XMLElementReader* ans = forFilter(
-                    static_cast<SurfaceFilterType>(type), [=](auto info) {
-                        return decltype(info)::Class::xmlFilterReader(parent_);
-                    }, nullptr);
-                if (ans)
-                    return ans;
-                else
-                    return new XMLFilterReader();
+                switch (static_cast<SurfaceFilterType>(type)) {
+                    case NS_FILTER_LEGACY_DEFAULT:
+                        return dataReader_ =
+                            new XMLPlainFilterReader(resolver_,
+                                parent_, anon_, label_, id_);
+                    case NS_FILTER_PROPERTIES:
+                        return dataReader_ =
+                            new XMLLegacyPropertiesFilterReader(resolver_,
+                                parent_, anon_, label_, id_);
+                    case NS_FILTER_COMBINATION:
+                        return dataReader_ =
+                            new XMLLegacyCombinationFilterReader(resolver_,
+                                parent_, anon_, label_, id_);
+                    default:
+                        return new XMLPacketReader(resolver_,
+                            parent_, anon_, label_, id_);
+                }
             }
         }
     return new XMLElementReader();
 }
 
-void XMLFilterPacketReader::endContentSubElement(
+void XMLLegacyFilterReader::endContentSubElement(const std::string&, XMLElementReader*) {
+    if (dataReader_)
+        filter_ = dataReader_->packetToCommit();
+}
+
+XMLCombinationFilterReader::XMLCombinationFilterReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id,
+        const regina::xml::XMLPropertyDict& props) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label), std::move(id)),
+        filter_(nullptr) {
+    std::string type = props.lookup("op");
+    if (type == "and") {
+        filter_ = std::make_shared<SurfaceFilterCombination>();
+        filter_->setUsesAnd(true);
+    } else if (type == "or") {
+        filter_ = std::make_shared<SurfaceFilterCombination>();
+        filter_->setUsesAnd(false);
+    }
+}
+
+XMLElementReader* XMLLegacyCombinationFilterReader::startContentSubElement(
         const std::string& subTagName,
-        XMLElementReader* subReader) {
+        const regina::xml::XMLPropertyDict& props) {
     if (! filter_)
-        if (subTagName == "filter")
-            filter_ = dynamic_cast<XMLFilterReader*>(subReader)->filter();
+        if (subTagName == "op") {
+            std::string type = props.lookup("type");
+            if (type == "and") {
+                filter_ = std::make_shared<SurfaceFilterCombination>();
+                filter_->setUsesAnd(true);
+            } else if (type == "or") {
+                filter_ = std::make_shared<SurfaceFilterCombination>();
+                filter_->setUsesAnd(false);
+            }
+        }
+    return new XMLElementReader();
 }
 
-XMLPacketReader* SurfaceFilter::xmlReader(Packet* parent,
-        XMLTreeResolver& resolver) {
-    return new XMLFilterPacketReader(parent, resolver);
+XMLPropertiesFilterReader::XMLPropertiesFilterReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id,
+        const regina::xml::XMLPropertyDict& props) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label), std::move(id)),
+        filter_(nullptr) {
+    BoolSet orbl, compact, realbdry;
+
+    auto prop = props.find("orbl");
+    if (prop != props.end()) {
+        if (! valueOf(prop->second, orbl))
+            return;
+    } else
+        orbl.fill();
+
+    prop = props.find("compact");
+    if (prop != props.end()) {
+        if (! valueOf(prop->second, compact))
+            return;
+    } else
+        compact.fill();
+
+    prop = props.find("realbdry");
+    if (prop != props.end()) {
+        if (! valueOf(prop->second, realbdry))
+            return;
+    } else
+        realbdry.fill();
+
+    // We have successfully parsed the BoolSet attributes.
+    filter_ = std::make_shared<SurfaceFilterProperties>();
+    filter_->setOrientability(orbl);
+    filter_->setCompactness(compact);
+    filter_->setRealBoundary(realbdry);
+
+    std::string euler = props.lookup("euler");
+    if (! euler.empty()) {
+        std::istringstream str(euler);
+        std::string val;
+        try {
+            while (std::getline(str, val, ','))
+                filter_->addEulerChar(LargeInteger(val));
+        } catch (const regina::InvalidArgument&) {
+            // We cannot parse the list of Euler characteristics.  Abort.
+            filter_.reset();
+        }
+    }
 }
 
-XMLFilterReader* SurfaceFilter::xmlFilterReader(Packet*) {
-    return new PlainFilterReader();
+XMLElementReader* XMLLegacyPropertiesFilterReader::startContentSubElement(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict& props) {
+    if (subTagName == "euler") {
+        return new XMLCharsReader();
+    } else if (subTagName == "orbl") {
+        BoolSet b;
+        if (valueOf(props.lookup("value"), b))
+            filter_->setOrientability(b);
+    } else if (subTagName == "compact") {
+        BoolSet b;
+        if (valueOf(props.lookup("value"), b))
+            filter_->setCompactness(b);
+    } else if (subTagName == "realbdry") {
+        BoolSet b;
+        if (valueOf(props.lookup("value"), b))
+            filter_->setRealBoundary(b);
+    }
+    return new XMLElementReader();
 }
 
-XMLFilterReader* SurfaceFilterCombination::xmlFilterReader(Packet*) {
-    return new CombinationReader();
-}
+void XMLLegacyPropertiesFilterReader::endContentSubElement(
+        const std::string& subTagName, XMLElementReader* subReader) {
+    if (subTagName == "euler") {
+        std::vector<std::string> tokens = basicTokenise(
+            dynamic_cast<XMLCharsReader*>(subReader)->chars());
 
-XMLFilterReader* SurfaceFilterProperties::xmlFilterReader(Packet*) {
-    return new PropertiesReader();
+        for (const auto& t : tokens) {
+            try {
+                filter_->addEulerChar(LargeInteger(t));
+            } catch (const regina::InvalidArgument&) {
+                // Silently fail with this token, but move on and try the next.
+                // Note that this behaviour changes with the second-generation
+                // file format, where an unparseable Euler characteristic
+                // will result in the entire filter being dropped.
+            }
+        }
+    }
 }
 
 } // namespace regina

@@ -10,6 +10,62 @@
 # restrictions that are required by its terms of service.
 
 
+# Macro: CHECK_STDFS
+#
+# Sets the boolean variable STDFS_FOUND according to whether one of
+# std::filesystem or std::experimental::filesystem is available.
+#
+# Sets the variable STDFS_LIBRARY to any additional library that is required
+# to use std::filesystem, beyond the standard C++ library.  This is important
+# for example with gcc7, which provides only std::experimental::filesystem,
+# and which needs the linker flag -lstdc++fs in order to use it.
+#
+macro (CHECK_STDFS)
+  SET (_SRCFILE "${CMAKE_SOURCE_DIR}/cmake/modules/stdfs.cpp")
+  SET (_BINDIR "${CMAKE_BINARY_DIR}/cmake/modules")
+
+  MESSAGE(STATUS "Checking for C++17 std::filesystem")
+  try_compile(_REGINA_STDFS_RAW ${_BINDIR} ${_SRCFILE})
+  IF (_REGINA_STDFS_RAW)
+    SET (STDFS_FOUND TRUE)
+    SET (STDFS_LIBRARY)
+    MESSAGE(STATUS "Checking for C++17 std::filesystem -- found")
+  ELSE (_REGINA_STDFS_RAW)
+    try_compile(_REGINA_STDFS_LIB ${_BINDIR} ${_SRCFILE} LINK_LIBRARIES stdc++fs)
+    IF (_REGINA_STDFS_LIB)
+      SET (STDFS_FOUND TRUE)
+      SET (STDFS_LIBRARY stdc++fs)
+      MESSAGE(STATUS "Checking for C++17 std::filesystem -- requires ${STDFS_LIBRARY}")
+    ELSE (_REGINA_STDFS_LIB)
+      SET (STDFS_FOUND FALSE)
+    ENDIF (_REGINA_STDFS_LIB)
+  ENDIF (_REGINA_STDFS_RAW)
+endmacro (CHECK_STDFS)
+
+
+# Macro: CHECK_LSB_RELEASE
+#
+# Sets the string variables LSB_RELEASE_ID and LSB_RELEASE_VERSION, if
+# this information can be deduced from the system lsb_release command.
+#
+# Otherwise these variables will be unset.
+#
+macro (CHECK_LSB_RELEASE)
+  find_program(LSB_RELEASE lsb_release)
+  if (LSB_RELEASE)
+    execute_process(COMMAND "${LSB_RELEASE}" -is
+      OUTPUT_VARIABLE LSB_RELEASE_ID OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND "${LSB_RELEASE}" -rs
+      OUTPUT_VARIABLE LSB_RELEASE_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
+    MESSAGE(STATUS "Checking Linux distribution -- ${LSB_RELEASE_ID} ${LSB_RELEASE_VERSION}")
+  else (LSB_RELEASE)
+    MESSAGE(STATUS "Checking Linux distribution -- not available")
+    UNSET(LSB_RELEASE_ID)
+    UNSET(LSB_RELEASE_VERSION)
+  endif (LSB_RELEASE)
+endmacro (CHECK_LSB_RELEASE)
+
+
 # Macro: REGINA_ESCAPE_BASH(input)
 #
 # Sets the variable BASH_${input} to be a variant of the variable ${input}

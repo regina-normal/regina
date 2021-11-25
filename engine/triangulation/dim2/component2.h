@@ -51,11 +51,6 @@
 namespace regina {
 
 /**
- * \weakgroup dim2
- * @{
- */
-
-/**
  * Represents a connected component of a 2-manifold triangulation.
  *
  * This is a specialisation of the generic Component class template; see
@@ -65,7 +60,15 @@ namespace regina {
  * In particular, each 2-dimensional component also stores details on
  * lower-dimensional faces (i.e., vertices and edges).
  *
+ * Components do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
  * \headerfile triangulation/dim2.h
+ *
+ * \ingroup dim2
  */
 template <>
 class Component<2> : public detail::ComponentBase<2>,
@@ -79,14 +82,42 @@ class Component<2> : public detail::ComponentBase<2>,
 
     public:
         /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countTriangles() const;
+
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        auto triangles() const;
+
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        Triangle<2>* triangle(size_t index) const;
+
+        /**
          * Returns the number of <i>subdim</i>-faces in this component.
          *
-         * \pre The template argument \a subdim is either 0 or 1.
+         * For convenience, this routine explicitly supports the case
+         * \a subdim = 2.  This is \e not the case for the routines
+         * face() and faces(), which give access to individual faces
+         * (the reason relates to the fact that triangles are built manually,
+         * whereas lower-dimensional faces are deduced properties).
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
          * <tt>countFaces(subdim)</tt>; that is, the template parameter
          * \a subdim becomes the first argument of the function.
+         *
+         * \tparam subdim the face dimension; this must be between 0 and 2
+         * inclusive.
          *
          * @return the number of <i>subdim</i>-faces.
          */
@@ -118,12 +149,11 @@ class Component<2> : public detail::ComponentBase<2>,
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
-         * \ifacespython Python users should call this function in the
-         * form <tt>faces(subdim)</tt>.  It will then return a Python list
-         * containing all the <i>subdim</i>-faces of the component.
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>faces(subdim)</tt>.
          *
-         * \tparam subdim the dimension of the faces to query.
-         * For 2-dimensional components, this must be 0 or 1.
+         * \tparam subdim the face dimension; this must be either 0 or 1.
          *
          * @return access to the list of all <i>subdim</i>-faces.
          */
@@ -136,12 +166,12 @@ class Component<2> : public detail::ComponentBase<2>,
          * Note that the index of a face in the component need
          * not be the index of the same face in the overall triangulation.
          *
-         * \pre The template argument \a subdim is either 0 or 1.
-         *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
          * <tt>face(subdim, index)</tt>; that is, the template parameter
          * \a subdim becomes the first argument of the function.
+         *
+         * \tparam subdim the face dimension; this must be either 0 or 1.
          *
          * @param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
@@ -149,6 +179,20 @@ class Component<2> : public detail::ComponentBase<2>,
          */
         template <int subdim>
         Face<2, subdim>* face(size_t index) const;
+
+        /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryEdges() const;
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryEdges() const;
 
         /**
          * Determines if this component is closed.
@@ -168,12 +212,27 @@ class Component<2> : public detail::ComponentBase<2>,
     friend class detail::TriangulationBase<2>;
 };
 
-/*@}*/
-
 // Inline functions for Component<2>
+
+inline size_t Component<2>::countTriangles() const {
+    return size();
+}
+
+inline auto Component<2>::triangles() const {
+    return simplices();
+}
+
+inline Triangle<2>* Component<2>::triangle(size_t index) const {
+    return simplex(index);
+}
 
 // Hide specialisations from doxygen, since it cannot handle them.
 #ifndef __DOXYGEN
+template <>
+inline size_t Component<2>::countFaces<2>() const {
+    return size();
+}
+
 template <>
 inline size_t Component<2>::countFaces<1>() const {
     return edges_.size();
@@ -207,6 +266,14 @@ inline Vertex<2>* Component<2>::face<0>(size_t index) const {
     return vertices_[index];
 }
 #endif // ! __DOXYGEN
+
+inline bool Component<2>::hasBoundaryEdges() const {
+    return hasBoundaryFacets();
+}
+
+inline size_t Component<2>::countBoundaryEdges() const {
+    return countBoundaryFacets();
+}
 
 inline bool Component<2>::isClosed() const {
     return (boundaryComponents().empty());

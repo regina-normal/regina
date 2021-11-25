@@ -33,6 +33,7 @@
 // Regina core includes:
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
+#include "triangulation/dim3.h"
 
 // UI includes:
 #include "compatcanvas.h"
@@ -56,9 +57,11 @@ using regina::NormalSurfaces;
 using regina::Packet;
 
 SurfacesCompatibilityUI::SurfacesCompatibilityUI(
-        regina::NormalSurfaces* packet, PacketTabbedUI* useParentUI) :
+        regina::PacketOf<regina::NormalSurfaces>* packet,
+        PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet),
-        matrixLocal(0), matrixGlobal(0), layerLocal(0), layerGlobal(0),
+        matrixLocal(nullptr), matrixGlobal(nullptr),
+        layerLocal(nullptr), layerGlobal(nullptr),
         requestedCalculation(false) {
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
@@ -66,7 +69,7 @@ SurfacesCompatibilityUI::SurfacesCompatibilityUI(
     QBoxLayout* hdrLayout = new QHBoxLayout();
     uiLayout->addLayout(hdrLayout);
 
-    QLabel* label = new QLabel(tr("Display matrix:"), ui);
+    auto* label = new QLabel(tr("Display matrix:"), ui);
     hdrLayout->addWidget(label);
     chooseMatrix = new QComboBox(ui);
     chooseMatrix->addItem(tr("Local compatibility (quads and octagons)"));
@@ -149,8 +152,8 @@ void SurfacesCompatibilityUI::refresh() {
         delete matrixGlobal;
     }
 
-    matrixLocal = matrixGlobal = 0;
-    layerLocal = layerGlobal = 0;
+    matrixLocal = matrixGlobal = nullptr;
+    layerLocal = layerGlobal = nullptr;
 
     // Are we able to compute the new matrices if we want to?
     if (surfaces->size() == 0) {

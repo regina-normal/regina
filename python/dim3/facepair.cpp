@@ -57,6 +57,8 @@ void addFacePair(pybind11::module_& m) {
         .def("dec", [](FacePair& p) {
             return p--;
         })
+        .def("commonEdge", &FacePair::commonEdge)
+        .def("oppositeEdge", &FacePair::oppositeEdge)
     ;
     regina::python::add_output_ostream(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);

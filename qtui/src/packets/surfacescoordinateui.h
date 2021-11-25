@@ -39,6 +39,7 @@
 
 #include "packet/packet.h"
 #include "surfaces/normalsurfaces.h"
+#include "triangulation/dim3.h"
 
 #include "../packettabui.h"
 #include "./coordinates.h" // Use ./ to avoid picking up the iOS header.
@@ -71,17 +72,12 @@ class SurfaceModel : public QAbstractItemModel {
         unsigned* realIndex;
         unsigned nFiltered;
 
-        /**
-         * Internal status
-         */
-        bool isReadWrite;
-
     public:
         /**
          * Constructor and destructor.
          */
-        SurfaceModel(regina::NormalSurfaces* surfaces, bool readWrite);
-        ~SurfaceModel();
+        SurfaceModel(regina::NormalSurfaces* surfaces);
+        ~SurfaceModel() override;
 
         /**
          * Data retrieval.
@@ -100,23 +96,19 @@ class SurfaceModel : public QAbstractItemModel {
         void rebuildUnicode();
 
         /**
-         * Updating read/write status.
-         */
-        void setReadWrite(bool readWrite);
-
-        /**
          * Overrides for describing and editing data in the model.
          */
         QModelIndex index(int row, int column,
-                const QModelIndex& parent) const;
-        QModelIndex parent(const QModelIndex& index) const;
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+                const QModelIndex& parent) const override;
+        QModelIndex parent(const QModelIndex& index) const override;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
-        Qt::ItemFlags flags(const QModelIndex& index) const;
-        bool setData(const QModelIndex& index, const QVariant& value, int role);
+            int role) const override;
+        Qt::ItemFlags flags(const QModelIndex& index) const override;
+        bool setData(const QModelIndex& index, const QVariant& value,
+            int role) override;
 
         /**
          * Information on the property (non-coordinate) columns.
@@ -138,7 +130,7 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
          * Packet details
          */
         SurfaceModel* model;
-        regina::NormalSurfaces* surfaces;
+        regina::PacketOf<regina::NormalSurfaces>* surfaces;
         regina::SurfaceFilter* appliedFilter;
 
         /**
@@ -159,16 +151,15 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * Internal status
          */
-        bool isReadWrite;
         bool currentlyResizing;
 
     public:
         /**
          * Constructor and destructor.
          */
-        SurfacesCoordinateUI(regina::NormalSurfaces* packet,
-            PacketTabbedUI* useParentUI, bool readWrite);
-        ~SurfacesCoordinateUI();
+        SurfacesCoordinateUI(regina::PacketOf<regina::NormalSurfaces>* packet,
+            PacketTabbedUI* useParentUI);
+        ~SurfacesCoordinateUI() override;
 
         /**
          * PacketEditorTab overrides.
@@ -177,12 +168,11 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
         regina::Packet* getPacket() override;
         QWidget* getInterface() override;
         const std::vector<QAction*>& getPacketTypeActions() override;
-        void setReadWrite(bool readWrite) override;
 
         /**
          * PacketListener overrides.
          */
-        void packetToBeDestroyed(regina::PacketShell packet) override;
+        void packetBeingDestroyed(regina::PacketShell packet) override;
 
     public slots:
         /**

@@ -42,11 +42,8 @@ const GroupPresentation& SnapPeaTriangulation::fundamentalGroupFilled(
             bool tryHardToShortenRelators) const {
     if (fundGroupFilled_.has_value())
         return *fundGroupFilled_;
-    if (! data_) {
-        // The user has violated the precondition.
-        // We need to return a reference to *something*.
-        return *(fundGroupFilled_ = GroupPresentation());
-    }
+    if (! data_)
+        throw SnapPeaIsNull("SnapPeaTriangulation::fundamentalGroupFilled");
 
     // Note: TRUE and FALSE are #defines in SnapPea, and so don't live in any
     // namespace.  We avoid them here, and directly use 0 and 1 instead.

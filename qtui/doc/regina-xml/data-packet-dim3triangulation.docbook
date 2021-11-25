@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>packet (3-dimensional triangulation)</refname>
-  <refpurpose>A 3-dimensional triangulation packet</refpurpose>
+  <refpurpose>Replaced by &xml-tri;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -29,7 +29,6 @@ packet ::= (&xml-tetrahedra;,
             &xml-splitsfce;?, &xml-zeroeff;?,
             &xml-threesphere;?, &xml-threeball;?, &xml-solidtorus;?, &xml-txi;?,
             &xml-irreducible;?, &xml-compressingdisc;?, &xml-haken;?,
-            &xml-turaevviro;*,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -41,10 +40,21 @@ packet ::= (&xml-tetrahedra;,
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   In &regina;&nbsp;6.0.1 and earlier, the &xml-packet; element was used
+   to store every packet in the entire packet tree that makes up a
+   &regina; data file.
+   This page describes how the &xml-packet; element was structured when
+   storing a 3-dimensional triangulation.
+   Since &regina;&nbsp;7.0, each packet type has its own &xml; element;
+   in particular, all triangulations are now stored using the
+   &xml-tri; element.
+  </para>
   <para>
    This type of <emphasis>triangulation</emphasis>
    packet stores a 3-dimensional triangulation
@@ -65,15 +75,6 @@ packet ::= (&xml-tetrahedra;,
    See also the elements &xml-packet-dim2triangulation;,
    &xml-packet-dim4triangulation;, and &xml-packet-triangulation;.
   </para></note>
-
-  <refsect2>
-   <title>Deprecated Data</title>
-   <para>
-    The child &xml-turaevviro; element is deprecated, and should not be used.
-    As of &regina;&nbsp;5.0, this element will not be written, and will be
-    ignored when reading older data files.
-   </para>
-  </refsect2>
 
   <refsect2>
    <title>Parents</title>
@@ -107,7 +108,6 @@ packet ::= (&xml-tetrahedra;,
      <member>&xml-tetrahedra;</member>
      <member>&xml-threeball;</member>
      <member>&xml-threesphere;</member>
-     <member>&xml-turaevviro;</member>
      <member>&xml-txi;</member>
      <member>&xml-zeroeff;</member>
     </simplelist>.

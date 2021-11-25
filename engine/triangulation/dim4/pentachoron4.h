@@ -51,11 +51,6 @@
 namespace regina {
 
 /**
- * \weakgroup dim4
- * @{
- */
-
-/**
  * Represents a pentachoron (a 4-dimensional simplex) within a
  * 4-manifold triangulation.
  *
@@ -70,7 +65,15 @@ namespace regina {
  * See the documentation for the partial specialisation Face<dim, dim> for an
  * overview of how a top-dimensional simplex class works.
  *
+ * Pentachora do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
  * \headerfile triangulation/dim4.h
+ *
+ * \ingroup dim4
  */
 template <>
 class Face<4, 4> : public detail::SimplexBase<4> {
@@ -110,8 +113,6 @@ template <>
 inline Edge<4>* detail::SimplexBase<4>::edge(int i, int j) const {
     return (i == j ? nullptr : edge(FaceNumbering<4, 1>::edgeNumber[i][j]));
 }
-
-/*@}*/
 
 // Inline functions for Pentachoron<4>
 

@@ -15,32 +15,41 @@
 
  <refsynopsisdiv>
   <informaltable frame="all">
-   <tgroup cols="2">
+   <tgroup cols="3">
     <colspec colname="c1"/>
     <colspec colname="c2"/>
+    <colspec colname="c3"/>
     <tbody>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
       <emphasis role="bold">Content Model</emphasis>
      </entry></row>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
 <synopsis>
 hypersurface ::= (#PCDATA,
              &xml-compact-surface;?, &xml-realbdry-surface;?)</synopsis>
      </entry></row>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
       <emphasis role="bold">Attributes</emphasis>
      </entry></row>
      <row>
       <entry><emphasis role="bold">Name</emphasis></entry>
       <entry><emphasis role="bold">Type</emphasis></entry>
+      <entry><emphasis role="bold">Version</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>enc</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+      <entry>&attraddedver;7.0</entry>
      </row>
      <row>
       <entry><sgmltag>len</sgmltag></entry>
       <entry><type>NUMBER</type> (required)</entry>
+      <entry></entry>
      </row>
      <row>
       <entry><sgmltag>name</sgmltag></entry>
       <entry><type>CDATA</type></entry>
+      <entry></entry>
      </row>
     </tbody>
    </tgroup>
@@ -56,12 +65,21 @@ hypersurface ::= (#PCDATA,
   <para>
    A normal hypersurface in a <replaceable>P</replaceable>-pentachoron
    triangulation is traditionally represented by a vector of integers, whose
-   length depends upon the underlying coordinate system.  For instance, under
-   standard tetrahedron-prism coordinates the vector will have length
-   15<replaceable>P</replaceable>.  The underlying coordinate
-   system is specified in the &xml-params; element of the parent
-   &xml-packet-normalhypersurfacelist;.
+   length depends upon the specific vector encoding being used.  For instance,
+   a vector encoded in standard tetrahedron-prism coordinates will have length
+   15<replaceable>P</replaceable>, and a vector encoded in prism coordinates
+   will have length 10<replaceable>P</replaceable>.
   </para>
+  <warning>
+   <para>
+    Since &regina;&nbsp;7.0, the specific vector encoding being used is now
+    explicitly specified in the <sgmltag>enc</sgmltag> attribute.
+    This might or might not be deducible from the coordinate system
+    specified in the parent &xml-hypersurfaces;.
+    The parent list's coordinate system should only be used as a fallback if
+    the <sgmltag>enc</sgmltag> attribute is not present.
+   </para>
+  </warning>
   <para>
    The normal hypersurface vector is stored as the character data of this
    &xml; element as follows.
@@ -79,7 +97,7 @@ hypersurface ::= (#PCDATA,
    <para>
     The following elements contain <sgmltag>hypersurface</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-normalhypersurfacelist;</member>
+     <member>&xml-hypersurfaces;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -100,12 +118,23 @@ hypersurface ::= (#PCDATA,
   <title>Attributes</title>
   <variablelist>
    <varlistentry>
+    <term><sgmltag>enc</sgmltag></term>
+    <listitem>
+     <para>
+      The specific vector encoding used to represent this normal hypersurface.
+      This will be given as an opaque integer; it is not meant to be
+      interpreted manually, but instead should be passed to Regina's
+      <function>HyperEncoding::fromIntValue()</function> function.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
     <term><sgmltag>len</sgmltag></term>
     <listitem>
      <para>
       The length of the underlying normal hypersurface vector.
-      This depends upon the coordinate system in which the normal
-      hypersurface was originally generated.
+      This depends upon both the underlying triangulation and the
+      specific vector encoding being used.
      </para>
     </listitem>
    </varlistentry>
@@ -137,7 +166,7 @@ hypersurface ::= (#PCDATA,
    surface is compact and has no real boundary.
   </para>
   <programlisting>
-&lt;hypersurface len="60"&gt; 10 1 25 1 36 1 51 1
+&lt;hypersurface enc=&quot;287&quot; len="60"&gt; 10 1 25 1 36 1 51 1
     &lt;realbdry value="F"/&gt;
     &lt;compact value="T"/&gt; &lt;/hypersurface&gt;
   </programlisting>

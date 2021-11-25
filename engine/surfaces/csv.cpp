@@ -61,20 +61,20 @@ namespace {
      * Writes a piece of the CSV header corresponding to the given set
      * of optional fields.
      */
-    void writePropHeader(std::ostream& out, int fields) {
-        if (fields & surfaceExportName)
+    void writePropHeader(std::ostream& out, SurfaceExport fields) {
+        if (fields.has(surfaceExportName))
             out << "name,";
-        if (fields & surfaceExportEuler)
+        if (fields.has(surfaceExportEuler))
             out << "euler,";
-        if (fields & surfaceExportOrient)
+        if (fields.has(surfaceExportOrient))
             out << "orientable,";
-        if (fields & surfaceExportSides)
+        if (fields.has(surfaceExportSides))
             out << "sides,";
-        if (fields & surfaceExportBdry)
+        if (fields.has(surfaceExportBdry))
             out << "boundary,";
-        if (fields & surfaceExportLink)
+        if (fields.has(surfaceExportLink))
             out << "link,";
-        if (fields & surfaceExportType)
+        if (fields.has(surfaceExportType))
             out << "type,";
     }
 
@@ -82,48 +82,51 @@ namespace {
      * Writes a piece of the CSV data for the given normal surface
      * corresponding to the given set of optional fields.
      */
-    void writePropData(std::ostream& out, const NormalSurface& s, int fields) {
-        if (fields & surfaceExportName) {
+    void writePropData(std::ostream& out, const NormalSurface& s,
+            SurfaceExport fields) {
+        if (fields.has(surfaceExportName)) {
             if (! s.name().empty())
                 writeCSVQuotedString(out, s.name().c_str());
             out << ',';
         }
-        if (fields & surfaceExportEuler) {
+        if (fields.has(surfaceExportEuler)) {
             if (s.isCompact())
                 out << s.eulerChar();
             out << ',';
         }
-        if (fields & surfaceExportOrient) {
+        if (fields.has(surfaceExportOrient)) {
             if (s.isCompact()) {
                 out << (s.isOrientable() ? "TRUE" : "FALSE");
             }
             out << ',';
         }
-        if (fields & surfaceExportSides) {
+        if (fields.has(surfaceExportSides)) {
             if (s.isCompact()) {
                 out << (s.isTwoSided() ? '2' : '1');
             }
             out << ',';
         }
-        if (fields & surfaceExportBdry) {
+        if (fields.has(surfaceExportBdry)) {
             if (! s.isCompact()) {
-                std::optional<MatrixInt> slopes = s.boundaryIntersections();
-                if (slopes) {
+                try {
+                    MatrixInt slopes = s.boundaryIntersections();
                     out << "\"spun:";
-                    for (unsigned i = 0; i < slopes->rows(); ++i)
-                        out << " (" << slopes->entry(i, 1)
-                            << ", " << - slopes->entry(i, 0)
+                    for (unsigned i = 0; i < slopes.rows(); ++i)
+                        out << " (" << slopes.entry(i, 1)
+                            << ", " << - slopes.entry(i, 0)
                             << ')';
                     out << '\"';
-                } else
+                } catch (const ReginaException&) {
+                    // This could be a FailedPrecondition or a SnapPeaisNull.
                     out << "spun";
+                }
             } else if (s.hasRealBoundary())
                 out << "real";
             else
                 out << "none";
             out << ',';
         }
-        if (fields & surfaceExportLink) {
+        if (fields.has(surfaceExportLink)) {
             // Mirror the information that gets shown in the Link column
             // in the GUI.
             const Vertex<3>* v = s.isVertexLink();
@@ -140,14 +143,13 @@ namespace {
             }
             out << ',';
         }
-        if (fields & surfaceExportType) {
+        if (fields.has(surfaceExportType)) {
             // Mirror the information that gets shown in the Type column
             // in the GUI.
             if (s.isSplitting())
                 out << "\"Splitting\"";
             else {
-                LargeInteger tot = s.isCentral();
-                if (tot != 0)
+                if (size_t tot = s.isCentral())
                     out << "\"Central (" << tot << ")\"";
             }
             out << ',';
@@ -156,7 +158,7 @@ namespace {
 }
 
 bool NormalSurfaces::saveCSVStandard(const char* filename,
-        int additionalFields) {
+        SurfaceExport additionalFields) const {
     std::ofstream out(filename);
     if (! out)
         return false;
@@ -227,7 +229,7 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
 }
 
 bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
-        int additionalFields) {
+        SurfaceExport additionalFields) const {
     std::ofstream out(filename);
     if (! out)
         return false;

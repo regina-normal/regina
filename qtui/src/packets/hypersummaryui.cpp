@@ -75,9 +75,10 @@ namespace {
 }
 
 HyperSummaryUI::HyperSummaryUI(
-        regina::NormalHypersurfaces* packet, PacketTabbedUI* useParentUI) :
+        regina::PacketOf<regina::NormalHypersurfaces>* packet,
+        PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet) {
-    QScrollArea* scroller = new QScrollArea();
+    auto* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);
     scroller->setFrameStyle(QFrame::NoFrame);
     // Transparency must be applied to both the QScrollArea *and* some of its
@@ -88,7 +89,7 @@ HyperSummaryUI::HyperSummaryUI(
     ui = scroller;
 
     pane = new QWidget(scroller);
-    QVBoxLayout* paneLayout = new QVBoxLayout;
+    auto* paneLayout = new QVBoxLayout;
     pane->setLayout(paneLayout);
     scroller->setWidget(pane);
 
@@ -150,9 +151,6 @@ HyperSummaryUI::HyperSummaryUI(
         this, SLOT(updatePreferences()));
 }
 
-HyperSummaryUI::~HyperSummaryUI() {
-}
-
 regina::Packet* HyperSummaryUI::getPacket() {
     return surfaces;
 }
@@ -174,7 +172,8 @@ void HyperSummaryUI::refresh() {
 
     std::string homology;
     std::pair<int, int> type;
-    for (const regina::NormalHypersurface& s : surfaces->hypersurfaces()) {
+    for (const regina::NormalHypersurface& s :
+            static_cast<const regina::NormalHypersurfaces&>(*surfaces)) {
         if (! s.isCompact())
             ++spun;
         else {
@@ -312,16 +311,15 @@ void HyperSummaryUI::refresh() {
         tableBounded->hide();
     }
 
-#if 0 // TODO: Enable (and update) this code once we support prism coordinates.
-    // Non-compact surfaces are possible only if the triangulation has an
+    // Non-compact hypersurfaces are possible only if the triangulation has an
     // ideal vertex, or if there is an invalid boundary vertex (in which
     // case all bets are off so we just give the user everything and let them
     // deal with it).
-    // Furthermore, spun normal surfaces are only possible in certain
+    // Furthermore, non-compact hypersurfaces are only possible in certain
     // coordinate systems.
     if ((surfaces->triangulation().isIdeal() ||
             ! surfaces->triangulation().isValid()) &&
-            (surfaces->allowsSpun())) {
+            (surfaces->allowsNonCompact())) {
         if (spun == 0) {
             totSpun->setText(tr("No non-compact hypersurfaces."));
         } else {
@@ -335,7 +333,6 @@ void HyperSummaryUI::refresh() {
         // does not support spun normal surfaces.
         totSpun->hide();
     }
-#endif
 }
 
 void HyperSummaryUI::updatePreferences() {

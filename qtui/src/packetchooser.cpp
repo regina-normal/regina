@@ -45,32 +45,32 @@
 
 using regina::Packet;
 
-PacketChooser::PacketChooser(regina::Packet* newSubtree,
+PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
         RootRole useRootRole, QWidget* parent) :
-        QComboBox(parent), subtree(newSubtree), filter(0),
+        QComboBox(parent), subtree(std::move(newSubtree)), filter(nullptr),
         rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-    fill(false, 0);
+    fill(false, nullptr);
 }
 
-PacketChooser::PacketChooser(regina::Packet* newSubtree,
+PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
         PacketFilter* newFilter, RootRole useRootRole, QWidget* parent) :
-        QComboBox(parent), subtree(newSubtree), filter(newFilter),
+        QComboBox(parent), subtree(std::move(newSubtree)), filter(newFilter),
         rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-    fill(false, 0);
+    fill(false, nullptr);
 }
 
-PacketChooser::PacketChooser(regina::Packet* newSubtree,
+PacketChooser::PacketChooser(std::shared_ptr<Packet> newSubtree,
         PacketFilter* newFilter, RootRole useRootRole, bool allowNone,
-        regina::Packet* initialSelection, QWidget* parent) :
-        QComboBox(parent), subtree(newSubtree), filter(newFilter),
+        std::shared_ptr<Packet> initialSelection, QWidget* parent) :
+        QComboBox(parent), subtree(std::move(newSubtree)), filter(newFilter),
         rootRole(useRootRole), onAutoUpdate(false), isUpdating(false) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-    fill(allowNone, initialSelection);
+    fill(allowNone, std::move(initialSelection));
 }
 
 PacketChooser::~PacketChooser() {
@@ -78,22 +78,22 @@ PacketChooser::~PacketChooser() {
         delete filter;
 }
 
-Packet* PacketChooser::selectedPacket() {
+std::shared_ptr<Packet> PacketChooser::selectedPacket() {
     if (count() == 0)
-        return 0;
+        return nullptr;
     int curr = currentIndex();
-    return (curr < 0 ? 0 : packets[curr]);
+    return (curr < 0 ? nullptr :
+            packets[curr] ? packets[curr]->shared_from_this() :
+            nullptr);
 }
 
-void PacketChooser::selectPacket(regina::Packet* packet) {
+void PacketChooser::selectPacket(std::shared_ptr<Packet> packet) {
     int index = 0;
-    std::vector<regina::Packet*>::const_iterator it = packets.begin();
-    while (it != packets.end()) {
-        if ((*it) == packet) {
+    for (regina::Packet* p : packets) {
+        if (p == packet.get()) {
             setCurrentIndex(index);
             return;
         }
-        ++it;
         ++index;
     }
 
@@ -109,33 +109,29 @@ void PacketChooser::setAutoUpdate(bool shouldAutoUpdate) {
 
     onAutoUpdate = shouldAutoUpdate;
     if (onAutoUpdate) {
-        for (std::vector<regina::Packet*>::iterator it = packets.begin();
-                it != packets.end(); it++)
-            if (*it)
-                (*it)->listen(this);
+        for (regina::Packet* p : packets)
+            if (p)
+                p->listen(this);
     } else
-        unregisterFromAllPackets();
+        unlisten();
 }
 
-void PacketChooser::packetWasRenamed(regina::Packet* renamed) {
+void PacketChooser::packetWasRenamed(regina::Packet& renamed) {
     // Just rename the item that was changed.
-    std::vector<regina::Packet*>::iterator it = std::find(
-        packets.begin(), packets.end(), renamed);
-
+    auto it = std::find(packets.begin(), packets.end(),
+        std::addressof(renamed));
     if (it != packets.end()) {
         // This may trigger a refreshContents(), but that's okay since
         // we're at the end of the routine.
         int index = it - packets.begin();
         setItemIcon(index, PacketManager::icon(renamed));
-        setItemText(index, renamed->humanLabel().c_str());
+        setItemText(index, renamed.humanLabel().c_str());
     }
 }
 
-void PacketChooser::packetToBeDestroyed(regina::PacketShell toDestroy) {
+void PacketChooser::packetBeingDestroyed(regina::PacketShell toDestroy) {
     // Just remove the item that is being destroyed.
-    std::vector<regina::Packet*>::iterator it = std::find(
-        packets.begin(), packets.end(), toDestroy);
-
+    auto it = std::find(packets.begin(), packets.end(), toDestroy);
     if (it != packets.end()) {
         // Make sure the call to removeItem() comes last since it could
         // trigger a refreshContents().
@@ -156,8 +152,7 @@ void PacketChooser::packetToBeDestroyed(regina::PacketShell toDestroy) {
 
         removeItem(destroyIndex);
 
-        // Don't bother unlistening; this will happen in the packet
-        // destructor anyway.
+        // No need to unlisten: the packet will have done this for us already.
     }
 }
 
@@ -175,13 +170,13 @@ void PacketChooser::refreshContents() {
     isUpdating = true;
 
     // Remember how it used to look.
-    Packet* remember = selectedPacket();
+    auto remember = selectedPacket();
     bool allowNone = ((! packets.empty()) && (! packets[0]));
 
     // Empty the combo box.
     // Empty from the end in case it's stored as a vector deep inside.
     if (onAutoUpdate)
-        unregisterFromAllPackets();
+        unlisten();
 
     clear();
     packets.clear();
@@ -192,22 +187,22 @@ void PacketChooser::refreshContents() {
     isUpdating = false;
 }
 
-void PacketChooser::fill(bool allowNone, Packet* select) {
+void PacketChooser::fill(bool allowNone, std::shared_ptr<Packet> select) {
     // Insert the None entry if appropriate.
     if (allowNone) {
         addItem(tr("<None>"));
-        packets.push_back(0);
+        packets.push_back(nullptr);
 
-        if (select == 0)
+        if (! select)
             setCurrentIndex(0);
     }
 
     // Insert the regular packets.
-    regina::Packet* p = subtree;
-    while (p && subtree->isGrandparentOf(p)) {
-        if ((! filter) || (filter->accept(p))) {
+    std::shared_ptr<Packet> p = subtree;
+    while (p && subtree->isAncestorOf(*p)) {
+        if ((! filter) || (filter->accept(*p))) {
             if (p->parent())
-                addItem(PacketManager::icon(p), p->humanLabel().c_str());
+                addItem(PacketManager::icon(*p), p->humanLabel().c_str());
             else switch (rootRole) {
                 case ROOT_AS_INSERTION_POINT:
                     // No icon for this role.
@@ -218,10 +213,10 @@ void PacketChooser::fill(bool allowNone, Packet* select) {
                     addItem(tr("<Entire tree>"));
                     break;
                 case ROOT_AS_PACKET:
-                    addItem(PacketManager::icon(p), tr("<Root packet>"));
+                    addItem(PacketManager::icon(*p), tr("<Root packet>"));
                     break;
             }
-            packets.push_back(p);
+            packets.push_back(p.get());
             if (onAutoUpdate)
                 p->listen(this);
             if (p == select)
@@ -232,17 +227,17 @@ void PacketChooser::fill(bool allowNone, Packet* select) {
 }
 
 bool PacketChooser::verify() {
-    regina::Packet* p = subtree;
-    std::vector<regina::Packet*>::const_iterator it = packets.begin();
+    std::shared_ptr<Packet> p = subtree;
+    auto it = packets.begin();
 
     // Ignore the None entry if it exists.
     if (it != packets.end() && (! *it))
-        it++;
+        ++it;
 
     // Now match the packets up one by one.
-    while (it != packets.end() || p != 0) {
+    while (it != packets.end() || p) {
         // Are we ignoring this packet?
-        if (p && filter && ! filter->accept(p)) {
+        if (p && filter && ! filter->accept(*p)) {
             p = p->nextTreePacket();
             continue;
         }
@@ -254,7 +249,7 @@ bool PacketChooser::verify() {
         if (! p)
             return false;
         // Mismatched entries?
-        if (p != *it)
+        if (p.get() != *it)
             return false;
 
         // All good.
@@ -266,26 +261,27 @@ bool PacketChooser::verify() {
 }
 
 PacketDialog::PacketDialog(QWidget* parent,
-        regina::Packet* subtree,
+        std::shared_ptr<Packet> subtree,
         PacketFilter* filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis,
         PacketChooser::RootRole rootRole,
         bool allowNone,
-        regina::Packet* initialSelection) {
+        std::shared_ptr<Packet> initialSelection) :
+        QDialog(parent) {
     setWindowTitle(title);
     setWhatsThis(whatsThis);
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
-    QLabel* label = new QLabel(message);
+    auto* label = new QLabel(message);
     layout->addWidget(label);
 
-    chooser = new PacketChooser(subtree, filter, rootRole, allowNone,
-        initialSelection, this);
+    chooser = new PacketChooser(std::move(subtree), filter, rootRole, allowNone,
+        std::move(initialSelection), this);
     layout->addWidget(chooser);
 
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(
+    auto* buttonBox = new QDialogButtonBox(
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
@@ -293,20 +289,20 @@ PacketDialog::PacketDialog(QWidget* parent,
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-regina::Packet* PacketDialog::choose(QWidget* parent,
-        regina::Packet* subtree,
+std::shared_ptr<Packet> PacketDialog::choose(QWidget* parent,
+        std::shared_ptr<Packet> subtree,
         PacketFilter* filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis,
         PacketChooser::RootRole rootRole,
         bool allowNone,
-        regina::Packet* initialSelection) {
-    PacketDialog dlg(parent, subtree, filter, title, message, whatsThis,
-        rootRole, allowNone, initialSelection);
+        std::shared_ptr<Packet> initialSelection) {
+    PacketDialog dlg(parent, std::move(subtree), filter, title, message,
+        whatsThis, rootRole, allowNone, std::move(initialSelection));
     if (dlg.exec())
         return dlg.chooser->selectedPacket();
     else
-        return 0;
+        return nullptr;
 }
 

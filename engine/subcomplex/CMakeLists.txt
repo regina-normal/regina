@@ -20,7 +20,6 @@ SET ( FILES
   plugtrisolidtorus.cpp
   satannulus.cpp
   satblock.cpp
-  satblockstarter.cpp
   satblocktypes.cpp
   satregion.cpp
   snappeacensustri.cpp
@@ -61,9 +60,9 @@ if (${REGINA_INSTALL_DEV})
     plugtrisolidtorus.h
     satannulus.h
     satblock.h
-    satblockstarter.h
     satblocktypes.h
     satregion.h
+    satregion-impl.h
     snappeacensustri.h
     snappedball.h
     snappedtwosphere.h

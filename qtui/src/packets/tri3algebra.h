@@ -58,7 +58,7 @@ class Tri3AlgebraUI : public PacketTabbedViewerTab {
         /**
          * Constructor.
          */
-        Tri3AlgebraUI(regina::Triangulation<3>* packet,
+        Tri3AlgebraUI(regina::PacketOf<regina::Triangulation<3>>* packet,
                 PacketTabbedUI* useParentUI);
 };
 
@@ -72,7 +72,7 @@ class Tri3HomologyFundUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Triangulation<3>* tri;
+        regina::PacketOf<regina::Triangulation<3>>* tri;
 
         /**
          * Internal components
@@ -95,15 +95,15 @@ class Tri3HomologyFundUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        Tri3HomologyFundUI(regina::Triangulation<3>* packet,
+        Tri3HomologyFundUI(regina::PacketOf<regina::Triangulation<3>>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     public slots:
         /**
@@ -132,7 +132,7 @@ class Tri3TuraevViroUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Triangulation<3>* tri;
+        regina::PacketOf<regina::Triangulation<3>>* tri;
 
         /**
          * Internal components
@@ -147,15 +147,15 @@ class Tri3TuraevViroUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        Tri3TuraevViroUI(regina::Triangulation<3>* packet,
+        Tri3TuraevViroUI(regina::PacketOf<regina::Triangulation<3>>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     public slots:
         /**
@@ -183,7 +183,7 @@ class Tri3CellularInfoUI: public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Triangulation<3>* tri;
+        regina::PacketOf<regina::Triangulation<3>>* tri;
 
         /**
          * Internal components
@@ -206,15 +206,15 @@ class Tri3CellularInfoUI: public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        Tri3CellularInfoUI(regina::Triangulation<3>* packet,
+        Tri3CellularInfoUI(regina::PacketOf<regina::Triangulation<3>>* packet,
                 PacketTabbedViewerTab* useParentUI);
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     public slots:
         /**

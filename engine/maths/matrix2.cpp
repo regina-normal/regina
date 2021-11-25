@@ -36,42 +36,46 @@
 namespace regina {
 
 Matrix2 Matrix2::inverse() const {
-    long det = data[0][0] * data[1][1] - data[0][1] * data[1][0];
+    long det = data_[0][0] * data_[1][1] - data_[0][1] * data_[1][0];
     if (det == 1)
-        return Matrix2(data[1][1], -data[0][1], -data[1][0], data[0][0]);
+        return Matrix2(data_[1][1], -data_[0][1], -data_[1][0], data_[0][0]);
     else if (det == -1)
-        return Matrix2(-data[1][1], data[0][1], data[1][0], -data[0][0]);
+        return Matrix2(-data_[1][1], data_[0][1], data_[1][0], -data_[0][0]);
     else
         return Matrix2();
 }
 
 Matrix2& Matrix2::operator *= (const Matrix2& other) {
-    long tmp00 = data[0][0] * other.data[0][0] + data[0][1] * other.data[1][0];
-    long tmp01 = data[0][0] * other.data[0][1] + data[0][1] * other.data[1][1];
-    long tmp10 = data[1][0] * other.data[0][0] + data[1][1] * other.data[1][0];
-    long tmp11 = data[1][0] * other.data[0][1] + data[1][1] * other.data[1][1];
+    long tmp00 = data_[0][0] * other.data_[0][0] +
+        data_[0][1] * other.data_[1][0];
+    long tmp01 = data_[0][0] * other.data_[0][1] +
+        data_[0][1] * other.data_[1][1];
+    long tmp10 = data_[1][0] * other.data_[0][0] +
+        data_[1][1] * other.data_[1][0];
+    long tmp11 = data_[1][0] * other.data_[0][1] +
+        data_[1][1] * other.data_[1][1];
 
-    data[0][0] = tmp00;
-    data[0][1] = tmp01;
-    data[1][0] = tmp10;
-    data[1][1] = tmp11;
+    data_[0][0] = tmp00;
+    data_[0][1] = tmp01;
+    data_[1][0] = tmp10;
+    data_[1][1] = tmp11;
 
     return *this;
 }
 
 bool Matrix2::invert() {
-    long det = data[0][0] * data[1][1] - data[0][1] * data[1][0];
+    long det = data_[0][0] * data_[1][1] - data_[0][1] * data_[1][0];
     if (det == 1) {
-        long tmp = data[0][0];
-        data[0][0] = data[1][1];
-        data[1][1] = tmp;
-        data[0][1] = -data[0][1];
-        data[1][0] = -data[1][0];
+        long tmp = data_[0][0];
+        data_[0][0] = data_[1][1];
+        data_[1][1] = tmp;
+        data_[0][1] = -data_[0][1];
+        data_[1][0] = -data_[1][0];
         return true;
     } else if (det == -1) {
-        long tmp = data[0][0];
-        data[0][0] = -data[1][1];
-        data[1][1] = -tmp;
+        long tmp = data_[0][0];
+        data_[0][0] = -data_[1][1];
+        data_[1][1] = -tmp;
         return true;
     } else
         return false;

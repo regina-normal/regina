@@ -55,35 +55,34 @@ namespace {
     /**
      * For a validator that ensures we're using the right characters.
      */
-    QRegExp reECChars("(\\d|\\s|,|-)*");
+    QRegExp reECChars(R"((\d|\s|,|-)*)");
     /**
      * For tokenising an list of Euler characteristics.
      */
-    QRegExp reECSeps("\\s|,");
+    QRegExp reECSeps(R"(\s|,)");
     /**
      * For strict verification that we in fact have an Euler
      * characteristic list.
      */
-    QRegExp reECList("\\s*(?:(?:(-?\\d+)\\s*[,|\\s]\\s*)*(-?\\d+))?\\s*");
+    QRegExp reECList(R"(\s*(?:(?:(-?\d+)\s*[,|\s]\s*)*(-?\d+))?\s*)");
 }
 
 FilterPropUI::FilterPropUI(SurfaceFilterProperties* packet,
         PacketPane* enclosingPane) :
-        PacketUI(enclosingPane), filter(packet),
-        allowReadWrite(enclosingPane->isReadWrite()), inNotify(false) {
+        PacketUI(enclosingPane), filter(packet), inNotify(false) {
     ui = new QWidget();
     ui->setWhatsThis(tr("Specify on this page which properties "
         "a normal surface must satisfy in order to be displayed by this "
         "filter."));
 
     // Set up the enclosing grid.
-    QGridLayout* layout = new QGridLayout(ui);//, 6, 4);
+    auto* layout = new QGridLayout(ui);//, 6, 4);
     layout->setRowStretch(0, 1);
     layout->setRowStretch(5, 1);
     layout->setColumnStretch(0, 1);
     layout->setColumnStretch(3, 1);
 
-    QLabel* label = new QLabel(tr("Restrict by:"), ui);
+    auto* label = new QLabel(tr("Restrict by:"), ui);
     layout->addWidget(label, 0, 1, Qt::AlignLeft | Qt::AlignBottom);
 
     // Set up the available restriction types.
@@ -213,21 +212,6 @@ void FilterPropUI::refresh() {
     eulerList->setText(filterECList());
 }
 
-void FilterPropUI::setReadWrite(bool readWrite) {
-    allowReadWrite = readWrite;
-
-    useOrient->setEnabled(readWrite);
-    useCompact->setEnabled(readWrite);
-    useBdry->setEnabled(readWrite);
-
-    enableDisableOrient();
-    enableDisableCompact();
-    enableDisableBdry();
-
-    eulerList->setEnabled(allowReadWrite);
-    eulerExpln->setEnabled(allowReadWrite);
-}
-
 bool FilterPropUI::notifyOptionsChanged() {
     // Sometimes notifyOptionsChanged() calls itself; this seems to be a
     // side-effect of the message box from ReginaSupport::info()
@@ -240,7 +224,7 @@ bool FilterPropUI::notifyOptionsChanged() {
     // characteristics and then jumping directly to toggle some other
     // checkbox).  We therefore wrap everything in a ChangeEventSpan, to
     // avoid refresh() being automatically called partway through.
-    regina::Packet::ChangeEventSpan span(filter);
+    regina::Packet::ChangeEventSpan span(*filter);
 
     inNotify = true;
     bool success = true;
@@ -265,10 +249,10 @@ bool FilterPropUI::notifyOptionsChanged() {
         // We have a valid and non-empty list of Euler characteristics.
         filter->removeAllEulerChars();
 
-        QStringList list = ecText.split(reECSeps);
-        for (QStringList::Iterator it = list.begin(); it != list.end();
-                it++)
-            filter->addEulerChar((*it).toUtf8().constData());
+        // We do not catch exceptions in the string-to-integer conversion,
+        // since our regex should have prevented any possible problems.
+        for (const auto& ec : ecText.split(reECSeps))
+            filter->addEulerChar(ec.toUtf8().constData());
 
         // Refill the text box so that it looks nice.
         eulerList->setText(filterECList());
@@ -279,15 +263,15 @@ bool FilterPropUI::notifyOptionsChanged() {
 }
 
 void FilterPropUI::enableDisableOrient() {
-    optOrient->setEnabled(allowReadWrite && useOrient->isChecked());
+    optOrient->setEnabled(useOrient->isChecked());
 }
 
 void FilterPropUI::enableDisableCompact() {
-    optCompact->setEnabled(allowReadWrite && useCompact->isChecked());
+    optCompact->setEnabled(useCompact->isChecked());
 }
 
 void FilterPropUI::enableDisableBdry() {
-    optBdry->setEnabled(allowReadWrite && useBdry->isChecked());
+    optBdry->setEnabled(useBdry->isChecked());
 }
 
 BoolSet FilterPropUI::getBoolSet(QCheckBox* use, QComboBox* opt) {
@@ -301,8 +285,7 @@ BoolSet FilterPropUI::getBoolSet(QCheckBox* use, QComboBox* opt) {
     }
 }
 
-void FilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt,
-        BoolSet set) {
+void FilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt, BoolSet set) {
     if (set == BoolSet() || set == BoolSet(true, true)) {
         // No restrictions.
         // Note that we're essentially ignoring the empty set, which should
@@ -312,7 +295,7 @@ void FilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt,
     } else {
         use->setChecked(true);
         opt->setCurrentIndex(set.hasTrue() ? 0 : 1);
-        opt->setEnabled(allowReadWrite);
+        opt->setEnabled(true);
     }
 }
 
@@ -321,7 +304,7 @@ QString FilterPropUI::filterECList() {
     if (ecs.empty())
         return QString();
 
-    std::set<regina::LargeInteger>::reverse_iterator it = ecs.rbegin();
+    auto it = ecs.rbegin();
     QString ans = (*it).stringValue().c_str();
     for (++it; it != ecs.rend(); ++it) {
         ans.append(", ");

@@ -36,7 +36,7 @@
 
 namespace regina {
 
-std::optional<AbelianGroup> TorusBundle::homology() const {
+AbelianGroup TorusBundle::homology() const {
     MatrixInt relns(2, 2);
 
     relns.entry(0, 0) = monodromy_[0][0] - 1;
@@ -233,7 +233,7 @@ void TorusBundle::reduce() {
     // really should be written down.
     Matrix2 start = monodromy_;
     Matrix2 best = monodromy_;
-    while (1) {
+    while (true) {
         // INV: monodromy has all non-negative entries.
         // INV: best contains the best seen matrix, including the current one.
 
@@ -275,7 +275,7 @@ void TorusBundle::reduce() {
             best = monodromy_;
 
         start = monodromy_;
-        while (1) {
+        while (true) {
             if (monodromy_.isIdentity()) {
                 if (allNegative)
                     monodromy_.negate();

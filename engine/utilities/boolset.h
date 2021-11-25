@@ -40,19 +40,18 @@
 #endif
 
 #include <iostream>
+#include <string>
 #include "regina-core.h"
 
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A set of booleans.  Note that there are only four possible such sets.
- * BoolSet objects are small enough to pass about by value instead of
- * by reference.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup utilities
  */
 class BoolSet {
     private:
@@ -64,6 +63,8 @@ class BoolSet {
             /**< A character with only the \c true member bit set. */
         static constexpr unsigned char eltFalse = 2;
             /**< A character with only the \c false member bit set. */
+        static constexpr char stringCodes[4][3] = { "--", "T-", "-F", "TF" };
+            /**< The string codes for all four boolean sets. */
 
     public:
         /**
@@ -324,15 +325,17 @@ class BoolSet {
          */
         constexpr unsigned char byteCode() const;
         /**
-         * Sets this boolean set to that represented by the given byte
-         * code.  See byteCode() for more information on byte codes.
+         * Sets this to be the boolean set represented by the given byte code.
+         * See byteCode() for more information on byte codes.
          *
-         * \pre \a code is 0, 1, 2 or 3.
+         * If \a code is not a value byte code, then this routine will
+         * do nothing and return \c false.
          *
          * @param code the byte code that will determine the new value
          * of this set.
+         * @return \c true if and only if \c code is a valid byte code.
          */
-        void setByteCode(unsigned char code);
+        bool setByteCode(unsigned char code);
         /**
          * Creates a boolean set from the given byte code.
          * See byteCode() for more information on byte codes.
@@ -343,6 +346,32 @@ class BoolSet {
          * created.
          */
         constexpr static BoolSet fromByteCode(unsigned char code);
+
+        /**
+         * Returns the string code representing this boolean set.
+         * String codes are a more human-readable alternative to byte codes;
+         * in particular, they are used in XML data files.
+         *
+         * Every string code contains precisely two characters (plus a
+         * terminating null).
+         * Sets {}, {true}, {false} and {true, false} have
+         * string codes \c "--", \c "T-", \c "-F" and \c "TF" respectively.
+         *
+         * @return the two-character string code representing this set.
+         */
+        const char* stringCode() const;
+        /**
+         * Sets this to be the boolean set represented by the given string code.
+         * See stringCode() for more information on string codes.
+         *
+         * If \a code is not a value string code, then this routine will
+         * do nothing and return \c false.
+         *
+         * @param code the string code that will determine the new value
+         * of this set.
+         * @return \c true if and only if \c code is a valid string code.
+         */
+        bool setStringCode(const std::string& code);
 
     friend std::ostream& operator << (std::ostream& out, BoolSet set);
 };
@@ -356,6 +385,8 @@ class BoolSet {
  * @param out the output stream to which to write.
  * @param set the boolean set to write.
  * @return a reference to \a out.
+ *
+ * \ingroup utilities
  */
 std::ostream& operator << (std::ostream& out, BoolSet set);
 
@@ -465,11 +496,18 @@ inline constexpr BoolSet BoolSet::operator ~ () const {
 inline constexpr unsigned char BoolSet::byteCode() const {
     return elements;
 }
-inline void BoolSet::setByteCode(unsigned char code) {
-    elements = code;
+inline bool BoolSet::setByteCode(unsigned char code) {
+    if (code < 4) {
+        elements = code;
+        return true;
+    } else
+        return false;
 }
 inline constexpr BoolSet BoolSet::fromByteCode(unsigned char code) {
     return BoolSet(code & eltTrue, code & eltFalse);
+}
+inline const char* BoolSet::stringCode() const {
+    return stringCodes[elements];
 }
 
 } // namespace regina

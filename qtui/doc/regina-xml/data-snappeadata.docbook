@@ -1,0 +1,131 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-snappeadata">
+ <refmeta>
+  <refentrytitle>snappeadata</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>snappeadata</refname>
+  <refpurpose>A &snappea; triangulation packet</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+snappeadata ::= (#PCDATA,
+                 &xml-tag;*,
+                 &packetsyn1;
+                 &packetsyn2;
+                 &packetsyn3;
+                 &packetsyn4;
+                 &packetsyn5;*)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     &packetattrlist2col;
+    </tbody>
+   </tgroup>
+  </informaltable>
+  <para>&eltaddedver;7.0</para>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   This represents a <emphasis>&snappea; triangulation packet</emphasis>,
+   one of the many types of packet that together form the
+   <emphasis>packet tree</emphasis> that a user sees when they open a
+   &regina; data file.
+  </para>
+  <para>
+   A &snappea; triangulation packet stores a 3-manifold triangulation
+   using &snappea;'s own text-based file format
+   (instead of &regina;'s native format).
+   This is useful when working with a triangulation that originated
+   from &snappea; or &snappy;, since it will preserve all of &snappea;'s own
+   internal data (e.g., peripheral curves and fillings).
+  </para>
+  <para>
+   The full contents of the &snappea; data file are contained in the
+   character data that appears before the first child &xml; element.
+   Whitespace and line breaks are relevant and are considered
+   a part of the data file.
+  </para>
+  &packetchilddesc;
+
+  <refsect2>
+   <title>Parents</title>
+   &packetparents;
+  </refsect2>
+
+   <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>snappeadata</sgmltag> has no children that are
+    specific to &snappea; triangulation packets.
+   </para>
+   &packetchildren;
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  &packetattrdesc;
+ </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents a &snappea; triangulation of
+   the figure eight knot complement.
+  </para>
+  <programlisting>
+&lt;snappeadata label=&quot;Figure 8 Knot Complement&quot;&gt;% Triangulation
+m004
+geometric_solution  2.02988321
+oriented_manifold
+CS_unknown
+
+1 0
+    torus   0.000000000000   0.000000000000
+
+2
+   1    1    1    1
+ 0132 1230 2310 2103
+   0    0    0    0
+  0  0  0  0  0  0  0  0 -1  1  0  0  0  0  0  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0 -1  0  1  1  0 -1  0  0  1  0 -1 -1  0  1  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0.500000000000   0.866025403784
+
+   0    0    0    0
+ 0132 3201 3012 2103
+   0    0    0    0
+  0  0  0  0  0  0  0  0  0  0  0  0  1  0 -1  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0 -1  0  1 -1  0  1  0  1  0  0 -1  0  1 -1  0
+  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+  0.500000000000   0.866025403784
+
+&lt;/snappeadata&gt;
+  </programlisting>
+ </refsect1>
+</refentry>

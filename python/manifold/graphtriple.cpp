@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "manifold/graphtriple.h"
 #include "manifold/sfs.h"
 #include "../helpers.h"
@@ -41,13 +42,8 @@ using regina::SFSpace;
 
 void addGraphTriple(pybind11::module_& m) {
     pybind11::class_<GraphTriple, regina::Manifold>(m, "GraphTriple")
-        .def(pybind11::init([](const SFSpace& s1,
-                const SFSpace& s2, const SFSpace& s3,
-                const Matrix2& m1, const Matrix2& m2) {
-            // Clone the given SFSs to avoid claiming ownership of them.
-            return new GraphTriple(
-                new SFSpace(s1), new SFSpace(s2), new SFSpace(s3), m1, m2);
-        }))
+        .def(pybind11::init<const SFSpace&, const SFSpace&, const SFSpace&,
+            const Matrix2&, const Matrix2&>())
         .def(pybind11::init<const GraphTriple&>())
         .def("end", &GraphTriple::end,
             pybind11::return_value_policy::reference_internal)

@@ -103,11 +103,6 @@ class Rational;
 template <class> class Vector;
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents a matrix of elements of the given type \a T.
  *
  * As of Regina 5.96, the old subclasses of Matrix have now been merged into a
@@ -165,6 +160,8 @@ template <class> class Vector;
  * \tparam ring \c true if we should enable member functions that only
  * work when T represents an element of a ring.  This has a sensible default;
  * see above in the class documentation for details.
+ *
+ * \ingroup maths
  */
 template <class T, bool ring =
         ((std::is_integral<T>::value && ! std::is_same<T, bool>::value) ||
@@ -174,7 +171,7 @@ class Matrix : public Output<Matrix<T>> {
         "Using Matrix with Regina's own integer types requires ring=true.");
 
     public:
-        typedef T Coefficient;
+        using Coefficient = T;
             /**< The type of each entry in the matrix. */
 
     private:
@@ -201,14 +198,37 @@ class Matrix : public Output<Matrix<T>> {
          *   case the other matrix will become uninitialised also and subject
          *   to similar constraints.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, since the C++ assignment operators
+         * are not accessible to Python.
          */
         Matrix() : rows_(0), cols_(0), data_(nullptr) {
         }
         /**
-         * Creates a new matrix of the given size.
-         * All entries will be initialised using their default constructors.
+         * Creates a new square matrix of the given size.  Both the number of
+         * rows and the number of columns will be set to \a size.
          *
+         * All entries will be initialised using their default constructors.
+         * In particular, this means that for Regina's own integer classes
+         * (Integer, LargeInteger and NativeInteger), all entries will be
+         * initialised to zero.
+         *
+         * \warning If \a T is a native C++ integer type (such as \c int
+         * or \c long), then the matrix elements will not be initialised
+         * to any particular value.
+         *
+         * \pre The given size is strictly positive.
+         *
+         * @param size the number of rows and columns in the new matrix.
+         */
+        Matrix(unsigned long size) :
+                rows_(size), cols_(size), data_(new T*[size]) {
+            for (unsigned long i = 0; i < size; ++i)
+                data_[i] = new T[size];
+        }
+        /**
+         * Creates a new matrix of the given size.
+         *
+         * All entries will be initialised using their default constructors.
          * In particular, this means that for Regina's own integer classes
          * (Integer, LargeInteger and NativeInteger), all entries will be
          * initialised to zero.
@@ -224,7 +244,7 @@ class Matrix : public Output<Matrix<T>> {
          */
         Matrix(unsigned long rows, unsigned long cols) :
                 rows_(rows), cols_(cols), data_(new T*[rows]) {
-            for (unsigned long i = 0; i < rows; i++)
+            for (unsigned long i = 0; i < rows; ++i)
                 data_[i] = new T[cols];
         }
         /**
@@ -242,7 +262,8 @@ class Matrix : public Output<Matrix<T>> {
          * \pre All elements of \a data (representing the rows of the matrix)
          * are lists of the same size.
          *
-         * \ifacespython Not available.
+         * \ifacespython The argument \a data should be a Python list of
+         * Python lists.
          *
          * @param data the rows of the matrix, each given as a list of elements.
          */
@@ -324,6 +345,10 @@ class Matrix : public Output<Matrix<T>> {
          * @return a reference to this matrix.
          */
         Matrix& operator = (const Matrix& src) {
+            // std::copy() exhibits undefined behaviour with self-assignment.
+            if (std::addressof(src) == this)
+                return *this;
+
             if (src.data_) {
                 if (rows_ != src.rows_ || cols_ != src.cols_ || ! data_) {
                     if (data_) {
@@ -392,19 +417,22 @@ class Matrix : public Output<Matrix<T>> {
 
 #ifdef __DOXYGEN
         /**
-         * A Python-only routine that fills the matrix with the given
-         * set of elements.
+         * A deprecated Python-only routine that fills the matrix with the
+         * given set of elements.
          *
          * The argument \a allValues must be a Python list of length
          * rows() * columns().  Its values will be inserted into the
          * matrix row by row (i.e., the first row will be filled, then
          * the second row, and so on).
          *
+         * \deprecated Use the list-based constructor instead, which is
+         * now available to Python users.
+         *
          * \ifacescpp Not available; this routine is for Python only.
          *
          * @param allValues the individual elements to place into the matrix.
          */
-        void initialise(List allValues);
+        [[deprecated]] void initialise(List allValues);
 #endif
 
         /**
@@ -442,11 +470,13 @@ class Matrix : public Output<Matrix<T>> {
          * \pre \a row is between 0 and rows()-1 inclusive.
          * \pre \a column is between 0 and columns()-1 inclusive.
          *
-         * \ifacespython Although the entry() routine gives direct
-         * read-write access to matrix elements, the syntax
-         * <tt>matrix.entry(row, column) = value</tt> still cannot be
-         * used in python to set a matrix element directly.  For this,
-         * you can use the syntax <tt>matrix.set(row, column, value)</tt>.
+         * \ifacespython The entry() routine gives direct read-write access
+         * to matrix elements, but does not allow them to be set using
+         * the assignment operator.  In other words, code such as
+         * <tt>matrix.entry(r, c).negate()</tt> will work, but
+         * <tt>matrix.entry(r, c) = value</tt> will not.
+         * To assign values to matrix elements, you should instead use the
+         * syntax <tt>matrix.set(row, column, value)</tt>.
          * This set() routine returns nothing, and is provided for python
          * only (i.e., it is not part of the C++ calculation engine).
          *
@@ -463,9 +493,6 @@ class Matrix : public Output<Matrix<T>> {
          *
          * \pre \a row is between 0 and rows()-1 inclusive.
          * \pre \a column is between 0 and columns()-1 inclusive.
-         *
-         * \ifacespython Not present, although the non-const form of
-         * this routine is.
          *
          * @param row the row of the desired entry.
          * @param column the column of the desired entry.
@@ -549,25 +576,22 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * Writes a complete representation of the matrix to the given
-         * output stream.
+         * Deprecated function that writes a complete representation of the
+         * matrix to the given output stream.
+         *
          * Each row will be written on a separate line with elements in
          * each row separated by single spaces.
          *
-         * \ifacespython Not present, even if a subclass of Matrix
-         * is mirrored and its inherited routines are mirrored also.
+         * \deprecated This routine is identical to writeTextLong().
+         * Call writeTextLong() instead, or detail() if you want the text
+         * representation in string form.
+         *
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
-        void writeMatrix(std::ostream& out) const {
-            unsigned long r, c;
-            for (r = 0; r < rows_; r++) {
-                for (c = 0; c < cols_; c++) {
-                    if (c > 0) out << ' ';
-                    out << data_[r][c];
-                }
-                out << '\n';
-            }
+        [[deprecated]] void writeMatrix(std::ostream& out) const {
+            writeTextLong(out);
         }
 
         /**
@@ -638,7 +662,7 @@ class Matrix : public Output<Matrix<T>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -649,12 +673,19 @@ class Matrix : public Output<Matrix<T>> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const {
-            writeMatrix(out);
+            unsigned long r, c;
+            for (r = 0; r < rows_; r++) {
+                for (c = 0; c < cols_; c++) {
+                    if (c > 0) out << ' ';
+                    out << data_[r][c];
+                }
+                out << '\n';
+            }
         }
 
         /**
@@ -1093,7 +1124,7 @@ class Matrix : public Output<Matrix<T>> {
                 T elt = 0;
                 for (col = 0; col < cols_; ++col)
                     elt += (data_[row][col] * other[col]);
-                ans.set(row, elt);
+                ans[row] = elt;
             }
 
             return ans;
@@ -1341,7 +1372,6 @@ class Matrix : public Output<Matrix<T>> {
             unsigned long currCol = 0;
 
             // The algorithm works from left to right.
-            T d, r, u, v, gcd, a, b, tmp;
             while (currRow < rows_ && currCol < cols_) {
                 // Identify the first non-zero entry in currCol.
                 for (i = currRow; i < rows_; ++i)
@@ -1364,12 +1394,12 @@ class Matrix : public Output<Matrix<T>> {
                 // Zero out all entries in currCol that appear *below* currRow.
                 for (i = currRow + 1; i < rows_; ++i)
                     if (data_[i][currCol] != 0) {
-                        gcd = data_[currRow][currCol].gcdWithCoeffs(
-                            data_[i][currCol], u, v);
-                        a = data_[currRow][currCol].divExact(gcd);
-                        b = data_[i][currCol].divExact(gcd);
+                        auto [gcd, u, v] = data_[currRow][currCol].
+                            gcdWithCoeffs(data_[i][currCol]);
+                        T a = data_[currRow][currCol].divExact(gcd);
+                        T b = data_[i][currCol].divExact(gcd);
                         for (j = 0; j < cols_; ++j) {
-                            tmp = u * data_[currRow][j] + v * data_[i][j];
+                            T tmp = u * data_[currRow][j] + v * data_[i][j];
                             data_[i][j] = a * data_[i][j] -
                                 b * data_[currRow][j];
                             data_[currRow][j] = tmp;
@@ -1384,11 +1414,10 @@ class Matrix : public Output<Matrix<T>> {
 
                 // Finally, reduce the entries in currCol *above* currRow.
                 for (i = 0; i < currRow; ++i) {
-                    d = data_[i][currCol].divisionAlg(data_[currRow][currCol],
-                        r);
-                    if (d != 0) {
+                    auto [d, r] = data_[i][currCol].divisionAlg(
+                        data_[currRow][currCol]);
+                    if (d != 0)
                         addRow(currRow /* source */, i /* dest */, -d);
-                    }
                 }
 
                 ++currRow;
@@ -1434,7 +1463,6 @@ class Matrix : public Output<Matrix<T>> {
             unsigned long currCol = 0;
 
             // The algorithm works from top to bottom.
-            T d, r, u, v, gcd, a, b, tmp;
             while (currRow < rows_ && currCol < cols_) {
                 // Identify the first non-zero entry in currRow.
                 for (i = currCol; i < cols_; ++i)
@@ -1457,12 +1485,12 @@ class Matrix : public Output<Matrix<T>> {
                 // Zero out all entries in currRow that appear right of currCol.
                 for (i = currCol + 1; i < cols_; ++i)
                     if (data_[currRow][i] != 0) {
-                        gcd = data_[currRow][currCol].gcdWithCoeffs(
-                            data_[currRow][i], u, v);
-                        a = data_[currRow][currCol].divExact(gcd);
-                        b = data_[currRow][i].divExact(gcd);
+                        auto [gcd, u, v] = data_[currRow][currCol].
+                            gcdWithCoeffs(data_[currRow][i]);
+                        T a = data_[currRow][currCol].divExact(gcd);
+                        T b = data_[currRow][i].divExact(gcd);
                         for (j = 0; j < rows_; ++j) {
-                            tmp = u * data_[j][currCol] + v * data_[j][i];
+                            T tmp = u * data_[j][currCol] + v * data_[j][i];
                             data_[j][i] = a * data_[j][i] -
                                 b * data_[j][currCol];
                             data_[j][currCol] = tmp;
@@ -1477,11 +1505,10 @@ class Matrix : public Output<Matrix<T>> {
 
                 // Finally, reduce the entries in currRow left of currCol.
                 for (i = 0; i < currCol; ++i) {
-                    d = data_[currRow][i].divisionAlg(data_[currRow][currCol],
-                        r);
-                    if (d != 0) {
+                    auto [d, r] = data_[currRow][i].divisionAlg(
+                        data_[currRow][currCol]);
+                    if (d != 0)
                         addCol(currCol /* source */, i /* dest */, -d);
-                    }
                 }
 
                 ++currRow;
@@ -1500,6 +1527,8 @@ class Matrix : public Output<Matrix<T>> {
  *
  * @param a the first matrix whose contents should be swapped.
  * @param b the second matrix whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 template <typename T>
 inline void swap(Matrix<T>& a, Matrix<T>& b) noexcept {
@@ -1513,10 +1542,26 @@ inline void swap(Matrix<T>& a, Matrix<T>& b) noexcept {
  * algorithms over integer matrices.  Since the underlying type is
  * Regina's Integer class, calculations will be exact regardless of
  * how large the integers become.
+ *
+ * \ifacespython This instance of the Matrix template class is made
+ * available to Python.
+ *
+ * \ingroup maths
  */
-typedef Matrix<Integer> MatrixInt;
+using MatrixInt = Matrix<Integer>;
 
-/*@}*/
+/**
+ * A matrix of booleans.
+ *
+ * This is used in a handful of places in Regina to represent incidence or
+ * adjacency matrices.
+ *
+ * \ifacespython This instance of the Matrix template class is made
+ * available to Python.
+ *
+ * \ingroup maths
+ */
+using MatrixBool = Matrix<bool>;
 
 } // namespace regina
 

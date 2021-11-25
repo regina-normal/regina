@@ -2,11 +2,11 @@
 
 # Files to compile
 SET ( FILES
+  attachment.cpp
   container.cpp
   packet.cpp
   packetlistener.cpp
   packettype.cpp
-  pdf.cpp
   pypacket.cpp
   script.cpp
   text.cpp

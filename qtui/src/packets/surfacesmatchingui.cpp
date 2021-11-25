@@ -33,6 +33,7 @@
 // Regina core includes:
 #include "maths/matrix.h"
 #include "surfaces/normalsurfaces.h"
+#include "triangulation/dim3.h"
 
 // UI includes:
 #include "./coordinates.h" // Use ./ to avoid picking up the iOS header.
@@ -96,9 +97,10 @@ QVariant MatchingModel::headerData(int section, Qt::Orientation orientation,
         return QVariant();
 }
 
-SurfacesMatchingUI::SurfacesMatchingUI(regina::NormalSurfaces* packet,
+SurfacesMatchingUI::SurfacesMatchingUI(
+        regina::PacketOf<regina::NormalSurfaces>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
-        currentlyAutoResizing(false), everRefreshed(false) {
+        surfaces(packet), currentlyAutoResizing(false), everRefreshed(false) {
     model = new MatchingModel(packet);
 
     table = new QTreeView();
@@ -139,7 +141,7 @@ SurfacesMatchingUI::~SurfacesMatchingUI() {
 }
 
 regina::Packet* SurfacesMatchingUI::getPacket() {
-    return model->surfaces();
+    return surfaces;
 }
 
 QWidget* SurfacesMatchingUI::getInterface() {

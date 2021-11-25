@@ -210,8 +210,8 @@
             (e->vertex(1)->isBoundary() && e->vertex(1)->boundaryComponent()->isReal())) {
         // We already connect with real boundary, so we must not
         // combine this with new ideal boundary.
-        if (e->vertex(0)->link() == regina::Vertex<3>::SPHERE ||
-                e->vertex(1)->link() == regina::Vertex<3>::SPHERE) {
+        if (e->vertex(0)->linkType() == regina::Vertex<3>::SPHERE ||
+                e->vertex(1)->linkType() == regina::Vertex<3>::SPHERE) {
             // We are drilling an edge that joins real boundary
             // with an internal vertex.
             // Topologically, this does nothing at all.
@@ -225,8 +225,7 @@
         } else {
             // We are drilling an edge between two boundaries, at least one of which is real.
             // Therefore we cannot use pinchEdge(), which would create a mixed real-ideal boundary.
-            // Since drillEdge() is deprecated (and will be removed in Regina 6.1), we will just
-            // refuse to do it here in the GUI.
+            // For now, just refuse to do it.
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Drill Between Boundaries"
                                                             message:@"I am not brave enough to drill an edge between two boundary components where at least one is real, since this could produce an enormous number of tetrahedra. You could try converting to an ideal triangulation, since I will happily drill edges between ideal vertices."
                                                            delegate:nil
@@ -238,8 +237,8 @@
     } else {
         // The edge does not connect with any real boundary.
         if (e->vertex(0) != e->vertex(1) &&
-                e->vertex(0)->link() == regina::Vertex<3>::SPHERE &&
-                e->vertex(1)->link() == regina::Vertex<3>::SPHERE) {
+                e->vertex(0)->linkType() == regina::Vertex<3>::SPHERE &&
+                e->vertex(1)->linkType() == regina::Vertex<3>::SPHERE) {
             // We are drilling an edge between two internal vertices.
             // Topologically, this is just a puncture.
             // Make sure that we puncture a tetrahedron that
@@ -247,8 +246,8 @@
             ans = new regina::Triangulation<3>(*self.packet);
             ans->puncture(ans->tetrahedron(e->front().tetrahedron()->index()));
         } else if (e->vertex(0) != e->vertex(1) &&
-                (e->vertex(0)->link() == regina::Vertex<3>::SPHERE ||
-                 e->vertex(1)->link() == regina::Vertex<3>::SPHERE)) {
+                (e->vertex(0)->linkType() == regina::Vertex<3>::SPHERE ||
+                 e->vertex(1)->linkType() == regina::Vertex<3>::SPHERE)) {
             // We are drilling an edge between an internal
             // vertex and an ideal vertex.  Topologically, this
             // does nothing.
@@ -332,7 +331,7 @@
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
                 cell.data1.text = [NSString stringWithFormat:@"%ld", v->degree()];
 
-                switch (v->link()) {
+                switch (v->linkType()) {
                     case regina::Vertex<3>::SPHERE:
                         cell.data0.text = @"Internal";
                         break;

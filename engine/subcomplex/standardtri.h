@@ -39,10 +39,11 @@
 #define __REGINA_STANDARDTRI_H
 #endif
 
-#include <optional>
+#include <memory>
 #include "regina-core.h"
 #include "core/output.h"
 #include "algebra/abeliangroup.h"
+#include "manifold/manifold.h"
 #include "triangulation/forward.h"
 
 namespace regina {
@@ -51,35 +52,50 @@ class AbelianGroup;
 class Manifold;
 
 /**
- * \addtogroup subcomplex Standard Triangulations and Subcomplexes
+ * \defgroup subcomplex Standard Triangulations and Subcomplexes
  * Standard triangulations and subcomplexes of triangulations whose
  * structures are well-understood.
- * @{
  */
 
 /**
  * Describes a triangulation or subcomplex of a triangulation whose structure
- * is well-understood.  A StandardTriangulation is generally connected
- * with a real triangulation, i.e., a Triangulation<3> object, which it
- * describes some portion of.
+ * is well-understood.  This is an abstract base class: its subclasses
+ * correspond to different combinatorial constructions (typically
+ * parameterised families of triangulations or subcomplexes).
  *
- * In general StandardTriangulation objects cannot be constructed
- * directly, but are instead created through static identification
- * routines such as
- * StandardTriangulation::isStandardTriangulation(Triangulation<3>*).
+ * A StandardTriangulation is generally identified with a concrete
+ * triangulation, i.e., a Triangulation<3> object, which it describes some
+ * portion of (or possibly all of).
  *
- * Subclasses corresponding to different families of triangulations may,
- * but not need to, override the output routines writeTextShort() and
- * writeTextLong().  This class offers sensible default implementations
- * of both routines, which call the pure virtual function writeName()
- * (which every subclass must override).
+ * In general StandardTriangulation objects cannot be constructed directly,
+ * but are instead created through static identification routines such as
+ * StandardTriangulation::recognise(const Triangulation<3>&).
+ *
+ * Each subclass of StandardTriangulation:
+ *
+ * - must override all pure virtual functions (of course);
+ *
+ * - may optionally override manifold() and/or homology(), if they are
+ *   able to provide this functionality;
+ *
+ * - may optionally override writeTextShort() and writeTextLong(), though this
+ *   class provides sensible default implementations which use writeName()
+ *   (which subclasses always override because writeName() is pure virtual);
+ *
+ * - provide value semantics (including at least a copy constructor and
+ *   assignment operator);
+ *
+ * - provide member and global swap functions, for consistency across all
+ *   StandardTriangulation subclasses.
+ *
+ * \ingroup subcomplex
  */
 class StandardTriangulation : public Output<StandardTriangulation> {
     public:
         /**
          * A destructor that does nothing.
          */
-        virtual ~StandardTriangulation();
+        virtual ~StandardTriangulation() = default;
 
         /**
          * Returns the name of this specific triangulation as a
@@ -98,7 +114,16 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          *
          * @return the name of this triangulation in TeX format.
          */
-        std::string TeXName() const;
+        std::string texName() const;
+        /**
+         * Deprecated routine that returns the name of this specific
+         * triangulation in TeX format.
+         *
+         * \deprecated This routine has been renamed to texName().
+         *
+         * @return the name of this triangulation in TeX format.
+         */
+        [[deprecated]] std::string TeXName() const;
         /**
          * Returns the 3-manifold represented by this triangulation, if
          * such a recognition routine has been implemented.  If the 3-manifold
@@ -113,54 +138,70 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * underlying 3-manifolds can be recognised will grow between
          * releases.
          *
-         * The 3-manifold will be newly allocated and must be destroyed
-         * by the caller of this routine.
-         *
          * @return the underlying 3-manifold.
          */
-        virtual Manifold* manifold() const;
+        virtual std::unique_ptr<Manifold> manifold() const;
         /**
          * Returns the expected first homology group of this triangulation,
-         * if such a routine has been implemented.  If the calculation of
-         * homology has not yet been implemented for this triangulation
-         * then this routine will return no value.
+         * if such a routine has been implemented.
          *
          * This routine does not work by calling Triangulation<3>::homology()
          * on the associated real triangulation.  Instead the homology is
          * calculated directly from the known properties of this
          * standard triangulation.
          *
-         * The details of which standard triangulations have homology
-         * calculation routines can be found in the notes for the
-         * corresponding subclasses of StandardTriangulation.  The
-         * default implementation of this routine returns no value.
+         * This means that homology() needs to be implemented separately
+         * for each class of standard triangulation.  See the class
+         * notes for each subclass of StandardTriangulation for details
+         * on whether homology has been implemented for that particular
+         * subclass.  The default implementation of this routine just throws a
+         * NotImplemented exception.
+         *
+         * Most users will not need this routine, since presumably you
+         * already have an explicit Triangulation<3> available and so
+         * you can just call Triangulation<3>::homology() instead
+         * (which, unlike this routine, \e is always implemented).
+         * This StandardTriangulation::homology() routine should be seen
+         * as more of a verification/validation tool for the Regina developers.
          *
          * If this StandardTriangulation describes an entire Triangulation<3>
          * (and not just a part thereof) then the results of this routine
          * should be identical to the homology group obtained by calling
          * Triangulation<3>::homology() upon the associated real triangulation.
          *
-         * This routine can also be accessed via the alias homologyH1()
-         * (a name that is more specific, but a little longer to type).
+         * \exception NotImplemented homology calculation has not yet
+         * been implemented for this particular type of standard triangulation.
          *
-         * @return the first homology group of this triangulation, or no value
-         * if the appropriate calculation routine has not yet been implemented.
+         * \exception FileError the homology needs to be read from file (as
+         * opposed to computed), but the file is inaccessible or its contents
+         * cannot be read and parsed correctly.  Currently this can only happen
+         * for the subclass SnapPeaCensusTri, which reads its results from
+         * the SnapPea census databases that are installed with Regina.
+         *
+         * @return the first homology group of this triangulation, if this
+         * functionality has been implemented.
          */
-        virtual std::optional<AbelianGroup> homology() const;
+        virtual AbelianGroup homology() const;
         /**
-         * An alias for homology().  See homology() for further details.
+         * A deprecated alias for homology().
          *
-         * @return the first homology group of this triangulation, or no value
-         * if the appropriate calculation routine has not yet been implemented.
+         * \deprecated This routine can be accessed by the simpler name
+         * homology().
+         *
+         * \exception NotImplemented homology calculation has not yet
+         * been implemented for this particular type of standard triangulation.
+         *
+         * @return the first homology group of this triangulation, if this
+         * functionality has been implemented.
          */
-        std::optional<AbelianGroup> homologyH1() const;
+        [[deprecated]] AbelianGroup homologyH1() const;
 
         /**
          * Writes the name of this triangulation as a human-readable
          * string to the given output stream.
          *
-         * \ifacespython The parameter \a out does not exist; standard
-         * output will be used.
+         * \ifacespython Not present; instead use the variant name() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -175,8 +216,8 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * Regina 4.3; in earlier versions, leading and trailing dollar
          * signs were provided.
          *
-         * \ifacespython The parameter \a out does not exist; standard
-         * output will be used.
+         * \ifacespython Not present; instead use the variant texName() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -191,7 +232,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * StandardTriangulation class offers a reasonable default
          * implementation based on writeName().
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -205,7 +246,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * StandardTriangulation class offers a reasonable default
          * implementation based on writeName().
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -223,7 +264,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * identifications of these boundary triangles with each other.
          *
          * Note that the triangulation-based routine
-         * isStandardTriangulation(Triangulation<3>*) may recognise more
+         * recognise(const Triangulation<3>&) may recognise more
          * triangulations than this routine, since passing an entire
          * triangulation allows access to more information.
          *
@@ -231,8 +272,17 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * @return the details of the standard triangulation if the
          * given component is recognised, or \c null otherwise.
          */
-        static StandardTriangulation* isStandardTriangulation(
+        static std::unique_ptr<StandardTriangulation> recognise(
             Component<3>* component);
+        /**
+         * A deprecated alias to determine whether a component represents
+         * one of the standard triangulations understood by Regina.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<StandardTriangulation>
+            isStandardTriangulation(Component<3>* component);
         /**
          * Determines whether the given triangulation represents one of the
          * standard triangulations understood by Regina.  The list of
@@ -245,50 +295,56 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * identifications of these boundary triangles with each other.
          *
          * This routine may recognise more triangulations than the
-         * component-based isStandardTriangulation(Component<3>*),
-         * since passing an entire triangulation allows access to
-         * more information.
+         * component-based recognise(Component<3>*), since passing an entire
+         * triangulation allows access to more information.
          *
          * @param tri the triangulation under examination.
          * @return the details of the standard triangualation if the
          * given triangulation is recognised, or \c null otherwise.
          */
-        static StandardTriangulation* isStandardTriangulation(
-            Triangulation<3>* tri);
-
-        // Mark this class as non-assignable.
-        StandardTriangulation& operator = (const StandardTriangulation&) =
-            delete;
+        static std::unique_ptr<StandardTriangulation> recognise(
+            const Triangulation<3>& tri);
+        /**
+         * A deprecated alias to determine whether a triangulation represents
+         * one of the standard triangulations understood by Regina.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<StandardTriangulation>
+            isStandardTriangulation(const Triangulation<3>& tri);
 
     protected:
         /**
-         * Default constructor.  This is needed for subclasses to implicitly
+         * Default constructor.  This is here for subclasses to implicitly
          * call from their own constructors.
          */
         StandardTriangulation() = default;
         /**
-         * Do-nothing copy constructor.  This is needed for subclasses to
-         * implicitly call from their own default copy constructors.
+         * Do-nothing copy constructor.  This is here for subclasses to
+         * implicitly call from their own copy constructors.
          */
         StandardTriangulation(const StandardTriangulation&) = default;
-};
+        /**
+         * Do-nothing assignment operator.  This is here for subclasses to
+         * implicitly call from their own assignment operators.
+         */
+        StandardTriangulation& operator = (const StandardTriangulation&) =
+            default;
 
-/*@}*/
+};
 
 // Inline functions for StandardTriangulation
 
-inline StandardTriangulation::~StandardTriangulation() {
+inline std::string StandardTriangulation::TeXName() const {
+    return texName();
 }
 
-inline Manifold* StandardTriangulation::manifold() const {
+inline std::unique_ptr<Manifold> StandardTriangulation::manifold() const {
     return nullptr;
 }
 
-inline std::optional<AbelianGroup> StandardTriangulation::homology() const {
-    return std::nullopt;
-}
-
-inline std::optional<AbelianGroup> StandardTriangulation::homologyH1() const {
+inline AbelianGroup StandardTriangulation::homologyH1() const {
     return homology();
 }
 
@@ -299,6 +355,17 @@ inline void StandardTriangulation::writeTextShort(std::ostream& out) const {
 inline void StandardTriangulation::writeTextLong(std::ostream& out) const {
     writeName(out);
     out << '\n';
+}
+
+inline std::unique_ptr<StandardTriangulation>
+        StandardTriangulation::isStandardTriangulation(Component<3>* comp) {
+    return recognise(comp);
+}
+
+inline std::unique_ptr<StandardTriangulation>
+        StandardTriangulation::isStandardTriangulation(
+        const Triangulation<3>& tri) {
+    return recognise(tri);
 }
 
 } // namespace regina

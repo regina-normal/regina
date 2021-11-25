@@ -35,57 +35,69 @@ from __future__ import print_function
 
 root = Container()
 
+# Note: Since Regina 7.0, when cloning a packet tree, the cloned surface
+# lists point to the *original* triangulations.
+
 # 3-D surface test:
 
-tri = Example3.poincareHomologySphere()
-list = NormalSurfaces.enumerate(tri, NS_STANDARD)
+tri = PacketOfTriangulation3(Example3.poincare())
+list = PacketOfNormalSurfaces(tri, NS_STANDARD)
+tri.insertChildLast(list)
 root.insertChildLast(tri)
 
-tri2 = tri.clone(True)
+tri2 = tri.cloneAsSibling(True)
 list2 = tri2.firstChild()
 
 s = list.surface(0)
 s2 = list2.surface(0)
 
 print(list.triangulation() == tri)
-print(list2.triangulation() == tri2)
+print(list2.triangulation() == tri)
+print(list2.triangulation() != tri2)
 
 print(s.triangulation() == tri)
-print(s2.triangulation() == tri2)
+print(s2.triangulation() == tri)
+print(s2.triangulation() != tri2)
 
 # 4-D hypersurface test:
 
-tri = Example4.s3xs1()
-list = NormalHypersurfaces.enumerate(tri, HS_STANDARD)
+tri = PacketOfTriangulation4(Example4.s3xs1())
+list = PacketOfNormalHypersurfaces(tri, HS_STANDARD)
+tri.insertChildLast(list)
 root.insertChildLast(tri)
 
-tri2 = tri.clone(True)
+tri2 = tri.cloneAsSibling(True)
 list2 = tri2.firstChild()
 
 s = list.hypersurface(0)
 s2 = list2.hypersurface(0)
 
 print(list.triangulation() == tri)
-print(list2.triangulation() == tri2)
+print(list2.triangulation() == tri)
+print(list2.triangulation() != tri2)
 
 print(s.triangulation() == tri)
-print(s2.triangulation() == tri2)
+print(s2.triangulation() == tri)
+print(s2.triangulation() != tri2)
 
 # Angle structure test:
 
-tri = Example3.whiteheadLink()
-list = AngleStructures.enumerate(tri)
+tri = PacketOfTriangulation3(Example3.whiteheadLink())
+list = PacketOfAngleStructures(tri)
+tri.insertChildLast(list)
 root.insertChildLast(tri)
 
-tri2 = tri.clone(True)
+tri2 = tri.cloneAsSibling(True)
 list2 = tri2.firstChild()
 
 s = list.structure(0)
 s2 = list2.structure(0)
 
 print(list.triangulation() == tri)
-print(list2.triangulation() == tri2)
+print(list2.triangulation() == tri)
+print(list2.triangulation() != tri2)
 
 print(s.triangulation() == tri)
-print(s2.triangulation() == tri2)
+print(s2.triangulation() == tri)
+print(s2.triangulation() != tri2)
 

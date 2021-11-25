@@ -39,6 +39,7 @@
 #define __REGINA_SIGNATURE_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/forward.h"
@@ -49,9 +50,8 @@ class SigCensus;
 class SigPartialIsomorphism;
 
 /**
- * \addtogroup split Splitting Surfaces
+ * \defgroup split Splitting Surfaces
  * Splitting surfaces in triangulations.
- * @{
  */
 
 /**
@@ -91,6 +91,12 @@ class SigPartialIsomorphism;
  * For further details on splitting surfaces and their signatures, consult
  * <i>Minimal triangulations and normal surfaces</i>, Burton, PhD thesis,
  * available from the Regina website.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
+ * \ingroup split
  */
 class Signature : public ShortOutput<Signature> {
     private:
@@ -120,15 +126,67 @@ class Signature : public ShortOutput<Signature> {
 
     public:
         /**
-         * Creates a new signature that is a clone of the given signature.
+         * Creates a new copy of the given signature.
          *
-         * @param sig the signature to clone.
+         * @param sig the signature to copy.
          */
         Signature(const Signature& sig);
+
+        /**
+         * Moves the given signature into this new signature.
+         * This is a fast (constant time) operation.
+         *
+         * The signature that is passed (\a src) will no longer be usable.
+         *
+         * @param src the signature to move.
+         */
+        Signature(Signature&& src) noexcept;
+
         /**
          * Destroys this signature.
          */
         ~Signature();
+
+        /**
+         * Copies the given signature into this signature.
+         *
+         * It does not matter if this and the given signature use different
+         * number of symbols, cycles and/or cycle groups; if so then
+         * this signature will be adjusted accordingly.
+         *
+         * This operator induces a deep copy of \a sig.
+         *
+         * @param sig the signature to copy.
+         * @return a reference to this signature.
+         */
+        Signature& operator = (const Signature& sig);
+
+        /**
+         * Moves the given signature into this signature.
+         * This is a fast (constant time) operation.
+         *
+         * It does not matter if this and the given signature use different
+         * number of symbols, cycles and/or cycle groups; if so then
+         * this signature will be adjusted accordingly.
+         *
+         * The signature that is passed (\a src) will no longer be usable.
+         *
+         * @param src the signature to move.
+         * @return a reference to this signature.
+         */
+        Signature& operator = (Signature&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given signature.
+         *
+         * It does not matter if this and the given signature use different
+         * number of symbols, cycles and/or cycle groups; if so then
+         * both signatures will be adjusted accordingly.
+         *
+         * @param other the signature whose contents are to be swapped
+         * with this.
+         */
+        void swap(Signature& other) noexcept;
 
         /**
          * Returns the order of this signature.  The order is the number
@@ -148,84 +206,46 @@ class Signature : public ShortOutput<Signature> {
          * <tt>"AAb-bc-C"</tt>.  See the class notes for further details
          * on what constitutes a valid signature.
          *
-         * \pre The given string contains at least one letter.
+         * \exception InvalidArgument the given string was not a valid
+         * signature with a positive number of letters.
          *
-         * @param sig a string representation of a splitting surface
-         * signature.
-         * @return a corresponding newly created signature, or 0 if the
-         * given string was invalid.
+         * @param sig a string representation of a splitting surface signature.
+         * @return the corresponding signature.
          */
-        static Signature* parse(const std::string& sig);
+        static Signature parse(const std::string& sig);
         /**
-         * Returns a newly created 3-manifold triangulation corresponding to
+         * Returns the 3-manifold triangulation corresponding to
          * this splitting surface signature.
          *
          * @return the corresponding triangulation.
          */
-        Triangulation<3>* triangulate() const;
+        Triangulation<3> triangulate() const;
+
+        using ShortOutput<Signature>::str;
 
         /**
-         * Lexicographically compares the results of transformations upon
-         * two given cycles.  Even if transformations are specified, the
-         * underlying signatures will not be changed.
+         * Returns a customised string representation of this signature.
          *
-         * This comparison is \e not case-sensitive.
+         * Note that there is also a zero-argument version of str(), inherited
+         * through the ShortOutput base class.  This zero-argument str()
+         * make sensible default choices for the three arguments required here.
          *
-         * \pre The two specified cycles have the same length.
-         *
-         * \ifacespython Not present.
-         *
-         * @param sig1 the signature containing the first cycle to examine.
-         * @param cycle1 specifies which cycle to examine in signature
-         * \a sig1.  This must be less than the total number of cycles in
-         * \a sig1.
-         * @param start1 allows the first cycle to be transformed by
-         * rotation; this parameter is the new starting position of the first
-         * cycle.  This must be between 0 and
-         * <tt>sig1.getCycleLength(cycle1)-1</tt> inclusive.
-         * @param dir1 allows the first cycle to be transformed by
-         * reversal; this parameter must be positive to use an unreversed
-         * cycle or negative to use a reversed cycle.
-         * @param relabel1 allows the first cycle to be transformed by
-         * relabelling; this parameter must be an array of size at least
-         * <tt>sig1.order()</tt> mapping old labels 0,1,...
-         * (representing letters A,B,...) to new labels (which must also be
-         * 0,1,..., possibly in a different order).  This parameter may
-         * be 0 if no relabelling is to be used.
-         *
-         * @param sig2 the signature containing the second cycle to examine.
-         * @param cycle2 specifies which cycle to examine in signature
-         * \a sig2.  This must be less than the total number of cycles in
-         * \a sig2.
-         * @param start2 allows the second cycle to be transformed by
-         * rotation; this parameter is the new starting position of the
-         * second cycle.  This must be between 0 and
-         * <tt>sig2.getCycleLength(cycle2)-1</tt> inclusive.
-         * @param dir2 allows the second cycle to be transformed by
-         * reversal; this parameter must be positive to use an unreversed
-         * cycle or negative to use a reversed cycle.
-         * @param relabel2 allows the second cycle to be transformed by
-         * relabelling; this parameter must be an array of size at least
-         * <tt>sig2.order()</tt> mapping old labels 0,1,...
-         * (representing letters A,B,...) to new labels (which must also be
-         * 0,1,..., possibly in a different order).  This parameter may
-         * be 0 if no relabelling is to be used.
-         *
-         * @return -1, 1 or 0 if the transformed first cycle is
-         * lexicographically less than, greater than or equal to the
-         * transformed second cycle respectively.
+         * @param cycleOpen the text to write at the beginning of each cycle
+         * (such as <tt>"("</tt>).
+         * @param cycleClose the text to write at the end of each cycle
+         * (such as <tt>")"</tt>).
+         * @param cycleJoin the text to write between each pair of consecutive
+         * cycles.
          */
-        static int cycleCmp(const Signature& sig1, unsigned cycle1,
-            unsigned start1, int dir1, unsigned* relabel1,
-            const Signature& sig2, unsigned cycle2, unsigned start2,
-            int dir2, unsigned* relabel2);
+        std::string str(const std::string& cycleOpen,
+            const std::string& cycleClose, const std::string& cycleJoin) const;
 
         /**
-         * Writes a string representation of this signature to the given
-         * output stream.
+         * Writes a customised string representation of this signature to the
+         * given output stream.
          *
-         * \ifacespython The parameter \a out does not exist; standard
-         * output will be used.
+         * \ifacespython Not present; instead use the variant of str() that
+         * takes the same three string arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @param cycleOpen the text to write at the beginning of a cycle
@@ -241,14 +261,11 @@ class Signature : public ShortOutput<Signature> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-
-        // Make this class non-assignable.
-        Signature& operator = (const Signature&) = delete;
 
     private:
         /**
@@ -273,15 +290,75 @@ class Signature : public ShortOutput<Signature> {
          */
         Signature(unsigned newOrder);
 
+        /**
+         * Lexicographically compares the results of transformations upon
+         * two given cycles within this signature.
+         *
+         * This comparison is \e not case-sensitive.
+         *
+         * \pre The two specified cycles have the same length.
+         *
+         * @param cycle1 specifies the first cycle to examine.
+         * This must be less than the total number of cycles in this signature.
+         * @param start1 allows the first cycle to be transformed by
+         * rotation; this parameter is the new starting position of the first
+         * cycle.  This must be between 0 and <tt>getCycleLength(cycle1)-1</tt>
+         * inclusive.
+         * @param dir1 allows the first cycle to be transformed by
+         * reversal; this parameter must be positive to use an unreversed
+         * cycle or negative to use a reversed cycle.
+         * @param relabel1 allows the first cycle to be transformed by
+         * relabelling; this parameter must be an array of size at least
+         * order(), mapping old labels 0,1,...  (representing letters A,B,...)
+         * to new labels (which must also be 0,1,..., possibly in a different
+         * order).  This may be \c null if no relabelling is to be used.
+         *
+         * @param cycle2 specifies the second cycle to examine.
+         * This must be less than the total number of cycles in this signature.
+         * @param start2 allows the second cycle to be transformed by
+         * rotation; this parameter is the new starting position of the second
+         * cycle.  This must be between 0 and <tt>getCycleLength(cycle2)-1</tt>
+         * inclusive.
+         * @param dir2 allows the second cycle to be transformed by
+         * reversal; this parameter must be positive to use an unreversed
+         * cycle or negative to use a reversed cycle.
+         * @param relabel2 allows the second cycle to be transformed by
+         * relabelling; this parameter must be an array of size at least
+         * order(), mapping old labels 0,1,...  (representing letters A,B,...)
+         * to new labels (which must also be 0,1,..., possibly in a different
+         * order).  This may be \c null if no relabelling is to be used.
+         *
+         * @return -1, 1 or 0 if the transformed first cycle is
+         * lexicographically less than, greater than or equal to the
+         * transformed second cycle respectively.
+         */
+        int cycleCmp(
+            unsigned cycle1, unsigned start1, int dir1, unsigned* relabel1,
+            unsigned cycle2, unsigned start2, int dir2, unsigned* relabel2)
+            const;
+
     friend class regina::SigPartialIsomorphism;
     friend class regina::SigCensus;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the given signatures.
+ *
+ * This global routine simply calls Signature::swap(); it is provided
+ * so that Signature meets the C++ Swappable requirements.
+ *
+ * @param a the first signature whose contents should be swapped.
+ * @param b the second signature whose contents should be swapped.
+ *
+ * \ingroup split
+ */
+void swap(Signature& a, Signature& b) noexcept;
 
 // Inline functions for Signature
 
-inline Signature::Signature() {
+inline Signature::Signature() : order_(0),
+        label(nullptr), labelInv(nullptr), nCycles(0), cycleStart(nullptr),
+        nCycleGroups(0), cycleGroupStart(nullptr) {
 }
 
 inline Signature::Signature(unsigned newOrder) : order_(newOrder),
@@ -290,6 +367,46 @@ inline Signature::Signature(unsigned newOrder) : order_(newOrder),
         nCycleGroups(0), cycleGroupStart(new unsigned[2 * newOrder + 1]) {
     // Insert sentinels.
     cycleStart[0] = cycleGroupStart[0] = 0;
+}
+
+inline Signature::Signature(Signature&& src) noexcept :
+        order_(src.order_),
+        label(src.label),
+        labelInv(src.labelInv),
+        nCycles(src.nCycles),
+        cycleStart(src.cycleStart),
+        nCycleGroups(src.nCycleGroups),
+        cycleGroupStart(src.cycleGroupStart) {
+    src.label = nullptr;
+    src.labelInv = nullptr;
+    src.cycleStart = nullptr;
+    src.cycleGroupStart = nullptr;
+}
+
+inline Signature& Signature::operator = (Signature&& src) noexcept {
+    // Integers to copy across:
+    order_ = src.order_;
+    nCycles = src.nCycles;
+    nCycleGroups = src.nCycleGroups;
+
+    // Arrays to swap, so that src can dispose of the original contents
+    // in its own destructor:
+    std::swap(label, src.label);
+    std::swap(labelInv, src.labelInv);
+    std::swap(cycleStart, src.cycleStart);
+    std::swap(cycleGroupStart, src.cycleGroupStart);
+
+    return *this;
+}
+
+inline void Signature::swap(Signature& other) noexcept {
+    std::swap(order_, other.order_);
+    std::swap(label, other.label);
+    std::swap(labelInv, other.labelInv);
+    std::swap(nCycles, other.nCycles);
+    std::swap(cycleStart, other.cycleStart);
+    std::swap(nCycleGroups, other.nCycleGroups);
+    std::swap(cycleGroupStart, other.cycleGroupStart);
 }
 
 inline Signature::~Signature() {
@@ -303,8 +420,19 @@ inline unsigned Signature::order() const {
     return order_;
 }
 
+inline std::string Signature::str(const std::string& cycleOpen,
+        const std::string& cycleClose, const std::string& cycleJoin) const {
+    std::ostringstream s;
+    writeCycles(s, cycleOpen, cycleClose, cycleJoin);
+    return s.str();
+}
+
 inline void Signature::writeTextShort(std::ostream& out) const {
     writeCycles(out, "(", ")", "");
+}
+
+inline void swap(Signature& a, Signature& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

@@ -31,8 +31,10 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
+#include "../pybind11/stl.h"
 #include "manifold/sfs.h"
-#include "subcomplex/satregion.h"
+#include "subcomplex/satregion-impl.h"
 #include <iostream>
 #include "../helpers.h"
 
@@ -45,46 +47,45 @@ namespace {
 
 void addSatRegion(pybind11::module_& m) {
     auto s = pybind11::class_<SatBlockSpec>(m, "SatBlockSpec")
-        .def(pybind11::init<>())
-        .def(pybind11::init<SatBlock*, bool, bool>())
-        .def(pybind11::init<const SatBlockSpec&>())
-        .def_readonly("block", &SatBlockSpec::block)
-        .def_readonly("refVert", &SatBlockSpec::refVert)
-        .def_readonly("refHoriz", &SatBlockSpec::refHoriz)
+        .def("block", &SatBlockSpec::block,
+            pybind11::return_value_policy::reference_internal)
+        .def("refVert", &SatBlockSpec::refVert)
+        .def("refHoriz", &SatBlockSpec::refHoriz)
     ;
     regina::python::add_eq_operators(s);
 
     auto r = pybind11::class_<SatRegion>(m, "SatRegion")
-        .def(pybind11::init<SatBlock*>())
-        .def("numberOfBlocks", &SatRegion::numberOfBlocks)
+        .def(pybind11::init<const SatRegion&>())
+        .def("swap", &SatRegion::swap)
+        .def("countBlocks", &SatRegion::countBlocks)
+        .def("numberOfBlocks", &SatRegion::countBlocks) // deprecated
         .def("block", &SatRegion::block,
             pybind11::return_value_policy::reference_internal)
         .def("blockIndex", &SatRegion::blockIndex)
-        .def("numberOfBoundaryAnnuli", &SatRegion::numberOfBoundaryAnnuli)
-        .def("boundaryAnnulus", [](const SatRegion& r, unsigned which) {
-            SatBlock* block;
-            unsigned annulus;
-            bool blockRefVert, blockRefHoriz;
-
-            r.boundaryAnnulus(which, block, annulus,
-                blockRefVert, blockRefHoriz);
-            return pybind11::make_tuple(
-                block, annulus, blockRefVert, blockRefHoriz);
-        }, pybind11::return_value_policy::reference_internal)
+        .def("countBoundaryAnnuli", &SatRegion::countBoundaryAnnuli)
+        .def("numberOfBoundaryAnnuli", // deprecated
+            &SatRegion::countBoundaryAnnuli)
+        .def("boundaryAnnulus", &SatRegion::boundaryAnnulus,
+            pybind11::return_value_policy::reference_internal)
         .def("createSFS", &SatRegion::createSFS)
-        .def("expand", [](SatRegion& r, bool stopIfIncomplete) {
+        .def("blockAbbrs", &SatRegion::blockAbbrs,
+            pybind11::arg("tex") = false)
+        .def_static("find", [](regina::Triangulation<3>& tri, bool complete,
+                const std::function<bool(std::unique_ptr<SatRegion>)>& action) {
+            // We need to strip out any reference to the TetList argument.
+            return SatRegion::find(tri, complete,
+                    [&](std::unique_ptr<SatRegion> r, SatBlock::TetList&) {
+                return action(std::move(r));
+            });
+        })
+        .def_static("beginsRegion", [](const regina::SatAnnulus& a) {
             SatBlock::TetList avoidTets;
-            return r.expand(avoidTets, stopIfIncomplete);
-        }, pybind11::arg("stopIfIncomplete") = false)
-        .def("writeBlockAbbrs", [](const SatRegion& r, bool tex) {
-            r.writeBlockAbbrs(std::cout, tex);
-        }, pybind11::arg("tex") = false)
-        .def("writeDetail", [](const SatRegion& r, const std::string& title) {
-            r.writeDetail(std::cout, title);
+            return SatRegion::beginsRegion(a, avoidTets);
         })
     ;
     regina::python::add_output(r);
     regina::python::add_eq_operators(r);
 
+    m.def("swap", (void(*)(SatRegion&, SatRegion&))(regina::swap));
 }
 

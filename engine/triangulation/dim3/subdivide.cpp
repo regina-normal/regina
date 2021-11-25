@@ -48,9 +48,10 @@ bool Triangulation<3>::idealToFinite() {
         return false;
 
     Triangulation<3> staging;
-    ChangeEventSpan span1(&staging);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span1(staging);
 
-    Tetrahedron<3> **newTet = new Tetrahedron<3>*[32*numOldTet];
+    auto* newTet = new Tetrahedron<3>*[32*numOldTet];
     for (i=0; i<32*numOldTet; i++)
         newTet[i] = staging.newTetrahedron();
 
@@ -134,7 +135,8 @@ bool Triangulation<3>::idealToFinite() {
             }
     }
 
-    ChangeEventSpan span2(this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span2(*this);
 
     swap(staging);
     ensureSkeleton();
@@ -165,7 +167,8 @@ void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
         tet = simplices_.front();
     }
 
-    ChangeEventSpan span(this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
 
     // We will attach a pair of triangular prisms to face 123 of tet.
     // We will join the rectangular walls of the prisms together, and
@@ -213,29 +216,64 @@ void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
     // From here we can assume that each triangulation contains at least
     // one tetrahedron.
 
-    ChangeEventSpan span(this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
 
-    Tetrahedron<3>* toPuncture[2];
-
-    // Insert the other triangulation *before* puncturing, so that
+    // Insert the other triangulation *before* puncturing this, so that
     // things work in the case where we sum a triangulation with itself.
     unsigned long n = simplices_.size();
     insertTriangulation(other);
-    toPuncture[0] = simplices_[0];
-    toPuncture[1] = simplices_[n];
 
-    Tetrahedron<3>* bdry[2][2];
+    // Make the puncture and record the resulting new boundary triangles.
+    puncture(simplices_.front());
+    Tetrahedron<3>* bdry[2] = {
+        simplices_[simplices_.size() - 2],
+        simplices_[simplices_.size() - 1]
+    };
 
-    puncture(toPuncture[0]);
-    bdry[0][0] = simplices_[simplices_.size() - 2];
-    bdry[0][1] = simplices_[simplices_.size() - 1];
+    // Pop open a triangle in the second triangulation, and join the
+    // two resulting boundary triangles to the boundary from the puncture.
+    //
+    // Even if the triangle we picked is a boundary triangle (i.e., has
+    // degree 1, not degree 2), the overall effect remains correct.
 
-    puncture(toPuncture[1]);
-    bdry[1][0] = simplices_[simplices_.size() - 2];
-    bdry[1][1] = simplices_[simplices_.size() - 1];
+    Triangle<3>* open = simplices_[n]->triangle(0);
+    if (open->degree() == 2) {
+        const FaceEmbedding<3, 2> emb1 = open->front();
+        const FaceEmbedding<3, 2> emb2 = open->back();
 
-    bdry[0][0]->join(0, bdry[1][0], Perm<4>(2, 3));
-    bdry[0][1]->join(0, bdry[1][1], Perm<4>(2, 3));
+        emb1.tetrahedron()->unjoin(emb1.vertices()[3]);
+
+        // We choose the gluing permutations so that, if both triangulations
+        // are oriented, the connected sum respects this orientation.
+        bool even = (emb1.vertices().sign() > 0);
+
+        if (even) {
+            bdry[0]->join(0, emb1.tetrahedron(),
+                emb1.vertices() * Perm<4>(3,0,1,2));
+            bdry[1]->join(0, emb2.tetrahedron(),
+                emb2.vertices() * Perm<4>(3,0,2,1));
+        } else {
+            bdry[0]->join(0, emb1.tetrahedron(),
+                emb1.vertices() * Perm<4>(3,0,2,1));
+            bdry[1]->join(0, emb2.tetrahedron(),
+                emb2.vertices() * Perm<4>(3,0,1,2));
+        }
+    } else {
+        const FaceEmbedding<3, 2> emb1 = open->front();
+
+        // We choose the gluing permutations so that, if both triangulations
+        // are oriented, the connected sum respects this orientation.
+        bool even = (emb1.vertices().sign() > 0);
+
+        if (even) {
+            bdry[0]->join(0, emb1.tetrahedron(),
+                emb1.vertices() * Perm<4>(3,0,1,2));
+        } else {
+            bdry[0]->join(0, emb1.tetrahedron(),
+                emb1.vertices() * Perm<4>(3,0,2,1));
+        }
+    }
 }
 
 } // namespace regina

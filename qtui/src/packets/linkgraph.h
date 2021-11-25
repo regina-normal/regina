@@ -62,7 +62,7 @@ class LinkGraphUI : public QObject, public PacketViewerTab {
         /**
          * The link itself.
          */
-        regina::Link* link;
+        regina::PacketOf<regina::Link>* link;
 
         /**
          * Internal components
@@ -80,14 +80,15 @@ class LinkGraphUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        LinkGraphUI(regina::Link* useLink, PacketTabbedUI* useParentUI);
+        LinkGraphUI(regina::PacketOf<regina::Link>* useLink,
+            PacketTabbedUI* useParentUI);
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     private:
         /**

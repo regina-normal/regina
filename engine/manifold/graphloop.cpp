@@ -38,24 +38,16 @@
 
 namespace regina {
 
-GraphLoop::~GraphLoop() {
-    delete sfs_;
-}
-
 bool GraphLoop::operator < (const GraphLoop& compare) const {
-    if (*sfs_ < *compare.sfs_)
+    if (sfs_ < compare.sfs_)
         return true;
-    if (*compare.sfs_ < *sfs_)
+    if (compare.sfs_ < sfs_)
         return false;
 
     return simpler(matchingReln_, compare.matchingReln_);
 }
 
-std::optional<AbelianGroup> GraphLoop::homology() const {
-    // Just for safety (this should always be true anyway):
-    if (sfs_->punctures(false) != 2 || sfs_->punctures(true) != 0)
-        return std::nullopt;
-
+AbelianGroup GraphLoop::homology() const {
     // Construct a matrix.
     // Generators: fibre, base curves, two base boundaries, exceptional
     //             fibre boundaries, obstruction boundary,
@@ -64,13 +56,13 @@ std::optional<AbelianGroup> GraphLoop::homology() const {
     // Relations: base curve relation, exception fibre relations,
     //            obstruction relation, reflector relations,
     //            fibre constraint, joining boundaries.
-    unsigned long genus = sfs_->baseGenus();
-    unsigned long fibres = sfs_->fibreCount();
-    unsigned long ref = sfs_->reflectors();
+    unsigned long genus = sfs_.baseGenus();
+    unsigned long fibres = sfs_.fibreCount();
+    unsigned long ref = sfs_.reflectors();
 
     // If we have an orientable base space, we get two curves per genus.
     // The easiest thing to do is just to double the genus now.
-    if (sfs_->baseOrientable())
+    if (sfs_.baseOrientable())
         genus *= 2;
 
     MatrixInt m(fibres + ref + 5, genus + fibres + 2 * ref + 5);
@@ -79,21 +71,21 @@ std::optional<AbelianGroup> GraphLoop::homology() const {
     // The relation for the base orbifold:
     for (i = 1 + genus; i < 1 + genus + 2 + fibres + 1 + ref; i++)
         m.entry(0, i) = 1;
-    if (! sfs_->baseOrientable())
+    if (! sfs_.baseOrientable())
         for (i = 1; i < 1 + genus; i++)
             m.entry(0, i) = 2;
 
     // A relation for each exceptional fibre:
     SFSFibre fibre;
     for (f = 0; f < fibres; f++) {
-        fibre = sfs_->fibre(f);
+        fibre = sfs_.fibre(f);
         m.entry(f + 1, 1 + genus + 2 + f) = fibre.alpha;
         m.entry(f + 1, 0) = fibre.beta;
     }
 
     // A relation for the obstruction constant:
     m.entry(1 + fibres, 1 + genus + 2 + fibres) = 1;
-    m.entry(1 + fibres, 0) = sfs_->obstruction();
+    m.entry(1 + fibres, 0) = sfs_.obstruction();
 
     // A relation for each reflector boundary:
     for (i = 0; i < ref; i++) {
@@ -104,9 +96,9 @@ std::optional<AbelianGroup> GraphLoop::homology() const {
     // A relation constraining the fibre.  This relationship only
     // appears in some cases; otherwise we will just have a (harmless)
     // zero row in the matrix.
-    if (sfs_->reflectors(true))
+    if (sfs_.reflectors(true))
         m.entry(2 + fibres + ref, 0) = 1;
-    else if (sfs_->fibreReversing())
+    else if (sfs_.fibreReversing())
         m.entry(2 + fibres + ref, 0) = 2;
 
     // Two relations for the joining of boundaries:
@@ -123,14 +115,14 @@ std::optional<AbelianGroup> GraphLoop::homology() const {
 }
 
 std::ostream& GraphLoop::writeName(std::ostream& out) const {
-    sfs_->writeName(out);
+    sfs_.writeName(out);
     return out << " / [ " <<
         matchingReln_[0][0] << ',' << matchingReln_[0][1] << " | " <<
         matchingReln_[1][0] << ',' << matchingReln_[1][1] << " ]";
 }
 
 std::ostream& GraphLoop::writeTeXName(std::ostream& out) const {
-    sfs_->writeTeXName(out);
+    sfs_.writeTeXName(out);
     return out << "_{\\homtwo{" <<
         matchingReln_[0][0] << "}{" << matchingReln_[0][1] << "}{" <<
         matchingReln_[1][0] << "}{" << matchingReln_[1][1] << "}}";
@@ -147,12 +139,12 @@ void GraphLoop::reduce() {
      *    - setting row 2 -> row 2 + row 1, or
      *    - setting col 1 -> col 1 - col 2.
      */
-    sfs_->reduce(false);
+    sfs_.reduce(false);
 
     // Bring the SFS obstruction constant back to zero.
-    long b = sfs_->obstruction();
+    long b = sfs_.obstruction();
     if (b != 0) {
-        sfs_->insertFibre(1, -b);
+        sfs_.insertFibre(1, -b);
         matchingReln_[0][0] += b * matchingReln_[0][1];
         matchingReln_[1][0] += b * matchingReln_[1][1];
     }
@@ -165,7 +157,7 @@ void GraphLoop::reduce() {
     // TODO: For non-orientable manifolds, reflect()/reduce() may yield
     // better results.
     Matrix2 compMatch =
-        Matrix2(1, 0, sfs_->fibreCount(), 1) *
+        Matrix2(1, 0, sfs_.fibreCount(), 1) *
         Matrix2(1, 0, 0, -1) *
         matchingReln_ *
         Matrix2(1, 0, 0, -1);
@@ -174,7 +166,7 @@ void GraphLoop::reduce() {
     if (simpler(compMatch, matchingReln_)) {
         // Do it.
         matchingReln_ = compMatch;
-        sfs_->complementAllFibres();
+        sfs_.complementAllFibres();
     }
 }
 

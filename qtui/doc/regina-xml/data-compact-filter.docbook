@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>compact (filter)</refname>
-  <refpurpose>A constraint on compactness</refpurpose>
+  <refpurpose>Replaced by attributes of &xml-filterprop;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,14 +40,19 @@ compact ::=</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-compact-filter; element represents a constraint on the
-   compactness of a normal surface.  A compact surface is one containing
-   finitely many normal discs.
+   This element was used in the past to represent a constraint on the
+   compactness of a normal surface.
+   Since &regina;&nbsp;7.0, this constraint is now stored in
+   the attributes of the corresponding &xml-filterprop; element instead.
+  </para>
+  <para>
+   A compact surface is one containing finitely many normal discs.
   </para>
 
   <refsect2>

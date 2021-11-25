@@ -59,7 +59,7 @@ zeroeff ::=</synopsis>
    <para>
     The following elements contain <sgmltag>zeroeff</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-dim3triangulation;</member>
+     <member>&xml-tri;</member>
     </simplelist>.
    </para>
   </refsect2>

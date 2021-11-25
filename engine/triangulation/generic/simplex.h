@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup generic
- * @{
- */
-
-/**
  * Represents a top-dimensional simplex in a <i>dim</i>-manifold triangulation.
  *
  * For example, for 3-manifolds this class represents a tetrahedron, and for
@@ -84,6 +79,12 @@ namespace regina {
  * triangulation headers (e.g., triangulation/dim2.h for \a dim = 2, or
  * triangulation/dim3.h for \a dim = 3).
  *
+ * Simplices do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., Simplex2 and Simplex3 for dimensions 2 and 3).
@@ -92,6 +93,8 @@ namespace regina {
  * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
+ *
+ * \ingroup generic
  */
 template <int dim>
 class Face<dim, dim> : public detail::SimplexBase<dim> {
@@ -131,12 +134,12 @@ class Face<dim, dim> : public detail::SimplexBase<dim> {
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup generic
  */
 template <int dim>
 using Simplex = Face<dim, dim>;
 #endif
-
-/*@}*/
 
 // Inline functions for Simplex
 

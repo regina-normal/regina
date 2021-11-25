@@ -1,0 +1,405 @@
+crossing 0 (-)
+crossing 1 (-)
+crossing 2 (+)
+crossing 3 (+)
+crossing 4 (-)
+^0
+_0
+
+crossing 0 (+)
+crossing 1 (+)
+crossing 2 (-)
+
+node 0
+node 1
+node 2
+node 3
+node 4
+node 5
+Cell 0
+0:0
+1:1
+4:1
+5:3
+3:3
+Cell 1
+0:1
+2:1
+1:0
+Cell 2
+0:2
+3:1
+2:0
+Cell 3
+0:3
+3:0
+Cell 4
+1:2
+4:0
+Cell 5
+1:3
+2:2
+5:1
+4:3
+Cell 6
+2:3
+3:2
+5:0
+Cell 7
+4:2
+5:2
+
+Boundary vertex of degree 3 : 0
+0 (2)
+1 (1)
+0 (0)
+Boundary vertex of degree 3 : 1
+1 (0)
+0 (1)
+1 (2)
+Internal edge : 0
+0 (01)
+1 (12)
+Boundary edge : 1
+0 (02)
+Internal edge : 2
+0 (12)
+1 (01)
+Boundary edge : 3
+1 (02)
+2-simplex : 0
+2-simplex : 1
+Boundary component : 0
+Boundary vertex of degree 3 : 0
+Boundary edge : 1
+Boundary component : 1
+Boundary vertex of degree 3 : 1
+Boundary edge : 3
+Component with 2 2-simplices : 0
+Boundary vertex of degree 3 : 0
+Boundary vertex of degree 3 : 1
+Internal edge : 0
+Boundary edge : 1
+Internal edge : 2
+Boundary edge : 3
+2-simplex : 0
+2-simplex : 1
+Boundary component : 0
+Boundary component : 1
+
+Boundary vertex of degree 8 : 0
+0 (0)
+1 (0)
+1 (3)
+0 (3)
+1 (2)
+0 (2)
+1 (1)
+0 (1)
+Boundary edge of degree 1 : 0
+0 (01)
+Boundary edge of degree 3 : 1
+0 (31)
+1 (01)
+0 (02)
+Boundary edge of degree 4 : 2
+0 (03)
+1 (02)
+1 (31)
+0 (21)
+Internal edge of degree 4 : 3
+0 (23)
+1 (30)
+1 (23)
+1 (12)
+Boundary triangle : 0
+0 (012)
+Boundary triangle : 1
+0 (013)
+Internal triangle : 2
+0 (023)
+1 (012)
+Internal triangle : 3
+0 (123)
+1 (130)
+Internal triangle : 4
+1 (023)
+1 (312)
+3-simplex : 0
+3-simplex : 1
+Finite boundary component : 0
+Boundary vertex of degree 8 : 0
+Boundary edge of degree 4 : 2
+Boundary edge of degree 3 : 1
+Boundary edge of degree 1 : 0
+Boundary triangle : 0
+Boundary triangle : 1
+Component with 2 3-simplices : 0
+Boundary vertex of degree 8 : 0
+Boundary edge of degree 1 : 0
+Boundary edge of degree 3 : 1
+Boundary edge of degree 4 : 2
+Internal edge of degree 4 : 3
+Boundary triangle : 0
+Boundary triangle : 1
+Internal triangle : 2
+Internal triangle : 3
+Internal triangle : 4
+3-simplex : 0
+3-simplex : 1
+Finite boundary component : 0
+
+Boundary vertex of degree 5 : 0
+0 (0)
+1 (1)
+0 (2)
+1 (3)
+0 (4)
+Boundary vertex of degree 5 : 1
+0 (1)
+1 (0)
+1 (2)
+0 (3)
+1 (4)
+Boundary edge of degree 4 : 0
+0 (01)
+1 (12)
+0 (23)
+1 (34)
+Boundary edge of degree 3 : 1
+0 (02)
+1 (13)
+0 (24)
+Boundary edge of degree 2 : 2
+0 (03)
+1 (14)
+Boundary edge of degree 1 : 3
+0 (04)
+Boundary edge of degree 4 : 4
+0 (12)
+1 (01)
+1 (23)
+0 (34)
+Boundary edge of degree 3 : 5
+0 (13)
+1 (02)
+1 (24)
+Boundary edge of degree 2 : 6
+0 (14)
+1 (03)
+Boundary edge of degree 1 : 7
+1 (04)
+Boundary triangle of degree 3 : 0
+0 (234)
+1 (123)
+0 (012)
+Boundary triangle of degree 2 : 1
+1 (023)
+0 (134)
+Boundary triangle of degree 2 : 2
+0 (124)
+1 (013)
+Boundary triangle of degree 3 : 3
+1 (012)
+0 (123)
+1 (234)
+Boundary triangle of degree 1 : 4
+0 (034)
+Boundary triangle of degree 1 : 5
+0 (024)
+Boundary triangle of degree 2 : 6
+1 (134)
+0 (023)
+Boundary triangle of degree 1 : 7
+0 (014)
+Boundary triangle of degree 2 : 8
+0 (013)
+1 (124)
+Boundary triangle of degree 1 : 9
+1 (034)
+Boundary triangle of degree 1 : 10
+1 (024)
+Boundary triangle of degree 1 : 11
+1 (014)
+Internal tetrahedron : 0
+0 (0123)
+1 (1234)
+Boundary tetrahedron : 1
+0 (0124)
+Boundary tetrahedron : 2
+0 (0134)
+Boundary tetrahedron : 3
+0 (0234)
+Internal tetrahedron : 4
+0 (1234)
+1 (0123)
+Boundary tetrahedron : 5
+1 (0124)
+Boundary tetrahedron : 6
+1 (0134)
+Boundary tetrahedron : 7
+1 (0234)
+4-simplex : 0
+4-simplex : 1
+Finite boundary component : 0
+Boundary vertex of degree 5 : 0
+Boundary vertex of degree 5 : 1
+Boundary edge of degree 4 : 0
+Boundary edge of degree 3 : 1
+Boundary edge of degree 1 : 3
+Boundary edge of degree 4 : 4
+Boundary edge of degree 2 : 6
+Boundary edge of degree 1 : 7
+Boundary edge of degree 2 : 2
+Boundary edge of degree 3 : 5
+Boundary triangle of degree 2 : 2
+Boundary triangle of degree 1 : 5
+Boundary triangle of degree 1 : 7
+Boundary triangle of degree 3 : 0
+Boundary triangle of degree 2 : 6
+Boundary triangle of degree 1 : 9
+Boundary triangle of degree 1 : 11
+Boundary triangle of degree 1 : 4
+Boundary triangle of degree 2 : 1
+Boundary triangle of degree 2 : 8
+Boundary triangle of degree 3 : 3
+Boundary triangle of degree 1 : 10
+Boundary tetrahedron : 1
+Boundary tetrahedron : 6
+Boundary tetrahedron : 3
+Boundary tetrahedron : 2
+Boundary tetrahedron : 7
+Boundary tetrahedron : 5
+Component with 2 4-simplices : 0
+Boundary vertex of degree 5 : 0
+Boundary vertex of degree 5 : 1
+Boundary edge of degree 4 : 0
+Boundary edge of degree 3 : 1
+Boundary edge of degree 2 : 2
+Boundary edge of degree 1 : 3
+Boundary edge of degree 4 : 4
+Boundary edge of degree 3 : 5
+Boundary edge of degree 2 : 6
+Boundary edge of degree 1 : 7
+Boundary triangle of degree 3 : 0
+Boundary triangle of degree 2 : 1
+Boundary triangle of degree 2 : 2
+Boundary triangle of degree 3 : 3
+Boundary triangle of degree 1 : 4
+Boundary triangle of degree 1 : 5
+Boundary triangle of degree 2 : 6
+Boundary triangle of degree 1 : 7
+Boundary triangle of degree 2 : 8
+Boundary triangle of degree 1 : 9
+Boundary triangle of degree 1 : 10
+Boundary triangle of degree 1 : 11
+Internal tetrahedron : 0
+Boundary tetrahedron : 1
+Boundary tetrahedron : 2
+Boundary tetrahedron : 3
+Internal tetrahedron : 4
+Boundary tetrahedron : 5
+Boundary tetrahedron : 6
+Boundary tetrahedron : 7
+4-simplex : 0
+4-simplex : 1
+Finite boundary component : 0
+
+Boundary vertex of degree 6 : 0
+0 (0)
+0 (1)
+0 (2)
+0 (3)
+0 (4)
+0 (5)
+Boundary edge of degree 5 : 0
+0 (01)
+0 (12)
+0 (23)
+0 (34)
+0 (45)
+Boundary edge of degree 4 : 1
+0 (02)
+0 (13)
+0 (24)
+0 (35)
+Boundary edge of degree 3 : 2
+0 (03)
+0 (14)
+0 (25)
+Boundary edge of degree 2 : 3
+0 (04)
+0 (15)
+Boundary edge of degree 1 : 4
+0 (05)
+Boundary triangle of degree 4 : 0
+0 (012)
+0 (123)
+0 (234)
+0 (345)
+Boundary triangle of degree 3 : 1
+0 (013)
+0 (124)
+0 (235)
+Boundary triangle of degree 2 : 2
+0 (014)
+0 (125)
+Boundary triangle of degree 1 : 3
+0 (015)
+Boundary triangle of degree 3 : 4
+0 (023)
+0 (134)
+0 (245)
+Boundary triangle of degree 2 : 5
+0 (024)
+0 (135)
+Boundary triangle of degree 1 : 6
+0 (025)
+Boundary triangle of degree 2 : 7
+0 (034)
+0 (145)
+Boundary triangle of degree 1 : 8
+0 (035)
+Boundary triangle of degree 1 : 9
+0 (045)
+Boundary tetrahedron of degree 3 : 0
+0 (0123)
+0 (1234)
+0 (2345)
+Boundary tetrahedron of degree 2 : 1
+0 (0234)
+0 (1345)
+Boundary tetrahedron of degree 2 : 2
+0 (0134)
+0 (1245)
+Boundary tetrahedron of degree 2 : 3
+0 (0124)
+0 (1235)
+Boundary tetrahedron of degree 1 : 4
+0 (0345)
+Boundary tetrahedron of degree 1 : 5
+0 (0245)
+Boundary tetrahedron of degree 1 : 6
+0 (0235)
+Boundary tetrahedron of degree 1 : 7
+0 (0145)
+Boundary tetrahedron of degree 1 : 8
+0 (0135)
+Boundary tetrahedron of degree 1 : 9
+0 (0125)
+Internal pentachoron : 0
+Boundary pentachoron : 1
+Boundary pentachoron : 2
+Boundary pentachoron : 3
+Boundary pentachoron : 4
+Boundary component : 0
+Boundary pentachoron : 1
+Boundary pentachoron : 2
+Boundary pentachoron : 4
+Boundary pentachoron : 3
+Component with 1 5-simplex : 0
+5-simplex : 0
+Boundary component : 0
+
+Complete cusp: vertex 0
+Complete cusp: vertex 1

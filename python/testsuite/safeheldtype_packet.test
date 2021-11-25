@@ -4,7 +4,7 @@
 # Copyright (c) 2015-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Provides tests for the wrapping of Packet subclasses through SafePtr
+# Provides tests for the wrapping of Packet subclasses through shared_ptr
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -31,9 +31,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-# NOTE: Since the move to pybind11 and Packet::safeDelete(), python references
-# to packets never expire.  Therefore we should never raise any exceptions.
-# in this test.
+# NOTE: Since Regina 5.96, python references to packets never expire.
+# Therefore we should never raise any exceptions in this test.
 
 from __future__ import print_function
 
@@ -42,7 +41,7 @@ print("-----------------------------------------------------------")
 print("Basic:")
 print()
 
-print(Example3.poincareHomologySphere().isoSig())
+print(PacketOfTriangulation3(Example3.poincare()).isoSig())
 print(Text("Hello World"))
 print(Text("Hello World").text())
 
@@ -51,9 +50,9 @@ print("-----------------------------------------------------------")
 print("Basic container tests:")
 print()
 
-t1 = Triangulation3()
-t2 = Example3.poincareHomologySphere()
-t3 = Example3.figureEight()
+t1 = PacketOfTriangulation3()
+t2 = PacketOfTriangulation3(Example3.poincare())
+t3 = PacketOfTriangulation3(Example3.figureEight())
 p = PDF()
 
 t = Text()
@@ -155,25 +154,28 @@ print("-----------------------------------------------------------")
 print()
 
 d1 = Triangulation3(); d1.newTetrahedron()
-d2 = Triangulation3(); d2.newTetrahedron(); d2.newTetrahedron()
-d3 = Triangulation3(); d3.newTetrahedron(); d3.newTetrahedron(); d3.newTetrahedron()
-d1.insertChildLast(d2)
-d2.insertChildLast(d3)
+d2 = Triangulation3(); d2.newTetrahedra(2)
+d3 = Triangulation3(); d3.newTetrahedra(3)
+p1 = PacketOfTriangulation3(d1)
+p2 = PacketOfTriangulation3(d2)
+p3 = PacketOfTriangulation3(d3)
+p1.insertChildLast(p2)
+p2.insertChildLast(p3)
 
-print(d1)
-print(d2)
-print(d3)
+print(p1)
+print(p2)
+print(p3)
 
-d2.makeOrphan()
-print(d1)
-print(d2)
-print(d3)
+p2.makeOrphan()
+print(p1)
+print(p2)
+print(p3)
 
 try:
-    d2 = None
-    print(d1)
-    print(d2)
-    print(d3)
+    p2 = None
+    print(p1)
+    print(p2)
+    print(p3)
 except RuntimeError:
     print("Got exception")
 

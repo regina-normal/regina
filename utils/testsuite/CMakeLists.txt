@@ -4,6 +4,11 @@ CONFIGURE_FILE(
   "${PROJECT_BINARY_DIR}/utils/testsuite/testall"
   @ONLY
 )
+CONFIGURE_FILE(
+  genout.in
+  "${PROJECT_BINARY_DIR}/utils/testsuite/genout"
+  @ONLY
+)
 
 IF (WIN32)
   ADD_TEST(utils-test bash testall)

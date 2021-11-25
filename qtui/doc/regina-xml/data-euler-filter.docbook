@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>euler (filter)</refname>
-  <refpurpose>A constraint on Euler characteristic</refpurpose>
+  <refpurpose>Replaced by attributes of &xml-filterprop;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -29,20 +29,26 @@ euler ::= (#PCDATA)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
   <para>
-   An &xml-euler-filter; element represents a constraint on the
-   Euler characteristic of a normal surface.  The character data should
-   contain a whitespace-separated list of integers; a surface will
-   satisfy this constraint if its Euler characteristic belongs to this
-   list.
+   This element was used in the past to represent a constraint on the
+   Euler characteristic of a normal surface.
+   Since &regina;&nbsp;7.0, this constraint is now stored in
+   the attributes of the corresponding &xml-filterprop; element instead.
   </para>
   <para>
-   Note that this list of acceptable Euler characteristics must not be
-   empty.
+   An &xml-euler-filter; element encodes a list of allowed
+   Euler characteristics in the character data for the &xml; element.
+   This character data should contain a whitespace-separated
+   list of integers; a surface will satisfy this constraint if its
+   Euler characteristic belongs to this list.
+  </para>
+  <para>
+   The list of acceptable Euler characteristics must not be empty.
   </para>
 
   <refsect2>

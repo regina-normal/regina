@@ -41,6 +41,7 @@
 
 #include <QLabel>
 #include <QHeaderView>
+#include <QMessageBox>
 #include <QTextDocument>
 #include <QTreeView>
 #include <QVBoxLayout>
@@ -139,9 +140,9 @@ QVariant AngleModel::headerData(int section, Qt::Orientation orientation,
         return QVariant();
 }
 
-AngleStructureUI::AngleStructureUI(AngleStructures* packet,
+AngleStructureUI::AngleStructureUI(regina::PacketOf<AngleStructures>* packet,
         PacketPane* enclosingPane) : PacketReadOnlyUI(enclosingPane),
-        currentlyAutoResizing(false) {
+        structures_(packet), currentlyAutoResizing(false) {
     ui = new BigWidget(1, 2);
     QBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -192,6 +193,13 @@ AngleStructureUI::AngleStructureUI(AngleStructures* packet,
     table->setModel(model);
     layout->addWidget(table, 1);
 
+    // Listen for events on the underlying triangulation, since we
+    // display its label in the header.
+    // This needs to happen *before* we call refresh(), since
+    // refreshHeader() checks the current listening status.
+    if (auto p = packet->triangulation().inAnyPacket())
+        std::const_pointer_cast<Packet>(p)->listen(this);
+
     refresh();
 
     // Resize columns now that the table is full of data.
@@ -201,10 +209,6 @@ AngleStructureUI::AngleStructureUI(AngleStructures* packet,
         this, SLOT(columnResized(int, int, int)));
 
     ui->setFocusProxy(table);
-
-    // Listen for renaming events on the parent triangulation, since we
-    // display its label in the header.
-    packet->parent()->listen(this);
 }
 
 AngleStructureUI::~AngleStructureUI() {
@@ -212,7 +216,7 @@ AngleStructureUI::~AngleStructureUI() {
 }
 
 Packet* AngleStructureUI::getPacket() {
-    return model->structures();
+    return structures_;
 }
 
 QWidget* AngleStructureUI::getInterface() {
@@ -234,8 +238,8 @@ void AngleStructureUI::refreshHeader() {
     QString count, span;
 
     // Update the general statistics.
-    unsigned long nStructs = model->structures()->size();
-    if (model->structures()->isTautOnly()) {
+    size_t nStructs = structures_->size();
+    if (structures_->isTautOnly()) {
         if (nStructs == 0)
             count = tr("No taut angle structures");
         else if (nStructs == 1)
@@ -253,28 +257,83 @@ void AngleStructureUI::refreshHeader() {
             count = tr("%1 vertex angle structures").arg(nStructs);
 
         span = tr("Span includes: ");
-        if (model->structures()->spansStrict())
+        if (structures_->spansStrict())
             span.append(tr("Strict, "));
         else
             span.append(tr("NO Strict, "));
-        if (model->structures()->spansTaut())
+        if (structures_->spansTaut())
             span.append(tr("Taut"));
         else
             span.append(tr("NO Taut"));
+    }
+
+    // Beware: we may be calling refresh() from packetBeingDestroyed(), in
+    // which case the triangulation is no longer safe to query.  In this
+    // scenario, isListening() will be false and triDestroyed will be true.
+    QString triName;
+    if (isListening()) {
+        // The triangulation is a real packet, has not changed, and is
+        // not currently being destroyed.
+        if (auto p = structures_->triangulation().inAnyPacket())
+            triName = p->humanLabel().c_str();
+        else {
+            // This shouldn't happen.
+            // It *was* once a packet: the only possibly explanation is that
+            // we took a snapshot but for some reason no change event was fired.
+            triName = tr("(private copy)");
+        }
+    } else {
+        // Either the triangulation was never a real packet, or it once was
+        // but the packet changed or was/is being destroyed.
+        if (triDestroyed || structures_->triangulation().isReadOnlySnapshot())
+            triName = tr("(private copy)");
+        else
+            triName = tr("(anonymous)");
     }
 
     stats->setText(tr(
         "<qt>%1<br>%2<br>Triangulation: <a href=\"#\">%3</a></qt>").
         arg(count).
         arg(span).
-        arg(QString(model->structures()->triangulation().
-            humanLabel().c_str()).toHtmlEscaped()));
+        arg(triName.toHtmlEscaped()));
 }
 
 void AngleStructureUI::viewTriangulation() {
-    enclosingPane->getMainWindow()->packetView(
-        model->structures()->parent(),
-        false /* visible in tree */, false /* select in tree */);
+    const regina::Triangulation<3>& tri = structures_->triangulation();
+    auto triPkt = tri.inAnyPacket();
+    if (! triPkt) {
+        QMessageBox msg(QMessageBox::Information,
+            tr("Create New Copy"),
+            tr("Should I create a new copy of this triangulation?"),
+            QMessageBox::Yes | QMessageBox::Cancel, ui);
+        if (tri.isReadOnlySnapshot())
+            msg.setInformativeText(tr("<qt>This list stores its own private "
+                "copy of the triangulation, since the original has changed or "
+                "been deleted.<p>"
+                "Would you like me to make a new copy "
+                "that you can view and edit?<p>"
+                "This list will continue to use its own private copy, so "
+                "you can edit or delete your new copy as you please.</qt>"));
+        else
+            msg.setInformativeText(tr("<qt>The triangulation is not "
+                "part of this Regina data file.<p>"
+                "Would you like me to make a new copy "
+                "that you can view and edit here?</qt>"));
+        msg.setDefaultButton(QMessageBox::Yes);
+        if (msg.exec() != QMessageBox::Yes)
+            return;
+
+        auto copy = regina::makePacket<regina::Triangulation<3>>(
+            std::in_place, tri);
+        copy->setLabel(structures_->adornedLabel("Triangulation"));
+        structures_->insertChildLast(copy);
+
+        enclosingPane->getMainWindow()->packetView(copy, true, true);
+    } else {
+        enclosingPane->getMainWindow()->packetView(
+            std::const_pointer_cast<Packet>(triPkt),
+            false /* visible in tree */, false /* select in tree */);
+    }
 }
 
 void AngleStructureUI::columnResized(int section, int, int newSize) {
@@ -289,8 +348,21 @@ void AngleStructureUI::columnResized(int section, int, int newSize) {
     currentlyAutoResizing = false;
 }
 
-void AngleStructureUI::packetWasRenamed(regina::Packet*) {
-    // Assume it is the parent triangulation.
+void AngleStructureUI::packetWasRenamed(regina::Packet&) {
+    // Assume it is the underlying triangulation.
     refreshHeader();
 }
 
+void AngleStructureUI::packetWasChanged(regina::Packet& packet) {
+    // The underlying triangulation has changed.
+    // Any such change *should* be immediately preceded by taking a local
+    // snapshot, so the triangulation should be read-only from now on.
+    packet.unlisten(this);
+    refreshHeader();
+}
+
+void AngleStructureUI::packetBeingDestroyed(regina::PacketShell) {
+    // Assume it is the underlying triangulation.
+    triDestroyed = true;
+    refreshHeader();
+}

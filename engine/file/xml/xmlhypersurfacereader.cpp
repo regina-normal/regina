@@ -32,7 +32,7 @@
 
 #include <vector>
 #include "file/xml/xmlhypersurfacereader.h"
-#include "hypersurface/hscoordregistry.h"
+#include "file/xml/xmltreeresolver.h"
 #include "triangulation/dim4.h"
 #include "utilities/stringutils.h"
 
@@ -43,43 +43,44 @@ void XMLNormalHypersurfaceReader::startElement(const std::string&,
         XMLElementReader*) {
     if (! valueOf(props.lookup("len"), vecLen_))
         vecLen_ = -1;
+    if (! valueOf(props.lookup("enc"), vecEnc_))
+        vecEnc_ = 0;
     name_ = props.lookup("name");
 }
 
 void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
-    if (vecLen_ < 0 || tri_ == 0)
+    // If this file was created before Regina 7.0, then it will not include
+    // a vector encoding.  For those earlier versions of Regina, the encoding
+    // is meant to be deduced from the enclosing list's coordinate system.
+    if (vecLen_ < 0)
         return;
 
-    std::vector<std::string> tokens;
-    if (basicTokenise(back_inserter(tokens), chars) % 2 != 0)
+    std::vector<std::string> tokens = basicTokenise(chars);
+    if (tokens.size() % 2 != 0)
         return;
 
     // Create a new vector and read all non-zero entries.
-    // Bring in cases from the coordinate system registry...
-    NormalHypersurfaceVector* vec = forCoords(coords_, [=](auto info) {
-        return static_cast<NormalHypersurfaceVector*>(
-            new typename decltype(info)::Class(vecLen_));
-    }, nullptr);
-    if (! vec)
-        return;
+    Vector<LargeInteger> vec(vecLen_);
 
     long pos;
     LargeInteger value;
     for (size_t i = 0; i < tokens.size(); i += 2) {
-        if (valueOf(tokens[i], pos))
-            if (valueOf(tokens[i + 1], value))
-                if (pos >= 0 && pos < vecLen_) {
-                    // All looks valid.
-                    vec->set(pos, value);
-                    continue;
-                }
-
-        // Found something invalid.
-        delete vec;
-        return;
+        if (! valueOf(tokens[i], pos))
+            return;
+        if (pos < 0 || pos >= vecLen_)
+            return;
+        try {
+            vec[pos] = tokens[i + 1];
+        } catch (const regina::InvalidArgument&) {
+            return;
+        }
     }
 
-    surface_ = new NormalHypersurface(*tri_, vec);
+    if (vecEnc_ != 0)
+        surface_ = NormalHypersurface(tri_,
+            HyperEncoding::fromIntValue(vecEnc_), std::move(vec));
+    else
+        surface_ = NormalHypersurface(tri_, coords_, std::move(vec));
     if (! name_.empty())
         surface_->setName(name_);
 }
@@ -102,13 +103,58 @@ XMLElementReader* XMLNormalHypersurfaceReader::startSubElement(
     return new XMLElementReader();
 }
 
+XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id,
+        const regina::xml::XMLPropertyDict& props) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label), std::move(id)),
+        list_(nullptr),
+        tri_(resolver_.resolvePacketData<Triangulation<4>>(
+            props.lookup("tri"))) {
+    if (! tri_)
+        return;
+
+    // Extract the list parameters from the attributes.
+    int coords, listType, algorithm;
+    if (valueOf(props.lookup("coords"), coords) &&
+            valueOf(props.lookup("type"), listType) &&
+            valueOf(props.lookup("algorithm"), algorithm)) {
+        // Parameters look sane; create the empty list.
+        list_ = makePacket<NormalHypersurfaces>(std::in_place,
+            static_cast<HyperCoords>(coords),
+            HyperList::fromInt(listType),
+            HyperAlg::fromInt(algorithm),
+            *tri_);
+    }
+}
+
 XMLElementReader* XMLNormalHypersurfacesReader::startContentSubElement(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict&) {
+    if (list_ && subTagName == "hypersurface")
+        return new XMLNormalHypersurfaceReader(
+            list_->triangulation_, list_->coords_);
+    else
+        return new XMLElementReader();
+}
+
+void XMLNormalHypersurfacesReader::endContentSubElement(
+        const std::string& subTagName,
+        XMLElementReader* subReader) {
+    if (list_ && subTagName == "hypersurface")
+        if (auto& s = dynamic_cast<XMLNormalHypersurfaceReader*>(
+                subReader)->hypersurface())
+            list_->surfaces_.push_back(std::move(*s));
+}
+
+XMLElementReader* XMLLegacyNormalHypersurfacesReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (list_) {
         // The hypersurface list has already been created.
         if (subTagName == "hypersurface")
-            return new XMLNormalHypersurfaceReader(tri_, list_->coords_);
+            return new XMLNormalHypersurfaceReader(
+                list_->triangulation_, list_->coords_);
     } else {
         // The hypersurface list has not yet been created.
         if (subTagName == "params") {
@@ -119,17 +165,19 @@ XMLElementReader* XMLNormalHypersurfacesReader::startContentSubElement(
                 if (valueOf(props.lookup("type"), listType) &&
                         valueOf(props.lookup("algorithm"), algorithm)) {
                     // Parameters look sane; create the empty list.
-                    list_ = new NormalHypersurfaces(
+                    list_ = makePacket<NormalHypersurfaces>(std::in_place,
                         static_cast<HyperCoords>(coords),
                         HyperList::fromInt(listType),
-                        HyperAlg::fromInt(algorithm));
+                        HyperAlg::fromInt(algorithm),
+                        tri_);
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old prerelease format.
-                    list_ = new NormalHypersurfaces(
+                    list_ = makePacket<NormalHypersurfaces>(std::in_place,
                         static_cast<HyperCoords>(coords),
                         HS_LEGACY | (embedded ?
                             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
-                        HS_ALG_LEGACY);
+                        HS_ALG_LEGACY,
+                        tri_);
                 }
             }
         }
@@ -137,21 +185,13 @@ XMLElementReader* XMLNormalHypersurfacesReader::startContentSubElement(
     return new XMLElementReader();
 }
 
-void XMLNormalHypersurfacesReader::endContentSubElement(
+void XMLLegacyNormalHypersurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
-    if (list_)
-        if (subTagName == "hypersurface")
-            if (NormalHypersurface* s =
-                    dynamic_cast<XMLNormalHypersurfaceReader*>(subReader)->
-                    hypersurface())
-                list_->surfaces_.push_back(std::move(*s));
-}
-
-XMLPacketReader* NormalHypersurfaces::xmlReader(Packet* parent,
-        XMLTreeResolver& resolver) {
-    return new XMLNormalHypersurfacesReader(
-        dynamic_cast<Triangulation<4>*>(parent), resolver);
+    if (list_ && subTagName == "hypersurface")
+        if (auto& s = dynamic_cast<XMLNormalHypersurfaceReader*>(
+                subReader)->hypersurface())
+            list_->surfaces_.push_back(std::move(*s));
 }
 
 } // namespace regina

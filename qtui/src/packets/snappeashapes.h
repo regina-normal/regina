@@ -77,15 +77,16 @@ class CuspModel : public QAbstractItemModel {
          * Overrides for describing and editing data in the model.
          */
         QModelIndex index(int row, int column,
-                const QModelIndex& parent) const;
-        QModelIndex parent(const QModelIndex& index) const;
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+                const QModelIndex& parent) const override;
+        QModelIndex parent(const QModelIndex& index) const override;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
-        Qt::ItemFlags flags(const QModelIndex& index) const;
-        bool setData(const QModelIndex& index, const QVariant& value, int role);
+            int role) const override;
+        Qt::ItemFlags flags(const QModelIndex& index) const override;
+        bool setData(const QModelIndex& index, const QVariant& value,
+            int role) override;
 };
 
 /**
@@ -99,7 +100,7 @@ class SnapPeaShapesUI : public QObject, public PacketEditorTab {
          * Packet details
          */
         CuspModel* model;
-        regina::SnapPeaTriangulation* tri;
+        regina::PacketOf<regina::SnapPeaTriangulation>* tri;
 
         /**
          * Internal components
@@ -115,16 +116,15 @@ class SnapPeaShapesUI : public QObject, public PacketEditorTab {
         QAction* actFill;
         QAction* actToRegina;
         std::vector<QAction*> triActionList;
-        std::vector<QAction*> enableWhenWritable;
         std::vector<QAction*> requiresNonNull;
 
     public:
         /**
          * Constructor and destructor.
          */
-        SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
-            PacketTabbedUI* useParentUI, bool readWrite);
-        ~SnapPeaShapesUI();
+        SnapPeaShapesUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
+            PacketTabbedUI* useParentUI);
+        ~SnapPeaShapesUI() override;
 
         /**
          * Fill the given toolbar with actions.
@@ -138,12 +138,11 @@ class SnapPeaShapesUI : public QObject, public PacketEditorTab {
         /**
          * PacketEditorTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        const std::vector<QAction*>& getPacketTypeActions();
-        void refresh();
-        void endEdit();
-        void setReadWrite(bool readWrite);
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        const std::vector<QAction*>& getPacketTypeActions() override;
+        void refresh() override;
+        void endEdit() override;
 
     public slots:
         /**

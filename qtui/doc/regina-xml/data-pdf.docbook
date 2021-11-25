@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>pdf</refname>
-  <refpurpose>An encoded &pdf; document</refpurpose>
+  <refpurpose>Replaced by &xml-attachment;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,10 +40,17 @@ pdf ::= (#PCDATA)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   This element was used in the past to store the contents of a &pdf; packet.
+   Since &regina;&nbsp;7.0, &pdf; packets now store their content
+   directly in the character data of an &xml-attachment; element
+   (which replaces the old &xml-packet; element for &pdf; packets).
+  </para>
   <para>
    A &xml-pdf; element contains a single &pdf; document, encoded in
    a printable format.  The precise encoding format is specified by the
@@ -70,21 +77,21 @@ pdf ::= (#PCDATA)</synopsis>
     Element <sgmltag>pdf</sgmltag> has no children.
    </para>
   </refsect2>
+ </refsect1>
 
-  <refsect2>
-   <title>Attributes</title>
-   <variablelist>
-    <varlistentry>
-     <term><sgmltag>encoding</sgmltag></term>
-     <listitem><para>
-      Specifies how the binary &pdf; document is encoded in printable
-      format.  Possible values are <literal>base64</literal> (indicating
-      a <application>base64</application> encoding with printable character
-      set <literal>A-Za-z0-9+/</literal>), or <literal>null</literal>
-      (indicating that the &pdf; document is empty, i.e., a zero-byte file).
-     </para></listitem>
-    </varlistentry>
-   </variablelist>
-  </refsect2>
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>encoding</sgmltag></term>
+    <listitem><para>
+     Specifies how the binary &pdf; document is encoded in printable
+     format.  Possible values are <literal>base64</literal> (indicating
+     a <application>base64</application> encoding with printable character
+     set <literal>A-Za-z0-9+/</literal>), or <literal>null</literal>
+     (indicating that the &pdf; document is empty, i.e., a zero-byte file).
+    </para></listitem>
+   </varlistentry>
+  </variablelist>
  </refsect1>
 </refentry>

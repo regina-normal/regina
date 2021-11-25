@@ -46,9 +46,8 @@
 namespace regina {
 
 /**
- * \addtogroup progress Progress Tracking
+ * \defgroup progress Progress Tracking
  * Progress tracking for long operations
- * @{
  */
 
 /**
@@ -110,11 +109,16 @@ namespace regina {
  * Until isFinished() returns \c true, there is no guarantee that the
  * writing thread has detected and honoured the cancellation request.
  *
+ * Progress trackers rely on multiple threads accessing the same underlying
+ * object, and so they cannot be copied, moved or swapped.
+ *
  * \note This class implements common functionality for ProgressTracker
  * and ProgressTrackerOpen, and should not be used on its own.  Instead,
  * you should always use either ProgressTracker or ProgressTrackerOpen
  * (according to whether you need percentage-based or open-ended
  * progress tracking respectively).
+ *
+ * \ingroup progress
  */
 class ProgressTrackerBase {
     protected:
@@ -231,6 +235,8 @@ class ProgressTrackerBase {
  * fractional weight (between 0 and 1 inclusive), and the percentage progress
  * of the entire calculation is taken to be the weighted sum of the progress
  * of the individual stages.  The weights of all stages should sum to 1.
+ *
+ * \ingroup progress
  */
 class ProgressTracker : public ProgressTrackerBase {
     private:
@@ -297,23 +303,7 @@ class ProgressTracker : public ProgressTrackerBase {
          * inclusive, and the weights of \e all stages must sum to 1
          * in total.
          */
-        void newStage(const char* desc, double weight = 1);
-        /**
-         * Used by the writing thread to indicate that it has moved on
-         * to a new stage of processing.  The percentage progress through
-         * the current stage will automatically be set to 100.
-         *
-         * This is typically called by the writing thread.
-         *
-         * @param desc a human-readable description of the new stage.
-         * Typically this begins with a capital and does not include a
-         * final period (full stop).
-         * @param weight the relative weight of this stage as a fraction
-         * of the entire operation.  This weight must be between 0 and 1
-         * inclusive, and the weights of \e all stages must sum to 1
-         * in total.
-         */
-        void newStage(const std::string& desc, double weight = 1);
+        void newStage(std::string desc, double weight = 1);
         /**
          * Used by the writing thread to indicate the level of progress
          * through the current stage.
@@ -365,6 +355,8 @@ class ProgressTracker : public ProgressTrackerBase {
  * as the operation progresses.  There is no particular "end point" or
  * upper bound on the number of steps, and indeed the end point is often
  * unknown until the operation has finished.
+ *
+ * \ingroup progress
  */
 class ProgressTrackerOpen : public ProgressTrackerBase {
     private:
@@ -418,19 +410,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase {
          * Typically this begins with a capital and does not include a
          * final period (full stop).
          */
-        void newStage(const char* desc);
-        /**
-         * Used by the writing thread to indicate that it has moved on
-         * to a new stage of processing.  The number of steps completed
-         * will be left unchanged.
-         *
-         * This is typically called by the writing thread.
-         *
-         * @param desc a human-readable description of the new stage.
-         * Typically this begins with a capital and does not include a
-         * final period (full stop).
-         */
-        void newStage(const std::string& desc);
+        void newStage(std::string desc);
         /**
          * Used by the writing thread to indicate that one more step has
          * been completed.
@@ -465,8 +445,6 @@ class ProgressTrackerOpen : public ProgressTrackerBase {
          */
         void setFinished();
 };
-
-/*@}*/
 
 // Inline functions for ProgressTrackerBase
 
@@ -524,18 +502,9 @@ inline double ProgressTracker::percent() {
     return prevPercent_ + currWeight_ * percent_;
 }
 
-inline void ProgressTracker::newStage(const char* desc, double weight) {
+inline void ProgressTracker::newStage(std::string desc, double weight) {
     std::lock_guard<std::mutex> lock(lock_);
-    desc_ = desc;
-    percent_ = 0;
-    prevPercent_ += 100 * currWeight_;
-    currWeight_ = weight;
-    percentChanged_ = descChanged_ = true;
-}
-
-inline void ProgressTracker::newStage(const std::string& desc, double weight) {
-    std::lock_guard<std::mutex> lock(lock_);
-    desc_ = desc;
+    desc_ = std::move(desc);
     percent_ = 0;
     prevPercent_ += 100 * currWeight_;
     currWeight_ = weight;
@@ -579,15 +548,9 @@ inline unsigned long ProgressTrackerOpen::steps() {
     return steps_;
 }
 
-inline void ProgressTrackerOpen::newStage(const char* desc) {
+inline void ProgressTrackerOpen::newStage(std::string desc) {
     std::lock_guard<std::mutex> lock(lock_);
-    desc_ = desc;
-    descChanged_ = true;
-}
-
-inline void ProgressTrackerOpen::newStage(const std::string& desc) {
-    std::lock_guard<std::mutex> lock(lock_);
-    desc_ = desc;
+    desc_ = std::move(desc);
     descChanged_ = true;
 }
 

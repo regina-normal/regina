@@ -49,7 +49,7 @@ class QTemporaryFile;
  * applications.
  *
  * In most ways this is just like a QTemporaryFile with autoRemove,
- * except that are share() is called, Regina does not keep the file
+ * except that after share() is called, Regina does not keep the file
  * open to the possible exclusion of other applications.
  *
  * The life cycle of a SharedTempFile is as follows:
@@ -82,7 +82,7 @@ class SharedTempFile : public QObject {
          * itself will be created in QDir::tempPath() automatically.
          */
         SharedTempFile(const QString& templateFileName, QObject* parent);
-        ~SharedTempFile();
+        ~SharedTempFile() override;
 
         void share();
 

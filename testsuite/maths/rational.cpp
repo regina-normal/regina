@@ -33,6 +33,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/rational.h"
+#include "utilities/exception.h"
 #include "utilities/stringutils.h"
 #include "testsuite/utilities/testutilities.h"
 
@@ -62,10 +63,10 @@ class RationalTest : public CppUnit::TestFixture {
                 using == with floating point numbers. */
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         template <typename T>
@@ -116,6 +117,27 @@ class RationalTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Rational IntegerBase<...>" << val <<
                     " reports an incorrect string.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Test self-assignment while we're here.
+            r = r;
+            if (r.numerator() != val) {
+                std::ostringstream msg;
+                msg << "Rational IntegerBase<...>" << val <<
+                    " reports an incorrect numerator after self-assignment.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (r.denominator() != 1) {
+                std::ostringstream msg;
+                msg << "Rational IntegerBase<...>" << val <<
+                    " reports an incorrect denominator after self-assignment.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (str(r) != val.stringValue()) {
+                std::ostringstream msg;
+                msg << "Rational IntegerBase<...>" << val <<
+                    " reports an incorrect string after self-assignment.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -360,43 +382,34 @@ class RationalTest : public CppUnit::TestFixture {
 
         void checkDoubleInRange(const Rational& r,
                 double lowerBnd, double upperBnd, const char* name) {
-            bool inRange;
-            double ans = r.doubleApprox(&inRange);
+            try {
+                double ans = r.doubleApprox();
 
-            if (! inRange) {
+                if (ans < lowerBnd || ans > upperBnd) {
+                    std::ostringstream msg;
+                    msg << "Rational " << name <<
+                        " converts to the double " << ans <<
+                        ", which is outside the expected range [ "
+                        << lowerBnd << ", " << upperBnd << " ].";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } catch (const regina::UnsolvedCase&) {
                 std::ostringstream msg;
                 msg << "Rational " << name <<
                     " should be reported as within the range of double.";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            if (ans < lowerBnd || ans > upperBnd) {
-                std::ostringstream msg;
-                msg << "Rational " << name <<
-                    " converts to the double " << ans <<
-                    ", which is outside the expected range [ "
-                    << lowerBnd << ", " << upperBnd << " ].";
-                CPPUNIT_FAIL(msg.str());
-            }
         }
 
         void checkDoubleOutOfRange(const Rational& r, const char* name) {
-            bool inRange;
-            double ans = r.doubleApprox(&inRange);
+            try {
+                r.doubleApprox();
 
-            if (inRange) {
                 std::ostringstream msg;
                 msg << "Rational " << name <<
                     " should be reported as outside the range of double.";
                 CPPUNIT_FAIL(msg.str());
-            }
-
-            if (ans < -epsilon || ans > epsilon) {
-                std::ostringstream msg;
-                msg << "Rational " << name <<
-                    " converts to the double " << ans <<
-                    ", which should be zero to indicate out-of-range.";
-                CPPUNIT_FAIL(msg.str());
+            } catch (const regina::UnsolvedCase&) {
             }
         }
 

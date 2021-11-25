@@ -55,18 +55,17 @@ int main(int argc, char* argv[]) {
 
     // Search for each signature.
     for (int i = 1; i < argc; ++i) {
-        regina::CensusHits* hits = regina::Census::lookup(argv[i]);
+        auto hits = regina::Census::lookup(argv[i]);
 
-        size_t n = hits->count();
+        size_t n = hits.size();
         std::cout << argv[i] << ": " << n
             << (n == 1 ? " hit" : " hits") << std::endl;
 
-        for (auto hit : *hits)
-            std::cout << "    " << hit->name() << " -- "
-                << hit->db()->desc() << std::endl;
+        for (const auto& hit : hits)
+            std::cout << "    " << hit.name() << " -- "
+                << hit.db().desc() << std::endl;
 
         std::cout << std::endl;
-        delete hits;
     }
 
     return 0;

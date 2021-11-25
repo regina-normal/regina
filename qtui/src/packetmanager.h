@@ -59,27 +59,20 @@ class PacketManager {
          * Returns an icon appropriate for the given packet.  This icon
          * may be rendered at various different sizes.
          */
-        static QIcon icon(regina::Packet* packet);
+        static QIcon icon(const regina::Packet& packet);
 
         /**
          * Returns a newly created interface appropriate for viewing or
          * editing the given packet.
-         *
-         * The interface will be created in read-write or read-only mode
-         * as appropriate.
-         *
-         * Note that the interface may be required to change its
-         * read-only or read-write status throughout its lifetime.
-         * See PacketUI::setReadWrite() for details.
          */
         static PacketUI* createUI(regina::Packet* packet,
             PacketPane* enclosingPane);
 
         /**
          * If this packet should be viewed using an external viewer
-         * (e.g., PDF packets), this routine returns an appropriate function.
+         * (e.g., attachments), this routine returns an appropriate function.
          * If this packet should be viewed using an internal viewer, this
-         * routine returns 0.
+         * routine returns \c null.
          */
         static PacketExternalViewer externalViewer(regina::Packet* packet);
 };

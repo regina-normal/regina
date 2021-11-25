@@ -50,7 +50,7 @@ namespace {
 
 void addTriangle4(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<4, 2>>(m, "FaceEmbedding4_2")
-        .def(pybind11::init<regina::Pentachoron<4>*, int>())
+        .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>())
         .def(pybind11::init<const TriangleEmbedding<4>&>())
         .def("simplex", &TriangleEmbedding<4>::simplex,
             pybind11::return_value_policy::reference)
@@ -65,25 +65,16 @@ void addTriangle4(pybind11::module_& m) {
 
     auto c = pybind11::class_<Face<4, 2>>(m, "Face4_2")
         .def("index", &Triangle<4>::index)
-        .def("embeddings", [](const Triangle<4>& t) {
-            pybind11::list ans;
-            for (const auto& emb : t)
-                ans.append(emb);
-            return ans;
-        })
-        .def("embedding", &Triangle<4>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Triangle<4>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Triangle<4>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Triangle<4>::embedding)
+        .def("embeddings", &Triangle<4>::embeddings)
+        .def("front", &Triangle<4>::front)
+        .def("back", &Triangle<4>::back)
         .def("triangulation", &Triangle<4>::triangulation)
         .def("component", &Triangle<4>::component,
             pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Triangle<4>::boundaryComponent,
             pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Triangle<4>, 2, int,
-            pybind11::return_value_policy::reference>)
+        .def("face", &regina::python::face<Triangle<4>, 2, int>)
         .def("vertex", &Triangle<4>::vertex,
             pybind11::return_value_policy::reference)
         .def("edge", &Triangle<4>::edge,
@@ -102,27 +93,17 @@ void addTriangle4(pybind11::module_& m) {
         .def_static("containsVertex", &Triangle<4>::containsVertex)
         .def_readonly_static("triangleNumber", &Triangle4_triangleNumber)
         .def_readonly_static("triangleVertex", &Triangle4_triangleVertex)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("nFaces", [](pybind11::object) {
-            return Triangle<4>::nFaces;
-        })
-        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
-            return Triangle<4>::lexNumbering;
-        })
-        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
-            return Triangle<4>::oppositeDim;
-        })
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Triangle<4>::dimension;
-        })
-        .def_property_readonly_static("subdimension", [](pybind11::object) {
-            return Triangle<4>::subdimension;
-        })
+        .def_readonly_static("nFaces", &Triangle<4>::nFaces)
+        .def_readonly_static("lexNumbering", &Triangle<4>::lexNumbering)
+        .def_readonly_static("oppositeDim", &Triangle<4>::oppositeDim)
+        .def_readonly_static("dimension", &Triangle<4>::dimension)
+        .def_readonly_static("subdimension", &Triangle<4>::subdimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<
+        decltype(std::declval<Triangle<4>>().embeddings())>(m);
 
     m.attr("TriangleEmbedding4") = m.attr("FaceEmbedding4_2");
     m.attr("Triangle4") = m.attr("Face4_2");

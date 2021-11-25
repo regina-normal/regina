@@ -208,47 +208,47 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
     // Actual creation of the about box starts here.
     // This follows the layout from KAboutApplicationDialog to a large extent.
-    QVBoxLayout *layout = new QVBoxLayout;
+    auto* layout = new QVBoxLayout;
 
-    QFrame* title = new QFrame(this);
+    auto* title = new QFrame(this);
     title->setAutoFillBackground(true);
     title->setFrameShape(QFrame::StyledPanel);
     title->setFrameShadow(QFrame::Plain);
     title->setBackgroundRole(QPalette::Base);
 
-    QGridLayout* titleGrid = new QGridLayout(title);
+    auto* titleGrid = new QGridLayout(title);
     titleGrid->setColumnStretch(1, 1);
     titleGrid->setMargin(6);
 
-    QLabel* titleIcon = new QLabel(this);
+    auto* titleIcon = new QLabel(this);
     titleIcon->setPixmap(IconCache::icon(IconCache::regina).pixmap(64));
     titleGrid->addWidget(titleIcon, 0, 0, 2, 1);
-    QLabel* titleText = new QLabel(tr("<qt><font size=\"5\">Regina</font><p>"
+    auto* titleText = new QLabel(tr("<qt><font size=\"5\">Regina</font><p>"
         "<b>Version %1</b></qt>").arg(PACKAGE_VERSION));
     titleGrid->addWidget(titleText, 0, 1);
 
     layout->addWidget(title);
 
-    QTabWidget *tabs = new QTabWidget;
+    auto* tabs = new QTabWidget;
 
     QString aboutText = QString("<qt>") + regDescription +
         "<p>" + regReleased +
         "<p>" + regCopyright +
         "<p><a href=\"" + regWebsite + "\">" + regWebsite + "</a></qt>";
-    QLabel* aboutLabel = new QLabel(aboutText);
+    auto* aboutLabel = new QLabel(aboutText);
     aboutLabel->setWordWrap(true);
     aboutLabel->setOpenExternalLinks(true);
     aboutLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
 
-    QLabel* licenseLabel =
+    auto* licenseLabel =
         new QLabel(tr("<a href=\"#\">License: Click here</a>"));
     licenseLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
     // Show license dialog when label is clicked
     connect(licenseLabel, SIGNAL(linkActivated(QString)),
         this, SLOT(showLicense()));
 
-    QWidget *aboutPage = new QWidget(this);
-    QVBoxLayout *aboutLayout = new QVBoxLayout;
+    auto* aboutPage = new QWidget(this);
+    auto* aboutLayout = new QVBoxLayout;
     aboutLayout->addStretch();
     aboutLayout->addWidget(aboutLabel);
     aboutLayout->addWidget(licenseLabel);
@@ -272,7 +272,7 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
         authorText += "<p style=\"margin: 0px;\">&nbsp;</p>";
     }
 
-    QTextBrowser* authorPage = new QTextBrowser;
+    auto* authorPage = new QTextBrowser;
     authorPage->setFrameStyle(QFrame::NoFrame);
     authorPage->setHtml(authorText);
     authorPage->setPalette(transparent);
@@ -290,7 +290,7 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
         bundledText += "<p style=\"margin: 0px;\">&nbsp;</p>";
     }
 
-    QTextBrowser* softwarePage = new QTextBrowser;
+    auto* softwarePage = new QTextBrowser;
     softwarePage->setFrameStyle(QFrame::NoFrame);
     softwarePage->setHtml(bundledText);
     softwarePage->setPalette(transparent);
@@ -324,7 +324,7 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     }
     thanksText += "<p style=\"margin: 0px;\">&nbsp;</p>";
 
-    QTextBrowser* thanksPage = new QTextBrowser;
+    auto* thanksPage = new QTextBrowser;
     thanksPage->setFrameStyle(QFrame::NoFrame);
     thanksPage->setHtml(thanksText);
     thanksPage->setPalette(transparent);
@@ -332,7 +332,7 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
     layout->addWidget(tabs);
 
-    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Close);
+    auto* buttons = new QDialogButtonBox(QDialogButtonBox::Close);
     layout->addWidget(buttons);
 
     this->setLayout(layout);
@@ -342,21 +342,21 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
 void ReginaAbout::showLicense() {
     // Borrow heavily from KAboutApplicationDialog::showLicense() here.
-    QDialog *win = new QDialog(this);
+    auto* win = new QDialog(this);
     win->setWindowTitle(tr("License Agreement - Regina"));
 
     const QFont font = ReginaPrefSet::fixedWidthFont();
     QFontMetrics metrics(font);
     
-    QTextBrowser *text = new QTextBrowser;
+    auto* text = new QTextBrowser;
     text->setFont(font);
     text->setLineWrapMode(QTextEdit::NoWrap);
     text->setPlainText(regLicense);
    
-    QVBoxLayout *layout = new QVBoxLayout;
+    auto* layout = new QVBoxLayout;
     layout->addWidget(text);
 
-    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Close);
+    auto* buttons = new QDialogButtonBox(QDialogButtonBox::Close);
     connect(buttons, SIGNAL(clicked(QAbstractButton*)), win, SLOT(accept()));
     layout->addWidget(buttons);
 

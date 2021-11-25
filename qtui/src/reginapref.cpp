@@ -71,10 +71,10 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     ReginaPrefSet& prefSet(ReginaPrefSet::global());
 
-    QVBoxLayout *layout = new QVBoxLayout;
+    auto* layout = new QVBoxLayout;
 
     // Construct the individual preferences pages.
-    QTabWidget* item = new QTabWidget(this);
+    auto* item = new QTabWidget(this);
     layout->addWidget(item);
 
     buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok |
@@ -121,16 +121,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     toolsPrefs->cbSnapPeaMessages->setChecked(
         regina::SnapPeaTriangulation::kernelMessagesEnabled());
-    if (prefSet.pdfExternalViewer.isEmpty()) {
-        toolsPrefs->cbDefaultPDFViewer->setChecked(true);
-        toolsPrefs->editPDFViewer->setEnabled(false);
-        toolsPrefs->labelPDFViewer->setEnabled(false);
-    } else {
-        toolsPrefs->cbDefaultPDFViewer->setChecked(false);
-        toolsPrefs->editPDFViewer->setEnabled(true);
-        toolsPrefs->labelPDFViewer->setEnabled(true);
-    }
-    toolsPrefs->editPDFViewer->setText(prefSet.pdfExternalViewer);
     toolsPrefs->editGAPExec->setText(prefSet.triGAPExec);
 
     // Finish off.
@@ -148,7 +138,7 @@ void ReginaPreferences::clicked(QAbstractButton *button) {
         slotApply();
         accept();
     } else if (buttonBox->buttonRole(button) == QDialogButtonBox::HelpRole) {
-        ReginaPrefSet::openHandbook("options", 0, this);
+        ReginaPrefSet::openHandbook("options", nullptr, this);
         return;
     }
     reject();
@@ -222,12 +212,6 @@ void ReginaPreferences::slotApply() {
 
     regina::SnapPeaTriangulation::enableKernelMessages(
         toolsPrefs->cbSnapPeaMessages->isChecked());
-    // Don't be too fussy about what they put in the PDF viewer field, since
-    // Regina tries hard to find a suitable PDF viewer regardless.
-    if (toolsPrefs->cbDefaultPDFViewer->isChecked())
-        prefSet.pdfExternalViewer = "";
-    else
-        prefSet.pdfExternalViewer = toolsPrefs->editPDFViewer->text().trimmed();
 
     strVal = toolsPrefs->editGAPExec->text().trimmed();
     if (strVal.isEmpty()) {
@@ -264,9 +248,8 @@ void ReginaPreferences::slotApply() {
         // being vague about it.  Maybe they don't have GAP installed.
         
         bool found = false;
-        for( QStringList::iterator it = pathList.begin(); it != pathList.end();
-            ++it) {
-            QDir dir(*it);
+        for (const auto& p : pathList) {
+            QDir dir(p);
             if ( dir.exists(strVal) ) {
                 found = true;
                 break;
@@ -337,13 +320,12 @@ ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     // Set up the tree jump size.
     QBoxLayout* box = new QHBoxLayout();
 
-    QLabel* label = new QLabel(tr("Packet tree jump size:"));
+    auto* label = new QLabel(tr("Packet tree jump size:"));
     box->addWidget(label);
     editTreeJumpSize = new QLineEdit();
-    editTreeJumpSize->setMaxLength(
-         10 /* ridiculously high number of digits */);
+    editTreeJumpSize->setMaxLength(10 /* ridiculously high number of digits */);
     box->addWidget(editTreeJumpSize);
-    QIntValidator* val = new QIntValidator(this);
+    auto* val = new QIntValidator(this);
     val->setBottom(1);
     editTreeJumpSize->setValidator(val);
     QString msg = tr("The number of steps that a packet moves when Jump Up "
@@ -422,41 +404,13 @@ ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {
         "not see these messages at all.</qt>"));
     layout->addWidget(cbSnapPeaMessages);
 
-    // Set up the PDF viewer.
-    cbDefaultPDFViewer = new QCheckBox(tr("Use default PDF viewer"));
-    cbDefaultPDFViewer->setWhatsThis(tr("<qt>Use the default PDF application "
-        "on your computer to view PDF packets.<p>"
-        "As an alternative, you may uncheck this box and select your "
-        "own PDF viewer in the text field below.</qt>"));
-    layout->addWidget(cbDefaultPDFViewer);
-    connect(cbDefaultPDFViewer, SIGNAL(stateChanged(int)),
-        this, SLOT(defaultPDFViewerChanged(int)));
-
-    QBoxLayout* box = new QHBoxLayout();
-    labelPDFViewer = new QLabel(tr("Custom PDF viewer:"));
-    box->addWidget(labelPDFViewer);
-    editPDFViewer = new QLineEdit();
-    box->addWidget(editPDFViewer);
-    QString msg = tr("<qt>The command used to view PDF packets.  "
-        "Examples might include "
-        "<tt>okular</tt>, <tt>evince</tt> or <tt>xpdf</tt>.<p>"
-        "You may include optional command-line arguments here.  The PDF "
-        "filename will be added to the end of the argument list, and the "
-        "entire command will be passed to a shell for execution.<p>"
-        "As an alternative, you can check the <i>default PDF viewer</i> "
-        "box above, and Regina will simply use the default PDF application "
-        "on your computer.</qt>");
-    labelPDFViewer->setWhatsThis(msg);
-    editPDFViewer->setWhatsThis(msg);
-    layout->addLayout(box);
-
     // Set up the GAP executable.
-    box = new QHBoxLayout();
-    QLabel* label = new QLabel(tr("GAP executable:"));
+    auto* box = new QHBoxLayout();
+    auto* label = new QLabel(tr("GAP executable:"));
     box->addWidget(label);
     editGAPExec = new QLineEdit();
     box->addWidget(editGAPExec);
-    msg = tr("<qt>The command used to run GAP (Groups, Algorithms and "
+    QString msg = tr("<qt>The command used to run GAP (Groups, Algorithms and "
         "Programming).  GAP can be used to help simplify presentations "
         "of fundamental groups.<p>"
         "This should be a single executable name (e.g., <i>%1</i>).  You "
@@ -476,11 +430,6 @@ ReginaPrefTools::ReginaPrefTools(QWidget* parent) : QWidget(parent) {
     setLayout(layout);
 }
 
-void ReginaPrefTools::defaultPDFViewerChanged(int state) {
-    editPDFViewer->setEnabled(state != Qt::Checked);
-    labelPDFViewer->setEnabled(state != Qt::Checked);
-}
-
 ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
     QBoxLayout* layout = new QVBoxLayout(this);
 
@@ -497,12 +446,11 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
     // Set up the number of spaces per tab.
     QBoxLayout* box = new QHBoxLayout();
 
-    QLabel* label = new QLabel(tr("Spaces per tab:"));
+    auto* label = new QLabel(tr("Spaces per tab:"));
     box->addWidget(label);
     editSpacesPerTab = new QLineEdit();
-    editSpacesPerTab->setMaxLength(
-         10 /* ridiculously high number of digits */);
-    QIntValidator* val = new QIntValidator(this);
+    editSpacesPerTab->setMaxLength(10 /* ridiculously high number of digits */);
+    auto* val = new QIntValidator(this);
     val->setBottom(1);
     editSpacesPerTab->setValidator(val);
     box->addWidget(editSpacesPerTab);

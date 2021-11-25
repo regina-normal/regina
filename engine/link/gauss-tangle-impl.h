@@ -48,31 +48,25 @@
 namespace regina {
 
 template <typename Iterator>
-Tangle* Tangle::fromOrientedGauss(Iterator begin, Iterator end) {
+Tangle Tangle::fromOrientedGauss(Iterator begin, Iterator end) {
     // Extract the number of crossings.
     size_t n = end - begin;
-    if (n < 2) {
-        std::cerr << "fromOrientedGauss(): too few terms" << std::endl;
-        return nullptr;
-    }
-    if (n % 2) {
-        std::cerr << "fromOrientedGauss(): odd number of terms" << std::endl;
-        return nullptr;
-    }
+    if (n < 2)
+        throw InvalidArgument("fromOrientedGauss(): too few terms");
+    if (n % 2)
+        throw InvalidArgument("fromOrientedGauss(): odd number of terms");
     n = (n / 2) - 1;
 
     char type = extractChar(*begin++);
-    if (! (type == '|' || type == '-' || type == 'x')) {
-        std::cerr << "fromOrientedGauss(): invalid tangle type" << std::endl;
-        return nullptr;
-    }
+    if (! (type == '|' || type == '-' || type == 'x'))
+        throw InvalidArgument("fromOrientedGauss(): invalid tangle type");
 
-    Tangle* ans = new Tangle;
-    ans->type_ = type;
+    Tangle ans;
+    ans.type_ = type;
 
     size_t i;
     for (i = 0; i < n; ++i)
-        ans->crossings_.push_back(new Crossing);
+        ans.crossings_.push_back(new Crossing);
 
     StrandRef prev, curr;
     Iterator it = begin;
@@ -87,92 +81,60 @@ Tangle* Tangle::fromOrientedGauss(Iterator begin, Iterator end) {
         if (! Link::parseOrientedGaussTerm(
                 *it, n, tmpCross, tmpStrand, tmpSign)) {
             if (extractChar(*it) == '_') {
-                if (string == 1) {
-                    std::cerr << "fromOrientedGauss(): more than one "
-                        "underscore present" << std::endl;
-                    delete ans;
-                    return nullptr;
-                }
+                if (string == 1)
+                    throw InvalidArgument("fromOrientedGauss(): more than one "
+                        "underscore present");
                 if (curr) {
-                    if (curr.crossing()->next_[curr.strand()]) {
-                        std::cerr
-                            << "fromOrientedGauss(): multiple passes out of "
-                            << (curr.strand() == 0 ? "lower" : "upper")
-                            << " strand of crossing "
-                            << (curr.crossing()->index() + 1) << std::endl;
-                        delete ans;
-                        return nullptr;
-                    }
-                    ans->end_[0][1] = curr;
+                    if (curr.crossing()->next_[curr.strand()])
+                        throw InvalidArgument("fromOrientedGauss(): "
+                            "multiple passes out of the same strand");
+                    ans.end_[0][1] = curr;
                     curr = StrandRef();
                 }
                 string = 1;
                 continue;
             } else {
-                std::cerr << "fromOrientedGauss(): could not parse " << *it
-                    << std::endl;
-                delete ans;
-                return nullptr;
+                throw InvalidArgument("fromOrientedGauss(): "
+                    "could not parse term");
             }
         }
 
         prev = curr;
 
-        cr = ans->crossings_[tmpCross - 1];
+        cr = ans.crossings_[tmpCross - 1];
 
         if (cr->sign_ == 0)
             cr->sign_ = tmpSign;
-        else if (cr->sign_ != tmpSign) {
-            std::cerr << "fromOrientedGauss(): inconsistent signs "
-                "for crossing " << tmpCross << std::endl;
-            delete ans;
-            return nullptr;
-        }
+        else if (cr->sign_ != tmpSign)
+            throw InvalidArgument("fromOrientedGauss(): inconsistent signs "
+                "for crossing");
 
         curr = cr->strand(tmpStrand);
 
         if (curr.crossing()->prev_[curr.strand()] ||
-                (string == 1 && curr == ans->end_[0][0])) {
-            std::cerr << "fromOrientedGauss(): multiple passes into "
-                << (curr.strand() == 0 ? "lower" : "upper")
-                << " strand of crossing " << (curr.crossing()->index() + 1)
-                << std::endl;
-            delete ans;
-            return nullptr;
-        }
+                (string == 1 && curr == ans.end_[0][0]))
+            throw InvalidArgument("fromOrientedGauss(): multiple passes into "
+                "the same strand");
 
         if (! prev) {
-            ans->end_[string][0] = curr;
+            ans.end_[string][0] = curr;
         } else {
-            if (prev.crossing()->next_[prev.strand()]) {
-                std::cerr << "fromOrientedGauss(): multiple passes out of "
-                    << (prev.strand() == 0 ? "lower" : "upper")
-                    << " strand of crossing " << (prev.crossing()->index() + 1)
-                    << std::endl;
-                delete ans;
-                return nullptr;
-            }
+            if (prev.crossing()->next_[prev.strand()])
+                throw InvalidArgument("fromOrientedGauss(): multiple "
+                    "passes out of the same strand");
             prev.crossing()->next_[prev.strand()] = curr;
             curr.crossing()->prev_[curr.strand()] = prev;
         }
     }
 
-    if (string != 1) {
-        std::cerr << "fromOrientedGauss(): missing underscore" << std::endl;
-        delete ans;
-        return nullptr;
-    }
+    if (string != 1)
+        throw InvalidArgument("fromOrientedGauss(): missing underscore");
 
     if (curr) {
-        if (curr.crossing()->next_[curr.strand()] || curr == ans->end_[0][1]) {
-            std::cerr << "fromOrientedGauss(): multiple passes out of "
-                << (curr.strand() == 0 ? "lower" : "upper")
-                << " strand of crossing " << (curr.crossing()->index() + 1)
-                << std::endl;
-            delete ans;
-            return nullptr;
-        }
-        ans->end_[1][1] = curr;
+        if (curr.crossing()->next_[curr.strand()] || curr == ans.end_[0][1])
+            throw InvalidArgument("fromOrientedGauss(): multiple "
+                "passes out of the same strand");
+        ans.end_[1][1] = curr;
     }
 
     // All done!

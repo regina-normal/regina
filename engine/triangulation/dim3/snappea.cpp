@@ -40,27 +40,26 @@
 
 namespace regina {
 
-Triangulation<3>* Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
+Triangulation<3> Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
     std::istringstream in(snapPeaData);
-    return Triangulation<3>::readSnapPea(in);
-}
 
-Triangulation<3>* Triangulation<3>::readSnapPea(std::istream& in) {
     // Check that this is a SnapPea triangulation.
     char name[1001];
     unsigned len;
     in.getline(name, 1000);
     if (in.fail() || in.eof())
-        return 0;
+        throw InvalidArgument("fromSnapPea(): unexpected end of string");
     // Allow junk on the same line following the triangulation marker.
-    if (strncmp(name, "% Triangulation", 15) &&
-            strncmp(name, "% triangulation", 15))
-        return 0;
+    if (strncmp(name, "% Triangulation", 15) != 0 &&
+            strncmp(name, "% triangulation", 15) != 0)
+        throw InvalidArgument("fromSnapPea(): missing triangulation marker");
 
     // Read in the manifold name.
+    // Unfortunately Triangulation<3> has nowhere to put this, so for
+    // now we just read it and then forget about it.
     in.getline(name, 1000);
     if (in.fail() || in.eof())
-        return 0;
+        throw InvalidArgument("fromSnapPea(): unexpected end of string");
     if ((len = strlen(name)) > 0 && name[len - 1] == '\r')
         name[len - 1] = 0;
 
@@ -87,14 +86,13 @@ Triangulation<3>* Triangulation<3>::readSnapPea(std::istream& in) {
     }
 
     // Create the new tetrahedra.
-    Triangulation<3>* triang = new Triangulation<3>();
-    triang->setLabel(name);
+    Triangulation<3> triang;
 
     unsigned numTet;
     in >> numTet;
-    Tetrahedron<3> **tet = new Tetrahedron<3>*[numTet];
+    auto* tet = new Tetrahedron<3>*[numTet];
     for (i=0; i<numTet; i++)
-        tet[i] = triang->newTetrahedron();
+        tet[i] = triang.newTetrahedron();
 
     int g[4];
     int p[4][4];
@@ -102,9 +100,9 @@ Triangulation<3>* Triangulation<3>::readSnapPea(std::istream& in) {
     for (i=0; i<numTet; i++) {
         // Test the state of the input stream.
         if (! in.good()) {
-            delete triang;
             delete[] tet;
-            return 0;
+            throw InvalidArgument("fromSnapPea(): string not in the "
+                "correct format");
         }
 
         // Read in adjacent tetrahedra.
@@ -121,9 +119,9 @@ Triangulation<3>* Triangulation<3>::readSnapPea(std::istream& in) {
                     case '2': p[j][k] = 2; break;
                     case '3': p[j][k] = 3; break;
                     default:
-                        delete triang;
                         delete[] tet;
-                        return 0;
+                        throw InvalidArgument("fromSnapPea(): "
+                            "invalid permutation");
                 }
         }
 

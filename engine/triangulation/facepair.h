@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
- * @{
- */
-
-/**
  * Represents a pair of tetrahedron face numbers.
  *
  * Note that we are not storing triangle numbers in a triangulation
@@ -66,13 +61,20 @@ namespace regina {
  *
  * The before-the-start and past-the-end values are internally
  * represented as (0,0) and (3,3) respectively.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup triangulation
  */
 class FacePair {
     private:
-        unsigned first_;
-            /**< The smaller of the two faces in this pair. */
-        unsigned second_;
-            /**< The larger of the two faces in this pair. */
+        uint8_t code_;
+            /**< An internal code, whose lowest two bits represent the
+                 smaller index face, and whose next two bits represent
+                 the higher index face.  Specifically:
+                 (0,0) (0,1) (0,2) (0,3) (1,2) (1,3) (2,3) (3,3) ->
+                  0,    1,    2,    3,    6,    7,    11,   15. */
 
     public:
         /**
@@ -89,13 +91,11 @@ class FacePair {
          * @param newFirst the first face number in the new pair.
          * @param newSecond the second face number in the new pair.
          */
-        FacePair(int newFirst, int newSecond);
+        FacePair(int first, int second);
         /**
          * Creates a new face pair that is a clone of the given pair.
-         *
-         * @param cloneMe the face pair to clone.
          */
-        FacePair(const FacePair& cloneMe) = default;
+        FacePair(const FacePair&) = default;
 
         /**
          * Returns the smaller of the two face numbers in this pair.
@@ -105,7 +105,7 @@ class FacePair {
          *
          * @return the lower face number.
          */
-        unsigned lower() const;
+        int lower() const;
         /**
          * Returns the larger of the two face numbers in this pair.
          *
@@ -114,7 +114,7 @@ class FacePair {
          *
          * @return the upper face number.
          */
-        unsigned upper() const;
+        int upper() const;
 
         /**
          * Determines if this face pair represents a before-the-start
@@ -204,6 +204,8 @@ class FacePair {
          * This is a preincrement operator: the object will be changed,
          * and then a reference to it will be returned.
          *
+         * \pre This face pair is not currently past-the-end.
+         *
          * \ifacespython This routine is not available; however, the
          * postincrement operator is available under the name inc().
          *
@@ -218,6 +220,8 @@ class FacePair {
          * This is a postincrement operator: the object will be changed,
          * but a copy of the original reference will be returned.
          *
+         * \pre This face pair is not currently past-the-end.
+         *
          * \ifacespython This routine is available under the name inc().
          *
          * @return a copy of this object before the change took place.
@@ -230,6 +234,8 @@ class FacePair {
          *
          * This is a predecrement operator: the object will be changed,
          * and then a reference to it will be returned.
+         *
+         * \pre This face pair is not currently before-the-start.
          *
          * \ifacespython This routine is not available; however, the
          * postdecrement operator is available under the name dec().
@@ -245,11 +251,48 @@ class FacePair {
          * This is a postdecrement operator: the object will be changed,
          * but a copy of the original reference will be returned.
          *
+         * \pre This face pair is not currently before-the-start.
+         *
          * \ifacespython This routine is available under the name dec().
          *
          * @return a copy of this object before the change took place.
          */
         FacePair operator -- (int);
+
+        /**
+         * Identifies the tetrahedron edge that is common to both faces
+         * in this pair.
+         *
+         * This will be a tetrahedron edge number, between 0 and 5 inclusive.
+         * Note that edges commonEdge() and oppositeEdge() will be opposite
+         * edges in the tetrahedron.
+         *
+         * \pre This face pair is neither before-the-start nor
+         * past-the-end.
+         *
+         * @return the edge that belongs to both faces in this pair.
+         */
+        int commonEdge() const;
+        /**
+         * Identifies the tetrahedron edge that belongs to neither of
+         * the two faces in this pair.
+         *
+         * This will be a tetrahedron edge number, between 0 and 5 inclusive.
+         * Note that edges commonEdge() and oppositeEdge() will be opposite
+         * edges in the tetrahedron.
+         *
+         * \pre This face pair is neither before-the-start nor
+         * past-the-end.
+         *
+         * @return the edge that does not belong to either of these two faces.
+         */
+        int oppositeEdge() const;
+
+    private:
+        /**
+         * Creates a new face pair with the given internal code.
+         */
+        FacePair(uint8_t code);
 };
 
 /**
@@ -258,60 +301,72 @@ class FacePair {
  * @param out the output stream to which to write.
  * @param pair the face pair to write.
  * @return a reference to \a out.
+ *
+ * \ingroup triangulation
  */
 std::ostream& operator << (std::ostream& out, const FacePair& pair);
 
 // Inline functions for FacePair
 
-inline FacePair::FacePair() : first_(0), second_(1) {
+inline FacePair::FacePair() : code_(1) {
 }
 
-inline unsigned FacePair::lower() const {
-    return first_;
+inline FacePair::FacePair(int first, int second) :
+        code_(first < second ?
+              ((first << 2) | second) :
+              ((second << 2) | first)) {
 }
 
-inline unsigned FacePair::upper() const {
-    return second_;
+inline FacePair::FacePair(uint8_t code) : code_(code) {
+}
+
+inline int FacePair::lower() const {
+    return (code_ >> 2) & 3;
+}
+
+inline int FacePair::upper() const {
+    return (code_ & 3);
 }
 
 inline bool FacePair::isBeforeStart() const {
-    return (second_ <= 0);
+    return (code_ <= 0);
 }
 
 inline bool FacePair::isPastEnd() const {
-    return (first_ >= 3);
+    return (code_ >= 15);
+}
+
+inline FacePair FacePair::complement() const {
+    // Codes: 1 <-> 11, 2 <-> 7, 3 <-> 6.
+    switch (code_) {
+        case 1: return FacePair(11);
+        case 11: return FacePair(1);
+        default: return FacePair(9 - code_);
+    }
 }
 
 inline bool FacePair::operator == (const FacePair& other) const {
-    return (first_ == other.first_ && second_ == other.second_);
+    return (code_ == other.code_);
 }
 
 inline bool FacePair::operator != (const FacePair& other) const {
-    return (first_ != other.first_ || second_ != other.second_);
+    return (code_ != other.code_);
 }
 
 inline bool FacePair::operator < (const FacePair& other) const {
-    if (first_ < other.first_)
-        return true;
-    if (first_ > other.first_)
-        return false;
-    return (second_ < other.second_);
+    return (code_ < other.code_);
 }
 
 inline bool FacePair::operator > (const FacePair& other) const {
-    return (other < *this);
+    return (code_ > other.code_);
 }
 
 inline bool FacePair::operator <= (const FacePair& other) const {
-    if (first_ < other.first_)
-        return true;
-    if (first_ > other.first_)
-        return false;
-    return (second_ <= other.second_);
+    return (code_ <= other.code_);
 }
 
 inline bool FacePair::operator >= (const FacePair& other) const {
-    return (other <= *this);
+    return (code_ >= other.code_);
 }
 
 inline FacePair FacePair::operator ++ (int) {
@@ -328,6 +383,24 @@ inline FacePair FacePair::operator -- (int) {
 
 inline std::ostream& operator << (std::ostream& out, const FacePair& pair) {
     return out << '(' << pair.lower() << ',' << pair.upper() << ')';
+}
+
+inline int FacePair::commonEdge() const {
+    // Code 1, 2, 3, 6, 7, 11 -> edge 5, 4, 3, 2, 1, 0.
+    if (code_ < 6)
+        return 6 - code_;
+    if (code_ < 11)
+        return 8 - code_;
+    return 0;
+}
+
+inline int FacePair::oppositeEdge() const {
+    // Code 1, 2, 3, 6, 7, 11 -> edge 0, 1, 2, 3, 4, 5.
+    if (code_ < 6)
+        return code_ - 1;
+    if (code_ < 11)
+        return code_ - 3;
+    return 5;
 }
 
 } // namespace regina

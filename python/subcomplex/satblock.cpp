@@ -32,18 +32,19 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "manifold/sfs.h"
 #include "subcomplex/satblock.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using regina::SatAnnulus;
 using regina::SatBlock;
+using regina::SatBlockModel;
 
 void addSatBlock(pybind11::module_& m) {
     auto c = pybind11::class_<SatBlock>(m, "SatBlock")
-        .def("clone", &SatBlock::clone)
-        .def("nAnnuli", &SatBlock::nAnnuli)
+        .def("countAnnuli", &SatBlock::countAnnuli)
+        .def("nAnnuli", &SatBlock::countAnnuli) // deprecated
         .def("annulus", &SatBlock::annulus,
             pybind11::return_value_policy::reference_internal)
         .def("twistedBoundary", &SatBlock::twistedBoundary)
@@ -53,35 +54,28 @@ void addSatBlock(pybind11::module_& m) {
         .def("adjacentAnnulus", &SatBlock::adjacentAnnulus)
         .def("adjacentReflected", &SatBlock::adjacentReflected)
         .def("adjacentBackwards", &SatBlock::adjacentBackwards)
-        .def("setAdjacent", &SatBlock::setAdjacent)
         .def("adjustSFS", &SatBlock::adjustSFS)
-        .def("transform", &SatBlock::transform)
-        .def("nextBoundaryAnnulus", [](SatBlock& b, unsigned a, bool fromPrev) {
-            SatBlock* nextBlock;
-            unsigned nextAnnulus;
-            bool refVert, refHoriz;
-
-            b.nextBoundaryAnnulus(a, nextBlock, nextAnnulus, refVert, refHoriz,
-                fromPrev);
-            return pybind11::make_tuple(nextBlock, nextAnnulus, refVert,
-                refHoriz);
-        }, pybind11::return_value_policy::reference)
+        .def("nextBoundaryAnnulus", &SatBlock::nextBoundaryAnnulus,
+            pybind11::return_value_policy::reference)
         .def("abbr", &SatBlock::abbr,
             pybind11::arg("tex") = false)
-        .def("writeAbbr", [](const SatBlock& b, bool tex) {
-            b.writeAbbr(std::cout, tex);
-        }, pybind11::arg("tex") = false)
         // We cannot bind the < operator in the normal way:
         // see https://github.com/pybind/pybind11/issues/1487 for details.
         .def("__lt__", [](const SatBlock& lhs, const SatBlock& rhs) {
             return lhs < rhs;
         })
-        .def_static("isBlock", [](const SatAnnulus& a) {
-            SatBlock::TetList avoidTets;
-            return SatBlock::isBlock(a, avoidTets);
-        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    auto d = pybind11::class_<SatBlockModel>(m, "SatBlockModel")
+        .def(pybind11::init<const SatBlockModel&>())
+        .def("swap", &SatBlockModel::swap)
+        .def("triangulation", &SatBlockModel::triangulation)
+        .def("block", &SatBlockModel::block)
+    ;
+    regina::python::add_eq_operators(d);
+
+    m.def("swap", (void(*)(SatBlockModel&, SatBlockModel&))(regina::swap));
 }
 

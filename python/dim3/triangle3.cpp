@@ -43,7 +43,7 @@ using regina::TriangleEmbedding;
 
 void addTriangle3(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<3, 2>>(m, "FaceEmbedding3_2")
-        .def(pybind11::init<regina::Tetrahedron<3>*, int>())
+        .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>())
         .def(pybind11::init<const TriangleEmbedding<3>&>())
         .def("simplex", &TriangleEmbedding<3>::simplex,
             pybind11::return_value_policy::reference)
@@ -58,14 +58,10 @@ void addTriangle3(pybind11::module_& m) {
 
     auto c = pybind11::class_<Face<3, 2>>(m, "Face3_2")
         .def("index", &Triangle<3>::index)
-        .def("embeddings", [](const Triangle<3>& t) {
-            pybind11::list ans;
-            for (const auto& emb : t)
-                ans.append(emb);
-            return ans;
-        }, pybind11::return_value_policy::reference_internal)
-        .def("embedding", &Triangle<3>::embedding,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Triangle<3>::embedding)
+        .def("embeddings", &Triangle<3>::embeddings)
+        .def("front", &Triangle<3>::front)
+        .def("back", &Triangle<3>::back)
         .def("isBoundary", &Triangle<3>::isBoundary)
         .def("inMaximalForest", &Triangle<3>::inMaximalForest)
         .def("type", &Triangle<3>::type)
@@ -77,17 +73,12 @@ void addTriangle3(pybind11::module_& m) {
         .def("hasBadLink", &Triangle<3>::hasBadLink)
         .def("isLinkOrientable", &Triangle<3>::isLinkOrientable)
         .def("degree", &Triangle<3>::degree)
-        .def("front", &Triangle<3>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Triangle<3>::back,
-            pybind11::return_value_policy::reference_internal)
         .def("triangulation", &Triangle<3>::triangulation)
         .def("component", &Triangle<3>::component,
             pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Triangle<3>::boundaryComponent,
             pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Triangle<3>, 2, int,
-            pybind11::return_value_policy::reference>)
+        .def("face", &regina::python::face<Triangle<3>, 2, int>)
         .def("vertex", &Triangle<3>::vertex,
             pybind11::return_value_policy::reference)
         .def("edge", &Triangle<3>::edge,
@@ -98,27 +89,17 @@ void addTriangle3(pybind11::module_& m) {
         .def_static("ordering", &Triangle<3>::ordering)
         .def_static("faceNumber", &Triangle<3>::faceNumber)
         .def_static("containsVertex", &Triangle<3>::containsVertex)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("nFaces", [](pybind11::object) {
-            return Triangle<3>::nFaces;
-        })
-        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
-            return Triangle<3>::lexNumbering;
-        })
-        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
-            return Triangle<3>::oppositeDim;
-        })
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Triangle<3>::dimension;
-        })
-        .def_property_readonly_static("subdimension", [](pybind11::object) {
-            return Triangle<3>::subdimension;
-        })
+        .def_readonly_static("nFaces", &Triangle<3>::nFaces)
+        .def_readonly_static("lexNumbering", &Triangle<3>::lexNumbering)
+        .def_readonly_static("oppositeDim", &Triangle<3>::oppositeDim)
+        .def_readonly_static("dimension", &Triangle<3>::dimension)
+        .def_readonly_static("subdimension", &Triangle<3>::subdimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<
+        decltype(std::declval<Triangle<3>>().embeddings())>(m);
 
     // Embed this enum in the Triangle3 class.
     pybind11::enum_<regina::Triangle<3>::Type>(c, "Type")

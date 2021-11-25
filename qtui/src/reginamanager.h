@@ -61,7 +61,7 @@ class ReginaManager : public QApplication {
         /**
          * Support QEvent::FileOpen on macOS.
          */
-        bool event(QEvent*);
+        bool event(QEvent*) override;
 
     private:
         QList<ReginaMain *> children;

@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/perm.h"
 #include "../constarray.h"
 #include "../helpers.h"
@@ -68,20 +69,7 @@ void addPerm2(pybind11::module_& m) {
     auto c = pybind11::class_<Perm<2>>(m, "Perm2")
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())
-        .def(pybind11::init([](pybind11::list l) {
-            if (l.size() != 2)
-                throw pybind11::index_error(
-                    "Initialisation list has the wrong length");
-            int image[2];
-            try {
-                for (long i = 0; i < 2; i++)
-                    image[i] = l[i].cast<int>();
-            } catch (pybind11::cast_error const &) {
-                throw std::invalid_argument(
-                    "List element not convertible to int");
-            }
-            return new Perm<2>(image);
-        }))
+        .def(pybind11::init<const std::array<int, 2>&>())
         .def(pybind11::init<const Perm<2>&>())
         .def("permCode", &Perm<2>::permCode)
         .def("setPermCode", &Perm<2>::setPermCode)
@@ -94,9 +82,13 @@ void addPerm2(pybind11::module_& m) {
         .def("reverse", &Perm<2>::reverse)
         .def("sign", &Perm<2>::sign)
         .def("__getitem__", &Perm<2>::operator[])
-        .def("preImageOf", &Perm<2>::preImageOf)
+        .def("pre", &Perm<2>::pre)
+        .def("preImageOf", &Perm<2>::pre) // deprecated
         .def("compareWith", &Perm<2>::compareWith)
         .def("isIdentity", &Perm<2>::isIdentity)
+        .def("inc", [](Perm<2>& p) {
+            return p++;
+        })
         .def(pybind11::self < pybind11::self)
         .def_static("rot", &Perm<2>::rot)
         // index and atIndex are deprecated, so do not call them directly.
@@ -112,12 +104,9 @@ void addPerm2(pybind11::module_& m) {
         .def("orderedS2Index", &Perm<2>::orderedS2Index)
         .def("orderedSnIndex", &Perm<2>::orderedS2Index)
         .def("isConjugacyMinimal", &Perm<2>::isConjugacyMinimal)
-        .def_property_readonly_static("codeType",
-            [](pybind11::object /* self */) { return Perm<2>::codeType; })
-        .def_property_readonly_static("nPerms",
-            [](pybind11::object /* self */) { return Perm<2>::nPerms; })
-        .def_property_readonly_static("nPerms_1",
-            [](pybind11::object /* self */) { return Perm<2>::nPerms_1; })
+        .def_readonly_static("codeType", &Perm<2>::codeType)
+        .def_readonly_static("nPerms", &Perm<2>::nPerms)
+        .def_readonly_static("nPerms_1", &Perm<2>::nPerms_1)
         .def_readonly_static("S2", &Perm2_S2_arr)
         .def_readonly_static("Sn", &Perm2_S2_arr)
         .def_readonly_static("orderedS2", &Perm2_S2_arr)

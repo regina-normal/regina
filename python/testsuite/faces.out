@@ -1,0 +1,40 @@
+<class 'regina.engine.Triangulation2'>
+Dimension: 2
+[4, 6, 4]
+[4, 6, 4]
+
+<class 'regina.engine.PacketOfTriangulation2'>
+Dimension: 2
+[4, 6, 4]
+[4, 6, 4]
+
+<class 'regina.engine.Triangulation3'>
+Dimension: 3
+[5, 10, 10, 5]
+[5, 10, 10, 5]
+
+<class 'regina.engine.PacketOfTriangulation3'>
+Dimension: 3
+[5, 10, 10, 5]
+[5, 10, 10, 5]
+
+<class 'regina.engine.Triangulation4'>
+Dimension: 4
+[6, 15, 20, 15, 6]
+[6, 15, 20, 15, 6]
+
+<class 'regina.engine.PacketOfTriangulation4'>
+Dimension: 4
+[6, 15, 20, 15, 6]
+[6, 15, 20, 15, 6]
+
+<class 'regina.engine.Triangulation5'>
+Dimension: 5
+[7, 21, 35, 35, 21, 7]
+[7, 21, 35, 35, 21, 7]
+
+<class 'regina.engine.PacketOfTriangulation5'>
+Dimension: 5
+[7, 21, 35, 35, 21, 7]
+[7, 21, 35, 35, 21, 7]
+

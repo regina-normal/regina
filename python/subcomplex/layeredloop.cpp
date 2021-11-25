@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/layeredloop.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -40,12 +41,17 @@ using regina::LayeredLoop;
 void addLayeredLoop(pybind11::module_& m) {
     pybind11::class_<LayeredLoop, regina::StandardTriangulation>
             (m, "LayeredLoop")
-        .def("clone", &LayeredLoop::clone)
+        .def(pybind11::init<const LayeredLoop&>())
+        .def("clone", [](const LayeredLoop& s) { // deprecated
+            return LayeredLoop(s);
+        })
+        .def("swap", &LayeredLoop::swap)
         .def("length", &LayeredLoop::length)
         .def("isTwisted", &LayeredLoop::isTwisted)
         .def("hinge", &LayeredLoop::hinge,
             pybind11::return_value_policy::reference)
-        .def_static("isLayeredLoop", &LayeredLoop::isLayeredLoop)
+        .def_static("recognise", &LayeredLoop::recognise)
+        .def_static("isLayeredLoop", &LayeredLoop::recognise) // deprecated
     ;
 }
 

@@ -4,12 +4,12 @@
 
 <refentry id="data-euler-surface">
  <refmeta>
-  <refentrytitle>euler (surface)</refentrytitle>
+  <refentrytitle>euler</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>euler (surface)</refname>
+  <refname>euler</refname>
   <refpurpose>The Euler characteristic of a normal surface</refpurpose>
  </refnamediv>
 

@@ -48,23 +48,28 @@
 #include <QTextDocument>
 #include <QWhatsThis>
 
-ImportDialog::ImportDialog(QWidget* parent, regina::Packet* importedData,
-        regina::Packet* packetTree, regina::Packet* defaultParent,
+ImportDialog::ImportDialog(QWidget* parent,
+        std::shared_ptr<regina::Packet> importedData,
+        std::shared_ptr<regina::Packet> packetTree,
+        std::shared_ptr<regina::Packet> defaultParent,
         PacketFilter* useFilter, bool useCodec, const QString& dialogTitle) :
-        QDialog(parent), tree(packetTree), newTree(importedData) {
+        QDialog(parent),
+        tree(std::move(packetTree)),
+        newTree(std::move(importedData)) {
     setWindowTitle(dialogTitle);
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
-    QHBoxLayout* hStrip = new QHBoxLayout();
+    auto* hStrip = new QHBoxLayout();
     layout->addLayout(hStrip);
     QString expln = tr("Select where in the packet tree "
         "the new data should be imported.  The imported data will be "
         "made a new child of the selected packet.");
-    QLabel* l = new QLabel(tr("Import beneath:"));
+    auto* l = new QLabel(tr("Import beneath:"));
     l->setWhatsThis(expln);
     hStrip->addWidget(l);
     chooser = new PacketChooser(tree, useFilter,
-        PacketChooser::ROOT_AS_INSERTION_POINT, false, defaultParent);
+        PacketChooser::ROOT_AS_INSERTION_POINT, false,
+        std::move(defaultParent));
     chooser->setWhatsThis(expln);
     hStrip->addWidget(chooser, 1);
 
@@ -85,7 +90,7 @@ ImportDialog::ImportDialog(QWidget* parent, regina::Packet* importedData,
         l = new QLabel(tr("<qt>Text encoding: %1</qt>").
             arg(QString(ReginaPrefSet::global().fileImportExportCodec)));
         hStrip->addWidget(l);
-        QPushButton* btn = new QPushButton(tr("Learn more..."));
+        auto* btn = new QPushButton(tr("Learn more..."));
         hStrip->addWidget(btn);
         hStrip->addStretch(1);
         layout->addLayout(hStrip);
@@ -95,7 +100,7 @@ ImportDialog::ImportDialog(QWidget* parent, regina::Packet* importedData,
 
     layout->addStretch(1);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(
+    auto* buttonBox = new QDialogButtonBox(
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
@@ -119,14 +124,14 @@ bool ImportDialog::validate() {
 
 void ImportDialog::slotOk() {
     // Get the parent packet.
-    regina::Packet* parentPacket = chooser->selectedPacket();
+    std::shared_ptr<regina::Packet> parentPacket = chooser->selectedPacket();
     if (! parentPacket) {
         ReginaSupport::info(this,
             tr("Please select a parent packet."));
         return;
     }
     PacketFilter* filter = chooser->getFilter();
-    if (filter && ! filter->accept(parentPacket)) {
+    if (filter && ! filter->accept(*parentPacket)) {
         ReginaSupport::info(this,
             tr("Please select a different location in the tree "
             "for the import."),

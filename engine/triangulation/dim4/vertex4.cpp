@@ -44,7 +44,7 @@ Face<4, 0>::~Face() {
 void Face<4, 0>::writeTextShort(std::ostream& out) const {
     if (! link_->isClosed())
         out << "Boundary ";
-    else if (link_->isThreeSphere())
+    else if (link_->isSphere())
         out << "Internal ";
     else
         out << "Ideal ";
@@ -52,78 +52,17 @@ void Face<4, 0>::writeTextShort(std::ostream& out) const {
     out << "vertex of degree " << degree();
 }
 
-Triangulation<3>* Face<4, 0>::buildLinkDetail(bool labels,
-        Isomorphism<4>** inclusion) const {
-    // Build the triangulation.
-    Triangulation<3>* ans = new Triangulation<3>();
-    Packet::ChangeEventSpan span(ans);
+Isomorphism<4> Face<4, 0>::buildLinkInclusion() const {
+    Isomorphism<4> inclusion(degree());
 
-    if (inclusion)
-        *inclusion = new Isomorphism<4>(degree());
-
-    std::vector<VertexEmbedding<4>>::const_iterator it, adjIt;
-    Tetrahedron<3>* tTet;
-    int i;
-    for (it = begin(), i = 0; it != end(); ++it, ++i) {
-        tTet = ans->newTetrahedron();
-        if (labels) {
-            std::stringstream s;
-            s << it->pentachoron()->markedIndex() <<
-                " (" << it->vertex() << ')';
-            tTet->setDescription(s.str());
-        }
-        if (inclusion) {
-            (*inclusion)->pentImage(i) = it->pentachoron()->markedIndex();
-            (*inclusion)->facetPerm(i) = it->pentachoron()->
-                tetrahedronMapping(it->vertex());
-        }
+    size_t i = 0;
+    for (auto it = begin(); it != end(); ++it, ++i) {
+        inclusion.pentImage(i) = it->pentachoron()->index();
+        inclusion.facetPerm(i) = it->pentachoron()->tetrahedronMapping(
+            it->vertex());
     }
 
-    Pentachoron<4> *pent, *adj;
-    int exitTet, v;
-    int faceInLink;
-    int adjIndex;
-    int adjVertex;
-    for (it = begin(), i = 0; it != end(); ++it, ++i) {
-        pent = it->pentachoron();
-        v = it->vertex();
-
-        for (exitTet = 0; exitTet < 5; ++exitTet) {
-            if (exitTet == v)
-                continue;
-
-            adj = pent->adjacentPentachoron(exitTet);
-            if (! adj)
-                continue;
-
-            faceInLink = pent->tetrahedronMapping(v).preImageOf(exitTet);
-            if (ans->tetrahedron(i)->adjacentTetrahedron(faceInLink)) {
-                // We've already made this gluing in the vertex link
-                // from the other side.
-                continue;
-            }
-
-            adjVertex = pent->adjacentGluing(exitTet)[v];
-
-            // TODO: We need to find which *embedding* corresponds to
-            // the adjacent pentachoron/vertex pair.
-            // Currently we do a simple linear scan, which makes the
-            // overall link construction quadratic.  This can surely be
-            // made linear(ish) with the right data structure and/or algorithm.
-            for (adjIt = begin(), adjIndex = 0;
-                    adjIt != end(); ++adjIt, ++adjIndex)
-                if (adjIt->pentachoron() == adj && adjIt->vertex() == adjVertex)
-                    break; // Sets adjIndex to the right value.
-
-            ans->tetrahedron(i)->join(faceInLink,
-                ans->tetrahedron(adjIndex),
-                Perm<4>::contract(adj->tetrahedronMapping(adjVertex).inverse() *
-                    pent->adjacentGluing(exitTet) *
-                    pent->tetrahedronMapping(v)));
-        }
-    }
-
-    return ans;
+    return inclusion;
 }
 
 } // namespace regina

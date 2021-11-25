@@ -41,6 +41,7 @@
 #endif
 
 #include "regina-core.h"
+#include "maths/matrix.h"
 #include "maths/vector.h"
 #include <iterator>
 #include <list>
@@ -48,10 +49,7 @@
 
 namespace regina {
 
-/**
- * \weakgroup enumerate
- * @{
- */
+class ValidityConstraints;
 
 /**
  * Implements a modified Contejean-Devie algorithm for enumerating Hilbert
@@ -69,7 +67,7 @@ namespace regina {
  * constraints.  Consider using the much faster HilbertPrimal or
  * HilbertDual instead.
  *
- * \ifacespython Not present.
+ * \ingroup enumerate
  */
 class HilbertCD {
     public:
@@ -78,9 +76,7 @@ class HilbertCD {
          * points in the intersection of the <i>n</i>-dimensional
          * non-negative orthant with some linear subspace.
          * The resulting basis elements will be of the class \a RayClass,
-         * will be newly allocated, and will be written to the given output
-         * iterator.  Their deallocation is the responsibility of whoever
-         * called this routine.
+         * and will be passed into the given action function one at a time.
          *
          * The non-negative orthant is an <i>n</i>-dimensional cone with
          * its vertex at the origin.  The extremal rays of this cone are
@@ -103,9 +99,17 @@ class HilbertCD {
          * constraints, in which case this routine will only return \e valid
          * basis elements.  Each validity constraint is of the form "at
          * most one of these coordinates may be non-zero"; see the
-         * EnumConstraints class for details.  These contraints have the
+         * ValidityConstraints class for details.  These contraints have the
          * important property that, although validity is not preserved under
          * addition, \e invalidity is.
+         *
+         * For each of the resulting basis elements, this routine will call
+         * \a action (which must be a function or some other callable object).
+         * This action should return \c void, and must take exactly one
+         * argument, which will be the basis element stored using \a RayClass.
+         * The argument will be passed as an rvalue; a typical \a action
+         * would take it as an rvalue reference (RayClass&&) and move its
+         * contents into some other more permanent storage.
          *
          * \pre The template argument RayClass is derived from (or equal to)
          * Vector<T>, where \a T is one of Regina's arbitrary-precision
@@ -116,20 +120,28 @@ class HilbertCD {
          * constraints.  Consider using the much faster HilbertPrimal or
          * HilbertDual instead.
          *
-         * @param results the output iterator to which the resulting basis
-         * elements will be written; this must accept objects of type
-         * <tt>RayClass*</tt>.
+         * \ifacespython There are two versions of this function available
+         * in Python.  The first version is the same as the C++ function;
+         * here you must pass \a action, which may be a pure Python function.
+         * The second form does not have an \a action argument; instead you
+         * call <tt>enumerate(subspace, constraints)</tt>,
+         * and it returns a Python list containing all Hilbert basis elements.
+         * In both versions, the argument \a RayClass is fixed as VectorInt.
+         *
+         * @param action a function (or other callable object) that will be
+         * called for each basis element.  This function must take a single
+         * argument, which will be passed as an rvalue of type RayClass.
          * @param subspace a matrix defining the linear subspace to intersect
          * with the given cone.  Each row of this matrix is the equation
          * for one of the hyperplanes whose intersection forms this linear
          * subspace.  The number of columns in this matrix must be the
          * dimension of the overall space in which we are working.
-         * @param constraints a set of validity constraints as described
-         * above, or \c null if no additional constraints should be imposed.
+         * @param constraints a set of validity constraints as described above,
+         * or ValidityConstraints::none if none should be imposed.
          */
-        template <class RayClass, class OutputIterator>
-        static void enumerateHilbertBasis(OutputIterator results,
-            const MatrixInt& subspace, const EnumConstraints* constraints);
+        template <class RayClass, typename Action>
+        static void enumerate(Action&& action,
+            const MatrixInt& subspace, const ValidityConstraints& constraints);
 
         // Mark this class as non-constructible.
         HilbertCD() = delete;
@@ -178,13 +190,13 @@ class HilbertCD {
             VecSpec& operator = (const VecSpec&) = default;
         };
         /**
-         * Identical to the public routine enumerateHilbertBasis(),
+         * Identical to the public routine enumerate(),
          * except that there is an extra template parameter \a BitmaskType.
          * This describes what type should be used for bitmasks that
          * assign flags to individual coordinate positions.
          *
          * All arguments to this function are identical to those for the
-         * public routine enumerateHilbertBasis().
+         * public routine enumerate().
          *
          * \pre The bitmask type is one of Regina's bitmask types, such
          * as Bitmask, Bitmask1 or Bitmask2.
@@ -192,12 +204,10 @@ class HilbertCD {
          * where \a n is the dimension of the Euclidean space (i.e., the
          * number of columns in \a subspace).
          */
-        template <class RayClass, class BitmaskType, class OutputIterator>
-        static void enumerateUsingBitmask(OutputIterator results,
-            const MatrixInt& subspace, const EnumConstraints* constraints);
+        template <class RayClass, class BitmaskType, typename Action>
+        static void enumerateUsingBitmask(Action&& action,
+            const MatrixInt& subspace, const ValidityConstraints& constraints);
 };
-
-/*@}*/
 
 // Inline functions for HilbertCD::VecSpec
 

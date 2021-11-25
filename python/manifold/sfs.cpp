@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "algebra/abeliangroup.h"
 #include "manifold/lensspace.h"
 #include "manifold/sfs.h"
@@ -55,7 +56,7 @@ void addSFSpace(pybind11::module_& m) {
 
     auto s = pybind11::class_<SFSpace, regina::Manifold>(m, "SFSpace")
         .def(pybind11::init<>())
-        .def(pybind11::init<SFSpace::classType, unsigned long,
+        .def(pybind11::init<SFSpace::ClassType, unsigned long,
             unsigned long, unsigned long,
             unsigned long, unsigned long>(),
             pybind11::arg(), pybind11::arg(),
@@ -64,6 +65,7 @@ void addSFSpace(pybind11::module_& m) {
             pybind11::arg("reflectors") = 0,
             pybind11::arg("reflectorsTwisted") = 0)
         .def(pybind11::init<const SFSpace&>())
+        .def("swap", &SFSpace::swap)
         .def("baseClass", &SFSpace::baseClass)
         .def("baseGenus", &SFSpace::baseGenus)
         .def("baseOrientable", &SFSpace::baseOrientable)
@@ -104,7 +106,9 @@ void addSFSpace(pybind11::module_& m) {
     // should not just inherit the compare-by-pointer test from Manifold.
     regina::python::add_eq_operators(s);
 
-    pybind11::enum_<SFSpace::classType>(s, "classType")
+    m.def("swap", (void(*)(SFSpace&, SFSpace&))(regina::swap));
+
+    pybind11::enum_<SFSpace::ClassType>(s, "ClassType")
         .value("o1", SFSpace::o1)
         .value("o2", SFSpace::o2)
         .value("n1", SFSpace::n1)
@@ -118,5 +122,7 @@ void addSFSpace(pybind11::module_& m) {
         .value("bn3", SFSpace::bn3)
         .export_values()
         ;
+
+    s.attr("classType") = s.attr("ClassType"); // deprecated type alias
 }
 

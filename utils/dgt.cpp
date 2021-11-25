@@ -24,12 +24,12 @@
 #include <triangulation/dim4.h>
 #include <link/link.h>
 
-typedef std::tuple<int, int, int> vertex3; // (c_id, v_id, s_id)
-typedef std::tuple<int, int> vertex; // (v_id, s_id)
-typedef std::tuple<vertex3, vertex3, int> edge3; // (v1, v2, col)
-typedef std::tuple<vertex, vertex, int> edge;
+using vertex3 = std::tuple<int, int, int>; // (c_id, v_id, s_id)
+using vertex = std::tuple<int, int>; // (v_id, s_id)
+using edge3 = std::tuple<vertex3, vertex3, int>; // (v1, v2, col)
+using edge = std::tuple<vertex, vertex, int>;
 
-typedef std::vector<std::array<int, 4>> pdcode;
+using pdcode = std::vector<std::array<int, 4>>;
 
 template <typename T, typename D>
 std::ostream& operator<<(std::ostream& os, const std::pair<T, D> &p)
@@ -71,8 +71,8 @@ public:
         // TODO: Sanitise inputs?
     }
     
-    void add_edges(std::vector<edge3> edgeList){
-        for(auto e : edgeList){
+    void add_edges(const std::vector<edge3>& edgeList){
+        for(const auto& e : edgeList){
             add_edge(e);
         }
     }
@@ -208,7 +208,7 @@ public:
         adjList.erase(v);
     }
     
-    void pd_sub(pdcode code) {
+    void pd_sub(const pdcode& code) {
         vertex3 newNbri;
         for (auto [vert, nbrs] : adjList) {
             for (int i=0; i<dim+1; i++) {
@@ -682,11 +682,11 @@ std::vector<int> pdc_orientations(pdcode code) {
     return orientations;
 }
 
-std::vector<int> pdc_xtype(pdcode code) {
+std::vector<int> pdc_xtype(const pdcode& code) {
 
     std::vector<int> ans;
     
-    for (auto x : code) {
+    for (const auto& x : code) {
         if (x[1]==x[2]) {
             // (x,y,y,w)
             ans.push_back(1);
@@ -712,23 +712,25 @@ std::vector<int> pdc_xtype(pdcode code) {
     return ans;
 }
 
-std::vector<std::pair<int, int>> pdc_xotype(pdcode code) {
+std::vector<std::pair<int, int>> pdc_xotype(const pdcode& code) {
     /*
      Probably too python-esque at the moment (running functions which create vectors, etc...
      */
     std::vector<std::pair<int, int>> ans;
+    ans.reserve(code.size());
+
     std::vector<int> pdc_os = pdc_orientations(code);
     std::vector<int> pdc_xs = pdc_xtype(code);
     
     for (int i=0; i<code.size(); i++) {
-        ans.push_back(std::make_pair(pdc_xs[i], pdc_os[i]));
+        ans.emplace_back(pdc_xs[i], pdc_os[i]);
     }
     return ans;
 }
 
 graph<4> posCross, negCross, posCurlA, posCurlB, negCurlA, negCurlB;
 
-graph<4> pd2dg(pdcode code) {
+graph<4> pd2dg(const pdcode& code) {
     
     std::vector<std::pair<int, int>> pdc_xot = pdc_xotype(code);
     graph<4> res_graph;
@@ -797,17 +799,18 @@ void printGluList(graph<4> G) {
 }
 
 std::vector<std::tuple<int,int,int>> genGluList(graph<4> G) {
-    std::vector<std::tuple<int,int,int>> ans;
     std::vector<vertex3> verts = G.vertices();
     std::vector<edge3> edges = G.edges();
     std::cout << "[";
+    std::vector<std::tuple<int,int,int>> ans;
+    ans.reserve(edges.size());
     for (const auto& elem : edges) {
-        ans.push_back(std::make_tuple(getIndex(verts, std::get<0>(elem)), getIndex(verts, std::get<1>(elem)), std::get<2>(elem)));
+        ans.emplace_back(getIndex(verts, std::get<0>(elem)), getIndex(verts, std::get<1>(elem)), std::get<2>(elem));
     }
     return ans;
 }
 
-int writhe(pdcode pdc) {
+int writhe(const pdcode& pdc) {
     int ans=0;
     for (const auto& n : pdc_orientations(pdc)) {
         ans += n;
@@ -997,20 +1000,23 @@ int main(int argc, char* argv[]) {
      END USER INPUT (PD CODE)
      */
     
-    regina::Link* tmpLinkObj = regina::Link::fromPD(pdcTmp.begin(), pdcTmp.end());
-    if (! tmpLinkObj) {
+    regina::Link tmpLinkObj;
+    try {
+        tmpLinkObj = regina::Link::fromPD(pdcTmp.begin(), pdcTmp.end());
+    } catch (const regina::InvalidArgument&) {
         // TODO: Barf
         // --- Benjamin Andrew Burton, 2021
     }
     
-    size_t numComps = tmpLinkObj -> countComponents();
+    size_t numComps = tmpLinkObj.countComponents();
     
     /*
      COMPUTE NUMBER OF CROSSINGS IN INDIVIDUAL COMPONENT
      */
     std::vector<regina::StrandRef> comps;
+    comps.reserve(numComps);
     for (int i=0; i<numComps; i++) {
-        comps.push_back(tmpLinkObj->component(i));
+        comps.push_back(tmpLinkObj.component(i));
     }
     
     /*
@@ -1032,7 +1038,7 @@ int main(int argc, char* argv[]) {
     std::vector<std::vector<long>> tmpIntersectionMatrix;
     std::vector<long> intersectionTotals;
     for (int i=0; i<numComps; i++) {
-        tmpIntersectionMatrix.push_back(std::vector<long>());
+        tmpIntersectionMatrix.emplace_back();
         for (int j=0; j<numComps; j++) {
             if (i!=j) {
                 long s1s = comp_x_indices[i].size();
@@ -1051,7 +1057,7 @@ int main(int argc, char* argv[]) {
         /*
          Sum up the values in each vector to give the total number of intersections from other components.
          */
-        long compTotal = std::accumulate(tmpIntersectionMatrix[i].begin(), tmpIntersectionMatrix[i].end(), 0);
+        long compTotal = std::accumulate(tmpIntersectionMatrix[i].begin(), tmpIntersectionMatrix[i].end(), long(0));
         intersectionTotals.push_back(compTotal);
     }
     /*
@@ -1068,8 +1074,9 @@ int main(int argc, char* argv[]) {
      */
     
     std::vector<long> compWrithes;
+    compWrithes.reserve(numComps);
     for (int i=0; i<numComps; i++) {
-        compWrithes.push_back(tmpLinkObj -> writheOfComponent(i));
+        compWrithes.push_back(tmpLinkObj.writheOfComponent(i));
     }
     std::cout << "Writhe of\n";
     for (int i=0; i<compWrithes.size(); i++) {
@@ -1092,35 +1099,34 @@ int main(int argc, char* argv[]) {
         long w = compWrithes[i];
         if (w > inputFramingVect[i]) {
             do {
-                tmpLinkObj->r1(tmpLinkObj->component(i), 0 /* left */, -1, false, true);
+                tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, -1, false, true);
                 --w;
             } while (w != inputFramingVect[i]);
         } else if (w < inputFramingVect[i]) {
             do {
-                tmpLinkObj->r1(tmpLinkObj->component(i), 0 /* left */, 1, false, true);
+                tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, 1, false, true);
                 ++w;
             } while (w != inputFramingVect[i]);
         }
         // Check number of crossings in i-th component: if < |framing|+2, suggest adding pair of cancelling twists (in order to guarantee existence of a quadricolour).
         if (compCrossingNums[i] < abs(inputFramingVect[i])+2) {
             std::cout << "Adding additional pair of cancelling twists to this component to guarantee existence of a quadricolour...\n";
-            tmpLinkObj->r1(tmpLinkObj->component(i), 0 /* left */, 1, false, true);
-            tmpLinkObj->r1(tmpLinkObj->component(i), 0 /* left */, -1, false, true);
+            tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, 1, false, true);
+            tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, -1, false, true);
         }
         
     }
     
     std::cout << "Link should now be self-framed: writhe(component) = framing(component)...\nWrithe of \n";
     for (int i=0; i<compWrithes.size(); i++) {
-        std::cout << "Component " << i << ": " << tmpLinkObj->writheOfComponent(i) << "\n";
+        std::cout << "Component " << i << ": " << tmpLinkObj.writheOfComponent(i) << "\n";
     }
     
     std::cout << std::endl;
     
     // Note: The reflection below is just a quick hack to fix orientations (that is, make consistent with SnapPy+Regina).
-    tmpLinkObj->reflect();
-    pdcode pdc = tmpLinkObj->pdData();
-    delete tmpLinkObj;
+    tmpLinkObj.reflect();
+    pdcode pdc = tmpLinkObj.pdData();
         
     graph<4> pdc_g;
 
@@ -1198,8 +1204,8 @@ int main(int argc, char* argv[]) {
             for (int i=0; i<size; i++) {
                 tmp_t.newPentachoron();
             }
-            for (int i=0; i<gl.size(); i++) {
-                tmp_t.pentachoron(std::get<0>(gl[i]))->join(std::get<2>(gl[i]), tmp_t.pentachoron(std::get<1>(gl[i])), perm);
+            for (const auto& g : gl) {
+                tmp_t.pentachoron(std::get<0>(g))->join(std::get<2>(g), tmp_t.pentachoron(std::get<1>(g)), perm);
             }
             std::cout << "\rHere is the isomorphism signature:\n" << std::flush;
             std::cout << tmp_t.isoSig() << "\n";
@@ -1216,12 +1222,9 @@ int main(int argc, char* argv[]) {
             regina::Triangulation<3> tmp_t;
             regina::Perm<4> perm;
             std::vector<regina::Simplex<3>> tmp_p;
-            size_t size = pdc_g.size();
-            for (int i=0; i<size; i++) {
-                tmp_t.newTetrahedron();
-            }
-            for (int i=0; i<gl.size(); i++) {
-                tmp_t.tetrahedron(std::get<0>(gl[i]))->join(std::get<2>(gl[i]), tmp_t.tetrahedron(std::get<1>(gl[i])), perm);
+            tmp_t.newTetrahedra(pdc_g.size());
+            for (const auto& g : gl) {
+                tmp_t.tetrahedron(std::get<0>(g))->join(std::get<2>(g), tmp_t.tetrahedron(std::get<1>(g)), perm);
             }
             std::cout << "\r " << std::endl;
             std::cout << "\rHere is the isomorphism signature:\n" << std::flush;

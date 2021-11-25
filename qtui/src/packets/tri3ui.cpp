@@ -34,8 +34,6 @@
 #include "triangulation/dim3.h"
 
 // UI includes:
-#include "clickablelabel.h"
-#include "eventids.h"
 #include "iconcache.h"
 #include "tri3algebra.h"
 #include "tri3composition.h"
@@ -56,14 +54,14 @@
 using regina::Packet;
 using regina::Triangulation;
 
-Tri3UI::Tri3UI(regina::Triangulation<3>* packet,
+Tri3UI::Tri3UI(regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane, ReginaPrefSet::global().tabDim3Tri) {
-    Tri3HeaderUI* header = new Tri3HeaderUI(packet, this);
-    gluings = new Tri3GluingsUI(packet, this, newEnclosingPane->isReadWrite());
-    skeleton = new Tri3SkeletonUI(packet, this);
+    auto* header = new Tri3HeaderUI(packet, this);
+    gluings = new Tri3GluingsUI(packet, this);
+    skeleton = new Tri3SkeletonUI(packet, packet, this);
     algebra = new Tri3AlgebraUI(packet, this);
-    surfaces = new Tri3SurfacesUI(packet, this);
+    surfaces = new Tri3SurfacesUI(packet, packet, this);
     snapPea = new Tri3SnapPeaUI(packet, this);
 
     gluings->fillToolBar(header->getToolBar());
@@ -72,7 +70,8 @@ Tri3UI::Tri3UI(regina::Triangulation<3>* packet,
     addTab(gluings, QObject::tr("&Gluings"));
     addTab(skeleton, QObject::tr("&Skeleton"));
     addTab(algebra, QObject::tr("&Algebra"));
-    addTab(new Tri3CompositionUI(packet, this), QObject::tr("&Composition"));
+    addTab(new Tri3CompositionUI(packet, packet, this),
+        QObject::tr("&Composition"));
     addTab(surfaces, QObject::tr("&Recognition"));
     addTab(snapPea, QObject::tr("Snap&Pea"));
 }
@@ -85,7 +84,7 @@ QString Tri3UI::getPacketMenuText() const {
     return QObject::tr("3-D T&riangulation");
 }
 
-Tri3HeaderUI::Tri3HeaderUI(regina::Triangulation<3>* packet,
+Tri3HeaderUI::Tri3HeaderUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -96,28 +95,12 @@ Tri3HeaderUI::Tri3HeaderUI(regina::Triangulation<3>* packet,
     bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     uiLayout->addWidget(bar);
 
-    QBoxLayout* headerLayout = new QHBoxLayout(ui);
-    headerLayout->setContentsMargins(0, 0, 0, 0);
     header = new QLabel();
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
     header->setWhatsThis(QObject::tr("Displays a few basic properties of the "
         "triangulation, such as boundary and orientability."));
-    headerLayout->addWidget(header, 1);
-    locked = new ClickableLabel(IconCache::icon(IconCache::lock));
-    locked->setWhatsThis(tr(
-        "<qt>This triangulation cannot be changed, since it has "
-        "normal surfaces and/or angle structures that refer to it.<p>"
-        "Click on the padlock for more information.</qt>"));
-    locked->hide();
-    connect(locked, SIGNAL(clicked()), this, SLOT(lockedExplanation()));
-    headerLayout->addWidget(locked);
-    headerLayout->addSpacing(10);
-    uiLayout->addLayout(headerLayout);
-
-    // Register ourselves as a lister for child changes, so we can
-    // update the lock icon accordingly.
-    tri->listen(this);
+    uiLayout->addWidget(header);
 }
 
 regina::Packet* Tri3HeaderUI::getPacket() {
@@ -130,7 +113,6 @@ QWidget* Tri3HeaderUI::getInterface() {
 
 void Tri3HeaderUI::refresh() {
     header->setText(summaryInfo(tri));
-    refreshLock();
 }
 
 QString Tri3HeaderUI::summaryInfo(regina::Triangulation<3>* tri) {
@@ -165,44 +147,5 @@ QString Tri3HeaderUI::summaryInfo(regina::Triangulation<3>* tri) {
         QObject::tr("disconnected"));
 
     return msg;
-}
-
-void Tri3HeaderUI::lockedExplanation() {
-    if (tri->isPacketEditable())
-        return;
-
-    ReginaSupport::info(ui,
-        tr("This triangulation cannot be changed."),
-        tr("<qt>There are normal surfaces and/or angle structures "
-            "that refer to it, and so you cannot change its "
-            "tetrahedron gluings.<p>"
-            "You may clone the triangulation (through the "
-            "<i>Packet Tree</i> menu in the main window), and then "
-            "edit the clone instead.</qt>"));
-}
-
-void Tri3HeaderUI::childWasAdded(regina::Packet* packet,
-        regina::Packet* child) {
-    // Be careful - we may not be in the GUI thread.
-    QApplication::postEvent(this, new QEvent(
-        (QEvent::Type)EVT_HEADER_CHILD_ADDED));
-}
-
-void Tri3HeaderUI::childWasRemoved(regina::Packet* packet,
-        regina::Packet*) {
-    if (packet) // not in packet's destructor
-        refreshLock();
-}
-
-void Tri3HeaderUI::refreshLock() {
-    if (tri->isPacketEditable())
-        locked->hide();
-    else
-        locked->show();
-}
-
-void Tri3HeaderUI::customEvent(QEvent* event) {
-    if (event->type() == EVT_HEADER_CHILD_ADDED)
-        refreshLock();
 }
 

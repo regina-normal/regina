@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup generic
- * @{
- */
-
-/**
  * A component of the boundary of a <i>dim</i>-manifold triangulation.
  *
  * Regina recognises three types of boundary components:
@@ -109,9 +104,11 @@ namespace regina {
  * all of its boundary component objects will be deleted and new ones will be
  * created in their place.
  *
- * Boundary component objects are all created, managed and destroyed by the
- * class Triangulation<dim>.  See the Triangulation notes for further
- * information on working with <i>dim</i>-dimensional triangulations.
+ * Boundary components do not support value semantics: they cannot be copied,
+ * swapped, or manually constructed.  Their location in memory defines them,
+ * and they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
  *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
@@ -121,6 +118,8 @@ namespace regina {
  * This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
+ *
+ * \ingroup generic
  */
 template <int dim>
 class BoundaryComponent : public detail::BoundaryComponentBase<dim> {
@@ -133,8 +132,6 @@ class BoundaryComponent : public detail::BoundaryComponentBase<dim> {
     friend class Triangulation<dim>;
     friend class detail::TriangulationBase<dim>;
 };
-
-/*@}*/
 
 } // namespace regina
 

@@ -36,47 +36,37 @@
 
 namespace regina {
 
-SnappedTwoSphere* SnappedTwoSphere::clone() const {
-    SnappedTwoSphere* ans = new SnappedTwoSphere();
-    ans->ball[0] = ball[0]->clone();
-    ans->ball[1] = ball[1]->clone();
-    return ans;
-}
-
-SnappedTwoSphere* SnappedTwoSphere::formsSnappedTwoSphere(
+std::unique_ptr<SnappedTwoSphere> SnappedTwoSphere::recognise(
         Tetrahedron<3>* tet1, Tetrahedron<3>* tet2) {
-    SnappedBall* ball[2];
-    if (! (ball[0] = SnappedBall::formsSnappedBall(tet1)))
-        return 0;
-    if (! (ball[1] = SnappedBall::formsSnappedBall(tet2))) {
-        delete ball[0];
-        return 0;
-    }
+    std::unique_ptr<SnappedBall> ball[2];
+    if (! (ball[0] = SnappedBall::recognise(tet1)))
+        return nullptr;
+    if (! (ball[1] = SnappedBall::recognise(tet2)))
+        return nullptr;
     if (tet1->edge(ball[0]->equatorEdge()) !=
-            tet2->edge(ball[1]->equatorEdge())) {
-        delete ball[0];
-        delete ball[1];
-        return 0;
-    }
+            tet2->edge(ball[1]->equatorEdge()))
+        return nullptr;
 
     // This is it.
-    SnappedTwoSphere* ans = new SnappedTwoSphere();
-    ans->ball[0] = ball[0];
-    ans->ball[1] = ball[1];
-    return ans;
+    //
+    // Note: we cannot use make_unique here, since the class
+    // constructor is private.
+    return std::unique_ptr<SnappedTwoSphere>(new SnappedTwoSphere(
+        *ball[0], *ball[1]));
 }
 
-SnappedTwoSphere* SnappedTwoSphere::formsSnappedTwoSphere(
-        SnappedBall* ball1, SnappedBall* ball2) {
-    if (ball1->tetrahedron()->edge(ball1->equatorEdge()) !=
-            ball2->tetrahedron()->edge(ball2->equatorEdge()))
-        return 0;
+std::unique_ptr<SnappedTwoSphere> SnappedTwoSphere::recognise(
+        const SnappedBall& ball1, const SnappedBall& ball2) {
+    if (ball1.tetrahedron()->edge(ball1.equatorEdge()) !=
+            ball2.tetrahedron()->edge(ball2.equatorEdge()))
+        return nullptr;
 
     // This is it.
-    SnappedTwoSphere* ans = new SnappedTwoSphere();
-    ans->ball[0] = ball1->clone();
-    ans->ball[1] = ball2->clone();
-    return ans;
+    //
+    // Note: we cannot use make_unique here, since the class
+    // constructor is private.
+    return std::unique_ptr<SnappedTwoSphere>(new SnappedTwoSphere(
+        ball1, ball2));
 }
 
 } // namespace regina

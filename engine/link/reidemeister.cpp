@@ -49,15 +49,15 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
         if (! perform)
             return true;
 
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
 
         if (crossing->prev(1).crossing() == crossing) {
             // This is a 1-crossing component, and we will convert it to a
             // zero-crossing unknot component.
-            for (auto it = components_.begin(); it != components_.end(); ++it)
-                if (it->crossing() == crossing) {
+            for (StrandRef& c : components_)
+                if (c.crossing() == crossing) {
                     // We found the component!
-                    *it = StrandRef();
+                    c = StrandRef();
                     break;
                 }
         } else {
@@ -68,9 +68,9 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
             to.crossing()->prev_[to.strand()] = from;
 
             // Ensure that no component uses this crossing as it starting point.
-            for (auto it = components_.begin(); it != components_.end(); ++it)
-                if (it->crossing() == crossing) {
-                    *it = to;
+            for (StrandRef& c : components_)
+                if (c.crossing() == crossing) {
+                    c = to;
                     break;
                 }
         }
@@ -84,7 +84,7 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
         if (! perform)
             return true;
 
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
 
         // The twist runs from the lower strand to the upper.
         StrandRef from = crossing->prev_[0];
@@ -93,9 +93,9 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
         to.crossing()->prev_[to.strand()] = from;
 
         // Ensure that no component uses this crossing as it starting point.
-        for (auto it = components_.begin(); it != components_.end(); ++it)
-            if (it->crossing() == crossing) {
-                *it = to;
+        for (StrandRef& c : components_)
+            if (c.crossing() == crossing) {
+                c = to;
                 break;
             }
 
@@ -116,13 +116,13 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
 bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
     if (! arc) {
         // A null reference.  Find the first zero-crossing component.
-        for (auto it = components_.begin(); it != components_.end(); ++it)
-            if (! *it) {
+        for (StrandRef& comp : components_)
+            if (! comp) {
                 // Found it!
                 if (perform) {
-                    ChangeEventSpan span(this);
+                    ChangeEventSpan span(*this);
 
-                    Crossing* c = new Crossing(sign);
+                    auto* c = new Crossing(sign);
                     c->next_[0] = c->prev_[0] = StrandRef(c, 1);
                     c->next_[1] = c->prev_[1] = StrandRef(c, 0);
 
@@ -133,9 +133,9 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
                     // R1 twist (as opposed to the remaining part of the
                     // unknot, which also becomes a twist in its own right).
                     if ((side == 0 && sign < 0) || (side == 1 && sign > 0))
-                        *it = StrandRef(c, 1);
+                        comp = StrandRef(c, 1);
                     else
-                        *it = StrandRef(c, 0);
+                        comp = StrandRef(c, 0);
 
                     clearAllProperties();
                 }
@@ -153,10 +153,10 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
     if (! perform)
         return true;
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     // Insert the twist.
-    Crossing* c = new Crossing(sign);
+    auto* c = new Crossing(sign);
     StrandRef to = arc.next();
     if ((side == 0 && sign > 0) || (side == 1 && sign < 0)) {
         // The link follows (c, lower) then (c, upper).
@@ -210,7 +210,7 @@ bool Link::r2(StrandRef arc, bool check, bool perform) {
     if (! perform)
         return true;
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     // The situation: (arc, arc2) represent opposite strands of one crossing,
     // and (to, to2) represent opposite strands of another crossing.
@@ -338,23 +338,23 @@ bool Link::r2(StrandRef arc, bool check, bool perform) {
     // and that any other components that start at one of the to-be-deleted
     // crossings have their start points moved.
     int fixed = 0;
-    for (auto it = components_.begin(); it != components_.end(); ++it) {
-        if (it->crossing() == arc.crossing() ||
-                it->crossing() == to.crossing()) {
+    for (StrandRef& comp : components_) {
+        if (comp.crossing() == arc.crossing() ||
+                comp.crossing() == to.crossing()) {
             // In the test below, we use the fact that arc.strand() is
             // known to be the same as to.strand().
-            if ((unknot1 && (it->strand() == arc.strand())) ||
-                    (unknot2 && (it->strand() == arc2.strand()))) {
+            if ((unknot1 && (comp.strand() == arc.strand())) ||
+                    (unknot2 && (comp.strand() == arc2.strand()))) {
                 // This component becomes a zero-crossing unknot.
-                *it = StrandRef();
+                comp = StrandRef();
             } else {
                 // This component still has crossings; we just need to
                 // advance the start point out of the crossings that are
                 // being removed.
                 do
-                    ++(*it);
-                while (it->crossing() == arc.crossing() ||
-                        it->crossing() == to.crossing());
+                    ++comp;
+                while (comp.crossing() == arc.crossing() ||
+                        comp.crossing() == to.crossing());
             }
 
             // There are at most two components that need fixing.
@@ -383,7 +383,7 @@ bool Link::r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
     if (! (upperArc && lowerArc)) {
         // We have references to one or two zero-crossing components.
         // Find them.
-        std::vector<StrandRef>::iterator it = components_.begin();
+        auto it = components_.begin();
 
         if (! upperArc) {
             for ( ; it != components_.end(); ++it)
@@ -506,10 +506,10 @@ bool Link::r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
     if (! perform)
         return true;
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
-    Crossing* pos = new Crossing(1);
-    Crossing* neg = new Crossing(-1);
+    auto* pos = new Crossing(1);
+    auto* neg = new Crossing(-1);
 
     StrandRef to;
 
@@ -656,7 +656,7 @@ bool Link::r3(StrandRef arc, int side, bool check, bool perform) {
     if (! perform)
         return true;
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     // Reorder the two crossings on each of the three edges.
     StrandRef x, first, second, y;

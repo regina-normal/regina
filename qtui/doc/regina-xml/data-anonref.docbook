@@ -1,0 +1,124 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-anonref">
+ <refmeta>
+  <refentrytitle>anonref</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>anonref</refname>
+  <refpurpose>Moves an anonymous packet into the packet tree</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+anonref ::= (&packetsyn1;
+             &packetsyn2;
+             &packetsyn3;
+             &packetsyn4;
+             &packetsyn5;*)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>id</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+  <para>&eltaddedver;7.0</para>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   This element has the effect of moving an anonymous packet into the
+   packet tree, effectively &ldquo;de-anonymising&rdquo; it.
+  </para>
+  <para>
+   The <sgmltag>id</sgmltag> attribute must be the ID of an anonymous packet
+   <replaceable>P</replaceable>
+   that appears <emphasis>before this list in the packet tree</emphasis>,
+   with respect to a pre-order depth-first traversal
+   (i.e.,  <replaceable>P</replaceable> must appear before this &xml-anonref;
+   in the &xml; data file).
+   Recall that an <emphasis>anonymous packet</emphasis> is
+   one that appears anywhere inside an &xml-anon; element within the data file.
+  </para>
+  <para>
+   The effect will be to move <replaceable>P</replaceable> to this location
+   in the packet tree.  Any child elements of this &xml-anonref; will
+   become child packets of <replaceable>P</replaceable>.
+   Both the ID and label of <replaceable>P</replaceable> will be preserved.
+   The packet <replaceable>P</replaceable> will no longer be anonymous:
+   the user will see it as part of their data file, just like any other
+   &ldquo;ordinary&rdquo; packet.
+  </para>
+  <para>
+   The reason for using an &xml-anonref; might be if the user has placed
+   a packet towards the end of the packet tree, but the &xml; parser needs to
+   see its contents earlier.  An example of this is a normal surface list
+   whose triangulation appears after it in a depth-first tree traversal.
+   In this case the triangulation would need to be written before the
+   normal surface list as an anonymous packet (since the normal surface
+   list needs to see it as it is being parsed), and would then be moved
+   using an &xml-anonref; to its correct location in the tree later on.
+  </para>
+  <para>
+   If an &xml-anonref; appears anywhere inside an &xml-anon; element,
+   then the &xml-anonref; will have no effect.
+   If the <sgmltag>id</sgmltag> attribute refers to a packet that is not
+   anonymous (including one that has already been de-anonymised through
+   some other &xml-anonref;), then this &xml-anonref; will be ignored.
+  </para>
+  <para>
+   Any tags associated with the packet <replaceable>P</replaceable>
+   should be included as child &xml-tag; elements of this &xml-anonref;,
+   not within the original &xml-anon; section of the data file.
+  </para>
+  &packetchilddesc;
+
+  <refsect2>
+   <title>Parents</title>
+   &packetparents;
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   &packetchildren;
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>id</sgmltag></term>
+    <listitem><para>
+     The ID of the anonymous packet that we are moving into the packet tree.
+     This must match the <sgmltag>id</sgmltag> attribute of a packet
+     that appears before this &xml-anonref; in a pre-order
+     depth-first traversal of the full packet tree.
+    </para></listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+</refentry>

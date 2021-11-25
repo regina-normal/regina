@@ -34,61 +34,62 @@
 #include "packet/packet.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::Packet;
 using regina::PacketListener;
 using regina::PacketShell;
 
 class PyPacketListener : public PacketListener {
     public:
-        void packetToBeChanged(Packet* packet) override {
+        void packetToBeChanged(Packet& packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 packetToBeChanged, packet);
         }
-        void packetWasChanged(Packet* packet) override {
+        void packetWasChanged(Packet& packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 packetWasChanged, packet);
         }
-        void packetToBeRenamed(Packet* packet) override {
+        void packetToBeRenamed(Packet& packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 packetToBeRenamed, packet);
         }
-        void packetWasRenamed(Packet* packet) override {
+        void packetWasRenamed(Packet& packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 packetWasRenamed, packet);
         }
-        void packetToBeDestroyed(PacketShell packet) override {
+        void packetBeingDestroyed(PacketShell packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
-                packetToBeDestroyed, packet);
+                packetBeingDestroyed, packet);
         }
-        void childToBeAdded(Packet* packet, Packet* child) override {
+        void childToBeAdded(Packet& packet, Packet& child) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childToBeAdded, packet, child);
         }
-        void childWasAdded(Packet* packet, Packet* child) override {
+        void childWasAdded(Packet& packet, Packet& child) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childWasAdded, packet, child);
         }
-        void childToBeRemoved(Packet* packet, Packet* child) override {
+        void childToBeRemoved(Packet& packet, Packet& child) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childToBeRemoved, packet, child);
         }
-        void childWasRemoved(Packet* packet, Packet* child) override {
+        void childWasRemoved(Packet& packet, Packet& child) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childWasRemoved, packet, child);
         }
-        void childrenToBeReordered(Packet* packet) override {
+        void childrenToBeReordered(Packet& packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childrenToBeReordered, packet);
         }
-        void childrenWereReordered(Packet* packet) override {
+        void childrenWereReordered(Packet& packet) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childrenWereReordered, packet);
         }
-        void childToBeRenamed(Packet* packet, Packet* child) override {
+        void childToBeRenamed(Packet& packet, Packet& child) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childToBeRenamed, packet, child);
         }
-        void childWasRenamed(Packet* packet, Packet* child) override {
+        void childWasRenamed(Packet& packet, Packet& child) override {
             PYBIND11_OVERRIDE(void, PacketListener,
                 childWasRenamed, packet, child);
         }
@@ -116,21 +117,35 @@ void addPacketListener(pybind11::module_& m) {
     auto l = pybind11::class_<PacketListener, PyPacketListener>(
             m, "PacketListener")
         .def(pybind11::init<>()) // necessary for pure python subclasses
-        .def("unregisterFromAllPackets",
-            &PacketListener::unregisterFromAllPackets)
-        .def("packetToBeChanged", &PacketListener::packetToBeChanged)
-        .def("packetWasChanged", &PacketListener::packetWasChanged)
-        .def("packetToBeRenamed", &PacketListener::packetToBeRenamed)
-        .def("packetWasRenamed", &PacketListener::packetWasRenamed)
-        .def("packetToBeDestroyed", &PacketListener::packetToBeDestroyed)
-        .def("childToBeAdded", &PacketListener::childToBeAdded)
-        .def("childWasAdded", &PacketListener::childWasAdded)
-        .def("childToBeRemoved", &PacketListener::childToBeRemoved)
-        .def("childWasRemoved", &PacketListener::childWasRemoved)
-        .def("childrenToBeReordered", &PacketListener::childrenToBeReordered)
-        .def("childrenWereReordered", &PacketListener::childrenWereReordered)
-        .def("childToBeRenamed", &PacketListener::childToBeRenamed)
-        .def("childWasRenamed", &PacketListener::childWasRenamed)
+        .def("isListening", &PacketListener::isListening)
+        .def("unlisten", &PacketListener::unlisten)
+        .def("unregisterFromAllPackets", // deprecated
+            &PacketListener::unlisten)
+        .def("packetToBeChanged", overload_cast<Packet&>(
+            &PacketListener::packetToBeChanged))
+        .def("packetWasChanged", overload_cast<Packet&>(
+            &PacketListener::packetWasChanged))
+        .def("packetToBeRenamed", overload_cast<Packet&>(
+            &PacketListener::packetToBeRenamed))
+        .def("packetWasRenamed", overload_cast<Packet&>(
+            &PacketListener::packetWasRenamed))
+        .def("packetBeingDestroyed", &PacketListener::packetBeingDestroyed)
+        .def("childToBeAdded", overload_cast<Packet&, Packet&>(
+            &PacketListener::childToBeAdded))
+        .def("childWasAdded", overload_cast<Packet&, Packet&>(
+            &PacketListener::childWasAdded))
+        .def("childToBeRemoved", overload_cast<Packet&, Packet&>(
+            &PacketListener::childToBeRemoved))
+        .def("childWasRemoved", overload_cast<Packet&, Packet&>(
+            &PacketListener::childWasRemoved))
+        .def("childrenToBeReordered", overload_cast<Packet&>(
+            &PacketListener::childrenToBeReordered))
+        .def("childrenWereReordered", overload_cast<Packet&>(
+            &PacketListener::childrenWereReordered))
+        .def("childToBeRenamed", overload_cast<Packet&, Packet&>(
+            &PacketListener::childToBeRenamed))
+        .def("childWasRenamed", overload_cast<Packet&, Packet&>(
+            &PacketListener::childWasRenamed))
         ;
     regina::python::add_eq_operators(l);
 }

@@ -67,7 +67,7 @@ class HyperCompatibilityUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::NormalHypersurfaces* surfaces;
+        regina::PacketOf<regina::NormalHypersurfaces>* surfaces;
 
         /**
          * Compatibility matrices
@@ -98,16 +98,17 @@ class HyperCompatibilityUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        HyperCompatibilityUI(regina::NormalHypersurfaces* packet,
+        HyperCompatibilityUI(
+            regina::PacketOf<regina::NormalHypersurfaces>* packet,
             PacketTabbedUI* useParentUI);
-        ~HyperCompatibilityUI();
+        ~HyperCompatibilityUI() override;
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     public slots:
         /**

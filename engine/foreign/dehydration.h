@@ -40,28 +40,26 @@
 #endif
 
 #include "regina-core.h"
+#include <memory>
 
 namespace regina {
 
 class Container;
 
 /**
- * \addtogroup foreign Foreign File Formats
+ * \defgroup foreign Foreign File Formats
  * Reading and writing foreign file formats
- * @{
  */
 
 /**
  * Reads a list of dehydrated triangulations from the given text file.
- * The file should contain one dehydration string per line.  These
- * strings will be rehydrated as described in
- * Triangulation<3>::insertRehydration().
+ * The file should contain one dehydration string per line.  These strings
+ * will be rehydrated as described in Triangulation<3>::rehydrate().
  *
- * A newly allocated container will be returned; the imported
- * triangulations will be inserted as children of this container.
- * The container will not be assigned a label.  The individual
- * triangulations will be assigned labels according to the parameter
- * \a colLabels.
+ * A new container will be returned; the imported triangulations will be
+ * inserted as children of this container.  The container will not be
+ * assigned a label.  The individual triangulations will be assigned labels
+ * according to the parameter \a colLabels.
  *
  * If any dehydrations strings are invalid, these will be recorded in an
  * additional text packet that will be the last child of the returned
@@ -91,14 +89,14 @@ class Container;
  * strings themselves will be used as packet labels.
  * @param ignoreLines the number of lines at the beginning of the text
  * file that should be ignored completely.
- * @return a new container as described above, or 0 if an I/O error occurred
- * whilst reading the given file.
+ * @return a new container as described above, or \c null if an I/O error
+ * occurred whilst reading the given file.
+ *
+ * \ingroup foreign
  */
-Container* readDehydrationList(const char *filename,
+std::shared_ptr<Container> readDehydrationList(const char *filename,
     unsigned colDehydrations = 0, int colLabels = -1,
     unsigned long ignoreLines = 0);
-
-/*@}*/
 
 } // namespace regina
 

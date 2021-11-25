@@ -31,8 +31,22 @@
  **************************************************************************/
 
 #include "triangulation-bindings.h"
+#include "boundarycomponent-bindings.h"
+#include "component-bindings.h"
+#include "isosig-bindings.h"
+#include "simplex-bindings.h"
 
 void addTriangulations11(pybind11::module_& m) {
     addTriangulation<11>(m, "Triangulation11");
+    addComponent<11>(m, "Component11");
+    addBoundaryComponent<11>(m, "BoundaryComponent11");
+    addSimplex<11>(m, "Simplex11");
+
+    addIsoSigClassic<11>(m, "IsoSigClassic11");
+    addIsoSigEdgeDegrees<11>(m, "IsoSigEdgeDegrees11");
+    addIsoSigRidgeDegrees<11>(m, "IsoSigRidgeDegrees11");
+    addIsoSigPrintable<11>(m, "IsoSigPrintable11");
+
+    m.attr("Face11_11") = m.attr("Simplex11");
 }
 

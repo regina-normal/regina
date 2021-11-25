@@ -48,27 +48,27 @@
 namespace regina {
 
 template <typename Iterator>
-Link* Link::fromPD(Iterator begin, Iterator end) {
+Link Link::fromPD(Iterator begin, Iterator end) {
     // Extract the number of crossings.
     size_t n = end - begin;
     if (n == 0) {
         // PD codes do not handle zero-crossing unknots.
         // Just return nothing at all.
-        return new Link();
+        return Link();
     }
 
     // Represents (crossing index, position in 4-tuple):
-    typedef std::pair<size_t, int> PDPos;
+    using PDPos = std::pair<size_t, int>;
 
     // The two occurrences of each strand in the PD code:
-    typedef std::pair<PDPos, PDPos> PDOccurrence;
+    using PDOccurrence = std::pair<PDPos, PDPos>;
 
     // The zero-based strand numbers that will begin each component:
     std::vector<size_t> components;
 
     // Identify the two crossings that each strand meets.
     // A position of -1 in the 4-tuple means "not yet seen".
-    PDOccurrence* occ = new PDOccurrence[2 * n];
+    auto* occ = new PDOccurrence[2 * n];
     for (size_t i = 0; i < 2 * n; ++i)
         occ[i].first.second = occ[i].second.second = -1;
 
@@ -78,10 +78,8 @@ Link* Link::fromPD(Iterator begin, Iterator end) {
         for (int i = 0; i < 4; ++i) {
             auto s = (*it)[i];
             if (s <= 0 || s > 2 * n) {
-                std::cerr << "fromPD(): strand number " << s << " out of range"
-                    << std::endl;
                 delete[] occ;
-                return nullptr;
+                throw InvalidArgument("fromPD(): strand out of range");
             }
             PDOccurrence* o = occ + (s - 1);
             if (o->first.second < 0) {
@@ -91,10 +89,9 @@ Link* Link::fromPD(Iterator begin, Iterator end) {
                 o->second.first = index;
                 o->second.second = i;
             } else {
-                std::cerr << "fromPD(): strand " << s << " appears "
-                    "more than twice" << std::endl;
                 delete[] occ;
-                return nullptr;
+                throw InvalidArgument(
+                    "fromPD(): strand appears more than twice");
             }
         }
     }
@@ -206,9 +203,9 @@ Link* Link::fromPD(Iterator begin, Iterator end) {
     */
 
     // Build and hook together the final list of crossings.
-    Link* ans = new Link;
+    Link ans;
     for (size_t i = 0; i < n; ++i)
-        ans->crossings_.push_back(new Crossing);
+        ans.crossings_.push_back(new Crossing);
     for (size_t i = 0; i < 2 * n; ++i) {
         PDPos from, to;
         if (dir[i] > 0) {
@@ -218,16 +215,16 @@ Link* Link::fromPD(Iterator begin, Iterator end) {
             from = occ[i].second;
             to = occ[i].first;
         }
-        ans->join(
-            StrandRef(ans->crossings_[from.first], (from.second % 2 ? 1 : 0)),
-            StrandRef(ans->crossings_[to.first], (to.second % 2 ? 1 : 0)));
+        ans.join(
+            StrandRef(ans.crossings_[from.first], (from.second % 2 ? 1 : 0)),
+            StrandRef(ans.crossings_[to.first], (to.second % 2 ? 1 : 0)));
 
         // If this strand exits from the upper side of its source crossing,
         // use this to determine the crossing's sign.
         if (from.second == 1)
-            ans->crossings_[from.first]->sign_ = 1;
+            ans.crossings_[from.first]->sign_ = 1;
         else if (from.second == 3)
-            ans->crossings_[from.first]->sign_ = -1;
+            ans.crossings_[from.first]->sign_ = -1;
     }
 
     // Finally, mark the starting point of each component.
@@ -235,8 +232,8 @@ Link* Link::fromPD(Iterator begin, Iterator end) {
     for (auto start : components) {
         const PDPos& from = (dir[start] > 0 ? occ[start].first :
             occ[start].second);
-        ans->components_.push_back(StrandRef(ans->crossings_[from.first],
-            (from.second % 2 ? 1 : 0)));
+        ans.components_.emplace_back(ans.crossings_[from.first],
+            (from.second % 2 ? 1 : 0));
     }
 
     delete[] dir;

@@ -31,12 +31,15 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
+#include "../pybind11/stl.h"
 #include "triangulation/facepair.h"
 #include "triangulation/facetpairing3.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
+using regina::BoolSet;
 using regina::FacetPairing;
 using regina::FacetSpec;
 using regina::Triangulation;
@@ -45,36 +48,29 @@ void addFacetPairing3(pybind11::module_& m) {
     auto c = pybind11::class_<FacetPairing<3>>(m, "FacetPairing3")
         .def(pybind11::init<const FacetPairing<3>&>())
         .def(pybind11::init<const Triangulation<3>&>())
+        .def("swap", &FacetPairing<3>::swap)
         .def("size", &FacetPairing<3>::size)
+        // We do not ask dest() or operator[] to return by reference,
+        // since FacetSpec is lightweight and we want to enforce constness.
+        // Use the default policy for (const T&) which is to return by copy.
         .def("dest", overload_cast<const FacetSpec<3>&>(
-            &FacetPairing<3>::dest, pybind11::const_),
-            pybind11::return_value_policy::reference)
+            &FacetPairing<3>::dest, pybind11::const_))
         .def("dest", overload_cast<size_t, unsigned>(
-            &FacetPairing<3>::dest, pybind11::const_),
-            pybind11::return_value_policy::reference)
+            &FacetPairing<3>::dest, pybind11::const_))
         .def("__getitem__", overload_cast<const FacetSpec<3>&>(
-            &FacetPairing<3>::operator[], pybind11::const_),
-            pybind11::return_value_policy::reference)
+            &FacetPairing<3>::operator[], pybind11::const_))
         .def("isUnmatched", overload_cast<const FacetSpec<3>&>(
             &FacetPairing<3>::isUnmatched, pybind11::const_))
         .def("isUnmatched", overload_cast<size_t, unsigned>(
             &FacetPairing<3>::isUnmatched, pybind11::const_))
         .def("isCanonical", &FacetPairing<3>::isCanonical)
+        .def("findAutomorphisms", &FacetPairing<3>::findAutomorphisms)
         .def("toTextRep", &FacetPairing<3>::toTextRep)
         .def_static("fromTextRep", &FacetPairing<3>::fromTextRep)
-        .def("writeDot", [](const FacetPairing<3>& p, const char* prefix,
-                bool subgraph, bool labels) {
-            p.writeDot(std::cout, prefix, subgraph, labels);
-        }, pybind11::arg("prefix") = nullptr,
-            pybind11::arg("subgraph") = false,
-            pybind11::arg("labels") = false)
         .def("dot", &FacetPairing<3>::dot,
             pybind11::arg("prefix") = nullptr,
             pybind11::arg("subgraph") = false,
             pybind11::arg("labels") = false)
-        .def_static("writeDotHeader", [](const char* graphName) {
-            FacetPairing<3>::writeDotHeader(std::cout, graphName);
-        }, pybind11::arg("graphName") = nullptr)
         .def_static("dotHeader", &FacetPairing<3>::dotHeader,
             pybind11::arg("graphName") = nullptr)
         .def("isClosed", &FacetPairing<3>::isClosed)
@@ -94,8 +90,14 @@ void addFacetPairing3(pybind11::module_& m) {
         .def("hasSingleStar", &FacetPairing<3>::hasSingleStar)
         .def("hasDoubleStar", &FacetPairing<3>::hasDoubleStar)
         .def("hasDoubleSquare", &FacetPairing<3>::hasDoubleSquare)
+        .def_static("findAllPairings", &FacetPairing<3>::findAllPairings<
+            const std::function<void(const FacetPairing<3>&,
+                FacetPairing<3>::IsoList)>&>)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    m.def("swap",
+        (void(*)(FacetPairing<3>&, FacetPairing<3>&))(regina::swap));
 }
 

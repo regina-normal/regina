@@ -39,17 +39,13 @@
 #define __REGINA_XMLALGEBRAREADER_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "algebra/abeliangroup.h"
 #include "algebra/grouppresentation.h"
 #include "file/xml/xmlelementreader.h"
 
 namespace regina {
-
-/**
- * \weakgroup algebra
- * @{
- */
 
 /**
  * An XML element reader that reads a single abelian group.
@@ -60,27 +56,28 @@ namespace regina {
  */
 class XMLAbelianGroupReader : public XMLElementReader {
     private:
-        AbelianGroup* group_;
+        std::optional<AbelianGroup> group_;
             /**< The abelian group currently being read. */
 
     public:
         /**
          * Creates a new abelian group reader.
          */
-        XMLAbelianGroupReader();
+        XMLAbelianGroupReader() = default;
 
         /**
-         * Returns the newly allocated abelian group that has been read by
+         * Returns a reference to the abelian group that has been read by
          * this element reader.
          *
-         * @return the group that has been read, or 0 if an error occurred.
+         * @return the group that has been read, or no value if an error
+         * occurred.
          */
-        AbelianGroup* group();
+        std::optional<AbelianGroup>& group();
 
-        virtual void startElement(const std::string& tagName,
+        void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
             XMLElementReader* parentReader) override;
-        virtual void initialChars(const std::string& chars) override;
+        void initialChars(const std::string& chars) override;
 };
 
 /**
@@ -92,50 +89,42 @@ class XMLAbelianGroupReader : public XMLElementReader {
  */
 class XMLGroupPresentationReader : public XMLElementReader {
     private:
-        GroupPresentation* group_;
+        std::optional<GroupPresentation> group_;
             /**< The group presentation currently being read. */
 
     public:
         /**
          * Creates a new group presentation reader.
          */
-        XMLGroupPresentationReader();
+        XMLGroupPresentationReader() = default;
 
         /**
-         * Returns the newly allocated group presentation that has been read by
+         * Returns a reference to the group presentation that has been read by
          * this element reader.
          *
-         * @return the group that has been read, or 0 if an error occurred.
+         * @return the group that has been read, or no value if an error
+         * occurred.
          */
-        GroupPresentation* group();
+        std::optional<GroupPresentation>& group();
 
-        virtual void startElement(const std::string& tagName,
+        void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
             XMLElementReader* parentReader) override;
-        virtual XMLElementReader* startSubElement(
-            const std::string& subTagName,
+        XMLElementReader* startSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endSubElement(const std::string& subTagName,
+        void endSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
-/*@}*/
-
 // Inline functions for XMLAbelianGroupReader
 
-inline XMLAbelianGroupReader::XMLAbelianGroupReader() : group_(0) {
-}
-
-inline AbelianGroup* XMLAbelianGroupReader::group() {
+inline std::optional<AbelianGroup>& XMLAbelianGroupReader::group() {
     return group_;
 }
 
 // Inline functions for XMLGroupPresentationReader
 
-inline XMLGroupPresentationReader::XMLGroupPresentationReader() : group_(0) {
-}
-
-inline GroupPresentation* XMLGroupPresentationReader::group() {
+inline std::optional<GroupPresentation>& XMLGroupPresentationReader::group() {
     return group_;
 }
 

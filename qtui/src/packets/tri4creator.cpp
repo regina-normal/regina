@@ -97,7 +97,7 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     layout->addLayout(typeArea);
     QString expln =
         QObject::tr("Specifies what type of triangulation to create.");
-    QLabel* label = new QLabel(QObject::tr("Type of triangulation:"), ui);
+    auto* label = new QLabel(QObject::tr("Type of triangulation:"), ui);
     label->setWhatsThis(expln);
     typeArea->addWidget(label);
     type = new QComboBox(ui);
@@ -197,8 +197,8 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     exampleWhich = new QComboBox(area);
-    for (size_t i = 0; i < examples.size(); ++i)
-        exampleWhich->addItem(examples[i].name());
+    for (const auto& e : examples)
+        exampleWhich->addItem(e.name());
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);
@@ -216,44 +216,46 @@ QWidget* Tri4Creator::getInterface() {
     return ui;
 }
 
-regina::Packet* Tri4Creator::createPacket(regina::Packet*,
-        QWidget* parentWidget) {
+std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
+        std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        Triangulation<4>* ans = new Triangulation<4>();
+        auto ans = regina::makePacket<Triangulation<4>>();
         ans->setLabel("4-D triangulation");
         return ans;
     } else if (typeId == TRI_IBUNDLE) {
-        regina::Triangulation<3>* from = dynamic_cast<regina::Triangulation<3>*>(
-            iBundleFrom->selectedPacket());
+        auto fromPacket = iBundleFrom->selectedPacket();
+        auto from = std::dynamic_pointer_cast<
+            regina::Triangulation<3>>(fromPacket);
         if (! from) {
             ReginaSupport::info(parentWidget, QObject::tr(
                 "Please select a 3-manifold triangulation to build the "
                 "I-bundle from."));
-            return 0;
+            return nullptr;
         }
-        Triangulation<4>* ans = Example<4>::iBundle(*from);
+        auto ans = regina::makePacket(Example<4>::iBundle(*from));
         ans->intelligentSimplify();
-        if (from->label().empty())
+        if (fromPacket->label().empty())
             ans->setLabel("I-bundle");
         else
-            ans->setLabel(from->label() + " × I");
+            ans->setLabel(fromPacket->label() + " × I");
         return ans;
     } else if (typeId == TRI_S1BUNDLE) {
-        regina::Triangulation<3>* from = dynamic_cast<regina::Triangulation<3>*>(
-            s1BundleFrom->selectedPacket());
+        auto fromPacket = s1BundleFrom->selectedPacket();
+        auto from = std::dynamic_pointer_cast<
+            regina::Triangulation<3>>(fromPacket);
         if (! from) {
             ReginaSupport::info(parentWidget, QObject::tr(
                 "Please select a 3-manifold triangulation to build the "
                 "S¹-bundle from."));
-            return 0;
+            return nullptr;
         }
-        Triangulation<4>* ans = Example<4>::s1Bundle(*from);
+        auto ans = regina::makePacket(Example<4>::s1Bundle(*from));
         ans->intelligentSimplify();
-        if (from->label().empty())
+        if (fromPacket->label().empty())
             ans->setLabel("S¹-bundle");
         else
-            ans->setLabel(from->label() + " × S¹");
+            ans->setLabel(fromPacket->label() + " × S¹");
         return ans;
     } else if (typeId == TRI_ISOSIG) {
         if (! reIsoSig.exactMatch(isoSig->text())) {
@@ -269,32 +271,31 @@ regina::Packet* Tri4Creator::createPacket(regina::Packet*,
                 "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
                 "4-dimensional isomorphism signatures (as used here) follow an "
                 "analogous scheme.</qt>"));
-            return 0;
+            return nullptr;
         }
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
-        Triangulation<4>* ans = Triangulation<4>::fromIsoSig(sig);
-        if (ans) {
-            ans->setLabel(sig);
-            return ans;
+        try {
+            return regina::makePacket(Triangulation<4>::fromIsoSig(sig), sig);
+        } catch (const regina::InvalidArgument&) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("I could not interpret the given "
+                "isomorphism signature."),
+                QObject::tr("<qt>3-dimensional isomorphism signatures are "
+                "described in detail in "
+                "<i>Simplification paths in the Pachner graphs "
+                "of closed orientable 3-manifold triangulations</i>, "
+                "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
+                "4-dimensional isomorphism signatures (as used here) follow an "
+                "analogous scheme.</qt>"));
+            return nullptr;
         }
-        ReginaSupport::sorry(parentWidget,
-            QObject::tr("I could not interpret the given "
-            "isomorphism signature."),
-            QObject::tr("<qt>3-dimensional isomorphism signatures are "
-            "described in detail in "
-            "<i>Simplification paths in the Pachner graphs "
-            "of closed orientable 3-manifold triangulations</i>, "
-            "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
-            "4-dimensional isomorphism signatures (as used here) follow an "
-            "analogous scheme.</qt>"));
-        return 0;
     } else if (typeId == TRI_EXAMPLE) {
         return examples[exampleWhich->currentIndex()].create();
     }
 
     ReginaSupport::info(parentWidget,
         QObject::tr("Please select a triangulation type."));
-    return 0;
+    return nullptr;
 }
 

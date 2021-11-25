@@ -53,21 +53,10 @@
 
 namespace regina {
 
-class XMLPacketReader;
-
 /**
- * \addtogroup dim2 2-Manifold Triangulations
+ * \defgroup dim2 2-Manifold Triangulations
  * Details for implementing triangulations of 2-manifolds.
- * @{
  */
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_TRIANGULATION2> {
-    typedef Triangulation<2> Class;
-    static constexpr const char* name = "2-Manifold Triangulation";
-};
-#endif
 
 /**
  * Represents a 2-manifold triangulation.
@@ -79,28 +68,16 @@ struct PacketInfo<PACKET_TRIANGULATION2> {
  * This 2-dimensional specialisation offers significant extra functionality,
  * including many functions specific to 2-manifolds.
  *
- * This class implements the C++ Swappable requirement by providing member
- * and global swap() functions.  However, like all packet types, it does
- * \e not implement a move constructor or move assignment, since this would
- * interfere with the structure of the packet tree.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \headerfile triangulation/dim2.h
+ *
+ * \ingroup dim2
  */
 template <>
-class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
-    REGINA_PACKET(Triangulation<2>, PACKET_TRIANGULATION2)
-
-    public:
-        typedef std::vector<Triangle<2>*>::const_iterator TriangleIterator;
-            /**< A dimension-specific alias for SimplexIterator,
-                 used to iterate through triangles. */
-        typedef decltype(detail::TriangulationBase<2>().faces<1>().begin())
-                EdgeIterator;
-            /**< Used to iterate through edges. */
-        typedef decltype(detail::TriangulationBase<2>().faces<0>().begin())
-                VertexIterator;
-            /**< Used to iterate through vertices. */
-
+class Triangulation<2> : public detail::TriangulationBase<2> {
     public:
         /**
          * \name Constructors and Destructors
@@ -112,10 +89,9 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          *
          * Creates an empty triangulation.
          */
-        Triangulation();
+        Triangulation() = default;
         /**
          * Creates a new copy of the given triangulation.
-         * The packet tree structure and packet label are \e not copied.
          *
          * This will clone any computed properties (such as homology,
          * fundamental group, and so on) of the given triangulation also.
@@ -124,7 +100,7 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          *
          * @param copy the triangulation to copy.
          */
-        Triangulation(const Triangulation& copy);
+        Triangulation(const Triangulation& copy) = default;
         /**
          * Creates a new copy of the given triangulation, with the option
          * of whether or not to clone its computed properties also.
@@ -137,6 +113,31 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          */
         Triangulation(const Triangulation& copy, bool cloneProps);
         /**
+         * Moves the given triangulation into this new triangulation.
+         *
+         * This is much faster than the copy constructor, but is still linear
+         * time.  This is because every triangle must be adjusted to point
+         * back to this new triangulation instead of \a src.
+         *
+         * All triangles and skeletal objects (faces, components and
+         * boundary components) that belong to \a src will be moved into
+         * this triangulation, and so any pointers or references to
+         * Triangle<2>, Face<2, subdim>, Component<2> or
+         * BoundaryComponent<2> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this triangulation
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the triangulation to move.
+         */
+        Triangulation(Triangulation&& src) noexcept = default;
+        /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
          *
@@ -146,8 +147,6 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          * - isomorphism signatures (see fromIsoSig()).
          *
          * This list may grow in future versions of Regina.
-         *
-         * Regina will also set the packet label accordingly.
          *
          * If Regina cannot interpret the given string, this will be
          * left as the empty triangulation.
@@ -162,17 +161,9 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          * The constituent triangles, the cellular structure and all other
          * properties will also be destroyed.
          */
-        virtual ~Triangulation();
+        ~Triangulation();
 
-        /*@}*/
-        /**
-         * \name Packet Administration
-         */
-        /*@{*/
-
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
-        virtual bool dependsOnParent() const override;
+        using Snapshottable<Triangulation<2>>::isReadOnlySnapshot;
 
         /*@}*/
         /**
@@ -180,6 +171,30 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          */
         /*@{*/
 
+        /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countTriangles() const;
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        auto triangles() const;
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        Triangle<2>* triangle(size_t index);
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        const Triangle<2>* triangle(size_t index) const;
         /**
          * A dimension-specific alias for newSimplex().
          *
@@ -192,6 +207,19 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          * See newSimplex() for further information.
          */
         Triangle<2>* newTriangle(const std::string& desc);
+        /**
+         * A dimension-specific alias for newSimplices().
+         *
+         * See newSimplices() for further information.
+         */
+        template <int k>
+        std::array<Triangle<2>*, k> newTriangles();
+        /**
+         * A dimension-specific alias for newSimplices().
+         *
+         * See newSimplices() for further information.
+         */
+        void newTriangles(size_t k);
         /**
          * A dimension-specific alias for removeSimplex().
          *
@@ -212,6 +240,41 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
         void removeAllTriangles();
 
         /**
+         * Sets this to be a (deep) copy of the given triangulation.
+         *
+         * @return a reference to this triangulation.
+         */
+        Triangulation& operator = (const Triangulation&) = default;
+
+        /**
+         * Moves the contents of the given triangulation into this
+         * triangulation.
+         *
+         * This is much faster than copy assignment, but is still linear
+         * time.  This is because every triangle must be adjusted to point
+         * back to this triangulation instead of \a src.
+         *
+         * All triangles and skeletal objects (faces, components and
+         * boundary components) that belong to \a src will be moved into
+         * this triangulation, and so any pointers or references to
+         * Triangle<2>, Face<2, subdim>, Component<2> or
+         * BoundaryComponent<2> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this triangulation which may in turn call arbitrary
+         * code via any registered packet listeners.  It deliberately does
+         * \e not fire change events on \a src, since it assumes that \a src is
+         * about to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the triangulation to move.
+         * @return a reference to this triangulation.
+         */
+        Triangulation& operator = (Triangulation&& src) = default;
+
+        /**
          * Swaps the contents of this and the given triangulation.
          *
          * All triangles that belong to this triangulation
@@ -224,16 +287,12 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          * In particular, any pointers or references to Triangle<2> and/or
          * Face<2, subdim> objects will remain valid.
          *
-         * The structure of the packet tree will \e not be swapped:
-         * both packets being swapped will remain with their original parents,
-         * and their original children will remain with them.
-         *
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
          * \note This swap function is \e not marked \c noexcept, since it
-         * fires packet change events which may in turn call arbitrary
-         * code via any registered packet listeners.
+         * fires change events on both triangulations which may in turn call
+         * arbitrary code via any registered packet listeners.
          *
          * @param other the triangulation whose contents should be
          * swapped with this.
@@ -249,6 +308,26 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          * swapped with this.
          */
         [[deprecated]] void swapContents(Triangulation<2>& other);
+
+        /*@}*/
+        /**
+         * \name Skeletal Queries
+         */
+        /*@{*/
+
+        /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryEdges() const;
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryEdges() const;
 
         /*@}*/
         /**
@@ -329,13 +408,6 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
 
         /*@}*/
 
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
-
-    protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
-
     private:
         /**
          * Clears any calculated properties, including skeletal data,
@@ -343,7 +415,7 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          * internal function that changes the triangulation.
          *
          * In most cases this routine is followed immediately by firing
-         * a packet change event.
+         * a change event.
          */
         void clearAllProperties();
 
@@ -353,8 +425,6 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
     friend class regina::detail::SimplexBase<2>;
     friend class regina::detail::TriangulationBase<2>;
 };
-
-/*@}*/
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
@@ -371,14 +441,6 @@ namespace regina {
 
 // Inline functions for Triangulation<2>
 
-inline Triangulation<2>::Triangulation() {
-}
-
-inline Triangulation<2>::Triangulation(const Triangulation& cloneMe) :
-        TriangulationBase<2>(cloneMe) {
-    // No properties yet to clone.
-}
-
 inline Triangulation<2>::Triangulation(const Triangulation& cloneMe,
         bool cloneProps) :
         TriangulationBase<2>(cloneMe, cloneProps) {
@@ -386,16 +448,24 @@ inline Triangulation<2>::Triangulation(const Triangulation& cloneMe,
 }
 
 inline Triangulation<2>::~Triangulation() {
+    Snapshottable<Triangulation<2>>::takeSnapshot();
     clearAllProperties();
 }
 
-inline void Triangulation<2>::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << simplices_.size()
-        << (simplices_.size() == 1 ? " triangle" : " triangles");
+inline size_t Triangulation<2>::countTriangles() const {
+    return size();
 }
 
-inline bool Triangulation<2>::dependsOnParent() const {
-    return false;
+inline auto Triangulation<2>::triangles() const {
+    return simplices();
+}
+
+inline Triangle<2>* Triangulation<2>::triangle(size_t index) {
+    return simplex(index);
+}
+
+inline const Triangle<2>* Triangulation<2>::triangle(size_t index) const {
+    return simplex(index);
 }
 
 inline Triangle<2>* Triangulation<2>::newTriangle() {
@@ -404,6 +474,15 @@ inline Triangle<2>* Triangulation<2>::newTriangle() {
 
 inline Triangle<2>* Triangulation<2>::newTriangle(const std::string& desc) {
     return newSimplex(desc);
+}
+
+template <int k>
+inline std::array<Triangle<2>*, k> Triangulation<2>::newTriangles() {
+    return newSimplices<k>();
+}
+
+inline void Triangulation<2>::newTriangles(size_t k) {
+    newSimplices(k);
 }
 
 inline void Triangulation<2>::removeTriangle(Triangle<2>* tri) {
@@ -431,6 +510,14 @@ inline long Triangulation<2>::eulerChar() const {
         + static_cast<long>(simplices_.size());
 }
 
+inline bool Triangulation<2>::hasBoundaryEdges() const {
+    return hasBoundaryFacets();
+}
+
+inline size_t Triangulation<2>::countBoundaryEdges() const {
+    return countBoundaryFacets();
+}
+
 inline bool Triangulation<2>::isClosed() const {
     ensureSkeleton();
     return boundaryComponents().empty();
@@ -438,10 +525,6 @@ inline bool Triangulation<2>::isClosed() const {
 
 inline bool Triangulation<2>::isIdeal() const {
     return false;
-}
-
-inline Packet* Triangulation<2>::internalClonePacket(Packet*) const {
-    return new Triangulation(*this);
 }
 
 inline void Triangulation<2>::swapContents(Triangulation<2>& other) {

@@ -16,7 +16,6 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    enumconstraints.h
     doubledescription.h
     doubledescription-impl.h
     hilbertcd.h
@@ -29,10 +28,12 @@ if (${REGINA_INSTALL_DEV})
     maxadmissible-impl.h
     ordering.h
     treeconstraint.h
+    treeconstraint-impl.h
     treelp.h
     treelp-impl.h
     treetraversal.h
     treetraversal-impl.h
     typetrie.h
+    validityconstraints.h
     DESTINATION "${INCLUDEDIR}/enumerate" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

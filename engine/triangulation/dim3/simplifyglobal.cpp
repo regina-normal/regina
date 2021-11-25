@@ -55,8 +55,9 @@ bool Triangulation<3>::minimiseBoundary() {
         return false;
     }
 
-    TopologyLock lock(this);
-    ChangeEventSpan span(this);
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
 
     bool changed = false;
 
@@ -146,7 +147,8 @@ bool Triangulation<3>::intelligentSimplify() {
     bool changed;
 
     { // Begin scope for change event block.
-        ChangeEventSpan span(this);
+        // Ensure only one event pair is fired in this sequence of changes.
+        ChangeEventSpan span(*this);
 
         // Reduce to a local minimum.
         changed = simplifyToLocalMinimum(true);
@@ -179,8 +181,7 @@ bool Triangulation<3>::intelligentSimplify() {
                 for (Edge<3>* edge : use->edges())
                     for (axis = 0; axis < 2; axis++)
                         if (use->fourFourMove(edge, axis, true, false))
-                            fourFourAvailable.push_back(
-                                std::make_pair(edge, axis));
+                            fourFourAvailable.emplace_back(edge, axis);
 
                 // Increment fourFourCap if needed.
                 if (fourFourCap < COEFF_4_4 * fourFourAvailable.size())
@@ -308,7 +309,8 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
     bool changedNow = true; // Did we just change something (for loop control)?
 
     { // Begin scope for change event span.
-        ChangeEventSpan span(this);
+        // Ensure only one event pair is fired in this sequence of changes.
+        ChangeEventSpan span(*this);
 
         while (changedNow) {
             changedNow = false;
@@ -320,8 +322,8 @@ bool Triangulation<3>::simplifyToLocalMinimum(bool perform) {
                 for (Edge<3>* edge : edges()) {
 #ifdef PINCH_NOT_COLLAPSE
                     if (edge->vertex(0) != edge->vertex(1) &&
-                            (edge->vertex(0)->link() == Vertex<3>::SPHERE ||
-                             edge->vertex(1)->link() == Vertex<3>::SPHERE)) {
+                            (edge->vertex(0)->linkType() == Vertex<3>::SPHERE ||
+                             edge->vertex(1)->linkType() == Vertex<3>::SPHERE)) {
                         // Note: this *increases* the number of tetrahedra.
                         pinchEdge(edge);
                         changedNow = changed = true;

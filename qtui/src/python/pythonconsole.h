@@ -113,9 +113,10 @@ class PythonConsole : public QMainWindow {
          * PythonManager::launchPythonConsole(), not by calling this
          * constructor directly.
          */
-        PythonConsole(QWidget* parent = 0, PythonManager* useManager = 0);
+        PythonConsole(QWidget* parent = nullptr,
+            PythonManager* useManager = nullptr);
 
-        ~PythonConsole();
+        ~PythonConsole() override;
 
         /**
          * Write input, output or error to the session transcript.
@@ -140,9 +141,9 @@ class PythonConsole : public QMainWindow {
          * Configure the python interpreter.
          */
         bool importRegina();
-        void setRootPacket(regina::Packet* packet);
-        void setSelectedPacket(regina::Packet* packet);
-        void setVar(const QString& name, regina::Packet* value);
+        void setRootPacket(std::shared_ptr<regina::Packet> packet);
+        void setSelectedPacket(std::shared_ptr<regina::Packet> packet);
+        void setVar(const QString& name, std::shared_ptr<regina::Packet> value);
         void executeLine(const QString& line);
         void executeLine(const std::string& line);
         void executeLine(const char* line);
@@ -199,7 +200,7 @@ class PythonConsole : public QMainWindow {
         /**
          * Qt overrides.
          */
-         virtual QSize sizeHint() const;
+        QSize sizeHint() const override;
 
         /**
          * A completer object to handle python tab completion.
@@ -252,7 +253,7 @@ class PythonConsole : public QMainWindow {
                 OutputStream(PythonConsole* console);
 
             protected:
-                void processOutput(const std::string& data);
+                void processOutput(const std::string& data) override;
         };
 
         /**
@@ -266,7 +267,7 @@ class PythonConsole : public QMainWindow {
                 ErrorStream(PythonConsole* console);
 
             protected:
-                void processOutput(const std::string& data);
+                void processOutput(const std::string& data) override;
         };
 };
 

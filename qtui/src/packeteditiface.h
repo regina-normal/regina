@@ -76,14 +76,14 @@ class PacketEditTextEditor : public PacketEditIface {
     public:
         PacketEditTextEditor(QTextEdit *edit);
 
-        virtual bool cutEnabled() const;
-        virtual bool copyEnabled() const;
-        virtual bool pasteEnabled() const;
+        bool cutEnabled() const override;
+        bool copyEnabled() const override;
+        bool pasteEnabled() const override;
 
     public slots:
-        virtual void cut();
-        virtual void copy();
-        virtual void paste();
+        void cut() override;
+        void copy() override;
+        void paste() override;
 
     /**
      * Hmm, seems we can't call cut/copy/paste directly on the text
@@ -104,14 +104,14 @@ class PacketEditPlainTextEditor : public PacketEditIface {
     public:
         PacketEditPlainTextEditor(QPlainTextEdit *edit);
 
-        virtual bool cutEnabled() const;
-        virtual bool copyEnabled() const;
-        virtual bool pasteEnabled() const;
+        bool cutEnabled() const override;
+        bool copyEnabled() const override;
+        bool pasteEnabled() const override;
 
     public slots:
-        virtual void cut();
-        virtual void copy();
-        virtual void paste();
+        void cut() override;
+        void copy() override;
+        void paste() override;
 
     /**
      * Hmm, seems we can't call cut/copy/paste directly on the text
@@ -133,14 +133,14 @@ class PacketEditTabbedUI : public PacketEditIface {
     public:
         PacketEditTabbedUI(PacketTabbedUI* tabs);
 
-        virtual bool cutEnabled() const;
-        virtual bool copyEnabled() const;
-        virtual bool pasteEnabled() const;
+        bool cutEnabled() const override;
+        bool copyEnabled() const override;
+        bool pasteEnabled() const override;
 
     public slots:
-        virtual void cut();
-        virtual void copy();
-        virtual void paste();
+        void cut() override;
+        void copy() override;
+        void paste() override;
 
     private slots:
         void tabChanged(int newTab);

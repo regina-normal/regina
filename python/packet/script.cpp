@@ -32,16 +32,17 @@
 
 #include "../pybind11/pybind11.h"
 #include "packet/script.h"
-#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
 using regina::Script;
 
 void addScript(pybind11::module_& m) {
-    pybind11::class_<Script, regina::Packet, regina::SafePtr<Script>>(
+    pybind11::class_<Script, regina::Packet, std::shared_ptr<Script>>(
             m, "Script")
         .def(pybind11::init<>())
+        .def(pybind11::init<const Script&>())
+        .def("swap", &Script::swap)
         .def("text", &Script::text)
         .def("setText", &Script::setText)
         .def("append", &Script::append)
@@ -53,18 +54,34 @@ void addScript(pybind11::module_& m) {
             &Script::variableValue, pybind11::const_))
         .def("variableIndex", &Script::variableIndex)
         .def("setVariableName", &Script::setVariableName)
-        .def("setVariableValue", &Script::setVariableValue)
-        .def("addVariable", &Script::addVariable)
-        .def("addVariableName", &Script::addVariableName)
+        .def("setVariableValue", [](Script& s, size_t index,
+                std::shared_ptr<regina::Packet> value) {
+            // We need to reimplement this, since Regina's function
+            // takes a weak_ptr, not a shared_ptr.
+            s.setVariableValue(index, value);
+        }, pybind11::arg(), pybind11::arg("value") = nullptr)
+        .def("addVariable", [](Script& s, const std::string& name,
+                std::shared_ptr<regina::Packet> value) {
+            // We need to reimplement this, since Regina's function
+            // takes a weak_ptr, not a shared_ptr.
+            return s.addVariable(name, value);
+        }, pybind11::arg(), pybind11::arg("value") = nullptr)
+        .def("addVariableName", [](Script& s, const std::string& name,
+                std::shared_ptr<regina::Packet> value) {
+            // We need to reimplement this, since Regina's function
+            // takes a weak_ptr, not a shared_ptr.
+            return s.addVariableName(name, value);
+        }, pybind11::arg(), pybind11::arg("value") = nullptr)
         .def("removeVariable",
             overload_cast<size_t>(&Script::removeVariable))
         .def("removeVariable",
             overload_cast<const std::string&>(&Script::removeVariable))
         .def("removeAllVariables", &Script::removeAllVariables)
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return Script::typeID;
-        })
+        .def_readonly_static("typeID", &Script::typeID)
+        .def("listenVariables", &Script::listenVariables)
+        .def("unlistenVariables", &Script::unlistenVariables)
     ;
+
+    m.def("swap", (void(*)(Script&, Script&))(regina::swap));
 }
 

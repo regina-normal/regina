@@ -1,13 +1,129 @@
-SEARCH: foo
-Hits: 0
+0:1 0:0 1:0 | 0:2 1:2 1:1
+cMabdd
+cMabcc
+cMabcd
+1:0 1:1 1:2 | 0:0 0:1 0:2
+cPbbaa
+cPbbac
+cPbbbe
+cPbbde
 
-SEARCH: cPcbbbiht
-Hits: 2
-  Cusped hyperbolic census (orientable)  -  m004 : #1
-  Christy's collection of knot/link complements  -  L104001
+0:1 0:0 1:0 | 0:2 1:2 1:1
+cMabdd
+cMabcc
+cMabcd
+1:0 1:1 1:2 | 0:0 0:1 0:2
+cPbbaa
+cPbbac
+cPbbbe
+cPbbde
 
-SEARCH: nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng
-Hits: 2
-  Christy's collection of knot/link complements  -  L111376
-  Christy's collection of knot/link complements  -  L111449
+0:1 0:0 1:0 | 0:2 1:2 1:1
+cMabdd
+cMabcc
+cMabcd
+1:0 1:1 1:2 | 0:0 0:1 0:2
+cPbbaa
+cPbbac
+cPbbbe
+cPbbde
+
+0:1 0:0 1:0 1:1 | 0:2 0:3 1:3 1:2
+cMcabbjqw
+cMcabbjxr
+cMcabbjaj
+cMcabbjak
+cMcabbjqs
+cMcabbgqw
+cMcabbgaj
+1:0 1:1 1:2 1:3 | 0:0 0:1 0:2 0:3
+cPcbbbaaa
+cPcbbbaai
+cPcbbbqxh
+cPcbbbahh
+
+0:1 0:0 1:0 1:1 | 0:2 0:3 1:3 1:2
+cMcabbjqw
+cMcabbjxr
+cMcabbjaj
+cMcabbjak
+cMcabbjqs
+cMcabbgqw
+cMcabbgaj
+1:0 1:1 1:2 1:3 | 0:0 0:1 0:2 0:3
+cPcbbbaaa
+cPcbbbaai
+cPcbbbqxh
+cPcbbbahh
+
+0:1 0:0 1:0 1:1 | 0:2 0:3 1:3 1:2
+cMcabbjqw
+cMcabbjxr
+cMcabbjaj
+cMcabbjak
+cMcabbjqs
+cMcabbgqw
+cMcabbgaj
+1:0 1:1 1:2 1:3 | 0:0 0:1 0:2 0:3
+cPcbbbaaa
+cPcbbbaai
+cPcbbbqxh
+cPcbbbahh
+
+0:1 0:0 0:3 0:2 1:0 | 0:4 1:2 1:1 1:4 1:3
+cAkaabb2aoa2aoa
+cAkaabb+aoaqbga
+cAkaabb+aoa+aoa
+cAkaabb+a+a+a+a
+cAkaabb+aKa+aKa
+0:1 0:0 1:0 1:1 1:2 | 0:2 0:3 0:4 1:4 1:3
+cMkabbb2a-ataqb
+cMkabbb2aHaua2a
+cMkabbb2a4aaaca
+cMkabbb+aaa0bPb
+cMkabbb2aaaaa2a
+cMkabbb+aAa3blb
+cMkabbb+aaaaa+a
+1:0 1:1 1:2 1:3 1:4 | 0:0 0:1 0:2 0:3 0:4
+cPkbbbbaaaaaaaa
+cPkbbbb4aaaaa4a
+cPkbbbb-a-a-aUa
+
+0:1 0:0 0:3 0:2 1:0 | 0:4 1:2 1:1 1:4 1:3
+cAkaabb2aoa2aoa
+cAkaabb+aoaqbga
+cAkaabb+aoa+aoa
+cAkaabb+a+a+a+a
+cAkaabb+aKa+aKa
+0:1 0:0 1:0 1:1 1:2 | 0:2 0:3 0:4 1:4 1:3
+cMkabbb2a-ataqb
+cMkabbb2aHaua2a
+cMkabbb2a4aaaca
+cMkabbb+aaa0bPb
+cMkabbb2aaaaa2a
+cMkabbb+aAa3blb
+cMkabbb+aaaaa+a
+1:0 1:1 1:2 1:3 1:4 | 0:0 0:1 0:2 0:3 0:4
+cPkbbbbaaaaaaaa
+cPkbbbb4aaaaa4a
+cPkbbbb-a-a-aUa
+
+0:1 0:0 0:3 0:2 1:0 | 0:4 1:2 1:1 1:4 1:3
+cAkaabb2aoa2aoa
+cAkaabb+aoaqbga
+cAkaabb+aoa+aoa
+cAkaabb+a+a+a+a
+cAkaabb+aKa+aKa
+0:1 0:0 1:0 1:1 1:2 | 0:2 0:3 0:4 1:4 1:3
+cMkabbb2a-ataqb
+cMkabbb2aHaua2a
+cMkabbb2a4aaaca
+cMkabbb+aaa0bPb
+cMkabbb2aaaaa2a
+cMkabbb+aAa3blb
+cMkabbb+aaaaa+a
+1:0 1:1 1:2 1:3 1:4 | 0:0 0:1 0:2 0:3 0:4
+cPkbbbbaaaaaaaa
+cPkbbbb4aaaaa4a
+cPkbbbb-a-a-aUa
 

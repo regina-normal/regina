@@ -1,0 +1,80 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2015-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests Regina's mechanism for snapshotting triangulations.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+from __future__ import print_function
+
+class Watcher(PacketListener):
+    def __init__(self, packet, label):
+        PacketListener.__init__(self)
+        packet.setLabel(label)
+        packet.listen(self)
+    def packetBeingDestroyed(self, packet):
+        print('Destroying: ' + packet.label())
+
+# Make sure that snapshotting works.
+
+t = PacketOfTriangulation3(Example3.whiteheadLink())
+w1 = Watcher(t, 'original')
+print(t.isoSig(), t.isReadOnlySnapshot())
+
+a = AngleStructures(t)
+print(a)
+print(a.triangulation().isoSig())
+
+a.triangulation().pachner(t.tetrahedron(0))
+print(t.isoSig(), t.isReadOnlySnapshot())
+print(a.triangulation().isoSig(), a.triangulation().isReadOnlySnapshot())
+
+print('Step 1')
+t = None
+print('Step 2')
+a = None
+# This should destroy a.triangulation(), but since that does not have a
+# packet wrapper we cannot observe its destruction here.
+print('Step 3')
+
+print()
+
+# Test that snapshotting happens when we nullify a SnapPea triangulation.
+
+t = ExampleSnapPea.whiteheadLink()
+print(t.isoSig(), t.isReadOnlySnapshot())
+
+a = AngleStructures(t)
+print(a)
+print(a.triangulation().isoSig())
+
+a.triangulation().pachner(t.tetrahedron(0))
+print(t.isoSig(), t.isReadOnlySnapshot()) # should be an empty triangulation
+print(a.triangulation().isoSig(), a.triangulation().isReadOnlySnapshot())
+

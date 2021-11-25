@@ -1,0 +1,454 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2007-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests the census database lookup routines.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+from __future__ import print_function
+
+def prefix(n):
+	return '  ' * n
+
+def describeSatRegion(r):
+	for b in range(r.countBlocks()):
+		spec = r.block(b)
+		block = spec.block()
+		if spec.refVert() and spec.refHoriz():
+			refStr = '<-> vert/horiz'
+		elif spec.refVert():
+			refStr = '<-> vert'
+		elif spec.refHoriz():
+			refstr = '<-> horiz'
+		else:
+			refStr = '<-X->'
+		print(prefix(3) + 'Block ' + str(b) + ':', block.abbr(), refStr)
+		print(prefix(4) + block.str())
+		for a in range(block.countAnnuli()):
+			ann = block.annulus(a)
+			msg = 'Ann. ' + str(b) + '/' + str(a) + \
+				' [' + str(ann.tet(0).index()) + '/' + \
+					str(ann.roles(0).trunc(3)) + \
+				', ' + str(ann.tet(1).index()) + '/' + \
+					str(ann.roles(1).trunc(3)) + ']'
+			if not block.hasAdjacentBlock(a):
+				msg = msg + ': bdry'
+			else:
+				msg = msg + ' -> ' + \
+					str(r.blockIndex(block.adjacentBlock(a))) + '/' + \
+					str(block.adjacentAnnulus(a))
+				ref = block.adjacentReflected(a)
+				back = block.adjacentBackwards(a)
+				if ref and back:
+					msg = msg + ' (ref, back)'
+				elif ref:
+					msg = msg + ' (ref)'
+				elif back:
+					msg = msg + ' (back)'
+			print(prefix(4) + msg)
+	pass
+
+def describe(t, name):
+	print(name + ':')
+	print(prefix(1) + 'IsoSig: ' + t.isoSig())
+
+	std = StandardTriangulation.recognise(t)
+	if std:
+		mfd = std.manifold()
+		if mfd:
+			print(prefix(1) + 'Standard: ' + std.name(), '=', mfd.name())
+		else:
+			print(prefix(1) + 'Standard: ' + std.name(), '= ?')
+
+	# We assume the triangulation is connected.
+	c = t.component(0)
+
+	sub = AugTriSolidTorus.recognise(c)
+	if sub:
+		print(prefix(1) + 'Aug. tri. solid torus: ' + sub.name())
+		core = sub.core()
+		print(prefix(2) + 'Core:', core.tetrahedron(0).index(),
+			core.tetrahedron(1).index(), core.tetrahedron(2).index())
+		if sub.hasLayeredChain():
+			if sub.chainType() == AugTriSolidTorus.CHAIN_MAJOR:
+				print(prefix(2) + 'Chain type: major')
+			elif sub.chainType() == AugTriSolidTorus.CHAIN_AXIS:
+				print(prefix(2) + 'Chain type: axis')
+			else:
+				print(prefix(2) + 'Chain type: unknown')
+		else:
+			print(prefix(2) + 'No chain')
+
+	sub = L31Pillow.recognise(c)
+	if sub:
+		print(prefix(1) + 'L(3,1) pillow: ' + sub.name())
+		print(prefix(2) + 'Interior vertex:',
+			sub.tetrahedron(0).vertex(sub.interiorVertex(0)).index())
+
+	sub = LayeredChainPair.recognise(c)
+	if sub:
+		print(prefix(1) + 'Layered chain pair: ' + sub.name())
+		print(prefix(2) + 'Chain lengths:',
+			sub.chain(0).index(), sub.chain(1).index())
+
+	sub = LayeredLensSpace.recognise(c)
+	if sub:
+		print(prefix(1) + 'Layered lens space: ' + sub.name())
+		torus = sub.torus()
+		print(prefix(2) + 'LST:', torus.meridinalCuts(0),
+			torus.meridinalCuts(1), torus.meridinalCuts(2))
+		if sub.isSnapped():
+			print(prefix(2) + 'Snapped')
+		else:
+			print(prefix(2) + 'Twisted')
+
+	sub = LayeredLoop.recognise(c)
+	if sub:
+		print(prefix(1) + 'Layered loop: ' + sub.name())
+		if sub.isTwisted():
+			print(prefix(2) + 'Twisted,', sub.length())
+			print(prefix(2) + 'Hinge:', sub.hinge(0).index())
+		else:
+			print(prefix(2) + 'Untwisted,', sub.length())
+			print(prefix(2) + 'Hinges:', sub.hinge(0).index(),
+				sub.hinge(1).index())
+
+	sub = PlugTriSolidTorus.recognise(c)
+	if sub:
+		print(prefix(1) + 'Plugged tri. solid torus: ' + sub.name())
+		core = sub.core()
+		print(prefix(2) + 'Core:', core.tetrahedron(0).index(),
+			core.tetrahedron(1).index(), core.tetrahedron(2).index())
+		for i in range(3):
+			chain = sub.chain(i)
+			if chain:
+				if sub.chainType(i) == PlugTriSolidTorus.CHAIN_MAJOR:
+					print(prefix(2) + 'Chain ' + str(i) + ':',
+						chain.index(), '(major)')
+				else:
+					print(prefix(2) + 'Chain ' + str(i) + ':',
+						chain.index(), '(minor)')
+			else:
+				print(prefix(2) + 'Chain ' + str(i) + ': 0')
+		if sub.equatorType() == PlugTriSolidTorus.EQUATOR_MAJOR:
+			print(prefix(2) + 'Equator: major')
+		else:
+			print(prefix(2) + 'Equator: minor')
+
+	sub = BlockedSFS.recognise(t)
+	if sub:
+		print(prefix(1) + 'Blocked SFS')
+		print(prefix(2) + 'Region:')
+		describeSatRegion(sub.region())
+
+	sub = BlockedSFSLoop.recognise(t)
+	if sub:
+		print(prefix(1) + 'Blocked SFS Loop')
+		print(prefix(2) + 'Region:')
+		describeSatRegion(sub.region())
+		print(prefix(2) + 'Matching:', sub.matchingReln())
+
+	sub = BlockedSFSPair.recognise(t)
+	if sub:
+		print(prefix(1) + 'Blocked SFS Pair')
+		print(prefix(2) + 'Region 0:')
+		describeSatRegion(sub.region(0))
+		print(prefix(2) + 'Region 1:')
+		describeSatRegion(sub.region(1))
+		print(prefix(2) + 'Matching:', sub.matchingReln())
+
+	sub = BlockedSFSTriple.recognise(t)
+	if sub:
+		print(prefix(1) + 'Blocked SFS Triple')
+		print(prefix(2) + 'Central region:')
+		describeSatRegion(sub.centre())
+		print(prefix(2) + 'End region 0:')
+		describeSatRegion(sub.end(0))
+		print(prefix(2) + 'End region 1:')
+		describeSatRegion(sub.end(1))
+		print(prefix(2) + 'Matching 0:', sub.matchingReln(0))
+		print(prefix(2) + 'Matching 1:', sub.matchingReln(1))
+
+	for f in t.triangles():
+		for g in t.triangles():
+			if g == f:
+				continue
+			sub = PillowTwoSphere.recognise(f, g)
+			if sub:
+				print(prefix(1) + 'Pillow 2-sphere')
+				print(prefix(2) + 'Triangles:', f.index(), g.index())
+				print(prefix(2) + 'Equator:',
+					f.edge(0).index(), f.edge(1).index(), f.edge(2).index())
+
+	for a in t.tetrahedra():
+		for b in t.tetrahedra():
+			if b == a:
+				continue
+			sub = SnappedTwoSphere.recognise(a, b)
+			if sub:
+				print(prefix(1) + 'Snapped 2-sphere')
+				print(prefix(2) + 'Tet:', a.index(), b.index())
+				ball = sub.snappedBall(0)
+				print(prefix(2) + 'Equator:',
+					ball.tetrahedron().edge(ball.equatorEdge()).index())
+
+
+	for tet in t.tetrahedra():
+		sub = LayeredSolidTorus.recogniseFromBase(tet)
+		if sub:
+			print(prefix(1) + 'Layered solid torus: ' + sub.name())
+			print(prefix(2) + 'Base:', sub.base().index())
+			print(prefix(2) + 'Top:', sub.topLevel().index())
+			print(prefix(2) + 'Cuts:', sub.meridinalCuts(0),
+				sub.meridinalCuts(1), sub.meridinalCuts(2))
+			print(prefix(2) + 'Edges:',
+				sub.topEdge(0, 0), sub.topEdge(0, 1), '/',
+				sub.topEdge(1, 0), sub.topEdge(1, 1), '/',
+				sub.topEdge(2, 0), sub.topEdge(2, 1))
+
+	for tet in t.tetrahedra():
+		sub = SnappedBall.recognise(tet)
+		if sub:
+			print(prefix(1) + 'Snapped 3-ball')
+			print(prefix(2) + 'Tet:', tet.index())
+			print(prefix(2) + 'Internal faces:',
+				sub.internalFace(0), sub.internalFace(1))
+
+	for tet in t.tetrahedra():
+		for p in Perm4.S4:
+			if p[0] > p[3]:
+				continue
+			sub = SpiralSolidTorus.recognise(tet, p)
+			if sub:
+				if not sub.isCanonical():
+					continue
+				msg = 'Spiral:'
+				for i in range(sub.size()):
+					msg = msg + ' ' + str(sub.tetrahedron(i).index()) + \
+						'/' + str(sub.vertexRoles(i))
+				print(prefix(1) + msg)
+
+def describeSig(sig):
+	describe(Triangulation3.fromIsoSig(sig), sig)
+
+# The following isosigs are the complete output of tricensus -sNfit<n>:
+
+t1 = [ 'bkaajj', 'bkaajn', 'bkaagb', 'bkaagj' ]
+t2 = [ 'cMcabbjqw', 'cMcabbjxr', 'cMcabbjaj', 'cMcabbjak', 'cMcabbjqs',
+	'cMcabbgqw', 'cMcabbgaj', 'cPcbbbaaa', 'cPcbbbaai', 'cPcbbbqxh',
+	'cPcbbbajs', 'cPcbbbahh' ]
+t3 = [ 'dLQbcbchhww', 'dLQbcbchxwn', 'dLQbcbchhjw', 'dLQbcbchxjn',
+	'dLQbcbchhjs', 'dLQbcbchxjj', 'dLQbccchhrw' ]
+t4 = [ 'eLAkbcbddhhwhr', 'eLAkbcbddhhwqj', 'eLAkbcbddhxwqs', 'eLAkbcbddhhjhr',
+	'eLAkbcbddhhjqj', 'eLAkbcbddhhwqn', 'eLAkbcbddhxjqs', 'eLAkbcbddhhjhk',
+	'eLAkbcbddhhjqn', 'eLAkbcbddhxjqw', 'eLAkbccddemkiw', 'eLAkbccddemker',
+	'eLAkbccddrrhrr', 'eLAkbccddemkij', 'eLAkbccddemken', 'eLAkbccddrrhrn',
+	'eLMkbcdddhhhqx', 'eLPkbcdddhrrnk', 'eLPkbcddddrwos' ]
+t5 = [ 'fLAMcbcbdeehhwhhw', 'fLAMcbcbdeehhwqqs', 'fLAMcbcbdeehhwhxn',
+	'fLAMcbcbdeehxwxhw', 'fLAMcbcbdeehhwqxk', 'fLAMcbcbdeehxwqhr',
+	'fLAMcbcbdeehhjhhw', 'fLAMcbcbdeehhjhxn', 'fLAMcbcbdeehhjqqs',
+	'fLAMcbcbdeehhjqxk', 'fLAMcbcbdeehhwhxj', 'fLAMcbcbdeehxjxhw',
+	'fLAMcbcbdeehhwqxr', 'fLAMcbcbdeehxjqhr', 'fLAMcbcbdeehhjhhs',
+	'fLAMcbcbdeehhjqqw', 'fLAMcbcbdeehhjhxj', 'fLAMcbcbdeehxjxhs',
+	'fLAMcbcbdeehhjqxr', 'fLAMcbcbdeehxjqhk', 'fLAMcbccdeeemkihr',
+	'fLAMcbccdeeemkehw', 'fLAMcbccdeerrhrhw', 'fLAMcbccdeeemkiqj',
+	'fLAMcbccdeeemkexn', 'fLAMcbccdeerrhrxn', 'fLAMcbccdeeemkihn',
+	'fLAMcbccdeeemkehj', 'fLAMcbccdeerrhrhj', 'fLAMcbccdeeemkiqn',
+	'fLAMcbccdeeemkexj', 'fLAMcbccdeerrhrxj', 'fLLQcacddeenkaikr',
+	'fLLQcacddeejkaink', 'fLLQcaceeedjkuxkn', 'fLLQcacddeejkaikk',
+	'fLLQcaceeedjkuxkj', 'fLLQcacddeejkaikr', 'fLLQcacddeejkainj',
+	'fLLQcacddeenkaink', 'fLLQcaceeednkuxkn', 'fLLQcacddeenkaikk',
+	'fLLQcacdeeenkqxvn', 'fLLQcacdeeenkaqnv', 'fLLQcacdeeejkqxvn',
+	'fLLQcacdeeejkaqnv', 'fLMPcbcdeeehhhhwr', 'fLLQcbeddeehhnkxx',
+	'fLLQcbededexxnxwx', 'fLLQcbededexxrxwx', 'fLLQcbeddeehhokum',
+	'fLLQcbcdeeehwkiiq', 'fvPQcdecedekrsnrs', 'fvPQcceddeerrnskr' ]
+
+# The following isosigs are from tricensus -sNfit<n>, after stripping
+# out the layered lens spaces:
+
+t6 = [ 'gLALQbcbefffxxnnmxm', 'gLALQbcbefffxxnndxd', 'gLALQbcbefffxxnnnxn',
+	'gLALQbcbefffhhwsmmq', 'gLALQbcbefffhhwsuuq', 'gLALQbcbefffhhwsssq',
+	'gLALQbcbefffhxwnmxm', 'gLALQbcbefffhxwndxd', 'gLALQbcbefffhxwnnxn',
+	'gLALQbcbefffxhnsmmq', 'gLALQbcbefffxhnsuuq', 'gLALQbcbefffxhnsssq',
+	'gLALQbcbefffxxjnmxm', 'gLALQbcbefffxxjndxd', 'gLALQbcbefffxxjnnxn',
+	'gLALQbcbefffhhjsmmq', 'gLALQbcbefffhhjsuuq', 'gLALQbcbefffhhjsssq',
+	'gLALQbcbefffhxjnmxm', 'gLALQbcbefffhxjndxd', 'gLALQbcbefffhxjnnxn',
+	'gLALQbcbefffxhjsmmq', 'gLALQbcbefffxhjsuuq', 'gLALQbcbefffxhjsssq',
+	'gLLAQaceefefjkuxxnn', 'gLLAQbcedfeftsajqnj', 'gLLAQbcedfeftsqsqwj',
+	'gLLAQbcedfeftsasqnj', 'gLLAQbcedfeftsqsxwk', 'gLLAQbcedfeftsasxnk',
+	'gLLAQaceefefjkuxhnw', 'gLLAQbcedfeftsajhnr', 'gLLAQaceefefjkuxxnj',
+	'gLLAQbcedfeftsajqnn', 'gLLAQbcedfeftsqsqww', 'gLLAQbcedfeftsasqnw',
+	'gLLAQbcedfeftsqsxwr', 'gLLAQbcedfeftsasxnr', 'gLLAQaceefefjkuxhnj',
+	'gLLAQbcedfeftsajhnn', 'gLLAQaceefefnkuxxnn', 'gLLAQbcedfeftsajqjj',
+	'gLLAQbcedfeftsqsqsj', 'gLLAQbcedfeftsasqjj', 'gLLAQbcedfeftsqsxsk',
+	'gLLAQbcedfeftsasxjk', 'gLLAQaceefefnkuxhnw', 'gLLAQbcedfeftsajhjr',
+	'gLLAQaceefefnkuxxnj', 'gLLAQbcedfeftsajqjn', 'gLLAQbcedfeftsqsqsw',
+	'gLLAQbcedfeftsasqjw', 'gLLAQbcedfeftsqsxsr', 'gLLAQbcedfeftsasxjr',
+	'gLLAQaceefefnkuxhnj', 'gLLAQbcedfeftsajhjn', 'gLLPQcdcfeffqsjhqos',
+	'gLLPQcdcfeffqsjahos', 'gLLPQcdcfeffhsrhqos', 'gLLPQcdcfeffhsrahos',
+	'gLLPQcdcfeffqsnhqos', 'gLLPQcdcfeffqsnahos', 'gLLPQcdcfeffhsnhqos',
+	'gLLPQcdcfeffhsnahos', 'gLLAQacdefffnkqxqlu', 'gLLAQacdefffnkxxxxa',
+	'gLLAQacdefffnkaqqul', 'gLLAQacdefffnkaaxxa', 'gLLAQacdefffnbxxxxa',
+	'gLLAQacdefffnsaaxxa', 'gLLAQbedeeffxxrxxhj', 'gLLAQbedeeffxxrxxhw',
+	'gLLAQacdefffjkqxqlu', 'gLLAQacdefffjkxxxxa', 'gLLAQacdefffjkaqqul',
+	'gLLAQacdefffjkaaxxa', 'gLLAQacdefffjbxxxxa', 'gLLAQacdefffjsaaxxa',
+	'gLLMQacdefefjkankjj', 'gLLPQaceedffjkxkjnn', 'gLLMQacdefefjkaknkr',
+	'gLLMQacdefefjkakkkj', 'gLLMQacdefefnkaknrr', 'gLLMQacdefefjkakkrk',
+	'gLLMQacdefefjkankjk', 'gLLPQaceedffjkxkjnj', 'gLLMQacdefefjkaknrr',
+	'gLLMQacdefefjkakkrj', 'gLLPQaceedffjkxknnn', 'gLLMQacdefefnkaknkr',
+	'gLLMQacdefefjkakkkk', 'gLLMQacdefefnkakkrk', 'gLLMQacdefefjkankkk',
+	'gLLMQacdefefjkaknkn', 'gLLPQaceedffnkxknnn', 'gLLMQacdefefnkaknkn',
+	'gLLMQacdefefnkakkkk', 'gLLMQacdefefnkankkk', 'gLLAQbcdeeffxkrllck',
+	'gLLAQbcdeeffxkrllkw', 'gLLAQbcdeeffxkrllcr', 'gLLAQbcdeeffxkrllkj',
+	'gLALQbccefffemkbtli', 'gLALQbccefffemkbemi', 'gLALQbccefffemkbsri',
+	'gLALQbcceffflpkksuc', 'gLALQbcceffflpkkeux', 'gLALQbcceffflpkktua',
+	'gLALQbccfefflpkusue', 'gLALQbccefffrrhutwf', 'gLALQbccefffrrhuswe',
+	'gLALQbccfeffrrhwhwa', 'gLALQbccfeffrrbwbwa', 'gLALQbccefffnknnkan',
+	'gLMzQbcdefffhhhhhxq', 'gLLAQccedffflnxkxvc', 'gLLAQccedfffhwxrxvc',
+	'gLLAQbeddfffhhnkarw', 'gLLAQbeddfffhhokxjo', 'gLLMQbeefffehhaxhqa',
+	'gLLPQbefefefhhxxqxh', 'gLLMQbeefffehhaqaqa', 'gLLPQbefefefjjjhhhf',
+	'gLLPQbefefefjjjsqss', 'gLLMQbeefffehharhra', 'gLLAQbcedffftsajhos',
+	'gLLAQbdedfffdwqsujs', 'gLLAQbdedfffdraolrj', 'gLLAQbdedfffendolgn',
+	'gLLMQbcefefftsamqqs', 'gLLMQbcdfefftsommkw', 'gLLMQbcdfefftsmmriq',
+	'gLLAQbddefffdwpjapq', 'gLLAQbddefffdwolaor', 'gLLPQcdeffefhsxxatn',
+	'gLLPQceeffefhlatdee', 'gLLPQceeffefhtatdee', 'gLLPQceeffefhlataee',
+	'gvLQQcdfeeffbqaqghh', 'gvLQQcedffefqsqsqjs', 'gvLQQdefdeffrwawrhh',
+	'gvLQQdefdeffrrawwhh', 'gvLQQdefdeffrqawxhh', 'gvLQQcdefeffjwnpjhe',
+	'gvLQQcdfeeffhqaqhhh', 'gvLQQcdeffefnxnnnxx', 'gvLQQdefdeffxqaqxhh',
+	'gvLQQdefedffxqawrgg', 'gvLQQcdefeffndnbejx', 'gvLQQcdefeffpinjkje',
+	'gvLQQcdefeffninjije', 'gvLQQcdefeffbwnpghe', 'gvLQQcdefeffbwdpikk',
+	'gvLQQcdefeffncnhchx', 'gvLQQcdefeffncpjcjs', 'gvLQQcdefeffnwnpkhe',
+	'gvLQQedfedffrwawrhh', 'gvLQQcedffeffsfhqjh', 'gvLQQcdefeffffjmfuu',
+	'gvLQQcdefeffffomfum', 'gvLQQcdefeffffomfhm', 'gvLQQcdfeeffjjassaa',
+	'gvLQQcdefeffdwnplhe', 'gvLQQcdefeffnjndspx', 'gvLQQcedffefvksidsi' ]
+
+# The following isosigs are hand-picked from the non-orientable census with
+# 7 and 8 tetrahedra, to collect blocked SFS pairs, other more exotic
+# block types and manifolds, and pillow 2-spheres:
+
+t7 = [ 'hLALAkbcceffggrrhutwun', 'hLALAkbcceffggrrhutwdk',
+	'hLAwPkbccdgfggemkijjjq', 'hLAwMkbccdfgggemkiwrwa',
+	'hLAwPkbccdgfggrrhrnnnx', 'hLAwMkbccdfgggrrhrrwar',
+	'hLAwMkbccdfgggrrbrqwar', 'hLALPkbccefgggrrhuwrfs',
+	'hLALPkbccefgggrrhurgsf', 'hLAvQkbccefgggrrhhgrwb',
+	'hLLAPkbedegfggjjhqjxox', 'hLLAPkbedegfggjjjqjsja',
+	'hLvAQkbefegfgghaxqahha', 'hLvAQkbefegfggjajqassa',
+	'hLvAQkbefegfggjajqashf', 'hvLPQkcdefggfgqhhvvaxq',
+	'hvLPQkcdefggfgqhhxaaxq', 'hvLPQkcdefgfggqqjqqjqq',
+	'hvLPQkcdefgfggqqxwrrrq', 'hvLPQkcdefgfggqqxqqxqq',
+	'hvLPQkcdefgfggdeiqqxqp', 'hvLPQkcedfggfgnnnvvaxn',
+	'hvLPQkcdefggfgtssdjkkw', 'hvLPQkcedfggfgpnnvvawn',
+	'hvLPQkcdefgfggffxqqjqo', 'hvLPQkcedfgfggnnkffeiw',
+	'hvLPQkcedfgfggnnkrweiw', 'hvLPQkcedfgfggwwrwrrrr',
+	'hvLPQkcedfgfggwwrffsfk', 'hvLPQkcedfgfggnpkkdrid',
+	'hvLAQkcdfegfggjqajpmpt', 'hvLAQkcdfegfggjqajooof',
+	'hvLAQkcdfegfggjdajpmpd', 'hvLAQkcdegffggttncseas' ]
+
+t8 = [ 'iLALAMcbcceffghhrrhutwuxn', 'iLALAMcbccfefghhrrhuhwhhw',
+	'iLALMMcbcceffghhrrhuestxk', 'iLALAMcbcceffghhrrhutwdxk',
+	'iLALAMcbccfefghhrrhuhwahr', 'iLALMMcbcceffghhrrhuesexn',
+	'iLALAMcbcceffghhrrhutwdqj', 'iLALAMcbccfefghhrrhuhwaqj',
+	'iLALMMcbcceffghhrrhuesehw', 'iLALAMcbcceffghhrrhutwuhw',
+	'iLALAMcbccfefghhrrhuhwhxn', 'iLALMMcbcceffghhrrhuestqs',
+	'iLALAMcbcceffghhrrhutwuxj', 'iLALAMcbccfefghhrrhuhwhhj',
+	'iLALMMcbcceffghhrrhuestxr', 'iLALAMcbcceffghhrrhutwdxr',
+	'iLALAMcbccfefghhrrhuhwahk', 'iLALMMcbcceffghhrrhuesexj',
+	'iLALAMcbcceffghhrrhutwdqw', 'iLALAMcbccfefghhrrhuhwaqn',
+	'iLALMMcbcceffghhrrhuesehs', 'iLALAMcbcceffghhrrhutwuhj',
+	'iLALAMcbccfefghhrrhuhwhxj', 'iLALMMcbcceffghhrrhuestqw',
+	'iLAwLQcbccdfgghhrrhrntxnk', 'iLAwMMcbccdfgghhrrhwwlukr',
+	'iLAwLQcbccdfhhghrrhrnamnn', 'iLAwMMcbccdfgghhrrhrriarr',
+	'iLAwLQcbccdfgghhrrhrntxkk', 'iLAwMMcbccdfgghhrrhwwlucw',
+	'iLAwLQcbccdfhhhgrrhrnamkn', 'iLAwMMcbccdfgghhrrhrriaww',
+	'iLAwLQcbccdfgghhrrhrntxkr', 'iLAwMMcbccdfgghhrrhwwlucs',
+	'iLAwLQcbccdfhhhgrrhrnamkj', 'iLAwMMcbccdfgghhrrhrriaws',
+	'iLAwLQcbccdfgghhrrhrntxnj', 'iLAwMMcbccdfgghhrrhwwlukn',
+	'iLAwLQcbccdfhhghrrhrnamrn', 'iLAwMMcbccdfgghhrrhrriarn',
+	'iLALzQcbccefhgghrrhuwuswr', 'iLAvAQcbccefghghrrhhwwhsn',
+	'iLALLQcbcceggfhhrrhugsnuj', 'iLALzQcbccefhgghrrhuwdjjj',
+	'iLAvAQcbccefghghrrhhwranw', 'iLALLQcbccegfghhrrhugjjdr',
+	'iLALzQcbccefhgghrrhuwdswk', 'iLAvAQcbccefghghrrhhwrhrn',
+	'iLALLQcbccegfghhrrhugjjuj', 'iLALzQcbccefhgghrrhuwdssj',
+	'iLAvAQcbccefghghrrhhwrhnr', 'iLALLQcbccegfghhrrhugwjun',
+	'iLALzQcbccefhgghrrhuwussr', 'iLAvAQcbccefghghrrhhwwhsr',
+	'iLALLQcbcceggfhhrrhugsjuj', 'iLALzQcbccefhgghrrhuwdjkj',
+	'iLAvAQcbccefghghrrhhwrans', 'iLALLQcbccegfghhrrhugwjdr',
+	'iLALzQcbccefhgghrrhuwdswj', 'iLAvAQcbccefghghrrhhwrhnn',
+	'iLALLQcbccegfghhrrhugwjuj', 'iLALzQcbccefhgghrrhuwdjjk',
+	'iLAvAQcbccefghghrrhhwrarw', 'iLALLQcbccegfghhrrhugjjdk',
+	'iLALzQcbccefhgghrrhuwdssk', 'iLAvAQcbccefghghrrhhwrhrr',
+	'iLALLQcbccegfghhrrhugjjun', 'iLALzQcbccefhgghrrhuwussn',
+	'iLAvAQcbccefghghrrhhwwhwr', 'iLALLQcbcceggfhhrrhugsjun',
+	'iLLALQcadddhhghgjsajsaajn', 'iLLALQcadddhhghgjsajsaqjw',
+	'iLAMLPcbccdeghhhemkehwrwa', 'iLAMLPcbccdeghhhrrhwqjpqp',
+	'iLAMLPcbccdeghhhlpkuhrwar', 'iLAMLPcbccdeghhhemkexjjqj',
+	'iLAMLPcbccdeghhhemkihrwar', 'iLAMLPcbccdeghhhlpklqwrwa',
+	'iLAMLPcbccdeghhhemkiqjjqj', 'iLAMLPcbccdeghhhlpklxrrhr',
+	'iLAMLPcbccdeghhhrrhrhwrwa', 'iLAMLPcbccdeghhhrrhwqjjqj',
+	'iLAMLPcbccdeghhhrrhrxjjqj', 'iLAMLPcbccdeghhhrrbrhxrwa',
+	'iLAwLQcbccdfhghhrrhrnhxnv', 'iLAwLQcbccdfhghhrrhrnahvn',
+	'iLAwwQcbccdfghhhrrhrrxhgw', 'iLAwwQcbccdfghhhrrhrraxgw',
+	'iLALzQcbccefhghhrrhuwusqx', 'iLALLQcbccegghhhrrhugstiu',
+	'iLAvAQcbccefghhhrrhhwwhml', 'iLLLQPccegffghhhkknknknka',
+	'iLLLQPccegffghhhkknqhknna', 'iLLvQQccdfeghghhhsaqllqxr',
+	'iLLvQQccdfehghghhsaquuahr', 'iLLvQQccdfeghghhhsaqxaiin',
+	'iLLvQQccdfeghhghhsaqlllmn', 'iLLvQQccdfeghhghhsawlllsn',
+	'iLLvQQccdfeghghhhsawvvodn', 'iLLvQQccdfeghhghhsanqqesn',
+	'iLLvQQccdfeghhghhsaqptttr', 'iLLvQQccdfehgghhhsaqeiiir',
+	'iLLvQQccdfeghhghqxaqhhhxh', 'iLLvQQccdfehgghhqxaqaaaqh',
+	'iLLvQQccdfeghhghqsaqhhhxj', 'iLLLMQcceefghghhkkaakqqvq',
+	'iLLLMQcceefghghhjjaajedve', 'iLvMQPcbefgfehhhjaaaaaaas' ]
+
+# The following isosigs are hand-picked from the 9-tetrahedron census to
+# pick up blocked SFS triples:
+
+t9 = [ 'jLALMLQbcceffhiiiemkbtilubc', 'jLALALQbccfefihiilpkusudego',
+	'jLALALQbccfefihiilpkusuuero' ]
+
+# TODO: We still have nothing in this list that contains a snapped 2-sphere
+# (mainly because such things do not appear in the census).
+
+for i in t1:
+	describeSig(i)
+for i in t2:
+	describeSig(i)
+for i in t3:
+	describeSig(i)
+for i in t4:
+	describeSig(i)
+for i in t5:
+	describeSig(i)
+for i in t6:
+	describeSig(i)
+for i in t7:
+	describeSig(i)
+for i in t8:
+	describeSig(i)
+for i in t9:
+	describeSig(i)

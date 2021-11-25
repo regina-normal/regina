@@ -44,22 +44,23 @@
 
 #include <algorithm>
 #include <iterator>
-#include "enumerate/enumconstraints.h"
+#include <set>
 #include "enumerate/hilbertdual.h"
 #include "enumerate/ordering.h"
+#include "enumerate/validityconstraints.h"
 #include "progress/progresstracker.h"
 #include "utilities/bitmask.h"
 #include "utilities/intutils.h"
 
 namespace regina {
 
-template <class RayClass, class OutputIterator>
-void HilbertDual::enumerateHilbertBasis(OutputIterator results,
-        const MatrixInt& subspace, const EnumConstraints* constraints,
+template <class RayClass, typename Action>
+void HilbertDual::enumerate(Action&& action,
+        const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned initialRows) {
     static_assert(
         IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
-        "HilbertDual::enumerateHilbertBasis() requires the RayClass "
+        "HilbertDual::enumerate() requires the RayClass "
         "template parameter to be equal to or derived from Vector<T>, "
         "where T is one of Regina's arbitrary precision integer types.");
 
@@ -75,36 +76,43 @@ void HilbertDual::enumerateHilbertBasis(OutputIterator results,
     // Then farm the work out to the real enumeration routine that is
     // templated on the bitmask type.
     if (dim <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
-            Bitmask2<unsigned long long, unsigned> >(results,
+            Bitmask2<unsigned long long, unsigned> >(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (dim <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass,
             Bitmask2<unsigned long long, unsigned long> >(
-            results, subspace, constraints, tracker, initialRows);
+            std::forward<Action>(action),
+            subspace, constraints, tracker, initialRows);
     else if (dim <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else
-        enumerateUsingBitmask<RayClass, Bitmask>(results,
+        enumerateUsingBitmask<RayClass, Bitmask>(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
 }
 
-template <class RayClass, class BitmaskType, class OutputIterator>
-void HilbertDual::enumerateUsingBitmask(OutputIterator results,
-        const MatrixInt& subspace, const EnumConstraints* constraints,
+template <class RayClass, class BitmaskType, typename Action>
+void HilbertDual::enumerateUsingBitmask(Action&& action,
+        const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned initialRows) {
-    typedef typename RayClass::Element IntegerType;
+    using IntegerType = typename RayClass::Element;
 
     // Get the dimension of the entire space in which we are working.
     // At this point we are guaranteed that the dimension is non-zero.
@@ -114,11 +122,10 @@ void HilbertDual::enumerateUsingBitmask(OutputIterator results,
     size_t nEqns = subspace.rows();
     if (nEqns == 0) {
         // No!  Just send back the unit vectors.
-        RayClass* ans;
         for (unsigned i = 0; i < dim; ++i) {
-            ans = new RayClass(dim);
-            ans->set(i, IntegerType::one);
-            *results++ = ans;
+            RayClass ans(dim);
+            ans[i] = IntegerType::one;
+            action(std::move(ans));
         }
 
         if (tracker)
@@ -140,21 +147,7 @@ void HilbertDual::enumerateUsingBitmask(OutputIterator results,
     std::sort(hyperplanes + initialRows, hyperplanes + nEqns,
         PosOrder(subspace));
 
-    // Convert the set of constraints into bitmasks, where for every
-    // original coordinate listed in the constraint, the corresponding
-    // bit is set to 1.
-    BitmaskType* constraintsBegin = nullptr;
-    BitmaskType* constraintsEnd = nullptr;
-    if (constraints && ! constraints->empty()) {
-        constraintsBegin = new BitmaskType[constraints->size()];
-
-        EnumConstraints::const_iterator cit;
-        for (cit = constraints->begin(), constraintsEnd = constraintsBegin;
-                cit != constraints->end(); ++cit, ++constraintsEnd) {
-            constraintsEnd->reset(dim);
-            constraintsEnd->set(cit->begin(), cit->end(), true);
-        }
-    }
+    auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
 
     // Create the vector list with which we will work.
     // Fill it with the initial basis elements.
@@ -168,8 +161,7 @@ void HilbertDual::enumerateUsingBitmask(OutputIterator results,
 
     // Intersect the hyperplanes one at a time.
     for (i=0; i<nEqns; i++) {
-        intersectHyperplane(list, subspace, hyperplanes[i],
-            constraintsBegin, constraintsEnd);
+        intersectHyperplane(list, subspace, hyperplanes[i], constraintMasks);
 
 #if 0
         std::cout << "LIST SIZE: " << list.size() << std::endl;
@@ -181,7 +173,6 @@ void HilbertDual::enumerateUsingBitmask(OutputIterator results,
 
     // We're done!
     delete[] hyperplanes;
-    delete[] constraintsBegin;
 
     typename std::vector<VecSpec<IntegerType, BitmaskType>*>::iterator it;
 
@@ -192,12 +183,11 @@ void HilbertDual::enumerateUsingBitmask(OutputIterator results,
         return;
     }
 
-    RayClass* ans;
     for (it = list.begin(); it != list.end(); ++it) {
-        ans = new RayClass(dim);
+        RayClass ans(dim);
         for (i = 0; i < dim; ++i)
-            ans->set(i, (**it)[i]);
-        *results++ = ans;
+            ans[i] = (**it)[i];
+        action(std::move(ans));
 
         delete *it;
     }
@@ -309,10 +299,8 @@ void HilbertDual::reduceBasis(
 template <class IntegerType, class BitmaskType>
 void HilbertDual::intersectHyperplane(
         std::vector<VecSpec<IntegerType, BitmaskType>*>& list,
-        const MatrixInt& subspace,
-        unsigned row,
-        const BitmaskType* constraintsBegin,
-        const BitmaskType* constraintsEnd) {
+        const MatrixInt& subspace, unsigned row,
+        const std::vector<BitmaskType>& constraintMasks) {
     // These must be linked lists because we need fast insertion and
     // deletion at arbitrary locations.
     std::list<VecSpec<IntegerType, BitmaskType>*>
@@ -383,14 +371,14 @@ void HilbertDual::intersectHyperplane(
 #endif
 
                 // Check for validity.
-                if (constraintsBegin) {
+                if (! constraintMasks.empty()) {
                     comb = (*posit)->mask();
                     comb |= (*negit)->mask();
 
                     broken = false;
-                    for (cit = constraintsBegin; cit != constraintsEnd; ++cit) {
+                    for (const BitmaskType& constraint : constraintMasks) {
                         tmpMask = comb;
-                        tmpMask &= (*cit);
+                        tmpMask &= constraint;
                         if (! tmpMask.atMostOneBit()) {
                             broken = true;
                             break;

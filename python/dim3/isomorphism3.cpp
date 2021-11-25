@@ -31,29 +31,46 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
 using regina::Isomorphism;
+using regina::Perm;
 
 void addIsomorphism3(pybind11::module_& m) {
     auto c = pybind11::class_<Isomorphism<3>>(m, "Isomorphism3")
         .def(pybind11::init<const Isomorphism<3>&>())
+        .def(pybind11::init<unsigned>())
         .def("swap", &Isomorphism<3>::swap)
         .def("size", &Isomorphism<3>::size)
         .def("simpImage", overload_cast<unsigned>(
             &Isomorphism<3>::simpImage, pybind11::const_))
+        .def("setSimpImage", [](Isomorphism<3>& iso, unsigned s, int image) {
+            iso.simpImage(s) = image;
+        })
         .def("tetImage", overload_cast<unsigned>(
             &Isomorphism<3>::tetImage, pybind11::const_))
+        .def("setTetImage", [](Isomorphism<3>& iso, unsigned s, int image) {
+            iso.tetImage(s) = image;
+        })
         .def("facetPerm", overload_cast<unsigned>(
             &Isomorphism<3>::facetPerm, pybind11::const_))
+        .def("setFacetPerm", [](Isomorphism<3>& iso, unsigned s, Perm<4> p) {
+            iso.facetPerm(s) = p;
+        })
         .def("facePerm", overload_cast<unsigned>(
             &Isomorphism<3>::facePerm, pybind11::const_))
+        .def("setFacePerm", [](Isomorphism<3>& iso, unsigned s, Perm<4> p) {
+            iso.facePerm(s) = p;
+        })
         .def("__getitem__", &Isomorphism<3>::operator[])
         .def("isIdentity", &Isomorphism<3>::isIdentity)
         .def("apply", &Isomorphism<3>::apply)
         .def("applyInPlace", &Isomorphism<3>::applyInPlace)
+        .def(pybind11::self * pybind11::self)
+        .def("inverse", &Isomorphism<3>::inverse)
         .def_static("random", &Isomorphism<3>::random,
             pybind11::arg(), pybind11::arg("even") = false)
         .def_static("identity", &Isomorphism<3>::identity)

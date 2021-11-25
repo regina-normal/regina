@@ -40,113 +40,12 @@
 
 namespace regina {
 
-Triangulation<4>::Triangulation(const std::string& description) :
-        knownSimpleLinks_(false) {
-    Triangulation<4>* attempt;
-
-    if ((attempt = fromIsoSig(description))) {
-        swap(*attempt);
-        setLabel(description);
+Triangulation<4>::Triangulation(const std::string& description) {
+    try {
+        *this = fromIsoSig(description);
+        return;
+    } catch (const InvalidArgument&) {
     }
-
-    delete attempt;
-}
-
-void Triangulation<4>::writeTextLong(std::ostream& out) const {
-    ensureSkeleton();
-
-    out << "Size of the skeleton:\n";
-    out << "  Pentachora: " << size() << '\n';
-    out << "  Tetrahedra: " << countTetrahedra() << '\n';
-    out << "  Triangles: " << countTriangles() << '\n';
-    out << "  Edges: " << countEdges() << '\n';
-    out << "  Vertices: " << countVertices() << '\n';
-    out << '\n';
-
-    Pentachoron<4>* pent;
-    Pentachoron<4>* adjPent;
-    unsigned pentPos;
-    int i, j, k;
-    Perm<5> adjPerm;
-
-    out << "Pentachoron gluing:\n";
-    out << "  Pent  |  glued to:     (0123)     (0124)     (0134)     (0234)     (1234)\n";
-    out << "  ------+------------------------------------------------------------------\n";
-    for (pentPos=0; pentPos < simplices_.size(); pentPos++) {
-        pent = simplices_[pentPos];
-        out << "  " << std::setw(4) << pentPos << "  |           ";
-        for (i = 4; i >= 0; --i) {
-            out << " ";
-            adjPent = pent->adjacentPentachoron(i);
-            if (! adjPent)
-                out << "  boundary";
-            else {
-                adjPerm = pent->adjacentGluing(i);
-                out << std::setw(3) << adjPent->index() << " (";
-                for (j = 0; j < 5; ++j) {
-                    if (j == i) continue;
-                    out << adjPerm[j];
-                }
-                out << ")";
-            }
-        }
-        out << '\n';
-    }
-    out << '\n';
-
-    out << "Vertices:\n";
-    out << "  Pent  |  vertex:    0   1   2   3   4\n";
-    out << "  ------+------------------------------\n";
-    for (pentPos = 0; pentPos < simplices_.size(); ++pentPos) {
-        pent = simplices_[pentPos];
-        out << "  " << std::setw(4) << pentPos << "  |          ";
-        for (i = 0; i < 5; ++i)
-            out << ' ' << std::setw(3) << pent->vertex(i)->index();
-        out << '\n';
-    }
-    out << '\n';
-
-    out << "Edges:\n";
-    out << "  Pent  |  edge:   01  02  03  04  12  13  14  23  24  34\n";
-    out << "  ------+------------------------------------------------\n";
-    for (pentPos = 0; pentPos < simplices_.size(); ++pentPos) {
-        pent = simplices_[pentPos];
-        out << "  " << std::setw(4) << pentPos << "  |        ";
-        for (i = 0; i < 5; ++i)
-            for (j = i + 1; j < 5; ++j)
-                out << ' ' << std::setw(3)
-                    << pent->edge(Edge<4>::edgeNumber[i][j])->index();
-        out << '\n';
-    }
-    out << '\n';
-
-    out << "Triangles:\n";
-    out << "  Pent  |  triangle:  012 013 014 023 024 034 123 124 134 234\n";
-    out << "  ------+----------------------------------------------------\n";
-    for (pentPos = 0; pentPos < simplices_.size(); ++pentPos) {
-        pent = simplices_[pentPos];
-        out << "  " << std::setw(4) << pentPos << "  |            ";
-        for (i = 0; i < 5; ++i)
-            for (j = i + 1; j < 5; ++j)
-                for (k = j + 1; k < 5; ++k)
-                    out << ' ' << std::setw(3)
-                        << pent->triangle(
-                            Triangle<4>::triangleNumber[i][j][k])->index();
-        out << '\n';
-    }
-    out << '\n';
-
-    out << "Tetrahedra:\n";
-    out << "  Pent  |  facet:  0123 0124 0134 0234 1234\n";
-    out << "  ------+----------------------------------\n";
-    for (pentPos = 0; pentPos < simplices_.size(); ++pentPos) {
-        pent = simplices_[pentPos];
-        out << "  " << std::setw(4) << pentPos << "  |         ";
-        for (i = 4; i >= 0; --i)
-            out << ' ' << std::setw(4) << pent->tetrahedron(i)->index();
-        out << '\n';
-    }
-    out << '\n';
 }
 
 long Triangulation<4>::eulerCharManifold() const {
@@ -170,45 +69,6 @@ long Triangulation<4>::eulerCharManifold() const {
     return ans;
 }
 
-void Triangulation<4>::writeXMLPacketData(std::ostream& out) const {
-    using regina::xml::xmlEncodeSpecialChars;
-    using regina::xml::xmlValueTag;
-
-    // Write the pentachoron gluings.
-    Pentachoron<4>* adjPent;
-    int facet;
-
-    out << "  <pentachora npent=\"" << simplices_.size() << "\">\n";
-    for (Pentachoron<4>* p : simplices_) {
-        out << "    <pent desc=\"" <<
-            xmlEncodeSpecialChars(p->description()) << "\"> ";
-        for (facet = 0; facet < 5; ++facet) {
-            adjPent = p->adjacentPentachoron(facet);
-            if (adjPent) {
-                out << adjPent->index() << ' '
-                    << p->adjacentGluing(facet).imagePack() << ' ';
-            } else
-                out << "-1 -1 ";
-        }
-        out << "</pent>\n";
-    }
-    out << "  </pentachora>\n";
-
-    writeXMLBaseProperties(out);
-
-    if (H2_.has_value()) {
-        out << "  <H2>";
-        H2_->writeXMLData(out);
-        out << "</H2>\n";
-    }
-}
-
-Triangulation<4>::Triangulation(const Triangulation& X) :
-        TriangulationBase<4>(X),
-        knownSimpleLinks_(X.knownSimpleLinks_),
-        H2_(X.H2_) {
-}
-
 Triangulation<4>::Triangulation(const Triangulation& X, bool cloneProps) :
         TriangulationBase<4>(X, cloneProps),
         knownSimpleLinks_(X.knownSimpleLinks_) /* always cloned */ {
@@ -216,7 +76,10 @@ Triangulation<4>::Triangulation(const Triangulation& X, bool cloneProps) :
     if (! cloneProps)
         return;
 
-    H2_ = X.H2_;
+    prop_ = X.prop_;
+
+    // We do not need to copy skeletal properties (e.g., ideal_), since this
+    // is computed on demand with the rest of the skeleton.
 }
 
 void Triangulation<4>::clearAllProperties() {
@@ -224,7 +87,7 @@ void Triangulation<4>::clearAllProperties() {
 
     if (! topologyLock_) {
         knownSimpleLinks_ = false;
-        H2_.reset();
+        prop_.H2_.reset();
     }
 }
 
@@ -232,9 +95,10 @@ void Triangulation<4>::swap(Triangulation<4>& other) {
     if (&other == this)
         return;
 
-    ChangeEventSpan span1(this);
-    ChangeEventSpan span2(&other);
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
 
+    // Note: swapBaseData() calls Snapshottable::swap().
     swapBaseData(other);
 
     // Properties stored directly:
@@ -242,7 +106,7 @@ void Triangulation<4>::swap(Triangulation<4>& other) {
     std::swap(ideal_, other.ideal_);
 
     // Properties stored using std::... helper classes:
-    H2_.swap(other.H2_);
+    prop_.H2_.swap(other.prop_.H2_);
 }
 
 } // namespace regina

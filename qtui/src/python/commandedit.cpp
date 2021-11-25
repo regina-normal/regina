@@ -48,20 +48,20 @@ CommandEdit::CommandEdit(PythonConsole* parent) :
         QLineEdit(parent), console(parent) { 
     setSpacesPerTab(COMMAND_EDIT_DEFAULT_SPACES_PER_TAB);
     historyPos = history.end();
-    oldColor = 0;
+    oldColor = nullptr;
 }
 
 bool CommandEdit::event(QEvent* event) {
     if (event->type() != QEvent::KeyPress) {
         return QLineEdit::event(event);
     } else {
-        QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+        auto *keyEvent = static_cast<QKeyEvent*>(event);
         bool completerUp = false;
         if (completer() && completer()->popup() &&
             completer()->popup()->hasFocus()) {
             completerUp = true;
         }
-        setCompleter(0); // Started typing again, disable completer
+        setCompleter(nullptr); // Started typing again, disable completer
         if (keyEvent->key() == Qt::Key_Tab) {
             // If there is some text before the cursor, and it doesn't
             // end in whitespace, then attempt tab completion.
@@ -157,8 +157,8 @@ void CommandEdit::highlightErrorInInput() {
 }
 
 void CommandEdit::setCompletionSurrounds(QString start, QString end) {
-    lineStart = start;
-    lineEnd = end;
+    lineStart = std::move(start);
+    lineEnd = std::move(end);
 }
 
 void CommandEdit::clearErrorInInput() {
@@ -167,7 +167,7 @@ void CommandEdit::clearErrorInInput() {
         pal.setColor(QPalette::Text, *oldColor);
         setPalette(pal);
         delete oldColor;
-        oldColor = 0;
+        oldColor = nullptr;
     }
 }
 

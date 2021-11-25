@@ -32,8 +32,8 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/stl.h"
+#include "../pybind11/iostream.h"
 #include "packet/packet.h"
-#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
@@ -42,50 +42,51 @@ using regina::Packet;
 using regina::PacketChildren;
 using regina::PacketDescendants;
 using regina::PacketShell;
+using regina::PacketType;
 using regina::SubtreeIterator;
 
 namespace {
     // Support for iterables and iterators:
     template <typename Iterator>
-    Packet* next(Iterator& it) {
-        if (*it)
-            return *it++;
+    std::shared_ptr<Packet> next(Iterator& it) {
+        if (it)
+            return (*it++).shared_from_this();
         else
             throw pybind11::stop_iteration();
     }
 }
 
 void addPacket(pybind11::module_& m) {
-    auto c1 = pybind11::class_<regina::PacketChildren>(m, "PacketChildren")
-        .def("__iter__", [](regina::PacketChildren c) {
+    auto c1 = pybind11::class_<PacketChildren<false>>(m, "PacketChildren")
+        .def("__iter__", [](PacketChildren<false> c) {
             return c.begin();
         })
         ;
     regina::python::add_eq_operators(c1);
 
-    auto c2 = pybind11::class_<regina::PacketDescendants>(m, "PacketDescendants")
-        .def("__iter__", [](regina::PacketDescendants d) {
+    auto c2 = pybind11::class_<PacketDescendants<false>>(m, "PacketDescendants")
+        .def("__iter__", [](PacketDescendants<false> d) {
             return d.begin();
         })
         ;
     regina::python::add_eq_operators(c2);
 
-    auto c3 = pybind11::class_<regina::ChildIterator>(m, "ChildIterator")
-        .def("next", next<ChildIterator>) // for python 2
-        .def("__next__", next<ChildIterator>) // for python 3
+    auto c3 = pybind11::class_<ChildIterator<false>>(m, "ChildIterator")
+        .def("next", next<ChildIterator<false>>) // for python 2
+        .def("__next__", next<ChildIterator<false>>) // for python 3
         ;
     regina::python::add_eq_operators(c3);
 
-    auto c4 = pybind11::class_<regina::SubtreeIterator>(m, "SubtreeIterator")
+    auto c4 = pybind11::class_<SubtreeIterator<false>>(m, "SubtreeIterator")
         .def("__iter__", [](pybind11::object const& it) {
             return it;
         })
-        .def("next", next<SubtreeIterator>) // for python 2
-        .def("__next__", next<SubtreeIterator>) // for python 3
+        .def("next", next<SubtreeIterator<false>>) // for python 2
+        .def("__next__", next<SubtreeIterator<false>>) // for python 3
         ;
     regina::python::add_eq_operators(c4);
 
-    auto c = pybind11::class_<Packet, regina::SafePtr<Packet>>(m, "Packet")
+    auto c = pybind11::class_<Packet, std::shared_ptr<Packet>>(m, "Packet")
         .def("type", &Packet::type)
         .def("typeName", &Packet::typeName)
         .def("label", &Packet::label)
@@ -102,16 +103,17 @@ void addPacket(pybind11::module_& m) {
         .def("listen", &Packet::listen)
         .def("isListening", &Packet::isListening)
         .def("unlisten", &Packet::unlisten)
+        .def("hasParent", &Packet::hasParent)
         .def("parent", &Packet::parent)
         .def("firstChild", &Packet::firstChild)
         .def("lastChild", &Packet::lastChild)
         .def("nextSibling", &Packet::nextSibling)
         .def("prevSibling", &Packet::prevSibling)
         .def("root", &Packet::root)
-        .def("hasOwner", &Packet::hasOwner)
         .def("levelsDownTo", &Packet::levelsDownTo)
         .def("levelsUpTo", &Packet::levelsUpTo)
-        .def("isGrandparentOf", &Packet::isGrandparentOf)
+        .def("isAncestorOf", &Packet::isAncestorOf)
+        .def("isGrandparentOf", &Packet::isAncestorOf) // deprecated
         .def("countChildren", &Packet::countChildren)
         .def("countDescendants", &Packet::countDescendants)
         .def("totalTreeSize", &Packet::totalTreeSize)
@@ -119,13 +121,8 @@ void addPacket(pybind11::module_& m) {
         .def("insertChildLast", &Packet::insertChildLast)
         .def("insertChildAfter", &Packet::insertChildAfter)
         .def("makeOrphan", &Packet::makeOrphan)
-        .def("reparent", [](Packet& child, Packet* newParent, bool first) {
-            if (child.parent())
-                child.reparent(newParent, first);
-            else
-                throw std::invalid_argument(
-                    "reparent() cannot be used on packets with no parent");
-        }, pybind11::arg(), pybind11::arg("first") = false)
+        .def("reparent", &Packet::reparent,
+            pybind11::arg(), pybind11::arg("first") = false)
         .def("transferChildren", &Packet::transferChildren)
         .def("swapWithNextSibling", &Packet::swapWithNextSibling)
         .def("moveUp", &Packet::moveUp,
@@ -135,29 +132,39 @@ void addPacket(pybind11::module_& m) {
         .def("moveToFirst", &Packet::moveToFirst)
         .def("moveToLast", &Packet::moveToLast)
         .def("sortChildren", &Packet::sortChildren)
-        .def("__iter__", &Packet::begin)
-        .def("children", &Packet::children)
-        .def("descendants", &Packet::descendants)
-        .def("subtree", &Packet::begin)
+        .def("__iter__", overload_cast<>(&Packet::begin)) // non-const
+        .def("children", overload_cast<>(&Packet::children)) // non-const
+        .def("descendants", overload_cast<>(&Packet::descendants)) // non-const
+        .def("subtree", overload_cast<>(&Packet::begin)) // non-const
         .def("nextTreePacket",
             overload_cast<>(&Packet::nextTreePacket))
         .def("nextTreePacket",
-            overload_cast<const std::string&>(&Packet::nextTreePacket))
+            overload_cast<PacketType>(&Packet::nextTreePacket))
         .def("firstTreePacket",
-            overload_cast<const std::string&>(&Packet::firstTreePacket))
+            overload_cast<PacketType>(&Packet::firstTreePacket))
         .def("findPacketLabel",
             overload_cast<const std::string&>(&Packet::findPacketLabel))
-        .def("dependsOnParent", &Packet::dependsOnParent)
-        .def("isPacketEditable", &Packet::isPacketEditable)
-        .def("clone", &Packet::clone,
+        .def("dependsOnParent", [](const Packet&) { // deprecated
+            return false;
+        })
+        .def("isPacketEditable", [](const Packet&) { // deprecated
+            return true;
+        })
+        .def("cloneAsSibling", &Packet::cloneAsSibling,
             pybind11::arg("cloneDescendants") = false,
             pybind11::arg("end") = true)
         .def("save",
-            overload_cast<const char*, bool>(&Packet::save, pybind11::const_),
-            pybind11::arg(), pybind11::arg("compressed") = true)
-        .def("writeXMLFile", [](const Packet& p) {
-            p.writeXMLFile(std::cout);
-        })
+            overload_cast<const char*, bool, regina::FileFormat>(
+                &Packet::save, pybind11::const_),
+            pybind11::arg(),
+            pybind11::arg("compressed") = true,
+            pybind11::arg("format") = regina::REGINA_CURRENT_FILE_FORMAT)
+        .def("writeXMLFile", [](const Packet& p, pybind11::object file,
+                regina::FileFormat format) {
+            pybind11::scoped_ostream_redirect stream(std::cout, file);
+            p.writeXMLFile(std::cout, format);
+        }, pybind11::arg(),
+            pybind11::arg("format") = regina::REGINA_CURRENT_FILE_FORMAT)
         .def("internalID", &Packet::internalID)
         .def("__eq__", [](const Packet* p, PacketShell s) {
             return (s == p);
@@ -169,6 +176,6 @@ void addPacket(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.def("open", (Packet* (*)(const char*)) &regina::open);
+    m.def("open", (std::shared_ptr<Packet> (*)(const char*)) &regina::open);
 }
 

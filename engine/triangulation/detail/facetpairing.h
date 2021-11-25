@@ -42,6 +42,7 @@
 
 #include <iostream>
 #include <list>
+#include <optional>
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/facetspec.h"
@@ -49,11 +50,6 @@
 #include "utilities/boolset.h"
 
 namespace regina::detail {
-
-/**
- * \weakgroup detail
- * @{
- */
 
 /**
  * Provides core functionality for facet pairings (that is, dual graphs) of
@@ -65,11 +61,18 @@ namespace regina::detail {
  *
  * See the FacetPairing class notes for further information.
  *
+ * Both this class and the "end user" class FacetPairing<dim> implement
+ * C++ move semantics, and FacetPairing<dim> also adheres to the C++ Swappable
+ * requirement.  These classes are designed to avoid deep copies wherever
+ * possible, even when passing or returning objects by value.
+ *
  * \ifacespython This base class is not present, but the "end user"
  * class FacetPairing<dim> is.
  *
  * \tparam dim the dimension of the triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim>
 class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
@@ -84,24 +87,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * This type is used to store all \e automorphisms of a facet pairing;
          * that is, all isomorphisms that map the facet pairing to itself.
          */
-        typedef std::list<Isomorphism<dim>*> IsoList;
-
-        /**
-         * A routine that can do arbitrary processing upon a facet pairing
-         * and its automorphisms.  Such routines are used to process
-         * pairings that are found when running findAllPairings().
-         *
-         * The first parameter passed should be a facet pairing
-         * (this should not be deallocated by this routine).
-         * The second parameter should be a list of all automorphisms of
-         * this pairing (this should not be deallocated either).
-         * The third parameter may contain arbitrary data as passed to
-         * findAllPairings().
-         *
-         * Note that the first two parameters passed might be \c null to
-         * signal that facet pairing generation has finished.
-         */
-        typedef void (*Use)(const FacetPairing<dim>*, const IsoList*, void*);
+        using IsoList = std::list<Isomorphism<dim>>;
 
     protected:
         size_t size_;
@@ -117,17 +103,26 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
 
     public:
         /**
-         * \name Constructors and Destructors
+         * \name Constructors, Destructors and Assignment
          */
         /*@{*/
 
         /**
-         * Creates a new facet pairing that is a clone of the given
-         * facet pairing.
+         * Creates a new copy of the given facet pairing.
          *
-         * @param cloneMe the facet pairing to clone.
+         * @param src the facet pairing to clone.
          */
-        FacetPairingBase(const FacetPairingBase& cloneMe);
+        FacetPairingBase(const FacetPairingBase& src);
+
+        /**
+         * Moves the given facet pairing into this facet pairing.
+         * This is a fast (constant time) operation.
+         *
+         * The facet pairing that is passed (\a src) will no longer be usable.
+         *
+         * @param src the facet pairing to move.
+         */
+        FacetPairingBase(FacetPairingBase&& src) noexcept;
 
         /**
          * Creates the facet pairing of given triangulation.  This
@@ -143,9 +138,62 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         FacetPairingBase(const Triangulation<dim>& tri);
 
         /**
+         * Reads a new facet pairing from the given input stream.  This
+         * routine reads data in the format written by toTextRep().
+         *
+         * This routine will skip any initial whitespace in the given input
+         * stream.  Once it finds its first non-whitespace character,
+         * it will read the \e entire line from the input stream and expect
+         * that line to containin the text representation of a facet pairing.
+         *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
+         *
+         * @param in the input stream from which to read.
+         */
+        FacetPairingBase(std::istream& in);
+
+        /**
          * Deallocates any memory used by this structure.
          */
         ~FacetPairingBase();
+
+        /**
+         * Copies the given facet pairing into this facet pairing.
+         *
+         * It does not matter if this and the given facet pairing use
+         * different numbers of top-dimensional simpilices; if they do
+         * then this facet pairing will be resized accordingly.
+         *
+         * This operator induces a deep copy of \a src.
+         *
+         * @param src the facet pairing to copy.
+         * @return a reference to this facet pairing.
+         */
+        FacetPairingBase& operator = (const FacetPairingBase& src);
+
+        /**
+         * Moves the given facet pairing into this facet pairing.
+         * This is a fast (constant time) operation.
+         *
+         * It does not matter if this and the given facet pairing use
+         * different numbers of top-dimensional simpilices; if they do
+         * then this facet pairing will be resized accordingly.
+         *
+         * The facet pairing that is passed (\a src) will no longer be usable.
+         *
+         * @param src the facet pairing to move.
+         * @return a reference to this facet pairing.
+         */
+        FacetPairingBase& operator = (FacetPairingBase&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given facet pairing.
+         *
+         * @param other the facet pairing whose contents are to be
+         * swapped with this.
+         */
+        void swap(FacetPairingBase& other) noexcept;
 
         /*@}*/
         /**
@@ -170,6 +218,9 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
          *
+         * \ifacespython This routine returns by value, not by reference,
+         * since Python cannot enforce constness otherwise.
+         *
          * @param source the facet under investigation.
          * @return the other facet to which the given facet is paired.
          */
@@ -180,6 +231,9 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * paired.  If the given facet is left deliberately unmatched,
          * the value returned will be boundary (as returned by
          * FacetSpec<dim>::isBoundary()).
+         *
+         * \ifacespython This routine returns by value, not by reference,
+         * since Python cannot enforce constness otherwise.
          *
          * @param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
@@ -201,6 +255,9 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          *
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
+         *
+         * \ifacespython This routine returns by value, not by reference,
+         * since Python cannot enforce constness otherwise.
          *
          * @param source the facet under investigation.
          * @return the other facet to which the given facet is paired.
@@ -269,8 +326,8 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         bool isCanonical() const;
 
         /**
-         * Fills the given list with the set of all combinatorial
-         * automorphisms of this facet pairing.
+         * Returns the set of all combinatorial automorphisms of this
+         * facet pairing.
          *
          * An automorphism is a relabelling of the simplices and/or a
          * renumbering of the (\a dim + 1) facets of each simplex resulting
@@ -279,24 +336,15 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * This routine uses optimisations that can cause unpredictable
          * breakages if this facet pairing is not in canonical form.
          *
-         * The automorphisms placed in the given list will be newly
-         * created; it is the responsibility of the caller of this
-         * routine to deallocate them.
-         *
-         * \pre The given list is empty.
          * \pre This facet pairing is connected, i.e., it is possible
          * to reach any simplex from any other simplex via a
          * series of matched facet pairs.
          * \pre This facet pairing is in canonical form as described by
          * isCanonical().
          *
-         * \ifacespython Not present, even in the dimension-specific
-         * subclasses.
-         *
-         * @param list the list into which the newly created automorphisms
-         * will be placed.
+         * @return the list of all automorphisms.
          */
-        void findAutomorphisms(IsoList& list) const;
+        IsoList findAutomorphisms() const;
 
         /*@}*/
         /**
@@ -310,7 +358,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          *
          * The string returned will contain no newlines.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -365,8 +413,8 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * directed graphs.  The final DOT file should be used with
          * either the \a neato or \a fdp programs shipped with Graphviz.
          *
-         * \ifacespython The \a out argument is not present; instead
-         * standard output is assumed.
+         * \ifacespython Not present; instead use the variant dot() that
+         * returns a string.
          *
          * @param out the output stream to which to write.
          * @param prefix a string to prepend to the name of each graph
@@ -407,18 +455,15 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * This text-based representation must be in the format produced
          * by routine toTextRep().
          *
-         * The facet pairing returned will be newly constructed; it is the
-         * responsibility of the caller of this routine to deallocate it.
-         *
-         * \pre The facet pairing to be reconstructed involves at least
-         * one simplex.
+         * \exception InvalidArgument the given string was not a valid
+         * text-based representation of a facet pairing on a positive
+         * number of simplices.
          *
          * @param rep a text-based representation of a facet pairing, as
          * produced by routine toTextRep().
-         * @return the corresponding newly constructed facet pairing, or
-         * \c null if the given text-based representation was invalid.
+         * @return the corresponding facet pairing.
          */
-        static FacetPairing<dim>* fromTextRep(const std::string& rep);
+        static FacetPairing<dim> fromTextRep(const std::string& rep);
 
         /**
          * Writes header information for a Graphviz DOT file that will
@@ -445,8 +490,8 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * directed graphs.  The final DOT file should be used with
          * either the \a neato or \a fdp programs shipped with Graphviz.
          *
-         * \ifacespython The \a out argument is not present; instead
-         * standard output is assumed.
+         * \ifacespython Not present; instead use the variant dotHeader() that
+         * returns a string.
          *
          * @param out the output stream to which to write.
          * @param graphName the name of the graph in the DOT file.
@@ -485,13 +530,24 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * representative of its isomorphism class, i.e., will be in
          * canonical form as described by isCanonical().
          *
-         * For each facet pairing that is generated, routine \a use (as
-         * passed to this function) will be called with that pairing and
-         * its automorphisms as arguments.
+         * For each facet pairing that is generated, this routine will call
+         * \a action (which must be a function or some other callable object).
          *
-         * Once the generation of facet pairings has finished, routine
-         * \a use will be called once more, this time with \c null as its
-         * first two arguments (for the facet pairing and its automorphisms).
+         * - The first argument to \a action must be a const reference to a
+         *   FacetPairing<dim>.  This will be the facet pairing that was found.
+         *   If \a action wishes to keep the facet pairing, it should take a
+         *   deep copy (not a reference), since the facet pairing may be
+         *   changed and reused after \a action returns.
+         *
+         * - The second argument to \a action must be a
+         *   FacetPairing<dim>::IsoList (this will be passed by value using
+         *   move semantics).  This will be the list of all automorphisms
+         *   of the facet pairing that was found.
+         *
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return \c void.
          *
          * Because this class cannot represent an empty facet pairing,
          * if the argument \a nSimplices is zero then no facet pairings
@@ -503,8 +559,10 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * pairing.
          * \todo \feature Allow cancellation of facet pairing generation.
          *
-         * \ifacespython Not present, even in the dimension-specific
-         * subclasses.
+         * \ifacespython This function is available, and \a action may be a
+         * pure Python function.  However, \a action cannot take any additional
+         * arguments beyond the facet pairing and its automorphisms (and
+         * therefore the additional \a args list is omitted here).
          *
          * @param nSimplices the number of simplices whose facets should
          * be (potentially) matched.
@@ -525,21 +583,15 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * Note that, in order to produce any pairings at all, this parameter
          * must be of the same parity as <tt>nSimplices * (dim+1)</tt>,
          * and can be at most <tt>(dim-1) * nSimplices + 2</tt>.
-         * @param use the function to call upon each facet pairing that is
-         * found.  The first parameter passed to this function will be a
-         * facet pairing.  The second parameter will be a list of all its
-         * automorphisms (relabellings of simplices and individual
-         * simplex facets that produce the exact same pairing).
-         * The third parameter will be parameter \a useArgs as was passed
-         * to this routine.
-         * @param useArgs the pointer to pass as the final parameter for
-         * the function \a use which will be called upon each pairing found.
+         * @param action a function (or other callable object) to call
+         * for each facet pairing that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial facet pairing and automorphism
+         * arguments.
          */
+        template <typename Action, typename... Args>
         static void findAllPairings(size_t nSimplices, BoolSet boundary,
-            int nBdryFacets, Use use, void* useArgs = nullptr);
-
-        // Make this class non-assignable.
-        FacetPairingBase& operator = (const FacetPairingBase&) = delete;
+            int nBdryFacets, Action&& action, Args&&... args);
 
     protected:
         /**
@@ -666,11 +718,10 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * FacetPairing<dim>, not an instance of the parent class
          * FacetPairingBase<dim>.
          */
+        template <typename Action, typename... Args>
         void enumerateInternal(BoolSet boundary, int nBdryFacets,
-            Use use, void* useArgs);
+            Action&& action, Args&&... args);
 };
-
-/*@}*/
 
 // Inline functions for FacetPairingBase
 
@@ -680,8 +731,55 @@ inline FacetPairingBase<dim>::FacetPairingBase(size_t size) :
 }
 
 template <int dim>
+inline FacetPairingBase<dim>::FacetPairingBase(
+        const FacetPairingBase<dim>& src) :
+        size_(src.size_),
+        pairs_(new FacetSpec<dim>[src.size_ * (dim + 1)]) {
+    std::copy(src.pairs_, src.pairs_ + (size_ * (dim + 1)), pairs_);
+}
+
+template <int dim>
+inline FacetPairingBase<dim>::FacetPairingBase(FacetPairingBase<dim>&& src)
+        noexcept :
+        size_(src.size_),
+        pairs_(src.pairs_) {
+    src.pairs_ = nullptr;
+}
+
+template <int dim>
 inline FacetPairingBase<dim>::~FacetPairingBase() {
     delete[] pairs_;
+}
+
+template <int dim>
+inline FacetPairingBase<dim>& FacetPairingBase<dim>::operator = (
+        const FacetPairingBase& src) {
+    // std::copy() exhibits undefined behaviour in the case of self-assignment.
+    if (std::addressof(src) == this)
+        return *this;
+
+    if (size_ != src.size_) {
+        delete[] pairs_;
+        size_ = src.size_;
+        pairs_ = new FacetSpec<dim>[size_ * (dim + 1)];
+    }
+    std::copy(src.pairs_, src.pairs_ + (size_ * (dim + 1)), pairs_);
+    return *this;
+}
+
+template <int dim>
+inline FacetPairingBase<dim>& FacetPairingBase<dim>::operator = (
+        FacetPairingBase&& src) noexcept {
+    size_ = src.size_;
+    std::swap(pairs_, src.pairs_);
+    // Let src dispose of the original contents in its own destructor.
+    return *this;
+}
+
+template <int dim>
+inline void FacetPairingBase<dim>::swap(FacetPairingBase& other) noexcept {
+    std::swap(size_, other.size_);
+    std::swap(pairs_, other.pairs_);
 }
 
 template <int dim>
@@ -752,17 +850,21 @@ inline bool FacetPairingBase<dim>::noDest(
 }
 
 template <int dim>
-inline void FacetPairingBase<dim>::findAutomorphisms(
-        typename FacetPairingBase<dim>::IsoList& list) const {
+inline typename FacetPairingBase<dim>::IsoList
+        FacetPairingBase<dim>::findAutomorphisms() const {
+    IsoList list;
     isCanonicalInternal(list);
+    return list;
 }
 
 template <int dim>
+template <typename Action, typename... Args>
 inline void FacetPairingBase<dim>::findAllPairings(size_t nSimplices,
         BoolSet boundary, int nBdryFacets,
-        typename FacetPairingBase<dim>::Use use, void* useArgs) {
+        Action&& action, Args&&... args) {
     FacetPairing<dim> pairing(nSimplices);
-    pairing.enumerateInternal(boundary, nBdryFacets, use, useArgs);
+    pairing.enumerateInternal(boundary, nBdryFacets,
+        std::forward<Action>(action), std::forward<Args>(args)...);
 }
 
 } // namespace regina::detail

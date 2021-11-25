@@ -43,6 +43,7 @@
 #include "reginasupport.h"
 #include "../progressdialogs.h"
 
+#include <thread>
 #include <QCheckBox>
 #include <QLabel>
 #include <QLayout>
@@ -70,7 +71,7 @@ SurfacesCreator::SurfacesCreator() {
     layout->addLayout(coordArea);
     QString expln = ui->tr("Specifies the coordinate system in which the "
         "normal surfaces will be enumerated.");
-    QLabel* label = new QLabel(ui->tr("Coordinate system:"), ui);
+    auto* label = new QLabel(ui->tr("Coordinate system:"), ui);
     label->setWhatsThis(expln);
     coordArea->addWidget(label);
     coords = new CoordinateChooser();
@@ -120,18 +121,17 @@ QString SurfacesCreator::parentWhatsThis() {
     return ui->tr("The triangulation that will contain your normal surfaces.");
 }
 
-regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
-        QWidget* parentWidget) {
+std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
+        std::shared_ptr<regina::Packet> parent, QWidget* parentWidget) {
     // Note that parent may be either Triangulation<3> or SnapPeaTriangulation.
-    regina::Triangulation<3>* tri =
-        dynamic_cast<regina::Triangulation<3>*>(parent);
+    auto tri = std::dynamic_pointer_cast<regina::Triangulation<3>>(parent);
     if (! tri) {
         ReginaSupport::sorry(ui,
             ui->tr("The selected parent is not a 3-manifold triangulation."),
             ui->tr("Normal surfaces must live within a 3-manifold "
             "triangulation.  Please select the corresponding triangulation "
             "as the location in the tree for your new normal surface list."));
-        return 0;
+        return nullptr;
     }
 
     regina::NormalCoords coordSystem = coords->getCurrentSystem();
@@ -139,7 +139,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
     if ((coordSystem == regina::NS_QUAD_CLOSED ||
                 coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) && ! (
             tri->countVertices() == 1 &&
-            tri->vertex(0)->link() == regina::Vertex<3>::TORUS &&
+            tri->vertex(0)->linkType() == regina::Vertex<3>::TORUS &&
             tri->isOriented())) {
         QString name = Coordinates::adjective(coordSystem, false);
         ReginaSupport::sorry(ui,
@@ -149,7 +149,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
                 "only available for oriented ideal triangulations with "
                 "one torus cusp and no other boundary components or "
                 "internal vertices.").arg(name));
-        return 0;
+        return nullptr;
     }
 
     int basisId = basis->currentIndex();
@@ -168,7 +168,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
                 "<i>almost normal</i> coordinate systems.<p>"
                 "Please check the box for embedded surfaces only, or "
                 "else select a different coordinate system.</qt>"));
-            return 0;
+            return nullptr;
         }
 
         if (ReginaPrefSet::global().warnOnNonEmbedded) {
@@ -185,7 +185,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
                 "Are you sure you wish to continue?</qt>"));
             msg.setDefaultButton(QMessageBox::Yes);
             if (msg.exec() != QMessageBox::Yes)
-                return 0;
+                return nullptr;
         }
     }
 
@@ -196,91 +196,60 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             regina::NS_IMMERSED_SINGULAR) |
         (basisId == BASIS_VERTEX ? regina::NS_VERTEX : regina::NS_FUNDAMENTAL);
 
-    if (basisId == BASIS_VERTEX) {
-        regina::ProgressTracker tracker;
-        ProgressDialogNumeric dlg(&tracker,
-            ui->tr("Enumerating vertex normal surfaces"),
-            parentWidget);
+    std::shared_ptr<regina::Packet> ans;
+    regina::ProgressTracker tracker;
 
-        NormalSurfaces* ans = NormalSurfaces::enumerate(
-            *tri,
-            coordSystem,
-            regina::NS_VERTEX | (embedded->isChecked() ?
-                regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
-            regina::NS_ALG_DEFAULT, &tracker);
+    QString sType = (basisId == BASIS_VERTEX ?
+        ui->tr("vertex") : ui->tr("fundamental"));
 
-        if (! ans) {
+    ProgressDialogNumeric dlg(&tracker,
+        ui->tr("Enumerating %1 normal surfaces").arg(sType), parentWidget);
+
+    regina::NormalList which =
+        (basisId == BASIS_VERTEX ?
+            regina::NS_VERTEX : regina::NS_FUNDAMENTAL) |
+        (embedded->isChecked() ?
+            regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR);
+    std::thread([&, coordSystem, which, this]() {
+        try {
+            ans = regina::makePacket<NormalSurfaces>(std::in_place,
+                *tri, coordSystem, which, regina::NS_ALG_DEFAULT, &tracker);
+        } catch (const regina::ReginaException&) {
+            // Leave ans as null.
+        }
+    }).detach();
+
+    if (dlg.run()) {
+        if (ans) {
+            ans->setLabel(ui->tr("%1 %2 surfaces")
+                .arg(Coordinates::adjective(coordSystem, true))
+                .arg(sType)
+                .toStdString());
+            parent->insertChildLast(ans);
+        } else {
             if (coordSystem == regina::NS_QUAD_CLOSED ||
                     coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) {
                 ReginaSupport::info(parentWidget,
-                    ui->tr("<qt>I could not enumerate vertex normal "
-                    "surfaces in %1 coordinates.  This could be "
+                    ui->tr("<qt>I could not enumerate %1 normal "
+                    "surfaces in %2 coordinates.  This could be "
                     "because SnapPea was unable to construct the slope "
                     "equations, or because it tried to retriangulate when "
                     "doing so.<p>"
                     "Please report this to the Regina developers.</qt>")
+                    .arg(sType)
                     .arg(Coordinates::adjective(coordSystem, false)));
             } else {
                 ReginaSupport::failure(parentWidget,
-                    ui->tr("<qt>I could not enumerate vertex normal "
-                    "surfaces.<p>"
-                    "Please report this to the Regina developers.</qt>"));
-            }
-            return 0;
-        }
-
-        if (dlg.run()) {
-            ans->setLabel(ui->tr("%1 vertex surfaces").arg(
-                Coordinates::adjective(coordSystem, true)).toStdString());
-            return ans;
-        } else {
-            delete ans;
-            ReginaSupport::info(parentWidget,
-                ui->tr("The normal surface enumeration was cancelled."));
-            return 0;
-        }
-    } else {
-        regina::ProgressTracker tracker;
-        ProgressDialogMessage dlg(&tracker,
-            ui->tr("Enumerating fundamental normal surfaces"),
-            parentWidget);
-
-        NormalSurfaces* ans = NormalSurfaces::enumerate(
-            *tri,
-            coordSystem,
-            regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
-                regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
-            regina::NS_ALG_DEFAULT, &tracker);
-
-        if (! ans) {
-            if (coordSystem == regina::NS_QUAD_CLOSED ||
-                    coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) {
-                ReginaSupport::info(parentWidget,
-                    ui->tr("<qt>I could not enumerate fundamental normal "
-                    "surfaces in %1 coordinates.  This could be "
-                    "because SnapPea was unable to construct the slope "
-                    "equations, or it tried to retriangulate when doing so.<p>"
+                    ui->tr("<qt>I could not enumerate %1 normal surfaces.<p>"
                     "Please report this to the Regina developers.</qt>")
-                    .arg(Coordinates::adjective(coordSystem, false)));
-            } else {
-                ReginaSupport::failure(parentWidget,
-                    ui->tr("<qt>I could not enumerate fundamental normal "
-                    "surfaces.<p>"
-                    "Please report this to the Regina developers.</qt>"));
+                    .arg(sType));
             }
-            return 0;
         }
-
-        if (dlg.run()) {
-            ans->setLabel(ui->tr("%1 fundamental surfaces").arg(
-                Coordinates::adjective(coordSystem, true)).toStdString());
-            return ans;
-        } else {
-            delete ans;
-            ReginaSupport::info(parentWidget,
-                ui->tr("The normal surface enumeration was cancelled."));
-            return 0;
-        }
+        return ans;
+    } else {
+        ReginaSupport::info(parentWidget,
+            ui->tr("The normal surface enumeration was cancelled."));
+        return nullptr;
     }
 }
 

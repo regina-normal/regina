@@ -4,18 +4,22 @@
 SET ( FILES
   xmlalgebrareader.cpp
   xmlanglestructreader.cpp
+  xmlanglestructwriter.cpp
   xmlcallback.cpp
   xmlfilterreader.cpp
   xmlhypersurfacereader.cpp
+  xmlhypersurfacewriter.cpp
   xmllinkreader.cpp
+  xmllinkwriter.cpp
   xmlpacketreader.cpp
   xmlpacketreaders.cpp
   xmlreader.cpp
   xmlsnappeareader.cpp
+  xmlsnappeawriter.cpp
   xmlsurfacereader.cpp
-  xmltrireader2.cpp
-  xmltrireader3.cpp
-  xmltrireader4.cpp)
+  xmlsurfacewriter.cpp
+  xmltreeresolver.cpp
+  xmltriwriter.cpp)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

@@ -69,7 +69,7 @@ std::pair<ModelLinkGraphArc, ModelLinkGraphArc> ModelLinkGraph::findFlype(
     // For each cell adjacent to C, we identify the first arc of C in a
     // clockwise direction from the vertex (X) that borders it.  A null arc
     // means the cell is not adjacent to C at all.
-    ModelLinkGraphArc* adjC = new ModelLinkGraphArc[cells_->nCells_];
+    auto* adjC = new ModelLinkGraphArc[cells_->nCells_];
     ModelLinkGraphArc a = back;
     do {
         a = a.traverse();
@@ -116,12 +116,13 @@ std::pair<ModelLinkGraphArc, ModelLinkGraphArc> ModelLinkGraph::findFlype(
         return std::make_pair(a, right);
 }
 
-ModelLinkGraph* ModelLinkGraph::flype(const ModelLinkGraphArc& from,
+ModelLinkGraph ModelLinkGraph::flype(const ModelLinkGraphArc& from,
         const ModelLinkGraphArc& left, const ModelLinkGraphArc& right) const {
     // Some basic sanity checking.
     if (left.traverse().node() == from.node() ||
             right.traverse().node() == from.node())
-        return nullptr;
+        throw InvalidArgument("flype(): one of the two exit arcs "
+            "returns back to the entry node");
 
     // Ensure that the cellular decomposition has been computed.
     cells();
@@ -137,8 +138,11 @@ ModelLinkGraph* ModelLinkGraph::flype(const ModelLinkGraphArc& from,
     size_t inner = cells_->cell(from);
 
     // Some more sanity checking, now that we have cell data.
-    if (upper == lower || centre == inner)
-        return nullptr;
+    if (upper == lower)
+        throw InvalidArgument("flype(): the entry node is a cut-vertex");
+    if (centre == inner)
+        throw InvalidArgument("flype(): either the flype is trivial "
+            "or the graph models a composite link");
 
     bool* flip = new bool[size()];
     std::fill(flip, flip + size(), false);
@@ -147,7 +151,7 @@ ModelLinkGraph* ModelLinkGraph::flype(const ModelLinkGraphArc& from,
     std::fill(visited, visited + cells_->nCells_, false);
     visited[upper] = visited[lower] = visited[centre] = true;
 
-    size_t* process = new size_t[cells_->nCells_]; // DFS stack
+    auto* process = new size_t[cells_->nCells_]; // DFS stack
     visited[inner] = true;
     process[0] = inner;
     size_t nProcess = 1;
@@ -176,7 +180,7 @@ ModelLinkGraph* ModelLinkGraph::flype(const ModelLinkGraphArc& from,
     flip[from.node()->index()] = false;
 
     // Off we go!  Prepare a new graph and perform the flype.
-    ModelLinkGraph* ans = new ModelLinkGraph(*this);
+    ModelLinkGraph ans(*this);
 
     ModelLinkGraphNode* n;
     for (size_t i = 0; i < size(); ++i)
@@ -185,7 +189,7 @@ ModelLinkGraph* ModelLinkGraph::flype(const ModelLinkGraphArc& from,
             // This code does not work if arcs 1 and 3 are joined to
             // each other, but such an arrangement is impossible for a
             // planar graph.
-            n = ans->nodes_[i];
+            n = ans.nodes_[i];
             std::swap(n->adj_[1], n->adj_[3]);
             n->adj_[1].node()->adj_[n->adj_[1].arc()].arc_ = 1;
             n->adj_[3].node()->adj_[n->adj_[3].arc()].arc_ = 3;
@@ -194,9 +198,9 @@ ModelLinkGraph* ModelLinkGraph::flype(const ModelLinkGraphArc& from,
     // Create the arcs in the new graph that correspond to the old graph's
     // left and right arcs.  Since the source nodes for both left and right
     // were caught up in the flips, we must account for this also.
-    ModelLinkGraphArc newLeft(ans->nodes_[left.node()->index()],
+    ModelLinkGraphArc newLeft(ans.nodes_[left.node()->index()],
         left.arc_ % 2 ? left.arc_ ^ 2 : left.arc_);
-    ModelLinkGraphArc newRight(ans->nodes_[right.node()->index()],
+    ModelLinkGraphArc newRight(ans.nodes_[right.node()->index()],
         right.arc_ % 2 ? right.arc_ ^ 2 : right.arc_);
 
     // Undo the crossing at from, and make a new crossing from left and right.
@@ -206,7 +210,7 @@ ModelLinkGraph* ModelLinkGraph::flype(const ModelLinkGraphArc& from,
     // Note that, when undoing the crossing at from, we know that from
     // is not connected immediately to itself due to the sanity checks
     // that we have already run.
-    n = ans->nodes_[from.node()->index()];
+    n = ans.nodes_[from.node()->index()];
     ModelLinkGraphArc a, b;
 
     a = n->adj(from.arc());

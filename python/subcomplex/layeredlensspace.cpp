@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/layeredlensspace.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -40,7 +41,11 @@ using regina::LayeredLensSpace;
 void addLayeredLensSpace(pybind11::module_& m) {
     pybind11::class_<LayeredLensSpace, regina::StandardTriangulation>
             (m, "LayeredLensSpace")
-        .def("clone", &LayeredLensSpace::clone)
+        .def(pybind11::init<const LayeredLensSpace&>())
+        .def("clone", [](const LayeredLensSpace& s) { // deprecated
+            return LayeredLensSpace(s);
+        })
+        .def("swap", &LayeredLensSpace::swap)
         .def("p", &LayeredLensSpace::p)
         .def("q", &LayeredLensSpace::q)
         .def("torus", &LayeredLensSpace::torus,
@@ -48,7 +53,9 @@ void addLayeredLensSpace(pybind11::module_& m) {
         .def("mobiusBoundaryGroup", &LayeredLensSpace::mobiusBoundaryGroup)
         .def("isSnapped", &LayeredLensSpace::isSnapped)
         .def("isTwisted", &LayeredLensSpace::isTwisted)
-        .def_static("isLayeredLensSpace", &LayeredLensSpace::isLayeredLensSpace)
+        .def_static("recognise", &LayeredLensSpace::recognise)
+        .def_static("isLayeredLensSpace", // deprecated
+            &LayeredLensSpace::recognise)
     ;
 }
 

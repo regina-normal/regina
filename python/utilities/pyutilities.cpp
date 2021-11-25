@@ -33,24 +33,36 @@
 namespace pybind11 { class module_; }
 
 void addBase64(pybind11::module_& m);
+void addBitManipulator(pybind11::module_& m);
+void addBitmask(pybind11::module_& m);
+void addBoolSet(pybind11::module_& m);
+void addException(pybind11::module_& m);
 void addIntUtils(pybind11::module_& m);
 void addLocale(pybind11::module_& m);
-void addBoolSet(pybind11::module_& m);
 void addOSUtils(pybind11::module_& m);
+void addQitmask(pybind11::module_& m);
 void addRandUtils(pybind11::module_& m);
+void addSigUtils(pybind11::module_& m);
 void addStringUtils(pybind11::module_& m);
 void addTightEncoding(pybind11::module_& m);
+void addTrieSet(pybind11::module_& m);
 void addXMLUtils(pybind11::module_& m);
 
 void addUtilitiesClasses(pybind11::module_& m) {
     addBase64(m);
+    addBitManipulator(m);
+    addBitmask(m);
+    addBoolSet(m);
+    addException(m);
     addIntUtils(m);
     addLocale(m);
-    addBoolSet(m);
     addOSUtils(m);
+    addQitmask(m);
     addRandUtils(m);
+    addSigUtils(m);
     addStringUtils(m);
     addTightEncoding(m);
+    addTrieSet(m);
     addXMLUtils(m);
 }
 

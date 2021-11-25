@@ -38,6 +38,8 @@
 #ifndef __PACKETIMPORTER_H
 #define __PACKETIMPORTER_H
 
+#include <memory>
+
 class QString;
 class QTextCodec;
 class ReginaMain;
@@ -56,7 +58,7 @@ class PacketImporter {
         /**
          * Default destructor that does nothing.
          */
-        virtual ~PacketImporter();
+        virtual ~PacketImporter() = default;
 
         /**
          * Import a packet tree from the given file.
@@ -65,14 +67,14 @@ class PacketImporter {
          *
          * If the import is unsuccessful, this routine should display
          * an appropriate error to the user (using the argument
-         * \a parentWidget as a parent for the message box) and return 0.
+         * \a parentWidget as a parent for the message box) and return \c null.
          * Otherwise the imported packet tree should be returned.
          *
          * Sensible packet labels must be assigned to all packets in the
          * imported tree.
          */
-        virtual regina::Packet* importData(const QString& fileName,
-            ReginaMain* parentWidget) const = 0;
+        virtual std::shared_ptr<regina::Packet> importData(
+            const QString& fileName, ReginaMain* parentWidget) const = 0;
 
         /**
          * Should the GUI inform the user that their preferred codec
@@ -82,9 +84,6 @@ class PacketImporter {
          */
         virtual bool useImportEncoding() const;
 };
-
-inline PacketImporter::~PacketImporter() {
-}
 
 inline bool PacketImporter::useImportEncoding() const {
     return false;

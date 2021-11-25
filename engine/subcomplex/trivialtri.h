@@ -45,16 +45,20 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents one of a few particular hard-coded trivial triangulations
  * that do not belong to any of the other larger families.
  *
  * All optional StandardTriangulation routines are implemented for this
  * class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class TrivialTri : public StandardTriangulation {
     public:
@@ -92,6 +96,7 @@ class TrivialTri : public StandardTriangulation {
          * triangulation has two Mobius band triangles.
          */
         static constexpr int N3_2 = 302;
+
     private:
         int type_;
             /**< The specific triangulation being represented.
@@ -100,11 +105,33 @@ class TrivialTri : public StandardTriangulation {
 
     public:
         /**
-         * Returns a newly created clone of this structure.
+         * Creates a new copy of this structure.
+         */
+        TrivialTri(const TrivialTri&) = default;
+
+        /**
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        TrivialTri& operator = (const TrivialTri&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        TrivialTri* clone() const;
+        [[deprecated]] TrivialTri* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(TrivialTri& other) noexcept;
 
         /**
          * Returns the specific trivial triangulation being represented.
@@ -118,15 +145,28 @@ class TrivialTri : public StandardTriangulation {
          * Determines if the given triangulation component is one of the
          * trivial triangulations recognised by this class.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure representing the trivial
-         * triangulation, or \c null if the given component is not one
-         * of the triangulations recognised by this class.
+         * @return a structure representing the trivial triangulation, or
+         * \c null if the given component is not one of the triangulations
+         * recognised by this class.
          */
-        static TrivialTri* isTrivialTriangulation(const Component<3>* comp);
+        static std::unique_ptr<TrivialTri> recognise(const Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component forms one of
+         * the trivial triangulations recognised by this class.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<TrivialTri>
+            isTrivialTriangulation(const Component<3>* comp);
 
-        Manifold* manifold() const override;
-        std::optional<AbelianGroup> homology() const override;
+        std::unique_ptr<Manifold> manifold() const override;
+        AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
@@ -135,22 +175,46 @@ class TrivialTri : public StandardTriangulation {
         /**
          * Creates a new structure.
          */
-        TrivialTri(int newType);
+        TrivialTri(int type);
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls TrivialTri::swap(); it is provided
+ * so that TrivialTri meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(TrivialTri& a, TrivialTri& b) noexcept;
 
 // Inline functions for TrivialTri
 
-inline TrivialTri::TrivialTri(int newType) : type_(newType) {
+inline TrivialTri::TrivialTri(int type) : type_(type) {
 }
 
 inline TrivialTri* TrivialTri::clone() const {
-    return new TrivialTri(type_);
+    return new TrivialTri(*this);
+}
+
+inline void TrivialTri::swap(TrivialTri& other) noexcept {
+    std::swap(type_, other.type_);
 }
 
 inline int TrivialTri::type() const {
     return type_;
+}
+
+inline std::unique_ptr<TrivialTri> TrivialTri::isTrivialTriangulation(
+        const Component<3>* comp) {
+    return recognise(comp);
+}
+
+inline void swap(TrivialTri& a, TrivialTri& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

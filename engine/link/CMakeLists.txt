@@ -42,6 +42,7 @@ if (${REGINA_INSTALL_DEV})
     jenkins-impl.h
     link.h
     modellinkgraph.h
+    modellinkgraph-impl.h
     pd-impl.h
     tangle.h
     DESTINATION "${INCLUDEDIR}/link" COMPONENT Development)

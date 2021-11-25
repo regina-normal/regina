@@ -1,10 +1,10 @@
 SET ( FILES
+  attachmenthandler.cpp
   csvsurfacehandler.cpp
   dehydrationhandler.cpp
   exportdialog.cpp
   importdialog.cpp
   orbhandler.cpp
-  pdfhandler.cpp
   pythonhandler.cpp
   recogniserhandler.cpp
   reginahandler.cpp

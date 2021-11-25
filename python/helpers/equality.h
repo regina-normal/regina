@@ -159,8 +159,8 @@ namespace add_eq_operators_detail {
     struct EqOperatorTraits {
         static const T& makeRef();
 
-        typedef decltype(makeRef() == makeRef()) EqType;
-        typedef decltype(makeRef() != makeRef()) IneqType;
+        using EqType = decltype(makeRef() == makeRef());
+        using IneqType = decltype(makeRef() != makeRef());
 
         static constexpr bool hasEqOperator =
             ! std::is_same<void, EqType>::value;

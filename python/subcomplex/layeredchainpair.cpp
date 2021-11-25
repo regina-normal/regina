@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/layeredchainpair.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -40,10 +41,19 @@ using regina::LayeredChainPair;
 void addLayeredChainPair(pybind11::module_& m) {
     pybind11::class_<LayeredChainPair, regina::StandardTriangulation>
             (m, "LayeredChainPair")
-        .def("clone", &LayeredChainPair::clone)
+        .def(pybind11::init<const LayeredChainPair&>())
+        .def("clone", [](const LayeredChainPair& s) { // deprecated
+            return LayeredChainPair(s);
+        })
+        .def("swap", &LayeredChainPair::swap)
         .def("chain", &LayeredChainPair::chain,
             pybind11::return_value_policy::reference_internal)
-        .def_static("isLayeredChainPair", &LayeredChainPair::isLayeredChainPair)
+        .def_static("recognise", &LayeredChainPair::recognise)
+        .def_static("isLayeredChainPair", // deprecated
+            &LayeredChainPair::recognise)
     ;
+
+    m.def("swap",
+        (void(*)(LayeredChainPair&, LayeredChainPair&))(regina::swap));
 }
 

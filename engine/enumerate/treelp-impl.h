@@ -121,15 +121,18 @@ void LPMatrix<IntType>::dump(std::ostream& out) const {
 
 template <class LPConstraint>
 LPInitialTableaux<LPConstraint>::LPInitialTableaux(
-        const Triangulation<3>& tri, NormalCoords coords, bool enumeration) :
-        tri_(tri), coords_(coords) {
+        const Triangulation<3>& tri, NormalEncoding enc, bool enumeration) :
+        tri_(&tri), system_(enc) {
     unsigned r, c;
 
     // Fetch the original (unadjusted) matrix of matching equations.
-    if (coords_ != NS_ANGLE) {
-        // Here coords must be one of NS_QUAD or NS_STANDARD, and so we
-        // know that makeMatchingEquations() must succeed.
-        eqns_ = *regina::makeMatchingEquations(tri, coords);
+    if (system_.normal()) {
+        // In both cases below we know that makeMatchingEquations() will
+        // always succeed.
+        if (system_.standard())
+            eqns_ = regina::makeMatchingEquations(tri, NS_STANDARD);
+        else
+            eqns_ = regina::makeMatchingEquations(tri, NS_QUAD);
         scaling_ = 0;
     } else {
         eqns_ = regina::makeAngleEquations(tri);
@@ -165,7 +168,7 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
                 col_[c].push(r, eqns_.entry(r, c).longValue());
 
     // Add in the final row(s) for any additional constraints.
-    constraintsBroken_ = ! LPConstraint::addRows(col_, columnPerm_, tri);
+    LPConstraint::addRows(col_, *this);
     rank_ += LPConstraint::nConstraints;
 }
 
@@ -174,7 +177,7 @@ template <class LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool) {
     // This is a "do-nothing" version of reorder().
     int i, j;
-    if (coords_ == NS_QUAD || coords_ == NS_ANGLE) {
+    if (! system_.standard()) {
         // Leave the columns exactly as they were.
         for (i = 0; i < cols_; ++i)
             columnPerm_[i] = i;
@@ -183,7 +186,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
         // Keep the tetrahedra in the same order, but move
         // quadrilaterals to the front and triangles to the back
         // as required by columnPerm().
-        int n = tri_.size();
+        int n = tri_->size();
         for (i = 0; i < n; ++i) {
             columnPerm_[3 * i] = 7 * i + 4;
             columnPerm_[3 * i + 1] = 7 * i + 5;
@@ -236,12 +239,12 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
 #else
 template <class LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
-    int n = tri_.size();
+    int n = tri_->size();
     int i, j, k;
 
     // Fill the columnPerm_ array according to what kind of
     // problem we're trying to solve.
-    if (coords_ == NS_STANDARD && enumeration) {
+    if (system_.standard() && enumeration) {
         // We're doing vertex enumeration in standard coordinates.
         //
         // Use exactly the same ordering of quadrilaterals that we
@@ -250,7 +253,9 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         //
         // We remove our extra constraints here, since some constraints might
         // not be offered in quad coordinates.
-        LPInitialTableaux<LPConstraintNone> quad(tri_, NS_QUAD,
+        // Note: NS_QUAD is always safe; the constructor call below will
+        // never throw.
+        LPInitialTableaux<LPConstraintNone> quad(*tri_, NS_QUAD,
             true /* enumeration */);
         for (i = 0; i < n; ++i) {
             k = quad.columnPerm()[3 * i] / 3;
@@ -262,7 +267,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
             columnPerm_[3 * n + 4 * i + 2] = 7 * k + 2;
             columnPerm_[3 * n + 4 * i + 3] = 7 * k + 3;
         }
-    } else if (coords_ == NS_ANGLE) {
+    } else if (system_.angle()) {
         // TODO: Find a good heuristic to use for angle structure coordinates.
         // For now, we'll leave the columns exactly as they were.
         for (i = 0; i < cols_; ++i)
@@ -304,9 +309,8 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
                 for (k = 0; k < n; ++k) {
                     if (touched[k])
                         continue;
-                    if (coords_ == NS_QUAD) {
-                        // We're in quadrilateral or angle structure
-                        // coordinates.
+                    if (system_.quad()) {
+                        // We're in quadrilateral coordinates.
                         if (eqns_.entry(j, 3 * k) != 0 ||
                                 eqns_.entry(j, 3 * k + 1) != 0 ||
                                 eqns_.entry(j, 3 * k + 2) != 0)
@@ -335,8 +339,8 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
             for (k = 0; k < n; ++k) {
                 if (touched[k])
                     continue;
-                if (coords_ == NS_QUAD) {
-                    // We're in quadrilateral or angle structure coordinates.
+                if (system_.quad()) {
+                    // We're in quadrilateral coordinates.
                     if ((eqns_.entry(bestRow, 3 * k) != 0 ||
                             eqns_.entry(bestRow, 3 * k + 1) != 0 ||
                             eqns_.entry(bestRow, 3 * k + 2) != 0)) {
@@ -382,8 +386,8 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
             if (touched[k])
                 continue;
             touched[k] = true;
-            if (coords_ == NS_QUAD) {
-                // We're in quadrilateral or angle structure coordinates.
+            if (system_.quad()) {
+                // We're in quadrilateral coordinates.
                 columnPerm_[3 * (n - nTouched) - 3] = 3 * k;
                 columnPerm_[3 * (n - nTouched) - 2] = 3 * k + 1;
                 columnPerm_[3 * (n - nTouched) - 1] = 3 * k + 2;
@@ -861,13 +865,18 @@ void LPData<LPConstraint, IntType>::dump(std::ostream& out) const {
 
 template <class LPConstraint, typename IntType>
 template <class RayClass>
-void LPData<LPConstraint, IntType>::extractSolution(
-        RayClass& v, const char* type) const {
+RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
+        const {
     static_assert(
         FaithfulAssignment<IntType, typename RayClass::Element>::value,
         "LPData::extractSolution() requires a RayClass template parameter "
         "whose elements can faithfully store integers of the template "
         "parameter IntType.");
+
+    // This next test is to ensure that RayClass zero-initialises its elements.
+    static_assert(IsReginaInteger<typename RayClass::Element>::value,
+        "LPData::extractSolution() requires a RayClass template parameter "
+        "that stores one of Regina's own integer types.");
 
     // Fetch details on how to undo the column permutation.
     const int* columnPerm = origTableaux_->columnPerm();
@@ -884,15 +893,16 @@ void LPData<LPConstraint, IntType>::extractSolution(
     for (i = 0; i < rank_; ++i)
         lcm = lcm.lcm(entry(i, basis_[i]));
 
+    RayClass v(origTableaux_->coordinateColumns());
+
     // Now compute (lcm * the solution vector).  We do not yet
     // take into account the change of variables x_i -> x_i - 1
     // that occurred each time we called constrainPositive(),
     // or the more complex changes of variables that occurred
     // each time we called constrainOct().
     //
-    // All non-basic variables will be zero (and so we do
-    // nothing, since the precondition states that they are
-    // already zero in \a v).
+    // All non-basic variables will be zero (and so we do nothing,
+    // since they will already have been initialised to zero in \a v).
     //
     // For basic variables, compute the values from the tableaux.
     // Because we are multiplying everything by lcm, the
@@ -905,7 +915,7 @@ void LPData<LPConstraint, IntType>::extractSolution(
         coord = lcm;
         coord *= rhs_[i];
         coord /= entry(i, basis_[i]);
-        v.set(columnPerm[basis_[i]], coord);
+        v[columnPerm[basis_[i]]] = coord;
     }
 
     // Now we take into account the changes of variable due
@@ -913,21 +923,19 @@ void LPData<LPConstraint, IntType>::extractSolution(
     // Since we have multiplied everything by lcm, instead of
     // adding +1 to each relevant variable we must add +lcm.
     size_t pos;
-    if (origTableaux_->coords() == NS_ANGLE) {
+    if (origTableaux_->system().angle()) {
         if (type) {
             // For taut angle structures, the only coordinate that is explicitly
             // constrained to be positive is the final scaling coordinate.
             // Even better, this coordinate is never moved by the column
             // permutation.
             pos = 3 * origTableaux_->tri().size();
-            v.set(pos, v[pos] + lcm);
+            v[pos] = v[pos] + lcm;
         } else {
-            // For strict angle structures, we pass type == 0, and we
+            // For strict angle structures, we pass type == nullptr, and we
             // constrain *all* coordinates as positive.
-            for (pos = 0;
-                    pos <= 3 * origTableaux_->tri().size();
-                    ++pos)
-                v.set(pos, v[pos] + lcm);
+            for (pos = 0; pos <= 3 * origTableaux_->tri().size(); ++pos)
+                v[pos] = v[pos] + lcm;
         }
     } else {
         // For normal and almost normal surfaces, we need to work through
@@ -939,27 +947,28 @@ void LPData<LPConstraint, IntType>::extractSolution(
         for (i = 0; i < nTets; ++i)
             if (type[i] && type[i] < 4) {
                 pos = columnPerm[3 * i + type[i] - 1];
-                v.set(pos, v[pos] + lcm);
+                v[pos] = v[pos] + lcm;
             }
         // ... and then the triangle types.
         for (i = 3 * nTets; i < v.size(); ++i)
             if (type[i - 2 * nTets]) {
                 pos = columnPerm[i];
-                v.set(pos, v[pos] + lcm);
+                v[pos] = v[pos] + lcm;
             }
 
         // Next take into account the changes of variable due to
         // past calls to constrainOct().
         if (octPrimary_ >= 0) {
             pos = columnPerm[octPrimary_];
-            v.set(pos, v[pos] + lcm);
-            v.set(columnPerm[octSecondary_], v[pos]);
+            v[pos] = v[pos] + lcm;
+            v[columnPerm[octSecondary_]] = v[pos];
         }
     }
 
     // To finish, divide through by the gcd so we have the
     // smallest multiple that is an integer vector.
     v.scaleDown();
+    return v;
 }
 
 template <class LPConstraint, typename IntType>

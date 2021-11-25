@@ -40,28 +40,16 @@ class Watcher(PacketListener):
         print('RENAMING: ' + packet.label())
     def packetWasRenamed(self, packet):
         print('RENAMED: ' + packet.label())
-    def packetToBeDestroyed(self, packet):
+    def packetBeingDestroyed(self, packet):
         print('DESTROYING: ' + packet.label())
     def childToBeAdded(self, packet, child):
         print('ADDING CHILD: ' + packet.label() + ' -> ' + child.label())
     def childWasAdded(self, packet, child):
         print('ADDED CHILD: ' + packet.label() + ' -> ' + child.label())
     def childToBeRemoved(self, packet, child):
-        if not packet:
-            print('REMOVING CHILD: from parent destructor -> ' + child.label())
-        elif not child:
-            # This case should be impossible to trigger from python.
-            print('REMOVING CHILD: from child destructor <- ' + packet.label())
-        else:
-            print('REMOVING CHILD: ' + packet.label() + ' -> ' + child.label())
+        print('REMOVING CHILD: ' + packet.label() + ' -> ' + child.label())
     def childWasRemoved(self, packet, child):
-        if not packet:
-            print('REMOVED CHILD: from parent destructor -> ' + child.label())
-        elif not child:
-            # This case should be impossible to trigger from python.
-            print('REMOVED CHILD: from child destructor <- ' + packet.label())
-        else:
-            print('REMOVED CHILD: ' + packet.label() + ' -> ' + child.label())
+        print('REMOVED CHILD: ' + packet.label() + ' -> ' + child.label())
     def childToBeRenamed(self, packet, child):
         print('RENAMING CHILD: ' + packet.label() + ' -> ' + child.label())
     def childWasRenamed(self, packet, child):
@@ -94,5 +82,20 @@ print('Destroying parent...')
 c = None # t lives, since it is managed by python
 print('Destroying child t...')
 t = None
+
+# Now test the order in which destruction events are fired.
+print('Preparing order test...')
+x = Container(); x.setLabel('x'); xw = Watcher(); x.listen(xw)
+y = Container(); y.setLabel('y'); yw = Watcher(); y.listen(yw)
+z1 = Container(); z1.setLabel('z1'); z1w = Watcher(); z1.listen(z1w)
+z2 = Container(); z2.setLabel('z2'); z2w = Watcher(); z2.listen(z2w)
+x.insertChildLast(z1)
+x.insertChildLast(z2)
+z1.insertChildLast(y)
+print('Dropping children...')
+y = None; z1 = None; z2 = None
+print('Dropping root...')
+x = None
+
 print('Finished.')
 

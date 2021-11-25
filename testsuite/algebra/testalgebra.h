@@ -42,6 +42,7 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
+void addAbelianGroup(CppUnit::TextUi::TestRunner& runner);
 void addCovers(CppUnit::TextUi::TestRunner& runner);
 void addGroupPresentation(CppUnit::TextUi::TestRunner& runner);
 

@@ -44,25 +44,24 @@ void addComponent(pybind11::module_& m, const char* name) {
         .def("size", &Component<dim>::size)
         .def("countBoundaryComponents",
             &Component<dim>::countBoundaryComponents)
-        .def("simplices", &Component<dim>::simplices,
-            pybind11::return_value_policy::reference)
+        .def("simplices", &Component<dim>::simplices)
         .def("simplex", &Component<dim>::simplex,
             pybind11::return_value_policy::reference)
-        .def("boundaryComponents", &Component<dim>::boundaryComponents,
-            pybind11::return_value_policy::reference)
+        .def("boundaryComponents", &Component<dim>::boundaryComponents)
         .def("boundaryComponent", &Component<dim>::boundaryComponent,
             pybind11::return_value_policy::reference)
         .def("isValid", &Component<dim>::isValid)
         .def("isOrientable", &Component<dim>::isOrientable)
         .def("hasBoundaryFacets", &Component<dim>::hasBoundaryFacets)
         .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets)
-        // We cannot take the addresses of the following header-only properties,
-        // so we define getter functions instead.
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Component<dim>::dimension;
-        })
+        .def_readonly_static("dimension", &Component<dim>::dimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<
+        decltype(std::declval<Component<dim>>().simplices())>(m);
+    regina::python::addListView<
+        decltype(std::declval<Component<dim>>().boundaryComponents())>(m);
 }
 

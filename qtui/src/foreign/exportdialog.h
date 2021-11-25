@@ -39,6 +39,7 @@
 #define __EXPORTDIALOG_H
 
 #include <QDialog>
+#include <memory>
 
 class PacketChooser;
 class PacketFilter;
@@ -62,23 +63,24 @@ class ExportDialog : public QDialog {
         /**
          * Packet tree structure:
          */
-        regina::Packet* tree;
-        regina::Packet* chosenPacket;
+        std::shared_ptr<regina::Packet> tree;
+        std::shared_ptr<regina::Packet> chosenPacket;
 
     public:
         /**
          * Dialog constructor.
          *
          * The filter passed is used to restrict the possible selections.
-         * It may be 0, in which case any packet or packet subtree
+         * It may be null, in which case any packet or packet subtree
          * will be allowed.
          *
          * This dialog and its components will claim ownership of the
          * given packet filter.
          */
-        ExportDialog(QWidget* parent, regina::Packet* packetTree,
-            regina::Packet* defaultSelection, PacketFilter* useFilter,
-            bool useCodec, const QString& dialogTitle);
+        ExportDialog(QWidget* parent,
+            std::shared_ptr<regina::Packet> packetTree,
+            std::shared_ptr<regina::Packet> defaultSelection,
+            PacketFilter* useFilter, bool useCodec, const QString& dialogTitle);
 
         /**
          * Returns whether or not there are any packets at all made
@@ -93,7 +95,7 @@ class ExportDialog : public QDialog {
         /**
          * Returns the packet or packet subtree selected by the user.
          */
-        regina::Packet* selectedPacket();
+        std::shared_ptr<regina::Packet> selectedPacket();
 
     protected slots:
         /**
@@ -107,7 +109,7 @@ class ExportDialog : public QDialog {
         virtual void slotEncodingInfo();
 };
 
-inline regina::Packet* ExportDialog::selectedPacket() {
+inline std::shared_ptr<regina::Packet> ExportDialog::selectedPacket() {
     return chosenPacket;
 }
 

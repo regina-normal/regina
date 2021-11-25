@@ -36,31 +36,7 @@
 
 namespace regina {
 
-namespace {
-    // The following gluings describe a punctured ideal unknot complement.
-    // The real 2-sphere boundary is a triangular pillow, formed from
-    // faces 5 (013) and 5 (213).
-
-    const int puncturedUnknotAdjacencies[6][4] = {
-        { 1, 1, 1, 3},
-        { 0, 0, 3, 0},
-        { 2, 2, 5, 3},
-        { 0, 1, 2, 4},
-        { 4, 3, 5, 4},
-        { -1, 2, -1, 4}
-    };
-
-    const int puncturedUnknotGluings[6][4][4] = {
-        { { 1, 3, 0, 2 }, { 3, 0, 1, 2 }, { 0, 1, 3, 2 }, { 1, 2, 3, 0 } },
-        { { 1, 2, 3, 0 }, { 2, 0, 3, 1 }, { 0, 2, 1, 3 }, { 0, 1, 3, 2 } },
-        { { 1, 0, 2, 3 }, { 1, 0, 2, 3 }, { 0, 2, 1, 3 }, { 0, 1, 3, 2 } },
-        { { 3, 0, 1, 2 }, { 0, 2, 1, 3 }, { 0, 1, 3, 2 }, { 0, 3, 2, 1 } },
-        { { 3, 1, 2, 0 }, { 0, 3, 2, 1 }, { 0, 1, 3, 2 }, { 3, 1, 2, 0 } },
-        { { 0, 0, 0, 0 }, { 0, 2, 1, 3 }, { 0, 0, 0, 0 }, { 0, 1, 3, 2 } }
-    };
-}
-
-Triangulation<3>* Link::complement(bool simplify) const {
+Triangulation<3> Link::complement(bool simplify) const {
     // This implementation produces an oriented triangluation.
     // The orientation follows a right-hand rule, where the thumb points
     // from vertices 0 to 1, and the fingers point from vertice 2 to 3.
@@ -94,55 +70,51 @@ Triangulation<3>* Link::complement(bool simplify) const {
     //   side-effect is that our triangulation might be disconnected, and
     //   we fix this before returning by connect summing the pieces together.
 
-    Triangulation<3>* ans = new Triangulation<3>();
+    Triangulation<3> ans;
 
     // Empty link?  Just return the 3-sphere.
     if (components_.empty()) {
-        Tetrahedron<3>* t = ans->newTetrahedron();
+        Tetrahedron<3>* t = ans.newTetrahedron();
         t->join(0, t, Perm<4>(0,1));
         t->join(2, t, Perm<4>(2,3));
         return ans;
     }
 
-    struct CrossingTet {
-        Tetrahedron<3>* tet[4];
-        /**
-         *
-         * Tetrahedra, for -ve crossing:
-         *   tet[0]: upper forward -> lower forward
-         *   tet[1]: lower forward -> upper backward
-         *   tet[2]: upper backward -> lower backward
-         *   tet[3]: lower backward -> upper forward
-         *
-         * Tetrahedra, for +ve crossing:
-         *   replace upper <-> lower in the list above
-         *
-         * Tetrahedron vertices:
-         *   0 = north pole
-         *   1 = south pole
-         *   2->3 represents the arrow in the tetrahedron list above
-         */
-    };
-
     size_t n = size();
-    CrossingTet* ctet = new CrossingTet[n];
+    auto* ctet = new std::array<Tetrahedron<3>*, 4>[n];
+
+    /**
+     *
+     * Tetrahedra, for -ve crossing:
+     *   ctet[i][0]: upper forward -> lower forward
+     *   ctet[i][1]: lower forward -> upper backward
+     *   ctet[i][2]: upper backward -> lower backward
+     *   ctet[i][3]: lower backward -> upper forward
+     *
+     * Tetrahedra, for +ve crossing:
+     *   replace upper <-> lower in the list above
+     *
+     * Tetrahedron vertices:
+     *   0 = north pole
+     *   1 = south pole
+     *   2->3 represents the arrow in the tetrahedron list above
+     */
 
     size_t i, j;
 
     // Create the local structure around each crossing:
     for (i = 0; i < n; ++i) {
-        for (j = 0; j < 4; ++j)
-            ctet[i].tet[j] = ans->newTetrahedron();
+        ctet[i] = ans.newTetrahedra<4>();
         if (crossing(i)->sign() > 0) {
-            ctet[i].tet[0]->join(0, ctet[i].tet[1], Perm<4>(2,3));
-            ctet[i].tet[1]->join(1, ctet[i].tet[2], Perm<4>(2,3));
-            ctet[i].tet[2]->join(0, ctet[i].tet[3], Perm<4>(2,3));
-            ctet[i].tet[3]->join(1, ctet[i].tet[0], Perm<4>(2,3));
+            ctet[i][0]->join(0, ctet[i][1], Perm<4>(2,3));
+            ctet[i][1]->join(1, ctet[i][2], Perm<4>(2,3));
+            ctet[i][2]->join(0, ctet[i][3], Perm<4>(2,3));
+            ctet[i][3]->join(1, ctet[i][0], Perm<4>(2,3));
         } else {
-            ctet[i].tet[0]->join(1, ctet[i].tet[1], Perm<4>(2,3));
-            ctet[i].tet[1]->join(0, ctet[i].tet[2], Perm<4>(2,3));
-            ctet[i].tet[2]->join(1, ctet[i].tet[3], Perm<4>(2,3));
-            ctet[i].tet[3]->join(0, ctet[i].tet[0], Perm<4>(2,3));
+            ctet[i][0]->join(1, ctet[i][1], Perm<4>(2,3));
+            ctet[i][1]->join(0, ctet[i][2], Perm<4>(2,3));
+            ctet[i][2]->join(1, ctet[i][3], Perm<4>(2,3));
+            ctet[i][3]->join(0, ctet[i][0], Perm<4>(2,3));
         }
     }
 
@@ -164,21 +136,21 @@ Triangulation<3>* Link::complement(bool simplify) const {
         adj = s.crossing();
         if ((adj->sign() > 0 && s.strand() == 1) ||
                 (adj->sign() < 0 && s.strand() == 0)) {
-            ctet[i].tet[3]->join(2, ctet[adj->index()].tet[3], Perm<4>(2,3));
-            ctet[i].tet[0]->join(3, ctet[adj->index()].tet[2], Perm<4>(2,3));
+            ctet[i][3]->join(2, ctet[adj->index()][3], Perm<4>(2,3));
+            ctet[i][0]->join(3, ctet[adj->index()][2], Perm<4>(2,3));
         } else {
-            ctet[i].tet[3]->join(2, ctet[adj->index()].tet[2], Perm<4>(2,3));
-            ctet[i].tet[0]->join(3, ctet[adj->index()].tet[1], Perm<4>(2,3));
+            ctet[i][3]->join(2, ctet[adj->index()][2], Perm<4>(2,3));
+            ctet[i][0]->join(3, ctet[adj->index()][1], Perm<4>(2,3));
         }
 
         adj = t.crossing();
         if ((adj->sign() > 0 && t.strand() == 1) ||
                 (adj->sign() < 0 && t.strand() == 0)) {
-            ctet[i].tet[0]->join(2, ctet[adj->index()].tet[3], Perm<4>(2,3));
-            ctet[i].tet[1]->join(3, ctet[adj->index()].tet[2], Perm<4>(2,3));
+            ctet[i][0]->join(2, ctet[adj->index()][3], Perm<4>(2,3));
+            ctet[i][1]->join(3, ctet[adj->index()][2], Perm<4>(2,3));
         } else {
-            ctet[i].tet[0]->join(2, ctet[adj->index()].tet[2], Perm<4>(2,3));
-            ctet[i].tet[1]->join(3, ctet[adj->index()].tet[1], Perm<4>(2,3));
+            ctet[i][0]->join(2, ctet[adj->index()][2], Perm<4>(2,3));
+            ctet[i][1]->join(3, ctet[adj->index()][1], Perm<4>(2,3));
         }
     }
 
@@ -188,42 +160,28 @@ Triangulation<3>* Link::complement(bool simplify) const {
     // disconnected triangluations, as discussed in the comments at the
     // beginning of this routine.
 
-    if (ans->isEmpty()) {
+    if (ans.isEmpty()) {
         // We seem to have lost all our components (which therefore means
         // our link is a k-component unlink for some k).
         // Build a 3-sphere for now; we will pick up the missing unknot
         // components shortly.
-        Tetrahedron<3>* tet = ans->newTetrahedron();
+        Tetrahedron<3>* tet = ans.newTetrahedron();
         tet->join(0, tet, Perm<4>(0,1));
         tet->join(2, tet, Perm<4>(2,3));
     }
 
-    if (! ans->isConnected()) {
+    if (! ans.isConnected()) {
         // Replace ans with the connected sum of its components.
-        Container parent;
-        ans->splitIntoComponents(&parent, false /* setLabels */);
+        auto comp = ans.triangulateComponents();
 
-        // Use the first component to form the connected sum.
-        Triangulation<3>* newAns = static_cast<Triangulation<3>*>(
-            parent.firstChild());
-
-        Triangulation<3>* comp = static_cast<Triangulation<3>*>(
-            newAns->nextSibling());
-        while (comp) {
-            newAns->connectedSumWith(*comp);
-            comp = static_cast<Triangulation<3>*>(comp->nextSibling());
-        }
-
-        newAns->makeOrphan();
-        delete ans;
-        ans = newAns;
-
-        // The remaining components will be destroyed when parent goes
-        // out of scope (i.e., now).
+        auto it = comp.begin();
+        ans = std::move(*it);
+        for (++it; it != comp.end(); ++it)
+            ans.connectedSumWith(*it);
     }
 
     size_t idealVertices = 0;
-    for (auto v : ans->vertices())
+    for (auto v : ans.vertices())
         if (v->isIdeal())
             ++idealVertices;
 
@@ -239,27 +197,35 @@ Triangulation<3>* Link::complement(bool simplify) const {
         // We do this by prying open a face and inserting a punctured
         // unknot complement with a triangular pillow boundary.
 
-        Triangle<3>* f = ans->triangle(0);
+        Triangle<3>* f = ans.triangle(0);
         Tetrahedron<3>* tet0 = f->embedding(0).simplex();
         Perm<4> vert0 = f->embedding(0).vertices();
         Tetrahedron<3>* tet1 = f->embedding(1).simplex();
         Perm<4> vert1 = f->embedding(1).vertices();
 
-        ans->insertConstruction(6, puncturedUnknotAdjacencies,
-            puncturedUnknotGluings);
-        Tetrahedron<3>* unknotBdry = ans->tetrahedra().back();
-        // Boundary triangles are 013 and 213.
+        // The following gluings describe a punctured ideal unknot complement.
+        // The real 2-sphere boundary is a triangular pillow, formed from
+        // faces p5 (013) and p5 (213).
+
+        auto [p0, p1, p2, p3, p4, p5] = ans.newTetrahedra<6>();
+
+        p0->join(0, p1, {1,3,0,2}); p0->join(1, p1, {3,0,1,2});
+        p0->join(2, p1, {0,1,3,2}); p0->join(3, p3, {1,2,3,0});
+        p1->join(2, p3, {0,2,1,3}); p2->join(0, p2, {1,0,2,3});
+        p2->join(2, p5, {0,2,1,3}); p2->join(3, p3, {0,1,3,2});
+        p3->join(3, p4, {0,3,2,1}); p4->join(0, p4, {3,1,2,0});
+        p4->join(2, p5, {0,1,3,2});
 
         tet0->unjoin(vert0[3]);
-        unknotBdry->join(2, tet0, vert0 * Perm<4>(3,2));
-        unknotBdry->join(0, tet1, vert1 * Perm<4>(3,1,0,2));
+        p5->join(2, tet0, vert0 * Perm<4>(3,2));
+        p5->join(0, tet1, vert1 * Perm<4>(3,1,0,2));
 
         ++idealVertices;
     }
 
     // Done!
     if (simplify)
-        ans->intelligentSimplify();
+        ans.intelligentSimplify();
     return ans;
 }
 

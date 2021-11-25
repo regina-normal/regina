@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>snappea</refname>
-  <refpurpose>The full contents of a &snappea; data file</refpurpose>
+  <refpurpose>Replaced by &xml-snappeadata;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -29,10 +29,19 @@ snappea ::= (#PCDATA)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   This element was used in the past to store the contents of a
+   &snappea; triangulation packet.
+   Since &regina;&nbsp;7.0, &snappea; triangulations
+   now store their content
+   directly in the character data of the &xml-snappeadata; element
+   (which replaces the old &xml-packet; element for &snappea; triangulations).
+  </para>
   <para>
    A &xml-snappea; element contains the full contents of a &snappea;
    data file, using &snappea;'s own text-based file format.

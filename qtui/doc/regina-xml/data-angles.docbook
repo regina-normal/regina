@@ -1,0 +1,175 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-angles">
+ <refmeta>
+  <refentrytitle>angles</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>angles</refname>
+  <refpurpose>An angle structure list packet</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+angles ::= (&xml-struct;*, &xml-spanstrict;?, &xml-spantaut;?,
+            &xml-tag;*,
+            &packetsyn1;
+            &packetsyn2;
+            &packetsyn3;
+            &packetsyn4;
+            &packetsyn5;*)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>algorithm</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>tautonly</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>tri</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+     &packetattrlist2col;
+    </tbody>
+   </tgroup>
+  </informaltable>
+  <para>&eltaddedver;7.0</para>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   This represents an <emphasis>angle structure list packet</emphasis>,
+   one of the many types of packet that together form the
+   <emphasis>packet tree</emphasis> that a user sees when they open a
+   &regina; data file.
+  </para>
+  <para>
+   An angle structure list stores a list of angle structures on a particular
+   3-manifold triangulation.  Generally this list will contain the vertex
+   structures whose convex span is the set of all angle structures on
+   the triangulation, though other lists (such as all taut angle structures,
+   or other customised lists) can be stored also.
+  </para>
+  <para>
+   Since &regina;&nbsp;7.0, an angle structure list no longer needs to
+   be a child packet of its underlying triangulation.
+   Instead, the triangulation is denoted by the <sgmltag>tri</sgmltag>
+   attribute.  This must be the ID of a 3-dimensional triangulation packet
+   that appears <emphasis>before this list in the packet tree</emphasis>,
+   with respect to a pre-order depth-first traversal
+   (i.e., the triangulation must appear before this list in the &xml;
+   data file).  The triangulation may be an anonymous packet (see &xml-anon;).
+  </para>
+  <para>
+   The individual angle structures in this list are contained in the
+   child &xml-struct; elements.
+   Since &regina;&nbsp;7.0, the parameters of the angle structure enumeration
+   that created this list are stored in the attributes; there is no
+   longer a child &xml-angleparams; element.
+  </para>
+  &packetchilddesc;
+
+  <refsect2>
+   <title>Parents</title>
+   &packetparents;
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>angles</sgmltag>,
+    and are specific to the angle structure list packet type:
+    <simplelist type="inline">
+     <member>&xml-spanstrict;</member>
+     <member>&xml-spantaut;</member>
+     <member>&xml-struct;</member>
+    </simplelist>.
+   </para>
+   &packetchildren;
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <para>
+   The following attributes are specific to angle structure lists:
+  </para>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>algorithm</sgmltag></term>
+    <listitem>
+     <para>
+      Specifies the algorithm that was used to enumerate these angle structures.
+     </para>
+     <para>
+      This must be an integer, formed as a bitwise OR combination of
+      constants from the <classname>AngleAlgFlags</classname> enumeration
+      in &regina;'s calculation engine.
+     </para>
+     <para>
+      An example of such an integer might be 32, which represents the
+      <classname>AngleAlgFlags</classname> constant
+      <literal>AS_ALG_DD</literal>.
+     </para>
+     <para>
+      &regina; versions&nbsp;6.0.1 and earlier did not store this
+      information in its data files at all.
+      If it is not provided, it will be treated as
+      <literal>AS_ALG_LEGACY</literal>.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>tautonly</sgmltag></term>
+    <listitem>
+     <para>
+      Either <literal>T</literal> if only taut structures are
+      enumerated, or <literal>F</literal> if all
+      vertex angle structures are enumerated.
+     </para>
+     <para>
+      &regina; versions&nbsp;4.6 and earlier did not store this
+      information in its data files at all.
+      If it not provided through either this attribute or a (deprecated) child
+      &xml-angleparams; element, it will be treated as <literal>F</literal>
+      (since taut enumeration was not offered in those very old versions
+      of &regina;).
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>tri</sgmltag></term>
+    <listitem><para>
+     The ID of the triangulation on which these angle structures lie.
+     This must match the <sgmltag>id</sgmltag> attribute of a
+     3-dimensional triangulation that appears before this list in a
+     pre-order depth-first traversal of the full packet tree.
+    </para></listitem>
+   </varlistentry>
+  </variablelist>
+  &packetattrdesc;
+ </refsect1>
+</refentry>

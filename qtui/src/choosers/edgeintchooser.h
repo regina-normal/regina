@@ -49,7 +49,7 @@
  * A filter function, used to determine whether a given edge with
  * integer argument should appear in the list.
  */
-typedef bool (*EdgeIntFilterFunc)(regina::Edge<3>*, int);
+using EdgeIntFilterFunc = bool (*)(regina::Edge<3>*, int);
 
 /**
  * A widget through which a single edge of some triangulation along with
@@ -77,7 +77,7 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
                  choosing from. */
         EdgeIntFilterFunc filter_;
             /**< A filter to restrict the available selections, or
-                 0 if no filter is necessary. */
+                 \c null if no filter is necessary. */
         std::vector<std::pair<regina::Edge<3>*, int> > options_;
             /**< A list of the available options to choose from. */
         int argMin_, argMax_;
@@ -101,7 +101,7 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
          * The given filter may be 0, in which case every edge/integer
          * combination will be offered.
          */
-        EdgeIntChooser(regina::Triangulation<3>* tri,
+        EdgeIntChooser(regina::PacketOf<regina::Triangulation<3>>* tri,
                 int argMin, int argMax, const QString& argDesc,
                 EdgeIntFilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
@@ -135,9 +135,9 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::Packet*) override;
-        void packetWasChanged(regina::Packet*) override;
-        void packetToBeDestroyed(regina::PacketShell) override;
+        void packetToBeChanged(regina::Packet&) override;
+        void packetWasChanged(regina::Packet&) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
 
     private:
         /**
@@ -172,7 +172,7 @@ class EdgeIntDialog : public QDialog {
          * Constructor and destructor.
          */
         EdgeIntDialog(QWidget* parent,
-            regina::Triangulation<3>* tri,
+            regina::PacketOf<regina::Triangulation<3>>* tri,
             int argMin, int argMax, const QString& argDesc,
             EdgeIntFilterFunc filter,
             const QString& title,
@@ -180,7 +180,7 @@ class EdgeIntDialog : public QDialog {
             const QString& whatsThis);
 
         static std::pair<regina::Edge<3>*, int> choose(QWidget* parent,
-            regina::Triangulation<3>* tri,
+            regina::PacketOf<regina::Triangulation<3>>* tri,
             int argMin, int argMax, const QString& argDesc,
             EdgeIntFilterFunc filter,
             const QString& title,
@@ -195,16 +195,16 @@ inline bool EdgeIntChooser::refresh() {
     return (count() > 0);
 }
 
-inline void EdgeIntChooser::packetToBeChanged(regina::Packet*) {
+inline void EdgeIntChooser::packetToBeChanged(regina::Packet&) {
     clear();
     options_.clear();
 }
 
-inline void EdgeIntChooser::packetWasChanged(regina::Packet*) {
+inline void EdgeIntChooser::packetWasChanged(regina::Packet&) {
     fill();
 }
 
-inline void EdgeIntChooser::packetToBeDestroyed(regina::PacketShell) {
+inline void EdgeIntChooser::packetBeingDestroyed(regina::PacketShell) {
     clear();
     options_.clear();
 }

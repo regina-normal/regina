@@ -67,7 +67,7 @@ GenericTriangulationBase::GenericTriangulationBase(regina::Packet* p,
 void GenericTriangulationBase::pythonConsole() {
     enclosingPane->getMainWindow()->getPythonManager().
         launchPythonConsole(enclosingPane->getMainWindow(),
-        packet->root(), packet);
+        packet->root(), packet->shared_from_this());
 }
 
 regina::Packet* GenericTriangulationBase::getPacket() {
@@ -75,7 +75,8 @@ regina::Packet* GenericTriangulationBase::getPacket() {
 }
 
 template <int dim>
-GenericTriangulationUI<dim>::GenericTriangulationUI(Triangulation<dim>* packet,
+GenericTriangulationUI<dim>::GenericTriangulationUI(
+        regina::PacketOf<Triangulation<dim>>* packet,
         PacketPane* enclosingPane) :
         GenericTriangulationBase(packet, enclosingPane) {
     ui = new QWidget();
@@ -105,11 +106,11 @@ GenericTriangulationUI<dim>::GenericTriangulationUI(Triangulation<dim>* packet,
     layout->addWidget(boundary);
 
     // Add a central divider.
-    QFrame* divider = new QFrame();
+    auto* divider = new QFrame();
     divider->setFrameStyle(QFrame::HLine | QFrame::Sunken);
     layout->addWidget(divider);
 
-    QLabel* label = new QLabel(QObject::tr(
+    auto* label = new QLabel(QObject::tr(
         "<qt>I cannot view trianguations of dimension ≥ 5 here in the "
         "graphical user interface.<p>"
         "You can, however, work with this triangulation in Python."));
@@ -141,7 +142,7 @@ QString GenericTriangulationUI<dim>::getPacketMenuText() const {
 
 template <int dim>
 void GenericTriangulationUI<dim>::refresh() {
-    Triangulation<dim>* tri = static_cast<Triangulation<dim>*>(packet);
+    const auto tri = static_cast<regina::PacketOf<Triangulation<dim>>*>(packet);
     if (tri->isEmpty())
         type->setText(QObject::tr("Empty"));
     else if (! tri->isValid())

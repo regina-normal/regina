@@ -41,31 +41,20 @@
 #endif
 
 #include <iostream>
+#include <tuple>
 #include "regina-core.h"
 
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
- * Writes time and memory usage for the current process to the given
- * output stream.  Information is gathered from the \c /proc filesystem,
- * which means that this routine will only write meaningful information
- * under a Linux system where \c /proc is mounted.
+ * Returns time and memory usage for the current process, for use on Linux
+ * systems.  Information is gathered from the \c /proc filesystem; if
+ * this is run on a non-Linux system (or a Linux system where \c /proc is not
+ * mounted), then this routine will throw an exception.
  *
- * Specifically, this routine reads information on the running process from
- * \c /proc/self/stat, and writes a short string to the given output
- * stream of the form:
- *
- * \code
- * utime=..., stime=..., vsize=...
- * \endcode
- *
- * The three ellipses in the example above will be replaced with integers,
- * representing:
+ * More precisely, this routine reads information on the running process from
+ * \c /proc/self/stat, and returns a tuple (\a utime, \a stime, \a vsize).
+ * These three fields reperesent:
  *
  * - the number jiffies that this process has been scheduled in user mode
  *   (the \e utime field);
@@ -77,34 +66,46 @@ namespace regina {
  * \c proc(5) manpage.  Note that the length of a jiffy can differ
  * from system to system; see the \c time(7) manpage for details.
  *
- * The output will not contain a newline, and the given output stream
- * will not be flushed.
- *
- * If \c /proc/self/stat cannot be read, this routine will write a short
- * message to that effect to the given output stream (which means that
- * this utility is safe to call under non-Linux operating systems,
- * although it will of course be useless in such scenarios).
- *
- * If \c /proc/self/stat can be read but contains unexpected
- * information, the behaviour of this routine is undefined.
- *
- * \ifacespython This routine does not take any arguments; instead the
- * stream \a out is assumed to be standard output.
+ * \exception FileError Either \c /proc/self/stat cannot be read,
+ * or it contains unexpected information.
  *
  * \warning Currently this routine allows at most 255 characters for the
  * \e comm field in \c /proc/self/stat (which stores the executable
  * filename along with surrounding parentheses).  If the \e comm field is too
  * long (i.e., the executable filename is too long), then this routine
- * will not be able to parse \c /proc/self/stat, and will write a note to
- * this effect to the given output stream.  If you encounter this problem,
- * you should be able to fix it by renaming your executable to something
- * shorter.
+ * will not be able to parse \c /proc/self/stat, and will throw an exception.
+ * If you encounter this problem, you should be able to fix it by renaming
+ * your executable to something shorter.
  *
- * @param out the output stream to which usage information will be written.
+ * \ingroup utilities
+ */
+std::tuple<unsigned long, unsigned long, unsigned long> resUsage();
+
+/**
+ * Writes time and memory usage for the current process to the given
+ * output stream, for use on Linux systems.
+ *
+ * This simply writes the information gathered from resUsage() to the given
+ * output stream in a human-readable format.  See resUsage() for full details
+ * on what this information means and on what systems it can be accessed.
+ *
+ * The output will be written in the following format, with no final newline,
+ * and without flushing the output stream:
+ *
+ * \code
+ * utime=..., stime=..., vsize=...
+ * \endcode
+ *
+ * Unline resUsage(), if an error occurs then this routine will not throw an
+ * exception.  Instead it will write an appropriate message to the output
+ * stream.
+ *
+ * \ifacespython Not present; instead use the variant resUsage() that
+ * takes no arguments and returns a tuple.
+ *
+ * @param out the output stream to which to write.
  */
 void writeResUsage(std::ostream& out);
-
-/*@}*/
 
 } // namespace regina
 

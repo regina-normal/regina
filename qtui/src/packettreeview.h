@@ -56,7 +56,7 @@ namespace regina {
 class PacketTreeItem : public QTreeWidgetItem, public regina::PacketListener {
     private:
         /**
-         * The underlying packet, or 0 if the underlying packet has
+         * The underlying packet, or null if the underlying packet has
          * already been destroyed.
          */
         regina::Packet* packet;
@@ -122,14 +122,14 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetWasChanged(regina::Packet* packet) override;
-        void packetWasRenamed(regina::Packet* packet) override;
-        void packetToBeDestroyed(regina::PacketShell packet) override;
-        void childWasAdded(regina::Packet* packet, regina::Packet* child)
+        void packetWasChanged(regina::Packet& packet) override;
+        void packetWasRenamed(regina::Packet& packet) override;
+        void packetBeingDestroyed(regina::PacketShell packet) override;
+        void childWasAdded(regina::Packet& packet, regina::Packet& child)
             override;
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
+        void childWasRemoved(regina::Packet& packet, regina::Packet& child)
             override;
-        void childrenWereReordered(regina::Packet* packet) override;
+        void childrenWereReordered(regina::Packet& packet) override;
 
         /**
          * Manual management of expansion state.
@@ -159,30 +159,32 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
         ReginaMain* mainWindow;
             /**< The main window responsible for this packet tree. */
 
-        regina::Packet* root;
+        std::shared_ptr<regina::Packet> root;
             /**< The root of the packet tree. */
 
         regina::Packet* toSelect;
             /**< If non-zero, this is a packet that will be added to the
                  tree shortly, and which will be automatically selected
-                 as soon as it appears. */
+                 as soon as it appears.  This should be considered
+                 temporary; it will be reset to null once the packet is
+                 seen and selected. */
 
     public:
         /**
          * Creates an empty tree.  This tree must be initialised using
          * fill().
          */
-        PacketTreeView(ReginaMain* newMainWindow, QWidget* parent = 0);
+        PacketTreeView(ReginaMain* newMainWindow, QWidget* parent = nullptr);
 
         /**
-         * Returns the currently selected packet, or 0 if no packet is
+         * Returns the currently selected packet, or null if no packet is
          * selected.
          */
-        regina::Packet* selectedPacket();
+        std::shared_ptr<regina::Packet> selectedPacket();
 
         /**
          * Selects the given packet in the tree, or clears the selection
-         * if 0 is passed.  If the given packet cannot be found in the
+         * if null is passed.  If the given packet cannot be found in the
          * tree, the selection will be cleared (and nothing will break).
          *
          * If \a allowDefer is \c true and the given packet cannot be
@@ -190,22 +192,23 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
          * added shortly, and once the corresponding tree item does appear
          * it will be selected immediately.
          */
-        void selectPacket(regina::Packet* p, bool allowDefer = false);
+        void selectPacket(std::shared_ptr<regina::Packet> p,
+            bool allowDefer = false);
 
         /**
          * Fills this tree with items corresponding to the given
          * packet tree.  Any existing items in this tree will be removed.
          */
-        void fill(regina::Packet* topPacket);
+        void fill(std::shared_ptr<regina::Packet> topPacket);
 
         /**
-         * Finds the item corresponding to the given packet, or 0 if no
+         * Finds the item corresponding to the given packet, or null if no
          * such item could be found.
          *
          * This routine will \e not find the root of the packet tree:
-         * if packet is the tree root then this routine will return 0.
+         * if packet is the tree root then this routine will return null.
          */
-        PacketTreeItem* find(regina::Packet* packet);
+        PacketTreeItem* find(std::shared_ptr<regina::Packet> packet);
 
         /**
          * Return the main window responsible for this packet tree.
@@ -217,11 +220,11 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
          * matters such as automatic packet selection correctly, and
          * should be used instead of the PacketTreeItem* constructors.
          */
-        PacketTreeItem* createAndSelect(regina::Packet* packet);
+        PacketTreeItem* createAndSelect(std::shared_ptr<regina::Packet> packet);
         PacketTreeItem* createAndSelect(QTreeWidgetItem* parent,
-            regina::Packet* packet);
+            std::shared_ptr<regina::Packet> packet);
         PacketTreeItem* createAndSelect(QTreeWidgetItem* parent,
-            QTreeWidgetItem* after, regina::Packet* packet);
+            QTreeWidgetItem* after, std::shared_ptr<regina::Packet> packet);
 
         /**
          * Updates this tree to match the underlying packet tree.
@@ -243,17 +246,17 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
          * invisible root item of the tree (in which case fromPacket must
          * be the tree root).
          */
-        void refreshSubtree(regina::Packet* fromPacket,
+        void refreshSubtree(std::shared_ptr<regina::Packet> fromPacket,
             QTreeWidgetItem* fromItem);
 
         /**
          * PacketListener overrides.
          */
-        void childWasAdded(regina::Packet* packet, regina::Packet* child)
+        void childWasAdded(regina::Packet& packet, regina::Packet& child)
             override;
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
+        void childWasRemoved(regina::Packet& packet, regina::Packet& child)
             override;
-        void childrenWereReordered(regina::Packet* packet) override;
+        void childrenWereReordered(regina::Packet& packet) override;
 
     public slots:
         /**
@@ -272,7 +275,7 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
          * Allow the user to deselect the current item by clicking on an
          * empty part of the tree.
          */
-        virtual void mousePressEvent(QMouseEvent* event) override;
+        void mousePressEvent(QMouseEvent* event) override;
 
     private slots:
         /**
@@ -299,14 +302,18 @@ inline void PacketTreeItem::markShouldBeExpanded(bool state) {
 }
 
 inline void PacketTreeItem::refreshSubtree() {
-    static_cast<PacketTreeView*>(treeWidget())->refreshSubtree(packet, this);
+    static_cast<PacketTreeView*>(treeWidget())->refreshSubtree(
+        packet->shared_from_this(), this);
 }
 
-inline regina::Packet* PacketTreeView::selectedPacket() {
+inline std::shared_ptr<regina::Packet> PacketTreeView::selectedPacket() {
     if (selectedItems().isEmpty())
-        return 0;
-    QTreeWidgetItem* item = selectedItems().first();
-    return (item ? dynamic_cast<PacketTreeItem*>(item)->getPacket() : 0);
+        return nullptr;
+    if (QTreeWidgetItem* item = selectedItems().first()) {
+        regina::Packet* p = dynamic_cast<PacketTreeItem*>(item)->getPacket();
+        return (p ? p->shared_from_this() : nullptr);
+    } else
+        return nullptr;
 }
 
 inline ReginaMain* PacketTreeView::getMainWindow() {

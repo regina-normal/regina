@@ -4,12 +4,12 @@
 
 <refentry id="data-realbdry-surface">
  <refmeta>
-  <refentrytitle>realbdry (surface)</refentrytitle>
+  <refentrytitle>realbdry</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>realbdry (surface)</refname>
+  <refname>realbdry</refname>
   <refpurpose>Does a normal surface/hypersurface have real boundary?</refpurpose>
  </refnamediv>
 

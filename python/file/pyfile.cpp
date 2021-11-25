@@ -32,10 +32,12 @@
 
 namespace pybind11 { class module_; }
 
+void addFileFormat(pybind11::module_& m);
 void addFileInfo(pybind11::module_& m);
 void addGlobalDirs(pybind11::module_& m);
 
 void addFileClasses(pybind11::module_& m) {
+    addFileFormat(m);
     addFileInfo(m);
     addGlobalDirs(m);
 }

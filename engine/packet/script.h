@@ -47,21 +47,7 @@
 
 namespace regina {
 
-class XMLPacketReader;
 class Script;
-
-/**
- * \weakgroup packet
- * @{
- */
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_SCRIPT> {
-    typedef Script Class;
-    static constexpr const char* name = "Script";
-};
-#endif
 
 /**
  * A packet representing a Python script that can be run.
@@ -71,23 +57,57 @@ struct PacketInfo<PACKET_SCRIPT> {
  * in your packet tree.  When running a script, the variables should be
  * instantiated in the default namespace before the script is run.
  *
- * The values of variables are given by pointers to packets (not packet
- * labels, as in some old versions of Regina).  This affects how variables
- * react to changes in the packets that they point to.  In particular, if a
- * variable \a V points to some packet \a P, then:
+ * The way variables are stored has changed as of Regina 7.0:
  *
- * - if \a P is renamed then \a V will still point to it and the script will
- *   notify listeners that the script has changed;
- * - if \a P is deleted then \a V will take the value \c None, and the script
- *   will likewise notify listeners of the change.
+ * - the value of each variable is now stored as a std::weak_ptr<Packet>;
+ * - scripts do not listen to packet events on their variables.
+ *
+ * This means that:
+ *
+ * - If a packet is stored as the value of some script variable, this
+ *   does not prevent the packet from being destroyed (since the script
+ *   only holds weak pointers).
+ *
+ * - If such a packet changes its packet label or is destroyed, the script
+ *   will not notify its \e own listeners of the change.  If a user interface
+ *   needs to know about this change (e.g., because it shows packet labels
+ *   of script variables in a visual table), it will need to set up packet
+ *   listeners for the individual variables - it is no longer enough just to
+ *   listen on the script itself.  Note that packet labels are completely
+ *   independent of the variable names stored in the script.
+ *
+ * - If such a packet is destroyed, the script will behave correctly: any
+ *   subsequent request to retrieve the value of the script variable will
+ *   return a null pointer (not an invalid pointer to a non-existent packet).
+ *
+ * For historical reference, the previous behaviour was:
+ *
+ * - In Regina 6.0.1 and earlier (before Regina switched to widespread use of
+ *   std::shared_ptr for packets), scripts would notify their own listeners
+ *   when a variable packet was destroyed or changed its packet label.
+ *   This was implemented by having each script listen for packet events on
+ *   its own variables.
+ *
+ * - In Regina 4.94 and earlier (before the file format supported
+ *   cross-referencing between packets), script variables were stored purely
+ *   by their packet labels (not pointers to the packets themselves).
+ *
+ * Like all packet types, this class does not support C++ move semantics
+ * since this would interfere with the structure of the packet tree.
+ * It does support copy construction, copy assignment and swaps; however,
+ * these operations only copy/swap the mathematical content, not the packet
+ * infrastructure (e.g., they do not touch packet labels, or the packet
+ * tree, or event listeners).
+ *
+ * \ingroup packet
  */
-class Script : public Packet, public PacketListener {
-    REGINA_PACKET(Script, PACKET_SCRIPT)
+class Script : public Packet {
+    REGINA_PACKET(PACKET_SCRIPT, "Script")
 
     private:
         std::string text_;
             /**< The complete text of this script, including newlines. */
-        std::map<std::string, Packet*> variables;
+        std::map<std::string, std::weak_ptr<Packet>> variables_;
             /**< A map storing the variables with which this script
                  is to be run.  Variable names are mapped to their
                  corresponding values. */
@@ -96,7 +116,40 @@ class Script : public Packet, public PacketListener {
         /**
          * Initialises to a script with no text and no variables.
          */
-        Script();
+        Script() = default;
+
+        /**
+         * Creates a new copy of the given script packet.
+         *
+         * Like all packet types, this only copies the script content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * it will not clone the given packet's children, and it will not
+         * insert the new packet into any packet tree).
+         */
+        Script(const Script&) = default;
+
+        /**
+         * Sets this to be a copy of the given script packet.
+         *
+         * Like all packet types, this only copies the script content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * or change this packet's location in any packet tree).
+         *
+         * @param src the script packet whose contents should be copied.
+         * @return a reference to this packet.
+         */
+        Script& operator = (const Script& src);
+
+        /**
+         * Swaps the contents of this and the given script packet.
+         *
+         * Like all packet types, this only swaps the script content, not
+         * the packet infrastructure (e.g., it will not swap packet labels,
+         * or change either packet's location in any packet tree).
+         *
+         * @other the script packet whose contents should be swapped with this.
+         */
+        void swap(Script& other);
 
         /**
          * Returns the complete text of this script.
@@ -159,7 +212,7 @@ class Script : public Packet, public PacketListener {
          * be between 0 and countVariables()-1 inclusive.
          * @return the value of the requested variable.
          */
-        Packet* variableValue(size_t index) const;
+        std::shared_ptr<Packet> variableValue(size_t index) const;
         /**
          * Returns the value of the variable stored with the given
          * name.  Variables may take the value \c null.
@@ -171,7 +224,7 @@ class Script : public Packet, public PacketListener {
          * names are case sensitive.
          * @return the value of the requested variable.
          */
-        Packet* variableValue(const std::string& name) const;
+        std::shared_ptr<Packet> variableValue(const std::string& name) const;
 
         /**
          * Changes the name of an existing variable associated with
@@ -192,9 +245,11 @@ class Script : public Packet, public PacketListener {
          *
          * @param index the index of the variable whose value should change;
          * this must be between 0 and countVariables()-1 inclusive.
-         * @param value the new value to assign to the variable.
+         * @param value the new value to assign to the variable.  This is
+         * allowed to be a null pointer, and if the argument is omitted then a
+         * null pointer will be used.
          */
-        void setVariableValue(size_t index, Packet* value);
+        void setVariableValue(size_t index, std::weak_ptr<Packet> value = {});
 
         /**
          * Attempts to add a new variable to be associated with this script.
@@ -211,12 +266,14 @@ class Script : public Packet, public PacketListener {
          * variables are kept stored in sorted order by name.
          *
          * @param name the name of the new variable.
-         * @param value the value of the new variable; this is allowed
-         * to be \c null.
+         * @param value the value of the new variable.  This is allowed
+         * to be a null pointer, and if the argument is omitted then a
+         * null pointer will be used.
          * @return \c true if the variable was successfully added, or
          * \c false if a variable with the given name was already stored.
          */
-        bool addVariable(const std::string& name, Packet* value);
+        bool addVariable(const std::string& name,
+            std::weak_ptr<Packet> value = {});
         /**
          * Adds a new variable to be associated with this script, changing
          * its name if necessary.  If the given variable name does not already
@@ -231,13 +288,14 @@ class Script : public Packet, public PacketListener {
          *
          * @param name the string upon which the new variable name will
          * be based.
-         * @param value the value of the new variable; this is allowed
-         * to be \c null.
+         * @param value the value of the new variable.  This is allowed
+         * to be a null pointer, and if the argument is omitted then a
+         * null pointer will be used.
          * @return the name of the variable that was added; this might
          * or might not be equal to \a name.
          */
         const std::string& addVariableName(const std::string& name,
-            Packet* value);
+            std::weak_ptr<Packet> value = {});
         /**
          * Removes the variable stored with the given name.
          * If no variable is stored with the given name, this routine
@@ -264,27 +322,61 @@ class Script : public Packet, public PacketListener {
          * Removes all variables associated with this script.
          */
         void removeAllVariables();
+        /**
+         * Registers the given packet listener to listen for events on
+         * all of packets identified by this script's variables.
+         *
+         * This is a one-off operation: if the script variables should
+         * change later on, the given listener will not be registered and/or
+         * deregistered to reflect the new variable values.
+         *
+         * This routine is safe to call if some variables have null values,
+         * and/or if the same packet is identified by multiple variables.
+         *
+         * @param listener the listener to register with all packets
+         * identified by the script variables.
+         */
+        void listenVariables(PacketListener* listener);
+        /**
+         * Deregisters the given packet listener from listening for events on
+         * all of packets identified by this script's variables.
+         *
+         * Like listenVariables(), this is a one-off operation: it will not
+         * make any further adjustments if the script variables should change
+         * later on.
+         *
+         * This routine is safe to call if some variables have null values,
+         * and/or if the same packet is identified by multiple variables.
+         *
+         * @param listener the listener to deregister from all packets
+         * identified by the script variables.
+         */
+        void unlistenVariables(PacketListener* listener);
 
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const override;
-
-        virtual void packetWasRenamed(Packet* packet) override;
-        virtual void packetToBeDestroyed(PacketShell packet) override;
+        void writeTextShort(std::ostream& out) const override;
+        void writeTextLong(std::ostream& out) const override;
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
+        std::shared_ptr<Packet> internalClonePacket() const override;
+        void writeXMLPacketData(std::ostream& out, FileFormat format,
+            bool anon, PacketRefs& refs) const override;
+        void addPacketRefs(PacketRefs& refs) const override;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the given script packets.
+ *
+ * This global routine simply calls Script::swap(); it is provided so that
+ * Script meets the C++ Swappable requirements.
+ *
+ * @param a the first script packet whose contents should be swapped.
+ * @param b the second script packet whose contents should be swapped.
+ *
+ * \ingroup packet
+ */
+void swap(Script& a, Script& b);
 
 // Inline functions for Script
-
-inline Script::Script() {
-}
 
 inline const std::string& Script::text() const {
     return text_;
@@ -293,7 +385,7 @@ inline void Script::setText(const std::string& newText) {
     if (text_ == newText)
         return; // No change event fired.
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     text_ = newText;
 }
 
@@ -301,34 +393,48 @@ inline void Script::append(const std::string& extraText) {
     if (extraText.empty())
         return; // No change event fired.
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     text_ += extraText;
 }
 
 inline size_t Script::countVariables() const {
-    return variables.size();
+    return variables_.size();
 }
 
-inline bool Script::addVariable(const std::string& name, Packet* value) {
-    ChangeEventSpan span(this);
-    bool ans = variables.insert(std::make_pair(name, value)).second;
-    if (value)
-        value->listen(this);
-    return ans;
+inline bool Script::addVariable(const std::string& name,
+        std::weak_ptr<Packet> value) {
+    ChangeEventSpan span(*this);
+    return variables_.emplace(name, std::move(value)).second;
 }
 inline void Script::removeAllVariables() {
-    unregisterFromAllPackets();
+    ChangeEventSpan span(*this);
+    variables_.clear();
+}
 
-    ChangeEventSpan span(this);
-    variables.clear();
+inline void Script::listenVariables(PacketListener* listener) {
+    for (const auto& v : variables_)
+        if (auto shared = v.second.lock())
+            shared->listen(listener);
+}
+
+inline void Script::unlistenVariables(PacketListener* listener) {
+    for (const auto& v : variables_)
+        if (auto shared = v.second.lock())
+            shared->unlisten(listener);
 }
 
 inline void Script::writeTextShort(std::ostream& o) const {
     o << "Python script";
 }
 
-inline bool Script::dependsOnParent() const {
-    return false;
+inline void Script::addPacketRefs(PacketRefs& refs) const {
+    for (const auto& v : variables_)
+        if (auto shared = v.second.lock())
+            refs.insert({ shared.get(), false });
+}
+
+inline void swap(Script& a, Script& b) {
+    a.swap(b);
 }
 
 } // namespace regina

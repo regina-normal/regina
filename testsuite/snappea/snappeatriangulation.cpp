@@ -53,6 +53,7 @@ using regina::Triangulation;
 class SnapPeaTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(SnapPeaTriangulationTest);
 
+    CPPUNIT_TEST(copyMove);
     CPPUNIT_TEST(incompatible);
     CPPUNIT_TEST(volume);
     CPPUNIT_TEST(flat);
@@ -126,44 +127,24 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                  vertices all have 2-sphere links. */
 
     public:
-        void copyAndDelete(Triangulation<3>& dest, Triangulation<3>* source) {
-            dest.insertTriangulation(*source);
-            delete source;
-        }
-
-        void setUp() {
+        void setUp() override {
             // Keep the kernel quiet.  It interferes with the test
             // suite's running progress messages.
             SnapPeaTriangulation::disableKernelMessages();
 
-            Tetrahedron<3>* t;
-            Tetrahedron<3>* s;
+            m2_1 = Triangulation<3>::rehydrate("cabbbbaei");
+            m2_2 = Triangulation<3>::rehydrate("cabbbbapt");
+            m3_9 = Triangulation<3>::rehydrate("dagacccfwkn");
+            m4_52 = Triangulation<3>::rehydrate("ebdbcdddaqhie");
+            m4_1_2 = Triangulation<3>::rehydrate("eahbcdddhsssj");
+            m4_4_2 = Triangulation<3>::rehydrate("ebdbcdddddddx");
 
-            m2_1.insertRehydration("cabbbbaei");
-            m2_1.setLabel("M 2_1");
-            m2_2.insertRehydration("cabbbbapt");
-            m2_2.setLabel("M 2_2");
-            m3_9.insertRehydration("dagacccfwkn");
-            m3_9.setLabel("M 3_9");
-            m4_52.insertRehydration("ebdbcdddaqhie");
-            m4_52.setLabel("M 4_52");
-            m4_1_2.insertRehydration("eahbcdddhsssj");
-            m4_1_2.setLabel("M 4_1^2");
-            m4_4_2.insertRehydration("ebdbcdddddddx");
-            m4_4_2.setLabel("M 4_4^2");
-
-            n1_1.insertRehydration("baaaade");
-            n1_1.setLabel("N 1_1");
-            n2_1.insertRehydration("cabbbbabw");
-            n2_1.setLabel("N 2_1");
-            n2_1_2.insertRehydration("cabbbbcdw");
-            n2_1_2.setLabel("N 2_1^2");
-            n4_14.insertRehydration("eahdccddakfhq");
-            n4_14.setLabel("N 4_14");
-            n4_9_2.insertRehydration("ebdbcdddcemre");
-            n4_9_2.setLabel("N 4_9^2");
-            n4_1_2_1.insertRehydration("eahbcdddjxxxj");
-            n4_1_2_1.setLabel("N 4_1^2,1");
+            n1_1 = Triangulation<3>::rehydrate("baaaade");
+            n2_1 = Triangulation<3>::rehydrate("cabbbbabw");
+            n2_1_2 = Triangulation<3>::rehydrate("cabbbbcdw");
+            n4_14 = Triangulation<3>::rehydrate("eahdccddakfhq");
+            n4_9_2 = Triangulation<3>::rehydrate("ebdbcdddcemre");
+            n4_1_2_1 = Triangulation<3>::rehydrate("eahbcdddjxxxj");
 
             // Note: the non-orientable manifold below is the same as
             // Example<3>::smallClosedNonOrblHyperbolic()),
@@ -172,79 +153,290 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             // gives the same triangulation with a different labelling,
             // which seems to prod SnapPea into finding a better
             // (non_geometric) solution instead.
-            copyAndDelete(closedHypOr,
-                Example<3>::smallClosedOrblHyperbolic());
-            closedHypOr.setLabel("or_0.94270736");
-            copyAndDelete(closedHypNor, Triangulation<3>::fromIsoSig(
-                "lLLLALAQccegffiijkikkkknawmhvwcls"));
-            closedHypNor.setLabel("nor_2.02988321");
+            closedHypOr = Example<3>::smallClosedOrblHyperbolic();
+            closedHypNor = Triangulation<3>::fromIsoSig(
+                "lLLLALAQccegffiijkikkkknawmhvwcls");
+            weberSeifert = Example<3>::weberSeifert();
 
-            copyAndDelete(weberSeifert,
-                Example<3>::weberSeifert());
-            weberSeifert.setLabel("Weber-Seifert");
-
-            t = flatOr.newTetrahedron();
-            s = flatOr.newTetrahedron();
-            t->join(0, s, Perm<4>(0,1,2,3));
-            t->join(1, s, Perm<4>(0,1,2,3));
-            t->join(2, s, Perm<4>(1,3,2,0));
-            t->join(3, s, Perm<4>(1,2,0,3));
-
-            t = flatNor.newTetrahedron();
-            s = flatNor.newTetrahedron();
-            t->join(0, s, Perm<4>(0,1,2,3));
-            t->join(1, s, Perm<4>(2,1,0,3));
-            t->join(2, s, Perm<4>(1,3,2,0));
-            t->join(3, s, Perm<4>(2,1,0,3));
-
-            t = degenerateOr.newTetrahedron();
-            s = degenerateOr.newTetrahedron();
-            t->join(0, t, Perm<4>(1,0,2,3));
-            t->join(2, s, Perm<4>(1,2,0,3));
-            t->join(3, s, Perm<4>(0,2,3,1));
-            s->join(2, s, Perm<4>(1,2,3,0));
-
-            t = degenerateNor.newTetrahedron();
-            s = degenerateNor.newTetrahedron();
-            t->join(0, t, Perm<4>(1,0,2,3));
-            t->join(2, s, Perm<4>(1,2,0,3));
-            t->join(3, s, Perm<4>(0,3,2,1));
-            s->join(2, s, Perm<4>(0,2,3,1));
+            {
+                auto [t, s] = flatOr.newTetrahedra<2>();
+                t->join(0, s, Perm<4>(0,1,2,3));
+                t->join(1, s, Perm<4>(0,1,2,3));
+                t->join(2, s, Perm<4>(1,3,2,0));
+                t->join(3, s, Perm<4>(1,2,0,3));
+            }
+            {
+                auto [t, s] = flatNor.newTetrahedra<2>();
+                t->join(0, s, Perm<4>(0,1,2,3));
+                t->join(1, s, Perm<4>(2,1,0,3));
+                t->join(2, s, Perm<4>(1,3,2,0));
+                t->join(3, s, Perm<4>(2,1,0,3));
+            }
+            {
+                auto [t, s] = degenerateOr.newTetrahedra<2>();
+                t->join(0, t, Perm<4>(1,0,2,3));
+                t->join(2, s, Perm<4>(1,2,0,3));
+                t->join(3, s, Perm<4>(0,2,3,1));
+                s->join(2, s, Perm<4>(1,2,3,0));
+            }
+            {
+                auto [t, s] = degenerateNor.newTetrahedra<2>();
+                t->join(0, t, Perm<4>(1,0,2,3));
+                t->join(2, s, Perm<4>(1,2,0,3));
+                t->join(3, s, Perm<4>(0,3,2,1));
+                s->join(2, s, Perm<4>(0,2,3,1));
+            }
 
             lst123.insertLayeredSolidTorus(1, 2);
-            m2_1_m2_1.insertRehydration("cabbbbaei");
-            m2_1_m2_1.insertRehydration("cabbbbaei");
 
-            t = genusTwoTorusCusp.newTetrahedron();
-            s = genusTwoTorusCusp.newTetrahedron();
-            t->join(0, s, Perm<4>(0,2,3,1));
-            t->join(1, s, Perm<4>(2,1,3,0));
-            t->join(2, s, Perm<4>(1,3,2,0));
-            t->join(3, s, Perm<4>(2,0,1,3));
+            m2_1_m2_1 = Triangulation<3>::rehydrate("cabbbbaei");
+            m2_1_m2_1.insertTriangulation(m2_1_m2_1);
 
-            t = projPlaneCusps.newTetrahedron();
-            s = projPlaneCusps.newTetrahedron();
-            t->join(0, t, Perm<4>(1,0,2,3));
-            t->join(2, s, Perm<4>(1,2,0,3));
-            t->join(3, s, Perm<4>(3,2,0,1));
-            s->join(2, s, Perm<4>(0,2,3,1));
-
-            t = genusFourNonOrCusp.newTetrahedron();
-            s = genusFourNonOrCusp.newTetrahedron();
-            t->join(0, t, Perm<4>(1,2,0,3));
-            t->join(2, s, Perm<4>(1,2,0,3));
-            t->join(3, s, Perm<4>(0,2,3,1));
-            s->join(2, s, Perm<4>(0,2,3,1));
+            {
+                auto [t, s] = genusTwoTorusCusp.newTetrahedra<2>();
+                t->join(0, s, Perm<4>(0,2,3,1));
+                t->join(1, s, Perm<4>(2,1,3,0));
+                t->join(2, s, Perm<4>(1,3,2,0));
+                t->join(3, s, Perm<4>(2,0,1,3));
+            }
+            {
+                auto [t, s] = projPlaneCusps.newTetrahedra<2>();
+                t->join(0, t, Perm<4>(1,0,2,3));
+                t->join(2, s, Perm<4>(1,2,0,3));
+                t->join(3, s, Perm<4>(3,2,0,1));
+                s->join(2, s, Perm<4>(0,2,3,1));
+            }
+            {
+                auto [t, s] = genusFourNonOrCusp.newTetrahedra<2>();
+                t->join(0, t, Perm<4>(1,2,0,3));
+                t->join(2, s, Perm<4>(1,2,0,3));
+                t->join(3, s, Perm<4>(0,2,3,1));
+                s->join(2, s, Perm<4>(0,2,3,1));
+            }
 
             cuspedTorus.insertLayeredSolidTorus(1, 2);
             cuspedTorus.finiteToIdeal();
 
-            t = edgeInvalid.newTetrahedron();
-            t->join(0, t, Perm<4>(1,0,3,2));
-            t->join(2, t, Perm<4>(1,0,3,2));
+            {
+                auto t = edgeInvalid.newTetrahedron();
+                t->join(0, t, Perm<4>(1,0,3,2));
+                t->join(2, t, Perm<4>(1,0,3,2));
+            }
         }
 
-        void tearDown() {
+        void tearDown() override {
+        }
+
+        static bool looksIdentical(const SnapPeaTriangulation& a,
+                const SnapPeaTriangulation& b) {
+            if (a.size() != b.size())
+                return false;
+            if (a.countComponents() != b.countComponents())
+                return false;
+            if (a.countCusps() != b.countCusps())
+                return false;
+            if (a.countCompleteCusps() != b.countCompleteCusps())
+                return false;
+            if (a.countFilledCusps() != b.countFilledCusps())
+                return false;
+            if (! a.isIdenticalTo(b))
+                return false;
+
+            if (a.isoSig() != b.isoSig())
+                return false;
+            if (a.snapPea() != b.snapPea())
+                return false;
+
+            return true;
+        }
+
+        static void verifyCopyMoveNull(const SnapPeaTriangulation& t,
+                const char* name) {
+            SnapPeaTriangulation copy(t);
+            if (! copy.isNull()) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed not null.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            SnapPeaTriangulation move(std::move(copy));
+            if (! move.isNull()) {
+                std::ostringstream msg;
+                msg << name << ": move constructed not null.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            SnapPeaTriangulation figureEight = ExampleSnapPea::figureEight();
+
+            SnapPeaTriangulation copyAss(figureEight);
+            copyAss = t;
+            if (! copyAss.isNull()) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned not null.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            SnapPeaTriangulation moveAss(figureEight);
+            moveAss = std::move(copyAss);
+            if (! moveAss.isNull()) {
+                std::ostringstream msg;
+                msg << name << ": move assigned not null.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        static void verifyCopyMove(const SnapPeaTriangulation& t,
+                const char* name) {
+            if (t.isNull()) {
+                verifyCopyMoveNull(t, name);
+                return;
+            }
+
+            if (t.countCusps() == 0) {
+                std::ostringstream msg;
+                msg << name << ": not null but no cusps.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (t.countVertices() == 0) {
+                std::ostringstream msg;
+                msg << name << ": not null but no vertices.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            const regina::Cusp* c0 = std::addressof(t.cusp(0));
+            regina::Vertex<3>* v0 = t.vertex(0);
+
+            SnapPeaTriangulation copy(t);
+            if (! looksIdentical(copy, t)) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            const regina::Cusp* c1 = (copy.countCusps() == 0 ? nullptr :
+                std::addressof(copy.cusp(0)));
+            regina::Vertex<3>* v1 = (copy.countVertices() == 0 ? nullptr :
+                copy.vertex(0));
+            if (c1 == c0) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed uses the same cusps.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v1 == v0) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed uses the same vertices.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            SnapPeaTriangulation move(std::move(copy));
+            if (! looksIdentical(move, t)) {
+                std::ostringstream msg;
+                msg << name << ": move constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            const regina::Cusp* c2 = (move.countCusps() == 0 ? nullptr :
+                std::addressof(move.cusp(0)));
+            regina::Vertex<3>* v2 = (move.countVertices() == 0 ? nullptr :
+                move.vertex(0));
+            if (c2 != c1) {
+                std::ostringstream msg;
+                msg << name << ": move constructed does not use the "
+                    "same cusps.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v2 != v1) {
+                std::ostringstream msg;
+                msg << name << ": move constructed does not use the "
+                    "same vertices.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            SnapPeaTriangulation copyAss;
+            copyAss.newSimplex(); // Give it something to overwrite.
+            copyAss = t;
+            if (! looksIdentical(copyAss, t)) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            const regina::Cusp* c3 = (copyAss.countCusps() == 0 ? nullptr :
+                std::addressof(copyAss.cusp(0)));
+            regina::Vertex<3>* v3 = (copyAss.countVertices() == 0 ? nullptr :
+                copyAss.vertex(0));
+            if (c3 == c0) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned uses the same cusps.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v3 == v0) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned uses the same vertices.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            SnapPeaTriangulation moveAss;
+            moveAss.newSimplex(); // Give it something to overwrite.
+            moveAss = std::move(copyAss);
+            if (! looksIdentical(moveAss, t)) {
+                std::ostringstream msg;
+                msg << name << ": move assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            const regina::Cusp* c4 = (moveAss.countCusps() == 0 ? nullptr :
+                std::addressof(moveAss.cusp(0)));
+            regina::Vertex<3>* v4 = (moveAss.countVertices() == 0 ? nullptr :
+                moveAss.vertex(0));
+            if (c4 != c3) {
+                std::ostringstream msg;
+                msg << name << ": move assigned does not use the "
+                    "same cusps.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (v4 != v3) {
+                std::ostringstream msg;
+                msg << name << ": move assigned does not use the "
+                    "same vertices.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void copyMove() {
+            verifyCopyMove(m2_1, "M 2_1");
+            verifyCopyMove(m2_2, "M 2_2");
+            verifyCopyMove(m3_9, "M 3_9");
+            verifyCopyMove(m4_52, "M 4_52");
+            verifyCopyMove(m4_1_2, "M 4_1^2");
+            verifyCopyMove(m4_4_2, "M 4_4^2");
+
+            verifyCopyMove(n1_1, "N 1_1");
+            verifyCopyMove(n2_1, "N 2_1");
+            verifyCopyMove(n2_1_2, "N 2_1^2");
+            verifyCopyMove(n4_14, "N 4_14");
+            verifyCopyMove(n4_9_2, "N 4_9^2");
+            verifyCopyMove(n4_1_2_1, "N 4_1^2,1");
+
+            verifyCopyMove(closedHypOr, "or_0.94270736");
+            verifyCopyMove(closedHypNor, "nor_2.02988321");
+            verifyCopyMove(weberSeifert, "Weber-Seifert");
+
+            verifyCopyMove(flatOr, "Flat orientable");
+            verifyCopyMove(flatNor, "Flat non-orientable");
+            verifyCopyMove(degenerateOr, "Degenerate orientable");
+            verifyCopyMove(degenerateNor, "Degenerate non-orientable");
+
+            verifyCopyMove(empty, "Empty");
+            verifyCopyMove(lst123, "LST(1,2,3)");
+            verifyCopyMove(m2_1_m2_1, "M 2_1 U M 2_1");
+            verifyCopyMove(genusTwoTorusCusp, "Genus two torus cusp");
+            verifyCopyMove(projPlaneCusps, "Two projective plane cusps");
+            verifyCopyMove(genusFourNonOrCusp,
+                "Genus four non-orientable cusp");
+            verifyCopyMove(cuspedTorus, "Cusped solid torus");
+            verifyCopyMove(edgeInvalid, "Two invalid edges");
         }
 
         void testIncompatible(Triangulation<3>& tri, const char* message) {
@@ -330,26 +522,25 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 "should not be representable in SnapPea format.");
         }
 
-        void testVolume(Triangulation<3>& tri, double vol, unsigned places) {
+        void testVolume(Triangulation<3>& tri, double vol, unsigned places,
+                const char* name) {
             // Verify the volume to the given number of decimal places.
             // Places are counted after the decimal point in standard
             // (non-scientific) notation.
             SnapPeaTriangulation s(tri);
             {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.label() <<
+                msg << "Triangulation " << name <<
                     " could not be represented in SnapPea format.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(), ! s.isNull());
             }
 
-            int precision;
-            double foundVol = s.volume(precision);
+            auto [foundVol, precision] = s.volumeWithPrecision();
             if (precision < static_cast<int>(places)) {
                 std::ostringstream msg;
-                msg << "Volume for " << tri.label() <<
-                    " has a precision of " << precision
-                    << " places, which is less than the desired "
+                msg << "Volume for " << name << " has a precision of "
+                    << precision << " places, which is less than the desired "
                     << places << " places.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -360,7 +551,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             if (foundVol > vol + epsilon || foundVol < vol - epsilon) {
                 std::ostringstream msg;
-                msg << "Volume for " << tri.label() << " should be "
+                msg << "Volume for " << name << " should be "
                     << std::setprecision(
                         places + static_cast<int>(ceil(log10(vol))))
                     << vol << ", not "
@@ -372,23 +563,23 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
         }
 
         void volume() {
-            testVolume(m2_1,   2.0298832128, 9);
-            testVolume(m2_2,   2.0298832128, 9);
-            testVolume(m3_9,   2.9441064867, 9);
-            testVolume(m4_52,  4.0597664256, 9);
-            testVolume(m4_1_2, 3.6638623767, 9);
-            testVolume(m4_4_2, 4.0597664256, 9);
+            testVolume(m2_1,   2.0298832128, 9, "M 2_1");
+            testVolume(m2_2,   2.0298832128, 9, "M 2_2");
+            testVolume(m3_9,   2.9441064867, 9, "M 3_9");
+            testVolume(m4_52,  4.0597664256, 9, "M 4_52");
+            testVolume(m4_1_2, 3.6638623767, 9, "M 4_1^2");
+            testVolume(m4_4_2, 4.0597664256, 9, "M 4_4^2");
 
-            testVolume(n1_1,     1.0149416064, 9);
-            testVolume(n2_1,     1.8319311884, 9);
-            testVolume(n2_1_2,   2.0298832128, 9);
-            testVolume(n4_14,    3.9696478012, 9);
-            testVolume(n4_9_2,   4.0597664256, 9);
-            testVolume(n4_1_2_1, 3.6638623767, 9);
+            testVolume(n1_1,     1.0149416064, 9, "N 1_1");
+            testVolume(n2_1,     1.8319311884, 9, "N 2_1");
+            testVolume(n2_1_2,   2.0298832128, 9, "N 2_1^2");
+            testVolume(n4_14,    3.9696478012, 9, "N 4_14");
+            testVolume(n4_9_2,   4.0597664256, 9, "N 4_9^2");
+            testVolume(n4_1_2_1, 3.6638623767, 9, "N 4_1^2,1");
 
-            testVolume(closedHypOr, 0.94270736, 7);
-            testVolume(closedHypNor, 2.02988321, 7);
-            testVolume(weberSeifert, 11.1990647, 6);
+            testVolume(closedHypOr, 0.94270736, 7, "or_0.94270736");
+            testVolume(closedHypNor, 2.02988321, 7, "nor_2.02988321");
+            testVolume(weberSeifert, 11.1990647, 6, "Weber-Seifert");
         }
 
         void testZeroVolume(const char* triName, double foundVol,
@@ -449,8 +640,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                     SnapPeaTriangulation::flat_solution);
             }
 
-            int precision;
-            double foundVol = s.volume(precision);
+            auto [foundVol, precision] = s.volumeWithPrecision();
             {
                 std::ostringstream msg;
                 msg << triName << " has a volume with a precision of "
@@ -511,43 +701,35 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
         }
 
         void spunBoundaries() {
-            Triangulation<3>* f8 =
-                Example<3>::figureEight();
-            SnapPeaTriangulation* t = new SnapPeaTriangulation(*f8);
+            SnapPeaTriangulation t(Example<3>::figureEight());
 
-            regina::NormalSurfaces* s =
-                regina::NormalSurfaces::enumerate(*t, regina::NS_QUAD);
-            if (s->size() != 4)
+            regina::NormalSurfaces s(t, regina::NS_QUAD);
+            if (s.size() != 4)
                 CPPUNIT_FAIL(
                     "The figure 8 knot complement should have 4 vertex "
                     "surfaces in quad space.");
 
             bool found[4] = {}; // initialises to false
-            for (const regina::NormalSurface& f : s->surfaces()) {
-                std::optional<regina::MatrixInt> m = f.boundaryIntersections();
-                if (! m) {
-                    CPPUNIT_FAIL(
-                        "Figure 8 knot complement: boundaryIntersections() "
-                        "returned no value.");
-                }
-                if (m->rows() != 1 || m->columns() != 2) {
+            for (const regina::NormalSurface& f : s) {
+                regina::MatrixInt m = f.boundaryIntersections();
+                if (m.rows() != 1 || m.columns() != 2) {
                     CPPUNIT_FAIL(
                         "Figure 8 knot complement: boundaryIntersections() "
                         "should give 1x2 matrices.");
                 }
-                if (m->entry(0, 0) == 1 && m->entry(0, 1) == 4)
+                if (m.entry(0, 0) == 1 && m.entry(0, 1) == 4)
                     found[0] = true;
-                else if (m->entry(0, 0) == 1 && m->entry(0, 1) == -4)
+                else if (m.entry(0, 0) == 1 && m.entry(0, 1) == -4)
                     found[1] = true;
-                else if (m->entry(0, 0) == -1 && m->entry(0, 1) == 4)
+                else if (m.entry(0, 0) == -1 && m.entry(0, 1) == 4)
                     found[2] = true;
-                else if (m->entry(0, 0) == -1 && m->entry(0, 1) == -4)
+                else if (m.entry(0, 0) == -1 && m.entry(0, 1) == -4)
                     found[3] = true;
                 else {
                     std::ostringstream msg;
                     msg << "Figure 8 knot complement: boundaryIntersections() "
                         "gives unexpected result ("
-                        << m->entry(0, 0) << ", " << m->entry(0, 1) << ").";
+                        << m.entry(0, 0) << ", " << m.entry(0, 1) << ").";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -564,20 +746,19 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             if (! found[3])
                 CPPUNIT_FAIL("Figure 8 knot complement: did not find "
                     "boundary slope (-1, -4).");
-
-            delete s;
-            delete t;
-            delete f8;
         }
 
-        static void testStability(Triangulation<3>* tri) {
+        static void testStability(const Triangulation<3>& tri, const char*) {
             // Just make sure SnapPea can work with the triangulation
             // without crashing.
-            SnapPeaTriangulation s(*tri);
-            s.volume();
-            s.randomize();
-            s.volume();
-            Triangulation<3> t(s);
+            try {
+                SnapPeaTriangulation s(tri);
+                s.volume();
+                s.randomize();
+                s.volume();
+                Triangulation<3> t(s);
+            } catch (const regina::SnapPeaIsNull&) {
+            }
         }
 
         void stability() {
@@ -585,28 +766,31 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
         }
 
         void testFilledHomology(const Triangulation<3>& tri, int m, int l,
-                const std::string& expectedH1) {
+                const std::string& expectedH1, const char* name) {
             SnapPeaTriangulation s(tri);
             if (s.isNull()) {
                 std::ostringstream msg;
-                msg << "Null SnapPea triangulation for " << tri.label() << ".";
+                msg << "Null SnapPea triangulation for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             s.fill(m, l);
 
-            const regina::AbelianGroup* h1 = s.homologyFilled();
-            if (! h1) {
-                std::ostringstream msg;
-                msg << "Could not compute filled homology for "
-                    << tri.label() << ".";
-                CPPUNIT_FAIL(msg.str());
-            }
-            if (h1->str() != expectedH1) {
+            const regina::AbelianGroup& h1 = s.homologyFilled();
+            if (h1.str() != expectedH1) {
                 std::ostringstream msg;
                 msg << "Filling (" << m << ", " << l << ") for "
-                    << tri.label() << " gives homology "
-                    << h1->str() << ", not " << expectedH1 << ".";
+                    << name << " gives homology "
+                    << h1.str() << ", not " << expectedH1 << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            const regina::GroupPresentation& fg = s.fundamentalGroupFilled();
+            if (fg.abelianisation().str() != expectedH1) {
+                std::ostringstream msg;
+                msg << "Filling (" << m << ", " << l << ") for "
+                    << name << " gives fundamental group " << fg.str()
+                    << ", which does not abelianise to " << expectedH1 << ".";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -616,97 +800,97 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             // homology routines appear to be functioning correctly.
 
             // 1 boundary component, orientable:
-            testFilledHomology(m2_1, 0, 0, "Z");
-            testFilledHomology(m2_1, 1, 1, "0");
-            testFilledHomology(m2_1, -3, 7, "Z_3");
+            testFilledHomology(m2_1, 0, 0, "Z", "M 2_1");
+            testFilledHomology(m2_1, 1, 1, "0", "M 2_1");
+            testFilledHomology(m2_1, -3, 7, "Z_3", "M 2_1");
 
             // 2 boundary components, orientable:
-            testFilledHomology(m4_4_2, 0, 0, "2 Z");
-            testFilledHomology(m4_4_2, 1, 1, "Z");
-            testFilledHomology(m4_4_2, -3, 7, "Z + Z_3");
+            testFilledHomology(m4_4_2, 0, 0, "2 Z", "M 4_4^2");
+            testFilledHomology(m4_4_2, 1, 1, "Z", "M 4_4^2");
+            testFilledHomology(m4_4_2, -3, 7, "Z + Z_3", "M 4_4^2");
 
             // 1 boundary component, non-orientable:
-            testFilledHomology(n1_1, 0, 0, "Z");
-            testFilledHomology(n1_1, 1, 0, "Z");
-            testFilledHomology(n1_1, -1, 0, "Z");
+            testFilledHomology(n1_1, 0, 0, "Z", "N 1_1");
+            testFilledHomology(n1_1, 1, 0, "Z", "N 1_1");
+            testFilledHomology(n1_1, -1, 0, "Z", "N 1_1");
 
             // 2 boundary components, non-orientable:
-            testFilledHomology(n4_9_2, 0, 0, "Z + Z_2");
-            testFilledHomology(n4_9_2, 1, 0, "Z");
-            testFilledHomology(n4_9_2, -1, 0, "Z");
+            testFilledHomology(n4_9_2, 0, 0, "Z + Z_2", "N 4_9^2");
+            testFilledHomology(n4_9_2, 1, 0, "Z", "N 4_9^2");
+            testFilledHomology(n4_9_2, -1, 0, "Z", "N 4_9^2");
         }
 
         void swapping() {
             {
-                SnapPeaTriangulation* a = ExampleSnapPea::figureEight();
-                SnapPeaTriangulation* b = ExampleSnapPea::whiteheadLink();
+                SnapPeaTriangulation a = ExampleSnapPea::figureEight();
+                SnapPeaTriangulation b = ExampleSnapPea::whiteheadLink();
 
-                a->volume();
-                b->volume();
+                a.volume();
+                b.volume();
 
-                swap(*a, *b);
+                swap(a, b);
 
-                if (a->isNull() || b->isNull()) {
+                if (a.isNull() || b.isNull()) {
                     CPPUNIT_FAIL("swap() nullified the triangulation(s).");
                 }
 
-                if (a->countCusps() != 2) {
+                if (a.countCusps() != 2) {
                     CPPUNIT_FAIL("swap() did not swap cusps correctly.");
                 }
-                if (std::floor(a->volume()) != 3) {
+                if (std::floor(a.volume()) != 3) {
                     CPPUNIT_FAIL("swap() did not swap snappea data correctly.");
                 }
 
-                std::iter_swap(a, b);
+                std::iter_swap(&a, &b);
 
-                if (a->countCusps() != 1) {
+                if (a.countCusps() != 1) {
                     CPPUNIT_FAIL(
                         "std::iter_swap() did not swap cusps correctly.");
                 }
-                if (std::floor(a->volume()) != 2) {
+                if (std::floor(a.volume()) != 2) {
                     CPPUNIT_FAIL(
                         "std::iter_swap() did not swap snappea data correctly.");
                 }
             }
             {
-                SnapPeaTriangulation* a = ExampleSnapPea::figureEight();
-                SnapPeaTriangulation* b = ExampleSnapPea::whiteheadLink();
+                SnapPeaTriangulation a = ExampleSnapPea::figureEight();
+                SnapPeaTriangulation b = ExampleSnapPea::whiteheadLink();
 
-                a->volume();
-                b->volume();
+                a.volume();
+                b.volume();
 
-                swap(static_cast<Triangulation<3>&>(*a), *b);
+                swap(static_cast<Triangulation<3>&>(a), b);
 
-                if (! (a->isNull() && b->isNull())) {
+                if (! (a.isNull() && b.isNull())) {
                     CPPUNIT_FAIL("swap() did not nullify triangulation(s) "
                         "where required.");
                 }
             }
             {
-                SnapPeaTriangulation* a = ExampleSnapPea::figureEight();
-                SnapPeaTriangulation* b = ExampleSnapPea::whiteheadLink();
+                SnapPeaTriangulation a = ExampleSnapPea::figureEight();
+                SnapPeaTriangulation b = ExampleSnapPea::whiteheadLink();
 
-                a->volume();
-                b->volume();
+                a.volume();
+                b.volume();
 
-                swap(*a, static_cast<Triangulation<3>&>(*b));
+                swap(a, static_cast<Triangulation<3>&>(b));
 
-                if (! (a->isNull() && b->isNull())) {
+                if (! (a.isNull() && b.isNull())) {
                     CPPUNIT_FAIL("swap() did not nullify triangulation(s) "
                         "where required.");
                 }
             }
             {
-                SnapPeaTriangulation* a = ExampleSnapPea::figureEight();
-                SnapPeaTriangulation* b = ExampleSnapPea::whiteheadLink();
+                SnapPeaTriangulation a = ExampleSnapPea::figureEight();
+                SnapPeaTriangulation b = ExampleSnapPea::whiteheadLink();
 
-                a->volume();
-                b->volume();
+                a.volume();
+                b.volume();
 
-                swap(static_cast<Triangulation<3>&>(*a),
-                    static_cast<Triangulation<3>&>(*b));
+                swap(static_cast<Triangulation<3>&>(a),
+                    static_cast<Triangulation<3>&>(b));
 
-                if (! (a->isNull() && b->isNull())) {
+                if (! (a.isNull() && b.isNull())) {
                     CPPUNIT_FAIL("swap() did not nullify triangulation(s) "
                         "where required.");
                 }

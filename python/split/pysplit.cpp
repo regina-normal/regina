@@ -33,8 +33,12 @@
 namespace pybind11 { class module_; }
 
 void addSignature(pybind11::module_& m);
+void addSigIsomorphism(pybind11::module_& m);
+void addSigCensus(pybind11::module_& m);
 
 void addSplitClasses(pybind11::module_& m) {
     addSignature(m);
+    addSigIsomorphism(m);
+    addSigCensus(m);
 }
 

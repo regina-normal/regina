@@ -41,7 +41,7 @@ using regina::FaceEmbedding;
 
 void addVertex2(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<2, 0>>(m, "FaceEmbedding2_0")
-        .def(pybind11::init<regina::Triangle<2>*, int>())
+        .def(pybind11::init<regina::Triangle<2>*, regina::Perm<3>>())
         .def(pybind11::init<const VertexEmbedding<2>&>())
         .def("simplex", &VertexEmbedding<2>::simplex,
             pybind11::return_value_policy::reference)
@@ -60,18 +60,10 @@ void addVertex2(pybind11::module_& m) {
         .def("hasBadIdentification", &Vertex<2>::hasBadIdentification)
         .def("hasBadLink", &Vertex<2>::hasBadLink)
         .def("isLinkOrientable", &Vertex<2>::isLinkOrientable)
-        .def("embeddings", [](const Vertex<2>& v) {
-            pybind11::list ans;
-            for (const auto& emb : v)
-                ans.append(emb);
-            return ans;
-        })
-        .def("embedding", &Vertex<2>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Vertex<2>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Vertex<2>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Vertex<2>::embedding)
+        .def("embeddings", &Vertex<2>::embeddings)
+        .def("front", &Vertex<2>::front)
+        .def("back", &Vertex<2>::back)
         .def("triangulation", &Vertex<2>::triangulation)
         .def("component", &Vertex<2>::component,
             pybind11::return_value_policy::reference)
@@ -82,27 +74,17 @@ void addVertex2(pybind11::module_& m) {
         .def_static("ordering", &Vertex<2>::ordering)
         .def_static("faceNumber", &Vertex<2>::faceNumber)
         .def_static("containsVertex", &Vertex<2>::containsVertex)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("nFaces", [](pybind11::object) {
-            return Vertex<2>::nFaces;
-        })
-        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
-            return Vertex<2>::lexNumbering;
-        })
-        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
-            return Vertex<2>::oppositeDim;
-        })
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Vertex<2>::dimension;
-        })
-        .def_property_readonly_static("subdimension", [](pybind11::object) {
-            return Vertex<2>::subdimension;
-        })
+        .def_readonly_static("nFaces", &Vertex<2>::nFaces)
+        .def_readonly_static("lexNumbering", &Vertex<2>::lexNumbering)
+        .def_readonly_static("oppositeDim", &Vertex<2>::oppositeDim)
+        .def_readonly_static("dimension", &Vertex<2>::dimension)
+        .def_readonly_static("subdimension", &Vertex<2>::subdimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<
+        decltype(std::declval<Vertex<2>>().embeddings())>(m);
 
     m.attr("VertexEmbedding2") = m.attr("FaceEmbedding2_0");
     m.attr("Vertex2") = m.attr("Face2_0");

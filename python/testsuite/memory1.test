@@ -31,11 +31,19 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# Fetch the python/testsuite path in the source tree, since we will need
+# to access external files.
+import sys
+if (len(sys.argv) > 1):
+	testpath = sys.argv[1]
+else:
+	testpath = '.'
+
 class Watcher(PacketListener):
     def __init__(self, packet):
         PacketListener.__init__(self)
         packet.listen(self)
-    def packetToBeDestroyed(self, packet):
+    def packetBeingDestroyed(self, packet):
         print('Destroying: ' + packet.label())
 
 
@@ -43,7 +51,7 @@ print('Insertion case')
 print('Step 1')
 c = Container(); cw = Watcher(c); c.setLabel('c')
 print('Step 2')
-t = Triangulation3(); t.newTetrahedron(); tw = Watcher(t); t.setLabel('t')
+t = PacketOfTriangulation3(); t.newTetrahedron(); tw = Watcher(t); t.setLabel('t')
 print('Step 3')
 c.insertChildLast(t)
 print('Step 4')
@@ -56,7 +64,7 @@ print('Root destruction case')
 print('Step 1')
 a = Container(); aw = Watcher(a); a.setLabel('a')
 print('Step 2')
-b = Triangulation3(); bw = Watcher(b); b.setLabel('b')
+b = PacketOfTriangulation3(); bw = Watcher(b); b.setLabel('b')
 print('Step 3')
 a.insertChildLast(b)
 print('Step 4')
@@ -70,7 +78,7 @@ print('Orphan case')
 print('Step 1')
 p = Container(); pw = Watcher(p); p.setLabel('p')
 print('Step 2')
-q = Triangulation3(); qw = Watcher(q); q.setLabel('q')
+q = PacketOfTriangulation3(); qw = Watcher(q); q.setLabel('q')
 print('Step 3')
 p.insertChildLast(q)
 print('Step 4')
@@ -85,39 +93,35 @@ print('Step 7')
 # child in the first place.
 print('Multiple orphan case')
 print('Step 1')
-x = Example3.lens(8,3); xw = Watcher(x); x.setLabel('x')
+x = regina.open(testpath + '/file1.rga'); xw = Watcher(x); x.setLabel('x')
 print('Step 2')
-x.connectedSumDecomposition()
-print('Step 3')
 y = x.lastChild(); yw = Watcher(y); y.setLabel('y')
-print('Step 4')
+print('Step 3')
 y.makeOrphan()
-print('Step 5')
+print('Step 4')
 x = None # Should destroy x
-print('Step 6')
+print('Step 5')
 y = None # Should destroy y
-print('Step 7')
+print('Step 6')
 
 # An example like above, but where we hold many references to the same
 # child packet.
 print('Many references case')
 print('Step 1')
-f = Example3.lens(8,3); fw = Watcher(f); f.setLabel('f')
+f = regina.open(testpath + '/file2.rga'); fw = Watcher(f); f.setLabel('f')
 print('Step 2')
-f.connectedSumDecomposition()
-print('Step 3')
 g = f.lastChild(); gw = Watcher(g); g.setLabel('g')
-print('Step 4')
+print('Step 3')
 h = f.lastChild(); hw = Watcher(h) # h is the same packet as g
-print('Step 5')
+print('Step 4')
 g.makeOrphan()
-print('Step 6')
+print('Step 5')
 f = None # Should destroy f
-print('Step 7')
+print('Step 6')
 g = None
-print('Step 8')
+print('Step 7')
 h = None # Should destroy g (and there are two watchers now)
-print('Step 9')
+print('Step 8')
 
 # b should still be alive at this point.
 print(b)
@@ -126,4 +130,25 @@ print(b.label())
 # Destroy b's watcher now, so it does not try to call print() as the
 # entire python system is shutting down
 bw = None
+
+# An example where we drop the root of a tree but hang on to references
+# deeper within the tree.
+print('Deep reference case')
+x = Container(); x.setLabel('x'); xw = Watcher(x);
+y = Container(); y.setLabel('y'); yw = Watcher(y);
+z1 = Container(); z1.setLabel('z1'); z1w = Watcher(z1);
+z2 = Container(); z2.setLabel('z2'); z2w = Watcher(z2);
+print('Step 1')
+x.insertChildLast(z1)
+x.insertChildLast(z2)
+z1.insertChildLast(y)
+print('Step 2')
+z2 = None
+print('Step 3')
+x = None # Should delete x and z2, with the child z2 going first
+print('Step 4')
+z1 = None # Should delete z1
+print('Step 5')
+y = None # Should delete y
+print('Step 6')
 

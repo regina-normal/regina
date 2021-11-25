@@ -37,7 +37,6 @@
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
 #include "triangulation/dim3.h"
-#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
@@ -87,7 +86,7 @@ void addLink(pybind11::module_& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    pybind11::class_<Link, regina::Packet, regina::SafePtr<Link>>(m, "Link")
+    auto l = pybind11::class_<Link, std::shared_ptr<Link>>(m, "Link")
         .def(pybind11::init<>())
         .def(pybind11::init<size_t>())
         .def(pybind11::init<const Link&>())
@@ -98,7 +97,11 @@ void addLink(pybind11::module_& m) {
         .def("countComponents", &Link::countComponents)
         .def("crossing", &Link::crossing,
             pybind11::return_value_policy::reference_internal)
+        .def("crossings", &Link::crossings,
+            pybind11::keep_alive<0, 1>())
         .def("component", &Link::component)
+        .def("components", &Link::components,
+            pybind11::keep_alive<0, 1>())
         .def("strand", &Link::strand)
         .def("translate", &Link::translate)
         // In the following overloads, we define functions twice because
@@ -141,23 +144,35 @@ void addLink(pybind11::module_& m) {
                 try {
                     pyTuple = obj.cast<pybind11::tuple>();
                 } catch (pybind11::cast_error const &) {
-                    throw std::invalid_argument("List element not "
-                        "convertible to a Python tuple");
+                    throw regina::InvalidArgument(
+                        "List element not convertible to a Python tuple");
                 }
                 if (pyTuple.size() != 4) {
-                    throw std::invalid_argument("List element is not "
-                        "a tuple of size 4");
+                    throw regina::InvalidArgument(
+                        "List element is not a tuple of size 4");
                 }
                 try {
                     for (int i = 0; i < 4; ++i)
                         cppTuple[i] = pyTuple[i].cast<long>();
                 } catch (pybind11::cast_error const &) {
-                    throw std::invalid_argument("Tuple element not "
-                        "convertible to a C++ long integer");
+                    throw regina::InvalidArgument(
+                        "Tuple element not convertible to a C++ long integer");
                 }
                 tuples.push_back(cppTuple);
             }
             return Link::fromPD(tuples.begin(), tuples.end());
+        })
+        .def_static("fromData", [](const std::vector<int>& s,
+                const std::vector<std::vector<int>>& c) {
+            return Link::fromData(s.begin(), s.end(), c.begin(), c.end());
+        })
+        .def_static("fromData", [](const std::vector<int>& s,
+                const std::vector<int>& c) {
+            // Allow [...] instead of [[...]]] if there is just one component.
+            // We need to make an iterator pair.  Possibly what we're
+            // about to do is illegal C++; I hope not.
+            auto begin = std::addressof(c);
+            return Link::fromData(s.begin(), s.end(), begin, begin + 1);
         })
         .def_static("fromKnotSig", &Link::fromKnotSig)
         .def_static("fromSig", &Link::fromSig)
@@ -205,6 +220,9 @@ void addLink(pybind11::module_& m) {
         .def("knowsBracket", &Link::knowsBracket)
         .def("knowsJones", &Link::knowsJones)
         .def("knowsHomfly", &Link::knowsHomfly)
+        .def_static("homflyAZtoLM", &Link::homflyAZtoLM)
+        .def("group", &Link::group,
+            pybind11::arg("simplify") = true)
         .def("niceTreeDecomposition", &Link::niceTreeDecomposition,
             pybind11::return_value_policy::reference_internal)
         .def("useTreeDecomposition", &Link::useTreeDecomposition)
@@ -226,9 +244,6 @@ void addLink(pybind11::module_& m) {
         .def("pdData", &Link::pdData)
         .def("pd",
             overload_cast<>(&Link::pd, pybind11::const_))
-        .def("writePACE", [](const Link& l) {
-            l.writePACE(std::cout);
-        })
         .def("pace", &Link::pace)
         .def("knotSig", &Link::knotSig,
             pybind11::arg("useReflection") = true,
@@ -280,15 +295,15 @@ void addLink(pybind11::module_& m) {
              pybind11::arg("nThreads") = 1,
              pybind11::arg("tracker") = nullptr)
         .def("rewrite", [](const Link& link, int height, int threads,
-                const std::function<bool(const std::string&, Link&)>& action) {
+                const std::function<bool(const std::string&, Link&&)>& action) {
             if (threads == 1) {
                 return link.rewrite(height, 1, nullptr, action);
             } else {
                 pybind11::gil_scoped_release release;
                 return link.rewrite(height, threads, nullptr,
-                    [&](const std::string& sig, Link& link) -> bool {
+                    [&](const std::string& sig, Link&& link) -> bool {
                         pybind11::gil_scoped_acquire acquire;
-                        return action(sig, link);
+                        return action(sig, std::move(link));
                     });
             }
         })
@@ -303,11 +318,18 @@ void addLink(pybind11::module_& m) {
         .def_readonly_static("homflyAZVarY", Link::homflyAZVarY)
         .def_readonly_static("homflyLMVarX", Link::homflyLMVarX)
         .def_readonly_static("homflyLMVarY", Link::homflyLMVarY)
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return Link::typeID;
-        })
     ;
+    regina::python::add_output(l);
+    regina::python::add_eq_operators(l);
+
+    regina::python::addListView<decltype(Link().crossings())>(m);
+    regina::python::addListView<decltype(Link().components())>(m);
+
+    auto wrap = regina::python::add_packet_wrapper<Link>(m, "PacketOfLink");
+    regina::python::add_packet_constructor<>(wrap);
+    regina::python::add_packet_constructor<size_t>(wrap);
+    regina::python::add_packet_constructor<const Link&, bool>(wrap);
+    regina::python::add_packet_constructor<const std::string&>(wrap);
 
     m.def("swap", (void(*)(Link&, Link&))(regina::swap));
 }

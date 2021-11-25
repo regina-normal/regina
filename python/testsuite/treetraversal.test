@@ -1,0 +1,183 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2007-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Provides tests for the linear programm tree traversal algorithms.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+from __future__ import print_function
+
+def dumpSurface(tree):
+	print('Found:', tree.buildSurface())
+	return False
+
+def dumpStructure(tree):
+	print('Found:', tree.buildStructure())
+	return False
+
+t = Example3.rp3rp3()
+tree = TreeSingleSoln_EulerPositive(t, NS_STANDARD)
+if tree.find():
+	print('Found:', tree.buildSurface())
+else:
+	print('No solution')
+print('Visited:', tree.visited())
+
+print()
+
+t = Example3.figureEight()
+tree = TautEnumeration(t)
+tree.run(dumpStructure)
+print('Visited:', tree.visited())
+print('Solutions:', tree.solutions())
+
+print()
+
+t = Example3.figureEight()
+tree = TreeEnumeration(t, NS_QUAD)
+tree.run(dumpSurface)
+print('Visited:', tree.visited())
+print('Solutions:', tree.solutions())
+
+print()
+
+t = Example3.trefoil()
+tree = TreeEnumeration_NonSpun(t, NS_QUAD)
+tree.run(dumpSurface)
+print('Visited:', tree.visited())
+print('Solutions:', tree.solutions())
+
+print()
+
+t = Example3.trefoil()
+tab = LPInitialTableaux_NonSpun(t, NS_QUAD)
+sys = tab.system()
+print('System:', sys.normal(), sys.angle(), sys.standard(), sys.quad())
+print('Columns:', tab.coordinateColumns(), '->', tab.columns())
+print('Perm:', tab.columnPerm())
+m = LPMatrix(tab.rank(), tab.columns())
+tab.fillInitialTableaux(m)
+print(m)
+dat = LPData_NonSpun()
+dat.reserve(tab)
+dat.initStart()
+if dat.isFeasible():
+	print(dat.extractSolution([0, 0]))
+else:
+	print('Not feasible')
+dat.constrainPositive(2)
+if dat.isFeasible():
+	print(dat.extractSolution([3, 0]))
+else:
+	print('Not feasible')
+dat.constrainZero(3) # already zero, should do nothing
+if dat.isFeasible():
+	print(dat.extractSolution([3, 0]))
+else:
+	print('Not feasible')
+dat.constrainPositive(5)
+if dat.isFeasible():
+	print(dat.extractSolution([3, 3]))
+else:
+	print('Not feasible')
+dat.constrainZero(4)
+if dat.isFeasible():
+	print(dat.extractSolution([3, 3]))
+else:
+	print('Not feasible')
+
+print()
+
+t = Example3.rp3rp3()
+tab = LPInitialTableaux(t, NS_STANDARD)
+print(LPConstraintNone.addRows(tab))
+tab = LPInitialTableaux_EulerPositive(t, NS_STANDARD)
+print(LPConstraintEulerPositive.addRows(tab))
+tab = LPInitialTableaux_EulerZero(t, NS_STANDARD)
+print(LPConstraintEulerZero.addRows(tab))
+
+print()
+
+t = Example3.lst(3,4)
+tab = LPInitialTableaux(t, NS_STANDARD)
+sys = tab.system()
+print('System:', sys.normal(), sys.angle(), sys.standard(), sys.quad())
+print('Columns:', tab.coordinateColumns(), '->', tab.columns())
+print('Perm:', tab.columnPerm())
+dat = LPData()
+dat.reserve(tab)
+dat.initStart()
+if dat.isFeasible():
+	print(dat.extractSolution([0, 0, 0] + [0] * 12))
+else:
+	print('Not feasible')
+dat.constrainPositive(0)
+if dat.isFeasible():
+	print(dat.extractSolution([1, 0, 0] + [0] * 12))
+else:
+	print('Not feasible')
+ban = BanBoundary(tab)
+ban.enforceBans(dat)
+if dat.isFeasible():
+	print(dat.extractSolution([1, 0, 0] + [0] * 12))
+else:
+	print('Not feasible')
+
+print()
+
+t = Triangulation3.fromIsoSig('gHLLOcbcdeffafwfss') # Solid torus # RP^3
+print(t.hasNonTrivialSphereOrDisc())
+tab = LPInitialTableaux(t, NS_STANDARD)
+sys = tab.system()
+print('System:', sys.normal(), sys.angle(), sys.standard(), sys.quad())
+print('Columns:', tab.coordinateColumns(), '->', tab.columns())
+print('Perm:', tab.columnPerm())
+dat = LPData()
+dat.reserve(tab)
+dat.initStart()
+if dat.isFeasible():
+	print(dat.extractSolution([0] * 30))
+else:
+	print('Not feasible')
+dat.constrainPositive(35) # should be the "real" triangle coordinate #1
+if dat.isFeasible():
+	print(dat.extractSolution([0] * 23 + [1] + [0] * 6))
+else:
+	print('Not feasible')
+ban = BanBoundary(tab)
+ban.enforceBans(dat)
+if dat.isFeasible():
+	print(dat.extractSolution([0] * 23 + [1] + [0] * 6))
+else:
+	print('Not feasible')
+dat.constrainPositive(36) # should be the "real" triangle coordinate #2
+if dat.isFeasible():
+	print(dat.extractSolution([0] * 23 + [1,1] + [0] * 5))
+else:
+	print('Not feasible')

@@ -42,15 +42,14 @@
 
 using regina::Cusp;
 
-CuspChooser::CuspChooser(
-        regina::SnapPeaTriangulation* tri,
+CuspChooser::CuspChooser(regina::PacketOf<regina::SnapPeaTriangulation>* tri,
         CuspFilterFunc filter, QWidget* parent,
         bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     if (autoUpdate)
-        tri_->listen(this);
+        tri->listen(this);
     fill();
 }
 
@@ -63,13 +62,11 @@ int CuspChooser::selected() {
 
 void CuspChooser::select(int option) {
     int index = 0;
-    std::vector<int>::const_iterator it = options_.begin();
-    while (it != options_.end()) {
-        if ((*it) == option) {
+    for (int c : options_) {
+        if (c == option) {
             setCurrentIndex(index);
             return;
         }
-        ++it;
         ++index;
     }
 
@@ -85,7 +82,7 @@ QString CuspChooser::description(int option) {
 
     return tr("Cusp %1 — Vertex %2")
         .arg(option)
-        .arg(tri_->cusp(option)->vertex()->markedIndex());
+        .arg(tri_->cusp(option).vertex()->markedIndex());
 }
 
 void CuspChooser::fill() {
@@ -100,16 +97,16 @@ void CuspChooser::fill() {
         }
 }
 
-bool CuspChooser::filterFilled(const Cusp* c) {
-    return ! c->complete();
+bool CuspChooser::filterFilled(const Cusp& c) {
+    return ! c.complete();
 }
 
-bool CuspChooser::filterComplete(const Cusp* c) {
-    return c->complete();
+bool CuspChooser::filterComplete(const Cusp& c) {
+    return c.complete();
 }
 
 CuspDialog::CuspDialog(QWidget* parent,
-        regina::SnapPeaTriangulation* tri,
+        regina::PacketOf<regina::SnapPeaTriangulation>* tri,
         CuspFilterFunc filter,
         const QString& title,
         const QString& message,
@@ -117,15 +114,15 @@ CuspDialog::CuspDialog(QWidget* parent,
         QDialog(parent) {
     setWindowTitle(title);
     setWhatsThis(whatsThis);
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
-    QLabel* label = new QLabel(message);
+    auto* label = new QLabel(message);
     layout->addWidget(label);
 
     chooser = new CuspChooser(tri, filter, this);
     layout->addWidget(chooser);
 
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(
+    auto* buttonBox = new QDialogButtonBox(
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
@@ -134,7 +131,7 @@ CuspDialog::CuspDialog(QWidget* parent,
 }
 
 int CuspDialog::choose(QWidget* parent,
-        regina::SnapPeaTriangulation* tri,
+        regina::PacketOf<regina::SnapPeaTriangulation>* tri,
         CuspFilterFunc filter,
         const QString& title,
         const QString& message,

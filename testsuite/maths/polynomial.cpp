@@ -47,6 +47,7 @@ class PolynomialTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST(set);
     CPPUNIT_TEST(arithmetic);
+    CPPUNIT_TEST(divisionAlg);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -61,10 +62,10 @@ class PolynomialTest : public CppUnit::TestFixture {
         Polynomial<Integer> e = { 0, 2, 4, -2, 2 };
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         template <typename T>
@@ -76,8 +77,7 @@ class PolynomialTest : public CppUnit::TestFixture {
 
         template <typename T>
         void verifyEqual(const Polynomial<T>& result,
-                std::initializer_list<T> coeffs) {
-            Polynomial<T> expect(coeffs);
+                const Polynomial<T>& expect) {
             if (result != expect) {
                 std::ostringstream msg;
                 msg << "Polynomial mismatch: "
@@ -96,6 +96,31 @@ class PolynomialTest : public CppUnit::TestFixture {
                     << result << " != " << expect;
                 CPPUNIT_FAIL(msg.str());
             }
+            if (result.isZero() && ! expect.isZero()) {
+                std::ostringstream msg;
+                msg << "Polynomial is zero: " << result;
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (expect.isZero() && ! result.isZero()) {
+                std::ostringstream msg;
+                msg << "Polynomial is non-zero: " << result;
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (result.degree() != expect.degree()) {
+                std::ostringstream msg;
+                msg << "Polynomial has wrong degree: "
+                    << result << " degree not " << expect.degree();
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        template <typename T>
+        void verifyEqual(const Polynomial<T>& result,
+                std::initializer_list<T> coeffs) {
+            Polynomial<T> expect(coeffs);
+
+            verifyEqual(result, expect);
+
             if (coeffs.size() == 0) {
                 if (! result.isZero()) {
                     std::ostringstream msg;
@@ -345,6 +370,57 @@ class PolynomialTest : public CppUnit::TestFixture {
                 verifyEqual<Integer>(x / x, {1});
                 verifyEqual<Integer>(x /= x, {1});
             }
+        }
+
+        void verifyDivisionAlg(const Polynomial<Rational>& x,
+                const Polynomial<Rational>& divisor) {
+            // std::cerr << "Verify: " << x << ", " << divisor << std::endl;
+            auto [q, r] = x.divisionAlg(divisor);
+
+            /* deprecated verison of divisionAlg():
+            {
+                Polynomial<Rational> q2, r2;
+                x.divisionAlg(divisor, q2, r2);
+
+                verifyEqual(q, q2);
+                verifyEqual(r, r2);
+            }
+            */
+
+            verifyEqual(x, q * divisor + r);
+
+            if (! r.isZero()) {
+                if (r.degree() >= divisor.degree()) {
+                    std::ostringstream msg;
+                    msg << "Remainder has too high a degree when computing "
+                        << x << " / " << divisor << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void divisionAlg() {
+            verifyDivisionAlg({}, {2});
+            verifyDivisionAlg({5}, {2});
+            verifyDivisionAlg({1, 3}, {2});
+            verifyDivisionAlg({-1, 1, -1}, {2});
+
+            verifyDivisionAlg({}, {-3, 2});
+            verifyDivisionAlg({5}, {-3, 2});
+            verifyDivisionAlg({1, 3}, {-3, 2});
+            verifyDivisionAlg({-1, 1, -1}, {-3, 2});
+
+            verifyDivisionAlg({}, {4, 3, 6});
+            verifyDivisionAlg({5}, {4, 3, 6});
+            verifyDivisionAlg({1, 3}, {4, 3, 6});
+            verifyDivisionAlg({-1, 1, -1}, {4, 3, 6});
+
+            verifyDivisionAlg({1, 0, 0, 0, 1}, {0, 1});
+            verifyDivisionAlg({0, 0, 0, 0, 1}, {0, 1});
+
+            // Test the case where x and divisor are the same C++ object.
+            Polynomial p{1, 3, 2};
+            verifyDivisionAlg(p, p);
         }
 };
 

@@ -65,7 +65,41 @@ Signature::Signature(const Signature& sig) : order_(sig.order_),
         cycleGroupStart);
 }
 
-Signature* Signature::parse(const std::string& str) {
+Signature& Signature::operator = (const Signature& sig) {
+    // std::copy() exhibits undefined behaviour in the case of self-assignment.
+    if (std::addressof(sig) == this)
+        return *this;
+
+    if (order_ != sig.order_) {
+        delete[] label;
+        delete[] labelInv;
+        order_ = sig.order_;
+        label = new unsigned[2 * order_];
+        labelInv = new bool[2 * order_];
+    }
+
+    if (nCycles != sig.nCycles) {
+        delete[] cycleStart;
+        nCycles = sig.nCycles;
+        cycleStart = new unsigned[nCycles + 1];
+    }
+
+    if (nCycleGroups != sig.nCycleGroups) {
+        delete[] cycleGroupStart;
+        nCycleGroups = sig.nCycleGroups;
+        cycleGroupStart = new unsigned[nCycleGroups + 1];
+    }
+
+    std::copy(sig.label, sig.label + 2 * order_, label);
+    std::copy(sig.labelInv, sig.labelInv + 2 * order_, labelInv);
+    std::copy(sig.cycleStart, sig.cycleStart + nCycles + 1, cycleStart);
+    std::copy(sig.cycleGroupStart, sig.cycleGroupStart + nCycleGroups + 1,
+        cycleGroupStart);
+
+    return *this;
+}
+
+Signature Signature::parse(const std::string& str) {
     // See if the string looks correctly formed.
     // Note that we're not yet counting the individual frequency of each
     // letter, just the overall number of letters.
@@ -90,20 +124,21 @@ Signature* Signature::parse(const std::string& str) {
         }
 
     if (static_cast<int>(nAlpha) != 2 * (largestLetter + 1))
-        return 0;
+        throw InvalidArgument("parse(): range of letters does not match "
+            "number of letters");
     if (nAlpha == 0)
-        return 0;
+        throw InvalidArgument("parse(): signature contains no letters");
 
     // Looks fine so far.
     // Build the signature and cycle structure (but not cycle groups yet).
     unsigned order = largestLetter + 1;
-    unsigned* label = new unsigned[nAlpha];
+    auto* label = new unsigned[nAlpha];
     bool* labelInv = new bool[nAlpha];
     unsigned nCycles = 0;
-    unsigned* cycleStart = new unsigned[nAlpha + 1];
+    auto* cycleStart = new unsigned[nAlpha + 1];
     cycleStart[0] = 0;
 
-    unsigned* freq = new unsigned[order];
+    auto* freq = new unsigned[order];
     std::fill(freq, freq + order, 0);
 
     unsigned whichPos = 0;
@@ -132,7 +167,8 @@ Signature* Signature::parse(const std::string& str) {
                 delete[] labelInv;
                 delete[] cycleStart;
                 delete[] freq;
-                return 0;
+                throw InvalidArgument(
+                    "parse(): letter appears more than twice");
             }
             label[whichPos] = letterIndex;
             labelInv[whichPos] = (str[pos] >= 'A' && str[pos] <= 'Z');
@@ -148,43 +184,42 @@ Signature* Signature::parse(const std::string& str) {
     }
 
     // We now have a valid signature!
-    Signature* sig = new Signature();
-    sig->order_ = order;
-    sig->label = label;
-    sig->labelInv = labelInv;
-    sig->nCycles = nCycles;
-    sig->cycleStart = cycleStart;
+    Signature sig;
+    sig.order_ = order;
+    sig.label = label;
+    sig.labelInv = labelInv;
+    sig.nCycles = nCycles;
+    sig.cycleStart = cycleStart;
 
     // Fill in the rest of the data members.
-    sig->nCycleGroups = 0;
-    sig->cycleGroupStart = new unsigned[nCycles];
+    sig.nCycleGroups = 0;
+    sig.cycleGroupStart = new unsigned[nCycles];
     for (pos = 0; pos < nCycles; pos++)
-        if (pos == 0 || sig->cycleStart[pos + 1] - sig->cycleStart[pos] !=
-                sig->cycleStart[pos] - sig->cycleStart[pos - 1]) {
+        if (pos == 0 || sig.cycleStart[pos + 1] - sig.cycleStart[pos] !=
+                sig.cycleStart[pos] - sig.cycleStart[pos - 1]) {
             // New cycle group.
-            sig->cycleGroupStart[sig->nCycleGroups] =
-                static_cast<unsigned>(pos);
-            sig->nCycleGroups++;
+            sig.cycleGroupStart[sig.nCycleGroups] = static_cast<unsigned>(pos);
+            sig.nCycleGroups++;
         }
 
     return sig;
 }
 
-Triangulation<3>* Signature::triangulate() const {
+Triangulation<3> Signature::triangulate() const {
     unsigned sigLen = 2 * order_;
-    Triangulation<3>* tri = new Triangulation<3>();
+    Triangulation<3> tri;
 
     // Create a new set of tetrahedra.
     // Tetrahedron vertices will be:
     //   bottom left -> top right: 0 -> 1
     //   bottom right -> top left: 2 -> 3
-    Tetrahedron<3>** tet = new Tetrahedron<3>*[order_];
+    auto* tet = new Tetrahedron<3>*[order_];
     unsigned pos;
     for (pos = 0; pos < order_; pos++)
-        tet[pos] = tri->newTetrahedron();
+        tet[pos] = tri.newTetrahedron();
 
     // Store the first occurrence of each symbol.
-    unsigned* first = new unsigned[order_];
+    auto* first = new unsigned[order_];
     std::fill(first, first + order_, sigLen);
 
     for (pos = 0; pos < sigLen; pos++)
@@ -215,12 +250,12 @@ Triangulation<3>* Signature::triangulate() const {
     return tri;
 }
 
-int Signature::cycleCmp(const Signature& sig1, unsigned cycle1,
-        unsigned start1, int dir1, unsigned* relabel1, const Signature& sig2,
-        unsigned cycle2, unsigned start2, int dir2, unsigned* relabel2) {
-    unsigned len = sig1.cycleStart[cycle1 + 1] - sig1.cycleStart[cycle1];
-    unsigned* arr1 = sig1.label + sig1.cycleStart[cycle1];
-    unsigned* arr2 = sig2.label + sig2.cycleStart[cycle2];
+int Signature::cycleCmp(
+        unsigned cycle1, unsigned start1, int dir1, unsigned* relabel1,
+        unsigned cycle2, unsigned start2, int dir2, unsigned* relabel2) const {
+    unsigned len = cycleStart[cycle1 + 1] - cycleStart[cycle1];
+    unsigned* arr1 = label + cycleStart[cycle1];
+    unsigned* arr2 = label + cycleStart[cycle2];
     unsigned pos1 = start1;
     unsigned pos2 = start2;
     for (unsigned i = 0; i < len; i++) {

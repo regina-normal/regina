@@ -49,7 +49,7 @@ ContainerUI::ContainerUI(Container* packet, PacketPane* enclosingPane) :
     layout->addStretch(1);
 
     // Give the grid two extra stretchable columns on the outside.
-    QGridLayout* grid = new QGridLayout();
+    auto* grid = new QGridLayout();
     layout->addLayout(grid);
     grid->setColumnStretch(0, 1);
     grid->setColumnStretch(3, 1);
@@ -113,12 +113,11 @@ void ContainerUI::refresh() {
     descendants->setText(QString::number(container->countDescendants()));
 }
 
-void ContainerUI::childWasAdded(Packet*, Packet*) {
+void ContainerUI::childWasAdded(Packet&, Packet&) {
     refresh();
 }
 
-void ContainerUI::childWasRemoved(Packet* packet, Packet*) {
-    if (packet) // not in packet's destructor
-        refresh();
+void ContainerUI::childWasRemoved(Packet&, Packet&) {
+    refresh();
 }
 

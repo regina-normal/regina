@@ -64,13 +64,13 @@ class FaceNumberingTest : public CppUnit::TestFixture {
     private:
         static constexpr int n = dim + 1;
 
-        typedef typename Perm<dim + 1>::Index Index;
+        using Index = typename Perm<dim + 1>::Index;
 
         Index* idx;
         Index nIdx;
 
     public:
-        void setUp() {
+        void setUp() override {
             idx = new Index[(Perm<dim + 1>::nPerms / increment[n]) + 2];
             nIdx = 0;
             for (Index i = 0; i < Perm<dim + 1>::nPerms; i += increment[n])
@@ -79,7 +79,7 @@ class FaceNumberingTest : public CppUnit::TestFixture {
                 idx[nIdx++] = Perm<dim + 1>::nPerms - 1;
         }
 
-        void tearDown() {
+        void tearDown() override {
             delete[] idx;
         }
 
@@ -204,7 +204,7 @@ void addFaceNumbering(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(FaceNumberingTest<4, 2>::suite());
     runner.addTest(FaceNumberingTest<4, 3>::suite());
 
-    // Generic implementations:
+    // Generic face numbering but specialised permutation templates:
     runner.addTest(FaceNumberingTest<5, 0>::suite());
     runner.addTest(FaceNumberingTest<5, 1>::suite());
     runner.addTest(FaceNumberingTest<5, 2>::suite());
@@ -225,6 +225,16 @@ void addFaceNumbering(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(FaceNumberingTest<7, 4>::suite());
     runner.addTest(FaceNumberingTest<7, 5>::suite());
     runner.addTest(FaceNumberingTest<7, 6>::suite());
+
+    // Generic face numbering *and* permutation templates:
+    runner.addTest(FaceNumberingTest<8, 0>::suite());
+    runner.addTest(FaceNumberingTest<8, 1>::suite());
+    runner.addTest(FaceNumberingTest<8, 2>::suite());
+    runner.addTest(FaceNumberingTest<8, 3>::suite());
+    runner.addTest(FaceNumberingTest<8, 4>::suite());
+    runner.addTest(FaceNumberingTest<8, 5>::suite());
+    runner.addTest(FaceNumberingTest<8, 6>::suite());
+    runner.addTest(FaceNumberingTest<8, 7>::suite());
 
     runner.addTest(FaceNumberingTest<15, 0>::suite());
     runner.addTest(FaceNumberingTest<15, 1>::suite());

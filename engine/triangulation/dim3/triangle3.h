@@ -50,11 +50,6 @@
 namespace regina {
 
 /**
- * \weakgroup dim3
- * @{
- */
-
-/**
  * Represents a triangle in the skeleton of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
@@ -63,7 +58,15 @@ namespace regina {
  * These specialisations for Regina's \ref stddim "standard dimensions"
  * offer significant extra functionality.
  *
+ * Triangles do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
  * \headerfile triangulation/dim3.h
+ *
+ * \ingroup dim3
  */
 template <>
 class Face<3, 2> : public detail::FaceBase<3, 2> {
@@ -173,8 +176,6 @@ class Face<3, 2> : public detail::FaceBase<3, 2> {
     friend class Triangulation<3>;
     friend class detail::TriangulationBase<3>;
 };
-
-/*@}*/
 
 // Inline functions for Triangle<3>
 

@@ -40,12 +40,12 @@
 
 namespace regina {
 
-Container* readDehydrationList(const char *filename,
+std::shared_ptr<Container> readDehydrationList(const char *filename,
         unsigned colDehydrations, int colLabels, unsigned long ignoreLines) {
     // Open the file.
     std::ifstream in(filename);
     if (! in)
-        return 0;
+        return nullptr;
 
     // Ignore the specified number of lines.
     std::string line;
@@ -54,11 +54,11 @@ Container* readDehydrationList(const char *filename,
     for (i = 0; i < ignoreLines; i++) {
         std::getline(in, line);
         if (in.eof())
-            return new Container();
+            return std::make_shared<Container>();
     }
 
     // Read in and process the remaining lines.
-    Container* ans = new Container();
+    std::shared_ptr<Container> ans = std::make_shared<Container>();
     std::string errStrings;
 
     int col;
@@ -66,7 +66,6 @@ Container* readDehydrationList(const char *filename,
 
     std::string dehydration;
     std::string label;
-    Triangulation<3>* tri;
 
     while(! in.eof()) {
         // Read in the next line.
@@ -94,20 +93,20 @@ Container* readDehydrationList(const char *filename,
 
         if (! dehydration.empty()) {
             // Process this dehydration string.
-            tri = new Triangulation<3>();
-            if (tri->insertRehydration(dehydration)) {
-                tri->setLabel(label.empty() ? dehydration : label);
-                ans->insertChildLast(tri);
-            } else {
-                errStrings = errStrings + '\n' + dehydration;
-                delete tri;
+            try {
+                ans->insertChildLast(makePacket(
+                    Triangulation<3>::rehydrate(dehydration),
+                    (label.empty() ? dehydration : label)));
+            } catch (const InvalidArgument&) {
+                errStrings += '\n';
+                errStrings += dehydration;
             }
         }
     }
 
     // Finish off.
     if (! errStrings.empty()) {
-        Text* errPkt = new Text(std::string(
+        auto errPkt = std::make_shared<Text>(std::string(
             "The following dehydration string(s) could not be rehydrated:\n") +
             errStrings);
         errPkt->setLabel("Errors");

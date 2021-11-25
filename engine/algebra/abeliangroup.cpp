@@ -30,145 +30,100 @@
  *                                                                        *
  **************************************************************************/
 
+#include <algorithm>
 #include "algebra/abeliangroup.h"
 #include "maths/matrixops.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
 
-const Integer& AbelianGroup::invariantFactor(size_t index) const {
-    std::multiset<Integer>::const_iterator it = invariantFactors.begin();
-    advance(it, index);
-    return *it;
+void AbelianGroup::addTorsion(Integer degree) {
+    // Loop from the largest invariant factor to the smallest.
+    for (auto it = revInvFactors_.begin(); it != revInvFactors_.end(); ++it) {
+        // INV: We still need to introduce a torsion element of degree,
+        // and we know that degree divides all invariant factors beyond it
+        // (i.e. all invariant factors that have already been seen in
+        // this loop).
+
+        // Replace (degree, *it) with (gcd, lcm).
+
+        Integer g = degree.gcd(*it);
+        degree.divByExact(g);
+        (*it) *= degree;
+
+        degree = g;
+        if (degree == 1)
+            return;
+    }
+
+    if (degree > 1)
+        revInvFactors_.push_back(degree);
 }
 
-void AbelianGroup::addTorsionElement(const Integer& degree,
-        unsigned mult) {
-    // If there are no current torsion elements, just throw in the new
-    // ones.
-    if (invariantFactors.empty()) {
-        for (unsigned j=0; j<mult; j++)
-            invariantFactors.insert(invariantFactors.begin(), degree);
-        return;
-    }
-
-    // Build a presentation matrix for the torsion.
-    size_t len = invariantFactors.size() + mult;
-    MatrixInt a(len, len);
-
-    // Put our own invariant factors in the top.
-    unsigned i=0;
-    std::multiset<Integer>::const_iterator it;
-    for (it = invariantFactors.begin(); it != invariantFactors.end(); it++) {
-        a.entry(i,i) = *it;
-        i++;
-    }
-
-    // Put the passed torsion elements beneath.
-    for (unsigned j=0; j<mult; j++) {
-        a.entry(i,i) = degree;
-        i++;
-    }
-
-    // Go calculate!
-    smithNormalForm(a);
-    replaceTorsion(a);
+void AbelianGroup::addTorsionElements(const std::multiset<Integer>& torsion) {
+    for (const Integer& i : torsion)
+        addTorsion(i);
 }
 
-void AbelianGroup::addTorsionElements(const std::multiset<Integer>&
-        torsion) {
-    // Build a presentation matrix for the torsion.
-    size_t len = invariantFactors.size() + torsion.size();
-    MatrixInt a(len, len);
+void AbelianGroup::addGroup(MatrixInt presentation) {
+    smithNormalForm(presentation);
 
-    // Put our own invariant factors in the top.
-    unsigned i=0;
-    std::multiset<Integer>::const_iterator it;
-    for (it = invariantFactors.begin(); it != invariantFactors.end(); it++) {
-        a.entry(i,i) = *it;
-        i++;
+    // Run up the diagonal until we hit 1.
+    // Hopefully this will be faster than running down the diagonal
+    // looking for 0 because the SNF calculation should end up with
+    // many 1s for a unnecessarily large presentation matrix such as
+    // is produced for instance by homology calculations.
+    unsigned long i = presentation.columns();
+
+    unsigned long rows = presentation.rows();
+    if (rows < i) {
+        // There are more columns than rows; these extras cols must be zero.
+        rank_ += (i - rows);
+        i = rows;
     }
 
-    // Put the passed torsion elements beneath.
-    for (it = torsion.begin(); it != torsion.end(); it++) {
-        a.entry(i,i) = *it;
-        i++;
+    // Now i is precisely the length of the diagonal.
+    while (i > 0) {
+        --i;
+        if (presentation.entry(i, i) == 0)
+            ++rank_;
+        else if (presentation.entry(i, i) == 1)
+            return;
+        else
+            addTorsion(presentation.entry(i, i));
     }
-
-    // Go calculate!
-    smithNormalForm(a);
-    replaceTorsion(a);
-}
-
-void AbelianGroup::addGroup(const MatrixInt& presentation) {
-    // Prepare to calculate invariant factors.
-    size_t len = invariantFactors.size();
-    MatrixInt a(len + presentation.rows(), len + presentation.columns());
-
-    // Fill in the complete presentation matrix.
-    // Fill the bottom half of the matrix with the presentation.
-    unsigned i,j;
-    for (i=0; i<presentation.rows(); i++)
-        for (j=0; j<presentation.columns(); j++)
-            a.entry(len + i, len + j) = presentation.entry(i, j);
-    
-    // Fill in the invariant factors in the top.
-    i = 0;
-    std::multiset<Integer>::const_iterator it;
-    for (it = invariantFactors.begin(); it != invariantFactors.end(); it++) {
-        a.entry(i,i) = *it;
-        i++;
-    }
-
-    // Go calculate!
-    smithNormalForm(a);
-    replaceTorsion(a);
 }
 
 void AbelianGroup::addGroup(const AbelianGroup& group) {
     rank_ += group.rank_;
 
     // Work out the torsion elements.
-    if (invariantFactors.empty()) {
-        // Copy the other group's factors!
-        invariantFactors = group.invariantFactors;
-        return;
+    if (revInvFactors_.empty()) {
+        revInvFactors_ = group.revInvFactors_;
+    } else if (std::addressof(group) == this) {
+        // Be careful with self-addition: we do not want to iterate over
+        // the same set of factors that we are inserting into.
+        // However: in this case we know exactly what will happen - the
+        // set of invariant factors is duplicated.
+        std::vector<Integer> ans;
+        for (const Integer& i : revInvFactors_) {
+            ans.push_back(i);
+            ans.push_back(i);
+        }
+        revInvFactors_ = std::move(ans);
+    } else {
+        for (const Integer& i : group.revInvFactors_)
+            addTorsion(i);
     }
-    if (group.invariantFactors.empty())
-        return;
-
-    // We will have to calculate the invariant factors ourselves.
-    size_t len = invariantFactors.size() + group.invariantFactors.size();
-    MatrixInt a(len, len);
-
-    // Put our own invariant factors in the top.
-    unsigned i = 0;
-    std::multiset<Integer>::const_iterator it;
-    for (it = invariantFactors.begin(); it != invariantFactors.end(); it++) {
-        a.entry(i,i) = *it;
-        i++;
-    }
-
-    // Put the other group's invariant factors beneath.
-    for (it = group.invariantFactors.begin();
-            it != group.invariantFactors.end(); it++) {
-        a.entry(i,i) = *it;
-        i++;
-    }
-
-    // Go calculate!
-    smithNormalForm(a);
-    replaceTorsion(a);
 }
 
 unsigned AbelianGroup::torsionRank(const Integer& degree) const {
-    std::multiset<Integer>::const_reverse_iterator it;
     unsigned ans = 0;
     // Because we have SNF, we can bail as soon as we reach a factor
     // that is not divisible by degree.
-    for (it = invariantFactors.rbegin(); it != invariantFactors.rend(); it++)
-        if (((*it) % degree) == 0)
-            ans++;
+    for (const auto& factor : revInvFactors_)
+        if (factor % degree == 0)
+            ++ans;
         else
             return ans;
     return ans;
@@ -187,15 +142,14 @@ void AbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
         writtenSomething = true;
     }
 
-    std::multiset<Integer>::const_iterator it =
-        invariantFactors.begin();
+    auto it = revInvFactors_.rbegin();
     Integer currDegree;
     unsigned currMult = 0;
     while(true) {
-        if (it != invariantFactors.end()) {
+        if (it != revInvFactors_.rend()) {
             if ((*it) == currDegree) {
-                currMult++;
-                it++;
+                ++currMult;
+                ++it;
                 continue;
             }
         }
@@ -210,125 +164,100 @@ void AbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
                 out << "Z_" << currDegree.stringValue();
             writtenSomething = true;
         }
-        if (it == invariantFactors.end())
+        if (it == revInvFactors_.rend())
             break;
         currDegree = *it;
         currMult = 1;
-        it++;
+        ++it;
     }
 
     if (! writtenSomething)
         out << '0';
 }
 
-void AbelianGroup::replaceTorsion(const MatrixInt& matrix) {
-    // Delete any preexisting torsion.
-    invariantFactors.clear();
+void AbelianGroup::writeXMLData(std::ostream& out) const {
+    out << "<abeliangroup rank=\"" << rank_ << "\"> ";
+    for (auto it = revInvFactors_.rbegin(); it != revInvFactors_.rend(); ++it)
+        out << (*it) << ' ';
+    out << "</abeliangroup>";
+}
+
+// ---N--> CC --M-->  ie: M*N = 0.
+AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) : rank_(0) {
+    smithNormalForm(N);
+
+    // Note: the rank comes from the zero *rows* of N.
 
     // Run up the diagonal until we hit 1.
     // Hopefully this will be faster than running down the diagonal
     // looking for 0 because the SNF calculation should end up with
     // many 1s for a unnecessarily large presentation matrix such as
     // is produced for instance by homology calculations.
-    unsigned long rows = matrix.rows();
-    unsigned long i = matrix.columns();
-    if (i > rows) {
-        rank_ += (i - rows);
-        i = rows;
+    unsigned long i = N.rows();
+
+    unsigned long cols = N.columns();
+    if (cols < i) {
+        // There are more rows than columns; these extras rows must be zero.
+        rank_ += (i - cols);
+        i = cols;
     }
+
+    // Now i is precisely the length of the diagonal.
+
+    // We insert the invariant factors in reverse order, but this is
+    // exactly what we need to do.
     while (i > 0) {
-        if (matrix.entry(i-1, i-1) == 0)
-            rank_++;
-        else if (matrix.entry(i-1, i-1) == 1)
-            return;
+        --i;
+        if (N.entry(i, i) == 0)
+            ++rank_;
+        else if (N.entry(i, i) == 1)
+            break;
         else
-            invariantFactors.insert(invariantFactors.begin(),
-                matrix.entry(i-1, i-1));
-        i--;
+            revInvFactors_.push_back(N.entry(i, i));
     }
+
+    // Finally, subtract the rank of M.
+    rank_ -= M.rowEchelonForm();
 }
 
-void AbelianGroup::writeXMLData(std::ostream& out) const {
-    out << "<abeliangroup rank=\"" << rank_ << "\"> ";
-    for (std::multiset<Integer>::const_iterator it =
-            invariantFactors.begin(); it != invariantFactors.end(); it++)
-        out << (*it) << ' ';
-    out << "</abeliangroup>";
-}
-
-// ---N--> CC --M-->  ie: M*N = 0.
-AbelianGroup::AbelianGroup(const MatrixInt& M, const MatrixInt& N) {
-    rank_ = N.rows();
-    MatrixInt tempN(N);
-    metricalSmithNormalForm(tempN);
-    unsigned long lim =
-        (tempN.rows() < tempN.columns() ? tempN.rows() : tempN.columns() );
-    std::multiset<Integer> torsion;
-    for (unsigned long i=0; i<lim; i++) {
-        if (tempN.entry(i,i) != 0) {
-            rank_--;
-            if (tempN.entry(i,i) > 1)
-                torsion.insert(tempN.entry(i,i));
-        }
-    }
-    addTorsionElements(torsion);
-
-    MatrixInt tempM(M);
-    metricalSmithNormalForm(tempM);
-    lim = (tempM.rows() < tempM.columns() ? tempM.rows() : tempM.columns());
-    for (unsigned long i=0; i<lim; ++i) {
-        if (tempM.entry(i,i) != 0)
-            rank_--;
-    }
-}
-
-AbelianGroup::AbelianGroup(const MatrixInt& M, const MatrixInt& N,
-        const Integer &p) {
+AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) {
     Integer cof(p.abs());
     rank_ = N.rows();
 
-    MatrixInt tempN(N);
-    metricalSmithNormalForm(tempN);
-    unsigned long lim =
-        (tempN.rows() < tempN.columns() ? tempN.rows() : tempN.columns() );
-    std::multiset<Integer> torsion;
+    smithNormalForm(N);
+    unsigned long lim = (N.rows() < N.columns() ? N.rows() : N.columns() );
 
     if (cof == 0) {
         for (unsigned long i=0; i<lim; i++)
-            if (tempN.entry(i,i) != 0) {
+            if (N.entry(i,i) != 0) {
                 rank_--;
-                if (tempN.entry(i,i) > 1)
-                    torsion.insert(tempN.entry(i,i));
+                if (N.entry(i,i) > 1)
+                    addTorsion(N.entry(i,i));
             }
     } else {
         for (unsigned long i=0; i<lim; i++)
-            if (tempN.entry(i,i) !=0) {
+            if (N.entry(i,i) !=0) {
                 rank_--;
-                Integer g( tempN.entry(i,i).gcd(cof) );
+                Integer g( N.entry(i,i).gcd(cof) );
                 if (g > 1)
-                    torsion.insert(g);
+                    addTorsion(g);
             }
     }
 
-    MatrixInt tempM(M);
-    metricalSmithNormalForm(tempM);
-    lim = (tempM.rows() < tempM.columns() ? tempM.rows() : tempM.columns() );
+    smithNormalForm(M);
+    lim = (M.rows() < M.columns() ? M.rows() : M.columns() );
     for (unsigned long i=0; i<lim; i++) {
-        if (tempM.entry(i,i) != 0) {
+        if (M.entry(i,i) != 0) {
             rank_--;
             if (cof != 0) {
-                Integer g( tempM.entry(i,i).gcd(cof) );
+                Integer g( M.entry(i,i).gcd(cof) );
                 if (g>1)
-                    torsion.insert(g);
+                    addTorsion(g);
             }
         }
     }
-    if (cof != 0) {
-        for (unsigned long i=0; i<rank_; i++)
-            torsion.insert(cof);
-        rank_ = 0;
-    }
-    addTorsionElements(torsion);
+    for ( ; rank_ > 0; --rank_)
+        addTorsion(cof);
 }
 
 } // namespace regina

@@ -44,7 +44,7 @@ H1Bdry ::= (&xml-abeliangroup;)</synopsis>
    <para>
     The following elements contain <sgmltag>H1Bdry</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-dim3triangulation;</member>
+     <member>&xml-tri;</member>
     </simplelist>.
    </para>
   </refsect2>

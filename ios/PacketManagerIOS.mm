@@ -65,7 +65,7 @@
             return [UIImage imageNamed:@"Surfaces"];
         case regina::PACKET_NORMALHYPERSURFACES:
             return [UIImage imageNamed:@"Hypersurfaces"];
-        case regina::PACKET_PDF:
+        case regina::PACKET_ATTACHMENT:
             return [UIImage imageNamed:@"PDF"];
         case regina::PACKET_SCRIPT:
             return [UIImage imageNamed:@"Script"];

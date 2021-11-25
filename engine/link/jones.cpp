@@ -163,7 +163,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
     // In count[i-1], the coefficient of A^k reflects the number of
     // resolutions with i loops and multiplier A^k.
     // We will always have 1 <= i <= #components + #crossings.
-    Laurent<Integer>* count = new Laurent<Integer>[n + components_.size()];
+    auto* count = new Laurent<Integer>[n + components_.size()];
 
     size_t maxLoops = 0;
 
@@ -286,12 +286,11 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     size_t nStrands = 2 * size();
     size_t loops;
 
-    typedef LightweightSequence<int> Key;
-    typedef Laurent<Integer> Value;
+    using Key = LightweightSequence<int>;
+    using Value = Laurent<Integer>;
+    using SolnSet = std::map<Key, Value>;
 
-    typedef std::map<Key*, Value*, Key::Less> SolnSet;
-
-    SolnSet** partial = new SolnSet*[nBags];
+    auto* partial = new SolnSet*[nBags];
     std::fill(partial, partial + nBags, nullptr);
 
     for (bag = d.first(); bag; bag = bag->next()) {
@@ -317,10 +316,11 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
 #endif
             partial[index] = new SolnSet;
 
-            Key* k = new Key(nStrands);
-            std::fill(k->begin(), k->end(), -2);
+            Key k(nStrands);
+            std::fill(k.begin(), k.end(), -2);
 
-            partial[index]->emplace(k, new Laurent<Integer>(0) /* x^0 = 1 */);
+            partial[index]->emplace(std::move(k),
+                Laurent<Integer>(0) /* x^0 = 1 */);
         } else if (bag->type() == NICE_INTRODUCE) {
             // Introduce bag.
             child = bag->children();
@@ -394,11 +394,6 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
 
             partial[index] = new SolnSet;
 
-            const Key *kChild;
-            Key *kNew;
-            const Value *vChild;
-            Value *vNew;
-            size_t newLoops;
             for (auto& soln : *(partial[child->index()])) {
                 if (tracker) {
                     percent += increment;
@@ -408,14 +403,15 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
                         // Therefore we need to finish the loop to ensure that
                         // all remaining child keys and values are deleted,
                         // even if we do not want to process them.
-                        delete soln.first;
-                        delete soln.second;
+                        //
+                        // TODO: Now that keys and values are stored by
+                        // value, not by pointer, do we still need this?
                         continue;
                     }
                 }
 
-                kChild = soln.first;
-                vChild = soln.second;
+                const Key& kChild = soln.first;
+                const Value& vChild = soln.second;
 
                 // Adjust the key and value to reflect the fact the newly
                 // forgotten crossing, under both possible resolutions.
@@ -423,29 +419,28 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
                     // i = 0: A resolution
                     // i = 1: A^{-1} resolution
 
-                    kNew = new Key(nStrands);
-                    std::copy(kChild->begin(), kChild->end(), kNew->begin());
+                    Key kNew = kChild;
 
-                    newLoops = 0;
+                    size_t newLoops = 0;
                     for (j = 0; j < 2; ++j) {
                         // Connect strands conn[i][j][0-1].
-                        if ((*kNew)[connIdx[i][j][0]] == -2 &&
-                                (*kNew)[connIdx[i][j][1]] == -2) {
+                        if (kNew[connIdx[i][j][0]] == -2 &&
+                                kNew[connIdx[i][j][1]] == -2) {
                             // Both strands stay in or above the bag.
                             if (connIdx[i][j][0] == connIdx[i][j][1]) {
                                 // The two strands form a loop.
                                 // Bury them in the forgotten region.
-                                (*kNew)[connIdx[i][j][0]] = -1;
-                                (*kNew)[connIdx[i][j][1]] = -1;
+                                kNew[connIdx[i][j][0]] = -1;
+                                kNew[connIdx[i][j][1]] = -1;
                                 ++newLoops;
                             } else {
                                 // The two strands go separate ways.
                                 // Make them the endponts of a new path that
                                 // enters and exits the forgotten region.
-                                (*kNew)[connIdx[i][j][0]] = connIdx[i][j][1];
-                                (*kNew)[connIdx[i][j][1]] = connIdx[i][j][0];
+                                kNew[connIdx[i][j][0]] = connIdx[i][j][1];
+                                kNew[connIdx[i][j][1]] = connIdx[i][j][0];
                             }
-                        } else if ((*kNew)[connIdx[i][j][0]] == -2) {
+                        } else if (kNew[connIdx[i][j][0]] == -2) {
                             // We cannot have one strand as -2 and the
                             // other as -1, since -2 means neither end
                             // of the strand is forgotten and -1 means
@@ -453,35 +448,30 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
 
                             // In this case we lengthen a section of the link
                             // that passes through the forgotten region.
-                            (*kNew)[connIdx[i][j][0]] =
-                                (*kNew)[connIdx[i][j][1]];
-                            (*kNew)[(*kNew)[connIdx[i][j][1]]] =
-                                connIdx[i][j][0];
-                            (*kNew)[connIdx[i][j][1]] = -1;
-                        } else if ((*kNew)[connIdx[i][j][1]] == -2) {
+                            kNew[connIdx[i][j][0]] = kNew[connIdx[i][j][1]];
+                            kNew[kNew[connIdx[i][j][1]]] = connIdx[i][j][0];
+                            kNew[connIdx[i][j][1]] = -1;
+                        } else if (kNew[connIdx[i][j][1]] == -2) {
                             // As before, we lengthen a section of the link
                             // that passes through the forgotten region.
-                            (*kNew)[connIdx[i][j][1]] =
-                                (*kNew)[connIdx[i][j][0]];
-                            (*kNew)[(*kNew)[connIdx[i][j][0]]] =
-                                connIdx[i][j][1];
-                            (*kNew)[connIdx[i][j][0]] = -1;
+                            kNew[connIdx[i][j][1]] = kNew[connIdx[i][j][0]];
+                            kNew[kNew[connIdx[i][j][0]]] = connIdx[i][j][1];
+                            kNew[connIdx[i][j][0]] = -1;
                         } else {
                             // Both strands head down into the forgotten region.
-                            if ((*kNew)[connIdx[i][j][0]] ==
-                                    connIdx[i][j][1]) {
+                            if (kNew[connIdx[i][j][0]] == connIdx[i][j][1]) {
                                 // We have closed off a loop.
                                 ++newLoops;
                             } else {
                                 // We connect two sections of the link
                                 // that pass through the forgotten region.
-                                (*kNew)[(*kNew)[connIdx[i][j][0]]] =
-                                    (*kNew)[connIdx[i][j][1]];
-                                (*kNew)[(*kNew)[connIdx[i][j][1]]] =
-                                    (*kNew)[connIdx[i][j][0]];
+                                kNew[kNew[connIdx[i][j][0]]] =
+                                    kNew[connIdx[i][j][1]];
+                                kNew[kNew[connIdx[i][j][1]]] =
+                                    kNew[connIdx[i][j][0]];
                             }
-                            (*kNew)[connIdx[i][j][0]] = -1;
-                            (*kNew)[connIdx[i][j][1]] = -1;
+                            kNew[connIdx[i][j][0]] = -1;
+                            kNew[connIdx[i][j][1]] = -1;
                         }
                     }
 
@@ -493,23 +483,18 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
                     if (index == nBags - 1)
                         --newLoops;
 
-                    vNew = new Value(*vChild);
-                    vNew->shift(i == 0 ? 1 : -1);
+                    Value vNew = vChild;
+                    vNew.shift(i == 0 ? 1 : -1);
                     for (loops = 0; loops < newLoops; ++loops)
-                        (*vNew) *= loopPoly;
+                        vNew *= loopPoly;
 
                     // Insert the new key/value into our partial
                     // solution, aggregating if need be.
-                    auto existingSoln = partial[index]->emplace(kNew, vNew);
-                    if (! existingSoln.second) {
-                        *(existingSoln.first->second) += *vNew;
-                        delete kNew;
-                        delete vNew;
-                    }
+                    auto existingSoln = partial[index]->try_emplace(
+                        std::move(kNew), std::move(vNew));
+                    if (! existingSoln.second)
+                        existingSoln.first->second += vNew;
                 }
-
-                delete kChild;
-                delete vChild;
             }
 
             delete partial[child->index()];
@@ -541,12 +526,6 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
 #endif
             partial[index] = new SolnSet;
 
-            const Key *k1, *k2;
-            const Value *v1, *v2;
-            Key *kNew;
-            Value *vNew;
-            size_t strand;
-
             for (auto& soln1 : *(partial[child->index()])) {
                 if (tracker) {
                     percent += increment;
@@ -554,40 +533,24 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
                         break;
                 }
 
-                k1 = soln1.first;
-                v1 = soln1.second;
                 for (auto& soln2 : *(partial[sibling->index()])) {
-                    k2 = soln2.first;
-                    v2 = soln2.second;
-
                     // Combine the two child keys and values.
-                    kNew = new Key(nStrands);
-                    for (strand = 0; strand < nStrands; ++strand)
-                        if ((*k1)[strand] == -2)
-                            (*kNew)[strand] = (*k2)[strand];
-                        else if ((*k2)[strand] == -2)
-                            (*kNew)[strand] = (*k1)[strand];
+                    Key kNew(nStrands);
+                    for (size_t strand = 0; strand < nStrands; ++strand)
+                        if (soln1.first[strand] == -2)
+                            kNew[strand] = soln2.first[strand];
+                        else if (soln2.first[strand] == -2)
+                            kNew[strand] = soln1.first[strand];
                         else
                             std::cerr <<
                                 "ERROR: Incompatible keys in join bag"
                                 << std::endl;
 
-                    vNew = new Value(*v1);
-                    *vNew *= *v2;
-
-                    if (! partial[index]->emplace(kNew, vNew).second)
+                    if (! partial[index]->emplace(std::move(kNew),
+                            soln1.second * soln2.second).second)
                         std::cerr << "ERROR: Combined keys in join bag "
                             "are not unique" << std::endl;
                 }
-            }
-
-            for (auto& soln : *(partial[child->index()])) {
-                delete soln.first;
-                delete soln.second;
-            }
-            for (auto& soln : *(partial[sibling->index()])) {
-                delete soln.first;
-                delete soln.second;
             }
 
             delete partial[child->index()];
@@ -600,13 +563,7 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
         // We don't know which elements of partial[] have been
         // deallocated, so check them all.
         for (size_t i = 0; i < nBags; ++i)
-            if (partial[i]) {
-                for (auto& soln : *(partial[i])) {
-                    delete soln.first;
-                    delete soln.second;
-                }
-                delete partial[i];
-            }
+            delete partial[i];
         delete[] partial;
         return Value();
     }
@@ -616,14 +573,9 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     if (! tracker)
         std::cerr << "FINISH" << std::endl;
 #endif
-    Value ans = std::move(*partial[nBags - 1]->begin()->second);
+    Value ans = std::move(partial[nBags - 1]->begin()->second);
 
-    for (auto& soln : *(partial[nBags - 1])) {
-        delete soln.first;
-        delete soln.second;
-    }
     delete partial[nBags - 1];
-
     delete[] partial;
 
     // Finally, factor in any zero-crossing components.
@@ -642,67 +594,41 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
         return *bracket_;
     }
 
-    if (tracker) {
-        std::thread([=]{
-            Laurent<Integer> ans;
-            switch (alg) {
-                case ALG_NAIVE:
-                    ans = bracketNaive(tracker);
-                    break;
-                default:
-                    ans = bracketTreewidth(tracker);
-                    break;
-            }
-
-            if (! tracker->isCancelled())
-                setPropertiesFromBracket(std::move(ans));
-
-            tracker->setFinished();
-        }).detach();
-
-        // Return nothing (the zero polynomial) for now.
-        // The user needs to poll the tracker to find out when the
-        // computation is complete.
-        return noResult;
-    } else {
-        Laurent<Integer> ans;
-        switch (alg) {
-            case ALG_NAIVE:
-                ans = bracketNaive(nullptr);
-                break;
-            default:
-                ans = bracketTreewidth(nullptr);
-                break;
-        }
-        setPropertiesFromBracket(std::move(ans));
-        return *bracket_;
+    Laurent<Integer> ans;
+    switch (alg) {
+        case ALG_NAIVE:
+            ans = bracketNaive(tracker);
+            break;
+        default:
+            ans = bracketTreewidth(tracker);
+            break;
     }
+
+    if (tracker && tracker->isCancelled()) {
+        tracker->setFinished();
+        return noResult;
+    }
+
+    setPropertiesFromBracket(std::move(ans));
+
+    if (tracker)
+        tracker->setFinished();
+    return *bracket_;
 }
 
 const Laurent<Integer>& Link::jones(Algorithm alg, ProgressTracker* tracker)
         const {
-    if (tracker) {
-        if (jones_.has_value()) {
+    if (jones_.has_value()) {
+        if (tracker)
             tracker->setFinished();
-            return *jones_;
-        }
-
-        // Start the bracket computation in a new thread.  This computes
-        // Jones as a side-effect, and runs the full life cycle of the tracker.
-        bracket(alg, tracker);
-
-        // Return nothing for now; the user needs to poll the tracker to
-        // find out when the computation is actually complete.
-        return noResult;
-    } else {
-        if (jones_.has_value()) {
-            return *jones_;
-        }
-
-        // Computing bracket_ will also set jones_.
-        bracket(alg);
         return *jones_;
     }
+
+    // Computing bracket_ will also set jones_.
+    bracket(alg, tracker); // this marks tracker as finished
+    if (tracker && tracker->isCancelled())
+        return noResult;
+    return *jones_;
 }
 
 void Link::setPropertiesFromBracket(Laurent<Integer>&& bracket) const {

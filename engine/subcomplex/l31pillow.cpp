@@ -37,23 +37,14 @@
 
 namespace regina {
 
-L31Pillow* L31Pillow::clone() const {
-    L31Pillow* ans = new L31Pillow();
-    ans->tet[0] = tet[0];
-    ans->tet[1] = tet[1];
-    ans->interior[0] = interior[0];
-    ans->interior[1] = interior[1];
-    return ans;
-}
-
-L31Pillow* L31Pillow::isL31Pillow(const Component<3>* comp) {
+std::unique_ptr<L31Pillow> L31Pillow::recognise(const Component<3>* comp) {
     // Basic property check.
     if (comp->size() != 2 ||
             comp->countVertices() != 2 ||
             comp->countEdges() != 4 ||
             (! comp->isClosed()) ||
             (! comp->isOrientable()))
-        return 0;
+        return nullptr;
 
     // Verify that the vertices have degrees 2 and 6.
     int internalVertex;
@@ -63,7 +54,7 @@ L31Pillow* L31Pillow::isL31Pillow(const Component<3>* comp) {
     else if (deg0 == 6)
         internalVertex = 1;
     else
-        return 0;
+        return nullptr;
 
     // Verify that all four faces of one tetrahedron join to the other.
     Tetrahedron<3>* tet[2];
@@ -74,34 +65,33 @@ L31Pillow* L31Pillow::isL31Pillow(const Component<3>* comp) {
             tet[0]->adjacentTetrahedron(1) != tet[1] ||
             tet[0]->adjacentTetrahedron(2) != tet[1] ||
             tet[0]->adjacentTetrahedron(3) != tet[1])
-        return 0;
+        return nullptr;
 
     // At this point we can prove through enumeration of all
     // 2-tetrahedron triangulations that we have our triangular pillow
     // L(3,1).
-    L31Pillow* ans = new L31Pillow();
-    ans->tet[0] = tet[0];
-    ans->tet[1] = tet[1];
+    std::unique_ptr<L31Pillow> ans(new L31Pillow());
+    ans->tet_[0] = tet[0];
+    ans->tet_[1] = tet[1];
 
     for (int i = 0; i < 2; i++) {
-        const VertexEmbedding<3>& emb = comp->vertex(internalVertex)->
-            embedding(i);
+        const auto& emb = comp->vertex(internalVertex)->embedding(i);
         if (emb.tetrahedron() == tet[0])
-            ans->interior[0] = emb.vertex();
+            ans->interior_[0] = emb.vertex();
         else
-            ans->interior[1] = emb.vertex();
+            ans->interior_[1] = emb.vertex();
     }
 
     return ans;
 }
 
-Manifold* L31Pillow::manifold() const {
-    return new LensSpace(3, 1);
+std::unique_ptr<Manifold> L31Pillow::manifold() const {
+    return std::make_unique<LensSpace>(3, 1);
 }
 
-std::optional<AbelianGroup> L31Pillow::homology() const {
+AbelianGroup L31Pillow::homology() const {
     AbelianGroup ans;
-    ans.addTorsionElement(3);
+    ans.addTorsion(3);
     return ans;
 }
 

@@ -77,22 +77,22 @@ namespace {
 
 QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
         const QStyleOptionViewItem&, const QModelIndex&) const {
-    PacketChooser* e = new PacketChooser(script_->root(),
-        0 /* filter */, PacketChooser::ROOT_AS_SUBTREE,
-        true /* allow "none" */, 0 /* initial selection */, parent);
+    auto* e = new PacketChooser(script_->root(),
+        nullptr /* filter */, PacketChooser::ROOT_AS_SUBTREE,
+        true /* allow "none" */, nullptr /* initial selection */, parent);
     e->setAutoUpdate(true);
     return e;
 }
 
 void ScriptValueDelegate::setEditorData(QWidget* editor,
         const QModelIndex& index) const {
-    PacketChooser* e = static_cast<PacketChooser*>(editor);
+    auto* e = static_cast<PacketChooser*>(editor);
     e->selectPacket(script_->variableValue(index.row()));
 }
 
 void ScriptValueDelegate::setModelData(QWidget* editor,
         QAbstractItemModel*, const QModelIndex& index) const {
-    PacketChooser* e = static_cast<PacketChooser*>(editor);
+    auto* e = static_cast<PacketChooser*>(editor);
     script_->setVariableValue(index.row(), e->selectedPacket());
 }
 
@@ -101,8 +101,7 @@ void ScriptValueDelegate::updateEditorGeometry(QWidget* editor,
     editor->setGeometry(option.rect);
 }
 
-ScriptVarModel::ScriptVarModel(Script* script, bool readWrite) :
-        script_(script), isReadWrite_(readWrite) {
+ScriptVarModel::ScriptVarModel(Script* script) : script_(script) {
 }
 
 void ScriptVarModel::rebuild() {
@@ -128,7 +127,7 @@ QVariant ScriptVarModel::data(const QModelIndex& index, int role) const {
         if (index.column() == 0)
             return script_->variableName(index.row()).c_str();
         else if (index.column() == 1) {
-            Packet* p = script_->variableValue(index.row());
+            auto p = script_->variableValue(index.row());
             if (! p)
                 return tr("<None>");
             else if (p->label().empty())
@@ -139,11 +138,11 @@ QVariant ScriptVarModel::data(const QModelIndex& index, int role) const {
             return QVariant();
     } else if (role == Qt::DecorationRole) {
         if (index.column() == 1) {
-            Packet* p = script_->variableValue(index.row());
+            auto p = script_->variableValue(index.row());
             if (! p)
                 return QIcon();
             else
-                return PacketManager::icon(p);
+                return PacketManager::icon(*p);
         } else
             return QVariant();
     } else if (role == Qt::EditRole) {
@@ -173,10 +172,7 @@ QVariant ScriptVarModel::headerData(int section, Qt::Orientation orientation,
 }
 
 Qt::ItemFlags ScriptVarModel::flags(const QModelIndex&) const {
-    if (isReadWrite_)
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
-    else
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 }
 
 bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
@@ -185,7 +181,7 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
         QString data = value.toString().trimmed();
 
         if (data.isEmpty()) {
-            ReginaSupport::info(0,
+            ReginaSupport::info(nullptr,
                 tr("Variable names cannot be empty."));
             return false;
         }
@@ -195,7 +191,7 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
             // Construct a better variable name.
             data.replace(QRegExp("[^A-Za-z0-9_]"), "");
             if (data.isEmpty()) {
-                ReginaSupport::info(0,
+                ReginaSupport::info(nullptr,
                     tr("<qt><tt>%1</tt> is not a valid Python "
                         "variable name.</qt>").arg(oldData.toHtmlEscaped()));
                 return false;
@@ -203,7 +199,7 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
             if (! rePythonIdentifier.exactMatch(data))
                 data.prepend('_');
 
-            ReginaSupport::info(0,
+            ReginaSupport::info(nullptr,
                 tr("<qt><tt>%1</tt> is not a valid Python variable name.</qt>").
                     arg(oldData.toHtmlEscaped()),
                 tr("<qt>I have changed it to <tt>%1</tt> instead.</qt>").
@@ -219,7 +215,7 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
                 ;
             data.append(QString::number(which));
 
-            ReginaSupport::info(0,
+            ReginaSupport::info(nullptr,
                 tr("<qt>Another variable is already using the "
                     "name <tt>%1</tt>.</qt>").arg(oldData.toHtmlEscaped()),
                 tr("<qt>I will use <tt>%1</tt> instead.</qt>").
@@ -248,35 +244,28 @@ bool ScriptVarModel::nameUsedElsewhere(const QString& name, int exclude) const {
 
 ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
         PacketUI(enclosingPane), script(packet) {
-    bool readWrite = enclosingPane->isReadWrite();
-
     ui = new BigWidget(1, 2);
-    QVBoxLayout* layout = new QVBoxLayout(ui);
+    auto* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
     // --- Action Toolbar ---
 
-    QToolBar* actionBar = new QToolBar(ui);
+    auto* actionBar = new QToolBar(ui);
     actionBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     layout->addWidget(actionBar);
 
     // --- Variable Table ---
 
     // Prepare a splitter for the remaining components.
-    QSplitter* splitter = new QSplitter(Qt::Vertical);
+    auto* splitter = new QSplitter(Qt::Vertical);
     layout->addWidget(splitter, 1);
 
-    model = new ScriptVarModel(packet, readWrite);
+    model = new ScriptVarModel(packet);
     varTable = new EditTableView();
     varTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     varTable->setModel(model);
-
-    if (readWrite )
-        varTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
-    else
-        varTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
+    varTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
     varTable->setWhatsThis(tr("<qt>A list of variables that will be "
         "set before the script is run.  Each variable may refer to a "
         "single packet.<p>"
@@ -295,7 +284,6 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
 
     editWidget = new DocWidget<Script, DocWidgetFinalNewline>(
         packet, splitter);
-    editWidget->setReadOnly(!readWrite);
     editWidget->setLineWrapMode(QPlainTextEdit::NoWrap);
     editWidget->setFont(ReginaPrefSet::fixedWidthFont());
     updateTabWidth();
@@ -328,7 +316,6 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     actAdd->setText(tr("&Add Var"));
     actAdd->setIcon(ReginaSupport::regIcon("insert"));
     actAdd->setToolTip(tr("Add a new script variable"));
-    actAdd->setEnabled(readWrite);
     actAdd->setWhatsThis(tr("Add a new variable to this script.<p>"
         "A script may come with any number of variables, each of which "
         "refers to a single packet.  "
@@ -351,20 +338,21 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
         "refers to a single packet.  "
         "This allows your script to easily access the other packets in "
         "this data file."));
-    connect(actRemove, SIGNAL(triggered()), this, 
+    connect(actRemove, SIGNAL(triggered()), this,
         SLOT(removeSelectedVariables()));
-    connect(varTable, SIGNAL(itemSelectionChanged()), this,
-        SLOT(updateRemoveState()));
+    connect(varTable->selectionModel(),
+        SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
+        this, SLOT(updateRemoveState()));
     actionBar->addAction(actRemove);
     scriptActionList.push_back(actRemove);
 
-    QAction* actSep = new QAction(this);
+    auto* actSep = new QAction(this);
     //scriptActions->addAction("script_separator");
     actSep->setSeparator(true);
     actionBar->addAction(actSep);
     scriptActionList.push_back(actSep);
 
-    QAction* actRun = new QAction(this);
+    auto* actRun = new QAction(this);
     //scriptActions->addAction("script_run");;
     actRun->setText(tr("&Run"));
     actRun->setIcon(ReginaSupport::regIcon("run"));
@@ -417,6 +405,10 @@ QString ScriptUI::getPacketMenuText() const {
 }
 
 void ScriptUI::refresh() {
+    // Adjusting the listeners is safe, since refresh() should not be
+    // called from this object's own PacketListener callbacks.
+    unlisten();
+
     // Refresh the variables.
     model->rebuild();
 
@@ -425,24 +417,44 @@ void ScriptUI::refresh() {
 
     // Update any actions as necessary.
     updateRemoveState();
+
+    script->listenVariables(this);
+}
+
+void ScriptUI::packetWasRenamed(Packet&) {
+    // Do not call refresh(), since that changes our registered packets.
+    model->rebuild();
+    updateRemoveState();
+}
+
+void ScriptUI::packetBeingDestroyed(regina::PacketShell packet) {
+    // Do not call refresh(), since that changes our registered packets.
+
+    // Okay. So: what we'd *really* love is if we could just rebuild the
+    // model, the same as when a packet is renamed.  For this to work,
+    // we need the std::weak_ptr to the packet to have *already* expired,
+    // even though we are still in the Packet destructor (and behind that,
+    // still in the shared_ptr destructor).  This way, the model rebuild
+    // will correctly return the value of the script variable as null.
+    //
+    // I *believe* the C++ standard promises nothing here.  However, all
+    // implementations I'm aware of do indeed expire all weak_ptrs (by
+    // setting the shared_ptr ownership count to zero) *before* calling
+    // the managed object's destructor.
+    //
+    // So: for now - since the alternative will be much messier - we assume
+    // this is indeed how shared_ptr and weak_ptr behave, and we explicitly
+    // check this in the C++ test suite (see ListenersTest::expiration()).
+    //
+    // If anyone has a better suggestion, I'm all ears.
+
+    model->rebuild();
+    updateRemoveState();
 }
 
 void ScriptUI::endEdit() {
     varTable->endEdit();
     editWidget->commit();
-}
-
-void ScriptUI::setReadWrite(bool readWrite) {
-    model->setReadWrite(readWrite);
-
-    if (readWrite)
-        varTable->setEditTriggers(QAbstractItemView::AllEditTriggers);
-    else
-        varTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    editWidget->setReadOnly(!readWrite);
-    actAdd->setEnabled(readWrite);
-    updateRemoveState();
 }
 
 void ScriptUI::addVariable() {
@@ -468,7 +480,7 @@ void ScriptUI::addVariable() {
     // Add the new variable.
     // TODO: Alter addVariable() to return the index immediately, so we
     // don't need to fetch it again.
-    script->addVariable(varName.toUtf8().constData(), 0);
+    script->addVariable(varName.toUtf8().constData());
     varTable->scrollTo(model->index(
         script->variableIndex(varName.toUtf8().constData()), 0, QModelIndex()));
 }
@@ -488,9 +500,8 @@ void ScriptUI::removeSelectedVariables() {
     // Gather together all the rows to be deleted.
     std::set<int> rows;
     QModelIndexList indices = varTable->selectionModel()->selectedIndexes();
-    for (QModelIndexList::Iterator it = indices.begin(); it != indices.end();
-            ++it)
-        rows.insert(it->row());
+    for (const auto& i : indices)
+        rows.insert(i.row());
 
     // Notify the user that variables will be removed.
     QMessageBox msgBox(ui);
@@ -514,17 +525,13 @@ void ScriptUI::removeSelectedVariables() {
     // Remove the variables!
     // Since std::set uses sorted order, we can delete from the bottom
     // up without affecting the indices of the rows yet to be removed.
-    for (std::set<int>::reverse_iterator rit = rows.rbegin();
-            rit != rows.rend(); ++rit)
+    Script::ChangeEventSpan span(*script);
+    for (auto rit = rows.rbegin(); rit != rows.rend(); ++rit)
         script->removeVariable(*rit);
 }
 
 void ScriptUI::updateRemoveState() {
-    // Are we read-write?
-    if (actAdd->isEnabled())
-        actRemove->setEnabled(script->countVariables() > 0);
-    else
-        actRemove->setEnabled(false);
+    actRemove->setEnabled(varTable->selectionModel()->hasSelection());
 }
 
 void ScriptUI::execute() {

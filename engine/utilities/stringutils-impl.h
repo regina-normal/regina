@@ -39,6 +39,7 @@
 
 // Make sure stringutils.h is included first.
 #include "utilities/stringutils.h"
+#include "utilities/exception.h"
 
 #ifndef __REGINA_STRINGUTILS_IMPL_H
 #ifndef __DOXYGEN
@@ -52,9 +53,12 @@ namespace regina {
 
 template <bool supportInfinity>
 bool valueOf(const std::string& str, IntegerBase<supportInfinity>& dest) {
-    bool valid;
-    dest = IntegerBase<supportInfinity>(str.c_str(), 10, &valid);
-    return valid;
+    try {
+        dest = str;
+        return true;
+    } catch (const regina::InvalidArgument&) {
+        return false;
+    }
 }
 
 template <class OutputIterator>

@@ -55,8 +55,14 @@ void addExample3(pybind11::module_& m) {
         .def_static("rp2xs1", &Example<3>::rp2xs1)
         .def_static("rp3rp3", &Example<3>::rp3rp3)
         .def_static("lens", &Example<3>::lens)
-        .def_static("poincareHomologySphere",
-            &Example<3>::poincareHomologySphere)
+        .def_static("layeredLoop", &Example<3>::layeredLoop)
+        .def_static("poincare", &Example<3>::poincare)
+        .def_static("poincareHomologySphere", // deprecated
+            &Example<3>::poincare)
+        .def_static("sfsOverSphere", &Example<3>::sfsOverSphere,
+            pybind11::arg("a1") = 1, pybind11::arg("b1") = 0,
+            pybind11::arg("a2") = 1, pybind11::arg("b2") = 0,
+            pybind11::arg("a3") = 1, pybind11::arg("b3") = 0)
         .def_static("weeks", &Example<3>::weeks)
         .def_static("weberSeifert", &Example<3>::weberSeifert)
         .def_static("smallClosedOrblHyperbolic",

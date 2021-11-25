@@ -40,6 +40,7 @@ spanstrict ::=</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltaddedver;4.90</para>
  </refsynopsisdiv>
 
  <refsect1>
@@ -53,17 +54,13 @@ spanstrict ::=</synopsis>
    A <firstterm>strict</firstterm> angle structure has all angles
    strictly between (not including) 0 and &pi;.
   </para>
-  <para>
-   This element is identical to the old (and now deprecated) element
-   &xml-allowstrict;.
-  </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
     The following elements contain <sgmltag>spanstrict</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-anglestructurelist;</member>
+     <member>&xml-angles;</member>
     </simplelist>.
    </para>
   </refsect2>

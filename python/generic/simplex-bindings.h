@@ -121,22 +121,15 @@ void addSimplex(pybind11::module_& m, const char* name) {
         .def("triangulation", &Simplex<dim>::triangulation)
         .def("component", &Simplex<dim>::component,
             pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Simplex<dim>, dim, int,
-            pybind11::return_value_policy::reference>)
+        .def("face", &regina::python::face<Simplex<dim>, dim, int>)
         .def("edge",
             overload_cast<int, int>(&Simplex<dim>::edge, pybind11::const_),
             pybind11::return_value_policy::reference)
         .def("faceMapping", &regina::python::faceMapping<Simplex<dim>, dim>)
         .def("orientation", &Simplex<dim>::orientation)
         .def("facetInMaximalForest", &Simplex<dim>::facetInMaximalForest)
-        // We cannot take the addresses of the following header-only properties,
-        // so we define getter functions instead.
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Simplex<dim>::dimension;
-        })
-        .def_property_readonly_static("subdimension", [](pybind11::object) {
-            return Simplex<dim>::subdimension;
-        })
+        .def_readonly_static("dimension", &Simplex<dim>::dimension)
+        .def_readonly_static("subdimension", &Simplex<dim>::subdimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

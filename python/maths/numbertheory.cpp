@@ -31,16 +31,14 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "maths/numbertheory.h"
 
 void addNumberTheory(pybind11::module_& m) {
     m.def("reducedMod", regina::reducedMod);
     m.def("gcd", regina::gcd);
-    m.def("gcdWithCoeffs", [](long a, long b){
-        long u, v;
-        long ans = regina::gcdWithCoeffs(a, b, u, v);
-        return pybind11::make_tuple(ans, u, v);
-    });
+    m.def("gcdWithCoeffs", pybind11::overload_cast<long, long>(
+        &regina::gcdWithCoeffs));
     m.def("lcm", regina::lcm);
     m.def("modularInverse", regina::modularInverse);
 }

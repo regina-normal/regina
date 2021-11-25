@@ -33,6 +33,7 @@
 #include "regina-config.h"
 #include "packet/container.h"
 #include "surfaces/normalsurfaces.h"
+#include "triangulation/dim3.h"
 
 #include "eventids.h"
 #include "examplesaction.h"
@@ -74,16 +75,16 @@
 #include <QVBoxLayout>
 #include <QWhatsThis>
 
-QMenu* ReginaMain::windowMenu = 0;
+QMenu* ReginaMain::windowMenu = nullptr;
 
 ReginaMain::ReginaMain(ReginaManager* useManager, bool starterWindow) :
         QMainWindow(),
         manager(useManager),
-        packetTree(0),
+        packetTree(nullptr),
         starterWindow_(starterWindow),
         fakeRoot_(false),
-        packetMenu(0),
-        aboutApp(0),
+        packetMenu(nullptr),
+        aboutApp(nullptr),
         dirty(false) {
     setAttribute(Qt::WA_DeleteOnClose);
 
@@ -119,14 +120,14 @@ ReginaMain::~ReginaMain() {
     delete treeView;
 
     // Finish cleaning up.
-    // The SafePtr should delete the packet tree automatically.
+    // The shared pointer should delete the packet tree automatically.
 }
 
 void ReginaMain::plugPacketMenu() {
     if (packetMenu) {
         menuBar()->removeAction(packetMenu->menuAction());
         delete packetMenu;
-        packetMenu = 0;
+        packetMenu = nullptr;
     }
 }
 
@@ -134,7 +135,7 @@ void ReginaMain::unplugPacketMenu() {
     if (packetMenu) {
         menuBar()->removeAction(packetMenu->menuAction());
         delete packetMenu;
-        packetMenu = 0;
+        packetMenu = nullptr;
     }
 }
 
@@ -142,7 +143,7 @@ void ReginaMain::registerWindow(QAction* windowAction) {
     docMenu->addAction(windowAction);
 }
 
-regina::Packet* ReginaMain::selectedPacket() {
+std::shared_ptr<regina::Packet> ReginaMain::selectedPacket() {
     return treeView->selectedPacket();
 }
 
@@ -153,17 +154,17 @@ void ReginaMain::setModified(bool modified) {
     if (starterWindow_ && modified) {
         starterWindow_ = false;
         delete advice;
-        advice = 0;
+        advice = nullptr;
     }
 }
 
-void ReginaMain::packetView(regina::Packet* packet, bool makeVisibleInTree,
-        bool selectInTree) {
-    PacketExternalViewer ext = PacketManager::externalViewer(packet);
+void ReginaMain::packetView(std::shared_ptr<regina::Packet> packet,
+        bool makeVisibleInTree, bool selectInTree) {
+    PacketExternalViewer ext = PacketManager::externalViewer(packet.get());
     if (ext) {
-        (*ext)(packet, this);
+        (*ext)(packet.get(), this);
     } else
-        view(new PacketPane(this, packet));
+        view(new PacketPane(this, packet.get()));
 
     if (makeVisibleInTree || selectInTree) {
         PacketTreeItem* item = treeView->find(packet);
@@ -173,7 +174,7 @@ void ReginaMain::packetView(regina::Packet* packet, bool makeVisibleInTree,
             // the tree has not been refreshed yet?
             // Force a refresh now and try again.
 
-            regina::Packet* treeParent = packet->parent();
+            std::shared_ptr<regina::Packet> treeParent = packet->parent();
             // We refresh from treeParent.
             if (treeParent && treeParent->parent()) {
                 // treeParent is not the root, which means the parent
@@ -202,7 +203,7 @@ void ReginaMain::packetView(regina::Packet* packet, bool makeVisibleInTree,
     }
 }
 
-void ReginaMain::ensureVisibleInTree(regina::Packet* packet) {
+void ReginaMain::ensureVisibleInTree(std::shared_ptr<regina::Packet> packet) {
     PacketTreeItem* item = treeView->find(packet);
     if (item)
         treeView->scrollToItem(item);
@@ -225,9 +226,8 @@ void ReginaMain::dropEvent(QDropEvent *event) {
         // We have a URI, so process it.
         // Load in each file.
         const QList<QUrl>& urls(event->mimeData()->urls());
-        for (QList<QUrl>::const_iterator it = urls.begin();
-                it != urls.end(); ++it)
-            fileOpenUrl(*it);
+        for (const auto& url : urls)
+            fileOpenUrl(url);
     }
 }
 
@@ -309,7 +309,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
         return;
     }
 
-    regina::Packet* data = regina::open(
+    std::shared_ptr<regina::Packet> data = regina::open(
         static_cast<const char*>(QFile::encodeName(f)));
 
     if (! data) {
@@ -326,7 +326,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
     // As of Regina 4.95, the root packet is hidden.
     // If the root packet is not a container, create a new fake root above it.
     if (data->type() != regina::PACKET_CONTAINER) {
-        regina::Container* newRoot = new regina::Container();
+        auto newRoot = std::make_shared<regina::Container>();
         newRoot->insertChildLast(data);
         data = newRoot;
 
@@ -337,7 +337,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
 
     // If we already have a document open, make a new window.
     ReginaMain* useWindow = (starterWindow_ ? this : manager->newWindow(false));
-    useWindow->initData(data, f, QString());
+    useWindow->initData(data, std::move(f), QString());
     useWindow->starterWindow_ = false;
 }
 
@@ -354,7 +354,7 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
         return;
     }
 
-    regina::Packet* data = regina::open(
+    std::shared_ptr<regina::Packet> data = regina::open(
         static_cast<const char*>(QFile::encodeName(f)));
 
     if (! data) {
@@ -428,13 +428,12 @@ void ReginaMain::raiseWindow() {
 }
 
 void ReginaMain::packetView() {
-    regina::Packet* packet = checkPacketSelected();
-    if (packet)
+    if (auto packet = checkPacketSelected())
         packetView(packet, false);
 }
 
 void ReginaMain::packetRename() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -452,7 +451,7 @@ void ReginaMain::packetRename() {
 }
 
 void ReginaMain::packetDelete() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -480,9 +479,13 @@ void ReginaMain::packetDelete() {
     if (msgBox.clickedButton() != delBtn)
         return;
 
-    // Call safeDelete() instead of delete, since there might be a
-    // python window still holding a reference to the packet.
-    regina::Packet::safeDelete(packet);
+    // Awkwardly, if a python window still holds a reference to the
+    // packet then the packet will not actually be deleted until the
+    // python window closes.  *Probably* this is what we want.
+    //
+    // Otherwise, the packet will simply be deleted as its last
+    // shared_ptr drops away.
+    packet->makeOrphan();
 }
 
 void ReginaMain::treeRefresh() {
@@ -495,33 +498,33 @@ void ReginaMain::treeRefresh() {
 }
 
 void ReginaMain::clonePacket() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! (packet && packet->parent())) {
         // Note that the root packet is not visible, and cannot be cloned.
         return;
     }
 
-    regina::Packet* ans = packet->clone(false, false);
+    auto ans = packet->cloneAsSibling(false, false);
 
     treeView->selectPacket(ans, true);
     packetView(ans, false);
 }
 
 void ReginaMain::cloneSubtree() {
-    regina::Packet* packet = checkSubtreeSelected();
+    auto packet = checkSubtreeSelected();
     if (! (packet && packet->parent())) {
         // Note that the root packet is not visible, and cannot be cloned.
         return;
     }
 
-    regina::Packet* ans = packet->clone(true, false);
+    auto ans = packet->cloneAsSibling(true, false);
 
     treeView->selectPacket(ans, true);
     packetView(ans, false);
 }
 
 void ReginaMain::pythonConsole() {
-    consoles.launchPythonConsole(this, packetTree.get(),
+    consoles.launchPythonConsole(this, packetTree,
         treeView->selectedPacket());
 }
 
@@ -537,7 +540,7 @@ void ReginaMain::helpAboutApp() {
 }
 
 void ReginaMain::helpHandbook() {
-    ReginaPrefSet::openHandbook("index", 0, this);
+    ReginaPrefSet::openHandbook("index", nullptr, this);
 }
 
 void ReginaMain::helpXMLRef() {
@@ -558,7 +561,7 @@ void ReginaMain::helpTipOfDay() {
 }
 
 void ReginaMain::helpTrouble() {
-    ReginaPrefSet::openHandbook("troubleshooting", 0, this);
+    ReginaPrefSet::openHandbook("troubleshooting", nullptr, this);
 }
 
 void ReginaMain::helpIntro() {
@@ -601,7 +604,7 @@ void ReginaMain::updateTreeActions() {
 }
 
 void ReginaMain::setupWidgets() {
-    QWidget* main = new QWidget(this);
+    auto* main = new QWidget(this);
     QBoxLayout* layout = new QVBoxLayout(main);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
@@ -627,13 +630,13 @@ void ReginaMain::setupWidgets() {
 
         int iconSize = QApplication::style()->pixelMetric(
             QStyle::PM_ToolBarIconSize);
-        QLabel* icon = new QLabel(advice);
+        auto* icon = new QLabel(advice);
         icon->setPixmap(ReginaSupport::regIcon("welcome").pixmap(iconSize));
         advLayout->addWidget(icon);
 
         advLayout->addSpacing(iconSize / 2);
 
-        QLabel* text = new QLabel(tr(
+        auto* text = new QLabel(tr(
             "<qt>New to Regina?  <a href=\"#\">Click here.</a></qt>"), advice);
         text->setWordWrap(false);
         text->setTextInteractionFlags(Qt::TextBrowserInteraction);
@@ -644,7 +647,7 @@ void ReginaMain::setupWidgets() {
 
         layout->addWidget(advice);
     } else
-        advice = 0;
+        advice = nullptr;
 
     // Put it all inside the main window.
     setCentralWidget(main);
@@ -656,7 +659,7 @@ void ReginaMain::initPacketTree() {
     // packetTree->setLabel(tr("Data").toUtf8().constData());
 
     // Update the visual representation.
-    treeView->fill(packetTree.get());
+    treeView->fill(packetTree);
 
     renameWindow(tr("Untitled"));
 }
@@ -669,37 +672,36 @@ void ReginaMain::view(PacketPane* newPane) {
     allPanes.push_back(newPane);
 }
 
-regina::Packet* ReginaMain::checkPacketSelected() {
+std::shared_ptr<regina::Packet> ReginaMain::checkPacketSelected() {
     // We guarantee not to return the root packet.
-    regina::Packet* p = treeView->selectedPacket();
+    std::shared_ptr<regina::Packet> p = treeView->selectedPacket();
     if (p && p->parent())
         return p;
     ReginaSupport::info(this, tr("Please select a packet to work with."));
-    return 0;
+    return nullptr;
 }
 
-regina::Packet* ReginaMain::checkSubtreeSelected() {
+std::shared_ptr<regina::Packet> ReginaMain::checkSubtreeSelected() {
     // We guarantee not to return the root packet.
-    regina::Packet* p = treeView->selectedPacket();
+    std::shared_ptr<regina::Packet> p = treeView->selectedPacket();
     if (p && p->parent())
         return p;
     ReginaSupport::info(this, tr("Please select a packet to work with."));
         // Remove all the information about subtrees; it's clear anyway.
-    return 0;
+    return nullptr;
 }
 
-bool ReginaMain::initData(regina::Packet* usePacketTree,
-        const QString& useLocalFilename,
-        const QString& useDisplayName) {
+bool ReginaMain::initData(std::shared_ptr<regina::Packet> usePacketTree,
+        QString useLocalFilename, QString useDisplayName) {
     if (packetTree)
         setModified(false);
 
-    localFile = useLocalFilename;
-    displayName = useDisplayName;
-    packetTree.reset(usePacketTree);
+    localFile = std::move(useLocalFilename);
+    displayName = std::move(useDisplayName);
+    packetTree = std::move(usePacketTree);
 
     if (packetTree) {
-        treeView->fill(packetTree.get());
+        treeView->fill(packetTree);
         // Expand the first level.
         for (int i = 0; i < treeView->topLevelItemCount(); ++i)
             treeView->expandItem(treeView->topLevelItem(i));
@@ -722,10 +724,10 @@ bool ReginaMain::initData(regina::Packet* usePacketTree,
 bool ReginaMain::saveFile() {
     endEdit();
 
-    regina::Packet* writeTree = packetTree.get();
+    std::shared_ptr<regina::Packet> writeTree = packetTree;
     if (fakeRoot_) {
         // Save the (visible) child, but only if there is exactly one child.
-        regina::Packet* child = packetTree.get()->firstChild();
+        auto child = packetTree->firstChild();
         if (child && ! child->nextSibling())
             writeTree = child;
     }
@@ -752,7 +754,7 @@ void ReginaMain::renameWindow(const QString& newName) {
 void ReginaMain::updatePreferences() {
     if (advice && ! ReginaPrefSet::global().helpIntroOnStartup) {
         delete advice;
-        advice = 0;
+        advice = nullptr;
     }
 }
 

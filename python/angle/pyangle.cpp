@@ -32,10 +32,12 @@
 
 namespace pybind11 { class module_; }
 
+void addAngleFlags(pybind11::module_& m);
 void addAngleStructure(pybind11::module_& m);
 void addAngleStructures(pybind11::module_& m);
 
 void addAngleClasses(pybind11::module_& m) {
+    addAngleFlags(m);
     addAngleStructure(m);
     addAngleStructures(m);
 }

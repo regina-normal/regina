@@ -10,7 +10,8 @@
 
  <refnamediv>
   <refname>filter</refname>
-  <refpurpose>A normal surface filter</refpurpose>
+  <refpurpose>Replaced by different elements for different filter
+   types</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -49,10 +50,19 @@ filter ::= (<replaceable>type-specific content</replaceable>)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   In &regina;&nbsp;6.0.1 and earlier, the &xml-filter; element was used
+   to store different types of normal surface filters, and was held
+   within an enclosing &xml-packet-surfacefilter; element.
+   Since &regina;&nbsp;7.0, each type of filter now has its own &xml; element,
+   which also serves as the &xml; element for the filter packet.
+   This &xml-filter; element is no longer used.
+  </para>
   <para>
    A &xml-filter; element represents a normal surface filter, used to
    filter desirable surfaces from a large list.

@@ -44,14 +44,19 @@
 #include <string>
 #include "regina-core.h"
 
-namespace regina::detail {
+namespace regina {
+
+class ProgressTrackerOpen;
+
+namespace detail {
 
 /**
  * A traits class that deduces the type of the argument in a given position
  * for a callable object.  It can (amongst other things) work with
- * function pointers, member functions, std::function wrappers, and lambdas.
+ * function pointers, function references, member function pointers,
+ * std::function wrappers, and lambdas.
  *
- * This struct provides a single member typedef, named \a type, which is
+ * This struct provides a single member type alias, named \a type, which is
  * the type of the argument to \a Action that appears in position \a pos.
  *
  * If \a Action is a member function, then arguments will still be numbered
@@ -67,6 +72,8 @@ namespace regina::detail {
  * one argument.
  * \tparam pos the index of the argument being requested.  Positions are
  * numbered from 0 upwards.
+ *
+ * \ingroup detail
  */
 template <typename Action, int pos>
 struct CallableArg;
@@ -74,45 +81,48 @@ struct CallableArg;
 #ifndef __DOXYGEN
 
 // Generic implementation which works for lambdas and classes with a
-// bracket operator:
+// bracket operator.  For lambdas, this then falls through (via inheritance)
+// to the case for member function pointers, implemented separately below.
 template <typename Action, int pos>
 struct CallableArg : public CallableArg<decltype(&Action::operator()), pos> {
 };
 
-// Implementation for global functions:
+// Implementation for global function pointers and references:
 template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<ReturnType(*)(Args...), pos> {
-    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
+};
+template <typename ReturnType, typename... Args, int pos>
+struct CallableArg<ReturnType(&)(Args...), pos> {
+    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
 };
 
-// Implementation for member functions (and this is also where the
-// lambda implementation ultimately falls through to):
+
+// Implementation for member function pointers:
 template <typename Class, typename ReturnType, typename... Args, int pos>
 struct CallableArg<ReturnType(Class::*)(Args...) const, pos> {
-    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
 };
 
 // Implementation for std::function objects:
 template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<std::function<ReturnType(Args...)>, pos> {
-    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
 };
 template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<std::function<ReturnType(Args...)>&, pos> {
-    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
 };
 template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
-    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
 };
 
 #endif // __DOXYGEN
 
 /**
  * Declares the internal type used to store a callable action that is passed
- * to a retriangulation or link rewriting function.  This internal type is
- * included here as a member typedef, but you can also access it directly
- * through the simpler type alias RetriangulateActionFunc<Object, withSig>.
+ * to a retriangulation or link rewriting function.
  *
  * A retriangulation or link rewriting function can work with arbitrary
  * callable objects.  However, the \e implementations of such functions are
@@ -130,8 +140,36 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
  * retriangulation/rewriting action will be bound in the std::function object).
  * This implementation is subject to change in future versions of Regina.
  *
- * This struct provides a single member typedef, named \a type,
- * which is the internal type used to store the callable action.
+ * \tparam Object the class providing the retriangulation/rewriting function,
+ * such as regina::Triangulation<dim> or regina::Link.
+ * \tparam withSig \c true if we are storing an action that includes both a
+ * text signature and a triangulation in its initial argument(s),
+ * or \c false if we are storing an action whose argument list begins with
+ * just a triangulation/link.
+ *
+ * \ingroup detail
+ */
+template <class Object, bool withSig>
+using RetriangulateActionFunc = typename std::conditional<withSig,
+    std::function<bool(const std::string&, Object&&)>,
+    std::function<bool(Object&&)>>::type;
+
+/**
+ * The common implementation of all retriangulation and link rewriting
+ * functions.
+ *
+ * This routine performs exactly the task described by Link::rewrite() or
+ * Triangluation<dim>::retriangulate() (for those dimensions where it is
+ * defined), with the following differences:
+ *
+ * - This routine assumes any preconditions have already been checked, and
+ *   exceptions thrown if they failed;
+ *
+ * - The action passed to this routine uses a much less templated type, which
+ *   means the implementation can be kept out of the public API headers.
+ *
+ * See Triangulation<dim>::retriangulate() or Link::rewrite() for full
+ * details on what this routine actually does.
  *
  * \tparam Object the class providing the retriangulation/rewriting function,
  * such as regina::Triangulation<dim> or regina::Link.
@@ -139,32 +177,25 @@ struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
  * text signature and a triangulation in its initial argument(s),
  * or \c false if we are storing an action whose argument list begins with
  * just a triangulation/link.
+ *
+ * @param obj the object being retriangulated or rewritten.
+ * @param height the maximum number of top-dimensional simplices or crossings
+ * to allow beyond the initial number in \a obj, or a negative number if
+ * this should not be bounded.
+ * @param nThreads the number of threads to use.  If this is 1 or smaller then
+ * the routine will run single-threaded.
+ * @param tracker a progress tracker through which progress will be reported,
+ * or \c null if no progress reporting is required.
+ * @param action a function to call for each triangulation that is found.
+ * @return \c true if some call to \a action returned \c true (thereby
+ * terminating the search early), or \c false if the search ran to completion.
+ *
+ * \ingroup detail
  */
 template <class Object, bool withSig>
-struct RetriangulateActionFuncDetail;
-
-#ifndef __DOXYGEN
-
-template <class Object>
-struct RetriangulateActionFuncDetail<Object, true> {
-    typedef std::function<bool(const std::string&, Object&)> type;
-};
-
-template <class Object>
-struct RetriangulateActionFuncDetail<Object, false> {
-    typedef std::function<bool(Object&)> type;
-};
-
-#endif // __DOXYGEN
-
-/**
- * The internal type used to store a callable action that is passed to a
- * retriangulation or link rewriting function.
- * See RetriangulateActionFuncDetail for details.
- */
-template <class Object, bool withSig>
-using RetriangulateActionFunc =
-    typename RetriangulateActionFuncDetail<Object, withSig>::type;
+bool retriangulateInternal(const Object& obj, int height, unsigned nThreads,
+        ProgressTrackerOpen* tracker,
+        RetriangulateActionFunc<Object, withSig>&& action);
 
 /**
  * A traits class that analyses callable objects that are passed to
@@ -172,13 +203,16 @@ using RetriangulateActionFunc =
  *
  * Recall that the initial arguments for such a callable object must be either
  * (a) a single triangulation/link, or (b) a text signature (e.g., an
- * isomorphism signature) followed by a triangulation/link.
+ * isomorphism signature) followed by a triangulation/link.  The callable
+ * object may take its triangulation/link by value, const reference or
+ * rvalue reference; however, if it takes a signature also then this must be
+ * by (const std::string&).
  *
  * This struct provides a boolean compile-time constant \a valid, which is
  * \c true if and only if the initial arguemnt(s) to \a Action are acceptable
- * as outlined above (i.e., a reference to the underlying \a Object class
+ * as outlined above (i.e., an argument of the underlying \a Object class
  * for actions that take a triangulation/link, or a const string reference and
- * an \a Object reference for actions that take a text signature also).
+ * an \a Object for actions that take a text signature also).
  *
  * If \a valid is \c true, then this struct also provides a boolean
  * compile-time constant \a withSig, which is \c true if and only if the action
@@ -186,22 +220,14 @@ using RetriangulateActionFunc =
  * If \a valid is \c false then the boolean constant \a withSig will still
  * be present, but its value is not defined.
  *
- * Finally, if \a valid is \c true, then this struct provides a static
- * function convert() that takes a callable object and all of its later
- * optional arguments (i.e., excluding the initial triangulation/link
- * and possibly the text signature before it), and returns a callable object
- * of type RetriangulateActionFunc<withSig> where these later optional
- * arguments are bound.  All arguments to convert() will be moved/copied
- * using std::forward().
- * If \a valid is \c false then the function \a convert will still be
- * declared but not defined, and it will have a \c void return type.
- *
  * \tparam Object the class providing the retriangulation or link rewriting
  * function, such as regina::Triangulation<dim> or regina::Link.
  * \tparam Action the type of a callable object that is passed to the
  * retriangulation/rewriting function.
  * \tparam FirstArg the type of the first argument to \a Action; you should
  * not specify this directly, but instead allow the compiler to deduce it.
+ *
+ * \ingroup detail
  */
 template <class Object, typename Action,
         typename FirstArg = typename CallableArg<Action, 0>::type>
@@ -213,57 +239,39 @@ template <class Object, typename Action, typename FirstArg>
 struct RetriangulateActionTraits {
     static constexpr bool valid = false;
     static constexpr bool withSig = false;
-
-    template <typename... Args>
-    static void convert(Action&&, Args&&...);
 };
 
 template <class Object, typename Action>
-struct RetriangulateActionTraits<Object, Action, Object&> {
+struct RetriangulateActionTraits<Object, Action, Object> {
     static constexpr bool valid = true;
     static constexpr bool withSig = false;
+};
 
-    template <typename... Args>
-    static RetriangulateActionFunc<Object, withSig> convert(
-            Action&& action, Args&&... args) {
-        return std::bind(std::forward<Action>(action),
-            std::placeholders::_1, std::forward<Args>(args)...);
-    }
+template <class Object, typename Action>
+struct RetriangulateActionTraits<Object, Action, Object&&> {
+    static constexpr bool valid = true;
+    static constexpr bool withSig = false;
 };
 
 template <class Object, typename Action>
 struct RetriangulateActionTraits<Object, Action, const Object&> {
     static constexpr bool valid = true;
     static constexpr bool withSig = false;
-
-    template <typename... Args>
-    static RetriangulateActionFunc<Object, withSig> convert(
-            Action&& action, Args&&... args) {
-        return std::bind(std::forward<Action>(action),
-            std::placeholders::_1, std::forward<Args>(args)...);
-    }
 };
 
 template <class Object, typename Action>
 struct RetriangulateActionTraits<Object, Action, const std::string&> {
-    typedef typename CallableArg<Action, 1>::type SecondArg;
+    using SecondArg = typename CallableArg<Action, 1>::type;
     static constexpr bool valid =
-        std::is_same<SecondArg, Object&>::value ||
+        std::is_same<SecondArg, Object>::value ||
+        std::is_same<SecondArg, Object&&>::value ||
         std::is_same<SecondArg, const Object&>::value;
     static constexpr bool withSig = true;
-
-    template <typename... Args>
-    static RetriangulateActionFunc<Object, withSig> convert(
-            Action&& action, Args&&... args) {
-        return std::bind(std::forward<Action>(action),
-            std::placeholders::_1, std::placeholders::_2,
-            std::forward<Args>(args)...);
-    }
 };
 
 #endif // __DOXYGEN
 
-} // namespace regina::detail
+} } // namespace regina::detail
 
 #endif
 

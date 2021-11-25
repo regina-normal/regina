@@ -7,9 +7,29 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 6.1  [ TODO ]
+Version 7.0  [ TODO ]
 
     GENERAL:
+        - The file format has changed.  It is still XML-based, but older
+          versions of Regina will not be able to read files created by
+          Regina 7.0 or later.  Regina can of course still both read
+          the old format (transparently) and write it (if asked).
+        - The packet tree is now used purely for the GUI and for file I/O.
+          Mathematical objects such as triangulations, links, surface lists,
+          etc. are standalone, without the overhead of the full packet tree
+          infrastructure (so no labels, tags, listeners, or parent/child
+          relationships).  To use them with the full packet tree
+          infrastructure, use a PacketOf<...> wrapper.
+        - Normal surface/hypersurface lists and angle structure lists no
+          longer need their triangulations to sit above them in the
+          packet tree, and indeed their triangulations may change or
+          even be deleted.  Lists will maintain a "snapshot" of the original
+          triangulation if necessary.
+        - All packet types are now managed exclusively by std::shared_ptr
+          (a promise from the engine, but also a new requirement for the user).
+          All non-packet types (including all mathematical objects, which are
+          now standalone types) have full value semantics, supporting copy,
+          move, swap and assignment operations wherever this makes sense.
         - Now requires C++17 (not C++14).
         - Updated the bundled copy of Normaliz to version 3.8.9 (26 Sep 2020).
         - Updated the SnapPea kernel to the one shipped with SnapPy 2.8.
@@ -19,10 +39,18 @@ Version 6.1  [ TODO ]
         - Major simplifications to the triangulation template class hierarchies.
           A consequence is that the API docs are much more usable, since
           doxygen can finally understand the code again.
+        - Removed all support for transversely oriented normal surfaces.
+          These were originally hooked into the normal surface machinery
+          as an "experimental" feature, but they are fundamentally different
+          kinds of objects and this was never really the right place for them.
+          They will return in a future version of Regina, with their own
+          dedicated suite of classes instead.
         - Environment variables such as REGINA_HOME and REGINA_PYLIBDIR
           are more consistently used, and should need to be set less often.
         - All XML parsing code is now private to Regina's engine, and the
           corresponding xml* headers are no longer installed.
+        - All callback functions now forward reference arguments correctly:
+          there is no longer any need to pass via std::ref() or std::cref().
         - Removed REGINA_API and associated macros.
     ENGINE:
         Class AbelianGroup:
@@ -30,56 +58,143 @@ Version 6.1  [ TODO ]
             - Added member and global swap() functions.
             - Added tightEncode() and tightEncoding() to help with perfect
               hashing.
+            - Replaced the old addTorsionElement() and addTorsionElements()
+              with a simpler and much faster addTorsion().  The old routines
+              are kept but deprecated, and are reimplemented using addTorsion().
+        Enum AngleAlgFlags, Class AngleAlg:
+            - New flags to specifiy angle structure enumeration algorithms.
         Class AngleStructure, AngleStructureVector:
+            - Angle structures now hold a snapshot of the underlying
+              triangulation at the time of creation.  The triangulation
+              that was originally used can be safely modified or even deleted.
             - The internal vector representation now uses Integer, not
               LargeInteger.
-            - The class AngleStructureVector has been removed, and is now a
-              deprecated typedef for Vector<Integer>.
+            - The class AngleStructureVector has been removed completely.
+              Just use Vector<Integer> instead.
             - Replaced rawVector() with vector(), which now returns a reference
               (not a pointer) and is now accessible through python.  The old
-              rawVector() (with its pointer return type) is kept but deprecated.
+              rawVector() is kept but deprecated, and returns by reference also.
             - AngleStructure now has copy and move constructors, copy and move
               assignment, and member and global swap() functions.  The old
               clone() is now deprecated; use the copy constructor instead.
             - Changed triangulation() to return a reference, not a pointer.
-            - Constructors now take a reference to the triangulation, not a
-              pointer.
+            - Constructors now take their arguments by reference (and,
+              for the vector constructor, optionally an rvalue reference).
+            - Added variants of constructors that take a SnapshotRef of
+              a triangulation instead of a triangulation.
         Class AngleStructures:
-            - New function structures() for simpler iteration.
+            - Angle structure lists now hold a snapshot of the underlying
+              triangulation at the time of creation.  The triangulation
+              that was originally used can be safely modified or even deleted.
+            - Replaced enumerate() and enumerateTautDD() with a unified class
+              constructor; this will not insert the new list into the packet
+              tree, and will not start in a background thread.  The new class
+              constructor allows you to choose your preferred enumeration
+              algorithm via an AngleAlg argument.  The old enumerate() and
+              enumerateTautDD() are kept as deprecated aliases, and now
+              explicitly return packets (not "pure" AngleStructures objects).
+            - Added copy/move construction and copy/move assignment.
+            - Added member and global swap() functions.
+            - Added begin() and end() for iteration through angle strutures.
             - Changed triangulation() and surface() to return const references,
               not pointers.
             - Changed enumerate() and enumerateTautDD() to take the
               triangulation argument by reference, not by pointer.
+            - When cloning a packet tree, a cloned angle structure list
+              will now refer back to the original triangulation, not a
+              clone of the original triangulation.
+        Class ArcIterator:
+            - Moved into link/graph.h, since this is not used anywhere
+              outside the Boost Graph Library interface.
+        Class Attachment:
+            - New packet class that replaces and enhances the old PDF class.
         Class AugTriSolidTorus:
             - Class constants are now constexpr.
+            - Routine augTorus() now returns a std::optional by const reference,
+              not a pointer that could be null.
+            - Routine isAugTriSolidTorus() is now called recognise(), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
+            - Deprecated clone().  Just use the copy constructor instead.
+        Class BanConstraintBase, BanNone, BanBoundary, BanTorusBoundary:
+            - All methods are now public, not protected.
+            - The init() routines are removed; instead these are now
+              rolled into the class constructors, which all now take a
+              single LPInitialTableaux as argument.
+            - BanNone no longer derives from BanConstraintBase; instead this is
+              intended as a trivial drop-in replacement.
         Class Base64SigEncoding:
             - New helper class that provides code common to isomorphism
               signatures and knot signatures.
+        Class BitManipulator and related classes:
+            - The class constants ...::specialised are now constexpr bools,
+              not enum values.
+        Class Bitmask, Bitmask1, Bitmask2:
+            - Added compile-time constant fixedSize.
+            - Added != to complement the already-existing == operator.
+            - Bitmask now has a move constructor, move assignment, and
+              member and global swap() functions.
+        Class BitmaskLen8, BitmaskLen16, BitmaskLen32, BitmaskLen64:
+            - Deprecated.  Just use Bitmask1<uint8_t>, etc.
+        Class BlockedSFS, BlockedSFSLoop, BlockedSFSPair, BlockedSFSTriple:
+            - Routines isBlockedSFS...() are now called recognise(), take their
+              triangulation arguments by const reference (not pointer), and
+              return a std::unique_ptr instead of a raw pointer.
+              The old names are kept as deprecated aliases.
+            - Added copy/move construction and copy/move assignment.
+            - Added member and global swap() functions.
+            - Changed BlockedSFS::isPluggedIBundle() to take no arguments,
+              and instead return a std::optional<std::string>.
         Class BoolSet:
             - Almost everything in this class is now constexpr.
             - The class constants sNone, sTrue, sFalse, sBoth are deprecated.
               Just use BoolSet(), true, false, or BoolSet(true, true).
             - Most routines that took a (const BoolSet&) now just take a
               BoolSet by value.
+            - New routines stringCode() and setStringCode().
+            - Routine setByteCode() now detects invalid codes, and
+              returns a boolean accordingly.
         Class BoundaryComponent<dim>:
             - Routines faces(), facets(), and the aliases vertices(), edges(),
               etc. no longer return a const reference to a std::vector, but
               instead return a lightweight ListView object by value.
               C++ users should just use auto, and Python users are unaffected.
               See the analagous Triangulation<dim> changes for further details.
-            - Routine build() now behaves correctly in the presence of
-              pinched faces (which only appear in invalid triangulations).
+            - Routine build() now returns by const reference (not const
+              pointer), and behaves correctly in the presence of pinched faces
+              (which only appear in invalid triangulations).
             - Simplified the class hierarchy; BoundaryComponentFaceInterface,
-              BoundaryComponentStorage, WeakFaceList and WeakFaceListSuite
-              are all gone.
+              BoundaryComponentStorage, BoundaryComponentFaceStorage,
+              WeakFaceList and WeakFaceListSuite are all gone.
             - New compile-time constant dimension.
             - Dimension 3 is no longer specialised: all dimensions now share
               the same generic code.
+            - Higher dimension (dim >= 5) can now access: isReal(), isIdeal(),
+              isInvalidVertex() (which always return true, false, false
+              respectively); face<dim-1>(), faces<dim-1>(), countFaces<dim-1>();
+              and countFaces<dim-2>().
         Class BoundaryComponent<4>:
             - All of the changes listed for BoundaryComponent<dim> above.
             - Added eulerChar().
         Class CensusDB:
             - Added member and global swap() functions.
+        Class Census, CensusHit, CensusHits, CensusHitIterator:
+            - CensusHit objects can now be passed around by value: they
+              now have copy/move construction and assignment, local and
+              global swap() functions, and comparison (== and !=) operators.
+            - The CensusHits and CensusHitIterator classes are removed
+              completely.  Instead, Census::lookup() now returns a std::list
+              of CensusHit objects.
+            - CensusHit has no next() function.
+            - CensusHit::db() now returns by reference, not pointer.
+            - CensusDB::lookup() now takes a callback action to perform
+              on each hit, not a CensusHits pointer.
+        Enum CensusPurgeFlags, Class CensusPurge:
+            - A proper flags class for the purge constants that used to live
+              within GluingPerms<3>.  Now these flags are more carefully typed.
+            - Moved out of GluingPerms<3> and into Regina's main namespace.
         Class Component<dim>:
             - Routines simplices(), boundaryComponents(), faces(), and the
               aliases vertices(), edges(), etc. no longer return a
@@ -88,70 +203,240 @@ Version 6.1  [ TODO ]
               C++ users should just use auto, and Python users are unaffected.
               See the analagous Triangulation<dim> changes for further details.
             - New compile-time constant dimension.
+            - Routine countFaces() (for those dimensions where it exists)
+              now supports the case subdim == dim.
+        Class Container:
+            - Added a trivial copy constructor and copy assignment operator.
+            - Added trivial member and global swap() functions.
+        Class CrossingIterator:
+            - Moved into link/graph.h, since this is not used anywhere
+              outside the Boost Graph Library interface.
+        Class Cusp:
+            - These objects can now be passed around by value; their memory
+              locations are not intended to uniquely identify a cusp.
+            - Added a copy constructor and copy assignment operator.
         Class Cyclotomic:
             - Added member and global swap() functions.
             - Changed polynomial() to return by value, not by pointer.
+            - Added a constructor that takes coefficients via an iterator pair.
         Class DiscType:
             - Almost everything in this class is now constexpr.
             - The class constant NONE is deprecated.  Just use DiscType().
             - Added a bool() operator that tests for a null disc type.
+        Class DiscSpecIterator:
+            - This is now a template class, templated upon the
+              DiscSetSurface / DiscSetSurfaceData type that it works with.
+        Class DiscSetSurface, DiscSetSurfaceData:
+            - Merged into a single class DiscSetSurfaceDataImpl, with
+              appropriate typedefs for DiscSetSurface and DiscSetSurfaceData.
+            - Added copy/move construction and copy/move assignment.
+            - Added member and global swap() functions.
+            - Function adjacentDisc() now returns an optional pair by value,
+              instead of taking output variables by reference and
+              returning newly allocated pointers that could be null.
+        Class DiscSetTet, DiscSetTetData:
+            - The destructors are no longer virtual.  Classes that own
+              DiscSetTetData objects now need to know the specific subclass.
+            - DiscSetTetData has a new typedef Data, and the old typedef
+              DataPtr is now deprecated.
+            - Added copy construction and copy assignment.
+            - Added move construction, move assignment, and member/global
+              swap() functions to DiscSetTetData.
+            - DiscSetTet::discFromArc() now returns a std::pair instead
+              of taking output variables by reference.
         Class DoubleDescription:
+            - Renamed enumerateExtremalRays() to enumerate().  The old name
+              is removed completely.
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.
+            - The main enumeration routine no longer takes an output iterator;
+              instead it takes a callable object (e.g., a lambda).
+            - The main enumeration now returns each ray by rvalue reference,
+              not by pointer to a newly allocated object.
         Class EnableIf<condition, T, defaultValue>:
             - Added to support data members that only appear for some
               template parameters (such as validity and link orientability
               for triangulation faces).
-        Class ExpandSequence:
-            - New type alias for working with integer parameter packs.
+        Class EnumConstraints:
+            - This has been removed completely, in favour of the new class
+              ValidityConstraints.
+        Class Example<dim>, ExampleLink, ExampleSnapPea:
+            - All examples now return by value, not by newly allocated pointer.
+        Class Example<3>:
+            - All of the changes from Example<dim> described above.
+            - Renamed poincareHomologySphere() to poincare().  The old name
+              is kept but deprecated.
+            - Added sfsOverSphere() and layeredLoop().
         Class Face<dim, subdim>:
             - New compile-time constants allowsNonOrientableLinks and
               allowsInvalidFaces.
-            - Simplified the class hierarchy; FaceOrientability,
-              FaceValidity and FaceListHolder are now gone.
+            - Simplified the class hierarchy; FaceOrientability, FaceValidity,
+              FaceListHolder and FaceStorage are all now gone.
             - New compile-time constants dimension and subdimension.
+            - For those faces that have a buildLink() function, this now
+              returns by const reference instead of const pointer.
+              Also, buildLinkDetail() has been renamed buildLinkInclusion();
+              the old name is removed entirely.  This now returns just an
+              isomorphism by value: the triangulation should be fetched via
+              buildLink(), and the labelling option is gone.
+            - New routine embeddings(), as a more readable alternative to
+              iterating over the face itself.
+        Class FaceEmbedding<dim, subdim>:
+            - Local copies of these objects can now happily outlive their
+              underlying faces.  This is because they now carry their entire
+              embedding permutations with them.  This change actually shrinks
+              the object size in Regina's standard dimensions, and it also
+              speeds up calls to vertices(), but it does marginally slow
+              down calls to face().
+            - The equality/inequality tests have changed meaning: not only do
+              the face *numbers* need to be the same, but the entire embedding
+              permutations returned by vertices() need to be the same.
+            - The old (simplex, face number) constructors are removed, with new
+              (simplex, embedding permutation) constructors to replace them.
         Class FaceNumbering<dim, subdim>:
             - Everything in this class is now constexpr.
             - New class constants lexNumbering and oppositeDim.
             - Simplified the underlying web of template specialisations.
+        Class FacePair:
+            - New routines commonEdge() and oppositeEdge().
+            - Increment/decrement operators now insist that the face
+              pair is not past-the-end/before-the-start respectively.
+        Class FacetPairing<dim>, FacetPairingBase<dim>:
+            - Added a copy assignment operator.
+            - Added move constructors and move assignment operators.
+            - Added member swap(), and for FacetPairing<dim> a global swap().
+            - Function fromTextRep() now returns by value (not pointer), and
+              throws an exception on error (instead of returning null).
+            - Type IsoList now stores isomorphisms by value, not by pointer.
+            - Routine findAutomorphisms() now returns a list by value, instead
+              of filling a given list.
+            - Routine findAllPairings() now uses a type-safe template-based
+              mechanism for its callback function, instead of a function
+              pointer with void* arguments.  Moreover, it no longer receives
+              an extra (null, null) call once the enumeration has finished.
+            - New constructor that reads a text representation from an
+              input stream.
         Class FailedPrecondition:
             - New exception class.
         Class FaithfulAssignment:
             - New type trait to identify which of Regina's integer types
               can be losslessly assigned to which others.
+        Class FileError:
+            - New exception class.
+        Enum FileFormat:
+            - New enumeration to indicate broad classes of interoperable
+              XML file formats.
         Class FileInfo:
             - Added a move constructor and move assignment operator.
+            - Added member and global swap() functions.
             - Class constant TYPE_XML is now constexpr.
             - Routine identify() now returns a std::optional<FileInfo>,
               not a newly allocated pointer that could be null.
+            - Added format() and formatDescription() and completely removed
+              type(), typeDescription() and TYPE_XML, since there is now more
+              than one generation of XML file format.
         Class FuncDelete, FuncNew, FuncNewCopyPtr, FuncNewCopyRef,
                 FuncNewCopyClonePtr:
-            - Deprecated.  Regina does not use these any more, and modern
-              C++ standards provide good alternatives nowadays.
+            - Removed completely, since C++ provides good alternatives nowadays.
         Class GlobalDirs:
             - Added deduceDirs() as an alternative to setDirs().  This new
               routine also supports running directly from the source tree, and
               respects environment variables REGINA_HOME and REGINA_PYLIBDIR.
             - Removed pythonLibs(), since nothing has been installed to
               this path since Regina 5.0.
+        Class GluingPerms<dim>:
+            - Added a move constructor and copy/move assignment operators.
+            - Added member and global swap() functions.
+            - Added a type alias Index, which is now used instead of int
+              to properly represent permutation indices in higher dimensions.
+            - Routine facetPairing() now returns by reference, not pointer.
+            - Routines facetPairing() and gluingPerm() are renamed to pairing()
+              and perm(); the old names are kept as deprecated aliases.
+            - The input stream constructor now throws an InvalidInput
+              exception upon error.  The inputError() routine has been removed.
+            - All previously-protected functions are now public: this
+              includes permIndex(), gluingToIndex(), indexToGluing(), and the
+              FacetPairing constructor.
+            - The destuctor and dumpData() are no longer virtual.
+            - Routine triangulate() now returns by value, not pointer.
+            - The read-only versions of permIndex() now return by value,
+              not by const reference.
+            - New static routine fromData().
         Class GluingPermSearcher<dim> and subclasses:
+            - No longer derived from GluingPerms<dim>, which means that
+              none of the previously-inherited functions are available.
+            - Significant reorganisation of the API for enumerating
+              permuatation sets; this includes:
+                * The callback function is passed to runSearch() or
+                  partialSearch(), not the class constructor or other static
+                  construction routines;
+                * The callback function and its arguments now use a type-safe
+                  template mechanism, not function pointers and void pointers;
+                * The callback function now receives its permutation by
+                  reference, and using the parent class GluingPerms<dim>;
+                * The callback function no longer receives an extra null call
+                  once the enumeration has finished;
+                * The search manager now copies (or moves, if possible) the
+                  given facet pairing, and so no longer relies on the original
+                  facet pairing existing for the lifetime of the search;
+                * The runSearch() routine no longer takes a depth argument;
+                  instead there is a new partialSearch() routine for that.
+                * Several other arguments are now passed by reference or
+                  by value, not by pointer.
             - Several class constants are now constexpr.
+            - The input stream constructor now throws an InvalidInput
+              exception upon error.  The inputError() routine has been removed.
+            - Routine bestSearcher() now returns a std::unique_ptr.
+            - Routine readTaggedData(std::iostream&) has been renamed to
+              fromTaggedData(), returns a std::unique_ptr, and throws an
+              exception on error instead of returning null.
+            - Added string-based functions taggedData(), data(), and
+              fromTaggedData(const std::string&).
+            - Renamed public constants ...::dataTag_ to ...::dataTag.
+            - Renamed completePermSet() to isComplete().  The old name
+              is kept as a deprecated alias.
+            - Moved GluingPermSearcher<3>::PurgeFlags to the more carefully
+              typed regina::CensusPurge and regina::CensusPurgeFlags.
+              The old name is kept as a deprecated type alias.
+        Class GraphLoop, GraphPair, GraphTriple:
+            - Constructors now take Seifert fibred spaces either by
+              const reference (which copy) or by rvalue reference (which move),
+              not by pointer (which used to transfer ownership).
+            - Added move constructors and move assignment operators.
+            - Added member and global swap() functions.
+            - Constructors now check some preconditions and throw exceptions if
+              they fail (these checks were previously done during homology()).
         Class GroupExpression:
             - Added move constructors and move assignment operators.
             - Added a constructor that takes a single term, or a single
               generator/exponent pair.
+            - Changed the string constructor to throw an exception on error;
+              the old optional validity reporting argument is now removed.
+            - Added a C-style string constructor.
+            - Deprecated addStringFirst() and addStringLast(); just use
+              addTermsFirst(string) and addTermsLast(string) instead.
             - New variant of substitute() that can replace all generators
               simultaneously.
             - Functions inverse() and power() now return by value, not pointer.
             - Functions addTermsFirst() and addTermsLast() now take the
               GroupExpression argument by value, not by const reference.
             - Added member and global swap() functions.
+            - Renamed toTeX() to tex().  The old name is kept but deprecated.
+            - Added more customisation options to writeTextShort(), and
+              deprecated writeText() which is now redundant.
+            - Now offers utf8() with UTF-8 exponents, as well as str(bool)
+              and utf8(bool) that offer the choice of numbered or alphabetic
+              generators.
         Class GroupPresentation:
-            - Added new routine enumerateCovers().
+            - New routines enumerateCovers(), incidence() and gap().
             - Added move constructors and move assignment operators.
             - New constructor to create free groups.
+            - The vector-of-strings constructor now throws an exception
+              on error, instead of silently removing the invalid relation.
             - Functions abelianisation() and markedAbelianisation() now
               return groups by value (which can then be moved from).
+            - New routine abelianRank().
+            - New routine relations().
             - Function addRelation() now takes its argument by value.
             - Added member and global swap() functions.
             - Functions intelligentSimplify(), smallCancellation(),
@@ -163,18 +448,28 @@ Version 6.1  [ TODO ]
               instead of a std::unique_ptr<HomGroupPresentation>.  The C++
               syntax should be largely unaffected, and the Python behaviour
               (returns None if there is no homomorphism) should remain the same.
+            - Renamed toTeX() to tex().  The old name is kept but deprecated.
             - Other major cleanup and reorganisation under the hood.
+        Class Handlebody:
+            - Added member and global swap() functions.
         Class HasReturnType:
             - Removed completely.
         Class HilbertCD, HilbertDual, HilbertPrimal:
+            - Renamed enumerateHilbertBasis() to enumerate().  The old name
+              is removed completely.
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.
+            - The main enumeration routine no longer takes an output iterator;
+              instead it takes a callable object (e.g., a lambda).
+            - The main enumeration now returns each basis element by
+              rvalue reference, not by pointer to a newly allocated object.
         Class HomGroupPresentation:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.
             - Added operator * for composition; the old composeWith() is
               now deprecated.
             - Added member and global swap() functions.
+            - Renamed range() to codomain(), since this is what it actually is.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
             - Constructors that used to take a domain, range and map(s) by
@@ -189,6 +484,7 @@ Version 6.1  [ TODO ]
             - Added a move constructor.
             - Added copy assignment and move assignment operators.
             - Added member and global swap() functions.
+            - Renamed range() to codomain(), since this is what it actually is.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
             - Constructors that used to take (const MarkedAbelianGroup&) and
@@ -196,9 +492,26 @@ Version 6.1  [ TODO ]
               MatrixInt arguments by value.
             - The composition operator (*) now has an overload whose argument
               is an rvalue reference.
-        Class HyperInfo<...>:
-            - Routine name() has been changed to a class constant.
-              This change is backward incompatible (but probably affects noone).
+            - Routine writeReducedMatrix() is now deprecated; instead this
+              information is output via writeTextLong() / detail().
+        Class HomologicalData:
+            - Now supports copy/move construction and copy/move assignment.
+            - Added member and global swap() functions.
+            - Some routines related to the torsion linking form can now throw
+              exceptions.  This will only happen if an internal
+              rational-to-double conversion fails; previously these
+              routines just silently did the wrong thing.
+        Class HyperEncoding:
+            - New class to describe how the internal integer vector is encoded.
+        Class HyperInfo:
+            - This used to be a template class full of compile-time constants.
+              It is now a non-templated class filled with static functions,
+              which are also constexpr (so you can still use them at
+              compile time if needed, but you can now use them at runtime also).
+            - Much of the functionality that HyperInfo<coords> used to provide
+              is now accessible through HyperEncoding(coords).  This
+              HyperInfo class has been stripped down to just provide
+              "human-readable name" functions.
         Class Integer, LargeInteger:
             - The constructor that takes a NativeInteger is no longer explicit.
             - The constructors Integer(LargeInteger) and LargeInteger(Integer)
@@ -207,13 +520,41 @@ Version 6.1  [ TODO ]
             - Added a global swap() to complement the member swap().
             - Added tightEncode() and tightEncoding() to help with perfect
               hashing.
+            - The string constructors and assignment operators now recognise
+              "inf" as infinity.  Also, these routines all now throw exceptions
+              if the input string is invalid: the old bool pointer argument to
+              the string constructors for testing validity is no longer present.
+            - Added a variant of gcdWithCoeffs() that returns a tuple
+              instead of using reference arguments.
+            - Changed divisionAlg() to return a pair instead of using
+              reference arguments.  The old version is kept but deprecated.
+            - New routine safeLongValue(), which is like longValue() but
+              throws an exception on overflow.
+        Class InvalidArgument, InvalidInput:
+            - New exception classes.
         Class Isomorphism<dim>, IsomorphismBase<dim>:
             - Added member and global swap() functions to Isomorphism<dim>.
             - Removed the IsomorphismBase<dim> base class; all functionality
               now lives directly within Isomorphism<dim>.
+            - Added composition operator (*) and inverse().
+            - Functions apply() and applyInPlace() now take their
+              arguments by reference, not pointer, and throw exceptions in some
+              cases if input requirements are not met.  Moreover, apply() now
+              returns by value, not by newly allocated pointer.
+        Class IsoSigPrintable<dim>, IsoSigClassic<dim>,
+                IsoSigDegrees<dim, subdim>, IsoSigEdgeDegree<dim>,
+                IsoSigRidgeDegree<dim>:
+            - New types and encodings for working with isomorphism signatures.
         Class IsReginaArbitraryPrecisionInteger:
             - New type trait to identify Regina's arbitrary precision integer
               types.
+        Class L31Pillow:
+            - Routine isL31Pillow() is now called recognise(), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
+            - Deprecated clone().  Just use the copy constructor instead.
         Class Laurent, Laurent2:
             - Added member and global swap() functions.
             - Added invertX(), and (for Laurent2 only) invertY().
@@ -221,16 +562,84 @@ Version 6.1  [ TODO ]
               well-defined (but unimportant) total order.
             - Added tightEncode() and tightEncoding() to help with perfect
               hashing.
+            - Added a constructor for Laurent2 that takes coefficients via an
+              iterator pair.
+        Class LayeredChain:
+            - Added copy assignment operator.
+            - Added member and global swap() functions.
+        Class LayeredChainPair:
+            - Routine isLayeredChainPair() is now called recognise(), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
+            - Deprecated clone().  Just use the copy constructor instead.
+            - Routine chain() now returns by reference, not by pointer.
+        Class LayeredLensSpace:
+            - Routine isLayeredLensSpace() is now called recognise(), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
+            - Deprecated clone().  Just use the copy constructor instead.
+        Class LayeredLoop:
+            - Routine isLayeredLoop() is now called recognise(), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
+            - Deprecated clone().  Just use the copy constructor instead.
+        Class LayeredSolidTorus:
+            - Routines isLayeredSolidTorus(), formsLayeredSolidTorusBase()
+              and formsLayeredSolidTorusTop() are now called recognise(),
+              recogniseFromBase() and recogniseFromTop(), and now return a
+              std::unique_ptr instead of a raw pointer.
+              The old names are kept as deprecated aliases.
+            - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
+            - Deprecated clone().  Just use the copy constructor instead.
+            - Routine transform() now takes its arguments by reference.
+            - Routine flatten() no longer takes a triangulation argument
+              (since this was redundant), and now returns by value.
+            - All access to the underlying triangulation is now const only.
+        Class LayeredTorusBundle:
+            - Routine coreIso() returns by const reference, not by pointer.
+            - Routine isLayeredTorusBundle() is now called recognise(), takes
+              its triangulation argument by const reference (not pointer), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
+        Class Layering:
+            - Added copy construction and copy assignment.
+            - All access to the underlying triangulation is now const only.
+        Class LensSpace:
+            - Added member and global swap() functions.
+        Class LessDeref:
+            - Removed completely.  Just use a lamba if you need to.
         Class LightweightSequence<T>:
             - Added member and global swap() functions.
+            - Added a constructor that takes a combination of elements
+              and iterator pairs.
+            - Replaced the old SubsequenceCompareFirstPtr with the new
+              SubsequenceCompareFirst, which is significantly redesigned,
+              and which now works with containers whose keys are sequences,
+              not pointers to sequences.  The old class is removed completely.
+            - Removed the inner class Less.
         Class Link:
             - New routines writheOfComponent() and selfFrame().
+            - New routine group().
             - New routines pd(), pdData(), pd(std::ostream&) and fromPD() to
               work with planar diagram codes.  The "magic" constructor that
               takes a string can now also work with planar diagram codes.
             - New routines gaussData(), orientedGaussData(), jenkinsData(),
               dtData(), and fromJenkins(Iterator, Iterator) for working with
               knot/link codes in machine-readable format.
+            - Routine fromData() now returns by value, and throws an exception
+              on error (it used to return a newly allocated pointer that was
+              null on error).
+            - Added a variant of fromData() that takes iterator pairs,
+              which allows the data to be constructed at runtime.
             - New routine brief(std::ostream&) to complement brief().
             - New alias fromSig(), which is is identical to fromKnotSig().
             - Class constants for Jones / HOMFLY-PT variable strings are
@@ -241,9 +650,36 @@ Version 6.1  [ TODO ]
               actions that take a knot signature as well as a full knot
               diagram.  This function is now also available through Python,
               and can take a pure Python function as its action argument.
+              It no longer runs in the background (even if a progress tracker
+              is passed), and it now requires as a precondition that the link
+              has at most one component (throwing an exception otherwise).
+            - Routine simplifyExhaustive() no longer runs in the background
+              (even if a progress tracker is passed), and it now throws an
+              exception if the link has multiple components.
+            - Routine useTreeDecomposition() now takes its argument by
+              value, not by const reference.
+            - Routine writePACE() no longer begins its output with a "c ..."
+              line, since links no longer have labels.
+            - Routines complement() and parallel() now return by value,
+              not pointer.
+            - Routines bracket(), jones(), homfly(), homflyAZ() and homflyLM()
+              now always run in the current thread, even if a progress
+              tracker was passed.
+            - New static routine homflyAZtoLM().
+            - New routines crossings() and components().
+        Class ListOnCall:
+            - Removed, since this class was not thread-safe and did not add
+              anything non-trivial.
         Class ListView:
             - New lightweight objects for basic read-only access to lists.
         Class LPConstraintBase and all subclasses:
+            - Changed nConstraints from an enum value to a static constexpr int.
+            - Simplified the way in which coefficients are stored.  The old
+              Coefficients structures are gone, replaced by a new Coefficient
+              type alias and a new octAdjustment constant.  Coefficients
+              are now stored directly within LPCol via the field LPCol::extra.
+            - Changed addRows() to take an initial tableaux instead of a
+              triangulation and column permutation.
             - The verify() routines now take their arguments by reference,
               not by pointer.
         Class LPConstraintEuler, LPConstraintEulerPositive:
@@ -252,9 +688,22 @@ Version 6.1  [ TODO ]
         Class LPConstraintEulerZero:
             - New constraint to use with normal surface enumeration that
               fixes Euler characteristic to be zero.
+        Class LPData:
+            - Routine reserve() now takes the tableaux by reference.
+            - Routine extractSolution() now returns its vector by value,
+              instead of using a reference argument.
+        Class LPInitialTableaux:
+            - The constraintsBroken() routines are gone; instead the class
+              constructor throws an exception on error.
+            - The enumeration constructor argument now defaults to true.
+        Class LPSystem:
+            - New class to translate coordinate systems into a layout
+              for LPInitialTableaux.
         Class Manifold:
-            - Routine homology() now returns a std::optional<AbelianGroup>,
-              not a newly allocated pointer that could be null.
+            - Routines construct() and homology() now return by value, not by
+              pointer, and throw exceptions on error instead of returning null.
+            - Renamed TeXName() to texName().  The old name is kept but
+              deprecated.
         Class MarkedAbelianGroup:
             - New move constructor.
             - New copy assignment and move assignment operators.
@@ -265,7 +714,7 @@ Version 6.1  [ TODO ]
               now take a MatrixInt by value.
         Class MarkedVector:
             - New convenience routine clear_destructive().
-            - New typedef value_type.
+            - New typedefs value_type, reference and const_reference.
             - New global swap() to complement the existing member swap().
             - Granted access to the reserve() member function.
         Class Matrix:
@@ -274,8 +723,10 @@ Version 6.1  [ TODO ]
               matrices over Regina's integer types (including MatrixInt).
             - New operator * for multiplying a matrix by a vector.
             - New routines combRows() and combCols().
+            - New constructor that takes the side length of a square matrix.
             - New constructor that takes a hard-coded list of entries
-              via a C++11 initialiser list.
+              via a C++11 initialiser list.  The old python-only
+              initialise([...]) is now deprecated in favour of this constructor.
             - New default constructor that leaves the matrix in an
               uninitialised state.
             - Added member and global swap() functions.
@@ -286,57 +737,177 @@ Version 6.1  [ TODO ]
             - Routine swapRows() is now constant time.
             - The type Matrix<bool> is now wrapped in Python under the name
               MatrixBool.
+            - Routine writeMatrix() is now deprecated, since it is
+              identical to writeTextLong().
+        Class Matrix2:
+            - Added member and global swap() functions.
+            - Re-engineered to use std::array internally.  This means
+              that the row access functions change their return type
+              (but the syntax for the user should stay the same).
+              All functions that take a long[2][2] array are now deprecated.
+        Class MaxAdmissible:
+            - Function enumerate() now returns by value, not by pointer.
         Class ModelLinkGraph:
             - Added a copy assignment operator.
             - Added a move constructor and move assignment operator.
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global
               regina::swap(ModelLinkGraph&, ModelLinkGraph&).
+            - Routine generateMinimalLinks() now uses a type-safe template-based
+              mechanism for its callback function, instead of a function
+              pointer with void* arguments, and the callback now takes its
+              link by rvalue (not pointer).  Moreover, it no longer receives
+              an extra null call once the enumeration has finished.
+            - Routines fromPlantri() and flype() now return by value (not
+              pointer), and throw exceptions on error instead of returning null.
+            - New routine nodes().
+        Class ModelLinkGraphCells:
+            - New typedef ArcIterator, which is returned by begin() and end().
+            - New routine arcs().
         Class NativeInteger<...>:
             - New do-nothing routines isInfinite() and tryReduce(), for
               compatibility with Integer and LargeInteger.
             - Added a global swap() to complement the member swap().
+            - Changed divisionAlg() to return a pair instead of using
+              reference arguments.  The old version is kept but deprecated.
         Class NewFunction<...>:
             - Removed completely.
-        Class NormalInfo<...>:
-            - Routine name() has been changed to a class constant.
-              This change is backward incompatible (but probably affects noone).
-            - Class constants almostNormal, spun and oriented are now
-              static constexpr bool, not enum constants.
+        Class NNativeLong:
+            - Renamed to NativeLong.  The old name is a deprecated typedef.
+        Class NormalEncoding:
+            - New class to describe how the internal integer vector is encoded.
+        Class NormalInfo:
+            - This used to be a template class full of compile-time constants.
+              It is now a non-templated class filled with static functions,
+              which are also constexpr (so you can still use them at
+              compile time if needed, but you can now use them at runtime also).
+            - Much of the functionality that NormalInfo<coords> used to provide
+              is now accessible through NormalEncoding(coords).  This
+              NormalInfo class has been stripped down to just provide
+              "human-readable name" functions.
         Class NormalHypersurface:
+            - Normal surfaces now hold a snapshot of the underlying
+              triangulation at the time of creation.  The triangulation
+              that was originally used can be safely modified or even deleted.
             - Replaced rawVector() with vector(), which now returns a
-              NormalHypersurfaceVector by reference (not a Vector by pointer).
+              Vector<LargeInteger> by reference (not a Vector by pointer).
               The old name is kept but deprecated.
             - Added copy and move constructors, copy and move assignment
               operators, and member and global swap() functions.  The old
               clone() now is deprecated; use the copy constructor instead.
             - Changed triangulation() to return a reference, not a pointer.
             - Changed doubleHypersurface() to return by value, not by pointer.
-            - Constructors now take a reference to the triangulation, not a
-              pointer.
+            - Constructors now take their arguments by reference (and,
+              for the vector constructors, optionally an rvalue reference).
+            - Added variants of constructors that take a SnapshotRef of
+              a triangulation instead of a triangulation.
+            - New routine encoding(), which explains how to interpret
+              the internal integer vector.
+            - New routine reconstructTetrahedra(), which now makes this
+              functionality available to the outside world.
+            - Removed countCoords() completely, since its meaning is
+              amgibuous as to whether it refers to the original
+              coordinate system or the current internal encoding.
+              Just use vector().size() instead.
+            - New operator +.  At last!  Crucially, this operator can combine
+              hypersurfaces that use different coordinate systems.
+            - Routine triangulate() now returns by value, not pointer.
+            - Routine writeRawVector() is deprecated (and unnecessary).
         Class NormalHypersurfaces:
-            - New function hypersurfaces() for simpler iteration.
+            - Normal hypersurface lists now hold a snapshot of the underlying
+              triangulation at the time of creation.  The triangulation
+              that was originally used can be safely modified or even deleted.
+            - Now supports enumeration in prism coordinates (HS_PRISM).
+            - Replaced enumerate() with a class constructor; this will throw an
+              exception on error (instead of returning null), will not insert
+              the new list into the packet tree, and will never start in a
+              background thread.  The old enumerate() function is kept as a
+              deprecated alias, but (a) it now explicitly returns a packet
+              (not a "pure" NormalHypersurfaces object), and (b) Python users
+              can no longer use it with a progress tracker.
+            - Added copy/move construction and copy/move assignment.
+            - Added member and global swap() functions.
+            - Added begin() and end() for iteration through hypersurfaces.
             - Changed triangulation() and hypersurface() to return
               const references, not pointers.
             - Changed enumerate() to take the triangulation argument by
               reference, not by pointer.
             - Changed sort() so the comparison function must now take
               two hypersurfaces by reference, not by pointer.
+            - New function allowsNonCompact().
+            - When cloning a packet tree, a cloned normal hypersurface list
+              will now refer back to the original triangulation, not a
+              clone of the original triangulation.
         Class NormalSurface:
+            - Normal surfaces now hold a snapshot of the underlying
+              triangulation at the time of creation.  The triangulation
+              that was originally used can be safely modified or even deleted.
             - Replaced rawVector() with vector(), which now returns a
-              NormalSurfaceVector by reference (not a Vector by pointer).
+              Vector<LargeInteger> by reference (not a Vector by pointer).
               The old name is kept but deprecated.
             - Added copy and move constructors, copy and move assignment
               operators, and member and global swap() functions.  The old
               clone() now is deprecated; use the copy constructor instead.
             - Changed triangulation() to return a reference, not a pointer.
-            - Changed boundaryIntersections() to return a
-              std::optional<MatrixInt>, not a pointer that could be null.
+            - Changed boundaryIntersections() to return by value (not by
+              pointer), and to throw an exception on error.
             - Changed doubleSurface() to return by value, not by pointer.
-            - Constructors now take a reference to the triangulation, not a
-              pointer.
+            - Constructors now take their arguments by reference (and,
+              for the vector constructors, optionally an rvalue reference).
+            - Added variants of constructors that take a SnapshotRef of
+              a triangulation instead of a triangulation.
+            - Removed systemAllowsOriented(), orientedTriangles() and
+              orientedQuads() completely, since TONS are now handled by a
+              completely different collection of classes.
+            - Changed isCentral() to return size_t, not LargeInteger.
+            - Routine disjoint() no longer requires both surfaces to use
+              the same coordinate system.
+            - New routine encoding(), which explains how to interpret
+              the internal integer vector.
+            - New routine reconstructTriangles(), which now makes this
+              functionality available to the outside world.
+            - Removed countCoords() completely, since its meaning is
+              amgibuous as to whether it refers to the original
+              coordinate system or the current internal encoding.
+              Just use vector().size() instead.
+            - Replaced systemAllowsAlmostNormal() and systemAllowsSpun() with
+              new functions couldBeAlmostNormal() and couldBeNonCompact(), again
+              to avoid ambiguities between the original coordinate system used
+              for enumeration versus the current vector encoding being used.
+              The old functions are removed completely.
+            - New routine hasMultipleOctDiscs(), which has been moved from the
+              old NormalSurfaceVector class.
+            - New operator +.  At last!  Crucially, this operator can combine
+              surfaces that use different coordinate systems.
+            - New routine components().
+            - Routines crush() and cutAlong() now return by value, not pointer.
+            - Routine writeRawVector() is deprecated (and unnecessary).
         Class NormalSurfaces:
-            - New function surfaces() for simpler iteration.
+            - Normal surface lists now hold a snapshot of the underlying
+              triangulation at the time of creation.  The triangulation
+              that was originally used can be safely modified or even deleted.
+            - Replaced enumerate() with a class constructor; this will throw an
+              exception on error (instead of returning null), will not insert
+              the new list into the packet tree, and will never start in a
+              background thread.  The old enumerate() function is kept as a
+              deprecated alias, but (a) it now explicitly returns a packet
+              (not a "pure" NormalSurfaces object), and (b) Python users can
+              no longer use it with a progress tracker.
+            - Added copy/move construction and copy/move assignment.
+            - Added member and global swap() functions.
+            - Replaced quadToStandard(), quadOctToStandardAN(),
+              standardToQuad(), standardANToQuadOct(), filterForDisjointPairs(),
+              filterForLocallyCompatiblePairs() and
+              filterForPotentiallyIncompressible() with a single class
+              constructor that takes a NormalTransform; this will throw an
+              exception on error (instead of returning null), and will not
+              insert the new list into the packet tree.  The old functions
+              are kept as deprecated aliases.
+            - Replaced filter() with a class constructor that takes a
+              SurfaceFilter; this will not insert the new list into the packet
+              tree.  The old function is kept as a deprecated alias, but
+              now takes its filter argument by reference (not by pointer).
+            - Added begin() and end() for iteration through surfaces.
             - New filter() method that takes a SurfaceFilter.
             - Changed triangulation() and surface() to return const references,
               not pointers.
@@ -344,26 +915,102 @@ Version 6.1  [ TODO ]
               reference, not by pointer.
             - Changed sort() so the comparison function must now take
               two surfaces by reference, not by pointer.
+            - Routine filterForDisjointPairs() no longer requires all surfaces
+              to use the same coordinate system.
+            - Removed allowsOriented() completely, since TONS are now
+              handled by a completely different collection of classes.
+            - Renamed allowsSpun() to allowsNonCompact(); the old name
+              is kept as a deprecated alias.
+            - Routines saveCSVEdgeWeight() and saveCSVStandard() now take the
+              optional fields argument using the new type SurfaceExport.
+            - When cloning a packet tree, a cloned normal surface list
+              will now refer back to the original triangulation, not a
+              clone of the original triangulation.
+            - Deprecated writeAllSurfaces(); just use writeTextLong() or
+              detail() instead.
         Class NormalSurfaceVector, NormalHypersurfaceVector:
-            - Renamed setElement() to set().  Since this is a virtual function,
-              the old name has been removed completely.  If you have a
-              subclass which overrides this function (which is highly unlikely
-              for end users), you MUST rename your override accordingly.
-            - The constructor that used to take a const Vector<LargeInteger>&
-              is now a template constructor that takes any const Vector<T>&.
-            - Operator += now returns a reference, as it should.
-            - New typedef Element, for better compatibility with Vector.
-            - Now derives from ShortOutput<...> and provides the corresponding
-              output routines.
-            - All query routines now take the triangulation by reference,
-              not by pointer.
+            - Removed completely.  Normal surfaces/hypersurfaces now hold
+              their coordinates using a plain Vector<LargeInteger>.
+        Enum NormalTransform:
+            - New enumeration to support conversions and filters.
+        Class NoSolution:
+            - New exception class.
+        Class NotImplemented:
+            - New exception class.
         Class NSVectorMirrored:
             - Changed makeMirror() to take its triangulation by reference,
               not by pointer.  Also removed the static versions of makeMirror();
               only the virtual (non-static) function is used.
-        Class PacketInfo<...>:
-            - Routine name() has been changed to a class constant.
-              This change is backward incompatible (but probably affects noone).
+        Class Packet:
+            - Packets are now managed exclusively by std::shared_ptr.
+              Creating a new packet *without* wrapping it in a std::shared_ptr
+              is no longer allowed.  To convert an existing raw packet pointer
+              into a std::shared_ptr, use shared_from_this().  The old
+              safeDelete() is now removed.
+            - Inner class ChangeEventSpan's constructor now takes its
+              argument by reference.
+            - Routines dependsOnParent() and isPacketEditable() are
+              deprecated, and now always return false and true respectively.
+            - Routines save() and writeXMLFile() now take an optional
+              XML file format argument.
+            - Iteration routines begin(), end(), children(), descendants()
+              now come in const and non-const versions.  The corresponding
+              iterator / iteration classes ChildIterator, SubtreeIterator,
+              PacketChildren, PacketDescendants are now templated according
+              to constness, all dereference iterators now return packets by
+              reference instead of by pointer, and all iterators can now
+              be tested for dereferencability by casting to bool.
+            - Functions firstTreePacket(type) and nextTreePacket(type) now
+              take type as a PacketType, not a string.  The old functions
+              are removed completely, because the typeName() string is
+              not guaranteed to stay constant between releases.
+            - Removed the "tree insertion constructor", which was never used.
+            - New function hasParent().
+            - Renamed isGrandparentOf() to isAncestorOf().  The old name
+              is kept as a deprecated alias.
+            - Changed levelsDownTo() and levelsUpTo() to throw an exception if
+              the ancestor/descendant precondition fails, instead of crashing.
+            - Renamed clone() to cloneAsSibling(), since this is not
+              just a plain copy operation and it will not always succeed.
+              The old clone() name is removed completely.
+            - All member functions that used to return a raw Packet pointer
+              return a shared_ptr instead.
+            - All member functions that used to take a raw Packet pointer
+              now take this either by shared_ptr or const reference.
+        Class PacketData<Held>, PacketOf<Held>:
+            - New template classes to support the new "wrapped" packet types.
+        Class PacketInfo:
+            - This used to be a template class.  It is now a non-templated
+              class, and has been stripped down to just a single static name()
+              function.  This function is constexpr, so you can still use it
+              at compile time if needed, but you can now use it at runtime also.
+        Class PacketListener:
+            - New routine isListening().
+            - Renamed unregisterFromAllPackets() to unlisten().  The old
+              name is kept as a deprecated alias.
+            - Renamed packetToBeDestroyed() to packetBeingDestroyed(), since
+              it is called when the destructor is already in progress.  The old
+              name is kept and marked final, to ensure it is not reimplemented.
+            - Callbacks childToBeRemoved() and childWasRemoved() are no longer
+              called from either the child or parent destructors.
+            - All callbacks now take their packets by reference, not pointer.
+              The old versions are again kept and marked as final, to ensure
+              they are not reimplemented.
+        Enum PacketType:
+            - New constant PACKET_NONE.
+            - Renamed PACKET_PDF to PACKET_ATTACHMENT.  The old name is
+              kept as a deprecated alias.
+        Class PDF:
+            - This has been renamed to Attachment, and expanded to support any
+              kind of file attachment (not just PDF documents).  The old
+              class name PDF is kept as a deprecated type alias.
+            - Added a copy constructor and a copy assignment operator.
+            - Added member and global swap() functions.
+            - Added a filename() routine.
+            - The binary data constructor and the non-trivial reset() routine
+              both now require an additional filename argument.
+            - Renamed savePDF() to save(), with the old name kept as a
+              deprecated alias.
         Class Perm<n>:
             - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really
@@ -371,6 +1018,10 @@ Version 6.1  [ TODO ]
             - Replaced lookup tables S1, S2, S3, ..., orderedS2, orderedS3, ...
               with lightweight objects whose square bracket operators compute
               and/or look up the relevant permutations on the fly.
+            - The C-style array constructors are now deprecated, and
+              std::array constructors have been added in their place.
+            - Renamed preImageOf() to pre().  The old name is kept as a
+              deprecated alias.
             - Now all n (not just small n) have static members Sn and orderedSn
               and member functions SnIndex() and orderedSnIndex().
             - New static routine rot().
@@ -378,8 +1029,8 @@ Version 6.1  [ TODO ]
             - For all classes that support packed image sequences in any form
               (n >= 4), added type ImagePack; constants imageBits, imageMask;
               and routines imagePack(), fromImagePack(), isImagePack().  For
-              n >= 7 these are aliases for the permutation code routines; for
-              n = 4,5,6 they are aliases for the first-generation code routines.
+              n >= 8 these are aliases for the permutation code routines; for
+              n = 4..7 they are aliases for the first-generation code routines.
             - Almost everything in the permutation classes is now constexpr.
             - Routines index() and atIndex() are now deprecated.
               Use orderedSnIndex() and orderedSn[...] instead.
@@ -387,11 +1038,15 @@ Version 6.1  [ TODO ]
             - New (and trivial) routine isConjugacyMinimal().
             - New ++ and < operators.
             - New routines pow() and order().
+            - Perm<3> gains a six-argument constructor, similar to those
+              in Perm<4..6>.
         Class Perm<4>:
             - All of the changes listed for Perm<n> above.
             - New routine isConjugacyMinimal().
             - New ++ and < operators.
             - New routines pow() and order().
+            - New routine pairs() which returnes the induced permutation
+              on six pairs of elements.
             - New constant imageBits for consistency with higher order
               permutation classes.
             - Added a new typedef Code2; this is identical to Code, but
@@ -402,7 +1057,7 @@ Version 6.1  [ TODO ]
             - Renamed permCode(), setPermCode(), fromPermCode(), isPermCode()
               to permCode1(), setPermCode1(), fromPermCode1(), isPermCode1().
               The old names are now deprecated.
-        Class Perm<5>, Perm<6>:
+        Class Perm<5>, Perm<6>, Perm<7>:
             - All of the changes listed for Perm<n> above.
             - New routine isConjugacyMinimal().
             - New ++ and < operators.
@@ -419,20 +1074,51 @@ Version 6.1  [ TODO ]
               The old names are now deprecated.
             - Several operations are now considerably faster than before
               (in particular, composition and inverses).
-            - Perm<6> now gains most of the extra functionality that Perm<2..5>
+            - Perm<6,7> now gain most of the extra functionality that Perm<2..5>
               already had over the generic higher-order Perm<n> class.
-            - Perm<6> also gains functions precompute() and cachedComp() for
-              users to generate and use lookup tables of products at runtime.
+            - Perm<6> also gains functions precompute(), cachedComp() and
+              cachedPow() for users to generate and use lookup tables of
+              products at runtime.
+            - Perm<7> likewise gains precompute(), cachedComp(), cachedPow()
+              and cachedOrder().
+        Class PillowTwoSphere:
+            - Routine formsPillowTwoSphere() is now called recognise(), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Deprecated clone().  Just use the copy constructor instead.
+        Class PluggedTorusBundle:
+            - Routine isPluggedTorusBundle() is now called recognise(), takes
+              its triangulation argument by const reference (not pointer), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy/move construction and copy/move assignment.
+            - Added member and global swap() functions.
         Class PlugTriSolidTorus:
             - Class constants are now constexpr.
+            - Routine chain() now returns a std::optional by const reference,
+              not by pointer that could be null.
+            - Routine isPlugTriSolidTorus() is now called recognise(), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
+            - Deprecated clone().  Just use the copy constructor instead.
         Class Polynomial:
             - Added member and global swap() functions.
+            - Changed divisionAlg() to return a pair instead of using
+              reference arguments.  The old version is kept but deprecated.
         Class Property<...>:
             - Removed completely.  Use either std::optional<...> or
               std::unique_ptr<...> instead (according to your storage policy).
             - Added a move constructor and move assignment operator.
             - Added a global swap() to complement the member swap().
             - Removed the StoreConstPtr storage policy, which was never used.
+        Class Qitmask1, Qitmask2:
+            - Added != operator to complement the already-existing == operator.
+            - Routines get() and set() now use values of type uint8_t, not char.
+        Class QitmaskLen8, QitmaskLen16, QitmaskLen32, QitmaskLen64:
+            - Deprecated.  Just use Qitmask1<uint8_t>, etc.
         Class Ray:
             - All of the old Ray functionality is now merged into
               Vector<LargeInteger>, and you should use that class directly.
@@ -440,52 +1126,314 @@ Version 6.1  [ TODO ]
         Class Rational:
             - Added a move constructor and move assignment operator.
             - Added a global swap() to complement the member swap().
+            - Routine doubleApprox() now throws an exception on error
+              instead of using an extra bool* argument.  The python-only
+              doubleApproxCheck() is now deprecated.
+            - Renamed TeX() to tex().  The old name is kept but deprecated.
+        Class ReginaException:
+            - New exception base class.
         Class Returns, ReturnsTraits:
             - Removed completely.
+        Class SafePtr, SafePointeeBase:
+            - Removed completely.
+        Class SatAnnulus:
+            - Routines transform() and image() now takes their arguments by
+              reference.
+            - Routine isAdjacent() now returns a tuple, instead of using
+              a mix of return values and pointer arguments for output.
+            - All access to the underlying triangulation is now const only.
+            - Removed the member attachLST(), since SatAnnulus now allows
+              only const access to the underlying triangulation.  Instead
+              this is now a static member function, which takes (non-const)
+              tetrahedra and permutations individually.
+        Class SatBlock and subclasses:
+            - The nextBlock output argument for nextBoundaryAnnulus()
+              now sends back a const pointer.
+            - Routine transform() now takes its arguments by reference.
+            - All copy constructors and clone() functions are now either
+              protected or private.
+            - All insertBlock() routines have been replaced with safer model()
+              routines that return a SatBlockModel by value.
+            - Removed SatBlock::isBlock(), and made all subclass isBlock...()
+              functions private (and with new names).  This functionality is
+              now accessible through SatRegion::beginsRegion() instead.
+            - Modifying routines transform() and setAdjacent() are now
+              protected and private respectively.
+            - Routine nextBoundaryAnnulus() now returns a tuple, instead
+              of using several reference arguments for output.
+            - Renamed nAnnuli() to countAnnuli().  The old name is kept
+              as a deprecated alias.
+            - All access to the underlying triangulation is now const only.
+        Class SatBlockModel:
+            - New class to replace SatBlockStarter.
+        Class SatBlockSpec:
+            - This is now a full class, with read-only access functions
+              to its data members which are now private.
+            - This class now owns its SatBlock, and will take responsibility
+              for deleting it.
+            - Due to the change in ownership semantics, this class is no
+              longer copyable; however, it is now movable and swappable.
+            - This class is also no longer constructible (except for the
+              new move constructor): only SatRegion is permitted to create a
+              SatBlockSpec with arbitrary content.
+        Class SatBlockStarter:
+            - Removed completely, and replaced with the new class SatBlockModel.
+        Class SatBlockStarterSet:
+            - Removed completely, and replaced with a hard-coded list
+              that is private to the SatRegion class.
+        Class SatBlockStarterSearcher:
+            - Removed completely.  Instead use the new, simpler and more
+              flexible routine SatRegion::find().
+        Class SatBlockStarterSet:
+            - Now requires a (lightweight) object to work with instead
+              of using static routines only.  This makes the class
+              suitable for use with C++11 range-based for loops.
+            - This class is now thread-safe.
+        Class SatLST:
+            - Routine lst() now returns by reference, not pointer.
+        Class SatRegion:
+            - Routine createSFS() now returns by value, and throws an exception
+              in the (rare) cases where it cannot determine the answer.
+            - Changed the two versions boundaryAnnulus() into a single
+              function that returns tuple instead of using reference arguments.
+              The old functions are removed completely.
+            - Added move construction, and move assignment.
+            - New static routine find(), which replaces the old class
+              SatBlockStarterSearcher.
+            - New static routine beginsRegion(), which replaces the old
+              SatBlock::isBlock().
+            - Routine expand() is now private, since all publicly accessible
+              functions that construct regions will expand them automatically.
+            - New routine blockAbbrs() that returns the output of
+              writeBlockAbbrs() in string format.
+            - All access to the underlying triangulation is now const only.
+        Class Script:
+            - Added a copy constructor and a copy assignment operator.
+            - Added member and global swap() functions.
+            - Routines addVariable(), addVariableName() and setVariableValue()
+              now take their value arguments by std::weak_ptr, and support a
+              default argument representing a null variable.
+            - Scripts no longer notify their listeners when a variable value
+              is destroyed or changes its packet label (but in the former case
+              they still correctly reset the variable value to null).
+            - New routines listenVariables() and unlistenVariables().
+        Class SFSAlt, SFSAltSet:
+            - Removed the old SFSAltSet class; replaced this with a new SFSAlt
+              class with a static altSet() function that returns a std::vector.
+        Class SFSpace:
+            - Added move constructors and move assignment operators.
+            - Added member and global swap() functions.
+            - Routine isLensSpace() now returns a std::optional by value,
+              not a newly created pointer that could be null.
+            - Routine insertFibre() now throws an exception if alpha is zero.
+        Class ShortArray:
+            - New class that is essentially a variable-but-bounded sized
+              std::array.
+        Class SigCensus:
+            - New typedef SigIsoList to replace the old global SigIsoList.
+            - The old global formSigCensus() is now a static member function
+              formCensus(), which uses a type-safe template-based mechanism
+              for callbacks instead of function pointers with void* arguments.
+            - Function run() is now private.  The only way to access
+              this class is through the static routine formCensus().
+        Class SigIsoList:
+            - Renamed to SigCensus::IsoList.  The old name has been kept
+              as a deprecated typedef.
+        Class Signature:
+            - Added a copy assignment operator.
+            - Added move constructors and move assignment operators.
+            - Added member and global swap() functions.
+            - Function parse() now returns by value (not pointer), and throws
+              an exception on error (instead of returning null).
+            - Function triangulate() now returns by value.
+            - Function cycleCmp() is now a private member function (it was
+              very specialised).
+            - New function str() that takes extra arguments to customise
+              the output, in the same manner as writeCycles().
+        Class SigPartialIsomorphism:
+            - Added a copy assignment operator.
+            - Added move constructors and move assignment operators.
+            - Added member and global swap() functions.
+            - Function compareWith() now takes the other isomorphism by
+              reference, not by pointer; added function compareWithIdentity()
+              to implement the (undocumented) previous behaviour when
+              the other isomorphism was null.
         Class SimpleSurfaceBundle:
             - Class constants are now constexpr.
+            - Added member and global swap() functions.
         Class Simplex<dim>:
             - Simplified the class hierarchy; SimplexFaces and
-              SimplexFacesSuite are now merged.
+              SimplexFacesSuite are both gone.
             - New compile-time constants dimension and subdimension.
-        Class SnapPeaCensusManifold, SnapPeaCensusTri:
+        Class SnapPeaCensusManifold:
             - Class constants for the census sections are now constexpr.
-        Class SnapPeaTriangulation:
             - Added member and global swap() functions.
+        Class SnapPeaCensusTri:
+            - Class constants for the census sections are now constexpr.
+            - Routine isSmallSnapPeaCensusTri() is now called recognise(), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
+            - Deprecated clone().  Just use the copy constructor instead.
+        Class SnapPeaException, SnapPeaFatalError, SnapPeaMemoryFull:
+            - The base class SnapPeaException is removed; instead the
+              other classes inherit from standard C++ exception types,
+              and return meaningful error messages via what().
+            - Most member functions are now explicitly marked as noexcept.
+        Class SnapPeaUnsolvedCase:
+            - New exception class used when Regina needs to convert a clean
+              SnapPea returned-with-error into an exception.
+        Class SnapPeaTriangulation:
+            - Routine cusp() now returns a const reference, and users are
+              encouraged to copy this if they wish to keep the information.
+              Cusps are not meant to be uniquely identified by Cusp pointers.
+            - New routine cusps().
+            - New constructor that takes a link and builds its complement.
+            - The filename-or-contents constructor now throws an exception on
+              error, instead of creating a null SnapPea triangulation.
+            - Now supports move construction and copy/move assignment.
+            - Added member and global swap() functions.
+            - New routine nullify().
             - Added new routine enumerateCovers(), which combines SnapPea's
               find_representations() and construct_cover().
-            - Changed slopeEquations() to return a std::optional<MatrixInt>,
-              not a pointer that could be null.
             - Changed gluingEquations() and gluingEquationsRect() to return a
               MatrixInt by value, not by pointer.
-            - Changed fundGroupFilled() to return a GroupPresentation by
-              reference, not by pointer.
+            - Changed homologyFilled() and fundGroupFilled() to return by
+              const reference (not by pointer), and to throw exceptions
+              when preconditions are not met (instead of returning null).
+            - Replaced the two versions of volume() with separate functions
+              volume() and volumeWithPrecision() (which was already what
+              the Python interface offered).  Also, these routines now
+              throw exceptions in the case of a null triangulation instead of
+              silently returning zero volume.
+            - Changed slopeEquations() to return by value (not by pointer),
+              and to throw an exception if the triangulation is null.
             - Routines gluingEquations(), gluingEquationsRect(),
               fundGroupFilled() and homologyFilled() now have a precondition
               that this must not be a null SnapPea triangulation (instead of
               the old behaviour of returning a null pointer).
+            - Changed canonise() and protoCanonise() to return by value
+              (not pointer), and to throw exceptions on error.
+            - Replaced the old filledTriangulation() (which used a polymorphic
+              return type) with filledPartial() and filledAll() (whose return
+              types are known at compile time).
+            - New constructor that takes raw SnapPea kernel data.
+        Class SnappedBall:
+            - Routine formsBall() is now called recognise(), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
+            - Deprecated clone().  Just use the copy constructor instead.
+        Class SnappedTwoSphere:
+            - Routine formsSnappedTwoSphere() is now called recognise(), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - The variant of recognise() that took a pair of snapped balls
+              now takes these balls by reference, not pointer.  Likewise,
+              snappedBall() now returns by reference, not pointer.
+            - Added copy construction and copy assignment.
+            - Deprecated clone().  Just use the copy constructor instead.
+        Class Snapshot, SnapshotRef, Snapshottable, SnapshotWriteError:
+            - A new suite of classes for taking snapshots of a large
+              object at a fixed moment in time.
+        Class SFSpace:
+            - Renamed classType enumeration to ClassType.  The old name
+              is kept as a deprecated alias.
+        Class SpiralSolidTorus:
+            - Routine formsSpiralSolidTorus() is now called recognise(), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy and move construction, and copy and move assignment.
+            - Added member and global swap() functions.
+            - Routines makeCanonical() and isCanonical() now take no
+              arguments (the old triangulation argument was redundant).
+            - Deprecated clone().  Just use the copy constructor instead.
         Class StandardTriangulation:
-            - Routine homology() now returns a std::optional<AbelianGroup>,
-              not a newly allocated pointer that could be null.
+            - Routine isStandardTriangulation() is now called recognise(),
+              and now returns a std::unique_ptr.  Also, the triangulation
+              variant now takes its argument by const reference, not pointer.
+              The old name is kept as a deprecated alias.
+            - Routines homology() and homologyH1() now return by value, and
+              throw an exception on error instead of returning null.
+              Also, the alias homologyH1() is now deprecated.
+            - Routine manifold() now returns a std::unique_ptr.
+            - Renamed TeXName() to texName().  The old name is kept but
+              deprecated.
+        Class SurfaceExport:
+            - A proper flags class for the normal surface CSV export constants,
+              built from the SurfaceExportFields enumeration type.
+        Class SurfaceFilter:
+            - This is now an abstract base class.  If you need a filter
+              that accepts everything, use a default-constructed
+              SurfaceFilterProperties filter instead.
+        Class SurfaceFilterCombination:
+            - Added a copy assignment operator.
+            - Added member and global swap() functions.
         Class SurfaceFilterInfo<...>:
-            - Routine name() has been changed to a class constant.
-              This change is backward incompatible (but probably affects noone).
+            - Removed completely.
         Class SurfaceFilterProperties:
+            - Added a copy assignment operator.
+            - Added member and global swap() functions.
             - Routines that took a (const BoolSet&) now just take a
               BoolSet by value.
+        Enum SurfaceFilterType:
+            - Renamed the constant NS_FILTER_DEFAULT to
+              NS_FILTER_LEGACY_DEFAULT, since the corresponding class
+              SurfaceFilter is now an abstract base class.
         Class Tangle:
             - Added a copy assignment operator.
             - Added a move constructor and move assignment operator.
             - Renamed swapContents() to swap(); the old name is now a deprecated
               alias.  Also added a global regina::swap(Tangle&, Tangle&).
-        Class TreeTraversal<...>
-            - The verify() routines no longer allow a ready-made matrix of
-              matching/angle equations to be passed; also, they now take
-              their arguments by reference (not by pointer).
+            - Routines numClosure and denClosure() now return by value,
+              not pointer.
+            - Routine fromOrientedGauss() now returns by value (not pointer),
+              and throws an exception on error (instead of returning null).
+            - New routine crossings().
+        Class Text:
+            - Added a copy constructor and a copy assignment operator.
+            - Added member and global swap() functions.
+            - The std::string constructor and assignment operator now
+              take a string by value, allowing for more efficient moves.
+        Class TorusBundle:
+            - Added member and global swap() functions.
+        Class TreeDecomposition:
+            - Added a move constructor and move/copy assignment operators.
+            - Added member and global swap() functions.
+            - Changed the "raw graph" constructor from taking a raw C-style
+              array to take either a Matrix<bool> or a std::vector of rows.
+              The old constructor is removed completely.
+            - The fromPACE() routines now return by value (not pointer),
+              and throw an exception on error instead of (returning null)
+        Class TreeTraversal, TreeEnumeration, TreeSingleSoln, TautEnumeration:
+            - Removed the verify() routines, since this is basically just a
+              single matrix multiplication.
             - Changed buildStructure() and buildSurface() to return by value,
               not by newly allocated pointer.  Now throws an exception (instead
               of returning null) if the coordinate preconditions are not met.
+            - Constructors now take a NormalEncoding, not a NormalCoords, and
+              will now happily accept any valid encoding.
+            - The constraintsBroken() routines are gone; instead the class
+              constructor throws an exception on error.
+            - TreeEnumeration::run() and TautEnumeration::run() now use a
+              type-safe template-based mechanism for callbacks instead of
+              function pointers with void* arguments.  Moreover, the
+              true/false behaviour of the callback has been inverted for
+              consistency with other callback functions throughout Regina.
+            - All writeTypes(), writeSurface() and writeStructure() functions
+              (which are intended as drop-in callbacks) no longer have a
+              void pointer argument, and now return false instead of true
+              according to the new callback requirements described above.
+            - New routine typeString() to complement dumpTypes().
+            - Renamed nVisited() and nSolns() to visited() and solutions().
+              The old names have been removed completely.
         Class Triangulation<dim>:
+            - New constructor that takes a link and builds its complement.
+            - Now supports move construction and copy/move assignment.
+            - Routine fromIsoSig() now returns by value (not pointer), and
+              throws an exception on error (instead of returning null).
             - New alias fromSig(), which is is identical to fromIsoSig().
             - Routine simplices(), faces(), components(), boundaryComponents(),
               and the aliases vertices(), edges(), etc. no longer return a
@@ -498,11 +1446,28 @@ Version 6.1  [ TODO ]
               temporary (as was recommended) should be unaffected, and the
               Python behaviour of these functions is completely unchanged.
               The old names are kept as deprecated aliases.
+            - New routines newSimplices<k>() and newSimplices(k), along
+              with dimension-specific aliases newTriangles(), newTetrahedra()
+              and newPentachora().  The templated versions of these functions
+              can be used with structured binding.
+            - Routine splitIntoComponents() is replaced with a new routine
+              triangulateComponents() with different behaviour: it does not
+              insert the results into the packet tree or assign packet labels.
+              The old splitIntoComponents() has been removed completely,
+              since it relied on triangulations living in the packet tree.
+            - Routines findAllIsomorphisms() and findAllSubcomplexesIn()
+              no longer take an output iterator; instead they take a callback
+              action and an argument list.  Python supports both this new
+              callback form as well as the old form that returned a Python
+              list of isomorphisms.
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global
               regina::swap(Triangulation<dim>&, Triangulation<dim>&).
-            - Routine isoSig() now supports different encodings (but not
-              different decodings), via a new template parameter.
+            - Routine isoSig() now supports different signature types and
+              encodings (but not different decodings), via new template
+              parameters.  It also no longer takes an optional relabelling
+              pointer; instead there is a new function isoSigDetail() for
+              returning this.
             - Functions isIsomorphicTo() and isContainedIn() now return a
               std::optional<Isomorphism>, not a std::unique_ptr<Isomorphism>.
               The C++ syntax should be largely unaffected, and the Python
@@ -510,30 +1475,130 @@ Version 6.1  [ TODO ]
             - Simplified the class hierarchy; BoundaryComponentCalculator,
               EulerCalculator, FaceCalculator, FaceList and PachnerHelper are
               now gone, and there are a lot fewer regina::alias classes.
-            - FaceListSuite has been renamed to TriangulationFaceStorage.
+            - FaceListSuite is gone, now merged into TriangulationBase.
+            - The inner TopologyLock class now takes its argument by reference.
+            - Routine countFaces() now supports the case subdim == dim.
+            - Add variants of countFaces(), faces() and face() that take
+              the face dimension at runtime (this was already available
+              in Python, but is now also available in C++).
+            - Removed all of the old iterator typedefs (SimplexIterator,
+              VertexIterator, EdgeIterator, etc.).  Just use auto or
+              (if necessary) decltype(...) instead.
         Class Triangulation<3>:
             - All of the changes listed for Triangulation<dim> above.
             - New routine generalAngleStructure().
+            - Routine connectedSumDecomposition() is replaced with a new routine
+              summands() with different behaviour: it does not insert the
+              results into the packet tree or assign packet labels, and it
+              throws on error.  The old connectedSumDecomposition() has been
+              removed completely, since it relied on triangulations living
+              in the packet tree.
+            - Routine makeZeroEfficient() has been removed completely, since
+              it relied on triangulations living in the packet tree.  Instead
+              call summands(), which now formally guarantees 0-efficiency.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.  This function is now also available
               through Python, and can take a pure Python function as its
-              action argument.
+              action argument.  It no longer runs in the background (even if a
+              progress tracker is passed), and it now throws an exception
+              if the triangulation has multiple components.
+            - Routine simplifyExhaustive() no longer runs in the background
+              (even if a progress tracker is passed), and it now throws an
+              exception if the triangulation has multiple components.
             - Renamed hasNonTrivialSphereOrDisc() and
               hasOctagonalAlmostNormalSphere() to nonTrivialSphereOrDisc() and
               octagonalAlmostNormalSphere().  These routines now also return a
               std::optional<NormalSurface>, not a newly allocated pointer
               that may be null.
-            - Renamed findStrictAngleStructure() to strictAngleStructure(),
+            - Renamed findStrictAngleStructure() to strictAngleStructure();
+              moreover, this now returns by const reference if a solution
+              exists and throws an exception otherwise.
+            - Renamed isThreeSphere() and knowsThreeSphere() to isSphere() and
+              knowsSphere().  The old names are kept as deprecated aliases.
+            - New routines inAnyPacket() and isSnapPea().
+            - Functions snapPea() and saveSnapPea() are no longer virtual.
+            - The Link constructor is now deprecated, since Link::complement()
+              is more efficient and now returns by value.
+            - New static routine fromGluings().  This replaces the old
+              insertConstruction(), which is now deprecated.
+            - Function enterTextTriangulation() returns by value, not pointer.
+            - Routine fromSnapPea() now returns by value (not pointer), and
+              throws an exception on error (instead of returning null).
+            - Routine rehydrate() now returns by value, not pointer; also,
+              both rehydrate() and insertRehydration() now throw exceptions on
+              error instead of indicating this through return values.
+            - Routine turaevViro() now always runs in the current thread,
+              even if a progress tracker was passed.
+            - Both turaevViro() and turaevViroApprox() now use ALG_TREEWIDTH
+              as their default algorithm.  You can access the old algorithm
+              by passing ALG_BACKTRACK.
+            - Routine connectedSumWith() now adds fewer tetrahedra (thanks
+              to Adele Jackson).
+            - Changed maximalForestInSkeleton() to return by value
+              instead of returning through a reference argument.
+            - Changed maximalForestInBoundary() to return the edge set by
+              value, and to not return the vertex set at all (since this
+              is just all boundary vertices).
+            - Routines insertLayeredLoop(), insertLayeredLensSpace(),
+              insertAugTriSolidTorus() and insertSFSOverSphere() are all
+              deprecated.  Use the routines from Example<3> instead.
+            - Routine enterTextTriangulation() is now deprecated; this
+              is a relic from Regina's ancient past.
         Class Triangluation<4>:
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.  This function is now also available
               through Python, and can take a pure Python function as its
-              action argument.
+              action argument.  It no longer runs in the background (even if a
+              progress tracker is passed), and it now throws an exception
+              if the triangulation has multiple components.
+            - Routine simplifyExhaustive() no longer runs in the background
+              (even if a progress tracker is passed), and it now throws an
+              exception if the triangulation has multiple components.
+        Class TrieSet:
+            - This is no longer a template class (though its member
+              functions are still templated on the bitmask type).
+            - Added move/copy constructors and move/copy assignment operators.
+            - Added member and global swap() functions.
+            - Added short and detailed output functions.
+        Class TriSolidTorus:
+            - Routine formsTriSolidTorus() is now called recognise(), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
+            - Deprecated clone().  Just use the copy constructor instead.
+            - Changed isAnnulusSelfIdentified() to return a std::optional,
+              instead of returning the permutation via a pointer argument.
+        Class Tritmask1, Tritmask2, TritmaskLen{8,16,32,64}:
+            - Removed completely.  These classes were not being used anywhere
+              within Regina, and did not support tritmasks of arbitrary length.
         Class TrivialTri:
             - Class constants are now constexpr.
+            - Routine isTrivialTriangulation() is now called recognise(), and
+              returns a std::unique_ptr instead of a raw pointer.
+              The old name is kept as a deprecated alias.
+            - Added copy construction and copy assignment.
+            - Added member and global swap() functions.
+            - Deprecated clone().  Just use the copy constructor instead.
+        Class TxICore:
+            - Renamed TeXName() to texName().  The old name is kept but
+              deprecated.
+        Class TxIDiagonalCore, TxIParallelCore:
+            - Added move/copy constructors and move/copy assignment operators.
+            - Added member and global swap() functions.
+        Class TypeTrie:
+            - Added move/copy constructors and move/copy assignment operators.
+            - Added member and global swap() functions.
+            - Added short and detailed output functions.
+        Class UnsolvedCase:
+            - New exception class.
+        Class ValidityConstraints:
+            - This is a new, completely re-engineered class that replaces the
+              old EnumConstraints.  It is easier to use within enumeration
+              algorithms, and it carries significantly less overhead.
         Class Vector:
             - New operator !=.
             - New constructors that take iterator ranges and initialiser lists.
@@ -543,8 +1608,8 @@ Version 6.1  [ TODO ]
             - New routine scaleDown() for vectors over Regina's integer classes.
             - New typedef Element.
             - Provides the standard str() and detail() output functions.
-            - Renamed setElement() to set(); the old name is now a deprecated
-              alias.
+            - Added a non-const operator[]; the old setElement() is now
+              deprecated.
             - Operators +=, -=, *= now return a reference, as they should.
             - The class Vector<Integer> is now available in python, via
               the typedef VectorInt (in a similar way to MatrixInt).
@@ -554,20 +1619,44 @@ Version 6.1  [ TODO ]
         Class VectorInt, VectorLarge:
             - New typedefs for Vector<Integer> and Vector<LargeInteger>, for
               compatibility with MatrixInt.
+        Class Vertex<3>:
+            - Renamed link() to linkType().  There is no deprecated alias,
+              because this rename is designed to clear the way for a
+              different routine to be called link() in the future.
+              Anyone who used link() before will need to update their code now.
         Class XMLCallback:
             - The state constants have now been rolled into a State enum type.
         Function allowsNonOrientableLinks(), allowsInvalidFaces():
             - Removed these global functions (which were never available in
               python). Use Face<dim, subdim>::allowsNonOrientableLinks
               and Face<dim, subdim>::allowsInvalidFaces instead.
+        Function basicTokenise():
+            - Rewritten to return the list of tokens as a std::vector.
+              The old version has been kept also but is now deprecated.
         Function binomSmall(), binomMedium():
             - Both these functions are now inline and constexpr.
+        Function clonePtr():
+            - Removed completely: C++ has evolved a lot since 2007 and
+              these functions no longer make sense to keep around.
+        Function duplicate():
+            - Removed completely; just use strdup() instead.
         Function faceOppositeEdge<dim>():
             - These functions are now constexpr.
-        Function forCoords(), forFilter(), forPacket():
-            - Completely rewritten to take advantage of C++14 generic lambdas.
-              Any code that used these functions will need to be completely
-              rewritten (but should now become substantially simpler).
+        Function forCoords():
+            - Removed completely.  See the new NormalEncoding / HyperEncoding
+              and the redesigned NormalInfo / HyperInfo classes for details.
+        Function forFilter():
+            - Removed completely.
+        Function forPacket():
+            - Removed completely.
+        Function formSigCensus:
+            - Replaced with SigCensus::formCensus(), which also uses a
+              type-safe template-based mechanism for callbacks instead of a
+              function pointer with a single void* argument.  The old function
+              is removed completely.
+        Function gcdWithCoeffs():
+            - Changed this to return a tuple instead of using reference
+              arguments.  The old version is kept but deprecated.
         Function makeAngleEquations():
             - Now takes a const reference (not a const pointer), and returns
               a MatrixInt by value (not by newly allocated pointer).
@@ -575,27 +1664,53 @@ Version 6.1  [ TODO ]
             - Now takes a const reference (not a const pointer), and returns an
               EnumConstraints by value (not by newly allocated pointer).
         Function makeMatchingEquations():
-            - Now takes a const reference (not a const pointer), and returns a
-              std::optional<MatrixInt> instead of a pointer that could be null.
+            - Now takes a const reference (not a const pointer), returns
+              by value instead of pointer, and throws an exception on
+              error instead of returning null.
+        Function makePacket():
+            - A new suite of overload functions for converting mathematical
+              objects of type Held into wrapped packets of type PacketOf<Held>.
         Function makeZeroVector():
             - Removed completely.
         Function preImageOfLattice():
             - Now returns a MatrixInt by value.
+        Function readOrb():
+            - Like the other import functions in foreign, this routine returns
+              a packet; this means that the return type has changed from
+              Triangulation<3> to PacketOf<Triangulation<3>>.
+            - Now returns a shared_ptr instead of a raw pointer.
+        Function readDehydrationList():
+            - Now returns a shared_ptr instead of a raw pointer.
         Function readSigList(), readIsoSigList():
             - The old readIsoSigList() is now deprecated, in favour of a new
               template function readSigList() that can work with knots and
               also triangulations of any dimension.  The old readIsoSigList()
               has been kept as a deprecated alias.
+            - Now returns a shared_ptr instead of a raw pointer.
+        Function resUsage():
+            - New function that fetches the same as writeResUsage(), but
+              returns it directly instead of writing to an output stream.
         Function smithNormalForm(), metricalSmithNormalForm():
             - The change of basis matrices no longer need to have the correct
               size (and may even be uninitialised) before they are passed in.
+            - The change of basis matrices are now passed by reference, which
+              means for metricalSmithNormalForm() they are no longer optional.
+        Function stringToToken()
+            - Replaced the two overloads with a single function that
+              takes a std::string by value, for better move optimisation.
         Function tightEncode(), tightEncoding():
             - New global function to help with perfect hashes of different
               types of integers.
         Function torsionAutInverse():
             - Now returns a MatrixInt by value.
+        Function valueOf():
+            - The Integer / LargeInteger variants are deprecated.  Just use the
+              (Large)Integer assignment operator inside a try/catch block.
         Global constants base64Table, base64Spare:
             - Added to support the base64 encoding/decoding routines.
+        Global constant packetTypeHolds<T>:
+            - Added to support compile-time conversion from types held by
+              packet wrappers to the corresponding packet type constants.
         Global arrays quadSeparating, quadMeeting, quadDefn, quadPartner,
                 quadString:
             - These are all now inline constexpr.
@@ -608,28 +1723,59 @@ Version 6.1  [ TODO ]
         Macro ENABLE_MEMBER_FOR_REGINA_INTEGER:
             - New macro for conditionally enabling or disabling member
               functions in template classes.
+        Macro REGINA_PACKET:
+            - No longer takes an initial class argument.
+        Header packet/packetregistry.h, packet/packetregistry-impl.h:
+            - Removed completely.
+        Header surfaces/coordregistry.h, surfaces/coordregistry-impl.h:
+            - Removed completely.
+        Header surfaces/filterregistry.h, surfaces/filterregistry-impl.h:
+            - Removed completely.
+        Header utilities/memutils.h:
+            - Removed completely.
         Header utilities/property.h:
+            - Removed completely.
+        Header utilities/ptrutils.h:
             - Removed completely.
         Header utilities/registryutils.h:
             - Removed completely.
     PYTHON:
-        - Updated the included pybind11 library from 2.6.1 to 2.6.2.
+        - Much more of Regina's C++ interface is accessible to Python.
+          Essentially what remains unwrapped is that which makes no sense to
+          wrap: direct interaction with C++ input/output streams, and code
+          that is heavily templated using custom types as template arguments.
+        - Updated the included pybind11 library from 2.6.1 to 2.8.1.
         - All face embedding classes now have a __repr__() for easier printing.
           This means, for instance, that print(face.embeddings()) is now useful.
         - Likewise, BoolSet and DiscType now have __repr__().
         - Wrapped Perm<n>::SnIndex() for n=2,3,4,5; this alias has been present
           in C++ for a long time but was somehow never wrapped in Python.
+        - All regina functions that used to throw std::invalid_argument on
+          error now throw regina::InvalidArgument instead.
+        - Removed wrappings for all C++ functions that took an output stream,
+          where this was assumed to be std::cout in Python
+          (e.g., Link::writePACE(std::ostream&).  Python users should just use
+          the string versions of these functions instead (e.g., Link::pace()).
     USER INTERFACES:
         - Removed the View/Edit action from the toolbar, since you might as
           well just double-click on the packet instead.
         - Gave some of the standard system icons (open, save, close, etc.)
           a long-awaited refresh.
     UTILITIES:
+        regconvert:
+            - Added options -3 and -7 to support old and new XML file formats.
         retriangulate:
             - Now works with knots as well as 3/4-manifold triangulations.
     TEST SUITE:
         - The command-line utilities now have their own dedicated tests (in
           addition to the engine and python tests which were already present).
+
+Version 6.0.1  [ 12 February, 2021 ]
+
+    PYTHON:
+        - Fixed an issue where the Triangulation3 constructor could become
+          unusable in the graphical user interface.  This issue did not
+          affect command-line users (e.g., regina-python users).
 
 Version 6.0  [ 11 January, 2021 ]
 

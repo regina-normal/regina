@@ -73,17 +73,16 @@ class TextUI : public QObject, public PacketUI {
          * Constructor and destructor.
          */
         TextUI(regina::Text* packet, PacketPane* newEnclosingPane);
-        ~TextUI();
+        ~TextUI() override;
 
         /**
          * PacketUI overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        PacketEditIface* getEditIface();
-        QString getPacketMenuText() const;
-        void refresh();
-        void setReadWrite(bool readWrite);
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        PacketEditIface* getEditIface() override;
+        QString getPacketMenuText() const override;
+        void refresh() override;
 };
 
 inline PacketEditIface* TextUI::getEditIface() {

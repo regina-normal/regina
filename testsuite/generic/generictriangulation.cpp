@@ -50,6 +50,7 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         using TriangulationTest<dim>::ballBundle;
         using TriangulationTest<dim>::twistedBallBundle;
 
+        using TriangulationTest<dim>::verifyCopyMove;
         using TriangulationTest<dim>::verifyMakeCanonical;
         using TriangulationTest<dim>::verifyIsomorphismSignature;
         using TriangulationTest<dim>::verifyOrient;
@@ -70,15 +71,20 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         /**
          * Run a given test over all hand-coded test cases.
          */
-        void testManualAll(void (*f)(regina::Triangulation<dim>*)) {
-            f(&empty);
-            f(&sphere);
-            f(&simplicialSphere);
-            f(&sphereBundle);
-            f(&twistedSphereBundle);
-            f(&ball);
-            f(&ballBundle);
-            f(&twistedBallBundle);
+        void testManualAll(
+                void (*f)(const regina::Triangulation<dim>&, const char*)) {
+            f(empty, "Empty");
+            f(sphere, "Sphere");
+            f(simplicialSphere, "Simplicial sphere");
+            f(sphereBundle, "Sphere bundle");
+            f(twistedSphereBundle, "Twisted sphere bundle");
+            f(ball, "Ball");
+            f(ballBundle, "Ball bundle");
+            f(twistedBallBundle, "Twisted ball bundle");
+        }
+
+        void copyMove() {
+            testManualAll(TriangulationTest<dim>::verifyCopyMove);
         }
 
         void makeCanonical() {
@@ -113,92 +119,97 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         }
 
         void validity() {
-            verifyValid(empty);
-            verifyValid(sphere);
-            verifyValid(simplicialSphere);
-            verifyValid(sphereBundle);
-            verifyValid(twistedSphereBundle);
-            verifyValid(ball);
-            verifyValid(ballBundle);
-            verifyValid(twistedBallBundle);
+            verifyValid(empty, true, "Empty");
+            verifyValid(sphere, true, "Sphere");
+            verifyValid(simplicialSphere, true, "Simplicial sphere");
+            verifyValid(sphereBundle, true, "Sphere bundle");
+            verifyValid(twistedSphereBundle, true, "Twisted sphere bundle");
+            verifyValid(ball, true, "Ball");
+            verifyValid(ballBundle, true, "Ball bundle");
+            verifyValid(twistedBallBundle, true, "Twisted ball bundle");
         }
 
         void connectedness() {
-            verifyConnected(empty);
-            verifyConnected(sphere);
-            verifyConnected(simplicialSphere);
-            verifyConnected(sphereBundle);
-            verifyConnected(twistedSphereBundle);
-            verifyConnected(ball);
-            verifyConnected(ballBundle);
-            verifyConnected(twistedBallBundle);
+            verifyConnected(empty, true, "Empty");
+            verifyConnected(sphere, true, "Sphere");
+            verifyConnected(simplicialSphere, true, "Simplicial sphere");
+            verifyConnected(sphereBundle, true, "Sphere bundle");
+            verifyConnected(twistedSphereBundle, true, "Twisted sphere bundle");
+            verifyConnected(ball, true, "Ball");
+            verifyConnected(ballBundle, true, "Ball bundle");
+            verifyConnected(twistedBallBundle, true, "Twisted ball bundle");
         }
 
         void orientability() {
-            verifyOrientable(empty);
-            verifyOrientable(sphere);
-            verifyOrientable(simplicialSphere);
-            verifyOrientable(sphereBundle);
-            verifyOrientable(twistedSphereBundle, false);
-            verifyOrientable(ball);
-            verifyOrientable(ballBundle);
-            verifyOrientable(twistedBallBundle, false);
+            verifyOrientable(empty, true, "Empty");
+            verifyOrientable(sphere, true, "Sphere");
+            verifyOrientable(simplicialSphere, true, "Simplicial sphere");
+            verifyOrientable(sphereBundle, true, "Sphere bundle");
+            verifyOrientable(twistedSphereBundle, false,
+                "Twisted sphere bundle");
+            verifyOrientable(ball, true, "Ball");
+            verifyOrientable(ballBundle, true, "Ball bundle");
+            verifyOrientable(twistedBallBundle, false, "Twisted ball bundle");
         }
 
         void eulerChar() {
-            verifyEulerCharTri(empty, 0);
-            verifyEulerCharTri(sphere, (dim % 2 ? 0 : 2));
-            verifyEulerCharTri(simplicialSphere, (dim % 2 ? 0 : 2));
-            verifyEulerCharTri(sphereBundle, 0);
-            verifyEulerCharTri(twistedSphereBundle, 0);
-            verifyEulerCharTri(ball, 1);
-            verifyEulerCharTri(ballBundle, 0);
-            verifyEulerCharTri(twistedBallBundle, 0);
+            verifyEulerCharTri(empty, 0, "Empty");
+            verifyEulerCharTri(sphere, (dim % 2 ? 0 : 2), "Sphere");
+            verifyEulerCharTri(simplicialSphere, (dim % 2 ? 0 : 2),
+                "Simplicial sphere");
+            verifyEulerCharTri(sphereBundle, 0, "Sphere bundle");
+            verifyEulerCharTri(twistedSphereBundle, 0, "Twisted sphere bundle");
+            verifyEulerCharTri(ball, 1, "Ball");
+            verifyEulerCharTri(ballBundle, 0, "Ball bundle");
+            verifyEulerCharTri(twistedBallBundle, 0, "Twisted ball bundle");
         }
 
         void boundaryCount() {
-            verifyBoundaryCount(empty, 0);
-            verifyBoundaryCount(sphere, 0);
-            verifyBoundaryCount(simplicialSphere, 0);
-            verifyBoundaryCount(sphereBundle, 0);
-            verifyBoundaryCount(twistedSphereBundle, 0);
-            verifyBoundaryCount(ball, 1);
-            verifyBoundaryCount(ballBundle, 1);
-            verifyBoundaryCount(twistedBallBundle, 1);
+            verifyBoundaryCount(empty, 0, 0, 0, "Empty");
+            verifyBoundaryCount(sphere, 0, 0, 0, "Sphere");
+            verifyBoundaryCount(simplicialSphere, 0, 0, 0, "Simplicial sphere");
+            verifyBoundaryCount(sphereBundle, 0, 0, 0, "Sphere bundle");
+            verifyBoundaryCount(twistedSphereBundle, 0, 0, 0,
+                "Twisted sphere bundle");
+            verifyBoundaryCount(ball, 1, 0, 0, "Ball");
+            verifyBoundaryCount(ballBundle, 1, 0, 0, "Ball bundle");
+            verifyBoundaryCount(twistedBallBundle, 1, 0, 0,
+                "Twisted ball bundle");
         }
 
         void boundaryHomology() {
-            verifyBoundaryH1(ball, 0, "0");
-            verifyBoundaryH1(ballBundle, 0, "Z");
-            verifyBoundaryH1(twistedBallBundle, 0, "Z");
+            verifyBoundaryH1(ball, 0, "0", "Ball");
+            verifyBoundaryH1(ballBundle, 0, "Z", "Ball bundle");
+            verifyBoundaryH1(twistedBallBundle, 0, "Z", "Twisted ball bundle");
         }
 
         void homologyH1() {
-            verifyHomology(empty, "0");
-            verifyHomology(sphere, "0");
-            verifyHomology(simplicialSphere, "0");
-            verifyHomology(sphereBundle, "Z");
-            verifyHomology(twistedSphereBundle, "Z");
-            verifyHomology(ball, "0");
-            verifyHomology(ballBundle, "Z");
-            verifyHomology(twistedBallBundle, "Z");
+            verifyHomology(empty, "0", "Empty");
+            verifyHomology(sphere, "0", "Sphere");
+            verifyHomology(simplicialSphere, "0", "Simplicial sphere");
+            verifyHomology(sphereBundle, "Z", "Sphere bundle");
+            verifyHomology(twistedSphereBundle, "Z", "Twisted sphere bundle");
+            verifyHomology(ball, "0", "Ball");
+            verifyHomology(ballBundle, "Z", "Ball bundle");
+            verifyHomology(twistedBallBundle, "Z", "Twisted ball bundle");
         }
 
         void fundGroup() {
-            verifyFundGroup(empty, "0");
-            verifyFundGroup(sphere, "0");
-            verifyFundGroup(simplicialSphere, "0");
-            verifyFundGroup(sphereBundle, "Z");
-            verifyFundGroup(twistedSphereBundle, "Z");
-            verifyFundGroup(ball, "0");
-            verifyFundGroup(ballBundle, "Z");
-            verifyFundGroup(twistedBallBundle, "Z");
+            verifyFundGroup(empty, "0", "Empty");
+            verifyFundGroup(sphere, "0", "Sphere");
+            verifyFundGroup(simplicialSphere, "0", "Simplicial sphere");
+            verifyFundGroup(sphereBundle, "Z", "Sphere bundle");
+            verifyFundGroup(twistedSphereBundle, "Z", "Twisted sphere bundle");
+            verifyFundGroup(ball, "0", "Ball");
+            verifyFundGroup(ballBundle, "Z", "Ball bundle");
+            verifyFundGroup(twistedBallBundle, "Z", "Twisted ball bundle");
         }
 };
 
 class Triangulation5Test : public GenericTriangulationTest<5> {
     CPPUNIT_TEST_SUITE(Triangulation5Test);
 
+    CPPUNIT_TEST(copyMove);
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
@@ -228,6 +239,7 @@ class Triangulation5Test : public GenericTriangulationTest<5> {
 class Triangulation6Test : public GenericTriangulationTest<6> {
     CPPUNIT_TEST_SUITE(Triangulation6Test);
 
+    CPPUNIT_TEST(copyMove);
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
     CPPUNIT_TEST(orient);
@@ -258,6 +270,7 @@ class Triangulation6Test : public GenericTriangulationTest<6> {
 class Triangulation8Test : public GenericTriangulationTest<8> {
     CPPUNIT_TEST_SUITE(Triangulation8Test);
 
+    CPPUNIT_TEST(copyMove);
     /**
      * Isomorphism-related routines have running times that include
      * a factor of (dim+1)!, which makes them too slow in higher dimensions.

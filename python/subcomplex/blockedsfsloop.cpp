@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/blockedsfsloop.h"
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
@@ -41,11 +42,17 @@ using regina::BlockedSFSLoop;
 void addBlockedSFSLoop(pybind11::module_& m) {
     pybind11::class_<BlockedSFSLoop, regina::StandardTriangulation>(
             m, "BlockedSFSLoop")
+        .def(pybind11::init<const BlockedSFSLoop&>())
+        .def("swap", &BlockedSFSLoop::swap)
         .def("region", &BlockedSFSLoop::region,
             pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &BlockedSFSLoop::matchingReln,
             pybind11::return_value_policy::reference_internal)
-        .def_static("isBlockedSFSLoop", &BlockedSFSLoop::isBlockedSFSLoop)
+        .def_static("recognise", &BlockedSFSLoop::recognise)
+        .def_static("isBlockedSFSLoop", // deprecated
+            &BlockedSFSLoop::recognise)
     ;
+
+    m.def("swap", (void(*)(BlockedSFSLoop&, BlockedSFSLoop&))(regina::swap));
 }
 

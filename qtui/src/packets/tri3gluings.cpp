@@ -38,6 +38,7 @@
 #include "snappea/snappeatriangulation.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example3.h"
 
 // UI includes:
 #include "edittableview.h"
@@ -54,6 +55,7 @@
 #include "choosers/facechooser.h"
 
 #include <memory>
+#include <thread>
 #include <QAction>
 #include <QCoreApplication>
 #include <QFileInfo>
@@ -227,7 +229,7 @@ bool GluingsModel3::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     // Yes!  Go ahead and make the change.
-    regina::Packet::ChangeEventSpan span(tri_);
+    regina::Triangulation<3>::ChangeEventSpan span(*tri_);
 
     // First unglue from the old partner if it exists.
     if (t->adjacentSimplex(face))
@@ -282,7 +284,7 @@ QString GluingsModel3::isFaceStringValid(unsigned long srcTet, int srcFace,
 void GluingsModel3::showError(const QString& message) {
     // We should actually pass the view to the message box, not 0, but we
     // don't have access to any widget from here...
-    ReginaSupport::info(0 /* should be the view? */,
+    ReginaSupport::info(nullptr /* should be the view? */,
         tr("This is not a valid gluing."), message);
 }
 
@@ -311,23 +313,19 @@ regina::Perm<4> GluingsModel3::faceStringToPerm(int srcFace, const QString& str)
         destVertex[3]) * regina::Triangle<3>::ordering(srcFace).inverse();
 }
 
-Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
-        PacketTabbedUI* useParentUI, bool readWrite) :
+Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
+        PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of face gluings.
-    model = new GluingsModel3(packet, readWrite);
+    model = new GluingsModel3(packet, true /* read-write */);
     faceTable = new EditTableView();
     faceTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     faceTable->setModel(model);
 
-    if (readWrite) {
-        QAbstractItemView::EditTriggers flags(
-            QAbstractItemView::AllEditTriggers);
-        flags ^= QAbstractItemView::CurrentChanged;
-        faceTable->setEditTriggers(flags);
-    } else
-        faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
+    QAbstractItemView::EditTriggers flags(
+        QAbstractItemView::AllEditTriggers);
+    flags ^= QAbstractItemView::CurrentChanged;
+    faceTable->setEditTriggers(flags);
 
     faceTable->setWhatsThis(tr("<qt>A table specifying which tetrahedron "
         "faces are identified with which others.<p>"
@@ -361,10 +359,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actAddTet->setText(tr("&Add Tet"));
     actAddTet->setIcon(ReginaSupport::regIcon("insert"));
     actAddTet->setToolTip(tr("Add a new tetrahedron"));
-    actAddTet->setEnabled(readWrite);
     actAddTet->setWhatsThis(tr("Add a new tetrahedron to this "
         "triangulation."));
-    enableWhenWritable.push_back(actAddTet);
     triActionList.push_back(actAddTet);
     connect(actAddTet, SIGNAL(triggered()), this, SLOT(addTet()));
 
@@ -390,7 +386,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actSimplify->setIcon(ReginaSupport::regIcon("simplify"));
     actSimplify->setToolTip(tr(
         "Simplify the triangulation as far as possible"));
-    actSimplify->setEnabled(readWrite);
     actSimplify->setWhatsThis(tr("Simplify this triangulation to use fewer "
         "tetrahedra without changing the underlying 3-manifold.  This "
         "triangulation will be modified directly.<p>"
@@ -401,21 +396,18 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "the <i>Make 0-Efficient</i> routine for a slower but more powerful "
         "reduction."));
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
-    enableWhenWritable.push_back(actSimplify);
     triActionList.push_back(actSimplify);
 
-    QAction* actEltMove = new QAction(this);
+    auto* actEltMove = new QAction(this);
     actEltMove->setText(tr("&Elementary Moves..."));
     actEltMove->setToolTip(tr(
         "Modify the triangulation using elementary moves"));
-    actEltMove->setEnabled(readWrite);
     actEltMove->setWhatsThis(tr("<qt>Perform elementary moves upon this "
         "triangulation.  <i>Elementary moves</i> are modifications local to "
         "a small number of tetrahedra that do not change the underlying "
         "3-manifold.<p>"
         "A dialog will be presented for you to select which "
         "elementary moves to apply.</qt>"));
-    enableWhenWritable.push_back(actEltMove);
     triActionList.push_back(actEltMove);
     connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
 
@@ -428,22 +420,19 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actOrient->setIcon(ReginaSupport::regIcon("orient"));
     actOrient->setToolTip(tr(
         "Relabel vertices of tetrahedra for consistent orientation"));
-    actOrient->setEnabled(readWrite);
     actOrient->setWhatsThis(tr("<qt>Relabel the vertices of each tetrahedron "
         "so that all tetrahedra are oriented consistently, i.e., "
         "so that orientation is preserved across adjacent faces.<p>"
         "If this triangulation includes both orientable and non-orientable "
         "components, only the orientable components will be relabelled.</qt>"));
-    enableWhenWritable.push_back(actOrient);
     triActionList.push_back(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
-    QAction* actReflect = new QAction(this);
+    auto* actReflect = new QAction(this);
     actReflect->setText(tr("Re&flect"));
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
     actReflect->setToolTip(tr(
         "Reverse the orientation of each tetrahedron"));
-    actReflect->setEnabled(readWrite);
     actReflect->setWhatsThis(tr("<qt>Relabel the vertices of each tetrahedron "
         "so that the orientations of all tetrahedra are reversed.<p>"
         "If this triangulation is oriented, then the overall effect will be "
@@ -452,28 +441,25 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     triActionList.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
-    QAction* actBarycentricSubdivide = new QAction(this);
+    auto* actBarycentricSubdivide = new QAction(this);
     actBarycentricSubdivide->setText(tr("&Barycentric Subdivision"));
     actBarycentricSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
     actBarycentricSubdivide->setToolTip(tr(
         "Perform a barycentric subdivision"));
-    actBarycentricSubdivide->setEnabled(readWrite);
     actBarycentricSubdivide->setWhatsThis(tr("Perform a barycentric "
         "subdivision on this triangulation.  The triangulation will be "
         "changed directly.<p>"
         "This operation involves subdividing each tetrahedron into "
         "24 smaller tetrahedra."));
-    enableWhenWritable.push_back(actBarycentricSubdivide);
     triActionList.push_back(actBarycentricSubdivide);
     connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
 
-    QAction* actIdealToFinite = new QAction(this);
+    auto* actIdealToFinite = new QAction(this);
     actIdealToFinite->setText(tr("&Truncate Ideal Vertices"));
     actIdealToFinite->setIcon(ReginaSupport::regIcon("finite"));
     actIdealToFinite->setToolTip(tr(
         "Truncate any ideal vertices"));
-    actIdealToFinite->setEnabled(readWrite);
     actIdealToFinite->setWhatsThis(tr("Convert this from an ideal "
         "triangulation to a finite triangulation.  Any vertices whose "
         "links are neither 2-spheres nor discs "
@@ -482,16 +468,14 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "vertices of this type to truncate, this operation will have no "
         "effect.<p>"
         "This action was previously called <i>Ideal to Finite</i>."));
-    enableWhenWritable.push_back(actIdealToFinite);
     triActionList.push_back(actIdealToFinite);
     connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
-    QAction* actFiniteToIdeal = new QAction(this);
+    auto* actFiniteToIdeal = new QAction(this);
     actFiniteToIdeal->setText(tr("Make &Ideal"));
     actFiniteToIdeal->setIcon(ReginaSupport::regIcon("cone"));
     actFiniteToIdeal->setToolTip(tr(
         "Convert real boundary components into ideal vertices"));
-    actFiniteToIdeal->setEnabled(readWrite);
     actFiniteToIdeal->setWhatsThis(tr("Convert this from a finite "
         "triangulation to an ideal triangulation.  Each real boundary "
         "component (formed from two or more boundary triangles) will be "
@@ -500,61 +484,52 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "components will be filled in with balls.<p>"
         "This triangulation will be modified directly.  If there are no "
         "real boundary components, this operation will have no effect."));
-    enableWhenWritable.push_back(actFiniteToIdeal);
     triActionList.push_back(actFiniteToIdeal);
     connect(actFiniteToIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
 
-    QAction* actDoubleCover = new QAction(this);
+    auto* actDoubleCover = new QAction(this);
     actDoubleCover->setText(tr("&Double Cover"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
     actDoubleCover->setToolTip(tr(
         "Convert the triangulation to its orientable double cover"));
-    actDoubleCover->setEnabled(readWrite);
     actDoubleCover->setWhatsThis(tr("Convert a non-orientable "
         "triangulation into an orientable double cover.  This triangulation "
         "will be modified directly.<p>"
         "If this triangulation is already orientable, it will simply be "
         "duplicated, resulting in a disconnected triangulation."));
-    enableWhenWritable.push_back(actDoubleCover);
     triActionList.push_back(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
-    QAction* actPuncture = new QAction(this);
+    auto* actPuncture = new QAction(this);
     actPuncture->setText(tr("Puncture"));
     actPuncture->setIcon(ReginaSupport::regIcon("puncture"));
     actPuncture->setToolTip(tr(
         "Remove a ball from the interior of the triangulation"));
-    actPuncture->setEnabled(readWrite);
     actPuncture->setWhatsThis(tr("Removes a ball from the interior of "
         "this triangulation.  "
         "This triangulation will be modified directly."));
-    enableWhenWritable.push_back(actPuncture);
     triActionList.push_back(actPuncture);
     connect(actPuncture, SIGNAL(triggered()), this, SLOT(puncture()));
 
-    QAction* actDrillEdge = new QAction(this);
+    auto* actDrillEdge = new QAction(this);
     actDrillEdge->setText(tr("Drill Ed&ge..."));
     actDrillEdge->setIcon(ReginaSupport::regIcon("drilledge"));
     actDrillEdge->setToolTip(tr(
         "Drill out a regular neighbourhood of an edge"));
-    actDrillEdge->setEnabled(readWrite);
     actDrillEdge->setWhatsThis(tr("Drill out a regular neighbourhood "
         "of an edge of this triangulation.  "
         "This triangulation will be modified directly."));
-    enableWhenWritable.push_back(actDrillEdge);
     triActionList.push_back(actDrillEdge);
     connect(actDrillEdge, SIGNAL(triggered()), this, SLOT(drillEdge()));
 
-    QAction* actConnectedSumWith = new QAction(this);
+    auto* actConnectedSumWith = new QAction(this);
     actConnectedSumWith->setText(tr("Connected Sum With..."));
     actConnectedSumWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
     actConnectedSumWith->setToolTip(tr(
         "Make this into a connected sum with another triangulation"));
-    actConnectedSumWith->setEnabled(readWrite);
     actConnectedSumWith->setWhatsThis(tr("Forms the connected sum "
         "of this triangulation with some other triangulation.  "
         "This triangulation will be modified directly."));
-    enableWhenWritable.push_back(actConnectedSumWith);
     triActionList.push_back(actConnectedSumWith);
     connect(actConnectedSumWith, SIGNAL(triggered()), this,
         SLOT(connectedSumWith()));
@@ -578,7 +553,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     connect(actBoundaryComponents, SIGNAL(triggered()), this,
         SLOT(boundaryComponents()));
 
-    QAction* actVertexLinks = new QAction(this);
+    auto* actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
     actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
     actVertexLinks->setToolTip(tr(
@@ -592,7 +567,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     triActionList.push_back(actVertexLinks);
     connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
 
-    QAction* actSplitIntoComponents = new QAction(this);
+    auto* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
     actSplitIntoComponents->setIcon(ReginaSupport::regIcon("components"));
     actSplitIntoComponents->setToolTip(tr(
@@ -608,7 +583,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     connect(actSplitIntoComponents, SIGNAL(triggered()), this,
         SLOT(splitIntoComponents()));
 
-    QAction* actConnectedSumDecomposition = new QAction(this);
+    auto* actConnectedSumDecomposition = new QAction(this);
     actConnectedSumDecomposition->setText(tr("Co&nnected Sum Decomposition"));
     actConnectedSumDecomposition->setIcon(ReginaSupport::regIcon(
         "connectedsum"));
@@ -623,11 +598,10 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     connect(actConnectedSumDecomposition, SIGNAL(triggered()), this,
         SLOT(connectedSumDecomposition()));
 
-    QAction* actZeroEff = new QAction(this);
+    auto* actZeroEff = new QAction(this);
     actZeroEff->setText(tr("Make &0-Efficient"));
     actZeroEff->setToolTip(tr(
         "Convert this into a 0-efficient triangulation if possible"));
-    actZeroEff->setEnabled(readWrite);
     actZeroEff->setWhatsThis(tr("<qt>Convert this into a 0-efficient "
         "triangulation of the same underlying 3-manifold, if possible.  "
         "This triangulation will be modified directly.<p>"
@@ -636,7 +610,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "Note also that some 3-manifolds (such as composite 3-manifolds) "
         "can never have 0-efficient triangulations.  You will be notified "
         "if this is the case.</qt>"));
-    enableWhenWritable.push_back(actZeroEff);
     triActionList.push_back(actZeroEff);
     connect(actZeroEff, SIGNAL(triggered()), this, SLOT(makeZeroEfficient()));
 
@@ -644,7 +617,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     sep->setSeparator(true);
     triActionList.push_back(sep);
 
-    QAction* actToSnapPea = new QAction(this);
+    auto* actToSnapPea = new QAction(this);
     actToSnapPea->setText(tr("Convert to SnapPea"));
     actToSnapPea->setIcon(ReginaSupport::regIcon("packet_snappea"));
     actToSnapPea->setToolTip(tr("Convert this to a SnapPea triangulation"));
@@ -695,24 +668,6 @@ void Tri3GluingsUI::refresh() {
 
 void Tri3GluingsUI::endEdit() {
     faceTable->endEdit();
-}
-
-void Tri3GluingsUI::setReadWrite(bool readWrite) {
-    model->setReadWrite(readWrite);
-
-    if (readWrite) {
-        QAbstractItemView::EditTriggers flags(
-            QAbstractItemView::AllEditTriggers);
-        flags ^= QAbstractItemView::CurrentChanged;
-        faceTable->setEditTriggers(flags);
-    } else
-        faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    for (auto action : enableWhenWritable)
-        action->setEnabled(readWrite);
-
-    updateRemoveState();
-    updateActionStates();
 }
 
 void Tri3GluingsUI::addTet() {
@@ -766,7 +721,7 @@ void Tri3GluingsUI::removeSelectedTets() {
     if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
-        regina::Packet::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(*tri);
         for (i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
@@ -775,7 +730,25 @@ void Tri3GluingsUI::removeSelectedTets() {
 void Tri3GluingsUI::simplify() {
     endEdit();
 
+    if (tri->isEmpty()) {
+        ReginaSupport::info(ui, tr("This triangulation is empty."));
+        return;
+    }
+
     if (! tri->intelligentSimplify()) {
+        if (tri->countComponents() > 1) {
+            ReginaSupport::info(ui,
+                tr("I could not simplify the triangulation."),
+                tr("<qt>I have only tried fast heuristics so far.<p>"
+                    "For connected triangulations I can try a more exaustive "
+                    "approach, but for multiple-component triangulations "
+                    "this is not yet available.<p>"
+                    "To use this more exhaustive approach, you could "
+                    "split the triangulation into components and try to "
+                    "simplify each component independently.</qt>"));
+            return;
+        }
+
         QMessageBox msgBox(ui);
         msgBox.setWindowTitle(tr("Information"));
         msgBox.setIcon(QMessageBox::Information);
@@ -799,7 +772,8 @@ void Tri3GluingsUI::simplifyExhaustive(int height) {
     ProgressDialogOpen dlg(&tracker, tr("Searching Pachner graph..."),
         tr("Tried %1 triangulations"), ui);
 
-    tri->simplifyExhaustive(height, regina::politeThreads(), &tracker);
+    std::thread(&Triangulation<3>::simplifyExhaustive, tri, height,
+        regina::politeThreads(), &tracker).detach();
 
     if (dlg.run() && tri->size() == initSize) {
         dlg.hide();
@@ -866,7 +840,7 @@ void Tri3GluingsUI::idealToFinite() {
             tr("This triangulation has no ideal vertices."),
             tr("Only ideal vertices can be truncated."));
     else {
-        regina::Packet::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(*tri);
         tri->idealToFinite();
         tri->intelligentSimplify();
     }
@@ -881,7 +855,7 @@ void Tri3GluingsUI::finiteToIdeal() {
             tr("Only real boundary components will be converted into "
             "ideal vertices."));
     else {
-        regina::Packet::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(*tri);
         tri->finiteToIdeal();
         tri->intelligentSimplify();
     }
@@ -906,7 +880,7 @@ void Tri3GluingsUI::puncture() {
         ReginaSupport::info(ui,
             tr("I cannot puncture an empty triangulation."));
     else {
-        regina::Packet::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(*tri);
         tri->puncture();
         tri->intelligentSimplify();
     }
@@ -938,7 +912,7 @@ void Tri3GluingsUI::drillEdge() {
             tr("Regina will drill out a regular neighbourhood around whichever "
                 "edge you choose."));
         if (e) {
-            regina::Triangulation<3>* ans = nullptr;
+            std::shared_ptr<regina::PacketOf<Triangulation<3>>> ans;
 
             // Avoid drillEdge() where possible, since that creates too
             // many tetrahedra.
@@ -948,8 +922,8 @@ void Tri3GluingsUI::drillEdge() {
                         e->vertex(1)->boundaryComponent()->isReal())) {
                 // We already connect with real boundary, so we must not
                 // combine this with new ideal boundary.
-                if (e->vertex(0)->link() == regina::Vertex<3>::SPHERE ||
-                        e->vertex(1)->link() == regina::Vertex<3>::SPHERE) {
+                if (e->vertex(0)->linkType() == regina::Vertex<3>::SPHERE ||
+                        e->vertex(1)->linkType() == regina::Vertex<3>::SPHERE) {
                     // We are drilling an edge that joins real boundary
                     // with an internal vertex.
                     // Topologically, this does nothing at all.
@@ -963,9 +937,8 @@ void Tri3GluingsUI::drillEdge() {
                     // We are drilling an edge between two boundaries,
                     // at least one of which is real.  Therefore we
                     // cannot use pinchEdge(), which would create a
-                    // mixed real-ideal boundary.  Since drillEdge() is
-                    // deprecated (and will be removed in Regina 6.1),
-                    // we will just refuse to do it here in the GUI.
+                    // mixed real-ideal boundary.
+                    // Just refuse to do it for now.
                     ReginaSupport::sorry(ui,
                         tr("Cannot drill between boundaries."),
                         tr("I am not brave enough "
@@ -981,18 +954,19 @@ void Tri3GluingsUI::drillEdge() {
             } else {
                 // The edge does not connect with any real boundary.
                 if (e->vertex(0) != e->vertex(1) &&
-                        e->vertex(0)->link() == regina::Vertex<3>::SPHERE &&
-                        e->vertex(1)->link() == regina::Vertex<3>::SPHERE) {
+                        e->vertex(0)->linkType() == regina::Vertex<3>::SPHERE &&
+                        e->vertex(1)->linkType() == regina::Vertex<3>::SPHERE) {
                     // We are drilling an edge between two internal vertices.
                     // Topologically, this is just a puncture.
                     // Make sure that we puncture a tetrahedron that
                     // belongs to the correct connected component.
-                    ans = new regina::Triangulation<3>(*tri);
+                    ans = regina::makePacket<Triangulation<3>>(
+                        std::in_place, *tri);
                     ans->puncture(ans->tetrahedron(
                         e->front().tetrahedron()->index()));
                 } else if (e->vertex(0) != e->vertex(1) &&
-                        (e->vertex(0)->link() == regina::Vertex<3>::SPHERE ||
-                         e->vertex(1)->link() == regina::Vertex<3>::SPHERE)) {
+                        (e->vertex(0)->linkType() == regina::Vertex<3>::SPHERE ||
+                         e->vertex(1)->linkType() == regina::Vertex<3>::SPHERE)) {
                     // We are drilling an edge between an internal
                     // vertex and an ideal vertex.  Topologically, this
                     // does nothing.
@@ -1007,7 +981,8 @@ void Tri3GluingsUI::drillEdge() {
                     // ideal vertex, or we are drilling an edge between
                     // two distinct ideal vertices.
                     // In both cases, pinchEdge() does what we want.
-                    ans = new regina::Triangulation<3>(*tri);
+                    ans = regina::makePacket<regina::Triangulation<3>>(
+                        std::in_place, *tri);
                     ans->pinchEdge(ans->edge(e->index()));
                 }
             }
@@ -1023,18 +998,18 @@ void Tri3GluingsUI::drillEdge() {
 void Tri3GluingsUI::connectedSumWith() {
     endEdit();
 
-    regina::Triangulation<3>* other = static_cast<regina::Triangulation<3>*>(
-        PacketDialog::choose(ui,
+    auto other = PacketDialog::choose(ui,
             tri->root(),
             new SubclassFilter<regina::Triangulation<3>>(),
             tr("Connected Sum"),
             tr("Sum this with which other triangulation?"),
             tr("Regina will form a connected sum of this triangulation "
                 "with whatever triangulation you choose here.  "
-                "The current triangulation will be modified directly.")));
+                "The current triangulation will be modified directly."));
 
     if (other)
-        tri->connectedSumWith(*other);
+        tri->connectedSumWith(*
+            std::dynamic_pointer_cast<regina::Triangulation<3>>(other));
 }
 
 void Tri3GluingsUI::boundaryComponents() {
@@ -1045,7 +1020,7 @@ void Tri3GluingsUI::boundaryComponents() {
             tr("This triangulation does not have any boundary components."));
     else {
         regina::BoundaryComponent<3>* chosen =
-            BoundaryComponent3Dialog::choose(ui, tri, 0 /* filter */,
+            BoundaryComponent3Dialog::choose(ui, tri, nullptr /* filter */,
             tr("Boundary Components"),
             tr("Triangulate which boundary component?"),
             tr("<qt>If you select a real boundary component, this will "
@@ -1055,10 +1030,10 @@ void Tri3GluingsUI::boundaryComponents() {
                 "construct a 2-manifold triangulation from the "
                 "corresponding vertex link.</qt>"));
         if (chosen) {
-            regina::Triangulation<2>* ans = new regina::Triangulation<2>(
-                *chosen->build());
-            ans->setLabel(tr("Boundary component %1").arg(
-                chosen->index()).toUtf8().constData());
+            auto ans = regina::makePacket<Triangulation<2>>(std::in_place,
+                chosen->build());
+            ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
+                toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
@@ -1073,7 +1048,7 @@ void Tri3GluingsUI::vertexLinks() {
             tr("This triangulation does not have any vertices."));
     else {
         regina::Vertex<3>* chosen =
-            FaceDialog<3, 0>::choose(ui, tri, 0 /* filter */,
+            FaceDialog<3, 0>::choose(ui, tri, nullptr /* filter */,
             tr("Vertex Links"),
             tr("Triangulate the link of which vertex?"),
             tr("<qt>Regina will triangulate the link of whichever "
@@ -1085,10 +1060,10 @@ void Tri3GluingsUI::vertexLinks() {
                 "the tetrahedron corners that meet together at "
                 "<i>V</i>.</qt>"));
         if (chosen) {
-            regina::Triangulation<2>* ans = new regina::Triangulation<2>(
-                *chosen->buildLink());
-            ans->setLabel(tr("Link of vertex %1").arg(
-                chosen->index()).toUtf8().constData());
+            auto ans = regina::makePacket<Triangulation<2>>(std::in_place,
+                chosen->buildLink());
+            ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
+                toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
@@ -1109,23 +1084,29 @@ void Tri3GluingsUI::splitIntoComponents() {
     else {
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
-        Packet* base;
+        std::shared_ptr<Packet> base;
         if (tri->firstChild()) {
-            base = new regina::Container();
+            base = std::make_shared<regina::Container>();
             tri->insertChildLast(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else
-            base = tri;
+            base = tri->shared_from_this();
 
         // Make the split.
-        size_t nComps = tri->splitIntoComponents(base);
+        size_t which = 0;
+        for (auto& c : tri->triangulateComponents()) {
+            std::ostringstream label;
+            label << "Component #" << ++which;
+            base->insertChildLast(regina::makePacket(std::move(c),
+                label.str()));
+        }
 
         // Make sure the new components are visible.
         enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
 
         // Tell the user what happened.
         ReginaSupport::info(ui,
-            tr("%1 components were extracted.").arg(nComps));
+            tr("%1 components were extracted.").arg(tri->countComponents()));
     }
 }
 
@@ -1147,43 +1128,58 @@ void Tri3GluingsUI::connectedSumDecomposition() {
             "slow for larger triangulations.\n\n"
             "Please be patient."), ui));
 
-        // If there are already children of this triangulation, insert
-        // the new triangulations at a deeper level.
-        Packet* base;
-        if (tri->firstChild()) {
-            base = new regina::Container();
-            tri->insertChildLast(base);
-            base->setLabel(tri->adornedLabel("Summands"));
-        } else
-            base = tri;
-
         // Form the decomposition.
-        long nSummands = tri->connectedSumDecomposition(base);
-
-        // Let the user know what happened.
-        dlg.reset();
-        if (nSummands < 0) {
+        std::vector<Triangulation<3>> ans;
+        try {
+            ans = tri->summands();
+        } catch (regina::UnsolvedCase&) {
+            dlg.reset();
             ReginaSupport::sorry(ui,
                 tr("<qt>This manifold contains an embedded two-sided "
                 "projective plane.<p>"
                 "Regina cannot always compute connected "
                 "sum decompositions in such cases, and this triangulation "
                 "in particular is one such case that it cannot resolve.</qt>"));
-        } else if (nSummands == 0) {
+            return;
+        }
+
+        // Let the user know what happened.
+        dlg.reset();
+        if (ans.empty()) {
             ReginaSupport::info(ui,
                 tr("This is the 3-sphere."),
                 tr("It has no prime summands."));
         } else {
             // There is at least one new summand triangulation.
+            //
+            // Insert them all into the packet tree.
+            // If there are already children of this triangulation, insert
+            // the new triangulations at a deeper level.
+            std::shared_ptr<Packet> base;
+            if (tri->firstChild()) {
+                base = std::make_shared<regina::Container>();
+                tri->insertChildLast(base);
+                base->setLabel(tri->adornedLabel("Summands"));
+            } else
+                base = tri->shared_from_this();
+
+            size_t which = 0;
+            for (auto& s : ans) {
+                std::ostringstream label;
+                label << "Summand #" << ++which;
+                base->insertChildLast(regina::makePacket(std::move(s),
+                    label.str()));
+            }
+
             // Make sure the new summands are visible.
             enclosingPane->getMainWindow()->ensureVisibleInTree(
                 base->lastChild());
 
-            if (nSummands == 1) {
+            if (ans.size() == 1) {
                 // Special-case S2xS1, S2x~S1 and RP3, which do not have
                 // 0-efficient triangulations.
-                Triangulation<3>* small = static_cast<Triangulation<3>*>
-                    (base->firstChild());
+                auto small = std::static_pointer_cast<
+                    regina::PacketOf<Triangulation<3>>>(base->firstChild());
                 if (small->size() <= 2 && small->homology().isZ()) {
                     // The only closed prime manifolds with
                     // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
@@ -1221,7 +1217,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
             } else
                 ReginaSupport::info(ui,
                     tr("This manifold decomposes into %1 prime summands.").
-                    arg(nSummands));
+                    arg(ans.size()));
         }
 
         // We might have learned something new for the recognition tab
@@ -1253,18 +1249,32 @@ void Tri3GluingsUI::makeZeroEfficient() {
         "slow for larger triangulations.\n\n"
         "Please be patient."), ui));
 
-    // If it's possible that the triangulation but not the number of
-    // tetrahedra is changed, remember the original.
-    std::unique_ptr<Triangulation<3>> orig;
-    if (initTets <= 2)
-        orig.reset(new Triangulation<3>(*tri));
-
-    // Make it 0-efficient and see what happens.
-    Packet* decomp = tri->makeZeroEfficient();
+    auto summands = tri->summands();
     dlg.reset();
 
-    if (decomp) {
+    if (summands.empty()) {
+        // 3-sphere.
+        if (tri->size() == 1) {
+            ReginaSupport::info(ui,
+                tr("This 3-sphere triangulation is already 0-efficient."),
+                tr("No changes are necessary."));
+        } else {
+            // Replace this with a minimal, 0-efficient 3-sphere triangulation.
+            *tri = regina::Example<3>::lens(1, 0);
+        }
+    } else if (summands.size() > 1) {
         // Composite 3-manifold.
+        auto decomp = std::make_shared<regina::Container>();
+        decomp->setLabel(tri->adornedLabel("Decomposition"));
+
+        size_t which = 0;
+        for (auto& s : summands) {
+            std::ostringstream label;
+            label << "Summand #" << ++which;
+            decomp->insertChildLast(regina::makePacket(std::move(s),
+                label.str()));
+        }
+
         tri->insertChildLast(decomp);
         enclosingPane->getMainWindow()->ensureVisibleInTree(
             decomp->lastChild());
@@ -1276,12 +1286,16 @@ void Tri3GluingsUI::makeZeroEfficient() {
             "prime summands (without modifying this triangulation)."));
     } else {
         // Prime 3-manifold.
-        unsigned long finalTets = tri->size();
-        if (finalTets <= 2) {
-            // Check for special cases.
-            if ((! tri->isZeroEfficient()) && tri->homology().isZn(2)) {
-                // RP3.
-                if (finalTets < initTets)
+
+        if (summands.front().size() < tri->size()) {
+            // The summand shrank.  Either it became 0-efficient or it
+            // became one of our 2-tetrahedron special cases.
+            tri->swap(summands.front());
+
+            if (tri->size() <= 2 && ! tri->isZeroEfficient()) {
+                // We improved the triangulation but it's still not
+                // 0-efficient.  Tell the user why.
+                if (tri->homology().isZn(2)) {
                     ReginaSupport::info(ui,
                         tr("<qt>This is the 3-manifold "
                         "RP<sup>3</sup>, which does not have a 0-efficient "
@@ -1289,24 +1303,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
                         tr("<qt>I have instead converted it to a minimal "
                         "two-tetrahedron triangulation of "
                         "RP<sup>3</sup>.</qt>"));
-                else if (orig->isIsomorphicTo(*tri))
-                    ReginaSupport::info(ui,
-                        tr("<qt>This is the 3-manifold "
-                        "RP<sup>3</sup>, which does not have a 0-efficient "
-                        "triangulation.</qt>"),
-                        tr("I have left the triangulation unchanged."));
-                else
-                    ReginaSupport::info(ui,
-                        tr("<qt>This is the 3-manifold "
-                        "RP<sup>3</sup>, which does not have a 0-efficient "
-                        "triangulation.</qt>"),
-                        tr("<qt>I have instead converted it to a "
-                        "one-vertex minimal triangulation "
-                        "of RP<sup>3</sup>.</qt>"));
-                return;
-            } else if ((! tri->isZeroEfficient()) && tri->homology().isZ()) {
-                // S2xS1.
-                if (finalTets < initTets)
+                } else if (tri->homology().isZ()) {
                     ReginaSupport::info(ui,
                         tr("<qt>This is the 3-manifold "
                         "S<sup>2</sup> x S<sup>1</sup>, which does not have "
@@ -1314,28 +1311,62 @@ void Tri3GluingsUI::makeZeroEfficient() {
                         tr("<qt>I have instead converted it to a minimal "
                         "two-tetrahedron triangulation of "
                         "S<sup>2</sup> x S<sup>1</sup>.</qt>"));
-                else
+                }
+            }
+        } else {
+            // The summand did not shrink.  Either it was already 0-efficient,
+            // or we have one of the following 2-tetrahedron cases:
+            // - we replaced a non-0-efficient L(3,1) with a 0-efficient L(3,1);
+            // - we replaced a 2-vertex RP3 with a 1-vertex RP3.
+            // - we had a non-0-efficient, 1-vertex RP3 or S2xS1 that we
+            //   could not improve.
+            if (tri->size() == 2) {
+                if (tri->homology().isZn(2)) {
+                    // This is RP3.  We could have reduced the number of
+                    // vertices, but it will still not be 0-efficient.
+                    if (tri->countVertices() > 1) {
+                        // This is our 2-to-1-vertex RP3 case.
+                        // Use the new triangulation; however, it is
+                        // still not 0-efficient, so also explain why.
+                        tri->swap(summands.front());
+                        ReginaSupport::info(ui,
+                            tr("<qt>This is the 3-manifold "
+                            "RP<sup>3</sup>, which does not have a 0-efficient "
+                            "triangulation.</qt>"),
+                            tr("<qt>I have instead converted it to a "
+                            "one-vertex minimal triangulation "
+                            "of RP<sup>3</sup>.</qt>"));
+                    } else {
+                        ReginaSupport::info(ui,
+                            tr("<qt>This is the 3-manifold "
+                            "RP<sup>3</sup>, which does not have a 0-efficient "
+                            "triangulation.</qt>"),
+                            tr("I have left the triangulation unchanged."));
+                    }
+                } else if (tri->homology().isZn(3)) {
+                    // We could still have improved this L(3,1) by
+                    // making it 0-efficient.
+                    if (! tri->isZeroEfficient()) {
+                        tri->swap(summands.front());
+                    } else {
+                        ReginaSupport::info(ui,
+                            tr("This triangulation is already 0-efficient."),
+                            tr("No changes are necessary."));
+                    }
+                } else if (tri->homology().isZ()) {
+                    // No way to improve this case.
                     ReginaSupport::info(ui,
                         tr("<qt>This is the 3-manifold "
                         "S<sup>2</sup> x S<sup>1</sup>, which does not have "
                         "a 0-efficient triangulation."),
                         tr("I have left the triangulation unchanged."));
-                return;
-            } else if (finalTets == initTets && ! orig->isZeroEfficient()) {
-                // The triangulation has been made 0-efficient
-                // without changing the number of tetrahedra; don't
-                // report this as a no-op to the user.
-                // This specifically occurs with some L(3,1) triangulations.
-                return;
+                }
+            } else {
+                ReginaSupport::info(ui,
+                    tr("This triangulation is already 0-efficient."),
+                    tr("No changes are necessary."));
             }
-
-            // Fall through - it's an ordinary case.
         }
-
-        if (finalTets == initTets)
-            ReginaSupport::info(ui,
-                tr("This triangulation is already 0-efficient."),
-                tr("No changes are necessary."));
     }
 }
 
@@ -1355,8 +1386,8 @@ void Tri3GluingsUI::toSnapPea() {
         return;
     }
 
-    regina::SnapPeaTriangulation* ans = new regina::SnapPeaTriangulation(*tri,
-        true /* allow closed, since we have already check this */);
+    auto ans = regina::makePacket<regina::SnapPeaTriangulation>(std::in_place,
+        *tri, true /* allow closed, since we have already check this */);
     if (ans->isNull()) {
         ReginaSupport::sorry(ui,
             tr("I could not create a SnapPea triangulation."),
@@ -1379,21 +1410,12 @@ void Tri3GluingsUI::toSnapPea() {
 }
 
 void Tri3GluingsUI::updateRemoveState() {
-    if (model->isReadWrite())
-        actRemoveTet->setEnabled(
-            ! faceTable->selectionModel()->selectedIndexes().empty());
-    else
-        actRemoveTet->setEnabled(false);
+    actRemoveTet->setEnabled(
+        ! faceTable->selectionModel()->selectedIndexes().empty());
 }
 
 void Tri3GluingsUI::updateActionStates() {
-    if (! model->isReadWrite())
-        actOrient->setEnabled(false);
-    else if (! tri->isOrientable())
-        actOrient->setEnabled(false);
-    else
-        actOrient->setEnabled(! tri->isOriented());
-
+    actOrient->setEnabled(tri->isOrientable() && ! tri->isOriented());
     actBoundaryComponents->setEnabled(! tri->boundaryComponents().empty());
 }
 

@@ -31,29 +31,46 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "triangulation/dim2.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
 using regina::Isomorphism;
+using regina::Perm;
 
 void addIsomorphism2(pybind11::module_& m) {
     auto c = pybind11::class_<Isomorphism<2>>(m, "Isomorphism2")
         .def(pybind11::init<const Isomorphism<2>&>())
+        .def(pybind11::init<unsigned>())
         .def("swap", &Isomorphism<2>::swap)
         .def("size", &Isomorphism<2>::size)
         .def("simpImage", overload_cast<unsigned>(
             &Isomorphism<2>::simpImage, pybind11::const_))
+        .def("setSimpImage", [](Isomorphism<2>& iso, unsigned s, int image) {
+            iso.simpImage(s) = image;
+        })
         .def("triImage", overload_cast<unsigned>(
             &Isomorphism<2>::triImage, pybind11::const_))
+        .def("setTriImage", [](Isomorphism<2>& iso, unsigned s, int image) {
+            iso.triImage(s) = image;
+        })
         .def("facetPerm", overload_cast<unsigned>(
             &Isomorphism<2>::facetPerm, pybind11::const_))
+        .def("setFacetPerm", [](Isomorphism<2>& iso, unsigned s, Perm<3> p) {
+            iso.facetPerm(s) = p;
+        })
         .def("edgePerm", overload_cast<unsigned>(
             &Isomorphism<2>::edgePerm, pybind11::const_))
+        .def("setEdgePerm", [](Isomorphism<2>& iso, unsigned s, Perm<3> p) {
+            iso.edgePerm(s) = p;
+        })
         .def("__getitem__", &Isomorphism<2>::operator[])
         .def("isIdentity", &Isomorphism<2>::isIdentity)
         .def("apply", &Isomorphism<2>::apply)
         .def("applyInPlace", &Isomorphism<2>::applyInPlace)
+        .def(pybind11::self * pybind11::self)
+        .def("inverse", &Isomorphism<2>::inverse)
         .def_static("random", &Isomorphism<2>::random,
             pybind11::arg(), pybind11::arg("even") = false)
         .def_static("identity", &Isomorphism<2>::identity)

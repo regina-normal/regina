@@ -8,26 +8,30 @@ Usage:
 --------------------
 Exit code: 1
 ============================================================
+TEST: regfiletype @TESTDIR@/test-v2.rga
+--------------------
+Regina data: Second-generation XML format (Regina 3.0-6.0.1)
+Engine 5.0
+--------------------
+Exit code: 0
+============================================================
 TEST: regfiletype @TESTDIR@/test.rga
 --------------------
-Regina data
-XML Regina data file
-Engine 5.0
+Regina data: Third-generation XML format (Regina 7.0+)
+Engine 7.0
 --------------------
 Exit code: 0
 ============================================================
 TEST: regfiletype @TESTDIR@/8-or.rga
 --------------------
-Regina data
-XML Regina data file (compressed)
+Regina data: Second-generation XML format (Regina 3.0-6.0.1), compressed
 Engine 4.5
 --------------------
 Exit code: 0
 ============================================================
 TEST: regfiletype @TESTDIR@/b5.rga
 --------------------
-Regina data
-XML Regina data file (compressed)
+Regina data: Second-generation XML format (Regina 3.0-6.0.1), compressed
 Engine 4.91
 --------------------
 Exit code: 0
@@ -44,27 +48,28 @@ Unknown file format or file could not be opened.
 --------------------
 Exit code: 0
 ============================================================
-TEST: regfiletype @TESTDIR@/test.rga @TESTDIR@/b5.rga
+TEST: regfiletype @TESTDIR@/test-v2.rga @TESTDIR@/b5.rga
 --------------------
-[ @TESTDIR@/test.rga ]
-Regina data
-XML Regina data file
+[ @TESTDIR@/test-v2.rga ]
+Regina data: Second-generation XML format (Regina 3.0-6.0.1)
 Engine 5.0
 
 [ @TESTDIR@/b5.rga ]
-Regina data
-XML Regina data file (compressed)
+Regina data: Second-generation XML format (Regina 3.0-6.0.1), compressed
 Engine 4.91
 
 --------------------
 Exit code: 0
 ============================================================
-TEST: regfiletype @TESTDIR@/test.rga @INVALIDFILE@ @BADFILE@ @TESTDIR@/b5.rga @TESTDIR@/8-or.rga
+TEST: regfiletype @TESTDIR@/test-v2.rga @TESTDIR@/test.rga @INVALIDFILE@ @BADFILE@ @TESTDIR@/b5.rga @TESTDIR@/8-or.rga
 --------------------
-[ @TESTDIR@/test.rga ]
-Regina data
-XML Regina data file
+[ @TESTDIR@/test-v2.rga ]
+Regina data: Second-generation XML format (Regina 3.0-6.0.1)
 Engine 5.0
+
+[ @TESTDIR@/test.rga ]
+Regina data: Third-generation XML format (Regina 7.0+)
+Engine 7.0
 
 [ @INVALIDFILE@ ]
 Unknown file format or file could not be opened.
@@ -73,13 +78,11 @@ Unknown file format or file could not be opened.
 Unknown file format or file could not be opened.
 
 [ @TESTDIR@/b5.rga ]
-Regina data
-XML Regina data file (compressed)
+Regina data: Second-generation XML format (Regina 3.0-6.0.1), compressed
 Engine 4.91
 
 [ @TESTDIR@/8-or.rga ]
-Regina data
-XML Regina data file (compressed)
+Regina data: Second-generation XML format (Regina 3.0-6.0.1), compressed
 Engine 4.5
 
 --------------------

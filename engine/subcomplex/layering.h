@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a layering of zero or more tetrahedra upon a torus
  * boundary.
  *
@@ -107,22 +102,26 @@ namespace regina {
  * layering.  The routines extend() or extendOne() are then called to see
  * how many additional tetrahedra have been layered upon this pair of triangles
  * according to the rules above.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup subcomplex
  */
 class Layering {
     private:
         unsigned long size_;
             /**< The number of tetrahedra that have been layered. */
 
-        Tetrahedron<3>* oldBdryTet_[2];
+        const Tetrahedron<3>* oldBdryTet_[2];
             /**< The two tetrahedra of the old boundary (these may be
+                 the same).  See the class notes for details. */
+        const Tetrahedron<3>* newBdryTet_[2];
+            /**< The two tetrahedra of the new boundary (these may be
                  the same).  See the class notes for details. */
         Perm<4> oldBdryRoles_[2];
             /**< The corresponding two permutations of the old boundary.
                  See the class notes for details. */
-
-        Tetrahedron<3>* newBdryTet_[2];
-            /**< The two tetrahedra of the new boundary (these may be
-                 the same).  See the class notes for details. */
         Perm<4> newBdryRoles_[2];
             /**< The corresponding two permutations of the new boundary.
                  See the class notes for details. */
@@ -159,8 +158,26 @@ class Layering {
          * @param roles1 the permutation describing how this second triangle is
          * formed from three vertices of tetrahedron \a bdry1.
          */
-        Layering(Tetrahedron<3>* bdry0, Perm<4> roles0, Tetrahedron<3>* bdry1,
-            Perm<4> roles1);
+        Layering(const Tetrahedron<3>* bdry0, Perm<4> roles0,
+            const Tetrahedron<3>* bdry1, Perm<4> roles1);
+
+        /**
+         * Creates a new copy of this layering structure.
+         *
+         * The new structure will describe the same layering within the same
+         * underlying triangulation.
+         */
+        Layering(const Layering&) = default;
+
+        /**
+         * Sets this to be a copy of the given layering structure.
+         *
+         * The copied structure will describe the same layering within the
+         * same underlying triangulation.
+         *
+         * @return a reference to this structure.
+         */
+        Layering& operator = (const Layering&) = default;
 
         /**
          * Returns the number of individual tetrahedra that have been
@@ -187,7 +204,7 @@ class Layering {
          * be either 0 or 1.
          * @return the requested tetrahedron of the old boundary.
          */
-        Tetrahedron<3>* oldBoundaryTet(unsigned which) const;
+        const Tetrahedron<3>* oldBoundaryTet(unsigned which) const;
         /**
          * Returns the permutations that describe the old boundary triangles.
          * These refer to the original boundary before any layerings
@@ -213,7 +230,7 @@ class Layering {
          * be either 0 or 1.
          * @return the requested tetrahedron of the new boundary.
          */
-        Tetrahedron<3>* newBoundaryTet(unsigned which) const;
+        const Tetrahedron<3>* newBoundaryTet(unsigned which) const;
         /**
          * Returns the permutations that describe the new boundary triangles.
          * These refer to the final boundary after layerings have been
@@ -399,24 +416,28 @@ class Layering {
          * @return \c true if the given boundary is found to matche the
          * new boundary of this structure, or \c false otherwise.
          */
-        bool matchesTop(Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
-            Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1,
+        bool matchesTop(const Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
+            const Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1,
             Matrix2& upperReln) const;
-
-        // Mark this class as non-copyable.
-        Layering(const Layering&) = delete;
-        Layering& operator = (const Layering&) = delete;
 };
 
-/*@}*/
-
 // Inline functions for Layering
+
+inline Layering::Layering(const Tetrahedron<3>* bdry0, Perm<4> roles0,
+        const Tetrahedron<3>* bdry1, Perm<4> roles1) :
+        size_(0),
+        oldBdryTet_ { bdry0, bdry1 },
+        newBdryTet_ { bdry0, bdry1 },
+        oldBdryRoles_ { roles0, roles1 },
+        newBdryRoles_ { roles0, roles1 },
+        reln(1, 0, 0, 1) {
+}
 
 inline unsigned long Layering::size() const {
     return size_;
 }
 
-inline Tetrahedron<3>* Layering::oldBoundaryTet(unsigned which) const {
+inline const Tetrahedron<3>* Layering::oldBoundaryTet(unsigned which) const {
     return oldBdryTet_[which];
 }
 
@@ -424,7 +445,7 @@ inline Perm<4> Layering::oldBoundaryRoles(unsigned which) const {
     return oldBdryRoles_[which];
 }
 
-inline Tetrahedron<3>* Layering::newBoundaryTet(unsigned which) const {
+inline const Tetrahedron<3>* Layering::newBoundaryTet(unsigned which) const {
     return newBdryTet_[which];
 }
 

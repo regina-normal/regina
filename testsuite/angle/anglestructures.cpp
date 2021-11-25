@@ -33,8 +33,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "angle/anglestructures.h"
 #include "surfaces/normalsurface.h"
-#include "triangulation/example3.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example3.h"
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/angle/testangle.h"
@@ -73,37 +73,32 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             /**< An untwisted layered loop of length 2. */
 
     public:
-        void copyAndDelete(Triangulation<3>& dest, Triangulation<3>* source) {
-            dest.insertTriangulation(*source);
-            delete source;
-        }
-
-        void setUp() {
+        void setUp() override {
             // Use pre-coded triangulations where we can.
-            copyAndDelete(triFigure8, Example<3>::figureEight());
-            copyAndDelete(triGieseking, Example<3>::gieseking());
+            triFigure8 = Example<3>::figureEight();
+            triGieseking = Example<3>::gieseking();
 
             // Layered loops can be constructed automatically.
-            triLoopC2.insertLayeredLoop(2, false);
+            triLoopC2 = Example<3>::layeredLoop(2, false);
 
             // Other things must be done manually.
             triOneTet.newTetrahedron();
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
-        void testSize(AngleStructures* list, const char* triName,
+        void testSize(AngleStructures& list, const char* triName,
                 unsigned long expectedSize,
                 bool allowStrict, bool allowTaut) {
             {
                 std::ostringstream msg;
                 msg << "Number of angle structures for " << triName
                     << " should be " << expectedSize << ", not "
-                    << list->size() << '.';
+                    << list.size() << '.';
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    list->size() == expectedSize);
+                    list.size() == expectedSize);
             }
             {
                 std::ostringstream msg;
@@ -114,7 +109,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 msg << "support strict angle structures.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    list->spansStrict() == allowStrict);
+                    list.spansStrict() == allowStrict);
             }
             {
                 std::ostringstream msg;
@@ -125,16 +120,16 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 msg << "support taut angle structures.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    list->spansTaut() == allowTaut);
+                    list.spansTaut() == allowTaut);
             }
         }
 
-        void countStructures(const AngleStructures* list,
+        void countStructures(const AngleStructures& list,
                 const char* triName, unsigned long expectedCount,
                 bool strict, bool taut) {
             unsigned long tot = 0;
 
-            for (const AngleStructure& s : list->structures())
+            for (const AngleStructure& s : list)
                 if (s.isStrict() == strict && s.isTaut() == taut)
                     ++tot;
 
@@ -152,66 +147,51 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         void empty() {
-            AngleStructures* list = AngleStructures::enumerate(triEmpty);
+            AngleStructures list(triEmpty);
 
             testSize(list, "the empty triangulation", 1, true, true);
-
-            delete list;
         }
 
         void oneTet() {
-            AngleStructures* list = AngleStructures::enumerate(triOneTet);
+            AngleStructures list(triOneTet);
 
             testSize(list, "a standalone tetrahedron", 3, true, true);
             countStructures(list, "a standalone tetrahedron", 3,
                 false /* strict */, true /* taut */);
-
-            delete list;
         }
 
         void gieseking() {
-            AngleStructures* list = AngleStructures::enumerate(triGieseking);
+            AngleStructures list(triGieseking);
 
             testSize(list, "the Gieseking manifold", 3, true, true);
             countStructures(list, "the Gieseking manifold", 3,
                 false /* strict */, true /* taut */);
-
-            delete list;
         }
 
         void figure8() {
-            AngleStructures* list = AngleStructures::enumerate(triFigure8);
+            AngleStructures list(triFigure8);
 
             testSize(list, "the figure eight knot complement", 5, true, true);
             countStructures(list, "the figure eight knot complement", 3,
                 false /* strict */, true /* taut */);
             countStructures(list, "the figure eight knot complement", 2,
                 false /* strict */, false /* taut */);
-
-            delete list;
         }
 
         void loopC2() {
-            AngleStructures* list = AngleStructures::enumerate(triLoopC2);
+            AngleStructures list(triLoopC2);
 
             testSize(list, "the untwisted layered loop C(2)", 0, false, false);
-
-            delete list;
         }
 
         void verifyTaut(const char* isoSig, unsigned long nTaut) {
-            Triangulation<3>* tri = Triangulation<3>::fromIsoSig(isoSig);
-            if (! tri) {
-                std::ostringstream msg;
-                msg << "Could not reconstruct from isoSig: " << isoSig << ".";
-                CPPUNIT_FAIL(msg.str());
-            }
+            Triangulation<3> tri = Triangulation<3>::fromIsoSig(isoSig);
 
-            AngleStructures* a = AngleStructures::enumerate(*tri, true);
-            if (a->size() != nTaut) {
+            AngleStructures a(tri, true);
+            if (a.size() != nTaut) {
                 std::ostringstream msg;
                 msg << "Taut angle structures for " << isoSig << ": "
-                    "found " << a->size()
+                    "found " << a.size()
                     << " structures instead of the expected " << nTaut << ".";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -219,8 +199,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             unsigned long j, k;
             regina::Rational tmp, tot;
             regina::Edge<3>* e;
-            for (const AngleStructure& s : a->structures()) {
-                for (j = 0; j < tri->size(); ++j) {
+            for (const AngleStructure& s : a) {
+                for (j = 0; j < tri.size(); ++j) {
                     tot = 0;
                     for (k = 0; k < 3; ++k) {
                         tmp = s.angle(j, k);
@@ -241,8 +221,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                     }
                 }
 
-                for (j = 0; j < tri->countEdges(); ++j) {
-                    e = tri->edge(j);
+                for (j = 0; j < tri.countEdges(); ++j) {
+                    e = tri.edge(j);
                     if (e->isBoundary())
                         continue;
 
@@ -263,9 +243,6 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                     }
                 }
             }
-
-            delete a;
-            delete tri;
         }
 
         void taut() {
@@ -308,17 +285,17 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             verifyTaut("JLLLAAwzLLAwQwvvwMAQAAQMcbedgfhfilnnnpoqrstvCxEBDzFAFEGEFHHIIxxnxhxjxxxaxgvcxxafenatpkatbwqrrqfqr", 0);
         }
 
-        void verifyTautVsAll(Triangulation<3>* t, const char* name) {
-            AngleStructures* all = AngleStructures::enumerate(*t, false);
-            AngleStructures* taut = AngleStructures::enumerate(*t, true);
+        void verifyTautVsAll(const Triangulation<3>& t, const char* name) {
+            AngleStructures all(t, false);
+            AngleStructures taut(t, true);
 
-            if (all->isTautOnly()) {
+            if (all.isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Non-taut-only enumeration on " << name
                     << " produced a list marked as taut-only.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! taut->isTautOnly()) {
+            if (! taut.isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Taut-only enumeration on " << name
                     << " produced a list marked as non-taut-only.";
@@ -327,11 +304,11 @@ class AngleStructuresTest : public CppUnit::TestFixture {
 
             unsigned nAll = 0, nTaut = 0;
 
-            for (const AngleStructure& a : all->structures())
+            for (const AngleStructure& a : all)
                 if (a.isTaut())
                     ++nAll;
 
-            for (const AngleStructure& a : taut->structures())
+            for (const AngleStructure& a : taut)
                 if (a.isTaut())
                     ++nTaut;
                 else {
@@ -348,22 +325,17 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                     " (" << nTaut << " vs " << nAll << ")";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            delete all;
-            delete taut;
         }
 
         void verifyTautVsAll(const char* dehydration) {
-            Triangulation<3>* t = Triangulation<3>::rehydrate(dehydration);
-            if (t->isEmpty()) {
+            Triangulation<3> t = Triangulation<3>::rehydrate(dehydration);
+            if (t.isEmpty()) {
                 std::ostringstream msg;
                 msg << "Failed to rehydrate " << dehydration << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             verifyTautVsAll(t, dehydration);
-
-            delete t;
         }
 
         void tautVsAll() {
@@ -372,8 +344,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             verifyTautVsAll("hbnajbcdeefgghvfeevho"); // v1000
             verifyTautVsAll("hepacdefegfggcurmsktu"); // y500
 
-            verifyTautVsAll(&triEmpty, "the empty triangulation");
-            verifyTautVsAll(&triOneTet, "a standalone tetrahedron");
+            verifyTautVsAll(triEmpty, "the empty triangulation");
+            verifyTautVsAll(triOneTet, "a standalone tetrahedron");
         }
 
         static bool lexLess(const regina::VectorInt* a, const regina::VectorInt* b) {
@@ -386,23 +358,22 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             return false;
         }
 
-        static bool identical(const AngleStructures* lhs,
-                const AngleStructures* rhs) {
-            if (lhs->size() != rhs->size())
+        static bool identical(const AngleStructures& lhs,
+                const AngleStructures& rhs) {
+            if (lhs.size() != rhs.size())
                 return false;
 
-            unsigned long n = lhs->size();
+            unsigned long n = lhs.size();
             if (n == 0)
                 return true;
 
-            typedef const regina::VectorInt* VecPtr;
-            VecPtr* lhsRaw = new VecPtr[n];
-            VecPtr* rhsRaw = new VecPtr[n];
+            auto* lhsRaw = new const regina::VectorInt*[n];
+            auto* rhsRaw = new const regina::VectorInt*[n];
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = &(lhs->structure(i).vector());
-                rhsRaw[i] = &(rhs->structure(i).vector());
+                lhsRaw[i] = &(lhs.structure(i).vector());
+                rhsRaw[i] = &(rhs.structure(i).vector());
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess);
@@ -420,24 +391,23 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             return ok;
         }
 
-        static bool identicalTaut(const AngleStructures* all,
-                const AngleStructures* taut) {
-            if (all->size() < taut->size())
+        static bool identicalTaut(const AngleStructures& all,
+                const AngleStructures& taut) {
+            if (all.size() < taut.size())
                 return false;
 
-            unsigned long nAll = all->size();
-            unsigned long nTaut = taut->size();
+            unsigned long nAll = all.size();
+            unsigned long nTaut = taut.size();
 
-            typedef const regina::VectorInt* VecPtr;
-            VecPtr* allRaw = new VecPtr[nAll + 1];
-            VecPtr* tautRaw = new VecPtr[nTaut + 1];
+            auto* allRaw = new const regina::VectorInt*[nAll + 1];
+            auto* tautRaw = new const regina::VectorInt*[nTaut + 1];
 
             unsigned long foundAll = 0;
-            for (const AngleStructure& a : all->structures())
+            for (const AngleStructure& a : all)
                 if (a.isTaut())
                     allRaw[foundAll++] = &(a.vector());
             unsigned long i = 0;
-            for (const AngleStructure& a : taut->structures())
+            for (const AngleStructure& a : taut)
                 tautRaw[i++] = &(a.vector());
 
             if (foundAll != nTaut) {
@@ -461,62 +431,73 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             return ok;
         }
 
-        static void verifyTreeVsDD(Triangulation<3>* tri) {
-            AngleStructures* all = AngleStructures::enumerate(*tri, false);
-            AngleStructures* tautTree = AngleStructures::enumerate(*tri, true);
-            AngleStructures* tautDD = AngleStructures::enumerateTautDD(*tri);
-            bool strictTree = tri->hasStrictAngleStructure();
+        static void verifyTreeVsDD(const Triangulation<3>& tri,
+                const char* name) {
+            AngleStructures all(tri, false);
+            AngleStructures tautTree(tri, true);
+            AngleStructures tautDD(tri, true, regina::AS_ALG_DD);
+            bool strictTree = tri.hasStrictAngleStructure();
 
-            if (all->isTautOnly()) {
+            if (all.isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Vertex angle structure enumeration gives "
-                    "incorrect flags for " << tri->label() << ".";
+                    "incorrect flags for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! tautTree->isTautOnly()) {
+            if (! tautTree.isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration (tree) gives "
-                    "incorrect flags for " << tri->label() << ".";
+                    "incorrect flags for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! tautDD->isTautOnly()) {
+            if (! tautDD.isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration (DD) gives "
-                    "incorrect flags for " << tri->label() << ".";
+                    "incorrect flags for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (all->spansTaut() != tautTree->spansTaut() ||
-                    all->spansTaut() != tautDD->spansTaut()) {
+            if (tautTree.algorithm() != regina::AS_ALG_TREE) {
+                std::ostringstream msg;
+                msg << "Taut angle structure enumeration (tree) gives "
+                    "incorrect algorithm for " << name << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tautDD.algorithm() != regina::AS_ALG_DD) {
+                std::ostringstream msg;
+                msg << "Taut angle structure enumeration (DD) gives "
+                    "incorrect algorithm for " << name << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (all.spansTaut() != tautTree.spansTaut() ||
+                    all.spansTaut() != tautDD.spansTaut()) {
                 std::ostringstream msg;
                 msg << "Flag for spansTaut() mismatched between "
-                    "different enumeration methods for "
-                    << tri->label() << ".";
+                    "different enumeration methods for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (all->spansStrict() && ! strictTree) {
+            if (all.spansStrict() && ! strictTree) {
                 std::ostringstream msg;
                 msg << "Finding a strict angle structure (tree) gives "
-                    "no solution when one should exist for "
-                    << tri->label() << ".";
+                    "no solution when one should exist for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (strictTree && ! all->spansStrict()) {
+            if (strictTree && ! all.spansStrict()) {
                 std::ostringstream msg;
                 msg << "Finding a strict angle structure (tree) gives "
-                    "a solution when none should exist for "
-                    << tri->label() << ".";
+                    "a solution when none should exist for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (! identical(tautTree, tautDD)) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration gives "
-                    "different solutions for tree vs DD for "
-                    << tri->label() << ".";
+                    "different solutions for tree vs DD for " << name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -524,13 +505,9 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration (tree) gives "
                     "different taut solutions from full vertex enumeration "
-                    "for "<< tri->label() << ".";
+                    "for "<< name << ".";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            delete all;
-            delete tautTree;
-            delete tautDD;
         }
 
         void tautStrictTreeVsDD() {
@@ -539,19 +516,20 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             runCensusAllBounded(verifyTreeVsDD); // May have partial solns.
         }
 
-        void verifyGeneralAngleStructure(Triangulation<3>* tri) {
-            const AngleStructure* ans = tri->generalAngleStructure();
+        static void verifyGeneralAngleStructure(const Triangulation<3>& tri,
+                const char* name) {
+            bool exists = tri.hasGeneralAngleStructure();
 
-            if (tri->isValid() && ! tri->hasBoundaryTriangles()) {
+            if (tri.isValid() && ! tri.hasBoundaryTriangles()) {
                 // A generalised angle structure exists iff every vertex
                 // link is a torus or Klein bottle.
-                for (const auto v : tri->vertices())
+                for (const auto v : tri.vertices())
                     if (v->linkEulerChar() != 0) {
                         // There should be no generalised angle structure.
-                        if (ans) {
+                        if (exists) {
                             std::ostringstream msg;
                             msg << "Unexpected generalised angle structure "
-                                "found for " << tri->label() << ".";
+                                "found for " << name << ".";
                             CPPUNIT_FAIL(msg.str());
                         } else {
                             // Indeed there is no solution.
@@ -561,39 +539,39 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                     }
 
                 // We *should* have a generalised angle structure.
-                if (! ans) {
+                if (! exists) {
                     std::ostringstream msg;
                     msg << "No generalised angle structure where one "
-                        "should exist for " << tri->label() << ".";
+                        "should exist for " << name << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
 
-            if (ans) {
-                regina::MatrixInt m = regina::makeAngleEquations(*tri);
+            if (exists) {
+                regina::MatrixInt m = regina::makeAngleEquations(tri);
 
-                const regina::VectorInt& vec = ans->vector();
+                const regina::VectorInt& vec =
+                    tri.generalAngleStructure().vector();
                 if (vec.size() != m.columns()) {
                     std::ostringstream msg;
                     msg << "Generalised angle structure vector has "
-                        "wrong size for " << tri->label() << ".";
+                        "wrong size for " << name << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (! (m * vec).isZero()) {
                     std::ostringstream msg;
                     msg << "Generalised angle structure vector does not "
-                        "satisfy the angle equations for "
-                        << tri->label() << ".";
+                        "satisfy the angle equations for " << name << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
         }
 
         void generalAngleStructure() {
-            runCensusAllIdeal(verifyTreeVsDD);
-            runCensusAllClosed(verifyTreeVsDD);
-            runCensusAllBounded(verifyTreeVsDD);
+            runCensusAllIdeal(verifyGeneralAngleStructure);
+            runCensusAllClosed(verifyGeneralAngleStructure);
+            runCensusAllBounded(verifyGeneralAngleStructure);
         }
 };
 

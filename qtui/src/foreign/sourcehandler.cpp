@@ -49,9 +49,11 @@ PacketFilter* SourceHandler::canExport() const {
     return new SubclassFilter<regina::Triangulation<3>>();
 }
 
-bool SourceHandler::exportData(regina::Packet* data, const QString& fileName,
-        QWidget* parentWidget) const {
-    regina::Triangulation<3>* tri = dynamic_cast<regina::Triangulation<3>*>(data);
+bool SourceHandler::exportData(std::shared_ptr<regina::Packet> data,
+        const QString& fileName, QWidget* parentWidget) const {
+    // Cast all the way up to Triangulation<3>, so that we catch both
+    // Triangulation<3> and SnapPeaTriangulation packets.
+    auto tri = std::dynamic_pointer_cast<regina::Triangulation<3>>(data);
 
     QFile f(fileName);
     if (! f.open(QIODevice::WriteOnly)) {

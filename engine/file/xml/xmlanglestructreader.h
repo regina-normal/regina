@@ -39,16 +39,12 @@
 #define __REGINA_XMLANGLESTRUCTREADER_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "file/xml/xmlpacketreader.h"
 #include "angle/anglestructures.h"
 
 namespace regina {
-
-/**
- * \weakgroup angle
- * @{
- */
 
 /**
  * An XML element reader that reads a single angle structure.
@@ -57,9 +53,9 @@ namespace regina {
  */
 class XMLAngleStructureReader : public XMLElementReader {
     private:
-        AngleStructure* angles;
+        std::optional<AngleStructure> angles_;
             /**< The angle structure currently being read. */
-        Triangulation<3>* tri;
+        SnapshotRef<Triangulation<3>> tri_;
             /**< The triangulation on which this angle structure is placed. */
         long vecLen;
             /**< The length of corresponding angle structure vector. */
@@ -70,38 +66,31 @@ class XMLAngleStructureReader : public XMLElementReader {
          *
          * @param newTri the triangulation on which this angle structure lies.
          */
-        XMLAngleStructureReader(Triangulation<3>* newTri);
+        XMLAngleStructureReader(const SnapshotRef<Triangulation<3>>& tri);
 
         /**
-         * Returns the angle structure that has been read.
+         * Returns a reference to the angle structure that has been read.
          *
-         * @return the newly allocated angle structure, or 0 if an error
-         * occurred.
+         * @return the angle structure, or no value if an error occurred.
          */
-        AngleStructure* structure();
+        std::optional<AngleStructure>& structure();
 
-        virtual void startElement(const std::string& tagName,
+        void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
             XMLElementReader* parentReader) override;
-        virtual void initialChars(const std::string& chars) override;
-        virtual XMLElementReader* startSubElement(
-            const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps) override;
+        void initialChars(const std::string& chars) override;
 };
 
 /**
  * An XML packet reader that reads a single angle structure list.
  *
- * \pre The parent XML element reader is in fact an
- * XMLTriangulationReader<3>.
- *
  * \ifacespython Not present.
  */
 class XMLAngleStructuresReader : public XMLPacketReader {
     private:
-        AngleStructures* list;
+        std::shared_ptr<PacketOf<AngleStructures>> list_;
             /**< The angle structure list currently being read. */
-        Triangulation<3>* tri;
+        const Triangulation<3>* tri_;
             /**< The triangulation on which these angle structures
                  are placed. */
 
@@ -109,44 +98,86 @@ class XMLAngleStructuresReader : public XMLPacketReader {
         /**
          * Creates a new angle structure list reader.
          *
-         * @param newTri the triangulation on which these angle
-         * structures are placed.
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
+         * @param props the attributes of the \c angles XML element.
          */
-        XMLAngleStructuresReader(Triangulation<3>* newTri,
-            XMLTreeResolver& resolver);
+        XMLAngleStructuresReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, const regina::xml::XMLPropertyDict& props);
 
-        virtual Packet* packet() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
-/*@}*/
+/**
+ * An XML packet reader that reads a single angle structure list using
+ * the older second-generation file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacyAngleStructuresReader : public XMLPacketReader {
+    private:
+        std::shared_ptr<PacketOf<AngleStructures>> list_;
+            /**< The angle structure list currently being read. */
+        const Triangulation<3>& tri_;
+            /**< The triangulation on which these angle structures
+                 are placed. */
+
+    public:
+        /**
+         * Creates a new angle structure list reader.
+         *
+         * All parameters not explained here are the same as for the
+         * parent class XMLPacketReader.
+         *
+         * @param tri the triangulation on which these angle
+         * structures are placed.
+         */
+        XMLLegacyAngleStructuresReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, const Triangulation<3>& tri);
+
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
+            const regina::xml::XMLPropertyDict& subTagProps) override;
+        void endContentSubElement(const std::string& subTagName,
+            XMLElementReader* subReader) override;
+        void endElement() override;
+};
 
 // Inline functions for XMLAngleStructureReader
 
 inline XMLAngleStructureReader::XMLAngleStructureReader(
-        Triangulation<3>* newTri) : angles(0), tri(newTri), vecLen(-1) {
+        const SnapshotRef<Triangulation<3>>& tri) : tri_(tri), vecLen(-1) {
 }
 
-inline AngleStructure* XMLAngleStructureReader::structure() {
-    return angles;
+inline std::optional<AngleStructure>& XMLAngleStructureReader::structure() {
+    return angles_;
 }
 
 // Inline functions for XMLAngleStructuresReader
 
-inline XMLAngleStructuresReader::XMLAngleStructuresReader(
-        Triangulation<3>* newTri, XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver),
-        list(new AngleStructures(false)), tri(newTri) {
+inline std::shared_ptr<Packet> XMLAngleStructuresReader::packetToCommit() {
+    return list_;
 }
 
-inline Packet* XMLAngleStructuresReader::packet() {
-    return list;
+// Inline functions for XMLLegacyAngleStructuresReader
+
+inline XMLLegacyAngleStructuresReader::XMLLegacyAngleStructuresReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id, const Triangulation<3>& tri) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        list_(nullptr), tri_(tri) {
+}
+
+inline std::shared_ptr<Packet> XMLLegacyAngleStructuresReader::packetToCommit() {
+    return list_;
 }
 
 } // namespace regina

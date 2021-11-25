@@ -73,55 +73,55 @@ class GroupPresentationTest : public CppUnit::TestFixture {
 
     public:
 
-    void setUp() {
+    void setUp() override {
         // the integers
         Z_pres.addGenerator(1);
 
         // Z modulo 6
         Z6_pres.addGenerator(1);
-        Z6_pres.addRelation( GroupExpression("a^6") );
+        Z6_pres.addRelation( "a^6" );
 
         // dihedral group of octagon.
         D8_pres.addGenerator(2);
-        D8_pres.addRelation( GroupExpression("a^8") );
-        D8_pres.addRelation( GroupExpression("b^2") );
-        D8_pres.addRelation( GroupExpression("abab") );
+        D8_pres.addRelation( "a^8" );
+        D8_pres.addRelation( "b^2" );
+        D8_pres.addRelation( "abab" );
 
         // figure-8 knot exterior.
         fig8_pres.addGenerator(2);
-        fig8_pres.addRelation( GroupExpression("aaBAbabAB") );
+        fig8_pres.addRelation( "aaBAbabAB" );
 
         // Bundle over S^1 with fiber S^1 x S^2 # S^1 x S^2.
         KSUM_pres.addGenerator(2);
-        KSUM_pres.addRelation( GroupExpression("a^2b^3") );
+        KSUM_pres.addRelation( "a^2b^3" );
 
         // Fox quick trip example 11.
         FOX_pres.addGenerator(2);
-        FOX_pres.addRelation( GroupExpression("a^2BAb") );
+        FOX_pres.addRelation( "a^2BAb" );
 
         // Cappell-Shaneson with Alex 1+t-t^3
         CS_pres.addGenerator(2);
-        CS_pres.addRelation( GroupExpression("a^3BA^2b^2") );
-        CS_pres.addRelation( GroupExpression("a^2B^2Ab^3") );
+        CS_pres.addRelation( "a^3BA^2b^2" );
+        CS_pres.addRelation( "a^2B^2Ab^3" );
 
         // Fibers over S^1 with fiber (S^1)^3 # (S^1)^3
         CSCS_pres.addGenerator(2);
-        CSCS_pres.addRelation( GroupExpression("A^2b^2a^4B^3") );
-        CSCS_pres.addRelation( GroupExpression("a^2bA^4ba^2B^2") );
+        CSCS_pres.addRelation( "A^2b^2a^4B^3" );
+        CSCS_pres.addRelation( "a^2bA^4ba^2B^2" );
 
         // Fibers over S^1 with fiber a Poincare Dodecahedral space.
         KPDS_pres.addGenerator(2);
-        KPDS_pres.addRelation( GroupExpression("aBBabbAbb") );
-        KPDS_pres.addRelation( GroupExpression("AbbaabbbaB") );
+        KPDS_pres.addRelation( "aBBabbAbb" );
+        KPDS_pres.addRelation( "AbbaabbbaB" );
 
         // Z_2 + Z_3 + Z_8
         Z2Z3Z8_pres.addGenerator(3);
-        Z2Z3Z8_pres.addRelation( GroupExpression("a^2") );
-        Z2Z3Z8_pres.addRelation( GroupExpression("b^3") );
-        Z2Z3Z8_pres.addRelation( GroupExpression("c^8") );
-        Z2Z3Z8_pres.addRelation( GroupExpression("abAB") );
-        Z2Z3Z8_pres.addRelation( GroupExpression("acAC") );
-        Z2Z3Z8_pres.addRelation( GroupExpression("bcBC") );
+        Z2Z3Z8_pres.addRelation( "a^2" );
+        Z2Z3Z8_pres.addRelation( "b^3" );
+        Z2Z3Z8_pres.addRelation( "c^8" );
+        Z2Z3Z8_pres.addRelation( "abAB" );
+        Z2Z3Z8_pres.addRelation( "acAC" );
+        Z2Z3Z8_pres.addRelation( "bcBC" );
 
         presList.push_back( &Z_pres );    presList.push_back( &Z6_pres );
         presList.push_back( &D8_pres );   presList.push_back( &fig8_pres );
@@ -130,29 +130,28 @@ class GroupPresentationTest : public CppUnit::TestFixture {
         presList.push_back( &KPDS_pres ); presList.push_back( &Z2Z3Z8_pres );
     } // end setUp
 
-    void tearDown() {
+    void tearDown() override {
         // so far nothing.
     }
 
     void RS_test() {
-        for (std::list<GroupPresentation*>::iterator i=presList.begin();
-                i!=presList.end(); i++) {
-            (*i)->intelligentSimplify();
+        for (GroupPresentation* g : presList) {
+            g->intelligentSimplify();
             // Currently identifyExtensionOverZ() is private, so we
             // cannot call it.  Examine the name from recogniseGroup()
             // instead to see if R-S worked.
-            std::string name = (*i)->recogniseGroup();
+            std::string name = g->recogniseGroup();
             if (! regina::startsWith(name, "Z~")) {
                 // We know which cases this should fail for.
                 // Note that Reidemeister-Schreir should work for Z and KPDS,
                 // but their recognised names are Z and (unknown)
                 // respectively and so we exclude them here.
-                if ( (*i != &Z_pres) &&
-                        (*i != &Z6_pres) &&
-                        (*i != &D8_pres) &&
-                        (*i != &FOX_pres) &&
-                        (*i != &KPDS_pres) &&
-                        (*i != &Z2Z3Z8_pres) )
+                if ( (g != &Z_pres) &&
+                        (g != &Z6_pres) &&
+                        (g != &D8_pres) &&
+                        (g != &FOX_pres) &&
+                        (g != &KPDS_pres) &&
+                        (g != &Z2Z3Z8_pres) )
                     CPPUNIT_FAIL("Reidemeister-Schreir failure.");
             }
         }
@@ -196,13 +195,12 @@ class GroupPresentationTest : public CppUnit::TestFixture {
             CPPUNIT_FAIL("GroupExpression::number of terms (7). "+word3.str());
     }
     void presValid_test() {
-        for (std::list<GroupPresentation*>::iterator i=presList.begin();
-                i!=presList.end(); i++)
-            if (!(*i)->isValid())
+        for (GroupPresentation* g : presList)
+            if (! g->isValid())
                 CPPUNIT_FAIL("Invalid presentation.");
         GroupPresentation DPRES;
         DPRES.addGenerator(1);
-        DPRES.addRelation( GroupExpression("ab^2aaa") );
+        DPRES.addRelation( "ab^2aaa" );
         if (DPRES.isValid())
             CPPUNIT_FAIL("DPRES: invalid presentation.");
     }
@@ -220,9 +218,8 @@ class GroupPresentationTest : public CppUnit::TestFixture {
     */
     void homalign_test() {
         // ensure homological alignment does what we claim
-        for (std::list<GroupPresentation*>::iterator i=presList.begin();
-                i!=presList.end(); i++) {
-            GroupPresentation tPres( *(*i) );
+        for (GroupPresentation* g : presList) {
+            GroupPresentation tPres( *g );
             tPres.homologicalAlignment();
             MarkedAbelianGroup mab = tPres.markedAbelianisation();
             unsigned long N(mab.countInvariantFactors());
@@ -281,7 +278,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
                         CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 8.");
                 } // end k loop
             } // end j loop
-        } // end i loop
+        } // end presList loop
     } // end homalign_test()
 };
 

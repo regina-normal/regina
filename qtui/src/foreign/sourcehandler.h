@@ -56,23 +56,25 @@ class SourceHandler : public PacketExporter {
         /**
          * PacketExporter overrides:
          */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::Packet* data, const QString& fileName,
-            QWidget* parentWidget) const;
-        virtual bool useExportEncoding() const;
+        PacketFilter* canExport() const override;
+        bool exportData(std::shared_ptr<regina::Packet> data,
+            const QString& fileName, QWidget* parentWidget) const override;
+        bool useExportEncoding() const override;
+        QString defaultExtension(const regina::Packet& data) const override;
 
     private:
         /**
          * Don't allow people to construct their own Source handlers.
          */
-        SourceHandler();
+        SourceHandler() = default;
 };
-
-inline SourceHandler::SourceHandler() {
-}
 
 inline bool SourceHandler::useExportEncoding() const {
     return true;
+}
+
+inline QString SourceHandler::defaultExtension(const regina::Packet&) const {
+    return ".cpp";
 }
 
 #endif

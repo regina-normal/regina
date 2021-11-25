@@ -41,7 +41,7 @@
 
 PatienceDialog* PatienceDialog::warn(const QString& message,
         QWidget* parent) {
-    PatienceDialog* dlg = new PatienceDialog(message, parent);
+    auto* dlg = new PatienceDialog(message, parent);
     dlg->show();
     
     QApplication::instance()->processEvents();
@@ -52,25 +52,25 @@ PatienceDialog* PatienceDialog::warn(const QString& message,
 PatienceDialog::PatienceDialog(const QString& message, QWidget* parent) :
         QDialog(parent, Qt::Dialog) {
     setWindowTitle(tr("Please Wait"));
-    setModal(0);
+    setModal(false);
 
     // Disable the window manager buttons (including Close).
     setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) &
         ~(Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint));
 
-    QHBoxLayout* layout = new QHBoxLayout(this);
+    auto* layout = new QHBoxLayout(this);
 
     int iconSize = QApplication::style()->pixelMetric(
         QStyle::PM_MessageBoxIconSize);
 
-    QLabel* clock = new QLabel(this);
+    auto* clock = new QLabel(this);
     clock->setPixmap(ReginaSupport::themeIcon("clock").pixmap(iconSize));
     clock->setAlignment(Qt::AlignHCenter);
     layout->addWidget(clock);
 
     layout->addSpacing(iconSize / 4 + 2 /* shrug */);
 
-    QLabel* msg = new QLabel(message, this);
+    auto* msg = new QLabel(message, this);
     layout->addWidget(msg, 1);
 }
 

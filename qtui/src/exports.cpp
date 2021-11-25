@@ -34,9 +34,9 @@
 
 #include "packettreeview.h"
 #include "reginamain.h"
+#include "foreign/attachmenthandler.h"
 #include "foreign/csvsurfacehandler.h"
 #include "foreign/exportdialog.h"
-#include "foreign/pdfhandler.h"
 #include "foreign/pythonhandler.h"
 #include "foreign/recogniserhandler.h"
 #include "foreign/reginahandler.h"
@@ -52,9 +52,9 @@ void ReginaMain::exportCSVSurfaceList() {
         tr("Export CSV Surface List"));
 }
 
-void ReginaMain::exportPDF() {
-    exportFile(PDFHandler::instance, tr(FILTER_PDF),
-        tr("Export PDF Document"));
+void ReginaMain::exportAttachment() {
+    exportFile(AttachmentHandler::instance, tr(FILTER_ALL),
+        tr("Export Attachment"));
 }
 
 void ReginaMain::exportPython() {
@@ -89,13 +89,13 @@ void ReginaMain::exportSource() {
 
 void ReginaMain::exportFile(const PacketExporter& exporter,
         const QString& fileFilter, const QString& dialogTitle) {
-    ExportDialog dlg(this, packetTree.get(), treeView->selectedPacket(),
+    ExportDialog dlg(this, packetTree, treeView->selectedPacket(),
         exporter.canExport(), exporter.useExportEncoding(), dialogTitle);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
-        regina::Packet* data = dlg.selectedPacket();
+        auto data = dlg.selectedPacket();
         if (data) {
-            QString file = QFileDialog::getSaveFileName(this,
-                dialogTitle, QString(), fileFilter);
+            QString file = QFileDialog::getSaveFileName(this, dialogTitle,
+                "Untitled" + exporter.defaultExtension(*data), fileFilter);
             if (! file.isEmpty())
                 exporter.exportData(data, file, this);
         }

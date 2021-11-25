@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+# Regina - Software for low-dimensional topology
+# Command-Line Utilities Test Suite
+#
+# Copyright (c) 2016-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# --- tricensus with errors:
+tricensus
+# --- tricensus with signature output
+tricensus -t2 -i -s @TESTOUT@
+# --- tricensus with Regina data output
+tricensus -t1 -i @TESTOUT@
+# --- using tricensus to generate pairings:
+tricensus -2 -t4 -i -p
+tricensus -2 -t4 -b -p
+tricensus -2 -t4 -b -B2 -p
+tricensus -t3 -i -p
+tricensus -t3 -b -p
+tricensus -t3 -b -B2 -p
+tricensus -4 -t2 -i -p
+tricensus -4 -t2 -b -p
+tricensus -4 -t2 -b -B2 -p
+# --- using tricensus to generate triangulations from pairings:
+tricensus -2 -s -o -P @TESTOUT@ < @TESTDIR@/dim2-bdry2-4.pairs
+tricensus -2 -s -o -P @TESTOUT@ < @TESTDIR@/dim2-internal-4.pairs
+tricensus -s -o -f -P @TESTOUT@ < @TESTDIR@/dim3-bdry2-3.pairs
+tricensus -s -o -f -P @TESTOUT@ < @TESTDIR@/dim3-internal-3.pairs
+tricensus -4 -s -o -f -P @TESTOUT@ < @TESTDIR@/dim4-bdry2-2.pairs
+tricensus -4 -s -o -f -P @TESTOUT@ < @TESTDIR@/dim4-internal-2.pairs

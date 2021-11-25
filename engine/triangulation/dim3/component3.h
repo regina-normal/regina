@@ -51,11 +51,6 @@
 namespace regina {
 
 /**
- * \weakgroup dim3
- * @{
- */
-
-/**
  * Represents a connected component of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic Component class template; see
@@ -65,7 +60,15 @@ namespace regina {
  * In particular, each 3-dimensional component also stores details on
  * lower-dimensional faces (i.e., vertices, edges and triangles).
  *
+ * Components do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
  * \headerfile triangulation/dim3.h
+ *
+ * \ingroup dim3
  */
 template <>
 class Component<3> : public detail::ComponentBase<3>,
@@ -84,14 +87,42 @@ class Component<3> : public detail::ComponentBase<3>,
 
     public:
         /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countTetrahedra() const;
+
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        auto tetrahedra() const;
+
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        Tetrahedron<3>* tetrahedron(size_t index) const;
+
+        /**
          * Returns the number of <i>subdim</i>-faces in this component.
          *
-         * \pre The template argument \a subdim is between 0 and 2 inclusive.
+         * For convenience, this routine explicitly supports the case
+         * \a subdim = 3.  This is \e not the case for the routines
+         * face() and faces(), which give access to individual faces
+         * (the reason relates to the fact that tetrahedra are built manually,
+         * whereas lower-dimensional faces are deduced properties).
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
          * <tt>countFaces(subdim)</tt>; that is, the template parameter
          * \a subdim becomes the first argument of the function.
+         *
+         * \tparam subdim the face dimension; this must be between 0 and 3
+         * inclusive.
          *
          * @return the number of <i>subdim</i>-faces.
          */
@@ -123,12 +154,12 @@ class Component<3> : public detail::ComponentBase<3>,
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
-         * \ifacespython Python users should call this function in the
-         * form <tt>faces(subdim)</tt>.  It will then return a Python list
-         * containing all the <i>subdim</i>-faces of the component.
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>faces(subdim)</tt>.
          *
-         * \tparam subdim the dimension of the faces to query.
-         * For 3-dimensional components, this must be between 0 and 2 inclusive.
+         * \tparam subdim the face dimension; this must be between 0 and 2
+         * inclusive.
          *
          * @return access to the list of all <i>subdim</i>-faces.
          */
@@ -141,12 +172,13 @@ class Component<3> : public detail::ComponentBase<3>,
          * Note that the index of a face in the component need
          * not be the index of the same face in the overall triangulation.
          *
-         * \pre The template argument \a subdim is between 0 and 2 inclusive.
-         *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
          * <tt>face(subdim, index)</tt>; that is, the template parameter
          * \a subdim becomes the first argument of the function.
+         *
+         * \tparam subdim the face dimension; this must be between 0 and 2
+         * inclusive.
          *
          * @param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
@@ -154,6 +186,20 @@ class Component<3> : public detail::ComponentBase<3>,
          */
         template <int subdim>
         Face<3, subdim>* face(size_t index) const;
+
+        /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryTriangles() const;
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryTriangles() const;
 
         /**
          * Determines if this component is ideal.
@@ -185,15 +231,30 @@ class Component<3> : public detail::ComponentBase<3>,
     friend class detail::TriangulationBase<3>;
 };
 
-/*@}*/
-
 // Inline functions for Component<3>
 
 inline Component<3>::Component() : detail::ComponentBase<3>(), ideal_(false) {
 }
 
+inline size_t Component<3>::countTetrahedra() const {
+    return size();
+}
+
+inline auto Component<3>::tetrahedra() const {
+    return simplices();
+}
+
+inline Tetrahedron<3>* Component<3>::tetrahedron(size_t index) const {
+    return simplex(index);
+}
+
 // Hide specialisations from doxygen, since it cannot handle them.
 #ifndef __DOXYGEN
+template <>
+inline size_t Component<3>::countFaces<3>() const {
+    return size();
+}
+
 template <>
 inline size_t Component<3>::countFaces<2>() const {
     return triangles_.size();
@@ -242,6 +303,14 @@ inline Vertex<3>* Component<3>::face<0>(size_t index) const {
     return vertices_[index];
 }
 #endif // ! __DOXYGEN
+
+inline bool Component<3>::hasBoundaryTriangles() const {
+    return hasBoundaryFacets();
+}
+
+inline size_t Component<3>::countBoundaryTriangles() const {
+    return countBoundaryFacets();
+}
 
 inline bool Component<3>::isIdeal() const {
     return ideal_;

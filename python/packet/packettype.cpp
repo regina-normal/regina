@@ -32,13 +32,16 @@
 
 #include "../pybind11/pybind11.h"
 #include "packet/packettype.h"
+#include "../helpers.h"
 
 void addPacketType(pybind11::module_& m) {
     pybind11::enum_<regina::PacketType>(m, "PacketType")
+        .value("PACKET_NONE", regina::PACKET_NONE)
         .value("PACKET_CONTAINER", regina::PACKET_CONTAINER)
         .value("PACKET_TEXT", regina::PACKET_TEXT)
         .value("PACKET_SCRIPT", regina::PACKET_SCRIPT)
-        .value("PACKET_PDF", regina::PACKET_PDF)
+        .value("PACKET_ATTACHMENT", regina::PACKET_ATTACHMENT)
+        .value("PACKET_PDF", regina::PACKET_ATTACHMENT) // deprecated
         .value("PACKET_ANGLESTRUCTURES", regina::PACKET_ANGLESTRUCTURES)
         .value("PACKET_NORMALSURFACES", regina::PACKET_NORMALSURFACES)
         .value("PACKET_SURFACEFILTER", regina::PACKET_SURFACEFILTER)
@@ -62,5 +65,10 @@ void addPacketType(pybind11::module_& m) {
         .value("PACKET_TRIANGULATION15", regina::PACKET_TRIANGULATION15)
 #endif
         .export_values();
+
+    auto i = pybind11::class_<regina::PacketInfo>(m, "PacketInfo")
+        .def_static("name", &regina::PacketInfo::name)
+        ;
+    regina::python::no_eq_operators(i);
 }
 

@@ -76,7 +76,7 @@ class CrossingModel : public QAbstractItemModel {
                  Array index is (1 + sign + strand). */
 
     public:
-        CrossingModel(bool pictorial, regina::Link* link, int component);
+        CrossingModel(bool pictorial, regina::Link& link, int component);
         const regina::StrandRef& strandAt(const QModelIndex& index) const;
         bool isPictorial() const;
         void setPictorial(bool pictorial);
@@ -90,11 +90,12 @@ class CrossingModel : public QAbstractItemModel {
          * text for what should be approximately the longest string that we
          * need to render.
          */
-        QModelIndex index(int row, int column, const QModelIndex& parent) const;
-        QModelIndex parent(const QModelIndex& index) const;
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        QModelIndex index(int row, int column,
+            const QModelIndex& parent) const override;
+        QModelIndex parent(const QModelIndex& index) const override;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
 };
 
 /**
@@ -115,12 +116,12 @@ class CrossingDelegate : public QStyledItemDelegate {
         static constexpr int iconSize = 22;
 
     public:
-        CrossingDelegate(QWidget *parent = 0);
+        CrossingDelegate(QWidget *parent = nullptr);
 
         void paint(QPainter *painter, const QStyleOptionViewItem &option,
-            const QModelIndex &index) const;
+            const QModelIndex &index) const override;
         QSize sizeHint(const QStyleOptionViewItem &option,
-            const QModelIndex &index) const;
+            const QModelIndex &index) const override;
 };
 
 /**
@@ -133,7 +134,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         /**
          * Packet details
          */
-        regina::Link* link;
+        regina::PacketOf<regina::Link>* link;
  
         /**
          * Internal components
@@ -159,15 +160,14 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         QAction* actSimplify;
         QAction* actComplement;
         std::vector<QAction*> actionList;
-        std::vector<QAction*> enableWhenWritable;
 
     public:
         /**
          * Constructor and destructor.
          */
-        LinkCrossingsUI(regina::Link* packet,
-            PacketTabbedUI* useParentUI, bool readWrite);
-        ~LinkCrossingsUI();
+        LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
+            PacketTabbedUI* useParentUI);
+        ~LinkCrossingsUI() override;
 
         /**
          * Fill the given toolbar with knot/link actions.
@@ -181,11 +181,10 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         /**
          * PacketEditorTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        const std::vector<QAction*>& getPacketTypeActions();
-        void refresh();
-        void setReadWrite(bool readWrite);
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        const std::vector<QAction*>& getPacketTypeActions() override;
+        void refresh() override;
 
     public slots:
         /**
@@ -226,7 +225,7 @@ class ParallelDialog : public QDialog {
     Q_OBJECT
 
     private:
-        regina::Link* link_;
+        regina::Link& link_;
 
         /**
          * Internal components
@@ -238,7 +237,7 @@ class ParallelDialog : public QDialog {
         /**
          * Constructor.
          */
-        ParallelDialog(QWidget* parent, regina::Link* link);
+        ParallelDialog(QWidget* parent, regina::Link& link);
 
     protected slots:
         /**

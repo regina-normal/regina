@@ -33,9 +33,19 @@
 
 from __future__ import print_function
 
-def dumpSurfaces(name, slist):
+def dumpSurfaces(name, tri, triName, coords = regina.HS_STANDARD, which = regina.HS_LIST_DEFAULT, alg = regina.HS_ALG_DEFAULT):
+	try:
+		slist = regina.NormalHypersurfaces(tri, coords, which)
+	except:
+		print("-------------------------------")
+		print(name)
+		print('ENUMERATION FAILED')
+		print("-------------------------------")
+		print()
+		return
+
 	print("-------------------------------")
-	print(slist.triangulation().label())
+	print(triName)
 	print(name)
 	print("-------------------------------")
 	print()
@@ -52,26 +62,31 @@ def dumpSurfaces(name, slist):
 	# Nothing else to say.
 	print()
 
-def surfaceStats(tri):
+def surfaceStats(tri, triName):
 	dumpSurfaces('Vertex hypersurfaces (std)',
-		regina.NormalHypersurfaces.enumerate(tri,
-		regina.HS_STANDARD, regina.HS_VERTEX))
+		tri, triName, regina.HS_STANDARD, regina.HS_VERTEX)
+	dumpSurfaces('Vertex hypersurfaces (prism)',
+		tri, triName, regina.HS_PRISM, regina.HS_VERTEX)
 	dumpSurfaces('Fundamental surfaces (std, primal)',
-		regina.NormalHypersurfaces.enumerate(tri,
-			regina.HS_STANDARD, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_PRIMAL))
+		tri, triName, regina.HS_STANDARD, regina.HS_FUNDAMENTAL,
+		regina.HS_HILBERT_PRIMAL)
 	dumpSurfaces('Fundamental surfaces (std, dual)',
-		regina.NormalHypersurfaces.enumerate(tri,
-		regina.HS_STANDARD, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_DUAL))
+		tri, triName, regina.HS_STANDARD, regina.HS_FUNDAMENTAL,
+		regina.HS_HILBERT_DUAL)
+	dumpSurfaces('Fundamental surfaces (prism, primal)',
+		tri, triName, regina.HS_PRISM, regina.HS_FUNDAMENTAL,
+		regina.HS_HILBERT_PRIMAL)
+	dumpSurfaces('Fundamental surfaces (prism, dual)',
+		tri, triName, regina.HS_PRISM, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_DUAL)
 
 t = regina.Triangulation4()
-t.setLabel("Empty triangulation")
-surfaceStats(t)
+surfaceStats(t, 'Empty triangulation')
 
-surfaceStats(regina.Example4.fourSphere())
-# surfaceStats(regina.Example4.simplicialFourSphere())
-surfaceStats(regina.Example4.rp4())
-surfaceStats(regina.Example4.s3xs1())
-surfaceStats(regina.Example4.s3xs1Twisted())
-surfaceStats(regina.Example4.cappellShaneson())
+surfaceStats(regina.Example4.fourSphere(), '4-sphere')
+# surfaceStats(regina.Example4.simplicialFourSphere(), 'Simplicial 4-sphere')
+surfaceStats(regina.Example4.rp4(), 'Real projective 4-space')
+surfaceStats(regina.Example4.s3xs1(), 'S3 x S1')
+surfaceStats(regina.Example4.s3xs1Twisted(), 'S3 x~ S1')
+surfaceStats(regina.Example4.cappellShaneson(), 'Cappell-Shaneson knot complement')
 # L(8,3) x S1:
-surfaceStats(regina.Triangulation4('kLLLzQMQQccefhihhgihijjijjKb9aGbKbebvbPadbaaebmb9aGasasamb'))
+surfaceStats(regina.Triangulation4('kLLLzQMQQccefhihhgihijjijjKb9aGbKbebvbPadbaaebmb9aGasasamb'), 'L(8,3) x S1')

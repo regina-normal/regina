@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Transforms the given integer matrix into Smith normal form.
  * Note that the given matrix need not be square and need not be of full
  * rank.
@@ -67,6 +62,8 @@ namespace regina {
  * coefficient explosion.
  *
  * @param matrix the matrix to transform.
+ *
+ * \ingroup maths
  */
 void smithNormalForm(MatrixInt& matrix);
 
@@ -112,6 +109,8 @@ void smithNormalForm(MatrixInt& matrix);
  * @param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
  *
  * \author Ryan Budney
+ *
+ * \ingroup maths
  */
 void smithNormalForm(MatrixInt& matrix,
         MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
@@ -124,7 +123,7 @@ void smithNormalForm(MatrixInt& matrix,
  * description of pivoting methods.
  *
  * The only input argument is \a matrix.  The four remaining arguments
- * (the change of basis matrices), if passed, will be refilled.
+ * (the change of basis matrices) will be refilled.
  * All five arguments are used to return information as follows.
  *
  * Let \a M be the initial value of \a matrix, and let \a S be the Smith
@@ -139,30 +138,30 @@ void smithNormalForm(MatrixInt& matrix,
  * Thus, one obtains the Smith normal form the original matrix by multiplying
  * on the left by ColSpaceBasis and on the right by RowSpaceBasis.
  *
- * The matrices \a rowSpaceBasis and \a rowSpaceBasisInv, if passed,
+ * The matrices \a rowSpaceBasis and \a rowSpaceBasisInv that are passed
  * may be of any size, or they may even be uninitialised; upon return they
  * will both be square with side length matrix.columns().
- * Likewise, the matrices \a colSpaceBasis and \a colSpaceBasisInv, if passed,
- * may be of any size or may be uninitialised; upon return they
+ * Likewise, the matrices \a colSpaceBasis and \a colSpaceBasisInv that are
+ * passed may be of any size or may be uninitialised; upon return they
  * will both be square with side length matrix.rows().
  *
  * @param matrix the original matrix to put into Smith Normal Form (this
  * need not be square).  When the algorithm terminates, this matrix \e is
  * in its Smith Normal Form.
  * @param rowSpaceBasis used to return a change of basis matrix (see
- * above for details).  This is optional; you may pass a null pointer instead.
+ * above for details).
  * @param rowSpaceBasisInv used to return the inverse of \a rowSpaceBasis.
- * This is optional; you may pass a null pointer instead.
  * @param colSpaceBasis used to return a change of basis matrix (see
- * above for details).  This is optional; you may pass a null pointer instead.
+ * above for details).
  * @param colSpaceBasisInv used to return the inverse of \a colSpaceBasis.
- * This is optional; you may pass a null pointer instead.
  *
  * \author Ryan Budney
+ *
+ * \ingroup maths
  */
 void metricalSmithNormalForm(MatrixInt& matrix,
-        MatrixInt *rowSpaceBasis=nullptr, MatrixInt *rowSpaceBasisInv=nullptr,
-        MatrixInt *colSpaceBasis=nullptr, MatrixInt *colSpaceBasisInv=nullptr);
+        MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
+        MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv);
 
 /**
  * Find a basis for the row space of the given matrix.
@@ -179,8 +178,10 @@ void metricalSmithNormalForm(MatrixInt& matrix,
  *
  * @param matrix the matrix to examine and rearrange.
  * @return the rank of the given matrix.
+ *
+ * \ingroup maths
  */
-unsigned rowBasis(MatrixInt& matrix);
+unsigned long rowBasis(MatrixInt& matrix);
 
 /**
  * Finds a basis for the row space of the given matrix, as well as an
@@ -216,6 +217,8 @@ unsigned rowBasis(MatrixInt& matrix);
  * @param complement the square matrix that will be re-filled with the
  * "incremental" basis for the orthogonal complement of \a input.
  * @return the rank of the given matrix \a input.
+ *
+ * \ingroup maths
  */
 unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
 
@@ -266,8 +269,6 @@ unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
  * \pre Both \a R and \a Ri are square matrices with side length M.columns(),
  * and these matrices are inverses of each other.
  *
- * \ifacespython The argument \a rowList should be supplied as a python list.
- *
  * @param M the matrix to reduce.
  * @param R used to return the row-reduction matrix, as described above.
  * @param Ri used to return the inverse of \a R.
@@ -278,6 +279,8 @@ unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
  * echelon form, this would be the list of all rows: 0,...,(M.rows()-1).
  *
  * \author Ryan Budney
+ *
+ * \ingroup maths
  */
 void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
         const std::vector<unsigned> &rowList);
@@ -299,8 +302,6 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
  * above) is some rank \a n lattice in Z^n.  This algorithm finds and
  * returns a basis for the lattice.
  *
- * \ifacespython The argument \a sublattice should be supplied as a python list.
- *
  * @param hom the matrix representing the homomorphism from Z^n to Z^k;
  * this must be a \a k by \a n matrix.
  * @param sublattice a list of length \a k describing the sublattice of Z^k;
@@ -310,6 +311,8 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
  * This matrix will have precisely \a n rows.
  *
  * \author Ryan Budney
+ *
+ * \ingroup maths
  */
 MatrixInt preImageOfLattice(const MatrixInt& hom,
         const std::vector<Integer>& sublattice);
@@ -330,8 +333,6 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
  * \pre The list p1, p2, ..., pn is a list of invariant factors,
  * which means that p1|p2, ..., p{n-1}|pn.
  *
- * \ifacespython The argument \a invF should be supplied as a python list.
- *
  * @param input the n-by-n matrix \a A, which must be a lift of a genuine
  * automorphism as described above.
  * @param invF the list p1, p2, ..., pn.
@@ -339,11 +340,11 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
  * as per the discussion above.
  *
  * \author Ryan Budney
+ *
+ * \ingroup maths
  */
 MatrixInt torsionAutInverse(const MatrixInt& input,
     const std::vector<Integer> &invF);
-
-/*@}*/
 
 } // namespace regina
 

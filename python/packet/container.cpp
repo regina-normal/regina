@@ -31,20 +31,20 @@
  **************************************************************************/
 
 #include "packet/container.h"
-#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using regina::Container;
 
 void addContainer(pybind11::module_& m) {
-    pybind11::class_<Container, regina::Packet, regina::SafePtr<Container>>(
+    pybind11::class_<Container, regina::Packet, std::shared_ptr<Container>>(
             m, "Container")
         .def(pybind11::init<>())
         .def(pybind11::init<const std::string&>())
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return Container::typeID;
-        })
+        .def(pybind11::init<const Container&>())
+        .def("swap", &Container::swap)
+        .def_readonly_static("typeID", &Container::typeID)
     ;
+
+    m.def("swap", (void(*)(Container&, Container&))(regina::swap));
 }
 

@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "algebra/abeliangroup.h"
 #include "manifold/torusbundle.h"
 #include "../helpers.h"
@@ -44,8 +45,11 @@ void addTorusBundle(pybind11::module_& m) {
         .def(pybind11::init<const Matrix2&>())
         .def(pybind11::init<long, long, long, long>())
         .def(pybind11::init<const TorusBundle&>())
+        .def("swap", &TorusBundle::swap)
         .def("monodromy", &TorusBundle::monodromy,
             pybind11::return_value_policy::reference_internal)
     ;
+
+    m.def("swap", (void(*)(TorusBundle&, TorusBundle&))(regina::swap));
 }
 

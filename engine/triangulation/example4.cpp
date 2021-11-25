@@ -30,21 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/example4.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
+#include "triangulation/example4.h"
 
 namespace regina {
 
-Triangulation<4>* Example<4>::rp4() {
-    Triangulation<4>* ans = new Triangulation<4>();
-    ans->setLabel("Real projective 4-space");
+Triangulation<4> Example<4>::rp4() {
+    Triangulation<4> ans;
 
     // Thanks Ryan, you rock. :)
-    Pentachoron<4>* p = ans->newPentachoron();
-    Pentachoron<4>* q = ans->newPentachoron();
-    Pentachoron<4>* r = ans->newPentachoron();
-    Pentachoron<4>* s = ans->newPentachoron();
+    auto [p, q, r, s] = ans.newPentachora<4>();
     p->join(0, s, Perm<5>(1,0,3,2,4));
     p->join(1, s, Perm<5>(1,0,3,2,4));
     p->join(2, q, Perm<5>());
@@ -59,13 +55,11 @@ Triangulation<4>* Example<4>::rp4() {
     return ans;
 }
 
-Triangulation<4>* Example<4>::cappellShaneson() {
+Triangulation<4> Example<4>::cappellShaneson() {
     // Use the gluings described in arXiv:1109.3899.
-    Triangulation<4>* ans = new Triangulation<4>();
-    ans->setLabel("Cappell-Shaneson knot complement");
+    Triangulation<4> ans;
 
-    Pentachoron<4>* p = ans->newPentachoron();
-    Pentachoron<4>* q = ans->newPentachoron();
+    auto [p, q] = ans.newPentachora<2>();
     q->join(0, p, Perm<5>(2,0,1,3,4));
     q->join(2, p, Perm<5>(0,1,4,2,3));
     q->join(3, p, Perm<5>(0,2,3,1,4));
@@ -110,33 +104,33 @@ namespace {
          * Create the pentachoron that provides either the upper or lower
          * tetrahedron boundary of this prism.
          */
-        inline void buildBdry(Triangulation<4>* tri, int which) {
-            bdry[which] = tri->newPentachoron();
+        inline void buildBdry(Triangulation<4>& tri, int which) {
+            bdry[which] = tri.newPentachoron();
         }
 
         /**
          * Create all remaining pentachora (80 of 82) within this prism.
          */
-        inline void buildWalls(Triangulation<4>* tri) {
+        inline void buildWalls(Triangulation<4>& tri) {
             unsigned i, j, k, l;
             for (i = 0; i < 2; ++i)
                 for (j = 0; j < 4; ++j)
-                    wallBase3[i][j] = tri->newPentachoron();
+                    wallBase3[i][j] = tri.newPentachoron();
             for (i = 0; i < 2; ++i)
                 for (j = 0; j < 4; ++j)
                     for (k = 0; k < 4; ++k)
                         if (j != k)
-                            wallBase2[i][j][k] = tri->newPentachoron();
+                            wallBase2[i][j][k] = tri.newPentachoron();
                         else
-                            wallBase2[i][j][k] = 0;
+                            wallBase2[i][j][k] = nullptr;
             for (i = 0; i < 2; ++i)
                 for (j = 0; j < 4; ++j)
                     for (k = 0; k < 4; ++k)
                         for (l = 0; l < 4; ++l)
                             if (j != k && k != l && j != l)
-                                wallSide[i][j][k][l] = tri->newPentachoron();
+                                wallSide[i][j][k][l] = tri.newPentachoron();
                             else
-                                wallSide[i][j][k][l] = 0;
+                                wallSide[i][j][k][l] = nullptr;
         }
 
         /**
@@ -219,18 +213,17 @@ namespace {
     };
 }
 
-Triangulation<4>* Example<4>::iBundle(
-        const Triangulation<3>& base) {
-    Triangulation<4>* ans = new Triangulation<4>();
-    Packet::ChangeEventSpan span(ans);
-    ans->setLabel(base.label() + " x I");
+Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
+    Triangulation<4> ans;
+    // Ensure only one event pair is fired in this sequence of changes.
+    Triangulation<4>::ChangeEventSpan span(ans);
 
     unsigned long n = base.size();
     if (n == 0)
         return ans;
 
     // We have at least one tetrahedron.  Off we go.
-    Prism* prism = new Prism[n];
+    auto* prism = new Prism[n];
 
     // Build the boundaries first so we get the relevant pentachora
     // numbered correctly within the final triangulation.
@@ -273,32 +266,30 @@ Triangulation<4>* Example<4>::iBundle(
     return ans;
 }
 
-Triangulation<4>* Example<4>::s1Bundle(
-        const Triangulation<3>& base) {
-    Triangulation<4>* ans = iBundle(base);
-    Packet::ChangeEventSpan span(ans);
-    ans->setLabel(base.label() + " x S1");
+Triangulation<4> Example<4>::s1Bundle(const Triangulation<3>& base) {
+    Triangulation<4> ans = iBundle(base);
+    // Ensure only one event pair is fired in this sequence of changes.
+    Triangulation<4>::ChangeEventSpan span(ans);
 
     Perm<5> id;
     unsigned long n = base.size();
     unsigned long i;
     for (i = 0; i < n; ++i)
-        ans->pentachoron(i)->join(4, ans->pentachoron(i + n), id);
+        ans.pentachoron(i)->join(4, ans.pentachoron(i + n), id);
 
     return ans;
 }
 
-Triangulation<4>* Example<4>::bundleWithMonodromy(
+Triangulation<4> Example<4>::bundleWithMonodromy(
         const Triangulation<3>& base, const Isomorphism<3>& monodromy) {
-    Triangulation<4>* ans = iBundle(base);
-    Packet::ChangeEventSpan span(ans);
-    ans->setLabel(base.label() + " x I / ~");
+    Triangulation<4> ans = iBundle(base);
+    // Ensure only one event pair is fired in this sequence of changes.
+    Triangulation<4>::ChangeEventSpan span(ans);
 
     unsigned long n = base.size();
     unsigned long i;
     for (i = 0; i < n; ++i)
-        ans->pentachoron(i)->join(4,
-            ans->pentachoron(monodromy.simpImage(i) + n),
+        ans.pentachoron(i)->join(4, ans.pentachoron(monodromy.simpImage(i) + n),
             Perm<5>::extend(monodromy.facetPerm(i)));
 
     return ans;

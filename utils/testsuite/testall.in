@@ -126,7 +126,7 @@ while IFS= read -r -d $'\0' i; do
 			echo "    Diff was:"
 			diff --strip-trailing-cr -u \
 				--label 'Expected output' --label 'Actual output' \
-				"$expected" "$observed" | head -n10 | sed -e 's/^/        /'
+				"$expected" "$observed" | head -n200 | sed -e 's/^/        /'
 			echo "        ..."
 			broken=1
 		else

@@ -57,7 +57,7 @@ class PacketExporter {
         /**
          * Default destructor that does nothing.
          */
-        virtual ~PacketExporter();
+        virtual ~PacketExporter() = default;
 
         /**
          * Returns a newly created packet filter describing which
@@ -79,8 +79,18 @@ class PacketExporter {
          * argument \a parentWidget as the parent widget of the message
          * box).
          */
-        virtual bool exportData(regina::Packet* data, const QString& fileName,
-            QWidget* parentWidget) const = 0;
+        virtual bool exportData(std::shared_ptr<regina::Packet> data,
+            const QString& fileName, QWidget* parentWidget) const = 0;
+
+        /**
+         * Returns an appropriate filename extension for exporting the
+         * given packet.
+         *
+         * The extension should begin with a period.  If no appropriate
+         * extension can be determined, this routine should return an
+         * empty string (which may or may not be a null string).
+         */
+        virtual QString defaultExtension(const regina::Packet& data) const = 0;
 
         /**
          * Should the GUI inform the user that their preferred codec
@@ -90,9 +100,6 @@ class PacketExporter {
          */
         virtual bool useExportEncoding() const;
 };
-
-inline PacketExporter::~PacketExporter() {
-}
 
 inline bool PacketExporter::useExportEncoding() const {
     return false;

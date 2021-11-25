@@ -145,7 +145,7 @@
 
 #pragma mark - Example triangulation
 
-typedef regina::SnapPeaTriangulation* (*SnapPeaCreator)();
+using SnapPeaCreator = regina::SnapPeaTriangulation* (*)();
 
 /**
  * Represents a single option in the examples picker.

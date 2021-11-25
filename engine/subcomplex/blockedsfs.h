@@ -41,17 +41,13 @@
 #endif
 
 #include "regina-core.h"
+#include "subcomplex/satregion.h"
 #include "subcomplex/standardtri.h"
 
 namespace regina {
 
 class SatBlock;
 class SatRegion;
-
-/**
- * \weakgroup subcomplex
- * @{
- */
 
 /**
  * Represents a blocked Seifert fibred space (possibly with boundary).
@@ -67,18 +63,63 @@ class SatRegion;
  *
  * The optional StandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * the only way to create objects of this class (aside from copying or moving)
+ * is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class BlockedSFS : public StandardTriangulation {
     private:
-        SatRegion* region_;
+        SatRegion region_;
             /**< The single saturated region that describes this entire
                  triangulation. */
 
     public:
         /**
-         * Destroys this structure and its constituent components.
+         * Creates a new copy of this structure.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the structure to copy.
          */
-        ~BlockedSFS();
+        BlockedSFS(const BlockedSFS& src) = default;
+        /**
+         * Moves the contents of the given structure into this new structure.
+         * This is a constant time operation.
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         *
+         * @param src the structure to move from.
+         */
+        BlockedSFS(BlockedSFS&& src) noexcept = default;
+        /**
+         * Sets this to be a copy of the given structure.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the structure to copy.
+         * @return a reference to this structure.
+         */
+        BlockedSFS& operator = (const BlockedSFS& src) = default;
+        /**
+         * Moves the contents of the given structure into this structure.
+         * This is a constant time operation.
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         *
+         * @param src the structure to move from.
+         * @return a reference to this structure.
+         */
+        BlockedSFS& operator = (BlockedSFS&& src) noexcept = default;
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(BlockedSFS& other) noexcept;
 
         /**
          * Returns details of the single saturated region that
@@ -95,20 +136,12 @@ class BlockedSFS : public StandardTriangulation {
          * 3-manifold triangulations", Benjamin A. Burton,
          * J. Knot Theory Ramifications 16 (2007), 545--574.
          *
-         * \ifacespython The argument \a name is not present.  Instead,
-         * this routine returns a tuple of size two: the boolean usually
-         * returned from this function, and the string usually returned in
-         * the argument \a name.
-         *
-         * @param name used to return the name of the plugged thin/thick
-         * I-bundle, if the triangulation is of this form.  If the
-         * triangulation is not of this form, this string is not touched.
-         * @return \c true if this triangulation is indeed a plugged thin
-         * I-bundle or a plugged thick I-bundle.
+         * @return the name of the plugged thin/thick I-bundle, if the
+         * triangulation is of this form, or no value if it is not.
          */
-        bool isPluggedIBundle(std::string& name) const;
+        std::optional<std::string> isPluggedIBundle() const;
 
-        Manifold* manifold() const override;
+        std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
@@ -117,24 +150,37 @@ class BlockedSFS : public StandardTriangulation {
          * Determines if the given triangulation is a blocked Seifert
          * fibred space.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tri the triangulation to examine.
-         * @return a newly created structure containing details of the
-         * blocked Seifert fibred space, or \c null if the given
-         * triangulation is not a blocked Seifert fibred space.
+         * @return a structure containing details of the blocked Seifert
+         * fibred space, or \c null if the given triangulation is not a
+         * blocked Seifert fibred space.
          */
-        static BlockedSFS* isBlockedSFS(Triangulation<3>* tri);
+        static std::unique_ptr<BlockedSFS> recognise(
+            const Triangulation<3>& tri);
+        /**
+         * A deprecated alias to recognise if a triangulation forms a
+         * saturated region joined to a think I-bundle via optional layerings.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<BlockedSFS> isBlockedSFS(
+            const Triangulation<3>& tri);
 
     private:
         /**
          * Constructs a new blocked Seifert fibred space, as described by
-         * the given saturated region.  The new object will take ownership
-         * of the given region.
+         * the given saturated region.
          *
          * Note that the new object must describe an existing triangulation.
          *
          * @param region the region describing this entire triangulation.
          */
-        BlockedSFS(SatRegion* region);
+        BlockedSFS(SatRegion&& region);
 
         /**
          * Attempts to identify the solid torus plugs in a plugged thin
@@ -149,11 +195,10 @@ class BlockedSFS : public StandardTriangulation {
          *
          * If the two blocks are indeed solid torus plugs (either layered
          * solid tori or Mobius bands), the full name of the plugged
-         * thin/thick I-bundle will be filled in and \c true will be
-         * returned.  Note that this name may be normalised or otherwise
-         * modified to return a simpler set of parameters for the same
-         * triangulation.  If either block is not a solid torus plug then
-         * \c false will be returned.
+         * thin/thick I-bundle will be returned.  Note that this name may be
+         * normalised or otherwise modified to return a simpler set of
+         * parameters for the same triangulation.  If either block is not a
+         * solid torus plug then no value will be returned.
          *
          * @param thin \c true if the overall structure being identified
          * is a plugged thin I-bundle, or \c false if it is a plugged
@@ -164,9 +209,6 @@ class BlockedSFS : public StandardTriangulation {
          * I-bundles or the four thick twisted I-bundles described in
          * the paper "Structures of small closed non-orientable
          * 3-manifold triangulations" (see isPluggedIBundle for details).
-         * @param name used to return the full parameterised name of this
-         * triangulation.  If the two given blocks are not solid torus
-         * plugs, this string is not touched.
          * @param torus0 the block that should provide the solid torus plug
          * corresponding to the first pair of integers in the plugged
          * thin/thick I-bundle parameters.
@@ -185,24 +227,48 @@ class BlockedSFS : public StandardTriangulation {
          * horizontal edges of the adjacent block (not the block
          * \a torus1, but its neighbour), or \c false if the vertical
          * and diagonal edges should be used instead.
-         * @return \c true if the two given blocks are both solid torus
-         * plugs (either layered solid tori or Mobius bands), or \c false
-         * otherwise.
+         * @return the full parameterised name of this triangulation, if the
+         * two given blocks are both solid torus plugs (either layered
+         * solid tori or Mobius bands), or no value otherwise.
          */
-        static bool findPluggedTori(bool thin, int id, std::string& name,
+        static std::optional<std::string> findPluggedTori(bool thin, int id,
             const SatBlock* torus0, bool horiz0,
             const SatBlock* torus1, bool horiz1);
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls BlockedSFS::swap(); it is provided
+ * so that BlockedSFS meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(BlockedSFS& a, BlockedSFS& b) noexcept;
 
 // Inline functions for BlockedSFS
 
-inline BlockedSFS::BlockedSFS(SatRegion* region) : region_(region) {
+inline BlockedSFS::BlockedSFS(SatRegion&& region) : region_(std::move(region)) {
+}
+
+inline void BlockedSFS::swap(BlockedSFS& other) noexcept {
+    region_.swap(other.region_);
 }
 
 inline const SatRegion& BlockedSFS::region() const {
-    return *region_;
+    return region_;
+}
+
+inline std::unique_ptr<BlockedSFS> BlockedSFS::isBlockedSFS(
+        const Triangulation<3>& tri) {
+    return recognise(tri);
+}
+
+inline void swap(BlockedSFS& a, BlockedSFS& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

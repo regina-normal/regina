@@ -49,7 +49,7 @@
     #define __regina_has_to_chars 1
   #else
     // On macOS, Xcode provides std::to_chars() but only enables it
-    // for macOS 15 / iOS 13 and above.
+    // for macOS 10.15 / iOS 13 and above.
     // Until we can check this properly, just use the same fallback as below.
     #include <cstdio>
     #undef __regina_has_to_chars
@@ -63,7 +63,7 @@
 
 namespace regina {
 
-Link* Link::fromGauss(const std::string& s) {
+Link Link::fromGauss(const std::string& s) {
     std::istringstream in(s);
     std::vector<int> terms;
 
@@ -73,16 +73,15 @@ Link* Link::fromGauss(const std::string& s) {
         if (! in) {
             if (in.eof())
                 break;
-            return nullptr;
+            throw InvalidArgument("fromGauss(): invalid character");
         }
         terms.push_back(i);
     }
     return fromGauss(terms.begin(), terms.end());
 }
 
-Link* Link::fromOrientedGauss(const std::string& s) {
-    std::vector<std::string> terms;
-    basicTokenise(std::back_inserter(terms), s);
+Link Link::fromOrientedGauss(const std::string& s) {
+    std::vector<std::string> terms = basicTokenise(s);
     return fromOrientedGauss(terms.begin(), terms.end());
 }
 
@@ -260,7 +259,7 @@ std::vector<std::string> Link::orientedGaussData() const {
             return std::vector<std::string>();
         }
 #endif
-        ans.push_back(token);
+        ans.emplace_back(token);
 
         ++s;
     } while (s != start);
@@ -299,9 +298,8 @@ void Tangle::orientedGauss(std::ostream& out) const {
     }
 }
 
-Tangle* Tangle::fromOrientedGauss(const std::string& s) {
-    std::vector<std::string> terms;
-    basicTokenise(std::back_inserter(terms), s);
+Tangle Tangle::fromOrientedGauss(const std::string& s) {
+    std::vector<std::string> terms = basicTokenise(s);
     return fromOrientedGauss(terms.begin(), terms.end());
 }
 

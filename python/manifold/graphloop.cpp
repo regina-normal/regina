@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "manifold/graphloop.h"
 #include "manifold/sfs.h"
 #include "../helpers.h"
@@ -41,15 +42,8 @@ using regina::SFSpace;
 
 void addGraphLoop(pybind11::module_& m) {
     pybind11::class_<GraphLoop, regina::Manifold>(m, "GraphLoop")
-        .def(pybind11::init([](const SFSpace& s,
-                long a, long b, long c, long d) {
-            // Clone the given SFS to avoid claiming ownership of it.
-            return new GraphLoop(new SFSpace(s), a, b, c, d);
-        }))
-        .def(pybind11::init([](const SFSpace& s, const Matrix2& m) {
-            // Clone the given SFS to avoid claiming ownership of it.
-            return new GraphLoop(new SFSpace(s), m);
-        }))
+        .def(pybind11::init<const SFSpace&, long, long, long, long>())
+        .def(pybind11::init<const SFSpace&, const Matrix2&>())
         .def(pybind11::init<const GraphLoop&>())
         .def("sfs", &GraphLoop::sfs,
             pybind11::return_value_policy::reference_internal)

@@ -34,9 +34,12 @@
  *  \brief Contains some of the implementation details for the generic
  *  Triangulation class template.
  *
- *  This file is \e not included from triangulation.h, but the routines
- *  it contains are explicitly instantiated in Regina's calculation engine.
- *  Therefore end users should never need to include this header.
+ *  This file is \e not included from triangulation.h, and it is not
+ *  shipped with Regina's development headers.  The routines it contains are
+ *  explicitly instantiated in Regina's calculation engine for all dimensions.
+ *
+ *  The reason for "quarantining" this file is simply to avoid putting
+ *  excessive implementation details in the headers where this is not needed.
  */
 
 #ifndef __REGINA_SKELETON_IMPL_H_DETAIL
@@ -66,9 +69,8 @@ void TriangulationBase<dim>::calculateSkeleton() {
     // Triangulations are orientable until proven otherwise.
     orientable_ = true;
 
-    SimplexIterator it;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
-        (*it)->component_ = 0;
+    for (auto it = simplices_.begin(); it != simplices_.end(); ++it) {
+        (*it)->component_ = nullptr;
         (*it)->dualForest_ = 0;
     }
 
@@ -77,16 +79,16 @@ void TriangulationBase<dim>::calculateSkeleton() {
     // component labelling.  We use a plain C array for this queue: since each
     // simplex is processed only once, an array of size simplices_.size()
     // is large enough.
-    Simplex<dim>** queue = new Simplex<dim>*[simplices_.size()];
+    auto* queue = new Simplex<dim>*[simplices_.size()];
     size_t queueStart = 0, queueEnd = 0;
 
     Component<dim>* c;
     Simplex<dim> *s, *adj;
     int facet;
     int yourOrientation;
-    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
+    for (auto it = simplices_.begin(); it != simplices_.end(); ++it) {
         s = *it;
-        if (s->component_ == 0) {
+        if (! s->component_) {
             c = new Component<dim>();
             components_.push_back(c);
 
@@ -134,9 +136,9 @@ void TriangulationBase<dim>::calculateSkeleton() {
     // Faces of all dimensions 0, ..., dim-1
     // -----------------------------------------------------------------
 
-    std::apply([=](auto&&... kFaces) {
+    std::apply([this](auto&&... kFaces) {
         (calculateFaces<subdimOf<decltype(kFaces)>()>(this), ...);
-    }, this->faces_);
+    }, faces_);
 
     // -----------------------------------------------------------------
     // Real boundary components
@@ -176,26 +178,25 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                 // A new face!
                 f = new Face<dim, dim-1>(s->component_);
                 std::get<dim - 1>(tri->faces_).push_back(f);
+                auto map = Face<dim, dim-1>::ordering(facet);
 
                 std::get<dim-1>(s->faces_)[facet] = f;
-                std::get<dim-1>(s->mappings_)[facet] =
-                    Face<dim, dim-1>::ordering(facet);
+                std::get<dim-1>(s->mappings_)[facet] = map;
 
                 adj = s->adjacentSimplex(facet);
                 if (adj) {
                     // We have an adjacent simplex.
                     adjFacet = s->adjacentFacet(facet);
+                    auto adjMap = s->adjacentGluing(facet) * map;
 
                     std::get<dim-1>(adj->faces_)[adjFacet] = f;
-                    std::get<dim-1>(adj->mappings_)[adjFacet] =
-                        s->adjacentGluing(facet) *
-                        std::get<dim-1>(s->mappings_)[facet];
+                    std::get<dim-1>(adj->mappings_)[adjFacet] = adjMap;
 
-                    f->push_back(FaceEmbedding<dim, dim-1>(s, facet));
-                    f->push_back(FaceEmbedding<dim, dim-1>(adj, adjFacet));
+                    f->embeddings_.push_back({s, map});
+                    f->embeddings_.push_back({adj, adjMap});
                 } else {
                     // This is a boundary facet.
-                    f->push_back(FaceEmbedding<dim, dim-1>(s, facet));
+                    f->embeddings_.push_back({s, map});
                 }
             }
         }
@@ -207,7 +208,7 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
         Face<dim, dim-2>* f;
         Simplex<dim> *simp, *adj;
         int adjFace;
-        Perm<dim+1> map, adjMap;
+        Perm<dim+1> adjMap;
         int dir, exitFacet;
         for (auto s : tri->simplices_) {
             for (start = 0; start < FaceNumbering<dim, dim-2>::nFaces;
@@ -217,6 +218,7 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
 
                 f = new Face<dim, dim-2>(s->component_);
                 std::get<dim - 2>(tri->faces_).push_back(f);
+                auto map = Face<dim, dim-2>::ordering(start);
 
                 // Since the link of a codimension-2-face is a path or loop, the
                 // depth-first search is really just a straight line in either
@@ -224,9 +226,8 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                 // just keep track of the next simplex to process in the current
                 // direction.
                 std::get<dim-2>(s->faces_)[start] = f;
-                std::get<dim-2>(s->mappings_)[start] =
-                    Face<dim, dim-2>::ordering(start);
-                f->push_back(FaceEmbedding<dim, dim-2>(s, start));
+                std::get<dim-2>(s->mappings_)[start] = map;
+                f->embeddings_.push_back({s, map});
 
                 for (dir = 0; dir < 2; ++dir) {
                     // Start at the start and walk in one particular direction.
@@ -269,11 +270,9 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                         std::get<dim-2>(adj->mappings_)[adjFace] = adjMap;
 
                         if (dir == 0)
-                            f->push_back(FaceEmbedding<dim, dim-2>(
-                                adj, adjFace));
+                            f->embeddings_.push_back({adj, adjMap});
                         else
-                            f->push_front(FaceEmbedding<dim, dim-2>(
-                                adj, adjFace));
+                            f->embeddings_.push_front({adj, adjMap});
 
                         simp = adj;
                         map = adjMap;
@@ -296,8 +295,9 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
         // We can do this using simple arrays - since each subdim-face of each
         // simplex is pushed on at most once, the array size does not need to
         // be very large.
-        typedef std::pair<Simplex<dim>*, int> Spec; /* (simplex, face) */
-        Spec* queue = new Spec[tri->size() * FaceNumbering<dim, subdim>::nFaces];
+        // Each element in our queue is a pair (simplex, face).
+        auto* queue = new std::pair<Simplex<dim>*, int>
+            [tri->size() * FaceNumbering<dim, subdim>::nFaces];
         unsigned queueStart, queueEnd;
         unsigned pos;
 
@@ -309,11 +309,11 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
 
                 f = new Face<dim, subdim>(s->component_);
                 std::get<subdim>(tri->faces_).push_back(f);
+                auto map = Face<dim, subdim>::ordering(start);
 
                 std::get<subdim>(s->faces_)[start] = f;
-                std::get<subdim>(s->mappings_)[start] =
-                    Face<dim, subdim>::ordering(start);
-                f->push_back(FaceEmbedding<dim, subdim>(s, start));
+                std::get<subdim>(s->mappings_)[start] = map;
+                f->embeddings_.push_back({s, map});
 
                 // Run a breadth-first search from this vertex to completely
                 // enumerate all identifications.
@@ -379,8 +379,7 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                                 std::get<subdim>(adj->faces_)[adjFace] = f;
                                 std::get<subdim>(adj->mappings_)[adjFace] =
                                     adjMap;
-                                f->push_back(FaceEmbedding<dim, subdim>(
-                                    adj, adjFace));
+                                f->embeddings_.push_back({adj, adjMap});
 
                                 queue[queueEnd].first = adj;
                                 queue[queueEnd].second = adjFace;
@@ -447,10 +446,10 @@ void TriangulationBase<dim>::calculateRealBoundary() {
 
             // Run through all faces of dimensions 0,...,(dim-3) within facet,
             // and include them in this boundary component.
-            std::apply([=](auto&&... kFaces) {
+            std::apply([label, facet](auto&&... kFaces) {
                 (calculateBoundaryFaces<subdimOf<decltype(kFaces)>()>(
                     label, facet), ...);
-            }, this->faces_);
+            }, faces_);
 
             // Finally we process the (dim-2)-faces, and also use these to
             // locate adjacent boundary facets.
@@ -566,7 +565,9 @@ void TriangulationBase<dim>::clearBaseProperties() {
         components_.clear();
         boundaryComponents_.clear();
 
-        this->deleteFaces();
+        std::apply([](auto&&... kFaces) {
+            (kFaces.clear_destructive(), ...);
+        }, faces_);
 
         calculatedSkeleton_ = false;
     }
@@ -580,6 +581,8 @@ void TriangulationBase<dim>::clearBaseProperties() {
 
 template <int dim>
 void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
+    Snapshottable<Triangulation<dim>>::swap(other);
+
     // Simplices:
     simplices_.swap(other.simplices_);
 
@@ -596,7 +599,7 @@ void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
     // Properties stored using std::... containers or MarkedVector:
     components_.swap(other.components_);
     boundaryComponents_.swap(other.boundaryComponents_);
-    this->faces_.swap(other.faces_);
+    faces_.swap(other.faces_);
     fundGroup_.swap(other.fundGroup_);
     H1_.swap(other.H1_);
 }

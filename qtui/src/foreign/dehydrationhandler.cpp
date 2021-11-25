@@ -44,8 +44,8 @@
 
 const DehydrationHandler DehydrationHandler::instance;
 
-regina::Packet* DehydrationHandler::importData(const QString& fileName,
-        ReginaMain* parentWidget) const {
+std::shared_ptr<regina::Packet> DehydrationHandler::importData(
+        const QString& fileName, ReginaMain* parentWidget) const {
     QString explnSuffix = QObject::tr("<p>The file should be a plain text "
         "file containing one dehydration string per line.  "
         "Dehydration strings are described in detail in "
@@ -53,7 +53,7 @@ regina::Packet* DehydrationHandler::importData(const QString& fileName,
         "Callahan, Hildebrand and Weeks, published in "
         "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>");
 
-    regina::Packet* ans = regina::readDehydrationList(
+    std::shared_ptr<regina::Packet> ans = regina::readDehydrationList(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans) {
         ReginaSupport::sorry(parentWidget,
@@ -61,17 +61,16 @@ regina::Packet* DehydrationHandler::importData(const QString& fileName,
             QObject::tr("<qt>I could not open the file <tt>%1</tt>.  "
                 "Please check that this file is readable.</qt>")
                 .arg(fileName.toHtmlEscaped()));
-        return 0;
+        return nullptr;
     }
 
-    regina::Packet* last = ans->lastChild();
-    if (last == 0) {
+    std::shared_ptr<regina::Packet> last = ans->lastChild();
+    if (! last) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>The selected file does not contain any "
                 "dehydration strings.") + explnSuffix);
-        delete ans;
-        return 0;
+        return nullptr;
     } else if (last->type() == regina::PACKET_TEXT) {
         if (last == ans->firstChild()) {
             ReginaSupport::sorry(parentWidget, 
@@ -79,8 +78,7 @@ regina::Packet* DehydrationHandler::importData(const QString& fileName,
                 QObject::tr("<qt>None of the lines in the selected file "
                 "could be interpreted as dehydration strings.")
                 + explnSuffix);
-            delete ans;
-            return 0;
+            return nullptr;
         } else {
             ReginaSupport::warn(parentWidget, 
                 QObject::tr("There were problems with the import."),

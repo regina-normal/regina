@@ -48,7 +48,7 @@
 #include <QSize>
 #include <QStringList>
 #include <QWhatsThis>
-#include <signal.h>
+#include <csignal>
 
 #define MAX_GAP_READ_LINE 512
 
@@ -90,7 +90,7 @@ const char* GAP_PROMPT = "gap> ";
 GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
         const regina::GroupPresentation& useOrigGroup) :
         QDialog(parent),
-        proc(0), currOutput(""), partialLine(""), stage(GAP_init),
+        proc(nullptr), currOutput(""), partialLine(""), stage(GAP_init),
         cancelled(false), origGroup(useOrigGroup) {
     setWindowTitle(tr("Running GAP"));
 
@@ -98,12 +98,12 @@ GAPRunner::GAPRunner(QWidget* parent, const QString& useExec,
     setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) &
         ~(Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint));
 
-    QVBoxLayout *dialogLayout = new QVBoxLayout(this);
+    auto* dialogLayout = new QVBoxLayout(this);
 
     status = new MessageLayer("system-run", tr("Initialising..."));
     dialogLayout->addWidget(status);
 
-    QDialogButtonBox* buttonBox = new QDialogButtonBox();
+    auto* buttonBox = new QDialogButtonBox();
     killBtn = new QPushButton(
         ReginaSupport::themeIcon("process-stop"), tr("Stop"), this);
     killBtn->setToolTip(tr("Stop the running GAP process"));
@@ -154,7 +154,7 @@ void GAPRunner::slotCancel() {
         // to Close.
         if (proc->state() == QProcess::Running)
             proc->kill();
-        disconnect(proc, 0, this, 0);
+        disconnect(proc, nullptr, this, nullptr);
 
         status->setText(tr("Simplification cancelled."));
         killBtn->setText(tr("Close"));
@@ -204,7 +204,7 @@ void GAPRunner::processOutput(const QString& output) {
 
     unsigned long count;
     bool ok;
-    regina::GroupExpression* reln;
+    std::optional<regina::GroupExpression> reln;
     switch (stage) {
         case GAP_init:
             // Ignore any output.
@@ -235,7 +235,7 @@ void GAPRunner::processOutput(const QString& output) {
             count = use.toULong(&ok);
             if (ok) {
                 newGenCount = count;
-                newGroup.reset(new regina::GroupPresentation());
+                newGroup = regina::GroupPresentation();
                 newGroup->addGenerator(newGenCount);
 
                 if (newGenCount == 0) {
@@ -295,7 +295,6 @@ void GAPRunner::processOutput(const QString& output) {
         case GAP_newrelseach:
             if ((reln = parseRelation(use))) {
                 newGroup->addRelation(std::move(*reln));
-                delete reln;
                 stageWhichReln++;
                 if (stageWhichReln == newRelnCount) {
                     // All finished!
@@ -318,12 +317,9 @@ void GAPRunner::processOutput(const QString& output) {
 }
 
 QString GAPRunner::origGroupRelns() {
-    unsigned long nRels = origGroup.countRelations();
     bool empty = true;
-
     QString ans = "[ ";
-    for (unsigned long i = 0; i < nRels; i++) {
-        const regina::GroupExpression& reln(origGroup.relation(i));
+    for (const auto& reln : origGroup.relations()) {
         if (reln.terms().empty())
             continue;
 
@@ -334,7 +330,6 @@ QString GAPRunner::origGroupRelns() {
         empty = false;
     }
     ans += " ]";
-
     return ans;
 }
 
@@ -350,7 +345,8 @@ QString GAPRunner::origGroupReln(const regina::GroupExpression& reln) {
     return ans;
 }
 
-regina::GroupExpression* GAPRunner::parseRelation(const QString& reln) {
+std::optional<regina::GroupExpression> GAPRunner::parseRelation(
+        const QString& reln) {
     // Newer versions of GAP seem to include spaces where you don't
     // really want them.  Just remove the whitespace completely.
     QString relnLocal = reln;
@@ -360,10 +356,10 @@ regina::GroupExpression* GAPRunner::parseRelation(const QString& reln) {
     if (terms.isEmpty()) {
         error(tr("GAP produced empty output where a group relator "
             "was expected."));
-        return nullptr;
+        return std::nullopt;
     }
 
-    std::unique_ptr<regina::GroupExpression> ans(new regina::GroupExpression);
+    regina::GroupExpression ans;
 
     // Make the regex local to this function since we're capturing text.
     QRegExp reGAPTerm("(f[0-9]+)(\\^(-?[0-9]+))?");
@@ -373,11 +369,11 @@ regina::GroupExpression* GAPRunner::parseRelation(const QString& reln) {
     std::map<QString, unsigned long>::iterator genPos;
     unsigned long gen;
     long exp;
-    for (QStringList::iterator it = terms.begin(); it != terms.end(); it++) {
-        if (! reGAPTerm.exactMatch(*it)) {
+    for (const auto& t : terms) {
+        if (! reGAPTerm.exactMatch(t)) {
             error(tr("GAP produced the following group relator, which could "
                 "not be understood:<p><tt>%1</tt>").arg(escape(reln)));
-            return nullptr;
+            return std::nullopt;
         }
 
         genStr = reGAPTerm.cap(1);
@@ -386,7 +382,7 @@ regina::GroupExpression* GAPRunner::parseRelation(const QString& reln) {
             error(tr("GAP produced the following group relator, which "
                 "includes the unknown generator <i>%1</i>:<p>"
                 "<tt>%2</tt>").arg(genStr).arg(escape(reln)));
-            return nullptr;
+            return std::nullopt;
         } else {
             gen = (*genPos).second;
         }
@@ -396,11 +392,11 @@ regina::GroupExpression* GAPRunner::parseRelation(const QString& reln) {
         else
             exp = reGAPTerm.cap(3).toLong();
 
-        ans->addTermLast(gen, exp);
+        ans.addTermLast(gen, exp);
     }
 
     // All good.
-    return ans.release();
+    return ans;
 }
 
 void GAPRunner::error(const QString& msg) {
@@ -409,7 +405,7 @@ void GAPRunner::error(const QString& msg) {
     cancelled = true;
     if (proc->state() == QProcess::Running)
         proc->kill();
-    disconnect(proc, 0, this, 0);
+    disconnect(proc, nullptr, this, nullptr);
 
     killBtn->setText(tr("Close"));
 
@@ -511,10 +507,10 @@ QSize GAPRunner::sizeHint() const {
     return QSize(300, 100);
 }
 
-std::unique_ptr<regina::GroupPresentation> GAPRunner::simplifiedGroup() {
+std::optional<regina::GroupPresentation> GAPRunner::simplifiedGroup() {
     if (stage == GAP_done)
         return std::move(newGroup);
     else
-        return nullptr;
+        return std::nullopt;
 }
 

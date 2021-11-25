@@ -48,20 +48,22 @@ simplex ::= (#PCDATA)</synopsis>
   <para>
    A &xml-simplex; element stores a single top-dimensional simplex in a
    <replaceable>dim</replaceable>-dimensional triangulation, along with its
-   associated facet gluings, for dimensions
-   5 &le; <replaceable>dim</replaceable> &le; 15.
+   associated facet gluings.
+   Since &regina;&nbsp;7.0, this element is now used by all of the
+   dimensions that &regina; supports
+   (2&nbsp;&le;&nbsp;<replaceable>dim</replaceable>&nbsp;&le;&nbsp;15).
   </para>
   <para>
    The character data of this &xml; element should be a
-   whitespace-separated list of <replaceable>dim</replaceable>+1
+   whitespace-separated list of <replaceable>dim</replaceable>&nbsp;+&nbsp;1
    integer pairs, representing the gluings of facets
-   0, 1, ..., <replaceable>dim</replaceable> of this simplex.  Note that
-   facet <replaceable>i</replaceable> is always opposite vertex
-   <replaceable>i</replaceable> in a top-dimensional simplex.
+   0, 1, &hellip;, <replaceable>dim</replaceable> of this simplex.  Note that
+   facet&nbsp; <replaceable>i</replaceable> is always opposite
+   vertex&nbsp;<replaceable>i</replaceable> in a top-dimensional simplex.
   </para>
   <para>
    For each pair, the first integer represents the other top-dimensional
-   simplex to which the facet is glued (note that simplices in a triangulation
+   simplex to which the facet is glued (recall that simplices in a triangulation
    are numbered 0, 1, 2, etc.).  The second integer represents the
    permutation of vertices from this simplex to the other simplex
    describing precisely how this gluing takes place.  This permutation
@@ -72,56 +74,87 @@ simplex ::= (#PCDATA)</synopsis>
    the adjacent simplex to which they are identified by this gluing.
   </para>
   <para>
-   A permutation is represented as an integer as follows.
-   If the permutation maps 0, 1, ..., <replaceable>dim</replaceable> to
-   <replaceable>a0</replaceable>, <replaceable>a1</replaceable>, ...,
-   <replaceable>aDim</replaceable> respectively (where
-   <replaceable>a0</replaceable>, <replaceable>a1</replaceable>, ...,
-   <replaceable>aDim</replaceable> are 0, 1, ..., <replaceable>dim</replaceable>
-   in some order), then the corresponding integer is
-   (<replaceable>a0</replaceable> +
-   <replaceable>B</replaceable>&nbsp;<replaceable>a1</replaceable> +
-   <replaceable>B</replaceable><superscript>2</superscript>&nbsp;<replaceable>a2</replaceable> +
-   ... +
-   <replaceable>B</replaceable><superscript><replaceable>dim</replaceable></superscript>&nbsp;<replaceable>aDim</replaceable>).
-   Here the &ldquo;base&rdquo; <replaceable>B</replaceable> is
-   <replaceable>B</replaceable> = 8 for dimensions
-   <replaceable>dim</replaceable> = 5..7, and
-   <replaceable>B</replaceable> = 16 for dimensions
-   <replaceable>dim</replaceable> = 8..15.
-   As an example, the identity permutation for dimension
-   <replaceable>dim</replaceable> = 8 which maps (0, 1, ..., 8) to
-   (0, 1, ..., 8) is represented by the integer
-   (0 + 1&times;16 + 2&times;256 + ... + 8&times;4294967296),
-   which is 36344967696.
+   There are two ways in which &regina; can encode permutations as integers:
+   <emphasis>indices</emphasis> into the symmetric group
+   S<subscript><replaceable>dim</replaceable>+1</subscript>, and
+   <emphasis>image packs</emphasis>.  Which of these methods is used
+   is specified by the <sgmltag>perm</sgmltag> attribute of the
+   enclosing &xml-tri; element.  If no method is specified (e.g., if
+   this is an older second-generation data file), then &regina; will
+   assume indices for dimension&nbsp;2, and image packs for
+   dimensions&nbsp;<replaceable>dim</replaceable>&nbsp;&ge;&nbsp;3
+   (following the behaviour of the second-generation file format).
   </para>
+  <itemizedlist>
+   <listitem><para>
+    An <emphasis>index</emphasis> encodes a permutation as an integer
+    <replaceable>i</replaceable> in the range
+    0&nbsp;&le;&nbsp;<replaceable>i</replaceable>&nbsp;&lt;&nbsp;(<replaceable>dim</replaceable>+1)!.
+    This integer is the index of the permutation into the symmetric
+    group S<subscript><replaceable>dim</replaceable>+1</subscript>.
+    These indices list the permutations in &ldquo;almost
+    lexicographical&rdquo; order; the exception is that some pairs
+    (2<replaceable>i</replaceable>, 2<replaceable>i</replaceable>+1) are
+    swapped to ensure that even indices correspond to even permutations.
+   </para><para>
+    You can access these indices from within &regina; using the functions
+    <code>Perm&lt;dim+1&gt;::SnIndex()</code> and
+    <code>Perm&lt;dim+1&gt;::Sn[...]</code>.
+   </para></listitem>
+   <listitem><para>
+    An <emphasis>image pack</emphasis> encodes a permutation as follows.
+    If the permutation maps 0, 1, &hellip;, <replaceable>dim</replaceable> to
+    <replaceable>a0</replaceable>, <replaceable>a1</replaceable>, &hellip;,
+    <replaceable>aDim</replaceable> respectively (where
+    <replaceable>a0</replaceable>, <replaceable>a1</replaceable>, &hellip;,
+    <replaceable>aDim</replaceable> are 0, 1, &hellip;, <replaceable>dim</replaceable>
+    in some order), then the corresponding integer is
+    (<replaceable>a0</replaceable> +
+    <replaceable>B</replaceable>&nbsp;<replaceable>a1</replaceable> +
+    <replaceable>B</replaceable><superscript>2</superscript>&nbsp;<replaceable>a2</replaceable> +
+    &hellip; +
+    <replaceable>B</replaceable><superscript><replaceable>dim</replaceable></superscript>&nbsp;<replaceable>aDim</replaceable>).
+    Here the &ldquo;base&rdquo; <replaceable>B</replaceable> is
+    <replaceable>B</replaceable>&nbsp;=&nbsp;4 for dimension
+    <replaceable>dim</replaceable>&nbsp;=&nbsp;3,
+    <replaceable>B</replaceable>&nbsp;=&nbsp;8 for dimensions
+    4&nbsp;&le;&nbsp;<replaceable>dim</replaceable>&nbsp;&le;&nbsp;7, and
+    <replaceable>B</replaceable>&nbsp;=&nbsp;16 for dimensions
+    8&nbsp;&le;&nbsp;<replaceable>dim</replaceable>&nbsp;&le;&nbsp;15.
+    As an example, the identity permutation for dimension
+    <replaceable>dim</replaceable>&nbsp;=&nbsp;8 which maps
+    (0,1,&hellip;,8) to
+    (0,1,&hellip;,8) is represented by the integer
+    (0 + 1&times;16 + 2&times;256 + &hellip; + 8&times;4294967296),
+    which is 36344967696.
+   </para><para>
+    You can access these indices from within &regina; using the functions
+    <code>Perm&lt;dim+1&gt;::imagePack()</code> and
+    <code>Perm&lt;dim+1&gt;::fromImagePack(...)</code>.
+   </para></listitem>
+  </itemizedlist>
   <para>
    If a facet is a boundary facet (i.e., it is not glued to anything), the
    two corresponding integers stored in the &xml; character data should
    be -1 and -1.
   </para>
   <warning><para>
-   For dimensions <replaceable>dim</replaceable> = 5..7,
+   For dimensions <replaceable>dim</replaceable>&nbsp;=&nbsp;2..7,
    permutations are represented by 32-bit integers.
-   In contrast, for dimensions <replaceable>dim</replaceable> = 8..15,
+   In contrast, for dimensions
+   <replaceable>dim</replaceable>&nbsp;=&nbsp;8..15,
    permutations are represented by 64-bit integers.
    If you are writing code that reads &regina; data files, you may need
    to use a large integer type
    (such as <literal>long&nbsp;long</literal> in &cpp;) accordingly.
   </para></warning>
-  <note><para>
-   The &xml-simplex; element is only for use in higher dimensions
-   5 &le; <replaceable>dim</replaceable> &le; 15.
-   For the smaller dimensions 2, 3 and 4, the specialised tags
-   &xml-triangle;, &xml-tet; and &xml-pent; should be used instead.
-  </para></note>
 
   <refsect2>
    <title>Parents</title>
    <para>
     The following elements contain <sgmltag>simplex</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-simplices;</member>
+     <member>&xml-tri;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -153,12 +186,12 @@ simplex ::= (#PCDATA)</synopsis>
   <title>Example</title>
   <para>
    The following &xml; snippet represents simplex number 0 in a
-   6-dimensional triangulation.
+   6-dimensional triangulation, using image packs to represent permutations.
    Facet 0 of this simplex is glued to facet 6 of simplex number 1,
    with a gluing permutation that maps (0,1,2,3,4,5,6) to (6,0,1,2,3,4,5).
    Facet 6 of this simplex is glued to facet 0 of simplex number 1,
    with a gluing permutation that maps (0,1,2,3,4,5,6) to (1,2,3,4,5,6,0).
-   The remaining facets 1,...,5 of this simplex are all boundary facets.
+   The remaining facets 1,&hellip;,5 of this simplex are all boundary facets.
   </para>
   <programlisting>
 &lt;simplex&gt; 1 14038087 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 2054353 &lt;/simplex&gt;
