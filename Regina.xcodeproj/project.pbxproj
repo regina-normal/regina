@@ -2083,6 +2083,9 @@
 		05FEA07C19C1890900A31924 /* examplesnappea.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FEA07919C1890900A31924 /* examplesnappea.h */; };
 		05FEA07F19C2B96000A31924 /* PacketPicker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07E19C2B96000A31924 /* PacketPicker.mm */; };
 		05FF4D3E1DB6BE310056D1EA /* SyntaxHighlighter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */; };
+		50BC46F326EECC4E003759CA /* 1h-testing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50BC46F226EECC4E003759CA /* 1h-testing.cpp */; };
+		50BC473F26EED278003759CA /* 1h-testing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50BC46F226EECC4E003759CA /* 1h-testing.cpp */; };
+		50F19A8F26D4E6A7005BADB8 /* up-down-simplify.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50F19A8E26D4E6A7005BADB8 /* up-down-simplify.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -2488,6 +2491,15 @@
 				050EA59A25A2BE08000E94F5 /* knot-census.rga in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50BC46EE26EECC4E003759CA /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -4475,6 +4487,10 @@
 		05FF4D3A1DB6BC1E0056D1EA /* SyntaxHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SyntaxHighlighter.h; sourceTree = "<group>"; };
 		05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SyntaxHighlighter.mm; sourceTree = "<group>"; };
 		05FF74E31DCB12F700FC2CB4 /* 600cell.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = 600cell.py; sourceTree = "<group>"; };
+		50BC46F026EECC4E003759CA /* 1h-testing */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "1h-testing"; sourceTree = BUILT_PRODUCTS_DIR; };
+		50BC46F226EECC4E003759CA /* 1h-testing.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "1h-testing.cpp"; sourceTree = "<group>"; };
+		50F19A8E26D4E6A7005BADB8 /* up-down-simplify.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "up-down-simplify.cpp"; sourceTree = "<group>"; };
+		50F19B4E26D5E602005BADB8 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libxml2.tbd; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4676,6 +4692,13 @@
 			files = (
 				0567B4FE2581AC070022EA5D /* libtokyocabinet.xcframework in Frameworks */,
 				05E0F1722582427000965440 /* libz.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50BC46ED26EECC4E003759CA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6035,6 +6058,7 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				50F19B4E26D5E602005BADB8 /* libxml2.tbd */,
 				057EDA312581BC97004F0068 /* cppunit.xcframework */,
 				057ED9C32581BAAE004F0068 /* graphviz.xcframework */,
 				0567B49A2581AB9A0022EA5D /* jansson.xcframework */,
@@ -6605,6 +6629,8 @@
 				05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */,
 				05685FEE1F9713B000085B44 /* testsuite */,
 				0577E70A1F970BF900CBDF15 /* local */,
+				50F19A8E26D4E6A7005BADB8 /* up-down-simplify.cpp */,
+				50BC46F226EECC4E003759CA /* 1h-testing.cpp */,
 			);
 			path = utils;
 			sourceTree = "<group>";
@@ -7098,6 +7124,7 @@
 				058FC8721FE188A0006D04B4 /* retriangulate */,
 				059D01A325B6A72C004150F7 /* Timing */,
 				057B0CC326A506B20017F5EA /* dgt */,
+				50BC46F026EECC4E003759CA /* 1h-testing */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -8273,6 +8300,23 @@
 			productReference = 05B14EA319B423A0002138C0 /* mkcensusdb */;
 			productType = "com.apple.product-type.tool";
 		};
+		50BC46EF26EECC4E003759CA /* 1h-testing */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50BC46F426EECC4E003759CA /* Build configuration list for PBXNativeTarget "1h-testing" */;
+			buildPhases = (
+				50BC46EC26EECC4E003759CA /* Sources */,
+				50BC46ED26EECC4E003759CA /* Frameworks */,
+				50BC46EE26EECC4E003759CA /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "1h-testing";
+			productName = "1h-testing";
+			productReference = 50BC46F026EECC4E003759CA /* 1h-testing */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -8342,6 +8386,9 @@
 						DevelopmentTeam = 67JTSH67LZ;
 						ProvisioningStyle = Automatic;
 					};
+					50BC46EF26EECC4E003759CA = {
+						CreatedOnToolsVersion = 12.4;
+					};
 				};
 			};
 			buildConfigurationList = 0575E6541805F36D009E3FC4 /* Build configuration list for PBXProject "Regina" */;
@@ -8376,6 +8423,7 @@
 				05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */,
 				05617B421D9DC55B00B1E33B /* Utils - TriSetCmp */,
 				059D019925B6A72C004150F7 /* Timing */,
+				50BC46EF26EECC4E003759CA /* 1h-testing */,
 			);
 		};
 /* End PBXProject section */
@@ -10073,6 +10121,7 @@
 				052F9F7C180600FB00FAE4DF /* cusps.c in Sources */,
 				05B7FFCA25AC22D3003BAF5C /* descent.cpp in Sources */,
 				05C1BEAE1DCA7CA9007C946B /* boundary6.cpp in Sources */,
+				50BC473F26EED278003759CA /* 1h-testing.cpp in Sources */,
 				05B4D2D8229F42D700B7B11C /* engine.cpp in Sources */,
 				05DC13851FEB942B00171D66 /* nsvectorquadoctclosed.cpp in Sources */,
 				052F9E9D180600FB00FAE4DF /* census.cpp in Sources */,
@@ -10206,6 +10255,7 @@
 				05C1BEB51DCA7CA9007C946B /* boundary13.cpp in Sources */,
 				052F9F8A180600FB00FAE4DF /* intersection_numbers.c in Sources */,
 				052F9F7A180600FB00FAE4DF /* cusp_neighborhoods.c in Sources */,
+				50F19A8F26D4E6A7005BADB8 /* up-down-simplify.cpp in Sources */,
 				0542087C1DF0D0B50018AB24 /* keywordlist.cpp in Sources */,
 				059802FA26683C6D002D5D57 /* xmlalgebrareader.cpp in Sources */,
 				059802E726683C6D002D5D57 /* xmltrireader2.cpp in Sources */,
@@ -10348,6 +10398,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				05B14EB519B4240D002138C0 /* mkcensusdb.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50BC46EC26EECC4E003759CA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50BC46F326EECC4E003759CA /* 1h-testing.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11557,6 +11615,7 @@
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11589,6 +11648,7 @@
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -11932,6 +11992,48 @@
 			};
 			name = Release;
 		};
+		50BC46F526EECC4E003759CA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		50BC46F626EECC4E003759CA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -12111,6 +12213,15 @@
 			buildConfigurations = (
 				05DADB06219256ED00DC80E1 /* Debug */,
 				05DADB07219256ED00DC80E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		50BC46F426EECC4E003759CA /* Build configuration list for PBXNativeTarget "1h-testing" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50BC46F526EECC4E003759CA /* Debug */,
+				50BC46F626EECC4E003759CA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

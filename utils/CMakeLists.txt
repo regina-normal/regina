@@ -13,6 +13,8 @@ set(UTILS
   sigcensus
   tricensus
   trisetcmp
+  up-down-simplify
+  1h-testing
   )
 
 foreach(UTIL ${UTILS})
