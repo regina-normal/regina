@@ -35,7 +35,7 @@
 #include "utilities/randutils.h"
 
 // Affects the number of random 3-3 moves attempted during simplification.
-#define COEFF_3_3 10
+#define COEFF_3_3 200
 
 namespace regina {
 
@@ -115,43 +115,43 @@ bool Triangulation<4>::intelligentSimplify() {
 
             // --- Open book moves ---
 
-            if (hasBoundaryTetrahedra()) {
-                // Clone again, always -- we don't want to create gratuitous
-                // boundary facets if they won't be of any help.
-                use = new Triangulation<4>(*this, false);
-
-                // Perform every book opening move we can find.
-                bool opened = false;
-                bool openedNow = true;
-                while (openedNow) {
-                    openedNow = false;
-
-                    for (Tetrahedron<4>* tet : use->tetrahedra())
-                        if (use->openBook(tet, true, true)) {
-                            opened = openedNow = true;
-                            break;
-                        }
-                }
-
-                // If we're lucky, we can now simplify further.
-                if (opened) {
-                    if (use->simplifyToLocalMinimum(true)) {
-                        // Yay!
-                        swap(*use);
-                        changed = true;
-                    } else {
-                        // No good.
-                        // Ditch use and don't open anything.
-                        opened = false;
-                    }
-                }
-
-                delete use;
-
-                // If we did any book opening stuff, start all over again.
-                if (opened)
-                    continue;
-            }
+//            if (hasBoundaryTetrahedra()) {
+//                // Clone again, always -- we don't want to create gratuitous
+//                // boundary facets if they won't be of any help.
+//                use = new Triangulation<4>(*this, false);
+//
+//                // Perform every book opening move we can find.
+//                bool opened = false;
+//                bool openedNow = true;
+//                while (openedNow) {
+//                    openedNow = false;
+//
+//                    for (Tetrahedron<4>* tet : use->tetrahedra())
+//                        if (use->openBook(tet, true, true)) {
+//                            opened = openedNow = true;
+//                            break;
+//                        }
+//                }
+//
+//                // If we're lucky, we can now simplify further.
+//                if (opened) {
+//                    if (use->simplifyToLocalMinimum(true)) {
+//                        // Yay!
+//                        swap(*use);
+//                        changed = true;
+//                    } else {
+//                        // No good.
+//                        // Ditch use and don't open anything.
+//                        opened = false;
+//                    }
+//                }
+//
+//                delete use;
+//
+//                // If we did any book opening stuff, start all over again.
+//                if (opened)
+//                    continue;
+//            }
 
             // Nothing more we can do here.
             break;
@@ -162,8 +162,8 @@ bool Triangulation<4>::intelligentSimplify() {
 }
 
 bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
-    unsigned long nTetrahedra;
-    unsigned long iTet;
+//    unsigned long nTetrahedra;
+//    unsigned long iTet;
 
     bool changed = false;   // Has anything changed ever (for return value)?
     bool changedNow = true; // Did we just change something (for loop control)?
@@ -197,18 +197,6 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
             // Experience suggests that 2-0 moves are more important to
             // "unblock" other moves, and we should leave the simpler
             // 4-2 moves until last.
-            for (Triangle<4>* t : triangles()) {
-                if (twoZeroMove(t, true, perform)) {
-                    changedNow = changed = true;
-                    break;
-                }
-            }
-            if (changedNow) {
-                if (perform)
-                    continue;
-                else
-                    return true;
-            }
 
             for (Edge<4>* e : edges()) {
                 if (twoZeroMove(e, true, perform)) {
@@ -222,9 +210,9 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
                 else
                     return true;
             }
-
-            for (Vertex<4>* v : vertices()) {
-                if (twoZeroMove(v, true, perform)) {
+            
+            for (Triangle<4>* t : triangles()) {
+                if (twoZeroMove(t, true, perform)) {
                     changedNow = changed = true;
                     break;
                 }
@@ -236,43 +224,57 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
                     return true;
             }
 
-            for (Edge<4>* e : edges()) {
-                if (pachner(e, true, perform)) {
-                    changedNow = changed = true;
-                    break;
-                }
-            }
-            if (changedNow) {
-                if (perform)
-                    continue;
-                else
-                    return true;
-            }
-
-            // Look for boundary simplifications.
-            if (hasBoundaryTetrahedra()) {
-                for (BoundaryComponent<4>* bc : boundaryComponents()) {
-                    // Run through facets of this boundary component looking
-                    // for shell boundary moves.
-                    nTetrahedra = bc->countTetrahedra();
-                    for (iTet = 0; iTet < nTetrahedra; ++iTet) {
-                        if (shellBoundary(bc->tetrahedron(iTet)->
-                                front().pentachoron(),
-                                true, perform)) {
-                            changedNow = changed = true;
-                            break;
-                        }
-                    }
-                    if (changedNow)
-                        break;
-                }
-                if (changedNow) {
-                    if (perform)
-                        continue;
-                    else
-                        return true;
-                }
-            }
+//
+//            for (Vertex<4>* v : vertices()) {
+//                if (twoZeroMove(v, true, perform)) {
+//                    changedNow = changed = true;
+//                    break;
+//                }
+//            }
+//            if (changedNow) {
+//                if (perform)
+//                    continue;
+//                else
+//                    return true;
+//            }
+//
+//            for (Edge<4>* e : edges()) {
+//                if (pachner(e, true, perform)) {
+//                    changedNow = changed = true;
+//                    break;
+//                }
+//            }
+//            if (changedNow) {
+//                if (perform)
+//                    continue;
+//                else
+//                    return true;
+//            }
+//
+//            // Look for boundary simplifications.
+//            if (hasBoundaryTetrahedra()) {
+//                for (BoundaryComponent<4>* bc : boundaryComponents()) {
+//                    // Run through facets of this boundary component looking
+//                    // for shell boundary moves.
+//                    nTetrahedra = bc->countTetrahedra();
+//                    for (iTet = 0; iTet < nTetrahedra; ++iTet) {
+//                        if (shellBoundary(bc->tetrahedron(iTet)->
+//                                front().pentachoron(),
+//                                true, perform)) {
+//                            changedNow = changed = true;
+//                            break;
+//                        }
+//                    }
+//                    if (changedNow)
+//                        break;
+//                }
+//                if (changedNow) {
+//                    if (perform)
+//                        continue;
+//                    else
+//                        return true;
+//                }
+//            }
         }
     } // End scope for change event span.
 
