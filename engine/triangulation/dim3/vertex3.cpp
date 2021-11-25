@@ -52,78 +52,73 @@ void Vertex<3>::writeTextShort(std::ostream& out) const {
     out << "vertex of degree " << degree();
 }
 
-Triangulation<2>* Vertex<3>::buildLinkDetail(bool labels,
-        Isomorphism<3>** inclusion) const {
-    // Build the triangulation.
-    Triangulation<2>* ans = new Triangulation<2>();
-    Packet::ChangeEventSpan span(ans);
+const Triangulation<2>& Face<3, 0>::buildLink() const {
+    if (! linkTri_) {
+        // Build the triangulation.
+        auto* ans = new Triangulation<2>();
+        // Ensure only one event pair is fired in this sequence of changes.
+        Triangulation<2>::ChangeEventSpan span(*ans);
 
-    if (inclusion)
-        *inclusion = new Isomorphism<3>(degree());
+        ans->newTriangles(degree());
 
-    std::vector<VertexEmbedding<3>>::const_iterator it, adjIt;
-    Triangle<2>* tTri;
-    int i;
-    for (it = begin(), i = 0; it != end(); ++it, ++i) {
-        tTri = ans->newTriangle();
-        if (labels) {
-            std::stringstream s;
-            s << it->tetrahedron()->markedIndex() <<
-                " (" << it->vertex() << ')';
-            tTri->setDescription(s.str());
-        }
-        if (inclusion) {
-            (*inclusion)->tetImage(i) = it->tetrahedron()->markedIndex();
-            (*inclusion)->facetPerm(i) = it->tetrahedron()->
-                triangleMapping(it->vertex());
-        }
-    }
+        size_t i = 0;
+        for (auto it = begin(); it != end(); ++it, ++i) {
+            Tetrahedron<3>* tet = it->tetrahedron();
+            int v = it->vertex();
 
-    Tetrahedron<3> *tet, *adj;
-    int exitTri, v;
-    int edgeInLink;
-    int adjIndex;
-    int adjVertex;
-    for (it = begin(), i = 0; it != end(); ++it, ++i) {
-        tet = it->tetrahedron();
-        v = it->vertex();
+            for (int exitTri = 0; exitTri < 4; ++exitTri) {
+                if (exitTri == v)
+                    continue;
 
-        for (exitTri = 0; exitTri < 4; ++exitTri) {
-            if (exitTri == v)
-                continue;
+                Tetrahedron<3>* adj = tet->adjacentTetrahedron(exitTri);
+                if (! adj)
+                    continue;
 
-            adj = tet->adjacentTetrahedron(exitTri);
-            if (! adj)
-                continue;
+                int edgeInLink = tet->triangleMapping(v).pre(exitTri);
+                if (ans->triangle(i)->adjacentTriangle(edgeInLink)) {
+                    // We've already made this gluing in the vertex link
+                    // from the other side.
+                    continue;
+                }
 
-            edgeInLink = tet->triangleMapping(v).preImageOf(exitTri);
-            if (ans->triangle(i)->adjacentTriangle(edgeInLink)) {
-                // We've already made this gluing in the vertex link
-                // from the other side.
-                continue;
+                int adjVertex = tet->adjacentGluing(exitTri)[v];
+
+                // TODO: We need to find which *embedding* corresponds to
+                // the adjacent tetrahedron/vertex pair.
+                // Currently we do a simple linear scan, which makes the
+                // overall link construction quadratic.  This can surely be
+                // made linear(ish) with the right data structure / algorithm.
+                size_t adjIndex = 0;
+                for (auto adjIt = begin(); adjIt != end(); ++adjIt, ++adjIndex)
+                    if (adjIt->tetrahedron() == adj &&
+                            adjIt->vertex() == adjVertex)
+                        break; // Sets adjIndex to the right value.
+
+                ans->triangle(i)->join(edgeInLink, ans->triangle(adjIndex),
+                    Perm<3>::contract(adj->triangleMapping(adjVertex).inverse() *
+                        tet->adjacentGluing(exitTri) *
+                        tet->triangleMapping(v)));
             }
-
-            adjVertex = tet->adjacentGluing(exitTri)[v];
-
-            // TODO: We need to find which *embedding* corresponds to
-            // the adjacent tetrahedron/vertex pair.
-            // Currently we do a simple linear scan, which makes the
-            // overall link construction quadratic.  This can surely be
-            // made linear(ish) with the right data structure and/or algorithm.
-            for (adjIt = begin(), adjIndex = 0;
-                    adjIt != end(); ++adjIt, ++adjIndex)
-                if (adjIt->tetrahedron() == adj &&
-                        adjIt->vertex() == adjVertex)
-                    break; // Sets adjIndex to the right value.
-
-            ans->triangle(i)->join(edgeInLink, ans->triangle(adjIndex),
-                Perm<3>::contract(adj->triangleMapping(adjVertex).inverse() *
-                    tet->adjacentGluing(exitTri) *
-                    tet->triangleMapping(v)));
         }
+
+        // This is a construct-on-demand member: cast away constness to
+        // set it here.
+        const_cast<Vertex<3>*>(this)->linkTri_ = ans;
+    }
+    return *linkTri_;
+}
+
+Isomorphism<3> Face<3, 0>::buildLinkInclusion() const {
+    Isomorphism<3> inclusion(degree());
+
+    size_t i = 0;
+    for (auto it = begin(); it != end(); ++it, ++i) {
+        inclusion.tetImage(i) = it->tetrahedron()->index();
+        inclusion.facetPerm(i) = it->tetrahedron()->triangleMapping(
+            it->vertex());
     }
 
-    return ans;
+    return inclusion;
 }
 
 } // namespace regina

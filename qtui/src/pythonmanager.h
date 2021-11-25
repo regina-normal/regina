@@ -40,6 +40,7 @@
 #define __PYTHONMANAGER_H
 
 #include <qstring.h>
+#include <memory>
 #include <set>
 
 class PythonConsole;
@@ -79,11 +80,11 @@ class PythonManager {
          * console is automatically registered with this python manager.
          *
          * If python scripting is not built in, a notice is displayed
-         * to the user and 0 is returned.
+         * to the user and null is returned.
          */
         PythonConsole* launchPythonConsole(QWidget* parent,
-                regina::Packet* tree = 0,
-                regina::Packet* selectedPacket = 0);
+                std::shared_ptr<regina::Packet> tree = nullptr,
+                std::shared_ptr<regina::Packet> selectedPacket = nullptr);
 
         /**
          * Launches a new python console to run the given script.

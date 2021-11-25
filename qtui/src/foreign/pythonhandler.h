@@ -39,6 +39,7 @@
 
 #include "packetexporter.h"
 #include "packetimporter.h"
+#include <QString>
 
 /**
  * An object responsible for importing and export data to and from
@@ -58,27 +59,25 @@ class PythonHandler : public PacketImporter, public PacketExporter {
         /**
          * PacketImporter overrides:
          */
-        virtual regina::Packet* importData(const QString& fileName,
-            ReginaMain* parentWidget) const;
-        virtual bool useImportEncoding() const;
+        std::shared_ptr<regina::Packet> importData(const QString& fileName,
+            ReginaMain* parentWidget) const override;
+        bool useImportEncoding() const override;
 
         /**
          * PacketExporter overrides:
          */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::Packet* data, const QString& fileName,
-            QWidget* parentWidget) const;
-        virtual bool useExportEncoding() const;
+        PacketFilter* canExport() const override;
+        bool exportData(std::shared_ptr<regina::Packet> data,
+            const QString& fileName, QWidget* parentWidget) const override;
+        bool useExportEncoding() const override;
+        QString defaultExtension(const regina::Packet& data) const override;
 
     private:
         /**
          * Don't allow people to construct their own Python handlers.
          */
-        PythonHandler();
+        PythonHandler() = default;
 };
-
-inline PythonHandler::PythonHandler() {
-}
 
 inline bool PythonHandler::useImportEncoding() const {
     return true;
@@ -86,6 +85,10 @@ inline bool PythonHandler::useImportEncoding() const {
 
 inline bool PythonHandler::useExportEncoding() const {
     return true;
+}
+
+inline QString PythonHandler::defaultExtension(const regina::Packet&) const {
+    return ".py";
 }
 
 #endif

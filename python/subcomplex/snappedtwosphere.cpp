@@ -31,25 +31,36 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/snappedball.h"
 #include "subcomplex/snappedtwosphere.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
+using regina::SnappedBall;
 using regina::SnappedTwoSphere;
 
 void addSnappedTwoSphere(pybind11::module_& m) {
     auto c = pybind11::class_<SnappedTwoSphere>(m, "SnappedTwoSphere")
-        .def("clone", &SnappedTwoSphere::clone)
+        .def(pybind11::init<const SnappedTwoSphere&>())
+        .def("clone", [](const SnappedTwoSphere& s) { // deprecated
+            return SnappedTwoSphere(s);
+        })
         .def("snappedBall", &SnappedTwoSphere::snappedBall,
             pybind11::return_value_policy::reference_internal)
-        .def_static("formsSnappedTwoSphere",
-            overload_cast<regina::SnappedBall*, regina::SnappedBall*>(
-            &SnappedTwoSphere::formsSnappedTwoSphere))
-        .def_static("formsSnappedTwoSphere",
+        .def_static("recognise",
+            overload_cast<const SnappedBall&, const SnappedBall&>(
+            &SnappedTwoSphere::recognise))
+        .def_static("formsSnappedTwoSphere", // deprecated
+            overload_cast<const SnappedBall&, const SnappedBall&>(
+            &SnappedTwoSphere::recognise))
+        .def_static("recognise",
             overload_cast<regina::Tetrahedron<3>*, regina::Tetrahedron<3>*>(
-            &SnappedTwoSphere::formsSnappedTwoSphere))
+            &SnappedTwoSphere::recognise))
+        .def_static("formsSnappedTwoSphere", // deprecated
+            overload_cast<regina::Tetrahedron<3>*, regina::Tetrahedron<3>*>(
+            &SnappedTwoSphere::recognise))
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

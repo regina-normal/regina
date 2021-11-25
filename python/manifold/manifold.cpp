@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "algebra/abeliangroup.h"
 #include "manifold/manifold.h"
 #include "triangulation/dim3.h"
@@ -42,21 +43,13 @@ using regina::Manifold;
 void addManifold(pybind11::module_& m) {
     auto c = pybind11::class_<Manifold>(m, "Manifold")
         .def("name", &Manifold::name)
-        .def("TeXName", &Manifold::TeXName)
+        .def("texName", &Manifold::texName)
+        .def("TeXName", &Manifold::texName) // deprecated
         .def("structure", &Manifold::structure)
         .def("construct", &Manifold::construct)
         .def("homology", &Manifold::homology)
         .def("homologyH1", &Manifold::homologyH1)
         .def("isHyperbolic", &Manifold::isHyperbolic)
-        .def("writeName", [](const Manifold& m) {
-            m.writeName(std::cout);
-        })
-        .def("writeTeXName", [](const Manifold& m) {
-            m.writeTeXName(std::cout);
-        })
-        .def("writeStructure", [](const Manifold& m) {
-            m.writeStructure(std::cout);
-        })
         // We cannot bind the < operator in the normal way:
         // see https://github.com/pybind/pybind11/issues/1487 for details.
         .def("__lt__", [](const Manifold& lhs, const Manifold& rhs) {

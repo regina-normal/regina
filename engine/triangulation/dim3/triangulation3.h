@@ -43,7 +43,6 @@
 #endif
 
 #include <map>
-#include <memory>
 #include <variant>
 #include <vector>
 #include <set>
@@ -51,11 +50,13 @@
 #include "regina-core.h"
 #include "angle/anglestructure.h"
 #include "maths/cyclotomic.h"
+#include "progress/progresstracker.h"
 #include "surfaces/normalsurface.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/detail/retriangulate.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/boolset.h"
+#include "utilities/exception.h"
 #include "utilities/markedvector.h"
 
 // NOTE: More #includes for faces, components and boundary components
@@ -65,26 +66,16 @@ namespace regina {
 
 class AngleStructure;
 class GroupPresentation;
+class Link;
 class NormalSurface;
-class ProgressTracker;
-class ProgressTrackerOpen;
-class XMLPacketReader;
+class SnapPeaTriangulation;
 
 template <int> class XMLTriangulationReader;
 
 /**
- * \addtogroup dim3 3-Manifold Triangulations
+ * \defgroup dim3 3-Manifold Triangulations
  * Details for implementing triangulations of 3-manifolds.
- * @{
  */
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_TRIANGULATION3> {
-    typedef Triangulation<3> Class;
-    static constexpr const char* name = "3-Manifold Triangulation";
-};
-#endif
 
 /**
  * Represents a 3-dimensional triangulation, typically of a 3-manifold.
@@ -96,10 +87,9 @@ struct PacketInfo<PACKET_TRIANGULATION3> {
  * This 3-dimensional specialisation offers significant extra functionality,
  * including many functions specific to 3-manifolds.
  *
- * This class implements the C++ Swappable requirement by providing member
- * and global swap() functions.  However, like all packet types, it does
- * \e not implement a move constructor or move assignment, since this would
- * interfere with the structure of the packet tree.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \todo \feature Is the boundary incompressible?
  * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
@@ -107,34 +97,19 @@ struct PacketInfo<PACKET_TRIANGULATION3> {
  * (Compare homology with boundary homology).
  * \todo \featurelong Is the triangulation Haken?
  * \todo \featurelong What is the Heegaard genus?
- * \todo \featurelong Have a subcomplex as a child packet of a
- * triangulation.  Include routines to crush a subcomplex or to expand a
- * subcomplex to a normal surface.
+ * \todo \featurelong Have a subcomplex as a new type.  Include routines to
+ * crush a subcomplex or to expand a subcomplex to a normal surface.
  * \todo \featurelong Implement writeTextLong() for skeletal objects.
  *
  * \headerfile triangulation/dim3.h
+ *
+ * \ingroup dim3
  */
 template <>
-class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
-    REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION3)
-
+class Triangulation<3> : public detail::TriangulationBase<3> {
     public:
-        typedef std::vector<Tetrahedron<3>*>::const_iterator
-                TetrahedronIterator;
-            /**< A dimension-specific alias for SimplexIterator,
-                 used to iterate through tetrahedra. */
-        typedef decltype(detail::TriangulationBase<3>().faces<2>().begin())
-                TriangleIterator;
-            /**< Used to iterate through triangles. */
-        typedef decltype(detail::TriangulationBase<3>().faces<1>().begin())
-                EdgeIterator;
-            /**< Used to iterate through edges. */
-        typedef decltype(detail::TriangulationBase<3>().faces<0>().begin())
-                VertexIterator;
-            /**< Used to iterate through vertices. */
-
-        typedef std::map<std::pair<unsigned long, bool>, Cyclotomic>
-                TuraevViroSet;
+        using TuraevViroSet =
+                std::map<std::pair<unsigned long, bool>, Cyclotomic>;
             /**< A map from (\a r, \a parity) pairs to Turaev-Viro invariants,
                  as described by turaevViro(). */
 
@@ -144,64 +119,84 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
         bool standard_;
             /**< Is the triangulation standard? */
 
-        mutable std::optional<AbelianGroup> H1Rel_;
-            /**< Relative first homology group of the triangulation
-             *   with respect to the boundary. */
-        mutable std::optional<AbelianGroup> H1Bdry_;
-            /**< First homology group of the boundary. */
-        mutable std::optional<AbelianGroup> H2_;
-            /**< Second homology group of the triangulation. */
+        /**
+         * A struct that holds all of our calculated properties.
+         * This is a convenience so we can use its implicitly defined
+         * assignment operators and copy constructors.  It is mutable so that
+         * expensive read-only calculations can cache their results.
+         *
+         * All std::optional properties are std::nullopt if they have
+         * not yet been computed.
+         */
+        mutable struct {
+            std::optional<AbelianGroup> H1Rel_;
+                /**< Relative first homology group of the triangulation
+                     with respect to the boundary. */
+            std::optional<AbelianGroup> H1Bdry_;
+                /**< First homology group of the boundary. */
+            std::optional<AbelianGroup> H2_;
+                /**< Second homology group of the triangulation. */
 
-        mutable std::optional<bool> twoSphereBoundaryComponents_;
-            /**< Does the triangulation contain any 2-sphere boundary
-                 components? */
-        mutable std::optional<bool> negativeIdealBoundaryComponents_;
-            /**< Does the triangulation contain any boundary components
-                 that are ideal and have negative Euler characteristic? */
+            std::optional<bool> twoSphereBoundaryComponents_;
+                /**< Does the triangulation contain any 2-sphere boundary
+                     components? */
+            std::optional<bool> negativeIdealBoundaryComponents_;
+                /**< Does the triangulation contain any boundary components
+                     that are ideal and have negative Euler characteristic? */
 
-        mutable std::optional<bool> zeroEfficient_;
-            /**< Is the triangulation zero-efficient? */
-        mutable std::optional<bool> splittingSurface_;
-            /**< Does the triangulation have a normal splitting surface? */
+            std::optional<bool> zeroEfficient_;
+                /**< Is the triangulation zero-efficient? */
+            std::optional<bool> splittingSurface_;
+                /**< Does the triangulation have a normal splitting surface? */
 
-        mutable std::optional<bool> threeSphere_;
-            /**< Is this a triangulation of a 3-sphere? */
-        mutable std::optional<bool> threeBall_;
-            /**< Is this a triangulation of a 3-dimensional ball? */
-        mutable std::optional<bool> solidTorus_;
-            /**< Is this a triangulation of the solid torus? */
-        mutable std::optional<bool> TxI_;
-            /**< Is this a triangulation of the product TxI? */
-        mutable std::optional<bool> irreducible_;
-            /**< Is this 3-manifold irreducible? */
-        mutable std::optional<bool> compressingDisc_;
-            /**< Does this 3-manifold contain a compressing disc? */
-        mutable std::optional<bool> haken_;
-            /**< Is this 3-manifold Haken?
-                 This property must only be stored for triangulations
-                 that are known to represent closed, connected,
-                 orientable, irreducible 3-manifolds. */
+            std::optional<bool> threeSphere_;
+                /**< Is this a triangulation of a 3-sphere? */
+            std::optional<bool> threeBall_;
+                /**< Is this a triangulation of a 3-dimensional ball? */
+            std::optional<bool> solidTorus_;
+                /**< Is this a triangulation of the solid torus? */
+            std::optional<bool> TxI_;
+                /**< Is this a triangulation of the product TxI? */
+            std::optional<bool> irreducible_;
+                /**< Is this 3-manifold irreducible? */
+            std::optional<bool> compressingDisc_;
+                /**< Does this 3-manifold contain a compressing disc? */
+            std::optional<bool> haken_;
+                /**< Is this 3-manifold Haken?
+                     This property must only be stored for triangulations
+                     that are known to represent closed, connected,
+                     orientable, irreducible 3-manifolds. */
 
-        mutable std::variant<bool, AngleStructure> strictAngleStructure_;
-            /**< A strict angle structure on this triangulation, or a
-                 boolean if we do not have one.  The boolean will be \c false
-                 if the computation has not yet been attempted, or \c true if
-                 it is confirmed that no such angle structure exists. */
+            std::optional<TreeDecomposition> niceTreeDecomposition_;
+                /**< A nice tree decomposition of the face pairing graph of
+                     this triangulation. */
 
-        mutable std::variant<bool, AngleStructure> generalAngleStructure_;
-            /**< A generalised angle structure on this triangulation, or a
-                 boolean if we do not have one.  The boolean will be \c false
-                 if the computation has not yet been attempted, or \c true if
-                 it is confirmed that no such angle structure exists. */
+            TuraevViroSet turaevViroCache_;
+                /**< The set of Turaev-Viro invariants that have already
+                     been calculated.  See allCalculatedTuraevViro() for
+                     details. */
+        } prop_;
 
-        mutable std::unique_ptr<TreeDecomposition> niceTreeDecomposition_;
-            /**< A nice tree decomposition of the face pairing graph of
-                 this triangulation. */
+        // Regarding cached normal surfaces and angle structures:
+        // When move constructing/assigning triangulations, we do *not* need to
+        // adjust the triangulation references in these surfaces/structures.
+        // This is because surfaces/structures reference their triangulations
+        // via a SnapshotRef, and the triangulation's inherited Snapshottable
+        // move construction/assignment preserves the underlying Snapshot.
 
-        mutable TuraevViroSet turaevViroCache_;
-            /**< The set of Turaev-Viro invariants that have already
-                 been calculated.  See allCalculatedTuraevViro() for
-                 details. */
+        mutable std::variant<bool, AngleStructure>
+            strictAngleStructure_ { false };
+                /**< A strict angle structure on this triangulation, or a
+                     bool if we do not have one.  The bool will be \c false
+                     if the computation has not yet been attempted, or \c true
+                     if it is confirmed that no such angle structure exists. */
+
+        mutable std::variant<bool, AngleStructure>
+            generalAngleStructure_ { false };
+                /**< A generalised angle structure on this triangulation, or a
+                     bool if we do not have one.  The bool will be \c false
+                     if the computation has not yet been attempted, or \c true
+                     if it is confirmed that no such angle structure exists. */
 
     public:
         /**
@@ -214,10 +209,9 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * Creates an empty triangulation.
          */
-        Triangulation();
+        Triangulation() = default;
         /**
          * Creates a new copy of the given triangulation.
-         * The packet tree structure and packet label are \e not copied.
          *
          * This will clone any computed properties (such as homology,
          * fundamental group, and so on) of the given triangulation also.
@@ -239,6 +233,49 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          */
         Triangulation(const Triangulation& copy, bool cloneProps);
         /**
+         * Moves the given triangulation into this new triangulation.
+         *
+         * This is much faster than the copy constructor, but is still linear
+         * time.  This is because every tetrahedron must be adjusted to point
+         * back to this new triangulation instead of \a src.
+         *
+         * All tetrahedra and skeletal objects (faces, components and
+         * boundary components) that belong to \a src will be moved into
+         * this triangulation, and so any pointers or references to
+         * Tetrahedron<3>, Face<3, subdim>, Component<3> or
+         * BoundaryComponent<3> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this triangulation
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the triangulation to move.
+         */
+        Triangulation(Triangulation&& src) noexcept = default;
+        /**
+         * Deprecated routine that creates a new ideal triangulation
+         * representing the complement of the given link in the 3-sphere.
+         *
+         * This is the same triangulation that is produced by
+         * Link::complement(); however, this routine is slightly less
+         * efficient because it induces an additional move.
+         * See Link::complemenet() for further details.
+         *
+         * The triangulation will be simplified, but be aware that it
+         * might still contain internal vertices (i.e., vertices whose
+         * links are spheres).  This should, however, be a rare occurrence.
+         *
+         * \deprecated Just call the more efficient Link::complement() instead.
+         *
+         * @param link the link whose complement we should build.
+         */
+        [[deprecated]] Triangulation(const Link& link);
+        /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
          *
@@ -250,8 +287,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * - the contents of a SnapPea data file (see fromSnapPea()).
          *
          * This list may grow in future versions of Regina.
-         *
-         * Regina will also set the packet label accordingly.
          *
          * If Regina cannot interpret the given string, this will be
          * left as the empty triangulation.
@@ -300,17 +335,85 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * The constituent tetrahedra, the cellular structure and all other
          * properties will also be destroyed.
          */
-        virtual ~Triangulation();
+        ~Triangulation();
 
-        /*@}*/
+        using Snapshottable<Triangulation<3>>::isReadOnlySnapshot;
+
         /**
-         * \name Packet Administration
+         * Returns the packet that holds this data, even if it is held
+         * indirectly via a SnapPea triangulation.
+         *
+         * This routine is similar to PacketOf<Triangulation<3>>::packet().
+         * In particular, if this triangulation is held directly by a
+         * 3-dimensional triangulation packet \a p, then this routine
+         * will return \a p.
+         *
+         * The difference is when this triangulation is held "indirectly" by a
+         * SnapPea triangulation packet \a q (i.e., this is the inherited
+         * Triangulation<3> data belonging to the SnapPea triangulation).
+         * In such a scenario, Triangulation<3>::packet() will return \c null
+         * (since there is no "direct" 3-dimensional triangulation packet),
+         * but inAnyPacket() will return \a q (since the triangulation is
+         * still "indirectly" held by a different type of packet).
+         *
+         * @return the packet that holds this data (directly or indirectly),
+         * or \c null if this data is not held by either a 3-dimensional
+         * triangulation packet or a SnapPea triangulation packet.
          */
-        /*@{*/
+        std::shared_ptr<Packet> inAnyPacket();
+        /**
+         * Returns the packet that holds this data, even if it is held
+         * indirectly via a SnapPea triangulation.
+         *
+         * This routine is similar to PacketOf<Triangulation<3>>::packet().
+         * In particular, if this triangulation is held directly by a
+         * 3-dimensional triangulation packet \a p, then this routine
+         * will return \a p.
+         *
+         * The difference is when this triangulation is held "indirectly" by a
+         * SnapPea triangulation packet \a q (i.e., this is the inherited
+         * Triangulation<3> data belonging to the SnapPea triangulation).
+         * In such a scenario, Triangulation<3>::packet() will return \c null
+         * (since there is no "direct" 3-dimensional triangulation packet),
+         * but inAnyPacket() will return \a q (since the triangulation is
+         * still "indirectly" held by a different type of packet).
+         *
+         * @return the packet that holds this data (directly or indirectly),
+         * or \c null if this data is not held by either a 3-dimensional
+         * triangulation packet or a SnapPea triangulation packet.
+         */
+        std::shared_ptr<const Packet> inAnyPacket() const;
 
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
-        virtual bool dependsOnParent() const override;
+        /**
+         * Returns the SnapPea triangulation that holds this data, if
+         * there is one.
+         *
+         * This routine essentially replaces a dynamic_cast, since the
+         * class Triangulation<3> is not polymorphic.
+         *
+         * If this object in fact belongs to a SnapPeaTriangulation \a t
+         * (through its inherited Triangulation<3> interface), then this
+         * routine will return \a t.  Otherwise it will return \c null.
+         *
+         * @return the SnapPea triangulation that holds this data, or
+         * \c null if this data is not part of a SnapPea triangulation.
+         */
+        SnapPeaTriangulation* isSnapPea();
+        /**
+         * Returns the SnapPea triangulation that holds this data, if
+         * there is one.
+         *
+         * This routine essentially replaces a dynamic_cast, since the
+         * class Triangulation<3> is not polymorphic.
+         *
+         * If this object in fact belongs to a SnapPeaTriangulation \a t
+         * (through its inherited Triangulation<3> interface), then this
+         * routine will return \a t.  Otherwise it will return \c null.
+         *
+         * @return the SnapPea triangulation that holds this data, or
+         * \c null if this data is not part of a SnapPea triangulation.
+         */
+        const SnapPeaTriangulation* isSnapPea() const;
 
         /*@}*/
         /**
@@ -318,6 +421,30 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          */
         /*@{*/
 
+        /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countTetrahedra() const;
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        auto tetrahedra() const;
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        Tetrahedron<3>* tetrahedron(size_t index);
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        const Tetrahedron<3>* tetrahedron(size_t index) const;
         /**
          * A dimension-specific alias for newSimplex().
          *
@@ -330,6 +457,19 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * See newSimplex() for further information.
          */
         Tetrahedron<3>* newTetrahedron(const std::string& desc);
+        /**
+         * A dimension-specific alias for newSimplices().
+         *
+         * See newSimplices() for further information.
+         */
+        template <int k>
+        std::array<Tetrahedron<3>*, k> newTetrahedra();
+        /**
+         * A dimension-specific alias for newSimplices().
+         *
+         * See newSimplices() for further information.
+         */
+        void newTetrahedra(size_t k);
         /**
          * A dimension-specific alias for removeSimplex().
          *
@@ -350,6 +490,42 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
         void removeAllTetrahedra();
 
         /**
+         * Sets this to be a (deep) copy of the given triangulation.
+         *
+         * @param src the triangulation to copy.
+         * @return a reference to this triangulation.
+         */
+        Triangulation& operator = (const Triangulation& src);
+
+        /**
+         * Moves the contents of the given triangulation into this
+         * triangulation.
+         *
+         * This is much faster than copy assignment, but is still linear
+         * time.  This is because every tetrahedron must be adjusted to point
+         * back to this triangulation instead of \a src.
+         *
+         * All tetrahedra and skeletal objects (faces, components and
+         * boundary components) that belong to \a src will be moved into
+         * this triangulation, and so any pointers or references to
+         * Tetrahedron<3>, Face<3, subdim>, Component<3> or
+         * BoundaryComponent<3> objects will remain valid.  Likewise, all
+         * cached properties will be moved into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this triangulation which may in turn call arbitrary
+         * code via any registered packet listeners.  It deliberately does
+         * \e not fire change events on \a src, since it assumes that \a src is
+         * about to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the triangulation to move.
+         * @return a reference to this triangulation.
+         */
+        Triangulation& operator = (Triangulation&& src);
+
+        /**
          * Swaps the contents of this and the given triangulation.
          *
          * All tetrahedra that belong to this triangulation
@@ -362,16 +538,12 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * In particular, any pointers or references to Tetrahedron<3> and/or
          * Face<3, subdim> objects will remain valid.
          *
-         * The structure of the packet tree will \e not be swapped:
-         * both packets being swapped will remain with their original parents,
-         * and their original children will remain with them.
-         *
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
          * \note This swap function is \e not marked \c noexcept, since it
-         * fires packet change events which may in turn call arbitrary
-         * code via any registered packet listeners.
+         * fires change events on both triangulations which may in turn call
+         * arbitrary code via any registered packet listeners.
          *
          * @param other the triangulation whose contents should be
          * swapped with this.
@@ -393,6 +565,20 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * \name Skeletal Queries
          */
         /*@{*/
+
+        /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryTriangles() const;
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryTriangles() const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -629,23 +815,12 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * very fast (since it just returns the previously computed result).
          * Otherwise the computation could be quite slow, particularly
          * for larger triangulations and/or larger values of \a r.
-         * This (potentially) long computation can be managed by passing
-         * a progress tracker:
          *
-         * - If a progress tracker is passed and the requested invariant has
-         *   not yet been computed, then the calculation will take place in a
-         *   new thread and this routine will return immediately.  Once the
-         *   progress tracker indicates that the calculation has finished,
-         *   you can call turaevViro() again with the same arguments for
-         *   \a r and \a parity to retrieve the value of the invariant.
-         *
-         * - If no progress tracker is passed and the requested invariant has
-         *   not yet been computed, the calculation will run in the current
-         *   thread and this routine will not return until it is complete.
-         *
-         * - If the requested invariant has already been computed, then this
-         *   routine will return immediately with the pre-computed value.  If
-         *   a progress tracker is passed then it will be marked as finished.
+         * Since Regina 7.0, this routine will not return until the
+         * Turaev-Viro computation is complete, regardless of whether a progress
+         * tracker was passed.  If you need the old behaviour (where passing a
+         * progress tracker caused the computation to start in the background),
+         * simply call this routine in a new detached thread.
          *
          * \pre This triangulation is valid, closed and non-empty.
          *
@@ -657,10 +832,9 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
          * @param tracker a progress tracker through will progress will
          * be reported, or \c nullptr if no progress reporting is required.
-         * @return the requested Turaev-Viro invariant.  As an exception,
-         * if \a tracker is non-null and the value of this invariant has
-         * not been computed before, then (since the calculation will
-         * still be running in a new thread) the return value is undefined.
+         * @return the requested Turaev-Viro invariant, or an uninitialised
+         * field element if the calculation was cancelled via the given
+         * progress tracker.
          *
          * @see allCalculatedTuraevViro
          */
@@ -738,7 +912,10 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * change from Regina 4.96 and earlier, which computed
          * floating-point approximations instead.
          *
-         * \ifacespython Not present.
+         * \ifacespython This routine returns a Python dictionary.
+         * It also returns by value, not by reference (i.e., if more
+         * Turaev-Viro invariants are computed later on, the dictionary
+         * that was originally returned will not change as a result).
          *
          * @return the cache of all Turaev-Viro invariants that have
          * already been calculated.
@@ -873,7 +1050,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * @return \c true if and only if this triangulation is
          * 0-efficient.
          */
-        bool isZeroEfficient();
+        bool isZeroEfficient() const;
         /**
          * Is it already known whether or not this triangulation is
          * 0-efficient?
@@ -911,17 +1088,10 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * within this triangulation.  If such a surface exists within
          * this triangulation, this routine is guaranteed to find one.
          *
-         * Note that the surface returned (if any) depends upon this
-         * triangulation, and so the surface cannot be used after this
-         * triangulation is destroyed.
-         *
-         * \warning This routine may, in some scenarios, temporarily modify the
-         * packet tree by creating and then destroying a normal surface list.
-         *
          * @return a non-vertex-linking normal sphere or disc, or no value if
          * none exists.
          */
-        std::optional<NormalSurface> nonTrivialSphereOrDisc();
+        std::optional<NormalSurface> nonTrivialSphereOrDisc() const;
         /**
          * A deprecated alias for nonTrivialSphereOrDisc(), which searches for
          * a non-vertex-linking normal sphere or disc within this triangulation.
@@ -932,27 +1102,21 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * @return a non-vertex-linking normal sphere or disc, or no value if
          * none exists.
          */
-        [[deprecated]] std::optional<NormalSurface> hasNonTrivialSphereOrDisc();
+        [[deprecated]] std::optional<NormalSurface> hasNonTrivialSphereOrDisc()
+            const;
         /**
          * Searches for an octagonal almost normal 2-sphere within this
          * triangulation.  If such a surface exists, this routine is
          * guaranteed to find one.
          *
-         * Note that the surface returned (if any) depends upon this
-         * triangulation, and so the surface cannot be used after this
-         * triangulation is destroyed.
-         *
          * \pre This triangulation is valid, closed, orientable, connected,
          * and 0-efficient.  These preconditions are almost certainly more
          * restrictive than they need to be, but we stay safe for now.
          *
-         * \warning This routine may, in some scenarios, temporarily modify the
-         * packet tree by creating and then destroying a normal surface list.
-         *
          * @return an octagonal almost normal 2-sphere, or no value if
          * none exists.
          */
-        std::optional<NormalSurface> octagonalAlmostNormalSphere();
+        std::optional<NormalSurface> octagonalAlmostNormalSphere() const;
         /**
          * A deprecated alias for octagonalAlmostNormalSphere(), which searches
          * for an octagonal almost normal 2-sphere within this triangulation.
@@ -967,61 +1131,83 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * none exists.
          */
         [[deprecated]] std::optional<NormalSurface>
-            hasOctagonalAlmostNormalSphere();
+            hasOctagonalAlmostNormalSphere() const;
         /**
-         * Searches for a strict angle structure on this triangulation.
-         * Recall that a \e strict angle structure is one in which every
-         * angle is strictly between 0 and &pi;.  If a strict angle structure
-         * does exist, then this routine is guaranteed to find one.
+         * Returns a strict angle structure on this triangulation, if one
+         * exists.  Recall that a \e strict angle structure is one in which
+         * every angle is strictly between 0 and &pi;.  If a strict angle
+         * structure does exist, then this routine is guaranteed to return one.
+         *
+         * This routine is designed for scenarios where you already know
+         * that a strict angle structure exists.  This means:
+         *
+         * - If no strict angle structure exists, this routine will throw an
+         *   exception, which will incur a significant overhead.
+         *
+         * - If you do \e not know in advance whether a strict angle structure
+         *   exists, you should call hasStrictAngleStructure() first.  If the
+         *   answer is no, this will avoid the overhead of throwing and catching
+         *   exceptions.  If the answer is yes, this will have the side-effect
+         *   of caching the strict angle structure, which means your subsequent
+         *   call to strictAngleStructure() will be essentially instantaneous.
          *
          * The underlying algorithm runs a single linear program (it does
          * \e not enumerate all vertex angle structures).  This means
          * that it is likely to be fast even for large triangulations.
          *
-         * If you are only interested in \e whether a strict angle structure
-         * exists (i.e., you are not interested in the specific angles
-         * themselves), then you may call hasStrictAngleStructure() instead.
+         * The result of this routine is cached internally: as long as
+         * the triangulation does not change, multiple calls to
+         * strictAngleStructure() will return identical angle structures,
+         * and every call after the first be essentially instantaneous.
          *
-         * The angle structure returned (if any) is cached internally
-         * alongside this triangulation.  This means that, as long as
-         * the triangulation does not change, subsequent calls to
-         * strictAngleStructure() will return identical pointers
-         * and will be essentially instantaneous.
+         * If the triangulation does change, however, then the cached angle
+         * structure will be deleted, and any reference that was returned
+         * before will become invalid.
          *
-         * If the triangulation changes however, then the cached angle
-         * structure will be deleted.  This means that you should not
-         * store the returned pointer for later use; instead you should
-         * just call strictAngleStructure() again.
+         * \exception NoSolution no strict angle structure exists on
+         * this triangulation.
          *
-         * @return a strict angle structure on this triangulation, or
-         * \c nullptr if none exists.
+         * @return a strict angle structure on this triangulation, if
+         * one exists.
          */
-        const AngleStructure* strictAngleStructure() const;
+        const AngleStructure& strictAngleStructure() const;
         /**
-         * A deprecated alias for strictAngleStructure(), which searches
-         * for a strict angle structure on this triangulation.
+         * A deprecated alias for strictAngleStructure(), which returns
+         * a strict angle structure on this triangulation if one exists.
          *
          * \deprecated This routine has been renamed to strictAngleStructure().
          * See that routine for further details.
          *
-         * @return a strict angle structure on this triangulation, or
-         * \c nullptr if none exists.
+         * \exception NoSolution no strict angle structure exists on
+         * this triangulation.
+         *
+         * @return a strict angle structure on this triangulation, if
+         * one exists.
          */
-        [[deprecated]] const AngleStructure* findStrictAngleStructure() const;
+        [[deprecated]] const AngleStructure& findStrictAngleStructure() const;
         /**
          * Determines whether this triangulation supports a strict angle
          * structure.  Recall that a \e strict angle structure is one
          * in which every angle is strictly between 0 and &pi;.
          *
-         * This routine is equivalent to calling strictAngleStructure()
-         * and testing whether the return value is non-null.
+         * This routine returns \c false if and only if strictAngleStructure()
+         * throws an exception.  However, if you do not \e know whether a
+         * strict angle structure exists, then this routine is faster:
+         *
+         * - If there is \e no strict angle structure, this routine will
+         *   avoid the overhead of throwing and catching exceptions.
+         *
+         * - If there \e is a strict angle structure, this routine will find
+         *   and cache this angle structure, which means that any subsequent
+         *   call to strictAngleStructure() to retrieve its details will
+         *   be essentially instantaneous.
          *
          * The underlying algorithm runs a single linear program (it does
          * \e not enumerate all vertex angle structures).  This means
          * that it is likely to be fast even for large triangulations.
          *
-         * @return \c true if a strict angle structure exists on this
-         * triangulation, or \c false if not.
+         * @return \c true if and only if a strict angle structure exists on
+         * this triangulation.
          */
         bool hasStrictAngleStructure() const;
         /**
@@ -1043,27 +1229,39 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          */
         bool knowsStrictAngleStructure() const;
         /**
-         * Searches for a generalised angle structure on this triangulation.
-         * A \e generalised angle structure must satisfy the same matching
-         * equations as all angle structures do, but there is no constraint on
-         * the signs of the angles; in particular, negative angles are allowed.
+         * Returns a generalised angle structure on this triangulation,
+         * if one exists.  A \e generalised angle structure must satisfy the
+         * same matching equations as all angle structures do, but there is no
+         * constraint on the signs of the angles; in particular, negative
+         * angles are allowed.  If a generalised angle structure does exist,
+         * then this routine is guaranteed to return one.
          *
-         * If a generalised angle structure does exist, then this routine is
-         * guaranteed to find one.
+         * This routine is designed for scenarios where you already know
+         * that a generalised angle structure exists.  This means:
+         *
+         * - If no generalised angle structure exists, this routine will
+         *   throw an exception, which will incur a significant overhead.
+         *
+         * - It should be rare that you do not know in advance whether a
+         *   generalised angle structure exists (see the simple conditions in
+         *   the note below).  However, if you don't yet know, you should call
+         *   hasGeneralAngleStructure() first.  If the answer is no, this will
+         *   avoid the overhead of throwing and catching exceptions.  If the
+         *   answer is yes, this will have the side-effect of caching the
+         *   angle structure, which means your subsequent call to
+         *   generalAngleStructure() will be essentially instantaneous.
          *
          * The underlying algorithm simply solves a system of linear equations,
          * and so should be fast even for large triangulations.
          *
-         * The angle structure returned (if any) is cached internally
-         * alongside this triangulation.  This means that, as long as
-         * the triangulation does not change, subsequent calls to
-         * generalAngleStructure() will return identical pointers
-         * and will be essentially instantaneous.
+         * The result of this routine is cached internally: as long as
+         * the triangulation does not change, multiple calls to
+         * generalAngleStructure() will return identical angle structures,
+         * and every call after the first be essentially instantaneous.
          *
-         * If the triangulation changes however, then the cached angle
-         * structure will be deleted.  This means that you should not
-         * store the returned pointer for later use; instead you should
-         * just call generalAngleStructure() again.
+         * If the triangulation does change, however, then the cached angle
+         * structure will be deleted, and any reference that was returned
+         * before will become invalid.
          *
          * \note For a valid triangulation with no boundary faces, a
          * generalised angle structure exists if and only if every vertex link
@@ -1072,10 +1270,51 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * "Angle structures and normal surfaces", Feng Luo and Stephan
          * Tillmann, Trans. Amer. Math. Soc. 360:6 (2008), pp. 2849-2866).
          *
-         * @return a generalised angle structure on this triangulation, or
-         * \c nullptr if none exists.
+         * \exception NoSolution no generalised angle structure exists on
+         * this triangulation.
+         *
+         * @return a generalised angle structure on this triangulation, if
+         * one exists.
          */
-        const AngleStructure* generalAngleStructure() const;
+        const AngleStructure& generalAngleStructure() const;
+        /**
+         * Determines whether this triangulation supports a generalised angle
+         * structure.  A \e generalised angle structure must satisfy the
+         * same matching equations as all angle structures do, but there is no
+         * constraint on the signs of the angles; in particular, negative
+         * angles are allowed.
+         *
+         * This routine returns \c false if and only if generalAngleStructure()
+         * throws an exception.  However, if you do not \e know whether a
+         * generalised angle structure exists, then this routine is faster:
+         *
+         * - If there is \e no generalised angle structure, this routine will
+         *   avoid the overhead of throwing and catching exceptions.
+         *
+         * - If there \e is a generalised angle structure, this routine will
+         *   find and cache this angle structure, which means that any
+         *   subsequent call to generalAngleStructure() to retrieve its
+         *   details will be essentially instantaneous.
+         *
+         * The underlying algorithm simply solves a system of linear equations,
+         * and so should be fast even for large triangulations.
+         *
+         * \note For a valid triangulation with no boundary faces, a
+         * generalised angle structure exists if and only if every vertex link
+         * is a torus or Klein bottle.  The "only if" direction is a simple
+         * Euler characteristic calculation; for the "if" direction see
+         * "Angle structures and normal surfaces", Feng Luo and Stephan
+         * Tillmann, Trans. Amer. Math. Soc. 360:6 (2008), pp. 2849-2866).
+         *
+         * \note Even if the condition above is true and it is clear that a
+         * generalised angle structure should exist, this routine will still do
+         * the extra work to compute an explicit solution (in order to fulfil
+         * the promise made in the generalAngleStructure() documentation).
+         *
+         * @return \c true if and only if a generalised angle structure exists
+         * on this triangulation.
+         */
+        bool hasGeneralAngleStructure() const;
 
         /*@}*/
         /**
@@ -1084,31 +1323,19 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
         /*@{*/
 
         /**
-         * Produces a maximal forest in the 1-skeleton of the
-         * triangulation boundary.
-         * Both given sets will be emptied and the edges and vertices of
-         * the maximal forest will be placed into them.
-         * A vertex that forms its own boundary component (such as an
-         * ideal vertex) will still be placed in \c vertexSet.
+         * Produces a maximal forest in the 1-skeleton of the triangulation
+         * boundary.
          *
-         * Note that the edge and vertex pointers returned will become
-         * invalid once the triangulation has changed.
+         * Note that the edge pointers returned will become invalid once the
+         * triangulation has changed.
          *
-         * \ifacespython Not present.
-         *
-         * @param edgeSet the set to be emptied and into which the edges
-         * of the maximal forest will be placed.
-         * @param vertexSet the set to be emptied and into which the
-         * vertices of the maximal forest will be placed.
+         * @return a set containing the edges of the maximal forest.
          */
-        void maximalForestInBoundary(std::set<Edge<3>*>& edgeSet,
-                std::set<Vertex<3>*>& vertexSet) const;
+        std::set<Edge<3>*> maximalForestInBoundary() const;
         /**
          * Produces a maximal forest in the triangulation's 1-skeleton.
-         * The given set will be emptied and will have the edges of the
-         * maximal forest placed into it.  It can be specified whether
-         * or not different boundary components may be joined by the
-         * maximal forest.
+         * It can be specified whether or not different boundary components
+         * may be joined by the maximal forest.
          *
          * An edge leading to an ideal vertex is still a
          * candidate for inclusion in the maximal forest.  For the
@@ -1119,15 +1346,11 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * Note that the edge pointers returned will become
          * invalid once the triangulation has changed.
          *
-         * \ifacespython Not present.
-         *
-         * @param edgeSet the set to be emptied and into which the edges
-         * of the maximal forest will be placed.
          * @param canJoinBoundaries \c true if and only if different
-         * boundary components are allowed to be joined by the maximal
-         * forest.
+         * boundary components are allowed to be joined by the maximal forest.
+         * @return a set containing the edges of the maximal forest.
          */
-        void maximalForestInSkeleton(std::set<Edge<3>*>& edgeSet,
+        std::set<Edge<3>*> maximalForestInSkeleton(
                 bool canJoinBoundaries = true) const;
 
         /**
@@ -1232,28 +1455,27 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
          * to "climb out" of such wells.
          *
-         * If a progress tracker is passed, then the exhaustive simplification
-         * will take place in a new thread and this routine will return
-         * immediately.  In this case, you will need to use some other
-         * means to determine whether the triangulation was eventually
-         * simplified (e.g., by examining size() after the tracker
-         * indicates that the operation has finished).
+         * Since Regina 7.0, this routine will not return until either the
+         * triangulation is simplified or the exhaustive search is complete,
+         * regardless of whether a progress tracker was passed.  If you
+         * need the old behaviour (where passing a progress tracker caused
+         * the exhaustive search to start in the background), simply call
+         * this routine in a new detached thread.
          *
          * To assist with performance, this routine can run in parallel
          * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, if no
-         * progress tracker is passed then this routine will not return until
-         * processing has finished (i.e., either the triangulation was
-         * simplified or the search was exhausted).
+         * in the argument \a nThreads.  Even in multithreaded mode, this
+         * routine will not return until processing has finished (i.e., either
+         * the triangulation was simplified or the search was exhausted).
          *
          * If this routine is unable to simplify the triangulation, then
          * the triangulation will not be changed.
          *
-         * If no progress tracker was passed then it will immediately return
-         * \c false; otherwise the progress tracker will immediately be
-         * marked as finished.
-         *
          * \pre This triangulation is connected.
+         *
+         * \exception FailedPrecondition this triangulation has more
+         * than one connected component.  If a progress tracker was passed,
+         * it will be marked as finished before the exception is thrown.
          *
          * @param height the maximum number of \e additional tetrahedra to
          * allow beyond the number of tetrahedra originally present in the
@@ -1262,12 +1484,8 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c nullptr if no progress reporting is required.
-         * @return If a progress tracker is passed, then this routine
-         * will return \c true or \c false immediately according to
-         * whether a new thread could or could not be started.  If no
-         * progress tracker is passed, then this routine will return \c true
-         * if and only if the triangulation was successfully simplified to
-         * fewer tetrahedra.
+         * @return \c true if and only if the triangulation was successfully
+         * simplified to fewer tetrahedra.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
             ProgressTrackerOpen* tracker = nullptr);
@@ -1287,14 +1505,22 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * be a function or some other callable object).
          *
          * - \a action must take the following initial argument(s).
-         *   Either (a) the first argument must be of type Triangulation<3>&,
-         *   representing the triangulation that has been found; or else
-         *   (b) the first two arguments must be of types const std::string&
-         *   and Triangulation<3>&, representing both the triangulation and its
-         *   isomorphism signature.  The second form is offered in order to
-         *   avoid unnecessarily recomputation within the \a action function.
+         *   Either (a) the first argument must be a triangulation (the precise
+         *   type is discussed below), representing the triangluation that has
+         *   been found; or else (b) the first two arguments must be of types
+         *   const std::string& followed by a triangulation, representing both
+         *   the triangulation and \e an isomorphism signature.
+         *   The second form is offered in order to avoid unnecessary
+         *   recomputation within the \a action function; however, note that
+         *   the signature might not be of the IsoSigClassic type (i.e., it
+         *   might not match the output from the default version of isoSig()).
          *   If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - The triangulation argument will be passed as an rvalue; a typical
+         *   action could (for example) take it by const reference and query it,
+         *   or take it by value and modify it, or take it by rvalue reference
+         *   and move it into more permanent storage.
          *
          * - \a action must return a boolean.  If \a action ever returns
          *   \c true, then this indicates that processing should stop
@@ -1306,12 +1532,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *   that this routine visits will be obtained via Pachner moves
          *   from the original form of this triangulation, before any
          *   subsequent changes (if any) were made.
-         *
-         * - \a action may, if it chooses, make changes to the triangulation
-         *   that is passed in its initial argument(s) (though it must not
-         *   delete it).  This will likewise not affect the search, since
-         *   the triangulation that is passed to \a action will be destroyed
-         *   immediately after \a action is called.
          *
          * - \a action will only be called once for each triangulation
          *   (including this starting triangulation).  In other words, no
@@ -1331,31 +1551,27 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * routine will <i>never terminate</i>, unless \a action returns
          * \c true for some triangulation that is passed to it.
          *
-         * If a progress tracker is passed, then the exploration of
-         * triangulations will take place in a new thread and this
-         * routine will return immediately.
+         * Since Regina 7.0, this routine will not return until the exploration
+         * of triangulations is complete, regardless of whether a progress
+         * tracker was passed.  If you need the old behaviour (where passing a
+         * progress tracker caused the enumeration to start in the background),
+         * simply call this routine in a new detached thread.
          *
          * To assist with performance, this routine can run in parallel
-         * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, if no
-         * progress tracker is passed then this routine will not return until
-         * processing has finished (i.e., either \a action returned \c true,
-         * or the search was exhausted).  All calls to \a action will be
-         * protected by a mutex (i.e., different threads will never be
-         * calling \a action at the same time); as a corollary, the action
-         * should avoid expensive operations where possible (otherwise
+         * (multithreaded) mode; simply pass the number of parallel threads in
+         * the argument \a nThreads.  Even in multithreaded mode, this routine
+         * will not return until processing has finished (i.e., either \a action
+         * returned \c true, or the search was exhausted).  All calls to
+         * \a action will be protected by a mutex (i.e., different threads will
+         * never be calling \a action at the same time); as a corollary, the
+         * action should avoid expensive operations where possible (otherwise
          * it will become a serialisation bottleneck in the multithreading).
          *
-         * If no progress tracker was passed then it will immediately return
-         * \c false; otherwise the progress tracker will immediately be
-         * marked as finished.
-         *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap them in std::ref or
-         * std::cref.
-         *
          * \pre This triangulation is connected.
+         *
+         * \exception FailedPrecondition this triangulation has more
+         * than one connected component.  If a progress tracker was passed,
+         * it will be marked as finished before the exception is thrown.
          *
          * \apinotfinal
          *
@@ -1364,7 +1580,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * form is more restricted: the arguments \a tracker and \a args are
          * removed, so you call it as retriangulate(height, threads, action).
          * Moreover, \a action must take exactly two arguments
-         * (const std::string&, Triangulation<3>&) representing the signature
+         * (const std::string&, Triangulation<3>&&) representing a signature
          * and the triangulation, as described in option (b) above.
          *
          * @param height the maximum number of \e additional tetrahedra to
@@ -1378,12 +1594,9 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * for each triangulation that is found.
          * @param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument(s).
-         * @return If a progress tracker is passed, then this routine
-         * will return \c true or \c false immediately according to
-         * whether a new thread could or could not be started.  If no
-         * progress tracker is passed, then this routine will return \c true
-         * if some call to \a action returned \c true (thereby terminating
-         * the search early), or \c false if the search ran to completion.
+         * @return \c true if some call to \a action returned \c true (thereby
+         * terminating the search early), or \c false if the search ran to
+         * completion.
          */
         template <typename Action, typename... Args>
         bool retriangulate(int height, unsigned nThreads,
@@ -1879,36 +2092,48 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
         /*@{*/
 
         /**
-         * Splits this triangulation into its connected sum
-         * decomposition.  The individual prime 3-manifold triangulations
-         * that make up this decomposition will be inserted as children
-         * of the given parent packet.  The original triangulation will
-         * be left unchanged.
+         * Computes the connected sum decomposition of this triangulation.
+         *
+         * The prime summands will be returned as a vector of triangulations;
+         * this triangulation will not be modified.
+         *
+         * As far as possible, the summands will be represented using
+         * 0-efficient triangulations (i.e., triangulations that contain
+         * no non-vertex-linking normal spheres).  Specifically, for
+         * every summand, either:
+         *
+         * - the triangulation of the summand that is produced will be
+         *   0-efficient; or
+         *
+         * - the summand is one of RP3, the product S2xS1, or the twisted
+         *   product S2x~S1.  In each of these cases there is no possible
+         *   0-efficient triangulation of the summand, and so the triangulation
+         *   that is produced will just be minimal (i.e., two tetrahedra).
          *
          * For non-orientable triangulations, this routine is only guaranteed
          * to succeed if the original manifold contains no embedded two-sided
          * projective planes.  If the manifold \e does contain embedded
          * two-sided projective planes, then this routine might still succeed
          * but it might fail; however, such a failure will always be detected,
-         * and in such a case this routine will return -1 instead (without
-         * building any prime summands at all).
+         * and in such a case this routine will throw an exception (as
+         * detailed below).
          *
          * Note that this routine is currently only available for closed
          * triangulations; see the list of preconditions for full details.
+         * If this triangulation is a 3-sphere then this routine will return
+         * an empty list.
          *
-         * If the given parent packet is \c nullptr, the new prime summand
-         * triangulations will be inserted as children of this triangulation.
+         * This function is new to Regina 7.0, and it has some important
+         * changes of behaviour from the old connectedSumDecomposition() from
+         * Regina 6.0.1 and earlier:
          *
-         * This routine can optionally assign unique (and sensible)
-         * packet labels to each of the new prime summand triangulations.
-         * Note however that uniqueness testing may be slow, so this
-         * assignment of labels should be disabled if the summand
-         * triangulations are only temporary objects used as part
-         * of a larger routine.
+         * - This function does not insert the resulting components into
+         *   the packet tree.
          *
-         * If this is a triangulation of a 3-sphere then no prime summand
-         * triangulations will be created at all, and this routine will
-         * return 0.
+         * - If this routine fails because of an embedded two-sided projective
+         *   plane, then it throws an exception instead of returning -1.
+         *
+         * - This function does not assign labels to the new summands.
          *
          * The underlying algorithm appears in "A new approach to crushing
          * 3-manifold triangulations", Discrete and Computational
@@ -1916,7 +2141,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * Jaco-Rubinstein 0-efficiency algorithm, and works in both
          * orientable and non-orientable settings.
          *
-         * \warning Users are strongly advised to check the return value if
+         * \warning Users are strongly advised to check for exceptions if
          * embedded two-sided projective planes are a possibility, since in
          * such a case this routine might fail (as explained above).
          * Note however that this routine might still succeed, and so success
@@ -1924,24 +2149,19 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * \warning The algorithms used in this routine rely on normal
          * surface theory and so can be very slow for larger triangulations.
-         * For 3-sphere testing, see the routine isThreeSphere() which
+         * For 3-sphere testing, see the routine isSphere() which
          * uses faster methods where possible.
          *
          * \pre This triangulation is valid, closed and connected.
          *
-         * @param primeParent the packet beneath which the new prime
-         * summand triangulations will be inserted, or \c nullptr if they
-         * should be inserted directly beneath this triangulation.
-         * @param setLabels \c true if the new prime summand triangulations
-         * should be assigned unique packet labels, or \c false if
-         * they should be left without labels at all.
-         * @return the number of prime summands created, 0 if this
-         * triangulation is a 3-sphere, or -1 if this routine failed
-         * because this is a non-orientable triangulation with embedded
-         * two-sided projective planes.
+         * \exception UnsolvedCase the original manifold is non-orientable
+         * and contains one or more embedded two-sided projective planes,
+         * and this routine was not able to recover from this situation.
+         *
+         * @return a list of triangulations of prime summands.
          */
-        long connectedSumDecomposition(Packet* primeParent = nullptr,
-            bool setLabels = true);
+        std::vector<Triangulation<3>> summands() const;
+
         /**
          * Determines whether this is a triangulation of a 3-sphere.
          *
@@ -1952,29 +2172,36 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * \warning The algorithms used in this routine rely on normal
          * surface theory and so can be very slow for larger
          * triangulations (although faster tests are used where possible).
-         * The routine knowsThreeSphere() can be called to see if this
+         * The routine knowsSphere() can be called to see if this
          * property is already known or if it happens to be very fast to
          * calculate for this triangulation.
          *
          * @return \c true if and only if this is a 3-sphere triangulation.
          */
-        bool isThreeSphere() const;
+        bool isSphere() const;
+        /**
+         * Deprecated function to test if this is a 3-sphere triangulation.
+         *
+         * \deprecated This routine has been renamed isSphere().
+         *
+         * @return \c true if and only if this is the 3-sphere.
+         */
+        [[deprecated]] bool isThreeSphere() const;
         /**
          * Is it already known (or trivial to determine) whether or not this
-         * is a triangulation of a 3-sphere?  See isThreeSphere() for
+         * is a triangulation of a 3-sphere?  See isSphere() for
          * further details.
          *
-         * If this property is indeed already known, future calls to
-         * isThreeSphere() will be very fast (simply returning the
-         * precalculated value).
+         * If this property is indeed already known, future calls to isSphere()
+         * will be very fast (simply returning the precalculated value).
          *
          * If this property is not already known, this routine will
          * nevertheless run some very fast preliminary tests to see if the
          * answer is obviously no.  If so, it will store \c false as the
-         * precalculated value for isThreeSphere() and this routine will
+         * precalculated value for isSphere() and this routine will
          * return \c true.
          *
-         * Otherwise a call to isThreeSphere() may potentially require more
+         * Otherwise a call to isSphere() may potentially require more
          * significant work, and so this routine will return \c false.
          *
          * \warning This routine does not actually tell you \e whether
@@ -1984,11 +2211,21 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * @return \c true if and only if this property is already known
          * or trivial to calculate.
          */
-        bool knowsThreeSphere() const;
+        bool knowsSphere() const;
+        /**
+         * Deprecated function to determine if it is already known (or
+         * trivial to determine) whether this is a 3-sphere triangulation.
+         *
+         * \deprecated This routine has been renamed knowsSphere().
+         *
+         * @return \c true if and only if this property is already known
+         * or trivial to calculate.
+         */
+        [[deprecated]] bool knowsThreeSphere() const;
         /**
          * Determines whether this is a triangulation of a 3-dimensional ball.
          *
-         * This routine is based on isThreeSphere(), which in turn combines
+         * This routine is based on isSphere(), which in turn combines
          * Rubinstein's 3-sphere recognition algorithm with Jaco and
          * Rubinstein's 0-efficiency prime decomposition algorithm.
          *
@@ -2028,49 +2265,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * or trivial to calculate.
          */
         bool knowsBall() const;
-        /**
-         * Converts this into a 0-efficient triangulation of the same
-         * underlying 3-manifold.  A triangulation is 0-efficient if its
-         * only normal spheres and discs are vertex linking, and if it has
-         * no 2-sphere boundary components.
-         *
-         * Note that this routine is currently only available for
-         * closed orientable triangulations; see the list of
-         * preconditions for details.  The 0-efficiency algorithm of
-         * Jaco and Rubinstein is used.
-         *
-         * If the underlying 3-manifold is prime, it can always be made
-         * 0-efficient (with the exception of the special cases RP3 and
-         * S2xS1 as noted below).  In this case the original triangulation
-         * will be modified directly and \c nullptr will be returned.
-         *
-         * If the underyling 3-manifold is RP3 or S2xS1, it cannot
-         * be made 0-efficient; in this case the original triangulation
-         * will be reduced to a two-tetrahedron minimal triangulation
-         * and \c nullptr will again be returned.
-         *
-         * If the underlying 3-manifold is not prime, it cannot be made
-         * 0-efficient.  In this case the original triangulation will
-         * remain unchanged and a new connected sum decomposition will
-         * be returned.  This will be presented as a newly allocated
-         * container packet with one child triangulation for each prime
-         * summand.
-         *
-         * \warning The algorithms used in this routine rely on normal
-         * surface theory and so can be very slow for larger triangulations.
-         *
-         * \pre This triangulation is valid, closed, orientable and
-         * connected.
-         *
-         * \todo Preserve computed properties of the underlying manifold.
-         *
-         * @return \c nullptr if the underlying 3-manifold is prime (in which
-         * case the original triangulation was modified directly), or
-         * a newly allocated connected sum decomposition if the
-         * underlying 3-manifold is composite (in which case the
-         * original triangulation was not changed).
-         */
-        Packet* makeZeroEfficient();
         /**
          * Determines whether this is a triangulation of the solid
          * torus; that is, the unknot complement.  This routine can be
@@ -2662,12 +2856,18 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
         Tetrahedron<3>* insertLayeredSolidTorus(unsigned long cuts0,
             unsigned long cuts1);
         /**
-         * Inserts a new layered lens space L(p,q) into the triangulation.
+         * Deprecated routine that inserts a new layered lens space L(p,q)
+         * into this triangulation.
          * The lens space will be created by gluing together two layered
          * solid tori in a way that uses the fewest possible tetrahedra.
          *
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
+         *
+         * \deprecated If you just wish to create a layered lens space,
+         * call <tt>Example<3>::lens(p, q)</tt>.  If you wish to insert a
+         * copy of it into an existing triangulation, call
+         * <tt>insertTriangulation(Example<3>::lens(p, q))</tt>.
          *
          * \pre \a p \> \a q \>= 0 unless (<i>p</i>,<i>q</i>) = (0,1);
          * \pre gcd(\a p, \a q) = 1.
@@ -2677,11 +2877,11 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * @see LayeredLensSpace
          */
-        void insertLayeredLensSpace(unsigned long p, unsigned long q);
+        [[deprecated]] void insertLayeredLensSpace(size_t p, size_t q);
         /**
-         * Inserts a layered loop of the given length into this triangulation.
-         * Layered loops are described in more detail in the LayeredLoop
-         * class notes.
+         * Deprecated routine that inserts a layered loop of the given length
+         * into this triangulation.  Layered loops are described in more
+         * detail in the LayeredLoop class notes.
          *
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
@@ -2691,27 +2891,36 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * @param twisted \c true if the new layered loop should be twisted,
          * or \c false if it should be untwisted.
          *
+         * \deprecated If you just wish to create a layered loop, call
+         * <tt>Example<3>::layeredLoop(...)</tt>.  If you wish to
+         * insert a copy of it into an existing triangulation, call
+         * <tt>insertTriangulation(Example<3>::layeredLoop(...))</tt>.
+         *
          * @see LayeredLoop
          */
-        void insertLayeredLoop(unsigned long length, bool twisted);
+        [[deprecated]] void insertLayeredLoop(size_t length, bool twisted);
         /**
-         * Inserts an augmented triangular solid torus with the given
-         * parameters into this triangulation.  Almost all augmented
-         * triangular solid tori represent Seifert fibred spaces with three
-         * or fewer exceptional fibres.  Augmented triangular solid tori
+         * Deprecated routine that inserts an augmented triangular solid torus
+         * with the given parameters into this triangulation.  Almost all
+         * augmented triangular solid tori represent Seifert fibred spaces with
+         * three or fewer exceptional fibres.  Augmented triangular solid tori
          * are described in more detail in the AugTriSolidTorus class notes.
          *
          * The resulting Seifert fibred space will be
-         * SFS((<i>a1</i>,<i>b1</i>) (<i>a2</i>,<i>b2</i>)
-         * (<i>a3</i>,<i>b3</i>) (1,1)), where the parameters
-         * <i>a1</i>, ..., <i>b3</i> are passed as arguments to this
-         * routine.  The three layered solid tori that are attached to
+         * SFS((\a a1, \a b1), (\a a2, \a b2), (\a a3, \a b3), (1,1)),
+         * where the parameters \a a1, ..., \a b3 are passed as arguments to
+         * this routine.  The three layered solid tori that are attached to
          * the central triangular solid torus will be
          * LST(|<i>a1</i>|, |<i>b1</i>|, |-<i>a1</i>-<i>b1</i>|), ...,
          * LST(|<i>a3</i>|, |<i>b3</i>|, |-<i>a3</i>-<i>b3</i>|).
          *
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
+         *
+         * \deprecated If you just wish to create an augmented triangular solid
+         * torus, call <tt>Example<3>::augTriSolidTorus(...)</tt>.  If you wish
+         * to insert a copy of it into an existing triangulation, call
+         * <tt>insertTriangulation(Example<3>::augTriSolidTorus(...))</tt>.
          *
          * \pre gcd(\a a1, \a b1) = 1.
          * \pre gcd(\a a2, \a b2) = 1.
@@ -2736,30 +2945,33 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * torus in the augmented triangular solid torus; this may be
          * either positive or negative.
          */
-        void insertAugTriSolidTorus(long a1, long b1, long a2, long b2,
-            long a3, long b3);
+        [[deprecated]] void insertAugTriSolidTorus(long a1, long b1,
+            long a2, long b2, long a3, long b3);
         /**
-         * Inserts an orientable Seifert fibred space with at most three
-         * exceptional fibres over the 2-sphere into this triangulation.
+         * Deprecated routine that inserts an orientable Seifert fibred space
+         * with at most three exceptional fibres over the 2-sphere into this
+         * triangulation.
          *
-         * The inserted Seifert fibred space will be
-         * SFS((<i>a1</i>,<i>b1</i>) (<i>a2</i>,<i>b2</i>)
-         * (<i>a3</i>,<i>b3</i>) (1,1)), where the parameters
-         * <i>a1</i>, ..., <i>b3</i> are passed as arguments to this
-         * routine.
+         * The Seifert fibred space will be
+         * SFS((\a a1, \a b1), (\a a2, \a b2), (\a a3, \a b3)), where the
+         * parameters \a a1, ..., \a b3 are passed as arguments to this routine.
          *
-         * The three pairs of parameters (<i>a</i>,<i>b</i>) do not need
+         * The three pairs of parameters (\a a, \a b) do not need
          * to be normalised, i.e., the parameters can be positive or
-         * negative and <i>b</i> may lie outside the range [0..<i>a</i>).
+         * negative and \a b may lie outside the range [0..\a a).
          * There is no separate twisting parameter; each additional
-         * twist can be incorporated into the existing parameters
-         * by replacing some pair (<i>a</i>,<i>b</i>) with the pair
-         * (<i>a</i>,<i>a</i>+<i>b</i>).  For Seifert fibred
-         * spaces with less than three exceptional fibres, some or all
-         * of the parameter pairs may be (1,<i>k</i>) or even (1,0).
+         * twist can be incorporated into the existing parameters by replacing
+         * some pair (\a a>, \a b) with the pair (\a a, \a a + \a b).
+         * For Seifert fibred spaces with less than three exceptional fibres,
+         * some or all of the parameter pairs may be (1, \a k) or even (1, 0).
          *
          * The new tetrahedra will be inserted at the end of the list of
          * tetrahedra in the triangulation.
+         *
+         * \deprecated If you just wish to triangulate the given Seifert fibred
+         * space, call <tt>Example<3>::sfsOverSphere(...)</tt>.  If you wish
+         * to insert a copy of it into an existing triangulation, call
+         * <tt>insertTriangulation(Example<3>::sfsOverSphere(...))</tt>.
          *
          * \pre None of \a a1, \a a2 or \a a3 are 0.
          * \pre gcd(\a a1, \a b1) = 1.
@@ -2773,7 +2985,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * @param a3 a parameter describing the third exceptional fibre.
          * @param b3 a parameter describing the third exceptional fibre.
          */
-        void insertSFSOverSphere(long a1 = 1, long b1 = 0,
+        [[deprecated]] void insertSFSOverSphere(long a1 = 1, long b1 = 0,
             long a2 = 1, long b2 = 0, long a3 = 1, long b3 = 0);
         /**
          * Forms the connected sum of this triangulation with the given
@@ -2803,10 +3015,9 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          */
         void connectedSumWith(const Triangulation& other);
         /**
-         * Inserts the rehydration of the given string into this triangulation.
-         * If you simply wish to convert a dehydration string into a
-         * new triangulation, use the static routine rehydrate() instead.
-         * See dehydrate() for more information on dehydration strings.
+         * Deprecated routine that inserts the rehydration of the given string
+         * into this triangulation.  See dehydrate() and rehydrate() for
+         * more information on dehydration strings.
          *
          * This routine will first rehydrate the given string into a proper
          * triangulation.  The tetrahedra from the rehydrated triangulation
@@ -2814,27 +3025,18 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * which they appear in the rehydrated triangulation, and the
          * numbering of their vertices (0-3) will not change.
          *
-         * The routine dehydrate() can be used to extract a dehydration
-         * string from an existing triangulation.  Dehydration followed
-         * by rehydration might not produce a triangulation identical to
-         * the original, but it is guaranteed to produce an isomorphic
-         * copy.  See dehydrate() for the reasons behind this.
+         * \deprecated If you just wish to rehydrate a dehydration string,
+         * simply call the static routine rehydrate().  If you wish to insert
+         * the rehydration into an existing triangulation, call rehydrate()
+         * followed by insertTriangulation().
          *
-         * For a full description of the dehydrated triangulation
-         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
-         * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
-         * 1999.
+         * \exception InvalidArgument the given string could not be rehydrated.
          *
          * @param dehydration a dehydrated representation of the
          * triangulation to insert.  Case is irrelevant; all letters
          * will be treated as if they were lower case.
-         * @return \c true if the insertion was successful, or
-         * \c false if the given string could not be rehydrated.
-         *
-         * @see dehydrate
-         * @see rehydrate
          */
-        bool insertRehydration(const std::string& dehydration);
+        [[deprecated]] void insertRehydration(const std::string& dehydration);
 
         /*@}*/
         /**
@@ -2878,9 +3080,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * empty string if dehydration is not possible because the
          * triangulation is disconnected, has boundary triangles or contains
          * too many tetrahedra.
-         *
-         * @see rehydrate
-         * @see insertRehydration
          */
         std::string dehydrate() const;
 
@@ -2892,19 +3091,21 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * Regarding what gets stored in the SnapPea data file:
          *
-         * - If you are calling this from one of Regina's own Triangulation<3>
-         *   objects, then only the tetrahedron gluings and the manifold name
-         *   will be stored (the name will be derived from the packet label).
-         *   All other SnapPea-specific information (such as peripheral curves)
-         *   will be marked as unknown (since Regina does not track such
-         *   information itself), and of course other Regina-specific
-         *   information (such as the Turaev-Viro invariants) will not
-         *   be written to the SnapPea file at all.
+         * - Since this function is defined by Regina's own Triangulation<3>
+         *   class, only the tetrahedron gluings will be included in the SnapPea
+         *   data file.  All other SnapPea-specific information (such as
+         *   peripheral curves) will be marked as unknown, since Regina does not
+         *   track such information itself, and of course Regina-specific
+         *   information (such as the Turaev-Viro invariants) will not be
+         *   included in the SnapPea file either.
          *
-         * - If you are calling this from the subclass SnapPeaTriangulation,
-         *   then all additional SnapPea-specific information will be written
-         *   to the file (indeed, the SnapPea kernel itself will be used to
-         *   produce the file contents).
+         * - The subclass SnapPeaTriangulation implements its own version
+         *   of this function, which writes all additional SnapPea-specific
+         *   information to the file (in fact it uses the SnapPea kernel itself
+         *   to produce the file contents).  However, to access that function
+         *   you must explicitly call SnapPeaTriangulation::snapPea()
+         *   (since Triangulation<3> is not a polymorphic class, and in
+         *   particular this function is not virtual).
          *
          * If you wish to export a triangulation to a SnapPea \e file, you
          * should call saveSnapPea() instead (which has better performance, and
@@ -2917,7 +3118,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * @return a string containing the contents of the corresponding
          * SnapPea data file.
          */
-        virtual std::string snapPea() const;
+        std::string snapPea() const;
 
         /**
          * Writes the full contents of a SnapPea data file describing this
@@ -2925,19 +3126,21 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * Regarding what gets stored in the SnapPea data file:
          *
-         * - If you are calling this from one of Regina's own Triangulation<3>
-         *   objects, then only the tetrahedron gluings and the manifold name
-         *   will be stored (the name will be derived from the packet label).
-         *   All other SnapPea-specific information (such as peripheral curves)
-         *   will be marked as unknown (since Regina does not track such
-         *   information itself), and of course other Regina-specific
-         *   information (such as the Turaev-Viro invariants) will not
-         *   be written to the SnapPea file at all.
+         * - Since this function is defined by Regina's own Triangulation<3>
+         *   class, only the tetrahedron gluings will be included in the SnapPea
+         *   data file.  All other SnapPea-specific information (such as
+         *   peripheral curves) will be marked as unknown, since Regina does not
+         *   track such information itself, and of course Regina-specific
+         *   information (such as the Turaev-Viro invariants) will not be
+         *   included in the SnapPea file either.
          *
-         * - If you are calling this from the subclass SnapPeaTriangulation,
-         *   then all additional SnapPea-specific information will be written
-         *   to the file (indeed, the SnapPea kernel itself will be used to
-         *   produce the file contents).
+         * - The subclass SnapPeaTriangulation implements its own version
+         *   of this function, which writes all additional SnapPea-specific
+         *   information to the file (in fact it uses the SnapPea kernel itself
+         *   to produce the file contents).  However, to access that function
+         *   you must explicitly call SnapPeaTriangulation::snapPea()
+         *   (since Triangulation<3> is not a polymorphic class, and in
+         *   particular this function is not virtual).
          *
          * If you wish to extract the SnapPea data file as a string, you should
          * call the zero-argument routine snapPea() instead.  If you wish to
@@ -2948,12 +3151,13 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * triangles (which SnapPea cannot represent), then nothing will
          * be written to the output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, but you can call snapPea() with
+         * no arguments which returns this data as a string.
          *
          * @param out the output stream to which the SnapPea data file
          * will be written.
          */
-        virtual void snapPea(std::ostream& out) const;
+        void snapPea(std::ostream& out) const;
 
         /**
          * Writes this triangulation to the given file using SnapPea's
@@ -2961,19 +3165,21 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          *
          * Regarding what gets stored in the SnapPea data file:
          *
-         * - If you are calling this from one of Regina's own Triangulation<3>
-         *   objects, then only the tetrahedron gluings and the manifold name
-         *   will be stored (the name will be derived from the packet label).
-         *   All other SnapPea-specific information (such as peripheral curves)
-         *   will be marked as unknown (since Regina does not track such
-         *   information itself), and of course other Regina-specific
-         *   information (such as the Turaev-Viro invariants) will not
-         *   be written to the SnapPea file at all.
+         * - Since this function is defined by Regina's own Triangulation<3>
+         *   class, only the tetrahedron gluings will be included in the SnapPea
+         *   data file.  All other SnapPea-specific information (such as
+         *   peripheral curves) will be marked as unknown, since Regina does not
+         *   track such information itself, and of course Regina-specific
+         *   information (such as the Turaev-Viro invariants) will not be
+         *   included in the SnapPea file either.
          *
-         * - If you are calling this from the subclass SnapPeaTriangulation,
-         *   then all additional SnapPea-specific information will be written
-         *   to the file (indeed, the SnapPea kernel itself will be used to
-         *   produce the file contents).
+         * - The subclass SnapPeaTriangulation implements its own version
+         *   of this function, which writes all additional SnapPea-specific
+         *   information to the file (in fact it uses the SnapPea kernel itself
+         *   to produce the file contents).  However, to access that function
+         *   you must explicitly call SnapPeaTriangulation::saveSnapPea()
+         *   (since Triangulation<3> is not a polymorphic class, and in
+         *   particular this function is not virtual).
          *
          * If this triangulation is empty, invalid, or contains boundary
          * triangles (which SnapPea cannot represent), then the file
@@ -2987,7 +3193,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * @param filename the name of the SnapPea file to which to write.
          * @return \c true if and only if the file was successfully written.
          */
-        virtual bool saveSnapPea(const char* filename) const;
+        bool saveSnapPea(const char* filename) const;
 
         /**
          * Returns a string that expresses this triangulation in
@@ -3019,7 +3225,8 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * \pre This triangulation is not invalid, and does not contain
          * any boundary triangles.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, but you can call recogniser() with
+         * no arguments which returns this data as a string.
          *
          * @param out the output stream to which the recogniser data file
          * will be written.
@@ -3034,7 +3241,8 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * \pre This triangulation is not invalid, and does not contain
          * any boundary triangles.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, but you can call recognizer() with
+         * no arguments which returns this data as a string.
          *
          * @param out the output stream to which the recogniser data file
          * will be written.
@@ -3082,27 +3290,36 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
         /*@{*/
 
         /**
-         * Allows the user to interactively enter a triangulation in
-         * plain text.  Prompts will be sent to the given output stream
-         * and information will be read from the given input stream.
+         * Deprecated function that allows the user to interactively enter a
+         * triangulation in plain text.  Prompts will be sent to the given
+         * output stream and information will be read from the given input
+         * stream.
          *
-         * \ifacespython This routine is a member of class Engine.
-         * It takes no parameters; \a in and \a out are always assumed
-         * to be standard input and standard output respectively.
+         * \deprecated This is essentially an ancient piece of an interactive
+         * user interface, buried inside what is otherwise a mathematical
+         * library, and dating back to before Regina offered Python bindings.
+         * Nowadays there are better ways of interacting with Regina at a low
+         * level (e.g., Python), and so this routine will soon be removed
+         * completely.
+         *
+         * \ifacespython This routine takes no parameters; \a in and \a out
+         * are always assumed to be standard input and standard output
+         * respectively.
          *
          * @param in the input stream from which text will be read.
-         * @param out the output stream to which prompts will be
-         * written.
+         * @param out the output stream to which prompts will be written.
          * @return the triangulation entered in by the user.
          */
-        static Triangulation<3>* enterTextTriangulation(std::istream& in,
-                std::ostream& out);
+        [[deprecated]] static Triangulation<3> enterTextTriangulation(
+                std::istream& in, std::ostream& out);
         /**
-         * Rehydrates the given alphabetical string into a new triangulation.
-         * See dehydrate() for more information on dehydration strings.
+         * Rehydrates the given alphabetical string into a 3-dimensional
+         * triangulation.
          *
-         * This routine will rehydrate the given string into a new
-         * triangulation, and return this new triangulation.
+         * For a full description of the dehydrated triangulation
+         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
+         * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
+         * 1999.
          *
          * The converse routine dehydrate() can be used to extract a
          * dehydration string from an existing triangulation.  Dehydration
@@ -3110,27 +3327,21 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * to the original, but it is guaranteed to produce an isomorphic
          * copy.  See dehydrate() for the reasons behind this.
          *
-         * For a full description of the dehydrated triangulation
-         * format, see <i>A Census of Cusped Hyperbolic 3-Manifolds</i>,
-         * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
-         * 1999.
+         * \exception InvalidArgument the given string could not be rehydrated.
          *
          * @param dehydration a dehydrated representation of the
          * triangulation to construct.  Case is irrelevant; all letters
          * will be treated as if they were lower case.
-         * @return a newly allocated triangulation if the rehydration was
-         * successful, or null if the given string could not be rehydrated.
-         *
-         * @see dehydrate
-         * @see insertRehydration
+         * @return the rehydrated triangulation.
          */
-        static Triangulation<3>* rehydrate(const std::string& dehydration);
+        static Triangulation<3> rehydrate(const std::string& dehydration);
 
         /**
          * Extracts the tetrahedron gluings from a string that contains the
          * full contents of a SnapPea data file.  All other SnapPea-specific
-         * information (such as peripheral curves) will be ignored, since
-         * Regina's Triangulation<3> class does not track such information itself.
+         * information (such as peripheral curves, and the manifold name) will
+         * be ignored, since Regina's Triangulation<3> class does not track
+         * such information itself.
          *
          * If you wish to preserve all SnapPea-specific information from the
          * data file, you should work with the SnapPeaTriangulation class
@@ -3143,10 +3354,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * information (as described above), and also avoids constructing an
          * enormous intermediate string.
          *
-         * The triangulation that is returned will be newly created.
-         * If the SnapPea data is not in the correct format, this
-         * routine will return \c nullptr instead.
-         *
          * \warning This routine is "lossy", in that drops SnapPea-specific
          * information (as described above).  Unless you specifically need an
          * Triangulation<3> (not an SnapPeaTriangulation) or you need to avoid
@@ -3155,21 +3362,17 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * contents instead.  See the string-based SnapPeaTriangulation
          * constructor for how to do this.
          *
+         * \exception InvalidArgument the given SnapPea data was not in
+         * the correct format.
+         *
          * @param snapPeaData a string containing the full contents of a
          * SnapPea data file.
-         * @return a new triangulation extracted from the given data,
-         * or \c nullptr on error.
+         * @return a native Regina triangulation extracted from the given
+         * SnapPea data.
          */
-        static Triangulation<3>* fromSnapPea(const std::string& snapPeaData);
+        static Triangulation<3> fromSnapPea(const std::string& snapPeaData);
 
         /*@}*/
-
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
-
-    protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
 
     private:
         /**
@@ -3178,7 +3381,7 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * internal function that changes the triangulation.
          *
          * In most cases this routine is followed immediately by firing
-         * a packet change event.
+         * a change event.
          */
         void clearAllProperties();
 
@@ -3213,23 +3416,6 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          */
         void calculateBoundaryProperties() const;
 
-        /**
-         * A much less templated version of retriangulate().
-         *
-         * This is identical to retriangulate(), except that the type
-         * of the action function is now known precisely.  This means that
-         * the implementation can be kept out of the main headers.
-         *
-         * \tparam withSig \c true if the action function includes an
-         * isomorphism signature before the triangulation in its
-         * initial argument(s).
-         */
-        template <bool withSig>
-        bool retriangulateInternal(int height, unsigned nThreads,
-            ProgressTrackerOpen* tracker,
-            regina::detail::RetriangulateActionFunc<
-                Triangulation<3>, withSig>&& action) const;
-
         void stretchBoundaryForestFromVertex(Vertex<3>*, std::set<Edge<3>*>&,
                 std::set<Vertex<3>*>&) const;
             /**< Internal to maximalForestInBoundary(). */
@@ -3238,36 +3424,81 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
             /**< Internal to maximalForestInSkeleton(). */
 
         /**
-         * Reads the contents of a SnapPea data file from the given input
-         * stream, and converts the result to a new Triangulation<3>.  Since
-         * this returns a Triangulation<3>, it will lose some SnapPea-specific
-         * information in the process (such as peripheral curves).
+         * Called before changing the Regina data for a SnapPea triangulation.
          *
-         * If the input stream could not be read or if the data was not in the
-         * correct format, \c nullptr will be returned.  Otherwise a newly
-         * allocated triangulation will be returned, and it is the user's
-         * responsibility to deallocate this when it is finished with.
+         * The functions snapPeaPreChange() and snapPeaPostChange() together
+         * manage change events on the SnapPea triangulation packet (if there
+         * is one), as well as the nullification of the SnapPea triangulation.
          *
-         * Unlike the SnapPeaTriangulation constructor, this routine uses
-         * Regina's own SnapPea input code - it does not call any functions
-         * from the SnapPea kernel.
-         *
-         * \ifacespython Not present.
+         * \pre This Regina triangulation is in fact the inherited
+         * Triangulation<3> data for the derived class SnapPeaTriangulation.
          */
-        static Triangulation<3>* readSnapPea(std::istream& in);
+        void snapPeaPreChange();
+
+        /**
+         * Called after changing the Regina data for a SnapPea triangulation.
+         *
+         * The functions snapPeaPreChange() and snapPeaPostChange() together
+         * manage change events on the SnapPea triangulation packet (if there
+         * is one), as well as the nullification of the SnapPea triangulation.
+         *
+         * \pre This Regina triangulation is in fact the inherited
+         * Triangulation<3> data for the derived class SnapPeaTriangulation.
+         */
+        void snapPeaPostChange();
 
     friend class regina::Face<3, 3>;
     friend class regina::detail::SimplexBase<3>;
     friend class regina::detail::TriangulationBase<3>;
+    friend class PacketData<Triangulation<3>>;
     friend class regina::XMLTriangulationReader<3>;
+    friend class regina::XMLWriter<Triangulation<3>>;
 };
 
-/*@}*/
+template <>
+inline PacketData<Triangulation<3>>::ChangeEventSpan::ChangeEventSpan(
+        PacketData& data) : data_(data) {
+    switch (data_.heldBy_) {
+        case HELD_BY_SNAPPEA: {
+            static_cast<Triangulation<3>&>(data_).snapPeaPreChange();
+            break;
+        }
+        case HELD_BY_PACKET: {
+            auto& p = static_cast<PacketOf<Triangulation<3>>&>(data_);
+            if (! p.changeEventSpans_)
+                p.fireEvent(&PacketListener::packetToBeChanged);
+            ++p.changeEventSpans_;
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+template <>
+inline PacketData<Triangulation<3>>::ChangeEventSpan::~ChangeEventSpan() {
+    switch (data_.heldBy_) {
+        case HELD_BY_SNAPPEA: {
+            static_cast<Triangulation<3>&>(data_).snapPeaPostChange();
+            break;
+        }
+        case HELD_BY_PACKET: {
+            auto& p = static_cast<PacketOf<Triangulation<3>>&>(data_);
+            --p.changeEventSpans_;
+            if (! p.changeEventSpans_)
+                p.fireEvent(&PacketListener::packetWasChanged);
+            break;
+        }
+        default:
+            break;
+    }
+}
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
 
 inline Triangulation<3>::~Triangulation() {
+    Snapshottable<Triangulation<3>>::takeSnapshot();
     clearAllProperties();
 }
 
@@ -3281,20 +3512,24 @@ namespace regina {
 
 // Inline functions for Triangulation<3>
 
-inline Triangulation<3>::Triangulation() :
-        strictAngleStructure_(false), generalAngleStructure_(false) {
-}
-
 inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
         Triangulation<3>(copy, true) {
 }
 
-inline Packet* Triangulation<3>::internalClonePacket(Packet*) const {
-    return new Triangulation<3>(*this);
+inline size_t Triangulation<3>::countTetrahedra() const {
+    return size();
 }
 
-inline bool Triangulation<3>::dependsOnParent() const {
-    return false;
+inline auto Triangulation<3>::tetrahedra() const {
+    return simplices();
+}
+
+inline Tetrahedron<3>* Triangulation<3>::tetrahedron(size_t index) {
+    return simplex(index);
+}
+
+inline const Tetrahedron<3>* Triangulation<3>::tetrahedron(size_t index) const {
+    return simplex(index);
 }
 
 inline Tetrahedron<3>* Triangulation<3>::newTetrahedron() {
@@ -3303,6 +3538,15 @@ inline Tetrahedron<3>* Triangulation<3>::newTetrahedron() {
 
 inline Tetrahedron<3>* Triangulation<3>::newTetrahedron(const std::string& desc) {
     return newSimplex(desc);
+}
+
+template <int k>
+inline std::array<Tetrahedron<3>*, k> Triangulation<3>::newTetrahedra() {
+    return newSimplices<k>();
+}
+
+inline void Triangulation<3>::newTetrahedra(size_t k) {
+    newSimplices(k);
 }
 
 inline void Triangulation<3>::removeTetrahedronAt(size_t index) {
@@ -3317,20 +3561,76 @@ inline void Triangulation<3>::removeAllTetrahedra() {
     removeAllSimplices();
 }
 
+inline Triangulation<3>& Triangulation<3>::operator = (
+        const Triangulation<3>& src) {
+    // We need to implement copy assignment ourselves because it all
+    // needs to be wrapped in a ChangeEventSpan.  This is so that the
+    // final packetWasChanged event is fired *after* we modify the
+    // properties specific to dimension 3.
+
+    ChangeEventSpan span(*this);
+
+    TriangulationBase<3>::operator = (src);
+
+    ideal_ = src.ideal_;
+    standard_ = src.standard_;
+    prop_ = src.prop_;
+
+    // Any cached angle structures must be remade to live in this triangulation.
+    if (std::holds_alternative<AngleStructure>(src.strictAngleStructure_))
+        strictAngleStructure_ = AngleStructure(
+            std::get<AngleStructure>(src.strictAngleStructure_), *this);
+    else
+        strictAngleStructure_ = std::get<bool>(src.strictAngleStructure_);
+    if (std::holds_alternative<AngleStructure>(src.generalAngleStructure_))
+        generalAngleStructure_ = AngleStructure(
+            std::get<AngleStructure>(src.generalAngleStructure_), *this);
+    else
+        generalAngleStructure_ = std::get<bool>(src.generalAngleStructure_);
+
+    return *this;
+}
+
+inline Triangulation<3>& Triangulation<3>::operator = (Triangulation<3>&& src) {
+    // Like copy assignment, we implement this ourselves because it all
+    // needs to be wrapped in a ChangeEventSpan.
+
+    ChangeEventSpan span(*this);
+
+    TriangulationBase<3>::operator = (std::move(src));
+
+    ideal_ = src.ideal_;
+    standard_ = src.standard_;
+    prop_ = std::move(src.prop_);
+
+    strictAngleStructure_ = std::move(src.strictAngleStructure_);
+    generalAngleStructure_ = std::move(src.generalAngleStructure_);
+
+    return *this;
+}
+
 inline void Triangulation<3>::swapContents(Triangulation<3>& other) {
     swap(other);
 }
 
+inline bool Triangulation<3>::hasBoundaryTriangles() const {
+    return hasBoundaryFacets();
+}
+
+inline size_t Triangulation<3>::countBoundaryTriangles() const {
+    return countBoundaryFacets();
+}
+
 inline bool Triangulation<3>::hasTwoSphereBoundaryComponents() const {
-    if (! twoSphereBoundaryComponents_.has_value())
+    if (! prop_.twoSphereBoundaryComponents_.has_value())
         calculateBoundaryProperties();
-    return *twoSphereBoundaryComponents_;
+    return *prop_.twoSphereBoundaryComponents_;
 }
 
 inline bool Triangulation<3>::hasNegativeIdealBoundaryComponents() const {
-    if (! negativeIdealBoundaryComponents_.has_value())
+    if (! prop_.negativeIdealBoundaryComponents_.has_value())
         calculateBoundaryProperties();
-    return *negativeIdealBoundaryComponents_;
+    return *prop_.negativeIdealBoundaryComponents_;
 }
 
 inline bool Triangulation<3>::isIdeal() const {
@@ -3348,34 +3648,51 @@ inline bool Triangulation<3>::isClosed() const {
     return boundaryComponents().empty();
 }
 
+inline bool Triangulation<3>::isThreeSphere() const {
+    return isSphere();
+}
+
+inline bool Triangulation<3>::knowsThreeSphere() const {
+    return knowsSphere();
+}
+
 inline bool Triangulation<3>::knowsZeroEfficient() const {
-    return zeroEfficient_.has_value();
+    return prop_.zeroEfficient_.has_value();
 }
 
 inline std::optional<NormalSurface>
-        Triangulation<3>::hasNonTrivialSphereOrDisc() {
+        Triangulation<3>::hasNonTrivialSphereOrDisc() const {
     return nonTrivialSphereOrDisc();
 }
 
 inline std::optional<NormalSurface>
-        Triangulation<3>::hasOctagonalAlmostNormalSphere() {
+        Triangulation<3>::hasOctagonalAlmostNormalSphere() const {
     return octagonalAlmostNormalSphere();
 }
 
-inline const AngleStructure* Triangulation<3>::findStrictAngleStructure()
+inline const AngleStructure& Triangulation<3>::strictAngleStructure() const {
+    if (hasStrictAngleStructure())
+        return std::get<AngleStructure>(strictAngleStructure_);
+    else
+        throw NoSolution();
+}
+
+inline const AngleStructure& Triangulation<3>::findStrictAngleStructure()
         const {
     return strictAngleStructure();
 }
 
-inline bool Triangulation<3>::hasStrictAngleStructure() const {
-    if (std::holds_alternative<AngleStructure>(strictAngleStructure_)) {
-        return true; // already known to have a solution
-    } else if (std::get<bool>(strictAngleStructure_)) {
-        return false; // already known to have no solution
-    } else {
-        // Not yet computed.
-        return (strictAngleStructure() != nullptr);
-    }
+inline const AngleStructure& Triangulation<3>::generalAngleStructure() const {
+    // Optimise for the common case where a solution is known to exist,
+    // so we can inline it.
+    if (std::holds_alternative<AngleStructure>(generalAngleStructure_))
+        return std::get<AngleStructure>(generalAngleStructure_);
+
+    // Either there is no solution or we don't know yet.
+    if (hasGeneralAngleStructure())
+        return std::get<AngleStructure>(generalAngleStructure_);
+    else
+        throw NoSolution();
 }
 
 inline unsigned long Triangulation<3>::homologyH2Z2() const {
@@ -3384,22 +3701,53 @@ inline unsigned long Triangulation<3>::homologyH2Z2() const {
 
 inline const Triangulation<3>::TuraevViroSet&
         Triangulation<3>::allCalculatedTuraevViro() const {
-    return turaevViroCache_;
+    return prop_.turaevViroCache_;
 }
 
 template <typename Action, typename... Args>
 inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
+    if (countComponents() != 1) {
+        if (tracker)
+            tracker->setFinished();
+        throw FailedPrecondition(
+            "retriangulate() requires a connected triangulation");
+    }
+
     // Use RetriangulateActionTraits to deduce whether the given action
     // takes a triangulation or both an isomorphism signature and triangulation
     // as its initial argument(s).
-    typedef regina::detail::RetriangulateActionTraits<
-        Triangulation<3>, Action> Traits;
+    using Traits =
+        regina::detail::RetriangulateActionTraits<Triangulation<3>, Action>;
     static_assert(Traits::valid,
         "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
-    return retriangulateInternal<Traits::withSig>(height, nThreads, tracker,
-        Traits::convert(std::forward<Action>(action),
-            std::forward<Args>(args)...));
+    if constexpr (Traits::withSig) {
+        return regina::detail::retriangulateInternal<Triangulation<3>, true>(
+            *this, height, nThreads, tracker,
+            [&](const std::string& sig, Triangulation<3>&& obj) {
+                return action(sig, std::move(obj), std::forward<Args>(args)...);
+            });
+    } else {
+        return regina::detail::retriangulateInternal<Triangulation<3>, false>(
+            *this, height, nThreads, tracker,
+            [&](Triangulation<3>&& obj) {
+                return action(std::move(obj), std::forward<Args>(args)...);
+            });
+    }
+}
+
+inline bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
+        ProgressTrackerOpen* tracker) {
+    return retriangulate(height, nThreads, tracker,
+        [](Triangulation<3>&& alt, Triangulation<3>& original, size_t minSimp) {
+            if (alt.size() < minSimp) {
+                ChangeEventSpan span(original);
+                original = std::move(alt);
+                original.intelligentSimplify();
+                return true;
+            } else
+                return false;
+        }, *this, size());
 }
 
 inline bool Triangulation<3>::minimizeBoundary() {
@@ -3408,19 +3756,14 @@ inline bool Triangulation<3>::minimizeBoundary() {
 
 inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()
         const {
-    if (niceTreeDecomposition_)
-        return *niceTreeDecomposition_;
+    if (prop_.niceTreeDecomposition_)
+        return *prop_.niceTreeDecomposition_;
 
-    TreeDecomposition* ans = new TreeDecomposition(*this, TD_UPPER);
-    ans->makeNice();
-    niceTreeDecomposition_.reset(ans);
+    TreeDecomposition ans(*this, TD_UPPER);
+    ans.makeNice();
+    prop_.niceTreeDecomposition_ = ans;
 
-    return *ans;
-}
-
-inline void Triangulation<3>::writeTextShort(std::ostream& out) const {
-    out << "Triangulation with " << simplices_.size()
-        << (simplices_.size() == 1 ? " tetrahedron" : " tetrahedra");
+    return *prop_.niceTreeDecomposition_;
 }
 
 inline void Triangulation<3>::recognizer(std::ostream& out) const {
@@ -3429,6 +3772,11 @@ inline void Triangulation<3>::recognizer(std::ostream& out) const {
 
 inline bool Triangulation<3>::saveRecognizer(const char* filename) const {
     return saveRecogniser(filename);
+}
+
+inline void Triangulation<3>::insertRehydration(
+        const std::string& dehydration) {
+    insertTriangulation(rehydrate(dehydration));
 }
 
 } // namespace regina

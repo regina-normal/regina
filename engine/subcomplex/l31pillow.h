@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a triangular pillow L(3,1) component of a triangulation.
  *
  * A triangular pillow L(3,1) is a two-tetrahedron two-vertex
@@ -59,28 +54,54 @@ namespace regina {
  * degree three vertex in the interior of the pillow.  The two boundary
  * triangles of this pillow are then identified with a one-third twist.
  *
- * All optional StandardTriangulation routines are implemented for this
- * class.
+ * All optional StandardTriangulation routines are implemented for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class L31Pillow : public StandardTriangulation {
     private:
-        Tetrahedron<3>* tet[2];
+        Tetrahedron<3>* tet_[2];
             /**< The two tetrahedra in the triangular pillow. */
-        unsigned interior[2];
+        unsigned interior_[2];
             /**< The vertex of each tetrahedron that corresponds to the
                  interior vertex of the triangular pillow. */
 
     public:
         /**
-         * Destroys this structure.
+         * Creates a new copy of this structure.
          */
-        virtual ~L31Pillow();
+        L31Pillow(const L31Pillow&) = default;
+
         /**
-         * Returns a newly created clone of this structure.
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        L31Pillow& operator = (const L31Pillow&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        L31Pillow* clone() const;
+        [[deprecated]] L31Pillow* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(L31Pillow& other) noexcept;
 
         /**
          * Returns one of the two tetrahedra involved in this structure.
@@ -112,15 +133,28 @@ class L31Pillow : public StandardTriangulation {
          * Determines if the given triangulation component is a
          * triangular pillow L(3,1).
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * triangular pillow L(3,1), or \c null if the given component is
-         * not a triangular pillow L(3,1).
+         * @return a structure containing details of the triangular pillow
+         * L(3,1), or \c null if the given component is not a
+         * triangular pillow L(3,1).
          */
-        static L31Pillow* isL31Pillow(const Component<3>* comp);
+        static std::unique_ptr<L31Pillow> recognise(const Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component forms a
+         * triangular pillow L(3,1).
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<L31Pillow> isL31Pillow(
+            const Component<3>* comp);
 
-        Manifold* manifold() const override;
-        std::optional<AbelianGroup> homology() const override;
+        std::unique_ptr<Manifold> manifold() const override;
+        AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
@@ -129,23 +163,40 @@ class L31Pillow : public StandardTriangulation {
         /**
          * Creates a new uninitialised structure.
          */
-        L31Pillow();
+        L31Pillow() = default;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls L31Pillow::swap(); it is provided
+ * so that L31Pillow meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(L31Pillow& a, L31Pillow& b) noexcept;
 
 // Inline functions for L31Pillow
 
-inline L31Pillow::L31Pillow() {
+inline L31Pillow* L31Pillow::clone() const {
+    return new L31Pillow(*this);
 }
-inline L31Pillow::~L31Pillow() {
+
+inline void L31Pillow::swap(L31Pillow& other) noexcept {
+    std::swap(tet_[0], other.tet_[0]);
+    std::swap(tet_[1], other.tet_[1]);
+    std::swap(interior_[0], other.interior_[0]);
+    std::swap(interior_[1], other.interior_[1]);
 }
 
 inline Tetrahedron<3>* L31Pillow::tetrahedron(int whichTet) const {
-    return tet[whichTet];
+    return tet_[whichTet];
 }
 inline unsigned L31Pillow::interiorVertex(int whichTet) const {
-    return interior[whichTet];
+    return interior_[whichTet];
 }
 inline std::ostream& L31Pillow::writeName(std::ostream& out) const {
     return out << "L'(3,1)";
@@ -155,6 +206,15 @@ inline std::ostream& L31Pillow::writeTeXName(std::ostream& out) const {
 }
 inline void L31Pillow::writeTextLong(std::ostream& out) const {
     out << "Triangular pillow lens space L(3,1)";
+}
+
+inline std::unique_ptr<L31Pillow> L31Pillow::isL31Pillow(
+        const Component<3>* comp) {
+    return recognise(comp);
+}
+
+inline void swap(L31Pillow& a, L31Pillow& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

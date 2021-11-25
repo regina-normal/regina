@@ -42,8 +42,6 @@
 #include <vector>
 #include "regina-core.h"
 #include "core/output.h"
-#include "triangulation/alias/face.h"
-#include "triangulation/alias/simplex.h"
 #include "triangulation/forward.h"
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
@@ -51,11 +49,6 @@
 namespace regina::detail {
 
 template <int> class TriangulationBase;
-
-/**
- * \weakgroup detail
- * @{
- */
 
 /**
  * Helper class that provides core functionality for a connected component
@@ -67,17 +60,22 @@ template <int> class TriangulationBase;
  *
  * See the Component class notes for further information.
  *
+ * Neither this class nor the "end user" class Component<dim> support
+ * value semantics: they cannot be copied, swapped, or manually constructed.
+ * Their memory is managed by the Triangulation class, and their locations
+ * in memory define them.  See Component<dim> for further details.
+ *
  * \ifacespython This base class is not present, but the "end user"
  * class Component<dim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim>
 class ComponentBase :
         public Output<ComponentBase<dim>>,
-        public alias::Simplices<ComponentBase<dim>, dim>,
-        public alias::SimplexAt<ComponentBase<dim>, dim, false>,
         public MarkedElement {
     public:
         static constexpr int dimension = dim;
@@ -142,8 +140,6 @@ class ComponentBase :
          * Therefore it is best to treat this object as temporary only,
          * and to call simplices() again each time you need it.
          *
-         * \ifacespython This routine returns a Python list.
-         *
          * @return access to the list of all top-dimensional simplices.
          */
         auto simplices() const;
@@ -190,8 +186,6 @@ class ComponentBase :
          * and others rebuilt in their place).
          * Therefore it is best to treat this object as temporary only,
          * and to call boundaryComponents() again each time you need it.
-         *
-         * \ifacespython This routine returns a Python list.
          *
          * @return access to the list of all boundary components.
          */
@@ -260,7 +254,7 @@ class ComponentBase :
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -269,7 +263,7 @@ class ComponentBase :
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -290,8 +284,6 @@ class ComponentBase :
     friend class Triangulation<dim>;
     friend class TriangulationBase<dim>;
 };
-
-/*@}*/
 
 // Inline functions for ComponentBase
 

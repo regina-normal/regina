@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a spiralled solid torus in a triangulation.
  *
  * A spiralled solid torus is created by placing tetrahedra one upon
@@ -87,12 +82,20 @@ namespace regina {
  *
  * All optional StandardTriangulation routines are implemented for this
  * class.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * the only way to create objects of this class (aside from copying or moving)
+ * is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class SpiralSolidTorus : public StandardTriangulation {
     private:
-        size_t nTet;
+        size_t nTet_;
             /**< The number of tetrahedra in this spiralled solid torus. */
-        Tetrahedron<3>** tet;
+        Tetrahedron<3>** tet_;
             /**< The tetrahedra that make up this spiralled solid torus. */
         Perm<4>* vertexRoles_;
             /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
@@ -101,15 +104,64 @@ class SpiralSolidTorus : public StandardTriangulation {
 
     public:
         /**
-         * Destroys this spiralled solid torus.
+         * Creates a new copy of this structure.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the structure to copy.
          */
-        virtual ~SpiralSolidTorus();
+        SpiralSolidTorus(const SpiralSolidTorus& src);
+
         /**
-         * Returns a newly created clone of this structure.
+         * Moves the contents of the given structure into this new structure.
+         * This is a fast (constant time) operation.
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         *
+         * @param src the structure to move from.
+         */
+        SpiralSolidTorus(SpiralSolidTorus&& src) noexcept;
+
+        /**
+         * Destroys this structure.
+         */
+        ~SpiralSolidTorus() override;
+
+        /**
+         * Sets this to be a copy of the given structure.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the structure to copy.
+         * @return a reference to this structure.
+         */
+        SpiralSolidTorus& operator = (const SpiralSolidTorus& src);
+
+        /**
+         * Moves the contents of the given structure into this structure.
+         * This is a fast (constant time) operation.
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         *
+         * @param src the structure to move from.
+         * @return a reference to this structure.
+         */
+        SpiralSolidTorus& operator = (SpiralSolidTorus&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(SpiralSolidTorus& other) noexcept;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        SpiralSolidTorus* clone() const;
+        [[deprecated]] SpiralSolidTorus* clone() const;
 
         /**
          * Returns the number of tetrahedra in this spiralled solid torus.
@@ -191,22 +243,20 @@ class SpiralSolidTorus : public StandardTriangulation {
          * under permutation <tt>vertexRoles(0)</tt> the image of 0
          * will be less than the image of 3.
          *
-         * @param tri the triangulation in which this solid torus lives.
          * @return \c true if and only if the representation of this
          * spiralled solid torus was actually changed.
          */
-        bool makeCanonical(const Triangulation<3>* tri);
+        bool makeCanonical();
 
         /**
          * Determines whether this spiralled solid torus is in canonical
          * form.  Canonical form is described in detail in the
          * description for makeCanonical().
          *
-         * @param tri the triangulation in which this solid torus lives.
          * @return \c true if and only if this spiralled solid torus is
          * in canonical form.
          */
-        bool isCanonical(const Triangulation<3>* tri) const;
+        bool isCanonical() const;
 
         /**
          * Determines if the given tetrahedron forms part of a
@@ -218,21 +268,33 @@ class SpiralSolidTorus : public StandardTriangulation {
          * triangulation, i.e., they may be identified with each other
          * or with triangles of other tetrahedra.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tet the tetrahedron to examine.
          * @param useVertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the solid torus; this must be
          * in the same format as the permutation returned by vertexRoles().
-         *
-         * @return a newly created structure containing details of the
-         * solid torus with the given tetrahedron as tetrahedron 0, or
-         * \c null if the given tetrahedron is not part of a spiralled
-         * solid torus with the given vertex roles.
+         * @return a structure containing details of the solid torus with the
+         * given tetrahedron as tetrahedron 0, or \c null if the given
+         * tetrahedron is not part of a spiralled solid torus with the given
+         * vertex roles.
          */
-        static SpiralSolidTorus* formsSpiralSolidTorus(Tetrahedron<3>* tet,
-                Perm<4> useVertexRoles);
+        static std::unique_ptr<SpiralSolidTorus> recognise(Tetrahedron<3>* tet,
+            Perm<4> useVertexRoles);
+        /**
+         * A deprecated alias to recognise if a tetrahedron forms part
+         * of a spiral solid torus with its vertices playing given roles.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<SpiralSolidTorus>
+            formsSpiralSolidTorus(Tetrahedron<3>* tet, Perm<4> useVertexRoles);
 
-        Manifold* manifold() const override;
-        std::optional<AbelianGroup> homology() const override;
+        std::unique_ptr<Manifold> manifold() const override;
+        AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
@@ -240,48 +302,101 @@ class SpiralSolidTorus : public StandardTriangulation {
     private:
         /**
          * Creates a new partially initialised structure.
-         * Member \a nTet will be initialised and dynamic arrays
-         * \a tet and \a vertexRoles will be created.
+         * Member \a nTet_ will be initialised and dynamic arrays
+         * \a tet_ and \a vertexRoles_ will be created.
          *
-         * @param newNTet the number of tetrahedra in this spiralled
+         * @param nTet the number of tetrahedra in this spiralled
          * solid torus; this must be strictly positive.
          */
-        SpiralSolidTorus(size_t newNTet);
+        SpiralSolidTorus(size_t nTet);
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls SpiralSolidTorus::swap(); it is provided
+ * so that SpiralSolidTorus meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(SpiralSolidTorus& a, SpiralSolidTorus& b) noexcept;
 
 // Inline functions for SpiralSolidTorus
 
-inline SpiralSolidTorus::SpiralSolidTorus(size_t newNTet) :
-        nTet(newNTet), tet(new Tetrahedron<3>*[newNTet]),
-        vertexRoles_(new Perm<4>[newNTet]) {
+inline SpiralSolidTorus::SpiralSolidTorus(const SpiralSolidTorus& src) :
+        nTet_(src.nTet_), tet_(new Tetrahedron<3>*[src.nTet_]),
+        vertexRoles_(new Perm<4>[src.nTet_]) {
+    std::copy(src.tet_, src.tet_ + nTet_, tet_);
+    std::copy(src.vertexRoles_, src.vertexRoles_ + nTet_, vertexRoles_);
+}
+
+inline SpiralSolidTorus::SpiralSolidTorus(SpiralSolidTorus&& src) noexcept :
+        nTet_(src.nTet_), tet_(src.tet_), vertexRoles_(src.vertexRoles_) {
+    src.tet_ = nullptr;
+    src.vertexRoles_ = nullptr;
 }
 
 inline SpiralSolidTorus::~SpiralSolidTorus() {
-    delete[] tet;
+    delete[] tet_;
     delete[] vertexRoles_;
 }
 
+inline SpiralSolidTorus& SpiralSolidTorus::operator = (
+        SpiralSolidTorus&& src) noexcept {
+    nTet_ = src.nTet_;
+    std::swap(tet_, src.tet_);
+    std::swap(vertexRoles_, src.vertexRoles_);
+    // Let src dispose of the original arrays in its own destructor.
+    return *this;
+}
+
+inline void SpiralSolidTorus::swap(SpiralSolidTorus& other) noexcept {
+    std::swap(nTet_, other.nTet_);
+    std::swap(tet_, other.tet_);
+    std::swap(vertexRoles_, other.vertexRoles_);
+}
+
+inline SpiralSolidTorus* SpiralSolidTorus::clone() const {
+    return new SpiralSolidTorus(*this);
+}
+
 inline size_t SpiralSolidTorus::size() const {
-    return nTet;
+    return nTet_;
 }
 
 inline Tetrahedron<3>* SpiralSolidTorus::tetrahedron(size_t index) const {
-    return tet[index];
+    return tet_[index];
 }
 inline Perm<4> SpiralSolidTorus::vertexRoles(size_t index) const {
     return vertexRoles_[index];
 }
 
 inline std::ostream& SpiralSolidTorus::writeName(std::ostream& out) const {
-    return out << "Spiral(" << nTet << ')';
+    return out << "Spiral(" << nTet_ << ')';
 }
 inline std::ostream& SpiralSolidTorus::writeTeXName(std::ostream& out) const {
-    return out << "\\mathit{Spiral}(" << nTet << ')';
+    return out << "\\mathit{Spiral}(" << nTet_ << ')';
 }
 inline void SpiralSolidTorus::writeTextLong(std::ostream& out) const {
-    out << nTet << "-tetrahedron spiralled solid torus";
+    out << nTet_ << "-tetrahedron spiralled solid torus";
+}
+
+inline std::unique_ptr<SpiralSolidTorus>
+        SpiralSolidTorus::formsSpiralSolidTorus(
+        Tetrahedron<3>* tet, Perm<4> useVertexRoles) {
+    return recognise(tet, useVertexRoles);
+}
+
+inline SpiralSolidTorus::SpiralSolidTorus(size_t nTet) :
+        nTet_(nTet), tet_(new Tetrahedron<3>*[nTet]),
+        vertexRoles_(new Perm<4>[nTet]) {
+}
+
+inline void swap(SpiralSolidTorus& a, SpiralSolidTorus& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

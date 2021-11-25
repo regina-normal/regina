@@ -4,9 +4,10 @@
 SET ( FILES
   enumerate.cpp
   links.cpp
-  hsvectorstandard.cpp
+  matching.cpp
   normalhypersurface.cpp
   normalhypersurfaces.cpp
+  tetrahedra.cpp
   triangulate.cpp
   )
 
@@ -20,9 +21,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    hscoordregistry.h
-    hscoordregistry-impl.h
-    hsvectorstandard.h
     hypercoords.h
     hyperflags.h
     normalhypersurface.h

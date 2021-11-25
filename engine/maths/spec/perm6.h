@@ -55,27 +55,23 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents a permutation of {0,1,2,3,4,5}.
  * This is a specialisation of the generic Perm template: it is highly
  * optimised, and also offers some additional functionality.
  * Amongst other things, this permutation class is used to specify how
  * simplices of a 5-dimensional triangulation are glued together.
  *
- * As with all Perm template classes, these objects are small enough to
- * pass about by value instead of by reference.
+ * As with all Perm template classes, these objects are small enough to pass
+ * by value and swap with std::swap(), with no need for any specialised move
+ * operations or swap functions.
  *
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the permutation.
  * Thus the internal code may be a useful means for passing permutation
  * objects to and from the engine.  For Perm<6>, the internal permutation
- * codes have changed as of Regina 6.1:
+ * codes have changed as of Regina 7.0:
  *
- * - \e First-generation codes were used internally in Regina 6.0 and earlier.
+ * - \e First-generation codes were used internally in Regina 6.0.1 and earlier.
  *   These are <i>image packs</i>: integers whose lowest three bits represent
  *   the image of 0, whose next lowest three bits represent the image of 1,
  *   and so on.  The routines permCode1(), setPermCode1(), fromPermCode1()
@@ -84,7 +80,7 @@ namespace regina {
  *   continues to use first-generation codes to describe gluings between
  *   5-simplices.
  *
- * - \e Second-generation codes are used internally in Regina 6.1 and above.
+ * - \e Second-generation codes are used internally in Regina 7.0 and above.
  *   These codes are integers between 0 and 719 inclusive, representing the
  *   index of the permutation in the array Perm<6>::S6.  The routines
  *   permCode2(), setPermCode2(), fromPermCode2() and isPermCode2()
@@ -100,6 +96,8 @@ namespace regina {
  *
  * \ifacespython Since Python does not support templates, this class is
  * made available under the name Perm6.
+ *
+ * \ingroup maths
  */
 template <>
 class Perm<6> {
@@ -142,7 +140,7 @@ class Perm<6> {
          * permutations on six elements.  In other words, this is a
          * native signed integer type large enough to store (6!).
          */
-        typedef int Index;
+        using Index = int;
 
         /**
          * Indicates what type of internal permutation code is used by
@@ -177,7 +175,7 @@ class Perm<6> {
          * on image packs, and how they are used to build the old
          * first-generation permutation codes.
          */
-        typedef uint32_t ImagePack;
+        using ImagePack = uint32_t;
 
         /**
          * A bitmask whose lowest \a imageBits bits are 1, and whose
@@ -191,13 +189,13 @@ class Perm<6> {
          * Indicates the native unsigned integer type used to store a
          * first-generation permutation code.
          */
-        typedef ImagePack Code1;
+        using Code1 = ImagePack;
 
         /**
          * Indicates the native unsigned integer type used to store a
          * second-generation permutation code.
          */
-        typedef uint16_t Code2;
+        using Code2 = uint16_t;
 
         /**
          * An alias for the first-generation code type Code1.
@@ -205,7 +203,7 @@ class Perm<6> {
          * Instead of Code, you should use either Code1 or Code2 to more
          * clearly express which kind of permutation code you are using.
          */
-        typedef Code1 Code [[deprecated]];
+        using Code [[deprecated]] = Code1;
 
         /**
          * Gives array-like access to all possible permutations of
@@ -337,27 +335,43 @@ class Perm<6> {
          * Creates a permutation mapping \a i to \a image[i] for each
          * \a i = 0,1,2,3,4,5.
          *
+         * \pre The elements of \a image are 0, 1, 2, 3, 4 and 5 in some order.
+         *
+         * @param image the array of images.
+         */
+        constexpr Perm(const std::array<int, 6>& image);
+
+        /**
+         * Deprecated constructor that creates a permutation mapping
+         * \a i to \a image[i] for each \a i = 0,1,2,3,4,5.
+         *
+         * \deprecated Use the six-integer constructor or the
+         * std::array constructor instead.
+         *
          * \pre The array \a image contains six elements, which are
          * 0, 1, 2, 3, 4 and 5 in some order.
          *
          * @param image the array of images.
          */
-        constexpr Perm(const int* image);
+        [[deprecated]] constexpr Perm(const int* image);
 
         /**
-         * Creates a permutation mapping (\a a[0], ..., \a a[5]) to
-         * (\a b[0], ..., \a b[5]) respectively.
+         * Deprecated constructor that creates a permutation mapping
+         * (\a a[0], ..., \a a[5]) to (\a b[0], ..., \a b[5]) respectively.
+         *
+         * \deprecated Use the 12-integer constructor or the
+         * std::array constructor instead.
          *
          * \pre Both arrays \a a and \a b contain six elements, which
          * are 0,...,5 in some order.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use the single-array constructor instead.
          *
          * @param a the array of preimages; this must have length 6.
          * @param b the corresponding array of images; this must also have
          * length 6.
          */
-        constexpr Perm(const int* a, const int* b);
+        [[deprecated]] constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation mapping
@@ -793,9 +807,9 @@ class Perm<6> {
         /**
          * Finds the reverse of this permutation.
          *
-         * Here \e reverse means that we reverse the images of 0,...,4.
+         * Here \e reverse means that we reverse the images of 0,...,5.
          * In other words, if permutation \a q is the
-         * reverse of \a p, then <tt>p[i] == q[4 - i]</tt> for all \a i.
+         * reverse of \a p, then <tt>p[i] == q[5 - i]</tt> for all \a i.
          */
         constexpr Perm<6> reverse() const;
 
@@ -825,7 +839,19 @@ class Perm<6> {
          * should be between 0 and 5 inclusive.
          * @return the preimage of \a image.
          */
-        constexpr int preImageOf(int image) const;
+        constexpr int pre(int image) const;
+
+        /**
+         * Deprecated routine that determines the preimage of the given
+         * integer under this permutation.
+         *
+         * \deprecated This routine has been renamed to pre().
+         *
+         * @param image the integer whose preimage we wish to find.  This
+         * should be between 0 and 5 inclusive.
+         * @return the preimage of \a image.
+         */
+        [[deprecated]] constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -880,7 +906,8 @@ class Perm<6> {
          * then this will wrap around to become the first permutation in
          * Perm<6>::Sn, which is the identity.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, although the postincrement operator is
+         * present in python as the member function inc().
          *
          * @return a reference to this permutation after the increment.
          */
@@ -892,7 +919,8 @@ class Perm<6> {
          * then this will wrap around to become the first permutation in
          * Perm<6>::Sn, which is the identity.
          *
-         * \ifacespython Not present.
+         * \ifacespython This routine is named inc() since python does
+         * not support the increment operator.
          *
          * @return a copy of this permutation before the increment took place.
          */
@@ -1068,7 +1096,7 @@ class Perm<6> {
 
         /**
          * Deprecated routine that returns the <i>i</i>th permutation on
-         * five elements, where permutations are numbered lexicographically.
+         * six elements, where permutations are numbered lexicographically.
          *
          * \deprecated Use orderedSn[\a i] instead.
          *
@@ -3094,8 +3122,6 @@ class Perm<6> {
         static constexpr Int convOrderedUnordered(Int index);
 };
 
-/*@}*/
-
 // Inline functions for Perm<6>
 
 template <typename Int>
@@ -3135,6 +3161,11 @@ inline constexpr Perm<6>::Perm(int a, int b) : code2_(swapTable[a][b]) {
 
 inline constexpr Perm<6>::Perm(int a, int b, int c, int d, int e, int f) :
         code2_(static_cast<Code2>(S6Index(a, b, c, d, e, f))) {
+}
+
+inline constexpr Perm<6>::Perm(const std::array<int, 6>& image) :
+        code2_(static_cast<Code2>(S6Index(
+            image[0], image[1], image[2], image[3], image[4], image[5]))) {
 }
 
 inline constexpr Perm<6>::Perm(const int* image) :
@@ -3223,7 +3254,7 @@ inline constexpr bool Perm<6>::isPermCode1(Code1 code) {
     for (int i = 0; i < 6; i++)
         mask |= (1 << ((code >> (3 * i)) & 7));
             // mask |= (1 << imageOf(i));
-    return (mask == 63);
+    return (mask == 63 && (code >> 18) == 0);
 }
 
 inline constexpr bool Perm<6>::isPermCode2(Code2 code) {
@@ -3339,6 +3370,10 @@ inline constexpr int Perm<6>::operator[](int source) const {
     return (code1Table[code2_] >> (3 * source)) & 0x07;
 }
 
+inline constexpr int Perm<6>::pre(int image) const {
+    return (code1Table[invS6[code2_]] >> (3 * image)) & 0x07;
+}
+
 inline constexpr int Perm<6>::preImageOf(int image) const {
     return (code1Table[invS6[code2_]] >> (3 * image)) & 0x07;
 }
@@ -3438,7 +3473,7 @@ inline constexpr int Perm<6>::S6Index(int a, int b, int c, int d, int e,
     int ans = 120 * a +
               24 * (b - (b > a ? 1 : 0)) +
               6 * (c - ((c > b ? 1 : 0) + (c > a ? 1 : 0))) +
-              2 * (d - ((d > c ? 1 : 0) + (d > b ? 1 : 0) + (d > a ? 1 : 0))) +
+              2 * ((d > e ? 1 : 0) + (d > f ? 1 : 0)) +
                   (e > f ? 1 : 0);
 
     // Then switch to the plain (unordered) S6 index.

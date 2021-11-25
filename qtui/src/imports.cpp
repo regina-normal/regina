@@ -34,11 +34,11 @@
 
 #include "packettreeview.h"
 #include "reginamain.h"
+#include "foreign/attachmenthandler.h"
 #include "foreign/dehydrationhandler.h"
 #include "foreign/importdialog.h"
 #include "foreign/sighandler.h"
 #include "foreign/orbhandler.h"
-#include "foreign/pdfhandler.h"
 #include "foreign/pythonhandler.h"
 #include "foreign/reginahandler.h"
 #include "foreign/snappeahandler.h"
@@ -51,52 +51,52 @@
 #include <QFileDialog>
 
 void ReginaMain::importDehydration() {
-    importFile(DehydrationHandler::instance, 0, tr(FILTER_ALL),
+    importFile(DehydrationHandler::instance, nullptr, tr(FILTER_ALL),
         tr("Import Dehydrated Triangulation List"));
 }
 
 void ReginaMain::importIsoSig2() {
-    importFile(SigHandler<regina::Triangulation<2>>::instance, 0,
+    importFile(SigHandler<regina::Triangulation<2>>::instance, nullptr,
         tr(FILTER_ALL), tr("Import Isomorphism Signature List (2-D)"));
 }
 
 void ReginaMain::importIsoSig3() {
-    importFile(SigHandler<regina::Triangulation<3>>::instance, 0,
+    importFile(SigHandler<regina::Triangulation<3>>::instance, nullptr,
         tr(FILTER_ALL), tr("Import Isomorphism Signature List (3-D)"));
 }
 
 void ReginaMain::importIsoSig4() {
-    importFile(SigHandler<regina::Triangulation<4>>::instance, 0,
+    importFile(SigHandler<regina::Triangulation<4>>::instance, nullptr,
         tr(FILTER_ALL), tr("Import Isomorphism Signature List (4-D)"));
 }
 
 void ReginaMain::importKnotSig() {
-    importFile(SigHandler<regina::Link>::instance, 0,
+    importFile(SigHandler<regina::Link>::instance, nullptr,
         tr(FILTER_ALL), tr("Import Knot Signature List"));
 }
 
-void ReginaMain::importPDF() {
-    importFile(PDFHandler::instance, 0, tr(FILTER_PDF),
-        tr("Import PDF Document"));
+void ReginaMain::importAttachment() {
+    importFile(AttachmentHandler::instance, nullptr, tr(FILTER_ALL),
+        tr("Import File Attachment"));
 }
 
 void ReginaMain::importPython() {
-    importFile(PythonHandler::instance, 0, tr(FILTER_PYTHON_SCRIPTS),
+    importFile(PythonHandler::instance, nullptr, tr(FILTER_PYTHON_SCRIPTS),
         tr("Import Python Script"));
 }
 
 void ReginaMain::importRegina() {
-    importFile(ReginaHandler(), 0, tr(FILTER_REGINA),
+    importFile(ReginaHandler(), nullptr, tr(FILTER_REGINA),
         tr("Import Regina Data File"));
 }
 
 void ReginaMain::importSnapPea() {
-    importFile(SnapPeaHandler::instance, 0, tr(FILTER_SNAPPEA),
+    importFile(SnapPeaHandler::instance, nullptr, tr(FILTER_SNAPPEA),
         tr("Import SnapPea Triangulation"));
 }
 
 void ReginaMain::importOrb() {
-    importFile(OrbHandler::instance, 0, tr(FILTER_ORB),
+    importFile(OrbHandler::instance, nullptr, tr(FILTER_ORB),
         tr("Import Orb or Casson Triangulation"));
 }
 
@@ -107,16 +107,14 @@ void ReginaMain::importFile(const PacketImporter& importer,
         dialogTitle, QString(), fileFilter);
     if (file.isEmpty())
         return;
-    regina::Packet* newTree = importer.importData(file, this);
+    std::shared_ptr<regina::Packet> newTree = importer.importData(file, this);
 
     if (newTree) {
-        ImportDialog dlg(this, newTree, packetTree.get(),
+        ImportDialog dlg(this, newTree, packetTree,
             treeView->selectedPacket(), parentFilter,
             importer.useImportEncoding(), dialogTitle);
         if (dlg.validate() && dlg.exec() == QDialog::Accepted)
             packetView(newTree, true);
-        else
-            delete newTree;
     }
 }
 

@@ -51,33 +51,49 @@ constexpr int NO_HEIGHT = -1000;
 int argHeight = NO_HEIGHT;
 int argThreads = 1;
 int flavour = FLAVOUR_DIM3;
+int internalSig = 0;
 
 template <int dim>
-void process(regina::Triangulation<dim>* tri) {
+void process(const regina::Triangulation<dim>& tri) {
     unsigned long nSolns = 0;
     bool nonMinimal = false;
     std::string simpler;
 
-    tri->retriangulate(argHeight, argThreads, nullptr /* tracker */,
-        [&nSolns, &nonMinimal, &simpler, tri](
+    tri.retriangulate(argHeight, argThreads, nullptr /* tracker */,
+        [&nSolns, &nonMinimal, &simpler, &tri](
                 const std::string& sig, const regina::Triangulation<dim>& t) {
-            if (t.size() > tri->size())
+            if (t.size() > tri.size())
                 return false;
 
-            std::lock_guard<std::mutex> lock(mutex);
-            std::cout << sig << std::endl;
+            if (internalSig) {
+                std::lock_guard<std::mutex> lock(mutex);
+                std::cout << sig << std::endl;
 
-            if (t.size() < tri->size()) {
-                nonMinimal = true;
-                simpler = sig;
-                return true;
+                if (t.size() < tri.size()) {
+                    nonMinimal = true;
+                    simpler = sig;
+                    return true;
+                }
+
+                ++nSolns;
+                return false;
+            } else {
+                // Recompute the signature using the default type IsoSigClassic.
+                std::string classic = t.isoSig();
+
+                std::lock_guard<std::mutex> lock(mutex);
+                std::cout << classic << std::endl;
+
+                if (t.size() < tri.size()) {
+                    nonMinimal = true;
+                    simpler = std::move(classic);
+                    return true;
+                }
+
+                ++nSolns;
+                return false;
             }
-
-            ++nSolns;
-            return false;
         });
-
-    delete tri;
 
     if (nonMinimal) {
         std::cerr << "Triangulation is non-minimal!" << std::endl;
@@ -86,21 +102,21 @@ void process(regina::Triangulation<dim>* tri) {
         std::cerr << "Found " << nSolns << " triangulation(s)." << std::endl;
 }
 
-void process(regina::Link* knot) {
+void process(const regina::Link& knot) {
     unsigned long nSolns = 0;
     bool nonMinimal = false;
     std::string simpler;
 
-    knot->rewrite(argHeight, argThreads, nullptr /* tracker */,
-        [&nSolns, &nonMinimal, &simpler, knot](
+    knot.rewrite(argHeight, argThreads, nullptr /* tracker */,
+        [&nSolns, &nonMinimal, &simpler, &knot](
                 const std::string& sig, const regina::Link& k) {
-            if (k.size() > knot->size())
+            if (k.size() > knot.size())
                 return false;
 
             std::lock_guard<std::mutex> lock(mutex);
             std::cout << sig << std::endl;
 
-            if (k.size() < knot->size()) {
+            if (k.size() < knot.size()) {
                 nonMinimal = true;
                 simpler = sig;
                 return true;
@@ -109,8 +125,6 @@ void process(regina::Link* knot) {
             ++nSolns;
             return false;
         });
-
-    delete knot;
 
     if (nonMinimal) {
         std::cerr << "Knot is non-minimal!" << std::endl;
@@ -129,16 +143,18 @@ int main(int argc, const char* argv[]) {
         { "threads", 't', POPT_ARG_INT, &argThreads, 0,
             "Number of parallel threads (default = 1)", "<threads>" },
         { "dim3", '3', POPT_ARG_VAL, &flavour, FLAVOUR_DIM3,
-            "Input is a 3-manifold signature (default)", 0 },
+            "Input is a 3-manifold signature (default)", nullptr },
         { "dim4", '4', POPT_ARG_VAL, &flavour, FLAVOUR_DIM4,
-            "Input is a 4-manifold signature", 0 },
+            "Input is a 4-manifold signature", nullptr },
         { "knot", 'k', POPT_ARG_VAL, &flavour, FLAVOUR_KNOT,
-            "Input is a knot signature", 0 },
+            "Input is a knot signature", nullptr },
+        { "anysig", 'a', POPT_ARG_NONE, &internalSig, 0,
+            "Output does not need to use classic signature(s)", nullptr },
         POPT_AUTOHELP
-        { 0, 0, 0, 0, 0, 0, 0 }
+        { nullptr, 0, 0, nullptr, 0, nullptr, nullptr }
     };
 
-    poptContext optCon = poptGetContext(0, argc, argv, opts, 0);
+    poptContext optCon = poptGetContext(nullptr, argc, argv, opts, 0);
     poptSetOtherOptionHelp(optCon, "<isosig>");
 
     // Parse the command-line arguments.
@@ -196,10 +212,9 @@ int main(int argc, const char* argv[]) {
     if (! broken) {
         switch (flavour) {
             case FLAVOUR_DIM3: {
-                auto tri3 = regina::Triangulation<3>::fromIsoSig(sig);
-                if (tri3) {
-                    process(tri3);
-                } else {
+                try {
+                    process(regina::Triangulation<3>::fromIsoSig(sig));
+                } catch (const regina::InvalidArgument&) {
                     std::cerr << "I could not interpret the given "
                         "3-manifold isomorphism signature.\n";
                     broken = true;
@@ -207,10 +222,9 @@ int main(int argc, const char* argv[]) {
                 break;
             }
             case FLAVOUR_DIM4: {
-                auto tri4 = regina::Triangulation<4>::fromIsoSig(sig);
-                if (tri4) {
-                    process(tri4);
-                } else {
+                try {
+                    process(regina::Triangulation<4>::fromIsoSig(sig));
+                } catch (const regina::InvalidArgument&) {
                     std::cerr << "I could not interpret the given "
                         "4-manifold isomorphism signature.\n";
                     broken = true;
@@ -218,10 +232,9 @@ int main(int argc, const char* argv[]) {
                 break;
             }
             case FLAVOUR_KNOT: {
-                auto knot = regina::Link::fromKnotSig(sig);
-                if (knot) {
-                    process(knot);
-                } else {
+                try {
+                    process(regina::Link::fromKnotSig(sig));
+                } catch (const regina::InvalidArgument&) {
                     std::cerr << "I could not interpret the given "
                         "knot signature.\n";
                     broken = true;

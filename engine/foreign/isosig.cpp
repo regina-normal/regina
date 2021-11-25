@@ -32,13 +32,14 @@
 
 #include "foreign/isosig.h"
 #include "link/link.h"
+#include "packet/container.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
 namespace regina {
 
-Container* readIsoSigList(const char *filename,
+std::shared_ptr<Container> readIsoSigList(const char *filename,
         unsigned dimension, unsigned colSigs, int colLabels,
         unsigned long ignoreLines) {
     switch (dimension) {

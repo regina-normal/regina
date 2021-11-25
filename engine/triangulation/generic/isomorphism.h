@@ -49,15 +49,11 @@
 #include "triangulation/alias/isomorphism.h"
 #include "triangulation/forward.h"
 #include "maths/perm.h"
+#include "utilities/exception.h"
 #include "utilities/randutils.h"
 #include <algorithm>
 
 namespace regina {
-
-/**
- * \weakgroup generic
- * @{
- */
 
 /**
  * Represents a combinatorial isomorphism from one <i>dim</i>-manifold
@@ -110,12 +106,15 @@ namespace regina {
  * class works with.  This must be between 2 and 15 inclusive.
  *
  * \headerfile triangulation/generic.h
+ *
+ * \ingroup generic
  */
 template <int dim>
 class Isomorphism :
         public Output<Isomorphism<dim>>,
         public alias::IsomorphismImage<Isomorphism<dim>, dim> {
     static_assert(dim >= 2, "Isomorphism requires dimension >= 2.");
+
     protected:
         unsigned nSimplices_;
             /**< The number of simplices in the source triangulation. */
@@ -133,7 +132,9 @@ class Isomorphism :
          * The images of the simplices and their vertices must be
          * explicitly set using simpImage() and facetPerm().
          *
-         * \ifacespython Not present.
+         * \ifacespython For Python users, the images of the simplices and
+         * their vertices must be set using setSimpImage() and setFacetPerm()
+         * instead.
          *
          * @param nSimplices the number of simplices in the source
          * triangulation associated with this isomorphism.
@@ -190,6 +191,9 @@ class Isomorphism :
         /**
          * Swaps the contents of this and the given isomorphism.
          *
+         * It does not matter if this and the given isomorphism use different
+         * numbers of simplices; if so then they will be adjusted accordingly.
+         *
          * @param other the isomorphism whose contents are to be swapped with
          * this.
          */
@@ -209,8 +213,10 @@ class Isomorphism :
          * Determines the image of the given source simplex under
          * this isomorphism.
          *
-         * \ifacespython This is not available for Python users.
-         * However, the read-only version of this routine is.
+         * \ifacespython Python users can only access the read-only version
+         * of this function that returns by value: you cannot use simpImage()
+         * to edit the isomorphism.  As an alternative however, Python users
+         * can call <tt>setSimpImage(sourceSimp, image)</tt> instead.
          *
          * @param sourceSimp the index of the source simplex; this must
          * be between 0 and <tt>size()-1</tt> inclusive.
@@ -236,8 +242,10 @@ class Isomorphism :
          * facet <tt>facetPerm(sourceSimp)[i]</tt> of simplex
          * <tt>simpImage(sourceSimp)</tt>.
          *
-         * \ifacespython This is not available for Python users.
-         * However, the read-only version of this routine is.
+         * \ifacespython Python users can only access the read-only version
+         * of this function that returns by value: you cannot use facetPerm()
+         * to edit the isomorphism.  As an alternative however, Python users
+         * can call <tt>setFacetPerm(sourceSimp, perm)</tt> instead.
          *
          * @param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
@@ -301,17 +309,6 @@ class Isomorphism :
          * describes the mapping from the simplices of \a T and their facets
          * to the simplices of \a U and their facets.
          *
-         * The resulting triangulation \a U is newly created, and must be
-         * destroyed by the caller of this routine.
-         *
-         * There are several preconditions to this routine.  This
-         * routine does a small amount of sanity checking (and returns 0
-         * if an error is detected), but it certainly does not check the
-         * full set of preconditions.  It is up to the caller of this
-         * routine to verify that all of the following preconditions are met.
-         *
-         * \pre The number of simplices in the given triangulation is
-         * precisely the number returned by size() for this isomorphism.
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
@@ -319,12 +316,14 @@ class Isomorphism :
          * \todo Lock the topological properties of the underlying manifold,
          * to avoid recomputing them after the isomorphism is applied.
          *
+         * \exception InvalidArgument the number of simplices in the given
+         * triangulation is not equal to size() for this isomorphism.
+         *
          * @param original the triangulation to which this isomorphism
          * should be applied.
-         * @return the new isomorphic triangulation, or 0 if a problem
-         * was encountered (i.e., an unmet precondition was noticed).
+         * @return the new isomorphic triangulation.
          */
-        Triangulation<dim>* apply(const Triangulation<dim>* original) const;
+        Triangulation<dim> apply(const Triangulation<dim>& original) const;
 
         /**
          * Applies this isomorphism to the given triangulation,
@@ -336,15 +335,6 @@ class Isomorphism :
          *
          * See apply() for further details on how this operation is performed.
          *
-         * As with apply(), there are several preconditions to this routine.
-         * This routine does a small amount of sanity checking (and returns
-         * without changes if an error is detected), but it certainly does
-         * not check the full set of preconditions.  It is up to the
-         * caller of this routine to verify that all of the following
-         * preconditions are met.
-         *
-         * \pre The number of simplices in the given triangulation is
-         * precisely the number returned by size() for this isomorphism.
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
@@ -352,16 +342,68 @@ class Isomorphism :
          * \todo Lock the topological properties of the underlying manifold,
          * to avoid recomputing them after the isomorphism is applied.
          *
+         * \exception InvalidArgument the number of simplices in the given
+         * triangulation is not equal to size() for this isomorphism.
+         *
          * @param tri the triangulation to which this isomorphism
          * should be applied.
          */
-        void applyInPlace(Triangulation<dim>* tri) const;
+        void applyInPlace(Triangulation<dim>& tri) const;
+
+        /**
+         * Returns the composition of this isomorphism with the given
+         * isomorphism.
+         *
+         * This follows the same order convention as Regina's permutation
+         * classes: the composition <tt>a * b</tt> first applies the right-hand
+         * isomorphism \a b, and then the left-hand isomorphism \a a.
+         *
+         * \pre The source triangulation for this isomorphism (the left-hand
+         * side) is at least as large as the destination triangulation
+         * for \a rhs (the right-hand side).  In other words, the maximum
+         * value of <tt>rhs.simpImage(i)</tt> over all \a i must be less than
+         * <tt>this->size()</tt>.
+         *
+         * @return the composition of both isomorphisms.
+         */
+        Isomorphism operator * (const Isomorphism& rhs) const;
+
+        /**
+         * Returns the composition of this isomorphism with the given
+         * isomorphism.
+         *
+         * This follows the same order convention as Regina's permutation
+         * classes: the composition <tt>a * b</tt> first applies the right-hand
+         * isomorphism \a b, and then the left-hand isomorphism \a a.
+         *
+         * \pre The source triangulation for this isomorphism (the left-hand
+         * side) is at least as large as the destination triangulation
+         * for \a rhs (the right-hand side).  In other words, the maximum
+         * value of <tt>rhs.simpImage(i)</tt> over all \a i must be less than
+         * <tt>this->size()</tt>.
+         *
+         * @return the composition of both isomorphisms.
+         */
+        Isomorphism operator * (Isomorphism&& rhs) const;
+
+        /**
+         * Returns the inverse of this isomorphism.
+         *
+         * \pre The destination triangulation has precisely the same
+         * number of simplices as the source triangulation.  In other words,
+         * there are no "gaps" in the simplex images: the values
+         * <tt>simpImage(0)</tt>, ..., <tt>simpImage(size()-1)</tt> must be
+         * a permutation of 0, ..., <tt>size()-1</tt>.
+         *
+         * @return the inverse isomorphism.
+         */
+        Isomorphism inverse() const;
 
         /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -370,7 +412,7 @@ class Isomorphism :
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -418,11 +460,11 @@ class Isomorphism :
  *
  * @param a the first isomorphism whose contents should be swapped.
  * @param b the second isomorphism whose contents should be swapped.
+ *
+ * \ingroup generic
  */
 template <int dim>
 void swap(Isomorphism<dim>& a, Isomorphism<dim>& b) noexcept;
-
-/*@}*/
 
 // Inline functions for Isomorphism
 
@@ -459,9 +501,13 @@ inline Isomorphism<dim>::~Isomorphism() {
 
 template <int dim>
 Isomorphism<dim>& Isomorphism<dim>::operator = (const Isomorphism<dim>& src) {
+    // std::copy() exhibits undefined behaviour in the case of self-assignment.
+    if (std::addressof(src) == this)
+        return *this;
+
     if (nSimplices_ != src.nSimplices_) {
         delete[] simpImage_;
-        delete facetPerm_;
+        delete[] facetPerm_;
 
         nSimplices_ = src.nSimplices_;
 
@@ -535,32 +581,34 @@ bool Isomorphism<dim>::isIdentity() const {
 }
 
 template <int dim>
-Triangulation<dim>* Isomorphism<dim>::apply(
-        const Triangulation<dim>* original) const {
-    if (original->size() != nSimplices_)
-        return 0;
+Triangulation<dim> Isomorphism<dim>::apply(
+        const Triangulation<dim>& original) const {
+    if (original.size() != nSimplices_)
+        throw InvalidArgument("Isomorphism::apply() was given "
+            "an input triangulation of the wrong size");
 
     if (nSimplices_ == 0)
-        return new Triangulation<dim>();
+        return Triangulation<dim>();
 
-    Triangulation<dim>* ans = new Triangulation<dim>();
-    Simplex<dim>** tet = new Simplex<dim>*[nSimplices_];
+    Triangulation<dim> ans;
+    auto* tet = new Simplex<dim>*[nSimplices_];
     unsigned long t;
     int f;
 
+    // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(ans);
     for (t = 0; t < nSimplices_; t++)
-        tet[t] = ans->newSimplex();
+        tet[t] = ans.newSimplex();
 
     for (t = 0; t < nSimplices_; t++)
         tet[simpImage_[t]]->setDescription(
-            original->simplex(t)->description());
+            original.simplex(t)->description());
 
     const Simplex<dim> *myTet, *adjTet;
     unsigned long adjTetIndex;
     Perm<dim+1> gluingPerm;
     for (t = 0; t < nSimplices_; t++) {
-        myTet = original->simplex(t);
+        myTet = original.simplex(t);
         for (f = 0; f <= dim; f++)
             if ((adjTet = myTet->adjacentSimplex(f))) {
                 // We have an adjacent simplex.
@@ -582,16 +630,39 @@ Triangulation<dim>* Isomorphism<dim>::apply(
 }
 
 template <int dim>
-void Isomorphism<dim>::applyInPlace(Triangulation<dim>* tri) const {
-    if (tri->size() != nSimplices_)
-        return;
+void Isomorphism<dim>::applyInPlace(Triangulation<dim>& tri) const {
+    Triangulation<dim> staging = apply(tri);
+    tri.swap(staging);
+}
 
-    if (nSimplices_ == 0)
-        return;
+template <int dim>
+Isomorphism<dim> Isomorphism<dim>::operator * (const Isomorphism& rhs) const {
+    Isomorphism<dim> ans(rhs.nSimplices_);
+    for (unsigned i = 0; i < rhs.nSimplices_; ++i) {
+        ans.simpImage_[i] = simpImage_[rhs.simpImage_[i]];
+        ans.facetPerm_[i] = facetPerm_[rhs.simpImage_[i]] * rhs.facetPerm_[i];
+    }
+    return ans;
+}
 
-    Triangulation<dim>* staging = apply(tri);
-    tri->swap(*staging);
-    delete staging;
+template <int dim>
+Isomorphism<dim> Isomorphism<dim>::operator * (Isomorphism&& rhs) const {
+    // We will construct the result by overwriting rhs.
+    for (unsigned i = 0; i < rhs.nSimplices_; ++i) {
+        rhs.facetPerm_[i] = facetPerm_[rhs.simpImage_[i]] * rhs.facetPerm_[i];
+        rhs.simpImage_[i] = simpImage_[rhs.simpImage_[i]];
+    }
+    return std::move(rhs);
+}
+
+template <int dim>
+Isomorphism<dim> Isomorphism<dim>::inverse() const {
+    Isomorphism<dim> ans(nSimplices_);
+    for (unsigned i = 0; i < nSimplices_; ++i) {
+        ans.simpImage_[simpImage_[i]] = i;
+        ans.facetPerm_[simpImage_[i]] = facetPerm_[i].inverse();
+    }
+    return ans;
 }
 
 template <int dim>

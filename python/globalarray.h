@@ -170,7 +170,7 @@ class GlobalArray {
          * \pre This class has already been wrapped in Python by calling
          * wrapClass().
          */
-        GlobalArray() : data_(0), size_(0) {
+        GlobalArray() : data_(nullptr), size_(0) {
         }
 
         /**
@@ -226,7 +226,7 @@ template <typename T, pybind11::return_value_policy rvp =
     pybind11::return_value_policy::copy>
 class GlobalArray2D {
     public:
-        typedef GlobalArray<T, rvp> Row;
+        using Row = GlobalArray<T, rvp>;
             /**< A wrapper class for each row of this array. */
 
     private:
@@ -383,7 +383,7 @@ class GlobalArray2D {
          * \pre This class has already been wrapped in Python by calling
          * wrapClass().
          */
-        GlobalArray2D() : data_(0), nRows_(0) {
+        GlobalArray2D() : data_(nullptr), nRows_(0) {
         }
 
         /**
@@ -463,7 +463,7 @@ template <typename T, pybind11::return_value_policy rvp =
     pybind11::return_value_policy::copy>
 class GlobalArray3D {
     public:
-        typedef GlobalArray2D<T, rvp> Subarray;
+        using Subarray = GlobalArray2D<T, rvp>;
             /**< A wrapper class for each two-dimensional subarray. */
 
     private:

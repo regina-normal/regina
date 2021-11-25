@@ -53,39 +53,36 @@ namespace {
     const TxIParallelCore core_T_p;
 }
 
-PluggedTorusBundle::~PluggedTorusBundle() {
-    delete bundleIso_;
-    delete region_;
-}
+std::unique_ptr<Manifold> PluggedTorusBundle::manifold() const {
+    try {
+        SFSpace sfs = region_.createSFS(false);
+        if (sfs.punctures() == 1) {
+            // The region has one larger boundary, but we pinch it to create
+            // two smaller boundaries.
+            sfs.addPuncture();
+        }
 
-Manifold* PluggedTorusBundle::manifold() const {
-    SFSpace* sfs = region_->createSFS(false);
-    if (! sfs)
-        return 0;
-    if (sfs->punctures() == 1) {
-        // The region has one larger boundary, but we pinch it to create
-        // two smaller boundaries.
-        sfs->addPuncture();
+        sfs.reduce(false);
+
+        return std::make_unique<GraphLoop>(std::move(sfs), matchingReln_);
+    } catch (const regina::NotImplemented&) {
+        return nullptr;
     }
-
-    sfs->reduce(false);
-
-    return new GraphLoop(sfs, matchingReln_);
 }
 
 std::ostream& PluggedTorusBundle::writeName(std::ostream& out) const {
     out << "Plugged Torus Bundle [";
-    bundle_.writeName(out);
+    bundle_->writeName(out);
     out << " | ";
-    region_->writeBlockAbbrs(out, false);
+    region_.writeBlockAbbrs(out, false);
     return out << ']';
 }
 
 std::ostream& PluggedTorusBundle::writeTeXName(std::ostream& out) const {
     out << "\\mathrm{PTB}\\left[";
-    bundle_.writeTeXName(out);
+    bundle_->writeTeXName(out);
     out << "\\,|\\n";
-    region_->writeBlockAbbrs(out, true);
+    region_.writeBlockAbbrs(out, true);
     return out << "\\right]";
 }
 
@@ -93,93 +90,86 @@ void PluggedTorusBundle::writeTextLong(std::ostream& out) const {
     out << "Plugged torus bundle, fibre/orbifold relation " << matchingReln_
         << '\n';
     out << "Thin I-bundle: ";
-    bundle_.writeName(out);
+    bundle_->writeName(out);
     out << '\n';
-    region_->writeDetail(out, "Saturated region");
+    region_.writeDetail(out, "Saturated region");
 }
 
-PluggedTorusBundle* PluggedTorusBundle::isPluggedTorusBundle(
-        Triangulation<3>* tri) {
+std::unique_ptr<PluggedTorusBundle> PluggedTorusBundle::recognise(
+        const Triangulation<3>& tri) {
     // Basic property checks.
-    if (! tri->isClosed())
-        return 0;
-    if (tri->countComponents() > 1)
-        return 0;
+    if (! tri.isClosed())
+        return nullptr;
+    if (tri.countComponents() > 1)
+        return nullptr;
 
     // The smallest non-trivial examples of these have nine tetrahedra
     // (six for the TxI core and another three for a non-trivial region).
-    if (tri->size() < 9)
-        return 0;
+    if (tri.size() < 9)
+        return nullptr;
 
     // We have a closed and connected triangulation with at least
     // nine tetrahedra.
 
     // Hunt for the thin torus bundle.
-    PluggedTorusBundle* ans;
-    if ((ans = hunt(tri, core_T_6_1)))
+    if (auto ans = hunt(tri, core_T_6_1))
         return ans;
-    if ((ans = hunt(tri, core_T_7_1)))
+    if (auto ans = hunt(tri, core_T_7_1))
         return ans;
-    if ((ans = hunt(tri, core_T_8_1)))
+    if (auto ans = hunt(tri, core_T_8_1))
         return ans;
-    if ((ans = hunt(tri, core_T_8_2)))
+    if (auto ans = hunt(tri, core_T_8_2))
         return ans;
-    if ((ans = hunt(tri, core_T_9_1)))
+    if (auto ans = hunt(tri, core_T_9_1))
         return ans;
-    if ((ans = hunt(tri, core_T_9_2)))
+    if (auto ans = hunt(tri, core_T_9_2))
         return ans;
-    if ((ans = hunt(tri, core_T_10_1)))
+    if (auto ans = hunt(tri, core_T_10_1))
         return ans;
-    if ((ans = hunt(tri, core_T_10_2)))
+    if (auto ans = hunt(tri, core_T_10_2))
         return ans;
-    if ((ans = hunt(tri, core_T_10_3)))
+    if (auto ans = hunt(tri, core_T_10_3))
         return ans;
-    if ((ans = hunt(tri, core_T_p)))
+    if (auto ans = hunt(tri, core_T_p))
         return ans;
 
-    return 0;
+    return nullptr;
 }
 
-PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* triang,
-        const TxICore& bundle) {
-    std::list<Isomorphism<3>*> isos;
-    if (! bundle.core().findAllSubcomplexesIn(*triang, back_inserter(isos)))
-        return 0;
+std::unique_ptr<PluggedTorusBundle> PluggedTorusBundle::hunt(
+        const Triangulation<3>& tri, const TxICore& bundle) {
+    std::unique_ptr<PluggedTorusBundle> ans;
+    bundle.core().findAllSubcomplexesIn(tri,
+            [&ans, &bundle, &tri](const Isomorphism<3>& iso) {
+        int regionPos;
+        Perm<4> annulusToUpperLayer;
+        SatAnnulus upperAnnulus, lowerAnnulus;
+        SatBlock::TetList avoidTets;
 
-    int regionPos;
-    Perm<4> annulusToUpperLayer;
-    SatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
-    SatBlock::TetList avoidTets;
-    SatBlock* starter;
-    SatRegion* region;
-    bool bdryRefVert, bdryRefHoriz;
+        // Look for the corresponding layering.
 
-    // Run through each isomorphism and look for the corresponding layering.
-    for (std::list<Isomorphism<3>*>::const_iterator it = isos.begin();
-            it != isos.end(); it++) {
         // Apply layerings to the upper and lower boundaries.
         Layering layerUpper(
-            triang->tetrahedron((*it)->tetImage(bundle.bdryTet(0,0))),
-            (*it)->facePerm(bundle.bdryTet(0,0)) * bundle.bdryRoles(0,0),
-            triang->tetrahedron((*it)->tetImage(bundle.bdryTet(0,1))),
-            (*it)->facePerm(bundle.bdryTet(0,1)) * bundle.bdryRoles(0,1));
+            tri.tetrahedron(iso.tetImage(bundle.bdryTet(0,0))),
+            iso.facePerm(bundle.bdryTet(0,0)) * bundle.bdryRoles(0,0),
+            tri.tetrahedron(iso.tetImage(bundle.bdryTet(0,1))),
+            iso.facePerm(bundle.bdryTet(0,1)) * bundle.bdryRoles(0,1));
         layerUpper.extend();
 
         Layering layerLower(
-            triang->tetrahedron((*it)->tetImage(bundle.bdryTet(1,0))),
-            (*it)->facePerm(bundle.bdryTet(1,0)) * bundle.bdryRoles(1,0),
-            triang->tetrahedron((*it)->tetImage(bundle.bdryTet(1,1))),
-            (*it)->facePerm(bundle.bdryTet(1,1)) * bundle.bdryRoles(1,1));
+            tri.tetrahedron(iso.tetImage(bundle.bdryTet(1,0))),
+            iso.facePerm(bundle.bdryTet(1,0)) * bundle.bdryRoles(1,0),
+            tri.tetrahedron(iso.tetImage(bundle.bdryTet(1,1))),
+            iso.facePerm(bundle.bdryTet(1,1)) * bundle.bdryRoles(1,1));
         layerLower.extend();
 
         // Count tetrahedra to ensure that the layerings haven't crossed.
         // In fact, we should have at least three spare tetrahedra for
         // housing a non-trivial saturated region.
         if (layerLower.size() + layerUpper.size() +
-                bundle.core().size() + 3 > triang->size()) {
+                bundle.core().size() + 3 > tri.size()) {
             // No good.  Move on.
-            delete *it;
-            continue;
+            return false;
         }
 
         lowerAnnulus.tet[0] = layerLower.newBoundaryTet(0);
@@ -215,31 +205,25 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* triang,
             avoidTets.insert(layerLower.newBoundaryTet(0));
             avoidTets.insert(layerLower.newBoundaryTet(1));
 
-            starter = SatBlock::isBlock(upperAnnulus, avoidTets);
-            if (! starter)
+            auto region = SatRegion::beginsRegion(upperAnnulus, avoidTets);
+            if (! region)
                 continue;
 
-            // We have a starter block.  Make a region out of it, and
-            // ensure that region has precisely two boundary annuli.
-            region = new SatRegion(starter);
-            region->expand(avoidTets, false);
-
-            if (region->numberOfBoundaryAnnuli() != 2) {
-                delete region;
+            // We have a starter block and a region built from it.
+            if (region->countBoundaryAnnuli() != 2)
                 continue;
-            }
 
             // From the SatRegion specifications we know that the first
             // boundary annulus will be upperAnnulus.  Find the second.
-            bdryAnnulus = region->boundaryAnnulus(1, bdryRefVert, bdryRefHoriz);
+            auto [bdryBlock, bdryAnnulus, bdryRefVert, bdryRefHoriz] =
+                region->boundaryAnnulus(1);
 
             // Hope like hell that this meets up with the lower layering
             // boundary.  Note that this will force it to be a torus also.
             Matrix2 upperRolesToLower;
-            if (! lowerAnnulus.isJoined(bdryAnnulus, upperRolesToLower)) {
-                delete region;
+            if (! lowerAnnulus.isJoined(bdryBlock->annulus(bdryAnnulus),
+                    upperRolesToLower))
                 continue;
-            }
 
             // All good!
             // Better work out what we've got here.
@@ -300,25 +284,20 @@ PluggedTorusBundle* PluggedTorusBundle::hunt(Triangulation<3>* triang,
             // together -- we worked this out earlier as upperRolesToLower.
             // Note that curvesToBdryAnnulus is self-inverse, so we won't
             // bother inverting it even though we should.
-            PluggedTorusBundle* ans = new PluggedTorusBundle(bundle, *it,
-                region, curvesToBdryAnnulus * upperRolesToLower.inverse() *
-                curvesToLowerAnnulus);
-
-            // Before we head home, delete the remaining isomorphisms
-            // that we never looked at.
-            for (it++; it != isos.end(); it++)
-                delete *it;
-
-            return ans;
+            //
+            // Note: we cannot use make_unique here, since the class
+            // constructor is private.
+            ans.reset(new PluggedTorusBundle(bundle, iso,
+                std::move(*region),
+                curvesToBdryAnnulus * upperRolesToLower.inverse() *
+                curvesToLowerAnnulus));
+            return true;
         }
 
-        // No match.  Delete this isomorphism; we won't need it any more.
-        delete *it;
-        continue;
-    }
-
-    // Nothing found.
-    return 0;
+        // No match.
+        return false;
+    });
+    return ans;
 }
 
 } // namespace regina

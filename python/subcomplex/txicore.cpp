@@ -40,12 +40,8 @@ using regina::TxIParallelCore;
 
 void addTxICore(pybind11::module_& m) {
     auto c = pybind11::class_<TxICore>(m, "TxICore")
-        .def("core", [](const TxICore& c) {
-            // Return a fresh clone.  This is because we are using a custom
-            // holder type, and so Python will ignore any return value policy
-            // and always claim ownership over the returned triangulation.
-            return new regina::Triangulation<3>(c.core());
-        })
+        .def("core", &TxICore::core,
+            pybind11::return_value_policy::reference_internal)
         .def("bdryTet", &TxICore::bdryTet)
         .def("bdryRoles", &TxICore::bdryRoles)
         .def("bdryReln", &TxICore::bdryReln,
@@ -53,25 +49,28 @@ void addTxICore(pybind11::module_& m) {
         .def("parallelReln", &TxICore::parallelReln,
             pybind11::return_value_policy::reference_internal)
         .def("name", &TxICore::name)
-        .def("TeXName", &TxICore::TeXName)
-        .def("writeName", [](const TxICore& c) {
-            c.writeName(std::cout);
-        })
-        .def("writeTeXName", [](const TxICore& c) {
-            c.writeTeXName(std::cout);
-        })
+        .def("texName", &TxICore::texName)
+        .def("TeXName", &TxICore::texName) // deprecated
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     pybind11::class_<TxIDiagonalCore, regina::TxICore>(m, "TxIDiagonalCore")
         .def(pybind11::init<unsigned long, unsigned long>())
+        .def(pybind11::init<const TxIDiagonalCore&>())
+        .def("swap", &TxIDiagonalCore::swap)
         .def("size", &TxIDiagonalCore::size)
         .def("k", &TxIDiagonalCore::k)
     ;
 
+    m.def("swap", (void(*)(TxIDiagonalCore&, TxIDiagonalCore&))(regina::swap));
+
     pybind11::class_<TxIParallelCore, regina::TxICore>(m, "TxIParallelCore")
         .def(pybind11::init<>())
+        .def(pybind11::init<const TxIParallelCore&>())
+        .def("swap", &TxIParallelCore::swap)
     ;
+
+    m.def("swap", (void(*)(TxIParallelCore&, TxIParallelCore&))(regina::swap));
 }
 

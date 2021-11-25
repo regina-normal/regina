@@ -1,0 +1,132 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-attachment">
+ <refmeta>
+  <refentrytitle>attachment</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>attachment</refname>
+  <refpurpose>An arbitrary file attachment</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+attachment ::= (#PCDATA,
+                &xml-tag;*,
+                &packetsyn1;
+                &packetsyn2;
+                &packetsyn3;
+                &packetsyn4;
+                &packetsyn5;*)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>encoding</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>filename</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+     &packetattrlist2col;
+    </tbody>
+   </tgroup>
+  </informaltable>
+  <para>&eltaddedver;7.0</para>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   This represents an <emphasis>attachment packet</emphasis>,
+   one of the many types of packet that together form the
+   <emphasis>packet tree</emphasis> that a user sees when they open a
+   &regina; data file.
+  </para>
+  <para>
+   An attachment packet stores a single file attachment.
+   The contents of the attachment are encoded in a printable format, using the
+   encoding specified by the <sgmltag>encoding</sgmltag> attribute (see below).
+   The encoded data is contained in the character data that appears before
+   the first child &xml; element.
+  </para>
+  <para>
+   Whitespace and line breaks within the encoded data
+   are not relevant, and can be ignored.
+  </para>
+  <para>
+   In &regina;&nbsp;6.0.1 and earlier, only &pdf; documents could be
+   stored as file attachments (and this packet type was called a
+   <emphasis>&pdf; packet</emphasis> instead).
+   Since &regina;&nbsp;7.0, any type of file attachment can be stored.
+  </para>
+  &packetchilddesc;
+
+  <refsect2>
+   <title>Parents</title>
+   &packetparents;
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>attachment</sgmltag> has no children that are
+    specific to attachment packets.
+   </para>
+   &packetchildren;
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <para>
+   The following attributes are specific to attachment packets:
+  </para>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>encoding</sgmltag></term>
+    <listitem><para>
+     Specifies how the contents of the file attachment are encoded in printable
+     format.  Possible values are <literal>base64</literal> (indicating
+     a <application>base64</application> encoding with printable character
+     set <literal>A-Za-z0-9+/</literal>), or <literal>null</literal>
+     (indicating that the attachment is empty, i.e., a zero-byte file).
+    </para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>filename</sgmltag></term>
+    <listitem><para>
+     The filename associated with this attachment.  Typically this would
+     be a filename only, with no directory prefixes.
+    </para><para>
+     User interfaces should use this filename to deduce the file type,
+     and in particular to choose an appropriate external viewer if required.
+    </para><para>
+     This filename should be treated as a hint only.  User interfaces are not
+     required to use it, and indeed they will <emphasis>have</emphasis>
+     to change it if the filename is empty or invalid for the current platform.
+    </para></listitem>
+   </varlistentry>
+  </variablelist>
+ &packetattrdesc;
+ </refsect1>
+</refentry>

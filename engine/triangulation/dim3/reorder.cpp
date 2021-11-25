@@ -80,8 +80,7 @@ Perm<4> perm_from_edges(const int edge_orientations_on_tet[6]) {
 
 // writes the result into edge_orientations_tet
 
-void edge_orientations_on_tet(const Triangulation<3> &trig,
-                              const std::vector<int> &edge_orientations,
+void edge_orientations_on_tet(const std::vector<int> &edge_orientations,
                               const Tetrahedron<3> *tet,
                               int edge_orientations_tet[6]) {
     for(int i = 0; i < 6; i++)
@@ -128,8 +127,7 @@ inline bool check_consistency_on_face(const int edge_orientations_tet[6],
 
 // checks that the edge_orientations give an ordering of the triangulation
 
-bool check_consistency_on_tet(const Triangulation<3> &trig,
-                              const std::vector<int> &edge_orientations,
+bool check_consistency_on_tet(const std::vector<int> &edge_orientations,
                               const Tetrahedron<3> *tet,
                               bool force_oriented)
 {
@@ -137,7 +135,7 @@ bool check_consistency_on_tet(const Triangulation<3> &trig,
 
     // compute how the assignment of orientations to edges of the triangulation
     // look on the tetrahedron
-    edge_orientations_on_tet(trig,edge_orientations,tet,edge_orientations_tet);
+    edge_orientations_on_tet(edge_orientations,tet,edge_orientations_tet);
 
     // check that edge orientations are acyclic on each face of tet
 
@@ -157,8 +155,8 @@ bool check_consistency_on_tet(const Triangulation<3> &trig,
 
     // orientation can't be determined until all edge_orientations are assigned
 
-    for(int i = 0; i < 6; i++)
-        if(edge_orientations_tet[i] == 0)
+    for (int e : edge_orientations_tet)
+        if (e == 0)
             return true;
 
     // check for valid orientation
@@ -180,7 +178,7 @@ bool check_consistency_around_edge(const Triangulation<3> &trig,
     // iterate through all tetrahedra around an edge
 
     for(auto& emb : *trig.edge(edge_index))
-        if(!check_consistency_on_tet(trig, edge_orientations,
+        if(!check_consistency_on_tet(edge_orientations,
                                      emb.tetrahedron(), force_oriented))
             return false;
 
@@ -193,7 +191,7 @@ Isomorphism<3>* iso_from_edges(const Triangulation<3> &trig,
                              const std::vector<int> & edge_orientations,
                              bool force_oriented) {
 
-    Isomorphism<3>* iso = new Isomorphism<3>(trig.size());
+    auto* iso = new Isomorphism<3>(trig.size());
 
     // iterate through all tetrahedra
 
@@ -201,8 +199,7 @@ Isomorphism<3>* iso_from_edges(const Triangulation<3> &trig,
 
         // consistency check
 
-        if(!check_consistency_on_tet(trig,
-                                     edge_orientations,
+        if(!check_consistency_on_tet(edge_orientations,
                                      trig.tetrahedron(i),
                                      force_oriented))
             reorder_fatal_error("Inconsistent edge orientations in reorder.cpp");
@@ -211,8 +208,7 @@ Isomorphism<3>* iso_from_edges(const Triangulation<3> &trig,
 
         // compute how the edge orientations look on the tetrahedron
 
-        edge_orientations_on_tet(trig,
-                                 edge_orientations,
+        edge_orientations_on_tet(edge_orientations,
                                  trig.tetrahedron(i),
                                  edge_orientations_tet);
 
@@ -237,7 +233,7 @@ Isomorphism<3>* ordering_iso(const Triangulation<3> &trig, bool force_oriented)
 
     while(true) {
         if(i < 0)
-            return NULL;
+            return nullptr;
 
         if(i >= static_cast<int>(trig.countEdges()))
             return iso_from_edges(trig, edge_orientations, force_oriented);
@@ -260,7 +256,7 @@ Isomorphism<3>* ordering_iso(const Triangulation<3> &trig, bool force_oriented)
                 --i;
             }
     }
-    return NULL;
+    return nullptr;
 }
 
 } // End anonymous namespace
@@ -296,7 +292,7 @@ bool Triangulation<3>::order(bool force_oriented) {
 
     // apply the isomorphism
 
-    iso -> applyInPlace(this);
+    iso->applyInPlace(*this);
     delete iso;
 
     // consistency check

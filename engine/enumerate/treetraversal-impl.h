@@ -48,10 +48,6 @@
 #include "angle/anglestructures.h"
 #include "enumerate/treetraversal.h"
 #include "progress/progresstracker.h"
-#include "surfaces/nsvectoranstandard.h"
-#include "surfaces/nsvectorquad.h"
-#include "surfaces/nsvectorquadoct.h"
-#include "surfaces/nsvectorstandard.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "utilities/exception.h"
@@ -90,147 +86,91 @@ namespace regina {
 template <class LPConstraint, typename BanConstraint, typename IntType>
 NormalSurface TreeTraversal<LPConstraint, BanConstraint, IntType>::
         buildSurface() const {
-    // Note that the vector constructors automatically set all
-    // elements to zero, as required by LPData::extractSolution().
-    NormalSurfaceVector* v;
-    if (coords_ == NS_QUAD || coords_ == NS_AN_QUAD_OCT)
-        v = new NSVectorQuad(3 * nTets_);
-    else if (coords_ == NS_STANDARD || coords_ == NS_AN_STANDARD)
-        v = new NSVectorStandard(7 * nTets_);
-    else
+    if (enc_.storesAngles())
         throw regina::FailedPrecondition(
             "TreeTraversal::buildSurface() requires "
-            "standard/quad/quad-oct normal or almost normal coordinates");
+            "normal or almost normal coordinates");
 
-    lpSlot_[nTypes_]->extractSolution(*v, type_);
+    // For almost normal systems, we will first extract a solution from
+    // the tableaux where octagons are encoded in the quad coordinates;
+    // we will then reconstruct the extra octagon coordinates later on.
+    size_t dim;
+    if (enc_.storesTriangles())
+        dim = 7 * nTets_;
+    else
+        dim = 3 * nTets_;
 
-    if (coords_ == NS_QUAD || coords_ == NS_STANDARD)
-        return NormalSurface(origTableaux_.tri(), v);
+    auto v = lpSlot_[nTypes_]->template extractSolution<Vector<LargeInteger>>(
+        type_);
 
-    // We have an almost normal surface: restore the octagon
-    // coordinates.
-    NormalSurfaceVector* an;
-    unsigned i, j;
-    if (coords_ == NS_AN_QUAD_OCT) {
-        an = new NSVectorQuadOct(6 * nTets_);
-        for (i = 0; i < nTets_; ++i)
-            for (j = 0; j < 3; ++j)
-                an->set(6 * i + j, (*v)[3 * i + j]);
+    if (! enc_.storesOctagons())
+        return NormalSurface(origTableaux_.tri(), enc_, std::move(v));
+
+    // We have an almost normal surface: restore the octagon coordinates.
+    if (! enc_.storesTriangles()) {
+        Vector<LargeInteger> an(6 * nTets_);
+        for (size_t i = 0; i < nTets_; ++i)
+            for (int j = 0; j < 3; ++j)
+                an[6 * i + j] = v[3 * i + j];
         if (octLevel_ >= 0) {
             unsigned octTet = (origTableaux_.columnPerm()[
                 3 * typeOrder_[octLevel_]] / 3);
             unsigned octType = type_[typeOrder_[octLevel_]] - 4;
-            an->set(6 * octTet + 3 + octType,
-                (*v)[3 * octTet + (octType + 1) % 3]);
-            for (j = 0; j < 3; ++j)
-                an->set(6 * octTet + j, 0);
+            an[6 * octTet + 3 + octType] = v[3 * octTet + (octType + 1) % 3];
+            for (int j = 0; j < 3; ++j)
+                an[6 * octTet + j] = 0;
         }
+        return NormalSurface(origTableaux_.tri(), enc_, std::move(an));
     } else {
-        an = new NSVectorANStandard(10 * nTets_);
-        for (i = 0; i < nTets_; ++i)
-            for (j = 0; j < 7; ++j)
-                an->set(10 * i + j, (*v)[7 * i + j]);
+        Vector<LargeInteger> an(10 * nTets_);
+        for (size_t i = 0; i < nTets_; ++i)
+            for (int j = 0; j < 7; ++j)
+                an[10 * i + j] = v[7 * i + j];
         if (octLevel_ >= 0) {
             unsigned octTet = (origTableaux_.columnPerm()[
                 3 * typeOrder_[octLevel_]] / 7);
             unsigned octType = type_[typeOrder_[octLevel_]] - 4;
-            an->set(10 * octTet + 7 + octType,
-                (*v)[7 * octTet + 4 + (octType + 1) % 3]);
-            for (j = 0; j < 3; ++j)
-                an->set(10 * octTet + 4 + j, 0);
+            an[10 * octTet + 7 + octType] =
+                v[7 * octTet + 4 + (octType + 1) % 3];
+            for (int j = 0; j < 3; ++j)
+                an[10 * octTet + 4 + j] = 0;
         }
+        return NormalSurface(origTableaux_.tri(), enc_, std::move(an));
     }
-    delete v;
-    return NormalSurface(origTableaux_.tri(), an);
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 AngleStructure TreeTraversal<LPConstraint, BanConstraint, IntType>::
         buildStructure() const {
-    // Note that the vector constructors automatically set all
-    // elements to zero, as required by LPData::extractSolution().
-    if (coords_ != NS_ANGLE)
+    if (! enc_.storesAngles())
         throw regina::FailedPrecondition(
             "TreeTraversal::buildStructure() requires "
             "angle structure coordinates");
 
-    VectorInt* v = new VectorInt(3 * nTets_ + 1);
-    lpSlot_[nTypes_]->extractSolution(*v, type_);
-    return AngleStructure(origTableaux_.tri(), v);
-}
-
-template <class LPConstraint, typename BanConstraint, typename IntType>
-bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
-        const NormalSurface& s) const {
-    if (coords_ == NS_ANGLE)
-        return false;
-
-    // Rebuild the matching equations.
-    std::optional<MatrixInt> matchingEqns = regina::makeMatchingEquations(
-        origTableaux_.tri(), coords_);
-    if (! matchingEqns) {
-        // The matching equations could not be constructed.
-        return false;
-    }
-
-    // Verify the matching equations.
-    unsigned row, col;
-    for (row = 0; row < matchingEqns->rows(); ++row) {
-        LargeInteger ans; // Initialised to zero.
-        for (col = 0; col < matchingEqns->columns(); ++col)
-            ans += (LargeInteger(matchingEqns->entry(row, col)) * (s.vector())[col]);
-        if (ans != 0)
-            return false;
-    }
-
-    // Verify any additional constraints.
-    return LPConstraint::verify(s);
-}
-
-template <class LPConstraint, typename BanConstraint, typename IntType>
-bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
-        const AngleStructure& s) const {
-    if (coords_ != NS_ANGLE)
-        return false;
-
-    // Rebuild the matching equations.
-    MatrixInt angleEqns = regina::makeAngleEquations(origTableaux_.tri());
-
-    // Verify the angle equations.
-    if (! (angleEqns * s.vector()).isZero())
-        return false;
-
-    // Verify any additional constraints.
-    return LPConstraint::verify(s);
+    return AngleStructure(origTableaux_.tri(),
+        lpSlot_[nTypes_]->template extractSolution<VectorInt>(type_));
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
-        const Triangulation<3>& tri, NormalCoords coords,
+        const Triangulation<3>& tri, NormalEncoding enc,
         int branchesPerQuad, int branchesPerTri, bool enumeration) :
-        BanConstraint(tri, coords),
-        origTableaux_(tri,
-            (coords == NS_AN_QUAD_OCT ? NS_QUAD :
-             coords == NS_AN_STANDARD ? NS_STANDARD :
-             coords),
-            enumeration),
-        coords_(coords),
+        origTableaux_(tri, enc, enumeration),
+        enc_(enc),
+        ban_(origTableaux_),
         nTets_(tri.size()),
-        nTypes_(coords == NS_QUAD || coords == NS_AN_QUAD_OCT ||
-            coords == NS_ANGLE ? nTets_ : 5 * nTets_),
+        nTypes_(enc_.storesTriangles() ? 5 * nTets_ : nTets_),
         /* Each time we branch, one LP can be solved in-place:
            therefore we use branchesPerQuad-1 and branchesPerTri-1.
            The final +1 is for the root node. */
-        nTableaux_(coords == NS_QUAD || coords == NS_AN_QUAD_OCT ||
-                coords == NS_ANGLE ?
-            (branchesPerQuad - 1) * nTets_ + 1 :
+        nTableaux_(enc_.storesTriangles() ?
             (branchesPerQuad - 1) * nTets_ +
-                (branchesPerTri - 1) * nTets_ * 4 + 1),
+                (branchesPerTri - 1) * nTets_ * 4 + 1 :
+            (branchesPerQuad - 1) * nTets_ + 1),
         type_(new char[nTypes_ + 1]),
         typeOrder_(new int[nTypes_]),
         level_(0),
-        octLevel_(coords == NS_AN_STANDARD || coords == NS_AN_QUAD_OCT ?
-            -1 : nTypes_),
+        octLevel_(enc_.storesOctagons() ? -1 : nTypes_),
         lp_(new LPData<LPConstraint, IntType>[nTableaux_]),
         lpSlot_(new LPData<LPConstraint, IntType>*[nTypes_ + 1]),
         nextSlot_(new LPData<LPConstraint, IntType>*[nTypes_ + 1]),
@@ -245,20 +185,17 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
 
     // Reserve space for all the tableaux that we will ever need.
     for (i = 0; i < nTableaux_; ++i)
-        lp_[i].reserve(&origTableaux_);
+        lp_[i].reserve(origTableaux_);
 
     // Mark the location of the initial tableaux at the root node.
     lpSlot_[0] = lp_;
     nextSlot_[0] = lp_ + 1;
 
-    // Set up the ban list.
-    BanConstraint::init(origTableaux_.columnPerm());
-
     // Reserve space for our additional temporary tableaux.
-    tmpLP_[0].reserve(&origTableaux_);
-    tmpLP_[1].reserve(&origTableaux_);
-    tmpLP_[2].reserve(&origTableaux_);
-    tmpLP_[3].reserve(&origTableaux_);
+    tmpLP_[0].reserve(origTableaux_);
+    tmpLP_[1].reserve(origTableaux_);
+    tmpLP_[2].reserve(origTableaux_);
+    tmpLP_[3].reserve(origTableaux_);
 }
 
 /**
@@ -293,7 +230,7 @@ int TreeTraversal<LPConstraint, BanConstraint, IntType>::feasibleBranches(
         int quadType) {
     // Spin off clones for the new linear programs (reusing as much
     // work as possible).
-    if (coords_ == NS_ANGLE) {
+    if (enc_.storesAngles()) {
         // Only spin off three clones, since we know at least one angle
         // must be non-zero.
         // Also, there is no need to use constrainPositive here, since
@@ -370,7 +307,7 @@ double TreeTraversal<LPConstraint, BanConstraint, IntType>::percent() const {
     // Just check the first few types, until the margin of
     // error is sufficiently small.
     for (unsigned i = 0; range > 0.01 && i < nTypes_; ++i) {
-        if (coords_ == NS_ANGLE) {
+        if (enc_.storesAngles()) {
             // Angle structure coordinates.
             range /= 3.0;
             if (type_[typeOrder_[i]] == 0)
@@ -415,7 +352,7 @@ bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
         // Prepare the root node by finding an initial basis
         // from the original starting tableaux.
         lp_[0].initStart();
-        BanConstraint::enforceBans(lp_[0]);
+        ban_.enforceBans(lp_[0]);
         ++nVisited_;
 
         // Is the system feasible at the root node?
@@ -804,7 +741,7 @@ bool TautEnumeration<LPConstraint, BanConstraint, IntType>::next(
         // final scaling coordinate be positive.
         lp_[0].constrainPositive(origTableaux_.coordinateColumns() - 1);
 
-        BanConstraint::enforceBans(lp_[0]);
+        ban_.enforceBans(lp_[0]);
         ++nVisited_;
 
         // Is the system feasible at the root node?
@@ -950,14 +887,6 @@ bool TautEnumeration<LPConstraint, BanConstraint, IntType>::next(
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
-bool TautEnumeration<LPConstraint, BanConstraint, IntType>::
-        writeStructure(const TautEnumeration& tree, void*) {
-    std::cout << "SOLN #" << tree.nSolns() << ": ";
-    std::cout << tree.buildStructure().str() << std::endl;
-    return true;
-}
-
-template <class LPConstraint, typename BanConstraint, typename IntType>
 bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
     // This code is similar to next(), but makes some changes to
     // account for the facts that:
@@ -984,7 +913,7 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
     // Prepare the root node by finding an initial basis from
     // the original starting tableaux.
     lp_[0].initStart();
-    BanConstraint::enforceBans(lp_[0]);
+    ban_.enforceBans(lp_[0]);
 
     ++nVisited_;
     if (! lp_[0].isFeasible())
@@ -1181,12 +1110,10 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
                 std::cout << " (" << idx << " -> " << (int)type_[idx]
                     << ")" << std::endl;
 
-                NormalSurfaceVector* v =
-                    new NSVectorStandard(7 * nTets_);
-                lpSlot_[level_ + 1]->extractSolution(*v, type_);
-                NormalSurface* f = new NormalSurface(origTableaux_.tri(), v);
-                std::cout << f->str() << std::endl;
-                delete f;
+                NormalSurface f(origTableaux_.tri(), NS_STANDARD,
+                    lpSlot_[level_ + 1]->
+                        extractSolution<Vector<LargeInteger>>(type_));
+                std::cout << f.str() << std::endl;
             }
 #endif
             if (level_ < nTypes_ - 1) {

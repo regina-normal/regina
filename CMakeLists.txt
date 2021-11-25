@@ -13,7 +13,7 @@ SET (PACKAGE_PRETTY_NAME Regina)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # Version
-SET (PACKAGE_VERSION 6.1)
+SET (PACKAGE_VERSION 7.0)
 SET (SNAPPY_VERSION 2.8)
 SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
 
@@ -44,6 +44,9 @@ ENDIF(LOWDIMONLY)
 IF (WIN32)
   SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-ipa-cp-clone")
 ENDIF (WIN32)
+
+# Regina's own cmake scripts:
+INCLUDE( ReginaMacros )
 
 # Distinguish between the different Regina installation types:
 # XDG = standard freedesktop.org filesystem installation in a fixed location.
@@ -89,6 +92,10 @@ ELSE()
   MESSAGE(FATAL_ERROR
     "REGINA_INSTALL_TYPE must be XDG, HPC or Windows.")
 ENDIF()
+
+IF(NOT (WIN32 OR APPLE))
+  CHECK_LSB_RELEASE()
+ENDIF(NOT (WIN32 OR APPLE))
 
 # Are we installing development files?
 SET (REGINA_INSTALL_DEV ON)
@@ -143,8 +150,10 @@ SET(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_CXX_STANDARD_REQUIRED YES)
 SET(CMAKE_CXX_EXTENSIONS OFF)
 
-# Regina's own cmake scripts:
-INCLUDE( ReginaMacros )
+CHECK_STDFS()
+IF (NOT STDFS_FOUND)
+  MESSAGE(FATAL_ERROR "Your compiler does not appear to support either the C++17 std::filesystem or the alternative std::experimental::filesystem.")
+ENDIF (NOT STDFS_FOUND)
 
 # Always include . in the header search path:
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

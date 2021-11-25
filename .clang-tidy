@@ -1,0 +1,32 @@
+Checks: "
+  -*,
+  misc-*,
+  -misc-no-recursion,
+  -misc-non-private-member-variables-in-classes,
+  modernize-*,
+  -modernize-avoid-c-arrays,
+  -modernize-use-default-member-init,
+  -modernize-use-nodiscard,
+  -modernize-use-trailing-return-type,
+  performance-*,
+  -performance-noexcept-move-constructor,
+  bugprone-*,
+  -bugprone-reserved-identifier,
+  -bugprone-narrowing-conversions,
+  -bugprone-signed-char-misuse,
+  -bugprone-macro-parentheses,
+  -bugprone-exception-escape,
+  -bugprone-branch-clone,
+"
+
+# Note: In python/ we should really disable:
+# -performance-unnecessary-value-param (passing pybind11::* by value)
+# -misc-redundant-expression (pybind11::self <op> pybind11::self)
+
+# Our aim in the following regex is:
+# - include engine/;
+# - exclude engine/libnormaliz/, engine/syntax and engine/snappea/*/;
+# - include python/ but not pybind11 or any system pythonX.Y/ or cpython/;
+# - include qtui/.
+#
+HeaderFilterRegex: "(engine/([^ls].*|link/.*|s[^ny].*|snappea/[^/]+)|/python/([^/]+/../)?([^p]|p[^y])[^/]+(/[^/]+)?|qtui/.*)$"

@@ -43,15 +43,12 @@
 namespace regina::detail {
 
 /**
- * \weakgroup detail
- * @{
- */
-
-/**
  * Contains a collection of compile-time constant strings that describe
  * features of the dimension \a dim.
  *
  * \tparam dim_ any dimension between 0 and 15 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim_>
 struct Strings {
@@ -290,8 +287,6 @@ struct Strings<15> {
 };
 
 #endif // __DOXYGEN
-
-/*@}*/
 
 } // namespace regina::detail
 

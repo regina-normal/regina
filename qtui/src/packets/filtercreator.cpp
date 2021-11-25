@@ -54,7 +54,7 @@ namespace {
 
 FilterCreator::FilterCreator() {
     ui = new QWidget();
-    QGridLayout* layout = new QGridLayout(ui);//, 2, 2, 5);
+    auto* layout = new QGridLayout(ui);//, 2, 2, 5);
     layout->setColumnStretch(1, 1);
 
     int iconSize = QApplication::style()->pixelMetric(
@@ -68,8 +68,7 @@ FilterCreator::FilterCreator() {
         iconSize, iconSize));
     layout->addWidget(pic, 0, 0, Qt::AlignRight);
 
-    QRadioButton* props = new QRadioButton(
-        QObject::tr("Filter by properties"), ui);
+    auto* props = new QRadioButton(QObject::tr("Filter by properties"), ui);
     layout->addWidget(props, 0, 1, Qt::AlignLeft);
 
     msg = QObject::tr("Create a filter that examines properties of normal surfaces, "
@@ -82,7 +81,7 @@ FilterCreator::FilterCreator() {
         iconSize, iconSize));
     layout->addWidget(pic, 1, 0, Qt::AlignRight);
 
-    QRadioButton* comb = new QRadioButton(
+    auto* comb = new QRadioButton(
         QObject::tr("Combination (AND/OR) filter"), ui);
     layout->addWidget(comb, 1, 1, Qt::AlignLeft);
 
@@ -105,13 +104,13 @@ QWidget* FilterCreator::getInterface() {
     return ui;
 }
 
-regina::Packet* FilterCreator::createPacket(regina::Packet*,
-        QWidget*) {
-    regina::Packet* ans;
+std::shared_ptr<regina::Packet> FilterCreator::createPacket(
+        std::shared_ptr<regina::Packet>, QWidget*) {
+    std::shared_ptr<regina::Packet> ans;
     if (group->checkedId() == ID_COMB)
-        ans = new regina::SurfaceFilterCombination();
+        ans = std::make_shared<regina::SurfaceFilterCombination>();
     else
-        ans = new regina::SurfaceFilterProperties();
+        ans = std::make_shared<regina::SurfaceFilterProperties>();
 
     ans->setLabel("Surface filter");
     return ans;

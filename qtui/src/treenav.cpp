@@ -39,23 +39,12 @@
 #include "reginasupport.h"
 
 void ReginaMain::moveShallow() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
-    if (packet->dependsOnParent()) {
-        ReginaSupport::info(this,
-            tr("This packet must stay with its current parent."),
-            tr("This is because it relies on information stored "
-            "in its parent (e.g., a normal surface list that stores "
-            "coordinates relative to its parent triangulation).  "
-            "If you want to move this packet to a higher level in the tree, "
-            "try moving its parent instead."));
-        return;
-    }
-
-    regina::Packet* parent = packet->parent();
-    regina::Packet* grandparent = parent->parent();
+    auto parent = packet->parent();
+    auto grandparent = parent->parent();
     if (! grandparent) {
         ReginaSupport::info(this,
             tr("This is already a top-level packet."),
@@ -70,23 +59,12 @@ void ReginaMain::moveShallow() {
 }
 
 void ReginaMain::moveDeep() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
-    if (packet->dependsOnParent()) {
-        ReginaSupport::info(this,
-            tr("This packet must stay with its current parent."),
-            tr("This is because it relies on information stored "
-            "in its parent (e.g., a normal surface list that stores "
-            "coordinates relative to its parent triangulation).  "
-            "If you want to move this packet to a deeper level in the tree, "
-            "try moving its parent instead."));
-        return;
-    }
-
     bool down = true;
-    regina::Packet* newParent = packet->nextSibling();
+    auto newParent = packet->nextSibling();
     if (! newParent) {
         newParent = packet->prevSibling();
         down = false;
@@ -109,7 +87,7 @@ void ReginaMain::moveDeep() {
 }
 
 void ReginaMain::moveUp() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -130,7 +108,7 @@ void ReginaMain::moveUp() {
 }
 
 void ReginaMain::moveDown() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -151,7 +129,7 @@ void ReginaMain::moveDown() {
 }
 
 void ReginaMain::movePageUp() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -172,7 +150,7 @@ void ReginaMain::movePageUp() {
 }
 
 void ReginaMain::movePageDown() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -193,7 +171,7 @@ void ReginaMain::movePageDown() {
 }
 
 void ReginaMain::moveTop() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -214,7 +192,7 @@ void ReginaMain::moveTop() {
 }
 
 void ReginaMain::moveBottom() {
-    regina::Packet* packet = checkPacketSelected();
+    auto packet = checkPacketSelected();
     if (! packet)
         return;
 

@@ -55,10 +55,10 @@ void SatAnnulus::switchSides() {
     }
 }
 
-bool SatAnnulus::isAdjacent(const SatAnnulus& other, bool* refVert,
-        bool* refHoriz) const {
+std::tuple<bool, bool, bool> SatAnnulus::isAdjacent(const SatAnnulus& other)
+        const {
     if (other.meetsBoundary())
-        return false;
+        return { false, false, false };
 
     // See what is actually attached to the given annulus.
     SatAnnulus opposite(other);
@@ -69,17 +69,13 @@ bool SatAnnulus::isAdjacent(const SatAnnulus& other, bool* refVert,
 
         if (opposite.roles[0] == roles[0] && opposite.roles[1] == roles[1]) {
             // Perfect match.
-            if (refVert) *refVert = false;
-            if (refHoriz) *refHoriz = false;
-            return true;
+            return { true, false, false };
         }
 
         if (opposite.roles[0] == roles[0] * Perm<4>(0, 1) &&
                 opposite.roles[1] == roles[1] * Perm<4>(0, 1)) {
             // Match with vertical reflection.
-            if (refVert) *refVert = true;
-            if (refHoriz) *refHoriz = false;
-            return true;
+            return { true, true, false };
         }
     }
 
@@ -89,21 +85,17 @@ bool SatAnnulus::isAdjacent(const SatAnnulus& other, bool* refVert,
         if (opposite.roles[0] == roles[1] * Perm<4>(0, 1) &&
                 opposite.roles[1] == roles[0] * Perm<4>(0, 1)) {
             // Match with horizontal reflection.
-            if (refVert) *refVert = false;
-            if (refHoriz) *refHoriz = true;
-            return true;
+            return { true, false, true };
         }
 
         if (opposite.roles[0] == roles[1] && opposite.roles[1] == roles[0]) {
             // Match with both reflections.
-            if (refVert) *refVert = true;
-            if (refHoriz) *refHoriz = true;
-            return true;
+            return { true, true, true };
         }
     }
 
     // No match.
-    return false;
+    return { false, false, false };
 }
 
 bool SatAnnulus::isJoined(const SatAnnulus& other, Matrix2& matching) const {
@@ -206,18 +198,19 @@ bool SatAnnulus::isTwoSidedTorus() const {
     return true;
 }
 
-void SatAnnulus::transform(const Triangulation<3>* originalTri,
-        const Isomorphism<3>* iso, Triangulation<3>* newTri) {
+void SatAnnulus::transform(const Triangulation<3>& /* originalTri */,
+        const Isomorphism<3>& iso, const Triangulation<3>& newTri) {
     unsigned which;
     unsigned long tetID;
     for (which = 0; which < 2; which++) {
         tetID = tet[which]->index();
-        tet[which] = newTri->tetrahedron(iso->tetImage(tetID));
-        roles[which] = iso->facePerm(tetID) * roles[which];
+        tet[which] = newTri.tetrahedron(iso.tetImage(tetID));
+        roles[which] = iso.facePerm(tetID) * roles[which];
     }
 }
 
-void SatAnnulus::attachLST(Triangulation<3>* tri, long alpha, long beta) const {
+void SatAnnulus::attachLST(Tetrahedron<3>* t0, Perm<4> r0,
+        Tetrahedron<3>* t1, Perm<4> r1, long alpha, long beta) {
     // Save ourselves headaches later.  Though this should never happen;
     // see the preconditions.
     if (alpha == 0)
@@ -231,8 +224,7 @@ void SatAnnulus::attachLST(Triangulation<3>* tri, long alpha, long beta) const {
 
     // Pull out the degenerate case.
     if (alpha == 2 && beta == 1) {
-        tet[0]->join(roles[0][3], tet[1],
-            roles[1] * Perm<4>(0, 1) * roles[0].inverse());
+        t0->join(r0[3], t1, r1 * Perm<4>(0, 1) * r0.inverse());
         return;
     }
 
@@ -302,17 +294,18 @@ void SatAnnulus::attachLST(Triangulation<3>* tri, long alpha, long beta) const {
         }
     }
 
-    Tetrahedron<3>* lst = tri->insertLayeredSolidTorus(cuts0, cuts1);
+    Tetrahedron<3>* lst = t0->triangulation().insertLayeredSolidTorus(
+        cuts0, cuts1);
 
     // The boundary of the new LST sits differently for the special
     // cases (0,1,1) and (1,1,2); see the insertLayeredSolidTorus()
     // documentation for details.
     if (cuts1 == 1) {
-        lst->join(3, tet[0], roles[0] * cutsToRoles * Perm<4>(1, 2, 0, 3));
-        lst->join(2, tet[1], roles[1] * cutsToRoles * Perm<4>(2, 1, 3, 0));
+        lst->join(3, t0, r0 * cutsToRoles * Perm<4>(1, 2, 0, 3));
+        lst->join(2, t1, r1 * cutsToRoles * Perm<4>(2, 1, 3, 0));
     } else {
-        lst->join(3, tet[0], roles[0] * cutsToRoles * Perm<4>(0, 1, 2, 3));
-        lst->join(2, tet[1], roles[1] * cutsToRoles * Perm<4>(1, 0, 3, 2));
+        lst->join(3, t0, r0 * cutsToRoles * Perm<4>(0, 1, 2, 3));
+        lst->join(2, t1, r1 * cutsToRoles * Perm<4>(1, 0, 3, 2));
     }
 }
 

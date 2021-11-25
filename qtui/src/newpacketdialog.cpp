@@ -46,14 +46,15 @@
 #include <QWhatsThis>
 
 NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
-        regina::Packet* packetTree, regina::Packet* defaultParent,
+        std::shared_ptr<regina::Packet> packetTree,
+        std::shared_ptr<regina::Packet> defaultParent,
         PacketFilter* useFilter, const QString& dialogTitle) :
         QDialog(parent), //dialogTitle, Ok|Cancel, Ok, parent),
-        creator(newCreator), tree(packetTree), newPacket(0) {
+        creator(newCreator), tree(std::move(packetTree)) {
     setWindowTitle(dialogTitle);
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
-    QHBoxLayout* parentStrip = new QHBoxLayout();
+    auto* parentStrip = new QHBoxLayout();
     layout->addLayout(parentStrip);
     QString parentPrompt = newCreator->parentPrompt();
     if (parentPrompt.isNull())
@@ -62,11 +63,12 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     if (expln.isNull())
         expln = tr("Specifies where in the packet tree the new "
             "packet will be placed.");
-    QLabel* createBeneath = new QLabel(parentPrompt);
+    auto* createBeneath = new QLabel(parentPrompt);
     createBeneath->setWhatsThis(expln);
     parentStrip->addWidget(createBeneath);
     chooser = new PacketChooser(tree, useFilter,
-        PacketChooser::ROOT_AS_INSERTION_POINT, false, defaultParent);
+        PacketChooser::ROOT_AS_INSERTION_POINT, false,
+        std::move(defaultParent));
     chooser->setWhatsThis(expln);
     parentStrip->addWidget(chooser, 1);
 
@@ -82,7 +84,7 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     } else {
         layout->addStretch(1);
     }
-    QDialogButtonBox *box = new QDialogButtonBox(
+    auto *box = new QDialogButtonBox(
             QDialogButtonBox::Ok|QDialogButtonBox::Cancel);
     layout->addWidget(box);
     connect(box, SIGNAL(accepted()), this, SLOT(slotOk()));
@@ -103,14 +105,14 @@ bool NewPacketDialog::validate() {
 
 void NewPacketDialog::slotOk() {
     // Get the parent packet.
-    regina::Packet* parentPacket = chooser->selectedPacket();
+    auto parentPacket = chooser->selectedPacket();
     if (! parentPacket) {
         ReginaSupport::info(this,
             tr("Please select a parent packet."));
         return;
     }
     PacketFilter* filter = chooser->getFilter();
-    if (filter && ! filter->accept(parentPacket)) {
+    if (filter && ! filter->accept(*parentPacket)) {
         ReginaSupport::info(this,
             tr("Please select a different location in the tree for "
             "the new packet."),

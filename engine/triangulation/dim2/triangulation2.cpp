@@ -40,23 +40,21 @@
 namespace regina {
 
 Triangulation<2>::Triangulation(const std::string& description) {
-    Triangulation<2>* attempt;
-
-    if ((attempt = fromIsoSig(description))) {
-        swap(*attempt);
-        setLabel(description);
+    try {
+        *this = fromIsoSig(description);
+        return;
+    } catch (const InvalidArgument&) {
     }
-
-    delete attempt;
 }
 
 void Triangulation<2>::swap(Triangulation<2>& other) {
     if (&other == this)
         return;
 
-    ChangeEventSpan span1(this);
-    ChangeEventSpan span2(&other);
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
 
+    // Note: swapBaseData() calls Snapshottable::swap().
     swapBaseData(other);
 }
 
@@ -75,99 +73,6 @@ bool Triangulation<2>::isMinimal() const {
 
     // All other bounded manifolds:
     return (countVertices() == countBoundaryComponents());
-}
-
-void Triangulation<2>::writeTextLong(std::ostream& out) const {
-    ensureSkeleton();
-
-    out << "Size of the skeleton:\n";
-    out << "  Triangles: " << simplices_.size() << '\n';
-    out << "  Edges: " << countEdges() << '\n';
-    out << "  Vertices: " << countVertices() << '\n';
-    out << '\n';
-
-    Triangle<2>* tri;
-    Triangle<2>* adjTri;
-    unsigned triPos;
-    int i, j;
-    Perm<3> adjPerm;
-
-    out << "Triangle gluing:\n";
-    out << "  Triangle  |  glued to:     (01)     (02)     (12)\n";
-    out << "  ----------+--------------------------------------\n";
-    for (triPos=0; triPos < simplices_.size(); triPos++) {
-        tri = simplices_[triPos];
-        out << "      " << std::setw(4) << triPos << "  |           ";
-        for (i = 2; i >= 0; --i) {
-            out << " ";
-            adjTri = tri->adjacentTriangle(i);
-            if (! adjTri)
-                out << "boundary";
-            else {
-                adjPerm = tri->adjacentGluing(i);
-                out << std::setw(3) << adjTri->index() << " (";
-                for (j = 0; j < 3; ++j) {
-                    if (j == i) continue;
-                    out << adjPerm[j];
-                }
-                out << ")";
-            }
-        }
-        out << '\n';
-    }
-    out << '\n';
-
-    out << "Vertices:\n";
-    out << "  Triangle  |  vertex:    0   1   2\n";
-    out << "  ----------+----------------------\n";
-    for (triPos = 0; triPos < simplices_.size(); ++triPos) {
-        tri = simplices_[triPos];
-        out << "      " << std::setw(4) << triPos << "  |          ";
-        for (i = 0; i < 3; ++i)
-            out << ' ' << std::setw(3) << tri->vertex(i)->index();
-        out << '\n';
-    }
-    out << '\n';
-
-    out << "Edges:\n";
-    out << "  Triangle  |  edge:   01  02  12\n";
-    out << "  ----------+--------------------\n";
-    for (triPos = 0; triPos < simplices_.size(); ++triPos) {
-        tri = simplices_[triPos];
-        out << "      " << std::setw(4) << triPos << "  |        ";
-        for (i = 2; i >= 0; --i)
-            out << ' ' << std::setw(3) << tri->edge(i)->index();
-        out << '\n';
-    }
-    out << '\n';
-}
-
-void Triangulation<2>::writeXMLPacketData(std::ostream& out) const {
-    using regina::xml::xmlEncodeSpecialChars;
-    using regina::xml::xmlValueTag;
-
-    // Write the triangle gluings.
-    Triangle<2>* adjTri;
-    int edge;
-
-    out << "  <triangles ntriangles=\"" << simplices_.size() << "\">\n";
-    for (Triangle<2>* t : simplices_) {
-        out << "    <triangle desc=\"" <<
-            xmlEncodeSpecialChars(t->description()) << "\"> ";
-        for (edge = 0; edge < 3; ++edge) {
-            adjTri = t->adjacentTriangle(edge);
-            if (adjTri) {
-                out << adjTri->index() << ' '
-                    << static_cast<int>(t->
-                        adjacentGluing(edge).permCode()) << ' ';
-            } else
-                out << "-1 -1 ";
-        }
-        out << "</triangle>\n";
-    }
-    out << "  </triangles>\n";
-
-    writeXMLBaseProperties(out);
 }
 
 } // namespace regina

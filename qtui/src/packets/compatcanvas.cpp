@@ -35,6 +35,8 @@
 #include "hypersurface/normalhypersurfaces.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 #define NICE_SIZE 200
 #define MIN_CELL 5
@@ -70,8 +72,7 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
     // Work out how much vertical and horizontal space we will need for
     // text.  Assume here that (nSurfaces-1) is the largest number we
     // will need to draw.
-    QGraphicsSimpleTextItem* t = new QGraphicsSimpleTextItem(
-        QString::number(nSurfaces - 1));
+    auto* t = new QGraphicsSimpleTextItem(QString::number(nSurfaces - 1));
     unsigned textWidth = t->boundingRect().width();
     unsigned textHeight = t->boundingRect().height();
     delete t;
@@ -103,8 +104,7 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
         gridY + gridSize + 1 + bottomMargin);
 
     // Draw a bounding box.
-    QGraphicsRectItem* box = new QGraphicsRectItem(
-        gridX, gridY, gridSize, gridSize);
+    auto* box = new QGraphicsRectItem(gridX, gridY, gridSize, gridSize);
     addItem(box);
     box->setZValue(10);
     box->show();
@@ -117,25 +117,24 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
     unsigned i;
 
     pos = gridX + halfCell;
-    QGraphicsSimpleTextItem* prev = new QGraphicsSimpleTextItem(" 0 ");
+    auto* prev = new QGraphicsSimpleTextItem(" 0 ");
     addItem(prev);
     prev->setPos(pos - prev->boundingRect().width() / 2, TOP_MARGIN);
     prev->show();
 
-    QGraphicsLineItem* tick = new QGraphicsLineItem();
+    auto* tick = new QGraphicsLineItem();
     addItem(tick);
     tick->setLine(pos, TOP_MARGIN + textHeight + TICK_LENGTH,
         pos, TOP_MARGIN + textHeight + 2 * TICK_LENGTH);
     tick->show();
 
     pos = gridX + halfCell + cellSize * (nSurfaces - 1);
-    QGraphicsSimpleTextItem* last = new QGraphicsSimpleTextItem(
-        QString(" %1 ").arg(nSurfaces - 1));
+    auto* last = new QGraphicsSimpleTextItem(QString(" %1 ").arg(nSurfaces-1));
     addItem(last);
     last->setPos(pos - last->boundingRect().width() / 2, TOP_MARGIN);
     if (last->collidesWithItem(prev)) {
         delete last;
-        last = 0;
+        last = nullptr;
     } else {
         last->show();
 
@@ -188,7 +187,7 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
         pos - last->boundingRect().height() / 2);
     if (last->collidesWithItem(prev)) {
         delete last;
-        last = 0;
+        last = nullptr;
     } else {
         last->show();
 
@@ -223,7 +222,7 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
 
     // Draw internal guide lines.
     for (i = 1; i < nSurfaces; ++i) {
-        QGraphicsLineItem* l = new QGraphicsLineItem();
+        auto* l = new QGraphicsLineItem();
         addItem(l);
         if (i % 5)
             l->setPen(QPen(Qt::lightGray));
@@ -234,7 +233,7 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
         l->show();
     }
     for (i = 1; i < nSurfaces; ++i) {
-        QGraphicsLineItem* l = new QGraphicsLineItem();
+        auto* l = new QGraphicsLineItem();
         addItem(l);
         if (i % 5)
             l->setPen(QPen(Qt::lightGray));
@@ -246,9 +245,6 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
     }
 
     update();
-}
-
-CompatCanvas::~CompatCanvas() {
 }
 
 void CompatCanvas::fillLocal(const NormalSurfaces& surfaces) {

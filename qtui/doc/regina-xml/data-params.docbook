@@ -10,67 +10,79 @@
 
  <refnamediv>
   <refname>params</refname>
-  <refpurpose>Parameters for a normal surface/hypersurface enumeration</refpurpose>
+  <refpurpose>Replaced by attributes of &xml-surfaces; and
+   &xml-hypersurfaces;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
   <informaltable frame="all">
-   <tgroup cols="2">
+   <tgroup cols="3">
     <colspec colname="c1"/>
     <colspec colname="c2"/>
+    <colspec colname="c3"/>
     <tbody>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
       <emphasis role="bold">Content Model</emphasis>
      </entry></row>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
 <synopsis>
 params ::=</synopsis>
      </entry></row>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
       <emphasis role="bold">Attributes</emphasis>
      </entry></row>
      <row>
       <entry><emphasis role="bold">Name</emphasis></entry>
       <entry><emphasis role="bold">Type</emphasis></entry>
+      <entry><emphasis role="bold">Version</emphasis></entry>
      </row>
      <row>
       <entry><sgmltag>algorithm</sgmltag></entry>
       <entry><type>CDATA</type> (required)</entry>
+      <entry>&attraddedver;4.94</entry>
      </row>
      <row>
       <entry><sgmltag>embedded</sgmltag></entry>
       <entry><type>CDATA</type> (deprecated)</entry>
+      <entry>&attrdepver;4.94</entry>
      </row>
      <row>
       <entry><sgmltag>flavour</sgmltag></entry>
       <entry><type>CDATA</type></entry>
+      <entry></entry>
      </row>
      <row>
       <entry><sgmltag>flavourid</sgmltag></entry>
       <entry><type>NUMBER</type> (required)</entry>
+      <entry></entry>
      </row>
      <row>
       <entry><sgmltag>type</sgmltag></entry>
       <entry><type>NUMBER</type> (required)</entry>
+      <entry>&attraddedver;4.94</entry>
      </row>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-params; element stores the parameters used in an enumeration
-   of vertex normal surfaces or hypersurfaces.
-   Typically these parameters are supplied
-   by the user when a new normal surface/hypersurface list is created.
+   This element was used in the past to store the parameters for an
+   enumeration of vertex normal surfaces or hypersurfaces.
+   These are typically the parameters supplied by the user when
+   creating a new normal surface/hypersurface list.
+   Since &regina;&nbsp;7.0, these enumeration parameters are now stored
+   in the attributes of the corresponding &xml-surfaces; and
+   &xml-hypersurfaces; elements instead.
   </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>param</sgmltag>:
+    The following elements contain <sgmltag>params</sgmltag>:
     <simplelist type="inline">
      <member>&xml-packet-normalhypersurfacelist;</member>
      <member>&xml-packet-normalsurfacelist;</member>

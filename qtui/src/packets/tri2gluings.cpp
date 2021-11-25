@@ -73,8 +73,7 @@ namespace {
     QRegExp reEdge("^[0-2][0-2]$");
 }
 
-GluingsModel2::GluingsModel2(regina::Triangulation<2>* tri,
-        bool readWrite) : tri_(tri), isReadWrite_(readWrite) {
+GluingsModel2::GluingsModel2(regina::Triangulation<2>* tri) : tri_(tri) {
 }
 
 void GluingsModel2::rebuild() {
@@ -144,10 +143,7 @@ QVariant GluingsModel2::headerData(int section, Qt::Orientation orientation,
 }
 
 Qt::ItemFlags GluingsModel2::flags(const QModelIndex& /* unused index*/) const {
-    if (isReadWrite_)
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
-    else
-        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
 }
 
 bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
@@ -212,7 +208,7 @@ bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     // Yes!  Go ahead and make the change.
-    regina::Packet::ChangeEventSpan span(tri_);
+    regina::Triangulation<2>::ChangeEventSpan span(*tri_);
 
     // First unglue from the old partner if it exists.
     if (t->adjacentSimplex(edge))
@@ -266,7 +262,7 @@ QString GluingsModel2::isEdgeStringValid(unsigned long srcTri, int srcEdge,
 void GluingsModel2::showError(const QString& message) {
     // We should actually pass the view to the message box, not 0, but we
     // don't have access to any widget from here...
-    ReginaSupport::info(0 /* should be the view? */,
+    ReginaSupport::info(nullptr /* should be the view? */,
         tr("This is not a valid gluing."), message);
 }
 
@@ -295,22 +291,19 @@ regina::Perm<3> GluingsModel2::edgeStringToPerm(int srcEdge,
         regina::Edge<2>::ordering(srcEdge).inverse();
 }
 
-Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
-        PacketTabbedUI* useParentUI, bool readWrite) :
+Tri2GluingsUI::Tri2GluingsUI(regina::PacketOf<regina::Triangulation<2>>* packet,
+        PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), tri(packet) {
     // Set up the table of edge gluings.
-    model = new GluingsModel2(packet, readWrite);
+    model = new GluingsModel2(packet);
     edgeTable = new EditTableView();
     edgeTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     edgeTable->setModel(model);
 
-    if (readWrite) {
-        QAbstractItemView::EditTriggers flags(
-            QAbstractItemView::AllEditTriggers);
-        flags ^= QAbstractItemView::CurrentChanged;
-        edgeTable->setEditTriggers(flags);
-    } else
-        edgeTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    QAbstractItemView::EditTriggers flags(
+        QAbstractItemView::AllEditTriggers);
+    flags ^= QAbstractItemView::CurrentChanged;
+    edgeTable->setEditTriggers(flags);
 
 
     edgeTable->setWhatsThis(tr("<qt>A table specifying which triangle "
@@ -341,9 +334,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
     actAddTri->setText(tr("&Add Triangle"));
     actAddTri->setIcon(ReginaSupport::regIcon("insert"));
     actAddTri->setToolTip(tr("Add a new triangle"));
-    actAddTri->setEnabled(readWrite);
     actAddTri->setWhatsThis(tr("Add a new triangle to this triangulation."));
-    enableWhenWritable.push_back(actAddTri);
     triActionList.push_back(actAddTri);
     connect(actAddTri, SIGNAL(triggered()), this, SLOT(addTri()));
 
@@ -360,7 +351,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
         this, SLOT(updateRemoveState()));
     triActionList.push_back(actRemoveTri);
 
-    QAction* sep = new QAction(this);
+    auto* sep = new QAction(this);
     sep->setSeparator(true);
     triActionList.push_back(sep);
 
@@ -369,7 +360,6 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
     actOrient->setIcon(ReginaSupport::regIcon("orient"));
     actOrient->setToolTip(tr(
         "Relabel vertices of triangles for consistent orientation"));
-    actOrient->setEnabled(readWrite);
     actOrient->setWhatsThis(tr("<qt>Relabel the vertices of each triangle "
         "so that all triangles are oriented consistently, i.e., "
         "so that orientation is preserved across adjacent edges.<p>"
@@ -378,12 +368,11 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
     triActionList.push_back(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
-    QAction* actReflect = new QAction(this);
+    auto* actReflect = new QAction(this);
     actReflect->setText(tr("Re&flect"));
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
     actReflect->setToolTip(tr(
         "Reverse the orientation of each triangle"));
-    actReflect->setEnabled(readWrite);
     actReflect->setWhatsThis(tr("<qt>Relabel the vertices of each triangle "
         "so that the orientations of all triangles are reversed.<p>"
         "If this triangulation is oriented, then the overall effect will be "
@@ -392,34 +381,30 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
     triActionList.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
-    QAction* actBarycentricSubdivide = new QAction(this);
+    auto* actBarycentricSubdivide = new QAction(this);
     actBarycentricSubdivide->setText(tr("&Barycentric Subdivision"));
     actBarycentricSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
     actBarycentricSubdivide->setToolTip(tr(
         "Perform a barycentric subdivision"));
-    actBarycentricSubdivide->setEnabled(readWrite);
     actBarycentricSubdivide->setWhatsThis(tr("Perform a barycentric "
         "subdivision on this triangulation.  The triangulation will be "
         "changed directly.<p>"
         "This operation involves subdividing each triangle into "
         "6 smaller triangles."));
-    enableWhenWritable.push_back(actBarycentricSubdivide);
     triActionList.push_back(actBarycentricSubdivide);
     connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
 
-    QAction* actDoubleCover = new QAction(this);
+    auto* actDoubleCover = new QAction(this);
     actDoubleCover->setText(tr("&Double Cover"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
     actDoubleCover->setToolTip(tr(
         "Convert the triangulation to its orientable double cover"));
-    actDoubleCover->setEnabled(readWrite);
     actDoubleCover->setWhatsThis(tr("Convert a non-orientable "
         "triangulation into an orientable double cover.  This triangulation "
         "will be modified directly.<p>"
         "If this triangulation is already orientable, it will simply be "
         "duplicated, resulting in a disconnected triangulation."));
-    enableWhenWritable.push_back(actDoubleCover);
     triActionList.push_back(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
@@ -427,7 +412,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
     sep->setSeparator(true);
     triActionList.push_back(sep);
 
-    QAction* actSplitIntoComponents = new QAction(this);
+    auto* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
     actSplitIntoComponents->setIcon(ReginaSupport::regIcon("components"));
     actSplitIntoComponents->setToolTip(tr(
@@ -482,24 +467,6 @@ void Tri2GluingsUI::endEdit() {
     edgeTable->endEdit();
 }
 
-void Tri2GluingsUI::setReadWrite(bool readWrite) {
-    model->setReadWrite(readWrite);
-
-    if (readWrite) {
-        QAbstractItemView::EditTriggers flags(
-            QAbstractItemView::AllEditTriggers);
-        flags ^= QAbstractItemView::CurrentChanged;
-        edgeTable->setEditTriggers(flags);
-    } else
-        edgeTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    for (auto action : enableWhenWritable)
-        action->setEnabled(readWrite);
-
-    updateRemoveState();
-    updateActionStates();
-}
-
 void Tri2GluingsUI::addTri() {
     endEdit();
 
@@ -551,7 +518,7 @@ void Tri2GluingsUI::removeSelectedTris() {
     if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
-        regina::Packet::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(*tri);
         for (i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
@@ -613,40 +580,38 @@ void Tri2GluingsUI::splitIntoComponents() {
     else {
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
-        Packet* base;
+        std::shared_ptr<Packet> base;
         if (tri->firstChild()) {
-            base = new regina::Container();
+            base = std::make_shared<regina::Container>();
             tri->insertChildLast(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else
-            base = tri;
+            base = tri->shared_from_this();
 
         // Make the split.
-        size_t nComps = tri->splitIntoComponents(base);
+        size_t which = 0;
+        for (auto& c : tri->triangulateComponents()) {
+            std::ostringstream label;
+            label << "Component #" << ++which;
+            base->insertChildLast(regina::makePacket(std::move(c),
+                label.str()));
+        }
 
         // Make sure the new components are visible.
         enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
 
         // Tell the user what happened.
         ReginaSupport::info(ui,
-            tr("%1 components were extracted.").arg(nComps));
+            tr("%1 components were extracted.").arg(tri->countComponents()));
     }
 }
 
 void Tri2GluingsUI::updateRemoveState() {
-    if (model->isReadWrite())
-        actRemoveTri->setEnabled(
-            ! edgeTable->selectionModel()->selectedIndexes().empty());
-    else
-        actRemoveTri->setEnabled(false);
+    actRemoveTri->setEnabled(
+        ! edgeTable->selectionModel()->selectedIndexes().empty());
 }
 
 void Tri2GluingsUI::updateActionStates() {
-    if (! model->isReadWrite())
-        actOrient->setEnabled(false);
-    else if (! tri->isOrientable())
-        actOrient->setEnabled(false);
-    else
-        actOrient->setEnabled(! tri->isOriented());
+    actOrient->setEnabled(tri->isOrientable() && ! tri->isOriented());
 }
 

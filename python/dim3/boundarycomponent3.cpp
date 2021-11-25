@@ -43,24 +43,20 @@ void addBoundaryComponent3(pybind11::module_& m) {
     auto c = pybind11::class_<BoundaryComponent<3>>(m, "BoundaryComponent3")
         .def("index", &BoundaryComponent<3>::index)
         .def("size", &BoundaryComponent<3>::size)
-        .def("countFaces", &regina::python::countFaces<BoundaryComponent<3>, 3>)
+        .def("countRidges", &BoundaryComponent<3>::countRidges)
+        .def("countFaces",
+            &regina::python::countFaces<BoundaryComponent<3>, 3, 2>)
         .def("countTriangles", &BoundaryComponent<3>::countTriangles)
         .def("countEdges", &BoundaryComponent<3>::countEdges)
         .def("countVertices", &BoundaryComponent<3>::countVertices)
-        .def("facets", &BoundaryComponent<3>::facets,
-            pybind11::return_value_policy::reference)
-        .def("faces", regina::python::faces<BoundaryComponent<3>, 3,
-            pybind11::return_value_policy::reference>)
-        .def("triangles", &BoundaryComponent<3>::triangles,
-            pybind11::return_value_policy::reference)
-        .def("edges", &BoundaryComponent<3>::edges,
-            pybind11::return_value_policy::reference)
-        .def("vertices", &BoundaryComponent<3>::vertices,
-            pybind11::return_value_policy::reference)
+        .def("facets", &BoundaryComponent<3>::facets)
+        .def("faces", regina::python::faces<BoundaryComponent<3>, 3>)
+        .def("triangles", &BoundaryComponent<3>::triangles)
+        .def("edges", &BoundaryComponent<3>::edges)
+        .def("vertices", &BoundaryComponent<3>::vertices)
         .def("facet", &BoundaryComponent<3>::facet,
             pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<BoundaryComponent<3>, 3, size_t,
-            pybind11::return_value_policy::reference>)
+        .def("face", &regina::python::face<BoundaryComponent<3>, 3, size_t>)
         .def("triangle", &BoundaryComponent<3>::triangle,
             pybind11::return_value_policy::reference)
         .def("edge", &BoundaryComponent<3>::edge,
@@ -70,34 +66,30 @@ void addBoundaryComponent3(pybind11::module_& m) {
         .def("component", &BoundaryComponent<3>::component,
             pybind11::return_value_policy::reference)
         .def("triangulation", &BoundaryComponent<3>::triangulation)
-        .def("build", [](const BoundaryComponent<3>* b) {
-            // Return a clone of the resulting triangulation.  This is because
-            // triangulations have a custom holder type, and so pybind11 ignores
-            // any attempt to pass return_value_policy::reference_internal.
-            return new regina::Triangulation<2>(*(b->build()));
+        .def("build", [](const BoundaryComponent<3>& b) {
+            // Return a clone of the resulting triangulation.
+            // This is because Python cannot enforce the constness of
+            // the reference that would normally be returned.
+            return new regina::Triangulation<2>(b.build());
         })
         .def("eulerChar", &BoundaryComponent<3>::eulerChar)
         .def("isReal", &BoundaryComponent<3>::isReal)
         .def("isIdeal", &BoundaryComponent<3>::isIdeal)
         .def("isInvalidVertex", &BoundaryComponent<3>::isInvalidVertex)
         .def("isOrientable", &BoundaryComponent<3>::isOrientable)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return BoundaryComponent<3>::dimension;
-        })
-        .def_property_readonly_static("allFaces", [](pybind11::object) {
-            return BoundaryComponent<3>::allFaces;
-        })
-        .def_property_readonly_static("allowVertex", [](pybind11::object) {
-            return BoundaryComponent<3>::allowVertex;
-        })
-        .def_property_readonly_static("canBuild", [](pybind11::object) {
-            return BoundaryComponent<3>::canBuild;
-        })
+        .def_readonly_static("dimension", &BoundaryComponent<3>::dimension)
+        .def_readonly_static("allFaces", &BoundaryComponent<3>::allFaces)
+        .def_readonly_static("allowVertex", &BoundaryComponent<3>::allowVertex)
+        .def_readonly_static("canBuild", &BoundaryComponent<3>::canBuild)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<
+        decltype(std::declval<BoundaryComponent<3>>().vertices())>(m);
+    regina::python::addListView<
+        decltype(std::declval<BoundaryComponent<3>>().edges())>(m);
+    regina::python::addListView<
+        decltype(std::declval<BoundaryComponent<3>>().triangles())>(m);
 }
 

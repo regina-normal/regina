@@ -58,8 +58,8 @@ class PermTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        typedef regina::Perm<n> Perm;
-        typedef typename Perm::Index Index;
+        using Perm = regina::Perm<n>;
+        using Index = typename Perm::Index;
 
         Index* idx;
         Index nIdx;
@@ -67,7 +67,7 @@ class PermTest : public CppUnit::TestFixture {
         char idStr[n + 1];
 
     public:
-        void setUp() {
+        void setUp() override {
             idx = new Index[(Perm::nPerms / increment[n]) + 2];
             nIdx = 0;
             for (Index i = 0; i < Perm::nPerms; i += increment[n])
@@ -80,7 +80,7 @@ class PermTest : public CppUnit::TestFixture {
             idStr[n] = 0;
         }
 
-        void tearDown() {
+        void tearDown() override {
             delete[] idx;
         }
 
@@ -171,7 +171,7 @@ class PermTest : public CppUnit::TestFixture {
             }
 
             {
-                int arr[n];
+                std::array<int, n> arr;
                 for (i = 0; i < n; ++i)
                     arr[i] = p[i];
                 Perm parr(arr);
@@ -183,6 +183,7 @@ class PermTest : public CppUnit::TestFixture {
                 }
             }
 
+            /*
             {
                 int arrA[n], arrB[n];
                 for (i = 0; i < n; ++i) {
@@ -197,6 +198,7 @@ class PermTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
             }
+            */
 
             Perm p3(p);
             if (! looksEqual(p3, p, name.str())) {
@@ -262,7 +264,7 @@ class PermTest : public CppUnit::TestFixture {
             }
 
             for (int from = 0; from < n - 1; ++from) {
-                int image[n];
+                std::array<int, n> image;
                 for (i = 0; i < n; ++i)
                     image[i] = p[i];
                 std::swap(image[from], image[from + 1]);
@@ -307,7 +309,7 @@ class PermTest : public CppUnit::TestFixture {
             }
 
             for (i = 0; i < n; ++i)
-                if (p.preImageOf(p[i]) != i) {
+                if (p.pre(p[i]) != i) {
                     std::ostringstream msg;
                     msg << "The element preimages for permutation "
                         << name.str() << " do not appear to be correct.";
@@ -333,7 +335,7 @@ class PermTest : public CppUnit::TestFixture {
             }
 
             if (! isReverse) {
-                int image[n];
+                std::array<int, n> image;
                 for (i = 0; i < n; ++i)
                     image[n - i - 1] = i;
                 Perm last(image);
@@ -583,7 +585,6 @@ class PermTest : public CppUnit::TestFixture {
 };
 
 void addPerm(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(PermTest<7>::suite()); // 3-bit images, 32-bit code
     runner.addTest(PermTest<8>::suite()); // 3-bit images, 32-bit code
     runner.addTest(PermTest<9>::suite()); // 4-bit images, 64-bit code
     // runner.addTest(PermTest<10>::suite());

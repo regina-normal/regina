@@ -49,23 +49,24 @@
 using regina::Packet;
 using regina::Triangulation;
 
-Tri3SkeletonUI::Tri3SkeletonUI(regina::Triangulation<3>* packet,
-        PacketTabbedUI* useParentUI) :
+Tri3SkeletonUI::Tri3SkeletonUI(regina::Triangulation<3>* tri,
+        regina::Packet* triAsPacket, PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim3TriSkeleton) {
-    addTab(new Tri3SkelCompUI(packet, this), tr("&Skeletal Components"));
-    addTab(new FacetGraphTab(new Dim3FaceGraphData(packet), this),
+    addTab(new Tri3SkelCompUI(tri, triAsPacket, this),
+        tr("&Skeletal Components"));
+    addTab(new FacetGraphTab(new Dim3FaceGraphData(tri, triAsPacket), this),
         tr("&Graphs"));
 }
 
-Tri3SkelCompUI::Tri3SkelCompUI(regina::Triangulation<3>* packet,
-        PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
-        tri(packet) {
+Tri3SkelCompUI::Tri3SkelCompUI(regina::Triangulation<3>* tri,
+        regina::Packet* triAsPacket, PacketTabbedViewerTab* useParentUI) :
+        PacketViewerTab(useParentUI), tri_(tri), triAsPacket_(triAsPacket) {
     ui = new QWidget();
-    QBoxLayout* layout = new QVBoxLayout(ui);
+    auto* layout = new QVBoxLayout(ui);
     layout->addStretch(1);
 
-    QGridLayout* grid = new QGridLayout();
+    auto* grid = new QGridLayout();
     layout->addLayout(grid);
     grid->setColumnStretch(0, 1);
     grid->setColumnMinimumWidth(2, 5);
@@ -210,7 +211,7 @@ Tri3SkelCompUI::Tri3SkelCompUI(regina::Triangulation<3>* packet,
 }
 
 regina::Packet* Tri3SkelCompUI::getPacket() {
-    return tri;
+    return triAsPacket_;
 }
 
 QWidget* Tri3SkelCompUI::getInterface() {
@@ -218,15 +219,15 @@ QWidget* Tri3SkelCompUI::getInterface() {
 }
 
 void Tri3SkelCompUI::refresh() {
-    nVertices->setText(QString::number(tri->countVertices()));
-    nEdges->setText(QString::number(tri->countEdges()));
-    nTriangles->setText(QString::number(tri->countTriangles()));
-    nTets->setText(QString::number(tri->size()));
-    nComps->setText(QString::number(tri->countComponents()));
-    nBdryComps->setText(QString::number(tri->countBoundaryComponents()));
+    nVertices->setText(QString::number(tri_->countVertices()));
+    nEdges->setText(QString::number(tri_->countEdges()));
+    nTriangles->setText(QString::number(tri_->countTriangles()));
+    nTets->setText(QString::number(tri_->size()));
+    nComps->setText(QString::number(tri_->countComponents()));
+    nBdryComps->setText(QString::number(tri_->countBoundaryComponents()));
 
-    eulerTri->setText(QString::number(tri->eulerCharTri()));
-    eulerManifold->setText(QString::number(tri->eulerCharManifold()));
+    eulerTri->setText(QString::number(tri_->eulerCharTri()));
+    eulerManifold->setText(QString::number(tri_->eulerCharManifold()));
 
     for (auto window : viewers)
         window->refresh();
@@ -237,32 +238,31 @@ void Tri3SkelCompUI::viewVertices() {
     // guaranteed that the window will be closed and deleted
     // automatically if the packet pane is closed.
     // Similarly for edges, triangles, etc.
-    SkeletonWindow* win = new SkeletonWindow(this, new Vertex3Model(tri));
+    auto* win = new SkeletonWindow(this, new Vertex3Model(tri_));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri3SkelCompUI::viewEdges() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Edge3Model(tri));
+    auto* win = new SkeletonWindow(this, new Edge3Model(tri_));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri3SkelCompUI::viewTriangles() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Triangle3Model(tri));
+    auto* win = new SkeletonWindow(this, new Triangle3Model(tri_));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri3SkelCompUI::viewComponents() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Component3Model(tri));
+    auto* win = new SkeletonWindow(this, new Component3Model(tri_));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri3SkelCompUI::viewBoundaryComponents() {
-    SkeletonWindow* win = new SkeletonWindow(this,
-        new BoundaryComponent3Model(tri));
+    auto* win = new SkeletonWindow(this, new BoundaryComponent3Model(tri_));
     win->show();
     viewers.push_back(win);
 }

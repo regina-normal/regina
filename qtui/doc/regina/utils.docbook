@@ -565,6 +565,7 @@
      <arg><option>-4, --dim4</option></arg>
      <arg><option>-k, --knot</option></arg>
     </group>
+    <arg><option>-a, --anysig</option></arg>
     <arg choice="req"><replaceable>signature</replaceable></arg>
    </cmdsynopsis>
    <cmdsynopsis>
@@ -750,6 +751,53 @@
        Indicates that the given signature is a knot signature.
        The local moves used will be the Reidemeister moves.
       </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-a, --anysig</option></term>
+     <listitem>
+      <para>
+       Indicates that the output is not required to be
+       classic isomorphism signatures.
+      </para>
+      <para>
+       &regina;&nbsp;7.0 introduced alternate <emphasis>types</emphasis>
+       of isomorphism signatures.  Like the original isomorphism signatures
+       that were introduced many years earlier, each type of signature
+       uniquely identifies a triangulation up to combinatorial isomorphism.
+       Moreover, &regina; can reconstruct a triangulation or link from a
+       signature of any type.
+      </para>
+      <para>
+       Internally, this utility uses one of the newer, alternate types
+       of signature that is faster to compute.  However, it still outputs
+       <emphasis>classic signatures</emphasis>; that is, the same isomorphism
+       signatures that were originally introduced back in 2011.  This
+       conversion from alternate to classic signatures adds extra overhead
+       to the running time.
+      </para>
+      <para>
+       If you pass the option <option>--anysig</option>, &regina; will
+       not convert its output back to classic signatures; instead it will
+       output whatever alternate signature type it uses internally.
+       This will be faster, and you can still use these alternate
+       signatures to reconstruct triangulations; the only reason
+       <emphasis>not</emphasis> to do this is if you neeed to ensure
+       compatibility with the original classical signatures (e.g., for
+       matching against a list of signatures that was generated elsewhere).
+      </para>
+      <warning><para>
+       The internal signature type is subject to change in future versions
+       of &regina;.  That is, if you do use <option>--anysig</option>,
+       then you may get different output depending upon which version of
+       &regina; you are using.
+      </para></warning>
+      <note><para>
+       Currently &regina; only uses alternate signature types with
+       triangulations.  For knot signatures, it still uses
+       classic signatures, though again this is subject to change in
+       future version of &regina;.
+      </para></note>
      </listitem>
     </varlistentry>
    </variablelist>

@@ -49,7 +49,9 @@
 #include "testsuite/generic/testgeneric.h"
 #endif
 #include "testsuite/link/testlink.h"
+#include "testsuite/manifold/testmanifold.h"
 #include "testsuite/maths/testmaths.h"
+#include "testsuite/misc/testmisc.h"
 #include "testsuite/snappea/testsnappea.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
 #include "testsuite/surfaces/testsurfaces.h"
@@ -60,7 +62,7 @@ namespace {
     static bool useDetailedTests = false;
 }
 
-typedef void (*TestSet)(CppUnit::TextUi::TestRunner& runner);
+using TestSet = void (*)(CppUnit::TextUi::TestRunner& runner);
 
 void checkTestParams() {
     if (checkedParams)
@@ -124,6 +126,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("perm4", &addPerm4));
     sets.insert(std::make_pair("perm5", &addPerm5));
     sets.insert(std::make_pair("perm6", &addPerm6));
+    sets.insert(std::make_pair("perm7", &addPerm7));
     sets.insert(std::make_pair("perm", &addPerm));
     sets.insert(std::make_pair("polynomial", &addPolynomial));
     sets.insert(std::make_pair("cyclotomic", &addCyclotomic));
@@ -136,6 +139,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("permconv", &addPermConv));
 
     // Algebra:
+    sets.insert(std::make_pair("abeliangroup", &addAbelianGroup));
     sets.insert(std::make_pair("grouppresentation", &addGroupPresentation));
     sets.insert(std::make_pair("covers", &addCovers));
 
@@ -160,6 +164,9 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("generictriangulation",
         &addGenericTriangulation));
 #endif
+
+    // Manifolds:
+    sets.insert(std::make_pair("sfs", &addSFS));
 
     // Subcomplexes:
     sets.insert(std::make_pair("standardtriangulation",
@@ -188,6 +195,10 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("link", &addLink));
     // We no longer build-depend on boost, so disable the boost.graph test.
     // sets.insert(std::make_pair("linkgraph", &addLinkGraph));
+
+    // Miscellaneous tests:
+    sets.insert(std::make_pair("callbacks", &addCallbacks));
+    sets.insert(std::make_pair("listeners", &addListeners));
 
     if (argc <= 1)
         for (const auto& i : sets)

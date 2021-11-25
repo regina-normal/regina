@@ -58,22 +58,11 @@ class GluingsModel4 : public QAbstractItemModel {
          */
         regina::Triangulation<4>* tri_;
 
-        /**
-         * Internal status
-         */
-        bool isReadWrite_;
-
     public:
         /**
          * Constructor.
          */
-        GluingsModel4(regina::Triangulation<4>* tri, bool readWrite);
-
-        /**
-         * Read-write state.
-         */
-        bool isReadWrite() const;
-        void setReadWrite(bool readWrite);
+        GluingsModel4(regina::Triangulation<4>* tri);
 
         /**
          * Force a complete refresh.
@@ -84,15 +73,16 @@ class GluingsModel4 : public QAbstractItemModel {
          * Overrides for describing and editing data in the model.
          */
         QModelIndex index(int row, int column,
-                const QModelIndex& parent) const;
-        QModelIndex parent(const QModelIndex& index) const;
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+                const QModelIndex& parent) const override;
+        QModelIndex parent(const QModelIndex& index) const override;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
-        Qt::ItemFlags flags(const QModelIndex& index) const;
-        bool setData(const QModelIndex& index, const QVariant& value, int role);
+            int role) const override;
+        Qt::ItemFlags flags(const QModelIndex& index) const override;
+        bool setData(const QModelIndex& index, const QVariant& value,
+            int role) override;
 
     private:
         /**
@@ -141,7 +131,7 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         /**
          * Packet details
          */
-        regina::Triangulation<4>* tri;
+        regina::PacketOf<regina::Triangulation<4>>* tri;
 
         /**
          * Internal components
@@ -159,15 +149,14 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         QAction* actOrient;
         QAction* actBoundaryComponents;
         std::vector<QAction*> triActionList;
-        std::vector<QAction*> enableWhenWritable;
 
     public:
         /**
          * Constructor and destructor.
          */
-        Tri4GluingsUI(regina::Triangulation<4>* packet,
-                PacketTabbedUI* useParentUI, bool readWrite);
-        ~Tri4GluingsUI();
+        Tri4GluingsUI(regina::PacketOf<regina::Triangulation<4>>* packet,
+                PacketTabbedUI* useParentUI);
+        ~Tri4GluingsUI() override;
 
         /**
          * Fill the given toolbar with triangulation actions.
@@ -181,12 +170,11 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         /**
          * PacketEditorTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        const std::vector<QAction*>& getPacketTypeActions();
-        void refresh();
-        void endEdit();
-        void setReadWrite(bool readWrite);
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        const std::vector<QAction*>& getPacketTypeActions() override;
+        void refresh() override;
+        void endEdit() override;
 
     public slots:
         /**
@@ -217,20 +205,6 @@ class Tri4GluingsUI : public QObject, public PacketEditorTab {
         void updateRemoveState();
         void updateActionStates();
 };
-
-inline bool GluingsModel4::isReadWrite() const {
-    return isReadWrite_;
-}
-
-inline void GluingsModel4::setReadWrite(bool readWrite) {
-    if (isReadWrite_ != readWrite) {
-        // Edit flags will all change.
-        // A full model reset is probably too severe, but.. *shrug*
-        beginResetModel();
-        isReadWrite_ = readWrite;
-        endResetModel();
-    }
-}
 
 inline QModelIndex GluingsModel4::parent(const QModelIndex&) const {
     // All items are top-level.

@@ -123,16 +123,13 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("domain", &HomMarkedAbelianGroup::domain,
             pybind11::return_value_policy::reference_internal)
-        .def("range", &HomMarkedAbelianGroup::range,
+        .def("codomain", &HomMarkedAbelianGroup::codomain,
             pybind11::return_value_policy::reference_internal)
         .def("definingMatrix", &HomMarkedAbelianGroup::definingMatrix,
             pybind11::return_value_policy::reference_internal)
         .def("reducedMatrix", &HomMarkedAbelianGroup::reducedMatrix,
             pybind11::return_value_policy::reference_internal)
         .def("torsionSubgroup", &HomMarkedAbelianGroup::torsionSubgroup)
-        .def("writeReducedMatrix", [](const HomMarkedAbelianGroup& h) {
-            h.writeReducedMatrix(std::cout);
-        })
         .def("evalCC", &HomMarkedAbelianGroup::evalCC)
         .def("evalSNF", &HomMarkedAbelianGroup::evalSNF)
         .def("inverseHom", &HomMarkedAbelianGroup::inverseHom)

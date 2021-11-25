@@ -47,11 +47,7 @@ void addProgressTracker(pybind11::module_& m) {
         .def("percent", &ProgressTracker::percent)
         .def("description", &ProgressTracker::description)
         .def("cancel", &ProgressTracker::cancel)
-        .def("newStage", overload_cast<const char*, double>(
-            &ProgressTracker::newStage),
-            pybind11::arg(), pybind11::arg("weight") = 1)
-        .def("newStage", overload_cast<const std::string&, double>(
-            &ProgressTracker::newStage),
+        .def("newStage", &ProgressTracker::newStage,
             pybind11::arg(), pybind11::arg("weight") = 1)
         .def("isCancelled", &ProgressTracker::isCancelled)
         .def("setPercent", &ProgressTracker::setPercent)
@@ -67,10 +63,7 @@ void addProgressTracker(pybind11::module_& m) {
         .def("steps", &ProgressTrackerOpen::steps)
         .def("description", &ProgressTrackerOpen::description)
         .def("cancel", &ProgressTrackerOpen::cancel)
-        .def("newStage", overload_cast<const char*>(
-            &ProgressTrackerOpen::newStage))
-        .def("newStage", overload_cast<const std::string&>(
-            &ProgressTrackerOpen::newStage))
+        .def("newStage", &ProgressTrackerOpen::newStage)
         .def("isCancelled", &ProgressTrackerOpen::isCancelled)
         .def("incSteps", overload_cast<>(
             &ProgressTrackerOpen::incSteps))

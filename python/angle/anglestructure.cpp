@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/iostream.h"
 #include "angle/anglestructure.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -43,6 +44,23 @@ void addAngleStructure(pybind11::module_& m) {
         .def(pybind11::init<const AngleStructure&>())
         .def(pybind11::init<const AngleStructure&,
             const regina::Triangulation<3>&>())
+        .def(pybind11::init<const regina::Triangulation<3>&,
+            const regina::Vector<regina::Integer>&>())
+        .def(pybind11::init([](const regina::Triangulation<3>& t,
+                pybind11::list values) {
+            regina::Vector<regina::Integer> v(3 * t.size() + 1);
+            if (values.size() != v.size())
+                throw pybind11::index_error(
+                    "Incorrect number of angle coordinates");
+            try {
+                for (size_t i = 0; i < v.size(); ++i)
+                    v[i] = values[i].cast<regina::Integer>();
+            } catch (pybind11::cast_error const &) {
+                throw regina::InvalidArgument(
+                    "List element not convertible to Integer");
+            }
+            return new AngleStructure(t, std::move(v));
+        }))
         .def("clone", [](const AngleStructure& a) {
             // Since clone() is deprecated, we reimplement it here to
             // avoid noisy compiler warnings.
@@ -50,7 +68,8 @@ void addAngleStructure(pybind11::module_& m) {
         })
         .def("swap", &AngleStructure::swap)
         .def("angle", &AngleStructure::angle)
-        .def("triangulation", &AngleStructure::triangulation)
+        .def("triangulation", &AngleStructure::triangulation,
+            pybind11::return_value_policy::reference_internal)
         .def("isStrict", &AngleStructure::isStrict)
         .def("isTaut", &AngleStructure::isTaut)
         .def("isVeering", &AngleStructure::isVeering)
@@ -58,6 +77,11 @@ void addAngleStructure(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("rawVector", &AngleStructure::vector, // deprecated
             pybind11::return_value_policy::reference_internal)
+        .def("writeXMLData", [](const AngleStructure& s,
+                pybind11::object file) {
+            pybind11::scoped_ostream_redirect stream(std::cout, file);
+            s.writeXMLData(std::cout);
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

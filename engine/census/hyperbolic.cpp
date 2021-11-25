@@ -30,22 +30,20 @@
  *                                                                        *
  **************************************************************************/
 
-#include <sstream>
 #include "census/gluingpermsearcher3.h"
 #include "triangulation/facepair.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
 
-HyperbolicMinSearcher::HyperbolicMinSearcher(const FacetPairing<3>* pairing,
-        const FacetPairing<3>::IsoList* autos, bool orientableOnly,
-        GluingPermSearcher<3>::Use use, void* useArgs) :
-        EulerSearcher(0, pairing, autos, orientableOnly,
-            PURGE_NON_MINIMAL_HYP, use, useArgs) {
+HyperbolicMinSearcher::HyperbolicMinSearcher(FacetPairing<3> pairing,
+        FacetPairing<3>::IsoList autos, bool orientableOnly) :
+        EulerSearcher(0, std::move(pairing), std::move(autos), orientableOnly,
+            PURGE_NON_MINIMAL_HYP) {
 }
 
-void HyperbolicMinSearcher::runSearch(long maxDepth) {
-    unsigned nTets = size();
+void HyperbolicMinSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
+    unsigned nTets = perms_.size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
         maxDepth = nTets * 4 + 1;
@@ -56,9 +54,8 @@ void HyperbolicMinSearcher::runSearch(long maxDepth) {
         started = true;
 
         // Do we in fact have no permutation at all to choose?
-        if (maxDepth == 0 || pairing_->dest(0, 0).isBoundary(nTets)) {
-            use_(this, useArgs_);
-            use_(0, useArgs_);
+        if (maxDepth == 0 || perms_.pairing().dest(0, 0).isBoundary(nTets)) {
+            action_(perms_);
             return;
         }
 
@@ -69,8 +66,7 @@ void HyperbolicMinSearcher::runSearch(long maxDepth) {
     // Is it a partial search that has already finished?
     if (orderElt == orderSize) {
         if (isCanonical())
-            use_(this, useArgs_);
-        use_(0, useArgs_);
+            action_(perms_);
         return;
     }
 
@@ -83,7 +79,7 @@ void HyperbolicMinSearcher::runSearch(long maxDepth) {
     int mergeResult;
     while (orderElt >= minOrder) {
         face = order[orderElt];
-        adj = (*pairing_)[face];
+        adj = perms_.pairing()[face];
 
         // TODO (long-term): Check for cancellation.
 
@@ -91,15 +87,15 @@ void HyperbolicMinSearcher::runSearch(long maxDepth) {
 
         // Be sure to preserve the orientation of the permutation if necessary.
         if ((! orientableOnly_) || adj.facet == 0)
-            permIndex(face)++;
+            perms_.permIndex(face)++;
         else
-            permIndex(face) += 2;
+            perms_.permIndex(face) += 2;
 
         // Are we out of ideas for this face?
-        if (permIndex(face) >= 6) {
+        if (perms_.permIndex(face) >= 6) {
             // Yep.  Head back down to the previous face.
-            permIndex(face) = -1;
-            permIndex(adj) = -1;
+            perms_.permIndex(face) = -1;
+            perms_.permIndex(adj) = -1;
             orderElt--;
 
             // Pull apart vertex and edge links at the previous level.
@@ -112,7 +108,8 @@ void HyperbolicMinSearcher::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = Perm<3>::S3[permIndex(face)].inverse().S3Index();
+        perms_.permIndex(adj) =
+            Perm<3>::S3[perms_.permIndex(face)].inverse().S3Index();
 
         // Merge edge links and run corresponding tests.
         if (mergeEdgeClasses()) {
@@ -134,7 +131,7 @@ void HyperbolicMinSearcher::runSearch(long maxDepth) {
         // Fix the orientation if appropriate.
         if (adj.facet == 0 && orientableOnly_) {
             // It's the first time we've hit this tetrahedron.
-            if ((permIndex(face) + (face.facet == 3 ? 0 : 1) +
+            if ((perms_.permIndex(face) + (face.facet == 3 ? 0 : 1) +
                     (adj.facet == 3 ? 0 : 1)) % 2 == 0)
                 orientation[adj.simp] = -orientation[face.simp];
             else
@@ -150,7 +147,7 @@ void HyperbolicMinSearcher::runSearch(long maxDepth) {
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
             if (isCanonical())
-                use_(this, useArgs_);
+                action_(perms_);
 
             // Back to the previous face.
             orderElt--;
@@ -166,28 +163,28 @@ void HyperbolicMinSearcher::runSearch(long maxDepth) {
             // We've moved onto a new face.
             // Be sure to get the orientation right.
             face = order[orderElt];
-            if (orientableOnly_ && pairing_->dest(face).facet > 0) {
+            if (orientableOnly_ && perms_.pairing().dest(face).facet > 0) {
                 // permIndex(face) will be set to -1 or -2 as appropriate.
-                adj = (*pairing_)[face];
+                adj = perms_.pairing()[face];
                 if (orientation[face.simp] == orientation[adj.simp])
-                    permIndex(face) = 1;
+                    perms_.permIndex(face) = 1;
                 else
-                    permIndex(face) = 0;
+                    perms_.permIndex(face) = 0;
 
                 if ((face.facet == 3 ? 0 : 1) + (adj.facet == 3 ? 0 : 1) == 1)
-                    permIndex(face) = (permIndex(face) + 1) % 2;
+                    perms_.permIndex(face) = (perms_.permIndex(face) + 1) % 2;
 
-                permIndex(face) -= 2;
+                perms_.permIndex(face) -= 2;
             }
 
             if (orderElt == maxOrder) {
                 // We haven't found an entire triangulation, but we've
                 // gone as far as we need to.
                 // Process it, then step back.
-                use_(this, useArgs_);
+                action_(perms_);
 
                 // Back to the previous face.
-                permIndex(face) = -1;
+                perms_.permIndex(face) = -1;
                 orderElt--;
 
                 // Pull apart vertex and edge links at the previous level.
@@ -278,23 +275,10 @@ void HyperbolicMinSearcher::runSearch(long maxDepth) {
                     << edgeStateChanged[i] << " at end of search!"
                     << std::endl;
     }
-
-    use_(0, useArgs_);
 }
 
 void HyperbolicMinSearcher::dumpData(std::ostream& out) const {
     EulerSearcher::dumpData(out);
-}
-
-HyperbolicMinSearcher::HyperbolicMinSearcher(std::istream& in,
-        GluingPermSearcher<3>::Use use, void* useArgs) :
-        EulerSearcher(in, use, useArgs) {
-    if (inputError_)
-        return;
-
-    // Did we hit an unexpected EOF?
-    if (in.eof())
-        inputError_ = true;
 }
 
 int HyperbolicMinSearcher::mergeEdgeClasses() {
@@ -307,11 +291,11 @@ int HyperbolicMinSearcher::mergeEdgeClasses() {
      * "The cusped hyperbolic census is complete", B.B.
      */
     FacetSpec<3> face = order[orderElt];
-    FacetSpec<3> adj = (*pairing_)[face];
+    FacetSpec<3> adj = perms_.pairing()[face];
 
     int retVal = 0;
 
-    Perm<4> p = gluingPerm(face);
+    Perm<4> p = perms_.perm(face);
     int v1, w1, v2, w2;
     int e, f;
     int orderIdx;
@@ -350,7 +334,7 @@ int HyperbolicMinSearcher::mergeEdgeClasses() {
                 retVal |= ECLASS_LOWDEG;
             else if (edgeState[eRep].size == 3) {
                 // Flag as LOWDEG only if three distinct tetrahedra are used.
-                middleTet = pairing_->dest(face.simp, v2).simp;
+                middleTet = perms_.pairing().dest(face.simp, v2).simp;
                 if (face.simp != adj.simp && adj.simp != middleTet &&
                         middleTet != face.simp)
                     retVal |= ECLASS_LOWDEG;

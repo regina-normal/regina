@@ -49,13 +49,13 @@ class PacketFilter {
         /**
          * Destructor.
          */
-        virtual ~PacketFilter();
+        virtual ~PacketFilter() = default;
 
         /**
          * Should the given packet be accepted according to this
          * particular acceptance algorithm?
          */
-        virtual bool accept(regina::Packet* packet) = 0;
+        virtual bool accept(const regina::Packet& packet) = 0;
 };
 
 /**
@@ -66,19 +66,7 @@ class AllPacketsFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(regina::Packet* packet);
-};
-
-/**
- * A packet filter that accepts only packets that can be happily
- * separated from their parents.
- */
-class StandaloneFilter : public PacketFilter {
-    public:
-        /**
-         * PacketFilter overrides.
-         */
-        virtual bool accept(regina::Packet* packet);
+        bool accept(const regina::Packet& packet) override;
 };
 
 /**
@@ -94,8 +82,8 @@ class SingleTypeFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(regina::Packet* packet) {
-            return (packet->type() == T::typeID);
+        bool accept(const regina::Packet& packet) override {
+            return (packet.type() == T::typeID);
         }
 };
 
@@ -112,17 +100,16 @@ class TwoTypeFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(regina::Packet* packet) {
-            int type = packet->type();
+        bool accept(const regina::Packet& packet) override {
+            int type = packet.type();
             return (type == S::typeID || type == T::typeID);
         }
 };
 
 /**
- * A packet filter that only accepts packets of either a given packet type
+ * A packet filter that only accepts packets of either a given type
  * or any of its subclasses.
  *
- * The template argument T must be one of the available packet types.
  * The acceptance test will be performed by calling dynamic_cast<T*>
  * upon each packet being questioned.
  */
@@ -132,20 +119,13 @@ class SubclassFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(regina::Packet* packet) {
-            return dynamic_cast<T*>(packet);
+        bool accept(const regina::Packet& packet) override {
+            return dynamic_cast<const T*>(std::addressof(packet));
         }
 };
 
-inline PacketFilter::~PacketFilter() {
-}
-
-inline bool AllPacketsFilter::accept(regina::Packet*) {
+inline bool AllPacketsFilter::accept(const regina::Packet&) {
     return true;
-}
-
-inline bool StandaloneFilter::accept(regina::Packet* packet) {
-    return ! packet->dependsOnParent();
 }
 
 #endif

@@ -39,6 +39,7 @@
 
 #include <QMap>
 #include <QMenu>
+#include <QUrl>
 
 class QUrl;
 class QActionGroup;
@@ -70,7 +71,6 @@ class ExamplesAction : public QMenu {
          * Constructor and destructor.
          */
         ExamplesAction(QWidget* parent);
-        virtual ~ExamplesAction();
 
         /**
          * Add a sample data file to the list of offerings.

@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>packet (angle structure list)</refname>
-  <refpurpose>An angle structure list packet</refpurpose>
+  <refpurpose>Replaced by &xml-angles;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -25,8 +25,7 @@
      <row><entry namest="c1" nameend="c2">
 <synopsis>
 packet ::= (&xml-angleparams;?, &xml-struct;*,
-            &xml-spanstrict;?, &xml-allowstrict;?,
-            &xml-spantaut;?, &xml-allowtaut;?,
+            &xml-spanstrict;?, &xml-spantaut;?,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -38,10 +37,21 @@ packet ::= (&xml-angleparams;?, &xml-struct;*,
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   In &regina;&nbsp;6.0.1 and earlier, the &xml-packet; element was used
+   to store every packet in the entire packet tree that makes up a
+   &regina; data file.
+   This page describes how the &xml-packet; element was structured when
+   storing an angle structure list.
+   Since &regina;&nbsp;7.0, each packet type has its own &xml; element;
+   in particular, angle structure lists are now stored using the
+   &xml-angles; element.
+  </para>
   <para>
    An <emphasis>angle structure list</emphasis> packet
    stores a list of angle structures on a particular
@@ -85,8 +95,6 @@ packet ::= (&xml-angleparams;?, &xml-struct;*,
     The following elements occur in <sgmltag>packet</sgmltag> for
     an angle structure list packet:
     <simplelist type="inline">
-     <member>&xml-allowstrict;</member>
-     <member>&xml-allowtaut;</member>
      <member>&xml-angleparams;</member>
      <member>&xml-packet;</member>
      <member>&xml-spanstrict;</member>

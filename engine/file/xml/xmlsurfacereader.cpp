@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include <vector>
-#include "surfaces/coordregistry.h"
 #include "file/xml/xmlsurfacereader.h"
+#include "file/xml/xmltreeresolver.h"
 #include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 
@@ -41,51 +41,49 @@ namespace regina {
 void XMLNormalSurfaceReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props,
         XMLElementReader*) {
-    if (! valueOf(props.lookup("len"), vecLen))
-        vecLen = -1;
-    name = props.lookup("name");
+    if (! valueOf(props.lookup("len"), vecLen_))
+        vecLen_ = -1;
+    if (! valueOf(props.lookup("enc"), vecEnc_))
+        vecEnc_ = 0;
+    name_ = props.lookup("name");
 }
 
 void XMLNormalSurfaceReader::initialChars(const std::string& chars) {
-    if (vecLen < 0 || tri == 0)
+    // If this file was created before Regina 7.0, then it will not include
+    // a vector encoding.  For those earlier versions of Regina, the encoding
+    // is meant to be deduced from the enclosing list's coordinate system.
+    if (vecLen_ < 0)
         return;
 
-    std::vector<std::string> tokens;
-    if (basicTokenise(back_inserter(tokens), chars) % 2 != 0)
+    std::vector<std::string> tokens = basicTokenise(chars);
+    if (tokens.size() % 2 != 0)
         return;
 
     // Create a new vector and read all non-zero entries.
-    // Bring in cases from the coordinate system registry...
-    NormalSurfaceVector* vec;
-    if (coords == NS_AN_LEGACY)
-        vec = new NSVectorANStandard(vecLen);
-    else
-        vec = forCoords(coords, [=](auto info) {
-            return static_cast<NormalSurfaceVector*>(
-                new typename decltype(info)::Class(vecLen));
-        }, nullptr);
-    if (! vec)
-        return;
+    Vector<LargeInteger> vec(vecLen_);
 
     long pos;
     LargeInteger value;
     for (unsigned long i = 0; i < tokens.size(); i += 2) {
-        if (valueOf(tokens[i], pos))
-            if (valueOf(tokens[i + 1], value))
-                if (pos >= 0 && pos < vecLen) {
-                    // All looks valid.
-                    vec->set(pos, value);
-                    continue;
-                }
-
-        // Found something invalid.
-        delete vec;
-        return;
+        if (! valueOf(tokens[i], pos))
+            return;
+        if (pos < 0 || pos >= vecLen_)
+            return;
+        try {
+            vec[pos] = tokens[i + 1];
+        } catch (const regina::InvalidArgument&) {
+            return;
+        }
     }
 
-    surface_ = new NormalSurface(*tri, vec);
-    if (! name.empty())
-        surface_->setName(name);
+    if (vecEnc_ != 0)
+        surface_ = NormalSurface(tri_, NormalEncoding::fromIntValue(vecEnc_),
+            std::move(vec));
+    else
+        surface_ = NormalSurface(tri_, coords_, std::move(vec));
+
+    if (! name_.empty())
+        surface_->setName(name_);
 }
 
 XMLElementReader* XMLNormalSurfaceReader::startSubElement(
@@ -95,9 +93,10 @@ XMLElementReader* XMLNormalSurfaceReader::startSubElement(
         return new XMLElementReader();
 
     if (subTagName == "euler") {
-        LargeInteger val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->eulerChar_ = val;
+        try {
+            surface_->eulerChar_ = props.lookup("value");
+        } catch (const regina::InvalidArgument&) {
+        }
     } else if (subTagName == "orbl") {
         bool val;
         if (valueOf(props.lookup("value"), val))
@@ -122,13 +121,57 @@ XMLElementReader* XMLNormalSurfaceReader::startSubElement(
     return new XMLElementReader();
 }
 
+XMLNormalSurfacesReader::XMLNormalSurfacesReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id,
+        const regina::xml::XMLPropertyDict& props) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        list_(nullptr), tri_(resolver_.resolveTri3(props.lookup("tri"))) {
+    if (! tri_)
+        return;
+
+    // Extract the list parameters from the attributes.
+    int coords, listType, algorithm;
+    if (valueOf(props.lookup("coords"), coords) &&
+            valueOf(props.lookup("type"), listType) &&
+            valueOf(props.lookup("algorithm"), algorithm)) {
+        // Parameters look sane; create the empty list.
+        list_ = makePacket<NormalSurfaces>(std::in_place,
+            static_cast<NormalCoords>(coords),
+            NormalList::fromInt(listType),
+            NormalAlg::fromInt(algorithm),
+            *tri_);
+    }
+}
+
 XMLElementReader* XMLNormalSurfacesReader::startContentSubElement(
         const std::string& subTagName,
+        const regina::xml::XMLPropertyDict&) {
+    if (list_ && subTagName == "surface")
+        return new XMLNormalSurfaceReader(
+            list_->triangulation_, list_->coords_);
+    else
+        return new XMLElementReader();
+}
+
+void XMLNormalSurfacesReader::endContentSubElement(
+        const std::string& subTagName,
+        XMLElementReader* subReader) {
+    if (list_ && subTagName == "surface")
+        if (auto& s = dynamic_cast<XMLNormalSurfaceReader*>(subReader)->
+                surface())
+            list_->surfaces_.push_back(std::move(*s));
+}
+
+XMLElementReader* XMLLegacyNormalSurfacesReader::startContentSubElement(
+        const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
-    if (list) {
+    if (list_) {
         // The surface list has already been created.
         if (subTagName == "surface")
-            return new XMLNormalSurfaceReader(tri, list->coords_);
+            return new XMLNormalSurfaceReader(
+                list_->triangulation_, list_->coords_);
     } else {
         // The surface list has not yet been created.
         if (subTagName == "params") {
@@ -139,17 +182,19 @@ XMLElementReader* XMLNormalSurfacesReader::startContentSubElement(
                 if (valueOf(props.lookup("type"), listType) &&
                         valueOf(props.lookup("algorithm"), algorithm)) {
                     // Parameters look sane; create the empty list.
-                    list = new NormalSurfaces(
+                    list_ = makePacket<NormalSurfaces>(std::in_place,
                         static_cast<NormalCoords>(coords),
                         NormalList::fromInt(listType),
-                        NormalAlg::fromInt(algorithm));
+                        NormalAlg::fromInt(algorithm),
+                        tri_);
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old format.
-                    list = new NormalSurfaces(
+                    list_ = makePacket<NormalSurfaces>(std::in_place,
                         static_cast<NormalCoords>(coords),
                         NS_LEGACY | (embedded ?
                             NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
-                        NS_ALG_LEGACY);
+                        NS_ALG_LEGACY,
+                        tri_);
                 }
             }
         }
@@ -157,21 +202,13 @@ XMLElementReader* XMLNormalSurfacesReader::startContentSubElement(
     return new XMLElementReader();
 }
 
-void XMLNormalSurfacesReader::endContentSubElement(
+void XMLLegacyNormalSurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
-    if (list)
-        if (subTagName == "surface")
-            if (NormalSurface* s =
-                    dynamic_cast<XMLNormalSurfaceReader*>(subReader)->
-                    surface())
-                list->surfaces_.push_back(std::move(*s));
-}
-
-XMLPacketReader* NormalSurfaces::xmlReader(Packet* parent,
-        XMLTreeResolver& resolver) {
-    return new XMLNormalSurfacesReader(
-        dynamic_cast<Triangulation<3>*>(parent), resolver);
+    if (list_ && subTagName == "surface")
+        if (auto& s = dynamic_cast<XMLNormalSurfaceReader*>(subReader)->
+                surface())
+            list_->surfaces_.push_back(std::move(*s));
 }
 
 } // namespace regina

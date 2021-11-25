@@ -39,28 +39,25 @@
 #define __REGINA_ORB_H
 #endif
 
+#include <memory>
 #include <string>
 #include "regina-core.h"
 #include "triangulation/forward.h"
 
 namespace regina {
 
-/**
- * \weakgroup foreign
- * @{
- */
+template <typename> class PacketOf;
 
 /**
- * Reads a triangulation from the given Orb / Casson file.  A newly
- * allocated triangulation will be returned; it is the user's
- * responsibility to deallocate this when it is finished with.
+ * Reads a triangulation from the given Orb / Casson file.  A new
+ * triangulation packet will be returned.
  *
  * The packet label of the new triangulation will be the manifold name
  * read from the second line of the Orb / Casson file.  The first line
  * of the Orb / Casson file must simply be ``<tt>% orb</tt>''.
  *
  * If the file could not be read or if the data was not in the correct
- * format, 0 will be returned.
+ * format, \c null will be returned.
  *
  * \i18n This routine makes no assumptions about the
  * \ref i18n "character encoding" used in the given file \e name, and
@@ -68,14 +65,14 @@ namespace regina {
  * It assumes however that the \e contents of the file are in UTF-8.
  *
  * @param filename the name of the Orb / Casson file from which to read.
- * @return a new triangulation containing the data read from the Orb / Casson
- * file, or 0 on error.
+ * @return a new triangulation packet containing the data read from the
+ * Orb / Casson file, or \c null on error.
  *
  * @author Ryan Budney, also with code from Damien Heard
+ *
+ * \ingroup foreign
  */
-Triangulation<3>* readOrb(const char *filename);
-
-/*@}*/
+std::shared_ptr<PacketOf<Triangulation<3>>> readOrb(const char *filename);
 
 } // namespace regina
 

@@ -39,6 +39,7 @@
 
 #include "packetexporter.h"
 #include "packetimporter.h"
+#include <QString>
 
 /**
  * An object responsible for exporting normal surface lists to
@@ -59,18 +60,21 @@ class CSVSurfaceHandler : public PacketExporter {
         /**
          * PacketExporter overrides:
          */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::Packet* data,
-            const QString& fileName, QWidget* parentWidget) const;
+        PacketFilter* canExport() const override;
+        bool exportData(std::shared_ptr<regina::Packet> data,
+            const QString& fileName, QWidget* parentWidget) const override;
+        QString defaultExtension(const regina::Packet& data) const override;
 
     private:
         /**
          * Don't allow people to construct their own CSV handlers.
          */
-        CSVSurfaceHandler();
+        CSVSurfaceHandler() = default;
 };
 
-inline CSVSurfaceHandler::CSVSurfaceHandler() {
+inline QString CSVSurfaceHandler::defaultExtension(const regina::Packet&)
+        const {
+    return ".csv";
 }
 
 #endif

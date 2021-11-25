@@ -196,7 +196,7 @@ class PythonInterpreter {
          *
          * Returns \c true on success or \c false on failure.
          */
-        bool setVar(const char* name, regina::Packet* value);
+        bool setVar(const char* name, std::shared_ptr<Packet> value);
 
         /**
          * Run the given script packet in Python's main namespace.

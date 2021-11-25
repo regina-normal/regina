@@ -34,9 +34,12 @@
  *  \brief Contains some of the implementation details for the generic
  *  Triangulation class template.
  *
- *  This file is \e not included from triangulation.h, but the routines
- *  it contains are explicitly instantiated in Regina's calculation engine.
- *  Therefore end users should never need to include this header.
+ *  This file is \e not included from triangulate.h, and it is not
+ *  shipped with Regina's development headers.  The routines it contains are
+ *  explicitly instantiated in Regina's calculation engine for all dimensions.
+ *
+ *  The reason for "quarantining" this file is so that the helper function and
+ *  classes it defines are not inadvertently made accessible to end users.
  */
 
 #ifndef __REGINA_PACHNER_IMPL_H_DETAIL
@@ -97,7 +100,7 @@ namespace regina::detail {
             "The generic movePerm() implementation cannot be used in "
             "standard dimensions.");
 
-        int image[dim + 1];
+        std::array<int, dim + 1> image;
         int i;
         int oldFacet, newFacet;
 
@@ -251,9 +254,10 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
             return true;
 
         // Perform the move.
-        TopologyLock lock(this);
+        TopologyLock lock(*this);
+        // Ensure only one event pair is fired in this sequence of changes.
         typename Triangulation<dim>::ChangeEventSpan span(
-            static_cast<Triangulation<dim>*>(this));
+            static_cast<Triangulation<dim>&>(*this));
 
         Simplex<dim>* newSimp = newSimplex();
 
@@ -273,7 +277,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
                     if (i > j) {
                         // Ensure we make the gluing in just one
                         // direction, not both directions.
-                        adjSimp[i] = 0;
+                        adjSimp[i] = nullptr;
                     } else {
                         // Adjust the gluing to point to the new simplex.
                         adjSimp[i] = newSimp;
@@ -302,9 +306,10 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
         if ( !perform )
             return true; // You can always do this move.
 
-        TopologyLock lock(this);
+        TopologyLock lock(*this);
+        // Ensure only one event pair is fired in this sequence of changes.
         typename Triangulation<dim>::ChangeEventSpan span(
-            static_cast<Triangulation<dim>*>(this));
+            static_cast<Triangulation<dim>&>(*this));
 
         // Before we unglue, record how the adjacent simplices are glued to f.
         Simplex<dim>* adjSimp[dim + 1];
@@ -480,9 +485,10 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
             return true;
 
         // Perform the move.
-        TopologyLock lock(this);
+        TopologyLock lock(*this);
+        // Ensure only one event pair is fired in this sequence of changes.
         typename Triangulation<dim>::ChangeEventSpan span(
-            static_cast<Triangulation<dim>*>(this));
+            static_cast<Triangulation<dim>&>(*this));
 
         // Create (k + 1) new top-dimensional simplices.
         // We insert them in reverse order to ensure that the new internal
@@ -522,7 +528,7 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
                         }
                         // Which facet of the old simplex is the destination
                         // of the gluing (using our own numbering scheme)?
-                        destFacet = oldVertices[l].preImageOf(
+                        destFacet = oldVertices[l].pre(
                             adjGluing[i][j][j < dim - k ? j : i + dim - k]);
 
                         if (j == l && oldFacet < destFacet) {

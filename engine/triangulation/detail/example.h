@@ -47,11 +47,6 @@
 namespace regina::detail {
 
 /**
- * \weakgroup detail
- * @{
- */
-
-/**
  * Helper class that builds various <i>dim</i>-dimensional
  * triangulations from (<i>dim</i>-1)-dimensional triangulations.
  *
@@ -62,6 +57,8 @@ namespace regina::detail {
  * This must be between 2 and 15 inclusive.
  * \tparam available \c true if Regina supports (<i>dim</i>-1)-dimensional
  * triangulations, or \c false if not (in which case this class will be empty).
+ *
+ * \ingroup detail
  */
 template <int dim, bool available>
 class ExampleFromLowDim {
@@ -96,10 +93,9 @@ class ExampleFromLowDim {
          * a (<i>dim</i>-1)-ball, you will obtain an invalid
          * <i>dim</i>-manifold triangulation as a result.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return a double cone over the given triangulation.
          */
-        static Triangulation<dim>* doubleCone(const Triangulation<dim-1>& base);
+        static Triangulation<dim> doubleCone(const Triangulation<dim-1>& base);
 
         /**
          * Returns a single cone over the given (<i>dim-1</i>)-dimensional
@@ -116,10 +112,12 @@ class ExampleFromLowDim {
          * a (<i>dim</i>-1)-ball, you will obtain an invalid
          * <i>dim</i>-manifold triangulation as a result.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return a single cone over the given triangulation.
          */
-        static Triangulation<dim>* singleCone(const Triangulation<dim-1>& base);
+        static Triangulation<dim> singleCone(const Triangulation<dim-1>& base);
+
+        // Make this class non-constructible.
+        ExampleFromLowDim() = delete;
 };
 
 /**
@@ -130,12 +128,18 @@ class ExampleFromLowDim {
  * This specialisation is used for dimensions in which
  * (<i>dim</i>-1)-dimensional triangulations are not supported.
  * As a result, this specialised class is empty.
+ *
+ * \ingroup detail
  */
 template <int dim>
 class ExampleFromLowDim<dim, false> {
     static_assert(dim == 2,
         "The ExampleFromLowDim template should only set available = false "
         "in dimension 2.");
+
+    public:
+        // Make this class non-constructible.
+        ExampleFromLowDim() = delete;
 };
 
 /**
@@ -153,6 +157,8 @@ class ExampleFromLowDim<dim, false> {
  *
  * \tparam dim the dimension of the example triangulations to construct.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim>
 class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
@@ -167,37 +173,33 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
         /**
          * Returns a two-simplex triangulation of the <i>dim</i>-sphere.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return a two-simplex <i>dim</i>-sphere.
          */
-        static Triangulation<dim>* sphere();
+        static Triangulation<dim> sphere();
 
         /**
          * Returns the standard (<i>dim</i>+2)-simplex triangulation of the
          * <i>dim</i>-sphere as the boundary of a (<i>dim</i>+1)-simplex.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the standard simplicial <i>dim</i>-sphere.
          */
-        static Triangulation<dim>* simplicialSphere();
+        static Triangulation<dim> simplicialSphere();
 
         /**
          * Returns a two-simplex triangulation of the product space
          * <tt>S^(<i>dim</i>-1) x S^1</tt>.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the product <tt>S^(<i>dim</i>-1) x S^1</tt>.
          */
-        static Triangulation<dim>* sphereBundle();
+        static Triangulation<dim> sphereBundle();
 
         /**
          * Returns a two-simplex triangulation of the twisted product
          * space <tt>S^(<i>dim</i>-1) x~ S^1</tt>.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the twisted product <tt>S^(<i>dim</i>-1) x~ S^1</tt>.
          */
-        static Triangulation<dim>* twistedSphereBundle();
+        static Triangulation<dim> twistedSphereBundle();
 
         /*@}*/
         /**
@@ -208,10 +210,9 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
         /**
          * Returns a one-simplex triangulation of the <i>dim</i>-ball.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return a one-simplex <i>dim</i>-ball.
          */
-        static Triangulation<dim>* ball();
+        static Triangulation<dim> ball();
 
         /**
          * Returns a triangulation of the product space
@@ -219,10 +220,9 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
          * This will use one simplex in odd dimensions, or two simplices
          * in even dimensions.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the product <tt>B^(<i>dim</i>-1) x S^1</tt>.
          */
-        static Triangulation<dim>* ballBundle();
+        static Triangulation<dim> ballBundle();
 
         /**
          * Returns a triangulation of the twisted product
@@ -230,10 +230,9 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
          * This will use one simplex in even dimensions, or two simplices
          * in odd dimensions.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the twisted product <tt>B^(<i>dim</i>-1) x~ S^1</tt>.
          */
-        static Triangulation<dim>* twistedBallBundle();
+        static Triangulation<dim> twistedBallBundle();
 
         /*@}*/
 
@@ -241,23 +240,21 @@ class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
         ExampleBase() = delete;
 };
 
-/*@}*/
-
 // Inline functions for ExampleFromLowDim
 
 template <int dim, bool available>
-Triangulation<dim>* ExampleFromLowDim<dim, available>::singleCone(
+Triangulation<dim> ExampleFromLowDim<dim, available>::singleCone(
         const Triangulation<dim-1>& base) {
-    Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
-    ans->setLabel("Single cone over " + base.label());
+    Triangulation<dim> ans;
+    // Ensure only one event pair is fired in this sequence of changes.
+    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     size_t n = base.size();
     if (n == 0)
         return ans;
 
     // We have at least one simplex.  Off we go.
-    Simplex<dim>** simp = new Simplex<dim>*[n];
+    auto* simp = new Simplex<dim>*[n];
 
     size_t i;
     int facet;
@@ -265,12 +262,12 @@ Triangulation<dim>* ExampleFromLowDim<dim, available>::singleCone(
     const Simplex<dim-1> *f, *adj;
     Perm<dim> map;
     for (i = 0; i < n; ++i) {
-        simp[i] = ans->newSimplex();
+        simp[i] = ans.newSimplex();
 
         f = base.simplex(i);
         for (facet = 0; facet < dim; ++facet) {
             adj = f->adjacentSimplex(facet);
-            if (adj == 0)
+            if (! adj)
                 continue;
 
             adjIndex = adj->index();
@@ -290,18 +287,18 @@ Triangulation<dim>* ExampleFromLowDim<dim, available>::singleCone(
 }
 
 template <int dim, bool available>
-Triangulation<dim>* ExampleFromLowDim<dim, available>::doubleCone(
+Triangulation<dim> ExampleFromLowDim<dim, available>::doubleCone(
         const Triangulation<dim-1>& base) {
-    Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
-    ans->setLabel("Double cone over " + base.label());
+    Triangulation<dim> ans;
+    // Ensure only one event pair is fired in this sequence of changes.
+    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
     size_t n = base.size();
     if (n == 0)
         return ans;
 
     // We have at least one simplex.  Off we go.
-    Simplex<dim>** simp = new Simplex<dim>*[2 * n];
+    auto* simp = new Simplex<dim>*[2 * n];
 
     size_t i;
     int facet;
@@ -310,7 +307,7 @@ Triangulation<dim>* ExampleFromLowDim<dim, available>::doubleCone(
     Perm<dim> map;
 
     for (i = 0; i < 2 * n; ++i)
-        simp[i] = ans->newSimplex();
+        simp[i] = ans.newSimplex();
 
     for (i = 0; i < n; ++i) {
         simp[i]->join(dim, simp[i + n], Perm<dim+1>());
@@ -318,7 +315,7 @@ Triangulation<dim>* ExampleFromLowDim<dim, available>::doubleCone(
         f = base.simplex(i);
         for (facet = 0; facet < dim; ++facet) {
             adj = f->adjacentSimplex(facet);
-            if (adj == 0)
+            if (! adj)
                 continue;
 
             adjIndex = adj->index();
@@ -342,15 +339,14 @@ Triangulation<dim>* ExampleFromLowDim<dim, available>::doubleCone(
 // Inline functions for Example
 
 template <int dim>
-Triangulation<dim>* ExampleBase<dim>::sphere() {
+Triangulation<dim> ExampleBase<dim>::sphere() {
     // Take two simplices and join their entire boundaries according to
     // the identity map.
-    Triangulation<dim>* ans = new Triangulation<dim>;
-    Packet::ChangeEventSpan span(ans);
-    ans->setLabel(std::string(Strings<dim>::dim) + "-sphere");
+    Triangulation<dim> ans;
+    // Ensure only one event pair is fired in this sequence of changes.
+    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
-    Simplex<dim>* p = ans->newSimplex();
-    Simplex<dim>* q = ans->newSimplex();
+    auto [p, q] = ans.template newSimplices<2>();
     for (int i = 0; i <= dim; ++i)
         p->join(i, q, Perm<dim+1>());
 
@@ -358,24 +354,21 @@ Triangulation<dim>* ExampleBase<dim>::sphere() {
 }
 
 template <int dim>
-Triangulation<dim>* ExampleBase<dim>::simplicialSphere() {
-    Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
-    ans->setLabel(std::string("Standard simplicial ") +
-        Strings<dim>::dim + "-sphere");
+Triangulation<dim> ExampleBase<dim>::simplicialSphere() {
+    Triangulation<dim> ans;
+    // Ensure only one event pair is fired in this sequence of changes.
+    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
-    Simplex<dim>* simps[dim + 2]; // One for every vertex of the (dim+1)-simplex
-    unsigned i, j, k;
-    for (i = 0; i < dim + 2; i++)
-        simps[i] = ans->newSimplex();
+    // One top-dimensional simplex for every vertex of the (dim+1)-simplex
+    auto simps = ans.template newSimplices<dim + 2>(); // One for ever
 
     // One gluing for every distinct pair of vertices of the (dim+1)-simplex.
     // We are gluing facet j-1 of simplex i to facet i of simplex j
     // using the cycle i -> i+1 -> ... -> j-1 -> i. 
-    for (i = 0; i <= dim; i++)
-        for (j = i + 1; j < dim + 2; j++) {
-            int map[dim + 1];
-            for (k = 0; k <= dim; k++) {
+    for (int i = 0; i <= dim; i++)
+        for (int j = i + 1; j < dim + 2; j++) {
+            std::array<int, dim + 1> map;
+            for (int k = 0; k <= dim; k++) {
                 if ((k < i) || (k >= j))
                     map[k] = k;
                 else if (k < (j-1))
@@ -389,25 +382,21 @@ Triangulation<dim>* ExampleBase<dim>::simplicialSphere() {
 }
 
 template <int dim>
-Triangulation<dim>* ExampleBase<dim>::sphereBundle() {
+Triangulation<dim> ExampleBase<dim>::sphereBundle() {
     // Make two simplex, and join all but two of the facets according
     // to the identity map.  Only facets 0 and dim of each simplex remain.
-    Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
-    ans->setLabel(std::string("S") + Strings<dim-1>::dim + " x S1");
+    Triangulation<dim> ans;
+    // Ensure only one event pair is fired in this sequence of changes.
+    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
-    Simplex<dim>* p = ans->newSimplex();
-    Simplex<dim>* q = ans->newSimplex();
-    int i;
-    for (i = 1; i < dim; ++i)
+    auto [p, q] = ans.template newSimplices<2>();
+    for (int i = 1; i < dim; ++i)
         p->join(i, q, Perm<dim+1>());
 
     // Now join each facet 0 to a facet dim to join up the S1 loop.
-    // Do this in the orientation-preserving way.
-    int map[dim + 1]; // { dim, 0, 1, 2, ..., dim-1 }
-    map[0] = dim;
-    for (i = 0; i < dim; ++i)
-        map[i + 1] = i;
+    // Do this in the orientation-preserving way:
+    //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
+    Perm<dim + 1> map = Perm<dim + 1>().rot(dim);
 
     if (dim % 2) {
         p->join(0, p, Perm<dim+1>(map));
@@ -422,25 +411,21 @@ Triangulation<dim>* ExampleBase<dim>::sphereBundle() {
 }
 
 template <int dim>
-Triangulation<dim>* ExampleBase<dim>::twistedSphereBundle() {
+Triangulation<dim> ExampleBase<dim>::twistedSphereBundle() {
     // Make two simplex, and join all but two of the facets according
     // to the identity map.  Only facets 0 and dim of each simplex remain.
-    Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
-    ans->setLabel(std::string("S") + Strings<dim-1>::dim + " x~ S1");
+    Triangulation<dim> ans;
+    // Ensure only one event pair is fired in this sequence of changes.
+    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
-    Simplex<dim>* p = ans->newSimplex();
-    Simplex<dim>* q = ans->newSimplex();
-    int i;
-    for (i = 1; i < dim; ++i)
+    auto [p, q] = ans.template newSimplices<2>();
+    for (int i = 1; i < dim; ++i)
         p->join(i, q, Perm<dim+1>());
 
     // Now join each facet 0 to a facet dim to join up the S1 loop.
-    // Do this in the orientation-reversing way.
-    int map[dim + 1]; // { dim, 0, 1, 2, ..., dim-1 }
-    map[0] = dim;
-    for (i = 0; i < dim; ++i)
-        map[i + 1] = i;
+    // Do this in the orientation-reversing way:
+    //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
+    Perm<dim + 1> map = Perm<dim + 1>().rot(dim);
 
     if (dim % 2) {
         p->join(0, q, Perm<dim+1>(map));
@@ -455,36 +440,33 @@ Triangulation<dim>* ExampleBase<dim>::twistedSphereBundle() {
 }
 
 template <int dim>
-Triangulation<dim>* ExampleBase<dim>::ball() {
-    Triangulation<dim>* ans = new Triangulation<dim>;
-    Packet::ChangeEventSpan span(ans);
-    ans->setLabel(std::string(Strings<dim>::dim) + "-ball");
+Triangulation<dim> ExampleBase<dim>::ball() {
+    Triangulation<dim> ans;
+    // Ensure only one event pair is fired in this sequence of changes.
+    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
-    ans->newSimplex();
+    ans.newSimplex();
     return ans;
 }
 
 template <int dim>
-Triangulation<dim>* ExampleBase<dim>::ballBundle() {
+Triangulation<dim> ExampleBase<dim>::ballBundle() {
     // This is the higher-dimensional analogy of a layered solid torus.
     // In even dimensions the corresponding construction is non-orientable,
     // and we need to take its orientable double cover.
-    Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
-    ans->setLabel(std::string("B") + Strings<dim-1>::dim + " x S1");
+    Triangulation<dim> ans;
+    // Ensure only one event pair is fired in this sequence of changes.
+    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
-    // Now join facet 0 to a facet dim to join up the S1 loop.
-    int map[dim + 1]; // { dim, 0, 1, 2, ..., dim-1 }
-    map[0] = dim;
-    for (int i = 0; i < dim; ++i)
-        map[i + 1] = i;
+    // Now join facet 0 to a facet dim to join up the S1 loop:
+    //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
+    Perm<dim + 1> map = Perm<dim + 1>().rot(dim);
 
     if (dim % 2) {
-        Simplex<dim>* s = ans->newSimplex();
+        Simplex<dim>* s = ans.newSimplex();
         s->join(0, s, Perm<dim+1>(map));
     } else {
-        Simplex<dim>* s = ans->newSimplex();
-        Simplex<dim>* t = ans->newSimplex();
+        auto [s, t] = ans.template newSimplices<2>();
         s->join(0, t, Perm<dim+1>(map));
         t->join(0, s, Perm<dim+1>(map));
     }
@@ -494,31 +476,27 @@ Triangulation<dim>* ExampleBase<dim>::ballBundle() {
 }
 
 template <int dim>
-Triangulation<dim>* ExampleBase<dim>::twistedBallBundle() {
+Triangulation<dim> ExampleBase<dim>::twistedBallBundle() {
     // This is the higher-dimensional analogy of a layered solid torus.
     // In even dimensions the corresponding construction is non-orientable.
     // In odd dimensions the construction is orientable, and so we
     // double it (giving a two-vertex, two-simplex Bn x S1) but fiddle
     // with the second map to make it non-orientable.
-    Triangulation<dim>* ans = new Triangulation<dim>();
-    Packet::ChangeEventSpan span(ans);
-    ans->setLabel(std::string("B") + Strings<dim-1>::dim + " x~ S1");
+    Triangulation<dim> ans;
+    // Ensure only one event pair is fired in this sequence of changes.
+    typename Triangulation<dim>::ChangeEventSpan span(ans);
 
-    // Now join facet 0 to a facet dim to join up the S1 loop.
-    int map[dim + 1]; // { dim, 0, 1, 2, ..., dim-1 }
-    map[0] = dim;
-    for (int i = 0; i < dim; ++i)
-        map[i + 1] = i;
+    // Now join facet 0 to a facet dim to join up the S1 loop:
+    //   0, 1, ..., dim -> dim, 0, 1, 2, ..., dim-1
+    Perm<dim + 1> map = Perm<dim + 1>().rot(dim);
 
     if (dim % 2) {
-        Simplex<dim>* s = ans->newSimplex();
-        Simplex<dim>* t = ans->newSimplex();
+        auto [s, t] = ans.template newSimplices<2>();
         s->join(0, t, Perm<dim+1>(map));
-        map[dim - 1] = dim - 1;
-        map[dim] = dim - 2;
+        map = map * Perm<dim+1>(dim - 1, dim);
         t->join(0, s, Perm<dim+1>(map));
     } else {
-        Simplex<dim>* s = ans->newSimplex();
+        Simplex<dim>* s = ans.newSimplex();
         s->join(0, s, Perm<dim+1>(map));
     }
 

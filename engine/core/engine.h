@@ -48,9 +48,8 @@
 namespace regina {
 
 /**
- * \addtogroup engine Engine Structure
+ * \defgroup engine Engine Structure
  * Overall structure of the calculation engine.
- * @{
  */
 
 /**
@@ -58,6 +57,8 @@ namespace regina {
  * For instance, version 2.3.1 would have full version <tt>"2.3.1"</tt>.
  *
  * @return the version of this calculation engine.
+ *
+ * \ingroup engine
  */
 const char* versionString();
 
@@ -66,6 +67,8 @@ const char* versionString();
  * For instance, version 2.3.1 would have major version 2.
  *
  * @return the major version number of this calculation engine.
+ *
+ * \ingroup engine
  */
 int versionMajor();
 
@@ -74,6 +77,8 @@ int versionMajor();
  * For instance, version 2.3.1 would have minor version 3.
  *
  * @return the minor version number of this calculation engine.
+ *
+ * \ingroup engine
  */
 int versionMinor();
 
@@ -102,6 +107,8 @@ int versionMinor();
  * @return \c true if the given version uses UTF-8 consistently, or
  * \c false if the given version is an older version that did not pay
  * attention to character encodings.
+ *
+ * \ingroup engine
  */
 bool versionUsesUTF8(const char* version);
 
@@ -118,6 +125,8 @@ bool versionUsesUTF8(const char* version);
  *
  * @return the version of SnapPy whose underlying SnapPea kernel is
  * built into Regina.
+ *
+ * \ingroup engine
  */
 const char* versionSnapPy();
 
@@ -129,6 +138,8 @@ const char* versionSnapPy();
  *
  * @return the version of SnapPy whose underlying SnapPea kernel is
  * built into Regina.
+ *
+ * \ingroup engine
  */
 const char* versionSnapPea();
 
@@ -140,6 +151,8 @@ const char* versionSnapPea();
  * are optimised to run significantly faster in some cases.
  *
  * @return \c true if and only if this build supports native 128-bit arithmetic.
+ *
+ * \ingroup engine
  */
 bool hasInt128();
 
@@ -151,6 +164,8 @@ bool hasInt128();
  * cores available on the machine.
  *
  * @return the suggested number of threads to use.
+ *
+ * \ingroup engine
  */
 int politeThreads();
 
@@ -164,10 +179,10 @@ int politeThreads();
  *
  * @param value any integer; this same integer will be returned.
  * @return the same integer that was passed as \a value.
+ *
+ * \ingroup engine
  */
 int testEngine(int value);
-
-/*@}*/
 
 } // namespace regina
 

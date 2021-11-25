@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>reginadata</refname>
-  <refpurpose>An entire &regina; data file</refpurpose>
+  <refpurpose>Replaced by &xml-regina;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,14 +40,27 @@ reginadata ::= (&xml-packet;)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-reginadata; element is the top-level element for
-   a &regina; data file.  The single &xml-packet; element
-   that it contains is the root of the packet tree stored in this data file.
+   This element was renamed to &xml-regina; when &regina; switched to
+   its third-generation file format in &regina;&nbsp;7.0.
+   If &regina; sees a data file whose root element is &xml-reginadata;
+   (not &xml-regina;), it will understand this to be a older second-generation
+   data file, and it will still be able to read it.  New data
+   files should use &xml-regina; as their root elements instead.
+  </para>
+  <para>
+   A &xml-reginadata; element is the top-level element for a
+   second-generation &regina; data file.
+   Whereas the newer &xml-regina; stores different types of packets
+   using their own element types (&xml-container;, &xml-tri;, etc.),
+   the older &xml-reginadata; stores every packet using a &xml-packet; element.
+   The single child &xml-packet; of a &xml-reginadata; element represents
+   the root of the packet tree stored in this data file.
   </para>
 
   <refsect2>
@@ -78,6 +91,11 @@ reginadata ::= (&xml-packet;)</synopsis>
      <para>
       The full version of the &regina; calculation engine that wrote
       this data file.
+     </para>
+     <para>
+      If a newer version of &regina; exports to an older &regina; file format,
+      then the <sgmltag>engine</sgmltag> attribute will reflect the
+      newer version of &regina; that actually wrote the file.
      </para>
      <para>
       If this file was created by hand or by an external program, the

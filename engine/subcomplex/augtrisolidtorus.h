@@ -40,17 +40,13 @@
 #define __REGINA_AUGTRISOLIDTORUS_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "subcomplex/trisolidtorus.h"
 #include "subcomplex/layeredsolidtorus.h"
 #include "triangulation/forward.h"
 
 namespace regina {
-
-/**
- * \weakgroup subcomplex
- * @{
- */
 
 /**
  * Represents an augmented triangular solid torus component of a
@@ -83,6 +79,15 @@ namespace regina {
  * Of the optional StandardTriangulation routines, manifold() is
  * implemented for most augmented triangular solid tori and
  * homology() is not implemented at all.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class AugTriSolidTorus : public StandardTriangulation {
     public:
@@ -99,13 +104,13 @@ class AugTriSolidTorus : public StandardTriangulation {
                  TriSolidTorus::areAnnuliLinkedAxis(). */
 
     private:
-        TriSolidTorus* core_;
+        TriSolidTorus core_;
             /**< The triangular solid torus at the core of this
                  triangulation. */
-        LayeredSolidTorus* augTorus_[3];
+        std::optional<LayeredSolidTorus> augTorus_[3];
             /**< The layered solid tori attached to the boundary annuli.
                  If one of the layered solid tori is a degenerate (2,1,1)
-                 triangle, the corresponding pointer will be 0.
+                 triangle, the corresponding value will be std::nullopt.
                  Note that <tt>augTorus[i]</tt> will be attached to
                  annulus \c i of the triangular solid torus. */
         Perm<4> edgeGroupRoles_[3];
@@ -114,7 +119,7 @@ class AugTriSolidTorus : public StandardTriangulation {
                  <tt>i</tt>.  For permutation <tt>p</tt>, group <tt>p[0]</tt>
                  is glued to an axis edge, group <tt>p[1]</tt> is glued to a
                  major edge and group <tt>p[2]</tt> is glued to a minor edge. */
-        unsigned long chainIndex;
+        unsigned long chainIndex_;
             /**< The number of tetrahedra in the layered chain if
                  present, or 0 if there is no layered chain. */
         int chainType_;
@@ -127,16 +132,33 @@ class AugTriSolidTorus : public StandardTriangulation {
 
     public:
         /**
-         * Destroys this augmented solid torus; note that the corresponding
-         * triangular and layered solid tori will also be destroyed.
+         * Creates a new copy of this structure.
          */
-        virtual ~AugTriSolidTorus();
+        AugTriSolidTorus(const AugTriSolidTorus&) = default;
+
         /**
-         * Returns a newly created clone of this structure.
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        AugTriSolidTorus& operator = (const AugTriSolidTorus&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        AugTriSolidTorus* clone() const;
+        [[deprecated]] AugTriSolidTorus* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(AugTriSolidTorus& other) noexcept;
 
         /**
          * Returns the triangular solid torus at the core of this
@@ -150,13 +172,13 @@ class AugTriSolidTorus : public StandardTriangulation {
          * annulus on the boundary of the core triangular solid torus.
          * If the layered solid torus is a degenerate (2,1,1) mobius
          * band (i.e., the two triangles of the corresponding annulus have
-         * simply been glued together), \c null will be returned.
+         * simply been glued together), then no value will be returned.
          *
          * @param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.
          * @return the corresponding layered solid torus.
          */
-        const LayeredSolidTorus* augTorus(int annulus) const;
+        const std::optional<LayeredSolidTorus>& augTorus(int annulus) const;
 
         /**
          * Returns a permutation describing the role played by each top
@@ -234,24 +256,39 @@ class AugTriSolidTorus : public StandardTriangulation {
          * Determines if the given triangulation component is an
          * augmented triangular solid torus.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * augmented triangular solid torus, or \c null if the given
-         * component is not an augmented triangular solid torus.
+         * @return a structure containing details of the augmented triangular
+         * solid torus, or \c null if the given component is not an augmented
+         * triangular solid torus.
          */
-        static AugTriSolidTorus* isAugTriSolidTorus(const Component<3>* comp);
+        static std::unique_ptr<AugTriSolidTorus> recognise(
+            const Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component forms an
+         * augmented triangular solid torus.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<AugTriSolidTorus>
+            isAugTriSolidTorus(const Component<3>* comp);
 
-        Manifold* manifold() const override;
+        std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
 
     private:
         /**
-         * Creates a new structure with all subcomponent pointers
-         * initialised to \c null.
+         * Creates a new structure with the given core.
+         * The chain type will be initialised to CHAIN_NONE, and
+         * all other data members will be left uninitialised.
          */
-        AugTriSolidTorus();
+        AugTriSolidTorus(const TriSolidTorus& core);
 
         /**
          * Contains code common to both writeName() and writeTeXName().
@@ -264,19 +301,45 @@ class AugTriSolidTorus : public StandardTriangulation {
         std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls AugTriSolidTorus::swap(); it is provided
+ * so that AugTriSolidTorus meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(AugTriSolidTorus& a, AugTriSolidTorus& b) noexcept;
 
 // Inline functions for AugTriSolidTorus
 
-inline AugTriSolidTorus::AugTriSolidTorus() : core_(0),
-        chainType_(CHAIN_NONE) {
-    augTorus_[0] = augTorus_[1] = augTorus_[2] = 0;
+inline AugTriSolidTorus::AugTriSolidTorus(const TriSolidTorus& core) :
+        core_(core), chainType_(CHAIN_NONE) {
+}
+
+inline AugTriSolidTorus* AugTriSolidTorus::clone() const {
+    return new AugTriSolidTorus(*this);
+}
+
+inline void AugTriSolidTorus::swap(AugTriSolidTorus& other) noexcept {
+    core_.swap(other.core_);
+    augTorus_[0].swap(other.augTorus_[0]);
+    augTorus_[1].swap(other.augTorus_[1]);
+    augTorus_[2].swap(other.augTorus_[2]);
+    std::swap_ranges(edgeGroupRoles_, edgeGroupRoles_ + 3,
+        other.edgeGroupRoles_);
+    std::swap(chainIndex_, other.chainIndex_);
+    std::swap(chainType_, other.chainType_);
+    std::swap(torusAnnulus_, other.torusAnnulus_);
 }
 
 inline const TriSolidTorus& AugTriSolidTorus::core() const {
-    return *core_;
+    return core_;
 }
-inline const LayeredSolidTorus* AugTriSolidTorus::augTorus(
+inline const std::optional<LayeredSolidTorus>& AugTriSolidTorus::augTorus(
         int annulus) const {
     return augTorus_[annulus];
 }
@@ -284,7 +347,7 @@ inline Perm<4> AugTriSolidTorus::edgeGroupRoles(int annulus) const {
     return edgeGroupRoles_[annulus];
 }
 inline unsigned long AugTriSolidTorus::chainLength() const {
-    return chainIndex;
+    return chainIndex_;
 }
 inline int AugTriSolidTorus::chainType() const {
     return chainType_;
@@ -293,7 +356,16 @@ inline int AugTriSolidTorus::torusAnnulus() const {
     return torusAnnulus_;
 }
 inline bool AugTriSolidTorus::hasLayeredChain() const {
-    return (chainIndex != 0);
+    return (chainIndex_ != 0);
+}
+
+inline void swap(AugTriSolidTorus& a, AugTriSolidTorus& b) noexcept {
+    a.swap(b);
+}
+
+inline std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::isAugTriSolidTorus(
+        const Component<3>* comp) {
+    return recognise(comp);
 }
 
 } // namespace regina

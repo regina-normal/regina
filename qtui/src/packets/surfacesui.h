@@ -65,14 +65,14 @@ class SurfacesUI : public PacketTabbedUI {
         /**
          * Constructor.
          */
-        SurfacesUI(regina::NormalSurfaces* packet,
+        SurfacesUI(regina::PacketOf<regina::NormalSurfaces>* packet,
             PacketPane* newEnclosingPane);
 
         /**
          * PacketUI overrides.
          */
-        const std::vector<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
+        const std::vector<QAction*>& getPacketTypeActions() override;
+        QString getPacketMenuText() const override;
 };
 
 /**
@@ -86,7 +86,8 @@ class SurfacesHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Packet details
          */
-        regina::NormalSurfaces* surfaces;
+        regina::PacketOf<regina::NormalSurfaces>* surfaces;
+        bool triDestroyed { false };
 
         /**
          * Internal components
@@ -98,7 +99,7 @@ class SurfacesHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Constructor.
          */
-        SurfacesHeaderUI(regina::NormalSurfaces* packet,
+        SurfacesHeaderUI(regina::PacketOf<regina::NormalSurfaces>* packet,
                 PacketTabbedUI* useParentUI);
 
         /**
@@ -111,7 +112,9 @@ class SurfacesHeaderUI : public QObject, public PacketViewerTab,
         /**
          * PacketListener overrides.
          */
-        void packetWasRenamed(regina::Packet* packet) override;
+        void packetWasRenamed(regina::Packet& packet) override;
+        void packetWasChanged(regina::Packet&) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
 
     private slots:
         /**

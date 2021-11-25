@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents an element of a cyclotomic field.
  *
  * The cyclotomic field of order \a n extends the rationals with a
@@ -81,10 +76,12 @@ namespace regina {
  *
  * Although this class makes use of global data in its implementation, all
  * of its methods are thread-safe.
+ *
+ * \ingroup maths
  */
 class Cyclotomic : public ShortOutput<Cyclotomic, true> {
     public:
-        typedef Rational Coefficient;
+        using Coefficient = Rational;
             /**< The type of each coefficient of the polynomial that is
                  used to store a field element. */
 
@@ -165,21 +162,46 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          */
         Cyclotomic(Cyclotomic&& value) noexcept;
         /**
-         * Creates a new field element from a hard-coded sequence of
-         * coefficients.
-         *
-         * This constructor takes a C++11 initialiser list, which should
-         * contain the coefficients of the field element's polynomial
-         * representation, in order from the constant coefficient
-         * upwards.  See operator[] for details on what this polynomial
-         * representation means.
+         * Creates a new field element from the given sequence of coefficients.
+         * The coefficients should describe the field element's polynomial
+         * representation, and should be given in order from the constant
+         * coefficient upwards.  See operator[] for details on what this
+         * polynomial representation means.
          *
          * There should be at most <tt>deg(Φ_n) = φ(n)</tt> coefficients in
          * the list, where \a n is the given order of the underlying field;
          * any missing coefficients are assumed to be zero.  In particular,
          * an empty sequence is allowed (and represents the zero field element).
          *
-         * \ifacespython Not available.
+         * \pre Rationals can be assigned values from dereferenced iterators
+         * of type \a iterator.
+         *
+         * \ifacespython Instead of a pair of iterators, this routine
+         * takes a python list of coefficients.
+         *
+         * @param field the order of the underlying cyclotomic field;
+         * this must be strictly positive.
+         * @param begin the beginning of a sequence of at most <tt>φ(n)</tt>
+         * coefficients, as described above.
+         * @param end a past-the-end iterator indicating the end of the
+         * sequence of coefficients.
+         */
+        template <typename iterator>
+        Cyclotomic(size_t field, iterator begin, iterator end);
+        /**
+         * Creates a new field element from a hard-coded sequence of
+         * coefficients.  The coefficients should describe the field element's
+         * polynomial representation, and should be given in order from the
+         * constant coefficient upwards.  See operator[] for details on what
+         * this polynomial representation means.
+         *
+         * There should be at most <tt>deg(Φ_n) = φ(n)</tt> coefficients in
+         * the list, where \a n is the given order of the underlying field;
+         * any missing coefficients are assumed to be zero.  In particular,
+         * an empty sequence is allowed (and represents the zero field element).
+         *
+         * \ifacespython Not available, but there is a Python constructor
+         * that takes a list of coefficients (which need not be constant).
          *
          * @param field the order of the underlying cyclotomic field;
          * this must be strictly positive.
@@ -545,10 +567,10 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * \pre The given integer \a n must be strictly positive.
          *
-         * \ifacespython This routine returns a newly allocated polynomial
-         * (not a constant reference).  Moreover, since Python exposes the
-         * class Polynomial<Rational> but not Polynomial<Integer>, this
-         * routine returns an object of type Polynomial<Rational> instead.
+         * \ifacespython Since Python exposes the class Polynomial<Rational>
+         * but not Polynomial<Integer>, this routine will convert the result
+         * to a Polynomial<Rational> (and will therefore return by value,
+         * not by reference).
          *
          * @param n indicates which cyclotomic polynomial to return.
          * @return the cyclotomic polynomial <tt>Φ_n</tt>.
@@ -569,7 +591,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * This will make the output nicer, but will require more complex
          * fonts to be available on the user's machine.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
          * @param utf8 \c true if unicode superscript characters may be used.
@@ -648,6 +670,8 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
  *
  * @param a the first field element whose contents should be swapped.
  * @param b the second field element whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 void swap(Cyclotomic& a, Cyclotomic& b) noexcept;
 
@@ -657,6 +681,8 @@ void swap(Cyclotomic& a, Cyclotomic& b) noexcept;
  * @param elt the field element to multiply by.
  * @param scalar the rational to multiply by.
  * @return the product of the given field element and rational.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator * (Cyclotomic elt, const Rational& scalar);
 
@@ -666,6 +692,8 @@ Cyclotomic operator * (Cyclotomic elt, const Rational& scalar);
  * @param scalar the rational to multiply by.
  * @param elt the field element to multiply by.
  * @return the product of the given field element and rational.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator * (const Rational& scalar, Cyclotomic elt);
 
@@ -677,6 +705,8 @@ Cyclotomic operator * (const Rational& scalar, Cyclotomic elt);
  * @param elt the field element to divide by the given rational.
  * @param scalar the rational to divide by.
  * @return the quotient of the given field element by the given rational.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator / (Cyclotomic elt, const Rational& scalar);
 
@@ -688,6 +718,8 @@ Cyclotomic operator / (Cyclotomic elt, const Rational& scalar);
  * @param lhs the first field element to add.
  * @param rhs the second field element to add.
  * @return the sum of both field elements.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
@@ -699,6 +731,8 @@ Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs);
  * @param lhs the first field element to add.
  * @param rhs the second field element to add.
  * @return the sum of both field elements.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs);
 
@@ -710,6 +744,8 @@ Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs);
  * @param lhs the first field element to add.
  * @param rhs the second field element to add.
  * @return the sum of both field elements.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs);
 
@@ -721,6 +757,8 @@ Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs);
  * @param lhs the first field element to add.
  * @param rhs the second field element to add.
  * @return the sum of both field elements.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
 
@@ -729,6 +767,8 @@ Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
  *
  * @param arg the field element to negate.
  * @return the negative of \a arg.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator - (Cyclotomic arg);
 
@@ -740,6 +780,8 @@ Cyclotomic operator - (Cyclotomic arg);
  * @param lhs the field element to subtract from.
  * @param rhs the field element to subtract.
  * @return the first field element minus the second.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
@@ -751,6 +793,8 @@ Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs);
  * @param lhs the field element to subtract from.
  * @param rhs the field element to subtract.
  * @return the first field element minus the second.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator - (Cyclotomic&& lhs, const Cyclotomic& rhs);
 
@@ -762,6 +806,8 @@ Cyclotomic operator - (Cyclotomic&& lhs, const Cyclotomic& rhs);
  * @param lhs the field element to subtract from.
  * @param rhs the field element to subtract.
  * @return the first field element minus the second.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator - (const Cyclotomic& lhs, Cyclotomic&& rhs);
 
@@ -773,6 +819,8 @@ Cyclotomic operator - (const Cyclotomic& lhs, Cyclotomic&& rhs);
  * @param lhs the field element to subtract from.
  * @param rhs the field element to subtract.
  * @return the first field element minus the second.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator - (Cyclotomic&& lhs, Cyclotomic&& rhs);
 
@@ -784,6 +832,8 @@ Cyclotomic operator - (Cyclotomic&& lhs, Cyclotomic&& rhs);
  * @param lhs the first field element to multiply.
  * @param rhs the second field element to multiply.
  * @return the product of both field elements.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
@@ -796,10 +846,10 @@ Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
  * @param lhs the field element to divide by \a rhs.
  * @param rhs the field element to divide \a lhs by.
  * @return the result of dividing \a lhs by \a rhs.
+ *
+ * \ingroup maths
  */
 Cyclotomic operator / (const Cyclotomic& lhs, const Cyclotomic& rhs);
-
-/*@}*/
 
 // Inline functions for Cyclotomic
 
@@ -843,10 +893,19 @@ inline Cyclotomic::Cyclotomic(size_t field, size_t degree, Rational* coeff) :
         field_(field), degree_(degree), coeff_(coeff) {
 }
 
+template <typename iterator>
+inline Cyclotomic::Cyclotomic(size_t field, iterator begin, iterator end) :
+        field_(field), degree_(cyclotomic(field).degree()),
+        coeff_(new Rational[degree_]) {
+    // Rationals initialise to 0, so a shorter list of coefficients is ok.
+    std::copy(begin, end, coeff_);
+}
+
 inline Cyclotomic::Cyclotomic(size_t field,
         std::initializer_list<Rational> coefficients) :
         field_(field), degree_(cyclotomic(field).degree()),
         coeff_(new Rational[degree_]) {
+    // Rationals initialise to 0, so a shorter list of coefficients is ok.
     std::copy(coefficients.begin(), coefficients.end(), coeff_);
 }
 
@@ -900,6 +959,8 @@ inline bool Cyclotomic::operator != (const Cyclotomic& rhs) const {
     return false;
 }
 
+// Self-assignment works, assuming Rational's self-assignment works.
+// NOLINTNEXTLINE(bugprone-unhandled-self-assignment)
 inline Cyclotomic& Cyclotomic::operator = (const Cyclotomic& other) {
     // std::cerr << "Cyclotomic: deep copy (=)" << std::endl;
     if (degree_ < other.degree_) {
@@ -1011,7 +1072,7 @@ inline Cyclotomic operator / (Cyclotomic elt, const Rational& scalar) {
 
 inline Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs) {
     // std::cerr << "Cyclotomic: deep copy (const +)" << std::endl;
-    Rational* coeff = new Rational[lhs.degree_];
+    auto* coeff = new Rational[lhs.degree_];
     for (size_t i = 0; i < lhs.degree_; ++i)
         coeff[i] = lhs.coeff_[i] + rhs.coeff_[i];
     return Cyclotomic(lhs.field_, lhs.degree_, coeff);
@@ -1036,7 +1097,7 @@ inline Cyclotomic operator - (Cyclotomic arg) {
 
 inline Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs) {
     // std::cerr << "Cyclotomic: deep copy (const -)" << std::endl;
-    Rational* coeff = new Rational[lhs.degree_];
+    auto* coeff = new Rational[lhs.degree_];
     for (size_t i = 0; i < lhs.degree_; ++i)
         coeff[i] = lhs.coeff_[i] - rhs.coeff_[i];
     return Cyclotomic(lhs.field_, lhs.degree_, coeff);

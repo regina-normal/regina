@@ -31,7 +31,9 @@
  **************************************************************************/
 
 #include <sstream>
+#include "algebra/abeliangroup.h"
 #include "manifold/manifold.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -41,7 +43,7 @@ std::string Manifold::name() const {
     return ans.str();
 }
 
-std::string Manifold::TeXName() const {
+std::string Manifold::texName() const {
     std::ostringstream ans;
     writeTeXName(ans);
     return ans.str();
@@ -51,6 +53,16 @@ std::string Manifold::structure() const {
     std::ostringstream ans;
     writeStructure(ans);
     return ans.str();
+}
+
+Triangulation<3> Manifold::construct() const {
+    throw NotImplemented("The construct() routine is currently not "
+        "implemented for this particular 3-manifold");
+}
+
+AbelianGroup Manifold::homology() const {
+    throw NotImplemented("The homology() routine is currently not "
+        "implemented for this particular 3-manifold");
 }
 
 } // namespace regina

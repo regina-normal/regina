@@ -34,8 +34,8 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/abeliangroup.h"
-#include "triangulation/example3.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example3.h"
 #include "testsuite/dim3/testtriangulation.h"
 
 using regina::AbelianGroup;
@@ -51,12 +51,13 @@ class Isomorphism3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(enumeration);
     CPPUNIT_TEST(application);
     CPPUNIT_TEST(isomorphic);
+    CPPUNIT_TEST(inverse);
     CPPUNIT_TEST(automorphismsAndSubcomplexes);
 
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        typedef void (Isomorphism3Test::*IsoTest)(const Isomorphism<3>&,
+        using IsoTest = void (Isomorphism3Test::*)(const Isomorphism<3>&,
             unsigned long);
 
         Triangulation<3> rp2xs1;
@@ -79,20 +80,17 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             /**< A standalone tetrahedron. */
 
     public:
-        void setUp() {
-            Triangulation<3>* t = Example<3>::rp2xs1();
-            rp2xs1.insertTriangulation(*t);
-            delete t;
-
-            lens8_1.insertLayeredLensSpace(8, 1);
-            lens13_3.insertLayeredLensSpace(13, 3);
-            twisted5.insertLayeredLoop(5, true);
-            untwisted5.insertLayeredLoop(5, false);
-            aug.insertAugTriSolidTorus(3, -1, 5, -3, 2, -1);
+        void setUp() override {
+            rp2xs1 = Example<3>::rp2xs1();
+            lens8_1 = Example<3>::lens(8, 1);
+            lens13_3 = Example<3>::lens(13, 3);
+            twisted5 = Example<3>::layeredLoop(5, true);
+            untwisted5 = Example<3>::layeredLoop(5, false);
+            aug = Example<3>::augTriSolidTorus(3, -1, 5, -3, 2, -1);
             ball.newTetrahedron();
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         unsigned long nIsomorphisms(unsigned long n) {
@@ -113,11 +111,11 @@ class Isomorphism3Test : public CppUnit::TestFixture {
 
             unsigned i, pos;
 
-            unsigned* tetPerm = new unsigned[n];
+            auto* tetPerm = new unsigned[n];
             for (i = 0; i < n; i++)
                 tetPerm[i] = i;
 
-            unsigned* facePermIndex = new unsigned[n];
+            auto* facePermIndex = new unsigned[n];
 
             Isomorphism<3> iso(n);
             unsigned long which = 0;
@@ -131,7 +129,7 @@ class Isomorphism3Test : public CppUnit::TestFixture {
                     iso.facePerm(i) = Perm<4>::S4[facePermIndex[i] = 0];
                 }
 
-                while (1) {
+                while (true) {
                     if (test)
                         (this->*test)(iso, which);
                     which++;
@@ -194,30 +192,29 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             if (which % 11 != 0)
                 return;
 
-            Triangulation<3>* image = iso.apply(&rp2xs1);
+            Triangulation<3> image = iso.apply(rp2xs1);
 
             // Clear all computed topological properties of image.
-            image->newSimplex();
-            image->removeSimplexAt(image->size() - 1);
+            image.newSimplex();
+            image.removeSimplexAt(image.size() - 1);
 
             std::ostringstream msg;
             msg << "Isomorphism #" << which << " created a copy of RP2xS1 ";
 
-            if (image->isOrientable())
+            if (image.isOrientable())
                 CPPUNIT_FAIL(msg.str() + "that was orientable.");
-            if (! image->isValid())
+            if (! image.isValid())
                 CPPUNIT_FAIL(msg.str() + "that was invalid.");
-            if (! image->isStandard())
+            if (! image.isStandard())
                 CPPUNIT_FAIL(msg.str() + "that was non-standard.");
-            if (! image->isClosed())
+            if (! image.isClosed())
                 CPPUNIT_FAIL(msg.str() + "that was not closed.");
 
-            const AbelianGroup& h1 = image->homology();
+            const AbelianGroup& h1 = image.homology();
             if (h1.rank() != 1 || h1.countInvariantFactors() != 1 ||
                     h1.invariantFactor(0) != 2)
                 CPPUNIT_FAIL(msg.str() + "that had homology different from "
                     "Z + Z_2.");
-            delete image;
         }
 
         void application() {
@@ -229,14 +226,13 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             if (which % 11 != 0)
                 return;
 
-            Triangulation<3>* image = iso.apply(&rp2xs1);
-            if (! rp2xs1.isIsomorphicTo(*image)) {
+            Triangulation<3> image = iso.apply(rp2xs1);
+            if (! rp2xs1.isIsomorphicTo(image)) {
                 std::ostringstream msg;
                 msg << "Isomorphism #" << which << " created a triangulation "
                     "that was not isomorphic to the original.";
                 CPPUNIT_FAIL(msg.str());
             }
-            delete image;
         }
 
         void isomorphic() {
@@ -260,11 +256,11 @@ class Isomorphism3Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            std::list<Isomorphism<3>*> isos;
-            std::list<Isomorphism<3>*>::iterator it;
-            unsigned long count;
-
-            count = t2.findAllSubcomplexesIn(t, back_inserter(isos));
+            unsigned long count = 0;
+            t2.findAllSubcomplexesIn(t, [&count](const Isomorphism<3>&){
+                ++count;
+                return false;
+            });
             if (count != symmetries) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name << " has "
@@ -272,17 +268,6 @@ class Isomorphism3Test : public CppUnit::TestFixture {
                     << " as expected.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (isos.size() != count) {
-                std::ostringstream msg;
-                msg << "Triangulation " << name <<
-                    " has a mismatched symmetry count (" << count
-                    << " != " << isos.size() << ").";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            for (it = isos.begin(); it != isos.end(); ++it)
-                delete *it;
-            isos.clear();
 
             // Some of these tests cannot be run on the standalone tetrahedron.
             bool standalone = (t.size() == 1 && t.countTriangles() == 4);
@@ -348,6 +333,35 @@ class Isomorphism3Test : public CppUnit::TestFixture {
                 msg << "Making a tetrahedron of " << name <<
                     " invalid results in a supercomplex (and should not).";
                 CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void inverse() {
+            const int size = 5;
+            for (int i = 0; i < 10; ++i) {
+                Isomorphism a = Isomorphism<3>::random(size);
+                Isomorphism b = a.inverse();
+                Isomorphism c = b * a;
+
+                for (int j = 0; j < size; ++j)
+                    if (c.simpImage(j) != j || c.facetPerm(j) != Perm<4>()) {
+                        std::ostringstream msg;
+                        msg << "Isomorphism composed with its inverse "
+                            "does not give the identity.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                // Try the rvalue reference variant of composition.
+                // (And, at the same time, compose the other way around.)
+                Isomorphism d = a * a.inverse();
+
+                for (int j = 0; j < size; ++j)
+                    if (d.simpImage(j) != j || d.facetPerm(j) != Perm<4>()) {
+                        std::ostringstream msg;
+                        msg << "Isomorphism composed with its inverse "
+                            "does not give the identity.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
             }
         }
 

@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a layered loop component of a triangulation.
  *
  * A layered loop is a layered chain of \a n tetrahedra whose bottom
@@ -74,8 +69,16 @@ namespace regina {
  * The \a length of the layered loop is the number of tetrahedra it
  * contains.  A layered loop must contain at least one tetrahedron.
  *
- * All optional StandardTriangulation routines are implemented for this
- * class.
+ * All optional StandardTriangulation routines are implemented for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class LayeredLoop : public StandardTriangulation {
     private:
@@ -87,15 +90,33 @@ class LayeredLoop : public StandardTriangulation {
 
     public:
         /**
-         * Destroys this layered loop.
+         * Creates a new copy of this structure.
          */
-        virtual ~LayeredLoop();
+        LayeredLoop(const LayeredLoop&) = default;
+
         /**
-         * Returns a newly created clone of this structure.
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        LayeredLoop& operator = (const LayeredLoop&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        LayeredLoop* clone() const;
+        [[deprecated]] LayeredLoop* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(LayeredLoop& other) noexcept;
 
         /**
          * Returns the length of this layered loop.
@@ -125,43 +146,73 @@ class LayeredLoop : public StandardTriangulation {
         Edge<3>* hinge(int which) const;
 
         /**
-         * Determines if the given triangulation component is a layered
-         * loop.
+         * Determines if the given triangulation component is a layered loop.
+         *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
          *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * layered loop, or \c null if the given component is
-         * not a layered loop.
+         * @return a structure containing details of the layered loop, or
+         * \c null if the given component is not a layered loop.
          */
-        static LayeredLoop* isLayeredLoop(const Component<3>* comp);
+        static std::unique_ptr<LayeredLoop> recognise(const Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component forms a layered loop.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<LayeredLoop> isLayeredLoop(
+            const Component<3>* comp);
 
-        Manifold* manifold() const override;
-        std::optional<AbelianGroup> homology() const override;
+        std::unique_ptr<Manifold> manifold() const override;
+        AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
 
     private:
         /**
-         * Creates a new uninitialised structure.
+         * Creates a new structure containing the given data.
          */
-        LayeredLoop();
+        LayeredLoop(unsigned long length, Edge<3>* hinge0, Edge<3>* hinge1);
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls LayeredLoop::swap(); it is provided
+ * so that LayeredLoop meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(LayeredLoop& a, LayeredLoop& b) noexcept;
 
 // Inline functions for LayeredLoop
 
-inline LayeredLoop::LayeredLoop() {
+inline LayeredLoop::LayeredLoop(unsigned long length, Edge<3>* hinge0,
+        Edge<3>* hinge1) : length_(length), hinge_ { hinge0, hinge1 } {
 }
-inline LayeredLoop::~LayeredLoop() {
+
+inline LayeredLoop* LayeredLoop::clone() const {
+    return new LayeredLoop(*this);
+}
+
+inline void LayeredLoop::swap(LayeredLoop& other) noexcept {
+    std::swap(length_, other.length_);
+    std::swap(hinge_[0], other.hinge_[0]);
+    std::swap(hinge_[1], other.hinge_[1]);
 }
 
 inline unsigned long LayeredLoop::length() const {
     return length_;
 }
 inline bool LayeredLoop::isTwisted() const {
-    return (hinge_[1] == 0);
+    return (hinge_[1] == nullptr);
 }
 inline Edge<3>* LayeredLoop::hinge(int which) const {
     return hinge_[which];
@@ -175,6 +226,15 @@ inline std::ostream& LayeredLoop::writeTeXName(std::ostream& out) const {
 inline void LayeredLoop::writeTextLong(std::ostream& out) const {
     out << "Layered loop (" << (hinge_[1] ? "not twisted" : "twisted") <<
         ") of length " << length_;
+}
+
+inline std::unique_ptr<LayeredLoop> LayeredLoop::isLayeredLoop(
+        const Component<3>* comp) {
+    return recognise(comp);
+}
+
+inline void swap(LayeredLoop& a, LayeredLoop& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

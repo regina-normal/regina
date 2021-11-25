@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>angleparams</refname>
-  <refpurpose>Parameters for an angle structure enumeration</refpurpose>
+  <refpurpose>Replaced by attributes of &xml-angles;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -35,25 +35,29 @@ angleparams ::=</synopsis>
      </row>
      <row>
       <entry><sgmltag>tautonly</sgmltag></entry>
-      <entry><type>CDATA</type></entry>
+      <entry><type>CDATA</type> (required)</entry>
      </row>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0 / &eltaddedver;4.90</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-angleparams; element stores the parameters used in an enumeration
-   of vertex angle structures.  Typically these parameters are supplied
-   by the user when a new angle structure list is created.
+   This element was used in the past to store the parameters for an
+   enumeration of vertex angle structures.
+   These are typically the parameters supplied by the user when
+   creating a new angle structure list.
+   Since &regina;&nbsp;7.0, these enumeration parameters are now stored in
+   the attributes of the corresponding &xml-angles; element instead.
   </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>param</sgmltag>:
+    The following elements contain <sgmltag>angleparams</sgmltag>:
     <simplelist type="inline">
      <member>&xml-packet-anglestructurelist;</member>
     </simplelist>.
@@ -80,9 +84,11 @@ angleparams ::=</synopsis>
       vertex angle structures are enumerated.
      </para>
      <para>
-      If not specified, this defaults to <literal>F</literal>
-      (which is consistent with earler versions of &regina; in which
-      taut-only enumeration was not an option).
+      &regina; versions&nbsp;4.6 and earlier did not write this attribute
+      (and indeed, they omitted the entire &xml-angleparams; element).
+      If it is missing, it will be treated as <literal>F</literal>
+      (since taut enumeration was not offered in those very old versions
+      of &regina;).
      </para>
     </listitem>
    </varlistentry>

@@ -36,8 +36,48 @@
 
 namespace regina {
 
-XMLPacketReader* Link::xmlReader(Packet*, XMLTreeResolver& resolver) {
-    return new XMLLinkReader(resolver);
+XMLLinkReader::XMLLinkReader(XMLTreeResolver& res,
+        std::shared_ptr<Packet> parent, bool anon, std::string label,
+        std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        link_(makePacket<Link>()) {
+}
+
+std::shared_ptr<Packet> XMLLinkReader::packetToCommit() {
+    return link_;
+}
+
+XMLElementReader* XMLLinkReader::startContentSubElement(
+        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
+    if (! link_)
+        return new XMLElementReader();
+
+    if (subTagName == "crossings")
+        return new XMLLinkCrossingsReader(link_.get());
+    else if (subTagName == "connections")
+        return new XMLLinkConnectionsReader(link_.get());
+    else if (subTagName == "components")
+        return new XMLLinkComponentsReader(link_.get());
+
+    return new XMLElementReader();
+}
+
+void XMLLinkReader::endContentSubElement(const std::string& subTagName,
+        XMLElementReader* reader) {
+    if (! link_)
+        return;
+
+    if (subTagName == "crossings") {
+        if (static_cast<XMLLinkCrossingsReader*>(reader)->broken())
+            link_.reset();
+    } else if (subTagName == "connections") {
+        if (static_cast<XMLLinkConnectionsReader*>(reader)->broken())
+            link_.reset();
+    } else if (subTagName == "components") {
+        if (static_cast<XMLLinkComponentsReader*>(reader)->broken())
+            link_.reset();
+    }
 }
 
 void XMLLinkCrossingsReader::initialChars(const std::string& chars) {
@@ -51,7 +91,7 @@ void XMLLinkCrossingsReader::initialChars(const std::string& chars) {
         in >> c;
 
         if (! in) {
-            link_ = 0;
+            link_ = nullptr;
             return;
         }
 
@@ -60,7 +100,7 @@ void XMLLinkCrossingsReader::initialChars(const std::string& chars) {
         else if (c == '-')
             link_->crossings_.push_back(new Crossing(-1));
         else {
-            link_ = 0;
+            link_ = nullptr;
             return;
         }
     }
@@ -81,7 +121,7 @@ void XMLLinkConnectionsReader::initialChars(const std::string& chars) {
             in >> s;
 
             if ((! in) || s.length() < 2) {
-                link_ = 0;
+                link_ = nullptr;
                 return;
             }
 
@@ -90,22 +130,22 @@ void XMLLinkConnectionsReader::initialChars(const std::string& chars) {
             else if (s[0] == '_')
                 adjSide = 0;
             else {
-                link_ = 0;
+                link_ = nullptr;
                 return;
             }
 
             if (! valueOf(s.c_str() + 1, crossing)) {
-                link_ = 0;
+                link_ = nullptr;
                 return;
             }
             if (/* crossing < 0 || */ crossing >= link_->size()) {
-                link_ = 0;
+                link_ = nullptr;
                 return;
             }
 
             adj = link_->crossing(crossing);
             if (adj->prev_[adjSide]) {
-                link_ = 0;
+                link_ = nullptr;
                 return;
             }
             link_->crossing(read)->next_[side] = adj->strand(adjSide);
@@ -126,12 +166,12 @@ void XMLLinkComponentsReader::initialChars(const std::string& chars) {
         in >> s;
 
         if ((! in) || s.length() < 2) {
-            link_ = 0;
+            link_ = nullptr;
             return;
         }
-        
+
         if (s == "(null)") {
-            link_->components_.push_back(StrandRef(nullptr, 0));
+            link_->components_.emplace_back(nullptr, 0);
             continue;
         }
 
@@ -140,16 +180,16 @@ void XMLLinkComponentsReader::initialChars(const std::string& chars) {
         else if (s[0] == '_')
             strand = 0;
         else {
-            link_ = 0;
+            link_ = nullptr;
             return;
         }
 
         if (! valueOf(s.c_str() + 1, crossing)) {
-            link_ = 0;
+            link_ = nullptr;
             return;
         }
         if (/* crossing < 0 || */ crossing >= link_->size()) {
-            link_ = 0;
+            link_ = nullptr;
             return;
         }
 

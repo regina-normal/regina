@@ -43,6 +43,9 @@ void IconCache::load(IconID id) {
         case packet_angles:
             cache_[id] = ReginaSupport::regIcon("packet_angles");
             return;
+        case packet_attachment:
+            cache_[id] = ReginaSupport::regIcon("packet_attachment");
+            return;
         case packet_container:
             cache_[id] = ReginaSupport::regIcon("packet_container");
             return;
@@ -54,9 +57,6 @@ void IconCache::load(IconID id) {
             return;
         case packet_link:
             cache_[id] = ReginaSupport::regIcon("packet_link");
-            return;
-        case packet_pdf:
-            cache_[id] = ReginaSupport::regIcon("packet_pdf");
             return;
         case packet_script:
             cache_[id] = ReginaSupport::regIcon("packet_script");

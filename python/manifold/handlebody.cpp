@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "manifold/handlebody.h"
 #include "../helpers.h"
 
@@ -40,11 +41,14 @@ void addHandlebody(pybind11::module_& m) {
     auto c = pybind11::class_<Handlebody, regina::Manifold>(m, "Handlebody")
         .def(pybind11::init<unsigned long, bool>())
         .def(pybind11::init<const Handlebody&>())
+        .def("swap", &Handlebody::swap)
         .def("handles", &Handlebody::handles)
         .def("isOrientable", &Handlebody::isOrientable)
     ;
     // The Handlebody subclass defines its own equality tests, so we
     // should not just inherit the compare-by-pointer test from Manifold.
     regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(Handlebody&, Handlebody&))(regina::swap));
 }
 

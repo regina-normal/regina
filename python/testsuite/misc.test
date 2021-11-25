@@ -37,8 +37,7 @@ from __future__ import print_function
 print(regina.testEngine(3))
 
 # Some slightly less trivial tests.
-t = regina.Triangulation3()
-t.insertLayeredLensSpace(5,1)
+t = Example3.lens(5, 1)
 print(t.homology())
 
 # Does equality work correctly?
@@ -48,7 +47,7 @@ c = Perm4(2,3)
 print(a == c, a == b, b == c)
 print(a != c, a != b, b != c)
 
-t = regina.Example3.poincareHomologySphere()
+t = regina.Example3.poincare()
 a = t.tetrahedron(0)
 b = t.tetrahedron(1)
 c = t.tetrahedron(0)

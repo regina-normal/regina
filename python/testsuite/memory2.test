@@ -36,7 +36,7 @@ class Watcher(PacketListener):
         PacketListener.__init__(self)
         packet.setLabel(label)
         packet.listen(self)
-    def packetToBeDestroyed(self, packet):
+    def packetBeingDestroyed(self, packet):
         print('Destroying: ' + packet.label())
 
 
@@ -44,7 +44,7 @@ print('Script variables #1')
 print('Step 1')
 a = Container(); aw1 = Watcher(a, 'a1')
 print('Step 2')
-b = Triangulation3(); b.newSimplex(); bw1 = Watcher(b, 'b1')
+b = PacketOfTriangulation3(); b.newSimplex(); bw1 = Watcher(b, 'b1')
 print('Step 3')
 c = Script(); cw1 = Watcher(c, 'c1')
 print('Step 4')
@@ -66,7 +66,7 @@ print('Script variables #2')
 print('Step 1')
 a = Container(); aw2 = Watcher(a, 'a2')
 print('Step 2')
-b = Triangulation3(); b.newSimplex(); bw2 = Watcher(b, 'b2')
+b = PacketOfTriangulation3(); b.newSimplex(); bw2 = Watcher(b, 'b2')
 print('Step 3')
 c = Script(); cw2 = Watcher(c, 'c2') # destroys c1
 print('Step 4')
@@ -88,57 +88,30 @@ print(c); print(c.label()); print(c.parent())
 
 print('Example triangulation')
 print('Step 1')
-f = ExampleSnapPea.figureEight(); fw = Watcher(f, 'f')
+f = PacketOfSnapPeaTriangulation(ExampleSnapPea.figureEight()); fw = Watcher(f, 'f')
 print('Step 2')
 f = None # destroys f
 print('Step 3')
 
 print('Vertex link #1')
 print('Step 1')
-t = Example3.lens(7,1); tw = Watcher(t, 't1')
+t = PacketOfTriangulation3(Example3.lens(7,1)); tw = Watcher(t, 't1')
 print('Step 2')
-v = t.vertex(0).buildLink(); vw = Watcher(v, 'v1')
+v = t.vertex(0).buildLink()
 print('Step 3')
-t.insertChildLast(v)
+t = None # destroys t1 but not v1
 print('Step 4')
-t = None # destroys t
-print('Step 5')
-# v1 is orphaned but alive
-print(v); print(v.label()); print(v.parent())
+print(v.isoSig())
 
 print('Vertex link #2')
 print('Step 1')
-t = Example3.lens(7,1); tw = Watcher(t, 't2')
+t = PacketOfTriangulation3(Example3.lens(7,1)); tw = Watcher(t, 't2')
 print('Step 2')
-v = t.vertex(0).buildLink(); vw = Watcher(v, 'v2') # destroys v1
+v = t.vertex(0).buildLink() # destroys v1
 print('Step 3')
 t = None # destroys t2
 print('Step 4')
 v = None # destroys v2
-print('Step 5')
-
-print('Vertex link detailed #1')
-print('Step 1')
-t = Example3.lens(7,1); tw = Watcher(t, 't3')
-print('Step 2')
-v = t.vertex(0).buildLinkDetail(); vw = Watcher(v[0], 'v3')
-print('Step 3')
-t.insertChildLast(v[0])
-print('Step 4')
-t = None # destroys t3
-print('Step 5')
-# v3 is orphaned but alive
-print(v[0]); print(v[0].label()); print(v[0].parent())
-
-print('Vertex link detailed #2')
-print('Step 1')
-t = Example3.lens(7,1); tw = Watcher(t, 't4')
-print('Step 2')
-v = t.vertex(0).buildLinkDetail(); vw = Watcher(v[0], 'v4') # destroys v3
-print('Step 3')
-t = None # destroys t4
-print('Step 4')
-v = None # destroys v4
 print('Step 5')
 
 # b2 and c2 are still alive at this point

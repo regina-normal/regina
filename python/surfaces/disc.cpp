@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "surfaces/disc.h"
 #include "surfaces/normalsurface.h"
 #include "../helpers.h"
@@ -42,7 +43,8 @@ using regina::DiscSpecIterator;
 
 namespace {
     // Support for iterables and iterators:
-    DiscSpec nextDiscSpec(DiscSpecIterator& it) {
+    template <typename TetData>
+    DiscSpec nextDiscSpec(DiscSpecIterator<TetData>& it) {
         if (! it.done())
             return *it++;
         else
@@ -66,6 +68,7 @@ void addDisc(pybind11::module_& m) {
 
     auto t = pybind11::class_<DiscSetTet>(m, "DiscSetTet")
         .def(pybind11::init<const regina::NormalSurface&, unsigned long>())
+        .def(pybind11::init<const DiscSetTet&>())
         .def("nDiscs", &DiscSetTet::nDiscs)
         .def("arcFromDisc", &DiscSetTet::arcFromDisc)
         .def("discFromArc", &DiscSetTet::discFromArc)
@@ -74,6 +77,8 @@ void addDisc(pybind11::module_& m) {
 
     auto s = pybind11::class_<DiscSetSurface>(m, "DiscSetSurface")
         .def(pybind11::init<const regina::NormalSurface&>())
+        .def(pybind11::init<const DiscSetSurface&>())
+        .def("swap", &DiscSetSurface::swap)
         .def("nTets", &DiscSetSurface::nTets)
         .def("nDiscs", &DiscSetSurface::nDiscs)
         .def("tetDiscs", &DiscSetSurface::tetDiscs,
@@ -85,9 +90,11 @@ void addDisc(pybind11::module_& m) {
     ;
     regina::python::add_eq_operators(s);
 
-    auto it = pybind11::class_<DiscSpecIterator>(m, "DiscSpecIterator")
-        .def("next", nextDiscSpec) // for python 2
-        .def("__next__", nextDiscSpec) // for python 3
+    m.def("swap", (void(*)(DiscSetSurface&, DiscSetSurface&))(regina::swap));
+
+    auto it = pybind11::class_<DiscSpecIterator<DiscSetTet>>(m, "DiscSpecIterator")
+        .def("next", nextDiscSpec<DiscSetTet>) // for python 2
+        .def("__next__", nextDiscSpec<DiscSetTet>) // for python 3
     ;
     regina::python::add_eq_operators(it);
 }

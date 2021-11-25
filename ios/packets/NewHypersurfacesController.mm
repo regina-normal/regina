@@ -170,9 +170,11 @@ static NSArray* embText;
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NormalHypersurfaces* ans =
-            NormalHypersurfaces::enumerate((regina::Triangulation<4>*)self.spec.parent,
-                                          coords, which, regina::HS_ALG_DEFAULT, &_tracker);
+        NormalHypersurfaces* ans = nullptr;
+        try {
+            ans = new NormalHypersurfaces((regina::Triangulation<4>*)self.spec.parent, coords, which, regina::HS_ALG_DEFAULT, &_tracker);
+        } catch (const regina::NoMatchingEquations&) {
+        }
         while (! _tracker.isFinished()) {
             if (_tracker.percentChanged()) {
                 // This operation blocks until the UI is updated:
@@ -201,6 +203,7 @@ static NSArray* embText;
                 [alert show];
             } else {
                 ans->setLabel("Normal hypersurfaces");
+                self.spec.parent->insertChildLast(ans);
                 [self.spec created:ans];
             }
             [self dismissViewControllerAnimated:YES completion:nil];

@@ -33,6 +33,7 @@
 // Regina core includes:
 #include "hypersurface/normalhypersurface.h"
 #include "hypersurface/normalhypersurfaces.h"
+#include "triangulation/dim4.h"
 
 // UI includes:
 #include "compatcanvas.h"
@@ -56,16 +57,17 @@ using regina::NormalHypersurfaces;
 using regina::Packet;
 
 HyperCompatibilityUI::HyperCompatibilityUI(
-        regina::NormalHypersurfaces* packet, PacketTabbedUI* useParentUI) :
+        regina::PacketOf<regina::NormalHypersurfaces>* packet,
+        PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet),
-        matrixLocal(0), layerLocal(0), requestedCalculation(false) {
+        matrixLocal(nullptr), layerLocal(nullptr), requestedCalculation(false) {
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
 
     QBoxLayout* hdrLayout = new QHBoxLayout();
     uiLayout->addLayout(hdrLayout);
 
-    QLabel* label = new QLabel(tr("Display matrix:"), ui);
+    auto* label = new QLabel(tr("Display matrix:"), ui);
     hdrLayout->addWidget(label);
     chooseMatrix = new QComboBox(ui);
     chooseMatrix->addItem(tr("Local compatibility (prism types)"));
@@ -140,8 +142,8 @@ void HyperCompatibilityUI::refresh() {
         delete matrixLocal;
     }
 
-    matrixLocal = 0;
-    layerLocal = 0;
+    matrixLocal = nullptr;
+    layerLocal = nullptr;
 
     // Are we able to compute the new matrices if we want to?
     if (surfaces->size() == 0) {

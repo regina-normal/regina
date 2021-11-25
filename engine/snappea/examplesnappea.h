@@ -46,66 +46,51 @@ namespace regina {
 class SnapPeaTriangulation;
 
 /**
- * \weakgroup snappea
- * @{
- */
-
-/**
  * This class offers routines for constructing various example SnapPea
- * triangulations.  This is analagous to the (much richer)
- * Example<3> class.
+ * triangulations.  This is analagous to the (much richer) Example<3> class.
  *
- * Each of the routines in this class constructs a new triangulation from
- * scratch.  It is up to the caller of each routine to destroy the
- * triangulation that is returned.
+ * \ingroup snappea
  */
 class ExampleSnapPea {
     public:
         /**
          * Returns a new triangulation of the Gieseking manifold.
          *
-         * @return a newly constructed SnapPea triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the Gieseking manifold.
          */
-        static SnapPeaTriangulation* gieseking();
+        static SnapPeaTriangulation gieseking();
 
         /**
          * Returns a new triangulation of the figure eight knot complement.
          *
-         * @return a newly constructed SnapPea triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the figure eight knot complement.
          */
-        static SnapPeaTriangulation* figureEight();
+        static SnapPeaTriangulation figureEight();
 
         /**
          * Returns a new triangulation of the trefoil knot complement.
          *
-         * @return a newly constructed SnapPea triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the trefoil knot complement.
          */
-        static SnapPeaTriangulation* trefoil();
+        static SnapPeaTriangulation trefoil();
 
         /**
          * Returns a new triangulation of the Whitehead link complement.
          *
-         * @return a newly constructed SnapPea triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the Whitehead link complement.
          */
-        static SnapPeaTriangulation* whiteheadLink();
+        static SnapPeaTriangulation whiteheadLink();
 
         /**
          * Returns a new triangulation of the census manifold \c x101.
          *
-         * @return a newly constructed SnapPea triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the census manifold \c x101.
          */
-        static SnapPeaTriangulation* x101();
+        static SnapPeaTriangulation x101();
 
         // Make this class non-constructible.
         ExampleSnapPea() = delete;
 };
-
-/*@}*/
 
 } // namespace regina
 

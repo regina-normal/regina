@@ -52,7 +52,7 @@ namespace {
         public:
             inline void startElement(const std::string& /* tagName */,
                     const regina::xml::XMLPropertyDict& props,
-                    XMLElementReader*) {
+                    XMLElementReader*) override {
                 name = props.lookup("name");
                 valueID = props.lookup("valueid");
                 valueLabel = props.lookup("value");
@@ -77,7 +77,7 @@ namespace {
      */
     class VariableResolutionTask : public XMLTreeResolutionTask {
         private:
-            Script* script_;
+            std::shared_ptr<Script> script_;
             std::string name_;
             std::string valueID_;
                 /**< An internal packet ID.  Used by Regina >= 4.95. */
@@ -85,21 +85,20 @@ namespace {
                 /**< A packet label.  Used by Regina <= 4.94. */
 
         public:
-            inline VariableResolutionTask(Script* script,
-                    const std::string& name,
-                    const std::string& valueID,
-                    const std::string& valueLabel) :
-                    script_(script), name_(name), valueID_(valueID),
-                    valueLabel_(valueLabel) {
+            inline VariableResolutionTask(std::shared_ptr<Script> script,
+                    std::string name,
+                    std::string valueID,
+                    std::string valueLabel) :
+                    script_(std::move(script)),
+                    name_(std::move(name)),
+                    valueID_(std::move(valueID)),
+                    valueLabel_(std::move(valueLabel)) {
             }
 
-            inline void resolve(const XMLTreeResolver& resolver) {
-                Packet* resolution = 0;
-                if (! valueID_.empty()) {
-                    XMLTreeResolver::IDMap::const_iterator it =
-                        resolver.ids().find(valueID_);
-                    resolution = (it == resolver.ids().end() ? 0 : it->second);
-                }
+            inline void resolve(const XMLTreeResolver& resolver) override {
+                std::shared_ptr<Packet> resolution;
+                if (! valueID_.empty())
+                    resolution = resolver.resolve(valueID_);
                 if ((! resolution) && (! valueLabel_.empty()))
                     resolution = script_->root()->findPacketLabel(valueLabel_);
 
@@ -108,21 +107,10 @@ namespace {
     };
 }
 
-XMLElementReader* XMLPDFReader::startContentSubElement(
-        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
-    if (subTagName == "pdf")
-        return new XMLCharsReader();
-    else
-        return new XMLElementReader();
-}
-
-void XMLPDFReader::endContentSubElement(const std::string& subTagName,
-        XMLElementReader* subReader) {
-    if (subTagName == "pdf") {
-        std::string base64 = dynamic_cast<XMLCharsReader*>(subReader)->
-            chars();
-
-        // Strip out whitespace.
+namespace {
+    void extractAttachmentFromBase64(Attachment& att, std::string base64,
+            std::string filename) {
+        // Strip out the whitespace.
         std::string::iterator in = base64.begin();
         std::string::iterator out = base64.begin();
         while (in != base64.end()) {
@@ -139,7 +127,7 @@ void XMLPDFReader::endContentSubElement(const std::string& subTagName,
 
         // Is there any data at all?
         if (out == base64.begin()) {
-            pdf->reset();
+            att.reset();
             return;
         }
 
@@ -147,16 +135,29 @@ void XMLPDFReader::endContentSubElement(const std::string& subTagName,
         char* data;
         size_t dataLen;
         if (base64Decode(base64.c_str(), out - base64.begin(), &data, &dataLen))
-            pdf->reset(data, dataLen, PDF::OWN_NEW);
+            att.reset(data, dataLen, Attachment::OWN_NEW, filename);
         else
-            pdf->reset();
+            att.reset();
+    }
+}
+
+void XMLAttachmentReader::initialChars(const std::string& chars) {
+    extractAttachmentFromBase64(*attachment, chars, filename);
+}
+
+void XMLLegacyPDFReader::endContentSubElement(const std::string& subTagName,
+        XMLElementReader* subReader) {
+    if (subTagName == "pdf") {
+        extractAttachmentFromBase64(*pdf,
+            dynamic_cast<XMLCharsReader*>(subReader)->chars(),
+            "attachment.pdf");
     }
 }
 
 XMLElementReader* XMLScriptReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
-    if (subTagName == "text")
+    if (subTagName == "code" || subTagName == "text")
         return new XMLCharsReader();
     else if (subTagName == "line") // Old-style
         return new XMLCharsReader();
@@ -168,13 +169,13 @@ XMLElementReader* XMLScriptReader::startContentSubElement(
 
 void XMLScriptReader::endContentSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
-    if (subTagName == "text")
+    if (subTagName == "code" || subTagName == "text")
         script->setText(dynamic_cast<XMLCharsReader*>(subReader)->chars());
     else if (subTagName == "line") { // Old-style
         script->append(dynamic_cast<XMLCharsReader*>(subReader)->chars());
         script->append("\n");
     } else if (subTagName == "var") {
-        ScriptVarReader* var = dynamic_cast<ScriptVarReader*>(subReader);
+        auto* var = dynamic_cast<ScriptVarReader*>(subReader);
         if (! var->getName().empty())
             resolver_.queueTask(new VariableResolutionTask(
                 script, var->getName(),
@@ -182,21 +183,12 @@ void XMLScriptReader::endContentSubElement(const std::string& subTagName,
     }
 }
 
-XMLPacketReader* Container::xmlReader(Packet*,
-        XMLTreeResolver& resolver) {
-    return new XMLContainerReader(resolver);
-}
-
-XMLPacketReader* PDF::xmlReader(Packet*, XMLTreeResolver& resolver) {
-    return new XMLPDFReader(resolver);
-}
-
-XMLPacketReader* Script::xmlReader(Packet*, XMLTreeResolver& resolver) {
-    return new XMLScriptReader(resolver);
-}
-
-XMLPacketReader* Text::xmlReader(Packet*, XMLTreeResolver& resolver) {
-    return new XMLTextReader(resolver);
+XMLAnonRefReader::XMLAnonRefReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)) {
+    packet = res.resolve(id_);
 }
 
 } // namespace regina

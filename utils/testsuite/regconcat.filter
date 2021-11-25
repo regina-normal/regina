@@ -9,6 +9,7 @@ set -e
 #
 # Note that BSD sed does not support \+, which is why we use \{1,\} instead.
 
-sed -e 's#^\tid="[^"]\{1,\}"$#\tid="_"#g' \
+sed -e 's# id="[^"]\{1,\}"># id="_">#g' \
+    -e 's# tri="[^"]\{1,\}" # tri="_" #g' \
     -e 's# valueid="[^"]\{1,\}"# valueid="_"#g' \
-    -e 's#<reginadata engine="[^"]\{1,\}">#<reginadata engine="_">#g'
+    -e 's#<regina engine="[^"]\{1,\}">#<regina engine="_">#g'

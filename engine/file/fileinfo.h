@@ -40,54 +40,48 @@
 #endif
 
 #include <optional>
-#include "regina-core.h"
-#include "core/output.h"
+#include "packet/packet.h"
 
 namespace regina {
 
 /**
- * \addtogroup file File I/O
+ * \defgroup file File I/O
  * File formats and the filesystem
- * @{
  */
 
 /**
- * Stores information about a Regina data file, including file type and
+ * Stores information about a Regina data file, including file format and
  * version.
  *
  * Routine identify() can be used to determine this information for a
  * given file.
  *
- * As of Regina 4.94, the old-style binary files are no longer supported.
- * These have not been in use for over a decade.  The only file type
- * that this class now recognises is TYPE_XML (compressed or uncompressed
- * XML data files).
+ * As of Regina 4.94, the ancient first-generation binary files
+ * (REGINA_BINARY_GEN_1) are no longer supported, and this class cannot
+ * recognise them at all.  These have not been in use since mid-2002.
+ * The only file formats that this class now recognises are Regina's newer
+ * XML-based (compressed or uncompressed) data files.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement, though it does not implement (or need) its own custom swap()
  * function.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup file
  */
 class FileInfo : public Output<FileInfo> {
-    public:
-        static constexpr int TYPE_XML = 2;
-            /**< Represents a new-style XML data file. */
-
     private:
         std::string pathname_;
             /**< The pathname of the data file being described. */
-        int type_;
-            /**< The type of data file; this will be one of the file type
-                 constants defined in this class. */
-        std::string typeDescription_;
-            /**< A human-readable description of the type of data file. */
+        FileFormat format_;
+            /**< Indicates which of Regina's XML file formats the file uses. */
         std::string engine_;
             /**< The version of the calculation engine that wrote this file. */
-        bool compressed;
+        bool compressed_;
             /**< \c true if this file is stored in compressed format,
                  \c false otherwise.  Currently this option only applies
                  to XML data files. */
-        bool invalid;
+        bool invalid_;
             /**< \c true if the file metadata could not be read,
                  \c false otherwise. */
 
@@ -114,18 +108,24 @@ class FileInfo : public Output<FileInfo> {
          */
         const std::string& pathname() const;
         /**
-         * Returns the type of data file.  The type will be given as one
-         * of the file type constants defined in this class.
+         * Returns which of Regina's file formats the data file uses.
          *
-         * @return the type of data file.
+         * In particular, this encodes which generation of XML the file
+         * uses, but does not encode whether the XML is compressed.
+         *
+         * @return the file format.
          */
-        int type() const;
+        FileFormat format() const;
         /**
-         * Returns a human-readable description of the type of data file.
+         * Returns a human-readable description of the file format used
+         * by the data file.
          *
-         * @return a description of the type of data file.
+         * Like format(), this indicates which generation of XML the file
+         * uses, but not whether the XML is compressed.
+         *
+         * @return a description of the file format.
          */
-        const std::string& typeDescription() const;
+        std::string formatDescription() const;
         /**
          * Returns the version of the calculation engine that wrote this file.
          *
@@ -159,6 +159,12 @@ class FileInfo : public Output<FileInfo> {
          * @return a reference to this object.
          */
         FileInfo& operator = (FileInfo&&) noexcept = default;
+        /**
+         * Swaps the contents of this and the given file information.
+         *
+         * @param other the object whose contents should be swapped with this.
+         */
+        void swap(FileInfo& other) noexcept;
 
         /**
          * Return information about the given Regina data file.
@@ -179,7 +185,7 @@ class FileInfo : public Output<FileInfo> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -188,7 +194,7 @@ class FileInfo : public Output<FileInfo> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -198,26 +204,43 @@ class FileInfo : public Output<FileInfo> {
         /**
          * Create a new uninitialised structure.
          */
-        FileInfo();
+        FileInfo() = default;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given file information objects.
+ *
+ * This global routine simply calls FileInfo::swap(); it is provided
+ * so that FileInfo meets the C++ Swappable requirements.
+ *
+ * @param a the object whose contents should be swapped with \a b.
+ * @param b the object whose contents should be swapped with \a a.
+ *
+ * \ingroup file
+ */
+void swap(FileInfo& a, FileInfo& b) noexcept;
 
 // Inline functions for FileInfo
-
-inline FileInfo::FileInfo() {
-}
 
 inline const std::string& FileInfo::pathname() const {
     return pathname_;
 }
 
-inline int FileInfo::type() const {
-    return type_;
+inline FileFormat FileInfo::format() const {
+    return format_;
 }
 
-inline const std::string& FileInfo::typeDescription() const {
-    return typeDescription_;
+inline std::string FileInfo::formatDescription() const {
+    switch (format_) {
+        case REGINA_BINARY_GEN_1:
+            return "First-generation binary format (Regina 2.4 and earlier)";
+        case REGINA_XML_GEN_2:
+            return "Second-generation XML format (Regina 3.0-6.0.1)";
+        case REGINA_XML_GEN_3:
+            return "Third-generation XML format (Regina 7.0+)";
+        default:
+            return "Unknown file format";
+    }
 }
 
 inline const std::string& FileInfo::engine() const {
@@ -225,11 +248,23 @@ inline const std::string& FileInfo::engine() const {
 }
 
 inline bool FileInfo::isCompressed() const {
-    return compressed;
+    return compressed_;
 }
 
 inline bool FileInfo::isInvalid() const {
-    return invalid;
+    return invalid_;
+}
+
+inline void FileInfo::swap(FileInfo& other) noexcept {
+    pathname_.swap(other.pathname_);
+    std::swap(format_, other.format_);
+    engine_.swap(other.engine_);
+    std::swap(compressed_, other.compressed_);
+    std::swap(invalid_, other.invalid_);
+}
+
+inline void swap(FileInfo& a, FileInfo& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

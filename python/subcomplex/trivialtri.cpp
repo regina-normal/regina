@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/trivialtri.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
@@ -39,31 +40,23 @@ using regina::TrivialTri;
 
 void addTrivialTri(pybind11::module_& m) {
     pybind11::class_<TrivialTri, regina::StandardTriangulation>(m, "TrivialTri")
-        .def("clone", &TrivialTri::clone)
+        .def(pybind11::init<const TrivialTri&>())
+        .def("clone", [](const TrivialTri& s) { // deprecated
+            return TrivialTri(s);
+        })
+        .def("swap", &TrivialTri::swap)
         .def("type", &TrivialTri::type)
-        .def_static("isTrivialTriangulation",
-            &TrivialTri::isTrivialTriangulation)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("SPHERE_4_VERTEX", [](pybind11::object) {
-            return TrivialTri::SPHERE_4_VERTEX;
-        })
-        .def_property_readonly_static("BALL_3_VERTEX", [](pybind11::object) {
-            return TrivialTri::BALL_3_VERTEX;
-        })
-        .def_property_readonly_static("BALL_4_VERTEX", [](pybind11::object) {
-            return TrivialTri::BALL_4_VERTEX;
-        })
-        .def_property_readonly_static("N2", [](pybind11::object) {
-            return TrivialTri::N2;
-        })
-        .def_property_readonly_static("N3_1", [](pybind11::object) {
-            return TrivialTri::N3_1;
-        })
-        .def_property_readonly_static("N3_2", [](pybind11::object) {
-            return TrivialTri::N3_2;
-        })
+        .def_static("recognise", &TrivialTri::recognise)
+        .def_static("isTrivialTriangulation", // deprecated
+            &TrivialTri::recognise)
+        .def_readonly_static("SPHERE_4_VERTEX", &TrivialTri::SPHERE_4_VERTEX)
+        .def_readonly_static("BALL_3_VERTEX", &TrivialTri::BALL_3_VERTEX)
+        .def_readonly_static("BALL_4_VERTEX", &TrivialTri::BALL_4_VERTEX)
+        .def_readonly_static("N2", &TrivialTri::N2)
+        .def_readonly_static("N3_1", &TrivialTri::N3_1)
+        .def_readonly_static("N3_2", &TrivialTri::N3_2)
     ;
+
+    m.def("swap", (void(*)(TrivialTri&, TrivialTri&))(regina::swap));
 }
 

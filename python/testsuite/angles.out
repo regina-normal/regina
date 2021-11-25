@@ -1,0 +1,102 @@
+-------------------------------
+Empty triangulation
+Vertex angle structures
+-------------------------------
+
+1 vertex angle structure (no restrictions):
+
+
+
+-------------------------------
+Empty triangulation
+Taut angle structures
+-------------------------------
+
+1 vertex angle structure (taut only):
+
+
+
+-------------------------------
+Figure eight knot complement
+Vertex angle structures
+-------------------------------
+
+5 vertex angle structures (no restrictions):
+1 0 0 ; 1 0 0
+1 0 0 ; 0 1/2 1/2
+0 1/2 1/2 ; 1 0 0
+0 1 0 ; 0 0 1
+0 0 1 ; 0 1 0
+
+
+-------------------------------
+Figure eight knot complement
+Taut angle structures
+-------------------------------
+
+3 vertex angle structures (taut only):
+1 0 0 ; 1 0 0
+0 1 0 ; 0 0 1
+0 0 1 ; 0 1 0
+
+
+-------------------------------
+Whitehead link complement
+Vertex angle structures
+-------------------------------
+
+18 vertex angle structures (no restrictions):
+1/2 1/2 0 ; 1/2 1/2 0 ; 1 0 0 ; 0 0 1
+1/2 1/2 0 ; 1/2 1/2 0 ; 0 0 1 ; 1 0 0
+1/2 1/2 0 ; 1 0 0 ; 1/2 1/2 0 ; 0 0 1
+1/2 1/2 0 ; 0 0 1 ; 1/2 1/2 0 ; 1 0 0
+1 0 0 ; 1/2 1/2 0 ; 0 0 1 ; 1/2 1/2 0
+1 0 0 ; 1 0 0 ; 0 1 0 ; 0 1 0
+1 0 0 ; 1 0 0 ; 0 0 1 ; 0 0 1
+1 0 0 ; 0 1 0 ; 1 0 0 ; 0 1 0
+1 0 0 ; 0 0 1 ; 1/2 1/2 0 ; 1/2 1/2 0
+1 0 0 ; 0 0 1 ; 1 0 0 ; 0 0 1
+1 0 0 ; 0 0 1 ; 0 0 1 ; 1 0 0
+0 1 0 ; 1 0 0 ; 0 1 0 ; 1 0 0
+0 1 0 ; 0 1 0 ; 1 0 0 ; 1 0 0
+0 0 1 ; 1/2 1/2 0 ; 1 0 0 ; 1/2 1/2 0
+0 0 1 ; 1 0 0 ; 1/2 1/2 0 ; 1/2 1/2 0
+0 0 1 ; 1 0 0 ; 1 0 0 ; 0 0 1
+0 0 1 ; 1 0 0 ; 0 0 1 ; 1 0 0
+0 0 1 ; 0 0 1 ; 1 0 0 ; 1 0 0
+
+
+-------------------------------
+Whitehead link complement
+Taut angle structures
+-------------------------------
+
+10 vertex angle structures (taut only):
+1 0 0 ; 1 0 0 ; 0 1 0 ; 0 1 0
+1 0 0 ; 1 0 0 ; 0 0 1 ; 0 0 1
+1 0 0 ; 0 1 0 ; 1 0 0 ; 0 1 0
+1 0 0 ; 0 0 1 ; 1 0 0 ; 0 0 1
+1 0 0 ; 0 0 1 ; 0 0 1 ; 1 0 0
+0 1 0 ; 1 0 0 ; 0 1 0 ; 1 0 0
+0 1 0 ; 0 1 0 ; 1 0 0 ; 1 0 0
+0 0 1 ; 1 0 0 ; 1 0 0 ; 0 0 1
+0 0 1 ; 1 0 0 ; 0 0 1 ; 1 0 0
+0 0 1 ; 0 0 1 ; 1 0 0 ; 1 0 0
+
+
+-------------------------------
+Poincare homology sphere
+Vertex angle structures
+-------------------------------
+
+0 vertex angle structures (no restrictions):
+
+
+-------------------------------
+Poincare homology sphere
+Taut angle structures
+-------------------------------
+
+0 vertex angle structures (taut only):
+
+

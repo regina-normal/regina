@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>pentachora</refname>
-  <refpurpose>The pentachora forming a 4-dimensional triangulation</refpurpose>
+  <refpurpose>Replaced by &xml-tri;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,10 +40,20 @@ pentachora ::= (&xml-pent;*)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   This element was used in the past to store all pentachora
+   in a 4-dimensional triangulation.
+   Since &regina;&nbsp;7.0, these pentachora are now stored directly
+   within the &xml-tri; element (which replaces the old
+   &xml-packet; element for triangulation packets), and each pentachoron
+   is encoded in a &xml-simplex; element (as opposed to the &xml-pent;
+   elements described here).
+  </para>
   <para>
    A &xml-pentachora; element stores the entire set of pentachora that
    form a 4-dimensional triangulation.

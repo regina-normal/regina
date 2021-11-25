@@ -39,6 +39,7 @@
 #define __IMPORTDIALOG_H
 
 #include <QDialog>
+#include <memory>
 
 class PacketChooser;
 class PacketFilter;
@@ -52,9 +53,7 @@ namespace regina {
  * A dialog used to inserted previously imported data into the packet tree.
  *
  * If OK is pressed, the imported data will be inserted into the packet
- * tree.  If the dialog is cancelled however, no further action will be
- * taken (and in particular the imported data will need to be destroyed
- * elsewhere).
+ * tree.  If the dialog is cancelled however, no further action will be taken.
  */
 class ImportDialog : public QDialog {
     Q_OBJECT
@@ -69,22 +68,24 @@ class ImportDialog : public QDialog {
         /**
          * Packet tree structure:
          */
-        regina::Packet* tree;
-        regina::Packet* newTree;
+        std::shared_ptr<regina::Packet> tree;
+        std::shared_ptr<regina::Packet> newTree;
 
     public:
         /**
          * Dialog constructor.
          *
          * The filter passed is used to restrict the possible parents of
-         * the imported data.  It may be 0, in which case any parent will
+         * the imported data.  It may be null, in which case any parent will
          * be allowed.
          *
          * This dialog and its components will claim ownership of the
          * given packet filter.
          */
-        ImportDialog(QWidget* parent, regina::Packet* importedData,
-            regina::Packet* packetTree, regina::Packet* defaultParent,
+        ImportDialog(QWidget* parent,
+            std::shared_ptr<regina::Packet> importedData,
+            std::shared_ptr<regina::Packet> packetTree,
+            std::shared_ptr<regina::Packet> defaultParent,
             PacketFilter* useFilter, bool useCodec, const QString& dialogTitle);
 
         /**

@@ -46,50 +46,94 @@
 namespace regina {
 
 /**
- * \weakgroup snappea
- * @{
- */
-
-/**
  * An XML packet reader that reads a single SnapPea triangulation.
  *
  * \ifacespython Not present.
  */
 class XMLSnapPeaReader : public XMLPacketReader {
     private:
-        SnapPeaTriangulation* snappea_;
+        std::shared_ptr<PacketOf<SnapPeaTriangulation>> snappea_;
             /**< The SnapPea triangulation currently being read. */
 
     public:
         /**
          * Creates a new SnapPea triangulation reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLSnapPeaReader(XMLTreeResolver& resolver);
+        XMLSnapPeaReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
-        virtual Packet* packet() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        void initialChars(const std::string& chars) override;
+};
+
+/**
+ * An XML packet reader that reads a single SnapPea triangulation using the
+ * older second-generation file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacySnapPeaReader : public XMLPacketReader {
+    private:
+        std::shared_ptr<PacketOf<SnapPeaTriangulation>> snappea_;
+            /**< The SnapPea triangulation currently being read. */
+
+    public:
+        /**
+         * Creates a new SnapPea triangulation reader.
+         *
+         * All parameters are the same as for the parent class XMLPacketReader.
+         */
+        XMLLegacySnapPeaReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
+
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
-/*@}*/
-
 // Inline functions for XMLSnapPeaReader
 
-inline XMLSnapPeaReader::XMLSnapPeaReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), snappea_(new SnapPeaTriangulation()) {
+inline XMLSnapPeaReader::XMLSnapPeaReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        snappea_(nullptr) {
 }
 
-inline Packet* XMLSnapPeaReader::packet() {
+inline std::shared_ptr<Packet> XMLSnapPeaReader::packetToCommit() {
+    if (! snappea_) {
+        // Null SnapPea triangulation:
+        snappea_ = makePacket<SnapPeaTriangulation>();
+    }
     return snappea_;
 }
 
-inline XMLElementReader* XMLSnapPeaReader::startContentSubElement(
+// Inline functions for XMLLegacySnapPeaReader
+
+inline XMLLegacySnapPeaReader::XMLLegacySnapPeaReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        snappea_(nullptr) {
+}
+
+inline std::shared_ptr<Packet> XMLLegacySnapPeaReader::packetToCommit() {
+    if (! snappea_) {
+        // Null SnapPea triangulation:
+        snappea_ = makePacket<SnapPeaTriangulation>();
+    }
+    return snappea_;
+}
+
+inline XMLElementReader* XMLLegacySnapPeaReader::startContentSubElement(
         const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
     if (subTagName == "snappea")
         return new XMLCharsReader();

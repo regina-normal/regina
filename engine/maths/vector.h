@@ -52,11 +52,6 @@ namespace regina {
 class Rational;
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * An optimised vector class of elements from a given ring T.
  * Various mathematical vector operations are available.
  *
@@ -100,11 +95,13 @@ class Rational;
  * \ifacespython Not present in general, although the specific types
  * Vector<Integer> and Vector<LargeInteger> are available under the names
  * VectorInt and VectorLarge respectively.
+ *
+ * \ingroup maths
  */
 template <class T>
 class Vector : public ShortOutput<Vector<T>> {
     public:
-        typedef T Element;
+        using Element = T;
             /**< The type of each element in the vector. */
 
         /**
@@ -195,11 +192,12 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * \pre The list \a data is non-empty.
          *
-         * \ifacespython Not available.
+         * \ifacespython Not available, but there is a Python constructor
+         * that takes a list of coefficients (which need not be constant).
          *
          * @param data the elements of the vector.
          */
-        inline Vector(std::initializer_list<std::initializer_list<T>> data) :
+        inline Vector(std::initializer_list<T> data) :
                 elements(new T[data.size]), end(elements + data.size()) {
             std::copy(data.begin(), data.end(), elements);
         }
@@ -253,32 +251,23 @@ class Vector : public ShortOutput<Vector<T>> {
             return elements[index];
         }
         /**
-         * Sets the element at the given index in the vector to the
-         * given value.
+         * Gives write access to the element at the given index in the vector.
          *
          * \pre \c index is between 0 and size()-1 inclusive.
          *
-         * \ifacespython This set() routine is available, but you can
-         * also set elements directly using syntax of the form
-         * <tt>v[index] = value</tt>.
-         *
-         * @param index the vector index to examine.
-         * @param value the new value to assign to the element.
+         * @param index the vector index to access.
+         * @return a reference to the vector element at the given index.
          */
-        inline void set(size_t index, const T& value) {
-            elements[index] = value;
+        inline T& operator[](size_t index) {
+            return elements[index];
         }
         /**
          * Deprecated routine that sets the element at the given index
          * in the vector to the given value.
          *
-         * \deprecated This routine has been renamed to set().
+         * \deprecated Simply use the square bracker operator instead.
          *
          * \pre \c index is between 0 and size()-1 inclusive.
-         *
-         * \ifacespython Both setElement() and its new name set() are available,
-         * but you can also set elements directly using syntax of the form
-         * <tt>v[index] = value</tt>.
          *
          * @param index the vector index to examine.
          * @param value the new value to assign to the element.
@@ -320,6 +309,9 @@ class Vector : public ShortOutput<Vector<T>> {
          * vector.
          */
         inline Vector<T>& operator = (const Vector<T>& cloneMe) {
+            // std::copy() exhibits undefined behaviour with self-assignment.
+            if (std::addressof(cloneMe) == this)
+                return *this;
             std::copy(cloneMe.elements, cloneMe.end, elements);
             return *this;
         }
@@ -584,7 +576,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -639,6 +631,8 @@ class Vector : public ShortOutput<Vector<T>> {
  *
  * @param a the first vector whose contents should be swapped.
  * @param b the second vector whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 template <typename T>
 inline void swap(Vector<T>& a, Vector<T>& b) noexcept {
@@ -650,11 +644,11 @@ inline void swap(Vector<T>& a, Vector<T>& b) noexcept {
  * The vector will be written on a single line with elements separated
  * by a single space.  No newline will be written.
  *
- * \ifacespython Not present.
- *
  * @param out the output stream to which to write.
  * @param vector the vector to write.
  * @return a reference to \a out.
+ *
+ * \ingroup maths
  */
 template <class T>
 std::ostream& operator << (std::ostream& out, const Vector<T>& vector) {
@@ -684,8 +678,10 @@ const T Vector<T>::minusOne(-1);
  *
  * \ifacespython This instance of the Vector template class is made
  * available to Python.
+ *
+ * \ingroup maths
  */
-typedef Vector<Integer> VectorInt;
+using VectorInt = Vector<Integer>;
 
 /**
  * A vector of arbitrary-precision integers that allows infinite elements.
@@ -695,25 +691,28 @@ typedef Vector<Integer> VectorInt;
  *
  * \ifacespython This instance of the Vector template class is made
  * available to Python.
+ *
+ * \ingroup maths
  */
-typedef Vector<LargeInteger> VectorLarge;
+using VectorLarge = Vector<LargeInteger>;
 
 /**
  * Deprecated alias for a vector of arbitrary-precision integers that
  * allows infinite elements.
  *
- * \deprecated Prior to Regina 6.1, Ray was its own separate subclass of
- * Vector<LargeInteger>.  Now the additional members of Ray have been
- * merged directly into the Vector class, and so you should just use
- * Vector<LargeInteger> (or the typedef VectorLarge) instead.  Note that
+ * \deprecated In Regina 6.0.1 and earlier, Ray was its own separate subclass
+ * of Vector<LargeInteger>.  As of Regina 7.0, the additional members of Ray
+ * have been merged directly into the Vector class, and so you should just use
+ * Vector<LargeInteger> (or the type alias VectorLarge) instead.  Note that
  * only the \e name Ray is deprecated; the \e class Vector<LargeInteger>
  * that it refers to remains in active use.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, but you can use the equivalent type VectorLarge
+ * instead.
+ *
+ * \ingroup maths
  */
-typedef Vector<LargeInteger> Ray [[deprecated]];
-
-/*@}*/
+using Ray [[deprecated]] = Vector<LargeInteger>;
 
 } // namespace regina
 

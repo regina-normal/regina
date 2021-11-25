@@ -35,18 +35,10 @@
 
 namespace regina {
 
-PillowTwoSphere* PillowTwoSphere::clone() const {
-    PillowTwoSphere* ans = new PillowTwoSphere();
-    ans->triangle_[0] = triangle_[0];
-    ans->triangle_[1] = triangle_[1];
-    ans->triMapping_ = triMapping_;
-    return ans;
-}
-
-PillowTwoSphere* PillowTwoSphere::formsPillowTwoSphere(
+std::unique_ptr<PillowTwoSphere> PillowTwoSphere::recognise(
         Triangle<3>* tri1, Triangle<3>* tri2) {
     if (tri1 == tri2 || tri1->isBoundary() || tri2->isBoundary())
-        return 0;
+        return nullptr;
     Edge<3>* edge[2][3];
     int i;
     for (i = 0; i < 3; i++) {
@@ -55,7 +47,7 @@ PillowTwoSphere* PillowTwoSphere::formsPillowTwoSphere(
     }
     if (edge[0][0] == edge[0][1] || edge[0][0] == edge[0][2] ||
             edge[0][1] == edge[0][2])
-        return 0;
+        return nullptr;
 
     // The first triangle has three distinct edges.  See if it matches to the
     // second triangle.
@@ -66,26 +58,24 @@ PillowTwoSphere* PillowTwoSphere::formsPillowTwoSphere(
             break;
         }
     if (joinTo0 == -1)
-        return 0;
+        return nullptr;
 
     // Now make sure the edges all match up and with the correct
     // permutations.
-    Perm<4> perm = tri2->edgeMapping(joinTo0) *
-        tri1->edgeMapping(0).inverse();
+    Perm<4> perm = tri2->edgeMapping(joinTo0) * tri1->edgeMapping(0).inverse();
     for (i = 1; i < 3; i++) {
         if (edge[0][i] != edge[1][perm[i]])
-            return 0;
-        if (! (tri2->edgeMapping(perm[i]) ==
-                perm * tri1->edgeMapping(i)))
-            return 0;
+            return nullptr;
+        if (! (tri2->edgeMapping(perm[i]) == perm * tri1->edgeMapping(i)))
+            return nullptr;
     }
 
     // We have an answer.
-    PillowTwoSphere* ans = new PillowTwoSphere();
-    ans->triangle_[0] = tri1;
-    ans->triangle_[1] = tri2;
-    ans->triMapping_ = perm;
-    return ans;
+    //
+    // Note: we cannot use make_unique here, since the class
+    // constructor is private.
+    return std::unique_ptr<PillowTwoSphere>(new PillowTwoSphere(
+        tri1, tri2, perm));
 }
 
 } // namespace regina

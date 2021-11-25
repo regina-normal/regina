@@ -48,7 +48,7 @@
 using regina::Packet;
 using regina::Triangulation;
 
-Tri4AlgebraUI::Tri4AlgebraUI(regina::Triangulation<4>* packet,
+Tri4AlgebraUI::Tri4AlgebraUI(regina::PacketOf<regina::Triangulation<4>>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim3TriAlgebra) {
@@ -56,16 +56,17 @@ Tri4AlgebraUI::Tri4AlgebraUI(regina::Triangulation<4>* packet,
         tr("&Homology && Fund. Group"));
 }
 
-Tri4HomologyFundUI::Tri4HomologyFundUI(regina::Triangulation<4>* packet,
+Tri4HomologyFundUI::Tri4HomologyFundUI(
+        regina::PacketOf<regina::Triangulation<4>>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
 
-    ColumnLayout* master = new ColumnLayout(ui);
+    auto* master = new ColumnLayout(ui);
 
     // Homology:
 
-    QGridLayout* homologyGrid = new QGridLayout();
+    auto* homologyGrid = new QGridLayout();
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(3, 1);
     homologyGrid->setColumnStretch(0, 1);
@@ -153,17 +154,15 @@ void Tri4HomologyFundUI::refresh() {
         fgMsg->show();
     } else {
         fgMsg->hide();
-        fgGroup->refresh(&tri->fundamentalGroup());
+        fgGroup->refresh(tri->fundamentalGroup());
         fgGroup->show();
     }
 }
 
 void Tri4HomologyFundUI::fundGroupSimplified() {
-    regina::GroupPresentation* simp = fgGroup->takeSimplifiedGroup();
-    if (simp) {
+    auto simp = fgGroup->takeSimplifiedGroup();
+    if (simp)
         tri->simplifiedFundamentalGroup(std::move(*simp));
-        delete simp;
-    }
 }
 
 void Tri4HomologyFundUI::refreshLabels() {

@@ -43,6 +43,7 @@
 #define __REGINA_PERM_H
 #endif
 
+#include <array>
 #include <cstdlib>
 #include <string>
 #include "regina-core.h"
@@ -50,11 +51,6 @@
 #include "utilities/randutils.h"
 
 namespace regina {
-
-/**
- * \weakgroup maths
- * @{
- */
 
 /**
  * Returns the character used to express the integer \a i in a permutation.
@@ -69,6 +65,8 @@ namespace regina {
  *
  * @param i the integer to represent; this must be between 0 and 35 inclusive.
  * @return the single character used to represent \a i.
+ *
+ * \ingroup maths
  */
 inline constexpr char digit(int i) {
     return (i < 10 ? '0' + i : 'a' + i - 10);
@@ -80,6 +78,8 @@ inline constexpr char digit(int i) {
  * @param n any non-negative integer; this must be at most 20
  * (since otherwise the factorial will overflow).
  * @return the factorial of \a n..
+ *
+ * \ingroup maths
  */
 inline constexpr int64_t factorial(int n) {
     return (n <= 1 ? 1 : factorial(n - 1) * n);
@@ -91,6 +91,8 @@ inline constexpr int64_t factorial(int n) {
  * class notes for more information on exactly how these codes are constructed.
  * The class constant Perm<n>::codeType indicates which type of code is used
  * for which \a n.
+ *
+ * \ingroup maths
  */
 enum PermCodeType {
     /**
@@ -122,24 +124,25 @@ enum PermCodeType {
  * Amongst other things, such permutations are used to describe
  * simplex gluings in (<i>n</i>-1)-manifold triangulations.
  *
- * Perm objects are small enough to pass about by value instead of by
- * reference.  The trade-off is that, for this to be possible, the Perm
- * template class can only work with \a n &le; 16.
+ * Perm objects are small enough to pass by value and swap with std::swap(),
+ * with no need to use references, specialised move operations or custom
+ * swap functions.  The trade-off is that, for this to be possible, the
+ * Perm template class can only work with \a n &le; 16.
  *
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the entire permutation.
  * Thus the internal code may be a useful means for passing permutation
  * objects to and from the engine.  These codes are constructed as follows:
  *
- * - For 7 &le; \a n &le; 16, the code is an <i>image pack</i>: essentially a
+ * - For 8 &le; \a n &le; 16, the code is an <i>image pack</i>: essentially a
  *   packed array that holds the images of 0,...,<i>n</i>-1 in a single native
  *   integer type.  More precisely, this is an unsigned integer of type
  *   \a ImagePack, whose lowest \a imageBits bits represent the image of 0,
  *   whose next lowest \a imageBits bits represent the image of 1, and so on.
  *   This scheme is consistent with the old first-generation codes for
- *   \a n = 4,5,6, which are still supported but no longer used internally.
+ *   \a n = 4,...,7, which are still supported but no longer used internally.
  *
- * - For \a n &le; 6, the code is an index into a hard-coded list of
+ * - For \a n &le; 7, the code is an index into a hard-coded list of
  *   all possible permutations; more precisely, an index into the symmetric
  *   group Perm<n>::Sn.  The ordering of Perm<n>::Sn is "almost lexicographic",
  *   in that we swap some pairs of indices (2<i>k</i>, 2<i>k</i>+1) to ensure
@@ -147,9 +150,9 @@ enum PermCodeType {
  *
  * For \a n = 2,...,5 (which appear throughout 2-, 3- and 4-manifold
  * triangulations), this template is specialised: the code is highly optimised
- * and also offers some extra functionality.  For \a n = 6, this template
+ * and also offers some extra functionality.  For \a n = 6,7, this template
  * is again specialised and highly optimised, and it offers some extra
- * functionality but not as much as Perm<5> and below.  For \a n &ge; 7,
+ * functionality but not as much as Perm<5> and below.  For \a n &ge; 8,
  * this template is generic and most operations require more time (in
  * particular, there are no harded-coded lookup tables).
  *
@@ -159,11 +162,13 @@ enum PermCodeType {
  *
  * @tparam n the number of objects being permuted.
  * This must be between 2 and 16 inclusive.
+ *
+ * \ingroup maths
  */
 template <int n>
 class Perm {
-    static_assert(n >= 7 && n <= 16,
-        "The generic Perm<n> template is only available for 7 <= n <= 16.");
+    static_assert(n >= 8 && n <= 16,
+        "The generic Perm<n> template is only available for 8 <= n <= 16.");
 
     public:
         /**
@@ -179,8 +184,15 @@ class Perm {
          * Denotes a native signed integer type large enough to count all
          * permutations on \a n elements.  In other words, this is a
          * native signed integer type large enough to store (<i>n</i>!).
+         *
+         * \note This type is not hyper-optimised: for very small \a n where
+         * Index is hard-coded this is just an \c int, and for larger \a n
+         * where Index is derived it is actually large enough to hold an
+         * entire image pack.  If at any stage there are plans to optimise this
+         * type, be careful of the special case of \a n = 8, where (8!) can be
+         * stored in an \e unsigned 16-bit type but not a signed 16-bit type.
          */
-        typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::type Index;
+        using Index = typename IntOfMinSize<(imageBits * n + 7) / 8>::type;
 
         /**
          * Indicates the native unsigned integer type used to store a
@@ -188,7 +200,7 @@ class Perm {
          * on image packs, and how they are used as permutation codes
          * for \a n &ge; 7.
          */
-        typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::utype ImagePack;
+        using ImagePack = typename IntOfMinSize<(imageBits * n + 7) / 8>::utype;
 
         /**
          * A bitmask whose lowest \a imageBits bits are 1, and whose
@@ -202,12 +214,12 @@ class Perm {
          * Indicates the native unsigned integer type used to store the
          * internal permutation code.
          *
-         * This typedef is present for all values of \a n, though its
+         * This type alias is present for all values of \a n, though its
          * precise size depends on how the permutation code is constructed.
-         * For \a n = 4, 5 and 6, it is a deprecated typedef that refers to
+         * For \a n = 4,...,7, it is a deprecated type alias that refers to
          * older (first-generation) permutation codes that are no longer used.
          */
-        typedef ImagePack Code;
+        using Code = ImagePack;
 
         /**
          * Indicates what type of internal permutation code is used by
@@ -236,8 +248,8 @@ class Perm {
              * Returns the permutation at the given index in the array Sn.
              * See Perm<n>::Sn for details.
              *
-             * For \a n &le; 6, this operator is very fast (and constant time).
-             * However, for \a n &ge; 7 it is not constant time; the current
+             * For \a n &le; 7, this operator is very fast (and constant time).
+             * However, for \a n &ge; 8 it is not constant time; the current
              * implementation is quadratic in \a n.
              *
              * @param index an index between 0 and <i>n</i>!-1 inclusive.
@@ -254,8 +266,8 @@ class Perm {
              * Returns the permutation at the given index in the array
              * orderedSn.  See Perm<n>::orderedSn for details.
              *
-             * For \a n &le; 6, this operator is very fast (and constant time).
-             * However, for \a n &ge; 7 it is not constant time; the current
+             * For \a n &le; 7, this operator is very fast (and constant time).
+             * However, for \a n &ge; 8 it is not constant time; the current
              * implementation is quadratic in \a n.
              *
              * @param index an index between 0 and <i>n</i>!-1 inclusive.
@@ -285,8 +297,8 @@ class Perm {
          * alternates between even and odd permutations, whereas \a orderedSn
          * stores permutations in lexicographical order.
          *
-         * \warning For \a n &le; 6, the square bracket operator is a
-         * very fast constant-time routine.  However, for \a n &ge; 7,
+         * \warning For \a n &le; 7, the square bracket operator is a
+         * very fast constant-time routine.  However, for \a n &ge; 8,
          * this is not constant time; the current implementation is
          * quadratic in \a n.
          */
@@ -311,8 +323,8 @@ class Perm {
          * stores permutations in lexicographical order, whereas \a Sn
          * alternates between even and odd permutations.
          *
-         * \warning For \a n &le; 6, the square bracket operator is a
-         * very fast constant-time routine.  However, for \a n &ge; 7,
+         * \warning For \a n &le; 7, the square bracket operator is a
+         * very fast constant-time routine.  However, for \a n &ge; 8,
          * this is not constant time; the current implementation is
          * quadratic in \a n.
          */
@@ -353,28 +365,42 @@ class Perm {
          * Creates a permutation mapping \a i to \a image[\a i] for each
          * 0 &le; \a i < \a n.
          *
+         * \pre The elements of \a image are 0,...,<i>n</i>-1 in some order.
+         *
+         * @param image the array of images.
+         */
+        constexpr Perm(const std::array<int, n>& image);
+
+        /**
+         * Deprecated constructor that creates a permutation mapping
+         * \a i to \a image[\a i] for each 0 &le; \a i < \a n.
+         *
+         * \deprecated Use the std::array constructor instead.
+         *
          * \pre The array \a image contains \a n elements, which are
          * 0,...,<i>n</i>-1 in some order.
          *
          * @param image the array of images.
          */
-        constexpr Perm(const int* image);
+        [[deprecated]] constexpr Perm(const int* image);
 
         /**
-         * Creates a permutation mapping
+         * Deprecated constructor that creates a permutation mapping
          * (\a a[0], ..., \a a[<i>n</i>-1]) to
          * (\a b[0], ..., \a b[<i>n</i>-1]) respectively.
+         *
+         * \deprecated Use the std::array constructor instead.
          *
          * \pre Both arrays \a a and \a b contain \a n elements, which
          * are 0,...,<i>n</i>-1 in some order.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use the single-array constructor instead.
          *
          * @param a the array of preimages; this must have length \a n.
          * @param b the corresponding array of images; this must also have
          * length \a n.
          */
-        constexpr Perm(const int* a, const int* b);
+        [[deprecated]] constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -533,7 +559,19 @@ class Perm {
          * should be between 0 and <i>n</i>-1 inclusive.
          * @return the preimage of \a image.
          */
-        constexpr int preImageOf(int image) const;
+        constexpr int pre(int image) const;
+
+        /**
+         * Deprecated routine that determines the preimage of the given
+         * integer under this permutation.
+         *
+         * \deprecated This routine has been renamed to pre().
+         *
+         * @param image the integer whose preimage we wish to find.  This
+         * should be between 0 and <i>n</i>-1 inclusive.
+         * @return the preimage of \a image.
+         */
+        [[deprecated]] constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -778,6 +816,8 @@ class Perm {
  *
  * @tparam n the number of objects being permuted.
  * This must be between 3 and 16 inclusive.
+ *
+ * \ingroup maths
  */
 template <int n>
 inline std::ostream& operator << (std::ostream& out, const Perm<n>& p) {
@@ -791,8 +831,7 @@ template <> class Perm<3>;
 template <> class Perm<4>;
 template <> class Perm<5>;
 template <> class Perm<6>;
-
-/*@}*/
+template <> class Perm<7>;
 
 // Inline functions for Perm
 
@@ -849,7 +888,7 @@ constexpr Perm<n> Perm<n>::SnLookup::operator[] (Perm<n>::Index i) const {
                     break;
                 } else {
                     // Set digit to (p-1) and carry.
-                    code |= ((p - 1) << ((n - p) * imageBits));
+                    code |= (Code(p - 1) << ((n - p) * imageBits));
                 }
             }
         } else {
@@ -900,6 +939,12 @@ inline constexpr Perm<n>::Perm(int a, int b) : code_(idCode_) {
 }
 
 template <int n>
+inline constexpr Perm<n>::Perm(const std::array<int, n>& image) : code_(0) {
+    for (int i = 0; i < n; ++i)
+        code_ |= (static_cast<Code>(image[i]) << (imageBits * i));
+}
+
+template <int n>
 inline constexpr Perm<n>::Perm(const int* image) : code_(0) {
     for (int i = 0; i < n; ++i)
         code_ |= (static_cast<Code>(image[i]) << (imageBits * i));
@@ -935,7 +980,13 @@ constexpr bool Perm<n>::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < n; ++i)
         mask |= (1 << ((code >> (imageBits * i)) & imageMask));
-    return (mask + 1 == (1 << n));
+    if constexpr (n < 16) {
+        return (mask + 1 == (1 << n) && (code >> (imageBits * n)) == 0);
+    } else {
+        // There are no "spare bits" beyond the 16 * 4 bits used in the code.
+        // This means no need to check if any unwanted extra bits are set.
+        return (mask + 1 == (1 << n));
+    }
 }
 
 template <int n>
@@ -994,12 +1045,17 @@ inline constexpr int Perm<n>::operator[](int source) const {
 }
 
 template <int n>
-inline constexpr int Perm<n>::preImageOf(int image) const {
+inline constexpr int Perm<n>::pre(int image) const {
     for (int i = 0; i < n; ++i)
         if (((code_ >> (imageBits * i)) & imageMask) == image)
             return i;
     // We should never reach this point.
     return -1;
+}
+
+template <int n>
+inline constexpr int Perm<n>::preImageOf(int image) const {
+    return pre(image);
 }
 
 template <int n>
@@ -1105,17 +1161,17 @@ Perm<n> Perm<n>::rand(bool even) {
 template <int n>
 template <class URBG>
 Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
-    // Note: This generic implementation of Perm covers 6 <= n <= 16.
+    // Note: This generic implementation of Perm covers 8 <= n <= 16.
     // The corresponding index types require 16, 32 or 64 bits.
     //
     // A slight messiness here is that std::uniform_int_distribution
     // requires the type argument to be one of short, int, long or long long.
     static_assert(sizeof(Index) <= sizeof(long long),
         "Permutation index cannot fit inside a long long");
-    typedef typename std::conditional<sizeof(Index) <= sizeof(short), short,
+    using Arg = typename std::conditional<sizeof(Index) <= sizeof(short), short,
         typename std::conditional<sizeof(Index) <= sizeof(int), int,
         typename std::conditional<sizeof(Index) <= sizeof(long), long,
-        long long>::type>::type>::type Arg;
+        long long>::type>::type>::type;
 
     if (even) {
         std::uniform_int_distribution<Arg> d(0, (nPerms / 2) - 1);

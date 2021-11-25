@@ -49,7 +49,7 @@
 using regina::Packet;
 using regina::Triangulation;
 
-Tri4SkeletonUI::Tri4SkeletonUI(regina::Triangulation<4>* packet,
+Tri4SkeletonUI::Tri4SkeletonUI(regina::PacketOf<Triangulation<4>>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim4TriSkeleton) {
@@ -58,14 +58,14 @@ Tri4SkeletonUI::Tri4SkeletonUI(regina::Triangulation<4>* packet,
         tr("&Graphs"));
 }
 
-Tri4SkelCompUI::Tri4SkelCompUI(regina::Triangulation<4>* packet,
+Tri4SkelCompUI::Tri4SkelCompUI(regina::PacketOf<Triangulation<4>>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
     layout->addStretch(1);
 
-    QGridLayout* grid = new QGridLayout();
+    auto* grid = new QGridLayout();
     layout->addLayout(grid);
     grid->setColumnStretch(0, 1);
     grid->setColumnMinimumWidth(2, 5);
@@ -257,39 +257,37 @@ void Tri4SkelCompUI::viewVertices() {
     // guaranteed that the window will be closed and deleted
     // automatically if the packet pane is closed.
     // Similarly for edges, triangles, etc.
-    SkeletonWindow* win = new SkeletonWindow(this, new Vertex4Model(tri));
+    auto* win = new SkeletonWindow(this, new Vertex4Model(tri));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewEdges() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Edge4Model(tri));
+    auto* win = new SkeletonWindow(this, new Edge4Model(tri));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewTriangles() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Triangle4Model(tri));
+    auto* win = new SkeletonWindow(this, new Triangle4Model(tri));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewTetrahedra() {
-    SkeletonWindow* win = new SkeletonWindow(this,
-        new Tetrahedron4Model(tri));
+    auto* win = new SkeletonWindow(this, new Tetrahedron4Model(tri));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewComponents() {
-    SkeletonWindow* win = new SkeletonWindow(this, new Component4Model(tri));
+    auto* win = new SkeletonWindow(this, new Component4Model(tri));
     win->show();
     viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewBoundaryComponents() {
-    SkeletonWindow* win = new SkeletonWindow(this,
-        new BoundaryComponent4Model(tri));
+    auto* win = new SkeletonWindow(this, new BoundaryComponent4Model(tri));
     win->show();
     viewers.push_back(win);
 }

@@ -3,7 +3,7 @@
   <!ENTITY regina "<application>Regina</application>">
   <!ENTITY kappname "&regina;">
 
-  <!ENTITY regversion "6.1">
+  <!ENTITY regversion "7.0">
   <!ENTITY regdate "2021-01-11">
   <!ENTITY utf8intro "4.5 (May 2008)">
   <!ENTITY copyrightyears "1999&ndash;2021">
@@ -21,12 +21,144 @@
   <!ENTITY utf8 "<acronym>UTF-8</acronym>">
   <!ENTITY xml "<acronym>XML</acronym>">
 
+  <!ENTITY eltaddedver "Added in &regina;&nbsp;">
+  <!ENTITY eltdepver "Deprecated since &regina;&nbsp;">
+  <!ENTITY eltrmver "Removed in &regina;&nbsp;">
+  <!ENTITY attraddedver "Added in &regina;&nbsp;">
+  <!ENTITY attrdepver "Deprecated since &regina;&nbsp;">
+  <!ENTITY eltrmdetail "<para>This element has been removed. It will not
+   be written to new data files, and it will be ignored when reading
+   older data files.</para>">
+
+  <!ENTITY allpackets "<simplelist type='inline'>
+     <member>&xml-angles;</member>
+     <member>&xml-anon;</member>
+     <member>&xml-anonref;</member>
+     <member>&xml-attachment;</member>
+     <member>&xml-container;</member>
+     <member>&xml-filtercomb;</member>
+     <member>&xml-filterprop;</member>
+     <member>&xml-filtertrivial;</member>
+     <member>&xml-hypersurfaces;</member>
+     <member>&xml-link;</member>
+     <member>&xml-script;</member>
+     <member>&xml-snappeadata;</member>
+     <member>&xml-surfaces;</member>
+     <member>&xml-textdata;</member>
+     <member>&xml-tri;</member>
+    </simplelist>.
+    This list includes all of &regina;'s packet types.">
+  <!ENTITY packetsyn1 "(&xml-container;|&xml-textdata;|&xml-script;|&xml-attachment;|">
+  <!ENTITY packetsyn2 " &xml-tri;|&xml-link;|&xml-snappeadata;|">
+  <!ENTITY packetsyn3 " &xml-angles;|&xml-surfaces;|&xml-hypersurfaces;|">
+  <!ENTITY packetsyn4 " &xml-filtercomb;|&xml-filterprop;|&xml-filtertrivial;|">
+  <!ENTITY packetsyn5 " &xml-anon;|&xml-anonref;)">
+  <!ENTITY packetchildren "<para>
+    The following children can occur in all packet elements:
+    <simplelist type='inline'>
+     <member>&xml-angles;</member>
+     <member>&xml-anon;</member>
+     <member>&xml-anonref;</member>
+     <member>&xml-attachment;</member>
+     <member>&xml-container;</member>
+     <member>&xml-filtercomb;</member>
+     <member>&xml-filterprop;</member>
+     <member>&xml-filtertrivial;</member>
+     <member>&xml-hypersurfaces;</member>
+     <member>&xml-link;</member>
+     <member>&xml-script;</member>
+     <member>&xml-snappeadata;</member>
+     <member>&xml-surfaces;</member>
+     <member>&xml-tag;</member>
+     <member>&xml-textdata;</member>
+     <member>&xml-tri;</member>
+    </simplelist>.
+    This list includes all packet types, as well as the &xml-tag; element
+    for tagging individual packets.
+   </para>">
+  <!ENTITY packetparents "<para>
+    The following elements can contain any packet element (including this):
+    <simplelist type='inline'>
+     <member>&xml-angles;</member>
+     <member>&xml-anon;</member>
+     <member>&xml-anonref;</member>
+     <member>&xml-attachment;</member>
+     <member>&xml-container;</member>
+     <member>&xml-filtercomb;</member>
+     <member>&xml-filterprop;</member>
+     <member>&xml-filtertrivial;</member>
+     <member>&xml-hypersurfaces;</member>
+     <member>&xml-link;</member>
+     <member>&xml-regina;</member>
+     <member>&xml-script;</member>
+     <member>&xml-snappeadata;</member>
+     <member>&xml-surfaces;</member>
+     <member>&xml-textdata;</member>
+     <member>&xml-tri;</member>
+    </simplelist>.
+    This list includes all packet types, as well as the top-level element
+    &xml-regina;.
+   </para>">
+  <!ENTITY packetchilddesc "<para>
+    There are several child &xml; elements that are common to all packet types.
+    The &xml-tag; elements represent an arbitrary set of string
+    &ldquo;tags&rdquo; that users can attach to a packet to help organise
+    their data.
+    The remaining child elements list all of &regina;'s packet types
+    (&xml-container;, &xml-textdata;, etc.), and these represent the
+    immediate children of this packet in the packet tree.
+   </para>">
+  <!ENTITY packetattrlist2col "<row>
+    <entry><sgmltag>id</sgmltag></entry>
+    <entry><type>CDATA</type></entry>
+   </row>
+   <row>
+    <entry><sgmltag>label</sgmltag></entry>
+    <entry><type>CDATA</type></entry>
+   </row>">
+  <!ENTITY packetattrdesc "<para>The following attributes are common to all
+    packet types:</para>
+   <variablelist>
+    <varlistentry>
+     <term><sgmltag>id</sgmltag></term>
+     <listitem>
+      <para>
+       A unique identifier for this packet.  Packets are not required to
+       have IDs, but when they are present they must be distinct (i.e.,
+       no packets in the same file may share the same ID).  IDs do not need to
+       be human-readable, must not contain leading or trailing whitespace,
+       and must not be empty strings.
+       Currently, IDs are built from base&nbsp;64 hashes
+       of the underlying <application>C++</application> pointers.
+      </para>
+      <para>
+       The purpose of these packet IDs is to allow other packets to reference
+       this packet (for instance, so that a script packet can store
+       references to its variables).
+      </para>
+      <para>
+       IDs are not required to stay the same across subsequent loads and
+       saves of the same file.  In other words, if you load a file and
+       save it again, the packet IDs are allowed to change.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><sgmltag>label</sgmltag></term>
+     <listitem><para>
+      The name given by the user to this particular packet within the overall
+      packet tree.
+     </para></listitem>
+    </varlistentry>
+   </variablelist>">
+
   <!ENTITY dataformat SYSTEM "dataformat.docbook">
   <!ENTITY % dataformat-entities SYSTEM "dataformat.ent">
   %dataformat-entities;
 
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
+
 ]>
 
 <book lang="&language;">

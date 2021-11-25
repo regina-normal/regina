@@ -49,11 +49,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A bitmask that can store arbitrarily many true-or-false bits.
  *
  * This bitmask packs the bits together, so that (unlike an array of bools)
@@ -72,6 +67,10 @@ namespace regina {
  * This means that, upon construction (or reset), the length will be
  * automatically rounded up to the next "raw unit of storage".
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
  * \todo \opt Insist that sizeof(Piece) is a power of two, and replace
  * expensive division/mod operations with cheap bit operations.
  *
@@ -80,14 +79,23 @@ namespace regina {
  * not give the results that you expect.  In particular, flip() may set
  * additional \c true bits in the "dead space" between the intended length
  * and the actual length, and this may have a flow-on effect for other
- * operations (such as subset testing, bit counting and so on).  Be
- * careful!
+ * operations (such as subset testing, bit counting and so on).  Be careful!
  *
- * \ifacespython Not present.
+ * \ingroup utilities
  */
 class Bitmask {
+    public:
+        /**
+         * A class constant indicating whether this class stores
+         * bitmasks whose sizes are fixed at compile time.
+         *
+         * For the general Bitmask class, this is \c false.  For the highly
+         * optimised Bitmask1 and Bitmask2 template classes, this is \c true.
+         */
+        static constexpr bool fixedSize = false;
+
     private:
-        typedef unsigned Piece;
+        using Piece = unsigned;
             /**< The types of the machine-native pieces into which this
                  bitmask is split. */
         size_t pieces;
@@ -132,9 +140,22 @@ class Bitmask {
          * the new bitmask will be invalid also).  Invalid bitmasks must be
          * assigned a length using reset(size_t) or the assignment operator.
          *
-         * @param cloneMe the bitmask to clone.
+         * @param src the bitmask to clone.
          */
-        Bitmask(const Bitmask& cloneMe);
+        Bitmask(const Bitmask& src);
+
+        /**
+         * Moves the contents of the given bitmask into this new bitmask.
+         *
+         * It is fine if the given bitmask is invalid (but in this case,
+         * the new bitmask will be invalid also).  Invalid bitmasks must be
+         * assigned a length using reset(size_t) or the assignment operator.
+         *
+         * The bitmask that was passed (\a src) will no longer be usable.
+         *
+         * @param src the bitmask whose contents should be moved.
+         */
+        Bitmask(Bitmask&& src) noexcept;
 
         /**
          * Destroys this bitmask.
@@ -168,8 +189,7 @@ class Bitmask {
          * routine takes iterators over this container, and sets the
          * bits at the corresponding indices to the given value.
          *
-         * For example, the following code would set bits 3, 5 and 6
-         * to \c true:
+         * For example, the following code would set bits 3, 5 and 6 to \c true:
          *
          * \code
          * std::vector<unsigned> indices;
@@ -193,6 +213,10 @@ class Bitmask {
          * larger bitmask types.
          * \pre All indices in the given list are at least zero and
          * strictly less than the length of this bitmask.
+         *
+         * \ifacespython Instead of a pair of iterators, you should pass
+         * a Python list (which, as described above, must be a sorted
+         * list of indices).
          *
          * @param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
@@ -263,6 +287,27 @@ class Bitmask {
          * @return a reference to this bitmask.
          */
         Bitmask& operator = (const Bitmask& other);
+
+        /**
+         * Moves the contents of the given bitmask into this bitmask.
+         *
+         * It is fine if the given bitmask is invalid (but in this case,
+         * the new bitmask will be invalid also).  Invalid bitmasks must be
+         * assigned a length using reset(size_t) or the assignment operator.
+         *
+         * The bitmask that was passed (\a src) will no longer be usable.
+         *
+         * @param src the bitmask whose contents should be moved.
+         * @return a reference to this bitmask.
+         */
+        Bitmask& operator = (Bitmask&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given bitmask.
+         *
+         * @param other the bitmask whose contents should be swapped with this.
+         */
+        void swap(Bitmask& other) noexcept;
 
         /**
          * Leaves the first \a numBits bits of this bitmask intact, but
@@ -346,6 +391,17 @@ class Bitmask {
          * identical.
          */
         bool operator == (const Bitmask& other) const;
+
+        /**
+         * Determines whether this and the given bitmask are different.
+         *
+         * \pre This and the given bitmask have the same length.
+         *
+         * @param other the bitmask to compare against this.
+         * @return \c true if and only if this and the given bitmask are
+         * different.
+         */
+        bool operator != (const Bitmask& other) const;
 
         /**
          * Determines whether this bitmask appears strictly before the given
@@ -456,6 +512,19 @@ class Bitmask {
 };
 
 /**
+ * Swaps the contents of the two given bitmasks.
+ *
+ * This global routine simply calls Bitmask::swap(); it is provided
+ * so that Bitmask meets the C++ Swappable requirements.
+ *
+ * @param a the first bitmask whose contents should be swapped.
+ * @param b the second bitmask whose contents should be swapped.
+ *
+ * \ingroup utilities
+ */
+void swap(Bitmask& a, Bitmask& b) noexcept;
+
+/**
  * Writes the given bitmask to the given output stream as a sequence of
  * zeroes and ones.
  *
@@ -464,11 +533,11 @@ class Bitmask {
  * bitmask (specifically, the length will be rounded up to the next "raw
  * unit of storage").
  *
- * \ifacespython Not present.
- *
  * @param out the output stream to which to write.
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 std::ostream& operator << (std::ostream& out, const Bitmask& mask);
 
@@ -482,11 +551,11 @@ class Bitmask1;
  * Since the length of the bitmask is not stored, the number of bits
  * written will be 8 * sizeof(\a T).
  *
- * \ifacespython Not present.
- *
  * @param out the output stream to which to write.
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
@@ -512,12 +581,33 @@ std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
  * many bits, see Bitmask2.  For a bitmask class that can store
  * arbitrarily many bits, see Bitmask.
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \pre Type \a T is an unsigned integral numeric type.
  *
- * \ifacespython Not present.
+ * \ifacespython Python does not support templates, and so instead Regina's
+ * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
+ * Bitmask64, Bitmask128, and (if the machine supports 128-bit integers)
+ * Bitmask256.  Each of these will be an optimised bitmask class that
+ * can hold the corresponding number of bits, and is guaranteed to be an
+ * instance of either the C++ Bitmask1<T> class (where possible) or the
+ * C++ Bitmask2<T,U> template class (if necessary).
+ *
+ * \ingroup utilities
  */
 template <typename T>
 class Bitmask1 {
+    public:
+        /**
+         * A class constant indicating whether this class stores
+         * bitmasks whose sizes are fixed at compile time.
+         *
+         * For the general Bitmask class, this is \c false.  For the highly
+         * optimised Bitmask1 and Bitmask2 template classes, this is \c true.
+         */
+        static constexpr bool fixedSize = true;
+
     private:
         T mask;
             /**< Contains all 8 * sizeof(\a T) bits of this bitmask. */
@@ -544,9 +634,9 @@ class Bitmask1 {
         /**
          * Creates a clone of the given bitmask.
          *
-         * @param cloneMe the bitmask to clone.
+         * @param src the bitmask to clone.
          */
-        inline Bitmask1(const Bitmask1<T>& cloneMe) = default;
+        inline Bitmask1(const Bitmask1<T>& src) = default;
 
         /**
          * Sets all bits of this bitmask to \c false.
@@ -647,6 +737,10 @@ class Bitmask1 {
          * \pre All indices in the given list are between
          * 0 and (8 * sizeof(\a T) - 1) inclusive.
          *
+         * \ifacespython Instead of a pair of iterators, you should pass
+         * a Python list (which, as described above, must be a sorted
+         * list of indices).
+         *
          * @param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
          * @param indexEnd the end of the iterator range containing the
@@ -735,6 +829,17 @@ class Bitmask1 {
          */
         inline bool operator == (const Bitmask1<T>& other) const {
             return (mask == other.mask);
+        }
+
+        /**
+         * Determines whether this and the given bitmask are different.
+         *
+         * @param other the bitmask to compare against this.
+         * @return \c true if and only if this and the given bitmask are
+         * different.
+         */
+        inline bool operator != (const Bitmask1<T>& other) const {
+            return (mask != other.mask);
         }
 
         /**
@@ -866,11 +971,11 @@ class Bitmask2;
  * Since the length of the bitmask is not stored, the number of bits
  * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
  *
- * \ifacespython Not present.
- *
  * @param out the output stream to which to write.
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 template <typename T, typename U>
 std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
@@ -899,12 +1004,33 @@ std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
  * see Bitmask1.  For a bitmask class that can store arbitrarily many bits,
  * see Bitmask.
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *
- * \ifacespython Not present.
+ * \ifacespython Python does not support templates, and so instead Regina's
+ * python interface offers the classes Bitmask8, Bitmask16, Bitmask32,
+ * Bitmask64, Bitmask128, and (if the machine supports 128-bit integers)
+ * Bitmask256.  Each of these will be an optimised bitmask class that
+ * can hold the corresponding number of bits, and is guaranteed to be an
+ * instance of either the C++ Bitmask1<T> class (where possible) or the
+ * C++ Bitmask2<T,U> template class (if necessary).
+ *
+ * \ingroup utilities
  */
 template <typename T, typename U = T>
 class Bitmask2 {
+    public:
+        /**
+         * A class constant indicating whether this class stores
+         * bitmasks whose sizes are fixed at compile time.
+         *
+         * For the general Bitmask class, this is \c false.  For the highly
+         * optimised Bitmask1 and Bitmask2 template classes, this is \c true.
+         */
+        static constexpr bool fixedSize = true;
+
     private:
         T low;
             /**< Contains the first 8 * sizeof(\a T) bits of this bitmask. */
@@ -933,9 +1059,9 @@ class Bitmask2 {
         /**
          * Creates a clone of the given bitmask.
          *
-         * @param cloneMe the bitmask to clone.
+         * @param src the bitmask to clone.
          */
-        inline Bitmask2(const Bitmask2<T, U>& cloneMe) = default;
+        inline Bitmask2(const Bitmask2<T, U>& src) = default;
 
         /**
          * Sets all bits of this bitmask to \c false.
@@ -1053,6 +1179,10 @@ class Bitmask2 {
          * \pre All indices in the given list are between
          * 0 and (8 * sizeof(\a T) + 8 * sizeof(\a U) - 1) inclusive.
          *
+         * \ifacespython Instead of a pair of iterators, you should pass
+         * a Python list (which, as described above, must be a sorted
+         * list of indices).
+         *
          * @param indexBegin the beginning of the iterator range
          * containing the sorted indices of the bits to set.
          * @param indexEnd the end of the iterator range containing the
@@ -1156,6 +1286,17 @@ class Bitmask2 {
          */
         inline bool operator == (const Bitmask2<T, U>& other) const {
             return (low == other.low && high == other.high);
+        }
+
+        /**
+         * Determines whether this and the given bitmask are different.
+         *
+         * @param other the bitmask to compare against this.
+         * @return \c true if and only if this and the given bitmask are
+         * different.
+         */
+        inline bool operator != (const Bitmask2<T, U>& other) const {
+            return (low != other.low || high != other.high);
         }
 
         /**
@@ -1293,64 +1434,8 @@ class Bitmask2 {
         const Bitmask2<T, U>& mask);
 };
 
-#ifndef __DOXYGEN
 /**
- * An internal template that helps choose the correct bitmask type for
- * a given (hard-coded) number of bits.
- *
- * Please do not use this class directly, since this template is internal
- * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs BitmaskLen8, BitmaskLen16, BitmaskLen32
- * and BitmaskLen64.
- *
- * The reason this template exists is to circumvent the fact that we cannot
- * use sizeof() in a #if statement.  The boolean argument to this template
- * should always be left as the default.
- */
-template <bool IntHolds4Bytes = (sizeof(unsigned int) >= 4)>
-struct InternalBitmaskLen32;
-
-template <>
-struct InternalBitmaskLen32<true> {
-    typedef Bitmask1<unsigned int> Type;
-};
-
-template <>
-struct InternalBitmaskLen32<false> {
-    // The standard guarantees that sizeof(long) >= 4.
-    typedef Bitmask1<unsigned long> Type;
-};
-
-/**
- * An internal template that helps choose the correct bitmask type for
- * a given (hard-coded) number of bits.
- *
- * Please do not use this class directly, since this template is internal
- * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs BitmaskLen8, BitmaskLen16, BitmaskLen32
- * and BitmaskLen64.
- *
- * The reason this template exists is to circumvent the fact that we cannot
- * use sizeof() in a #if statement.  The boolean argument to this template
- * should always be left as the default.
- */
-template <bool LongHolds8Bytes = (sizeof(unsigned long) >= 8)>
-struct InternalBitmaskLen64;
-
-template <>
-struct InternalBitmaskLen64<true> {
-    typedef Bitmask1<unsigned long> Type;
-};
-
-template <>
-struct InternalBitmaskLen64<false> {
-    // The C standard guarantees that sizeof(long long) >= 8.
-    typedef Bitmask1<unsigned long long> Type;
-};
-#endif // End block for doxygen to ignore.
-
-/**
- * A convenience typedef that gives a small and extremely fast bitmask
+ * A deprecated type alias that gives a small and extremely fast bitmask
  * class capable of holding at least 8 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of the
@@ -1359,12 +1444,18 @@ struct InternalBitmaskLen64<false> {
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \ifacespython Not present.
+ * \deprecated This type alias is deprecated; just use Bitmask1<uint8_t
+ * instead.
+ *
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised bitmask class via the name Bitmask8.
+ *
+ * \ingroup utilities
  */
-typedef Bitmask1<unsigned char> BitmaskLen8;
+using BitmaskLen8 [[deprecated]] = Bitmask1<uint8_t>;
 
 /**
- * A convenience typedef that gives a small and extremely fast bitmask
+ * A deprecated type alias that gives a small and extremely fast bitmask
  * class capable of holding at least 16 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of the
@@ -1373,12 +1464,18 @@ typedef Bitmask1<unsigned char> BitmaskLen8;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \ifacespython Not present.
+ * \deprecated This type alias is deprecated; just use Bitmask1<uint16_t>
+ * instead.
+ *
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised bitmask class via the name Bitmask16.
+ *
+ * \ingroup utilities
  */
-typedef Bitmask1<unsigned int> BitmaskLen16;
+using BitmaskLen16 [[deprecated]] = Bitmask1<uint16_t>;
 
 /**
- * A convenience typedef that gives a small and extremely fast bitmask
+ * A deprecated type alias that gives a small and extremely fast bitmask
  * class capable of holding at least 32 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of the
@@ -1387,12 +1484,18 @@ typedef Bitmask1<unsigned int> BitmaskLen16;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \ifacespython Not present.
+ * \deprecated This type alias is deprecated; just use Bitmask1<uint32_t>
+ * instead.
+ *
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised bitmask class via the name Bitmask32.
+ *
+ * \ingroup utilities
  */
-typedef InternalBitmaskLen32<>::Type BitmaskLen32;
+using BitmaskLen32 [[deprecated]] = Bitmask1<uint32_t>;
 
 /**
- * A convenience typedef that gives a small and extremely fast bitmask
+ * A deprecated type alias that gives a small and extremely fast bitmask
  * class capable of holding at least 64 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of
@@ -1401,15 +1504,19 @@ typedef InternalBitmaskLen32<>::Type BitmaskLen32;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \ifacespython Not present.
+ * \deprecated This type alias is deprecated; just use Bitmask1<uint64_t>
+ * instead.
+ *
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised bitmask class via the name Bitmask64.
+ *
+ * \ingroup utilities
  */
-typedef InternalBitmaskLen64<>::Type BitmaskLen64;
-
-/*@}*/
+using BitmaskLen64 [[deprecated]] = Bitmask1<uint64_t>;
 
 // Inline functions for Bitmask
 
-inline Bitmask::Bitmask() : pieces(0), mask(0) {
+inline Bitmask::Bitmask() : pieces(0), mask(nullptr) {
 }
 
 inline Bitmask::Bitmask(size_t length) :
@@ -1418,10 +1525,14 @@ inline Bitmask::Bitmask(size_t length) :
     std::fill(mask, mask + pieces, 0);
 }
 
-inline Bitmask::Bitmask(const Bitmask& cloneMe) :
-        pieces(cloneMe.pieces),
-        mask(new Piece[cloneMe.pieces]) {
-    std::copy(cloneMe.mask, cloneMe.mask + pieces, mask);
+inline Bitmask::Bitmask(const Bitmask& src) :
+        pieces(src.pieces), mask(new Piece[src.pieces]) {
+    std::copy(src.mask, src.mask + pieces, mask);
+}
+
+inline Bitmask::Bitmask(Bitmask&& src) noexcept :
+        pieces(src.pieces), mask(src.mask) {
+    src.mask = nullptr;
 }
 
 inline Bitmask::~Bitmask() {
@@ -1442,6 +1553,10 @@ inline void Bitmask::reset(size_t length) {
 }
 
 inline Bitmask& Bitmask::operator = (const Bitmask& other) {
+    // std::copy exhibits undefined behaviour in the case of self-assignment.
+    if (std::addressof(other) == this)
+        return *this;
+
     if (pieces != other.pieces) {
         delete[] mask;
         pieces = other.pieces;
@@ -1450,6 +1565,18 @@ inline Bitmask& Bitmask::operator = (const Bitmask& other) {
     if (pieces)
         std::copy(other.mask, other.mask + pieces, mask);
     return *this;
+}
+
+inline Bitmask& Bitmask::operator = (Bitmask&& src) noexcept {
+    pieces = src.pieces;
+    std::swap(mask, src.mask);
+    // Let src dispose of the original contents in its own destructor.
+    return *this;
+}
+
+inline void Bitmask::swap(Bitmask& other) noexcept {
+    std::swap(pieces, other.pieces);
+    std::swap(mask, other.mask);
 }
 
 inline void Bitmask::truncate(size_t numBits) {
@@ -1510,6 +1637,10 @@ inline void Bitmask::flip() {
 
 inline bool Bitmask::operator == (const Bitmask& other) const {
     return std::equal(mask, mask + pieces, other.mask);
+}
+
+inline bool Bitmask::operator != (const Bitmask& other) const {
+    return ! std::equal(mask, mask + pieces, other.mask);
 }
 
 inline bool Bitmask::lessThan(const Bitmask& other) const {
@@ -1573,6 +1704,10 @@ inline bool Bitmask::atMostOneBit() const {
             return false;
     }
     return true;
+}
+
+inline void swap(Bitmask& a, Bitmask& b) noexcept {
+    a.swap(b);
 }
 
 inline std::ostream& operator << (std::ostream& out, const Bitmask& mask) {

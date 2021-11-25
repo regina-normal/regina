@@ -44,7 +44,7 @@
  */
 class EditTreeView : public QTreeView {
     public:
-        EditTreeView(QWidget* parent = 0);
+        EditTreeView(QWidget* parent = nullptr);
 
         /**
          * Finish any cell editing operation that might be in progress.

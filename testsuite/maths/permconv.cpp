@@ -47,10 +47,10 @@ class PermConvTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void identity() {
@@ -187,15 +187,21 @@ void addPermConv(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(PermConvTest<2, 5>::suite());
     runner.addTest(PermConvTest<2, 6>::suite());
     runner.addTest(PermConvTest<2, 7>::suite());
+    runner.addTest(PermConvTest<2, 8>::suite());
     runner.addTest(PermConvTest<3, 4>::suite());
     runner.addTest(PermConvTest<3, 5>::suite());
     runner.addTest(PermConvTest<3, 6>::suite());
     runner.addTest(PermConvTest<3, 7>::suite());
+    runner.addTest(PermConvTest<3, 8>::suite());
     runner.addTest(PermConvTest<4, 5>::suite());
     runner.addTest(PermConvTest<4, 6>::suite());
     runner.addTest(PermConvTest<4, 7>::suite());
+    runner.addTest(PermConvTest<4, 8>::suite());
     runner.addTest(PermConvTest<5, 6>::suite());
     runner.addTest(PermConvTest<5, 7>::suite());
+    runner.addTest(PermConvTest<5, 8>::suite());
     runner.addTest(PermConvTest<6, 7>::suite());
+    runner.addTest(PermConvTest<6, 8>::suite());
+    runner.addTest(PermConvTest<7, 8>::suite());
 }
 

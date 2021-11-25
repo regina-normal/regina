@@ -40,34 +40,12 @@
 
 namespace regina {
 
-AugTriSolidTorus::~AugTriSolidTorus() {
-    if (core_)
-        delete core_;
-    for (int i = 0; i < 3; i++)
-        if (augTorus_[i])
-            delete augTorus_[i];
-}
-
-AugTriSolidTorus* AugTriSolidTorus::clone() const {
-    AugTriSolidTorus* ans = new AugTriSolidTorus();
-    ans->core_ = core_->clone();
-    for (int i = 0; i < 3; i++) {
-        if (augTorus_[i])
-            ans->augTorus_[i] = augTorus_[i]->clone();
-        ans->edgeGroupRoles_[i] = edgeGroupRoles_[i];
-    }
-    ans->chainIndex = chainIndex;
-    ans->chainType_ = chainType_;
-    ans->torusAnnulus_ = torusAnnulus_;
-    return ans;
-}
-
-Manifold* AugTriSolidTorus::manifold() const {
-    SFSpace* ans = new SFSpace();
+std::unique_ptr<Manifold> AugTriSolidTorus::manifold() const {
+    std::unique_ptr<SFSpace> ans(new SFSpace());
     if (chainType_ == CHAIN_MAJOR) {
         // Layered solid torus + layered chain.
         ans->insertFibre(2, 1);
-        ans->insertFibre(chainIndex + 1, 1);
+        ans->insertFibre(chainIndex_ + 1, 1);
 
         long q, r;
         if (edgeGroupRoles_[torusAnnulus_][2] == 2) {
@@ -96,10 +74,9 @@ Manifold* AugTriSolidTorus::manifold() const {
             r = -r;
             q = -q;
         }
-        if (r == 0) {
-            delete ans;
-            return 0;
-        } else
+        if (r == 0)
+            return nullptr;
+        else
             ans->insertFibre(r, q);
     } else if (chainType_ == CHAIN_AXIS) {
         // Layered solid torus + layered chain.
@@ -128,16 +105,15 @@ Manifold* AugTriSolidTorus::manifold() const {
                 q = -(edgeGroupRoles_[torusAnnulus_][1] == 2 ? 2 : 1);
             }
         }
-        long alpha = q - chainIndex * r;
+        long alpha = q - chainIndex_ * r;
         long beta = -r;
         if (alpha < 0) {
             alpha = -alpha;
             beta = -beta;
         }
-        if (alpha == 0) {
-            delete ans;
-            return 0;
-        } else
+        if (alpha == 0)
+            return nullptr;
+        else
             ans->insertFibre(alpha, beta);
     } else {
         // Three layered solid tori.
@@ -162,10 +138,9 @@ Manifold* AugTriSolidTorus::manifold() const {
                     beta = -(edgeGroupRoles_[i][1] == 2 ? 2 : 1);
                 }
             }
-            if (alpha == 0) {
-                delete ans;
-                return 0;
-            } else
+            if (alpha == 0)
+                return nullptr;
+            else
                 ans->insertFibre(alpha, beta);
         }
     }
@@ -174,25 +149,25 @@ Manifold* AugTriSolidTorus::manifold() const {
     return ans;
 }
 
-AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
+std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
         const Component<3>* comp) {
     // Basic property checks.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
-        return 0;
+        return nullptr;
     if (comp->countVertices() > 1)
-        return 0;
+        return nullptr;
 
     // We have a 1-vertex closed orientable triangulation.
 
     unsigned long nTet = comp->size();
     if (nTet < 3)
-        return 0;
+        return nullptr;
 
     // Handle the 3-tetrahedron case separately.
     if (nTet == 3) {
         // Note that there cannot be a layered chain.
         Tetrahedron<3>* base = comp->tetrahedron(0);
-        TriSolidTorus* core;
+        std::unique_ptr<TriSolidTorus> core;
         Perm<4> annulusMap[3];
         // Check every possible choice of vertex roles in tetrahedron 0.
         // Note that (a,b,c,d) gives an equivalent core to (d,c,b,a).
@@ -202,23 +177,24 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
             if (Perm<4>::S4[i][0] > Perm<4>::S4[i][3])
                 continue;
 
-            core = TriSolidTorus::formsTriSolidTorus(base, Perm<4>::S4[i]);
+            core = TriSolidTorus::recognise(base, Perm<4>::S4[i]);
             if (core) {
                 // Check that the annuli are being glued to themselves.
                 // Since the component is orientable, that's all we need
                 // to know.
                 for (j = 0; j < 3; j++) {
-                    if (! core->isAnnulusSelfIdentified(j, annulusMap + j)) {
-                        delete core;
-                        core = 0;
+                    if (auto id = core->isAnnulusSelfIdentified(j)) {
+                        annulusMap[j] = *id;
+                    } else {
+                        core.reset();
                         break;
                     }
                 }
 
                 if (core) {
                     // We got one!
-                    AugTriSolidTorus* ans = new AugTriSolidTorus();
-                    ans->core_ = core;
+                    std::unique_ptr<AugTriSolidTorus> ans(
+                        new AugTriSolidTorus(*core));
 
                     // Work out how the mobius strip is glued onto each
                     // annulus.
@@ -236,7 +212,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                         }
                     }
 
-                    ans->chainIndex = 0;
+                    ans->chainIndex_ = 0;
                     ans->chainType_ = CHAIN_NONE;
                     ans->torusAnnulus_ = -1;
                     return ans;
@@ -245,7 +221,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
         }
 
         // Didn't find anything.
-        return 0;
+        return nullptr;
     }
 
     // We have strictly more than three tetrahedra.
@@ -254,19 +230,17 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
     // boundary annuli on the core, since no other tetrahedron is glued
     // to itself.
     int nLayered = 0;
-    LayeredSolidTorus* layered[4];
+    std::unique_ptr<LayeredSolidTorus> layered[4];
     unsigned long usedTets = 0;
     for (unsigned long t = 0; t < nTet; t++) {
-        layered[nLayered] = LayeredSolidTorus::formsLayeredSolidTorusBase(
+        layered[nLayered] = LayeredSolidTorus::recogniseFromBase(
             comp->tetrahedron(t));
         if (layered[nLayered]) {
             usedTets += layered[nLayered]->size();
             nLayered++;
             if (nLayered == 4) {
                 // Too many layered solid tori.
-                for (int i = 0; i < nLayered; i++)
-                    delete layered[i];
-                return 0;
+                return nullptr;
             }
         }
     }
@@ -281,22 +255,23 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
 
         // Run through all possible cores to which it might belong.
         int i;
-        Perm<4> p, annulusPerm;
-        TriSolidTorus* core;
+        Perm<4> p;
+        std::optional<Perm<4>> gluing;
+        std::unique_ptr<TriSolidTorus> core;
         int torusAnnulus;
         unsigned long chainLen;
         for (i = 0; i < 24; i++) {
             p = Perm<4>::S4[i];
             if (p[0] > p[3])
                 continue;
-            core = TriSolidTorus::formsTriSolidTorus(tet, p);
+            core = TriSolidTorus::recognise(tet, p);
             if (! core)
                 continue;
 
             // Let's try this core.
             // Look for an identified annulus.
             for (torusAnnulus = 0; torusAnnulus < 3; torusAnnulus++)
-                if (core->isAnnulusSelfIdentified(torusAnnulus, &annulusPerm)) {
+                if ((gluing = core->isAnnulusSelfIdentified(torusAnnulus))) {
                     // Look now for a layered chain.
                     // If we don't find it, the entire core must be wrong.
                     int chainType = CHAIN_NONE;
@@ -311,9 +286,9 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                         break;
 
                     // We have the entire structure!
-                    AugTriSolidTorus* ans = new AugTriSolidTorus();
-                    ans->core_ = core;
-                    switch (annulusPerm[0]) {
+                    std::unique_ptr<AugTriSolidTorus> ans(
+                        new AugTriSolidTorus(*core));
+                    switch ((*gluing)[0]) {
                         case 0:
                             ans->edgeGroupRoles_[torusAnnulus] = Perm<4>(2,0,1,3);
                             break;
@@ -324,14 +299,13 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                             ans->edgeGroupRoles_[torusAnnulus] = Perm<4>(0,1,2,3);
                             break;
                     }
-                    ans->chainIndex = chainLen;
+                    ans->chainIndex_ = chainLen;
                     ans->chainType_ = chainType;
                     ans->torusAnnulus_ = torusAnnulus;
                     return ans;
                 }
 
             // Didn't find anything.
-            delete core;
         }
 
         // Wasn't the core.  Must have been the chain.
@@ -359,7 +333,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
             // Test the chain at both ends (bottom / top).
             for (j = 0; j < 2; j++) {
                 if (chainType == CHAIN_MAJOR) {
-                    core = TriSolidTorus::formsTriSolidTorus(chain.bottom(),
+                    core = TriSolidTorus::recognise(chain.bottom(),
                         chain.bottomVertexRoles() * Perm<4>(2, 3, 0, 1));
                     if (core) {
                         // Test that everything is put together properly.
@@ -376,12 +350,11 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                                 (top->adjacentGluing(topRoles[3])
                                     * topRoles * Perm<4>(0, 1, 3, 2) ==
                                     core->vertexRoles(2)) &&
-                                core->isAnnulusSelfIdentified(
-                                    0, &annulusPerm)) {
+                                (gluing = core->isAnnulusSelfIdentified(0))) {
                             // We have the entire structure!
-                            AugTriSolidTorus* ans = new AugTriSolidTorus();
-                            ans->core_ = core;
-                            switch (annulusPerm[0]) {
+                            std::unique_ptr<AugTriSolidTorus> ans(
+                                new AugTriSolidTorus(*core));
+                            switch ((*gluing)[0]) {
                                 case 0:
                                     ans->edgeGroupRoles_[0] = Perm<4>(2, 0, 1, 3);
                                     break;
@@ -392,13 +365,11 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                                     ans->edgeGroupRoles_[0] = Perm<4>(0, 1, 2, 3);
                                     break;
                             }
-                            ans->chainIndex = chain.index() - 1;
+                            ans->chainIndex_ = chain.index() - 1;
                             ans->chainType_ = chainType;
                             ans->torusAnnulus_ = 0;
                             return ans;
                         }
-
-                        delete core;
                     }
                 } else if (chainType == CHAIN_AXIS) {
                     bottom = chain.bottom();
@@ -408,12 +379,11 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                         bottomRoles[2]);
 
                     if (startCore)
-                        core = TriSolidTorus::formsTriSolidTorus(startCore,
-                            bottom->adjacentGluing(
-                                bottomRoles[2]) *
+                        core = TriSolidTorus::recognise(startCore,
+                            bottom->adjacentGluing(bottomRoles[2]) *
                             bottomRoles * Perm<4>(0, 3, 2, 1));
                     else
-                        core = 0;
+                        core.reset();
 
                     if (core) {
                         // Test that everything is put together properly.
@@ -436,12 +406,11 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                                 (top->adjacentGluing(topRoles[3])
                                     * topRoles * Perm<4>(1, 2, 3, 0) ==
                                     core->vertexRoles(2)) &&
-                                core->isAnnulusSelfIdentified(
-                                    0, &annulusPerm)) {
+                                (gluing = core->isAnnulusSelfIdentified(0))) {
                             // We have the entire structure!
-                            AugTriSolidTorus* ans = new AugTriSolidTorus();
-                            ans->core_ = core;
-                            switch (annulusPerm[0]) {
+                            std::unique_ptr<AugTriSolidTorus> ans(
+                                new AugTriSolidTorus(*core));
+                            switch ((*gluing)[0]) {
                                 case 0:
                                     ans->edgeGroupRoles_[0] = Perm<4>(2, 0, 1, 3);
                                     break;
@@ -452,13 +421,11 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                                     ans->edgeGroupRoles_[0] = Perm<4>(0, 1, 2, 3);
                                     break;
                             }
-                            ans->chainIndex = chain.index();
+                            ans->chainIndex_ = chain.index();
                             ans->chainType_ = chainType;
                             ans->torusAnnulus_ = 0;
                             return ans;
                         }
-
-                        delete core;
                     }
                 }
 
@@ -469,7 +436,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
         }
 
         // Didn't find anything.
-        return 0;
+        return nullptr;
     }
 
     // We now know nLayered >= 1.
@@ -478,23 +445,17 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
     // Determine whether or not this augmented solid torus must contain a
     // layered chain.
     bool needChain = (usedTets + 3 != nTet);
-    if (needChain && nLayered != 1) {
-        for (j = 0; j < nLayered; j++)
-            delete layered[j];
-        return 0;
-    }
+    if (needChain && nLayered != 1)
+        return nullptr;
 
     // Examine each layered solid torus.
-    Tetrahedron<3>* top[3];
+    const Tetrahedron<3>* top[3];
     for (i = 0; i < nLayered; i++) {
         top[i] = layered[i]->topLevel();
         if (top[i]->adjacentTetrahedron(layered[i]->topFace(0)) ==
                 top[i]->adjacentTetrahedron(layered[i]->topFace(1))) {
-            // These two top triangles should be glued to different
-            // tetrahedra.
-            for (j = 0; j < nLayered; j++)
-                delete layered[j];
-            return 0;
+            // These two top triangles should be glued to different tetrahedra.
+            return nullptr;
         }
     }
 
@@ -510,16 +471,15 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
     int topCoreFace = top[0]->adjacentFace(topFace);
     Perm<4> swap3Top(3, topCoreFace);
     Perm<4> swap23(2, 3);
-    TriSolidTorus* core;
+    std::unique_ptr<TriSolidTorus> core;
     Tetrahedron<3>* coreTets[3];
     Perm<4> coreVertexRoles[3];
     int whichLayered[3];
     int usedLayered;
     Perm<4> edgeGroupRoles[3];
     int torusAnnulus;
-    Perm<4> q;
     for (int p = 0; p < 6; p++) {
-        core = TriSolidTorus::formsTriSolidTorus(coreTet,
+        core = TriSolidTorus::recognise(coreTet,
             swap3Top * Perm<4>::S3[p] * swap23);
         if (core) {
             // We have a potential core.
@@ -535,19 +495,18 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                 // Check annulus j.
                 // Recall that the 3-manifold is orientable so we don't
                 // have to check for wacky reversed gluings.
-                if (core->isAnnulusSelfIdentified(j, &q)) {
+                if (auto q = core->isAnnulusSelfIdentified(j)) {
                     // We have a degenerate (2,1,1) glued in here.
                     if (needChain) {
                         // We already know there is a non-degenerate
                         // layered solid torus floating about, and the
                         // other two annuli are reserved for the layered
                         // chain.
-                        delete core;
-                        core = 0;
+                        core.reset();
                         break;
                     }
                     whichLayered[j] = -1;
-                    switch (q[0]) {
+                    switch ((*q)[0]) {
                         case 0:
                             edgeGroupRoles[j] = Perm<4>(2, 0, 1, 3); break;
                         case 2:
@@ -566,7 +525,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                                 coreVertexRoles[(j+2)%3][1]) ==
                                 top[whichLayered[j]]) {
                             // Annulus j is glued to torus whichLayered[j].
-                            q = coreTets[(j+1)%3]->
+                            Perm<4> q = coreTets[(j+1)%3]->
                                 adjacentGluing(
                                 coreVertexRoles[(j+1)%3][2]) *
                                 coreVertexRoles[(j+1)%3];
@@ -590,8 +549,7 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                         if (needChain)
                             whichLayered[j] = -1;
                         else {
-                            delete core;
-                            core = 0;
+                            core.reset();
                             break;
                         }
                     } else {
@@ -606,7 +564,6 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
 
             if (usedLayered < nLayered) {
                 // We didn't use all our layered solid tori.
-                delete core;
                 continue;
             }
 
@@ -621,36 +578,35 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
                 else if ((chainLen = core->areAnnuliLinkedAxis(torusAnnulus)))
                     chainType = CHAIN_AXIS;
 
-                if (chainType == CHAIN_NONE ||
-                        usedTets + chainLen + 3 != nTet) {
-                    delete core;
+                if (chainType == CHAIN_NONE || usedTets + chainLen + 3 != nTet)
                     continue;
-                }
 
                 // We've got one!
-                AugTriSolidTorus* ans = new AugTriSolidTorus();
-                ans->core_ = core;
+                std::unique_ptr<AugTriSolidTorus> ans(
+                    new AugTriSolidTorus(*core));
                 for (j = 0; j < 3; j++) {
                     if (whichLayered[j] >= 0) {
-                        ans->augTorus_[j] = layered[whichLayered[j]];
+                        ans->augTorus_[j] =
+                            std::move(*layered[whichLayered[j]]);
                         ans->edgeGroupRoles_[j] = edgeGroupRoles[j];
                     }
                 }
-                ans->chainIndex = chainLen;
+                ans->chainIndex_ = chainLen;
                 ans->chainType_ = chainType;
                 ans->torusAnnulus_ = torusAnnulus;
                 return ans;
             } else {
                 // We're not looking for a layered chain.
                 // This means we have found the entire structure!
-                AugTriSolidTorus* ans = new AugTriSolidTorus();
-                ans->core_ = core;
+                std::unique_ptr<AugTriSolidTorus> ans(
+                    new AugTriSolidTorus(*core));
                 for (j = 0; j < 3; j++) {
                     ans->edgeGroupRoles_[j] = edgeGroupRoles[j];
                     if (whichLayered[j] >= 0)
-                        ans->augTorus_[j] = layered[whichLayered[j]];
+                        ans->augTorus_[j] =
+                            std::move(*layered[whichLayered[j]]);
                 }
-                ans->chainIndex = 0;
+                ans->chainIndex_ = 0;
                 ans->chainType_ = CHAIN_NONE;
                 ans->torusAnnulus_ = -1;
                 return ans;
@@ -659,17 +615,15 @@ AugTriSolidTorus* AugTriSolidTorus::isAugTriSolidTorus(
     }
 
     // Nothing was found.
-    for (i = 0; i < nLayered; i++)
-        delete layered[i];
-    return 0;
+    return nullptr;
 }
 
 std::ostream& AugTriSolidTorus::writeCommonName(std::ostream& out,
         bool tex) const {
-    if (chainIndex) {
+    if (chainIndex_) {
         // We have a layered solid torus and a layered chain.
         Perm<4> roles = edgeGroupRoles_[torusAnnulus_];
-        const LayeredSolidTorus* torus = augTorus_[torusAnnulus_];
+        const auto& torus = augTorus_[torusAnnulus_];
 
         long params[3];
         if (torus) {
@@ -692,20 +646,19 @@ std::ostream& AugTriSolidTorus::writeCommonName(std::ostream& out,
             out << (tex ? "J_{" : "J(");
         else
             out << (tex ? "X_{" : "X(");
-        return out << chainIndex << " | " << params[roles[0]] << ','
+        return out << chainIndex_ << " | " << params[roles[0]] << ','
             << params[roles[1]] << (tex ? '}' : ')');
     } else {
         // We have three layered solid tori.
         std::pair<long, long> allParams[3];
         int nAllParams = 0;
         Perm<4> roles;
-        const LayeredSolidTorus* torus;
         long params[3];
         std::pair<long, long> lstParams;
         int i;
         for (i = 0; i < 3; i++) {
             roles = edgeGroupRoles_[i];
-            torus = augTorus_[i];
+            const auto& torus = augTorus_[i];
             if (torus) {
                 params[0] = torus->meridinalCuts(0);
                 params[1] = torus->meridinalCuts(1);
@@ -744,7 +697,7 @@ std::ostream& AugTriSolidTorus::writeTeXName(std::ostream& out) const {
 }
 
 void AugTriSolidTorus::writeTextLong(std::ostream& out) const {
-    out << (chainIndex ? "Chained " : "Augmented ")
+    out << (chainIndex_ ? "Chained " : "Augmented ")
         << "triangular solid torus "
         << (torusAnnulus_ == -1 ? "(three tori): " : "(torus + chain): ");
     writeName(out);

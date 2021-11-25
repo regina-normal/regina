@@ -78,7 +78,7 @@ class FilterCombUI : public QObject, public PacketUI,
          */
         FilterCombUI(regina::SurfaceFilterCombination* packet,
                 PacketPane* newEnclosingPane);
-        ~FilterCombUI();
+        ~FilterCombUI() override;
 
         /**
          * PacketUI overrides.
@@ -87,17 +87,16 @@ class FilterCombUI : public QObject, public PacketUI,
         QWidget* getInterface() override;
         QString getPacketMenuText() const override;
         void refresh() override;
-        void setReadWrite(bool readWrite) override;
 
         /**
          * PacketListener overrides.
          */
-        void packetWasRenamed(regina::Packet* packet) override;
-        void childWasAdded(regina::Packet* packet, regina::Packet* child)
+        void packetWasRenamed(regina::Packet& packet) override;
+        void childWasAdded(regina::Packet& packet, regina::Packet& child)
             override;
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
+        void childWasRemoved(regina::Packet& packet, regina::Packet& child)
             override;
-        void childrenWereReordered(regina::Packet* packet) override;
+        void childrenWereReordered(regina::Packet& packet) override;
 
     public slots:
         /**

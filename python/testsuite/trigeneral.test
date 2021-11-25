@@ -40,12 +40,12 @@ def checksum(str):
 	h.update(str.encode('utf-8'))
 	return h.hexdigest()
 
-def vitalStats(tri):
+def vitalStats(tri, name):
 	# To guard against accidental changes.
 	old = tri.detail()
 
 	print("-------------------------------")
-	print(tri.label())
+	print(name)
 	print("-------------------------------")
 	print()
 	print(tri.detail())
@@ -128,7 +128,7 @@ def vitalStats(tri):
 
 	print("Dehydration:", tri.dehydrate())
 	print("Isomorphism signature:", tri.isoSig())
-	print("Result of splitIntoComponents:", tri.splitIntoComponents())
+	print("Result of splitIntoComponents:", len(tri.triangulateComponents()))
 
 	if tri.detail() != old:
 		print("ERROR: Original triangulation has changed!")
@@ -136,20 +136,19 @@ def vitalStats(tri):
 	print()
 
 t = regina.Triangulation3()
-t.setLabel("Empty triangulation")
-vitalStats(t)
+vitalStats(t, 'Empty triangulation')
 
-vitalStats(regina.Example3.threeSphere())
-vitalStats(regina.Example3.s2xs1())
-vitalStats(regina.Example3.rp2xs1())
-vitalStats(regina.Example3.rp3rp3())
-vitalStats(regina.Example3.lens(8,3))
-vitalStats(regina.Example3.poincareHomologySphere())
-vitalStats(regina.Example3.smallClosedOrblHyperbolic())
-vitalStats(regina.Example3.smallClosedNonOrblHyperbolic())
-vitalStats(regina.Example3.lst(3,4))
-vitalStats(regina.Example3.solidKleinBottle())
-vitalStats(regina.Example3.figureEight())
-vitalStats(regina.Example3.whiteheadLink())
-vitalStats(regina.Example3.gieseking())
-vitalStats(regina.Example3.cuspedGenusTwoTorus())
+vitalStats(regina.Example3.threeSphere(), '3-sphere')
+vitalStats(regina.Example3.s2xs1(), 'S2 x S1')
+vitalStats(regina.Example3.rp2xs1(), 'RP2 x S1')
+vitalStats(regina.Example3.rp3rp3(), 'RP3 # RP3')
+vitalStats(regina.Example3.lens(8,3), 'L(8,3)')
+vitalStats(regina.Example3.poincare(), 'Poincare homology sphere')
+vitalStats(regina.Example3.smallClosedOrblHyperbolic(), 'Closed orientable hyperbolic 3-manifold')
+vitalStats(regina.Example3.smallClosedNonOrblHyperbolic(), 'Closed non-orientable hyperbolic 3-manifold')
+vitalStats(regina.Example3.lst(3,4), 'LST(3,4,7)')
+vitalStats(regina.Example3.solidKleinBottle(), 'Solid Klein bottle')
+vitalStats(regina.Example3.figureEight(), 'Figure eight knot complement')
+vitalStats(regina.Example3.whiteheadLink(), 'Whitehead link complement')
+vitalStats(regina.Example3.gieseking(), 'Gieseking manifold')
+vitalStats(regina.Example3.cuspedGenusTwoTorus(), 'Cusped genus two solid torus')

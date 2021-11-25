@@ -42,6 +42,7 @@ void addHomologicalData(pybind11::module_& m) {
     auto c = pybind11::class_<HomologicalData>(m, "HomologicalData")
         .def(pybind11::init<const Triangulation<3>&>())
         .def(pybind11::init<const HomologicalData&>())
+        .def("swap", &HomologicalData::swap)
         .def("homology", &HomologicalData::homology,
             pybind11::return_value_policy::reference_internal)
         .def("bdryHomology", &HomologicalData::bdryHomology,
@@ -74,5 +75,7 @@ void addHomologicalData(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(HomologicalData&, HomologicalData&))(regina::swap));
 }
 

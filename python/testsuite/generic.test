@@ -35,22 +35,20 @@ from __future__ import print_function
 
 def product1(triClass, dim, permClass):
     tri = triClass()
-    tri.setLabel(str(dim) + '-D product #1')
     s = tri.newSimplex()
     s.join(dim, s, permClass(list(range(1, dim+1)) + [0]))
     return tri
 
 def product2(triClass, dim, permClass):
     tri = triClass()
-    tri.setLabel(str(dim) + '-D product #2')
     s = tri.newSimplex()
     t = tri.newSimplex()
     s.join(dim, t, permClass(list(range(1, dim+1)) + [0]))
     t.join(dim, s, permClass(list(range(1, dim+1)) + [0]))
     return tri
 
-def dump(tri):
-    print('Triangulation:', tri.label())
+def dump(tri, name):
+    print('Triangulation:', name)
     print()
     print('Connected:', tri.isConnected())
     print('Orientable:', tri.isOrientable())
@@ -60,8 +58,8 @@ def dump(tri):
     print(tri.detail())
 
 def testDim(triClass, dim, permClass):
-    dump(product1(triClass, dim, permClass))
-    dump(product2(triClass, dim, permClass))
+    dump(product1(triClass, dim, permClass), str(dim) + '-D product #1')
+    dump(product2(triClass, dim, permClass), str(dim) + '-D product #2')
 
 #testDim(Triangulation2, 2, Perm3)
 #testDim(Triangulation3, 3, Perm4)

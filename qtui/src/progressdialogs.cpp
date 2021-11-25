@@ -45,9 +45,8 @@
 #include <QVBoxLayout>
 
 // Indicates how we convert floating-point percentages to integer counts.
-// Integer progress will range from 0 to SLICES.
-// For the arithmetic to be correct, SLICES must be a multiple of 100.
-#define SLICES 1000
+// Integer progress will range from 0 to 100*SLICES_PER_PERCENT.
+#define SLICES_PER_PERCENT 10
 
 ProgressDialogNumeric::ProgressDialogNumeric(
         regina::ProgressTracker* tracker,
@@ -66,7 +65,7 @@ bool ProgressDialogNumeric::run() {
     QCoreApplication::instance()->processEvents();
 
     setMinimum(0);
-    setMaximum(SLICES);
+    setMaximum(SLICES_PER_PERCENT * 100);
     bool stillRunning = true;
     while (! tracker_->isFinished()) {
         if (stillRunning) {
@@ -77,7 +76,7 @@ bool ProgressDialogNumeric::run() {
                 // updating descriptions / percentages from here on.
             } else {
                 if (tracker_->percentChanged())
-                    setValue(tracker_->percent() * (SLICES / 100));
+                    setValue(tracker_->percent() * SLICES_PER_PERCENT);
                 if (tracker_->descriptionChanged()) {
                     QString text = tracker_->description().c_str();
 
@@ -107,13 +106,13 @@ ProgressDialogMessage::ProgressDialogMessage(
     setWindowTitle(tr("Working"));
     setWindowModality(Qt::WindowModal);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
-    QLabel* label = new QLabel(QString("<qt><b>%1</b></qt>").arg(displayText));
+    auto* label = new QLabel(QString("<qt><b>%1</b></qt>").arg(displayText));
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
 
-    QFrame* separator = new QFrame();
+    auto* separator = new QFrame();
     separator->setFrameStyle(QFrame::HLine);
     separator->setFrameShadow(QFrame::Sunken);
     layout->addWidget(separator);
@@ -143,19 +142,19 @@ bool ProgressDialogMessage::run() {
 }
 
 ProgressDialogOpen::ProgressDialogOpen(regina::ProgressTrackerOpen* tracker,
-        const QString& displayText, const QString& detailTemplate,
-        QWidget* parent) :
-        QDialog(parent), tracker_(tracker), detailTemplate_(detailTemplate) {
+        const QString& displayText, QString detailTemplate, QWidget* parent) :
+        QDialog(parent), tracker_(tracker),
+        detailTemplate_(std::move(detailTemplate)) {
     setWindowTitle(tr("Working"));
     setWindowModality(Qt::WindowModal);
 
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
-    QLabel* label = new QLabel(QString("<qt><b>%1</b></qt>").arg(displayText));
+    auto* label = new QLabel(QString("<qt><b>%1</b></qt>").arg(displayText));
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
 
-    QFrame* separator = new QFrame();
+    auto* separator = new QFrame();
     separator->setFrameStyle(QFrame::HLine);
     separator->setFrameShadow(QFrame::Sunken);
     layout->addWidget(separator);
@@ -187,7 +186,7 @@ bool ProgressDialogOpen::run() {
 
     bool success = ! tracker_->isCancelled();
     buttons->button(QDialogButtonBox::Cancel)->setEnabled(false);
-    tracker_ = 0;
+    tracker_ = nullptr;
     return success;
 }
 

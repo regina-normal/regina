@@ -40,39 +40,34 @@
 #endif
 
 #include "regina-core.h"
-#include "link/link.h"
 #include "file/xml/xmlpacketreader.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
 
-/**
- * \weakgroup link
- * @{
- */
+class Link;
 
 /**
  * An XML packet reader that reads a single knot or link.
  */
 class XMLLinkReader : public XMLPacketReader {
     private:
-        Link* link_;
+        std::shared_ptr<PacketOf<Link>> link_;
             /**< The link currently being read. */
 
     public:
         /**
          * Creates a new knot/link reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLLinkReader(XMLTreeResolver& resolver);
+        XMLLinkReader(XMLTreeResolver& resolver, std::shared_ptr<Packet> parent,
+            bool anon, std::string label, std::string id);
 
-        virtual Packet* packet() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
@@ -99,9 +94,9 @@ class XMLLinkCrossingsReader : public XMLElementReader {
          */
         XMLLinkCrossingsReader(Link* link);
 
-        virtual void startElement(const std::string&,
+        void startElement(const std::string&,
             const regina::xml::XMLPropertyDict&, XMLElementReader*) override;
-        virtual void initialChars(const std::string& chars) override;
+        void initialChars(const std::string& chars) override;
 
         /**
          * Indicates whether the XML element has been found to contain
@@ -132,7 +127,7 @@ class XMLLinkConnectionsReader : public XMLElementReader {
          */
         XMLLinkConnectionsReader(Link* link);
 
-        virtual void initialChars(const std::string& chars);
+        void initialChars(const std::string& chars) override;
 
         /**
          * Indicates whether the XML element has been found to contain
@@ -166,9 +161,9 @@ class XMLLinkComponentsReader : public XMLElementReader {
          */
         XMLLinkComponentsReader(Link* link);
 
-        virtual void startElement(const std::string&,
-            const regina::xml::XMLPropertyDict&, XMLElementReader*);
-        virtual void initialChars(const std::string& chars);
+        void startElement(const std::string&,
+            const regina::xml::XMLPropertyDict&, XMLElementReader*) override;
+        void initialChars(const std::string& chars) override;
 
         /**
          * Indicates whether the XML element has been found to contain
@@ -179,94 +174,45 @@ class XMLLinkComponentsReader : public XMLElementReader {
         bool broken() const;
 };
 
-/*@}*/
-
-// Inline functions for XMLLinkReader
-
-inline XMLLinkReader::XMLLinkReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), link_(new Link()) {
-}
-
-inline Packet* XMLLinkReader::packet() {
-    return link_;
-}
-
-inline XMLElementReader* XMLLinkReader::startContentSubElement(
-        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
-    if (! link_)
-        return new XMLElementReader();
-
-    if (subTagName == "crossings")
-        return new XMLLinkCrossingsReader(link_);
-    else if (subTagName == "connections")
-        return new XMLLinkConnectionsReader(link_);
-    else if (subTagName == "components")
-        return new XMLLinkComponentsReader(link_);
-
-    return new XMLElementReader();
-}
-
-inline void XMLLinkReader::endContentSubElement(const std::string& subTagName,
-        XMLElementReader* reader) {
-    if (! link_)
-        return;
-
-    if (subTagName == "crossings") {
-        if (static_cast<XMLLinkCrossingsReader*>(reader)->broken()) {
-            delete link_;
-            link_ = 0;
-        }
-    } else if (subTagName == "connections") {
-        if (static_cast<XMLLinkConnectionsReader*>(reader)->broken()) {
-            delete link_;
-            link_ = 0;
-        }
-    } else if (subTagName == "components") {
-        if (static_cast<XMLLinkComponentsReader*>(reader)->broken()) {
-            delete link_;
-            link_ = 0;
-        }
-    }
-}
-
 // Inline functions for XMLLinkCrossingsReader
 
-XMLLinkCrossingsReader::XMLLinkCrossingsReader(Link* link) :
+inline XMLLinkCrossingsReader::XMLLinkCrossingsReader(Link* link) :
         link_(link), size_(0) {
 }
 
-void XMLLinkCrossingsReader::startElement(const std::string&,
+inline void XMLLinkCrossingsReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
     if (! valueOf(props.lookup("size"), size_))
-        link_ = 0;
+        link_ = nullptr;
 }
 
-bool XMLLinkCrossingsReader::broken() const {
+inline bool XMLLinkCrossingsReader::broken() const {
     return ! link_;
 }
 
 // Inline functions for XMLLinkConnectionsReader
 
-XMLLinkConnectionsReader::XMLLinkConnectionsReader(Link* link) : link_(link) {
+inline XMLLinkConnectionsReader::XMLLinkConnectionsReader(Link* link) :
+        link_(link) {
 }
 
-bool XMLLinkConnectionsReader::broken() const {
+inline bool XMLLinkConnectionsReader::broken() const {
     return ! link_;
 }
 
 // Inline functions for XMLLinkComponentsReader
 
-XMLLinkComponentsReader::XMLLinkComponentsReader(Link* link) :
+inline XMLLinkComponentsReader::XMLLinkComponentsReader(Link* link) :
         link_(link), size_(0) {
 }
 
-void XMLLinkComponentsReader::startElement(const std::string&,
+inline void XMLLinkComponentsReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
     if (! valueOf(props.lookup("size"), size_))
-        link_ = 0;
+        link_ = nullptr;
 }
 
-bool XMLLinkComponentsReader::broken() const {
+inline bool XMLLinkComponentsReader::broken() const {
     return ! link_;
 }
 

@@ -121,40 +121,43 @@ SkeletonWindow::SkeletonWindow(PacketUI* packetUI,
     table->setModel(model);
     layout->addWidget(table, 1);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
+    auto* buttonBox = new QDialogButtonBox(QDialogButtonBox::Close);
     layout->addWidget(buttonBox);
 
+    regina::Packet* p = packetUI->getPacket();
+
+    updateCaption(p->label());
     refresh();
 
     // Resize columns now that the table is full of data.
     table->header()->resizeSections(QHeaderView::ResizeToContents);
 
-    packetUI->getPacket()->listen(this);
+    p->listen(this);
 
     // Only one button to press (Close).
     connect(buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(accept()));
 }
 
 void SkeletonWindow::refresh() {
-    updateCaption();
     model->rebuild();
     table->header()->resizeSections(QHeaderView::ResizeToContents);
 }
 
-void SkeletonWindow::packetWasChanged(regina::Packet*) {
+void SkeletonWindow::packetWasChanged(regina::Packet& p) {
+    updateCaption(p.label());
     refresh();
 }
 
-void SkeletonWindow::packetWasRenamed(regina::Packet*) {
-    updateCaption();
+void SkeletonWindow::packetWasRenamed(regina::Packet& p) {
+    updateCaption(p.label());
 }
 
-void SkeletonWindow::packetToBeDestroyed(regina::PacketShell) {
+void SkeletonWindow::packetBeingDestroyed(regina::PacketShell) {
     accepted();
 }
 
-QString Vertex3Model::caption() const {
-    return tr("Vertices (%1)").arg(tri->label().c_str());
+QString Vertex3Model::name() const {
+    return tr("Vertices");
 }
 
 QString Vertex3Model::overview() const {
@@ -185,7 +188,7 @@ QVariant Vertex3Model::data(const QModelIndex& index, int role) const {
             case 0:
                 return index.row();
             case 1: {
-                switch (item->link()) {
+                switch (item->linkType()) {
                     case Vertex<3>::SPHERE:
                         return QString();
                     case Vertex<3>::DISC:
@@ -260,8 +263,8 @@ QString Vertex3Model::toolTipForCol(int column) {
     }
 }
 
-QString Edge3Model::caption() const {
-    return tr("Edges (%1)").arg(tri->label().c_str());
+QString Edge3Model::name() const {
+    return tr("Edges");
 }
 
 QString Edge3Model::overview() const {
@@ -349,8 +352,8 @@ QString Edge3Model::toolTipForCol(int column) {
     }
 }
 
-QString Triangle3Model::caption() const {
-    return tr("Triangles (%1)").arg(tri->label().c_str());
+QString Triangle3Model::name() const {
+    return tr("Triangles");
 }
 
 QString Triangle3Model::overview() const {
@@ -456,8 +459,8 @@ QString Triangle3Model::toolTipForCol(int column) {
     }
 }
 
-QString Component3Model::caption() const {
-    return tr("Components (%1)").arg(tri->label().c_str());
+QString Component3Model::name() const {
+    return tr("Components");
 }
 
 QString Component3Model::overview() const {
@@ -540,8 +543,8 @@ QString Component3Model::toolTipForCol(int column) {
     }
 }
 
-QString BoundaryComponent3Model::caption() const {
-    return tr("Boundary Components (%1)").arg(tri->label().c_str());
+QString BoundaryComponent3Model::name() const {
+    return tr("Boundary Components");
 }
 
 QString BoundaryComponent3Model::overview() const {
@@ -651,8 +654,8 @@ QString BoundaryComponent3Model::toolTipForCol(int column) {
     }
 }
 
-QString Vertex2Model::caption() const {
-    return tr("Vertices (%1)").arg(tri->label().c_str());
+QString Vertex2Model::name() const {
+    return tr("Vertices");
 }
 
 QString Vertex2Model::overview() const {
@@ -739,8 +742,8 @@ QString Vertex2Model::toolTipForCol(int column) {
     }
 }
 
-QString Edge2Model::caption() const {
-    return tr("Edges (%1)").arg(tri->label().c_str());
+QString Edge2Model::name() const {
+    return tr("Edges");
 }
 
 QString Edge2Model::overview() const {
@@ -826,8 +829,8 @@ QString Edge2Model::toolTipForCol(int column) {
     }
 }
 
-QString Component2Model::caption() const {
-    return tr("Components (%1)").arg(tri->label().c_str());
+QString Component2Model::name() const {
+    return tr("Components");
 }
 
 QString Component2Model::overview() const {
@@ -907,8 +910,8 @@ QString Component2Model::toolTipForCol(int column) {
     }
 }
 
-QString BoundaryComponent2Model::caption() const {
-    return tr("Boundary Components (%1)").arg(tri->label().c_str());
+QString BoundaryComponent2Model::name() const {
+    return tr("Boundary Components");
 }
 
 QString BoundaryComponent2Model::overview() const {
@@ -990,8 +993,8 @@ QString BoundaryComponent2Model::toolTipForCol(int column) {
     }
 }
 
-QString Vertex4Model::caption() const {
-    return tr("Vertices (%1)").arg(tri->label().c_str());
+QString Vertex4Model::name() const {
+    return tr("Vertices");
 }
 
 QString Vertex4Model::overview() const {
@@ -1083,8 +1086,8 @@ QString Vertex4Model::toolTipForCol(int column) {
     }
 }
 
-QString Edge4Model::caption() const {
-    return tr("Edges (%1)").arg(tri->label().c_str());
+QString Edge4Model::name() const {
+    return tr("Edges");
 }
 
 QString Edge4Model::overview() const {
@@ -1178,8 +1181,8 @@ QString Edge4Model::toolTipForCol(int column) {
     }
 }
 
-QString Triangle4Model::caption() const {
-    return tr("Triangles (%1)").arg(tri->label().c_str());
+QString Triangle4Model::name() const {
+    return tr("Triangles");
 }
 
 QString Triangle4Model::overview() const {
@@ -1268,8 +1271,8 @@ QString Triangle4Model::toolTipForCol(int column) {
     }
 }
 
-QString Tetrahedron4Model::caption() const {
-    return tr("Tetrahedra (%1)").arg(tri->label().c_str());
+QString Tetrahedron4Model::name() const {
+    return tr("Tetrahedra");
 }
 
 QString Tetrahedron4Model::overview() const {
@@ -1359,8 +1362,8 @@ QString Tetrahedron4Model::toolTipForCol(int column) {
     }
 }
 
-QString Component4Model::caption() const {
-    return tr("Components (%1)").arg(tri->label().c_str());
+QString Component4Model::name() const {
+    return tr("Components");
 }
 
 QString Component4Model::overview() const {
@@ -1443,8 +1446,8 @@ QString Component4Model::toolTipForCol(int column) {
     }
 }
 
-QString BoundaryComponent4Model::caption() const {
-    return tr("Boundary Components (%1)").arg(tri->label().c_str());
+QString BoundaryComponent4Model::name() const {
+    return tr("Boundary Components");
 }
 
 QString BoundaryComponent4Model::overview() const {

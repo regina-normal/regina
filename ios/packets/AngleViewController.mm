@@ -97,9 +97,12 @@
     self.span.attributedText = spanText;
 
     [self updateTriangulationButton];
-    // Continue to update the button text if the triangulation is renamed.
-    if (! _triListener)
-        _triListener = [PacketListenerIOS listenerWithPacket:self.packet->triangulation() delegate:self listenChildren:NO];
+    // Continue to update the button text if the triangulation is renamed, changed or destroyed.
+    if (! _triListener) {
+        const regina::Triangulation<3>& tri = self.packet->triangulation();
+        if (! tri.isReadOnlySnapshot())
+            _triListener = [PacketListenerIOS listenerWithPacket:std::addressof(tri) delegate:self listenChildren:NO];
+    }
 
     [self initMetrics];
     [self.angles reloadData];
@@ -124,24 +127,66 @@
 }
 
 - (IBAction)openTriangulation:(id)sender {
-    [ReginaHelper viewPacket:self.packet->triangulation()];
+    const regina::Triangulation<3>& tri = self.packet->triangulation();
+    if (tri.isReadOnlySnapshot()) {
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Triangulation is Private"
+                                                                       message:@"This list stores its own private copy of the triangulation, since the original has changed or been deleted.\n\nWould you like me to make a new copy that you can view and edit?\n\nThis list will continue to use its own private copy, so you can edit or delete your new copy as you please."
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Create Copy"
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction* action) {
+                                                            regina::Triangulation<3>* copy = new regina::Triangulation<3>(tri);
+                                                            copy->setLabel(self.packet->adornedLabel("Triangulation"));
+                                                            self.packet->insertChildLast(copy);
+
+                                                            [ReginaHelper viewPacket:copy];
+                                                        }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                                          style:UIAlertActionStyleCancel
+                                                        handler:^(UIAlertAction * action) {}]];
+                [self presentViewController:alert animated:YES completion:nil];
+    } else {
+        [ReginaHelper viewPacket:std::addressof(tri)];
+    }
 }
 
 - (void)updateTriangulationButton
 {
-    regina::Packet* tri = self.packet->triangulation();
-    NSString* triName = [NSString stringWithUTF8String:tri->label().c_str()];
-    if (triName.length == 0)
-        triName = @"(Unnamed)";
+    const regina::Triangulation<3>& tri = self.packet->triangulation();
+    NSString* triName;
+    if (tri.isReadOnlySnapshot())
+        triName = @"(Private Copy)";
+    else {
+        triName = [NSString stringWithUTF8String:tri.label().c_str()];
+        if (triName.length == 0)
+            triName = @"(Unnamed)";
+    }
+
     [self.triangulation setTitle:triName forState:UIControlStateNormal];
 }
 
 #pragma mark - Packet listener
 
-- (void)packetWasRenamed:(regina::Packet *)packet
+- (void)packetWasRenamed:(regina::Packet&)packet
 {
-    if (packet == self.packet->triangulation())
+    // Assume it is the underlying triangulation.
+    [self updateTriangulationButton];
+}
+
+- (void)packetWasChanged:(regina::Packet&)packet
+{
+    if (packet != std::addressof(self.packet->triangulation())) {
+        // Our list has switched to use a local snapshot of the triangulation.
+        // The triangulation will be read-only from now on.
+        [self permanentlyUnlisten];
         [self updateTriangulationButton];
+    }
+}
+
+- (void)packetBeingDestroyed:(regina::PacketShell)packet
+{
+    // Assume it is the underlying triangulation.
+    [self updateTriangulationButton];
 }
 
 #pragma mark - MDSpreadView data source

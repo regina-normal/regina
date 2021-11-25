@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>pent</refname>
-  <refpurpose>A single pentachoron in a 4-dimensional triangulation</refpurpose>
+  <refpurpose>Replaced by &xml-simplex;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,10 +40,20 @@ pent ::= (#PCDATA)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   This element was used in the past to store a single pentachoron in a
+   4-dimensional triangulation.  Since &regina;&nbsp;7.0, all
+   top-dimensional simplices for triangulations in all dimensions
+   are now stored using the &xml-simplex; element.
+   Moreover, &regina; now supports multiple ways of encoding the gluing
+   permutations between these top-dimensional simplices.
+   See &xml-simplex; for details.
+  </para>
   <para>
    A &xml-pent; element stores a single pentachoron in a 4-dimensional
    triangulation, along with its associated facet gluings.

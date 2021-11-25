@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>flags</refname>
-  <refpurpose>Deprecated: do not use</refpurpose>
+  <refpurpose>No longer stored</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,19 +40,48 @@ flags ::=</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltrmver;4.93</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  &eltrmdetail;
   <para>
-   This element is deprecated, and should no longer be used.
-   As of Regina&nbsp;4.93, this element will not be written, and will be
-   ignored when reading older data files.
+   A &xml-flags; element stores multiple boolean properties of an
+   individual angle structure, combined into a single integer.
   </para>
   <para>
-   A &xml-flags; element stores an arbitrary set of flags combined into
-   a single integer.
+   This integer is a bitwise combination of the following values:
   </para>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1" colwidth="1*"/>
+    <colspec colname="c2" colwidth="8*"/>
+    <tbody>
+     <row>
+      <entry><emphasis role="bold">Value</emphasis></entry>
+      <entry><emphasis role="bold">Meaning</emphasis></entry>
+     </row>
+     <row>
+      <entry>1</entry>
+      <entry>The angle structure is strict (all angles are strictly
+       between 0 and &pi;).  This flag is only meaningful if the angle
+       structure type has been calculated; see below.</entry>
+     </row>
+     <row>
+      <entry>2</entry>
+      <entry>The angle structure is taut (all angles are either 0 or
+       &pi;).  This flag is only meaningful if the angle structure type
+       has been calculated; see below.</entry>
+     </row>
+     <row>
+      <entry>4</entry>
+      <entry>The angle structure type (strict/taut) has been
+       calculated.</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
 
   <refsect2>
    <title>Parents</title>
@@ -80,10 +109,7 @@ flags ::=</synopsis>
     <listitem>
      <para>
       A single integer containing the values of all the flags under
-      consideration.  Generally these flags take boolean values (or
-      belong to very small enumerations) and are thus stored as
-      individual bits (or small clumps of bits) in this integer's binary
-      representation.
+      consideration.
      </para>
     </listitem>
    </varlistentry>

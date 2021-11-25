@@ -42,10 +42,9 @@ using regina::BoolSet;
 /**
  * Simply increment the given count when a face pairing is found.
  */
-void countFacetPairings(const FacetPairing<4>* pair,
-        const FacetPairing<4>::IsoList*, void* count) {
-    if (pair)
-        (*(unsigned*)count)++;
+void countFacetPairings(const FacetPairing<4>& pair,
+        FacetPairing<4>::IsoList, unsigned& count) {
+    ++count;
 }
 
 class FacetPairing4Test : public CppUnit::TestFixture {
@@ -61,10 +60,10 @@ class FacetPairing4Test : public CppUnit::TestFixture {
             /**< Used to hold arbitrary totals. */
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void rawCountsClosed() {
@@ -77,7 +76,7 @@ class FacetPairing4Test : public CppUnit::TestFixture {
             for (size = 0; size <= 5; ++size) {
                 count = 0;
                 FacetPairing<4>::findAllPairings(size, false,
-                    0, countFacetPairings, &count);
+                    0, countFacetPairings, count);
 
                 if (count != nPairs[size]) {
                     std::ostringstream msg;
@@ -102,7 +101,7 @@ class FacetPairing4Test : public CppUnit::TestFixture {
             for (size = 0; size <= 6; ++size) {
                 count = 0;
                 FacetPairing<4>::findAllPairings(size, true,
-                    1, countFacetPairings, &count);
+                    1, countFacetPairings, count);
 
                 if (count != nBdry1[size]) {
                     std::ostringstream msg;
@@ -117,7 +116,7 @@ class FacetPairing4Test : public CppUnit::TestFixture {
             for (size = 0; size <= 5; ++size) {
                 count = 0;
                 FacetPairing<4>::findAllPairings(size, true,
-                    2, countFacetPairings, &count);
+                    2, countFacetPairings, count);
 
                 if (count != nBdry2[size]) {
                     std::ostringstream msg;
@@ -132,7 +131,7 @@ class FacetPairing4Test : public CppUnit::TestFixture {
             for (size = 0; size <= 4; ++size) {
                 count = 0;
                 FacetPairing<4>::findAllPairings(size, true,
-                    -1, countFacetPairings, &count);
+                    -1, countFacetPairings, count);
 
                 if (count != nBdry[size]) {
                     std::ostringstream msg;

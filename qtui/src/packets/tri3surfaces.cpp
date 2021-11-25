@@ -62,16 +62,16 @@
 
 using regina::Packet;
 
-Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
-        PacketTabbedUI* useParentUI) :
-        PacketViewerTab(useParentUI), tri(packet) {
+Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* tri,
+        regina::Packet* triAsPacket, PacketTabbedUI* useParentUI) :
+        PacketViewerTab(useParentUI), tri_(tri), triAsPacket_(triAsPacket) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
     layout->addStretch(2);
 
     QLabel* label;
-    if (dynamic_cast<regina::SnapPeaTriangulation*>(packet))
+    if (tri_->isSnapPea())
         label = new QLabel(tr(
             "<qt><b>Unfilled Manifold:<br>"
             "High-level Recognition Routines</b></qt>"), ui);
@@ -83,7 +83,7 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
 
     layout->addStretch(1);
 
-    QGridLayout* grid = new QGridLayout();//, 4, 7, 5);
+    auto* grid = new QGridLayout();//, 4, 7, 5);
     layout->addLayout(grid);
     grid->setColumnStretch(0, 1);
     grid->setColumnMinimumWidth(2, 5); // Horizontal gap
@@ -334,7 +334,7 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
 
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
         this, SLOT(updatePreferences()));
-            
+
     manifold->setContextMenuPolicy(Qt::CustomContextMenu);
     census->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(census, SIGNAL(customContextMenuRequested(const QPoint&)),
@@ -344,7 +344,7 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
 }
 
 regina::Packet* Tri3SurfacesUI::getPacket() {
-    return tri;
+    return triAsPacket_;
 }
 
 QWidget* Tri3SurfacesUI::getInterface() {
@@ -355,37 +355,34 @@ void Tri3SurfacesUI::refresh() {
     int autoCalcThreshold = ReginaPrefSet::global().triSurfacePropsThreshold;
 
     std::optional<bool> isHyp;
-    if (! tri->isValid())
+    if (! tri_->isValid())
         isHyp = false;
 
     name.clear();
 
     // Begin with the combinatorial recognition.
-    regina::StandardTriangulation* std =
-        regina::StandardTriangulation::isStandardTriangulation(tri);
+    auto std = regina::StandardTriangulation::recognise(*tri_);
     if (std) {
-        regina::Manifold* mfd = std->manifold();
+        auto mfd = std->manifold();
         if (mfd) {
             isHyp = mfd->isHyperbolic();
             name = mfd->name();
-            delete mfd;
 
             // If we have the 3-sphere, 3-ball or solid torus, then
             // automatically run the large recognition routines: these
             // should finish quickly and give results consistent with
             // the combinatorial routines.
             if (name == "S3") {
-                tri->isThreeSphere();
+                tri_->isSphere();
             } else if (name == "B3") {
-                tri->isBall();
+                tri_->isBall();
             } else if (name == "B2 x S1") {
-                tri->isSolidTorus();
+                tri_->isSolidTorus();
             }
         }
-        delete std;
     }
 
-    if (! dynamic_cast<regina::SnapPeaTriangulation*>(tri)) {
+    if (! tri_->isSnapPea()) {
         titleZeroEff->setVisible(true);
         zeroEff->setVisible(true);
         btnZeroEff->setVisible(true);
@@ -394,9 +391,8 @@ void Tri3SurfacesUI::refresh() {
         splitting->setVisible(true);
         btnSplitting->setVisible(true);
 
-        if (tri->knowsZeroEfficient() ||
-                tri->size() <= autoCalcThreshold) {
-            if (tri->isZeroEfficient()) {
+        if (tri_->knowsZeroEfficient() || tri_->size() <= autoCalcThreshold) {
+            if (tri_->isZeroEfficient()) {
                 zeroEff->setText(tr("True"));
                 QPalette pal = zeroEff->palette();
                 pal.setColor(zeroEff->foregroundRole(), Qt::darkGreen);
@@ -419,7 +415,7 @@ void Tri3SurfacesUI::refresh() {
         // Now that hasSplittingSurface() is fast, we will always compute it.
         // Eventually we should get rid of the Calculate button, which
         // will now be forever disabled.
-        if (tri->hasSplittingSurface()) {
+        if (tri_->hasSplittingSurface()) {
             splitting->setText(tr("True"));
             QPalette pal = splitting->palette();
             pal.setColor(splitting->foregroundRole(), Qt::darkGreen);
@@ -441,14 +437,13 @@ void Tri3SurfacesUI::refresh() {
         btnSplitting->setVisible(false);
     }
 
-    if (tri->isClosed()) {
+    if (tri_->isClosed()) {
         titleThreeSphere->setVisible(true);
         threeSphere->setVisible(true);
         btnThreeSphere->setVisible(true);
 
-        if (tri->knowsThreeSphere() ||
-                tri->size() <= autoCalcThreshold) {
-            if (tri->isThreeSphere()) {
+        if (tri_->knowsSphere() || tri_->size() <= autoCalcThreshold) {
+            if (tri_->isSphere()) {
                 threeSphere->setText(tr("True"));
                 QPalette pal = threeSphere->palette();
                 pal.setColor(threeSphere->foregroundRole(), Qt::darkGreen);
@@ -477,14 +472,13 @@ void Tri3SurfacesUI::refresh() {
         btnThreeSphere->setVisible(false);
     }
 
-    if (tri->hasBoundaryTriangles()) {
+    if (tri_->hasBoundaryTriangles()) {
         titleThreeBall->setVisible(true);
         threeBall->setVisible(true);
         btnThreeBall->setVisible(true);
 
-        if (tri->knowsBall() ||
-                tri->size() <= autoCalcThreshold) {
-            if (tri->isBall()) {
+        if (tri_->knowsBall() || tri_->size() <= autoCalcThreshold) {
+            if (tri_->isBall()) {
                 threeBall->setText(tr("True"));
                 QPalette pal = threeBall->palette();
                 pal.setColor(threeBall->foregroundRole(), Qt::darkGreen);
@@ -513,7 +507,7 @@ void Tri3SurfacesUI::refresh() {
         btnThreeBall->setVisible(false);
     }
 
-    if (tri->countBoundaryComponents() > 0) {
+    if (tri_->countBoundaryComponents() > 0) {
         titleSolidTorus->setVisible(true);
         solidTorus->setVisible(true);
         btnSolidTorus->setVisible(true);
@@ -522,8 +516,8 @@ void Tri3SurfacesUI::refresh() {
         TxI->setVisible(true);
         btnTxI->setVisible(true);
 
-        if (tri->knowsSolidTorus() || tri->size() <= autoCalcThreshold) {
-            if (tri->isSolidTorus()) {
+        if (tri_->knowsSolidTorus() || tri_->size() <= autoCalcThreshold) {
+            if (tri_->isSolidTorus()) {
                 solidTorus->setText(tr("True"));
                 QPalette pal = solidTorus->palette();
                 pal.setColor(solidTorus->foregroundRole(), Qt::darkGreen);
@@ -547,8 +541,8 @@ void Tri3SurfacesUI::refresh() {
             btnSolidTorus->setEnabled(true);
         }
 
-        if (tri->knowsTxI() || tri->size() <= autoCalcThreshold) {
-            if (tri->isTxI()) {
+        if (tri_->knowsTxI() || tri_->size() <= autoCalcThreshold) {
+            if (tri_->isTxI()) {
                 TxI->setText(tr("True"));
                 QPalette pal = TxI->palette();
                 pal.setColor(TxI->foregroundRole(), Qt::darkGreen);
@@ -581,15 +575,14 @@ void Tri3SurfacesUI::refresh() {
         btnTxI->setVisible(false);
     }
 
-    if (tri->isOrientable() && tri->isClosed() && tri->isValid() &&
-            tri->isConnected()) {
+    if (tri_->isOrientable() && tri_->isClosed() && tri_->isValid() &&
+            tri_->isConnected()) {
         titleIrreducible->setVisible(true);
         irreducible->setVisible(true);
         btnIrreducible->setVisible(true);
 
-        if (tri->knowsIrreducible() ||
-                tri->size() <= autoCalcThreshold) {
-            if (tri->isIrreducible()) {
+        if (tri_->knowsIrreducible() || tri_->size() <= autoCalcThreshold) {
+            if (tri_->isIrreducible()) {
                 irreducible->setText(tr("True"));
                 QPalette pal = irreducible->palette();
                 pal.setColor(irreducible->foregroundRole(), Qt::darkGreen);
@@ -617,26 +610,26 @@ void Tri3SurfacesUI::refresh() {
     }
 
     // Use the same threshold adjustment as for 3-sphere recognition.
-    if (tri->isOrientable() && tri->isClosed() && tri->isValid() &&
-            tri->isConnected()) {
+    if (tri_->isOrientable() && tri_->isClosed() && tri_->isValid() &&
+            tri_->isConnected()) {
         titleHaken->setVisible(true);
         haken->setVisible(true);
         btnHaken->setVisible(true);
 
-        if (tri->knowsIrreducible() && ! tri->isIrreducible()) {
+        if (tri_->knowsIrreducible() && ! tri_->isIrreducible()) {
             // We are not allowed to test Hakenness in this situation.
             haken->setText(tr("N/A"));
             QPalette pal = haken->palette();
             pal.setColor(haken->foregroundRole(), Qt::darkYellow);
             haken->setPalette(pal);
             btnHaken->setEnabled(false);
-        } else if (tri->knowsHaken() ||
-                tri->size() + HAKEN_AUTO_CALC_ADJUSTMENT
+        } else if (tri_->knowsHaken() ||
+                tri_->size() + HAKEN_AUTO_CALC_ADJUSTMENT
                 <= autoCalcThreshold) {
             // This will not trigger new knowledge about irreducibility,
             // since if the triangulation has few tetrahedra we would
             // have just run an irreducibility test in the previous section.
-            if (tri->isHaken()) {
+            if (tri_->isHaken()) {
                 haken->setText(tr("True"));
                 QPalette pal = haken->palette();
                 pal.setColor(haken->foregroundRole(), Qt::darkGreen);
@@ -661,7 +654,7 @@ void Tri3SurfacesUI::refresh() {
         btnHaken->setVisible(false);
     }
 
-    if (tri->isIdeal() && ! tri->hasBoundaryTriangles()) {
+    if (tri_->isIdeal() && ! tri_->hasBoundaryTriangles()) {
         titleStrict->setVisible(true);
         strict->setVisible(true);
         btnStrict->setVisible(true);
@@ -669,15 +662,15 @@ void Tri3SurfacesUI::refresh() {
         titleHyperbolic->setVisible(true);
         hyperbolic->setVisible(true);
 
-        if (tri->knowsStrictAngleStructure() ||
-                tri->size() <= STRICT_AUTO_CALC_THRESHOLD) {
-            if (tri->hasStrictAngleStructure()) {
+        if (tri_->knowsStrictAngleStructure() ||
+                tri_->size() <= STRICT_AUTO_CALC_THRESHOLD) {
+            if (tri_->hasStrictAngleStructure()) {
                 strict->setText("Yes");
                 QPalette pal = strict->palette();
                 pal.setColor(strict->foregroundRole(), Qt::darkGreen);
                 strict->setPalette(pal);
 
-                if (tri->isValid() && tri->isStandard())
+                if (tri_->isValid() && tri_->isStandard())
                     isHyp = true;
             } else {
                 strict->setText("No");
@@ -729,27 +722,26 @@ void Tri3SurfacesUI::refresh() {
             "Not recognised</qt>"));
     }
 
-    if (tri->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
-        hits = std::unique_ptr<regina::CensusHits>(
-            regina::Census::lookup(tri->isoSig()));
-        if (hits->empty()) {
+    if (tri_->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
+        hits = regina::Census::lookup(tri_->isoSig());
+        if (hits.empty()) {
             census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
-        } else if (hits->count() == 1) {
+        } else if (hits.size() == 1) {
             census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;%1</qt>")
-                .arg(QString(hits->first()->name().c_str()).toHtmlEscaped()));
+                .arg(QString(hits.front().name().c_str()).toHtmlEscaped()));
         } else {
             QString ans = tr("<qt><b>Census:</b>&nbsp;&nbsp;%1 matches")
-                .arg(hits->count());
-            for (auto hit : *hits) {
+                .arg(hits.size());
+            for (const auto& hit : hits) {
                 ans += "<br>";
-                ans += QString(hit->name().c_str()).toHtmlEscaped();
+                ans += QString(hit.name().c_str()).toHtmlEscaped();
             }
             ans += "</qt>";
             census->setText(ans);
         }
     } else {
-        hits.reset();
-        
+        hits.clear();
+
         // The triangulation is too large to be found in the census.
         // Avoid the overhead of calling isoSig().
         census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
@@ -761,7 +753,7 @@ void Tri3SurfacesUI::calculateZeroEff() {
         "Deciding whether a triangulation is 0-efficient\n"
         "can be quite slow for larger triangulations.\n\n"
         "Please be patient."), ui);
-    tri->isZeroEfficient();
+    tri_->isZeroEfficient();
     delete dlg;
 
     refresh();
@@ -772,7 +764,7 @@ void Tri3SurfacesUI::calculateSplitting() {
         "Deciding whether a splitting surface exists can\n"
         "be quite slow for larger triangulations.\n\n"
         "Please be patient."), ui);
-    tri->hasSplittingSurface();
+    tri_->hasSplittingSurface();
     delete dlg;
 
     refresh();
@@ -783,7 +775,7 @@ void Tri3SurfacesUI::calculateThreeSphere() {
         "3-sphere recognition can be quite slow\n"
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
-    tri->isThreeSphere();
+    tri_->isSphere();
     delete dlg;
 
     refresh();
@@ -794,7 +786,7 @@ void Tri3SurfacesUI::calculateThreeBall() {
         "3-ball recognition can be quite slow\n"
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
-    tri->isBall();
+    tri_->isBall();
     delete dlg;
 
     refresh();
@@ -805,7 +797,7 @@ void Tri3SurfacesUI::calculateSolidTorus() {
         "Solid torus recognition can be quite slow\n"
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
-    tri->isSolidTorus();
+    tri_->isSolidTorus();
     delete dlg;
 
     refresh();
@@ -816,7 +808,7 @@ void Tri3SurfacesUI::calculateTxI() {
         "(T x I) recognition can be quite slow\n"
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
-    tri->isTxI();
+    tri_->isTxI();
     delete dlg;
 
     refresh();
@@ -827,7 +819,7 @@ void Tri3SurfacesUI::calculateIrreducible() {
         "Testing irreducibility can be quite slow\n"
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
-    tri->isIrreducible();
+    tri_->isIrreducible();
     delete dlg;
 
     refresh();
@@ -838,7 +830,7 @@ void Tri3SurfacesUI::calculateHaken() {
         "Hakenness testing can be quite slow\n"
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
-    tri->isHaken();
+    tri_->isHaken();
     delete dlg;
 
     refresh();
@@ -849,7 +841,7 @@ void Tri3SurfacesUI::calculateStrict() {
         "Testing for a strict angle structure may be slow\n"
         "for extremely large triangulations.\n\n"
         "Please be patient."), ui);
-    tri->hasStrictAngleStructure();
+    tri_->hasStrictAngleStructure();
     delete dlg;
 
     refresh();
@@ -867,7 +859,7 @@ void Tri3SurfacesUI::contextManifold(const QPoint& pos) {
 }
 
 void Tri3SurfacesUI::contextCensus(const QPoint& pos) {
-    if (! (hits.get() && ! hits->empty()))
+    if (hits.empty())
         return;
     
     QMenu m(tr("Context menu"), census);
@@ -884,12 +876,11 @@ void Tri3SurfacesUI::copyManifold() {
 void Tri3SurfacesUI::copyCensus() {
     QString ans;
     
-    if (hits->count() == 1) {
-        ans = hits->first()->name().c_str();
+    if (hits.size() == 1) {
+        ans = hits.front().name().c_str();
     } else {
-        for (const regina::CensusHit* hit = hits->first() ; hit;
-            hit = hit->next()) {
-            ans += hit->name().c_str();
+        for (const auto& hit : hits) {
+            ans += hit.name().c_str();
             ans += "\n";
         }
     }

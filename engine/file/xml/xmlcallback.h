@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup file
- * @{
- */
-
-/**
  * Provides the callbacks for an XMLParser required to parse an entire
  * file using a series of XMLElementReader objects.
  * See the XMLElementReader class notes for details of precisely how
@@ -110,7 +105,7 @@ class XMLCallback : public regina::xml::XMLParserCallback {
          * the top-level reader) that has not yet been destroyed will
          * have abort() called upon it and will be destroyed at this point.
          */
-        virtual ~XMLCallback();
+        ~XMLCallback() override;
 
         /**
          * Returns the state that this callback object is currently in.
@@ -132,15 +127,15 @@ class XMLCallback : public regina::xml::XMLParserCallback {
          */
         void abort();
 
-        virtual void start_document(regina::xml::XMLParser* parser) override;
-        virtual void end_document() override;
-        virtual void start_element(const std::string& n,
+        void start_document(regina::xml::XMLParser* parser) override;
+        void end_document() override;
+        void start_element(const std::string& n,
             const regina::xml::XMLPropertyDict& p) override;
-        virtual void end_element(const std::string& n) override;
-        virtual void characters(const std::string& s) override;
-        virtual void warning(const std::string& s) override;
-        virtual void error(const std::string& s) override;
-        virtual void fatal_error(const std::string& s) override;
+        void end_element(const std::string& n) override;
+        void characters(const std::string& s) override;
+        void warning(const std::string& s) override;
+        void error(const std::string& s) override;
+        void fatal_error(const std::string& s) override;
 
         // Make this class non-copyable.
         XMLCallback(const XMLCallback&) = delete;
@@ -155,8 +150,6 @@ class XMLCallback : public regina::xml::XMLParserCallback {
          */
         XMLElementReader* currentReader();
 };
-
-/*@}*/
 
 // Inline functions for XMLCallback
 

@@ -176,7 +176,7 @@ struct CountSet {
     nSpun = 0;
     
     regina::LargeInteger euler;
-    for (const regina::NormalSurface* s : self.packet->surfaces()) {
+    for (const regina::NormalSurface* s : *self.packet) {
         if (! s->isCompact())
             ++nSpun;
         else {

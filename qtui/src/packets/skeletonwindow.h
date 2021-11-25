@@ -71,12 +71,11 @@ class SkeletalModel : public QAbstractItemModel {
          * Constructor and destructor.
          */
         SkeletalModel();
-        virtual ~SkeletalModel();
 
         /**
          * General information about the subclass of model.
          */
-        virtual QString caption() const = 0;
+        virtual QString name() const = 0;
         virtual QString overview() const = 0;
 
         /**
@@ -94,8 +93,8 @@ class SkeletalModel : public QAbstractItemModel {
          * Overrides for describing data in the model.
          */
         QModelIndex index(int row, int column,
-            const QModelIndex& parent) const;
-        QModelIndex parent(const QModelIndex& index) const;
+            const QModelIndex& parent) const override;
+        QModelIndex parent(const QModelIndex& index) const override;
 };
 
 /**
@@ -128,20 +127,20 @@ class SkeletonWindow : public QDialog, public regina::PacketListener {
          * Constructor and destructor.
          */
         SkeletonWindow(PacketUI* parentUI, SkeletalModel* useModel);
-        ~SkeletonWindow();
+        ~SkeletonWindow() override;
 
         /**
          * Update the display.
          */
         void refresh();
-        void updateCaption();
+        void updateCaption(const std::string& triLabel);
 
         /**
          * PacketListener overrides.
          */
-        void packetWasChanged(regina::Packet* packet) override;
-        void packetWasRenamed(regina::Packet* packet) override;
-        void packetToBeDestroyed(regina::PacketShell packet) override;
+        void packetWasChanged(regina::Packet& packet) override;
+        void packetWasRenamed(regina::Packet& packet) override;
+        void packetBeingDestroyed(regina::PacketShell packet) override;
 };
 
 /**
@@ -154,7 +153,7 @@ class SkeletonTreeView : public QTreeView {
         SkeletonTreeView();
 
     protected:
-        virtual QSize sizeHint() const;
+        QSize sizeHint() const override;
 };
 
 class Vertex3Model : public SkeletalModel {
@@ -173,17 +172,17 @@ class Vertex3Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -207,17 +206,17 @@ class Edge3Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -241,17 +240,17 @@ class Triangle3Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -275,17 +274,17 @@ class Component3Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -309,17 +308,17 @@ class BoundaryComponent3Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -343,17 +342,17 @@ class Vertex2Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -377,17 +376,17 @@ class Edge2Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -411,17 +410,17 @@ class Component2Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -445,17 +444,17 @@ class BoundaryComponent2Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -479,17 +478,17 @@ class Vertex4Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -513,17 +512,17 @@ class Edge4Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -547,17 +546,17 @@ class Triangle4Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -581,17 +580,17 @@ class Tetrahedron4Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -615,17 +614,17 @@ class Component4Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -649,17 +648,17 @@ class BoundaryComponent4Model : public SkeletalModel {
         /**
          * Overrides for describing this subclass of model.
          */
-        virtual QString caption() const;
-        virtual QString overview() const;
+        QString name() const override;
+        QString overview() const override;
 
         /**
          * Overrides for describing data in the model.
          */
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 
         /**
          * Helper routine for generating tooltips.
@@ -668,9 +667,6 @@ class BoundaryComponent4Model : public SkeletalModel {
 };
 
 inline SkeletalModel::SkeletalModel() : forceEmpty(false) {
-}
-
-inline SkeletalModel::~SkeletalModel() {
 }
 
 inline void SkeletalModel::makeEmpty() {
@@ -702,51 +698,51 @@ inline SkeletonWindow::~SkeletonWindow() {
     delete model;
 }
 
-inline void SkeletonWindow::updateCaption() {
-    setWindowTitle(model->caption());
+inline void SkeletonWindow::updateCaption(const std::string& triLabel) {
+    setWindowTitle(QString("%1 (%2)").arg(model->name(), triLabel.c_str()));
 }
 
-inline Vertex3Model::Vertex3Model(regina::Triangulation<3>* tri_) :
-        tri(tri_) {}
+inline Vertex3Model::Vertex3Model(
+        regina::Triangulation<3>* tri_) : tri(tri_) {}
 
-inline Edge3Model::Edge3Model(regina::Triangulation<3>* tri_) :
-        tri(tri_) {}
+inline Edge3Model::Edge3Model(
+        regina::Triangulation<3>* tri_) : tri(tri_) {}
 
-inline Triangle3Model::Triangle3Model(regina::Triangulation<3>* tri_) :
-        tri(tri_) {}
+inline Triangle3Model::Triangle3Model(
+        regina::Triangulation<3>* tri_) : tri(tri_) {}
 
-inline Component3Model::Component3Model(regina::Triangulation<3>* tri_) :
-        tri(tri_) {}
+inline Component3Model::Component3Model(
+        regina::Triangulation<3>* tri_) : tri(tri_) {}
 
 inline BoundaryComponent3Model::BoundaryComponent3Model(
         regina::Triangulation<3>* tri_) : tri(tri_) {}
 
-inline Vertex2Model::Vertex2Model(regina::Triangulation<2>* tri_) :
-        tri(tri_) {}
+inline Vertex2Model::Vertex2Model(
+        regina::Triangulation<2>* tri_) : tri(tri_) {}
 
-inline Edge2Model::Edge2Model(regina::Triangulation<2>* tri_) :
-        tri(tri_) {}
+inline Edge2Model::Edge2Model(
+        regina::Triangulation<2>* tri_) : tri(tri_) {}
 
-inline Component2Model::Component2Model(regina::Triangulation<2>* tri_) :
-        tri(tri_) {}
+inline Component2Model::Component2Model(
+        regina::Triangulation<2>* tri_) : tri(tri_) {}
 
 inline BoundaryComponent2Model::BoundaryComponent2Model(
         regina::Triangulation<2>* tri_) : tri(tri_) {}
 
-inline Vertex4Model::Vertex4Model(regina::Triangulation<4>* tri_) :
-        tri(tri_) {}
+inline Vertex4Model::Vertex4Model(
+        regina::Triangulation<4>* tri_) : tri(tri_) {}
 
-inline Edge4Model::Edge4Model(regina::Triangulation<4>* tri_) :
-        tri(tri_) {}
+inline Edge4Model::Edge4Model(
+        regina::Triangulation<4>* tri_) : tri(tri_) {}
 
-inline Triangle4Model::Triangle4Model(regina::Triangulation<4>* tri_) :
-        tri(tri_) {}
+inline Triangle4Model::Triangle4Model(
+        regina::Triangulation<4>* tri_) : tri(tri_) {}
 
 inline Tetrahedron4Model::Tetrahedron4Model(
         regina::Triangulation<4>* tri_) : tri(tri_) {}
 
-inline Component4Model::Component4Model(regina::Triangulation<4>* tri_) :
-        tri(tri_) {}
+inline Component4Model::Component4Model(
+        regina::Triangulation<4>* tri_) : tri(tri_) {}
 
 inline BoundaryComponent4Model::BoundaryComponent4Model(
         regina::Triangulation<4>* tri_) : tri(tri_) {}

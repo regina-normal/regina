@@ -32,195 +32,144 @@
 
 #include <queue>
 #include "surfaces/disc.h"
-#include "surfaces/nsvectorstandard.h"
-#include "surfaces/nsvectoranstandard.h"
+#include "surfaces/normalsurface.h"
 
 namespace regina {
 
-namespace {
-    /**
-     * Stores a connected component ID for a normal disc.
-     */
-    struct ComponentData {
-        long id;
-            /**< Stores the ID of the connected component that this disc
-                 belongs to.  Components are numbered from 0 upwards;
-                 -1 means that the component ID is unknown. */
+std::vector<NormalSurface> NormalSurface::components() const {
+    if (connected_.has_value()) {
+        // We already know that either the surface is empty or it is a
+        // single connected component.
+        if (isEmpty())
+            return {};
+        else
+            return { *this };
+    }
 
-        /**
-         * Create a new structure with the component ID initialised to -1.
-         */
-        ComponentData() : id(-1) {
+    // Shamelessly copied from my orientation/two-sidedness code from
+    // years earlier.  Some day I will need to make a generic structure
+    // for a depth-first search over normal discs.  Not today.
+
+    // If the precondition (compactness) does not hold, things will get
+    // nasty (read: infinite).
+    if (! isCompact())
+        return {};
+
+    // TODO: First check that there aren't too many discs!
+
+    // The components structure stores an integer alongside each disc;
+    // that integer will be the ID of its connected component, or -1 if
+    // this is unknown.  Components are numbered from 0 upwards.
+    DiscSetSurfaceData<long> components(*this, -1);
+        // Stores the component ID for each disc.
+    std::queue<DiscSpec> discQueue;
+        // A queue of discs whose component IDs must be propagated.
+    DiscSpecIterator it(components);
+        // Runs through the discs whose component IDs might not have yet
+        // been determined.
+    DiscSpec use;
+        // The disc that currently holds our interest.
+
+    int nGluingArcs;     // The number of arcs on the current disc to
+                         //     which an adjacent disc might may be glued.
+    Perm<4> arc[8];       // Holds each gluing arc for the current disc.
+
+    long compID = 0;     // The current working component ID.
+    long i;
+
+    while (true) {
+        // If there's no discs to propagate from, choose the next
+        // one without a component label.
+        while (discQueue.empty() && (! it.done())) {
+            if (components.data(*it) == -1) {
+                components.data(*it) = compID++;
+                discQueue.push(*it);
+            }
+            ++it;
         }
-    };
+        if (discQueue.empty())
+            break;
 
-    /**
-     * Splits the given normal surface into connected components.
-     *
-     * The surface itself will not be changed.  Instead, each
-     * connected component will be appended to the end of the
-     * given list \a dest.  Note that the list \a dest will \e not
-     * be emptied at the beginning of this routine (i.e., any
-     * surfaces that were in the list beforehand will be left there).
-     *
-     * The components inserted into \a dest will always be in standard
-     * (tri-quad or tri-quad-oct) coordinates, regardless of the
-     * native coordinate system that is used by the given surface.
-     * Any transverse orientations will be lost.
-     *
-     * This routine is slow, since it performs a depth-first search
-     * over the entire set of normal discs.  If the surface contains
-     * a very large number of discs (large enough to cause integer
-     * overflows or exhaust memory) then this routine will give up and
-     * return 0.
-     *
-     * The components inserted into \a dest will be newly created.  It is
-     * the responsibility of the caller of this routine to deallocate them.
-     *
-     * \pre The given normal surface is compact (has finitely many discs)
-     * and is also embedded.
-     *
-     * \todo \prob Check for absurdly large numbers of discs and bail
-     * accordingly.
-     *
-     * @param s the surface to split into components.
-     * @param dest the vector into which individual components will
-     * be inserted.
-     * @return the number of connected components.
-     */
-    unsigned splitIntoComponents(const NormalSurface& s,
-            std::vector<NormalSurface*>& dest) {
-        // Shamelessly copied from my orientation/two-sidedness code from
-        // years earlier.  Some day I will need to make a generic structure
-        // for a depth-first search over normal discs.  Not today.
+        // At the head of the queue is the next already-labelled disc
+        // whose component ID must be propagated.
+        use = discQueue.front();
+        discQueue.pop();
 
-        // If the precondition (compactness) does not hold, things will get
-        // nasty (read: infinite).
-        if (! s.isCompact())
-            return 0;
-
-        // TODO: First check that there aren't too many discs!
-
-        // All right.  Off we go.
-        DiscSetSurfaceData<ComponentData> components(s);
-            // Stores the component ID for each disc.
-        std::queue<DiscSpec> discQueue;
-            // A queue of discs whose component IDs must be propagated.
-        DiscSpecIterator it(components);
-            // Runs through the discs whose component IDs might not have yet
-            // been determined.
-        DiscSpec use;
-            // The disc that currently holds our interest.
-
-        int nGluingArcs;     // The number of arcs on the current disc to
-                             //     which an adjacent disc might may be glued.
-
-        DiscSpec* adjDisc;  // The disc to which the current disc is glued.
-        Perm<4> arc[8];       // Holds each gluing arc for the current disc.
-        Perm<4> adjArc;       // Represents the corresponding gluing arc on the
-                             //     adjacent disc.
-
-        long compID = 0;     // The current working component ID.
-        long i;
-
-        while (true) {
-            // If there's no discs to propagate from, choose the next
-            // one without a component label.
-            while (discQueue.empty() && (! it.done())) {
-                if (components.data(*it).id == -1) {
-                    components.data(*it).id = compID++;
-                    discQueue.push(*it);
-                }
-                ++it;
-            }
-            if (discQueue.empty())
-                break;
-
-            // At the head of the queue is the next already-labelled disc
-            // whose component ID must be propagated.
-            use = discQueue.front();
-            discQueue.pop();
-
-            // Determine along which arcs we may glue other discs.
-            if (use.type < 4) {
-                // Current disc is a triangle.
-                nGluingArcs = 3;
-                for (i = 0; i < 3; i++)
-                    arc[i] = regina::triDiscArcs[use.type][i];
-            } else if (use.type < 7) {
-                // Current disc is a quad.
-                nGluingArcs = 4;
-                for (i = 0; i < 4; i++)
-                    arc[i] = regina::quadDiscArcs[use.type - 4][i];
-            } else {
-                // Current disc is an octagon.
-                nGluingArcs = 8;
-                for (i = 0; i < 8; i++)
-                    arc[i] = regina::octDiscArcs[use.type - 7][i];
-            }
-
-            // Process any discs that might be adjacent to each of these
-            // gluing arcs.
-            for (i = 0; i < nGluingArcs; ++i) {
-                // Establish which is the adjacent disc.
-                adjDisc = components.adjacentDisc(use, arc[i], adjArc);
-                if (adjDisc == 0)
-                    continue;
-
-                // There is actually a disc glued along this arc.
-                // Propagate the component ID.
-
-                if (components.data(*adjDisc).id == -1) {
-                    components.data(*adjDisc).id = components.data(use).id;
-                    discQueue.push(*adjDisc);
-                }
-
-                // Tidy up.
-                delete adjDisc;
-            }
-        }
-
-        // Were there any discs at all?
-        if (compID == 0)
-            return 0;
-
-        // Create the set of normal surfaces!
-        // Note that all vectors are automagically initialised to zero.
-        const Triangulation<3>& tri = s.triangulation();
-        NormalSurfaceVector** ans = new NormalSurfaceVector*[compID];
-
-        NormalSurfaceVector* vec;
-        long coord;
-        if (s.systemAllowsAlmostNormal()) {
-            for (i = 0; i < compID; ++i)
-                ans[i] = new NSVectorANStandard(
-                    10 * tri.size());
-
-            for (const auto& disc : components) {
-                vec = ans[components.data(disc).id];
-                coord = 10 * disc.tetIndex + disc.type;
-                vec->set(coord, (*vec)[coord] + 1);
-            }
+        // Determine along which arcs we may glue other discs.
+        if (use.type < 4) {
+            // Current disc is a triangle.
+            nGluingArcs = 3;
+            for (i = 0; i < 3; i++)
+                arc[i] = regina::triDiscArcs[use.type][i];
+        } else if (use.type < 7) {
+            // Current disc is a quad.
+            nGluingArcs = 4;
+            for (i = 0; i < 4; i++)
+                arc[i] = regina::quadDiscArcs[use.type - 4][i];
         } else {
-            for (i = 0; i < compID; ++i)
-                ans[i] = new NSVectorStandard(
-                    7 * tri.size());
+            // Current disc is an octagon.
+            nGluingArcs = 8;
+            for (i = 0; i < 8; i++)
+                arc[i] = regina::octDiscArcs[use.type - 7][i];
+        }
 
-            for (const auto& disc : components) {
-                vec = ans[components.data(disc).id];
-                coord = 7 * disc.tetIndex + disc.type;
-                vec->set(coord, (*vec)[coord] + 1);
+        // Process any discs that might be adjacent to each of these
+        // gluing arcs.
+        for (i = 0; i < nGluingArcs; ++i) {
+            // Establish which is the adjacent disc.
+            auto adjDisc = components.adjacentDisc(use, arc[i]);
+            if (! adjDisc)
+                continue;
+
+            // There is actually a disc glued along this arc.
+            // Propagate the component ID.
+
+            if (components.data(adjDisc->first) == -1) {
+                components.data(adjDisc->first) = components.data(use);
+                discQueue.push(adjDisc->first);
             }
         }
+    }
+
+    // Were there any discs at all?
+    if (compID == 0) {
+        connected_ = true;
+        return {};
+    }
+
+    // Create the set of normal surfaces!
+    // Note that all vectors are automagically initialised to zero.
+    std::vector<NormalSurface> dest;
+    std::vector<Vector<LargeInteger>> ans;
+    ans.reserve(compID);
+
+    if (couldBeAlmostNormal()) {
+        size_t size = 10 * triangulation_->size();
 
         for (i = 0; i < compID; ++i)
-            dest.push_back(new NormalSurface(tri, ans[i]));
-        delete[] ans;
+            ans.emplace_back(size);
 
-        // All done!
-        return compID;
+        for (const auto& disc : components)
+            ++ans[components.data(disc)][10 * disc.tetIndex + disc.type];
+
+        for (i = 0; i < compID; ++i)
+            dest.emplace_back(triangulation_, NS_AN_STANDARD, ans[i]);
+    } else {
+        size_t size = 7 * triangulation_->size();
+
+        for (i = 0; i < compID; ++i)
+            ans.emplace_back(size);
+
+        for (const auto& disc : components)
+            ++ans[components.data(disc)][7 * disc.tetIndex + disc.type];
+
+        for (i = 0; i < compID; ++i)
+            dest.emplace_back(triangulation_, NS_STANDARD, ans[i]);
     }
-} // anonymous namespace
+
+    connected_ = (compID == 1);
+    return dest;
+}
 
 bool NormalSurface::disjoint(const NormalSurface& other) const {
     // Some sanity tests before we begin.
@@ -237,28 +186,11 @@ bool NormalSurface::disjoint(const NormalSurface& other) const {
     // Now we know that the sum of both surfaces is an embedded surface.
     // Form the sum, pull it apart into connected components, and see
     // whether we get our original two surfaces back.
-    NormalSurfaceVector* v =
-        static_cast<NormalSurfaceVector*>(vector_->clone());
-    (*v) += *(other.vector_);
-    NormalSurface* sum = new NormalSurface(*triangulation_, v);
-
-    typedef std::vector<NormalSurface*> CompVector;
-    CompVector bits;
-    splitIntoComponents(*sum, bits);
-
-    bool ans = false;
-    if (bits.size() == 2)
-        for (int c = 0; c < 2; ++c)
-            if (sameSurface(*bits[c])) {
-                ans = true;
-                break;
-            }
-
-    for (auto s : bits)
-        delete s;
-    delete sum;
-
-    return ans;
+    //
+    // Note: splitIntoComponents() may return surfaces that use
+    // different vector encodings, but sameSurface() can handle this.
+    std::vector<NormalSurface> bits = ((*this) + other).components();
+    return (bits.size() == 2 && (sameSurface(bits[0]) || sameSurface(bits[1])));
 }
 
 } // namespace regina

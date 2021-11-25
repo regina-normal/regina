@@ -108,8 +108,7 @@ static NSArray* whichText;
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        AngleStructures* ans =
-            AngleStructures::enumerate((regina::Triangulation<3>*)self.spec.parent, tautOnly, &_tracker);
+        AngleStructures* ans = new AngleStructures((regina::Triangulation<3>*)self.spec.parent, tautOnly, regina::AS_ALG_DEFAULT, &_tracker);
         while (! _tracker.isFinished()) {
             if (_tracker.percentChanged()) {
                 // This operation blocks until the UI is updated:
@@ -134,6 +133,7 @@ static NSArray* whichText;
                     ans->setLabel("Taut angle structures");
                 else
                     ans->setLabel("Vertex angle structures");
+                self.spec.parent->insertChildLast(ans);
                 [self.spec created:ans];
             }
             [self dismissViewControllerAnimated:YES completion:nil];

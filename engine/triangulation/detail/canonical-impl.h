@@ -104,8 +104,8 @@ struct CanonicalHelper {
             origTriBest = bestInv.simpImage(simplex);
 
             for (facet = 0; facet <= dim; ++facet) {
-                origFacet = current.facetPerm(origTri).preImageOf(facet);
-                origFacetBest = best.facetPerm(origTriBest).preImageOf(facet);
+                origFacet = current.facetPerm(origTri).pre(facet);
+                origFacetBest = best.facetPerm(origTriBest).pre(facet);
 
                 // Check out the adjacency along simplex/facet.
                 adjTri = tri->simplex(origTri)->adjacentSimplex(origFacet);
@@ -227,34 +227,33 @@ bool TriangulationBase<dim>::makeCanonical() {
         return false;
 
     // Do it.
-    best.applyInPlace(static_cast<Triangulation<dim>*>(this));
+    best.applyInPlace(static_cast<Triangulation<dim>&>(*this));
     return true;
 }
 
 template <int dim>
-template <typename OutputIterator>
-size_t TriangulationBase<dim>::findIsomorphisms(
-        const Triangulation<dim>& other, OutputIterator output,
-        bool complete, bool firstOnly) const {
+template <typename Action, typename... Args>
+bool TriangulationBase<dim>::findIsomorphisms(
+        const Triangulation<dim>& other, bool complete, Action&& action,
+        Args&&... args) const {
     ensureSkeleton();
     other.ensureSkeleton();
 
     // Deal with the empty triangulation first.
     if (simplices_.empty()) {
         if (complete && ! other.simplices_.empty())
-            return 0;
-        *output++ = new Isomorphism<dim>(0);
-        return 1;
+            return false;
+
+        return action(Isomorphism<dim>(0), std::forward<Args>(args)...);
     }
 
     // Basic property checks.
     if (! compatible(other, complete))
-        return 0;
+        return false;
 
     // Start searching for the isomorphism.
     // From the tests above, we are guaranteed that both triangulations
     // have at least one triangle.
-    size_t nResults = 0;
     size_t nSimplices = simplices_.size();
     size_t nDestSimplices = other.simplices_.size();
     size_t nComponents = components().size();
@@ -270,11 +269,10 @@ size_t TriangulationBase<dim>::findIsomorphisms(
 
     // The image of the first source simplex of each component.  The
     // remaining images can be derived by following gluings.
-    size_t* startSimp = new size_t[nComponents];
+    auto* startSimp = new size_t[nComponents];
     std::fill(startSimp, startSimp + nComponents, 0);
 
-    typename Perm<dim+1>::Index* startPerm =
-        new typename Perm<dim+1>::Index[nComponents];
+    auto* startPerm = new typename Perm<dim+1>::Index[nComponents];
     std::fill(startPerm, startPerm + nComponents, 0);
 
     // The simplices whose neighbours must be processed when filling
@@ -300,19 +298,16 @@ size_t TriangulationBase<dim>::findIsomorphisms(
         // startSimp[comp] and startPerm[comp].
         if (comp == static_cast<long>(nComponents)) {
             // We have an isomorphism!!!
-            if (firstOnly) {
-                // Move iso into the output list, to avoid a deep copy.
-                *output++ = new Isomorphism<dim>(std::move(iso));
+
+            // The action takes a const reference to iso, since iso is our
+            // "scratch space" and will keep on changing as we keep searching.
+            if (action(iso, std::forward<Args>(args)...)) {
+                // The action has asked us to terminate the search.
                 delete[] whichComp;
                 delete[] startSimp;
                 delete[] startPerm;
-                return 1;
-            } else
-                nResults++;
-
-            // Make a deep copy of iso, since iso is our "scratch space"
-            // and will keep on changing as we keep searching.
-            *output++ = new Isomorphism<dim>(iso);
+                return true;
+            }
 
             // Back down to the previous component, and clear the
             // mapping for that previous component so we can make way
@@ -405,8 +400,8 @@ size_t TriangulationBase<dim>::findIsomorphisms(
 
             // If we are after a complete isomorphism, test whether the
             // simplices are a potential match.
-            if (complete &&
-                    ! tri->template sameDegreesTo<dim - 2>(*destSimp, myPerm)) {
+            if (complete && ! tri->sameDegreesAt(*destSimp, myPerm,
+                    std::integer_sequence<int, dim - 1>())) {
                 broken = true;
                 break;
             }
@@ -491,7 +486,7 @@ size_t TriangulationBase<dim>::findIsomorphisms(
     delete[] whichComp;
     delete[] startSimp;
     delete[] startPerm;
-    return nResults;
+    return false;
 }
 
 template <int dim>
@@ -507,13 +502,20 @@ bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
             return false;
         if (isOrientable() ^ other.isOrientable())
             return false;
-        if (! this->sameFVector(other))
+
+        // Check that both triangulations have the same f-vector.
+        if (! std::apply([&other](auto&&... kFaces) {
+                    return ((kFaces.size() == std::get<
+                        subdimOf<decltype(kFaces)>()>(other.faces_).size())
+                        && ...);
+                }, faces_)) {
             return false;
+        }
 
         // TODO: Count boundary components and their sizes, once we have them.
 
         // Test degree sequences and the like.
-        if (! this->template sameDegreesTo<dim - 2>(other))
+        if (! sameDegreesAt(other, std::make_integer_sequence<int, dim - 1>()))
             return false;
 
         // Test component sizes.

@@ -40,6 +40,7 @@
 #endif
 
 #include <string>
+#include <vector>
 #include "regina-core.h"
 
 namespace regina {
@@ -50,31 +51,13 @@ template <bool>
 class IntegerBase;
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
- * Creates a new C string that is a duplicate of the given C++ string.
- *
- * The deallocation of the new C string is the responsibility of
- * the caller of this routine.
- *
- * \ifacespython Not present.
- *
- * @param str the C++ string to duplicate.
- * @return the new duplicate C string.
- */
-char* duplicate(const std::string& str);
-
-/**
  * Determines whether the given C++ string begins with the given prefix.
- *
- * \ifacespython Not present.
  *
  * @param str the full C++ string to examine.
  * @param prefix the prefix whose presence we are testing for.
  * @return \c true if and only if \a str begins with \a prefix.
+ *
+ * \ingroup utilities
  */
 bool startsWith(const std::string& str, const std::string& prefix);
 
@@ -88,10 +71,10 @@ bool startsWith(const std::string& str, const std::string& prefix);
  * isspace() is used to identify whitespace.  Use it on strings with
  * international characters at your own peril.
  *
- * \ifacespython Not present.
- *
  * @param str the string to be stripped.
  * @return the resulting stripped string.
+ *
+ * \ingroup utilities
  */
 std::string stripWhitespace(const std::string& str);
 
@@ -104,12 +87,16 @@ std::string stripWhitespace(const std::string& str);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython Not present.
+ * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * since these tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting 8-bit integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, int8_t& dest);
 /**
@@ -121,13 +108,17 @@ bool valueOf(const std::string& str, int8_t& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython Not present.
+ * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * since these tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting unsigned
  * 8-bit integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, uint8_t& dest);
 /**
@@ -139,12 +130,16 @@ bool valueOf(const std::string& str, uint8_t& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython Not present.
+ * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * since these tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting short integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, short& dest);
 /**
@@ -156,13 +151,17 @@ bool valueOf(const std::string& str, short& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython Not present.
+ * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * since these tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting unsigned
  * short integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, unsigned short& dest);
 /**
@@ -174,12 +173,16 @@ bool valueOf(const std::string& str, unsigned short& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython Not present.
+ * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * since these tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, int& dest);
 /**
@@ -191,12 +194,16 @@ bool valueOf(const std::string& str, int& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython Not present.
+ * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * since these tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting unsigned integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, unsigned& dest);
 /**
@@ -208,12 +215,16 @@ bool valueOf(const std::string& str, unsigned& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython Not present.
+ * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * since these tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting long integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, long& dest);
 /**
@@ -225,13 +236,17 @@ bool valueOf(const std::string& str, long& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython Not present.
+ * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * since these tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting unsigned long
  * integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, unsigned long& dest);
 /**
@@ -243,12 +258,16 @@ bool valueOf(const std::string& str, unsigned long& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython Not present.
+ * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * since these tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting long long integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, long long& dest);
 /**
@@ -260,34 +279,45 @@ bool valueOf(const std::string& str, long long& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython Not present.
+ * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * since these tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting unsigned long long
  * integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, unsigned long long& dest);
 /**
- * Converts the entire given string to an arbitrary precision integer and
- * reports whether this conversion was successful.
+ * Deprecated routine that converts the entire given string to an arbitrary
+ * precision integer and reports whether this conversion was successful.
  *
  * The given string should contain no whitespace or other characters
  * that are not a part of the integer that the string represents.
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython Not present.
+ * \deprecated Simply use the string constructor or string assignment operator
+ * for Integer / LargeInteger (but note that these throw exceptions on error).
+ *
+ * \ifacespython Not present; instead use the Integer / LargeInteger
+ * string constructor as noted above.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting arbitrary
  * precision integer.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 template <bool supportInfinity>
-bool valueOf(const std::string& str, IntegerBase<supportInfinity>& dest);
+[[deprecated]] bool valueOf(const std::string& str,
+    IntegerBase<supportInfinity>& dest);
 /**
  * Converts the entire given string to a double precision real number and
  * reports whether this conversion was successful.
@@ -297,12 +327,16 @@ bool valueOf(const std::string& str, IntegerBase<supportInfinity>& dest);
  * If any unexpected characters are encountered, the routine will convert
  * the string as best it can but \c false will be returned.
  *
- * \ifacespython Not present.
+ * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * since these tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting real number.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, double& dest);
 /**
@@ -316,50 +350,87 @@ bool valueOf(const std::string& str, double& dest);
  * Otherwise the conversion will be unsuccessful and argument \a dest will
  * be set to \c false.
  *
- * \ifacespython Not present.
+ * \ifacespython None of Regina's valueOf() functions are wrapped in Python,
+ * since these tailored to the many different native C++ numeric types.
+ * Instead, use Python's own native string-to-number mechanisms.
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting boolean.
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, bool& dest);
 /**
  * Converts the entire given string to a set of booleans and reports whether
  * this conversion was successful.
  *
- * A set of booleans is represented by one of the four strings
- * <tt>--</tt>, <tt>T-</tt>, <tt>-F</tt> or <tt>TF</tt>.  If the
- * conversion is unsuccessful, argument \a dest will be set to
- * the empty set and \c false will be returned.
+ * A set of booleans is represented by one of the four string codes
+ * <tt>--</tt>, <tt>T-</tt>, <tt>-F</tt> or <tt>TF</tt>, as returned by
+ * BoolSet::stringCode().  If the conversion is unsuccessful, argument
+ * \a dest will be set to the empty set and \c false will be returned.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, since none of Regina's valueOf() functions are
+ * available to Python.  Instead you can use BoolSet::setStringCode(), which
+ * performs the same task (with the minor difference that it does not change
+ * \a dest if the conversion is unsuccessful).
  *
  * @param str the string to convert.
  * @param dest the variable in which to store the resulting set of booleans.
  * @return \c true if the conversion was successful or \c false otherwise.
+ *
+ * \ingroup utilities
  */
 bool valueOf(const std::string& str, BoolSet& dest);
 
 /**
  * Decomposes the given string into tokens.
+ *
  * This is an extremely simple tokeniser; tokens are defined to be
- * separated by whitespace.
+ * separated by arbitrary blocks of whitespace.  Any leading or trailing
+ * whitespace will be ignored.
  *
  * \warning This routine treats all strings as plain ASCII.  In
  * particular, characters are examined one at a time, and the C routine
  * isspace() is used to identify whitespace.  Use it on strings with
  * international characters at your own peril.
  *
- * \ifacespython Not present.
+ * @param str the string to decompose.
+ * @return the resulting list of tokens.
+ *
+ * \ingroup utilities
+ */
+std::vector<std::string> basicTokenise(const std::string& str);
+
+/**
+ * Deprecated routine to decompose a string into tokens.
+ *
+ * This is an extremely simple tokeniser; tokens are defined to be
+ * separated by arbitrary blocks of whitespace.  Any leading or trailing
+ * whitespace will be ignored.
+ *
+ * \warning This routine treats all strings as plain ASCII.  In
+ * particular, characters are examined one at a time, and the C routine
+ * isspace() is used to identify whitespace.  Use it on strings with
+ * international characters at your own peril.
+ *
+ * \deprecated This routine has been rewritten to return the list of
+ * tokens as a std::vector.  Use that variant of basicTokenise() instead.
+ *
+ * \ifacespython Not present; instead use the one-argument variant of
+ * basicTokenise(), which returns the list of tokens.
  *
  * @param results the output iterator to which the resulting tokens will
  * be written; this must accept objects of type <tt>const std::string&</tt>.
  * @param str the string to decompose.
  * @return the number of tokens found.
+ *
+ * \ingroup utilities
  */
 template <class OutputIterator>
-unsigned basicTokenise(OutputIterator results, const std::string& str);
+[[deprecated]] unsigned basicTokenise(OutputIterator results,
+    const std::string& str);
 
 /**
  * Returns a token derived from the given string.
@@ -368,18 +439,10 @@ unsigned basicTokenise(OutputIterator results, const std::string& str);
  *
  * @param str the string on which to base the token.
  * @return the corresponding token.
- */
-std::string stringToToken(const char* str);
-
-/**
- * Returns a token derived from the given string.
- * All whitespace characters in the given string will be replaced with
- * an underscore.
  *
- * @param str the string on which to base the token.
- * @return the corresponding token.
+ * \ingroup utilities
  */
-std::string stringToToken(const std::string& str);
+std::string stringToToken(std::string str);
 
 /**
  * Converts the given C++ integer into a unicode superscript string.
@@ -392,6 +455,8 @@ std::string stringToToken(const std::string& str);
  *
  * \ifacespython This template function is instantiated in Python for types
  * \a T = \c long, as well as const references to Integer and LargeInteger.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 std::string superscript(T value);
@@ -407,11 +472,11 @@ std::string superscript(T value);
  *
  * \ifacespython This template function is instantiated in Python for types
  * \a T = \c long, as well as const references to Integer and LargeInteger.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 std::string subscript(T value);
-
-/*@}*/
 
 } // namespace regina
 

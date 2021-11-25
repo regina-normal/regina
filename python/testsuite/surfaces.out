@@ -800,7 +800,7 @@ ENUMERATION FAILED
 -------------------------------
 
 -------------------------------
-Poincaré homology sphere
+Poincare homology sphere
 Vertex surfaces (std)
 -------------------------------
 
@@ -817,7 +817,7 @@ Coordinates: Standard normal (tri-quad)
 
 
 -------------------------------
-Poincaré homology sphere
+Poincare homology sphere
 Vertex surfaces (quad)
 -------------------------------
 
@@ -833,7 +833,7 @@ Coordinates: Quad normal
 
 
 -------------------------------
-Poincaré homology sphere
+Poincare homology sphere
 Vertex surfaces (std almost normal)
 -------------------------------
 
@@ -865,7 +865,7 @@ Coordinates: Standard almost normal (tri-quad-oct)
 
 
 -------------------------------
-Poincaré homology sphere
+Poincare homology sphere
 Vertex surfaces (quad-oct almost normal)
 -------------------------------
 
@@ -906,7 +906,7 @@ ENUMERATION FAILED
 -------------------------------
 
 -------------------------------
-Poincaré homology sphere
+Poincare homology sphere
 Fundamental surfaces (std)
 -------------------------------
 
@@ -923,7 +923,7 @@ Coordinates: Standard normal (tri-quad)
 
 
 -------------------------------
-Poincaré homology sphere
+Poincare homology sphere
 Fundamental surfaces (quad)
 -------------------------------
 
@@ -939,7 +939,7 @@ Coordinates: Quad normal
 
 
 -------------------------------
-Poincaré homology sphere
+Poincare homology sphere
 Fundamental surfaces (std almost normal)
 -------------------------------
 
@@ -971,7 +971,7 @@ Coordinates: Standard almost normal (tri-quad-oct)
 
 
 -------------------------------
-Poincaré homology sphere
+Poincare homology sphere
 Fundamental surfaces (quad-oct almost normal)
 -------------------------------
 
@@ -1486,7 +1486,7 @@ Vertex surfaces (closed quad)
 
 Number of surfaces is 0
 Embedded, vertex surfaces
-Coordinates: Closed quad
+Coordinates: Closed quad (non-spun)
 
 
 -------------------------------
@@ -1496,7 +1496,7 @@ Vertex surfaces (closed quad-oct)
 
 Number of surfaces is 0
 Embedded, vertex surfaces
-Coordinates: Closed quad-oct almost normal
+Coordinates: Closed quad-oct (non-spun)
 
 
 -------------------------------
@@ -1566,7 +1566,7 @@ Fundamental surfaces (closed quad)
 
 Number of surfaces is 0
 Embedded, fundamental surfaces
-Coordinates: Closed quad
+Coordinates: Closed quad (non-spun)
 
 
 -------------------------------
@@ -1576,7 +1576,7 @@ Fundamental surfaces (closed quad-oct)
 
 Number of surfaces is 0
 Embedded, fundamental surfaces
-Coordinates: Closed quad-oct almost normal
+Coordinates: Closed quad-oct (non-spun)
 
 
 -------------------------------
@@ -2036,7 +2036,7 @@ Vertex surfaces (closed quad)
 
 Number of surfaces is 1
 Embedded, vertex surfaces
-Coordinates: Closed quad
+Coordinates: Closed quad (non-spun)
 1 1 0 0 ; 1 0 0 || 1 1 0 0 ; 1 0 0
 
 
@@ -2047,7 +2047,7 @@ Vertex surfaces (closed quad-oct)
 
 Number of surfaces is 1
 Embedded, vertex surfaces
-Coordinates: Closed quad-oct almost normal
+Coordinates: Closed quad-oct (non-spun)
 1 1 0 0 ; 1 0 0 ; 0 0 0 || 1 1 0 0 ; 1 0 0 ; 0 0 0
 
 
@@ -2116,7 +2116,7 @@ Fundamental surfaces (closed quad)
 
 Number of surfaces is 1
 Embedded, fundamental surfaces
-Coordinates: Closed quad
+Coordinates: Closed quad (non-spun)
 1 1 0 0 ; 1 0 0 || 1 1 0 0 ; 1 0 0
 
 
@@ -2127,7 +2127,7 @@ Fundamental surfaces (closed quad-oct)
 
 Number of surfaces is 1
 Embedded, fundamental surfaces
-Coordinates: Closed quad-oct almost normal
+Coordinates: Closed quad-oct (non-spun)
 1 1 0 0 ; 1 0 0 ; 0 0 0 || 1 1 0 0 ; 1 0 0 ; 0 0 0
 
 

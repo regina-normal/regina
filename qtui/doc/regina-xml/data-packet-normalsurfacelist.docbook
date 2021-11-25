@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>packet (normal surface list)</refname>
-  <refpurpose>A normal surface list packet</refpurpose>
+  <refpurpose>Replaced by &xml-surfaces;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -36,10 +36,21 @@ packet ::= (&xml-params;, &xml-surface;*,
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   In &regina;&nbsp;6.0.1 and earlier, the &xml-packet; element was used
+   to store every packet in the entire packet tree that makes up a
+   &regina; data file.
+   This page describes how the &xml-packet; element was structured when
+   storing a normal surface list.
+   Since &regina;&nbsp;7.0, each packet type has its own &xml; element;
+   in particular, normal surface lists are now stored using the
+   &xml-surfaces; element.
+  </para>
   <para>
    A <emphasis>normal surface list</emphasis>
    packet stores a list of normal surfaces in a particular

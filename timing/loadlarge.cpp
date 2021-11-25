@@ -48,11 +48,11 @@ int main(int argc, char* argv[]) {
         usage(argv[0]);
 
     bool traverse;
-    const char* file = 0;
+    const char* file = nullptr;
     if (argc == 2) {
         traverse = false;
         file = argv[1];
-    } else if (strcmp(argv[1], "-t"))
+    } else if (strcmp(argv[1], "-t") != 0)
         usage(argv[0]);
     else {
         traverse = true;
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
     }
 
     std::cout << "Loading..." << std::endl;
-    regina::Packet* tree = regina::open(file);
+    std::shared_ptr<regina::Packet> tree = regina::open(file);
     if (! tree) {
         std::cerr << "ERROR: Could not load file: " << file << std::endl;
         return 1;
@@ -68,12 +68,9 @@ int main(int argc, char* argv[]) {
 
     if (traverse) {
         std::cout << "Traversing..." << std::endl;
-        for (regina::Packet* p = tree; p; p = p->nextTreePacket())
+        for (auto p = tree; p; p = p->nextTreePacket())
             ;
     }
-
-    std::cout << "Cleaning up..." << std::endl;
-    delete tree;
 
     std::cout << "Done." << std::endl;
     return 0;

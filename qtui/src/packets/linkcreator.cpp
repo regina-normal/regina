@@ -51,6 +51,7 @@
 
 using regina::ExampleLink;
 using regina::Link;
+using regina::makePacket;
 
 namespace {
     /**
@@ -85,10 +86,10 @@ namespace {
     /**
      * Regular expressions describing different sets of parameters.
      */
-    QRegExp reTorusParams("^[^0-9\\-]*(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]*$");
+    QRegExp reTorusParams(R"(^[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]*$)");
 }
 
-LinkCreator::LinkCreator(ReginaMain* mainWindow) {
+LinkCreator::LinkCreator(ReginaMain*) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -96,7 +97,7 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     QBoxLayout* typeArea = new QHBoxLayout();//layout, 5);
     layout->addLayout(typeArea);
     QString expln = QObject::tr("Specifies what type of knot or link to create.");
-    QLabel* label = new QLabel(QObject::tr("Type of knot/link:"), ui);
+    auto* label = new QLabel(QObject::tr("Type of knot/link:"), ui);
     label->setWhatsThis(expln);
     typeArea->addWidget(label);
     type = new QComboBox(ui);
@@ -234,8 +235,8 @@ QWidget* LinkCreator::getInterface() {
     return ui;
 }
 
-regina::Packet* LinkCreator::createPacket(regina::Packet*,
-        QWidget* parentWidget) {
+std::shared_ptr<regina::Packet> LinkCreator::createPacket(
+        std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == LINK_CODE) {
         std::string use = regina::stripWhitespace(
@@ -245,12 +246,11 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
                 QObject::tr("Please type a text code into the box provided."));
             return nullptr;
         }
-        Link* ans = new Link(use);
+        auto ans = makePacket<Link>(std::in_place, use);
         if (! ans->isEmpty()) {
             ans->setLabel(use);
             return ans;
         }
-        delete ans;
         ReginaSupport::sorry(parentWidget,
             QObject::tr("I could not interpret the given text code."),
             QObject::tr("<qt>Here you can enter a knot signature, "
@@ -273,48 +273,55 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
                 "must be non-negative integers."),
                 QObject::tr("<qt>Example parameters are "
                 "<i>7,5</i>.</qt>"));
-            return 0;
+            return nullptr;
         }
 
         unsigned long p = reTorusParams.cap(1).toULong();
         unsigned long q = reTorusParams.cap(2).toULong();
 
-        return ExampleLink::torus(p, q);
+        std::ostringstream label;
+        label << "Torus(" << p << ", " << q << ')';
+        return makePacket(ExampleLink::torus(p, q), label.str().c_str());
     } else if (typeId == LINK_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_BORROMEAN:
-                return ExampleLink::borromean();
+                return makePacket(ExampleLink::borromean(), "Borromean rings");
             case EXAMPLE_CONWAY:
-                return ExampleLink::conway();
+                return makePacket(ExampleLink::conway(), "Conway knot");
             case EXAMPLE_FIGURE_EIGHT:
-                return ExampleLink::figureEight();
+                return makePacket(ExampleLink::figureEight(),
+                    "Figure eight knot");
             case EXAMPLE_GST:
-                return ExampleLink::gst();
+                return makePacket(ExampleLink::gst(),
+                    "Gompf-Scharlemann-Thompson");
             case EXAMPLE_HOPF:
-                return ExampleLink::hopf();
+                return makePacket(ExampleLink::hopf(), "Hopf link");
             case EXAMPLE_KT:
-                return ExampleLink::kinoshitaTerasaka();
+                return makePacket(ExampleLink::kinoshitaTerasaka(),
+                    "Kinoshita-Terasaka knot");
             case EXAMPLE_TREFOIL_LEFT:
-                return ExampleLink::trefoilLeft();
+                return makePacket(ExampleLink::trefoilLeft(),
+                    "Left-hand trefoil");
             case EXAMPLE_TREFOIL_RIGHT:
-                return ExampleLink::trefoilRight();
+                return makePacket(ExampleLink::trefoilRight(),
+                    "Right-hand trefoil");
             case EXAMPLE_UNKNOT:
-                return ExampleLink::unknot();
+                return makePacket(ExampleLink::unknot(), "Unknot");
             case EXAMPLE_MONSTER:
-                return ExampleLink::monster();
+                return makePacket(ExampleLink::monster(), "Monster unknot");
             case EXAMPLE_GORDIAN:
-                return ExampleLink::gordian();
+                return makePacket(ExampleLink::gordian(), "Gordian unknot");
             case EXAMPLE_WHITEHEAD:
-                return ExampleLink::whitehead();
+                return makePacket(ExampleLink::whitehead(), "Whitehead link");
         }
 
         ReginaSupport::info(parentWidget,
             QObject::tr("Please select an example knot or link."));
-        return 0;
+        return nullptr;
     }
 
     ReginaSupport::info(parentWidget,
         QObject::tr("Please select a knot/link type."));
-    return 0;
+    return nullptr;
 }
 

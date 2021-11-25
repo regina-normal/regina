@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup manifold
- * @{
- */
-
-/**
  * Represents a general lens space.
  *
  * The lens space L(\a p,\a q) is the 3-manifold you get by
@@ -61,6 +56,13 @@ namespace regina {
  * integer.
  *
  * All optional Manifold routines are implemented for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other manifold classes.
+ *
+ * \ingroup manifold
  */
 class LensSpace : public Manifold {
     private:
@@ -84,15 +86,9 @@ class LensSpace : public Manifold {
          */
         LensSpace(unsigned long newP, unsigned long newQ);
         /**
-         * Creates a clone of the given lens space.
-         *
-         * @param cloneMe the lens space to clone.
+         * Creates a new copy of the given lens space.
          */
-        LensSpace(const LensSpace& cloneMe) = default;
-        /**
-         * Destroys this lens space.
-         */
-        virtual ~LensSpace();
+        LensSpace(const LensSpace&) = default;
         /**
          * Returns the first parameter \a p of this lens space L(p,q).
          * See the class notes for details.
@@ -132,14 +128,22 @@ class LensSpace : public Manifold {
         bool operator != (const LensSpace& compare) const;
 
         /**
-         * Sets this to be a clone of the given lens space.
+         * Sets this to be a copy of the given lens space.
          *
-         * @param cloneMe the lens space to clone.
+         * @return a reference to this lens space.
          */
-        LensSpace& operator = (const LensSpace& cloneMe) = default;
+        LensSpace& operator = (const LensSpace&) = default;
 
-        Triangulation<3>* construct() const override;
-        std::optional<AbelianGroup> homology() const override;
+        /**
+         * Swaps the contents of this and the given lens space.
+         *
+         * @param other the lens space whose contents should be swapped
+         * with this.
+         */
+        void swap(LensSpace& other) noexcept;
+
+        Triangulation<3> construct() const override;
+        AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
@@ -152,15 +156,24 @@ class LensSpace : public Manifold {
         void reduce();
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given lens spaces.
+ *
+ * This global routine simply calls LensSpace::swap(); it is provided so
+ * that LensSpace meets the C++ Swappable requirements.
+ *
+ * @param a the first lens space whose contents should be swapped.
+ * @param b the second lens space whose contents should be swapped.
+ *
+ * \ingroup manifold
+ */
+void swap(LensSpace& a, LensSpace& b) noexcept;
 
 // Inline functions for LensSpace
 
 inline LensSpace::LensSpace(unsigned long newP, unsigned long newQ) :
         p_(newP), q_(newQ) {
     reduce();
-}
-inline LensSpace::~LensSpace() {
 }
 inline unsigned long LensSpace::p() const {
     return p_;
@@ -177,6 +190,15 @@ inline bool LensSpace::operator != (const LensSpace& compare) const {
 
 inline bool LensSpace::isHyperbolic() const {
     return false;
+}
+
+inline void LensSpace::swap(LensSpace& other) noexcept {
+    std::swap(p_, other.p_);
+    std::swap(q_, other.q_);
+}
+
+inline void swap(LensSpace& a, LensSpace& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

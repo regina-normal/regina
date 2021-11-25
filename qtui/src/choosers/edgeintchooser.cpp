@@ -42,8 +42,7 @@
 
 using regina::Edge;
 
-EdgeIntChooser::EdgeIntChooser(
-        regina::Triangulation<3>* tri,
+EdgeIntChooser::EdgeIntChooser(regina::PacketOf<regina::Triangulation<3>>* tri,
         int argMin, int argMax, const QString& argDesc,
         EdgeIntFilterFunc filter, QWidget* parent,
         bool autoUpdate) :
@@ -52,27 +51,25 @@ EdgeIntChooser::EdgeIntChooser(
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     if (autoUpdate)
-        tri_->listen(this);
+        tri->listen(this);
     fill();
 }
 
 std::pair<Edge<3>*, int> EdgeIntChooser::selected() {
     if (count() == 0)
-        return std::make_pair((Edge<3>*)(0), (int)(0));
+        return std::make_pair((Edge<3>*)(nullptr), (int)(0));
     int curr = currentIndex();
-    return (curr < 0 ? std::make_pair((Edge<3>*)(0), (int)(0)) : options_[curr]);
+    return (curr < 0 ? std::make_pair((Edge<3>*)(nullptr), (int)(0)) :
+        options_[curr]);
 }
 
 void EdgeIntChooser::select(regina::Edge<3>* option, int arg) {
     int index = 0;
-    std::vector<std::pair<regina::Edge<3>*, int> >::const_iterator it =
-        options_.begin();
-    while (it != options_.end()) {
-        if (it->first == option && it->second == arg) {
+    for (const auto& e : options_) {
+        if (e.first == option && e.second == arg) {
             setCurrentIndex(index);
             return;
         }
-        ++it;
         ++index;
     }
 
@@ -116,12 +113,12 @@ void EdgeIntChooser::fill() {
         for (i = argMin_; i <= argMax_; ++i)
             if ((! filter_) || (*filter_)(e, i)) {
                 addItem(description(e, i));
-                options_.push_back(std::make_pair(e, i));
+                options_.emplace_back(e, i);
             }
 }
 
 EdgeIntDialog::EdgeIntDialog(QWidget* parent,
-        regina::Triangulation<3>* tri,
+        regina::PacketOf<regina::Triangulation<3>>* tri,
         int argMin, int argMax, const QString& argDesc,
         EdgeIntFilterFunc filter,
         const QString& title,
@@ -130,15 +127,15 @@ EdgeIntDialog::EdgeIntDialog(QWidget* parent,
         QDialog(parent) {
     setWindowTitle(title);
     setWhatsThis(whatsThis);
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
-    QLabel* label = new QLabel(message);
+    auto* label = new QLabel(message);
     layout->addWidget(label);
 
     chooser = new EdgeIntChooser(tri, argMin, argMax, argDesc, filter, this);
     layout->addWidget(chooser);
 
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(
+    auto* buttonBox = new QDialogButtonBox(
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
@@ -147,7 +144,7 @@ EdgeIntDialog::EdgeIntDialog(QWidget* parent,
 }
 
 std::pair<regina::Edge<3>*, int> EdgeIntDialog::choose(QWidget* parent,
-        regina::Triangulation<3>* tri,
+        regina::PacketOf<regina::Triangulation<3>>* tri,
         int argMin, int argMax, const QString& argDesc,
         EdgeIntFilterFunc filter,
         const QString& title,
@@ -158,6 +155,6 @@ std::pair<regina::Edge<3>*, int> EdgeIntDialog::choose(QWidget* parent,
     if (dlg.exec())
         return dlg.chooser->selected();
     else
-        return std::make_pair((Edge<3>*)(0), (int)(0));
+        return std::make_pair((Edge<3>*)(nullptr), (int)(0));
 }
 

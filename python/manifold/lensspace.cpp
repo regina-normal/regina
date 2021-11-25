@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "manifold/lensspace.h"
 #include "../helpers.h"
 
@@ -40,11 +41,14 @@ void addLensSpace(pybind11::module_& m) {
     auto c = pybind11::class_<LensSpace, regina::Manifold>(m, "LensSpace")
         .def(pybind11::init<unsigned long, unsigned long>())
         .def(pybind11::init<const LensSpace&>())
+        .def("swap", &LensSpace::swap)
         .def("p", &LensSpace::p)
         .def("q", &LensSpace::q)
     ;
     // The LensSpace subclass defines its own equality tests, so we
     // should not just inherit the compare-by-pointer test from Manifold.
     regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(LensSpace&, LensSpace&))(regina::swap));
 }
 

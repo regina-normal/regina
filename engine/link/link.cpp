@@ -32,12 +32,14 @@
 
 #include "link.h"
 #include "maths/numbertheory.h"
+#include "triangulation/dim3.h"
 #include <algorithm>
 #include <sstream>
 
 namespace regina {
 
 Link::Link(const Link& cloneMe, bool cloneProps) {
+    crossings_.reserve(cloneMe.crossings_.size());
     for (Crossing* c : cloneMe.crossings_)
         crossings_.push_back(new Crossing(c->sign()));
 
@@ -50,6 +52,7 @@ Link::Link(const Link& cloneMe, bool cloneProps) {
         ++it;
     }
 
+    components_.reserve(cloneMe.components_.size());
     for (const StrandRef& comp : cloneMe.components_)
         components_.push_back(translate(comp));
 
@@ -61,29 +64,109 @@ Link::Link(const Link& cloneMe, bool cloneProps) {
     homflyAZ_ = cloneMe.homflyAZ_;
     homflyLM_ = cloneMe.homflyLM_;
     bracket_ = cloneMe.bracket_;
+    niceTreeDecomposition_ = cloneMe.niceTreeDecomposition_;
+}
+
+Link::Link(Link&& src) noexcept :
+        components_(std::move(src.components_)),
+        jones_(std::move(src.jones_)),
+        homflyLM_(std::move(src.homflyLM_)),
+        homflyAZ_(std::move(src.homflyAZ_)),
+        bracket_(std::move(src.bracket_)),
+        niceTreeDecomposition_(std::move(src.niceTreeDecomposition_)) {
+    // We need src.crossings_ to be empty, so that src's destructor does not
+    // do anything unexpected.  Ensure this by using a swap instead of a move.
+    crossings_.swap(src.crossings_);
+}
+
+Link& Link::operator = (const Link& src) {
+    if (std::addressof(src) == this)
+        return *this;
+
+    ChangeEventSpan span(*this);
+
+    for (Crossing* c : crossings_)
+        delete c;
+
+    crossings_.clear();
+    components_.clear();
+
+    crossings_.reserve(src.crossings_.size());
+    for (Crossing* c : src.crossings_)
+        crossings_.push_back(new Crossing(c->sign()));
+
+    auto it = src.crossings_.begin();
+    for (Crossing* c : crossings_) {
+        for (int i = 0; i < 2; ++i) {
+            c->next_[i] = translate((*it)->next_[i]);
+            c->prev_[i] = translate((*it)->prev_[i]);
+        }
+        ++it;
+    }
+
+    components_.reserve(src.components_.size());
+    for (const StrandRef& comp : src.components_)
+        components_.push_back(translate(comp));
+
+    // Clone properties:
+    jones_ = src.jones_;
+    homflyAZ_ = src.homflyAZ_;
+    homflyLM_ = src.homflyLM_;
+    bracket_ = src.bracket_;
+    niceTreeDecomposition_ = src.niceTreeDecomposition_;
+
+    return *this;
+}
+
+Link& Link::operator = (Link&& src) {
+    ChangeEventSpan span(*this);
+
+    // MarkedVector, pointers must eventually be destroyed:
+    crossings_.swap(src.crossings_);
+
+    // std::vector, does not own its pointers:
+    components_ = std::move(src.components_);
+
+    jones_ = std::move(src.jones_);
+    homflyLM_ = std::move(src.homflyLM_);
+    homflyAZ_ = std::move(src.homflyAZ_);
+    bracket_ = std::move(src.bracket_);
+    niceTreeDecomposition_ = std::move(src.niceTreeDecomposition_);
+
+    // Let src dispose of the original crossings in its own destructor.
+    return *this;
 }
 
 Link::Link(const std::string& description) {
-    Link* attempt;
-
-    if ((attempt = fromKnotSig(description))) {
-        swap(*attempt);
-        setLabel(description);
-    } else if ((attempt = fromOrientedGauss(description))) {
-        swap(*attempt);
-        setLabel(description);
-    } else if ((attempt = fromGauss(description))) {
-        swap(*attempt);
-        setLabel(description);
-    } else if ((attempt = fromDT(description))) {
-        swap(*attempt);
-        setLabel(description);
-    } else if ((attempt = fromPD(description))) {
-        swap(*attempt);
-        setLabel(description);
+    try {
+        *this = fromKnotSig(description);
+        return;
+    } catch (const InvalidArgument&) {
     }
 
-    delete attempt;
+    try {
+        *this = fromOrientedGauss(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
+
+    try {
+        *this = fromGauss(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
+
+    try {
+        *this = fromDT(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
+
+    try {
+        *this = fromPD(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
 }
 
 bool Link::connected(const Crossing* a, const Crossing* b) const {
@@ -94,7 +177,7 @@ bool Link::connected(const Crossing* a, const Crossing* b) const {
     size_t n = crossings_.size();
 
     bool* visited = new bool[n];
-    Crossing const** stack = new Crossing const*[n];
+    auto* stack = new Crossing const*[n];
 
     std::fill(visited, visited + n, false);
 
@@ -292,8 +375,8 @@ void Link::swap(Link& other) {
     if (&other == this)
         return;
 
-    ChangeEventSpan span1(this);
-    ChangeEventSpan span2(&other);
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
 
     // Swap core data:
     crossings_.swap(other.crossings_);
@@ -308,7 +391,7 @@ void Link::swap(Link& other) {
 }
 
 void Link::reflect() {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     for (Crossing* cross : crossings_)
         cross->sign_ = -cross->sign_;
 
@@ -316,7 +399,7 @@ void Link::reflect() {
 }
 
 void Link::reverse() {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     for (Crossing* cross : crossings_) {
         std::swap(cross->next_[0], cross->prev_[0]);
         std::swap(cross->next_[1], cross->prev_[1]);
@@ -326,7 +409,7 @@ void Link::reverse() {
 }
 
 void Link::rotate() {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     for (StrandRef& s : components_)
         s.strand_ ^= 1;
@@ -344,7 +427,7 @@ void Link::rotate() {
 }
 
 void Link::change(Crossing* c) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     for (StrandRef& s : components_)
         if (s.crossing_ == c)
@@ -384,7 +467,7 @@ void Link::change(Crossing* c) {
 }
 
 void Link::changeAll() {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     for (StrandRef& s : components_)
         s.strand_ ^= 1;
@@ -404,7 +487,7 @@ void Link::changeAll() {
 }
 
 void Link::resolve(Crossing* c) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     if (c->next_[0].crossing() == c) {
         if (c->prev_[0].crossing() == c) {
@@ -418,7 +501,7 @@ void Link::resolve(Crossing* c) {
                     break;
                 }
             // 0-crossing component #2:
-            components_.push_back(StrandRef());
+            components_.emplace_back();
 
             crossings_.erase(crossings_.begin() + c->index());
             delete c;
@@ -437,7 +520,7 @@ void Link::resolve(Crossing* c) {
                     break;
                 }
 
-            components_.push_back(StrandRef());
+            components_.emplace_back();
             crossings_.erase(crossings_.begin() + c->index());
             delete c;
         }
@@ -456,7 +539,7 @@ void Link::resolve(Crossing* c) {
                 break;
             }
 
-        components_.push_back(StrandRef());
+        components_.emplace_back();
         crossings_.erase(crossings_.begin() + c->index());
         delete c;
     } else {
@@ -471,7 +554,7 @@ void Link::resolve(Crossing* c) {
                 ++s;
 
         // See whether c belongs to one or two components.
-        std::vector<StrandRef>::iterator comp = components_.end();
+        auto comp = components_.end();
         StrandRef s = c->next_[1];
         while (s.crossing_ != c) {
             if (comp == components_.end())
@@ -521,6 +604,117 @@ void Link::resolve(Crossing* c) {
     }
 }
 
+GroupPresentation Link::group(bool simplify) const {
+    if (crossings_.empty()) {
+        // This is a zero-crossing unlink.
+        return GroupPresentation(components_.size());
+    }
+
+    // We have a non-zero number of crossings.
+    // Build the Wirtinger presentation.
+    //
+    // We start with just the generators corresponding to sections of
+    // the diagram that include crossings; we will pick up any additional
+    // generators for zero-crossing unknot components when we traverse the
+    // link shortly.
+    GroupPresentation g(crossings_.size());
+
+    // We will need to number the "over-segments" - coniguous sections
+    // of the knot that consist entirely of over-crossings.
+    // Construct a map from arc IDs to "over-segment" IDs, by traversing
+    // each component one at a time.
+    int* strandToSection = new int[2 * crossings_.size()];
+    int currSegment = 0;
+
+    for (StrandRef comp : components_) {
+        if (! comp) {
+            // This is a zero-crossing unknot component.
+            g.addGenerator();
+            continue;
+        }
+
+        // Start our traversal of each component from an under-crossing,
+        // so we are guaranteed that this is the beginning of an over-segment.
+        StrandRef start = comp;
+        if (start.strand() > 0) {
+            if (components_.size() == 1) {
+                // Just jump immediately to the under-strand at this crossing.
+                start.jump();
+            } else {
+                // There is no guarantee that the under-strand is part
+                // of the same component.  Instead, walk along the component
+                // until we find an under-strand.
+                StrandRef s = start;
+                do {
+                    ++s;
+                } while (s.strand() > 0 && s != start);
+
+                start = s;
+
+                // It is possible that we never found an under-strand.
+                // This happens when the entire component is an unknot
+                // with no self-crossings that is overlaid onto the diagram.
+                //
+                // How this affects us now is that the total number of
+                // "over-segments" (i.e., the number of generators in our
+                // group presentation) goes up by one.
+                //
+                // We will adjust this later.
+            }
+        }
+
+        StrandRef s = start;
+        do {
+            strandToSection[s.id()] = currSegment;
+            ++s;
+            if (s.strand() == 0) {
+                // We just passed under a crossing.
+                ++currSegment;
+            }
+        } while (s != start);
+
+        if (start.strand() > 0) {
+            // This is the scenario noted above where some component
+            // consists entirely of over-crossings.
+            // We need to make two adjustments:
+            //
+            // - increment currSegment, since we are about to move to a new
+            //   component but we did not increment it at the end of the
+            //   loop just now; and
+            //
+            // - increment the total number of group generators, since we
+            //   based our original count on the number of crossings, which
+            //   only counts those over-segments with start and end points.
+
+            ++currSegment;
+            g.addGenerator();
+        }
+    }
+
+    // Now build the presentation.
+    for (Crossing* c : crossings_) {
+        GroupExpression exp;
+        if (c->sign() > 0) {
+            exp.addTermLast(strandToSection[c->upper().id()], 1);
+            exp.addTermLast(strandToSection[c->lower().id()], 1);
+            exp.addTermLast(strandToSection[c->upper().id()], -1);
+            exp.addTermLast(strandToSection[c->lower().prev().id()], -1);
+        } else {
+            exp.addTermLast(strandToSection[c->upper().id()], 1);
+            exp.addTermLast(strandToSection[c->lower().prev().id()], 1);
+            exp.addTermLast(strandToSection[c->upper().id()], -1);
+            exp.addTermLast(strandToSection[c->lower().id()], -1);
+        }
+        g.addRelation(std::move(exp));
+    }
+
+    delete[] strandToSection;
+
+    if (simplify)
+        g.intelligentSimplify();
+    return g;
+}
+
 std::string Link::brief() const {
     if (components_.empty())
         return std::string();
@@ -563,7 +757,7 @@ void Link::composeWith(const Link& other) {
     if (other.isEmpty())
         return;
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
     // From here we can assume other is non-empty.
     // Clone its crossings, and transfer them directly into this link.
@@ -610,17 +804,17 @@ void Link::composeWith(const Link& other) {
     clearAllProperties();
 }
 
-Link* Link::parallel(int k, Framing framing) const {
+Link Link::parallel(int k, Framing framing) const {
     // Get the special cases out of the way.
     if (k == 0 || components_.empty())
-        return new Link;
+        return Link();
     if (k == 1)
-        return new Link(*this);
+        return Link(*this);
     if (crossings_.empty())
-        return new Link(components_.size() * k);
+        return Link(components_.size() * k);
 
-    Link* ans = new Link;
-    Crossing** tmp = new Crossing*[k*k]; // Used to build grids of crossings
+    Link ans;
+    auto* tmp = new Crossing*[k*k]; // Used to build grids of crossings
 
     // Crossing i of knot:
     //
@@ -641,7 +835,7 @@ Link* Link::parallel(int k, Framing framing) const {
     int i, j;
     for (Crossing* c : crossings_) {
         for (i = 0; i < k * k; ++i)
-            ans->crossings_.push_back(tmp[i] = new Crossing(c->sign()));
+            ans.crossings_.push_back(tmp[i] = new Crossing(c->sign()));
 
         for (i = 0; i < k; ++i)
             for (j = 0; j < k - 1; ++j)
@@ -672,7 +866,7 @@ Link* Link::parallel(int k, Framing framing) const {
         if (! start) {
             // This component is a 0-crossing unknot.
             for (i = 0; i < k; ++i)
-                ans->components_.push_back(StrandRef());
+                ans.components_.emplace_back();
             continue;
         }
 
@@ -704,9 +898,9 @@ Link* Link::parallel(int k, Framing framing) const {
             if (exitL >= 0) {
                 for (i = 0; i < k; ++i)
                     Link::join(
-                        ans->crossings_[exitL + i * exitDelta]->
+                        ans.crossings_[exitL + i * exitDelta]->
                             strand(exitStrand),
-                        ans->crossings_[enterL + i * enterDelta]->
+                        ans.crossings_[enterL + i * enterDelta]->
                             strand(enterStrand));
             } else {
                 startL = enterL;
@@ -736,9 +930,9 @@ Link* Link::parallel(int k, Framing framing) const {
             // Close up the k new parallel link components.
             for (i = 0; i < k; ++i)
                 Link::join(
-                    ans->crossings_[exitL + i * exitDelta]->
+                    ans.crossings_[exitL + i * exitDelta]->
                         strand(exitStrand),
-                    ans->crossings_[startL + i * startDelta]->
+                    ans.crossings_[startL + i * startDelta]->
                         strand(startStrand));
         } else if (writhe > 0) {
             // We want the Seifert framing, and the writhe is positive.
@@ -746,29 +940,29 @@ Link* Link::parallel(int k, Framing framing) const {
             // before closing off the k parallel link components.
             for (i = 0; i < writhe * k; ++i) {
                 for (j = 0; j < k - 1; ++j)
-                    ans->crossings_.push_back(tmp[j] = new Crossing(-1));
+                    ans.crossings_.push_back(tmp[j] = new Crossing(-1));
 
                 for (j = 0; j < k - 2; ++j)
                     Link::join(tmp[j]->lower(), tmp[j + 1]->lower());
 
                 if (i == 0) {
                     Link::join(
-                        ans->crossings_[exitL]->strand(exitStrand),
+                        ans.crossings_[exitL]->strand(exitStrand),
                         tmp[0]->lower());
                     for (j = 1; j < k; ++j)
                         Link::join(
-                            ans->crossings_[exitL + j * exitDelta]->
+                            ans.crossings_[exitL + j * exitDelta]->
                                 strand(exitStrand),
                             tmp[j - 1]->upper());
                 } else {
                     Link::join(
-                        ans->crossings_[exitL]->upper(), tmp[0]->lower());
+                        ans.crossings_[exitL]->upper(), tmp[0]->lower());
                     for (j = 1; j < k - 1; ++j)
                         Link::join(
-                            ans->crossings_[exitL + j]->upper(),
+                            ans.crossings_[exitL + j]->upper(),
                             tmp[j - 1]->upper());
                     Link::join(
-                        ans->crossings_[exitL + (k - 2)]->lower(),
+                        ans.crossings_[exitL + (k - 2)]->lower(),
                         tmp[k - 2]->upper());
                 }
 
@@ -777,12 +971,12 @@ Link* Link::parallel(int k, Framing framing) const {
 
             for (j = 0; j < k - 1; ++j)
                 Link::join(
-                    ans->crossings_[exitL + j]->upper(),
-                    ans->crossings_[startL + j * startDelta]->
+                    ans.crossings_[exitL + j]->upper(),
+                    ans.crossings_[startL + j * startDelta]->
                         strand(startStrand));
             Link::join(
-                ans->crossings_[exitL + (k - 2)]->lower(),
-                ans->crossings_[startL + (k - 1) * startDelta]->
+                ans.crossings_[exitL + (k - 2)]->lower(),
+                ans.crossings_[startL + (k - 1) * startDelta]->
                     strand(startStrand));
         } else {
             // We want the Seifert framing, and the writhe is negative.
@@ -790,29 +984,29 @@ Link* Link::parallel(int k, Framing framing) const {
             // before closing off the k parallel link components.
             for (i = 0; i < (-writhe) * k; ++i) {
                 for (j = 0; j < k - 1; ++j)
-                    ans->crossings_.push_back(tmp[j] = new Crossing(1));
+                    ans.crossings_.push_back(tmp[j] = new Crossing(1));
 
                 for (j = 0; j < k - 2; ++j)
                     Link::join(tmp[j]->upper(), tmp[j + 1]->upper());
 
                 if (i == 0) {
                     Link::join(
-                        ans->crossings_[exitL]->strand(exitStrand),
+                        ans.crossings_[exitL]->strand(exitStrand),
                         tmp[0]->upper());
                     for (j = 1; j < k; ++j)
                         Link::join(
-                            ans->crossings_[exitL + j * exitDelta]->
+                            ans.crossings_[exitL + j * exitDelta]->
                                 strand(exitStrand),
                             tmp[j - 1]->lower());
                 } else {
                     Link::join(
-                        ans->crossings_[exitL]->lower(), tmp[0]->upper());
+                        ans.crossings_[exitL]->lower(), tmp[0]->upper());
                     for (j = 1; j < k - 1; ++j)
                         Link::join(
-                            ans->crossings_[exitL + j]->lower(),
+                            ans.crossings_[exitL + j]->lower(),
                             tmp[j - 1]->lower());
                     Link::join(
-                        ans->crossings_[exitL + (k - 2)]->upper(),
+                        ans.crossings_[exitL + (k - 2)]->upper(),
                         tmp[k - 2]->lower());
                 }
 
@@ -821,19 +1015,19 @@ Link* Link::parallel(int k, Framing framing) const {
 
             for (j = 0; j < k - 1; ++j)
                 Link::join(
-                    ans->crossings_[exitL + j]->lower(),
-                    ans->crossings_[startL + j * startDelta]->
+                    ans.crossings_[exitL + j]->lower(),
+                    ans.crossings_[startL + j * startDelta]->
                         strand(startStrand));
             Link::join(
-                ans->crossings_[exitL + (k - 2)]->upper(),
-                ans->crossings_[startL + (k - 1) * startDelta]->
+                ans.crossings_[exitL + (k - 2)]->upper(),
+                ans.crossings_[startL + (k - 1) * startDelta]->
                     strand(startStrand));
         }
 
         // Take note of the k new link components.
         for (i = 0; i < k; ++i)
-            ans->components_.push_back(
-                ans->crossings_[startL + i * startDelta]->
+            ans.components_.push_back(
+                ans.crossings_[startL + i * startDelta]->
                     strand(startStrand));
     }
 
@@ -845,20 +1039,7 @@ Link* Link::parallel(int k, Framing framing) const {
 std::string Link::dumpConstruction() const {
     std::ostringstream out;
 
-    out <<
-"/**\n";
-    if (! label().empty()) {
-        out <<
-" * Link: " << label() << "\n";
-    } else {
-        out <<
-" * Link:\n";
-    }
-    out <<
-" * Code automatically generated by dumpConstruction().\n"
-" */\n"
-"\n"
-"Link* link = Link::fromData(";
+    out << "Link link = Link::fromData(";
 
     out << "{ ";
     if (crossings_.empty())
@@ -897,21 +1078,6 @@ std::string Link::dumpConstruction() const {
     return out.str();
 }
 
-void Link::writeXMLPacketData(std::ostream& out) const {
-    out << "  <crossings size=\"" << crossings_.size() << "\">\n ";
-    for (const Crossing* c : crossings_)
-        out << ' ' << (c->sign() == 1 ? '+' : '-');
-    out << "\n  </crossings>\n";
-    out << "  <connections>\n";
-    for (const Crossing* c : crossings_)
-        out << "  " << c->next_[1] << ' ' << c->next_[0] << '\n';
-    out << "  </connections>\n";
-    out << "  <components size=\"" << components_.size() << "\">\n ";
-    for (const StrandRef& s : components_)
-        out << ' ' << s;
-    out << "\n  </components>\n";
-}
-
 std::string Link::pace() const {
     std::ostringstream out;
     writePACE(out);
@@ -919,8 +1085,8 @@ std::string Link::pace() const {
 }
 
 void Link::writePACE(std::ostream& out) const {
-    if (! label().empty())
-        out << "c " << label() << std::endl;
+    // if (! label().empty())
+    //     out << "c " << label() << std::endl;
     out << "p tw " << size() << ' ' << (size() * 2) << std::endl;
 
     int i;
@@ -984,22 +1150,22 @@ void Link::insertTorusLink(int p, int q, bool positive) {
 
     // We have p >= q.
     if (q == 0) {
-        ChangeEventSpan span(this);
+        ChangeEventSpan span(*this);
         if (p == 0) {
             // Insert a single unknot.
-            components_.push_back({});
+            components_.emplace_back();
         } else {
             // Insert p disjoint unknots.
             for (int i = 0; i < p; ++i)
-                components_.push_back({});
+                components_.emplace_back();
         }
         clearAllProperties();
         return;
     }
     if (q == 1) {
         // Insert a single unknot.
-        ChangeEventSpan span(this);
-        components_.push_back({});
+        ChangeEventSpan span(*this);
+        components_.emplace_back();
         clearAllProperties();
         return;
     }
@@ -1010,9 +1176,9 @@ void Link::insertTorusLink(int p, int q, bool positive) {
     int n = p * (q - 1);
     int nComp = regina::gcd(p, q);
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
-    Crossing** c = new Crossing*[n];
+    auto* c = new Crossing*[n];
     int i;
     for (i = 0; i < n; ++i) {
         c[i] = new Crossing(positive ? 1 : -1);
@@ -1031,7 +1197,7 @@ void Link::insertTorusLink(int p, int q, bool positive) {
         join({c[sliceIdx + q - 2], 1}, {c[nextIdx + q - 2], 0});
 
         if (slice < nComp)
-            components_.push_back({c[sliceIdx], 1});
+            components_.emplace_back(c[sliceIdx], 1);
     }
 
     delete[] c;

@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  fileformat.cpp
   fileinfo.cpp
   globaldirs.cpp
   pyfile.cpp

@@ -37,8 +37,6 @@
 
 using regina::Packet;
 
-typedef std::list<std::string> StringList;
-
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
         std::cerr << error << "\n\n";
@@ -77,16 +75,16 @@ void dumpNoPacket(std::ostream& out, const std::string& packetLabel,
     }
 }
 
-void dumpPacketHeader(std::ostream& out, Packet* p) {
+void dumpPacketHeader(std::ostream& out, const Packet& p) {
     out << separator << '\n';
     out << "*\n";
-    out << "* Label: " << p->humanLabel() << '\n';
-    out << "* Type: " << p->typeName() << '\n';
-    out << "* Parent: " << (p->parent() ?
-        p->parent()->humanLabel() : "(none)") << '\n';
-    if (p->hasTags()) {
+    out << "* Label: " << p.humanLabel() << '\n';
+    out << "* Type: " << p.typeName() << '\n';
+    out << "* Parent: " << (p.parent() ?
+        p.parent()->humanLabel() : "(none)") << '\n';
+    if (p.hasTags()) {
         out << "* Tags: ";
-        const std::set<std::string>& tags = p->tags();
+        const std::set<std::string>& tags = p.tags();
         for (auto it = tags.begin(); it != tags.end(); it++) {
             if (it != tags.begin())
                 out << ", ";
@@ -98,20 +96,20 @@ void dumpPacketHeader(std::ostream& out, Packet* p) {
     out << separator << '\n';
 }
 
-void dumpPacket(std::ostream& out, Packet* p, char dumpOpt) {
+void dumpPacket(std::ostream& out, const Packet& p, char dumpOpt) {
     if (dumpOpt == 'l')
-        out << p->fullName() << '\n';
+        out << p.fullName() << '\n';
     else if (dumpOpt == 'f') {
         dumpPacketHeader(out, p);
         out << '\n';
-        out << p->detail() << '\n';
+        out << p.detail() << '\n';
         out << '\n';
     }
 }
 
 int main(int argc, char* argv[]) {
     std::string file;
-    StringList packets;
+    std::list<std::string> packets;
     char dumpOpt = 0;
     bool count = false;
 
@@ -142,7 +140,7 @@ int main(int argc, char* argv[]) {
             if (file.empty())
                 file = argv[i];
             else
-                packets.push_back(argv[i]);
+                packets.emplace_back(argv[i]);
         } else
             usage(argv[0], "Empty arguments are not allowed.");
     }
@@ -166,7 +164,7 @@ int main(int argc, char* argv[]) {
         "UTF-8", regina::i18n::Locale::codeset());
 
     // Do the actual work.
-    Packet* tree = regina::open(file.c_str());
+    std::shared_ptr<Packet> tree = regina::open(file.c_str());
     if (! tree) {
         std::cerr << "File " << file << " could not be read.\n";
         return 1;
@@ -174,16 +172,14 @@ int main(int argc, char* argv[]) {
 
     if (dumpOpt != 'n') {
         if (packets.empty())
-            for (Packet* p : *tree)
+            for (const Packet& p : *tree)
                 dumpPacket(out, p, dumpOpt);
         else
-            for (StringList::const_iterator it = packets.begin();
-                    it != packets.end(); it++) {
-                Packet* p = tree->findPacketLabel(*it);
-                if (p)
-                    dumpPacket(out, p, dumpOpt);
+            for (const auto& label : packets) {
+                if (auto p = tree->findPacketLabel(label))
+                    dumpPacket(out, *p, dumpOpt);
                 else
-                    dumpNoPacket(out, *it, dumpOpt);
+                    dumpNoPacket(out, label, dumpOpt);
             }
     }
 
@@ -193,7 +189,6 @@ int main(int argc, char* argv[]) {
         out << tree->totalTreeSize() << " total packets in file.\n";
     }
 
-    delete tree;
     return 0;
 }
 

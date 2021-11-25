@@ -15,14 +15,15 @@
 
  <refsynopsisdiv>
   <informaltable frame="all">
-   <tgroup cols="2">
+   <tgroup cols="3">
     <colspec colname="c1"/>
     <colspec colname="c2"/>
+    <colspec colname="c3"/>
     <tbody>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
       <emphasis role="bold">Content Model</emphasis>
      </entry></row>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
 <synopsis>
 surface ::= (#PCDATA,
              &xml-compact-surface;?,
@@ -30,20 +31,28 @@ surface ::= (#PCDATA,
              &xml-orbl-surface;?, &xml-realbdry-surface;?,
              &xml-twosided;?)</synopsis>
      </entry></row>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
       <emphasis role="bold">Attributes</emphasis>
      </entry></row>
      <row>
       <entry><emphasis role="bold">Name</emphasis></entry>
       <entry><emphasis role="bold">Type</emphasis></entry>
+      <entry><emphasis role="bold">Version</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>enc</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+      <entry>&attraddedver;7.0</entry>
      </row>
      <row>
       <entry><sgmltag>len</sgmltag></entry>
       <entry><type>NUMBER</type> (required)</entry>
+      <entry></entry>
      </row>
      <row>
       <entry><sgmltag>name</sgmltag></entry>
       <entry><type>CDATA</type></entry>
+      <entry></entry>
      </row>
     </tbody>
    </tgroup>
@@ -59,13 +68,22 @@ surface ::= (#PCDATA,
   <para>
    A normal surface in a <replaceable>T</replaceable>-tetrahedron
    triangulation is traditionally represented by a vector of integers, whose
-   length depends upon the underlying coordinate system.  For instance, under
-   standard tri-quad coordinates the vector will have length
-   7<replaceable>T</replaceable>, and under quad coordinates it will
-   have length 3<replaceable>T</replaceable>.  The underlying coordinate
-   system is specified in the &xml-params; element of the parent
-   &xml-packet-normalsurfacelist;.
+   length depends upon the specific vector encoding being used (which in
+   turn depends upon the underlying coordinate system).  For instance,
+   a vector encoded in standard tri-quad coordinates will have length
+   7<replaceable>T</replaceable>, and a vector encoded in quad coordinates
+   will have length 3<replaceable>T</replaceable>.
   </para>
+  <warning>
+   <para>
+    Since &regina;&nbsp;7.0, the specific vector encoding being used is now
+    explicitly specified in the <sgmltag>enc</sgmltag> attribute.
+    This might or might not be deducible from the coordinate system
+    specified in the parent &xml-surfaces;.
+    The parent list's coordinate system should only be used as a fallback if
+    the <sgmltag>enc</sgmltag> attribute is not present.
+   </para>
+  </warning>
   <para>
    The normal surface vector is stored as the character data of this
    &xml; element as follows.
@@ -83,7 +101,7 @@ surface ::= (#PCDATA,
    <para>
     The following elements contain <sgmltag>surface</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-normalsurfacelist;</member>
+     <member>&xml-surfaces;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -108,12 +126,23 @@ surface ::= (#PCDATA,
   <title>Attributes</title>
   <variablelist>
    <varlistentry>
+    <term><sgmltag>enc</sgmltag></term>
+    <listitem>
+     <para>
+      The specific vector encoding used to represent this normal surface.
+      This will be given as an opaque integer; it is not meant to be
+      interpreted manually, but instead should be passed to Regina's
+      <function>NormalEncoding::fromIntValue()</function> function.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
     <term><sgmltag>len</sgmltag></term>
     <listitem>
      <para>
       The length of the underlying normal surface vector.
-      This depends upon the coordinate system in which the normal
-      surface was originally generated.
+      This depends upon both the underlying triangulation and the
+      specific vector encoding being used.
      </para>
     </listitem>
    </varlistentry>
@@ -146,7 +175,7 @@ surface ::= (#PCDATA,
    compact, connected, orientable and two-sided.
   </para>
   <programlisting>
-&lt;surface len=&quot;28&quot;&gt; 5 2 9 1 10 1 11 1 14 1 15 1 18 1 26 2
+&lt;surface enc=&quot;279&quot; len=&quot;28&quot;&gt; 5 2 9 1 10 1 11 1 14 1 15 1 18 1 26 2
     &lt;euler value=&quot;-2&quot;/&gt;
     &lt;realbdry value=&quot;T&quot;/&gt;
     &lt;compact value=&quot;T&quot;/&gt;

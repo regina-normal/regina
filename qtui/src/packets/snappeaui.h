@@ -40,7 +40,6 @@
 #include "packet/packet.h"
 #include "../packettabui.h"
 
-class ClickableLabel;
 class SnapPeaAlgebraUI;
 class SnapPeaGluingsUI;
 class SnapPeaShapesUI;
@@ -74,44 +73,42 @@ class SnapPeaUI : public PacketTabbedUI {
         /**
          * Constructor and destructor.
          */
-        SnapPeaUI(regina::SnapPeaTriangulation* packet,
+        SnapPeaUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
             PacketPane* newEnclosingPane);
-        ~SnapPeaUI();
+        ~SnapPeaUI() override;
 
         /**
          * PacketUI overrides.
          */
-        PacketEditIface* getEditIface();
-        const std::vector<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
+        PacketEditIface* getEditIface() override;
+        const std::vector<QAction*>& getPacketTypeActions() override;
+        QString getPacketMenuText() const override;
 };
 
 /**
  * A header for the SnapPea triangulation viewer.
  */
-class SnapPeaHeaderUI : public QObject, public PacketViewerTab,
-        public regina::PacketListener {
+class SnapPeaHeaderUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
         /**
          * Packet details
          */
-        regina::SnapPeaTriangulation* tri;
+        regina::PacketOf<regina::SnapPeaTriangulation>* tri;
 
         /**
          * Internal components
          */
         QWidget* ui;
         QLabel* header;
-        ClickableLabel* locked;
         QToolBar* bar;
 
     public:
         /**
          * Constructor.
          */
-        SnapPeaHeaderUI(regina::SnapPeaTriangulation* packet,
+        SnapPeaHeaderUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
                 PacketTabbedUI* useParentUI);
 
         /**
@@ -127,34 +124,9 @@ class SnapPeaHeaderUI : public QObject, public PacketViewerTab,
         void refresh() override;
 
         /**
-         * PacketListener overrides.
-         */
-        void childWasAdded(regina::Packet* packet, regina::Packet* child)
-            override;
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
-            override;
-
-        /**
          * Allow other UIs to access the summary information.
          */
         static QString summaryInfo(regina::SnapPeaTriangulation* tri);
-
-    public slots:
-        /**
-         * Explain to the user what the padlock means.
-         */
-        void lockedExplanation();
-
-    protected:
-        /**
-         * Update the state of the padlock.
-         */
-        void refreshLock();
-
-        /**
-         * Allow GUI updates from a non-GUI thread.
-         */
-        void customEvent(QEvent* event) override;
 };
 
 inline PacketEditIface* SnapPeaUI::getEditIface() {

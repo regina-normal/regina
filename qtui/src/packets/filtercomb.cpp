@@ -53,8 +53,6 @@ using regina::SurfaceFilterCombination;
 
 FilterCombUI::FilterCombUI(SurfaceFilterCombination* packet,
         PacketPane* enclosingPane) : PacketUI(enclosingPane), filter(packet) {
-    bool readWrite = enclosingPane->isReadWrite();
-
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
 
@@ -65,7 +63,7 @@ FilterCombUI::FilterCombUI(SurfaceFilterCombination* packet,
     layout->addLayout(typeLayout);
     typeLayout->addStretch(1);
 
-    QLabel* label = new QLabel(tr("Combine using:"), ui);
+    auto* label = new QLabel(tr("Combine using:"), ui);
     label->setWhatsThis(tr("Specifies whether this combination "
         "filter will use boolean AND or boolean OR to combine its "
         "children."));
@@ -75,13 +73,11 @@ FilterCombUI::FilterCombUI(SurfaceFilterCombination* packet,
     QBoxLayout* typeOptionLayout = new QVBoxLayout();
     typeLayout->addLayout(typeOptionLayout);
     typeAnd = new QRadioButton(tr("AND (passes all)"), ui);
-    typeAnd->setEnabled(readWrite);
     typeAnd->setWhatsThis(tr("Combine the children of this filter "
         "using boolean AND.  A surface will pass this filter only when "
         "it passes every one of the child filters."));
     typeOptionLayout->addWidget(typeAnd);
     typeOr = new QRadioButton(tr("OR (passes any)"), ui);
-    typeOr->setEnabled(readWrite);
     typeOr->setWhatsThis(tr("Combine the children of this filter "
         "using boolean OR.  A surface will pass this filter only when "
         "it passes at least one of the child filters."));
@@ -107,7 +103,7 @@ FilterCombUI::FilterCombUI(SurfaceFilterCombination* packet,
 
     wideChildLayout->addStretch(1);
 
-    QVBoxLayout* childLayout = new QVBoxLayout();
+    auto* childLayout = new QVBoxLayout();
     wideChildLayout->addLayout(childLayout, 2);
 
     label = new QLabel(tr("Filters to be combined\n"
@@ -171,28 +167,23 @@ void FilterCombUI::refresh() {
     boolType->button(filter->usesAnd() ? ID_AND : ID_OR)->setChecked(true);
 }
 
-void FilterCombUI::setReadWrite(bool readWrite) {
-    typeAnd->setEnabled(readWrite);
-    typeOr->setEnabled(readWrite);
-}
-
-void FilterCombUI::packetWasRenamed(Packet* p) {
-    if (p->parent() == filter)
+void FilterCombUI::packetWasRenamed(Packet& p) {
+    if (p.parent().get() == filter)
         refreshChildList();
 }
 
-void FilterCombUI::childWasAdded(Packet* p, Packet*) {
-    if (p == filter)
+void FilterCombUI::childWasAdded(Packet& p, Packet&) {
+    if (std::addressof(p) == filter)
         refreshChildList();
 }
 
-void FilterCombUI::childWasRemoved(Packet* p, Packet*) {
-    if (p == filter)
+void FilterCombUI::childWasRemoved(Packet& p, Packet&) {
+    if (std::addressof(p) == filter)
         refreshChildList();
 }
 
-void FilterCombUI::childrenWereReordered(Packet* p) {
-    if (p == filter)
+void FilterCombUI::childrenWereReordered(Packet& p) {
+    if (std::addressof(p) == filter)
         refreshChildList();
 }
 
@@ -205,9 +196,9 @@ void FilterCombUI::refreshChildList() {
 
     // Add the items in reverse order since the QListViewItem
     // constructor puts new items at the front.
-    for (regina::Packet* p = filter->firstChild(); p; p = p->nextSibling())
+    for (auto p = filter->firstChild(); p; p = p->nextSibling())
         if (p->type() == regina::PACKET_SURFACEFILTER) {
-            new QListWidgetItem(PacketManager::icon(p),
+            new QListWidgetItem(PacketManager::icon(*p),
                 p->humanLabel().c_str(), children);
 
             // Listen for renaming events.  We won't ever call

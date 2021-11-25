@@ -35,6 +35,7 @@
 #define __REGINA_MATRIX2_H
 #endif
 
+#include <array>
 #include <iostream>
 #include "regina-core.h"
 
@@ -45,22 +46,23 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
- * Represents a 2-by-2 integer matrix.  The advantages of using this
- * class over the larger MatrixInt and friends is that this class has
- * less overhead and offers additional mathematical support routines
- * that the larger classes do not.
+ * Represents a 2-by-2 integer matrix.  The advantage of using this class
+ * over the larger Matrix class template (e.g., MatrixInt) is that this class
+ * has less overhead.
  *
  * This class only contains four long integers, and so it may be considered
  * small enough to pass about by value.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the Matrix classes.
+ *
+ * \ingroup maths
  */
 class Matrix2 {
     private:
-        long data[2][2];
+        std::array<std::array<long, 2>, 2> data_;
             /**< The four entries in this matrix, indexed by row and
                  then by column. */
 
@@ -71,21 +73,23 @@ class Matrix2 {
         Matrix2();
         /**
          * Initialises to a copy of the given matrix.
-         *
-         * @param cloneMe the matrix to be copied.
          */
-        Matrix2(const Matrix2& cloneMe);
+        Matrix2(const Matrix2&) = default;
         /**
-         * Initialises to the given integer values.
+         * Deprecated constructor that initialises to the given integer values.
          *
          * Each given integer <tt>values[r][c]</tt> will be placed in
          * row \a r, column \a c.
          *
-         * \ifacespython Not present.
+         * \deprecated This class aims to remove its reliance on raw
+         * C-style arrays, and so this constructor will be removed at some
+         * point in the future.  Use the four-argument constructor instead.
+         *
+         * \ifacespython Not present; use the four-argument constructor instead.
          *
          * @param values the four values to insert into the new matrix.
          */
-        Matrix2(const long values[2][2]);
+        [[deprecated]] Matrix2(const long values[2][2]);
         /**
          * Initialises to the given integer values.
          *
@@ -99,22 +103,31 @@ class Matrix2 {
         /**
          * Sets this matrix to be a copy of the given matrix.
          *
-         * @param cloneMe the matrix to be copied.
          * @return a reference to this matrix.
          */
-        Matrix2& operator = (const Matrix2& cloneMe);
+        Matrix2& operator = (const Matrix2&) = default;
         /**
-         * Sets the elements of this matrix to the given integer values.
+         * Deprecated routine that sets the elements of this matrix to the
+         * given integer values.
          *
          * Each given integer <tt>values[r][c]</tt> will be placed in
          * row \a r, column \a c.
          *
-         * \ifacespython Not present.
+         * \deprecated This class aims to remove its reliance on raw
+         * C-style arrays, and so this operator will be removed at
+         * some point in the future.
          *
          * @param values the four values to copy into this matrix.
          * @return a reference to this matrix.
          */
-        Matrix2& operator = (const long values[2][2]);
+        [[deprecated]] Matrix2& operator = (const long values[2][2]);
+
+        /**
+         * Swaps the contents of this and the given matrix.
+         *
+         * @param other the matrix whose contents should be swapped with this.
+         */
+        void swap(Matrix2& other) noexcept;
 
         /**
          * Returns a single row of this matrix.
@@ -127,7 +140,7 @@ class Matrix2 {
          * @return a two-integer array containing the elements of the
          * requested row.
          */
-        const long* operator [] (unsigned row) const;
+        const std::array<long, 2>& operator [] (unsigned row) const;
         /**
          * Returns a single row of this matrix.
          *
@@ -139,7 +152,7 @@ class Matrix2 {
          * @return a two-integer array containing the elements of the
          * requested row.
          */
-        long* operator [] (unsigned row);
+        std::array<long, 2>& operator [] (unsigned row);
 
         /**
          * Calculates the matrix product of this and the given matrix.
@@ -289,6 +302,19 @@ class Matrix2 {
 };
 
 /**
+ * Swaps the contents of the two given matrices.
+ *
+ * This global routine simply calls Matrix2::swap(); it is provided so
+ * that Matrix2 meets the C++ Swappable requirements.
+ *
+ * @param a the first matrix whose contents should be swapped.
+ * @param b the second matrix whose contents should be swapped.
+ *
+ * \ingroup maths
+ */
+void swap(Matrix2& a, Matrix2& b) noexcept;
+
+/**
  * Writes the given matrix to the given output stream.  The matrix will
  * be written entirely on a single line, with the first row followed by the
  * second row.
@@ -296,6 +322,8 @@ class Matrix2 {
  * @param out the output stream to which to write.
  * @param mat the matrix to write.
  * @return a reference to \a out.
+ *
+ * \ingroup maths
  */
 std::ostream& operator << (std::ostream& out, const Matrix2& mat);
 
@@ -310,6 +338,8 @@ std::ostream& operator << (std::ostream& out, const Matrix2& mat);
  * @return \c true if \a m1 is deemed to be more pleasing than \a m2,
  * or \c false if either the matrices are equal or \a m2 is more
  * pleasing than \a m1.
+ *
+ * \ingroup maths
  */
 bool simpler(const Matrix2& m1, const Matrix2& m2);
 
@@ -329,139 +359,130 @@ bool simpler(const Matrix2& m1, const Matrix2& m2);
  * @return \c true if the first pair is deemed to be more pleasing than
  * the second pair, or \c false if either the ordered pairs are equal or
  * the second pair is more pleasing than the first.
+ *
+ * \ingroup maths
  */
 bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
         const Matrix2& pair2first, const Matrix2& pair2second);
 
-/*@}*/
-
 // Inline functions for Matrix2
 
-inline Matrix2::Matrix2() {
-    data[0][0] = data[0][1] = data[1][0] = data[1][1] = 0;
+inline Matrix2::Matrix2() : data_ {{{ 0, 0 }, { 0, 0 }}} {
 }
 
-inline Matrix2::Matrix2(const Matrix2& cloneMe) {
-    data[0][0] = cloneMe.data[0][0]; data[0][1] = cloneMe.data[0][1];
-    data[1][0] = cloneMe.data[1][0]; data[1][1] = cloneMe.data[1][1];
+inline Matrix2::Matrix2(const long values[2][2]) :
+        data_ {{{ values[0][0], values[0][1] },
+                { values[1][0], values[1][1] }}} {
 }
 
-inline Matrix2::Matrix2(const long values[2][2]) {
-    data[0][0] = values[0][0]; data[0][1] = values[0][1];
-    data[1][0] = values[1][0]; data[1][1] = values[1][1];
-}
-
-inline Matrix2::Matrix2(long val00, long val01, long val10, long val11) {
-    data[0][0] = val00; data[0][1] = val01;
-    data[1][0] = val10; data[1][1] = val11;
-}
-
-inline Matrix2& Matrix2::operator = (const Matrix2& cloneMe) {
-    data[0][0] = cloneMe.data[0][0]; data[0][1] = cloneMe.data[0][1];
-    data[1][0] = cloneMe.data[1][0]; data[1][1] = cloneMe.data[1][1];
-    return *this;
+inline Matrix2::Matrix2(long val00, long val01, long val10, long val11) :
+        data_ {{{ val00, val01 }, { val10, val11 }}} {
 }
 
 inline Matrix2& Matrix2::operator = (const long values[2][2]) {
-    data[0][0] = values[0][0]; data[0][1] = values[0][1];
-    data[1][0] = values[1][0]; data[1][1] = values[1][1];
+    data_[0][0] = values[0][0]; data_[0][1] = values[0][1];
+    data_[1][0] = values[1][0]; data_[1][1] = values[1][1];
     return *this;
 }
 
-inline const long* Matrix2::operator [] (unsigned row) const {
-    return data[row];
+inline void Matrix2::swap(Matrix2& other) noexcept {
+    data_.swap(other.data_);
 }
 
-inline long* Matrix2::operator [] (unsigned row) {
-    return data[row];
+inline const std::array<long, 2>& Matrix2::operator [] (unsigned row) const {
+    return data_[row];
+}
+
+inline std::array<long, 2>& Matrix2::operator [] (unsigned row) {
+    return data_[row];
 }
 
 inline Matrix2 Matrix2::operator * (const Matrix2& other) const {
     return Matrix2(
-        data[0][0] * other.data[0][0] + data[0][1] * other.data[1][0],
-        data[0][0] * other.data[0][1] + data[0][1] * other.data[1][1],
-        data[1][0] * other.data[0][0] + data[1][1] * other.data[1][0],
-        data[1][0] * other.data[0][1] + data[1][1] * other.data[1][1]);
+        data_[0][0] * other.data_[0][0] + data_[0][1] * other.data_[1][0],
+        data_[0][0] * other.data_[0][1] + data_[0][1] * other.data_[1][1],
+        data_[1][0] * other.data_[0][0] + data_[1][1] * other.data_[1][0],
+        data_[1][0] * other.data_[0][1] + data_[1][1] * other.data_[1][1]);
 }
 
 inline Matrix2 Matrix2::operator * (long scalar) const {
     return Matrix2(
-        data[0][0] * scalar, data[0][1] * scalar,
-        data[1][0] * scalar, data[1][1] * scalar);
+        data_[0][0] * scalar, data_[0][1] * scalar,
+        data_[1][0] * scalar, data_[1][1] * scalar);
 }
 
 inline Matrix2 Matrix2::operator + (const Matrix2& other) const {
     return Matrix2(
-        data[0][0] + other.data[0][0], data[0][1] + other.data[0][1],
-        data[1][0] + other.data[1][0], data[1][1] + other.data[1][1]);
+        data_[0][0] + other.data_[0][0], data_[0][1] + other.data_[0][1],
+        data_[1][0] + other.data_[1][0], data_[1][1] + other.data_[1][1]);
 }
 
 inline Matrix2 Matrix2::operator - (const Matrix2& other) const {
     return Matrix2(
-        data[0][0] - other.data[0][0], data[0][1] - other.data[0][1],
-        data[1][0] - other.data[1][0], data[1][1] - other.data[1][1]);
+        data_[0][0] - other.data_[0][0], data_[0][1] - other.data_[0][1],
+        data_[1][0] - other.data_[1][0], data_[1][1] - other.data_[1][1]);
 }
 
 inline Matrix2 Matrix2::operator - () const {
-    return Matrix2(-data[0][0], -data[0][1], -data[1][0], -data[1][1]);
+    return Matrix2(-data_[0][0], -data_[0][1], -data_[1][0], -data_[1][1]);
 }
 
 inline Matrix2 Matrix2::transpose() const {
-    return Matrix2(data[0][0], data[1][0], data[0][1], data[1][1]);
+    return Matrix2(data_[0][0], data_[1][0], data_[0][1], data_[1][1]);
 }
 
 inline Matrix2& Matrix2::operator += (const Matrix2& other) {
-    data[0][0] += other.data[0][0]; data[0][1] += other.data[0][1];
-    data[1][0] += other.data[1][0]; data[1][1] += other.data[1][1];
+    data_[0][0] += other.data_[0][0]; data_[0][1] += other.data_[0][1];
+    data_[1][0] += other.data_[1][0]; data_[1][1] += other.data_[1][1];
     return *this;
 }
 
 inline Matrix2& Matrix2::operator -= (const Matrix2& other) {
-    data[0][0] -= other.data[0][0]; data[0][1] -= other.data[0][1];
-    data[1][0] -= other.data[1][0]; data[1][1] -= other.data[1][1];
+    data_[0][0] -= other.data_[0][0]; data_[0][1] -= other.data_[0][1];
+    data_[1][0] -= other.data_[1][0]; data_[1][1] -= other.data_[1][1];
     return *this;
 }
 
 inline Matrix2& Matrix2::operator *= (long scalar) {
-    data[0][0] *= scalar; data[0][1] *= scalar;
-    data[1][0] *= scalar; data[1][1] *= scalar;
+    data_[0][0] *= scalar; data_[0][1] *= scalar;
+    data_[1][0] *= scalar; data_[1][1] *= scalar;
     return *this;
 }
 
 inline void Matrix2::negate() {
-    data[0][0] = -data[0][0]; data[0][1] = -data[0][1];
-    data[1][0] = -data[1][0]; data[1][1] = -data[1][1];
+    data_[0][0] = -data_[0][0]; data_[0][1] = -data_[0][1];
+    data_[1][0] = -data_[1][0]; data_[1][1] = -data_[1][1];
 }
 
 inline bool Matrix2::operator == (const Matrix2& compare) const {
-    return (
-        data[0][0] == compare.data[0][0] && data[0][1] == compare.data[0][1] &&
-        data[1][0] == compare.data[1][0] && data[1][1] == compare.data[1][1]);
+    return data_ == compare.data_;
 }
 
 inline bool Matrix2::operator != (const Matrix2& compare) const {
-    return (
-        data[0][0] != compare.data[0][0] || data[0][1] != compare.data[0][1] ||
-        data[1][0] != compare.data[1][0] || data[1][1] != compare.data[1][1]);
+    return data_ != compare.data_;
 }
 
 inline long Matrix2::determinant() const {
-    return data[0][0] * data[1][1] - data[0][1] * data[1][0];
+    return data_[0][0] * data_[1][1] - data_[0][1] * data_[1][0];
 }
 
 inline bool Matrix2::isIdentity() const {
-    return (data[0][0] == 1 && data[0][1] == 0 &&
-            data[1][0] == 0 && data[1][1] == 1);
+    return (data_[0][0] == 1 && data_[0][1] == 0 &&
+            data_[1][0] == 0 && data_[1][1] == 1);
 }
 
 inline bool Matrix2::isZero() const {
-    return (data[0][0] == 0 && data[0][1] == 0 &&
-            data[1][0] == 0 && data[1][1] == 0);
+    return (data_[0][0] == 0 && data_[0][1] == 0 &&
+            data_[1][0] == 0 && data_[1][1] == 0);
 }
 
 inline std::ostream& operator << (std::ostream& out, const Matrix2& mat) {
-    return out << "[[ " << mat.data[0][0] << ' ' << mat.data[0][1]
-        << " ] [ " << mat.data[1][0] << ' ' << mat.data[1][1] << " ]]";
+    return out << "[[ " << mat.data_[0][0] << ' ' << mat.data_[0][1]
+        << " ] [ " << mat.data_[1][0] << ' ' << mat.data_[1][1] << " ]]";
+}
+
+inline void swap(Matrix2& a, Matrix2& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

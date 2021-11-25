@@ -51,7 +51,7 @@ namespace {
 
 void addEdge4(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<4, 1>>(m, "FaceEmbedding4_1")
-        .def(pybind11::init<regina::Pentachoron<4>*, int>())
+        .def(pybind11::init<regina::Pentachoron<4>*, regina::Perm<5>>())
         .def(pybind11::init<const EdgeEmbedding<4>&>())
         .def("simplex", &EdgeEmbedding<4>::simplex,
             pybind11::return_value_policy::reference)
@@ -66,25 +66,16 @@ void addEdge4(pybind11::module_& m) {
 
     auto c = pybind11::class_<Face<4, 1>>(m, "Face4_1")
         .def("index", &Edge<4>::index)
-        .def("embeddings", [](const Edge<4>& e) {
-            pybind11::list ans;
-            for (const auto& emb : e)
-                ans.append(emb);
-            return ans;
-        })
-        .def("embedding", &Edge<4>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Edge<4>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Edge<4>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Edge<4>::embedding)
+        .def("embeddings", &Edge<4>::embeddings)
+        .def("front", &Edge<4>::front)
+        .def("back", &Edge<4>::back)
         .def("triangulation", &Edge<4>::triangulation)
         .def("component", &Edge<4>::component,
             pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Edge<4>::boundaryComponent,
             pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Edge<4>, 1, int,
-            pybind11::return_value_policy::reference>)
+        .def("face", &regina::python::face<Edge<4>, 1, int>)
         .def("vertex", &Edge<4>::vertex,
             pybind11::return_value_policy::reference)
         .def("faceMapping", &regina::python::faceMapping<Edge<4>, 1, 5>)
@@ -95,46 +86,29 @@ void addEdge4(pybind11::module_& m) {
         .def("isValid", &Edge<4>::isValid)
         .def("hasBadIdentification", &Edge<4>::hasBadIdentification)
         .def("hasBadLink", &Edge<4>::hasBadLink)
-        .def("buildLink", [](const Edge<4>* e) {
-            // Return a clone of the link.  This is because triangulations
-            // have a custom holder type, and so pybind11 ignores any attempt
-            // to pass return_value_policy::reference_internal.
-            return new regina::Triangulation<2>(*(e->buildLink()));
+        .def("buildLink", [](const Edge<4>& e) {
+            // Return a clone of the resulting triangulation.
+            // This is because Python cannot enforce the constness of
+            // the reference that would normally be returned.
+            return new regina::Triangulation<2>(e.buildLink());
         })
-        .def("buildLinkDetail", [](const Edge<4>* e, bool labels) {
-            // Return a clone of the link (as above); also, we always
-            // build the isomorphism.
-            regina::Isomorphism<4>* iso;
-            regina::Triangulation<2>* link = new regina::Triangulation<2>(
-                *(e->buildLinkDetail(labels, &iso)));
-            return pybind11::make_tuple(link, iso);
-        }, pybind11::arg("labels") = true)
+        .def("buildLinkInclusion", &Edge<4>::buildLinkInclusion)
         .def_static("ordering", &Edge<4>::ordering)
         .def_static("faceNumber", &Edge<4>::faceNumber)
         .def_static("containsVertex", &Edge<4>::containsVertex)
         .def_readonly_static("edgeNumber", &Edge4_edgeNumber)
         .def_readonly_static("edgeVertex", &Edge4_edgeVertex)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("nFaces", [](pybind11::object) {
-            return Edge<4>::nFaces;
-        })
-        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
-            return Edge<4>::lexNumbering;
-        })
-        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
-            return Edge<4>::oppositeDim;
-        })
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Edge<4>::dimension;
-        })
-        .def_property_readonly_static("subdimension", [](pybind11::object) {
-            return Edge<4>::subdimension;
-        })
+        .def_readonly_static("nFaces", &Edge<4>::nFaces)
+        .def_readonly_static("lexNumbering", &Edge<4>::lexNumbering)
+        .def_readonly_static("oppositeDim", &Edge<4>::oppositeDim)
+        .def_readonly_static("dimension", &Edge<4>::dimension)
+        .def_readonly_static("subdimension", &Edge<4>::subdimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<
+        decltype(std::declval<Edge<4>>().embeddings())>(m);
 
     m.attr("EdgeEmbedding4") = m.attr("FaceEmbedding4_1");
     m.attr("Edge4") = m.attr("Face4_1");

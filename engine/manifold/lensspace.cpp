@@ -34,6 +34,7 @@
 #include "manifold/lensspace.h"
 #include "maths/numbertheory.h"
 #include "triangulation/dim3.h"
+#include "triangulation/example3.h"
 
 namespace regina {
 
@@ -47,7 +48,7 @@ void LensSpace::reduce() {
     }
 
     // p > 1 and gcd(p,q) = 1.
-    
+
     // Reduce q to +/-q.
     q_ = q_ % p_;
     if (2 * q_ > p_)
@@ -60,18 +61,16 @@ void LensSpace::reduce() {
         q_ = inv;
 }
 
-Triangulation<3>* LensSpace::construct() const {
-    Triangulation<3>* ans = new Triangulation<3>();
-    ans->insertLayeredLensSpace(p_, q_);
-    return ans;
+Triangulation<3> LensSpace::construct() const {
+    return Example<3>::lens(p_, q_);
 }
 
-std::optional<AbelianGroup> LensSpace::homology() const {
+AbelianGroup LensSpace::homology() const {
     AbelianGroup ans;
     if (p_ == 0)
         ans.addRank();
     else if (p_ > 1)
-        ans.addTorsionElement(p_);
+        ans.addTorsion(p_);
     return ans;
 }
 

@@ -31,8 +31,17 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "packet/packetregistry.h"
-#include "surfaces/filterregistry.h"
+#include "hypersurface/normalhypersurfaces.h"
+#include "link/link.h"
+#include "packet/container.h"
+#include "packet/script.h"
+#include "packet/text.h"
+#include "snappea/snappeatriangulation.h"
+#include "surfaces/normalsurfaces.h"
+#include "surfaces/surfacefilter.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 
 // UI includes:
 #include "iconcache.h"
@@ -40,6 +49,7 @@
 #include "reginamain.h"
 #include "reginasupport.h"
 #include "packets/anglesui.h"
+#include "packets/attachmentui.h"
 #include "packets/tri2ui.h"
 #include "packets/tri4ui.h"
 #include "packets/filtercomb.h"
@@ -48,7 +58,6 @@
 #include "packets/containerui.h"
 #include "packets/hyperui.h"
 #include "packets/linkui.h"
-#include "packets/pdfui.h"
 #include "packets/scriptui.h"
 #include "packets/snappeaui.h"
 #include "packets/surfacesui.h"
@@ -59,25 +68,25 @@
 
 using namespace regina;
 
-QIcon PacketManager::icon(Packet* packet) {
+QIcon PacketManager::icon(const Packet& packet) {
     IconCache::IconID id;
 
-    switch (packet->type()) {
+    switch (packet.type()) {
         case PACKET_ANGLESTRUCTURES :
             id = IconCache::packet_angles;
             break;
         case PACKET_CONTAINER :
-            id = (packet->parent() ? IconCache::packet_container :
+            id = (packet.parent() ? IconCache::packet_container :
                 IconCache::regina);
             break;
         case PACKET_LINK:
             id = IconCache::packet_link;
             break;
-        case PACKET_PDF :
-            id = IconCache::packet_pdf;
+        case PACKET_ATTACHMENT:
+            id = IconCache::packet_attachment;
             break;
         case PACKET_SURFACEFILTER :
-            switch (((SurfaceFilter*)packet)->filterType()) {
+            switch (((const SurfaceFilter&)packet).filterType()) {
                 case NS_FILTER_COMBINATION :
                     id = IconCache::filter_comb;
                     break;
@@ -151,25 +160,29 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
     switch (packet->type()) {
         case PACKET_ANGLESTRUCTURES:
             return new AngleStructureUI(
-                dynamic_cast<AngleStructures*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<AngleStructures>*>(packet),
+                    enclosingPane);
         case PACKET_CONTAINER:
             return new ContainerUI(
                 dynamic_cast<Container*>(packet), enclosingPane);
         case PACKET_LINK:
             return new LinkUI(
-                dynamic_cast<Link*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Link>*>(packet), enclosingPane);
         case PACKET_NORMALSURFACES:
             return new SurfacesUI(
-                dynamic_cast<NormalSurfaces*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<NormalSurfaces>*>(packet),
+                    enclosingPane);
         case PACKET_NORMALHYPERSURFACES:
             return new HyperUI(
-                dynamic_cast<NormalHypersurfaces*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<NormalHypersurfaces>*>(packet),
+                    enclosingPane);
         case PACKET_SCRIPT:
             return new ScriptUI(
                 dynamic_cast<Script*>(packet), enclosingPane);
         case PACKET_SNAPPEATRIANGULATION:
             return new SnapPeaUI(
-                dynamic_cast<SnapPeaTriangulation*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<SnapPeaTriangulation>*>(packet),
+                enclosingPane);
         case PACKET_SURFACEFILTER:
             switch (((SurfaceFilter*)packet)->filterType()) {
                 case NS_FILTER_COMBINATION:
@@ -188,47 +201,61 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
                 dynamic_cast<Text*>(packet), enclosingPane);
         case PACKET_TRIANGULATION2:
             return new Tri2UI(
-                dynamic_cast<Triangulation<2>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<2>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION3:
             return new Tri3UI(
-                dynamic_cast<Triangulation<3>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<3>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION4:
             return new Tri4UI(
-                dynamic_cast<Triangulation<4>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<4>>*>(packet),
+                enclosingPane);
 #ifndef REGINA_LOWDIMONLY
         case PACKET_TRIANGULATION5:
             return new GenericTriangulationUI<5>(
-                dynamic_cast<Triangulation<5>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<5>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION6:
             return new GenericTriangulationUI<6>(
-                dynamic_cast<Triangulation<6>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<6>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION7:
             return new GenericTriangulationUI<7>(
-                dynamic_cast<Triangulation<7>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<7>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION8:
             return new GenericTriangulationUI<8>(
-                dynamic_cast<Triangulation<8>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<8>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION9:
             return new GenericTriangulationUI<9>(
-                dynamic_cast<Triangulation<9>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<9>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION10:
             return new GenericTriangulationUI<10>(
-                dynamic_cast<Triangulation<10>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<10>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION11:
             return new GenericTriangulationUI<11>(
-                dynamic_cast<Triangulation<11>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<11>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION12:
             return new GenericTriangulationUI<12>(
-                dynamic_cast<Triangulation<12>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<12>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION13:
             return new GenericTriangulationUI<13>(
-                dynamic_cast<Triangulation<13>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<13>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION14:
             return new GenericTriangulationUI<14>(
-                dynamic_cast<Triangulation<14>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<14>>*>(packet),
+                enclosingPane);
         case PACKET_TRIANGULATION15:
             return new GenericTriangulationUI<15>(
-                dynamic_cast<Triangulation<15>*>(packet), enclosingPane);
+                dynamic_cast<regina::PacketOf<Triangulation<15>>*>(packet),
+                enclosingPane);
 #endif /* ! REGINA_LOWDIMONLY */
         default:
             return new DefaultPacketUI(packet, enclosingPane);
@@ -236,8 +263,8 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
 }
 
 PacketExternalViewer PacketManager::externalViewer(regina::Packet* packet) {
-    if (packet->type() == PACKET_PDF)
-        return &PDFExternalViewer::view;
-    return 0;
+    if (packet->type() == PACKET_ATTACHMENT)
+        return &AttachmentExternalViewer::view;
+    return nullptr;
 }
 

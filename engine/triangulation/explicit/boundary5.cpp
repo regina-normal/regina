@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "triangulation/detail/boundarycomponent-impl.h"
 #include "triangulation/dim4.h" // for deleting boundary components
 #include "triangulation/generic.h"
+#include "triangulation/detail/boundarycomponent-impl.h"
 
 namespace regina::detail {
 

@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/blockedsfstriple.h"
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
@@ -41,13 +42,20 @@ using regina::BlockedSFSTriple;
 void addBlockedSFSTriple(pybind11::module_& m) {
     pybind11::class_<BlockedSFSTriple, regina::StandardTriangulation>
             (m, "BlockedSFSTriple")
+        .def(pybind11::init<const BlockedSFSTriple&>())
+        .def("swap", &BlockedSFSTriple::swap)
         .def("end", &BlockedSFSTriple::end,
             pybind11::return_value_policy::reference_internal)
         .def("centre", &BlockedSFSTriple::centre,
             pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &BlockedSFSTriple::matchingReln,
             pybind11::return_value_policy::reference_internal)
-        .def_static("isBlockedSFSTriple", &BlockedSFSTriple::isBlockedSFSTriple)
+        .def_static("recognise", &BlockedSFSTriple::recognise)
+        .def_static("isBlockedSFSTriple", // deprecated
+            &BlockedSFSTriple::recognise)
     ;
+
+    m.def("swap",
+        (void(*)(BlockedSFSTriple&, BlockedSFSTriple&))(regina::swap));
 }
 

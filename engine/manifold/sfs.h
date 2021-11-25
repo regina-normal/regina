@@ -40,6 +40,7 @@
 #endif
 
 #include <list>
+#include <optional>
 #include "regina-core.h"
 #include "manifold.h"
 
@@ -47,11 +48,6 @@ namespace regina {
 
 class AbelianGroup;
 class LensSpace;
-
-/**
- * \weakgroup manifold
- * @{
- */
 
 /**
  * Represents an exceptional (<i>alpha</i>, <i>beta</i>) fibre in a Seifert
@@ -65,6 +61,9 @@ class LensSpace;
  * may be larger than \a alpha).  This is to allow more flexibility in
  * routines such as SFSpace::insertFibre().
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \warning In Regina 4.2.1 and earlier, this class was named
  * NExceptionalFibre.  The new SFSFibre class was introduced with
  * Regina 4.3, and has changed its behaviour (in particular, the
@@ -72,6 +71,8 @@ class LensSpace;
  * to work with the old NExceptionalFibre class should be looked at closely
  * before being adapted to the new SFSFibre class (i.e., it may require
  * more than just substituting class names).
+ *
+ * \ingroup manifold
  */
 struct SFSFibre {
     long alpha;
@@ -85,7 +86,7 @@ struct SFSFibre {
     /**
      * Creates a new uninitialised exceptional fibre.
      */
-    SFSFibre();
+    SFSFibre() = default;
     /**
      * Creates a new exceptional fibre with the given parameters.
      *
@@ -147,6 +148,8 @@ struct SFSFibre {
  * @param out the output stream to which to write.
  * @param f the fibre to write.
  * @return the output stream \a out.
+ *
+ * \ingroup manifold
  */
 std::ostream& operator << (std::ostream& out, const SFSFibre& f);
 
@@ -189,6 +192,12 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * Seifert fibred spaces over the 2-sphere without punctures or reflector
  * boundaries.
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * SFSpace still requires a non-trivial (but constant sized) amount of data to
+ * be copied even in a move operation.
+ *
  * \warning In Regina 4.2.1 and earlier, this class was named NSFS.
  * As of Regina 4.3, this class was renamed due to significant changes of
  * behaviour (it became more general, and also now keeps the obstruction
@@ -199,6 +208,8 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * \todo \featurelong Implement recognition of more common names.
  * \todo \featurelong Implement triangulation construction and homology
  * calculation for more Seifert fibred spaces.
+ *
+ * \ingroup manifold
  */
 class SFSpace : public Manifold {
     public:
@@ -208,7 +219,7 @@ class SFSpace : public Manifold {
          * \c bo1, \c b02, \c bn1, \c bn2, \c bn3 for base orbifolds
          * with boundaries.
          */
-        enum classType {
+        enum ClassType {
             o1 = 101,
                 /**< Indicates that the base orbifold is orientable with
                      no punctures or reflector boundaries, and that none
@@ -260,8 +271,19 @@ class SFSpace : public Manifold {
                      and that its fibre-reversing paths do not correspond
                      precisely to its orientation-reversing paths. */
         };
+
+        /**
+         * Deprecated alias for the ClassType enumeration, which lists the
+         * different classes for base orbifolds.
+         *
+         * \deprecated This enumeration has been renamed from \a classType
+         * to \a ClassType, for consistency with the names of other
+         * enumeration types across Regina.
+         */
+        using classType [[deprecated]] = ClassType;
+
     private:
-        classType class_;
+        ClassType class_;
             /**< Indicates which of the classes above this space belongs to. */
         unsigned long genus_;
             /**< The genus of the base orbifold.  For non-orientable
@@ -319,7 +341,7 @@ class SFSpace : public Manifold {
          * @param useClass indicates whether the base orbifold is closed
          * and/or orientable, and gives information about fibre-reversing
          * paths in the 3-manifold.  See the SFSpace class notes and the
-         * classType enumeration notes for details.
+         * ClassType enumeration notes for details.
          * @param genus the genus of the base orbifold (the
          * number of tori or projective planes that it contains).
          * Note that for non-orientable base surfaces, this is the
@@ -339,28 +361,40 @@ class SFSpace : public Manifold {
          * components of the base orbifold.  These are in addition to
          * the ordinary boundary components described by \a puncturesTwisted.
          */
-        SFSpace(classType useClass, unsigned long genus,
+        SFSpace(ClassType useClass, unsigned long genus,
             unsigned long punctures = 0, unsigned long puncturesTwisted = 0,
             unsigned long reflectors = 0, unsigned long reflectorsTwisted = 0);
         /**
-         * Creates a new Seifert fibred space that is a clone of
-         * the given space.
-         *
-         * @param cloneMe the Seifert fibred space to clone.
+         * Creates a new copy of the given Seifert fibred space.
          */
-        SFSpace(const SFSpace& cloneMe) = default;
+        SFSpace(const SFSpace&) = default;
         /**
-         * Destroys this Seifert fibred space.
+         * Moves the contents of the given Seifert fibred space into this
+         * new Seifert fibred space.  This is a fast (constant time) operation.
+         *
+         * The space that was passed will no longer be usable.
          */
-        virtual ~SFSpace();
+        SFSpace(SFSpace&&) noexcept = default;
 
         /**
-         * Modifies this Seifert fibred space to be a clone of the given
-         * space.
-         *
-         * @param cloneMe the Seifert fibred space to clone.
+         * Sets this to be a copy of the given Seifert fibred space.
          */
-        SFSpace& operator = (const SFSpace& cloneMe) = default;
+        SFSpace& operator = (const SFSpace&) = default;
+        /**
+         * Moves the contents of the given Seifert fibred space into this
+         * Seifert fibred space.  This is a fast (constant time) operation.
+         *
+         * The space that was passed will no longer be usable.
+         *
+         * @return a reference to this space.
+         */
+        SFSpace& operator = (SFSpace&&) noexcept = default;
+        /**
+         * Swaps the contents of this and the given Seifert fibred space.
+         *
+         * @param other the space whose contents should be swapped with this.
+         */
+        void swap(SFSpace& other) noexcept;
 
         /**
          * Returns which of the eleven predefined classes this space
@@ -373,11 +407,11 @@ class SFSpace : public Manifold {
          * addHandle(), addCrosscap(), addPuncture() or addReflector().
          *
          * For more information on the eleven predefined classes, see the
-         * SFSpace class notes or the classType enumeration notes.
+         * SFSpace class notes or the ClassType enumeration notes.
          *
          * @return the particular class to which this space belongs.
          */
-        classType baseClass() const;
+        ClassType baseClass() const;
         /**
          * Returns the genus of the base orbifold.  All punctures and
          * reflector boundaries in the base orbifold are ignored (i.e.,
@@ -537,7 +571,7 @@ class SFSpace : public Manifold {
          * a punctured torus.
          *
          * Note that this operation may alter which of the classes
-         * described by classType this space belongs to.
+         * described by ClassType this space belongs to.
          *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
@@ -557,7 +591,7 @@ class SFSpace : public Manifold {
          * a Mobius band.
          *
          * Note that this operation may alter which of the classes
-         * described by classType this space belongs to.
+         * described by ClassType this space belongs to.
          *
          * The exceptional fibres and the obstruction constant \a b are
          * not modified by this routine.
@@ -623,6 +657,8 @@ class SFSpace : public Manifold {
          * range and the excess will be pushed into the obstruction
          * constant \a b.
          *
+         * \exception InvalidArgument \a alpha is zero.
+         *
          * @param fibre the fibre to insert.  The first parameter of
          * this fibre (i.e., its index) must be strictly positive, and
          * the two parameters of this fibre must be coprime.
@@ -642,6 +678,8 @@ class SFSpace : public Manifold {
          * 0 <= \a beta < \a alpha, it will be pulled back into this
          * range and the excess will be pushed into the obstruction
          * constant \a b.
+         *
+         * \exception InvalidArgument \a alpha is zero.
          *
          * @param alpha the first parameter (i.e., the index) of the
          * fibre to insert; this must be strictly positive.
@@ -701,14 +739,10 @@ class SFSpace : public Manifold {
         /**
          * Determines if this Seifert fibred space is a Lens space.
          *
-         * If this is a Lens space, the LensSpace returned will be
-         * newly created and it will be up to the caller
-         * of this routine to destroy it.
-         *
          * @return a structure containing the details of this Lens
-         * space, or \c null if this is not a Lens space.
+         * space, or no value if this is not a Lens space.
          */
-        LensSpace* isLensSpace() const;
+        std::optional<LensSpace> isLensSpace() const;
 
         /**
          * Determines whether this and the given structure contain
@@ -760,8 +794,8 @@ class SFSpace : public Manifold {
          */
         bool operator < (const SFSpace& compare) const;
 
-        Triangulation<3>* construct() const override;
-        std::optional<AbelianGroup> homology() const override;
+        Triangulation<3> construct() const override;
+        AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
@@ -831,12 +865,21 @@ class SFSpace : public Manifold {
         std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given Seifert fibred spaces.
+ *
+ * This global routine simply calls SFSpace::swap(); it is provided so
+ * that SFSpace meets the C++ Swappable requirements.
+ *
+ * @param a the first space whose contents should be swapped.
+ * @param b the second space whose contents should be swapped.
+ *
+ * \ingroup manifold
+ */
+void swap(SFSpace& a, SFSpace& b) noexcept;
 
 // Inline functions for SFSFibre
 
-inline SFSFibre::SFSFibre() {
-}
 inline SFSFibre::SFSFibre(long newAlpha, long newBeta) :
         alpha(newAlpha), beta(newBeta) {
 }
@@ -860,7 +903,7 @@ inline SFSpace::SFSpace() : class_(o1), genus_(0),
         nFibres_(0), b_(0) {
 }
 
-inline SFSpace::SFSpace(SFSpace::classType useClass, unsigned long genus,
+inline SFSpace::SFSpace(SFSpace::ClassType useClass, unsigned long genus,
         unsigned long punctures, unsigned long puncturesTwisted,
         unsigned long reflectors, unsigned long reflectorsTwisted) :
         class_(useClass), genus_(genus),
@@ -869,14 +912,23 @@ inline SFSpace::SFSpace(SFSpace::classType useClass, unsigned long genus,
         nFibres_(0), b_(0) {
 }
 
-inline SFSpace::~SFSpace() {
+inline void SFSpace::swap(SFSpace& other) noexcept {
+    std::swap(class_, other.class_);
+    std::swap(genus_, other.genus_);
+    std::swap(punctures_, other.punctures_);
+    std::swap(puncturesTwisted_, other.puncturesTwisted_);
+    std::swap(reflectors_, other.reflectors_);
+    std::swap(reflectorsTwisted_, other.reflectorsTwisted_);
+    fibres_.swap(other.fibres_);
+    std::swap(nFibres_, other.nFibres_);
+    std::swap(b_, other.b_);
 }
 
 inline bool SFSpace::operator != (const SFSpace& compare) const {
     return ! ((*this) == compare);
 }
 
-inline SFSpace::classType SFSpace::baseClass() const {
+inline SFSpace::ClassType SFSpace::baseClass() const {
     return class_;
 }
 
@@ -943,6 +995,10 @@ inline std::ostream& SFSpace::writeTeXName(std::ostream& out) const {
 
 inline std::ostream& SFSpace::writeStructure(std::ostream& out) const {
     return writeCommonStructure(out, false);
+}
+
+inline void swap(SFSpace& a, SFSpace& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

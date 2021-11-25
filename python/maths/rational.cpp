@@ -69,18 +69,16 @@ void addRational(pybind11::module_& m) {
         .def(pybind11::self > pybind11::self)
         .def(pybind11::self <= pybind11::self)
         .def(pybind11::self >= pybind11::self)
-        .def("doubleApprox", [](const Rational& r) {
-            return r.doubleApprox();
-        })
+        .def("doubleApprox", &Rational::doubleApprox)
         .def("doubleApproxCheck", [](const Rational& r) {
-            bool inRange;
-            double ans = r.doubleApprox(&inRange);
-            return pybind11::make_tuple(ans, inRange);
+            try {
+                return pybind11::make_tuple(r.doubleApprox(), true);
+            } catch (const regina::UnsolvedCase&) {
+                return pybind11::make_tuple(0.0, false);
+            }
         })
-        .def("TeX", &Rational::TeX)
-        .def("writeTeX", [](const Rational& r) {
-            r.writeTeX(std::cout);
-        })
+        .def("tex", &Rational::tex)
+        .def("TeX", &Rational::tex) // deprecated
         .def_readonly_static("zero", &Rational::zero)
         .def_readonly_static("one", &Rational::one)
         .def_readonly_static("infinity", &Rational::infinity)

@@ -9,6 +9,8 @@ Triangulation3:
 False True
 GroupPresentation:
 False True
+Packet:
+True False
 Triangulation3:
 True False
 Tetrahedron3:

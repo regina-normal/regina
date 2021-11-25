@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>packet (script)</refname>
-  <refpurpose>A script packet</refpurpose>
+  <refpurpose>Replaced by &xml-script;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-packet ::= (&xml-var;*, &xml-line;*, &xml-text;
+packet ::= (&xml-var;*, &xml-text;,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -36,10 +36,20 @@ packet ::= (&xml-var;*, &xml-line;*, &xml-text;
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   In &regina;&nbsp;6.0.1 and earlier, the &xml-packet; element was used
+   to store every packet in the entire packet tree that makes up a
+   &regina; data file.
+   This page describes how the &xml-packet; element was structured when
+   storing a script packet.
+   Since &regina;&nbsp;7.0, each packet type has its own &xml; element;
+   in particular, script packets are now stored using the &xml-script; element.
+  </para>
   <para>
    A <emphasis>script</emphasis> packet stores a &python; script offering direct
    low-level access to the &regina; calculation engine.
@@ -49,28 +59,34 @@ packet ::= (&xml-var;*, &xml-line;*, &xml-text;
    packet tree; these are described by the child &xml-var; elements.
   </para>
   <para>
-   The &python; script itself is stored as a single &xml-text; element.
-   In older versions of &regina; (4.95 and earlier) it was stored
-   line-by-line using a sequence of &xml-line; elements, but this
-   method of storage was deprecated when the &xml-text; element
-   was introduced in &regina;&nbsp;4.96.
+   The way the &python; code is stored has changed over time:
+   <itemizedlist>
+    <listitem><para>
+     Between &regina;&nbsp;4.96 and &regina;&nbsp;6.0.1, the &python; code
+     was stored as a single &xml-text; element.
+    </para></listitem>
+    <listitem><para>
+     In &regina;&nbsp;4.95 and earlier, the &python; code was stored
+     line-by-line using a sequence of &xml-line; elements.
+    </para></listitem>
+   </itemizedlist>
+   Both storage methods are still recognised by &regina; when reading
+   old second-generation data files.
   </para>
   <para>
-   If you are writing a file that must be read by older versions of
-   &regina; then you may write the script twice,
-   first as a series of &xml-line; elements (for &regina;&nbsp;4.95 and
-   earlier), and then as a single &xml-text; element (for &regina;&nbsp;4.96
-   and later).
+   If you are writing a second-generation data file that must be read by
+   very old versions of &regina; (dating back to &regina;&nbsp;4.95),
+   then you may write the script twice:
+   first as a series of &xml-line; elements, and then again as a single
+   &xml-text; element.
+   However, the &xml-line; elements <emphasis>must</emphasis> come
+   first, since when &regina; reads a file it will append each &xml-line;
+   to the script, whereas if it sees a &xml-text; element
+   it will replace the script entirely.
+   Therefore, if the &xml-line; elements appear
+   <emphasis>after</emphasis> the &xml-text; element,
+   &regina; will effectively build two copies of the script end-on-end.
   </para>
-  <warning><para>
-   If you are writing both &xml-line; and &xml-text; elements, then
-   <emphasis>the order is important.</emphasis>.  This is because when
-   &regina; reads a &xml-line; element it will append the line to the script,
-   but when it reads a &xml-text; element it will simply replace the
-   entire script.  Therefore, if the &xml-line; elements appear
-   <emphasis>after</emphasis> the &xml-text; element, &regina; will
-   construct two copies of the script end-on-end.
-  </para></warning>
   <para>
    The roles played by the child &xml-tag; and &xml-packet; elements are
    described in the general &xml-packet; element documentation.
@@ -93,7 +109,6 @@ packet ::= (&xml-var;*, &xml-line;*, &xml-text;
     The following elements occur in <sgmltag>packet</sgmltag> for
     a script packet:
     <simplelist type="inline">
-     <member>&xml-line;</member>
      <member>&xml-packet;</member>
      <member>&xml-tag;</member>
      <member>&xml-text;</member>

@@ -72,7 +72,6 @@ class CompatCanvas : public QGraphicsScene {
          * Constructor and destructor.
          */
         CompatCanvas(unsigned useNumSurfaces);
-        ~CompatCanvas();
 
         /**
          * Fill the canvas with data.

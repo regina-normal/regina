@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>allowstrict</refname>
-  <refpurpose>Deprecated: see &xml-spanstrict;</refpurpose>
+  <refpurpose>Replaced by &xml-spanstrict;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,6 +40,7 @@ allowstrict ::=</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;4.90</para>
  </refsynopsisdiv>
 
  <refsect1>

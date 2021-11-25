@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/integer.h"
 #include "../helpers.h"
 
@@ -57,6 +58,7 @@ void addLargeInteger(pybind11::module_& m) {
         .def("isInfinite", &LargeInteger::isInfinite)
         .def("makeInfinite", &LargeInteger::makeInfinite)
         .def("longValue", &LargeInteger::longValue)
+        .def("safeLongValue", &LargeInteger::safeLongValue)
         .def("stringValue", &LargeInteger::stringValue,
             pybind11::arg("base") = 10)
         .def("swap", &LargeInteger::swap)
@@ -72,6 +74,12 @@ void addLargeInteger(pybind11::module_& m) {
         .def(pybind11::self <= long())
         .def(pybind11::self >= pybind11::self)
         .def(pybind11::self >= long())
+        .def("inc", [](LargeInteger& i) {
+            return i++;
+        })
+        .def("dec", [](LargeInteger& i) {
+            return i--;
+        })
         .def(pybind11::self + pybind11::self)
         .def(pybind11::self + long())
         .def(pybind11::self - pybind11::self)
@@ -86,12 +94,8 @@ void addLargeInteger(pybind11::module_& m) {
             &LargeInteger::divExact, pybind11::const_))
         .def(pybind11::self % pybind11::self)
         .def(pybind11::self % long())
-        .def("divisionAlg", [](const LargeInteger& n,
-                const LargeInteger& divisor) {
-            LargeInteger remainder;
-            LargeInteger quotient = n.divisionAlg(divisor, remainder);
-            return pybind11::make_tuple(quotient, remainder);
-        })
+        .def("divisionAlg", overload_cast<const LargeInteger&>(
+            &LargeInteger::divisionAlg, pybind11::const_))
         .def(- pybind11::self)
         .def(pybind11::self += pybind11::self)
         .def(pybind11::self += long())
@@ -116,7 +120,11 @@ void addLargeInteger(pybind11::module_& m) {
         .def("gcd", &LargeInteger::gcd)
         .def("lcmWith", &LargeInteger::lcmWith)
         .def("lcm", &LargeInteger::lcm)
-        .def("gcdWithCoeffs", &LargeInteger::gcdWithCoeffs)
+        .def("gcdWithCoeffs", overload_cast<const LargeInteger&>(
+            &LargeInteger::gcdWithCoeffs, pybind11::const_))
+        .def("gcdWithCoeffs",
+            overload_cast<const LargeInteger&, LargeInteger&, LargeInteger&>(
+                &LargeInteger::gcdWithCoeffs, pybind11::const_))
         .def("legendre", &LargeInteger::legendre)
         .def("randomBoundedByThis", &LargeInteger::randomBoundedByThis)
         .def_static("randomBinary", &LargeInteger::randomBinary)

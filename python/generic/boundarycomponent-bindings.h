@@ -34,8 +34,10 @@
 #include "../pybind11/stl.h"
 #include "triangulation/generic.h"
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using regina::BoundaryComponent;
+using regina::python::invalidFaceDimension;
 
 template <int dim>
 void addBoundaryComponent(pybind11::module_& m, const char* name) {
@@ -47,40 +49,64 @@ void addBoundaryComponent(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<BoundaryComponent<dim>>(m, name)
         .def("index", &BoundaryComponent<dim>::index)
         .def("size", &BoundaryComponent<dim>::size)
-        .def("facets", [](const BoundaryComponent<dim>& b) {
-            pybind11::list ans;
-            for (auto f : b.facets())
-                ans.append(f); // Uses reference return value policy
-            return ans;
+        .def("countRidges", &BoundaryComponent<dim>::countRidges)
+        .def("countFaces", [](const BoundaryComponent<dim>& b, int subdim) {
+            if (subdim == dim - 1)
+                return b.template countFaces<dim - 1>();
+            else if (subdim == dim - 2)
+                return b.template countFaces<dim - 2>();
+            else {
+                invalidFaceDimension("countFaces", dim - 2, dim - 1);
+                // This throws, but the compiler wants us to return a value.
+                return (size_t)0;
+            }
+        })
+        .def("facets", &BoundaryComponent<dim>::facets)
+        .def("faces", [](const BoundaryComponent<dim>& b, int subdim) {
+            if (subdim != dim - 1)
+                invalidFaceDimension("faces", dim - 1, dim - 1);
+            return b.template faces<dim - 1>();
         })
         .def("facet", &BoundaryComponent<dim>::facet,
             pybind11::return_value_policy::reference)
+        .def("face", [](const BoundaryComponent<dim>& b, int subdim,
+                size_t index) {
+            if (subdim != dim - 1)
+                invalidFaceDimension("face", dim - 1, dim - 1);
+            return b.template face<dim - 1>(index);
+        }, pybind11::return_value_policy::reference)
         .def("component", &BoundaryComponent<dim>::component,
             pybind11::return_value_policy::reference)
         .def("triangulation", &BoundaryComponent<dim>::triangulation)
-        .def("build", [](const BoundaryComponent<dim>* b) {
-            // Return a clone of the resulting triangulation.  This is because
-            // triangulations have a custom holder type, and so pybind11 ignores
-            // any attempt to pass return_value_policy::reference_internal.
-            return new regina::Triangulation<dim-1>(*(b->build()));
+        .def("build", [](const BoundaryComponent<dim>& b) {
+            // Return a clone of the resulting triangulation.
+            // This is because Python cannot enforce the constness of
+            // the reference that would normally be returned.
+            return new regina::Triangulation<dim-1>(b.build());
         })
+        .def("isReal", &BoundaryComponent<dim>::isReal)
+        .def("isIdeal", &BoundaryComponent<dim>::isIdeal)
+        .def("isInvalidVertex", &BoundaryComponent<dim>::isInvalidVertex)
         .def("isOrientable", &BoundaryComponent<dim>::isOrientable)
-        // We cannot take the addresses of the following header-only properties,
-        // so we define getter functions instead.
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return BoundaryComponent<dim>::dimension;
-        })
-        .def_property_readonly_static("allFaces", [](pybind11::object) {
-            return BoundaryComponent<dim>::allFaces;
-        })
-        .def_property_readonly_static("allowVertex", [](pybind11::object) {
-            return BoundaryComponent<dim>::allowVertex;
-        })
-        .def_property_readonly_static("canBuild", [](pybind11::object) {
-            return BoundaryComponent<dim>::canBuild;
-        })
+        .def_readonly_static("dimension", &BoundaryComponent<dim>::dimension)
+        .def_readonly_static("allFaces", &BoundaryComponent<dim>::allFaces)
+        .def_readonly_static("allowVertex",
+            &BoundaryComponent<dim>::allowVertex)
+        .def_readonly_static("canBuild", &BoundaryComponent<dim>::canBuild)
     ;
+    if constexpr (dim == 5) {
+        c.def("countPentachora", &BoundaryComponent<dim>::size);
+        c.def("pentachoron", &BoundaryComponent<dim>::facet,
+            pybind11::return_value_policy::reference);
+        c.def("pentachora", &BoundaryComponent<dim>::pentachora);
+    }
+    if constexpr (dim == 6) {
+        c.def("countPentachora", &BoundaryComponent<dim>::countRidges);
+    }
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<
+        decltype(std::declval<BoundaryComponent<dim>>().facets())>(m);
 }
 

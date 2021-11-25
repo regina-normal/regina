@@ -44,27 +44,22 @@
 
 namespace regina {
 
-class XMLPacketReader;
 class Text;
 
 /**
- * \weakgroup packet
- * @{
- */
-
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_TEXT> {
-    typedef Text Class;
-    static constexpr const char* name = "Text";
-};
-#endif
-
-/**
  * A packet representing a text string.
+ *
+ * Like all packet types, this class does not support C++ move semantics
+ * since this would interfere with the structure of the packet tree.
+ * It does support copy construction, copy assignment and swaps; however,
+ * these operations only copy/swap the text content, not the packet
+ * infrastructure (e.g., they do not touch packet labels, or the packet
+ * tree, or event listeners).
+ *
+ * \ingroup packet
  */
 class Text : public Packet {
-    REGINA_PACKET(Text, PACKET_TEXT)
+    REGINA_PACKET(PACKET_TEXT, "Text")
 
     private:
         std::string text_;
@@ -73,21 +68,47 @@ class Text : public Packet {
         /**
          * Initialises the packet to the empty string.
          */
-        Text();
+        Text() = default;
 
         /**
          * Initialises the packet to the given string.
          *
-         * @param newText the new value for the packet.
+         * @param text the new value for the packet.
          */
-        Text(const std::string& newText);
+        Text(std::string text);
 
         /**
-         * Initialises the packet to the given string.
+         * Creates a new copy of the given text packet.
          *
-         * @param newText the new value for the packet.
+         * Like all packet types, this only copies the text content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * it will not clone the given packet's children, and it will not
+         * insert the new packet into any packet tree).
          */
-        Text(const char* newText);
+        Text(const Text&) = default;
+
+        /**
+         * Sets this to be a copy of the given text packet.
+         *
+         * Like all packet types, this only copies the text content, not
+         * the packet infrastructure (e.g., it will not copy the packet label,
+         * or change this packet's location in any packet tree).
+         *
+         * @param src the text packet whose contents should be copied.
+         * @return a reference to this packet.
+         */
+        Text& operator = (const Text& src);
+
+        /**
+         * Swaps the contents of this and the given text packet.
+         *
+         * Like all packet types, this only swaps the text content, not
+         * the packet infrastructure (e.g., it will not swap packet labels,
+         * or change either packet's location in any packet tree).
+         *
+         * @other the text packet whose contents should be swapped with this.
+         */
+        void swap(Text& other);
 
         /**
          * Returns the string stored in the packet.
@@ -99,59 +120,59 @@ class Text : public Packet {
         /**
          * Sets the packet data to the given string.
          *
-         * @param newText the new value for the packet.
+         * @param text the new value for the packet.
          */
-        void setText(const std::string& newText);
+        void setText(std::string text);
 
-        /**
-         * Sets the packet data to the given string.
-         *
-         * @param newText the new value for the packet.
-         */
-        void setText(const char* newText);
-
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const override;
+        void writeTextShort(std::ostream& out) const override;
+        void writeTextLong(std::ostream& out) const override;
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
+        std::shared_ptr<Packet> internalClonePacket() const override;
+        void writeXMLPacketData(std::ostream& out, FileFormat format,
+            bool anon, PacketRefs& refs) const override;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the given text packets.
+ *
+ * This global routine simply calls Text::swap(); it is provided so that
+ * Text meets the C++ Swappable requirements.
+ *
+ * @param a the first text packet whose contents should be swapped.
+ * @param b the second text packet whose contents should be swapped.
+ *
+ * \ingroup packet
+ */
+void swap(Text& a, Text& b);
 
 // Inline functions for Text
 
-inline Text::Text() {
+inline Text::Text(std::string text) : text_(std::move(text)) {
 }
 
-inline Text::Text(const std::string& newText) : text_(newText) {
+inline Text& Text::operator = (const Text& src) {
+    ChangeEventSpan span(*this);
+    text_ = src.text_;
+    return *this;
 }
 
-inline Text::Text(const char* newText) : text_(newText) {
+inline void Text::swap(Text& other) {
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
+    text_.swap(other.text_);
 }
 
 inline const std::string& Text::text() const {
     return text_;
 }
 
-inline void Text::setText(const std::string& newText) {
-    if (text_ == newText)
+inline void Text::setText(std::string text) {
+    if (text_ == text)
         return; // No change event fired.
 
-    ChangeEventSpan span(this);
-    text_ = newText;
-}
-
-inline void Text::setText(const char* newText) {
-    if (text_ == newText)
-        return; // No change event fired.
-
-    ChangeEventSpan span(this);
-    text_ = newText;
+    ChangeEventSpan span(*this);
+    text_ = std::move(text);
 }
 
 inline void Text::writeTextShort(std::ostream& o) const {
@@ -162,12 +183,12 @@ inline void Text::writeTextLong(std::ostream& o) const {
     o << text_ << '\n';
 }
 
-inline bool Text::dependsOnParent() const {
-    return false;
+inline std::shared_ptr<Packet> Text::internalClonePacket() const {
+    return std::make_shared<Text>(text_);
 }
 
-inline Packet* Text::internalClonePacket(Packet*) const {
-    return new Text(text_);
+inline void swap(Text& a, Text& b) {
+    a.swap(b);
 }
 
 } // namespace regina

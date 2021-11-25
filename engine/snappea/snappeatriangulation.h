@@ -53,88 +53,123 @@ namespace regina {
 
 class SnapPeaTriangulation;
 class XMLSnapPeaReader;
+class XMLLegacySnapPeaReader;
 
 template <typename, bool> class Matrix;
-typedef Matrix<Integer, true> MatrixInt;
+using MatrixInt = Matrix<Integer, true>;
 
 /**
- * \addtogroup snappea SnapPea Triangulations
+ * \defgroup snappea SnapPea Triangulations
  * Interfaces for accessing the SnapPea kernel
- * @{
  */
-
-/**
- * A base class for all exceptions that are thrown from within the
- * SnapPea kernel.
- *
- * \ifacespython Not present.
- */
-struct SnapPeaException {
-};
 
 /**
  * An exception that is thrown when the SnapPea kernel encounters a
  * fatal error.
  *
- * \ifacespython Not present.
+ * This is one of two types of exception that can be thrown from deep
+ * within the SnapPea kernel.  SnapPeaFatalError is used for informative
+ * messages (the description includes a function and filename), whereas
+ * SnapPeaMemoryFull is used for out-of-memory errors (which use a stock
+ * description so they can be created without allocating further resources).
+ *
+ * Details of the error can be accessed through the inherited member
+ * function what().
+ *
+ * \ingroup snappea
  */
-struct SnapPeaFatalError : public SnapPeaException {
-    std::string function;
-        /**< The function from the SnapPea kernel in which the
-             fatal error occurred. */
-    std::string file;
-        /**< The source file from the SnapPea kernel in which the
-             fatal error occurred. */
+class SnapPeaFatalError : public std::runtime_error {
+    public:
+        /**
+         * Creates a new exception, indicating where in the SnapPea kernel
+         * the error occurred.
+         *
+         * @param fromFunction the function from the SnapPea kernel in which
+         * the error occurred.
+         * @param fromFile the source file from the SnapPea kernel in which
+         * the error occurred.
+         */
+        SnapPeaFatalError(const char* fromFunction, const char* fromFile);
 
-    /**
-     * Creates a new exception, indicating where in the SnapPea kernel
-     * the error occurred.
-     *
-     * @param fromFunction the function from the SnapPea kernel in which
-     * the error occurred.
-     * @param fromFile the source file from the SnapPea kernel in which
-     * the error occurred.
-     */
-    SnapPeaFatalError(const char* fromFunction, const char* fromFile);
+        /**
+         * Creates a new copy of the given exception.
+         */
+        SnapPeaFatalError(const SnapPeaFatalError&) noexcept = default;
 
-    /**
-     * Clones the given exception.
-     */
-    SnapPeaFatalError(const SnapPeaFatalError&) = default;
-
-    /**
-     * Sets this to a copy of the given exception.
-     */
-    SnapPeaFatalError& operator = (const SnapPeaFatalError&) = default;
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * @return a reference to this exception.
+         */
+        SnapPeaFatalError& operator = (const SnapPeaFatalError&) noexcept =
+            default;
 };
 
 /**
  * An exception that is thrown when the SnapPea kernel finds that all
  * available memory has been exhausted.
  *
- * \ifacespython Not present.
+ * This is one of two types of exception that can be thrown from deep
+ * within the SnapPea kernel.  SnapPeaFatalError is used for informative
+ * messages (the description includes a function and filename), whereas
+ * SnapPeaMemoryFull is used for out-of-memory errors (which use a stock
+ * description so they can be created without allocating further resources).
+ *
+ * Details of the error can be accessed through the member function what().
+ *
+ * \ingroup snappea
  */
-struct SnapPeaMemoryFull : public SnapPeaException {
-};
+class SnapPeaMemoryFull : public std::exception {
+    public:
+        /**
+         * Creates a new exception.
+         */
+        SnapPeaMemoryFull() noexcept = default;
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
-    typedef SnapPeaTriangulation Class;
-    static constexpr const char* name = "SnapPea Triangulation";
+        /**
+         * Creates a new copy of the given exception.
+         */
+        SnapPeaMemoryFull(const SnapPeaMemoryFull&) noexcept = default;
+
+        /**
+         * Sets this to be a copy of the given exception.
+         *
+         * @return a reference to this exception.
+         */
+        SnapPeaMemoryFull& operator = (const SnapPeaMemoryFull&) noexcept =
+            default;
+
+        /**
+         * Returns a human-readable description of the error that occurred.
+         *
+         * @return a description of the error.
+         */
+        const char* what() const noexcept override {
+            return "SnapPea reports that memory is full";
+        }
 };
-#endif
 
 /**
- * Represents a single cusp of a SnapPea triangulation.
- * See the SnapPeaTriangulation class for further details.
+ * Used to return information about a single cusp of a SnapPea triangulation.
+ * See SnapPeaTriangulation::cusp() and SnapPeaTriangulation::cusps() for
+ * further details.
  *
- * Cusp objects should be considered temporary only.  They are preserved
- * if you change the fillings (via SnapPeaTriangulation::fill()
- * or SnapPeaTriangulation::unfill()).  However, if you change the SnapPea
- * triangulation itself (e.g., via randomize()), then all cusp objects will
- * be deleted and replaced with new ones (using fresh data re-fetched from
- * the SnapPea kernel).
+ * Cusp objects essentially package together information about a cusp as
+ * a standalone read-only object.  Unlike Triangulation<3>::Vertex and other
+ * skeletal objects, a Cusp object does not uniquely define a cusp (if you
+ * need a unique identifier, use Cusp::vertex() for this).  You can make
+ * many copies of the same Cusp object, and each copy will contain the same
+ * information and point to the same vertex of the underlying triangulation.
+ *
+ * Cusp objects should be considered temporary only; you should not
+ * hold onto references or pointers to them.  If you need to hold on to
+ * information about a cusp, you can simply copy the Cusp object by value
+ * (an operation that is both cheap and safe).
+ *
+ * Cusp objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup snappea
  */
 class Cusp : public ShortOutput<Cusp> {
     private:
@@ -148,6 +183,18 @@ class Cusp : public ShortOutput<Cusp> {
                  cusp is complete. */
 
     public:
+        /**
+         * Creates a new copy of the given cusp information.
+         */
+        Cusp(const Cusp&) = default;
+
+        /**
+         * Sets this to be a copy of the given cusp information.
+         *
+         * @return a reference to this object.
+         */
+        Cusp& operator = (const Cusp&) = default;
+
         /**
          * Returns the corresponding vertex of the Regina triangulation
          * (i.e., of the Triangulation<3> structure that is inherited by
@@ -200,21 +247,17 @@ class Cusp : public ShortOutput<Cusp> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
-        // Make this class non-copyable.
-        Cusp(const Cusp&) = delete;
-        Cusp& operator = (const Cusp&) = delete;
-
     private:
         /**
          * A default constructor that performs no initialisation whatsoever.
          */
-        Cusp();
+        Cusp() = default;
 
     friend class SnapPeaTriangulation;
         /**< Allow access to private members. */
@@ -259,11 +302,12 @@ class Cusp : public ShortOutput<Cusp> {
  *   automatically cause this to become a <b>null triangulation</b>,
  *   with no tetrahedra and no SnapPea data at all.
  *
- * - In particular, if you wish to swap the contents of two SnapPea
- *   triangulations, you \e must cast both to SnapPeaTriangulation before
- *   calling swap().  If either argument is presented as the parent class
- *   Triangulation<3> then the inherited Triangulation<3>::swap() will be
- *   called instead, which will (as above) nullify both SnapPea triangulations.
+ * - In particular, if you wish to assign one SnapPea triangulation to another,
+ *   or swap the contents of two SnapPea triangulations, then you \e must
+ *   cast both objects to SnapPeaTriangulation before performing the operation.
+ *   If either argument is presented as the parent class Triangulation<3> then
+ *   the inherited operation on Triangulation<3> will be called instead, which
+ *   will (as above) nullify one or both SnapPea triangulations respectively.
  *
  * Null triangulations appear more generally when Regina is unable to
  * represent data in SnapPea's native format.  You can test for a
@@ -307,15 +351,13 @@ class Cusp : public ShortOutput<Cusp> {
  * a SnapPea file with filling coefficients outside these requirements will
  * result in a null triangulation (as discussed above).
  *
- * There are many places in the SnapPea kernel where SnapPea throws a
- * fatal error.  As of Regina 4.96, these fatal errors are converted
- * into exceptions (subclassed from SnapPeaException), which can be caught
- * and handled politely.
- *
- * This class implements the C++ Swappable requirement by providing member
- * and global swap() functions.  However, like all packet types, it does
- * \e not implement a move constructor or move assignment, since this would
- * interfere with the structure of the packet tree.
+ * There are many places in the SnapPea kernel where SnapPea throws a fatal
+ * error.  These fatal errors are converted into exceptions (in particular,
+ * SnapPeaFatalError and SnapPeaMemoryFull), which can be caught and handled
+ * politely.  You should assume, unless you have good reason to believe
+ * otherwise (e.g., you have read and traced through the SnapPea source code),
+ * that any member function of this class that uses the SnapPea kernel could
+ * throw either of these exceptions.
  *
  * Regina uses the variant of the SnapPea kernel that is shipped with
  * SnapPy (standard precision), as well as some additional code
@@ -323,6 +365,51 @@ class Cusp : public ShortOutput<Cusp> {
  * macro SNAPPY_VERSION that gives the exact version of SnapPy that is
  * bundled into Regina, and you can query this at runtime by calling
  * Regina's function regina::versionSnapPy().
+ *
+ * Since Regina 7.0, SnapPeaTriangulation is no longer a "packet type" that can
+ * be inserted directly into the packet tree.  Instead a SnapPeaTriangulation
+ * is now a standalone mathematatical object, which makes it slimmer and faster
+ * for ad-hoc use.  The consequences of this are:
+ *
+ * - If you create your own SnapPeaTriangulation, it will not have any of the
+ *   usual packet infrastructure.  You cannot add it into the packet tree, and
+ *   it will not support a label, tags, child/parent packets, and/or event
+ *   listeners.
+ *
+ * - To include a SnapPeaTriangulation in the packet tree, you must create a
+ *   new PacketOf<SnapPeaTriangulation>.  This \e is a packet type, and
+ *   supports labels, tags, child/parent packets, and event listeners.
+ *   It derives from SnapPeaTriangulation, and so inherits the full
+ *   SnapPeaTriangulation interface.
+ *
+ * - If you are adding new functions to this class that edit the
+ *   triangulation, you must still remember to create a ChangeEventSpan.
+ *   This will ensure that, if the triangulation is being managed by a
+ *   PacketOf<SnapPeaTriangulation>, then the appropriate packet change events
+ *   will be fired.  All other events (aside from packetToBeChanged() and
+ *   packetWasChanged() are managed directly by the
+ *   PacketOf<SnapPeaTriangulation> wrapper class.
+ *
+ * Regarding the packet interface, there is currently a deficiency when
+ * listening for change events on a PacketOf<SnapPeaTriangulation>:
+ *
+ * - As described above, if you edit the triangulation using the inherited
+ *   Triangulation<3> interface, this will nullify the SnapPea triangulation.
+ *
+ * - As expected, this will fire a pair of change events.  However, the
+ *   packetToBeChanged() event will be fired too late: specifically, it will be
+ *   fired \e after the Triangulation<3> change is made but \e before the
+ *   SnapPea triangulation is nullifed.  In particular, it will already be
+ *   too late to take a copy of the original SnapPea triangulation.
+ *
+ * - Since fixing this will require non-trivial re-engineering of the code,
+ *   and since users should not be modifying SnapPea triangulations via the
+ *   inherited Triangulation<3> interface, this deficiency is being left to
+ *   stay for the time being.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * The SnapPea kernel was originally written by Jeff Weeks.  SnapPy,
  * where this kernel is now maintained, is primarily developed by Marc Culler,
@@ -333,10 +420,20 @@ class Cusp : public ShortOutput<Cusp> {
  *
  * See http://snappy.computop.org/ for further information on
  * SnapPea and its successor SnapPy.
+ *
+ * \exception SnapPeaFatalError the SnapPea kernel detected a fatal error
+ * from which it could not recover.  This could be thrown by any member
+ * function that uses the SnapPea kernel.
+ *
+ * \exception SnapPeaMemoryFull the SnapPea kernel ran out of memory.
+ * This could be thrown by any member function that uses the SnapPea kernel.
+ *
+ * \ingroup snappea
  */
-class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
-    REGINA_PACKET(SnapPeaTriangulation, PACKET_SNAPPEATRIANGULATION)
-
+class SnapPeaTriangulation :
+        public Triangulation<3>,
+        public PacketData<SnapPeaTriangulation>,
+        public Output<SnapPeaTriangulation> {
     public:
         /**
          * Describes the different types of solution that can be found when
@@ -351,7 +448,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * \warning This enumeration must always be kept in sync with
          * SnapPea's own SolutionType enumeration.
          */
-        typedef enum {
+        enum SolutionType {
             not_attempted,
                 /**< A solution has not been attempted. */
             geometric_solution,
@@ -372,7 +469,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
                 /**< The gluing equations could not be solved. */
             externally_computed
                 /**< Tetrahedron shapes were inserted into the triangulation. */
-        } SolutionType;
+        };
 
         /**
          * Indicates which types of covers should be enumerated when calling
@@ -388,7 +485,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * \warning This enumeration must always be kept in sync with
          * SnapPea's PermutationSubgroup enumeration.
          */
-        typedef enum {
+        enum CoverEnumerationType {
             cyclic_covers,
                 /**< Indicates that only cyclic covers should be enumerated.
                      This corresponds to the SnapPea constant
@@ -397,7 +494,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
                 /**< Indicates that all covers should be enumerated.
                      This corresponds to the SnapPea constant
                      \a permutation_subgroup_Sn. */
-        } CoverEnumerationType;
+        };
 
         /**
          * Indicates the different types of covers that can be produced
@@ -412,7 +509,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * \warning This enumeration must always be kept in sync with
          * SnapPea's own CoveringType enumeration.
          */
-        typedef enum {
+        enum CoverType {
             unknown_cover,
                 /**< Indicates that SnapPea has not yet computed the covering
                      type. */
@@ -426,7 +523,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
                      covering transformation taking one to the other. */
             cyclic_cover
                 /**< Indicates a cyclic covering. */
-        } CoverType;
+        };
 
     private:
         regina::snappea::Triangulation* data_;
@@ -447,21 +544,13 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
             /**< The number of cusps that are currently filled. */
 
         mutable std::optional<GroupPresentation> fundGroupFilled_;
-            /**< The fundamental group of the filled triangulation, or
-                 no value if this has not yet been computed. */
-        mutable std::variant<bool, AbelianGroup> h1Filled_;
-            /**< The first homology group of the filled triangulation,
-                 or a boolean if this unknown.  The boolean will be
-                 \c false if if the computation has not yet been attempted,
-                 or \c true if the computation failed (which means SnapPea
+            /**< The fundamental group of the filled triangulation.
+                 This is std::nullopt if it has not yet been computed. */
+        mutable std::optional<AbelianGroup> h1Filled_;
+            /**< The first homology group of the filled triangulation.
+                 This is std::nullopt if the computation has not yet been
+                 attempted, or if the computation failed (i.e., SnapPea
                  overflowed when building the matrix of relations). */
-
-        bool syncing_;
-            /**< Set to \c true whilst sync() is being called.  This allows the
-                 internal packet listener to distinguish between "legitimate"
-                 changes to the inherited Triangulation<3> via sync(), versus
-                 "illegitimate" changes from elsewhere through the inherited
-                 Triangulation<3> interface. */
 
         static bool kernelMessages_;
             /**< Should the SnapPea kernel write diagnostic messages to
@@ -470,6 +559,10 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
             /**< The complex number 0.  This is defined as a (static) data
                  member so that shape() can still return a reference even when
                  no tetrahedron shapes have been computed. */
+
+        unsigned reginaChangeEventSpans_ { 0 };
+            /**< The number of change event spans currently registered
+                 on the inherited Triangulation<3> interface. */
 
     public:
         /**
@@ -493,16 +586,14 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * (including information that Regina itself does not store,
          * such as peripheral curves).
          *
-         * If this operation is successful, this constructor will immediately
-         * ask SnapPea to try to find a hyperbolic structure.
-         *
          * If this operation fails (e.g., if the given string does not
-         * represent a valid SnapPea data file), then this will be a
-         * null triangulation.  You can test for this by calling isNull().
+         * represent a valid SnapPea data file), then this routine will
+         * thrown an exception; see below for details.
          *
-         * The triangulation will automatically be given a packet label
-         * based on the manifold name stored in the second line of the
-         * SnapPea data file.
+         * If this routine returns (as opposed to throwing an exception),
+         * then it is guaranteed that this is not a null SnapPea triangulation.
+         * In this successful scenario, this constructor will ask SnapPea to
+         * try to find a hyperbolic structure before it returns.
          *
          * \note This constructor can be used in a Python session to
          * pass data from SnapPy through to Regina's copy of the SnapPea
@@ -519,6 +610,10 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * file I/O routines.  This routine assumes that the file \e contents,
          * however, are in UTF-8 (the standard encoding used throughout Regina).
          *
+         * \exception FileError the SnapPea kernel could not read the
+         * given file, or could not parse the file contents (which could
+         * have been passed explicitly or could have been read from file).
+         *
          * @param fileNameOrContents either the name of a SnapPea data
          * file, or the contents of a SnapPea data file (which need not
          * actually exist on the filesystem).
@@ -526,16 +621,40 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
         SnapPeaTriangulation(const std::string& fileNameOrContents);
 
         /**
-         * Creates a clone of the given SnapPea triangulation.
-         * This copy will be independent (i.e., this triangulation will
-         * not be affected if \a tri is later changed or destroyed).
+         * Creates a new copy of the given SnapPea triangulation.
          *
-         * If \a tri is a null triangulation then this will be a null
+         * If \a src is a null triangulation then this will be a null
          * triangulation also.  See isNull() for further details.
          *
-         * @param tri the SnapPea triangulation to clone.
+         * @param src the SnapPea triangulation to copy.
          */
-        SnapPeaTriangulation(const SnapPeaTriangulation& tri);
+        SnapPeaTriangulation(const SnapPeaTriangulation& src);
+
+        /**
+         * Moves the given SnapPea triangulation into this new triangulation.
+         *
+         * This is much faster than the copy constructor, but is still
+         * linear time.  This is because every tetrahedron must be adjusted
+         * to point back to this new triangulation instead of \a src.
+         *
+         * All tetrahedra, cusps and skeletal objects (faces, components and
+         * boundary components) that belong to \a src will be moved into this
+         * triangulation, and so any pointers or references to Tetrahedron<3>,
+         * Cusp, Face<3, subdim>, Component<3> or BoundaryComponent<3> objects
+         * will remain valid.  Likewise, all cached properties will be moved
+         * into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this triangulation
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the triangulation to move.
+         */
+        SnapPeaTriangulation(SnapPeaTriangulation&& src) noexcept;
 
         /**
          * Converts the given Regina triangulation to a SnapPea triangulation.
@@ -607,6 +726,53 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
         SnapPeaTriangulation(const Triangulation<3>& tri, bool ignored = false);
 
         /**
+         * Creates a new ideal SnapPea triangulation representing the
+         * complement of the given link in the 3-sphere.
+         *
+         * This is the same triangulation that would be produced by calling
+         * Link::complement() to build a native Triangulation<3>, and then
+         * passing the resulting triangulation to the constructor
+         * SnapPeaTriangulation(const Triangulation<3>&).
+         *
+         * Be aware that the peripheral curves are chosen by SnapPea
+         * according to the method outlined in the constructor
+         * SnapPeaTriangulation(const Triangulation<3>&); in particular,
+         * this is done with no knowledge of the original link diagram.
+         *
+         * Also, be aware that this could be a null SnapPea triangulation
+         * (if, for whatever reason, SnapPea is unable to do the conversion
+         * from the intermediate native Regina triangulation).  As always,
+         * you can (and should) test this by calling isNull().
+         *
+         * @param link the link whose complement we should build.
+         */
+        SnapPeaTriangulation(const Link& link);
+
+        /**
+         * Creates a new triangulation that holds the given raw data from
+         * the SnapPea kernel.
+         *
+         * Typical users will not be able to call this constructor, since the
+         * SnapPea kernel headers are not part of Regina's public API and are
+         * not shipped with Regina's development headers.
+         *
+         * This new triangulation will take ownership of \a data, and
+         * will use it directly as its native SnapPea representation.
+         * Nevertheless, this constructor is not constant time, since it
+         * also needs to construct a native Regina representation of the
+         * same triangulation.
+         *
+         * The given SnapPea kernel data may be \c null, in which case this
+         * will become a null SnapPea triangulation.
+         *
+         * \ifacespython Not present, since this talks directly to the
+         * SnapPea kernel.
+         *
+         * @param data the raw SnapPea kernel data to use in this triangulation.
+         */
+        SnapPeaTriangulation(regina::snappea::Triangulation* data);
+
+        /**
          * Destroys this triangulation.  All internal SnapPea data will
          * also be destroyed.
          */
@@ -619,6 +785,61 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
         /*@{*/
 
         /**
+         * Sets this to be a (deep) copy of the given SnapPea triangulation.
+         *
+         * \warning If you wish to copy the contents of one SnapPea
+         * triangulation into another, you \e must cast both to
+         * SnapPeaTriangulation before calling the assignment operator.  If
+         * either argument is presented as the parent class Triangulation<3>,
+         * then the Triangulation<3> assignment operator will be called
+         * instead; the result will be that (just like when you call any of
+         * the Triangulation<3> edit routines) this SnapPea triangulation will
+         * be reset to a null triangulation.  See the SnapPeaTriangulation
+         * class notes for further discussion.
+         *
+         * @return a reference to this triangulation.
+         */
+        SnapPeaTriangulation& operator = (const SnapPeaTriangulation& src);
+
+        /**
+         * Moves the contents of the given triangulation into this
+         * triangulation.
+         *
+         * This is much faster than copy assignment, but is still linear
+         * time.  This is because every tetrahedron must be adjusted to point
+         * back to this triangulation instead of \a src.
+         *
+         * All tetrahedra, cusps and skeletal objects (faces, components and
+         * boundary components) that belong to \a src will be moved into this
+         * triangulation, and so any pointers or references to Tetrahedron<3>,
+         * Cusp, Face<3, subdim>, Component<3> or BoundaryComponent<3> objects
+         * will remain valid.  Likewise, all cached properties will be moved
+         * into this triangulation.
+         *
+         * The triangulation that is passed (\a src) will no longer be usable.
+         *
+         * \warning If you wish to move the contents of one SnapPea
+         * triangulation into another, you \e must cast both to
+         * SnapPeaTriangulation before calling the assignment operator.  If
+         * either argument is presented as the parent class Triangulation<3>,
+         * then the Triangulation<3> assignment operator will be called
+         * instead; the result will be that (just like when you call any of
+         * the Triangulation<3> edit routines) this SnapPea triangulation will
+         * be reset to a null triangulation.  See the SnapPeaTriangulation
+         * class notes for further discussion.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this triangulation which may in turn call arbitrary
+         * code via any registered packet listeners.  It deliberately does
+         * \e not fire change events on \a src, since it assumes that \a src is
+         * about to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the triangulation to move.
+         * @return a reference to this triangulation.
+         */
+        SnapPeaTriangulation& operator = (SnapPeaTriangulation&& src);
+
+        /**
          * Swaps the contents of this and the given SnapPea triangulation.
          *
          * All information contained in this triangulation, including both
@@ -628,10 +849,6 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          *
          * In particular, any pointers or references to Tetrahedron<3>,
          * Face<3, subdim> and/or Cusp objects will remain valid.
-         *
-         * The structure of the packet tree will \e not be swapped:
-         * both packets being swapped will remain with their original parents,
-         * and their original children will remain with them.
          *
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
@@ -646,13 +863,18 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * See the SnapPeaTriangulation class notes for further discussion.
          *
          * \note This swap function is \e not marked \c noexcept, since it
-         * fires packet change events which may in turn call arbitrary
-         * code via any registered packet listeners.
+         * fires change events on both triangulations which may in turn call
+         * arbitrary code via any registered packet listeners.
          *
          * @param other the SnapPea triangulation whose contents should
          * be swapped with this.
          */
         void swap(SnapPeaTriangulation& other);
+
+        /**
+         * Sets this to be a null SnapPea triangulation.
+         */
+        void nullify();
 
         /*@}*/
         /**
@@ -714,8 +936,9 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.volume()</tt>.
          *
-         * @return the estimated volume of the underlying 3-manifold,
-         * or 0 if this is a null triangulation.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * @return the estimated volume of the underlying 3-manifold.
          */
         double volume() const;
 
@@ -727,19 +950,13 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.volume(accuracy=True)</tt>.
          *
-         * \ifacespython The \a precision argument is not present.
-         * Instead, two routines are offered.  The routine \a volume()
-         * takes no arguments and returns the volume only, whereas the
-         * routine \a volumeWithPrecision() takes no arguments and
-         * returns a (\a volume, \a precision) tuple.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
          *
-         * @param precision used to return an estimate of the number of
-         * decimal places of accuracy in the calculated volume.
-         *
-         * @return the estimated volume of the underlying 3-manifold,
-         * or 0 if this is a null triangulation.
+         * @return a pair whose first element is the estimated volume of the
+         * underlying 3-manifold, and whose second element is an estimate
+         * of the number of decimal places of accuracy in this volume.
          */
-        double volume(int& precision) const;
+        std::pair<double, int> volumeWithPrecision() const;
 
         /**
          * Determines whether the current solution to the gluing equations
@@ -936,12 +1153,15 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * <tt>Manifold.cusp_info()[c]</tt>, though the set of
          * information returned about each cusp is different.
          *
-         * These Cusp objects should be considered temporary only.  They are
-         * preserved if you change the fillings (via fill() or unfill()).
-         * However, if you change the SnapPea triangulation itself
-         * (e.g., via randomize()), then all cusp objects will be deleted
-         * and replaced with new ones (using fresh data re-fetched from
-         * the SnapPea kernel).
+         * These Cusp objects should be considered temporary only; you
+         * should not hold onto references or pointers to them.
+         * If you need to hold on to information about a cusp, you can
+         * simply copy the Cusp object by value (an operation that is
+         * both cheap and safe).
+         *
+         * In older versions of Regina, this routine would explicitly
+         * check for a null triangulation.  Nowadays this is the
+         * responsibility of the user or programmer.
          *
          * \warning Be warned that cusp \a i might not correspond to vertex
          * \a i of the triangulation.  The Cusp::vertex() method (which
@@ -950,10 +1170,44 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          *
          * @param whichCusp the index of a cusp according to SnapPea;
          * this must be between 0 and countCusps()-1 inclusive.
-         * @return information about the given cusp, or \c nullptr if this is a
-         * null triangulation.
+         * @return information about the given cusp.
          */
-        const Cusp* cusp(unsigned whichCusp = 0) const;
+        const Cusp& cusp(unsigned whichCusp = 0) const;
+
+        /**
+         * Returns an object that allows iteration through and random access
+         * to information about all of the cusps of this manifold.
+         * This information includes the filling coefficients (if any),
+         * along with other combinatorial information.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  The elements of the list will be
+         * read-only objects of type Cusp.  For example, your code might look
+         * like:
+         *
+         * \code{.cpp}
+         * for (const Cusp& c : tri->cusps()) { ... }
+         * \endcode
+         *
+         * These Cusp objects should be considered temporary only; you
+         * should not hold onto references or pointers to them.
+         * If you need to hold on to information about a cusp, you can
+         * simply copy the Cusp object by value (an operation that is
+         * both cheap and safe).
+         *
+         * \warning Be warned that cusp \a i might not correspond to vertex
+         * \a i of the triangulation.  The Cusp::vertex() method (which
+         * is accessed through the cusp() routine) can help translate
+         * between SnapPea's cusp numbers and Regina's vertex numbers.
+         *
+         * @return access to the list of all cusps of this manifold.
+         */
+        auto cusps() const;
 
         /**
          * Assigns a Dehn filling to the given cusp.  This routine will
@@ -964,7 +1218,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * simply ask SnapPea to store the given filling coefficients
          * alongside the cusp, to be used in operations such as computing
          * hyperbolic structures.  If you wish to retriangulate to permanently
-         * fill the cusp, call filledTriangulation() instead.
+         * fill the cusp, call filledAll() or filledPartial() instead.
          *
          * For orientable cusps only coprime filling coefficients are allowed,
          * and for non-orientable cusps only (±1, 0) fillings are allowed.
@@ -1014,70 +1268,133 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
         void unfill(unsigned whichCusp = 0);
 
         /**
-         * Retriangulates to permanently fill the given cusp.  This uses
-         * the current Dehn filling coefficients on the cusp, as set by fill().
+         * Retriangulates to permanently fill the given cusp.  This uses the
+         * current Dehn filling coefficients on the cusp, as set by fill().
+         * The result will be another instance of SnapPeaTriangulation, with
+         * at least one cusp remaining.
          *
-         * If this triangulation has more than one cusp to begin with,
-         * then the result will be a new instance of SnapPeaTriangulation,
-         * and will have one fewer cusp.  Note that the remaining cusps
-         * may be reindexed, and all Cusp structures will be destroyed
-         * and rebuilt.  Auxiliary information on the remaining cusps (such
-         * as filling coefficients and peripheral curves) will be preserved,
-         * and SnapPea will automatically attempt to compute a hyperbolic
-         * structure on the new triangulation.
+         * This routine requires the manifold to have at least two cusps
+         * (i.e., the cusp being filled, plus at least one other).  This is
+         * because most of the SnapPea kernel routines require its
+         * triangulations to have at least one cusp.
          *
-         * If this triangulation has only one cusp, then the result will
-         * be a new instance of Triangulation<3> (not SnapPeaTriangulation),
-         * and will represent a closed manifold.
+         * The error conditions are as follows:
          *
-         * Either way, the result will be a newly allocated triangulation, and
-         * it is the responsibility of the caller of this routine to destroy it.
-         * The original triangulation (this object) will be left unchanged.
-         * If the given cusp is complete or if this is a null triangulation,
-         * then this routine will simply return \c nullptr.
+         * - If the given cusp has no filling coefficients assigned
+         *   (i.e., it is complete), then it cannot be filled: instead
+         *   this routine will throw an exception.
+         *
+         * - If the manifold has only one cusp, then this routine will likewise
+         *   throw an exception.  For such scenarios you should call filledAll()
+         *   instead, which will return a closed Regina triangulation.
+         *
+         * - Otherwise, if there is at least one other cusp, the result will be
+         *   a SnapPeaTriangulation with one fewer cusp.  The remaining cusps
+         *   might be reindexed, and all Cusp structures will be destroyed and
+         *   rebuilt.  Auxiliary information on the remaining cusps (such as
+         *   peripheral curves) will be preserved, and SnapPea will
+         *   automatically attempt to compute a hyperbolic structure on the
+         *   new triangulation.
+         *
+         * This replaces the old filledTriangulation() routines from
+         * Regina 6.0.1 and earlier, which decided at runtime whether to
+         * return a Triangulation<3> or a SnapPeaTriangulation.  Since this
+         * routine explicitly does not fill all cusps, it is able to guarantee
+         * an explicit return type of SnapPeaTriangulation at compile time.
+         *
+         * \pre The given cusp is non-complete (i.e., has filling coefficients
+         * assigned), and the manifold has at least one other cusp.  These
+         * preconditions will be checked, and an exception will be thrown if
+         * they are not met.
          *
          * \warning Be warned that cusp \a i might not correspond to vertex
          * \a i of the triangulation.  The Cusp::vertex() method (which
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception FailedPrecondition the given cusp is complete,
+         * and/or it is the only cusp.
+         *
          * @param whichCusp the index of the cusp to permanently fill according
          * to SnapPea; this must be between 0 and countCusps()-1 inclusive.
-         * @return the new filled triangulation or \c nullptr if the filling was
-         * not possible (as described above).
+         * @return the filled triangulation.
          */
-        Triangulation<3>* filledTriangulation(unsigned whichCusp) const;
+        SnapPeaTriangulation filledPartial(unsigned whichCusp) const;
 
         /**
-         * Retriangulates to permanently fill all non-complete cusps.
-         * This uses the current Dehn filling coefficients on the cusps,
-         * as set by fill().
+         * Retriangulates to permanently fill some but not all cusps.  This
+         * uses the current Dehn filling coefficients on the cusps, as set by
+         * fill().  The result will be another instance of SnapPeaTriangulation,
+         * with at least one cusp remaining.
          *
-         * If every cusp of this triangulation is complete, this routine
-         * will simply return a new clone of this triangulation.
+         * This routine requires at least one cusp to be complete (i.e., to
+         * have no filling coefficients assigned), since most of the SnapPea
+         * kernel requires its triangulations to have at least one cusp.
          *
-         * If some but not all cusps are complete, then the result will
-         * be a new instance of SnapPeaTriangulation, and will have
-         * fewer cusps.  Note that the remaining cusps may be reindexed,
-         * and all Cusp structures will be destroyed and rebuilt.  Auxiliary
-         * information on the remaining cusps (such as peripheral curves)
-         * will be preserved, and SnapPea will automatically attempt to
-         * compute a hyperbolic structure on the new triangulation.
+         * - If all cusps are complete, then the result will simply be a
+         *   clone of this triangulation.
          *
-         * If all cusps of this triangulation have filling coefficients
-         * assigned, then the result will be a new instance of Triangulation<3>
-         * (not SnapPeaTriangulation), and will represent a closed manifold.
+         * - If some but not all cusps are complete, then the result will
+         *   be a SnapPeaTriangulation with fewer cusps.  The remaining cusps
+         *   might be reindexed, and all Cusp structures will be destroyed and
+         *   rebuilt.  Auxiliary information on the remaining cusps (such as
+         *   peripheral curves) will be preserved, and SnapPea will
+         *   automatically attempt to compute a hyperbolic structure on the
+         *   new triangulation.
          *
-         * Whatever happens, the result will be a newly allocated triangulation,
-         * and it is the responsibility of the caller of this routine to
-         * destroy it.  The original triangulation (this object) will be left
-         * unchanged.  If this is a null triangulation, then this routine
-         * will simply return \c nullptr.
+         * - If no cusps are complete (i.e., all cusps have filling
+         *   coefficients), then this routine will throw an exception.
+         *   For such scenarios you should call filledAll() instead.
          *
-         * @return the new filled triangulation, or \c nullptr if this is a null
-         * triangulation.
+         * This replaces the old filledTriangulation() routines from
+         * Regina 6.0.1 and earlier, which decided at runtime whether to
+         * return a Triangulation<3> or a SnapPeaTriangulation.  Since this
+         * routine explicitly does not fill all cusps, it is able to guarantee
+         * an explicit return type of SnapPeaTriangulation at compile time.
+         *
+         * \pre At least one cusp of this manifold is complete (i.e., has no
+         * filling coefficients assigned).  This will be checked, and an
+         * exception will be thrown if this requirement is not met.
+         *
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception FailedPrecondition all cusps of this manifold are
+         * non-complete.
+         *
+         * @return the filled triangulation.
          */
-        Triangulation<3>* filledTriangulation() const;
+        SnapPeaTriangulation filledPartial() const;
+
+        /**
+         * Retriangulates to permanently fill all cusps.  This uses the
+         * current Dehn filling coefficients on the cusps, as set by fill().
+         * The result will be a closed triangulation, of type Triangulation<3>
+         * (not SnapPeaTriangulation).
+         *
+         * This routine requires every cusp to be non-complete.  If one or
+         * more cusps is complete (i.e., has no filling coefficients assigned),
+         * then this routine will throw an exception.
+         *
+         * This replaces the old filledTriangulation() routines from
+         * Regina 6.0.1 and earlier, which decided at runtime whether to
+         * return a Triangulation<3> or a SnapPeaTriangulation.  Since this
+         * routine explicitly fills all cusps, it is able to guarantee
+         * an explicit return type of Triangulation<3> at compile time.
+         *
+         * \pre All cusps of this manifold are non-complete (i.e., have
+         * filling coefficients assigned).  This will be checked, and an
+         * exception will be thrown if this requirement is not met.
+         *
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception FailedPrecondition some cusp of this manifold
+         * is complete.
+         *
+         * @return the filled triangulation.
+         */
+        Triangulation<3> filledAll() const;
 
         /**
          * Returns a matrix for computing boundary slopes of
@@ -1125,13 +1442,14 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * constructor SnapPeaTriangulation(const Triangulation<3>&, bool).
          * This might not be what the user expects.
          *
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
          * @author William Pettersson and Stephan Tillmann
          *
-         * @return a newly allocated matrix with (2 * \a number_of_cusps) rows
-         * and (3 * \a number_of_tetrahedra) columns as described above,
-         * or no value if this is a null triangulation.
+         * @return a matrix with (2 * \a number_of_cusps) rows
+         * and (3 * \a number_of_tetrahedra) columns as described above.
          */
-        std::optional<MatrixInt> slopeEquations() const;
+        MatrixInt slopeEquations() const;
 
         /*@}*/
         /**
@@ -1152,7 +1470,8 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          *   a combination of both SnapPea's and Regina's code to compute
          *   homology groups.  There may be situations in which the SnapPea
          *   kernel cannot perform its part of the computation (see below),
-         *   in which case this routine will return \c null.
+         *   in which case this routine will throw a SnapPeaUnsolvedCase
+         *   exception.
          *
          * - The inherited homology() routine uses only Regina's code, and
          *   works purely within Regina's parent Triangulation<3> class.
@@ -1168,23 +1487,25 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          *
          * - SnapPea constructs a filled relation matrix using machine integer
          *   arithmetic, but detects overflow (in which case this routine
-         *   will return \c null);
+         *   will throw an exception);
          *
          * - Regina then uses exact integer arithmetic to solve for the
          *   abelian group invariants (i.e., Smith normal form).
          *
          * Note that each time the triangulation changes, the homology
-         * group will be deleted.  Thus the pointer that is returned
+         * group will be deleted.  Thus the reference that is returned
          * from this routine should not be kept for later use.  Instead,
          * homologyFilled() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
-         * \pre This is not a null triangulation.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
          *
-         * @return the first homology group of the filled manifold, or
-         * \c null if an overflow occurred inside the SnapPea kernel.
+         * \exception SnapPeaUnsolvedCase SnapPea detected an overflow
+         * when attempting to create the filled relation matrix.
+         *
+         * @return the first homology group of the filled manifold.
          */
-        const AbelianGroup* homologyFilled() const;
+        const AbelianGroup& homologyFilled() const;
 
         /**
          * Returns the fundamental group of the manifold with respect to
@@ -1209,7 +1530,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * fundamentalGroupFilled() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
-         * \pre This is not a null triangulation.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
          *
          * @param simplifyPresentation \c true if SnapPea should attempt
          * to simplify the group presentation, or \c false if it should
@@ -1250,6 +1571,12 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * - building the cover that corresponds to each representation,
          *   using the SnapPea function <tt>construct_cover()</tt>.
          *
+         * If you are only interested in the corresponding index \a k subgroups
+         * of the fundamental group and not the triangulated covers themselves,
+         * then you may wish to consider the native Regina function
+         * GroupPresentation::enumerateCovers() instead.  That function is
+         * highly optimised, and should be considerably faster as \a k grows.
+         *
          * Each covering space is produced once up to equivalence; here
          * equivalent covers correspond to conjugate representations of
          * the fundamental group.
@@ -1264,11 +1591,12 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * For each cover that is produced, this routine will call \a action
          * (which must be a function or some other callable object).
          *
-         * - The first argument to \a action must be a reference to a
-         *   SnapPeaTriangulation.  This will be the newly produced cover.
-         *   \a action may, if it chooses, modify the triangulation that
-         *   it receives (though it must not delete it).  The triangulation
-         *   will be destroyed immediately after \a action is called.
+         * - The first argument to \a action must be a SnapPea triangulation;
+         *   this will be the newly produced cover.  This argument will be
+         *   passed as an rvalue; a typical action could (for example) take it
+         *   by const reference and query it, or take it by value and modify it,
+         *   or take it by rvalue reference and move it into more permanent
+         *   storage.
          *
          * - The second argument to \a action must be of type
          *   \a SnapPeaTriangulation::CoverType.
@@ -1309,17 +1637,17 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * this will nullify the SnapPeaTriangulation.  See the class
          * notes for further explanation.
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap them in std::ref or
-         * std::cref.
-         *
          * \apinotfinal
          *
-         * \ifacespython This function is available in Python, and the
-         * \a action argument may be a pure Python function.  However, its
-         * form is more restricted: the arguments \a args are removed, so you
-         * must simply call it as enumerateCovers(sheets, type, action).
+         * \ifacespython There are two versions of this function available
+         * in Python.  The first form is
+         * <tt>enumerateCovers(sheets, type, action)</tt>, which mirrors the
+         * C++ function: it takes \a action which may be a pure Python function,
+         * it returns the number of covers found, but it does \e not take an
+         * addition argument list (\a args).  The second form is
+         * <tt>enumerateCovers(sheets, type)</tt>, which returns a Python list
+         * containing all of the triangulated covers, each given as a
+         * pair (SnapPeaTriangulation, SnapPeaTriangulation::CoverType).
          *
          * @param sheets the number of sheets in the covers to produce
          * (i.e., the number \a k in the description above); this must
@@ -1360,40 +1688,55 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * Either way, we preserve the hyperbolic structure.
          *
          * If you need a canonical triangulation (as opposed to an arbitrary
-         * retriangulation), then you should call canonize() instead.
+         * retriangulation), then you should call canonise() instead.
          *
-         * The resulting triangulation will be newly allocated, and it
-         * is the responsibility of the caller of this routine to destroy it.
+         * SnapPea is not always able to triangulate the canonical cell
+         * decomposition: if it fails then then this routine will throw an
+         * exception (see below for details).
          *
-         * If for any reason either Regina or SnapPea are unable to
-         * construct a triangulation of the canonical cell decomposition,
-         * then this routine will return \c nullptr.
-         *
-         * \snappy The function <tt>canonize()</tt> means different
+         * \snappy The function <tt>canonise()</tt> means different
          * things for SnapPy versus the SnapPea kernel.  Here Regina follows
          * the naming convention used in the SnapPea kernel.  Specifically:
-         * Regina's routine SnapPeaTriangulation::protoCanonize()
+         * Regina's routine SnapPeaTriangulation::protoCanonise()
          * corresponds to SnapPy's <tt>Manifold.canonize()</tt> and the
          * SnapPea kernel's <tt>proto_canonize(manifold)</tt>.
-         * Regina's routine SnapPeaTriangulation::canonize()
+         * Regina's routine SnapPeaTriangulation::canonise()
          * corresponds to the SnapPea kernel's <tt>canonize(manifold)</tt>,
          * and is not available through SnapPy at all.
          *
          * \warning The SnapPea kernel does not always compute the canonical
-         * cell decomposition correctly.  However, it guarantees that
-         * the manifold that it does compute is homeomorphic to the original.
+         * cell decomposition correctly.  Sometimes it gives the wrong answer,
+         * although in such a case it still guarantees that the manifold it
+         * \e does return is homeomorphic to the original.  Sometimes it
+         * gives no answer at all, in which case this routine will throw
+         * an exception (see below).
          *
-         * @return the canonical triangulation of the canonical cell
-         * decomposition, or \c nullptr if this could not be constructed.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception UnsolvedCase the SnapPea kernel was unable to
+         * triangulate the canonical cell decomposition.
+         *
+         * @return a triangulation of the canonical cell decomposition.
          */
-        SnapPeaTriangulation* protoCanonize() const;
+        SnapPeaTriangulation protoCanonise() const;
 
         /**
-         * A synonym for protoCanonize(), which constructs the canonical
+         * An alias for protoCanonise(), which constructs the canonical
          * cell decomposition using an arbitrary retriangulation if necessary.
-         * See canonize() for further details.
+         * See protoCanonise() for further details.
+         *
+         * This alias is provided as "glue" between the British spelling
+         * used throughout Regina and the American spelling used
+         * throughout the SnapPea kernel.
+         *
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception UnsolvedCase the SnapPea kernel was unable to
+         * triangulate the canonical cell decomposition.
+         *
+         * @return a triangulation of the canonical cell decomposition.
          */
-        SnapPeaTriangulation* protoCanonise() const;
+        SnapPeaTriangulation protoCanonize() const;
 
         /**
          * Constructs the canonical retriangulation of the canonical
@@ -1427,40 +1770,57 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * SnapPea-specific information (such as peripheral curves and
          * fillings), and simply returns one of Regina's native triangulations.
          * If you need to preserve SnapPea-specific information then you
-         * should call protoCanonize() instead.
+         * should call protoCanonise() instead.
          *
-         * The resulting triangulation will be newly allocated, and it
-         * is the responsibility of the caller of this routine to destroy it.
+         * SnapPea is not always able to compute the canonical cell
+         * decomposition: if it fails then then this routine will throw an
+         * exception (see below for details).
          *
-         * If for any reason either Regina or SnapPea are unable to
-         * construct the canonical retriangulation of the canonical cell
-         * decomposition, this routine will return \c nullptr.
-         *
-         * \snappy The function <tt>canonize()</tt> means different
+         * \snappy The function <tt>canonise()</tt> means different
          * things for SnapPy versus the SnapPea kernel.  Here Regina follows
          * the naming convention used in the SnapPea kernel.  Specifically:
-         * Regina's routine SnapPeaTriangulation::protoCanonize()
+         * Regina's routine SnapPeaTriangulation::protoCanonise()
          * corresponds to SnapPy's <tt>Manifold.canonize()</tt> and the
          * SnapPea kernel's <tt>proto_canonize(manifold)</tt>.
-         * Regina's routine SnapPeaTriangulation::canonize()
+         * Regina's routine SnapPeaTriangulation::canonise()
          * corresponds to the SnapPea kernel's <tt>canonize(manifold)</tt>,
          * and is not available through SnapPy at all.
          *
          * \warning The SnapPea kernel does not always compute the canonical
-         * cell decomposition correctly.  However, it guarantees that
-         * the manifold that it does compute is homeomorphic to the original.
+         * cell decomposition correctly.  Sometimes it gives the wrong answer,
+         * although in such a case it still guarantees that the manifold it
+         * \e does return is homeomorphic to the original.  Sometimes it
+         * gives no answer at all, in which case this routine will throw
+         * an exception (see below).
+         *
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception UnsolvedCase the SnapPea kernel was unable to
+         * compute the canonical cell decomposition.
          *
          * @return the canonical triangulation of the canonical cell
-         * decomposition, or \c nullptr if this could not be constructed.
+         * decomposition.
          */
-        Triangulation<3>* canonize() const;
+        Triangulation<3> canonise() const;
 
         /**
-         * A synonym for canonize(), which constructs the canonical
+         * An alias for canonise(), which constructs the canonical
          * retriangulation of the canonical cell decomposition.
-         * See canonize() for further details.
+         * See canonise() for further details.
+         *
+         * This alias is provided as "glue" between the British spelling
+         * used throughout Regina and the American spelling used
+         * throughout the SnapPea kernel.
+         *
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
+         *
+         * \exception UnsolvedCase the SnapPea kernel was unable to
+         * compute the canonical cell decomposition.
+         *
+         * @return the canonical triangulation of the canonical cell
+         * decomposition.
          */
-        Triangulation<3>* canonise() const;
+        Triangulation<3> canonize() const;
 
         /**
          * Asks SnapPea to randomly retriangulate this manifold, using
@@ -1469,7 +1829,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          *
          * This routine uses SnapPea's own internal retriangulation code.
          *
-         * After randomizing, this routine will immediately ask SnapPea
+         * After randomising, this routine will immediately ask SnapPea
          * to try to find a hyperbolic structure.
          *
          * If this is a null SnapPea triangulation, this routine does nothing.
@@ -1477,13 +1837,17 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.randomize()</tt>.
          */
-        void randomize();
+        void randomise();
 
         /**
-         * A synonym for randomize(), which asks SnapPea to randomly
-         * retriangulate this manifold.  See randomize() for further details.
+         * An alias for randomise(), which asks SnapPea to randomly
+         * retriangulate this manifold.  See randomise() for further details.
+         *
+         * This alias is provided as "glue" between the British spelling
+         * used throughout Regina and the American spelling used
+         * throughout the SnapPea kernel.
          */
-        void randomise();
+        void randomize();
 
         /*@}*/
         /**
@@ -1536,9 +1900,78 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          */
         /*@{*/
 
-        virtual std::string snapPea() const override;
-        virtual void snapPea(std::ostream& out) const override;
-        virtual bool saveSnapPea(const char* filename) const override;
+        /**
+         * Returns a string containing the full contents of a SnapPea data
+         * file that describes this triangulation.  In particular, this string
+         * can be used in a Python session to pass the triangulation directly
+         * to SnapPy (without writing to the filesystem).
+         *
+         * Unlike Triangulation<3>::snapPea(), this routine uses the
+         * SnapPea kernel to produce the file contents.  This means it
+         * will include not just the tetrahedron gluings, but also other
+         * SnapPea-specific information that Regina does not use (e.g.,
+         * peripheral curves).
+         *
+         * If you wish to export a triangulation to a SnapPea \e file, you
+         * should call saveSnapPea() instead (which has better performance, and
+         * does not require you to construct an enormous intermediate string).
+         *
+         * If this is a null triangulation, then the string returned
+         * will be empty.
+         *
+         * @return a string containing the contents of the corresponding
+         * SnapPea data file.
+         */
+        std::string snapPea() const;
+
+        /**
+         * Writes the full contents of a SnapPea data file describing this
+         * triangulation to the given output stream.
+         *
+         * Unlike Triangulation<3>::snapPea(), this routine uses the
+         * SnapPea kernel to produce the file contents.  This means it
+         * will include not just the tetrahedron gluings, but also other
+         * SnapPea-specific information that Regina does not use (e.g.,
+         * peripheral curves).
+         *
+         * If you wish to extract the SnapPea data file as a string, you should
+         * call the zero-argument routine snapPea() instead.  If you wish to
+         * write to a real SnapPea data file on the filesystem, you should call
+         * saveSnapPea() (which is also available in Python).
+         *
+         * If this is a null triangulation, then nothing will be written
+         * to the output stream.
+         *
+         * \ifacespython Not present; instead you can use the variant of
+         * snapPea() that takes no arguments and returns a string.
+         *
+         * @param out the output stream to which the SnapPea data file
+         * will be written.
+         */
+        void snapPea(std::ostream& out) const;
+
+        /**
+         * Writes this triangulation to the given file using SnapPea's
+         * native file format.
+         *
+         * Unlike Triangulation<3>::saveSnapPea(), this routine uses the
+         * SnapPea kernel to produce the file contents.  This means it
+         * will include not just the tetrahedron gluings, but also other
+         * SnapPea-specific information that Regina does not use (e.g.,
+         * peripheral curves).
+         *
+         * If this is a null triangulation, then the file will not be
+         * written and this routine will return \c false.
+         *
+         * \i18n This routine makes no assumptions about the
+         * \ref i18n "character encoding" used in the given file \e name, and
+         * simply passes it through unchanged to low-level C/C++ file I/O
+         * routines.  The \e contents of the file will be written using UTF-8.
+         *
+         * @param filename the name of the SnapPea file to which to write.
+         * @return \c true if and only if the file was successfully written.
+         */
+        bool saveSnapPea(const char* filename) const;
 
         /*@}*/
         /**
@@ -1546,26 +1979,26 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          */
         /*@{*/
 
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
-
-        virtual bool dependsOnParent() const override;
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
-
-        /*@}*/
         /**
-         * \name Packet Listener Interface
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
          */
-        /*@{*/
-
-        virtual void packetWasChanged(Packet* packet) override;
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
         /*@}*/
-
-    protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
 
     private:
         /**
@@ -1574,23 +2007,17 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * Also refreshes other internal properties and caches,
          * such as cusps and tetrahedron shapes.
          *
-         * A change event will be fired by this routine (this will be a
-         * "safe" change event that does not void the triangulation).
-         *
          * SnapPea will be asked to recompute the hyperbolic structure
          * only if the current solution type is \a not_attempted.
+         *
+         * This routine will not fire any SnapPeaTriangulation change events.
+         * It will, however, fire Triangulation<3> change events, and so
+         * the caller must ensure that Triangulation<3>::heldBy_ is
+         * (temporarily) set to to HELD_BY_NONE when sync() is called so that
+         * this does not nullify the SnapPea triangulation.  Creating a
+         * ChangeAndSyncSpan object on the stack is a good way to ensure this.
          */
         void sync();
-
-        /**
-         * Like sync(), but assumes that \e only the filling coefficients
-         * have changed, and that all other data (such as the tetrahedron
-         * gluings, or peripheral curves on the cusps) is unchanged.
-         *
-         * Essentially this just extends fillingsHaveChanged() to also
-         * fire a (safe) change event.
-         */
-        void syncFillings();
 
         /**
          * Clears and where necessary refreshes any properties of the
@@ -1599,6 +2026,8 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * This routine assumes that the combinatorics of the triangulation
          * have not changed.  It also assumes that SnapPea has already
          * called do_Dehn_filling() (so this routine will not call it again).
+         *
+         * This routine will not fire any change events.
          */
         void fillingsHaveChanged();
 
@@ -1618,14 +2047,6 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
             Triangulation<3>& dest);
 
         /**
-         * Resets the internal SnapPea data to the given SnapPea triangulation.
-         * This object will take ownership of the given SnapPea data.
-         *
-         * @param data the new SnapPea data for this object.
-         */
-        void reset(regina::snappea::Triangulation* data);
-
-        /**
          * A much less templated version of enumerateCovers().
          *
          * This is identical to enumerateCovers(), except that the type
@@ -1633,10 +2054,50 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * that the implementation can be kept out of the main headers.
          */
         size_t enumerateCoversInternal(int sheets, CoverEnumerationType type,
-            std::function<void(SnapPeaTriangulation&, CoverType)>&& action)
+            std::function<void(SnapPeaTriangulation&&, CoverType)>&& action)
             const;
 
-    friend class regina::XMLSnapPeaReader;
+        /**
+         * A class that helps manage internal changes that modify Regina's
+         * native Triangulation<3> structure.
+         *
+         * On construction, this class creates a SnapPeaTriangulation
+         * change event span, and also sets Triangulation<3>::heldBy_ to
+         * HELD_BY_NONE to ensure that any changes to the inherited
+         * Triangulation<3> will not cause the entire SnapPea triangulation to
+         * be nullified.  On destruction, this class resets heldBy_ to
+         * HELD_BY_SNAPPEA, and destroys the change event span.
+         *
+         * Typically you would create a local ChangeAndSyncSpan (instead
+         * of the usual ChangeEventSpan) when performing changes that affect
+         * both the SnapPea and Regina triangulation structures.  A common
+         * case of this would be calling a modifying SnapPea kernel routine and
+         * then calling sync() to update the inherited Regina structure.
+         *
+         * Using a local ChangeAndSyncSpan on the stack is preferable to
+         * managing these operations manually, since the SnapPea interface is
+         * one part of Regina where exceptions can regularly and unexpectedly
+         * be thrown, and so this helps ensure that things are always tidied
+         * up correctly.
+         */
+        class ChangeAndSyncSpan {
+            private:
+                SnapPeaTriangulation& tri_;
+                PacketData<SnapPeaTriangulation>::ChangeEventSpan span_;
+
+            public:
+                ChangeAndSyncSpan(SnapPeaTriangulation& tri) :
+                        tri_(tri), span_(tri) {
+                    tri_.Triangulation<3>::heldBy_ = HELD_BY_NONE;
+                }
+
+                ~ChangeAndSyncSpan() {
+                    tri_.Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+                }
+        };
+
+    // Ensure that Triangulation<3> can edit reginaChangeEventSpans_.
+    friend class Triangulation<3>;
 };
 
 /**
@@ -1656,27 +2117,24 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
  * See the SnapPeaTriangulation class notes for further discussion.
  *
  * \note This swap function is \e not marked \c noexcept, since it
- * fires packet change events which may in turn call arbitrary
+ * fires change events which may in turn call arbitrary
  * code via any registered packet listeners.
  *
  * @param lhs the triangulation whose contents should be swapped with \a rhs.
  * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ *
+ * \ingroup snappea
  */
 void swap(SnapPeaTriangulation& lhs, SnapPeaTriangulation& rhs);
 
-/*@}*/
-
 // Inline functions for SnapPeaFatalError
 
-inline SnapPeaFatalError::SnapPeaFatalError(
-        const char* fromFunction, const char* fromFile) :
-        function(fromFunction), file(fromFile) {
+inline SnapPeaFatalError::SnapPeaFatalError(const char* fromFunction,
+        const char* fromFile) :
+        std::runtime_error((std::string(fromFile) + ": ") + fromFunction) {
 }
 
 // Inline functions for Cusp
-
-inline Cusp::Cusp() {
-}
 
 inline Vertex<3>* Cusp::vertex() const {
     return vertex_;
@@ -1697,9 +2155,8 @@ inline int Cusp::l() const {
 // Inline functions for SnapPeaTriangulation
 
 inline SnapPeaTriangulation::SnapPeaTriangulation() :
-        data_(nullptr), shape_(nullptr), cusp_(nullptr),
-        filledCusps_(0), h1Filled_(false), syncing_(false) {
-    listen(this);
+        data_(nullptr), shape_(nullptr), cusp_(nullptr), filledCusps_(0) {
+    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
 
 inline bool SnapPeaTriangulation::isNull() const {
@@ -1723,37 +2180,33 @@ inline unsigned SnapPeaTriangulation::countFilledCusps() const {
     return filledCusps_;
 }
 
-inline const Cusp* SnapPeaTriangulation::cusp(unsigned whichCusp) const {
-    return (cusp_ ? cusp_ + whichCusp : nullptr);
+inline const Cusp& SnapPeaTriangulation::cusp(unsigned whichCusp) const {
+    return cusp_[whichCusp];
 }
 
-inline bool SnapPeaTriangulation::dependsOnParent() const {
-    return false;
+inline auto SnapPeaTriangulation::cusps() const {
+    return ListView(cusp_, countBoundaryComponents());
 }
 
-inline SnapPeaTriangulation* SnapPeaTriangulation::protoCanonise() const {
-    return protoCanonize();
+inline SnapPeaTriangulation SnapPeaTriangulation::protoCanonize() const {
+    return protoCanonise();
 }
 
-inline Triangulation<3>* SnapPeaTriangulation::canonise() const {
-    return canonize();
+inline Triangulation<3> SnapPeaTriangulation::canonize() const {
+    return canonise();
 }
 
-inline void SnapPeaTriangulation::randomise() {
-    randomize();
+inline void SnapPeaTriangulation::randomize() {
+    randomise();
 }
 
 template <typename Action, typename... Args>
 inline size_t SnapPeaTriangulation::enumerateCovers(int sheets,
         CoverEnumerationType type, Action&& action, Args&&... args) const {
     return enumerateCoversInternal(sheets, type,
-        std::bind(std::forward<Action>(action),
-            std::placeholders::_1, std::placeholders::_2,
-            std::forward<Args>(args)...));
-}
-
-inline Packet* SnapPeaTriangulation::internalClonePacket(Packet*) const {
-    return new SnapPeaTriangulation(*this);
+        [&](SnapPeaTriangulation&& s, CoverType c) {
+            action(std::move(s), c, std::forward<Args>(args)...);
+        });
 }
 
 inline void swap(SnapPeaTriangulation& lhs, SnapPeaTriangulation& rhs) {

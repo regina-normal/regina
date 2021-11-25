@@ -32,99 +32,76 @@
 
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
-#include "surfaces/nsvectorstandard.h"
-#include "surfaces/nsvectorquad.h"
-#include "surfaces/nsvectoranstandard.h"
-#include "surfaces/nsvectorquadoct.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
 
-// Although internalStandardToReduced() is a template routine, we implement
-// it here in this C++ file to avoid dragging it into the headers.
-//
-// The following definitions should ensure that the template is fully
-// instantiated where it needs to be.
-
-NormalSurfaces* NormalSurfaces::standardToQuad() const {
-    return internalStandardToReduced<NormalSpec>();
-}
-
-NormalSurfaces* NormalSurfaces::standardANToQuadOct() const {
-    return internalStandardToReduced<AlmostNormalSpec>();
-}
-
-template <class Variant>
-NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
-    // And off we go!
-    const Triangulation<3>& owner = triangulation();
-
-    // Basic sanity checks:
-    if (coords_ != Variant::standardCoords)
-        return nullptr;
-    if (which_ != (NS_EMBEDDED_ONLY | NS_VERTEX))
-        return nullptr;
-    if (owner.isIdeal() || ! owner.isValid())
-        return nullptr;
-
-    // Prepare a final surface list.
-    NormalSurfaces* ans = new NormalSurfaces(
-        Variant::reducedCoords, NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
-
+void NormalSurfaces::buildReducedFromStandard(
+        const std::vector<NormalSurface>& stdList) {
     // Get the empty triangulation out of the way now.
-    unsigned long n = owner.size();
-    if (n == 0) {
-        parent()->insertChildLast(ans);
-        return ans;
-    }
+    unsigned long n = triangulation_->size();
+    if (n == 0)
+        return;
+
+    bool almostNormal = allowsAlmostNormal();
 
     // We need to get rid of vertex links entirely before we start.
-    typedef const Vector<LargeInteger>* VectorPtr;
-    VectorPtr* use = new VectorPtr[surfaces_.size()];
-    unsigned long nUse = 0;
+    // Build a new list of pointers to the (non-vertex-linking) surfaces
+    // that we are interested in.
+    auto* use = new const NormalSurface*[stdList.size()];
+    size_t nUse = 0;
 
-    for (const NormalSurface& s : surfaces_)
+    for (const NormalSurface& s : stdList)
         if (! s.isVertexLinking())
-            use[nUse++] = &s.vector().coords();
+            use[nUse++] = &s;
 
     // We want to take all surfaces with maximal zero sets in quad space.
     // That is, we want surface S if and only if there is no other surface T
-    // where, for every quadrilateral coordinate where S is zero, T is
-    // zero also.
-    // For almost normal surfaces, simply replace "quadrilateral" with
-    // "quadrilateral or octagonal".
-    bool dominates, strict;
-    unsigned tet, quad, pos;
-    typename Variant::ReducedVector* v;
-    unsigned long i, j;
-    for (i = 0; i < nUse; ++i) {
-        if (use[i] == 0)
+    // where, for every quad coordinate where S is zero, T is zero also.
+    // For almost normal surfaces, simply replace "quad coordinate" with
+    // "quad or oct coordinate".
+    unsigned tet;
+    for (size_t i = 0; i < nUse; ++i) {
+        if (! use[i])
             continue;
 
-        dominates = strict = false;
+        bool dominates = false;
+        bool strict = false;
 
-        for (j = 0; j < nUse; ++j) {
-            if (j == i || use[j] == 0)
+        for (size_t j = 0; j < nUse; ++j) {
+            if (j == i || ! use[j])
                 continue;
 
             dominates = true;
             strict = false;
-            for (tet = 0; tet < n && dominates; ++tet)
-                for (quad = 0; quad < Variant::reducedPerTet; ++quad)
-                    if ((*use[i])[Variant::stdPos(tet, 4 + quad)] ==
-                                LargeInteger::zero &&
-                            (*use[j])[Variant::stdPos(tet, 4 + quad)] !=
-                                LargeInteger::zero) {
+            for (tet = 0; tet < n && dominates; ++tet) {
+                // Check the zero/non-zero status of the quads.
+                for (int type = 0; type < 3; ++type) {
+                    if (use[i]->quads(tet, type) == 0 &&
+                            use[j]->quads(tet, type) != 0) {
                         dominates = false;
                         break;
-                    } else if ((*use[i])[Variant::stdPos(tet, 4 + quad)] !=
-                                LargeInteger::zero &&
-                            (*use[j])[Variant::stdPos(tet, 4 + quad)] ==
-                                LargeInteger::zero) {
+                    } else if (use[i]->quads(tet, type) != 0 &&
+                            use[j]->quads(tet, type) == 0) {
                         // If this *does* turn out to be a domination of
                         // zero sets, we know it's strict.
                         strict = true;
                     }
+                }
+                // Likewise for the octagons.
+                if (almostNormal && dominates) {
+                    for (int type = 0; type < 3; ++type) {
+                        if (use[i]->octs(tet, type) == 0 &&
+                                use[j]->octs(tet, type) != 0) {
+                            dominates = false;
+                            break;
+                        } else if (use[i]->octs(tet, type) != 0 &&
+                                use[j]->octs(tet, type) == 0) {
+                            strict = true;
+                        }
+                    }
+                }
+            }
 
             if (dominates)
                 break;
@@ -132,13 +109,15 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
 
         if (! dominates) {
             // We want this surface.
-            v = new typename Variant::ReducedVector(Variant::redLen(n));
-            pos = 0;
-            for (tet = 0; tet < n; ++tet)
-                for (quad = 0; quad < Variant::reducedPerTet; ++quad)
-                    v->set(pos++,
-                        (*use[i])[Variant::stdPos(tet, 4 + quad)]);
-            ans->surfaces_.push_back(NormalSurface(owner, v));
+            // Although we now have vertices in a different coordinate
+            // system, the encoding should not have changed.
+
+            // TODO: However.. we *should* give the encoding the extra
+            // flag that guarantees it is not vertex linking.
+            // Not doing so is harmless but a bit wasteful.
+            // However, the entire standard-to-quad conversion is also
+            // somewhat unnecessary and wasteful, so leave this alone for now.
+            surfaces_.push_back(*use[i]);
         } else if (strict) {
             // We can drop this surface entirely from our list.
             // We don't want it for our final solution set, and if
@@ -148,15 +127,11 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
             // The domination need to be strict because otherwise we
             // might want use[i] to rule out use[j] (i.e., they both
             // rule out each other).
-            use[i] = 0;
+            use[i] = nullptr;
         }
     }
 
     delete[] use;
-
-    // All done!
-    parent()->insertChildLast(ans);
-    return ans;
 }
 
 } // namespace regina

@@ -52,6 +52,241 @@
 namespace regina {
 namespace graph {
 
+/**
+ * Iterates through all crossings of a link.
+ *
+ * The order of iteration follows the indexing of the crossings
+ * from 0 to Link::size()-1.
+ *
+ * This class implements the Boost multipass input iterator concept,
+ * which is similar to the standard C++ forward iterator except that
+ * the \a reference type may be the same as \a value_type (and so,
+ * in particular, the dereference operator may return by value).
+ *
+ * \ingroup link
+ */
+class CrossingIterator {
+    public:
+        using iterator_category = std::input_iterator_tag;
+            /**< Declares this to be an input iterator type. */
+        using value_type = regina::Crossing*;
+            /**< Indicates what type the iterator points to. */
+        using difference_type = ptrdiff_t;
+            /**< The type obtained by subtracting iterators. */
+        using pointer = regina::Crossing* const*;
+            /**< A pointer to \a value_type. */
+        using reference = regina::Crossing*;
+            /**< The type obtained when dereferencing iterators.
+                 Note that, for input iterators that are not forward iterators,
+                 this does not need to be an actual C++ reference type. */
+
+    private:
+        const Link* link_;
+            /**< The underlying link.  This is stored by pointer to
+                 allow assignment; it must never be \c null. */
+        size_t index_;
+            /**< The index of the crossing that we are currently visiting. */
+
+    public:
+        /**
+         * Creates a singular iterator.
+         */
+        CrossingIterator();
+        /**
+         * Default copy constructor.
+         */
+        CrossingIterator(const CrossingIterator&) = default;
+
+        /**
+         * Creates a new iterator pointing to the given crossing of the
+         * given link.
+         *
+         * @param link the underlying knot/link.
+         * @param index the index of the crossing to point to.  This must be
+         * between 0 and link.size()-1 for a deferencable iterator,
+         * or must be exactly link.size() for a past-the-end iterator.
+         */
+        CrossingIterator(const Link& link, size_t index = 0);
+
+        /**
+         * Preincrement operator.
+         *
+         * @return a reference to this iterator.
+         */
+        CrossingIterator& operator ++ ();
+
+        /**
+         * Postincrement operator.
+         *
+         * @return a copy of this iterator before it was incremented.
+         */
+        CrossingIterator operator ++ (int);
+
+        /**
+         * Returns the crossing to which this iterator points.
+         *
+         * \pre This iterator is not past-the-end.
+         *
+         * @return the crossing to which this iterator points.
+         */
+        Crossing* operator * () const;
+
+        /**
+         * Default assignment operator.
+         *
+         * @return a reference to this iterator.
+         */
+        CrossingIterator& operator = (const CrossingIterator&) = default;
+
+        /**
+         * Tests whether this and the given iterator are equal.
+         *
+         * \note This routine only compares the indices of the crossings.
+         * It does not examine whether this and the given iterator refer
+         * to the same underlying link.
+         *
+         * @param rhs the iterator to compare with this.
+         * @return \c true if and only if the two iterators are equal.
+         */
+        bool operator == (const CrossingIterator& rhs) const;
+        /**
+         * Tests whether this and the given iterator are different.
+         *
+         * \note This routine only compares the indices of the crossings.
+         * It does not examine whether this and the given iterator refer
+         * to the same underlying link.
+         *
+         * @param rhs the iterator to compare with this.
+         * @return \c true if and only if the two iterators are different.
+         */
+        bool operator != (const CrossingIterator& rhs) const;
+};
+
+/**
+ * Iterates through all directed arcs of a knot or link.
+ *
+ * The order of iteration is as follows.  The iterator works through
+ * crossings 0,1,... of the underlying link in turn.  For each crossing,
+ * it visits the arcs exiting the crossing from the lower strand and then
+ * the upper strand, in that order.
+ *
+ * Zero-crossing unknot components are not visited at all by this iterator type.
+ *
+ * This class implements the Boost multipass input iterator concept,
+ * which is similar to the standard C++ forward iterator except that
+ * the \a reference type may be the same as \a value_type (and so,
+ * in particular, the dereference operator may return by value).
+ *
+ * \ingroup link
+ */
+class ArcIterator {
+    public:
+        using iterator_category = std::input_iterator_tag;
+            /**< Declares this to be an input iterator type. */
+        using value_type = regina::StrandRef;
+            /**< Indicates what type the iterator points to. */
+        using difference_type = ptrdiff_t;
+            /**< The type obtained by subtracting iterators. */
+        using pointer = regina::StrandRef const*;
+            /**< A pointer to \a value_type. */
+        using reference = regina::StrandRef;
+            /**< The type obtained when dereferencing iterators.
+                 Note that, for input iterators that are not forward iterators,
+                 this does not need to be an actual C++ reference type. */
+
+    private:
+        const Link* link_;
+            /**< The underlying link.  This is stored by pointer to
+                 allow assignment; it must never be \c null. */
+        size_t index_;
+            /**< The index of the crossing that we are currently visiting. */
+        bool upper_;
+            /**< \c false if we are visiting the arc exiting the
+                 crossing from the lower strand, or \c true if we
+                 are visiting the arc exiting from the upper strand. */
+
+    public:
+        /**
+         * Creates a singular iterator.
+         */
+        ArcIterator();
+        /**
+         * Default copy constructor.
+         */
+        ArcIterator(const ArcIterator&) = default;
+
+        /**
+         * Creates a new iterator pointing to the arc exiting the
+         * given strand of the given crossing of the given link.
+         *
+         * @param link the underlying knot/link.
+         * @param crossing the index of the given crossing.  This must be
+         * between 0 and link.size()-1 for a deferencable iterator,
+         * or must be exactly link.size() for a past-the-end iterator.
+         * @param upper \c true or \c false according to whether the
+         * iterator should point to the arc exiting the given crossing
+         * from the upper or lower strand respectively.  For a
+         * past-the-end iterator, this should always be \c false.
+         */
+        ArcIterator(const Link& link, size_t crossing = 0, bool upper = false);
+
+        /**
+         * Preincrement operator.
+         *
+         * @return a reference to this iterator.
+         */
+        ArcIterator& operator ++ ();
+
+        /**
+         * Postincrement operator.
+         *
+         * @return a copy of this iterator before it was incremented.
+         */
+        ArcIterator operator ++ (int);
+
+        /**
+         * Returns the directed arc to which this iterator points.
+         *
+         * See the StrandRef documentation for details on how a
+         * StrandRef object is used to identify a directed arc.
+         *
+         * \pre This iterator is not past-the-end.
+         *
+         * @return the directed arc to which this iterator points.
+         */
+        StrandRef operator * () const;
+
+        /**
+         * Default assignment operator.
+         *
+         * @return a reference to this iterator.
+         */
+        ArcIterator& operator = (const ArcIterator&) = default;
+
+        /**
+         * Tests whether this and the given iterator are equal.
+         *
+         * \note This routine only compares the indices of the crossings
+         * and the upper/lower strand markings.  It does not examine whether
+         * this and the given iterator refer to the same underlying link.
+         *
+         * @param rhs the iterator to compare with this.
+         * @return \c true if and only if the two iterators are equal.
+         */
+        bool operator == (const ArcIterator& rhs) const;
+        /**
+         * Tests whether this and the given iterator are different.
+         *
+         * \note This routine only compares the indices of the crossings
+         * and the upper/lower strand markings.  It does not examine whether
+         * this and the given iterator refer to the same underlying link.
+         *
+         * @param rhs the iterator to compare with this.
+         * @return \c true if and only if the two iterators are different.
+         */
+        bool operator != (const ArcIterator& rhs) const;
+};
+
     /**
      * Iterates through the two directed arcs either entering or exiting a
      * given crossing of a knot or link.
@@ -70,13 +305,27 @@ namespace graph {
      * which is similar to the standard C++ forward iterator except that
      * the \a reference type may be the same as \a value_type (and so,
      * in particular, the dereference operator may return by value).
-     * This header also specialises std::iterator_traits for this iterator type.
      *
      * \tparam out indicates whether to iterate through arcs exiting or
      * entering the given crossing, as described above.
      */
     template <bool out>
     class IncidentArcIterator {
+        public:
+            using iterator_category = std::input_iterator_tag;
+                /**< Declares this to be an input iterator type. */
+            using value_type = regina::StrandRef;
+                /**< Indicates what type the iterator points to. */
+            using difference_type = int;
+                /**< The type obtained by subtracting iterators. */
+            using pointer = regina::StrandRef const*;
+                /**< A pointer to \a value_type. */
+            using reference = regina::StrandRef;
+                /**< The type obtained when dereferencing iterators.
+                     Note that, for input iterators that are not forward
+                     iterators, this does not need to be an actual C++
+                     reference type. */
+
         private:
             Crossing* crossing_;
                 /**< The crossing whose incident arcs we are iterating
@@ -181,9 +430,23 @@ namespace graph {
      * which is similar to the standard C++ forward iterator except that
      * the \a reference type may be the same as \a value_type (and so,
      * in particular, the dereference operator may return by value).
-     * This header also specialises std::iterator_traits for this iterator type.
      */
     class AdjacentCrossingIterator {
+        public:
+            using iterator_category = std::input_iterator_tag;
+                /**< Declares this to be an input iterator type. */
+            using value_type = regina::Crossing*;
+                /**< Indicates what type the iterator points to. */
+            using difference_type = int;
+                /**< The type obtained by subtracting iterators. */
+            using pointer = regina::Crossing* const*;
+                /**< A pointer to \a value_type. */
+            using reference = regina::Crossing*;
+                /**< The type obtained when dereferencing iterators.
+                     Note that, for input iterators that are not forward
+                     iterators, this does not need to be an actual C++
+                     reference type. */
+
         private:
             Crossing* crossing_;
                 /**< The crossing whose adacent crossings we are iterating
@@ -516,64 +779,44 @@ namespace graph {
 
 } // namespace regina
 
-namespace std {
-    template <>
-    struct iterator_traits<regina::graph::AdjacentCrossingIterator> {
-        typedef int difference_type;
-        typedef regina::Crossing* value_type;
-        typedef regina::Crossing* const* pointer;
-        typedef regina::Crossing* reference;
-        typedef std::input_iterator_tag iterator_category;
-    };
-
-    template <bool out>
-    struct iterator_traits<regina::graph::IncidentArcIterator<out>> {
-        typedef int difference_type;
-        typedef typename regina::StrandRef value_type;
-        typedef typename regina::StrandRef const* pointer;
-        typedef typename regina::StrandRef reference;
-        typedef std::input_iterator_tag iterator_category;
-    };
-} // namespace std
-
 namespace boost {
     template <>
     struct property_traits<regina::graph::InherentLinkPropertyMap<
             boost::vertex_index_t>> {
-        typedef size_t value_type;
-        typedef size_t reference;
-        typedef regina::Crossing* key_type;
-        typedef boost::readable_property_map_tag category;
+        using value_type = size_t;
+        using reference = size_t;
+        using key_type = regina::Crossing*;
+        using category = boost::readable_property_map_tag;
     };
 
     template <typename PropertyType>
     struct property_map<regina::Link, PropertyType> {
-        typedef regina::graph::InherentLinkPropertyMap<PropertyType> const_type;
+        using const_type = regina::graph::InherentLinkPropertyMap<PropertyType>;
     };
 
     template <>
     struct graph_traits<regina::Link> {
-        typedef regina::Crossing* vertex_descriptor;
-        typedef regina::StrandRef edge_descriptor;
-        typedef boost::directed_tag directed_category;
-        typedef boost::allow_parallel_edge_tag edge_parallel_category;
+        using vertex_descriptor = regina::Crossing*;
+        using edge_descriptor = regina::StrandRef;
+        using directed_category = boost::directed_tag;
+        using edge_parallel_category = boost::allow_parallel_edge_tag;
         struct traversal_category :
                 public boost::vertex_list_graph_tag,
                 public boost::edge_list_graph_tag,
                 public boost::adjacency_graph_tag,
                 public boost::bidirectional_graph_tag {
         };
-        typedef typename regina::CrossingIterator vertex_iterator;
-        typedef typename regina::ArcIterator edge_iterator;
-        typedef typename regina::graph::AdjacentCrossingIterator
-            adjacency_iterator;
-        typedef typename regina::graph::IncidentArcIterator<false>
-            in_edge_iterator;
-        typedef typename regina::graph::IncidentArcIterator<true>
-            out_edge_iterator;
-        typedef size_t vertices_size_type;
-        typedef size_t edges_size_type;
-        typedef unsigned degree_size_type;
+        using vertex_iterator = typename regina::CrossingIterator;
+        using edge_iterator = typename regina::ArcIterator;
+        using adjacency_iterator =
+            typename regina::graph::AdjacentCrossingIterator;
+        using in_edge_iterator =
+            typename regina::graph::IncidentArcIterator<false>;
+        using out_edge_iterator =
+            typename regina::graph::IncidentArcIterator<true>;
+        using vertices_size_type = size_t;
+        using edges_size_type = size_t;
+        using degree_size_type = unsigned;
 
         static vertex_descriptor null_vertex() {
             return nullptr;
@@ -583,6 +826,79 @@ namespace boost {
 
 namespace regina {
 namespace graph {
+
+    // Inline functions for CrossingIterator
+
+    inline CrossingIterator::CrossingIterator() : link_(nullptr), index_(0) {
+    }
+
+    inline CrossingIterator::CrossingIterator(const Link& link, size_t index) :
+            link_(&link), index_(index) {
+    }
+
+    inline CrossingIterator& CrossingIterator::operator ++ () {
+        ++index_;
+        return *this;
+    }
+
+    inline CrossingIterator CrossingIterator::operator ++ (int) {
+        return CrossingIterator(*link_, index_++);
+    }
+
+    inline Crossing* CrossingIterator::operator * () const {
+        return link_->crossing(index_);
+    }
+
+    inline bool CrossingIterator::operator == (const CrossingIterator& rhs)
+            const {
+        return (index_ == rhs.index_);
+    }
+
+    inline bool CrossingIterator::operator != (const CrossingIterator& rhs)
+            const {
+        return (index_ != rhs.index_);
+    }
+
+    // Inline functions for ArcIterator
+
+    inline ArcIterator::ArcIterator() : link_(nullptr), index_(0),
+            upper_(false) {
+    }
+
+    inline ArcIterator::ArcIterator(const Link& link, size_t index,
+            bool upper) : link_(&link), index_(index), upper_(upper) {
+    }
+
+    inline ArcIterator& ArcIterator::operator ++ () {
+        if (upper_) {
+            ++index_;
+            upper_ = false;
+        } else
+            upper_ = true;
+        return *this;
+    }
+
+    inline ArcIterator ArcIterator::operator ++ (int) {
+        ArcIterator ans(*this);
+        if (upper_) {
+            ++index_;
+            upper_ = false;
+        } else
+            upper_ = true;
+        return ans;
+    }
+
+    inline StrandRef ArcIterator::operator * () const {
+        return StrandRef(link_->crossing(index_), upper_ ? 1 : 0);
+    }
+
+    inline bool ArcIterator::operator == (const ArcIterator& rhs) const {
+        return (index_ == rhs.index_) && (upper_ == rhs.upper_);
+    }
+
+    inline bool ArcIterator::operator != (const ArcIterator& rhs) const {
+        return (index_ != rhs.index_) || (upper_ != rhs.upper_);
+    }
 
     // Inline functions for IncidentArcIterator
 

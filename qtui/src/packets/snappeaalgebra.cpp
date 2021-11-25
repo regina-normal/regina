@@ -47,12 +47,13 @@
 using regina::Packet;
 using regina::SnapPeaTriangulation;
 
-SnapPeaAlgebraUI::SnapPeaAlgebraUI(regina::SnapPeaTriangulation* packet,
+SnapPeaAlgebraUI::SnapPeaAlgebraUI(
+        regina::PacketOf<regina::SnapPeaTriangulation>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
 
-    ColumnLayout* master = new ColumnLayout(ui);
+    auto* master = new ColumnLayout(ui);
 
     QVBoxLayout* layout;
 
@@ -147,11 +148,15 @@ void SnapPeaAlgebraUI::refresh() {
         filledFundGroupTitle->hide();
         filledFundGroup->hide();
     } else {
-        if (unicode)
-            filledH1->setText(tri->homologyFilled()->utf8().c_str());
-        else
-            filledH1->setText(tri->homologyFilled()->str().c_str());
-        filledFundGroup->refresh(&tri->fundamentalGroupFilled());
+        try {
+            if (unicode)
+                filledH1->setText(tri->homologyFilled().utf8().c_str());
+            else
+                filledH1->setText(tri->homologyFilled().str().c_str());
+        } catch (const regina::SnapPeaUnsolvedCase&) {
+            filledH1->setText(tr("SnapPea overflow"));
+        }
+        filledFundGroup->refresh(tri->fundamentalGroupFilled());
 
         filledH1Title->show();
         filledH1->show();
@@ -163,7 +168,7 @@ void SnapPeaAlgebraUI::refresh() {
         unfilledH1->setText(tri->homology().utf8().c_str());
     else
         unfilledH1->setText(tri->homology().str().c_str());
-    unfilledFundGroup->refresh(&tri->fundamentalGroup());
+    unfilledFundGroup->refresh(tri->fundamentalGroup());
 
     unfilledH1Title->show();
     unfilledH1->show();

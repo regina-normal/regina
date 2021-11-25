@@ -39,14 +39,18 @@ regconvert @INVALIDFILE@
 regconvert @BADFILE@
 regconvert @TESTDIR@/b5.rga @INVALIDFILE@
 # --- regconvert when successful:
-regconvert @TESTDIR@/b5.rga
-regconvert @TESTDIR@/tiny.rga
-regconvert @TESTDIR@/b5.rga @TESTOUT@
-regconvert @TESTDIR@/tiny.rga @TESTOUT@
-regconvert -x @TESTDIR@/b5.rga @TESTOUT@
-regconvert -x @TESTDIR@/tiny.rga @TESTOUT@
-regconvert -u @TESTDIR@/b5.rga
-regconvert -u @TESTDIR@/tiny.rga
-regconvert -u @TESTDIR@/b5.rga @TESTOUT@
-regconvert -u @TESTDIR@/tiny.rga @TESTOUT@
+regconvert -2 @TESTDIR@/b5.rga
+regconvert -2 @TESTDIR@/tiny.rga
+regconvert -2 @TESTDIR@/b5.rga @TESTOUT@
+regconvert -2 @TESTDIR@/tiny-v2.rga @TESTOUT@
+regconvert -2 -x @TESTDIR@/b5.rga @TESTOUT@
+regconvert -2 -x @TESTDIR@/tiny.rga @TESTOUT@
+regconvert -2 -u @TESTDIR@/b5.rga
+regconvert -2 -u @TESTDIR@/tiny-v2.rga
+regconvert -2 -u @TESTDIR@/b5.rga @TESTOUT@
+regconvert -2 -u @TESTDIR@/tiny.rga @TESTOUT@
+# --- files where lists and their triangulations are separated:
+regconvert -2 -u @TESTDIR@/refs.rga
+regconvert -3 -u @TESTDIR@/refs.rga
+
 # Note: this test framework does not let us test the case old-file == new-file.

@@ -41,19 +41,19 @@
  */
 @protocol PacketDelegate <NSObject>
 @optional
-- (void)packetToBeChanged:(regina::Packet*)packet;
-- (void)packetWasChanged:(regina::Packet*)packet;
-- (void)packetToBeRenamed:(regina::Packet*)packet;
-- (void)packetWasRenamed:(regina::Packet*)packet;
-- (void)packetToBeDestroyed:(regina::PacketShell)packet;
-- (void)childToBeAddedTo:(regina::Packet*)packet child:(regina::Packet*)child;
-- (void)childWasAddedTo:(regina::Packet*)packet child:(regina::Packet*)child;
-- (void)childToBeRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child;
-- (void)childWasRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child;
-- (void)childrenToBeReordered:(regina::Packet*)packet;
-- (void)childrenWereReordered:(regina::Packet*)packet;
-- (void)childToBeRenamed:(regina::Packet*)packet child:(regina::Packet*)child;
-- (void)childWasRenamed:(regina::Packet*)packet child:(regina::Packet*)child;
+- (void)packetToBeChanged:(regina::Packet&)packet;
+- (void)packetWasChanged:(regina::Packet&)packet;
+- (void)packetToBeRenamed:(regina::Packet&)packet;
+- (void)packetWasRenamed:(regina::Packet&)packet;
+- (void)packetBeingDestroyed:(regina::PacketShell)packet;
+- (void)childToBeAddedTo:(regina::Packet&)packet child:(regina::Packet&)child;
+- (void)childWasAddedTo:(regina::Packet&)packet child:(regina::Packet&)child;
+- (void)childToBeRemovedFrom:(regina::Packet&)packet child:(regina::Packet&)child;
+- (void)childWasRemovedFrom:(regina::Packet&)packet child:(regina::Packet&)child;
+- (void)childrenToBeReordered:(regina::Packet&)packet;
+- (void)childrenWereReordered:(regina::Packet&)packet;
+- (void)childToBeRenamed:(regina::Packet&)packet child:(regina::Packet&)child;
+- (void)childWasRenamed:(regina::Packet&)packet child:(regina::Packet&)child;
 @end
 
 /**
@@ -94,6 +94,8 @@
 /**
  * Unregisters this listener from all packets that it is currently listening to.
  * This operation cannot be undone.
+ *
+ * This is safe to call multiple times (any call after the first will do nothing).
  */
 - (void)permanentlyUnlisten;
 

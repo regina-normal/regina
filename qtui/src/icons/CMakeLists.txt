@@ -27,6 +27,7 @@ set (IMGS
   orb
   orient
   packet_angles
+  packet_attachment
   packet_container
   packet_filter
   packet_hypersurfaces

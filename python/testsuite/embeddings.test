@@ -31,6 +31,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+from __future__ import print_function
+
 def doit(list):
 	for f in list:
 		print(f)
@@ -74,4 +76,16 @@ doit(s.triangle(0).embeddings())
 doit(s.tetrahedron(0).embeddings())
 doit(s.pentachoron(0).embeddings())
 doit(s.face(5, 0).embeddings())
+
+print()
+
+t = Example3.poincare()
+list = t.vertex(0).embeddings()
+front = t.vertex(0).front()
+back = t.vertex(0).back()
+# Embeddings can outlive their faces, but currently this means we
+# don't ensure they do *not* outlive their triangulations.
+# t = None
+print([i for i in list])
+print(front, back)
 

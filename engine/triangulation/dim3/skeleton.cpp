@@ -167,7 +167,7 @@ void Triangulation<3>::calculateVertexLinks() {
                 ideal_ = true;
                 vertex->component()->ideal_ = true;
 
-                BoundaryComponent<3>* bc = new BoundaryComponent<3>();
+                auto* bc = new BoundaryComponent<3>();
                 bc->push_back(vertex);
                 bc->orientable_ = vertex->isLinkOrientable();
                 vertex->boundaryComponent_ = bc;
@@ -185,11 +185,10 @@ void Triangulation<3>::calculateBoundaryProperties() const {
     bool localTwoSphereBoundaryComponents = false;
     bool localNegativeIdealBoundaryComponents = false;
 
-    for (BoundaryComponentIterator it = boundaryComponents_.begin();
-            it != boundaryComponents_.end(); it++) {
-        if ((*it)->eulerChar() == 2)
+    for (BoundaryComponent<3>* bc : boundaryComponents_) {
+        if (bc->eulerChar() == 2)
             localTwoSphereBoundaryComponents = true;
-        else if ((*it)->isIdeal() && (*it)->eulerChar() < 0)
+        else if (bc->isIdeal() && bc->eulerChar() < 0)
             localNegativeIdealBoundaryComponents = true;
 
         // Stop the search if we've found everything we're looking for.
@@ -198,8 +197,9 @@ void Triangulation<3>::calculateBoundaryProperties() const {
             break;
     }
 
-    twoSphereBoundaryComponents_ = localTwoSphereBoundaryComponents;
-    negativeIdealBoundaryComponents_ = localNegativeIdealBoundaryComponents;
+    prop_.twoSphereBoundaryComponents_ = localTwoSphereBoundaryComponents;
+    prop_.negativeIdealBoundaryComponents_ =
+        localNegativeIdealBoundaryComponents;
 }
 
 } // namespace regina

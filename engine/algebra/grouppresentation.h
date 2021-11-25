@@ -49,7 +49,6 @@
 
 #include "regina-core.h"
 #include "core/output.h"
-#include "utilities/ptrutils.h"
 #include "algebra/markedabeliangroup.h"
 #include "algebra/abeliangroup.h"
 #include "maths/matrix.h"
@@ -63,12 +62,12 @@ class HomGroupPresentation;
 class MarkedAbelianGroup;
 
 /**
- * \weakgroup algebra
- * @{
- */
-
-/**
  * Represents a power of a generator in a group presentation.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup algebra
  */
 struct GroupExpressionTerm {
     unsigned long generator;
@@ -79,7 +78,7 @@ struct GroupExpressionTerm {
     /**
      * Creates a new uninitialised term.
      */
-    GroupExpressionTerm();
+    GroupExpressionTerm() = default;
     /**
      * Creates a new term initialised to the given value.
      *
@@ -162,6 +161,8 @@ struct GroupExpressionTerm {
  * @param out the output stream to which to write.
  * @param term the term to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup algebra
  */
 std::ostream& operator << (std::ostream& out, const GroupExpressionTerm& term);
 
@@ -177,8 +178,10 @@ std::ostream& operator << (std::ostream& out, const GroupExpressionTerm& term);
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup algebra
  */
-class GroupExpression : public ShortOutput<GroupExpression> {
+class GroupExpression : public ShortOutput<GroupExpression, true> {
     private:
         std::list<GroupExpressionTerm> terms_;
             /** The terms that make up this expression. */
@@ -187,7 +190,7 @@ class GroupExpression : public ShortOutput<GroupExpression> {
         /**
          * Creates a new expression with no terms.
          */
-        GroupExpression();
+        GroupExpression() = default;
         /**
          * Creates a new expression containing a single term.
          *
@@ -224,24 +227,29 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          *
          * The string may contain whitespace, which will simply be ignored.
          *
-         * The argument \a valid may be \c null, but if it is non-null
-         * then the boolean it points to will be used for error reporting.
-         * This routine sets valid to \c true if the string was successfully
-         * interpreted, or \c false if the algorithm failed to interpret the
-         * string.
-         *
-         * Regardless of whether \a valid is \c null, if the string
-         * could not be interpreted then this expression will be initialised
-         * to the trivial word.
-         *
-         * \ifacespython The second argument \a valid is not present,
-         * and will be assumed to be \c null.
+         * \exception InvalidArgument the given string could not be
+         * interpreted as a group expression.
          *
          * @param input the input string that is to be interpreted.
-         * @param valid used for error reporting as described above, or
-         * \c null if no error reporting is required.
          */
-        GroupExpression(const std::string &input, bool* valid=nullptr);
+        GroupExpression(const char* input);
+        /**
+         * Attempts to interpret the given input string as a word in a group.
+         * Regina can recognise strings in the following four basic forms:
+         *
+         *  - \c a^7b^-2
+         *  - \c aaaaaaaBB
+         *  - \c a^7B^2
+         *  - \c g0^7g1^-2
+         *
+         * The string may contain whitespace, which will simply be ignored.
+         *
+         * \exception InvalidArgument the given string could not be
+         * interpreted as a group expression.
+         *
+         * @param input the input string that is to be interpreted.
+         */
+        GroupExpression(const std::string &input);
 
         /**
          * Makes this expression a clone of the given expression.
@@ -296,8 +304,11 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and
          * <tt>g6^1</tt> in that order.
          *
-         * \ifacespython Not present; only the const version of this
-         * routine is available.
+         * \ifacespython The list itself is not returned by reference
+         * (instead this routine returns a new Python list).  However,
+         * the terms within this list are still returned by reference
+         * (i.e., you can use the elements of this list to modify each
+         * term individually).
          *
          * @return the list of terms.
          */
@@ -310,10 +321,9 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          * consisting of three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and
          * <tt>g6^1</tt> in that order.
          *
-         * \ifacespython This routine returns a python list of copied
-         * GroupExpressionTerm objects.  In particular, modifying this
-         * list or the terms within it will not modify the group
-         * expression from which they came.
+         * \ifacespython The list itself is not returned by reference
+         * (instead this routine returns a new Python list).  However,
+         * the terms within this list are still returned by reference.
          *
          * @return the list of terms.
          */
@@ -378,9 +388,6 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          *
          * \warning This routine is <i>O(n)</i> where \a n is the number
          * of terms in this expression.
-         *
-         * \ifacespython Not present; only the non-const version of this
-         * routine is available.
          *
          * @param index the index of the term to return; this must be
          * between 0 and countTerms()-1 inclusive.
@@ -463,11 +470,16 @@ class GroupExpression : public ShortOutput<GroupExpression> {
         void addTermsLast(GroupExpression word);
 
         /**
-         * Multiplies this expression on the left by the word
-         * respresented by the given string.
+         * Deprecated routine that multiplies this expression on the left by
+         * the word respresented by the given string.
+         *
+         * \deprecated Simply call <tt>addTermsFirst(input)</tt>, which will
+         * automatically construct a GroupExpression from the string \a input.
+         * The only change is that you will need to use a try/catch block to
+         * detect errors, instead of checking a return value.
          *
          * See the string-based constructor
-         * GroupExpression(const std::string&, bool*) for further
+         * GroupExpression(const std::string&) for further
          * information on how this string should be formatted.
          *
          * If the given string cannot be interpreted as a word in a group,
@@ -480,14 +492,19 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          * \c false if the given string could not be interpreted
          * (in which case this expression will be left untouched).
          */
-        bool addStringFirst(const std::string& input);
+        [[deprecated]] bool addStringFirst(const std::string& input);
 
         /**
-         * Multiplies this expression on the right by the word
-         * respresented by the given string.
+         * Deprecated routine that multiplies this expression on the right by
+         * the word respresented by the given string.
+         *
+         * \deprecated Simply call <tt>addTermsLast(input)</tt>, which will
+         * automatically construct a GroupExpression from the string \a input.
+         * The only change is that you will need to use a try/catch block to
+         * detect errors, instead of checking a return value.
          *
          * See the string-based constructor
-         * GroupExpression(const std::string&, bool*) for further
+         * GroupExpression(const std::string&) for further
          * information on how this string should be formatted.
          *
          * If the given string cannot be interpreted as a word in a group,
@@ -500,7 +517,7 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          * \c false if the given string could not be interpreted
          * (in which case this expression will be left untouched).
          */
-        bool addStringLast(const std::string& input);
+        [[deprecated]] bool addStringLast(const std::string& input);
 
         /**
          * Cycles this word by moving the leftmost term around to the rightmost.
@@ -642,7 +659,8 @@ class GroupExpression : public ShortOutput<GroupExpression> {
         /**
          * Writes a chunk of XML containing this expression.
          *
-         * \ifacespython Not present.
+         * \ifacespython The argument \a out should be an open Python file
+         * object.
          *
          * @param out the output stream to which the XML should be written.
          */
@@ -654,7 +672,17 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          *
          * @return a TeX representation of this expression.
          */
-        std::string toTeX() const;
+        std::string tex() const;
+
+        /**
+         * Deprecated function that returns a TeX representation of this
+         * expression.  See writeTeX() for details on how this is formed.
+         *
+         * \deprecated This function has been renamed to tex().
+         *
+         * @return a TeX representation of this expression.
+         */
+        [[deprecated]] std::string toTeX() const;
 
         /**
          * Writes a TeX represesentation of this expression to the given
@@ -663,53 +691,117 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          * The text representation will be of the form
          * <tt>g_2^4 g_{13}^{-5} g_4</tt>.
          *
-         * \ifacespython The parameter \a out does not exist;
-         * standard output will be used.
+         * \ifacespython Not present; instead use the variant tex() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          */
         void writeTeX(std::ostream& out) const;
 
+        using ShortOutput<GroupExpression, true>::str;
+        using ShortOutput<GroupExpression, true>::utf8;
+
         /**
-         * Writes a text representation of this expression to the given
-         * output stream, using either numbered generators or
-         * alphabetic generators.
+         * Returns a short text representation of this group expression, with
+         * a choice of either numbered generators or alphabetic generators.
          *
-         * The text representation will be of the form
-         * <tt>g2^4 g13^-5 g4</tt>. If the \a shortword flag is \c true, it
-         * will assume your word is in an alphabet of no more than 26 letters,
-         * and will write the word using lower-case ASCII, i.e.,
-         * <tt>c^4 n^-5 e</tt>.  If the \a utf8 flag is \c true, all exponents
-         * will be written using superscript characters encoded in UTF-8.
+         * If \a alphaGen is \c false, the text representation will be of
+         * the form <tt>g2^4 g13^-5 g4</tt>.  If \a alphaGen is \c true,
+         * this routine will assume your word is in an alphabet of no more
+         * than 26 letters, and will format the word using lower-case ASCII,
+         * i.e., <tt>c^4 n^-5 e</tt>.
          *
-         * \pre If \a shortword is \c true, the number of generators in
+         * Note that there is also a zero-argument version of str(), inherited
+         * through the ShortOutput base class.  This zero-argument str()
+         * gives the same output as <tt>str(false)</tt>.
+         *
+         * \pre If \a alphaGen is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
          *
-         * \ifacespython The parameter \a out does not exist;
-         * standard output will be used.
+         * @param alphaGen indicates whether to use numbered or
+         * alphabetic generators, as described above.
+         * @return a short text representation of this group expression.
+         */
+        std::string str(bool alphaGen) const;
+
+        /**
+         * Returns a short text representation of this group expression using
+         * unicode characters, with a choice of either numbered generators or
+         * alphabetic generators.
+         *
+         * This outputs a similar text representation to str(bool), except that
+         * all exponents will be written using superscript characters encoded
+         * in UTF-8.  See str(bool) for further details.
+         *
+         * Note that there is also a zero-argument version of utf8(), inherited
+         * through the ShortOutput base class.  This zero-argument utf8()
+         * gives the same output as <tt>utf8(false)</tt>.
+         *
+         * \pre If \a alphaGen is \c true, the number of generators in
+         * the corresponding group must be 26 or fewer.
+         *
+         * @param alphaGen indicates whether to use numbered or
+         * alphabetic generators, as described above.
+         * @return a short text representation of this group expression.
+         */
+        std::string utf8(bool alphaGen) const;
+
+        /**
+         * Deprecated routine that writes a text representation of this
+         * expression to the given output stream, using either numbered
+         * generators or alphabetic generators.
+         *
+         * Note that, prior to Regina 7.0, this routine output numbered
+         * generators in the form <tt>g_3</tt>, despite the documentation
+         * claiming that the format would be <tt>g3</tt>.  In Regina 7.0
+         * (which also deprecated this function), the behaviour was
+         * changed to match the documentation (and not vice versa).
+         *
+         * \deprecated This writes exactly the same text as writeTextShort(),
+         * though the optional arguments are given in a different order.
+         * Use writeTextShort() instead.
+         *
+         * \pre If \a alphaGen is \c true, the number of generators in
+         * the corresponding group must be 26 or fewer.
+         *
+         * \ifacespython Not present; use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
-         * @param shortword indicates whether to use numbered or
+         * @param alphaGen indicates whether to use numbered or
          * alphabetic generators, as described above.
          * @param utf8 \c true if exponents should be written using
          * unicode superscript characters, or \c false if they should be
          * written using a caret (^) symbol.
          */
-        void writeText(std::ostream& out, bool shortword = false,
+        [[deprecated]] void writeText(std::ostream& out, bool alphaGen = false,
             bool utf8 = false) const;
 
         /**
          * Writes a short text representation of this object to the
-         * given output stream.
+         * given output stream, using either numbered generators or
+         * alphabetic generators.
          *
          * The text representation will be of the form
-         * <tt>g2^4 g13^-5 g4</tt>.
+         * <tt>g2^4 g13^-5 g4</tt>. If the \a alphaGen flag is \c true, it
+         * will assume your word is in an alphabet of no more than 26 letters,
+         * and will write the word using lower-case ASCII, i.e.,
+         * <tt>c^4 n^-5 e</tt>.  If the \a utf8 flag is \c true, all exponents
+         * will be written using superscript characters encoded in UTF-8.
          *
-         * \ifacespython Not present.
+         * \pre If \a alphaGen is \c true, the number of generators in
+         * the corresponding group must be 26 or fewer.
+         *
+         * \ifacespython Not present; use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
+         * @param utf8 \c true if exponents should be written using
+         * unicode superscript characters, or \c false if they should be
+         * written using a caret (^) symbol.
+         * @param alphaGen indicates whether to use numbered or
+         * alphabetic generators, as described above.
          */
-        void writeTextShort(std::ostream& out) const;
+        void writeTextShort(std::ostream& out, bool utf8 = false,
+            bool alphaGen = false) const;
 };
 
 /**
@@ -720,6 +812,8 @@ class GroupExpression : public ShortOutput<GroupExpression> {
  *
  * @param lhs the expression whose contents should be swapped with \a rhs.
  * @param rhs the expression whose contents should be swapped with \a lhs.
+ *
+ * \ingroup algebra
  */
 void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept;
 
@@ -742,6 +836,8 @@ void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept;
  * objects directly from text strings.  We would like to have something like
  * GroupPresentation( numGens, "abAAB", "bccd" ) etc., with arbitrary
  * numbers of relators. Maybe std::tuple.  Or "variadic templates"?
+ *
+ * \ingroup algebra
  */
 class GroupPresentation : public Output<GroupPresentation> {
     protected:
@@ -784,20 +880,17 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The first argument \a nGens is the number of generators one wants
          * the group to have. The second argument \a rels is a vector
          * of strings, where each string gives a single relator.  See
-         * the GroupExpression::GroupExpression(const std::string&, bool*)
+         * the GroupExpression::GroupExpression(const std::string&)
          * constructor notes for information on what format these strings
          * can take.
          *
-         * If any of the given strings could not be interpreted as
-         * words, this routine will insert the trivial (unit) word in
-         * its place.
-         *
-         * If you are compiling Regina against C++11, you can use the
-         * C++11 initializer_list construction to construct an
-         * GroupPresentation directly using syntax of the form
+         * If you wish to create a group presentation from a hard-coded list
+         * of relations, you can use this constructor with an initialiser list,
+         * via syntax of the form
          * <tt>GroupPresentation(nGens, { "rel1", "rel2", ... })</tt>.
          *
-         * \ifacespython Not present.
+         * \exception InvalidArgument one or more of the given strings
+         * could not be interpreted as a group expression.
          *
          * @param nGens the number of generators.
          * @param rels a vector of relations each given in string form,
@@ -883,6 +976,21 @@ class GroupPresentation : public Output<GroupPresentation> {
          * this will be the expression <tt>g1^2 g2</tt>.
          */
         const GroupExpression& relation(size_t index) const;
+        /**
+         * Returns the list of all relations in this group presentation.
+         *
+         * \ifacespython This routine returns a python list of copied
+         * GroupExpression objects.  In particular, modifying this
+         * list or the relations within it will not modify the group
+         * presentation from which they came.
+         *
+         * \ifacespython The list itself is not returned by reference
+         * (instead this routine returns a new Python list).  However,
+         * the relations within this list are still returned by reference.
+         *
+         * @return the list of relations.
+         */
+        const std::vector<GroupExpression>& relations() const;
 
         /**
          * Tests whether all of the relations for the group are indeed words
@@ -1063,7 +1171,8 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Writes a chunk of XML containing this group presentation.
          *
-         * \ifacespython Not present.
+         * \ifacespython The argument \a out should be an open Python file
+         * object.
          *
          * @param out the output stream to which the XML should be written.
          */
@@ -1084,6 +1193,23 @@ class GroupPresentation : public Output<GroupPresentation> {
          * @return the abelianisation of this group.
          */
         AbelianGroup abelianisation() const;
+
+        /**
+         * Computes the rank of the abelianisation of this group.
+         * This is the number of \a Z summands in the abelianisation
+         * (i.e., ignoring any torsion summands).
+         *
+         * This is much less informative than computing the full
+         * abelianisation, but in some cases it might be significantly faster
+         * (since it involves just a matrix rank computation as opposed to a
+         * Smith normal form).
+         *
+         * The result of this routine should be the same as the output
+         * of <tt>abelianisation().rank()</tt>.
+         *
+         * @return the rank of the abelianisation of this group.
+         */
+        unsigned abelianRank() const;
 
         /**
          * Computes the abelianisation of this group.
@@ -1350,12 +1476,12 @@ class GroupPresentation : public Output<GroupPresentation> {
          * For each representation that is produced, this routine will call
          * \a action (which must be a function or some other callable object).
          *
-         * - The first argument to \a action must be a reference to a
-         *   GroupPresentation.  This will be the index \a k subgroup
-         *   corresponding to the representation.  \a action may, if it
-         *   chooses, modify the subgroup presentation that it receives
-         *   (though it must not delete it).  The subgroup presentation
-         *   will be destroyed immediately after \a action is called.
+         * - The first argument to \a action must be a group presentation.
+         *   This will be the index \a k subgroup corresponding to the
+         *   representation.  This argument will be passed as an rvalue;
+         *   a typical action could (for example) take it by const reference
+         *   and query it, or take it by value and modify it, or take it by
+         *   rvalue reference and move it into more permanent storage.
          *
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
@@ -1387,23 +1513,21 @@ class GroupPresentation : public Output<GroupPresentation> {
          * abelianisations then you are better off using the \e abelian group
          * simplification / computation instead (which is much faster).
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap them in std::ref or
-         * std::cref.
-         *
          * \apinotfinal
          *
-         * \ifacespython This function is available in Python, and the
-         * \a action argument may be a pure Python function.  However, its
-         * form is more restricted.  The template parameter \a index becomes
-         * the first argument to the function, and the arguments \a args are
-         * removed entirely.  This means that Python users should call this
-         * function as enumerateCovers(index, action).
+         * \ifacespython There are two versions of this function available in
+         * Python.  The first form is <tt>enumerateCovers(index, action)</tt>,
+         * which mirrors the C++ function: it takes \a action which may
+         * be a pure Python function, it returns the number of representations
+         * found, but it does \e not take an addition argument list (\a args).
+         * The second form is <tt>enumerateCovers(index)</tt>, which returns
+         * a Python list containing all of the corresponding subgroups, each
+         * given as a GroupPresentation.  In both forms, the template
+         * parameter \a index becomes the first argument to the Python function.
          *
          * \tparam index the number \a k in the description above; in other
          * words, the index of the resulting subgroups.  Currently this
-         * must be between 2 and 6 inclusive; this range is chosen because
+         * must be between 2 and 7 inclusive; this range is chosen because
          * those are the \a k for which Regina's permutation class Perm<k>
          * is highly optimised.
          * @param action a function (or other callable object) to call
@@ -1436,7 +1560,17 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * @return a TeX representation of this group presentation.
          */
-        std::string toTeX() const;
+        std::string tex() const;
+
+        /**
+         * Deprecated function that returns a TeX representation of this group
+         * presentation.  See writeTeX() for details on how this is formed.
+         *
+         * \deprecated This function has been renamed to tex().
+         *
+         * @return a TeX representation of this group presentation.
+         */
+        [[deprecated]] std::string toTeX() const;
 
         /**
          * Writes a TeX represesentation of this group presentation
@@ -1445,8 +1579,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The output will be of the form &lt; generators | relators &gt;.
          * There will be no final newline.
          *
-         * \ifacespython The parameter \a out does not exist;
-         * standard output will be used.
+         * \ifacespython Not present; instead use the variant tex() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          */
@@ -1469,8 +1603,8 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The full relations will be included, and the entire output
          * will be written on a single line.  There will be no final newline.
          *
-         * \ifacespython The parameter \a out does not exist;
-         * standard output will be used.
+         * \ifacespython Not present; instead use the variant compact() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          */
@@ -1480,7 +1614,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1489,11 +1623,31 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+        /**
+         * Returns a sequence of GAP commands that create this group.
+         *
+         * GAP is a widely-used computational algebra system, and can be
+         * downloaded from http://gap-system.org/ .
+         *
+         * Other than the variable for the group itself, the commands
+         * returned will not use or modify any other GAP variables with the
+         * current GAP scope.
+         *
+         * The string that is returned will be presented as a single
+         * (possibly very long) GAP function call, and will not contain
+         * any newlines.
+         *
+         * @param groupVariable the name of the GAP variable to which
+         * this group will be assigned.
+         * @return a sequence of commands to create this group in GAP.
+         */
+        std::string gap(const std::string& groupVariable = "g") const;
 
 #ifdef __DOXYGEN
         /**
@@ -1551,11 +1705,11 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * \apinotfinal Reconsider how the end-user should see this routine.
          *
-         * @return a list of newly allocated group presentations giving
-         * the factors of this free product, or an empty list if this
-         * routine fails (i.e., the result is inconclusive).
+         * @return a list of group presentations giving the factors of this
+         * free product, or an empty list if this routine fails (i.e., the
+         * result is inconclusive).
          */
-        std::list< GroupPresentation* > identifyFreeProduct() const;
+        std::list<GroupPresentation> identifyFreeProduct() const;
 
         /**
          * A structure internal to the small cancellation simplification
@@ -1673,7 +1827,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          */
         template <int index>
         size_t enumerateCoversInternal(
-            std::function<void(GroupPresentation&)>&& action);
+            std::function<void(GroupPresentation&&)>&& action);
 
         /**
          * Relabels the generators and reorders the relations in the
@@ -1692,17 +1846,16 @@ class GroupPresentation : public Output<GroupPresentation> {
          * precise algorithm (and hence the precise reordering/relabelling)
          * is subject to change in future versions of Regina.
          *
-         * If the argument \a genRange is non-null, then this array will
-         * be filled so that genRange[i] is one more than the maximum
-         * generator label that appears amongst all relations 0,...,<i>i</i>
-         * after the relabelling has taken place.
+         * It is guaranteed that, after this routine finishes, the maximum
+         * generator label used in each relation is a (non-strict) monotonic
+         * increasing function of the relation number (with all empty
+         * relations appearing at the beginning of the relation list).
          *
-         * @param genRange an array whose size is at least the number of
-         * relations, which will be filled as described above.  The contents
-         * of this array will be ignored, and will be overwritten.
-         * This argument may be \c null if you do not need this data.
+         * This routine will also cycle the relations around so that
+         * the last term of each relation uses the relation's corresponding
+         * maximum generator label.
          */
-        void minimaxGenerators(unsigned long* genRange = nullptr);
+        void minimaxGenerators();
 };
 
 /**
@@ -1713,15 +1866,13 @@ class GroupPresentation : public Output<GroupPresentation> {
  *
  * @param lhs the presentation whose contents should be swapped with \a rhs.
  * @param rhs the presentation whose contents should be swapped with \a lhs.
+ *
+ * \ingroup algebra
  */
 void swap(GroupPresentation& lhs, GroupPresentation& rhs) noexcept;
 
-/*@}*/
-
 // Inline functions for GroupExpressionTerm
 
-inline GroupExpressionTerm::GroupExpressionTerm() {
-}
 inline GroupExpressionTerm::GroupExpressionTerm(unsigned long newGen,
         long newExp) : generator(newGen), exponent(newExp) {
 }
@@ -1758,16 +1909,17 @@ inline bool GroupExpressionTerm::operator < (
 
 // Inline functions for GroupExpression
 
-inline GroupExpression::GroupExpression() {
-}
-
 inline GroupExpression::GroupExpression(const GroupExpressionTerm& term) {
     terms_.push_back(term);
 }
 
 inline GroupExpression::GroupExpression(unsigned long generator,
         long exponent) {
-    terms_.push_back(GroupExpressionTerm(generator, exponent));
+    terms_.emplace_back(generator, exponent);
+}
+
+inline GroupExpression::GroupExpression(const std::string &input) :
+        GroupExpression(input.c_str()) {
 }
 
 inline void GroupExpression::swap(GroupExpression& other) noexcept {
@@ -1830,7 +1982,7 @@ inline void GroupExpression::addTermLast(const GroupExpressionTerm& term) {
 
 inline void GroupExpression::addTermLast(unsigned long generator,
         long exponent) {
-    terms_.push_back(GroupExpressionTerm(generator, exponent));
+    terms_.emplace_back(generator, exponent);
 }
 
 inline void GroupExpression::addTermsLast(GroupExpression word) {
@@ -1843,6 +1995,28 @@ inline void GroupExpression::addTermsFirst(GroupExpression word) {
 
 inline void GroupExpression::erase() {
     terms_.clear();
+}
+
+inline std::string GroupExpression::toTeX() const {
+    return tex();
+}
+
+inline std::string GroupExpression::str(bool alphaGen) const {
+    std::ostringstream out;
+    writeTextShort(out, false, alphaGen);
+    return out.str();
+}
+
+inline std::string GroupExpression::utf8(bool alphaGen) const {
+    std::ostringstream out;
+    writeTextShort(out, true, alphaGen);
+    return out.str();
+}
+
+inline void GroupExpression::writeText(std::ostream& out, bool alphaGen,
+        bool utf8) const {
+    // Note: argument are given in a different order.
+    writeTextShort(out, utf8, alphaGen);
 }
 
 inline void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept {
@@ -1883,6 +2057,15 @@ inline const GroupExpression& GroupPresentation::relation(size_t index) const {
     return relations_[index];
 }
 
+inline const std::vector<GroupExpression>& GroupPresentation::relations()
+        const {
+    return relations_;
+}
+
+inline std::string GroupPresentation::toTeX() const {
+    return tex();
+}
+
 inline void GroupPresentation::writeTextShort(std::ostream& out) const {
     out << "Group presentation: " << nGenerators_ << " generators, "
         << relations_.size() << " relations";
@@ -1890,8 +2073,8 @@ inline void GroupPresentation::writeTextShort(std::ostream& out) const {
 
 inline size_t GroupPresentation::relatorLength() const {
     size_t retval(0);
-    for (size_t i=0; i<relations_.size(); i++)
-        retval += relations_[i].wordLength();
+    for (const auto& r : relations_)
+        retval += r.wordLength();
     return retval;
 }
 
@@ -1937,9 +2120,10 @@ inline size_t GroupPresentation::enumerateCovers(
         Action&& action, Args&&... args) const {
     // Do the real work on a temporary copy of this presentation that we
     // can be free to modify as we see fit.
-    return GroupPresentation(*this).enumerateCoversInternal<index>(std::bind(
-        std::forward<Action>(action), std::placeholders::_1,
-        std::forward<Args>(args)...));
+    return GroupPresentation(*this).enumerateCoversInternal<index>(
+        [&](GroupPresentation&& g) {
+            action(std::move(g), std::forward<Args>(args)...);
+        });
 }
 
 } // namespace regina

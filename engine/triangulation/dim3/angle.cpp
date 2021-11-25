@@ -38,6 +38,12 @@
 namespace regina {
 
 bool Triangulation<3>::knowsStrictAngleStructure() const {
+    if (std::holds_alternative<AngleStructure>(strictAngleStructure_))
+        return true; // already known: a solution exists
+
+    if (std::get<bool>(strictAngleStructure_))
+        return true; // already known: no solution exists
+
     // There are some simple cases for which we can deduce the answer
     // automatically.
     if (simplices_.empty()) {
@@ -54,23 +60,20 @@ bool Triangulation<3>::knowsStrictAngleStructure() const {
         }
     }
 
-    return std::holds_alternative<AngleStructure>(strictAngleStructure_) ||
-        std::get<bool>(strictAngleStructure_);
+    // Don't know.  This requres a real computation.
+    return false;
 }
 
-const AngleStructure* Triangulation<3>::strictAngleStructure() const {
+bool Triangulation<3>::hasStrictAngleStructure() const {
     // The following test also catches any easy cases.
-    if (knowsStrictAngleStructure()) {
-        if (std::holds_alternative<AngleStructure>(strictAngleStructure_))
-            return &std::get<AngleStructure>(strictAngleStructure_);
-        else
-            return nullptr; // known to have no solution
-    }
+    if (knowsStrictAngleStructure())
+        return std::holds_alternative<AngleStructure>(strictAngleStructure_);
 
+    // Run the full computation and cache the resulting structure, if any.
     LPInitialTableaux<LPConstraintNone> eqns(*this, NS_ANGLE, false);
 
     LPData<LPConstraintNone, Integer> lp;
-    lp.reserve(&eqns);
+    lp.reserve(eqns);
 
     // Find an initial basis.
     lp.initStart();
@@ -86,29 +89,29 @@ const AngleStructure* Triangulation<3>::strictAngleStructure() const {
     // Test for a solution!
     if (! lp.isFeasible()) {
         strictAngleStructure_ = true; // confirmed: no solution
-        return nullptr;
+        return false;
     }
 
     // We have a strict angle structure: reconstruct it.
-    unsigned long len = 3 * simplices_.size() + 1;
-    VectorInt* v = new VectorInt(len);
-    lp.extractSolution(*v, nullptr /* type vector */);
-    strictAngleStructure_ = AngleStructure(*this, v);
-    return &std::get<AngleStructure>(strictAngleStructure_);
+    strictAngleStructure_ = AngleStructure(*this,
+        lp.extractSolution<VectorInt>(nullptr /* type vector */));
+    return true;
 }
 
-const AngleStructure* Triangulation<3>::generalAngleStructure() const {
+bool Triangulation<3>::hasGeneralAngleStructure() const {
     if (std::holds_alternative<AngleStructure>(generalAngleStructure_)) {
-        return &std::get<AngleStructure>(generalAngleStructure_);
+        return true; // known to have a solution
     } else if (std::get<bool>(generalAngleStructure_)) {
-        return nullptr; // known to have no solution
+        return false; // known to have no solution
     }
+
+    // Run the full computation and cache the resulting structure, if any.
 
     // There are some simple cases for which we can deduce the answer
     // automatically.
     if (simplices_.empty()) {
         generalAngleStructure_ = true; // confirmed: no solution
-        return nullptr;
+        return false;
     }
 
     if (! hasBoundaryTriangles()) {
@@ -116,7 +119,7 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
         // then we must have #edges = #tetrahedra.
         if (countEdges() != simplices_.size()) {
             generalAngleStructure_ = true; // confirmed: no solution
-            return nullptr;
+            return false;
         }
 
         // If the triangulation is valid, we also need every vertex link
@@ -143,7 +146,7 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
 
     // Go down through the matrix from top-left to bottom-right and work
     // out where the leading coefficients of each row appear.
-    unsigned long* leading = new unsigned long[rank];
+    auto* leading = new unsigned long[rank];
     unsigned long row = 0;
     unsigned long col = 0;
 
@@ -159,12 +162,12 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
         // The final column appears as a leading coefficient.
         delete[] leading;
         generalAngleStructure_ = true; // confirmed: no solution
-        return nullptr;
+        return false;
     }
 
     // Build up the final vector from back to front.
-    VectorInt* v = new VectorInt(eqns.columns());
-    v->set(eqns.columns() - 1, 1);
+    VectorInt v(eqns.columns());
+    v[eqns.columns() - 1] = 1;
 
     // We currently have row == rank.
     while (row > 0) {
@@ -179,14 +182,14 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
         Integer den = eqns.entry(row, col);
 
         Integer num; // set to 0
-        for (++col; col < v->size(); ++col)
+        for (++col; col < v.size(); ++col)
             if (eqns.entry(row, col) != 0)
-                num += (eqns.entry(row, col) * (*v)[col]);
+                num += (eqns.entry(row, col) * v[col]);
 
         // Our row echelon form guarantees that den > 0.
         // We need to set v[leading[row]] = -num/den.
         if (den == 1) {
-            v->set(leading[row], -num);
+            v[leading[row]] = -num;
         } else {
             Integer gcd = den.gcd(num); // guaranteed >= 0.
             if (gcd > 1) {
@@ -196,17 +199,17 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
 
             // Still we have den > 0.
             if (den > 1)
-                (*v) *= den;
+                v *= den;
             // Now the current solution has gcd == den.
 
-            v->set(leading[row], -num);
+            v[leading[row]] = -num;
             // Since gcd(num, den) == 1, there is no need to scale down again.
         }
     }
 
     delete[] leading;
-    generalAngleStructure_ = AngleStructure(*this, v);
-    return &std::get<AngleStructure>(generalAngleStructure_);
+    generalAngleStructure_ = AngleStructure(*this, std::move(v));
+    return true;
 }
 
 } // namespace regina

@@ -35,15 +35,6 @@
 
 namespace regina {
 
-Layering::Layering(Tetrahedron<3>* bdry0, Perm<4> roles0, Tetrahedron<3>* bdry1,
-        Perm<4> roles1) : size_(0), reln(1, 0, 0, 1) {
-    oldBdryTet_[0] = newBdryTet_[0] = bdry0;
-    oldBdryTet_[1] = newBdryTet_[1] = bdry1;
-
-    oldBdryRoles_[0] = newBdryRoles_[0] = roles0;
-    oldBdryRoles_[1] = newBdryRoles_[1] = roles1;
-}
-
 bool Layering::extendOne() {
     // See if we move to a common new tetrahedron.
     // Also make sure this really is a new tetrahedron, so we don't get
@@ -51,7 +42,7 @@ bool Layering::extendOne() {
     Tetrahedron<3>* next = newBdryTet_[0]->adjacentTetrahedron(
         newBdryRoles_[0][3]);
 
-    if (next == 0 || next == newBdryTet_[0] || next == newBdryTet_[1] ||
+    if ((! next) || next == newBdryTet_[0] || next == newBdryTet_[1] ||
             next == oldBdryTet_[0] || next == oldBdryTet_[1])
         return false;
     if (next != newBdryTet_[1]->adjacentTetrahedron(newBdryRoles_[1][3]))
@@ -125,9 +116,9 @@ unsigned long Layering::extend() {
     return added;
 }
 
-bool Layering::matchesTop(Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
-        Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1, Matrix2& upperReln)
-        const {
+bool Layering::matchesTop(const Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
+        const Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1,
+        Matrix2& upperReln) const {
     // We can cut half our cases by assuming that upperBdry0 meets with
     // newBdryTet[0] and that upperBdry1 meets with newBdryTet[1].
     bool rot180;
@@ -136,14 +127,8 @@ bool Layering::matchesTop(Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
         // If it does match, it's the opposite matching (upperBdry0 with
         // newBdryTet[1] and vice versa).  Switch them and remember what
         // we did.
-        Tetrahedron<3>* tmpTet = upperBdry0;
-        upperBdry0 = upperBdry1;
-        upperBdry1 = tmpTet;
-
-        Perm<4> tmpPerm = upperRoles0;
-        upperRoles0 = upperRoles1;
-        upperRoles1 = tmpPerm;
-
+        std::swap(upperBdry0, upperBdry1);
+        std::swap(upperRoles0, upperRoles1);
         rot180 = true;
     } else {
         // If it does match, it's what we'd like.

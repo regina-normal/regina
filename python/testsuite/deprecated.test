@@ -1,0 +1,70 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2015-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests reimplementations of some routines that are deprecated in C++.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+from __future__ import print_function
+
+print(BoolSet.sBoth, BoolSet.sTrue, BoolSet.sFalse, BoolSet.sNone)
+
+t = Example3.s2xs1()
+s = NormalSurfaces.enumerate(t, NS_QUAD)
+print(s.detail())
+u = s.filterForPotentiallyIncompressible()
+print(u.detail())
+
+t = Example3.whiteheadLink()
+a = AngleStructures.enumerate(t)
+print(a.detail())
+a = AngleStructures.enumerateTautDD(t)
+print(a.detail())
+
+t = Example4.s3xs1()
+s = NormalHypersurfaces.enumerate(t, HS_STANDARD)
+print(s.detail())
+
+# The old enumeration() functions used to insert into the packet tree.
+
+t = PacketOfTriangulation3(Example3.s2xs1())
+s = NormalSurfaces.enumerate(t, NS_QUAD)
+print(t.firstChild().detail())
+u = s.filterForPotentiallyIncompressible()
+print(t.lastChild().detail())
+
+t = PacketOfTriangulation3(Example3.whiteheadLink())
+a = AngleStructures.enumerate(t)
+print(t.firstChild().detail())
+a = AngleStructures.enumerateTautDD(t)
+print(t.lastChild().detail())
+
+t = PacketOfTriangulation4(Example4.s3xs1())
+s = NormalHypersurfaces.enumerate(t, HS_STANDARD)
+print(t.firstChild().detail())

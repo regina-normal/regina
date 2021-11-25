@@ -1,0 +1,201 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-tri">
+ <refmeta>
+  <refentrytitle>tri</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>tri</refname>
+  <refpurpose>A triangulation packet</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+tri ::= (&xml-simplex;*,
+         &xml-fundgroup;?, &xml-H1;?, &xml-H1Bdry;?, &xml-H1Rel;?, &xml-H2;?,
+         &xml-splitsfce;?, &xml-zeroeff;?,
+         &xml-threesphere;?, &xml-threeball;?, &xml-solidtorus;?, &xml-txi;?,
+         &xml-irreducible;?, &xml-compressingdisc;?, &xml-haken;?,
+         &xml-tag;*,
+         &packetsyn1;
+         &packetsyn2;
+         &packetsyn3;
+         &packetsyn4;
+         &packetsyn5;*)</synopsis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><sgmltag>dim</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>perm</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>size</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+     &packetattrlist2col;
+    </tbody>
+   </tgroup>
+  </informaltable>
+  <para>&eltaddedver;7.0</para>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   This represents a <emphasis>triangulation packet</emphasis>,
+   one of the many types of packet that together form the
+   <emphasis>packet tree</emphasis> that a user sees when they open a
+   &regina; data file.
+  </para>
+  <para>
+   A triangulation packet stores a <replaceable>d</replaceable>-dimensional
+   triangulation (typically of a <replaceable>d</replaceable>-manifold),
+   for any dimension
+   2&nbsp;&le;&nbsp;<replaceable>d</replaceable>&nbsp;&le;&nbsp;15.
+  </para>
+  <para>
+   The total number of top-dimensional simplices in the triangulation
+   (e.g., the total number of tetrahedra in the case
+   <replaceable>d</replaceable>&nbsp;=&nbsp;3) must be specified by the
+   <sgmltag>size</sgmltag> attribute.  The individual simplices are
+   numbered 0, 1, 2, etc., and the gluings between them are described by the
+   corresponding child &xml-simplex; elements.  There must be precisely
+   <replaceable>size</replaceable> child &xml-simplex; elements in total.
+  </para>
+  <para>
+   There are additional optional child elements
+   (e.g., &xml-fundgroup;, &xml-H1;, etc.) that can be used to store
+   known properties of this triangulation.  Some of these are only used in
+   particular dimensions, as noted in the
+   <emphasis>Children</emphasis> section below.
+  </para>
+  &packetchilddesc;
+
+  <refsect2>
+   <title>Parents</title>
+   &packetparents;
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>tri</sgmltag>,
+    and are used for triangulations in all dimensions:
+    <simplelist type="inline">
+     <member>&xml-fundgroup;</member>
+     <member>&xml-H1;</member>
+     <member>&xml-simplex;</member>
+    </simplelist>.
+   </para>
+   <para>
+    For triangulations in dimensions&nbsp;3 and&nbsp;4,
+    the following child element may also occur:
+    <simplelist type="inline">
+     <member>&xml-H2;</member>
+    </simplelist>.
+   </para>
+   <para>
+    In addition, for triangulations in dimension&nbsp;3,
+    there are many more optional child elements:
+    <simplelist type="inline">
+     <member>&xml-compressingdisc;</member>
+     <member>&xml-H1Bdry;</member>
+     <member>&xml-H1Rel;</member>
+     <member>&xml-haken;</member>
+     <member>&xml-irreducible;</member>
+     <member>&xml-splitsfce;</member>
+     <member>&xml-solidtorus;</member>
+     <member>&xml-threeball;</member>
+     <member>&xml-threesphere;</member>
+     <member>&xml-txi;</member>
+     <member>&xml-zeroeff;</member>
+    </simplelist>.
+   </para>
+   &packetchildren;
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <para>
+   The following attributes are specific to triangulation packets:
+  </para>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>dim</sgmltag></term>
+    <listitem><para>
+     Indicates the dimension of the triangulation.
+     This must be an integer between 2 and 15 inclusive.
+    </para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>perm</sgmltag></term>
+    <listitem><para>
+     Indicates how gluing permutations are encoded within each
+     &xml-simplex; element.
+     Possible values are <literal>index</literal> (where permutations
+     are denoted by indices into the symmetric group
+     S<subscript><replaceable>dim</replaceable>+1</subscript>)
+     or <literal>imagepack</literal> (where permutations are denoted by
+     &ldquo;image packs&rdquo;).  See the &xml-simplex; element for more
+     information on each of these encodings.
+    </para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>size</sgmltag></term>
+    <listitem><para>
+     Indicates the total number of top-dimensional simplices in the
+     triangulation (e.g., the total number of tetrahedra in the case
+     <sgmltag>dim</sgmltag>&nbsp;=&nbsp;3).
+     This must be a non-negative integer, and must be equal to the
+     number of child &xml-simplex; elements.
+    </para></listitem>
+   </varlistentry>
+  </variablelist>
+ &packetattrdesc;
+ </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents a three-tetrahedron triangulation of
+   the 3-manifold
+   RP<superscript>2</superscript>&nbsp;&times;&nbsp;S<superscript>1</superscript>,
+   along with some pre-computed homology groups.
+  </para>
+  <programlisting>
+&lt;tri dim=&quot;3&quot; size=&quot;3&quot; perm=&quot;index&quot; label=&quot;RP² x S¹&quot;&gt;
+  &lt;simplex&gt; 1 0 1 0 2 11 2 2 &lt;/simplex&gt;
+  &lt;simplex&gt; 0 0 0 0 2 21 2 12 &lt;/simplex&gt;
+  &lt;simplex&gt; 0 13 0 4 1 21 1 8 &lt;/simplex&gt;
+  &lt;H1&gt;&lt;abeliangroup rank=&quot;1&quot;&gt; 2 &lt;/abeliangroup&gt;&lt;/H1&gt;
+  &lt;H1Rel&gt;&lt;abeliangroup rank=&quot;1&quot;&gt; 2 &lt;/abeliangroup&gt;&lt;/H1Rel&gt;
+  &lt;H1Bdry&gt;&lt;abeliangroup rank=&quot;0&quot;&gt; &lt;/abeliangroup&gt;&lt;/H1Bdry&gt;
+  &lt;H2&gt;&lt;abeliangroup rank=&quot;0&quot;&gt; 2 &lt;/abeliangroup&gt;&lt;/H2&gt;
+&lt;/tri>
+  </programlisting>
+ </refsect1>
+</refentry>

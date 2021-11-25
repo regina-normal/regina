@@ -15,35 +15,40 @@
 
  <refsynopsisdiv>
   <informaltable frame="all">
-   <tgroup cols="2">
+   <tgroup cols="3">
     <colspec colname="c1"/>
     <colspec colname="c2"/>
+    <colspec colname="c3"/>
     <tbody>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
       <emphasis role="bold">Content Model</emphasis>
      </entry></row>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
 <synopsis>
 var ::=</synopsis>
      </entry></row>
-     <row><entry namest="c1" nameend="c2">
+     <row><entry namest="c1" nameend="c3">
       <emphasis role="bold">Attributes</emphasis>
      </entry></row>
      <row>
       <entry><emphasis role="bold">Name</emphasis></entry>
       <entry><emphasis role="bold">Type</emphasis></entry>
+      <entry><emphasis role="bold">Version</emphasis></entry>
      </row>
      <row>
       <entry><sgmltag>name</sgmltag></entry>
       <entry><type>CDATA</type> (required)</entry>
+      <entry></entry>
      </row>
      <row>
       <entry><sgmltag>valueid</sgmltag></entry>
       <entry><type>CDATA</type> (required)</entry>
+      <entry>&attraddedver;4.95</entry>
      </row>
      <row>
       <entry><sgmltag>value</sgmltag></entry>
       <entry><type>CDATA</type> (deprecated)</entry>
+      <entry>&attrdepver;4.95</entry>
      </row>
     </tbody>
    </tgroup>
@@ -66,7 +71,7 @@ var ::=</synopsis>
    <para>
     The following elements contain <sgmltag>var</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-script;</member>
+     <member>&xml-script;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -98,9 +103,6 @@ var ::=</synopsis>
       specifically, it must match the <sgmltag>id</sgmltag> attribute
       that is stored in the value's <sgmltag>packet</sgmltag> tag.
       If the variable has a null value, then this should be the empty string.
-     </para>
-     <para>
-      This attribute was introduced in &regina;&nbsp;4.95.
      </para>
     </listitem>
    </varlistentry>

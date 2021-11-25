@@ -114,27 +114,25 @@
     {
         regina::Triangulation<3> simp(*self.packet);
         simp.intelligentSimplify();
-        regina::StandardTriangulation* std = regina::StandardTriangulation::isStandardTriangulation(&simp);
+        auto std = regina::StandardTriangulation::recognise(&simp);
         if (std) {
-            regina::Manifold* mfd = std->manifold();
+            auto mfd = std->manifold();
             if (mfd) {
                 isHyp = mfd->isHyperbolic();
                 manifoldName = @(mfd->name().c_str());
-                delete mfd;
 
                 // If we have the 3-sphere, 3-ball or solid torus, then
                 // automatically run the large recognition routines: these
                 // should finish quickly and give results consistent with
                 // the combinatorial routines.
                 if ([manifoldName isEqualToString:@"S3"]) {
-                    self.packet->isThreeSphere();
+                    self.packet->isSphere();
                 } else if ([manifoldName isEqualToString:@"B3"]) {
                     self.packet->isBall();
                 } else if ([manifoldName isEqualToString:@"B2 x S1"]) {
                     self.packet->isSolidTorus();
                 }
             }
-            delete std;
         }
         if (manifoldName)
             self.manifold.text = manifoldName;
@@ -148,7 +146,7 @@
     if (self.packet->isClosed() && ! self.packet->isEmpty()) {
         [propertyList addObject:@PROP_SPHERE];
         if (self.packet->size() <= 6)
-            self.packet->isThreeSphere();
+            self.packet->isSphere();
     } else if (self.packet->countBoundaryComponents() > 0) {
         // Real boundary only:
         if (self.packet->hasBoundaryTriangles()) {
@@ -238,7 +236,7 @@
     if (isHyp.has_value())
         return;
 
-    if (self.packet->isClosed() && self.packet->knowsThreeSphere() && self.packet->isThreeSphere())
+    if (self.packet->isClosed() && self.packet->knowsSphere() && self.packet->isSphere())
         isHyp = false;
     else if (self.packet->hasBoundaryTriangles() && self.packet->knowsBall() && self.packet->isBall())
         isHyp = false;
@@ -254,10 +252,10 @@
 {
     switch (property) {
         case PROP_SPHERE:
-            if (self.packet->knowsThreeSphere()) {
-                if (self.packet->isThreeSphere() && ! manifoldName)
+            if (self.packet->knowsSphere()) {
+                if (self.packet->isSphere() && ! manifoldName)
                     self.manifold.text = manifoldName = @"S3";
-                return [TextHelper yesNoString:self.packet->isThreeSphere() yes:@"Yes" no:@"No"];
+                return [TextHelper yesNoString:self.packet->isSphere() yes:@"Yes" no:@"No"];
             }
             return nil;
         case PROP_BALL:
@@ -318,7 +316,7 @@
                         code:^{
                             switch (static_cast<PropertyCell*>(cell).property) {
                                 case PROP_SPHERE:
-                                    self.packet->isThreeSphere(); break;
+                                    self.packet->isSphere(); break;
                                 case PROP_BALL:
                                     self.packet->isBall(); break;
                                 case PROP_SOLIDTORUS:
@@ -361,31 +359,33 @@
         return;
     }
 
-    regina::Packet* base = new regina::Container();
-    __block long nSummands = 0;
+    __block std::vector<std::unique_ptr<Triangulation<3>>> summands;
     [ReginaHelper runWithHUD:@"Decomposing…"
                         code:^{
-                            nSummands = self.packet->connectedSumDecomposition(base);
+                            try {
+                                summands = self.packet->summands(true);
+                            } catch (regina::UnsolvedCase&) {
+                                // We can detect this by having a non-orientable triangulation with an empty summands list.
+                            }
                         }
                      cleanup:^{
-                         if (nSummands < 0) {
-                             delete base;
+                         if (summands.empty() && ! self.packet->isOrientable()) {
+                             // This is the case that throws an exception above.
                              UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Two-Sided Projective Plane"
                                                                              message:@"This manifold contains an embedded two-sided projective plane.  Regina cannot always compute connected sum decompositions in such cases, and this happens to be one such case that it cannot resolve."
                                                                             delegate:nil
                                                                    cancelButtonTitle:@"Close"
                                                                    otherButtonTitles:nil];
                              [alert show];
-                         } else if (nSummands == 0) {
-                             delete base;
+                         } else if (summands.empty()) {
                              UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S³"
                                                                              message:@"This is the 3-sphere.  It has no prime summands."
                                                                             delegate:nil
                                                                    cancelButtonTitle:@"Close"
                                                                    otherButtonTitles:nil];
                              [alert show];
-                         } else if (nSummands == 1) {
-                             regina::Triangulation<3>* small = static_cast<regina::Triangulation<3>*>(base->firstChild());
+                         } else if (summands.size() == 1) {
+                             const regina::Triangulation<3>* small = summands.front().get();
 
                              // Special-case S2xS1, S2x~S1 and RP3, which do not have
                              // 0-efficient triangulations.
@@ -429,11 +429,10 @@
                                  [alert show];
                              }
 
-                             small->reparent(self.packet);
-                             delete base;
+                             self.packet->insertChildLast(small);
                              [ReginaHelper viewPacket:small];
                          } else {
-                             UIAlertView* alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%ld Prime Summands", nSummands]
+                             UIAlertView* alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%ld Prime Summands", summands.size()]
                                                                              message:@"This is a composite manifold.  I have constructed a new triangulation for each summand."
                                                                             delegate:nil
                                                                    cancelButtonTitle:@"Close"
@@ -443,16 +442,19 @@
                              if (self.packet->firstChild()) {
                                  // This packet already has children.
                                  // Insert the summands at a deeper level.
+                                 regina::Packet* base = new regina::Container();
                                  base->setLabel(self.packet->adornedLabel("Summands"));
                                  self.packet->insertChildLast(base);
+                                 for (auto& s : summands)
+                                     base->insertChildLast(s.release());
                                  [ReginaHelper viewChildren:base];
                              } else {
-                                 base->transferChildren(self.packet);
-                                 delete base;
+                                 for (auto& s : summands)
+                                     self.packet->insertChildLast(s.release());
                                  [ReginaHelper viewChildren:self.packet];
                              }
                          }
-                         
+
                          // We might have learned something new for the recognition tab to show.
                          [self reloadPacket];
                      }];

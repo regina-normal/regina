@@ -40,17 +40,13 @@
 #define __REGINA_PLUGTRISOLIDTORUS_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "subcomplex/trisolidtorus.h"
 #include "subcomplex/layeredchain.h"
 #include "triangulation/forward.h"
 
 namespace regina {
-
-/**
- * \weakgroup subcomplex
- * @{
- */
 
 /**
  * Represents a plugged triangular solid torus component of a
@@ -92,6 +88,15 @@ namespace regina {
  * Of the optional StandardTriangulation routines, manifold() is
  * implemented for most plugged triangular solid tori and
  * homology() is not implemented at all.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class PlugTriSolidTorus : public StandardTriangulation {
     public:
@@ -117,10 +122,10 @@ class PlugTriSolidTorus : public StandardTriangulation {
                  core triangular solid torus. */
 
     private:
-        TriSolidTorus* core_;
+        TriSolidTorus core_;
             /**< The triangular solid torus at the core of this
                  triangulation. */
-        LayeredChain* chain_[3];
+        std::optional<LayeredChain> chain_[3];
             /**< The layered chains attached to the annuli on the
                  triangular solid torus, or 0 for those annuli without
                  attached layered chains. */
@@ -129,21 +134,37 @@ class PlugTriSolidTorus : public StandardTriangulation {
                  annulus on the triangular solid torus, or \a CHAIN_NONE
                  for those annuli without attached layered chains. */
         int equatorType_;
-            /**< Indicates which types of edges form the equator of the
-                 plug. */
+            /**< Indicates which types of edges form the equator of the plug. */
 
     public:
         /**
-         * Destroys this plugged solid torus; note that the corresponding
-         * triangular solid torus and layered chains will also be destroyed.
+         * Creates a new copy of this structure.
          */
-        virtual ~PlugTriSolidTorus();
+        PlugTriSolidTorus(const PlugTriSolidTorus&) = default;
+
         /**
-         * Returns a newly created clone of this structure.
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        PlugTriSolidTorus& operator = (const PlugTriSolidTorus&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        PlugTriSolidTorus* clone() const;
+        [[deprecated]] PlugTriSolidTorus* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(PlugTriSolidTorus& other) noexcept;
 
         /**
          * Returns the triangular solid torus at the core of this
@@ -156,7 +177,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
         /**
          * Returns the layered chain attached to the requested
          * annulus on the boundary of the core triangular solid torus.
-         * If there is no attached layered chain, \c null will be returned.
+         * If there is no attached layered chain, no value will be returned.
          *
          * Note that the core triangular solid torus will be attached to
          * the bottom (as opposed to the top) of the layered chain.
@@ -165,7 +186,7 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * be 0, 1 or 2.
          * @return the corresponding layered chain.
          */
-        const LayeredChain* chain(int annulus) const;
+        const std::optional<LayeredChain>& chain(int annulus) const;
 
         /**
          * Returns the way in which a layered chain is attached to the
@@ -201,39 +222,78 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * Determines if the given triangulation component is a
          * plugged triangular solid torus.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * plugged triangular solid torus, or \c null if the given
-         * component is not a plugged triangular solid torus.
+         * @return a structure containing details of the plugged triangular
+         * solid torus, or \c null if the given component is not a plugged
+         * triangular solid torus.
          */
-        static PlugTriSolidTorus* isPlugTriSolidTorus(Component<3>* comp);
+        static std::unique_ptr<PlugTriSolidTorus> recognise(Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component forms a
+         * plugged triangular solid torus.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<PlugTriSolidTorus>
+            isPlugTriSolidTorus(Component<3>* comp);
 
-        Manifold* manifold() const override;
+        std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
 
     private:
         /**
-         * Creates a new structure with all subcomponent pointers
-         * initialised to \c null.
+         * Creates a new structure with the given core.
+         * All optional data members will be initialsed to no value,
+         * all chain types will be initialised to CHAIN_NONE, and
+         * all remaining data members will be left uninitialised.
          */
-        PlugTriSolidTorus();
+        PlugTriSolidTorus(const TriSolidTorus& core);
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls PlugTriSolidTorus::swap(); it is provided
+ * so that PlugTriSolidTorus meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(PlugTriSolidTorus& a, PlugTriSolidTorus& b) noexcept;
 
 // Inline functions for PlugTriSolidTorus
 
-inline PlugTriSolidTorus::PlugTriSolidTorus() : core_(0) {
-    chain_[0] = chain_[1] = chain_[2] = 0;
-    chainType_[0] = chainType_[1] = chainType_[2] = CHAIN_NONE;
+inline PlugTriSolidTorus::PlugTriSolidTorus(const TriSolidTorus& core) :
+        core_(core), chainType_ { CHAIN_NONE, CHAIN_NONE, CHAIN_NONE } {
+}
+
+inline PlugTriSolidTorus* PlugTriSolidTorus::clone() const {
+    return new PlugTriSolidTorus(*this);
+}
+
+inline void PlugTriSolidTorus::swap(PlugTriSolidTorus& other) noexcept {
+    core_.swap(other.core_);
+    chain_[0].swap(other.chain_[0]);
+    chain_[1].swap(other.chain_[1]);
+    chain_[2].swap(other.chain_[2]);
+    std::swap_ranges(chainType_, chainType_ + 3, other.chainType_);
+    std::swap(equatorType_, other.equatorType_);
 }
 
 inline const TriSolidTorus& PlugTriSolidTorus::core() const {
-    return *core_;
+    return core_;
 }
-inline const LayeredChain* PlugTriSolidTorus::chain(int annulus) const {
+inline const std::optional<LayeredChain>& PlugTriSolidTorus::chain(int annulus)
+        const {
     return chain_[annulus];
 }
 inline int PlugTriSolidTorus::chainType(int annulus) const {
@@ -241,6 +301,15 @@ inline int PlugTriSolidTorus::chainType(int annulus) const {
 }
 inline int PlugTriSolidTorus::equatorType() const {
     return equatorType_;
+}
+
+inline void swap(PlugTriSolidTorus& a, PlugTriSolidTorus& b) noexcept {
+    a.swap(b);
+}
+
+inline std::unique_ptr<PlugTriSolidTorus>
+        PlugTriSolidTorus::isPlugTriSolidTorus(Component<3>* comp) {
+    return recognise(comp);
 }
 
 } // namespace regina

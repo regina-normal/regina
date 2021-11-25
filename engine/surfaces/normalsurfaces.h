@@ -31,8 +31,8 @@
  **************************************************************************/
 
 /*! \file surfaces/normalsurfaces.h
- *  \brief Contains a packet representing a collection of normal
- *  surfaces in a 3-manifold.
+ *  \brief Implements a collection of normal surfaces in a 3-manifold
+ *  triangulation.
  */
 
 #ifndef __REGINA_NORMALSURFACES_H
@@ -45,41 +45,38 @@
 #include <optional>
 #include <vector>
 #include "regina-core.h"
-#include "enumerate/enumconstraints.h"
+#include "enumerate/validityconstraints.h"
 #include "maths/matrix.h"
 #include "packet/packet.h"
+#include "progress/progresstracker.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalflags.h"
 #include "surfaces/normalcoords.h"
-#include "utilities/listview.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
 class NormalSurfaces;
 class ProgressTracker;
 class SurfaceFilter;
-class XMLPacketReader;
-
-/**
- * \weakgroup surfaces
- * @{
- */
 
 /**
  * Used to describe a field, or a set of fields, that can be exported
- * alongside a normal surface list.  This enumeration type is used with
- * export routines such as NormalSurfaces::saveCSVStandard() or
- * NormalSurfaces::saveCSVEdgeWeight().
+ * alongside a normal surface list.  This enumeration type, and the
+ * corresponding flags class SurfaceExport, is used with export routines such
+ * as NormalSurfaces::saveCSVStandard() or NormalSurfaces::saveCSVEdgeWeight().
  *
  * This type describes fields in addition to normal coordinates, not the
  * normal coordinates themselves (which are always exported).  Each field
  * describes some property of a single normal surface, and corresponds to a
  * single column in a table of normal surfaces.
  *
- * This type should be treated as a bitmask: you can describe a set of fields
- * by combining the values for individual fields using bitwise \e or.
+ * You can describe a set of fields by combining the values for individual
+ * fields using the bitwise OR operator.
  *
  * The list of available fields may grow with future releases of Regina.
+ *
+ * \ingroup surfaces
  */
 enum SurfaceExportFields {
     surfaceExportName = 0x0001,
@@ -135,24 +132,79 @@ enum SurfaceExportFields {
              value of this constant may change as a result. */
 };
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_NORMALSURFACES> {
-    typedef NormalSurfaces Class;
-    static constexpr const char* name = "Normal Surface List";
-};
-#endif
+/**
+ * A set of fields to export alongside a normal surface list.
+ *
+ * If a function requires a SurfaceExport object as an argument, you can
+ * pass a single SurfaceExportFields constant, or a combination of such
+ * constants using the bitwise OR operator, or empty braces {} to indicate
+ * no fields at all.
+ *
+ * \ingroup surfaces
+ */
+using SurfaceExport = regina::Flags<SurfaceExportFields>;
 
 /**
- * A packet representing a collection of normal surfaces in a 3-manifold.
- * Such a packet must always be a child packet of the triangulation from
- * which the surfaces were obtained.  If this triangulation changes, the
- * information contained in this packet will become invalid.
+ * Returns the bitwise OR of the two given flags.
  *
- * See the NormalSurfaceVector class notes for details of what to do
+ * @param lhs the first flag to combine.
+ * @param rhs the second flag to combine.
+ * @return the combination of both flags.
+ *
+ * \ingroup surfaces
+ */
+inline SurfaceExport operator | (
+        SurfaceExportFields lhs, SurfaceExportFields rhs) {
+    return SurfaceExport(lhs) | rhs;
+}
+
+/**
+ * A collection of normal surfaces in a 3-manifold triangulation.
+ *
+ * There are some important changes to this class as of Regina 7.0:
+ *
+ * - A normal surface list does \e not need to be a child packet of the
+ *   underlying triangulation, and indeed does not need to interact with
+ *   the packet tree at all.
+ *
+ * - You are welcome to modify or even destroy the original triangulation;
+ *   if you do then this list will automatically make a private copy of the
+ *   original triangulation as an ongoing reference.  Different normal
+ *   surface lists (and angle structure lists) can all share the same
+ *   private copy, so this is not an expensive process.
+ *
+ * - You should now create normal surface lists using the class constructor
+ *   (but which, unlike the old enumerate(), does not insert the list
+ *   into the packet tree).  There is no need to use enumerate() any more.
+ *
+ * Since Regina 7.0, this is no longer a "packet type" that can be
+ * inserted directly into the packet tree.  Instead a normal surface list
+ * is now a standalone mathematatical object, which makes it slimmer and
+ * faster for ad-hoc use.  The consequences of this are:
+ *
+ * - If you create your own NormalSurfaces object, it will not have any of
+ *   the usual packet infrastructure.  You cannot add it into the packet tree,
+ *   and it will not support a label, tags, child/parent packets, and/or
+ *   event listeners.
+ *
+ * - To include an NormalSurfaces object in the packet tree, you must create
+ *   a new PacketOf<NormalSurfaces>.  This \e is a packet type, and supports
+ *   labels, tags, child/parent packets, and event listeners.  It derives from
+ *   NormalSurfaces, and so inherits the full NormalSurfaces interface.
+ *
+ * - If you are adding new functions to this class that edit the list,
+ *   you must still remember to create a ChangeEventSpan.  This will
+ *   ensure that, if the list is being managed by a PacketOf<NormalSurfaces>,
+ *   then the appropriate packet change events will be fired.
+ *   All other events (aside from packetToBeChanged() and packetWasChanged()
+ *   are managed directly by the PacketOf<NormalSurfaces> wrapper class.
+ *
+ * See the NormalSurface class notes for details of what to do
  * when introducing a new coordinate system.
  *
- * Normal surface lists should be created using the routine enumerate().
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \todo \feature Allow custom matching equations.
  * \todo \feature Allow enumeration with some coordinates explicitly set
@@ -160,37 +212,43 @@ struct PacketInfo<PACKET_NORMALSURFACES> {
  * \todo \feature Allow generating only closed surfaces.
  * \todo \feature Generate facets of the solution space representing
  * embedded surfaces.
+ *
+ * \ingroup surfaces
  */
-class NormalSurfaces : public Packet {
-    REGINA_PACKET(NormalSurfaces, PACKET_NORMALSURFACES)
-
+class NormalSurfaces :
+        public PacketData<NormalSurfaces>, public Output<NormalSurfaces> {
     public:
         class VectorIterator;
 
     protected:
         std::vector<NormalSurface> surfaces_;
-            /**< Contains the normal surfaces stored in this packet. */
+            /**< Contains all normal surfaces in this list. */
+        SnapshotRef<Triangulation<3>> triangulation_;
+            /**< The triangulation in which these normal surfaces lie. */
         NormalCoords coords_;
-            /**< Stores which coordinate system is being
-                 used by the normal surfaces in this packet. */
+            /**< The coordinate system that was originally used to enumerate
+                 the normal surfaces in this list. */
         NormalList which_;
             /**< Indicates which normal surfaces these represent within
                  the underlying triangulation. */
         NormalAlg algorithm_;
             /**< Stores the details of the enumeration algorithm that
                  was used to generate this list.  This might not be the
-                 same as the \a algorithmHints flag passed to the
-                 corresponding enumeration routine (e.g., if invalid
+                 same as the \a algHints flag that was originally
+                 passed to the enumeration routine (e.g., if invalid
                  or inappropriate flags were passed). */
 
     public:
         /**
-         * A unified routine for enumerating various classes of normal
-         * surfaces within a given triangulation.
+         * A unified "enumeration constructor" for enumerating various classes
+         * of normal surfaces within a given triangulation.
          *
          * The NormalCoords argument allows you to specify an underlying
-         * coordinate system (e.g., standard coordinates,
-         * quadrilateral coordinates or almost normal coordinates).
+         * coordinate system in which to do the enumeration (e.g., standard
+         * coordinates, quadrilateral coordinates or almost normal coordinates).
+         * This choice of coordinate system will affect which surfaces are
+         * produced, since vertex/fundamental surfaces in one system are not
+         * necessarily vertex/fundamental in another.
          *
          * The NormalList argument is a combination of flags that
          * allows you to specify exactly which normal surfaces you require.
@@ -210,40 +268,212 @@ class NormalSurfaces : public Packet {
          * makes no hints at all) will allow Regina to choose what it
          * thinks will be the most efficient method.
          *
-         * The enumerated surfaces will be stored in a new normal
+         * The enumerated surfaces will be stored in this new normal
          * surface list, and their representations will be scaled down
          * to use the smallest possible integer coordinates.
-         * This normal surface list will be inserted into the packet tree as
-         * the last child of the given triangulation.  This triangulation
-         * \b must remain the parent of this normal surface list, and must not
-         * change while this normal surface list remains in existence.
          *
-         * If a progress tracker is passed, the normal surface
-         * enumeration will take place in a new thread and this routine
-         * will return immediately.  If the user cancels the operation
-         * from another thread, then the normal surface list will \e not
-         * be inserted into the packet tree (but the caller of this
-         * routine will still need to delete it).  Regarding progress tracking,
-         * this routine will declare and work through a series of stages
-         * whose combined weights sum to 1; typically this means that the
-         * given tracker must not have been used before.
+         * Unlike the old enumerate() function, the new normal surface
+         * list will \e not be inserted into the packet tree.  Moreover,
+         * the given triangulation may change or even be destroyed
+         * without causing problems.  See the class notes for details.
          *
-         * If no progress tracker is passed, the enumeration will run
-         * in the current thread and this routine will return only when
-         * the enumeration is complete.  Note that this enumeration can
-         * be extremely slow for larger triangulations.
+         * If a progress tracker is passed, this routine will declare and
+         * work through a series of stages whose combined weights sum to 1;
+         * typically this means that the given tracker must not have been
+         * used before.
          *
-         * If an error occurs, then this routine will return \c null,
-         * no normal surface list will be created, and the progress
-         * tracker (if passed) will be marked as finished.  Errors can occur
-         * in the following scenarios:
+         * This constructor will not return until the enumeration of surfaces
+         * is complete, regardless of whether a progress tracker was passed.
+         * If you need the behaviour of the old enumerate() (where passing a
+         * progress tracker caused the enumeration to start in the background),
+         * simply call this constructor in a new detached thread.
+         * Note that this enumeration can be extremely slow for larger
+         * triangulations, and so there could be good reasons to do this.
          *
-         * - Regina could not create the matching equations for the given
-         *   triangulation in the given coordinate system.  This is only
-         *   possible in certain coordinate systems, and all such coordinate
-         *   systems are marked as such in the NormalCoords enum documentation.
+         * If an error occurs, then this routine will thrown an exception.
+         * In this case, no normal surface list will be created, and the
+         * progress tracker (if passed) will be marked as finished.
+         * See the exception specifications below for details.
          *
-         * - A progress tracker is passed but a new thread could not be started.
+         * \exception InvalidArgument the matching equations could not
+         * be created for the given triangulation in the given coordinate
+         * system, due to an error that should have been preventable
+         * with the right checks in advance.  This can only happen in certain
+         * coordinate systems, and for all such coordinate systems this is
+         * explicitly described in the HyperCoords enum documentation.
+         *
+         * \exception UnsolvedCase the matching equations could not
+         * be created for the given triangulation in the given coordinate
+         * system, due to an error that was "genuinely" unforseeable.
+         * Again this can only happen in certain coordinate systems, where
+         * this is explicitly described in the HyperCoords enum documentation.
+         *
+         * @param triangulation the triangulation upon which this list of
+         * normal surfaces will be based.
+         * @param coords the coordinate system to be used.  This must be
+         * one of the system that Regina is able to use for enumeration;
+         * this is documented alongside each NormalCoords enum value.
+         * @param which indicates which normal surfaces should be enumerated.
+         * @param algHints passes requests to Regina for which specific
+         * enumeration algorithm should be used.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         */
+        NormalSurfaces(
+            const Triangulation<3>& triangulation,
+            NormalCoords coords,
+            NormalList which = NS_LIST_DEFAULT,
+            NormalAlg algHints = NS_ALG_DEFAULT,
+            ProgressTracker* tracker = nullptr);
+
+        /**
+         * A unified "transform constructor" for transforming one normal
+         * surface list into another.
+         *
+         * The available transformations include:
+         *
+         * - conversions between vertex surfaces in different coordinate
+         *   systems, including those formerly provided by the deprecated
+         *   functions quadToStandard(), quadOctToStandardAN(), standardToQuad()
+         *   and standardANToQuadOct();
+         *
+         * - filters that select a subset of surfaces, including those
+         *   formerly provided by the deprecated functions
+         *   filterForLocallyCompatiblePairs(), filterForDisjointPairs(),
+         *   and filterForPotentiallyIncompressible().
+         *
+         * Each transformation comes with its own set of preconditions,
+         * as documented alongside the various NormalTransform enumeration
+         * constants.  These preconditions will be checked, and if any of them
+         * fails then this constructor will throw an exception (see below).
+         *
+         * Unlike the old conversion and filter functions, this constructor
+         * will \e not insert the new normal surface list into the packet tree.
+         *
+         * \exception FailedPrecondition the preconditions for the given
+         * transformation were not met.  See each NormalTransform enum
+         * constant for the corresponding set of preconditions.
+         *
+         * @param src the normal surface list that we wish to transform;
+         * this will not be modified.
+         * @param transform the specific transformation to apply.
+         */
+        NormalSurfaces(const NormalSurfaces& src, NormalTransform transform);
+
+        /**
+         * A "filter constructor" that creates a new list filled with those
+         * surfaces from the given list that pass the given filter.
+         *
+         * Unlike the old filter() function, this constructor will \e not
+         * insert the new normal surface list into the packet tree.
+         *
+         * For this new filtered list, which() will include the NS_CUSTOM
+         * flag, and algorithm() will include the NS_ALG_CUSTOM flag.
+         *
+         * @param src the normal surface list that we wish to filter;
+         * this will not be modified.
+         * @param filter the filter to apply to the given list.
+         */
+        NormalSurfaces(const NormalSurfaces& src, const SurfaceFilter& filter);
+
+        /**
+         * Constructs a new copy of the given list.
+         */
+        NormalSurfaces(const NormalSurfaces&) = default;
+
+        /**
+         * Moves the given list into this new list.
+         * This is a fast (constant time) operation.
+         *
+         * The list that is passed will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this list
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the list to move.
+         */
+        NormalSurfaces(NormalSurfaces&&) noexcept = default;
+
+        /**
+         * Sets this to be a (deep) copy of the given list.
+         *
+         * @param copy the list to copy.
+         * @return a reference to this list.
+         */
+        NormalSurfaces& operator = (const NormalSurfaces& src);
+
+        /**
+         * Moves the contents of the given list into this list.
+         * This is a fast (constant time) operation.
+         *
+         * The list that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this list which may in turn call arbitrary code
+         * via any registered packet listeners.  It deliberately does \e not
+         * fire change events on \a src, since it assumes that \a src is about
+         * to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the list to move.
+         * @return a reference to this list.
+         */
+        NormalSurfaces& operator = (NormalSurfaces&& src);
+
+        /**
+         * Swaps the contents of this and the given list.
+         *
+         * This routine will behave correctly if \a other is in fact
+         * this list.
+         *
+         * \note This swap function is \e not marked \c noexcept, since it
+         * fires change events on both lists which may in turn call arbitrary
+         * code via any registered packet listeners.
+         *
+         * @param other the list whose contents should be swapped with this.
+         */
+        void swap(NormalSurfaces& other);
+
+        /**
+         * Deprecated routine to enumerate normal surfaces within a given
+         * triangulation.
+         *
+         * This static routine is identical to calling the class "enumeration
+         * constructor" with the given arguments, but with three differences:
+         *
+         * - If a progress tracker is passed, this routine will start the
+         *   enumeration in a detached background thread and return immediately
+         *   (unlike the class constructor, which does not return until the
+         *   enumeration is finished).
+         *
+         * - This routine wraps the new normal surface list in a packet and
+         *   inserts it beneath \a owner in the packet tree (unlike the
+         *   class constructor, which creates a plain NormalSurfaces object).
+         *   If a progress tracker is passed (i.e., the enumeration runs in a
+         *   background thread) then this tree insertion will not happen until
+         *   the enumeration has finished, and if the user cancels the
+         *   operation then the insertion will not happen at all.
+         *
+         * - If there is an error, this routine will return \c null (unlike
+         *   the class constructor, which throws an exception).
+         *
+         * This function is safe to use even if \a owner is a "pure"
+         * Triangulation<3> or SnapPeaTriangulation, not a packet type.
+         * In such a scenario, this routine will still build the normal
+         * surface list, but the resulting packet will be orphaned.
+         *
+         * See the class "enumeration constructor" for details on how this
+         * routine works and what the arguments mean.
+         *
+         * \deprecated Just call the NormalSurfaces "enumeration constructor".
+         *
+         * \ifacespython For this deprecated function, the progress tracker
+         * argument is omitted.  It is still possible to enumerate in
+         * the background with a progress tracker, but for that you will
+         * need to call the class constructor instead and create the new
+         * thread yourself.
          *
          * @param owner the triangulation upon which this list of normal
          * surfaces will be based.
@@ -253,20 +483,20 @@ class NormalSurfaces : public Packet {
          * enumeration algorithm should be used.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the newly created normal surface list.  Note that if
-         * a progress tracker is passed then this list may not be completely
-         * filled when this routine returns.  If an error occurs (as
-         * described above) then this routine will return \c null instead.
+         * @return the new normal surface list, or \c null if an error
+         * occurred.
          */
-        static NormalSurfaces* enumerate(Triangulation<3>& owner,
-            NormalCoords coords,
-            NormalList which = NS_LIST_DEFAULT,
-            NormalAlg algHints = NS_ALG_DEFAULT,
-            ProgressTracker* tracker = nullptr);
+        [[deprecated]] static std::shared_ptr<PacketOf<NormalSurfaces>>
+            enumerate(
+                Triangulation<3>& owner,
+                NormalCoords coords,
+                NormalList which = NS_LIST_DEFAULT,
+                NormalAlg algHints = NS_ALG_DEFAULT,
+                ProgressTracker* tracker = nullptr);
 
         /**
-         * Returns the coordinate system being used by the
-         * surfaces stored in this set.
+         * Returns the coordinate system that was originally used to enumerate
+         * the surfaces in this list.
          *
          * @return the coordinate system used.
          */
@@ -275,8 +505,8 @@ class NormalSurfaces : public Packet {
          * Returns details of which normal surfaces this list represents
          * within the underlying triangulation.
          *
-         * This may not be the same NormalList that was passed to
-         * enumerate().  In particular, default values will have been
+         * This may not be the same NormalList that was passed to the
+         * class constructor.  In particular, default values will have been
          * explicitly filled in (such as NS_VERTEX and/or NS_EMBEDDED_ONLY),
          * and invalid and/or redundant values will have been removed.
          *
@@ -287,8 +517,8 @@ class NormalSurfaces : public Packet {
          * Returns details of the algorithm that was used to enumerate
          * this list.
          *
-         * These may not be the same NormalAlg flags that were passed to
-         * enumerate().  In particular, default values will have been
+         * These may not be the same NormalAlg flags that were passed to the
+         * class constructor.  In particular, default values will have been
          * explicitly filled in, invalid and/or redundant values will have
          * been removed, and unavailable and/or unsupported combinations
          * of algorithm flags will be replaced with whatever algorithm was
@@ -298,30 +528,39 @@ class NormalSurfaces : public Packet {
          */
         NormalAlg algorithm() const;
         /**
-         * Determines if the coordinate system being used
-         * allows for almost normal surfaces, that is, allows for
-         * octagonal discs.
+         * Determines if the coordinate system that was used for enumeration
+         * allows for almost normal surfaces.
          *
-         * @return \c true if and only if almost normal surfaces are
-         * allowed.
+         * This does not test whether any of the surfaces in this list
+         * actually contain octagons: it simply returns a basic property
+         * of the coordinate system that was used for enumeration.
+         *
+         * @return \c true if and only if almost normal surfaces are supported.
          */
         bool allowsAlmostNormal() const;
         /**
-         * Determines if the coordinate system being used
-         * allows for spun normal surfaces.
+         * Determines if the coordinate system that was used for enumeration
+         * allows for non-compact normal surfaces.
          *
-         * @return \c true if and only if spun normal surface are
+         * This does not test whether any of the surfaces in this list
+         * are actually non-compact: it simply returns a basic property
+         * of the coordinate system that was used for enumeration.
+         *
+         * @return \c true if and only if non-compact normal surfaces are
          * supported.
          */
-        bool allowsSpun() const;
+        bool allowsNonCompact() const;
         /**
-         * Determines if the coordinate system being used
-         * allows for transversely oriented normal surfaces.
+         * A deprecated alias for allowsNonCompact().
          *
-         * @return \c true if and only if transverse orientations are
+         * \deprecated This routine has been renamed to allowsNonCompact(),
+         * for consistency between three and four dimensions.  See
+         * allowsNonCompact() for further details.
+         *
+         * @return c true if and only if non-compact normal surfaces are
          * supported.
          */
-        bool allowsOriented() const;
+        [[deprecated]] bool allowsSpun() const;
         /**
          * Returns whether this list was constructed to contain only
          * properly embedded surfaces.
@@ -337,18 +576,32 @@ class NormalSurfaces : public Packet {
         bool isEmbeddedOnly() const;
         /**
          * Returns the triangulation in which these normal surfaces live.
-         * 
-         * The triangulation is also accessible via the packet tree as
-         * parent(); this routine simply adds the convenience of casting
-         * down to the correct triangulation class.
          *
-         * If you need non-const access to the triangulation (e.g., to
-         * rename the packet), use parent(); however, remember that a
-         * triangulation that owns angle structures or normal surfaces
-         * must \e not change its tetrahedra or their gluings.
+         * This will be a snapshot frozen in time of the triangulation
+         * that was originally passed to the NormalSurfaces constructor.
          *
-         * @return a reference to the triangulation in which these surfaces
-         * live.
+         * This will return a correct result even if the original triangulation
+         * has since been modified or destroyed.  However, in order to ensure
+         * this behaviour, it is possible that at different points in time
+         * this function may return references to different C++ objects.
+         *
+         * The rules for using the triangulation() reference are:
+         *
+         * - Do not keep the resulting reference as a long-term reference or
+         *   pointer of your own, since in time you may find yourself referring
+         *   to the wrong object (see above).  Just call this function again.
+         *
+         * - You must respect the read-only nature of the result (i.e.,
+         *   you must not cast the constness away).  The snapshotting
+         *   process detects modifications, and modifying the frozen
+         *   snapshot may result in an exception being thrown.
+         *
+         * \warning As of Regina 7.0, you \e cannot access this triangulation
+         * via the packet tree as Packet::parent().  This is because normal
+         * surface lists can now be kept anywhere in the packet tree, or can
+         * be kept as standalone objects outside the packet tree entirely.
+         *
+         * @return a reference to the underlying triangulation.
          */
         const Triangulation<3>& triangulation() const;
         /**
@@ -358,219 +611,229 @@ class NormalSurfaces : public Packet {
          */
         size_t size() const;
         /**
-         * Returns an object that allows iteration through and random access
-         * to all normal surfaces in this list.
+         * Returns the surface at the requested index in this list.
          *
-         * The object that is returned is lightweight, and can be happily
-         * copied by value.  The C++ type of the object is subject to change,
-         * so C++ users should use \c auto (just like this declaration does).
-         *
-         * The returned object is guaranteed to be an instance of ListView,
-         * which means it offers basic container-like functions and supports
-         * C++11 range-based \c for loops.  Note that the elements of the list
-         * will be pointers, so your code might look like:
-         *
-         * \code{.cpp}
-         * for (const NormalSurface* s : list.surfaces()) { ... }
-         * \endcode
-         *
-         * The object that is returned will remain valid only for as
-         * long as this normal surface list exists.
-         *
-         * \ifacespython This routine returns a Python list.
-         *
-         * @return access to the list of all normal surfaces.
-         */
-        auto surfaces() const;
-        /**
-         * Returns the surface at the requested index in this set.
-         *
-         * @param index the index of the requested surface in this set;
+         * @param index the index of the requested surface in this list;
          * this must be between 0 and size()-1 inclusive.
          *
-         * @return the normal surface at the requested index in this set.
+         * @return the normal surface at the requested index in this list.
          */
         const NormalSurface& surface(size_t index) const;
         /**
-         * Writes the number of surfaces in this set followed by the
-         * details of each surface to the given output stream.  Output
-         * will be over many lines.
+         * Returns an iterator at the beginning of this list of surfaces.
          *
-         * \ifacespython Parameter \a out is not present and is assumed
-         * to be standard output.
+         * The begin() and end() functions allow you to iterate through all
+         * surfaces in this list using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * NormalSurfaces list(...);
+         * for (const NormalSurface& s : list) { ... }
+         * \endcode
+         *
+         * In Python, a normal surface list can be treated as an iterable
+         * object:
+         *
+         * \code{.py}
+         * list = NormalSurfaces(...)
+         * for s in list:
+         *     ...
+         * \endcode
+         *
+         * The type that is returned will be a lightweight iterator type,
+         * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
+         * The precise C++ type of the iterator is subject to change, so
+         * C++ users should use \c auto (just like this declaration does).
+         *
+         * @return an iterator at the beginning of this list.
+         */
+        auto begin() const;
+        /**
+         * Returns an iterator beyond the end of this list of surfaces.
+         *
+         * In C++, the begin() and end() routines allow you to iterate through
+         * all surfaces in this list using C++11 range-based \c for loops.
+         * In Python, a normal surface list can be treated as an iterable
+         * object.
+         *
+         * See the begin() documentation for further details.
+         *
+         * @return an iterator beyond the end of this list.
+         */
+        auto end() const;
+        /**
+         * Deprecated routine that writes the number of surfaces in this list
+         * followed by the details of each surface to the given output stream.
+         * Output will be over many lines.
+         *
+         * \deprecated All of the information that this routine outputs
+         * is also written by writeTextLong() and returned in string form
+         * by detail().  Use those routines instead.
+         *
+         * \ifacespython Not present; instead use detail(), which returns a
+         * string including all this information (plus a little more).
          *
          * @param out the output stream to which to write.
          */
-        void writeAllSurfaces(std::ostream& out) const;
-
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const override;
+        [[deprecated]] void writeAllSurfaces(std::ostream& out) const;
 
         /**
-         * Converts the set of all embedded vertex normal surfaces in
-         * quadrilateral space to the set of all embedded vertex normal
-         * surfaces in standard (tri-quad) space.  The initial list in
-         * quadrilateral space is taken to be this normal surface list;
-         * the final list in standard space will be inserted as a new
-         * child packet of the underlying triangulation (specifically, as
-         * the final child).  As a convenience, the final list will also
-         * be returned from this routine.
+         * Writes a short text representation of this object to the
+         * given output stream.
          *
-         * This routine can only be used with normal surfaces, not almost
-         * normal surfaces.  For almost normal surfaces, see the similar
-         * routine quadOctToStandardAN().
+         * \ifacespython Not present; use str() instead.
          *
-         * This procedure is available for any triangulation whose vertex
-         * links are all spheres and/or discs, and is \e much faster than
-         * enumerating surfaces directly in standard tri-quad coordinates.
-         * The underlying algorithm is described in detail in "Converting
-         * between quadrilateral and standard solution sets in normal
-         * surface theory", Benjamin A. Burton, Algebr. Geom. Topol. 9 (2009),
-         * 2121-2174.
-         *
-         * Typically users do not need to call this routine directly,
-         * since the standard enumerate() routine will use it implicitly
-         * where possible.  That is, when asked for standard vertex surfaces,
-         * enumerate() will first find all \e quadrilateral vertex surfaces
-         * and then use this procedure to convert them to standard vertex
-         * surfaces; this is generally orders of magnitude faster than
-         * enumerating surfaces directly in standard coordinates.
-         *
-         * Nevertheless, this standalone routine is provided as a convenience
-         * for users who already have a set of quadrilateral vertex surfaces,
-         * and who simply wish to convert them to a set of standard
-         * vertex surfaces without the cost of implicitly enumerating the
-         * quadrilateral vertex surfaces again.
-         *
-         * It should be noted that this routine does \e not simply convert
-         * vectors from one form to another; instead it converts a full
-         * solution set of vertex surfaces in quadrilateral coordinates to a
-         * full solution set of vertex surfaces in standard coordinates.
-         * Typically there are many more vertex surfaces in standard
-         * coordinates (all of which this routine will find).
-         *
-         * This routine will run some very basic sanity checks before
-         * starting.  Specifically, it will check the validity and vertex
-         * links of the underlying triangulation, and will verify that
-         * the coordinate system and embedded-only flag are set to
-         * NS_QUAD and \c true respectively.  If any of
-         * these checks fails, this routine will do nothing and return \c null.
-         *
-         * \pre The underlying triangulation (the parent packet of this
-         * normal surface list) is valid, and the link of every vertex
-         * is either a sphere or a disc.
-         * \pre This normal surface list is precisely the set of all
-         * embedded vertex normal surfaces in quadrilateral space; no more,
-         * no less.  Moreover, these vectors are stored using quadrilateral
-         * coordinates.  Typically this means that it was obtained through
-         * enumerate(), with the coordinate system set to NS_QUAD and
-         * with \a embeddedOnly set to \c true.
-         *
-         * @return a full list of vertex normal surfaces in standard (tri-quad)
-         * coordinates, or \c null if any of the basic sanity checks failed.
+         * @param out the output stream to which to write.
          */
-        NormalSurfaces* quadToStandard() const;
-
+        void writeTextShort(std::ostream& out) const;
         /**
-         * Converts the set of all embedded vertex almost normal surfaces in
-         * quadrilateral-octagon space to the set of all embedded vertex
-         * almost normal surfaces in the standard tri-quad-oct space.
+         * Writes a detailed text representation of this object to the
+         * given output stream.
          *
-         * This routine is the almost normal analogue to the
-         * quadToStandard() conversion routine; see the quadToStandard()
-         * documentation for further information.
+         * \ifacespython Not present; use detail() instead.
          *
-         * \pre The underlying triangulation (the parent packet of this
-         * normal surface list) is valid, and the link of every vertex
-         * is either a sphere or a disc.
-         * \pre This surface list is precisely the set of all embedded vertex
-         * almost normal surfaces in quadrilateral-octagon space; no more,
-         * no less.  Moreover, these vectors are stored using
-         * quadrilateral-octagon coordinates.  Typically this means that it
-         * was obtained through enumerate(), with the coordinate system set to
-         * NS_AN_QUAD_OCT and with \a embeddedOnly set to \c true.
-         *
-         * @return a full list of vertex almost normal surfaces in standard
-         * tri-quad-oct coordinates, or \c null if any of the basic sanity
-         * checks failed.
+         * @param out the output stream to which to write.
          */
-        NormalSurfaces* quadOctToStandardAN() const;
+        void writeTextLong(std::ostream& out) const;
 
         /**
-         * Converts the set of all embedded vertex normal surfaces in
-         * standard (tri-quad) space to the set of all embedded vertex
-         * normal surfaces in quadrilateral space.  The initial list in
-         * standard space is taken to be this normal surface list;
-         * the final list in quadrilateral space will be inserted as a new
-         * child packet of the underlying triangulation (specifically, as
-         * the final child).  As a convenience, the final list will also
-         * be returned from this routine.
+         * Deprecated function that converts the set of all embedded
+         * vertex normal surfaces in quadrilateral space to the set of all
+         * embedded vertex normal surfaces in standard (tri-quad) space.
+         * The input list will be taken as this list; the output list
+         * will be returned and also inserted into the packet tree (see below).
          *
-         * This routine can only be used with normal surfaces, not almost
-         * normal surfaces.  For almost normal surfaces, see the similar
-         * routine standardANToQuadOct().
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD)</tt>, but
+         * with two key differences:
          *
-         * This procedure is available for any triangulation whose vertex
-         * links are all spheres and/or discs.  The underlying algorithm
-         * is described in detail in "Converting between quadrilateral and
-         * standard solution sets in normal surface theory",
-         * Benjamin A. Burton, Algebr. Geom. Topol. 9 (2009), 2121-2174.
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
          *
-         * It should be noted that this routine does \e not simply convert
-         * vectors from one form to another; instead it converts a full
-         * solution set of vertex surfaces in standard coordinates to a
-         * full solution set of vertex surfaces in quadrilateral coordinates.
-         * Typically there are far fewer vertex surfaces in quadrilateral
-         * coordinates (all of which this routine will find).
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
          *
-         * This routine will run some very basic sanity checks before
-         * starting.  Specifically, it will check the validity and vertex
-         * links of the underlying triangulation, and will verify that
-         * the coordinate system and embedded-only flag are set to
-         * NS_STANDARD and \c true respectively.  If any of
-         * these checks fails, this routine will do nothing and return \c null.
+         * See the class "transform constructor" for details on how this
+         * routine works and what the arguments mean.  See the NormalList
+         * enumeration (in particular, the NS_CONV_REDUCED_TO_STD value)
+         * for details on the algorithm, and for preconditions on the
+         * triangulation and the input list.
          *
-         * \pre The underlying triangulation (the parent packet of this
-         * normal surface list) is valid, and the link of every vertex
-         * is either a sphere or a disc.
-         * \pre This normal surface list is precisely the set of all
-         * embedded vertex normal surfaces in standard (tri-quad) space;
-         * no more, no less.  Moreover, these vectors are stored using
-         * standard coordinates.  Typically this means that this list was
-         * obtained through enumerate(), with the coordinate system set to
-         * NS_STANDARD and with \a embeddedOnly set to \c true.
+         * \deprecated Just call the NormalSurfaces "transform constructor".
+         *
+         * @return a full list of vertex normal surfaces in standard normal
+         * coordinates, or \c null if any of the preconditions were not
+         * satisfied.
+         */
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            quadToStandard() const;
+
+        /**
+         * Deprecated function that converts the set of all embedded vertex
+         * surfaces in quadrilateral-octagon space to the set of all embedded
+         * vertex surfaces in standard almost normal (tri-quad-oct) space.
+         * The input list will be taken as this list; the output list will be
+         * returned and also inserted into the packet tree (see below).
+         *
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_CONV_REDUCED_TO_STD)</tt>, but
+         * with two key differences:
+         *
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
+         *
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
+         *
+         * See the class "transform constructor" for details on how this
+         * routine works and what the arguments mean.  See the NormalList
+         * enumeration (in particular, the NS_CONV_REDUCED_TO_STD value)
+         * for details on the algorithm, and for preconditions on the
+         * triangulation and the input list.
+         *
+         * \deprecated Just call the NormalSurfaces "transform constructor".
+         *
+         * @return a full list of vertex surfaces in standard almost normal
+         * coordinates, or \c null if any of the preconditions were not
+         * satisfied.
+         */
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            quadOctToStandardAN() const;
+
+        /**
+         * Deprecated function that converts the set of all embedded
+         * vertex normal surfaces in standard (tri-quad) space to the set of
+         * all embedded vertex normal surfaces in quadrilateral space.
+         * The input list will be taken as this list; the output list
+         * will be returned and also inserted into the packet tree (see below).
+         *
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED)</tt>, but
+         * with two key differences:
+         *
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
+         *
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
+         *
+         * See the class "transform constructor" for details on how this
+         * routine works and what the arguments mean.  See the NormalList
+         * enumeration (in particular, the NS_CONV_STD_TO_REDUCED value)
+         * for details on the algorithm, and for preconditions on the
+         * triangulation and the input list.
+         *
+         * \deprecated Just call the NormalSurfaces "transform constructor".
          *
          * @return a full list of vertex normal surfaces in quadrilateral
-         * coordinates, or \c null if any of the basic sanity checks failed.
+         * coordinates, or \c null if any of the preconditions were not
+         * satisfied.
          */
-        NormalSurfaces* standardToQuad() const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            standardToQuad() const;
 
         /**
-         * Converts the set of all embedded vertex almost normal surfaces in
-         * standard tri-quad-oct space to the set of all embedded vertex
-         * almost normal surfaces in the smaller quadrilateral-octagon space.
+         * Deprecated function that converts the set of all embedded vertex
+         * surfaces in standard almost normal (tri-quad-oct) space to the set
+         * of all embedded vertex surfaces in quadrilateral-octagon space.
+         * The input list will be taken as this list; the output list
+         * will be returned and also inserted into the packet tree (see below).
          *
-         * This routine is the almost normal analogue to the
-         * standardToQuad() conversion routine; see the standardToQuad()
-         * documentation for further information.
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_CONV_STD_TO_REDUCED)</tt>, but
+         * with two key differences:
          *
-         * \pre The underlying triangulation (the parent packet of this
-         * normal surface list) is valid, and the link of every vertex
-         * is either a sphere or a disc.
-         * \pre This normal surface list is precisely the set of all
-         * embedded vertex almost normal surfaces in standard tri-quad-oct
-         * space; no more, no less.  Typically this means that it was obtained
-         * through enumerate(), with the coordinate system set to
-         * NS_AN_STANDARD and with \a embeddedOnly set to \c true.
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
          *
-         * @return a full list of vertex almost normal surfaces in
-         * quadrilateral-octagon coordinates, or \c null if any of the basic
-         * sanity checks failed.
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
+         *
+         * See the class "transform constructor" for details on how this
+         * routine works and what the arguments mean.  See the NormalList
+         * enumeration (in particular, the NS_CONV_STD_TO_REDUCED value)
+         * for details on the algorithm, and for preconditions on the
+         * triangulation and the input list.
+         *
+         * \deprecated Just call the NormalSurfaces "transform constructor".
+         *
+         * @return a full list of vertex surfaces in quadrilateral-octagon
+         * coordinates, or \c null if any of the preconditions were not
+         * satisfied.
          */
-        NormalSurfaces* standardANToQuadOct() const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            standardANToQuadOct() const;
 
         /**
          * Sorts the surfaces in this list according to the given criterion.
@@ -580,9 +843,10 @@ class NormalSurfaces : public Packet {
          *
          * The implementation of this routine uses std::stable_sort.
          *
-         * \ifacespython Not present.
+         * \ifacespython This is available in Python, and \a comp may be
+         * a pure Python function.
          *
-         * @param comp a binary function (or function object) that
+         * @param comp a binary function (or other callable object) that
          * accepts two const NormalSurface references, and returns \c true
          * if and only if the first surface should appear before the second
          * in the sorted list.
@@ -591,151 +855,114 @@ class NormalSurfaces : public Packet {
         void sort(Comparison&& comp);
 
         /**
-         * Creates a new list filled with the surfaces from this list
-         * that pass the given filter.
+         * Deprecated function that creates a new list filled with those
+         * surfaces from this list that pass the given filter.
          *
-         * The new list will be inserted as a new child packet of the
-         * underlying triangulation (specifically, as the final child).  As a
-         * convenience, the new list will also be returned from this routine.
+         * This routine is identical to calling the "filter constructor"
+         * <tt>NormalSurfaces(*this, filter)</tt>, except that it also
+         * wraps the output list in a packet and insert it beneath the same
+         * parent packet as this input list.  (If this list has no parent,
+         * then then new list will be orphaned.)
          *
-         * This original list is not altered in any way.  Likewise,
-         * the surfaces in the new list are deep copies of the originals
-         * (so they can be altered without affecting the original surfaces).
+         * See the "filter constructor" for details on how this routine works.
          *
-         * @return the new list, which will also have been inserted as
-         * a new child packet of the underlying triangulation.
+         * \deprecated Just call the NormalSurfaces "filter constructor".
+         *
+         * @return the new filtered list of surfaces.
          */
-        NormalSurfaces* filter(const SurfaceFilter* filter) const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>> filter(
+            const SurfaceFilter& filter) const;
 
         /**
-         * Creates a new list filled with the surfaces from this list
-         * that have at least one locally compatible partner.
-         * In other words, a surface \a S from this list will be placed
-         * in the new list if and only if there is some other surface \a T
-         * in this list for which \a S and \a T are locally compatible.
-         * See NormalSurface::locallyCompatible() for further details on
-         * compatibility testing.
+         * Deprecated function to create a new list filled with those surfaces
+         * from this list that have at least one locally compatible partner.
          *
-         * The new list will be inserted as a new child packet of the
-         * underlying triangulation (specifically, as the final child).  As a
-         * convenience, the new list will also be returned from this routine.
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_FILTER_COMPATIBLE)</tt>, but
+         * with two key differences:
          *
-         * This original list is not altered in any way.  Likewise,
-         * the surfaces in the new list are deep copies of the originals
-         * (so they can be altered without affecting the original surfaces).
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
          *
-         * \pre This list contains only embedded normal surfaces.  More
-         * precisely, isEmbeddedOnly() must return \c true.
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
          *
-         * \warning If this list contains a vertex link (plus at least
-         * one other surface), then the new list will be identical to
-         * the old (i.e., every surface will be copied across).
+         * See the class "transform constructor" for details on how this
+         * routine works.  See the NormalList enumeration (in particular, the
+         * NS_FILTER_COMPATIBLE value) for more details on local compatibility
+         * and for preconditions on the input list.
          *
-         * @return the new list, which will also have been inserted as
-         * a new child packet of the underlying triangulation.
+         * \deprecated Just call the NormalSurfaces "transform constructor".
+         *
+         * @return the new filtered list of surfaces.
          */
-        NormalSurfaces* filterForLocallyCompatiblePairs() const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            filterForLocallyCompatiblePairs() const;
 
         /**
-         * Creates a new list filled with the surfaces from this list
-         * that have at least one disjoint partner.
-         * In other words, a surface \a S from this list will be placed
-         * in the new list if and only if there is some other surface \a T
-         * in this list for which \a S and \a T can be made to intersect
-         * nowhere at all, without changing either normal isotopy class.
-         * See NormalSurface::disjoint() for further details on disjointness
-         * testing.
+         * Deprecated function to create a new list filled with those surfaces
+         * from this list that have at least one disjoint partner.
          *
-         * This routine cannot deal with empty, disconnected or
-         * non-compact surfaces.  Such surfaces will be silently
-         * ignored, and will not be used in any disjointness tests (in
-         * particular, they will never be considered as a "disjoint partner"
-         * for any other surface).
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_FILTER_COMPATIBLE)</tt>, but
+         * with two key differences:
          *
-         * The new list will be inserted as a new child packet of the
-         * underlying triangulation (specifically, as the final child).  As a
-         * convenience, the new list will also be returned from this routine.
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
          *
-         * This original list is not altered in any way.  Likewise,
-         * the surfaces in the new list are deep copies of the originals
-         * (so they can be altered without affecting the original surfaces).
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
          *
-         * \pre This list contains only embedded normal surfaces.  More
-         * precisely, isEmbeddedOnly() must return \c true.
-         * \pre All surfaces within this list are stored using the same
-         * coordinate system (i.e., the same subclass of NormalSurfaceVector).
+         * See the class "transform constructor" for details on how this
+         * routine works.  See the NormalList enumeration (in particular, the
+         * NS_FILTER_COMPATIBLE value) for more details on disjointness testing,
+         * some important caveats, and for preconditions on the input list.
          *
-         * \warning If this list contains a vertex link (plus at least
-         * one other surface), then the new list will be identical to
-         * the old (i.e., every surface will be copied across).
+         * \deprecated Just call the NormalSurfaces "transform constructor".
          *
          * \todo Deal properly with surfaces that are too large to handle.
          *
-         * @return the new list, which will also have been inserted as
-         * a new child packet of the underlying triangulation.
+         * @return the new filtered list of surfaces.
          */
-        NormalSurfaces* filterForDisjointPairs() const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            filterForDisjointPairs() const;
 
         /**
-         * Creates a new list filled with only the surfaces from this list
-         * that "might" represent two-sided incompressible surfaces.
-         * More precisely, we consider all two-sided surfaces in this list,
-         * as well as the two-sided double covers of all one-sided surfaces
-         * in this list (see below for details on how one-sided surfaces
-         * are handled).  Each of these surfaces is examined using
-         * relatively fast heuristic tests for incompressibility.  Any
-         * surface that is definitely \e not incompressible is thrown
-         * away, and all other surfaces are placed in the new list.
+         * Deprecated function to create a new list filled with those surfaces
+         * from this list that "might" represent two-sided incompressible
+         * surfaces, according to fast heuristics.
          *
-         * Therefore, it is guaranteed that every incompressible surface
-         * from the old list will be placed in the new list.  However,
-         * it is not known whether any given surface in the new list is
-         * indeed incompressible.
+         * This routine is identical to calling the "transform constructor"
+         * <tt>NormalSurfaces(*this, NS_FILTER_INCOMPRESSIBLE)</tt>, but
+         * with two key differences:
          *
-         * See NormalSurface::isIncompressible() for the definition of
-         * incompressibility that is used here.  Note in particular that
-         * spheres are \e never considered incompressible.
+         * - Unlike the transform constructor, this routine will also wrap the
+         *   new normal surface list in a packet and insert it beneath the same
+         *   parent packet as this input list.  (If this list has no parent,
+         *   then then new list will be orphaned.)
          *
-         * As indicated above, this filter works exclusively with two-sided
-         * surfaces.  If a surface in this list is one-sided, the heuristic
-         * incompressibility tests will be run on its two-sided double cover.
-         * Nevertheless, if the tests pass, the original one-sided surface
-         * (not the double cover) will be added to the new list.
+         * - If a precondition is not satisfied, then the class constructor
+         *   will throw an exception, whereas this routine will simply return
+         *   \c null.
          *
-         * The new list will be inserted as a new child packet of the
-         * underlying triangulation (specifically, as the final child).  As a
-         * convenience, the new list will also be returned from this routine.
+         * See the class "transform constructor" for details on how this
+         * routine works.  See the NormalList enumeration (in particular, the
+         * NS_FILTER_INCOMPRESSIBLE value) for more details on what "potential
+         * incompressibility" testing means, the heuristics behind it, and
+         * for preconditions on the triangulation and the input list.
          *
-         * This original list is not altered in any way.  Likewise,
-         * the surfaces in the new list are deep copies of the originals
-         * (so they can be altered without affecting the original surfaces).
+         * \deprecated Just call the NormalSurfaces "transform constructor".
          *
-         * Currently the heuristic tests include (i) throwing away
-         * all vertex links and thin edge links, and then
-         * (ii) cutting along the remaining surfaces and running
-         * Triangulation<3>::hasSimpleCompressingDisc() on the resulting
-         * bounded triangulations.  For more details on these tests
-         * see "The Weber-Seifert dodecahedral space is non-Haken",
-         * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
-         * Trans. Amer. Math. Soc. 364:2 (2012), pp. 911-932.
-         *
-         * \pre The underlying 3-manifold triangulation is valid and closed.
-         * In particular, it has no ideal vertices.
-         * \pre This list contains only embedded normal surfaces.  More
-         * precisely, isEmbeddedOnly() must return \c true.
-         * \pre This list contains only compact, connected normal surfaces.
-         * \pre No surfaces in this list contain any octagonal discs.
-         *
-         * \warning The behaviour of this routine is subject to change
-         * in future versions of Regina, since additional tests may be
-         * added to improve the power of this filtering.
-         *
-         * \todo Add progress tracking.
-         *
-         * @return the new list, which will also have been inserted as
-         * a new child packet of the underlying triangulation.
+         * @return the new filtered list of surfaces.
          */
-        NormalSurfaces* filterForPotentiallyIncompressible() const;
+        [[deprecated]] std::shared_ptr<PacketOf<NormalSurfaces>>
+            filterForPotentiallyIncompressible() const;
 
         /**
          * Returns the matching equations that were used to create this
@@ -748,11 +975,11 @@ class NormalSurfaces : public Packet {
          * makeMatchingEquations().
          *
          * Note that there are situations in which makeMatchingEquations()
-         * returns no value (because the triangulation is not supported
+         * throws an exception (because the triangulation is not supported
          * by the chosen coordinate system).  However, this routine will
-         * always returns a value, because if makeMatchingEquations() had
-         * returned no value then this normal surface list would not have
-         * been created in the first place.
+         * always succeed, because if makeMatchingEquations() had failed
+         * then this normal surface list would not have been created
+         * in the first place.
          *
          * @return the matching equations used to create this normal
          * surface list.
@@ -773,9 +1000,9 @@ class NormalSurfaces : public Packet {
          * As well as the normal surface coordinates, additional properties
          * of the normal surfaces (such as Euler characteristic, orientability,
          * and so on) can be included as extra fields in the export.  Users can
-         * select precisely which properties to include by passing a bitmask,
-         * formed as a bitwise \e or combination of constants from
-         * the regina::SurfaceExportFields enumeration type.
+         * select precisely which properties to include by passing a
+         * bitwise OR combination of constants from the
+         * regina::SurfaceExportFields enumeration type.
          *
          * The CSV format used here begins with a header row, and uses commas
          * as field separators.  Text fields with arbitrary contents are
@@ -791,13 +1018,13 @@ class NormalSurfaces : public Packet {
          * in UTF-8.
          *
          * @param filename the name of the CSV file to export to.
-         * @param additionalFields a bitwise combination of constants from
+         * @param additionalFields a bitwise OR combination of constants from
          * regina::SurfaceExportFields indicating which additional properties
          * of surfaces should be included in the export.
          * @return \c true if the export was successful, or \c false otherwise.
          */
         bool saveCSVStandard(const char* filename,
-            int additionalFields = regina::surfaceExportAll);
+            SurfaceExport additionalFields = regina::surfaceExportAll) const;
 
         /**
          * Exports the given list of normal surfaces as a plain text CSV
@@ -813,9 +1040,9 @@ class NormalSurfaces : public Packet {
          * As well as the normal surface coordinates, additional properties
          * of the normal surfaces (such as Euler characteristic, orientability,
          * and so on) can be included as extra fields in the export.  Users can
-         * select precisely which properties to include by passing a bitmask,
-         * formed as a bitwise \e or combination of constants from
-         * the regina::SurfaceExportFields enumeration type.
+         * select precisely which properties to include by passing a
+         * bitwise OR combination of constants from the
+         * regina::SurfaceExportFields enumeration type.
          *
          * The CSV format used here begins with a header row, and uses commas
          * as field separators.  Text fields with arbitrary contents are
@@ -831,19 +1058,28 @@ class NormalSurfaces : public Packet {
          * in UTF-8.
          *
          * @param filename the name of the CSV file to export to.
-         * @param additionalFields a bitwise combination of constants from
+         * @param additionalFields a bitwise OR combination of constants from
          * regina::SurfaceExportFields indicating which additional properties
          * of surfaces should be included in the export.
          * @return \c true if the export was successful, or \c false otherwise.
          */
         bool saveCSVEdgeWeight(const char* filename,
-            int additionalFields = regina::surfaceExportAll);
+            SurfaceExport additionalFields = regina::surfaceExportAll) const;
 
         /**
          * An iterator that gives access to the raw vectors for surfaces in
          * this list, pointing to the beginning of this surface list.
          *
-         * \ifacespython Not present.
+         * In Python, beginVectors() and endVectors() are replaced
+         * by a single routine vectors(), which returns an iterable object:
+         *
+         * \code{.py}
+         * list = NormalSurfaces(...)
+         * for v in list.vectors():
+         *     ...
+         * \endcode
+         *
+         * \ifacespython Not present; use vectors() instead.
          *
          * @return an iterator at the beginning of this surface list.
          */
@@ -854,7 +1090,11 @@ class NormalSurfaces : public Packet {
          * this list, pointing past the end of this surface list.
          * This iterator is not dereferenceable.
          *
-         * \ifacespython Not present.
+         * In Python, beginVectors() and endVectors() are replaced
+         * by a single routine vectors(), which returns an iterable object;
+         * see the beginVectors() documentation for further details.
+         *
+         * \ifacespython Not present; use vectors() instead.
          *
          * @return an iterator past the end of this surface list.
          */
@@ -864,10 +1104,23 @@ class NormalSurfaces : public Packet {
          * A bidirectional iterator that runs through the raw vectors for
          * surfaces in this list.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present.  Instead NormalSurfaces::vectors()
+         * returns an object of a different (hidden) class that supports
+         * the Python iterable/iterator interface.
          */
-        class VectorIterator : public std::iterator<
-                std::bidirectional_iterator_tag, Vector<LargeInteger>> {
+        class VectorIterator {
+            public:
+                using iterator_category = std::bidirectional_iterator_tag;
+                    /**< Declares this to be a bidirectional iterator type. */
+                using value_type = Vector<LargeInteger>;
+                    /**< Indicates what type the iterator points to. */
+                using difference_type = ptrdiff_t;
+                    /**< The type obtained by subtracting iterators. */
+                using pointer = const Vector<LargeInteger>*;
+                    /**< A pointer to \a value_type. */
+                using reference = const Vector<LargeInteger>&;
+                    /**< The type obtained when dereferencing iterators. */
+
             private:
                 std::vector<NormalSurface>::const_iterator it_;
                     /**< An iterator into the underlying list of surfaces. */
@@ -876,7 +1129,7 @@ class NormalSurfaces : public Packet {
                 /**
                  * Creates a new uninitialised iterator.
                  */
-                VectorIterator();
+                VectorIterator() = default;
 
                 /**
                  * Creates a copy of the given iterator.
@@ -970,153 +1223,28 @@ class NormalSurfaces : public Packet {
         /**
          * Creates an empty list of normal surfaces with the given
          * parameters.
-         *
-         * @param coords the coordinate system to be used
-         * for filling this list.
-         * @param which indicates which normal surfaces these will
-         * represent within the underlying triangulation.
-         * @param algorithm details of the enumeration algorithm that
-         * will be used to fill this list.
          */
         NormalSurfaces(NormalCoords coords, NormalList which,
-            NormalAlg algorithm);
-
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
+            NormalAlg algorithm, const Triangulation<3>& triangulation);
 
         /**
-         * An output iterator used to insert surfaces into an
-         * NormalSurfaces.
-         *
-         * Objects of type <tt>NormalSurfaceVector*</tt> can be assigned to
-         * this iterator, whereupon a surrounding NormalSurface
-         * will be automatically created.
-         *
-         * \warning The behaviour of this class has changed!
-         * As of Regina 4.6, this class happily inserts every surface or
-         * vector that it is given.  In previous versions it checked
-         * almost normal surface vectors for multiple octagonal discs;
-         * this check has been removed to support conversions between
-         * quad-oct space and standard almost normal space, and to support
-         * the enumeration of \e all almost normal surfaces (as opposed to
-         * just vertex surfaces).  Such checks are now left to the user
-         * interface (and indeed are now optional, at the user's discretion).
+         * Creates an empty list of normal surfaces with the given
+         * parameters.
          */
-        struct SurfaceInserter : public std::iterator<
-                std::output_iterator_tag, NormalSurfaceVector*> {
-            NormalSurfaces* list;
-                /**< The list into which surfaces will be inserted. */
-            const Triangulation<3>& owner;
-                /**< The triangulation in which the surfaces to be
-                 *   inserted are contained. */
-
-            /**
-             * Creates a new output iterator.  The member variables of
-             * this iterator will be initialised according to the
-             * parameters passed to this constructor.
-             *
-             * @param newList the list into which surfaces will be inserted.
-             * @param newOwner the triangulation in which the surfaces
-             * to be inserted are contained.
-             */
-            SurfaceInserter(NormalSurfaces& newList,
-                const Triangulation<3>& newOwner);
-            /**
-             * Creates a new output iterator that is a clone of the
-             * given iterator.
-             *
-             * @param cloneMe the output iterator to clone.
-             */
-            SurfaceInserter(const SurfaceInserter& cloneMe) = default;
-
-            /**
-             * Appends the normal surface corresponding to the given
-             * vector to the end of the appropriate surface list.
-             *
-             * The given vector will be owned by the newly created
-             * normal surface and will be deallocated with the other
-             * surfaces in this list when the list is eventually destroyed.
-             *
-             * \warning The behaviour of this routine has changed!
-             * As of Regina 4.6, this routine no longer checks for
-             * multiple octagonal discs.  See the SurfaceInserter
-             * class notes for details.
-             *
-             * @param vector the vector of the normal surface to insert.
-             * @return this output iterator.
-             */
-            SurfaceInserter& operator =(NormalSurfaceVector* vector);
-
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            SurfaceInserter& operator *();
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            SurfaceInserter& operator ++();
-            /**
-             * Returns a reference to this output iterator.
-             *
-             * @return this output iterator.
-             */
-            SurfaceInserter& operator ++(int);
-
-            SurfaceInserter& operator =(const SurfaceInserter& cloneMe) =
-                delete;
-        };
+        NormalSurfaces(NormalCoords coords, NormalList which,
+            NormalAlg algorithm,
+            const SnapshotRef<Triangulation<3>>& triangulation);
 
     private:
-        /**
-         * A helper class containing constants, typedefs and operations
-         * for working with normal (as opposed to almost normal) surfaces.
-         *
-         * This class and its partner AlmostNormalSpec can be used to
-         * write generic template code that works with both normal
-         * \e and almost normal surfaces.
-         *
-         * The full definition of this class is in the file normalspec-impl.h,
-         * which is included automatically by this header.
-         */
-        struct NormalSpec;
-
-        /**
-         * A helper class containing constants, typedefs and operations
-         * for working with almost normal (as opposed to normal) surfaces.
-         *
-         * This class and its partner NormalSpec can be used to
-         * write generic template code that works with both normal
-         * \e and almost normal surfaces.
-         *
-         * The full definition of this class is in the file normalspec-impl.h,
-         * which is included automatically by this header.
-         */
-        struct AlmostNormalSpec;
-
         /**
          * Converts a set of embedded vertex normal surfaces in
          * (quad or quad-oct) space to a set of embedded vertex normal
          * surfaces in (standard normal or standard almost normal) space.
-         * The original (quad or quad-oct) space surfaces are passed in
-         * the argument \a quadList, and the resulting (standard normal
-         * or standard almost normal) space surfaces will be inserted
-         * directly into this list.
+         * The original surfaces are passed in the argument \a reducedList,
+         * and the resulting surfaces will be inserted directly into this list.
          *
-         * See quadToStandard() and quadOctToStandardAN() for full details
+         * See NormalTransform::NS_CONV_REDUCED_TO_STD for full details
          * and preconditions for this procedure.
-         *
-         * This routine is designed to work with surface lists that are
-         * still under construction.  As such, it ignores the packet
-         * tree completely.  The parent packet is ignored (and not changed);
-         * instead the underlying triangulation is passed explicitly as
-         * the argument \a owner.
-         *
-         * Although this routine takes a vector of non-const pointers, it
-         * guarantees not to modify (or destroy) any of the contents.
          *
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
@@ -1129,25 +1257,17 @@ class NormalSurfaces : public Packet {
          * template function and so is only defined in the one <tt>.cpp</tt>
          * file that needs it.
          *
-         * \pre The template argument \a Variant is either NormalSpec
-         * or AlmostNormalSpec, according to whether we are doing the
-         * work for quadToStandard() or quadOctToStandardAN() respectively.
          * \pre The coordinate system for this surface list is set to
-         * NS_STANDARD or NS_AN_STANDARD, according to whether we are doing
-         * the work for quadToStandard() or quadOctToStandardAN() respectively,
-         * and the embedded-only flag is set to \c true.
-         * \pre The given triangulation is valid and non-empty, and the link
+         * NS_STANDARD or NS_AN_STANDARD, and the embedded-only flag is \c true.
+         * \pre The underlying triangulation is valid, and the link
          * of every vertex is either a sphere or a disc.
          *
-         * @param owner the triangulation upon which this list of
-         * surfaces is to be based.
          * @param reducedList a full list of vertex surfaces in
-         * (quad or quad-oct) coordinates for the given triangulation.
+         * (quad or quad-oct) coordinates for the underlying triangulation.
          * @param tracker a progress tracker to be used for progress reporting
          * and cancellation requests, or \c null if this is not required.
          */
-        template <class Variant>
-        void buildStandardFromReduced(const Triangulation<3>& owner,
+        void buildStandardFromReduced(
             const std::vector<NormalSurface>& reducedList,
             ProgressTracker* tracker = nullptr);
 
@@ -1165,61 +1285,43 @@ class NormalSurfaces : public Packet {
          * \pre The template argument \a BitmaskType can support
          * bitmasks of size 7 \a n (if we are using normal surfaces) or size
          * 10 \a n (if we are using almost normal surfaces), where \a n is
-         * the number of tetrahedra in the given triangulation.
+         * the number of tetrahedra in the underlying triangulation.
+         * \pre The underlying triangulation (in addition to the other
+         * preconditions) is non-empty.
          */
-        template <class Variant, class BitmaskType>
-        void buildStandardFromReducedUsing(const Triangulation<3>& owner,
+        template <class BitmaskType>
+        void buildStandardFromReducedUsing(
             const std::vector<NormalSurface>& reducedList,
             ProgressTracker* tracker);
 
         /**
-         * Converts a set of embedded vertex surfaces in (quad or quad-oct)
-         * space to a set of embedded vertex surfaces in (standard normal or
-         * standard almost normal) space.
+         * Converts a set of embedded vertex normal surfaces in
+         * (standard normal or almost normal) space to a set of embedded
+         * vertex normal surfaces in (quad or quad-oct) space.
+         * The original surfaces are passed in the argument \a stdList, and the
+         * resulting surfaces will be inserted directly into this list.
          *
-         * This is a generic implementation that performs the real work
-         * for both quadToStandard() and quadOctToStandardAN().  See each
-         * of those routines for further details as well as relevant
-         * preconditions and postconditions.
+         * See NormalTransform::NS_CONV_STD_TO_REDUCED for full details
+         * and preconditions for this procedure.
          *
-         * \pre The template argument \a Variant is either NormalSpec
-         * or AlmostNormalSpec, according to whether we are implementing
-         * quadToStandard() or quadOctToStandardAN() accordingly.
+         * \pre The coordinate system for this surface list is set to NS_QUAD
+         * or NS_AN_QUAD_OCT, and the embedded-only flag is set to \c true.
+         * \pre The underlying triangulation is valid, and the link
+         * of every vertex is either a sphere or a disc.
+         *
+         * @param stdList a full list of vertex surfaces in standard normal or
+         * almost normal coordinates for the underlying triangulation.
          */
-        template <class Variant>
-        NormalSurfaces* internalReducedToStandard() const;
+        void buildReducedFromStandard(
+            const std::vector<NormalSurface>& stdList);
 
         /**
-         * Converts a set of embedded vertex surfaces in
-         * (standard normal or standard almost normal) space to a set of
-         * embedded vertex surfaces in (quad or quad-oct) space.
-         *
-         * This is a generic implementation that performs the real work
-         * for both standardToQuad() and standardANToQuadOct().  See each
-         * of those routines for further details as well as relevant
-         * preconditions and postconditions.
-         *
-         * \pre The template argument \a Variant is either NormalSpec
-         * or AlmostNormalSpec, according to whether we are implementing
-         * standardToQuad() or standardANToQuadOct() accordingly.
+         * Contains the code responsible for all normal surface enumeration.
          */
-        template <class Variant>
-        NormalSurfaces* internalStandardToReduced() const;
-
-        /**
-         * Contains the code responsible for all normal surface enumeration,
-         * in a setting where the underlying coordinate system is known
-         * at compile time.
-         *
-         * \tparam Coords an instance of the NormalInfo<> template class.
-         */
-        template <typename Coords>
         class Enumerator {
             private:
                 NormalSurfaces* list_;
                     /**< The surface list to be filled. */
-                Triangulation<3>* triang_;
-                    /**< The triangulation in which these surfaces lie. */
                 const MatrixInt& eqns_;
                     /**< The matching equations for the given triangulation in
                          the coordinate system corresponding to list_. */
@@ -1227,22 +1329,20 @@ class NormalSurfaces : public Packet {
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
                          or \c null if no progress tracker is in use. */
+                Packet* treeParent_;
+                    /**< The parent packet in the tree, if we should insert the
+                         finished list into the packet tree once enumeration
+                         has finished, or \c null if we should not. */
 
             public:
                 /**
                  * Creates a new functor with the given parameters.
                  *
-                 * @param list the surface list to be filled.
-                 * @param triang the triangulation in which these surfaces lie.
-                 * @param eqns the matching equations for the given
-                 * triangulation in the coordinate system corresopnding to
-                 * \a list.
-                 * @param tracker the progress tracker to use for progress
-                 * reporting and cancellation polling, or \c null if these
-                 * capabilities are not required.
+                 * \pre If \a treeParent is non-null, then list is actually
+                 * the inherited interface of a PacketOf<NormalSurfaces>.
                  */
-                Enumerator(NormalSurfaces* list, Triangulation<3>* triang,
-                    const MatrixInt& eqns, ProgressTracker* tracker);
+                Enumerator(NormalSurfaces* list, const MatrixInt& eqns,
+                    ProgressTracker* tracker, Packet* treeParent);
 
                 /**
                  * Default move constructor.
@@ -1256,8 +1356,8 @@ class NormalSurfaces : public Packet {
                  * list_->algorithm_ have been sanity-checked.
                  *
                  * This routine fills \a list_ with surfaces, and then once
-                 * this is finished it inserts \a list_ into the packet
-                 * tree as a child of \a triang_.
+                 * this is finished it inserts \a list_ beneath \a treeParent_
+                 * if \a treeParent_ is non-null.
                  */
                 void enumerate();
 
@@ -1423,55 +1523,133 @@ class NormalSurfaces : public Packet {
                  * \pre The underlying triangulation is non-empty.
                  */
                 void fillFundamentalFullCone();
-
-            friend class Enumerator<typename Coords::Standard>;
-            friend class Enumerator<typename Coords::Reduced>;
         };
 
     friend class XMLNormalSurfacesReader;
+    friend class XMLLegacyNormalSurfacesReader;
+    friend class XMLWriter<NormalSurfaces>;
 };
+
+/**
+ * Swaps the contents of the two given lists.
+ *
+ * This global routine simply calls NormalSurfaces::swap(); it is provided so
+ * that NormalSurfaces meets the C++ Swappable requirements.
+ *
+ * See NormalSurfaces::swap() for more details.
+ *
+ * \note This swap function is \e not marked \c noexcept, since it
+ * fires change events on both lists which may in turn call arbitrary
+ * code via any registered packet listeners.
+ *
+ * @param lhs the list whose contents should be swapped with \a rhs.
+ * @param rhs the list whose contents should be swapped with \a lhs.
+ *
+ * \ingroup surfaces
+ */
+void swap(NormalSurfaces& lhs, NormalSurfaces& rhs);
 
 /**
  * Generates the set of normal surface matching equations for the
  * given triangulation using the given coordinate system.
  *
+ * These are the matching equations that will be used when enumerating
+ * normal surfaces in the coordinate system \a coords.
+ *
  * Each equation will be represented as a row of the resulting matrix.
  * Each column of the matrix represents a coordinate in the given
  * coordinate system.
  *
- * For some coordinate systems, Regina may not be able to create matching
- * equations for all triangulations (these coordinate systems are explicitly
- * mentioned as such in the NormalCoords enum documentation).  If Regina
- * cannot create the matching equations as requested, this routine will
- * return no value instead.
+ * \exception InvalidArgument the matching equations could not be created for
+ * the given triangulation in the given coordinate system, due to an error
+ * that should have been preventable with the right checks in advance.  This
+ * can only happen in certain coordinate systems, and for all such coordinate
+ * systems this is explicitly described in the NormalCoords enum documentation.
+ *
+ * \exception UnsolvedCase the matching equations could not be created for the
+ * given triangulation in the given coordinate system, due to an error that was
+ * "genuinely" unforseeable.  Again this can only happen in certain coordinate
+ * systems, where this is explicitly described in the NormalCoords enum
+ * documentation.
  *
  * @param triangulation the triangulation upon which these matching equations
  * will be based.
  * @param coords the coordinate system to be used.
- * @return the resulting set of matching equations, or no value if
- * Regina is not able to construct them for the given combination of
- * triangulation and coordinate system.
+ * @return the resulting set of matching equations.
+ *
+ * \ingroup surfaces
  */
-std::optional<MatrixInt> makeMatchingEquations(
-    const Triangulation<3>& triangulation, NormalCoords coords);
+MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
+    NormalCoords coords);
+
 /**
  * Generates the validity constraints representing the condition that
  * normal surfaces be embedded.  The validity constraints will be expressed
  * relative to the given coordinate system.
  *
- * \ifacespython Not present.
+ * For some coordinate systems, these will include additional constraints
+ * of a similar nature (i.e., restricting which combinations of
+ * coordinates may be non-zero).  For instance, in almost normal coordinates,
+ * there will typically be an extra constraint insisting that at most
+ * one octagon type is non-zero across the entire triangulation.
+ *
+ * These are the constraints that will be used when enumerating embedded
+ * surfaces in the given coordinate system (i.e., when the default
+ * NS_EMBEDDED_ONLY flag is used).  They will not be used when the enumeration
+ * allows for immersed and/or singular surfaces.
  *
  * @param triangulation the triangulation upon which these validity constraints
  * will be based.
  * @param coords the coordinate system to be used.
  * @return the set of validity constraints.
+ *
+ * \ingroup surfaces
  */
-EnumConstraints makeEmbeddedConstraints(const Triangulation<3>& triangulation,
-    NormalCoords coords);
-
-/*@}*/
+ValidityConstraints makeEmbeddedConstraints(
+    const Triangulation<3>& triangulation, NormalCoords coords);
 
 // Inline functions for NormalSurfaces
+
+inline NormalSurfaces::NormalSurfaces(const Triangulation<3>& triangulation,
+        NormalCoords coords, NormalList which, NormalAlg algHints,
+        ProgressTracker* tracker) :
+        triangulation_(triangulation), coords_(coords), which_(which),
+        algorithm_(algHints) {
+    try {
+        Enumerator(this, makeMatchingEquations(triangulation, coords),
+            tracker, nullptr).enumerate();
+    } catch (const ReginaException&) {
+        if (tracker)
+            tracker->setFinished();
+        throw;
+    }
+}
+
+inline NormalSurfaces& NormalSurfaces::operator = (const NormalSurfaces& src) {
+    ChangeEventSpan span(*this);
+
+    surfaces_ = src.surfaces_;
+    triangulation_ = src.triangulation_;
+    coords_ = src.coords_;
+    which_ = src.which_;
+    algorithm_ = src.algorithm_;
+
+    return *this;
+}
+
+inline NormalSurfaces& NormalSurfaces::operator = (NormalSurfaces&& src) {
+    ChangeEventSpan span(*this);
+
+    surfaces_ = std::move(src.surfaces_);
+    triangulation_ = std::move(src.triangulation_);
+
+    // Trivial data members:
+    coords_ = src.coords_;
+    which_ = src.which_;
+    algorithm_ = src.algorithm_;
+
+    return *this;
+}
 
 inline NormalCoords NormalSurfaces::coords() const {
     return coords_;
@@ -1489,29 +1667,42 @@ inline bool NormalSurfaces::isEmbeddedOnly() const {
     return which_.has(NS_EMBEDDED_ONLY);
 }
 
-inline size_t NormalSurfaces::size() const {
-    return surfaces_.size();
+inline const Triangulation<3>& NormalSurfaces::triangulation() const {
+    return *triangulation_;
 }
 
-inline auto NormalSurfaces::surfaces() const {
-    return ListView(surfaces_);
+inline size_t NormalSurfaces::size() const {
+    return surfaces_.size();
 }
 
 inline const NormalSurface& NormalSurfaces::surface(size_t index) const {
     return surfaces_[index];
 }
 
-inline bool NormalSurfaces::dependsOnParent() const {
-    return true;
+inline auto NormalSurfaces::begin() const {
+    return surfaces_.begin();
+}
+
+inline auto NormalSurfaces::end() const {
+    return surfaces_.end();
+}
+
+inline bool NormalSurfaces::allowsAlmostNormal() const {
+    return NormalEncoding(coords_).storesOctagons();
+}
+
+inline bool NormalSurfaces::allowsNonCompact() const {
+    return NormalEncoding(coords_).couldBeNonCompact();
+}
+
+inline bool NormalSurfaces::allowsSpun() const {
+    return NormalEncoding(coords_).couldBeNonCompact();
 }
 
 template <typename Comparison>
 inline void NormalSurfaces::sort(Comparison&& comp) {
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
     std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
-}
-
-inline NormalSurfaces::VectorIterator::VectorIterator() {
 }
 
 inline bool NormalSurfaces::VectorIterator::operator ==(
@@ -1526,7 +1717,7 @@ inline bool NormalSurfaces::VectorIterator::operator !=(
 
 inline const Vector<LargeInteger>& NormalSurfaces::VectorIterator::
         operator *() const {
-    return it_->vector().coords();
+    return it_->vector();
 }
 
 inline NormalSurfaces::VectorIterator& NormalSurfaces::VectorIterator::
@@ -1563,49 +1754,28 @@ inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors() const {
     return VectorIterator(surfaces_.end());
 }
 
-inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
-        NormalSurfaces& newList, const Triangulation<3>& newOwner) :
-        list(&newList), owner(newOwner) {
+inline NormalSurfaces::NormalSurfaces(NormalCoords coords, NormalList which,
+        NormalAlg algorithm, const Triangulation<3>& triangulation) :
+        triangulation_(triangulation), coords_(coords), which_(which),
+        algorithm_(algorithm) {
 }
 
-inline NormalSurfaces::SurfaceInserter&
-        NormalSurfaces::SurfaceInserter::operator =(
-        NormalSurfaceVector* vector) {
-    list->surfaces_.push_back(NormalSurface(owner, vector));
-    return *this;
+inline NormalSurfaces::NormalSurfaces(NormalCoords coords, NormalList which,
+        NormalAlg algorithm,
+        const SnapshotRef<Triangulation<3>>& triangulation) :
+        triangulation_(triangulation), coords_(coords), which_(which),
+        algorithm_(algorithm) {
 }
 
-inline NormalSurfaces::SurfaceInserter&
-        NormalSurfaces::SurfaceInserter::operator *() {
-    return *this;
+inline void swap(NormalSurfaces& lhs, NormalSurfaces& rhs) {
+    lhs.swap(rhs);
 }
 
-inline NormalSurfaces::SurfaceInserter&
-        NormalSurfaces::SurfaceInserter::operator ++() {
-    return *this;
-}
-
-inline NormalSurfaces::SurfaceInserter&
-        NormalSurfaces::SurfaceInserter::operator ++(int) {
-    return *this;
-}
-
-inline NormalSurfaces::NormalSurfaces(NormalCoords coords,
-        NormalList which, NormalAlg algorithm) :
-        coords_(coords), which_(which), algorithm_(algorithm) {
-}
-
-template <typename Coords>
-inline NormalSurfaces::Enumerator<Coords>::Enumerator(NormalSurfaces* list,
-        Triangulation<3>* triang, const MatrixInt& eqns,
-        ProgressTracker* tracker) :
-        list_(list), triang_(triang), eqns_(eqns),
-        tracker_(tracker) {
+inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,
+        const MatrixInt& eqns, ProgressTracker* tracker, Packet* treeParent) :
+        list_(list), eqns_(eqns), tracker_(tracker), treeParent_(treeParent) {
 }
 
 } // namespace regina
-
-// Import the full definitions of NormalSpec and AlmostNormalSpec.
-#include "surfaces/normalspec-impl.h"
 
 #endif

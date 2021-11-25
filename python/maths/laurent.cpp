@@ -32,25 +32,22 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/integer.h"
 #include "maths/laurent.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
+using regina::Integer;
 using regina::Laurent;
 
 void addLaurent(pybind11::module_& m) {
     auto c = pybind11::class_<Laurent<regina::Integer>>(m, "Laurent")
         .def(pybind11::init<>())
         .def(pybind11::init<long>())
-        .def(pybind11::init<const Laurent<regina::Integer>&>())
-        .def(pybind11::init([](long minExp, pybind11::list l) {
-            regina::Integer* coeffs =
-                regina::python::seqFromList<regina::Integer>(l);
-            Laurent<regina::Integer>* ans = new Laurent<regina::Integer>(
-                minExp, coeffs, coeffs + l.size());
-            delete[] coeffs;
-            return ans;
+        .def(pybind11::init<const Laurent<Integer>&>())
+        .def(pybind11::init([](long minExp, const std::vector<Integer>& c) {
+            return new Laurent<Integer>(minExp, c.begin(), c.end());
         }))
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
@@ -59,18 +56,15 @@ void addLaurent(pybind11::module_& m) {
         .def("init", (void (Laurent<regina::Integer>::*)(long))
             &Laurent<regina::Integer>::init)
         .def("init", [](Laurent<regina::Integer>& p, long minExp,
-                pybind11::list l) {
-            regina::Integer* coeffs =
-                regina::python::seqFromList<regina::Integer>(l);
-            p.init(minExp, coeffs, coeffs + l.size());
-            delete[] coeffs;
+                const std::vector<Integer>& c) {
+            p.init(minExp, c.begin(), c.end());
         })
         .def("minExp", &Laurent<regina::Integer>::minExp)
         .def("maxExp", &Laurent<regina::Integer>::maxExp)
         .def("isZero", &Laurent<regina::Integer>::isZero)
         .def("__getitem__", [](const Laurent<regina::Integer>& p, long exp) {
             return p[exp];
-        }, pybind11::return_value_policy::reference_internal)
+        }, pybind11::return_value_policy::copy) // to enforce constness
         .def("__setitem__", [](Laurent<regina::Integer>& p, long exp,
                 const regina::Integer& value) {
             p.set(exp, value);

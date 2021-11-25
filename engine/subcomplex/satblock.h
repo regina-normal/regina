@@ -43,17 +43,14 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "subcomplex/satannulus.h"
+#include "triangulation/dim3.h"
 #include <set>
+#include <tuple>
 
 namespace regina {
 
-struct SatAnnulus;
+class SatBlockModel;
 class SFSpace;
-
-/**
- * \weakgroup subcomplex
- * @{
- */
 
 /**
  * Represents a saturated block in a Seifert fibred space.  A saturated
@@ -103,17 +100,31 @@ class SFSpace;
  * \e backwards, meaning that the first triangle of one annulus is joined to
  * the second triangle of the other (and vice versa).
  *
- * \warning In addition to mandatory overrides such as clone() and
- * adjustSFS(), some subclasses will need to override the virtual
- * routine transform() in order to correctly adjust additional
- * triangulation-specific information stored in the subclass.  See the
- * transform() documentation for further details.
+ * This is an abstract base class: its subclasses correspond to different
+ * combinatorial constructions (or in some cases, parameterised families
+ * of constructions).  Each subclass of SatBlock:
+ *
+ * - must override all pure virtual functions (of course);
+ *
+ * - should override transform() if the subclass contains additional
+ *   data that needs to be altered when an isomorphism is applied;
+ *
+ * - may optionally override writeTextLong(), if more detailed output
+ *   could be useful.
+ *
+ * SatBlock does not support value semantics: blocks cannot be copied,
+ * swapped, or manually constructed.  Their memory is managed by the
+ * SatRegion class (or in special cases the SatBlockModel class), and their
+ * locations in memory define them.  See SatRegion for further details.
+ *
+ * \ingroup subcomplex
  */
 class SatBlock : public Output<SatBlock> {
     public:
-        typedef std::set<Tetrahedron<3>*> TetList;
+        using TetList = std::set<const Tetrahedron<3>*>;
             /**< The data structure used to store a list of tetrahedra
-                 that should not be examined by isBlock(). */
+                 that should not be examined when searching for
+                 saturated blocks. */
 
     protected:
         unsigned nAnnuli_;
@@ -147,17 +158,6 @@ class SatBlock : public Output<SatBlock> {
 
     public:
         /**
-         * Creates a new clone of the given block.
-         *
-         * Note that the new \a adjBlock_ array will contain pointers to
-         * the same adjacent blocks as the original.  That is, adjacent
-         * blocks will not be cloned also; instead pointers to adjacent
-         * blocks will simply be copied across.
-         *
-         * @param cloneMe the saturated block to clone.
-         */
-        SatBlock(const SatBlock& cloneMe);
-        /**
          * Destroys all internal arrays.  Note that any adjacent blocks
          * that are referenced by the \a adjBlock array will \e not be
          * destroyed.
@@ -165,30 +165,29 @@ class SatBlock : public Output<SatBlock> {
         virtual ~SatBlock();
 
         /**
-         * Returns a newly created clone of this saturated block structure.
-         * A clone of the correct subclass of SatBlock will be returned.
-         * For this reason, each subclass of SatBlock must implement this
-         * routine.
-         *
-         * @return a new clone of this block.
-         */
-        virtual SatBlock* clone() const = 0;
-
-        /**
          * Returns the number of annuli on the boundary of this
          * saturated block.
          *
          * @return the number of boundary annuli.
          */
-        unsigned nAnnuli() const;
+        unsigned countAnnuli() const;
+        /**
+         * Deprecated routine that returns the number of annuli on the
+         * boundary of this saturated block.
+         *
+         * \deprecated This routine has been renamed countAnnuli().
+         *
+         * @return the number of boundary annuli.
+         */
+        [[deprecated]] unsigned nAnnuli() const;
 
         /**
          * Returns details of the requested annulus on the boundary of
          * this saturated block.  Annuli are numbered from 0 to
-         * nAnnuli()-1 as described in the class notes.
+         * countAnnuli()-1 as described in the class notes.
          *
          * @param which indicates which boundary annulus is requested;
-         * this must be between 0 and nAnnuli()-1 inclusive.
+         * this must be between 0 and countAnnuli()-1 inclusive.
          * @return a reference to the requested boundary annulus.
          */
         const SatAnnulus& annulus(unsigned which) const;
@@ -198,7 +197,7 @@ class SatBlock : public Output<SatBlock> {
          * strip?
          *
          * Recall from the class notes that the twist occurs between
-         * boundary annuli nAnnuli()-1 and 0.
+         * boundary annuli countAnnuli()-1 and 0.
          *
          * @return \c true if the ring of boundary annuli is twisted, or
          * \c false if not.
@@ -210,7 +209,7 @@ class SatBlock : public Output<SatBlock> {
          * being adjacent to the given boundary annulus of this block.
          *
          * @param whichAnnulus indicates which boundary annulus of this block
-         * should be examined; this must be between 0 and nAnnuli()-1
+         * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
          * @return \c true if the given boundary annulus has an adjacent
          * block listed, or \c false otherwise.
@@ -222,9 +221,9 @@ class SatBlock : public Output<SatBlock> {
          * given boundary annulus of this block.
          *
          * @param whichAnnulus indicates which boundary annulus of this block
-         * should be examined; this must be between 0 and nAnnuli()-1
+         * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
-         * @return the other block adjacent along this annulus, or 0
+         * @return the other block adjacent along this annulus, or \c null
          * if there is no adjacent block listed.
          */
         SatBlock* adjacentBlock(unsigned whichAnnulus) const;
@@ -238,7 +237,7 @@ class SatBlock : public Output<SatBlock> {
          * block listed.
          *
          * @param whichAnnulus indicates which boundary annulus of this block
-         * should be examined; this must be between 0 and nAnnuli()-1
+         * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
          * @return the corresponding annulus number on the other block
          * that is adjacent along this annulus.
@@ -254,7 +253,7 @@ class SatBlock : public Output<SatBlock> {
          * block listed.
          *
          * @param whichAnnulus indicates which boundary annulus of this block
-         * should be examined; this must be between 0 and nAnnuli()-1
+         * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
          * @return \c true if the corresponding adjacency is reflected,
          * or \c false if it is not.
@@ -270,33 +269,12 @@ class SatBlock : public Output<SatBlock> {
          * block listed.
          *
          * @param whichAnnulus indicates which boundary annulus of this block
-         * should be examined; this must be between 0 and nAnnuli()-1
+         * should be examined; this must be between 0 and countAnnuli()-1
          * inclusive.
          * @return \c true if the corresponding adjacency is backwards,
          * or \c false if it is not.
          */
         bool adjacentBackwards(unsigned whichAnnulus) const;
-
-        /**
-         * Lists the given saturated block as being adjacent to the
-         * given boundary annulus of this block.  Both block structures
-         * (this and the given block) will be updated.
-         *
-         * @param whichAnnulus indicates which boundary annulus of this block
-         * has the new adjacency; this must be between 0 and nAnnuli()-1
-         * inclusive.
-         * @param adjBlock the other saturated block that is adjacent to
-         * this.
-         * @param adjAnnulus indicates which boundary annulus of the
-         * adjacent block meets the given boundary annulus of this block;
-         * this must be between 0 and adjBlock->nAnnuli()-1 inclusive.
-         * @param adjReflected indicates whether the new adjacency is
-         * reflected (see the class notes for details).
-         * @param adjBackwards indicates whether the new adjacency is
-         * backwards (see the class notes for details).
-         */
-        void setAdjacent(unsigned whichAnnulus, SatBlock* adjBlock,
-                unsigned adjAnnulus, bool adjReflected, bool adjBackwards);
 
         /**
          * Adjusts the given Seifert fibred space to insert the contents
@@ -345,6 +323,339 @@ class SatBlock : public Output<SatBlock> {
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const = 0;
 
         /**
+         * Finds the next (or previous) boundary annulus around from this,
+         * treating all adjacent blocks as part of a single large saturated
+         * region.
+         *
+         * Suppose that all saturated blocks are merged together according
+         * to adjacent boundary annuli, forming larger saturated structures.
+         * The remaining annuli that do not have adjacent blocks will
+         * group together to form several large boundary rings.  Note that
+         * each boundary ring might involve annuli from several
+         * different blocks, and might or might not have a twist (thus
+         * forming a large Klein bottle instead of a large torus).
+         *
+         * This routine is used to trace around such a boundary ring.  It is
+         * assumed that annulus \a thisAnnulus of this block forms part
+         * of a boundary ring (i.e., it has no adjacent block).  This
+         * routine will then return the next/previous annulus around from
+         * this in the large boundary ring.  Here "next" means in the direction
+         * following from the second triangle of this annulus, and
+         * "previous" means in the direction following from the first triangle;
+         * the boolean argument \a followPrev controls which we will be used.
+         * This next/previous annulus might belong to another block, or it
+         * might even be this original annulus again.
+         *
+         * The next/previous annulus itself is not returned, but rather a
+         * reference as to how it appears within its enclosing saturated block.
+         * Specifically, a block and corresponding annulus number will be
+         * included as the first two elements of the returned tuple.
+         *
+         * It is possible that the next/previous annulus as it appears within
+         * the returned block is oriented differently from how it appears
+         * within this large boundary ring.  For this reason, two booleans are
+         * returned also.  The third element of the returned tuple will
+         * describe whether the annulus is reflected vertically as it
+         * appears within the large boundary ring (i.e., the first and
+         * second triangles remain the same but the fibre direction is
+         * reversed).  Similarly, the fourth element of the tuple will describe
+         * whether the annulus is reflected horizontally as it appears
+         * within the large boundary ring (i.e., first and second triangles
+         * are switched but the fibre direction is unchanged).
+         *
+         * It is possible that both a horizontal and vertical reflection
+         * take place.  Note that any kind of reflection will also
+         * affect the locations of the 0/1/2 markings as described in
+         * the SatAnnulus class notes.
+         *
+         * Finally, note that if the large boundary ring is twisted
+         * (i.e., it forms a Klein bottle), then following the entire
+         * boundary ring around using this routine will bring you back to
+         * the starting annulus but with the vertical reflection flag set.
+         *
+         * \pre Annulus \a thisAnnulus of this block has no block
+         * adjacent to it.
+         *
+         * \warning If you wish to trace around an entire boundary
+         * ring, you will need to adjust the argument \a followPrev
+         * according to whether or not the current annulus
+         * is reflected horizontally (since, under a horizontal
+         * reflection, "next" becomes "previous" and vice versa).
+         *
+         * @param thisAnnulus describes which original boundary annulus of
+         * this block to examine; this must be between 0 and countAnnuli()-1
+         * inclusive.
+         * @param followPrev \c true if we should find the previous boundary
+         * annulus, or \c false if we should find the next boundary annulus.
+         * @return a tuple (\a nextBlock, \a nextAnnulus, \a refVert,
+         * \a refHoriz), where: \a nextBlock is the block containing the next
+         * boundary annulus around from \a thisAnnulus; \a nextAnnulus is the
+         * specific annulus number within \a nextBlock of the next annulus
+         * around (between 0 and \a nextBlock->countAnnuli()-1 inclusive, and
+         * the corresponding annulus will have no block adjacent to it);
+         * \a refVert is \c true iff the next annulus around is vertically
+         * reflected; and \a refHoriz is \c true iff the next annulus around
+         * is horizontally reflected (see above for details on reflections).
+         */
+        std::tuple<const SatBlock*, unsigned, bool, bool>
+            nextBoundaryAnnulus(unsigned thisAnnulus, bool followPrev) const;
+
+        /**
+         * Returns an abbreviated name or symbol for this block.
+         * This name will reflect the particular block type, but may not
+         * provide thorough details.
+         *
+         * The name will be no more than a handful of characters long, and
+         * will not include a newline (or surrounding dollar signs in TeX
+         * mode).
+         *
+         * @param tex \c true if the name should be formatted for TeX,
+         * or \c false if it should be in plain text format.
+         * @return an abbreviated name for this block.
+         */
+        std::string abbr(bool tex = false) const;
+
+        /**
+         * Writes an abbreviated name or symbol for this block to the
+         * given output stream.  This name should reflect the particular
+         * block type, but need not provide thorough details.
+         *
+         * The output should be no more than a handful of characters long,
+         * and no newline should be written.  In TeX mode, no leading or
+         * trailing dollar signs should be written.
+         *
+         * \ifacespython Not present; instead use the variant abbr() that
+         * returns a string.
+         *
+         * @param out the output stream to which to write.
+         * @param tex \c true if the output should be formatted for TeX,
+         * or \c false if it should be in plain text format.
+         */
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const = 0;
+
+        /**
+         * Implements a consistent ordering of saturated blocks.
+         * This ordering is purely aesthetic on the part of the author,
+         * and is subject to change in future versions of Regina.
+         *
+         * @param compare the saturated block with which this will be
+         * compared.
+         * @return \c true if this block comes before the given block
+         * according to the ordering of saturated blocks, or \c false
+         * if either the blocks are identical or this block comes after
+         * the given block.
+         */
+        bool operator < (const SatBlock& compare) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * This must be implemented by subclasses.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        virtual void writeTextShort(std::ostream& out) const = 0;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * This may be reimplemented by subclasses, but the parent
+         * SatBlock class offers a reasonable default implementation.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        virtual void writeTextLong(std::ostream& out) const;
+
+        // Mark this class as non-assignable.
+        // There is a copy constructor, but that is protected.
+        SatBlock& operator = (const SatBlock&) = delete;
+
+    protected:
+        /**
+         * Constructor for a block with the given number of annuli on
+         * the boundary.
+         *
+         * All arrays will be constructed but their contents will remain
+         * uninitialised, with the exception that the \a adjBlock array
+         * will be filled with null pointers.
+         *
+         * @param nAnnuli the number of annuli on the boundary of this
+         * block; this must be strictly positive.
+         * @param twistedBoundary \c true if the ring of boundary annuli
+         * is twisted to form a long Mobius band, or \c false (the default)
+         * if it is not.
+         */
+        SatBlock(unsigned nAnnuli, bool twistedBoundary = false);
+        /**
+         * Creates a new clone of the given block.
+         *
+         * Note that the new \a adjBlock_ array will contain pointers to
+         * the same adjacent blocks as the original.  That is, adjacent
+         * blocks will not be cloned also; instead pointers to adjacent
+         * blocks will simply be copied across.
+         *
+         * @param cloneMe the saturated block to clone.
+         */
+        SatBlock(const SatBlock& cloneMe);
+
+        /**
+         * Returns a newly created clone of this saturated block structure.
+         * A clone of the correct subclass of SatBlock will be returned.
+         * For this reason, each subclass of SatBlock must implement this
+         * routine.
+         *
+         * @return a new clone of this block.
+         */
+        virtual SatBlock* clone() const = 0;
+
+        /**
+         * Determines whether the given tetrahedron is contained within the
+         * given list.
+         *
+         * This is intended as a helper routine for isBlock() and
+         * related routines.
+         *
+         * @param t the tetrahedron to search for.
+         * @param list the list in which to search.
+         * @return \c true if and only if the given tetrahedron was found.
+         */
+        static bool isBad(const Tetrahedron<3>* t, const TetList& list);
+        /**
+         * Determines whether the given tetrahedron is contained within
+         * the given list.
+         *
+         * This is intended as a helper routine for isBlock() and
+         * related routines.  It is a generic routine for working with
+         * arbitrary list types.
+         *
+         * \pre Forward iterators of type <tt>List::const_iterator</tt>
+         * that span the given list can be obtained by calling
+         * <tt>list.begin()</tt> and <tt>list.end()</tt>.
+         *
+         * @param t the tetrahedron to search for.
+         * @param list the list in which to search.
+         * @return \c true if and only if the given tetrahedron was found.
+         */
+        template <class List>
+        static bool isBad(const Tetrahedron<3>* t, const List& list) {
+            for (const Tetrahedron<3>* tet : list)
+                if (tet == t)
+                    return true;
+            return false;
+        }
+
+        /**
+         * Determines whether the given tetrahedron pointer is null.
+         *
+         * This is intended as a helper routine for isBlock() and
+         * related routines.  Despite its trivial implementation, it is
+         * provided to make long blocks of code easier to read and
+         * distinguish by functionality.
+         *
+         * The name notUnique() may seem strang for what is essentially
+         * a nullity test; in fact this routine is offered as a
+         * degenerate case of other variants of notUnique() that take
+         * more tetrahedra as arguments.
+         *
+         * @param test the tetrahedron pointer to test.
+         * @return \c true if \a test is null, or \c false otherwise.
+         */
+        static bool notUnique(const Tetrahedron<3>* test);
+        /**
+         * Determines whether the given tetrahedron pointer is null
+         * or equal to another from the given list.
+         *
+         * This is intended as a helper routine for isBlock() and
+         * related routines.  Despite its trivial implementation, it is
+         * provided to make long blocks of code easier to read and
+         * distinguish by functionality.
+         *
+         * @param test the tetrahedron pointer to test.
+         * @param other1 another tetrahedron that will be compared with \a test.
+         * @return \c true if \a test is null or equal to \a other1,
+         * or \c false otherwise.
+         */
+        static bool notUnique(const Tetrahedron<3>* test,
+            const Tetrahedron<3>* other1);
+        /**
+         * Determines whether the given tetrahedron pointer is null
+         * or equal to another from the given list.
+         *
+         * This is intended as a helper routine for isBlock() and
+         * related routines.  Despite its trivial implementation, it is
+         * provided to make long blocks of code easier to read and
+         * distinguish by functionality.
+         *
+         * @param test the tetrahedron pointer to test.
+         * @param other1 another tetrahedron that will be compared with \a test.
+         * @param other2 another tetrahedron that will be compared with \a test.
+         * @return \c true if \a test is null or equal to \a other1 or
+         * \a other2, or \c false otherwise.
+         */
+        static bool notUnique(const Tetrahedron<3>* test,
+            const Tetrahedron<3>* other1, const Tetrahedron<3>* other2);
+        /**
+         * Determines whether the given tetrahedron pointer is null
+         * or equal to another from the given list.
+         *
+         * This is intended as a helper routine for isBlock() and
+         * related routines.  Despite its trivial implementation, it is
+         * provided to make long blocks of code easier to read and
+         * distinguish by functionality.
+         *
+         * @param test the tetrahedron pointer to test.
+         * @param other1 another tetrahedron that will be compared with \a test.
+         * @param other2 another tetrahedron that will be compared with \a test.
+         * @param other3 another tetrahedron that will be compared with \a test.
+         * @return \c true if \a test is null or equal to \a other1,
+         * \a other2 or \a other3, or \c false otherwise.
+         */
+        static bool notUnique(const Tetrahedron<3>* test,
+            const Tetrahedron<3>* other1, const Tetrahedron<3>* other2,
+            const Tetrahedron<3>* other3);
+        /**
+         * Determines whether the given tetrahedron pointer is null
+         * or equal to another from the given list.
+         *
+         * This is intended as a helper routine for isBlock() and
+         * related routines.  Despite its trivial implementation, it is
+         * provided to make long blocks of code easier to read and
+         * distinguish by functionality.
+         *
+         * @param test the tetrahedron pointer to test.
+         * @param other1 another tetrahedron that will be compared with \a test.
+         * @param other2 another tetrahedron that will be compared with \a test.
+         * @param other3 another tetrahedron that will be compared with \a test.
+         * @param other4 another tetrahedron that will be compared with \a test.
+         * @return \c true if \a test is null or equal to \a other1,
+         * \a other2, \a other3 or \a other4, or \c false otherwise.
+         */
+        static bool notUnique(const Tetrahedron<3>* test,
+            const Tetrahedron<3>* other1, const Tetrahedron<3>* other2,
+            const Tetrahedron<3>* other3, const Tetrahedron<3>* other4);
+
+        /**
+         * Returns a new model that combines this block structure with
+         * the given triangulation.  The new model will take ownership of
+         * both this block and the given triangulation.
+         *
+         * The purpose of this routine is, essentially, to give subclasses
+         * access to the private SatBlockModel constructor (which SatBlock
+         * can access as a friend class, but which subclasses cannot).
+         *
+         * @param triangulation an explicit triangulation of this block
+         * structure.
+         * @return a model that holds this block and the given triangulation.
+         */
+        SatBlockModel modelWith(Triangulation<3>* triangulation);
+
+        /**
          * Adjusts the structure of this block according to the given
          * isomorphism between triangulations.  Any triangulation-specific
          * information will be transformed accordingly (for instance, the
@@ -375,353 +686,151 @@ class SatBlock : public Output<SatBlock> {
          * @param newTri the triangulation to be used by the updated
          * block structure.
          */
-        virtual void transform(const Triangulation<3>* originalTri,
-                const Isomorphism<3>* iso, Triangulation<3>* newTri);
+        virtual void transform(const Triangulation<3>& originalTri,
+                const Isomorphism<3>& iso, const Triangulation<3>& newTri);
 
+    private:
         /**
-         * Finds the next (or previous) boundary annulus around from this,
-         * treating all adjacent blocks as part of a single large saturated
-         * region.
+         * Lists the given saturated block as being adjacent to the
+         * given boundary annulus of this block.  Both block structures
+         * (this and the given block) will be updated.
          *
-         * Suppose that all saturated blocks are merged together according
-         * to adjacent boundary annuli, forming larger saturated structures.
-         * The remaining annuli that do not have adjacent blocks will
-         * group together to form several large boundary rings.  Note that
-         * each boundary ring might involve annuli from several
-         * different blocks, and might or might not have a twist (thus
-         * forming a large Klein bottle instead of a large torus).
-         *
-         * This routine is used to trace around such a boundary ring.  It is
-         * assumed that annulus \a thisAnnulus of this block forms part
-         * of a boundary ring (i.e., it has no adjacent block).  This
-         * routine will then return the next/previous annulus around from
-         * this in the large boundary ring.  Here "next" means in the direction
-         * following from the second triangle of this annulus, and
-         * "previous" means in the direction following from the first triangle;
-         * the boolean argument \a followPrev controls which we will be used.
-         * This next/previous annulus might belong to another block, or it
-         * might even be this original annulus again.
-         *
-         * The next/previous annulus itself is not returned, but rather a
-         * reference as to how it appears within its enclosing saturated block.
-         * Specifically, a block and corresponding annulus number will be
-         * returned in the arguments \a nextBlock and \a nextAnnulus
-         * respectively.
-         *
-         * It is possible that the next/previous annulus as it appears within
-         * the returned block is oriented differently from how it appears
-         * within this large boundary ring.  For this reason, two
-         * booleans are returned also.  The argument \a refVert will
-         * describe whether the annulus is reflected vertically as it
-         * appears within the large boundary ring (i.e., the first and
-         * second triangles remain the same but the fibre direction is
-         * reversed).  Similarly, the argument \a refHoriz will describe
-         * whether the annulus is reflected horizontally as it appears
-         * within the large boundary ring (i.e., first and second triangles
-         * are switched but the fibre direction is unchanged).
-         *
-         * It is possible that both a horizontal and vertical reflection
-         * take place.  Note that any kind of reflection will also
-         * affect the locations of the 0/1/2 markings as described in
-         * the SatAnnulus class notes.
-         *
-         * Finally, note that if the large boundary ring is twisted
-         * (i.e., it forms a Klein bottle), then following the entire
-         * boundary ring around using this routine will bring you back to
-         * the starting annulus but with the \a refVert flag set.
-         *
-         * \pre Annulus \a thisAnnulus of this block has no block
-         * adjacent to it.
-         *
-         * \warning If you wish to trace around an entire boundary
-         * ring, you will need to adjust the argument \a followPrev
-         * according to whether or not the current annulus
-         * is reflected horizontally (since, under a horizontal
-         * reflection, "next" becomes "previous" and vice versa).
-         *
-         * \ifacespython This routine only takes two arguments (\a thisAnnulus
-         * and \a followPrev). The return value is a tuple of four
-         * values: the block returned in \a nextBlock, the integer
-         * returned in \a nextAnnulus, the boolean returned in \a refVert,
-         * and the boolean returned in \a refHoriz.
-         *
-         * @param thisAnnulus describes which original boundary annulus of
-         * this block to examine; this must be between 0 and nAnnuli()-1
+         * @param whichAnnulus indicates which boundary annulus of this block
+         * has the new adjacency; this must be between 0 and countAnnuli()-1
          * inclusive.
-         * @param nextBlock a reference used to return the block
-         * containing the next boundary annulus around from \a thisAnnulus.
-         * @param nextAnnulus a reference used to return the specific
-         * annulus number within \a nextBlock of the next annulus
-         * around; this will be between 0 and \a nextBlock->nAnnuli()-1
-         * inclusive, and the corresponding annulus will have no block
-         * adjacent to it.
-         * @param refVert a reference used to return \c true if the next
-         * annulus around is vertically reflected, or \c false if not;
-         * see above for details.
-         * @param refHoriz a reference used to return \c true if the next
-         * annulus around is horizontally reflected, or \c false if not;
-         * see above for details.
-         * @param followPrev \c true if we should find the previous boundary
-         * annulus, or \c false if we should find the next boundary annulus.
+         * @param adjBlock the other saturated block that is adjacent to
+         * this.
+         * @param adjAnnulus indicates which boundary annulus of the
+         * adjacent block meets the given boundary annulus of this block;
+         * this must be between 0 and adjBlock->countAnnuli()-1 inclusive.
+         * @param adjReflected indicates whether the new adjacency is
+         * reflected (see the class notes for details).
+         * @param adjBackwards indicates whether the new adjacency is
+         * backwards (see the class notes for details).
          */
-        void nextBoundaryAnnulus(unsigned thisAnnulus, SatBlock*& nextBlock,
-                unsigned& nextAnnulus, bool& refVert, bool& refHoriz,
-                bool followPrev);
+        void setAdjacent(unsigned whichAnnulus, SatBlock* adjBlock,
+                unsigned adjAnnulus, bool adjReflected, bool adjBackwards);
 
-        /**
-         * Returns an abbreviated name or symbol for this block.
-         * This name will reflect the particular block type, but may not
-         * provide thorough details.
-         *
-         * The name will be no more than a handful of characters long, and
-         * will not include a newline (or surrounding dollar signs in TeX
-         * mode).
-         *
-         * @param tex \c true if the name should be formatted for TeX,
-         * or \c false if it should be in plain text format.
-         * @return an abbreviated name for this block.
-         */
-        std::string abbr(bool tex = false) const;
-
-        /**
-         * Writes an abbreviated name or symbol for this block to the
-         * given output stream.  This name should reflect the particular
-         * block type, but need not provide thorough details.
-         *
-         * The output should be no more than a handful of characters long,
-         * and no newline should be written.  In TeX mode, no leading or
-         * trailing dollar signs should be written.
-         *
-         * \ifacespython The parameter \a out does not exist; standard
-         * output will be used.
-         *
-         * @param out the output stream to which to write.
-         * @param tex \c true if the output should be formatted for TeX,
-         * or \c false if it should be in plain text format.
-         */
-        virtual void writeAbbr(std::ostream& out, bool tex = false) const = 0;
-
-        /**
-         * Implements a consistent ordering of saturated blocks.
-         * This ordering is purely aesthetic on the part of the author,
-         * and is subject to change in future versions of Regina.
-         *
-         * @param compare the saturated block with which this will be
-         * compared.
-         * @return \c true if this block comes before the given block
-         * according to the ordering of saturated blocks, or \c false
-         * if either the blocks are identical or this block comes after
-         * the given block.
-         */
-        bool operator < (const SatBlock& compare) const;
-
-        /**
-         * Determines whether the given annulus is in fact a boundary
-         * annulus for a recognised type of saturated block.  The
-         * annulus should be represented from the inside of the proposed
-         * saturated block.
-         *
-         * Only certain types of saturated block are recognised by this
-         * routine.  More exotic saturated blocks will not be identified,
-         * and this routine will return \c null in such cases.
-         *
-         * The given list of tetrahedra will not be examined by this
-         * routine.  That is, only saturated blocks that do not contain
-         * any of these tetrahedra will be considered.  As a consequence,
-         * if the given annulus uses any of these tetrahedra then \c null
-         * will be returned.
-         *
-         * If a block is found on the other hand, all of the tetrahedra
-         * within this block will be added to the given list.
-         *
-         * In the event that a block is found, it is guaranteed that the
-         * given annulus will be listed as annulus number 0 in the block
-         * structure, without any horizontal or vertical reflection.
-         *
-         * \ifacespython The second argument \a avoidTets is not
-         * present.  An empty list will be passed instead.
-         *
-         * @param annulus the proposed boundary annulus that should form
-         * part of the new saturated block.
-         * @param avoidTets the list of tetrahedra that should not be
-         * considered, and to which any new tetrahedra will be added.
-         * @return details of the saturated block if one was found, or
-         * \c null if none was found.
-         */
-        static SatBlock* isBlock(const SatAnnulus& annulus,
-            TetList& avoidTets);
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * This must be implemented by subclasses.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-         virtual void writeTextShort(std::ostream& out) const = 0;
-
-         /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * This may be reimplemented by subclasses, but the parent
-         * SatBlock class offers a reasonable default implementation.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-         virtual void writeTextLong(std::ostream& out) const;
-
-         // Mark this class as non-assignable.
-         SatBlock& operator = (const SatBlock&) = delete;
-
-    protected:
-        /**
-         * Constructor for a block with the given number of annuli on
-         * the boundary.
-         *
-         * All arrays will be constructed but their contents will remain
-         * uninitialised, with the exception that the \a adjBlock array
-         * will be filled with null pointers.
-         *
-         * @param nAnnuli the number of annuli on the boundary of this
-         * block; this must be strictly positive.
-         * @param twistedBoundary \c true if the ring of boundary annuli
-         * is twisted to form a long Mobius band, or \c false (the default)
-         * if it is not.
-         */
-        SatBlock(unsigned nAnnuli, bool twistedBoundary = false);
-
-        /**
-         * Determines whether the given tetrahedron is contained within the
-         * given list.
-         *
-         * This is intended as a helper routine for isBlock() and
-         * related routines.
-         *
-         * @param t the tetrahedron to search for.
-         * @param list the list in which to search.
-         * @return \c true if and only if the given tetrahedron was found.
-         */
-        static bool isBad(Tetrahedron<3>* t, const TetList& list);
-        /**
-         * Determines whether the given tetrahedron is contained within
-         * the given list.
-         *
-         * This is intended as a helper routine for isBlock() and
-         * related routines.  It is a generic routine for working with
-         * arbitrary list types.
-         *
-         * \pre Forward iterators of type <tt>List::const_iterator</tt>
-         * that span the given list can be obtained by calling
-         * <tt>list.begin()</tt> and <tt>list.end()</tt>.
-         *
-         * @param t the tetrahedron to search for.
-         * @param list the list in which to search.
-         * @return \c true if and only if the given tetrahedron was found.
-         */
-        template <class List>
-        static bool isBad(Tetrahedron<3>* t, const List& list) {
-            for (typename List::const_iterator it = list.begin();
-                    it != list.end(); ++it)
-                if (*it == t)
-                    return true;
-            return false;
-        }
-
-        /**
-         * Determines whether the given tetrahedron pointer is null.
-         *
-         * This is intended as a helper routine for isBlock() and
-         * related routines.  Despite its trivial implementation, it is
-         * provided to make long blocks of code easier to read and
-         * distinguish by functionality.
-         *
-         * The name notUnique() may seem strang for what is essentially
-         * a nullity test; in fact this routine is offered as a
-         * degenerate case of other variants of notUnique() that take
-         * more tetrahedra as arguments.
-         *
-         * @param test the tetrahedron pointer to test.
-         * @return \c true if \a test is null, or \c false otherwise.
-         */
-        static bool notUnique(Tetrahedron<3>* test);
-        /**
-         * Determines whether the given tetrahedron pointer is null
-         * or equal to another from the given list.
-         *
-         * This is intended as a helper routine for isBlock() and
-         * related routines.  Despite its trivial implementation, it is
-         * provided to make long blocks of code easier to read and
-         * distinguish by functionality.
-         *
-         * @param test the tetrahedron pointer to test.
-         * @param other1 another tetrahedron that will be compared with \a test.
-         * @return \c true if \a test is null or equal to \a other1,
-         * or \c false otherwise.
-         */
-        static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1);
-        /**
-         * Determines whether the given tetrahedron pointer is null
-         * or equal to another from the given list.
-         *
-         * This is intended as a helper routine for isBlock() and
-         * related routines.  Despite its trivial implementation, it is
-         * provided to make long blocks of code easier to read and
-         * distinguish by functionality.
-         *
-         * @param test the tetrahedron pointer to test.
-         * @param other1 another tetrahedron that will be compared with \a test.
-         * @param other2 another tetrahedron that will be compared with \a test.
-         * @return \c true if \a test is null or equal to \a other1 or
-         * \a other2, or \c false otherwise.
-         */
-        static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
-            Tetrahedron<3>* other2);
-        /**
-         * Determines whether the given tetrahedron pointer is null
-         * or equal to another from the given list.
-         *
-         * This is intended as a helper routine for isBlock() and
-         * related routines.  Despite its trivial implementation, it is
-         * provided to make long blocks of code easier to read and
-         * distinguish by functionality.
-         *
-         * @param test the tetrahedron pointer to test.
-         * @param other1 another tetrahedron that will be compared with \a test.
-         * @param other2 another tetrahedron that will be compared with \a test.
-         * @param other3 another tetrahedron that will be compared with \a test.
-         * @return \c true if \a test is null or equal to \a other1,
-         * \a other2 or \a other3, or \c false otherwise.
-         */
-        static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
-            Tetrahedron<3>* other2, Tetrahedron<3>* other3);
-        /**
-         * Determines whether the given tetrahedron pointer is null
-         * or equal to another from the given list.
-         *
-         * This is intended as a helper routine for isBlock() and
-         * related routines.  Despite its trivial implementation, it is
-         * provided to make long blocks of code easier to read and
-         * distinguish by functionality.
-         *
-         * @param test the tetrahedron pointer to test.
-         * @param other1 another tetrahedron that will be compared with \a test.
-         * @param other2 another tetrahedron that will be compared with \a test.
-         * @param other3 another tetrahedron that will be compared with \a test.
-         * @param other4 another tetrahedron that will be compared with \a test.
-         * @return \c true if \a test is null or equal to \a other1,
-         * \a other2, \a other3 or \a other4, or \c false otherwise.
-         */
-        static bool notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
-            Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4);
+    // The following classes are the only classes that are allowed to
+    // manage a raw SatBlock pointer:
+    friend class SatBlockModel;
+    friend class SatRegion;
 };
 
-/*@}*/
+/**
+ * Contains an explicit triangulation of a saturated block along with the
+ * accompanying saturated block description.
+ *
+ * This class is designed to work with SatRegion::findStarterBlock(),
+ * which uses such models as potential starting points for its search.
+ * The ultimate aim here is to identify regions within triangulations that are
+ * formed by joining saturated blocks together along their boundary annuli.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * you cannot create generate your own models manually (aside from copying or
+ * moving); instead you will need to use block-specific factory routines
+ * such as SatTriPrism::model(), SatCube::model(), and so on.
+ *
+ * \ingroup subcomplex
+ */
+class SatBlockModel {
+    private:
+        Triangulation<3>* triangulation_;
+            /**< The triangulation of the saturated block. */
+        SatBlock* block_;
+            /**< Structural details of the saturated block. */
+
+    public:
+        /**
+         * Creates a new copy of the given model.
+         * This will induce a deep copy of both the triangulation and the
+         * block structure.
+         *
+         * @param src the model to copy.
+         */
+        SatBlockModel(const SatBlockModel& src);
+
+        /**
+         * Moves the contents of the given model into this new model.
+         * This is a fast (constant time) operation.
+         *
+         * The model that was passed (\a src) will no longer be usable.
+         *
+         * @param src the model whose contents should be moved.
+         */
+        SatBlockModel(SatBlockModel&& src) noexcept;
+
+        /**
+         * Destroys both the internal triangulation and block structure.
+         */
+        ~SatBlockModel();
+
+        /**
+         * Sets this to be a copy of the given model.
+         * This will induce a deep copy of both the triangulation and the
+         * block structure.
+         *
+         * @param src the model to copy.
+         * @return a reference to this model.
+         */
+        SatBlockModel& operator = (const SatBlockModel& src);
+
+        /**
+         * Moves the contents of the given model into this model.
+         * This is a fast (constant time) operation.
+         *
+         * The model that was passed (\a src) will no longer be usable.
+         *
+         * @param src the model whose contents should be moved.
+         * @return a reference to this model.
+         */
+        SatBlockModel& operator = (SatBlockModel&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given model.
+         *
+         * @param other the model whose contents should be swapped with this.
+         */
+        void swap(SatBlockModel& other) noexcept;
+
+        /**
+         * Returns the triangulation of the saturated block.
+         *
+         * @return the block triangulation.
+         */
+        const Triangulation<3>& triangulation() const;
+
+        /**
+         * Returns the structure of the saturated block.
+         *
+         * @return the block structure.
+         */
+        const SatBlock& block() const;
+
+    private:
+        /**
+         * Creates a new model filled with the given data.  The model will
+         * take ownership of both the given triangulation and the given block.
+         */
+        SatBlockModel(Triangulation<3>* triangulation, SatBlock* block);
+
+    friend class SatBlock;
+};
+
+/**
+ * Swaps the contents of the two given models.
+ *
+ * This global routine simply calls SatBlockModel::swap(); it is provided
+ * so that SatBlockModel meets the C++ Swappable requirements.
+ *
+ * @param a the first model whose contents should be swapped.
+ * @param b the second model whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(SatBlockModel& a, SatBlockModel& b) noexcept;
 
 // Inline functions for SatBlock
 
@@ -734,7 +843,7 @@ inline SatBlock::SatBlock(unsigned nAnnuli, bool twistedBoundary) :
         adjReflected_(new bool[nAnnuli]),
         adjBackwards_(new bool[nAnnuli]) {
     for (unsigned i = 0; i < nAnnuli; i++)
-        adjBlock_[i] = 0;
+        adjBlock_[i] = nullptr;
 }
 
 inline SatBlock::~SatBlock() {
@@ -750,6 +859,10 @@ inline void SatBlock::writeTextLong(std::ostream& out) const {
     out << '\n';
 }
 
+inline unsigned SatBlock::countAnnuli() const {
+    return nAnnuli_;
+}
+
 inline unsigned SatBlock::nAnnuli() const {
     return nAnnuli_;
 }
@@ -763,7 +876,7 @@ inline bool SatBlock::twistedBoundary() const {
 }
 
 inline bool SatBlock::hasAdjacentBlock(unsigned whichAnnulus) const {
-    return (adjBlock_[whichAnnulus] != 0);
+    return (adjBlock_[whichAnnulus] != nullptr);
 }
 
 inline SatBlock* SatBlock::adjacentBlock(unsigned whichAnnulus) const {
@@ -795,28 +908,92 @@ inline void SatBlock::setAdjacent(unsigned whichAnnulus, SatBlock* adjBlock,
     adjBlock->adjBackwards_[adjAnnulus] = adjBackwards;
 }
 
-inline bool SatBlock::notUnique(Tetrahedron<3>* test) {
-    return (test == 0);
+inline bool SatBlock::notUnique(const Tetrahedron<3>* test) {
+    return (test == nullptr);
 }
 
-inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1) {
-    return (test == 0 || test == other1);
+inline bool SatBlock::notUnique(const Tetrahedron<3>* test,
+        const Tetrahedron<3>* other1) {
+    return (test == nullptr || test == other1);
 }
 
-inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
-        Tetrahedron<3>* other2) {
-    return (test == 0 || test == other1 || test == other2);
+inline bool SatBlock::notUnique(const Tetrahedron<3>* test,
+        const Tetrahedron<3>* other1, const Tetrahedron<3>* other2) {
+    return (test == nullptr || test == other1 || test == other2);
 }
 
-inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
-        Tetrahedron<3>* other2, Tetrahedron<3>* other3) {
-    return (test == 0 || test == other1 || test == other2 || test == other3);
+inline bool SatBlock::notUnique(const Tetrahedron<3>* test,
+        const Tetrahedron<3>* other1, const Tetrahedron<3>* other2,
+        const Tetrahedron<3>* other3) {
+    return (test == nullptr || test == other1 || test == other2 ||
+        test == other3);
 }
 
-inline bool SatBlock::notUnique(Tetrahedron<3>* test, Tetrahedron<3>* other1,
-        Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4) {
-    return (test == 0 || test == other1 || test == other2 || test == other3 ||
-        test == other4);
+inline bool SatBlock::notUnique(const Tetrahedron<3>* test,
+        const Tetrahedron<3>* other1, const Tetrahedron<3>* other2,
+        const Tetrahedron<3>* other3, const Tetrahedron<3>* other4) {
+    return (test == nullptr || test == other1 || test == other2 ||
+        test == other3 || test == other4);
+}
+
+inline SatBlockModel SatBlock::modelWith(Triangulation<3>* triangulation) {
+    return SatBlockModel(triangulation, this);
+}
+
+// Inline functions for SatBlockModel
+
+inline SatBlockModel::SatBlockModel(Triangulation<3>* triangulation,
+        SatBlock* block) : triangulation_(triangulation), block_(block) {
+}
+
+inline SatBlockModel::SatBlockModel(const SatBlockModel& src) :
+        triangulation_(new Triangulation<3>(*src.triangulation_)),
+        block_(src.block_->clone()) {
+}
+
+inline SatBlockModel::SatBlockModel(SatBlockModel&& src) noexcept :
+        triangulation_(src.triangulation_), block_(src.block_) {
+    src.triangulation_ = nullptr;
+    src.block_ = nullptr;
+}
+
+inline SatBlockModel::~SatBlockModel() {
+    delete triangulation_;
+    delete block_;
+}
+
+inline SatBlockModel& SatBlockModel::operator = (const SatBlockModel& src) {
+    if (std::addressof(src) != this) {
+        delete triangulation_;
+        delete block_;
+        triangulation_ = new Triangulation<3>(*src.triangulation_);
+        block_ = src.block_->clone();
+    }
+    return *this;
+}
+
+inline SatBlockModel& SatBlockModel::operator = (SatBlockModel&& src) noexcept {
+    std::swap(triangulation_, src.triangulation_);
+    std::swap(block_, src.block_);
+    // Let src dispose of the original contents in its own destructor.
+    return *this;
+}
+
+inline void SatBlockModel::swap(SatBlockModel& other) noexcept {
+    std::swap(triangulation_, other.triangulation_);
+    std::swap(block_, other.block_);
+}
+
+inline const Triangulation<3>& SatBlockModel::triangulation() const {
+    return *triangulation_;
+}
+
+inline const SatBlock& SatBlockModel::block() const {
+    return *block_;
+}
+
+inline void swap(SatBlockModel& a, SatBlockModel& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

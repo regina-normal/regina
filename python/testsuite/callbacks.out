@@ -1,32 +1,62 @@
-Poincaré homology sphere -> display, height = 1, threads = 1
+Poincare homology sphere -> display, height = 1, threads = 1
     fvPQcdecedekrsnrs 5
-    gvLQQcdfeeffnjqsspp 6
-Poincaré homology sphere -> display, height = 1, threads = 2
+    gvLQQcdfefefjwawtbi 6
+Poincare homology sphere -> display, height = 1, threads = 2
     fvPQcdecedekrsnrs 5
-    gvLQQcdfeeffnjqsspp 6
-Poincaré homology sphere -> stop after 10, height = 1, threads = 1
+    gvLQQcdfefefjwawtbi 6
+Poincare homology sphere -> stop after 10, height = 1, threads = 1
     search ran to completion, count: 2
-Poincaré homology sphere -> stop after 10, height = 1, threads = 2
+Poincare homology sphere -> stop after 10, height = 1, threads = 2
     search ran to completion, count: 2
-Poincaré homology sphere -> collect, height = 1, threads = 1
+Poincare homology sphere -> collect, height = 1, threads = 1
     fvPQcdecedekrsnrs
-    gvLQQcdfeeffnjqsspp
-Poincaré homology sphere -> collect, height = 1, threads = 2
+    gvLQQcdfefefjwawtbi
+Poincare homology sphere -> collect, height = 1, threads = 2
     fvPQcdecedekrsnrs
-    gvLQQcdfeeffnjqsspp
+    gvLQQcdfefefjwawtbi
+Poincare homology sphere vs Poincare homology sphere -> isomorphisms, stop after 5
+    search terminated early, count: 5
+Poincare homology sphere vs Poincare homology sphere -> subcomplexes, stop after 5
+    search terminated early, count: 5
 
 Weeks manifold -> display, height = 0, threads = 1
-    jLvAMPQadfgghhiiijaqgjqxims 9
+    jvLPLQQefghghifiigaxxhdingk 9
 Weeks manifold -> display, height = 0, threads = 2
-    jLvAMPQadfgghhiiijaqgjqxims 9
+    jvLPLQQefghghifiigaxxhdingk 9
 Weeks manifold -> stop after 10, height = 1, threads = 1
     search terminated early, count: 10
 Weeks manifold -> stop after 10, height = 1, threads = 2
     search terminated early, count: 10
 Weeks manifold -> collect, height = 0, threads = 1
-    jLvAMPQadfgghhiiijaqgjqxims
+    jvLPLQQefghghifiigaxxhdingk
 Weeks manifold -> collect, height = 0, threads = 2
-    jLvAMPQadfgghhiiijaqgjqxims
+    jvLPLQQefghghifiigaxxhdingk
+Weeks manifold vs Weeks manifold -> isomorphisms, display
+0 -> 0 (0123)
+1 -> 1 (0123)
+2 -> 2 (0123)
+3 -> 3 (0123)
+4 -> 4 (0123)
+5 -> 5 (0123)
+6 -> 6 (0123)
+7 -> 7 (0123)
+8 -> 8 (0123)
+
+Weeks manifold vs Weeks manifold -> subcomplexes, display
+0 -> 0 (0123)
+1 -> 1 (0123)
+2 -> 2 (0123)
+3 -> 3 (0123)
+4 -> 4 (0123)
+5 -> 5 (0123)
+6 -> 6 (0123)
+7 -> 7 (0123)
+8 -> 8 (0123)
+
+Weeks manifold vs Weeks manifold -> isomorphisms, stop after 5
+    search ran to completion, count: 1
+Weeks manifold vs Weeks manifold -> subcomplexes, stop after 5
+    search ran to completion, count: 1
 
 Cappell-Shaneson knot complement -> display, height = 0, threads = 1
     cMkabbb+aAa3blb 2
@@ -38,24 +68,57 @@ Cappell-Shaneson knot complement -> stop after 10, height = 2, threads = 2
     search ran to completion, count: 9
 Cappell-Shaneson knot complement -> collect, height = 2, threads = 1
     cMkabbb+aAa3blb
-    eLAQcabcdddd1azayajbVbVbVb
-    eLAQcabcdddd5asbCbRb3b3b3b
-    eLAQcabcdddd5asbCblaObObOb
-    eLAQcabcddddGavb6aia8a8a8a
-    eLMQcbbcdddd0bRb+aPbwawawa
+    eLMQcbbccdddaaaa+axbcbvaGa
+    eLMQcbbccdddaaaa1aHbCbvaYa
+    eLMQcbbccdddaaaa1aHbKavapb
+    eLMQcbbccdddaaaaHbka2avawa
+    eLMQcbbcddddaaaa+aJa2aGava
     eLMQcbbdccddaaaa1bHbibvafb
-    eLMQcbccddddHaJbyaXbPbSava
-    eLMQcbccddddMaobya1bPbRava
+    eLMQcbccddddMaobyayaPbKava
+    eLMQcbccddddObJbxbtb5albva
 Cappell-Shaneson knot complement -> collect, height = 2, threads = 2
     cMkabbb+aAa3blb
-    eLAQcabcdddd1azayajbVbVbVb
-    eLAQcabcdddd5asbCbRb3b3b3b
-    eLAQcabcdddd5asbCblaObObOb
-    eLAQcabcddddGavb6aia8a8a8a
-    eLMQcbbcdddd0bRb+aPbwawawa
+    eLMQcbbccdddaaaa+axbcbvaGa
+    eLMQcbbccdddaaaa1aHbCbvaYa
+    eLMQcbbccdddaaaa1aHbKavapb
+    eLMQcbbccdddaaaaHbka2avawa
+    eLMQcbbcddddaaaa+aJa2aGava
     eLMQcbbdccddaaaa1bHbibvafb
-    eLMQcbccddddHaJbyaXbPbSava
-    eLMQcbccddddMaobya1bPbRava
+    eLMQcbccddddMaobyayaPbKava
+    eLMQcbccddddObJbxbtb5albva
+Cappell-Shaneson knot complement vs Cappell-Shaneson knot complement -> isomorphisms, display
+0 -> 0 (01234)
+1 -> 1 (01234)
+
+0 -> 1 (43210)
+1 -> 0 (43210)
+
+Cappell-Shaneson knot complement vs Cappell-Shaneson knot complement -> subcomplexes, display
+0 -> 0 (01234)
+1 -> 1 (01234)
+
+0 -> 1 (43210)
+1 -> 0 (43210)
+
+Cappell-Shaneson knot complement vs Cappell-Shaneson knot complement -> isomorphisms, stop after 5
+    search ran to completion, count: 2
+Cappell-Shaneson knot complement vs Cappell-Shaneson knot complement -> subcomplexes, stop after 5
+    search ran to completion, count: 2
+
+LST(1,2,3) vs L(8,3) -> isomorphisms, display
+LST(1,2,3) vs L(8,3) -> subcomplexes, display
+0 -> 0 (2310)
+
+0 -> 0 (3201)
+
+0 -> 1 (0123)
+
+0 -> 1 (1032)
+
+LST(1,2,3) vs L(8,3) -> isomorphisms, stop after 5
+    search ran to completion, count: 0
+LST(1,2,3) vs L(8,3) -> subcomplexes, stop after 5
+    search ran to completion, count: 4
 
 Trefoil -> display, height = 0, threads = 1
     dabcabcv- 3
@@ -102,4 +165,351 @@ Trefoil -> all covers, sheets = 4
 Trefoil -> all covers, sheets = 5
     CoverType.cyclic_cover: Z
     CoverType.irregular_cover: Z + Z_3
+
+Enumerating facet pairings:
+    0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 2:1 | 1:2 1:3 2:3 2:2  -> automorphisms:  32
+    0:1 0:0 1:0 2:0 | 0:2 1:2 1:1 2:1 | 0:3 1:3 2:3 2:2  -> automorphisms:  48
+    0:1 0:0 1:0 2:0 | 0:2 2:1 2:2 2:3 | 0:3 1:1 1:2 1:3  -> automorphisms:  24
+    1:0 1:1 2:0 2:1 | 0:0 0:1 2:2 2:3 | 0:2 0:3 1:2 1:3  -> automorphisms:  48
+    0:1 0:0 0:3 0:2 1:0 1:1 | 0:4 0:5 1:3 1:2 1:5 1:4  -> automorphisms:  256
+    0:1 0:0 1:0 1:1 1:2 1:3 | 0:2 0:3 0:4 0:5 1:5 1:4  -> automorphisms:  192
+    1:0 1:1 1:2 1:3 1:4 1:5 | 0:0 0:1 0:2 0:3 0:4 0:5  -> automorphisms:  1440
+
+Enumerating splitting surface signatures:
+    (aabbcc)  -> automorphisms:  6
+    (aabcbc)  -> automorphisms:  2
+    (aabccb)  -> automorphisms:  4
+    (abacbc)  -> automorphisms:  4
+    (abcabc)  -> automorphisms:  6
+    (aabbc)(c)  -> automorphisms:  2
+    (aabcb)(c)  -> automorphisms:  2
+    (ababc)(c)  -> automorphisms:  2
+    (aabc)(bc)  -> automorphisms:  2
+    (aabc)(b)(c)  -> automorphisms:  2
+    (abac)(bc)  -> automorphisms:  4
+    (abac)(b)(c)  -> automorphisms:  4
+    (aab)(bcc)  -> automorphisms:  4
+    (aab)(bc)(c)  -> automorphisms:  2
+    (abc)(abc)  -> automorphisms:  6
+    (abc)(acb)  -> automorphisms:  12
+    (abc)(ab)(c)  -> automorphisms:  2
+    (abc)(a)(b)(c)  -> automorphisms:  6
+    (ab)(ac)(bc)  -> automorphisms:  12
+    (ab)(ac)(b)(c)  -> automorphisms:  4
+
+Enumerating knots:
+    +++-++ ( ^0 ^1 _4 ^5 _2 _0 _3 ^2 _1 ^4 _5 ^3 )
+    ++-+++ ( ^0 ^1 _4 ^5 ^2 _0 ^3 _2 _1 ^4 _5 _3 )
+    +-+--- ( ^0 _1 ^4 _5 _2 _0 _3 ^2 ^1 _4 ^5 ^3 )
+    +--+-- ( ^0 _1 ^4 _5 ^2 _0 ^3 _2 ^1 _4 ^5 _3 )
+
+Finding regions:
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> bdry
+    0/2 --> 2/0
+    1/0 --> 0/0
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/2 (reflected)
+    0/1 --> bdry
+    0/2 --> 0/0 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/2 (reflected)
+    0/1 --> bdry
+    0/2 --> 0/0 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> bdry
+    0/2 --> 2/0
+    1/0 --> 0/0
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> 2/0
+    0/2 --> bdry
+    1/0 --> 0/0
+    2/0 --> 0/1
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/1 (reflected)
+    0/1 --> 0/0 (reflected)
+    0/2 --> bdry
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 1/0
+    0/2 --> 2/0
+    1/0 --> 0/1
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 0/2 (reflected)
+    0/2 --> 0/1 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> 2/0
+    0/2 --> bdry
+    1/0 --> 0/0
+    2/0 --> 0/1
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/1 (reflected)
+    0/1 --> 0/0 (reflected)
+    0/2 --> bdry
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 1/0
+    0/2 --> 2/0
+    1/0 --> 0/1
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 0/2 (reflected)
+    0/2 --> 0/1 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> bdry
+    0/2 --> bdry
+    1/0 --> 0/0
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> bdry
+    0/2 --> 1/0
+    1/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 1/0
+    0/2 --> bdry
+    1/0 --> 0/1
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 1/0
+    0/2 --> bdry
+    1/0 --> 0/1
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> bdry
+    0/2 --> bdry
+    1/0 --> 0/0
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> bdry
+    0/2 --> 1/0
+    1/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/1 (reflected)
+    0/1 --> 0/0 (reflected)
+    0/2 --> bdry
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 0/2 (reflected)
+    0/2 --> 0/1 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 1/0
+    0/2 --> 2/0
+    1/0 --> 0/1
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> 2/0
+    0/2 --> bdry
+    1/0 --> 0/0
+    2/0 --> 0/1
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> 2/0
+    0/2 --> bdry
+    1/0 --> 0/0
+    2/0 --> 0/1
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 1/0
+    0/2 --> 2/0
+    1/0 --> 0/1
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> bdry
+    0/1 --> 0/2 (reflected)
+    0/2 --> 0/1 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/1 (reflected)
+    0/1 --> 0/0 (reflected)
+    0/2 --> bdry
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/2 (reflected)
+    0/1 --> bdry
+    0/2 --> 0/0 (reflected)
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> bdry
+    0/2 --> 2/0
+    1/0 --> 0/0
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+    1. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+    2. Saturated Mobius band, boundary on vertical edge (1 annulus, horiz. reflection)
+  Adjacencies:
+    0/0 --> 1/0
+    0/1 --> bdry
+    0/2 --> 2/0
+    1/0 --> 0/0
+    2/0 --> 0/2
+
+Saturated region:
+  Blocks:
+    0. Saturated triangular prism of major type (3 annuli)
+  Adjacencies:
+    0/0 --> 0/2 (reflected)
+    0/1 --> bdry
+    0/2 --> 0/0 (reflected)
+
+
+Enumerating covers:
+  mLvALvQQQceegjlkjiljklhhahhaaaghahg CoverType.irregular_cover
+  mLvALvQQQceegjlkjiljklhhahhaaaghahg CoverType.irregular_cover
+  mLvwMMMPQbegfijhkkklllhaahbabhhahbg CoverType.cyclic_cover
+  mLvwMMMPQbegfijhkkklllhaahbabhhahbg CoverType.cyclic_cover
+  mvLALPzQQdefeghhjkllklbbabbbbbhhhhb CoverType.cyclic_cover
+  mvLALPzQQdefeghhjkllklbbabbbbbhhhhb CoverType.cyclic_cover
 

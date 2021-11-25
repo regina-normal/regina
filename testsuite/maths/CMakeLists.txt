@@ -16,6 +16,7 @@ SET ( FILES
   perm4.cpp
   perm5.cpp
   perm6.cpp
+  perm7.cpp
   permconv.cpp
   polynomial.cpp
   primes.cpp

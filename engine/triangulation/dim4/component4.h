@@ -51,11 +51,6 @@
 namespace regina {
 
 /**
- * \weakgroup dim4
- * @{
- */
-
-/**
  * Represents a connected component of a 4-manifold triangulation.
  *
  * This is a specialisation of the generic Component class template; see
@@ -65,7 +60,15 @@ namespace regina {
  * In particular, each 4-dimensional component also stores details on
  * lower-dimensional faces (i.e., vertices, edges, triangles and tetrahedra).
  *
+ * Components do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
  * \headerfile triangulation/dim4.h
+ *
+ * \ingroup dim4
  */
 template <>
 class Component<4> : public detail::ComponentBase<4>,
@@ -86,14 +89,42 @@ class Component<4> : public detail::ComponentBase<4>,
 
     public:
         /**
+         * A dimension-specific alias for size().
+         *
+         * See size() for further information.
+         */
+        size_t countPentachora() const;
+
+        /**
+         * A dimension-specific alias for simplices().
+         *
+         * See simplices() for further information.
+         */
+        auto pentachora() const;
+
+        /**
+         * A dimension-specific alias for simplex().
+         *
+         * See simplex() for further information.
+         */
+        Pentachoron<4>* pentachoron(size_t index) const;
+
+        /**
          * Returns the number of <i>subdim</i>-faces in this component.
          *
-         * \pre The template argument \a subdim is between 0 and 3 inclusive.
+         * For convenience, this routine explicitly supports the case
+         * \a subdim = 4.  This is \e not the case for the routines
+         * face() and faces(), which give access to individual faces
+         * (the reason relates to the fact that pentachora are built manually,
+         * whereas lower-dimensional faces are deduced properties).
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
          * <tt>countFaces(subdim)</tt>; that is, the template parameter
          * \a subdim becomes the first argument of the function.
+         *
+         * \tparam subdim the face dimension; this must be between 0 and 4
+         * inclusive.
          *
          * @return the number of <i>subdim</i>-faces.
          */
@@ -125,12 +156,12 @@ class Component<4> : public detail::ComponentBase<4>,
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
-         * \ifacespython Python users should call this function in the
-         * form <tt>faces(subdim)</tt>.  It will then return a Python list
-         * containing all the <i>subdim</i>-faces of the component.
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>faces(subdim)</tt>.
          *
-         * \tparam subdim the dimension of the faces to query.
-         * For 4-dimensional components, this must be between 0 and 3 inclusive.
+         * \tparam subdim the face dimension; this must be between 0 and 3
+         * inclusive.
          *
          * @return access to the list of all <i>subdim</i>-faces.
          */
@@ -143,12 +174,13 @@ class Component<4> : public detail::ComponentBase<4>,
          * Note that the index of a face in the component need
          * not be the index of the same face in the overall triangulation.
          *
-         * \pre The template argument \a subdim is between 0 and 3 inclusive.
-         *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
          * <tt>face(subdim, index)</tt>; that is, the template parameter
          * \a subdim becomes the first argument of the function.
+         *
+         * \tparam subdim the face dimension; this must be between 0 and 3
+         * inclusive.
          *
          * @param index the index of the desired face, ranging from 0 to
          * countFaces<subdim>()-1 inclusive.
@@ -156,6 +188,20 @@ class Component<4> : public detail::ComponentBase<4>,
          */
         template <int subdim>
         Face<4, subdim>* face(size_t index) const;
+
+        /**
+         * A dimension-specific alias for hasBoundaryFacets().
+         *
+         * See hasBoundaryFacets() for further information.
+         */
+        bool hasBoundaryTetrahedra() const;
+
+        /**
+         * A dimension-specific alias for countBoundaryFacets().
+         *
+         * See countBoundaryFacets() for further information.
+         */
+        size_t countBoundaryTetrahedra() const;
 
         /**
          * Determines if this component is ideal.
@@ -191,14 +237,29 @@ class Component<4> : public detail::ComponentBase<4>,
         /**< Allow access to private members. */
 };
 
-/*@}*/
-
 // Inline functions for Component<4>
 
 inline Component<4>::Component() : detail::ComponentBase<4>(), ideal_(false) {
 }
 
+inline size_t Component<4>::countPentachora() const {
+    return size();
+}
+
+inline auto Component<4>::pentachora() const {
+    return simplices();
+}
+
+inline Pentachoron<4>* Component<4>::pentachoron(size_t index) const {
+    return simplex(index);
+}
+
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
+
+template <>
+inline size_t Component<4>::countFaces<4>() const {
+    return size();
+}
 
 template <>
 inline size_t Component<4>::countFaces<3>() const {
@@ -261,6 +322,14 @@ inline Vertex<4>* Component<4>::face<0>(size_t index) const {
 }
 
 #endif // __DOXYGEN
+
+inline bool Component<4>::hasBoundaryTetrahedra() const {
+    return hasBoundaryFacets();
+}
+
+inline size_t Component<4>::countBoundaryTetrahedra() const {
+    return countBoundaryFacets();
+}
 
 inline bool Component<4>::isIdeal() const {
     return ideal_;

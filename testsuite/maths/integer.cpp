@@ -33,6 +33,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/integer.h"
+#include "utilities/exception.h"
 #include "testsuite/utilities/testutilities.h"
 
 using regina::IntegerBase;
@@ -214,7 +215,7 @@ class IntegerTest : public CppUnit::TestFixture {
             return ans;
         }
 
-        void setUp() {
+        void setUp() override {
             dataL.setUp();
             dataI.setUp();
 
@@ -227,7 +228,7 @@ class IntegerTest : public CppUnit::TestFixture {
             sULongMax = str(ULONG_MAX);
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         template <typename IntType>
@@ -446,6 +447,10 @@ class IntegerTest : public CppUnit::TestFixture {
                 w = x;
                 testLarge(w, "Large = from large", value, sign, false);
 
+                // Test self-assignment.
+                w = w;
+                testLarge(w, "Large = from self", value, sign, false);
+
                 // Test raw GMP assignment.
                 IntType v(5);
                 v.setRaw(y.rawData());
@@ -481,6 +486,12 @@ class IntegerTest : public CppUnit::TestFixture {
             if (x.longValue() != value) {
                 std::ostringstream msg;
                 msg << name << " != " << value << " as a long.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (x.safeLongValue() != value) {
+                std::ostringstream msg;
+                msg << name << " != " << value << " via safeLongValue().";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -599,7 +610,6 @@ class IntegerTest : public CppUnit::TestFixture {
         template <typename IntType>
         void testStringNative(const std::string& s, int base,
                 long value, int sign) {
-            bool valid;
             std::string str;
             for (int i = 0; i < 4; ++i) {
                 if (i < 2)
@@ -615,12 +625,7 @@ class IntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C string \"" << str << "\"";
-                    IntType x(str.c_str(), base, &valid);
-                    if (! valid) {
-                        std::ostringstream msg;
-                        msg << name.str() << " is not valid.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    IntType x(str.c_str(), base);
                     if (base > 0 && x.stringValue(base) != s) {
                         std::ostringstream msg;
                         msg << name.str() << " has incorrect stringValue(base).";
@@ -631,12 +636,7 @@ class IntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C++ string \"" << str << "\"";
-                    IntType x(str, base, &valid);
-                    if (! valid) {
-                        std::ostringstream msg;
-                        msg << name.str() << " is not valid.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    IntType x(str, base);
                     if (base > 0 && x.stringValue(base) != s) {
                         std::ostringstream msg;
                         msg << name.str() << " has incorrect stringValue(base).";
@@ -669,27 +669,30 @@ class IntegerTest : public CppUnit::TestFixture {
             // Try strings with errors.
             {
                 str = s + "!";
-                IntType x(str.c_str(), base, &valid);
-                if (valid) {
+                try {
+                    IntType x(str.c_str(), base);
+
                     std::ostringstream msg;
                     msg << "C string \"" << str << "\" should be invalid.";
                     CPPUNIT_FAIL(msg.str());
+                } catch (regina::InvalidArgument&) {
                 }
             }
             {
                 str = s + "!";
-                IntType x(str, base, &valid);
-                if (valid) {
+                try {
+                    IntType x(str, base);
+
                     std::ostringstream msg;
                     msg << "C++ string \"" << str << "\" should be invalid.";
                     CPPUNIT_FAIL(msg.str());
+                } catch (regina::InvalidArgument&) {
                 }
             }
         }
 
         template <typename IntType>
         void testStringLarge(const std::string& s, int sign) {
-            bool valid;
             std::string str;
             for (int i = 0; i < 4; ++i) {
                 if (i < 2)
@@ -705,23 +708,13 @@ class IntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C string \"" << str << "\"";
-                    IntType x(str.c_str(), 10, &valid);
-                    if (! valid) {
-                        std::ostringstream msg;
-                        msg << name.str() << " is not valid.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    IntType x(str.c_str(), 10);
                     testLarge(x, name.str().c_str(), s, sign);
                 }
                 {
                     std::ostringstream name;
                     name << "C++ string \"" << str << "\"";
-                    IntType x(str, 10, &valid);
-                    if (! valid) {
-                        std::ostringstream msg;
-                        msg << name.str() << " is not valid.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    IntType x(str, 10);
                     testLarge(x, name.str().c_str(), s, sign);
                 }
                 {
@@ -747,20 +740,24 @@ class IntegerTest : public CppUnit::TestFixture {
             // Try strings with errors.
             {
                 str = s + "!";
-                IntType x(str.c_str(), 10, &valid);
-                if (valid) {
+                try {
+                    IntType x(str.c_str(), 10);
+
                     std::ostringstream msg;
                     msg << "C string \"" << str << "\" should be invalid.";
                     CPPUNIT_FAIL(msg.str());
+                } catch (regina::InvalidArgument&) {
                 }
             }
             {
                 str = s + "!";
-                IntType x(str, 10, &valid);
-                if (valid) {
+                try {
+                    IntType x(str, 10);
+
                     std::ostringstream msg;
                     msg << "C++ string \"" << str << "\" should be invalid.";
                     CPPUNIT_FAIL(msg.str());
+                } catch (regina::InvalidArgument&) {
                 }
             }
         }
@@ -768,7 +765,6 @@ class IntegerTest : public CppUnit::TestFixture {
         template <typename IntType>
         void testStringLarge(const std::string& s, int base,
                 const std::string& valueBase10, int sign) {
-            bool valid;
             std::string str;
             for (int i = 0; i < 4; ++i) {
                 if (i < 2)
@@ -784,12 +780,7 @@ class IntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C string \"" << str << "\"";
-                    IntType x(str.c_str(), base, &valid);
-                    if (! valid) {
-                        std::ostringstream msg;
-                        msg << name.str() << " is not valid.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    IntType x(str.c_str(), base);
                     if (base > 0 && x.stringValue(base) != s) {
                         std::ostringstream msg;
                         msg << name.str() << " has incorrect stringValue(base).";
@@ -800,12 +791,7 @@ class IntegerTest : public CppUnit::TestFixture {
                 {
                     std::ostringstream name;
                     name << "C++ string \"" << str << "\"";
-                    IntType x(str, base, &valid);
-                    if (! valid) {
-                        std::ostringstream msg;
-                        msg << name.str() << " is not valid.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    IntType x(str, base);
                     if (base > 0 && x.stringValue(base) != s) {
                         std::ostringstream msg;
                         msg << name.str() << " has incorrect stringValue(base).";
@@ -838,20 +824,24 @@ class IntegerTest : public CppUnit::TestFixture {
             // Try strings with errors.
             {
                 str = s + "!";
-                IntType x(str.c_str(), base, &valid);
-                if (valid) {
+                try {
+                    IntType x(str.c_str(), base);
+
                     std::ostringstream msg;
                     msg << "C string \"" << str << "\" should be invalid.";
                     CPPUNIT_FAIL(msg.str());
+                } catch (regina::InvalidArgument&) {
                 }
             }
             {
                 str = s + "!";
-                IntType x(str, base, &valid);
-                if (valid) {
+                try {
+                    IntType x(str, base);
+
                     std::ostringstream msg;
                     msg << "C++ string \"" << str << "\" should be invalid.";
                     CPPUNIT_FAIL(msg.str());
+                } catch (regina::InvalidArgument&) {
                 }
             }
         }
@@ -950,6 +940,13 @@ class IntegerTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
+            try {
+                x.safeLongValue();
+                CPPUNIT_FAIL("Infinity.safeLongValue() does not throw an "
+                    "exception.");
+            } catch (const regina::NoSolution&) {
+            }
+
             if (testCopy) {
                 // Test the copy constructor and copy assignment here
                 // also.
@@ -985,6 +982,37 @@ class IntegerTest : public CppUnit::TestFixture {
             }
         }
 
+        void testInfinityFrom(const char* str) {
+            std::string cppstr(str);
+
+            {
+                LargeInteger x(str);
+                testInfinity(x, (std::string("Copied infinity: ")
+                    + str).c_str());
+            }
+            {
+                LargeInteger x(cppstr);
+                testInfinity(x, (std::string("Copied std::string infinity: ")
+                    + str).c_str());
+            }
+            {
+                LargeInteger x(5);
+                if (! x.isNative())
+                    CPPUNIT_FAIL("Hard-coded 5 is not native.");
+                x = str;
+                testInfinity(x, (std::string("Assigned infinity: ")
+                    + str).c_str());
+            }
+            {
+                LargeInteger x(5);
+                if (! x.isNative())
+                    CPPUNIT_FAIL("Hard-coded 5 is not native.");
+                x = cppstr;
+                testInfinity(x, (std::string("Assigned std::string infinity: ")
+                    + str).c_str());
+            }
+        }
+
         void constructAssignCopyInfinity() {
             testInfinity(LargeInteger::infinity, "Static infinity");
 
@@ -1005,6 +1033,12 @@ class IntegerTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL("Hard-coded infinity is not infinite.");
             z.makeInfinite();
             testInfinity(z, "inf.makeInfinite()");
+
+            testInfinityFrom("inf");
+            testInfinityFrom("infinity");
+            testInfinityFrom(" \tinf");
+            testInfinityFrom(" \tinfinity! ");
+            testInfinityFrom("  infimum");
         }
 
         template <typename IntType>
@@ -2434,8 +2468,7 @@ class IntegerTest : public CppUnit::TestFixture {
 
         template <typename IntType>
         void testDivisionAlg(const IntType& n, const IntType& divisor) {
-            IntType q, r;
-            q = IntType(n).divisionAlg(divisor, r);
+            auto [q, r] = IntType(n).divisionAlg(divisor);
 
             shouldBeEqual(q * divisor + r, n);
             if (divisor == 0) {
@@ -2587,10 +2620,38 @@ class IntegerTest : public CppUnit::TestFixture {
                     if (! (x.isNative() && y.isNative() && z.isNative()))
                         CPPUNIT_FAIL("Integers are not native after "
                             "tryReduce() even though they are within range.");
+
+                    // Make sure safeLongValue() returns the correct answer.
+                    if (! (d.cases[a] == x.safeLongValue() &&
+                            d.cases[a] == y.safeLongValue() &&
+                            d.cases[a] == z.safeLongValue())) {
+                        CPPUNIT_FAIL("safeLongValue() does not return "
+                            "the correct value for an in-range integer.");
+                    }
                 } else {
                     if (x.isNative() || y.isNative() || z.isNative())
                         CPPUNIT_FAIL("Integers become native after "
                             "tryReduce() even though they are out of range.");
+
+                    // Make sure safeLongValue() throws an exception.
+                    try {
+                        x.safeLongValue();
+                        CPPUNIT_FAIL("safeLongValue() does not throw an "
+                            "exception for an out-of-range integer.");
+                    } catch (const regina::NoSolution&) {
+                    }
+                    try {
+                        y.safeLongValue();
+                        CPPUNIT_FAIL("safeLongValue() does not throw an "
+                            "exception for an out-of-range integer.");
+                    } catch (const regina::NoSolution&) {
+                    }
+                    try {
+                        z.safeLongValue();
+                        CPPUNIT_FAIL("safeLongValue() does not throw an "
+                            "exception for an out-of-range integer.");
+                    } catch (const regina::NoSolution&) {
+                    }
                 }
             }
         }
@@ -2719,9 +2780,8 @@ class IntegerTest : public CppUnit::TestFixture {
                                         shouldBeEqual(x % y, x2 % y2); break;
                                     case 14:
                                         {
-                                            IntType q, r, q2, r2;
-                                            q = x.divisionAlg(y, r);
-                                            q2 = x2.divisionAlg(y2, r2);
+                                            auto [q, r] = x.divisionAlg(y);
+                                            auto [q2, r2] = x2.divisionAlg(y2);
                                             shouldBeEqual(q, q2);
                                             shouldBeEqual(r, r2);
                                         }

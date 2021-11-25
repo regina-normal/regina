@@ -52,9 +52,9 @@ using regina::Packet;
 using regina::SnapPeaTriangulation;
 using regina::Triangulation;
 
-Tri3SnapPeaUI::Tri3SnapPeaUI(regina::Triangulation<3>* packet,
+Tri3SnapPeaUI::Tri3SnapPeaUI(regina::PacketOf<Triangulation<3>>* packet,
         PacketTabbedUI* useParentUI) :
-        PacketViewerTab(useParentUI), reginaTri(packet), snappeaTri(0) {
+        PacketViewerTab(useParentUI), reginaTri(packet), snappeaTri(nullptr) {
     ui = new QStackedWidget();
 
     // Data for a null SnapPea triangulation:
@@ -63,7 +63,7 @@ Tri3SnapPeaUI::Tri3SnapPeaUI(regina::Triangulation<3>* packet,
 
     nullLayout->addStretch(3);
 
-    QLabel* label = new QLabel(tr("<qt><b>SnapPea Calculations</b></qt>"));
+    auto* label = new QLabel(tr("<qt><b>SnapPea Calculations</b></qt>"));
     label->setAlignment(Qt::AlignCenter);
     nullLayout->addWidget(label);
 
@@ -89,7 +89,7 @@ Tri3SnapPeaUI::Tri3SnapPeaUI(regina::Triangulation<3>* packet,
 
     validLayout->addStretch(1);
 
-    QGridLayout* validGrid = new QGridLayout();
+    auto* validGrid = new QGridLayout();
     validGrid->setColumnStretch(0, 1);
     validGrid->setColumnMinimumWidth(2, 5); // Horizontal gap
     validGrid->setColumnStretch(4, 1);
@@ -126,9 +126,9 @@ Tri3SnapPeaUI::Tri3SnapPeaUI(regina::Triangulation<3>* packet,
     label->setAlignment(Qt::AlignCenter);
     validLayout->addWidget(label);
 
-    QBoxLayout* buttonArea = new QHBoxLayout();
+    auto* buttonArea = new QHBoxLayout();
     buttonArea->addStretch(1);
-    QPushButton* btnToSnapPea = new QPushButton(
+    auto* btnToSnapPea = new QPushButton(
         IconCache::icon(IconCache::packet_snappea),
         tr("Convert to a SnapPea triangulation"));
     buttonArea->addWidget(btnToSnapPea);
@@ -179,8 +179,7 @@ void Tri3SnapPeaUI::refresh() {
         solutionTypeLabel->setWhatsThis(expln);
         solutionType->setWhatsThis(expln);
 
-        int places;
-        double ans = snappeaTri->volume(places);
+        auto ans = snappeaTri->volumeWithPrecision();
 
         if (snappeaTri->volumeZero()) {
             // Zero is within the margin of error, and this margin of
@@ -188,10 +187,10 @@ void Tri3SnapPeaUI::refresh() {
             // beneath.
             volume->setText(tr("Possibly zero\n(calculated %1,\n"
                 "est. %2 places accuracy)").
-                arg(ans, 0, 'g', 9).arg(places));
+                arg(ans.first, 0, 'g', 9).arg(ans.second));
         } else {
             volume->setText(tr("%1\n(est. %2 places accuracy)").
-                arg(ans, 0, 'g', 9).arg(places));
+                arg(ans.first, 0, 'g', 9).arg(ans.second));
         }
 
         volume->setEnabled(true);
@@ -206,12 +205,12 @@ void Tri3SnapPeaUI::toSnapPea() {
         return;
     }
 
-    SnapPeaTriangulation* ans = new SnapPeaTriangulation(*snappeaTri);
+    auto ans = regina::makePacket<SnapPeaTriangulation>(std::in_place,
+        *snappeaTri);
     if (ans->isNull()) {
         // This should never happen either...
         ui->setCurrentWidget(dataNull);
         unavailable->refresh();
-        delete ans;
         return;
     }
 

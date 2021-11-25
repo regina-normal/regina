@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  abeliangroup.cpp
   covers.cpp
   grouppresentation.cpp
   )

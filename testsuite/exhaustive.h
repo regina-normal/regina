@@ -37,17 +37,21 @@
 
 /**
  * The functions in this header allow you to run a test over all
- * triangulations from a census.  Each triangulation will have its
- * packet label set to its isomorphic signature (which may be useful for
- * any test failure messages).
+ * triangulations from a census.
  *
  * The \a small parameter indicates that a smaller census should be
  * used; this is appropriate when the corresponding test is extremely slow.
+ *
+ * Each test function takes as arguments a triangulation and its
+ * human-readable name.
  */
 
-typedef void (*Triangulation2TestFunction)(regina::Triangulation<2>*);
-typedef void (*Triangulation3TestFunction)(regina::Triangulation<3>*);
-typedef void (*Triangulation4TestFunction)(regina::Triangulation<4>*);
+using Triangulation2TestFunction = void (*)(const regina::Triangulation<2>&,
+    const char*);
+using Triangulation3TestFunction = void (*)(const regina::Triangulation<3>&,
+    const char*);
+using Triangulation4TestFunction = void (*)(const regina::Triangulation<4>&,
+    const char*);
 
 void runCensusMinClosed(Triangulation3TestFunction f, bool small_ = false);
 void runCensusAllClosed(Triangulation3TestFunction f, bool small_ = false);

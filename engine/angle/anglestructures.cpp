@@ -79,31 +79,72 @@ MatrixInt makeAngleEquations(const Triangulation<3>& tri) {
     return eqns;
 }
 
-void AngleStructures::enumerateInternal(Triangulation<3>& triang,
-        ProgressTracker* tracker) {
-    // Form the matching equations.
-    MatrixInt eqns = regina::makeAngleEquations(triang);
+void AngleStructures::swap(AngleStructures& other) {
+    if (std::addressof(other) == this)
+        return;
 
-    if (tautOnly_ && (! triang.isEmpty())) {
-        // For now just stick to arbitrary precision arithmetic.
-        // TODO: Use native integer types when the angle equation matrix
-        // is sufficiently small / simple.
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
+
+    structures_.swap(other.structures_);
+    triangulation_.swap(other.triangulation_);
+    std::swap(tautOnly_, other.tautOnly_);
+    std::swap(algorithm_, other.algorithm_);
+
+    doesSpanStrict_.swap(other.doesSpanStrict_);
+    doesSpanTaut_.swap(other.doesSpanTaut_);
+}
+
+void AngleStructures::enumerateInternal(ProgressTracker* tracker,
+        Packet* treeParent) {
+    // Form the matching equations.
+    MatrixInt eqns = regina::makeAngleEquations(*triangulation_);
+
+    // Clean up the algorithms flag.
+    algorithm_ &= (AS_ALG_TREE | AS_ALG_DD);
+
+    if (tautOnly_ && (! triangulation_->isEmpty())) {
+        // We can support either algorithm, but tree traversal should be faster.
+        algorithm_.ensureOne(AS_ALG_TREE, AS_ALG_DD);
+
         if (tracker)
             tracker->newStage("Enumerating taut angle structures");
 
-        TautEnumeration<LPConstraintNone, BanNone, Integer> search(triang);
-        while (search.next(tracker)) {
-            structures_.push_back(search.buildStructure());
-            if (tracker && tracker->isCancelled())
-                break;
+        if (algorithm_.has(AS_ALG_TREE)) {
+            // For now just stick to arbitrary precision arithmetic.
+            // TODO: Use native integer types when the angle equation matrix
+            // is sufficiently small / simple.
+            TautEnumeration<LPConstraintNone, BanNone, Integer> search(
+                *triangulation_);
+            while (search.next(tracker)) {
+                structures_.push_back(search.buildStructure());
+                if (tracker && tracker->isCancelled())
+                    break;
+            }
+        } else {
+            // Use the double description method.
+            MatrixInt eqns = regina::makeAngleEquations(*triangulation_);
+
+            ValidityConstraints compat(3, triangulation_->size(), 1);
+            compat.addLocal({ 0, 1, 2 });
+
+            // Find the angle structures.
+            DoubleDescription::enumerate<VectorInt>([this](VectorInt&& v) {
+                    structures_.emplace_back(triangulation_, std::move(v));
+                }, eqns, compat, tracker);
         }
 
-        if (! (tracker && tracker->isCancelled()))
-            triang.insertChildLast(this);
+        if (treeParent && ! (tracker && tracker->isCancelled()))
+            treeParent->insertChildLast(
+                static_cast<PacketOf<AngleStructures>*>(this)->
+                shared_from_this());
 
         if (tracker)
             tracker->setFinished();
     } else {
+        // Use the double description method: it's all we support.
+        algorithm_ = AS_ALG_DD;
+
         // For the empty triangulation, we fall through here regardless
         // of whether we want taut or all vertex angle structures (but
         // either way, the answer is the same - just one empty structure).
@@ -114,61 +155,51 @@ void AngleStructures::enumerateInternal(Triangulation<3>& triang,
             tracker->newStage("Enumerating vertex angle structures");
 
         // Find the angle structures.
-        DoubleDescription::enumerateExtremalRays<VectorInt>(
-            StructureInserter(*this, triang), eqns, nullptr /* constraints */,
-            tracker);
+        DoubleDescription::enumerate<VectorInt>([this](VectorInt&& v) {
+                structures_.emplace_back(triangulation_, std::move(v));
+            }, eqns, ValidityConstraints::none, tracker);
 
         // All done!
-        if (! (tracker && tracker->isCancelled()))
-            triang.insertChildLast(this);
+        if (treeParent && ! (tracker && tracker->isCancelled()))
+            treeParent->insertChildLast(
+                static_cast<PacketOf<AngleStructures>*>(this)->
+                shared_from_this());
 
         if (tracker)
             tracker->setFinished();
     }
 }
 
-AngleStructures* AngleStructures::enumerate(Triangulation<3>& owner,
-        bool tautOnly, ProgressTracker* tracker) {
-    AngleStructures* ans = new AngleStructures(tautOnly);
+std::shared_ptr<PacketOf<AngleStructures>> AngleStructures::enumerate(
+        Triangulation<3>& triangulation, bool tautOnly,
+        ProgressTracker* tracker) {
+    auto ans = makePacket<AngleStructures>(std::in_place, tautOnly,
+        AS_ALG_DEFAULT, triangulation);
+    auto treeParent = triangulation.inAnyPacket();
 
-    if (tracker)
-        std::thread(&AngleStructures::enumerateInternal,
-            ans, std::ref(owner), tracker).detach();
-    else
-        ans->enumerateInternal(owner);
+    if (tracker) {
+        // We pass the shared pointers ans and treeParent into the thread
+        // to ensure that they survive for the lifetime of the thread.
+        std::thread([tracker](
+                // NOLINTNEXTLINE(performance-unnecessary-value-param)
+                std::shared_ptr<AngleStructures> a,
+                // NOLINTNEXTLINE(performance-unnecessary-value-param)
+                std::shared_ptr<Packet> p) {
+            a->enumerateInternal(tracker, p.get());
+        }, ans, std::move(treeParent)).detach();
+    } else
+        ans->enumerateInternal(nullptr, treeParent.get());
     return ans;
 }
 
-AngleStructures* AngleStructures::enumerateTautDD(Triangulation<3>& owner) {
-    AngleStructures* ans = new AngleStructures(true /* taut only */);
+std::shared_ptr<PacketOf<AngleStructures>> AngleStructures::enumerateTautDD(
+        Triangulation<3>& triangulation) {
+    auto ans = makePacket<AngleStructures>(std::in_place, true, AS_ALG_DD,
+        triangulation);
+    auto treeParent = triangulation.inAnyPacket();
 
-    // Form the matching equations.
-    MatrixInt eqns = regina::makeAngleEquations(owner);
-
-    // Form the taut constraints.
-    EnumConstraints* constraints = new EnumConstraints(owner.size());
-
-    unsigned base = 0;
-    for (unsigned c = 0; c < constraints->size(); ++c) {
-        (*constraints)[c].insert((*constraints)[c].end(), base++);
-        (*constraints)[c].insert((*constraints)[c].end(), base++);
-        (*constraints)[c].insert((*constraints)[c].end(), base++);
-    }
-
-    // Find the angle structures.
-    DoubleDescription::enumerateExtremalRays<VectorInt>(
-        StructureInserter(*ans, owner), eqns, constraints,
-        nullptr /* tracker */);
-
-    // All done!
-    owner.insertChildLast(ans);
-
-    delete constraints;
+    ans->enumerateInternal(nullptr /* tracker */, treeParent.get());
     return ans;
-}
-
-const Triangulation<3>& AngleStructures::triangulation() const {
-    return *dynamic_cast<Triangulation<3>*>(parent());
 }
 
 void AngleStructures::writeTextShort(std::ostream& o) const {
@@ -188,37 +219,6 @@ void AngleStructures::writeTextLong(std::ostream& o) const {
     }
 }
 
-void AngleStructures::writeXMLPacketData(std::ostream& out) const {
-    using regina::xml::xmlValueTag;
-
-    // Write the enumeration parameters.
-    out << "  <angleparams tautonly=\"" << (tautOnly_ ? 'T' : 'F') << "\"/>\n";
-
-    // Write the individual structures.
-    for (const AngleStructure& a : structures_)
-        a.writeXMLData(out);
-
-    // Write the properties.
-    if (doesSpanStrict_.has_value())
-        out << "  " << xmlValueTag("spanstrict", *doesSpanStrict_)
-            << '\n';
-    if (doesSpanTaut_.has_value())
-        out << "  " << xmlValueTag("spantaut", *doesSpanTaut_)
-            << '\n';
-}
-
-Packet* AngleStructures::internalClonePacket(Packet* parent) const {
-    AngleStructures* ans = new AngleStructures(tautOnly_);
-    for (const AngleStructure& s : structures_)
-        ans->structures_.push_back(AngleStructure(s,
-            *static_cast<Triangulation<3>*>(parent)));
-
-    ans->doesSpanStrict_ = doesSpanStrict_;
-    ans->doesSpanTaut_ = doesSpanTaut_;
-
-    return ans;
-}
-
 void AngleStructures::calculateSpanStrict() const {
     if (structures_.empty()) {
         doesSpanStrict_ = false;
@@ -232,7 +232,7 @@ void AngleStructures::calculateSpanStrict() const {
     }
 
     // We run into trouble if there's a 0 or pi angle that never changes.
-    Rational* fixedAngles = new Rational[nTets * 3];
+    auto* fixedAngles = new Rational[nTets * 3];
     unsigned long nFixed = 0;
 
     // Get the list of bad unchanging angles from the first structure.

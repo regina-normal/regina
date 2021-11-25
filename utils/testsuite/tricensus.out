@@ -1,0 +1,422 @@
+============================================================
+TEST: tricensus
+--------------------
+An output file must be specified.
+
+Usage: tricensus <output-file>
+  -t, --tetrahedra=<tetrahedra>     Number of tetrahedra.
+  -b, --boundary                    Must have at least one boundary face.
+  -i, --internal                    Must have all faces internal (no boundary
+                                    faces).
+  -B, --bdryfaces=<faces>           Must have fixed number (>= 1) of boundary
+                                    faces.
+  -o, --orientable                  Must be orientable.
+  -n, --nonorientable               Must be non-orientable.
+  -f, --finite                      Must be finite (no ideal vertices).
+  -d, --ideal                       Must have at least one ideal vertex.
+  -m, --minimal                     Ignore obviously non-minimal
+                                    triangulations.
+  -M, --minprime                    Ignore obviously non-minimal, non-prime
+                                    and/or disc-reducible triangulations.
+  -N, --minprimep2                  Ignore obviously non-minimal, non-prime,
+                                    disc-reducible and/or P2-reducible
+                                    triangulations.
+  -h, --minhyp                      Ignore triangulations that are obviously
+                                    not minimal ideal triangulations of cusped
+                                    finite-volume hyperbolic 3-manifolds.
+                                    Implies --internal and --ideal.
+  -2, --dim2                        Run a census of 2-manifold triangulations,
+                                    not 3-manifold triangulations.  Here
+                                    --tetrahedra counts triangles, and
+                                    --bdryfaces counts boundary edges.
+  -4, --dim4                        Run a census of 4-manifold triangulations,
+                                    not 3-manifold triangulations.  Here
+                                    --tetrahedra counts pentachora, and
+                                    --bdryfaces counts boundary facets.
+  -s, --sigs                        Write isomorphism signatures only, not
+                                    full Regina data files.
+  -c, --subcontainers               For each face pairing, place resulting
+                                    triangulations into different subcontainers
+  -p, --genpairs                    Only generate face pairings, not
+                                    triangulations.
+  -P, --usepairs                    Only use face pairings read from standard
+                                    input.
+
+Help options:
+  -?, --help                        Show this help message
+      --usage                       Display brief usage message
+--------------------
+Exit code: 1
+============================================================
+TEST: tricensus -t2 -i -s @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 1:0 1:1 | 0:2 0:3 1:3 1:2
+1:0 1:1 1:2 1:3 | 0:0 0:1 0:2 0:3
+Finished.
+Total triangulations: 61
+--------------------
+Exit code: 0
+--------------------
+Output:
+cMcabbjdw
+cMcabbjds
+cMcabbjqw
+cMcabbjxr
+cMcabbjij
+cMcabbjik
+cMcabbjaj
+cMcabbjak
+cMcabbjqs
+cMcabbjmk
+cMcabbidt
+cMcabbidu
+cMcabbifs
+cMcabbifw
+cMcabbiqt
+cMcabbiqu
+cMcabbijk
+cMcabbijr
+cMcabbile
+cMcabbick
+cMcabbicj
+cMcabbiii
+cMcabbiai
+cMcabbgre
+cMcabbgdv
+cMcabbgds
+cMcabbgci
+cMcabbgqv
+cMcabbgqs
+cMcabbgqw
+cMcabbgje
+cMcabbgig
+cMcabbgij
+cMcabbgik
+cMcabbgag
+cMcabbgaj
+cPcbbbaaa
+cPcbbbaai
+cPcbbbali
+cPcbbbalm
+cPcbbbabb
+cPcbbbdht
+cPcbbbdhq
+cPcbbbabk
+cPcbbbcbd
+cPcbbbqxh
+cPcbbbiht
+cPcbbbihq
+cPcbbbade
+cPcbbbadh
+cPcbbbadu
+cPcbbbajk
+cPcbbbajs
+cPcbbbahh
+cPcbbbcbt
+cPcbbbchn
+cPcbbbcbq
+cPcbbbdei
+cPcbbbdxm
+cPcbbbcjt
+cPcbbbchw
+============================================================
+TEST: tricensus -t1 -i @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 0:3 0:2
+Finished.
+Total triangulations: 5
+--------------------
+Exit code: 0
+--------------------
+Output (compressed):
+<?xml version="1.0"?>
+<regina engine="7.0">
+<container label="Command-line census">
+<textdata label="Parameters">Searching for 3-manifold triangulations
+1 tetrahedron
+No boundary faces only
+Finite and ideal
+Orientable and non-orientable
+</textdata>
+<container label="Triangulations">
+<tri dim="3" size="1" perm="index" label="Item 1">
+  <simplex> 0 9 0 19 0 9 0 19 </simplex>
+</tri>
+<tri dim="3" size="1" perm="index" label="Item 2">
+  <simplex> 0 9 0 19 0 13 0 11 </simplex>
+</tri>
+<tri dim="3" size="1" perm="index" label="Item 3">
+  <simplex> 0 8 0 12 0 2 0 4 </simplex>
+</tri>
+<tri dim="3" size="1" perm="index" label="Item 4">
+  <simplex> 0 7 0 7 0 1 0 1 </simplex>
+</tri>
+<tri dim="3" size="1" perm="index" label="Item 5">
+  <simplex> 0 7 0 7 0 9 0 19 </simplex>
+</tri>
+</container>
+</container>
+</regina>
+============================================================
+TEST: tricensus -2 -t4 -i -p
+--------------------
+0 1 0 0 1 0 0 2 2 0 2 1 1 1 1 2 3 0 2 2 3 2 3 1
+0 1 0 0 1 0 0 2 2 0 3 0 1 1 2 2 2 1 1 2 3 2 3 1
+0 1 0 0 1 0 0 2 2 0 3 0 1 1 3 1 3 2 1 2 2 1 2 2
+1 0 1 1 2 0 0 0 0 1 3 0 0 2 3 1 3 2 1 2 2 1 2 2
+1 0 2 0 3 0 0 0 2 1 3 1 0 1 1 1 3 2 0 2 1 2 2 2
+Total edge pairings: 5
+--------------------
+Exit code: 0
+============================================================
+TEST: tricensus -2 -t4 -b -p
+--------------------
+0 1 0 0 1 0 0 2 2 0 2 1 1 1 1 2 3 0 2 2 4 0 4 0
+0 1 0 0 1 0 0 2 2 0 3 0 1 1 2 2 2 1 1 2 4 0 4 0
+0 1 0 0 1 0 0 2 2 0 3 0 1 1 3 1 4 0 1 2 2 1 4 0
+0 1 0 0 1 0 0 2 2 0 3 0 1 1 4 0 4 0 1 2 4 0 4 0
+0 1 0 0 1 0 0 2 2 0 4 0 1 1 3 0 3 1 2 1 2 2 4 0
+0 1 0 0 1 0 0 2 2 0 4 0 1 1 3 0 4 0 2 1 3 2 3 1
+0 1 0 0 1 0 0 2 2 0 4 0 1 1 3 0 4 0 2 1 4 0 4 0
+1 0 1 1 2 0 0 0 0 1 2 1 0 2 1 2 3 0 2 2 4 0 4 0
+1 0 1 1 2 0 0 0 0 1 3 0 0 2 3 1 4 0 1 2 2 1 4 0
+1 0 1 1 2 0 0 0 0 1 3 0 0 2 4 0 4 0 1 2 4 0 4 0
+1 0 1 1 2 0 0 0 0 1 4 0 0 2 3 0 3 1 2 1 2 2 4 0
+1 0 1 1 2 0 0 0 0 1 4 0 0 2 3 0 4 0 2 1 4 0 4 0
+1 0 2 0 3 0 0 0 2 1 3 1 0 1 1 1 4 0 0 2 1 2 4 0
+1 0 2 0 3 0 0 0 2 1 4 0 0 1 1 1 4 0 0 2 4 0 4 0
+1 0 2 0 3 0 0 0 4 0 4 0 0 1 4 0 4 0 0 2 4 0 4 0
+1 0 2 0 4 0 0 0 3 0 4 0 0 1 3 1 4 0 1 1 2 1 4 0
+1 0 2 0 4 0 0 0 3 0 4 0 0 1 4 0 4 0 1 1 4 0 4 0
+Total edge pairings: 17
+--------------------
+Exit code: 0
+============================================================
+TEST: tricensus -2 -t4 -b -B2 -p
+--------------------
+0 1 0 0 1 0 0 2 2 0 2 1 1 1 1 2 3 0 2 2 4 0 4 0
+0 1 0 0 1 0 0 2 2 0 3 0 1 1 2 2 2 1 1 2 4 0 4 0
+0 1 0 0 1 0 0 2 2 0 3 0 1 1 3 1 4 0 1 2 2 1 4 0
+0 1 0 0 1 0 0 2 2 0 4 0 1 1 3 0 3 1 2 1 2 2 4 0
+0 1 0 0 1 0 0 2 2 0 4 0 1 1 3 0 4 0 2 1 3 2 3 1
+1 0 1 1 2 0 0 0 0 1 2 1 0 2 1 2 3 0 2 2 4 0 4 0
+1 0 1 1 2 0 0 0 0 1 3 0 0 2 3 1 4 0 1 2 2 1 4 0
+1 0 1 1 2 0 0 0 0 1 4 0 0 2 3 0 3 1 2 1 2 2 4 0
+1 0 2 0 3 0 0 0 2 1 3 1 0 1 1 1 4 0 0 2 1 2 4 0
+Total edge pairings: 9
+--------------------
+Exit code: 0
+============================================================
+TEST: tricensus -t3 -i -p
+--------------------
+0 1 0 0 1 0 1 1 0 2 0 3 2 0 2 1 1 2 1 3 2 3 2 2
+0 1 0 0 1 0 2 0 0 2 1 2 1 1 2 1 0 3 1 3 2 3 2 2
+0 1 0 0 1 0 2 0 0 2 2 1 2 2 2 3 0 3 1 1 1 2 1 3
+1 0 1 1 2 0 2 1 0 0 0 1 2 2 2 3 0 2 0 3 1 2 1 3
+Total face pairings: 4
+--------------------
+Exit code: 0
+============================================================
+TEST: tricensus -t3 -b -p
+--------------------
+0 1 0 0 1 0 1 1 0 2 0 3 2 0 2 1 1 2 1 3 3 0 3 0
+0 1 0 0 1 0 1 1 0 2 0 3 2 0 3 0 1 2 2 2 2 1 3 0
+0 1 0 0 1 0 1 1 0 2 0 3 2 0 3 0 1 2 3 0 3 0 3 0
+0 1 0 0 1 0 2 0 0 2 1 2 1 1 2 1 0 3 1 3 3 0 3 0
+0 1 0 0 1 0 2 0 0 2 1 2 1 1 3 0 0 3 2 2 2 1 3 0
+0 1 0 0 1 0 2 0 0 2 1 2 1 1 3 0 0 3 3 0 3 0 3 0
+0 1 0 0 1 0 2 0 0 2 2 1 2 2 3 0 0 3 1 1 1 2 3 0
+0 1 0 0 1 0 2 0 0 2 2 1 3 0 3 0 0 3 1 1 3 0 3 0
+0 1 0 0 1 0 2 0 0 2 3 0 3 0 3 0 0 3 3 0 3 0 3 0
+0 1 0 0 1 0 3 0 0 2 2 0 2 1 2 2 1 1 1 2 1 3 3 0
+0 1 0 0 1 0 3 0 0 2 2 0 2 1 3 0 1 1 1 2 3 0 3 0
+0 1 0 0 1 0 3 0 0 2 2 0 3 0 3 0 1 1 2 2 2 1 3 0
+0 1 0 0 1 0 3 0 0 2 2 0 3 0 3 0 1 1 3 0 3 0 3 0
+1 0 1 1 1 2 2 0 0 0 0 1 0 2 2 1 0 3 1 3 3 0 3 0
+1 0 1 1 1 2 2 0 0 0 0 1 0 2 3 0 0 3 3 0 3 0 3 0
+1 0 1 1 2 0 2 1 0 0 0 1 2 2 3 0 0 2 0 3 1 2 3 0
+1 0 1 1 2 0 2 1 0 0 0 1 3 0 3 0 0 2 0 3 3 0 3 0
+1 0 1 1 2 0 3 0 0 0 0 1 2 1 3 0 0 2 1 2 3 0 3 0
+1 0 1 1 2 0 3 0 0 0 0 1 3 0 3 0 0 2 3 0 3 0 3 0
+1 0 2 0 3 0 3 0 0 0 2 1 3 0 3 0 0 1 1 1 3 0 3 0
+1 0 2 0 3 0 3 0 0 0 3 0 3 0 3 0 0 1 3 0 3 0 3 0
+Total face pairings: 21
+--------------------
+Exit code: 0
+============================================================
+TEST: tricensus -t3 -b -B2 -p
+--------------------
+0 1 0 0 1 0 1 1 0 2 0 3 2 0 2 1 1 2 1 3 3 0 3 0
+0 1 0 0 1 0 1 1 0 2 0 3 2 0 3 0 1 2 2 2 2 1 3 0
+0 1 0 0 1 0 2 0 0 2 1 2 1 1 2 1 0 3 1 3 3 0 3 0
+0 1 0 0 1 0 2 0 0 2 1 2 1 1 3 0 0 3 2 2 2 1 3 0
+0 1 0 0 1 0 2 0 0 2 2 1 2 2 3 0 0 3 1 1 1 2 3 0
+0 1 0 0 1 0 3 0 0 2 2 0 2 1 2 2 1 1 1 2 1 3 3 0
+1 0 1 1 1 2 2 0 0 0 0 1 0 2 2 1 0 3 1 3 3 0 3 0
+1 0 1 1 2 0 2 1 0 0 0 1 2 2 3 0 0 2 0 3 1 2 3 0
+Total face pairings: 8
+--------------------
+Exit code: 0
+============================================================
+TEST: tricensus -4 -t2 -i -p
+--------------------
+0 1 0 0 0 3 0 2 1 0 0 4 1 2 1 1 1 4 1 3
+0 1 0 0 1 0 1 1 1 2 0 2 0 3 0 4 1 4 1 3
+1 0 1 1 1 2 1 3 1 4 0 0 0 1 0 2 0 3 0 4
+Total facet pairings: 3
+--------------------
+Exit code: 0
+============================================================
+TEST: tricensus -4 -t2 -b -p
+--------------------
+0 1 0 0 0 3 0 2 1 0 0 4 1 2 1 1 2 0 2 0
+0 1 0 0 0 3 0 2 1 0 0 4 2 0 2 0 2 0 2 0
+0 1 0 0 1 0 1 1 1 2 0 2 0 3 0 4 2 0 2 0
+0 1 0 0 1 0 1 1 2 0 0 2 0 3 1 3 1 2 2 0
+0 1 0 0 1 0 1 1 2 0 0 2 0 3 2 0 2 0 2 0
+0 1 0 0 1 0 2 0 2 0 0 2 1 2 1 1 2 0 2 0
+0 1 0 0 1 0 2 0 2 0 0 2 2 0 2 0 2 0 2 0
+1 0 1 1 1 2 1 3 2 0 0 0 0 1 0 2 0 3 2 0
+1 0 1 1 1 2 2 0 2 0 0 0 0 1 0 2 2 0 2 0
+1 0 1 1 2 0 2 0 2 0 0 0 0 1 2 0 2 0 2 0
+1 0 2 0 2 0 2 0 2 0 0 0 2 0 2 0 2 0 2 0
+Total facet pairings: 11
+--------------------
+Exit code: 0
+============================================================
+TEST: tricensus -4 -t2 -b -B2 -p
+--------------------
+0 1 0 0 0 3 0 2 1 0 0 4 1 2 1 1 2 0 2 0
+0 1 0 0 1 0 1 1 1 2 0 2 0 3 0 4 2 0 2 0
+0 1 0 0 1 0 1 1 2 0 0 2 0 3 1 3 1 2 2 0
+1 0 1 1 1 2 1 3 2 0 0 0 0 1 0 2 0 3 2 0
+Total facet pairings: 4
+--------------------
+Exit code: 0
+============================================================
+TEST: tricensus -2 -s -o -P @TESTOUT@ < @TESTDIR@/dim2-bdry2-4.pairs
+--------------------
+Trying edge pairings...
+0:1 0:0 1:0 | 0:2 2:0 2:1 | 1:1 1:2 3:0 | 2:2 bdry bdry
+1:0 2:0 3:0 | 0:0 2:1 3:1 | 0:1 1:1 bdry | 0:2 1:2 bdry
+Total triangulations: 7
+--------------------
+Exit code: 0
+--------------------
+Output:
+eLbcbdaf
+eLbcbdec
+efPacdca
+efMacdcd
+efMacdce
+efMacdba
+efMacdbd
+============================================================
+TEST: tricensus -2 -s -o -P @TESTOUT@ < @TESTDIR@/dim2-internal-4.pairs
+--------------------
+Trying edge pairings...
+0:1 0:0 1:0 | 0:2 2:0 2:1 | 1:1 1:2 3:0 | 2:2 3:2 3:1
+1:0 2:0 3:0 | 0:0 2:1 3:1 | 0:1 1:1 3:2 | 0:2 1:2 2:2
+Total triangulations: 5
+--------------------
+Exit code: 0
+--------------------
+Output:
+eLMcbdabb
+eLMcbddbc
+evQcddbbb
+evQcddbfc
+evQcddcfb
+============================================================
+TEST: tricensus -s -o -f -P @TESTOUT@ < @TESTDIR@/dim3-bdry2-3.pairs
+--------------------
+Trying face pairings...
+0:1 0:0 1:0 1:1 | 0:2 0:3 2:0 bdry | 1:2 2:2 2:1 bdry
+1:0 1:1 1:2 2:0 | 0:0 0:1 0:2 2:1 | 0:3 1:3 bdry bdry
+Total triangulations: 8
+--------------------
+Exit code: 0
+--------------------
+Output:
+dHKcaccbpf
+dHKcaccbag
+dHKcaccjag
+dHHcaccbao
+dHHcaccjao
+dHHcaccnao
+dLIacccaao
+dLIacccaak
+============================================================
+TEST: tricensus -s -o -f -P @TESTOUT@ < @TESTDIR@/dim3-internal-3.pairs
+--------------------
+Trying face pairings...
+0:1 0:0 1:0 2:0 | 0:2 1:2 1:1 2:1 | 0:3 1:3 2:3 2:2
+1:0 1:1 2:0 2:1 | 0:0 0:1 2:2 2:3 | 0:2 0:3 1:2 1:3
+Total triangulations: 30
+--------------------
+Exit code: 0
+--------------------
+Output:
+dLQabccbcjb
+dLQabccbcgo
+dLQabccbckv
+dLQabccbjrb
+dLQabccbrwb
+dLQabccbcjn
+dLQabccbcjj
+dLQacbcbgbb
+dLQacbcbgbj
+dLQabccbcbv
+dLQabccbcsv
+dLQabccbcss
+dLQabccbcsw
+dLQabccbcon
+dLQabccbcor
+dLQbcccaacr
+dLQbcccaacv
+dLQbcccaigs
+dLQbcccaacj
+dLQbcccaicj
+dLQbcccaajr
+dLQbcccains
+dLQbcccaank
+dLQbcccaajj
+dLQbcccdmgv
+dLQbcccdugn
+dLQbcccdigf
+dLQbcccdigv
+dLQbccchhgb
+dLQbccchhrw
+============================================================
+TEST: tricensus -4 -s -o -f -P @TESTOUT@ < @TESTDIR@/dim4-bdry2-2.pairs
+--------------------
+Trying facet pairings...
+0:1 0:0 1:0 1:1 1:2 | 0:2 0:3 0:4 bdry bdry
+1:0 1:1 1:2 1:3 bdry | 0:0 0:1 0:2 0:3 bdry
+Total triangulations: 3
+--------------------
+Exit code: 0
+--------------------
+Output:
+cHIbbbaaaava
+cHkbbbaaaaaa
+cHkbbb-aaaaa
+============================================================
+TEST: tricensus -4 -s -o -f -P @TESTOUT@ < @TESTDIR@/dim4-internal-2.pairs
+--------------------
+Trying facet pairings...
+0:1 0:0 1:0 1:1 1:2 | 0:2 0:3 0:4 1:4 1:3
+1:0 1:1 1:2 1:3 1:4 | 0:0 0:1 0:2 0:3 0:4
+Total triangulations: 5
+--------------------
+Exit code: 0
+--------------------
+Output:
+cMkabbb2aHaua2a
+cMkabbb2a4aaaca
+cMkabbb2aaaaa2a
+cPkbbbbaaaaaaaa
+cPkbbbb-a-a-aUa
+============================================================

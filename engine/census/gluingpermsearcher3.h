@@ -40,10 +40,14 @@
 #define __REGINA_GLUINGPERMSEARCHER3_H
 #endif
 
+#include <functional>
+#include <memory>
 #include "regina-core.h"
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
+#include "census/purgeflags.h"
 #include "triangulation/facetpairing3.h"
+#include "utilities/exception.h"
 #include "utilities/qitmask.h"
 
 /**
@@ -65,15 +69,12 @@
  *
  * To enable pruning on high-degree edges, set this macro to 1 (the default
  * for Regina's main source distribution); to disable it, set it to 0.
+ *
+ * \ingroup census
  */
 #define PRUNE_HIGH_DEG_EDGE_SET 1
 
 namespace regina {
-
-/**
- * \weakgroup census
- * @{
- */
 
 /**
  * A utility class for searching through all possible gluing permutation
@@ -93,114 +94,55 @@ namespace regina {
  * constructing an object of the corresponding class (and again
  * calling runSearch() on that object directly).
  *
- * Note that this class derives from GluingPerms<3>.  The search will
- * involve building and repeatedly modifying the inherited GluingPerms<3>
- * data in-place.
+ * This class is designed to manage the construction of a large census of
+ * triangulations, and so it does not support copying, moving or swapping.
  *
- * \ifacespython Only the PurgeFlags enumeration from this class is
- * present, and the PurgeFlags constants are also made directly
- * available through the regina namespace.  Therefore there is no need
- * to explicitly access the class GluingPermSearcher<3> through Python.
+ * \ingroup census
  */
 template <>
-class GluingPermSearcher<3> : public GluingPerms<3> {
+class GluingPermSearcher<3> {
     public:
-        /**
-         * A routine that can do arbitrary processing upon a set of gluing
-         * permutations.  Such routines are used to process permutation
-         * sets that are found when running census-building routines such as
-         * findAllPerms().
-         *
-         * The first parameter passed will be a set of gluing permutations
-         * (as this class derives from GluingPerms<3>).  This set of gluing
-         * permutations must not be deallocated by this routine, since it may
-         * be used again later by the caller.  The second parameter may contain
-         * arbitrary data; typically this will be the data passed to the
-         * relevant search routine, such as findAllPerms() or the
-         * GluingPermSearcher class constructor.
-         *
-         * Note that the first parameter passed might be \c null to signal that
-         * gluing permutation generation has finished.
-         */
-        typedef void (*Use)(const GluingPermSearcher<3>*, void*);
-
-        static constexpr char dataTag_ = 'g';
+        static constexpr char dataTag = 'g';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
         /**
-         * Flags to indicate that our enumeration may (at the discretion of
-         * the enumeration algorithm) ignore certain classes of triangulations.
-         * These flags can be combined using bitwise OR.
+         * Deprecated type alias for flags that indicate that our enumeration
+         * may ignore certain classes of triangulations.
          *
-         * See the GluingPermSearcher<3> constructor documentation for further
-         * details on how these flags are used.
+         * \deprecated This enumeration has now been renamed to
+         * regina::CensusPurgeFlags (and it now lives at the namespace level).
+         * Bitwise combinations of flags are now represented by
+         * regina::CensusPurge (not raw integers).
          *
-         * \ifacespython For convenience, these constants are also made
-         * available directly in Python's regina namespace.
+         * \ifacespython The enumeration constants (but not the PurgeFlags
+         * type itself) are still available through the GluingPermSearcher<3>
+         * class for backward compatibility.
          */
-        enum PurgeFlags {
-            /**
-             * Indicates that no triangulations should be ignored.
-             */
-            PURGE_NONE = 0,
-            /**
-             * Indicates that non-minimal triangulations may be ignored.
-             */
-            PURGE_NON_MINIMAL = 1,
-            /**
-             * Indicates that any triangulation that is not prime (i.e.,
-             * can be written as a non-trivial connected sum) and any bounded
-             * triangulation that is reducible over a disc may be ignored.
-             */
-            PURGE_NON_PRIME = 2,
-            /**
-             * Indicates that any triangulation that is not prime (i.e.,
-             * can be written as a non-trivial connected sum), any
-             * bounded triangulation that is reducible over a disc and
-             * any triangulation that is non-minimal may be ignored.
-             * Note that this is simply a combination of the constants
-             * \a PURGE_NON_MINIMAL and \a PURGE_NON_PRIME.
-             */
-            PURGE_NON_MINIMAL_PRIME = 3,
-            /**
-             * Indicates that any triangulation that is not a minimal ideal
-             * triangulation of a cusped finite-volume hyperbolic 3-manifold
-             * may be ignored.
-             */
-            PURGE_NON_MINIMAL_HYP = 9,
-            /**
-             * Indicates that any triangulation containing an embedded
-             * two-sided projective plane may be ignored.
-             */
-            PURGE_P2_REDUCIBLE = 4
-        };
+        using PurgeFlags [[deprecated]] = CensusPurgeFlags;
 
     protected:
-        const FacetPairing<3>::IsoList* autos_;
+        using ActionWrapper = std::function<void(const GluingPerms<3>&)>;
+            /**< The type used to hold the user's action function and
+                 arguments when enumerating gluing permutations. */
+
+        GluingPerms<3> perms_;
+            /**< The set of gluing permutations under construction. */
+        const FacetPairing<3>::IsoList autos_;
             /**< The set of isomorphisms that define equivalence of
                  gluing permutation sets.  Generally this is the set of all
                  automorphisms of the underlying face pairing. */
-        bool autosNew;
-            /**< Did we create the isomorphism list autos_ ourselves (in
-                 which case we must destroy it also)? */
         bool orientableOnly_;
             /**< Are we only searching for gluing permutations that
                  correspond to orientable triangulations? */
         bool finiteOnly_;
             /**< Are we only searching for gluing permutations that
                  correspond to finite triangulations? */
-        int whichPurge_;
+        CensusPurge whichPurge_;
             /**< Are there any types of triangulation that we may optionally
                  avoid constructing?  This should be a bitwise OR of constants
-                 from the PurgeFlags enumeration.  See the constructor
+                 from the CensusPurgeFlags enumeration.  See the constructor
                  documentation for further details on this search parameter. */
-        GluingPermSearcher<3>::Use use_;
-            /**< A routine to call each time a gluing permutation set is
-                 found during the search. */
-        void* useArgs_;
-            /**< Additional user-supplied data to be passed as the second
-                 argument to the \a use_ routine. */
 
         bool started;
             /**< Has the search started yet?  This helps distinguish
@@ -246,8 +188,7 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * searching, and is the preferred entry point for end users.
          *
          * The arguments to this constructor describe the search
-         * parameters in detail, as well as what should be done with
-         * each gluing permutation set that is found.
+         * parameters in detail.
          *
          * Parameter \a whichPurge may be used to avoid constructing
          * permutation sets that correspond to triangulations satisfying
@@ -284,9 +225,8 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * of permutation sets.  These are used by runSearch(), which produces
          * each permutation set precisely once up to equivalence.  These
          * isomorphisms must all be automorphisms of the given face pairing,
-         * and will generally be the set of all such automorphisms.  This
-         * parameter may be 0, in which case the set of all automorphisms
-         * of the given face pairing will be generated and used.
+         * and will generally be the set of all such automorphisms (which
+         * you can generate via <tt>pairing.findAutomorphisms()</tt>).
          * @param orientableOnly \c true if only gluing permutations
          * corresponding to orientable triangulations should be
          * generated, or \c false if no such restriction should be imposed.
@@ -297,25 +237,18 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * might still be produced; see the notes above for details.
          * @param whichPurge specifies which permutation sets we may avoid
          * constructing (see the function notes above for details).  This
-         * should be a bitwise OR of constants from the PurgeFlags enumeration,
-         * or 0 if we should simply generate every possible permutation set.
+         * should be a bitwise OR of constants from the CensusPurgeFlags
+         * enumeration, or PURGE_NONE if we should simply generate every
+         * possible permutation set.
          * If a variety of purge constants are bitwise ORed together, a
          * permutation set whose triangulation satisfies \e any of these
          * constraints may be avoided.  Note that not all such
          * permutation sets will be avoided, but enough are avoided that
          * the performance increase is noticeable.
-         * @param use the function to call upon each permutation set that
-         * is found.  The first parameter passed to this function will be
-         * a gluing permutation set.  The second parameter will be
-         * parameter \a useArgs as was passed to this routine.
-         * @param useArgs the pointer to pass as the final parameter for
-         * the function \a use which will be called upon each permutation
-         * set found.
          */
-        GluingPermSearcher(const FacetPairing<3>* pairing,
-                const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, bool finiteOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        GluingPermSearcher(FacetPairing<3> pairing,
+                FacetPairing<3>::IsoList autos, bool orientableOnly,
+                bool finiteOnly, CensusPurge whichPurge);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -324,26 +257,28 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          *
          * This routine reads data in the format written by dumpData().
          * If you wish to read data whose precise class is unknown,
-         * consider using dumpTaggedData() and readTaggedData() instead.
-         *
-         * If the data found in the input stream is invalid or incorrectly
-         * formatted, the routine inputError() will return \c true but
-         * the contents of this object will be otherwise undefined.
+         * consider using dumpTaggedData() and fromTaggedData() instead.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
+         *
+         * \ifacespython Not present, since this constructor is fundamentally
+         * designed around working through a single input stream as we make
+         * our way from base class constructors down to subclass constructors.
+         * Python users should use taggedData() and fromTaggedData() instead,
+         * which incorporate this same text data as part of their richer text
+         * format.
+         *
          * @param in the input stream from which to read.
-         * @param use as for the main GluingPermSearcher<3> constructor.
-         * @param useArgs as for the main GluingPermSearcher<3> constructor.
          */
-        GluingPermSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        GluingPermSearcher(std::istream& in);
 
         /**
-         * Destroys this search manager and all supporting data
-         * structures.
+         * Destroys this search manager and all supporting data structures.
          */
         virtual ~GluingPermSearcher();
 
@@ -357,27 +292,59 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * once up to equivalence, where equivalence is defined by the
          * given set of automorphisms of the given face pairing.
          *
-         * For each permutation set that is generated, routine \a use_ (as
-         * passed to the class constructor) will be called with that
-         * permutation set as an argument.
+         * For each permutation set that is generated, this routine will call
+         * \a action (which must be a function or some other callable object).
          *
-         * Once the generation of permutation sets has finished, routine
-         * \a use_ will be called once more, this time with \c null as its
-         * first (permutation set) argument.
+         * - The first argument to \a action must be a const reference to a
+         *   GluingPerms<3>.  This will be the permutation set that was found.
+         *   If \a action wishes to keep the permutation set, it should take a
+         *   deep copy (not a reference), since the permutation set may be
+         *   changed and reused after \a action returns.
          *
-         * Subclasses corresponding to more specialised search criteria
-         * should override this routine to use a better optimised algorithm
-         * where possible.
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return \c void.
          *
          * It is possible to run only a partial search, branching to a
-         * given depth but no further.  In this case, rather than
-         * producing complete gluing permutation sets, the search will
-         * produce a series of partially-complete GluingPermSearcher<3>
-         * objects.  These partial searches may then be restarted by
-         * calling runSearch() once more (usually after being frozen or
-         * passed on to a different processor).  If necessary, the \a use_
-         * routine may call completePermSet() to distinguish between
-         * a complete set of gluing permutations and a partial search state.
+         * given depth but no further; for this you should use the
+         * separate routine partialSearch(), not runSearch().
+         *
+         * \todo \feature Allow cancellation of permutation set generation.
+         *
+         * \ifacespython This function is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial gluing permutation set
+         * (and therefore the additional \a args list is omitted here).
+         *
+         * @param action a function (or other callable object) to call
+         * for each permutation set that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
+         */
+        template <typename Action, typename... Args>
+        void runSearch(Action&& action, Args&&... args);
+
+        /**
+         * Runs a partial search for all possible gluing permutations
+         * that satisfy the search criteria, branching only to the
+         * given depth and no further.
+         *
+         * This routine essentially does some but not all of the work of
+         * runSearch().  See the runSearch() documentation for a detailed
+         * overview of what the full search aims to achieve.
+         *
+         * If runSearch() enumerates an entire search tree, then you can
+         * think of partialSearch() as only enumerating the first
+         * \a maxDepth levels of this search tree.  Rather than
+         * producing complete gluing permutation sets, this search will
+         * produce a series of partially-constructed permutation sets.
+         * A partial searche can be continued by calling runSearch()
+         * again on the underlying GluingPermSearcher (perhaps after being
+         * frozen, or passed on to a different processor via taggedData() and
+         * fromTaggedData()).  If necessary, the \a action routine may call
+         * isComplete() to distinguish between a complete set of
+         * gluing permutations and a partial search state.
          *
          * Note that a restarted search will never drop below its
          * initial depth.  That is, calling runSearch() with a fixed
@@ -385,43 +352,156 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * many branches, and then calling runSearch() on each resulting
          * partial search will complete each of these branches without overlap.
          *
-         * \todo \feature Allow cancellation of permutation set generation.
+         * If the search tree is shallow enough (or if \a maxDepth is
+         * large enough), it is possible that this routine will produce
+         * complete gluing permutation sets.
          *
-         * @param maxDepth the depth of the partial search to run, or a
-         * negative number if a full search should be run (the default).
+         * @param maxDepth the depth of the partial search to run.
+         * A negative number indicates that a full search should be run.
+         * @param action a function (or other callable object) to call
+         * for each permutation set (partial or complete) that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial permutation set argument.
          */
-        virtual void runSearch(long maxDepth = -1);
+        template <typename Action, typename... Args>
+        void partialSearch(long maxDepth, Action&& action, Args&&... args);
 
         /**
          * Determines whether this search manager holds a complete
          * gluing permutation set or just a partially completed search
          * state.
          *
-         * This may assist the \a use_ routine when running partial
-         * depth-based searches.  See runSearch() for further details.
+         * This may assist the \a action routine when running partial
+         * depth-based searches.  See partialSearch() for further details.
          *
          * @return \c true if a complete gluing permutation set is held,
          * or \c false otherwise.
          */
-        bool completePermSet() const;
+        bool isComplete() const;
+
+        /**
+         * Deprecated function that determines whether this search manager
+         * holds a complete gluing permutation set or just a partially
+         * completed search state.
+         *
+         * \deprecated This routine has been renamed to isComplete().
+         *
+         * @return \c true if a complete gluing permutation set is held,
+         * or \c false otherwise.
+         */
+        [[deprecated]] bool completePermSet() const;
 
         /**
          * Dumps all internal data in a plain text format, along with a
          * marker to signify which precise class the data belongs to.
-         * This routine can be used with readTaggedData() to transport
+         * This routine can be used with fromTaggedData() to transport
          * objects from place to place whose precise class is unknown.
+         *
+         * This routine outputs the same information that taggedData() returns.
+         *
+         * The key difference between dumpData() and dumpTaggedData() is that
+         * dumpTaggedData() preserves all internal information even if this
+         * object belongs to a subclass of GluingPermSearcher, whereas
+         * dumpData() only writes information pertaining to this base class.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
+         *
+         * \ifacespython Not present; instead use taggedData(), which
+         * returns this same information as a string.
          *
          * @param out the output stream to which the data should be
          * written.
          */
         void dumpTaggedData(std::ostream& out) const;
 
-        // Overridden methods:
-        virtual void dumpData(std::ostream& out) const override;
+        /**
+         * Returns all internal data in a plain text format, along with a
+         * marker to signify which precise class the data belongs to.
+         * This routine can be used with fromTaggedData() to transport
+         * objects from place to place whose precise class is unknown.
+         *
+         * This routine returns the same information that dumpTaggedData()
+         * writes.
+         *
+         * The key difference between data() and taggedData() is that
+         * taggedData() preserves all internal information even if this
+         * object belongs to a subclass of GluingPermSearcher, whereas
+         * data() only writes information pertaining to this base class.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * @return all of this object's internal data in plain text format.
+         */
+        std::string taggedData() const;
+
+        /**
+         * Dumps all internal data in a plain text format to the given
+         * output stream.  This object can be recreated from this text data
+         * by calling the input stream constructor for the appropriate class.
+         *
+         * This routine may be useful for transferring objects from
+         * one processor to another.
+         *
+         * If subclasses override this function, they should write subclass
+         * data after superclass data.  This means it is safe to dump data
+         * from a subclass and then recreate a new superclass object from
+         * that data (though subclass-specific information will be lost).
+         *
+         * This routine outputs the same information that data() returns.
+         *
+         * The key difference between dumpData() and dumpTaggedData() is that
+         * dumpTaggedData() preserves all internal information even if this
+         * object belongs to a subclass of GluingPermSearcher, whereas
+         * dumpData() only writes information pertaining to this base class.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * \ifacespython Not present; instead use data(), which returns this
+         * same information as a string.  However, the matching input stream
+         * constructor is not available in Python either, so it is recommended
+         * that Python users use taggedData() and fromTaggedData() instead.
+         *
+         * @param out the output stream to which the data should be written.
+         */
+        virtual void dumpData(std::ostream& out) const;
+
+        /**
+         * Returns all internal data in a plain text format.
+         * This object can be recreated from this text data by calling the
+         * input stream constructor for the appropriate class.
+         *
+         * This routine may be useful for transferring objects from
+         * one processor to another.
+         *
+         * If subclasses override this function, they should write subclass
+         * data after superclass data.  This means it is safe to dump data
+         * from a subclass and then recreate a new superclass object from
+         * that data (though subclass-specific information will be lost).
+         *
+         * This routine returns the same information that dumpData() writes.
+         *
+         * The key difference between data() and taggedData() is that
+         * taggedData() preserves all internal information even if this
+         * object belongs to a subclass of GluingPermSearcher, whereas
+         * data() only writes information pertaining to this base class.
+         *
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
+         *
+         * \ifacespython This routine is available, but the matching
+         * input stream constructor is not.  Python users should use
+         * taggedData() and fromTaggedData() instead.
+         *
+         * @param all of this object's internal data in plain text format.
+         */
+        std::string data() const;
 
         /**
          * The main entry routine for running a search for all gluing
@@ -435,7 +515,7 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * See the GluingPermSearcher<3> constructor for documentation on
          * the arguments to this routine.  See the runSearch() method
          * for documentation on how the search runs and returns its
-         * results.
+         * results via \a action and \a args..
          *
          * \pre The given face pairing is connected, i.e., it is possible
          * to reach any tetrahedron from any other tetrahedron via a
@@ -443,11 +523,17 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * \pre The given face pairing is in canonical form as described
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
+         *
+         * \ifacespython This function is available, and \a action may be
+         * a pure Python function.  However, \a action cannot take any
+         * additional arguments beyond the initial gluing permutation set
+         * (and therefore the additional \a args list is omitted here).
          */
-        static void findAllPerms(const FacetPairing<3>* pairing,
-                const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, bool finiteOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        template <typename Action, typename... Args>
+        static void findAllPerms(FacetPairing<3> pairing,
+                FacetPairing<3>::IsoList autos, bool orientableOnly,
+                bool finiteOnly, CensusPurge whichPurge,
+                Action&& action, Args&&... args);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -461,9 +547,6 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * (such as partial searching), you are probably better calling
          * findAllPerms() instead.
          *
-         * The resulting object is newly created, and must be destroyed
-         * by the caller of this routine.
-         *
          * See the GluingPermSearcher<3> constructor for documentation on
          * the arguments to this routine.
          *
@@ -474,13 +557,11 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          *
-         * @return the newly created search manager.
+         * @return the new search manager.
          */
-        static GluingPermSearcher<3>* bestSearcher(
-                const FacetPairing<3>* pairing,
-                const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, bool finiteOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        static std::unique_ptr<GluingPermSearcher<3>> bestSearcher(
+                FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
+                bool orientableOnly, bool finiteOnly, CensusPurge whichPurge);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -494,29 +575,69 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * the input stream constructors, where the class of the data being
          * read must be known at compile time.
          *
-         * If the data found in the input stream is invalid or
-         * incorrectly formatted, a null pointer will be returned.
-         * Otherwise a newly constructed search manager will be returned,
-         * and it is the responsibility of the caller of this routine to
-         * destroy it after use.
+         * \warning The data format is liable to change between Regina
+         * releases.  Data in this format should be used on a short-term
+         * temporary basis only.
          *
-         * The arguments \a use and \a useArgs are the same as for the
-         * GluingPermSearcher<3> constructor.
+         * \exception InvalidInput the data found in the given input stream
+         * is invalid, incomplete, or incorrectly formatted.
+         *
+         * \ifacespython Not present; instead you can use the variant of
+         * fromTaggedData() that takes its input as a string.
+         *
+         * @param in the input stream from which to read.
+         * @return the new search manager, or \c null if the data in the
+         * input stream was invalid or incorrectly formatted.
+         */
+        static std::unique_ptr<GluingPermSearcher<3>> fromTaggedData(
+                std::istream& in);
+
+        /**
+         * Creates a new search manager based on tagged data stored in
+         * the given string.  This may be a new search or a
+         * partially completed search.
+         *
+         * The tagged data should be in the format returned by taggedData().
+         * The precise class of the search manager
+         * will be determined from the tagged data, and does not need to
+         * be known in advance.  This is in contrast to dumpData() and
+         * the input stream constructors, where the class of the data being
+         * read must be known at compile time.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * @param in the input stream from which to read.
+         * \exception InvalidArgument the data found in the given string
+         * is invalid, incomplete, or incorrectly formatted.
+         *
+         * @param data the tagged data from which to reconstruct a
+         * search manager.
+         * @return the new search manager, or \c null if the data in the
+         * given string was invalid or incorrectly formatted.
          */
-        static GluingPermSearcher<3>* readTaggedData(std::istream& in,
-                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        static std::unique_ptr<GluingPermSearcher<3>> fromTaggedData(
+                const std::string& data);
 
         // Make this class non-copyable.
-        // The base class GluingPerms already makes it non-assignable.
         GluingPermSearcher(const GluingPermSearcher&) = delete;
+        GluingPermSearcher& operator = (const GluingPermSearcher&) = delete;
 
     protected:
+        /**
+         * A de-templatised implementation of runSearch() and partialSearch().
+         *
+         * Here the templated action plus arguments are bundled together
+         * in a wrapper whose full type is known in advance.
+         *
+         * Subclasses corresponding to more specialised search criteria
+         * should override this routine to use a better optimised algorithm
+         * where possible.
+         *
+         * See runSearch() and partialSearch() for further details.
+         */
+        virtual void searchImpl(long maxDepth, ActionWrapper&& action);
+
         /**
          * Compares the current set of gluing permutations with its
          * preimage under each automorphism of the underlying face pairing,
@@ -590,7 +711,7 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          *
          * @return the class tag.
          */
-        virtual char dataTag() const;
+        virtual char dataTagInternal() const;
 };
 
 /**
@@ -623,7 +744,10 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
  * (in contrast to other search classes, such as ClosedPrimeMinSearcher).
  * That is, \e only 3-manifolds with the required vertex links will be produced.
  *
- * \ifacespython Not present.
+ * This class is designed to manage the construction of a large census of
+ * triangulations, and so it does not support copying, moving or swapping.
+ *
+ * \ingroup census
  */
 class EulerSearcher : public GluingPermSearcher<3> {
     protected:
@@ -918,7 +1042,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
 
-            QitmaskLen64 facesPos;
+            Qitmask1<uint64_t> facesPos;
                 /**< Indicates how many times this edge runs along the
                      boundary of each tetrahedron face in the positive
                      direction.  Specifically, the (4t+i)th trit counts
@@ -937,7 +1061,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
                      TetEdgeState), but it is only used and updated in
                      the subclass ClosedPrimeMinSearcher (where it
                      allows us to optimise the census algorithm). */
-            QitmaskLen64 facesNeg;
+            Qitmask1<uint64_t> facesNeg;
                 /**< Indicates how many times this edge runs along the
                      boundary of each tetrahedron face in the negative
                      direction.  Specifically, the (4t+i)th trit counts
@@ -1007,7 +1131,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
         };
 
     public:
-        static constexpr char dataTag_ = 'e';
+        static constexpr char dataTag = 'e';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -1098,10 +1222,9 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * of the closed surface that would be obtained if the puncture in
          * the vertex link were filled.
          */
-        EulerSearcher(int useEuler, const FacetPairing<3>* pairing,
-                const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        EulerSearcher(int useEuler, FacetPairing<3> pairing,
+                FacetPairing<3>::IsoList autos, bool orientableOnly,
+                CensusPurge whichPurge);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -1110,37 +1233,38 @@ class EulerSearcher : public GluingPermSearcher<3> {
          *
          * This routine reads data in the format written by dumpData().
          * If you wish to read data whose precise class is unknown,
-         * consider using dumpTaggedData() and readTaggedData() instead.
-         *
-         * If the data found in the input stream is invalid or incorrectly
-         * formatted, the routine inputError() will return \c true but
-         * the contents of this object will be otherwise undefined.
-         *
-         * The arguments \a use and \a useArgs are the same as for the
-         * GluingPermSearcher<3> constructor.
+         * consider using dumpTaggedData() and fromTaggedData() instead.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
+         *
+         * \ifacespython Not present, since this constructor is fundamentally
+         * designed around working through a single input stream as we make
+         * our way from base class constructors down to subclass constructors.
+         * Python users should use taggedData() and fromTaggedData() instead,
+         * which incorporate this same text data as part of their richer text
+         * format.
+         *
          * @param in the input stream from which to read.
          */
-        EulerSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        EulerSearcher(std::istream& in);
 
         /**
-         * Destroys this search manager and all supporting data
-         * structures.
+         * Destroys this search manager and all supporting data structures.
          */
-        virtual ~EulerSearcher();
+        ~EulerSearcher() override;
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const override;
-        virtual void runSearch(long maxDepth = -1) override;
+        void dumpData(std::ostream& out) const override;
 
     protected:
         // Overridden methods:
-        virtual char dataTag() const override;
+        void searchImpl(long maxDepth, ActionWrapper&& action) override;
+        char dataTagInternal() const override;
 
     protected:
         /**
@@ -1466,7 +1590,10 @@ class EulerSearcher : public GluingPermSearcher<3> {
  * (in contrast to other search classes, such as ClosedPrimeMinSearcher).
  * That is, \e only compact 3-manifolds will be produced.
  *
- * \ifacespython Not present.
+ * This class is designed to manage the construction of a large census of
+ * triangulations, and so it does not support copying, moving or swapping.
+ *
+ * \ingroup census
  */
 class CompactSearcher : public GluingPermSearcher<3> {
     protected:
@@ -1730,7 +1857,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
 
-            QitmaskLen64 facesPos;
+            Qitmask1<uint64_t> facesPos;
                 /**< Indicates how many times this edge runs along the
                      boundary of each tetrahedron face in the positive
                      direction.  Specifically, the (4t+i)th trit counts
@@ -1749,7 +1876,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
                      TetEdgeState), but it is only used and updated in
                      the subclass ClosedPrimeMinSearcher (where it
                      allows us to optimise the census algorithm). */
-            QitmaskLen64 facesNeg;
+            Qitmask1<uint64_t> facesNeg;
                 /**< Indicates how many times this edge runs along the
                      boundary of each tetrahedron face in the negative
                      direction.  Specifically, the (4t+i)th trit counts
@@ -1819,7 +1946,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
         };
 
     public:
-        static constexpr char dataTag_ = 'f';
+        static constexpr char dataTag = 'f';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -1891,10 +2018,8 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * by FacetPairing<3>::isCanonical().  Note that all face pairings
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          */
-        CompactSearcher(const FacetPairing<3>* pairing,
-                const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        CompactSearcher(FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
+                bool orientableOnly, CensusPurge whichPurge);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -1903,37 +2028,38 @@ class CompactSearcher : public GluingPermSearcher<3> {
          *
          * This routine reads data in the format written by dumpData().
          * If you wish to read data whose precise class is unknown,
-         * consider using dumpTaggedData() and readTaggedData() instead.
-         *
-         * If the data found in the input stream is invalid or incorrectly
-         * formatted, the routine inputError() will return \c true but
-         * the contents of this object will be otherwise undefined.
-         *
-         * The arguments \a use and \a useArgs are the same as for the
-         * GluingPermSearcher<3> constructor.
+         * consider using dumpTaggedData() and fromTaggedData() instead.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
+         *
+         * \ifacespython Not present, since this constructor is fundamentally
+         * designed around working through a single input stream as we make
+         * our way from base class constructors down to subclass constructors.
+         * Python users should use taggedData() and fromTaggedData() instead,
+         * which incorporate this same text data as part of their richer text
+         * format.
+         *
          * @param in the input stream from which to read.
          */
-        CompactSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        CompactSearcher(std::istream& in);
 
         /**
-         * Destroys this search manager and all supporting data
-         * structures.
+         * Destroys this search manager and all supporting data structures.
          */
-        virtual ~CompactSearcher();
+        ~CompactSearcher() override;
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const override;
-        virtual void runSearch(long maxDepth = -1) override;
+        void dumpData(std::ostream& out) const override;
 
     protected:
         // Overridden methods:
-        virtual char dataTag() const override;
+        void searchImpl(long maxDepth, ActionWrapper&& action) override;
+        char dataTagInternal() const override;
 
     protected:
         /**
@@ -2254,7 +2380,10 @@ class CompactSearcher : public GluingPermSearcher<3> {
  * However, significantly fewer unwanted triangulations will be produced
  * when using this class instead of GluingPermSearcher<3>.
  *
- * \ifacespython Not present.
+ * This class is designed to manage the construction of a large census of
+ * triangulations, and so it does not support copying, moving or swapping.
+ *
+ * \ingroup census
  */
 class ClosedPrimeMinSearcher : public CompactSearcher {
     private:
@@ -2329,7 +2458,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
                  the TetEdgeState class. */
 
     public:
-        static constexpr char dataTag_ = 'c';
+        static constexpr char dataTag = 'c';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -2408,10 +2537,8 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          * \pre The given face pairing has no boundary faces and has at
          * least three tetrahedra.
          */
-        ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
-                const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, GluingPermSearcher<3>::Use use,
-                void* useArgs = nullptr);
+        ClosedPrimeMinSearcher(FacetPairing<3> pairing,
+                FacetPairing<3>::IsoList autos, bool orientableOnly);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2420,37 +2547,38 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          *
          * This routine reads data in the format written by dumpData().
          * If you wish to read data whose precise class is unknown,
-         * consider using dumpTaggedData() and readTaggedData() instead.
-         *
-         * If the data found in the input stream is invalid or incorrectly
-         * formatted, the routine inputError() will return \c true but
-         * the contents of this object will be otherwise undefined.
-         *
-         * The arguments \a use and \a useArgs are the same as for the
-         * GluingPermSearcher<3> constructor.
+         * consider using dumpTaggedData() and fromTaggedData() instead.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
+         *
+         * \ifacespython Not present, since this constructor is fundamentally
+         * designed around working through a single input stream as we make
+         * our way from base class constructors down to subclass constructors.
+         * Python users should use taggedData() and fromTaggedData() instead,
+         * which incorporate this same text data as part of their richer text
+         * format.
+         *
          * @param in the input stream from which to read.
          */
-        ClosedPrimeMinSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        ClosedPrimeMinSearcher(std::istream& in);
 
         /**
-         * Destroys this search manager and all supporting data
-         * structures.
+         * Destroys this search manager and all supporting data structures.
          */
-        virtual ~ClosedPrimeMinSearcher();
+        ~ClosedPrimeMinSearcher() override;
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const override;
-        virtual void runSearch(long maxDepth = -1) override;
+        void dumpData(std::ostream& out) const override;
 
     protected:
         // Overridden methods:
-        virtual char dataTag() const override;
+        void searchImpl(long maxDepth, ActionWrapper&& action) override;
+        char dataTagInternal() const override;
 
     private:
         /**
@@ -2506,7 +2634,10 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
  * However, significantly fewer unwanted triangulations will be produced
  * when using this class instead of GluingPermSearcher<3>.
  *
- * \ifacespython Not present.
+ * This class is designed to manage the construction of a large census of
+ * triangulations, and so it does not support copying, moving or swapping.
+ *
+ * \ingroup census
  */
 class HyperbolicMinSearcher : public EulerSearcher {
     private:
@@ -2520,7 +2651,7 @@ class HyperbolicMinSearcher : public EulerSearcher {
                  distinct tetrahedra). */
 
     public:
-        static constexpr char dataTag_ = 'h';
+        static constexpr char dataTag = 'h';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -2550,10 +2681,8 @@ class HyperbolicMinSearcher : public EulerSearcher {
          * constructed by FacetPairing<3>::findAllPairings() are of this form.
          * \pre The given face pairing has no boundary faces.
          */
-        HyperbolicMinSearcher(const FacetPairing<3>* pairing,
-                const FacetPairing<3>::IsoList* autos,
-                bool orientableOnly, GluingPermSearcher<3>::Use use,
-                void* useArgs = nullptr);
+        HyperbolicMinSearcher(FacetPairing<3> pairing,
+                FacetPairing<3>::IsoList autos, bool orientableOnly);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2562,31 +2691,33 @@ class HyperbolicMinSearcher : public EulerSearcher {
          *
          * This routine reads data in the format written by dumpData().
          * If you wish to read data whose precise class is unknown,
-         * consider using dumpTaggedData() and readTaggedData() instead.
-         *
-         * If the data found in the input stream is invalid or incorrectly
-         * formatted, the routine inputError() will return \c true but
-         * the contents of this object will be otherwise undefined.
-         *
-         * The arguments \a use and \a useArgs are the same as for the
-         * GluingPermSearcher<3> constructor.
+         * consider using dumpTaggedData() and fromTaggedData() instead.
          *
          * \warning The data format is liable to change between Regina
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
+         * \exception InvalidInput the data found in the input stream is
+         * invalid, incomplete, or incorrectly formatted.
+         *
+         * \ifacespython Not present, since this constructor is fundamentally
+         * designed around working through a single input stream as we make
+         * our way from base class constructors down to subclass constructors.
+         * Python users should use taggedData() and fromTaggedData() instead,
+         * which incorporate this same text data as part of their richer text
+         * format.
+         *
          * @param in the input stream from which to read.
          */
-        HyperbolicMinSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
+        HyperbolicMinSearcher(std::istream& in);
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const override;
-        virtual void runSearch(long maxDepth = -1) override;
+        void dumpData(std::ostream& out) const override;
 
     protected:
         // Overridden methods:
-        virtual char dataTag() const override;
+        void searchImpl(long maxDepth, ActionWrapper&& action) override;
+        char dataTagInternal() const override;
 
     private:
         /**
@@ -2629,16 +2760,126 @@ class HyperbolicMinSearcher : public EulerSearcher {
         void splitEdgeClasses();
 };
 
-/*@}*/
-
 // Inline functions for GluingPermSearcher<3>
+
+template <typename Action, typename... Args>
+inline void GluingPermSearcher<3>::runSearch(Action&& action, Args&&... args) {
+    // Delegate to a de-templatised function.
+    searchImpl(-1, ActionWrapper([&](const regina::GluingPerms<3>& p) {
+        action(p, std::forward<Args>(args)...);
+    }));
+}
+
+template <typename Action, typename... Args>
+inline void GluingPermSearcher<3>::partialSearch(long maxDepth,
+        Action&& action, Args&&... args) {
+    // Delegate to a de-templatised function.
+    searchImpl(maxDepth, ActionWrapper([&](const regina::GluingPerms<3>& p) {
+        action(p, std::forward<Args>(args)...);
+    }));
+}
+
+inline bool GluingPermSearcher<3>::isComplete() const {
+    return (orderElt == orderSize);
+}
 
 inline bool GluingPermSearcher<3>::completePermSet() const {
     return (orderElt == orderSize);
 }
 
-inline char GluingPermSearcher<3>::dataTag() const {
-    return GluingPermSearcher<3>::dataTag_;
+inline void GluingPermSearcher<3>::dumpTaggedData(std::ostream& out) const {
+    out << dataTagInternal() << std::endl;
+    dumpData(out);
+}
+
+inline std::string GluingPermSearcher<3>::taggedData() const {
+    std::ostringstream out;
+    dumpTaggedData(out);
+    return out.str();
+}
+
+inline std::string GluingPermSearcher<3>::data() const {
+    std::ostringstream out;
+    dumpData(out);
+    return out.str();
+}
+
+inline char GluingPermSearcher<3>::dataTagInternal() const {
+    return GluingPermSearcher<3>::dataTag;
+}
+
+inline std::unique_ptr<GluingPermSearcher<3>>
+        GluingPermSearcher<3>::fromTaggedData(std::istream& in) {
+    // Read the class marker.
+    char c;
+    in >> c;
+    if (in.eof())
+        throw InvalidInput("Missing class marker "
+            "when reading tagged GluingPermSearcher<3> data");
+
+    switch (c) {
+        case GluingPermSearcher<3>::dataTag:
+            return std::make_unique<GluingPermSearcher<3>>(in);
+        case CompactSearcher::dataTag:
+            return std::make_unique<CompactSearcher>(in);
+        case ClosedPrimeMinSearcher::dataTag:
+            return std::make_unique<ClosedPrimeMinSearcher>(in);
+        case EulerSearcher::dataTag:
+            return std::make_unique<EulerSearcher>(in);
+        case HyperbolicMinSearcher::dataTag:
+            return std::make_unique<HyperbolicMinSearcher>(in);
+        default:
+            throw InvalidInput("Invalid class marker "
+                "when reading tagged GluingPermSearcher<3> data");
+    }
+}
+
+inline std::unique_ptr<GluingPermSearcher<3>>
+        GluingPermSearcher<3>::fromTaggedData(const std::string& data) {
+    // With C++20 we will be able to move the string into the input stream,
+    // which means the argument should become a string (not const string&).
+    try {
+        std::istringstream in(data);
+        return fromTaggedData(in);
+    } catch (const InvalidInput& exc) {
+        throw InvalidArgument(exc.what());
+    }
+}
+
+inline std::unique_ptr<GluingPermSearcher<3>>
+        GluingPermSearcher<3>::bestSearcher(
+        FacetPairing<3> pairing, FacetPairing<3>::IsoList autos,
+        bool orientableOnly, bool finiteOnly, CensusPurge whichPurge) {
+    // Use an optimised algorithm if possible.
+    if (finiteOnly) {
+        if (pairing.isClosed() && pairing.size() >= 3 &&
+                whichPurge.has(PURGE_NON_MINIMAL) &&
+                whichPurge.has(PURGE_NON_PRIME) &&
+                (orientableOnly || whichPurge.has(PURGE_P2_REDUCIBLE))) {
+            // Closed prime minimal P2-irreducible triangulations with >= 3
+            // tetrahedra.
+            return std::make_unique<ClosedPrimeMinSearcher>(std::move(pairing),
+                std::move(autos), orientableOnly);
+        }
+        return std::make_unique<CompactSearcher>(std::move(pairing),
+            std::move(autos), orientableOnly, whichPurge);
+    }
+
+    if (pairing.isClosed() && whichPurge.has(PURGE_NON_MINIMAL_HYP))
+        return std::make_unique<HyperbolicMinSearcher>(std::move(pairing),
+            std::move(autos), orientableOnly);
+
+    return std::make_unique<GluingPermSearcher<3>>(std::move(pairing),
+        std::move(autos), orientableOnly, finiteOnly, whichPurge);
+}
+
+template <typename Action, typename... Args>
+inline void GluingPermSearcher<3>::findAllPerms(FacetPairing<3> pairing,
+        FacetPairing<3>::IsoList autos, bool orientableOnly, bool finiteOnly,
+        CensusPurge whichPurge, Action&& action, Args&&... args) {
+    bestSearcher(std::move(pairing), std::move(autos), orientableOnly,
+        finiteOnly, whichPurge)->
+        runSearch(std::forward<Action>(action), std::forward<Args>(args)...);
 }
 
 // Inline functions for EulerSearcher
@@ -2660,8 +2901,8 @@ inline EulerSearcher::~EulerSearcher() {
     delete[] edgeStateChanged;
 }
 
-inline char EulerSearcher::dataTag() const {
-    return EulerSearcher::dataTag_;
+inline char EulerSearcher::dataTagInternal() const {
+    return EulerSearcher::dataTag;
 }
 
 inline int EulerSearcher::findEdgeClass(int edgeID) const {
@@ -2721,12 +2962,13 @@ inline void EulerSearcher::vtxBdryNext(int vertexID,
         case 3: next[0] = next[1] = vertexID;
                 twist[0] = twist[1] = 0;
                 break;
-        case 2: if (permIndex(tet, vertexLinkNextFace[vertex][bdryFace]) < 0) {
+        case 2: if (perms_.permIndex(tet,
+                        vertexLinkNextFace[vertex][bdryFace]) < 0) {
                     next[0] = vertexState[vertexID].bdryNext[0];
                     twist[0] = vertexState[vertexID].bdryTwist[0];
                     next[1] = vertexID;
                     twist[1] = 0;
-                } else if (permIndex(tet,
+                } else if (perms_.permIndex(tet,
                         vertexLinkPrevFace[vertex][bdryFace]) < 0) {
                     next[0] = vertexID;
                     twist[0] = 0;
@@ -2741,7 +2983,7 @@ inline void EulerSearcher::vtxBdryNext(int vertexID,
                     // to either the tetrahedron face we are currently
                     // working with or its adjacent partner.
                     int ghostFace = (bdryFace == order[orderElt].facet ?
-                        (*pairing_)[order[orderElt]].facet :
+                        perms_.pairing()[order[orderElt]].facet :
                         order[orderElt].facet);
                     if (vertexLinkNextFace[vertex][bdryFace] == ghostFace) {
                         next[0] = vertexState[vertexID].bdryNext[0];
@@ -2799,8 +3041,8 @@ inline CompactSearcher::~CompactSearcher() {
     delete[] edgeStateChanged;
 }
 
-inline char CompactSearcher::dataTag() const {
-    return CompactSearcher::dataTag_;
+inline char CompactSearcher::dataTagInternal() const {
+    return CompactSearcher::dataTag;
 }
 
 inline int CompactSearcher::findEdgeClass(int edgeID) const {
@@ -2860,12 +3102,13 @@ inline void CompactSearcher::vtxBdryNext(int vertexID,
         case 3: next[0] = next[1] = vertexID;
                 twist[0] = twist[1] = 0;
                 break;
-        case 2: if (permIndex(tet, vertexLinkNextFace[vertex][bdryFace]) < 0) {
+        case 2: if (perms_.permIndex(tet,
+                        vertexLinkNextFace[vertex][bdryFace]) < 0) {
                     next[0] = vertexState[vertexID].bdryNext[0];
                     twist[0] = vertexState[vertexID].bdryTwist[0];
                     next[1] = vertexID;
                     twist[1] = 0;
-                } else if (permIndex(tet,
+                } else if (perms_.permIndex(tet,
                         vertexLinkPrevFace[vertex][bdryFace]) < 0) {
                     next[0] = vertexID;
                     twist[0] = 0;
@@ -2880,7 +3123,7 @@ inline void CompactSearcher::vtxBdryNext(int vertexID,
                     // to either the tetrahedron face we are currently
                     // working with or its adjacent partner.
                     int ghostFace = (bdryFace == order[orderElt].facet ?
-                        (*pairing_)[order[orderElt]].facet :
+                        perms_.pairing()[order[orderElt]].facet :
                         order[orderElt].facet);
                     if (vertexLinkNextFace[vertex][bdryFace] == ghostFace) {
                         next[0] = vertexState[vertexID].bdryNext[0];
@@ -2928,14 +3171,18 @@ inline ClosedPrimeMinSearcher::~ClosedPrimeMinSearcher() {
         delete[] chainPermIndices;
 }
 
-inline char ClosedPrimeMinSearcher::dataTag() const {
-    return ClosedPrimeMinSearcher::dataTag_;
+inline char ClosedPrimeMinSearcher::dataTagInternal() const {
+    return ClosedPrimeMinSearcher::dataTag;
 }
 
 // Inline functions for HyperbolicMinSearcher
 
-inline char HyperbolicMinSearcher::dataTag() const {
-    return HyperbolicMinSearcher::dataTag_;
+inline HyperbolicMinSearcher::HyperbolicMinSearcher(std::istream& in) :
+        EulerSearcher(in) {
+}
+
+inline char HyperbolicMinSearcher::dataTagInternal() const {
+    return HyperbolicMinSearcher::dataTag;
 }
 
 } // namespace regina

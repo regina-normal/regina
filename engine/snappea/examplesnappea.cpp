@@ -38,8 +38,8 @@ namespace {
 
 namespace regina {
 
-SnapPeaTriangulation* ExampleSnapPea::figureEight() {
-    SnapPeaTriangulation* ans = new SnapPeaTriangulation(
+SnapPeaTriangulation ExampleSnapPea::figureEight() {
+    return SnapPeaTriangulation(
 "% Triangulation\n"
 "m004\n"
 "geometric_solution  2.02988321\n"
@@ -67,13 +67,10 @@ SnapPeaTriangulation* ExampleSnapPea::figureEight() {
 "  0 -1  0  1 -1  0  1  0  1  0  0 -1  0  1 -1  0\n"
 "  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
 "  0.500000000000   0.866025403784\n");
-
-    ans->setLabel("Figure eight knot complement");
-    return ans;
 }
 
-SnapPeaTriangulation* ExampleSnapPea::trefoil() {
-    SnapPeaTriangulation* ans = new SnapPeaTriangulation(
+SnapPeaTriangulation ExampleSnapPea::trefoil() {
+    return SnapPeaTriangulation(
 "% Triangulation\n"
 "Trefoil\n"
 "flat_solution  0.00000000\n"
@@ -101,13 +98,10 @@ SnapPeaTriangulation* ExampleSnapPea::trefoil() {
 "  0 -1  1  0 -1  0  1  0  1 -1  0  0  1  2 -3  0\n"
 "  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
 "  2.000000000000   0.000000000000\n");
-
-    ans->setLabel("Trefoil knot complement");
-    return ans;
 }
 
-SnapPeaTriangulation* ExampleSnapPea::whiteheadLink() {
-    SnapPeaTriangulation* ans = new SnapPeaTriangulation(
+SnapPeaTriangulation ExampleSnapPea::whiteheadLink() {
+    return SnapPeaTriangulation(
 "% Triangulation\n"
 "m129\n"
 "geometric_solution  3.66386238\n"
@@ -154,13 +148,10 @@ SnapPeaTriangulation* ExampleSnapPea::whiteheadLink() {
 "  0  0  0  0 -1  0  0  1 -1  1  0  0  1  0 -1  0\n"
 "  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
 "  0.500000000000   0.500000000000\n");
-
-    ans->setLabel("Whitehead link complement");
-    return ans;
 }
 
-SnapPeaTriangulation* ExampleSnapPea::gieseking() {
-    SnapPeaTriangulation* ans = new SnapPeaTriangulation(
+SnapPeaTriangulation ExampleSnapPea::gieseking() {
+    return SnapPeaTriangulation(
 "% Triangulation\n"
 "m000\n"
 "geometric_solution  1.01494161\n"
@@ -179,13 +170,10 @@ SnapPeaTriangulation* ExampleSnapPea::gieseking() {
 "  0  0  0  0  0  0  0  0  1 -1  0  0  0  0  0  0\n"
 "  0  0  0  0  0  0  0  0  1 -1  0  0  0  0  0  0\n"
 "  0.500000000000   0.866025403784\n");
-
-    ans->setLabel("Gieseking manifold");
-    return ans;
 }
 
-SnapPeaTriangulation* ExampleSnapPea::x101() {
-    SnapPeaTriangulation* ans = new SnapPeaTriangulation(
+SnapPeaTriangulation ExampleSnapPea::x101() {
+    return SnapPeaTriangulation(
 "% Triangulation\n"
 "x101\n"
 "geometric_solution  5.07470803\n"
@@ -249,9 +237,6 @@ SnapPeaTriangulation* ExampleSnapPea::x101() {
 "  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
 "  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0\n"
 " -1.000000000000  -0.000000000000\n");
-
-    ans->setLabel("x101");
-    return ans;
 }
 
 }

@@ -60,7 +60,7 @@ namespace regina {
  */
 class FacetGraphData {
     public:
-        virtual ~FacetGraphData() {}
+        virtual ~FacetGraphData() = default;
 
         virtual regina::Packet* getPacket() = 0;
         virtual std::string dual(bool withLabels) = 0;
@@ -74,53 +74,60 @@ class FacetGraphData {
 
 class Dim2EdgeGraphData : public FacetGraphData {
     private:
-        regina::Triangulation<2>* tri_;
+        regina::PacketOf<regina::Triangulation<2>>* tri_;
 
     public:
-        Dim2EdgeGraphData(regina::Triangulation<2>* tri) : tri_(tri) {}
+        Dim2EdgeGraphData(regina::PacketOf<regina::Triangulation<2>>* tri) :
+            tri_(tri) {}
 
-        regina::Packet* getPacket();
-        std::string dual(bool withLabels);
-        std::string treeDecomp(bool nice, int& bags, int& width);
-        size_t numberOfSimplices();
-        QString simplexName();
-        QString simplicesName();
-        QString facetName();
-        QString facetsName();
+        regina::Packet* getPacket() override;
+        std::string dual(bool withLabels) override;
+        std::string treeDecomp(bool nice, int& bags, int& width) override;
+        size_t numberOfSimplices() override;
+        QString simplexName() override;
+        QString simplicesName() override;
+        QString facetName() override;
+        QString facetsName() override;
 };
 
 class Dim3FaceGraphData : public FacetGraphData {
     private:
+        // Both tri_ and triAsPacket_ represent the same object, which could be
+        // either a Triangulation<3> packet or a SnapPeaTriangulation packet.
         regina::Triangulation<3>* tri_;
+        regina::Packet* triAsPacket_;
 
     public:
-        Dim3FaceGraphData(regina::Triangulation<3>* tri) : tri_(tri) {}
+        Dim3FaceGraphData(regina::Triangulation<3>* tri,
+            regina::Packet* triAsPacket) :
+            tri_(tri), triAsPacket_(triAsPacket) {}
 
-        regina::Packet* getPacket();
-        std::string dual(bool withLabels);
-        std::string treeDecomp(bool nice, int& bags, int& width);
-        size_t numberOfSimplices();
-        QString simplexName();
-        QString simplicesName();
-        QString facetName();
-        QString facetsName();
+        regina::Packet* getPacket() override;
+        std::string dual(bool withLabels) override;
+        std::string treeDecomp(bool nice, int& bags, int& width) override;
+        size_t numberOfSimplices() override;
+        QString simplexName() override;
+        QString simplicesName() override;
+        QString facetName() override;
+        QString facetsName() override;
 };
 
 class Dim4FacetGraphData : public FacetGraphData {
     private:
-        regina::Triangulation<4>* tri_;
+        regina::PacketOf<regina::Triangulation<4>>* tri_;
 
     public:
-        Dim4FacetGraphData(regina::Triangulation<4>* tri) : tri_(tri) {}
+        Dim4FacetGraphData(regina::PacketOf<regina::Triangulation<4>>* tri) :
+            tri_(tri) {}
 
-        regina::Packet* getPacket();
-        std::string dual(bool withLabels);
-        std::string treeDecomp(bool nice, int& bags, int& width);
-        size_t numberOfSimplices();
-        QString simplexName();
-        QString simplicesName();
-        QString facetName();
-        QString facetsName();
+        regina::Packet* getPacket() override;
+        std::string dual(bool withLabels) override;
+        std::string treeDecomp(bool nice, int& bags, int& width) override;
+        size_t numberOfSimplices() override;
+        QString simplexName() override;
+        QString simplicesName() override;
+        QString facetName() override;
+        QString facetsName() override;
 };
 
 /**
@@ -162,14 +169,14 @@ class FacetGraphTab : public QObject, public PacketViewerTab {
          */
         FacetGraphTab(FacetGraphData* useData,
                 PacketTabbedViewerTab* useParentUI);
-        ~FacetGraphTab();
+        ~FacetGraphTab() override;
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     public slots:
         /**

@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "utilities/boolset.h"
+#include "utilities/stringutils.h"
 
 #include <iostream>
 
@@ -40,6 +41,17 @@ const BoolSet BoolSet::sNone;
 const BoolSet BoolSet::sTrue(true);
 const BoolSet BoolSet::sFalse(false);
 const BoolSet BoolSet::sBoth(true, true);
+
+bool BoolSet::setStringCode(const std::string& code) {
+    // We need to use a temporary, since valueOf() will change ans even
+    // if code is not valid.
+    BoolSet ans;
+    if (valueOf(code, ans)) {
+        elements = ans.elements;
+        return true;
+    } else
+        return false;
+}
 
 std::ostream& operator << (std::ostream& out, BoolSet set) {
     if (set == BoolSet())

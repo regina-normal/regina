@@ -60,24 +60,26 @@ class SnapPeaHandler : public PacketImporter, public PacketExporter {
         /**
          * PacketImporter overrides:
          */
-        virtual regina::Packet* importData(const QString& fileName,
-            ReginaMain* parentWidget) const;
+        std::shared_ptr<regina::Packet> importData(const QString& fileName,
+            ReginaMain* parentWidget) const override;
 
         /**
          * PacketExporter overrides:
          */
-        virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::Packet* data,
-            const QString& fileName, QWidget* parentWidget) const;
+        PacketFilter* canExport() const override;
+        bool exportData(std::shared_ptr<regina::Packet> data,
+            const QString& fileName, QWidget* parentWidget) const override;
+        QString defaultExtension(const regina::Packet& data) const override;
 
     private:
         /**
          * Don't allow people to construct their own SnapPea handlers.
          */
-        SnapPeaHandler();
+        SnapPeaHandler() = default;
 };
 
-inline SnapPeaHandler::SnapPeaHandler() {
+inline QString SnapPeaHandler::defaultExtension(const regina::Packet&) const {
+    return ".tri";
 }
 
 #endif

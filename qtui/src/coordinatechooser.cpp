@@ -32,6 +32,7 @@
 
 // Regina core includes:
 #include "surfaces/normalsurfaces.h"
+#include "triangulation/dim3.h"
 
 // UI includes:
 #include "coordinatechooser.h"
@@ -39,6 +40,8 @@
 #include "reginaprefset.h"
 
 #include <algorithm>
+
+// #define SUPPORT_TONS
 
 using regina::NormalSurfaces;
 
@@ -56,10 +59,12 @@ void CoordinateChooser::insertAllCreators() {
     // ideal triangulations.
     insertSystem(regina::NS_QUAD_CLOSED);
     insertSystem(regina::NS_AN_QUAD_OCT_CLOSED);
+#ifdef SUPPORT_TONS
     if (ReginaPrefSet::global().surfacesSupportOriented) {
         insertSystem(regina::NS_ORIENTED);
         insertSystem(regina::NS_ORIENTED_QUAD);
     }
+#endif
 }
 
 void CoordinateChooser::insertAllViewers(regina::NormalSurfaces* surfaces) {
@@ -77,10 +82,12 @@ void CoordinateChooser::insertAllViewers(regina::NormalSurfaces* surfaces) {
         insertSystem(regina::NS_STANDARD);
         insertSystem(regina::NS_QUAD);
 
+#ifdef SUPPORT_TONS
         if (surfaces->allowsOriented()) {
             insertSystem(regina::NS_ORIENTED);
             insertSystem(regina::NS_ORIENTED_QUAD);
         }
+#endif
     }
 
     insertSystem(regina::NS_EDGE_WEIGHT);
@@ -88,18 +95,22 @@ void CoordinateChooser::insertAllViewers(regina::NormalSurfaces* surfaces) {
 }
 
 void CoordinateChooser::setCurrentSystem(regina::NormalCoords newSystem) {
-    std::vector<regina::NormalCoords>::const_iterator it =
-        std::find(systems.begin(), systems.end(), newSystem);
+    auto it = std::find(systems.begin(), systems.end(), newSystem);
 
     if (it == systems.end()) {
         // Try to find a reasonable fallback.
-        if (newSystem == regina::NS_QUAD_CLOSED ||
-                newSystem == regina::NS_ORIENTED_QUAD)
+        if (newSystem == regina::NS_QUAD_CLOSED)
             it = std::find(systems.begin(), systems.end(), regina::NS_QUAD);
+#ifdef SUPPORT_TONS
+        else if (newSystem == regina::NS_ORIENTED_QUAD)
+            it = std::find(systems.begin(), systems.end(), regina::NS_QUAD);
+#endif
         else if (newSystem == regina::NS_AN_QUAD_OCT_CLOSED)
             it = std::find(systems.begin(), systems.end(), regina::NS_AN_QUAD_OCT);
+#ifdef SUPPORT_TONS
         else if (newSystem == regina::NS_ORIENTED)
             it = std::find(systems.begin(), systems.end(), regina::NS_STANDARD);
+#endif
         else if (newSystem == regina::NS_AN_LEGACY)
             it = std::find(systems.begin(), systems.end(), regina::NS_AN_STANDARD);
     }
@@ -115,6 +126,7 @@ void HyperCoordinateChooser::insertSystem(regina::HyperCoords coordSystem) {
 
 void HyperCoordinateChooser::insertAllCreators() {
     insertSystem(regina::HS_STANDARD);
+    insertSystem(regina::HS_PRISM);
 }
 
 void HyperCoordinateChooser::insertAllViewers(
@@ -125,8 +137,7 @@ void HyperCoordinateChooser::insertAllViewers(
 }
 
 void HyperCoordinateChooser::setCurrentSystem(regina::HyperCoords newSystem) {
-    std::vector<regina::HyperCoords>::const_iterator it =
-        std::find(systems.begin(), systems.end(), newSystem);
+    auto it = std::find(systems.begin(), systems.end(), newSystem);
 
     if (it != systems.end())
         setCurrentIndex(it - systems.begin());

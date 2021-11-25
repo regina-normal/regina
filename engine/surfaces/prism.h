@@ -45,11 +45,6 @@
 
 namespace regina {
 
-/**
- * \weakgroup surfaces
- * @{
- */
-
 class NormalSurface;
 
 /**
@@ -60,8 +55,12 @@ class NormalSurface;
  * additional product regions).  Each triangular prism contains two of
  * the vertices and one of the edges of the original tetrahedron.
  *
- * \pre This class should only be used with \a embedded
- * normal surfaces.
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \pre This class should only be used with \a embedded normal surfaces.
+ *
+ * \ingroup surfaces
  */
 struct PrismSpec {
     size_t tetIndex;
@@ -73,7 +72,7 @@ struct PrismSpec {
     /**
      * Creates a new uninitialised prism specifier.
      */
-    PrismSpec();
+    PrismSpec() = default;
     /**
      * Creates a new prism specifier containing the given values.
      *
@@ -127,15 +126,13 @@ struct PrismSpec {
  * @param out the output stream to which to write.
  * @param spec the prism specifier to write.
  * @return a reference to \a out.
+ *
+ * \ingroup surfaces
  */
 std::ostream& operator << (std::ostream& out, const PrismSpec& spec);
 
-/*@}*/
-
 // Inline functions for PrismSpec
 
-inline PrismSpec::PrismSpec() {
-}
 inline PrismSpec::PrismSpec(size_t newTetIndex, int newEdge) :
         tetIndex(newTetIndex), edge(newEdge) {
 }

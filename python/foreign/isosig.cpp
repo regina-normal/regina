@@ -62,7 +62,7 @@ void addForeignIsoSig(pybind11::module_& m) {
                     return regina::readSigList<regina::Triangulation<4>>(
                         filename, colSigs, colLabels, ignoreLines);
                 default:
-                    return static_cast<regina::Container*>(nullptr);
+                    return std::shared_ptr<regina::Container>();
             }
         },
         pybind11::arg("dimension"),
@@ -96,7 +96,7 @@ void addForeignIsoSig(pybind11::module_& m) {
                     return regina::readSigList<regina::Triangulation<4>>(
                         filename, colSigs, colLabels, ignoreLines);
                 default:
-                    return static_cast<regina::Container*>(nullptr);
+                    return std::shared_ptr<regina::Container>();
             }
         },
         pybind11::arg(),

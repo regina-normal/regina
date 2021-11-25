@@ -64,22 +64,11 @@ class ScriptVarModel : public QAbstractItemModel {
          */
         regina::Script* script_;
 
-        /**
-         * Current state.
-         */
-        bool isReadWrite_;
-
     public:
         /**
          * Constructor.
          */
-        ScriptVarModel(regina::Script* script, bool readWrite);
-
-        /**
-         * Read-write state.
-         */
-        bool isReadWrite() const;
-        void setReadWrite(bool readWrite);
+        ScriptVarModel(regina::Script* script);
 
         /**
          * Force a complete refresh.
@@ -90,15 +79,16 @@ class ScriptVarModel : public QAbstractItemModel {
          * Overrides for describing and editing data in the model.
          */
         QModelIndex index(int row, int column,
-                const QModelIndex& parent) const;
-        QModelIndex parent(const QModelIndex& index) const;
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+                const QModelIndex& parent) const override;
+        QModelIndex parent(const QModelIndex& index) const override;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
-        Qt::ItemFlags flags(const QModelIndex& index) const;
-        bool setData(const QModelIndex& index, const QVariant& value, int role);
+            int role) const override;
+        Qt::ItemFlags flags(const QModelIndex& index) const override;
+        bool setData(const QModelIndex& index, const QVariant& value,
+            int role) override;
 
     private:
         /**
@@ -116,20 +106,23 @@ class ScriptValueDelegate : public QStyledItemDelegate {
     public:
         ScriptValueDelegate(regina::Script* script);
 
-        virtual QWidget* createEditor(QWidget* parent,
-            const QStyleOptionViewItem& option, const QModelIndex& index) const;
-        virtual void setEditorData(QWidget* editor,
-            const QModelIndex& index) const;
-        virtual void setModelData(QWidget* editor,
-            QAbstractItemModel* model, const QModelIndex& index) const;
-        virtual void updateEditorGeometry(QWidget* editor,
-            const QStyleOptionViewItem& option, const QModelIndex& index) const;
+        QWidget* createEditor(QWidget* parent,
+            const QStyleOptionViewItem& option, const QModelIndex& index) const
+            override;
+        void setEditorData(QWidget* editor,
+            const QModelIndex& index) const override;
+        void setModelData(QWidget* editor,
+            QAbstractItemModel* model, const QModelIndex& index) const override;
+        void updateEditorGeometry(QWidget* editor,
+            const QStyleOptionViewItem& option, const QModelIndex& index) const
+            override;
 };
 
 /**
  * A packet interface for viewing script packets.
  */
-class ScriptUI : public QObject, public PacketUI {
+class ScriptUI : public QObject, public PacketUI,
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -160,19 +153,24 @@ class ScriptUI : public QObject, public PacketUI {
          * Constructor and destructor.
          */
         ScriptUI(regina::Script* packet, PacketPane* newEnclosingPane);
-        ~ScriptUI();
+        ~ScriptUI() override;
 
         /**
          * PacketUI overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        PacketEditIface* getEditIface();
-        const std::vector<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
-        void refresh();
-        void endEdit();
-        void setReadWrite(bool readWrite);
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        PacketEditIface* getEditIface() override;
+        const std::vector<QAction*>& getPacketTypeActions() override;
+        QString getPacketMenuText() const override;
+        void refresh() override;
+        void endEdit() override;
+
+        /**
+         * PacketListener callbacks.
+         */
+        void packetWasRenamed(regina::Packet& packet) override;
+        void packetBeingDestroyed(regina::PacketShell packet) override;
 
     public slots:
         /**
@@ -209,20 +207,6 @@ class ScriptUI : public QObject, public PacketUI {
          */
         void updateTabWidth();
 };
-
-inline bool ScriptVarModel::isReadWrite() const {
-    return isReadWrite_;
-}
-
-inline void ScriptVarModel::setReadWrite(bool readWrite) {
-    if (isReadWrite_ != readWrite) {
-        // Edit flags will all change.
-        // A full model reset is probably too severe, but.. *shrug*
-        beginResetModel();
-        isReadWrite_ = readWrite;
-        endResetModel();
-    }
-}
 
 inline QModelIndex ScriptVarModel::parent(const QModelIndex&) const {
     // All items are top-level.

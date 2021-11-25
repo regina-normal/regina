@@ -36,10 +36,24 @@
 
 namespace regina {
 
-void XMLSnapPeaReader::endContentSubElement(
+void XMLSnapPeaReader::initialChars(const std::string& chars) {
+    try {
+        regina::snappea::Triangulation* data =
+            regina::snappea::read_triangulation_from_string(chars.c_str());
+        if (data) {
+            regina::snappea::find_complete_hyperbolic_structure(data);
+            regina::snappea::do_Dehn_filling(data);
+            snappea_ = makePacket<SnapPeaTriangulation>(std::in_place, data);
+        }
+    } catch (regina::SnapPeaFatalError& err) {
+        snappea_.reset();
+    }
+}
+
+void XMLLegacySnapPeaReader::endContentSubElement(
         const std::string& subTagName, XMLElementReader* subReader) {
     if (subTagName == "snappea") {
-        if (snappea_->data_) {
+        if (snappea_) {
             // We can't have two <snappea>..</snappea> blocks.
             return;
         }
@@ -51,18 +65,13 @@ void XMLSnapPeaReader::endContentSubElement(
             if (data) {
                 regina::snappea::find_complete_hyperbolic_structure(data);
                 regina::snappea::do_Dehn_filling(data);
-                snappea_->reset(data);
+                snappea_ = makePacket<SnapPeaTriangulation>(std::in_place,
+                    data);
             }
         } catch (regina::SnapPeaFatalError& err) {
-            if (snappea_->data_)
-                snappea_->reset(0);
+            snappea_.reset();
         }
     }
-}
-
-XMLPacketReader* SnapPeaTriangulation::xmlReader(Packet*,
-        XMLTreeResolver& resolver) {
-    return new XMLSnapPeaReader(resolver);
 }
 
 } // namespace regina

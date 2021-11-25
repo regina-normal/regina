@@ -41,7 +41,7 @@ using regina::Packet;
 
 PacketTabbedUI::PacketTabbedUI(PacketPane* enclosingPane,
         unsigned& indexPref) : PacketUI(enclosingPane),
-        editorTab(0), header(0), visibleViewer(0),
+        editorTab(nullptr), header(nullptr), visibleViewer(nullptr),
         indexPref_(indexPref), rememberTabSelection_(true) {
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
@@ -67,9 +67,9 @@ PacketTabbedUI::~PacketTabbedUI() {
     // destructor should take care of it.
 
     // These viewers are definitely not visible.
-    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
-        if ((*it) && (*it) != visibleViewer)
-            delete (*it);
+    for (PacketViewerTab* v : viewerTabs)
+        if (v && v != visibleViewer)
+            delete v;
 
     // The editor is visible iff there is no visible viewer.
     if (editorTab)
@@ -113,7 +113,7 @@ void PacketTabbedUI::addTab(PacketEditorTab* editor, const QString& label) {
     }
 
     editorTab = editor;
-    viewerTabs.push_back(0);
+    viewerTabs.push_back(nullptr);
 
     tabs->addTab(editor->getInterface(), label);
 
@@ -147,13 +147,13 @@ regina::Packet* PacketTabbedUI::getPacket() {
     if (header)
         return header->getPacket();
 
-    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
-        if (*it)
-            return (*it)->getPacket();
+    for (PacketViewerTab* v : viewerTabs)
+        if (v)
+            return v->getPacket();
 
     // We have no pages.  This should not happen.
     std::cerr << "ERROR: PacketTabbedUI has no pages!  Expect a crash soon.\n";
-    return 0;
+    return nullptr;
 }
 
 QWidget* PacketTabbedUI::getInterface() {
@@ -167,13 +167,13 @@ void PacketTabbedUI::refresh() {
     if (header)
         header->refresh();
 
-    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
-        if (*it) {
-            if (*it == visibleViewer) {
-                (*it)->refresh();
-                (*it)->queuedAction = PacketViewerTab::None;
+    for (PacketViewerTab* v : viewerTabs)
+        if (v) {
+            if (v == visibleViewer) {
+                v->refresh();
+                v->queuedAction = PacketViewerTab::None;
             } else
-                (*it)->queuedAction = PacketViewerTab::Refresh;
+                v->queuedAction = PacketViewerTab::Refresh;
         }
 }
 
@@ -189,11 +189,6 @@ PacketUI* PacketTabbedUI::currentInterface() {
         return visibleViewer;
     else
         return editorTab;
-}
-
-void PacketTabbedUI::setReadWrite(bool readWrite) {
-    if (editorTab)
-        editorTab->setReadWrite(readWrite);
 }
 
 void PacketTabbedUI::notifyTabSelected(int newTab) {
@@ -218,7 +213,7 @@ void PacketTabbedUI::notifyTabSelected(int newTab) {
 
 PacketTabbedViewerTab::PacketTabbedViewerTab(PacketTabbedUI* useParentUI,
         unsigned& indexPref) : PacketViewerTab(useParentUI),
-        header(0), visibleViewer(0),
+        header(nullptr), visibleViewer(nullptr),
         indexPref_(indexPref), rememberTabSelection_(true) {
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
@@ -241,9 +236,9 @@ PacketTabbedViewerTab::~PacketTabbedViewerTab() {
     // destructor should take care of it.
 
     // These viewers are definitely not visible.
-    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
-        if ((*it) != visibleViewer)
-            delete (*it);
+    for (PacketViewerTab* v : viewerTabs)
+        if (v != visibleViewer)
+            delete v;
 
     // Finally delete the visible viewer if there was one.
     if (visibleViewer)
@@ -289,12 +284,12 @@ void PacketTabbedViewerTab::refresh() {
     if (header)
         header->refresh();
 
-    for (ViewerIterator it = viewerTabs.begin(); it != viewerTabs.end(); it++)
-        if (*it == visibleViewer) {
-            (*it)->refresh();
-            (*it)->queuedAction = PacketViewerTab::None;
+    for (PacketViewerTab* v : viewerTabs)
+        if (v == visibleViewer) {
+            v->refresh();
+            v->queuedAction = PacketViewerTab::None;
         } else
-            (*it)->queuedAction = PacketViewerTab::Refresh;
+            v->queuedAction = PacketViewerTab::Refresh;
 }
 
 void PacketTabbedViewerTab::notifyTabSelected(int newTab) {

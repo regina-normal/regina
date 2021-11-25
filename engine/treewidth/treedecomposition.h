@@ -40,16 +40,18 @@
 #define __REGINA_TREEDECOMPOSITION_H
 #endif
 
+#include <vector>
 #include "regina-core.h"
 #include "core/output.h"
+#include "maths/matrix.h"
 #include "triangulation/forward.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
 /**
- * \addtogroup treewidth Treewidth
+ * \defgroup treewidth Treewidth
  * Treewidth and tree decompositions.
- * @{
  */
 
 class Link;
@@ -61,6 +63,8 @@ class TreeBag;
  *
  * Additional algorithms may be added to this list in future versions of
  * Regina.
+ *
+ * \ingroup treewidth
  */
 enum TreeDecompositionAlg {
     /**
@@ -94,6 +98,8 @@ enum TreeDecompositionAlg {
 
 /**
  * Indicates the relationship between two bags in a tree decomposition.
+ *
+ * \ingroup treewidth
  */
 enum BagComparison {
     /**
@@ -130,6 +136,8 @@ enum BagComparison {
  * See TreeDecomposition::makeNice() for further details, including how
  * TreeBag::type() and TreeBag::subtype() are defined for a nice tree
  * decomposition.
+ *
+ * \ingroup treewidth
  */
 enum NiceType {
     /**
@@ -193,6 +201,14 @@ enum NiceType {
  * Note that a bag may be empty (indeed, if you call
  * TreeDecomposition::makeNice() then it is guaranteed that the root bag
  * will be empty).
+ *
+ * Tree bags do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the TreeDecomposition to which they belong.
+ *
+ * \ingroup treewidth
  */
 class TreeBag : public ShortOutput<TreeBag> {
     private:
@@ -458,13 +474,14 @@ class TreeBag : public ShortOutput<TreeBag> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
-        // Make this class non-assignable.
+        // Make this class non-copyable.
+        // (There is a copy constructor, but it is private.)
         TreeBag& operator = (const TreeBag&) = delete;
 
     private:
@@ -494,9 +511,9 @@ class TreeBag : public ShortOutput<TreeBag> {
          * and it will not be assigned any other information (such as index,
          * type or subtype).
          *
-         * @param cloneMe the bag whose contents should be cloned.
+         * @param src the bag whose contents should be cloned.
          */
-        TreeBag(const TreeBag& cloneMe);
+        TreeBag(const TreeBag& src);
 
         /**
          * Inserts the given bag into the tree as the first child of this bag.
@@ -517,7 +534,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          *
          * @param other the bag to swap contents with this.
          */
-        void swapContents(TreeBag& other);
+        void swapNodes(TreeBag& other) noexcept;
 
         /**
          * Adjusts the links between bags to make this bag the root of
@@ -613,6 +630,12 @@ class TreeBag : public ShortOutput<TreeBag> {
  * Note that individual bags are allowed to be empty.  Moreover, if the
  * underlying graph \a G is empty then the tree decomposition may
  * contain no bags at all.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
+ * \ingroup treewidth
  */
 class TreeDecomposition : public Output<TreeDecomposition> {
     protected:
@@ -622,8 +645,6 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * This is an internal class, used to convert input graphs into
          * a common format before passing them to the main tree
          * decomposition algorithms.
-         *
-         * \ifacespython Not present.
          */
         struct Graph {
             int order_;
@@ -674,11 +695,22 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Builds a new copy of the given tree decomposition.
          *
          * This will be a deep copy, in the sense that all of the bags
-         * of \a cloneMe will be cloned also.
+         * of \a src will be cloned also.
          *
-         * @param cloneMe the tree decomposition to clone.
+         * @param src the tree decomposition to clone.
          */
-        TreeDecomposition(const TreeDecomposition& cloneMe);
+        TreeDecomposition(const TreeDecomposition& src);
+
+        /**
+         * Moves the contents of the given tree decomposition into this
+         * new tree decomposition.  This is a fast (constant time) operation.
+         *
+         * The tree decomposition that was passed (\a src) will no longer be
+         * usable.
+         *
+         * @param src the tree decomposition to move.
+         */
+        TreeDecomposition(TreeDecomposition&& src) noexcept;
 
         /**
          * Builds a tree decomposition of the facet pairing graph of the
@@ -751,39 +783,106 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Builds a tree decomposition of an arbitrary graph.
          * The graph may be directed or undirected.
          *
-         * The graph is specified by an adjacency matrix.  The matrix
-         * may contain any data type (this is the template argument \a T).
-         * However, the contents of this matrix will be interpreted as
-         * booleans: an arc runs from node \a i to node \a j if and
-         * only if \a graph[i][j] is \c true when interpreted as a boolean.
+         * The graph is specified by an adjacency matrix, expressed
+         * using Regina's own matrix type.
          *
-         * \headers This routine is implemented in a separate header
-         * (treedecomposition-impl.h), which is not included automatically
-         * by this file.  Regina's calculation engine already includes
-         * explicit instantiations for types \c bool and \c int, but for
-         * other types you will need to include treedecomposition-impl.h
-         * along with this header.
+         * Each entry \a graph[i][j] will be treated as a boolean, indicating
+         * whether the graph contains an arc from node \a i to node \a j.
          *
-         * \ifacespython The argument \a order is not present (it will be
-         * deduced automatically from \a graph).  The adjacency matrix should
-         * be given as a list of lists.  There is no need to use the same data
-         * type \a T throughout: each element of the matrix will be individually
-         * interpreted as a boolean as described above.
+         * \exception InvalidArgument the adjacency matrix does not have
+         * the same number of rows as columns.
          *
-         * @param order the number of nodes in the graph.
+         * \ifacespython The argument \a graph must be of type \c MatrixBool
+         * (which is the Python type corresponding to the C++ class
+         * Matrix<bool>).
+         *
          * @param graph the adjacency matrix of the graph.
          * @param alg the algorithm that should be used to compute the
          * tree decomposition; in particular, this specifies whether to
          * use a slow exact algorithm or a fast greedy algorithm.
          */
         template <typename T>
-        TreeDecomposition(unsigned order, T const** const graph,
+        TreeDecomposition(const Matrix<T>& graph,
+            TreeDecompositionAlg alg = TD_UPPER);
+
+        /**
+         * Builds a tree decomposition of an arbitrary graph.
+         * The graph may be directed or undirected.
+         *
+         * The graph is specified by an adjacency matrix, given as a
+         * vector of rows:
+         *
+         * - The number of elements in each row should be equal to the
+         *   number of rows (i.e., the adjacency matrix should be square).
+         *
+         * - The individual elements of each row \a r should be accessible
+         *   using a range-based \c for loop over \a r.
+         *
+         * - Each entry in row \a i, column \a j will be treated as a boolean,
+         *   indicating whether the graph contains an arc from node \a i to
+         *   node \a j.
+         *
+         * An example of a suitable type for the adjacency matrix could be
+         * std::vector<std::vector<bool>>.
+         *
+         * \exception InvalidArgument the adjacency matrix does not have
+         * the same number of rows as columns.
+         *
+         * \ifacespython The adjacency matrix should be given as a list of
+         * lists.
+         *
+         * @param graph the adjacency matrix of the graph.
+         * @param alg the algorithm that should be used to compute the
+         * tree decomposition; in particular, this specifies whether to
+         * use a slow exact algorithm or a fast greedy algorithm.
+         */
+        template <typename Row>
+        TreeDecomposition(const std::vector<Row>& graph,
             TreeDecompositionAlg alg = TD_UPPER);
 
         /**
          * Destroys this tree decomposition and all of its bags.
          */
         ~TreeDecomposition();
+
+        /**
+         * Sets this to be a copy of the given tree decomposition.
+         *
+         * This will be a deep copy, in the sense that all of the bags
+         * of \a src will be copied also.
+         *
+         * It does not matter if this and the given tree decomposition were
+         * originally built from different and/or differently sized objects
+         * or graphs.
+         *
+         * @param src the tree decomposition to copy.
+         * @return a reference to this tree decomposition.
+         */
+        TreeDecomposition& operator = (const TreeDecomposition& src);
+
+        /**
+         * Moves the contents of the given tree decomposition into this
+         * tree decomposition.  This is a fast (constant time) operation.
+         *
+         * The tree decomposition that was passed (\a src) will no longer be
+         * usable.
+         *
+         * It does not matter if this and the given tree decomposition were
+         * originally built from different and/or differently sized objects
+         * or graphs.
+         *
+         * @param src the tree decomposition to move.
+         * @return a reference to this tree decomposition.
+         */
+        TreeDecomposition& operator = (TreeDecomposition&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given tree decomposition.
+         *
+         * @param other the tree decomposition whose contents should be
+         * swapped with this.
+         */
+        void swap(TreeDecomposition& other) noexcept;
 
         /**
          * Returns the width of this tree decomposition.
@@ -957,7 +1056,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * there is no need to explicitly call compress() before calling
          * makeNice().
          *
-         * \ifacespython The \e heightHint argument is not present.
+         * \ifacespython If a \e heightHint argument is given, it should
+         * be passed as a Python list of integers.
          *
          * @param heightHint an optional array where, for each node \a i,
          * a higher value of <tt>heightHint[i]</tt> indicates that the node
@@ -965,7 +1065,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * then the size of this array should be the number of nodes in
          * the underlying graph.
          */
-        void makeNice(int* heightHint = nullptr);
+        void makeNice(const int* heightHint = nullptr);
 
         /**
          * Reverses child-parent relationships so that the given bag
@@ -1070,7 +1170,9 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * extra header, since Regina's calculation engine already includes
          * explicit instantiations for common types.
          *
-         * \ifacespython Not present.
+         * \ifacespython The \a costSame and \a costReverse arrays,
+         * as well as \a costRoot if it is given, should be passed as
+         * Python lists of real numbers.
          *
          * \tparam T the type being used to estimate costs.
          * It must be possible to assign 0 to a variable of type \a T
@@ -1099,8 +1201,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * contained in each bag.  The resulting DOT file should be used
          * with the \a dot program shipped with Graphviz.
          *
-         * \ifacespython The \a out argument is not present; instead
-         * standard output is assumed.
+         * \ifacespython Not present; instead use the variant dot() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          *
@@ -1133,8 +1235,8 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * the PACE text format stores the connections between bags as an
          * undirected, unrooted tree.
          *
-         * \ifacespython The \a out argument is not present; instead
-         * standard output is assumed.
+         * \ifacespython Not present; instead use the variant pace() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          *
@@ -1164,7 +1266,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1174,7 +1276,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1225,29 +1327,32 @@ class TreeDecomposition : public Output<TreeDecomposition> {
            2 4
            \endverbatim
          *
-         * This routine does some basic error checking as it reads the input,
-         * but this checking is not exhaustive; in particular, it does
-         * not verify that the connections between bags actually form a tree.
-         *
          * There are two variants of this routine.  This variant
          * contains a single string containing the entire text representation.
          * The other variant takes an input stream, from which the text
          * representation will be read.
          *
+         * \warning While this routine does some basic error checking on
+         * the input, this checking is not exhaustive; in particular, it does
+         * not verify that the connections between bags actually form a tree.
+         *
+         * \exception InvalidArgument the input was not a valid representation
+         * of a tree decomposition using the PACE text format.
+         * As noted above, the checks performed here are not exhaustive.
+         *
          * @param str a text representation of the tree
          * decomposition using the PACE text format.
-         * @return a newly constructed tree decomposition, or \c null if
-         * the input was found to be invalid.
+         * @return the corresponding tree decomposition.
          *
          * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
-        static TreeDecomposition* fromPACE(const std::string& str);
+        static TreeDecomposition fromPACE(const std::string& str);
         /**
          * Builds a tree decomposition from an input stream using the PACE
          * text format.  The text format is described in detail at
          * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ .
          *
-         * See the constructor TreeDecomposition(const std::string&) for
+         * See the routine fromPACE(const std::string&) for
          * a description of this text format.
          *
          * There are two variants of this routine.  The other variant
@@ -1259,19 +1364,21 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * (i.e., it should contain no additional text after this text
          * representation).
          *
-         * \ifacespython Not present.
+         * \exception InvalidArgument the input was not a valid representation
+         * of a tree decomposition using the PACE text format.
+         * As documented more thoroughly in the string variant of this
+         * routine, the checks performed here are not exhaustive.
+         *
+         * \ifacespython Not present; instead you can use the variant of
+         * fromPACE() that takes a string.
          *
          * @param in an input stream that provides a text
          * representation of the tree decomposition using the PACE text format.
-         * @return a newly constructed tree decomposition, or \c null if
-         * the input was found to be invalid.
+         * @return the corresponding tree decomposition.
          *
          * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
-        static TreeDecomposition* fromPACE(std::istream& in);
-
-        // Make this class non-assignable.
-        TreeDecomposition& operator = (const TreeDecomposition&) = delete;
+        static TreeDecomposition fromPACE(std::istream& in);
 
     private:
         /**
@@ -1307,7 +1414,18 @@ class TreeDecomposition : public Output<TreeDecomposition> {
         void reindex();
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given tree decompositions.
+ *
+ * This global routine simply calls TreeDecomposition::swap(); it is provided
+ * so that TreeDecomposition meets the C++ Swappable requirements.
+ *
+ * @param a the first tree decomposition whose contents should be swapped.
+ * @param b the second tree decomposition whose contents should be swapped.
+ *
+ * \ingroup treewidth
+ */
+void swap(TreeDecomposition& a, TreeDecomposition& b) noexcept;
 
 // Inline functions for TreeBag
 
@@ -1321,16 +1439,16 @@ inline TreeBag::TreeBag(int size) :
         subtype_(0) {
 }
 
-inline TreeBag::TreeBag(const TreeBag& cloneMe) :
-        size_(cloneMe.size_),
-        elements_(new int[cloneMe.size_]),
+inline TreeBag::TreeBag(const TreeBag& src) :
+        size_(src.size_),
+        elements_(new int[src.size_]),
         parent_(nullptr),
         sibling_(nullptr),
         children_(nullptr),
         type_(0),
         subtype_(0) {
     for (int i = 0; i < size_; ++i)
-        elements_[i] = cloneMe.elements_[i];
+        elements_[i] = src.elements_[i];
 }
 
 inline TreeBag::~TreeBag() {
@@ -1385,9 +1503,9 @@ inline void TreeBag::insertChild(TreeBag* child) {
     children_ = child;
 }
 
-inline void TreeBag::swapContents(TreeBag& other) {
-    int s = size_; size_ = other.size_; other.size_ = s;
-    int* e = elements_; elements_ = other.elements_; other.elements_ = e;
+inline void TreeBag::swapNodes(TreeBag& other) noexcept {
+    std::swap(size_, other.size_);
+    std::swap(elements_, other.elements_);
 }
 
 // Inline functions for TreeDecomposition
@@ -1396,8 +1514,74 @@ inline TreeDecomposition::TreeDecomposition() :
         width_(0), size_(0), root_(nullptr) {
 }
 
+inline TreeDecomposition::TreeDecomposition(TreeDecomposition&& src) noexcept :
+        width_(src.width_), size_(src.size_), root_(src.root_) {
+    src.root_ = nullptr;
+}
+
+template <typename T>
+TreeDecomposition::TreeDecomposition(const Matrix<T>& graph,
+        TreeDecompositionAlg alg) : width_(0), root_(nullptr) {
+    if (graph.rows() != graph.columns())
+        throw InvalidArgument("The adjacency matrix must be square");
+
+    Graph g(graph.rows());
+
+    for (int i = 0; i < graph.rows(); ++i)
+        for (int j = 0; j < graph.columns(); ++j)
+            g.adj_[i][j] = graph.entry(i, j) || graph.entry(j, i);
+
+    construct(g, alg);
+}
+
+template <typename Row>
+TreeDecomposition::TreeDecomposition(const std::vector<Row>& graph,
+        TreeDecompositionAlg alg) : width_(0), root_(nullptr) {
+    size_t order = graph.size();
+    Graph g(order);
+
+    int r = 0;
+    for (const auto& row : graph) {
+        int c = 0;
+        for (const auto& entry: row) {
+            if (c >= order)
+                throw InvalidArgument("The adjacency matrix must be square");
+            if (entry)
+                g.adj_[r][c] = g.adj_[c][r] = true;
+            ++c;
+        }
+        if (c != order)
+            throw InvalidArgument("The adjacency matrix must be square");
+        ++r;
+    }
+
+    construct(g, alg);
+}
+
 inline TreeDecomposition::~TreeDecomposition() {
     delete root_;
+}
+
+inline TreeDecomposition& TreeDecomposition::operator = (
+        const TreeDecomposition& src) {
+    TreeDecomposition copy(src); // all the hard work is here
+    swap(copy); // let copy dispose of our original contents
+    return *this;
+}
+
+inline TreeDecomposition& TreeDecomposition::operator = (
+        TreeDecomposition&& src) noexcept {
+    width_ = src.width_;
+    size_ = src.size_;
+    std::swap(root_, src.root_);
+    // Let src dispose of the original bags in its own destructor.
+    return *this;
+}
+
+inline void TreeDecomposition::swap(TreeDecomposition& other) noexcept {
+    std::swap(width_, other.width_);
+    std::swap(size_, other.size_);
+    std::swap(root_, other.root_);
 }
 
 inline int TreeDecomposition::width() const {
@@ -1422,15 +1606,17 @@ inline void TreeDecomposition::reindex() {
         const_cast<TreeBag*>(b)->index_ = size_++;
 }
 
+inline void swap(TreeDecomposition& a, TreeDecomposition& b) noexcept {
+    a.swap(b);
+}
+
 // Inline functions for TreeDecomposition::Graph
 
 inline TreeDecomposition::Graph::Graph(int order) :
         order_(order), adj_(new bool*[order]) {
-    int i, j;
-    for (i = 0; i < order; ++i) {
+    for (int i = 0; i < order; ++i) {
         adj_[i] = new bool[order];
-        for (j = 0; j < order; ++j)
-            adj_[i][j] = false;
+        std::fill(adj_[i], adj_[i] + order, false);
     }
 }
 

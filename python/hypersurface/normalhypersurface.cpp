@@ -31,72 +31,55 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/iostream.h"
 #include "../pybind11/operators.h"
-#include "hypersurface/hscoordregistry.h"
-#include "hypersurface/normalhypersurface.h"
+#include "hypersurface/normalhypersurfaces.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
 
 using regina::NormalHypersurface;
-using regina::NormalHypersurfaceVector;
 using regina::Triangulation;
 
 void addNormalHypersurface(pybind11::module_& m) {
-    auto v = pybind11::class_<NormalHypersurfaceVector>(m,
-            "NormalHypersurfaceVector")
-        .def("coords", &NormalHypersurfaceVector::coords)
-        .def("clone", &NormalHypersurfaceVector::clone)
-        .def("size", &NormalHypersurfaceVector::size)
-        .def("__getitem__", [](const NormalHypersurfaceVector& v,
-                size_t index) {
-            return v[index];
-        }, pybind11::return_value_policy::reference_internal)
-        .def("set", &NormalHypersurfaceVector::set)
-        // We cannot just use pybind11::self += pybind11:;self, because
-        // in that case pybind11 seems to want to return by value.
-        .def("__iadd__", &NormalHypersurfaceVector::operator +=,
-            pybind11::return_value_policy::reference_internal)
-        .def("scaleDown", &NormalHypersurfaceVector::scaleDown)
-        .def("isCompact", &NormalHypersurfaceVector::isCompact)
-        .def("isVertexLinking", &NormalHypersurfaceVector::isVertexLinking)
-        .def("isVertexLink", &NormalHypersurfaceVector::isVertexLink)
-        .def("isThinEdgeLink", &NormalHypersurfaceVector::isThinEdgeLink)
-        .def("tetrahedra", &NormalHypersurfaceVector::tetrahedra)
-        .def("prisms", &NormalHypersurfaceVector::prisms)
-        .def("edgeWeight", &NormalHypersurfaceVector::edgeWeight)
-    ;
-    regina::python::add_output(v, true /* __repr__ */);
-    regina::python::add_eq_operators(v);
-
     auto c = pybind11::class_<NormalHypersurface>(m, "NormalHypersurface")
         .def(pybind11::init<const NormalHypersurface&>())
         .def(pybind11::init<const NormalHypersurface&,
             const Triangulation<4>&>())
-        .def(pybind11::init([](Triangulation<4>& t, regina::HyperCoords coords,
-                pybind11::list values) {
-            regina::NormalHypersurfaceVector* v =
-                forCoords(coords, [&](auto info) {
-                    typedef decltype(info) Coords;
-                    return static_cast<NormalHypersurfaceVector*>(
-                        new typename Coords::Class(Coords::dimension(t.size())));
-                }, nullptr);
-            if (values.size() != v->size()) {
-                delete v;
+        .def(pybind11::init<const Triangulation<4>&, regina::HyperEncoding,
+            const regina::Vector<regina::LargeInteger>&>())
+        .def(pybind11::init<const Triangulation<4>&, regina::HyperCoords,
+            const regina::Vector<regina::LargeInteger>&>())
+        .def(pybind11::init([](const Triangulation<4>& t,
+                regina::HyperEncoding enc, pybind11::list values) {
+            regina::Vector<regina::LargeInteger> v(enc.block() * t.size());
+            if (values.size() != v.size())
                 throw pybind11::index_error(
                     "Incorrect number of normal coordinates");
-            }
             try {
-                // Accept any type that we know how to convert to a large
-                // integer.
-                for (size_t i = 0; i < v->size(); ++i)
-                    v->set(i, values[i].cast<regina::LargeInteger>());
+                for (size_t i = 0; i < v.size(); ++i)
+                    v[i] = values[i].cast<regina::LargeInteger>();
             } catch (pybind11::cast_error const &) {
-                delete v;
-                throw std::invalid_argument(
+                throw regina::InvalidArgument(
                     "List element not convertible to LargeInteger");
             }
-            return new NormalHypersurface(t, v);
+            return new NormalHypersurface(t, enc, std::move(v));
+        }))
+        .def(pybind11::init([](const Triangulation<4>& t,
+                regina::HyperCoords coords, pybind11::list values) {
+            regina::HyperEncoding enc(coords);
+            regina::Vector<regina::LargeInteger> v(enc.block() * t.size());
+            if (values.size() != v.size())
+                throw pybind11::index_error(
+                    "Incorrect number of normal coordinates");
+            try {
+                for (size_t i = 0; i < v.size(); ++i)
+                    v[i] = values[i].cast<regina::LargeInteger>();
+            } catch (pybind11::cast_error const &) {
+                throw regina::InvalidArgument(
+                    "List element not convertible to LargeInteger");
+            }
+            return new NormalHypersurface(t, enc, std::move(v));
         }))
         .def("clone", [](const NormalHypersurface& s) {
             // Since clone() is deprecated, we reimplement it here to
@@ -104,7 +87,7 @@ void addNormalHypersurface(pybind11::module_& m) {
             // Here we use the copy constructor, which has the side-effect of
             // cloning the surface name also (which the C++ clone() does not).
             // To ensure no change in behaviour, we revert the name change here.
-            NormalHypersurface* ans = new NormalHypersurface(s);
+            auto* ans = new NormalHypersurface(s);
             ans->setName(std::string());
             return ans;
         })
@@ -113,12 +96,15 @@ void addNormalHypersurface(pybind11::module_& m) {
         .def("tetrahedra", &NormalHypersurface::tetrahedra)
         .def("prisms", &NormalHypersurface::prisms)
         .def("edgeWeight", &NormalHypersurface::edgeWeight)
-        .def("countCoords", &NormalHypersurface::countCoords)
-        .def("triangulation", &NormalHypersurface::triangulation)
+        .def("triangulation", &NormalHypersurface::triangulation,
+            pybind11::return_value_policy::reference_internal)
         .def("name", &NormalHypersurface::name)
         .def("setName", &NormalHypersurface::setName)
-        .def("writeRawVector", [](const NormalHypersurface& s) {
-            s.writeRawVector(std::cout);
+        .def("writeXMLData", [](const NormalHypersurface& s,
+                pybind11::object file, regina::FileFormat f,
+                const regina::NormalHypersurfaces* list) {
+            pybind11::scoped_ostream_redirect stream(std::cout, file);
+            s.writeXMLData(std::cout, f, list);
         })
         .def("isEmpty", &NormalHypersurface::isEmpty)
         .def("isCompact", &NormalHypersurface::isCompact)
@@ -139,11 +125,12 @@ void addNormalHypersurface(pybind11::module_& m) {
         .def("locallyCompatible", &NormalHypersurface::locallyCompatible)
         .def("vector", &NormalHypersurface::vector,
             pybind11::return_value_policy::reference_internal)
-        .def("rawVector", [](const NormalHypersurface& s) {
-            // Since rawVector() is deprecated, we reimplement it
-            // ourselves here to avoid noisy compiler warnings.
-            return s.vector().coords();
-        }, pybind11::return_value_policy::reference_internal)
+        .def("rawVector", &NormalHypersurface::vector, // deprecated
+            pybind11::return_value_policy::reference_internal)
+        .def("encoding", &NormalHypersurface::encoding)
+        .def_static("reconstructTetrahedra",
+            &NormalHypersurface::reconstructTetrahedra)
+        .def(pybind11::self + pybind11::self)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

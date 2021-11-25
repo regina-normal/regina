@@ -45,9 +45,8 @@
 namespace regina {
 
 /**
- * \addtogroup utilities Miscellaneous Utilities
+ * \defgroup utilities Miscellaneous Utilities
  * Miscellaneous helper classes and functions
- * @{
  */
 
 /**
@@ -75,6 +74,8 @@ namespace regina {
  * See MarkedVector for further information.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 class MarkedElement {
     private:
@@ -149,13 +150,16 @@ class MarkedElement {
  * \pre The type \a T is a class derived from MarkedElement.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 class MarkedVector : private std::vector<T*> {
     public:
+        using typename std::vector<T*>::reference;
+        using typename std::vector<T*>::const_reference;
         using typename std::vector<T*>::iterator;
         using typename std::vector<T*>::const_iterator;
-
         using typename std::vector<T*>::value_type;
         using typename std::vector<T*>::size_type;
 
@@ -173,7 +177,7 @@ class MarkedVector : private std::vector<T*> {
         /**
          * Constructs a new empty vector.
          */
-        inline MarkedVector() {}
+        MarkedVector() = default;
 
         /**
          * Moves the contents of the given vector into this new vector.
@@ -233,7 +237,7 @@ class MarkedVector : private std::vector<T*> {
          */
         inline typename std::vector<T*>::iterator erase(
                 typename std::vector<T*>::iterator pos) {
-            typename std::vector<T*>::iterator it = pos;
+            auto it = pos;
             for (++it; it != end(); ++it)
                 --((*it)->marking_);
             return std::vector<T*>::erase(pos);
@@ -292,7 +296,7 @@ class MarkedVector : private std::vector<T*> {
         template <typename Iterator>
         void refill(Iterator begin, Iterator end) {
             Iterator it = begin;
-            typename std::vector<T*>::iterator local = std::vector<T*>::begin();
+            auto local = std::vector<T*>::begin();
             while (it != end && local != std::vector<T*>::end())
                 *local++ = *it++;
 
@@ -334,11 +338,11 @@ class MarkedVector : private std::vector<T*> {
  *
  * @param a the first vector whose contents should be swapped.
  * @param b the second vector whose contents should be swapped.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 void swap(MarkedVector<T>& a, MarkedVector<T>& b) noexcept;
-
-/*@}*/
 
 // Inline functions for MarkedElement
 

@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * Contains implementation details for BitManipulator where we optimise
  * according to the underlying data type.
  *
@@ -58,23 +53,26 @@ namespace regina {
  *
  * \pre Type \a T is an unsigned integral numeric type.
  *
+ * \ifacespython Only the end-user class BitManipulator<unsigned long> is
+ * available to Python users.
+ *
  * @tparam T an unsigned integral numeric type, which we treat as a
  * sequence of \c true and/or \c false bits.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 class BitManipulatorByType {
     public:
-        enum {
-            /**
-             * Indicates whether this class is a template specialisation
-             * of BitManipulatorByType with extra optimisations.
-             *
-             * This compile-time constant is set to 0 for the generic
-             * implementation of BitManipulatorByType, and 1 for all
-             * specialisations.
-             */
-            specialised = 0
-        };
+        /**
+         * Indicates whether this class is a template specialisation
+         * of BitManipulatorByType with extra optimisations.
+         *
+         * This compile-time constant is set to \c false for the generic
+         * implementation of BitManipulatorByType, and \c true for all
+         * specialisations.
+         */
+        static constexpr bool specialised = false;
 
         /**
          * Returns the next largest integer with the same number of \c
@@ -105,9 +103,7 @@ class BitManipulatorByType {
 template <>
 class BitManipulatorByType<unsigned char> {
     public:
-        enum {
-            specialised = 1
-        };
+        static constexpr bool specialised = true;
 
         inline static unsigned char nextPermutation(unsigned char x) {
             // Based upon http://graphics.stanford.edu/~seander/bithacks.html
@@ -122,9 +118,7 @@ class BitManipulatorByType<unsigned char> {
 template <>
 class BitManipulatorByType<unsigned int> {
     public:
-        enum {
-            specialised = 1
-        };
+        static constexpr bool specialised = true;
 
         inline static unsigned int nextPermutation(unsigned int x) {
             // Based upon http://graphics.stanford.edu/~seander/bithacks.html
@@ -139,9 +133,7 @@ class BitManipulatorByType<unsigned int> {
 template <>
 class BitManipulatorByType<unsigned long> {
     public:
-        enum {
-            specialised = 1
-        };
+        static constexpr bool specialised = true;
 
         inline static unsigned long nextPermutation(unsigned long x) {
             // Based upon http://graphics.stanford.edu/~seander/bithacks.html
@@ -157,9 +149,7 @@ class BitManipulatorByType<unsigned long> {
 template <>
 class BitManipulatorByType<unsigned long long> {
     public:
-        enum {
-            specialised = 1
-        };
+        static constexpr bool specialised = true;
 
         inline static unsigned long long nextPermutation(unsigned long long x) {
             // Based upon http://graphics.stanford.edu/~seander/bithacks.html
@@ -183,6 +173,9 @@ class BitManipulatorByType<unsigned long long> {
  * \pre Type \a T is an unsigned integral numeric type.
  * \pre The argument \a size is a power of two, and is at most sizeof(\a T).
  *
+ * \ifacespython Only the end-user class BitManipulator<unsigned long> is
+ * available to Python users.
+ *
  * @tparam T an unsigned integral numeric type, which we treat as a
  * sequence of \c true and/or \c false bits.
  * @tparam size the number of \e bytes of \a T to examine.  Any higher-order
@@ -191,17 +184,15 @@ class BitManipulatorByType<unsigned long long> {
 template <typename T, unsigned size = sizeof(T)>
 class BitManipulatorBySize {
     public:
-        enum {
-            /**
-             * Indicates whether this class is a template specialisation
-             * of BitManipulatorBySize with extra optimisations.
-             *
-             * This compile-time constant is set to 0 for the generic
-             * implementation of BitManipulatorBySize, and 1 for all
-             * specialisations.
-             */
-            specialised = 0
-        };
+        /**
+         * Indicates whether this class is a template specialisation
+         * of BitManipulatorBySize with extra optimisations.
+         *
+         * This compile-time constant is set to \c false for the generic
+         * implementation of BitManipulatorBySize, and \c true for all
+         * specialisations.
+         */
+        static constexpr bool specialised = false;
 
         /**
          * Returns the number of bits that are set to 1 in the given integer.
@@ -223,9 +214,7 @@ class BitManipulatorBySize {
 template <typename T>
 class BitManipulatorBySize<T, 1> {
     public:
-        enum {
-            specialised = 1
-        };
+        static constexpr bool specialised = true;
 
         inline static int bits(T x) {
             x = (x & T(0x55)) + ((x & T(0xAA)) >> 1);
@@ -237,9 +226,7 @@ class BitManipulatorBySize<T, 1> {
 template <typename T>
 class BitManipulatorBySize<T, 2> {
     public:
-        enum {
-            specialised = 1
-        };
+        static constexpr bool specialised = true;
 
         inline static int bits(T x) {
             x = (x & T(0x5555)) + ((x & T(0xAAAA)) >> 1);
@@ -252,9 +239,7 @@ class BitManipulatorBySize<T, 2> {
 template <typename T>
 class BitManipulatorBySize<T, 4> {
     public:
-        enum {
-            specialised = 1
-        };
+        static constexpr bool specialised = true;
 
         inline static int bits(T x) {
             x = (x & T(0x55555555)) + ((x & T(0xAAAAAAAA)) >> 1);
@@ -271,9 +256,7 @@ class BitManipulatorBySize<T, 4> {
 template <typename T>
 class BitManipulatorBySize<T, 8> {
     public:
-        enum {
-            specialised = 1
-        };
+        static constexpr bool specialised = true;
 
         inline static int bits(T x) {
             x = (x & T(0x5555555555555555)) +
@@ -294,9 +277,7 @@ class BitManipulatorBySize<T, 8> {
 template <typename T>
 class BitManipulatorBySize<T, 8> {
     public:
-        enum {
-            specialised = 1
-        };
+        static constexpr bool specialised = true;
 
         inline static int bits(T x) {
             x = (x & T(0x5555555555555555LL)) +
@@ -331,7 +312,12 @@ class BitManipulatorBySize<T, 8> {
  * \pre Type \a T is an unsigned integral numeric type whose size in
  * bits is a power of two.
  *
- * \ifacespython Not present.
+ * \ifacespython For Python users, the class BitManipulator represents the
+ * C++ type BitManipulator<unsigned long>.  In particular, you should be aware
+ * that BitManipulator is designed specifically to work with native C++ integer
+ * types, and \e cannot handle Python's arbitrary-precision integers.  It is
+ * up to you to ensure that any Python integers that you pass into the
+ * BitManipulator routines are small enough to fit inside a C++ unsigned long.
  */
 template <typename T>
 class BitManipulator :
@@ -342,17 +328,17 @@ class BitManipulator :
         "BitManipulator can only work with data types whose size is a "
         "power of two.");
     public:
-        enum {
-            /**
-             * Indicates whether this class is a template specialisation
-             * of BitManipulator with extra optimisations.
-             *
-             * This compile-time constant is set to 0 for the generic
-             * implementation of BitManipulator, and 1 for all specialisations.
-             */
-            specialised = (BitManipulatorByType<T>::specialised |
-                BitManipulatorBySize<T>::specialised)
-        };
+        /**
+         * Indicates whether this class is a template specialisation
+         * of BitManipulator with extra optimisations.
+         *
+         * This compile-time constant is set to \c false for the generic
+         * implementation of BitManipulator, and \c true for all
+         * specialisations.
+         */
+        static constexpr bool specialised =
+            BitManipulatorByType<T>::specialised ||
+            BitManipulatorBySize<T>::specialised;
 
         /**
          * Returns the index of the first \c true bit in the given
@@ -407,8 +393,6 @@ class BitManipulator :
             return chunkStart;
         }
 };
-
-/*@}*/
 
 } // namespace regina
 

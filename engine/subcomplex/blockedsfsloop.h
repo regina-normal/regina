@@ -42,16 +42,12 @@
 
 #include "regina-core.h"
 #include "maths/matrix2.h"
+#include "subcomplex/satregion.h"
 #include "subcomplex/standardtri.h"
 
 namespace regina {
 
 class SatRegion;
-
-/**
- * \weakgroup subcomplex
- * @{
- */
 
 /**
  * Represents a blocked Seifert fibred space with two boundary tori that
@@ -101,10 +97,18 @@ class SatRegion;
  *
  * The optional StandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Note, however, that
+ * the only way to create objects of this class (aside from copying or moving)
+ * is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class BlockedSFSLoop : public StandardTriangulation {
     private:
-        SatRegion* region_;
+        SatRegion region_;
             /**< The saturated region whose two torus boundaries are joined. */
         Matrix2 matchingReln_;
             /**< Specifies how the two boundary tori are joined, as described
@@ -112,9 +116,46 @@ class BlockedSFSLoop : public StandardTriangulation {
 
     public:
         /**
-         * Destroys this structure and its constituent components.
+         * Creates a new copy of this structure.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the structure to copy.
          */
-        ~BlockedSFSLoop();
+        BlockedSFSLoop(const BlockedSFSLoop& src) = default;
+        /**
+         * Moves the contents of the given structure into this new structure.
+         * This is a constant time operation.
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         *
+         * @param src the structure to move from.
+         */
+        BlockedSFSLoop(BlockedSFSLoop&& src) noexcept = default;
+        /**
+         * Sets this to be a copy of the given structure.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the structure to copy.
+         * @return a reference to this structure.
+         */
+        BlockedSFSLoop& operator = (const BlockedSFSLoop& src) = default;
+        /**
+         * Moves the contents of the given structure into this structure.
+         * This is a constant time operation.
+         *
+         * The structure that was passed (\a src) will no longer be usable.
+         *
+         * @param src the structure to move from.
+         * @return a reference to this structure.
+         */
+        BlockedSFSLoop& operator = (BlockedSFSLoop&& src) noexcept = default;
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(BlockedSFSLoop& other) noexcept;
 
         /**
          * Returns details of the saturated region from which this
@@ -139,7 +180,7 @@ class BlockedSFSLoop : public StandardTriangulation {
          */
         const Matrix2& matchingReln() const;
 
-        Manifold* manifold() const override;
+        std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
@@ -149,19 +190,31 @@ class BlockedSFSLoop : public StandardTriangulation {
          * fibred space with identified boundaries, as described by this
          * class.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tri the triangulation to examine.
-         * @return a newly created structure containing details of the
-         * blocked self-identified Seifert fibred space, or \c null if
-         * the given triangulation is not of this form.
+         * @return a structure containing details of the blocked
+         * self-identified Seifert fibred space, or \c null if the given
+         * triangulation is not of this form.
          */
-        static BlockedSFSLoop* isBlockedSFSLoop(Triangulation<3>* tri);
+        static std::unique_ptr<BlockedSFSLoop> recognise(
+            const Triangulation<3>& tri);
+        /**
+         * A deprecated alias to recognise if a triangulation forms a
+         * saturated region joined to a think I-bundle via optional layerings.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<BlockedSFSLoop> isBlockedSFSLoop(
+            const Triangulation<3>& tri);
 
     private:
         /**
-         * Constructs a new blocked self-identified Seifert fibred
-         * space, as described by the given saturated region and
-         * matching relation.  The new object will take ownership of the
-         * given region.
+         * Constructs a new blocked self-identified Seifert fibred space, as
+         * described by the given saturated region and matching relation.
          *
          * Note that the new object must describe an existing triangulation.
          *
@@ -170,24 +223,49 @@ class BlockedSFSLoop : public StandardTriangulation {
          * @param matchingReln describes how the two boundaries of the
          * region are joined, as described in the class notes above.
          */
-        BlockedSFSLoop(SatRegion* region, const Matrix2& matchingReln);
+        BlockedSFSLoop(SatRegion&& region, const Matrix2& matchingReln);
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls BlockedSFSLoop::swap(); it is provided
+ * so that BlockedSFSLoop meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(BlockedSFSLoop& a, BlockedSFSLoop& b) noexcept;
 
 // Inline functions for BlockedSFSLoop
 
-inline BlockedSFSLoop::BlockedSFSLoop(SatRegion* region,
+inline BlockedSFSLoop::BlockedSFSLoop(SatRegion&& region,
         const Matrix2& matchingReln) :
-        region_(region), matchingReln_(matchingReln) {
+        region_(std::move(region)), matchingReln_(matchingReln) {
+}
+
+inline void BlockedSFSLoop::swap(BlockedSFSLoop& other) noexcept {
+    region_.swap(other.region_);
+    matchingReln_.swap(other.matchingReln_);
 }
 
 inline const SatRegion& BlockedSFSLoop::region() const {
-    return *region_;
+    return region_;
 }
 
 inline const Matrix2& BlockedSFSLoop::matchingReln() const {
     return matchingReln_;
+}
+
+inline std::unique_ptr<BlockedSFSLoop> BlockedSFSLoop::isBlockedSFSLoop(
+        const Triangulation<3>& tri) {
+    return recognise(tri);
+}
+
+inline void swap(BlockedSFSLoop& a, BlockedSFSLoop& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

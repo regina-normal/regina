@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a 3-manifold triangulation from the SnapPea cusped census.
  *
  * The SnapPea cusped census is the census of cusped hyperbolic 3-manifolds
@@ -79,6 +74,15 @@ namespace regina {
  *
  * All of the optional StandardTriangulation routines are implemented
  * for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class SnapPeaCensusTri: public StandardTriangulation {
     public:
@@ -115,11 +119,33 @@ class SnapPeaCensusTri: public StandardTriangulation {
 
     public:
         /**
-         * Returns a newly created clone of this structure.
+         * Creates a new copy of this structure.
+         */
+        SnapPeaCensusTri(const SnapPeaCensusTri&) = default;
+
+        /**
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        SnapPeaCensusTri& operator = (const SnapPeaCensusTri&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        SnapPeaCensusTri* clone() const;
+        [[deprecated]] SnapPeaCensusTri* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(SnapPeaCensusTri& other) noexcept;
 
         /**
          * Returns the section of the SnapPea census to which this
@@ -169,17 +195,29 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * Most triangulations from the census however will not be
          * recognised by this routine.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure representing the small
-         * SnapPea census triangulation, or \c null if the given
-         * component is not one of the few SnapPea census
-         * triangulations recognised by this routine.
+         * @return a structure representing the small SnapPea census
+         * triangulation, or \c null if the given component is not one of
+         * the few SnapPea census triangulations recognised by this routine.
          */
-        static SnapPeaCensusTri* isSmallSnapPeaCensusTri(
+        static std::unique_ptr<SnapPeaCensusTri> recognise(
             const Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component forms one of
+         * the smallest SnapPea census triangulations.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<SnapPeaCensusTri>
+            isSmallSnapPeaCensusTri(const Component<3>* comp);
 
-        Manifold* manifold() const override;
-        std::optional<AbelianGroup> homology() const override;
+        std::unique_ptr<Manifold> manifold() const override;
+        AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 
@@ -188,25 +226,40 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * Creates a new SnapPea census triangulation with the given
          * parameters.
          */
-        SnapPeaCensusTri(char newSection, unsigned long newIndex);
+        SnapPeaCensusTri(char section, unsigned long index);
 
     friend class SnapPeaCensusManifold;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls SnapPeaCensusTri::swap(); it is provided
+ * so that SnapPeaCensusTri meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(SnapPeaCensusTri& a, SnapPeaCensusTri& b) noexcept;
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
 
-inline SnapPeaCensusTri::SnapPeaCensusTri(char newSection,
-        unsigned long newIndex) :
-        section_(newSection), index_(newIndex) {
+inline SnapPeaCensusTri::SnapPeaCensusTri(char section, unsigned long index) :
+        section_(section), index_(index) {
 }
 
 // Inline functions for SnapPeaCensusTri
 
 inline SnapPeaCensusTri* SnapPeaCensusTri::clone() const {
-    return new SnapPeaCensusTri(section_, index_);
+    return new SnapPeaCensusTri(*this);
+}
+
+inline void SnapPeaCensusTri::swap(SnapPeaCensusTri& other) noexcept {
+    std::swap(section_, other.section_);
+    std::swap(index_, other.index_);
 }
 
 inline char SnapPeaCensusTri::section() const {
@@ -225,6 +278,15 @@ inline bool SnapPeaCensusTri::operator == (const SnapPeaCensusTri& compare)
 inline bool SnapPeaCensusTri::operator != (const SnapPeaCensusTri& compare)
         const {
     return (section_ != compare.section_ || index_ != compare.index_);
+}
+
+inline std::unique_ptr<SnapPeaCensusTri>
+        SnapPeaCensusTri::isSmallSnapPeaCensusTri(const Component<3>* comp) {
+    return recognise(comp);
+}
+
+inline void swap(SnapPeaCensusTri& a, SnapPeaCensusTri& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

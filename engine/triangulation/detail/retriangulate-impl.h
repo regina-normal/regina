@@ -35,9 +35,12 @@
  *  \brief Full implementation details for the retriangulation and
  *  link rewriting functions.
  *
- *  This file is \e not included from triangulation.h or link.h, but the
- *  routines it contains are explicitly instantiated in Regina's calculation
- *  engine.  Therefore end users should never need to include this header.
+ *  This file is \e not included from triangulation.h or link.h, and it is not
+ *  shipped with Regina's development headers.  The routines it contains are
+ *  explicitly instantiated in Regina's calculation engine for all dimensions.
+ *
+ *  The reason for "quarantining" this file is so that the helper function and
+ *  classes it defines are not inadvertently made accessible to end users.
  */
 
 #ifndef __REGINA_RETRIANGULATE_IMPL_H_DETAIL
@@ -80,15 +83,7 @@ namespace regina::detail {
  *
  * - a function <tt>static std::string sig(const Object&)</tt>, which
  *   returns the text signature that is used to identify a triangulation
- *   or link up to the appropriate notion of combinatorial equivalence;
- *
- * - a function <tt>bool satisfiesPreconditions(const Object&)</tt>, which
- *   tests any preconditions on the retriangulation/rewriting routine
- *   and returns \c false if they fail.  For any object that fails the
- *   preconditions, the retriangulation/rewriting code will do nothing;
- *   moreover, if a progress tracker was passed then it will be immediately
- *   marked as finished, and otherwise the retriangulation/rewriting routine
- *   will return \c false.
+ *   or link up to the appropriate notion of combinatorial equivalence.
  *
  * The function <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>
  * takes the following arguments:
@@ -107,12 +102,10 @@ namespace regina::detail {
  * The function should reconstruct a triangulation or link \a obj from \a sig;
  * examine all possible moves from \a obj that do not exceed size \a max; and
  * for each resulting triangulation/link \a alt, it should call
- * <tt>retriangulator->candidate(alt, sig)</tt>
- * and then immediately destroy \a alt.  Note that the \a candidate function
- * is allowed to modify \a alt.
+ * <tt>retriangulator->candidate(std::move(alt), sig)</tt>.
  *
  * The function should also check the return value each time it calls
- * <tt>retriangulator->candidate(alt, sig)</tt>.  If the \a candidate
+ * <tt>retriangulator->candidate(...)</tt>.  If the \a candidate
  * function ever returns \c true then it should not try any further moves, but
  * instead should clean up and return immediately.
  *
@@ -128,29 +121,6 @@ namespace regina::detail {
  */
 template <class Object>
 struct RetriangulateParams;
-
-/**
- * A helper class that performs the callable action that was passed to the
- * high-level retriangulation or link rewriting function.
- * This implementation is for actions that take a text signature
- * as well as a triangulation/link.
- */
-template <class Object>
-bool retriangulateAct(const RetriangulateActionFunc<Object, true>& action,
-        Object& obj, const std::string& sig) {
-    return action(sig, obj);
-}
-
-/**
- * A helper class that performs the callable action that was passed to the
- * high-level retriangulation or link rewriting function.
- * This implementation is for actions that just take a triangulation/link.
- */
-template <class Object>
-bool retriangulateAct(const RetriangulateActionFunc<Object, false>& action,
-        Object& obj, const std::string&) {
-    return action(obj);
-}
 
 /**
  * A helper class that manages multithreading for the main Retriangulator class.
@@ -172,8 +142,8 @@ class RetriangulateThreadSync<true> {
     public:
         class Lock : public std::unique_lock<std::mutex> {
             public:
-                Lock(RetriangulateThreadSync* self) :
-                        std::unique_lock<std::mutex>(self->mutex_) {
+                Lock(RetriangulateThreadSync& self) :
+                        std::unique_lock<std::mutex>(self.mutex_) {
                 }
         };
 
@@ -203,7 +173,7 @@ class RetriangulateThreadSync<true> {
         void startThreads(unsigned nThreads, ProgressTrackerOpen* tracker) {
             nRunning_ = nThreads;
 
-            std::thread* t = new std::thread[nThreads];
+            auto* t = new std::thread[nThreads];
             unsigned i;
 
             // In the std::thread constructor, we \e must pass \c this as a
@@ -283,7 +253,7 @@ class RetriangulateThreadSync<false> {
 
         class Lock {
             public:
-                Lock(RetriangulateThreadSync*) {}
+                Lock(RetriangulateThreadSync&) {}
                 void lock() {}
                 void unlock() {}
         };
@@ -312,7 +282,7 @@ class RetriangulateThreadSync<false> {
  *
  * Therefore, this backtracing code is disabled at the source code level
  * and not available at all through the API. To turn it on, you will
- * need to edit this source file and change the typedef
+ * need to edit this source file and change the type alias
  * Retriangulator::SigSet from RetriangulateSigGraph<false> to
  * RetriangulateSigGraph<true>.
  *
@@ -363,7 +333,7 @@ class RetriangulateSigGraph<false> : private std::set<std::string> {
             return insert(sig);
         }
 
-        auto insertDerived(const std::string& sig, const std::string& from) {
+        auto insertDerived(const std::string& sig, const std::string&) {
             return insert(sig);
         }
 
@@ -389,9 +359,9 @@ class RetriangulateSigGraph<false> : private std::set<std::string> {
 template <class Object, bool threading, bool withSig>
 class Retriangulator : public RetriangulateThreadSync<threading> {
     private:
-        // To switch on backtracing, just change the following typedef to
+        // To switch on backtracing, just change the following type alias to
         // RetriangulateSigGraph<true>.
-        typedef RetriangulateSigGraph<false> SigSet;
+        using SigSet = RetriangulateSigGraph<false>;
 
         const size_t maxSize_;
         RetriangulateActionFunc<Object, withSig> action_;
@@ -446,15 +416,14 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
         /**
          * This function is called from the RetriangulateParams class, whose
          * implementation is specific to \a Object (i.e., the underlying
-         * triangulation class).  It may assume that the RetriangulateParams
-         * class will delete \a alt immediately after calling this function.
+         * triangulation class).
          *
          * The argument \a derivedFrom is to support optional backtracing.
          * This should be the signature of the previously-found object from
          * which a single move (e.g., a Pachner or Reidemeister move)
          * produced \a alt.
          */
-        bool candidate(Object& alt, const std::string& derivedFrom);
+        bool candidate(Object&& alt, const std::string& derivedFrom);
 };
 
 template <class Object, bool threading, bool withSig>
@@ -466,13 +435,19 @@ inline bool Retriangulator<Object, threading, withSig>::seed(
     const std::string sig = RetriangulateParams<Object>::sig(obj);
     {
         Object copy(obj, false);
-        if (retriangulateAct(action_, copy, sig)) {
-            sigs_.backtrace(sig);
-            RetriangulateThreadSync<threading>::setDone();
-            return true;
+        if constexpr (withSig) {
+            if (action_(sig, std::move(copy))) {
+                sigs_.backtrace(sig);
+                RetriangulateThreadSync<threading>::setDone();
+                return true;
+            }
+        } else {
+            if (action_(std::move(copy))) {
+                sigs_.backtrace(sig);
+                RetriangulateThreadSync<threading>::setDone();
+                return true;
+            }
         }
-        // We cannot use copy from here, since action_() might have
-        // changed it.
     }
     process_.push(sigs_.insertStart(sig).first);
     return false;
@@ -483,7 +458,7 @@ void Retriangulator<Object, threading, withSig>::processQueue(
         ProgressTrackerOpen* tracker) {
     SigSet::iterator next;
 
-    typename RetriangulateThreadSync<threading>::Lock lock(this);
+    typename RetriangulateThreadSync<threading>::Lock lock(*this);
 
     while (true) {
         // Process the queue until either done_ is true, or there is
@@ -517,10 +492,10 @@ void Retriangulator<Object, threading, withSig>::processQueue(
 
 template <class Object, bool threading, bool withSig>
 bool Retriangulator<Object, threading, withSig>::candidate(
-        Object& alt, const std::string& derivedFrom) {
+        Object&& alt, const std::string& derivedFrom) {
     const std::string sig = RetriangulateParams<Object>::sig(alt);
 
-    typename RetriangulateThreadSync<threading>::Lock lock(this);
+    typename RetriangulateThreadSync<threading>::Lock lock(*this);
 
     if (RetriangulateThreadSync<threading>::done())
         return false;
@@ -537,13 +512,19 @@ bool Retriangulator<Object, threading, withSig>::candidate(
         } else
             process_.push(result.first);
 
-        if (retriangulateAct(action_, alt, sig)) {
-            sigs_.backtrace(sig);
-            RetriangulateThreadSync<threading>::setDone();
-            return true;
+        if constexpr (withSig) {
+            if (action_(sig, std::move(alt))) {
+                sigs_.backtrace(sig);
+                RetriangulateThreadSync<threading>::setDone();
+                return true;
+            }
+        } else {
+            if (action_(std::move(alt))) {
+                sigs_.backtrace(sig);
+                RetriangulateThreadSync<threading>::setDone();
+                return true;
+            }
         }
-        // We cannot use alt from here, since action_() might have
-        // changed it.
     }
     return false;
 }
@@ -555,13 +536,14 @@ bool enumerateDetail(const Object& obj, int height, unsigned nThreads,
     if (tracker)
         tracker->newStage(RetriangulateParams<Object>::progressStage);
 
-    if (! RetriangulateParams<Object>::satisfiesPreconditions(obj)) {
+    if (obj.isEmpty()) {
+        // There are no moves possible on empty links or empty triangulations.
         if (tracker)
             tracker->setFinished();
         return false;
     }
 
-    typedef Retriangulator<Object, threading, withSig> T;
+    using T = Retriangulator<Object, threading, withSig>;
 
     T bfs((height >= 0 ? obj.size() + height :
         std::numeric_limits<std::size_t>::max()), std::move(action));
@@ -578,7 +560,7 @@ bool enumerateDetail(const Object& obj, int height, unsigned nThreads,
 }
 
 template <class Object, bool withSig>
-bool enumerate(const Object& obj, int height, unsigned nThreads,
+bool retriangulateInternal(const Object& obj, int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {
     if (nThreads <= 1) {

@@ -35,7 +35,7 @@
 #include "packet/packet.h"
 
 // UI includes:
-#include "eventids.h"
+#include "elidedlabel.h"
 #include "packeteditiface.h"
 #include "packetmanager.h"
 #include "packetui.h"
@@ -47,7 +47,6 @@
 #include <QAction>
 #include <QApplication>
 #include <QBoxLayout>
-#include <QEvent>
 #include <QFrame>
 #include <QLabel>
 #include <QMenu>
@@ -77,7 +76,7 @@ DefaultPacketUI::DefaultPacketUI(regina::Packet* newPacket,
         "through Regina's Python interface instead.</qt>")
         .arg(newPacket->typeName().c_str());
 
-    label = new QLabel(msg, 0);
+    label = new QLabel(msg, nullptr);
     label->setAlignment(Qt::AlignCenter);
     label->setContentsMargins(20, 20, 20, 20);
 }
@@ -99,15 +98,12 @@ void DefaultPacketUI::refresh() {
 
 PacketPane::PacketPane(ReginaMain* newMainWindow, Packet* newPacket,
         QWidget* parent) : QWidget(parent),
-        mainWindow(newMainWindow), frame(0),
-        editCut(0), editCopy(0), editPaste(0) {
+        mainWindow(newMainWindow), frame(nullptr),
+        editCut(nullptr), editCopy(nullptr), editPaste(nullptr) {
     // Initialise a vertical layout with no padding or spacing.
-    QBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
-
-    // Should we allow both read and write?
-    readWrite = newPacket->isPacketEditable();
 
     // Create the actions first, since PacketManager::createUI()
     // might want to modify them.
@@ -120,31 +116,52 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, Packet* newPacket,
     connect(actClose,SIGNAL(triggered()), this, SLOT(close()));
 
     // Set up the header.
-    QBoxLayout* headerBox = new QHBoxLayout();
-    headerBox->setSpacing(0);
+    // We use a real widget for this - not just a layout - in order to
+    // do the right thing when packet labels are obscenely long and also
+    // when they are very short:
+    //
+    // - We want headerTitle to use no more than its preferred size, so
+    //   that for short labels both the icon and the label are centred.
+    //   This is done using a horizontal headerTitle->sizePolicy of
+    //   QSizePolicy::Preferred, with stretchable space on either side of
+    //   the [icon + label] pair, and with headerTitle being non-stretchable.
+    //
+    // - We also want the main widget to *ignore* the preferred size of
+    //   headerTitle, so that for long labels the window does not get
+    //   expanded.  This is done using a horizontal headerBox->sizePolicy
+    //   of QSizePolicy::Ignored.
 
-    headerBox->addStretch(1);
+    auto* headerBox = new QWidget();
+    headerBox->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
+
+    auto* headerLayout = new QHBoxLayout(headerBox);
+    headerLayout->setContentsMargins(0, 0, 0, 0);
+    headerLayout->setSpacing(0);
+
+    headerLayout->addStretch(1);
 
     headerIcon = new QLabel();
-    headerIcon->setPixmap(PacketManager::icon(newPacket).pixmap(headerSize));
+    headerIcon->setPixmap(PacketManager::icon(*newPacket).pixmap(headerSize));
     headerIcon->setMargin(2); // Leave *some* space, however tiny.
     headerIcon->setWhatsThis(tr("This shows the label of the packet "
         "being viewed, as well as its packet type."));
-    headerBox->addWidget(headerIcon);
+    headerLayout->addWidget(headerIcon);
 
-    headerBox->addSpacing((headerSize / 2 /* shrug */));
+    headerLayout->addSpacing((headerSize / 2 /* shrug */));
 
-    headerTitle = new QLabel(newPacket->fullName().c_str());
-    headerTitle->setAlignment(Qt::AlignCenter);
+    headerTitle = new ElidedLabel(newPacket->fullName().c_str());
+    headerTitle->setSizePolicy(
+        QSizePolicy::Maximum /* horizontal */,
+        QSizePolicy::Preferred /* vertical */);
     headerTitle->setWhatsThis(tr("This shows the label of the packet "
         "being viewed, as well as its packet type."));
-    headerBox->addWidget(headerTitle);
+    headerLayout->addWidget(headerTitle);
 
-    headerBox->addStretch(1);
+    headerLayout->addStretch(1);
 
-    layout->addLayout(headerBox);
+    layout->addWidget(headerBox);
 
-    QFrame* separator = new QFrame();
+    auto* separator = new QFrame();
     separator->setFrameStyle(QFrame::HLine);
     separator->setFrameShadow(QFrame::Sunken);
     layout->addWidget(separator);
@@ -172,23 +189,6 @@ void PacketPane::fillPacketTypeMenu(QMenu* menu) {
         menu->addSeparator();
     }
     menu->addAction(actClose);
-}
-
-bool PacketPane::setReadWrite(bool allowReadWrite) {
-    if (allowReadWrite)
-        if (! (mainUI->getPacket()->isPacketEditable()))
-            return false;
-
-    if (readWrite == allowReadWrite)
-        return true;
-
-    // We are changing the status and we are allowed to.
-    readWrite = allowReadWrite;
-
-    mainUI->setReadWrite(allowReadWrite);
-    updateClipboardActions();
-
-    return true;
 }
 
 bool PacketPane::queryClose() {
@@ -239,51 +239,35 @@ void PacketPane::deregisterEditOperations() {
 
     if (editCut) {
         editCut->setEnabled(false);
-        editCut = 0;
+        editCut = nullptr;
     }
     if (editCopy) {
         editCopy->setEnabled(false);
-        editCopy = 0;
+        editCopy = nullptr;
     }
     if (editPaste) {
         editPaste->setEnabled(false);
-        editPaste = 0;
+        editPaste = nullptr;
     }
 }
 
-void PacketPane::packetWasChanged(regina::Packet*) {
+void PacketPane::packetWasChanged(regina::Packet&) {
     // Assume it's this packet.
     mainUI->refresh();
 }
 
-void PacketPane::packetWasRenamed(regina::Packet*) {
+void PacketPane::packetWasRenamed(regina::Packet&) {
     // Assume it's this packet.
     regina::Packet* packet = getPacket();
 
     headerTitle->setText(packet->fullName().c_str());
     if (frame)
-        frame->renameWindow(packet->humanLabel().c_str());
+        frame->updateWindowTitle();
 }
 
-void PacketPane::packetToBeDestroyed(regina::PacketShell) {
+void PacketPane::packetBeingDestroyed(regina::PacketShell) {
     // Assume it's this packet.
     close();
-}
-
-void PacketPane::childWasAdded(regina::Packet* packet, regina::Packet*) {
-    // Assume it's this packet.
-    // Watch out though.  We may not be in the GUI thread.
-    // Better do it all through Qt events.
-    if (packet->isPacketEditable() != readWrite)
-        QApplication::postEvent(this, new QEvent(
-            readWrite ? (QEvent::Type)EVT_PANE_SET_READONLY : (QEvent::Type)EVT_PANE_SET_READWRITE));
-}
-
-void PacketPane::childWasRemoved(regina::Packet* packet, regina::Packet*) {
-    // Assume it's this packet, though be careful: we might already be inside
-    // packet's destructor (in which case packet will be passed as null).
-    if (packet && packet->isPacketEditable() != readWrite)
-        setReadWrite(!readWrite);
 }
 
 bool PacketPane::close() {
@@ -313,13 +297,5 @@ void PacketPane::updateClipboardActions() {
         editCopy->setEnabled(iface ? iface->copyEnabled() : false);
     if (editPaste)
         editPaste->setEnabled(iface ? iface->pasteEnabled() : false);
-}
-
-void PacketPane::customEvent(QEvent* evt) {
-    int type = evt->type();
-    if (type == EVT_PANE_SET_READONLY)
-        setReadWrite(false);
-    else if (type == EVT_PANE_SET_READWRITE)
-        setReadWrite(true);
 }
 

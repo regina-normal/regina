@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  angleflags.cpp
   anglestructure.cpp
   anglestructures.cpp
   pyangle.cpp

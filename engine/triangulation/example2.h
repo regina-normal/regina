@@ -41,15 +41,10 @@
 #endif
 
 #include "regina-core.h"
-#include "triangulation/forward.h"
+#include "triangulation/dim2.h"
 #include "triangulation/detail/example.h"
 
 namespace regina {
-
-/**
- * \weakgroup triangulation
- * @{
- */
 
 /**
  * Offers routines for constructing a variety of sample 2-dimensional
@@ -61,6 +56,8 @@ namespace regina {
  *
  * This 2-dimensional specialisation offers significant extra functionality,
  * by providing several more hard-coded constructions.
+ *
+ * \ingroup triangulation
  */
 template <>
 class Example<2> : public detail::ExampleBase<2> {
@@ -72,10 +69,9 @@ class Example<2> : public detail::ExampleBase<2> {
          * than or equal to zero.
          * @param punctures the number of punctures in the surface;
          * this must be greater than or equal to zero.
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the requested orientable surface.
          */
-        static Triangulation<2>* orientable(
+        static Triangulation<2> orientable(
             unsigned genus, unsigned punctures);
 
         /**
@@ -86,92 +82,102 @@ class Example<2> : public detail::ExampleBase<2> {
          * than or equal to one.
          * @param punctures the number of punctures in the surface;
          * this must be greater than or equal to zero.
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the requested non-orientable surface.
          */
-        static Triangulation<2>* nonOrientable(
+        static Triangulation<2> nonOrientable(
             unsigned genus, unsigned punctures);
 
         /**
          * Returns the four-triangle 2-sphere formed from the boundary
          * of a tetrahedron.  This is isomorphic to the triangulation
-         * returned by the generic routine simplicialSphere(), though
-         * it will have a different packet label.
+         * returned by the generic routine simplicialSphere().
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the tetrahedral sphere.
          */
-        static Triangulation<2>* sphereTetrahedron();
+        static Triangulation<2> sphereTetrahedron();
 
         /**
          * Returns the eight-triangle 2-sphere formed from the boundary
          * of an octahedron.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the octahedral sphere.
          */
-        static Triangulation<2>* sphereOctahedron();
+        static Triangulation<2> sphereOctahedron();
 
         /**
          * Returns a one-triangle disc.
          * This is isomorphic to the triangulation returned by the generic
-         * routine ball(), though it will have a different packet label.
+         * routine ball().
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the disc.
          */
-        static Triangulation<2>* disc();
+        static Triangulation<2> disc();
 
         /**
          * Returns a two-triangle annulus.
          * This is isomorphic to the triangulation returned by the generic
-         * routine ballBundle(), though it will have a different packet label.
+         * routine ballBundle().
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the annulus.
          */
-        static Triangulation<2>* annulus();
+        static Triangulation<2> annulus();
 
         /**
          * Returns a one-triangle Mobius band.  This is isomorphic to the
-         * triangulation returned by the generic routine twistedBallBundle(),
-         * though it will have a different packet label.
+         * triangulation returned by the generic routine twistedBallBundle().
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the Mobius band.
          */
-        static Triangulation<2>* mobius();
+        static Triangulation<2> mobius();
 
         /**
          * Returns a two-triangle torus.
          * This is isomorphic to the triangulation returned by the generic
-         * routine sphereBundle(), though it will have a different packet label.
+         * routine sphereBundle().
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the torus.
          */
-        static Triangulation<2>* torus();
+        static Triangulation<2> torus();
 
         /**
          * Returns a two-triangle projective plane.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the projective plane.
          */
-        static Triangulation<2>* rp2();
+        static Triangulation<2> rp2();
 
         /**
          * Returns a two-triangle Klein bottle.  This is isomorphic to the
-         * triangulation returned by the generic routine twistedSphereBundle(),
-         * though it will have a different packet label.
+         * triangulation returned by the generic routine twistedSphereBundle().
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the Klein bottle.
          */
-        static Triangulation<2>* kb();
+        static Triangulation<2> kb();
 };
 
-/*@}*/
+inline Triangulation<2> Example<2>::sphereTetrahedron() {
+    return simplicialSphere();
+}
+
+inline Triangulation<2> Example<2>::torus() {
+    return sphereBundle();
+}
+
+inline Triangulation<2> Example<2>::kb() {
+    return twistedSphereBundle();
+}
+
+inline Triangulation<2> Example<2>::disc() {
+    return ball();
+}
+
+inline Triangulation<2> Example<2>::annulus() {
+    return ballBundle();
+}
+
+inline Triangulation<2> Example<2>::mobius() {
+    return twistedBallBundle();
+}
 
 } // namespace regina
 

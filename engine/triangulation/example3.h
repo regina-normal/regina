@@ -41,15 +41,14 @@
 #endif
 
 #include "regina-core.h"
-#include "triangulation/forward.h"
+#include "triangulation/dim3.h"
 #include "triangulation/detail/example.h"
 
 namespace regina {
 
 /**
- * \addtogroup triangulation Triangulations
+ * \defgroup triangulation Triangulations
  * Triangulations of manifolds in all supported dimensions.
- * @{
  */
 
 /**
@@ -62,6 +61,8 @@ namespace regina {
  *
  * This 3-dimensional specialisation offers significant extra functionality,
  * by providing several more hard-coded and parameterised constructions.
+ *
+ * \ingroup triangulation
  */
 template <>
 class Example<3> : public detail::ExampleBase<3> {
@@ -76,73 +77,167 @@ class Example<3> : public detail::ExampleBase<3> {
          * This is \e different from the generic routine sphere(),
          * which uses two tetrahedra instead.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return a one-tetrahedron 3-sphere.
          */
-        static Triangulation<3>* threeSphere();
+        static Triangulation<3> threeSphere();
 
         /**
          * Returns the two-tetrahedron triangulation of the 3-sphere
          * that is dual to Bing's house with two rooms.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return a 3-sphere triangulation dual to Bing's house.
          */
-        static Triangulation<3>* bingsHouse();
+        static Triangulation<3> bingsHouse();
 
         /**
          * Returns a two-tetrahedron triangulation of the product space
          * <tt>S^2 x S^1</tt>.
          * This is identical to calling the generic routine sphereBundle().
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the product space <tt>S^2 x S^1</tt>.
          */
-        static Triangulation<3>* s2xs1();
+        static Triangulation<3> s2xs1();
 
         /**
          * Returns a three-tetrahedron triangulation of the non-orientable
          * product space <tt>RP^2 x S^1</tt>.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the product space <tt>RP^2 x S^1</tt>.
          */
-        static Triangulation<3>* rp2xs1();
+        static Triangulation<3> rp2xs1();
 
         /**
          * Returns a triangulation of the connected sum
          * <tt>RP^3 # RP^3</tt>.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the connected sum <tt>RP^3 # RP^3</tt>.
          */
-        static Triangulation<3>* rp3rp3();
+        static Triangulation<3> rp3rp3();
 
         /**
          * Returns a triangulation of the lens space <tt>L(p,q)</tt>.
          *
-         * The triangulation uses a layered lens space, which is
-         * conjectured (but not proven in all cases) to be the
-         * triangulation requiring the fewest tetrahedra.
+         * The triangulation uses a layered lens space, which is conjectured
+         * (but not proven in all cases) to be the triangulation requiring the
+         * fewest tetrahedra.  A layered lens space is constructed by
+         * building a layered solid torus and then joining together the
+         * two boundary triangles.
          *
          * \pre \a p \> \a q \>= 0 unless (<i>p</i>,<i>q</i>) = (0,1).
          * \pre gcd(\a p, \a q) = 1.
          *
          * @param p a parameter of the desired lens space.
          * @param q a parameter of the desired lens space.
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the lens space <tt>L(p,q)</tt>.
          */
-        static Triangulation<3>* lens(size_t p, size_t q);
+        static Triangulation<3> lens(size_t p, size_t q);
+
+        /**
+         * Returns a layered loop of the given length.
+         * Layered loops are described in detail in the LayeredLoop class notes.
+         *
+         * @param length the length of the layered loop to construct;
+         * this must be strictly positive.
+         * @param twisted \c true if the layered loop should be twisted,
+         * or \c false if it should be untwisted.
+         * @return the resulting layered loop.
+         */
+        static Triangulation<3> layeredLoop(size_t length, bool twisted);
 
         /**
          * Returns the five-tetrahedron triangulation of the
          * Poincare homology sphere.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the Poincare homology sphere.
          */
-        static Triangulation<3>* poincareHomologySphere();
+        static Triangulation<3> poincare();
+
+        /**
+         * Deprecated routine that returns the five-tetrahedron triangulation
+         * of the Poincare homology sphere.
+         *
+         * \deprecated This routine has been renamed to poincare().
+         *
+         * @return the Poincare homology sphere.
+         */
+        [[deprecated]] static Triangulation<3> poincareHomologySphere();
+
+        /**
+         * Returns an augmented triangular solid torus with the given
+         * parameters.  Almost all augmented triangular solid tori represent
+         * Seifert fibred spaces with three or fewer exceptional fibres.
+         * Augmented triangular solid tori are described in more detail in the
+         * AugTriSolidTorus class notes.
+         *
+         * The resulting Seifert fibred space will be
+         * SFS((\a a1, \a b1), (\a a2, \a b2), (\a a3, \a b3), (1, 1)),
+         * where the parameters \a a1, ..., \a b3 are passed as arguments to
+         * this routine.  The three layered solid tori that are attached to
+         * the central triangular solid torus will be
+         * LST(|<i>a1</i>|, |<i>b1</i>|, |-<i>a1</i>-<i>b1</i>|), ...,
+         * LST(|<i>a3</i>|, |<i>b3</i>|, |-<i>a3</i>-<i>b3</i>|).
+         *
+         * There are no sign constraints on the parameters; in particular,
+         * negative arguments are allowed.
+         *
+         * The new tetrahedra will be inserted at the end of the list of
+         * tetrahedra in the triangulation.
+         *
+         * \pre gcd(\a a1, \a b1) = 1.
+         * \pre gcd(\a a2, \a b2) = 1.
+         * \pre gcd(\a a3, \a b3) = 1.
+         *
+         * @param a1 a parameter describing the first layered solid
+         * torus in the augmented triangular solid torus.
+         * @param b1 a parameter describing the first layered solid
+         * torus in the augmented triangular solid torus.
+         * @param a2 a parameter describing the second layered solid
+         * torus in the augmented triangular solid torus.
+         * @param b2 a parameter describing the second layered solid
+         * torus in the augmented triangular solid torus.
+         * @param a3 a parameter describing the third layered solid
+         * torus in the augmented triangular solid torus.
+         * @param b3 a parameter describing the third layered solid
+         * torus in the augmented triangular solid torus.
+         */
+        static Triangulation<3> augTriSolidTorus(long a1, long b1,
+            long a2, long b2, long a3, long b3);
+        /**
+         * Returns a triangulation of the given orientable Seifert fibred space
+         * over the sphere with at most three exceptional fibres.
+         *
+         * The Seifert fibred space will be
+         * SFS((\a a1, \a b1), (\a a2, \a b2), (\a a3, \a b3)), where the
+         * parameters \a a1, ..., \a b3 are passed as arguments to this routine.
+         *
+         * The three pairs of parameters (\a a, \a b) do not need
+         * to be normalised, i.e., the parameters can be positive or
+         * negative and \a b may lie outside the range [0..\a a).
+         * There is no separate twisting parameter; each additional
+         * twist can be incorporated into the existing parameters by replacing
+         * some pair (\a a>, \a b) with the pair (\a a, \a a + \a b).
+         * For Seifert fibred spaces with less than three exceptional fibres,
+         * some or all of the parameter pairs may be (1, \a k) or even (1, 0).
+         *
+         * If you wish to construct more complex Seifert fibred spaces
+         * (e.g., with more exceptional fibres, or with a different base
+         * orbifold), you can use the more sophisticated SFSpace::construct().
+         *
+         * \pre None of \a a1, \a a2 or \a a3 are 0.
+         * \pre gcd(\a a1, \a b1) = 1.
+         * \pre gcd(\a a2, \a b2) = 1.
+         * \pre gcd(\a a3, \a b3) = 1.
+         *
+         * @param a1 a parameter describing the first exceptional fibre.
+         * @param b1 a parameter describing the first exceptional fibre.
+         * @param a2 a parameter describing the second exceptional fibre.
+         * @param b2 a parameter describing the second exceptional fibre.
+         * @param a3 a parameter describing the third exceptional fibre.
+         * @param b3 a parameter describing the third exceptional fibre.
+         * @return the triangulated Seifert fibred space.
+         */
+        static Triangulation<3> sfsOverSphere(long a1 = 1, long b1 = 0,
+            long a2 = 1, long b2 = 0, long a3 = 1, long b3 = 0);
 
         /**
          * Returns a nine-tetrahedron minimal triangulation of the Weeks
@@ -151,10 +246,9 @@ class Example<3> : public detail::ExampleBase<3> {
          * Note that there are nine minimal triangulations of the Weeks
          * manifold (of course this routine returns just one).
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the Weeks manifold.
          */
-        static Triangulation<3>* weeks();
+        static Triangulation<3> weeks();
 
         /**
          * Returns a one-vertex triangulation of the Weber-Seifert
@@ -167,28 +261,26 @@ class Example<3> : public detail::ExampleBase<3> {
          * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
          * Trans. Amer. Math. Soc. 364:2 (2012), pp. 911-932.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the Weber-Seifert dodecahedral space.
          */
-        static Triangulation<3>* weberSeifert();
+        static Triangulation<3> weberSeifert();
 
         /**
          * Returns the nine-tetrahedron closed orientable hyperbolic
          * 3-manifold with volume 0.94270736.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the closed orientable hyperbolic manifold described above.
          */
-        static Triangulation<3>* smallClosedOrblHyperbolic();
+        static Triangulation<3> smallClosedOrblHyperbolic();
 
         /**
          * Returns the eleven-tetrahedron closed non-orientable hyperbolic
          * 3-manifold with volume 2.02988321.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the closed non-orientable hyperbolic manifold described
+         * above.
          */
-        static Triangulation<3>* smallClosedNonOrblHyperbolic();
+        static Triangulation<3> smallClosedNonOrblHyperbolic();
 
         /**
          * Returns the boundary 3-sphere of the regular 600-cell.
@@ -199,10 +291,9 @@ class Example<3> : public detail::ExampleBase<3> {
          * library of triangulations.  See:
          * http://page.math.tu-berlin.de/~lutz/stellar/library_of_triangulations.html
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the boundary of the regular 600-cell.
          */
-        static Triangulation<3>* sphere600();
+        static Triangulation<3> sphere600();
 
         /*@}*/
         /**
@@ -226,21 +317,18 @@ class Example<3> : public detail::ExampleBase<3> {
          *
          * @param a the first parameter of the layered solid torus.
          * @param b the second parameter of the layered solid torus.
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the layered solid torus <tt>LST(a,b,c)</tt>.
          */
-        static Triangulation<3>* lst(size_t a, size_t b);
+        static Triangulation<3> lst(size_t a, size_t b);
 
         /**
          * Returns a triangulation of the solid Klein bottle.
          * This is isomorphic to the triangulation returned by the
-         * generic routine twistedBallBundle(), though it will have a
-         * different packet label.
+         * generic routine twistedBallBundle().
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the solid Klein bottle.
          */
-        static Triangulation<3>* solidKleinBottle();
+        static Triangulation<3> solidKleinBottle();
 
         /*@}*/
         /**
@@ -252,56 +340,61 @@ class Example<3> : public detail::ExampleBase<3> {
          * Returns a two-tetrahedron ideal triangulation of the figure
          * eight knot complement.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the figure eight knot complement.
          */
-        static Triangulation<3>* figureEight();
+        static Triangulation<3> figureEight();
 
         /**
          * Returns a two-tetrahedron ideal triangulation of the trefoil
          * knot complement.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the trefoil knot complement.
          */
-        static Triangulation<3>* trefoil();
+        static Triangulation<3> trefoil();
 
         /**
          * Returns a four-tetrahedron ideal triangulation of the
          * Whitehead link complement.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the Whitehead link complement.
          */
-        static Triangulation<3>* whiteheadLink();
+        static Triangulation<3> whiteheadLink();
 
         /**
          * Returns the one-tetrahedron ideal triangulation of the
          * non-orientable Gieseking manifold.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the Gieseking manifold.
          */
-        static Triangulation<3>* gieseking();
+        static Triangulation<3> gieseking();
 
         /**
          * Returns a triangulation of a solid genus two torus with a
          * cusped boundary.  This triangulation has one internal finite
          * vertex and one genus two ideal vertex.
          *
-         * @return a newly constructed triangulation, which must be
-         * destroyed by the caller of this routine.
+         * @return the solid genus two torus with cusped boundary.
          */
-        static Triangulation<3>* cuspedGenusTwoTorus();
+        static Triangulation<3> cuspedGenusTwoTorus();
 
         /*@}*/
 };
 
-inline Triangulation<3>* Example<3>::s2xs1() {
+inline Triangulation<3> Example<3>::threeSphere() {
+    return lens(1, 0);
+}
+
+inline Triangulation<3> Example<3>::s2xs1() {
     return sphereBundle();
 }
 
-/*@}*/
+inline Triangulation<3> Example<3>::poincareHomologySphere() {
+    return poincare();
+}
+
+inline Triangulation<3> Example<3>::solidKleinBottle() {
+    return twistedBallBundle();
+}
 
 } // namespace regina
 

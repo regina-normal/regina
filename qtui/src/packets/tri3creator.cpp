@@ -84,7 +84,7 @@ namespace {
         ExampleCreator<3>(QObject::tr("Figure eight knot complement"), &regina::Example<3>::figureEight),
         ExampleCreator<3>(QObject::tr("Gieseking manifold"), &regina::Example<3>::gieseking),
         ExampleCreator<3>(QObject::tr("Lens space L(8,3)"), [](){ return regina::Example<3>::lens(8, 3); }),
-        ExampleCreator<3>(QObject::tr("Poincaré homology sphere"), &regina::Example<3>::poincareHomologySphere),
+        ExampleCreator<3>(QObject::tr("Poincaré homology sphere"), &regina::Example<3>::poincare),
         ExampleCreator<3>(QObject::tr("Product ℝP² × S¹"), &regina::Example<3>::rp2xs1),
         ExampleCreator<3>(QObject::tr("Product S² × S¹"), &regina::Example<3>::s2xs1),
         ExampleCreator<3>(QObject::tr("ℝP³"), [](){ return regina::Example<3>::lens(2, 1); }),
@@ -100,21 +100,21 @@ namespace {
     /**
      * Regular expressions describing different sets of parameters.
      */
-    QRegExp reLensParams("^[^0-9\\-]*(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]*$");
+    QRegExp reLensParams(R"(^[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]*$)");
     QRegExp reLSTParams(
-        "^[^0-9\\-]*(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]*$");
+        R"(^[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]+(\d+)[^0-9\-]*$)");
     QRegExp reSFS3Params(
-        "^[^0-9\\-]*(-?\\d+)[^0-9\\-]+(-?\\d+)"
-        "[^0-9\\-]+(-?\\d+)[^0-9\\-]+(-?\\d+)"
-        "[^0-9\\-]+(-?\\d+)[^0-9\\-]+(-?\\d+)[^0-9\\-]*$");
+        R"(^[^0-9\-]*(-?\d+)[^0-9\-]+(-?\d+))"
+        R"([^0-9\-]+(-?\d+)[^0-9\-]+(-?\d+))"
+        R"([^0-9\-]+(-?\d+)[^0-9\-]+(-?\d+)[^0-9\-]*$)");
     QRegExp reSFSAllParams(
-        "^[^0-9\\-]*(-?\\d+)[^0-9\\-]+(-?\\d+)"
-        "(?:[^0-9\\-]+(-?\\d+)[^0-9\\-]+(-?\\d+))*"
-        "[^0-9\\-]*$");
-    QRegExp reSFSParamPair("(-?\\d+)[^0-9\\-]+(-?\\d+)");
-    QRegExp reIsoSig("^([A-Za-z0-9+-]+)$");
-    QRegExp reDehydration("^([A-Za-z]+)$");
-    QRegExp reSignature("^([\\(\\)\\.,;:\\|\\-A-Za-z]+)$");
+        R"(^[^0-9\-]*(-?\d+)[^0-9\-]+(-?\d+))"
+        R"((?:[^0-9\-]+(-?\d+)[^0-9\-]+(-?\d+))*)"
+        R"([^0-9\-]*$)");
+    QRegExp reSFSParamPair(R"((-?\d+)[^0-9\-]+(-?\d+))");
+    QRegExp reIsoSig(R"(^([A-Za-z0-9+-]+)$)");
+    QRegExp reDehydration(R"(^([A-Za-z]+)$)");
+    QRegExp reSignature(R"(^([\(\)\.,;:\|\-A-Za-z]+)$)");
 }
 
 Tri3Creator::Tri3Creator() {
@@ -125,7 +125,7 @@ Tri3Creator::Tri3Creator() {
     QBoxLayout* typeArea = new QHBoxLayout();//layout, 5);
     layout->addLayout(typeArea);
     QString expln = QObject::tr("Specifies what type of triangulation to create.");
-    QLabel* label = new QLabel(QObject::tr("Type of triangulation:"), ui);
+    auto* label = new QLabel(QObject::tr("Type of triangulation:"), ui);
     label->setWhatsThis(expln);
     typeArea->addWidget(label);
     type = new QComboBox(ui);
@@ -293,8 +293,8 @@ Tri3Creator::Tri3Creator() {
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     exampleWhich = new QComboBox(hArea);
-    for (size_t i = 0; i < examples.size(); ++i)
-        exampleWhich->addItem(examples[i].name());
+    for (const auto& e : examples)
+        exampleWhich->addItem(e.name());
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     hLayout->addWidget(exampleWhich, 1);
@@ -312,11 +312,11 @@ QWidget* Tri3Creator::getInterface() {
     return ui;
 }
 
-regina::Packet* Tri3Creator::createPacket(regina::Packet*,
-        QWidget* parentWidget) {
+std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
+        std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        Triangulation<3>* ans = new Triangulation<3>();
+        auto ans = regina::makePacket<Triangulation<3>>();
         ans->setLabel("3-D triangulation");
         return ans;
     } else if (typeId == TRI_LAYERED_LENS_SPACE) {
@@ -327,7 +327,7 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
                 "must be non-negative integers."),
                 QObject::tr("<qt>Example parameters are "
                 "<i>8,3</i>.</qt>"));
-            return 0;
+            return nullptr;
         }
 
         unsigned long p = reLensParams.cap(1).toULong();
@@ -340,16 +340,19 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
                 QObject::tr("<qt>For instance, "
                 "the parameters <i>8,3</i> are valid whereas <i>3,8</i> "
                 "are not.</qt>"));
-            return 0;
+            return nullptr;
         }
         if (regina::gcd(p, q) != 1) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The two lens space "
                 "parameters must be relatively prime."));
-            return 0;
+            return nullptr;
         }
 
-        return Example<3>::lens(p, q);
+        std::ostringstream s;
+        s << "L(" << p << ',' << q << ')';
+
+        return regina::makePacket(Example<3>::lens(p, q), s.str());
     } else if (typeId == TRI_LAYERED_SOLID_TORUS) {
         if (! reLSTParams.exactMatch(lstParams->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -357,42 +360,46 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
                 "torus parameters (<i>a</i>,<i>b</i>,<i>c</i>) "
                 "must be non-negative integers.</qt>"),
                 QObject::tr("<qt>Example parameters are <i>3,4,7</i>.</qt>"));
-            return 0;
+            return nullptr;
         }
 
-        unsigned long a = reLSTParams.cap(1).toULong();
-        unsigned long b = reLSTParams.cap(2).toULong();
-        unsigned long c = reLSTParams.cap(3).toULong();
+        unsigned long param[3] {
+            reLSTParams.cap(1).toULong(),
+            reLSTParams.cap(2).toULong(),
+            reLSTParams.cap(3).toULong()
+        };
 
-        if (a == 0 && b == 0 && c == 0) {
+        std::sort(param, param + 3);
+
+        if (param[2] == 0) {
+            // All three parameters are zero.
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("At least one of the "
                 "layered solid torus parameters must be strictly "
                 "positive."));
-            return 0;
+            return nullptr;
         }
-        if (regina::gcd(a, b) != 1) {
+        if (regina::gcd(param[0], param[1]) != 1) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The layered "
                 "solid torus parameters must be relatively prime."));
-            return 0;
+            return nullptr;
         }
 
-        if (a + b == c)
-            return Example<3>::lst(a, b);
-        else if (a + c == b)
-            return Example<3>::lst(a, c);
-        else if (b + c == a)
-            return Example<3>::lst(b, c);
-        else {
+        if (param[0] + param[1] != param[2]) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("Two of the layered "
                 "solid torus parameters must add to give the third."),
                 QObject::tr("<qt>For instance, the parameters "
                 "<i>3,4,7</i> are valid "
                 "whereas the parameters <i>3,4,5</i> are not.</qt>"));
-            return 0;
+            return nullptr;
         }
+
+        std::ostringstream s;
+        s << "LST(" << param[0] << ',' << param[1] << ',' << param[2] << ')';
+
+        return regina::makePacket(Example<3>::lst(param[0], param[1]), s.str());
     } else if (typeId == TRI_SFS_SPHERE) {
         if (! reSFSAllParams.exactMatch(sfsParams->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -420,13 +427,12 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
                 "acceptable.<p>"
                 "An example set of parameters is <i>(2,-1) (3,4) (5,-4)</i>, "
                 "representing the Poincar&eacute; homology sphere.</qt>"));
-            return 0;
+            return nullptr;
         }
 
         // Build the Seifert fibred space.
         regina::SFSpace sfs;
         long a, b;
-        long d, u, v;
         long pos = 0;
         long whichPair = 1;
 
@@ -439,12 +445,12 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
                     QObject::tr("<qt>None of the parameters "
                     "<i>a<sub>1</sub></i>, <i>a<sub>2</sub></i>, ..., "
                     "<i>a<sub>n</sub></i> may be zero.</qt>"));
-                return 0;
+                return nullptr;
             }
 
             // For gcd calculations, use gcdWithCoeffs() which can cope with
             // negatives.
-            d = regina::gcdWithCoeffs(a, b, u, v);
+            auto [d, u, v] = regina::gcdWithCoeffs(a, b);
             if (d != 1 && d != -1) {
                 ReginaSupport::sorry(parentWidget,
                     QObject::tr("<qt>The two parameters "
@@ -452,7 +458,7 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
                     "<i>b<sub>%3</sub> = %4</i> must be "
                     "relatively prime.</qt>").
                     arg(whichPair).arg(a).arg(whichPair).arg(b));
-                return 0;
+                return nullptr;
             }
 
             if (a < 0)
@@ -464,9 +470,9 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
             whichPair++;
         }
 
-        Triangulation<3>* ans = sfs.construct();
-        ans->setLabel(sfs.structure());
-        return ans;
+        // Note: Our SFS is over the sphere, and SFSpace::construct()
+        // is implemented for all such manifolds.
+        return regina::makePacket(sfs.construct(), sfs.structure());
     } else if (typeId == TRI_ISOSIG) {
         if (! reIsoSig.exactMatch(isoSig->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -479,23 +485,22 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
                 "<i>Simplification paths in the Pachner graphs "
                 "of closed orientable 3-manifold triangulations</i>, "
                 "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>"));
-            return 0;
+            return nullptr;
         }
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
-        Triangulation<3>* ans = Triangulation<3>::fromIsoSig(sig);
-        if (ans) {
-            ans->setLabel(sig);
-            return ans;
+        try {
+            return regina::makePacket(Triangulation<3>::fromIsoSig(sig), sig);
+        } catch (const regina::InvalidArgument&) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("I could not interpret the given "
+                    "isomorphism signature."),
+                QObject::tr("<qt>Isomorphism signatures are described in "
+                    "detail in <i>Simplification paths in the Pachner graphs "
+                    "of closed orientable 3-manifold triangulations</i>, "
+                    "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>"));
+            return nullptr;
         }
-        ReginaSupport::sorry(parentWidget,
-            QObject::tr("I could not interpret the given "
-            "isomorphism signature."),
-            QObject::tr("<qt>Isomorphism signatures are described in detail in "
-            "<i>Simplification paths in the Pachner graphs "
-            "of closed orientable 3-manifold triangulations</i>, "
-            "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>"));
-        return 0;
     } else if (typeId == TRI_DEHYDRATION) {
         if (! reDehydration.exactMatch(dehydrationString->text())) {
             ReginaSupport::sorry(parentWidget, 
@@ -507,13 +512,14 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
                 "<i>A census of cusped hyperbolic 3-manifolds</i>, "
                 "Callahan, Hildebrand and Weeks, published in "
                 "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>"));
-            return 0;
+            return nullptr;
         }
 
-        Triangulation<3>* ans = new Triangulation<3>();
         std::string dehydString = reDehydration.cap(1).toUtf8().constData();
-        if (! ans->insertRehydration(dehydString)) {
-            delete ans;
+        try {
+            return regina::makePacket(Triangulation<3>::rehydrate(dehydString),
+                dehydString);
+        } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("I could not interpret the given "
                 "dehydration string."),
@@ -522,10 +528,8 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
                 "<i>A census of cusped hyperbolic 3-manifolds</i>, "
                 "Callahan, Hildebrand and Weeks, published in "
                 "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>"));
-            return 0;
+            return nullptr;
         }
-        ans->setLabel(dehydString);
-        return ans;
     } else if (typeId == TRI_SPLITTING_SURFACE) {
         if (! reSignature.exactMatch(splittingSignature->text())) {
             ReginaSupport::sorry(parentWidget, 
@@ -539,12 +543,14 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
                 "Splitting surface signatures are described in detail in "
                 "<i>Minimal triangulations and normal surfaces</i>, "
                 "Burton, PhD thesis, available from the Regina website.</qt>"));
-            return 0;
+            return nullptr;
         }
 
         std::string sigString = reSignature.cap(1).toUtf8().constData();
-        regina::Signature* sig = regina::Signature::parse(sigString);
-        if (! sig) {
+        try {
+            return regina::makePacket(
+                regina::Signature::parse(sigString).triangulate(), sigString);
+        } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("I could not interpret the given "
                 "splitting surface signature."),
@@ -552,18 +558,14 @@ regina::Packet* Tri3Creator::createPacket(regina::Packet*,
                 "described in detail in "
                 "<i>Minimal triangulations and normal surfaces</i>, "
                 "Burton, PhD thesis, available from the Regina website.</qt>"));
-            return 0;
+            return nullptr;
         }
-        Triangulation<3>* ans = sig->triangulate();
-        delete sig;
-        ans->setLabel(sigString);
-        return ans;
     } else if (typeId == TRI_EXAMPLE) {
         return examples[exampleWhich->currentIndex()].create();
     }
 
     ReginaSupport::info(parentWidget,
         QObject::tr("Please select a triangulation type."));
-    return 0;
+    return nullptr;
 }
 

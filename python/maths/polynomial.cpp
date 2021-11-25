@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/polynomial.h"
 #include "maths/rational.h"
 #include "../helpers.h"
@@ -45,12 +46,8 @@ void addPolynomial(pybind11::module_& m) {
         .def(pybind11::init<>())
         .def(pybind11::init<size_t>())
         .def(pybind11::init<const Polynomial<Rational>&>())
-        .def(pybind11::init([](pybind11::list l) {
-            Rational* coeffs = regina::python::seqFromList<Rational>(l);
-            Polynomial<Rational>* ans = new Polynomial<Rational>(
-                coeffs, coeffs + l.size());
-            delete[] coeffs;
-            return ans;
+        .def(pybind11::init([](const std::vector<Rational>& coeffs) {
+            return new Polynomial<Rational>(coeffs.begin(), coeffs.end());
         }))
         // overload_cast has trouble with templated vs non-templated overloads.
         // Just cast directly.
@@ -58,19 +55,18 @@ void addPolynomial(pybind11::module_& m) {
             &Polynomial<Rational>::init)
         .def("init", (void (Polynomial<Rational>::*)(size_t))
             &Polynomial<Rational>::init)
-        .def("init", [](Polynomial<Rational>& p, pybind11::list l) {
-            Rational* coeffs = regina::python::seqFromList<Rational>(l);
-            p.init(coeffs, coeffs + l.size());
-            delete[] coeffs;
+        .def("init", [](Polynomial<Rational>& p,
+                const std::vector<Rational>& c) {
+            p.init(c.begin(), c.end());
         })
         .def("degree", &Polynomial<Rational>::degree)
         .def("isZero", &Polynomial<Rational>::isZero)
         .def("isMonic", &Polynomial<Rational>::isMonic)
         .def("leading", &Polynomial<Rational>::leading,
-            pybind11::return_value_policy::reference_internal)
+            pybind11::return_value_policy::copy) // to enforce constness
         .def("__getitem__", [](const Polynomial<Rational>& p, size_t exp) {
             return p[exp];
-        }, pybind11::return_value_policy::reference_internal)
+        }, pybind11::return_value_policy::copy) // to enforce constness
         .def("__setitem__", [](Polynomial<Rational>& p, size_t exp,
                 const regina::Rational& value) {
             p.set(exp, value);
@@ -96,14 +92,8 @@ void addPolynomial(pybind11::module_& m) {
         .def(pybind11::self * pybind11::self)
         .def(pybind11::self / pybind11::self)
         .def(- pybind11::self)
-        .def("divisionAlg", [](const Polynomial<Rational>& p,
-                const Polynomial<Rational>& divisor) {
-            std::unique_ptr<Polynomial<Rational>> q(new Polynomial<Rational>);
-            std::unique_ptr<Polynomial<Rational>> r(new Polynomial<Rational>);
-
-            p.divisionAlg(divisor, *q, *r);
-            return std::make_pair(std::move(q), std::move(r));
-        })
+        .def("divisionAlg", overload_cast<const Polynomial<Rational>&>(
+            &Polynomial<Rational>::divisionAlg, pybind11::const_))
         .def("gcdWithCoeffs", &Polynomial<Rational>::gcdWithCoeffs<Rational>)
     ;
     regina::python::add_output(c, true /* __repr__ */);

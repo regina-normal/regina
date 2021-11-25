@@ -72,17 +72,14 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * Returns the number of base64 characters required to encode the given
  * number of bytes.  This is the number of characters used (excluding the
  * null terminator) by the routine base64Encode(const char*, size_t, char**).
  *
  * @param bytes the number of raw input bytes.
  * @return the corresponding number of base64 printable output characters.
+ *
+ * \ingroup utilities
  */
 size_t base64Length(size_t bytes);
 
@@ -98,6 +95,8 @@ size_t base64Length(size_t bytes);
  * @param ch any character.
  * @return \c true if the given character is one of the base64 printable
  * characters used in Regina, or \c false if it is not.
+ *
+ * \ingroup utilities
  */
 bool isBase64(char ch);
 
@@ -107,6 +106,8 @@ bool isBase64(char ch);
  *
  * This is the translation table as described in RFC1113.
  * It is presented as a string of length 64.
+ *
+ * \ingroup utilities
  */
 inline constexpr char base64Table[] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
@@ -122,6 +123,8 @@ inline constexpr char base64Table[] =
  * Future versions of Regina may append new characters to the end of this
  * string, but the existing characters base64Spare[0], base64Spare[1], etc.
  * will not change.
+ *
+ * \ingroup utilities
  */
 inline constexpr char base64Spare[] = "_-.";
 
@@ -139,7 +142,11 @@ inline constexpr char base64Spare[] = "_-.";
  * The routine base64Length() can be used to precalculate precisely how
  * many output characters will be required.
  *
- * \ifacespython Not present.
+ * \ifacespython These base64 encoding routines are made available to Python
+ * in the form <tt>base64Encode(input_bytes)</tt>.  In Python 3, this routine
+ * takes a single Python \c bytes object as input and returns a string;
+ * in Python 2 it takes the input bytes as a byte string and returns a unicode
+ * string.  You do not need to supply any input or output buffer lengths.
  *
  * @param in the sequence of input bytes; this does not need to be
  * terminated in any special way.
@@ -151,6 +158,8 @@ inline constexpr char base64Spare[] = "_-.";
  * @author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
+ *
+ * \ingroup utilities
  */
 void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
 
@@ -164,7 +173,11 @@ void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
  * If the output array is too large (in particular, the expected size
  * will overflow a \c size_t), the \a out pointer will be set to \c null.
  *
- * \ifacespython Not present.
+ * \ifacespython These base64 encoding routines are made available to Python
+ * in the form <tt>base64Encode(input_bytes)</tt>.  In Python 3, this routine
+ * takes a single Python \c bytes object as input and returns a string;
+ * in Python 2 it takes the input bytes as a byte string and returns a unicode
+ * string.  You do not need to supply any input or output buffer lengths.
  *
  * @param in the sequence of input bytes; this does not need to be
  * terminated in any special way.
@@ -176,6 +189,8 @@ void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
  * @author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
+ *
+ * \ingroup utilities
  */
 size_t base64Encode(const char* in, size_t inlen, char** out);
 
@@ -196,7 +211,12 @@ size_t base64Encode(const char* in, size_t inlen, char** out);
  * The total number of output bytes is important to know, since the output
  * array is not terminated in any special way.
  *
- * \ifacespython Not present.
+ * \ifacespython These base64 decoding routines are made available to Python
+ * in the form <tt>base64Decode(input_string)</tt>.  In Python 3, this routine
+ * takes a base64 string as input and returns a Python \c bytes object;
+ * in Python 2 it takes a base64 string as input and returns a string of bytes.
+ * You do not need to supply any input or output buffer lengths.
+ * If the decoding is unsuccessful, this routine will return \c None.
  *
  * @param in the input sequence of base64 characters; this does not need
  * to be terminated in any special way.
@@ -211,6 +231,8 @@ size_t base64Encode(const char* in, size_t inlen, char** out);
  * @author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
+ *
+ * \ingroup utilities
  */
 bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
 
@@ -235,7 +257,12 @@ bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
  * null pointer may be passed in the \a outlen argument.  Note however
  * that the output array is not terminated in any special way.
  *
- * \ifacespython Not present.
+ * \ifacespython These base64 decoding routines are made available to Python
+ * in the form <tt>base64Decode(input_string)</tt>.  In Python 3, this routine
+ * takes a base64 string as input and returns a Python \c bytes object;
+ * in Python 2 it takes a base64 string as input and returns a string of bytes.
+ * You do not need to supply any input or output buffer lengths.
+ * If the decoding is unsuccessful, this routine will return \c None.
  *
  * @param in the input sequence of base64 characters; this does not need
  * to be terminated in any special way.
@@ -250,10 +277,10 @@ bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
  * @author This routine is based on the \a Base64 project at
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
+ *
+ * \ingroup utilities
  */
 bool base64Decode(const char* in, size_t inlen, char** out, size_t* outlen);
-
-/*@}*/
 
 // Inline functions:
 

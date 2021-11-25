@@ -32,24 +32,22 @@
 
 #include "../pybind11/pybind11.h"
 #include "packet/text.h"
-#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
 using regina::Text;
 
 void addText(pybind11::module_& m) {
-    pybind11::class_<Text, regina::Packet, regina::SafePtr<Text>>(m, "Text")
+    pybind11::class_<Text, regina::Packet, std::shared_ptr<Text>>(m, "Text")
         .def(pybind11::init<>())
-        .def(pybind11::init<const std::string&>())
-        .def(pybind11::init<const char*>())
+        .def(pybind11::init<std::string>())
+        .def(pybind11::init<const Text&>())
+        .def("swap", &Text::swap)
         .def("text", &Text::text)
-        .def("setText", overload_cast<const std::string&>(&Text::setText))
-        .def("setText", overload_cast<const char*>(&Text::setText))
-        .def_property_readonly_static("typeID", [](pybind11::object) {
-            // We cannot take the address of typeID, so use a getter function.
-            return Text::typeID;
-        })
+        .def("setText", &Text::setText)
+        .def_readonly_static("typeID", &Text::typeID)
     ;
+
+    m.def("swap", (void(*)(Text&, Text&))(regina::swap));
 }
 

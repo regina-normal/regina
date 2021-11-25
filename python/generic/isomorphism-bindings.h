@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "triangulation/generic.h"
 #include "../helpers.h"
 
@@ -41,16 +42,26 @@ template <int dim>
 void addIsomorphism(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<Isomorphism<dim>>(m, name)
         .def(pybind11::init<const Isomorphism<dim>&>())
+        .def(pybind11::init<unsigned>())
         .def("swap", &Isomorphism<dim>::swap)
         .def("size", &Isomorphism<dim>::size)
         .def("simpImage", overload_cast<unsigned>(
             &Isomorphism<dim>::simpImage, pybind11::const_))
+        .def("setSimpImage", [](Isomorphism<dim>& iso, unsigned s, int image) {
+            iso.simpImage(s) = image;
+        })
         .def("facetPerm", overload_cast<unsigned>(
             &Isomorphism<dim>::facetPerm, pybind11::const_))
+        .def("setFacetPerm", [](Isomorphism<dim>& iso, unsigned s,
+                regina::Perm<dim+1> p) {
+            iso.facetPerm(s) = p;
+        })
         .def("__getitem__", &Isomorphism<dim>::operator[])
         .def("isIdentity", &Isomorphism<dim>::isIdentity)
         .def("apply", &Isomorphism<dim>::apply)
         .def("applyInPlace", &Isomorphism<dim>::applyInPlace)
+        .def(pybind11::self * pybind11::self)
+        .def("inverse", &Isomorphism<dim>::inverse)
         .def_static("random", &Isomorphism<dim>::random,
             pybind11::arg(), pybind11::arg("even") = false)
         .def_static("identity", &Isomorphism<dim>::identity)

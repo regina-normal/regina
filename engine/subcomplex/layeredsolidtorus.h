@@ -40,14 +40,11 @@
 #endif
 
 #include "regina-core.h"
+#include "maths/perm.h"
 #include "subcomplex/standardtri.h"
+#include "triangulation/facepair.h"
 
 namespace regina {
-
-/**
- * \weakgroup subcomplex
- * @{
- */
 
 /**
  * Represents a layered solid torus in a triangulation.
@@ -59,54 +56,80 @@ namespace regina {
  * boundary (including the minimal (1,1,0) triangulation) are not
  * described by this class.
  *
- * All optional StandardTriangulation routines are implemented for this
- * class.
+ * All optional StandardTriangulation routines are implemented for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class LayeredSolidTorus : public StandardTriangulation {
     private:
-        size_t nTetrahedra;
+        size_t size_;
             /**< The number of tetrahedra in this torus. */
 
-        Tetrahedron<3>* base_;
+        const Tetrahedron<3>* base_;
             /**< The tetrahedron that is glued to itself at the base of
                  this torus. */
-        int baseEdge_[6];
-            /**< The edges of the base tetrahedron that are identified as
-                 a group of 1, 2 or 3 according to whether the index is
-                 0, 1-2 or 3-5 respectively.  See baseEdge() for
-                 further details. */
-        int baseEdgeGroup_[6];
-            /**< Classifies the edges of the base tetrahedron according
-                 to whether they are identified in a group of 1, 2 or 3. */
-        int baseFace_[2];
+        const Tetrahedron<3>* top_;
+            /**< The tetrahedron on the boundary of this torus. */
+
+        Perm<6> baseEdge_;
+            /**< Edges baseEdge_[0..5] of the base tetrahedron are identified
+                 as a group of 1, 2, 2, 3, 3, 3 respectively.
+                 See baseEdge() for further details. */
+        Perm<6> topEdge_;
+            /**< Edges topEdge_[0,1], topEdge_[2,3] and topEdge_[4,5] are the
+                 boundary edges of the top tetrahedron that the meridinal disc
+                 fewest, middle and most times respectively.  As an exception,
+                 one of the edges is *not* on the boundary; this will
+                 be put in the group with only one edge, and will correspond to
+                 index 1, 3 or 5.  See topEdge() for further details. */
+
+        FacePair baseFace_;
             /**< The two faces of the base tetrahedron that are glued to
                  each other. */
-
-        Tetrahedron<3>* topLevel_;
-            /**< The tetrahedron on the boundary of this torus. */
-        int topEdge_[3][2];
-            /**< Returns the edges of the top tetrahedron that the meridinal
-                 disc cuts fewest, middle or most times according to whether
-                 the first index is 0, 1 or 2 respectively.  See topEdge()
-                 for further details. */
-        unsigned long meridinalCuts_[3];
-            /**< Returns the number of times the meridinal disc cuts each
-                 boundary edge; this array is in non-decreasing order. */
-        int topEdgeGroup_[6];
-            /**< Classifies the edges of the boundary tetrahedron
-                 according to whether the meridinal disc cuts them fewest,
-                 middle or most times. */
-        int topFace_[2];
+        FacePair topFace_;
             /**< The two faces of the boundary tetrahedron that form the
                  torus boundary. */
 
+        unsigned long meridinalCuts_[3];
+            /**< Returns the number of times the meridinal disc cuts each
+                 boundary edge; this array is in non-decreasing order. */
+
     public:
         /**
-         * Returns a newly created clone of this structure.
+         * Creates a new copy of this structure.
+         */
+        LayeredSolidTorus(const LayeredSolidTorus&) = default;
+
+        /**
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        LayeredSolidTorus& operator = (const LayeredSolidTorus&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        LayeredSolidTorus* clone() const;
+        [[deprecated]] LayeredSolidTorus* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(LayeredSolidTorus& other) noexcept;
 
         /**
          * Returns the number of tetrahedra in this layered solid torus.
@@ -121,7 +144,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          *
          * @return the base tetrahedron.
          */
-        Tetrahedron<3>* base() const;
+        const Tetrahedron<3>* base() const;
         /**
          * Returns the requested edge of the base tetrahedron belonging
          * to the given group.  The layering identifies the six edges
@@ -179,7 +202,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          *
          * @return the top level tetrahedron.
          */
-        Tetrahedron<3>* topLevel() const;
+        const Tetrahedron<3>* topLevel() const;
         /**
          * Returns the number of times the meridinal disc of the torus
          * cuts the top level tetrahedron edges in the given group.
@@ -251,26 +274,23 @@ class LayeredSolidTorus : public StandardTriangulation {
 
         /**
          * Flattens this layered solid torus to a Mobius band.
-         * A newly created modified triangulation is returned; the
-         * original triangulation is unchanged.
+         * A new modified triangulation is returned; the original triangulation
+         * that contains this layered solid torus will be left unchanged.
          *
          * Note that there are three different ways in which this layered
          * solid torus can be flattened, corresponding to the three
          * different edges of the boundary torus that could become the
          * boundary edge of the new Mobius band.
          *
-         * @param original the triangulation containing this layered
-         * solid torus; this triangulation will not be changed.
          * @param mobiusBandBdry the edge group on the boundary of this
          * layered solid torus that will become the boundary of the new
          * Mobius band (the remaining edge groups will become internal
          * edges of the new Mobius band).  This must be 0, 1 or 2.
          * See topEdge() for further details about edge groups.
-         * @return a newly created triangulation in which this layered
-         * solid torus has been flattened to a Mobius band.
+         * @return a new triangulation in which this layered solid torus has
+         * been flattened to a Mobius band.
          */
-        Triangulation<3>* flatten(const Triangulation<3>* original,
-                int mobiusBandBdry) const;
+        Triangulation<3> flatten(int mobiusBandBdry) const;
 
         /**
          * Adjusts the details of this layered solid torus according to
@@ -293,8 +313,8 @@ class LayeredSolidTorus : public StandardTriangulation {
          * @param newTri the triangulation to be referenced by the updated
          * layered solid torus.
          */
-        void transform(const Triangulation<3>* originalTri,
-                const Isomorphism<3>* iso, Triangulation<3>* newTri);
+        void transform(const Triangulation<3>& originalTri,
+                const Isomorphism<3>& iso, const Triangulation<3>& newTri);
 
         /**
          * Determines if the given tetrahedron forms the base of a
@@ -306,13 +326,26 @@ class LayeredSolidTorus : public StandardTriangulation {
          * tetrahedron furthest from the boundary of the torus, i.e. the
          * tetrahedron glued to itself with a twist.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tet the tetrahedron to examine as a potential base.
-         * @return a newly created structure containing details of the
-         * layered solid torus, or \c null if the given tetrahedron is
-         * not the base of a layered solid torus.
+         * @return a structure containing details of the layered solid torus,
+         * or \c null if the given tetrahedron is not the base of a
+         * layered solid torus.
          */
-        static LayeredSolidTorus* formsLayeredSolidTorusBase(
-            Tetrahedron<3>* tet);
+        static std::unique_ptr<LayeredSolidTorus> recogniseFromBase(
+            const Tetrahedron<3>* tet);
+        /**
+         * A deprecated alias to recognise if a tetrahedron forms the
+         * base of a layered solid torus.
+         *
+         * \deprecated This function has been renamed to recogniseFromBase().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<LayeredSolidTorus>
+            formsLayeredSolidTorusBase(const Tetrahedron<3>* tet);
 
         /**
          * Determines if the given tetrahedron forms the top level
@@ -328,6 +361,10 @@ class LayeredSolidTorus : public StandardTriangulation {
          * In fact, they may even extend this smaller layered solid torus
          * to a larger layered solid torus.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tet the tetrahedron to examine as a potential top
          * level of a layered solid torus.
          * @param topFace1 the face number of the given tetrahedron that
@@ -337,12 +374,22 @@ class LayeredSolidTorus : public StandardTriangulation {
          * should represent the second boundary triangle of the layered solid
          * torus.  This should be between 0 and 3 inclusive, and should
          * not be equal to \a topFace1.
-         * @return a newly created structure containing details of the
-         * layered solid torus, or \c null if the given tetrahedron with
-         * its two faces do not form the top level of a layered solid torus.
+         * @return a structure containing details of the layered solid torus,
+         * or \c null if the given tetrahedron with its two faces do not form
+         * the top level of a layered solid torus.
          */
-        static LayeredSolidTorus* formsLayeredSolidTorusTop(
-            Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2);
+        static std::unique_ptr<LayeredSolidTorus> recogniseFromTop(
+            const Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2);
+        /**
+         * A deprecated alias to recognise if a tetrahedron forms the
+         * top level of a layered solid torus.
+         *
+         * \deprecated This function has been renamed to recogniseFromTop().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<LayeredSolidTorus>
+            formsLayeredSolidTorusTop(const Tetrahedron<3>* tet,
+            unsigned topFace1, unsigned topFace2);
 
         /**
          * Determines if the given triangulation component forms a
@@ -354,15 +401,28 @@ class LayeredSolidTorus : public StandardTriangulation {
          * triangles of the layered solid torus must in fact be boundary
          * triangles of the component.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * layered solid torus, or \c null if the given component is not
-         * a layered solid torus.
+         * @return a structure containing details of the layered solid torus,
+         * or \c null if the given component is not a layered solid torus.
          */
-        static LayeredSolidTorus* isLayeredSolidTorus(Component<3>* comp);
+        static std::unique_ptr<LayeredSolidTorus> recognise(
+            Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component forms a
+         * layered solid torus.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<LayeredSolidTorus>
+            isLayeredSolidTorus(Component<3>* comp);
 
-        Manifold* manifold() const override;
-        std::optional<AbelianGroup> homology() const override;
+        std::unique_ptr<Manifold> manifold() const override;
+        AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
@@ -371,44 +431,44 @@ class LayeredSolidTorus : public StandardTriangulation {
         /**
          * Create a new uninitialised structure.
          */
-        LayeredSolidTorus();
-
-        /**
-         * Fills <tt>topEdge[destGroup]</tt> with the edges produced by
-         * following the edges in group \c sourceGroup from the current
-         * top level tetrahedron up to the next layered tetrahedron.
-         *
-         * Note that which edge is placed in <tt>topEdge[][0]</tt> and
-         * which edge is placed in <tt>topEdge[][1]</tt> will be an
-         * arbitrary decision; these may need to be switched later on.
-         *
-         * \pre There is a next layered tetrahedron.
-         * \pre Member variables \a topLevel and \a topFace have not yet been
-         * changed to reflect the next layered tetrahedron.
-         * \pre The edges in group \a destGroup in the next layered
-         * tetrahedron are actually layered onto the edges in group \a
-         * sourceGroup in the current top level tetrahedron.
-         *
-         * @param sourceGroup the group in the current top level
-         * tetrahedron to which the edges belong.
-         * @param destGroup the group in the next layered tetrahedron to
-         * which the same edges belong.
-         */
-        void followEdge(int destGroup, int sourceGroup);
+        LayeredSolidTorus() = default;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls LayeredSolidTorus::swap(); it is provided
+ * so that LayeredSolidTorus meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(LayeredSolidTorus& a, LayeredSolidTorus& b) noexcept;
 
 // Inline functions for LayeredSolidTorus
 
-inline LayeredSolidTorus::LayeredSolidTorus() {
+inline LayeredSolidTorus* LayeredSolidTorus::clone() const {
+    return new LayeredSolidTorus(*this);
+}
+
+inline void LayeredSolidTorus::swap(LayeredSolidTorus& other) noexcept {
+    std::swap(size_, other.size_);
+    std::swap(base_, other.base_);
+    std::swap(top_, other.top_);
+    std::swap(baseEdge_, other.baseEdge_);
+    std::swap(topEdge_, other.topEdge_);
+    std::swap(baseFace_, other.baseFace_);
+    std::swap(topFace_, other.topFace_);
+    std::swap_ranges(meridinalCuts_, meridinalCuts_ + 3, other.meridinalCuts_);
 }
 
 inline size_t LayeredSolidTorus::size() const {
-    return nTetrahedra;
+    return size_;
 }
 
-inline Tetrahedron<3>* LayeredSolidTorus::base() const {
+inline const Tetrahedron<3>* LayeredSolidTorus::base() const {
     return base_;
 }
 inline int LayeredSolidTorus::baseEdge(int group, int index) const {
@@ -416,26 +476,28 @@ inline int LayeredSolidTorus::baseEdge(int group, int index) const {
         group == 2 ? baseEdge_[1 + index] : baseEdge_[3 + index];
 }
 inline int LayeredSolidTorus::baseEdgeGroup(int edge) const {
-    return baseEdgeGroup_[edge];
+    int pre = baseEdge_.pre(edge);
+    return (pre == 0 ? 1 : pre < 3 ? 2 : 3);
 }
 inline int LayeredSolidTorus::baseFace(int index) const {
-    return baseFace_[index];
+    return (index == 0 ? baseFace_.lower() : baseFace_.upper());
 }
 
-inline Tetrahedron<3>* LayeredSolidTorus::topLevel() const {
-    return topLevel_;
+inline const Tetrahedron<3>* LayeredSolidTorus::topLevel() const {
+    return top_;
 }
 inline unsigned long LayeredSolidTorus::meridinalCuts(int group) const {
     return meridinalCuts_[group];
 }
 inline int LayeredSolidTorus::topEdge(int group, int index) const {
-    return topEdge_[group][index];
+    int ans = topEdge_[2 * group + index];
+    return (ans == topFace_.oppositeEdge() ? -1 : ans);
 }
 inline int LayeredSolidTorus::topEdgeGroup(int edge) const {
-    return topEdgeGroup_[edge];
+    return (edge == topFace_.oppositeEdge() ? -1 : (topEdge_.pre(edge) / 2));
 }
 inline int LayeredSolidTorus::topFace(int index) const {
-    return topFace_[index];
+    return (index == 0 ? topFace_.lower() : topFace_.upper());
 }
 
 inline std::ostream& LayeredSolidTorus::writeName(std::ostream& out) const {
@@ -449,6 +511,27 @@ inline std::ostream& LayeredSolidTorus::writeTeXName(std::ostream& out) const {
 inline void LayeredSolidTorus::writeTextLong(std::ostream& out) const {
     out << "( " << meridinalCuts_[0] << ", " << meridinalCuts_[1] << ", "
         << meridinalCuts_[2] << " ) layered solid torus";
+}
+
+inline std::unique_ptr<LayeredSolidTorus>
+        LayeredSolidTorus::formsLayeredSolidTorusBase(
+        const Tetrahedron<3>* tet) {
+    return recogniseFromBase(tet);
+}
+
+inline std::unique_ptr<LayeredSolidTorus>
+        LayeredSolidTorus::formsLayeredSolidTorusTop(
+        const Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2) {
+    return recogniseFromTop(tet, topFace1, topFace2);
+}
+
+inline std::unique_ptr<LayeredSolidTorus>
+        LayeredSolidTorus::isLayeredSolidTorus(Component<3>* comp) {
+    return recognise(comp);
+}
+
+inline void swap(LayeredSolidTorus& a, LayeredSolidTorus& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

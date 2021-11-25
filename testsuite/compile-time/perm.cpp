@@ -59,7 +59,7 @@ void testPerm() {
     static_assert(swap.compareWith(Perm<n>(swap)) == 0);
 
     static_assert(swap[pos] == pos-1);
-    static_assert(swap.preImageOf(pos) == pos-1);
+    static_assert(swap.pre(pos) == pos-1);
     static_assert(Perm<n>().sign() == 1);
     static_assert(swap.sign() == -1);
 
@@ -114,30 +114,30 @@ void testConvert() {
 }
 
 void testPermArrays() {
-    constexpr int a2[2] = { 1, 0 };
+    constexpr std::array<int, 2> a2 { 1, 0 };
     static_assert(Perm<2>(a2) != Perm<2>());
-    static_assert(Perm<2>(a2, a2) == Perm<2>());
+    // static_assert(Perm<2>(a2, a2) == Perm<2>());
 
-    constexpr int a3[3] = { 1, 2, 0 };
+    constexpr std::array<int, 3> a3 { 1, 2, 0 };
     static_assert(Perm<3>(a3) != Perm<3>());
-    static_assert(Perm<3>(a3, a3) == Perm<3>());
+    // static_assert(Perm<3>(a3, a3) == Perm<3>());
     static_assert(Perm<3>(a3) == Perm<3>(1, 2, 0));
 
-    constexpr int a4[4] = { 1, 3, 2, 0 };
+    constexpr std::array<int, 4> a4 { 1, 3, 2, 0 };
     static_assert(Perm<4>(a4) != Perm<4>());
-    static_assert(Perm<4>(a4, a4) == Perm<4>());
+    // static_assert(Perm<4>(a4, a4) == Perm<4>());
     static_assert(Perm<4>(a4) == Perm<4>(1, 3, 2, 0));
     static_assert(Perm<4>(a4).inverse() == Perm<4>(1,0, 3,1, 2,2, 0,3));
 
-    constexpr int a5[5] = { 1, 3, 2, 4, 0 };
+    constexpr std::array<int, 5> a5 { 1, 3, 2, 4, 0 };
     static_assert(Perm<5>(a5) != Perm<5>());
-    static_assert(Perm<5>(a5, a5) == Perm<5>());
+    // static_assert(Perm<5>(a5, a5) == Perm<5>());
     static_assert(Perm<5>(a5) == Perm<5>(1, 3, 2, 4, 0));
     static_assert(Perm<5>(a5).inverse() == Perm<5>(1,0, 3,1, 2,2, 4,3, 0,4));
 
-    constexpr int a6[6] = { 1, 5, 3, 2, 4, 0 };
+    constexpr std::array<int, 6> a6 { 1, 5, 3, 2, 4, 0 };
     static_assert(Perm<6>(a6) != Perm<6>());
-    static_assert(Perm<6>(a6, a6) == Perm<6>());
+    // static_assert(Perm<6>(a6, a6) == Perm<6>());
 }
 
 template void testPerm<2, 1, 1>();

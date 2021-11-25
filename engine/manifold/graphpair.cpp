@@ -33,37 +33,26 @@
 #include "algebra/abeliangroup.h"
 #include "manifold/graphpair.h"
 #include "manifold/sfs.h"
-#include "manifold/sfsaltset.h"
+#include "manifold/sfsalt.h"
 #include "maths/matrix.h"
 
 namespace regina {
 
-GraphPair::~GraphPair() {
-    delete sfs_[0];
-    delete sfs_[1];
-}
-
 bool GraphPair::operator < (const GraphPair& compare) const {
-    if (*sfs_[0] < *compare.sfs_[0])
+    if (sfs_[0] < compare.sfs_[0])
         return true;
-    if (*compare.sfs_[0] < *sfs_[0])
+    if (compare.sfs_[0] < sfs_[0])
         return false;
 
-    if (*sfs_[1] < *compare.sfs_[1])
+    if (sfs_[1] < compare.sfs_[1])
         return true;
-    if (*compare.sfs_[1] < *sfs_[1])
+    if (compare.sfs_[1] < sfs_[1])
         return false;
 
     return simpler(matchingReln_, compare.matchingReln_);
 }
 
-std::optional<AbelianGroup> GraphPair::homology() const {
-    // Just for safety (this should always be true anyway):
-    if (sfs_[0]->punctures(false) != 1 || sfs_[0]->punctures(true) != 0)
-        return std::nullopt;
-    if (sfs_[1]->punctures(false) != 1 || sfs_[1]->punctures(true) != 0)
-        return std::nullopt;
-
+AbelianGroup GraphPair::homology() const {
     // Construct a matrix.
     // Generators: fibre 0, base curves 0, base boundary 0,
     //             exceptional fibre boundaries 0, obstruction 0,
@@ -78,19 +67,19 @@ std::optional<AbelianGroup> GraphPair::homology() const {
     //            obstruction relation 1, reflector relations 1,
     //            fibre constraint 1,
     //            joining of boundaries.
-    unsigned long genus0 = sfs_[0]->baseGenus();
-    unsigned long fibres0 = sfs_[0]->fibreCount();
-    unsigned long ref0 = sfs_[0]->reflectors();
+    unsigned long genus0 = sfs_[0].baseGenus();
+    unsigned long fibres0 = sfs_[0].fibreCount();
+    unsigned long ref0 = sfs_[0].reflectors();
     unsigned long all0 = 3 + genus0 + fibres0 + 2 * ref0;
-    unsigned long genus1 = sfs_[1]->baseGenus();
-    unsigned long fibres1 = sfs_[1]->fibreCount();
-    unsigned long ref1 = sfs_[1]->reflectors();
+    unsigned long genus1 = sfs_[1].baseGenus();
+    unsigned long fibres1 = sfs_[1].fibreCount();
+    unsigned long ref1 = sfs_[1].reflectors();
 
     // If we have an orientable base space, we get two curves per genus.
     // The easiest thing to do is just to double each genus now.
-    if (sfs_[0]->baseOrientable())
+    if (sfs_[0].baseOrientable())
         genus0 *= 2;
-    if (sfs_[1]->baseOrientable())
+    if (sfs_[1].baseOrientable())
         genus1 *= 2;
 
     MatrixInt m(fibres0 + fibres1 + ref0 + ref1 + 8,
@@ -100,13 +89,13 @@ std::optional<AbelianGroup> GraphPair::homology() const {
     // The relation for each base orbifold:
     for (i = 1 + genus0; i < 1 + genus0 + 1 + fibres0 + 1 + ref0; i++)
         m.entry(0, i) = 1;
-    if (! sfs_[0]->baseOrientable())
+    if (! sfs_[0].baseOrientable())
         for (i = 1; i < 1 + genus0; i++)
             m.entry(0, i) = 2;
 
     for (i = 1 + genus1; i < 1 + genus1 + 1 + fibres1 + 1 + ref1; i++)
         m.entry(1, all0 + i) = 1;
-    if (! sfs_[1]->baseOrientable())
+    if (! sfs_[1].baseOrientable())
         for (i = 1; i < 1 + genus1; i++)
             m.entry(1, all0 + i) = 2;
 
@@ -114,20 +103,20 @@ std::optional<AbelianGroup> GraphPair::homology() const {
     SFSFibre fibre;
 
     for (f = 0; f < fibres0; f++) {
-        fibre = sfs_[0]->fibre(f);
+        fibre = sfs_[0].fibre(f);
         m.entry(2 + f, 1 + genus0 + 1 + f) = fibre.alpha;
         m.entry(2 + f, 0) = fibre.beta;
     }
     m.entry(2 + fibres0, 1 + genus0 + 1 + fibres0) = 1;
-    m.entry(2 + fibres0, 0) = sfs_[0]->obstruction();
+    m.entry(2 + fibres0, 0) = sfs_[0].obstruction();
 
     for (f = 0; f < fibres1; f++) {
-        fibre = sfs_[1]->fibre(f);
+        fibre = sfs_[1].fibre(f);
         m.entry(3 + fibres0 + f, all0 + 1 + genus1 + 1 + f) = fibre.alpha;
         m.entry(3 + fibres0 + f, all0) = fibre.beta;
     }
     m.entry(3 + fibres0 + fibres1, all0 + 1 + genus1 + 1 + fibres1) = 1;
-    m.entry(3 + fibres0 + fibres1, all0) = sfs_[1]->obstruction();
+    m.entry(3 + fibres0 + fibres1, all0) = sfs_[1].obstruction();
 
     // A relation for each reflector boundary:
     for (i = 0; i < ref0; i++) {
@@ -145,14 +134,14 @@ std::optional<AbelianGroup> GraphPair::homology() const {
     // A relation contraining each fibre type.  This relationship only
     // appears in some cases; otherwise we will just have a (harmless)
     // zero row in the matrix.
-    if (sfs_[0]->reflectors(true))
+    if (sfs_[0].reflectors(true))
         m.entry(4 + fibres0 + fibres1 + ref0 + ref1, 0) = 1;
-    else if (sfs_[0]->fibreReversing())
+    else if (sfs_[0].fibreReversing())
         m.entry(4 + fibres0 + fibres1 + ref0 + ref1, 0) = 2;
 
-    if (sfs_[1]->reflectors(true))
+    if (sfs_[1].reflectors(true))
         m.entry(5 + fibres0 + fibres1 + ref0 + ref1, all0) = 1;
-    else if (sfs_[1]->fibreReversing())
+    else if (sfs_[1].fibreReversing())
         m.entry(5 + fibres0 + fibres1 + ref0 + ref1, all0) = 2;
 
     // Finally, two relations for the joining of boundaries:
@@ -171,20 +160,20 @@ std::optional<AbelianGroup> GraphPair::homology() const {
 }
 
 std::ostream& GraphPair::writeName(std::ostream& out) const {
-    sfs_[0]->writeName(out);
+    sfs_[0].writeName(out);
     out << " U/m ";
-    sfs_[1]->writeName(out);
+    sfs_[1].writeName(out);
     return out << ", m = [ " <<
         matchingReln_[0][0] << ',' << matchingReln_[0][1] << " | " <<
         matchingReln_[1][0] << ',' << matchingReln_[1][1] << " ]";
 }
 
 std::ostream& GraphPair::writeTeXName(std::ostream& out) const {
-    sfs_[0]->writeTeXName(out);
+    sfs_[0].writeTeXName(out);
     out << " \\bigcup_{\\homtwo{" <<
         matchingReln_[0][0] << "}{" << matchingReln_[0][1] << "}{" <<
         matchingReln_[1][0] << "}{" << matchingReln_[1][1] << "}} ";
-    return sfs_[1]->writeTeXName(out);
+    return sfs_[1].writeTeXName(out);
 }
 
 void GraphPair::reduce() {
@@ -213,87 +202,74 @@ void GraphPair::reduce() {
 
     // Simplify each space and build a list of possible reflections and
     // other representations that we wish to experiment with using.
-    SFSAltSet alt0(sfs_[0]);
-    SFSAltSet alt1(sfs_[1]);
-
-    delete sfs_[0];
-    delete sfs_[1];
+    std::vector<SFSAlt> alt0 = SFSAlt::altSet(sfs_[0]);
+    std::vector<SFSAlt> alt1 = SFSAlt::altSet(sfs_[1]);
 
     // Decide which of these possible representations gives the nicest
     // matching relation.
-    SFSpace* use0 = 0;
-    SFSpace* use1 = 0;
+    std::vector<SFSAlt>::iterator use0, use1;
     Matrix2 useReln;
 
+    bool first = true;
     Matrix2 tryReln;
-    unsigned i, j;
-    for (i = 0; i < alt0.size(); i++)
-        for (j = 0; j < alt1.size(); j++) {
+    for (auto it0 = alt0.begin(); it0 != alt0.end(); ++it0) {
+        for (auto it1 = alt1.begin(); it1 != alt1.end(); ++it1) {
             // Insist on the leftmost space being at least as simple as
             // the rightmost.
 
-            // See if the (i,j) combination is better than what we've
+            // See if the (it0, it1) combination is better than what we've
             // seen so far.
-            tryReln = alt1.conversion(j) * matchingReln_ *
-                alt0.conversion(i).inverse();
+            tryReln = it1->conversion() * matchingReln_ *
+                it0->conversion().inverse();
             reduceSign(tryReln);
 
             // Try without space swapping.
-            if (! (*alt1[j] < *alt0[i])) {
-                if ((! use0) || simpler(tryReln, useReln)) {
-                    use0 = alt0[i];
-                    use1 = alt1[j];
+            if (! (it1->alt() < it0->alt())) {
+                if (first || simpler(tryReln, useReln)) {
+                    use0 = it0;
+                    use1 = it1;
                     useReln = tryReln;
+                    first = false;
                 } else if (! simpler(useReln, tryReln)) {
                     // The matrix is the same as our best.  Compare spaces.
-                    if (*alt0[i] < *use0 ||
-                            (*alt0[i] == *use0 && *alt1[j] < *use1)) {
-                        use0 = alt0[i];
-                        use1 = alt1[j];
+                    if (it0->alt() < use0->alt() ||
+                            (it0->alt() == use0->alt() &&
+                             it1->alt() < use1->alt())) {
+                        use0 = it0;
+                        use1 = it1;
                         useReln = tryReln;
                     }
                 }
             }
 
             // Now try with space swapping.
-            if (! (*alt0[i] < *alt1[j])) {
+            if (! (it0->alt() < it1->alt())) {
                 tryReln = tryReln.inverse();
                 reduceSign(tryReln);
 
-                if ((! use0) || simpler(tryReln, useReln)) {
-                    use0 = alt1[j];
-                    use1 = alt0[i];
+                if (first || simpler(tryReln, useReln)) {
+                    use0 = it1;
+                    use1 = it0;
                     useReln = tryReln;
+                    first = false;
                 } else if (! simpler(useReln, tryReln)) {
                     // The matrix is the same as our best.  Compare spaces.
-                    if (*alt1[j] < *use0 ||
-                            (*alt1[j] == *use0 && *alt0[i] < *use1)) {
-                        use0 = alt1[j];
-                        use1 = alt0[i];
+                    if (it1->alt() < use0->alt() ||
+                            (it1->alt() == use0->alt() &&
+                             it0->alt() < use1->alt())) {
+                        use0 = it1;
+                        use1 = it0;
                         useReln = tryReln;
                     }
                 }
             }
         }
-
-    // This should never happen, but just in case... let's not crash.
-    if (! (use0 && use1)) {
-        use0 = alt0[0];
-        use1 = alt1[0];
-
-        useReln = alt1.conversion(0) * matchingReln_ *
-            alt0.conversion(0).inverse();
-        reduceSign(useReln);
     }
 
     // Use what we found.
-    sfs_[0] = use0;
-    sfs_[1] = use1;
+    sfs_[0] = std::move(use0->alt());
+    sfs_[1] = std::move(use1->alt());
     matchingReln_ = useReln;
-
-    // And what we don't use, delete.
-    alt0.deleteAll(use0, use1);
-    alt1.deleteAll(use0, use1);
 
     // TODO: Exploit the (1,2) = (1,0) and (1,1) = (1,0) relations in
     // the relevant non-orientable cases.

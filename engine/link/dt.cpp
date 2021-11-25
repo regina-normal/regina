@@ -140,14 +140,14 @@ std::vector<int> Link::dtData() const {
     return ans;
 }
 
-Link* Link::fromDT(const std::string& s) {
+Link Link::fromDT(const std::string& s) {
     // Do we have an alphabetical or numerical string?
     auto it = s.begin();
     while (it != s.end() && ::isspace(*it))
         ++it;
     if (it == s.end()) {
         // Empty string, so return the unknot.
-        return new Link(1);
+        return Link(1);
     }
 
     std::vector<int> terms;
@@ -161,7 +161,8 @@ Link* Link::fromDT(const std::string& s) {
                 terms.push_back(-2 * (*it - 'A' + 1));
             else if (! ::isspace(*it)) {
                 // Invalid character.
-                return nullptr;
+                throw InvalidArgument(
+                    "fromDT(): invalid alphabetical character");
             }
         }
     } else if ((*it >= '0' && *it <= '9') || *it == '-') {
@@ -174,12 +175,12 @@ Link* Link::fromDT(const std::string& s) {
             if (! in) {
                 if (in.eof())
                     break;
-                return nullptr;
+                throw InvalidArgument("fromDT(): invalid numerical character");
             }
             terms.push_back(i);
         }
     } else
-        return nullptr;
+        throw InvalidArgument("fromDT(): invalid character");
 
     return fromDT(terms.begin(), terms.end());
 }

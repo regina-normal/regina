@@ -58,17 +58,14 @@ class DehydrationHandler : public PacketImporter {
         /**
          * PacketImporter overrides:
          */
-        virtual regina::Packet* importData(const QString& fileName,
-            ReginaMain* parentWidget) const;
+        std::shared_ptr<regina::Packet> importData(const QString& fileName,
+            ReginaMain* parentWidget) const override;
 
     private:
         /**
          * Don't allow people to construct their own dehydration handlers.
          */
-        DehydrationHandler();
+        DehydrationHandler() = default;
 };
-
-inline DehydrationHandler::DehydrationHandler() {
-}
 
 #endif

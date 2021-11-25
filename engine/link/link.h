@@ -41,10 +41,10 @@
 
 #include <array>
 #include <functional>
-#include <memory>
 #include <optional>
 #include <vector>
 #include "regina-core.h"
+#include "algebra/grouppresentation.h"
 #include "maths/integer.h"
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
@@ -52,14 +52,15 @@
 #include "progress/progresstracker.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/detail/retriangulate.h"
+#include "utilities/exception.h"
+#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 
 namespace regina {
 
 /**
- * \addtogroup link Knots and Links
+ * \defgroup link Knots and Links
  * Knots and links in the 3-sphere
- * @{
  */
 
 class Crossing;
@@ -75,6 +76,8 @@ template <int> class Triangulation;
  * Here a \e framing refers to a choice of normal vector field along the
  * knot or link.  Equivalently, a framing refers to a choice of longitude
  * on the torus bounding each component of the link.
+ *
+ * \ingroup link
  */
 enum Framing {
     /**
@@ -113,8 +116,6 @@ enum Framing {
  *
  * A "null reference" is one whose crossing is the null pointer.
  *
- * These references are small enough to pass around by value.
- *
  * This class can also be used to refer to an \e arc of a link; that is,
  * a section of the link that runs from one crossing to the next.
  * When used in this way:
@@ -133,6 +134,11 @@ enum Framing {
  * - The increment and decrement operators, as well as next() and prev(),
  *   behave as expected: they follow the link forward and backward
  *   respectively along its orientation.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup link
  */
 class StrandRef {
     private:
@@ -383,6 +389,8 @@ class StrandRef {
  * @param out the output stream to which to write.
  * @param s the reference to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup link
  */
 std::ostream& operator << (std::ostream& out, const StrandRef& s);
 
@@ -417,6 +425,14 @@ std::ostream& operator << (std::ostream& out, const StrandRef& s);
  * added or removed - if you wish to track a particular crossing through
  * such operations then you should use a pointer to the relevant Crossing
  * object instead.
+ *
+ * Crossings do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Link to which they belong.
+ *
+ * \ingroup link
  */
 class Crossing : public MarkedElement, public Output<Crossing> {
     private:
@@ -541,7 +557,7 @@ class Crossing : public MarkedElement, public Output<Crossing> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -550,7 +566,7 @@ class Crossing : public MarkedElement, public Output<Crossing> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -584,14 +600,6 @@ class Crossing : public MarkedElement, public Output<Crossing> {
     friend class XMLLinkConnectionsReader;
 };
 
-#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
-template <>
-struct PacketInfo<PACKET_LINK> {
-    typedef Link Class;
-    static constexpr const char* name = "Link";
-};
-#endif
-
 /**
  * Represents a directed knot or link in the 3-sphere.
  *
@@ -599,14 +607,34 @@ struct PacketInfo<PACKET_LINK> {
  * and it also supports components with no crossings (which form additional
  * unknot components of the overall link).
  *
- * This class implements the C++ Swappable requirement by providing member
- * and global swap() functions.  However, like all packet types, it does
- * \e not implement a move constructor or move assignment, since this would
- * interfere with the structure of the packet tree.
+ * Since Regina 7.0, this is no longer a "packet type" that can be
+ * inserted directly into the packet tree.  Instead a Link is now a
+ * standalone mathematatical object, which makes it slimmer and faster
+ * for ad-hoc use.  The consequences of this are:
+ *
+ * - If you create your own Link, it will not have any of the usual packet
+ *   infrastructure.  You cannot add it into the packet tree, and it will
+ *   not support a label, tags, child/parent packets, and/or event listeners.
+ *
+ * - To include a Link in the packet tree, you must create a new
+ *   PacketOf<Link>.  This \e is a packet type, and supports labels, tags,
+ *   child/parent packets, and event listeners.  It derives from Link,
+ *   and so inherits the full Link interface.
+ *
+ * - If you are adding new functions to this class that edit the link,
+ *   you must still remember to create a ChangeEventSpan.  This will
+ *   ensure that, if the link is being managed by a PacketOf<Link>,
+ *   then the appropriate packet change events will be fired.
+ *   All other events (aside from packetToBeChanged() and packetWasChanged()
+ *   are managed directly by the PacketOf<Link> wrapper class.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
+ * \ingroup link
  */
-class Link : public Packet {
-    REGINA_PACKET(Link, PACKET_LINK)
-
+class Link : public PacketData<Link>, public Output<Link> {
     private:
         MarkedVector<Crossing> crossings_;
             /**< The crossings in this link. */
@@ -618,22 +646,26 @@ class Link : public Packet {
                  null reference. */
 
         mutable std::optional<Laurent<Integer>> jones_;
-            /**< The Jones polynomial of the link. */
+            /**< The Jones polynomial of the link.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<Laurent2<Integer>> homflyLM_;
             /**< The HOMFLY polynomial of the link, as a polynomial in
                  \a l and \a m.  This property will be known if and only
-                 if \a homflyAZ_ is known. */
+                 if \a homflyAZ_ is known.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<Laurent2<Integer>> homflyAZ_;
             /**< The HOMFLY polynomial of the link, as a polynomial in
                  \a alpha and \a z.  This property will be known if and
-                 only if \a homflyLM_ is known. */
+                 only if \a homflyLM_ is known.
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<Laurent<Integer>> bracket_;
-            /**< The Kauffman bracket polynomial of the link diagram. */
+            /**< The Kauffman bracket polynomial of the link diagram.
+                 This is std::nullopt if it has not yet been computed. */
 
-        mutable std::unique_ptr<TreeDecomposition> niceTreeDecomposition_;
+        mutable std::optional<TreeDecomposition> niceTreeDecomposition_;
             /**< A nice tree decomposition of the planar 4-valent multigraph
-                 formed by the link diagram, or \c null if one has not yet
-                 been computed. */
+                 formed by the link diagram.
+                 This is std::nullopt if it has not yet been computed. */
 
     public:
         /**
@@ -731,7 +763,7 @@ class Link : public Packet {
         /**
          * Constructs an empty link.  This will have zero components.
          */
-        Link();
+        Link() = default;
         /**
          * Constructs the unlink with the given number of components.
          *
@@ -741,7 +773,6 @@ class Link : public Packet {
         Link(size_t unknots);
         /**
          * Constructs a new copy of the given link.
-         * The packet tree structure and packet label are \e not copied.
          *
          * This will clone any computed properties (such as Jones
          * polynomial and so on) of the given link also.  If you want a
@@ -763,6 +794,25 @@ class Link : public Packet {
          */
         Link(const Link& copy, bool cloneProps);
         /**
+         * Moves the given link into this new link.
+         * This is a fast (constant time) operation.
+         *
+         * All crossings that belong to \a src will be moved into this link,
+         * and so any Crossing pointers or StrandRef object will remain valid.
+         * Likewise, all cached properties will be moved into this link.
+         *
+         * The link that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is marked \c noexcept, and in particular
+         * does not fire any change events.  This is because this link
+         * is freshly constructed (and therefore has no listeners yet), and
+         * because we assume that \a src is about to be destroyed (an action
+         * that \e will fire a packet destruction event).
+         *
+         * @param src the link to move.
+         */
+        Link(Link&& src) noexcept;
+        /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a link.
          *
@@ -777,8 +827,6 @@ class Link : public Packet {
          * - planar diagram codes, as used by fromPD().
          *
          * This list may grow in future versions of Regina.
-         *
-         * Regina will also set the packet label accordingly.
          *
          * If Regina cannot interpret the given string, this will be
          * left as the empty link.
@@ -844,6 +892,33 @@ class Link : public Packet {
         Crossing* crossing(size_t index) const;
 
         /**
+         * Returns an object that allows iteration through and random access
+         * to all crossings within this link.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (Crossing* c : link.crossings()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for as
+         * long as the link exists: even as crossings are added and/or removed,
+         * it will always reflect the crossings that are currently in the link.
+         * Nevertheless, it is recommended to treat this object as temporary
+         * only, and to call crossings() again each time you need it.
+         *
+         * @return access to the list of all crossings.
+         */
+        auto crossings() const;
+
+        /**
          * Returns a strand in the given component of this link.
          *
          * For each component of the link, this routine returns a
@@ -863,6 +938,36 @@ class Link : public Packet {
          * has no crossings.
          */
         StrandRef component(size_t index) const;
+
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all components of this link.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Each element of the list will be
+         * a starting strand for some components; more precisely, iterating
+         * through this list is equivalent to calling <tt>component(0)</tt>,
+         * <tt>component(1)</tt>, ..., <tt>component(countComponents()-1)</tt>
+         * in turn.  As an example, your code might look like:
+         *
+         * \code{.cpp}
+         * for (const StrandRef& c : link.components()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for as
+         * long as the link exists: even as components are added and/or removed,
+         * it will always reflect the components that are currently in the link.
+         * Nevertheless, it is recommended to treat this object as temporary
+         * only, and to call components() again each time you need it.
+         *
+         * @return access to the list of all components.
+         */
+        auto components() const;
 
         /**
          * Returns the strand in the link with the given integer ID.
@@ -928,6 +1033,35 @@ class Link : public Packet {
         /*@{*/
 
         /**
+         * Sets this to be a (deep) copy of the given link.
+         *
+         * @param src the link to copy.
+         * @return a reference to this link.
+         */
+        Link& operator = (const Link& src);
+
+        /**
+         * Moves the contents of the given link into this link.
+         * This is a fast (constant time) operation.
+         *
+         * All crossings that belong to \a src will be moved into this link,
+         * and so any Crossing pointers or StrandRef object will remain valid.
+         * Likewise, all cached properties will be moved into this link.
+         *
+         * The link that is passed (\a src) will no longer be usable.
+         *
+         * \note This operator is \e not marked \c noexcept, since it fires
+         * change events on this link which may in turn call arbitrary code
+         * via any registered packet listeners.  It deliberately does \e not
+         * fire change events on \a src, since it assumes that \a src is about
+         * to be destroyed (which will fire a destruction event instead).
+         *
+         * @param src the link to move.
+         * @return a reference to this link.
+         */
+        Link& operator = (Link&& src);
+
+        /**
          * Swaps the contents of this and the given link.
          *
          * All crossings that belong to this link will be moved to \a other,
@@ -938,15 +1072,11 @@ class Link : public Packet {
          * In particular, any Crossing pointers or references and any
          * StrandRef objects will remain valid.
          *
-         * The structure of the packet tree will \e not be swapped:
-         * both packets being swapped will remain with their original parents,
-         * and their original children will remain with them.
-         *
          * This routine will behave correctly if \a other is in fact
          * this link.
          *
          * \note This swap function is \e not marked \c noexcept, since it
-         * fires packet change events which may in turn call arbitrary
+         * fires change events on both links which may in turn call arbitrary
          * code via any registered packet listeners.
          *
          * @param other the link whose contents should be swapped with this.
@@ -1608,7 +1738,7 @@ class Link : public Packet {
          *
          * This routine is only available for knots at the present time.
          * If this link has multiple (or zero) components, then this
-         * routine will return immediately (as described below).
+         * routine will throw an exception (as described below).
          *
          * This routine will iterate through all knot diagrams that can be
          * reached from this via Reidemeister moves, without ever exceeding
@@ -1643,27 +1773,28 @@ class Link : public Packet {
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
          * to "climb out" of such wells.
          *
-         * If a progress tracker is passed, then the exhaustive simplification
-         * will take place in a new thread and this routine will return
-         * immediately.  In this case, you will need to use some other
-         * means to determine whether the knot diagram was eventually
-         * simplified (e.g., by examining size() after the tracker
-         * indicates that the operation has finished).
+         * Since Regina 7.0, this routine will not return until either the
+         * knot diagram is simplified or the exhaustive search is complete,
+         * regardless of whether a progress tracker was passed.  If you
+         * need the old behaviour (where passing a progress tracker caused
+         * the exhaustive search to start in the background), simply call
+         * this routine in a new detached thread.
          *
          * To assist with performance, this routine can run in parallel
          * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, if no
-         * progress tracker is passed then this routine will not return until
-         * processing has finished (i.e., either the diagram was
-         * simplified or the search was exhausted).
+         * in the argument \a nThreads.  Even in multithreaded mode, this
+         * routine will not return until processing has finished (i.e., either
+         * the diagram was simplified or the search was exhausted).
          *
          * If this routine is unable to simplify the knot diagram, then
          * this knot diagram will not be changed.
          *
-         * If this link does not have precisely one component, then this
-         * routine will do nothing.  If no progress tracker was passed then
-         * it will immediately return \c false; otherwise the progress tracker
-         * will immediately be marked as finished.
+         * \pre This link has at most one component (i.e., it is empty
+         * or it is a knot).
+         *
+         * \exception FailedPrecondition this link has more than one component.
+         * If a progress tracker was passed, it will be marked as finished
+         * before the exception is thrown.
          *
          * @param height the maximum number of \e additional crossings to
          * allow beyond the number of crossings originally present in this
@@ -1672,12 +1803,8 @@ class Link : public Packet {
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return If a progress tracker is passed, then this routine
-         * will return \c true or \c false immediately according to
-         * whether a new thread could or could not be started.  If no
-         * progress tracker is passed, then this routine will return \c true
-         * if and only if this diagram was successfully simplified to
-         * fewer crossings.
+         * @return \c true if and only if this diagram was successfully
+         * simplified to fewer crossings.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
             ProgressTrackerOpen* tracker = nullptr);
@@ -1689,7 +1816,7 @@ class Link : public Packet {
          *
          * This routine is only available for knots at the present time.
          * If this link has multiple (or zero) components, then this
-         * routine will return immediately (as described below).
+         * routine will throw an exception (as described below).
          *
          * This routine iterates through all knot diagrams that can be reached
          * from this via Reidemeister moves, without ever exceeding
@@ -1705,14 +1832,20 @@ class Link : public Packet {
          * be a function or some other callable object).
          *
          * - \a action must take the following initial argument(s).
-         *   Either (a) the first argument must be of type Link&,
-         *   representing the knot diagram that has been found; or else
-         *   (b) the first two arguments must be of types const std::string&
-         *   and Link&, representing both the knot diagram and its
-         *   knot signature.  The second form is offered in order to
-         *   avoid unnecessarily recomputation within the \a action function.
+         *   Either (a) the first argument must be a link (the precise type
+         *   is discussed below), representing the knot diagram that has been
+         *   found; or else (b) the first two arguments must be of types
+         *   const std::string& followed by a link, representing both the
+         *   knot diagram and its knot signature.
+         *   The second form is offered in order to avoid unnecessarily
+         *   recomputation within the \a action function.
          *   If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - The link argument will be passed as an rvalue; a typical action
+         *   could (for example) take it by const reference and query it,
+         *   or take it by value and modify it, or take it by rvalue reference
+         *   and move it into more permanent storage.
          *
          * - \a action must return a boolean.  If \a action ever returns
          *   \c true, then this indicates that processing should stop
@@ -1724,12 +1857,6 @@ class Link : public Packet {
          *   that this routine visits will be obtained via Reidemeister moves
          *   from the original knot diagram, before any subsequent changes
          *   (if any) were made.
-         *
-         * - \a action may, if it chooses, make changes to the knot that is
-         *   passed in its initial argument(s) (though it must not delete it).
-         *   This will likewise not affect the search, since the knot diagram
-         *   that is passed to \a action will be destroyed immediately after
-         *   \a action is called.
          *
          * - \a action will only be called once for each knot diagram
          *   (including this starting diagram).  In other words, no
@@ -1749,30 +1876,28 @@ class Link : public Packet {
          * routine will <i>never terminate</i>, unless \a action returns
          * \c true for some knot diagram that is passed to it.
          *
-         * If a progress tracker is passed, then the exploration of
-         * knot diagrams will take place in a new thread and this
-         * routine will return immediately.
+         * Since Regina 7.0, this routine will not return until the exploration
+         * of knot diagrams is complete, regardless of whether a progress
+         * tracker was passed.  If you need the old behaviour (where passing a
+         * progress tracker caused the enumeration to start in the background),
+         * simply call this routine in a new detached thread.
          *
          * To assist with performance, this routine can run in parallel
-         * (multithreaded) mode; simply pass the number of parallel threads
-         * in the argument \a nThreads.  Even in multithreaded mode, if no
-         * progress tracker is passed then this routine will not return until
-         * processing has finished (i.e., either \a action returned \c true,
-         * or the search was exhausted).  All calls to \a action will be
-         * protected by a mutex (i.e., different threads will never be
-         * calling \a action at the same time); as a corollary, the action
-         * should avoid expensive operations where possible (otherwise
+         * (multithreaded) mode; simply pass the number of parallel threads in
+         * the argument \a nThreads.  Even in multithreaded mode, this routine
+         * will not return until processing has finished (i.e., either \a action
+         * returned \c true, or the search was exhausted).  All calls to
+         * \a action will be protected by a mutex (i.e., different threads will
+         * never be calling \a action at the same time); as a corollary, the
+         * action should avoid expensive operations where possible (otherwise
          * it will become a serialisation bottleneck in the multithreading).
          *
-         * If this link does not have precisely one component, then this
-         * routine will do nothing.  If no progress tracker was passed then
-         * it will immediately return \c false; otherwise the progress tracker
-         * will immediately be marked as finished.
+         * \pre This link has at most one component (i.e., it is empty
+         * or it is a knot).
          *
-         * \warning By default, the arguments \a args will be copied (or moved)
-         * when they are passed to \a action.  If you need to pass some
-         * argument(s) by reference, you must wrap them in std::ref or
-         * std::cref.
+         * \exception FailedPrecondition this link has more than one component.
+         * If a progress tracker was passed, it will be marked as finished
+         * before the exception is thrown.
          *
          * \apinotfinal
          *
@@ -1781,8 +1906,8 @@ class Link : public Packet {
          * form is more restricted: the arguments \a tracker and \a args are
          * removed, so you simply call it as rewrite(height, threads, action).
          * Moreover, \a action must take exactly two arguments
-         * (const std::string&, Link&) representing the knot signature and the
-         * knot diagram, as described in option (b) above.
+         * (const std::string&, Link&&) representing the knot signature and
+         * the knot diagram, as described in option (b) above.
          *
          * @param height the maximum number of \e additional crossings to
          * allow beyond the number of crossings originally present in this
@@ -1795,12 +1920,9 @@ class Link : public Packet {
          * for each knot diagram that is found.
          * @param args any additional arguments that should be passed to
          * \a action, following the initial knot argument(s).
-         * @return If a progress tracker is passed, then this routine
-         * will return \c true or \c false immediately according to
-         * whether a new thread could or could not be started.  If no
-         * progress tracker is passed, then this routine will return \c true
-         * if some call to \a action returned \c true (thereby terminating
-         * the search early), or \c false if the search ran to completion.
+         * @return \c true if some call to \a action returned \c true (thereby
+         * terminating the search early), or \c false if the search ran to
+         * completion.
          */
         template <typename Action, typename... Args>
         bool rewrite(int height, unsigned nThreads,
@@ -1945,15 +2067,12 @@ class Link : public Packet {
          *   internal vertices (and, in general, far more tetrahedra
          *   than are necessary).
          *
-         * The triangulation will be newly created, and it is the
-         * responsibility of the caller of this routine to destroy it.
-         *
          * @param simplify \c true if and only if the triangulation of
          * the complement should be simplified (thereby losing information
          * about the orientation), as described above.
-         * @return the complement of this link, as a newly-created object.
+         * @return the complement of this link.
          */
-        Triangulation<3>* complement(bool simplify = true) const;
+        Triangulation<3> complement(bool simplify = true) const;
 
         /**
          * Returns \a k cables of this link, all parallel to each
@@ -1969,15 +2088,12 @@ class Link : public Packet {
          *
          * This link will not be modified.
          *
-         * The result will returned as a new link, and it is the
-         * responsibility of the caller of this routine to destroy it.
-         *
          * @param k the number of parallel copies to create.
          * This must be non-negative.
          * @param framing the framing under which these copies will be parallel.
-         * @return \a k parallel copies of this link, as a newly-created object.
+         * @return \a k parallel copies of this link.
          */
-        Link* parallel(int k, Framing framing = FRAMING_SEIFERT) const;
+        Link parallel(int k, Framing framing = FRAMING_SEIFERT) const;
 
         /**
          * Returns the Kauffman bracket polynomial of this link diagram.
@@ -1998,22 +2114,12 @@ class Link : public Packet {
          * be cached and so this routine will be very fast (since it just
          * returns the previously computed result).  Otherwise the computation
          * could be quite slow, particularly for larger numbers of crossings.
-         * This (potentially) long computation can be managed by passing
-         * a progress tracker:
          *
-         * - If a progress tracker is passed and the polynomial has not yet
-         *   been computed, then the calculation will take place in a
-         *   new thread and this routine will return immediately.  Once the
-         *   progress tracker indicates that the calculation has finished,
-         *   you can call bracket() again to retrieve the polynomial.
-         *
-         * - If no progress tracker is passed and the polynomial has
-         *   not yet been computed, the calculation will run in the current
-         *   thread and this routine will not return until it is complete.
-         *
-         * - If the requested invariant has already been computed, then this
-         *   routine will return immediately with the pre-computed value.  If
-         *   a progress tracker is passed then it will be marked as finished.
+         * Since Regina 7.0, this routine will not return until the polynomial
+         * computation is complete, regardless of whether a progress tracker
+         * was passed.  If you need the old behaviour (where passing a progress
+         * tracker caused the computation to start in the background), simply
+         * call this routine in a new detached thread.
          *
          * \warning The naive algorithm can only handle a limited number
          * of crossings (currently less than the number of bits in a long,
@@ -2032,9 +2138,8 @@ class Link : public Packet {
          * treewidth-based algorithm.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the bracket polynomial.  If a progress tracker was passed
-         * then this return value must be ignored, and you should call
-         * bracket() again once the tracker is marked as finished.
+         * @return the bracket polynomial, or the zero polynomial if the
+         * calculation was cancelled via the given progress tracker.
          */
         const Laurent<Integer>& bracket(Algorithm alg = ALG_DEFAULT,
             ProgressTracker* tracker = nullptr) const;
@@ -2090,22 +2195,12 @@ class Link : public Packet {
          * be cached and so this routine will be very fast (since it just
          * returns the previously computed result).  Otherwise the computation
          * could be quite slow, particularly for larger numbers of crossings.
-         * This (potentially) long computation can be managed by passing
-         * a progress tracker:
          *
-         * - If a progress tracker is passed and the polynomial has not yet
-         *   been computed, then the calculation will take place in a
-         *   new thread and this routine will return immediately.  Once the
-         *   progress tracker indicates that the calculation has finished,
-         *   you can call bracket() again to retrieve the polynomial.
-         *
-         * - If no progress tracker is passed and the polynomial has
-         *   not yet been computed, the calculation will run in the current
-         *   thread and this routine will not return until it is complete.
-         *
-         * - If the requested invariant has already been computed, then this
-         *   routine will return immediately with the pre-computed value.  If
-         *   a progress tracker is passed then it will be marked as finished.
+         * Since Regina 7.0, this routine will not return until the polynomial
+         * computation is complete, regardless of whether a progress tracker
+         * was passed.  If you need the old behaviour (where passing a progress
+         * tracker caused the computation to start in the background), simply
+         * call this routine in a new detached thread.
          *
          * \warning The naive algorithm can only handle a limited number
          * of crossings (currently less than the number of bits in a long,
@@ -2124,9 +2219,8 @@ class Link : public Packet {
          * treewidth-based algorithm.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the Jones polynomial.  If a progress tracker was passed
-         * then this return value must be ignored, and you should call
-         * jones() again once the tracker is marked as finished.
+         * @return the Jones polynomial, or the zero polynomial if the
+         * calculation was cancelled via the given progress tracker.
          */
         const Laurent<Integer>& jones(Algorithm alg = ALG_DEFAULT,
             ProgressTracker* tracker = nullptr) const;
@@ -2178,27 +2272,17 @@ class Link : public Packet {
          * Instead, homflyAZ() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
          *
-         * If the HOMFLY polynomial has already been computed, then the result
+         * If the HOMFLY polynomial has already been computed (either in terms
+         * of \a alpha and \a z or in terms of \a l and \a m), then the result
          * will be cached and so this routine will be very fast (since it just
          * returns the previously computed result).  Otherwise the computation
          * could be quite slow, particularly for larger numbers of crossings.
-         * This (potentially) long computation can be managed by passing
-         * a progress tracker:
          *
-         * - If a progress tracker is passed and the polynomial has not yet
-         *   been computed, then the calculation will take place in a
-         *   new thread and this routine will return immediately.  Once the
-         *   progress tracker indicates that the calculation has finished,
-         *   you can call homflyAZ() again to retrieve the polynomial.
-         *
-         * - If no progress tracker is passed and the polynomial has
-         *   not yet been computed, the calculation will run in the current
-         *   thread and this routine will not return until it is complete.
-         *
-         * - If the HOMFLY polynomial has already been computed (either in
-         *   terms of \a alpha and \a z or in terms of \a l and \a m), then
-         *   this routine will return immediately with the pre-computed value.
-         *   If a progress tracker is passed then it will be marked as finished.
+         * Since Regina 7.0, this routine will not return until the polynomial
+         * computation is complete, regardless of whether a progress tracker
+         * was passed.  If you need the old behaviour (where passing a progress
+         * tracker caused the computation to start in the background), simply
+         * call this routine in a new detached thread.
          *
          * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
@@ -2208,9 +2292,8 @@ class Link : public Packet {
          * fixed-parameter tractable treewidth-based algorithm.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the HOMFLY polynomial.  If a progress tracker was passed
-         * then this return value must be ignored, and you should call
-         * homflyAZ() again once the tracker is marked as finished.
+         * @return the HOMFLY polynomial, or the zero polynomial if the
+         * calculation was cancelled via the given progress tracker.
          */
         const Laurent2<Integer>& homflyAZ(Algorithm alg = ALG_DEFAULT,
             ProgressTracker* tracker = nullptr) const;
@@ -2249,27 +2332,17 @@ class Link : public Packet {
          * Instead, homflyLM() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
          *
-         * If the HOMFLY polynomial has already been computed, then the result
+         * If the HOMFLY polynomial has already been computed (either in terms
+         * of \a alpha and \a z or in terms of \a l and \a m), then the result
          * will be cached and so this routine will be very fast (since it just
          * returns the previously computed result).  Otherwise the computation
          * could be quite slow, particularly for larger numbers of crossings.
-         * This (potentially) long computation can be managed by passing
-         * a progress tracker:
          *
-         * - If a progress tracker is passed and the polynomial has not yet
-         *   been computed, then the calculation will take place in a
-         *   new thread and this routine will return immediately.  Once the
-         *   progress tracker indicates that the calculation has finished,
-         *   you can call homflyLM() again to retrieve the polynomial.
-         *
-         * - If no progress tracker is passed and the polynomial has
-         *   not yet been computed, the calculation will run in the current
-         *   thread and this routine will not return until it is complete.
-         *
-         * - If the HOMFLY polynomial has already been computed (either in
-         *   terms of \a alpha and \a z or in terms of \a l and \a m), then
-         *   this routine will return immediately with the pre-computed value.
-         *   If a progress tracker is passed then it will be marked as finished.
+         * Since Regina 7.0, this routine will not return until the polynomial
+         * computation is complete, regardless of whether a progress tracker
+         * was passed.  If you need the old behaviour (where passing a progress
+         * tracker caused the computation to start in the background), simply
+         * call this routine in a new detached thread.
          *
          * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
@@ -2279,9 +2352,8 @@ class Link : public Packet {
          * fixed-parameter tractable treewidth-based algorithm.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the HOMFLY polynomial.  If a progress tracker was passed
-         * then this return value must be ignored, and you should call
-         * homflyLM() again once the tracker is marked as finished.
+         * @return the HOMFLY polynomial, or the zero polynomial if the
+         * calculation was cancelled via the given progress tracker.
          */
         const Laurent2<Integer>& homflyLM(Algorithm alg = ALG_DEFAULT,
             ProgressTracker* tracker = nullptr) const;
@@ -2309,9 +2381,8 @@ class Link : public Packet {
          * fixed-parameter tractable treewidth-based algorithm.
          * @param tracker a progress tracker through which progress will
          * be reported, or \c null if no progress reporting is required.
-         * @return the HOMFLY polynomial.  If a progress tracker was passed
-         * then this return value must be ignored, and you should call
-         * homfly() again once the tracker is marked as finished.
+         * @return the HOMFLY polynomial, or the zero polynomial if the
+         * calculation was cancelled via the given progress tracker.
          */
         const Laurent2<Integer>& homfly(Algorithm alg = ALG_DEFAULT,
             ProgressTracker* tracker = nullptr) const;
@@ -2326,6 +2397,52 @@ class Link : public Packet {
          * @return \c true if and only if this property is already known.
          */
         bool knowsHomfly() const;
+
+        /**
+         * Converts between the (\a alpha, \a z) and (\a l, \a m)
+         * representations of the HOMFLY polynomial.
+         *
+         * The (\a alpha, \a z) and (\a l, \a m) variants are related by a
+         * simple transformation: \a alpha = \a l \a i and \a z = -\a m \a i,
+         * where \a i represents (as usual) a square root of -1.
+         *
+         * See homflyAZ() and homflyLM() for further details.
+         *
+         * @param homflyAZ the HOMFLY polynomial of a link as a polynomial in
+         * \a alpha and \a z, where (\a alpha, \a z) are represented by
+         * (\a x, \a y) in the class Laurent2<Integer>.
+         * @return the HOMFLY polynomial of the same link as a polynomial in
+         * \a l and \a m, where (\a l, \a m) are represented by (\a x, \a y)
+         * in the class Laurent2<Integer>.
+         */
+        static Laurent2<Integer> homflyAZtoLM(Laurent2<Integer> homflyAZ);
+
+        /**
+         * Returns the group of this link; that is, the fundamental group of
+         * the link exterior.
+         *
+         * This routine builds the Wirtinger presentation, where all relations
+         * are some variant of the form <tt>xy=yz</tt>.
+         *
+         * If you pass \a simplify as \c false, it will leave the presentation
+         * in exactly this form (i.e., the Wirtinger presentation), and not
+         * simplify it further.  If you pass \a simplify as \c true (the
+         * default), this routine will attempt to simplify the group
+         * presentation before returning.
+         *
+         * \note If you are finding the resulting group presentation too large
+         * for your liking even after simplification, then you could also try
+         * calling complement() and computing the fundamental group of the
+         * resulting 3-manifold triangulation.  Sometimes the presentation
+         * obtained via the complement is better, and sometimes it is worse.
+         *
+         * Currently this group is \e not cached; instead it is reconstructed
+         * every time this function is called.  This behaviour may change in
+         * future versions of Regina.
+         *
+         * @return the group of this link.
+         */
+        GroupPresentation group(bool simplify = true) const;
 
         /**
          * Returns a nice tree decomposition of the planar 4-valent
@@ -2374,10 +2491,7 @@ class Link : public Packet {
          * that it has cached, and will instead cache \e td for future
          * use instead.
          *
-         * Regina will not claim ownership of \e td, and will not edit
-         * it in any way.  Instead, it will make a deep copy of \e td
-         * and then modify this copy for its purposes.
-         *
+         * Regina may modify the given tree decomposition for its purposes.
          * In particular, \e td does not need to be a \e nice tree
          * decomposition (indeed, it does not need to have any special
          * properties beyond the definition of a tree decomposition).
@@ -2387,7 +2501,7 @@ class Link : public Packet {
          * @param td a tree decomposition of the planar 4-valent
          * multigraph formed by this link diagram.
          */
-        void useTreeDecomposition(const TreeDecomposition& td);
+        void useTreeDecomposition(TreeDecomposition td);
 
         /*@}*/
         /**
@@ -2395,9 +2509,8 @@ class Link : public Packet {
          */
         /*@{*/
 
-        virtual void writeTextShort(std::ostream& out) const override;
-        virtual void writeTextLong(std::ostream& out) const override;
-        virtual bool dependsOnParent() const override;
+        void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
         /*@}*/
         /**
@@ -2467,7 +2580,7 @@ class Link : public Packet {
          * See also brief(), which returns the brief format as a string.
          *
          * \ifacespython Not present; instead use the variant
-         * brief() that returns a string.
+         * brief() that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          */
@@ -2562,7 +2675,7 @@ class Link : public Packet {
          * as a machine-readable sequence of integers.
          *
          * \ifacespython Not present; instead use the variants
-         * gauss() or gaussData().
+         * gauss() or gaussData() that take no arguments.
          *
          * @param out the output stream to which to write.
          */
@@ -2669,7 +2782,7 @@ class Link : public Packet {
          * as a machine-readable sequence of tokens.
          *
          * \ifacespython Not present; instead use the variants
-         * orientedGauss() or orientedGaussData().
+         * orientedGauss() or orientedGaussData() that take no arguments.
          *
          * @param out the output stream to which to write.
          */
@@ -2771,7 +2884,7 @@ class Link : public Packet {
          * as a machine-readable sequence of integers.
          *
          * \ifacespython Not present; instead use the variants
-         * jenkins() or jenkinsData().
+         * jenkins() or jenkinsData() that take no arguments.
          *
          * @param out the output stream to which to write.
          */
@@ -2899,7 +3012,7 @@ class Link : public Packet {
          * variant only as a machine-readable sequence of integers.
          *
          * \ifacespython Not present; instead use the variants
-         * dt(bool) or dtData().
+         * dt(bool) or dtData() that take no arguments.
          *
          * @param out the output stream to which to write.
          * @param alpha \c true to use alphabetical notation, or \c false
@@ -3022,7 +3135,7 @@ class Link : public Packet {
          * as a machine-readable sequence of 4-tuples of integers.
          *
          * \ifacespython Not present; instead use the variants
-         * pd() or pdData().
+         * pd() or pdData() that take no arguments.
          *
          * @param out the output stream to which to write.
          */
@@ -3036,11 +3149,7 @@ class Link : public Packet {
          *
          * In summary, the output will consist of several lines of text:
          *
-         * - If this link has a packet label, then the output will begin with
-         *   a descriptive comment line of the form <tt>c <i>label</i></tt>.
-         *   Otherwise this initial comment line will be omitted.
-         *
-         * - Next will be a line of the form
+         * - The first line will be of the form
          *   <tt>p&nbsp;tw&nbsp;<i>num_vertices</i>&nbsp;<i>num_edges</i></tt>.
          *   Note that, since the underlying graph comes from a link diagram,
          *   we will always have \e num_edges equal to twice \e num_vertices.
@@ -3053,7 +3162,6 @@ class Link : public Packet {
          * An example of this text format is as follows:
          *
            \verbatim
-           c Figure eight knot
            p tw 4 8
            1 2
            1 4
@@ -3067,6 +3175,9 @@ class Link : public Packet {
          *
          * \ifacespython The \a out argument is not present; instead
          * standard output is assumed.
+         *
+         * \ifacespython Not present; instead use the variant pace() that
+         * takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          *
@@ -3094,7 +3205,7 @@ class Link : public Packet {
         /**
          * Returns C++ code that can be used to reconstruct this link.
          *
-         * This code will use the Link constructor that takes a series of
+         * This code will call Link::fromData(), passing a series of
          * hard-coded C++11 initialiser lists.
          *
          * The main purpose of this routine is to generate these hard-coded
@@ -3175,10 +3286,10 @@ class Link : public Packet {
         void insertTorusLink(int p, int q, bool positive = true);
 
         /**
-         * Creates a new link from hard-coded information about its
-         * crossings and components.
+         * Creates a link from hard-coded information about its crossings
+         * and components.
          *
-         * This constructor takes a series of C++11 initialiser lists
+         * This routine takes a series of C++11 initialiser lists
          * (each a list of integers), which makes it useful for creating
          * hard-coded examples directly in C++ code.
          *
@@ -3221,28 +3332,104 @@ class Link : public Packet {
          *
          * \note If you have an existing link that you would like to
          * hard-code, the routine dumpConstruction() will output C++ code
-         * that can reconstruct the link by calling this constructor.
+         * that can reconstruct the link by calling this routine.
          *
-         * \ifacespython Not available.
+         * \exception InvalidArgument a link could not be reconstructed from
+         * the given data.
+         *
+         * \ifacespython Not available, but there is a variant of fromData()
+         * that takes the same data using two Python lists (which need not
+         * be constant).
          *
          * @param crossingSigns a list containing the signs of the
          * crossings; each sign must be either +1 or -1.
          * @param components one list for each link component that
          * describes the crossings that are visited along that component,
          * as described in the detailed notes above.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed link.
          */
         template <typename... Args>
-        static Link* fromData(std::initializer_list<int> crossingSigns,
+        static Link fromData(std::initializer_list<int> crossingSigns,
             std::initializer_list<Args>... components);
+
+        /**
+         * Creates a new link from information about its crossings and
+         * components.
+         *
+         * This routine is an analogue to the variant of fromData() that
+         * takes C++11 initialiser lists; however, here the input data may be
+         * constructed at runtime (which makes it accessible to Python,
+         * amongst other things).
+         *
+         * For the purposes of this routine, we number the crossings
+         * 1, 2, ..., \a n.  The information that you must pass to this
+         * routine is the following:
+         *
+         * - The first iterator range (\a beginSigns, \a endSigns)
+         *   encodes the signs of crossings 1, ..., \a n in order.
+         *   Each iterator in this range must dereference to either +1 or -1.
+         *
+         * - The second iterator range (\a beginComponents, \a endComponents)
+         *   identifies the individual components of the link.
+         *   Each iterator in this range must dereference to a container
+         *   that has a size() function and supports range-based \c for loops
+         *   (so standard C++ container classes such as std::vector<int> and
+         *   std::list<int> are be fine).
+         *
+         * - The container for each component must be filled with integers,
+         *   which identify the crossings you visit in order when traversing
+         *   the component.  A positive entry \a i indicates that you pass
+         *   over crossing \a i, and a negative entry -\a i indicates that you
+         *   pass under crossing \a i.
+         *
+         * - To encode a component with no crossings, you may use either an
+         *   empty container or a container containing the single integer 0.
+         *
+         * Be aware that, once the link has been constructed, the crossings
+         * 1, ..., \a n will have been reindexed as 0, ..., <i>n</i>-1
+         * (since every Link object numbers its crossings starting from 0).
+         *
+         * As an example, Python users can construct the left-hand trefoil and
+         * the Hopf link as follows:
+         *
+         * \code{.py}
+         * trefoil = Link.fromData([ -1, -1, -1 ], [[ 1, -2, 3, -1, 2, -3 ]])
+         * hopf = Link.fromData([ +1, +1 ], [[ 1, -2 ], [ -1, 2 ]])
+         * \endcode
+         *
+         * \warning While this routine does some error checking on the
+         * input, it does \e not test for planarity of the diagram.
+         * That is, if the input describes a link diagram that must be
+         * drawn on some higher-genus surface as opposed to the plane,
+         * this will not be detected.  Of course such inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument a link could not be reconstructed from
+         * the given data.
+         *
+         * \ifacespython The signs should be passed as a single Python list of
+         * integers (not an iterator pair).  Likewise, the components should be
+         * passed as a Python list of lists of integers (not an iterator pair).
+         * In the case of a knot (which has only one component), you are
+         * welcome to replace the list of lists <tt>[[...]]</tt> with a
+         * single list <tt>[...]</tt>.
+         *
+         * @param beginSigns the beginning of the list of crossing signs.
+         * @param endSigns a past-the-end iterator indicating the end of
+         * the list of crossing signs.
+         * @param beginComponents the beginning of the list of containers
+         * describing each link component.
+         * @param endComponents a past-the-end iterator indicating the
+         * end of the list of link components.
+         * @return the reconstructed link.
+         */
+        template <typename SignIterator, typename ComponentIterator>
+        static Link fromData(SignIterator beginSigns, SignIterator endSigns,
+            ComponentIterator beginComponents, ComponentIterator endComponents);
 
         /**
          * Recovers a knot diagram from its signature.
          * See knotSig() for more information on knot signatures.
-         *
-         * The knot that is returned will be newly created, and it is
-         * the responsibility of the caller of this routine to destroy it.
          *
          * Calling knotSig() followed by fromKnotSig() is not guaranteed to
          * produce an \e identical knot diagram to the original, but it
@@ -3250,13 +3437,14 @@ class Link : public Packet {
          * rotation, and optionally (according to the arguments that
          * were passed to knotSig()) reflection and/or reversal.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * knot signature.
+         *
          * @param sig the signature of the knot diagram to construct.
          * Note that signatures are case-sensitive.
-         * @return a newly allocated knot if the reconstruction was
-         * successful, or \c null if the given string was not a valid
-         * knot signature.
+         * @return the reconstructed knot.
          */
-        static Link* fromKnotSig(const std::string& sig);
+        static Link fromKnotSig(const std::string& sig);
 
         /**
          * Alias for fromKnotSig(), to recover a knot diagram from its
@@ -3267,13 +3455,14 @@ class Link : public Packet {
          *
          * See fromKnotSig() for further details.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * knot signature.
+         *
          * @param sig the signature of the knot diagram to construct.
          * Note that signatures are case-sensitive.
-         * @return a newly allocated knot if the reconstruction was
-         * successful, or \c null if the given string was not a valid
-         * knot signature.
+         * @return the reconstructed knot.
          */
-        static Link* fromSig(const std::string& sig);
+        static Link fromSig(const std::string& sig);
 
         /**
          * Creates a new knot from a classical Gauss code, presented as
@@ -3328,19 +3517,23 @@ class Link : public Packet {
          * using the \e oriented Gauss code instead.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * classical Gauss code for a knot.  As noted above, the checks
+         * performed here are not exhaustive.
+         *
          * @author Adam Gowty
          *
          * @param str a classical Gauss code for a knot, as described above.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed knot.
          */
-        static Link* fromGauss(const std::string& str);
+        static Link fromGauss(const std::string& str);
 
         /**
          * Creates a new knot from a classical Gauss code, presented as
@@ -3368,11 +3561,16 @@ class Link : public Packet {
          * using the \e oriented Gauss code instead.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given sequence was not a valid
+         * classical Gauss code for a knot.  As noted above, the checks
+         * performed here are not exhaustive.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
@@ -3383,11 +3581,10 @@ class Link : public Packet {
          * sequence of integers for a classical Gauss code.
          * @param end an iterator that points past the end of the
          * sequence of integers for a classical Gauss code.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed knot.
          */
         template <typename Iterator>
-        static Link* fromGauss(Iterator begin, Iterator end);
+        static Link fromGauss(Iterator begin, Iterator end);
 
         /**
          * Creates a new knot from an "oriented" variant of the Gauss code,
@@ -3433,17 +3630,21 @@ class Link : public Packet {
          * beginning or end of the string is allowed.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * oriented Gauss code for a knot.  As noted above, the checks
+         * performed here are not exhaustive.
+         *
          * @param str an "oriented" Gauss code for a knot, as described above.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed knot.
          */
-        static Link* fromOrientedGauss(const std::string& str);
+        static Link fromOrientedGauss(const std::string& str);
 
         /**
          * Creates a new knot from an "oriented" variant of the Gauss code,
@@ -3481,11 +3682,16 @@ class Link : public Packet {
          * C++-style string (which can be cast to <tt>const std::string&</tt>).
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given sequence was not a valid
+         * oriented Gauss code for a knot.  As noted above, the checks
+         * performed here are not exhaustive.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of strings.
@@ -3494,11 +3700,10 @@ class Link : public Packet {
          * sequence of tokens for an "oriented" Gauss code.
          * @param end an iterator that points past the end of the
          * sequence of tokens for an "oriented" Gauss code.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed knot.
          */
         template <typename Iterator>
-        static Link* fromOrientedGauss(Iterator begin, Iterator end);
+        static Link fromOrientedGauss(Iterator begin, Iterator end);
 
         /**
          * Creates a new link from Bob Jenkins' format, presented as a string.
@@ -3531,18 +3736,22 @@ class Link : public Packet {
          * beginning or end of the string is allowed.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * encoding of a link in Jenkins' format.  As noted above, the
+         * checks performed here are not exhaustive.
+         *
          * @param str a string describing a link in Jenkins' format,
          * as described above.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed link.
          */
-        static Link* fromJenkins(const std::string& str);
+        static Link fromJenkins(const std::string& str);
 
         /**
          * Creates a new link from Bob Jenkins' format, read directly
@@ -3564,11 +3773,16 @@ class Link : public Packet {
          * which can be read by the user after this routine has finished.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given input was not a valid
+         * encoding of a link in Jenkins' format.  As noted above, the
+         * checks performed here are not exhaustive.
          *
          * \ifacespython This routine is not available in Python.  Instead,
          * Python users can use the variant fromJenkins(const std::string&),
@@ -3576,10 +3790,9 @@ class Link : public Packet {
          *
          * @param in an input stream that begins with a sequence of integers
          * separated by whitespace that describes a link.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed link.
          */
-        static Link* fromJenkins(std::istream& in);
+        static Link fromJenkins(std::istream& in);
 
         /**
          * Creates a new link from Bob Jenkins' format, presented as an
@@ -3599,11 +3812,16 @@ class Link : public Packet {
          * dereferencing such an iterator produces an integer.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given sequence was not a valid
+         * encoding of a link in Jenkins' format.  As noted above, the
+         * checks performed here are not exhaustive.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
@@ -3612,11 +3830,10 @@ class Link : public Packet {
          * sequence of integers that describes a link.
          * @param end an iterator that points past the end of the
          * sequence of integers that describes a link.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed link.
          */
         template <typename Iterator>
-        static Link* fromJenkins(Iterator begin, Iterator end);
+        static Link fromJenkins(Iterator begin, Iterator end);
 
         /**
          * Creates a new knot from either alphabetical or numerical
@@ -3665,21 +3882,25 @@ class Link : public Packet {
          * using the oriented Gauss code instead.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given string was not a valid
+         * Dowker-Thistlethwaite code for a knot.  As noted above, the checks
+         * performed here are not exhaustive.
          *
          * @author Much of the code for this routine is based on the
          * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
          *
          * @param str either the alphabetical or numerical
          * Dowker-Thistlethwaite notation for a knot, as described above.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed knot.
          */
-        static Link* fromDT(const std::string& str);
+        static Link fromDT(const std::string& str);
 
         /**
          * Creates a new knot from numerical Dowker-Thistlethwaite notation,
@@ -3712,11 +3933,16 @@ class Link : public Packet {
          * using the oriented Gauss code instead.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a knot diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given sequence was not a valid
+         * Dowker-Thistlethwaite code for a knot.  As noted above, the checks
+         * performed here are not exhaustive.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list of integers.
@@ -3730,11 +3956,10 @@ class Link : public Packet {
          * @param end an iterator that points past the end of the
          * sequence of integers for the Dowker-Thistlethwaite notation
          * for a knot.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed knot.
          */
         template <typename Iterator>
-        static Link* fromDT(Iterator begin, Iterator end);
+        static Link fromDT(Iterator begin, Iterator end);
 
         /**
          * Creates a new link from a planar diagram code, presented as a string.
@@ -3814,17 +4039,21 @@ class Link : public Packet {
          * contain this information.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
+         * \exception InvalidArgument the given string was not a valid
+         * planar diagram code.  As noted above, the checks performed here
+         * are not exhaustive.
+         *
          * @param str a planar diagram code for a link, as described above.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed link.
          */
-        static Link* fromPD(const std::string& str);
+        static Link fromPD(const std::string& str);
 
         /**
          * Creates a new link from a planar diagram code, presented as a
@@ -3855,11 +4084,16 @@ class Link : public Packet {
          * contain this information.
          *
          * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the diagram.
+         * input, these checks are not exhaustive.  In particular,
+         * it does \e not test for planarity of the diagram.
          * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \exception InvalidArgument the given sequence was not a valid
+         * planar diagram code.  As noted above, the checks performed here
+         * are not exhaustive.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
          * iterators, this routine takes a Python list.  Each element
@@ -3871,20 +4105,12 @@ class Link : public Packet {
          * sequence of 4-tuples for a planar diagram code.
          * @param end an iterator that points past the end of the
          * sequence of 4-tuples for a planar diagram code.
-         * @return a newly constructed link, or \c null if the input was
-         * found to be invalid.
+         * @return the reconstructed link.
          */
         template <typename Iterator>
-        static Link* fromPD(Iterator begin, Iterator end);
+        static Link fromPD(Iterator begin, Iterator end);
 
         /*@}*/
-
-        static XMLPacketReader* xmlReader(Packet* parent,
-            XMLTreeResolver& resolver);
-
-    protected:
-        virtual Packet* internalClonePacket(Packet* parent) const override;
-        virtual void writeXMLPacketData(std::ostream& out) const override;
 
     private:
         /**
@@ -3892,7 +4118,7 @@ class Link : public Packet {
          * This must be called by any internal function that changes the link.
          *
          * In most cases this routine is followed immediately by firing
-         * a packet change event.
+         * a change event.
          */
         void clearAllProperties();
 
@@ -3972,6 +4198,9 @@ class Link : public Packet {
          * This routine processes one link component, and then recursively
          * calls itself to process the remaining components.
          *
+         * \exception InvalidArgument an error or inconsistency is found in
+         * the given data.
+         *
          * @param strandsRemaining the expected sum of the lengths of
          * all components that still need to be processed.  This expected
          * sum is computed as twice the number of crossings minus the
@@ -3983,11 +4212,9 @@ class Link : public Packet {
          * @param otherComponents the remaining components still to be
          * processed; these will be processed by a recursive call to this
          * routine.
-         * @return \c true if and only if the components were successfully
-         * processed without errors.
          */
         template <typename... Args>
-        bool addComponents(size_t strandsRemaining,
+        void addComponents(size_t strandsRemaining,
             std::initializer_list<int> component,
             std::initializer_list<Args>... otherComponents);
 
@@ -3998,14 +4225,16 @@ class Link : public Packet {
          * It is called when there are no more components remaining to
          * be processed.
          *
+         * \exception InvalidArgument an error or inconsistency was found in
+         * the given data (which for this terminating call simply means
+         * \a strandsRemaining != 0).
+         *
          * @param strandsRemaining the expected sum of the lengths of
          * all components that still need to be processed.  This expected
          * sum is computed as twice the number of crossings minus the
          * lengths of all components that have already been processed.
-         * @return \c true if and only if no errors are detected, which
-         * for this terminating call simply means \a strandsRemaining == 0.
          */
-        bool addComponents(size_t strandsRemaining);
+        void addComponents(size_t strandsRemaining);
 
         /**
          * Internal to bracketNaive().
@@ -4132,26 +4361,11 @@ class Link : public Packet {
          */
         void setPropertiesFromBracket(Laurent<Integer>&& bracket) const;
 
-        /**
-         * A much less templated version of rewrite().
-         *
-         * This is identical to rewrite(), except that the type of the
-         * action function is now known precisely.  This means that the
-         * implementation can be kept out of the main headers.
-         *
-         * \tparam withSig \c true if the action function includes a
-         * knot signature before the link in its initial argument(s).
-         */
-        template <bool withSig>
-        bool rewriteInternal(int height, unsigned nThreads,
-            ProgressTrackerOpen* tracker,
-            regina::detail::RetriangulateActionFunc<Link, withSig>&& action)
-                const;
-
     friend class ModelLinkGraph;
     friend class Tangle;
     friend class XMLLinkCrossingsReader;
     friend class XMLLinkComponentsReader;
+    friend class XMLWriter<Link>;
 };
 
 /**
@@ -4163,222 +4377,15 @@ class Link : public Packet {
  * See Link::swap() for more details.
  *
  * \note This swap function is \e not marked \c noexcept, since it
- * fires packet change events which may in turn call arbitrary
+ * fires change events on both links which may in turn call arbitrary
  * code via any registered packet listeners.
  *
  * @param lhs the link whose contents should be swapped with \a rhs.
  * @param rhs the link whose contents should be swapped with \a lhs.
+ *
+ * \ingroup link
  */
 void swap(Link& lhs, Link& rhs);
-
-/**
- * Iterates through all crossings of a link.
- *
- * The order of iteration follows the indexing of the crossings
- * from 0 to Link::size()-1.
- *
- * This class implements the Boost multipass input iterator concept,
- * which is similar to the standard C++ forward iterator except that
- * the \a reference type may be the same as \a value_type (and so,
- * in particular, the dereference operator may return by value).
- * This header also specialises std::iterator_traits for this iterator type.
- *
- * \ifacespython Not present.
- */
-class CrossingIterator {
-    private:
-        const Link* link_;
-            /**< The underlying link. */
-        size_t index_;
-            /**< The index of the crossing that we are currently visiting. */
-
-    public:
-        /**
-         * Creates a singular iterator.
-         */
-        CrossingIterator();
-        /**
-         * Default copy constructor.
-         */
-        CrossingIterator(const CrossingIterator&) = default;
-
-        /**
-         * Creates a new iterator pointing to the given crossing of the
-         * given link.
-         *
-         * @param link the underlying knot/link.
-         * @param index the index of the crossing to point to.  This must be
-         * between 0 and link.size()-1 for a deferencable iterator,
-         * or must be exactly link.size() for a past-the-end iterator.
-         */
-        CrossingIterator(const Link& link, size_t index = 0);
-
-        /**
-         * Preincrement operator.
-         *
-         * @return a reference to this iterator.
-         */
-        CrossingIterator& operator ++ ();
-
-        /**
-         * Postincrement operator.
-         *
-         * @return a copy of this iterator before it was incremented.
-         */
-        CrossingIterator operator ++ (int);
-
-        /**
-         * Returns the crossing to which this iterator points.
-         *
-         * \pre This iterator is not past-the-end.
-         *
-         * @return the crossing to which this iterator points.
-         */
-        Crossing* operator * () const;
-
-        /**
-         * Default assignment operator.
-         *
-         * @return a reference to this iterator.
-         */
-        CrossingIterator& operator = (const CrossingIterator&) = default;
-
-        /**
-         * Tests whether this and the given iterator are equal.
-         *
-         * \note This routine only compares the indices of the crossings.
-         * It does not examine whether this and the given iterator refer
-         * to the same underlying link.
-         *
-         * @param rhs the iterator to compare with this.
-         * @return \c true if and only if the two iterators are equal.
-         */
-        bool operator == (const CrossingIterator& rhs) const;
-        /**
-         * Tests whether this and the given iterator are different.
-         *
-         * \note This routine only compares the indices of the crossings.
-         * It does not examine whether this and the given iterator refer
-         * to the same underlying link.
-         *
-         * @param rhs the iterator to compare with this.
-         * @return \c true if and only if the two iterators are different.
-         */
-        bool operator != (const CrossingIterator& rhs) const;
-};
-
-/**
- * Iterates through all directed arcs of a knot or link.
- *
- * The order of iteration is as follows.  The iterator works through
- * crossings 0,1,... of the underlying link in turn.  For each crossing,
- * it visits the arcs exiting the crossing from the lower strand and then
- * the upper strand, in that order.
- *
- * Zero-crossing unknot components are not visited at all by this iterator type.
- *
- * This class implements the Boost multipass input iterator concept,
- * which is similar to the standard C++ forward iterator except that
- * the \a reference type may be the same as \a value_type (and so,
- * in particular, the dereference operator may return by value).
- * This header also specialises std::iterator_traits for this iterator type.
- *
- * \ifacespython Not present.
- */
-class ArcIterator {
-    private:
-        const Link* link_;
-            /**< The underlying link. */
-        size_t index_;
-            /**< The index of the crossing that we are currently visiting. */
-        bool upper_;
-            /**< \c false if we are visiting the arc exiting the
-                 crossing from the lower strand, or \c true if we
-                 are visiting the arc exiting from the upper strand. */
-
-    public:
-        /**
-         * Creates a singular iterator.
-         */
-        ArcIterator();
-        /**
-         * Default copy constructor.
-         */
-        ArcIterator(const ArcIterator&) = default;
-
-        /**
-         * Creates a new iterator pointing to the arc exiting the
-         * given strand of the given crossing of the given link.
-         *
-         * @param link the underlying knot/link.
-         * @param crossing the index of the given crossing.  This must be
-         * between 0 and link.size()-1 for a deferencable iterator,
-         * or must be exactly link.size() for a past-the-end iterator.
-         * @param upper \c true or \c false according to whether the
-         * iterator should point to the arc exiting the given crossing
-         * from the upper or lower strand respectively.  For a
-         * past-the-end iterator, this should always be \c false.
-         */
-        ArcIterator(const Link& link, size_t crossing = 0, bool upper = false);
-
-        /**
-         * Preincrement operator.
-         *
-         * @return a reference to this iterator.
-         */
-        ArcIterator& operator ++ ();
-
-        /**
-         * Postincrement operator.
-         *
-         * @return a copy of this iterator before it was incremented.
-         */
-        ArcIterator operator ++ (int);
-
-        /**
-         * Returns the directed arc to which this iterator points.
-         *
-         * See the StrandRef documentation for details on how a
-         * StrandRef object is used to identify a directed arc.
-         *
-         * \pre This iterator is not past-the-end.
-         *
-         * @return the directed arc to which this iterator points.
-         */
-        StrandRef operator * () const;
-
-        /**
-         * Default assignment operator.
-         *
-         * @return a reference to this iterator.
-         */
-        ArcIterator& operator = (const ArcIterator&) = default;
-
-        /**
-         * Tests whether this and the given iterator are equal.
-         *
-         * \note This routine only compares the indices of the crossings
-         * and the upper/lower strand markings.  It does not examine whether
-         * this and the given iterator refer to the same underlying link.
-         *
-         * @param rhs the iterator to compare with this.
-         * @return \c true if and only if the two iterators are equal.
-         */
-        bool operator == (const ArcIterator& rhs) const;
-        /**
-         * Tests whether this and the given iterator are different.
-         *
-         * \note This routine only compares the indices of the crossings
-         * and the upper/lower strand markings.  It does not examine whether
-         * this and the given iterator refer to the same underlying link.
-         *
-         * @param rhs the iterator to compare with this.
-         * @return \c true if and only if the two iterators are different.
-         */
-        bool operator != (const ArcIterator& rhs) const;
-};
-
-/*@}*/
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
@@ -4547,9 +4554,6 @@ inline Crossing::Crossing(int sign) : sign_(sign) {
 
 // Inline functions for Link
 
-inline Link::Link() {
-}
-
 inline Link::Link(size_t unknots) {
     components_.resize(unknots);
     std::fill(components_.begin(), components_.end(), StrandRef());
@@ -4578,8 +4582,16 @@ inline Crossing* Link::crossing(size_t index) const {
     return crossings_[index];
 }
 
+inline auto Link::crossings() const {
+    return ListView(crossings_);
+}
+
 inline StrandRef Link::component(size_t index) const {
     return components_[index];
+}
+
+inline auto Link::components() const {
+    return ListView(components_);
 }
 
 inline StrandRef Link::strand(int id) const {
@@ -4635,25 +4647,16 @@ inline const TreeDecomposition& Link::niceTreeDecomposition() const {
     if (niceTreeDecomposition_)
         return *niceTreeDecomposition_;
 
-    TreeDecomposition* ans = new TreeDecomposition(*this, TD_UPPER);
-    prepareTreeDecomposition(*ans);
-    niceTreeDecomposition_.reset(ans);
+    TreeDecomposition ans(*this, TD_UPPER);
+    prepareTreeDecomposition(ans);
+    niceTreeDecomposition_ = ans;
 
-    return *ans;
+    return *niceTreeDecomposition_;
 }
 
-inline void Link::useTreeDecomposition(const TreeDecomposition& td) {
-    TreeDecomposition* use = new TreeDecomposition(td);
-    prepareTreeDecomposition(*use);
-    niceTreeDecomposition_.reset(use);
-}
-
-inline bool Link::dependsOnParent() const {
-    return false;
-}
-
-inline Packet* Link::internalClonePacket(Packet*) const {
-    return new Link(*this);
+inline void Link::useTreeDecomposition(TreeDecomposition td) {
+    prepareTreeDecomposition(td);
+    niceTreeDecomposition_ = std::move(td);
 }
 
 inline StrandRef Link::translate(const StrandRef& other) const {
@@ -4665,14 +4668,45 @@ inline StrandRef Link::translate(const StrandRef& other) const {
 template <typename Action, typename... Args>
 inline bool Link::rewrite(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
+    if (countComponents() != 1) {
+        if (tracker)
+            tracker->setFinished();
+        throw FailedPrecondition(
+            "rewrite() requires a link with at most one component");
+    }
+
     // Use RetriangulateActionTraits to deduce whether the given action takes
     // a link or both a knot signature and link as its initial argument(s).
-    typedef regina::detail::RetriangulateActionTraits<Link, Action> Traits;
+    using Traits = regina::detail::RetriangulateActionTraits<Link, Action>;
     static_assert(Traits::valid,
         "The action that is passed to rewrite() does not take the correct initial argument type(s).");
-    return rewriteInternal<Traits::withSig>(height, nThreads, tracker,
-        Traits::convert(std::forward<Action>(action),
-            std::forward<Args>(args)...));
+    if constexpr (Traits::withSig) {
+        return regina::detail::retriangulateInternal<Link, true>(
+            *this, height, nThreads, tracker,
+            [&](const std::string& sig, Link&& obj) {
+                return action(sig, std::move(obj), std::forward<Args>(args)...);
+            });
+    } else {
+        return regina::detail::retriangulateInternal<Link, false>(
+            *this, height, nThreads, tracker,
+            [&](Link&& obj) {
+                return action(std::move(obj), std::forward<Args>(args)...);
+            });
+    }
+}
+
+inline bool Link::simplifyExhaustive(int height, unsigned nThreads,
+        ProgressTrackerOpen* tracker) {
+    return rewrite(height, nThreads, tracker,
+        [](Link&& alt, Link& original, size_t minCrossings) {
+            if (alt.size() < minCrossings) {
+                ChangeEventSpan span(original);
+                original = std::move(alt);
+                original.intelligentSimplify();
+                return true;
+            } else
+                return false;
+        }, *this, size());
 }
 
 inline void Link::join(const StrandRef& s, const StrandRef& t) {
@@ -4680,7 +4714,7 @@ inline void Link::join(const StrandRef& s, const StrandRef& t) {
     t.crossing_->prev_[t.strand_] = s;
 }
 
-inline Link* Link::fromSig(const std::string& sig) {
+inline Link Link::fromSig(const std::string& sig) {
     return Link::fromKnotSig(sig);
 }
 
@@ -4688,97 +4722,7 @@ inline void swap(Link& lhs, Link& rhs) {
     lhs.swap(rhs);
 }
 
-// Inline functions for CrossingIterator
-
-inline CrossingIterator::CrossingIterator() : link_(nullptr), index_(0) {
-}
-
-inline CrossingIterator::CrossingIterator(const Link& link, size_t index) :
-        link_(&link), index_(index) {
-}
-
-inline CrossingIterator& CrossingIterator::operator ++ () {
-    ++index_;
-    return *this;
-}
-
-inline CrossingIterator CrossingIterator::operator ++ (int) {
-    return CrossingIterator(*link_, index_++);
-}
-
-inline Crossing* CrossingIterator::operator * () const {
-    return link_->crossing(index_);
-}
-
-inline bool CrossingIterator::operator == (const CrossingIterator& rhs) const {
-    return (index_ == rhs.index_);
-}
-
-inline bool CrossingIterator::operator != (const CrossingIterator& rhs) const {
-    return (index_ != rhs.index_);
-}
-
-// Inline functions for ArcIterator
-
-inline ArcIterator::ArcIterator() : link_(nullptr), index_(0), upper_(false) {
-}
-
-inline ArcIterator::ArcIterator(const Link& link, size_t index, bool upper) :
-        link_(&link), index_(index), upper_(upper) {
-}
-
-inline ArcIterator& ArcIterator::operator ++ () {
-    if (upper_) {
-        ++index_;
-        upper_ = false;
-    } else
-        upper_ = true;
-    return *this;
-}
-
-inline ArcIterator ArcIterator::operator ++ (int) {
-    ArcIterator ans(*this);
-    if (upper_) {
-        ++index_;
-        upper_ = false;
-    } else
-        upper_ = true;
-    return ans;
-}
-
-inline StrandRef ArcIterator::operator * () const {
-    return StrandRef(link_->crossing(index_), upper_ ? 1 : 0);
-}
-
-inline bool ArcIterator::operator == (const ArcIterator& rhs) const {
-    return (index_ == rhs.index_) && (upper_ == rhs.upper_);
-}
-
-inline bool ArcIterator::operator != (const ArcIterator& rhs) const {
-    return (index_ != rhs.index_) || (upper_ != rhs.upper_);
-}
-
 } // namespace regina
-
-namespace std {
-    template <>
-    struct iterator_traits<regina::CrossingIterator> {
-        typedef int difference_type;
-        typedef regina::Crossing* value_type;
-        typedef regina::Crossing* const* pointer;
-        typedef regina::Crossing* const& reference;
-        typedef std::input_iterator_tag iterator_category;
-    };
-
-    template <>
-    struct iterator_traits<regina::ArcIterator> {
-        typedef int difference_type;
-        typedef typename regina::StrandRef value_type;
-        typedef typename regina::StrandRef const* pointer;
-        typedef typename regina::StrandRef reference;
-        typedef std::input_iterator_tag iterator_category;
-    };
-} // namespace std
 
 #include "link/data-impl.h"
 #include "link/dt-impl.h"

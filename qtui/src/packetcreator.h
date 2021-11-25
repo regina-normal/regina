@@ -58,14 +58,14 @@ class PacketCreator {
         /**
          * Virtual destructor.
          */
-        virtual ~PacketCreator();
+        virtual ~PacketCreator() = default;
 
         /**
          * Returns the main interface component for this packet creator.
-         * This may be 0 if there are no non-generic interface elements
+         * This may be \c null if there are no non-generic interface elements
          * required.
          *
-         * The default implementation of this routine returns 0.
+         * The default implementation of this routine returns \c null.
          */
         virtual QWidget* getInterface();
 
@@ -86,7 +86,7 @@ class PacketCreator {
          *
          * This routine must verify that the information entered is
          * valid.  If it is valid, a newly created packet must be
-         * returned.  If it is invalid, 0 must be returned and an
+         * returned.  If it is invalid, null must be returned and an
          * appropriate error must be displayed (using the argument
          * \a parentWidget as a parent for the message box).
          *
@@ -95,7 +95,8 @@ class PacketCreator {
          * done then it will be done elsewhere.  It does not need to assign
          * a packet label; this will be also be done elsewhere.
          */
-        virtual regina::Packet* createPacket(regina::Packet* parentPacket,
+        virtual std::shared_ptr<regina::Packet> createPacket(
+            std::shared_ptr<regina::Packet> parentPacket,
             QWidget* parentWidget) = 0;
 
         /**
@@ -122,18 +123,16 @@ class BasicPacketCreator : public PacketCreator {
         /**
          * PacketCreator overrides.
          */
-        regina::Packet* createPacket(regina::Packet*, QWidget*) {
-            regina::Packet* ans = new T();
+        std::shared_ptr<regina::Packet> createPacket(
+                std::shared_ptr<regina::Packet>, QWidget*) override {
+            auto ans = std::make_shared<T>();
             ans->setLabel(ans->typeName());
             return ans;
         }
 };
 
-inline PacketCreator::~PacketCreator() {
-}
-
 inline QWidget* PacketCreator::getInterface() {
-    return 0;
+    return nullptr;
 }
 
 inline QString PacketCreator::parentPrompt() {

@@ -31,104 +31,57 @@
  **************************************************************************/
 
 #include "triangulation/dim3.h"
+#include "triangulation/isosigtype.h"
+#include "triangulation/detail/isosig-impl.h"
 #include "triangulation/detail/retriangulate-impl.h"
 
+// NOLINTNEXTLINE(modernize-concat-nested-namespaces)
 namespace regina {
 
 namespace detail {
     template <>
     struct RetriangulateParams<Triangulation<3>> {
         static std::string sig(const Triangulation<3>& tri) {
-            return tri.isoSig();
+            return tri.isoSig<IsoSigEdgeDegrees<3>>();
         }
 
         static constexpr const char* progressStage = "Exploring triangulations";
 
-        static bool satisfiesPreconditions(const Triangulation<3>&) {
-            return true;
-        }
-
         template <class Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {
-            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sig);
+            Triangulation<3> t = Triangulation<3>::fromIsoSig(sig);
             size_t i;
-            for (i = 0; i < t->countEdges(); ++i)
-                if (t->pachner(t->edge(i), true, false)) {
-                    Triangulation<3> alt(*t, false);
+            for (i = 0; i < t.countEdges(); ++i)
+                if (t.pachner(t.edge(i), true, false)) {
+                    Triangulation<3> alt(t, false);
                     alt.pachner(alt.edge(i), false, true);
-                    if (retriang->candidate(alt, sig)) {
-                        delete t;
+                    if (retriang->candidate(std::move(alt), sig))
                         return;
-                    }
-                    // We cannot use alt from here, since candidate() might
-                    // have changed it.
                 }
 
-            if (t->size() < maxSize)
-                for (i = 0; i < t->countTriangles(); ++i)
-                    if (t->pachner(t->triangle(i), true, false)) {
-                        Triangulation<3> alt(*t, false);
+            if (t.size() < maxSize)
+                for (i = 0; i < t.countTriangles(); ++i)
+                    if (t.pachner(t.triangle(i), true, false)) {
+                        Triangulation<3> alt(t, false);
                         alt.pachner(alt.triangle(i), false, true);
-                        if (retriang->candidate(alt, sig)) {
-                            delete t;
+                        if (retriang->candidate(std::move(alt), sig))
                             return;
-                        }
-                        // We cannot use alt from here, since candidate() might
-                        // have changed it.
                     }
-
-            delete t;
         }
     };
 } // namespace detail
 
-template <bool withSig>
-bool Triangulation<3>::retriangulateInternal(int height, unsigned nThreads,
-        ProgressTrackerOpen* tracker,
-        regina::detail::RetriangulateActionFunc<
-            Triangulation<3>, withSig>&& action) const {
-    if (tracker) {
-        try {
-            std::thread(&regina::detail::enumerate<Triangulation<3>, withSig>,
-                *this, height, nThreads, tracker, std::move(action)).detach();
-            return true;
-        } catch (const std::system_error& e) {
-            return false;
-        }
-    } else
-        return regina::detail::enumerate<Triangulation<3>, withSig>(
-            *this, height, nThreads, tracker, std::move(action));
-}
-
-// Instantiate all retriangulateInternal() template functions
+// Instantiate all necessary retriangulation template functions
 // so the full implementation can stay out of the headers.
 
-template bool Triangulation<3>::retriangulateInternal<true>(
-    int, unsigned, ProgressTrackerOpen*,
-    regina::detail::RetriangulateActionFunc<Triangulation<3>, true>&&) const;
+template bool regina::detail::retriangulateInternal<Triangulation<3>, true>(
+    const Triangulation<3>&, int, unsigned, ProgressTrackerOpen*,
+    regina::detail::RetriangulateActionFunc<Triangulation<3>, true>&&);
 
-template bool Triangulation<3>::retriangulateInternal<false>(
-    int, unsigned, ProgressTrackerOpen*,
-    regina::detail::RetriangulateActionFunc<Triangulation<3>, false>&&) const;
-
-bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
-        ProgressTrackerOpen* tracker) {
-    return retriangulate(height, nThreads, tracker,
-        [](Triangulation<3>& alt, Triangulation<3>& original, size_t minSimp) {
-            if (alt.size() < minSimp) {
-                // Since we are allowed to change alt, we use swap(),
-                // which avoids yet another round of remaking the tetrahedron
-                // gluings.
-                Packet::ChangeEventSpan span(&original);
-                original.swap(alt);
-                original.intelligentSimplify();
-                return true;
-            } else
-                return false;
-        },
-        std::ref(*this), size());
-}
+template bool regina::detail::retriangulateInternal<Triangulation<3>, false>(
+    const Triangulation<3>&, int, unsigned, ProgressTrackerOpen*,
+    regina::detail::RetriangulateActionFunc<Triangulation<3>, false>&&);
 
 } // namespace regina
 

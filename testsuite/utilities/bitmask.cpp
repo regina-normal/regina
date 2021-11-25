@@ -54,10 +54,10 @@ class BitmaskTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void assignment() {
@@ -91,14 +91,14 @@ class BitmaskTest : public CppUnit::TestFixture {
         }
 
         void sizes() {
-            if (sizeof(regina::BitmaskLen8) < 1)
-                CPPUNIT_FAIL("BitmaskLen8 does not hold 1 byte.");
-            if (sizeof(regina::BitmaskLen16) < 2)
-                CPPUNIT_FAIL("BitmaskLen16 does not hold 2 bytes.");
-            if (sizeof(regina::BitmaskLen32) < 4)
-                CPPUNIT_FAIL("BitmaskLen32 does not hold 4 bytes.");
-            if (sizeof(regina::BitmaskLen64) < 8)
-                CPPUNIT_FAIL("BitmaskLen64 does not hold 8 bytes.");
+            if (sizeof(regina::Bitmask1<uint8_t>) < 1)
+                CPPUNIT_FAIL("Bitmask1<uint8_t> does not hold 1 byte.");
+            if (sizeof(regina::Bitmask1<uint16_t>) < 2)
+                CPPUNIT_FAIL("Bitmask1<uint16_t> does not hold 2 bytes.");
+            if (sizeof(regina::Bitmask1<uint32_t>) < 4)
+                CPPUNIT_FAIL("Bitmask1<uint32_t> does not hold 4 bytes.");
+            if (sizeof(regina::Bitmask1<uint64_t>) < 8)
+                CPPUNIT_FAIL("Bitmask1<uint64_t> does not hold 8 bytes.");
         }
 
         template <typename BitmaskType>
@@ -143,10 +143,10 @@ class BitmaskTest : public CppUnit::TestFixture {
         }
 
         void firstLastBit() {
-            testFirstLastBit<regina::BitmaskLen8>("len8", 8);
-            testFirstLastBit<regina::BitmaskLen16>("len16", 16);
-            testFirstLastBit<regina::BitmaskLen32>("len32", 32);
-            testFirstLastBit<regina::BitmaskLen64>("len64", 64);
+            testFirstLastBit<regina::Bitmask1<uint8_t>>("len8", 8);
+            testFirstLastBit<regina::Bitmask1<uint16_t>>("len16", 16);
+            testFirstLastBit<regina::Bitmask1<uint32_t>>("len32", 32);
+            testFirstLastBit<regina::Bitmask1<uint64_t>>("len64", 64);
             testFirstLastBit<regina::Bitmask1<unsigned char> >("uchar", 8);
             testFirstLastBit<regina::Bitmask1<unsigned long> >
                 ("ulong", 8 * sizeof(unsigned long));
@@ -195,10 +195,10 @@ class BitmaskTest : public CppUnit::TestFixture {
         }
 
         void bits() {
-            testBits<regina::BitmaskLen8>("len8", 8);
-            testBits<regina::BitmaskLen16>("len16", 16);
-            testBits<regina::BitmaskLen32>("len32", 32);
-            testBits<regina::BitmaskLen64>("len64", 64);
+            testBits<regina::Bitmask1<uint8_t>>("len8", 8);
+            testBits<regina::Bitmask1<uint16_t>>("len16", 16);
+            testBits<regina::Bitmask1<uint32_t>>("len32", 32);
+            testBits<regina::Bitmask1<uint64_t>>("len64", 64);
             testBits<regina::Bitmask1<unsigned char> >("uchar", 8);
             testBits<regina::Bitmask1<unsigned long> >
                 ("ulong", 8 * sizeof(unsigned long));
@@ -242,10 +242,10 @@ class BitmaskTest : public CppUnit::TestFixture {
         }
 
         void truncate() {
-            testTruncate<regina::BitmaskLen8>("len8", 8);
-            testTruncate<regina::BitmaskLen16>("len16", 16);
-            testTruncate<regina::BitmaskLen32>("len32", 32);
-            testTruncate<regina::BitmaskLen64>("len64", 64);
+            testTruncate<regina::Bitmask1<uint8_t>>("len8", 8);
+            testTruncate<regina::Bitmask1<uint16_t>>("len16", 16);
+            testTruncate<regina::Bitmask1<uint32_t>>("len32", 32);
+            testTruncate<regina::Bitmask1<uint64_t>>("len64", 64);
             testTruncate<regina::Bitmask1<unsigned char> >("uchar", 8);
             testTruncate<regina::Bitmask1<unsigned long> >
                 ("ulong", 8 * sizeof(unsigned long));
@@ -295,10 +295,10 @@ class BitmaskTest : public CppUnit::TestFixture {
         }
 
         void lexOrder() {
-            testLexOrder<regina::BitmaskLen8>("len8", 8);
-            testLexOrder<regina::BitmaskLen16>("len16", 16);
-            testLexOrder<regina::BitmaskLen32>("len32", 32);
-            testLexOrder<regina::BitmaskLen64>("len64", 64);
+            testLexOrder<regina::Bitmask1<uint8_t>>("len8", 8);
+            testLexOrder<regina::Bitmask1<uint16_t>>("len16", 16);
+            testLexOrder<regina::Bitmask1<uint32_t>>("len32", 32);
+            testLexOrder<regina::Bitmask1<uint64_t>>("len64", 64);
             testLexOrder<regina::Bitmask1<unsigned char> >("uchar", 8);
             testLexOrder<regina::Bitmask1<unsigned long> >
                 ("ulong", 8 * sizeof(unsigned long));

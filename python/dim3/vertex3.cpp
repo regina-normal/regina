@@ -43,7 +43,7 @@ using regina::VertexEmbedding;
 
 void addVertex3(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<3, 0>>(m, "FaceEmbedding3_0")
-        .def(pybind11::init<regina::Tetrahedron<3>* ,int>())
+        .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>())
         .def(pybind11::init<const VertexEmbedding<3>&>())
         .def("simplex", &VertexEmbedding<3>::simplex,
             pybind11::return_value_policy::reference)
@@ -58,39 +58,30 @@ void addVertex3(pybind11::module_& m) {
 
     auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0")
         .def("index", &Vertex<3>::index)
-        .def("embeddings", [](const Vertex<3>& v) {
-            pybind11::list ans;
-            for (const auto& emb : v)
-                ans.append(emb);
-            return ans;
-        })
-        .def("embedding", &Vertex<3>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Vertex<3>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Vertex<3>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Vertex<3>::embedding)
+        .def("embeddings", &Vertex<3>::embeddings)
+        .def("front", &Vertex<3>::front)
+        .def("back", &Vertex<3>::back)
         .def("triangulation", &Vertex<3>::triangulation)
         .def("component", &Vertex<3>::component,
             pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Vertex<3>::boundaryComponent,
             pybind11::return_value_policy::reference)
         .def("degree", &Vertex<3>::degree)
-        .def("link", &Vertex<3>::link)
-        .def("buildLink", [](const Vertex<3>* v) {
-            // Return a clone of the link.  This is because triangulations
-            // have a custom holder type, and so pybind11 ignores any attempt
-            // to pass return_value_policy::reference_internal.
-            return new regina::Triangulation<2>(*(v->buildLink()));
+        .def("linkType", &Vertex<3>::linkType)
+        .def("link", [](const Vertex<3>&) {
+            PyErr_SetString(PyExc_RuntimeError,
+                "Vertex3::link() has been renamed to Vertex3::linkType().  "
+                "You should change your code now, because the name link() "
+                "will be used for a different function in the future.");
         })
-        .def("buildLinkDetail", [](const Vertex<3>* v, bool labels) {
-            // Return a clone of the link (as above); also, we always
-            // build the isomorphism.
-            regina::Isomorphism<3>* iso;
-            regina::Triangulation<2>* link = new regina::Triangulation<2>(
-                *(v->buildLinkDetail(labels, &iso)));
-            return pybind11::make_tuple(link, iso);
-        }, pybind11::arg("labels") = true)
+        .def("buildLink", [](const Vertex<3>& v) {
+            // Return a clone of the resulting triangulation.
+            // This is because Python cannot enforce the constness of
+            // the reference that would normally be returned.
+            return new regina::Triangulation<2>(v.buildLink());
+        })
+        .def("buildLinkInclusion", &Vertex<3>::buildLinkInclusion)
         .def("isLinkClosed", &Vertex<3>::isLinkClosed)
         .def("isIdeal", &Vertex<3>::isIdeal)
         .def("isBoundary", &Vertex<3>::isBoundary)
@@ -103,27 +94,17 @@ void addVertex3(pybind11::module_& m) {
         .def_static("ordering", &Vertex<3>::ordering)
         .def_static("faceNumber", &Vertex<3>::faceNumber)
         .def_static("containsVertex", &Vertex<3>::containsVertex)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("nFaces", [](pybind11::object) {
-            return Vertex<3>::nFaces;
-        })
-        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
-            return Vertex<3>::lexNumbering;
-        })
-        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
-            return Vertex<3>::oppositeDim;
-        })
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Vertex<3>::dimension;
-        })
-        .def_property_readonly_static("subdimension", [](pybind11::object) {
-            return Vertex<3>::subdimension;
-        })
+        .def_readonly_static("nFaces", &Vertex<3>::nFaces)
+        .def_readonly_static("lexNumbering", &Vertex<3>::lexNumbering)
+        .def_readonly_static("oppositeDim", &Vertex<3>::oppositeDim)
+        .def_readonly_static("dimension", &Vertex<3>::dimension)
+        .def_readonly_static("subdimension", &Vertex<3>::subdimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<
+        decltype(std::declval<Vertex<3>>().embeddings())>(m);
 
     pybind11::enum_<regina::Vertex<3>::LinkType>(c, "LinkType")
         .value("SPHERE", regina::Vertex<3>::SPHERE)

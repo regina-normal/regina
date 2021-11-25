@@ -35,14 +35,9 @@
 
 namespace regina {
 
-unsigned long formSigCensus(unsigned order, UseSignature use, void* useArgs) {
-    SigCensus census(order, use, useArgs);
-    census.run(0);
-    return census.totalFound;
-}
-
-void* SigCensus::run(void*) {
+size_t SigCensus::run() {
     // Initialisations.
+    std::fill(sig.labelInv, sig.labelInv + 2 * sig.order_, false);
     sig.nCycles = 0;
     sig.nCycleGroups = 0;
     nextLabel = 0;
@@ -53,63 +48,46 @@ void* SigCensus::run(void*) {
     extendAutomorphisms();
     for (unsigned i = 2 * sig.order_; i > 0; i--)
         tryCycle(i, true, 0);
-    clearTopAutomorphisms();
+    automorph[sig.nCycleGroups].clear();
 
-    return 0;
-}
-
-void SigCensus::clearTopAutomorphisms() {
-    if (! automorph[sig.nCycleGroups].empty()) {
-        for (auto a : automorph[sig.nCycleGroups])
-            delete a;
-        automorph[sig.nCycleGroups].clear();
-    }
+    return totalFound;
 }
 
 bool SigCensus::extendAutomorphisms() {
     if (sig.nCycleGroups == 0) {
-        automorph[0].push_back(new SigPartialIsomorphism(1));
-        automorph[0].push_back(new SigPartialIsomorphism(-1));
+        automorph[0].push_back(SigPartialIsomorphism(1));
+        automorph[0].push_back(SigPartialIsomorphism(-1));
         return true;
     }
 
-    SigPartialIsomorphism* iso;
     unsigned firstLabel;
     int result;
     unsigned i;
-    std::list<SigPartialIsomorphism*>::const_iterator it;
-    for (it = automorph[sig.nCycleGroups - 1].begin();
-            it != automorph[sig.nCycleGroups - 1].end(); it++) {
+    for (const SigPartialIsomorphism& base : automorph[sig.nCycleGroups - 1]) {
         // Try extending this automorphism.
-        iso = new SigPartialIsomorphism(**it, nextLabel, sig.nCycles);
-        firstLabel = (*it)->nLabels;
+        SigPartialIsomorphism iso(base, nextLabel, sig.nCycles);
+        firstLabel = base.nLabels;
 
         if (firstLabel == nextLabel) {
-            iso->makeCanonical(sig, sig.nCycleGroups - 1);
-            result = iso->compareWith(sig, 0, sig.nCycleGroups - 1);
+            iso.makeCanonical(sig, sig.nCycleGroups - 1);
+            result = iso.compareWithIdentity(sig, sig.nCycleGroups - 1);
             if (result == 0)
-                automorph[sig.nCycleGroups].push_back(iso);
-            else {
-                delete iso;
-                if (result < 0)
-                    return false;
-            }
+                automorph[sig.nCycleGroups].push_back(std::move(iso));
+            else if (result < 0)
+                return false;
         } else {
             for (i = firstLabel; i < nextLabel; i++)
-                iso->labelImage[i] = i;
+                iso.labelImage[i] = i;
             do {
-                iso->makeCanonical(sig, sig.nCycleGroups - 1);
-                result = iso->compareWith(sig, 0, sig.nCycleGroups - 1);
-                if (result < 0) {
-                    delete iso;
+                iso.makeCanonical(sig, sig.nCycleGroups - 1);
+                result = iso.compareWithIdentity(sig, sig.nCycleGroups - 1);
+                if (result < 0)
                     return false;
-                }
                 else if (result == 0)
                     automorph[sig.nCycleGroups].push_back(
-                        new SigPartialIsomorphism(*iso));
-            } while (std::next_permutation(iso->labelImage + firstLabel,
-                    iso->labelImage + nextLabel));
-            delete iso;
+                        SigPartialIsomorphism(iso));
+            } while (std::next_permutation(iso.labelImage + firstLabel,
+                    iso.labelImage + nextLabel));
         }
     }
     return true;
@@ -119,8 +97,8 @@ void SigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
         unsigned startPos) {
     // Are we finished?
     if (startPos == 2 * sig.order_) {
-        totalFound++;
-        use(sig, automorph[sig.nCycleGroups], useArgs);
+        ++totalFound;
+        action_(sig, automorph[sig.nCycleGroups]);
         return;
     }
 
@@ -153,8 +131,9 @@ void SigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
                 i = 1;
                 while (sig.label[startPos + i] != sig.label[startPos])
                     i++;
-                if (Signature::cycleCmp(sig, sig.nCycles - 1, 0, 1, 0,
-                        sig, sig.nCycles - 1, i, 1, 0) > 0)
+                if (sig.cycleCmp(
+                        sig.nCycles - 1, 0, 1, nullptr,
+                        sig.nCycles - 1, i, 1, nullptr) > 0)
                     avoid = true;
             }
 
@@ -164,7 +143,7 @@ void SigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
                     sig.cycleGroupStart[sig.nCycleGroups] = sig.nCycles;
                     if (extendAutomorphisms())
                         tryCycle(0, true, endPos);
-                    clearTopAutomorphisms();
+                    automorph[sig.nCycleGroups].clear();
                 } else {
                     // Move on to create the next cycle.
                     // The next cycle will have length i.
@@ -176,7 +155,7 @@ void SigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
                                 cycleLen - 1 : 2 * sig.order_ - endPos);
                                 i > 0; i--)
                             tryCycle(i, true, endPos);
-                    clearTopAutomorphisms();
+                    automorph[sig.nCycleGroups].clear();
                 }
             }
 
@@ -228,7 +207,8 @@ void SigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
                 if (sig.label[tryPos] == nextLabel)
                     nextLabel++;
                 tryPos++;
-                sig.label[tryPos] = 0;
+                if (tryPos < endPos)
+                    sig.label[tryPos] = 0;
             }
         }
     }

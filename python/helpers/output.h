@@ -59,8 +59,8 @@ namespace regina::python {
  */
 template <class C, typename... options>
 void add_output(pybind11::class_<C, options...>& c, bool reprAlso = false) {
-    typedef typename regina::OutputBase<C>::type BaseType;
-    typedef std::string (BaseType::*OutputFunctionType)() const;
+    using BaseType = typename regina::OutputBase<C>::type;
+    using OutputFunctionType = std::string (BaseType::*)() const;
 
     c.def("str", OutputFunctionType(&BaseType::str));
     c.def("utf8", OutputFunctionType(&BaseType::utf8));
@@ -91,8 +91,8 @@ void add_output(pybind11::class_<C, options...>& c, bool reprAlso = false) {
 template <class C, typename... options>
 void add_output_basic(pybind11::class_<C, options...>& c,
         bool reprAlso = false) {
-    typedef typename regina::OutputBase<C>::type BaseType;
-    typedef std::string (BaseType::*OutputFunctionType)() const;
+    using BaseType = typename regina::OutputBase<C>::type;
+    using OutputFunctionType = std::string (BaseType::*)() const;
 
     c.def("str", OutputFunctionType(&BaseType::str));
     c.def("__str__", OutputFunctionType(&BaseType::str));

@@ -9,6 +9,7 @@ SET ( FILES
   lensspace.cpp
   manifold.cpp
   sfs.cpp
+  sfsalt.cpp
   simplesurfacebundle.cpp
   snappeacensusmfd.cpp
   torusbundle.cpp

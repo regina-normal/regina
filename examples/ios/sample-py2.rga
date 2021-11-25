@@ -1,12 +1,7 @@
 <?xml version="1.0"?>
-<reginadata engine="5.96">
-<packet label="Sample Data File"
-	type="Container" typeid="1"
-	parent="">
-<packet label="Read Me"
-	type="Text" typeid="2"
-	parent="Sample Data File">
-  <text>Welcome to Regina!
+<regina engine="7.0">
+<container label="Sample Data File">
+<textdata label="Read Me">Welcome to Regina!
 
 A single Regina document can store many objects, from 3-manifold triangulations and normal surfaces to Python scripts, PDF documents and text notes (such as the one you are reading now).
 
@@ -18,12 +13,8 @@ Any questions?  Just mail the authors; see the website regina-normal.github.io f
 
 Enjoy!
 
-- The Regina development team</text>
-</packet> <!-- Read Me (Text) -->
-<packet label="LaTeX document"
-	type="PDF" typeid="10"
-	parent="Sample Data File">
-  <pdf encoding="base64">
+- The Regina development team</textdata>
+<attachment encoding="base64" filename="welcome.pdf" label="LaTeX Document">
 JVBERi0xLjUKJdDUxdgKNSAwIG9iago8PAovTGVuZ3RoIDkxNCAgICAgICAKL0ZpbHRlciAvRmxh
 dGVEZWNvZGUKPj4Kc3RyZWFtCnja1VZLj9s2EL77Vyg3Cqi4fD9yabvYLpqeksJACzQ9aC3uWoge
 iSTHyL/v8CGvvBYSpAmCBAbMITkznG9mRH7X283VLVUZpdhKybLtfca4wUKJTFODpaDZtsr+QX/l
@@ -1894,417 +1885,383 @@ SCIRqCJANiuR2IOFmERKn5v86n+r7v2qPgB4Ec4DhPdEDHCzIhojVJ9iKPriWwzEl/gRv2JEHvd2
 EQqKmHBEXCTEh8iIpKiLtEgR/sYeaItA5EReFERRuMITJVEWFSJY2W2VmIRWNWK2sPKJdS/60elq
 Y4O4w6pJ/J+tWqTrgQznNnbI6cWqSy5vVj0xJg/baO9vhzekBRZFCmVuZHN0cmVhbQplbmRvYmoK
 c3RhcnR4cmVmCjEwNjEyMQolJUVPRgo=
-  </pdf>
-</packet> <!-- LaTeX document (PDF) -->
-<packet label="3-Manifolds and Knots"
-	type="Container" typeid="1"
-	id="ELwNAEBgAAA="
-	parent="Sample Data File">
-<packet label="Layered Solid Torus"
-	type="3-Manifold Triangulation" typeid="3"
-	parent="3-Manifolds and Knots">
-  <tetrahedra ntet="4">
-    <tet desc=""> 1 54 1 156 -1 -1 -1 -1 </tet>
-    <tet desc=""> 2 54 2 156 0 135 0 120 </tet>
-    <tet desc=""> 3 39 3 216 1 135 1 120 </tet>
-    <tet desc=""> 3 57 3 147 2 216 2 39 </tet>
-  </tetrahedra>
+</attachment>
+<container label="3-Manifolds and Knots" id="4HLwmWtVAAA=">
+<tri dim="3" size="4" perm="index" label="Layered Solid Torus" id="cHbwmWtVAAA=">
+  <simplex> 1 14 1 4 -1 -1 -1 -1 </simplex>
+  <simplex> 2 14 2 4 0 20 0 2 </simplex>
+  <simplex> 3 21 3 3 1 20 1 2 </simplex>
+  <simplex> 3 9 3 19 2 3 2 21 </simplex>
   <H1><abeliangroup rank="1"> </abeliangroup></H1>
-<packet label="Vertex Link"
-	type="2-Manifold Triangulation" typeid="15"
-	parent="Layered Solid Torus">
-  <triangles ntriangles="16">
-    <triangle desc=""> 1 4 -1 -1 -1 -1 </triangle>
-    <triangle desc=""> 2 4 3 3 0 2 </triangle>
-    <triangle desc=""> 4 5 5 3 1 2 </triangle>
-    <triangle desc=""> 1 3 6 5 -1 -1 </triangle>
-    <triangle desc=""> 8 0 7 2 2 5 </triangle>
-    <triangle desc=""> 2 3 9 5 10 5 </triangle>
-    <triangle desc=""> 11 5 3 5 8 3 </triangle>
-    <triangle desc=""> 12 0 8 5 4 4 </triangle>
-    <triangle desc=""> 4 0 7 5 6 3 </triangle>
-    <triangle desc=""> 13 2 5 5 12 3 </triangle>
-    <triangle desc=""> 5 5 14 1 -1 -1 </triangle>
-    <triangle desc=""> 13 5 14 4 6 5 </triangle>
-    <triangle desc=""> 7 0 13 4 9 3 </triangle>
-    <triangle desc=""> 12 2 9 4 11 5 </triangle>
-    <triangle desc=""> 11 2 15 4 10 1 </triangle>
-    <triangle desc=""> 14 2 -1 -1 -1 -1 </triangle>
-  </triangles>
-</packet> <!-- Vertex Link (2_Manifold Triangulation) -->
-<packet label="Almost Normal Surfaces"
-	type="Normal Surface List" typeid="6"
-	parent="Layered Solid Torus">
-  <params type="5" algorithm="17" flavourid="102"
-	flavour="Standard almost normal (tri-quad-oct)"/>
-  <surface len="40" name=""> 0 1 1 1 2 1 3 1 10 1 11 1 12 1 13 1 20 1 21 1 24 1 35 2
+<tri dim="2" size="16" perm="index" label="Vertex Link">
+  <simplex> 1 4 -1 -1 -1 -1 </simplex>
+  <simplex> 2 4 3 3 0 2 </simplex>
+  <simplex> 4 5 5 3 1 2 </simplex>
+  <simplex> 1 3 6 5 -1 -1 </simplex>
+  <simplex> 8 0 7 2 2 5 </simplex>
+  <simplex> 2 3 9 5 10 5 </simplex>
+  <simplex> 11 5 3 5 8 3 </simplex>
+  <simplex> 12 0 8 5 4 4 </simplex>
+  <simplex> 4 0 7 5 6 3 </simplex>
+  <simplex> 13 2 5 5 12 3 </simplex>
+  <simplex> 5 5 14 1 -1 -1 </simplex>
+  <simplex> 13 5 14 4 6 5 </simplex>
+  <simplex> 7 0 13 4 9 3 </simplex>
+  <simplex> 12 2 9 4 11 5 </simplex>
+  <simplex> 11 2 15 4 10 1 </simplex>
+  <simplex> 14 2 -1 -1 -1 -1 </simplex>
+</tri>
+<surfaces tri="cHbwmWtVAAA=" type="5" algorithm="17" coords="102" label="Almost Normal Surfaces">
+  <surface enc="314" len="40"> 0 1 1 1 2 1 3 1 10 1 11 1 12 1 13 1 20 1 21 1 24 1 35 2
 	<euler value="-1"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 2 2 3 2 12 2 13 2 15 2 22 2 23 2 29 2 30 2 31 2 32 3 33 3 34 1
+  <surface enc="314" len="40"> 2 2 3 2 12 2 13 2 15 2 22 2 23 2 29 2 30 2 31 2 32 3 33 3 34 1
 	<euler value="-2"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 2 1 2 16 2 25 2 32 1 33 1 34 1
+  <surface enc="314" len="40"> 0 2 1 2 16 2 25 2 32 1 33 1 34 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 2 1 3 1 4 1 10 1 11 1 12 1 13 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
+  <surface enc="314" len="40"> 2 1 3 1 4 1 10 1 11 1 12 1 13 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 5 2 12 1 13 1 14 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
+  <surface enc="314" len="40"> 5 2 12 1 13 1 14 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 2 1 2 5 4 12 2 13 2 18 2 20 2 21 2 22 2 23 2 25 2 30 2 31 2 32 3 33 3 34 1
+  <surface enc="314" len="40"> 0 2 1 2 5 4 12 2 13 2 18 2 20 2 21 2 22 2 23 2 25 2 30 2 31 2 32 3 33 3 34 1
 	<euler value="-2"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 1 1 1 5 1 18 1 20 1 21 1 35 1
+  <surface enc="314" len="40"> 0 1 1 1 5 1 18 1 20 1 21 1 35 1
 	<euler value="-2"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 2 2 3 2 5 2 12 2 13 2 19 2 20 2 21 2 22 3 23 3 24 1 30 3 31 3 32 3 33 3
+  <surface enc="314" len="40"> 2 2 3 2 5 2 12 2 13 2 19 2 20 2 21 2 22 3 23 3 24 1 30 3 31 3 32 3 33 3
 	<euler value="-2"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 6 2 15 2 22 1 23 1 24 1 30 1 31 1 32 1 33 1
+  <surface enc="314" len="40"> 6 2 15 2 22 1 23 1 24 1 30 1 31 1 32 1 33 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 2 1 2 6 5 10 2 11 2 15 3 22 1 23 1 28 2 30 2 31 2 32 1 33 1 36 1
+  <surface enc="314" len="40"> 0 2 1 2 6 5 10 2 11 2 15 3 22 1 23 1 28 2 30 2 31 2 32 1 33 1 36 1
 	<euler value="-2"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 6 1 15 1 22 1 23 1 38 1
+  <surface enc="314" len="40"> 6 1 15 1 22 1 23 1 38 1
 	<euler value="-1"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 4 1 4 6 2 10 2 11 2 16 2 20 1 21 1 27 1 30 1 31 1 32 1 33 1
+  <surface enc="314" len="40"> 0 4 1 4 6 2 10 2 11 2 16 2 20 1 21 1 27 1 30 1 31 1 32 1 33 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 2 1 2 6 1 10 1 11 1 16 1 20 1 21 1 35 1
+  <surface enc="314" len="40"> 0 2 1 2 6 1 10 1 11 1 16 1 20 1 21 1 35 1
 	<euler value="0"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 4 1 4 6 3 10 3 11 3 16 1 20 1 21 1 26 2 30 1 31 1 36 1
+  <surface enc="314" len="40"> 0 4 1 4 6 3 10 3 11 3 16 1 20 1 21 1 26 2 30 1 31 1 36 1
 	<euler value="1"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 6 1 6 6 4 10 4 11 4 16 2 20 2 21 2 26 2 30 1 31 1 37 1
+  <surface enc="314" len="40"> 0 6 1 6 6 4 10 4 11 4 16 2 20 2 21 2 26 2 30 1 31 1 37 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 4 1 4 6 1 10 1 11 1 16 3 20 1 21 1 25 2 32 1 33 1 39 1
+  <surface enc="314" len="40"> 0 4 1 4 6 1 10 1 11 1 16 3 20 1 21 1 25 2 32 1 33 1 39 1
 	<euler value="-1"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 2 1 2 6 2 10 1 11 1 17 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
+  <surface enc="314" len="40"> 0 2 1 2 6 2 10 1 11 1 17 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 3 1 3 2 1 3 1 6 1 10 2 11 2 18 1 20 1 21 1 26 2 30 1 31 1 36 1
+  <surface enc="314" len="40"> 0 3 1 3 2 1 3 1 6 1 10 2 11 2 18 1 20 1 21 1 26 2 30 1 31 1 36 1
 	<euler value="-1"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 1 1 1 7 1 10 1 11 1 12 1 13 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
+  <surface enc="314" len="40"> 0 1 1 1 7 1 10 1 11 1 12 1 13 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 2 2 3 2 8 2 10 2 11 2 12 2 13 2 15 2 20 2 21 2 22 3 23 3 24 1 30 3 31 3 32 3 33 3
+  <surface enc="314" len="40"> 2 2 3 2 8 2 10 2 11 2 12 2 13 2 15 2 20 2 21 2 22 3 23 3 24 1 30 3 31 3 32 3 33 3
 	<euler value="-2"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 1 1 1 8 1 10 1 11 1 16 1 20 1 21 1 35 1
+  <surface enc="314" len="40"> 0 1 1 1 8 1 10 1 11 1 16 1 20 1 21 1 35 1
 	<euler value="-2"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 1 1 1 8 3 10 3 11 3 16 1 20 1 21 1 26 2 30 1 31 1 36 1
+  <surface enc="314" len="40"> 0 1 1 1 8 3 10 3 11 3 16 1 20 1 21 1 26 2 30 1 31 1 36 1
 	<euler value="-5"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 2 2 3 2 9 2 10 2 11 2 12 3 13 3 14 1 20 3 21 3 22 3 23 3 30 3 31 3 32 3 33 3
+  <surface enc="314" len="40"> 2 2 3 2 9 2 10 2 11 2 12 3 13 3 14 1 20 3 21 3 22 3 23 3 30 3 31 3 32 3 33 3
 	<euler value="-2"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 4 2 16 2 25 2 32 1 33 1 34 1
+  <surface enc="314" len="40"> 4 2 16 2 25 2 32 1 33 1 34 1
 	<euler value="-2"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 2 1 3 1 4 1 10 1 11 1 12 1 13 1 20 1 21 1 24 1 35 2
+  <surface enc="314" len="40"> 2 1 3 1 4 1 10 1 11 1 12 1 13 1 20 1 21 1 24 1 35 2
 	<euler value="-2"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 5 2 12 1 13 1 14 1 20 1 21 1 24 1 35 2
+  <surface enc="314" len="40"> 5 2 12 1 13 1 14 1 20 1 21 1 24 1 35 2
 	<euler value="-2"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 2 1 3 1 5 1 12 1 13 1 19 1 20 1 21 1 24 2 35 3
+  <surface enc="314" len="40"> 2 1 3 1 5 1 12 1 13 1 19 1 20 1 21 1 24 2 35 3
 	<euler value="-4"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 6 1 15 1 24 1 35 1
+  <surface enc="314" len="40"> 6 1 15 1 24 1 35 1
 	<euler value="-1"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 2 1 2 6 2 10 1 11 1 17 1 20 1 21 1 24 1 35 2
+  <surface enc="314" len="40"> 0 2 1 2 6 2 10 1 11 1 17 1 20 1 21 1 24 1 35 2
 	<euler value="-2"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 1 1 1 7 1 10 1 11 1 12 1 13 1 20 1 21 1 24 1 35 2
+  <surface enc="314" len="40"> 0 1 1 1 7 1 10 1 11 1 12 1 13 1 20 1 21 1 24 1 35 2
 	<euler value="-2"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 2 1 3 1 8 1 10 1 11 1 12 1 13 1 15 1 20 1 21 1 24 2 35 3
+  <surface enc="314" len="40"> 2 1 3 1 8 1 10 1 11 1 12 1 13 1 15 1 20 1 21 1 24 2 35 3
 	<euler value="-4"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 2 2 3 2 9 2 10 2 11 2 12 3 13 3 14 1 20 3 21 3 24 3 35 6
+  <surface enc="314" len="40"> 2 2 3 2 9 2 10 2 11 2 12 3 13 3 14 1 20 3 21 3 24 3 35 6
 	<euler value="-8"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="40" name=""> 0 1 1 1 2 1 3 1 10 1 11 1 12 1 13 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
+  <surface enc="314" len="40"> 0 1 1 1 2 1 3 1 10 1 11 1 12 1 13 1 20 1 21 1 22 1 23 1 30 1 31 1 32 1 33 1
 	<euler value="1"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-</packet> <!-- Almost Normal Surfaces (Normal Surface List) -->
-<packet label="Fundamental Normal Surfaces"
-	type="Normal Surface List" typeid="6"
-	parent="Layered Solid Torus">
-  <params type="9" algorithm="273" flavourid="0"
-	flavour="Standard normal (tri-quad)"/>
-  <surface len="28" name=""> 6 1 12 1 18 1 26 1
+</surfaces>
+<surfaces tri="cHbwmWtVAAA=" type="9" algorithm="273" coords="0" label="Fundamental Normal Surfaces">
+  <surface enc="279" len="28"> 6 1 12 1 18 1 26 1
 	<euler value="-1"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="28" name=""> 6 2 12 2 16 1 17 1 18 1 21 1 22 1 23 1 24 1
+  <surface enc="279" len="28"> 6 2 12 2 16 1 17 1 18 1 21 1 22 1 23 1 24 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="28" name=""> 5 2 9 1 10 1 11 1 14 1 15 1 18 1 26 2
+  <surface enc="279" len="28"> 5 2 9 1 10 1 11 1 14 1 15 1 18 1 26 2
 	<euler value="-2"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="28" name=""> 5 2 9 1 10 1 11 1 14 1 15 1 16 1 17 1 21 1 22 1 23 1 24 1
+  <surface enc="279" len="28"> 5 2 9 1 10 1 11 1 14 1 15 1 16 1 17 1 21 1 22 1 23 1 24 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="28" name=""> 4 2 13 2 19 2 23 1 24 1 25 1
+  <surface enc="279" len="28"> 4 2 13 2 19 2 23 1 24 1 25 1
 	<euler value="-2"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="28" name=""> 2 1 3 1 4 1 7 1 8 1 9 1 10 1 14 1 15 1 18 1 26 2
+  <surface enc="279" len="28"> 2 1 3 1 4 1 7 1 8 1 9 1 10 1 14 1 15 1 18 1 26 2
 	<euler value="-2"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="28" name=""> 2 1 3 1 4 1 7 1 8 1 9 1 10 1 14 1 15 1 16 1 17 1 21 1 22 1 23 1 24 1
+  <surface enc="279" len="28"> 2 1 3 1 4 1 7 1 8 1 9 1 10 1 14 1 15 1 16 1 17 1 21 1 22 1 23 1 24 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="28" name=""> 0 1 1 1 4 1 13 2 19 2 23 1 24 1 25 1
+  <surface enc="279" len="28"> 0 1 1 1 4 1 13 2 19 2 23 1 24 1 25 1
 	<euler value="-1"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="28" name=""> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1 14 1 15 1 18 1 26 2
+  <surface enc="279" len="28"> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1 14 1 15 1 18 1 26 2
 	<euler value="-1"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="28" name=""> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1 14 1 15 1 16 1 17 1 21 1 22 1 23 1 24 1
+  <surface enc="279" len="28"> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1 14 1 15 1 16 1 17 1 21 1 22 1 23 1 24 1
 	<euler value="1"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="28" name=""> 0 2 1 2 13 2 19 2 23 1 24 1 25 1
+  <surface enc="279" len="28"> 0 2 1 2 13 2 19 2 23 1 24 1 25 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="28" name=""> 0 2 1 2 6 1 7 1 8 1 13 1 14 1 15 1 26 1
+  <surface enc="279" len="28"> 0 2 1 2 6 1 7 1 8 1 13 1 14 1 15 1 26 1
 	<euler value="0"/>
 	<orbl value="F"/>
 	<twosided value="F"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-  <surface len="28" name=""> 0 4 1 4 6 3 7 3 8 3 13 1 14 1 15 1 20 2 21 1 22 1 27 1
+  <surface enc="279" len="28"> 0 4 1 4 6 3 7 3 8 3 13 1 14 1 15 1 20 2 21 1 22 1 27 1
 	<euler value="1"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="T"/>
 	<compact value="T"/> </surface>
-</packet> <!-- Fundamental Normal Surfaces (Normal Surface List) -->
-</packet> <!-- Layered Solid Torus (3_Manifold Triangulation) -->
-<packet label="Poincaré Homology Sphere"
-	type="3-Manifold Triangulation" typeid="3"
-	parent="3-Manifolds and Knots">
-  <tetrahedra ntet="5">
-    <tet desc=""> 1 120 2 147 3 78 4 39 </tet>
-    <tet desc=""> 0 156 2 54 3 147 4 78 </tet>
-    <tet desc=""> 0 57 1 135 3 45 4 147 </tet>
-    <tet desc=""> 0 78 1 57 2 99 4 201 </tet>
-    <tet desc=""> 0 39 1 78 2 57 3 210 </tet>
-  </tetrahedra>
+</surfaces>
+</tri>
+<tri dim="3" size="5" perm="index" label="Poincaré Homology Sphere">
+  <simplex> 1 2 2 19 3 16 4 21 </simplex>
+  <simplex> 0 4 2 14 3 19 4 16 </simplex>
+  <simplex> 0 9 1 20 3 10 4 19 </simplex>
+  <simplex> 0 16 1 9 2 18 4 8 </simplex>
+  <simplex> 0 21 1 16 2 9 3 12 </simplex>
   <H1><abeliangroup rank="0"> </abeliangroup></H1>
   <H1Rel><abeliangroup rank="0"> </abeliangroup></H1Rel>
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> </abeliangroup></H2>
   <zeroeff value="T"/>
   <splitsfce value="F"/>
-</packet> <!-- Poincaré Homology Sphere (3_Manifold Triangulation) -->
-<packet label="ℝP² × S¹"
-	type="3-Manifold Triangulation" typeid="3"
-	parent="3-Manifolds and Knots">
-  <tetrahedra ntet="3">
-    <tet desc=""> 1 228 1 228 2 141 2 120 </tet>
-    <tet desc=""> 0 228 0 228 2 39 2 210 </tet>
-    <tet desc=""> 0 114 0 156 1 39 1 201 </tet>
-  </tetrahedra>
+</tri>
+<tri dim="3" size="3" perm="index" label="ℝP² × S¹">
+  <simplex> 1 0 1 0 2 11 2 2 </simplex>
+  <simplex> 0 0 0 0 2 21 2 12 </simplex>
+  <simplex> 0 13 0 4 1 21 1 8 </simplex>
   <H1><abeliangroup rank="1"> 2 </abeliangroup></H1>
   <H1Rel><abeliangroup rank="1"> 2 </abeliangroup></H1Rel>
   <H1Bdry><abeliangroup rank="0"> </abeliangroup></H1Bdry>
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
-<packet label="Note"
-	type="Text" typeid="2"
-	parent="ℝP² × S¹">
-  <text>There are in fact two triangulations of this 3-manifold with three tetrahedra.</text>
-</packet> <!-- Note (Text) -->
-</packet> <!-- ℝP² × S¹ (3_Manifold Triangulation) -->
-<packet label="Right-Hand Trefoil"
-	type="Link" typeid="17"
-	parent="3-Manifolds and Knots">
+<textdata label="Note">There are in fact two triangulations of this 3-manifold with three tetrahedra.</textdata>
+</tri>
+<link label="Right-Hand Trefoil">
   <crossings size="3">
   + + +
   </crossings>
@@ -2316,10 +2273,8 @@ c3RhcnR4cmVmCjEwNjEyMQolJUVPRgo=
   <components size="1">
   ^0
   </components>
-</packet> <!-- Right_Hand Trefoil (Link) -->
-<packet label="Borromean Rings"
-	type="Link" typeid="17"
-	parent="3-Manifolds and Knots">
+</link>
+<link label="Borromean Rings">
   <crossings size="6">
   + - + - + -
   </crossings>
@@ -2334,11 +2289,8 @@ c3RhcnR4cmVmCjEwNjEyMQolJUVPRgo=
   <components size="3">
   ^0 ^2 ^4
   </components>
-</packet> <!-- Borromean Rings (Link) -->
-<packet label="Whitehead Link Complement"
-	type="SnapPea Triangulation" typeid="16"
-	parent="3-Manifolds and Knots">
-  <snappea>% Triangulation
+</link>
+<snappeadata label="Whitehead Link Complement">% Triangulation
 m129
 geometric_solution  3.66386238
 oriented_manifold
@@ -2385,12 +2337,8 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.500000000000
 
-</snappea>
-</packet> <!-- Whitehead Link Complement (SnapPea Triangulation) -->
-<packet label="Figure 8 Knot Complement"
-	type="SnapPea Triangulation" typeid="16"
-	parent="3-Manifolds and Knots">
-  <snappea>% Triangulation
+</snappeadata>
+<snappeadata label="Figure 8 Knot Complement" id="YMXxmWtVAAA=">% Triangulation
 m004
 geometric_solution  2.02988321
 oriented_manifold
@@ -2418,52 +2366,36 @@ CS_unknown
   0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
   0.500000000000   0.866025403784
 
-</snappea>
-<packet label="Vertex Link"
-	type="2-Manifold Triangulation" typeid="15"
-	parent="Figure 8 Knot Complement">
-  <triangles ntriangles="8">
-    <triangle desc=""> 1 0 2 3 2 1 </triangle>
-    <triangle desc=""> 0 0 3 1 3 5 </triangle>
-    <triangle desc=""> 0 3 0 1 4 2 </triangle>
-    <triangle desc=""> 1 5 5 0 1 1 </triangle>
-    <triangle desc=""> 2 4 6 1 6 5 </triangle>
-    <triangle desc=""> 7 3 3 0 7 5 </triangle>
-    <triangle desc=""> 4 5 7 2 4 1 </triangle>
-    <triangle desc=""> 5 5 5 3 6 4 </triangle>
-  </triangles>
-</packet> <!-- Vertex Link (2_Manifold Triangulation) -->
-<packet label="Tri-Quad Normal Surfaces"
-	type="Normal Surface List" typeid="6"
-	parent="Figure 8 Knot Complement">
-  <params type="5" algorithm="34" flavourid="0"
-	flavour="Standard normal (tri-quad)"/>
-  <surface len="14" name=""> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1
+<tri dim="2" size="8" perm="index" label="Vertex Link">
+  <simplex> 1 0 2 3 2 1 </simplex>
+  <simplex> 0 0 3 1 3 5 </simplex>
+  <simplex> 0 3 0 1 4 2 </simplex>
+  <simplex> 1 5 5 0 1 1 </simplex>
+  <simplex> 2 4 6 1 6 5 </simplex>
+  <simplex> 7 3 3 0 7 5 </simplex>
+  <simplex> 4 5 7 2 4 1 </simplex>
+  <simplex> 5 5 5 3 6 4 </simplex>
+</tri>
+<surfaces tri="YMXxmWtVAAA=" type="5" algorithm="34" coords="0" label="Tri-Quad Normal Surfaces">
+  <surface enc="279" len="14"> 0 1 1 1 2 1 3 1 7 1 8 1 9 1 10 1
 	<euler value="0"/>
 	<orbl value="T"/>
 	<twosided value="T"/>
 	<connected value="T"/>
 	<realbdry value="F"/>
 	<compact value="T"/> </surface>
-</packet> <!-- Tri_Quad Normal Surfaces (Normal Surface List) -->
-<packet label="Quad Normal Surfaces"
-	type="Normal Surface List" typeid="6"
-	parent="Figure 8 Knot Complement">
-  <params type="5" algorithm="16" flavourid="1"
-	flavour="Quad normal"/>
-  <surface len="6" name=""> 0 2 3 1
+</surfaces>
+<surfaces tri="YMXxmWtVAAA=" type="5" algorithm="16" coords="1" label="Quad Normal Surfaces">
+  <surface enc="535" len="14"> 0 inf 1 inf 2 inf 3 inf 4 2 7 inf 8 inf 9 inf 10 inf 11 1
 	<compact value="F"/> </surface>
-  <surface len="6" name=""> 2 2 3 1
+  <surface enc="535" len="14"> 0 inf 1 inf 2 inf 3 inf 6 2 7 inf 8 inf 9 inf 10 inf 11 1
 	<compact value="F"/> </surface>
-  <surface len="6" name=""> 1 1 4 2
+  <surface enc="535" len="14"> 0 inf 1 inf 2 inf 3 inf 5 1 7 inf 8 inf 9 inf 10 inf 12 2
 	<compact value="F"/> </surface>
-  <surface len="6" name=""> 1 1 5 2
+  <surface enc="535" len="14"> 0 inf 1 inf 2 inf 3 inf 5 1 7 inf 8 inf 9 inf 10 inf 13 2
 	<compact value="F"/> </surface>
-</packet> <!-- Quad Normal Surfaces (Normal Surface List) -->
-<packet label="Angle Structures"
-	type="Angle Structure List" typeid="9"
-	parent="Figure 8 Knot Complement">
-  <angleparams tautonly="F"/>
+</surfaces>
+<angles tri="YMXxmWtVAAA=" tautonly="F" algorithm="32" label="Angle Structures">
   <struct len="7"> 1 1 3 1 6 1 </struct>
   <struct len="7"> 2 1 5 1 6 1 </struct>
   <struct len="7"> 0 1 4 1 6 1 </struct>
@@ -2471,115 +2403,63 @@ CS_unknown
   <struct len="7"> 1 2 4 1 5 1 6 2 </struct>
   <spanstrict value="T"/>
   <spantaut value="T"/>
-</packet> <!-- Angle Structures (Angle Structure List) -->
-</packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
-</packet> <!-- 3_Manifolds and Knots (Container) -->
-<packet label="4-Manifolds"
-	type="Container" typeid="1"
-	parent="Sample Data File">
-<packet label="Cappell-Shaneson Knot Complement"
-	type="4-Manifold Triangulation" typeid="11"
-	parent="4-Manifolds">
-  <pentachora npent="2">
-    <pent desc=""> 0 17475 1 17496 1 17937 0 16593 1 10440 </pent>
-    <pent desc=""> 0 17986 1 13408 0 13576 0 17104 1 6352 </pent>
-  </pentachora>
+</angles>
+</snappeadata>
+</container>
+<container label="4-Manifolds">
+<tri dim="4" size="2" perm="index" label="Cappell-Shaneson Knot Complement">
+  <simplex> 0 73 1 12 1 30 0 33 1 2 </simplex>
+  <simplex> 0 48 1 19 0 4 0 8 1 9 </simplex>
   <fundgroup>
 <group generators="2">
   <reln> 0^1 1^2 0^-2 1^-3 </reln>
   <reln> 1^2 0^3 1^-1 0^-2 </reln>
 </group>
   </fundgroup>
-</packet> <!-- Cappell_Shaneson Knot Complement (4_Manifold Triangulation) -->
-<packet label="Twisted S³ ×~ S¹"
-	type="4-Manifold Triangulation" typeid="11"
-	parent="4-Manifolds">
-  <pentachora npent="2">
-    <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
-    <pent desc=""> 1 13380 0 18056 0 18056 0 18056 1 2257 </pent>
-  </pentachora>
-<packet label="Normal Hypersurfaces"
-	type="Normal Hypersurface List" typeid="13"
-	parent="Twisted S³ ×~ S¹">
-  <params type="5" algorithm="32" flavourid="0"
-	flavour="Standard normal (tet-prism)"/>
-  <hypersurface len="30" name=""> 10 1 25 1 </hypersurface>
-  <hypersurface len="30" name=""> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
-  <hypersurface len="30" name=""> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
-  <hypersurface len="30" name=""> 0 1 4 1 5 1 14 1 15 1 19 1 20 1 29 1 </hypersurface>
-  <hypersurface len="30" name=""> 0 1 1 1 2 1 3 1 4 1 15 1 16 1 17 1 18 1 19 1 </hypersurface>
-</packet> <!-- Normal Hypersurfaces (Normal Hypersurface List) -->
-</packet> <!-- Twisted S³ ×~ S¹ (4_Manifold Triangulation) -->
-</packet> <!-- 4_Manifolds (Container) -->
-<packet label="2-Manifolds"
-	type="Container" typeid="1"
-	parent="Sample Data File">
-<packet label="Octahedron Boundary"
-	type="2-Manifold Triangulation" typeid="15"
-	parent="2-Manifolds">
-  <triangles ntriangles="8">
-    <triangle desc=""> 4 0 1 1 3 1 </triangle>
-    <triangle desc=""> 5 0 2 1 0 1 </triangle>
-    <triangle desc=""> 6 0 3 1 1 1 </triangle>
-    <triangle desc=""> 7 0 0 1 2 1 </triangle>
-    <triangle desc=""> 0 0 5 1 7 1 </triangle>
-    <triangle desc=""> 1 0 6 1 4 1 </triangle>
-    <triangle desc=""> 2 0 7 1 5 1 </triangle>
-    <triangle desc=""> 3 0 4 1 6 1 </triangle>
-  </triangles>
-</packet> <!-- Octahedron Boundary (2_Manifold Triangulation) -->
-<packet label="Klein Bottle, version 1"
-	type="2-Manifold Triangulation" typeid="15"
-	parent="2-Manifolds">
-  <triangles ntriangles="2">
-    <triangle desc=""> 1 1 1 5 1 0 </triangle>
-    <triangle desc=""> 0 1 0 5 0 0 </triangle>
-  </triangles>
-</packet> <!-- Klein Bottle, version 1 (2_Manifold Triangulation) -->
-<packet label="Klein Bottle, version 2"
-	type="2-Manifold Triangulation" typeid="15"
-	parent="2-Manifolds">
-  <triangles ntriangles="2">
-    <triangle desc=""> 0 4 1 0 0 2 </triangle>
-    <triangle desc=""> 1 4 0 0 1 2 </triangle>
-  </triangles>
-</packet> <!-- Klein Bottle, version 2 (2_Manifold Triangulation) -->
-</packet> <!-- 2_Manifolds (Container) -->
-<packet label="Normal Surface Filters"
-	type="Container" typeid="1"
-	parent="Sample Data File">
-<packet label="Tori, Annuli and Discs"
-	type="Surface Filter" typeid="8"
-	parent="Normal Surface Filters">
-  <filter type="Combination filter" typeid="2">
-    <op type="or"/>
-  </filter>
-<packet label="Tori and Annuli"
-	type="Surface Filter" typeid="8"
-	parent="Tori, Annuli and Discs">
-  <filter type="Filter by basic properties" typeid="1">
-    <euler> 0 </euler>
-    <orbl value="T-"/>
-    <compact value="T-"/>
-  </filter>
-</packet> <!-- Tori and Annuli (Surface Filter) -->
-<packet label="Discs"
-	type="Surface Filter" typeid="8"
-	parent="Tori, Annuli and Discs">
-  <filter type="Filter by basic properties" typeid="1">
-    <euler> 1 </euler>
-    <orbl value="T-"/>
-    <compact value="T-"/>
-    <realbdry value="T-"/>
-  </filter>
-</packet> <!-- Discs (Surface Filter) -->
-</packet> <!-- Tori, Annuli and Discs (Surface Filter) -->
-</packet> <!-- Normal Surface Filters (Container) -->
-<packet label="Python Script"
-	type="Script" typeid="7"
-	parent="Sample Data File">
-  <var name="tri" valueid="ELwNAEBgAAA=" value="3-Manifolds and Knots"/>
-  <text># This Python script runs through all 3-manifold triangulations and links
+</tri>
+<tri dim="4" size="2" perm="index" label="Twisted S³ ×~ S¹" id="gBfymWtVAAA=">
+  <simplex> 0 96 1 0 1 0 1 0 0 32 </simplex>
+  <simplex> 1 96 0 0 0 0 0 0 1 32 </simplex>
+<hypersurfaces tri="gBfymWtVAAA=" type="5" algorithm="32" coords="0" label="Normal Hypersurfaces">
+  <hypersurface enc="287" len="30"> 10 1 25 1 </hypersurface>
+  <hypersurface enc="287" len="30"> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
+  <hypersurface enc="287" len="30"> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
+  <hypersurface enc="287" len="30"> 0 1 4 1 5 1 14 1 15 1 19 1 20 1 29 1 </hypersurface>
+  <hypersurface enc="287" len="30"> 0 1 1 1 2 1 3 1 4 1 15 1 16 1 17 1 18 1 19 1 </hypersurface>
+</hypersurfaces>
+</tri>
+</container>
+<container label="2-Manifolds">
+<tri dim="2" size="8" perm="index" label="Octahedron Boundary">
+  <simplex> 4 0 1 1 3 1 </simplex>
+  <simplex> 5 0 2 1 0 1 </simplex>
+  <simplex> 6 0 3 1 1 1 </simplex>
+  <simplex> 7 0 0 1 2 1 </simplex>
+  <simplex> 0 0 5 1 7 1 </simplex>
+  <simplex> 1 0 6 1 4 1 </simplex>
+  <simplex> 2 0 7 1 5 1 </simplex>
+  <simplex> 3 0 4 1 6 1 </simplex>
+</tri>
+<tri dim="2" size="2" perm="index" label="Klein Bottle, version 1">
+  <simplex> 1 1 1 5 1 0 </simplex>
+  <simplex> 0 1 0 5 0 0 </simplex>
+</tri>
+<tri dim="2" size="2" perm="index" label="Klein Bottle, version 2">
+  <simplex> 0 4 1 0 0 2 </simplex>
+  <simplex> 1 4 0 0 1 2 </simplex>
+</tri>
+</container>
+<container label="Normal Surface Filters">
+<filtercomb op="or" label="Tori, Annuli and Discs">
+<filterprop orbl="T-" compact="T-" realbdry="TF" euler="0" label="Tori and Annuli">
+</filterprop>
+<filterprop orbl="T-" compact="T-" realbdry="T-" euler="1" label="Discs">
+</filterprop>
+</filtercomb>
+</container>
+<script label="Python Script">
+  <var name="tri" valueid="4HLwmWtVAAA=" value="3-Manifolds and Knots"/>
+  <code># This Python script runs through all 3-manifold triangulations and links
 # in this file.  It prints the first homology of each Regina triangulation,
 # the volume of each SnapPea triangulation, and the HOMFLY-PT polynomial of each link.
 #
@@ -2596,7 +2476,7 @@ for t in tri.children():
 		print t.homfly()
 	else:
 		print 'Unknown packet type'
-</text>
-</packet> <!-- Python Script (Script) -->
-</packet> <!-- Sample Data File (Container) -->
-</reginadata>
+</code>
+</script>
+</container>
+</regina>

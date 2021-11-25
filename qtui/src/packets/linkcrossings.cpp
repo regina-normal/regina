@@ -45,6 +45,7 @@
 #include "reginamain.h"
 #include "reginasupport.h"
 
+#include <thread>
 #include <QAction>
 #include <QComboBox>
 #include <QDialogButtonBox>
@@ -77,12 +78,12 @@ QString LinkCrossingsUI::explnText;
 QString LinkCrossingsUI::explnPictorial;
 
 namespace {
-    QRegExp reCables("^\\s*(\\d+)\\s*$");
+    QRegExp reCables(R"(^\s*(\d+)\s*$)");
 }
 
-inline CrossingModel::CrossingModel(bool pictorial, regina::Link* link,
+inline CrossingModel::CrossingModel(bool pictorial, regina::Link& link,
         int component) : pictorial_(pictorial), maxIndex_(0) {
-    regina::StrandRef start = link->component(component);
+    regina::StrandRef start = link.component(component);
     if (start.crossing()) {
         regina::StrandRef s = start;
         do {
@@ -209,7 +210,7 @@ CrossingDelegate::CrossingDelegate(QWidget *parent) :
 
 void CrossingDelegate::paint(QPainter *painter,
         const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    const CrossingModel* m = static_cast<const CrossingModel*>(index.model());
+    const auto* m = static_cast<const CrossingModel*>(index.model());
 
     if (m->isPictorial()) {
         painter->drawPixmap(option.rect.x() + hPadding,
@@ -237,7 +238,7 @@ void CrossingDelegate::paint(QPainter *painter,
 
 QSize CrossingDelegate::sizeHint(const QStyleOptionViewItem &option,
         const QModelIndex &index) const {
-    const CrossingModel* m = static_cast<const CrossingModel*>(index.model());
+    const auto* m = static_cast<const CrossingModel*>(index.model());
 
     QRect r = QFontMetrics(option.font).boundingRect(qvariant_cast<QString>(
         m->data(QModelIndex(), Qt::DisplayRole)));
@@ -249,14 +250,14 @@ QSize CrossingDelegate::sizeHint(const QStyleOptionViewItem &option,
         return QSize(r.width() + 2 * hPadding, r.height() + 2 * vPadding);
 }
 
-LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
-        PacketTabbedUI* useParentUI, bool readWrite) :
+LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
+        PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), link(packet), useCrossing(-1) {
     ui = new QWidget();
     layout = new QVBoxLayout(ui);
 
-    QHBoxLayout* sublayout = new QHBoxLayout();
-    QLabel* label = new QLabel(tr("Display crossings:"));
+    auto* sublayout = new QHBoxLayout();
+    auto* label = new QLabel(tr("Display crossings:"));
     sublayout->addWidget(label);
     type = new QComboBox();
     type->setWhatsThis(tr("Allows you to switch between different "
@@ -323,32 +324,28 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     actSimplify->setIcon(ReginaSupport::regIcon("simplify-link"));
     actSimplify->setToolTip(tr(
         "Simplify the knot or link as far as possible"));
-    actSimplify->setEnabled(readWrite);
     actSimplify->setWhatsThis(tr("Simplify this link to use fewer "
         "crossings.  This link will be modified directly.<p>"
         "This procedure uses only fast heuristics based on Reidemeister "
         "moves, and so there is no guarantee that the smallest possible "
         "number of crossings will be achieved."));
-    enableWhenWritable.push_back(actSimplify);
     actionList.push_back(actSimplify);
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
 
-    QAction* actMoves = new QAction(this);
+    auto* actMoves = new QAction(this);
     actMoves->setText(tr("Reidemeister &Moves..."));
     actMoves->setToolTip(tr(
         "Modify the link diagram using Reidemeister moves"));
-    actMoves->setEnabled(readWrite);
     actMoves->setWhatsThis(tr("Perform Reidemeister moves upon this "
         "link diagram.  <i>Reidemeister moves</i> are modifications "
         "local to a small number of crossings that do not change "
         "the underlying link.<p>"
         "A dialog will be presented for you to select which "
         "Reidemeister moves to apply."));
-    enableWhenWritable.push_back(actMoves);
     actionList.push_back(actMoves);
     connect(actMoves, SIGNAL(triggered()), this, SLOT(moves()));
 
-    QAction* sep = new QAction(this);
+    auto* sep = new QAction(this);
     sep->setSeparator(true);
     actionList.push_back(sep);
 
@@ -357,64 +354,54 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     actReflect->setText(tr("Re&flect"));
     actReflect->setIcon(ReginaSupport::regIcon("reflect"));
     actReflect->setToolTip(tr("Reflect this link"));
-    actReflect->setEnabled(readWrite);
     actReflect->setWhatsThis(tr("Reflect this link about some axis in "
         "the plane.  Every crossing will change sign, but its upper "
         "and lower strands will remain the same."));
     actionList.push_back(actReflect);
-    enableWhenWritable.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
-    QAction* actRotate = new QAction(this);
+    auto* actRotate = new QAction(this);
     actRotate->setText(tr("&Rotate"));
     actRotate->setIcon(ReginaSupport::regIcon("rotate"));
     actRotate->setToolTip(tr("Rotate this link"));
-    actRotate->setEnabled(readWrite);
     actRotate->setWhatsThis(tr("Rotate this link about some axis in "
         "the plane.  Every crossing will keep the same sign, but its upper "
         "and lower strands will be switched.<p>"
         "This operation simply produces a different diagram of the "
         "same link."));
     actionList.push_back(actRotate);
-    enableWhenWritable.push_back(actRotate);
     connect(actRotate, SIGNAL(triggered()), this, SLOT(rotate()));
 
-    QAction* actReverse = new QAction(this);
+    auto* actReverse = new QAction(this);
     actReverse->setText(tr("Re&verse"));
     actReverse->setIcon(ReginaSupport::regIcon("reverse"));
     actReverse->setToolTip(tr("Reverse this link"));
-    actReverse->setEnabled(readWrite);
     actReverse->setWhatsThis(tr("Reverse the orientation of each component "
         "of this link.  Every crossing will keep the same sign and the "
         "same upper/lower strands, but the order in which you traverse "
         "the strands will be reversed."));
     actionList.push_back(actReverse);
-    enableWhenWritable.push_back(actReverse);
     connect(actReverse, SIGNAL(triggered()), this, SLOT(reverse()));
 
-    QAction* actParallel = new QAction(this);
+    auto* actParallel = new QAction(this);
     actParallel->setText(tr("Parallel Ca&bles..."));
     actParallel->setIcon(ReginaSupport::regIcon("parallel"));
     actParallel->setToolTip(tr("Expand into parallel cables"));
-    actParallel->setEnabled(readWrite);
     actParallel->setWhatsThis(tr("Expands this link into many cables, "
         "all of which will be parallel according to a chosen framing.  "
         "This link will be modified directly."));
     actionList.push_back(actParallel);
-    enableWhenWritable.push_back(actParallel);
     connect(actParallel, SIGNAL(triggered()), this, SLOT(parallel()));
 
-    QAction* actComposeWith = new QAction(this);
+    auto* actComposeWith = new QAction(this);
     actComposeWith->setText(tr("Com&pose With..."));
     actComposeWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
     actComposeWith->setToolTip(
         tr("Make this into a composition with another link"));
-    actComposeWith->setEnabled(readWrite);
     actComposeWith->setWhatsThis(tr("Forms the composition of "
         "this link with some other link.  "
         "This link will be modified directly."));
     actionList.push_back(actComposeWith);
-    enableWhenWritable.push_back(actComposeWith);
     connect(actComposeWith, SIGNAL(triggered()), this, SLOT(composeWith()));
 
     sep = new QAction(this);
@@ -461,11 +448,6 @@ QWidget* LinkCrossingsUI::getInterface() {
 
 const std::vector<QAction*>& LinkCrossingsUI::getPacketTypeActions() {
     return actionList;
-}
-
-void LinkCrossingsUI::setReadWrite(bool readWrite) {
-    for (auto action : enableWhenWritable)
-        action->setEnabled(readWrite);
 }
 
 void LinkCrossingsUI::refresh() {
@@ -542,7 +524,7 @@ void LinkCrossingsUI::refresh() {
         }
 
         // We have actual crossings.
-        model = new CrossingModel(type->currentIndex() == 0, link, i);
+        model = new CrossingModel(type->currentIndex() == 0, *link, i);
         if (i < componentLists.size()) {
             // This is an old component.
             // If the previous version also had crossings, we can just
@@ -603,7 +585,7 @@ void LinkCrossingsUI::refresh() {
         // There are no list views at all.
         // Add some extra space at the end to avoid the "no crossing" labels
         // spreading themselves across the entire widget.
-        QWidget* stretch = new QWidget();
+        auto* stretch = new QWidget();
         layout->addWidget(stretch, 1);
     }
 }
@@ -627,10 +609,7 @@ void LinkCrossingsUI::simplify() {
         QMessageBox msgBox(ui);
         msgBox.setWindowTitle(tr("Information"));
         msgBox.setIcon(QMessageBox::Information);
-        if (link->countComponents() > 1)
-            msgBox.setText(tr("I could not simplify the link."));
-        else
-            msgBox.setText(tr("I could not simplify the knot."));
+        msgBox.setText(tr("I could not simplify the knot."));
         msgBox.setInformativeText(tr("I have only tried fast heuristics "
             "so far."));
         msgBox.setStandardButtons(QMessageBox::Close);
@@ -652,7 +631,8 @@ void LinkCrossingsUI::simplifyExhaustive(int height) {
     ProgressDialogOpen dlg(&tracker, tr("Searching Reidemeister graph..."),
         (knot ? tr("Tried %1 knots") : tr("Tried %1 links")), ui);
 
-    link->simplifyExhaustive(height, regina::politeThreads(), &tracker);
+    std::thread(&Link::simplifyExhaustive, link, height,
+        regina::politeThreads(), std::addressof(tracker)).detach();
 
     if (dlg.run() && link->size() == initSize) {
         dlg.hide();
@@ -689,15 +669,15 @@ void LinkCrossingsUI::reverse() {
 }
 
 void LinkCrossingsUI::parallel() {
-    ParallelDialog dlg(ui, link);
+    ParallelDialog dlg(ui, *link);
     dlg.exec();
 }
 
 void LinkCrossingsUI::composeWith() {
-    regina::Link* other = static_cast<regina::Link*>(
+    auto other = std::static_pointer_cast<regina::PacketOf<regina::Link>>(
         PacketDialog::choose(ui,
             link->root(),
-            new SingleTypeFilter<regina::Link>(),
+            new SingleTypeFilter<regina::PacketOf<regina::Link>>(),
             tr("Compose With"),
             tr("Compose this with which other link?"),
             tr("Regina will form the composition of this link "
@@ -713,8 +693,7 @@ void LinkCrossingsUI::moves() {
 }
 
 void LinkCrossingsUI::complement() {
-    regina::Triangulation<3>* ans = link->complement();
-    ans->setLabel(link->adornedLabel("Complement"));
+    auto ans = makePacket(link->complement(), link->adornedLabel("Complement"));
     link->insertChildLast(ans);
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
@@ -780,19 +759,19 @@ void LinkCrossingsUI::updatePreferences() {
     typeChanged(1);
 }
 
-ParallelDialog::ParallelDialog(QWidget* parent, regina::Link* link) :
+ParallelDialog::ParallelDialog(QWidget* parent, regina::Link& link) :
         QDialog(parent), link_(link) {
     setWindowTitle(tr("Parallel Cables"));
     setWhatsThis(tr("This will construct a new link that represents "
         "several cables of the link that you are viewing., all parallel using a chosen framing.  "
         "This link will not be modified."));
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
-    QHBoxLayout* subLayout = new QHBoxLayout();
+    auto* subLayout = new QHBoxLayout();
     layout->addLayout(subLayout);
     QString expln = tr("Choose the number of parallel cables to create.  "
         "This must be a positive integer.");
-    QLabel* label = new QLabel(tr("Number of cables:"), this);
+    auto* label = new QLabel(tr("Number of cables:"), this);
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     nCables = new QLineEdit(this);
@@ -815,7 +794,7 @@ ParallelDialog::ParallelDialog(QWidget* parent, regina::Link* link) :
     framing->setWhatsThis(expln);
     subLayout->addWidget(framing, 1);
 
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(
+    auto* buttonBox = new QDialogButtonBox(
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
@@ -858,9 +837,7 @@ void ParallelDialog::slotOk() {
             break;
     }
 
-    regina::Link* ans = link_->parallel(n, f);
-    link_->swap(*ans);
-    delete ans;
+    link_ = link_.parallel(n, f);
 
     accept();
 }

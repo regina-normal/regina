@@ -41,10 +41,27 @@ std::string TxICore::name() const {
     return out.str();
 }
 
-std::string TxICore::TeXName() const {
+std::string TxICore::texName() const {
     std::ostringstream out;
     writeTeXName(out);
     return out.str();
+}
+
+void TxICore::swapBaseData(TxICore& other) noexcept {
+    core_.swap(other.core_);
+
+    for (int i = 0; i < 2; ++i)
+        for (int j = 0; j < 2; ++j)
+            std::swap(bdryTet_[i][j], other.bdryTet_[i][j]);
+
+    for (int i = 0; i < 2; ++i)
+        for (int j = 0; j < 2; ++j)
+            std::swap(bdryRoles_[i][j], other.bdryRoles_[i][j]);
+
+    for (int i = 0; i < 2; ++i)
+        std::swap(bdryReln_[i], other.bdryReln_[i]);
+
+    parallelReln_.swap(other.parallelReln_);
 }
 
 TxIDiagonalCore::TxIDiagonalCore(unsigned long newSize, unsigned long newK) :
@@ -65,7 +82,7 @@ TxIDiagonalCore::TxIDiagonalCore(unsigned long newSize, unsigned long newK) :
 
     // Off we go!
     unsigned i;
-    Tetrahedron<3>** t = new Tetrahedron<3>*[size_];
+    auto* t = new Tetrahedron<3>*[size_];
     for (i = 0; i < size_; i++)
         t[i] = core_.newTetrahedron();
 
@@ -130,7 +147,7 @@ TxIParallelCore::TxIParallelCore() {
     // Just hard-code it.  It's only one triangulation, and it's highly
     // symmetric.
     unsigned i;
-    Tetrahedron<3>** t = new Tetrahedron<3>*[6];
+    auto* t = new Tetrahedron<3>*[6];
     for (i = 0; i < 6; i++)
         t[i] = core_.newTetrahedron();
 

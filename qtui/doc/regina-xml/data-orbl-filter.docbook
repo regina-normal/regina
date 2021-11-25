@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>orbl (filter)</refname>
-  <refpurpose>A constraint on orientability</refpurpose>
+  <refpurpose>Replaced by attributes of &xml-filterprop;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,13 +40,16 @@ orbl ::=</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
   <para>
-   An &xml-orbl-filter; element represents a constraint on the
+   This element was used in the past to represent a constraint on the
    orientability of a normal surface.
+   Since &regina;&nbsp;7.0, this constraint is now stored in
+   the attributes of the corresponding &xml-filterprop; element instead.
   </para>
 
   <refsect2>

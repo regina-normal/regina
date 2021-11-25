@@ -84,15 +84,13 @@ printEuler(tri, "Two projective plane cusps")
 
 # Invalid boundary vertex links:
 tri = regina.Triangulation3()
-t = tri.newTetrahedron()
-s = tri.newTetrahedron()
+(t, s) = tri.newTetrahedra(2)
 t.join(3, s, regina.Perm4(0,1,2,3))
 t.join(2, s, regina.Perm4(0,3,1,2))
 printEuler(tri, "Pinched solid torus")
 
 tri = regina.Triangulation3()
-t = tri.newTetrahedron()
-s = tri.newTetrahedron()
+(t, s) = tri.newTetrahedra(2)
 t.join(3, s, regina.Perm4(0,1,2,3))
 t.join(2, s, regina.Perm4(0,2,1,3))
 printEuler(tri, "Pinched solid Klein bottle")

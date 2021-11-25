@@ -49,7 +49,7 @@
  * A filter function, used to determine whether a given boundary component
  * should appear in the list.
  */
-typedef bool (*BoundaryComponentFilterFunc)(regina::BoundaryComponent<3>*);
+using BoundaryComponentFilterFunc = bool (*)(regina::BoundaryComponent<3>*);
 
 /**
  * A widget through which a single boundary component of some triangulation
@@ -75,7 +75,7 @@ class BoundaryComponent3Chooser :
                  choosing from. */
         BoundaryComponentFilterFunc filter_;
             /**< A filter to restrict the available selections, or
-                 0 if no filter is necessary. */
+                 \c null if no filter is necessary. */
         std::vector<regina::BoundaryComponent<3>*> options_;
             /**< A list of the available options to choose from. */
 
@@ -95,7 +95,8 @@ class BoundaryComponent3Chooser :
          * The given filter may be 0, in which case every boundary component
          * will be offered.
          */
-        BoundaryComponent3Chooser(regina::Triangulation<3>* tri,
+        BoundaryComponent3Chooser(
+                regina::PacketOf<regina::Triangulation<3>>* tri,
                 BoundaryComponentFilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
 
@@ -103,7 +104,7 @@ class BoundaryComponent3Chooser :
          * Returns the currently selected boundary component.
          *
          * If there are no available boundary components to choose from,
-         * this routine will return 0.
+         * this routine will return \c null.
          */
         regina::BoundaryComponent<3>* selected();
 
@@ -128,9 +129,9 @@ class BoundaryComponent3Chooser :
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::Packet*) override;
-        void packetWasChanged(regina::Packet*) override;
-        void packetToBeDestroyed(regina::PacketShell) override;
+        void packetToBeChanged(regina::Packet&) override;
+        void packetWasChanged(regina::Packet&) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
 
     private:
         /**
@@ -164,14 +165,14 @@ class BoundaryComponent3Dialog : public QDialog {
          * Constructor and destructor.
          */
         BoundaryComponent3Dialog(QWidget* parent,
-            regina::Triangulation<3>* tri,
+            regina::PacketOf<regina::Triangulation<3>>* tri,
             BoundaryComponentFilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static regina::BoundaryComponent<3>* choose(QWidget* parent,
-            regina::Triangulation<3>* tri,
+            regina::PacketOf<regina::Triangulation<3>>* tri,
             BoundaryComponentFilterFunc filter,
             const QString& title,
             const QString& message,
@@ -185,16 +186,16 @@ inline bool BoundaryComponent3Chooser::refresh() {
     return (count() > 0);
 }
 
-inline void BoundaryComponent3Chooser::packetToBeChanged(regina::Packet*) {
+inline void BoundaryComponent3Chooser::packetToBeChanged(regina::Packet&) {
     clear();
     options_.clear();
 }
 
-inline void BoundaryComponent3Chooser::packetWasChanged(regina::Packet*) {
+inline void BoundaryComponent3Chooser::packetWasChanged(regina::Packet&) {
     fill();
 }
 
-inline void BoundaryComponent3Chooser::packetToBeDestroyed(
+inline void BoundaryComponent3Chooser::packetBeingDestroyed(
         regina::PacketShell) {
     clear();
     options_.clear();

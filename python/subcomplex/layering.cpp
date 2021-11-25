@@ -43,6 +43,7 @@ void addLayering(pybind11::module_& m) {
     auto c = pybind11::class_<Layering>(m, "Layering")
         .def(pybind11::init<Tetrahedron<3>*, Perm<4>,
             Tetrahedron<3>*, Perm<4>>())
+        .def(pybind11::init<const Layering&>())
         .def("size", &Layering::size)
         .def("oldBoundaryTet", &Layering::oldBoundaryTet,
             pybind11::return_value_policy::reference)

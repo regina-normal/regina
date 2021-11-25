@@ -97,21 +97,22 @@ class EltMoveDialog3 : public QDialog, public regina::PacketListener {
         /**
          * Packet tree structure:
          */
-        regina::Triangulation<3>* tri;
+        regina::PacketOf<regina::Triangulation<3>>* tri;
 
     public:
         /**
          * Constructor and destructor.
          */
-        EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri);
-        ~EltMoveDialog3();
+        EltMoveDialog3(QWidget* parent,
+            regina::PacketOf<regina::Triangulation<3>>* useTri);
+        ~EltMoveDialog3() override;
 
         /**
          * Update the overview information if the triangulation changes.
          */
-        void packetWasRenamed(regina::Packet*) override;
-        void packetWasChanged(regina::Packet*) override;
-        void packetToBeDestroyed(regina::PacketShell) override;
+        void packetWasRenamed(regina::Packet&) override;
+        void packetWasChanged(regina::Packet&) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
 
     protected slots:
         /**

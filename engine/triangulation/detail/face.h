@@ -45,10 +45,10 @@
 #include "triangulation/facenumbering.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/alias/facenumber.h"
-#include "triangulation/alias/simplex.h"
 #include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
+#include "utilities/shortarray.h"
 #include "utilities/typeutils.h"
 #include <deque>
 #include <vector>
@@ -56,11 +56,6 @@
 namespace regina::detail {
 
 template <int dim> class TriangulationBase;
-
-/**
- * \weakgroup detail
- * @{
- */
 
 /**
  * Helper class that provides core functionality for describing how a
@@ -80,6 +75,8 @@ template <int dim> class TriangulationBase;
  * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces of the underlying triangulation.
  * This must be between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim, int subdim>
 class FaceEmbeddingBase :
@@ -93,16 +90,19 @@ class FaceEmbeddingBase :
     private:
         Simplex<dim>* simplex_;
             /**< The top-dimensional simplex in which the underlying
-             * <i>subdim</i>-face of the triangulation is contained. */
-        int face_;
-            /**< The corresponding face number of \a simplex_. */
+                 <i>subdim</i>-face of the triangulation is contained. */
+        Perm<dim + 1> vertices_;
+            /**< Maps the vertices of the underlying <i>subdim</i>-face
+                 of the triangulation to the corresponding vertex numbers of
+                 \a simplex_.  See vertices() for details. */
 
     public:
         /**
          * Default constructor.  This object is unusable until it has
          * some data assigned to it using <tt>operator =</tt>.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, since the C++ assignment operators
+         * are not accessible to Python.
          */
         FaceEmbeddingBase();
         /**
@@ -110,11 +110,12 @@ class FaceEmbeddingBase :
          *
          * @param simplex the top-dimensional simplex in which the
          * underlying <i>subdim</i>-face of the triangulation is contained.
-         * @param face the corresponding face number of \a simplex.
-         * This must be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
-         * inclusive.
+         * @param vertices a mapping from the vertices of the underlying
+         * <i>subdim</i>-face of the triangulation to the corresponding
+         * vertex numbers of \a simplex.  See vertices() for details of how
+         * this permutation should be structured.
          */
-        FaceEmbeddingBase(Simplex<dim>* simplex, int face);
+        FaceEmbeddingBase(Simplex<dim>* simplex, Perm<dim + 1> vertices);
         /**
          * Creates a new copy of the given object.
          *
@@ -162,7 +163,8 @@ class FaceEmbeddingBase :
          * FaceEmbedding objects for the same underlying <i>subdim</i>-face.
          *
          * This routine returns the same permutation as
-         * <tt>simplex().faceMapping<subdim>(face())</tt>.
+         * <tt>simplex().faceMapping<subdim>(face())</tt> (and this
+         * routine is faster if you already have a FaceEmbedding).
          * See Simplex<dim>::faceMapping() for details.
          *
          * @return a mapping from the vertices of the underlying
@@ -172,8 +174,13 @@ class FaceEmbeddingBase :
 
         /**
          * Tests whether this and the given object are identical.
-         * Here "identical" means that they refer to the same face of
-         * the same top-dimensional simplex.
+         *
+         * Since Regina 7.0, "identical" means that both objects refer to the
+         * same face of the same top-dimensional simplex, \e and have
+         * the same embedding permutations as returned by vertices().
+         * This is a stronger (but more natural) condition than was used in
+         * Regina 6.0.1 and earlier, which merely required both objects to
+         * refer to the same face number of the same top-dimensional simplex.
          *
          * @param rhs the object to compare with this.
          * @return \c true if and only if both object are identical.
@@ -181,9 +188,14 @@ class FaceEmbeddingBase :
         bool operator == (const FaceEmbeddingBase& rhs) const;
 
         /**
-         * Tests whether this and the given object are different.
-         * Here "different" means that they do not refer to the same face of
-         * the same top-dimensional simplex.
+         * Tests whether this and the given object are not identical.
+         *
+         * Since Regina 7.0, "identical" means that both objects refer to the
+         * same face of the same top-dimensional simplex, \e and have
+         * the same embedding permutations as returned by vertices().
+         * This is a stronger (but more natural) condition than was used in
+         * Regina 6.0.1 and earlier, which merely required both objects to
+         * refer to the same face number of the same top-dimensional simplex.
          *
          * @param rhs the object to compare with this.
          * @return \c true if and only if both object are identical.
@@ -194,285 +206,69 @@ class FaceEmbeddingBase :
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-};
-
-/**
- * Helper class for storing all the ways in which a given face of codimension
- * \a codim in a <i>dim</i>-dimensional triangulation appears within the
- * various top-dimensional simplices.
- *
- * In essence, this class provides the data structures which which a
- * Face object stores its list of corresponding FaceEmbedding objects.
- * All the routines in this class are inherited by Face, and so end
- * users should not need to refer to FaceStorage directly.
- *
- * The reason these data structrues belong to a separate class FaceStorage
- * (as opposed to be being integrated directly into Face or FaceBase) is
- * so that Regina can use different data structures for different codimensions.
- *
- * See the Face and FaceEmbedding template class notes for further information.
- *
- * \warning The second template parameter is the \e codimension of the face, not
- * the \e dimension of the face.  This means that Face<dim, subdim> inherits
- * from FaceStorage<dim, dim - codim>.  This inconsistency arises because
- * it is the codimension of the face that determines what data structures
- * we use.
- *
- * \ifacespython This base class is not present, but the "end user" class
- * Face<dim, subdim> is.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
- * \tparam codim the codimension of the faces of the underlying triangulation.
- * This must be between 1 and \a dim inclusive.
- */
-template <int dim, int codim>
-class FaceStorage {
-    static_assert(dim >= 2, "Face requires dimension >= 2.");
-    static_assert(2 < codim && codim <= dim,
-        "The generic FaceStorage should only be used for codimension > 2.");
 
     private:
-        std::vector<FaceEmbedding<dim, dim - codim>> embeddings_;
-            /**< The list of all occurrences of a given face within the
-                 top-dimensional simplices of the underlying triangulation. */
-
-    public:
         /**
-         * Returns the degree of this face.
-         * This is the number of different ways in which the face appears
-         * within the various top-dimensional simplices of the underlying
-         * triangulation.
+         * Explicitly disable the old (\a simplex, \a face) constructor from
+         * Regina 6.0.1 and earlier.
          *
-         * Note that if this face appears multiple times within the same
-         * top-dimensional simplex, then it will be counted multiple
-         * times by this routine.
-         *
-         * @return the degree of this face.
+         * This is so that, if the user unintentionally calls the old
+         * (\a simplex, \a face) constructor, the face argument will not be
+         * silently converted to a permutation and passed to the new
+         * (\a simplex, \a vertices) constructor instead.
          */
-        size_t degree() const;
-        /**
-         * Returns one of the ways in which this face appears within a
-         * top-dimensional simplex of the underlying triangluation.
-         *
-         * For convenience, you can also use begin() and end() to
-         * iterate through all such appearances.
-         *
-         * In most cases, the ordering of appearances is arbitrary.
-         * The exception is for codimension 2, where these appearances
-         * are ordered in a way that follows the link around the face
-         * (which in codimension 2 is always a path or a cycle).
-         *
-         * @param index the index of the requested appearance.  This
-         * must be between 0 and degree()-1 inclusive.
-         * @return details of the requested appearance.
-         */
-        const FaceEmbedding<dim, dim - codim>& embedding(size_t index) const;
-
-        /**
-         * A begin function for iterating through all appearances of
-         * this face within the various top-dimensional simplices of the
-         * underlying triangulation.
-         *
-         * In most cases, the ordering of appearances is arbitrary.
-         * The exception is for codimension 2, where these appearances
-         * are ordered in a way that follows the link around the face
-         * (which in codimension 2 is always a path or a cycle).
-         *
-         * An iteration from begin() to end() will run through
-         * degree() appearances in total.
-         *
-         * \ifacespython Not present.  However, Python users can call
-         * the Python-only routine embeddings(), which will return all
-         * appearances (from begin() through to end()) in a Python sequence.
-         *
-         * @return a iterator that points to the first appearance.
-         */
-        typename std::vector<FaceEmbedding<dim, dim - codim>>::const_iterator
-            begin() const;
-        /**
-         * An end function for iterating through all appearances of
-         * this face within the various top-dimensional simplices of the
-         * underlying triangulation.
-         *
-         * In most cases, the ordering of appearances is arbitrary.
-         * The exception is for codimension 2, where these appearances
-         * are ordered in a way that follows the link around the face
-         * (which in codimension 2 is always a path or a cycle).
-         *
-         * An iteration from begin() to end() will run through
-         * degree() appearances in total.
-         *
-         * \ifacespython Not present.  However, Python users can call
-         * the Python-only routine embeddings(), which will return all
-         * appearances (from begin() through to end()) in a Python sequence.
-         *
-         * @return a "beyond the end" iterator that comes immediately
-         * after the last appearance.
-         */
-        typename std::vector<FaceEmbedding<dim, dim - codim>>::const_iterator
-            end() const;
-
-        /**
-         * Returns the first appearance of this face within a top-dimensional
-         * simplex of the underlying triangluation.
-         *
-         * This is equivalent to calling <tt>*begin()</tt>, or
-         * <tt>embedding(0)</tt>.
-         *
-         * In most cases, the ordering of appearances is arbitrary.
-         * The exception is for codimension 2, where the appearances of
-         * a face are ordered in a way that follows the link around the face
-         * (which in codimension 2 is always a path or a cycle).
-         * In particular, for a boundary face of codimension 2, both
-         * front() and back() will refer to the two appearances of this
-         * face on the (<i>dim</i>-1)-dimensional boundary.
-         *
-         * @return details of the first appearance.
-         */
-        const FaceEmbedding<dim, dim - codim>& front() const;
-        /**
-         * Returns the last appearance of this face within a top-dimensional
-         * simplex of the underlying triangluation.
-         *
-         * This is equivalent to calling <tt>embedding(degree()-1)</tt>.
-         *
-         * In most cases, the ordering of appearances is arbitrary.
-         * The exception is for codimension 2, where the appearances of
-         * a face are ordered in a way that follows the link around the face
-         * (which in codimension 2 is always a path or a cycle).
-         * In particular, for a boundary face of codimension 2, both
-         * front() and back() will refer to the two appearances of this
-         * face on the (<i>dim</i>-1)-dimensional boundary.
-         *
-         * @return details of the last appearance.
-         */
-        const FaceEmbedding<dim, dim - codim>& back() const;
-
-#ifdef __DOXYGEN
-        // This is purely for the benefit of the API documentation.
-        // It is commented out of the real build because the codimension-1 case
-        // (the only case in which this routine exists) is specialised below.
-        /**
-         * Determines whether a codimension-1-face represents a dual edge in
-         * the maximal forest that has been chosen for the dual 1-skeleton of
-         * the triangulation.
-         *
-         * This routine is only available for faces of codimension 1; that is,
-         * (<i>dim</i>-1)-faces of a <i>dim</i>-dimensional triangulation.
-         *
-         * When the skeletal structure of a triangulation is first computed,
-         * a maximal forest in the dual 1-skeleton of the triangulation is
-         * also constructed.  Each dual edge in this maximal forest
-         * represents a (<i>dim</i>-1)-face of the (primal) triangulation.
-         *
-         * This maximal forest will remain fixed until the triangulation
-         * changes, at which point it will be recomputed (as will all
-         * other skeletal objects, such as connected components and so on).
-         * There is no guarantee that, when it is recomputed, the
-         * maximal forest will use the same dual edges as before.
-         *
-         * This routine identifies whether this (<i>dim</i>-1)-face belongs to
-         * the dual forest.  In this sense it performs a similar role to
-         * Simplex::facetInMaximalForest(), but this routine is typically
-         * easier to use.
-         *
-         * If the skeleton has already been computed, then this routine is
-         * very fast (since it just returns a precomputed answer).
-         *
-         * @return \c true if and only if this (<i>dim</i>-1)-face represents
-         * a dual edge in the maximal forest.
-         */
-        bool inMaximalForest() const;
-#endif
-
-        // Make this class non-copyable.
-        FaceStorage(const FaceStorage&) = delete;
-        FaceStorage& operator = (const FaceStorage&) = delete;
-
-    protected:
-        /**
-         * Default constructor that leaves the list of embeddings empty.
-         */
-        FaceStorage() = default;
-
-        /**
-         * Internal routine to help build the skeleton of a triangulation.
-         *
-         * This routine pushes the given object onto the end of the
-         * internal list of appearances of this face within
-         * top-dimensional simplices.
-         *
-         * @param emb the appearance to push onto the end of the internal list.
-         */
-        void push_back(const FaceEmbedding<dim, dim - codim>& emb);
+        FaceEmbeddingBase(Simplex<dim>*, int);
 };
 
 #ifndef __DOXYGEN
-
-template <int dim>
-class FaceStorage<dim, 2> {
-    private:
-        std::deque<FaceEmbedding<dim, dim-2>> embeddings_;
-
-    public:
-        size_t degree() const;
-        const FaceEmbedding<dim, dim-2>& embedding(size_t index) const;
-
-        typename std::deque<FaceEmbedding<dim, dim-2>>::const_iterator
-            begin() const;
-        typename std::deque<FaceEmbedding<dim, dim-2>>::const_iterator
-            end() const;
-
-        const FaceEmbedding<dim, dim-2>& front() const;
-        const FaceEmbedding<dim, dim-2>& back() const;
-
-        // Make this class non-copyable.
-        FaceStorage(const FaceStorage&) = delete;
-        FaceStorage& operator = (const FaceStorage&) = delete;
-
-    protected:
-        /**
-         * Default constructor that leaves the list of embeddings empty.
-         */
-        FaceStorage() = default;
-
-        void push_front(const FaceEmbedding<dim, dim-2>& emb);
-        void push_back(const FaceEmbedding<dim, dim-2>& emb);
+/**
+ * Internal helper class that determines the data structure used to
+ * store embeddings for a face of a triangulation.
+ *
+ * End users should have no need to use this class, and should never
+ * need to see or know about the data type that it describes.
+ *
+ * \ifacespython Not present.
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 2 and 15 inclusive.
+ * \tparam codim the codimension (not dimension!) of the faces under
+ * consideration.  This must be between 1 and \a dim inclusive.
+ *
+ * \ingroup detail
+ */
+template <int dim, int codim>
+struct FaceEmbeddingsList {
+    /**
+     * For most face types, we store the embeddings in an ordinary vector.
+     */
+    using type = std::vector<FaceEmbedding<dim, dim - codim>>;
 };
 
 template <int dim>
-class FaceStorage<dim, 1> {
-    private:
-        unsigned nEmb_;
-        FaceEmbedding<dim, dim-1> embeddings_[2];
-
-    public:
-        size_t degree() const;
-        const FaceEmbedding<dim, dim-1>& embedding(size_t index) const;
-
-        const FaceEmbedding<dim, dim-1>* begin() const;
-        const FaceEmbedding<dim, dim-1>* end() const;
-
-        const FaceEmbedding<dim, dim-1>& front() const;
-        const FaceEmbedding<dim, dim-1>& back() const;
-
-        bool inMaximalForest() const;
-
-        // Make this class non-copyable.
-        FaceStorage(const FaceStorage&) = delete;
-        FaceStorage& operator = (const FaceStorage&) = delete;
-
-    protected:
-        FaceStorage();
-        void push_back(const FaceEmbedding<dim, dim-1>& emb);
+struct FaceEmbeddingsList<dim, 2> {
+    /**
+     * For codimension 2 faces, we store the embeddings in a deque.  This is
+     * because the link is 1-dimensional, and the skeleton building routines
+     * will want to push embeddings onto both ends of the list to maintain the
+     * correct order as we follow the link around.
+     */
+    using type = std::deque<FaceEmbedding<dim, dim - 2>>;
 };
 
+template <int dim>
+struct FaceEmbeddingsList<dim, 1> {
+    /**
+     * For codimension 1 faces, there are always either one or two embeddings.
+     * We therefore use a cheap stack-based array of maximum size 2.
+     */
+    using type = ShortArray<FaceEmbedding<dim, dim - 1>, 2>;
+};
 #endif // __DOXYGEN
 
 /**
@@ -485,6 +281,11 @@ class FaceStorage<dim, 1> {
  *
  * See the Face template class notes for further information.
  *
+ * Neither this class nor the "end user" class Face<dim> support
+ * value semantics: they cannot be copied, swapped, or manually constructed.
+ * Their memory is managed by the Triangulation class, and their locations
+ * in memory define them.  See Face<dim> for further details.
+ *
  * \ifacespython This base class is not present, but the "end user" class
  * Face<dim, subdim> is.
  *
@@ -492,14 +293,17 @@ class FaceStorage<dim, 1> {
  * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces that this class represents.
  * This must be between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim, int subdim>
 class FaceBase :
-        public FaceStorage<dim, dim - subdim>,
         public FaceNumbering<dim, subdim>,
         public MarkedElement,
         public alias::FaceOfSimplex<FaceBase<dim, subdim>, dim, subdim - 1>,
         public Output<Face<dim, subdim>> {
+    static_assert(dim >= 2, "Face requires dimension >= 2.");
+
     public:
         static constexpr int dimension = dim;
             /**< A compile-time constant that gives the dimension of the
@@ -532,11 +336,14 @@ class FaceBase :
                      the rules laid out by isValid(). */
         };
 
+        typename FaceEmbeddingsList<dim, dim - subdim>::type embeddings_;
+            /**< The list of all occurrences of this face within the
+                 top-dimensional simplices of the underlying triangulation. */
         Component<dim>* component_;
             /**< The component that this face belongs to. */
         BoundaryComponent<dim>* boundaryComponent_;
             /**< The boundary component that this face is a part of,
-                 or 0 if this face is internal. */
+                 or \c null if this face is internal. */
         EnableIf<allowsNonOrientableLinks, bool, true> linkOrientable_;
             /**< Is the link of this face orientable? */
         EnableIf<allowsInvalidFaces && standardDim(dim), unsigned, VALID>
@@ -585,8 +392,9 @@ class FaceBase :
          * an invalid vertex boundary component if the invalid vertex does
          * not already belong to some real boundary component.
          *
-         * @return the boundary component containing this face, or 0 if this
-         * face does not lie entirely within the boundary of the triangulation.
+         * @return the boundary component containing this face, or \c null if
+         * this face does not lie entirely within the boundary of the
+         * triangulation.
          */
         BoundaryComponent<dim>* boundaryComponent() const;
         /**
@@ -600,6 +408,225 @@ class FaceBase :
          * @return \c true if and only if this face lies on the boundary.
          */
         bool isBoundary() const;
+
+        /**
+         * Returns the degree of this face.
+         * This is the number of different ways in which the face appears
+         * within the various top-dimensional simplices of the underlying
+         * triangulation.
+         *
+         * Note that if this face appears multiple times within the same
+         * top-dimensional simplex, then it will be counted multiple
+         * times by this routine.
+         *
+         * @return the degree of this face.
+         */
+        size_t degree() const;
+        /**
+         * Returns one of the ways in which this face appears within a
+         * top-dimensional simplex of the underlying triangluation.
+         *
+         * For convenience, you can also use begin() and end() to iterate
+         * through all such appearances, or equivalently you can iterate
+         * over the lightweight object returned by embeddings().
+         *
+         * In most cases, the ordering of appearances is arbitrary.
+         * The exception is for codimension 2, where these appearances
+         * are ordered in a way that follows the link around the face
+         * (which in codimension 2 is always a path or a cycle).
+         *
+         * @param index the index of the requested appearance.  This
+         * must be between 0 and degree()-1 inclusive.
+         * @return details of the requested appearance.
+         */
+        const FaceEmbedding<dim, subdim>& embedding(size_t index) const;
+
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all of the ways in which this face appears within a
+         * top-dimensional simplex of the underlying triangluation.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  The elements of the list will be
+         * read-only objects of type FaceEmbedding<dim, subdim>.  For
+         * example, your code might look like:
+         *
+         * \code{.cpp}
+         * Face<dim, subdim>* face = ...;
+         * for (const auto& emb : face->embeddings()) { ... }
+         * \endcode
+         *
+         * In most cases, the ordering of appearances is arbitrary.
+         * The exception is for codimension 2, where these appearances
+         * are ordered in a way that follows the link around the face
+         * (which in codimension 2 is always a path or a cycle).
+         *
+         * Using embeddings() is equivalent to iterating over the face
+         * itself.  It generates a tiny amount of extra overhead, but also
+         * may be considered more readable.  In particular, the code
+         * above is equivalent to both of the following alternatives:
+         *
+         * \code{.cpp}
+         * Face<dim, subdim>* face = ...;
+         * for (const auto& emb : *face) { ... }
+         * \endcode
+         *
+         * \code{.cpp}
+         * Face<dim, subdim>* face = ...;
+         * for (size_t i = 0; i < face->degree(); ++i) {
+         *     const auto& emb = face->embedding(i);
+         *     ...
+         * }
+         * \endcode
+         *
+         * @return access to the list of all appearances of this face
+         * within a top-dimensional simplex of the underlying triangulation.
+         */
+        auto embeddings() const;
+
+        /**
+         * A begin function for iterating through all appearances of
+         * this face within the various top-dimensional simplices of the
+         * underlying triangulation.
+         *
+         * In most cases, the ordering of appearances is arbitrary.
+         * The exception is for codimension 2, where these appearances
+         * are ordered in a way that follows the link around the face
+         * (which in codimension 2 is always a path or a cycle).
+         *
+         * An iteration from begin() to end() will run through
+         * degree() appearances in total.
+         *
+         * The type that is returned will be a lightweight iterator type,
+         * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
+         * The precise C++ type of the iterator is subject to change, so
+         * C++ users should use \c auto (just like this declaration does).
+         *
+         * Iterating from begin() to end() (that is, iterating directly over a
+         * face) is equivalent to iterating over embeddings().  Iterating
+         * directly over a face generates a tiny bit less overhead, but
+         * you may also find it to be less readable.  In particular, the
+         * following three blocks of code are all equivalent:
+         *
+         * \code{.cpp}
+         * Face<dim, subdim>* face = ...;
+         * for (const auto& emb : *face) { ... }
+         * \endcode
+         *
+         * \code{.cpp}
+         * Face<dim, subdim>* face = ...;
+         * for (const auto& emb : face->embeddings()) { ... }
+         * \endcode
+         *
+         * \code{.cpp}
+         * Face<dim, subdim>* face = ...;
+         * for (size_t i = 0; i < face->degree(); ++i) {
+         *     const auto& emb = face->embedding(i);
+         *     ...
+         * }
+         * \endcode
+         *
+         * \ifacespython Not present; Python users can iterate over
+         * embeddings() instead.
+         *
+         * @return a iterator that points to the first appearance.
+         */
+        auto begin() const;
+        /**
+         * An end function for iterating through all appearances of
+         * this face within the various top-dimensional simplices of the
+         * underlying triangulation.
+         *
+         * See begin() for full details on how this iteration works, and what
+         * other alternatives are available.
+         *
+         * The type that is returned will be a lightweight iterator type,
+         * guaranteed to satisfy the C++ LegacyRandomAccessIterator requirement.
+         * The precise C++ type of the iterator is subject to change, so
+         * C++ users should use \c auto (just like this declaration does).
+         *
+         * \ifacespython Not present; Python users can iterate over
+         * embeddings() instead.
+         *
+         * @return a "beyond the end" iterator that comes immediately
+         * after the last appearance.
+         */
+        auto end() const;
+
+        /**
+         * Returns the first appearance of this face within a top-dimensional
+         * simplex of the underlying triangluation.
+         *
+         * This is equivalent to calling <tt>*begin()</tt>, or
+         * <tt>embedding(0)</tt>.
+         *
+         * In most cases, the ordering of appearances is arbitrary.
+         * The exception is for codimension 2, where the appearances of
+         * a face are ordered in a way that follows the link around the face
+         * (which in codimension 2 is always a path or a cycle).
+         * In particular, for a boundary face of codimension 2, both
+         * front() and back() will refer to the two appearances of this
+         * face on the (<i>dim</i>-1)-dimensional boundary.
+         *
+         * @return details of the first appearance.
+         */
+        const FaceEmbedding<dim, subdim>& front() const;
+        /**
+         * Returns the last appearance of this face within a top-dimensional
+         * simplex of the underlying triangluation.
+         *
+         * This is equivalent to calling <tt>embedding(degree()-1)</tt>.
+         *
+         * In most cases, the ordering of appearances is arbitrary.
+         * The exception is for codimension 2, where the appearances of
+         * a face are ordered in a way that follows the link around the face
+         * (which in codimension 2 is always a path or a cycle).
+         * In particular, for a boundary face of codimension 2, both
+         * front() and back() will refer to the two appearances of this
+         * face on the (<i>dim</i>-1)-dimensional boundary.
+         *
+         * @return details of the last appearance.
+         */
+        const FaceEmbedding<dim, subdim>& back() const;
+
+        /**
+         * Determines whether a codimension-1-face represents a dual edge in
+         * the maximal forest that has been chosen for the dual 1-skeleton of
+         * the triangulation.
+         *
+         * This routine is only available for faces of codimension 1; that is,
+         * (<i>dim</i>-1)-faces of a <i>dim</i>-dimensional triangulation.
+         *
+         * When the skeletal structure of a triangulation is first computed,
+         * a maximal forest in the dual 1-skeleton of the triangulation is
+         * also constructed.  Each dual edge in this maximal forest
+         * represents a (<i>dim</i>-1)-face of the (primal) triangulation.
+         *
+         * This maximal forest will remain fixed until the triangulation
+         * changes, at which point it will be recomputed (as will all
+         * other skeletal objects, such as connected components and so on).
+         * There is no guarantee that, when it is recomputed, the
+         * maximal forest will use the same dual edges as before.
+         *
+         * This routine identifies whether this (<i>dim</i>-1)-face belongs to
+         * the dual forest.  In this sense it performs a similar role to
+         * Simplex::facetInMaximalForest(), but this routine is typically
+         * easier to use.
+         *
+         * If the skeleton has already been computed, then this routine is
+         * very fast (since it just returns a precomputed answer).
+         *
+         * \pre The facial dimension \a subdim is precisely <i>dim</i>-1.
+         *
+         * @return \c true if and only if this (<i>dim</i>-1)-face represents
+         * a dual edge in the maximal forest.
+         */
+        bool inMaximalForest() const;
 
         /**
          * Determines if the link of this face is orientable.
@@ -783,7 +810,7 @@ class FaceBase :
          * since the output routines cast down to Face<dim, subdim>
          * before calling it.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -797,13 +824,15 @@ class FaceBase :
          * since the output routines cast down to Face<dim, subdim>
          * before calling it.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
-        // This class inherits non-copyability from FaceStorage.
+        // Make this class non-copyable.
+        FaceBase(const FaceBase&) = delete;
+        FaceBase& operator = (const FaceBase&) = delete;
 
     protected:
         /**
@@ -819,19 +848,16 @@ class FaceBase :
     friend class TriangulationBase<dim>;
 };
 
-/*@}*/
-
 // Inline functions for FaceEmbeddingBase
 
 template <int dim, int subdim>
-inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase() :
-        simplex_(0), face_(0) {
+inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase() : simplex_(nullptr) {
 }
 
 template <int dim, int subdim>
 inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase(
-        Simplex<dim>* simplex, int face) :
-        simplex_(simplex), face_(face) {
+        Simplex<dim>* simplex, Perm<dim + 1> vertices) :
+        simplex_(simplex), vertices_(vertices) {
 }
 
 template <int dim, int subdim>
@@ -841,173 +867,35 @@ inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::simplex() const {
 
 template <int dim, int subdim>
 inline int FaceEmbeddingBase<dim, subdim>::face() const {
-    return face_;
+    return FaceNumbering<dim, subdim>::faceNumber(vertices_);
 }
 
 template <int dim, int subdim>
 inline Perm<dim+1> FaceEmbeddingBase<dim, subdim>::vertices() const {
-    return simplex_->template faceMapping<subdim>(face_);
+    return vertices_;
 }
 
 template <int dim, int subdim>
 inline bool FaceEmbeddingBase<dim, subdim>::operator == (
         const FaceEmbeddingBase& rhs) const {
-    return ((simplex_ == rhs.simplex_) && (face_ == rhs.face_));
+    return ((simplex_ == rhs.simplex_) && (vertices_ == rhs.vertices_));
 }
 
 template <int dim, int subdim>
 inline bool FaceEmbeddingBase<dim, subdim>::operator != (
         const FaceEmbeddingBase& rhs) const {
-    return ((simplex_ != rhs.simplex_) || (face_ != rhs.face_));
+    return ((simplex_ != rhs.simplex_) || (vertices_ != rhs.vertices_));
 }
 
 template <int dim, int subdim>
 inline void FaceEmbeddingBase<dim, subdim>::writeTextShort(std::ostream& out)
         const {
     if constexpr (subdim == 0)
-        out << simplex_->index() << " (" << face_ << ')';
+        out << simplex_->index() << " (" << vertices_[0] << ')';
     else
         out << simplex_->index() << " ("
-            << vertices().trunc(subdim + 1) << ')';
+            << vertices_.trunc(subdim + 1) << ')';
 }
-
-// Inline functions for FaceStorage
-
-template <int dim, int codim>
-inline size_t FaceStorage<dim, codim>::degree() const {
-    return embeddings_.size();
-}
-
-template <int dim, int codim>
-inline const FaceEmbedding<dim, dim - codim>& FaceStorage<dim, codim>::
-        embedding(size_t index) const {
-    return embeddings_[index];
-}
-
-template <int dim, int codim>
-inline typename std::vector<FaceEmbedding<dim, dim - codim>>::const_iterator
-        FaceStorage<dim, codim>::begin() const {
-    return embeddings_.begin();
-}
-
-template <int dim, int codim>
-inline typename std::vector<FaceEmbedding<dim, dim - codim>>::const_iterator
-        FaceStorage<dim, codim>::end() const {
-    return embeddings_.end();
-}
-
-template <int dim, int codim>
-inline const FaceEmbedding<dim, dim - codim>& FaceStorage<dim, codim>::front()
-         const {
-    return embeddings_.front();
-}
-
-template <int dim, int codim>
-inline const FaceEmbedding<dim, dim - codim>& FaceStorage<dim, codim>::back()
-         const {
-    return embeddings_.back();
-}
-
-template <int dim, int codim>
-inline void FaceStorage<dim, codim>::push_back(
-        const FaceEmbedding<dim, dim - codim>& emb) {
-    embeddings_.push_back(emb);
-}
-
-// We hid the specialisations FaceStorage<dim, {1,2}> from doxygen, so hide
-// its implementation as well.
-#ifndef __DOXYGEN
-template <int dim>
-inline FaceStorage<dim, 1>::FaceStorage() : nEmb_(0) {
-}
-
-template <int dim>
-inline size_t FaceStorage<dim, 1>::degree() const {
-    return nEmb_;
-}
-
-template <int dim>
-inline bool FaceStorage<dim, 1>::inMaximalForest() const {
-    return embeddings_->simplex()->facetInMaximalForest(embeddings_->face());
-}
-
-template <int dim>
-inline const FaceEmbedding<dim, dim-1>& FaceStorage<dim, 1>::
-        embedding(size_t index) const {
-    return embeddings_[index];
-}
-
-template <int dim>
-inline const FaceEmbedding<dim, dim-1>* FaceStorage<dim, 1>::begin() const {
-    return embeddings_;
-}
-
-template <int dim>
-inline const FaceEmbedding<dim, dim-1>* FaceStorage<dim, 1>::end() const {
-    return embeddings_ + nEmb_;
-}
-
-template <int dim>
-inline const FaceEmbedding<dim, dim-1>& FaceStorage<dim, 1>::front() const {
-    return *embeddings_;
-}
-
-template <int dim>
-inline const FaceEmbedding<dim, dim-1>& FaceStorage<dim, 1>::back() const {
-    return *(embeddings_ + nEmb_ - 1);
-}
-
-template <int dim>
-inline void FaceStorage<dim, 1>::push_back(
-        const FaceEmbedding<dim, dim-1>& emb) {
-    embeddings_[nEmb_++] = emb;
-}
-
-template <int dim>
-inline size_t FaceStorage<dim, 2>::degree() const {
-    return embeddings_.size();
-}
-
-template <int dim>
-inline const FaceEmbedding<dim, dim-2>& FaceStorage<dim, 2>::
-        embedding(size_t index) const {
-    return embeddings_[index];
-}
-
-template <int dim>
-inline typename std::deque<FaceEmbedding<dim, dim-2>>::const_iterator
-        FaceStorage<dim, 2>::begin() const {
-    return embeddings_.begin();
-}
-
-template <int dim>
-inline typename std::deque<FaceEmbedding<dim, dim-2>>::const_iterator
-        FaceStorage<dim, 2>::end() const {
-    return embeddings_.end();
-}
-
-template <int dim>
-inline const FaceEmbedding<dim, dim-2>& FaceStorage<dim, 2>::front() const {
-    return embeddings_.front();
-}
-
-template <int dim>
-inline const FaceEmbedding<dim, dim-2>& FaceStorage<dim, 2>::back() const {
-    return embeddings_.back();
-}
-
-template <int dim>
-inline void FaceStorage<dim, 2>::push_front(
-        const FaceEmbedding<dim, dim-2>& emb) {
-    embeddings_.push_front(emb);
-}
-
-template <int dim>
-inline void FaceStorage<dim, 2>::push_back(
-        const FaceEmbedding<dim, dim-2>& emb) {
-    embeddings_.push_back(emb);
-}
-#endif // ! __DOXYGEN
 
 // Inline functions for FaceBase
 
@@ -1018,7 +906,7 @@ inline size_t FaceBase<dim, subdim>::index() const {
 
 template <int dim, int subdim>
 inline Triangulation<dim>& FaceBase<dim, subdim>::triangulation() const {
-    return FaceStorage<dim, dim - subdim>::front().simplex()->triangulation();
+    return front().simplex()->triangulation();
 }
 
 template <int dim, int subdim>
@@ -1035,6 +923,51 @@ inline BoundaryComponent<dim>* FaceBase<dim, subdim>::boundaryComponent()
 template <int dim, int subdim>
 inline bool FaceBase<dim, subdim>::isBoundary() const {
     return boundaryComponent_;
+}
+
+template <int dim, int subdim>
+inline size_t FaceBase<dim, subdim>::degree() const {
+    return embeddings_.size();
+}
+
+template <int dim, int subdim>
+inline const FaceEmbedding<dim, subdim>& FaceBase<dim, subdim>::embedding(
+        size_t index) const {
+    return embeddings_[index];
+}
+
+template <int dim, int subdim>
+inline auto FaceBase<dim, subdim>::embeddings() const {
+    return ListView(embeddings_);
+}
+
+template <int dim, int subdim>
+inline auto FaceBase<dim, subdim>::begin() const {
+    return embeddings_.begin();
+}
+
+template <int dim, int subdim>
+inline auto FaceBase<dim, subdim>::end() const {
+    return embeddings_.end();
+}
+
+template <int dim, int subdim>
+inline const FaceEmbedding<dim, subdim>& FaceBase<dim, subdim>::front() const {
+    return embeddings_.front();
+}
+
+template <int dim, int subdim>
+inline const FaceEmbedding<dim, subdim>& FaceBase<dim, subdim>::back() const {
+    return embeddings_.back();
+}
+
+template <int dim, int subdim>
+inline bool FaceBase<dim, subdim>::inMaximalForest() const {
+    static_assert(dim == subdim + 1,
+        "FaceBase::inMaximalForest() is only available for faces of "
+        "codimension 1");
+    return embeddings_.front().simplex()->facetInMaximalForest(
+        embeddings_.front().face());
 }
 
 template <int dim, int subdim>
@@ -1083,14 +1016,11 @@ inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
 
     int inSimp = (
         // If lowerdim = 0, the general formula can be simplified.
-        lowerdim == 0 ?
-        FaceStorage<dim, dim - subdim>::front().vertices()[f] :
+        lowerdim == 0 ? front().vertices()[f] :
         FaceNumbering<dim, lowerdim>::faceNumber(
-            FaceStorage<dim, dim - subdim>::front().vertices() *
-            Perm<dim + 1>::extend(
+            front().vertices() * Perm<dim + 1>::extend(
                 FaceNumbering<subdim, lowerdim>::ordering(f))));
-    return FaceStorage<dim, dim - subdim>::front().simplex()->
-        template face<lowerdim>(inSimp);
+    return front().simplex()->template face<lowerdim>(inSimp);
 }
 
 template <int dim, int subdim>
@@ -1102,18 +1032,14 @@ Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
 
     int inSimp = (
         // If lowerdim = 0, the general formula can be simplified.
-        lowerdim == 0 ?
-        FaceStorage<dim, dim - subdim>::front().vertices()[f] :
+        lowerdim == 0 ?  front().vertices()[f] :
         FaceNumbering<dim, lowerdim>::faceNumber(
-            FaceStorage<dim, dim - subdim>::front().vertices() *
-            Perm<dim + 1>::extend(
+            front().vertices() * Perm<dim + 1>::extend(
                 FaceNumbering<subdim, lowerdim>::ordering(f))));
 
     // Get the images of 0,...,lowerdim correct:
-    Perm<dim + 1> p =
-        FaceStorage<dim, dim - subdim>::front().vertices().inverse() *
-        FaceStorage<dim, dim - subdim>::front().simplex()->
-            template faceMapping<lowerdim>(inSimp);
+    Perm<dim + 1> p = front().vertices().inverse() *
+        front().simplex()->template faceMapping<lowerdim>(inSimp);
 
     // Ensure the images of lowerdim+1,...,dim are correct also.
     for (unsigned i = subdim + 1; i <= dim; ++i)
@@ -1133,14 +1059,14 @@ Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
 
 template <int dim, int subdim>
 inline FaceBase<dim, subdim>::FaceBase(Component<dim>* component) :
-        component_(component), boundaryComponent_(0) {
+        component_(component), boundaryComponent_(nullptr) {
 }
 
 template <int dim, int subdim>
 inline void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
     out << (isBoundary() ? "Boundary " : "Internal ") << Strings<subdim>::face;
     if (subdim < dim - 1)
-        out << " of degree " << FaceStorage<dim, dim - subdim>::degree();
+        out << " of degree " << degree();
 }
 
 template <int dim, int subdim>

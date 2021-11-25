@@ -76,11 +76,6 @@ class PacketTabbedUI : public QObject, public PacketUI {
 
     private:
         /**
-         * Used for iterating through viewer pages.
-         */
-        typedef std::vector<PacketViewerTab*>::iterator ViewerIterator;
-
-        /**
          * Packet interfaces for individual pages.
          *
          * The indices of viewerTabs correspond precisely to tab
@@ -114,7 +109,7 @@ class PacketTabbedUI : public QObject, public PacketUI {
          * Constructor and destructor.
          */
         PacketTabbedUI(PacketPane* newEnclosingPane, unsigned& indexPref);
-        virtual ~PacketTabbedUI();
+        ~PacketTabbedUI() override;
 
         /**
          * Add a new tabbed page to this packet interface.
@@ -161,11 +156,10 @@ class PacketTabbedUI : public QObject, public PacketUI {
         /**
          * PacketUI overrides.
          */
-        virtual regina::Packet* getPacket();
-        virtual QWidget* getInterface();
-        virtual void refresh();
-        virtual void endEdit();
-        virtual void setReadWrite(bool readWrite);
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
+        void endEdit() override;
 
     public slots:
         /**
@@ -228,7 +222,7 @@ class PacketViewerTab : public PacketReadOnlyUI {
         /**
          * PacketUI overrides.
          */
-        QString getPacketMenuText() const;
+        QString getPacketMenuText() const override;
 
     friend class PacketTabbedUI;
     friend class PacketTabbedViewerTab;
@@ -259,7 +253,7 @@ class PacketEditorTab : public PacketUI {
         /**
          * PacketUI overrides.
          */
-        QString getPacketMenuText() const;
+        QString getPacketMenuText() const override;
 };
 
 /**
@@ -284,11 +278,6 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
-        /**
-         * Used for iterating through viewer pages.
-         */
-        typedef std::vector<PacketViewerTab*>::iterator ViewerIterator;
-
         /**
          * Packet interfaces for individual pages.
          *
@@ -319,7 +308,7 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
          * Constructor and destructor.
          */
         PacketTabbedViewerTab(PacketTabbedUI* useParentUI, unsigned& indexPref);
-        virtual ~PacketTabbedViewerTab();
+        ~PacketTabbedViewerTab() override;
 
         /**
          * Add a new tabbed page to this packet interface.
@@ -355,9 +344,9 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
         /**
          * PacketUI overrides.
          */
-        virtual regina::Packet* getPacket();
-        virtual QWidget* getInterface();
-        virtual void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     public slots:
         /**

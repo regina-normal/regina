@@ -2,9 +2,9 @@
 
 # Files to compile
 SET ( FILES
+  attachment.cpp
   open.cpp
   packet.cpp
-  pdf.cpp
   script.cpp
   text.cpp
   )
@@ -19,11 +19,11 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    attachment.h
     container.h
     packet.h
+    packet-impl.h
     pdf.h
-    packetregistry.h
-    packetregistry-impl.h
     packettype.h
     script.h
     text.h

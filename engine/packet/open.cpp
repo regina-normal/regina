@@ -45,14 +45,15 @@ namespace regina {
 
 namespace {
     /**
-     * Reads the outermost \<reginadata ...\> XML element.
+     * Reads the outermost \<regina ...\> or \<reginadata ...\> XML element.
      */
     class ReginaDataReader : public regina::XMLPacketReader {
         private:
-            Container container;
+            std::shared_ptr<Container> container;
                 /**< Sits above the entire packet tree read from file. */
             bool isReginaData;
-                /**< Are we actually reading a \<reginadata ...\> element? */
+                /**< Are we actually reading a \<regina ...\> or
+                     \<reginadata ...\> element? */
             std::string version_;
                 /**< The version of Regina that created this file, or
                      the empty string if this is not known. */
@@ -62,13 +63,13 @@ namespace {
              * Create a new top-level reader.
              */
             ReginaDataReader(XMLTreeResolver& resolver) :
-                    XMLPacketReader(resolver),
-                    isReginaData(false) {
+                    XMLPacketReader(resolver, nullptr, false, {}, {}),
+                    container(new Container()), isReginaData(false) {
             }
 
-            virtual Packet* packet() override {
+            std::shared_ptr<Packet> packetToCommit() override {
                 if (isReginaData)
-                    return &container;
+                    return container;
                 else
                     return nullptr;
             }
@@ -77,24 +78,15 @@ namespace {
                 return version_;
             }
 
-            virtual void startElement(const std::string& n,
+            void startElement(const std::string& n,
                     const regina::xml::XMLPropertyDict& props,
                     XMLElementReader*) override {
-                if (n == "reginadata") {
+                if (n == "regina" || n == "reginadata") {
                     isReginaData = true;
 
-                    regina::xml::XMLPropertyDict::const_iterator it =
-                        props.find("engine");
+                    auto it = props.find("engine");
                     if (it != props.end())
                         version_ = stripWhitespace(it->second);
-                }
-            }
-
-            virtual void abort(XMLElementReader*) override {
-                // Delete all children of the top-level container.
-                while (Packet* child = container.firstChild()) {
-                    child->makeOrphan();
-                    delete child;
                 }
             }
     };
@@ -115,14 +107,14 @@ namespace {
     const int regChunkSize = 1024;
 }
 
-Packet* open(const char* filename) {
+std::shared_ptr<Packet> open(const char* filename) {
     std::ifstream file(filename, std::ios_base::in | std::ios_base::binary);
     // We don't test whether the file was opened, since open(std::istream&)
     // tests this for us as the first thing it does.
     return regina::open(file);
 }
 
-Packet* open(std::istream& s) {
+std::shared_ptr<Packet> open(std::istream& s) {
     // Note: open(const char*) relies on us testing here whether s was
     // successfully opened.  If anyone removes this test, then they
     // should add a corresponding test to open(const char*) instead.
@@ -207,7 +199,7 @@ Packet* open(std::istream& s) {
                 start += 20; /* Length of "<reginadata engine=\"" */
 
                 char* finish = ::strchr(start, '"');
-                if (finish == 0 || finish == start) {
+                if ((! finish) || finish == start) {
                     // Never found a closing quote, or else the engine version
                     // string is empty.
                     buf[regDataOpenBy] = tmp;
@@ -263,16 +255,13 @@ Packet* open(std::istream& s) {
 
         // See if we read anything.
         // If so, break it away from the top-level container and return it.
-        Packet* p = reader.packet();
-        if (p) {
-            p = p->firstChild();
-            if (p)
-                p->makeOrphan();
-
+        if (auto p = reader.packetToCommit()) {
             // Resolve any dangling packet references.
-            resolver.resolve();
+            resolver.resolveDelayed();
 
-            return p;
+            // As reader is destroyed, it will automatically orphan the
+            // child packet that we return and delete the old parent container.
+            return p->firstChild();
         } else
             return nullptr;
     } catch (const zstr::Exception& e) {

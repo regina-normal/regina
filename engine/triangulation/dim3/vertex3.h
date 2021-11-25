@@ -50,11 +50,6 @@
 namespace regina {
 
 /**
- * \weakgroup dim3
- * @{
- */
-
-/**
  * Represents a vertex in the skeleton of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic Face class template; see the
@@ -63,7 +58,15 @@ namespace regina {
  * These specialisations for Regina's \ref stddim "standard dimensions"
  * offer significant extra functionality.
  *
+ * Vertices do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the Triangulation to which they belong.
+ *
  * \headerfile triangulation/dim3.h
+ *
+ * \ingroup dim3
  */
 template <>
 class Face<3, 0> : public detail::FaceBase<3, 0> {
@@ -108,7 +111,9 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
             /**< Specifies the Euler characteristic of the vertex link. */
         Triangulation<2>* linkTri_;
             /**< A triangulation of the vertex link.  This will only be
-                 constructed on demand; until then it will be null. */
+                 constructed on demand; until then it will be null.
+                 We keep this as a pointer to avoid instantiating the
+                 lower-dimensional triangulation classes here in the header. */
 
     public:
         /**
@@ -125,92 +130,78 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * vertex link, and so can be much faster than analysing the
          * result of buildLink().
          *
+         * This is the routine that used to be called link() in Regina 6.0.1
+         * and earlier.  It was renamed to linkType() in Regina 7.0, to clear
+         * the way for a different routine to be called link() in the future.
+         *
          * @return a broad categorisation of the vertex link.
          */
-        LinkType link() const;
+        LinkType linkType() const;
 
         /**
          * Returns a full 2-manifold triangulation describing
          * the link of this vertex.
          *
          * This routine is fast (it uses a pre-computed triangulation if
-         * possible).  The downside is that the triangulation is read-only,
-         * and does not contain any information on how the triangles in the
-         * link correspond to tetrahedra in the original triangulation
-         * (though this is easily deduced; see below).
-         * If you want a writable triangulation, or one with this extra
-         * information, then call buildLinkDetail() instead.
+         * possible).  The downside is that the triangulation is read-only
+         * (though you can always clone it).
          *
-         * The triangulation of the vertex link is built as follows.
-         * Let \a i lie between 0 and degree()-1 inclusive, let
-         * \a tet represent <tt>embedding(i).tetrahedron()</tt>,
-         * and let \a v represent <tt>embedding(i).vertex()</tt>.
-         * Then <tt>buildLink()->triangle(i)</tt> is the triangle
-         * in the vertex link that "slices off" vertex \a v from
-         * tetrahedron \a tet.  In other words,
-         * <tt>buildLink()->triangle(i)</tt> in the vertex link
-         * is parallel to triangle <tt>tet->triangle(v)</tt> in the
-         * surrounding 3-manifold triangulation.
+         * Regarding the labelling of triangles in the vertex link:
          *
-         * The vertices of each triangle in the vertex link are
-         * numbered as follows.  Following the discussion above,
-         * suppose that <tt>buildLink()->triangle(i)</tt> sits within
-         * \c tet and is parallel to <tt>tet->triangle(v)</tt>.
-         * Then vertices 0,1,2 of the triangle in the link will be
-         * parallel to vertices 0,1,2 of the corresponding Triangle<3>.
-         * The permutation <tt>tet->triangleMapping(v)</tt> will map
-         * vertices 0,1,2 of the triangle in the link to the
-         * corresponding vertices of \c tet (those opposite \c v),
-         * and will map 3 to \c v itself.
+         * - The triangles of the vertex link are numbered as follows.
+         *   Let \a i lie between 0 and degree()-1 inclusive, let
+         *   \a tet represent <tt>embedding(i).tetrahedron()</tt>,
+         *   and let \a v represent <tt>embedding(i).vertex()</tt>.
+         *   Then <tt>buildLink()->triangle(i)</tt> is the triangle
+         *   in the vertex link that "slices off" vertex \a v from
+         *   tetrahedron \a tet.  In other words,
+         *   <tt>buildLink()->triangle(i)</tt> in the vertex link
+         *   is parallel to triangle <tt>tet->triangle(v)</tt> in the
+         *   surrounding 3-manifold triangulation.
          *
-         * This Vertex<3> object will retain ownership of the triangulation
-         * that is returned.  If you wish to edit the triangulation, you
-         * should make a new clone and edit the clone instead.
+         * - The vertices of each triangle in the vertex link are
+         *   numbered as follows.  Following the discussion above,
+         *   suppose that <tt>buildLink()->triangle(i)</tt> sits within
+         *   \c tet and is parallel to <tt>tet->triangle(v)</tt>.
+         *   Then vertices 0,1,2 of the triangle in the link will be
+         *   parallel to vertices 0,1,2 of the corresponding Triangle<3>.
+         *   The permutation <tt>tet->triangleMapping(v)</tt> will map
+         *   vertices 0,1,2 of the triangle in the link to the
+         *   corresponding vertices of \c tet (those opposite \c v),
+         *   and will map 3 to \c v itself.
+         *
+         * - If you need this labelling data in a format that is easy to
+         *   compute with, you can call buildLinkInclusion() to retrieve
+         *   this information as an isomorphism.
          *
          * \ifacespython Since Python does not distinguish between const and
-         * non-const, this routine will make a deep copy of the vertex link.
-         * You are free to modify the triangulation that is returned.
+         * non-const, this routine will return by value (thus making a
+         * deep copy of the vertex link).  You are free to modify the
+         * triangulation that is returned.
          *
          * @return the read-only triangulated link of the vertex.
          */
-        const Triangulation<2>* buildLink() const;
+        const Triangulation<2>& buildLink() const;
 
         /**
-         * Returns a full 2-manifold triangulation describing
-         * the link of this vertex.
+         * Returns details of how the triangles are labelled in the link
+         * of this vertex.  This is a companion function to buildLink(),
+         * which returns a full 2-manifold triangulation of the vertex link.
          *
-         * This routine is heavyweight (it computes a new triangulation
-         * each time).  The benefit is that the triangulation is writeable,
-         * and optionally contain detailed information on how the triangles
-         * in the link correspond to tetrahedra in the original triangulation.
-         * If you do not need this extra information, consider using the
-         * faster buildLink() instead.
+         * The documentation for buildLink() describes in plain English
+         * exactly how the vertex link will be triangulated.  This function
+         * essentially returns the same information in a machine-readable form.
          *
-         * See the buildLink() documentation for an explanation of
-         * exactly how the triangulation will be constructed.
-         *
-         * If \a labels is passed as \c true, each triangle of the new
-         * vertex link will be given a text description of the form
-         * <tt>t&nbsp;(v)</tt>, where \c t is the index of the tetrahedron
-         * the triangle is from, and \c v is the vertex of that tetrahedron
-         * that this triangle links.
-         *
-         * If \a inclusion is non-null (i.e., it points to some
-         * Isomorphism<3> pointer \a p), then it will be modified to
-         * point to a new Isomorphism<3> that describes in detail how the
-         * individual triangles of the link sit within tetrahedra of
-         * the original triangulation.  Specifically, after this routine
-         * is called, <tt>p->tetImage(i)</tt> will indicate which tetrahedron
+         * Specifically, this function returns an Isomorphism<3> that describes
+         * how the individual triangles of the link sit within the tetrahedra
+         * of the original triangulation.  If \a p is the isomorphism returned,
+         * then <tt>p.tetImage(i)</tt> will indicate which tetrahedron
          * \a tet of the 3-manifold triangulation contains the <i>i</i>th
-         * triangle of the link.  Moreover, <tt>p->facePerm(i)</tt> will
+         * triangle of the link.  Moreover, <tt>p.facePerm(i)</tt> will
          * indicate exactly where the <i>i</i>th triangle sits within \a tet:
          * it will send 3 to the vertex of \a t that the triangle links,
          * and it will send 0,1,2 to the vertices of \a tet that are
          * parallel to vertices 0,1,2 of this triangle.
-         *
-         * The triangulation that is returned, as well as the isomorphism
-         * if one was requested, will be newly allocated.  The caller of
-         * this routine is responsible for destroying these objects.
          *
          * Strictly speaking, this is an abuse of the Isomorphism<3> class
          * (the domain is a triangulation of the wrong dimension, and
@@ -218,19 +209,13 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * it anyway, but you should not attempt to call any high-level
          * routines (such as Isomorphism<3>::apply).
          *
-         * \ifacespython The second (isomorphism) argument is not present.
-         * Instead this routine returns a pair (triangulation, isomorphism).
-         * As a side-effect, the isomorphism will always be constructed
-         * (i.e., it is not optional).
+         * This is the same isomorphism that was accessible through the
+         * old buildLinkDetail() function in Regina 6.0.1 and earlier.
          *
-         * \ifacespython Since Python does not distinguish between const and
-         * non-const, this routine will make a deep copy of the vertex link.
-         * You are free to modify the triangulation that is returned.
-         *
-         * @return a newly constructed triangulation of the link of this vertex.
+         * @return details of how buildLink() labels the triangles of
+         * the vertex link.
          */
-        Triangulation<2>* buildLinkDetail(bool labels = true,
-            Isomorphism<3>** inclusion = nullptr) const;
+        Isomorphism<3> buildLinkInclusion() const;
 
         /**
          * Determines if the link of this vertex is closed.
@@ -273,7 +258,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -293,25 +278,15 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
     friend class detail::TriangulationBase<3>;
 };
 
-/*@}*/
-
 // Inline functions for Vertex<3>
 
 inline Face<3, 0>::Face(Component<3>* component) :
-        detail::FaceBase<3, 0>(component), linkEulerChar_(0), linkTri_(0) {
+        detail::FaceBase<3, 0>(component),
+        linkEulerChar_(0), linkTri_(nullptr) {
 }
 
-inline Vertex<3>::LinkType Face<3, 0>::link() const {
+inline Vertex<3>::LinkType Face<3, 0>::linkType() const {
     return link_;
-}
-
-inline const Triangulation<2>* Face<3, 0>::buildLink() const {
-    if (! linkTri_) {
-        // This is a construct-on-demand member: cast away constness to
-        // set it here.
-        const_cast<Vertex<3>*>(this)->linkTri_ = buildLinkDetail(false);
-    }
-    return linkTri_;
 }
 
 inline bool Face<3, 0>::isLinkClosed() const {

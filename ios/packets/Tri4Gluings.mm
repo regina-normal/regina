@@ -424,10 +424,11 @@
         base = self.packet;
 
     // Make the split.
-    size_t nComps = self.packet->splitIntoComponents(base);
+    for (auto& c : self.packet->triangulateComponents(true))
+        base->insertChildLast(c.release());
 
     // Tell the user what happened.
-    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%ld Components Extracted", nComps]
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%ld Components Extracted", self.packet->countComponents()]
                                                     message:@"I have constructed a new triangulation for each component."
                                                    delegate:nil
                                           cancelButtonTitle:@"Close"

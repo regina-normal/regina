@@ -200,7 +200,7 @@ static NSArray* embText;
 
     if ((coords == regina::NS_QUAD_CLOSED || coords == regina::NS_AN_QUAD_OCT_CLOSED) && ! (
             tri->countVertices() == 1 &&
-            tri->vertex(0)->link() == regina::Vertex<3>::TORUS &&
+            tri->vertex(0)->linkType() == regina::Vertex<3>::TORUS &&
             tri->isOriented())) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Selection Not Supported"
                                                         message:@"At present, closed quad and closed quad-oct coordinates are only available for oriented ideal triangulations with one torus cusp and no other boundary components or internal vertices."
@@ -227,8 +227,11 @@ static NSArray* embText;
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NormalSurfaces* ans =
-            NormalSurfaces::enumerate(tri, coords, which, regina::NS_ALG_DEFAULT, &_tracker);
+        NormalSurfaces* ans = nullptr;
+        try {
+            ans = new NormalSurfaces(tri, coords, which, regina::NS_ALG_DEFAULT, &_tracker);
+        } catch (const regina::NoMatchingEquations&) {
+        }
         while (! _tracker.isFinished()) {
             if (_tracker.percentChanged()) {
                 // This operation blocks until the UI is updated:
@@ -274,6 +277,7 @@ static NSArray* embText;
                         ans->setLabel("Normal surfaces"); break;
                 }
 
+                tri->insertChildLast(ans);
                 [self.spec created:ans];
             }
             [self dismissViewControllerAnimated:YES completion:nil];

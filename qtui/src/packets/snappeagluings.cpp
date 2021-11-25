@@ -43,7 +43,8 @@
 using regina::Packet;
 using regina::SnapPeaTriangulation;
 
-SnapPeaGluingsUI::SnapPeaGluingsUI(regina::SnapPeaTriangulation* packet,
+SnapPeaGluingsUI::SnapPeaGluingsUI(
+        regina::PacketOf<regina::SnapPeaTriangulation>* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), tri(packet) {
     // Set up the table of face gluings.

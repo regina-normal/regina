@@ -58,7 +58,7 @@ int main(int argc, char* argv[]) {
             // Option.
 
             // Is it an argument we don't understand?
-            if (strcmp(argv[i], "-o"))
+            if (strcmp(argv[i], "-o") != 0)
                 usage(argv[0], std::string("Invalid option: ") + argv[i]);
 
             // Are we missing the actual output filename?
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
             outputFile = argv[++i];
         } else if (*argv[i]) {
             // Just an ordinary filename.
-            files.push_back(argv[i]);
+            files.emplace_back(argv[i]);
         } else
             usage(argv[0], "Empty arguments are not allowed.");
     }
@@ -83,16 +83,14 @@ int main(int argc, char* argv[]) {
         usage(argv[0], "No data files have been supplied.");
 
     // Read the input files one by one.
-    regina::Packet* ans = new regina::Container();
+    std::shared_ptr<regina::Packet> ans = std::make_shared<regina::Container>();
     ans->setLabel("Combined Data");
 
     bool error = false;
-    regina::Packet* data;
-    for(std::list<std::string>::const_iterator it = files.begin();
-            it != files.end(); it++) {
-        data = regina::open(it->c_str());
+    for (const auto& f : files) {
+        std::shared_ptr<regina::Packet> data = regina::open(f.c_str());
         if (!data) {
-            std::cerr << "File " << *it << " could not be read.\n";
+            std::cerr << "File " << f << " could not be read.\n";
             error = true;
             continue;
         }
@@ -108,7 +106,6 @@ int main(int argc, char* argv[]) {
         error = true;
     }
 
-    delete ans;
     return (error ? 1 : 0);
 }
 

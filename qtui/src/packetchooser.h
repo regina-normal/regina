@@ -62,7 +62,7 @@ namespace regina {
  * In particular, if it is possible that the selected packet will be
  * deleted during the lifetime of the packet chooser, it is advisable to
  * call refreshContents() before extracting the packet with selectedPacket().
- * This way the selected packet will be replaced with 0 if it has since
+ * This way the selected packet will be replaced with \c null if it has since
  * been destroyed.
  *
  * By calling setAutoUpdate(), a packet chooser can be modified to
@@ -74,6 +74,10 @@ namespace regina {
  * the first option in the combo box will be selected.  Note however
  * that no activated() signal will be emitted since this change was not
  * a result of direct user interaction.
+ *
+ * Regardless of whatever else happens: the root of the subtree that was
+ * originally passed to the constructor will \e not be destroyed, because
+ * we hold a shared_ptr to it here.
  */
 class PacketChooser : public QComboBox, public regina::PacketListener {
     Q_OBJECT
@@ -90,11 +94,11 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
         };
 
     private:
-        regina::Packet* subtree;
+        std::shared_ptr<regina::Packet> subtree;
             /**< The subtree of packets available for selection. */
         PacketFilter* filter;
             /**< A filter to restrict the available selections, or
-                 0 if no filter is necessary. */
+                 \c null if no filter is necessary. */
         std::vector<regina::Packet*> packets;
             /**< A list of the packets corresponding to the available
                  entries in the packet chooser. */
@@ -117,14 +121,16 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
          * This chooser will claim ownership of any filter that is
          * passed.
          */
-        PacketChooser(regina::Packet* newSubtree,
+        PacketChooser(std::shared_ptr<regina::Packet> newSubtree,
                 RootRole useRootRole, QWidget* parent);
-        PacketChooser(regina::Packet* newSubtree, PacketFilter* newFilter,
-                RootRole useRootRole, QWidget* parent);
-        PacketChooser(regina::Packet* newSubtree, PacketFilter* newFilter,
-                RootRole useRootRole = ROOT_AS_SUBTREE, bool allowNone = false,
-                regina::Packet* initialSelection = 0, QWidget* parent = 0);
-        ~PacketChooser();
+        PacketChooser(std::shared_ptr<regina::Packet> newSubtree,
+                PacketFilter* newFilter, RootRole useRootRole, QWidget* parent);
+        PacketChooser(std::shared_ptr<regina::Packet> newSubtree,
+                PacketFilter* newFilter, RootRole useRootRole = ROOT_AS_SUBTREE,
+                bool allowNone = false,
+                std::shared_ptr<regina::Packet> initialSelection = nullptr,
+                QWidget* parent = nullptr);
+        ~PacketChooser() override;
 
         /**
          * Returns the filter used by this packet chooser.
@@ -146,21 +152,21 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
          * cause a crash.
          *
          * If the "None" entry is selected or if there are in fact no
-         * available packets to choose from, this routine will return 0.
+         * available packets to choose from, this routine will return \c null.
          */
-        regina::Packet* selectedPacket();
+        std::shared_ptr<regina::Packet> selectedPacket();
 
         /**
          * Changes the selection to the given packet.
          *
          * If the given packet is not one of the options in this packet
-         * chooser, or if the given pointer is 0, then the first entry
+         * chooser, or if the given pointer is null, then the first entry
          * in the packet chooser will be selected (which is the "None"
          * entry if "None" was enabled).
          *
          * The activated() signal will \e not be emitted.
          */
-        void selectPacket(regina::Packet* packet);
+        void selectPacket(std::shared_ptr<regina::Packet> packet);
 
         /**
          * Set whether this packet chooser should update itself
@@ -172,8 +178,8 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetWasRenamed(regina::Packet* packet) override;
-        void packetToBeDestroyed(regina::PacketShell packet) override;
+        void packetWasRenamed(regina::Packet& packet) override;
+        void packetBeingDestroyed(regina::PacketShell packet) override;
 
     public slots:
         /**
@@ -181,9 +187,6 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
          * packet tree.
          *
          * The current selection will be preserved if possible.
-         *
-         * It is assumed that the packet subtree initially passed to the
-         * constructor has not since been destroyed.
          */
         void refreshContents();
 
@@ -192,7 +195,7 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
          * Fills the chooser with the set of allowable packets.
          * A packet to be preselected can be optionally specified.
          */
-        void fill(bool allowNone, regina::Packet* select);
+        void fill(bool allowNone, std::shared_ptr<regina::Packet> select);
 
         /**
          * Verifies whether the current list of packets shown in the
@@ -218,24 +221,24 @@ class PacketDialog : public QDialog {
          * Constructor and destructor.
          */
         PacketDialog(QWidget* parent,
-            regina::Packet* subtree,
+            std::shared_ptr<regina::Packet> subtree,
             PacketFilter* filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis,
             PacketChooser::RootRole rootRole = PacketChooser::ROOT_AS_SUBTREE,
             bool allowNone = false,
-            regina::Packet* initialSelection = 0);
+            std::shared_ptr<regina::Packet> initialSelection = nullptr);
 
-        static regina::Packet* choose(QWidget* parent,
-            regina::Packet* subtree,
+        static std::shared_ptr<regina::Packet> choose(QWidget* parent,
+            std::shared_ptr<regina::Packet> subtree,
             PacketFilter* filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis,
             PacketChooser::RootRole rootRole = PacketChooser::ROOT_AS_SUBTREE,
             bool allowNone = false,
-            regina::Packet* initialSelection = 0);
+            std::shared_ptr<regina::Packet> initialSelection = nullptr);
 };
 
 inline PacketFilter* PacketChooser::getFilter() {

@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "file/fileinfo.h"
 #include "../helpers.h"
 
@@ -40,20 +41,17 @@ void addFileInfo(pybind11::module_& m) {
     auto c = pybind11::class_<FileInfo>(m, "FileInfo")
         .def(pybind11::init<const FileInfo&>())
         .def("pathname", &FileInfo::pathname)
-        .def("type", &FileInfo::type)
-        .def("typeDescription", &FileInfo::typeDescription)
+        .def("format", &FileInfo::format)
+        .def("formatDescription", &FileInfo::formatDescription)
         .def("engine", &FileInfo::engine)
         .def("isCompressed", &FileInfo::isCompressed)
         .def("isInvalid", &FileInfo::isInvalid)
+        .def("swap", &FileInfo::swap)
         .def_static("identify", &FileInfo::identify)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("TYPE_XML", [](pybind11::object) {
-            return FileInfo::TYPE_XML;
-        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(FileInfo&, FileInfo&))(regina::swap));
 }
 

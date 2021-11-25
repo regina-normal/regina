@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
- * @{
- */
-
-/**
  * Specifies how <i>subdim</i>-faces are numbered within a
  * <i>dim</i>-dimensional simplex.
  *
@@ -92,6 +87,8 @@ namespace regina {
  * This must be between 1 and 15 inclusive.
  * \tparam subdim the dimension of the faces that we are numbering.
  * This must be between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \ingroup triangulation
  */
 template <int dim, int subdim>
 class FaceNumbering : public detail::FaceNumberingImpl<dim, subdim> {
@@ -111,11 +108,11 @@ class FaceNumbering : public detail::FaceNumberingImpl<dim, subdim> {
  * @param j the second vertex of an edge in a <i>dim</i>-dimensional simplex.
  * This must be between 0 and \a dim inclusive, and must be different from \a i.
  * @return the number of the (<i>dim</i>-2)-face opposite the given edge.
+ *
+ * \ingroup triangulation
  */
 template <int dim>
 constexpr inline int faceOppositeEdge(int i, int j);
-
-/*@}*/
 
 // Inline functions
 

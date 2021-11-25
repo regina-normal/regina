@@ -36,7 +36,7 @@
 namespace regina::xml {
 
 std::string xmlEncodeSpecialChars(const std::string& original) {
-    xmlChar* ans = ::xmlEncodeSpecialChars(0,
+    xmlChar* ans = ::xmlEncodeSpecialChars(nullptr,
         (const xmlChar*)(original.c_str()));
     std::string ansStr((const char*)ans);
     xmlFree(ans);
@@ -45,7 +45,7 @@ std::string xmlEncodeSpecialChars(const std::string& original) {
 
 std::string xmlEncodeComment(const std::string& original) {
     // Encode special characters.
-    xmlChar* ans = ::xmlEncodeSpecialChars(0,
+    xmlChar* ans = ::xmlEncodeSpecialChars(nullptr,
         (const xmlChar*)(original.c_str()));
 
     // Replace dashes with underscores.

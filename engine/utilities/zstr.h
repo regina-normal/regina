@@ -87,8 +87,7 @@ public:
         }
         _msg += zstrm_p->msg;
     }
-    Exception(const std::string msg) : _msg(msg) {}
-    const char * what() const noexcept { return _msg.c_str(); }
+    const char * what() const noexcept override { return _msg.c_str(); }
 private:
     std::string _msg;
 }; // class Exception
@@ -162,14 +161,14 @@ public:
     istreambuf & operator = (const istreambuf &) = delete;
     istreambuf & operator = (istreambuf &&) = default;
 
-    virtual ~istreambuf()
+    ~istreambuf() override
     {
         delete [] in_buff;
         delete [] out_buff;
         if (zstrm_p) delete zstrm_p;
     }
 
-    virtual std::streambuf::int_type underflow()
+    std::streambuf::int_type underflow() override
     {
         if (this->gptr() == this->egptr())
         {
@@ -301,7 +300,7 @@ public:
         return 0;
     }
 
-    virtual ~ostreambuf()
+    ~ostreambuf() override
     {
         // flush the zlib stream
         //
@@ -316,7 +315,7 @@ public:
         delete [] out_buff;
         delete zstrm_p;
     }
-    virtual std::streambuf::int_type overflow(std::streambuf::int_type c = traits_type::eof())
+    std::streambuf::int_type overflow(std::streambuf::int_type c = traits_type::eof()) override
     {
         zstrm_p->next_in = reinterpret_cast< decltype(zstrm_p->next_in) >(pbase());
         zstrm_p->avail_in = pptr() - pbase();
@@ -332,7 +331,7 @@ public:
         setp(in_buff, in_buff + buff_size);
         return traits_type::eq_int_type(c, traits_type::eof()) ? traits_type::eof() : sputc(c);
     }
-    virtual int sync()
+    int sync() override
     {
         // first, call overflow to clear in_buff
         overflow();
@@ -368,7 +367,7 @@ public:
     {
         exceptions(std::ios_base::badbit);
     }
-    virtual ~istream()
+    ~istream() override
     {
         delete rdbuf();
     }
@@ -388,7 +387,7 @@ public:
     {
         exceptions(std::ios_base::badbit);
     }
-    virtual ~ostream()
+    ~ostream() override
     {
         delete rdbuf();
     }

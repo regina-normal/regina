@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>realbdry (filter)</refname>
-  <refpurpose>A constraint on real boundary</refpurpose>
+  <refpurpose>Replaced by attributes of &xml-filterprop;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,15 +40,20 @@ realbdry ::=</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-realbdry-filter; element represents a constraint on the
-   boundary of a normal surface.  A surface with real boundary
-   is one that meets one or more boundary faces of the underlying
-   triangulation.
+   This element was used in the past to represent a constraint on the
+   boundary of a normal surface.
+   Since &regina;&nbsp;7.0, this constraint is now stored in
+   the attributes of the corresponding &xml-filterprop; element instead.
+  </para>
+  <para>
+   A surface with real boundary is one that meets one or more
+   boundary faces of the underlying triangulation.
   </para>
 
   <refsect2>

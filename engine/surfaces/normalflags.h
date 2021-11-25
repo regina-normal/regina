@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup surfaces
- * @{
- */
-
-/**
  * Represents different lists of normal surfaces that might be constructed
  * for a given 3-manifold triangulation.
  *
@@ -57,10 +52,11 @@ namespace regina {
  * whereas the NormalAlgFlags enumeration refers to the \e algorithm
  * used to build it.
  *
- * \ifacespython The values in this enumeration type are present, but
- * they are treated by Python as NormalList objects (and they can be
- * combined and/or queried as such).
- * The underlying enumeration type is not exposed to Python.
+ * These flags can be combined using the bitwise OR operator, and then
+ * passed to enumeration routines such as the NormalSurfaces
+ * class constructor.
+ *
+ * \ingroup surfaces
  */
 enum NormalListFlags {
     /**
@@ -131,10 +127,14 @@ enum NormalListFlags {
 /**
  * A combination of flags for types of normal surface lists.
  *
- * \ifacespython This is present, and all values in the NormalListFlags
- * enumeration type are treated as members of this NormalList class.
+ * If a function requires a NormalList object as an argument, you can
+ * pass a single NormalListFlags constant, or a combination of such
+ * constants using the bitwise OR operator, or empty braces {} to indicate
+ * no flags at all.
+ *
+ * \ingroup surfaces
  */
-typedef regina::Flags<NormalListFlags> NormalList;
+using NormalList = regina::Flags<NormalListFlags>;
 
 /**
  * Returns the bitwise OR of the two given flags.
@@ -142,6 +142,8 @@ typedef regina::Flags<NormalListFlags> NormalList;
  * @param lhs the first flag to combine.
  * @param rhs the second flag to combine.
  * @return the combination of both flags.
+ *
+ * \ingroup surfaces
  */
 inline NormalList operator | (NormalListFlags lhs, NormalListFlags rhs) {
     return NormalList(lhs) | rhs;
@@ -151,14 +153,11 @@ inline NormalList operator | (NormalListFlags lhs, NormalListFlags rhs) {
  * Represents options and variants of algorithms for enumerating various
  * types of normal surfaces in 3-manifold triangulations.
  *
- * These options are typically combined in a bitwise fashion using the
- * NormalAlg type, and then passed to enumeration routines such as
- * NormalSurfaces::enumerate().
+ * These options can be combined using the bitwise OR operator, and then
+ * passed to enumeration routines such as the NormalSurfaces
+ * class constructor.
  *
- * \ifacespython The values in this enumeration type are present, but
- * they are treated by Python as NormalList objects (and they can be
- * combined and/or queried as such).
- * The underlying enumeration type is not exposed to Python.
+ * \ingroup surfaces
  */
 enum NormalAlgFlags {
     /**
@@ -344,12 +343,16 @@ enum NormalAlgFlags {
 };
 
 /**
- * A combination of flags for types of normal surface lists.
+ * A combination of flags for normal surface enumeration algorithms.
  *
- * \ifacespython This is present, and all values in the NormalAlgFlags
- * enumeration type are treated as members of this NormalAlg class.
+ * If a function requires a NormalAlg object as an argument, you can
+ * pass a single NormalAlgFlags constant, or a combination of such
+ * constants using the bitwise OR operator, or empty braces {} to indicate
+ * no flags at all.
+ *
+ * \ingroup surfaces
  */
-typedef regina::Flags<NormalAlgFlags> NormalAlg;
+using NormalAlg = regina::Flags<NormalAlgFlags>;
 
 /**
  * Returns the bitwise OR of the two given flags.
@@ -357,12 +360,193 @@ typedef regina::Flags<NormalAlgFlags> NormalAlg;
  * @param lhs the first flag to combine.
  * @param rhs the second flag to combine.
  * @return the combination of both flags.
+ *
+ * \ingroup surfaces
  */
 inline NormalAlg operator | (NormalAlgFlags lhs, NormalAlgFlags rhs) {
     return NormalAlg(lhs) | rhs;
 }
 
-/*@}*/
+/**
+ * Represents different ways in which Regina can transform one normal
+ * surface list into another.
+ *
+ * Each type of transformation comes with its own preconditions on the
+ * original normal surface list and/or its underlying triangulation; these
+ * preconditions are documented alongside the individual enumeration values.
+ *
+ * \ingroup surfaces
+ */
+enum NormalTransform {
+    /**
+     * Converts the set of all embedded vertex normal surfaces in quadrilateral
+     * or quadrilateral-octagon coordinates to the set of all embedded vertex
+     * normal surfaces in standard normal or standard almost normal
+     * coordinates respectively.
+     *
+     * It should be emphasised that this routine does \e not simply convert
+     * vectors from one coordinate system to another; instead it converts a
+     * full set of vertex surfaces in quad or quad-oct coordinates into a
+     * full set of vertex surfaces in standard normal or almost normal
+     * coordinates.  Typically there are many more vertex surfaces in standard
+     * coordinates (all of which this routine will find).
+     *
+     * This conversion process is typically \e much faster than enumerating
+     * surfaces directly in standard coordinates.  However, normally you
+     * would not need to invoke this transformation yourself, since the
+     * standard enumeration process will use it automatically when possible.
+     * That is, when asked to build a list of standard vertex surfaces,
+     * the NormalSurfaces constructor will (if possible) first find all
+     * quad or quad-oct vertex surfaces and then use this procedure to convert
+     * the solution set.
+     *
+     * Nevertheless, this standalone transformation is provided as a
+     * convenience for users who already have a set of quad or quad-oct
+     * vertex surfaces, and who simply wish to convert them to a set of
+     * standard vertex surfaces without the implicit cost of enumerating
+     * the quad or quad-oct vertex surfaces again.
+     *
+     * The conversion algorithm is described in detail in "Converting between
+     * quadrilateral and standard solution sets in normal surface theory",
+     * Benjamin A. Burton, Algebr. Geom. Topol. 9 (2009), 2121-2174.
+     *
+     * The preconditions for using this transformation:
+     *
+     * - The underlying triangulation is valid, and has no ideal vertices.
+     *
+     * - The input to this transformation is exactly the set of all embedded
+     *   vertex surfaces in quadrilateral or quadrilateral-octagon coordinates.
+     *   This will be checked by examining NormalSurface::coords() and
+     *   NormalSurface::which().
+     */
+    NS_CONV_REDUCED_TO_STD = 0x01,
+    /**
+     * Converts the set of all embedded vertex normal surfaces in standard
+     * normal or standard almost normal coordinates to the set of all embedded
+     * vertex normal surfaces in quadrilateral or quadrilateral-octagon
+     * coordinates respectively.
+     *
+     * It should be emphasised that this routine does \e not simply convert
+     * vectors from one coordinate system to another; instead it converts a
+     * full set of vertex surfaces in standard normal or almost normal
+     * coordinates into a full set of vertex surfaces in quad or quad-oct
+     * coordinates.  Typically there are far fewer vertex surfaces in
+     * quad or quad-oct coordinates (all of which this routine will find).
+     *
+     * The conversion algorithm is described in detail in "Converting between
+     * quadrilateral and standard solution sets in normal surface theory",
+     * Benjamin A. Burton, Algebr. Geom. Topol. 9 (2009), 2121-2174.
+     *
+     * The preconditions for using this transformation:
+     *
+     * - The underlying triangulation is valid, and has no ideal vertices.
+     *
+     * - The input to this transformation is exactly the set of all embedded
+     *   vertex surfaces in standard normal or almost normal coordinates.
+     *   This will be checked by examining NormalSurface::coords() and
+     *   NormalSurface::which().
+     */
+    NS_CONV_STD_TO_REDUCED = 0x02,
+    /**
+     * Selects only the surfaces in the input list that have at least one
+     * locally compatible partner.  That is, a surface \a S from the input
+     * list will be included in the output list if and only if there is some
+     * other surface \a T in the input list for which \a S and \a T are
+     * locally compatible.  See NormalSurface::locallyCompatible() for
+     * further details on compatibility testing.
+     *
+     * Be aware that, since vertex links are compatible with everything,
+     * if the input list contains a vertex link plus at least one other
+     * surface, then the output list will be identical to the input.
+     *
+     * For the output list, which() will include the NS_CUSTOM flag, and
+     * algorithm() will be precisely NS_ALG_CUSTOM.
+     *
+     * The preconditions for using this transformation:
+     *
+     * - The input list contains only embedded normal or almost normal surfaces.
+     *   This will be checked by examining NormalSurface::which().
+     */
+    NS_FILTER_COMPATIBLE = 0x10,
+    /**
+     * Selects only the surfaces in the input list that have at least one
+     * disjoint partner.  That is, a surface \a S from the input list will
+     * be included in the output list if and only if there is some other
+     * surface \a T in the input list for which \a S and \a T can be made to
+     * intersect nowhere at all, without changing either normal isotopy class.
+     * See NormalSurface::disjoint() for further details on disjointness
+     * testing.
+     *
+     * This transformation comes with some caveats:
+     *
+     * - It cannot deal with empty, disconnected or non-compact surfaces.
+     *   Such surfaces will be silently ignored, and will not be used in any
+     *   disjointness tests (in particular, they will never be considered as a
+     *   "disjoint partner" for any other surface).
+     *
+     * - Since vertex links can always be made disjoint from other surfaces,
+     *   if the input list contains a vertex link plus at least one other
+     *   surface, then the output list will be identical to the input.
+     *
+     * For the output list, which() will include the NS_CUSTOM flag, and
+     * algorithm() will be precisely NS_ALG_CUSTOM.
+     *
+     * The preconditions for using this transformation:
+     *
+     * - The input list contains only embedded normal or almost normal surfaces.
+     *   This will be checked by examining NormalSurface::which().
+     */
+    NS_FILTER_DISJOINT = 0x20,
+    /**
+     * Selects only the surfaces in the input list that "might" represent
+     * two-sided incompressible surfaces.
+     *
+     * More precisely, this transformation considers all two-sided surfaces in
+     * the input list, as well as the two-sided double covers of all one-sided
+     * surfaces in the input list (see below for details on how one-sided
+     * surfaces are handled).  Each of these surfaces is examined using
+     * relatively fast heuristic tests for incompressibility.  Any surface
+     * that is definitely \e not incompressible is ignored, and all other
+     * surfaces are placed in the output list.
+     *
+     * Therefore, it is guaranteed that every incompressible surface from the
+     * input list will be included in the output list.  However, each
+     * individual output surface might or might not be incompressible.
+     *
+     * See NormalSurface::isIncompressible() for the definition of
+     * incompressibility that is used here.  Note in particular that
+     * spheres are \e never considered incompressible.
+     *
+     * As indicated above, this filter works exclusively with two-sided
+     * surfaces.  If a surface in the input list is one-sided, the heuristic
+     * incompressibility tests will be run on its two-sided double cover.
+     * Nevertheless, if the tests pass, the original one-sided surface
+     * (not the double cover) will be added to the output list.
+     *
+     * Currently the heuristic tests include (i) throwing away all vertex links
+     * and thin edge links, and then (ii) cutting along the remaining surfaces
+     * and running Triangulation<3>::hasSimpleCompressingDisc() on the
+     * resulting bounded triangulations.  For more details on these tests
+     * see "The Weber-Seifert dodecahedral space is non-Haken",
+     * Benjamin A. Burton, J. Hyam Rubinstein and Stephan Tillmann,
+     * Trans. Amer. Math. Soc. 364:2 (2012), pp. 911-932.
+     *
+     * For the output list, which() will include the NS_CUSTOM flag, and
+     * algorithm() will be precisely NS_ALG_CUSTOM.
+     *
+     * The preconditions for using this transformation:
+     *
+     * - The underlying 3-manifold triangulation is valid and closed.
+     *
+     * - The input list contains only compact, connected, embedded normal
+     *   surfaces.  In particular, almost normal surfaces are not supported.
+     *
+     * \warning The behaviour of this transformation is subject to change
+     * in future versions of Regina, since additional tests may be added to
+     * improve the power of this filtering.
+     */
+    NS_FILTER_INCOMPRESSIBLE = 0x30
+};
 
 } // namespace regina
 

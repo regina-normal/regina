@@ -48,11 +48,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents a Laurent polynomial in the two variables \e x, \e y with
  * coefficients of type \a T.  A Laurent polynomial differs from an ordinary
  * polynomial in that it allows negative exponents (so, for example, you can
@@ -82,15 +77,17 @@ namespace regina {
  *
  * \ifacespython In Python, the class Laurent2 refers to the specific
  * template class Laurent2<Integer>.
+ *
+ * \ingroup maths
  */
 template <typename T>
 class Laurent2 : public ShortOutput<Laurent2<T>, true> {
     public:
-        typedef T Coefficient;
+        using Coefficient = T;
             /**< The type of each coefficient of the polynomial. */
 
     private:
-        typedef std::pair<long, long> Exponents;
+        using Exponents = std::pair<long, long>;
 
         std::map<Exponents, T> coeff_;
             /**< Stores all non-zero coefficients of the polynomial.
@@ -166,12 +163,48 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
         Laurent2(const Laurent2<U>& value);
 
         /**
+         * Creates a new polynomial from the given collection of coefficients.
+         *
+         * The coefficients should be presented as a collection of tuples of
+         * the form (\a d, \a e, \a v), each representing a term of the form
+         * <tt>v x^d y^e</tt>.
+         *
+         * The tuples may be given in any order.
+         * An empty sequence will be treated as the zero polynomial.
+         *
+         * Unlike the std::initializer_list constructor, zero coefficients are
+         * allowed (these will be silently ignored), and multiple coefficients
+         * with the same exponents are also allowed (these will be aggregated
+         * using the += operator).
+         *
+         * \ifacespython Instead of the iterators \a begin and \a end,
+         * this routine takes a python list of tuples.
+         *
+         * \tparam iterator an iterator type which, when dereferenced, gives a
+         * std::tuple of the form (\a d, \a e, \a v), where \a d and \a e can
+         * be assigned to long integers, and where \a v can be assigned to
+         * type \a T.
+         *
+         * \tparam deref a dummy argument that should be ignored.  This is
+         * present to ensure that \a iterator can be dereferenced, so that
+         * a call such as Laurent2(int, int) falls through to the (long, long)
+         * constructor, and not this iterator-based constructor instead.
+         *
+         * @param begin the beginning of the set of coefficients, as outlined
+         * above.
+         * @param end a past-the-end iterator indicating the end of the set of
+         * coefficients.
+         */
+        template <typename iterator, typename deref = decltype(*iterator())>
+        Laurent2(iterator begin, iterator end);
+
+        /**
          * Creates a new polynomial from a hard-coded collection of
          * non-zero coefficients.
          *
-         * This constructor takes a C++11 initialiser list, which should
-         * contain a collection of tuples of the form (\a d, \a e, \a v)
-         * each representing a term of the form <tt>v x^d y^e</tt>.
+         * The coefficients should be presented as a collection of tuples of
+         * the form (\a d, \a e, \a v) each representing a term of the form
+         * <tt>v x^d y^e</tt>.
          *
          * The tuples may be given in any order.
          * An empty sequence will be treated as the zero polynomial.
@@ -186,7 +219,8 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * \pre Each tuple has a non-zero value \a v, and no two tuples
          * share the same pair of exponents (\a d, \a e).
          *
-         * \ifacespython Not available.
+         * \ifacespython Not available, but there is a Python constructor
+         * that takes a list of coefficients (which need not be constant).
          *
          * @param coefficients the set of all non-zero coefficients, as
          * outlined above.
@@ -222,9 +256,13 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * not the round bracket operator; that is, Python users can access
          * coefficients through the syntax <tt>poly[xExp, yExp]</tt>.
          * Moreover, this operator can also \e set cofficients; that is,
-         * you can write <tt>poly[xExp, yExp] = value</tt>.  In contrast,
-         * C++ users must use the separate routine set(), due to the fact
-         * that in C++ this bracket operator is const.
+         * you can write <tt>poly[xExp, yExp] = value</tt>.
+         * However, when \e getting a coefficient this operator will return
+         * by value (to enforce constness), which means for example you
+         * cannot write something like <tt>poly[xExp, yExp].negate()</tt>.
+         *
+         * \ifacescpp C++ users must always set coefficients using the
+         * separate routine set(), since this bracket operator is const.
          *
          * @param xExp the exponent attached to \a x.
          * @param yExp the exponent attached to \a y.
@@ -470,7 +508,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * using UTF-8.  This will make the output nicer, but will require more
          * complex fonts to be available on the user's machine.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() or utf8() instead.
          *
          * @param out the output stream to which to write.
          * @param utf8 \c true if unicode characters may be used.
@@ -557,7 +595,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
     template <typename U>
     friend Laurent2<U> operator * (const Laurent2<U>&, const Laurent2<U>&);
 
-    // For the time being, allow HOMFLY calculations to do low-level
+    // For the time being, allow Link::homflyAZtoLM() to do low-level
     // operations on these polynomials.
     friend class Link;
 };
@@ -570,6 +608,8 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
  *
  * @param a the first polynomial whose contents should be swapped.
  * @param b the second polynomial whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 template <typename T>
 void swap(Laurent2<T>& a, Laurent2<T>& b) noexcept;
@@ -583,6 +623,8 @@ void swap(Laurent2<T>& a, Laurent2<T>& b) noexcept;
  * @param poly the polynomial to multiply by.
  * @param scalar the scalar to multiply by.
  * @return the product of the given polynomial and scalar.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator * (Laurent2<T> poly,
@@ -597,6 +639,8 @@ Laurent2<T> operator * (Laurent2<T> poly,
  * @param scalar the scalar to multiply by.
  * @param poly the polynomial to multiply by.
  * @return the product of the given polynomial and scalar.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
@@ -615,6 +659,8 @@ Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
  * @param poly the polynomial to divide by the given scalar.
  * @param scalar the scalar factor to divide by.
  * @return the quotient of the given polynomial by the given scalar.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator / (Laurent2<T> poly,
@@ -628,6 +674,8 @@ Laurent2<T> operator / (Laurent2<T> poly,
  * @param lhs the first polynomial to add.
  * @param rhs the second polynomial to add.
  * @return the sum of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
@@ -640,6 +688,8 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
  * @param lhs the first polynomial to add.
  * @param rhs the second polynomial to add.
  * @return the sum of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
@@ -652,6 +702,8 @@ Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
  * @param lhs the first polynomial to add.
  * @param rhs the second polynomial to add.
  * @return the sum of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
@@ -664,6 +716,8 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
  * @param lhs the first polynomial to add.
  * @param rhs the second polynomial to add.
  * @return the sum of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
@@ -673,6 +727,8 @@ Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
  *
  * @param arg the polynomial to negate.
  * @return the negative of \a arg.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator - (Laurent2<T> arg);
@@ -685,6 +741,8 @@ Laurent2<T> operator - (Laurent2<T> arg);
  * @param lhs the polynomial to subtract from.
  * @param rhs the polynomial to subtract.
  * @return the first polynomial minus the second.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
@@ -697,6 +755,8 @@ Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
  * @param lhs the polynomial to subtract from.
  * @param rhs the polynomial to subtract.
  * @return the first polynomial minus the second.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
@@ -709,6 +769,8 @@ Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
  * @param lhs the polynomial to subtract from.
  * @param rhs the polynomial to subtract.
  * @return the first polynomial minus the second.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
@@ -721,6 +783,8 @@ Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
  * @param lhs the polynomial to subtract from.
  * @param rhs the polynomial to subtract.
  * @return the first polynomial minus the second.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
@@ -733,11 +797,11 @@ Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
  * @param lhs the first polynomial to multiply.
  * @param rhs the second polynomial to multiply.
  * @return the product of both polynomials.
+ *
+ * \ingroup maths
  */
 template <typename T>
 Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
-
-/*@}*/
 
 template <typename T>
 const T Laurent2<T>::zero_(0);
@@ -767,6 +831,24 @@ template <typename U>
 inline Laurent2<T>::Laurent2(const Laurent2<U>& value) :
         coeff_(value.coeff_) {
     // std::cerr << "Laurent2: deep copy (init)" << std::endl;
+}
+
+template <typename T>
+template <typename iterator, typename deref>
+inline Laurent2<T>::Laurent2(iterator begin, iterator end) {
+    for (auto it = begin; it != end; ++it) {
+        if (std::get<2>(*it) == 0)
+            continue;
+
+        auto res = coeff_.emplace(Exponents(std::get<0>(*it), std::get<1>(*it)),
+            std::get<2>(*it));
+        if (! res.second) {
+            // This pair of exponents is already present.
+            // Accumulate, and erase if the resulting coefficient is zero.
+            if ((res.first->second += std::get<2>(*it)) == 0)
+                coeff_.erase(res.first);
+        }
+    }
 }
 
 template <typename T>
@@ -866,14 +948,14 @@ inline void Laurent2<T>::swap(Laurent2<T>& other) noexcept {
 
 template <typename T>
 inline void Laurent2<T>::negate() {
-    for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
-        it->second = -it->second;
+    for (auto& c : coeff_)
+        c.second = -c.second;
 }
 
 template <typename T>
 inline void Laurent2<T>::invertX() {
     std::map<Exponents, T> newCoeff;
-    for (auto c : coeff_)
+    for (const auto& c : coeff_)
         newCoeff.insert(std::make_pair(
             std::make_pair(- c.first.first, c.first.second), c.second));
     coeff_ = std::move(newCoeff);
@@ -882,7 +964,7 @@ inline void Laurent2<T>::invertX() {
 template <typename T>
 inline void Laurent2<T>::invertY() {
     std::map<Exponents, T> newCoeff;
-    for (auto c : coeff_)
+    for (const auto& c : coeff_)
         newCoeff.insert(std::make_pair(
             std::make_pair(c.first.first, - c.first.second), c.second));
     coeff_ = std::move(newCoeff);
@@ -895,16 +977,16 @@ inline Laurent2<T>& Laurent2<T>::operator *= (const T& scalar) {
         coeff_.clear();
     } else {
         // No coefficients become zero that were not zero already.
-        for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
-            it->second *= scalar;
+        for (auto& c : coeff_)
+            c.second *= scalar;
     }
     return *this;
 }
 
 template <typename T>
 inline Laurent2<T>& Laurent2<T>::operator /= (const T& scalar) {
-    for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
-        it->second /= scalar;
+    for (auto& c : coeff_)
+        c.second /= scalar;
 
     // For integer division, we could have zeroed out some coefficients.
     removeZeroes();

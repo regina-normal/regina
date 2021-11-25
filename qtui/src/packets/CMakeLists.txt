@@ -1,6 +1,7 @@
 SET ( FILES
   anglescreator.cpp
   anglesui.cpp
+  attachmentui.cpp
   compatcanvas.cpp
   containerui.cpp
   eltmovedialog3.cpp
@@ -24,7 +25,6 @@ SET ( FILES
   linkmovedialog.cpp
   linkpoly.cpp
   linkui.cpp
-  pdfui.cpp
   scriptui.cpp
   skeletonwindow.cpp
   snappeaalgebra.cpp
@@ -46,8 +46,8 @@ SET ( FILES
   tri2skeleton.cpp
   tri2ui.cpp
   tri3algebra.cpp
-  tri3creator.cpp
   tri3composition.cpp
+  tri3creator.cpp
   tri3gluings.cpp
   tri3skeleton.cpp
   tri3snappea.cpp

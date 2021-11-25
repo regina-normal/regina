@@ -174,7 +174,7 @@ namespace {
 template <int dim, int subdim>
 void addFace(pybind11::module_& m, const char* name, const char* embName) {
     auto e = pybind11::class_<FaceEmbedding<dim, subdim>>(m, embName)
-        .def(pybind11::init<regina::Simplex<dim>*, int>())
+        .def(pybind11::init<regina::Simplex<dim>*, regina::Perm<dim + 1>>())
         .def(pybind11::init<const FaceEmbedding<dim, subdim>&>())
         .def("simplex", &FaceEmbedding<dim, subdim>::simplex,
             pybind11::return_value_policy::reference)
@@ -191,18 +191,10 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def("hasBadIdentification", &Face<dim, subdim>::hasBadIdentification)
         .def("isLinkOrientable", &Face<dim, subdim>::isLinkOrientable)
         .def("degree", &Face<dim, subdim>::degree)
-        .def("embeddings", [](const Face<dim, subdim>& f) {
-            pybind11::list ans;
-            for (const auto& emb : f)
-                ans.append(emb);
-            return ans;
-        })
-        .def("embedding", &Face<dim, subdim>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Face<dim, subdim>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Face<dim, subdim>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Face<dim, subdim>::embedding)
+        .def("embeddings", &Face<dim, subdim>::embeddings)
+        .def("front", &Face<dim, subdim>::front)
+        .def("back", &Face<dim, subdim>::back)
         .def("index", &Face<dim, subdim>::index)
         .def("triangulation", &Face<dim, subdim>::triangulation)
         .def("component", &Face<dim, subdim>::component,
@@ -210,35 +202,26 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def("boundaryComponent", &Face<dim, subdim>::boundaryComponent,
             pybind11::return_value_policy::reference)
         .def("isBoundary", &Face<dim, subdim>::isBoundary)
-        .def("face", &regina::python::face<Face<dim, subdim>, subdim, int,
-            pybind11::return_value_policy::reference>)
+        .def("face", &regina::python::face<Face<dim, subdim>, subdim, int>)
         .def("faceMapping",
             &regina::python::faceMapping<Face<dim, subdim>, subdim, dim + 1>)
         .def_static("ordering", &Face<dim, subdim>::ordering)
         .def_static("faceNumber", &Face<dim, subdim>::faceNumber)
         .def_static("containsVertex", &Face<dim, subdim>::containsVertex)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("nFaces", [](pybind11::object) {
-            return Face<dim, subdim>::nFaces;
-        })
-        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
-            return Face<dim, subdim>::lexNumbering;
-        })
-        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
-            return Face<dim, subdim>::oppositeDim;
-        })
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Face<dim, subdim>::dimension;
-        })
-        .def_property_readonly_static("subdimension", [](pybind11::object) {
-            return Face<dim, subdim>::subdimension;
-        })
+        .def_readonly_static("nFaces", &Face<dim, subdim>::nFaces)
+        .def_readonly_static("lexNumbering", &Face<dim, subdim>::lexNumbering)
+        .def_readonly_static("oppositeDim", &Face<dim, subdim>::oppositeDim)
+        .def_readonly_static("dimension", &Face<dim, subdim>::dimension)
+        .def_readonly_static("subdimension", &Face<dim, subdim>::subdimension)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
     face_in_maximal_forest<dim, subdim, dim - subdim>::add(c);
     subface_aliases<dim, subdim, subdim - 1>::add(c);
+
+    regina::python::addListView<
+        decltype(std::declval<Face<dim, subdim>>().embeddings())>(m);
+    regina::python::addListView<
+        decltype(regina::Triangulation<dim>().template faces<subdim>())>(m);
 }
 

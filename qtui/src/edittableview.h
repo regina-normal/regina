@@ -44,7 +44,7 @@
  */
 class EditTableView : public QTableView {
     public:
-        EditTableView(QWidget* parent = 0);
+        EditTableView(QWidget* parent = nullptr);
 
         /**
          * Finish any cell editing operation that might be in progress.

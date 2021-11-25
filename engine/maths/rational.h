@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents an arbitrary precision rational number.
  * Calculations with Rational objects will be exact.
  *
@@ -75,6 +70,8 @@ namespace regina {
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup maths
  */
 class Rational {
     public:
@@ -403,18 +400,8 @@ class Rational {
          *
          * If this rational can be approximated by a double
          * (specifically, if it lies within double's allowable range)
-         * then a such an approximation is returned.  Otherwise zero is
-         * returned instead.
-         *
-         * The optional \a inRange argument allows the result of range
-         * checking to be returned explicitly as a boolean
-         * (<tt>*inRange</tt> will be set to \c true if a double
-         * approximation is possible and \c false otherwise).
-         *
-         * It is safe to pass \a inRange as \c null, in which case this
-         * boolean is not returned.  Range checking is still performed
-         * internally however, i.e., zero is still returned if the rational
-         * is out of range.
+         * then a such an approximation is returned.  Otherwise this
+         * routine will throw an exception.
          *
          * Note that "lies with double's allowable range" is
          * machine-dependent, and may vary between different installations.
@@ -423,22 +410,17 @@ class Rational {
          * finite but too large (e.g., 10^10000) or non-zero but too small
          * (e.g., 10^-10000).
          *
-         * @param inRange returns the result of range checking as
-         * described above; this pointer may be passed as \c null if
-         * the caller does not care about this result.
-         * @return the double approximation to this rational, or zero if
-         * this rational lies outside double's allowable range.
+         * \exception UnsolvedCase This rational lies outside double's
+         * allowable range.
          *
-         * \ifacespython The \a inRange argument is not present.
-         * Instead there are two versions of this routine.
-         * The first is \a doubleApprox(), which returns a single real
-         * number.  The second is \a doubleApproxCheck(), which returns
-         * a (real, bool) pair containing the converted real number
-         * followed by the result of range checking.
+         * \ifacespython The old python-only routine doubleApproxCheck() is
+         * now deprecated.  Just call this routine inside a try/catch block.
+         *
+         * @return the double approximation to this rational.
          *
          * @author Ryan Budney, B.B.
          */
-        double doubleApprox(bool* inRange = 0) const;
+        double doubleApprox() const;
 
         /**
          * Returns this rational as written using TeX formatting.
@@ -448,15 +430,24 @@ class Rational {
          *
          * @author Ryan Budney
          */
-        std::string TeX() const;
+        std::string tex() const;
+
+        /**
+         * Deprecated routine that returns this rational as written using TeX
+         * formatting.
+         *
+         * \deprecated This routine has been renamed to tex().
+         *
+         * @return this rational as written using TeX formatting.
+         */
+        [[deprecated]] std::string TeX() const;
 
         /**
          * Writes this rational in TeX format to the given output stream.
          * No leading or trailing dollar signs will be included.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present; instead use the variant tex()
+         * that takes no arguments and returns a string.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -484,6 +475,8 @@ class Rational {
  *
  * @param a the first rational whose contents should be swapped.
  * @param b the second rational whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 void swap(Rational& a, Rational& b) noexcept;
 
@@ -497,10 +490,10 @@ void swap(Rational& a, Rational& b) noexcept;
  * @param out the output stream to which to write.
  * @param rat the rational to write.
  * @return a reference to \a out.
+ *
+ * \ingroup maths
  */
 std::ostream& operator << (std::ostream& out, const Rational& rat);
-
-/*@}*/
 
 // Inline functions for Rational
 
@@ -565,6 +558,10 @@ inline Rational::~Rational() {
 }
 
 inline Rational& Rational::operator = (const Rational& value) {
+    // We assume that mpq_set() is fine with self-assignment, since:
+    // - the GMP docs state that output and input variables can be the same;
+    // - the libgmpxx classes do not special-case self-assignment.
+    // The C++ test suite tests self-assignment of Rationals also.
     flavour = value.flavour;
     if (flavour == f_normal)
         mpq_set(data, value.data);
@@ -616,6 +613,10 @@ inline bool Rational::operator >= (const Rational& compare) const {
 }
 inline bool Rational::operator != (const Rational& compare) const {
     return ! (*this == compare);
+}
+
+inline std::string Rational::TeX() const {
+    return tex();
 }
 
 inline void swap(Rational& a, Rational& b) noexcept {

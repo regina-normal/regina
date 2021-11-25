@@ -93,11 +93,12 @@ namespace {
     }
 }
 
-EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri) :
+EltMoveDialog3::EltMoveDialog3(QWidget* parent,
+        regina::PacketOf<regina::Triangulation<3>>* useTri) :
         QDialog(parent), // tr("Elementary Move"), Ok|Cancel, Ok, parent),
         tri(useTri) {
     setWindowTitle(tr("Elementary Moves"));
-    QVBoxLayout *dialogLayout = new QVBoxLayout(this);
+    auto* dialogLayout = new QVBoxLayout(this);
 
     name = new QLabel();
     name->setAlignment(Qt::AlignCenter);
@@ -107,7 +108,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
     overview->setAlignment(Qt::AlignCenter);
     dialogLayout->addWidget(overview);
 
-    QGridLayout* layout = new QGridLayout();
+    auto* layout = new QGridLayout();
       //, 10, 2, 0 /* margin */, spacingHint());
     dialogLayout->addLayout(layout);
 
@@ -243,7 +244,7 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box23, 2, 1);
-    box14 = new SimplexChooser<3>(tri, 0, this, false);
+    box14 = new SimplexChooser<3>(tri, nullptr, this, false);
     box14->setWhatsThis( tr("<qt>Select the tetrahedron upon which "
         "the 1-4 move will be performed.<p>"
         "All tetrahedra are offered here, since "
@@ -339,8 +340,8 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
         SLOT(clicked(QAbstractButton*)));
     connect(moveTypes, SIGNAL(buttonClicked(int)), this, SLOT(updateApply()));
 
-    packetWasRenamed(tri);
-    packetWasChanged(tri);
+    packetWasRenamed(*tri);
+    packetWasChanged(*tri);
 
     tri->listen(this);
 }
@@ -413,7 +414,7 @@ void EltMoveDialog3::updateApply() {
     buttons->button(QDialogButtonBox::Apply)->setEnabled(b && b->isEnabled());
 }
 
-void EltMoveDialog3::packetWasRenamed(regina::Packet*) {
+void EltMoveDialog3::packetWasRenamed(regina::Packet&) {
     name->setText(tri->humanLabel().c_str());
 }
 
@@ -428,7 +429,7 @@ void EltMoveDialog3::updateStates(ChooserClass* chooser, QRadioButton* button) {
     }
 }
 
-void EltMoveDialog3::packetWasChanged(regina::Packet*) {
+void EltMoveDialog3::packetWasChanged(regina::Packet&) {
     if (tri->size() == 1)
         overview->setText(tr("1 tetrahedron"));
     else
@@ -451,7 +452,7 @@ void EltMoveDialog3::packetWasChanged(regina::Packet*) {
     updateApply();
 }
 
-void EltMoveDialog3::packetToBeDestroyed(regina::PacketShell) {
+void EltMoveDialog3::packetBeingDestroyed(regina::PacketShell) {
     reject();
 }
 

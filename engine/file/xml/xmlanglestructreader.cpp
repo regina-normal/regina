@@ -32,6 +32,7 @@
 
 #include <vector>
 #include "file/xml/xmlanglestructreader.h"
+#include "file/xml/xmltreeresolver.h"
 #include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 
@@ -45,65 +46,76 @@ void XMLAngleStructureReader::startElement(const std::string&,
 }
 
 void XMLAngleStructureReader::initialChars(const std::string& chars) {
-    if (vecLen < 0 || tri == 0)
+    if (vecLen < 0)
         return;
 
-    std::vector<std::string> tokens;
-    if (basicTokenise(back_inserter(tokens), chars) % 2 != 0)
+    std::vector<std::string> tokens = basicTokenise(chars);
+    if (tokens.size() % 2 != 0)
         return;
 
     // Create a new vector and read all non-zero entries.
-    VectorInt* vec = new VectorInt(vecLen);
+    VectorInt vec(vecLen);
 
     long pos;
     Integer value;
     for (unsigned long i = 0; i < tokens.size(); i += 2) {
-        if (valueOf(tokens[i], pos))
-            if (valueOf(tokens[i + 1], value))
-                if (pos >= 0 && pos < vecLen) {
-                    // All looks valid.
-                    vec->set(pos, value);
-                    continue;
-                }
-
-        // Found something invalid.
-        delete vec;
-        return;
+        if (! valueOf(tokens[i], pos))
+            return;
+        if (pos < 0 || pos >= vecLen)
+            return;
+        try {
+            vec[pos] = tokens[i + 1];
+        } catch (const regina::InvalidArgument&) {
+            return;
+        }
     }
 
-    angles = new AngleStructure(*tri, vec);
+    angles_ = AngleStructure(tri_, std::move(vec));
 }
 
-XMLElementReader* XMLAngleStructureReader::startSubElement(
-        const std::string& subTagName,
-        const regina::xml::XMLPropertyDict& props) {
-    if (! angles)
-        return new XMLElementReader();
+XMLAngleStructuresReader::XMLAngleStructuresReader(XMLTreeResolver& res,
+        std::shared_ptr<Packet> parent, bool anon, std::string label,
+        std::string id, const regina::xml::XMLPropertyDict& props) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        list_(nullptr), tri_(resolver_.resolveTri3(props.lookup("tri"))) {
+    if (! tri_)
+        return;
 
-    return new XMLElementReader();
+    // Extract the list parameters from the attributes.
+    // We will (unnecessarily) allow the algorithm to be missing.
+    bool tautOnly;
+    if (! valueOf(props.lookup("tautonly"), tautOnly))
+        return;
+
+    int algorithm;
+    if (! valueOf(props.lookup("algorithm"), algorithm))
+        algorithm = AS_ALG_LEGACY;
+
+    list_ = makePacket<AngleStructures>(std::in_place, tautOnly,
+        AngleAlg::fromInt(algorithm), *tri_);
 }
 
 XMLElementReader* XMLAngleStructuresReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
+    if (! list_) {
+        // We are ignoring this <angles> element because it was missing the
+        // required attributes.
+        return new XMLElementReader();
+    }
+
+    if (subTagName == "struct")
+        return new XMLAngleStructureReader(list_->triangulation_);
+
     bool b;
-    if (subTagName == "angleparams") {
-        if (valueOf(props.lookup("tautonly"), b))
-            list->tautOnly_ = b;
-    } else if (subTagName == "struct") {
-        return new XMLAngleStructureReader(tri);
-    } else if (subTagName == "spanstrict") {
+    if (subTagName == "spanstrict") {
         if (valueOf(props.lookup("value"), b))
-            list->doesSpanStrict_ = b;
+            list_->doesSpanStrict_ = b;
     } else if (subTagName == "spantaut") {
+        bool b;
         if (valueOf(props.lookup("value"), b))
-            list->doesSpanTaut_ = b;
-    } else if (subTagName == "allowstrict") {
-        if (valueOf(props.lookup("value"), b))
-            list->doesSpanStrict_ = b;
-    } else if (subTagName == "allowtaut") {
-        if (valueOf(props.lookup("value"), b))
-            list->doesSpanTaut_ = b;
+            list_->doesSpanTaut_ = b;
     }
     return new XMLElementReader();
 }
@@ -111,16 +123,85 @@ XMLElementReader* XMLAngleStructuresReader::startContentSubElement(
 void XMLAngleStructuresReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
-    if (subTagName == "struct")
-        if (AngleStructure* s =
-                dynamic_cast<XMLAngleStructureReader*>(subReader)->structure())
-            list->structures_.push_back(std::move(*s));
+    if (list_ && subTagName == "struct")
+        if (auto& s = dynamic_cast<XMLAngleStructureReader*>(subReader)->
+                structure())
+            list_->structures_.push_back(std::move(*s));
 }
 
-XMLPacketReader* AngleStructures::xmlReader(Packet* parent,
-        XMLTreeResolver& resolver) {
-    return new XMLAngleStructuresReader(
-        dynamic_cast<Triangulation<3>*>(parent), resolver);
+XMLElementReader* XMLLegacyAngleStructuresReader::startContentSubElement(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict& props) {
+    if (list_) {
+        bool b;
+        // The angle structure list has already been created.
+        if (subTagName == "struct") {
+            return new XMLAngleStructureReader(list_->triangulation_);
+        } else if (subTagName == "spanstrict") {
+            if (valueOf(props.lookup("value"), b))
+                list_->doesSpanStrict_ = b;
+        } else if (subTagName == "spantaut") {
+            if (valueOf(props.lookup("value"), b))
+                list_->doesSpanTaut_ = b;
+        } else if (subTagName == "allowstrict") {
+            if (valueOf(props.lookup("value"), b))
+                list_->doesSpanStrict_ = b;
+        } else if (subTagName == "allowtaut") {
+            if (valueOf(props.lookup("value"), b))
+                list_->doesSpanTaut_ = b;
+        }
+    } else {
+        // The angle structure list has not yet been created.
+        if (subTagName == "angleparams") {
+            // All of these parameters are optional, to support older
+            // file formats.
+            bool tautOnly;
+            int algorithm;
+            if (! valueOf(props.lookup("tautonly"), tautOnly))
+                tautOnly = false;
+            if (! valueOf(props.lookup("algorithm"), algorithm))
+                algorithm = AS_ALG_LEGACY;
+            list_ = makePacket<AngleStructures>(std::in_place, tautOnly,
+                AngleAlg::fromInt(algorithm), tri_);
+        } else if (subTagName == "struct") {
+            // Eep, we are getting angle structures but no parameters were
+            // ever specified.  This was how data files looked in
+            // Regina 4.6 and earlier, when there were no parameters to select.
+            // Set up a new list containing all default values, before
+            // reading the first angle structure that we just bumped into.
+            list_ = makePacket<AngleStructures>(std::in_place, false,
+                AS_ALG_LEGACY, tri_);
+            return new XMLAngleStructureReader(list_->triangulation_);
+        }
+
+        // If the file format is old *and* the list is empty, we could
+        // conceivably jump straight to a property (spansstrict, etc.),
+        // which means we would see them here, before the list is created.
+        // However, we silently ignore such properties in this case, since
+        // they are trivial to recreate (given that the list is empty).
+    }
+    return new XMLElementReader();
+}
+
+void XMLLegacyAngleStructuresReader::endContentSubElement(
+        const std::string& subTagName,
+        XMLElementReader* subReader) {
+    if (list_ && subTagName == "struct")
+        if (auto& s = dynamic_cast<XMLAngleStructureReader*>(subReader)->
+                structure())
+            list_->structures_.push_back(std::move(*s));
+}
+
+void XMLLegacyAngleStructuresReader::endElement() {
+    // If we have an empty angle structure list and the file was saved
+    // in an ancient version of Regina, the XML content for the packet
+    // could legitimately contain no content at all - technically,
+    // everything in this XML element is optional.
+    if (! list_)
+        list_ = makePacket<AngleStructures>(std::in_place, false,
+            AS_ALG_LEGACY, tri_);
+
+    XMLPacketReader::endElement();
 }
 
 } // namespace regina

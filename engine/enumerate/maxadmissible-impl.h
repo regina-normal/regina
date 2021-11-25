@@ -42,43 +42,32 @@
 #define __REGINA_MAXADMISSIBLE_IMPL_H
 #endif
 
-#include "enumerate/enumconstraints.h"
 #include "enumerate/maxadmissible.h"
+#include "enumerate/validityconstraints.h"
 #include <algorithm>
 #include <list>
 
 namespace regina {
 
 template <class BitmaskType, class RayIterator>
-std::vector<BitmaskType>* MaxAdmissible::enumerate(
+std::vector<BitmaskType> MaxAdmissible::enumerate(
         RayIterator beginExtremalRays, RayIterator endExtremalRays,
-        const EnumConstraints* constraints) {
+        const ValidityConstraints& constraints) {
     if (beginExtremalRays == endExtremalRays) {
         // Input is empty, so output is empty.
-        return new std::vector<BitmaskType>();
+        return std::vector<BitmaskType>();
     }
 
     size_t dim = (*beginExtremalRays).size();
-    BitmaskType b(dim);
     int i;
 
-    // Rewrite the constraints as bitmasks.
-    std::vector<BitmaskType> constMasks;
-    if (constraints) {
-        EnumConstraints::const_iterator cit;
-        std::set<unsigned long>::const_iterator sit; 
-        for (cit = constraints->begin(); cit != constraints->end(); ++cit) {
-            b.reset();
-            for (sit = cit->begin(); sit != cit->end(); ++sit)
-                b.set(*sit, true);
-            constMasks.push_back(b);
-        }
-    }
+    auto constMasks = constraints.bitmasks<BitmaskType>(dim);
 
     // Create a set of bitmasks representing the admissible 1-faces of
     // the cone, i.e., the set of admissible extremal rays.
     std::vector<BitmaskType> rays;
-    for (RayIterator rit = beginExtremalRays; rit != endExtremalRays; ++rit) {
+    BitmaskType b(dim);
+    for (auto rit = beginExtremalRays; rit != endExtremalRays; ++rit) {
         for (i = 0; i < dim; ++i)
             b.set(i, (*rit)[i] != 0);
         rays.push_back(b);
@@ -89,7 +78,7 @@ std::vector<BitmaskType>* MaxAdmissible::enumerate(
     std::list<BitmaskType> faces(rays.begin(), rays.end());
 
     // Create the final set of faces to return.
-    std::vector<BitmaskType>* maxFaces = new std::vector<BitmaskType>();
+    std::vector<BitmaskType> maxFaces;
 
     // Keep expanding the faces using additional extremal rays until we can
     // expand no more.
@@ -152,7 +141,7 @@ std::vector<BitmaskType>* MaxAdmissible::enumerate(
                     nextDim.push_back(comb);
             }
             if (isMax)
-                maxFaces->push_back(*f);
+                maxFaces.push_back(*f);
         }
         std::swap(nextDim, faces);
         nextDim.clear();

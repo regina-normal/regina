@@ -39,16 +39,12 @@
 #define __REGINA_TRISOLIDTORUS_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "maths/perm.h"
 #include "subcomplex/standardtri.h"
 
 namespace regina {
-
-/**
- * \weakgroup subcomplex
- * @{
- */
 
 /**
  * Represents a three-tetrahedron triangular solid torus in a triangulation.
@@ -81,12 +77,20 @@ namespace regina {
  * Note that all three tetrahedra in the triangular solid torus must be
  * distinct.
  *
- * All optional StandardTriangulation routines are implemented for this
- * class.
+ * All optional StandardTriangulation routines are implemented for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class TriSolidTorus : public StandardTriangulation {
     private:
-        Tetrahedron<3>* tet[3];
+        Tetrahedron<3>* tet_[3];
             /**< The tetrahedra that make up this solid torus. */
         Perm<4> vertexRoles_[3];
             /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
@@ -97,15 +101,33 @@ class TriSolidTorus : public StandardTriangulation {
 
     public:
         /**
-         * Destroys this solid torus.
+         * Creates a new copy of this structure.
          */
-        virtual ~TriSolidTorus();
+        TriSolidTorus(const TriSolidTorus&) = default;
+
         /**
-         * Returns a newly created clone of this structure.
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        TriSolidTorus& operator = (const TriSolidTorus&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        TriSolidTorus* clone() const;
+        [[deprecated]] TriSolidTorus* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(TriSolidTorus& other) noexcept;
 
         /**
          * Returns the requested tetrahedron in this solid torus.
@@ -151,13 +173,12 @@ class TriSolidTorus : public StandardTriangulation {
          * Determines whether the two triangles of the requested annulus are
          * glued to each other.
          *
-         * If the two triangles are glued, parameter \a roleMap will be
-         * modified to return a permutation describing how the vertex
-         * roles are glued to each other.  This will describe directly
-         * how axis edges, major edges and minor edges map to each other
-         * without having to worry about the specific assignment of
-         * tetrahedron vertex numbers.  For a discussion of vertex
-         * roles, see vertexRoles().
+         * If the two triangles are glued, this routine will return a
+         * permutation describing how the vertex roles are glued to each other.
+         * This will describe directly how axis edges, major edges and minor
+         * edges map to each other without having to worry about the specific
+         * assignment of tetrahedron vertex numbers.  For a discussion of
+         * vertex roles, see vertexRoles().
          *
          * Note that annulus <tt>index</tt> uses faces
          * from tetrahedra <tt>index+1</tt> and <tt>index+2</tt>.
@@ -168,13 +189,11 @@ class TriSolidTorus : public StandardTriangulation {
          *
          * @param index specifies which annulus on the solid torus
          * boundary to examine; this must be 0, 1 or 2.
-         * @param roleMap a pointer to a permutation that, if this
-         * routine returns \c true, will be modified to describe the gluing
-         * of vertex roles.  This parameter may be \c null.
-         * @return \c true if and only if the two triangles of the requested
-         * annulus are glued together.
+         * @return a permutation that describes the gluing of vertex roles,
+         * or \c nullopt if the two triangles of the requested annulus are
+         * not glued together.
          */
-        bool isAnnulusSelfIdentified(int index, Perm<4>* roleMap) const;
+        std::optional<Perm<4>> isAnnulusSelfIdentified(int index) const;
 
         /**
          * Determines whether the two given annuli are linked in a
@@ -250,21 +269,34 @@ class TriSolidTorus : public StandardTriangulation {
          * triangulation, i.e., they may be identified with each other
          * or with faces of other tetrahedra.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param tet the tetrahedron to examine.
          * @param useVertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the solid torus; this must be
          * in the same format as the permutation returned by
          * vertexRoles().
-         * @return a newly created structure containing details of the
-         * solid torus with the given tetrahedron as tetrahedron 0, or
-         * \c null if the given tetrahedron is not part of a triangular
-         * solid torus with the given vertex roles.
+         * @return a structure containing details of the solid torus with the
+         * given tetrahedron as tetrahedron 0, or \c null if the given
+         * tetrahedron is not part of a triangular solid torus with the given
+         * vertex roles.
          */
-        static TriSolidTorus* formsTriSolidTorus(Tetrahedron<3>* tet,
+        static std::unique_ptr<TriSolidTorus> recognise(Tetrahedron<3>* tet,
                 Perm<4> useVertexRoles);
+        /**
+         * A deprecated alias to recognise if a component forms one of
+         * the trivial triangulations recognised by this class.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<TriSolidTorus> formsTriSolidTorus(
+                Tetrahedron<3>* tet, Perm<4> useVertexRoles);
 
-        Manifold* manifold() const override;
-        std::optional<AbelianGroup> homology() const override;
+        std::unique_ptr<Manifold> manifold() const override;
+        AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
@@ -273,20 +305,22 @@ class TriSolidTorus : public StandardTriangulation {
         /**
          * Creates a new uninitialised structure.
          */
-        TriSolidTorus();
+        TriSolidTorus() = default;
 };
-
-/*@}*/
 
 // Inline functions for TriSolidTorus
 
-inline TriSolidTorus::TriSolidTorus() {
+inline void TriSolidTorus::swap(TriSolidTorus& other) noexcept {
+    std::swap_ranges(tet_, tet_ + 3, other.tet_);
+    std::swap_ranges(vertexRoles_, vertexRoles_ + 3, other.vertexRoles_);
 }
-inline TriSolidTorus::~TriSolidTorus() {
+
+inline TriSolidTorus* TriSolidTorus::clone() const {
+    return new TriSolidTorus(*this);
 }
 
 inline Tetrahedron<3>* TriSolidTorus::tetrahedron(int index) const {
-    return tet[index];
+    return tet_[index];
 }
 inline Perm<4> TriSolidTorus::vertexRoles(int index) const {
     return vertexRoles_[index];
@@ -300,6 +334,15 @@ inline std::ostream& TriSolidTorus::writeTeXName(std::ostream& out) const {
 }
 inline void TriSolidTorus::writeTextLong(std::ostream& out) const {
     out << "3-tetrahedron triangular solid torus";
+}
+
+inline std::unique_ptr<TriSolidTorus> TriSolidTorus::formsTriSolidTorus(
+        Tetrahedron<3>* tet, Perm<4> useVertexRoles) {
+    return recognise(tet, useVertexRoles);
+}
+
+inline void swap(TriSolidTorus& a, TriSolidTorus& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

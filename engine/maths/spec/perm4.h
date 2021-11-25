@@ -55,20 +55,16 @@
 namespace regina {
 
 /**
- * \weakgroup maths
- * @{
- */
-
-/**
  * Represents a permutation of {0,1,2,3}.
  * This is a specialisation of the generic Perm template: it is highly
  * optimised, and also offers some additional functionality.
  * Amongst other things, this permutation class is used to specify how
  * simplices of a 3-manifold triangulation are glued together.
  *
- * As with all Perm template classes, these objects are small enough to
- * pass about by value instead of by reference.  Moreover, Perm<4>
- * is extremely fast to work with.
+ * As with all Perm template classes, these objects are small enough to pass
+ * by value and swap with std::swap(), with no need for any specialised move
+ * operations or swap functions.  Moreover, Perm<4> in particular is extremely
+ * fast to work with.
  *
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the permutation.
@@ -100,6 +96,8 @@ namespace regina {
  *
  * \ifacespython Since Python does not support templates, this class is
  * made available under the name Perm4.
+ *
+ * \ingroup maths
  */
 template <>
 class Perm<4> {
@@ -190,7 +188,7 @@ class Perm<4> {
          * permutations on four elements.  In other words, this is a
          * native signed integer type large enough to store (4!).
          */
-        typedef int Index;
+        using Index = int;
 
         /**
          * Indicates what type of internal permutation code is used by
@@ -216,7 +214,7 @@ class Perm<4> {
          * on image packs, and how they are used to build the old
          * first-generation permutation codes.
          */
-        typedef uint8_t ImagePack;
+        using ImagePack = uint8_t;
 
         /**
          * Indicates the number of bits used in an image pack to store the
@@ -240,20 +238,20 @@ class Perm<4> {
          * first-generation permutation code.
          *
          * Although types \a Code1 and \a Code2 are identical, they are
-         * provided as separate typedefs to help communicate in your
+         * provided as separate type aliases to help communicate in your
          * source code which type of code is being used.
          */
-        typedef ImagePack Code1;
+        using Code1 = ImagePack;
 
         /**
          * Indicates the native unsigned integer type used to store a
          * second-generation permutation code.
          *
          * Although types \a Code1 and \a Code2 are identical, they are
-         * provided as separate typedefs to help communicate in your
+         * provided as separate type aliases to help communicate in your
          * source code which type of code is being used.
          */
-        typedef uint8_t Code2;
+        using Code2 = uint8_t;
 
         /**
          * An alias for the first-generation code type Code1.
@@ -261,7 +259,7 @@ class Perm<4> {
          * Instead of Code, you should use either Code1 or Code2 to more
          * clearly express which kind of permutation code you are using.
          */
-        typedef Code1 Code [[deprecated]];
+        using Code [[deprecated]] = Code1;
 
         /**
          * Gives array-like access to all possible permutations of
@@ -271,8 +269,8 @@ class Perm<4> {
          * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
          * between 0 and 23 inclusive.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -313,8 +311,8 @@ class Perm<4> {
          * Lexicographical ordering treats each permutation \a p as the
          * ordered pair (\a p[0], ..., \a p[3]).
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -345,8 +343,8 @@ class Perm<4> {
          * square bracket operator: <tt>Sn_1[i]</tt>.  The index \a i must be
          * between 0 and 5 inclusive.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -383,8 +381,8 @@ class Perm<4> {
          * square bracket operator: <tt>orderedS3[i]</tt>.  The index \a i
          * must be between 0 and 5 inclusive.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -408,8 +406,8 @@ class Perm<4> {
          * square bracket operator: <tt>S2[i]</tt>.  The index \a i must be
          * between 0 and 1 inclusive.
          *
-         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
-         * since Regina 6.1 it has changed type, but accessing elements as
+         * In Regina 6.0.1 and earlier, this was a hard-coded C-style array;
+         * since Regina 7.0 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
@@ -466,27 +464,43 @@ class Perm<4> {
          * Creates a permutation mapping \a i to \a image[i] for each
          * \a i = 0,1,2,3.
          *
+         * \pre The elements of \a image are 0, 1, 2 and 3 in some order.
+         *
+         * @param image the array of images.
+         */
+        constexpr Perm(const std::array<int, 4>& image);
+
+        /**
+         * Deprecated constructor that creates a permutation mapping
+         * \a i to \a image[i] for each \a i = 0,1,2,3.
+         *
+         * \deprecated Use the four-integer constructor or the
+         * std::array constructor instead.
+         *
          * \pre The array \a image contains four elements, which are
          * 0, 1, 2 and 3 in some order.
          *
          * @param image the array of images.
          */
-        constexpr Perm(const int* image);
+        [[deprecated]] constexpr Perm(const int* image);
 
         /**
-         * Creates a permutation mapping (\a a[0], ..., \a a[3]) to
-         * (\a b[0], ..., \a b[3]) respectively.
+         * Deprecated constructor that creates a permutation mapping
+         * (\a a[0], ..., \a a[3]) to (\a b[0], ..., \a b[3]) respectively.
+         *
+         * \deprecated Use the eight-integer constructor or the
+         * std::array constructor instead.
          *
          * \pre Both arrays \a a and \a b contain 4 elements, which
          * are 0,...,3 in some order.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use the single-array constructor instead.
          *
          * @param a the array of preimages; this must have length 4.
          * @param b the corresponding array of images; this must also have
          * length 4.
          */
-        constexpr Perm(const int* a, const int* b);
+        [[deprecated]] constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation mapping
@@ -843,7 +857,19 @@ class Perm<4> {
          * should be between 0 and 3 inclusive.
          * @return the preimage of \a image.
          */
-        constexpr int preImageOf(int image) const;
+        constexpr int pre(int image) const;
+
+        /**
+         * Deprecated routine that determines the preimage of the given
+         * integer under this permutation.
+         *
+         * \deprecated This routine has been renamed to pre().
+         *
+         * @param image the integer whose preimage we wish to find.  This
+         * should be between 0 and 3 inclusive.
+         * @return the preimage of \a image.
+         */
+        [[deprecated]] constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -898,7 +924,8 @@ class Perm<4> {
          * then this will wrap around to become the first permutation in
          * Perm<4>::Sn, which is the identity.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, although the postincrement operator is
+         * present in python as the member function inc().
          *
          * @return a reference to this permutation after the increment.
          */
@@ -910,7 +937,8 @@ class Perm<4> {
          * then this will wrap around to become the first permutation in
          * Perm<4>::Sn, which is the identity.
          *
-         * \ifacespython Not present.
+         * \ifacespython This routine is named inc() since python does
+         * not support the increment operator.
          *
          * @return a copy of this permutation before the increment took place.
          */
@@ -1168,6 +1196,25 @@ class Perm<4> {
          */
         constexpr bool isConjugacyMinimal() const;
 
+        /**
+         * Returns the induced permutation on all six \e pairs of
+         * elements from 0,1,2,3.
+         *
+         * Specifically: suppose we number the six pairs in
+         * lexicographical order, so that the pairs 01, 02, 03, 12, 13, 23
+         * are indexed as 0, 1, 2, 3, 4, 5 respectively.  Then this
+         * permutation induces a corresponding permutation of 0,...,5, where
+         * the pair (\a a, \a b) maps to the pair (<i>p[a]</i>, <i>p[b]</i>).
+         * This routine returns that induced permutation.
+         *
+         * Note that, if \a p permutes the four vertices (or equivalently,
+         * the four faces) of a tetrahedron, then <tt>p.pairs()</tt> is
+         * the induced permutation on the six \e edges of the tetrahedron.
+         *
+         * @return the induced permutation on six pairs of elements.
+         */
+        constexpr Perm<6> pairs() const;
+
     private:
         /**
          * Contains the images of every element under every possible
@@ -1259,6 +1306,16 @@ class Perm<4> {
          */
         static constexpr Code2 S3Table[6] = { 0, 3, 8, 7, 12, 15 };
 
+        /**
+         * Contains a full table of induced permutations on six
+         * elements, as returned by pairs().  This array is indexed
+         * according to S4, and its values are indices in S6.
+         */
+        static constexpr uint16_t pairsTable[24] = {
+            0,   26,  148, 120, 242, 268,  86,  60, 372, 436, 556, 494,
+            186, 230, 466, 402, 638, 682, 356, 330, 546, 592, 712, 668
+        };
+
     protected:
         /**
          * Creates a permutation from the given second-generation
@@ -1298,11 +1355,6 @@ class Perm<4> {
         template <typename Int>
         static constexpr Int convOrderedUnordered(Int index);
 };
-
-// Routines for constructing the permutations associated to
-// triangles and edges of the triangulation
-
-/*@}*/
 
 // Inline functions for Perm<4>
 
@@ -1350,6 +1402,11 @@ inline constexpr Perm<4>::Perm(int a, int b) : code_(swapTable[a][b]) {
 
 inline constexpr Perm<4>::Perm(int a, int b, int c, int d) :
         code_(static_cast<Code2>(S4Index(a, b, c, d))) {
+}
+
+inline constexpr Perm<4>::Perm(const std::array<int, 4>& image) :
+        code_(static_cast<Code2>(S4Index(
+        image[0], image[1], image[2], image[3]))) {
 }
 
 inline constexpr Perm<4>::Perm(const int* image) :
@@ -1427,6 +1484,8 @@ inline constexpr Perm<4> Perm<4>::fromPermCode(Code1 code) {
 }
 
 inline constexpr bool Perm<4>::isPermCode1(Code1 code) {
+    // There are no "spare" bits since Code1 is uint8_t, which means there is
+    // no need to check that only the first 8 bits are in use.
     unsigned mask = 0;
     for (int i = 0; i < 4; i++)
         mask |= (1 << ((code >> (2 * i)) & 3));
@@ -1501,6 +1560,10 @@ inline constexpr int Perm<4>::sign() const {
 
 inline constexpr int Perm<4>::operator[](int source) const {
     return imageTable[code_][source];
+}
+
+inline constexpr int Perm<4>::pre(int image) const {
+    return imageTable[invS4[code_]][image];
 }
 
 inline constexpr int Perm<4>::preImageOf(int image) const {
@@ -1606,6 +1669,10 @@ inline constexpr Perm<4> Perm<4>::atIndex(Index i) {
 
 inline constexpr bool Perm<4>::isConjugacyMinimal() const {
     return (code_ < 3 || code_ == 6 || code_ == 9);
+}
+
+inline constexpr Perm<6> Perm<4>::pairs() const {
+    return Perm<6>::fromPermCode2(pairsTable[code_]);
 }
 
 } // namespace regina

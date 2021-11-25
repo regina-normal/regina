@@ -57,7 +57,7 @@ class SnapPeaAlgebraUI : public QObject, public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::SnapPeaTriangulation* tri;
+        regina::PacketOf<regina::SnapPeaTriangulation>* tri;
 
         /**
          * Internal components
@@ -78,15 +78,15 @@ class SnapPeaAlgebraUI : public QObject, public PacketViewerTab {
         /**
          * Constructor.
          */
-        SnapPeaAlgebraUI(regina::SnapPeaTriangulation* packet,
+        SnapPeaAlgebraUI(regina::PacketOf<regina::SnapPeaTriangulation>* packet,
                 PacketTabbedUI* useParentUI);
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     public slots:
         /**

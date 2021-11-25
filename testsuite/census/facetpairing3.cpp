@@ -42,10 +42,9 @@ using regina::BoolSet;
 /**
  * Simply increment the given count when a face pairing is found.
  */
-void countFacePairings(const FacetPairing<3>* pair, const FacetPairing<3>::IsoList*,
-        void* count) {
-    if (pair)
-        (*(unsigned*)count)++;
+void countFacePairings(const FacetPairing<3>& pair,
+        FacetPairing<3>::IsoList, unsigned& count) {
+    ++count;
 }
 
 /**
@@ -53,49 +52,16 @@ void countFacePairings(const FacetPairing<3>* pair, const FacetPairing<3>::IsoLi
  */
 namespace {
     struct BadGraphs {
-        unsigned tripleEdge;
-        unsigned brokenDoubleEndedChain;
-        unsigned oneEndedChainWithDoubleHandle;
-        unsigned wedgedDoubleEndedChain;
-        unsigned oneEndedChainWithStrayBigon;
-        unsigned tripleOneEndedChain;
-        unsigned singleStar;
-        unsigned doubleStar;
-        unsigned doubleSquare;
-
-        BadGraphs() : tripleEdge(0), brokenDoubleEndedChain(0),
-                      oneEndedChainWithDoubleHandle(0),
-                      wedgedDoubleEndedChain(0),
-                      oneEndedChainWithStrayBigon(0), tripleOneEndedChain(0),
-                      singleStar(0), doubleStar(0), doubleSquare(0) {
-        }
+        unsigned tripleEdge { 0 };
+        unsigned brokenDoubleEndedChain { 0 };
+        unsigned oneEndedChainWithDoubleHandle { 0 };
+        unsigned wedgedDoubleEndedChain { 0 };
+        unsigned oneEndedChainWithStrayBigon { 0 };
+        unsigned tripleOneEndedChain { 0 };
+        unsigned singleStar { 0 };
+        unsigned doubleStar { 0 };
+        unsigned doubleSquare { 0 };
     };
-}
-
-void countBadGraphs(const FacetPairing<3>* pair, const FacetPairing<3>::IsoList*,
-        void* badGraphsRaw) {
-    if (pair) {
-        BadGraphs* badGraphs = static_cast<BadGraphs*>(badGraphsRaw);
-
-        if (pair->hasTripleEdge())
-            badGraphs->tripleEdge++;
-        if (pair->hasBrokenDoubleEndedChain())
-            badGraphs->brokenDoubleEndedChain++;
-        if (pair->hasOneEndedChainWithDoubleHandle())
-            badGraphs->oneEndedChainWithDoubleHandle++;
-        if (pair->hasWedgedDoubleEndedChain())
-            badGraphs->wedgedDoubleEndedChain++;
-        if (pair->hasOneEndedChainWithStrayBigon())
-            badGraphs->oneEndedChainWithStrayBigon++;
-        if (pair->hasTripleOneEndedChain())
-            badGraphs->tripleOneEndedChain++;
-        if (pair->hasSingleStar())
-            badGraphs->singleStar++;
-        if (pair->hasDoubleStar())
-            badGraphs->doubleStar++;
-        if (pair->hasDoubleSquare())
-            badGraphs->doubleSquare++;
-    }
 }
 
 class FacetPairing3Test : public CppUnit::TestFixture {
@@ -112,10 +78,10 @@ class FacetPairing3Test : public CppUnit::TestFixture {
             /**< Used to hold arbitrary totals. */
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void rawCountsClosed() {
@@ -131,7 +97,7 @@ class FacetPairing3Test : public CppUnit::TestFixture {
             for (nTets = 0; nTets <= 8; nTets++) {
                 count = 0;
                 FacetPairing<3>::findAllPairings(nTets, false,
-                    0, countFacePairings, &count);
+                    0, countFacePairings, count);
 
                 if (count != nPairs[nTets]) {
                     std::ostringstream msg;
@@ -154,7 +120,7 @@ class FacetPairing3Test : public CppUnit::TestFixture {
             for (nTets = 0; nTets <= 8; nTets++) {
                 count = 0;
                 FacetPairing<3>::findAllPairings(nTets, true,
-                    1, countFacePairings, &count);
+                    1, countFacePairings, count);
 
                 if (count != 0) {
                     std::ostringstream msg;
@@ -169,7 +135,7 @@ class FacetPairing3Test : public CppUnit::TestFixture {
             for (nTets = 0; nTets <= 7; nTets++) {
                 count = 0;
                 FacetPairing<3>::findAllPairings(nTets, true,
-                    2, countFacePairings, &count);
+                    2, countFacePairings, count);
 
                 if (count != nBdry2[nTets]) {
                     std::ostringstream msg;
@@ -184,7 +150,7 @@ class FacetPairing3Test : public CppUnit::TestFixture {
             for (nTets = 0; nTets <= 6; nTets++) {
                 count = 0;
                 FacetPairing<3>::findAllPairings(nTets, true,
-                    -1, countFacePairings, &count);
+                    -1, countFacePairings, count);
 
                 if (count != nBdry[nTets]) {
                     std::ostringstream msg;
@@ -222,8 +188,28 @@ class FacetPairing3Test : public CppUnit::TestFixture {
             unsigned nTets;
             for (nTets = 1; nTets <= 8; nTets++) {
                 BadGraphs bad;
-                FacetPairing<3>::findAllPairings(nTets, false,
-                    0, countBadGraphs, &bad);
+                FacetPairing<3>::findAllPairings(nTets, false, 0,
+                        [&bad](const FacetPairing<3>& pair,
+                               FacetPairing<3>::IsoList) {
+                    if (pair.hasTripleEdge())
+                        bad.tripleEdge++;
+                    if (pair.hasBrokenDoubleEndedChain())
+                        bad.brokenDoubleEndedChain++;
+                    if (pair.hasOneEndedChainWithDoubleHandle())
+                        bad.oneEndedChainWithDoubleHandle++;
+                    if (pair.hasWedgedDoubleEndedChain())
+                        bad.wedgedDoubleEndedChain++;
+                    if (pair.hasOneEndedChainWithStrayBigon())
+                        bad.oneEndedChainWithStrayBigon++;
+                    if (pair.hasTripleOneEndedChain())
+                        bad.tripleOneEndedChain++;
+                    if (pair.hasSingleStar())
+                        bad.singleStar++;
+                    if (pair.hasDoubleStar())
+                        bad.doubleStar++;
+                    if (pair.hasDoubleSquare())
+                        bad.doubleSquare++;
+                });
 
                 if (bad.tripleEdge != nTriple[nTets]) {
                     std::ostringstream msg;

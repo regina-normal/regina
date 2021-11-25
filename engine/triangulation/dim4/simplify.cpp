@@ -207,8 +207,9 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    TopologyLock lock(this);
-    ChangeEventSpan span(this);
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
     Perm<5> crossover = pent[0]->adjacentGluing(perm[0][3]);
@@ -306,8 +307,9 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    TopologyLock lock(this);
-    ChangeEventSpan span(this);
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
     Perm<5> crossover = pent[0]->adjacentGluing(perm[0][2]);
@@ -393,8 +395,9 @@ bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
-    TopologyLock lock(this);
-    ChangeEventSpan span(this);
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
 
     // Unglue faces from the doomed pentachora and glue them to each other.
     Pentachoron<4>* top = pent[0]->adjacentPentachoron(vertex[0]);
@@ -484,7 +487,7 @@ bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
 
     // Actually perform the move.
     // Don't bother with a change event block since this is so simple.
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     pent->unjoin(emb.tetrahedron());
 
     return true;
@@ -565,7 +568,7 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
 
     // Actually perform the move.
     // Don't bother with a change event block since this is so simple.
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     removePentachoron(p);
 
     return true;
@@ -913,16 +916,17 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    TopologyLock lock(this);
-    ChangeEventSpan span(this);
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
     Perm<5> topPerm, botPerm;
     Pentachoron<4> *top, *bot;
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
     unsigned nEmbs = e->degree();
-    Pentachoron<4>** embPent = new Pentachoron<4>*[nEmbs];
-    Perm<5>* embVert = new Perm<5>[nEmbs];
+    auto* embPent = new Pentachoron<4>*[nEmbs];
+    auto* embVert = new Perm<5>[nEmbs];
 
     unsigned i = 0;
     for (auto& emb : *e) {

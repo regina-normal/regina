@@ -57,18 +57,13 @@ class HyperMatchingModel : public QAbstractItemModel {
          * Details of the matching equations being displayed
          */
         std::optional<regina::MatrixInt> eqns_;
-        regina::NormalHypersurfaces* surfaces_;
+        const regina::NormalHypersurfaces* surfaces_;
 
     public:
         /**
          * Constructor.
          */
-        HyperMatchingModel(regina::NormalHypersurfaces* surfaces);
-
-        /**
-         * Data retrieval.
-         */
-        regina::NormalHypersurfaces* surfaces() const;
+        HyperMatchingModel(const regina::NormalHypersurfaces* surfaces);
 
         /**
          * Rebuild the model from scratch.
@@ -79,13 +74,13 @@ class HyperMatchingModel : public QAbstractItemModel {
          * Overrides for describing data in the model.
          */
         QModelIndex index(int row, int column,
-                const QModelIndex& parent) const;
-        QModelIndex parent(const QModelIndex& index) const;
-        int rowCount(const QModelIndex& parent) const;
-        int columnCount(const QModelIndex& parent) const;
-        QVariant data(const QModelIndex& index, int role) const;
+                const QModelIndex& parent) const override;
+        QModelIndex parent(const QModelIndex& index) const override;
+        int rowCount(const QModelIndex& parent) const override;
+        int columnCount(const QModelIndex& parent) const override;
+        QVariant data(const QModelIndex& index, int role) const override;
         QVariant headerData(int section, Qt::Orientation orientation,
-            int role) const;
+            int role) const override;
 };
 
 /**
@@ -96,8 +91,9 @@ class HyperMatchingUI : public QObject, public PacketViewerTab {
 
     private:
         /**
-         * Matrix details
+         * Packet details
          */
+        regina::PacketOf<regina::NormalHypersurfaces>* surfaces_;
         HyperMatchingModel* model;
 
         /**
@@ -116,16 +112,16 @@ class HyperMatchingUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        HyperMatchingUI(regina::NormalHypersurfaces* packet,
+        HyperMatchingUI(regina::PacketOf<regina::NormalHypersurfaces>* packet,
                 PacketTabbedUI* useParentUI);
-        ~HyperMatchingUI();
+        ~HyperMatchingUI() override;
 
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
     protected slots:
         /**
@@ -135,19 +131,15 @@ class HyperMatchingUI : public QObject, public PacketViewerTab {
 };
 
 inline HyperMatchingModel::HyperMatchingModel(
-        regina::NormalHypersurfaces* surfaces) :
+        const regina::NormalHypersurfaces* surfaces) :
         surfaces_(surfaces) {
-}
-
-inline regina::NormalHypersurfaces* HyperMatchingModel::surfaces() const {
-    return surfaces_;
 }
 
 inline QModelIndex HyperMatchingModel::index(int row, int column,
         const QModelIndex& /* unused parent */) const {
     if (eqns_)
         return createIndex(row, column,
-            quintptr(eqns_->columns() * row + column));
+            quintptr(eqns_->columns()) * row + column);
     else
         return createIndex(row, column, quintptr(0));
 }

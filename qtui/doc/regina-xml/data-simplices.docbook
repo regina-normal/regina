@@ -10,8 +10,7 @@
 
  <refnamediv>
   <refname>simplices</refname>
-  <refpurpose>The top-dimeinsional simplices that form a
-  <replaceable>dim</replaceable>-dimensional triangulation</refpurpose>
+  <refpurpose>Replaced by &xml-tri;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -41,10 +40,20 @@ simplices ::= (&xml-simplex;*)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   This element was used in the past to store all top-dimensional
+   simplices in a <replaceable>dim</replaceable>-dimensional triangulation,
+   for dimensions
+   5&nbsp;&le;&nbsp;<replaceable>dim</replaceable>&nbsp;&le;&nbsp;15.
+   Since &regina;&nbsp;7.0, these top-dimensional simplices are now
+   stored directly within the &xml-tri; element (which replaces the old
+   &xml-packet; element for triangulation packets).
+  </para>
   <para>
    A &xml-simplices; element stores the entire set of top-dimensional
    simplices that form a <replaceable>dim</replaceable>-dimensional
@@ -59,11 +68,12 @@ simplices ::= (&xml-simplex;*)</synopsis>
    <replaceable>size</replaceable> child &xml-simplex; elements in total.
   </para>
   <note><para>
-   The &xml-simplices; element is only for use in higher dimensions
+   Before it was deprecated,
+   the &xml-simplices; element was only for use in higher dimensions
    5 &le; <replaceable>dim</replaceable> &le; 15.
    For the smaller dimensions 2, 3 and 4, the specialised tags
    &xml-triangles;, &xml-tetrahedra; and &xml-pentachora;
-   should be used instead.
+   were used instead.
   </para></note>
 
   <refsect2>

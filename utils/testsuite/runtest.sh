@@ -27,6 +27,10 @@
 # may be specified with a pair of single quotes ('').  Currently there is
 # no way to escape single quotes within an argument.
 #
+# If you wish to send your own data to standard input, you can follow the
+# arguments with the usual redirection "< filename" (without the quotes).
+# You can (and probably should) use @TESTDIR@ in the filename also.
+#
 # Lines beginning with # will be ignored.
 #
 # If <filter> is given, the output from each line will be piped through it.
@@ -200,8 +204,18 @@ while read -r -a line; do
     args=()
     next=
     waiting=0
+    infilenext=0
+    infile=
     for arg in "${line[@]:1}"; do
-        if [ "$waiting" = 0 ]; then
+        if [ "$infilenext" = 1 ]; then
+            if [ -n "$infile" ]; then
+              echo "ERROR: Argument after input file: $arg"
+              exit 1
+            else
+              infile="`printf '%s\n' "$arg" | \
+                  perl -pe 's/\@TESTDIR\@/$ENV{testdir}/g;'`"
+            fi
+        elif [ "$waiting" = 0 ]; then
             # We are beginning a new argument.
             case "$arg" in
                 "'"*"'" )
@@ -210,6 +224,9 @@ while read -r -a line; do
                 "'"* )
                     next="`printf '%s\n' "$arg" | sed -e 's#^.##'`"
                     waiting=1
+                    ;;
+                '<' )
+                    infilenext=1
                     ;;
                 * )
                     next="$arg"
@@ -227,7 +244,7 @@ while read -r -a line; do
                     ;;
             esac
         fi
-        if [ "$waiting" = 0 ]; then
+        if [ "$waiting" = 0 -a "$infilenext" = 0 ]; then
             args+=("`printf '%s\n' "$next" | \
                 perl -pe 's/\@TESTDIR\@/$ENV{testdir}/g;
                           s/\@TESTOUT\@/$ENV{testout}/g;
@@ -240,6 +257,10 @@ while read -r -a line; do
         echo "ERROR: Unfinished quoted argument: $next"
         exit 1
     fi
+    if [ "$infilenext" = 1 -a -z "$infile" ]; then
+        echo "ERROR: Missing input file after <"
+        exit 1
+    fi
 
     echo "============================================================"
     echo "TEST: ${line[@]}"
@@ -248,14 +269,29 @@ while read -r -a line; do
     # The LC_ALL setting is to ensure that regina's command-line utilities
     # write unicode strings (e.g., packet labels) in UTF-8, to match how our
     # expected output is encoded.
-    if [ -z "$filter" ]; then
-        LANG="$fix_lang" LC_ALL="$fix_lc_all" LC_CTYPE="$fix_lc_ctype" \
-            "$bindir/$util" "${args[@]}" 2>&1 | pathfilter && dummy=
-        exitcode=$?
+    if [ -z "$infile" ]; then
+      if [ -z "$filter" ]; then
+          LANG="$fix_lang" LC_ALL="$fix_lc_all" LC_CTYPE="$fix_lc_ctype" \
+              "$bindir/$util" "${args[@]}" 2>&1 | pathfilter && dummy=
+          exitcode=$?
+      else
+          LANG="$fix_lang" LC_ALL="$fix_lc_all" LC_CTYPE="$fix_lc_ctype" \
+              "$bindir/$util" "${args[@]}" 2>&1 | pathfilter | \
+              "$filter" && dummy=
+          exitcode=$?
+      fi
     else
-        LANG="$fix_lang" LC_ALL="$fix_lc_all" LC_CTYPE="$fix_lc_ctype" \
-            "$bindir/$util" "${args[@]}" 2>&1 | pathfilter | "$filter" && dummy=
-        exitcode=$?
+      if [ -z "$filter" ]; then
+          LANG="$fix_lang" LC_ALL="$fix_lc_all" LC_CTYPE="$fix_lc_ctype" \
+              "$bindir/$util" "${args[@]}" < "$infile" 2>&1 | \
+              pathfilter && dummy=
+          exitcode=$?
+      else
+          LANG="$fix_lang" LC_ALL="$fix_lc_all" LC_CTYPE="$fix_lc_ctype" \
+              "$bindir/$util" "${args[@]}" < "$infile" 2>&1 | \
+              pathfilter | "$filter" && dummy=
+          exitcode=$?
+      fi
     fi
     echo "--------------------"
     echo "Exit code: $exitcode"

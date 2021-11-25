@@ -54,11 +54,8 @@
 using regina::NormalSurfaces;
 using regina::Packet;
 
-SurfaceModel::SurfaceModel(regina::NormalSurfaces* surfaces,
-        bool readWrite) :
-        surfaces_(surfaces),
-        coordSystem_(surfaces->coords()),
-        isReadWrite(readWrite) {
+SurfaceModel::SurfaceModel(regina::NormalSurfaces* surfaces) :
+        surfaces_(surfaces), coordSystem_(surfaces->coords()) {
     nFiltered = surfaces_->size();
     if (nFiltered == 0)
         realIndex = nullptr;
@@ -101,17 +98,6 @@ void SurfaceModel::rebuildUnicode() {
             coordSystem_ == regina::NS_TRIANGLE_ARCS)
         emit headerDataChanged(Qt::Horizontal, propertyColCount(),
             columnCount(QModelIndex()) - 1);
-}
-
-void SurfaceModel::setReadWrite(bool readWrite) {
-    if (readWrite == isReadWrite)
-        return;
-
-    // Presumably a model reset is too severe, but I'm not sure what's
-    // actually necessary so let's just be safe.
-    beginResetModel();
-    readWrite = isReadWrite;
-    endResetModel();
 }
 
 QModelIndex SurfaceModel::index(int row, int column,
@@ -163,18 +149,19 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s.isCompact()) {
-                std::optional<regina::MatrixInt> slopes =
-                    s.boundaryIntersections();
-                if (slopes) {
+                try {
+                    regina::MatrixInt slopes = s.boundaryIntersections();
                     QString ans = tr("Spun:");
                     // Display each boundary slope as (nu(L), -nu(M)).
-                    for (unsigned i = 0; i < slopes->rows(); ++i)
+                    for (unsigned i = 0; i < slopes.rows(); ++i)
                         ans += QString(" (%1, %2)")
-                            .arg(slopes->entry(i,1).stringValue().c_str())
-                            .arg((-slopes->entry(i,0)).stringValue().c_str());
+                            .arg(slopes.entry(i,1).stringValue().c_str())
+                            .arg((-slopes.entry(i,0)).stringValue().c_str());
                     return ans;
-                } else
+                } catch (const regina::ReginaException&) {
+                    // This could be a FailedPrecondition or a SnapPeaisNull.
                     return tr("Spun");
+                }
             } else if (s.hasRealBoundary()) {
                 if (surfaces_->isEmbeddedOnly())
                     return QString::number(s.countBoundaries());
@@ -201,11 +188,10 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 return QVariant();
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 7) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 5)) {
-            regina::LargeInteger tot;
             if (s.isSplitting())
                 return tr("Splitting");
-            else if ((tot = s.isCentral()) != 0)
-                return tr("Central (%1)").arg(tot.longValue());
+            else if (size_t tot = s.isCentral())
+                return tr("Central (%1)").arg(tot);
             else
                 return QVariant();
         } else if (surfaces_->allowsAlmostNormal() &&
@@ -354,7 +340,7 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
 }
 
 Qt::ItemFlags SurfaceModel::flags(const QModelIndex& index) const {
-    if (index.column() == 1 && isReadWrite)
+    if (index.column() == 1)
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
     else
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -366,7 +352,7 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         // At present, NormalSurface::setName() does not fire a change
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
-        regina::Packet::ChangeEventSpan span(surfaces_);
+        regina::NormalSurfaces::ChangeEventSpan span(*surfaces_);
         const_cast<regina::NormalSurface&>(
             surfaces_->surface(realIndex[index.row()])).
             setName(value.toString().toUtf8().constData());
@@ -450,10 +436,11 @@ QString SurfaceModel::propertyColDesc(int whichCol) const {
     return tr("Unknown");
 }
 
-SurfacesCoordinateUI::SurfacesCoordinateUI(regina::NormalSurfaces* packet,
-        PacketTabbedUI* useParentUI, bool readWrite) :
-        PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(0),
-        isReadWrite(readWrite), currentlyResizing(false) {
+SurfacesCoordinateUI::SurfacesCoordinateUI(
+        regina::PacketOf<regina::NormalSurfaces>* packet,
+        PacketTabbedUI* useParentUI) :
+        PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(nullptr),
+        currentlyResizing(false) {
     // Set up the UI.
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
@@ -464,7 +451,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(regina::NormalSurfaces* packet,
     uiLayout->addLayout(hdrLayout);
 
     // Set up the coordinate selector.
-    QLabel* label = new QLabel(tr("Display coordinates:"));
+    auto* label = new QLabel(tr("Display coordinates:"));
     hdrLayout->addWidget(label);
     coords = new CoordinateChooser();
     coords->insertAllViewers(surfaces);
@@ -483,7 +470,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(regina::NormalSurfaces* packet,
     hdrLayout->addWidget(label);
     filter = new PacketChooser(surfaces->root(),
         new SingleTypeFilter<regina::SurfaceFilter>(),
-        PacketChooser::ROOT_AS_PACKET, true, 0, ui);
+        PacketChooser::ROOT_AS_PACKET, true, nullptr, ui);
     filter->setAutoUpdate(true);
     connect(filter, SIGNAL(activated(int)), this, SLOT(refresh()));
     hdrLayout->addWidget(filter);
@@ -496,7 +483,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(regina::NormalSurfaces* packet,
     filter->setWhatsThis(msg);
 
     // Set up the coordinate table.
-    model = new SurfaceModel(surfaces, readWrite);
+    model = new SurfaceModel(surfaces);
 
     table = new QTreeView();
     table->setItemsExpandable(false);
@@ -598,12 +585,12 @@ void SurfacesCoordinateUI::refresh() {
     filter->refreshContents();
 
     bool filterChanged = false;
-    if (filter->selectedPacket() != appliedFilter) {
+    if (filter->selectedPacket().get() != appliedFilter) {
         filterChanged = true;
         if (appliedFilter)
             appliedFilter->unlisten(this);
         appliedFilter = dynamic_cast<regina::SurfaceFilter*>(
-            filter->selectedPacket());
+            filter->selectedPacket().get());
         if (appliedFilter)
             appliedFilter->listen(this);
     }
@@ -625,15 +612,8 @@ void SurfacesCoordinateUI::refresh() {
     }
 }
 
-void SurfacesCoordinateUI::setReadWrite(bool readWrite) {
-    isReadWrite = readWrite;
-
-    model->setReadWrite(readWrite);
-    updateActionStates();
-}
-
-void SurfacesCoordinateUI::packetToBeDestroyed(regina::PacketShell) {
-    // Our currently applied filter is about to be destroyed.
+void SurfacesCoordinateUI::packetBeingDestroyed(regina::PacketShell) {
+    // Our currently applied filter is being destroyed.
     filter->setCurrentIndex(0); // (i.e., None)
     refresh();
 }
@@ -659,12 +639,10 @@ void SurfacesCoordinateUI::cutAlong() {
 
     // Go ahead and cut along the surface.
     // Be nice and simplify the triangulation, which could be very large.
-    regina::Triangulation<3>* ans = toCutAlong.cutAlong();
+    auto ans = regina::makePacket(toCutAlong.cutAlong(),
+        "Cut #" + std::to_string(whichSurface));
     ans->intelligentSimplify();
-    ans->setLabel(surfaces->triangulation().adornedLabel(
-        "Cut #" + std::to_string(whichSurface)));
     surfaces->insertChildLast(ans);
-
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
@@ -688,17 +666,14 @@ void SurfacesCoordinateUI::crush() {
     }
 
     // Go ahead and crush it.
-    regina::Triangulation<3>* ans = toCrush.crush();
-    ans->setLabel(surfaces->triangulation().adornedLabel(
-        "Crushed #" + std::to_string(whichSurface)));
+    auto ans = regina::makePacket(toCrush.crush(),
+        "Crushed #" + std::to_string(whichSurface));
     surfaces->insertChildLast(ans);
-
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
 void SurfacesCoordinateUI::updateActionStates() {
-    bool canCrushOrCut = isReadWrite &&
-        table->selectionModel()->hasSelection() &&
+    bool canCrushOrCut = table->selectionModel()->hasSelection() &&
         (! surfaces->allowsAlmostNormal()) && surfaces->isEmbeddedOnly();
 
     actCutAlong->setEnabled(canCrushOrCut);

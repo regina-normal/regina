@@ -48,6 +48,7 @@
 #include "regina-core.h"
 #include "regina-config.h"
 #include "enumerate/doubledescription.h"
+#include "enumerate/validityconstraints.h"
 #include "maths/matrixops.h"
 #include "progress/progresstracker.h"
 #include "utilities/bitmask.h"
@@ -97,11 +98,11 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     unsigned long cols = subspace.columns() - facets_.bits();
 
     // Extract the set of columns that we actually care about.
-    unsigned long* use = new unsigned long[cols];
+    auto* use = new unsigned long[cols];
     for (i = 0, j = 0; i < subspace.columns(); ++i)
         if (facets_.get(i)) {
             // We know in advance that this coordinate will be zero.
-            dest.set(i, IntegerType::zero);
+            dest[i] = IntegerType::zero;
         } else {
             use[j++] = i;
         }
@@ -110,7 +111,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     // If there are no equations then there must be only one non-zero
     // coordinate, and vice versa.
     if (cols == 1) {
-        dest.set(*use, 1);
+        dest[*use] = 1;
         delete[] use;
         return;
     }
@@ -119,7 +120,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     // non-trivial equation relating them.
 
     // Form a submatrix for the equations, looking only at non-zero coordinates.
-    IntegerType* m = new IntegerType[rows * cols];
+    auto* m = new IntegerType[rows * cols];
     for (i = 0; i < rows; ++i)
         for (j = 0; j < cols; ++j)
             m[i * cols + j] = subspace.entry(i, use[j]);
@@ -127,7 +128,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     // Put this submatrix in echelon form; moreover, for the leading
     // entry in each row, set all other entries in the corresponding
     // column to zero.
-    unsigned long* lead = new unsigned long[cols];
+    auto* lead = new unsigned long[cols];
     for (i = 0; i < cols; ++i)
         lead[i] = i;
 
@@ -191,9 +192,9 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
         common.negate();
 
     for (i = 0; i < rows; ++i)
-        dest.set(use[lead[i]], - (common * m[i * cols + lead[rows]]).
-            divExact(m[i * cols + lead[i]]));
-    dest.set(use[lead[rows]], common);
+        dest[use[lead[i]]] = - (common * m[i * cols + lead[rows]]).
+            divExact(m[i * cols + lead[i]]);
+    dest[use[lead[rows]]] = common;
 
     dest.scaleDown();
 
@@ -203,13 +204,13 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     delete[] use;
 }
 
-template <class RayClass, class OutputIterator>
-void DoubleDescription::enumerateExtremalRays(OutputIterator results,
-        const MatrixInt& subspace, const EnumConstraints* constraints,
+template <class RayClass, typename Action>
+void DoubleDescription::enumerate(Action&& action,
+        const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
     static_assert(
         IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
-        "DoubleDescription::enumerateExtremalRays() requires the RayClass "
+        "DoubleDescription::enumerate() requires the RayClass "
         "template parameter to be equal to or derived from Vector<T>, "
         "where T is one of Regina's arbitrary precision integer types.");
 
@@ -225,36 +226,42 @@ void DoubleDescription::enumerateExtremalRays(OutputIterator results,
     // Then farm the work out to the real enumeration routine that is
     // templated on the bitmask type.
     if (nFacets <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned>>(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long>>(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long>>(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass,
-            Bitmask2<unsigned long long, unsigned> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long, unsigned>>(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass,
-            Bitmask2<unsigned long long, unsigned long> >(
-            results, subspace, constraints, tracker, initialRows);
+            Bitmask2<unsigned long long, unsigned long>>(
+            std::forward<Action>(action),
+            subspace, constraints, tracker, initialRows);
     else if (nFacets <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long>>(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
     else
-        enumerateUsingBitmask<RayClass, Bitmask>(results,
+        enumerateUsingBitmask<RayClass, Bitmask>(
+            std::forward<Action>(action),
             subspace, constraints, tracker, initialRows);
 }
 
-template <class RayClass, class BitmaskType, class OutputIterator>
-void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
-        const MatrixInt& subspace, const EnumConstraints* constraints,
+template <class RayClass, class BitmaskType, typename Action>
+void DoubleDescription::enumerateUsingBitmask(Action&& action,
+        const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
-    typedef typename RayClass::Element IntegerType;
+    using IntegerType = typename RayClass::Element;
 
     // Get the dimension of the entire space in which we are working.
     unsigned long dim = subspace.columns();
@@ -263,11 +270,10 @@ void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
     unsigned long nEqns = subspace.rows();
     if (nEqns == 0) {
         // No!  Just send back the vertices of the non-negative orthant.
-        RayClass* ans;
         for (unsigned long i = 0; i < dim; ++i) {
-            ans = new RayClass(dim);
-            ans->set(i, IntegerType::one);
-            *results++ = ans;
+            RayClass ans(dim);
+            ans[i] = IntegerType::one;
+            action(std::move(ans));
         }
 
         if (tracker)
@@ -297,27 +303,13 @@ void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
 
     // Create the two vector lists with which we will work.
     // Fill the first with the initial set of rays.
-    typedef std::vector<RaySpec<IntegerType, BitmaskType>*> RaySpecList;
-    RaySpecList list[2];
+    std::vector<RaySpec<IntegerType, BitmaskType>*> list[2];
 
     for (i = 0; i < dim; ++i)
         list[0].push_back(new RaySpec<IntegerType, BitmaskType>(
             i, subspace, hyperplanes));
 
-    // Convert the set of constraints into a bitmask, where for every original
-    // facet listed in the constraint the corresponding bit is set to 1.
-    BitmaskType* constraintsBegin = nullptr;
-    BitmaskType* constraintsEnd = nullptr;
-    if (constraints && ! constraints->empty()) {
-        constraintsBegin = new BitmaskType[constraints->size()];
-
-        EnumConstraints::const_iterator cit;
-        for (cit = constraints->begin(), constraintsEnd = constraintsBegin;
-                cit != constraints->end(); ++cit, ++constraintsEnd) {
-            constraintsEnd->reset(dim);
-            constraintsEnd->set(cit->begin(), cit->end(), true);
-        }
-    }
+    auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
 
 #if 0
     std::cout << "Initial size: " << list[0].size() << std::endl;
@@ -337,7 +329,7 @@ void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
         // space *without* this hyperplane (and therefore satisfies the
         // relevant dimensional constraints without this hyperplane).
         if (intersectHyperplane(list[workingList], list[1 - workingList],
-                dim, used, constraintsBegin, constraintsEnd, tracker))
+                dim, used, constraintMasks, tracker))
             ++used;
 
         workingList = 1 - workingList;
@@ -352,27 +344,21 @@ void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
 
     // We're done!
     delete[] hyperplanes;
-    if (constraintsBegin)
-        delete[] constraintsBegin;
-
-    typename RaySpecList::iterator it;
 
     if (tracker && tracker->isCancelled()) {
         // The operation was cancelled.  Clean up before returning.
-        for (it = list[workingList].begin(); it != list[workingList].end();
-                ++it)
-            delete *it;
+        for (auto* r : list[workingList])
+            delete r;
         return;
     }
 
     // Convert the final solutions into the required ray class.
-    RayClass* ans;
-    for (it = list[workingList].begin(); it != list[workingList].end(); ++it) {
-        ans = new RayClass(dim);
-        (*it)->recover(*ans, subspace);
-        *results++ = ans;
+    for (auto* r : list[workingList]) {
+        RayClass ans(dim);
+        r->recover(ans, subspace);
+        action(std::move(ans));
 
-        delete *it;
+        delete r;
     }
 
     // All done!
@@ -385,21 +371,19 @@ bool DoubleDescription::intersectHyperplane(
         std::vector<RaySpec<IntegerType, BitmaskType>*>& src,
         std::vector<RaySpec<IntegerType, BitmaskType>*>& dest,
         unsigned long dim, unsigned long prevHyperplanes,
-        const BitmaskType* constraintsBegin,
-        const BitmaskType* constraintsEnd,
+        const std::vector<BitmaskType>& constraintMasks,
         ProgressTracker* tracker) {
     if (src.empty())
         return false;
 
-    typedef std::vector<RaySpec<IntegerType, BitmaskType>*> RayList;
-    RayList pos, neg;
+    std::vector<RaySpec<IntegerType, BitmaskType>*> pos, neg;
 
     // Run through the old rays and determine which side of the
     // new hyperplane they lie on.
     // Rays lying within the new hyperplane will be added directly to
     // the new solution set.
     int sign;
-    for (auto ray : src) {
+    for (auto* ray : src) {
         sign = ray->sign();
         if (sign == 0)
             dest.push_back(new RaySpec<IntegerType, BitmaskType>(*ray));
@@ -412,7 +396,7 @@ bool DoubleDescription::intersectHyperplane(
     // Does one of the closed half-spaces defined by the hyperplane contain the
     // entire old solution set?  If so, there will be no new vertices.
     if (pos.empty() || neg.empty()) {
-        for (auto ray : src)
+        for (auto* ray : src)
             delete ray;
         src.clear();
         return false;
@@ -422,40 +406,36 @@ bool DoubleDescription::intersectHyperplane(
     // pair of rays that are adjacent in the current solution space,
     // add the corresponding intersection with the new hyperplane to the
     // new solution set.
-    typename RayList::iterator posit, negit, otherit;
-
     const BitmaskType* constraint;
     bool broken;
 
     // We use the TrieSet data structure to speed up adjacency testing
     // in the code below.  Construct a TrieSet that records the facet
     // structure for every vertex in the old solution set.
-    TrieSet<BitmaskType> trie;
-    for (otherit = src.begin(); otherit != src.end(); ++otherit)
-        trie.insert((*otherit)->facets());
+    TrieSet trie;
+    for (auto* other : src)
+        trie.insert(other->facets());
 
     unsigned iterations = 0;
-    for (posit = pos.begin(); posit != pos.end(); ++posit)
-        for (negit = neg.begin(); negit != neg.end(); ++negit) {
+    for (auto* p : pos)
+        for (auto* n : neg) {
             // Test for cancellation, but not every time (since this
             // involves expensive mutex locking).
             if (tracker && ++iterations == 100) {
                 iterations = 0;
                 if (tracker->isCancelled()) {
-                    for (otherit = src.begin(); otherit != src.end();
-                            ++otherit)
-                        delete *otherit;
+                    for (auto* other : src)
+                        delete other;
                     src.clear();
-                    for (otherit = dest.begin(); otherit != dest.end();
-                            ++otherit)
-                        delete *otherit;
+                    for (auto* other : dest)
+                        delete other;
                     dest.clear();
                     return false;
                 }
             }
 
-            BitmaskType join((*posit)->facets());
-            join &= ((*negit)->facets());
+            BitmaskType join(p->facets());
+            join &= (n->facets());
 
             // We only care about adjacent rays, i.e., rays joined by an edge.
             // For the rays to be adjacent, the number of original facets that
@@ -466,15 +446,14 @@ bool DoubleDescription::intersectHyperplane(
                 continue;
 
             // Are we supposed to check for compatibility?
-            if (constraintsBegin) {
+            if (! constraintMasks.empty()) {
                 BitmaskType inv(join);
                 inv.flip();
 
                 broken = false;
-                for (constraint = constraintsBegin;
-                        constraint != constraintsEnd; ++constraint) {
+                for (const BitmaskType& constraint : constraintMasks) {
                     BitmaskType mask(inv);
-                    mask &= *constraint;
+                    mask &= constraint;
                     if (! mask.atMostOneBit()) {
                         broken = true;
                         break;
@@ -489,15 +468,13 @@ bool DoubleDescription::intersectHyperplane(
             //
             // If the rays *are* adjacent, join them and put the
             // corresponding intersection in the new results set.
-            if (! trie.hasExtraSuperset(join,
-                    (*posit)->facets(), (*negit)->facets(), dim))
-                dest.push_back(new RaySpec<IntegerType, BitmaskType>(
-                    **posit, **negit));
+            if (! trie.hasExtraSuperset(join, p->facets(), n->facets(), dim))
+                dest.push_back(new RaySpec<IntegerType, BitmaskType>(*p, *n));
         }
 
     // Clean up.
-    for (otherit = src.begin(); otherit != src.end(); ++otherit)
-        delete *otherit;
+    for (auto* other : src)
+        delete other;
     src.clear();
     return true;
 }

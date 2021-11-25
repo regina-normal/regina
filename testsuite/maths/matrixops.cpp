@@ -88,7 +88,7 @@ class MatrixOpsTest : public CppUnit::TestFixture {
                 red43(4, 3), dup34(3, 4), dup43(4, 3) {
         }
 
-        void setUp() {
+        void setUp() override {
             zero34.initialise(0L);
             zero43.initialise(0L);
             identity3.makeIdentity();
@@ -118,7 +118,7 @@ class MatrixOpsTest : public CppUnit::TestFixture {
                 dup43.entry(i / 3, i % 3) = dup34.entry(i % 3, i / 3);
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         static void checkSNF3(const MatrixInt& m, const char* name,
@@ -240,6 +240,12 @@ class MatrixOpsTest : public CppUnit::TestFixture {
 
             regina::smithNormalForm(snfBasis, R, invR, C, invC);
 
+            if (! (snf == snfBasis)) {
+                CPPUNIT_FAIL(std::string("In smithNormalForm(") +
+                    name + "), the basis and plain variants give "
+                    "different results.");
+            }
+
             if (! (R * invR).isIdentity()) {
                 CPPUNIT_FAIL(std::string("In smithNormalForm(") +
                     name + "), rowSpaceBasis and rowSpaceBasisInv are "
@@ -291,12 +297,15 @@ class MatrixOpsTest : public CppUnit::TestFixture {
             // Do it now with the five-argument routine, to collect
             // change of basis matrices.
             MatrixInt snfBasis(m);
-            MatrixInt R(m.columns(), m.columns());
-            MatrixInt C(m.rows(), m.rows());
-            MatrixInt invR(R);
-            MatrixInt invC(C);
+            MatrixInt R, C, invR, invC;
 
-            regina::metricalSmithNormalForm(snfBasis, &R, &invR, &C, &invC);
+            regina::metricalSmithNormalForm(snfBasis, R, invR, C, invC);
+
+            if (! (snf == snfBasis)) {
+                CPPUNIT_FAIL(std::string("In smithNormalForm(") +
+                    name + "), the metrical and plain variants give "
+                    "different results.");
+            }
 
             if (! (R * invR).isIdentity()) {
                 CPPUNIT_FAIL(std::string("In metricalSmithNormalForm(") +

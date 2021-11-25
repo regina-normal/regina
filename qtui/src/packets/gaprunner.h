@@ -37,20 +37,16 @@
 #ifndef __GAPRUNNER_H
 #define __GAPRUNNER_H
 
+#include "algebra/grouppresentation.h"
 #include <QDialog>
 #include <QProcess>
 #include <map>
-#include <memory>
+#include <optional>
 
 class MessageLayer;
 class QDialogButtonBox;
 class QLabel;
 class QSize;
-
-namespace regina {
-    class GroupExpression;
-    class GroupPresentation;
-};
 
 /**
  * A dialog that handles communications with GAP in order to simplify a
@@ -84,7 +80,7 @@ class GAPRunner : public QDialog {
          * Group information.
          */
         const regina::GroupPresentation& origGroup;
-        std::unique_ptr<regina::GroupPresentation> newGroup;
+        std::optional<regina::GroupPresentation> newGroup;
 
     public:
         /**
@@ -92,20 +88,20 @@ class GAPRunner : public QDialog {
          */
         GAPRunner(QWidget* parent, const QString& useExec,
             const regina::GroupPresentation& useOrigGroup);
-        ~GAPRunner();
+        ~GAPRunner() override;
 
         /**
          * Returns the new simplified group.
          *
          * This routine may only be called once!
-         * When called, ownership of the simplified group will be
-         * transferred to the calling routine.  Further calls to this
-         * routine will result in a null pointer being returned.
+         * When called, the data from the simplified group will be moved into
+         * the return value.  Further calls to this routine will result
+         * in undefined behaviour.
          *
-         * If no simplified group has been created, a null pointer will
+         * If no simplified group has been created, then no value will
          * be returned.
          */
-        std::unique_ptr<regina::GroupPresentation> simplifiedGroup();
+        std::optional<regina::GroupPresentation> simplifiedGroup();
 
     protected slots:
         /**
@@ -117,12 +113,12 @@ class GAPRunner : public QDialog {
         /**
          * Qt override to set preferred size of the window
          */
-        virtual QSize sizeHint() const;
+        QSize sizeHint() const override;
 
         /**
          * Disable the window-close event.
          */
-        virtual void closeEvent(QCloseEvent* e);
+        void closeEvent(QCloseEvent* e) override;
 
     private:
         /**
@@ -133,7 +129,8 @@ class GAPRunner : public QDialog {
         void processOutput(const QString& output);
         QString origGroupRelns();
         QString origGroupReln(const regina::GroupExpression& reln);
-        regina::GroupExpression* parseRelation(const QString& reln);
+        std::optional<regina::GroupExpression> parseRelation(
+            const QString& reln);
 
         /**
          * Display an error to the user and cancel the operation.

@@ -40,17 +40,13 @@
 #define __REGINA_PILLOWTWOSPHERE_H
 #endif
 
+#include <memory>
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/perm.h"
 #include "triangulation/forward.h"
 
 namespace regina {
-
-/**
- * \weakgroup subcomplex
- * @{
- */
 
 /**
  * Represents a 2-sphere made from two triangles glued together along their
@@ -66,6 +62,13 @@ namespace regina {
  * the same number of tetrahedra as the original.  If the original
  * 2-sphere was separating, the resulting triangulation will contain the
  * two terms of the corresponding connected sum.
+ *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ * However, the only way to create them (aside from copying or moving)
+ * is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
     private:
@@ -78,11 +81,25 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
 
     public:
         /**
-         * Returns a newly created clone of this structure.
+         * Creates a new copy of this structure.
+         */
+        PillowTwoSphere(const PillowTwoSphere&) = default;
+
+        /**
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        PillowTwoSphere& operator = (const PillowTwoSphere&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        PillowTwoSphere* clone() const;
+        [[deprecated]] PillowTwoSphere* clone() const;
 
         /**
          * Returns one of the two triangles whose boundaries are joined.
@@ -110,43 +127,58 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
          * Determines if the two given triangles together form a pillow
          * 2-sphere.
          *
+         * Even though PillowTwoSphere is a two-dimensional class and so does
+         * not inherit from StandardTriangulation, this routine nevertheless
+         * returns by (smart) pointer for consistency with the
+         * StandardTriangulation recognition routines (which use pointers
+         * because of the polymorphic StandardTriangulation class hierarchy).
+         *
          * \pre The two given triangles are distinct.
          *
          * @param tri1 the first triangle to examine.
          * @param tri2 the second triangle to examine.
-         * @return a newly created structure containing details of the
-         * pillow 2-sphere, or \c null if the given triangles do not
-         * form a pillow 2-sphere.
+         * @return a structure containing details of the pillow 2-sphere, or
+         * \c null if the given triangles do not form a pillow 2-sphere.
          */
-        static PillowTwoSphere* formsPillowTwoSphere(Triangle<3>* tri1,
-            Triangle<3>* tri2);
+        static std::unique_ptr<PillowTwoSphere> recognise(
+            Triangle<3>* tri1, Triangle<3>* tri2);
+
+        /**
+         * A deprecated alias to recognise if two triangles together
+         * form a pillow 2-sphere.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<PillowTwoSphere>
+            formsPillowTwoSphere(Triangle<3>* tri1, Triangle<3>* tri2);
 
         /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
 
-        // Make this class non-copyable.
-        PillowTwoSphere(const PillowTwoSphere&) = delete;
-        PillowTwoSphere& operator = (const PillowTwoSphere&) = delete;
-
     private:
         /**
-         * Creates a new uninitialised structure.
+         * Creates a new structure containing the given internal data.
          */
-        PillowTwoSphere();
+        PillowTwoSphere(Triangle<3>* tri0, Triangle<3>* tri1,
+            Perm<4> triMapping);
 };
-
-/*@}*/
 
 // Inline functions for PillowTwoSphere
 
-inline PillowTwoSphere::PillowTwoSphere() {
+inline PillowTwoSphere::PillowTwoSphere(Triangle<3>* tri0, Triangle<3>* tri1,
+        Perm<4> triMapping) :
+        triangle_ { tri0, tri1 }, triMapping_(triMapping) {
+}
+inline PillowTwoSphere* PillowTwoSphere::clone() const {
+    return new PillowTwoSphere(*this);
 }
 inline Triangle<3>* PillowTwoSphere::triangle(int index) const {
     return triangle_[index];
@@ -156,6 +188,11 @@ inline Perm<4> PillowTwoSphere::triangleMapping() const {
 }
 inline void PillowTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Pillow 2-sphere";
+}
+
+inline std::unique_ptr<PillowTwoSphere> PillowTwoSphere::formsPillowTwoSphere(
+        Triangle<3>* tri1, Triangle<3>* tri2) {
+    return recognise(tri1, tri2);
 }
 
 } // namespace regina

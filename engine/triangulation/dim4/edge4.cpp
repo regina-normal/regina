@@ -41,84 +41,78 @@ Face<4, 1>::~Face() {
     delete link_;
 }
 
-Triangulation<2>* Face<4, 1>::buildLinkDetail(bool labels,
-        Isomorphism<4>** inclusion) const {
-    // Build the triangulation.
-    Triangulation<2>* ans = new Triangulation<2>();
-    Packet::ChangeEventSpan span(ans);
+const Triangulation<2>& Face<4, 1>::buildLink() const {
+    if (! link_) {
+        // Build the triangulation.
+        auto* ans = new Triangulation<2>();
+        // Ensure only one event pair is fired in this sequence of changes.
+        Triangulation<2>::ChangeEventSpan span(*ans);
 
-    if (inclusion)
-        *inclusion = new Isomorphism<4>(degree());
+        ans->newTriangles(degree());
 
-    std::vector<EdgeEmbedding<4>>::const_iterator it, adjIt;
-    Triangle<2>* tTri;
-    Perm<5> perm;
-    int i;
-    for (it = begin(), i = 0; it != end(); ++it, ++i) {
-        tTri = ans->newTriangle();
-        if (labels) {
-            std::stringstream s;
-            s << it->pentachoron()->index() << " (" << it->edge() << ')';
-            tTri->setDescription(s.str());
-        }
-        if (inclusion) {
-            (*inclusion)->pentImage(i) = it->pentachoron()->index();
+        size_t i = 0;
+        for (auto it = begin(); it != end(); ++it, ++i) {
+            Pentachoron<4>* pent = it->pentachoron();
+            int e = it->edge();
 
-            perm = it->pentachoron()->triangleMapping(it->edge());
-            if (perm[3] == it->pentachoron()->edgeMapping(it->edge())[0])
-                (*inclusion)->facetPerm(i) = perm;
-            else
-                (*inclusion)->facetPerm(i) = perm * Perm<5>(3, 4);
-        }
-    }
+            for (int exitTet = 0; exitTet < 5; ++exitTet) {
+                if (exitTet == edgeVertex[e][0] || exitTet == edgeVertex[e][1])
+                    continue;
 
-    Pentachoron<4> *pent, *adj;
-    Perm<5> adjGluing;
-    int exitTet, e;
-    int edgeInLink;
-    int adjIndex;
-    int adjEdge;
-    for (it = begin(), i = 0; it != end(); ++it, ++i) {
-        pent = it->pentachoron();
-        e = it->edge();
+                Pentachoron<4>* adj = pent->adjacentPentachoron(exitTet);
+                if (! adj)
+                    continue;
 
-        for (exitTet = 0; exitTet < 5; ++exitTet) {
-            if (exitTet == edgeVertex[e][0] || exitTet == edgeVertex[e][1])
-                continue;
+                int edgeInLink = pent->triangleMapping(e).pre(exitTet);
+                if (ans->triangle(i)->adjacentTriangle(edgeInLink)) {
+                    // We've already made this gluing in the vertex link
+                    // from the other side.
+                    continue;
+                }
 
-            adj = pent->adjacentPentachoron(exitTet);
-            if (! adj)
-                continue;
+                Perm<5> adjGluing = pent->adjacentGluing(exitTet);
+                int adjEdge = edgeNumber[adjGluing[edgeVertex[e][0]]]
+                                        [adjGluing[edgeVertex[e][1]]];
 
-            edgeInLink = pent->triangleMapping(e).preImageOf(exitTet);
-            if (ans->triangle(i)->adjacentTriangle(edgeInLink)) {
-                // We've already made this gluing in the vertex link
-                // from the other side.
-                continue;
+                // TODO: We need to find which *embedding* corresponds to
+                // the adjacent pentachoron/edge pair.
+                // Currently we do a simple linear scan, which makes the
+                // overall link construction quadratic.  This can surely be
+                // made linear(ish) with the right data structure / algorithm.
+                size_t adjIndex = 0;
+                for (auto adjIt = begin(); adjIt != end(); ++adjIt, ++adjIndex)
+                    if (adjIt->pentachoron() == adj && adjIt->edge() == adjEdge)
+                        break; // Sets adjIndex to the right value.
+
+                ans->triangle(i)->join(edgeInLink, ans->triangle(adjIndex),
+                    Perm<3>::contract(adj->triangleMapping(adjEdge).inverse() *
+                        adjGluing *
+                        pent->triangleMapping(e)));
             }
-
-            adjGluing = pent->adjacentGluing(exitTet);
-            adjEdge = edgeNumber[adjGluing[edgeVertex[e][0]]]
-                                [adjGluing[edgeVertex[e][1]]];
-
-            // TODO: We need to find which *embedding* corresponds to
-            // the adjacent pentachoron/edge pair.
-            // Currently we do a simple linear scan, which makes the
-            // overall link construction quadratic.  This can surely be
-            // made linear(ish) with the right data structure and/or algorithm.
-            for (adjIt = begin(), adjIndex = 0;
-                    adjIt != end(); ++adjIt, ++adjIndex)
-                if (adjIt->pentachoron() == adj && adjIt->edge() == adjEdge)
-                    break; // Sets adjIndex to the right value.
-
-            ans->triangle(i)->join(edgeInLink, ans->triangle(adjIndex),
-                Perm<3>::contract(adj->triangleMapping(adjEdge).inverse() *
-                    adjGluing *
-                    pent->triangleMapping(e)));
         }
+
+        // This is a construct-on-demand member; cast away constness to
+        // set it here.
+        const_cast<Edge<4>*>(this)->link_ = ans;
+    }
+    return *link_;
+}
+
+Isomorphism<4> Face<4, 1>::buildLinkInclusion() const {
+    Isomorphism<4> inclusion(degree());
+
+    size_t i = 0;
+    for (auto it = begin(); it != end(); ++it, ++i) {
+        inclusion.pentImage(i) = it->pentachoron()->index();
+
+        Perm<5> perm = it->pentachoron()->triangleMapping(it->edge());
+        if (perm[3] == it->vertices()[0])
+            inclusion.facetPerm(i) = perm;
+        else
+            inclusion.facetPerm(i) = perm * Perm<5>(3, 4);
     }
 
-    return ans;
+    return inclusion;
 }
 
 } // namespace regina

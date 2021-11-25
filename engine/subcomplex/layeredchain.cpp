@@ -39,7 +39,7 @@ namespace regina {
 
 bool LayeredChain::extendAbove() {
     Tetrahedron<3>* adj = top_->adjacentTetrahedron(topVertexRoles_[0]);
-    if (adj == bottom_ || adj == top_ || adj == 0)
+    if (adj == bottom_ || adj == top_ || ! adj)
         return false;
     if (adj != top_->adjacentTetrahedron(topVertexRoles_[3]))
         return false;
@@ -60,7 +60,7 @@ bool LayeredChain::extendAbove() {
 
 bool LayeredChain::extendBelow() {
     Tetrahedron<3>* adj = bottom_->adjacentTetrahedron(bottomVertexRoles_[1]);
-    if (adj == bottom_ || adj == top_ || adj == 0)
+    if (adj == bottom_ || adj == top_ || ! adj)
         return false;
     if (adj != bottom_->adjacentTetrahedron(bottomVertexRoles_[2]))
         return false;
@@ -103,11 +103,11 @@ void LayeredChain::invert() {
     bottomVertexRoles_ = bottomVertexRoles_ * Perm<4>(3, 2, 1, 0);
 }
 
-Manifold* LayeredChain::manifold() const {
-    return new Handlebody(index_ <= 1 ? 0 : 1, true);
+std::unique_ptr<Manifold> LayeredChain::manifold() const {
+    return std::make_unique<Handlebody>(index_ <= 1 ? 0 : 1, true);
 }
 
-std::optional<AbelianGroup> LayeredChain::homology() const {
+AbelianGroup LayeredChain::homology() const {
     AbelianGroup ans;
     if (index_ > 1)
         ans.addRank();

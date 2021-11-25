@@ -48,11 +48,6 @@
 namespace regina::detail {
 
 /**
- * \weakgroup detail
- * @{
- */
-
-/**
  * Placeholder class that outlines the functions provided by
  * FaceNumbering<dim, subdim>.
  * This class exists mainly to help with documentation.
@@ -84,6 +79,8 @@ namespace regina::detail {
  * This must be between 1 and 15 inclusive.
  * \tparam subdim the dimension of the faces being numbered.
  * This must be between 0 and <i>dim</i>-1 inclusive.
+ *
+ * \ingroup detail
  */
 template <int dim, int subdim>
 class FaceNumberingAPI {
@@ -206,6 +203,8 @@ class FaceNumberingAPI {
  * <tt>dim-subdim-1</tt> in the partial template specialisation, and this
  * \e should be legal according to CWG1315; however, it fails to build
  * under some versions of gcc (e.g., 10.2.0).
+ *
+ * \ingroup detail
  */
 template <int dim, int subdim, int codim = dim - subdim - 1>
 class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
@@ -262,7 +261,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
             // We construct a permutation code from the individual images.
 
-            typedef typename Perm<dim + 1>::ImagePack ImagePack;
+            using ImagePack = typename Perm<dim + 1>::ImagePack;
             ImagePack code = 0;
             int shift = 0;
 
@@ -440,7 +439,7 @@ class FaceNumberingImpl<dim, 0, codim> : public FaceNumberingAPI<dim, 0> {
             } else {
                 // Construct a permutation code from the individual images.
 
-                typedef typename Perm<dim + 1>::ImagePack ImagePack;
+                using ImagePack = typename Perm<dim + 1>::ImagePack;
                 ImagePack code = face; // 0 -> face
 
                 int shift = Perm<dim + 1>::imageBits;
@@ -483,7 +482,7 @@ class FaceNumberingImpl<dim, subdim, 0> : public FaceNumberingAPI<dim, dim - 1> 
         static constexpr Perm<dim + 1> ordering(unsigned face) {
             // Construct a permutation code from the individual images.
 
-            typedef typename Perm<dim + 1>::ImagePack ImagePack;
+            using ImagePack = typename Perm<dim + 1>::ImagePack;
             ImagePack code = 0;
 
             int shift = 0;
@@ -829,8 +828,6 @@ class FaceNumberingImpl<4, 3, 0> : public FaceNumberingAPI<4, 3> {
         }
 #endif // ! __DOXYGEN
 };
-
-/*@}*/
 
 } // namespace regina::detail
 

@@ -40,6 +40,7 @@
 #include "maths/numbertheory.h"
 #include "subcomplex/satannulus.h"
 #include "triangulation/dim3.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -53,15 +54,12 @@ namespace {
     const SFSFibre four(4, 1);
 }
 
-typedef std::list<SFSFibre>::iterator FibreIterator;
-typedef std::list<SFSFibre>::const_iterator FibreIteratorConst;
-
 std::ostream& operator << (std::ostream& out, const SFSFibre& f) {
     return (out << '(' << f.alpha << ',' << f.beta << ')');
 }
 
 SFSFibre SFSpace::fibre(unsigned long which) const {
-    FibreIteratorConst pos = fibres_.begin();
+    auto pos = fibres_.begin();
     advance(pos, which);
     return *pos;
 }
@@ -231,12 +229,8 @@ void SFSpace::insertFibre(long alpha, long beta) {
     // that alpha is strictly positive.
 
     // Sanity check.
-    if (alpha == 0) {
-        // TODO: We should probably throw an exception here or something.
-        std::cerr << "ERROR: Inserting illegal fibre (0," << beta <<
-            ")." << std::endl;
-        return;
-    }
+    if (alpha == 0)
+        throw InvalidArgument("SFSpace::insertFibre() require alpha != 0");
 
     // Is it a regular fibre?
     if (alpha == 1) {
@@ -261,7 +255,7 @@ void SFSpace::insertFibre(long alpha, long beta) {
 }
 
 void SFSpace::reduce(bool mayReflect) {
-    FibreIterator it, it2;
+    std::list<SFSFibre>::iterator it, it2;
 
     // If the SFS is non-orientable, we can get rid of b completely and
     // convert most (if not all) exceptional fibres to beta <= alpha / 2.
@@ -391,7 +385,6 @@ void SFSpace::reduce(bool mayReflect) {
                 complementAllFibres();
             else if (nLarge == nSmall && it2 != fibres_.end()) {
                 // We need to look in a little more detail.
-                FibreIterator next;
                 bool shouldReflect = false;
 
                 // Restore our starting position, and let it2 become a
@@ -407,7 +400,7 @@ void SFSpace::reduce(bool mayReflect) {
 
                     // Now it2 points to the first element of the
                     // following block.
-                    next = it2;
+                    auto next = it2;
                     it2--;
 
                     // Now it2 points to the last element of this block.
@@ -449,7 +442,6 @@ void SFSpace::reduce(bool mayReflect) {
             } else if (b_ == (-b_ - static_cast<long>(nFibres_))) {
                 // Reflecting won't change b, but it will complement all
                 // fibres.  See whether this is worthwhile.
-                FibreIterator next;
                 bool shouldReflect = false;
 
                 it = fibres_.begin();
@@ -463,7 +455,7 @@ void SFSpace::reduce(bool mayReflect) {
 
                     // Now it2 points to the first element of the
                     // following block.
-                    next = it2;
+                    auto next = it2;
                     it2--;
 
                     // Now it2 points to the last element of this block.
@@ -503,7 +495,7 @@ std::list<SFSFibre>::iterator SFSpace::negateFibreDown(
 
     // The return value.  This is also a strict upper bound for the
     // location of the replacement fibre.
-    std::list<SFSFibre>::iterator next = it;
+    auto next = it;
     next++;
 
     // Delete the old iterator.
@@ -529,22 +521,21 @@ std::list<SFSFibre>::iterator SFSpace::negateFibreDown(
 }
 
 void SFSpace::complementAllFibres() {
-    FibreIterator it, it2, next;
-    for (it = fibres_.begin(); it != fibres_.end(); it++)
-        it->beta = it->alpha - it->beta;
+    for (auto& f : fibres_)
+        f.beta = f.alpha - f.beta;
 
     // Ensure that the array remains in sorted order.
     // Each portion of the array with fixed index must be reversed.
     SFSFibre tmpFibre;
-    it = fibres_.begin();
+    auto it = fibres_.begin();
     while (it != fibres_.end()) {
         // INV: it points to the next block to be reversed.
-        it2 = it;
+        auto it2 = it;
         for (it2++; it2 != fibres_.end() && (*it2).alpha == (*it).alpha; it2++)
             ;
 
         // Now it2 points to the first element of the following block.
-        next = it2;
+        auto next = it2;
         it2--;
 
         // Now it2 points to the last element of this block.
@@ -566,22 +557,22 @@ void SFSpace::complementAllFibres() {
     }
 }
 
-LensSpace* SFSpace::isLensSpace() const {
+std::optional<LensSpace> SFSpace::isLensSpace() const {
     if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_) {
         // Not a chance.
-        return 0;
+        return std::nullopt;
     }
 
     if (genus_ == 0 && class_ == o1) {
         // Base orbifold is the sphere.
         if (fibres_.empty())
-            return new LensSpace(b_ >= 0 ? b_ : -b_, 1);
+            return LensSpace(b_ >= 0 ? b_ : -b_, 1);
         else if (nFibres_ == 1) {
             long q = fibres_.front().alpha;
             long p = fibres_.front().beta + (b_ * q);
 
             // We have SFS [S2 : (q,p)].
-            return new LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
+            return LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
         } else if (nFibres_ == 2) {
             // Precisely two fibres.
             long q = fibres_.back().alpha;
@@ -600,11 +591,11 @@ LensSpace* SFSpace::isLensSpace() const {
             }
 
             // We should now have (x,y) == (1,0).
-            return new LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
+            return LensSpace(p >= 0 ? p : -p, q >= 0 ? q : -q);
         }
 
         // Not a lens space.
-        return 0;
+        return std::nullopt;
     } else if (genus_ == 1 && class_ == n2) {
         // Base orbifold is the projective plane.
         if (nFibres_ == 1) {
@@ -613,14 +604,14 @@ LensSpace* SFSpace::isLensSpace() const {
             long n = b_ * a + fibres_.front().beta;
 
             if (n == 1 || n == -1)
-                return new LensSpace(4 * a, 2 * a - 1);
+                return LensSpace(4 * a, 2 * a - 1);
         }
 
         // Not a lens space.
-        return 0;
+        return std::nullopt;
     }
 
-    return 0;
+    return std::nullopt;
 }
 
 bool SFSpace::operator == (const SFSpace& compare) const {
@@ -718,42 +709,41 @@ bool SFSpace::operator < (const SFSpace& compare) const {
     return false;
 }
 
-Triangulation<3>* SFSpace::construct() const {
+Triangulation<3> SFSpace::construct() const {
     // Things that we don't deal with just yet.
     if (punctures_ || puncturesTwisted_ || reflectors_ || reflectorsTwisted_)
-        return 0;
+        throw NotImplemented("SFSpace::construct() is currently not "
+            "implemented for spaces whose base orbifolds have punctures "
+            "or reflector boundaries");
 
     // We already know how to construct lens spaces.
-    LensSpace* lens = isLensSpace();
-    if (lens) {
-        Triangulation<3>* t = lens->construct();
-        delete lens;
-        return t;
-    }
+    if (auto lens = isLensSpace())
+        return lens->construct();
 
     // Currently we work over the 2-sphere only.
     if (genus_ != 0 || class_ != o1)
-        return 0;
+        throw NotImplemented("SFSpace::construct() is currently not "
+            "implemented for spaces whose base orbifold is not the 2-sphere");
 
     // Since we've already dealt with lens spaces, we must have at least
     // three exceptional fibres.  Build a blocked structure.
-    Triangulation<3>* ans = new Triangulation<3>();
+    Triangulation<3> ans;
     Tetrahedron<3> *a, *b, *c;
 
     // Begin with the first triangular solid torus.
-    a = ans->newTetrahedron();
-    b = ans->newTetrahedron();
-    c = ans->newTetrahedron();
+    a = ans.newTetrahedron();
+    b = ans.newTetrahedron();
+    c = ans.newTetrahedron();
     a->join(1, b, Perm<4>());
     b->join(2, c, Perm<4>());
     c->join(3, a, Perm<4>(1, 2, 3, 0));
 
-    std::list<SFSFibre>::const_iterator fit = fibres_.begin();
-    SatAnnulus(a, Perm<4>(1, 0, 2, 3), b, Perm<4>(1, 2, 0, 3)).
-        attachLST(ans, fit->alpha, fit->beta);
+    auto fit = fibres_.begin();
+    SatAnnulus::attachLST(a, Perm<4>(1, 0, 2, 3), b, Perm<4>(1, 2, 0, 3),
+        fit->alpha, fit->beta);
     fit++;
-    SatAnnulus(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0)).
-        attachLST(ans, fit->alpha, fit->beta);
+    SatAnnulus::attachLST(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0),
+        fit->alpha, fit->beta);
     fit++;
 
     // Run through the rest of the fibres, one at a time.  Each extra
@@ -764,17 +754,17 @@ Triangulation<3>* SFSpace::construct() const {
 
     SFSFibre nextFibre = *fit++;
     while (fit != fibres_.end()) {
-        a = ans->newTetrahedron();
-        b = ans->newTetrahedron();
-        c = ans->newTetrahedron();
+        a = ans.newTetrahedron();
+        b = ans.newTetrahedron();
+        c = ans.newTetrahedron();
         a->join(3, prevA, Perm<4>(2, 3));
         b->join(3, prevC, Perm<4>(0, 2, 3, 1));
         a->join(1, b, Perm<4>());
         b->join(2, c, Perm<4>());
         c->join(3, a, Perm<4>(1, 2, 3, 0));
 
-        SatAnnulus(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0)).
-            attachLST(ans, nextFibre.alpha, nextFibre.beta);
+        SatAnnulus::attachLST(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0),
+            nextFibre.alpha, nextFibre.beta);
 
         prevA = a;
         prevC = c;
@@ -783,16 +773,17 @@ Triangulation<3>* SFSpace::construct() const {
 
     // We have one remaining fibre.  Fill in the final annulus of the
     // last triangular solid torus.
-    SatAnnulus(a, Perm<4>(1, 0, 3, 2), c, Perm<4>(2, 3, 0, 1)).attachLST(ans,
+    SatAnnulus::attachLST(a, Perm<4>(1, 0, 3, 2), c, Perm<4>(2, 3, 0, 1),
         nextFibre.alpha, -(nextFibre.beta + b_ * nextFibre.alpha));
 
     return ans;
 }
 
-std::optional<AbelianGroup> SFSpace::homology() const {
+AbelianGroup SFSpace::homology() const {
     if (punctures_ || puncturesTwisted_) {
         // Not just now.
-        return std::nullopt;
+        throw NotImplemented("SFSpace::homology() is currently not "
+            "implemented for spaces whose base orbifolds have punctures");
     }
 
     // Construct the presentation of the fundamental group and
@@ -820,14 +811,13 @@ std::optional<AbelianGroup> SFSpace::homology() const {
             nFibres_ + 1 + 2 * nRef);
 
         unsigned long which = 0;
-        for (FibreIteratorConst it = fibres_.begin(); it != fibres_.end();
-                it++) {
+        for (const auto& f : fibres_) {
             pres.entry(nFibres_ + nRef, which) = 1;
 
-            pres.entry(which, nFibres_) = it->beta;
-            pres.entry(which, which) = it->alpha;
+            pres.entry(which, nFibres_) = f.beta;
+            pres.entry(which, which) = f.alpha;
 
-            which++;
+            ++which;
         }
 
         unsigned long ref;
@@ -862,14 +852,13 @@ std::optional<AbelianGroup> SFSpace::homology() const {
             nFibres_ + genus_ + 1 + 2 * nRef);
 
         unsigned long which = 0;
-        for (FibreIteratorConst it = fibres_.begin(); it != fibres_.end();
-                it++) {
+        for (const auto& f : fibres_) {
             pres.entry(nFibres_ + nRef, which) = 1;
 
-            pres.entry(which, nFibres_ + genus_) = it->beta;
-            pres.entry(which, which) = it->alpha;
+            pres.entry(which, nFibres_ + genus_) = f.beta;
+            pres.entry(which, which) = f.alpha;
 
-            which++;
+            ++which;
         }
 
         unsigned long ref;
@@ -1047,13 +1036,11 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
     // punctures or reflector boundaries.
 
     // Take out the lens spaces first.
-    LensSpace* lens = isLensSpace();
-    if (lens) {
+    if (auto lens = isLensSpace()) {
         if (tex)
             lens->writeTeXName(out);
         else
             lens->writeName(out);
-        delete lens;
         return out;
     }
 
@@ -1243,7 +1230,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
             if (b_ == 0) {
                 // [ RP2 ]
                 // Orlik, p113, remark.
-                return out << (tex ? "\\mathbb{R}P^3 \\# \\mathbb{R}P^3" :
+                return out << (tex ? R"(\mathbb{R}P^3 \# \mathbb{R}P^3)" :
                     "RP3 # RP3");
             } else {
                 // TODO: [ RP2 : (1,b) ]

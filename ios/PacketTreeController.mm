@@ -318,21 +318,21 @@
 
 #pragma mark - Packet listener
 
-- (void)packetWasRenamed:(regina::Packet *)packet {
+- (void)packetWasRenamed:(regina::Packet &)packet {
     [[ReginaHelper document] setDirty];
-    if (packet == self.node) {
+    if (std::addressof(packet) == self.node) {
         // Refresh the title, but only if this is not the root of the packet tree.
         if (packet->parent())
-            self.title = [NSString stringWithUTF8String:packet->label().c_str()];
+            self.title = [NSString stringWithUTF8String:packet.label().c_str()];
     } else {
         // Don't animate, since this was most likely a result of the user editing the cell.
-        NSIndexPath* path = [self pathForPacket:packet];
+        NSIndexPath* path = [self pathForPacket:(std::addressof(packet))];
         if (path)
             [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationNone];
     }
 }
 
-- (void)childWasAddedTo:(regina::Packet*)packet child:(regina::Packet*)child {
+- (void)childWasAddedTo:(regina::Packet&)packet child:(regina::Packet&)child {
     [[ReginaHelper document] setDirty];
 
     NSIndexPath* path;
@@ -369,7 +369,7 @@
      */
 }
 
-- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child {
+- (void)childWasRemovedFrom:(regina::Packet &)packet child:(regina::Packet &)child {
     if (! packet) // are we in the parent's destructor?
         return;
 
@@ -389,7 +389,7 @@
     }
 }
 
-- (void)childrenWereReordered:(regina::Packet *)packet {
+- (void)childrenWereReordered:(regina::Packet &)packet {
     // Only update the table if this action was not a result
     // of user interaction with the table.
     if (! _changingChildren) {
@@ -399,7 +399,7 @@
     [[ReginaHelper document] setDirty];
 }
 
-- (void)packetToBeDestroyed:(regina::PacketShell)packet {
+- (void)packetBeingDestroyed:(regina::PacketShell)packet {
     if (packet == _node) {
         _node = 0;
         _listener = nil;

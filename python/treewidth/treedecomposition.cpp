@@ -31,8 +31,9 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "link/link.h"
-#include "treewidth/treedecomposition.h"
+#include "treewidth/treedecomposition-impl.h"
 #include "triangulation/facetpairing.h"
 #include "triangulation/facetpairing3.h"
 #include "triangulation/dim2.h"
@@ -111,52 +112,14 @@ void addTreeDecomposition(pybind11::module_& m) {
         .def(pybind11::init<const regina::Link&>())
         .def(pybind11::init<const regina::Link&,
             regina::TreeDecompositionAlg>())
+        .def(pybind11::init<const regina::Matrix<bool>&>())
+        .def(pybind11::init<const regina::Matrix<bool>&,
+            regina::TreeDecompositionAlg>())
+        .def(pybind11::init<const std::vector<std::vector<bool>>&>())
+        .def(pybind11::init<const std::vector<std::vector<bool>>&,
+            regina::TreeDecompositionAlg>())
         .def(pybind11::init<const regina::TreeDecomposition&>())
-        .def(pybind11::init([](pybind11::list graph,
-                regina::TreeDecompositionAlg alg) {
-            size_t len = graph.size();
-            bool** g = new bool*[len];
-
-            long i, j, k;
-            pybind11::list row;
-            for (i = 0; i < len; ++i) {
-                try {
-                    row = graph[i].cast<pybind11::list>();
-                } catch (pybind11::cast_error const &) {
-                    // Clean up and throw an exception.
-                    for (k = 0; k < i; ++k) delete[] g[k];
-                    delete[] g;
-                    throw std::invalid_argument(
-                        "Graph must be presented as a list of lists");
-                }
-                if (row.size() != len) {
-                    // Clean up and throw an exception.
-                    for (k = 0; k < i; ++k) delete[] g[k];
-                    delete[] g;
-                    throw pybind11::index_error("Initialisation list "
-                        "does not describe a square matrix");
-                }
-
-                g[i] = new bool[len];
-                try {
-                    for (j = 0; j < len; ++j)
-                        g[i][j] = row[j].cast<bool>();
-                } catch (pybind11::cast_error const &) {
-                    // Clean up and throw an exception.
-                    for (k = 0; k <= i; ++k) delete[] g[k];
-                    delete[] g;
-                    throw std::invalid_argument(
-                        "Matrix element not convertible to a boolean");
-                }
-            }
-            TreeDecomposition* ans = new TreeDecomposition(
-                len, const_cast<bool const**>(g), alg);
-
-            // Clean up and return.
-            for (i = 0; i < len; ++i) delete[] g[i];
-            delete[] g;
-            return ans;
-        }), pybind11::arg(), pybind11::arg("alg") = regina::TD_UPPER)
+        .def("swap", &TreeDecomposition::swap)
         .def("width", &TreeDecomposition::width)
         .def("size", &TreeDecomposition::size)
         .def("root", &TreeDecomposition::root,
@@ -169,26 +132,69 @@ void addTreeDecomposition(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("compress", &TreeDecomposition::compress)
         .def("makeNice", [](TreeDecomposition& t) {
-            // In python we don't allow passing the heightHint array.
             t.makeNice();
         })
-        .def("reroot", [](TreeDecomposition& t, TreeBag* b) {
-            // overload_cast breaks since reroot is overloaded with a
-            // templated and non-templated version.
-            t.reroot(b);
+        .def("makeNice", [](TreeDecomposition& t, nullptr_t) {
+            t.makeNice();
         })
-        .def("writeDot", [](const TreeDecomposition& t) {
-            t.writeDot(std::cout);
+        .def("makeNice", [](TreeDecomposition& t, const std::vector<int>& h) {
+            // We cannot sanity-check the size of h, since a tree decomposition
+            // does not know how many nodes are in its underlying graph.
+            t.makeNice(h.data());
+        })
+        // overload_cast cannot handle template vs non-template overloads.
+        .def("reroot", (void (TreeDecomposition::*)(TreeBag*))(
+            &TreeDecomposition::reroot))
+        .def("reroot", [](TreeDecomposition& t,
+                const std::vector<double>& costSame,
+                const std::vector<double>& costReverse) {
+            if (costSame.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costSame is a list of the wrong size");
+            if (costReverse.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costReverse is a list of the wrong size");
+
+            t.reroot(costSame.data(), costReverse.data());
+        })
+        .def("reroot", [](TreeDecomposition& t,
+                const std::vector<double>& costSame,
+                const std::vector<double>& costReverse,
+                nullptr_t) {
+            if (costSame.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costSame is a list of the wrong size");
+            if (costReverse.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costReverse is a list of the wrong size");
+
+            t.reroot(costSame.data(), costReverse.data());
+        })
+        .def("reroot", [](TreeDecomposition& t,
+                const std::vector<double>& costSame,
+                const std::vector<double>& costReverse,
+                const std::vector<double>& costRoot) {
+            if (costSame.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costSame is a list of the wrong size");
+            if (costReverse.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costReverse is a list of the wrong size");
+            if (costRoot.size() != t.size())
+                throw regina::InvalidArgument(
+                    "Argument costRoot is a list of the wrong size");
+
+            t.reroot(costSame.data(), costReverse.data(), costRoot.data());
         })
         .def("dot", &TreeDecomposition::dot)
-        .def("writePACE", [](const TreeDecomposition& t) {
-            t.writePACE(std::cout);
-        })
         .def("pace", &TreeDecomposition::pace)
         .def_static("fromPACE",
             overload_cast<const std::string&>(&TreeDecomposition::fromPACE))
     ;
     regina::python::add_output(td);
     regina::python::add_eq_operators(td);
+
+    m.def("swap",
+        (void(*)(TreeDecomposition&, TreeDecomposition&))(regina::swap));
 }
 

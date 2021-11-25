@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/integer.h"
 #include "../helpers.h"
 
@@ -56,6 +57,7 @@ void addInteger(pybind11::module_& m) {
         .def("isInfinite", &Integer::isInfinite)
         .def("makeInfinite", &Integer::makeInfinite)
         .def("longValue", &Integer::longValue)
+        .def("safeLongValue", &Integer::safeLongValue)
         .def("stringValue", &Integer::stringValue,
             pybind11::arg("base") = 10)
         .def("swap", &Integer::swap)
@@ -71,6 +73,12 @@ void addInteger(pybind11::module_& m) {
         .def(pybind11::self <= long())
         .def(pybind11::self >= pybind11::self)
         .def(pybind11::self >= long())
+        .def("inc", [](Integer& i) {
+            return i++;
+        })
+        .def("dec", [](Integer& i) {
+            return i--;
+        })
         .def(pybind11::self + pybind11::self)
         .def(pybind11::self + long())
         .def(pybind11::self - pybind11::self)
@@ -85,11 +93,8 @@ void addInteger(pybind11::module_& m) {
             &Integer::divExact, pybind11::const_))
         .def(pybind11::self % pybind11::self)
         .def(pybind11::self % long())
-        .def("divisionAlg", [](const Integer& n, const Integer& divisor) {
-            Integer remainder;
-            Integer quotient = n.divisionAlg(divisor, remainder);
-            return pybind11::make_tuple(quotient, remainder);
-        })
+        .def("divisionAlg", overload_cast<const Integer&>(
+            &Integer::divisionAlg, pybind11::const_))
         .def(- pybind11::self)
         .def(pybind11::self += pybind11::self)
         .def(pybind11::self += long())
@@ -112,7 +117,10 @@ void addInteger(pybind11::module_& m) {
         .def("gcd", &Integer::gcd)
         .def("lcmWith", &Integer::lcmWith)
         .def("lcm", &Integer::lcm)
-        .def("gcdWithCoeffs", &Integer::gcdWithCoeffs)
+        .def("gcdWithCoeffs", overload_cast<const Integer&>(
+            &Integer::gcdWithCoeffs, pybind11::const_))
+        .def("gcdWithCoeffs", overload_cast<const Integer&, Integer&, Integer&>(
+            &Integer::gcdWithCoeffs, pybind11::const_))
         .def("legendre", &Integer::legendre)
         .def("randomBoundedByThis", &Integer::randomBoundedByThis)
         .def_static("randomBinary", &Integer::randomBinary)

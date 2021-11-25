@@ -74,9 +74,10 @@ namespace {
 }
 
 SurfacesSummaryUI::SurfacesSummaryUI(
-        regina::NormalSurfaces* packet, PacketTabbedUI* useParentUI) :
+        regina::PacketOf<regina::NormalSurfaces>* packet,
+        PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet) {
-    QScrollArea* scroller = new QScrollArea();
+    auto* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);
     scroller->setFrameStyle(QFrame::NoFrame);
     // Transparency must be applied to both the QScrollArea *and* some of its
@@ -87,7 +88,7 @@ SurfacesSummaryUI::SurfacesSummaryUI(
     ui = scroller;
 
     pane = new QWidget(scroller);
-    QVBoxLayout* paneLayout = new QVBoxLayout;
+    auto* paneLayout = new QVBoxLayout;
     pane->setLayout(paneLayout);
     scroller->setWidget(pane);
 
@@ -145,9 +146,6 @@ SurfacesSummaryUI::SurfacesSummaryUI(
     paneLayout->addStretch(1);
 }
 
-SurfacesSummaryUI::~SurfacesSummaryUI() {
-}
-
 regina::Packet* SurfacesSummaryUI::getPacket() {
     return surfaces;
 }
@@ -167,7 +165,8 @@ void SurfacesSummaryUI::refresh() {
 
     regina::LargeInteger euler;
     std::pair<int, int> type;
-    for (const regina::NormalSurface& s : surfaces->surfaces()) {
+    for (const regina::NormalSurface& s :
+            static_cast<const regina::NormalSurfaces&>(*surfaces)) {
         if (! s.isCompact())
             ++spun;
         else if (s.hasRealBoundary()) {
@@ -308,7 +307,7 @@ void SurfacesSummaryUI::refresh() {
     // coordinate systems.
     if ((surfaces->triangulation().isIdeal() ||
             ! surfaces->triangulation().isValid()) &&
-            (surfaces->allowsSpun())) {
+            (surfaces->allowsNonCompact())) {
         if (spun == 0) {
             totSpun->setText(tr("No spun (non-compact) surfaces."));
         } else {

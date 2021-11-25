@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>op</refname>
-  <refpurpose>A single logical operation</refpurpose>
+  <refpurpose>Replaced by attributes of &xml-filtercomb;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -40,12 +40,16 @@ op ::=</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-op; element represents a single logical operation.
+   This element was used in the past to encode a single logical operation,
+   as used by a combination filter to combine several other surface filters.
+   Since &regina;&nbsp;7.0, this logical operation is now stored in
+   the attributes of the corresponding &xml-filtercomb; element instead.
   </para>
 
   <refsect2>

@@ -39,11 +39,6 @@
 #define __REGINA_CORE_H
 #endif
 
-/**
- * \weakgroup engine
- * @{
- */
-
 namespace regina {
 
 /**
@@ -54,6 +49,8 @@ namespace regina {
  *
  * @param dim the dimension in question.
  * @return \c true if and only if \a dim is one of Regina's standard dimensions.
+ *
+ * \ingroup engine
  */
 constexpr bool standardDim(int dim) {
     return (dim == 2 || dim == 3 || dim == 4);
@@ -70,8 +67,10 @@ constexpr bool standardDim(int dim) {
  *
  * For some computations where the user can exert more fine-grained control
  * over the underlying algorithm, a more specialised enumeration type is
- * used instead.  For example, see NormalSurfaces::enumerate(), which uses the
- * specialised algorithm types NormalAlg and NormalAlgFlags.
+ * used instead.  For example, see the NormalSurfaces class constructor, which
+ * uses the specialised algorithm types NormalAlg and NormalAlgFlags.
+ *
+ * \ingroup engine
  */
 enum Algorithm {
     /**
@@ -106,7 +105,5 @@ enum Algorithm {
 };
 
 } // namespace regina
-
-/*@}*/
 
 #endif

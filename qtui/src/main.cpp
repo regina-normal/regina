@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
     QCoreApplication::addLibraryPath(appDirPath + "/../PlugIns");
 #endif
 
-    ReginaManager *app = new ReginaManager(argc, argv);
+    auto *app = new ReginaManager(argc, argv);
     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
     QCoreApplication::setOrganizationName("Regina");

@@ -1,0 +1,199 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-surfaces">
+ <refmeta>
+  <refentrytitle>surfaces</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>surfaces</refname>
+  <refpurpose>A normal surface list packet</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+surfaces ::= (&xml-surface;*,
+              &xml-tag;*,
+              &packetsyn1;
+              &packetsyn2;
+              &packetsyn3;
+              &packetsyn4;
+              &packetsyn5;*)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>algorithm</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>coords</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>tri</sgmltag></entry>
+      <entry><type>CDATA</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>type</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+     &packetattrlist2col;
+    </tbody>
+   </tgroup>
+  </informaltable>
+  <para>&eltaddedver;7.0</para>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   This represents a <emphasis>normal surface list packet</emphasis>,
+   one of the many types of packet that together form the
+   <emphasis>packet tree</emphasis> that a user sees when they open a
+   &regina; data file.
+  </para>
+  <para>
+   A normal surface list stores a list of normal surfaces in a particular
+   3-manifold triangulation.  This list will often contain the vertex
+   surfaces whose convex span is the set of all normal surfaces in
+   the triangulation that satisfy certain constraints, though
+   other lists (such as fundamental surfaces, or other customised lists)
+   can be stored also.
+  </para>
+  <para>
+   Since &regina;&nbsp;7.0, a normal surface list no longer needs to
+   be a child packet of its underlying triangulation.
+   Instead, the triangulation is denoted by the <sgmltag>tri</sgmltag>
+   attribute.  This must be the ID of a 3-dimensional triangulation packet
+   that appears <emphasis>before this list in the packet tree</emphasis>,
+   with respect to a pre-order depth-first traversal
+   (i.e., the triangulation must appear before this list in the &xml;
+   data file).  The triangulation may be an anonymous packet (see &xml-anon;).
+  </para>
+  <para>
+   The individual normal surfaces in this list are contained in the
+   child &xml-surface; elements.
+   Since &regina;&nbsp;7.0, the parameters of the normal surface enumeration
+   that created this list are stored in the attributes; there is no
+   longer a child &xml-params; element.
+  </para>
+  &packetchilddesc;
+
+  <refsect2>
+   <title>Parents</title>
+   &packetparents;
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>surfaces</sgmltag>,
+    and are specific to the normal surface list packet type:
+    <simplelist type="inline">
+     <member>&xml-surface;</member>
+    </simplelist>.
+   </para>
+   &packetchildren;
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <para>
+   The following attributes are specific to normal surface lists:
+  </para>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>algorithm</sgmltag></term>
+    <listitem>
+     <para>
+      Specifies the algorithm that was used to enumerate these normal surfaces.
+     </para>
+     <para>
+      This must be an integer, formed as a bitwise OR combination of
+      constants from the <classname>NormalAlgFlags</classname> enumeration
+      in &regina;'s calculation engine.
+     </para>
+     <para>
+      An example of such an integer might be 17, which combines the
+      <classname>NormalAlgFlags</classname> constants
+      <literal>NS_VERTEX_VIA_REDUCED</literal> (1) and
+      <literal>NS_TREE</literal> (16), indicating that the enumeration used
+      the tree traversal method and did the bulk of its work in a
+      smaller coordinate system.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>coords</sgmltag></term>
+    <listitem>
+     <para>
+      Specifies which coordinate system was used in the normal surface
+      enumeration.
+     </para>
+     <para>
+      This must be a non-negative integer that matches one of the
+      constants from the <classname>NormalCoords</classname> enumeration
+      in &regina;'s calculation engine.
+     </para>
+     <para>
+      An example of such an integer might be 102, which is the
+      constant <literal>NS_AN_QUAD_OCT</literal> that represents
+      standard coordinates for octagonal almost normal surfaces.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>tri</sgmltag></term>
+    <listitem><para>
+     The ID of the triangulation in which these normal surfaces live.
+     This must match the <sgmltag>id</sgmltag> attribute of a
+     3-dimensional triangulation that appears before this list in a
+     pre-order depth-first traversal of the full packet tree.
+    </para></listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>type</sgmltag></term>
+    <listitem>
+     <para>
+      Specifies exactly which normal surfaces this list contains.
+      In particular, this flag indicates whether the list contains all
+      vertex surfaces, all fundamental surfaces, or some other
+      customised list.  It also indicates whether the list is
+      restricted to properly embedded surfaces.
+     </para>
+     <para>
+      This must be an integer, formed as a bitwise OR combination of
+      constants from the <classname>NormalListFlags</classname> enumeration
+      in &regina;'s calculation engine.
+     </para>
+     <para>
+      An example of such an integer might be 5, which combines the
+      <classname>NormalListFlags</classname> constants
+      <literal>NS_EMBEDDED_ONLY</literal> (1) and
+      <literal>NS_VERTEX</literal> (4).
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+  &packetattrdesc;
+ </refsect1>
+</refentry>

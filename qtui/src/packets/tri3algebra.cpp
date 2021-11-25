@@ -47,6 +47,7 @@
 #include "reginasupport.h"
 #include "../progressdialogs.h"
 
+#include <thread>
 #include <QDir>
 #include <QFileInfo>
 #include <QHeaderView>
@@ -64,7 +65,6 @@
 #include <QTextDocument>
 #include <QValidator>
 
-using regina::Cyclotomic;
 using regina::Packet;
 using regina::Triangulation;
 
@@ -82,8 +82,9 @@ namespace {
             QString value_;
 
         public:
-            TuraevViroItem(unsigned long r, bool parity, const QString& value) :
-                    QTreeWidgetItem(), r_(r), parity_(parity), value_(value) {
+            TuraevViroItem(unsigned long r, bool parity, QString value) :
+                    QTreeWidgetItem(), r_(r), parity_(parity),
+                    value_(std::move(value)) {
                 if (r_ % 2) {
                     if (parity_)
                         setText(0, QObject::tr("%1, odd").arg(r_));
@@ -109,7 +110,7 @@ namespace {
     };
 }
 
-Tri3AlgebraUI::Tri3AlgebraUI(regina::Triangulation<3>* packet,
+Tri3AlgebraUI::Tri3AlgebraUI(regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketTabbedUI* useParentUI) :
         PacketTabbedViewerTab(useParentUI,
             ReginaPrefSet::global().tabDim3TriAlgebra) {
@@ -119,16 +120,17 @@ Tri3AlgebraUI::Tri3AlgebraUI(regina::Triangulation<3>* packet,
     addTab(new Tri3CellularInfoUI(packet, this), tr("&Cellular Info"));
 }
 
-Tri3HomologyFundUI::Tri3HomologyFundUI(regina::Triangulation<3>* packet,
+Tri3HomologyFundUI::Tri3HomologyFundUI(
+        regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
 
-    ColumnLayout* master = new ColumnLayout(ui);
+    auto* master = new ColumnLayout(ui);
 
     // Homology:
 
-    QGridLayout* homologyGrid = new QGridLayout();//, 7, 4, 0, 5);
+    auto* homologyGrid = new QGridLayout();//, 7, 4, 0, 5);
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(6, 1);
     homologyGrid->setColumnStretch(0, 1);
@@ -260,7 +262,7 @@ void Tri3HomologyFundUI::refresh() {
 
     if (tri->countComponents() <= 1) {
         fgMsg->hide();
-        fgGroup->refresh(&tri->fundamentalGroup());
+        fgGroup->refresh(tri->fundamentalGroup());
         fgGroup->show();
     } else {
         fgGroup->hide();
@@ -271,11 +273,9 @@ void Tri3HomologyFundUI::refresh() {
 }
 
 void Tri3HomologyFundUI::fundGroupSimplified() {
-    regina::GroupPresentation* simp = fgGroup->takeSimplifiedGroup();
-    if (simp) {
+    auto simp = fgGroup->takeSimplifiedGroup();
+    if (simp)
         tri->simplifiedFundamentalGroup(std::move(*simp));
-        delete simp;
-    }
 }
 
 void Tri3HomologyFundUI::refreshLabels() {
@@ -300,7 +300,8 @@ void Tri3HomologyFundUI::updatePreferences() {
     refresh();
 }
 
-Tri3TuraevViroUI::Tri3TuraevViroUI(regina::Triangulation<3>* packet,
+Tri3TuraevViroUI::Tri3TuraevViroUI(
+        regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -333,7 +334,7 @@ Tri3TuraevViroUI::Tri3TuraevViroUI(regina::Triangulation<3>* packet,
     paramsArea->addWidget(paramsLabel);
 
     params = new QLineEdit(ui);
-    QIntValidator* val = new QIntValidator(ui);
+    auto* val = new QIntValidator(ui);
     val->setBottom(0);
     params->setValidator(val);
     params->setWhatsThis(expln);
@@ -373,7 +374,7 @@ Tri3TuraevViroUI::Tri3TuraevViroUI(regina::Triangulation<3>* packet,
     invArea->addWidget(invariants, 4);
 
     invariants->setColumnCount(2);
-    QTreeWidgetItem* header = new QTreeWidgetItem();
+    auto* header = new QTreeWidgetItem();
     header->setText(0, tr("r"));
     header->setText(1, tr("value"));
     for (int i = 0; i < 2; ++i)
@@ -406,16 +407,15 @@ void Tri3TuraevViroUI::refresh() {
     // Since TuraevViroSet is a sorted data type,
     // these items will automatically be inserted in the right order.
     const Triangulation<3>::TuraevViroSet& invs(tri->allCalculatedTuraevViro());
-    for (Triangulation<3>::TuraevViroSet::const_iterator it = invs.begin();
-            it != invs.end(); it++)
+    for (const auto& tv : invs)
         if (unicode)
             invariants->addTopLevelItem(new TuraevViroItem(
-                (*it).first.first, (*it).first.second,
-                (*it).second.utf8("\u03B6" /* small zeta */).c_str()));
+                tv.first.first, tv.first.second,
+                tv.second.utf8("\u03B6" /* small zeta */).c_str()));
         else
             invariants->addTopLevelItem(new TuraevViroItem(
-                (*it).first.first, (*it).first.second,
-                (*it).second.str("z").c_str()));
+                tv.first.first, tv.first.second,
+                tv.second.str("z").c_str()));
 }
 
 void Tri3TuraevViroUI::calculateInvariant() {
@@ -481,7 +481,8 @@ bool Tri3TuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
 
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing invariant"), ui);
-    tri->turaevViro(r, parity, regina::ALG_DEFAULT, &tracker);
+    std::thread(&Triangulation<3>::turaevViro, tri, r, parity,
+        regina::ALG_DEFAULT, &tracker).detach();
     if (! dlg.run())
         return false;
     dlg.hide();
@@ -578,12 +579,21 @@ void Tri3CellularInfoUI::refresh() {
             // 8 principle cases:
             // orientable y/n, boundary y/n, torsion exists y/n
             if (tri->isOrientable()) {
-                TorForOrders->setText(
-                    minfo.torsionRankVectorString().c_str());
-                TorForSigma->setText(
-                    minfo.torsionSigmaVectorString().c_str());
-                TorForLegendre->setText(
-                    minfo.torsionLegendreSymbolVectorString().c_str());
+                try {
+                    TorForOrders->setText(
+                        minfo.torsionRankVectorString().c_str());
+                    TorForSigma->setText(
+                        minfo.torsionSigmaVectorString().c_str());
+                    TorForLegendre->setText(
+                        minfo.torsionLegendreSymbolVectorString().c_str());
+                } catch (const regina::UnsolvedCase&) {
+                    QString msg(QObject::tr("Torsion linking form could "
+                        "not be computed."));
+
+                    TorForOrders->setText(msg);
+                    TorForSigma->setText(msg);
+                    TorForLegendre->setText(msg);
+                }
             } else {
                 // The torsion linking form routines insist on orientability,
                 // so we should avoid calling them.
@@ -615,10 +625,11 @@ void Tri3CellularInfoUI::refresh() {
     }
 }
 
-Tri3CellularInfoUI::Tri3CellularInfoUI(regina::Triangulation<3>* packet,
+Tri3CellularInfoUI::Tri3CellularInfoUI(
+        regina::PacketOf<regina::Triangulation<3>>* packet,
         PacketTabbedViewerTab* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
-    QScrollArea* scroller = new QScrollArea();
+    auto* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);
     scroller->setFrameStyle(QFrame::NoFrame);
     // Transparency must be applied to both the QScrollArea *and* some of its
@@ -628,10 +639,10 @@ Tri3CellularInfoUI::Tri3CellularInfoUI(regina::Triangulation<3>* packet,
                             "}");
     ui = scroller;
 
-    QWidget* grid = new QWidget(scroller->viewport());
+    auto* grid = new QWidget(scroller->viewport());
     scroller->setWidget(grid);
 
-    QGridLayout* homologyGrid = new QGridLayout(grid);//, 11, 4, 0, 5);
+    auto* homologyGrid = new QGridLayout(grid);//, 11, 4, 0, 5);
     homologyGrid->setRowStretch(0, 1);
     homologyGrid->setRowStretch(11, 1);
     homologyGrid->setColumnStretch(0, 1);

@@ -125,12 +125,11 @@
 
     self.isosig.text = @(self.packet->isoSig().c_str());
     
-    regina::StandardTriangulation* stdTri = regina::StandardTriangulation::isStandardTriangulation(self.packet);
+    auto stdTri = regina::StandardTriangulation::recognise(self.packet);
     if (stdTri)
         self.standard.text = @(stdTri->name().c_str());
     else
         self.standard.attributedText = [TextHelper dimString:@"Not recognised"];
-    delete stdTri;
     
     NSMutableString* details = [[NSMutableString alloc] init];
     
@@ -183,9 +182,8 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::AugTriSolidTorus* aug;
     for (unsigned long i = 0; i < nComps; i++) {
-        aug = regina::AugTriSolidTorus::isAugTriSolidTorus(self.packet->component(i));
+        auto aug = regina::AugTriSolidTorus::recognise(self.packet->component(i));
         if (aug) {
             [details appendFormat:@"Augmented triangular solid torus %s\n", aug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -207,7 +205,6 @@
                 [details appendString:@INDENT1 "Attached: 3 layered solid tori\n"];
      
             [details appendString:@"\n"];
-            delete aug;
         }
     }
 }
@@ -216,9 +213,8 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::L31Pillow* pillow;
     for (unsigned long i = 0; i < nComps; i++) {
-        pillow = regina::L31Pillow::isL31Pillow(self.packet->component(i));
+        auto pillow = regina::L31Pillow::recognise(self.packet->component(i));
         if (pillow) {
             [details appendFormat:@"L(3,1) pillow %s\n", pillow->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -226,7 +222,6 @@
              pillow->tetrahedron(0)->vertex(pillow->interiorVertex(0))->index()];
             
             [details appendString:@"\n"];
-            delete pillow;
         }
     }
 }
@@ -235,18 +230,16 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::LayeredChainPair* pair;
     for (unsigned long i = 0; i < nComps; i++) {
-        pair = regina::LayeredChainPair::isLayeredChainPair(self.packet->component(i));
+        auto pair = regina::LayeredChainPair::recognise(self.packet->component(i));
         if (pair) {
             [details appendFormat:@"Layered chain pair %s\n", pair->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
             [details appendFormat:@INDENT1 "Chain lengths: %ld, %ld\n",
-             pair->chain(0)->index(),
-             pair->chain(1)->index()];
+             pair->chain(0).index(),
+             pair->chain(1).index()];
             
             [details appendString:@"\n"];
-            delete pair;
         }
     }
 }
@@ -255,9 +248,8 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::LayeredLensSpace* lens;
     for (unsigned long i = 0; i < nComps; i++) {
-        lens = regina::LayeredLensSpace::isLayeredLensSpace(self.packet->component(i));
+        auto lens = regina::LayeredLensSpace::recognise(self.packet->component(i));
         if (lens) {
             [details appendFormat:@"Layered lens space %s\n", lens->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -270,7 +262,6 @@
              (lens->isSnapped() ? "snapped shut" : "twisted shut")];
 
             [details appendString:@"\n"];
-            delete lens;
         }
     }
 }
@@ -279,9 +270,8 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::LayeredLoop* loop;
     for (unsigned long i = 0; i < nComps; i++) {
-        loop = regina::LayeredLoop::isLayeredLoop(self.packet->component(i));
+        auto loop = regina::LayeredLoop::recognise(self.packet->component(i));
         if (loop) {
             [details appendFormat:@"Layered loop %s\n", loop->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -297,7 +287,6 @@
             }
             
             [details appendString:@"\n"];
-            delete loop;
         }
     }
 }
@@ -306,10 +295,8 @@
 {
     unsigned long nComps = self.packet->countComponents();
     
-    regina::PlugTriSolidTorus* plug;
-    const regina::LayeredChain* chain;
     for (unsigned long i = 0; i < nComps; i++) {
-        plug = regina::PlugTriSolidTorus::isPlugTriSolidTorus(self.packet->component(i));
+        auto plug = regina::PlugTriSolidTorus::recognise(self.packet->component(i));
         if (plug) {
             [details appendFormat:@"Plugged triangular solid torus %s\n", plug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -322,7 +309,7 @@
 
             [details appendString:@INDENT1 "Chain lengths: "];
             for (int j = 0; j < 3; j++) {
-                chain = plug->chain(j);
+                const auto& chain = plug->chain(j);
                 if (chain) {
                     [details appendFormat:@"%ld", chain->index()];
                     if (plug->chainType(j) == regina::PlugTriSolidTorus::CHAIN_MAJOR)
@@ -342,25 +329,23 @@
                 [details appendString:@INDENT1 "Equator type: minor\n"];
 
             [details appendString:@"\n"];
-            delete plug;
         }
     }
 }
 
 - (void)describeSatRegion:(const regina::SatRegion&)region details:(NSMutableString*)details
 {
-    regina::SatBlockSpec spec;
     regina::SatAnnulus ann;
     unsigned nAnnuli;
     long b;
     int a;
     bool ref, back;
     NSString *thisAnnulus, *adjAnnulus;
-    for (b = region.numberOfBlocks() - 1; b >= 0; b--) {
-        spec = region.block(b);
+    for (b = region.countBlocks() - 1; b >= 0; b--) {
+        const regina::SatBlockSpec& spec = region.block(b);
         [details appendFormat:@INDENT2 "Block %ld: %s\n", b, spec.block->abbr().c_str()];
         
-        nAnnuli = spec.block->nAnnuli();
+        nAnnuli = spec.block->countAnnuli();
         
         [details appendString:@INDENT3 "Adjacencies:\n"];
         
@@ -418,16 +403,15 @@
 
 - (void)findBlockedTriangulations:(NSMutableString*)details
 {
-    regina::BlockedSFS* sfs = regina::BlockedSFS::isBlockedSFS(self.packet);
+    auto sfs = regina::BlockedSFS::recognise(self.packet);
     if (sfs) {
         [details appendString:@"Blocked Seifert Fibred Space\n"];
         [details appendString:@INDENT1 "Saturated region:\n"];
         [self describeSatRegion:sfs->region() details:details];
         [details appendString:@"\n"];
-        delete sfs;
     }
     
-    regina::BlockedSFSLoop* loop = regina::BlockedSFSLoop::isBlockedSFSLoop(self.packet);
+    auto loop = regina::BlockedSFSLoop::recognise(self.packet);
     if (loop) {
         [details appendString:@"Blocked SFS Loop\n"];
         
@@ -438,10 +422,9 @@
          [Tri3Composition matrixString:loop->matchingReln()]];
         
         [details appendString:@"\n"];
-        delete loop;
     }
     
-    regina::BlockedSFSPair* pair = regina::BlockedSFSPair::isBlockedSFSPair(self.packet);
+    auto pair = regina::BlockedSFSPair::recognise(self.packet);
     if (pair) {
         [details appendString:@"Blocked SFS Pair\n"];
         
@@ -455,10 +438,9 @@
          [Tri3Composition matrixString:pair->matchingReln()]];
         
         [details appendString:@"\n"];
-        delete pair;
     }
     
-    regina::BlockedSFSTriple* triple = regina::BlockedSFSTriple::isBlockedSFSTriple(self.packet);
+    auto triple = regina::BlockedSFSTriple::recognise(self.packet);
     if (triple) {
         [details appendString:@"Blocked SFS Triple\n"];
         
@@ -478,10 +460,9 @@
          [Tri3Composition matrixString:triple->matchingReln(0)]];
         
         [details appendString:@"\n"];
-        delete triple;
     }
     
-    regina::LayeredTorusBundle* bundle = regina::LayeredTorusBundle::isLayeredTorusBundle(self.packet);
+    auto bundle = regina::LayeredTorusBundle::recognise(self.packet);
     if (bundle) {
         [details appendString:@"Layered Torus Bundle\n"];
         
@@ -495,10 +476,9 @@
          bundle->core().name().c_str()];
         
         [details appendString:@"\n"];
-        delete bundle;
     }
     
-    regina::PluggedTorusBundle* pBundle = regina::PluggedTorusBundle::isPluggedTorusBundle(self.packet);
+    auto pBundle = regina::PluggedTorusBundle::recognise(self.packet);
     if (pBundle) {
         [details appendString:@"Plugged Torus Bundle\n"];
         
@@ -512,7 +492,6 @@
          pBundle->bundle().name().c_str()];
         
         [details appendString:@"\n"];
-        delete pBundle;
     }
 }
 
@@ -520,10 +499,9 @@
 {
     unsigned long nTets = self.packet->size();
     
-    regina::LayeredSolidTorus* torus;
     unsigned long topIndex;
     for (unsigned long i = 0; i < nTets; i++) {
-        torus = regina::LayeredSolidTorus::formsLayeredSolidTorusBase(self.packet->tetrahedron(i));
+        auto torus = regina::LayeredSolidTorus::recogniseFromBase(self.packet->tetrahedron(i));
         if (torus) {
             [details appendFormat:@"Layered solid torus %s\n", torus->name().c_str()];
             [details appendFormat:@INDENT1 "Base: tet %ld\n", torus->base()->index()];
@@ -546,7 +524,6 @@
                                          second:torus->topEdge(2, 1)]];
             
             [details appendString:@"\n"];
-            delete torus;
         }
     }
 }
@@ -555,7 +532,6 @@
 {
     unsigned long nTets = self.packet->size();
     
-    regina::SpiralSolidTorus* spiral;
     regina::Tetrahedron<3>* tet;
     int whichPerm;
     unsigned long i, j;
@@ -565,13 +541,11 @@
             if (regina::Perm<4>::S4[whichPerm][0] > regina::Perm<4>::S4[whichPerm][3])
                 continue;
             
-            spiral = regina::SpiralSolidTorus::formsSpiralSolidTorus(tet, regina::Perm<4>::S4[whichPerm]);
+            auto spiral = regina::SpiralSolidTorus::recognise(tet, regina::Perm<4>::S4[whichPerm]);
             if (! spiral)
                 continue;
-            if (! spiral->isCanonical(self.packet)) {
-                delete spiral;
+            if (! spiral->isCanonical())
                 continue;
-            }
             
             // We've got one!
             [details appendFormat:@"Spiralled solid torus %s\n", spiral->name().c_str()];
@@ -633,7 +607,6 @@
             }
             
             [details appendString:@"\n"];
-            delete spiral;
         }
     }
 }
@@ -642,9 +615,8 @@
 {
     unsigned long nTets = self.packet->size();
     
-    regina::SnappedBall* ball;
     for (unsigned long i = 0; i < nTets; i++) {
-        ball = regina::SnappedBall::formsSnappedBall(self.packet->tetrahedron(i));
+        auto ball = regina::SnappedBall::formsSnappedBall(self.packet->tetrahedron(i));
         if (ball) {
             [details appendString:@"Snapped 3-ball\n"];
             [details appendFormat:@INDENT1 "Tetrahedron %ld\n", i];
@@ -653,7 +625,6 @@
              ball->internalFace(1)];
             
             [details appendString:@"\n"];
-            delete ball;
         }
     }
 }
@@ -665,12 +636,11 @@
     unsigned long i, j;
     regina::Triangle<3>* f1;
     regina::Triangle<3>* f2;
-    regina::PillowTwoSphere* pillow;
     for (i = 0; i < nTriangles; i++) {
         f1 = self.packet->triangle(i);
         for (j = i + 1; j < nTriangles; j++) {
             f2 = self.packet->triangle(j);
-            pillow = regina::PillowTwoSphere::formsPillowTwoSphere(f1, f2);
+            auto pillow = regina::PillowTwoSphere::recognise(f1, f2);
             if (pillow) {
                 [details appendString:@"Pillow 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Triangles: %ld, %ld\n", i, j];
@@ -680,7 +650,6 @@
                  f1->edge(2)->index()];
                 
                 [details appendString:@"\n"];
-                delete pillow;
             }
         }
     }
@@ -693,22 +662,20 @@
     unsigned long i, j;
     regina::Tetrahedron<3>* t1;
     regina::Tetrahedron<3>* t2;
-    regina::SnappedTwoSphere* sphere;
     for (i = 0; i < nTets; i++) {
         t1 = self.packet->tetrahedron(i);
         for (j = i + 1; j < nTets; j++) {
             t2 = self.packet->tetrahedron(j);
-            sphere = regina::SnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
+            auto sphere = regina::SnappedTwoSphere::recognise(t1, t2);
             if (sphere) {
                 [details appendString:@"Snapped 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Tetrahedra: %ld, %ld\n", i, j];
                 
-                const regina::SnappedBall* ball = sphere->snappedBall(0);
+                const regina::SnappedBall& ball = sphere->snappedBall(0);
                 [details appendFormat:@INDENT1 "Equator: edge %ld\n",
-                 ball->tetrahedron()->edge(ball->equatorEdge())->index()];
+                 ball.tetrahedron()->edge(ball.equatorEdge())->index()];
                 
                 [details appendString:@"\n"];
-                delete sphere;
             }
         }
     }

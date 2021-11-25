@@ -45,26 +45,25 @@
  */
 class ReginaProgress : public CppUnit::TextTestProgressListener {
     private:
-        bool failed;
+        bool failed { false };
 
     public:
-        ReginaProgress() : TextTestProgressListener(), failed(false) {
-        }
+        ReginaProgress() = default;
 
-        virtual void startTest(CppUnit::Test* test) {
+        void startTest(CppUnit::Test* test) override {
             std::cout << truncateFixture(test->getName()) << "... ";
             std::cout.flush();
             failed = false;
         }
 
-        virtual void addFailure(const CppUnit::TestFailure&) {
+        void addFailure(const CppUnit::TestFailure&) override {
             if (! failed) {
                 std::cout << "FAILED." << std::endl;
                 failed = true;
             }
         }
 
-        virtual void endTest(CppUnit::Test*) {
+        void endTest(CppUnit::Test*) override {
             if (! failed)
                 std::cout << "ok." << std::endl;
         }

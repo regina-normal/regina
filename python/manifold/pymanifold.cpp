@@ -39,6 +39,7 @@ void addHandlebody(pybind11::module_& m);
 void addManifold(pybind11::module_& m);
 void addLensSpace(pybind11::module_& m);
 void addSFSpace(pybind11::module_& m);
+void addSFSAlt(pybind11::module_& m);
 void addSimpleSurfaceBundle(pybind11::module_& m);
 void addSnapPeaCensusManifold(pybind11::module_& m);
 void addTorusBundle(pybind11::module_& m);
@@ -48,6 +49,7 @@ void addManifoldClasses(pybind11::module_& m) {
     addHandlebody(m);
     addLensSpace(m);
     addSFSpace(m);
+    addSFSAlt(m);
     addSimpleSurfaceBundle(m);
     addSnapPeaCensusManifold(m);
     addTorusBundle(m);

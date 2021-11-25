@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/perm.h"
 #include "../constarray.h"
 #include "../helpers.h"
@@ -74,20 +75,7 @@ void addPerm6(pybind11::module_& m) {
         .def(pybind11::init<int, int, int, int, int, int>())
         .def(pybind11::init<int, int, int, int, int, int,
                             int, int, int, int, int, int>())
-        .def(pybind11::init([](pybind11::list l) {
-            if (l.size() != 6)
-                throw pybind11::index_error(
-                    "Initialisation list has the wrong length");
-            int image[6];
-            try {
-                for (long i = 0; i < 6; i++)
-                    image[i] = l[i].cast<int>();
-            } catch (pybind11::cast_error const &) {
-                throw std::invalid_argument(
-                    "List element not convertible to int");
-            }
-            return new Perm<6>(image);
-        }))
+        .def(pybind11::init<const std::array<int, 6>&>())
         .def(pybind11::init<const Perm<6>&>())
         .def_static("precompute", &Perm<6>::precompute)
         .def("permCode1", &Perm<6>::permCode1)
@@ -117,9 +105,13 @@ void addPerm6(pybind11::module_& m) {
         .def("reverse", &Perm<6>::reverse)
         .def("sign", &Perm<6>::sign)
         .def("__getitem__", &Perm<6>::operator[])
-        .def("preImageOf", &Perm<6>::preImageOf)
+        .def("pre", &Perm<6>::pre)
+        .def("preImageOf", &Perm<6>::pre) // deprecated
         .def("compareWith", &Perm<6>::compareWith)
         .def("isIdentity", &Perm<6>::isIdentity)
+        .def("inc", [](Perm<6>& p) {
+            return p++;
+        })
         .def(pybind11::self < pybind11::self)
         .def_static("rot", &Perm<6>::rot)
         // index and atIndex are deprecated, so do not call them directly.
@@ -139,16 +131,11 @@ void addPerm6(pybind11::module_& m) {
         .def_static("extend", &Perm<6>::extend<3>)
         .def_static("extend", &Perm<6>::extend<4>)
         .def_static("extend", &Perm<6>::extend<5>)
-        .def_property_readonly_static("codeType",
-            [](pybind11::object /* self */) { return Perm<6>::codeType; })
-        .def_property_readonly_static("imageBits",
-            [](pybind11::object /* self */) { return Perm<6>::imageBits; })
-        .def_property_readonly_static("imageMask",
-            [](pybind11::object /* self */) { return Perm<6>::imageMask; })
-        .def_property_readonly_static("nPerms",
-            [](pybind11::object /* self */) { return Perm<6>::nPerms; })
-        .def_property_readonly_static("nPerms_1",
-            [](pybind11::object /* self */) { return Perm<6>::nPerms_1; })
+        .def_readonly_static("codeType", &Perm<6>::codeType)
+        .def_readonly_static("imageBits", &Perm<6>::imageBits)
+        .def_readonly_static("imageMask", &Perm<6>::imageMask)
+        .def_readonly_static("nPerms", &Perm<6>::nPerms)
+        .def_readonly_static("nPerms_1", &Perm<6>::nPerms_1)
         .def_readonly_static("S6", &Perm6_S6_arr)
         .def_readonly_static("Sn", &Perm6_S6_arr)
         .def_readonly_static("orderedS6", &Perm6_orderedS6_arr)

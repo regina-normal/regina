@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "maths/matrix2.h"
 #include "subcomplex/satannulus.h"
 #include "triangulation/dim3.h"
@@ -67,12 +68,7 @@ void addSatAnnulus(pybind11::module_& m) {
         .def("horizontalReflection", &SatAnnulus::horizontalReflection)
         .def("rotateHalfTurn", &SatAnnulus::rotateHalfTurn)
         .def("halfTurnRotation", &SatAnnulus::halfTurnRotation)
-        .def("isAdjacent", [](const SatAnnulus& a, const SatAnnulus& other) {
-            bool refVert = false;
-            bool refHoriz = false;
-            bool ans = a.isAdjacent(other, &refVert, &refHoriz);
-            return pybind11::make_tuple(ans, refVert, refHoriz);
-        })
+        .def("isAdjacent", &SatAnnulus::isAdjacent)
         .def("isJoined", &SatAnnulus::isJoined)
         .def("isTwoSidedTorus", &SatAnnulus::isTwoSidedTorus)
         .def("transform", &SatAnnulus::transform)

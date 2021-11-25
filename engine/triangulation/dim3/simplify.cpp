@@ -102,8 +102,9 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
     // Perform the 4-4 move as a 2-3 move followed by a 3-2 move.
     // Note that, by using pachner(), we also preserve orientation
     // (if the triangulation was originally oriented).
-    TopologyLock lock(this);
-    ChangeEventSpan span(this);
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
     Triangle<3>* tri23 = (newAxis == 0 ?
         oldTet[0]->triangle(e->embedding(0).vertices()[2]) :
         oldTet[1]->triangle(e->embedding(1).vertices()[2]));
@@ -173,8 +174,9 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
-    TopologyLock lock(this);
-    ChangeEventSpan span(this);
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each
     // other.
@@ -215,7 +217,7 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
 
 bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
     if (check) {
-        if (v->link() != Vertex<3>::SPHERE)
+        if (v->linkType() != Vertex<3>::SPHERE)
             return false;
         if (v->degree() != 2)
             return false;
@@ -260,8 +262,9 @@ bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
-    TopologyLock lock(this);
-    ChangeEventSpan span(this);
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each
     // other.
@@ -350,8 +353,9 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
     #endif
 
     // Go ahead and perform the move.
-    TopologyLock lock(this);
-    ChangeEventSpan span(this);
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
 
     // First glue together the two faces that will be flattened.
     Tetrahedron<3>* adjTet[2];
@@ -454,7 +458,7 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
 
         if (nBdry != 2)
             return false;
-        if (tet->vertex(vertices[fVertex])->link() != Vertex<3>::DISC)
+        if (tet->vertex(vertices[fVertex])->linkType() != Vertex<3>::DISC)
             return false;
         if (! f->edge(fVertex)->isValid())
             return false;
@@ -469,7 +473,7 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
 
     // Actually perform the move.
     // Don't bother with a change event block since this is so simple.
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     tet->unjoin(emb.triangle());
     return true;
 }
@@ -494,8 +498,8 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     if (check) {
         if (t0->vertex(p0[2]) == t1->vertex(p1[3]))
             return false;
-        if (t0->vertex(p0[2])->link() != Vertex<3>::DISC ||
-               t1->vertex(p1[3])->link() != Vertex<3>::DISC)
+        if (t0->vertex(p0[2])->linkType() != Vertex<3>::DISC ||
+               t1->vertex(p1[3])->linkType() != Vertex<3>::DISC)
             return false;
     }
 
@@ -509,7 +513,7 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     // Actually perform the move.
     // Don't bother with a change event block since this is so simple.
 
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     t0->join(p0[3], t1, p1 * Perm<4>(2, 3) * p0.inverse());
     return true;
 }
@@ -567,7 +571,7 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
 
     // Actually perform the move.
     // Don't bother with a change event block since this is so simple.
-    TopologyLock lock(this);
+    TopologyLock lock(*this);
     removeTetrahedron(t);
     return true;
 }
@@ -575,7 +579,7 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
 bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     // Find the tetrahedra to remove.
     std::deque<EdgeEmbedding<3>>::const_iterator it;
-    Tetrahedron<3>* tet = 0;
+    Tetrahedron<3>* tet = nullptr;
     Perm<4> p;
 
     if (check) {
@@ -607,9 +611,9 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
         if (e->vertex(0)->isBoundary() && e->vertex(1)->isBoundary()) {
             if (! e->isBoundary())
                 return false;
-            if (e->vertex(0)->link() != Vertex<3>::DISC)
+            if (e->vertex(0)->linkType() != Vertex<3>::DISC)
                 return false;
-            if (e->vertex(1)->link() != Vertex<3>::DISC)
+            if (e->vertex(1)->linkType() != Vertex<3>::DISC)
                 return false;
         }
 
@@ -793,16 +797,17 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     #endif
 
     // Perform the move.
-    TopologyLock lock(this);
-    ChangeEventSpan span(this);
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
     Perm<4> topPerm, botPerm;
     Tetrahedron<3> *top, *bot;
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
     size_t degree = e->degree();
-    Tetrahedron<3>** embTet = new Tetrahedron<3>*[degree];
-    Perm<4>* embVertices = new Perm<4>[degree];
+    auto* embTet = new Tetrahedron<3>*[degree];
+    auto* embVertices = new Perm<4>[degree];
 
     unsigned i;
     for (i = 0, it = e->begin(); it != e->end(); ++i, ++it) {
@@ -844,7 +849,8 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
     std::cerr << "Performing edge pinch move\n";
     #endif
 
-    ChangeEventSpan span(this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
 
     // The two tetrahedra that we insert together form a pinched ball.
     // By a "pinched ball", this means a 3-ball in which some internal curve
@@ -864,8 +870,7 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
     // Since e is an internal edge (a precondition of this routine),
     // this is topologically the same as collapsing e itself.
 
-    Tetrahedron<3>* t0 = newTetrahedron();
-    Tetrahedron<3>* t1 = newTetrahedron();
+    auto [t0, t1] = newTetrahedra<2>();
     t0->join(0, t1, Perm<4>(1, 2));
     t0->join(3, t1, Perm<4>(0, 1));
     t1->join(1, t1, Perm<4>(1, 2));
@@ -887,11 +892,12 @@ void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
     if (n == 0)
         return;
 
-    TopologyLock lock(this);
-    ChangeEventSpan span(this);
+    TopologyLock lock(*this);
+    Snapshottable<Triangulation<3>>::takeSnapshot();
+    ChangeEventSpan span(*this);
 
     // Run a breadth-first search over all tetrahedra.
-    Tetrahedron<3>** ordered = new Tetrahedron<3>*[n];
+    auto* ordered = new Tetrahedron<3>*[n];
     bool* used = new bool[n];
 
     std::fill(used, used + n, false);

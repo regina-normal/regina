@@ -69,13 +69,13 @@ namespace regina {
  * vertex link.
  */
 
-std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() {
+std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() const {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
         return std::nullopt;
 
     // Do we already know the answer?
-    if (zeroEfficient_.has_value() && *zeroEfficient_)
+    if (prop_.zeroEfficient_.has_value() && *prop_.zeroEfficient_)
         return std::nullopt;
 
     // Use combinatorial optimisation if we can.
@@ -97,9 +97,9 @@ std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() {
     // For valid, non-ideal triangulations we can do this in quad
     // coordinates (where a non-trivial sphere or disc is guaranteed to
     // appear as a vertex surface).  Otherwise fall back to standard coords.
-    NormalSurfaces* surfaces = NormalSurfaces::enumerate(*this,
+    NormalSurfaces surfaces(*this,
         (isValid() && ! isIdeal()) ? NS_QUAD : NS_STANDARD);
-    for (const NormalSurface& s : surfaces->surfaces()) {
+    for (const NormalSurface& s : surfaces) {
         // These are vertex surfaces, so we know they must be connected.
         // Because we are either (i) using standard coordinates, or
         // (ii) working with a non-ideal triangulation; we know the
@@ -113,28 +113,23 @@ std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() {
         if (s.eulerChar() == 2) {
             // Must be a sphere; no bounded surface has chi=2.
             NormalSurface ans = s;
-            delete surfaces;
             return ans;
         } else if (s.eulerChar() == 1) {
             if (s.hasRealBoundary()) {
                 // Must be a disc.
-                NormalSurface ans = s;
-                delete surfaces;
-                return ans;
+                return s;
             } else if (! s.isTwoSided()) {
                 // A projective plane that doubles to a sphere.
-                NormalSurface ans = s.doubleSurface();
-                delete surfaces;
-                return ans;
+                return s.doubleSurface();
             }
         }
     }
 
-    delete surfaces;
     return std::nullopt;
 }
 
-std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere() {
+std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere()
+        const {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
         return std::nullopt;
@@ -163,7 +158,7 @@ std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere() {
     // Given our preconditions, we can do this in quadrilateral-octagon
     // coordinates; for details see "Quadrilateral-octagon coordinates for
     // almost normal surfaces", B.B., Experiment. Math. 19 (2010), 285-315.
-    NormalSurfaces* surfaces = NormalSurfaces::enumerate(*this, NS_AN_QUAD_OCT);
+    NormalSurfaces surfaces(*this, NS_AN_QUAD_OCT);
 
     // Our vertex surfaces are guaranteed to be in smallest possible
     // integer coordinates, with at most one non-zero octagonal coordinate.
@@ -171,7 +166,7 @@ std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere() {
     unsigned oct;
     bool found, broken;
     LargeInteger coord;
-    for (const NormalSurface& s : surfaces->surfaces()) {
+    for (const NormalSurface& s : surfaces) {
         // These are vertex surfaces, so we know they must be connected.
         // Because we are working with a non-ideal triangulation, we know the
         // vertex surfaces are compact.
@@ -199,61 +194,47 @@ std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere() {
                 }
             if (found && ! broken) {
                 // This is it!
-                NormalSurface ans = s;
-                delete surfaces;
-                return ans;
+                return s;
             }
         }
     }
 
-    delete surfaces;
     return std::nullopt;
 }
 
-bool Triangulation<3>::isZeroEfficient() {
-    if (! zeroEfficient_.has_value()) {
+bool Triangulation<3>::isZeroEfficient() const {
+    if (! prop_.zeroEfficient_.has_value()) {
         if (hasTwoSphereBoundaryComponents())
-            zeroEfficient_ = false;
-        else {
-            // Operate on a clone of this triangulation, to avoid
-            // changing the real packet tree.
-            Triangulation<3> clone(*this, false);
-            if (clone.nonTrivialSphereOrDisc()) {
-                zeroEfficient_ = false;
-            } else {
-                zeroEfficient_ = true;
+            prop_.zeroEfficient_ = false;
+        else if (nonTrivialSphereOrDisc()) {
+            prop_.zeroEfficient_ = false;
+        } else {
+            prop_.zeroEfficient_ = true;
 
-                // Things implied by 0-efficiency:
-                if (isValid() && isClosed() && isConnected())
-                    irreducible_ = true;
-            }
+            // Things implied by 0-efficiency:
+            if (isValid() && isClosed() && isConnected())
+                prop_.irreducible_ = true;
         }
     }
-    return *zeroEfficient_;
+    return *prop_.zeroEfficient_;
 }
 
 bool Triangulation<3>::hasSplittingSurface() const {
-    if (splittingSurface_.has_value())
-        return *splittingSurface_;
+    if (prop_.splittingSurface_.has_value())
+        return *prop_.splittingSurface_;
 
     if (isEmpty())
-        return *(splittingSurface_ = false);
+        return *(prop_.splittingSurface_ = false);
 
     // In the main loop of this procedure, we assume the triangulation is
     // connected.  If it isn't connected, we see instead if each component
     // has a splitting surface.
 
     if (!isConnected()) {
-        Container c;
-        // The call to splitIntoComponents() will not change this triangulation,
-        // since we pass a different parent packet (c).
-        // Therefore it is safe to cast away the const here.
-        const_cast<Triangulation<3>*>(this)->splitIntoComponents(&c);
-        for (Packet* child : c.children())
-            if (! static_cast<Triangulation<3>*>(child)->hasSplittingSurface())
-                return *(splittingSurface_ = false);
-        // All the components have splitting surfaces.
-        return *(splittingSurface_ = true);
+        for (const Triangulation<3>& comp : triangulateComponents())
+            if (! comp.hasSplittingSurface())
+                return *(prop_.splittingSurface_ = false);
+        return *(prop_.splittingSurface_ = true);
     }
 
     // Now we can assume the triangulation is connected.
@@ -265,7 +246,7 @@ bool Triangulation<3>::hasSplittingSurface() const {
         EDGE_DISJOINT = 1,
         EDGE_INTERSECTING = 2
     };
-    EdgeState* state = new EdgeState[countEdges()];
+    auto* state = new EdgeState[countEdges()];
 
     // We also keep track of each edge e that is not yet assumed disjoint but
     // that is a candidate for this assumption.
@@ -336,13 +317,13 @@ bool Triangulation<3>::hasSplittingSurface() const {
             // with two opposite disjoint edges per tetrahedron.
             // Thus there is a splitting surface.
             delete[] state;
-            return *(splittingSurface_ = true);
+            return *(prop_.splittingSurface_ = true);
         }
     } // End search for splitting surfaces along each edge of tri.
 
     // We found no splitting surfaces; there is none.
     delete[] state;
-    return *(splittingSurface_ = false);
+    return *(prop_.splittingSurface_ = false);
 }
 
 } // namespace regina

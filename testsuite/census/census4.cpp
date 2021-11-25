@@ -53,10 +53,10 @@ class Census4Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void rawCounts() {
@@ -103,28 +103,21 @@ class Census4Test : public CppUnit::TestFixture {
                 finite_(finite), orbl_(orbl), count_(0) {}
         };
 
-        static void foundPerms(const GluingPermSearcher<4>* perms, void* spec) {
-            if (perms) {
-                CensusSpec* s = static_cast<CensusSpec*>(spec);
-                Triangulation<4>* tri = perms->triangulate();
-                if (tri->isValid() &&
-                        (! (s->orbl_ == true && ! tri->isOrientable())) &&
-                        (! (s->orbl_ == false && tri->isOrientable())) &&
-                        (! (s->finite_ == true && tri->isIdeal())) &&
-                        (! (s->finite_ == false && ! tri->isIdeal())))
-                    ++s->count_;
-                delete tri;
-            }
+        static void foundPerms(const GluingPerms<4>& perms, CensusSpec* spec) {
+            Triangulation<4> tri = perms.triangulate();
+            if (tri.isValid() &&
+                    (! (spec->orbl_ == true && ! tri.isOrientable())) &&
+                    (! (spec->orbl_ == false && tri.isOrientable())) &&
+                    (! (spec->finite_ == true && tri.isIdeal())) &&
+                    (! (spec->finite_ == false && ! tri.isIdeal())))
+                ++spec->count_;
         }
 
-        static void foundPairing(const FacetPairing<4>* pairing,
-                const FacetPairing<4>::IsoList* autos, void* spec) {
-            if (pairing) {
-                CensusSpec* s = static_cast<CensusSpec*>(spec);
-                GluingPermSearcher<4>::findAllPerms(pairing, autos,
-                    ! s->orbl_.hasFalse(), ! s->finite_.hasFalse(),
-                    foundPerms, spec);
-            }
+        static void foundPairing(const FacetPairing<4>& pairing,
+            FacetPairing<4>::IsoList autos, CensusSpec* spec) {
+            GluingPermSearcher<4>::findAllPerms(pairing, std::move(autos),
+                ! spec->orbl_.hasFalse(), ! spec->finite_.hasFalse(),
+                foundPerms, spec);
         }
 
         static void rawCountsCompare(unsigned minPent, unsigned maxPent,

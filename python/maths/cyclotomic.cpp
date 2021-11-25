@@ -32,11 +32,13 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/cyclotomic.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
 using regina::Cyclotomic;
+using regina::Rational;
 
 void addCyclotomic(pybind11::module_& m) {
     auto c = pybind11::class_<Cyclotomic>(m, "Cyclotomic")
@@ -45,10 +47,13 @@ void addCyclotomic(pybind11::module_& m) {
         .def(pybind11::init<size_t, int>())
         .def(pybind11::init<size_t, const regina::Rational&>())
         .def(pybind11::init<const Cyclotomic&>())
+        .def(pybind11::init([](size_t field, const std::vector<Rational>& c) {
+            return new Cyclotomic(field, c.begin(), c.end());
+        }))
         .def("init", &Cyclotomic::init)
         .def("field", &Cyclotomic::field)
         .def("degree", &Cyclotomic::degree)
-        .def("__getitem__", [](const Cyclotomic& c, int exp) {
+        .def("__getitem__", [](Cyclotomic& c, int exp) -> regina::Rational& {
             return c[exp];
         }, pybind11::return_value_policy::reference_internal)
         .def("__setitem__", [](Cyclotomic& c, int exp,

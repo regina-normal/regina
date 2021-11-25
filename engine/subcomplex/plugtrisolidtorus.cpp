@@ -37,26 +37,6 @@
 
 namespace regina {
 
-PlugTriSolidTorus::~PlugTriSolidTorus() {
-    if (core_)
-        delete core_;
-    for (int i = 0; i < 3; i++)
-        if (chain_[i])
-            delete chain_[i];
-}
-
-PlugTriSolidTorus* PlugTriSolidTorus::clone() const {
-    PlugTriSolidTorus* ans = new PlugTriSolidTorus();
-    ans->core_ = core_->clone();
-    for (int i = 0; i < 3; i++) {
-        if (chain_[i])
-            ans->chain_[i] = new LayeredChain(*chain_[i]);
-        ans->chainType_[i] = chainType_[i];
-    }
-    ans->equatorType_ = equatorType_;
-    return ans;
-}
-
 std::ostream& PlugTriSolidTorus::writeName(std::ostream& out) const {
     long params[3];
     int nParams = 0;
@@ -112,8 +92,8 @@ void PlugTriSolidTorus::writeTextLong(std::ostream& out) const {
     writeName(out);
 }
 
-Manifold* PlugTriSolidTorus::manifold() const {
-    SFSpace* ans = new SFSpace();
+std::unique_ptr<Manifold> PlugTriSolidTorus::manifold() const {
+    std::unique_ptr<SFSpace> ans(new SFSpace());
     ans->insertFibre(2, -1);
     ans->insertFibre(3, 1);
 
@@ -127,16 +107,14 @@ Manifold* PlugTriSolidTorus::manifold() const {
         }
     if (rot != 0)
         ans->insertFibre(rot, 1);
-    else {
-        delete ans;
-        return 0;
-    }
+    else
+        return nullptr;
 
     ans->reduce();
     return ans;
 }
 
-PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
+std::unique_ptr<PlugTriSolidTorus> PlugTriSolidTorus::recognise(
         Component<3>* comp) {
     // Each triangular solid torus is tested three times since we
     // can't call Tetrahedron<3>::index() from within a component only.
@@ -145,14 +123,14 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
 
     // Basic property checks.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
-        return 0;
+        return nullptr;
 
     if (comp->countVertices() > 1)
-        return 0;
+        return nullptr;
 
     unsigned long nTet = comp->size();
     if (nTet < 5)
-        return 0;
+        return nullptr;
 
     // We have a 1-vertex closed orientable component with at least
     // 5 tetrahedra.
@@ -161,7 +139,7 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
     // just once.
     unsigned long tetIndex;
     int coreIndex;
-    TriSolidTorus* core;
+    std::unique_ptr<TriSolidTorus> core;
     Tetrahedron<3>* coreTet[3];
     Edge<3>* axis[3];
     Perm<4> coreRoles[3];
@@ -174,11 +152,9 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
     Perm<4> plugRoles[3][2];
     Perm<4> realPlugRoles[2];
 
-    LayeredChain* chain[3];
+    std::optional<LayeredChain> chain[3];
     int chainType[3];
     int equatorType = 0;
-
-    chain[0] = chain[1] = chain[2] = 0;
 
     for (tetIndex = 0; tetIndex < nTet - 2; tetIndex++)
         for (coreIndex = 0; coreIndex < 24; coreIndex++) {
@@ -186,7 +162,7 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
             if (coreRoles[0][0] > coreRoles[0][3])
                 continue;
 
-            core = TriSolidTorus::formsTriSolidTorus(
+            core = TriSolidTorus::recognise(
                 comp->tetrahedron(tetIndex), coreRoles[0]);
             if (! core)
                 continue;
@@ -200,7 +176,6 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
 
             if (axis[0] == axis[1] || axis[1] == axis[2] ||
                     axis[2] == axis[0]) {
-                delete core;
                 continue;
             }
 
@@ -228,7 +203,7 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
                     coreRoles[(i + 2) % 3] * Perm<4>(2, 1, 0, 3);
                 if (baseRoles[0] == baseRoles[1]) {
                     chainType[i] = CHAIN_MAJOR;
-                    chain[i] = new LayeredChain(base[0], baseRoles[0]);
+                    chain[i] = LayeredChain(base[0], baseRoles[0]);
                     while (chain[i]->extendAbove())
                         ;
                     continue;
@@ -243,7 +218,7 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
                     coreRoles[(i + 2) % 3] * Perm<4>(2, 1, 3, 0);
                 if (baseRoles[0] == baseRoles[1]) {
                     chainType[i] = CHAIN_MINOR;
-                    chain[i] = new LayeredChain(base[0], baseRoles[0]);
+                    chain[i] = LayeredChain(base[0], baseRoles[0]);
                     while (chain[i]->extendAbove())
                         ;
                     continue;
@@ -278,11 +253,7 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
 
             if (error) {
                 for (j = 0; j < 3; j++)
-                    if (chain[j]) {
-                        delete chain[j];
-                        chain[j] = 0;
-                    }
-                delete core;
+                    chain[j].reset();
                 continue;
             }
 
@@ -393,19 +364,15 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
 
             if (error) {
                 for (j = 0; j < 3; j++)
-                    if (chain[j]) {
-                        delete chain[j];
-                        chain[j] = 0;
-                    }
-                delete core;
+                    chain[j].reset();
                 continue;
             }
 
             // Success!
-            PlugTriSolidTorus* plug = new PlugTriSolidTorus();
-            plug->core_ = core;
+            std::unique_ptr<PlugTriSolidTorus> plug(
+                new PlugTriSolidTorus(*core));
             for (i = 0; i < 3; i++) {
-                plug->chain_[i] = chain[i];
+                plug->chain_[i] = std::move(chain[i]);
                 plug->chainType_[i] = chainType[i];
             }
             plug->equatorType_ = equatorType;
@@ -413,7 +380,7 @@ PlugTriSolidTorus* PlugTriSolidTorus::isPlugTriSolidTorus(
         }
 
     // Nothing was found.
-    return 0;
+    return nullptr;
 }
 
 } // namespace regina

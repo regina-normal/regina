@@ -35,7 +35,7 @@
 
 namespace regina {
 
-std::optional<AbelianGroup> Handlebody::homology() const {
+AbelianGroup Handlebody::homology() const {
     AbelianGroup ans;
     if (nHandles)
         ans.addRank(nHandles);

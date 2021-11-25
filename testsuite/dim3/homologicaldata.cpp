@@ -32,9 +32,9 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
+#include "triangulation/dim3.h"
 #include "triangulation/example3.h"
 #include "triangulation/homologicaldata.h"
-#include "triangulation/dim3.h"
 #include "testsuite/dim3/testtriangulation.h"
 
 using regina::Example;
@@ -64,9 +64,9 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         // constructed on the fly by Example<3>.
 
         // Closed orientable:
-        Triangulation<3>* s3;
+        Triangulation<3> s3;
             /**< A one-tetrahedron 3-sphere. */
-        Triangulation<3>* s2xs1;
+        Triangulation<3> s2xs1;
             /**< The two-tetrahedron S^2 x S^1. */
         Triangulation<3> lens3_1;
             /**< The layered lens space L(3,1). */
@@ -77,9 +77,9 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         Triangulation<3> d88xz15;
             /**< The orbit manifold S^3 / D_88 x Z_15, also known
                  as SFS [S2: (2,1) (2,1) (11,19)]. */
-        Triangulation<3>* poincare;
+        Triangulation<3> poincare;
             /**< The poincare homology sphere. */
-        Triangulation<3>* weberSeifert;
+        Triangulation<3> weberSeifert;
             /**< The Weber-Seifert dodecahedral space. */
         Triangulation<3> torusBundleA;
             /**< The torus bundle T x I / [ 0,1 | -1,0 ], built using an
@@ -108,9 +108,9 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             /**< The non-orientable torus bundle T x I / [ 2,1 | 1,0 ]. */
 
         // Ideal:
-        Triangulation<3>* gieseking;
+        Triangulation<3> gieseking;
             /**< The Gieseking manifold. */
-        Triangulation<3>* figureEight;
+        Triangulation<3> figureEight;
             /**< The figure eight knot complement. */
         Triangulation<3> m003;
             /**< The manifold m003 from the cusped hyperbolic census of
@@ -138,52 +138,49 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             /**< The layered solid torus LST(3,4,7). */
 
     public:
-        void setUp() {
+        void setUp() override {
             // First deal with ready-made example triangulations.
             s3 = Example<3>::threeSphere();
             s2xs1 = Example<3>::s2xs1();
-            poincare = Example<3>::poincareHomologySphere();
+            poincare = Example<3>::poincare();
             weberSeifert = Example<3>::weberSeifert();
             gieseking = Example<3>::gieseking();
             figureEight = Example<3>::figureEight();
 
             // Next deal with triangulations that are easy to build.
-            lens3_1.insertLayeredLensSpace(3, 1);
-            lens4_1.insertLayeredLensSpace(4, 1);
-            lens7_1.insertLayeredLensSpace(7, 1);
-            d88xz15.insertAugTriSolidTorus(2, -1, 2, -1, 11, -30);
-            torusBundleA.insertAugTriSolidTorus(2, 1, 4, -7, 4, 1);
-            torusBundleB.insertAugTriSolidTorus(3, -1, 3, -1, 3, -1);
+            lens3_1 = Example<3>::lens(3, 1);
+            lens4_1 = Example<3>::lens(4, 1);
+            lens7_1 = Example<3>::lens(7, 1);
+            d88xz15 = Example<3>::augTriSolidTorus(2, -1, 2, -1, 11, -30);
+            torusBundleA = Example<3>::augTriSolidTorus(2, 1, 4, -7, 4, 1);
+            torusBundleB = Example<3>::augTriSolidTorus(3, -1, 3, -1, 3, -1);
             lst3_4_7.insertLayeredSolidTorus(3, 4);
 
             // The others we recreate using dehydration strings.
             // The dehydration strings were obtained by running
             // Triangulation<3>::dehydrate() over triangulations from
             // the relevant census data files.
-            twistedKBxS1.insertRehydration("gepaacdfefefknakanx");
-            closedHypA.insertRehydration("jgpadaaeffghfiihirmxitdagbj");
-            closedHypB.insertRehydration("mnnjjcabehfgjijkijllaaqabhoehrtab");
-            closedHypC.insertRehydration("jlncbaabdghfggiiiafxhbccqei");
-            norA.insertRehydration("jofbdaabccfhgihiiffhofoxohx");
-            norB.insertRehydration("gepaacdfefefaaknnkx");
-            norTorusBundle.insertRehydration("hipabcedfggfggbgforro");
-            m003.insertRehydration("cabbbbmlq");
-            m041.insertRehydration("eahcdbddbokpv");
-            m045.insertRehydration("eahccdcddbfof");
-            s028.insertRehydration("gkfacaccdeffffohhhf");
-            s887.insertRehydration("gknaaacefffennqbnjf");
-            s955.insertRehydration("gbpaabcfdffefohfxhf");
-            genusTwoBdry.insertRehydration("eanadccdnxfno");
+            twistedKBxS1 = Triangulation<3>::rehydrate("gepaacdfefefknakanx");
+            closedHypA = Triangulation<3>::rehydrate(
+                "jgpadaaeffghfiihirmxitdagbj");
+            closedHypB = Triangulation<3>::rehydrate(
+                "mnnjjcabehfgjijkijllaaqabhoehrtab");
+            closedHypC = Triangulation<3>::rehydrate(
+                "jlncbaabdghfggiiiafxhbccqei");
+            norA = Triangulation<3>::rehydrate("jofbdaabccfhgihiiffhofoxohx");
+            norB = Triangulation<3>::rehydrate("gepaacdfefefaaknnkx");
+            norTorusBundle = Triangulation<3>::rehydrate(
+                "hipabcedfggfggbgforro");
+            m003 = Triangulation<3>::rehydrate("cabbbbmlq");
+            m041 = Triangulation<3>::rehydrate("eahcdbddbokpv");
+            m045 = Triangulation<3>::rehydrate("eahccdcddbfof");
+            s028 = Triangulation<3>::rehydrate("gkfacaccdeffffohhhf");
+            s887 = Triangulation<3>::rehydrate("gknaaacefffennqbnjf");
+            s955 = Triangulation<3>::rehydrate("gbpaabcfdffefohfxhf");
+            genusTwoBdry = Triangulation<3>::rehydrate("eanadccdnxfno");
         }
 
-        void tearDown() {
-            // Delete triangulations that were dynamically allocated.
-            delete s3;
-            delete s2xs1;
-            delete poincare;
-            delete weberSeifert;
-            delete gieseking;
-            delete figureEight;
+        void tearDown() override {
         }
 
         void verifyHomologyConsistency(const Triangulation<3>& tri,
@@ -218,13 +215,13 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         }
 
         void homologyConsistency() {
-            verifyHomologyConsistency(*s3, "S^3");
-            verifyHomologyConsistency(*s2xs1, "S^2 x S^1");
+            verifyHomologyConsistency(s3, "S^3");
+            verifyHomologyConsistency(s2xs1, "S^2 x S^1");
             verifyHomologyConsistency(lens3_1, "L(3,1)");
             verifyHomologyConsistency(lens4_1, "L(4,1)");
             verifyHomologyConsistency(lens7_1, "L(7,1)");
-            verifyHomologyConsistency(*poincare, "Poincare homology sphere");
-            verifyHomologyConsistency(*weberSeifert, "Weber-Seifert");
+            verifyHomologyConsistency(poincare, "Poincare homology sphere");
+            verifyHomologyConsistency(weberSeifert, "Weber-Seifert");
             verifyHomologyConsistency(d88xz15, "S^3 / D_88 x Z_15");
             verifyHomologyConsistency(closedHypA,
                 "Closed Hyp (vol=1.01494161)");
@@ -239,8 +236,8 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             verifyHomologyConsistency(norB, "SFS [RP2: (2,1) (2,1)]");
             verifyHomologyConsistency(norTorusBundle, "T x I / [ 2,1 | 1,0 ]");
             verifyHomologyConsistency(lst3_4_7, "LST(3,4,7)");
-            verifyHomologyConsistency(*gieseking, "Gieseking manifold");
-            verifyHomologyConsistency(*figureEight,
+            verifyHomologyConsistency(gieseking, "Gieseking manifold");
+            verifyHomologyConsistency(figureEight,
                 "Figure eight knot complement");
             verifyHomologyConsistency(m003, "SnapPea m003");
             verifyHomologyConsistency(m041, "SnapPea m041");
@@ -267,7 +264,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void bdryManifoldMapH1() {
             verifyBdryManifoldMapH1(lens7_1, "L(7,1)", "zero map");
             verifyBdryManifoldMapH1(d88xz15, "S^3 / D_88 x Z_15", "zero map");
-            verifyBdryManifoldMapH1(*weberSeifert, "Weber-Seifert", "zero map");
+            verifyBdryManifoldMapH1(weberSeifert, "Weber-Seifert", "zero map");
             verifyBdryManifoldMapH1(closedHypA, "Closed Hyp (vol=1.01494161)",
                 "zero map");
             verifyBdryManifoldMapH1(closedHypB, "Closed Hyp (vol=2.45402944)",
@@ -302,7 +299,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void standardCells() {
             verifyStandardCells(lens7_1, "L(7,1)", 1, 5, 8, 4);
             verifyStandardCells(d88xz15, "S^3 / D_88 x Z_15", 1, 10, 18, 9);
-            verifyStandardCells(*weberSeifert, "Weber-Seifert", 1, 24, 46, 23);
+            verifyStandardCells(weberSeifert, "Weber-Seifert", 1, 24, 46, 23);
             verifyStandardCells(closedHypA, "Closed Hyp (vol=1.01494161)",
                 1, 10, 18, 9);
             verifyStandardCells(closedHypB, "Closed Hyp (vol=2.45402944)",
@@ -334,7 +331,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void dualCells() {
             verifyDualCells(lens7_1, "L(7,1)", 4, 8, 5, 1);
             verifyDualCells(d88xz15, "S^3 / D_88 x Z_15", 9, 18, 10, 1);
-            verifyDualCells(*weberSeifert, "Weber-Seifert", 23, 46, 24, 1);
+            verifyDualCells(weberSeifert, "Weber-Seifert", 23, 46, 24, 1);
             verifyDualCells(closedHypA, "Closed Hyp (vol=1.01494161)",
                 9, 18, 10, 1);
             verifyDualCells(closedHypB, "Closed Hyp (vol=2.45402944)",
@@ -361,7 +358,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             verifyTorsionRankVector(lens7_1, "L(7,1)", "7(1)");
             verifyTorsionRankVector(d88xz15, "S^3 / D_88 x Z_15",
                 "2(0 0 1) 3(1) 5(1)");
-            verifyTorsionRankVector(*weberSeifert, "Weber-Seifert", "5(3)");
+            verifyTorsionRankVector(weberSeifert, "Weber-Seifert", "5(3)");
             verifyTorsionRankVector(closedHypA, "Closed Hyp (vol=1.01494161)",
                 "2(1) 3(2)");
             verifyTorsionRankVector(closedHypB, "Closed Hyp (vol=2.45402944)",
@@ -387,7 +384,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void torsionSigmaVector() {
             verifyTorsionSigmaVector(lens7_1, "L(7,1)", "no 2-torsion");
             verifyTorsionSigmaVector(d88xz15, "S^3 / D_88 x Z_15", "7 7 inf");
-            verifyTorsionSigmaVector(*weberSeifert, "Weber-Seifert",
+            verifyTorsionSigmaVector(weberSeifert, "Weber-Seifert",
                 "no 2-torsion");
             verifyTorsionSigmaVector(closedHypA, "Closed Hyp (vol=1.01494161)",
                 "inf");
@@ -416,7 +413,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             verifyTorsionLegendreSymbolVector(lens7_1, "L(7,1)", "7(1)");
             verifyTorsionLegendreSymbolVector(d88xz15, "S^3 / D_88 x Z_15",
                 "3(1) 5(1)");
-            verifyTorsionLegendreSymbolVector(*weberSeifert,
+            verifyTorsionLegendreSymbolVector(weberSeifert,
                 "Weber-Seifert", "5(1)");
             verifyTorsionLegendreSymbolVector(closedHypA,
                 "Closed Hyp (vol=1.01494161)", "3(1)");
@@ -446,14 +443,14 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void embeddabilityComment() {
             // Watch the comment for S^3 change once we run a
             // three-sphere recognition.
-            verifyEmbeddability(*s3, "S^3", "Manifold is a homology 3-sphere.");
-            s3->isThreeSphere();
-            verifyEmbeddability(*s3, "S^3", "This manifold is S^3.");
+            verifyEmbeddability(s3, "S^3", "Manifold is a homology 3-sphere.");
+            s3.isSphere();
+            verifyEmbeddability(s3, "S^3", "This manifold is S^3.");
 
-            verifyEmbeddability(*s2xs1, "S^2 x S^1", "No information.");
-            verifyEmbeddability(*poincare, "Poincare homology sphere",
+            verifyEmbeddability(s2xs1, "S^2 x S^1", "No information.");
+            verifyEmbeddability(poincare, "Poincare homology sphere",
                 "Manifold is a homology 3-sphere.");
-            verifyEmbeddability(*weberSeifert,
+            verifyEmbeddability(weberSeifert,
                 "Weber-Seifert dodecahedral space",
                 "Does not embed in homology 4-sphere.  "
                 "Manifold is a rational homology sphere.");
@@ -477,9 +474,9 @@ class HomologicalDataTest : public CppUnit::TestFixture {
                 "Orientation cover has hyperbolic torsion linking form.");
             verifyEmbeddability(norTorusBundle, "T x I / [ 2,1 | 1,0 ]",
                 "Does not embed in homology 4-sphere.");
-            verifyEmbeddability(*gieseking, "Gieseking manifold",
+            verifyEmbeddability(gieseking, "Gieseking manifold",
                 "Orientation cover satisfies KK 2-torsion condition.");
-            verifyEmbeddability(*figureEight, "Figure eight knot complement",
+            verifyEmbeddability(figureEight, "Figure eight knot complement",
                 "Embeds in a homology 3-sphere as a knot complement.");
             verifyEmbeddability(m003, "SnapPea m003",
                 "Embeds in rational homology 3-sphere.  KK 2-tor "

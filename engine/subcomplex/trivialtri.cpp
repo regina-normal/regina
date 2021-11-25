@@ -40,7 +40,7 @@
 
 namespace regina {
 
-TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
+std::unique_ptr<TrivialTri> TrivialTri::recognise(const Component<3>* comp) {
     // Since the triangulations are so small we can use census results
     // to recognise the triangulations by properties alone.
 
@@ -55,15 +55,17 @@ TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
                 // Look for a one-tetrahedron ball.
                 if (comp->size() == 1) {
                     if (bc->countTriangles() == 4)
-                        return new TrivialTri(BALL_4_VERTEX);
+                        return std::unique_ptr<TrivialTri>(
+                            new TrivialTri(BALL_4_VERTEX));
                     if (bc->countTriangles() == 2 && comp->countVertices() == 3)
-                        return new TrivialTri(BALL_3_VERTEX);
+                        return std::unique_ptr<TrivialTri>(
+                            new TrivialTri(BALL_3_VERTEX));
                 }
             }
         }
 
         // Not recognised.
-        return 0;
+        return nullptr;
     }
 
     // Otherwise we are dealing with a closed component.
@@ -71,7 +73,7 @@ TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
     // Before we do our validity check, make sure the number of
     // tetrahedra is in the supported range.
     if (comp->size() > 3)
-        return 0;
+        return nullptr;
 
     // Is the triangulation valid?
     // Since the triangulations is closed we know that the vertices are
@@ -80,7 +82,7 @@ TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
     unsigned long i;
     for (i = 0; i < nEdges; i++)
         if (! comp->edge(i)->isValid())
-            return 0;
+            return nullptr;
 
     // Test for the specific triangulations that we know about.
 
@@ -89,14 +91,15 @@ TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
             if (comp->countVertices() == 4) {
                 // There's only one closed valid two-tetrahedron
                 // four-vertex orientable triangulation.
-                return new TrivialTri(SPHERE_4_VERTEX);
+                return std::unique_ptr<TrivialTri>(
+                    new TrivialTri(SPHERE_4_VERTEX));
             }
         } else {
             // There's only one closed valid two-tetrahedron non-orientable
             // triangulation.
-            return new TrivialTri(N2);
+            return std::unique_ptr<TrivialTri>(new TrivialTri(N2));
         }
-        return 0;
+        return nullptr;
     }
 
     if (comp->size() == 3) {
@@ -106,7 +109,7 @@ TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
             // All of the vertices are valid since there are no boundary
             // triangles; we thus only need to check the edges.
             if (comp->countEdges() != 4)
-                return 0;
+                return nullptr;
 
             long degree[4];
             for (i = 0; i < 4; i++)
@@ -120,35 +123,38 @@ TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
                 unsigned long nTriangles = comp->countTriangles();
                 for (i = 0; i < nTriangles; i++)
                     if (comp->triangle(i)->isMobiusBand())
-                        return new TrivialTri(N3_2);
-                return new TrivialTri(N3_1);
+                        return std::unique_ptr<TrivialTri>(
+                            new TrivialTri(N3_2));
+                return std::unique_ptr<TrivialTri>(new TrivialTri(N3_1));
             }
         }
     }
 
-    return 0;
+    return nullptr;
 }
 
-Manifold* TrivialTri::manifold() const {
+std::unique_ptr<Manifold> TrivialTri::manifold() const {
     if (type_ == SPHERE_4_VERTEX)
-        return new LensSpace(1, 0);
+        return std::make_unique<LensSpace>(1, 0);
     else if (type_ == BALL_3_VERTEX || type_ == BALL_4_VERTEX)
-        return new Handlebody(0, true);
+        return std::make_unique<Handlebody>(0, true);
     else if (type_ == N2)
-        return new SimpleSurfaceBundle(SimpleSurfaceBundle::S2xS1_TWISTED);
+        return std::make_unique<SimpleSurfaceBundle>(
+            SimpleSurfaceBundle::S2xS1_TWISTED);
     else if (type_ == N3_1 || type_ == N3_2)
-        return new SimpleSurfaceBundle(SimpleSurfaceBundle::RP2xS1);
-    return 0;
+        return std::make_unique<SimpleSurfaceBundle>(
+            SimpleSurfaceBundle::RP2xS1);
+    return nullptr;
 }
 
-std::optional<AbelianGroup> TrivialTri::homology() const {
+AbelianGroup TrivialTri::homology() const {
     AbelianGroup ans;
 
     if (type_ == N2)
         ans.addRank();
     else if (type_ == N3_1 || type_ == N3_2) {
         ans.addRank();
-        ans.addTorsionElement(2);
+        ans.addTorsion(2);
     }
 
     return ans;

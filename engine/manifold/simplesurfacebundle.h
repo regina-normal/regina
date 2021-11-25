@@ -45,16 +45,18 @@
 namespace regina {
 
 /**
- * \weakgroup manifold
- * @{
- */
-
-/**
  * Represents a particularly simple closed surface bundle over the circle.
  * Only 2-sphere bundles, twisted 2-sphere bundles and projective plane
  * bundles are considered.
  *
  * All optional Manifold routines are implemented for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other manifold classes.
+ *
+ * \ingroup manifold
  */
 class SimpleSurfaceBundle : public Manifold {
     public:
@@ -88,11 +90,9 @@ class SimpleSurfaceBundle : public Manifold {
          */
         SimpleSurfaceBundle(int newType);
         /**
-         * Creates a clone of the given surface bundle.
-         *
-         * @param cloneMe the surface bundle to clone.
+         * Creates a new copy of the given surface bundle.
          */
-        SimpleSurfaceBundle(const SimpleSurfaceBundle& cloneMe) = default;
+        SimpleSurfaceBundle(const SimpleSurfaceBundle&) = default;
         /**
          * Returns the specific type of surface bundle being represented.
          *
@@ -120,21 +120,39 @@ class SimpleSurfaceBundle : public Manifold {
         bool operator != (const SimpleSurfaceBundle& compare) const;
 
         /**
-         * Sets this to be a clone of the given surface bundle.
+         * Sets this to be a copy of the given surface bundle.
          *
-         * @param cloneMe the surface bundle to clone.
+         * @return a reference to this surface bundle.
          */
-        SimpleSurfaceBundle& operator = (const SimpleSurfaceBundle& cloneMe) =
-            default;
+        SimpleSurfaceBundle& operator = (const SimpleSurfaceBundle&) = default;
 
-        Triangulation<3>* construct() const override;
-        std::optional<AbelianGroup> homology() const override;
+        /**
+         * Swaps the contents of this and the given surface bundle.
+         *
+         * @param other the surface bundle whose contents should be swapped
+         * with this.
+         */
+        void swap(SimpleSurfaceBundle& other) noexcept;
+
+        Triangulation<3> construct() const override;
+        AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given surface bundles.
+ *
+ * This global routine simply calls SimpleSurfaceBundle::swap(); it is
+ * provided so that SimpleSurfaceBundle meets the C++ Swappable requirements.
+ *
+ * @param a the first surface bundle whose contents should be swapped.
+ * @param b the second surface bundle whose contents should be swapped.
+ *
+ * \ingroup manifold
+ */
+void swap(SimpleSurfaceBundle& a, SimpleSurfaceBundle& b) noexcept;
 
 // Inline functions for SimpleSurfaceBundle
 
@@ -155,6 +173,14 @@ inline bool SimpleSurfaceBundle::operator !=
 
 inline bool SimpleSurfaceBundle::isHyperbolic() const {
     return false;
+}
+
+inline void SimpleSurfaceBundle::swap(SimpleSurfaceBundle& other) noexcept {
+    std::swap(type_, other.type_);
+}
+
+inline void swap(SimpleSurfaceBundle& a, SimpleSurfaceBundle& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

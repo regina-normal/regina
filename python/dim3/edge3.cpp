@@ -48,7 +48,7 @@ namespace {
 
 void addEdge3(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<3, 1>>(m, "FaceEmbedding3_1")
-        .def(pybind11::init<regina::Tetrahedron<3>*, int>())
+        .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>())
         .def(pybind11::init<const EdgeEmbedding<3>&>())
         .def("simplex", &EdgeEmbedding<3>::simplex,
             pybind11::return_value_policy::reference)
@@ -63,25 +63,16 @@ void addEdge3(pybind11::module_& m) {
 
     auto c = pybind11::class_<Face<3, 1>>(m, "Face3_1")
         .def("index", &Edge<3>::index)
-        .def("embeddings", [](const Edge<3>& e) {
-            pybind11::list ans;
-            for (const auto& emb : e)
-                ans.append(emb);
-            return ans;
-        })
-        .def("embedding", &Edge<3>::embedding,
-            pybind11::return_value_policy::reference_internal)
-        .def("front", &Edge<3>::front,
-            pybind11::return_value_policy::reference_internal)
-        .def("back", &Edge<3>::back,
-            pybind11::return_value_policy::reference_internal)
+        .def("embedding", &Edge<3>::embedding)
+        .def("embeddings", &Edge<3>::embeddings)
+        .def("front", &Edge<3>::front)
+        .def("back", &Edge<3>::back)
         .def("triangulation", &Edge<3>::triangulation)
         .def("component", &Edge<3>::component,
             pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Edge<3>::boundaryComponent,
             pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Edge<3>, 1, int,
-            pybind11::return_value_policy::reference>)
+        .def("face", &regina::python::face<Edge<3>, 1, int>)
         .def("vertex", &Edge<3>::vertex,
             pybind11::return_value_policy::reference)
         .def("faceMapping", &regina::python::faceMapping<Edge<3>, 1, 4>)
@@ -97,27 +88,38 @@ void addEdge3(pybind11::module_& m) {
         .def_static("containsVertex", &Edge<3>::containsVertex)
         .def_readonly_static("edgeNumber", &Edge3_edgeNumber)
         .def_readonly_static("edgeVertex", &Edge3_edgeVertex)
-        // On some systems we cannot take addresses of the following
-        // inline class constants (e.g., this fails with gcc10 on windows).
-        // We therefore define getter functions instead.
-        .def_property_readonly_static("nFaces", [](pybind11::object) {
-            return Edge<3>::nFaces;
-        })
-        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
-            return Edge<3>::lexNumbering;
-        })
-        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
-            return Edge<3>::oppositeDim;
-        })
-        .def_property_readonly_static("dimension", [](pybind11::object) {
-            return Edge<3>::dimension;
-        })
-        .def_property_readonly_static("subdimension", [](pybind11::object) {
-            return Edge<3>::subdimension;
+        .def_readonly_static("nFaces", &Edge<3>::nFaces)
+        .def_readonly_static("lexNumbering", &Edge<3>::lexNumbering)
+        .def_readonly_static("oppositeDim", &Edge<3>::oppositeDim)
+        .def_readonly_static("dimension", &Edge<3>::dimension)
+        .def_readonly_static("subdimension", &Edge<3>::subdimension)
+        // Since the Triangulation<3> maximal forest routines return
+        // sets of edges, we need edges to be hashable.
+        .def("__hash__", [](const Edge<3>& e) {
+            // Edges are equal in python if they reference the same C++
+            // objects.  Therefore we can just use the C++ pointer as a hash.
+            //
+            // So: we cannot cast to long, since this is too small on
+            // 64-bit Windows.  The *correct* type is uintptr_t, but the
+            // C++ standard says this is optional.  Does any compiler *not*
+            // support uintptr_t?  If anyone gets a compile error from this,
+            // please do let Ben know (and in the meantime if you are on a
+            // 64-bit machine then you should be able to change it back to a
+            // long for your own quick fix.)
+            //
+            // A further note: even though long is too small on 64-bit Windows,
+            // this is harmless - since we are only using this as a hash, so
+            // it is okay if the integer is truncated.  Perhaps then the
+            // real standards-compliant solution is to just cast to a long
+            // regardless of platform.
+            return uintptr_t(std::addressof(e));
         })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<
+        decltype(std::declval<Edge<3>>().embeddings())>(m);
 
     m.attr("EdgeEmbedding3") = m.attr("FaceEmbedding3_1");
     m.attr("Edge3") = m.attr("Face3_1");

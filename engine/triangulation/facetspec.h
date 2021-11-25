@@ -47,11 +47,6 @@
 namespace regina {
 
 /**
- * \weakgroup triangulation
- * @{
- */
-
-/**
  * A lightweight class used to refer to a particular facet of a particular
  * top-dimensional simplex in a <i>dim</i>-dimensional triangulation.
  * Only the simplex index and the facet number are stored.
@@ -70,12 +65,17 @@ namespace regina {
  * as simplex \a n, facet 1, and the before-the-start value will be
  * represented as simplex -1, facet \a dim.
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \ifacespython Python does not support templates.  Instead this class
  * can be used by appending the dimension as a suffix (e.g., FacetSpec2
  * and FacetSpec3 for dimensions 2 and 3).
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
+ *
+ * \ingroup triangulation
  */
 template <int dim>
 struct FacetSpec {
@@ -90,7 +90,7 @@ struct FacetSpec {
      * Creates a new specifier with no initialisation.  This
      * specifier must be initialised before it is used.
      */
-    FacetSpec();
+    FacetSpec() = default;
     /**
      * Creates a new specifier referring to the given facet of the given
      * simplex.
@@ -273,17 +273,13 @@ struct FacetSpec {
  * @param out the output stream to which to write.
  * @param spec the specifier to write.
  * @return a reference to \a out.
+ *
+ * \ingroup triangulation
  */
 template <int dim>
 std::ostream& operator << (std::ostream& out, const FacetSpec<dim>& spec);
 
-/*@}*/
-
 // Inline functions for FacetSpec
-
-template <int dim>
-inline FacetSpec<dim>::FacetSpec() {
-}
 
 template <int dim>
 inline FacetSpec<dim>::FacetSpec(int newSimp, int newFacet) :

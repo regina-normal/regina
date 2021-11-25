@@ -34,48 +34,25 @@
 
 namespace regina {
 
-FacePair::FacePair(int newFirst, int newSecond) {
-    if (newFirst < newSecond) {
-        first_ = newFirst;
-        second_ = newSecond;
-    } else {
-        first_ = newSecond;
-        second_ = newFirst;
-    }
-}
-
-FacePair FacePair::complement() const {
-    if (first_ > 1)
-        return FacePair(0, 1);
-    else if (first_ == 1)
-        return (second_ == 2 ? FacePair(0, 3) : FacePair(0, 2));
-    else if (second_ == 1)
-        return FacePair(2, 3);
-    else if (second_ == 2)
-        return FacePair(1, 3);
-    else
-        return FacePair(1, 2);
-}
-
 FacePair& FacePair::operator ++ () {
-    if (second_ < 3)
-        second_++;
-    else if (first_ < 3) {
-        first_++;
-        if (first_ < 3)
-            second_ = first_ + 1;
-    }
+    // Codes: 0, 1, 2, 3, 6, 7, 11, 15.
+    if (code_ < 3 || code_ == 6) // alt test: code & 3 != 3
+        ++code_;
+    else if (code_ > 6) // alt test: code & 12 != 0
+        code_ += 4;
+    else
+        code_ = 6;
     return *this;
 }
 
 FacePair& FacePair::operator -- () {
-    if (second_ > first_ + 1)
-        second_--;
-    else if (first_ > 0) {
-        first_--;
-        second_ = 3;
-    } else
-        second_ = 0;
+    // Codes: 0, 1, 2, 3, 6, 7, 11, 15.
+    if (code_ < 6 || code_ == 7)
+        --code_;
+    else if (code_ > 7)
+        code_ -= 4;
+    else
+        code_ = 3;
     return *this;
 }
 

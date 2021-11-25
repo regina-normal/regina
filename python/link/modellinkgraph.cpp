@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "link/modellinkgraph.h"
 #include "../helpers.h"
 
@@ -76,9 +77,13 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("size", &ModelLinkGraph::size)
         .def("node", &ModelLinkGraph::node,
             pybind11::return_value_policy::reference_internal)
+        .def("nodes", &ModelLinkGraph::nodes,
+            pybind11::keep_alive<0, 1>())
         .def("swap", &ModelLinkGraph::swap)
         .def("swapContents", &ModelLinkGraph::swap) // deprecated
         .def("reflect", &ModelLinkGraph::reflect)
+        .def("cells", &ModelLinkGraph::cells,
+            pybind11::return_value_policy::reference_internal)
         .def("findFlype", &ModelLinkGraph::findFlype)
         .def("flype", overload_cast<const ModelLinkGraphArc&,
                 const ModelLinkGraphArc&, const ModelLinkGraphArc&>(
@@ -90,20 +95,27 @@ void addModelLinkGraph(pybind11::module_& m) {
             pybind11::arg("useReflection") = true,
             pybind11::arg("tight") = false)
         .def_static("fromPlantri", &ModelLinkGraph::fromPlantri)
+        .def("generateMinimalLinks", &ModelLinkGraph::generateMinimalLinks<
+            const std::function<void(regina::Link&&)>&>)
     ;
     regina::python::add_output(g);
     regina::python::add_eq_operators(g);
+
+    regina::python::addListView<decltype(ModelLinkGraph().nodes())>(m);
 
     auto c = pybind11::class_<ModelLinkGraphCells>(m, "ModelLinkGraphCells")
         .def("isValid", &ModelLinkGraphCells::isValid)
         .def("countCells", &ModelLinkGraphCells::countCells)
         .def("size", &ModelLinkGraphCells::size)
         .def("arc", &ModelLinkGraphCells::arc)
+        .def("arcs", &ModelLinkGraphCells::arcs)
         .def("cell", &ModelLinkGraphCells::cell)
         .def("cellPos", &ModelLinkGraphCells::cellPos)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    regina::python::addListView<decltype(ModelLinkGraph().cells().arcs(0))>(m);
 
     m.def("swap", (void(*)(ModelLinkGraph&, ModelLinkGraph&))(regina::swap));
 }

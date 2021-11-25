@@ -51,7 +51,7 @@
 #define MAX_RELATIONS_FOR_PROLIFERATION 8
 
 GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
-        QWidget(), group_(0), simplified_(0) {
+        QWidget(), group_(nullptr) {
     QBoxLayout* layout = new QVBoxLayout(this);
 
     if (paddingStretch)
@@ -74,7 +74,7 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
     if (allowSimplify) {
         layout->addStretch(1);
 
-        QLabel* label = new QLabel(tr("Try to simplify:"));
+        auto* label = new QLabel(tr("Try to simplify:"));
         label->setAlignment(Qt::AlignCenter);
         layout->addWidget(label);
 
@@ -136,12 +136,8 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
         layout->addStretch(1);
 }
 
-GroupWidget::~GroupWidget() {
-    delete simplified_;
-}
-
-void GroupWidget::refresh(const regina::GroupPresentation* group) {
-    group_ = group;
+void GroupWidget::refresh(const regina::GroupPresentation& group) {
+    group_ = &group;
 
     bool unicode = ReginaPrefSet::global().displayUnicode;
 
@@ -182,15 +178,13 @@ void GroupWidget::refresh(const regina::GroupPresentation* group) {
     fundRels_->clear();
     if (alphabetic) {
         // Generators are a, b, ...
-        for (long i = 0; i < nRels; ++i) {
+        for (const auto& r : group_->relations()) {
             QString rel;
-            const std::list<regina::GroupExpressionTerm>& terms(
-                group_->relation(i).terms());
+            const std::list<regina::GroupExpressionTerm>& terms(r.terms());
             if (terms.empty())
                 rel = "1";
             else {
-                std::list<regina::GroupExpressionTerm>::const_iterator it;
-                for (it = terms.begin(); it != terms.end(); ++it) {
+                for (auto it = terms.begin(); it != terms.end(); ++it) {
                     if (it != terms.begin())
                         rel += ' ';
                     if (it->exponent == 0)
@@ -212,9 +206,8 @@ void GroupWidget::refresh(const regina::GroupPresentation* group) {
     } else {
         // Generators are g0, g1, ...
         // This is the default text that comes from the calculation engine.
-        for (long i = 0; i < nRels; ++i)
-            new QListWidgetItem(QString(group_->relation(i).str().c_str()),
-                fundRels_);
+        for (const auto& r : group_->relations())
+            new QListWidgetItem(QString(r.str().c_str()), fundRels_);
     }
 }
 
@@ -222,15 +215,12 @@ void GroupWidget::simplifyInternal() {
     if (! group_)
         return;
 
-    // Note: We might have group_ == simplified_, so we cannot delete
-    // simplified_ just yet.
-    regina::GroupPresentation* ans = new regina::GroupPresentation(*group_);
-    ans->intelligentSimplify();
+    // This *should* block the UI, which means we don't need to worry
+    // about race conditons with simplified_.
+    simplified_ = *group_;
+    simplified_->intelligentSimplify();
 
-    delete simplified_;
-    simplified_ = ans;
-
-    refresh(simplified_);
+    refresh(*simplified_);
     emit simplified();
 }
 
@@ -246,15 +236,12 @@ void GroupWidget::proliferateRelators() {
                     "Are you sure you wish to do this?")))
             return;
 
-    // Note: We might have group_ == simplified_, so we cannot delete
-    // simplified_ just yet.
-    regina::GroupPresentation* ans = new regina::GroupPresentation(*group_);
-    ans->proliferateRelators(1);
+    // This *should* block the UI, which means we don't need to worry
+    // about race conditons with simplified_.
+    simplified_ = *group_;
+    simplified_->proliferateRelators(1);
 
-    delete simplified_;
-    simplified_ = ans;
-
-    refresh(simplified_);
+    refresh(*simplified_);
     emit simplified();
 }
 
@@ -267,16 +254,13 @@ void GroupWidget::simplifyGAP() {
     if (useExec.isNull())
         return;
 
-    // Note: We might have group_ == simplified_, so we cannot delete
-    // simplified_ just yet.
     GAPRunner dlg(this, useExec, *group_);
     if (dlg.exec() == GAPRunner::Accepted) {
-        regina::GroupPresentation* ans = dlg.simplifiedGroup().release();
+        auto ans = dlg.simplifiedGroup();
         if (ans) {
-            delete simplified_;
             simplified_ = ans;
 
-            refresh(simplified_);
+            refresh(*simplified_);
             emit simplified();
         } else {
             ReginaSupport::sorry(this,
@@ -307,9 +291,8 @@ QString GroupWidget::verifyGAPExec() {
         QStringList pathList = paths.split(pathSeparator);
 
         bool found = false;
-        for( QStringList::iterator it = pathList.begin(); it != pathList.end();
-            ++it) {
-            QDir dir(*it);
+        for (const auto& p : pathList) {
+            QDir dir(p);
             if ( dir.exists(useExec) ) {
                 found = true;
                 break;

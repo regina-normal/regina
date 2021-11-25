@@ -47,11 +47,6 @@
 
 namespace regina {
 
-/**
- * \weakgroup utilities
- * @{
- */
-
 template <typename T>
 class Qitmask1;
 
@@ -62,11 +57,11 @@ class Qitmask1;
  * Since the length of the qitmask is not stored, the number of qits
  * written will be 8 * sizeof(\a T).
  *
- * \ifacespython Not present.
- *
  * @param out the output stream to which to write.
  * @param mask the qitmask to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
@@ -93,9 +88,20 @@ std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
  * many qits, see Qitmask2.  At present there is no qitmask class
  * in Regina that can store arbitrarily many qits.
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \pre Type \a T is an unsigned integral numeric type.
  *
- * \ifacespython Not present.
+ * \ifacespython Python does not support templates, and so instead Regina's
+ * python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
+ * Qitmask64, Qitmask128, and (if the machine supports 128-bit integers)
+ * Qitmask256.  Each of these will be an optimised qitmask class that
+ * can hold the corresponding number of bits, and is guaranteed to be an
+ * instance of either the C++ Qitmask1<T> class (where possible) or the
+ * C++ Qitmask2<T,U> template class (if necessary).
+ *
+ * \ingroup utilities
  */
 template <typename T>
 class Qitmask1 {
@@ -144,7 +150,7 @@ class Qitmask1 {
          * @return the value of the (\a index)th qit; this will be
          * either 0, 1, 2 or 3.
          */
-        inline char get(unsigned index) const {
+        inline uint8_t get(unsigned index) const {
             T bit = T(1) << index;
             return ((mask1 & bit) ? 1 : 0) | ((mask2 & bit) ? 2 : 0);
         }
@@ -157,7 +163,7 @@ class Qitmask1 {
          * @param value the value that will be assigned to the (\a index)th
          * qit; this must be 0, 1, 2 or 3.
          */
-        inline void set(unsigned index, char value) {
+        inline void set(unsigned index, uint8_t value) {
             mask1 |= (T(1) << index);
             if (! (value & 1))
                 mask1 ^= (T(1) << index);
@@ -235,6 +241,17 @@ class Qitmask1 {
         }
 
         /**
+         * Determines whether this and the given qitmask are different.
+         *
+         * @param other the qitmask to compare against this.
+         * @return \c true if and only if this and the given qitmask are
+         * different.
+         */
+        inline bool operator != (const Qitmask1<T>& other) const {
+            return (mask1 != other.mask1 || mask2 != other.mask2);
+        }
+
+        /**
          * Determines whether there is some index at which both this and
          * the given qitmask both have non-zero qits.  That is, there is some
          * index \a i for which <tt>get(i)</tt> and <tt>other.get(i)</tt>
@@ -267,11 +284,11 @@ class Qitmask2;
  * Since the length of the qitmask is not stored, the number of qits
  * written will be 8 * sizeof(\a T) + 8 * sizeof(\a U).
  *
- * \ifacespython Not present.
- *
  * @param out the output stream to which to write.
  * @param mask the qitmask to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 template <typename T, typename U>
 std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
@@ -300,9 +317,20 @@ std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
  * see Qitmask1.  At present there is no qitmask class
  * in Regina that can store arbitrarily many qits.
  *
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *
- * \ifacespython Not present.
+ * \ifacespython Python does not support templates, and so instead Regina's
+ * python interface offers the classes Qitmask8, Qitmask16, Qitmask32,
+ * Qitmask64, Qitmask128, and (if the machine supports 128-bit integers)
+ * Qitmask256.  Each of these will be an optimised qitmask class that
+ * can hold the corresponding number of bits, and is guaranteed to be an
+ * instance of either the C++ Qitmask1<T> class (where possible) or the
+ * C++ Qitmask2<T,U> template class (if necessary).
+ *
+ * \ingroup utilities
  */
 template <typename T, typename U = T>
 class Qitmask2 {
@@ -358,7 +386,7 @@ class Qitmask2 {
          * @return the value of the (\a index)th qit; this will be
          * either 0, 1, 2 or 3.
          */
-        inline char get(unsigned index) const {
+        inline uint8_t get(unsigned index) const {
             if (index < 8 * sizeof(T)) {
                 T bit = T(1) << index;
                 return ((low1 & bit) ? 1 : 0) | ((low2 & bit) ? 2 : 0);
@@ -376,7 +404,7 @@ class Qitmask2 {
          * @param value the value that will be assigned to the (\a index)th
          * qit; this must be 0, 1, 2 or 3.
          */
-        inline void set(unsigned index, char value) {
+        inline void set(unsigned index, uint8_t value) {
             if (index < 8 * sizeof(T)) {
                 low1 |= (T(1) << index);
                 if (! (value & 1))
@@ -468,6 +496,18 @@ class Qitmask2 {
         }
 
         /**
+         * Determines whether this and the given qitmask are different.
+         *
+         * @param other the qitmask to compare against this.
+         * @return \c true if and only if this and the given qitmask are
+         * different.
+         */
+        inline bool operator != (const Qitmask2<T, U>& other) const {
+            return (low1 != other.low1 || low2 != other.low2 ||
+                high1 != other.high1 || high2 != other.high2);
+        }
+
+        /**
          * Determines whether there is some index at which both this and
          * the given qitmask both have non-zero qits.  That is, there is some
          * index \a i for which <tt>get(i)</tt> and <tt>other.get(i)</tt>
@@ -491,64 +531,8 @@ class Qitmask2 {
         const Qitmask2<T, U>& mask);
 };
 
-#ifndef __DOXYGEN
 /**
- * An internal template that helps choose the correct qitmask type for
- * a given (hard-coded) number of bits.
- *
- * Please do not use this class directly, since this template is internal
- * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs QitmaskLen8, QitmaskLen16, QitmaskLen32
- * and QitmaskLen64.
- *
- * The reason this template exists is to circumvent the fact that we cannot
- * use sizeof() in a #if statement.  The boolean argument to this template
- * should always be left as the default.
- */
-template <bool IntHolds4Bytes = (sizeof(unsigned int) >= 4)>
-struct InternalQitmaskLen32;
-
-template <>
-struct InternalQitmaskLen32<true> {
-    typedef Qitmask1<unsigned int> Type;
-};
-
-template <>
-struct InternalQitmaskLen32<false> {
-    // The standard guarantees that sizeof(long) >= 4.
-    typedef Qitmask1<unsigned long> Type;
-};
-
-/**
- * An internal template that helps choose the correct qitmask type for
- * a given (hard-coded) number of bits.
- *
- * Please do not use this class directly, since this template is internal
- * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs QitmaskLen8, QitmaskLen16, QitmaskLen32
- * and QitmaskLen64.
- *
- * The reason this template exists is to circumvent the fact that we cannot
- * use sizeof() in a #if statement.  The boolean argument to this template
- * should always be left as the default.
- */
-template <bool LongHolds8Bytes = (sizeof(unsigned long) >= 8)>
-struct InternalQitmaskLen64;
-
-template <>
-struct InternalQitmaskLen64<true> {
-    typedef Qitmask1<unsigned long> Type;
-};
-
-template <>
-struct InternalQitmaskLen64<false> {
-    // The C standard guarantees that sizeof(long long) >= 8.
-    typedef Qitmask1<unsigned long long> Type;
-};
-#endif // End block for doxygen to ignore.
-
-/**
- * A convenience typedef that gives a small and extremely fast qitmask
+ * A deprecated type alias that gives a small and extremely fast qitmask
  * class capable of holding at least 8 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of the
@@ -557,12 +541,18 @@ struct InternalQitmaskLen64<false> {
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \ifacespython Not present.
+ * \deprecated This type alias is deprecated; just use Qitmask1<uint8_t>
+ * instead.
+ *
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised qitmask class via the name Qitmask8.
+ *
+ * \ingroup utilities
  */
-typedef Qitmask1<unsigned char> QitmaskLen8;
+using QitmaskLen8 [[deprecated]] = Qitmask1<uint8_t>;
 
 /**
- * A convenience typedef that gives a small and extremely fast qitmask
+ * A deprecated type alias that gives a small and extremely fast qitmask
  * class capable of holding at least 16 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of the
@@ -571,12 +561,18 @@ typedef Qitmask1<unsigned char> QitmaskLen8;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \ifacespython Not present.
+ * \deprecated This type alias is deprecated; just use Qitmask1<uint16_t>
+ * instead.
+ *
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised qitmask class via the name Qitmask16.
+ *
+ * \ingroup utilities
  */
-typedef Qitmask1<unsigned int> QitmaskLen16;
+using QitmaskLen16 [[deprecated]] = Qitmask1<uint16_t>;
 
 /**
- * A convenience typedef that gives a small and extremely fast qitmask
+ * A deprecated type alias that gives a small and extremely fast qitmask
  * class capable of holding at least 32 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of the
@@ -585,12 +581,18 @@ typedef Qitmask1<unsigned int> QitmaskLen16;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \ifacespython Not present.
+ * \deprecated This type alias is deprecated; just use Qitmask1<uint32_t>
+ * instead.
+ *
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised qitmask class via the name Qitmask32.
+ *
+ * \ingroup utilities
  */
-typedef InternalQitmaskLen32<>::Type QitmaskLen32;
+using QitmaskLen32 [[deprecated]] = Qitmask1<uint32_t>;
 
 /**
- * A convenience typedef that gives a small and extremely fast qitmask
+ * A deprecated type alias that gives a small and extremely fast qitmask
  * class capable of holding at least 64 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of
@@ -599,11 +601,15 @@ typedef InternalQitmaskLen32<>::Type QitmaskLen32;
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
- * \ifacespython Not present.
+ * \deprecated This type alias is deprecated; just use Qitmask1<uint64_t>
+ * instead.
+ *
+ * \ifacespython Not present, but in Python you can access essentially
+ * the same optimised qitmask class via the name Qitmask64.
+ *
+ * \ingroup utilities
  */
-typedef InternalQitmaskLen64<>::Type QitmaskLen64;
-
-/*@}*/
+using QitmaskLen64 [[deprecated]] = Qitmask1<uint64_t>;
 
 } // namespace regina
 

@@ -44,12 +44,13 @@
 #include <QMenuBar>
 
 PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
-        QMainWindow(0, Qt::Window | Qt::WindowContextHelpButtonHint),
+        QMainWindow(nullptr, Qt::Window | Qt::WindowContextHelpButtonHint),
         heldPane(newPane), mainWindow(parent) {
     // Set destructive close
     setAttribute(Qt::WA_DeleteOnClose);
 
-    setWindowTitle(heldPane->getPacket()->humanLabel().c_str());
+    windowAction = new QAction(this);
+    updateWindowTitle(); // renames windowAction also
 
     // On windows, the close button does not seem to appear automatically.
     setWindowFlags(windowFlags() | Qt::WindowCloseButtonHint);
@@ -60,8 +61,6 @@ PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
 
     setupMenus();
 
-    windowAction = new QAction(heldPane->getPacket()->humanLabel().c_str(),
-        this);
     connect(windowAction, SIGNAL(triggered()), this, SLOT(raiseWindow()));
     parent->registerWindow(windowAction);
 
@@ -87,20 +86,20 @@ void PacketWindow::setupMenus() {
 
     QMenu* editMenu = menuBar()->addMenu(tr("&Edit"));
 
-    QAction* actCut = new QAction(ReginaSupport::themeIcon("edit-cut"),
+    auto* actCut = new QAction(ReginaSupport::themeIcon("edit-cut"),
         tr("Cu&t"), this);
     actCut->setWhatsThis(tr("Cut out the current selection and store it "
         "in the clipboard."));
     actCut->setShortcuts(QKeySequence::Cut);
     editMenu->addAction(actCut);
 
-    QAction* actCopy = new QAction(ReginaSupport::themeIcon("edit-copy"),
+    auto* actCopy = new QAction(ReginaSupport::themeIcon("edit-copy"),
         tr("&Copy"), this);
     actCopy->setWhatsThis(tr("Copy the current selection to the clipboard."));
     actCopy->setShortcuts(QKeySequence::Copy);
     editMenu->addAction(actCopy);
 
-    QAction* actPaste = new QAction(ReginaSupport::themeIcon("edit-paste"),
+    auto* actPaste = new QAction(ReginaSupport::themeIcon("edit-paste"),
         tr("&Paste"), this);
     actPaste->setWhatsThis(tr("Paste the contents of the clipboard."));
     actPaste->setShortcuts(QKeySequence::Paste);
@@ -112,7 +111,7 @@ void PacketWindow::setupMenus() {
 
     QMenu* toolMenu = menuBar()->addMenu(tr("&Tools"));
 
-    QAction* actPython = new QAction(this);
+    auto* actPython = new QAction(this);
     actPython->setText(tr("&Python Console"));
     actPython->setIcon(ReginaSupport::themeIcon("utilities-terminal"));
     actPython->setShortcut(tr("Alt+y"));
@@ -124,7 +123,7 @@ void PacketWindow::setupMenus() {
 
     toolMenu->addSeparator();
 
-    QAction* act = new QAction(this);
+    auto* act = new QAction(this);
     act->setText(tr("&Configure Regina"));
     act->setIcon(ReginaSupport::themeIcon("configure"));
     act->setShortcuts(QKeySequence::Preferences);
@@ -209,14 +208,17 @@ void PacketWindow::setupMenus() {
     helpMenu->addAction(act);
 }
 
-void PacketWindow::renameWindow(const QString& newName) {
-    setWindowTitle(newName);
-    windowAction->setText(newName);
+void PacketWindow::updateWindowTitle() {
+    QString label = heldPane->getPacket()->label().c_str();
+
+    setWindowTitle(label);
+    windowAction->setText(label);
 }
 
 void PacketWindow::pythonConsole() {
     mainWindow->getPythonManager().launchPythonConsole(
-        this, mainWindow->getPacketTree(), heldPane->getPacket());
+        this, mainWindow->getPacketTree(),
+        heldPane->getPacket()->shared_from_this());
 }
 
 void PacketWindow::raiseWindow() {

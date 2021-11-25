@@ -1,0 +1,210 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2019-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests iteration with C++ functions that return a ListView.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+from __future__ import print_function
+
+l = ExampleLink.whitehead()
+for c in l.crossings():
+	print(c)
+for c in l.components():
+	print(c)
+
+print()
+
+l = Tangle(2, 3)
+for c in l.crossings():
+	print(c)
+
+print()
+
+g = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
+for n in g.nodes():
+	print(n)
+cells = g.cells()
+for i in range(cells.countCells()):
+	print('Cell', i)
+	for a in cells.arcs(i):
+		print(a)
+
+print()
+
+t = Example2.annulus()
+for f in t.vertices():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+for f in t.edges():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+for f in t.triangles():
+	print(f.str(), ':', f.index())
+for c in t.boundaryComponents():
+	print(c.str(), ':', c.index())
+	for f in c.vertices():
+		print(f, ':', f.index())
+	for f in c.edges():
+		print(f, ':', f.index())
+for c in t.components():
+	print(c.str(), ':', c.index())
+	for f in c.vertices():
+		print(f, ':', f.index())
+	for f in c.edges():
+		print(f, ':', f.index())
+	for f in c.triangles():
+		print(f, ':', f.index())
+	for f in c.boundaryComponents():
+		print(f, ':', f.index())
+
+print()
+
+t = Example3.lst(2, 3)
+for f in t.vertices():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+for f in t.edges():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+for f in t.triangles():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+for f in t.tetrahedra():
+	print(f.str(), ':', f.index())
+for c in t.boundaryComponents():
+	print(c.str(), ':', c.index())
+	for f in c.vertices():
+		print(f, ':', f.index())
+	for f in c.edges():
+		print(f, ':', f.index())
+	for f in c.triangles():
+		print(f, ':', f.index())
+for c in t.components():
+	print(c.str(), ':', c.index())
+	for f in c.vertices():
+		print(f, ':', f.index())
+	for f in c.edges():
+		print(f, ':', f.index())
+	for f in c.triangles():
+		print(f, ':', f.index())
+	for f in c.tetrahedra():
+		print(f, ':', f.index())
+	for f in c.boundaryComponents():
+		print(f, ':', f.index())
+
+print()
+
+t = Example4.ballBundle()
+for f in t.vertices():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+for f in t.edges():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+for f in t.triangles():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+for f in t.tetrahedra():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+for f in t.pentachora():
+	print(f.str(), ':', f.index())
+for c in t.boundaryComponents():
+	print(c.str(), ':', c.index())
+	for f in c.vertices():
+		print(f, ':', f.index())
+	for f in c.edges():
+		print(f, ':', f.index())
+	for f in c.triangles():
+		print(f, ':', f.index())
+	for f in c.tetrahedra():
+		print(f, ':', f.index())
+for c in t.components():
+	print(c.str(), ':', c.index())
+	for f in c.vertices():
+		print(f, ':', f.index())
+	for f in c.edges():
+		print(f, ':', f.index())
+	for f in c.triangles():
+		print(f, ':', f.index())
+	for f in c.tetrahedra():
+		print(f, ':', f.index())
+	for f in c.pentachora():
+		print(f, ':', f.index())
+	for f in c.boundaryComponents():
+		print(f, ':', f.index())
+
+print()
+
+t = Example5.ballBundle()
+for f in t.vertices():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+for f in t.edges():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+for f in t.triangles():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+for f in t.tetrahedra():
+	print(f.str(), ':', f.index())
+	for e in f.embeddings():
+		print(e)
+for f in t.pentachora():
+	print(f.str(), ':', f.index())
+for c in t.boundaryComponents():
+	print(c.str(), ':', c.index())
+	for f in c.pentachora():
+		print(f, ':', f.index())
+for c in t.components():
+	print(c.str(), ':', c.index())
+	for f in c.simplices():
+		print(f, ':', f.index())
+	for f in c.boundaryComponents():
+		print(f, ':', f.index())
+
+print()
+
+s = ExampleSnapPea.whiteheadLink()
+for c in s.cusps():
+	print(c.str())
+

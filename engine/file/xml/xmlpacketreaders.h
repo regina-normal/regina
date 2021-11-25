@@ -41,17 +41,52 @@
 
 #include "regina-core.h"
 #include "file/xml/xmlpacketreader.h"
+#include "packet/attachment.h"
 #include "packet/container.h"
-#include "packet/pdf.h"
 #include "packet/script.h"
 #include "packet/text.h"
 
 namespace regina {
 
 /**
- * \weakgroup packet
- * @{
+ * An XML packet reader that resolves an anonref element.
+ *
+ * Immediately upon construction, this reader will attempt to resolve
+ * the given ID.  If successful, the corresopnding packet will be removed
+ * from its current location (either the packet tree or the anonymous pool),
+ * with the assumption that it will be re-inserted when this anonref element
+ * commits its packet.
+ *
+ * \ifacespython Not present.
  */
+class XMLAnonRefReader : public XMLPacketReader {
+    private:
+        std::shared_ptr<Packet> packet;
+            /**< The packet currently being read. */
+
+    public:
+        /**
+         * Creates a new anonref reader.
+         *
+         * The \a id argument is the ID that should be resolved (and,
+         * after resolution, the packet will retain this ID).
+         *
+         * If the \a label argument is non-empty, then this will overwrite any
+         * existing packet label.  If the \a label argument is empty, then
+         * the packet will retain the label that it had before resolution.
+         *
+         * If \a anon is \c true, then when it is finally committed, the
+         * packet will be put back into the anonymous pool (so the use
+         * of anonref is redundant but harmless in this case).
+         *
+         * All parameters are the same as for the parent class XMLPacketReader.
+         */
+        XMLAnonRefReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
+
+        std::shared_ptr<Packet> packetToCommit() override;
+};
 
 /**
  * An XML packet reader that reads a single container.
@@ -60,45 +95,73 @@ namespace regina {
  */
 class XMLContainerReader : public XMLPacketReader {
     private:
-        Container* container;
+        std::shared_ptr<Container> container;
             /**< The container currently being read. */
 
     public:
         /**
          * Creates a new container reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLContainerReader(XMLTreeResolver& resolver);
+        XMLContainerReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
-        virtual Packet* packet() override;
+        std::shared_ptr<Packet> packetToCommit() override;
 };
 
 /**
- * An XML packet reader that reads a single PDF packet.
+ * An XML packet reader that reads a single file attachment.
  *
  * \ifacespython Not present.
  */
-class XMLPDFReader : public XMLPacketReader {
+class XMLAttachmentReader : public XMLPacketReader {
     private:
-        PDF* pdf;
-            /**< The PDF packet currently being read. */
+        std::string filename;
+            /**< The name of the file attachment. */
+        std::shared_ptr<Attachment> attachment;
+            /**< The file attachment currently being read. */
 
     public:
         /**
-         * Creates a new PDF reader.
+         * Creates a new attachment reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLPDFReader(XMLTreeResolver& resolver);
+        XMLAttachmentReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id, const regina::xml::XMLPropertyDict& props);
 
-        virtual Packet* packet() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        void initialChars(const std::string& chars) override;
+};
+
+/**
+ * An XML packet reader that reads a single PDF attachment using the
+ * older second-generation file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacyPDFReader : public XMLPacketReader {
+    private:
+        std::shared_ptr<Attachment> pdf;
+            /**< The PDF attachment currently being read. */
+
+    public:
+        /**
+         * Creates a new PDF attachment reader.
+         *
+         * All parameters are the same as for the parent class XMLPacketReader.
+         */
+        XMLLegacyPDFReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
+
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
@@ -109,23 +172,23 @@ class XMLPDFReader : public XMLPacketReader {
  */
 class XMLScriptReader : public XMLPacketReader {
     private:
-        Script* script;
+        std::shared_ptr<Script> script;
             /**< The script currently being read. */
 
     public:
         /**
          * Creates a new script reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLScriptReader(XMLTreeResolver& resolver);
+        XMLScriptReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
-        virtual Packet* packet() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
@@ -136,69 +199,155 @@ class XMLScriptReader : public XMLPacketReader {
  */
 class XMLTextReader : public XMLPacketReader {
     private:
-        Text* text;
+        std::shared_ptr<Text> text;
             /**< The text packet currently being read. */
 
     public:
         /**
          * Creates a new text packet reader.
          *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * All parameters are the same as for the parent class XMLPacketReader.
          */
-        XMLTextReader(XMLTreeResolver& resolver);
+        XMLTextReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
 
-        virtual Packet* packet() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
+        std::shared_ptr<Packet> packetToCommit() override;
+        void initialChars(const std::string& chars) override;
+};
+
+/**
+ * An XML packet reader that reads a single text packet using the
+ * older second-generation file format.
+ *
+ * \ifacespython Not present.
+ */
+class XMLLegacyTextReader : public XMLPacketReader {
+    private:
+        std::shared_ptr<Text> text;
+            /**< The text packet currently being read. */
+
+    public:
+        /**
+         * Creates a new text packet reader.
+         *
+         * All parameters are the same as for the parent class XMLPacketReader.
+         */
+        XMLLegacyTextReader(XMLTreeResolver& resolver,
+            std::shared_ptr<Packet> parent, bool anon, std::string label,
+            std::string id);
+
+        std::shared_ptr<Packet> packetToCommit() override;
+        XMLElementReader* startContentSubElement(const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
-/*@}*/
+// Inline functions for XMLAnonRefReader
+
+inline std::shared_ptr<Packet> XMLAnonRefReader::packetToCommit() {
+    return packet;
+}
 
 // Inline functions for XMLContainerReader
 
-inline XMLContainerReader::XMLContainerReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), container(new Container()) {
+inline XMLContainerReader::XMLContainerReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        container(new Container()) {
 }
 
-inline Packet* XMLContainerReader::packet() {
+inline std::shared_ptr<Packet> XMLContainerReader::packetToCommit() {
     return container;
 }
 
-// Inline functions for XMLPDFReader
+// Inline functions for XMLAttachmentReader
 
-inline XMLPDFReader::XMLPDFReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), pdf(new PDF()) {
+inline XMLAttachmentReader::XMLAttachmentReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id,
+        const regina::xml::XMLPropertyDict& props) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        filename(props.lookup("filename")), attachment(new Attachment()) {
 }
 
-inline Packet* XMLPDFReader::packet() {
+inline std::shared_ptr<Packet> XMLAttachmentReader::packetToCommit() {
+    return attachment;
+}
+
+// Inline functions for XMLLegacyPDFReader
+
+inline XMLLegacyPDFReader::XMLLegacyPDFReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        pdf(new Attachment()) {
+}
+
+inline std::shared_ptr<Packet> XMLLegacyPDFReader::packetToCommit() {
     return pdf;
+}
+
+inline XMLElementReader* XMLLegacyPDFReader::startContentSubElement(
+        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
+    if (subTagName == "pdf")
+        return new XMLCharsReader();
+    else
+        return new XMLElementReader();
 }
 
 // Inline functions for XMLScriptReader
 
-inline XMLScriptReader::XMLScriptReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), script(new Script()) {
+inline XMLScriptReader::XMLScriptReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        script(new Script()) {
 }
 
-inline Packet* XMLScriptReader::packet() {
+inline std::shared_ptr<Packet> XMLScriptReader::packetToCommit() {
     return script;
 }
 
 // Inline functions for XMLTextReader
 
-inline XMLTextReader::XMLTextReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), text(new Text()) {
+inline XMLTextReader::XMLTextReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        text(new Text()) {
 }
 
-inline Packet* XMLTextReader::packet() {
+inline std::shared_ptr<Packet> XMLTextReader::packetToCommit() {
     return text;
 }
 
-inline XMLElementReader* XMLTextReader::startContentSubElement(
+inline void XMLTextReader::initialChars(const std::string& chars) {
+    text->setText(chars);
+}
+
+// Inline functions for XMLLegacyTextReader
+
+inline XMLLegacyTextReader::XMLLegacyTextReader(
+        XMLTreeResolver& res, std::shared_ptr<Packet> parent, bool anon,
+        std::string label, std::string id) :
+        XMLPacketReader(res, std::move(parent), anon, std::move(label),
+            std::move(id)),
+        text(new Text()) {
+}
+
+inline std::shared_ptr<Packet> XMLLegacyTextReader::packetToCommit() {
+    return text;
+}
+
+inline XMLElementReader* XMLLegacyTextReader::startContentSubElement(
         const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
     if (subTagName == "text")
         return new XMLCharsReader();
@@ -206,8 +355,8 @@ inline XMLElementReader* XMLTextReader::startContentSubElement(
         return new XMLElementReader();
 }
 
-inline void XMLTextReader::endContentSubElement(const std::string& subTagName,
-        XMLElementReader* subReader) {
+inline void XMLLegacyTextReader::endContentSubElement(
+        const std::string& subTagName, XMLElementReader* subReader) {
     if (subTagName == "text")
         text->setText(dynamic_cast<XMLCharsReader*>(subReader)->chars());
 }

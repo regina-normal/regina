@@ -53,11 +53,6 @@
 namespace regina::i18n {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * Identifies the longest prefix of the given string that is valid UTF-8.
  *
  * The substring from <tt>s.begin()</tt> to the iterator that is
@@ -68,6 +63,8 @@ namespace regina::i18n {
  * UTF-8 prefix.  The length is measured in raw bytes (not unicode characters).
  *
  * @return an iterator marking the end of the longest valid UTF-8 prefix.
+ *
+ * \ingroup utilities
  */
 std::string::const_iterator utf8ValidTo(const std::string& s);
 
@@ -82,6 +79,8 @@ std::string::const_iterator utf8ValidTo(const std::string& s);
  * UTF-8 prefix.  The length is measured in raw bytes (not unicode characters).
  *
  * @return a pointer marking the end of the longest valid UTF-8 prefix.
+ *
+ * \ingroup utilities
  */
 const char* utf8ValidTo(const char* s);
 
@@ -91,6 +90,8 @@ const char* utf8ValidTo(const char* s);
  *
  * These routines use ::setlocale() to determine the current locale,
  * which means they respect environment variables such as LANG and LC_ALL.
+ *
+ * \ingroup utilities
  */
 class Locale {
     private:
@@ -128,11 +129,13 @@ class Locale {
  * (<tt>http://www.tntnet.org/cxxutils.html</tt>), which is
  * copyright (c) 2003 by Tommi Maekitalo, and covered by the GNU Lesser
  * General Public License.
+ *
+ * \ingroup utilities
  */
 class IConvStreamBuffer : public std::streambuf {
     private:
         std::ostream* sink;
-            /**< The destination output stream, or 0 if it has not yet
+            /**< The destination output stream, or \c null if it has not yet
                  been initialised. */
         char preBuffer[16];
             /**< The internal pre-conversion character buffer. */
@@ -143,6 +146,7 @@ class IConvStreamBuffer : public std::streambuf {
             /**< The iconv conversion descriptor, or \a cdNone if no
                  conversion descriptor is currently active. */
 
+        // NOLINTNEXTLINE(misc-misplaced-const)
         static const iconv_t cdNone;
             /**< Signifies that no iconv conversion descriptor is
                  currently active. */
@@ -156,7 +160,7 @@ class IConvStreamBuffer : public std::streambuf {
          * Destroys this stream buffer.  This stream buffer will be
          * closed, but the destination output stream will not be.
          */
-        ~IConvStreamBuffer();
+        ~IConvStreamBuffer() override;
 
         /**
          * Opens a new stream buffer that wraps around the given output
@@ -182,16 +186,16 @@ class IConvStreamBuffer : public std::streambuf {
          * written into this stream buffer.
          * @param destCode the character encoding for the translated data
          * that will subsequently be written to the destination output stream.
-         * @return this stream buffer on success, or 0 on error.
+         * @return this stream buffer on success, or \c null on error.
          */
         IConvStreamBuffer* open(std::ostream& dest,
             const char* srcCode, const char* destCode);
         /**
          * Closes this stream buffer.
          *
-         * @return this stream buffer on success, or 0 on error.
+         * @return this stream buffer on success, or \c null on error.
          */
-        IConvStreamBuffer* close() throw();
+        IConvStreamBuffer* close() noexcept;
 
         /**
          * Sends buffered data to the destination output stream,
@@ -207,20 +211,20 @@ class IConvStreamBuffer : public std::streambuf {
          * internal buffer, or EOF if we simply wish to flush the buffer.
          * @return 0 on success, or EOF on error.
          */
-        int_type overflow(int_type c);
+        int_type overflow(int_type c) override;
         /**
          * Simply returns EOF (since this is not an input stream).
          *
          * @return EOF.
          */
-        int_type underflow();
+        int_type underflow() override;
         /**
          * Flushes all output buffers.  The buffers for both this stream
          * and the destination output stream will be flushed.
          *
          * @return 0 on success, or -1 on error.
          */
-        int sync();
+        int sync() override;
 
         // Make this class non-copyable.
         IConvStreamBuffer(const IConvStreamBuffer&) = delete;
@@ -253,6 +257,8 @@ class IConvStreamBuffer : public std::streambuf {
  * (<tt>http://www.tntnet.org/cxxutils.html</tt>), which is
  * copyright (c) 2003 by Tommi Maekitalo, and covered by the GNU Lesser
  * General Public License.
+ *
+ * \ingroup utilities
  */
 class IConvStream : public std::ostream {
     private:
@@ -287,12 +293,10 @@ class IConvStream : public std::ostream {
         IConvStream& operator = (const IConvStream&) = delete;
 };
 
-/*@}*/
-
 // Inline functions for IConvStreamBuffer
 
 inline IConvStreamBuffer::IConvStreamBuffer() :
-        sink(0), cd(cdNone) {
+        sink(nullptr), cd(cdNone) {
 }
 
 inline IConvStreamBuffer::~IConvStreamBuffer() {
@@ -307,7 +311,7 @@ inline IConvStreamBuffer::int_type IConvStreamBuffer::underflow() {
 
 inline IConvStream::IConvStream(std::ostream& dest,
         const char* srcCode, const char* destCode) : std::ostream(&buf) {
-    if (buf.open(dest, srcCode, destCode) == 0)
+    if (buf.open(dest, srcCode, destCode) == nullptr)
         setstate(std::ios::failbit);
 }
 

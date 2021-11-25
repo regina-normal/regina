@@ -45,25 +45,24 @@
 #include "reginamain.h"
 
 #include <QLabel>
+#include <QMessageBox>
 #include <QTextDocument>
 #include <QWhatsThis>
 
 using regina::Packet;
-using regina::NormalHypersurface;
+using regina::Triangulation;
 
-HyperUI::HyperUI(regina::NormalHypersurfaces* packet,
+HyperUI::HyperUI(regina::PacketOf<regina::NormalHypersurfaces>* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane,
             ReginaPrefSet::global().tabHypersurfaceList) {
-    HyperHeaderUI* header = new HyperHeaderUI(packet, this);
-    addHeader(header);
+    addHeader(new HyperHeaderUI(packet, this));
 
     // WARNING: If these tabs are reordered, the code below that sets
     // the default tab must be updated accordingly.
     addTab(new HyperSummaryUI(packet, this), tr("&Summary"));
 
-    coords = new HyperCoordinateUI(packet, this,
-        newEnclosingPane->isReadWrite());
+    coords = new HyperCoordinateUI(packet, this);
     addTab(coords, tr("Hypersurface &Coordinates"));
 
     addTab(new HyperMatchingUI(packet, this), tr("&Matching Equations"));
@@ -80,10 +79,11 @@ QString HyperUI::getPacketMenuText() const {
     return tr("&Normal Hypersurfaces");
 }
 
-HyperHeaderUI::HyperHeaderUI(regina::NormalHypersurfaces* packet,
+HyperHeaderUI::HyperHeaderUI(
+        regina::PacketOf<regina::NormalHypersurfaces>* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         surfaces(packet) {
-    header = new QLabel(0);
+    header = new QLabel(nullptr);
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
     header->setWhatsThis(header->tr("Displays the parameters of the "
@@ -96,9 +96,10 @@ HyperHeaderUI::HyperHeaderUI(regina::NormalHypersurfaces* packet,
 
     ui = header;
 
-    // Listen for renaming events on the parent triangulation, since we
+    // Listen for events on the underlying triangulation, since we
     // display its label in the header.
-    packet->parent()->listen(this);
+    if (auto p = packet->triangulation().packet())
+        std::const_pointer_cast<regina::PacketOf<Triangulation<4>>>(p)->listen(this);
 }
 
 regina::Packet* HyperHeaderUI::getPacket() {
@@ -143,22 +144,91 @@ void HyperHeaderUI::refresh() {
         count = header->tr("%1 %2, %3 hypersurfaces").arg(
             surfaces->size()).arg(sType).arg(sEmb);
 
+    // Beware: we may be calling refresh() from packetBeingDestroyed(), in
+    // which case the triangulation is no longer safe to query.  In this
+    // scenario, isListening() will be false and triDestroyed will be true.
+    QString triName;
+    if (isListening()) {
+        // The triangulation is a real packet, has not changed, and is
+        // not currently being destroyed.
+        if (auto p = surfaces->triangulation().packet())
+            triName = p->humanLabel().c_str();
+        else {
+            // This shouldn't happen.
+            // It *was* once a packet: the only possibly explanation is that
+            // we took a snapshot but for some reason no change event was fired.
+            triName = tr("(private copy)");
+        }
+    } else {
+        // Either the triangulation was never a real packet, or it once was
+        // but the packet changed or was/is being destroyed.
+        if (triDestroyed || surfaces->triangulation().isReadOnlySnapshot())
+            triName = tr("(private copy)");
+        else
+            triName = tr("(anonymous)");
+    }
+
     header->setText(header->tr(
         "<qt>%1<br>Enumerated in %2 coordinates<br>"
         "Triangulation: <a href=\"#\">%3</a></qt>").
         arg(count).
         arg(header->tr(Coordinates::name(surfaces->coords(), false))).
-        arg(QString(surfaces->triangulation().humanLabel().c_str()).
-            toHtmlEscaped()));
+        arg(triName.toHtmlEscaped()));
 }
 
 void HyperHeaderUI::viewTriangulation() {
-    enclosingPane->getMainWindow()->packetView(surfaces->parent(),
-        false /* visible in tree */, false /* select in tree */);
+    const regina::Triangulation<4>& tri = surfaces->triangulation();
+    auto triPkt = tri.packet();
+    if (! triPkt) {
+        QMessageBox msg(QMessageBox::Information,
+            tr("Create New Copy"),
+            tr("Should I create a new copy of this triangulation?"),
+            QMessageBox::Yes | QMessageBox::Cancel, ui);
+        if (tri.isReadOnlySnapshot())
+            msg.setInformativeText(tr("<qt>This list stores its own private "
+                "copy of the triangulation, since the original has changed or "
+                "been deleted.<p>"
+                "Would you like me to make a new copy "
+                "that you can view and edit?<p>"
+                "This list will continue to use its own private copy, so "
+                "you can edit or delete your new copy as you please.</qt>"));
+        else
+            msg.setInformativeText(tr("<qt>The triangulation is not "
+                "part of this Regina data file.<p>"
+                "Would you like me to make a new copy "
+                "that you can view and edit here?</qt>"));
+        msg.setDefaultButton(QMessageBox::Yes);
+        if (msg.exec() != QMessageBox::Yes)
+            return;
+
+        auto copy = regina::makePacket<regina::Triangulation<4>>(
+            std::in_place, tri);
+        copy->setLabel(surfaces->adornedLabel("Triangulation"));
+        surfaces->insertChildLast(copy);
+
+        enclosingPane->getMainWindow()->packetView(copy, true, true);
+    } else {
+        enclosingPane->getMainWindow()->packetView(
+            std::const_pointer_cast<regina::PacketOf<Triangulation<4>>>(triPkt),
+            false /* visible in tree */, false /* select in tree */);
+    }
 }
 
-void HyperHeaderUI::packetWasRenamed(regina::Packet*) {
-    // Assume it is the parent triangulation.
+void HyperHeaderUI::packetWasRenamed(regina::Packet&) {
+    // Assume it is the underlying triangulation.
     refresh();
 }
 
+void HyperHeaderUI::packetWasChanged(regina::Packet& packet) {
+    // The underlying triangulation has changed.
+    // Any such change *should* be immediately preceded by taking a local
+    // snapshot, so the triangulation should be read-only from now on.
+    packet.unlisten(this);
+    refresh();
+}
+
+void HyperHeaderUI::packetBeingDestroyed(regina::PacketShell) {
+    // Assume it is the underlying triangulation.
+    triDestroyed = true;
+    refresh();
+}

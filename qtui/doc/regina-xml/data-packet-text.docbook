@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>packet (text)</refname>
-  <refpurpose>A text packet</refpurpose>
+  <refpurpose>Replaced by &xml-textdata;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -36,10 +36,20 @@ packet ::= (&xml-text;,
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   In &regina;&nbsp;6.0.1 and earlier, the &xml-packet; element was used
+   to store every packet in the entire packet tree that makes up a
+   &regina; data file.
+   This page describes how the &xml-packet; element was structured when
+   storing a text packet.
+   Since &regina;&nbsp;7.0, each packet type has its own &xml; element;
+   in particular, text packets are now stored using the &xml-textdata; element.
+  </para>
   <para>
    A <emphasis>text</emphasis> packet simply stores an
    arbitrary amount of text.  The text itself is contained in the

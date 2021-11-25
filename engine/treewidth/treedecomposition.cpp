@@ -57,12 +57,6 @@ template TreeDecomposition::TreeDecomposition(
 template TreeDecomposition::TreeDecomposition(
     const FacetPairing<4>&, TreeDecompositionAlg);
 
-// Instantiate templates for common types:
-template TreeDecomposition::TreeDecomposition(
-    unsigned, bool const** const, TreeDecompositionAlg);
-template TreeDecomposition::TreeDecomposition(
-    unsigned, int const** const, TreeDecompositionAlg);
-
 template void TreeDecomposition::reroot(const int*, const int*, const int*);
 
 bool TreeBag::contains(int element) const {
@@ -206,12 +200,12 @@ TreeDecomposition::TreeDecomposition(const Link& link,
     construct(g, alg);
 }
 
-TreeDecomposition* TreeDecomposition::fromPACE(const std::string& str) {
+TreeDecomposition TreeDecomposition::fromPACE(const std::string& str) {
     std::istringstream s(str);
     return fromPACE(s);
 }
 
-TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
+TreeDecomposition TreeDecomposition::fromPACE(std::istream& in) {
     TreeBag** bags = nullptr; // non-null after reading the header line
     size_t nVert, nBags, maxBagSize; // set after reading the header line
     size_t readBags = 0, readJoins = 0, readMaxBagSize = 0;
@@ -231,10 +225,8 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
             // We are expecting the header line.
             if (! ((s >> c >> tmp >> nBags >> maxBagSize >> nVert) &&
                     (c == 's') && (tmp == "td") && (nBags > 0) &&
-                    ! (s >> tmp))) {
-                std::cerr << "ERROR: Invalid header line" << std::endl;
-                return nullptr;
-            }
+                    ! (s >> tmp)))
+                throw InvalidArgument("fromPACE(): invalid header line");
 
             bags = new TreeBag*[nBags];
             std::fill(bags, bags + nBags, nullptr);
@@ -242,11 +234,10 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
             // We are expecting a bag.
             if (! ((s >> c >> idx) && (c == 'b') && (idx > 0) &&
                     (idx <= nBags) && (! bags[idx - 1]))) {
-                std::cerr << "ERROR: Invalid bag line" << std::endl;
                 for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
                     delete *bag;
                 delete[] bags;
-                return nullptr;
+                throw InvalidArgument("fromPACE(): invalid bag line");
             }
             --idx;
 
@@ -257,11 +248,11 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
                     if (bags[idx]->size_ == maxBagSize ||
                             bags[idx]->elements_[bags[idx]->size_] <= 0 ||
                             bags[idx]->elements_[bags[idx]->size_] > nVert) {
-                        std::cerr << "ERROR: Invalid bag contents" << std::endl;
                         for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
                             delete *bag;
                         delete[] bags;
-                        return nullptr;
+                        throw InvalidArgument(
+                            "fromPACE(): invalid bag contents");
                     } else {
                         --bags[idx]->elements_[bags[idx]->size_];
                         ++bags[idx]->size_;
@@ -280,11 +271,10 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
             // Make sure there are no duplicate vertices in the bag.
             for (i = 0; i + 1 < bags[idx]->size_; ++i)
                 if (bags[idx]->elements_[i] == bags[idx]->elements_[i + 1]) {
-                    std::cerr << "ERROR: Duplicate bag element" << std::endl;
                     for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
                         delete *bag;
                     delete[] bags;
-                    return nullptr;
+                    throw InvalidArgument("fromPACE(): duplicate bag element");
                 }
 
             // TODO: Reallocate bags[idx]->elements_ to be just the right size.
@@ -297,11 +287,10 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
             // We are expecting a connection between two bags.
             if (! ((s >> i >> j) && (i != j) && (i > 0) && (j > 0) &&
                     (i <= nBags) && (j <= nBags) && ! (s >> tmp))) {
-                std::cerr << "ERROR: Invalid connection line" << std::endl;
                 for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
                     delete *bag;
                 delete[] bags;
-                return nullptr;
+                throw InvalidArgument("fromPACE(): invalid connection line");
             }
             --i;
             --j;
@@ -330,33 +319,31 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
             ++readJoins;
         } else {
             // We are not expecting any more data.
-            std::cerr << "ERROR: Unexpected additional data" << std::endl;
             for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
                 delete *bag;
             delete[] bags;
-            return nullptr;
+            throw InvalidArgument("fromPACE(): unexpected additional data");
         }
     }
 
     if (! (bags && readBags == nBags && readJoins + 1 == nBags &&
             readMaxBagSize == maxBagSize)) {
-        std::cerr << "ERROR: Mismatched max bag size" << std::endl;
         for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
             delete *bag;
         delete[] bags;
-        return nullptr;
+        throw InvalidArgument("fromPACE(): mismatched max bag size");
     }
 
-    TreeDecomposition* ans = new TreeDecomposition();
-    ans->width_ = maxBagSize - 1;
+    TreeDecomposition ans;
+    ans.width_ = maxBagSize - 1;
 
-    for (ans->root_ = bags[nBags - 1]; ans->root_->parent_;
-            ans->root_ = ans->root_->parent_)
+    for (ans.root_ = bags[nBags - 1]; ans.root_->parent_;
+            ans.root_ = ans.root_->parent_)
         ;
 
     delete[] bags;
 
-    ans->reindex();
+    ans.reindex();
     return ans;
 }
 
@@ -391,7 +378,7 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
     bool* used = new bool[graph.order_];
     int* elimOrder = new int[graph.order_]; // Elimination stage -> vertex
     int* elimStage = new int[graph.order_]; // Vertex -> elimination stage
-    TreeBag** bags = new TreeBag*[graph.order_];
+    auto* bags = new TreeBag*[graph.order_];
 
     std::fill(used, used + graph.order_, false);
 
@@ -593,7 +580,7 @@ bool TreeDecomposition::compress() {
         if (compare != BAG_UNRELATED) {
             // We will merge b with b->parent_, and then remove b.
             if (compare == BAG_SUPERSET)
-                b->swapContents(*b->parent_);
+                b->swapNodes(*b->parent_);
 
             if (b->children_) {
                 // Bag b has children.
@@ -653,7 +640,7 @@ bool TreeDecomposition::compress() {
     return changed;
 }
 
-void TreeDecomposition::makeNice(int* heightHint) {
+void TreeDecomposition::makeNice(const int* heightHint) {
     if (! root_)
         return;
 

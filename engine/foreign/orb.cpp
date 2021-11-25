@@ -101,13 +101,13 @@ const int vertex_at_faces[4][4] =
  * The routine was changed to be compatible with Regina's Triangulation<3>
  * data structure.
  */
-Triangulation<3> *cassonToTriangulation( CassonFormat *cf )
- {
+std::shared_ptr<PacketOf<Triangulation<3>>> cassonToTriangulation(
+        CassonFormat *cf ) {
  int i;
- Triangulation<3> *triang = new Triangulation<3>();
+ auto triang = makePacket<Triangulation<3>>();
  // since CassonFormat does not allow naming of triangulations,
  //  triang is given a name in the readOrb() function.
- //  I try to mimic Triangulation<3>::readSnapPea and
+ //  I try to mimic Triangulation<3>::fromSnapPea and
  //  Orb::cassonToTriangulation as much as possible.
 
  // If the triangulation is empty, leave now before we start allocating
@@ -115,7 +115,7 @@ Triangulation<3> *cassonToTriangulation( CassonFormat *cf )
  if (cf->num_tet == 0)
      return triang;
 
- Tetrahedron<3> **tet = new Tetrahedron<3>*[cf->num_tet]; // tet corresponds to tet_array in Orb
+ auto* tet = new Tetrahedron<3>*[cf->num_tet]; // tet corresponds to tet_array in Orb
  for (i=0; i<cf->num_tet; i++)
         tet[i]=triang->newTetrahedron();
  // now tet is a pointer to an array of Tetrahedron<3>s,
@@ -132,12 +132,12 @@ Triangulation<3> *cassonToTriangulation( CassonFormat *cf )
  // this routine goes through the edges of cf, picking off the adjacent
  // tetrahedra and assembled the information into tet. this code is
  // adapted from Orb::cassonToTriangulation in Orb's organizer.cpp
- while (ei!=NULL) // if we have a non-trivial edge, proceed
+ while (ei) // if we have a non-trivial edge, proceed
         {
         tei1 = ei->head;
-        while (tei1!=NULL) // now we spin about the tetrahedra adj to ei.
+        while (tei1) // now we spin about the tetrahedra adj to ei.
                 {
-                if (tei1->next==NULL)
+                if (! tei1->next)
                         tei2 = ei->head;
                 else    tei2 = tei1->next;
 
@@ -192,7 +192,7 @@ CassonFormat *readCassonFormat( std::istream &ts )
         bool        vertices_known = false;
 
         cf = new CassonFormat;
-        cf->head = NULL;
+        cf->head = nullptr;
         cf->num_tet = 0;
 
         // Skip any initial non-empty lines (looking whether there is
@@ -222,12 +222,12 @@ CassonFormat *readCassonFormat( std::istream &ts )
 
                 nei = new EdgeInfo;
 
-                if (cf->head==NULL)
+                if (! cf->head)
                         cf->head = nei;
                 else    ei->next = nei;
 
-                nei->next = NULL;
-                nei->head = NULL;
+                nei->next = nullptr;
+                nei->head = nullptr;
 
                 ei = nei;
 
@@ -245,12 +245,12 @@ CassonFormat *readCassonFormat( std::istream &ts )
                 {
                         ntei = new TetEdgeInfo;
 
-                        if (ei->head==NULL)
+                        if (! ei->head)
                                 ei->head        = ntei;
                         else
                                 tei->next       = ntei;
 
-                        ntei->next = NULL;
+                        ntei->next = nullptr;
                         tei = ntei;
 
                         tei->f1 = LN(section[section.length()-2]);
@@ -291,15 +291,15 @@ bool verifyCassonFormat( CassonFormat *cf )
 
                 ei = cf->head;
 
-                if (ei == NULL)
+                if (! ei)
                         return false;
 
-                while(ei!=NULL)
+                while(ei)
                 {
                         tei = ei->head;
-                        if (tei == NULL)
+                        if (! tei)
                                 return false;
-                        while(tei!=NULL)
+                        while(tei)
                         {
                                 if (tei->tet_index == i )
                                 {
@@ -330,11 +330,11 @@ void freeCassonFormat( CassonFormat *cf )
         TetEdgeInfo *t1, *t2;
         e1 = cf->head;
 
-        while (e1!=NULL)
+        while (e1)
         {
                 e2 = e1->next;
                 t1 = e1->head;
-                while (t1!=NULL)
+                while (t1)
                 {
                         t2 = t1->next;
                         delete t1;
@@ -353,14 +353,14 @@ void freeCassonFormat( CassonFormat *cf )
  * data structure, and to use standard C++ string and I/O streams
  * instead of Qt strings and I/O streams.
  */
-Triangulation<3> *readTriangulation( std::istream &ts) {
+std::shared_ptr<PacketOf<Triangulation<3>>> readTriangulation(std::istream &ts) {
     std::string line, file_id;
 
     getline(ts, line);
     if (line != "% orb") {
         std::cerr << "Orb / Casson file is not in the correct format."
             << std::endl;
-        return 0;
+        return nullptr;
     }
 
     getline(ts, file_id);
@@ -369,10 +369,10 @@ Triangulation<3> *readTriangulation( std::istream &ts) {
     if (! verifyCassonFormat( cf )) {
         std::cerr << "Error verifying Orb / Casson file." << std::endl;
         freeCassonFormat( cf );
-        return 0;
+        return nullptr;
     }
 
-    Triangulation<3>* manifold = cassonToTriangulation( cf );
+    auto manifold = cassonToTriangulation( cf );
     freeCassonFormat( cf );
 
     manifold->setLabel(file_id);
@@ -381,12 +381,12 @@ Triangulation<3> *readTriangulation( std::istream &ts) {
 
 } // End anonymous namespace
 
-Triangulation<3> *readOrb(const char *filename) {
+std::shared_ptr<PacketOf<Triangulation<3>>> readOrb(const char *filename) {
     std::ifstream file(filename);
 
     if (! file) {
         std::cerr << "Error opening Orb / Casson file." << std::endl;
-        return 0;
+        return nullptr;
     }
 
     return readTriangulation(file);

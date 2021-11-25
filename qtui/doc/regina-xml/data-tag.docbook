@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>tag</refname>
-  <refpurpose>An individual packet tag</refpurpose>
+  <refpurpose>A user-assigned packet tag</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -48,18 +48,16 @@ tag ::=</synopsis>
    A &xml-tag; element stores a single packet tag.
   </para>
   <para>
-   Each packet may have an arbitrary set of string tags associated with
-   it.  Packet tags are not provided for any particular purpose; they
-   may be utilised however a user sees fit.
+   Users can assign an arbitrary set of string tags to any packet in the
+   packet tree.  &regina; does not use these tags at all; they are simply
+   to help user organise their data in whatever way they see fit.
   </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>tag</sgmltag>:
-    <simplelist type="inline">
-     <member>&xml-packet;</member>
-    </simplelist>.
+    The following elements may contain <sgmltag>tag</sgmltag>:
+    &allpackets;
    </para>
   </refsect2>
 

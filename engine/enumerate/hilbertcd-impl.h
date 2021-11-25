@@ -44,8 +44,8 @@
 
 #include "regina-core.h"
 #include "regina-config.h"
-#include "enumerate/enumconstraints.h"
 #include "enumerate/hilbertcd.h"
+#include "enumerate/validityconstraints.h"
 #include "maths/matrix.h"
 #include "utilities/bitmask.h"
 #include "utilities/intutils.h"
@@ -53,12 +53,12 @@
 
 namespace regina {
 
-template <class RayClass, class OutputIterator>
-void HilbertCD::enumerateHilbertBasis(OutputIterator results,
-        const MatrixInt& subspace, const EnumConstraints* constraints) {
+template <class RayClass, typename Action>
+void HilbertCD::enumerate(Action&& action,
+        const MatrixInt& subspace, const ValidityConstraints& constraints) {
     static_assert(
         IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
-        "HilbertCD::enumerateHilbertBasis() requires the RayClass "
+        "HilbertCD::enumerate() requires the RayClass "
         "template parameter to be equal to or derived from Vector<T>, "
         "where T is one of Regina's arbitrary precision integer types.");
 
@@ -72,74 +72,59 @@ void HilbertCD::enumerateHilbertBasis(OutputIterator results,
     // Then farm the work out to the real enumeration routine that is
     // templated on the bitmask type.
     if (dim <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(results,
-            subspace, constraints);
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(
+            std::forward<Action>(action), subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(results,
-            subspace, constraints);
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(
+            std::forward<Action>(action), subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(results,
-            subspace, constraints);
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(
+            std::forward<Action>(action), subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
-            Bitmask2<unsigned long long, unsigned> >(results,
-            subspace, constraints);
+            Bitmask2<unsigned long long, unsigned> >(
+            std::forward<Action>(action), subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass,
             Bitmask2<unsigned long long, unsigned long> >(
-            results, subspace, constraints);
+            std::forward<Action>(action), subspace, constraints);
     else if (dim <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(results,
-            subspace, constraints);
+        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(
+            std::forward<Action>(action), subspace, constraints);
     else
-        enumerateUsingBitmask<RayClass, Bitmask>(results,
-            subspace, constraints);
+        enumerateUsingBitmask<RayClass, Bitmask>(
+            std::forward<Action>(action), subspace, constraints);
 }
 
-template <class RayClass, class BitmaskType, class OutputIterator>
-void HilbertCD::enumerateUsingBitmask(OutputIterator results,
-        const MatrixInt& subspace, const EnumConstraints* constraints) {
-    typedef typename RayClass::Element IntegerType;
+template <class RayClass, class BitmaskType, typename Action>
+void HilbertCD::enumerateUsingBitmask(Action&& action,
+        const MatrixInt& subspace, const ValidityConstraints& constraints) {
+    using IntegerType = typename RayClass::Element;
 
     // Stack-based Contejean-Devie algorithm (Information & Computation, 1994).
     size_t dim = subspace.columns();
     size_t nEqns = subspace.rows();
 
-    // Convert the set of constraints into bitmasks, where for every
-    // original coordinate listed in the constraint, the corresponding
-    // bit is set to 1.
-    BitmaskType* constraintsBegin = nullptr;
-    BitmaskType* constraintsEnd = nullptr;
-    if (constraints && ! constraints->empty()) {
-        constraintsBegin = new BitmaskType[constraints->size()];
-
-        EnumConstraints::const_iterator cit;
-        for (cit = constraints->begin(), constraintsEnd = constraintsBegin;
-                cit != constraints->end(); ++cit, ++constraintsEnd) {
-            constraintsEnd->reset(dim);
-            constraintsEnd->set(cit->begin(), cit->end(), true);
-        }
-    }
+    auto constraintMasks = constraints.bitmasks<BitmaskType>(dim);
 
     std::list<VecSpec<IntegerType, BitmaskType>*> basis;
     typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator bit;
 
-    Vector<IntegerType>** unitMatch = new Vector<IntegerType>*[dim];
+    auto* unitMatch = new Vector<IntegerType>*[dim];
     int i, j;
     for (i = 0; i < dim; ++i) {
         unitMatch[i] = new Vector<IntegerType>(nEqns);
         for (j = 0; j < nEqns; ++j)
-            unitMatch[i]->set(j, subspace.entry(j, i));
+            (*unitMatch[i])[j] = subspace.entry(j, i);
     }
 
     unsigned stackSize;
     // All vectors/rays are created and destroyed.
     // Bitmasks on the other hand are reused.
-    VecSpec<IntegerType, BitmaskType>** coord =
-        new VecSpec<IntegerType, BitmaskType>*[dim];
-    Vector<IntegerType>** match = new Vector<IntegerType>*[dim];
-    BitmaskType* frozen = new BitmaskType[dim];
+    auto* coord = new VecSpec<IntegerType, BitmaskType>*[dim];
+    auto* match = new Vector<IntegerType>*[dim];
+    auto* frozen = new BitmaskType[dim];
 
     for (i = 0; i < dim; ++i)
         frozen[i].reset(dim); // All false.
@@ -192,12 +177,11 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
                 mask.set(i, true);
 
                 // Constraint test.
-                if (constraintsBegin) {
+                if (! constraintMasks.empty()) {
                     found = false;
-                    for (constraint = constraintsBegin;
-                            constraint != constraintsEnd; ++constraint) {
+                    for (const BitmaskType& constraint : constraintMasks) {
                         tmpMask = mask;
-                        tmpMask &= *constraint;
+                        tmpMask &= constraint;
                         if (! tmpMask.atMostOneBit()) {
                             found = true;
                             break;
@@ -244,7 +228,7 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
             }
 
             coord[stackSize] = new VecSpec<IntegerType, BitmaskType>(*c);
-            coord[stackSize]->set(i, (*coord[stackSize])[i] + 1);
+            ++(*coord[stackSize])[i];
             coord[stackSize]->mask_.set(i, true);
 
             match[stackSize] = new Vector<IntegerType>(*m);
@@ -271,11 +255,10 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
     delete[] coord;
     delete[] match;
     delete[] frozen;
-    delete[] constraintsBegin;
 
     // Output basis elements.
     for (bit = basis.begin(); bit != basis.end(); ++bit) {
-        *results++ = new RayClass(**bit);
+        action(RayClass(**bit));
         delete *bit;
     }
 }

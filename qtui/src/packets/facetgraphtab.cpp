@@ -68,15 +68,21 @@
 // #define LIBGVC_DYNAMIC_PLUGINS 1
 
 #ifndef LIBGVC_DYNAMIC_PLUGINS
+#if defined(_WIN32)
+__declspec(dllimport) gvplugin_library_t gvplugin_neato_layout_LTX_library;
+__declspec(dllimport) gvplugin_library_t gvplugin_dot_layout_LTX_library;
+__declspec(dllimport) gvplugin_library_t gvplugin_core_LTX_library;
+#else
 extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
 extern gvplugin_library_t gvplugin_dot_layout_LTX_library;
 extern gvplugin_library_t gvplugin_core_LTX_library;
+#endif
 
 lt_symlist_t lt_preloaded_symbols[] = {
     { "gvplugin_neato_layout_LTX_library", &gvplugin_neato_layout_LTX_library },
     { "gvplugin_dot_layout_LTX_library", &gvplugin_dot_layout_LTX_library },
     { "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
-    { 0, 0 }
+    { nullptr, nullptr }
 };
 #endif
 #endif
@@ -93,7 +99,7 @@ FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
     QBoxLayout* hdrLayout = new QHBoxLayout();
     baseLayout->addLayout(hdrLayout);
 
-    QLabel* label = new QLabel(tr("Display graph:"), ui);
+    auto* label = new QLabel(tr("Display graph:"), ui);
     hdrLayout->addWidget(label);
     chooseType = new QComboBox(ui);
     chooseType->addItem(tr("Dual graph"));
@@ -333,7 +339,7 @@ void FacetGraphTab::showError(const QString& msg) {
 
 std::string Dim2EdgeGraphData::dual(bool withLabels) {
     regina::FacetPairing<2> pairing(*tri_);
-    return pairing.dot(0 /* prefix */, false /* subgraphs */, withLabels);
+    return pairing.dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
 }
 
 std::string Dim2EdgeGraphData::treeDecomp(bool nice, int& bags, int& width) {
@@ -371,7 +377,7 @@ regina::Packet* Dim2EdgeGraphData::getPacket() {
 
 std::string Dim3FaceGraphData::dual(bool withLabels) {
     regina::FacetPairing<3> pairing(*tri_);
-    return pairing.dot(0 /* prefix */, false /* subgraphs */, withLabels);
+    return pairing.dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
 }
 
 std::string Dim3FaceGraphData::treeDecomp(bool nice, int& bags, int& width) {
@@ -404,12 +410,12 @@ QString Dim3FaceGraphData::facetsName() {
 }
 
 regina::Packet* Dim3FaceGraphData::getPacket() {
-    return tri_;
+    return triAsPacket_;
 }
 
 std::string Dim4FacetGraphData::dual(bool withLabels) {
     regina::FacetPairing<4> pairing(*tri_);
-    return pairing.dot(0 /* prefix */, false /* subgraphs */, withLabels);
+    return pairing.dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
 }
 
 std::string Dim4FacetGraphData::treeDecomp(bool nice, int& bags, int& width) {

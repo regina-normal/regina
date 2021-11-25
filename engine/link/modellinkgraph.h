@@ -41,14 +41,11 @@
 
 #include <vector>
 #include "core/output.h"
+#include "utilities/exception.h"
+#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 
 namespace regina {
-
-/**
- * \weakgroup link
- * @{
- */
 
 class Link;
 class ModelLinkGraph;
@@ -70,7 +67,10 @@ class ModelLinkGraphNode;
  *
  * A "null arc" is one whose node is the null pointer.
  *
- * These objects are small enough to pass around by value.
+ * These objects are small enough to pass by value and swap with std::swap(),
+ * with no need for any specialised move operations or swap functions.
+ *
+ * \ingroup link
  */
 class ModelLinkGraphArc {
     private:
@@ -322,8 +322,8 @@ class ModelLinkGraphArc {
         /**
          * Tests whether this is a non-null arc.
          *
-         * \ifacespython This is not available to python users.
-         * Instead you can simply test whether <tt>node() == None</tt>.
+         * \ifacespython Not available; instead you can simply test whether
+         * <tt>node() == None</tt>.
          *
          * @return \c true if this is not a null arc (i.e., node()
          * does not return a null pointer), or \c false if this is a null
@@ -340,6 +340,8 @@ class ModelLinkGraphArc {
  * @param out the output stream to which to write.
  * @param a the arc reference to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup link
  */
 std::ostream& operator << (std::ostream& out, const ModelLinkGraphArc& a);
 
@@ -351,6 +353,14 @@ std::ostream& operator << (std::ostream& out, const ModelLinkGraphArc& a);
  * Note that nodes may be reindexed when other nodes are added or removed -
  * if you wish to track a particular node through such operations then you
  * should use a pointer to the relevant ModelLinkGraphNode instead.
+ *
+ * Graph nodes do not support value semantics: they cannot be copied, swapped,
+ * or manually constructed.  Their location in memory defines them, and
+ * they are often passed and compared by pointer.  End users are never
+ * responsible for their memory management; this is all taken care of by
+ * the ModelLinkGraph to which they belong.
+ *
+ * \ingroup link
  */
 class ModelLinkGraphNode : public MarkedElement,
         public Output<ModelLinkGraphNode> {
@@ -411,7 +421,7 @@ class ModelLinkGraphNode : public MarkedElement,
          * Writes a short text representation of this node to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -420,7 +430,7 @@ class ModelLinkGraphNode : public MarkedElement,
          * Writes a detailed text representation of this node to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -458,25 +468,10 @@ class ModelLinkGraphNode : public MarkedElement,
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup link
  */
 class ModelLinkGraph : public Output<ModelLinkGraph> {
-    public:
-        /**
-         * A routine that can do arbitrary processing upon a knot or link.
-         * Such routines are used to process links that are found when
-         * running generateMinimalLinks().
-         *
-         * The first parameter passed should be a link, which \e must be
-         * deallocated by this routine.  The second parameter may
-         * contain arbitrary data as passed to generateMinimalLinks().
-         *
-         * Note that the first parameter might be \c null to signal that
-         * link generation has finished.
-         *
-         * \apinotfinal
-         */
-        typedef void (*Use)(Link*, void*);
-
     private:
         MarkedVector<ModelLinkGraphNode> nodes_;
             /**< The nodes of this graph. */
@@ -540,6 +535,32 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * @return the node at the given index.
          */
         ModelLinkGraphNode* node(size_t index) const;
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all nodes in this graph.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (ModelLinkGraphNode* n : graph.nodes()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for as
+         * long as the graph exists: even if nodes are added and/or removed,
+         * it will always reflect the nodes that are currently in the graph.
+         * Nevertheless, it is recommended to treat this object as temporary
+         * only, and to call nodes() again each time you need it.
+         *
+         * @return access to the list of all nodes.
+         */
+        auto nodes() const;
 
         /**
          * Sets this to be a (deep) copy of the given graph.
@@ -624,9 +645,6 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * - The common cell is the inside cell at from.node().
          *
          * \pre This graph is connected and TODO: valid.
-         *
-         * \ifacespython Instead of a C++ pair, this routine returns a
-         * Python tuple containing two ModelLinkGraphArc objects.
          */
         std::pair<ModelLinkGraphArc, ModelLinkGraphArc> findFlype(
             const ModelLinkGraphArc& from) const;
@@ -645,21 +663,30 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
                   Cell C
            \endverbatim
          *
-         * Conditions that explicitly return 0:
+         * Conditions that explicitly throw exceptions:
          *
          * - Neither left nor right ends at from.node().
          * - The upper and lower bounding cells are distinct,
          * - The cell between left and right is not the inside cell
          * where the flype begins from from.node().
+         *
+         * Even if the arguments are a (non-null) result of findFlype(),
+         * this routine could still throw an exception, but only for graphs
+         * that model non-minimal and/or composite link diagrams.
+         *
+         * \exception InvalidArgument TODO.
          */
-        ModelLinkGraph* flype(const ModelLinkGraphArc& from,
+        ModelLinkGraph flype(const ModelLinkGraphArc& from,
             const ModelLinkGraphArc& left, const ModelLinkGraphArc& right)
             const;
 
         /**
          * TODO: Document.
+         *
+         * \exception InvalidArgument there is no flype available from
+         * the given starting arc.
          */
-        ModelLinkGraph* flype(const ModelLinkGraphArc& from) const;
+        ModelLinkGraph flype(const ModelLinkGraphArc& from) const;
 
         /**
          * TODO: Document.  Only aims for minimal, ignores reflections.
@@ -669,11 +696,26 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Arc (0,0) will always be forwards, and crossing 0 will always
          * be positive.
          *
+         * For each link that is generated, this routine will call \a action
+         * (which must be a function or some other callable object).
+         *
+         * - The first argument passed to \action will be the link that was
+         *   generated.  This will be passed as an rvalue; a typical action
+         *   could (for example) take it by const reference and query it,
+         *   or take it by value and modify it, or take it by rvalue reference
+         *   and move it into more permanent storage.
+         *
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return \c void.
+         *
          * TODO: PRE: Knot, not link.
          *
          * \apinotfinal
          */
-        void generateMinimalLinks(Use use, void* useArgs = nullptr) const;
+        template <typename Action, typename... Args>
+        void generateMinimalLinks(Action&& action, Args&&... args) const;
 
         /**
          * Outputs this graph in the ASCII text format used by \e plantri.
@@ -789,7 +831,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Writes a short text representation of this graph to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -798,7 +840,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Writes a detailed text representation of this graph to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -835,7 +877,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * This function \e only takes the comma-separated sequence of
          * alphabetical strings.  So, for example, to construct the graph
-         * correpsonding to the second line of output above, you could call:
+         * corresponding to the second line of output above, you could call:
          *
          * \code{.cpp}
          * fromPlantri("bcdd,aeec,abfd,acfa,bffb,ceed");
@@ -860,11 +902,12 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * by the member function canonicalPlantri() (even though such output
          * would certainly \e not be produced by the program \e plantri).
          *
-         * \warning While this routine does some error checking on the
-         * input, it does \e not test for planarity of the graph.
-         * Of course \e plantri does not output non-planar graphs, but
-         * if a user constructs one by hand and passes it to this
-         * routine then the resulting behaviour is undefined.
+         * \warning While this routine does some basic error checking on the
+         * input, these checks are not exhaustive.  In particular, it does
+         * \e not test for planarity of the graph.  (Of course \e plantri
+         * does not output non-planar graphs, but a user could still construct
+         * one by hand and passes it to this routine, in which case the
+         * resulting behaviour is undefined.)
          *
          * \pre The graph being described is connected.
          * \pre The graph being described has between 1 and 26 nodes inclusive.
@@ -873,13 +916,25 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * edges.  Note that any graph that fails this condition will the model
          * graph for a link diagram that is an "obvious" connected sum.
          *
+         * \exception InvalidArgument the input was not a valid
+         * representation of a graph using the \e plantri output format.
+         * As noted above, the checks performed here are not exhaustive.
+         *
          * @param plantri a string containing the comma-separated
          * sequence of alphabetical strings output by \e plantri, as
          * described above.
-         * @return a newly constructed graph, or \c null if the input
-         * was found to be invalid.
+         * @return the resulting graph.
          */
-        static ModelLinkGraph* fromPlantri(const std::string& plantri);
+        static ModelLinkGraph fromPlantri(const std::string& plantri);
+
+    private:
+        /**
+         * A helper array used by generateMinimalLinks().
+         */
+        static constexpr int upperOutArc[2 /* 0,1 for -,+ */][13 /* dir */] = {
+            { -1, -1, -1, 0, -1, -1, 1, -1, -1, 3, -1, -1, 2 },
+            { -1, -1, -1, 1, -1, -1, 2, -1, -1, 0, -1, -1, 3 }
+        };
 };
 
 /**
@@ -892,6 +947,8 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
  *
  * @param lhs the graph whose contents should be swapped with \a rhs.
  * @param rhs the graph whose contents should be swapped with \a lhs.
+ *
+ * \ingroup link
  */
 void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs) noexcept;
 
@@ -907,8 +964,21 @@ void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs) noexcept;
  *
  * At present, this class insists that each 2-cell is a topological disc.
  * As a consequence, this class cannot work with empty or disconnected graphs.
+ *
+ * Cellular decompositions do not support value semantics: they cannot be
+ * copied, swapped, or manually constructed.  Instead they are computed
+ * properties of model graphs, and are only accessible via const reference
+ * through the member function ModelLinkGraph::cells().
+ *
+ * \ingroup link
  */
 class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
+    public:
+        /**
+         * An iterator type used when traversing the boundary of a 2-cell.
+         */
+        using ArcIterator = const ModelLinkGraphArc*;
+
     private:
         ModelLinkGraphArc* arcs_;
             /**< Stores the boundary of each cell.  Specifically, for cell
@@ -989,6 +1059,21 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
         size_t countCells() const;
 
         /**
+         * Returns the number of arcs aloung the boundary of the given 2-cell.
+         * If the given cell is a <i>k</i>-gon, then this routine returns the
+         * integer \a k.
+         *
+         * \pre The underlying ModelLinkGraph is non-empty, connected,
+         * and describes a planar graph embedding.  Note that connectivity
+         * is already required by the class constructor, and you can test
+         * the remaining conditions by calling isValid().
+         *
+         * @param cell indicates which cell to query; this must be
+         * between 0 and countCells()-1 inclusive.
+         * @return the size of the correpsonding 2-cell.
+         */
+        size_t size(size_t cell) const;
+        /**
          * Returns the given arc along the boundary of the given 2-cell.
          *
          * For each cell, the arcs along the boundary are given in order
@@ -1017,20 +1102,40 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          */
         const ModelLinkGraphArc& arc(size_t cell, size_t which) const;
         /**
-         * Returns the number of arcs aloung the boundary of the given 2-cell.
-         * If the given cell is a <i>k</i>-gon, then this routine returns the
-         * integer \a k.
+         * Returns an object that allows iteration through and random access
+         * to all arcs along the boundary of the given 2-cell.
          *
-         * \pre The underlying ModelLinkGraph is non-empty, connected,
-         * and describes a planar graph embedding.  Note that connectivity
-         * is already required by the class constructor, and you can test
-         * the remaining conditions by calling isValid().
+         * Suppose that the <i>i</i>th cell is a <i>k</i>-gon.  Then this
+         * object gives access to the \a k arcs along the boundary of the
+         * <i>i</i>th cell in the same order as described by arc(); that
+         * is, walking anticlockwise around the cell boundary with the
+         * cell to the left of each arc.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  The elements of the list will be
+         * read-only objects of type ModelLinkGraphArc, and so your code might
+         * look like:
+         *
+         * \code{.cpp}
+         * for (const ModelLinkGraphArc& a : cells.arcs(cell)) { ... }
+         * \endcode
+         *
+         * Using <tt>arcs(cell)</tt> is equivalent to iterating over the
+         * iterator range (<tt>begin(cell)</tt>, <tt>end(cell)</tt>).
+         * Using arcs() generates a tiny amount of extra overhead, but you may
+         * also find it more readable.
          *
          * @param cell indicates which cell to query; this must be
          * between 0 and countCells()-1 inclusive.
-         * @return the size of the correpsonding 2-cell.
+         * @return access to the list of all arcs along the boundary of
+         * the given cell.
          */
-        size_t size(size_t cell) const;
+        auto arcs(size_t cell) const;
         /**
          * Returns the beginning of an iterator range for walking around the
          * boundary of the given 2-cell.
@@ -1043,19 +1148,22 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * cell to the left of each arc.
          *
          * Dereferencing the <i>j</i>th iterator in this range gives the
-         * same result as calling <tt>arc(cell, j)</tt>.
+         * same result as calling <tt>arc(cell, j)</tt>, and iterating
+         * over the entire range (<tt>begin(cell)</tt>, <tt>end(cell)</tt>)
+         * is equivalent to iterating over <tt>arcs(cell)</tt>.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
          * and describes a planar graph embedding.  Note that connectivity
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * \ifacespython Not present.  Use arc() and size() instead.
+         * \ifacespython Not present; Python users can iterate over
+         * arcs(\a cell) instead.
          *
          * @return the beginning of an iterator range for the boundary
          * of the given cell.
          */
-        const ModelLinkGraphArc* begin(size_t cell) const;
+        ArcIterator begin(size_t cell) const;
         /**
          * Returns the end of an iterator range for walking around the
          * boundary of the given 2-cell.  As is usual for iterator
@@ -1070,19 +1178,22 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * cell to the left of each arc.
          *
          * Dereferencing the <i>j</i>th iterator in this range gives the
-         * same result as calling <tt>arc(cell, j)</tt>.
+         * same result as calling <tt>arc(cell, j)</tt>, and iterating
+         * over the entire range (<tt>begin(cell)</tt>, <tt>end(cell)</tt>)
+         * is equivalent to iterating over <tt>arcs(cell)</tt>.
          *
          * \pre The underlying ModelLinkGraph is non-empty, connected,
          * and describes a planar graph embedding.  Note that connectivity
          * is already required by the class constructor, and you can test
          * the remaining conditions by calling isValid().
          *
-         * \ifacespython Not present.  Use arc() and size() instead.
+         * \ifacespython Not present; Python users can iterate over
+         * arcs(\a cell) instead.
          *
          * @return the end of an iterator range for the boundary
          * of the given cell.
          */
-        const ModelLinkGraphArc* end(size_t cell) const;
+        ArcIterator end(size_t cell) const;
 
         /**
          * Returns the 2-cell that lies to the left of the given arc.
@@ -1135,7 +1246,7 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * Writes a short text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
@@ -1144,13 +1255,14 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
          * Writes a detailed text representation of this object to the
          * given output stream.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use detail() instead.
          *
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
 
         // Make this class non-assignable.
+        // There is a copy constructor, but it is private.
         ModelLinkGraphCells& operator = (const ModelLinkGraphCells&) = delete;
 
     private:
@@ -1193,8 +1305,6 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
     friend class ModelLinkGraph;
 };
 
-/*@}*/
-
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
 
@@ -1207,7 +1317,7 @@ inline ModelLinkGraphCells::~ModelLinkGraphCells() {
 
 // Inline functions for ModelLinkGraphArc
 
-inline ModelLinkGraphArc::ModelLinkGraphArc() : node_(0), arc_(0) {
+inline ModelLinkGraphArc::ModelLinkGraphArc() : node_(nullptr), arc_(0) {
 }
 
 inline ModelLinkGraphArc::ModelLinkGraphArc(ModelLinkGraphNode* node, int arc) :
@@ -1285,7 +1395,7 @@ inline ModelLinkGraphArc ModelLinkGraphArc::operator -- (int) {
 }
 
 inline ModelLinkGraphArc::operator bool() const {
-    return (node_ != 0);
+    return (node_ != nullptr);
 }
 
 inline std::ostream& operator << (std::ostream& out,
@@ -1345,6 +1455,10 @@ inline ModelLinkGraphNode* ModelLinkGraph::node(size_t index) const {
     return nodes_[index];
 }
 
+inline auto ModelLinkGraph::nodes() const {
+    return ListView(nodes_);
+}
+
 inline ModelLinkGraph& ModelLinkGraph::operator = (ModelLinkGraph&& src)
         noexcept {
     nodes_.swap(src.nodes_);
@@ -1371,10 +1485,13 @@ inline const ModelLinkGraphCells& ModelLinkGraph::cells() const {
     return *cells_;
 }
 
-inline ModelLinkGraph* ModelLinkGraph::flype(const ModelLinkGraphArc& from)
+inline ModelLinkGraph ModelLinkGraph::flype(const ModelLinkGraphArc& from)
         const {
     auto use = findFlype(from);
-    return (use.first ? flype(from, use.first, use.second) : nullptr);
+    if (use.first)
+        return flype(from, use.first, use.second);
+    else
+        throw InvalidArgument("No flype is available from this arc");
 }
 
 inline void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs) noexcept {
@@ -1400,11 +1517,17 @@ inline const ModelLinkGraphArc& ModelLinkGraphCells::arc(size_t cell,
     return arcs_[start_[cell] + which];
 }
 
-inline const ModelLinkGraphArc* ModelLinkGraphCells::begin(size_t cell) const {
+inline auto ModelLinkGraphCells::arcs(size_t cell) const {
+    return ListView(arcs_ + start_[cell], arcs_ + start_[cell + 1]);
+}
+
+inline ModelLinkGraphCells::ArcIterator ModelLinkGraphCells::begin(size_t cell)
+        const {
     return arcs_ + start_[cell];
 }
 
-inline const ModelLinkGraphArc* ModelLinkGraphCells::end(size_t cell) const {
+inline ModelLinkGraphCells::ArcIterator ModelLinkGraphCells::end(size_t cell)
+        const {
     return arcs_ + start_[cell + 1];
 }
 
@@ -1417,6 +1540,8 @@ inline size_t ModelLinkGraphCells::cellPos(const ModelLinkGraphArc& arc) const {
 }
 
 } // namespace regina
+
+#include "link/modellinkgraph-impl.h"
 
 #endif
 

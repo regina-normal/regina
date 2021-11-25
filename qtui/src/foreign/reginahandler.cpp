@@ -39,9 +39,9 @@
 #include <QFile>
 #include <QTextDocument>
 
-regina::Packet* ReginaHandler::importData(const QString& fileName,
-        ReginaMain* parentWidget) const {
-    regina::Packet* ans = regina::open(
+std::shared_ptr<regina::Packet> ReginaHandler::importData(
+        const QString& fileName, ReginaMain* parentWidget) const {
+    std::shared_ptr<regina::Packet> ans = regina::open(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
         ReginaSupport::sorry(parentWidget,
@@ -49,25 +49,17 @@ regina::Packet* ReginaHandler::importData(const QString& fileName,
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in Regina format.</qt>").
                 arg(fileName.toHtmlEscaped()));
-    if (ans->label().empty())
+    else if (ans->label().empty())
         ans->setLabel("Imported data");
     return ans;
 }
 
 PacketFilter* ReginaHandler::canExport() const {
-    return new StandaloneFilter();
+    return new AllPacketsFilter();
 }
 
-bool ReginaHandler::exportData(regina::Packet* data,
+bool ReginaHandler::exportData(std::shared_ptr<regina::Packet> data,
         const QString& fileName, QWidget* parentWidget) const {
-    if (data->dependsOnParent()) {
-        ReginaSupport::sorry(parentWidget,
-            QObject::tr("I cannot export this packet subtree on its own."), 
-            QObject::tr("<qt>This is because the root packet <i>%1</i> "
-            "must stay connected to its parent.</qt>").
-            arg(QString(data->humanLabel().c_str()).toHtmlEscaped()));
-        return false;
-    }
     if (! data->save(QFile::encodeName(fileName), compressed)) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 

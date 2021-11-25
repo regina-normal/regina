@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "maths/vector.h"
 #include "../helpers.h"
 
@@ -50,22 +51,21 @@ void addVectorInt(pybind11::module_& m) {
         .def(pybind11::init<size_t>())
         .def(pybind11::init<size_t, const regina::Integer&>())
         .def(pybind11::init<const VectorInt&>())
-        .def(pybind11::init([](pybind11::list l) {
-            regina::Integer* coeffs =
-                regina::python::seqFromList<regina::Integer>(l);
-            VectorInt* ans = new VectorInt(coeffs, coeffs + l.size());
-            delete[] coeffs;
-            return ans;
+        .def(pybind11::init([](const std::vector<regina::Integer> v) {
+            return new VectorInt(v.begin(), v.end());
         }))
         .def("size", &VectorInt::size)
-        .def("__getitem__", [](const VectorInt& v, size_t index) {
+        .def("__getitem__", [](VectorInt& v, size_t index) ->
+                regina::Integer& {
             return v[index];
         }, pybind11::return_value_policy::reference_internal)
-        .def("set", &VectorInt::set)
-        .def("setElement", &VectorInt::set) // deprecated
+        .def("setElement", [](VectorInt& v, size_t index, // deprecated
+                const regina::Integer& value) {
+            v[index] = value;
+        })
         .def("__setitem__", [](VectorInt& v, size_t index,
                 const regina::Integer& value) {
-            v.set(index, value);
+            v[index] = value;
         })
         .def(pybind11::self += pybind11::self)
         .def(pybind11::self -= pybind11::self)

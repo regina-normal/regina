@@ -68,17 +68,6 @@ void HyperModel::rebuildUnicode() {
             columnCount(QModelIndex()) - 1);
 }
 
-void HyperModel::setReadWrite(bool readWrite) {
-    if (readWrite == isReadWrite)
-        return;
-
-    // Presumably a model reset is too severe, but I'm not sure what's
-    // actually necessary so let's just be safe.
-    beginResetModel();
-    readWrite = isReadWrite;
-    endResetModel();
-}
-
 QModelIndex HyperModel::index(int row, int column,
         const QModelIndex& parent) const {
     return createIndex(row, column,
@@ -255,7 +244,7 @@ QVariant HyperModel::headerData(int section, Qt::Orientation orientation,
 }
 
 Qt::ItemFlags HyperModel::flags(const QModelIndex& index) const {
-    if (index.column() == 1 && isReadWrite)
+    if (index.column() == 1)
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
     else
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
@@ -267,7 +256,7 @@ bool HyperModel::setData(const QModelIndex& index, const QVariant& value,
         // At present, NormalHypersurface::setName() does not fire a change
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
-        regina::Packet::ChangeEventSpan span(surfaces_);
+        regina::NormalHypersurfaces::ChangeEventSpan span(*surfaces_);
         const_cast<regina::NormalHypersurface&>(
             surfaces_->hypersurface(index.row())).
             setName(value.toString().toUtf8().constData());
@@ -338,10 +327,11 @@ QString HyperModel::propertyColDesc(int whichCol) const {
     return tr("Unknown");
 }
 
-HyperCoordinateUI::HyperCoordinateUI(regina::NormalHypersurfaces* packet,
-        PacketTabbedUI* useParentUI, bool readWrite) :
+HyperCoordinateUI::HyperCoordinateUI(
+        regina::PacketOf<regina::NormalHypersurfaces>* packet,
+        PacketTabbedUI* useParentUI) :
         PacketEditorTab(useParentUI), surfaces(packet),
-        isReadWrite(readWrite), currentlyResizing(false) {
+        currentlyResizing(false) {
     // Set up the UI.
     ui = new QWidget();
     QBoxLayout* uiLayout = new QVBoxLayout(ui);
@@ -352,7 +342,7 @@ HyperCoordinateUI::HyperCoordinateUI(regina::NormalHypersurfaces* packet,
     uiLayout->addLayout(hdrLayout);
 
     // Set up the coordinate selector.
-    QLabel* label = new QLabel(tr("Display coordinates:"));
+    auto* label = new QLabel(tr("Display coordinates:"));
     hdrLayout->addWidget(label);
     coords = new HyperCoordinateChooser();
     coords->insertAllViewers(surfaces);
@@ -367,7 +357,7 @@ HyperCoordinateUI::HyperCoordinateUI(regina::NormalHypersurfaces* packet,
     hdrLayout->addStretch(1);
 
     // Set up the coordinate table.
-    model = new HyperModel(surfaces, readWrite);
+    model = new HyperModel(surfaces);
 
     table = new QTreeView();
     table->setItemsExpandable(false);
@@ -460,13 +450,6 @@ void HyperCoordinateUI::refresh() {
     }
 }
 
-void HyperCoordinateUI::setReadWrite(bool readWrite) {
-    isReadWrite = readWrite;
-
-    model->setReadWrite(readWrite);
-    updateActionStates();
-}
-
 void HyperCoordinateUI::triangulate() {
     if (table->selectionModel()->selectedIndexes().empty()) {
         ReginaSupport::info(ui,
@@ -487,18 +470,14 @@ void HyperCoordinateUI::triangulate() {
     }
 
     // Go ahead and triangulate it.
-    regina::Triangulation<3>* ans = use.triangulate();
-    ans->setLabel(surfaces->triangulation().adornedLabel(
-        "Hypersurface #" + std::to_string(whichSurface)));
+    auto ans = makePacket(use.triangulate(),
+        "Hypersurface #" + std::to_string(whichSurface));
     surfaces->insertChildLast(ans);
-
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
 
 void HyperCoordinateUI::updateActionStates() {
-    actTriangulate->setEnabled(
-        isReadWrite &&
-        table->selectionModel()->hasSelection() &&
+    actTriangulate->setEnabled(table->selectionModel()->hasSelection() &&
         surfaces->isEmbeddedOnly());
 }
 

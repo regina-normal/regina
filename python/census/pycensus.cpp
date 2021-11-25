@@ -32,11 +32,47 @@
 
 namespace pybind11 { class module_; }
 
+void addPurgeFlags(pybind11::module_& m);
+void addGluingPerms2(pybind11::module_& m);
+void addGluingPerms3(pybind11::module_& m);
+void addGluingPerms4(pybind11::module_& m);
+void addGluingPerms5(pybind11::module_& m);
+void addGluingPerms6(pybind11::module_& m);
+void addGluingPerms7(pybind11::module_& m);
+void addGluingPerms8(pybind11::module_& m);
+void addGluingPerms9(pybind11::module_& m);
+void addGluingPerms10(pybind11::module_& m);
+void addGluingPerms11(pybind11::module_& m);
+void addGluingPerms12(pybind11::module_& m);
+void addGluingPerms13(pybind11::module_& m);
+void addGluingPerms14(pybind11::module_& m);
+void addGluingPerms15(pybind11::module_& m);
+void addGluingPermSearcher2(pybind11::module_& m);
 void addGluingPermSearcher3(pybind11::module_& m);
+void addGluingPermSearcher4(pybind11::module_& m);
 void addCensus(pybind11::module_& m);
 
 void addCensusClasses(pybind11::module_& m) {
+    addPurgeFlags(m);
+    addGluingPerms2(m);
+    addGluingPerms3(m);
+    addGluingPerms4(m);
+#ifndef REGINA_LOWDIMONLY
+    addGluingPerms5(m);
+    addGluingPerms6(m);
+    addGluingPerms7(m);
+    addGluingPerms8(m);
+    addGluingPerms9(m);
+    addGluingPerms10(m);
+    addGluingPerms11(m);
+    addGluingPerms12(m);
+    addGluingPerms13(m);
+    addGluingPerms14(m);
+    addGluingPerms15(m);
+#endif /* ! REGINA_LOWDIMONLY */
+    addGluingPermSearcher2(m);
     addGluingPermSearcher3(m);
+    addGluingPermSearcher4(m);
     addCensus(m);
 }
 

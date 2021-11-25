@@ -88,11 +88,12 @@ namespace {
     }
 }
 
-EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri) :
+EltMoveDialog4::EltMoveDialog4(QWidget* parent,
+        regina::PacketOf<regina::Triangulation<4>>* useTri) :
         QDialog(parent), // tr("Elementary Move"), Ok|Cancel, Ok, parent),
         tri(useTri) {
     setWindowTitle(tr("Elementary Moves"));
-    QVBoxLayout *dialogLayout = new QVBoxLayout(this);
+    auto* dialogLayout = new QVBoxLayout(this);
 
     name = new QLabel();
     name->setAlignment(Qt::AlignCenter);
@@ -102,7 +103,7 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
     overview->setAlignment(Qt::AlignCenter);
     dialogLayout->addWidget(overview);
 
-    QGridLayout* layout = new QGridLayout();
+    auto* layout = new QGridLayout();
       //, 10, 2, 0 /* margin */, spacingHint());
     dialogLayout->addLayout(layout);
 
@@ -235,7 +236,7 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         "Only moves that do not change the underlying 4-manifold are "
         "offered.</qt>"));
     layout->addWidget(box24, 3, 1);
-    box15 = new SimplexChooser<4>(tri, 0, this, false);
+    box15 = new SimplexChooser<4>(tri, nullptr, this, false);
     box15->setWhatsThis( tr("<qt>Select the pentachoron upon which "
         "the 1-5 move will be performed.<p>"
         "All pentachora are offered here, since "
@@ -310,8 +311,8 @@ EltMoveDialog4::EltMoveDialog4(QWidget* parent, regina::Triangulation<4>* useTri
         SLOT(clicked(QAbstractButton*)));
     connect(moveTypes, SIGNAL(buttonClicked(int)), this, SLOT(updateApply()));
 
-    packetWasRenamed(tri);
-    packetWasChanged(tri);
+    packetWasRenamed(*tri);
+    packetWasChanged(*tri);
 
     tri->listen(this);
 }
@@ -380,7 +381,7 @@ void EltMoveDialog4::updateApply() {
     buttons->button(QDialogButtonBox::Apply)->setEnabled(b && b->isEnabled());
 }
 
-void EltMoveDialog4::packetWasRenamed(regina::Packet*) {
+void EltMoveDialog4::packetWasRenamed(regina::Packet&) {
     name->setText(tri->humanLabel().c_str());
 }
 
@@ -395,7 +396,7 @@ void EltMoveDialog4::updateStates(ChooserClass* chooser, QRadioButton* button) {
     }
 }
 
-void EltMoveDialog4::packetWasChanged(regina::Packet*) {
+void EltMoveDialog4::packetWasChanged(regina::Packet&) {
     if (tri->size() == 1)
         overview->setText(tr("1 pentachoron"));
     else
@@ -417,7 +418,7 @@ void EltMoveDialog4::packetWasChanged(regina::Packet*) {
     updateApply();
 }
 
-void EltMoveDialog4::packetToBeDestroyed(regina::PacketShell) {
+void EltMoveDialog4::packetBeingDestroyed(regina::PacketShell) {
     reject();
 }
 

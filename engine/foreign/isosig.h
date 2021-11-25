@@ -40,15 +40,11 @@
 #endif
 
 #include "regina-core.h"
+#include <memory>
 
 namespace regina {
 
 class Container;
-
-/**
- * \weakgroup foreign
- * @{
- */
 
 /**
  * Reads a list of isomorphism signatures or knot signatures from the given
@@ -59,11 +55,10 @@ class Container;
  * These signatures will be converted into knots and/or triangulations using
  * Link::fromKnotSig() and Triangulation<dim>::fromIsoSig() respectively.
  *
- * A newly allocated container will be returned; the imported
- * knots or triangulations will be inserted as children of this container.
- * The container will not be assigned a label.  The individual
- * knots or triangulations will be assigned labels according to the parameter
- * \a colLabels.
+ * A new container will be returned; the imported knots or triangulations will
+ * be inserted as children of this container.  The container will not be
+ * assigned a label.  The individual knots or triangulations will be assigned
+ * labels according to the parameter \a colLabels.
  *
  * If any signatures are invalid, these will be recorded in an additional
  * text packet that will be the last child of the returned container.
@@ -106,9 +101,11 @@ class Container;
  * file that should be ignored completely.
  * @return a new container as described above, or \c null if an I/O error
  * occurred whilst reading the given file.
+ *
+ * \ingroup foreign
  */
 template <class PacketType>
-Container* readSigList(const char *filename,
+std::shared_ptr<Container> readSigList(const char *filename,
     unsigned colSigs = 0, int colLabels = -1, unsigned long ignoreLines = 0);
 
 /**
@@ -140,12 +137,12 @@ Container* readSigList(const char *filename,
  * file that should be ignored completely.
  * @return a new container, or \c null if an I/O error
  * occurred whilst reading the given file.
+ *
+ * \ingroup foreign
  */
-[[deprecated]] Container* readIsoSigList(const char *filename,
+[[deprecated]] std::shared_ptr<Container> readIsoSigList(const char *filename,
     unsigned dimension = 3, unsigned colSigs = 0, int colLabels = -1,
     unsigned long ignoreLines = 0);
-
-/*@}*/
 
 } // namespace regina
 

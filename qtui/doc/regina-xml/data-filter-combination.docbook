@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>filter (combination)</refname>
-  <refpurpose>A logical combination surface filter</refpurpose>
+  <refpurpose>Replaced by &xml-filtercomb;</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -35,10 +35,22 @@ filter ::= (&xml-op;)</synopsis>
     </tbody>
    </tgroup>
   </informaltable>
+  <para>&eltdepver;7.0</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
+  <para>
+   In &regina;&nbsp;6.0.1 and earlier, the &xml-filter; element was used
+   to store different types of normal surface filters, and was held
+   within an enclosing &xml-packet-surfacefilter; element..
+   This page describes how the &xml-filter; element was structured when
+   storing a combination filter.
+   Since &regina;&nbsp;7.0, each filter type now has its own &xml; element,
+   which also serves as the &xml; element for the filter packet.
+   In particular, combination filters are now stored using the
+   &xml-filtercomb; element.
+  </para>
   <para>
    A <emphasis>combination filter</emphasis> uses a
    logical operation to combine other normal surface filters into a

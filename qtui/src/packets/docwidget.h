@@ -74,14 +74,14 @@ class DocWidget : public QPlainTextEdit {
             QTextDocument* doc;
             int users;
         };
-        typedef QHash<PacketType*, Details> Registry;
+        using Registry = QHash<PacketType*, Details>;
         static Registry registry_;
 
         PacketType* packet_;
 
     public:
         DocWidget(PacketType* packet, QWidget* parent);
-        ~DocWidget();
+        ~DocWidget() override;
 
         /**
          * Refresh this widget with the contents of the packet from the
@@ -98,7 +98,7 @@ class DocWidget : public QPlainTextEdit {
         /**
          * QWidget overrides.
          */
-        virtual void focusOutEvent(QFocusEvent*);
+        void focusOutEvent(QFocusEvent*) override;
 };
 
 /**
@@ -127,7 +127,7 @@ DocWidget<PacketType, Sanitise>::DocWidget(
         QPlainTextEdit(parent), packet_(packet) {
     // Find the QTextDocument in the registry for this packet, or create
     // a new document if this packet is not yet registered.
-    typename Registry::Iterator it = registry_.find(packet);
+    auto it = registry_.find(packet);
     if (it != registry_.end()) {
         ++it->users;
         setDocument(it->doc);
@@ -148,7 +148,7 @@ DocWidget<PacketType, Sanitise>::~DocWidget() {
 
     // If we are the last DocWidget registered for this packet, delete
     // the underlying QTextDocument.
-    typename Registry::Iterator it = registry_.find(packet_);
+    auto it = registry_.find(packet_);
     if (it != registry_.end()) { // Should always be true, but just in case..
         --it->users;
         if (it->users == 0) {

@@ -46,25 +46,25 @@
 template <int dim>
 class ExampleCreator {
     public:
-        typedef regina::Triangulation<dim>* (*CreatorFunc)();
+        using CreatorFunc = regina::Triangulation<dim> (*)();
 
     private:
         QString name_;
         CreatorFunc creator_;
 
     public:
-        ExampleCreator(const QString& name, CreatorFunc creator) :
-                name_(name), creator_(creator) {
+        ExampleCreator(QString name, CreatorFunc creator) :
+                name_(std::move(name)), creator_(creator) {
         }
 
         const QString& name() const {
             return name_;
         }
 
-        regina::Triangulation<dim>* create() const {
-            regina::Triangulation<dim>* ans = (*creator_)();
-            ans->setLabel(name_.toUtf8().constData());
-            return ans;
+        std::shared_ptr<regina::PacketOf<regina::Triangulation<dim>>> create()
+                const {
+            return regina::makePacket((*creator_)(),
+                name_.toUtf8().constData());
         }
 };
 

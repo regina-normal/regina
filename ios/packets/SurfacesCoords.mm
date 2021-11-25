@@ -156,7 +156,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             case PROP_BDRY:
                 if (self.packet->triangulation().isClosed())
                     tmp = (self.compact.on ? [RegularSpreadViewCell cellSizeFor:@"—"] : [RegularSpreadHeaderCell cellSizeFor:@"Bdry"]).width;
-                else if (! self.packet->allowsSpun())
+                else if (! self.packet->allowsNonCompact())
                     tmp = [RegularSpreadViewCell cellSizeFor:@"Real"].width;
                 else if (! dynamic_cast<regina::SnapPeaTriangulation*>(self.packet->triangulation()))
                     tmp = [RegularSpreadViewCell cellSizeFor:@"Spun"].width;
@@ -264,7 +264,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
     
     regina::Triangulation<3>* ans = s->cutAlong();
     ans->intelligentSimplify();
-    ans->setLabel(self.packet->triangulation().adornedLabel("Cut #" + std::to_string(selectedRow - 1)));
+    ans->setLabel("Cut #" + std::to_string(selectedRow - 1));
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }
@@ -311,7 +311,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     regina::Triangulation<3>* ans = s->crush();
     ans->intelligentSimplify();
-    ans->setLabel(self.packet->triangulation().adornedLabel("Crushed #" + std::to_string(selectedRow - 1)));
+    ans->setLabel("Crushed #" + std::to_string(selectedRow - 1));
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }
@@ -503,11 +503,10 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         }
         case PROP_TYPE:
         {
-            regina::LargeInteger tot;
             if (s->isSplitting())
                 cell.textLabel.text = @"Splitting";
-            else if (! (tot = s->isCentral()).isZero())
-                cell.textLabel.text = [NSString stringWithFormat:@"Central (%ld)", tot.longValue()];
+            else if (size_t tot = s->isCentral())
+                cell.textLabel.text = [NSString stringWithFormat:@"Central (%ld)", tot];
             else
                 cell.textLabel.text = @"";
             cell.textLabel.textAlignment = NSTextAlignmentLeft;

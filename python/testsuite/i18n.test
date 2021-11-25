@@ -81,7 +81,7 @@ if i18nNew != None:
 # the triangulation name.
 subscriptImport = SnapPeaTriangulation(testpath + '/O2_1.tri')
 if subscriptImport != None:
-	print(subscriptImport.label())
+	print(subscriptImport.name())
 
 # Load a Regina data file with a pre-saved version of this same SnapPea
 # triangulation.

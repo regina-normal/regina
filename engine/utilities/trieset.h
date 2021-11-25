@@ -40,14 +40,10 @@
 #endif
 
 #include "regina-core.h"
+#include "core/output.h"
 #include "utilities/bitmask.h"
 
 namespace regina {
-
-/**
- * \weakgroup utilities
- * @{
- */
 
 /**
  * A trie-like data structure for storing and retriving sets.
@@ -55,10 +51,11 @@ namespace regina {
  * fairly small universe, but where the \e number of sets being stored
  * can be extremely large.
  *
- * For simplicity, let the universe consist of the integers 0,...,\a n.
- * Sets are represented as bitmasks of type \a T (which must be capable
- * of holding bitmasks of length \a n).  The <i>i</i>th bit of a bitmask
- * indicates whether the integer \a i belongs to the corresponding set.
+ * For simplicity, let the universe consist of the integers 0,...,(<i>n</i>-1).
+ * Sets are represented as bitmasks of length \a n (using one of Regina's
+ * bitmask types, such as Bitmask, Bitmask1 or Bitmask2).  The <i>i</i>th bit
+ * of a bitmask indicates whether the integer \a i belongs to the corresponding
+ * set.
  *
  * To construct an empty trie, simply call the default constructor.
  * To insert a new set into the trie, call insert() (whose running time is
@@ -83,36 +80,103 @@ namespace regina {
  * which occurs at level 3 of the tree.  Regions of the tree that do
  * not store any sets are never explicitly constructed in memory.
  *
- * \pre The template argument T is one of Regina's bitmask types, such
- * as Bitmask, Bitmask1 or Bitmask2.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
- * \ifacespython Not present.
+ * \ingroup utilities
  */
-template <typename T>
-class TrieSet {
+class TrieSet : public Output<TrieSet> {
     private:
-        TrieSet* child_[2];
-            /**< Stores the two child nodes that appear beneath this
-                 node in the tree.  If \c P is the prefix corresponding
-                 to this node, then the two child nodes will correspond to
-                 prefixes \c P0 and \c P1 respectively.  If there are no
-                 sets stored at or beneath a child node, then the
-                 corresponding child pointer will be \c null. */
-        unsigned long descendants_;
-            /**< The number of sets stored at or beneath this node in
-                 the tree.  The number of sets stored \e precisely at
-                 this node can be computed by subtracting the descendant
-                 counts for each child node. */
+        /**
+         * An individual node in this trie.
+         */
+        struct Node {
+            Node* child_[2];
+                /**< Stores the two child nodes that appear beneath this
+                     node in the tree.  If \c P is the prefix corresponding
+                     to this node, then the two child nodes will correspond to
+                     prefixes \c P0 and \c P1 respectively.  If there are no
+                     sets stored at or beneath a child node, then the
+                     corresponding child pointer will be \c null. */
+            unsigned long descendants_;
+                /**< The number of sets stored at or beneath this node in
+                     the tree.  The number of sets stored \e precisely at
+                     this node can be computed by subtracting the descendant
+                     counts for each child node. */
+
+            /**
+             * Constructs an empty node.
+             */
+            Node();
+            /**
+             * Constructs a node filled with the given data.
+             */
+            Node(Node* child0, Node* child1, unsigned long descendants);
+            /**
+             * Destroys this node and all its descendants.
+             */
+            ~Node();
+
+            // Make this class non-copyable.
+            Node(const Node&) = delete;
+            Node& operator = (const Node&) = delete;
+        };
+
+        Node root_;
+            /**< Stores the root node in this tree. */
 
     public:
         /**
          * Constructs an empty collection of sets.
          */
-        TrieSet();
+        TrieSet() = default;
+
         /**
-         * Destroys this collection of sets.
+         * Creates a new copy of the given collection.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the collection of sets to copy.
          */
-        ~TrieSet();
+        TrieSet(const TrieSet& src);
+
+        /**
+         * Moves the contents of the given collection into this new collection.
+         * This is a fast (constant time) operation.
+         *
+         * The collection that was passed (\a src) will no longer be usable.
+         *
+         * @param src the collection of sets whose contents should be moved.
+         */
+        TrieSet(TrieSet&& src) noexcept;
+
+        /**
+         * Sets this to be a copy of the given collection.
+         * This will induce a deep copy of \a src.
+         *
+         * @param src the collection of sets to copy.
+         * @return a reference to this collection.
+         */
+        TrieSet& operator = (const TrieSet& src);
+
+        /**
+         * Moves the contents of the given collection into this collection.
+         * This is a fast (constant time) operation.
+         *
+         * The collection that was passed (\a src) will no longer be usable.
+         *
+         * @param src the collection of sets whose contents should be moved.
+         * @return a reference to this collection.
+         */
+        TrieSet& operator = (TrieSet&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given collection.
+         *
+         * @param other the collection whose contents should be swapped
+         * with this.
+         */
+        void swap(TrieSet& other) noexcept;
 
         /**
          * Insert the given set into this collection.  The same set may
@@ -122,8 +186,12 @@ class TrieSet {
          * Running time for insertion is O(\a n), where \a n is the
          * bitmask length.
          *
+         * \tparam T One of Regina's bitmask types, such as Bitmask, Bitmask1
+         * or Bitmask2.
+         *
          * \param entry the new set to insert.
          */
+        template <typename T>
         void insert(const T& entry);
 
         /**
@@ -139,15 +207,18 @@ class TrieSet {
          * for "typical" searches in the context of normal surface
          * enumeration, the running time is often significantly faster.
          *
+         * \tparam T One of Regina's bitmask types, such as Bitmask, Bitmask1
+         * or Bitmask2.
+         *
          * \param superset the object of the query: we are searching this
          * collection for a (non-strict) subset of this argument.
          * \param universeSize the number of elements in the underlying
          * universe (and therefore the lowest possible level in the
-         * search tree).  Note that this is always less than or equal to
-         * the number of bits that the underlying bitmask type \a T
-         * can support.
+         * search tree).  This must be less than or equal to the number of
+         * bits that the underlying bitmask type \a T can support.
          * \return \c true if a subset was found, or \c false otherwise.
          */
+        template <typename T>
         bool hasSubset(const T& superset, unsigned long universeSize) const;
 
         /**
@@ -171,6 +242,9 @@ class TrieSet {
          * \pre The sets \a exc1 and \a exc2 are distinct, and each is
          * contained in this collection precisely once.
          *
+         * \tparam T One of Regina's bitmask types, such as Bitmask, Bitmask1
+         * or Bitmask2.
+         *
          * \param subset the object of the query: we are searching this
          * collection for a (non-strict) superset of this argument.
          * \param exc1 the first set in the collection to be excluded
@@ -179,54 +253,99 @@ class TrieSet {
          * from this search.
          * \param universeSize the number of elements in the underlying
          * universe (and therefore the lowest possible level in the
-         * search tree).  Note that this is always less than or equal to
-         * the number of bits that the underlying bitmask type \a T
-         * can support.
+         * search tree).  This must be less than or equal to the number of
+         * bits that the underlying bitmask type \a T can support.
          * \return \c true if a superset with the required properties
          * was found, or \c false otherwise.
          */
+        template <typename T>
         bool hasExtraSuperset(const T& subset, const T& exc1, const T& exc2,
             unsigned long universeSize) const;
 
-        // Make this class non-copyable.
-        TrieSet(const TrieSet&) = delete;
-        TrieSet& operator = (const TrieSet&) = delete;
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given collections.
+ *
+ * @param a the first collection of sets whose contents should be swapped.
+ * @param b the second collection of sets whose contents should be swapped.
+ *
+ * \ingroup utilities
+ */
+void swap(TrieSet& a, TrieSet& b) noexcept;
 
 // Inline functions and template implementations for TrieSet
 
-template <typename T>
-inline TrieSet<T>::TrieSet() : descendants_(0) {
-    child_[0] = child_[1] = 0;
+inline TrieSet::Node::Node() : child_ { nullptr, nullptr }, descendants_(0) {
 }
 
-template <typename T>
-inline TrieSet<T>::~TrieSet() {
+inline TrieSet::Node::Node(Node* child0, Node* child1,
+        unsigned long descendants) :
+        child_ { child0, child1 }, descendants_(descendants) {
+}
+
+inline TrieSet::Node::~Node() {
     delete child_[0];
     delete child_[1];
 }
 
+inline TrieSet::TrieSet(TrieSet&& src) noexcept :
+        root_(src.root_.child_[0], src.root_.child_[1],
+            src.root_.descendants_) {
+    src.root_.child_[0] = src.root_.child_[1] = nullptr;
+}
+
+inline TrieSet& TrieSet::operator = (TrieSet&& src) noexcept {
+    std::swap(root_.child_[0], src.root_.child_[0]);
+    std::swap(root_.child_[1], src.root_.child_[1]);
+    root_.descendants_ = src.root_.descendants_;
+    // Let src.root_ dispose of the original children in its own destructor.
+    return *this;
+}
+
+inline void TrieSet::swap(TrieSet& other) noexcept {
+    std::swap(root_.child_[0], other.root_.child_[0]);
+    std::swap(root_.child_[1], other.root_.child_[1]);
+    std::swap(root_.descendants_, other.root_.descendants_);
+}
+
 template <typename T>
-void TrieSet<T>::insert(const T& entry) {
-    ++descendants_;
+void TrieSet::insert(const T& entry) {
+    ++root_.descendants_;
 
     long last = entry.lastBit();
     if (last < 0)
         return;
 
-    TrieSet<T>* node = this;
+    Node* node = &root_;
     for (long pos = 0; pos <= last; ++pos) {
         if (entry.get(pos)) {
             // Follow right branch.
             if (! node->child_[1])
-                node->child_[1] = new TrieSet<T>();
+                node->child_[1] = new Node;
             node = node->child_[1];
         } else {
             // Follow left branch.
             if (! node->child_[0])
-                node->child_[0] = new TrieSet<T>();
+                node->child_[0] = new Node;
             node = node->child_[0];
         }
         ++node->descendants_;
@@ -234,12 +353,11 @@ void TrieSet<T>::insert(const T& entry) {
 }
 
 template <typename T>
-bool TrieSet<T>::hasSubset(const T& superset, unsigned long universeSize)
-        const {
-    const TrieSet<T>** node = new const TrieSet<T>*[universeSize + 2];
+bool TrieSet::hasSubset(const T& superset, unsigned long universeSize) const {
+    const Node** node = new const Node*[universeSize + 2];
 
     long level = 0;
-    node[0] = this;
+    node[0] = &root_;
     while (level >= 0) {
         if (! node[level]) {
             // We ran out of siblings at this level.  Move up.
@@ -248,7 +366,7 @@ bool TrieSet<T>::hasSubset(const T& superset, unsigned long universeSize)
             if (level > 0 && node[level] == node[level - 1]->child_[1])
                 node[level] = node[level - 1]->child_[0];
             else if (level >= 0)
-                node[level] = 0;
+                node[level] = nullptr;
             continue;
         }
 
@@ -272,9 +390,9 @@ bool TrieSet<T>::hasSubset(const T& superset, unsigned long universeSize)
 }
 
 template <typename T>
-bool TrieSet<T>::hasExtraSuperset(const T& subset,
+bool TrieSet::hasExtraSuperset(const T& subset,
         const T& exc1, const T& exc2, unsigned long universeSize) const {
-    const TrieSet<T>** node = new const TrieSet<T>*[universeSize + 2];
+    const Node** node = new const Node*[universeSize + 2];
 
     long last = subset.lastBit();
 
@@ -282,7 +400,7 @@ bool TrieSet<T>::hasExtraSuperset(const T& subset,
     long prefixOfExc1 = 0; // Last layer for which this is true.
     long prefixOfExc2 = 0; // Last layer for which this is true.
 
-    node[0] = this;
+    node[0] = &root_;
 
     while (level >= 0) {
         if (! node[level]) {
@@ -304,7 +422,7 @@ bool TrieSet<T>::hasExtraSuperset(const T& subset,
                 else if (prefixOfExc2 == level - 1 && exc2.get(level - 1))
                     ++prefixOfExc2;
             } else if (level >= 0)
-                node[level] = 0;
+                node[level] = nullptr;
             continue;
         }
 
@@ -319,7 +437,7 @@ bool TrieSet<T>::hasExtraSuperset(const T& subset,
             }
 
             // Back up.
-            node[level] = 0;
+            node[level] = nullptr;
             continue;
         }
 
@@ -342,6 +460,18 @@ bool TrieSet<T>::hasExtraSuperset(const T& subset,
 
     delete[] node;
     return false;
+}
+
+inline void swap(TrieSet& a, TrieSet& b) noexcept {
+    a.swap(b);
+}
+
+inline void TrieSet::writeTextShort(std::ostream& out) const {
+    if (root_.descendants_ == 1) {
+        out << "Trie containing 1 set";
+    } else {
+        out << "Trie containing " << root_.descendants_ << " sets";
+    }
 }
 
 } // namespace regina

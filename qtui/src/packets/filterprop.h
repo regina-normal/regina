@@ -81,7 +81,6 @@ class FilterPropUI : public QObject, public PacketUI {
         /**
          * Current state
          */
-        bool allowReadWrite;
         bool inNotify;
 
     public:
@@ -94,11 +93,10 @@ class FilterPropUI : public QObject, public PacketUI {
         /**
          * PacketUI overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        QString getPacketMenuText() const;
-        void refresh();
-        void setReadWrite(bool readWrite);
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        QString getPacketMenuText() const override;
+        void refresh() override;
 
     public slots:
         /**

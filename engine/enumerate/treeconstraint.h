@@ -39,9 +39,11 @@
 #define __REGINA_TREECONSTRAINT_H
 #endif
 
+#include "enumerate/treelp.h" // for LPSystem
 #include "maths/integer.h"
 #include "surfaces/normalcoords.h"
 #include "surfaces/normalsurface.h"
+#include "triangulation/dim3.h" // for Triangulation<3>::size()
 
 namespace regina {
 
@@ -53,11 +55,6 @@ template <class LPConstraint> class LPInitialTableaux;
 template <class LPConstraint, typename IntType> class LPData;
 
 class LPConstraintNone;
-
-/**
- * \weakgroup enumerate
- * @{
- */
 
 /**
  * A base class for additional linear constraints that we can add to the
@@ -79,147 +76,102 @@ class LPConstraintNone;
  * The coefficient for the final scaling coordinate in each additional
  * linear constraint will be assumed to be zero.
  *
+ * Bear in mind that the tableaux that these constraints are working with will
+ * not necessarily use the same coordinates as the underlying enumeration task
+ * (e.g., the tableaux will never include separate columns for octagon
+ * coordinates).  See LPInitialTableaux for a more detailed discussion of this.
+ *
  * This base class provides no functionality.  For documentation's sake
  * only, the notes here describe the functionality that any subclass
  * \e must implement.  We note again that LPConstraintBase does not
  * provide any implementations at all, and subclasses are completely
  * responsible for their own implementations.
  *
+ * All constraint classes provide their functionality through static routines:
+ * they do not contain any member data, and it is unnecessary (but harmless) to
+ * construct them.
+ *
+ * These linear constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a linear constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
+ * \ifacespython This base class is not present, but all of the "real" linear
+ * constraint subclasses are available.  However, as noted above, it is rare
+ * that you would need to access any of these constraint classes directly
+ * through Python.  Instead, to use a linear constraint class, you would
+ * typically create a tree traversal object with the appropriate class suffix
+ * (e.g., one such Python class is \c TreeEnumeration_NonSpun).
+ *
  * \apinotfinal
  *
- * \ifacespython Not present.
+ * \ingroup enumerate
  */
 class LPConstraintBase {
 #ifdef __DOXYGEN
     public:
-        enum {
-            /**
-             * The number of additional linear constraints that we impose.
-             * Each constraint will generate one new variable (column)
-             * and one new equation (row) in the tableaux.
-             */
-            nConstraints
-        };
+        /**
+         * The number of additional linear constraints that we impose.
+         * Each constraint will generate one new variable (column)
+         * and one new equation (row) in the tableaux.
+         */
+        static constexpr int nConstraints = 0;
 
         /**
-         * Stores the extra coefficients in a single column for the
-         * \a nConstraints additional rows that we add to the tableaux
-         * to describe the \a nConstraints additional linear equations
-         * or inequalities.
+         * The type used to store each coefficient for each of these
+         * additional linear constraints.
          *
-         * Subclasses may store these coefficients however they like
-         * (in particular, they may optimise for sparse coefficients,
-         * binary coefficients, and so on).  They will only ever be
-         * accessed through the member functions of this Coefficients class.
+         * The type should:
+         *
+         * - be able to be constructed or assigned from the value 0;
+         *
+         * - support multiplication of the form <tt>IntType * Coefficient</tt>
+         *   and assignment of the form <tt>IntType = Coefficient</tt>,
+         *   where \a IntType is any integer type that could be used with
+         *   the LPData and LPMatrix classes that use these constraints.
          */
-        struct Coefficients {
-            /**
-             * Creates an uninitialised set of coefficients for a single
-             * column.  These cofficients must be initialised through a
-             * call to addRows() before they can be used.
-             */
-            Coefficients();
+        using Coefficient = int;
 
-            /**
-             * Explicitly fills the final row(s) of the given tableaux matrix 
-             * with the coefficients stored in this Coefficients structure.
-             * In essence, this routine simply copies this sparse and/or
-             * specialised representation of the final row(s) into a
-             * more standard dense matrix representation.
-             *
-             * This routine should only affect the final \a nConstraints
-             * entries in the given column of the matrix.  It may assume
-             * that these final row(s) have already been initialised to zero.
-             *
-             * \pre The given matrix has at least \a nConstraints rows
-             * and at least \a col + 1 columns.
-             * \pre The final \a nConstraints entries in column \a col
-             * of the given matrix have already been set to zero.
-             *
-             * @param m the matrix in which to place these column
-             * coefficients.
-             * @param col the column of the given matrix in which to
-             * place these coefficients.
-             */
-            template <typename IntType>
-            void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
-
-            /**
-             * Computes the inner product of (i) the final \a nConstraints
-             * entries in the given row of the given matrix with (ii) the
-             * \a nConstraints column coefficients stored in this data
-             * structure.
-             *
-             * \pre The given matrix has at least \a nConstraints columns
-             * and at least \a mRow + 1 rows.
-             *
-             * @param m the matrix whose row we will use in the inner product.
-             * @param mRow the row of the matrix \a m to use in the inner
-             * product.
-             * @return the resulting portion of the inner product.
-             */
-            template <typename IntType>
-            IntType innerProduct(const LPMatrix<IntType>& m, unsigned mRow)
-                const;
-
-            /**
-             * A variant of innerProduct() that takes into account any
-             * adjustments to these linear constraint(s) that are required when
-             * this is a quadrilateral column being used to represent an
-             * octagon type.
-             *
-             * The LPData class offers support for octagonal almost normal
-             * surfaces, in which exactly one tetrahedron is allowed to have
-             * exactly one octagon type.  We represent such an octagon as a
-             * \e pair of incompatible quadrilaterals within the same
-             * tetrahedron.  See the LPData class notes for details on how
-             * this works.
-             *
-             * In some settings, our extra linear constraints must behave
-             * differently in the presence of octagons (i.e., the coefficient
-             * of the octagon type is not just the sum of coefficients of the
-             * two constituent quadrilateral types).  This routine effectively
-             * allows us to adjust the tableaux accordingly.
-             *
-             * Specifically: this routine computes the inner product of (i) the
-             * final \a nConstraints entries in the given row of the given
-             * matrix with (ii) the \a nConstraints column coefficients
-             * stored in this data structure.  We assume that this column
-             * in the underlying tableaux describes one of the two
-             * quadrilateral coordinates in some tetrahedron that together
-             * form an octagon type, and if necessary we implicitly adjust
-             * the coefficients stored in this data structure accordingly.
-             *
-             * This routine is not used with angle structure coordinates.
-             *
-             * \pre The given matrix has at least \a nConstraints columns
-             * and at least \a mRow + 1 rows.
-             *
-             * \pre This column of the underlying tableaux describes one
-             * of the two quadrilateral coordinates that are being
-             * combined to form an octagon type within some tetrahedron.
-             *
-             * @param m the matrix whose row we will use in the inner product.
-             * @param mRow the row of the matrix \a m to use in the inner
-             * product.
-             * @return the resulting portion of the inner product.
-             */
-            template <typename IntType>
-            IntType innerProductOct(const LPMatrix<IntType>& m, unsigned mRow)
-                const;
-        };
+        /**
+         * Indicates if/how to adjust the coefficients of these linear
+         * constraints when using two quadrilateral columns to represent an
+         * octagon type.
+         *
+         * The LPData class offers support for octagonal almost normal
+         * surfaces, in which exactly one tetrahedron is allowed to have
+         * exactly one octagon type.  We represent such an octagon as a
+         * \e pair of incompatible quadrilaterals within the same
+         * tetrahedron.  See the LPData class notes for details on how
+         * this works.
+         *
+         * In some settings, our extra linear constraints must behave
+         * differently in the presence of octagons (i.e., the coefficient
+         * of the octagon type is not just the sum of coefficients of the
+         * two constituent quadrilateral types).  This constant effectively
+         * allows us to adjust the tableaux accordingly.
+         *
+         * Specifically: for each of the two quadrilateral columns being
+         * used to represent an octagon type, the coefficient for each
+         * of these additional linear constraints will be adjusted by
+         * adding \a octAdjustment.
+         *
+         * This adjustment is not used with angle structure coordinates.
+         *
+         * Currently this is a \e very blunt mechanism: it assumes that
+         * the adjustment can be made by adding a compile-time constant,
+         * and it assumes that if there are multiple constraints (i.e.,
+         * \a nConstraints > 1) then they can all be adjusted in the same way.
+         * This mechanism will be made more flexible if/when this becomes
+         * necessary.
+         */
+        static constexpr Coefficient octAdjustment = 0;
 
         /**
          * Explicitly constructs equations for the linear function(s)
          * constrained by this class.  Specifically, this routine takes an
-         * array of Coefficients objects (one for each column of the initial
-         * tableaux) and fills in the necessary coefficient data.
-         *
-         * The precise form of the linear function(s) will typically
-         * depend upon the underlying triangulation.  For this reason,
-         * the triangulation is explicitly passed, along with the
-         * permutation that indicates which columns of the initial tableaux
-         * correspond to which normal or angle structure coordinates.
+         * array of columns in the initial tableaux and fills in the necessary
+         * coefficient data.
          *
          * More precisely: recall that, for each linear function, the initial
          * tableaux acquires one new variable \a x_i that evaluates this linear
@@ -229,21 +181,12 @@ class LPConstraintBase {
          * coordinates, and it must also set a coefficient of -1 in the
          * column for the corresponding new variable.
          *
-         * For each subclass \a S of LPConstraintBase, the array \a col
-         * must be an array of objects of type LPCol<S>.
-         * The class LPCol<S> is itself a larger subclass of
-         * the Coefficients class.  This exact type must be used because the
-         * compiler must know how large each column object is in
-         * order to correct access each element of the given array.
-         *
-         * As described in the LPInitialTableaux class notes, it might
-         * not be possible to construct the linear functions (since the
+         * As described in the LPInitialTableaux class notes, it might not be
+         * possible to construct the linear functions (since the underlying
          * triangulation might not satisfy the necessary requirements).
-         * In this case, this routine should ensure that the linear
-         * functions are in fact the zero functions, and should return
-         * \c false (but it must still set -1 coefficients for the new
-         * variables as described above).  Otherwise (if the linear function
-         * were successfully constructed) this routine should return \c true.
+         * In such cases this routine should throw an exception, as
+         * described below, and the corresponding constraint class
+         * \e must mention this possibility in its class documentation.
          *
          * If you are implementing this routine in a subclass that
          * works with angle structure coordinates, remember that your
@@ -253,23 +196,57 @@ class LPConstraintBase {
          * implementation of this routine \e must ensure that your
          * linear constraints all have coefficient zero in this column.
          *
-         * \pre For all coefficients in the array \a col, the
-         * Coefficients substructures have all been initialised with the
-         * default constructor and not modified since.
+         * The precise form of the linear function(s) will typically depend
+         * upon the underlying triangulation, as well as the permutation that
+         * indicates which columns of the initial tableaux correspond to which
+         * normal or angle structure coordinates.  All of this information is
+         * read from the given initial tableaux \a init.
+         *
+         * Note that the tableaux \a init may still be under construction (and
+         * indeed, the column array \a col to be filled will typically be the
+         * internal column array from \a init itself).  This routine should not
+         * read any of the tableaux entries; it should only access the
+         * underlying triangulation (LPInitialTableaux.tri()) and the
+         * permutation of columns (LPInitialTableaux.columnPerm()).
+         *
+         * For each subclass \a S of LPConstraintBase, the array \a col
+         * must be an array of objects of type LPCol<S>, and the tableaux
+         * \a init must be of type LPInitialTableaux<S>.
+         *
+         * This routine should only write to the coefficients stored in
+         * LPCol::extra.  You may assume that these coefficients have all been
+         * initialised to zero by the LPCol constructor.
+         *
+         * \pre For all columns in the array \a col, the members
+         * LPCol::extra have all been initialised to zero.
+         *
+         * \exception InvalidArgument it was not possible to create the
+         * linear functions for these constraints, due to an error which
+         * should have been preventable with the right checks in advance.
+         * Any constraint class that could throw exceptions in this way
+         * \e must describe this behaviour in its own class documentation.
+         *
+         * \exception UnsolvedCase it was not possible to create the linear
+         * functions for these constraints, due to an error that was
+         * "genuinely" unforseeable.  Again, any constraint class that could
+         * throw exceptions in this way \e must describe this behaviour in its
+         * own class documentation.
+         *
+         * \ifacespython The argument \a col is not present, since LPCol is
+         * only designed to be used as part of the internal data storage for
+         * LPInitialTableaux.  Instead, this routine returns a Python list of
+         * constraints, where each constraint is presented as a Python list of
+         * coefficients.  Each of these inner lists will have size
+         * init.columns().
          *
          * @param col the array of columns as stored in the initial
          * tableaux (i.e., the data member LPInitialTableaux::col_).
-         * @param columnPerm the corresponding permutation of columns
-         * that describes how columns of the tableaux correspond to normal or
-         * angle structure coordinates in the underlying triangulation
-         * (i.e., the data member LPInitialTableaux::columnPerm_).
-         * @param tri the underlying triangulation.
-         * @return \c true if the linear functions were successfully
-         * constructed, or \c false if not (in which case they will be
-         * replaced with the zero functions instead).
+         * @param init the tableaux through which this routine can acces
+         * the underlying triangulation and permutation of columns.
+         * Typically this will be the tableaux holding the column array \a col.
          */
-        static bool addRows(LPCol<LPConstraintBase>* col,
-            const int* columnPerm, const Triangulation<3>& tri);
+        static void addRows(LPCol<LPConstraintBase>* col,
+            const LPInitialTableaux<LPConstraintBase>& init);
 
         /**
          * Explicitly constraints each of these linear functions to an
@@ -334,24 +311,31 @@ class LPConstraintBase {
         static bool verify(const AngleStructure& s);
 
         /**
-         * Indicates whether the given coordinate system is supported by
+         * Indicates whether the given vector encoding is supported by
          * this constraint class.
          *
-         * This routine assumes that the given system is already known to be
+         * This routine assumes that the given encoding is already known to be
          * supported by the generic tree traversal infrastructure, and only
          * returns \c false if there are additional prerequisites
          * imposed by this particular constraint class that the given
-         * system does not satisfy.  If this constraint class does not impose
+         * encoding does not satisfy.  If this constraint class does not impose
          * any of its own additional conditions, this routine may
          * simply return \c true.
          *
-         * @param coords the coordinate system being queried; this must
-         * be one of the coordinate systems known to be supported by the
-         * generic TreeTraversal infrastructure.
-         * @return \c true if and only if this coordinate system is
+         * The only features of the encoding that this routine should
+         * examine are what coordinates are stored (e.g.,
+         * NormalEncoding::storesTriangles()).  In particular, this
+         * routine will not look at any "semantic guarantees" (e.g.
+         * NormalEncoding::couldBeNonCompact()).
+         *
+         * @param enc the vector encoding being queried.  This must
+         * be one of the vector encodings known to be supported by the
+         * generic TreeTraversal infrastructure, and in particular it
+         * may be the special angle structure encoding.
+         * @return \c true if and only if this vector encoding is
          * also supported by this specific constraint class.
          */
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 #endif
 };
 
@@ -368,9 +352,13 @@ class LPConstraintBase {
  * This class does not provide any additional functionality.  It is
  * merely a convenience to help describe and enforce preconditions.
  *
+ * \ifacespython This base class is not present, but all of the "real" linear
+ * constraint subclasses are available.  See the LPConstraintBase class notes
+ * for further details on accessing linear constraints from within Python.
+ *
  * \apinotfinal
  *
- * \ifacespython Not present.
+ * \ingroup enumerate
  */
 class LPConstraintSubspace : public LPConstraintBase {
 };
@@ -379,40 +367,41 @@ class LPConstraintSubspace : public LPConstraintBase {
  * A do-nothing class that imposes no additional linear constraints on
  * the tableaux of normal surface or angle structure matching equations.
  *
- * See the LPConstraintBase class notes for details on all member
- * functions and structs.
+ * See the LPConstraintBase class notes for details on all member functions.
  *
- * \ifacespython Not present.
+ * These linear constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a linear constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use this do-nothing constraint class, you would
+ * typically create a tree traversal object with no linear constraint class
+ * suffix at all (since LPConstraintNone is the default behaviour).  For
+ * example, the Python classes \c TreeEnumeration, \c TreeSingleSoln_BanBoundary
+ * and \c TautEnumeration all use this do-nothing LPConstraintNone class.  See
+ * the LPConstraintBase class notes for further details on accessing other
+ * types of linear constraints from within Python.
+ *
+ * \apinotfinal
+ *
+ * \ingroup enumerate
  */
 class LPConstraintNone : public LPConstraintSubspace {
     public:
-        enum { nConstraints = 0 };
+        static constexpr int nConstraints = 0;
+        using Coefficient = int;
+        static constexpr Coefficient octAdjustment = 0;
 
-        /**
-         * Stores the extra coefficients in the tableaux associated
-         * with this constraint class (which for this class is a no-op,
-         * since in this case there are no extra coefficients).
-         *
-         * See the LPConstraintBase::Coefficients notes for further details.
-         */
-        struct Coefficients {
-            Coefficients();
-            template<typename IntType>
-            void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
-            template<typename IntType>
-            IntType innerProduct(const LPMatrix<IntType>&, unsigned) const;
-            template<typename IntType>
-            IntType innerProductOct(const LPMatrix<IntType>&, unsigned) const;
-        };
-
-        static bool addRows(LPCol<regina::LPConstraintNone>*,
-            const int*, const Triangulation<3>&);
+        static void addRows(LPCol<regina::LPConstraintNone>*,
+            const LPInitialTableaux<LPConstraintNone>& init);
         template<typename IntType>
         static void constrain(
             LPData<regina::LPConstraintNone, IntType>&, unsigned);
         static bool verify(const NormalSurface&);
         static bool verify(const AngleStructure&);
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 };
 
 /**
@@ -430,64 +419,67 @@ class LPConstraintNone : public LPConstraintSubspace {
  * is used to ensure we do not have more than two octagons when searching for
  * a normal or almost normal sphere in the 3-sphere recognition algorithm).
  *
- * See the LPConstraintBase class notes for details on all member
- * functions and structs.
+ * See the LPConstraintBase class notes for details on all member functions.
  *
- * \pre We are working in standard normal or almost normal coordinates
- * (not quadrilateral or quadrilateral-octagon coordinates).  In
- * particular, the coordinate system passed to the corresponding
- * LPInitialTableaux class constructor must be NS_STANDARD.
+ * These linear constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a linear constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
+ * \pre We are working with a normal or almost normal vector encoding
+ * that includes triangle coordinates (i.e., the encoding for standard
+ * normal or standard almost normal coordinates).
+ *
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use a linear constraint class, you would
+ * typically create a tree traversal object with the appropriate class suffix
+ * (e.g., one such Python class is \c TreeSingleSolution_EulerPositive).
+ * See the LPConstraintBase class notes for further details.
  *
  * \apinotfinal
  *
- * \ifacespython Not present.
+ * \ingroup enumerate
  */
 class LPConstraintEulerPositive : public LPConstraintBase {
     public:
-        enum { nConstraints = 1 };
+        static constexpr int nConstraints = 1;
+        using Coefficient = int;
 
-        /**
-         * Stores the extra coefficients in the tableaux associated with this
-         * constraint class (in this case, one extra integer per column).
-         *
-         * See the LPConstraintBase::Coefficients notes for further details.
-         */
-        struct Coefficients {
-            int euler;
-                /**< The coefficient of the Euler characteristic
-                     function for the corresponding column of the matching
-                     equation matrix. */
+        // Suppose we are using two quad columns to represent a single octagon.
+        //
+        // The adjustment in this case is to subtract two from the overall
+        // Euler characteristic coefficient for this octagon type (-1 because
+        // an octagon has lower Euler characteristic than two quads, and
+        // -1 again because we are actually measuring Euler - #octagons).
+        //
+        // Happily we can do this by subtracting one from the coefficient in
+        // each of the two quad columns.
+        static constexpr Coefficient octAdjustment = -1;
 
-            Coefficients();
-            template<typename IntType>
-            void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
-            template<typename IntType>
-            IntType innerProduct(const LPMatrix<IntType>& m,
-                    unsigned mRow) const;
-            template<typename IntType>
-            IntType innerProductOct(const LPMatrix<IntType>& m,
-                    unsigned mRow) const;
-        };
-
-        static bool addRows(
+        static void addRows(
             LPCol<regina::LPConstraintEulerPositive>* col,
-            const int* columnPerm, const Triangulation<3>& tri);
+            const LPInitialTableaux<LPConstraintEulerPositive>& init);
         template<typename IntType>
         static void constrain(
             LPData<regina::LPConstraintEulerPositive, IntType>& lp,
             unsigned numCols);
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 };
 
 /**
- * A deprecated typedef for LPConstraintEulerPositive.
+ * A deprecated type alias for LPConstraintEulerPositive.
  *
  * The old name LPConstraintEuler should no longer be used, since Regina
  * now provides multiple constraint types relating to Euler characteristic.
+ *
+ * \ifacespython Not present; use LPConstraintEulerPositive instead.
+ *
+ * \ingroup enumerate
  */
-typedef LPConstraintEulerPositive LPConstraintEuler [[deprecated]];
+using LPConstraintEuler [[deprecated]] = LPConstraintEulerPositive;
 
 /**
  * A class that constraints the tableaux of normal surface matching equations
@@ -500,54 +492,44 @@ typedef LPConstraintEulerPositive LPConstraintEuler [[deprecated]];
  * This constraint currently only works with normal (and \e not almost normal)
  * coordinates.
  *
- * See the LPConstraintBase class notes for details on all member
- * functions and structs.
+ * See the LPConstraintBase class notes for details on all member functions.
  *
- * \pre We are working in standard normal coordinates (not quadrilateral
- * coordinates).  In particular, the coordinate system passed to the
- * corresponding LPInitialTableaux class constructor must be NS_STANDARD.
+ * These linear constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a linear constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
+ * \pre We are working with a normal vector encoding that includes triangle
+ * coordinates, and that does \e not include octagon coordinates (i.e,
+ * the encoding for standard normal coordinates).
+ *
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use a linear constraint class, you would
+ * typically create a tree traversal object with the appropriate class suffix
+ * (e.g., one such Python class is \c TreeEnumeration_EulerZero).
+ * See the LPConstraintBase class notes for further details.
  *
  * \apinotfinal
  *
- * \ifacespython Not present.
+ * \ingroup enumerate
  */
 class LPConstraintEulerZero : public LPConstraintSubspace {
     public:
-        enum { nConstraints = 1 };
+        static constexpr int nConstraints = 1;
+        using Coefficient = int;
+        static constexpr Coefficient octAdjustment = 0;
 
-        /**
-         * Stores the extra coefficients in the tableaux associated with this
-         * constraint class (in this case, one extra integer per column).
-         *
-         * See the LPConstraintBase::Coefficients notes for further details.
-         */
-        struct Coefficients {
-            int euler;
-                /**< The coefficient of the Euler characteristic
-                     function for the corresponding column of the matching
-                     equation matrix. */
-
-            Coefficients();
-            template<typename IntType>
-            void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
-            template<typename IntType>
-            IntType innerProduct(const LPMatrix<IntType>& m,
-                    unsigned mRow) const;
-            template<typename IntType>
-            IntType innerProductOct(const LPMatrix<IntType>& m,
-                    unsigned mRow) const;
-        };
-
-        static bool addRows(
+        static void addRows(
             LPCol<regina::LPConstraintEulerZero>* col,
-            const int* columnPerm, const Triangulation<3>& tri);
+            const LPInitialTableaux<LPConstraintEulerZero>& init);
         template<typename IntType>
         static void constrain(
             LPData<regina::LPConstraintEulerZero, IntType>& lp,
             unsigned numCols);
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 };
 
 /**
@@ -556,71 +538,63 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
  * (thereby avoiding spun normal surfaces with infinitely many triangles).
  *
  * At present this class can only work with oriented triangulations that have
- * precisely one vertex, which is ideal with torus link.  These
- * constraints are explicitly checked by addRows(), which returns \c false
- * if they are not satisfied.  Moreover, this constraint calls on
- * SnapPea for some calculations: in the unexpected situation where
- * SnapPea retriangulates, the linear function cannot be constructed and
- * addRows() will again return \c false.  You should always test
- * LPInitialTableaux::constraintsBroken() to verify that the linear
- * functions have been constructed correctly.
+ * precisely one vertex, which is ideal with torus link.  Moreover, it uses
+ * the SnapPea kernel for some of its computations, and so SnapPea must be
+ * able to work directly with the given triangulation.  See below for details
+ * on the exceptions that addRows() can throw if these requirements are not met.
  *
  * Also, at present this class can only work with quadrilateral normal
  * coordinates (and cannot handle almost normal coordinates at all).
  * This is \e not explicitly checked; instead it appears as a
  * precondition (see below).
  *
- * See the LPConstraintBase class notes for details on all member
- * functions and structs.
+ * See the LPConstraintBase class notes for details on all member functions.
  *
- * \pre We are working in quadrilateral normal coordinates.  In particular,
- * the coordinate system passed to the corresponding LPInitialTableaux class
- * must be NS_QUAD, and constrainOct() must never be
- * called on any of the corresponding LPData tableaux.
+ * These linear constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a linear constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
+ * \pre We are working with a normal or almost normal vector encoding that
+ * does not include triangle coordinates (i.e., the encoding for quad or
+ * quad-oct normal coordinates).
+ *
+ * \exception InvalidArgument thrown by addRows() if the underlying
+ * triangulation is not oriented with precisely one vertex, which must have a
+ * torus link.
+ *
+ * \exception UnsolvedCase thrown by addRows() if SnapPea retriangulates the
+ * underlying triangulation or produces a null triangulation, or if the
+ * coefficients of the slope equations are too large to store in a native
+ * C++ long integer.
+ *
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use a linear constraint class, you would
+ * typically create a tree traversal object with the appropriate class suffix
+ * (e.g., one such Python class is \c TreeEnumeration_NonSpun).
+ * See the LPConstraintBase class notes for further details.
  *
  * \apinotfinal
  *
- * \ifacespython Not present.
+ * \ingroup enumerate
  */
 class LPConstraintNonSpun : public LPConstraintSubspace {
     public:
-        enum { nConstraints = 2 };
+        static constexpr int nConstraints = 2;
+        using Coefficient = long;
+        static constexpr Coefficient octAdjustment = 0;
 
-        /**
-         * Stores the extra coefficients in the tableaux associated with this
-         * constraint class (in this case, two extra integers per column).
-         *
-         * See the LPConstraintBase::Coefficients notes for further details.
-         */
-        struct Coefficients {
-            int meridian;
-                /**< The coefficient of the meridian equation for the
-                     corresponding column of the matching equation matrix. */
-            int longitude;
-                /**< The coefficient of the longitude equation for the
-                     corresponding column of the matching equation matrix. */
-
-            Coefficients();
-            template <typename IntType>
-            void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
-            template <typename IntType>
-            IntType innerProduct(const LPMatrix<IntType>& m,
-                    unsigned mRow) const;
-            template <typename IntType>
-            IntType innerProductOct(const LPMatrix<IntType>& m,
-                    unsigned mRow) const;
-        };
-
-        static bool addRows(
+        static void addRows(
             LPCol<regina::LPConstraintNonSpun>* col,
-            const int* columnPerm, const Triangulation<3>& tri);
+            const LPInitialTableaux<LPConstraintNonSpun>& init);
         template <typename IntType>
         static void constrain(
             LPData<regina::LPConstraintNonSpun, IntType>& lp,
             unsigned numCols);
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 };
 
 /**
@@ -667,25 +641,42 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  * the initial lists of banned and marked columns, but then these lists are
  * easy to use on the fly during tree traversal algorithms.
  *
+ * Bear in mind that the tableaux that these constraints are working with will
+ * not necessarily use the same coordinates as the underlying enumeration task
+ * (e.g., the tableaux will never include separate columns for octagon
+ * coordinates).  See LPInitialTableaux for a more detailed discussion of this.
+ *
  * This base class provides limited functionality (as documented below).
  * Subclasses \e must implement a constructor (which, like this base
- * class, takes a triangulation and a coordinate system), must implement
- * init() which determines which coordinates are banned and/or marked,
- * and must implement supported(), which indicates which normal or angle
- * structure coordinate system this constraint class can work with.
+ * class, takes an initial tableaux and determines which coordinates are
+ * banned and/or marked), and must implement supported(), which indicates
+ * which normal or angle structure coordinate system this constraint class
+ * can work with.
+ *
+ * These ban constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a ban constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
+ * \ifacespython This base class is not present, but all subclasses are
+ * available.  However, as noted above, it is rare that you would need
+ * to access any of these ban constraint classes directly through Python.
+ * Instead, to use a ban constraint class, you would typically create
+ * a tree traversal object with the appropriate class suffix (e.g., one
+ * such Python class is \c TreeEnumeration_BanBoundary).
  *
  * \apinotfinal
  *
- * \ifacespython Not present.
+ * \ingroup enumerate
  */
 class BanConstraintBase {
     protected:
         const Triangulation<3>& tri_;
             /**< The triangulation with which we are working. */
-        int coords_;
-            /**< The normal or almost normal coordinate system in which
-                 we are working.  This must be one of NS_QUAD, NS_STANDARD,
-                 NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE. */
+        LPSystem system_;
+            /**< The broad class of vector encodings that our enumeration task
+                 is working with. */
         bool* banned_;
             /**< Indicates which columns of a tableaux correspond to banned
                  coordinates (e.g., banned normal disc types).
@@ -699,24 +690,24 @@ class BanConstraintBase {
                  structure coordinates (so we explicitly exclude extra columns
                  that arise from the template parameter LPConstraint. */
 
-    protected:
+    public:
         /**
-         * Constructs and initialises the \a banned_ and \a marked_ arrays
-         * to be entirely \c false.  The only purpose of passing the
-         * triangulation and coordinate system is to determine how many
-         * normal or angle structure coordinates we are dealing with.
+         * Constructs a new set of banning and marking constraints.
          *
-         * \warning Before you use this object, the routine init() must be
-         * called to fill in the \a banned_ and \a marked_ arrays with the
-         * correct data.  Otherwise you will have no banned or marked disc
-         * types at all.
+         * This base class constructor will create \a banned_ and \a marked_
+         * arrays of the correct size, and will initialise their contents to
+         * be entirely \c false.  This means that there will be no banned or
+         * marked disc types at all.
          *
-         * @param tri the triangulation with which we are working.
-         * @param coords the coordinate system in
-         * which we are working.  This must be one of NS_QUAD,
-         * NS_STANDARD, NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE.
+         * Subclass constructors should identify which coordinates to ban and
+         * mark, and adjust the contents of the \a banned_ and \a marked_
+         * arrays accordingly.
+         *
+         * @param init the original starting tableaux being used for this
+         * enumeration task.
          */
-        BanConstraintBase(const Triangulation<3>& tri, int coords);
+        template <class LPConstraint>
+        BanConstraintBase(const LPInitialTableaux<LPConstraint>& init);
 
         /**
          * Destroys this object and all associated data.
@@ -734,20 +725,20 @@ class BanConstraintBase {
         template <class LPConstraint, typename IntType>
         void enforceBans(LPData<LPConstraint, IntType>& lp) const;
 
-#ifdef __DOXYGEN
         /**
-         * Identifies which coordinates to ban and mark, and records the
-         * corresponding tableaux columns in the \a banned_ and \a marked_
-         * arrays respectively.
+         * Identifies whether the given column of the tableaux corresponds to
+         * a marked coordinate (e.g., a marked normal disc type).
          *
-         * @param columnPerm the permutation of columns that describes how
-         * columns of the tableaux correspond to normal or angle strutcure
-         * coordinates in the underlying triangulation.  Specifically, this
-         * permutation must be the same permutation returned by
-         * LPInitialTableaux::columnPerm().
+         * @param column a column of the tableaux.  This must be one of
+         * the columns corresponding to a normal or angle structure coordinate,
+         * not one of the extra columns induced by an LPConstraint parameter
+         * for the tree traversal class.
+         * @return \c true if and only if the given column corresponds
+         * to a marked coordinate.
          */
-        void init(const int* columnPerm);
+        bool marked(size_t column) const;
 
+#ifdef __DOXYGEN
         /**
          * Indicates whether the given coordinate system is supported by
          * this constraint class.
@@ -760,13 +751,20 @@ class BanConstraintBase {
          * any of its own additional conditions, this routine may
          * simply return \c true.
          *
-         * @param coords the coordinate system being queried; this must
-         * be one of the coordinate systems known to be supported by the
-         * generic TreeTraversal infrastructure.
-         * @return \c true if and only if this coordinate system is
+         * The only features of the encoding that this routine should
+         * examine are what coordinates are stored (e.g.,
+         * NormalEncoding::storesTriangles()).  In particular, this
+         * routine will not look at any "semantic guarantees" (e.g.
+         * NormalEncoding::couldBeNonCompact()).
+         *
+         * @param enc the vector encoding being queried.  This must
+         * be one of the vector encodings known to be supported by the
+         * generic TreeTraversal infrastructure, and in particular it
+         * may be the special angle structure encoding.
+         * @return \c true if and only if this vector encoding is
          * also supported by this specific constraint class.
          */
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 #endif
 
         // Mark this class as non-copyable.
@@ -777,33 +775,43 @@ class BanConstraintBase {
 /**
  * A do-nothing class that bans no coordinates and marks no coordinates.
  *
- * See the BanConstraintBase class notes for details on all member
- * functions and structs.
+ * This is intended to act as a drop-in replacement for a "real" BanConstraint
+ * class (i.e., a subclass of BanConstraintBase).  However, to avoid any
+ * overhead in this trivial case, BanNone does \e not derive from
+ * BanConstraintBase, and all of its routines do nothing at all.
+ *
+ * See the BanConstraintBase class notes for details on the interface
+ * that this class adheres to.
+ *
+ * These ban constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a ban constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use this ban constraint class, you would
+ * typically create a tree traversal object with no ban constraint class suffix
+ * at all (since BanNone is the default behaviour).  For example, all of the
+ * Python classes \c TreeEnumeration_NonSpun, \c TreeSingleSoln_EulerPositive
+ * and \c TautEnumeration use this do-nothing BanNone class.  See the
+ * BanConstraintBase class notes for further details on accessing other
+ * types of ban constraints from within Python.
  *
  * \apinotfinal
  *
- * \ifacespython Not present.
+ * \ingroup enumerate
  */
-class BanNone : public BanConstraintBase {
-    protected:
-        /**
-         * Constructs and initialises the \a banned_ and \a marked_ arrays
-         * to be entirely \c false, as described in the BanConstraintBase
-         * superclass constructor.
-         *
-         * Although one should normally call the routine init() before
-         * using this object, for BanNone this is not strictly necessary
-         * since there are no coordinates to ban or mark.
-         *
-         * @param tri the triangulation with which we are working.
-         * @param coords the coordinate system in
-         * which we are working.  This must be one of NS_QUAD,
-         * NS_STANDARD, NS_AN_QUAD_OCT, NS_AN_STANDARD, or NS_ANGLE.
-         */
-        BanNone(const Triangulation<3>& tri, int coords);
+class BanNone {
+    public:
+        template <class LPConstraint>
+        BanNone(const LPInitialTableaux<LPConstraint>&) {}
 
-        void init(const int*);
-        static bool supported(NormalCoords coords);
+        template <class LPConstraint, typename IntType>
+        void enforceBans(LPData<LPConstraint, IntType>&) const {}
+
+        bool marked(size_t) const { return false; }
+        static bool supported(NormalEncoding) { return true; }
 };
 
 /**
@@ -813,42 +821,60 @@ class BanNone : public BanConstraintBase {
  * This class is only for use with normal or almost normal surfaces, not
  * angle structures.
  *
- * \warning This class only works as expected in \e standard normal or
- * almost normal coordinates.  In quadrilateral or quadrilateral-octagon
+ * \warning This class only works as expected with vector encodings that
+ * explicitly include triangles (e.g., encodings for standard normal or
+ * almost normal coordinates).  In quadrilateral or quadrilateral-octagon
  * coordinates it will only ban quadrilaterals or octagons that touch
  * the boundary, but it will still allow \e triangles that meet the boundary
  * (since triangle types are not counted in these coordinate systems).
- * The supported() routine will only return \c true in standard normal or
- * almost normal coordinates.
+ * The supported() routine will only return \c true for encodings that
+ * include triangles.
  *
  * See the BanConstraintBase class notes for details on all member
  * functions and structs.
  *
+ * These ban constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a ban constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
+ * \headers Some templated parts of this class are implemented in a separate
+ * header (treeconstraint-impl.h), which is not included automatically by this
+ * file.  Most end users should not need this extra header, since Regina's
+ * calculation engine already includes explicit instantiations for common
+ * template arguments.
+ *
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use a ban constraint class, you would typically
+ * create a tree traversal object with the appropriate class suffix (e.g., one
+ * such Python class is \c TreeEnumeration_BanBoundary).  See the
+ * BanConstraintBase class notes for further details.
+ *
  * \apinotfinal
  *
- * \ifacespython Not present.
+ * \ingroup enumerate
  */
 class BanBoundary : public BanConstraintBase {
-    protected:
+    public:
         /**
-         * Constructs and initialises the \a banned_ and \a marked_ arrays
-         * to be entirely \c false, as described in the BanConstraintBase
-         * superclass constructor.
+         * Constructs a new set of banning and marking constraints.
          *
-         * \warning Before you use this object, the routine init() must be
-         * called to fill in the \a banned_ and \a marked_ arrays with the
-         * correct data.  Otherwise you will have no banned or marked disc
-         * types at all.
+         * This base class constructor will construct the \a banned_ and
+         * \a marked_ arrays to be the correct size based on the given
+         * tableaux, and will initialise their contents to ban disc types
+         * that meet the triangulation boundary.
          *
-         * @param tri the triangulation with which we are working.
-         * @param coords the normal or almost normal coordinate system in
-         * which we are working.  This must be one of NS_QUAD,
-         * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
+         * No disc types will be marked.
+         *
+         * @param init the original starting tableaux being used for this
+         * enumeration task.  This tableaux must work with normal or almost
+         * normal surface coordinates (not angle structure coordinates).
          */
-        BanBoundary(const Triangulation<3>& tri, int coords);
+        template <class LPConstraint>
+        BanBoundary(const LPInitialTableaux<LPConstraint>& init);
 
-        void init(const int* columnPerm);
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 };
 
 /**
@@ -865,45 +891,60 @@ class BanBoundary : public BanConstraintBase {
  * This class is only for use with normal or almost normal surfaces, not
  * angle structures.
  *
- * \warning As with BanBoundary, this class only works as expected in
- * \e standard normal or almost normal coordinates.  In quadrilateral or
+ * \warning As with BanBoundary, this class only works as expected with
+ * vector encodings that explicitly include triangles (e.g., encodings for
+ * standard normal or almost normal coordinates).  In quadrilateral or
  * quadrilateral-octagon coordinates it will only ban quadrilaterals or
  * octagons that touch torus boundaries, but it will still allow \e triangles
  * that meet torus boundaries (since triangle types are not counted in these
- * coordinate systems).  The supported() routine will only return \c true
- * in standard normal or almost normal coordinates.
+ * coordinate systems).  The supported() routine will only return \c true for
+ * encodings that include triangles.
  *
  * See the BanConstraintBase class notes for details on all member
  * functions and structs.
  *
+ * These ban constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a ban constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
+ * \headers Some templated parts of this class are implemented in a separate
+ * header (treeconstraint-impl.h), which is not included automatically by this
+ * file.  Most end users should not need this extra header, since Regina's
+ * calculation engine already includes explicit instantiations for common
+ * template arguments.
+ *
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use a ban constraint class, you would typically
+ * create a tree traversal object with the appropriate class suffix (e.g., one
+ * such Python class is \c TreeEnumeration_BanTorusBoundary).  See the
+ * BanConstraintBase class notes for further details.
+ *
  * \apinotfinal
  *
- * \ifacespython Not present.
+ * \ingroup enumerate
  */
 class BanTorusBoundary : public BanConstraintBase {
-    protected:
+    public:
         /**
-         * Constructs and initialises the \a banned_ and \a marked_ arrays
-         * to be entirely \c false, as described in the BanConstraintBase
-         * superclass constructor.
+         * Constructs a new set of banning and marking constraints.
          *
-         * \warning Before you use this object, the routine init() must be
-         * called to fill in the \a banned_ and \a marked_ arrays with the
-         * correct data.  Otherwise you will have no banned or marked disc
-         * types at all.
+         * This base class constructor will construct the \a banned_ and
+         * \a marked_ arrays to be the correct size based on the given
+         * tableaux, and will initialise their contents to ban and mark
+         * disc types associated with torus boundary components, as
+         * described in the class notes.
          *
-         * @param tri the triangulation with which we are working.
-         * @param coords the normal or almost normal coordinate system in
-         * which we are working.  This must be one of NS_QUAD,
-         * NS_STANDARD, NS_AN_QUAD_OCT, or NS_AN_STANDARD.
+         * @param init the original starting tableaux being used for this
+         * enumeration task.  This tableaux must work with normal or almost
+         * normal surface coordinates (not angle structure coordinates).
          */
-        BanTorusBoundary(const Triangulation<3>& tri, int coords);
+        template <class LPConstraint>
+        BanTorusBoundary(const LPInitialTableaux<LPConstraint>& init);
 
-        void init(const int* columnPerm);
-        static bool supported(NormalCoords coords);
+        static bool supported(NormalEncoding enc);
 };
-
-/*@}*/
 
 }
 
@@ -913,30 +954,9 @@ namespace regina {
 
 // Inline functions
 
-inline LPConstraintNone::Coefficients::Coefficients() {
-}
-
-template <typename IntType>
-inline void LPConstraintNone::Coefficients::fillFinalRows(
-        LPMatrix<IntType>& m, unsigned col) const {
-}
-
-template <typename IntType>
-inline IntType LPConstraintNone::Coefficients::innerProduct(
-        const LPMatrix<IntType>&, unsigned) const {
-    return 0;
-}
-
-template <typename IntType>
-inline IntType LPConstraintNone::Coefficients::innerProductOct(
-        const LPMatrix<IntType>&, unsigned) const {
-    return 0;
-}
-
-inline bool LPConstraintNone::addRows(
+inline void LPConstraintNone::addRows(
         LPCol<regina::LPConstraintNone>*,
-        const int*, const Triangulation<3>&) {
-    return true;
+        const LPInitialTableaux<LPConstraintNone>& init) {
 }
 
 template <typename IntType>
@@ -952,44 +972,8 @@ inline bool LPConstraintNone::verify(const AngleStructure&) {
     return true;
 }
 
-inline bool LPConstraintNone::supported(NormalCoords) {
+inline bool LPConstraintNone::supported(NormalEncoding) {
     return true;
-}
-
-inline LPConstraintEulerPositive::Coefficients::Coefficients() : euler(0) {}
-
-template <typename IntType>
-inline void LPConstraintEulerPositive::Coefficients::fillFinalRows(
-        LPMatrix<IntType>& m, unsigned col) const {
-    m.entry(m.rows() - 1, col) = euler;
-}
-
-template <typename IntType>
-inline IntType LPConstraintEulerPositive::Coefficients::innerProduct(
-        const LPMatrix<IntType>& m, unsigned mRow) const {
-    IntType ans(m.entry(mRow, m.rows() - 1));
-    ans *= euler;
-    return ans;
-}
-
-template <typename IntType>
-inline IntType LPConstraintEulerPositive::Coefficients::innerProductOct(
-        const LPMatrix<IntType>& m, unsigned mRow) const {
-    // This is called for *two* quad columns (the two quads
-    // that combine to give a single octagon).
-    //
-    // The adjustment in this case is to subtract two from
-    // the overall Euler characteristic coefficient for this
-    // octagon type (-1 because an octagon has lower Euler
-    // characteristic than two quads, and -1 again because
-    // we are measuring Euler - #octagons.
-    //
-    // Happily we can do this by subtracting one from the
-    // coefficient in each of the two columns, as
-    // implemented below.
-    IntType ans(m.entry(mRow, m.rows() - 1));
-    ans *= (euler - 1);
-    return ans;
 }
 
 template <typename IntType>
@@ -1007,33 +991,9 @@ inline bool LPConstraintEulerPositive::verify(const AngleStructure&) {
     return false;
 }
 
-inline bool LPConstraintEulerPositive::supported(NormalCoords coords) {
-    return (coords == NS_STANDARD || coords == NS_AN_STANDARD);
-}
-
-inline LPConstraintEulerZero::Coefficients::Coefficients() : euler(0) {}
-
-template <typename IntType>
-inline void LPConstraintEulerZero::Coefficients::fillFinalRows(
-        LPMatrix<IntType>& m, unsigned col) const {
-    m.entry(m.rows() - 1, col) = euler;
-}
-
-template <typename IntType>
-inline IntType LPConstraintEulerZero::Coefficients::innerProduct(
-        const LPMatrix<IntType>& m, unsigned mRow) const {
-    IntType ans(m.entry(mRow, m.rows() - 1));
-    ans *= euler;
-    return ans;
-}
-
-template <typename IntType>
-inline IntType LPConstraintEulerZero::Coefficients::innerProductOct(
-        const LPMatrix<IntType>& m, unsigned mRow) const {
-    // This should never be called, since we never use this
-    // constraint with almost normal surfaces.
-    // For compilation's sake though, just return the usual inner product.
-    return innerProduct(m, mRow);
+inline bool LPConstraintEulerPositive::supported(NormalEncoding enc) {
+    // Note: storesTriangles() will ensure we are not using angle structures.
+    return enc.storesTriangles();
 }
 
 template <typename IntType>
@@ -1050,40 +1010,9 @@ inline bool LPConstraintEulerZero::verify(const AngleStructure&) {
     return false;
 }
 
-inline bool LPConstraintEulerZero::supported(NormalCoords coords) {
-    return (coords == NS_STANDARD);
-}
-
-inline LPConstraintNonSpun::Coefficients::Coefficients() :
-        meridian(0), longitude(0) {
-}
-
-template <typename IntType>
-inline void LPConstraintNonSpun::Coefficients::fillFinalRows(
-        LPMatrix<IntType>& m, unsigned col) const {
-    m.entry(m.rows() - 2, col) = meridian;
-    m.entry(m.rows() - 1, col) = longitude;
-}
-
-template <typename IntType>
-inline IntType LPConstraintNonSpun::Coefficients::innerProduct(
-        const LPMatrix<IntType>& m, unsigned mRow) const {
-    IntType ans1(m.entry(mRow, m.rows() - 2));
-    ans1 *= meridian;
-    IntType ans2(m.entry(mRow, m.rows() - 1));
-    ans2 *= longitude;
-    ans1 += ans2;
-    return ans1;
-}
-
-template <typename IntType>
-inline IntType LPConstraintNonSpun::Coefficients::innerProductOct(
-        const LPMatrix<IntType>& m, unsigned mRow) const {
-    // This should never be called, since we never use this
-    // constraint with almost normal surfaces.
-    // For compilation's sake though, just return the usual
-    // inner product.
-    return innerProduct(m, mRow);
+inline bool LPConstraintEulerZero::supported(NormalEncoding enc) {
+    // Note: storesTriangles() will ensure we are not using angle structures.
+    return (enc.storesTriangles() && ! enc.storesOctagons());
 }
 
 template <typename IntType>
@@ -1101,8 +1030,19 @@ inline bool LPConstraintNonSpun::verify(const AngleStructure&) {
     return false;
 }
 
-inline bool LPConstraintNonSpun::supported(NormalCoords coords) {
-    return (coords == NS_QUAD || coords == NS_AN_QUAD_OCT);
+inline bool LPConstraintNonSpun::supported(NormalEncoding enc) {
+    return ! (enc.storesTriangles() || enc.storesAngles());
+}
+
+template <class LPConstraint>
+inline BanConstraintBase::BanConstraintBase(
+        const LPInitialTableaux<LPConstraint>& init) :
+        tri_(init.tri()), system_(init.system()) {
+    const size_t nCols = system_.coords(tri_.size());
+    banned_ = new bool[nCols];
+    marked_ = new bool[nCols];
+    std::fill(banned_, banned_ + nCols, false);
+    std::fill(marked_, marked_ + nCols, false);
 }
 
 inline BanConstraintBase::~BanConstraintBase() {
@@ -1118,32 +1058,18 @@ inline void BanConstraintBase::enforceBans(LPData<LPConstraint, IntType>& lp)
             lp.constrainZero(i);
 }
 
-inline BanNone::BanNone(const Triangulation<3>& tri, int coords) :
-        BanConstraintBase(tri, coords) {
+inline bool BanConstraintBase::marked(size_t column) const {
+    return marked_[column];
 }
 
-inline void BanNone::init(const int*) {
+inline bool BanBoundary::supported(NormalEncoding enc) {
+    // Note: storesTriangles() will ensure we are not using angle structures.
+    return enc.storesTriangles();
 }
 
-inline bool BanNone::supported(NormalCoords) {
-    return true;
-}
-
-inline BanBoundary::BanBoundary(const Triangulation<3>& tri, int coords) :
-        BanConstraintBase(tri, coords) {
-}
-
-inline bool BanBoundary::supported(NormalCoords coords) {
-    return (coords == NS_STANDARD || NS_AN_STANDARD);
-}
-
-inline BanTorusBoundary::BanTorusBoundary(
-        const Triangulation<3>& tri, int coords) :
-        BanConstraintBase(tri, coords) {
-}
-
-inline bool BanTorusBoundary::supported(NormalCoords coords) {
-    return (coords == NS_STANDARD || NS_AN_STANDARD);
+inline bool BanTorusBoundary::supported(NormalEncoding enc) {
+    // Note: storesTriangles() will ensure we are not using angle structures.
+    return enc.storesTriangles();
 }
 
 } // namespace regina

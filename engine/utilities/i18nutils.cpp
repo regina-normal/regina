@@ -33,7 +33,7 @@
 #include <cerrno>
 #include <cstddef>
 #include <cstring>
-#include <locale.h>
+#include <clocale>
 #include "regina-config.h"
 #include "utilities/i18nutils.h"
 
@@ -85,6 +85,7 @@ const char* utf8ValidTo(const char* s) {
 
 bool Locale::initialised = false;
 
+// NOLINTNEXTLINE(misc-misplaced-const)
 const iconv_t IConvStreamBuffer::cdNone((iconv_t)(-1));
 
 #ifdef LANGINFO_FOUND
@@ -109,14 +110,14 @@ IConvStreamBuffer* IConvStreamBuffer::open(std::ostream& dest,
         const char* srcCode, const char* destCode) {
     if (sink)
         if (! close())
-            return 0;
+            return nullptr;
 
     sink = &dest;
 
     cd = iconv_open(destCode, srcCode);
     if (cd == cdNone) {
         if (errno != EINVAL)
-            return 0;
+            return nullptr;
 
         // The given encodings are not supported.
         // This is fine; we'll just pass data through to sink untranslated.
@@ -129,7 +130,7 @@ IConvStreamBuffer* IConvStreamBuffer::open(std::ostream& dest,
     return this;
 }
 
-IConvStreamBuffer* IConvStreamBuffer::close() throw() {
+IConvStreamBuffer* IConvStreamBuffer::close() noexcept {
     sync();
 
     if (cd == cdNone) {
@@ -142,13 +143,13 @@ IConvStreamBuffer* IConvStreamBuffer::close() throw() {
         cd = cdNone;
         return this;
     } else
-        return 0;
+        return nullptr;
 }
 
 IConvStreamBuffer::int_type IConvStreamBuffer::overflow(
         IConvStreamBuffer::int_type c) {
     // Are we even open?
-    if (sink == 0)
+    if (! sink)
         return traits_type::eof();
 
     // Add the extra character to the end of the buffer before processing.

@@ -24,9 +24,20 @@ REMOVING CHILD: c -> u
 REMOVED CHILD: c -> u
 DESTROYING: u
 Destroying parent...
-REMOVING CHILD: from parent destructor -> t2
-REMOVED CHILD: from parent destructor -> t2
 DESTROYING: c
 Destroying child t...
 DESTROYING: t2
+Preparing order test...
+ADDING CHILD: x -> z1
+ADDED CHILD: x -> z1
+ADDING CHILD: x -> z2
+ADDED CHILD: x -> z2
+ADDING CHILD: z1 -> y
+ADDED CHILD: z1 -> y
+Dropping children...
+Dropping root...
+DESTROYING: y
+DESTROYING: z1
+DESTROYING: z2
+DESTROYING: x
 Finished.

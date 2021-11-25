@@ -6,7 +6,7 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 6.1  [ TODO ]
+Version 7.0  [ TODO ]
 
     Overview:
         - Regina now uses the C++17 standard, and no longer uses boost at all.
@@ -24,6 +24,11 @@ Version 6.1  [ TODO ]
         - Access to more of Regina's C++ classes and routines.
         - Better facilities for iteration, string representation, and
           compatibility with Sage.
+
+Version 6.0.1  [ 12 February, 2021 ]
+
+    - Fixes an issue for Python users, where the Triangulation3 constructor
+      could become unusable in the graphical user interface.
 
 Version 6.0  [ 11 January, 2021 ]
 

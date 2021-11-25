@@ -51,6 +51,8 @@ void addTangle(pybind11::module_& m) {
         .def("size", &Tangle::size)
         .def("crossing", &Tangle::crossing,
             pybind11::return_value_policy::reference_internal)
+        .def("crossings", &Tangle::crossings,
+            pybind11::keep_alive<0, 1>())
         .def("begin", &Tangle::begin)
         .def("end", &Tangle::end)
         .def("translate", &Tangle::translate)
@@ -96,6 +98,9 @@ void addTangle(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    // No need to register the ListView class for crossings(), since
+    // this is the same class used by Link.
 
     m.def("swap", (void(*)(Tangle&, Tangle&))(regina::swap));
 }

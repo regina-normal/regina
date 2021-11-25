@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "subcomplex/blockedsfs.h"
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
@@ -40,14 +41,15 @@ using regina::BlockedSFS;
 
 void addBlockedSFS(pybind11::module_& m) {
     pybind11::class_<BlockedSFS, regina::StandardTriangulation>(m, "BlockedSFS")
+        .def(pybind11::init<const BlockedSFS&>())
+        .def("swap", &BlockedSFS::swap)
         .def("region", &BlockedSFS::region,
             pybind11::return_value_policy::reference_internal)
-        .def("isPluggedIBundle", [](const BlockedSFS& b) {
-            std::string name;
-            bool ans = b.isPluggedIBundle(name);
-            return pybind11::make_tuple(ans, name);
-        })
-        .def_static("isBlockedSFS", &BlockedSFS::isBlockedSFS)
+        .def("isPluggedIBundle", &BlockedSFS::isPluggedIBundle)
+        .def_static("recognise", &BlockedSFS::recognise)
+        .def_static("isBlockedSFS", &BlockedSFS::recognise) // deprecated
     ;
+
+    m.def("swap", (void(*)(BlockedSFS&, BlockedSFS&))(regina::swap));
 }
 

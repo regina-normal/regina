@@ -65,6 +65,7 @@ $svn = $ARGV[0];
 process('configure', 'actions', \@actionSizes);
 process('edit-rename', 'actions', \@actionSizes);
 process('help-contextual', 'actions', \@actionSizes);
+process('mail-attachment', 'status', \@actionSizes);
 
 # Better than the verison in humanity:
 process('application-xml', 'mimetypes', \@actionSizes);

@@ -63,35 +63,30 @@ namespace regina {
 // -----------------------------------------------------------------------
 
 template <typename Iterator>
-Link* Link::fromDT(Iterator begin, Iterator end) {
+Link Link::fromDT(Iterator begin, Iterator end) {
     // Extract the number of crossings.
     int aNumCrossings = end - begin;
     if (aNumCrossings == 0)
-        return new Link(1);
+        return Link(1);
 
     // Some basic sanity checking.
     // We ensure that the integers are in range, but we do not yet check
     // that their absolute values are distinct (that will come later).
     Iterator it;
     for (it = begin; it != end; ++it) {
-        if (*it % 2 != 0) {
-            std::cerr << "fromDT(): found odd integer " << *it << std::endl;
-            return nullptr;
-        }
-        if (*it == 0 || *it > 2*aNumCrossings || *it < -2*aNumCrossings) {
-            std::cerr << "fromDT(): integer " << *it << " out of range"
-                << std::endl;
-            return nullptr;
-        }
+        if (*it % 2 != 0)
+            throw InvalidArgument("fromDT(): code contains odd integer");
+        if (*it == 0 || *it > 2*aNumCrossings || *it < -2*aNumCrossings)
+            throw InvalidArgument("fromDT(): integer out of range in code");
     }
 
-    Link* ans = new Link;
+    Link ans;
 
     int i;
     for (i = 0; i < aNumCrossings; ++i)
-        ans->crossings_.push_back(new Crossing);
+        ans.crossings_.push_back(new Crossing);
 
-    ans->components_.push_back(StrandRef(ans->crossings_.front(), 0));
+    ans.components_.emplace_back(ans.crossings_.front(), 0);
 
     // Here starts the SnapPea code!
 
@@ -136,12 +131,9 @@ Link* Link::fromDT(Iterator begin, Iterator end) {
     for (i = 0; i < aNumCrossings; i++)
     {
         if (theInvolution[theAlternatingDT[i]] != 1 /* the initial value */) {
-            std::cerr << "fromDT(): +/-" << (theAlternatingDT[i] + 1)
-                << " appears more than once" << std::endl;
             delete[] theAlternatingDT;
             delete[] theInvolution;
-            delete ans;
-            return nullptr;
+            throw InvalidArgument("fromDT(): repeated |entry| in code");
         }
         theInvolution[2*i]                  = theAlternatingDT[i];
         theInvolution[theAlternatingDT[i]]  = 2*i;
@@ -168,12 +160,10 @@ Link* Link::fromDT(Iterator begin, Iterator end) {
     theRealization = new bool[2 * aNumCrossings];
     if (! realizeDT(theInvolution, theRealization, aNumCrossings)) {
         // The sequence could not be realized.
-        std::cerr << "fromDT(): sequence is not realisable" << std::endl;
         delete[] theAlternatingDT;
         delete[] theInvolution;
         delete[] theRealization;
-        delete ans;
-        return nullptr;
+        throw InvalidArgument("fromDT(): sequence is not realisable");
     }
 
     /*
@@ -212,15 +202,15 @@ Link* Link::fromDT(Iterator begin, Iterator end) {
     Crossing* cr;
     Crossing* adj;
     for (i = 0; i < 2 * aNumCrossings; ++i) {
-        cr = ans->crossings_[crossingForPos[i]];
+        cr = ans.crossings_[crossingForPos[i]];
 
         if (i % 2 == 0) {
             // Pass under.
-            adj = ans->crossings_[crossingForPos[
+            adj = ans.crossings_[crossingForPos[
                 i < 2 * aNumCrossings - 1 ? i + 1 : 0]];
             cr->next_[0] = StrandRef(adj, 1);
 
-            adj = ans->crossings_[crossingForPos[
+            adj = ans.crossings_[crossingForPos[
                 i > 0 ? i - 1 : 2 * aNumCrossings - 1]];
             cr->prev_[0] = StrandRef(adj, 1);
 
@@ -230,11 +220,11 @@ Link* Link::fromDT(Iterator begin, Iterator end) {
             cr->sign_ = (theRealization[i] ? 1 : -1);
         } else {
             // Pass over.
-            adj = ans->crossings_[crossingForPos[
+            adj = ans.crossings_[crossingForPos[
                 i < 2 * aNumCrossings - 1 ? i + 1 : 0]];
             cr->next_[1] = StrandRef(adj, 0);
 
-            adj = ans->crossings_[crossingForPos[
+            adj = ans.crossings_[crossingForPos[
                 i > 0 ? i - 1 : 2 * aNumCrossings - 1]];
             cr->prev_[1] = StrandRef(adj, 0);
         }
@@ -248,7 +238,7 @@ Link* Link::fromDT(Iterator begin, Iterator end) {
      */
     for (it = begin; it != end; ++it)
         if (*it < 0)
-            ans->change(ans->crossings_[crossingForPos[-(*it) - 1]]);
+            ans.change(ans.crossings_[crossingForPos[-(*it) - 1]]);
 
     // All done!
     delete[] oddPos;

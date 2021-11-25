@@ -67,8 +67,8 @@ namespace {
 
     template <>
     struct TuraevViroDetails<true> {
-        typedef Cyclotomic TVType;
-        typedef Cyclotomic TVResult;
+        using TVType = Cyclotomic;
+        using TVResult = Cyclotomic;
 
         static TVResult zero() {
             return Cyclotomic(1);
@@ -77,8 +77,8 @@ namespace {
 
     template <>
     struct TuraevViroDetails<false> {
-        typedef std::complex<double> TVType;
-        typedef double TVResult;
+        using TVType = std::complex<double>;
+        using TVResult = double;
 
         static TVResult zero() {
             return 0;
@@ -92,8 +92,8 @@ namespace {
     template <bool exact>
     class BracketFactorial {
         public:
-            typedef typename TuraevViroDetails<exact>::TVType TVType;
-            typedef typename TuraevViroDetails<exact>::TVResult TVResult;
+            using TVType = typename TuraevViroDetails<exact>::TVType;
+            using TVResult = typename TuraevViroDetails<exact>::TVResult;
 
         private:
             TVResult* bracket_;
@@ -206,8 +206,8 @@ namespace {
      */
     template <bool exact>
     struct InitialData {
-        typedef typename TuraevViroDetails<exact>::TVType TVType;
-        typedef typename TuraevViroDetails<exact>::TVResult TVResult;
+        using TVType = typename TuraevViroDetails<exact>::TVType;
+        using TVResult = typename TuraevViroDetails<exact>::TVResult;
 
         unsigned long r, whichRoot;
             /**< The Turaev-Viro parameters. */
@@ -442,7 +442,7 @@ namespace {
             const Triangulation<3>& tri,
             const InitialData<exact>& init,
             ProgressTracker* tracker) {
-        typedef typename InitialData<exact>::TVType TVType;
+        using TVType = typename InitialData<exact>::TVType;
 
         if (tracker)
             tracker->newStage("Enumerating colourings");
@@ -457,8 +457,8 @@ namespace {
 
         // We first sort the edges by degree.
         unsigned long i, j;
-        unsigned long* sortedEdges = new unsigned long[nEdges];
-        unsigned long* edgePos = new unsigned long[nEdges];
+        auto* sortedEdges = new unsigned long[nEdges];
+        auto* edgePos = new unsigned long[nEdges];
 
         for (i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
@@ -481,8 +481,8 @@ namespace {
                 tmp[emb.tetrahedron()->
                     triangle(emb.vertices()[2])->index()] = i;
         }
-        unsigned long* triDone = new unsigned long[nTriangles];
-        unsigned long* triDoneStart = new unsigned long[nEdges + 1];
+        auto* triDone = new unsigned long[nTriangles];
+        auto* triDoneStart = new unsigned long[nEdges + 1];
         triDoneStart[0] = 0;
         for (i = 0; i < nEdges; ++i) {
             triDoneStart[i + 1] = triDoneStart[i];
@@ -496,8 +496,8 @@ namespace {
         for (i = 0; i < nEdges; ++i)
             for (auto& emb : *tri.edge(sortedEdges[i]))
                 tmp[emb.tetrahedron()->index()] = i;
-        unsigned long* tetDone = new unsigned long[nTet];
-        unsigned long* tetDoneStart = new unsigned long[nEdges + 1];
+        auto* tetDone = new unsigned long[nTet];
+        auto* tetDoneStart = new unsigned long[nEdges + 1];
         tetDoneStart[0] = 0;
         for (i = 0; i < nEdges; ++i) {
             tetDoneStart[i + 1] = tetDoneStart[i];
@@ -508,13 +508,13 @@ namespace {
         delete[] tmp;
 
         // Caches for partially computed weights of colourings:
-        TVType* edgeCache = new TVType[nEdges + 1];
+        auto* edgeCache = new TVType[nEdges + 1];
         init.initOne(edgeCache[0]);
 
-        TVType* triangleCache = new TVType[nEdges + 1];
+        auto* triangleCache = new TVType[nEdges + 1];
         init.initOne(triangleCache[0]);
 
-        TVType* tetCache = new TVType[nEdges + 1];
+        auto* tetCache = new TVType[nEdges + 1];
         init.initOne(tetCache[0]);
 
         // Run through all admissible colourings.
@@ -522,7 +522,7 @@ namespace {
         init.initZero(ans);
 
         // Now hunt for colourings.
-        unsigned long* colour = new unsigned long[nEdges];
+        auto* colour = new unsigned long[nEdges];
 
         std::fill(colour, colour + nEdges, 0);
         long curr = 0;
@@ -671,7 +671,7 @@ namespace {
             const Triangulation<3>& tri,
             const InitialData<exact>& init,
             ProgressTracker* tracker) {
-        typedef typename InitialData<exact>::TVType TVType;
+        using TVType = typename InitialData<exact>::TVType;
 
         if (tracker)
             tracker->newStage("Enumerating colourings");
@@ -684,8 +684,8 @@ namespace {
 
         // We first sort the edges by degree.
         unsigned long i;
-        unsigned long* sortedEdges = new unsigned long[nEdges];
-        unsigned long* edgePos = new unsigned long[nEdges];
+        auto* sortedEdges = new unsigned long[nEdges];
+        auto* edgePos = new unsigned long[nEdges];
 
         for (i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
@@ -699,7 +699,7 @@ namespace {
         init.initZero(ans);
 
         // Now hunt for colourings.
-        unsigned long* colour = new unsigned long[nEdges];
+        auto* colour = new unsigned long[nEdges];
 
         std::fill(colour, colour + nEdges, 0);
         long curr = 0;
@@ -826,7 +826,7 @@ namespace {
             const Triangulation<3>& tri,
             InitialData<exact>& init,
             ProgressTracker* tracker) {
-        typedef typename InitialData<exact>::TVType TVType;
+        using TVType = typename InitialData<exact>::TVType;
 
         // Progress:
         // - weight of forget/join bag processing is 0.9
@@ -858,8 +858,7 @@ namespace {
         // of its tetrahedra will be marked as seenDegree[i] = -1 (as
         // opposed to seenDegree[i] = tri.edge(i)->degree()).
         // This is simply to make such a condition easier to test.
-        LightweightSequence<int>* seenDegree =
-            new LightweightSequence<int>[nBags];
+        auto* seenDegree = new LightweightSequence<int>[nBags];
 
         for (bag = d.first(); bag; bag = bag->next()) {
             index = bag->index();
@@ -904,23 +903,19 @@ namespace {
             }
         }
 
-        typedef std::map<LightweightSequence<int>*, TVType,
-            LightweightSequence<int>::Less> SolnSet;
-        typedef typename SolnSet::iterator SolnIterator;
+        using SolnSet = std::map<LightweightSequence<int>, TVType>;
+        using SolnIterator = typename SolnSet::iterator;
 
-        SolnSet** partial = new SolnSet*[nBags];
+        auto* partial = new SolnSet*[nBags];
         std::fill(partial, partial + nBags, nullptr);
 
-        LightweightSequence<int>* seq;
-        SolnIterator it;
         std::pair<SolnIterator, bool> existingSoln;
         int tetEdge[6];
         int colour[6];
         int level;
         bool ok;
-        TVType val;
 
-        size_t* overlap = new size_t[nEdges];
+        auto* overlap = new size_t[nEdges];
         size_t nOverlap;
         SolnIterator *leftIndexed, *rightIndexed;
         size_t nLeft, nRight;
@@ -955,12 +950,14 @@ namespace {
                 }
 
                 // A single empty colouring.
-                seq = new LightweightSequence<int>(nEdges);
-                std::fill(seq->begin(), seq->end(), TV_UNCOLOURED);
+                LightweightSequence<int> seq(nEdges);
+                std::fill(seq.begin(), seq.end(), TV_UNCOLOURED);
+
+                TVType val;
+                init.initOne(val);
 
                 partial[index] = new SolnSet;
-                init.initOne(val);
-                partial[index]->insert(std::make_pair(seq, val));
+                partial[index]->emplace(std::move(seq), std::move(val));
             } else if (bag->type() == NICE_INTRODUCE) {
                 // Introduce bag.
                 if (tracker) {
@@ -974,7 +971,7 @@ namespace {
 
                 child = bag->children();
                 partial[index] = partial[child->index()];
-                partial[child->index()] = 0;
+                partial[child->index()] = nullptr;
             } else if (bag->type() == NICE_FORGET) {
                 // Forget bag.
                 if (tracker) {
@@ -1012,8 +1009,7 @@ namespace {
                 increment = 100.0 / partial[child->index()]->size();
                 percent = 0;
 
-                for (it = partial[child->index()]->begin();
-                        it != partial[child->index()]->end(); ++it) {
+                for (const auto& soln : *partial[child->index()]) {
                     if (tracker) {
                         percent += increment;
                         if (! tracker->setPercent(percent))
@@ -1021,7 +1017,7 @@ namespace {
                     }
                     for (i = 0; i < 6; ++i)
                         colour[i] = (choiceType[i] < 0 ?
-                            (*(it->first))[tetEdge[i]] : -1);
+                            soln.first[tetEdge[i]] : -1);
 
                     level = 5;
                     while (level < 6) {
@@ -1029,7 +1025,7 @@ namespace {
                             // We have an admissible partial colouring.
 
                             // First, compute its (partial) weight:
-                            val = it->second;
+                            TVType val = soln.second;
                             init.tetContrib(tet,
                                 colour[0], colour[1], colour[2],
                                 colour[3], colour[4], colour[5], val);
@@ -1038,26 +1034,24 @@ namespace {
                             // that we will use as a lookup key.
                             // For any edges that never appear beyond
                             // this bag, we mark them for aggregation.
-                            seq = new LightweightSequence<int>(nEdges);
+                            LightweightSequence<int> seq(nEdges);
                             for (i = 0; i < nEdges; ++i)
                                 if (seenDegree[index][i] < 0)
-                                    (*seq)[i] = TV_AGGREGATED;
+                                    seq[i] = TV_AGGREGATED;
                                 else
-                                    (*seq)[i] = (*it->first)[i];
+                                    seq[i] = soln.first[i];
                             for (i = 0; i < 6; ++i)
                                 if (choiceType[i] == 0 &&
-                                        (*seq)[tetEdge[i]] != TV_AGGREGATED)
-                                    (*seq)[tetEdge[i]] = colour[i];
+                                        seq[tetEdge[i]] != TV_AGGREGATED)
+                                    seq[tetEdge[i]] = colour[i];
 
                             // Finally, insert the solution into the
                             // lookup table, aggregating with existing
                             // solutions if need be.
-                            existingSoln = partial[index]->insert(
-                                std::make_pair(seq, val));
-                            if (! existingSoln.second) {
+                            existingSoln = partial[index]->try_emplace(
+                                std::move(seq), std::move(val));
+                            if (! existingSoln.second)
                                 existingSoln.first->second += val;
-                                delete seq;
-                            }
 
                             ++level;
                             while (level < 6 && choiceType[level] != 0)
@@ -1109,10 +1103,8 @@ namespace {
                     }
                 }
 
-                for (auto& soln : *(partial[child->index()]))
-                    delete soln.first;
                 delete partial[child->index()];
-                partial[child->index()] = 0;
+                partial[child->index()] = nullptr;
             } else {
                 // Join bag.
                 if (tracker) {
@@ -1135,15 +1127,18 @@ namespace {
                             seenDegree[sibling->index()][i] != 0)
                     overlap[nOverlap++] = i;
 
-                LightweightSequence<int>::SubsequenceCompareFirstPtr<
-                    SolnIterator> compare(nOverlap, overlap);
+                // The final template argument (which expands to size_t*)
+                // should be deducible, but gcc bug #79501 prevents us from
+                // declaring the appropriate deduction guide.
+                LightweightSequence<int>::SubsequenceCompareFirst<
+                    decltype(overlap)> compare(overlap, overlap + nOverlap);
 
                 if (tracker && tracker->isCancelled())
                     break;
 
                 nLeft = 0;
                 leftIndexed = new SolnIterator[partial[child->index()]->size()];
-                for (it = partial[child->index()]->begin();
+                for (auto it = partial[child->index()]->begin();
                         it != partial[child->index()]->end(); ++it)
                     leftIndexed[nLeft++] = it;
                 std::sort(leftIndexed, leftIndexed + nLeft, compare);
@@ -1154,7 +1149,7 @@ namespace {
                 nRight = 0;
                 rightIndexed = new SolnIterator[
                     partial[sibling->index()]->size()];
-                for (it = partial[sibling->index()]->begin();
+                for (auto it = partial[sibling->index()]->begin();
                         it != partial[sibling->index()]->end(); ++it)
                     rightIndexed[nRight++] = it;
                 std::sort(rightIndexed, rightIndexed + nRight, compare);
@@ -1200,47 +1195,38 @@ namespace {
                             // We have two compatible solutions.
                             // Combine them and store the corresponding
                             // value, again aggregating if necessary.
-                            val = (*subit)->second;
-                            val *= (*subit2)->second;
+                            TVType val = (*subit)->second * (*subit2)->second;
 
-                            seq = new LightweightSequence<int>(nEdges);
+                            LightweightSequence<int> seq(nEdges);
                             for (i = 0; i < nEdges; ++i)
                                 if (seenDegree[index][i] < 0)
-                                    (*seq)[i] = TV_AGGREGATED;
+                                    seq[i] = TV_AGGREGATED;
                                 else if (seenDegree[child->index()][i] > 0)
-                                    (*seq)[i] = (*((*subit)->first))[i];
+                                    seq[i] = ((*subit)->first)[i];
                                 else
-                                    (*seq)[i] = (*((*subit2)->first))[i];
+                                    seq[i] = ((*subit2)->first)[i];
 
-                            existingSoln = partial[index]->insert(
-                                std::make_pair(seq, val));
-                            if (! existingSoln.second) {
+                            existingSoln = partial[index]->try_emplace(
+                                std::move(seq), std::move(val));
+                            if (! existingSoln.second)
                                 existingSoln.first->second += val;
-                                delete seq;
-                            }
                         }
                 }
 
                 delete[] leftIndexed;
                 delete[] rightIndexed;
 
-                for (auto& soln : *(partial[child->index()]))
-                    delete soln.first;
                 delete partial[child->index()];
-                partial[child->index()] = 0;
+                partial[child->index()] = nullptr;
 
-                for (auto& soln : *(partial[sibling->index()]))
-                    delete soln.first;
                 delete partial[sibling->index()];
-                partial[sibling->index()] = 0;
+                partial[sibling->index()] = nullptr;
             }
 
 #ifdef TV_BACKTRACK_DUMP_COLOURINGS
             std::cout << "Bag " << bag->index() << ":" << std::endl;
-            for (it = partial[index]->begin(); it != partial[index]->end();
-                    ++it)
-                std::cout << *(it->first) << " -> "
-                    << it->second << std::endl;
+            for (const auto& soln : partial[index])
+                std::cout << soln.first << " -> " soln.second << std::endl;
 #endif
         }
 
@@ -1256,11 +1242,7 @@ namespace {
             // We don't know which elements of partial[] have been
             // deallocated, so check them all.
             for (i = 0; i < nBags; ++i)
-                if (partial[i]) {
-                    for (auto& soln : *(partial[i]))
-                        delete soln.first;
-                    delete partial[i];
-                }
+                delete partial[i];
             delete[] partial;
 
             return TuraevViroDetails<exact>::zero();
@@ -1273,8 +1255,6 @@ namespace {
         // only one colouring stored (in which all edge colours are aggregated).
         TVType ans = partial[nBags - 1]->begin()->second;
 
-        for (auto& soln : *(partial[nBags - 1]))
-            delete soln.first;
         delete partial[nBags - 1];
         delete[] partial;
 
@@ -1287,7 +1267,7 @@ namespace {
     typename InitialData<exact>::TVType turaevViroPolytope(
             const Triangulation<3>& tri,
             InitialData<exact>& init) {
-        typedef typename InitialData<exact>::TVType TVType;
+        using TVType = typename InitialData<exact>::TVType;
 
         std::vector<std::vector<mpz_class> > input;
         unsigned long nTri = tri.countTriangles();
@@ -1297,24 +1277,23 @@ namespace {
         unsigned long i;
         for (Edge<3>* edge : tri.edges()) {
             for (auto& emb : *edge) {
-                input.push_back(std::vector<mpz_class>());
-                std::vector<mpz_class>& v(input.back());
+                std::vector<mpz_class>& v(input.emplace_back());
                 v.reserve(3 * nTri);
 
                 for (i = 0; i < 3 * nTri; ++i)
-                    v.push_back(long(0));
+                    v.emplace_back(long(0));
 
                 tet = emb.tetrahedron();
                 p = emb.vertices();
 
                 ++v[3 * tet->triangle(p[2])->index() +
-                    tet->triangleMapping(p[2]).preImageOf(p[0])];
+                    tet->triangleMapping(p[2]).pre(p[0])];
                 ++v[3 * tet->triangle(p[2])->index() +
-                    tet->triangleMapping(p[2]).preImageOf(p[1])];
+                    tet->triangleMapping(p[2]).pre(p[1])];
                 --v[3 * tet->triangle(p[3])->index() +
-                    tet->triangleMapping(p[3]).preImageOf(p[0])];
+                    tet->triangleMapping(p[3]).pre(p[0])];
                 --v[3 * tet->triangle(p[3])->index() +
-                    tet->triangleMapping(p[3]).preImageOf(p[1])];
+                    tet->triangleMapping(p[3]).pre(p[1])];
             }
         }
 
@@ -1369,14 +1348,14 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
 
     InitialData<false>::TVType ans;
     switch (alg) {
-        case ALG_TREEWIDTH:
-            ans = turaevViroTreewidth(*this, init, 0);
+        case ALG_BACKTRACK:
+            ans = turaevViroBacktrack(*this, init, nullptr);
             break;
         case ALG_NAIVE:
-            ans = turaevViroNaive(*this, init, 0);
+            ans = turaevViroNaive(*this, init, nullptr);
             break;
         default:
-            ans = turaevViroBacktrack(*this, init, 0);
+            ans = turaevViroTreewidth(*this, init, nullptr);
             break;
     }
     /*
@@ -1410,58 +1389,41 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
     // Have we already calculated this invariant?
     std::pair<unsigned long, bool> tvParams(r, parity);
 #ifndef TV_IGNORE_CACHE
-    TuraevViroSet::const_iterator it = turaevViroCache_.find(tvParams);
-    if (it != turaevViroCache_.end()) {
+    auto it = prop_.turaevViroCache_.find(tvParams);
+    if (it != prop_.turaevViroCache_.end()) {
         if (tracker)
             tracker->setFinished();
         return (*it).second;
     }
 #endif
 
-    if (tracker) {
-        std::thread([=]{
-            // Set up our initial data.
-            InitialData<true> init(r, (parity ? 1 : 0));
+    // Set up our initial data.
+    InitialData<true> init(r, (parity ? 1 : 0));
 
-            InitialData<true>::TVType ans;
-            switch (alg) {
-                case ALG_TREEWIDTH:
-                    ans = turaevViroTreewidth(*this, init, tracker);
-                    break;
-                case ALG_NAIVE:
-                    ans = turaevViroNaive(*this, init, tracker);
-                    break;
-                default:
-                    ans = turaevViroBacktrack(*this, init, tracker);
-                    break;
-            }
-
-            if (! tracker->isCancelled())
-                turaevViroCache_[tvParams] = ans;
-
-            tracker->setFinished();
-        }).detach();
-
-        return Cyclotomic(1); // Zero element of a trivial field.
-    } else {
-        // Set up our initial data.
-        InitialData<true> init(r, (parity ? 1 : 0));
-
-        InitialData<true>::TVType ans;
-        switch (alg) {
-            case ALG_TREEWIDTH:
-                ans = turaevViroTreewidth(*this, init, tracker);
-                break;
-            case ALG_NAIVE:
-                ans = turaevViroNaive(*this, init, tracker);
-                break;
-            default:
-                ans = turaevViroBacktrack(*this, init, tracker);
-                break;
-        }
-
-        return (turaevViroCache_[tvParams] = ans);
+    InitialData<true>::TVType ans;
+    switch (alg) {
+        case ALG_BACKTRACK:
+            ans = turaevViroBacktrack(*this, init, tracker);
+            break;
+        case ALG_NAIVE:
+            ans = turaevViroNaive(*this, init, tracker);
+            break;
+        default:
+            ans = turaevViroTreewidth(*this, init, tracker);
+            break;
     }
+
+    if (tracker) {
+        if (tracker->isCancelled()) {
+            tracker->setFinished();
+            return Cyclotomic();
+        } else {
+            prop_.turaevViroCache_[tvParams] = ans;
+            tracker->setFinished();
+            return ans;
+        }
+    } else
+        return (prop_.turaevViroCache_[tvParams] = std::move(ans));
 }
 
 } // namespace regina

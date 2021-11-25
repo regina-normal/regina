@@ -47,557 +47,424 @@
 #include "algebra/abeliangroup.h"
 #include "hypersurface/hypercoords.h"
 #include "maths/vector.h"
+#include "packet/packet.h"
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
+#include "utilities/snapshot.h"
 
 namespace regina {
 
 /**
- * \addtogroup hypersurface Normal Hypersurfaces
+ * \defgroup hypersurface Normal Hypersurfaces
  * Normal hypersurfaces in 4-manifold triangulations.
- * @{
  */
+
+class NormalHypersurfaces;
 
 template <typename, bool> class Matrix;
-typedef Matrix<Integer, true> MatrixInt;
-
-/**
- * A template that stores information about a particular
- * normal hypersurface coordinate system.  Much of this information is
- * given in the form of compile-time constants and types.
- *
- * To iterate through cases for a given value of HyperCoords that is not
- * known until runtime, see the various forCoords() routines defined in
- * hscoordregistry.h.
- *
- * This HyperInfo template should only be defined for \a coordType
- * arguments that represent coordinate systems in which you can create
- * and store normal hypersurfaces within 4-manifold triangulations.
- *
- * At a bare minimum, each specialisation of this template must provide:
- *
- * - a typedef \a Class that represents the corresponding
- *   NormalHypersurfaceVector subclass;
- * - a static constexpr member <tt>const char* name</tt>, which gives
- *   the human-readable name of the coordinate system;
- * - a static constexpr function <tt>size_t dimension(size_t)</tt> which,
- *   given the number of pentachora in a triangulation, returns the
- *   dimension of the coordinate system (i.e., the length of the vector).
- *
- * \ifacespython Not present.
- *
- * \tparam coordType one of the #HyperCoords constants, indicating which
- * coordinate system we are querying.
- */
-template <HyperCoords coordType>
-struct HyperInfo;
-
-/**
- * Defines various constants, types and virtual functions for a subclass
- * of NormalHypersurfaceVector.
- *
- * Every subclass of NormalHypersurfaceVector \a must include
- * REGINA_NORMAL_HYPERSURFACE_FLAVOUR at the beginning of the class definition.
- *
- * This macro provides the class with:
- *
- * - a compile-time enum constant \a coordsID, which is equal to the
- *   corresponding HyperCoords constant;
- * - a typedef \a Info, which refers to the corresponding specialisation 
- *   of the HyperInfo<> tempate;
- * - a copy constructor that takes a vector of the same subclass;
- * - declarations and implementations of the virtual function
- *   NormalHypersurfaceVector::clone().
- *
- * @param class_ the name of this subclass of NormalHypersurfaceVector.
- * @param id the corresponding NNormalCoords constant.
- * @param superclass the vector class from which \a class_ is derived.
- * This is typically NormalHypersurfaceVector, though in some cases
- * (e.g., prism coordinates) it may be different.
- */
-#define REGINA_NORMAL_HYPERSURFACE_FLAVOUR(class_, id, superclass) \
-    public: \
-        typedef HyperInfo<id> Info; \
-        static constexpr const HyperCoords coordsID = id; \
-        inline class_(const class_& cloneMe) : \
-                superclass(cloneMe.coords()) {} \
-        inline virtual NormalHypersurfaceVector* clone() const override { \
-            return new class_(*this); \
-        }
-
-/**
- * Stores the vector of a single normal hypersurface in a 4-manifold
- * triangulation.  The different subclasses of NormalHypersurfaceVector use
- * different underlying coordinate systems for the normal solution space.
- * However, the various coordinate retrieval routines will return values
- * that are independent of the underlying coordinate system.  Thus the
- * coordinates of the normal hypersurface in any coordinate system can be
- * determined without knowledge of the specific underlying coordinate
- * system being used.
- *
- * Note that non-compact hypersurfaces (surfaces with infinitely many pieces)
- * are allowed; in these cases, the corresponding coordinate lookup routines
- * should return LargeInteger::infinity where appropriate.
- *
- * All subclasses of NormalHypersurfaceVector <b>must</b> have the following
- * properties:
- *
- * - Normal hypersurfaces can be enumerated by intersecting the non-negative
- *   orthant of the underlying vector space with some linear subspace;
- *
- * - Adding two normal hypersurfaces corresponds to adding the two underlying
- *   vectors.
- *
- * <b>When deriving classes from NormalHypersurfaceVector:</b>
- * <ul>
- *   <li>A new value must be added to the HyperCoords enum in hypercoords.h
- *   to represent the new coordinate system.</li>
- *   <li>The file hscoordregistry-impl.h must be updated to reflect the new
- *   coordinate system (the file itself contains instructions on
- *   how to do this).</li>
- *   <li>A corresponding specialisation of HyperInfo<> must be defined,
- *   typically in the same header as the new vector subclass.</li>
- *   <li>The macro REGINA_NORMAL_HYPERSURFACE_FLAVOUR must be added to
- *   the beginning of the new vector subclass.  This will declare and
- *   define various constants, typedefs and virtual functions (see the
- *   REGINA_NORMAL_HYPERSURFACE_FLAVOUR macro documentation for details).</li>
- *   <li>A constructor <tt>class(size_t length)</tt> and a template constructor
- *   <tt>class(const Vector<T>& cloneMe)</tt> must be
- *   declared and implemented; these will usually just call the
- *   corresponding superclass constructors.</li>
- *   <li>All abstract functions must be implemented, except for those
- *   already provided by REGINA_NORMAL_HYPERSURFACE_FLAVOUR.
- *   Note that coordinate functions such as tetrahedra() must return the
- *   \e total number of pieces of the requested type; if your new coordinate
- *   system adorns pieces with extra information (such as orientation) then
- *   your implementation must compute the appropriate sum.</li>
- *   <li>Static public functions
- *   std::optional<MatrixInt> makeMatchingEquations(const Triangulation<4>&) and
- *   makeEmbeddedConstraints(const Triangulation<4>&) must be declared and
- *   implemented.</li>
- * </ul>
- *
- * \ifacespython The base class NormalHypersurfaceVector is available, but
- * the subclasses for individual coordinate systems are not.
- */
-class NormalHypersurfaceVector : public ShortOutput<NormalHypersurfaceVector> {
-    public:
-        typedef LargeInteger Element;
-            /**< The type of each element in the vector. */
-
-    protected:
-        Vector<LargeInteger> coords_;
-            /**< The raw vector of normal coordinates. */
-
-    public:
-        /**
-         * Creates a new vector all of whose entries are initialised to
-         * zero.
-         *
-         * \ifacespython Not present, since this is an abstract base class
-         * and it cannot be instantiated directly.
-         *
-         * @param length the number of elements in the new vector.
-         */
-        NormalHypersurfaceVector(size_t length);
-        /**
-         * Creates a new vector that is a clone of the given vector.
-         *
-         * \ifacespython Not present, since this is an abstract base class
-         * and it cannot be instantiated directly.
-         *
-         * @param cloneMe the vector to clone.
-         */
-        template <typename T>
-        NormalHypersurfaceVector(const Vector<T>& cloneMe);
-
-        /**
-         * A virtual destructor.  This is required because here we
-         * introduce virtual functions into the Vector hierarchy.
-         */
-        virtual ~NormalHypersurfaceVector();
-
-        /**
-         * Gives read-only access to the underlying vector of coordinates.
-         *
-         * @return the vector of coordinates.
-         */
-        const Vector<LargeInteger>& coords() const;
-
-        /**
-         * Creates a newly allocated clone of this vector.
-         * The clone will be of the same subclass of NormalHypersurfaceVector
-         * as this vector.
-         */
-        virtual NormalHypersurfaceVector* clone() const = 0;
-
-        /**
-         * Returns the number of coordinates in the underlying vector.
-         *
-         * @return the number of coordinates.
-         */
-        size_t size() const;
-
-        /**
-         * Returns the given coordinate from the underlying vector.
-         *
-         * @param index the index of the coordinate to retrieve; this
-         * must be between 0 and size()-1 inclusive.
-         * @return the coordinate at the given index.
-         */
-        const LargeInteger& operator [] (size_t index) const;
-
-        /**
-         * Sets the given normal coordinate to the given value.
-         *
-         * The default implementation simply sets the coordinate in the
-         * underlying vector.  Subclasses should reimplement this if they
-         * carry any additional information that also need adjusting.
-         *
-         * \warning Before Regina 6.1, this routine was named setElement().
-         * It is now named set(), and if you have subclasses that reimplement
-         * it then it should be renamed accordingly in these subclasses also.
-         *
-         * @param index the index of the coordinate to set; this must e
-         * between 0 and size()-1 inclusive.
-         * @param value the new value to assign to the given coordinate.
-         */
-        virtual void set(size_t index, const LargeInteger& value);
-
-        /**
-         * Adds the given vector to this vector.
-         * This behaves correctly in the case where \a other is \c this.
-         *
-         * The default implementation simply adds the coordinates of the
-         * underlying vectors.  Subclasses should reimplement this if they
-         * carry any additional information that also need adjusting.
-         *
-         * \pre This and the given vector represent normal hypersurfaces in
-         * the same triangulation, and use the same normal coordinate system.
-         *
-         * @param other the vector to add to this vector.
-         * @return a reference to this vector.
-         */
-        virtual NormalHypersurfaceVector& operator += (
-            const NormalHypersurfaceVector& other);
-
-        /**
-         * Scales this vector down by the greatest common divisor of all
-         * its elements.  The resulting vector will be the smallest
-         * multiple of the original that maintains integral entries, and
-         * these entries will have the same signs as the originals.
-         *
-         * This routine poses no problem for vectors containing infinite
-         * elements; such elements are simply ignored and left at
-         * infinity.
-         *
-         * The default implementation simply scales down the underlying vector.
-         * Subclasses should reimplement this if they carry any additional
-         * information that also needs adjusting.
-         */
-        virtual void scaleDown();
-
-        /**
-         * Determines if the normal hypersurface represented is compact (has
-         * finitely many pieces).
-         *
-         * The default implementation for this routine simply runs
-         * through every piece type until a piece type with infinite piece
-         * count is found or all piece types have been examined.
-         * Subclasses of NormalHypersurfaceVector should override this if
-         * they can provide a faster implementation.
-         *
-         * @param triang the triangulation in which this normal hypersurface
-         * lives.
-         * @return \c true if and only if the normal hypersurface represented
-         * is compact.
-         */
-        virtual bool isCompact(const Triangulation<4>& triang) const;
-        /**
-         * Determines if the normal hypersurface represented is vertex
-         * linking.  A <i>vertex linking</i> hypersurface contains only
-         * tetrahedra.
-         *
-         * The default implementation for this routine simply runs
-         * through every non-tetrahedron piece type ensuring that each
-         * has no corresponding pieces.
-         * Subclasses of NormalHypersurfaceVector should override this if
-         * they can provide a faster implementation.
-         *
-         * @param triang the triangulation in which this normal hypersurface
-         * lives.
-         * @return \c true if and only if the normal hypersurface represented
-         * is vertex linking.
-         */
-        virtual bool isVertexLinking(const Triangulation<4>& triang) const;
-        /**
-         * Determines if a rational multiple of the normal hypersurface
-         * represented is the link of a single vertex.
-         *
-         * The default implementation for this routine involves counting the
-         * number of pieces of every type.
-         * Subclasses of NormalSurfaceVector should override this if
-         * they can provide a faster implementation.
-         *
-         * @param triang the triangulation in which this normal hypersurface
-         * lives.
-         * @return the vertex linked by this hypersurface, or \c null if this
-         * hypersurface is not the link of a single vertex.
-         */
-        virtual const Vertex<4>* isVertexLink(const Triangulation<4>& triang)
-            const;
-        /**
-         * Determines if a rational multiple of the normal hypersurface
-         * represented is the thin link of a single edge.
-         *
-         * The default implementation for this routine involves counting the
-         * number of pieces of every type.
-         * Subclasses of NormalHypersurfaceVector should override this if
-         * they can provide a faster implementation.
-         *
-         * @param triang the triangulation in which this normal hypersurface
-         * lives.
-         * @return the edge linked by this hypersurface, or \c null if this
-         * hypersurface is not a thin edge link.
-         */
-        virtual const Edge<4>* isThinEdgeLink(const Triangulation<4>& triang)
-            const;
-
-        /**
-         * Returns the number of tetrahedron pieces of the given type in
-         * this normal hypersurface.
-         * See NormalHypersurface::tetrahedra() for further details.
-         *
-         * @param pentIndex the index in the triangulation of the
-         * pentachoron in which the requested tetrahedron pieces reside;
-         * this should be between 0 and Triangulation<4>::size()-1 inclusive.
-         * @param vertex the vertex of the given pentachoron around
-         * which the requested tetrahedron pieces lie; this should be between
-         * 0 and 4 inclusive.
-         * @param triang the triangulation in which this normal hypersurface
-         * lives.
-         * @return the number of tetrahedron pieces of the given type.
-         */
-        virtual LargeInteger tetrahedra(size_t pentIndex,
-            int vertex, const Triangulation<4>& triang) const = 0;
-        /**
-         * Returns the number of prism pieces of the given type
-         * in this normal hypersurface.
-         * See NormalHypersurface::prisms() for further details.
-         *
-         * @param pentIndex the index in the triangulation of the
-         * pentachoron in which the requested prism pieces reside;
-         * this should be between 0 and Triangulation<4>::size()-1 inclusive.
-         * @param prismType specifies the edge of the given pentachoron that
-         * this prism separates from the opposite triangle;
-         * this should be between 0 and 9 inclusive.
-         * @param triang the triangulation in which this normal hypersurface
-         * lives.
-         * @return the number of prism pieces of the given type.
-         */
-        virtual LargeInteger prisms(size_t pentIndex,
-            int prismType, const Triangulation<4>& triang) const = 0;
-        /**
-         * Returns the number of times this normal hypersurface crosses the
-         * given edge.
-         * See NormalHypersurface::edgeWeight() for further details.
-         *
-         * @param edgeIndex the index in the triangulation of the edge
-         * in which we are interested; this should be between 0 and
-         * Triangulation<4>::countEdges()-1 inclusive.
-         * @param triang the triangulation in which this normal hypersurface
-         * lives.
-         * @return the number of times this normal hypersurface crosses the
-         * given edge.
-         */
-        virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const Triangulation<4>& triang) const = 0;
-
-        /**
-         * Generates the set of normal hypersurface matching equations for
-         * the given triangulation using the coordinate
-         * system corresponding to this particular subclass of
-         * NormalHypersurfaceVector.
-         *
-         * See ::makeMatchingEquations() for further details.
-         *
-         * \ifacespython Not present; use the global
-         * regina::makeMatchingEquations() instead.
-         *
-         * @param triangulation the triangulation upon which these
-         * matching equations will be based.
-         * @return the set of normal hypersurface matching equations.
-         */
-        #ifdef __DOXYGEN
-            static std::optional<MatrixInt> makeMatchingEquations(
-                const Triangulation<4>& triangulation);
-        #endif
-        /**
-         * Creates a new set of validity constraints representing
-         * the condition that normal hypersurfaces be embedded.  The
-         * validity constraints will be expressed relative to the
-         * coordinate system corresponding to this particular
-         * subclass of NormalHypersurfaceVector.
-         *
-         * \ifacespython Not present; use the global
-         * regina::makeEmbeddedConstraints() instead.
-         *
-         * @param triangulation the triangulation upon which these
-         * validity constraints will be based.
-         * @return a newly allocated set of constraints.
-         */
-        #ifdef __DOXYGEN
-            static EnumConstraints makeEmbeddedConstraints(
-                const Triangulation<4>& triangulation);
-        #endif
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-
-        // Make this class non-assignable, since we do not want to
-        // accidentally change coordinate systems.
-        NormalHypersurfaceVector& operator = (
-            const NormalHypersurfaceVector&) = delete;
-};
+using MatrixInt = Matrix<Integer, true>;
 
 /**
  * Represents a single normal hypersurface in a 4-manifold triangulation.
- * Once the underlying triangulation changes, this normal hypersurface object
- * is no longer valid.
  *
- * The information provided by the various query methods is independent
- * of the underlying coordinate system being used.
- * See the NormalHypersurfaceVector class notes for details of what to do
- * when introducing a new coordinate system.
+ * The normal hypersurface is described internally by an integer vector
+ * (discussed in more detail below).  Since different hypersurfaces may use
+ * different vector encodings, you should not rely on the raw vector
+ * entries unless absolutely necessary.  Instead, the query routines
+ * such as tetrahedra(), prisms(), edgeWeight() and so on are independent
+ * of the underlying vector encoding being used.
  *
- * Note that non-compact surfaces (surfaces with infinitely many pieces,
+ * Note that non-compact hypersurfaces (surfaces with infinitely many pieces)
  * are allowed; in these cases, the corresponding coordinate lookup routines
  * will return LargeInteger::infinity where appropriate.
+ *
+ * Since Regina 7.0, you can modify or even destroy the original
+ * triangulation that was used to create this normal hypersurface.  If you do,
+ * then this normal hypersurface will automatically make a private copy of
+ * the original triangulation as an ongoing reference.  Different normal
+ * hypersurfaces can all share the same private copy, so this is not an
+ * expensive process.
+ *
+ * Internally, a normal hypersurface is represented by a Vector<LargeInteger>
+ * (possibly using a different coordinate system from the one in which
+ * the hypersurfaces were originally enumerated).  This contains a block of
+ * coordinates for each pentachoron, in order from the first pentachoron
+ * to the last.  Each block begins with five tetrahedron coordinates (always),
+ * followed by ten prisms coordinates (always) - unlike the 3-dimensional
+ * world, there are currently no optional coordinates that might or might not
+ * be stored (though this could change in future versions of Regina).
+ * Therefore the vector that is stored will always have length 15<i>n</i>,
+ * where \a n is the number of pentachora in the underlying triangulation.
+ *
+ * When adding support for a new coordinate system:
+ *
+ * - The file hypercoords.h must be updated.  This includes a new enum
+ *   value for HyperCoords, a new case for the HyperEncoding constructor,
+ *   and new cases for the functions in HyperInfo.  Do not forget to
+ *   update the python bindings for HyperCoords also.
+ *
+ * - The global routines makeEmbeddedConstraints() and makeMatchingEquations()
+ *   should be updated to incorporate the new coordinate system.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
+ *
+ * \ingroup hypersurface
  */
 class NormalHypersurface : public ShortOutput<NormalHypersurface> {
     protected:
-        NormalHypersurfaceVector* vector_;
-            /**< Contains the coordinates of the normal hypersurface in
-             *   whichever space is appropriate. */
-        const Triangulation<4>* triangulation_;
-            /**< The triangulation in which this normal hypersurface resides.
-                 This must never be \c null. */
+        HyperEncoding enc_;
+            /**< The specific encoding of a normal hypersurface used by the
+                 coordinate vector. */
+        Vector<LargeInteger> vector_;
+            /**< Contains the coordinates of the normal hypersurface. */
+        SnapshotRef<Triangulation<4>> triangulation_;
+            /**< The triangulation in which this normal hypersurface resides. */
 
         std::string name_;
             /**< An optional name associated with this hypersurface. */
 
         mutable std::optional<bool> orientable_;
-            /**< Is this hypersurface orientable? */
+            /**< Is this hypersurface orientable?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> twoSided_;
-            /**< Is this hypersurface two-sided? */
+            /**< Is this hypersurface two-sided?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> connected_;
-            /**< Is this hypersurface connected? */
+            /**< Is this hypersurface connected?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> realBoundary_;
             /**< Does this hypersurface have real boundary (i.e. does it meet
-                 any boundary facets)? */
+                 any boundary facets)?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<bool> compact_;
             /**< Is this hypersurface compact (i.e., does it only
-                 contain finitely many pieces)? */
+                 contain finitely many pieces)?
+                 This is std::nullopt if it has not yet been computed. */
         mutable std::optional<AbelianGroup> H1_;
-            /**< First homology group of the hypersurface. */
+            /**< First homology group of the hypersurface.
+                 This is std::nullopt if it has not yet been computed. */
 
     public:
         /**
          * Creates a new copy of the given normal hypersurface.
-         *
-         * @param other the normal hypersurface to clone.
          */
-        NormalHypersurface(const NormalHypersurface& other);
+        NormalHypersurface(const NormalHypersurface&) = default;
 
         /**
-         * Creates a new copy of the given normal hypersurface.
+         * Creates a new copy of the given normal hypersurface, but
+         * relocated to the given triangulation.
+         *
+         * A snapshot will be taken of the given triangulation as it appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal hypersurface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
          *
          * \pre The given triangulation is either the same as, or is
          * combinatorially identical to, the triangulation in which
-         * \a other resides.
+         * \a src resides.
          *
-         * @param other the normal hypersurface to clone.
+         * @param src the normal hypersurface to copy.
          * @param triangulation the triangulation in which this new
          * hypersurface will reside.
          */
-        NormalHypersurface(const NormalHypersurface& other,
+        NormalHypersurface(const NormalHypersurface& src,
             const Triangulation<4>& triangulation);
+
+        /**
+         * Creates a new copy of the given normal hypersurface, but
+         * relocated to the given triangulation.
+         *
+         * \pre The given triangulation is either the same as, or is
+         * combinatorially identical to, the triangulation in which
+         * \a src resides.
+         *
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation.
+         *
+         * @param src the normal hypersurface to copy.
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this new hypersurface will reside.
+         */
+        NormalHypersurface(const NormalHypersurface& src,
+            const SnapshotRef<Triangulation<4>>& triangulation);
 
         /**
          * Moves the given hypersurface into this new normal hypersurface.
          * This is a fast (constant time) operation.
          *
-         * The hypersurface that is passed (\a src) will no longer be usable.
-         *
-         * @param src the normal hypersurface to move.
+         * The hypersurface that is passed will no longer be usable.
          */
-        NormalHypersurface(NormalHypersurface&& src) noexcept;
+        NormalHypersurface(NormalHypersurface&&) noexcept = default;
 
         /**
          * Creates a new normal hypersurface inside the given triangulation
-         * with the given coordinate vector.
+         * with the given coordinate vector, using the given vector encoding.
          *
-         * This normal hypersurface will claim ownership of the given vector
-         * (i.e., you should not change or delete the vector yourself
-         * afterwards).
+         * There is no guarantee that this hypersurface will keep the given
+         * encoding: NormalHypersurface will sometimes convert the vector to
+         * use a different encoding for its own internal storage.
          *
-         * \pre The given coordinate vector represents a
-         * normal hypersurface inside the given triangulation.
-         * \pre The given coordinate vector cannot be the null pointer.
+         * Despite what is said in the class notes, it is okay if the
+         * given vector encoding does not include tetrahedron coordinates.
+         * (If this is the case, the vector will be converted automatically.)
          *
-         * \ifacespython Not present.
+         * A snapshot will be taken of the given triangulation as it appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal hypersurface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
          *
-         * @param triangulation the triangulation in which this normal
-         * hypersurface resides.
-         * @param vector a vector containing the coordinates of the
-         * normal hypersurface in whichever space is appropriate.
-         */
-        NormalHypersurface(const Triangulation<4>& triangulation,
-            NormalHypersurfaceVector* vector);
-
-        /**
-         * A Python-only routine that creates a new normal hypersurface
-         * inside the given triangulation with the given coordinate vector.
+         * \pre The given coordinate vector does indeed represent a normal
+         * hypersurface inside the given triangulation, using the given
+         * encoding.  This will not be checked!
          *
-         * \pre The given coordinate system is one in which Regina is
-         * able to enumerate and store normal hypersurfaces (not a system
-         * like regina::HS_EDGE_WEIGHT, which is for viewing purposes only).
-         * \pre The given coordinate vector represents a normal hypersurface
-         * inside the given triangulation (in particular, it satisfies the
-         * relevant system of matching equations).  This will not be checked,
-         * and things \e will go wrong if you break it.
-         *
-         * \ifacescpp Not available; this routine is for Python only.
+         * \ifacespython Instead of a Vector<LargeInteger>, you may (if
+         * you prefer) pass a Python list of integers.
          *
          * @param triang the triangulation in which this normal hypersurface
          * resides.
-         * @param coordSystem the coordinate system used by this normal
+         * @param enc indicates precisely how the given vector encodes a normal
          * hypersurface.
-         * @param allCoords the corresponding vector of normal coordinates,
-         * expressed as a Python list.  The list elements will be
-         * converted internally to LargeInteger objects.
+         * @param vector a vector containing the coordinates of the normal
+         * hypersurface.
          */
-        #ifdef __DOXYGEN
-        NormalHypersurface(const Triangulation<4>& triang,
-            HyperCoords coordSystem, List allCoords);
-        #endif
+        NormalHypersurface(const Triangulation<4>& triang, HyperEncoding enc,
+            const Vector<LargeInteger>& vector);
 
         /**
-         * Destroys this normal hypersurface.
-         * The underlying vector of coordinates will also be deallocated.
+         * Creates a new normal hypersurface inside the given triangulation
+         * with the given coordinate vector, using the given vector encoding.
+         *
+         * There is no guarantee that this hypersurface will keep the given
+         * encoding: NormalHypersurface will sometimes convert the vector to
+         * use a different encoding for its own internal storage.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given vector encoding does not include tetrahedron coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * A snapshot will be taken of the given triangulation as it appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal hypersurface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * hypersurface inside the given triangulation, using the given
+         * encoding.  This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * copies \a vector.
+         *
+         * @param triang the triangulation in which this normal hypersurface
+         * resides.
+         * @param enc indicates precisely how the given vector encodes a normal
+         * hypersurface.
+         * @param vector a vector containing the coordinates of the normal
+         * hypersurface.
          */
-        ~NormalHypersurface();
+        NormalHypersurface(const Triangulation<4>& triang, HyperEncoding enc,
+            Vector<LargeInteger>&& vector);
+
+        /**
+         * Creates a new normal hypersurface inside the given triangulation
+         * with the given coordinate vector, using the given vector encoding.
+         *
+         * There is no guarantee that this hypersurface will keep the given
+         * encoding: NormalHypersurface will sometimes convert the vector to
+         * use a different encoding for its own internal storage.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given vector encoding does not include tetrahedron coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * hypersurface inside the given triangulation, using the given
+         * encoding.  This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation.
+         *
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this normal hypersurface resides.
+         * @param enc indicates precisely how the given vector encodes a normal
+         * hypersurface.
+         * @param vector a vector containing the coordinates of the normal
+         * hypersurface.
+         */
+        NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
+            HyperEncoding enc, const Vector<LargeInteger>& vector);
+
+        /**
+         * Creates a new normal hypersurface inside the given triangulation
+         * with the given coordinate vector, using the given vector encoding.
+         *
+         * There is no guarantee that this hypersurface will keep the given
+         * encoding: NormalHypersurface will sometimes convert the vector to
+         * use a different encoding for its own internal storage.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given vector encoding does not include tetrahedron coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * hypersurface inside the given triangulation, using the given
+         * encoding.  This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation and copies \a vector.
+         *
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this normal hypersurface resides.
+         * @param enc indicates precisely how the given vector encodes a normal
+         * hypersurface.
+         * @param vector a vector containing the coordinates of the normal
+         * hypersurface.
+         */
+        NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
+            HyperEncoding enc, Vector<LargeInteger>&& vector);
+
+        /**
+         * Creates a new normal hypersurface inside the given triangulation
+         * with the given coordinate vector, using the given coordinate system.
+         *
+         * It is assumed that this hypersurface uses the vector encoding
+         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * if you are extracting the vector from some other normal hypersurface,
+         * since Regina may internally convert to use a different encoding from
+         * whatever was used during enumeration and/or read from file.
+         * In the same spirit, there is no guarantee that this hypersurface will
+         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given coordinate system does not include tetrahedron coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * A snapshot will be taken of the given triangulation as it appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal hypersurface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * hypersurface inside the given triangulation, using the encoding
+         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         *
+         * \ifacespython Instead of a Vector<LargeInteger>, you may (if
+         * you prefer) pass a Python list of integers.
+         *
+         * @param triang the triangulation in which this normal hypersurface
+         * resides.
+         * @param coords the coordinate system from which the vector
+         * encoding will be deduced.
+         * @param vector a vector containing the coordinates of the normal
+         * hypersurface.
+         */
+        NormalHypersurface(const Triangulation<4>& triang, HyperCoords coords,
+            const Vector<LargeInteger>& vector);
+
+        /**
+         * Creates a new normal hypersurface inside the given triangulation
+         * with the given coordinate vector, using the given coordinate system.
+         *
+         * It is assumed that this hypersurface uses the vector encoding
+         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * if you are extracting the vector from some other normal hypersurface,
+         * since Regina may internally convert to use a different encoding from
+         * whatever was used during enumeration and/or read from file.
+         * In the same spirit, there is no guarantee that this hypersurface will
+         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given coordinate system does not include tetrahedron coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * A snapshot will be taken of the given triangulation as it appears
+         * right now.  You may change or even delete the triangulation later
+         * on; if so, then this normal hypersurface will still refer to the
+         * frozen snapshot that was taken at the time of construction.
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * hypersurface inside the given triangulation, using the encoding
+         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * copies \a vector.
+         *
+         * @param triang the triangulation in which this normal hypersurface
+         * resides.
+         * @param coords the coordinate system from which the vector
+         * encoding will be deduced.
+         * @param vector a vector containing the coordinates of the normal
+         * hypersurface.
+         */
+        NormalHypersurface(const Triangulation<4>& triang, HyperCoords coords,
+            Vector<LargeInteger>&& vector);
+
+        /**
+         * Creates a new normal hypersurface inside the given triangulation
+         * with the given coordinate vector, using the given coordinate system.
+         *
+         * It is assumed that this hypersurface uses the vector encoding
+         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * if you are extracting the vector from some other normal hypersurface,
+         * since Regina may internally convert to use a different encoding from
+         * whatever was used during enumeration and/or read from file.
+         * In the same spirit, there is no guarantee that this hypersurface will
+         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given coordinate system does not include tetrahedron coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * hypersurface inside the given triangulation, using the encoding
+         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation.
+         *
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this normal hypersurface resides.
+         * @param coords the coordinate system from which the vector
+         * encoding will be deduced.
+         * @param vector a vector containing the coordinates of the normal
+         * hypersurface.
+         */
+        NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
+            HyperCoords coords, const Vector<LargeInteger>& vector);
+
+        /**
+         * Creates a new normal hypersurface inside the given triangulation
+         * with the given coordinate vector, using the given coordinate system.
+         *
+         * It is assumed that this hypersurface uses the vector encoding
+         * described by <tt>HyperEncoding(coords)</tt>.  Be careful with this
+         * if you are extracting the vector from some other normal hypersurface,
+         * since Regina may internally convert to use a different encoding from
+         * whatever was used during enumeration and/or read from file.
+         * In the same spirit, there is no guarantee that this hypersurface will
+         * use <tt>HyperEncoding(coords)</tt> as its internal encoding method.
+         *
+         * Despite what is said in the class notes, it is okay if the
+         * given coordinate system does not include tetrahedron coordinates.
+         * (If this is the case, the vector will be converted automatically.)
+         *
+         * \pre The given coordinate vector does indeed represent a normal
+         * hypersurface inside the given triangulation, using the encoding
+         * <tt>HyperEncoding(coords)</tt>.  This will not be checked!
+         *
+         * \ifacespython Not present, but you can use the version that
+         * takes a "pure" triangulation and copies \a vector.
+         *
+         * @param triangulation a snapshot, frozen in time, of the
+         * triangulation in which this normal hypersurface resides.
+         * @param coords the coordinate system from which the vector
+         * encoding will be deduced.
+         * @param vector a vector containing the coordinates of the normal
+         * hypersurface.
+         */
+        NormalHypersurface(const SnapshotRef<Triangulation<4>>& triang,
+            HyperCoords coords, Vector<LargeInteger>&& vector);
 
         /**
          * Deprecated routine that creates a newly allocated clone of this
@@ -623,10 +490,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * This operator induces a deep copy of the given normal hypersurface.
          *
-         * @param value the normal hypersurface to copy.
          * @return a reference to this normal hypersurface.
          */
-        NormalHypersurface& operator = (const NormalHypersurface& value);
+        NormalHypersurface& operator = (const NormalHypersurface&) = default;
 
         /**
          * Moves the contents of the given normal hypersurface to this
@@ -638,12 +504,12 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * these properties differs then this hypersurface will be adjusted
          * accordingly.
          *
-         * The hypersurface that was passed (\a value) will no longer be usable.
+         * The hypersurface that was passed will no longer be usable.
          *
-         * @param value the normal hypersurface to move.
          * @return a reference to this normal hypersurface.
          */
-        NormalHypersurface& operator = (NormalHypersurface&& value) noexcept;
+        NormalHypersurface& operator = (NormalHypersurface&&) noexcept =
+            default;
 
         /**
          * Swaps the contents of this and the given normal hypersurface.
@@ -668,16 +534,29 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         NormalHypersurface doubleHypersurface() const;
 
         /**
+         * Returns the sum of this and the given hypersurface.  This will
+         * combine all tetrahedra and/or prisms from both surfaces.
+         *
+         * The two hypersurfaces do not need to use the same coordinate system
+         * and/or internal vector encodings.  Moreover, the resulting
+         * hypersurface might well use an encoding different from both of these,
+         * or even a hybrid encoding that does not come from one of
+         * Regina's ready-made coordinate systems.
+         *
+         * \pre Both this and the given normal hypersurface use the same
+         * underlying triangulation.
+         *
+         * @param rhs the hypersurface to sum with this.
+         * @return the sum of both normal hypersurfaces.
+         */
+        NormalHypersurface operator + (const NormalHypersurface& rhs) const;
+
+        /**
          * Returns the number of tetrahedron pieces of the given type in
          * this normal hypersurface.
          * A tetrahedron piece type is identified by specifying a
          * pentachoron and a vertex of that pentachoron that the
          * tetrahedron surrounds.
-         *
-         * If you are using a coordinate system that adorns pieces with
-         * additional information (such as orientation), this routine
-         * returns the \e total number of tetrahedra in the given
-         * pentachoron of the given type.
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested pieces reside;
@@ -695,11 +574,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * pentachoron and an edge of that pentachoron; prisms of this
          * type will then separate edge \a i of the pentachoron from
          * triangle \a i of the pentachoron.
-         *
-         * If you are using a coordinate system that adorns pieces with
-         * additional information (such as orientation), this routine
-         * returns the \e total number of prisms in the given
-         * pentachoron of the given type.
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested prisms reside;
@@ -723,14 +597,26 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         LargeInteger edgeWeight(size_t edgeIndex) const;
 
         /**
-         * Returns the number of coordinates in the specific underlying
-         * coordinate system being used.
-         *
-         * @return the number of coordinates.
-         */
-        size_t countCoords() const;
-        /**
          * Returns the triangulation in which this normal hypersurface resides.
+         *
+         * This will be a snapshot frozen in time of the triangulation
+         * that was originally passed to the NormalHypersurface constructor.
+         *
+         * This will return a correct result even if the original triangulation
+         * has since been modified or destroyed.  However, in order to ensure
+         * this behaviour, it is possible that at different points in time
+         * this function may return references to different C++ objects.
+         *
+         * The rules for using the triangulation() reference are:
+         *
+         * - Do not keep the resulting reference as a long-term reference or
+         *   pointer of your own, since in time you may find yourself referring
+         *   to the wrong object (see above).  Just call this function again.
+         *
+         * - You must respect the read-only nature of the result (i.e.,
+         *   you must not cast the constness away).  The snapshotting
+         *   process detects modifications, and modifying the frozen
+         *   snapshot may result in an exception being thrown.
          *
          * @return a reference to the underlying triangulation.
          */
@@ -757,35 +643,43 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * Writes this hypersurface to the given output stream, using
          * standard tetrahedron-prism coordinates.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present; use str() instead.
          *
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
         /**
-         * Writes the underlying coordinate vector to the given output
-         * stream in text format.
+         * Deprecated routine that writes the underlying coordinate vector
+         * to the given output stream in text format.
          * No indication will be given as to which coordinate
          * system is being used or what each coordinate means.
          * No newline will be written.
          *
-         * \ifacespython The paramater \a out does not exist, and is
-         * taken to be standard output.
+         * \deprecated Just write vector() directly to the output stream.
+         *
+         * \ifacespython Not present; instead just write vector() to the
+         * appropriate output stream.
          *
          * @param out the output stream to which to write.
          */
-        void writeRawVector(std::ostream& out) const;
+        [[deprecated]] void writeRawVector(std::ostream& out) const;
 
         /**
          * Writes a chunk of XML containing this normal hypersurface and all
          * of its properties.  This routine will be called from within
          * NormalHypersurfaces::writeXMLPacketData().
          *
-         * \ifacespython Not present.
+         * \ifacespython The argument \a out should be an open Python file
+         * object.
          *
          * @param out the output stream to which the XML should be written.
+         * @param format indicates which of Regina's XML file formats to write.
+         * @param list the enclosing normal hypersurface list.  Currently this
+         * is only relevant when writing to the older REGINA_XML_GEN_2 format;
+         * it will be ignored (and may be \c null) for newer file formats.
          */
-        void writeXMLData(std::ostream& out) const;
+        void writeXMLData(std::ostream& out, FileFormat format,
+            const NormalHypersurfaces* list) const;
 
         /**
          * Determines if this normal hypersurface is empty (has no
@@ -943,9 +837,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * correspond to any particular tetrahedron/prism pieces of
          * this normal hypersurface.
          *
-         * The 3-manifold triangulation will be newly allocated, and
-         * destroying it is the responsibility of the caller of this routine.
-         *
          * \todo \prob Check for absurdly large numbers of pieces and
          * return \c null accordingly.
          *
@@ -953,7 +844,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * @return a triangulation of this normal hypersurface.
          */
-        Triangulation<3>* triangulate() const;
+        Triangulation<3> triangulate() const;
 
         /**
          * Determines whether this and the given hypersurface in fact
@@ -963,9 +854,10 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * normal pieces of each type, and returns \c true
          * if and only if these counts are the same for both hypersurfaces.
          *
-         * It does not matter what coordinate systems the two hypersurfaces
+         * It does not matter what vector encodings the two hypersurfaces
          * use.  In particular, it does not matter if this and the
-         * given hypersurface use different coordinate systems.
+         * given hypersurface use different encodings, or if one but not
+         * the other supports non-compact surfaces.
          *
          * \pre Both this and the given normal hypersurface live within the
          * same 4-manifold triangulation.
@@ -1017,36 +909,72 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         bool locallyCompatible(const NormalHypersurface& other) const;
 
         /**
-         * Gives read-only access to the vector that represents this
-         * hypersurface.
+         * Gives read-only access to the integer vector that Regina uses
+         * internally to represent this hypersurface.
          *
-         * The vector is returned as a NormalHypersurfaceVector, which
-         * is a class that knows the underlying normal coordinate system.
-         * If you just want a plain Vector<LargeInteger>, you can call
-         * vector().coords() instead.
+         * Note that this vector might not use the same coordinate system
+         * in which the hypersurfaces were originally enumerated.  (For example,
+         * this vector will always include tetrahedron coordinates, even if
+         * the surfaces were originally enumerated in prism coordinates.)
+         * You can call encoding() to find out precisley how the coordinates
+         * of this vector should be interpreted.
          *
-         * \note If you just wish to access the numbers of tetrahedra,
-         * prisms and so on, you can use the functions tetrahedra(), prisms()
-         * and so on, which do not require any knowledge of the underlying
-         * coordinate system.
+         * See the NormalHypersurface class notes for information on how this
+         * vector is structured.
          *
-         * @return the underlying vector.
+         * \note If you wish to access the numbers of tetrahedra, prisms and
+         * so on, you should use the functions tetrahedra(), prisms(), etc.,
+         * which do not require any knowledge of the internal vector
+         * encoding that this hypersurface uses.
+         *
+         * @return the underlying integer vector.
          */
-        const NormalHypersurfaceVector& vector() const;
+        const Vector<LargeInteger>& vector() const;
 
         /**
-         * A deprecated routine that gives read-only access to the raw
-         * vector of integers that represents this hypersurface.
+         * A deprecated alias for vector().
          *
-         * \deprecated This routine is now deprecated; instead call vector()
-         * to obtain the underlying vector as a NormalHypersurfaceVector, or
-         * call vector().coords() to obtain it as a plain Vector<LargeInteger>.
+         * \deprecated This routine has been renamed to vector().
          *
-         * @return the underlying raw vector.
+         * @return the underlying integer vector.
          */
         [[deprecated]] const Vector<LargeInteger>& rawVector() const;
 
-    protected:
+        /**
+         * Returns the specific integer vector encoding that this hypersurface
+         * uses internally.  This is the encoding that should be used
+         * to interpret vector().
+         *
+         * Note that this might differ from the encoding originally
+         * passed to the class constructor.
+         *
+         * @return the internal vector encoding.
+         */
+        HyperEncoding encoding() const;
+
+        /**
+         * Reconstructs the tetrahedron coordinates in the given integer vector.
+         *
+         * The given vector must represent a normal hypersurface within the
+         * given triangulation, using the given vector encoding.
+         *
+         * - If the given encoding does not already store tetrahedron
+         *   coordinates, then the vector will be modified directly to use a
+         *   new encoding that does, and this new encoding will be returned.
+         *
+         * - If the given encoding does already store tetrahedra, then
+         *   this routine will do nothing and immediately return \a enc.
+         *
+         * @param tri the triangulation in which the normal hypersurface lives.
+         * @param vector an integer vector that encodes a normal hypersurface
+         * within \a tri; this will be modified directly.
+         * @param enc the encoding used by the given integer vector.
+         * @return the new encoding used by the modified \a vector.
+         */
+        static HyperEncoding reconstructTetrahedra(const Triangulation<4>& tri,
+            Vector<LargeInteger>& vector, HyperEncoding enc);
+
+    private:
         /**
          * Calculates whether this hypersurface has any real boundary and
          * stores the result as a property.
@@ -1070,138 +998,105 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
  *
  * @param a the first normal hypersurface whose contents should be swapped.
  * @param b the second normal hypersurface whose contents should be swapped.
+ *
+ * \ingroup hypersurface
  */
 void swap(NormalHypersurface& a, NormalHypersurface& b) noexcept;
 
-/*@}*/
-
-// Inline functions for NormalHypersurfaceVector
-
-inline NormalHypersurfaceVector::NormalHypersurfaceVector(size_t length) :
-        coords_(length) {
-}
-template <typename T>
-inline NormalHypersurfaceVector::NormalHypersurfaceVector(
-        const Vector<T>& cloneMe) : coords_(cloneMe) {
-}
-inline NormalHypersurfaceVector::~NormalHypersurfaceVector() {
-}
-
-inline const Vector<LargeInteger>& NormalHypersurfaceVector::coords() const {
-    return coords_;
-}
-
-inline size_t NormalHypersurfaceVector::size() const {
-    return coords_.size();
-}
-
-inline const LargeInteger& NormalHypersurfaceVector::operator []
-        (size_t index) const {
-    return coords_[index];
-}
-
-inline void NormalHypersurfaceVector::set(size_t index,
-        const LargeInteger& value) {
-    coords_.set(index, value);
-}
-
-inline NormalHypersurfaceVector& NormalHypersurfaceVector::operator += (
-        const NormalHypersurfaceVector& other) {
-    coords_ += other.coords_;
-    return *this;
-}
-
-inline void NormalHypersurfaceVector::scaleDown() {
-    coords_.scaleDown();
-}
-
-inline void NormalHypersurfaceVector::writeTextShort(std::ostream& out) const {
-    coords_.writeTextShort(out);
-}
-
 // Inline functions for NormalHypersurface
 
+inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
+        HyperEncoding enc, const Vector<LargeInteger>& vector) :
+        enc_(enc), vector_(vector), triangulation_(tri) {
+    // This call to storesTetrahedra() is unnecessary, but we'd like it
+    // accessible to the inline version.  (Same goes for the similar
+    // occurrences of storesTetrahedra() in the constructors below.)
+    if (! enc_.storesTetrahedra())
+        enc_ = reconstructTetrahedra(tri, vector_, enc_);
+}
+
+inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
+        HyperEncoding enc, Vector<LargeInteger>&& vector) :
+        enc_(enc), vector_(std::move(vector)), triangulation_(tri) {
+    if (! enc_.storesTetrahedra())
+        enc_ = reconstructTetrahedra(tri, vector_, enc_);
+}
+
 inline NormalHypersurface::NormalHypersurface(
-        const Triangulation<4>& triangulation,
-        NormalHypersurfaceVector* vector) :
-        vector_(vector), triangulation_(&triangulation) {
+        const SnapshotRef<Triangulation<4>>& tri,
+        HyperEncoding enc, const Vector<LargeInteger>& vector) :
+        enc_(enc), vector_(vector), triangulation_(tri) {
+    if (! enc_.storesTetrahedra())
+        enc_ = reconstructTetrahedra(*tri, vector_, enc_);
 }
 
-inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other,
+inline NormalHypersurface::NormalHypersurface(
+        const SnapshotRef<Triangulation<4>>& tri,
+        HyperEncoding enc, Vector<LargeInteger>&& vector) :
+        enc_(enc), vector_(std::move(vector)), triangulation_(tri) {
+    if (! enc_.storesTetrahedra())
+        enc_ = reconstructTetrahedra(*tri, vector_, enc_);
+}
+
+inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
+        HyperCoords coords, const Vector<LargeInteger>& vector) :
+        enc_(coords), vector_(vector), triangulation_(tri) {
+    if (! enc_.storesTetrahedra())
+        enc_ = reconstructTetrahedra(tri, vector_, enc_);
+}
+
+inline NormalHypersurface::NormalHypersurface(const Triangulation<4>& tri,
+        HyperCoords coords, Vector<LargeInteger>&& vector) :
+        enc_(coords), vector_(std::move(vector)),
+        triangulation_(tri) {
+    if (! enc_.storesTetrahedra())
+        enc_ = reconstructTetrahedra(tri, vector_, enc_);
+}
+
+inline NormalHypersurface::NormalHypersurface(
+        const SnapshotRef<Triangulation<4>>& tri,
+        HyperCoords coords, const Vector<LargeInteger>& vector) :
+        enc_(coords), vector_(vector), triangulation_(tri) {
+    if (! enc_.storesTetrahedra())
+        enc_ = reconstructTetrahedra(*tri, vector_, enc_);
+}
+
+inline NormalHypersurface::NormalHypersurface(
+        const SnapshotRef<Triangulation<4>>& tri,
+        HyperCoords coords, Vector<LargeInteger>&& vector) :
+        enc_(coords), vector_(std::move(vector)),
+        triangulation_(tri) {
+    if (! enc_.storesTetrahedra())
+        enc_ = reconstructTetrahedra(*tri, vector_, enc_);
+}
+
+// NOLINTNEXTLINE(modernize-pass-by-value)
+inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& src,
         const Triangulation<4>& triangulation) :
-        vector_(other.vector_->clone()),
-        triangulation_(&triangulation),
-        name_(other.name_),
-        // properties by value:
-        orientable_(other.orientable_),
-        twoSided_(other.twoSided_),
-        connected_(other.connected_),
-        realBoundary_(other.realBoundary_),
-        compact_(other.compact_),
-        H1_(other.H1_) {
+        NormalHypersurface(src) {
+    // We will happily accept one redundant SnapshotRef assignment as the
+    // cost of removing many lines of code.
+    triangulation_ = triangulation;
 }
 
-inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other) :
-        NormalHypersurface(other, *other.triangulation_) {
+// NOLINTNEXTLINE(modernize-pass-by-value)
+inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& src,
+        const SnapshotRef<Triangulation<4>>& triangulation) :
+        NormalHypersurface(src) {
+    // We will happily accept one redundant SnapshotRef assignment as the
+    // cost of removing many lines of code.
+    triangulation_ = triangulation;
 }
 
-inline NormalHypersurface::NormalHypersurface(NormalHypersurface&& src)
-        noexcept :
-        vector_(src.vector_),
-        triangulation_(src.triangulation_),
-        name_(std::move(src.name_)),
-        orientable_(std::move(src.orientable_)),
-        twoSided_(std::move(src.twoSided_)),
-        connected_(std::move(src.connected_)),
-        realBoundary_(std::move(src.realBoundary_)),
-        compact_(std::move(src.compact_)),
-        H1_(std::move(src.H1_)) {
-    src.vector_ = nullptr;
-}
-
-inline NormalHypersurface::~NormalHypersurface() {
-    delete vector_;
-}
-
-inline NormalHypersurface& NormalHypersurface::operator = (
-        const NormalHypersurface& value) {
-    delete vector_;
-    vector_ = value.vector_->clone();
-
-    triangulation_ = value.triangulation_;
-    name_ = value.name_;
-
-    orientable_ = value.orientable_;
-    twoSided_ = value.twoSided_;
-    connected_ = value.connected_;
-    realBoundary_ = value.realBoundary_;
-    compact_ = value.compact_;
-    H1_ = value.H1_;
-
-    return *this;
-}
-
-inline NormalHypersurface& NormalHypersurface::operator =
-        (NormalHypersurface&& value) noexcept {
-    // Let value dispose of the original vector.
-    std::swap(vector_, value.vector_);
-
-    triangulation_ = value.triangulation_;
-
-    name_ = std::move(value.name_);
-    orientable_ = std::move(value.orientable_);
-    twoSided_ = std::move(value.twoSided_);
-    connected_ = std::move(value.connected_);
-    realBoundary_ = std::move(value.realBoundary_);
-    compact_ = std::move(value.compact_);
-    H1_ = std::move(value.H1_);
-
-    return *this;
+inline NormalHypersurface* NormalHypersurface::clone() const {
+    return new NormalHypersurface(*this);
 }
 
 inline void NormalHypersurface::swap(NormalHypersurface& other) noexcept {
-    std::swap(vector_, other.vector_);
-    std::swap(triangulation_, other.triangulation_);
+    std::swap(enc_, other.enc_);
+    vector_.swap(other.vector_);
+    triangulation_.swap(other.triangulation_);
+
     name_.swap(other.name_);
     orientable_.swap(other.orientable_);
     twoSided_.swap(other.twoSided_);
@@ -1213,19 +1108,13 @@ inline void NormalHypersurface::swap(NormalHypersurface& other) noexcept {
 
 inline LargeInteger NormalHypersurface::tetrahedra(size_t pentIndex, int vertex)
         const {
-    return vector_->tetrahedra(pentIndex, vertex, *triangulation_);
+    return vector_[enc_.block() * pentIndex + vertex];
 }
 inline LargeInteger NormalHypersurface::prisms(
         size_t pentIndex, int prismType) const {
-    return vector_->prisms(pentIndex, prismType, *triangulation_);
-}
-inline LargeInteger NormalHypersurface::edgeWeight(size_t edgeIndex) const {
-    return vector_->edgeWeight(edgeIndex, *triangulation_);
+    return vector_[enc_.block() * pentIndex + 5 + prismType];
 }
 
-inline size_t NormalHypersurface::countCoords() const {
-    return vector_->size();
-}
 inline const Triangulation<4>& NormalHypersurface::triangulation() const {
     return *triangulation_;
 }
@@ -1238,13 +1127,12 @@ inline void NormalHypersurface::setName(const std::string& name) {
 }
 
 inline void NormalHypersurface::writeRawVector(std::ostream& out) const {
-    out << vector_->coords();
+    out << vector_;
 }
 
-inline bool NormalHypersurface::isCompact() const {
-    if (! compact_.has_value())
-        compact_ = vector_->isCompact(*triangulation_);
-    return *compact_;
+inline bool NormalHypersurface::isEmpty() const {
+    // All vector encodings store the empty hypersurface as the zero vector.
+    return vector_.isZero();
 }
 
 inline bool NormalHypersurface::isOrientable() const {
@@ -1277,24 +1165,25 @@ inline const AbelianGroup& NormalHypersurface::homology() const {
     return *H1_;
 }
 
-inline bool NormalHypersurface::isVertexLinking() const {
-    return vector_->isVertexLinking(*triangulation_);
-}
-
-inline const Vertex<4>* NormalHypersurface::isVertexLink() const {
-    return vector_->isVertexLink(*triangulation_);
-}
-
-inline const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
-    return vector_->isThinEdgeLink(*triangulation_);
-}
-
-inline const NormalHypersurfaceVector& NormalHypersurface::vector() const {
-    return *vector_;
+inline const Vector<LargeInteger>& NormalHypersurface::vector() const {
+    return vector_;
 }
 
 inline const Vector<LargeInteger>& NormalHypersurface::rawVector() const {
-    return vector_->coords();
+    return vector_;
+}
+
+inline HyperEncoding NormalHypersurface::encoding() const {
+    return enc_;
+}
+
+inline NormalHypersurface NormalHypersurface::operator + (
+        const NormalHypersurface& rhs) const {
+    // Given our current conditions on vector storage, both underlying
+    // integer vectors should store both tetrahedra and prisms.
+    // This means that we can just add the vectors directly.
+    return NormalHypersurface(triangulation_, enc_ + rhs.enc_,
+            vector_ + rhs.vector_);
 }
 
 inline void swap(NormalHypersurface& a, NormalHypersurface& b) noexcept {

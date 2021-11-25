@@ -81,10 +81,6 @@ SyntaxHighlighter::SyntaxHighlighter(QTextDocument *document) :
     qRegisterMetaType<QTextBlock>();
 }
 
-SyntaxHighlighter::~SyntaxHighlighter()
-{
-}
-
 void SyntaxHighlighter::setDefinition(const Definition& def)
 {
     const auto needsRehighlight = (m_definition != def);

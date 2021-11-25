@@ -96,15 +96,17 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
     }
 
     FileInfo ans;
-    ans.compressed = compressed;
-    ans.pathname_ = idPathname;
-    ans.type_ = FileInfo::TYPE_XML;
-    ans.typeDescription_ = "XML Regina data file";
+    ans.compressed_ = compressed;
+    ans.pathname_ = std::move(idPathname);
+    ans.format_ = REGINA_CURRENT_FILE_FORMAT;
+
+    // Note: we cannot use the idPathname argument from here on, since we moved its data out.
+    // We must use ans.pathname_ instead.
 
     // Make it an invalid file until we know otherwise.
-    ans.invalid = true;
+    ans.invalid_ = true;
 
-    std::ifstream file(idPathname.c_str(),
+    std::ifstream file(ans.pathname_.c_str(),
         std::ios_base::in | std::ios_base::binary);
     if (! file)
         return ans;
@@ -147,7 +149,11 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
         if (in.eof())
             return ans;
         in >> s;
-        if (s != "<reginadata")
+        if (s == "<regina")
+            ans.format_ = REGINA_XML_GEN_3;
+        else if (s == "<reginadata")
+            ans.format_ = REGINA_XML_GEN_2;
+        else
             return ans;
 
         // Next should be the engine version.
@@ -169,23 +175,24 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
     }
 
     // That's as far as we need to go; we've extracted everything we want.
-    ans.invalid = false;
+    ans.invalid_ = false;
     return ans;
 }
 
 void FileInfo::writeTextShort(std::ostream& out) const {
-    out << "File information: " << typeDescription_;
-    if (compressed)
-        out << " (compressed)";
+    out << "File information: " << formatDescription();
+    if (compressed_)
+        out << ", compressed";
 }
 
 void FileInfo::writeTextLong(std::ostream& out) const {
-    out << "Regina data\n" << typeDescription_;
-    if (compressed)
-        out << " (compressed)";
+    // All supported file types are XML.
+    out << "Regina data: " << formatDescription();
+    if (compressed_)
+        out << ", compressed";
     out << '\n';
 
-    if (invalid)
+    if (invalid_)
         out << "File contains invalid metadata.\n";
     else
         out << "Engine " << engine_ << '\n';

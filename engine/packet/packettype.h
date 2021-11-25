@@ -40,21 +40,25 @@
 #endif
 
 #include "regina-core.h"
+#include "triangulation/forward.h"
 
 namespace regina {
-
-/**
- * \weakgroup packet
- * @{
- */
 
 /**
  * Represents the different types of packet that are available in Regina.
  *
  * IDs 0-9999 are reserved for future use by Regina.  If you are extending
  * Regina to include your own packet type, you should choose an ID >= 10000.
+ *
+ * \ingroup packet
  */
 enum PacketType {
+    /**
+     * Does not represent any of Regina's packet types.
+     *
+     * This can be used (for example) for initialising a PacketType variable.
+     */
+    PACKET_NONE = 0,
     /**
      * Represents a container packet, of class Container.
      */
@@ -81,9 +85,16 @@ enum PacketType {
      */
     PACKET_ANGLESTRUCTURES = 9,
     /**
-     * Represents a PDF document, of class PDF.
+     * Represents an arbitrary file attachment, of class Attachment.
      */
-    PACKET_PDF = 10,
+    PACKET_ATTACHMENT = 10,
+    /**
+     * A legacy constant that represents a PDF document.  This is stored
+     * using the Attachment class, which can now represent any kind of
+     * file attachment (not just a PDF document).  This legacy constant
+     * PACKET_PDF takes the same value as the new constant PACKET_ATTACHMENT.
+     */
+    PACKET_PDF [[deprecated]] = PACKET_ATTACHMENT,
     /**
      * Represents a normal hypersurface list, of class NormalHypersurfaces.
      */
@@ -157,7 +168,153 @@ enum PacketType {
 #endif /* ! REGINA_LOWDIMONLY */
 };
 
-/*@}*/
+/**
+ * A class used to query general information about different packet types.
+ *
+ * This class has become much simpler since Regina 7.0.  It is no longer
+ * templated, and instead just offers a name() function that is accessible at
+ * both compile time and runtime.
+ *
+ * \ingroup packet
+ */
+class PacketInfo {
+    public:
+        /**
+         * Returns a human-readable name for the given packet type.
+         *
+         * The first letter of the returned string will be upper-case,
+         * and all subsequent letters will be lower-case (except for
+         * special words such as "PDF" and "SnapPea", which will retain
+         * their internal upper-case letters where required).
+         *
+         * This routine is guaranteed to return a non-null string, even
+         * if \a packetType is not one of the PacketType enum values.
+         *
+         * @param packetType the packet type being queried.
+         * @return the name of the given packet type.
+         */
+        constexpr static const char* name(PacketType packetType) {
+            switch (packetType) {
+                case PACKET_CONTAINER:
+                    return "Container";
+                case PACKET_TEXT:
+                    return "Text";
+                case PACKET_NORMALSURFACES:
+                    return "Normal surface list";
+                case PACKET_SCRIPT:
+                    return "Script";
+                case PACKET_SURFACEFILTER:
+                    return "Surface filter";
+                case PACKET_ANGLESTRUCTURES:
+                    return "Angle structure list";
+                case PACKET_ATTACHMENT:
+                    return "Attachment";
+                case PACKET_NORMALHYPERSURFACES:
+                    return "Normal hypersurface list";
+                case PACKET_SNAPPEATRIANGULATION:
+                    return "SnapPea triangulation";
+                case PACKET_LINK:
+                    return "Link";
+                case PACKET_TRIANGULATION2:
+                    return "2-D triangulation";
+                case PACKET_TRIANGULATION3:
+                    return "3-D triangulation";
+                case PACKET_TRIANGULATION4:
+                    return "4-D triangulation";
+            #ifndef REGINA_LOWDIMONLY
+                case PACKET_TRIANGULATION5:
+                    return "5-D triangulation";
+                case PACKET_TRIANGULATION6:
+                    return "6-D triangulation";
+                case PACKET_TRIANGULATION7:
+                    return "7-D triangulation";
+                case PACKET_TRIANGULATION8:
+                    return "8-D triangulation";
+                case PACKET_TRIANGULATION9:
+                    return "9-D triangulation";
+                case PACKET_TRIANGULATION10:
+                    return "10-D triangulation";
+                case PACKET_TRIANGULATION11:
+                    return "11-D triangulation";
+                case PACKET_TRIANGULATION12:
+                    return "12-D triangulation";
+                case PACKET_TRIANGULATION13:
+                    return "13-D triangulation";
+                case PACKET_TRIANGULATION14:
+                    return "14-D triangulation";
+                case PACKET_TRIANGULATION15:
+                    return "15-D triangulation";
+            #endif /* ! REGINA_LOWDIMONLY */
+                default:
+                    return "Unknown";
+            }
+        }
+};
+
+/**
+ * The packet type constant for a packet wrapping an object of type \a Held.
+ *
+ * This variable is only meaningful when \a Held is not itself a packet type,
+ * but instead is a standalone type that can (if desired) be wrapped in a
+ * packet of type PacketOf<Held>.  Examples of such types include Link and
+ * Triangulation<dim>.
+ *
+ * In all other cases, this variable will be PACKET_NONE.
+ *
+ * In particular, if \a Held is a full packet type itself (such as Container,
+ * Script, or PacketOf<...>), then this template variable will be PACKET_NONE.
+ *
+ * \ifacespython Not present.
+ */
+template <typename Held>
+static constexpr PacketType packetTypeHolds = PACKET_NONE;
+
+#ifndef __DOXYGEN
+// Don't confuse doxygen with specialisations.
+
+class AngleStructures;
+class Link;
+class NormalHypersurfaces;
+class NormalSurfaces;
+class SnapPeaTriangulation;
+template <int> class Triangulation;
+
+template <>
+inline constexpr PacketType packetTypeHolds<Link> = PACKET_LINK;
+
+template <>
+inline constexpr PacketType packetTypeHolds<SnapPeaTriangulation> =
+    PACKET_SNAPPEATRIANGULATION;
+
+template <>
+inline constexpr PacketType packetTypeHolds<Triangulation<2>> =
+    PACKET_TRIANGULATION2;
+
+template <>
+inline constexpr PacketType packetTypeHolds<Triangulation<3>> =
+    PACKET_TRIANGULATION3;
+
+template <>
+inline constexpr PacketType packetTypeHolds<Triangulation<4>> =
+    PACKET_TRIANGULATION4;
+
+template <int dim>
+inline constexpr PacketType packetTypeHolds<Triangulation<dim>> =
+    PacketType(100 + dim);
+
+template <>
+inline constexpr PacketType packetTypeHolds<AngleStructures> =
+    PACKET_ANGLESTRUCTURES;
+
+template <>
+inline constexpr PacketType packetTypeHolds<NormalSurfaces> =
+    PACKET_NORMALSURFACES;
+
+template <>
+inline constexpr PacketType packetTypeHolds<NormalHypersurfaces> =
+    PACKET_NORMALHYPERSURFACES;
+
+#endif // __DOXYGEN
 
 } // namespace regina
 

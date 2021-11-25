@@ -45,11 +45,6 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
- * @{
- */
-
-/**
  * A lightweight class for storing a random-access sequence of objects.
  *
  * This class is intended as a lightweight substitute for std::vector,
@@ -69,17 +64,19 @@ namespace regina {
  * even when passing or returning objects by value.
  *
  * \ifacespython Not present.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 class LightweightSequence {
     public:
-        typedef T* iterator;
+        using iterator = T*;
             /**< An iterator type for read-write access to the elements
                 of a sequence.  Such a type can be dereferenced
                 (yielding a reference to type \a T), and manipulated
                 using the usual pointer arithmetic (such as <tt>p++</tt>,
                 <tt>--p</tt>, <tt>p += n</tt>, and so on). */
-        typedef const T* const_iterator;
+        using const_iterator = const T*;
             /**< An iterator type for read-only access to the elements
                 of a sequence.  Such a type can be dereferenced
                 (yielding a const reference to type \a T), and manipulated
@@ -107,6 +104,37 @@ class LightweightSequence {
          * @param size the number of elements in the new sequence.
          */
         explicit LightweightSequence(size_t size);
+        /**
+         * Create a new sequence containing the given elements, which
+         * may be given through a combination of individual elements and
+         * iterator pairs.
+         *
+         * Specifically, this constructor will step through the \a elements
+         * arguments in turn:
+         *
+         * - If the next argument is of type \a T (or can be implicitly
+         *   converted to type \a T), then the corresponding value will be
+         *   added onto the end of the sequence.
+         *
+         * - If the next argument is a LightweightSequence iterator, then this
+         *   must be followed by \e another LightweightSequence iterator.
+         *   The range defined by this iterator pair will be copied onto
+         *   the end of the sequence.
+         *
+         * The routine requires you to pass the entire length of the sequence
+         * in advance; this is so the necessary memory can be pre-allocated
+         * without requiring any unnecessary arithmetic.
+         *
+         * \pre The argument \a size is precisely the sum of the lengths of all
+         * iterator ranges plus the number of standalone elements in the
+         * argument list \a elements.
+         *
+         * @param size the number of elements in the new sequence.
+         * @param elements the elements and/or iterator ranges with which to
+         * fill the sequence, as described above.
+         */
+        template <typename... Args>
+        explicit LightweightSequence(size_t size, Args&&... elements);
         /**
          * Create a copy of the given sequence.
          *
@@ -275,31 +303,8 @@ class LightweightSequence {
         bool operator < (const LightweightSequence& rhs) const;
 
         /**
-         * A binary function object that compares sequences lexicographically,
-         * for use in containers that hold pointers to sequences.
-         *
-         * \pre The type \a T supports the less-than operator.
-         */
-        struct Less {
-            /**
-             * Compares two sequences lexicographically.  The sequences
-             * need not be the same size.
-             *
-             * This routine is identical to testing <tt>(*a) &lt; (*b)</tt>.
-             *
-             * @param a a pointer to the first of the two sequences to compare.
-             * @param b a pointer to the second of the two sequences to compare.
-             * @return \c true if sequence \a a is strictly lexicographically
-             * smaller than sequence \a b, or \c false if \a a is either
-             * lexicographically greater than or equal to \a b.
-             */
-            bool operator () (const LightweightSequence* a,
-                    const LightweightSequence* b) const;
-        };
-
-        /**
          * A binary function object for comparing subsequences, for use in
-         * associative containers whose keys are pointers to sequences.
+         * associative containers whose keys are sequences.
          *
          * This is a very specialised comparison object, for use in the
          * following settings:
@@ -310,12 +315,12 @@ class LightweightSequence {
          *
          * - The actual objects that we compare are not the sequences
          *   themselves, but iterators that point to (key, value) pairs,
-         *   whose keys are pointers to sequences.
+         *   whose keys are sequences.
          *
          * More precisely: suppose the indices of the elements to
          * compare are \a i0, \a i1, \a i2, ..., and that we are comparing
          * iterators \a a, \a b.  Then this function object will consider the
-         * sequences <tt>s = *(a->first)</tt> and <tt>t = *(b->first)</tt>,
+         * sequences <tt>s = a->first</tt> and <tt>t = b->first</tt>,
          * and will lexicographically compare their subsequences
          * <tt>s[i0], s[i1], ...</tt> and <tt>t[i0], t[i1], ...</tt>.
          *
@@ -329,15 +334,22 @@ class LightweightSequence {
          * (which is a C-style array) has a lifespan at least as long as
          * this object.  This behaviour is new as of Regina 5.96; in past
          * versions of Regina the list of elements was copied on construction.
+         *
+         * \tparam IndexIterator the iterator type used to store the range
+         * of indices that define the subsequences being compared (that is,
+         * the range of indices \a i0, \a i1, \a i2, ...).  This would be
+         * deducible from the constructor arguments, were it not for a
+         * gcc bug (#79501) that prevents us from declaring a deduction guide.
          */
-        template <typename Iterator>
-        class SubsequenceCompareFirstPtr {
+        template <typename IndexIterator>
+        class SubsequenceCompareFirst {
             private:
-                size_t nSub_;
-                    /**< The number of elements to compare in each sequence. */
-                const size_t* sub_;
-                    /**< The indices of the elements to compare in each
-                         sequence. */
+                IndexIterator beginSub_;
+                    /**< The beginning of the range of indices of elements to
+                         compare in each sequence. */
+                IndexIterator endSub_;
+                    /**< The beginning of the range of indices of elements to
+                         compare in each sequence. */
 
             public:
                 /**
@@ -346,34 +358,39 @@ class LightweightSequence {
                  * As explained in the class notes, this object compares
                  * just some, not necessarily all, elements of two
                  * sequences.  The indices of the elements to compare
-                 * should be passed to this constructor.
+                 * should be passed to this constructor using an iterator range.
+                 * Specifically, the range defined by \a beginSub and \a endSub
+                 * should contain the indices \a i0, \a i1, ..., as described
+                 * in the class notes.
                  *
-                 * \warning This class merely copies the pointer \a sub,
-                 * and does not take a deep copy.  The caller of this
-                 * routine must ensure that the array \a sub has a lifespan
-                 * at least as long as this function object and any
-                 * function objects that are copied from it.
+                 * \warning This class merely copies the iterators \a beginSub
+                 * and \a endSub, and does not take a deep copy of the range
+                 * that they define.  The caller of this routine must ensure
+                 * that these iterators remain valid for the entire lifespan of
+                 * this function object and any function objects that are
+                 * copied from it.
                  *
-                 * @param nSub the number of elements to compare from
-                 * each sequence.
-                 * @param sub the indices of the elements to compare
-                 * from each sequence; that is, the indices \a i0,
-                 * \a i1, ..., as described in the class notes.
+                 * @param beginSub the beginning of the range of indices of
+                 * elements to compare from each sequence.
+                 * @param endSub the end (i.e., a past-the-end iterator) of
+                 * the range of indices of elements to compare from each
+                 * sequence.
                  */
-                SubsequenceCompareFirstPtr(size_t nSub, const size_t* sub);
+                SubsequenceCompareFirst(IndexIterator beginSub,
+                    IndexIterator endSub);
                 /**
                  * Copies the given function object into this new object.
                  */
-                SubsequenceCompareFirstPtr(
-                    const SubsequenceCompareFirstPtr<Iterator>&) = default;
+                SubsequenceCompareFirst(const SubsequenceCompareFirst&) =
+                    default;
 
                 /**
                  * Copies the given function object into this object.
                  *
                  * @return a reference to this function object.
                  */
-                SubsequenceCompareFirstPtr<Iterator>& operator = (
-                    const SubsequenceCompareFirstPtr<Iterator>&) = default;
+                SubsequenceCompareFirst& operator = (
+                    const SubsequenceCompareFirst&) = default;
 
                 /**
                  * Tests whether the subsequences referred to by the
@@ -389,7 +406,8 @@ class LightweightSequence {
                  * @return \c true if and only if the two subsequences
                  * are identical.
                  */
-                bool equal(Iterator a, Iterator b) const;
+                template <typename SeqIterator>
+                bool equal(SeqIterator a, SeqIterator b) const;
                 /**
                  * Lexicographically compares the subsequences referred to
                  * by the given pair of iterators.
@@ -407,7 +425,8 @@ class LightweightSequence {
                  * indicated by \a a is lexicographically smaller than
                  * the subsequence indicated by \a b.
                  */
-                bool less(Iterator a, Iterator b) const;
+                template <typename SeqIterator>
+                bool less(SeqIterator a, SeqIterator b) const;
                 /**
                  * Lexicographically compares the subsequences referred to
                  * by the given pair of iterators.
@@ -426,8 +445,39 @@ class LightweightSequence {
                  * indicated by \a a is lexicographically smaller than
                  * the subsequence indicated by \a b.
                  */
-                bool operator () (Iterator a, Iterator b) const;
+                template <typename SeqIterator>
+                bool operator () (SeqIterator a, SeqIterator b) const;
         };
+
+#if 0 // gcc bug #79501 incorrectly marks this as an error.
+        template <class IndexIterator>
+        SubsequenceCompareFirst(IndexIterator, IndexIterator) ->
+            SubsequenceCompareFirst<IndexIterator>;
+#endif
+
+    private:
+        /**
+         * Implementation details for the iterators-and-values constructor.
+         */
+        template <typename... Args>
+        void fill(T* dest, const T* from, const T* to, Args&&... args) {
+            fill(std::copy(from, to, dest), std::forward<Args>(args)...);
+        }
+
+        /**
+         * Implementation details for the iterators-and-values constructor.
+         */
+        template <typename... Args>
+        void fill(T* dest, T elt, Args&&... args) {
+            *dest = std::move(elt);
+            fill(dest + 1, std::forward<Args>(args)...);
+        }
+
+        /**
+         * Implementation details for the iterators-and-values constructor.
+         */
+        void fill(T* /* dest */) {
+        }
 };
 
 /**
@@ -442,6 +492,8 @@ class LightweightSequence {
  * @param out the output stream to which to write.
  * @param s the sequence to write.
  * @return a reference to the given output stream.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 std::ostream& operator << (std::ostream& out, const LightweightSequence<T>& s);
@@ -454,21 +506,29 @@ std::ostream& operator << (std::ostream& out, const LightweightSequence<T>& s);
  *
  * @param a the first sequence whose contents should be swapped.
  * @param b the second sequence whose contents should be swapped.
+ *
+ * \ingroup utilities
  */
 template <typename T>
 void swap(LightweightSequence<T>& a, LightweightSequence<T>& b) noexcept;
 
-/*@}*/
-
 // Inline functions:
 
 template <typename T>
-inline LightweightSequence<T>::LightweightSequence() : data_(0), size_(0) {
+inline LightweightSequence<T>::LightweightSequence() :
+        data_(nullptr), size_(0) {
 }
 
 template <typename T>
 inline LightweightSequence<T>::LightweightSequence(size_t size) :
         data_(new T[size]), size_(size) {
+}
+
+template <typename T>
+template <typename... Args>
+inline LightweightSequence<T>::LightweightSequence(size_t size,
+        Args&&... args) : data_(new T[size]), size_(size) {
+    fill(data_, std::forward<Args>(args)...);
 }
 
 template <typename T>
@@ -493,7 +553,7 @@ inline LightweightSequence<T>::~LightweightSequence() {
 template <typename T>
 inline void LightweightSequence<T>::init(size_t size) {
     delete[] data_;
-    data_ = (size ? new T[size] : 0);
+    data_ = (size ? new T[size] : nullptr);
     size_ = size;
 }
 
@@ -539,6 +599,9 @@ inline typename LightweightSequence<T>::const_iterator
 template <typename T>
 inline LightweightSequence<T>& LightweightSequence<T>::operator = (
         const LightweightSequence& src) {
+    if (std::addressof(src) == this)
+        return *this;
+
     size_ = src.size_;
 
     delete[] data_;
@@ -589,20 +652,6 @@ inline bool LightweightSequence<T>::operator < (
 }
 
 template <typename T>
-inline bool LightweightSequence<T>::Less::operator () (
-        const LightweightSequence<T>* a, const LightweightSequence<T>* b)
-        const {
-    for (size_t i = 0; i < b->size_; ++i)
-        if (i >= a->size_ || a->data_[i] < b->data_[i])
-            return true;
-        else if (b->data_[i] < a->data_[i])
-            return false;
-    // The sequences match for the first b->size_ elements, and
-    // sequence a is at least as long as sequence b.
-    return false;
-}
-
-template <typename T>
 inline std::ostream& operator << (std::ostream& out,
         const LightweightSequence<T>& s) {
     out << '(';
@@ -615,42 +664,45 @@ inline std::ostream& operator << (std::ostream& out,
 }
 
 template <typename T>
-template <typename Iterator>
-inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
-        SubsequenceCompareFirstPtr(size_t nSub, const size_t* sub) :
-        nSub_(nSub), sub_(sub) {
+template <typename IndexIterator>
+inline LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
+        SubsequenceCompareFirst(IndexIterator beginSub, IndexIterator endSub) :
+        beginSub_(beginSub), endSub_(endSub) {
 }
 
 template <typename T>
-template <typename Iterator>
-inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
-        equal(Iterator a, Iterator b) const {
-    for (size_t i = 0; i < nSub_; ++i)
-        if ((*(a->first))[sub_[i]] != (*(b->first))[sub_[i]])
+template <typename IndexIterator>
+template <typename SeqIterator>
+inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
+        equal(SeqIterator a, SeqIterator b) const {
+    for (auto it = beginSub_; it != endSub_; ++it)
+        if (a->first[*it] != b->first[*it])
             return false;
     return true;
 }
 
 template <typename T>
-template <typename Iterator>
-inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
-        less(Iterator a, Iterator b) const {
-    for (size_t i = 0; i < nSub_; ++i)
-        if ((*(a->first))[sub_[i]] < (*(b->first))[sub_[i]])
+template <typename IndexIterator>
+template <typename SeqIterator>
+inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
+        less(SeqIterator a, SeqIterator b) const {
+    for (auto it = beginSub_; it != endSub_; ++it)
+        if (a->first[*it] < b->first[*it])
             return true;
-        else if ((*(a->first))[sub_[i]] > (*(b->first))[sub_[i]])
+        else if (a->first[*it] > b->first[*it])
             return false;
     return false;
 }
 
 template <typename T>
-template <typename Iterator>
-inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
-        operator () (Iterator a, Iterator b) const {
-    for (size_t i = 0; i < nSub_; ++i)
-        if ((*(a->first))[sub_[i]] < (*(b->first))[sub_[i]])
+template <typename IndexIterator>
+template <typename SeqIterator>
+inline bool LightweightSequence<T>::SubsequenceCompareFirst<IndexIterator>::
+        operator () (SeqIterator a, SeqIterator b) const {
+    for (auto it = beginSub_; it != endSub_; ++it)
+        if (a->first[*it] < b->first[*it])
             return true;
-        else if ((*(a->first))[sub_[i]] > (*(b->first))[sub_[i]])
+        else if (a->first[*it] > b->first[*it])
             return false;
     return false;
 }

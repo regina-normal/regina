@@ -70,12 +70,12 @@ extern gvplugin_library_t gvplugin_core_LTX_library;
 lt_symlist_t link_lt_preloaded_symbols[] = {
     { "gvplugin_dot_layout_LTX_library", &gvplugin_dot_layout_LTX_library },
     { "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
-    { 0, 0 }
+    { nullptr, nullptr }
 };
 #endif
 #endif
 
-LinkGraphUI::LinkGraphUI(regina::Link* useLink,
+LinkGraphUI::LinkGraphUI(regina::PacketOf<regina::Link>* useLink,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI),
         link(useLink) {
@@ -86,7 +86,7 @@ LinkGraphUI::LinkGraphUI(regina::Link* useLink,
     QBoxLayout* hdrLayout = new QHBoxLayout();
     baseLayout->addLayout(hdrLayout);
 
-    QLabel* label = new QLabel(tr("Display graph:"), ui);
+    auto* label = new QLabel(tr("Display graph:"), ui);
     hdrLayout->addWidget(label);
     chooseType = new QComboBox(ui);
     chooseType->addItem(tr("Tree decomposition"));

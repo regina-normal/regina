@@ -40,15 +40,15 @@
  */
 
 #include <list>
+#include <tuple>
 #include "regina-core.h"
 #include "maths/integer.h"
 
 namespace regina {
 
 /**
- * \addtogroup maths Mathematical Support
+ * \defgroup maths Mathematical Support
  * Underlying mathematical gruntwork.
- * @{
  */
 
 /**
@@ -61,6 +61,8 @@ namespace regina {
  *
  * @param k the number to reduce modulo \a modBase.
  * @param modBase the modular base in which to work.
+ *
+ * \ingroup maths
  */
 long reducedMod(long k, long modBase);
 
@@ -74,6 +76,8 @@ long reducedMod(long k, long modBase);
  * @param a one of the two integers to work with.
  * @param b the other integer with which to work.
  * @return the greatest common divisor of \a a and \a b.
+ *
+ * \ingroup maths
  */
 long gcd(long a, long b);
 
@@ -86,29 +90,51 @@ long gcd(long a, long b);
  * gcd returned is guaranteed to be non-negative.
  * As a special case, gcd(0,0) is considered to be zero.
  *
- * If \a d is the gcd of \a a and \a b, the values placed in \a u and \a v
- * will be those for which
- * <tt>u*a + v*b = d</tt>,
- * <tt>-abs(a)/d < v*sign(b) <= 0</tt> and
- * <tt>1 <= u*sign(a) <= abs(b)/d</tt>.
+ * If \a d is the gcd of \a a and \a b, then this routine returns the
+ * tuple (\a d, \a u, \a v), where \a u and \a v are coefficients for which:
+ *
+ * - <tt>u*a + v*b = d</tt>;
+ * - <tt>-abs(a)/d < v*sign(b) <= 0</tt>; and
+ * - <tt>1 <= u*sign(a) <= abs(b)/d</tt>.
  *
  * In the special case where one of the given integers is zero, the
  * corresponding coefficient will also be zero and the other coefficient
  * will be 1 or -1 so that <tt>u*a + v*b = d</tt> still holds.  If both
  * given integers are zero, both of the coefficients will be set to zero.
  *
- * \ifacespython The arguments \a u and \a v are not present.  Instead,
- * this routine returns the tuple (\a gcd, \a u, \a v).
+ * @param a the first integer to compute the gcd of.
+ * @param b the second integer to compute the gcd of.
+ * @return a tuple containing: the greatest common divisor of \a a and \a b;
+ * the final coefficient of \a a; and the final coefficient of \a b.
  *
- * @param a one of the integers to work with.
- * @param b the other integer with which to work.
- * @param u a variable into which the final coefficient of \a a will be
- * placed.
- * @param v a variable into which the final coefficient of \a b will be
- * placed.
- * @return the greatest common divisor of \a a and \a b.
+ * \ingroup maths
  */
-long gcdWithCoeffs(long a, long b, long& u, long& v);
+std::tuple<long, long, long> gcdWithCoeffs(long a, long b);
+
+/**
+ * Deprecated function that calculates the greatest common divisor of two
+ * given integers and finds the smallest coefficients with which these
+ * integers combine to give their gcd.  This routine is not recursive.
+ *
+ * \deprecated This function has been redesigned to take just \a a and \a b
+ * as argument, and to return (\a gcd, \a u, \a v) as a tuple.
+ * See that version of gcdWithCoeffs() for further details on how this
+ * function operates.
+ *
+ * \ifacespython Not present; instead you can use the two-argument variant
+ * that returns the tuple (\a gcd, \a u, \a v).
+ *
+ * @param a the first integer to compute the gcd of.
+ * @param b the second integer to compute the gcd of.
+ * @param u a variable into which the final coefficient of \a a will be
+ * placed.  Any existing contents of \a u will be overwritten.
+ * @param v a variable into which the final coefficient of \a b will be
+ * placed.  Any existing contents of \a v will be overwritten.
+ * @return the greatest common divisor of \a a and \a b.
+ *
+ * \ingroup maths
+ */
+[[deprecated]] long gcdWithCoeffs(long a, long b, long& u, long& v);
 
 /**
  * Calculates the lowest common multiple of two signed integers.
@@ -123,6 +149,8 @@ long gcdWithCoeffs(long a, long b, long& u, long& v);
  * @param a one of the two integers to work with.
  * @param b the other integer with which to work.
  * @return the lowest common multiple of \a a and \a b.
+ *
+ * \ingroup maths
  */
 long lcm(long a, long b);
 
@@ -136,10 +164,10 @@ long lcm(long a, long b);
  * @param n the modular base in which to work.
  * @param k the number whose multiplicative inverse should be found.
  * @return the inverse \a v for which <tt>k * v == 1 (mod n)</tt>.
+ *
+ * \ingroup maths
  */
 unsigned long modularInverse(unsigned long n, unsigned long k);
-
-/*@}*/
 
 } // namespace regina
 

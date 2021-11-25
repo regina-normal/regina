@@ -41,9 +41,10 @@
 #include <QString>
 
 using regina::HyperCoords;
-using regina::NormalSurfaces;
 using regina::NormalCoords;
 using regina::Triangle;
+
+// #define SUPPORT_TONS
 
 namespace Coordinates {
     const char* name(NormalCoords coordSystem, bool capitalise) {
@@ -66,10 +67,12 @@ namespace Coordinates {
                 return QT_TR_NOOP("Edge weight");
             if (coordSystem == regina::NS_TRIANGLE_ARCS)
                 return QT_TR_NOOP("Triangle arc");
+#ifdef SUPPORT_TONS
             if (coordSystem == regina::NS_ORIENTED)
                 return QT_TR_NOOP("Transversely oriented normal");
             if (coordSystem == regina::NS_ORIENTED_QUAD)
                 return QT_TR_NOOP("Transversely oriented quad normal");
+#endif
             return QT_TR_NOOP("Unknown");
         } else {
             if (coordSystem == regina::NS_STANDARD)
@@ -90,10 +93,12 @@ namespace Coordinates {
                 return QT_TR_NOOP("edge weight");
             if (coordSystem == regina::NS_TRIANGLE_ARCS)
                 return QT_TR_NOOP("triangle arc");
+#ifdef SUPPORT_TONS
             if (coordSystem == regina::NS_ORIENTED)
                 return QT_TR_NOOP("transversely oriented normal");
             if (coordSystem == regina::NS_ORIENTED_QUAD)
                 return QT_TR_NOOP("transversely oriented quad normal");
+#endif
             return QT_TR_NOOP("unknown");
         }
     }
@@ -118,10 +123,12 @@ namespace Coordinates {
                 return QT_TR_NOOP("Edge weight");
             if (coordSystem == regina::NS_TRIANGLE_ARCS)
                 return QT_TR_NOOP("Triangle arc");
+#ifdef SUPPORT_TONS
             if (coordSystem == regina::NS_ORIENTED)
                 return QT_TR_NOOP("Transversely oriented");
             if (coordSystem == regina::NS_ORIENTED_QUAD)
                 return QT_TR_NOOP("Transversely oriented quad");
+#endif
             return QT_TR_NOOP("Unknown");
         } else {
             if (coordSystem == regina::NS_STANDARD)
@@ -142,10 +149,12 @@ namespace Coordinates {
                 return QT_TR_NOOP("edge weight");
             if (coordSystem == regina::NS_TRIANGLE_ARCS)
                 return QT_TR_NOOP("triangle arc");
+#ifdef SUPPORT_TONS
             if (coordSystem == regina::NS_ORIENTED)
                 return QT_TR_NOOP("transversely oriented");
             if (coordSystem == regina::NS_ORIENTED_QUAD)
                 return QT_TR_NOOP("transversely oriented quad");
+#endif
             return QT_TR_NOOP("unknown");
         }
     }
@@ -217,10 +226,12 @@ namespace Coordinates {
             return tri.countEdges();
         else if (coordSystem == regina::NS_TRIANGLE_ARCS)
             return tri.countTriangles() * 3;
+#ifdef SUPPORT_TONS
         else if (coordSystem == regina::NS_ORIENTED)
             return tri.size() * 14;
         else if (coordSystem == regina::NS_ORIENTED_QUAD)
             return tri.size() * 6;
+#endif
         else
             return 0;
     }
@@ -286,6 +297,7 @@ namespace Coordinates {
             else
                 return QString("B %1: %2").
                     arg(whichCoord / 3).arg(whichCoord % 3);
+#ifdef SUPPORT_TONS
         } else if (coordSystem == regina::NS_ORIENTED) {
             size_t stdCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
@@ -322,6 +334,7 @@ namespace Coordinates {
                     arg(regina::quadDefn[(quadCoord % 3)][2]).
                     arg(regina::quadDefn[(quadCoord % 3)][3]);
             }
+#endif
         }
 
         return QString("Unknown");
@@ -411,6 +424,7 @@ namespace Coordinates {
                 return context->tr(
                     "Arcs on (boundary) triangle %1 crossing triangle vertex %2").
                     arg(whichCoord / 3).arg(whichCoord % 3);
+#ifdef SUPPORT_TONS
         } else if (coordSystem == regina::NS_ORIENTED) {
             size_t stdCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
@@ -459,6 +473,7 @@ namespace Coordinates {
                     arg(regina::quadDefn[(quadCoord % 3)][2]).
                     arg(regina::quadDefn[(quadCoord % 3)][3]);
             }
+#endif
         }
 
         return context->tr("This coordinate system is not known");
@@ -527,6 +542,7 @@ namespace Coordinates {
             return surface.edgeWeight(whichCoord);
         } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
             return surface.arcs(whichCoord / 3, whichCoord % 3);
+#ifdef SUPPORT_TONS
         } else if (coordSystem == regina::NS_ORIENTED) {
             bool orientation = (whichCoord % 2 == 0);
             whichCoord /= 2;
@@ -541,6 +557,7 @@ namespace Coordinates {
             whichCoord /= 2;
             return surface.orientedQuads(
                 whichCoord / 3, whichCoord % 3, orientation);
+#endif
         }
 
         return (long)0;

@@ -46,11 +46,6 @@
 namespace regina {
 
 /**
- * \weakgroup subcomplex
- * @{
- */
-
-/**
  * Represents a layered chain pair component of a triangulation.
  *
  * A layered chain pair consists of two layered chains (as described by
@@ -75,25 +70,51 @@ namespace regina {
  * only one tetrahedron is in fact a layered loop with a twist
  * (see class LayeredLoop).
  *
- * All optional StandardTriangulation routines are implemented for this
- * class.
+ * All optional StandardTriangulation routines are implemented for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other StandardTriangulation
+ * subclasses.  Note that the only way to create these objects (aside from
+ * copying or moving) is via the static member function recognise().
+ *
+ * \ingroup subcomplex
  */
 class LayeredChainPair : public StandardTriangulation {
     private:
-        LayeredChain* chain_[2];
+        LayeredChain chain_[2];
             /**< The two layered chains that make up this pair. */
 
     public:
         /**
-         * Destroys this layered chain pair.
+         * Creates a new copy of this structure.
          */
-        virtual ~LayeredChainPair();
+        LayeredChainPair(const LayeredChainPair&) = default;
+
         /**
-         * Returns a newly created clone of this structure.
+         * Sets this to be a copy of the given structure.
+         *
+         * @return a reference to this structure.
+         */
+        LayeredChainPair& operator = (const LayeredChainPair&) = default;
+
+        /**
+         * Deprecated routine that returns a new copy of this structure.
+         *
+         * \deprecated Just use the copy constructor instead.
          *
          * @return a newly created clone.
          */
-        LayeredChainPair* clone() const;
+        [[deprecated]] LayeredChainPair* clone() const;
+
+        /**
+         * Swaps the contents of this and the given structure.
+         *
+         * @param other the structure whose contents should be swapped
+         * with this.
+         */
+        void swap(LayeredChainPair& other) noexcept;
 
         /**
          * Returns the requested layered chain used to form this structure.
@@ -104,58 +125,96 @@ class LayeredChainPair : public StandardTriangulation {
          * or 1.
          * @return the requested layered chain.
          */
-        const LayeredChain* chain(int which) const;
+        const LayeredChain& chain(int which) const;
 
         /**
          * Determines if the given triangulation component is a layered
          * chain pair.
          *
+         * This function returns by (smart) pointer for consistency with
+         * StandardTriangulation::recognise(), which makes use of the
+         * polymorphic nature of the StandardTriangulation class hierarchy.
+         *
          * @param comp the triangulation component to examine.
-         * @return a newly created structure containing details of the
-         * layered chain pair, or \c null if the given component is
-         * not a layered chain pair.
+         * @return a structure containing details of the layered chain pair,
+         * or \c null if the given component is not a layered chain pair.
          */
-        static LayeredChainPair* isLayeredChainPair(const Component<3>* comp);
+        static std::unique_ptr<LayeredChainPair> recognise(
+            const Component<3>* comp);
+        /**
+         * A deprecated alias to recognise if a component is a layered chain
+         * pair.
+         *
+         * \deprecated This function has been renamed to recognise().
+         * See recognise() for details on the parameters and return value.
+         */
+        [[deprecated]] static std::unique_ptr<LayeredChainPair>
+            isLayeredChainPair(const Component<3>* comp);
 
-        Manifold* manifold() const override;
-        std::optional<AbelianGroup> homology() const override;
+        std::unique_ptr<Manifold> manifold() const override;
+        AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
 
     private:
         /**
-         * Creates a new uninitialised structure.
+         * Creates a new structure containing the given data.
          */
-        LayeredChainPair();
+        LayeredChainPair(const LayeredChain& c0, const LayeredChain& c1);
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls L31Pillow::swap(); it is provided
+ * so that L31Pillow meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(LayeredChainPair& a, LayeredChainPair& b) noexcept;
 
 // Inline functions for LayeredChainPair
 
-inline LayeredChainPair::LayeredChainPair() {
-    chain_[0] = chain_[1] = 0;
-}
-inline LayeredChainPair::~LayeredChainPair() {
-    if (chain_[0]) delete chain_[0];
-    if (chain_[1]) delete chain_[1];
+inline LayeredChainPair::LayeredChainPair(const LayeredChain& c0,
+        const LayeredChain& c1) : chain_ { c0, c1 } {
 }
 
-inline const LayeredChain* LayeredChainPair::chain(int which) const {
+inline void LayeredChainPair::swap(LayeredChainPair& other) noexcept {
+    chain_[0].swap(other.chain_[0]);
+    chain_[1].swap(other.chain_[1]);
+}
+
+inline LayeredChainPair* LayeredChainPair::clone() const {
+    return new LayeredChainPair(*this);
+}
+
+inline const LayeredChain& LayeredChainPair::chain(int which) const {
     return chain_[which];
 }
 inline std::ostream& LayeredChainPair::writeName(std::ostream& out) const {
     return out << "C("
-        << chain_[0]->index() << ',' << chain_[1]->index() << ')';
+        << chain_[0].index() << ',' << chain_[1].index() << ')';
 }
 inline std::ostream& LayeredChainPair::writeTeXName(std::ostream& out) const {
     return out << "C_{"
-        << chain_[0]->index() << ',' << chain_[1]->index() << '}';
+        << chain_[0].index() << ',' << chain_[1].index() << '}';
 }
 inline void LayeredChainPair::writeTextLong(std::ostream& out) const {
     out << "Layered chain pair (chain lengths "
-        << chain_[0]->index() << ", " << chain_[1]->index() << ')';
+        << chain_[0].index() << ", " << chain_[1].index() << ')';
+}
+
+inline std::unique_ptr<LayeredChainPair> LayeredChainPair::isLayeredChainPair(
+        const Component<3>* comp) {
+    return recognise(comp);
+}
+
+inline void swap(LayeredChainPair& a, LayeredChainPair& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

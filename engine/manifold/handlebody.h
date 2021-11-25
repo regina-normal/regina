@@ -45,15 +45,17 @@
 namespace regina {
 
 /**
- * \weakgroup manifold
- * @{
- */
-
-/**
  * Represents an arbitrary handlebody.
  *
  * All optional Manifold routines except for Manifold::construct() are
  * implemented for this class.
+ *
+ * This class supports copying but does not implement separate move operations,
+ * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the other manifold classes.
+ *
+ * \ingroup manifold
  */
 class Handlebody : public Manifold {
     private:
@@ -73,15 +75,9 @@ class Handlebody : public Manifold {
          */
         Handlebody(unsigned long newHandles, bool newOrientable);
         /**
-         * Creates a clone of the given handlebody.
-         *
-         * @param cloneMe the handlebody to clone.
+         * Creates a new copy of the given handlebody.
          */
-        Handlebody(const Handlebody& cloneMe) = default;
-        /**
-         * Destroys this handlebody.
-         */
-        virtual ~Handlebody();
+        Handlebody(const Handlebody&) = default;
         /**
          * Returns the number of handles of this handlebody.
          *
@@ -115,26 +111,43 @@ class Handlebody : public Manifold {
         bool operator != (const Handlebody& compare) const;
 
         /**
-         * Sets this to be a clone of the given handlebody.
+         * Sets this to be a copy of the given handlebody.
          *
-         * @param cloneMe the handlebody to clone.
+         * @return a reference to this handlebody.
          */
-        Handlebody& operator = (const Handlebody& cloneMe) = default;
+        Handlebody& operator = (const Handlebody&) = default;
 
-        std::optional<AbelianGroup> homology() const override;
+        /**
+         * Swaps the contents of this and the given handlebody.
+         *
+         * @param other the handlebody whose contents should be swapped
+         * with this.
+         */
+        void swap(Handlebody& other) noexcept;
+
+        AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given handlebodies.
+ *
+ * This global routine simply calls Handlebody::swap(); it is provided so
+ * that LensSpace meets the C++ Handlebody requirements.
+ *
+ * @param a the first handlebody whose contents should be swapped.
+ * @param b the second handlebody whose contents should be swapped.
+ *
+ * \ingroup manifold
+ */
+void swap(Handlebody& a, Handlebody& b) noexcept;
 
 // Inline functions for Handlebody
 
 inline Handlebody::Handlebody(unsigned long newHandles, bool newOrientable) :
         nHandles(newHandles), orientable(newOrientable) {
-}
-inline Handlebody::~Handlebody() {
 }
 inline unsigned long Handlebody::handles() const {
     return nHandles;
@@ -159,6 +172,15 @@ inline bool Handlebody::operator != (const Handlebody& compare) const {
 
 inline bool Handlebody::isHyperbolic() const {
     return false;
+}
+
+inline void Handlebody::swap(Handlebody& other) noexcept {
+    std::swap(nHandles, other.nHandles);
+    std::swap(orientable, other.orientable);
+}
+
+inline void swap(Handlebody& a, Handlebody& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

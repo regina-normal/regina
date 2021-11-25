@@ -62,14 +62,14 @@ class Tri2UI : public PacketTabbedUI {
         /**
          * Constructor and destructor.
          */
-        Tri2UI(regina::Triangulation<2>* packet,
+        Tri2UI(regina::PacketOf<regina::Triangulation<2>>* packet,
             PacketPane* newEnclosingPane);
 
         /**
          * PacketUI overrides.
          */
-        const std::vector<QAction*>& getPacketTypeActions();
-        QString getPacketMenuText() const;
+        const std::vector<QAction*>& getPacketTypeActions() override;
+        QString getPacketMenuText() const override;
 };
 
 /**
@@ -80,7 +80,7 @@ class Tri2HeaderUI : public PacketViewerTab {
         /**
          * Packet details
          */
-        regina::Triangulation<2>* tri;
+        regina::PacketOf<regina::Triangulation<2>>* tri;
 
         /**
          * Internal components
@@ -93,7 +93,7 @@ class Tri2HeaderUI : public PacketViewerTab {
         /**
          * Constructor.
          */
-        Tri2HeaderUI(regina::Triangulation<2>* packet,
+        Tri2HeaderUI(regina::PacketOf<regina::Triangulation<2>>* packet,
                 PacketTabbedUI* useParentUI);
 
         /**
@@ -104,9 +104,9 @@ class Tri2HeaderUI : public PacketViewerTab {
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
         /**
          * Allow other UIs to access the summary information.

@@ -36,7 +36,6 @@
 #include "enumerate/hilbertdual.h"
 #include "enumerate/hilbertprimal.h"
 #include "hypersurface/normalhypersurfaces.h"
-#include "hypersurface/hscoordregistry.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
@@ -44,22 +43,18 @@
 
 namespace regina {
 
-std::optional<MatrixInt> makeMatchingEquations(
-        const Triangulation<4>& triangulation, HyperCoords coords) {
-    return forCoords(coords, [&](auto info) {
-        return decltype(info)::Class::makeMatchingEquations(triangulation);
-    }, std::nullopt);
-}
+void NormalHypersurfaces::swap(NormalHypersurfaces& other) {
+    if (std::addressof(other) == this)
+        return;
 
-EnumConstraints makeEmbeddedConstraints(
-        const Triangulation<4>& triangulation, HyperCoords coords) {
-    return forCoords(coords, [&](auto info) {
-        return decltype(info)::Class::makeEmbeddedConstraints(triangulation);
-    });
-}
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
 
-const Triangulation<4>& NormalHypersurfaces::triangulation() const {
-    return *dynamic_cast<Triangulation<4>*>(parent());
+    surfaces_.swap(other.surfaces_);
+    triangulation_.swap(other.triangulation_);
+    std::swap(coords_, other.coords_);
+    std::swap(which_, other.which_);
+    std::swap(algorithm_, other.algorithm_);
 }
 
 void NormalHypersurfaces::writeTextShort(std::ostream& out) const {
@@ -86,11 +81,7 @@ void NormalHypersurfaces::writeTextShort(std::ostream& out) const {
     out << " hypersurface";
     if (surfaces_.size() != 1)
         out << 's';
-    out << " ("
-        << forCoords(coords_, [](auto info) {
-                return decltype(info)::name;
-            }, "Unknown")
-        << ')';
+    out << " (" << HyperInfo::name(coords_) << ')';
 }
 
 void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
@@ -114,11 +105,7 @@ void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
 
     out << " hypersurfaces\n";
 
-    out << "Coordinates: "
-        << forCoords(coords_, [](auto info) {
-                return decltype(info)::name;
-            }, "Unknown")
-        << '\n';
+    out << "Coordinates: " << HyperInfo::name(coords_) << '\n';
 
     size_t n = surfaces_.size();
     out << "Number of hypersurfaces is " << n << '\n';
@@ -126,34 +113,6 @@ void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
         s.writeTextShort(out);
         out << '\n';
     }
-}
-
-void NormalHypersurfaces::writeXMLPacketData(std::ostream& out) const {
-    // Write the surface list parameters.
-    out << "  <params "
-        << "type=\"" << which_.intValue() << "\" "
-        << "algorithm=\"" << algorithm_.intValue() << "\" "
-        << "flavourid=\"" << coords_ << "\"\n";
-    out << "\tflavour=\""
-        << regina::xml::xmlEncodeSpecialChars(
-            forCoords(coords_, [](auto info) {
-                return decltype(info)::name;
-            }, "Unknown"))
-        << "\"/>\n";
-
-    // Write the individual hypersurfaces.
-    for (auto it = surfaces_.begin(); it != surfaces_.end(); it++)
-        it->writeXMLData(out);
-}
-
-Packet* NormalHypersurfaces::internalClonePacket(Packet* parent) const {
-    NormalHypersurfaces* ans = new NormalHypersurfaces(
-        coords_, which_, algorithm_);
-    for (const NormalHypersurface& s : surfaces_) {
-        ans->surfaces_.push_back(NormalHypersurface(s,
-            *static_cast<Triangulation<4>*>(parent)));
-    }
-    return ans;
 }
 
 } // namespace regina

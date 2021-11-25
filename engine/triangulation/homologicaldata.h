@@ -44,18 +44,12 @@
 #include "algebra/markedabeliangroup.h"
 #include "maths/rational.h"
 #include "triangulation/dim3.h"
-#include "utilities/ptrutils.h"
 #include <algorithm>
-#include <memory>
 #include <vector>
 #include <cstddef>
+#include <optional>
 
 namespace regina {
-
-/**
- * \weakgroup triangulation
- * @{
- */
 
 /**
  * Data type that deals with all the detailed homological information in a
@@ -112,10 +106,19 @@ namespace regina {
  * - \b 3-cells: the non-boundary, non-ideal vertices.begin() through
  *               vertices.end().
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.  Be aware, however, that
+ * it contains an enormous amount of internal data, and even moves will
+ * still be relatively expensive - you should try to use just the one
+ * HomologicalData object and not copy or move it at all, if possible.
+ *
  * This class will eventually be removed in a future release of Regina.
- * A new and more flexible class called NCellularData will take its place.
+ * A new and more flexible class called CellularData will take its place.
  *
  * @author Ryan Budney
+ *
+ * \ingroup triangulation
  */
 class HomologicalData : public ShortOutput<HomologicalData> {
 private:
@@ -140,18 +143,32 @@ private:
             /**
              * Construct an empty array.
              */
-            inline SortedArray() {
-            }
+            inline SortedArray() = default;
 
             /**
              * Construct a clone of the given array.
              */
             SortedArray(const SortedArray&) = default;
+            /**
+             * Move the contents of the given array into this new array.
+             */
+            SortedArray(SortedArray&&) noexcept = default;
 
             /**
              * Set this to a clone of the given array.
              */
             SortedArray& operator = (const SortedArray&) = default;
+            /**
+             * Move the contents of the given array into this array.
+             */
+            SortedArray& operator = (SortedArray&&) noexcept = default;
+
+            /**
+             * Swap the contents of this and the given array.
+             */
+            void swap(SortedArray& other) noexcept {
+                data_.swap(other.data_);
+            }
 
             /**
              * Return the number of elements in this array.
@@ -182,8 +199,7 @@ private:
              * or -1 if the given integer is not stored in this array.
              */
             inline ptrdiff_t index(unsigned long value) const {
-                std::vector<unsigned long>::const_iterator it =
-                    std::lower_bound(data_.begin(), data_.end(), value);
+                auto it = std::lower_bound(data_.begin(), data_.end(), value);
                 if (it != data_.end() && *it == value)
                     return (it - data_.begin());
                 else
@@ -204,92 +220,91 @@ private:
     };
 
     /**
-     * Stored pointer to a valid triangulation. All routines use this
-     * triangulation as reference.
-     * This is the triangulation that it is initialized by.
+     * The triangulation that this object was initialised with.
+     * All routines use this triangulation as reference.
      */
-    std::unique_ptr<Triangulation<3>> tri;
+    SnapshotRef<Triangulation<3>> tri_;
 
     /**
-     * Pointer to the 0-th homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
+     * The 0-th homology group in standard cellular coordinates,
+     * or no value if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> mHomology0;
+    std::optional<MarkedAbelianGroup> mHomology0_;
     /**
-     * Pointer to the 1st homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
+     * The 1st homology group in standard cellular coordinates,
+     * or no value if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> mHomology1;
+    std::optional<MarkedAbelianGroup> mHomology1_;
     /**
-     * Pointer to the 2nd homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
+     * The 2nd homology group in standard cellular coordinates,
+     * or no value if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> mHomology2;
+    std::optional<MarkedAbelianGroup> mHomology2_;
     /**
-     * Pointer to the 3rd homology group in standard cellular coordinates,
-     * or 0 if it has not yet been computed.
+     * The 3rd homology group in standard cellular coordinates,
+     * or no value if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> mHomology3;
+    std::optional<MarkedAbelianGroup> mHomology3_;
 
     /**
-     * Pointer to the 0-th boundary homology group in standard cellular
-     * coordinates, or 0 if it has not yet been computed.
+     * The 0-th boundary homology group in standard cellular
+     * coordinates, or no value if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> bHomology0;
+    std::optional<MarkedAbelianGroup> bHomology0_;
     /**
-     * Pointer to the 1st boundary homology group in standard cellular
-     * coordinates, or 0 if it has not yet been computed.
+     * The 1st boundary homology group in standard cellular
+     * coordinates, or no value if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> bHomology1;
+    std::optional<MarkedAbelianGroup> bHomology1_;
     /**
-     * Pointer to the 2nd boundary homology group in standard cellular
-     * coordinates, or 0 if it has not yet been computed.
+     * The 2nd boundary homology group in standard cellular
+     * coordinates, or no value if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> bHomology2;
+    std::optional<MarkedAbelianGroup> bHomology2_;
 
     /**
-     * Pointer to the boundary inclusion on 0-th homology, standard
-     * cellular coordinates, or 0 if it has not yet been computed.
+     * The boundary inclusion on 0-th homology, standard
+     * cellular coordinates, or no value if it has not yet been computed.
      */
-    std::unique_ptr<HomMarkedAbelianGroup> bmMap0;
+    std::optional<HomMarkedAbelianGroup> bmMap0_;
     /**
-     * Pointer to the boundary inclusion on 1st homology, standard
-     * cellular coordinates, or 0 if it has not yet been computed.
+     * The boundary inclusion on 1st homology, standard
+     * cellular coordinates, or no value if it has not yet been computed.
      */
-    std::unique_ptr<HomMarkedAbelianGroup> bmMap1;
+    std::optional<HomMarkedAbelianGroup> bmMap1_;
     /**
-     * Pointer to the boundary inclusion on 2nd homology, standard
-     * cellular coordinates, or 0 if it has not yet been computed.
+     * The boundary inclusion on 2nd homology, standard
+     * cellular coordinates, or no value if it has not yet been computed.
      */
-    std::unique_ptr<HomMarkedAbelianGroup> bmMap2;
+    std::optional<HomMarkedAbelianGroup> bmMap2_;
 
     /**
-     * Pointer to the 0-th homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
+     * The 0-th homology group in dual cellular coordinates, or
+     * no value if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> dmHomology0;
+    std::optional<MarkedAbelianGroup> dmHomology0_;
     /**
-     * Pointer to the 1st homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
+     * The 1st homology group in dual cellular coordinates, or
+     * no value if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> dmHomology1;
+    std::optional<MarkedAbelianGroup> dmHomology1_;
     /**
-     * Pointer to the 2nd homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
+     * The 2nd homology group in dual cellular coordinates, or
+     * no value if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> dmHomology2;
+    std::optional<MarkedAbelianGroup> dmHomology2_;
     /**
-     * Pointer to the 3rd homology group in dual cellular coordinates, or
-     * 0 if it has not yet been computed.
+     * The 3rd homology group in dual cellular coordinates, or
+     * no value if it has not yet been computed.
      */
-    std::unique_ptr<MarkedAbelianGroup> dmHomology3;
+    std::optional<MarkedAbelianGroup> dmHomology3_;
 
     /**
-     * Pointer to the cellular approx of the identity H1(M) --> H1(M)
-     * from dual to standard cellular coordinates, or 0 if it has not yet
-     * been computed.
+     * The cellular approx of the identity H1(M) --> H1(M)
+     * from dual to standard cellular coordinates, or no value if it has
+     * not yet been computed.
      */
-    std::unique_ptr<HomMarkedAbelianGroup> dmTomMap1;
+    std::optional<HomMarkedAbelianGroup> dmTomMap1_;
 
     // below here and the public declaration go the internal bits of
     // data that are not publicly accessible...
@@ -297,7 +312,7 @@ private:
     // the chain complexes for the regular cellular homology
 
     /** true if the indexing of the chain complexes is complete */
-    bool ccIndexingComputed;
+    bool ccIndexingComputed_;
 
     /** number of standard cells in dimension 0, 1, 2, 3. */
     unsigned long numStandardCells[4];
@@ -332,50 +347,63 @@ private:
     bool chainComplexesComputed;
 
     /** 0th term in chain complex for cellular homology, using standard
-        CW-complex struc */
-    std::unique_ptr<MatrixInt> A0;
+        CW-complex struc, or no value if not yet computed */
+    std::optional<MatrixInt> A0_;
     /** 1st term in chain complex for cellular homology, using standard
-        CW-complex struc */
-    std::unique_ptr<MatrixInt> A1;
+        CW-complex struc, or no value if not yet computed */
+    std::optional<MatrixInt> A1_;
     /** 2nd term in chain complex for cellular homology, using standard
-        CW-complex struc */
-    std::unique_ptr<MatrixInt> A2;
+        CW-complex struc, or no value if not yet computed */
+    std::optional<MatrixInt> A2_;
     /** 3rd term in chain complex for cellular homology, using standard
-        CW-complex struc */
-    std::unique_ptr<MatrixInt> A3;
+        CW-complex struc, or no value if not yet computed */
+    std::optional<MatrixInt> A3_;
     /** 4th term in chain complex for cellular homology, using standard
-        CW-complex struc */
-    std::unique_ptr<MatrixInt> A4;
+        CW-complex struc, or no value if not yet computed */
+    std::optional<MatrixInt> A4_;
 
-    /** 0-th term in chain complex for dual cellular homology */
-    std::unique_ptr<MatrixInt> B0_; // B0 is #defined in some system headers :/
-    /** 1st term in chain complex for dual cellular homology */
-    std::unique_ptr<MatrixInt> B1;
-    /** 2nd term in chain complex for dual cellular homology */
-    std::unique_ptr<MatrixInt> B2;
-    /** 3rd term in chain complex for dual cellular homology */
-    std::unique_ptr<MatrixInt> B3;
-    /** 4th term in chain complex for dual cellular homology */
-    std::unique_ptr<MatrixInt> B4;
+    /** 0-th term in chain complex for dual cellular homology, or
+        no value if not yet computed */
+    std::optional<MatrixInt> B0_; // B0 is #defined in some system headers :/
+    /** 1st term in chain complex for dual cellular homology, or
+        no value if not yet computed */
+    std::optional<MatrixInt> B1_;
+    /** 2nd term in chain complex for dual cellular homology, or
+        no value if not yet computed */
+    std::optional<MatrixInt> B2_;
+    /** 3rd term in chain complex for dual cellular homology, or
+        no value if not yet computed */
+    std::optional<MatrixInt> B3_;
+    /** 4th term in chain complex for dual cellular homology, or
+        no value if not yet computed */
+    std::optional<MatrixInt> B4_;
 
-    /** 0th term in chain complex for boundary cellular homology */
-    std::unique_ptr<MatrixInt> Bd0;
-    /** 1st term in chain complex for boundary cellular homology */
-    std::unique_ptr<MatrixInt> Bd1;
-    /** 2nd term in chain complex for boundary cellular homology */
-    std::unique_ptr<MatrixInt> Bd2;
-    /** 3rd term in chain complex for boundary cellular homology */
-    std::unique_ptr<MatrixInt> Bd3;
+    /** 0th term in chain complex for boundary cellular homology, or
+        no value if not yet computed */
+    std::optional<MatrixInt> Bd0_;
+    /** 1st term in chain complex for boundary cellular homology, or
+        no value if not yet computed */
+    std::optional<MatrixInt> Bd1_;
+    /** 2nd term in chain complex for boundary cellular homology, or
+        no value if not yet computed */
+    std::optional<MatrixInt> Bd2_;
+    /** 3rd term in chain complex for boundary cellular homology, or
+        no value if not yet computed */
+    std::optional<MatrixInt> Bd3_;
 
-    /** Chain map from C_0 boundary to C_0 manifold, standard coords */
-    std::unique_ptr<MatrixInt> B0Incl;
-    /** Chain map from C_1 boundary to C_1 manifold, standard coords */
-    std::unique_ptr<MatrixInt> B1Incl;
-    /** Chain map from C_2 boundary to C_2 manifold, standard coords */
-    std::unique_ptr<MatrixInt> B2Incl;
+    /** Chain map from C_0 boundary to C_0 manifold, standard coords, or
+        no value if not yet computed */
+    std::optional<MatrixInt> B0Incl_;
+    /** Chain map from C_1 boundary to C_1 manifold, standard coords, or
+        no value if not yet computed */
+    std::optional<MatrixInt> B1Incl_;
+    /** Chain map from C_2 boundary to C_2 manifold, standard coords, or
+        no value if not yet computed */
+    std::optional<MatrixInt> B2Incl_;
 
-    /** Isomorphism from C_1 dual to C_1 standard */
-    std::unique_ptr<MatrixInt> H1map;
+    /** Isomorphism from C_1 dual to C_1 standard, or no value if not yet
+        computed */
+    std::optional<MatrixInt> H1map_;
 
     /** Call this routine to demand the indexing of the chain complexes. */
     void computeccIndexing();
@@ -403,6 +431,16 @@ private:
      * this routine unless you know the manifold is orientable.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      */
     void computeTorsionLinkingForm();
     /**
@@ -411,6 +449,16 @@ private:
      * orientable double cover).
      *
      * \pre The triangulation is of a connected 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      */
     void computeEmbeddabilityString();
 
@@ -421,7 +469,7 @@ private:
         h1PrimePowerDecomp;
     /** p-primary decomposition of the torsion linking form as needed to
      ** construct the Kawauchi-Kojima invariants. */
-    std::vector< Matrix<Rational>* > linkingFormPD;
+    std::vector<Matrix<Rational>> linkingFormPD;
 
     /** True if torsion linking form is `hyperbolic'.   */
     bool torsionLinkingFormIsHyperbolic;
@@ -456,25 +504,66 @@ public:
     /**
      * Takes as input a triangulation.
      *
-     * This class takes its own copy of the input triangulation.  This
-     * means that the input triangulation can change or even be
-     * destroyed, and this homological data will happily continue to work
-     * with the original triangulation as it was first passed to the
-     * constructor.
+     * This class will maintain a fixed snapshot of the given triangulation as
+     * it is at this point in time.  You are free to edit or even destroy
+     * the input triangulation later on; if you do then this HomologicalData
+     * object will automatically take its own deep copy of the original and
+     * continue to use that for its own internal reference.
      *
      * @param input the triangulation to use.
      */
     HomologicalData(const Triangulation<3>& input);
     /**
-     * Copy constructor.
+     * Creates a new copy of the given object.
      *
-     * @param h the homological data to clone.
+     * This constructor induces a deep copy of the given object; moreover,
+     * this is expensive since HomologicalData objects are \e very large.
      */
-    HomologicalData(const HomologicalData& h);
+    HomologicalData(const HomologicalData&) = default;
     /**
-     * Destructor.
+     * Moves the contents of the given object into this new object.
+     *
+     * This operation is constant time, but it is still expensive
+     * constant time because HomologicalData objects are \e very large.
+     *
+     * The object that was passed will no longer be usable.
      */
-    ~HomologicalData();
+    HomologicalData(HomologicalData&&) noexcept = default;
+
+    /**
+     * Sets this to be a copy of the given object.
+     *
+     * This operator induces a deep copy of the given object; moreover,
+     * this is expensive since HomologicalData objects are \e very large.
+     *
+     * @return a reference to this normal surface.
+     */
+    HomologicalData& operator = (const HomologicalData&) = default;
+    /**
+     * Moves the contents of the given object into this object.
+     *
+     * This operation is constant time, but it is still expensive
+     * constant time because HomologicalData objects are \e very large.
+     *
+     * The object that was passed will no longer be usable.
+     *
+     * @return a reference to this object.
+     */
+    HomologicalData& operator = (HomologicalData&&) noexcept = default;
+
+    /**
+     * Swaps the contents of this and the given object.
+     *
+     * \warning Although this operation is constant time, the HomologicalData
+     * class contains an enormous amount of data spread across many different
+     * member variables, and so this should really be considered "expensive
+     * constant time".  You should still work to avoid swapping (or moving,
+     * and certainly copying) HomologicalData objects where possible.
+     *
+     * @param other the object whose contents should be swapped with this.
+     */
+    void swap(HomologicalData& other) noexcept;
+
     /**
      * Writes a short text representation of this object to the
      * given output stream.
@@ -483,7 +572,7 @@ public:
      * not yet asked HomologicalData to compute anything about this
      * triangulation, writeTextShort may be empty.
      *
-     * \ifacespython Not present.
+     * \ifacespython Not present; use str() instead.
      *
      * @param out the output stream to which to write.
      */
@@ -630,6 +719,16 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
+     *
      * @return the torsion form rank vector.
      */
     const std::vector< std::pair< Integer,
@@ -638,6 +737,16 @@ public:
      * Same as torsionRankVector() but returns as a human-readable string.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      *
      * @return human-readable prime power factorization of the order of
      * the torsion subgroup of H1.
@@ -653,6 +762,16 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
+     *
      * @return the Kawauchi-Kojima sigma-vector.
      */
     const std::vector<LargeInteger>& torsionSigmaVector();
@@ -661,6 +780,16 @@ public:
      * This is an orientation-sensitive invariant.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      *
      * @return the Kawauchi-Kojima sigma-vector in human readable form.
      */
@@ -676,6 +805,16 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
+     *
      * @return the Legendre symbol vector associated to the torsion
      * linking form.
      */
@@ -686,6 +825,16 @@ public:
      * human-readable string.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      *
      * @return the Legendre symbol vector in human-readable form.
      */
@@ -705,6 +854,16 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
+     *
      * @return \c true iff the torsion linking form is hyperbolic.
      */
     bool formIsHyperbolic();
@@ -712,6 +871,16 @@ public:
      * Returns true iff the torsion linking form is split.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      *
      * @return \c true iff the linking form is split.
      */
@@ -726,6 +895,16 @@ public:
      * perhaps with boundary to embed in a homology 4-sphere.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
+     *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
      *
      * @return \c true iff the form satisfies the 2-torsion
      * condition of Kawauchi-Kojima.
@@ -748,17 +927,41 @@ public:
      *
      * \pre The triangulation is of a connected 3-manifold.
      *
+     * \warning The code that computes the torsion linking form includes
+     * some floating-point arithmetic that could be subject to round-off error.
+     * Such errors are not expected, since this code is simply distinguishing
+     * different multiples of a known irrational; nevertheless, these
+     * results should at present be considered non-rigorous.
+     *
+     * \exception UnsolvedCase The torsion linking form could not be computed.
+     * This should be rare: the only way it can occur is during an internal
+     * rational-to-double conversion if the rational is out of range.
+     *
      * @return a string giving a one-line description of what
      * is known about where this manifold embeds, based solely
      * on the manifold's homological data.
      */
     const std::string& embeddabilityComment();
-
-    // Make this class non-assignable.
-    HomologicalData& operator = (const HomologicalData&) = delete;
 };
 
-/*@}*/
+/**
+ * Swaps the contents of the two given HomologicalData objects.
+ *
+ * This global routine simply calls HomologicalData::swap(); it is provided
+ * so that HomologicalData meets the C++ Swappable requirements.
+ *
+ * \warning Although this operation is constant time, the HomologicalData
+ * class contains an enormous amount of data spread across many different
+ * member variables, and so this should really be considered "expensive
+ * constant time".  You should still work to avoid swapping (or moving,
+ * and certainly copying) HomologicalData objects where possible.
+ *
+ * @param a the first object whose contents should be swapped.
+ * @param b the second object whose contents should be swapped.
+ *
+ * \ingroup triangulation
+ */
+inline void swap(HomologicalData& a, HomologicalData& b) noexcept;
 
 // Inline functions for HomologicalData
 
@@ -767,107 +970,18 @@ inline HomologicalData::HomologicalData(const Triangulation<3>& input):
 
         // We clone the properties of input, since the embeddability
         // string wants to know whether input is the 3-sphere.
-        tri(new Triangulation<3>(input)),
+        tri_(input),
 
-        ccIndexingComputed(false),
+        ccIndexingComputed_(false),
         chainComplexesComputed(false),
 
-        torsionFormComputed(false),
-        h1PrimePowerDecomp(0), linkingFormPD(0) 
+        torsionFormComputed(false)
 {
     std::fill(numStandardCells, numStandardCells + 4, 0);
     std::fill(numDualCells, numDualCells + 4, 0);
     std::fill(numBdryCells, numBdryCells + 3, 0);
 }
 
-
-
-// copy constructor
-inline HomologicalData::HomologicalData(const HomologicalData& g) :
-
-        tri(clonePtr(g.tri)),
-
-        mHomology0(clonePtr(g.mHomology0)),
-        mHomology1(clonePtr(g.mHomology1)),
-        mHomology2(clonePtr(g.mHomology2)),
-        mHomology3(clonePtr(g.mHomology3)),
-
-        bHomology0(clonePtr(g.bHomology0)),
-        bHomology1(clonePtr(g.bHomology1)),
-        bHomology2(clonePtr(g.bHomology2)),
-
-        bmMap0(clonePtr(g.bmMap0)),
-        bmMap1(clonePtr(g.bmMap1)),
-        bmMap2(clonePtr(g.bmMap2)),
-
-        dmHomology0(clonePtr(g.dmHomology0)),
-        dmHomology1(clonePtr(g.dmHomology1)),
-        dmHomology2(clonePtr(g.dmHomology2)),
-        dmHomology3(clonePtr(g.dmHomology3)),
-
-        dmTomMap1(clonePtr(g.dmTomMap1)),
-
-        ccIndexingComputed(g.ccIndexingComputed),
-
-        chainComplexesComputed(g.chainComplexesComputed),
-        A0(clonePtr(g.A0)), A1(clonePtr(g.A1)), A2(clonePtr(g.A2)),
-        A3(clonePtr(g.A3)), A4(clonePtr(g.A4)),
-        B0_(clonePtr(g.B0_)), B1(clonePtr(g.B1)), B2(clonePtr(g.B2)),
-        B3(clonePtr(g.B3)), B4(clonePtr(g.B4)),
-        Bd0(clonePtr(g.Bd0)), Bd1(clonePtr(g.Bd1)),
-        Bd2(clonePtr(g.Bd2)), Bd3(clonePtr(g.Bd3)),
-        B0Incl(clonePtr(g.B0Incl)),
-        B1Incl(clonePtr(g.B1Incl)),
-        B2Incl(clonePtr(g.B2Incl)),
-        H1map(clonePtr(g.H1map)),
-
-        torsionFormComputed(g.torsionFormComputed),
-        embeddabilityString(g.embeddabilityString)
-{
-    // More complex initialisation:
-    if (ccIndexingComputed) {
-        // Numbers of cells, dual cells and standard boundary cells
-        std::copy(g.numStandardCells, g.numStandardCells + 4, numStandardCells);
-        std::copy(g.numDualCells, g.numDualCells + 4, numDualCells);
-        std::copy(g.numBdryCells, g.numBdryCells + 3, numBdryCells);
-
-        sNIV = g.sNIV;   // non-ideal vertices
-        sIEOE = g.sIEOE;  // ideal endpoints of edges
-        sIEEOF = g.sIEEOF; // ideal end edges of faces
-        sIEFOT = g.sIEFOT; // ideal end faces of tetrahedra
-        dNINBV = g.dNINBV; // nonideal nonboundary vertices
-        dNBE = g.dNBE;   // non-boundary edges
-        dNBF = g.dNBF;   // non-boundary faces
-        sBNIV = g.sBNIV;  // boundary non-ideal vertices
-        sBNIE = g.sBNIE;  // boundary non-ideal edges
-        sBNIF = g.sBNIF;  // boundary non-ideal faces
-    }
-
-    if (torsionFormComputed) {
-        h1PrimePowerDecomp = g.h1PrimePowerDecomp;
-        linkingFormPD.resize( g.linkingFormPD.size(), 0 );
-        for (unsigned long i=0; i<linkingFormPD.size(); i++)
-            linkingFormPD[i] = new Matrix<Rational> (*g.linkingFormPD[i]);
-        torsionLinkingFormIsHyperbolic = g.torsionLinkingFormIsHyperbolic;
-        torsionLinkingFormIsSplit = g.torsionLinkingFormIsSplit;
-        torsionLinkingFormSatisfiesKKtwoTorCondition =
-            g.torsionLinkingFormSatisfiesKKtwoTorCondition;
-        torRankV = g.torRankV;
-        twoTorSigmaV = g.twoTorSigmaV;
-        oddTorLegSymV = g.oddTorLegSymV;
-        torsionRankString = g.torsionRankString;
-        torsionSigmaString = g.torsionSigmaString;
-        torsionLegendreString = g.torsionLegendreString;
-    }
-}
-
-// destructor
-inline HomologicalData::~HomologicalData() {
-    if (torsionFormComputed) {
-        for (unsigned long i=0; i<linkingFormPD.size(); i++)
-            delete linkingFormPD[i];
-    }
-}
 
 inline unsigned long HomologicalData::countStandardCells(unsigned dimension)
 {
@@ -948,6 +1062,10 @@ inline const std::string& HomologicalData::embeddabilityComment()
 {
     computeEmbeddabilityString();
     return embeddabilityString;
+}
+
+inline void swap(HomologicalData& a, HomologicalData& b) noexcept {
+    a.swap(b);
 }
 
 } // namespace regina

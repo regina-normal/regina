@@ -39,113 +39,113 @@
 
 namespace regina {
 
+Script& Script::operator = (const Script& src) {
+    ChangeEventSpan span(*this);
+
+    text_ = src.text_;
+    variables_ = src.variables_;
+
+    return *this;
+}
+
+void Script::swap(Script& other) {
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
+
+    text_.swap(other.text_);
+    variables_.swap(other.variables_);
+}
+
 const std::string& Script::variableName(size_t index) const {
-    std::map<std::string, Packet*>::const_iterator it = variables.begin();
+    auto it = variables_.begin();
     advance(it, index);
     return (*it).first;
 }
 
-Packet* Script::variableValue(size_t index) const {
-    std::map<std::string, Packet*>::const_iterator it = variables.begin();
+std::shared_ptr<Packet> Script::variableValue(size_t index) const {
+    auto it = variables_.begin();
     advance(it, index);
-    return (*it).second;
+    return it->second.lock();
 }
 
-Packet* Script::variableValue(const std::string& name) const {
-    std::map<std::string, Packet*>::const_iterator it = variables.find(name);
-    if (it == variables.end())
-        return 0;
-    return (*it).second;
+std::shared_ptr<Packet> Script::variableValue(const std::string& name) const {
+    auto it = variables_.find(name);
+    if (it == variables_.end())
+        return nullptr;
+    return it->second.lock();
 }
 
 long Script::variableIndex(const std::string& name) const {
-    std::map<std::string, Packet*>::const_iterator it = variables.find(name);
-    if (it == variables.end())
+    auto it = variables_.find(name);
+    if (it == variables_.end())
         return -1;
-    return distance(variables.begin(), it);
+    return distance(variables_.begin(), it);
 }
 
 void Script::setVariableName(size_t index, const std::string& name) {
-    std::map<std::string, Packet*>::iterator it = variables.begin();
+    auto it = variables_.begin();
     advance(it, index);
 
     if (name == it->first)
         return;
 
-    ChangeEventSpan span(this);
+    ChangeEventSpan span(*this);
 
-    Packet* value = it->second;
-    variables.erase(it);
-    variables.insert(std::make_pair(name, value));
+    std::weak_ptr<Packet> value = std::move(it->second);
+    variables_.erase(it);
+    variables_.emplace(name, std::move(value));
 }
 
-void Script::setVariableValue(size_t index, Packet* value) {
-    std::map<std::string, Packet*>::iterator it = variables.begin();
+void Script::setVariableValue(size_t index, std::weak_ptr<Packet> value) {
+    auto it = variables_.begin();
     advance(it, index);
 
-    if (it->second == value)
-        return;
-
-    ChangeEventSpan span(this);
-
-    if (it->second)
-        it->second->unlisten(this);
-    it->second = value;
-    if (it->second)
-        it->second->listen(this);
+    ChangeEventSpan span(*this);
+    it->second = std::move(value);
 }
 
 const std::string& Script::addVariableName(const std::string& name,
-        Packet* value) {
-    ChangeEventSpan span(this);
+        std::weak_ptr<Packet> value) {
+    ChangeEventSpan span(*this);
 
-    auto result = variables.insert(std::make_pair(name, value));
+    auto result = variables_.emplace(name, value);
     int which = 2;
     while (! result.second) {
         std::ostringstream s;
         s << name << ' ' << which;
-        result = variables.insert(std::make_pair(s.str(), value));
+        result = variables_.emplace(s.str(), value);
 
         ++which;
     }
 
-    if (value)
-        value->listen(this);
     return result.first->first;
 }
 
 void Script::removeVariable(const std::string& name) {
-    std::map<std::string, Packet*>::iterator it = variables.find(name);
-    if (it == variables.end())
+    auto it = variables_.find(name);
+    if (it == variables_.end())
         return;
 
-    if (it->second)
-        it->second->unlisten(this);
-
-    ChangeEventSpan span(this);
-    variables.erase(it);
+    ChangeEventSpan span(*this);
+    variables_.erase(it);
 }
 
 void Script::removeVariable(size_t index) {
-    std::map<std::string, Packet*>::iterator it = variables.begin();
+    auto it = variables_.begin();
     advance(it, index);
 
-    if (it->second)
-        it->second->unlisten(this);
-
-    ChangeEventSpan span(this);
-    variables.erase(it);
+    ChangeEventSpan span(*this);
+    variables_.erase(it);
 }
 
 void Script::writeTextLong(std::ostream& o) const {
-    if (variables.empty())
+    if (variables_.empty())
         o << "No variables.\n";
     else {
-        for (std::map<std::string, Packet*>::const_iterator vit =
-                variables.begin(); vit != variables.end(); vit++) {
-            o << "Variable: " << vit->first << " = ";
-            if (vit->second)
-                o << vit->second->label() << '\n';
+        for (const auto& v : variables_) {
+            o << "Variable: " << v.first << " = ";
+            if (auto shared = v.second.lock())
+                o << shared->label() << '\n';
             else
                 o << "(null)" << '\n';
         }
@@ -153,46 +153,39 @@ void Script::writeTextLong(std::ostream& o) const {
     o << '\n' << text_;
 }
 
-Packet* Script::internalClonePacket(Packet*) const {
-    Script* ans = new Script();
+std::shared_ptr<Packet> Script::internalClonePacket() const {
+    auto ans = std::make_shared<Script>();
     ans->text_ = text_;
-    ans->variables = variables;
+    ans->variables_ = variables_;
     return ans;
 }
 
-void Script::writeXMLPacketData(std::ostream& out) const {
+void Script::writeXMLPacketData(std::ostream& out, FileFormat format,
+        bool anon, PacketRefs& refs) const {
     using regina::xml::xmlEncodeSpecialChars;
 
-    for (std::map<std::string, Packet*>::const_iterator vit =
-            variables.begin(); vit != variables.end(); vit++) {
-        out << "  <var name=\"" << xmlEncodeSpecialChars((*vit).first)
+    writeXMLHeader(out, "script", format, anon, refs);
+
+    for (const auto& v : variables_) {
+        auto shared = v.second.lock();
+        out << "  <var name=\"" << xmlEncodeSpecialChars(v.first)
             << "\" valueid=\"";
-        if (vit->second)
-            out << vit->second->internalID();
+        if (shared)
+            out << shared->internalID();
         out << "\" value=\"";
-        if (vit->second)
-            out << xmlEncodeSpecialChars(vit->second->label());
+        if (shared)
+            out << xmlEncodeSpecialChars(shared->label());
         out << "\"/>\n";
     }
 
-    out << "  <text>" << xmlEncodeSpecialChars(text_) << "</text>\n";
-}
+    if (format == REGINA_XML_GEN_2)
+        out << "  <text>" << xmlEncodeSpecialChars(text_) << "</text>\n";
+    else
+        out << "  <code>" << xmlEncodeSpecialChars(text_) << "</code>\n";
 
-void Script::packetWasRenamed(Packet*) {
-    // We assume that the packet that was renamed is one of the
-    // variables for this packet.
-    // There is nothing to update here; just fire the update.
-    ChangeEventSpan span(this);
-}
-
-void Script::packetToBeDestroyed(PacketShell packet) {
-    // We know the script will change, because one of our variables is
-    // listening on this packet.
-    ChangeEventSpan span(this);
-    for (std::map<std::string, Packet*>::iterator vit =
-            variables.begin(); vit != variables.end(); vit++)
-        if (vit->second == packet)
-            vit->second = 0;
+    if (! anon)
+        writeXMLTreeData(out, format, refs);
+    writeXMLFooter(out, "script", format);
 }
 
 } // namespace regina

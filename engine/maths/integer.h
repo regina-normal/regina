@@ -40,10 +40,12 @@
  */
 
 #include <climits>
-#include <stdint.h> // MPIR (and thus SAGE) needs this *before* gmp.h.
-#include <stddef.h> // OSX needs this before gmp.h to avoid a ::ptrdiff_t error.
+#include <cstdint> // MPIR (and thus SAGE) needs this *before* gmp.h.
+#include <cstddef> // OSX needs this before gmp.h to avoid a ::ptrdiff_t error.
+#include <tuple>
 #include <gmp.h>
 #include "regina-core.h"
+#include "utilities/exception.h"
 #include "utilities/tightencoding.h"
 
 /**
@@ -55,6 +57,8 @@
  * By making our own copy of such optimisation macros we can use
  * C++-style casts instead of C-style casts and avoid noisy compiler
  * warnings.  I'd love a better way of doing this.
+ *
+ * \ingroup maths
  */
 #ifdef __GNUC__
     #define mpz_cmp_si_cpp(z, si) \
@@ -68,11 +72,6 @@
 
 namespace regina {
 
-/**
- * \weakgroup maths
- * @{
- */
-
 template <int bytes>
 class NativeInteger;
 
@@ -81,6 +80,8 @@ class NativeInteger;
  * should support infinity as an allowed value.
  *
  * See the IntegerBase class notes for details.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 struct InfinityBase;
@@ -89,29 +90,22 @@ struct InfinityBase;
 /**
  * An internal base class inherited by LargeInteger, which provides
  * support for infinity as an allowed value.
+ *
+ * End users should not use this class directly.
+ *
+ * \ingroup maths
  */
 template <>
 struct InfinityBase<true> {
-    bool infinite_;
+    bool infinite_ = false;
         /**< Does this integer represent infinity? */
-
-    /**
-     * Default constructor that sets this integer to be finite.
-     */
-    inline InfinityBase() : infinite_(false) {
-    }
-    /**
-     * Copy constructor that sets this integer to be infinite if and only
-     * if the given integer is infinite.
-     *
-     * @param src the integer whose finiteness should be copied.
-     */
-    InfinityBase(const InfinityBase&) = default;
 };
 
 /**
  * An empty internal base class inherited by Integer, which does not
  * support infinity as an allowed value.
+ *
+ * \ingroup maths
  */
 template <>
 struct InfinityBase<false> {
@@ -158,6 +152,8 @@ struct InfinityBase<false> {
  * \ifacespython Both variants of this template are available through Python.
  * For \a supportInfinity = \c false, use the name Integer.
  * For \a supportInfinity = \c true, use the name LargeInteger.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity = false>
 class IntegerBase : private InfinityBase<supportInfinity> {
@@ -271,7 +267,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * compile-time assertion, but may be lifted in future versions
          * of Regina.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, since NativeInteger is not available to
+         * Python users.
          *
          * @param value the new value of this integer.
          */
@@ -310,30 +307,29 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * begins with \c 0, the base will be assumed to be 8.
          * Otherwise it will be taken as base 10.
          *
+         * If the template argument \a supportInfinity is \c true, then
+         * any string beginning with "inf" (after any initial whitesapce)
+         * will be interpreted as infinity.
+         *
          * Whitespace may be present at the beginning or the end
          * of the given string, and will simply be ignored.
-         *
-         * Error detection is possible by passing a non-null boolean
-         * pointer as the third parameter to this constructor.
          *
          * For finer details on how the string parsing works, see
          * strtol() from the standard C library (on which this method
          * is based).
          *
          * \pre The given base is zero, or is between 2 and 36 inclusive.
-         * \pre The given string represents a finite integer
+         * \pre The given string represents an integer
          * in the given base, with optional whitespace beforehand.
          *
-         * \ifacespython The final parameter \a valid is not present.
+         * \exception InvalidArgument the given string was not a valid
+         * large integer representation.
          *
          * @param value the new value of this integer, represented as a string
          * of digits in base \a base.
          * @param base the base in which \a value is given.
-         * @param valid if this pointer is not null, the boolean referenced
-         * will be set to \c true if the entire given string was a valid
-         * large integer representation and \c false otherwise.
          */
-        IntegerBase(const char* value, int base = 10, bool* valid = nullptr);
+        IntegerBase(const char* value, int base = 10);
         /**
          * Initialises this integer to the given value which is
          * represented as a string of digits in a given base.
@@ -345,11 +341,12 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * begins with \c 0, the base will be assumed to be 8.
          * Otherwise it will be taken as base 10.
          *
+         * If the template argument \a supportInfinity is \c true, then
+         * any string beginning with "inf" (after any initial whitesapce)
+         * will be interpreted as infinity.
+         *
          * Whitespace may be present at the beginning or the end
          * of the given string, and will simply be ignored.
-         *
-         * Error detection is possible by passing a non-null boolean
-         * pointer as the third parameter to this constructor.
          *
          * For finer details on how the string parsing works, see
          * strtol() from the standard C library (on which this method
@@ -359,17 +356,14 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * \pre The given string represents an integer
          * in the given base, with optional whitespace beforehand.
          *
-         * \ifacespython The final parameter \a valid is not present.
+         * \exception InvalidArgument the given string was not a valid
+         * large integer representation.
          *
          * @param value the new value of this integer, represented as a string
          * of digits in base \a base.
          * @param base the base in which \a value is given.
-         * @param valid if this pointer is not null, the boolean referenced
-         * will be set to \c true if the entire given string was a valid
-         * large integer representation and \c false otherwise.
          */
-        IntegerBase(const std::string& value, int base = 10,
-                bool* valid = nullptr);
+        IntegerBase(const std::string& value, int base = 10);
         /**
          * Destroys this integer.
          */
@@ -439,6 +433,20 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          */
         long longValue() const;
         /**
+         * Returns the value of this integer as a long, or throws an
+         * exception if this is not possible.
+         *
+         * If this integer is within the required range, regardless of
+         * whether the underlying representation is a native or large integer,
+         * this routine will return the correct result.
+         *
+         * \exception NoSolution This integer is too large or small to fit
+         * into a long.
+         *
+         * @return the value of this integer.
+         */
+        long safeLongValue() const;
+        /**
          * Returns the value of this integer as a native integer of some
          * fixed byte length.
          *
@@ -459,7 +467,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre This integer is not infinity.
          *
-         * \ifacespython Not present.
+         * \ifacespython Not present, but you can use the non-templated
+         * longValue() instead.
          *
          * @return the value of this integer.
          */
@@ -474,8 +483,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre The given base is between 2 and 36 inclusive.
          *
-         * @return the value of this integer as a newly allocated
-         * string.
+         * @return the value of this integer as a string.
          */
         std::string stringValue(int base = 10) const;
 
@@ -552,8 +560,15 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Whitespace may be present at the beginning or end of the given
          * string and will simply be ignored.
          *
+         * If the template argument \a supportInfinity is \c true, then
+         * any string beginning with "inf" (after any initial whitesapce)
+         * will be interpreted as infinity.
+         *
          * \pre The given string represents an integer
          * in base 10, with optional whitespace added.
+         *
+         * \exception InvalidArgument the given string was not a valid
+         * large integer representation.
          *
          * @param value the new value of this integer, represented as a string
          * of digits in base 10.
@@ -567,8 +582,15 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Whitespace may be present at the beginning or end of the given
          * string and will simply be ignored.
          *
+         * If the template argument \a supportInfinity is \c true, then
+         * any string beginning with "inf" (after any initial whitesapce)
+         * will be interpreted as infinity.
+         *
          * \pre The given string represents an integer
          * in base 10, with optional whitespace added.
+         *
+         * \exception InvalidArgument the given string was not a valid
+         * large integer representation.
          *
          * @param value the new value of this integer, represented as a string
          * of digits in base 10.
@@ -700,7 +722,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator increments this integer by one, and returns a
          * reference to the integer \e after the increment.
          *
-         * \ifacespython Not available.
+         * \ifacespython Not present, although the postincrement operator is
+         * present in python as the member function inc().
          *
          * @return a reference to this integer after the increment.
          */
@@ -711,10 +734,10 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator increments this integer by one, and returns a
          * copy of the integer \e before the increment.
          *
-         * \ifacespython Not available.
+         * \ifacespython This routine is named inc() since python does not
+         * support the increment operator.
          *
-         * @return a copy of this integer before the
-         * increment took place.
+         * @return a copy of this integer before the increment took place.
          */
         IntegerBase operator ++(int);
 
@@ -723,7 +746,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator decrements this integer by one, and returns a
          * reference to the integer \e after the decrement.
          *
-         * \ifacespython Not available.
+         * \ifacespython Not present, although the postdecrement operator is
+         * present in python as the member function dec().
          *
          * @return a reference to this integer after the decrement.
          */
@@ -734,10 +758,10 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * This operator decrements this integer by one, and returns a
          * copy of the integer \e before the decrement.
          *
-         * \ifacespython Not available.
+         * \ifacespython This routine is named dec() since python does not
+         * support the decrement operator.
          *
-         * @return a copy of this integer before the
-         * decrement took place.
+         * @return a copy of this integer before the decrement took place.
          */
         IntegerBase operator --(int);
 
@@ -957,14 +981,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * Note that this differs from other division routines in this
          * class, in that it always rounds to give a non-negative remainder.
-         * Thus IntegerBase(-7).divisionAlg(3) gives quotient -3 and
-         * remainder 2, whereas (-7)/3 gives quotient -2 and (-7)\%3 gives
-         * remainder -1.
-         *
-         * The two results are passed back to the caller as follows:
-         * The quotient \a q is passed back as the return value of the
-         * function, and the remainder \a r is stored in the reference
-         * argument \a r.
+         * Thus (-7).divisionAlg(3) gives quotient -3 and remainder 2,
+         * whereas (-7)/3 gives quotient -2 and (-7)\%3 gives remainder -1.
          *
          * In the special case where the given divisor is 0 (not
          * allowed by the usual division algorithm), this routine selects
@@ -972,21 +990,38 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre Neither this nor the divisor are infinite.
          *
-         * \ifacespython The argument \a remainder is missing; instead both
-         * the quotient and remainder are passed back through the return
-         * value of the function.  Specifically, this function returns a
-         * (\a quotient, \a remainder) pair.
-         *
          * @param divisor the divisor \a d.
-         * @param remainder used to store the remainder \a r when the
-         * functon returns.  The initial value of this argument is ignored.
-         * @return the quotient \a q.
-         *
-         * @author Ryan Budney & B.B.
+         * @return the pair (\a q, \a r), where \a q is the quotient and
+         * \a r is the remainder, as described above.
          */
-        IntegerBase<supportInfinity> divisionAlg(
-                const IntegerBase<supportInfinity>& divisor,
-                IntegerBase<supportInfinity>& remainder) const;
+        std::pair<IntegerBase, IntegerBase> divisionAlg(
+            const IntegerBase& divisor) const;
+
+        /**
+         * Deprecated function that uses the division algorithm to obtain a
+         * quotient and remainder when dividing by the given integer.
+         *
+         * This function performs the same task as the one-argument
+         * variant of divisionAlg(); however, instead of incorporating the
+         * remainder into the return value, it sends it back using a
+         * reference argument.
+         *
+         * See the one-argument variant of divisionAlg() for further details.
+         *
+         * \deprecated Use the one-argument variant of divisionAlg() instead.
+         *
+         * \pre Neither this nor the divisor are infinite.
+         *
+         * \ifacespython Not present; instead you can use the one-argument
+         * variant of divisionAlg().
+         *
+         * @param divisor the divisor.
+         * @param remainder an integer whose contents will be destroyed and
+         * replaced with the remainder.
+         * @return the quotient.
+         */
+        [[deprecated]] IntegerBase divisionAlg(const IntegerBase& divisor,
+            IntegerBase& remainder) const;
 
         /**
          * Determines the negative of this integer.
@@ -1288,23 +1323,68 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * Note that the given integers need not be non-negative.
          * However, the gcd returned is guaranteed to be non-negative.
          *
-         * If \a d is the gcd of \a this and \a other, the values placed
-         * into \a u and \a v will be those for which
-         * <tt>u*this + v*other = d</tt>,
-         * <tt>-abs(this)/d < v*sign(other) <= 0</tt> and
-         * <tt>1 <= u*sign(this) <= abs(other)/d</tt>.
+         * If \a d is the gcd of \a this and \a other, then this routine
+         * returns the tuple (\a d, \a u, \a v), where \a u and \a v are
+         * coefficients for which:
+         *
+         * - <tt>u*this + v*other = d</tt>;
+         * - <tt>-abs(this)/d < v*sign(other) <= 0</tt>; and
+         * - <tt>1 <= u*sign(this) <= abs(other)/d</tt>.
+         *
          * These equations are not satisfied when either of \a this or
-         * \a other are zero, but in this case \a u and \a v are both
+         * \a other are zero, but in this case \a u and \a v will both be
          * 0, 1 or -1, using as many zeros as possible.
          *
          * \pre Neither this integer nor \a other is infinite.
          *
+         * \note There are two variants of this routine: one returns the
+         * coefficients \a u and \a v as part of a tuple, and one returns
+         * them via reference arguments.  For now both versions remain
+         * supported, but there is a long-term plan to eventually phase out
+         * the reference argument variant (i.e., not this variant).
+         *
          * @param other the integer whose greatest common divisor with
          * this will be found.
-         * @param u a variable into which the final coefficient of
-         * \a this will be placed.
-         * @param v a variable into which the final coefficient of
-         * \a other will be placed.
+         * @return a tuple containing: the greatest common divisor of
+         * \a this and \a other; the final coefficient of \a this; and
+         * the final coefficient of \a other.
+         */
+        std::tuple<IntegerBase, IntegerBase, IntegerBase> gcdWithCoeffs(
+            const IntegerBase<supportInfinity>& other) const;
+
+        /**
+         * Determines the greatest common divisor of this and the given
+         * integer and finds the smallest coefficients with which these
+         * integers combine to give their gcd.
+         *
+         * Note that the given integers need not be non-negative.
+         * However, the gcd returned is guaranteed to be non-negative.
+         *
+         * If \a d is the gcd of \a this and \a other, the values placed
+         * into \a u and \a v will be coefficients for which:
+         *
+         * - <tt>u*this + v*other = d</tt>;
+         * - <tt>-abs(this)/d < v*sign(other) <= 0</tt>; and
+         * - <tt>1 <= u*sign(this) <= abs(other)/d</tt>.
+         *
+         * These equations are not satisfied when either of \a this or
+         * \a other are zero, but in this case \a u and \a v will both be
+         * 0, 1 or -1, using as many zeros as possible.
+         *
+         * \pre Neither this integer nor \a other is infinite.
+         *
+         * \note There are two variants of this routine: one returns the
+         * coefficients \a u and \a v as part of a tuple, and one returns
+         * them via reference arguments.  For now both versions remain
+         * supported, but there is a long-term plan to eventually phase out
+         * the reference argument variant (i.e., this variant).
+         *
+         * @param other the integer whose greatest common divisor with
+         * this will be found.
+         * @param u a variable into which the final coefficient of \a this
+         * will be placed.  Any existing contents of \a u will be overwritten.
+         * @param v a variable into which the final coefficient of \a other
+         * will be placed.  Any existing contents of \a v will be overwritten.
          * @return the greatest common divisor of \a this and \a other.
          */
         IntegerBase<supportInfinity> gcdWithCoeffs(
@@ -1561,20 +1641,20 @@ class IntegerBase : private InfinityBase<supportInfinity> {
 };
 
 /**
- * LargeInteger is a typedef for IntegerBase<true>, which offers
+ * LargeInteger is a type alias for IntegerBase<true>, which offers
  * arbitrary precision integers with support for infinity.
  *
- * \ifacespython This typedef is available in Python.
+ * \ingroup maths
  */
-typedef IntegerBase<true> LargeInteger;
+using LargeInteger = IntegerBase<true>;
 
 /**
- * Integer is a typedef for IntegerBase<false>, which offers
+ * Integer is a type alias for IntegerBase<false>, which offers
  * arbitrary precision integers without support for infinity.
  *
- * \ifacespython This typedef is available in Python.
+ * \ingroup maths
  */
-typedef IntegerBase<false> Integer;
+using Integer = IntegerBase<false>;
 
 /**
  * Swaps the contents of the given integers.
@@ -1585,6 +1665,8 @@ typedef IntegerBase<false> Integer;
  *
  * @param a the first integer whose contents should be swapped.
  * @param b the second integer whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 void swap(IntegerBase<supportInfinity>& a, IntegerBase<supportInfinity>& b)
@@ -1596,6 +1678,8 @@ void swap(IntegerBase<supportInfinity>& a, IntegerBase<supportInfinity>& b)
  * @param out the output stream to which to write.
  * @param i the integer to write.
  * @return a reference to \a out.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 std::ostream& operator << (std::ostream& out,
@@ -1605,11 +1689,11 @@ std::ostream& operator << (std::ostream& out,
  * Adds the given native integer to the given large integer.
  * If the large integer is infinite, the result will also be infinity.
  *
- * \ifacespython Not available.
- *
  * @param lhs the native integer to add.
  * @param rhs the large integer to add.
  * @return the sum \a lhs plus \a rhs.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 IntegerBase<supportInfinity> operator + (long lhs,
@@ -1619,11 +1703,11 @@ IntegerBase<supportInfinity> operator + (long lhs,
  * Multiplies the given native integer with the given large integer.
  * If the large integer is infinite, the result will also be infinity.
  *
- * \ifacespython Not available.
- *
  * @param lhs the native integer to multiply.
  * @param rhs the large integer to multiply.
  * @return the product \a lhs times \a rhs.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 IntegerBase<supportInfinity> operator * (long lhs,
@@ -1642,6 +1726,8 @@ IntegerBase<supportInfinity> operator * (long lhs,
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 void tightEncode(std::ostream& out, IntegerBase<supportInfinity> value);
@@ -1657,6 +1743,8 @@ void tightEncode(std::ostream& out, IntegerBase<supportInfinity> value);
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.
+ *
+ * \ingroup maths
  */
 template <bool supportInfinity>
 std::string tightEncoding(IntegerBase<supportInfinity> value);
@@ -1681,20 +1769,25 @@ std::string tightEncoding(IntegerBase<supportInfinity> value);
  * their code, or support both Integer and NativeInteger types as
  * template arguments.
  *
- * This class implements the C++ Swappable requirement by providing member
- * and global swap() functions, for compatibility with Integer.
- * However, it does not implement a move constructor or move assignment,
+ * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
+ * It implements the C++ Swappable requirement via its own member and global
+ * swap() functions, for consistency with the Integer and LargeInteger classes.
  *
  * \pre The system must support integers of the given size; in particular,
  * there must be an appropriate specialisation IntOfSize<bytes>.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, since the purpose of NativeInteger is to be a
+ * highly optimised drop-in replacement for Integer as a C++ template parameter.
+ * Python users should just use regina.Integer if you need Regina's integer
+ * interface, or Python's own integer type if you do not.
+ *
+ * \ingroup maths
  */
 template <int bytes>
 class NativeInteger {
     public:
-        typedef typename IntOfSize<bytes>::type Native;
+        using Native = typename IntOfSize<bytes>::type;
             /**< The native data type used to store this integer. */
 
     private:
@@ -1737,8 +1830,6 @@ class NativeInteger {
          * but may be lifted in future versions of Regina.
          *
          * \pre The given integer is not infinity.
-         *
-         * \ifacespython Not present.
          *
          * @param value the new value of this integer.
          */
@@ -1889,8 +1980,6 @@ class NativeInteger {
          * This operator increments this integer by one, and returns a
          * reference to the integer \e after the increment.
          *
-         * \ifacespython Not available.
-         *
          * @return a reference to this integer after the increment.
          */
         NativeInteger& operator ++();
@@ -1899,8 +1988,6 @@ class NativeInteger {
          * The postincrement operator.
          * This operator increments this integer by one, and returns a
          * copy of the integer \e before the increment.
-         *
-         * \ifacespython Not available.
          *
          * @return a copy of this integer before the
          * increment took place.
@@ -1912,8 +1999,6 @@ class NativeInteger {
          * This operator decrements this integer by one, and returns a
          * reference to the integer \e after the decrement.
          *
-         * \ifacespython Not available.
-         *
          * @return a reference to this integer after the decrement.
          */
         NativeInteger& operator --();
@@ -1922,8 +2007,6 @@ class NativeInteger {
          * The postdecrement operator.
          * This operator decrements this integer by one, and returns a
          * copy of the integer \e before the decrement.
-         *
-         * \ifacespython Not available.
          *
          * @return a copy of this integer before the
          * decrement took place.
@@ -2101,29 +2184,43 @@ class NativeInteger {
          *
          * Note that this differs from other division routines in this
          * class, in that it always rounds to give a non-negative remainder.
-         * Thus NativeInteger(-7).divisionAlg(3) gives quotient -3 and
-         * remainder 2, whereas (-7)/3 gives quotient -2 and (-7)\%3 gives
-         * remainder -1.
-         *
-         * The two results are passed back to the caller as follows:
-         * The quotient \a q is passed back as the return value of the
-         * function, and the remainder \a r is stored in the reference
-         * argument \a r.
+         * Thus (-7).divisionAlg(3) gives quotient -3 and remainder 2,
+         * whereas (-7)/3 gives quotient -2 and (-7)\%3 gives remainder -1.
          *
          * In the special case where the given divisor is 0 (not
          * allowed by the usual division algorithm), this routine selects
          * quotient 0 and remainder \a n.
          *
          * @param divisor the divisor \a d.
-         * @param remainder used to store the remainder \a r when the
-         * functon returns.  The initial value of this argument is ignored.
-         * @return the quotient \a q.
-         *
-         * @author Ryan Budney & B.B.
+         * @return the pair (\a q, \a r), where \a q is the quotient and
+         * \a r is the remainder, as described above.
          */
-        NativeInteger<bytes> divisionAlg(
-                const NativeInteger<bytes>& divisor,
-                NativeInteger<bytes>& remainder) const;
+        std::pair<NativeInteger, NativeInteger> divisionAlg(
+            const NativeInteger& divisor) const;
+
+        /**
+         * Deprecated function that uses the division algorithm to obtain a
+         * quotient and remainder when dividing by the given integer.
+         *
+         * This function performs the same task as the one-argument
+         * variant of divisionAlg(); however, instead of incorporating the
+         * remainder into the return value, it sends it back using a
+         * reference argument.
+         *
+         * See the one-argument variant of divisionAlg() for further details.
+         *
+         * \deprecated Use the one-argument variant of divisionAlg() instead.
+         *
+         * \ifacespython Not present; instead you can use the one-argument
+         * variant of divisionAlg().
+         *
+         * @param divisor the divisor.
+         * @param remainder an integer whose contents will be destroyed and
+         * replaced with the remainder.
+         * @return the quotient.
+         */
+        [[deprecated]] NativeInteger divisionAlg(const NativeInteger& divisor,
+            NativeInteger& remainder) const;
 
         /**
          * Determines the negative of this integer.
@@ -2351,6 +2448,8 @@ class NativeInteger {
  *
  * @param a the first integer whose contents should be swapped.
  * @param b the second integer whose contents should be swapped.
+ *
+ * \ingroup maths
  */
 template <int bytes>
 void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) noexcept;
@@ -2361,19 +2460,34 @@ void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) noexcept;
  * @param out the output stream to which to write.
  * @param i the integer to write.
  * @return a reference to \a out.
+ *
+ * \ingroup maths
  */
 template <int bytes>
 std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
 
 /**
- * NNativeLong is a typedef for the NativeInteger template class whose
+ * NativeLong is a type alias for the NativeInteger template class whose
  * underlying integer type is a native long.
  *
- * \ifacespython Not present.
+ * \ifacespython Not present, since NativeInteger is not available to
+ * Python users.
+ *
+ * \ingroup maths
  */
-typedef NativeInteger<sizeof(long)> NNativeLong;
+using NativeLong = NativeInteger<sizeof(long)>;
 
-/*@}*/
+/**
+ * A deprecated alias for the NativeLong type alias.
+ *
+ * \deprecated Use NativeLong instead.
+ *
+ * \ifacespython Not present, since NativeInteger is not available to
+ * Python users.
+ *
+ * \ingroup maths
+ */
+using NNativeLong [[deprecated]] = NativeLong;
 
 // Inline functions for IntegerBase
 
@@ -2504,8 +2618,8 @@ template <bool supportInfinity>
 template <int bytes>
 typename IntOfSize<bytes>::type
         IntegerBase<supportInfinity>::nativeValue() const {
-    typedef typename IntOfSize<bytes>::type Native;
-    typedef typename IntOfSize<bytes>::utype UNative;
+    using Native = typename IntOfSize<bytes>::type;
+    using UNative = typename IntOfSize<bytes>::utype;
     static_assert(bytes % sizeof(long) == 0,
         "IntegerBase::nativeValue(): native integer must partition exactly into long integers.");
 
@@ -2554,6 +2668,12 @@ typename IntOfSize<bytes>::type
 
     mpz_clear(tmp);
     return ans;
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity>::IntegerBase(
+        const std::string& value, int base) :
+        IntegerBase(value.c_str(), base) {
 }
 
 template <bool supportInfinity>
@@ -2613,9 +2733,29 @@ inline long IntegerBase<supportInfinity>::longValue() const {
 }
 
 template <bool supportInfinity>
+inline long IntegerBase<supportInfinity>::safeLongValue() const {
+    if constexpr (supportInfinity)
+        if (isInfinite())
+            throw NoSolution();
+
+    if (large_) {
+        if (mpz_cmp_si(large_, LONG_MAX) <= 0 &&
+                mpz_cmp_si(large_, LONG_MIN) >= 0)
+            return mpz_get_si(large_);
+        else
+            throw NoSolution();
+    } else
+        return small_;
+}
+
+template <bool supportInfinity>
 inline IntegerBase<supportInfinity>&
         IntegerBase<supportInfinity>::operator =(
         const IntegerBase<supportInfinity>& value) {
+    // We assume that mpz_set() is fine with self-assignment, since:
+    // - the GMP docs state that output and input variables can be the same;
+    // - the libgmpxx classes do not special-case self-assignment.
+    // The C++ test suite tests self-assignment of Integers also.
     if (value.isInfinite()) {
         makeInfinite();
         return *this;
@@ -2748,6 +2888,7 @@ inline IntegerBase<supportInfinity>&
 template <bool supportInfinity>
 inline IntegerBase<supportInfinity>&
         IntegerBase<supportInfinity>::operator =(const std::string& value) {
+    // NOLINTNEXTLINE(misc-unconventional-assign-operator)
     return (*this) = value.c_str();
 }
 
@@ -3168,6 +3309,15 @@ inline IntegerBase<supportInfinity>
 }
 
 template <bool supportInfinity>
+inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::divisionAlg(
+        const IntegerBase<supportInfinity>& divisor,
+        IntegerBase<supportInfinity>& remainder) const {
+    auto [q, r] = divisionAlg(divisor);
+    remainder = r;
+    return q;
+}
+
+template <bool supportInfinity>
 inline IntegerBase<supportInfinity>
         IntegerBase<supportInfinity>::operator %(
         const IntegerBase<supportInfinity>& other) const {
@@ -3308,6 +3458,18 @@ template <bool supportInfinity>
 inline IntegerBase<supportInfinity> operator *(long lhs,
         const IntegerBase<supportInfinity>& rhs) {
     return rhs * lhs;
+}
+
+template <bool supportInfinity>
+inline std::tuple<IntegerBase<supportInfinity>, IntegerBase<supportInfinity>,
+        IntegerBase<supportInfinity>>
+        IntegerBase<supportInfinity>::gcdWithCoeffs(
+        const IntegerBase<supportInfinity>& other) const {
+    // In the long term, this will eventually become the preferred
+    // implementation.  For now though, just forward to the non-tuple variant.
+    std::tuple<IntegerBase, IntegerBase, IntegerBase> ans;
+    std::get<0>(ans) = gcdWithCoeffs(other, std::get<1>(ans), std::get<2>(ans));
+    return ans;
 }
 
 template <bool supportInfinity>
@@ -3641,30 +3803,38 @@ inline NativeInteger<bytes> NativeInteger<bytes>::operator %(
 }
 
 template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::divisionAlg(
-        const NativeInteger<bytes>& divisor,
-        NativeInteger<bytes>& remainder) const {
-    if (divisor == 0) {
-        remainder.data_ = data_;
-        return 0;
-    }
+inline std::pair<NativeInteger<bytes>, NativeInteger<bytes>>
+        NativeInteger<bytes>::divisionAlg(const NativeInteger& divisor) const {
+    if (divisor == 0)
+        return { 0, data_ };
+
+    std::pair<NativeInteger, NativeInteger> ans;
 
     // Native integer division could leave a negative remainder
     // regardless of the sign of the divisor (I think the standard
     // indicates that the decision is based on the sign of *this?).
-    NativeInteger<bytes> quotient = data_ / divisor.data_;
-    remainder = data_ - (quotient.data_ * divisor.data_);
-    if (remainder.data_ < 0) {
+    ans.first = data_ / divisor.data_;
+    ans.second = data_ - (ans.first.data_ * divisor.data_);
+    if (ans.second.data_ < 0) {
         if (divisor.data_ > 0) {
-            remainder.data_ += divisor.data_;
-            --quotient.data_;
+            ans.second.data_ += divisor.data_;
+            --ans.first.data_;
         } else {
-            remainder.data_ -= divisor.data_;
-            ++quotient.data_;
+            ans.second.data_ -= divisor.data_;
+            ++ans.first.data_;
         }
     }
 
-    return quotient;
+    return ans;
+}
+
+template <int bytes>
+inline NativeInteger<bytes> NativeInteger<bytes>::divisionAlg(
+        const NativeInteger<bytes>& divisor,
+        NativeInteger<bytes>& remainder) const {
+    auto [q, r] = divisionAlg(divisor);
+    remainder = r;
+    return q;
 }
 
 template <int bytes>

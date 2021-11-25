@@ -44,47 +44,41 @@ namespace {
      */
     class ExpressionReader : public XMLElementReader {
         private:
-            GroupExpression* exp;
+            std::optional<GroupExpression> exp;
             long nGens;
 
         public:
-            ExpressionReader(long newNGens) : exp(new GroupExpression()),
+            ExpressionReader(long newNGens) : exp(GroupExpression()),
                     nGens(newNGens) {
             }
 
-            GroupExpression* getExpression() {
+            std::optional<GroupExpression>& expression() {
                 return exp;
             }
 
-            virtual void initialChars(const std::string& chars) override {
-                std::list<std::string> tokens;
-                basicTokenise(back_inserter(tokens), chars);
+            void initialChars(const std::string& chars) override {
+                std::vector<std::string> tokens = basicTokenise(chars);
 
                 std::string genStr, powStr;
                 long gen, pow;
                 std::string::size_type split;
-                for (std::list<std::string>::const_iterator it = tokens.begin();
-                        it != tokens.end(); it++) {
-                    split = (*it).find('^');
-                    if (split == (*it).length()) {
-                        delete exp;
-                        exp = nullptr;
+                for (const std::string& t : tokens) {
+                    split = t.find('^');
+                    if (split == t.length()) {
+                        exp.reset();
                         break;
                     }
 
-                    genStr = (*it).substr(0, split);
-                    powStr = (*it).substr(split + 1,
-                        (*it).length() - split - 1);
+                    genStr = t.substr(0, split);
+                    powStr = t.substr(split + 1, t.length() - split - 1);
 
                     if ((! valueOf(genStr, gen)) || (! valueOf(powStr, pow))) {
-                        delete exp;
-                        exp = nullptr;
+                        exp.reset();
                         break;
                     } 
 
                     if (gen < 0 || gen >= nGens) {
-                        delete exp;
-                        exp = nullptr;
+                        exp.reset();
                         break;
                     }
 
@@ -99,7 +93,7 @@ void XMLAbelianGroupReader::startElement(const std::string&,
     long rank;
     if (valueOf(tagProps.lookup("rank"), rank))
         if (rank >= 0) {
-            group_ = new AbelianGroup();
+            group_ = AbelianGroup();
             if (rank)
                 group_->addRank(rank);
         }
@@ -107,18 +101,13 @@ void XMLAbelianGroupReader::startElement(const std::string&,
 
 void XMLAbelianGroupReader::initialChars(const std::string& chars) {
     if (group_) {
-        std::list<std::string> tokens;
-        if (basicTokenise(back_inserter(tokens), chars) > 0) {
-            std::multiset<Integer> torsion;
-            Integer val;
-
-            for (std::list<std::string>::const_iterator it = tokens.begin();
-                    it != tokens.end(); it++)
-                if (valueOf(*it, val))
-                    torsion.insert(val);
-
-            if (! torsion.empty())
-                group_->addTorsionElements(torsion);
+        std::vector<std::string> tokens = basicTokenise(chars);
+        try {
+            for (const std::string& t : tokens)
+                group_->addTorsion(Integer(t));
+        } catch (const regina::InvalidArgument&) {
+            // Unparseable.
+            group_.reset();
         }
     }
 }
@@ -128,7 +117,7 @@ void XMLGroupPresentationReader::startElement(const std::string&,
     long nGen;
     if (valueOf(tagProps.lookup("generators"), nGen))
         if (nGen >= 0) {
-            group_ = new GroupPresentation();
+            group_ = GroupPresentation();
             if (nGen)
                 group_->addGenerator(nGen);
         }
@@ -147,12 +136,9 @@ void XMLGroupPresentationReader::endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (group_)
         if (subTagName == "reln") {
-            GroupExpression* exp =
-                dynamic_cast<ExpressionReader*>(subReader)->getExpression();
-            if (exp) {
+            auto& exp = dynamic_cast<ExpressionReader*>(subReader)->expression();
+            if (exp)
                 group_->addRelation(std::move(*exp));
-                delete exp;
-            }
         }
 }
 

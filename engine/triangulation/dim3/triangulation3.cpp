@@ -37,65 +37,75 @@
 #include <sstream>
 #include <stack>
 
+#include "link/link.h"
+#include "snappea/snappeatriangulation.h"
 #include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
 
-Triangulation<3>::Triangulation(const std::string& description) :
-        strictAngleStructure_(false), generalAngleStructure_(false) {
-    Triangulation<3>* attempt;
-
-    if ((attempt = fromIsoSig(description))) {
-        swap(*attempt);
-        setLabel(description);
-    } else if ((attempt = rehydrate(description))) {
-        swap(*attempt);
-        setLabel(description);
-    } else if ((attempt = fromSnapPea(description))) {
-        swap(*attempt);
-        setLabel(attempt->label());
+Triangulation<3>::Triangulation(const std::string& description) {
+    try {
+        *this = fromIsoSig(description);
+        return;
+    } catch (const InvalidArgument&) {
     }
 
-    delete attempt;
+    try {
+        *this = rehydrate(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
+
+    try {
+        *this = fromSnapPea(description);
+        return;
+    } catch (const InvalidArgument&) {
+    }
+}
+
+Triangulation<3>::Triangulation(const Link& link) :
+        Triangulation(link.complement()) {
 }
 
 void Triangulation<3>::clearAllProperties() {
     clearBaseProperties();
 
     // Properties of the triangulation:
-    zeroEfficient_.reset();
-    splittingSurface_.reset();
-    strictAngleStructure_ = false; // computation not attempted
-    generalAngleStructure_ = false; // computation not attempted
-    niceTreeDecomposition_.reset();
+    prop_.zeroEfficient_.reset();
+    prop_.splittingSurface_.reset();
+    prop_.niceTreeDecomposition_.reset();
 
     // Properties of the manifold:
     if (! topologyLock_) {
-        H1Rel_.reset();
-        H1Bdry_.reset();
-        H2_.reset();
-        twoSphereBoundaryComponents_.reset();
-        negativeIdealBoundaryComponents_.reset();
-        threeSphere_.reset();
-        threeBall_.reset();
-        solidTorus_.reset();
-        TxI_.reset();
-        irreducible_.reset();
-        compressingDisc_.reset();
-        haken_.reset();
-        turaevViroCache_.clear();
+        prop_.H1Rel_.reset();
+        prop_.H1Bdry_.reset();
+        prop_.H2_.reset();
+        prop_.twoSphereBoundaryComponents_.reset();
+        prop_.negativeIdealBoundaryComponents_.reset();
+        prop_.threeSphere_.reset();
+        prop_.threeBall_.reset();
+        prop_.solidTorus_.reset();
+        prop_.TxI_.reset();
+        prop_.irreducible_.reset();
+        prop_.compressingDisc_.reset();
+        prop_.haken_.reset();
+        prop_.turaevViroCache_.clear();
     }
+
+    strictAngleStructure_ = false; // computation not attempted
+    generalAngleStructure_ = false; // computation not attempted
 }
 
 void Triangulation<3>::swap(Triangulation<3>& other) {
     if (&other == this)
         return;
 
-    ChangeEventSpan span1(this);
-    ChangeEventSpan span2(&other);
+    ChangeEventSpan span1(*this);
+    ChangeEventSpan span2(other);
 
+    // Note: swapBaseData() calls Snapshottable::swap().
     swapBaseData(other);
 
     // Properties stored directly:
@@ -103,184 +113,37 @@ void Triangulation<3>::swap(Triangulation<3>& other) {
     std::swap(standard_, other.standard_);
 
     // Properties stored using std::... helper classes:
-    H1Rel_.swap(other.H1Rel_);
-    H1Bdry_.swap(other.H1Bdry_);
-    H2_.swap(other.H2_);
+    prop_.H1Rel_.swap(other.prop_.H1Rel_);
+    prop_.H1Bdry_.swap(other.prop_.H1Bdry_);
+    prop_.H2_.swap(other.prop_.H2_);
 
-    twoSphereBoundaryComponents_.swap(other.twoSphereBoundaryComponents_);
-    negativeIdealBoundaryComponents_.swap(
-        other.negativeIdealBoundaryComponents_);
+    prop_.twoSphereBoundaryComponents_.swap(
+        other.prop_.twoSphereBoundaryComponents_);
+    prop_.negativeIdealBoundaryComponents_.swap(
+        other.prop_.negativeIdealBoundaryComponents_);
 
-    zeroEfficient_.swap(other.zeroEfficient_);
-    splittingSurface_.swap(other.splittingSurface_);
+    prop_.zeroEfficient_.swap(other.prop_.zeroEfficient_);
+    prop_.splittingSurface_.swap(other.prop_.splittingSurface_);
 
-    threeSphere_.swap(other.threeSphere_);
-    threeBall_.swap(other.threeBall_);
-    solidTorus_.swap(other.solidTorus_);
-    TxI_.swap(other.TxI_);
-    irreducible_.swap(other.irreducible_);
-    compressingDisc_.swap(other.compressingDisc_);
-    haken_.swap(other.haken_);
+    prop_.threeSphere_.swap(other.prop_.threeSphere_);
+    prop_.threeBall_.swap(other.prop_.threeBall_);
+    prop_.solidTorus_.swap(other.prop_.solidTorus_);
+    prop_.TxI_.swap(other.prop_.TxI_);
+    prop_.irreducible_.swap(other.prop_.irreducible_);
+    prop_.compressingDisc_.swap(other.prop_.compressingDisc_);
+    prop_.haken_.swap(other.prop_.haken_);
 
     strictAngleStructure_.swap(other.strictAngleStructure_);
     generalAngleStructure_.swap(other.generalAngleStructure_);
-    niceTreeDecomposition_.swap(other.niceTreeDecomposition_);
+    prop_.niceTreeDecomposition_.swap(other.prop_.niceTreeDecomposition_);
 
     // Properties stored using std::... containers:
-    turaevViroCache_.swap(other.turaevViroCache_);
+    prop_.turaevViroCache_.swap(other.prop_.turaevViroCache_);
 }
 
-void Triangulation<3>::writeTextLong(std::ostream& out) const {
-    ensureSkeleton();
-
-    out << "Size of the skeleton:\n";
-    out << "  Tetrahedra: " << simplices_.size() << '\n';
-    out << "  Triangles: " << countTriangles() << '\n';
-    out << "  Edges: " << countEdges() << '\n';
-    out << "  Vertices: " << countVertices() << '\n';
-    out << '\n';
-
-    Tetrahedron<3>* tet;
-    Tetrahedron<3>* adjTet;
-    unsigned tetPos;
-    int face, vertex, start, end;
-    Perm<4> adjPerm;
-
-    out << "Tetrahedron gluing:\n";
-    out << "  Tet  |  glued to:      (012)      (013)      (023)      (123)\n";
-    out << "  -----+-------------------------------------------------------\n";
-    for (tetPos=0; tetPos<simplices_.size(); tetPos++) {
-        tet = simplices_[tetPos];
-        out << "  " << std::setw(3) << tetPos << "  |           ";
-        for (face=3; face>=0; face--) {
-            out << "  ";
-            adjTet = tet->adjacentTetrahedron(face);
-            if (! adjTet)
-                out << " boundary";
-            else {
-                adjPerm = tet->adjacentGluing(face);
-                out << std::setw(3) << adjTet->index() << " (";
-                for (vertex=0; vertex<4; vertex++) {
-                    if (vertex == face) continue;
-                    out << adjPerm[vertex];
-                }
-                out << ")";
-            }
-        }
-        out << '\n';
-    }
-    out << '\n';
-
-    out << "Vertices:\n";
-    out << "  Tet  |  vertex:    0   1   2   3\n";
-    out << "  -----+--------------------------\n";
-    for (tetPos=0; tetPos<simplices_.size(); tetPos++) {
-        tet = simplices_[tetPos];
-        out << "  " << std::setw(3) << tetPos << "  |          ";
-        for (vertex=0; vertex<4; vertex++)
-            out << ' ' << std::setw(3) << tet->vertex(vertex)->index();
-        out << '\n';
-    }
-    out << '\n';
-
-    out << "Edges:\n";
-    out << "  Tet  |  edge:   01  02  03  12  13  23\n";
-    out << "  -----+--------------------------------\n";
-    for (tetPos=0; tetPos<simplices_.size(); tetPos++) {
-        tet = simplices_[tetPos];
-        out << "  " << std::setw(3) << tetPos << "  |        ";
-        for (start=0; start<4; start++)
-            for (end=start+1; end<4; end++)
-                out << ' ' << std::setw(3)
-                    << tet->edge(Edge<3>::edgeNumber[start][end])->index();
-        out << '\n';
-    }
-    out << '\n';
-
-    out << "Triangles:\n";
-    out << "  Tet  |  face:  012 013 023 123\n";
-    out << "  -----+------------------------\n";
-    for (tetPos=0; tetPos<simplices_.size(); tetPos++) {
-        tet = simplices_[tetPos];
-        out << "  " << std::setw(3) << tetPos << "  |        ";
-        for (face=3; face>=0; face--)
-            out << ' ' << std::setw(3) << tet->triangle(face)->index();
-        out << '\n';
-    }
-    out << '\n';
-}
-
-void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
-    using regina::xml::xmlEncodeSpecialChars;
-    using regina::xml::xmlValueTag;
-
-    // Write the tetrahedron gluings.
-    Tetrahedron<3>* adjTet;
-    int face;
-
-    out << "  <tetrahedra ntet=\"" << simplices_.size() << "\">\n";
-    for (Tetrahedron<3>* t : simplices_) {
-        out << "    <tet desc=\"" <<
-            xmlEncodeSpecialChars(t->description()) << "\"> ";
-        for (face = 0; face < 4; face++) {
-            adjTet = t->adjacentTetrahedron(face);
-            if (adjTet) {
-                out << adjTet->index() << ' '
-                    << static_cast<int>(t->adjacentGluing(face).imagePack())
-                    << ' ';
-            } else
-                out << "-1 -1 ";
-        }
-        out << "</tet>\n";
-    }
-    out << "  </tetrahedra>\n";
-
-    writeXMLBaseProperties(out);
-
-    if (H1Rel_.has_value()) {
-        out << "  <H1Rel>";
-        H1Rel_->writeXMLData(out);
-        out << "</H1Rel>\n";
-    }
-    if (H1Bdry_.has_value()) {
-        out << "  <H1Bdry>";
-        H1Bdry_->writeXMLData(out);
-        out << "</H1Bdry>\n";
-    }
-    if (H2_.has_value()) {
-        out << "  <H2>";
-        H2_->writeXMLData(out);
-        out << "</H2>\n";
-    }
-    if (twoSphereBoundaryComponents_.has_value())
-        out << "  " << xmlValueTag("twosphereboundarycomponents",
-            *twoSphereBoundaryComponents_) << '\n';
-    if (negativeIdealBoundaryComponents_.has_value())
-        out << "  " << xmlValueTag("negativeidealboundarycomponents",
-            *negativeIdealBoundaryComponents_) << '\n';
-    if (zeroEfficient_.has_value())
-        out << "  " << xmlValueTag("zeroeff", *zeroEfficient_) << '\n';
-    if (splittingSurface_.has_value())
-        out << "  " << xmlValueTag("splitsfce", *splittingSurface_) << '\n';
-    if (threeSphere_.has_value())
-        out << "  " << xmlValueTag("threesphere", *threeSphere_) << '\n';
-    if (threeBall_.has_value())
-        out << "  " << xmlValueTag("threeball", *threeBall_) << '\n';
-    if (solidTorus_.has_value())
-        out << "  " << xmlValueTag("solidtorus", *solidTorus_) << '\n';
-    if (TxI_.has_value())
-        out << "  " << xmlValueTag("txi", *TxI_) << '\n';
-    if (irreducible_.has_value())
-        out << "  " << xmlValueTag("irreducible", *irreducible_) << '\n';
-    if (compressingDisc_.has_value())
-        out << "  " << xmlValueTag("compressingdisc", *compressingDisc_) << '\n';
-    if (haken_.has_value())
-        out << "  " << xmlValueTag("haken", *haken_) << '\n';
-}
-
-Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,
+Triangulation<3> Triangulation<3>::enterTextTriangulation(std::istream& in,
         std::ostream& out) {
-    Triangulation<3>* triang = new Triangulation<3>();
+    Triangulation<3> triang;
     Tetrahedron<3>* tet;
     long nTet;
 
@@ -295,7 +158,7 @@ Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,
     out << '\n';
 
     for (long i=0; i<nTet; i++)
-        triang->newTetrahedron();
+        triang.newTetrahedron();
 
     // Read in the joins.
     long tetPos, altPos;
@@ -307,7 +170,7 @@ Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,
     out << "Vertices are numbered from 0 to 3.\n";
     out << "Enter in the face gluings one at a time.\n";
     out << '\n';
-    while(1) {
+    while (true) {
         out << "Enter two tetrahedra to glue, separated by a space, or ";
         out << "-1 if finished: ";
         in >> tetPos;
@@ -319,8 +182,8 @@ Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,
                 << nTet-1 << " inclusive.\n";
             continue;
         }
-        tet = triang->simplices_[tetPos];
-        altTet = triang->simplices_[altPos];
+        tet = triang.simplices_[tetPos];
+        altTet = triang.simplices_[altPos];
         out << "Enter the three vertices of the first tetrahedron ("
             << tetPos << "), separated by spaces,\n";
         out << "    that will form one face of the gluing: ";
@@ -392,7 +255,7 @@ long Triangulation<3>::eulerCharManifold() const {
     // and truncate those unwanted bits also.
     if (! valid_) {
         for (Vertex<3>* v : vertices())
-            if (v->link() == Vertex<3>::INVALID)
+            if (v->linkType() == Vertex<3>::INVALID)
                 ans += v->linkEulerChar() - 1;
         for (Edge<3>* e : edges())
             if (! e->isValid())
@@ -403,27 +266,12 @@ long Triangulation<3>::eulerCharManifold() const {
 }
 
 Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
-        TriangulationBase<3>(X, cloneProps),
-        strictAngleStructure_(false), generalAngleStructure_(false) {
+        TriangulationBase<3>(X, cloneProps) {
     if (! cloneProps)
         return;
 
     // Clone properties:
-    H1Rel_ = X.H1Rel_;
-    H1Bdry_ = X.H1Bdry_;
-    H2_ = X.H2_;
-
-    twoSphereBoundaryComponents_ = X.twoSphereBoundaryComponents_;
-    negativeIdealBoundaryComponents_ = X.negativeIdealBoundaryComponents_;
-    zeroEfficient_ = X.zeroEfficient_;
-    splittingSurface_ = X.splittingSurface_;
-    threeSphere_ = X.threeSphere_;
-    threeBall_ = X.threeBall_;
-    solidTorus_ = X.solidTorus_;
-    TxI_ = X.TxI_;
-    irreducible_ = X.irreducible_;
-    compressingDisc_ = X.compressingDisc_;
-    haken_ = X.haken_;
+    prop_ = X.prop_;
 
     // Any cached angle structures must be remade to live in this triangulation.
     if (std::holds_alternative<AngleStructure>(X.strictAngleStructure_))
@@ -437,7 +285,8 @@ Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
     else
         generalAngleStructure_ = std::get<bool>(X.generalAngleStructure_);
 
-    turaevViroCache_ = X.turaevViroCache_;
+    // We do not need to copy skeletal properties (e.g., ideal_ or standard_),
+    // since this is computed on demand with the rest of the skeleton.
 }
 
 std::string Triangulation<3>::snapPea() const {
@@ -453,10 +302,7 @@ void Triangulation<3>::snapPea(std::ostream& out) const {
 
     // Write header information.
     out << "% Triangulation\n";
-    if (label().empty())
-        out << "Regina_Triangulation\n";
-    else
-        out << stringToToken(label()) << '\n';
+    out << "Regina_Triangulation\n";
 
     // Write general details.
     out << "not_attempted 0.0\n";
@@ -575,6 +421,80 @@ bool Triangulation<3>::saveRecogniser(const char* filename) const {
         return false;
     recogniser(out);
     return true;
+}
+
+SnapPeaTriangulation* Triangulation<3>::isSnapPea() {
+    return (heldBy_ == HELD_BY_SNAPPEA ?
+        static_cast<SnapPeaTriangulation*>(this) : nullptr);
+}
+
+const SnapPeaTriangulation* Triangulation<3>::isSnapPea() const {
+    return (heldBy_ == HELD_BY_SNAPPEA ?
+        static_cast<const SnapPeaTriangulation*>(this) : nullptr);
+}
+
+std::shared_ptr<Packet> Triangulation<3>::inAnyPacket() {
+    switch (heldBy_) {
+        case HELD_BY_PACKET:
+            return static_cast<PacketOf<Triangulation<3>>*>(this)->
+                shared_from_this();
+        case HELD_BY_SNAPPEA:
+            return static_cast<SnapPeaTriangulation*>(this)->
+                PacketData<SnapPeaTriangulation>::packet();
+        default:
+            return nullptr;
+    }
+}
+
+std::shared_ptr<const Packet> Triangulation<3>::inAnyPacket() const {
+    switch (heldBy_) {
+        case HELD_BY_PACKET:
+            return static_cast<const PacketOf<Triangulation<3>>*>(this)->
+                shared_from_this();
+        case HELD_BY_SNAPPEA:
+            return static_cast<const SnapPeaTriangulation*>(this)->
+                PacketData<SnapPeaTriangulation>::packet();
+        default:
+            return nullptr;
+    }
+}
+
+void Triangulation<3>::snapPeaPreChange() {
+    // This is in the .cpp file so we can keep snappeatriangulation.h
+    // out of the main Triangulation<3> headers.
+    auto* s = static_cast<SnapPeaTriangulation*>(this);
+
+    // We do not nullify the triangulation until after the change,
+    // since the routine performing the change probably expects
+    // the original (non-empty) Triangulation<3> data.
+    //
+    // However, if the SnapPeaTriangulation is held by a packet, we
+    // *should* be firing a packet pre-change event now to acknowledge that
+    // the triangulation will be nullified.  Unfortunately this requires us
+    // to read and edit the SnapPeaTriangulation's changeEventSpans_ member,
+    // which is private and inaccessible to Triangulation<3>.
+    //
+    // See the SnapPeaTriangulation class notes for more details on this issue,
+    // and why it is not enormously important.
+    //
+    // If this is ever fixed, we should also remember to put the corresponding
+    // packet post-change event code in snapPeaPostChange() also.
+
+    ++s->reginaChangeEventSpans_;
+}
+
+void Triangulation<3>::snapPeaPostChange() {
+    // This is in the .cpp file so we can keep snappeatriangulation.h
+    // out of the main Triangulation<3> headers.
+    auto* s = static_cast<SnapPeaTriangulation*>(this);
+    --s->reginaChangeEventSpans_;
+
+    // The triangulation changes might be nested.  Only nullify the SnapPea
+    // triangulation once all of them are finished, since we do not want to
+    // clear out the triangulation while a complex change set is still
+    // happening.
+    if (! s->reginaChangeEventSpans_)
+        static_cast<SnapPeaTriangulation*>(this)->nullify();
 }
 
 } // namespace regina

@@ -48,6 +48,7 @@
 #include <type_traits>
 #include "packet/container.h"
 #include "packet/text.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -55,8 +56,8 @@ class Link;
 template <int dim> class Triangulation;
 
 template <class PacketType>
-Container* readSigList(const char *filename, unsigned colSigs, int colLabels,
-        unsigned long ignoreLines) {
+std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
+        int colLabels, unsigned long ignoreLines) {
     // Open the file.
     std::ifstream in(filename);
     if (! in)
@@ -69,11 +70,11 @@ Container* readSigList(const char *filename, unsigned colSigs, int colLabels,
     for (i = 0; i < ignoreLines; i++) {
         std::getline(in, line);
         if (in.eof())
-            return new Container();
+            return std::make_shared<Container>();
     }
 
     // Read in and process the remaining lines.
-    Container* ans = new Container();
+    auto ans = std::make_shared<Container>();
     std::string errStrings;
 
     int col;
@@ -81,7 +82,6 @@ Container* readSigList(const char *filename, unsigned colSigs, int colLabels,
 
     std::string sig;
     std::string label;
-    PacketType* object;
 
     while(! in.eof()) {
         // Read in the next line.
@@ -109,11 +109,13 @@ Container* readSigList(const char *filename, unsigned colSigs, int colLabels,
 
         if (! sig.empty()) {
             // Process this isomorphism signature.
-            if ((object = PacketType::fromSig(sig))) {
-                object->setLabel(label.empty() ? sig : label);
-                ans->insertChildLast(object);
-            } else
-                errStrings = errStrings + '\n' + sig;
+            try {
+                ans->insertChildLast(makePacket(PacketType::fromSig(sig),
+                    (label.empty() ? sig : label)));
+            } catch (const InvalidArgument&) {
+                errStrings += '\n';
+                errStrings += sig;
+            }
         }
     }
 
@@ -127,7 +129,7 @@ Container* readSigList(const char *filename, unsigned colSigs, int colLabels,
             msg << PacketType::dimension << "-manifold triangulations:\n";
         msg << errStrings;
 
-        Text* errPkt = new Text(msg.str());
+        auto errPkt = std::make_shared<Text>(msg.str());
         errPkt->setLabel("Errors");
         ans->insertChildLast(errPkt);
     }

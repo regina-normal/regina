@@ -43,52 +43,42 @@
 #define __REGINA_DATA_IMPL_H
 #endif
 
+#include "utilities/exception.h"
+
 namespace regina {
 
 template <typename... Args>
-Link* Link::fromData(std::initializer_list<int> crossingSigns,
+Link Link::fromData(std::initializer_list<int> crossingSigns,
         std::initializer_list<Args>... components) {
-    Link* ans = new Link();
-
+    Link ans;
     for (auto sign : crossingSigns) {
         if (sign == 1 || sign == -1)
-            ans->crossings_.push_back(new Crossing(sign));
-        else {
-            std::cerr << "fromData(): crossing sign not +/-1" << std::endl;
-            delete ans;
-            return 0;
-        }
+            ans.crossings_.push_back(new Crossing(sign));
+        else
+            throw InvalidArgument("fromData(): crossing sign not +/-1");
     }
-
-    if (! ans->addComponents(2 * crossingSigns.size(), components...)) {
-        delete ans;
-        return 0;
-    }
-
+    ans.addComponents(2 * crossingSigns.size(), components...);
     return ans;
 }
 
-inline bool Link::addComponents(size_t strandsRemaining) {
-    if (strandsRemaining != 0) {
-        std::cerr << "fromData(): too few strands" << std::endl;
-        return false;
-    } else
-        return true;
+inline void Link::addComponents(size_t strandsRemaining) {
+    if (strandsRemaining != 0)
+        throw InvalidArgument("fromData(): too few strands");
 }
 
 template <typename... Args>
-bool Link::addComponents(size_t strandsRemaining,
+void Link::addComponents(size_t strandsRemaining,
         std::initializer_list<int> component,
         std::initializer_list<Args>... otherComponents) {
     if (component.size() == 0) {
         // Support an empty component via { }, though I suspect this is
         // impossible to use because the C++ compiler cannot deduce the type.
-        components_.push_back(StrandRef());
+        components_.emplace_back();
     } else if (component.size() == 1 && *component.begin() == 0) {
         // Support an empty component via { 0 }.
         // Here we increment strandsRemaining, to account for the extra
         // integer (0) in our list that does not belong to any crossing.
-        components_.push_back(StrandRef());
+        components_.emplace_back();
         ++strandsRemaining;
     } else {
         long n = crossings_.size();
@@ -97,11 +87,8 @@ bool Link::addComponents(size_t strandsRemaining,
         int tmpStrand;
 
         auto it = component.begin();
-        if (*it == 0 || *it > n || *it < -n) {
-            std::cerr << "fromData(): crossing " << *it
-                << " out of range" << std::endl;
-            return false;
-        }
+        if (*it == 0 || *it > n || *it < -n)
+            throw InvalidArgument("fromData(): crossing out of range");
         if (*it > 0) {
             tmpCross = *it;
             tmpStrand = 1;
@@ -118,11 +105,8 @@ bool Link::addComponents(size_t strandsRemaining,
         for (++it; it != component.end(); ++it) {
             prev = curr;
 
-            if (*it == 0 || *it > n || *it < -n) {
-                std::cerr << "fromData(): crossing " << *it
-                    << " out of range" << std::endl;
-                return false;
-            }
+            if (*it == 0 || *it > n || *it < -n)
+                throw InvalidArgument("fromData(): crossing out of range");
             if (*it > 0) {
                 tmpCross = *it;
                 tmpStrand = 1;
@@ -134,49 +118,105 @@ bool Link::addComponents(size_t strandsRemaining,
             cr = crossings_[tmpCross - 1];
             curr = cr->strand(tmpStrand);
 
-            if (prev.crossing()->next_[prev.strand()]) {
-                std::cerr << "fromData(): multiple passes out of "
-                    << (prev.strand() == 0 ? "lower" : "upper")
-                    << " strand of crossing " << (prev.crossing()->index() + 1)
-                    << std::endl;
-                return false;
-            }
+            if (prev.crossing()->next_[prev.strand()])
+                throw InvalidArgument("fromData(): multiple passes "
+                    "out of same strand of crossing");
             prev.crossing()->next_[prev.strand()] = curr;
 
-            if (curr.crossing()->prev_[curr.strand()]) {
-                std::cerr << "fromData(): multiple passes into "
-                    << (curr.strand() == 0 ? "lower" : "upper")
-                    << " strand of crossing " << (curr.crossing()->index() + 1)
-                    << std::endl;
-                return false;
-            }
+            if (curr.crossing()->prev_[curr.strand()])
+                throw InvalidArgument("fromData(): multiple passes "
+                    "into same strand of crossing");
             curr.crossing()->prev_[curr.strand()] = prev;
         }
 
         prev = curr;
         curr = components_.back();
 
-        if (prev.crossing()->next_[prev.strand()]) {
-            std::cerr << "fromData(): multiple passes out of "
-                << (prev.strand() == 0 ? "lower" : "upper")
-                << " strand of crossing " << (prev.crossing()->index() + 1)
-                << std::endl;
-            return false;
-        }
+        if (prev.crossing()->next_[prev.strand()])
+            throw InvalidArgument("fromData(): multiple passes "
+                "out of same strand of crossing");
         prev.crossing()->next_[prev.strand()] = curr;
 
-        if (curr.crossing()->prev_[curr.strand()]) {
-            std::cerr << "fromData(): multiple passes into "
-                << (curr.strand() == 0 ? "lower" : "upper")
-                << " strand of crossing " << (curr.crossing()->index() + 1)
-                << std::endl;
-            return false;
-        }
+        if (curr.crossing()->prev_[curr.strand()])
+            throw InvalidArgument("fromData(): multiple passes "
+                "into same strand of crossing");
         curr.crossing()->prev_[curr.strand()] = prev;
     }
 
-    return addComponents(strandsRemaining - component.size(),
-        otherComponents...);
+    addComponents(strandsRemaining - component.size(), otherComponents...);
+}
+
+template <typename SignIterator, typename ComponentIterator>
+Link Link::fromData(SignIterator beginSigns, SignIterator endSigns,
+        ComponentIterator beginComponents, ComponentIterator endComponents) {
+    Link ans;
+
+    for (auto sit = beginSigns; sit != endSigns; ++sit) {
+        if (*sit == 1 || *sit == -1)
+            ans.crossings_.push_back(new Crossing(*sit));
+        else
+            throw InvalidArgument("fromData(): crossing sign not +/-1");
+    }
+
+    size_t strandsFound = 0;
+    long n = ans.crossings_.size();
+
+    for (auto cit = beginComponents; cit != endComponents; ++cit) {
+        if (cit->size() == 0) {
+            // Support an empty component via { }.
+            ans.components_.emplace_back();
+        } else if (cit->size() == 1 && *cit->begin() == 0) {
+            // Support an empty component via { 0 }.
+            ans.components_.emplace_back();
+        } else {
+            bool first = true;
+            StrandRef curr, prev;
+            for (auto c : *cit) {
+                if (c == 0 || c > n || c < -n)
+                    throw InvalidArgument("fromData(): crossing out of range");
+                if (c > 0)
+                    curr = ans.crossings_[c - 1]->upper();
+                else
+                    curr = ans.crossings_[(-c) - 1]->lower();
+
+                if (first) {
+                    ans.components_.push_back(curr);
+                    first = false;
+                } else {
+                    if (prev.crossing()->next_[prev.strand()])
+                        throw InvalidArgument("fromData(): multiple passes "
+                            "out of same strand of crossing");
+                    prev.crossing()->next_[prev.strand()] = curr;
+
+                    if (curr.crossing()->prev_[curr.strand()])
+                        throw InvalidArgument("fromData(): multiple passes "
+                            "into same strand of crossing");
+                    curr.crossing()->prev_[curr.strand()] = prev;
+                }
+
+                prev = curr;
+            }
+
+            curr = ans.components_.back();
+
+            if (prev.crossing()->next_[prev.strand()])
+                throw InvalidArgument("fromData(): multiple passes "
+                    "out of same strand of crossing");
+            prev.crossing()->next_[prev.strand()] = curr;
+
+            if (curr.crossing()->prev_[curr.strand()])
+                throw InvalidArgument("fromData(): multiple passes "
+                    "into same strand of crossing");
+            curr.crossing()->prev_[curr.strand()] = prev;
+
+            strandsFound += cit->size();
+        }
+    }
+
+    if (strandsFound != 2 * ans.crossings_.size())
+        throw InvalidArgument("fromData(): incorrect number of strands");
+
+    return ans;
 }
 
 } // namespace regina

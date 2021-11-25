@@ -62,14 +62,11 @@ ExamplesAction::ExamplesAction(QWidget* parent) :
         "3-manifold triangulations are also provided."));
 }
 
-ExamplesAction::~ExamplesAction() {
-}
-
 void ExamplesAction::addUrl(const QString& fileName, const QString& text) {
 
-    QAction* action = new QAction(this);
+    auto* action = new QAction(this);
     action->setText(text);
-    insertAction(0 /* insert last */, action);
+    insertAction(nullptr /* insert last */, action);
     group->addAction(action);
     urls_.insert(action, QUrl(QString("file:%1/%2")
         .arg(QFile::decodeName(regina::GlobalDirs::examples().c_str()))

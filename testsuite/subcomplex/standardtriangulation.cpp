@@ -50,24 +50,16 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        void setUp() {
+        void setUp() override {
         }
 
-        void tearDown() {
+        void tearDown() override {
         }
 
         void testRecognition(const char* dehydration,
                 const char* triName, const char* mfdName) {
-            Triangulation<3> t;
-            if (! t.insertRehydration(dehydration)) {
-                std::ostringstream msg;
-                msg << "The standard triangulation " << triName
-                    << " could not be constructed from its dehydration.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            StandardTriangulation* std =
-                StandardTriangulation::isStandardTriangulation(&t);
+            auto std = StandardTriangulation::recognise(
+                Triangulation<3>::rehydrate(dehydration));
             if (! std) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName
@@ -82,7 +74,7 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            Manifold* mfd = std->manifold();
+            auto mfd = std->manifold();
             if (! mfd) {
                 std::ostringstream msg;
                 msg << "The 3-manifold for the standard triangulation "
@@ -96,23 +88,12 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
                     << ", not the expected " << mfdName << ".";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            delete mfd;
-            delete std;
         }
 
         void testRecognitionSig(const char* isoSig,
                 const char* triName, const char* mfdName) {
-            Triangulation<3>* t = Triangulation<3>::fromIsoSig(isoSig);
-            if (! t) {
-                std::ostringstream msg;
-                msg << "The standard triangulation " << triName
-                    << " could not be constructed from its dehydration.";
-                CPPUNIT_FAIL(msg.str());
-            }
-
-            StandardTriangulation* std =
-                StandardTriangulation::isStandardTriangulation(t);
+            auto std = StandardTriangulation::recognise(
+                Triangulation<3>::fromIsoSig(isoSig));
             if (! std) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName
@@ -127,7 +108,7 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            Manifold* mfd = std->manifold();
+            auto mfd = std->manifold();
             if (! mfd) {
                 std::ostringstream msg;
                 msg << "The 3-manifold for the standard triangulation "
@@ -141,10 +122,6 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
                     << ", not the expected " << mfdName << ".";
                 CPPUNIT_FAIL(msg.str());
             }
-
-            delete mfd;
-            delete std;
-            delete t;
         }
 
         void recognition() {
@@ -163,6 +140,9 @@ class StandardTriangulationTest : public CppUnit::TestFixture {
             testRecognition("fapaadecedenbokbo", "P(0)", "S3/P120");
             testRecognition("jhnafaabdgfghhiiihkagrkvskr",
                 "B(T7:1 | -1,0 | -3,-1)", "T x I / [ -4,-3 | -1,-1 ]");
+            testRecognition("knncgaabcgifjhhjijmgtnnasgana",
+                "Plugged Torus Bundle [T7:1 | Tri, Mob(v)]",
+                "SFS [A: (2,1)] / [ -1,-2 | 0,1 ]");
             testRecognition("jlkijaaabdefghhiifanavrumvb",
                 "Blocked SFS [Tri, Tri, LST(1, 2, 3), LST(1, 3, 4)]",
                 "SFS [RP2/n2: (3,1) (4,3)]");

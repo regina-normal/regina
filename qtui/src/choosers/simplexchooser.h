@@ -69,14 +69,14 @@ class SimplexChooser : public QComboBox, public regina::PacketListener {
          * A filter function, used to determine whether a given simplex
          * should appear in the list.
          */
-        typedef bool (*FilterFunc)(regina::Simplex<dim>*);
+        using FilterFunc = bool (*)(regina::Simplex<dim>*);
 
     private:
         regina::Triangulation<dim>* tri_;
             /**< The triangulation whose simplices we are choosing from. */
         FilterFunc filter_;
             /**< A filter to restrict the available selections, or
-                 0 if no filter is necessary. */
+                 \c null if no filter is necessary. */
         std::vector<regina::Simplex<dim>*> options_;
             /**< A list of the available options to choose from. */
 
@@ -96,7 +96,7 @@ class SimplexChooser : public QComboBox, public regina::PacketListener {
          * The given filter may be 0, in which case every simplex
          * will be offered.
          */
-        SimplexChooser(regina::Triangulation<dim>* tri,
+        SimplexChooser(regina::PacketOf<regina::Triangulation<dim>>* tri,
                 FilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
 
@@ -104,7 +104,7 @@ class SimplexChooser : public QComboBox, public regina::PacketListener {
          * Returns the currently selected simplex.
          *
          * If there are no available simplices to choose from,
-         * this routine will return 0.
+         * this routine will return \c null.
          */
         regina::Simplex<dim>* selected();
 
@@ -129,9 +129,9 @@ class SimplexChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::Packet*) override;
-        void packetWasChanged(regina::Packet*) override;
-        void packetToBeDestroyed(regina::PacketShell) override;
+        void packetToBeChanged(regina::Packet&) override;
+        void packetWasChanged(regina::Packet&) override;
+        void packetBeingDestroyed(regina::PacketShell) override;
 
     private:
         /**
@@ -166,14 +166,14 @@ class SimplexDialog : public QDialog {
          * Constructor and destructor.
          */
         SimplexDialog(QWidget* parent,
-            regina::Triangulation<dim>* tri,
+            regina::PacketOf<regina::Triangulation<dim>>* tri,
             typename SimplexChooser<dim>::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static regina::Simplex<dim>* choose(QWidget* parent,
-            regina::Triangulation<dim>* tri,
+            regina::PacketOf<regina::Triangulation<dim>>* tri,
             typename SimplexChooser<dim>::FilterFunc filter,
             const QString& title,
             const QString& message,
@@ -189,41 +189,41 @@ inline bool SimplexChooser<dim>::refresh() {
 }
 
 template <int dim>
-inline void SimplexChooser<dim>::packetToBeChanged(regina::Packet*) {
+inline void SimplexChooser<dim>::packetToBeChanged(regina::Packet&) {
     clear();
     options_.clear();
 }
 
 template <int dim>
-inline void SimplexChooser<dim>::packetWasChanged(regina::Packet*) {
+inline void SimplexChooser<dim>::packetWasChanged(regina::Packet&) {
     fill();
 }
 
 template <int dim>
-inline void SimplexChooser<dim>::packetToBeDestroyed(regina::PacketShell) {
+inline void SimplexChooser<dim>::packetBeingDestroyed(regina::PacketShell) {
     clear();
     options_.clear();
 }
 
 template <int dim>
 SimplexChooser<dim>::SimplexChooser(
-        regina::Triangulation<dim>* tri,
+        regina::PacketOf<regina::Triangulation<dim>>* tri,
         FilterFunc filter, QWidget* parent,
         bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
     setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     if (autoUpdate)
-        tri_->listen(this);
+        tri->listen(this);
     fill();
 }
 
 template <int dim>
 regina::Simplex<dim>* SimplexChooser<dim>::selected() {
     if (count() == 0)
-        return 0;
+        return nullptr;
     int curr = currentIndex();
-    return (curr < 0 ? 0 : options_[curr]);
+    return (curr < 0 ? nullptr : options_[curr]);
 }
 
 template <int dim>
@@ -261,7 +261,7 @@ void SimplexChooser<dim>::fill() {
 
 template <int dim>
 SimplexDialog<dim>::SimplexDialog(QWidget* parent,
-        regina::Triangulation<dim>* tri,
+        regina::PacketOf<regina::Triangulation<dim>>* tri,
         typename SimplexChooser<dim>::FilterFunc filter,
         const QString& title,
         const QString& message,
@@ -269,15 +269,15 @@ SimplexDialog<dim>::SimplexDialog(QWidget* parent,
         QDialog(parent) {
     setWindowTitle(title);
     setWhatsThis(whatsThis);
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto* layout = new QVBoxLayout(this);
 
-    QLabel* label = new QLabel(message);
+    auto* label = new QLabel(message);
     layout->addWidget(label);
 
     chooser = new SimplexChooser<dim>(tri, filter, this);
     layout->addWidget(chooser);
 
-    QDialogButtonBox* buttonBox = new QDialogButtonBox(
+    auto* buttonBox = new QDialogButtonBox(
         QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     layout->addWidget(buttonBox);
 
@@ -287,7 +287,7 @@ SimplexDialog<dim>::SimplexDialog(QWidget* parent,
 
 template <int dim>
 regina::Simplex<dim>* SimplexDialog<dim>::choose(QWidget* parent,
-        regina::Triangulation<dim>* tri,
+        regina::PacketOf<regina::Triangulation<dim>>* tri,
         typename SimplexChooser<dim>::FilterFunc filter,
         const QString& title,
         const QString& message,
@@ -296,7 +296,7 @@ regina::Simplex<dim>* SimplexDialog<dim>::choose(QWidget* parent,
     if (dlg.exec())
         return dlg.chooser->selected();
     else
-        return 0;
+        return nullptr;
 }
 
 #endif
