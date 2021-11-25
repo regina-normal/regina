@@ -150,7 +150,7 @@ inline std::shared_ptr<Packet> Container::internalClonePacket() const {
 
 inline void Container::writeXMLPacketData(std::ostream& out, FileFormat format,
         bool anon, PacketRefs& refs) const {
-    writeXMLHeader(out, "container", format, anon, refs);
+    writeXMLHeader(out, "container", format, anon, refs, true);
     if (! anon)
         writeXMLTreeData(out, format, refs);
     writeXMLFooter(out, "container", format);

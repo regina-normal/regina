@@ -1603,7 +1603,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
         template <typename... Args>
         void writeXMLHeader(std::ostream& out, const char* element,
             FileFormat format, bool anon, PacketRefs& refs,
-            bool newline = true, std::pair<const char*, Args>... attr) const;
+            bool newline, std::pair<const char*, Args>... attr) const;
 
         /**
          * Writes any generic XML sub-elements for this packet that come from

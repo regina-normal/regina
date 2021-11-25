@@ -130,7 +130,7 @@ void SurfaceFilterProperties::writeXMLPacketData(std::ostream& out,
     using regina::xml::xmlValueTag;
 
     if (format == REGINA_XML_GEN_2) {
-        writeXMLHeader(out, "filterprop", format, anon, refs);
+        writeXMLHeader(out, "filterprop", format, anon, refs, true);
         out << "  <filter type=\""
             << regina::xml::xmlEncodeSpecialChars(filterTypeName())
             << "\" typeid=\"" << filterType() << "\">\n";

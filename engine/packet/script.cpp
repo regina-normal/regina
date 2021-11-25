@@ -164,7 +164,7 @@ void Script::writeXMLPacketData(std::ostream& out, FileFormat format,
         bool anon, PacketRefs& refs) const {
     using regina::xml::xmlEncodeSpecialChars;
 
-    writeXMLHeader(out, "script", format, anon, refs);
+    writeXMLHeader(out, "script", format, anon, refs, true);
 
     for (const auto& v : variables_) {
         auto shared = v.second.lock();
