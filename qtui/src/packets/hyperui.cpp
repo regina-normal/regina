@@ -201,7 +201,7 @@ void HyperHeaderUI::viewTriangulation() {
         if (msg.exec() != QMessageBox::Yes)
             return;
 
-        auto copy = regina::makePacket<regina::Triangulation<4>>(
+        auto copy = regina::make_packet<regina::Triangulation<4>>(
             std::in_place, tri);
         copy->setLabel(surfaces->adornedLabel("Triangulation"));
         surfaces->insertChildLast(copy);

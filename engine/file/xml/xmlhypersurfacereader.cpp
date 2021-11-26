@@ -120,7 +120,7 @@ XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
             valueOf(props.lookup("type"), listType) &&
             valueOf(props.lookup("algorithm"), algorithm)) {
         // Parameters look sane; create the empty list.
-        list_ = makePacket<NormalHypersurfaces>(std::in_place,
+        list_ = make_packet<NormalHypersurfaces>(std::in_place,
             static_cast<HyperCoords>(coords),
             HyperList::fromInt(listType),
             HyperAlg::fromInt(algorithm),
@@ -165,14 +165,14 @@ XMLElementReader* XMLLegacyNormalHypersurfacesReader::startContentSubElement(
                 if (valueOf(props.lookup("type"), listType) &&
                         valueOf(props.lookup("algorithm"), algorithm)) {
                     // Parameters look sane; create the empty list.
-                    list_ = makePacket<NormalHypersurfaces>(std::in_place,
+                    list_ = make_packet<NormalHypersurfaces>(std::in_place,
                         static_cast<HyperCoords>(coords),
                         HyperList::fromInt(listType),
                         HyperAlg::fromInt(algorithm),
                         tri_);
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old prerelease format.
-                    list_ = makePacket<NormalHypersurfaces>(std::in_place,
+                    list_ = make_packet<NormalHypersurfaces>(std::in_place,
                         static_cast<HyperCoords>(coords),
                         HS_LEGACY | (embedded ?
                             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),

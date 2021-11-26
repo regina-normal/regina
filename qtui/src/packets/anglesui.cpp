@@ -323,7 +323,7 @@ void AngleStructureUI::viewTriangulation() {
         if (msg.exec() != QMessageBox::Yes)
             return;
 
-        auto copy = regina::makePacket<regina::Triangulation<3>>(
+        auto copy = regina::make_packet<regina::Triangulation<3>>(
             std::in_place, tri);
         copy->setLabel(structures_->adornedLabel("Triangulation"));
         structures_->insertChildLast(copy);

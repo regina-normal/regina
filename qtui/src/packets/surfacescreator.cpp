@@ -205,7 +205,7 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
             regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR);
     std::thread([&, coordSystem, which, this]() {
         try {
-            ans = regina::makePacket<NormalSurfaces>(std::in_place,
+            ans = regina::make_packet<NormalSurfaces>(std::in_place,
                 tri, coordSystem, which, regina::NS_ALG_DEFAULT, &tracker);
         } catch (const regina::ReginaException&) {
             // Leave ans as null.

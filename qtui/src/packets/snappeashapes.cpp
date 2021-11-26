@@ -433,7 +433,7 @@ void SnapPeaShapesUI::vertexLinks() {
                 "the tetrahedron corners that meet together at "
                 "<i>V</i>.</qt>"));
         if (chosen) {
-            auto ans = regina::makePacket<regina::Triangulation<2>>(
+            auto ans = regina::make_packet<regina::Triangulation<2>>(
                 std::in_place, chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
@@ -451,7 +451,7 @@ void SnapPeaShapesUI::toRegina() {
             tr("This is a null triangulation: there is no SnapPea "
             "triangulation for me to convert."));
     else {
-        auto ans = regina::makePacket<regina::Triangulation<3>>(
+        auto ans = regina::make_packet<regina::Triangulation<3>>(
             std::in_place, *tri);
         ans->setLabel(tri->label());
         tri->insertChildLast(ans);
@@ -475,9 +475,9 @@ void SnapPeaShapesUI::fill() {
         std::shared_ptr<regina::Packet> ans;
         if (tri->countFilledCusps() == 1) {
             if (tri->countCompleteCusps() == 0)
-                ans = regina::makePacket(tri->filledAll());
+                ans = regina::make_packet(tri->filledAll());
             else
-                ans = regina::makePacket(tri->filledPartial());
+                ans = regina::make_packet(tri->filledPartial());
         } else {
             int chosen = CuspDialog::choose(ui, tri, CuspChooser::filterFilled,
                 tr("Permanently Fill Cusps"),
@@ -488,11 +488,11 @@ void SnapPeaShapesUI::fill() {
                 return;
             else if (chosen == CuspChooser::CUSP_ALL) {
                 if (tri->countCompleteCusps() == 0)
-                    ans = regina::makePacket(tri->filledAll());
+                    ans = regina::make_packet(tri->filledAll());
                 else
-                    ans = regina::makePacket(tri->filledPartial());
+                    ans = regina::make_packet(tri->filledPartial());
             } else {
-                ans = regina::makePacket(tri->filledPartial(chosen));
+                ans = regina::make_packet(tri->filledPartial(chosen));
             }
         }
         if (! ans) {
@@ -523,7 +523,7 @@ void SnapPeaShapesUI::canonise() {
             "triangulation for me to canonise."));
     else {
         try {
-            auto ans = makePacket(tri->canonise(), "Canonical retriangulation");
+            auto ans = make_packet(tri->canonise(), "Canonical retriangulation");
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         } catch (const regina::UnsolvedCase&) {

@@ -220,7 +220,7 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        auto ans = regina::makePacket<Triangulation<4>>();
+        auto ans = regina::make_packet<Triangulation<4>>();
         ans->setLabel("4-D triangulation");
         return ans;
     } else if (typeId == TRI_IBUNDLE) {
@@ -232,7 +232,7 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
             return nullptr;
         }
         auto& from = regina::static_triangulation3_cast(*fromPacket);
-        auto ans = regina::makePacket(Example<4>::iBundle(from));
+        auto ans = regina::make_packet(Example<4>::iBundle(from));
         ans->intelligentSimplify();
         if (fromPacket->label().empty())
             ans->setLabel("I-bundle");
@@ -248,7 +248,7 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
             return nullptr;
         }
         auto& from = regina::static_triangulation3_cast(*fromPacket);
-        auto ans = regina::makePacket(Example<4>::s1Bundle(from));
+        auto ans = regina::make_packet(Example<4>::s1Bundle(from));
         ans->intelligentSimplify();
         if (fromPacket->label().empty())
             ans->setLabel("S¹-bundle");
@@ -274,7 +274,7 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
         try {
-            return regina::makePacket(Triangulation<4>::fromIsoSig(sig), sig);
+            return regina::make_packet(Triangulation<4>::fromIsoSig(sig), sig);
         } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("I could not interpret the given "

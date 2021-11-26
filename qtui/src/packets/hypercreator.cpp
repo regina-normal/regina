@@ -178,7 +178,7 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
             regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR);
     std::thread([&, coordSystem, which, this]() {
         try {
-            ans = regina::makePacket<NormalHypersurfaces>(std::in_place,
+            ans = regina::make_packet<NormalHypersurfaces>(std::in_place,
                 tri, coordSystem, which, regina::HS_ALG_DEFAULT, &tracker);
         } catch (const regina::ReginaException&) {
             // Leave ans as null.

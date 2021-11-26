@@ -365,7 +365,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             };
 
             {
-                auto p = regina::makePacket(
+                auto p = regina::make_packet(
                     Example<4>::doubleCone(Example<3>::s2xs1()));
                 Watcher w;
                 p->listen(&w);
@@ -393,7 +393,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 }
             }
             {
-                auto p = regina::makePacket(
+                auto p = regina::make_packet(
                     Example<4>::doubleCone(Example<3>::s2xs1()));
                 Watcher w;
                 p->listen(&w);

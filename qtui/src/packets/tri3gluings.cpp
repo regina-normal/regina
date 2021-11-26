@@ -960,7 +960,7 @@ void Tri3GluingsUI::drillEdge() {
                     // Topologically, this is just a puncture.
                     // Make sure that we puncture a tetrahedron that
                     // belongs to the correct connected component.
-                    ans = regina::makePacket<Triangulation<3>>(
+                    ans = regina::make_packet<Triangulation<3>>(
                         std::in_place, *tri);
                     ans->puncture(ans->tetrahedron(
                         e->front().tetrahedron()->index()));
@@ -981,7 +981,7 @@ void Tri3GluingsUI::drillEdge() {
                     // ideal vertex, or we are drilling an edge between
                     // two distinct ideal vertices.
                     // In both cases, pinchEdge() does what we want.
-                    ans = regina::makePacket<regina::Triangulation<3>>(
+                    ans = regina::make_packet<regina::Triangulation<3>>(
                         std::in_place, *tri);
                     ans->pinchEdge(ans->edge(e->index()));
                 }
@@ -1029,7 +1029,7 @@ void Tri3GluingsUI::boundaryComponents() {
                 "construct a 2-manifold triangulation from the "
                 "corresponding vertex link.</qt>"));
         if (chosen) {
-            auto ans = regina::makePacket<Triangulation<2>>(std::in_place,
+            auto ans = regina::make_packet<Triangulation<2>>(std::in_place,
                 chosen->build());
             ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
                 toUtf8().constData());
@@ -1059,7 +1059,7 @@ void Tri3GluingsUI::vertexLinks() {
                 "the tetrahedron corners that meet together at "
                 "<i>V</i>.</qt>"));
         if (chosen) {
-            auto ans = regina::makePacket<Triangulation<2>>(std::in_place,
+            auto ans = regina::make_packet<Triangulation<2>>(std::in_place,
                 chosen->buildLink());
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
@@ -1096,7 +1096,7 @@ void Tri3GluingsUI::splitIntoComponents() {
         for (auto& c : tri->triangulateComponents()) {
             std::ostringstream label;
             label << "Component #" << ++which;
-            base->insertChildLast(regina::makePacket(std::move(c),
+            base->insertChildLast(regina::make_packet(std::move(c),
                 label.str()));
         }
 
@@ -1166,7 +1166,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
             for (auto& s : ans) {
                 std::ostringstream label;
                 label << "Summand #" << ++which;
-                base->insertChildLast(regina::makePacket(std::move(s),
+                base->insertChildLast(regina::make_packet(std::move(s),
                     label.str()));
             }
 
@@ -1270,7 +1270,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
         for (auto& s : summands) {
             std::ostringstream label;
             label << "Summand #" << ++which;
-            decomp->insertChildLast(regina::makePacket(std::move(s),
+            decomp->insertChildLast(regina::make_packet(std::move(s),
                 label.str()));
         }
 
@@ -1385,7 +1385,7 @@ void Tri3GluingsUI::toSnapPea() {
         return;
     }
 
-    auto ans = regina::makePacket<regina::SnapPeaTriangulation>(std::in_place,
+    auto ans = regina::make_packet<regina::SnapPeaTriangulation>(std::in_place,
         *tri, true /* allow closed, since we have already check this */);
     if (ans->isNull()) {
         ReginaSupport::sorry(ui,

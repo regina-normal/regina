@@ -1667,7 +1667,7 @@ Version 7.0  [ TODO ]
             - Now takes a const reference (not a const pointer), returns
               by value instead of pointer, and throws an exception on
               error instead of returning null.
-        Function makePacket():
+        Function make_packet():
             - A new suite of overload functions for converting mathematical
               objects of type Held into wrapped packets of type PacketOf<Held>.
         Function makeZeroVector():

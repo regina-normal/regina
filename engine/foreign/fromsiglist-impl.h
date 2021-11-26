@@ -110,7 +110,7 @@ std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
         if (! sig.empty()) {
             // Process this isomorphism signature.
             try {
-                ans->insertChildLast(makePacket(PacketType::fromSig(sig),
+                ans->insertChildLast(make_packet(PacketType::fromSig(sig),
                     (label.empty() ? sig : label)));
             } catch (const InvalidArgument&) {
                 errStrings += '\n';

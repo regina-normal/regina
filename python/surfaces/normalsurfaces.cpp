@@ -98,7 +98,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             // This means we can't use the progress tracker variant, which
             // requires threading code internal to the NormalSurfaces class.
             try {
-                auto ans = regina::makePacket<NormalSurfaces>(
+                auto ans = regina::make_packet<NormalSurfaces>(
                     std::in_place, owner, coords, which, algHints);
                 if (auto p = owner.inAnyPacket())
                     p->insertChildLast(ans);
@@ -114,7 +114,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             auto p = src.packet();
             auto parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = regina::makePacket<NormalSurfaces>(
+                auto ans = regina::make_packet<NormalSurfaces>(
                     std::in_place, src, regina::NS_CONV_REDUCED_TO_STD);
                 if (parent)
                     parent->insertChildLast(ans);
@@ -128,7 +128,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             auto p = src.packet();
             auto parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = regina::makePacket<NormalSurfaces>(
+                auto ans = regina::make_packet<NormalSurfaces>(
                     std::in_place, src, regina::NS_CONV_REDUCED_TO_STD);
                 if (parent)
                     parent->insertChildLast(ans);
@@ -142,7 +142,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             auto p = src.packet();
             auto parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = regina::makePacket<NormalSurfaces>(
+                auto ans = regina::make_packet<NormalSurfaces>(
                     std::in_place, src, regina::NS_CONV_STD_TO_REDUCED);
                 if (parent)
                     parent->insertChildLast(ans);
@@ -156,7 +156,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             auto p = src.packet();
             auto parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = regina::makePacket<NormalSurfaces>(
+                auto ans = regina::make_packet<NormalSurfaces>(
                     std::in_place, src, regina::NS_CONV_STD_TO_REDUCED);
                 if (parent)
                     parent->insertChildLast(ans);
@@ -172,7 +172,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             auto p = src.packet();
             auto parent = (p ? p->parent() : nullptr);
 
-            auto ans = regina::makePacket<NormalSurfaces>(
+            auto ans = regina::make_packet<NormalSurfaces>(
                 std::in_place, src, f);
             if (parent)
                 parent->insertChildLast(ans);
@@ -183,7 +183,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             auto p = src.packet();
             auto parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = regina::makePacket<NormalSurfaces>(
+                auto ans = regina::make_packet<NormalSurfaces>(
                     std::in_place, src, regina::NS_FILTER_COMPATIBLE);
                 if (parent)
                     parent->insertChildLast(ans);
@@ -197,7 +197,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             auto p = src.packet();
             auto parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = regina::makePacket<NormalSurfaces>(
+                auto ans = regina::make_packet<NormalSurfaces>(
                     std::in_place, src, regina::NS_FILTER_DISJOINT);
                 if (parent)
                     parent->insertChildLast(ans);
@@ -212,7 +212,7 @@ void addNormalSurfaces(pybind11::module_& m) {
             auto p = src.packet();
             auto parent = (p ? p->parent() : nullptr);
             try {
-                auto ans = regina::makePacket<NormalSurfaces>(
+                auto ans = regina::make_packet<NormalSurfaces>(
                     std::in_place, src, regina::NS_FILTER_INCOMPRESSIBLE);
                 if (parent)
                     parent->insertChildLast(ans);

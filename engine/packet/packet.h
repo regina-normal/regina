@@ -2312,9 +2312,9 @@ class PacketData {
  * \ingroup packet
  */
 template <typename Held>
-std::shared_ptr<PacketOf<Held>> makePacket(Held&& src) {
+std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
     static_assert(std::is_class<Held>::value,
-        "The template argument to makePacket() must be a plain class type.");
+        "The template argument to make_packet() must be a plain class type.");
     return std::make_shared<PacketOf<Held>>(std::forward<Held>(src));
 }
 
@@ -2344,10 +2344,10 @@ std::shared_ptr<PacketOf<Held>> makePacket(Held&& src) {
  * \ingroup packet
  */
 template <typename Held>
-std::shared_ptr<PacketOf<Held>> makePacket(Held&& src,
+std::shared_ptr<PacketOf<Held>> make_packet(Held&& src,
         const std::string& label) {
     static_assert(std::is_class<Held>::value,
-        "The template argument to makePacket() must be a plain class type.");
+        "The template argument to make_packet() must be a plain class type.");
     auto ans = std::make_shared<PacketOf<Held>>(std::forward<Held>(src));
     ans->setLabel(label);
     return ans;
@@ -2362,7 +2362,7 @@ std::shared_ptr<PacketOf<Held>> makePacket(Held&& src,
  *
  * The initial argument should just be \c std::in_place; this is so the
  * compiler can disambiguate between this function and other variants of
- * makePacket().
+ * make_packet().
  *
  * The packet that is returned will be newly created, and will have no
  * packet label.
@@ -2383,7 +2383,7 @@ std::shared_ptr<PacketOf<Held>> makePacket(Held&& src,
  * \ingroup packet
  */
 template <typename Held, typename... Args>
-std::shared_ptr<PacketOf<Held>> makePacket(std::in_place_t, Args&&... args) {
+std::shared_ptr<PacketOf<Held>> make_packet(std::in_place_t, Args&&... args) {
     return std::make_shared<PacketOf<Held>>(
         std::in_place, std::forward<Args>(args)...);
 }
@@ -2391,7 +2391,7 @@ std::shared_ptr<PacketOf<Held>> makePacket(std::in_place_t, Args&&... args) {
 /**
  * Creates a new packet that wraps a default-constructed \a Held object.
  *
- * This is equivalent to calling makePacket<Held>(std::in_place).
+ * This is equivalent to calling make_packet<Held>(std::in_place).
  *
  * The packet that is returned will be newly created, and will have no
  * packet label.
@@ -2410,7 +2410,7 @@ std::shared_ptr<PacketOf<Held>> makePacket(std::in_place_t, Args&&... args) {
  * \ingroup packet
  */
 template <typename Held>
-std::shared_ptr<PacketOf<Held>> makePacket() {
+std::shared_ptr<PacketOf<Held>> make_packet() {
     return std::make_shared<PacketOf<Held>>();
 }
 

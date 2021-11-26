@@ -176,7 +176,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
         out << "Item " << (nSolns + 1);
 
         container->insertChildLast(
-            regina::makePacket(std::move(tri), out.str()));
+            regina::make_packet(std::move(tri), out.str()));
     }
     ++nSolns;
 }

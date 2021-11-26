@@ -478,7 +478,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             };
 
             {
-                auto p = regina::makePacket(Example<3>::lst(3,4));
+                auto p = regina::make_packet(Example<3>::lst(3,4));
                 Watcher w;
                 p->listen(&w);
 
@@ -505,7 +505,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 }
             }
             {
-                auto p = regina::makePacket(Example<3>::lst(3,4));
+                auto p = regina::make_packet(Example<3>::lst(3,4));
                 Watcher w;
                 p->listen(&w);
 

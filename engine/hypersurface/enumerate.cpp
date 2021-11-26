@@ -103,7 +103,7 @@ std::shared_ptr<PacketOf<NormalHypersurfaces>> NormalHypersurfaces::enumerate(
         return nullptr;
     }
 
-    auto ans = makePacket<NormalHypersurfaces>(std::in_place, coords, which,
+    auto ans = make_packet<NormalHypersurfaces>(std::in_place, coords, which,
         algHints, owner);
     auto treeParent = owner.packet();
 

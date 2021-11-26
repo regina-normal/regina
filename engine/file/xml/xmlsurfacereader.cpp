@@ -137,7 +137,7 @@ XMLNormalSurfacesReader::XMLNormalSurfacesReader(
             valueOf(props.lookup("type"), listType) &&
             valueOf(props.lookup("algorithm"), algorithm)) {
         // Parameters look sane; create the empty list.
-        list_ = makePacket<NormalSurfaces>(std::in_place,
+        list_ = make_packet<NormalSurfaces>(std::in_place,
             static_cast<NormalCoords>(coords),
             NormalList::fromInt(listType),
             NormalAlg::fromInt(algorithm),
@@ -182,14 +182,14 @@ XMLElementReader* XMLLegacyNormalSurfacesReader::startContentSubElement(
                 if (valueOf(props.lookup("type"), listType) &&
                         valueOf(props.lookup("algorithm"), algorithm)) {
                     // Parameters look sane; create the empty list.
-                    list_ = makePacket<NormalSurfaces>(std::in_place,
+                    list_ = make_packet<NormalSurfaces>(std::in_place,
                         static_cast<NormalCoords>(coords),
                         NormalList::fromInt(listType),
                         NormalAlg::fromInt(algorithm),
                         tri_);
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old format.
-                    list_ = makePacket<NormalSurfaces>(std::in_place,
+                    list_ = make_packet<NormalSurfaces>(std::in_place,
                         static_cast<NormalCoords>(coords),
                         NS_LEGACY | (embedded ?
                             NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),

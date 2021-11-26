@@ -92,7 +92,7 @@ XMLAngleStructuresReader::XMLAngleStructuresReader(XMLTreeResolver& res,
     if (! valueOf(props.lookup("algorithm"), algorithm))
         algorithm = AS_ALG_LEGACY;
 
-    list_ = makePacket<AngleStructures>(std::in_place, tautOnly,
+    list_ = make_packet<AngleStructures>(std::in_place, tautOnly,
         AngleAlg::fromInt(algorithm), *tri_);
 }
 
@@ -161,7 +161,7 @@ XMLElementReader* XMLLegacyAngleStructuresReader::startContentSubElement(
                 tautOnly = false;
             if (! valueOf(props.lookup("algorithm"), algorithm))
                 algorithm = AS_ALG_LEGACY;
-            list_ = makePacket<AngleStructures>(std::in_place, tautOnly,
+            list_ = make_packet<AngleStructures>(std::in_place, tautOnly,
                 AngleAlg::fromInt(algorithm), tri_);
         } else if (subTagName == "struct") {
             // Eep, we are getting angle structures but no parameters were
@@ -169,7 +169,7 @@ XMLElementReader* XMLLegacyAngleStructuresReader::startContentSubElement(
             // Regina 4.6 and earlier, when there were no parameters to select.
             // Set up a new list containing all default values, before
             // reading the first angle structure that we just bumped into.
-            list_ = makePacket<AngleStructures>(std::in_place, false,
+            list_ = make_packet<AngleStructures>(std::in_place, false,
                 AS_ALG_LEGACY, tri_);
             return new XMLAngleStructureReader(list_->triangulation_);
         }
@@ -198,7 +198,7 @@ void XMLLegacyAngleStructuresReader::endElement() {
     // could legitimately contain no content at all - technically,
     // everything in this XML element is optional.
     if (! list_)
-        list_ = makePacket<AngleStructures>(std::in_place, false,
+        list_ = make_packet<AngleStructures>(std::in_place, false,
             AS_ALG_LEGACY, tri_);
 
     XMLPacketReader::endElement();

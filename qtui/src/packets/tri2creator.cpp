@@ -233,7 +233,7 @@ std::shared_ptr<regina::Packet> Tri2Creator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        auto ans = regina::makePacket<Triangulation<2>>();
+        auto ans = regina::make_packet<Triangulation<2>>();
         ans->setLabel("2-D triangulation");
         return ans;
     } else if (typeId == TRI_OR) {
@@ -247,7 +247,7 @@ std::shared_ptr<regina::Packet> Tri2Creator::createPacket(
         else if (punctures > 1)
             s << ", " << punctures << " punctures";
 
-        return regina::makePacket(Example<2>::orientable(genus, punctures),
+        return regina::make_packet(Example<2>::orientable(genus, punctures),
             s.str());
     } else if (typeId == TRI_NOR) {
         unsigned long genus = norGenus->text().toULong();
@@ -266,7 +266,7 @@ std::shared_ptr<regina::Packet> Tri2Creator::createPacket(
         else if (punctures > 1)
             s << ", " << punctures << " punctures";
 
-        return regina::makePacket(Example<2>::nonOrientable(genus, punctures),
+        return regina::make_packet(Example<2>::nonOrientable(genus, punctures),
             s.str());
     } else if (typeId == TRI_ISOSIG) {
         if (! reIsoSig.exactMatch(isoSig->text())) {
@@ -288,7 +288,7 @@ std::shared_ptr<regina::Packet> Tri2Creator::createPacket(
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
         try {
-            return regina::makePacket(Triangulation<2>::fromIsoSig(sig), sig);
+            return regina::make_packet(Triangulation<2>::fromIsoSig(sig), sig);
         } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("I could not interpret the given "

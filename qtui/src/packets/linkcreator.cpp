@@ -51,7 +51,7 @@
 
 using regina::ExampleLink;
 using regina::Link;
-using regina::makePacket;
+using regina::make_packet;
 
 namespace {
     /**
@@ -246,7 +246,7 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
                 QObject::tr("Please type a text code into the box provided."));
             return nullptr;
         }
-        auto ans = makePacket<Link>(std::in_place, use);
+        auto ans = make_packet<Link>(std::in_place, use);
         if (! ans->isEmpty()) {
             ans->setLabel(use);
             return ans;
@@ -281,38 +281,38 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
 
         std::ostringstream label;
         label << "Torus(" << p << ", " << q << ')';
-        return makePacket(ExampleLink::torus(p, q), label.str().c_str());
+        return make_packet(ExampleLink::torus(p, q), label.str().c_str());
     } else if (typeId == LINK_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_BORROMEAN:
-                return makePacket(ExampleLink::borromean(), "Borromean rings");
+                return make_packet(ExampleLink::borromean(), "Borromean rings");
             case EXAMPLE_CONWAY:
-                return makePacket(ExampleLink::conway(), "Conway knot");
+                return make_packet(ExampleLink::conway(), "Conway knot");
             case EXAMPLE_FIGURE_EIGHT:
-                return makePacket(ExampleLink::figureEight(),
+                return make_packet(ExampleLink::figureEight(),
                     "Figure eight knot");
             case EXAMPLE_GST:
-                return makePacket(ExampleLink::gst(),
+                return make_packet(ExampleLink::gst(),
                     "Gompf-Scharlemann-Thompson");
             case EXAMPLE_HOPF:
-                return makePacket(ExampleLink::hopf(), "Hopf link");
+                return make_packet(ExampleLink::hopf(), "Hopf link");
             case EXAMPLE_KT:
-                return makePacket(ExampleLink::kinoshitaTerasaka(),
+                return make_packet(ExampleLink::kinoshitaTerasaka(),
                     "Kinoshita-Terasaka knot");
             case EXAMPLE_TREFOIL_LEFT:
-                return makePacket(ExampleLink::trefoilLeft(),
+                return make_packet(ExampleLink::trefoilLeft(),
                     "Left-hand trefoil");
             case EXAMPLE_TREFOIL_RIGHT:
-                return makePacket(ExampleLink::trefoilRight(),
+                return make_packet(ExampleLink::trefoilRight(),
                     "Right-hand trefoil");
             case EXAMPLE_UNKNOT:
-                return makePacket(ExampleLink::unknot(), "Unknot");
+                return make_packet(ExampleLink::unknot(), "Unknot");
             case EXAMPLE_MONSTER:
-                return makePacket(ExampleLink::monster(), "Monster unknot");
+                return make_packet(ExampleLink::monster(), "Monster unknot");
             case EXAMPLE_GORDIAN:
-                return makePacket(ExampleLink::gordian(), "Gordian unknot");
+                return make_packet(ExampleLink::gordian(), "Gordian unknot");
             case EXAMPLE_WHITEHEAD:
-                return makePacket(ExampleLink::whitehead(), "Whitehead link");
+                return make_packet(ExampleLink::whitehead(), "Whitehead link");
         }
 
         ReginaSupport::info(parentWidget,

@@ -122,7 +122,7 @@ std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::enumerate(
         return nullptr;
     }
 
-    auto ans = makePacket<NormalSurfaces>(std::in_place, coords, which,
+    auto ans = make_packet<NormalSurfaces>(std::in_place, coords, which,
         algHints, owner);
     auto treeParent = owner.inAnyPacket();
 

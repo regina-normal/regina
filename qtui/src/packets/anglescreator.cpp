@@ -90,7 +90,7 @@ std::shared_ptr<regina::Packet> AngleStructureCreator::createPacket(
         ui->tr("Enumerating vertex angle structures..."), parentWidget);
 
     std::thread([&, this]() {
-        ans = regina::makePacket<regina::AngleStructures>(std::in_place,
+        ans = regina::make_packet<regina::AngleStructures>(std::in_place,
             tri, tautOnly->isChecked(), regina::AS_ALG_DEFAULT, &tracker);
     }).detach();
 

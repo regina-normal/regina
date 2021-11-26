@@ -67,7 +67,7 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             // This means we can't use the progress tracker variant, which
             // requires threading code internal to NormalHypersurfaces.
             try {
-                auto ans = regina::makePacket<NormalHypersurfaces>(
+                auto ans = regina::make_packet<NormalHypersurfaces>(
                     std::in_place, owner, coords, which, algHints);
                 if (auto p = owner.packet())
                     p->insertChildLast(ans);

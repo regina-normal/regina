@@ -133,7 +133,7 @@ std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::quadToStandard()
     auto parent = (p ? p->parent() : nullptr);
 
     try {
-        auto ans = makePacket<NormalSurfaces>(
+        auto ans = make_packet<NormalSurfaces>(
             std::in_place, *this, NS_CONV_REDUCED_TO_STD);
         if (parent)
             parent->insertChildLast(ans);
@@ -149,7 +149,7 @@ std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::quadOctToStandardAN()
     auto parent = (p ? p->parent() : nullptr);
 
     try {
-        auto ans = makePacket<NormalSurfaces>(
+        auto ans = make_packet<NormalSurfaces>(
             std::in_place, *this, NS_CONV_REDUCED_TO_STD);
         if (parent)
             parent->insertChildLast(ans);
@@ -165,7 +165,7 @@ std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::standardToQuad()
     auto parent = (p ? p->parent() : nullptr);
 
     try {
-        auto ans = makePacket<NormalSurfaces>(
+        auto ans = make_packet<NormalSurfaces>(
             std::in_place, *this, NS_CONV_STD_TO_REDUCED);
         if (parent)
             parent->insertChildLast(ans);
@@ -181,7 +181,7 @@ std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::standardANToQuadOct()
     auto parent = (p ? p->parent() : nullptr);
 
     try {
-        auto ans = makePacket<NormalSurfaces>(
+        auto ans = make_packet<NormalSurfaces>(
             std::in_place, *this, NS_CONV_STD_TO_REDUCED);
         if (parent)
             parent->insertChildLast(ans);
@@ -197,7 +197,7 @@ std::shared_ptr<PacketOf<NormalSurfaces>>
     auto parent = (p ? p->parent() : nullptr);
 
     try {
-        auto ans = makePacket<NormalSurfaces>(std::in_place, *this,
+        auto ans = make_packet<NormalSurfaces>(std::in_place, *this,
             NS_FILTER_COMPATIBLE);
         if (parent)
             parent->insertChildLast(ans);
@@ -213,7 +213,7 @@ std::shared_ptr<PacketOf<NormalSurfaces>>
     auto parent = (p ? p->parent() : nullptr);
 
     try {
-        auto ans = makePacket<NormalSurfaces>(std::in_place, *this,
+        auto ans = make_packet<NormalSurfaces>(std::in_place, *this,
             NS_FILTER_DISJOINT);
         if (parent)
             parent->insertChildLast(ans);
@@ -229,7 +229,7 @@ std::shared_ptr<PacketOf<NormalSurfaces>>
     auto parent = (p ? p->parent() : nullptr);
 
     try {
-        auto ans = makePacket<NormalSurfaces>(std::in_place, *this,
+        auto ans = make_packet<NormalSurfaces>(std::in_place, *this,
             NS_FILTER_INCOMPRESSIBLE);
         if (parent)
             parent->insertChildLast(ans);
@@ -244,7 +244,7 @@ std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::filter(
     auto p = packet();
     auto parent = (p ? p->parent() : nullptr);
 
-    auto ans = makePacket<NormalSurfaces>(std::in_place, *this, filter);
+    auto ans = make_packet<NormalSurfaces>(std::in_place, *this, filter);
     if (parent)
         parent->insertChildLast(ans);
     return ans;
