@@ -41,6 +41,8 @@
 #include <qstring.h>
 
 class QWidget;
+class PacketFilter;
+class ReginaMain;
 
 /**
  * An interface component for creating a packet.  Such interface
@@ -100,6 +102,14 @@ class PacketCreator {
             QWidget* parentWidget) = 0;
 
         /**
+         * Returns a filter that restricts the possible parents of the
+         * new packet, or \c null if any parent is allowed.
+         *
+         * The default implementation simply returns \c null.
+         */
+        virtual PacketFilter* filter();
+
+        /**
          * Show a message box to the user explaining why packets of this
          * type cannot (yet) be created.  This will be shown if the user
          * tries to create a new packet but no suitable parents exist.
@@ -121,6 +131,11 @@ template <class T>
 class BasicPacketCreator : public PacketCreator {
     public:
         /**
+         * Constructor.
+         */
+        BasicPacketCreator(ReginaMain*) {}
+
+        /**
          * PacketCreator overrides.
          */
         std::shared_ptr<regina::Packet> createPacket(
@@ -141,6 +156,10 @@ inline QString PacketCreator::parentPrompt() {
 
 inline QString PacketCreator::parentWhatsThis() {
     return QString();
+}
+
+inline PacketFilter* PacketCreator::filter() {
+    return nullptr;
 }
 
 #endif

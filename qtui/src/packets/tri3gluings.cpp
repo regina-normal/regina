@@ -1008,8 +1008,7 @@ void Tri3GluingsUI::connectedSumWith() {
                 "The current triangulation will be modified directly."));
 
     if (other)
-        tri->connectedSumWith(*
-            std::dynamic_pointer_cast<regina::Triangulation<3>>(other));
+        tri->connectedSumWith(regina::static_triangulation3_cast(*other));
 }
 
 void Tri3GluingsUI::boundaryComponents() {

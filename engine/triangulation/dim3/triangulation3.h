@@ -3455,6 +3455,60 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
     friend class regina::XMLWriter<Triangulation<3>>;
 };
 
+/**
+ * Casts a reference from Packet to Triangulation<3>, allowing for
+ * the packet to hold either a Triangulation<3> or a SnapPeaTriangulation.
+ *
+ * The behaviour of this routine is analogous to
+ * static_cast<Triangulation<3&>>() and
+ * regina::static_packet_cast<Triangulation<3>>().  It is provided because
+ * these other routines cannot simultaneously support packets that hold a
+ * Triangulation<3> and packets that hold a SnapPeaTriangulation - these
+ * two cases use separate (and unrelated) paths through the class hierarchy to
+ * get from Packet to Triangulation<3>.
+ *
+ * In particular, attempting to use regina::static_packet_cast<Triangulation<3>>
+ * with a packet holding a SnapPea triangulation is not allowed, and will result
+ * in undefined behaviour.  In contrast, calling
+ * regina::static_triangulation3_cast on such a packet is allowed and
+ * will return the expected Triangulation<3> reference.
+ *
+ * \ifacespython Not present, since casting is unnecessary in Python.
+ *
+ * @param p a reference, presented as a packet.
+ * @return the same reference, presented using the type \a Held.
+ *
+ * \ingroup dim3
+ */
+Triangulation<3>& static_triangulation3_cast(Packet& p);
+
+/**
+ * Casts a const reference from Packet to Triangulation<3>, allowing for
+ * the packet to hold either a Triangulation<3> or a SnapPeaTriangulation.
+ *
+ * The behaviour of this routine is analogous to
+ * static_cast<const Triangulation<3>&>() and
+ * regina::static_packet_cast<Triangulation<3>>().  It is provided because
+ * these other routines cannot simultaneously support packets that hold a
+ * Triangulation<3> and packets that hold a SnapPeaTriangulation - these
+ * two cases use separate (and unrelated) paths through the class hierarchy to
+ * get from Packet to Triangulation<3>.
+ *
+ * In particular, attempting to use regina::static_packet_cast<Triangulation<3>>
+ * with a packet holding a SnapPea triangulation is not allowed, and will result
+ * in undefined behaviour.  In contrast, calling
+ * regina::static_triangulation3_cast on such a packet is allowed and
+ * will return the expected Triangulation<3> reference.
+ *
+ * \ifacespython Not present, since casting is unnecessary in Python.
+ *
+ * @param p a reference, presented as a packet.
+ * @return the same reference, presented using the type \a Held.
+ *
+ * \ingroup dim3
+ */
+const Triangulation<3>& static_triangulation3_cast(const Packet& p);
+
 template <>
 inline PacketData<Triangulation<3>>::ChangeEventSpan::ChangeEventSpan(
         PacketData& data) : data_(data) {

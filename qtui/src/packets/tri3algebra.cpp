@@ -500,7 +500,7 @@ bool Tri3TuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
     // Since we have already checked for duplicates, we can assume no
     // invariant with the same parameters exists.
     for (int i = 0; i < invariants->invisibleRootItem()->childCount(); ++i)
-        if (item->compare(dynamic_cast<TuraevViroItem*>(
+        if (item->compare(static_cast<TuraevViroItem*>(
                 invariants->invisibleRootItem()->child(i))) < 0) {
             invariants->insertTopLevelItem(i, item);
             return true;

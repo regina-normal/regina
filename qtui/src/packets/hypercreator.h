@@ -62,7 +62,7 @@ class HyperCreator : public PacketCreator {
         /**
          * Constructor.
          */
-        HyperCreator();
+        HyperCreator(ReginaMain*);
 
         /**
          * PacketCreator overrides.
@@ -73,6 +73,7 @@ class HyperCreator : public PacketCreator {
         std::shared_ptr<regina::Packet> createPacket(
             std::shared_ptr<regina::Packet> parentPacket,
             QWidget* parentWidget) override;
+        PacketFilter* filter() override;
         void explainNoParents() override;
 };
 

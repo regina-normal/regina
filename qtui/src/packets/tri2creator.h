@@ -71,7 +71,7 @@ class Tri2Creator : public PacketCreator {
         /**
          * Constructor.
          */
-        Tri2Creator();
+        Tri2Creator(ReginaMain*);
 
         /**
          * PacketCreator overrides.

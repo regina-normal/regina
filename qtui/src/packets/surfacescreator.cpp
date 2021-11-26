@@ -38,6 +38,7 @@
 // UI includes:
 #include "coordinatechooser.h"
 #include "./coordinates.h" // Use ./ to avoid picking up the iOS header.
+#include "packetfilter.h"
 #include "surfacescreator.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
@@ -62,7 +63,7 @@ namespace {
     };
 }
 
-SurfacesCreator::SurfacesCreator() {
+SurfacesCreator::SurfacesCreator(ReginaMain*) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -124,23 +125,15 @@ QString SurfacesCreator::parentWhatsThis() {
 std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
         std::shared_ptr<regina::Packet> parent, QWidget* parentWidget) {
     // Note that parent may be either Triangulation<3> or SnapPeaTriangulation.
-    auto tri = std::dynamic_pointer_cast<regina::Triangulation<3>>(parent);
-    if (! tri) {
-        ReginaSupport::sorry(ui,
-            ui->tr("The selected parent is not a 3-manifold triangulation."),
-            ui->tr("Normal surfaces must live within a 3-manifold "
-            "triangulation.  Please select the corresponding triangulation "
-            "as the location in the tree for your new normal surface list."));
-        return nullptr;
-    }
+    auto& tri = regina::static_triangulation3_cast(*parent);
 
     regina::NormalCoords coordSystem = coords->getCurrentSystem();
 
     if ((coordSystem == regina::NS_QUAD_CLOSED ||
                 coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) && ! (
-            tri->countVertices() == 1 &&
-            tri->vertex(0)->linkType() == regina::Vertex<3>::TORUS &&
-            tri->isOriented())) {
+            tri.countVertices() == 1 &&
+            tri.vertex(0)->linkType() == regina::Vertex<3>::TORUS &&
+            tri.isOriented())) {
         QString name = Coordinates::adjective(coordSystem, false);
         ReginaSupport::sorry(ui,
             ui->tr("I cannot use %1 coordinates with this "
@@ -213,7 +206,7 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
     std::thread([&, coordSystem, which, this]() {
         try {
             ans = regina::makePacket<NormalSurfaces>(std::in_place,
-                *tri, coordSystem, which, regina::NS_ALG_DEFAULT, &tracker);
+                tri, coordSystem, which, regina::NS_ALG_DEFAULT, &tracker);
         } catch (const regina::ReginaException&) {
             // Leave ans as null.
         }
@@ -251,6 +244,10 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
             ui->tr("The normal surface enumeration was cancelled."));
         return nullptr;
     }
+}
+
+PacketFilter* SurfacesCreator::filter() {
+    return new SubclassFilter<regina::Triangulation<3>>();
 }
 
 void SurfacesCreator::explainNoParents() {

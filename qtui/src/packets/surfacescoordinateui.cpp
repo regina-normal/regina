@@ -589,7 +589,7 @@ void SurfacesCoordinateUI::refresh() {
         filterChanged = true;
         if (appliedFilter)
             appliedFilter->unlisten(this);
-        appliedFilter = dynamic_cast<regina::SurfaceFilter*>(
+        appliedFilter = static_cast<regina::SurfaceFilter*>(
             filter->selectedPacket().get());
         if (appliedFilter)
             appliedFilter->listen(this);

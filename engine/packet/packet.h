@@ -2308,6 +2308,8 @@ class PacketData {
  * @param src the \a Held object that will be moved into the new packet;
  * this will become unusable after this function returns.
  * @return the new wrapped packet.
+ *
+ * \ingroup packet
  */
 template <typename Held>
 std::shared_ptr<PacketOf<Held>> makePacket(Held&& src) {
@@ -2338,6 +2340,8 @@ std::shared_ptr<PacketOf<Held>> makePacket(Held&& src) {
  * this will become unusable after this function returns.
  * @param label the label to assign to the new packet.
  * @return the new wrapped packet.
+ *
+ * \ingroup packet
  */
 template <typename Held>
 std::shared_ptr<PacketOf<Held>> makePacket(Held&& src,
@@ -2375,6 +2379,8 @@ std::shared_ptr<PacketOf<Held>> makePacket(Held&& src,
  * @param args the arguments to be forwarded to the appropriate
  * \a Held constructor.
  * @return the new wrapped packet.
+ *
+ * \ingroup packet
  */
 template <typename Held, typename... Args>
 std::shared_ptr<PacketOf<Held>> makePacket(std::in_place_t, Args&&... args) {
@@ -2400,10 +2406,68 @@ std::shared_ptr<PacketOf<Held>> makePacket(std::in_place_t, Args&&... args) {
  * <tt>PacketOfHeld()</tt>.
  *
  * @return the new wrapped packet.
+ *
+ * \ingroup packet
  */
 template <typename Held>
 std::shared_ptr<PacketOf<Held>> makePacket() {
     return std::make_shared<PacketOf<Held>>();
+}
+
+/**
+ * Casts a reference from Packet to \a Held, assuming that the given
+ * packet is actually a PacketOf<Held>.
+ *
+ * This is analogous to static_cast<Held&>().  It is provided
+ * because we cannot perform a direct static cast between Packet and \a Held
+ * (since the two classes do not have a one-way inheritance relationship).
+ *
+ * \pre The given reference refers to an object of type PacketOf<Held>.
+ *
+ * \warning If you try to use static_packet_cast<Triangulation<3>> on a
+ * reference to a PacketOf<SnapPeaTriangulation>, this will \e not work,
+ * since PacketOf<SnapPeaTriangulation> is \e not a subclass of
+ * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
+ * You should use regina::static_triangulation3_cast() instead.
+ *
+ * \ifacespython Not present, since casting is unnecessary in Python.
+ *
+ * @param p a reference, presented as a packet.
+ * @return the same reference, presented using the type \a Held.
+ *
+ * \ingroup packet
+ */
+template <typename Held>
+Held& static_packet_cast(Packet& p) {
+    return static_cast<PacketOf<Held>&>(p);
+}
+
+/**
+ * Casts a const reference from Packet to \a Held, assuming that the given
+ * packet is actually a PacketOf<Held>.
+ *
+ * This is analogous to static_cast<const Held&>().  It is provided
+ * because we cannot perform a direct static cast between Packet and \a Held
+ * (since the two classes do not have a one-way inheritance relationship).
+ *
+ * \pre The given reference refers to an object of type PacketOf<Held>.
+ *
+ * \warning If you try to use static_packet_cast<Triangulation<3>> on a
+ * reference to a PacketOf<SnapPeaTriangulation>, this will \e not work,
+ * since PacketOf<SnapPeaTriangulation> is \e not a subclass of
+ * PacketOf<Triangulation<3>>.  The behaviour in this scenario is undefined.
+ * You should use regina::static_triangulation3_cast() instead.
+ *
+ * \ifacespython Not present, since casting is unnecessary in Python.
+ *
+ * @param p a reference, presented as a packet.
+ * @return the same reference, presented using the type \a Held.
+ *
+ * \ingroup packet
+ */
+template <typename Held>
+const Held& static_packet_cast(const Packet& p) {
+    return static_cast<const PacketOf<Held>&>(p);
 }
 
 /**

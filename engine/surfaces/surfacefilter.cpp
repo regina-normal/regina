@@ -51,7 +51,7 @@ bool SurfaceFilterCombination::accept(const NormalSurface& surface) const {
         // Combine all child filters using AND.
         for (auto child = firstChild(); child; child = child->nextSibling())
             if (child->type() == PACKET_SURFACEFILTER)
-                if (! (std::dynamic_pointer_cast<SurfaceFilter>(child)->accept(
+                if (! (std::static_pointer_cast<SurfaceFilter>(child)->accept(
                         surface)))
                     return false;
         return true;
@@ -59,7 +59,7 @@ bool SurfaceFilterCombination::accept(const NormalSurface& surface) const {
         // Combine all child filters using OR.
         for (auto child = firstChild(); child; child = child->nextSibling())
             if (child->type() == PACKET_SURFACEFILTER)
-                if (std::dynamic_pointer_cast<SurfaceFilter>(child)->accept(
+                if (std::static_pointer_cast<SurfaceFilter>(child)->accept(
                         surface))
                     return true;
         return false;

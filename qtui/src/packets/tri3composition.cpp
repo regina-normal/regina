@@ -301,14 +301,15 @@ void Tri3CompositionUI::updateIsoPanel() {
     }
 
     // Run the isomorphism tests.
-    if (auto c = dynamic_cast<regina::Triangulation<3>*>(compare_)) {
-        if ((isomorphism = tri_->isIsomorphicTo(*c))) {
+    if (compare_) {
+        auto& c = regina::static_triangulation3_cast(*compare_);
+        if ((isomorphism = tri_->isIsomorphicTo(c))) {
             isoResult->setText(tr("Result: Isomorphic (this = T)"));
             isoType = IsIsomorphic;
-        } else if ((isomorphism = tri_->isContainedIn(*c))) {
+        } else if ((isomorphism = tri_->isContainedIn(c))) {
             isoResult->setText(tr("Result: Subcomplex (this < T)"));
             isoType = IsSubcomplex;
-        } else if ((isomorphism = c->isContainedIn(*tri_))) {
+        } else if ((isomorphism = c.isContainedIn(*tri_))) {
             isoResult->setText(tr("Result: Subcomplex (T < this)"));
             isoType = IsSupercomplex;
         } else {

@@ -48,7 +48,7 @@ PacketFilter* CSVSurfaceHandler::canExport() const {
 
 bool CSVSurfaceHandler::exportData(std::shared_ptr<regina::Packet> data,
         const QString& fileName, QWidget* parentWidget) const {
-    auto list = std::dynamic_pointer_cast<
+    auto list = std::static_pointer_cast<
         regina::PacketOf<regina::NormalSurfaces>>(data);
     if (! list->saveCSVStandard(
             static_cast<const char*>(QFile::encodeName(fileName)))) {

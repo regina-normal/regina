@@ -38,7 +38,6 @@
 
 #include "newpacketdialog.h"
 #include "packetcreator.h"
-#include "packetfilter.h"
 #include "packettreeview.h"
 #include "reginamain.h"
 #include "packets/tri2creator.h"
@@ -51,32 +50,37 @@
 #include "packets/snappeacreator.h"
 #include "packets/surfacescreator.h"
 
+template <typename PacketCreatorClass>
+void ReginaMain::newPacket(const QString& dialogTitle) {
+    NewPacketDialog dlg(this, new PacketCreatorClass(this), packetTree,
+        treeView->selectedPacket(), dialogTitle);
+    if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
+        auto newPacket = dlg.createdPacket();
+        if (newPacket) {
+            // Open a UI for the new packet, and select it in the tree.
+            packetView(newPacket, true, true);
+        }
+    }
+}
+
 void ReginaMain::newAngleStructures() {
-    newPacket(new AngleStructureCreator(),
-        new SubclassFilter<regina::Triangulation<3>>(),
-        tr("New Angle Structure Solutions"));
+    newPacket<AngleStructureCreator>(tr("New Angle Structure Solutions"));
 }
 
 void ReginaMain::newContainer() {
-    newPacket(new BasicPacketCreator<regina::Container>(), nullptr,
-        tr("New Container"));
+    newPacket<BasicPacketCreator<regina::Container>>(tr("New Container"));
 }
 
 void ReginaMain::newFilter() {
-    newPacket(new FilterCreator(), nullptr,
-        tr("New Normal Surface Filter"));
+    newPacket<FilterCreator>(tr("New Normal Surface Filter"));
 }
 
 void ReginaMain::newNormalSurfaces() {
-    newPacket(new SurfacesCreator(),
-        new SubclassFilter<regina::Triangulation<3>>(),
-        tr("New Normal Surface List"));
+    newPacket<SurfacesCreator>(tr("New Normal Surface List"));
 }
 
 void ReginaMain::newNormalHypersurfaces() {
-    newPacket(new HyperCreator(),
-        new SubclassFilter<regina::Triangulation<4>>(),
-        tr("New Normal Hypersurface List"));
+    newPacket<HyperCreator>(tr("New Normal Hypersurface List"));
 }
 
 void ReginaMain::newAttachment() {
@@ -85,49 +89,30 @@ void ReginaMain::newAttachment() {
 }
 
 void ReginaMain::newScript() {
-    newPacket(new BasicPacketCreator<regina::Script>(), nullptr,
-        tr("New Script"));
+    newPacket<BasicPacketCreator<regina::Script>>(tr("New Script"));
 }
 
 void ReginaMain::newSnapPeaTriangulation() {
-    newPacket(new SnapPeaTriangulationCreator(this), nullptr,
-        tr("New SnapPea Triangulation"));
+    newPacket<SnapPeaTriangulationCreator>(tr("New SnapPea Triangulation"));
 }
 
 void ReginaMain::newLink() {
-    newPacket(new LinkCreator(this), nullptr, tr("New Knot or Link"));
+    newPacket<LinkCreator>(tr("New Knot or Link"));
 }
 
 void ReginaMain::newText() {
-    newPacket(new BasicPacketCreator<regina::Text>(), nullptr,
-        tr("New Text Packet"));
+    newPacket<BasicPacketCreator<regina::Text>>(tr("New Text Packet"));
 }
 
 void ReginaMain::newTriangulation2() {
-    newPacket(new Tri2Creator(), nullptr,
-        tr("New 2-Manifold Triangulation"));
+    newPacket<Tri2Creator>(tr("New 2-Manifold Triangulation"));
 }
 
 void ReginaMain::newTriangulation3() {
-    newPacket(new Tri3Creator(), nullptr,
-        tr("New 3-Manifold Triangulation"));
+    newPacket<Tri3Creator>(tr("New 3-Manifold Triangulation"));
 }
 
 void ReginaMain::newTriangulation4() {
-    newPacket(new Tri4Creator(this), nullptr,
-        tr("New 4-Manifold Triangulation"));
-}
-
-void ReginaMain::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
-        const QString& dialogTitle) {
-    NewPacketDialog dlg(this, creator, packetTree,
-        treeView->selectedPacket(), parentFilter, dialogTitle);
-    if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
-        auto newPacket = dlg.createdPacket();
-        if (newPacket) {
-            // Open a UI for the new packet, and select it in the tree.
-            packetView(newPacket, true, true);
-        }
-    }
+    newPacket<Tri4Creator>(tr("New 4-Manifold Triangulation"));
 }
 

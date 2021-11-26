@@ -132,7 +132,7 @@ PacketFilter* PythonHandler::canExport() const {
 
 bool PythonHandler::exportData(std::shared_ptr<regina::Packet> data,
         const QString& fileName, QWidget* parentWidget) const {
-    auto script = std::dynamic_pointer_cast<regina::Script>(data);
+    auto script = std::static_pointer_cast<regina::Script>(data);
 
     QFile f(fileName);
     if (! f.open(QIODevice::WriteOnly)) {

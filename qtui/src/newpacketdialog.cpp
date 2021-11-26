@@ -48,7 +48,7 @@
 NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
         std::shared_ptr<regina::Packet> packetTree,
         std::shared_ptr<regina::Packet> defaultParent,
-        PacketFilter* useFilter, const QString& dialogTitle) :
+        const QString& dialogTitle) :
         QDialog(parent), //dialogTitle, Ok|Cancel, Ok, parent),
         creator(newCreator), tree(std::move(packetTree)) {
     setWindowTitle(dialogTitle);
@@ -66,7 +66,7 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
     auto* createBeneath = new QLabel(parentPrompt);
     createBeneath->setWhatsThis(expln);
     parentStrip->addWidget(createBeneath);
-    chooser = new PacketChooser(tree, useFilter,
+    chooser = new PacketChooser(tree, creator->filter(),
         PacketChooser::ROOT_AS_INSERTION_POINT, false,
         std::move(defaultParent));
     chooser->setWhatsThis(expln);

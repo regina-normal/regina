@@ -85,7 +85,7 @@ namespace {
     QRegExp reIsoSig("^([A-Za-z0-9+-]+)$");
 }
 
-Tri2Creator::Tri2Creator() {
+Tri2Creator::Tri2Creator(ReginaMain*) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);

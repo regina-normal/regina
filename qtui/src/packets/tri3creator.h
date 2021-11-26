@@ -71,7 +71,7 @@ class Tri3Creator : public PacketCreator {
         /**
          * Constructor.
          */
-        Tri3Creator();
+        Tri3Creator(ReginaMain*);
 
         /**
          * PacketCreator overrides.

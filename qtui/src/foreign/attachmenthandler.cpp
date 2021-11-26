@@ -64,7 +64,7 @@ PacketFilter* AttachmentHandler::canExport() const {
 
 bool AttachmentHandler::exportData(std::shared_ptr<regina::Packet> data,
         const QString& fileName, QWidget* parentWidget) const {
-    auto att = std::dynamic_pointer_cast<regina::Attachment>(data);
+    auto att = std::static_pointer_cast<regina::Attachment>(data);
     if (! att->data()) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("This attachment is empty."),

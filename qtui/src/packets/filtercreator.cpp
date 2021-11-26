@@ -52,7 +52,7 @@ namespace {
     const int ID_COMB = 1;
 }
 
-FilterCreator::FilterCreator() {
+FilterCreator::FilterCreator(ReginaMain*) {
     ui = new QWidget();
     auto* layout = new QGridLayout(ui);//, 2, 2, 5);
     layout->setColumnStretch(1, 1);

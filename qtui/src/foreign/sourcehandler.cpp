@@ -53,7 +53,7 @@ bool SourceHandler::exportData(std::shared_ptr<regina::Packet> data,
         const QString& fileName, QWidget* parentWidget) const {
     // Cast all the way up to Triangulation<3>, so that we catch both
     // Triangulation<3> and SnapPeaTriangulation packets.
-    auto tri = std::dynamic_pointer_cast<regina::Triangulation<3>>(data);
+    auto& tri = regina::static_triangulation3_cast(*data);
 
     QFile f(fileName);
     if (! f.open(QIODevice::WriteOnly)) {
@@ -67,7 +67,7 @@ bool SourceHandler::exportData(std::shared_ptr<regina::Packet> data,
 
     out.setCodec(ReginaPrefSet::importExportCodec());
 
-    out << tri->dumpConstruction().c_str();
+    out << tri.dumpConstruction().c_str();
     return true;
 }
 

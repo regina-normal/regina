@@ -405,8 +405,9 @@ class ReginaMain : public QMainWindow {
         /**
          * Generic packet operations.
          */
-        void newPacket(PacketCreator* creator, PacketFilter* parentFilter,
-            const QString& dialogTitle);
+        template <class PacketCreatorClass>
+        void newPacket(const QString& dialogTitle);
+
         void importFile(const PacketImporter& importer,
             PacketFilter* parentFilter, const QString& fileFilter,
             const QString& dialogTitle);

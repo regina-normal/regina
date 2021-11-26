@@ -117,7 +117,7 @@ namespace {
     QRegExp reSignature(R"(^([\(\)\.,;:\|\-A-Za-z]+)$)");
 }
 
-Tri3Creator::Tri3Creator() {
+Tri3Creator::Tri3Creator(ReginaMain*) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);

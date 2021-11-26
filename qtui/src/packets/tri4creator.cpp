@@ -225,15 +225,14 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         return ans;
     } else if (typeId == TRI_IBUNDLE) {
         auto fromPacket = iBundleFrom->selectedPacket();
-        auto from = std::dynamic_pointer_cast<
-            regina::Triangulation<3>>(fromPacket);
-        if (! from) {
+        if (! fromPacket) {
             ReginaSupport::info(parentWidget, QObject::tr(
                 "Please select a 3-manifold triangulation to build the "
                 "I-bundle from."));
             return nullptr;
         }
-        auto ans = regina::makePacket(Example<4>::iBundle(*from));
+        auto& from = regina::static_triangulation3_cast(*fromPacket);
+        auto ans = regina::makePacket(Example<4>::iBundle(from));
         ans->intelligentSimplify();
         if (fromPacket->label().empty())
             ans->setLabel("I-bundle");
@@ -242,15 +241,14 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         return ans;
     } else if (typeId == TRI_S1BUNDLE) {
         auto fromPacket = s1BundleFrom->selectedPacket();
-        auto from = std::dynamic_pointer_cast<
-            regina::Triangulation<3>>(fromPacket);
-        if (! from) {
+        if (! fromPacket) {
             ReginaSupport::info(parentWidget, QObject::tr(
                 "Please select a 3-manifold triangulation to build the "
                 "S¹-bundle from."));
             return nullptr;
         }
-        auto ans = regina::makePacket(Example<4>::s1Bundle(*from));
+        auto& from = regina::static_triangulation3_cast(*fromPacket);
+        auto ans = regina::makePacket(Example<4>::s1Bundle(from));
         ans->intelligentSimplify();
         if (fromPacket->label().empty())
             ans->setLabel("S¹-bundle");

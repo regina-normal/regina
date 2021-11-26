@@ -191,27 +191,8 @@ std::shared_ptr<regina::Packet> SnapPeaTriangulationCreator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_CONVERT) {
-        std::shared_ptr<regina::Packet> src = convertFrom->selectedPacket();
-        if (auto fromSnapPea = std::dynamic_pointer_cast<
-                regina::PacketOf<SnapPeaTriangulation>>(src)) {
-            if (fromSnapPea->isNull()) {
-                ReginaSupport::info(parentWidget,
-                    QObject::tr("The source triangulation you have "
-                        "selected is a null triangulation."),
-                    QObject::tr("In other words, the triangulation you "
-                        "have selected does not contain any data.  "
-                        "Please select a different triangulation "
-                        "instead."));
-                return nullptr;
-            }
-            auto ans = regina::makePacket<SnapPeaTriangulation>(
-                std::in_place, *fromSnapPea);
-            ans->setLabel(fromSnapPea->label());
-            return ans;
-        }
-
-        auto from = std::dynamic_pointer_cast<
-            regina::PacketOf<Triangulation<3>>>(src);
+        auto from = std::static_pointer_cast<
+            regina::PacketOf<Triangulation<3>>>(convertFrom->selectedPacket());
         if (! from) {
             // We didn't get either a SnapPeaTriangulation *or* a
             // Triangulation<3>.

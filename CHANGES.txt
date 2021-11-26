@@ -1695,6 +1695,9 @@ Version 7.0  [ TODO ]
               size (and may even be uninitialised) before they are passed in.
             - The change of basis matrices are now passed by reference, which
               means for metricalSmithNormalForm() they are no longer optional.
+        Function static_packet_cast(), static_triangulation3_cast():
+            - A new suite of functions for converting between general Packet
+              pointers and pointers to non-packet objects.
         Function stringToToken()
             - Replaced the two overloads with a single function that
               takes a std::string by value, for better move optimisation.
