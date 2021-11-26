@@ -77,7 +77,7 @@ class DocWidget : public QPlainTextEdit {
         using Registry = QHash<PacketType*, Details>;
         static Registry registry_;
 
-        PacketType* packet_;
+        std::weak_ptr<PacketType> packet_;
 
     public:
         DocWidget(PacketType* packet, QWidget* parent);
@@ -124,7 +124,9 @@ typename DocWidget<PacketType, Sanitise>::Registry
 template <class PacketType, class Sanitise>
 DocWidget<PacketType, Sanitise>::DocWidget(
         PacketType* packet, QWidget* parent) :
-        QPlainTextEdit(parent), packet_(packet) {
+        QPlainTextEdit(parent),
+        packet_(std::static_pointer_cast<PacketType>(
+            packet->shared_from_this())) {
     // Find the QTextDocument in the registry for this packet, or create
     // a new document if this packet is not yet registered.
     auto it = registry_.find(packet);
@@ -143,37 +145,54 @@ DocWidget<PacketType, Sanitise>::DocWidget(
 
 template <class PacketType, class Sanitise>
 DocWidget<PacketType, Sanitise>::~DocWidget() {
-    // Push any outstanding changes to the calculation engine.
-    packet_->setText(toPlainText().toUtf8().constData());
+    // We could be in the destructor because the user closed the packet pane,
+    // or because the packet was destroyed elsewhere.
+    //
+    // To distinguish between these cases we check the weak_ptr for expiration.
+    // Strictly speaking the C++ standard does not guarantee that the weak_ptr
+    // will be expired *before* the destructor is called; however, this seems
+    // to be a safe assumption in practice, and we explicitly verify this
+    // behaviour in the C++ test suite.  See ScriptUI::packetBeingDestroyed()
+    // for a more detailed discussion of this issue.
 
-    // If we are the last DocWidget registered for this packet, delete
-    // the underlying QTextDocument.
-    auto it = registry_.find(packet_);
-    if (it != registry_.end()) { // Should always be true, but just in case..
-        --it->users;
-        if (it->users == 0) {
-            delete it->doc;
-            registry_.erase(it);
+    if (auto p = packet_.lock()) {
+        // The packet is not being destroyed.
+        // Push any outstanding changes to the calculation engine.
+        p->setText(toPlainText().toUtf8().constData());
+
+        // If we are the last DocWidget registered for this packet, delete
+        // the underlying QTextDocument.
+        auto it = registry_.find(p.get());
+        if (it != registry_.end()) { // Should always be true, but just in case.
+            --it->users;
+            if (it->users == 0) {
+                delete it->doc;
+                registry_.erase(it);
+            }
         }
     }
 }
 
 template <class PacketType, class Sanitise>
 inline void DocWidget<PacketType, Sanitise>::refresh() {
-    // We have to jump through several hoops to preserve the cursor
-    // position, sigh.
-    QTextCursor c = textCursor();
-    int pos = c.position();
-    setPlainText(packet_->text().c_str());
-    c.setPosition(pos);
-    setTextCursor(c);
+    if (auto p = packet_.lock()) {
+        // We have to jump through several hoops to preserve the cursor
+        // position, sigh.
+        QTextCursor c = textCursor();
+        int pos = c.position();
+        setPlainText(p->text().c_str());
+        c.setPosition(pos);
+        setTextCursor(c);
+    }
 }
 
 template <class PacketType, class Sanitise>
 inline void DocWidget<PacketType, Sanitise>::commit() {
-    QString text = toPlainText();
-    Sanitise::sanitise(text);
-    packet_->setText(text.toUtf8().constData());
+    if (auto p = packet_.lock()) {
+        QString text = toPlainText();
+        Sanitise::sanitise(text);
+        p->setText(text.toUtf8().constData());
+    }
 }
 
 template <class PacketType, class Sanitise>
