@@ -85,12 +85,12 @@ std::ofstream sigStream;
 // Forward declarations:
 template <int dim>
 void foundGluingPerms(const regina::GluingPerms<dim>&,
-    std::shared_ptr<regina::Packet>);
+    const std::shared_ptr<regina::Packet>&);
 
 template <int dim>
 void findAllPerms(const regina::FacetPairing<dim>&,
     typename regina::FacetPairing<dim>::IsoList,
-    bool, bool, regina::CensusPurge, std::shared_ptr<regina::Packet>);
+    bool, bool, regina::CensusPurge, const std::shared_ptr<regina::Packet>&);
 
 template <int dim>
 bool mightBeMinimal(regina::Triangulation<dim>&);
@@ -103,7 +103,7 @@ template <>
 inline void findAllPerms<2>(const regina::FacetPairing<2>& p,
         regina::FacetPairing<2>::IsoList autos, bool orientableOnly,
         bool /* finiteOnly */, regina::CensusPurge,
-        std::shared_ptr<regina::Packet> dest) {
+        const std::shared_ptr<regina::Packet>& dest) {
     regina::GluingPermSearcher<2>::findAllPerms(p, std::move(autos),
         orientableOnly, foundGluingPerms<2>, dest);
 }
@@ -117,7 +117,7 @@ template <>
 inline void findAllPerms<3>(const regina::FacetPairing<3>& p,
         regina::FacetPairing<3>::IsoList autos, bool orientableOnly,
         bool finiteOnly, regina::CensusPurge usePurge,
-        std::shared_ptr<regina::Packet> dest) {
+        const std::shared_ptr<regina::Packet>& dest) {
     regina::GluingPermSearcher<3>::findAllPerms(p, std::move(autos),
         orientableOnly, finiteOnly, usePurge, foundGluingPerms<3>, dest);
 }
@@ -131,7 +131,7 @@ template <>
 inline void findAllPerms<4>(const regina::FacetPairing<4>& p,
         regina::FacetPairing<4>::IsoList autos, bool orientableOnly,
         bool finiteOnly, regina::CensusPurge,
-        std::shared_ptr<regina::Packet> dest) {
+        const std::shared_ptr<regina::Packet>& dest) {
     regina::GluingPermSearcher<4>::findAllPerms(p, std::move(autos),
         orientableOnly, finiteOnly, foundGluingPerms<4>, dest);
 }
@@ -146,7 +146,7 @@ inline bool mightBeMinimal<4>(regina::Triangulation<4>&) {
  */
 template <int dim>
 void foundGluingPerms(const regina::GluingPerms<dim>& perms,
-        std::shared_ptr<regina::Packet> container) {
+        const std::shared_ptr<regina::Packet>& container) {
     regina::Triangulation<dim> tri = perms.triangulate();
 
     // For minimalHyp, we don't run mightBeMinimal<dim>().
@@ -187,7 +187,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
 template <int dim>
 void foundFacePairing(const regina::FacetPairing<dim>& pairing,
         typename regina::FacetPairing<dim>::IsoList autos,
-        std::shared_ptr<regina::Packet> container) {
+        const std::shared_ptr<regina::Packet>& container) {
     std::cout << pairing.str() << std::endl;
     // If creating a full .rga file, store triangulations for each face
     // pairing in a different container.
