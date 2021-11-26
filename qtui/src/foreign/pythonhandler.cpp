@@ -130,9 +130,9 @@ PacketFilter* PythonHandler::canExport() const {
     return new SingleTypeFilter<regina::Script>();
 }
 
-bool PythonHandler::exportData(std::shared_ptr<regina::Packet> data,
+bool PythonHandler::exportData(const regina::Packet& data,
         const QString& fileName, QWidget* parentWidget) const {
-    auto script = std::static_pointer_cast<regina::Script>(data);
+    auto& script = static_cast<const regina::Script&>(data);
 
     QFile f(fileName);
     if (! f.open(QIODevice::WriteOnly)) {
@@ -148,7 +148,7 @@ bool PythonHandler::exportData(std::shared_ptr<regina::Packet> data,
 
     // Write the name of the script.
     out << "### " << scriptMarker << ' ';
-    out << QString(script->label().c_str());
+    out << QString(script.label().c_str());
 #if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
     Qt::endl(out);
     out << "###";
@@ -161,10 +161,10 @@ bool PythonHandler::exportData(std::shared_ptr<regina::Packet> data,
 
     // Output the value of each variable.
     unsigned long i;
-    for (i = 0; i < script->countVariables(); i++) {
-        auto value = script->variableValue(i);
+    for (i = 0; i < script.countVariables(); i++) {
+        auto value = script.variableValue(i);
         out << "### " << varMarker
-            << QString(script->variableName(i).c_str())
+            << QString(script.variableName(i).c_str())
             << ": " << (value ? QString(value->label().c_str()) : "");
 #if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
         Qt::endl(out);
@@ -183,7 +183,7 @@ bool PythonHandler::exportData(std::shared_ptr<regina::Packet> data,
     out << "### " << endMetadataMarker;
     endl(out);
 #endif
-    out << script->text().c_str();
+    out << script.text().c_str();
 
     // All done!
     return true;

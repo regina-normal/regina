@@ -61,11 +61,11 @@ PacketFilter* SnapPeaHandler::canExport() const {
     return new SubclassFilter<regina::Triangulation<3>>();
 }
 
-bool SnapPeaHandler::exportData(std::shared_ptr<regina::Packet> data,
+bool SnapPeaHandler::exportData(const regina::Packet& data,
         const QString& fileName, QWidget* parentWidget) const {
     // Cast all the way up to Triangulation<3>, so that we catch both
     // Triangulation<3> and SnapPeaTriangulation packets.
-    auto& tri = regina::static_triangulation3_cast(*data);
+    auto& tri = regina::static_triangulation3_cast(data);
     if (! tri.isValid()) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("This triangulation is not valid."),

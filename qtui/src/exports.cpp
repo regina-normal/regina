@@ -97,7 +97,7 @@ void ReginaMain::exportFile(const PacketExporter& exporter,
             QString file = QFileDialog::getSaveFileName(this, dialogTitle,
                 "Untitled" + exporter.defaultExtension(*data), fileFilter);
             if (! file.isEmpty())
-                exporter.exportData(data, file, this);
+                exporter.exportData(*data, file, this);
         }
     }
 }
