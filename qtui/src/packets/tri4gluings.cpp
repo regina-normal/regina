@@ -803,7 +803,7 @@ void Tri4GluingsUI::boundaryComponents() {
             ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
 }
@@ -833,7 +833,7 @@ void Tri4GluingsUI::vertexLinks() {
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
 }
@@ -870,7 +870,8 @@ void Tri4GluingsUI::splitIntoComponents() {
         }
 
         // Make sure the new components are visible.
-        enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
+        enclosingPane->getMainWindow()->ensureVisibleInTree(
+            *base->firstChild());
 
         // Tell the user what happened.
         ReginaSupport::info(ui,

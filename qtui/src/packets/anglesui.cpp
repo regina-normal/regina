@@ -328,10 +328,10 @@ void AngleStructureUI::viewTriangulation() {
         copy->setLabel(structures_->adornedLabel("Triangulation"));
         structures_->insertChildLast(copy);
 
-        enclosingPane->getMainWindow()->packetView(copy, true, true);
+        enclosingPane->getMainWindow()->packetView(*copy, true, true);
     } else {
         enclosingPane->getMainWindow()->packetView(
-            std::const_pointer_cast<Packet>(triPkt),
+            const_cast<regina::Packet&>(*triPkt),
             false /* visible in tree */, false /* select in tree */);
     }
 }

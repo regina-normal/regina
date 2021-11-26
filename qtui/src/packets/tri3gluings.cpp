@@ -989,7 +989,7 @@ void Tri3GluingsUI::drillEdge() {
             if (ans) {
                 ans->setLabel(tri->adornedLabel("Drilled"));
                 tri->insertChildLast(ans);
-                enclosingPane->getMainWindow()->packetView(ans, true, true);
+                enclosingPane->getMainWindow()->packetView(*ans, true, true);
             }
         }
     }
@@ -1034,7 +1034,7 @@ void Tri3GluingsUI::boundaryComponents() {
             ans->setLabel(tr("Boundary component %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
 }
@@ -1064,7 +1064,7 @@ void Tri3GluingsUI::vertexLinks() {
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
 }
@@ -1101,7 +1101,8 @@ void Tri3GluingsUI::splitIntoComponents() {
         }
 
         // Make sure the new components are visible.
-        enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
+        enclosingPane->getMainWindow()->ensureVisibleInTree(
+            *base->firstChild());
 
         // Tell the user what happened.
         ReginaSupport::info(ui,
@@ -1172,7 +1173,7 @@ void Tri3GluingsUI::connectedSumDecomposition() {
 
             // Make sure the new summands are visible.
             enclosingPane->getMainWindow()->ensureVisibleInTree(
-                base->lastChild());
+                *base->lastChild());
 
             if (ans.size() == 1) {
                 // Special-case S2xS1, S2x~S1 and RP3, which do not have
@@ -1276,7 +1277,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
 
         tri->insertChildLast(decomp);
         enclosingPane->getMainWindow()->ensureVisibleInTree(
-            decomp->lastChild());
+            *decomp->lastChild());
 
         ReginaSupport::info(ui,
             tr("This triangulation represents a composite 3-manifold."),
@@ -1405,7 +1406,7 @@ void Tri3GluingsUI::toSnapPea() {
 
     ans->setLabel(tri->label());
     tri->insertChildLast(ans);
-    enclosingPane->getMainWindow()->packetView(ans, true, true);
+    enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 
 void Tri3GluingsUI::updateRemoveState() {

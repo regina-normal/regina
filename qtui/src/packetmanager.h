@@ -65,7 +65,7 @@ class PacketManager {
          * Returns a newly created interface appropriate for viewing or
          * editing the given packet.
          */
-        static PacketUI* createUI(regina::Packet* packet,
+        static PacketUI* createUI(regina::Packet& packet,
             PacketPane* enclosingPane);
 
         /**
@@ -74,7 +74,8 @@ class PacketManager {
          * If this packet should be viewed using an internal viewer, this
          * routine returns \c null.
          */
-        static PacketExternalViewer externalViewer(regina::Packet* packet);
+        static PacketExternalViewer externalViewer(
+            const regina::Packet& packet);
 };
 
 #endif

@@ -47,53 +47,50 @@
 
 using regina::Packet;
 
-PacketTreeItem::PacketTreeItem(PacketTreeView* parent, Packet* realPacket) :
+PacketTreeItem::PacketTreeItem(PacketTreeView* parent, Packet& realPacket) :
         QTreeWidgetItem(parent), packet(realPacket),
         shouldBeExpanded_(false) {
     init();
 }
 
-PacketTreeItem::PacketTreeItem(QTreeWidgetItem* parent, Packet* realPacket) :
+PacketTreeItem::PacketTreeItem(QTreeWidgetItem* parent, Packet& realPacket) :
         QTreeWidgetItem(parent), packet(realPacket),
         shouldBeExpanded_(false) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(QTreeWidgetItem* parent,
-        QTreeWidgetItem* after, Packet* realPacket) :
+        QTreeWidgetItem* after, Packet& realPacket) :
         QTreeWidgetItem(parent, after), packet(realPacket),
         shouldBeExpanded_(false) {
     init();
 }
 
 void PacketTreeItem::init() {
-    packet->listen(this);
+    packet.listen(this);
     refreshLabel();
-    setIcon(0, PacketManager::icon(*packet));
+    setIcon(0, PacketManager::icon(packet));
 }
 
 void PacketTreeItem::fill() {
     PacketTreeItem* childTree = nullptr;
-    for (auto p = packet->firstChild(); p; p = p->nextSibling()) {
+    for (auto p = packet.firstChild(); p; p = p->nextSibling()) {
         if (childTree)
             childTree = static_cast<PacketTreeView*>(treeWidget())->
-                createAndSelect(this, childTree, p);
+                createAndSelect(this, childTree, *p);
         else
             childTree = static_cast<PacketTreeView*>(treeWidget())->
-                createAndSelect(this, p);
+                createAndSelect(this, *p);
         childTree->fill();
     }
 }
 
 void PacketTreeItem::refreshLabel() {
-    if (packet) {
-        QString newLabel = packet->humanLabel().c_str();
-        if (packet->hasTags())
-            newLabel += " (+)";
-        if (text(0) != newLabel)
-            setText(0, newLabel);
-    } else
-        setText(0, QObject::tr("<Deleted>"));
+    QString newLabel = packet.humanLabel().c_str();
+    if (packet.hasTags())
+        newLabel += " (+)";
+    if (text(0) != newLabel)
+        setText(0, newLabel);
 }
 
 void PacketTreeItem::ensureExpanded() {
@@ -115,8 +112,6 @@ void PacketTreeItem::packetWasRenamed(regina::Packet&) {
 }
 
 void PacketTreeItem::packetBeingDestroyed(regina::PacketShell) {
-    packet = nullptr;
-    refreshLabel();
     getMainWindow()->setModified(true);
 
     // I'm a bit worried about this line, but I understand it will
@@ -169,13 +164,10 @@ void PacketTreeView::fill(std::shared_ptr<Packet> topPacket) {
 
     // The root packet itself does not appear in the tree.
     for (auto p = root->firstChild(); p; p = p->nextSibling())
-        createAndSelect(p)->fill();
+        createAndSelect(*p)->fill();
 }
 
-PacketTreeItem* PacketTreeView::find(std::shared_ptr<Packet> packet) {
-    if (! packet)
-        return nullptr;
-
+PacketTreeItem* PacketTreeView::find(const Packet& packet) {
     // Start at the root of the tree and work down.
     // Note that the root packet itself will not be found by this routine.
     // Also, note that the invisible root item might not be a PacketTreeItem,
@@ -189,9 +181,9 @@ PacketTreeItem* PacketTreeView::find(std::shared_ptr<Packet> packet) {
         item = static_cast<PacketTreeItem*>(rootItem->child(itemCount++));
         current = item->getPacket();
 
-        if (current == packet.get())
+        if (current == std::addressof(packet))
             return item;
-        if (current && current->isAncestorOf(*packet)) {
+        if (current && current->isAncestorOf(packet)) {
             rootItem = item;
             itemCount = 0;
         }
@@ -208,7 +200,7 @@ void PacketTreeView::selectPacket(std::shared_ptr<regina::Packet> p,
         return;
     }
 
-    PacketTreeItem* item = find(p);
+    PacketTreeItem* item = find(*p);
     if (item) {
         setCurrentItem(item);
     } else {
@@ -220,29 +212,19 @@ void PacketTreeView::selectPacket(std::shared_ptr<regina::Packet> p,
 
 void PacketTreeView::packetView(QTreeWidgetItem* packet) {
     if (packet)
-        mainWindow->packetView(static_cast<PacketTreeItem*>(packet)->
-            getPacket()->shared_from_this());
+        mainWindow->packetView(*(static_cast<PacketTreeItem*>(packet)->
+            getPacket()));
 }
 
-void PacketTreeView::refreshSubtree(std::shared_ptr<Packet> fromPacket,
+void PacketTreeView::refreshSubtree(const Packet& fromPacket,
         QTreeWidgetItem* fromItem) {
-    // Is this a stale node in the tree?
-    if (! fromPacket) {
-        // Yes, it's a stale node.  Delete all of its children.
-        while (fromItem->childCount())
-            delete fromItem->child(0);
-        return;
-    }
-
-    // No, we're looking at a real packet.
-
     // Before we do anything else: this routine can mess up the current
     // selection.  Remember it so we can restore it later.
     std::shared_ptr<Packet> selected = selectedPacket();
 
     // Run through the child packets and child nodes and ensure they
     // match up.
-    std::shared_ptr<Packet> p = fromPacket->firstChild();
+    std::shared_ptr<Packet> p = fromPacket.firstChild();
     int itemCounter = 0;
     auto* item = static_cast<PacketTreeItem*>(fromItem->child(itemCounter));
     PacketTreeItem* prev = nullptr;
@@ -252,9 +234,9 @@ void PacketTreeView::refreshSubtree(std::shared_ptr<Packet> fromPacket,
         if (! item) {
             // We've already run out of child nodes.  Add a new one.
             if (prev)
-                prev = createAndSelect(fromItem, prev, p);
+                prev = createAndSelect(fromItem, prev, *p);
             else
-                prev = createAndSelect(fromItem, nullptr, p);
+                prev = createAndSelect(fromItem, nullptr, *p);
             prev->fill();
 
             // Assume this has come from moving prev to a different
@@ -299,9 +281,9 @@ void PacketTreeView::refreshSubtree(std::shared_ptr<Packet> fromPacket,
                 // We couldn't find a node for this packet anywhere.
                 // Insert a new one.
                 if (prev)
-                    prev = createAndSelect(fromItem, prev, p);
+                    prev = createAndSelect(fromItem, prev, *p);
                 else
-                    prev = createAndSelect(fromItem, nullptr, p);
+                    prev = createAndSelect(fromItem, nullptr, *p);
                 prev->fill();
 
                 // Assume this has come from moving prev to a different
@@ -324,10 +306,9 @@ void PacketTreeView::refreshSubtree(std::shared_ptr<Packet> fromPacket,
         selectPacket(selected);
 }
 
-PacketTreeItem* PacketTreeView::createAndSelect(
-        std::shared_ptr<Packet> packet) {
-    auto* item = new PacketTreeItem(this, packet.get());
-    if (packet.get() == toSelect) {
+PacketTreeItem* PacketTreeView::createAndSelect(Packet& packet) {
+    auto* item = new PacketTreeItem(this, packet);
+    if (std::addressof(packet) == toSelect) {
         setCurrentItem(item);
         toSelect = nullptr;
     }
@@ -335,9 +316,9 @@ PacketTreeItem* PacketTreeView::createAndSelect(
 }
 
 PacketTreeItem* PacketTreeView::createAndSelect(QTreeWidgetItem* parent,
-        std::shared_ptr<Packet> packet) {
-    auto* item = new PacketTreeItem(parent, packet.get());
-    if (packet.get() == toSelect) {
+        Packet& packet) {
+    auto* item = new PacketTreeItem(parent, packet);
+    if (std::addressof(packet) == toSelect) {
         setCurrentItem(item);
         toSelect = nullptr;
     }
@@ -345,9 +326,9 @@ PacketTreeItem* PacketTreeView::createAndSelect(QTreeWidgetItem* parent,
 }
 
 PacketTreeItem* PacketTreeView::createAndSelect(QTreeWidgetItem* parent,
-        QTreeWidgetItem* after, std::shared_ptr<Packet> packet) {
-    auto* item = new PacketTreeItem(parent, after, packet.get());
-    if (packet.get() == toSelect) {
+        QTreeWidgetItem* after, Packet& packet) {
+    auto* item = new PacketTreeItem(parent, after, packet);
+    if (std::addressof(packet) == toSelect) {
         setCurrentItem(item);
         toSelect = nullptr;
     }

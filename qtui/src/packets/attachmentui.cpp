@@ -49,9 +49,9 @@
 #include <QTextDocument>
 #include <QUrl>
 
-void AttachmentExternalViewer::view(regina::Packet* packet,
+void AttachmentExternalViewer::view(const regina::Packet& packet,
         QWidget* parentWidget) {
-    const auto& att = static_cast<regina::Attachment&>(*packet);
+    auto& att = static_cast<const regina::Attachment&>(packet);
 
     // Write the attachment to a temporary file.
     const char* data = att.data();

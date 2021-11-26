@@ -56,10 +56,9 @@ namespace regina {
 class PacketTreeItem : public QTreeWidgetItem, public regina::PacketListener {
     private:
         /**
-         * The underlying packet, or null if the underlying packet has
-         * already been destroyed.
+         * The underlying packet.
          */
-        regina::Packet* packet;
+        regina::Packet& packet;
 
         /**
          * Since the KDE4 port, moving packets around the tree seems to
@@ -80,10 +79,10 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::PacketListener {
          * \todo Make these constructors private, and add PacketTreeView
          * as a friend class.
          */
-        PacketTreeItem(PacketTreeView* parent, regina::Packet* realPacket);
-        PacketTreeItem(QTreeWidgetItem* parent, regina::Packet* realPacket);
+        PacketTreeItem(PacketTreeView* parent, regina::Packet& realPacket);
+        PacketTreeItem(QTreeWidgetItem* parent, regina::Packet& realPacket);
         PacketTreeItem(QTreeWidgetItem* parent, QTreeWidgetItem* after,
-                regina::Packet* realPacket);
+                regina::Packet& realPacket);
 
         /**
          * Returns the underlying packet.
@@ -208,7 +207,7 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
          * This routine will \e not find the root of the packet tree:
          * if packet is the tree root then this routine will return null.
          */
-        PacketTreeItem* find(std::shared_ptr<regina::Packet> packet);
+        PacketTreeItem* find(const regina::Packet& packet);
 
         /**
          * Return the main window responsible for this packet tree.
@@ -220,11 +219,11 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
          * matters such as automatic packet selection correctly, and
          * should be used instead of the PacketTreeItem* constructors.
          */
-        PacketTreeItem* createAndSelect(std::shared_ptr<regina::Packet> packet);
+        PacketTreeItem* createAndSelect(regina::Packet& packet);
         PacketTreeItem* createAndSelect(QTreeWidgetItem* parent,
-            std::shared_ptr<regina::Packet> packet);
+            regina::Packet& packet);
         PacketTreeItem* createAndSelect(QTreeWidgetItem* parent,
-            QTreeWidgetItem* after, std::shared_ptr<regina::Packet> packet);
+            QTreeWidgetItem* after, regina::Packet& packet);
 
         /**
          * Updates this tree to match the underlying packet tree.
@@ -240,13 +239,11 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
          *
          * PRE: The given packet and the given subtree node correspond.
          *
-         * The given packet may be 0 (in which case the entire subtree will
-         * be removed, though the subtree root fromItem itself will remain).
-         * The given subtree may not be 0.  It is legitimate to pass the
+         * The given subtree may not be \c null.  It is legitimate to pass the
          * invisible root item of the tree (in which case fromPacket must
          * be the tree root).
          */
-        void refreshSubtree(std::shared_ptr<regina::Packet> fromPacket,
+        void refreshSubtree(const regina::Packet& fromPacket,
             QTreeWidgetItem* fromItem);
 
         /**
@@ -286,7 +283,7 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
 };
 
 inline regina::Packet* PacketTreeItem::getPacket() {
-    return packet;
+    return std::addressof(packet);
 }
 
 inline ReginaMain* PacketTreeItem::getMainWindow() {
@@ -302,8 +299,7 @@ inline void PacketTreeItem::markShouldBeExpanded(bool state) {
 }
 
 inline void PacketTreeItem::refreshSubtree() {
-    static_cast<PacketTreeView*>(treeWidget())->refreshSubtree(
-        packet->shared_from_this(), this);
+    static_cast<PacketTreeView*>(treeWidget())->refreshSubtree(packet, this);
 }
 
 inline std::shared_ptr<regina::Packet> PacketTreeView::selectedPacket() {
@@ -321,7 +317,7 @@ inline ReginaMain* PacketTreeView::getMainWindow() {
 }
 
 inline void PacketTreeView::refreshFullTree() {
-    refreshSubtree(root, invisibleRootItem());
+    refreshSubtree(*root, invisibleRootItem());
 }
 
 #endif

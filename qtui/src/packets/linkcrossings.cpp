@@ -696,7 +696,7 @@ void LinkCrossingsUI::complement() {
     auto ans = make_packet(link->complement(),
         link->adornedLabel("Complement"));
     link->insertChildLast(ans);
-    enclosingPane->getMainWindow()->packetView(ans, true, true);
+    enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 
 void LinkCrossingsUI::typeChanged(int) {

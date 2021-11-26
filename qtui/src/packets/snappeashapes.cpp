@@ -438,7 +438,7 @@ void SnapPeaShapesUI::vertexLinks() {
             ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
 }
@@ -455,7 +455,7 @@ void SnapPeaShapesUI::toRegina() {
             std::in_place, *tri);
         ans->setLabel(tri->label());
         tri->insertChildLast(ans);
-        enclosingPane->getMainWindow()->packetView(ans, true, true);
+        enclosingPane->getMainWindow()->packetView(*ans, true, true);
     }
 }
 
@@ -503,7 +503,7 @@ void SnapPeaShapesUI::fill() {
         } else {
             ans->setLabel(tri->adornedLabel("Filled"));
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(*ans, true, true);
         }
     }
 }
@@ -525,7 +525,7 @@ void SnapPeaShapesUI::canonise() {
         try {
             auto ans = make_packet(tri->canonise(), "Canonical retriangulation");
             tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            enclosingPane->getMainWindow()->packetView(*ans, true, true);
         } catch (const regina::UnsolvedCase&) {
             ReginaSupport::sorry(ui,
                 tr("The SnapPea kernel was not able to build the "

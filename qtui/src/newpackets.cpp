@@ -58,7 +58,7 @@ void ReginaMain::newPacket(const QString& dialogTitle) {
         auto newPacket = dlg.createdPacket();
         if (newPacket) {
             // Open a UI for the new packet, and select it in the tree.
-            packetView(newPacket, true, true);
+            packetView(*newPacket, true, true);
         }
     }
 }

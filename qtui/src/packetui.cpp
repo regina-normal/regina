@@ -96,7 +96,7 @@ QString DefaultPacketUI::getPacketMenuText() const {
 void DefaultPacketUI::refresh() {
 }
 
-PacketPane::PacketPane(ReginaMain* newMainWindow, Packet* newPacket,
+PacketPane::PacketPane(ReginaMain* newMainWindow, Packet& newPacket,
         QWidget* parent) : QWidget(parent),
         mainWindow(newMainWindow), frame(nullptr),
         editCut(nullptr), editCopy(nullptr), editPaste(nullptr) {
@@ -141,7 +141,7 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, Packet* newPacket,
     headerLayout->addStretch(1);
 
     headerIcon = new QLabel();
-    headerIcon->setPixmap(PacketManager::icon(*newPacket).pixmap(headerSize));
+    headerIcon->setPixmap(PacketManager::icon(newPacket).pixmap(headerSize));
     headerIcon->setMargin(2); // Leave *some* space, however tiny.
     headerIcon->setWhatsThis(tr("This shows the label of the packet "
         "being viewed, as well as its packet type."));
@@ -149,7 +149,7 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, Packet* newPacket,
 
     headerLayout->addSpacing((headerSize / 2 /* shrug */));
 
-    headerTitle = new ElidedLabel(newPacket->fullName().c_str());
+    headerTitle = new ElidedLabel(newPacket.fullName().c_str());
     headerTitle->setSizePolicy(
         QSizePolicy::Maximum /* horizontal */,
         QSizePolicy::Preferred /* vertical */);
@@ -173,7 +173,7 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, Packet* newPacket,
     setFocusProxy(mainUIWidget);
 
     // Register ourselves to listen for various events.
-    newPacket->listen(this);
+    newPacket.listen(this);
 }
 
 PacketPane::~PacketPane() {

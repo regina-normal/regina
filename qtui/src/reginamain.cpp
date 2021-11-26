@@ -158,13 +158,13 @@ void ReginaMain::setModified(bool modified) {
     }
 }
 
-void ReginaMain::packetView(std::shared_ptr<regina::Packet> packet,
+void ReginaMain::packetView(regina::Packet& packet,
         bool makeVisibleInTree, bool selectInTree) {
-    PacketExternalViewer ext = PacketManager::externalViewer(packet.get());
+    PacketExternalViewer ext = PacketManager::externalViewer(packet);
     if (ext) {
-        (*ext)(packet.get(), this);
+        (*ext)(packet, this);
     } else
-        view(new PacketPane(this, packet.get()));
+        view(new PacketPane(this, packet));
 
     if (makeVisibleInTree || selectInTree) {
         PacketTreeItem* item = treeView->find(packet);
@@ -174,12 +174,12 @@ void ReginaMain::packetView(std::shared_ptr<regina::Packet> packet,
             // the tree has not been refreshed yet?
             // Force a refresh now and try again.
 
-            std::shared_ptr<regina::Packet> treeParent = packet->parent();
+            std::shared_ptr<regina::Packet> treeParent = packet.parent();
             // We refresh from treeParent.
             if (treeParent && treeParent->parent()) {
                 // treeParent is not the root, which means the parent
                 // is also visible in the tree.
-                PacketTreeItem* parent = treeView->find(treeParent);
+                PacketTreeItem* parent = treeView->find(*treeParent);
                 if (parent) {
                     parent->refreshSubtree();
                     item = treeView->find(packet);
@@ -203,7 +203,7 @@ void ReginaMain::packetView(std::shared_ptr<regina::Packet> packet,
     }
 }
 
-void ReginaMain::ensureVisibleInTree(std::shared_ptr<regina::Packet> packet) {
+void ReginaMain::ensureVisibleInTree(const regina::Packet& packet) {
     PacketTreeItem* item = treeView->find(packet);
     if (item)
         treeView->scrollToItem(item);
@@ -429,7 +429,7 @@ void ReginaMain::raiseWindow() {
 
 void ReginaMain::packetView() {
     if (auto packet = checkPacketSelected())
-        packetView(packet, false);
+        packetView(*packet, false);
 }
 
 void ReginaMain::packetRename() {
@@ -507,7 +507,7 @@ void ReginaMain::clonePacket() {
     auto ans = packet->cloneAsSibling(false, false);
 
     treeView->selectPacket(ans, true);
-    packetView(ans, false);
+    packetView(*ans, false);
 }
 
 void ReginaMain::cloneSubtree() {
@@ -520,7 +520,7 @@ void ReginaMain::cloneSubtree() {
     auto ans = packet->cloneAsSibling(true, false);
 
     treeView->selectPacket(ans, true);
-    packetView(ans, false);
+    packetView(*ans, false);
 }
 
 void ReginaMain::pythonConsole() {

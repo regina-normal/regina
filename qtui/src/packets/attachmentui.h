@@ -44,7 +44,7 @@
  */
 class AttachmentExternalViewer {
     public:
-        static void view(regina::Packet* packet, QWidget* parentWidget);
+        static void view(const regina::Packet& packet, QWidget* parentWidget);
 };
 
 #endif
