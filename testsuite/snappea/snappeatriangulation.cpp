@@ -793,6 +793,89 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                     << ", which does not abelianise to " << expectedH1 << ".";
                 CPPUNIT_FAIL(msg.str());
             }
+
+            if (m == 0 && l == 0) {
+                try {
+                    Triangulation<3> t = s.filledAll();
+
+                    std::ostringstream msg;
+                    msg << "Calling filledAll() on " << name
+                        << " with no cusps filled "
+                        "should have thrown an exception.";
+                    CPPUNIT_FAIL(msg.str());
+                } catch (const regina::FailedPrecondition&) {
+                }
+
+                SnapPeaTriangulation t = s.filledPartial();
+                const regina::AbelianGroup& reg = t.homology();
+                if (reg.str() != expectedH1) {
+                    std::ostringstream msg;
+                    msg << "Permanent filling (" << m << ", " << l << ") for "
+                        << name << " gives homology "
+                        << reg.str() << ", not " << expectedH1 << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                const regina::AbelianGroup& snap = s.homologyFilled();
+                if (snap.str() != expectedH1) {
+                    std::ostringstream msg;
+                    msg << "Permanent filling (" << m << ", " << l << ") for "
+                        << name << " gives homology "
+                        << snap.str() << ", not " << expectedH1 << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else if (tri.countBoundaryComponents() == 1) {
+                try {
+                    SnapPeaTriangulation t = s.filledPartial();
+
+                    std::ostringstream msg;
+                    msg << "Calling filledPartial() on " << name
+                        << " with the one cusp filled should have "
+                        "thrown an exception.";
+                    CPPUNIT_FAIL(msg.str());
+                } catch (const regina::FailedPrecondition&) {
+                }
+
+                Triangulation<3> t = s.filledAll();
+                const regina::AbelianGroup& ans = t.homology();
+                if (ans.str() != expectedH1) {
+                    std::ostringstream msg;
+                    msg << "Permanent filling (" << m << ", " << l << ") for "
+                        << name << " gives homology "
+                        << ans.str() << ", not " << expectedH1 << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                try {
+                    Triangulation<3> t = s.filledAll();
+
+                    std::ostringstream msg;
+                    msg << "Calling filledAll() on " << name
+                        << " with only one cusped filled "
+                        "should have thrown an exception.";
+                    CPPUNIT_FAIL(msg.str());
+                } catch (const regina::FailedPrecondition&) {
+                }
+
+                SnapPeaTriangulation t = s.filledPartial();
+                const regina::AbelianGroup& reg = t.homology();
+                if (reg.str() != expectedH1) {
+                    std::ostringstream msg;
+                    msg << "Permanent filling (" << m << ", " << l << ") for "
+                        << name << " gives homology "
+                        << reg.str() << ", not " << expectedH1 << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                const regina::AbelianGroup& snap = s.homologyFilled();
+                if (snap.str() != expectedH1) {
+                    std::ostringstream msg;
+                    msg << "Permanent filling (" << m << ", " << l << ") for "
+                        << name << " gives homology "
+                        << snap.str() << ", not " << expectedH1 << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
         }
 
         void filling() {
