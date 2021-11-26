@@ -218,7 +218,6 @@ std::shared_ptr<regina::Packet> SurfacesCreator::createPacket(
                 .arg(Coordinates::adjective(coordSystem, true))
                 .arg(sType)
                 .toStdString());
-            parent->insertChildLast(ans);
         } else {
             if (coordSystem == regina::NS_QUAD_CLOSED ||
                     coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) {

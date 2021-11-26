@@ -99,7 +99,6 @@ std::shared_ptr<regina::Packet> AngleStructureCreator::createPacket(
             ans->setLabel("Taut angle structures");
         else
             ans->setLabel("Vertex angle structures");
-        parentPacket->insertChildLast(ans);
         return ans;
     } else {
         ReginaSupport::info(parentWidget,

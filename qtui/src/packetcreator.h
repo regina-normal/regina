@@ -92,10 +92,13 @@ class PacketCreator {
          * appropriate error must be displayed (using the argument
          * \a parentWidget as a parent for the message box).
          *
-         * This routine may ensure that the newly created packet is
-         * placed beneath the given parent packet, though if this is not
-         * done then it will be done elsewhere.  It does not need to assign
-         * a packet label; this will be also be done elsewhere.
+         * The parent is passed as a std::shared_ptr so that the creator
+         * can (for instance) run a long computation in a separate
+         * thread and guarantee that the parent packet survives.
+         *
+         * This routine should not insert the new packet beneath the
+         * given parent in the packet tree, and should not assign the
+         * new packet a label.  This will all be done elsewhere.
          */
         virtual std::shared_ptr<regina::Packet> createPacket(
             std::shared_ptr<regina::Packet> parentPacket,

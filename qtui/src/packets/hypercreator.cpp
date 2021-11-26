@@ -191,7 +191,6 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
                 .arg(Coordinates::adjective(coordSystem, true))
                 .arg(sType)
                 .toStdString());
-            parent->insertChildLast(ans);
         } else {
             ReginaSupport::failure(parentWidget,
                 ui->tr("<qt>I could not enumerate %1 normal hypersurfaces.<p>"
