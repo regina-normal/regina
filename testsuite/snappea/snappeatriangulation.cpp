@@ -33,6 +33,8 @@
 #include <cmath>
 #include <iomanip>
 #include <cppunit/extensions/HelperMacros.h>
+#include "link/examplelink.h"
+#include "link/link.h"
 #include "maths/matrix.h"
 #include "snappea/examplesnappea.h"
 #include "snappea/snappeatriangulation.h"
@@ -61,6 +63,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(spunBoundaries);
     CPPUNIT_TEST(stability);
     CPPUNIT_TEST(filling);
+    CPPUNIT_TEST(link);
     CPPUNIT_TEST(swapping);
 
     CPPUNIT_TEST_SUITE_END();
@@ -522,18 +525,16 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 "should not be representable in SnapPea format.");
         }
 
-        void testVolume(Triangulation<3>& tri, double vol, unsigned places,
-                const char* name) {
+        void testVolume(const SnapPeaTriangulation& s,
+                double vol, unsigned places, const char* name) {
             // Verify the volume to the given number of decimal places.
             // Places are counted after the decimal point in standard
             // (non-scientific) notation.
-            SnapPeaTriangulation s(tri);
-            {
+            if (s.isNull()) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name <<
                     " could not be represented in SnapPea format.";
-
-                CPPUNIT_ASSERT_MESSAGE(msg.str(), ! s.isNull());
+                CPPUNIT_FAIL(msg.str());
             }
 
             auto [foundVol, precision] = s.volumeWithPrecision();
@@ -617,38 +618,33 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             CPPUNIT_FAIL(msg.str());
         }
 
-        void testFlat(Triangulation<3>& tri, const char* triName,
+        void testFlat(const SnapPeaTriangulation& s, const char* triName,
                 unsigned places) {
             // Verify that the triangulation has a flat solution and the
             // volume is zero to the given number of decimal places.
             // Places are counted after the decimal point in standard
             // (non-scientific) notation.
-            SnapPeaTriangulation s(tri);
-            {
-                std::ostringstream msg;
-                msg << triName <<
-                    " could not be represented in SnapPea format.";
 
-                CPPUNIT_ASSERT_MESSAGE(msg.str(), ! s.isNull());
+            if (s.isNull()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << triName <<
+                    " could not be represented in SnapPea format.";
+                CPPUNIT_FAIL(msg.str());
             }
 
-            {
+            if (s.solutionType() != SnapPeaTriangulation::flat_solution) {
                 std::ostringstream msg;
                 msg << triName << " has a solution type that is not flat.";
-
-                CPPUNIT_ASSERT_MESSAGE(msg.str(), s.solutionType() ==
-                    SnapPeaTriangulation::flat_solution);
+                CPPUNIT_FAIL(msg.str());
             }
 
             auto [foundVol, precision] = s.volumeWithPrecision();
-            {
+            if (precision < static_cast<int>(places)) {
                 std::ostringstream msg;
                 msg << triName << " has a volume with a precision of "
                     << precision << " places, which is less than the desired "
                     << places << " places.";
-
-                CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    precision >= static_cast<int>(places));
+                CPPUNIT_FAIL(msg.str());
             }
 
             // Dumb down the precision to our given maximum.
@@ -765,9 +761,10 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             runCensusAllNoBdry(&testStability);
         }
 
-        void testFilledHomology(const Triangulation<3>& tri, int m, int l,
+        void testFilledHomology(SnapPeaTriangulation s, int m, int l,
                 const std::string& expectedH1, const char* name) {
-            SnapPeaTriangulation s(tri);
+            // We pass s by value because we are going to edit it here.
+
             if (s.isNull()) {
                 std::ostringstream msg;
                 msg << "Null SnapPea triangulation for " << name << ".";
@@ -824,7 +821,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                         << snap.str() << ", not " << expectedH1 << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
-            } else if (tri.countBoundaryComponents() == 1) {
+            } else if (s.countBoundaryComponents() == 1) {
                 try {
                     SnapPeaTriangulation t = s.filledPartial();
 
@@ -901,6 +898,28 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             testFilledHomology(n4_9_2, 0, 0, "Z + Z_2", "N 4_9^2");
             testFilledHomology(n4_9_2, 1, 0, "Z", "N 4_9^2");
             testFilledHomology(n4_9_2, -1, 0, "Z", "N 4_9^2");
+        }
+
+        void link() {
+            testVolume(regina::ExampleLink::figureEight(),
+                2.0298832128, 9, "Figure eight");
+            testFilledHomology(regina::ExampleLink::figureEight(),
+                1, 1, "0", "Figure eight");
+            testFilledHomology(regina::ExampleLink::figureEight(),
+                -3, 7, "Z_3", "Figure eight");
+
+            testFlat(regina::ExampleLink::trefoil(), "Trefoil", 9);
+            testFilledHomology(regina::ExampleLink::trefoil(),
+                1, 1, "Z_2", "Trefoil");
+            testFilledHomology(regina::ExampleLink::trefoil(),
+                -3, 7, "Z_16", "Trefoil");
+
+            testVolume(regina::ExampleLink::whitehead(),
+                3.663862376708876, 9, "Whitehead link");
+            testFilledHomology(regina::ExampleLink::whitehead(),
+                1, 1, "Z", "Whitehead link");
+            testFilledHomology(regina::ExampleLink::whitehead(),
+                -3, 7, "Z + Z_17", "Whitehead link");
         }
 
         void swapping() {
