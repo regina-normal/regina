@@ -768,7 +768,8 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * first child of the given parent, or \c false (the default) if
          * it should be inserted as the last child.
          */
-        void reparent(std::shared_ptr<Packet> newParent, bool first = false);
+        void reparent(const std::shared_ptr<Packet>& newParent,
+            bool first = false);
 
         /**
          * Cuts all of this packet's children out of the packet tree,
@@ -796,7 +797,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * @param newParent the new parent beneath which the children
          * will be inserted.
          */
-        void transferChildren(std::shared_ptr<Packet> newParent);
+        void transferChildren(const std::shared_ptr<Packet>& newParent);
 
         /**
          * Swaps this packet with its next sibling in the sequence of
@@ -1762,7 +1763,7 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * @param parent the parent beneath which the descendant clones
          * will be inserted.
          */
-        void internalCloneDescendants(std::shared_ptr<Packet> parent) const;
+        void internalCloneDescendants(Packet& parent) const;
 
         /**
          * Calls the given PacketListener event for all registered
