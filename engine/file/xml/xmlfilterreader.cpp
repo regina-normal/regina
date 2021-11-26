@@ -178,7 +178,7 @@ void XMLLegacyPropertiesFilterReader::endContentSubElement(
         const std::string& subTagName, XMLElementReader* subReader) {
     if (subTagName == "euler") {
         std::vector<std::string> tokens = basicTokenise(
-            dynamic_cast<XMLCharsReader*>(subReader)->chars());
+            static_cast<XMLCharsReader*>(subReader)->chars());
 
         for (const auto& t : tokens) {
             try {

@@ -186,7 +186,7 @@ PacketTreeItem* PacketTreeView::find(std::shared_ptr<Packet> packet) {
     PacketTreeItem* item;
     regina::Packet* current;
     while (itemCount < rootItem->childCount()) {
-        item = dynamic_cast<PacketTreeItem*>(rootItem->child(itemCount++));
+        item = static_cast<PacketTreeItem*>(rootItem->child(itemCount++));
         current = item->getPacket();
 
         if (current == packet.get())
@@ -220,7 +220,7 @@ void PacketTreeView::selectPacket(std::shared_ptr<regina::Packet> p,
 
 void PacketTreeView::packetView(QTreeWidgetItem* packet) {
     if (packet)
-        mainWindow->packetView(dynamic_cast<PacketTreeItem*>(packet)->
+        mainWindow->packetView(static_cast<PacketTreeItem*>(packet)->
             getPacket()->shared_from_this());
 }
 
@@ -368,17 +368,13 @@ void PacketTreeView::customEvent(QEvent* evt) {
 }
 
 void PacketTreeView::handleItemExpanded(QTreeWidgetItem* item) {
-    auto* p = dynamic_cast<PacketTreeItem*>(item);
-    if (! p)
-        return;
-    p->markShouldBeExpanded(true);
+    if (auto p = dynamic_cast<PacketTreeItem*>(item))
+        p->markShouldBeExpanded(true);
 }
 
 void PacketTreeView::handleItemCollapsed(QTreeWidgetItem* item) {
-    auto* p = dynamic_cast<PacketTreeItem*>(item);
-    if (! p)
-        return;
-    p->markShouldBeExpanded(false);
+    if (auto p = dynamic_cast<PacketTreeItem*>(item))
+        p->markShouldBeExpanded(false);
 }
 
 void PacketTreeView::childWasAdded(regina::Packet&, regina::Packet&) {

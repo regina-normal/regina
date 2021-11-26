@@ -136,7 +136,7 @@ void XMLGroupPresentationReader::endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (group_)
         if (subTagName == "reln") {
-            auto& exp = dynamic_cast<ExpressionReader*>(subReader)->expression();
+            auto& exp = static_cast<ExpressionReader*>(subReader)->expression();
             if (exp)
                 group_->addRelation(std::move(*exp));
         }

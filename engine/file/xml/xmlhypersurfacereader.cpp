@@ -142,7 +142,7 @@ void XMLNormalHypersurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (list_ && subTagName == "hypersurface")
-        if (auto& s = dynamic_cast<XMLNormalHypersurfaceReader*>(
+        if (auto& s = static_cast<XMLNormalHypersurfaceReader*>(
                 subReader)->hypersurface())
             list_->surfaces_.push_back(std::move(*s));
 }
@@ -189,7 +189,7 @@ void XMLLegacyNormalHypersurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (list_ && subTagName == "hypersurface")
-        if (auto& s = dynamic_cast<XMLNormalHypersurfaceReader*>(
+        if (auto& s = static_cast<XMLNormalHypersurfaceReader*>(
                 subReader)->hypersurface())
             list_->surfaces_.push_back(std::move(*s));
 }

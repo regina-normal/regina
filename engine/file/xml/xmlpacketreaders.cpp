@@ -149,7 +149,7 @@ void XMLLegacyPDFReader::endContentSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (subTagName == "pdf") {
         extractAttachmentFromBase64(*pdf,
-            dynamic_cast<XMLCharsReader*>(subReader)->chars(),
+            static_cast<XMLCharsReader*>(subReader)->chars(),
             "attachment.pdf");
     }
 }
@@ -170,12 +170,12 @@ XMLElementReader* XMLScriptReader::startContentSubElement(
 void XMLScriptReader::endContentSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (subTagName == "code" || subTagName == "text")
-        script->setText(dynamic_cast<XMLCharsReader*>(subReader)->chars());
+        script->setText(static_cast<XMLCharsReader*>(subReader)->chars());
     else if (subTagName == "line") { // Old-style
-        script->append(dynamic_cast<XMLCharsReader*>(subReader)->chars());
+        script->append(static_cast<XMLCharsReader*>(subReader)->chars());
         script->append("\n");
     } else if (subTagName == "var") {
-        auto* var = dynamic_cast<ScriptVarReader*>(subReader);
+        auto* var = static_cast<ScriptVarReader*>(subReader);
         if (! var->getName().empty())
             resolver_.queueTask(new VariableResolutionTask(
                 script, var->getName(),

@@ -159,7 +159,7 @@ void XMLNormalSurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (list_ && subTagName == "surface")
-        if (auto& s = dynamic_cast<XMLNormalSurfaceReader*>(subReader)->
+        if (auto& s = static_cast<XMLNormalSurfaceReader*>(subReader)->
                 surface())
             list_->surfaces_.push_back(std::move(*s));
 }
@@ -206,7 +206,7 @@ void XMLLegacyNormalSurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (list_ && subTagName == "surface")
-        if (auto& s = dynamic_cast<XMLNormalSurfaceReader*>(subReader)->
+        if (auto& s = static_cast<XMLNormalSurfaceReader*>(subReader)->
                 surface())
             list_->surfaces_.push_back(std::move(*s));
 }

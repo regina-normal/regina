@@ -548,7 +548,7 @@ inline XMLElementReader* AbelianGroupPropertyReader::startSubElement(
 inline void AbelianGroupPropertyReader::endSubElement(
         const std::string& subTagName, XMLElementReader* subReader) {
     if (subTagName == "abeliangroup") {
-        auto& ans = dynamic_cast<XMLAbelianGroupReader*>(subReader)->group();
+        auto& ans = static_cast<XMLAbelianGroupReader*>(subReader)->group();
         if (ans)
             prop_ = std::move(*ans);
     }
@@ -572,7 +572,7 @@ inline XMLElementReader* GroupPresentationPropertyReader::startSubElement(
 inline void GroupPresentationPropertyReader::endSubElement(
         const std::string& subTagName, XMLElementReader* subReader) {
     if (subTagName == "group") {
-        auto& ans = dynamic_cast<XMLGroupPresentationReader*>(subReader)->
+        auto& ans = static_cast<XMLGroupPresentationReader*>(subReader)->
             group();
         if (ans)
             prop_ = std::move(*ans);

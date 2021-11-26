@@ -124,7 +124,7 @@ void XMLAngleStructuresReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (list_ && subTagName == "struct")
-        if (auto& s = dynamic_cast<XMLAngleStructureReader*>(subReader)->
+        if (auto& s = static_cast<XMLAngleStructureReader*>(subReader)->
                 structure())
             list_->structures_.push_back(std::move(*s));
 }
@@ -187,7 +187,7 @@ void XMLLegacyAngleStructuresReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (list_ && subTagName == "struct")
-        if (auto& s = dynamic_cast<XMLAngleStructureReader*>(subReader)->
+        if (auto& s = static_cast<XMLAngleStructureReader*>(subReader)->
                 structure())
             list_->structures_.push_back(std::move(*s));
 }
