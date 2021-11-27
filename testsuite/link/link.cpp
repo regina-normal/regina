@@ -79,6 +79,7 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(gauss);
     CPPUNIT_TEST(orientedGauss);
     CPPUNIT_TEST(pdCode);
+    CPPUNIT_TEST(magic);
     CPPUNIT_TEST(rewrite);
     CPPUNIT_TEST(swapping);
     CPPUNIT_TEST(group);
@@ -2662,6 +2663,115 @@ class LinkTest : public CppUnit::TestFixture {
             verifyPDCode(unlink3_0, empty, "Unlink (3 components)");
             verifyPDCode(trefoil_unknot0, trefoilRight,
                 "Trefoil U unknot (separate)");
+        }
+
+        void verifyMagic(const Link& l, const char* name,
+                size_t trivialComponents = 0, bool gaussAmbiguous = false) {
+            std::string sig = l.knotSig();
+
+            if (l.countComponents() == 1) {
+                {
+                    Link recon(sig);
+                    if (recon.knotSig() != sig) {
+                        std::ostringstream msg;
+                        msg << name << ": cannot reconstruct from "
+                            "knot signature using magic constructor.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+                {
+                    Link recon(l.orientedGauss());
+                    if (recon.knotSig() != sig) {
+                        std::ostringstream msg;
+                        msg << name << ": cannot reconstruct from "
+                            "oriented Gauss code using magic constructor.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+                if (! gaussAmbiguous) {
+                    {
+                        Link recon(l.gauss());
+                        if (recon.knotSig() != sig) {
+                            std::ostringstream msg;
+                            msg << name << ": cannot reconstruct from "
+                                "classical Gauss code using magic constructor.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                    {
+                        Link recon(l.dt(false));
+                        if (recon.knotSig() != sig) {
+                            std::ostringstream msg;
+                            msg << name << ": cannot reconstruct from "
+                                "numeric DT code using magic constructor.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                    if (l.size() <= 26 && l.size() != 1) {
+                        // For the 1-crossing unknot, the alphabetic DT code
+                        // is "a", which is the same as the knot signature
+                        // for the 0-crossing unknot.
+                        Link recon(l.dt(true));
+                        if (recon.knotSig() != sig) {
+                            std::ostringstream msg;
+                            msg << name << ": cannot reconstruct from "
+                                "alphabetic DT code using magic constructor.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                }
+            }
+
+            {
+                Link recon(l.pd());
+                // We should really insert trivialComponents additional
+                // 0-crossing unknots and then compare the two links up
+                // to isomorphism.  However, knotSig() only works on knots,
+                // so currently this is not easy.  Instead we verify
+                // that the PD code is preserved, which is a looser test.
+                if (recon.pd() != l.pd()) {
+                    std::ostringstream msg;
+                    msg << name << ": cannot reconstruct from "
+                        "PD code using magic constructor.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void magic() {
+            // The empty link:
+            verifyMagic(empty, "Empty");
+
+            // Single-component knots:
+            verifyMagic(unknot0, "Unknot (0 crossings)", 1);
+            verifyMagic(unknot1, "Unknot (1 crossing)");
+            verifyMagic(unknot3, "Unknot (3 crossings)");
+            verifyMagic(unknotMonster, "Monster unknot");
+            verifyMagic(unknotGordian, "Gordian unknot");
+            verifyMagic(trefoilLeft, "LH Trefoil");
+            verifyMagic(trefoilRight, "RH Trefoil");
+            verifyMagic(trefoil_r1x2, "Trefoil with 2 R1s", 0, true);
+            verifyMagic(trefoil_r1x6, "Trefoil with 6 R1s", 0, true);
+            verifyMagic(figureEight, "Figure eight");
+            verifyMagic(figureEight_r1x2, "Figure eight with 2 R1s", 0, true);
+            verifyMagic(conway, "Conway knot");
+            verifyMagic(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
+            verifyMagic(gst, "GST");
+            verifyMagic(rht_rht, "RH Trefoil # RH Trefoil", 0, true);
+            verifyMagic(rht_lht, "RH Trefoil # LH Trefoil", 0, true);
+
+            // Links with multiple components:
+            verifyMagic(unlink2_0, "Unlink (2 components)", 2);
+            verifyMagic(unlink3_0, "Unlink (3 components)", 3);
+            verifyMagic(unlink2_r2, "Unlink (2 components via R2)");
+            verifyMagic(unlink2_r1r1, "Unlink (2 components via R1+R1)");
+            verifyMagic(hopf, "Hopf link");
+            verifyMagic(whitehead, "Whitehead link");
+            verifyMagic(borromean, "Borromean rings");
+            verifyMagic(trefoil_unknot0, "Trefoil U unknot (separate)", 1);
+            verifyMagic(trefoil_unknot1, "Trefoil U unknot (separate + twist)");
+            verifyMagic(trefoil_unknot_overlap, "Trefoil U unknot (with R2)");
+            verifyMagic(adams6_28, "Adams Fig. 6.28");
         }
 
         void verifyRewrite(const Link& link, int height, int threads,
