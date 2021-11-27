@@ -2014,6 +2014,8 @@
 		05E0F1CE2582428800965440 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFEC258241E100965440 /* libiconv.tbd */; };
 		05E0F1DE2582428C00965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
 		05E0F1EE2582429000965440 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFEE258241E100965440 /* libz.tbd */; };
+		05E7DA2C275250BE00B01C09 /* link_complement.c in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA2B275250BE00B01C09 /* link_complement.c */; };
+		05E7DA2D275250BE00B01C09 /* link_complement.c in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA2B275250BE00B01C09 /* link_complement.c */; };
 		05EA195719F30A0100D37501 /* EltMoves3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMoves3.mm */; };
 		05EBB418259DB49A00362FA5 /* censuslookup in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B011D9DC51600B1E33B /* censuslookup */; };
 		05EBB419259DB49E00362FA5 /* regconcat in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B0C1D9DC52200B1E33B /* regconcat */; };
@@ -4471,6 +4473,7 @@
 		05E0EFED258241E100965440 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		05E0EFEE258241E100965440 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		05E5312E1C53C48600ECEB72 /* simplexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexchooser.h; sourceTree = "<group>"; };
+		05E7DA2B275250BE00B01C09 /* link_complement.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = link_complement.c; sourceTree = "<group>"; };
 		05EA195519F30A0100D37501 /* EltMoves3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMoves3.h; sourceTree = "<group>"; };
 		05EA195619F30A0100D37501 /* EltMoves3.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EltMoves3.mm; sourceTree = "<group>"; };
 		05F09FBC1DBEF01800117BFC /* dim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2.h; sourceTree = "<group>"; };
@@ -5915,6 +5918,7 @@
 				0583656018DB8876008B08D9 /* kernel_namespace.h */,
 				052F9D41180600FA00FAE4DF /* kernel_prototypes.h */,
 				052F9D42180600FA00FAE4DF /* kernel_typedefs.h */,
+				05E7DA2B275250BE00B01C09 /* link_complement.c */,
 				052F9D43180600FA00FAE4DF /* link_projection.h */,
 				05A73C9419B2EF5A0099C617 /* matrix_conversion.c */,
 				05A73C9519B2EF5A0099C617 /* matrix_generators.c */,
@@ -9467,6 +9471,7 @@
 				052FA20C1806129B00FAE4DF /* osutils.cpp in Sources */,
 				05772F1E270CFBAA00D26D8A /* pyenumerate.cpp in Sources */,
 				054208CB1DF0D29C0018AB24 /* lensspace.cpp in Sources */,
+				05E7DA2D275250BE00B01C09 /* link_complement.c in Sources */,
 				05A73C9D19B2EF5A0099C617 /* fundamental_group.c in Sources */,
 				05CAE64D27450D89007C93F3 /* gluingperms7.cpp in Sources */,
 				05249EFF1DBC16F1001FE29E /* isomorphism15.cpp in Sources */,
@@ -10311,6 +10316,7 @@
 				0512E08A26DF349800DDB222 /* tetrahedra.cpp in Sources */,
 				05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */,
 				052F9F93180600FB00FAE4DF /* peripheral_curves.c in Sources */,
+				05E7DA2C275250BE00B01C09 /* link_complement.c in Sources */,
 				052F9F70180600FB00FAE4DF /* canonize_result.c in Sources */,
 				05C1BED51DCA89DA007C946B /* triangulation3.cpp in Sources */,
 				052F9FE0180600FB00FAE4DF /* sigcensus.cpp in Sources */,
