@@ -140,7 +140,8 @@ std::string Link::gauss() const {
 
 void Link::gauss(std::ostream& out) const {
     if (components_.size() != 1)
-        return;
+        throw NotImplemented(
+            "Gauss codes are only implemented for single-component links");
     if (crossings_.empty())
         return;
 
@@ -160,7 +161,8 @@ void Link::gauss(std::ostream& out) const {
 
 std::vector<int> Link::gaussData() const {
     if (components_.size() != 1)
-        return std::vector<int>();
+        throw NotImplemented(
+            "Gauss codes are only implemented for single-component links");
     if (crossings_.empty())
         return std::vector<int>();
 
@@ -188,7 +190,8 @@ std::string Link::orientedGauss() const {
 
 void Link::orientedGauss(std::ostream& out) const {
     if (components_.size() != 1)
-        return;
+        throw NotImplemented(
+            "Gauss codes are only implemented for single-component links");
     if (crossings_.empty())
         return;
 
@@ -214,8 +217,11 @@ void Link::orientedGauss(std::ostream& out) const {
 }
 
 std::vector<std::string> Link::orientedGaussData() const {
-    if (components_.size() != 1 || crossings_.empty())
-        return std::vector<std::string>();
+    if (components_.size() != 1)
+        throw NotImplemented(
+            "Gauss codes are only implemented for single-component links");
+    if (crossings_.empty())
+        return {};
 
     std::vector<std::string> ans;
     ans.reserve(2 * crossings_.size());

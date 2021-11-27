@@ -48,11 +48,13 @@ std::string Link::dt(bool alpha) const {
 
 void Link::dt(std::ostream& out, bool alpha) const {
     if (components_.size() != 1)
-        return;
+        throw NotImplemented("Dowker-Thistlethwaite notation is "
+            "only implemented for single-component links");
     if (crossings_.empty())
         return;
     if (alpha && size() > 26)
-        return;
+        throw NotImplemented("Alphabetical Dowker-Thistlethwaite notation is "
+            "only implemented for links with at most 26 crossings");
 
     // Dowker-Thistlethwaite notation requires us to start on the lower strand.
     StrandRef start = components_.front();
@@ -100,8 +102,11 @@ void Link::dt(std::ostream& out, bool alpha) const {
 }
 
 std::vector<int> Link::dtData() const {
-    if (components_.size() != 1 || crossings_.empty())
-        return std::vector<int>();
+    if (components_.size() != 1)
+        throw NotImplemented("Dowker-Thistlethwaite notation is "
+            "only implemented for single-component links");
+    if (crossings_.empty())
+        return {};
 
     // Dowker-Thistlethwaite notation requires us to start on the lower strand.
     StrandRef start = components_.front();

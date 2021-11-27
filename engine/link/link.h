@@ -2624,10 +2624,12 @@ class Link : public PacketData<Link>, public Output<Link> {
            1 -2 3 -1 2 -3
            \endverbatim
          *
-         * Currently Regina only supports Gauss codes for knots (i.e., links
-         * with exactly one component).  If you attempt to create a classical
-         * Gauss code for a link with zero or multiple components, an empty
-         * string will be returned.
+         * Currently Regina only supports Gauss codes for knots, not
+         * empty or multiple component links.  If this link does not
+         * have precisely one component, then this routine will throw an
+         * exception.  It is possible that in future versions of Regina,
+         * Gauss codes will be expanded to cover all possible link diagrams
+         * (hence the choice of NotImplemented as the exception type).
          *
          * This routine formats the list of integers as a string.  The integers
          * will be separated by single spaces, and there will be no newlines.
@@ -2637,8 +2639,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * used here (a string).  There is also another variant of gauss()
          * that writes directly to an output stream.
          *
-         * @return a classical Gauss code as described above, or the empty
-         * string if this link has zero or multiple components.
+         * \exception NotImplemented This link is empty or has multiple
+         * components.
+         *
+         * @return a classical Gauss code as described above.
          */
         std::string gauss() const;
 
@@ -2653,9 +2657,11 @@ class Link : public PacketData<Link>, public Output<Link> {
          * in contrast, gauss() returns the same data in human-readable format
          * (as a string).
          *
-         * @return a classical Gauss code for this knot in machine-readable
-         * form, or the empty vector if this link has zero or multiple
+         * \exception NotImplemented This link is empty or has multiple
          * components.
+         *
+         * @return a classical Gauss code for this knot in machine-readable
+         * form.
          */
         std::vector<int> gaussData() const;
 
@@ -2673,6 +2679,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * See also gauss(), which returns the Gauss code as a
          * human-readable string, and gaussData(), which returns it
          * as a machine-readable sequence of integers.
+         *
+         * \exception NotImplemented This link is empty or has multiple
+         * components.
          *
          * \ifacespython Not present; instead use the variants
          * gauss() or gaussData() that take no arguments.
@@ -2717,10 +2726,12 @@ class Link : public PacketData<Link>, public Output<Link> {
            +>1 -<2 +>3 -<1 +>2 -<3
            \endverbatim
          *
-         * Currently Regina only supports Gauss codes for knots (i.e., links
-         * with exactly one component).  If you attempt to create an oriented
-         * Gauss code for a link with zero or multiple components, an empty
-         * string will be returned.
+         * Currently Regina only supports Gauss codes for knots, not
+         * empty or multiple component links.  If this link does not
+         * have precisely one component, then this routine will throw an
+         * exception.  It is possible that in future versions of Regina,
+         * Gauss codes will be expanded to cover all possible link diagrams
+         * (hence the choice of NotImplemented as the exception type).
          *
          * This routine joins the tokens together as a single string.  The
          * tokens will be separated by single spaces, and there will be no
@@ -2732,8 +2743,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * There is also another variant of orientedGauss() that writes
          * directly to an output stream.
          *
-         * @return an oriented Gauss code as described above, or the empty
-         * string if this is a link with zero or multiple components.
+         * \exception NotImplemented This link is empty or has multiple
+         * components.
+         *
+         * @return an oriented Gauss code as described above.
          */
         std::string orientedGauss() const;
 
@@ -2760,9 +2773,11 @@ class Link : public PacketData<Link>, public Output<Link> {
          * in contrast, orientedGauss() returns the same data in
          * human-readable format (as a string).
          *
-         * @return an oriented Gauss code for this knot in machine-readable
-         * form, or the empty vector if this link has zero or multiple
+         * \exception NotImplemented This link is empty or has multiple
          * components.
+         *
+         * @return an oriented Gauss code for this knot in machine-readable
+         * form.
          */
         std::vector<std::string> orientedGaussData() const;
 
@@ -2780,6 +2795,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * See also orientedGauss(), which returns the oriented Gauss code as
          * a human-readable string, and orientedGaussData(), which returns it
          * as a machine-readable sequence of tokens.
+         *
+         * \exception NotImplemented This link is empty or has multiple
+         * components.
          *
          * \ifacespython Not present; instead use the variants
          * orientedGauss() or orientedGaussData() that take no arguments.
@@ -2927,8 +2945,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          *   and replacing negative integers (-2,-4,-6,...) with upper-case
          *   letters (\c A,\c B,\c C,...).  This alphabetical variant
          *   can only be used for knots with 26 crossings or fewer; for
-         *   larger knots this routine will return the empty string if
-         *   the alphabetical variant is requested.
+         *   larger knots this routine will throw an exception if the
+         *   alphabetical variant is requested.
          *
          * As an example, you can describe the trefoil using numerical
          * Dowker-Thistlethwaite notation as:
@@ -2943,10 +2961,13 @@ class Link : public PacketData<Link>, public Output<Link> {
            bca
            \endverbatim
          *
-         * Currently Regina only supports Dowker-Thistlethwaite notation for
-         * knots (i.e., links with exactly one component).  If you attempt to
-         * generate Dowker-Thistlethwaite notation for a link with zero or
-         * multiple components, an empty string will be returned.
+         * Currently Regina only supports Dowker-Thistlethwaite codes for
+         * knots, not empty or multiple component links.  If this link does not
+         * have precisely one component, then this routine will throw an
+         * exception.  It is possible that in future versions of Regina,
+         * Dowker-Thistlethwaite codes will be expanded to cover all possible
+         * link diagrams (hence the choice of NotImplemented as the exception
+         * type).
          *
          * For numerical Dowker-Thistlethwaite notation, this routine will
          * format the list of integers as a string.  The integers will be
@@ -2960,12 +2981,12 @@ class Link : public PacketData<Link>, public Output<Link> {
          * variant of dt() that can write either the numerical or the
          * alphabetical variant directly to an output stream.
          *
+         * \exception NotImplemented Either this link is empty or has multiple
+         * components, or \a alpha is true and it has more than 26 crossings.
+         *
          * @param alpha \c true to use alphabetical notation, or \c false
          * (the default) to use numerical notation.
          * @return the Dowker-Thistlethwaite notation for this knot diagram.
-         * This routine will return the empty string if this link has zero or
-         * multiple components, or if \a alpha is \c true and the knot
-         * has more than 26 crossings.
          */
         std::string dt(bool alpha = false) const;
 
@@ -2985,9 +3006,11 @@ class Link : public PacketData<Link>, public Output<Link> {
          * in contrast, calling <tt>dt()</tt> returns the same integer
          * sequence in human-readable format (as a string).
          *
+         * \exception NotImplemented This link is empty or has multiple
+         * components.
+         *
          * @return the numerical Dowker-Thistlethwaite notation in
-         * machine-readable form, or the empty vector if this link has zero
-         * or multiple components.
+         * machine-readable form.
          */
         std::vector<int> dtData() const;
 
@@ -3010,6 +3033,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * or alphabetical variant of Dowker-Thistlethwaite notation as a
          * human-readable string, and dtData(), which exports the numerical
          * variant only as a machine-readable sequence of integers.
+         *
+         * \exception NotImplemented Either this link is empty or has multiple
+         * components, or \a alpha is true and it has more than 26 crossings.
          *
          * \ifacespython Not present; instead use the variants
          * dt(bool) or dtData() that take no arguments.
@@ -3225,8 +3251,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * Currently signatures are only implemented for knots, not
          * empty or multiple component links.  If this link does not
-         * have precisely one component, then this routine will return
-         * the empty string.
+         * have precisely one component, then this routine will throw an
+         * exception.  It is possible that in future versions of Regina,
+         * knot signatures will be expanded to cover all possible link
+         * diagrams (hence the choice of NotImplemented as the exception type).
          *
          * The signature is constructed entirely of printable characters,
          * and has length proportional to <tt>n log n</tt>, where \a n
@@ -3239,6 +3267,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * reflection and reversal.
          *
          * This routine runs in quadratic time.
+         *
+         * \exception NotImplemented This link is empty or has multiple
+         * components.
          *
          * @param useReflection \c true if the reflection of a knot diagram
          * should have the same signature as the original, or \c false

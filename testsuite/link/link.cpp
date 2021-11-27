@@ -2667,9 +2667,9 @@ class LinkTest : public CppUnit::TestFixture {
 
         void verifyMagic(const Link& l, const char* name,
                 size_t trivialComponents = 0, bool gaussAmbiguous = false) {
-            std::string sig = l.knotSig();
-
             if (l.countComponents() == 1) {
+                std::string sig = l.knotSig();
+
                 {
                     Link recon(sig);
                     if (recon.knotSig() != sig) {

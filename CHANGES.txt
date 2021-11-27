@@ -635,6 +635,9 @@ Version 7.0  [ TODO ]
             - New routines gaussData(), orientedGaussData(), jenkinsData(),
               dtData(), and fromJenkins(Iterator, Iterator) for working with
               knot/link codes in machine-readable format.
+            - Routines gauss(), orientedGauss(), dt() and knotSig() now throw
+              exceptions if the link is not supported (e.g., it has zero or
+              multiple components), instead of returning the empty string.
             - Routine fromData() now returns by value, and throws an exception
               on error (it used to return a newly allocated pointer that was
               null on error).

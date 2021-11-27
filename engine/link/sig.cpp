@@ -55,7 +55,8 @@ namespace {
 std::string Link::knotSig(bool useReflection, bool useReverse) const {
     // Only defined for knots at present.
     if (components_.size() != 1)
-        return std::string();
+        throw NotImplemented(
+            "Knot signatures are only implemented for single-component links");
 
     // Minimise sequence: (crossing, strand, sign) ... (crossing, strand, sign)
     // Ordering: crossing by ID; strand upper first; sign positive first
