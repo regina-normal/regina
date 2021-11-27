@@ -246,25 +246,26 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
                 QObject::tr("Please type a text code into the box provided."));
             return nullptr;
         }
-        auto ans = make_packet<Link>(std::in_place, use);
-        if (! ans->isEmpty()) {
+        try {
+            auto ans = make_packet<Link>(std::in_place, use);
             ans->setLabel(use);
             return ans;
+        } catch (const regina::InvalidArgument&) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("I could not interpret the given text code."),
+                QObject::tr("<qt>Here you can enter a knot signature, "
+                    "an oriented or classical Gauss code, or numerical or "
+                    "alphabetical Dowker-Thistlethwaite notation.<p>"
+                    "Examples for the trefoil include:<p>"
+                    "<ul><li><tt>dabcabcv-</tt></li>"
+                    "<li><tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></li>"
+                    "<li><tt>1 -2 3 -1 2 -3</tt></li>"
+                    "<li><tt>4 6 2</tt></li>"
+                    "<li><tt>bca</tt></li></ul><p>"
+                    "For more information on what each type of code means, "
+                    "see the Regina Handbook.</qt>"));
+            return nullptr;
         }
-        ReginaSupport::sorry(parentWidget,
-            QObject::tr("I could not interpret the given text code."),
-            QObject::tr("<qt>Here you can enter a knot signature, "
-                "an oriented or classical Gauss code, or numerical or "
-                "alphabetical Dowker-Thistlethwaite notation.<p>"
-                "Examples for the trefoil include:<p>"
-                "<ul><li><tt>dabcabcv-</tt></li>"
-                "<li><tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></li>"
-                "<li><tt>1 -2 3 -1 2 -3</tt></li>"
-                "<li><tt>4 6 2</tt></li>"
-                "<li><tt>bca</tt></li></ul><p>"
-                "For more information on what each type of code means, "
-                "see the Regina Handbook.</qt>"));
-        return nullptr;
     } else if (typeId == LINK_TORUS) {
         if (! reTorusParams.exactMatch(torusParams->text())) {
             ReginaSupport::sorry(parentWidget,

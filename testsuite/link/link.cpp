@@ -2772,6 +2772,13 @@ class LinkTest : public CppUnit::TestFixture {
             verifyMagic(trefoil_unknot1, "Trefoil U unknot (separate + twist)");
             verifyMagic(trefoil_unknot_overlap, "Trefoil U unknot (with R2)");
             verifyMagic(adams6_28, "Adams Fig. 6.28");
+
+            try {
+                Link l("INVALID");
+                CPPUNIT_FAIL("The magic constructor did not throw an "
+                    "exception for an invalid link code.");
+            } catch (const regina::InvalidArgument&) {
+            }
         }
 
         void verifyRewrite(const Link& link, int height, int threads,

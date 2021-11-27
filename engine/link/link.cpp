@@ -167,6 +167,9 @@ Link::Link(const std::string& description) {
         return;
     } catch (const InvalidArgument&) {
     }
+
+    throw InvalidArgument("The given string could not be interpreted "
+        "as representing a link");
 }
 
 bool Link::connected(const Crossing* a, const Crossing* b) const {

@@ -641,6 +641,8 @@ Version 7.0  [ TODO ]
             - Routine fromData() now returns by value, and throws an exception
               on error (it used to return a newly allocated pointer that was
               null on error).
+            - The "magic" string contructor likewise now throws an exception
+              on error (instead of constructing an empty link).
             - Added a variant of fromData() that takes iterator pairs,
               which allows the data to be constructed at runtime.
             - New routine brief(std::ostream&) to complement brief().

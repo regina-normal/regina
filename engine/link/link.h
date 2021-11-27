@@ -828,8 +828,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * This list may grow in future versions of Regina.
          *
-         * If Regina cannot interpret the given string, this will be
-         * left as the empty link.
+         * \exception InvalidArgument Regina could not interpret the given
+         * string as representing a link using any of the supported string
+         * types.
          *
          * @param description a string that describes a knot or link.
          */
