@@ -134,6 +134,9 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def_static("disableKernelMessages",
             &SnapPeaTriangulation::disableKernelMessages)
     ;
+    // SnapPeaTriangulation overrides the output routines; make sure we do not
+    // get left with the inherited versions from Triangulation<3>.
+    regina::python::add_output(c2);
 
     regina::python::addListView<decltype(SnapPeaTriangulation().cusps())>(m);
 

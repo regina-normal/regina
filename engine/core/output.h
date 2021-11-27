@@ -228,7 +228,9 @@ struct ShortOutput : public Output<T, supportsUtf8> {
  *
  * If \a T is a class derived (directly or indirectly) from some class
  * Output<...>, then <tt>OutputBase<T>::type</tt> is defined to be this
- * parent class Output<...>.
+ * parent class Output<...>.  If \a T is derived from multiple Output<...>
+ * classes (like SnapPeaTriangulation is), then this ambiguity will be
+ * resolved if possible by prioritising Output<T, ...>.
  *
  * If \a T is not derived from any class Output<...>, then
  * <tt>OutputBase<T>::type</tt> is defined to be \a T itself.
@@ -247,6 +249,9 @@ struct OutputBase {
     private:
         // Implementation details:
         static T& test(...);
+
+        template <bool supportsUtf8>
+        static Output<T, supportsUtf8>& test(const Output<T, supportsUtf8>&);
 
         template <typename U, bool supportsUtf8>
         static Output<U, supportsUtf8>& test(const Output<U, supportsUtf8>&);
