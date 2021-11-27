@@ -34,6 +34,7 @@ SET ( FILES
   identify_solution_type.c
   interface.c
   intersection_numbers.c
+  link_complement.c
   matrix_conversion.c
   matrix_generators.c
   my_malloc.c

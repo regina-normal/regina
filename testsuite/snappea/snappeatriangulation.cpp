@@ -902,7 +902,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
 
         void link() {
             testVolume(regina::ExampleLink::figureEight(),
-                2.0298832128, 9, "Figure eight");
+                2.02988321282, 9, "Figure eight");
             testFilledHomology(regina::ExampleLink::figureEight(),
                 1, 1, "0", "Figure eight");
             testFilledHomology(regina::ExampleLink::figureEight(),
@@ -910,16 +910,16 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             testFlat(regina::ExampleLink::trefoil(), "Trefoil", 9);
             testFilledHomology(regina::ExampleLink::trefoil(),
-                1, 1, "Z_2", "Trefoil");
+                1, 1, "0", "Trefoil");
             testFilledHomology(regina::ExampleLink::trefoil(),
-                -3, 7, "Z_16", "Trefoil");
+                -3, 7, "Z_3", "Trefoil");
 
             testVolume(regina::ExampleLink::whitehead(),
-                3.663862376708876, 9, "Whitehead link");
+                3.66386237671, 9, "Whitehead link");
             testFilledHomology(regina::ExampleLink::whitehead(),
                 1, 1, "Z", "Whitehead link");
             testFilledHomology(regina::ExampleLink::whitehead(),
-                -3, 7, "Z + Z_17", "Whitehead link");
+                -3, 7, "Z + Z_3", "Whitehead link");
         }
 
         void swapping() {

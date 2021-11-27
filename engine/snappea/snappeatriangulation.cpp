@@ -39,6 +39,7 @@
 #include "maths/numbertheory.h"
 #include "snappea/snappeatriangulation.h"
 #include "snappea/kernel/kernel_prototypes.h"
+#include "snappea/kernel/link_projection.h"
 #include "snappea/kernel/triangulation.h"
 #include "snappea/kernel/unix_file_io.h"
 #include "snappea/snappy/SnapPy.h"
@@ -69,6 +70,19 @@ namespace {
      */
     Perm<4> snappeaGluing(const int* gluing) {
         return Perm<4>(gluing[0], gluing[1], gluing[2], gluing[3]);
+    }
+
+    /**
+     * Returns the SnapPea KLPStrandType corresponding to the given strand
+     * in one of Regina's native links.
+     */
+    inline regina::snappea::KLPStrandType klpStrand(const StrandRef& s) {
+        if (s.crossing()->sign() > 0)
+            return (s.strand() == 0 ?
+                regina::snappea::KLPStrandY : regina::snappea::KLPStrandX);
+        else
+            return (s.strand() == 0 ?
+                regina::snappea::KLPStrandX : regina::snappea::KLPStrandY);
     }
 }
 
@@ -307,7 +321,118 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) :
-        SnapPeaTriangulation(link.complement()) {
+        data_(nullptr), shape_(nullptr), cusp_(nullptr), filledCusps_(0) {
+    if (link.isEmpty())
+        throw InvalidArgument("The SnapPeaTriangulation constructor "
+            "requires a non-empty link");
+
+    // In SnapPea's notation:
+    // - For a positive crossing, the (x,y) strands are (over, under);
+    // - For a negative crossing, the (x,y) strands are (under, over).
+
+    regina::snappea::KLPProjection proj;
+    proj.num_crossings = link.size();
+    proj.num_free_loops = 0; // We will fix this later.
+    proj.num_components = link.countComponents();
+
+    proj.crossings = new regina::snappea::KLPCrossing[link.size()];
+    for (Crossing* c : link.crossings()) {
+        auto& raw = proj.crossings[c->index()];
+
+        using regina::snappea::KLPStrandX;
+        using regina::snappea::KLPStrandY;
+        using regina::snappea::KLPForward;
+        using regina::snappea::KLPBackward;
+
+        if (c->sign() > 0) {
+            raw.neighbor[KLPStrandX][KLPForward] =
+                proj.crossings + c->next(1).crossing()->index();
+            raw.neighbor[KLPStrandX][KLPBackward] =
+                proj.crossings + c->prev(1).crossing()->index();
+
+            raw.neighbor[KLPStrandY][KLPForward] =
+                proj.crossings + c->next(0).crossing()->index();
+            raw.neighbor[KLPStrandY][KLPBackward] =
+                proj.crossings + c->prev(0).crossing()->index();
+
+            raw.strand[KLPStrandX][KLPForward] = klpStrand(c->next(1));
+            raw.strand[KLPStrandX][KLPBackward] = klpStrand(c->prev(1));
+
+            raw.strand[KLPStrandY][KLPForward] = klpStrand(c->next(0));
+            raw.strand[KLPStrandY][KLPBackward] = klpStrand(c->prev(0));
+
+            raw.handedness = regina::snappea::KLPHalfTwistCL;
+        } else {
+            raw.neighbor[KLPStrandX][KLPForward] =
+                proj.crossings + c->next(0).crossing()->index();
+            raw.neighbor[KLPStrandX][KLPBackward] =
+                proj.crossings + c->prev(0).crossing()->index();
+
+            raw.neighbor[KLPStrandY][KLPForward] =
+                proj.crossings + c->next(1).crossing()->index();
+            raw.neighbor[KLPStrandY][KLPBackward] =
+                proj.crossings + c->prev(1).crossing()->index();
+
+            raw.strand[KLPStrandX][KLPForward] = klpStrand(c->next(0));
+            raw.strand[KLPStrandX][KLPBackward] = klpStrand(c->prev(0));
+
+            raw.strand[KLPStrandY][KLPForward] = klpStrand(c->next(1));
+            raw.strand[KLPStrandY][KLPBackward] = klpStrand(c->prev(1));
+
+            raw.handedness = regina::snappea::KLPHalfTwistCCL;
+        }
+    }
+
+    size_t compIndex = 0;
+    for (const StrandRef& comp : link.components()) {
+        if (comp) {
+            StrandRef s = comp;
+            do {
+                if (s.crossing()->sign() > 0) {
+                    if (s.strand() == 0)
+                        proj.crossings[s.crossing()->index()].
+                            component[regina::snappea::KLPStrandY] = compIndex;
+                    else
+                        proj.crossings[s.crossing()->index()].
+                            component[regina::snappea::KLPStrandX] = compIndex;
+                } else {
+                    if (s.strand() == 0)
+                        proj.crossings[s.crossing()->index()].
+                            component[regina::snappea::KLPStrandX] = compIndex;
+                    else
+                        proj.crossings[s.crossing()->index()].
+                            component[regina::snappea::KLPStrandY] = compIndex;
+                }
+                ++s;
+            } while (s != comp);
+
+            ++compIndex;
+        } else
+            ++proj.num_free_loops;
+    }
+
+    data_ = regina::snappea::triangulate_link_complement(std::addressof(proj),
+        1 /* remove finite vertices */);
+    delete[] proj.crossings;
+
+    if (! data_) {
+        Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
+        return;
+    }
+
+    // We need to give the SnapPea triangulation a name, since
+    // triangulate_link_complement() initialises data_->name to null,
+    // and this will crash fill_cusps() (which tries to copy the name).
+    data_->name = ::strdup("Link");
+
+    // Since the other SnapPeaTriangulation constructors find a hyperbolic
+    // structure in order to choose peripheral curves, for consistency we will
+    // make this constructor find a hyperbolic structure also (even though
+    // our peripheral curves are already determined from the link diagram).
+    regina::snappea::find_complete_hyperbolic_structure(data_);
+
+    sync();
+    Triangulation<3>::heldBy_ = HELD_BY_SNAPPEA;
 }
 
 SnapPeaTriangulation::~SnapPeaTriangulation() {
