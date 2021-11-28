@@ -144,8 +144,10 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
 
     // in the case coeff > 0 we need to consider the TOR part of homology. 
 
-    if (coeff > 0) for (unsigned i=0; i<rankOM; i++) 
-        if (tM.entry(i,i).gcd(coeff) > 1) { TORVec.push_back(tM.entry(i,i)); }
+    if (coeff > 0)
+        for (unsigned i=0; i<rankOM; i++)
+            if (tM.entry(i,i).gcd(coeff) > 1)
+                TORVec.push_back(tM.entry(i,i));
     TORLoc = rankOM - TORVec.size();
 
     // okay, lets get a presentation matrix for H_*(M;Z) \otimes Z_p
