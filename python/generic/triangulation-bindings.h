@@ -41,6 +41,7 @@
 
 using pybind11::overload_cast;
 using regina::Isomorphism;
+using regina::MatrixInt;
 using regina::Triangulation;
 
 namespace {
@@ -165,6 +166,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::return_value_policy::reference_internal)
         .def("homologyH1", &Triangulation<dim>::homologyH1,
             pybind11::return_value_policy::reference_internal)
+        .def("boundaryMap", (MatrixInt (Triangulation<dim>::*)(int) const)(
+            &Triangulation<dim>::boundaryMap))
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
         .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)

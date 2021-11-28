@@ -43,6 +43,7 @@
 
 using pybind11::overload_cast;
 using regina::Isomorphism;
+using regina::MatrixInt;
 using regina::Triangulation;
 
 void addTriangulation2(pybind11::module_& m) {
@@ -175,6 +176,8 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("homologyH1", &Triangulation<2>::homologyH1,
             pybind11::return_value_policy::reference_internal)
+        .def("boundaryMap", (MatrixInt (Triangulation<2>::*)(int) const)(
+            &Triangulation<2>::boundaryMap))
         .def("pachner", &Triangulation<2>::pachner<2>,
             pybind11::arg(),
             pybind11::arg("check") = true,

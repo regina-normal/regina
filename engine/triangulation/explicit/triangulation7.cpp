@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "triangulation/detail/algebra-impl.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "triangulation/detail/pachner-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
@@ -46,6 +47,14 @@ template std::pair<std::string, Isomorphism<7>>
     IsoSigClassic<7>, IsoSigPrintable<7>>() const;
 template Triangulation<7> TriangulationBase<7>::fromIsoSig(const std::string&);
 template size_t TriangulationBase<7>::isoSigComponentSize(const std::string&);
+
+template MatrixInt TriangulationBase<7>::boundaryMap<1>() const;
+template MatrixInt TriangulationBase<7>::boundaryMap<2>() const;
+template MatrixInt TriangulationBase<7>::boundaryMap<3>() const;
+template MatrixInt TriangulationBase<7>::boundaryMap<4>() const;
+template MatrixInt TriangulationBase<7>::boundaryMap<5>() const;
+template MatrixInt TriangulationBase<7>::boundaryMap<6>() const;
+template MatrixInt TriangulationBase<7>::boundaryMap<7>() const;
 
 template void TriangulationBase<7>::calculateSkeleton();
 template void TriangulationBase<7>::clearBaseProperties();

@@ -13,6 +13,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     boundarycomponent.h
+    boundarymap-impl.h
     canonical-impl.h
     component.h
     example.h

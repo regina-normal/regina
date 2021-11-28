@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "triangulation/detail/algebra-impl.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "triangulation/detail/pachner-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
@@ -47,6 +48,21 @@ template std::pair<std::string, Isomorphism<14>>
 template Triangulation<14> TriangulationBase<14>::fromIsoSig(
     const std::string&);
 template size_t TriangulationBase<14>::isoSigComponentSize(const std::string&);
+
+template MatrixInt TriangulationBase<14>::boundaryMap<1>() const;
+template MatrixInt TriangulationBase<14>::boundaryMap<2>() const;
+template MatrixInt TriangulationBase<14>::boundaryMap<3>() const;
+template MatrixInt TriangulationBase<14>::boundaryMap<4>() const;
+template MatrixInt TriangulationBase<14>::boundaryMap<5>() const;
+template MatrixInt TriangulationBase<14>::boundaryMap<6>() const;
+template MatrixInt TriangulationBase<14>::boundaryMap<7>() const;
+template MatrixInt TriangulationBase<14>::boundaryMap<8>() const;
+template MatrixInt TriangulationBase<14>::boundaryMap<9>() const;
+template MatrixInt TriangulationBase<14>::boundaryMap<10>() const;
+template MatrixInt TriangulationBase<14>::boundaryMap<11>() const;
+template MatrixInt TriangulationBase<14>::boundaryMap<12>() const;
+template MatrixInt TriangulationBase<14>::boundaryMap<13>() const;
+template MatrixInt TriangulationBase<14>::boundaryMap<14>() const;
 
 template void TriangulationBase<14>::calculateSkeleton();
 template void TriangulationBase<14>::clearBaseProperties();

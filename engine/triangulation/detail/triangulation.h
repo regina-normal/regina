@@ -1069,6 +1069,78 @@ class TriangulationBase :
          */
         const AbelianGroup& homologyH1() const;
 
+        /**
+         * Returns the boundary map from <i>subdim</i>-faces to
+         * (<i>subdim</i>-1)-faces of the triangulation.
+         *
+         * This is the boundary map that you would use if you were building
+         * the homology groups manually from a chain complex.
+         *
+         * Unlike homology(), this code does \e not use the dual skeleton:
+         * instead it uses the primal (i.e., ordinary) skeleton.
+         *
+         * - The main advantage of this is that you can easily match rows and
+         *   columns of the returned matrix to faces of this triangulation.
+         *
+         * - The main disadvantage is that ideal vertices are \e not treated
+         *   as though they were truncated; instead they are just treated
+         *   as 0-faces that appear as part of the chain complex.
+         *
+         * In the matrix that is returned, the <i>r</i>th row corresponds to
+         * the <i>r</i>th <i>subdim</i>-face of this triangulation, and
+         * the <i>c</i>th column corresponds to the <i>c</i>th
+         * (<i>subdim</i>-1)-face of this triangulation.  All faces are
+         * oriented according to the permutations returned by
+         * Simplex::faceMapping(), or equivalently, by
+         * FaceEmbedding::vertices().
+         *
+         * If you wish to convert these boundary maps to homology groups
+         * yourself, the MarkedAbelianGroup class can help you do this.
+         *
+         * Note that, unlike many of the templated face-related routines,
+         * this routine explicitly supports the case \a subdim = \a dim.
+         *
+         * \pre This triangulation is valid and non-empty.
+         *
+         * \ifacespython Not present, since Python does not support templates.
+         * Python users can instead use the variant
+         * <tt>homologyMap(subdim)</tt>.
+         *
+         * \tparam subdim the face dimension; this must be between 1 and
+         * \a dim inclusive.
+         *
+         * @return the boundary map from <i>subdim</i>-faces to
+         * (<i>subdim</i>-1)-faces.
+         */
+        template <int subdim>
+        MatrixInt boundaryMap() const;
+
+        /**
+         * Returns the boundary map from <i>subdim</i>-faces to
+         * (<i>subdim</i>-1)-faces of the triangulation, where the
+         * face dimension does not need to be known until runtime.
+         *
+         * This routine takes linear time in the dimension \a dim.  For C++
+         * programmers who know \a subdim at compile time, you are better off
+         * using the template function boundaryMap<subdim>() instead, which
+         * is slightly faster.
+         *
+         * See the templated boundaryMap<subdim>() for full details on
+         * what this function computes and how the matrix it returns
+         * should be interpreted.
+         *
+         * \pre This triangulation is valid and non-empty.
+         *
+         * \exception InvalidArgument the face dimension \a subdim is outside
+         * the supported range (i.e., less than 1 or greater than \a dim).
+         *
+         * @param subdim the face dimension; this must be between 1 and \a dim
+         * inclusive.
+         * @return the boundary map from <i>subdim</i>-faces to
+         * (<i>subdim</i>-1)-faces.
+         */
+        MatrixInt boundaryMap(int subdim) const;
+
         /*@}*/
         /**
          * \name Skeletal Transformations
@@ -2246,6 +2318,21 @@ class TriangulationBase :
         auto facesImpl(int subdim, std::integer_sequence<int, 0, k...>) const;
 
         /**
+         * Implements the non-templated boundaryMap(subdim) function.
+         *
+         * The purpose of the std::integer_sequence argument is to give
+         * us the list of all face dimensions as individual template
+         * parameters, which means we can use C++17 fold expressions.
+         *
+         * The reason for separating out face dimension 0 is because
+         * boundaryMap() can only be used with face dimension >= 1
+         * (and so we wish to exclude 0 from our fold expression).
+         */
+        template <int... k>
+        MatrixInt boundaryMapImpl(int subdim,
+                std::integer_sequence<int, 0, k...>) const;
+
+        /**
          * Internal to calculateSkeleton().
          *
          * This routine calculates all <i>subdim</i>-faces for the given
@@ -2871,8 +2958,6 @@ template <int dim>
 template <int... k>
 size_t TriangulationBase<dim>::countFacesImpl(int subdim,
         std::integer_sequence<int, k...>) const {
-    ensureSkeleton();
-
     // We give the result a name (tmp) to avoid compiler warnings.
     size_t ans;
     auto tmp = (
@@ -2922,8 +3007,6 @@ template <int dim>
 template <int... k>
 auto TriangulationBase<dim>::facesImpl(int subdim,
         std::integer_sequence<int, 0, k...>) const {
-    ensureSkeleton();
-
     // Since none of our ListView types have default constructors,
     // our std::variant return type does not have one either.
     // We therefore set it to faces<0>(), which is cheap since
@@ -2988,8 +3071,6 @@ template <int dim>
 template <int... k>
 auto TriangulationBase<dim>::faceImpl(int subdim, size_t index,
         std::integer_sequence<int, k...>) const {
-    ensureSkeleton();
-
     // We give the result a name (tmp) to avoid compiler warnings.
     std::variant<Face<dim, k>*...> ans;
     auto tmp = (
@@ -4065,6 +4146,26 @@ const GroupPresentation& TriangulationBase<dim>::fundamentalGroup() const {
     ans.intelligentSimplify();
 
     return *(fundGroup_ = std::move(ans));
+}
+
+template <int dim>
+template <int... k>
+MatrixInt TriangulationBase<dim>::boundaryMapImpl(int subdim,
+        std::integer_sequence<int, 0, k...>) const {
+    // We give the result a name (tmp) to avoid compiler warnings.
+    MatrixInt ans;
+    auto tmp = (
+        (subdim == k && (void(ans = boundaryMap<k>()), 1))
+        || ...);
+    return ans;
+}
+
+template <int dim>
+MatrixInt TriangulationBase<dim>::boundaryMap(int subdim) const {
+    if (subdim < 1 || subdim > dim)
+        throw InvalidArgument("boundaryMap(): unsupported face dimension");
+
+    return boundaryMapImpl(subdim, std::make_integer_sequence<int, dim + 1>());
 }
 
 template <int dim>

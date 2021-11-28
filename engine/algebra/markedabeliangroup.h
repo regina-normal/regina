@@ -148,7 +148,6 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         friend class HomMarkedAbelianGroup;
 
     public:
-
         /**
          * Creates a marked abelian group from a chain complex. This constructor
          * assumes you're interested in homology with integer coefficents of

@@ -50,6 +50,7 @@
 using pybind11::overload_cast;
 using regina::Example;
 using regina::Isomorphism;
+using regina::MatrixInt;
 using regina::Triangulation;
 
 /**
@@ -253,6 +254,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("homologyH2", &Triangulation<3>::homologyH2,
             pybind11::return_value_policy::reference_internal)
         .def("homologyH2Z2", &Triangulation<3>::homologyH2Z2)
+        .def("boundaryMap", (MatrixInt (Triangulation<3>::*)(int) const)(
+            &Triangulation<3>::boundaryMap))
         .def("turaevViro", &Triangulation<3>::turaevViro,
             pybind11::arg(), pybind11::arg("parity") = true,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
