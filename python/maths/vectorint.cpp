@@ -67,6 +67,9 @@ void addVectorInt(pybind11::module_& m) {
                 const regina::Integer& value) {
             v[index] = value;
         })
+        .def("__iter__", [](const VectorInt& list) {
+            return pybind11::make_iterator(list);
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps vector alive
         .def(pybind11::self += pybind11::self)
         .def(pybind11::self -= pybind11::self)
         .def(pybind11::self *= regina::Integer())
@@ -86,6 +89,7 @@ void addVectorInt(pybind11::module_& m) {
         .def("scaleDown",
             (void (VectorInt::*)())
             &VectorInt::scaleDown)
+        .def_static("unit", &VectorInt::unit)
         .def_readonly_static("zero", &zero)
         .def_readonly_static("one", &one)
         .def_readonly_static("minusOne", &minusOne)

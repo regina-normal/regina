@@ -4,9 +4,9 @@ New marked abelian group
 
 Group: Z + Z_6
 Free generators:
-0: [ -1 0 0 0 1 ]
+0: ( -1 0 0 0 1 )
 Torsion generators:
-0: [ 3 -1 -1 0 -1 ]
+0: ( 3 -1 -1 0 -1 )
 
 ------------------------
 New marked abelian group
@@ -14,11 +14,11 @@ New marked abelian group
 
 Group: 2 Z + 2 Z_2
 Free generators:
-0: [ -1 0 0 1 0 ]
-1: [ -1 0 0 0 1 ]
+0: ( -1 0 0 1 0 )
+1: ( -1 0 0 0 1 )
 Torsion generators:
-0: [ -1 1 0 0 0 ]
-1: [ -3 0 1 1 1 ]
+0: ( -1 1 0 0 0 )
+1: ( -3 0 1 1 1 )
 
 ----------------
 New homomorphism
@@ -60,11 +60,11 @@ Reduced Matrix (torsion coordinates appear first):
 Miscellaneous vector representations
 ------------------------------------
 
-[ ]
-[ 0 6 ]
-[ 2 6 ]
-[ 4 6 ]
-[ 0 6 ]
-[ ]
-[ 1 1 4 2 ]
-[ 0 1 4 2 ]
+Not in kernel
+( 0 6 )
+( 2 6 )
+( 4 6 )
+( 0 6 )
+Not in kernel
+( 1 1 4 2 )
+( 0 1 4 2 )

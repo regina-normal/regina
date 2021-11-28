@@ -495,6 +495,11 @@ Version 7.0  [ TODO ]
               MatrixInt arguments by value.
             - The composition operator (*) now has an overload whose argument
               is an rvalue reference.
+            - Now uses the mathematical class regina::Vector<Integer> instead of
+              the non-mathematical class std::vector<Integer> for all arguments
+              and return values.
+            - All functions that used to return empty vectors on error now
+              throw exceptions instead.
             - Routine writeReducedMatrix() is now deprecated; instead this
               information is output via writeTextLong() / detail().
         Class HomologicalData:
@@ -719,6 +724,11 @@ Version 7.0  [ TODO ]
             - The chain complex constructors now explicitly check that
               the two matrices have compatible dimensions, and throw an
               exception if this is not true.
+            - Now uses the mathematical class regina::Vector<Integer> instead of
+              the non-mathematical class std::vector<Integer> for all arguments
+              and return values.
+            - All functions that used to return empty vectors on error now
+              throw exceptions instead.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
             - Constructors that used to take (const MatrixInt&) arguments
@@ -1626,6 +1636,7 @@ Version 7.0  [ TODO ]
             - New routine isZero().
             - New routine scaleDown() for vectors over Regina's integer classes.
             - New typedef Element.
+            - New static routine unit().
             - Provides the standard str() and detail() output functions.
             - Added a non-const operator[]; the old setElement() is now
               deprecated.
@@ -1635,6 +1646,11 @@ Version 7.0  [ TODO ]
             - Deprecated class constants zero, one and minusOne; just use
               0, 1 and -1 instead.
             - Added member and global swap() functions.
+            - Added begin() and end() functions to support iteration.
+            - Now explicitly supports zero-length vectors.
+            - Added the standard container type aliases value_type, reference,
+              const_reference, iterator and const_iterator.  Element is now
+              deprecated; use value_type instead.
         Class VectorInt, VectorLarge:
             - New typedefs for Vector<Integer> and Vector<LargeInteger>, for
               compatibility with MatrixInt.

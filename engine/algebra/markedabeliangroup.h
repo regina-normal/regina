@@ -44,6 +44,7 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/matrix.h"
+#include "maths/vector.h"
 
 namespace regina {
 
@@ -80,7 +81,7 @@ class HomMarkedAbelianGroup;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * @author Ryan Budney
+ * @author Ryan Budney and B.B.
  *
  * \todo \optlong Look at using sparse matrices for storage of SNF and the like.
  * \todo Testsuite additions: isBoundary(), boundaryMap(), writeAsBdry(),
@@ -416,14 +417,16 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \warning The return value may change from version to version
          * of Regina, since it depends on the choice of Smith normal form.
          *
+         * \exception InvalidArgument The argument \a index is out of
+         * range (i.e., greater than or equal to rank()).
+         *
          * @param index specifies which free generator to look up;
          * this must be between 0 and rank()-1 inclusive.
          * @return the coordinates of the free generator in the nullspace of
          * \a M; this vector will have length M.columns() (or
-         * equivalently, N.rows()). If this generator does not exist,
-         * you will receive an empty vector.
+         * equivalently, N.rows()).
          */
-        std::vector<Integer> freeRep(unsigned long index) const;
+        Vector<Integer> freeRep(unsigned long index) const;
 
         /**
          * Returns the requested generator of the torsion subgroup but
@@ -438,15 +441,18 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \warning The return value may change from version to version
          * of Regina, since it depends on the choice of Smith normal form.
          *
+         * \exception InvalidArgument The argument \a index is out of
+         * range (i.e., greater than or equal to the number of non-trivial
+         * invariant factors).
+         *
          * @param index specifies which generator in the torsion subgroup;
          * this must be at least 0 and strictly less than the number of
-         * non-trivial invariant factors.  If not, you receive an empty
-         * vector.
+         * non-trivial invariant factors.
          * @return the coordinates of the generator in the nullspace of
          * \a M; this vector will have length M.columns() (or
          * equivalently, N.rows()).
          */
-        std::vector<Integer> torsionRep(unsigned long index) const;
+        Vector<Integer> torsionRep(unsigned long index) const;
 
         /**
          * A combination of freeRep and torsionRep, this routine takes
@@ -459,14 +465,16 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \warning The return value may change from version to version
          * of Regina, since it depends on the choice of Smith normal form.
          *
+         * \exception InvalidArgument The size of the given vector was
+         * not the number of generators in SNF coordinates.
+         *
          * @param SNFRep a vector of size the number of generators of
-         * the group, i.e., it must be valid in the SNF coordinates.  If not,
-         * an empty vector is returned.
+         * the group, i.e., it must be valid in the SNF coordinates.
          * @return a corresponding vector whose length is M.columns(),
          * where \a M is one of the matrices that defines the chain
          * complex; see the class notes for details.
          */
-        std::vector<Integer> ccRep(const std::vector<Integer>& SNFRep) const;
+        Vector<Integer> ccRep(const Vector<Integer>& SNFRep) const;
 
         /**
          * Same as ccRep(const std::vector<Integer>&), but we assume you
@@ -476,6 +484,10 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \warning The return value may change from version to version
          * of Regina, since it depends on the choice of Smith normal form.
          *
+         * \exception InvalidArgument The given index was greater than
+         * or equal to the number of generators in SNF coordinates
+         * (i.e., greater than or equal to minNumberOfGenerators()).
+         *
          * @param SNFRep specifies which standard basis vector from SNF
          * coordinates; this must be between 0 and
          * minNumberOfGenerators()-1 inclusive.
@@ -483,15 +495,17 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * where \a M is one of the matrices that defines the chain
          * complex; see the class notes for details.
          */
-        std::vector<Integer> ccRep(unsigned long SNFRep) const;
+        Vector<Integer> ccRep(unsigned long SNFRep) const;
 
         /**
          * Projects an element of the chain complex to the subspace of cycles.
-         * Returns an empty vector if the input element does not have
-         * dimensions of the chain complex.
          *
          * \warning The return value may change from version to version
          * of Regina, since it depends on the choice of Smith normal form.
+         *
+         * \exception InvalidArgument The length of the given vector was
+         * not the dimension of the chain complex (i.e., the number of
+         * chain complex coordinates).
          *
          * @param ccelt a vector whose length is M.columns(),
          * where \a M is one of the matrices that defines the chain
@@ -499,22 +513,24 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * @return a corresponding vector, also in the chain complex
          * coordinates.
          */
-        std::vector<Integer> cycleProjection(
-            const std::vector<Integer> &ccelt) const;
+        Vector<Integer> cycleProjection(const Vector<Integer>& ccelt) const;
 
         /**
          * Projects an element of the chain complex to the subspace of cycles.
-         * Returns an empty vector if the input index is out of bounds.
          *
          * \warning The return value may change from version to version
          * of Regina, since it depends on the choice of Smith normal form.
+         *
+         * \exception InvalidArgument The index \a ccindx was greater than or
+         * equal to the dimension of the chain complex (i.e., the number of
+         * chain complex coordinates).
          *
          * @param ccindx the index of the standard basis vector in chain
          * complex coordinates.
          * @return the resulting projection, in the chain complex
          * coordinates.
          */
-        std::vector<Integer> cycleProjection(unsigned long ccindx) const;
+        Vector<Integer> cycleProjection(unsigned long ccindx) const;
 
         /**
          * Given a vector, determines if it represents a cycle in the chain
@@ -523,20 +539,22 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * @param input an input vector in chain complex coordinates.
          * @return \c true if and only if the given vector represents a cycle.
          */
-        bool isCycle(const std::vector<Integer> &input) const;
+        bool isCycle(const Vector<Integer>& input) const;
 
         /**
          * Computes the differential of the given vector in the chain
          * complex whose kernel is the cycles.  In other words, this
          * routine returns <tt>M*CCrep</tt>.
          *
+         * \exception InvalidArgument The given vector is not in chain
+         * complex coordinates; that is, its length is not <tt>M.columns()</tt>.
+         *
          * @param CCrep a vector whose length is M.columns(),
          * where \a M is one of the matrices that defines the chain
          * complex (see the class notes for details).
          * @return the differential, expressed as a vector of length M.rows().
          */
-        std::vector<Integer> boundaryMap(
-            const std::vector<Integer> &CCrep) const;
+        Vector<Integer> boundaryMap(const Vector<Integer>& CCrep) const;
 
         /**
          * Given a vector, determines if it represents a boundary in the chain
@@ -548,12 +566,11 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * @return \c true if and only if the given vector represents a
          * boundary.
          */
-        bool isBoundary(const std::vector<Integer> &input) const;
+        bool isBoundary(const Vector<Integer> &input) const;
 
         /**
-         * Expresses the given vector as a boundary in the chain complex
-         * (if the vector is indeed a boundary at all).  This routine
-         * uses chain complex coordinates for both the input and the
+         * Expresses the given vector as a boundary in the chain complex,
+         * using chain complex coordinates for both the input and the
          * return value.
          *
          * \warning If you're using mod-p coefficients and if your element
@@ -564,17 +581,18 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \warning The return value may change from version to version
          * of Regina, since it depends on the choice of Smith normal form.
          *
-         * @return a length zero vector if the input is not a boundary;
-         * otherwise a vector \a v such that <tt>Nv=input</tt>.
+         * \exception InvalidArgument The given vector is not a boundary.
+         *
+         * @param input a boundary vector, given in chain complex coordinates.
+         * @return a vector \a v such that <tt>N*v=input</tt>.
          */
-        std::vector<Integer> writeAsBoundary(
-            const std::vector<Integer> &input) const;
+        Vector<Integer> writeAsBoundary(const Vector<Integer>& input) const;
 
         /**
          * Returns the rank of the chain complex supporting the homology
-         *  computation. In the description of this class, this is also given
-         *  by M.columns() and N.rows() from the constructor that takes as
-         *  input two matrices, M and N.
+         * computation. In the description of this class, this is also given
+         * by M.columns() and N.rows() from the constructor that takes as
+         * input two matrices, M and N.
          *
          * @return the rank of the chain complex.
          */
@@ -621,24 +639,23 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \a v = \a b1.t1 + ... + \a bk.tk + \a a1.f1 + ... + \a ad.fd
          * modulo img(N).
          *
-         * If \a v does not belong to ker(M), this routine simply returns
-         * the empty vector.
+         * If \a v does not belong to ker(M), this routine throws an exception.
          *
          * \warning The return value may change from version to version
          * of Regina, as it depends on the choice of Smith normal form.
          *
          * \pre Vector \a v has length M.columns(), or equivalently N.rows().
          *
+         * \exception InvalidArgument The given vector was the wrong
+         * size, or is not in the kernel of \a M.
+         *
          * @param v a vector of length M.columns(). M.columns() is also
-         *  rankCC().
-         *
+         * rankCC().
          * @return a vector that describes \a v in the standard
-         *  Z_{d1} + ... + Z_{dk} + Z^d form, or the empty vector if
-         *  \a v is not in the kernel of \a M. k+d is equal to 
-         *  minNumberOfGenerators().
-         *
+         * Z_{d1} + ... + Z_{dk} + Z^d form.  k+d is equal to 
+         * minNumberOfGenerators().
          */
-        std::vector<Integer> snfRep(const std::vector<Integer>& v) const;
+        Vector<Integer> snfRep(const Vector<Integer>& v) const;
 
         /**
          * Returns the number of generators of ker(M), where M is one of
@@ -655,10 +672,13 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \warning The return value may change from version to version
          * of Regina, as it depends on the choice of Smith normal form.
          *
-         * @param i between 0 and minNumCycleGens()-1.
+         * \exception InvalidArgument The argument \a i was out of range
+         * (i.e., greater than or equal to minNumberCycleGens()).
+         *
+         * @param i between 0 and minNumberCycleGens()-1.
          * @return the corresponding generator in chain complex coordinates.
          */
-        std::vector<Integer> cycleGen(unsigned long i) const;
+        Vector<Integer> cycleGen(unsigned long i) const;
 
         /**
          * Returns the `right' matrix used in defining the chain complex.
@@ -1034,29 +1054,36 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * the original chain complexes' coordinates. This involves
          * multiplication by the defining matrix.
          *
+         * \exception InvalidArgument The given vector was not in the
+         * original chain complex coordinates; that is, its length was not
+         * <tt>domain().M().columns()</tt>.
+         *
          * @param input an input vector in the domain chain complex's
          * coordinates, of length domain().M().columns().
          * @return the image of this vector in the codomain chain complex's
          * coordinates, of length codomain().M().columns().
          */
-        std::vector<Integer> evalCC(const std::vector<Integer> &input) const;
+        Vector<Integer> evalCC(const Vector<Integer>& input) const;
 
         /**
          * Evaluate the image of a vector under this homomorphism, using
          * the Smith normal form coordinates. This is just multiplication by
-         * the reduced matrix, returning the empty vector if the input vector
-         * has the wrong dimensions.
+         * the reduced matrix.
          *
          * \warning Smith normal form coordinates are sensitive to the
          * implementation of the Smith Normal Form, i.e., they are not
          * canonical.
+         *
+         * \exception InvalidArgument The given vector was not in domain SNF
+         * coordinates; that is, its length was not
+         * <tt>domain().minNumberOfGenerators()</tt>.
          *
          * @param input an input vector in the domain SNF coordinates,
          * of length domain().minNumberOfGenerators().
          * @return the image of this vector in the codomain chain complex's
          * coordinates, of length codomain().minNumberOfGenerators().
          */
-        std::vector<Integer> evalSNF(const std::vector<Integer> &input) const;
+        Vector<Integer> evalSNF(const Vector<Integer>& input) const;
 
         /**
          * Returns the inverse to a HomMarkedAbelianGroup. If this
@@ -1285,6 +1312,15 @@ inline bool HomMarkedAbelianGroup::isIsomorphism() const {
 
 inline bool HomMarkedAbelianGroup::isZero() const {
     return image().isTrivial();
+}
+
+inline Vector<Integer> HomMarkedAbelianGroup::evalCC(
+       const Vector<Integer>& input) const {
+    if (input.size() != domain().M().columns())
+        throw InvalidArgument(
+            "The argument to evalCC() is a vector of the wrong size");
+
+    return matrix * input;
 }
 
 inline void swap(HomMarkedAbelianGroup& a, HomMarkedAbelianGroup& b) noexcept {

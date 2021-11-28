@@ -1084,9 +1084,8 @@ std::optional<HomGroupPresentation> GroupPresentation::homologicalAlignment() {
     MatrixInt abMat( abelianized.minNumberOfGenerators(), countGenerators() );
 
     for (unsigned long j=0; j<countGenerators(); j++) {
-        std::vector<Integer> epsilon( countGenerators() );
-        epsilon[j] = 1;
-        std::vector<Integer> temp( abelianized.snfRep(epsilon) );
+        Vector<Integer> temp = abelianized.snfRep(
+            Vector<Integer>::unit(countGenerators(), j));
         for (unsigned long i=0; i<abelianized.minNumberOfGenerators(); i++)
             abMat.entry(i,j) = temp[i]; // columns are snfreps of abelianized gens.
     }

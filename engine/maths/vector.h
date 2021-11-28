@@ -61,9 +61,10 @@ class Rational;
  * be known at compile time.  Nevertheless, in many respects, different
  * subclasses of Vector<T> can happily interact with one another.
  *
- * This class is written with bulky types in mind (such as
- * arbitrary precision integers), and so creations and operations are kept
- * to a minimum.
+ * This class is written with bulky types in mind (such as arbitrary precision
+ * integers), and so creations and operations are kept to a minimum.
+ *
+ * As of Regina 7.0, this class explicitly supports zero-length vectors.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -101,8 +102,44 @@ class Rational;
 template <class T>
 class Vector : public ShortOutput<Vector<T>> {
     public:
-        using Element = T;
-            /**< The type of each element in the vector. */
+        /**
+         * The type of element that is stored in this vector.
+         */
+        using value_type = T;
+
+        /**
+         * The type used for indexing into this vector.
+         */
+        using size_type = size_t;
+
+        /**
+         * A reference to an element of this vector.
+         */
+        using reference = T&;
+
+        /**
+         * A const reference to an element of this vector.
+         */
+        using const_reference = const T&;
+
+        /**
+         * The non-const iterator type for this vector.
+         */
+        using iterator = T*;
+
+        /**
+         * The const iterator type for this vector.
+         */
+        using const_iterator = const T*;
+
+        /**
+         * Deprecated alias for the type of element that is stored in
+         * this vector.
+         *
+         * \deprecated This has been renamed to value_type, for
+         * consistency with standard C++ container types.
+         */
+        using Element [[deprecated]] = T;
 
         /**
          * Zero in the underlying number system.
@@ -124,46 +161,46 @@ class Vector : public ShortOutput<Vector<T>> {
         [[deprecated]] static const T minusOne;
 
     protected:
-        T* elements;
+        T* elts_;
             /**< The internal array containing all vector elements. */
-        T* end;
+        T* end_;
             /**< A pointer just beyond the end of the internal array.
-                 The size of the vector can be computed as (end - elements). */
+                 The size of the vector can be computed as (end_ - elts_). */
 
     public:
         /**
          * Creates a new vector.
          *
-         * Its elements will be initialised using their default
-         * constructors.  So, for example, if \a T is \c int then the
-         * elements will remain uninitialised, and if \a T is regina::Integer
-         * then the elements will be initialised to zero.
+         * All entries will be initialised using their default constructors.
+         * In particular, this means that for Regina's own integer classes
+         * (Integer, LargeInteger and NativeInteger), all entries will be
+         * initialised to zero.
          *
-         * @param newVectorSize the number of elements in the new
-         * vector; this must be strictly positive.
+         * \warning If \a T is a native C++ integer type (such as \c int
+         * or \c long), then the elements will not be initialised
+         * to any particular value.
+         *
+         * @param newVectorSize the number of elements in the new vector.
          */
         inline Vector(size_t newVectorSize) :
-                elements(new T[newVectorSize]), end(elements + newVectorSize) {
+                elts_(new T[newVectorSize]), end_(elts_ + newVectorSize) {
         }
         /**
          * Creates a new vector and initialises every element to the
          * given value.
          *
-         * @param newVectorSize the number of elements in the new
-         * vector; this must be strictly positive.
+         * @param newVectorSize the number of elements in the new vector.
          * @param initValue the value to assign to every element of the
          * vector.
          */
         inline Vector(size_t newVectorSize, const T& initValue) :
-                elements(new T[newVectorSize]), end(elements + newVectorSize) {
-            std::fill(elements, end, initValue);
+                elts_(new T[newVectorSize]), end_(elts_ + newVectorSize) {
+            std::fill(elts_, end_, initValue);
         }
         /**
          * Creates a new vector containing the given sequence of elements.
          *
          * This constructor induces a deep copy of the given range.
-         *
-         * \pre The given sequence is non-empty; that is, \a begin != \a end.
          *
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
@@ -182,15 +219,13 @@ class Vector : public ShortOutput<Vector<T>> {
          */
         template <typename iterator>
         inline Vector(iterator begin, iterator end) :
-                elements(new T[end - begin]), end(elements + (end - begin)) {
-            std::copy(begin, end, elements);
+                elts_(new T[end - begin]), end_(elts_ + (end - begin)) {
+            std::copy(begin, end, elts_);
         }
         /**
          * Creates a new vector containing the given hard-coded elements.
          * This constructor can be used (for example) to create
          * hard-coded examples directly in C++ code.
-         *
-         * \pre The list \a data is non-empty.
          *
          * \ifacespython Not available, but there is a Python constructor
          * that takes a list of coefficients (which need not be constant).
@@ -198,8 +233,8 @@ class Vector : public ShortOutput<Vector<T>> {
          * @param data the elements of the vector.
          */
         inline Vector(std::initializer_list<T> data) :
-                elements(new T[data.size]), end(elements + data.size()) {
-            std::copy(data.begin(), data.end(), elements);
+                elts_(new T[data.size]), end_(elts_ + data.size()) {
+            std::copy(data.begin(), data.end(), elts_);
         }
         /**
          * Creates a new vector that is a clone of the given vector.
@@ -207,9 +242,9 @@ class Vector : public ShortOutput<Vector<T>> {
          * @param cloneMe the vector to clone.
          */
         inline Vector(const Vector<T>& cloneMe) :
-                elements(new T[cloneMe.end - cloneMe.elements]),
-                end(elements + (cloneMe.end - cloneMe.elements)) {
-            std::copy(cloneMe.elements, cloneMe.end, elements);
+                elts_(new T[cloneMe.end_ - cloneMe.elts_]),
+                end_(elts_ + (cloneMe.end_ - cloneMe.elts_)) {
+            std::copy(cloneMe.elts_, cloneMe.end_, elts_);
         }
         /**
          * Moves the given vector into this new vector.
@@ -220,14 +255,14 @@ class Vector : public ShortOutput<Vector<T>> {
          * @param src the vector to move.
          */
         inline Vector(Vector&& src) noexcept :
-                elements(src.elements), end(src.end) {
-            src.elements = nullptr;
+                elts_(src.elts_), end_(src.end_) {
+            src.elts_ = nullptr;
         }
         /**
          * Destroys this vector.
          */
         inline ~Vector() {
-            delete[] elements;
+            delete[] elts_;
         }
         /**
          * Returns the number of elements in the vector.
@@ -235,7 +270,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * @return the vector size.
          */
         inline size_t size() const {
-            return end - elements;
+            return end_ - elts_;
         }
         /**
          * Returns the element at the given index in the vector.
@@ -248,7 +283,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * @return the vector element at the given index.
          */
         inline const T& operator[](size_t index) const {
-            return elements[index];
+            return elts_[index];
         }
         /**
          * Gives write access to the element at the given index in the vector.
@@ -259,7 +294,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * @return a reference to the vector element at the given index.
          */
         inline T& operator[](size_t index) {
-            return elements[index];
+            return elts_[index];
         }
         /**
          * Deprecated routine that sets the element at the given index
@@ -273,7 +308,67 @@ class Vector : public ShortOutput<Vector<T>> {
          * @param value the new value to assign to the element.
          */
         [[deprecated]] inline void setElement(size_t index, const T& value) {
-            elements[index] = value;
+            elts_[index] = value;
+        }
+        /**
+         * Returns the beginning of a non-const iterator range that runs
+         * through all elements of this vector.
+         *
+         * This is safe to use even if this vector has zero length (in
+         * which case begin() and end() will be equal).
+         *
+         * \ifacespython Vector is an iterable object: instead of providing
+         * begin() and end(), it implements the Python iterable interface.
+         *
+         * @return an iterator pointing to the first element of this vector.
+         */
+        inline iterator begin() {
+            return elts_;
+        }
+        /**
+         * Returns the beginning of a const iterator range that runs through
+         * all elements of this vector.
+         *
+         * This is safe to use even if this vector has zero length (in
+         * which case begin() and end() will be equal).
+         *
+         * \ifacespython Vector is an iterable object: instead of providing
+         * begin() and end(), it implements the Python iterable interface.
+         *
+         * @return an iterator pointing to the first element of this vector.
+         */
+        inline const_iterator begin() const {
+            return elts_;
+        }
+        /**
+         * Returns the end of a non-const iterator range that runs through
+         * all elements of this vector.
+         *
+         * This is safe to use even if this vector has zero length (in
+         * which case begin() and end() will be equal).
+         *
+         * \ifacespython Vector is an iterable object: instead of providing
+         * begin() and end(), it implements the Python iterable interface.
+         *
+         * @return an iterator beyond the last element of this vector.
+         */
+        inline iterator end() {
+            return end_;
+        }
+        /**
+         * Returns the end of a const iterator range that runs through
+         * all elements of this vector.
+         *
+         * This is safe to use even if this vector has zero length (in
+         * which case begin() and end() will be equal).
+         *
+         * \ifacespython Vector is an iterable object: instead of providing
+         * begin() and end(), it implements the Python iterable interface.
+         *
+         * @return an iterator beyond the last element of this vector.
+         */
+        inline const_iterator end() const {
+            return end_;
         }
 
         /**
@@ -286,7 +381,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * are equal.
          */
         inline bool operator == (const Vector<T>& compare) const {
-            return std::equal(elements, end, compare.elements);
+            return std::equal(elts_, end_, compare.elts_);
         }
         /**
          * Determines if this vector is different from the given vector.
@@ -298,7 +393,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * are not equal.
          */
         inline bool operator != (const Vector<T>& compare) const {
-            return ! std::equal(elements, end, compare.elements);
+            return ! std::equal(elts_, end_, compare.elts_);
         }
         /**
          * Sets this vector equal to the given vector.
@@ -312,7 +407,7 @@ class Vector : public ShortOutput<Vector<T>> {
             // std::copy() exhibits undefined behaviour with self-assignment.
             if (std::addressof(cloneMe) == this)
                 return *this;
-            std::copy(cloneMe.elements, cloneMe.end, elements);
+            std::copy(cloneMe.elts_, cloneMe.end_, elts_);
             return *this;
         }
         /**
@@ -328,8 +423,8 @@ class Vector : public ShortOutput<Vector<T>> {
          * @return a reference to this vector.
          */
         inline Vector& operator = (Vector&& src) noexcept {
-            std::swap(elements, src.elements);
-            end = src.end;
+            std::swap(elts_, src.elts_);
+            end_ = src.end_;
             // Let src dispose of the original elements in its own destructor.
             return *this;
         }
@@ -339,8 +434,8 @@ class Vector : public ShortOutput<Vector<T>> {
          * @param other the vector whose contents are to be swapped with this.
          */
         inline void swap(Vector& other) noexcept {
-            std::swap(elements, other.elements);
-            std::swap(end, other.end);
+            std::swap(elts_, other.elts_);
+            std::swap(end_, other.end_);
         }
         /**
          * Adds the given vector to this vector.
@@ -353,9 +448,9 @@ class Vector : public ShortOutput<Vector<T>> {
          * @return a reference to this vector.
          */
         inline Vector& operator += (const Vector<T>& other) {
-            T* e = elements;
-            const T* o = other.elements;
-            for ( ; e < end; ++e, ++o)
+            T* e = elts_;
+            const T* o = other.elts_;
+            for ( ; e < end_; ++e, ++o)
                 *e += *o;
             return *this;
         }
@@ -370,9 +465,9 @@ class Vector : public ShortOutput<Vector<T>> {
          * @return a reference to this vector.
          */
         inline Vector& operator -= (const Vector<T>& other) {
-            T* e = elements;
-            const T* o = other.elements;
-            for ( ; e < end; ++e, ++o)
+            T* e = elts_;
+            const T* o = other.elts_;
+            for ( ; e < end_; ++e, ++o)
                 *e -= *o;
             return *this;
         }
@@ -386,7 +481,7 @@ class Vector : public ShortOutput<Vector<T>> {
         inline Vector& operator *= (const T& factor) {
             if (factor == 1)
                 return *this;
-            for (T* e = elements; e < end; ++e)
+            for (T* e = elts_; e < end_; ++e)
                 *e *= factor;
             return *this;
         }
@@ -402,11 +497,11 @@ class Vector : public ShortOutput<Vector<T>> {
         inline Vector operator + (const Vector<T>& other) const {
             Vector ans(size());
 
-            const T* e = elements;
-            const T* o = other.elements;
-            T* res = ans.elements;
+            const T* e = elts_;
+            const T* o = other.elts_;
+            T* res = ans.elts_;
 
-            while (e < end)
+            while (e < end_)
                 (*res++) = (*e++) + (*o++);
 
             return ans;
@@ -423,11 +518,11 @@ class Vector : public ShortOutput<Vector<T>> {
         inline Vector operator - (const Vector<T>& other) const {
             Vector ans(size());
 
-            const T* e = elements;
-            const T* o = other.elements;
-            T* res = ans.elements;
+            const T* e = elts_;
+            const T* o = other.elts_;
+            T* res = ans.elts_;
 
-            while (e < end)
+            while (e < end_)
                 (*res++) = (*e++) - (*o++);
 
             return ans;
@@ -445,10 +540,10 @@ class Vector : public ShortOutput<Vector<T>> {
 
             Vector ans(size());
 
-            const T* e = elements;
-            T* res = ans.elements;
+            const T* e = elts_;
+            T* res = ans.elts_;
 
-            while (e < end)
+            while (e < end_)
                 (*res++) = (*e++) * factor;
 
             return ans;
@@ -464,9 +559,9 @@ class Vector : public ShortOutput<Vector<T>> {
         inline T operator * (const Vector<T>& other) const {
             T ans(0);
 
-            const T* e = elements;
-            const T* o = other.elements;
-            for ( ; e < end; ++e, ++o)
+            const T* e = elts_;
+            const T* o = other.elts_;
+            for ( ; e < end_; ++e, ++o)
                 ans += (*e) * (*o);
 
             return ans;
@@ -477,10 +572,10 @@ class Vector : public ShortOutput<Vector<T>> {
         inline void negate() {
             if constexpr (IsReginaInteger<T>::value ||
                     std::is_same_v<T, regina::Rational>) {
-                for (T* e = elements; e < end; ++e)
+                for (T* e = elts_; e < end_; ++e)
                     e->negate();
             } else {
-                for (T* e = elements; e < end; ++e)
+                for (T* e = elts_; e < end_; ++e)
                     *e = -*e;
             }
         }
@@ -492,7 +587,7 @@ class Vector : public ShortOutput<Vector<T>> {
          */
         inline T norm() const {
             T ans(0);
-            for (const T* e = elements; e < end; ++e)
+            for (const T* e = elts_; e < end_; ++e)
                 ans += (*e) * (*e);
             return ans;
         }
@@ -503,7 +598,7 @@ class Vector : public ShortOutput<Vector<T>> {
          */
         inline T elementSum() const {
             T ans(0);
-            for (const T* e = elements; e < end; ++e)
+            for (const T* e = elts_; e < end_; ++e)
                 ans += *e;
             return ans;
         }
@@ -529,9 +624,9 @@ class Vector : public ShortOutput<Vector<T>> {
                 (*this) -= other;
                 return;
             }
-            T* e = elements;
-            const T* o = other.elements;
-            for ( ; e < end; ++e, ++o)
+            T* e = elts_;
+            const T* o = other.elts_;
+            for ( ; e < end_; ++e, ++o)
                 *e += *o * multiple;
         }
         /**
@@ -556,9 +651,9 @@ class Vector : public ShortOutput<Vector<T>> {
                 (*this) += other;
                 return;
             }
-            T* e = elements;
-            const T* o = other.elements;
-            for ( ; e < end; ++e, ++o)
+            T* e = elts_;
+            const T* o = other.elts_;
+            for ( ; e < end_; ++e, ++o)
                 *e -= *o * multiple;
         }
         /**
@@ -567,7 +662,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * @return \c true if and only if all elements of the vector are zero.
          */
         bool isZero() const {
-            for (const T* e = elements; e != end; ++e)
+            for (const T* e = elts_; e != end_; ++e)
                 if (*e != 0)
                     return false;
             return true;
@@ -582,7 +677,7 @@ class Vector : public ShortOutput<Vector<T>> {
          */
         void writeTextShort(std::ostream& out) const {
             out << '(';
-            for (const T* elt = elements; elt != end; ++elt)
+            for (const T* elt = elts_; elt != end_; ++elt)
                 out << ' ' << *elt;
             out << " )";
         }
@@ -606,7 +701,7 @@ class Vector : public ShortOutput<Vector<T>> {
          */
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) scaleDown() {
             T gcd; // Initialised to 0.
-            for (const T* e = elements; e != end; ++e) {
+            for (const T* e = elts_; e != end_; ++e) {
                 if (e->isInfinite() || (*e) == 0)
                     continue;
                 gcd.gcdWith(*e); // Guaranteed non-negative result.
@@ -615,11 +710,37 @@ class Vector : public ShortOutput<Vector<T>> {
             }
             if (gcd == 0)
                 return;
-            for (T* e = elements; e != end; ++e)
+            for (T* e = elts_; e != end_; ++e)
                 if ((! e->isInfinite()) && (*e) != 0) {
                     e->divByExact(gcd);
                     e->tryReduce();
                 }
+        }
+
+        /**
+         * Returns the given unit vector.
+         *
+         * The vector will have length \a dimension.  The element
+         * in position \a coordinate will be set to 1, and all other
+         * elements will be set to 0.
+         *
+         * @param dimension the number of elements in the vector.
+         * @param coordinate the coordinate position that should hold
+         * the value 1; this must be between 0 and (\a dimension - 1)
+         * inclusive.
+         * @return the requested unit vector.
+         */
+        static Vector unit(size_t dimension, size_t coordinate) {
+            if constexpr (IsReginaInteger<T>::value) {
+                // Elements are initialised to zero by default.
+                Vector ans(dimension);
+                ans[coordinate] = 1;
+                return ans;
+            } else {
+                Vector ans(dimension, 0);
+                ans[coordinate] = 1;
+                return ans;
+            }
         }
 };
 

@@ -93,10 +93,11 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
 
     metricalSmithNormalForm(ORN, ornR, ornRi, ornC, ornCi);
 
-    for (unsigned long i=0; ( (i<ORN.rows()) && (i<ORN.columns()) ); i++)
-    {
-        if (ORN.entry(i,i)==1) ifLoc++; else 
-            if (ORN.entry(i,i)>1) InvFacList.push_back(ORN.entry(i,i)); 
+    for (unsigned long i=0; ( (i<ORN.rows()) && (i<ORN.columns()) ); i++) {
+        if (ORN.entry(i,i)==1)
+            ifLoc++;
+        else if (ORN.entry(i,i)>1)
+            InvFacList.push_back(ORN.entry(i,i)); 
     }
 
     ifNum = InvFacList.size();
@@ -323,25 +324,21 @@ void MarkedAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
  * this routine returns the index-th free generator of the
  * ker(M)/img(N) in Z^l.
  */
-std::vector<Integer> MarkedAbelianGroup::freeRep(unsigned long index)
-        const {
-    if (index >= snfrank) return {};
+Vector<Integer> MarkedAbelianGroup::freeRep(unsigned long index) const {
+    if (index >= snfrank)
+        throw InvalidArgument("freeRep(): invalid index");
 
-    std::vector<Integer> retval(OM.columns(),Integer::zero);
+    Vector<Integer> retval(OM.columns()); // initialised to zero
     // index corresponds to the (index+snffreeindex)-th column of ornCi
     // we then pad this vector (at the front) with rankOM 0's
     // and apply OMR to it.
 
-     std::vector<Integer> temp(ornCi.rows()+rankOM,Integer::zero);
-     for (unsigned long i=0;i<ornCi.rows();i++)
-         temp[i+rankOM]=ornCi.entry(i,index+snffreeindex);
-     // the above line takes the index+snffreeindex-th column of ornCi and
-     // pads it.
-     for (unsigned long i=0;i<retval.size();i++) 
-         for (unsigned long j=0;j<OMR.columns();j++)
-            retval[i] += OMR.entry(i,j)*temp[j];
-     // the above takes temp and multiplies it by the matrix OMR.
-    return retval;
+    Vector<Integer> temp(ornCi.rows()+rankOM); // initialised to zero
+    for (unsigned long i=0;i<ornCi.rows();i++)
+        temp[i+rankOM]=ornCi.entry(i,index+snffreeindex);
+    // the above line takes the index+snffreeindex-th column of ornCi and
+    // pads it.
+    return OMR * temp;
 }
 
 /*
@@ -350,143 +347,127 @@ std::vector<Integer> MarkedAbelianGroup::freeRep(unsigned long index)
  * this routine returns the index-th torsion generator of the
  * ker(M)/img(N) in Z^l.
  */
-std::vector<Integer> MarkedAbelianGroup::torsionRep(
-        unsigned long index) const {
-    if (index >= ifNum) return {};
-    std::vector<Integer> retval(OM.columns(),Integer::zero);
+Vector<Integer> MarkedAbelianGroup::torsionRep(unsigned long index) const {
+    if (index >= ifNum)
+        throw InvalidArgument("torsionRep(): invalid index");
 
-    if (coeff == 0)
-    {
-     std::vector<Integer> temp(ornCi.rows()+rankOM,  Integer::zero);
-     for (unsigned long i=0;i<ornCi.rows();i++)
-       temp[i+TORLoc] = ornCi.entry(i,ifLoc+index);
-     // the above line takes the index+snffreeindex-th column of ornCi and
-     // pads it suitably
-     for (unsigned long i=0;i<retval.size();i++) 
-       for (unsigned long j=0;j<OMR.columns();j++) 
-         retval[i] += OMR.entry(i,j)*temp[j];
-    } 
-   else
-    { // coeff > 0 with coefficients there's the extra step of dealing with the 
-      // UCT splitting start with column column index + ifLoc of matrix ornCi, 
-      /// split into two vectors
-      // 1) first TORVec.size() entries and 2) remaining entries. 
-      std::vector<Integer> firstV(TORVec.size(), Integer::zero);
-      std::vector<Integer> secondV(ornC.rows()-TORVec.size(), 
-        Integer::zero);
-      for (unsigned long i=0; i<firstV.size(); i++)
-          firstV[i] = ornCi.entry( i, index + ifLoc );
-      for (unsigned long i=0; i<secondV.size(); i++)
-          secondV[i] = ornCi.entry( i + firstV.size(), index + ifLoc );
-      // 1st vec needs coords scaled appropriately by p/gcd(p,q) and
-      //  multiplied by appropriate OMR columns
-      for (unsigned long i=0; i<firstV.size(); i++)
-          firstV[i] *= coeff.divExact( TORVec[i].gcd(coeff) );
-      std::vector<Integer> otCiSecondV(otCi.rows(), Integer::zero);
-      for (unsigned long i=0; i<otCi.rows(); i++) 
-        for (unsigned long j=tensorIfLoc; j<otCi.columns(); j++)
-          otCiSecondV[i] += otCi.entry(i,j) * secondV[j-tensorIfLoc];
-      // 2nd vec needs be multiplied by otCi, padded, then have OMR applied. 
-      for (unsigned long i=0; i<retval.size(); i++) 
-        for (unsigned long j=0; j<firstV.size(); j++)
-         retval[i] += OMR.entry(i, TORLoc + j)*firstV[j];
-      for (unsigned long i=0; i<retval.size(); i++) 
-        for (unsigned long j=0; j<otCiSecondV.size(); j++)
-          retval[i] += OMR.entry(i, rankOM+j) * otCiSecondV[j];
-      // add answers together. 
-   }
- return retval;
+    if (coeff == 0) {
+        Vector<Integer> temp(ornCi.rows()+rankOM); // initialised to zero
+        for (unsigned long i=0;i<ornCi.rows();i++)
+            temp[i+TORLoc] = ornCi.entry(i,ifLoc+index);
+        // the above line takes the index+snffreeindex-th column of ornCi and
+        // pads it suitably
+        return OMR * temp;
+    } else {
+        // coeff > 0 with coefficients there's the extra step of dealing with
+        // the UCT splitting start with column column index + ifLoc of matrix
+        // ornCi, split into two vectors
+        // 1) first TORVec.size() entries and 2) remaining entries. 
+        Vector<Integer> retval(OM.columns()); // initialised to zero
+        Vector<Integer> firstV(TORVec.size());
+        Vector<Integer> secondV(ornC.rows()-TORVec.size());
+        for (unsigned long i=0; i<firstV.size(); i++)
+            firstV[i] = ornCi.entry( i, index + ifLoc );
+        for (unsigned long i=0; i<secondV.size(); i++)
+            secondV[i] = ornCi.entry( i + firstV.size(), index + ifLoc );
+        // 1st vec needs coords scaled appropriately by p/gcd(p,q) and
+        //  multiplied by appropriate OMR columns
+        for (unsigned long i=0; i<firstV.size(); i++)
+            firstV[i] *= coeff.divExact( TORVec[i].gcd(coeff) );
+        Vector<Integer> otCiSecondV(otCi.rows());
+        for (unsigned long i=0; i<otCi.rows(); i++) 
+            for (unsigned long j=tensorIfLoc; j<otCi.columns(); j++)
+                otCiSecondV[i] += otCi.entry(i,j) * secondV[j-tensorIfLoc];
+        // 2nd vec needs be multiplied by otCi, padded, then have OMR applied. 
+        for (unsigned long i=0; i<retval.size(); i++) 
+            for (unsigned long j=0; j<firstV.size(); j++)
+                retval[i] += OMR.entry(i, TORLoc + j)*firstV[j];
+        for (unsigned long i=0; i<retval.size(); i++) 
+            for (unsigned long j=0; j<otCiSecondV.size(); j++)
+                retval[i] += OMR.entry(i, rankOM+j) * otCiSecondV[j];
+        // add answers together.
+        return retval;
+    }
 }
 
 
-std::vector<Integer> MarkedAbelianGroup::ccRep(const std::vector<Integer>& SNFRep) const
-{
-    if (SNFRep.size() != snfrank + ifNum) return {};
+Vector<Integer> MarkedAbelianGroup::ccRep(const Vector<Integer>& SNFRep) const {
+    if (SNFRep.size() != snfrank + ifNum)
+        throw InvalidArgument(
+            "The argument to ccRep() is a vector of the wrong size");
 
-    std::vector<Integer> retval(OM.columns(),Integer::zero);
-    std::vector<Integer> temp(ornCi.rows()+TORLoc,Integer::zero);
-
-    if (coeff == 0)
-    {
+    if (coeff == 0) {
+        Vector<Integer> temp(ornCi.rows()+TORLoc);
         for (unsigned long j=0; j<ifNum+snfrank; j++) 
-          for (unsigned long i=0; i<ornCi.rows(); i++)
-            temp[i+TORLoc] += ornCi.entry(i,ifLoc+j) * SNFRep[j];
-        for (unsigned long i=0;i<retval.size();i++) 
-          for (unsigned long j=0;j<OMR.columns();j++)
-            retval[i] += OMR.entry(i,j)*temp[j];
+            for (unsigned long i=0; i<ornCi.rows(); i++)
+                temp[i+TORLoc] += ornCi.entry(i,ifLoc+j) * SNFRep[j];
+        return OMR * temp;
+    } else {
+        // coeff > 0
+        Vector<Integer> retval(OM.columns());
+        Vector<Integer> firstV(TORVec.size());
+        Vector<Integer> secondV(ornC.rows()-TORVec.size());
+        for (unsigned long i=0; i<firstV.size(); i++) 
+            for (unsigned long j=0; j<SNFRep.size(); j++)
+                firstV[i] += ornCi.entry( i, j + ifLoc ) * SNFRep[j];
+        for (unsigned long i=0; i<secondV.size(); i++) 
+            for (unsigned long j=0; j<SNFRep.size(); j++)
+                secondV[i] += ornCi.entry( i + firstV.size(), j + ifLoc ) * SNFRep[j];
+        // 1st vec needs coords scaled appropriately by p/gcd(p,q) and 
+        //  multiplied by appropriate OMR columns
+        for (unsigned long i=0; i<firstV.size(); i++)
+            firstV[i] *= coeff.divExact( TORVec[i].gcd(coeff) );
+        Vector<Integer> otCiSecondV(otCi.rows());
+        for (unsigned long i=0; i<otCi.rows(); i++) 
+            for (unsigned long j=tensorIfLoc; j<otCi.columns(); j++)
+                otCiSecondV[i] += otCi.entry(i,j) * secondV[j-tensorIfLoc];
+        // 2nd vec needs be multiplied by otCi, padded, then have OMR applied. 
+        for (unsigned long i=0; i<retval.size(); i++) 
+            for (unsigned long j=0; j<firstV.size(); j++)
+                retval[i] += OMR.entry(i, TORLoc + j)*firstV[j];
+        for (unsigned long i=0; i<retval.size(); i++) 
+            for (unsigned long j=0; j<otCiSecondV.size(); j++)
+                retval[i] += OMR.entry(i, rankOM+j) * otCiSecondV[j];
+        return retval;
     }
-    else
-    { // coeff > 0
-     std::vector<Integer> firstV(TORVec.size(), Integer::zero);
-     std::vector<Integer> secondV(ornC.rows()-TORVec.size(), 
-       Integer::zero);
-     for (unsigned long i=0; i<firstV.size(); i++) 
-       for (unsigned long j=0; j<SNFRep.size(); j++)
-         firstV[i] += ornCi.entry( i, j + ifLoc ) * SNFRep[j];
-     for (unsigned long i=0; i<secondV.size(); i++) 
-       for (unsigned long j=0; j<SNFRep.size(); j++)
-         secondV[i] += ornCi.entry( i + firstV.size(), j + ifLoc ) * SNFRep[j];
-     // 1st vec needs coords scaled appropriately by p/gcd(p,q) and 
-     //  multiplied by appropriate OMR columns
-     for (unsigned long i=0; i<firstV.size(); i++)
-        firstV[i] *= coeff.divExact( TORVec[i].gcd(coeff) );
-     std::vector<Integer> otCiSecondV(otCi.rows(), Integer::zero);
-     for (unsigned long i=0; i<otCi.rows(); i++) 
-       for (unsigned long j=tensorIfLoc; j<otCi.columns(); j++)
-        otCiSecondV[i] += otCi.entry(i,j) * secondV[j-tensorIfLoc];
-     // 2nd vec needs be multiplied by otCi, padded, then have OMR applied. 
-     for (unsigned long i=0; i<retval.size(); i++) 
-       for (unsigned long j=0; j<firstV.size(); j++)
-        retval[i] += OMR.entry(i, TORLoc + j)*firstV[j];
-     for (unsigned long i=0; i<retval.size(); i++) 
-       for (unsigned long j=0; j<otCiSecondV.size(); j++)
-         retval[i] += OMR.entry(i, rankOM+j) * otCiSecondV[j];
-    }
- return retval;
 }
 
-std::vector<Integer> MarkedAbelianGroup::ccRep(
-     unsigned long SNFRep) const
-{
- if (SNFRep >= snfrank + ifNum) return {};
+Vector<Integer> MarkedAbelianGroup::ccRep(unsigned long SNFRep) const {
+    if (SNFRep >= snfrank + ifNum)
+        throw InvalidArgument("The argument to ccRep() must be "
+            "less than the number of SNF generators");
 
- std::vector<Integer> retval(OM.columns(),Integer::zero);
- std::vector<Integer> temp(ornCi.rows()+TORLoc,Integer::zero);
-
- if (coeff == 0)
-  {
-    for (unsigned long i=0; i<ornCi.rows(); i++)
-        temp[i+TORLoc] = ornCi.entry(i,ifLoc+SNFRep);
-    for (unsigned long i=0;i<retval.size();i++) 
-      for (unsigned long j=0;j<OMR.columns();j++)
-        retval[i] += OMR.entry(i,j)*temp[j];
-  }
- else
-  { // coeff > 0
-    std::vector<Integer> firstV(TORVec.size(), Integer::zero);
-    std::vector<Integer> secondV(ornC.rows()-TORVec.size(), 
-     Integer::zero);
-    for (unsigned long i=0; i<firstV.size(); i++)
-        firstV[i] = ornCi.entry( i, SNFRep + ifLoc );
-    for (unsigned long i=0; i<secondV.size(); i++)
-        secondV[i] = ornCi.entry( i + firstV.size(), SNFRep + ifLoc );
-    // 1st vec needs coords scaled appropriately by p/gcd(p,q) 
-    //  and multiplied by appropriate OMR columns
-    for (unsigned long i=0; i<firstV.size(); i++)
-        firstV[i] *= coeff.divExact( TORVec[i].gcd(coeff) );
-    std::vector<Integer> otCiSecondV(otCi.rows(), Integer::zero);
-    for (unsigned long i=0; i<otCi.rows(); i++) 
-      for (unsigned long j=tensorIfLoc; j<otCi.columns(); j++)
-        otCiSecondV[i] += otCi.entry(i,j) * secondV[j-tensorIfLoc];
-    // 2nd vec needs be multiplied by otCi, padded, then have OMR applied. 
-    for (unsigned long i=0; i<retval.size(); i++) 
-      for (unsigned long j=0; j<firstV.size(); j++)
-       retval[i] += OMR.entry(i, TORLoc + j)*firstV[j];
-    for (unsigned long i=0; i<retval.size(); i++) 
-     for (unsigned long j=0; j<otCiSecondV.size(); j++)
-       retval[i] += OMR.entry(i, rankOM+j) * otCiSecondV[j];
- }
- return retval;
+    if (coeff == 0) {
+        Vector<Integer> temp(ornCi.rows()+TORLoc);
+        for (unsigned long i=0; i<ornCi.rows(); i++)
+            temp[i+TORLoc] = ornCi.entry(i,ifLoc+SNFRep);
+        return OMR * temp;
+    } else {
+        // coeff > 0
+        Vector<Integer> retval(OM.columns());
+        Vector<Integer> firstV(TORVec.size());
+        Vector<Integer> secondV(ornC.rows()-TORVec.size());
+        for (unsigned long i=0; i<firstV.size(); i++)
+            firstV[i] = ornCi.entry( i, SNFRep + ifLoc );
+        for (unsigned long i=0; i<secondV.size(); i++)
+            secondV[i] = ornCi.entry( i + firstV.size(), SNFRep + ifLoc );
+        // 1st vec needs coords scaled appropriately by p/gcd(p,q) 
+        //  and multiplied by appropriate OMR columns
+        for (unsigned long i=0; i<firstV.size(); i++)
+            firstV[i] *= coeff.divExact( TORVec[i].gcd(coeff) );
+        Vector<Integer> otCiSecondV(otCi.rows());
+        for (unsigned long i=0; i<otCi.rows(); i++) 
+            for (unsigned long j=tensorIfLoc; j<otCi.columns(); j++)
+                otCiSecondV[i] += otCi.entry(i,j) * secondV[j-tensorIfLoc];
+        // 2nd vec needs be multiplied by otCi, padded, then have OMR applied. 
+        for (unsigned long i=0; i<retval.size(); i++) 
+            for (unsigned long j=0; j<firstV.size(); j++)
+                retval[i] += OMR.entry(i, TORLoc + j)*firstV[j];
+        for (unsigned long i=0; i<retval.size(); i++) 
+            for (unsigned long j=0; j<otCiSecondV.size(); j++)
+                retval[i] += OMR.entry(i, rankOM+j) * otCiSecondV[j];
+        return retval;
+    }
 }
 
 
@@ -503,183 +484,194 @@ std::vector<Integer> MarkedAbelianGroup::ccRep(
  * element is not in the kernel of M. element is assumed to have
  * OM.columns()==ON.rows() entries.
  */
-std::vector<Integer> MarkedAbelianGroup::snfRep(
-        const std::vector<Integer>& element)  const {
-    std::vector<Integer> retval(snfrank+ifNum,
-            Integer::zero);
+Vector<Integer> MarkedAbelianGroup::snfRep(const Vector<Integer>& element)
+        const {
     // apply OMRi, crop, then apply ornC, tidy up and return.
     // first, does element have the right dimensions? if not, abort.
-    if (element.size() != OM.columns()) return {};
+    if (element.size() != OM.columns())
+        throw InvalidArgument(
+            "The argument to snfRep() is a vector of the wrong size");
+
     // this holds OMRi * element which we will use to check first if
     // element is in the kernel, and then to construct its SNF rep. 
-    std::vector<Integer> temp(ON.rows(), Integer::zero); 
-    for (unsigned long i=0;i<ON.rows();i++) 
-      for (unsigned long j=0;j<ON.rows();j++)
-        temp[i] += OMRi.entry(i,j)*element[j];
+    Vector<Integer> temp = OMRi * element;
 
     // make judgement on if in kernel.
     // needs to be tweaked for mod p coefficients.
-    if (coeff == 0)
-    { for (unsigned long i=0;i<rankOM;i++) if (temp[i] != 0) return {}; }
-    else
-    { // the first TORLoc-1 terms of tM were units mod p so we need only 
-      // check divisibility by p for temp[i] the remaining terms of tM were 
-      // given by TORVec[i-TORLoc] and share a common factor with p==coeff. 
-      // for element to be in ker(M), we need temp[i]*TORVec[i-TORLoc] % p == 0 
-      for (unsigned long i=0; i<rankOM; i++) 
-      { 
-        if (i<TORLoc) { if (temp[i] % coeff != 0) return {}; }
-        else { if ((temp[i]*TORVec[i-TORLoc]) % coeff != 0) return {}; 
-            temp[i] = temp[i].divExact(coeff.divExact(
-               coeff.gcd(TORVec[i-TORLoc])));  }
-      }
-   } //ok
+    if (coeff == 0) {
+        for (unsigned long i=0;i<rankOM;i++)
+            if (temp[i] != 0)
+                throw InvalidArgument(
+                    "The argument to snfRep() is not in the kernel");
+    } else {
+        // the first TORLoc-1 terms of tM were units mod p so we need only
+        // check divisibility by p for temp[i] the remaining terms of tM were
+        // given by TORVec[i-TORLoc] and share a common factor with p==coeff.
+        // for element to be in ker(M), we need
+        // temp[i]*TORVec[i-TORLoc] % p == 0
+        for (unsigned long i=0; i<rankOM; i++) {
+            if (i<TORLoc) {
+                if (temp[i] % coeff != 0)
+                    throw InvalidArgument(
+                        "The argument to snfRep() is not in the kernel");
+            } else {
+                if ((temp[i]*TORVec[i-TORLoc]) % coeff != 0)
+                    throw InvalidArgument(
+                        "The argument to snfRep() is not in the kernel");
+                temp[i] = temp[i].divExact(coeff.divExact(
+                    coeff.gcd(TORVec[i-TORLoc])));
+            }
+        }
+    }
 
-  if (coeff == 0)
-   {
-     for (unsigned long i=0;i<snfrank;i++) 
-      for (unsigned long j=rankOM;j<ON.rows();j++)
-        retval[i+ifNum] += ornC.entry(i+snffreeindex,j-rankOM)*temp[j];
-     for (unsigned long i=0;i<ifNum;i++)   
-       for (unsigned long j=rankOM;j<ON.rows();j++)
-         retval[i] += ornC.entry(i+ifLoc,j-rankOM)*temp[j]; 
-     // redundant for loops
-   }
-  else 
-   {
-    std::vector<Integer> diagPresV( ornC.rows(), Integer::zero);
-    for (unsigned long i=0; i<diagPresV.size(); i++)
-     {
-      // TOR part
-      if (i < TORVec.size()) diagPresV[i] = temp[ i + TORLoc ]; else
-      // tensor part
-      for (unsigned long j=0; j<otC.columns(); j++) 
-       diagPresV[i] += otC.entry( i - TORVec.size() + 
-        tensorIfLoc, j) * temp[ j + rankOM ];
-     }
-    // assemble to a diagPres vector, apply ornC
-    for (unsigned long i=0; i<retval.size(); i++) 
-     for (unsigned long j=0; j<diagPresV.size(); j++) 
-      retval[i] += ornC.entry(i,j) * diagPresV[j];
-   }
-  // do modular reduction to make things look nice...
-  for (unsigned long i=0; i<ifNum; i++)
-   {
-    retval[i] %= InvFacList[i];
-    if (retval[i] < 0) retval[i] += InvFacList[i];
-   }
- return retval;
+    // The given vector is in the kernel.
+    Vector<Integer> retval(snfrank+ifNum); // initialised to zero
+
+    if (coeff == 0) {
+        for (unsigned long i=0;i<snfrank;i++)
+            for (unsigned long j=rankOM;j<ON.rows();j++)
+                retval[i+ifNum] += ornC.entry(i+snffreeindex,j-rankOM)*temp[j];
+        for (unsigned long i=0;i<ifNum;i++)
+            for (unsigned long j=rankOM;j<ON.rows();j++)
+                retval[i] += ornC.entry(i+ifLoc,j-rankOM)*temp[j];
+        // redundant for loops
+    } else {
+        Vector<Integer> diagPresV(ornC.rows()); // initialised to zero
+        for (unsigned long i=0; i<diagPresV.size(); i++) {
+            // TOR part
+            if (i < TORVec.size())
+                diagPresV[i] = temp[ i + TORLoc ];
+            else // tensor part
+                for (unsigned long j=0; j<otC.columns(); j++)
+                    diagPresV[i] += otC.entry( i - TORVec.size() +
+                        tensorIfLoc, j) * temp[ j + rankOM ];
+        }
+        // assemble to a diagPres vector, apply ornC
+        retval = ornC * diagPresV;
+    }
+    // do modular reduction to make things look nice...
+    for (unsigned long i=0; i<ifNum; i++) {
+        retval[i] %= InvFacList[i];
+        if (retval[i] < 0)
+            retval[i] += InvFacList[i];
+    }
+    return retval;
 }
 
-
-bool MarkedAbelianGroup::isCycle(const std::vector<Integer> &input) const
-{ 
- if (input.size() != OM.columns()) return false;
- for (unsigned long i=0; i<OM.rows(); i++)
-  {
-   Integer T(Integer::zero);
-   for (unsigned long j=0; j<OM.columns(); j++) T += input[j]*OM.entry(i,j);
-   if (coeff == 0) { if (T != 0) return false; } else 
-       if ( (T % coeff) != 0 ) return false;
-  } 
- return true;
+bool MarkedAbelianGroup::isCycle(const Vector<Integer> &input) const {
+    if (input.size() != OM.columns())
+        return false;
+    for (unsigned long i=0; i<OM.rows(); i++) {
+        Integer T; // zero
+        for (unsigned long j=0; j<OM.columns(); j++)
+            T += input[j]*OM.entry(i,j);
+        if (coeff == 0) {
+            if (T != 0)
+                return false;
+        } else if ( (T % coeff) != 0 )
+            return false;
+    }
+    return true;
 }
 
-bool MarkedAbelianGroup::isBoundary(
-     const std::vector<Integer> &input) const
-{ 
-    if (input.size() != OM.columns()) return false;
-    std::vector<Integer> snF(snfRep(input));
-    if (snF.size() != countInvariantFactors() + rank()) return false;
+bool MarkedAbelianGroup::isBoundary(const Vector<Integer> &input) const {
+    if (input.size() != OM.columns())
+        return false;
+    Vector<Integer> snF = snfRep(input);
+    if (snF.size() != countInvariantFactors() + rank())
+        return false;
     for (const auto& i : snF)
         if (i != 0)
             return false;
     return true;
 }
 
-std::vector<Integer> MarkedAbelianGroup::boundaryMap(
-     const std::vector<Integer> &CCrep) const
-{
-    std::vector<Integer> retval(OM.rows(), Integer::zero);
+Vector<Integer> MarkedAbelianGroup::boundaryMap(const Vector<Integer>& CCrep)
+        const {
+    if (CCrep.size() != OM.columns())
+        throw InvalidArgument(
+            "The argument to boundaryMap() is a vector of the wrong size");
 
-    if (CCrep.size() == OM.columns()) 
-      for (unsigned long i=0; i<OM.rows(); i++)
-    {
-        for (unsigned long j=0; j<OM.columns(); j++) 
-         retval[i] += CCrep[j]*OM.entry(i,j);
-        if (coeff > 0) 
-        { 
+    Vector<Integer> retval = OM * CCrep;
+
+    if (coeff > 0) {
+        for (unsigned long i=0; i<OM.rows(); i++) {
             retval[i] %= coeff;
-            if (retval[i] < 0) retval[i] += coeff;
+            if (retval[i] < 0)
+                retval[i] += coeff;
         }
     }
     return retval;
 }
 
-// routine checks to see if an object in the CC coords for our group is a 
-// boundary, and if so it returns CC coords of what an object that it is a 
-// boundary of.  Null vector is returned if not boundary.  
-std::vector<Integer> MarkedAbelianGroup::writeAsBoundary(
-    const std::vector<Integer> &input) const
-{  
-    if ( !isCycle(input) ) return {};
-    // okay, it's a cycle so lets determine whether or not it is a boundary. 
-    std::vector<Integer> temp(ON.rows(), Integer::zero); 
-    for (unsigned long i=0; i<OMRi.rows(); i++) 
-      for (unsigned long j=0;j<OMRi.columns();j++)
-        temp[i] += OMRi.entry(i,j)*input[j];
+// routine checks to see if an object in the CC coords for our group is a
+// boundary, and if so it returns CC coords of what an object that it is a
+// boundary of.  Null vector is returned if not boundary.
+Vector<Integer> MarkedAbelianGroup::writeAsBoundary(
+        const Vector<Integer>& input) const {
+    if ( !isCycle(input) )
+        throw InvalidArgument("The argument to writeAsBoundary() "
+            "is not a cycle");
+    // okay, it's a cycle so lets determine whether or not it is a boundary.
+    Vector<Integer> temp = OMRi * input;
     for (unsigned long i=0; i<TORVec.size(); i++)
-        if (temp[TORLoc + i] % coeff != 0) return {};
-    // now we know we're dealing with a cycle with zero TOR part (if coeff != 0) 
-    // convert into the diagPres coordinates / standard snfcoords if p==0. 
-    std::vector<Integer> retval(ON.columns(), Integer::zero);
-    if (coeff == 0)
-    {
-        std::vector<Integer> snfV(ornC.rows(), Integer::zero);
-        for (unsigned long i=0;i<ornC.rows();i++) 
-          for (unsigned long j=0;j<ornC.columns();j++)
-            snfV[i] += ornC.entry(i,j)*temp[j+rankOM];
+        if (temp[TORLoc + i] % coeff != 0)
+            throw InvalidArgument("The argument to writeAsBoundary() "
+                "is not a boundary");
+    // now we know we're dealing with a cycle with zero TOR part (if coeff != 0)
+    // convert into the diagPres coordinates / standard snfcoords if p==0.
+    Vector<Integer> retval(ON.columns());
+    if (coeff == 0) {
+        Vector<Integer> snfV(ornC.rows());
+        for (unsigned long i=0;i<ornC.rows();i++)
+            for (unsigned long j=0;j<ornC.columns();j++)
+                snfV[i] += ornC.entry(i,j)*temp[j+rankOM];
         // check divisibility in the invFac coords
-        for (unsigned long i=0; i<ifNum; i++)
-        { if (snfV[i+ifLoc] % InvFacList[i] != 0) return {};
-            snfV[i+ifLoc] /= InvFacList[i]; }
-            // check that it's zero on coords missed by N...
-            for (unsigned long i=0; i<snfrank; i++)
-                if (snfV[i+snffreeindex] != 0) return {};
-            // we know it's in the image now. 
-            for (unsigned long i=0; i<ornR.rows(); i++) 
-              for (unsigned long j=0; j<snffreeindex; j++)
-                retval[i] += ornR.entry(i, j) * snfV[j];  
-    }
-    else 
-    {// find tensorV -- apply otC.
-        std::vector<Integer> tensorV( otC.rows(), Integer::zero);
-        for (unsigned long i=0; i<otC.rows(); i++) 
-          for (unsigned long j=0; j<otC.columns(); j++) 
-            tensorV[i] += otC.entry(i, j) * temp[ j + rankOM ];
-        for (unsigned long i=0; i<tensorIfNum; i++)
-        {
-            if (tensorV[i+tensorIfLoc] % tensorInvFacList[i] != 0) 
-              return {};
+        for (unsigned long i=0; i<ifNum; i++) {
+            if (snfV[i+ifLoc] % InvFacList[i] != 0)
+                throw InvalidArgument("The argument to writeAsBoundary() "
+                    "is not a boundary");
+            snfV[i+ifLoc] /= InvFacList[i];
+        }
+        // check that it's zero on coords missed by N...
+        for (unsigned long i=0; i<snfrank; i++)
+            if (snfV[i+snffreeindex] != 0)
+                throw InvalidArgument("The argument to writeAsBoundary() "
+                    "is not a boundary");
+        // we know it's in the image now.
+        for (unsigned long i=0; i<ornR.rows(); i++)
+            for (unsigned long j=0; j<snffreeindex; j++)
+                retval[i] += ornR.entry(i, j) * snfV[j];
+    } else {
+        // find tensorV -- apply otC.
+        Vector<Integer> tensorV( otC.rows());
+        for (unsigned long i=0; i<otC.rows(); i++)
+            for (unsigned long j=0; j<otC.columns(); j++)
+                tensorV[i] += otC.entry(i, j) * temp[ j + rankOM ];
+        for (unsigned long i=0; i<tensorIfNum; i++) {
+            if (tensorV[i+tensorIfLoc] % tensorInvFacList[i] != 0)
+                throw InvalidArgument("The argument to writeAsBoundary() "
+                    "is not a boundary");
             tensorV[i+tensorIfLoc] /= tensorInvFacList[i];
         }
         // so we know it's where it comes from now...
-        for (unsigned long i=0; i<retval.size(); i++) 
-          for (unsigned long j=0; j<tensorV.size(); j++)
-            retval[i] += otR.entry(i,j) * tensorV[j];
-        // ah! the other coefficients of otR gives the relevant congruence. 
+        for (unsigned long i=0; i<retval.size(); i++)
+            for (unsigned long j=0; j<tensorV.size(); j++)
+                retval[i] += otR.entry(i,j) * tensorV[j];
+        // ah! the other coefficients of otR gives the relevant congruence.
     }
     return retval;
 }
 
 // returns the j+TORLoc -th column of the matrix OMR, rescaled appropriately
 //  if it corresponds to a TOR vector.  
-std::vector<Integer> MarkedAbelianGroup::cycleGen(unsigned long j) const
-{
-    if (j >= minNumberCycleGens()) return {};
-    std::vector<Integer> retval( OM.columns(), Integer::zero);
-    for (unsigned long i=0; i<retval.size(); i++) 
-     retval[i] = OMR.entry(i, j+TORLoc);
+Vector<Integer> MarkedAbelianGroup::cycleGen(unsigned long j) const {
+    if (j >= minNumberCycleGens())
+        throw InvalidArgument("The argument to cycleGen() must be "
+            "less than minNumberCycleGens()");
+    Vector<Integer> retval(OM.columns());
+    for (unsigned long i=0; i<retval.size(); i++)
+        retval[i] = OMR.entry(i, j+TORLoc);
     // if j < TORVec.size() rescale by coeff / gcd(coeff, TORVec[j]
     if (j < TORVec.size())
         for (auto& r : retval)
@@ -687,35 +679,33 @@ std::vector<Integer> MarkedAbelianGroup::cycleGen(unsigned long j) const
     return retval;
 }
 
-std::vector<Integer> MarkedAbelianGroup::cycleProjection( 
-     const std::vector<Integer> &ccelt ) const
-{
+Vector<Integer> MarkedAbelianGroup::cycleProjection(
+        const Vector<Integer>& ccelt) const {
     // multiply by OMRi, truncate, multiply by OMR
-    if (ccelt.size() != OMRi.columns()) return {};
-    std::vector<Integer> retval( OMRi.columns(), Integer::zero );
-    for (unsigned long i=0; i<retval.size(); i++)
-    {
-        for (unsigned long j=rankOM; j<OMRi.rows(); j++) 
-           for (unsigned long k=0; k<ccelt.size(); k++)
-            retval[i] += OMR.entry(i,j) * OMRi.entry(j,k) * ccelt[k];
+    if (ccelt.size() != OMRi.columns())
+        throw InvalidArgument(
+            "The argument to cycleProjection() is a vector of the wrong size");
+    Vector<Integer> retval(OMRi.columns());
+    for (unsigned long i=0; i<retval.size(); i++) {
+        for (unsigned long j=rankOM; j<OMRi.rows(); j++)
+            for (unsigned long k=0; k<ccelt.size(); k++)
+                retval[i] += OMR.entry(i,j) * OMRi.entry(j,k) * ccelt[k];
     }
     return retval;
 }
 
-std::vector<Integer> MarkedAbelianGroup::cycleProjection(
-      unsigned long ccindx ) const
-{
+Vector<Integer> MarkedAbelianGroup::cycleProjection(unsigned long ccindx)
+        const {
     // truncate column cyclenum of OMRi, multiply by OMR
-    if (ccindx >= OMRi.columns()) return {};
-    std::vector<Integer> retval( OMRi.columns(), Integer::zero );
+    if (ccindx >= OMRi.columns())
+        throw InvalidArgument("The argument to cycleProjection() must be "
+            "less than the number of chain complex coordinates");
+    Vector<Integer> retval(OMRi.columns());
     for (unsigned long i=0; i<retval.size(); i++)
-    {
         for (unsigned long j=rankOM; j<OMRi.rows(); j++)
             retval[i] += OMR.entry(i,j) * OMRi.entry(j,ccindx);
-    }
     return retval;
 }
-
 
 // the trivially presented torsion subgroup
 MarkedAbelianGroup MarkedAbelianGroup::torsionSubgroup() const {
@@ -730,7 +720,7 @@ MarkedAbelianGroup MarkedAbelianGroup::torsionSubgroup() const {
 HomMarkedAbelianGroup MarkedAbelianGroup::torsionInclusion() const {
     MatrixInt iM( rankCC(), countInvariantFactors() );
     for (unsigned long j=0; j<iM.columns(); j++) {
-        std::vector<Integer> jtor( torsionRep(j) );
+        Vector<Integer> jtor = torsionRep(j);
         for (unsigned long i=0; i<iM.rows(); i++)
             iM.entry(i,j) = jtor[i];
     }
@@ -861,28 +851,20 @@ void HomMarkedAbelianGroup::swap(HomMarkedAbelianGroup& other) noexcept {
     reducedKernelLattice_.swap(other.reducedKernelLattice_);
 }
 
-void HomMarkedAbelianGroup::computeReducedMatrix()
-{
- if (!reducedMatrix_)
-  {
-   reducedMatrix_ = MatrixInt( codomain_.minNumberOfGenerators(),
-    domain_.minNumberOfGenerators() );
+void HomMarkedAbelianGroup::computeReducedMatrix() {
+    if (!reducedMatrix_) {
+        reducedMatrix_ = MatrixInt( codomain_.minNumberOfGenerators(),
+            domain_.minNumberOfGenerators() );
 
-   for (unsigned long j=0; j<reducedMatrix_->columns(); j++)
-    {
-     std::vector<Integer> colV(
-      (j<domain_.countInvariantFactors()) ?
-       domain_.torsionRep(j) :
-       domain_.freeRep(j-domain_.countInvariantFactors()) );
-     std::vector<Integer> icv( matrix.rows(), Integer::zero);
-     for (unsigned long i=0; i<icv.size(); i++) 
-      for (unsigned long k=0; k<matrix.columns(); k++)
-       icv[i] += matrix.entry(i,k) * colV[k];
-     std::vector<Integer> midge( codomain_.snfRep(icv) );
-     for (unsigned long i=0; i<midge.size(); i++)
-     reducedMatrix_->entry(i,j) = midge[i];
+        for (unsigned long j=0; j<reducedMatrix_->columns(); j++) {
+            Vector<Integer> colV = (j<domain_.countInvariantFactors()) ?
+                domain_.torsionRep(j) :
+                domain_.freeRep(j-domain_.countInvariantFactors());
+            Vector<Integer> midge = codomain_.snfRep(matrix * colV);
+            for (unsigned long i=0; i<midge.size(); i++)
+                reducedMatrix_->entry(i,j) = midge[i];
+        }
     }
-  }
 }
 
 void HomMarkedAbelianGroup::computeReducedKernelLattice() {
@@ -985,31 +967,19 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::operator * (
         matrix * X.matrix);
 }
 
-std::vector<Integer> HomMarkedAbelianGroup::evalCC(
-   const std::vector<Integer> &input) const
-{
-    std::vector<Integer> retval(matrix.rows(), Integer::zero);
-    for (unsigned long i=0; i<retval.size(); i++) 
-      for (unsigned long j=0; j<matrix.columns(); j++)
-        retval[i] += input[j]*matrix.entry(i,j);
-    return retval;
-}
-
-std::vector<Integer> HomMarkedAbelianGroup::evalSNF(
-    const std::vector<Integer> &input) const
-{
+Vector<Integer> HomMarkedAbelianGroup::evalSNF(const Vector<Integer>& input)
+        const {
     const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
-    if (input.size() != domain_.minNumberOfGenerators() ) return {};
-    std::vector<Integer> retval( 
-          codomain_.minNumberOfGenerators(), Integer::zero );
+    if (input.size() != domain_.minNumberOfGenerators() )
+        throw InvalidArgument(
+            "The argument to evalSNF() is a vector of the wrong size");
 
-    for (unsigned long i=0; i<retval.size(); i++) 
-    {
-        for (unsigned long j=0; j<reducedMatrix().columns(); j++)
-            retval[i] += input[j] * reducedMatrix().entry(i,j);
-        if ( i < codomain_.countInvariantFactors() ) {
-            retval[i] %= codomain_.invariantFactor(i);
-            if (retval[i]<0) retval[i] += codomain_.invariantFactor(i); }
+    Vector<Integer> retval = reducedMatrix() * input;
+
+    for (unsigned long i=0; i<codomain_.countInvariantFactors(); ++i) {
+        retval[i] %= codomain_.invariantFactor(i);
+        if (retval[i]<0)
+            retval[i] += codomain_.invariantFactor(i);
     }
     return retval;
 }
@@ -1111,17 +1081,10 @@ bool HomMarkedAbelianGroup::isIdentity() const
     return true;
 }
 
-bool HomMarkedAbelianGroup::isCycleMap() const
-{
+bool HomMarkedAbelianGroup::isCycleMap() const {
     for (unsigned long j=0; j<domain_.minNumberCycleGens(); j++)
-    {
-        std::vector<Integer> cycJ( domain_.cycleGen(j) );
-        std::vector<Integer> FcycJ( codomain_.rankCC(), Integer::zero );
-        for (unsigned long i=0; i<matrix.rows(); i++) 
-          for (unsigned long k=0; k<matrix.columns(); k++)
-            FcycJ[i] += matrix.entry(i,k) * cycJ[k];
-        if (!codomain_.isCycle(FcycJ)) { return false; }
-    }
+        if (! codomain_.isCycle(matrix * domain_.cycleGen(j)))
+            return false;
     return true;
 }
 
@@ -1134,9 +1097,8 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::torsionSubgroup() const {
     MatrixInt mat(codomain_.countInvariantFactors(),
         domain_.countInvariantFactors() );
     for (unsigned long j=0; j<domain_.countInvariantFactors(); j++) {
-        // std::vector<Integer> in codomain's snfRep coords
-        std::vector<Integer> temp(codomain_.snfRep(evalCC(
-            domain_.torsionRep(j))));
+        // vector in codomain's snfRep coords
+        Vector<Integer> temp(codomain_.snfRep(evalCC(domain_.torsionRep(j))));
         for (unsigned long i=0; i<codomain_.countInvariantFactors(); i++)
             mat.entry(i,j) = temp[i];
     }

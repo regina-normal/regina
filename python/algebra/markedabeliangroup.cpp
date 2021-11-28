@@ -73,11 +73,11 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         // the non-vector version.
         .def("ccRep", overload_cast<unsigned long>(
             &MarkedAbelianGroup::ccRep, pybind11::const_))
-        .def("ccRep", overload_cast<const std::vector<Integer>&>(
+        .def("ccRep", overload_cast<const regina::Vector<Integer>&>(
             &MarkedAbelianGroup::ccRep, pybind11::const_))
         .def("cycleProjection", overload_cast<unsigned long>(
             &MarkedAbelianGroup::cycleProjection, pybind11::const_))
-        .def("cycleProjection", overload_cast<const std::vector<Integer>&>(
+        .def("cycleProjection", overload_cast<const regina::Vector<Integer>&>(
             &MarkedAbelianGroup::cycleProjection, pybind11::const_))
         .def("isCycle", &MarkedAbelianGroup::isCycle)
         .def("boundaryMap", &MarkedAbelianGroup::boundaryMap)

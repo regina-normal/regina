@@ -91,7 +91,7 @@ namespace {
                 // Note that the vector is initialised to zero since
                 // this is what LargeInteger's default constructor does.
                 for (size_t i = 0; i < v.size(); ++i)
-                    if ((elements[i] = v[i]) == 0)
+                    if ((elts_[i] = v[i]) == 0)
                         facets_.set(i, true);
             }
 
@@ -122,7 +122,7 @@ namespace {
                             vertex(i % coordsPerTet)->markedIndex()
                             == whichLink) {
                         // A triangular coordinate in our vertex link.
-                        elements[i] = -1;
+                        elts_[i] = -1;
                     } else {
                         // A triangular coordinate not in our vertex link.
                         facets_.set(i, true);
@@ -157,7 +157,7 @@ namespace {
                 LargeInteger negDiff = neg[coord];
 
                 for (size_t i = 0; i < size(); ++i)
-                    if ((elements[i] = neg[i] * posDiff - pos[i] * negDiff)
+                    if ((elts_[i] = neg[i] * posDiff - pos[i] * negDiff)
                             == 0)
                         facets_.set(i, true);
 
@@ -231,17 +231,17 @@ namespace {
                 for (i = 0; i < size(); ++i)
                     if (! link.facets_.get(i)) {
                         if (start) {
-                            max = elements[i];
+                            max = elts_[i];
                             start = false;
-                        } else if (max > elements[i])
-                            max = elements[i];
+                        } else if (max > elts_[i])
+                            max = elts_[i];
                     }
 
                 // If start == true then this next loop is harmless, since
                 // link.facets_.get(i) must always be true.
                 for (i = 0; i < size(); ++i)
                     if (! link.facets_.get(i))
-                        if ((elements[i] -= max) == 0)
+                        if ((elts_[i] -= max) == 0)
                             facets_.set(i, true);
             }
 
@@ -273,7 +273,7 @@ namespace {
             inline int sign(size_t index) const {
                 if (facets_.get(index))
                     return 0;
-                return (elements[index] > 0 ? 1 : -1);
+                return (elts_[index] > 0 ? 1 : -1);
             }
 
             using Vector<LargeInteger>::scaleDown;

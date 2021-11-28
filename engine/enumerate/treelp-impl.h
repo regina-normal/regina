@@ -868,13 +868,13 @@ template <class RayClass>
 RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
         const {
     static_assert(
-        FaithfulAssignment<IntType, typename RayClass::Element>::value,
+        FaithfulAssignment<IntType, typename RayClass::value_type>::value,
         "LPData::extractSolution() requires a RayClass template parameter "
         "whose elements can faithfully store integers of the template "
         "parameter IntType.");
 
     // This next test is to ensure that RayClass zero-initialises its elements.
-    static_assert(IsReginaInteger<typename RayClass::Element>::value,
+    static_assert(IsReginaInteger<typename RayClass::value_type>::value,
         "LPData::extractSolution() requires a RayClass template parameter "
         "that stores one of Regina's own integer types.");
 
@@ -889,7 +889,7 @@ RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
     //
     // First compute this lcm.
     unsigned i;
-    typename RayClass::Element lcm(1);
+    typename RayClass::value_type lcm(1);
     for (i = 0; i < rank_; ++i)
         lcm = lcm.lcm(entry(i, basis_[i]));
 
@@ -908,7 +908,7 @@ RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
     // Because we are multiplying everything by lcm, the
     // divisions in the following code are all perfectly safe
     // (and give precise integer results).
-    typename RayClass::Element coord;
+    typename RayClass::value_type coord;
     for (i = 0; i < rank_; ++i) {
         if (basis_[i] >= v.size())
             continue;

@@ -101,6 +101,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(homology);
     CPPUNIT_TEST(homologyBdry);
+    CPPUNIT_TEST(homologyMarked);
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(fundGroupVsH1);
     CPPUNIT_TEST(zeroEfficiency);
@@ -2062,6 +2063,44 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Boundary H1(tri with projective plane cusps)", 0, 2, 2);
             verifyGroup(cuspedGenusTwoTorus.homologyBdry(),
                 "Boundary H1(cusped solid genus two torus)", 4);
+        }
+
+        void homologyMarked() {
+            // Just one test for now, to test whether MarkedAbelianGroup
+            // is correctly tracking edge classes on a layered solid torus.
+            Triangulation<3> t = Example<3>::lst(3, 5);
+
+            regina::MarkedAbelianGroup g(
+                t.boundaryMap<1>(), t.boundaryMap<2>());
+            if (! g.isZ()) {
+                std::ostringstream msg;
+                msg << "LST has incorrect H1 = " << g.str() << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            regina::Edge<3>* e = t.simplex(0)->edge(0);
+            if (! (e->isBoundary() && e->degree() == 1)) {
+                std::ostringstream msg;
+                msg << "LST has the degree 1 edge in an unexpected "
+                    "location.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            regina::VectorInt v(t.countEdges());
+            v[e->index()] = 1;
+            regina::VectorInt snf = g.snfRep(v);
+            if (snf.size() != 1) {
+                std::ostringstream msg;
+                msg << "H1(LST) gives SNF reps of the wrong size: "
+                    << snf.size();
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (snf[0] != 8 && snf[0] != -8) {
+                std::ostringstream msg;
+                msg << "H1(LST) has the degree 1 edge with the wrong "
+                    "SNF rep: " << snf[0];
+                CPPUNIT_FAIL(msg.str());
+            }
         }
 
         static void verifyFundGroupVsH1(const Triangulation<3>& tri,

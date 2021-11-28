@@ -59,7 +59,7 @@ void HilbertDual::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned initialRows) {
     static_assert(
-        IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
+        IsReginaArbitraryPrecisionInteger<typename RayClass::value_type>::value,
         "HilbertDual::enumerate() requires the RayClass "
         "template parameter to be equal to or derived from Vector<T>, "
         "where T is one of Regina's arbitrary precision integer types.");
@@ -112,7 +112,7 @@ template <class RayClass, class BitmaskType, typename Action>
 void HilbertDual::enumerateUsingBitmask(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned initialRows) {
-    using IntegerType = typename RayClass::Element;
+    using IntegerType = typename RayClass::value_type;
 
     // Get the dimension of the entire space in which we are working.
     // At this point we are guaranteed that the dimension is non-zero.

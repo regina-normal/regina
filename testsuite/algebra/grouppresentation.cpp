@@ -235,9 +235,9 @@ class GroupPresentationTest : public CppUnit::TestFixture {
              * will be mapped to zero.
              */
             for (unsigned long j=0; j<tPres.countGenerators(); j++) {
-                std::vector<Integer> epsilon( tPres.countGenerators() );
+                regina::Vector<Integer> epsilon( tPres.countGenerators() );
                 epsilon[j] = 1;
-                std::vector<Integer> temp( mab.snfRep(epsilon) );
+                regina::Vector<Integer> temp = mab.snfRep(epsilon);
 
                 for (unsigned long k=0; k<M; k++) {
                     // case 1: columns of torsion abelianisations

@@ -1175,13 +1175,10 @@ void HomologicalData::computeTorsionLinkingForm() {
     //            also, we need to find the 2-chains bounding2c
     //            boundary(bounding2c[i]) = orderinh1(pvList[i])*pvList[i]
 
-    std::vector< Integer > tV; // temporary vector for holding dual
-                                     // cc vectors.
-
     std::vector<Integer> ppList; // prime power list
     std::vector< std::pair<Integer, unsigned long> >
         pPrList; // proper prime power list.
-    std::vector< std::vector<Integer> > pvList; // list of vectors
+    std::vector< Vector<Integer> > pvList; // list of vectors
     // the above two lists will have the same length. for each i,
     // pvList[i] will be a vector in the dual h1 homology chain complex, and
     // ppList[i] will be its order.
@@ -1207,7 +1204,7 @@ void HomologicalData::computeTorsionLinkingForm() {
             // now the corresponding vector...
             // this will have to be fac1i * vector corresponding to
             // invariantFactor(i).
-            tV = dmHomology1_->torsionRep(i);
+            Vector<Integer> tV = dmHomology1_->torsionRep(i);
 
             for (k=0; k<tV.size(); k++) tV[k]=fac1i*fac2*tV[k];
 
