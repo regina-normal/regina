@@ -81,6 +81,12 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(boundaryTriangles);
     CPPUNIT_TEST(boundaryBuild);
     CPPUNIT_TEST(edgeAccess);
+    CPPUNIT_TEST(pachner<0>);
+    CPPUNIT_TEST(pachner<1>);
+    CPPUNIT_TEST(pachner<2>);
+    CPPUNIT_TEST(pachner<3>);
+    CPPUNIT_TEST(chainComplex<1>);
+    CPPUNIT_TEST(chainComplex<2>);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(magic);
@@ -116,10 +122,6 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(retriangulation);
     CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
-    CPPUNIT_TEST(pachner<0>);
-    CPPUNIT_TEST(pachner<1>);
-    CPPUNIT_TEST(pachner<2>);
-    CPPUNIT_TEST(pachner<3>);
     CPPUNIT_TEST(minimiseBoundary);
     CPPUNIT_TEST(fillTorus);
     CPPUNIT_TEST(meridianLongitude);
@@ -4318,6 +4320,11 @@ class Triangulation3Test : public TriangulationTest<3> {
             runCensusAllBounded(verifyPachner<k>, true);
             runCensusAllIdeal(verifyPachner<k>, true);
             verifyPachnerSimplicial<k>();
+        }
+
+        template <int k>
+        void chainComplex() {
+            testManualAll(verifyChainComplex<k>);
         }
 
         static void verifyMinimiseBoundaryDoesNothing(

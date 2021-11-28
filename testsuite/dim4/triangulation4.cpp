@@ -77,6 +77,9 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(pachner<2>);
     CPPUNIT_TEST(pachner<3>);
     CPPUNIT_TEST(pachner<4>);
+    CPPUNIT_TEST(chainComplex<1>);
+    CPPUNIT_TEST(chainComplex<2>);
+    CPPUNIT_TEST(chainComplex<3>);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(magic);
@@ -339,6 +342,11 @@ class Triangulation4Test : public TriangulationTest<4> {
             runCensusAllBounded(verifyPachner<k>);
             runCensusAllNoBdry(verifyPachner<k>);
             verifyPachnerSimplicial<k>();
+        }
+
+        template <int k>
+        void chainComplex() {
+            testManualAll(verifyChainComplex<k>);
         }
 
         static void verifyMagic(const Triangulation<4>& t, const char* name) {

@@ -1406,5 +1406,70 @@ class TriangulationTest : public CppUnit::TestFixture {
         void verifyPachnerSimplicial() {
             verifyPachnerDetail<k>(simplicialSphere, true, "Simplicial sphere");
         }
+
+        template <int k>
+        static void verifyChainComplex(const Triangulation<dim>& tri,
+                const char* name) {
+            static_assert(0 < k && k < dim);
+
+            // These tests use homology on the skeleton: invalid or empty
+            // triangulations are explicitly disallowed, and ideal
+            // triangluations will give wrong answers (since the ideal
+            // vertices will not be considered as truncated).
+            if (tri.isEmpty() || ! tri.isValid())
+                return;
+            if (tri.isIdeal())
+                return;
+
+            regina::MatrixInt m = tri.template boundaryMap<k>();
+            regina::MatrixInt n = tri.template boundaryMap<k + 1>();
+
+            if (m.columns() != n.rows()) {
+                std::ostringstream msg;
+                msg << name << ": boundary maps for computing H" << k
+                    << " have incompatible sizes.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! (m * n).isZero()) {
+                std::ostringstream msg;
+                msg << name << ": boundary maps for computing H" << k
+                    << " do not compose to give zero.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            regina::AbelianGroup g1(m, n);
+            regina::MarkedAbelianGroup g2(m, n);
+            if (g1.str() != g2.str()) {
+                std::ostringstream msg;
+                msg << name << ": computing H" << k << " via the "
+                    "chain complex gives " << g1.str()
+                    << " using AbelianGroup, but " << g2.str()
+                    << " using MarkedAbelianGroup.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if constexpr (k == 1) {
+                const auto& h1 = tri.homologyH1();
+                if (g1.str() != h1.str()) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k << " via the "
+                        "chain complex gives " << g1.str()
+                        << ", but homologyH1() gives " << h1.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            if constexpr (k == 2 && (dim == 3 || dim == 4)) {
+                const auto& h2 = tri.homologyH2();
+                if (g1.str() != h2.str()) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k << " via the "
+                        "chain complex gives " << g1.str()
+                        << ", but homologyH2() gives " << h2.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
 };
 
