@@ -3953,13 +3953,15 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void verifyNoDehydration(const Triangulation<3>& tri,
                 const char* name) {
-            std::string dehydrate = tri.dehydrate();
-            if (! dehydrate.empty()) {
+            try {
+                std::string dehydrate = tri.dehydrate();
+
                 std::ostringstream msg;
                 msg << name
                     << ": Should not dehydrate, but instead dehydrates to \""
                     << dehydrate << "\".";
                 CPPUNIT_FAIL(msg.str());
+            } catch (const regina::NotImplemented&) {
             }
         }
 

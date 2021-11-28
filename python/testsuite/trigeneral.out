@@ -836,7 +836,7 @@ Result = True
 Checksum = 662b84caee7f99a6cd6d1d961b94276a
 Barycentric subdivision:
 Checksum = f8914f8f88fb2d7d38e15dfa67946104
-Dehydration: 
+Dehydration: (none)
 Isomorphism signature: dHKcbcchqn
 Result of splitIntoComponents: 1
 
@@ -911,7 +911,7 @@ Result = True
 Checksum = ab2ae3ce95e1091a6c8dae6ad7b2370b
 Barycentric subdivision:
 Checksum = 6a2ca7b0e923ec1f28604165c925160d
-Dehydration: 
+Dehydration: (none)
 Isomorphism signature: cHabj
 Result of splitIntoComponents: 1
 
