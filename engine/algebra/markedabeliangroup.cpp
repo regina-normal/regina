@@ -67,6 +67,10 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
     coeff(Integer::zero), TORLoc(0), TORVec(0), tensorIfLoc(0),
     tensorIfNum(0), tensorInvFacList(0)
 {
+    if (OM.columns() != ON.rows())
+        throw InvalidArgument("The chain complex constructor requires "
+            "M.columns() == N.rows()");
+
     MatrixInt tM(OM);
 
     metricalSmithNormalForm(tM, OMR, OMRi, OMC, OMCi);
@@ -125,6 +129,10 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
         rankOM(0), InvFacList(0), snfrank(0), snffreeindex(0),
         ifNum(0), ifLoc(0), coeff(std::move(pcoeff)),
         TORLoc(0), TORVec(0), tensorIfLoc(0), tensorInvFacList(0) {
+    if (OM.columns() != ON.rows())
+        throw InvalidArgument("The chain complex constructor requires "
+            "M.columns() == N.rows()");
+
     // find SNF(M).
     MatrixInt tM(OM);
 

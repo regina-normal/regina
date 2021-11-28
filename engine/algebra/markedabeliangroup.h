@@ -156,8 +156,15 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * See the class notes for further details.
          *
-         * \pre M.columns() = N.rows().
-         * \pre The product M*N = 0.
+         * \pre M.columns() = N.rows().  This condition will be tested,
+         * and an exception will be thrown if it does not hold.
+         *
+         * \pre The product M*N = 0.  This condition will \e not be tested
+         * (for efficiency reasons); this is left to the user/programmer
+         * to ensure.
+         *
+         * \exception InvalidArgument The number of columns in \a M does
+         * not match the number of rows in \a N.
          *
          * @param M the `right' matrix in the chain complex; that is,
          * the matrix that one takes the kernel of when computing homology.
@@ -170,8 +177,15 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * Creates a marked abelian group from a chain complex with
          * coefficients in Z_p.
          *
-         * \pre M.columns() = N.rows().
-         * \pre The product M*N = 0.
+         * \pre M.columns() = N.rows().  This condition will be tested,
+         * and an exception will be thrown if it does not hold.
+         *
+         * \pre The product M*N = 0.  This condition will \e not be tested
+         * (for efficiency reasons); this is left to the user/programmer
+         * to ensure.
+         *
+         * \exception InvalidArgument The number of columns in \a M does
+         * not match the number of rows in \a N.
          *
          * @param M the `right' matrix in the chain complex; that is,
          * the matrix that one takes the kernel of when computing homology.

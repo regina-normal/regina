@@ -61,6 +61,9 @@ Version 7.0  [ TODO ]
             - Replaced the old addTorsionElement() and addTorsionElements()
               with a simpler and much faster addTorsion().  The old routines
               are kept but deprecated, and are reimplemented using addTorsion().
+            - The chain complex constructors now explicitly check that
+              the two matrices have compatible dimensions, and throw an
+              exception if this is not true.
         Enum AngleAlgFlags, Class AngleAlg:
             - New flags to specifiy angle structure enumeration algorithms.
         Class AngleStructure, AngleStructureVector:
@@ -713,6 +716,9 @@ Version 7.0  [ TODO ]
             - New move constructor.
             - New copy assignment and move assignment operators.
             - Added member and global swap() functions.
+            - The chain complex constructors now explicitly check that
+              the two matrices have compatible dimensions, and throw an
+              exception if this is not true.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
             - Constructors that used to take (const MatrixInt&) arguments

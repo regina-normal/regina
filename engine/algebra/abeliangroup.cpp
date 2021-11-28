@@ -184,6 +184,10 @@ void AbelianGroup::writeXMLData(std::ostream& out) const {
 
 // ---N--> CC --M-->  ie: M*N = 0.
 AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) : rank_(0) {
+    if (M.columns() != N.rows())
+        throw InvalidArgument("The chain complex constructor requires "
+            "M.columns() == N.rows()");
+
     smithNormalForm(N);
 
     // Note: the rank comes from the zero *rows* of N.
@@ -221,6 +225,10 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) : rank_(0) {
 }
 
 AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) {
+    if (M.columns() != N.rows())
+        throw InvalidArgument("The chain complex constructor requires "
+            "M.columns() == N.rows()");
+
     Integer cof(p.abs());
     rank_ = N.rows();
 
