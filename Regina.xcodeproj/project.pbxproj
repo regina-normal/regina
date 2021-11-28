@@ -2016,6 +2016,7 @@
 		05E0F1EE2582429000965440 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFEE258241E100965440 /* libz.tbd */; };
 		05E7DA2C275250BE00B01C09 /* link_complement.c in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA2B275250BE00B01C09 /* link_complement.c */; };
 		05E7DA2D275250BE00B01C09 /* link_complement.c in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA2B275250BE00B01C09 /* link_complement.c */; };
+		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
 		05EA195719F30A0100D37501 /* EltMoves3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMoves3.mm */; };
 		05EBB418259DB49A00362FA5 /* censuslookup in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B011D9DC51600B1E33B /* censuslookup */; };
 		05EBB419259DB49E00362FA5 /* regconcat in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B0C1D9DC52200B1E33B /* regconcat */; };
@@ -4474,6 +4475,7 @@
 		05E0EFEE258241E100965440 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		05E5312E1C53C48600ECEB72 /* simplexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexchooser.h; sourceTree = "<group>"; };
 		05E7DA2B275250BE00B01C09 /* link_complement.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = link_complement.c; sourceTree = "<group>"; };
+		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
 		05EA195519F30A0100D37501 /* EltMoves3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMoves3.h; sourceTree = "<group>"; };
 		05EA195619F30A0100D37501 /* EltMoves3.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EltMoves3.mm; sourceTree = "<group>"; };
 		05F09FBC1DBEF01800117BFC /* dim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2.h; sourceTree = "<group>"; };
@@ -6526,6 +6528,7 @@
 		05431F061C40F213009BC072 /* detail */ = {
 			isa = PBXGroup;
 			children = (
+				05E7DA2E2753A06100B01C09 /* algebra-impl.h */,
 				059BC6671DC7F77F00AB4206 /* boundarycomponent.h */,
 				05C1BE961DCA7C77007C946B /* boundarycomponent-impl.h */,
 				05431F151C40F260009BC072 /* canonical-impl.h */,
@@ -7977,6 +7980,7 @@
 				0512E0A526DF356300DDB222 /* shortarray.h in Headers */,
 				05431F2D1C40F2DB009BC072 /* perm.h in Headers */,
 				052F9EC7180600FB00FAE4DF /* hilbertcd.h in Headers */,
+				05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */,
 				05431F231C40F260009BC072 /* facenumbering.h in Headers */,
 				052F9FDC180600FB00FAE4DF /* snappeatriangulation.h in Headers */,
 				05A067171DFA68190047872E /* layeredchainpair.h in Headers */,
