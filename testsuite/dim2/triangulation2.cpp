@@ -58,6 +58,7 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST(pachner<2>);
 
     // Dimension-specific tests:
+    CPPUNIT_TEST(magic);
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
     CPPUNIT_TEST(orientability);
@@ -163,6 +164,31 @@ class Triangulation2Test : public TriangulationTest<2> {
         void pachner() {
             testManualAll(verifyPachner<k>);
             verifyPachnerSimplicial<k>();
+        }
+
+        static void verifyMagic(const Triangulation<2>& t, const char* name) {
+            std::string sig = t.isoSig();
+
+            {
+                Triangulation<2> recon(sig);
+                if (recon.isoSig() != sig) {
+                    std::ostringstream msg;
+                    msg << name << ": cannot reconstruct from "
+                        "isomorphism signature using magic constructor.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void magic() {
+            testManualAll(verifyMagic);
+
+            try {
+                Triangulation<2> t("INVALID");
+                CPPUNIT_FAIL("The magic constructor did not throw an "
+                    "exception for an invalid triangulation description.");
+            } catch (const regina::InvalidArgument&) {
+            }
         }
 
         void validity() {

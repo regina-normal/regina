@@ -79,6 +79,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(pachner<4>);
 
     // Dimension-specific tests:
+    CPPUNIT_TEST(magic);
     CPPUNIT_TEST(events);
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
@@ -338,6 +339,31 @@ class Triangulation4Test : public TriangulationTest<4> {
             runCensusAllBounded(verifyPachner<k>);
             runCensusAllNoBdry(verifyPachner<k>);
             verifyPachnerSimplicial<k>();
+        }
+
+        static void verifyMagic(const Triangulation<4>& t, const char* name) {
+            std::string sig = t.isoSig();
+
+            {
+                Triangulation<4> recon(sig);
+                if (recon.isoSig() != sig) {
+                    std::ostringstream msg;
+                    msg << name << ": cannot reconstruct from "
+                        "isomorphism signature using magic constructor.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void magic() {
+            testManualAll(verifyMagic);
+
+            try {
+                Triangulation<4> t("INVALID");
+                CPPUNIT_FAIL("The magic constructor did not throw an "
+                    "exception for an invalid triangulation description.");
+            } catch (const regina::InvalidArgument&) {
+            }
         }
 
         void events() {

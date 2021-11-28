@@ -83,6 +83,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(edgeAccess);
 
     // Dimension-specific tests:
+    CPPUNIT_TEST(magic);
     CPPUNIT_TEST(events);
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
@@ -448,6 +449,50 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void boundaryBuild() {
             testManualAll(verifyBoundaryBuild);
+        }
+
+        static void verifyMagic(const Triangulation<3>& t, const char* name) {
+            std::string sig = t.isoSig();
+
+            {
+                Triangulation<3> recon(sig);
+                if (recon.isoSig() != sig) {
+                    std::ostringstream msg;
+                    msg << name << ": cannot reconstruct from "
+                        "isomorphism signature using magic constructor.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            if (t.isConnected() && (! t.hasBoundaryTriangles()) &&
+                    t.size() <= 25) {
+                Triangulation<3> recon(t.dehydrate());
+                if (recon.isoSig() != sig) {
+                    std::ostringstream msg;
+                    msg << name << ": cannot reconstruct from "
+                        "dehydration string using magic constructor.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            if ((! t.isEmpty()) && t.isValid() && ! t.hasBoundaryTriangles()) {
+                Triangulation<3> recon(t.snapPea());
+                if (recon.isoSig() != sig) {
+                    std::ostringstream msg;
+                    msg << name << ": cannot reconstruct from "
+                        "SnapPea data using magic constructor.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void magic() {
+            testManualAll(verifyMagic);
+
+            try {
+                Triangulation<3> t("INVALID");
+                CPPUNIT_FAIL("The magic constructor did not throw an "
+                    "exception for an invalid triangulation description.");
+            } catch (const regina::InvalidArgument&) {
+            }
         }
 
         void events() {
