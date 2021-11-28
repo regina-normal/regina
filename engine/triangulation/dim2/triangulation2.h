@@ -148,8 +148,9 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          *
          * This list may grow in future versions of Regina.
          *
-         * If Regina cannot interpret the given string, this will be
-         * left as the empty triangulation.
+         * \exception InvalidArgument Regina could not interpret the given
+         * string as representing a triangulation using any of the supported
+         * string types.
          *
          * @param description a string that describes a 2-manifold
          * triangulation.

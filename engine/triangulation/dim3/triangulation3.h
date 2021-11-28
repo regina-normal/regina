@@ -288,14 +288,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * This list may grow in future versions of Regina.
          *
-         * If Regina cannot interpret the given string, this will be
-         * left as the empty triangulation.
-         *
          * \warning If you pass the contents of a SnapPea data file,
          * then only the tetrahedron gluings will be read; all other
          * SnapPea-specific information (such as peripheral curves) will
          * be lost.  See fromSnapPea() for details, and for other
          * alternatives that preserve SnapPea-specific data.
+         *
+         * \exception InvalidArgument Regina could not interpret the given
+         * string as representing a triangulation using any of the supported
+         * string types.
          *
          * @param description a string that describes a 3-manifold
          * triangulation.

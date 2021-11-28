@@ -63,6 +63,9 @@ Triangulation<3>::Triangulation(const std::string& description) {
         return;
     } catch (const InvalidArgument&) {
     }
+
+    throw InvalidArgument("The given string could not be interpreted "
+        "as representing a 3-dimensional triangulation");
 }
 
 Triangulation<3>::Triangulation(const Link& link) :
