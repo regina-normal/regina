@@ -2867,12 +2867,16 @@ class LinkTest : public CppUnit::TestFixture {
 
         void rewrite() {
             // The counts here were computed using Regina 6.0 in
-            // single-threaded mode.
+            // single-threaded mode (except for the unknot0 cases, which
+            // were computed by hand).
             //
             // The expected counts should always be positive, so passing
             // an expected count of 0 will be treated as a request to display
             // the number of triangulations that were actually found.
             //
+            verifyRewrite(unknot0, 0, 1, "Unknot (0 crossings)");
+            verifyRewrite(unknot0, 1, 2, "Unknot (0 crossings)");
+            verifyRewrite(unknot0, 2, 6, "Unknot (0 crossings)");
             verifyRewrite(figureEight, 0, 1, "Figure eight");
             verifyRewrite(figureEight, 1, 8, "Figure eight");
             verifyRewrite(figureEight, 2, 137, "Figure eight");

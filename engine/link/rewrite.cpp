@@ -52,10 +52,12 @@ namespace detail {
             if (t.size() == 0) {
                 // We have a zero-crossing unknot.
                 // There is only one move we can perform on this.
-                Link alt(t, false);
-                alt.r1(regina::StrandRef(), 0, 1 /* sign */, false, true);
-                retriang->candidate(std::move(alt), sig);
-                return;
+                if (maxSize > 0) {
+                    Link alt(t, false);
+                    alt.r1(regina::StrandRef(), 0, 1 /* sign */, false, true);
+                    retriang->candidate(std::move(alt), sig);
+                    return;
+                }
             }
 
             // From here we assume >= 1 crossing.
