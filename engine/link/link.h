@@ -1893,12 +1893,11 @@ class Link : public PacketData<Link>, public Output<Link> {
          * action should avoid expensive operations where possible (otherwise
          * it will become a serialisation bottleneck in the multithreading).
          *
-         * \pre This link has at most one component (i.e., it is empty
-         * or it is a knot).
+         * \pre This link has precisely one component (i.e., it is a knot).
          *
-         * \exception FailedPrecondition this link has more than one component.
-         * If a progress tracker was passed, it will be marked as finished
-         * before the exception is thrown.
+         * \exception FailedPrecondition this link is empty or has more than
+         * one component.  If a progress tracker was passed, it will be marked
+         * as finished before the exception is thrown.
          *
          * \apinotfinal
          *
@@ -4712,7 +4711,7 @@ inline bool Link::rewrite(int height, unsigned nThreads,
         if (tracker)
             tracker->setFinished();
         throw FailedPrecondition(
-            "rewrite() requires a link with at most one component");
+            "rewrite() requires a link with exactly one component");
     }
 
     // Use RetriangulateActionTraits to deduce whether the given action takes
@@ -4737,6 +4736,11 @@ inline bool Link::rewrite(int height, unsigned nThreads,
 
 inline bool Link::simplifyExhaustive(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker) {
+    if (isEmpty()) {
+        if (tracker)
+            tracker->setFinished();
+        return false;
+    }
     return rewrite(height, nThreads, tracker,
         [](Link&& alt, Link& original, size_t minCrossings) {
             if (alt.size() < minCrossings) {

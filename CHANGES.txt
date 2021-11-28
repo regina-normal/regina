@@ -657,7 +657,7 @@ Version 7.0  [ TODO ]
               and can take a pure Python function as its action argument.
               It no longer runs in the background (even if a progress tracker
               is passed), and it now requires as a precondition that the link
-              has at most one component (throwing an exception otherwise).
+              has precisely one component (throwing an exception otherwise).
             - Routine simplifyExhaustive() no longer runs in the background
               (even if a progress tracker is passed), and it now throws an
               exception if the link has multiple components.
