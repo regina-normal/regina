@@ -191,7 +191,7 @@ template <int dim>
 template <int subdim>
 MatrixInt TriangulationBase<dim>::boundaryMap() const {
     static_assert(subdim > 0 && subdim <= dim);
-    MatrixInt ans(countFaces<subdim>(), countFaces<subdim - 1>());
+    MatrixInt ans(countFaces<subdim - 1>(), countFaces<subdim>());
 
     if constexpr (subdim == dim) {
         size_t row = 0;
@@ -205,15 +205,15 @@ MatrixInt TriangulationBase<dim>::boundaryMap() const {
                             * subface).sign() > 0) {
                     // The boundary face was not reflected.
                     if (i % 2)
-                        ++ans.entry(row, facet->index());
+                        ++ans.entry(facet->index(), row);
                     else
-                        --ans.entry(row, facet->index());
+                        --ans.entry(facet->index(), row);
                 } else {
                     // The boundary face was reflected.
                     if (i % 2)
-                        --ans.entry(row, facet->index());
+                        --ans.entry(facet->index(), row);
                     else
-                        ++ans.entry(row, facet->index());
+                        ++ans.entry(facet->index(), row);
                 }
 
                 if (i > 0) {
@@ -238,23 +238,23 @@ MatrixInt TriangulationBase<dim>::boundaryMap() const {
                     // (subdim-1)-faces, since these are vertices
                     // (and there is no Perm<1> class).
                     if (i % 2)
-                        ++ans.entry(row, facet->index());
+                        ++ans.entry(facet->index(), row);
                     else
-                        --ans.entry(row, facet->index());
+                        --ans.entry(facet->index(), row);
                 } else if (Perm<subdim>::contract(
                         s->template faceMapping<subdim - 1>(facetNum).inverse()
                             * subface).sign() > 0) {
                     // The boundary face was not reflected.
                     if (i % 2)
-                        ++ans.entry(row, facet->index());
+                        ++ans.entry(facet->index(), row);
                     else
-                        --ans.entry(row, facet->index());
+                        --ans.entry(facet->index(), row);
                 } else {
                     // The boundary face was reflected.
                     if (i % 2)
-                        --ans.entry(row, facet->index());
+                        --ans.entry(facet->index(), row);
                     else
-                        ++ans.entry(row, facet->index());
+                        ++ans.entry(facet->index(), row);
                 }
 
                 if (i > 0) {

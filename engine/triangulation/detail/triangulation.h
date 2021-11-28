@@ -1086,16 +1086,19 @@ class TriangulationBase :
          *   as though they were truncated; instead they are just treated
          *   as 0-faces that appear as part of the chain complex.
          *
-         * In the matrix that is returned, the <i>r</i>th row corresponds to
-         * the <i>r</i>th <i>subdim</i>-face of this triangulation, and
-         * the <i>c</i>th column corresponds to the <i>c</i>th
+         * The matrix that is returned should be thought of as acting on
+         * column vectors.  Specifically, the <i>c</i>th column of the matrix
+         * corresponds to the <i>c</i>th <i>subdim</i>-face of this
+         * triangulation, and the <i>r</i>th row corresponds to the <i>r</i>th
          * (<i>subdim</i>-1)-face of this triangulation.  All faces are
          * oriented according to the permutations returned by
          * Simplex::faceMapping(), or equivalently, by
          * FaceEmbedding::vertices().
          *
          * If you wish to convert these boundary maps to homology groups
-         * yourself, the MarkedAbelianGroup class can help you do this.
+         * yourself, either the AbelianGroup class (if you do not need
+         * to track which face is which) or the MarkedAbelianGroup class
+         * (if you do need to track individual faces) can help you do this.
          *
          * Note that, unlike many of the templated face-related routines,
          * this routine explicitly supports the case \a subdim = \a dim.

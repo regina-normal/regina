@@ -150,9 +150,15 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
     public:
         /**
          * Creates a marked abelian group from a chain complex. This constructor
-         * assumes you're interested in homology with integer coefficents of
-         * the chain complex.  Creates a marked abelian group given by
-         * the quotient of the kernel of \a M modulo the image of \a N.
+         * assumes you are interested in homology with integer coefficents of
+         * the chain complex.
+         * The abelian group is the kernel of \a M modulo the image of \a N.
+         *
+         * The matrices should be thought of as acting on column vectors:
+         * this means that the product <tt>B*A</tt> applies the linear
+         * transformation \a A, then the linear transformation \a B.
+         * This is consistent (for example) with the convention that
+         * Regina uses for for multiplying permutations.
          *
          * See the class notes for further details.
          *
@@ -176,6 +182,13 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         /**
          * Creates a marked abelian group from a chain complex with
          * coefficients in Z_p.
+         * The abelian group is the kernel of \a M modulo the image of \a N.
+         *
+         * The matrices should be thought of as acting on column vectors:
+         * this means that the product <tt>B*A</tt> applies the linear
+         * transformation \a A, then the linear transformation \a B.
+         * This is consistent (for example) with the convention that
+         * Regina uses for for multiplying permutations.
          *
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.

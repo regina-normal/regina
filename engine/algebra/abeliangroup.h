@@ -107,6 +107,13 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
         AbelianGroup(AbelianGroup&&) noexcept = default;
         /**
          * Creates an abelian group as the homology of a chain complex.
+         * The abelian group is the kernel of \a M modulo the image of \a N.
+         *
+         * The matrices should be thought of as acting on column vectors:
+         * this means that the product <tt>B*A</tt> applies the linear
+         * transformation \a A, then the linear transformation \a B.
+         * This is consistent (for example) with the convention that
+         * Regina uses for for multiplying permutations.
          *
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
@@ -127,6 +134,13 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
         /**
          * Creates an abelian group as the homology of a chain complex,
          * using mod-\a p coefficients.
+         * The abelian group is the kernel of \a M modulo the image of \a N.
+         *
+         * The matrices should be thought of as acting on column vectors:
+         * this means that the product <tt>B*A</tt> applies the linear
+         * transformation \a A, then the linear transformation \a B.
+         * This is consistent (for example) with the convention that
+         * Regina uses for for multiplying permutations.
          *
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
