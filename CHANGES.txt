@@ -1299,6 +1299,8 @@ Version 7.0  [ TODO ]
               error, instead of creating a null SnapPea triangulation.
             - Now supports move construction and copy/move assignment.
             - Added member and global swap() functions.
+            - The snapPea() export routines now throw an exception if the
+              triangulation is null, instead of producing empty output.
             - New routine nullify().
             - Added new routine enumerateCovers(), which combines SnapPea's
               find_representations() and construct_cover().

@@ -949,7 +949,7 @@ void SnapPeaTriangulation::disableKernelMessages() {
 
 std::string SnapPeaTriangulation::snapPea() const {
     if (! data_)
-        return std::string();
+        throw SnapPeaIsNull("SnapPeaTriangulation::snapPea");
 
     char* file = regina::snappea::string_triangulation(data_);
     std::string ans(file);
@@ -959,7 +959,7 @@ std::string SnapPeaTriangulation::snapPea() const {
 
 void SnapPeaTriangulation::snapPea(std::ostream& out) const {
     if (! data_)
-        return;
+        throw SnapPeaIsNull("SnapPeaTriangulation::snapPea");
 
     char* file = regina::snappea::string_triangulation(data_);
     out << file;

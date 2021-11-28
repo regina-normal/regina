@@ -1917,8 +1917,7 @@ class SnapPeaTriangulation :
          * should call saveSnapPea() instead (which has better performance, and
          * does not require you to construct an enormous intermediate string).
          *
-         * If this is a null triangulation, then the string returned
-         * will be empty.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
          *
          * @return a string containing the contents of the corresponding
          * SnapPea data file.
@@ -1940,8 +1939,7 @@ class SnapPeaTriangulation :
          * write to a real SnapPea data file on the filesystem, you should call
          * saveSnapPea() (which is also available in Python).
          *
-         * If this is a null triangulation, then nothing will be written
-         * to the output stream.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
          *
          * \ifacespython Not present; instead you can use the variant of
          * snapPea() that takes no arguments and returns a string.
