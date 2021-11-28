@@ -2614,6 +2614,36 @@ class LinkTest : public CppUnit::TestFixture {
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
+
+                // Try building a code with extra separator symbols.
+                auto data = link.pdData();
+
+                std::ostringstream longCode;
+                longCode << "PD[";
+                int i = 0;
+                for (const auto& tuple : data) {
+                    switch (i % 5) {
+                        case 0: longCode << " X(";
+                        case 1: longCode << " Xp {";
+                        case 2: longCode << " Xm[";
+                        case 3: longCode << " P[";
+                        default: longCode << ' ';
+                    }
+                    ++i;
+
+                    for (auto k : tuple)
+                        longCode << ' ' << k << ",\t";
+                    longCode << "), ";
+                }
+                longCode << "] ";
+
+                Link longLink = Link::fromPD(longCode.str());
+                if (longLink.brief() != recon.brief()) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction changes "
+                        "in the presence of extra separators.";
+                    CPPUNIT_FAIL(msg.str());
+                }
             } catch (const regina::InvalidArgument&) {
                 std::ostringstream msg;
                 msg << name << ": cannot reconstruct from code.";

@@ -4046,10 +4046,16 @@ class Link : public PacketData<Link>, public Output<Link> {
          * sequence of 4-tuples of integers, defined by a pair of iterators.
          *
          * In this variant (the string variant), the integers may be
-         * separated by any blocks of non-digit characters, and the string
-         * may containin additional non-digit prefix or suffix characters
-         * (which will be ignored).  Thus the follow strings all
-         * describe the same sequence:
+         * separated by any combination of the following:
+         *
+         * - any whitespace;
+         * - commas;
+         * - open or close round brackets, square brackets and/or braces;
+         * - the special symbols \c PD, \c X, \c Xp, \c Xm and \c P, which are
+         *   used by other sources (such as the Knot Atlas), but which
+         *   are ignored here.
+         *
+         * Thus the follow strings all describe the same sequence:
          *
            \verbatim
            [[1, 5, 2, 4], [3, 1, 4, 6], [5, 3, 6, 2]]
@@ -4057,11 +4063,13 @@ class Link : public PacketData<Link>, public Output<Link> {
            1 5 2 4 3 1 4 6 5 3 6 2
            \endverbatim
          *
-         * Some sources (such as the Knot Atlas) describe special symbols
-         * such as \c Xp, \c Xm and \c P, which change the meaning of the
-         * tuples.  Regina does \e not recognise these special symbols;
-         * any letters that appear in the string will be treated as separating
-         * characters between the integers, and nothing more.
+         * The string may containin separators (as defined above) at the
+         * beginning and/or the end; these will be ignored.
+         *
+         * Note that some sources (again, such as the Knot Atlas) use the
+         * special symbols \c Xp, \c Xm and \c P to change the meaning of the
+         * tuples.  Regina does \e not attribute any meaning to these symbols,
+         * and will treat them as nothing more than separators.
          *
          * \warning If the link contains an unknotted loop that sits
          * completely above all other link components (in other words,
