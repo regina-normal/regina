@@ -1535,6 +1535,9 @@ Version 7.0  [ TODO ]
             - Routine rehydrate() now returns by value, not pointer; also,
               both rehydrate() and insertRehydration() now throw exceptions on
               error instead of indicating this through return values.
+            - Routines dehydrate(), snapPea(), recogniser() and recognizer()
+              now throw an exception if the triangulation is not supported,
+              instead of returning empty output.
             - Routine turaevViro() now always runs in the current thread,
               even if a progress tracker was passed.
             - Both turaevViro() and turaevViroApprox() now use ALG_TREEWIDTH

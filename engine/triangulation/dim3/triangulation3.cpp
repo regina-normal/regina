@@ -300,8 +300,15 @@ std::string Triangulation<3>::snapPea() const {
 
 void Triangulation<3>::snapPea(std::ostream& out) const {
     // Sanity checks.
-    if ((! isValid()) || hasBoundaryTriangles() || simplices_.empty())
-        return;
+    if (! isValid())
+        throw NotImplemented("SnapPea exports are only available "
+            "for valid triangulations");
+    if (hasBoundaryTriangles())
+        throw NotImplemented("SnapPea exports are only available "
+            "for triangulations with no boundary triangles");
+    if (simplices_.empty())
+        throw NotImplemented("SnapPea exports are only available "
+            "for non-empty triangulations");
 
     // Write header information.
     out << "% Triangulation\n";
@@ -353,6 +360,8 @@ void Triangulation<3>::snapPea(std::ostream& out) const {
 
 bool Triangulation<3>::saveSnapPea(const char* filename) const {
     // Sanity checks.
+    // Although snapPea() will also check these conditions, we need to
+    // check them now so if we fail then we do so before the file is opened.
     if ((! isValid()) || hasBoundaryTriangles() || simplices_.empty())
         return false;
 
@@ -377,8 +386,12 @@ std::string Triangulation<3>::recognizer() const {
 
 void Triangulation<3>::recogniser(std::ostream& out) const {
     // Sanity checks.
-    if ((! isValid()) || hasBoundaryTriangles())
-        return;
+    if (! isValid())
+        throw NotImplemented("Recogniser exports are only available "
+            "for valid triangulations");
+    if (hasBoundaryTriangles())
+        throw NotImplemented("Recogniser exports are only available "
+            "for triangulations with no boundary triangles");
 
     // Write the header.
     out << "triangulation" << std::endl;
@@ -415,6 +428,8 @@ void Triangulation<3>::recogniser(std::ostream& out) const {
 
 bool Triangulation<3>::saveRecogniser(const char* filename) const {
     // Sanity checks.
+    // Although recogniser() will also check these conditions, we need to
+    // check them now so if we fail then we do so before the file is opened.
     if ((! isValid()) || hasBoundaryTriangles())
         return false;
 

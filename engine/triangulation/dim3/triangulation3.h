@@ -3076,11 +3076,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
          * 1999.
          *
+         * \exception NotImplemented Either this triangulation is disconnected,
+         * it has boundary triangles, or it contains more than 25 tetrahedra.
+         *
          * @return a dehydrated representation of this triangulation
-         * (or an isomorphic variant of this triangulation), or the
-         * empty string if dehydration is not possible because the
-         * triangulation is disconnected, has boundary triangles or contains
-         * too many tetrahedra.
+         * (or an isomorphic variant of this triangulation).
          */
         std::string dehydrate() const;
 
@@ -3112,9 +3112,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * should call saveSnapPea() instead (which has better performance, and
          * does not require you to construct an enormous intermediate string).
          *
-         * If this triangulation is empty, invalid, or contains boundary
-         * triangles (which SnapPea cannot represent), then the resulting
-         * string will be empty.
+         * SnapPea cannot represent triangulations that are empty, invalid,
+         * or contain boundary triangles.  If any of these conditions is
+         * true then this routine will throw an exception.
+         *
+         * \exception NotImplemented This triangulation is either empty,
+         * invalid, or has boundary triangles.
          *
          * @return a string containing the contents of the corresponding
          * SnapPea data file.
@@ -3148,9 +3151,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * write to a real SnapPea data file on the filesystem, you should call
          * saveSnapPea() (which is also available in Python).
          *
-         * If this triangulation is empty, invalid, or contains boundary
-         * triangles (which SnapPea cannot represent), then nothing will
-         * be written to the output stream.
+         * SnapPea cannot represent triangulations that are empty, invalid,
+         * or contain boundary triangles.  If any of these conditions is
+         * true then this routine will throw an exception.
+         *
+         * \exception NotImplemented This triangulation is either empty,
+         * invalid, or has boundary triangles.
          *
          * \ifacespython Not present, but you can call snapPea() with
          * no arguments which returns this data as a string.
@@ -3182,9 +3188,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   (since Triangulation<3> is not a polymorphic class, and in
          *   particular this function is not virtual).
          *
-         * If this triangulation is empty, invalid, or contains boundary
-         * triangles (which SnapPea cannot represent), then the file
-         * will not be written and this routine will return \c false.
+         * SnapPea cannot represent triangulations that are empty, invalid,
+         * or contain boundary triangles.  If any of these conditions is
+         * true then the file will not be written and this routine will
+         * return \c false.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file \e name, and
@@ -3200,8 +3207,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Returns a string that expresses this triangulation in
          * Matveev's 3-manifold recogniser format.
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * Recogniser exports are currently not available for triangulations
+         * that are invalid or contain boundary triangles.  If either of these
+         * conditions is true then this routine will throw an exception.
+         *
+         * \exception NotImplemented This triangulation is either invalid
+         * or has boundary triangles.
          *
          * @return a string containing the 3-manifold recogniser data.
          */
@@ -3212,8 +3223,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * expresses this triangulation in Matveev's 3-manifold
          * recogniser format.
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * Recogniser exports are currently not available for triangulations
+         * that are invalid or contain boundary triangles.  If either of these
+         * conditions is true then this routine will throw an exception.
+         *
+         * \exception NotImplemented This triangulation is either invalid
+         * or has boundary triangles.
          *
          * @return a string containing the 3-manifold recogniser data.
          */
@@ -3223,8 +3238,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Writes a string expressing this triangulation in Matveev's
          * 3-manifold recogniser format to the given output stream.
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * Recogniser exports are currently not available for triangulations
+         * that are invalid or contain boundary triangles.  If either of these
+         * conditions is true then this routine will throw an exception.
+         *
+         * \exception NotImplemented This triangulation is either invalid
+         * or has boundary triangles.
          *
          * \ifacespython Not present, but you can call recogniser() with
          * no arguments which returns this data as a string.
@@ -3239,8 +3258,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * a string expressing this triangulation in Matveev's
          * 3-manifold recogniser format to the given output stream.
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * Recogniser exports are currently not available for triangulations
+         * that are invalid or contain boundary triangles.  If either of these
+         * conditions is true then this routine will throw an exception.
+         *
+         * \exception NotImplemented This triangulation is either invalid
+         * or has boundary triangles.
          *
          * \ifacespython Not present, but you can call recognizer() with
          * no arguments which returns this data as a string.
@@ -3254,8 +3277,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Writes this triangulation to the given file in Matveev's
          * 3-manifold recogniser format.
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * Recogniser exports are currently not available for triangulations
+         * that are invalid or contain boundary triangles.  If either of these
+         * conditions is true then the file will not be written, and
+         * this routine will return \c false.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file \e name, and
