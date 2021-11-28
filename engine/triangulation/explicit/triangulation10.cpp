@@ -60,6 +60,9 @@ template MatrixInt TriangulationBase<10>::boundaryMap<8>() const;
 template MatrixInt TriangulationBase<10>::boundaryMap<9>() const;
 template MatrixInt TriangulationBase<10>::boundaryMap<10>() const;
 
+template const AbelianGroup& TriangulationBase<10>::homology() const;
+template const GroupPresentation& TriangulationBase<10>::fundamentalGroup() const;
+
 template void TriangulationBase<10>::calculateSkeleton();
 template void TriangulationBase<10>::clearBaseProperties();
 template void TriangulationBase<10>::swapBaseData(TriangulationBase<10>&);

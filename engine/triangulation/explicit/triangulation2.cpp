@@ -51,6 +51,9 @@ template size_t TriangulationBase<2>::isoSigComponentSize(const std::string&);
 template MatrixInt TriangulationBase<2>::boundaryMap<1>() const;
 template MatrixInt TriangulationBase<2>::boundaryMap<2>() const;
 
+template const AbelianGroup& TriangulationBase<2>::homology() const;
+template const GroupPresentation& TriangulationBase<2>::fundamentalGroup() const;
+
 template void TriangulationBase<2>::calculateSkeleton();
 template void TriangulationBase<2>::clearBaseProperties();
 template void TriangulationBase<2>::swapBaseData(TriangulationBase<2>&);
