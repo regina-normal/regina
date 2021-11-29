@@ -67,13 +67,12 @@ class SurfaceFilterProperties;
  * - declarations and implementations of the virtual functions
  *   SurfaceFilter::filterType() and SurfaceFilter::filterTypeName();
  *
- * @param class_ the name of this descendant class of SurfaceFilter.
  * @param id the corresponding SurfaceFilterType constant.
  * @param name a human-readable name for this filter type.
  *
  * \ingroup surfaces
  */
-#define REGINA_SURFACE_FILTER(class_, id, name) \
+#define REGINA_SURFACE_FILTER(id, name) \
     public: \
         static constexpr const SurfaceFilterType filterTypeID = id; \
         inline SurfaceFilterType filterType() const override { \
@@ -180,8 +179,7 @@ class SurfaceFilter : public Packet {
  * \ingroup surfaces
  */
 class SurfaceFilterCombination : public SurfaceFilter {
-    REGINA_SURFACE_FILTER(SurfaceFilterCombination, NS_FILTER_COMBINATION,
-        "Combination filter")
+    REGINA_SURFACE_FILTER(NS_FILTER_COMBINATION, "Combination filter")
 
     private:
         bool usesAnd_;
@@ -288,8 +286,7 @@ void swap(SurfaceFilterCombination& a, SurfaceFilterCombination& b);
  * \ingroup surfaces
  */
 class SurfaceFilterProperties : public SurfaceFilter {
-    REGINA_SURFACE_FILTER(SurfaceFilterProperties, NS_FILTER_PROPERTIES,
-        "Filter by basic properties")
+    REGINA_SURFACE_FILTER(NS_FILTER_PROPERTIES, "Filter by basic properties")
 
     private:
         std::set<LargeInteger> eulerChar_;
