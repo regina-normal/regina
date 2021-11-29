@@ -1470,6 +1470,45 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
             }
+
+            regina::AbelianGroup g1z2(m, n, 2);
+            regina::MarkedAbelianGroup g2z2(m, n, 2);
+            if (g1z2.str() != g2z2.str()) {
+                std::ostringstream msg;
+                msg << name << ": computing H" << k
+                    << " with Z_2 coefficients via the chain complex gives "
+                    << g1z2.str() << " using AbelianGroup, but "
+                    << g2z2.str() << " using MarkedAbelianGroup.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (g1z2.rank() != 0) {
+                std::ostringstream msg;
+                msg << name << ": computing H" << k
+                    << " with Z_2 coefficients via the chain complex gives "
+                    "a group with non-trivial rank " << g1z2.rank();
+                CPPUNIT_FAIL(msg.str());
+            }
+            size_t z2rank = g1z2.countInvariantFactors();
+            for (size_t i = 0; i < z2rank; ++i)
+                if (g1z2.invariantFactor(i) != 2) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k
+                        << " with Z_2 coefficients via the chain complex gives "
+                        "an unexpected invariant factor "
+                        << g1z2.invariantFactor(i);
+                    CPPUNIT_FAIL(msg.str());
+                }
+            if constexpr (k == 2 && dim == 3) {
+                unsigned long h2 = tri.homologyH2Z2();
+                if (h2 != z2rank) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k
+                        << " with Z_2 coefficients via the chain complex "
+                        "gives Z_2 rank " << z2rank
+                        << ", but homologyH2Z2() gives " << h2 << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
         }
 };
 
