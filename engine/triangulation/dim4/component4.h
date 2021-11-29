@@ -72,7 +72,6 @@ namespace regina {
  */
 template <>
 class Component<4> : public detail::ComponentBase<4>,
-        public alias::FaceOfTriangulation<Component<4>, 4>,
         public alias::FacesOfTriangulation<Component<4>, 4> {
     private:
         std::vector<Tetrahedron<4>*> tetrahedra_;
@@ -89,25 +88,11 @@ class Component<4> : public detail::ComponentBase<4>,
 
     public:
         /**
-         * A dimension-specific alias for size().
-         *
-         * See size() for further information.
-         */
-        size_t countPentachora() const;
-
-        /**
          * A dimension-specific alias for simplices().
          *
          * See simplices() for further information.
          */
         auto pentachora() const;
-
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        Pentachoron<4>* pentachoron(size_t index) const;
 
         /**
          * Returns the number of <i>subdim</i>-faces in this component.
@@ -242,16 +227,8 @@ class Component<4> : public detail::ComponentBase<4>,
 inline Component<4>::Component() : detail::ComponentBase<4>(), ideal_(false) {
 }
 
-inline size_t Component<4>::countPentachora() const {
-    return size();
-}
-
 inline auto Component<4>::pentachora() const {
     return simplices();
-}
-
-inline Pentachoron<4>* Component<4>::pentachoron(size_t index) const {
-    return simplex(index);
 }
 
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.

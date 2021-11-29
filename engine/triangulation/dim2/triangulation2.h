@@ -173,29 +173,11 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
         /*@{*/
 
         /**
-         * A dimension-specific alias for size().
-         *
-         * See size() for further information.
-         */
-        size_t countTriangles() const;
-        /**
          * A dimension-specific alias for simplices().
          *
          * See simplices() for further information.
          */
         auto triangles() const;
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        Triangle<2>* triangle(size_t index);
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        const Triangle<2>* triangle(size_t index) const;
         /**
          * A dimension-specific alias for newSimplex().
          *
@@ -453,20 +435,8 @@ inline Triangulation<2>::~Triangulation() {
     clearAllProperties();
 }
 
-inline size_t Triangulation<2>::countTriangles() const {
-    return size();
-}
-
 inline auto Triangulation<2>::triangles() const {
     return simplices();
-}
-
-inline Triangle<2>* Triangulation<2>::triangle(size_t index) {
-    return simplex(index);
-}
-
-inline const Triangle<2>* Triangulation<2>::triangle(size_t index) const {
-    return simplex(index);
 }
 
 inline Triangle<2>* Triangulation<2>::newTriangle() {

@@ -72,7 +72,6 @@ namespace regina {
  */
 template <>
 class Component<3> : public detail::ComponentBase<3>,
-        public alias::FaceOfTriangulation<Component<3>, 3>,
         public alias::FacesOfTriangulation<Component<3>, 3> {
     private:
         std::vector<Triangle<3>*> triangles_;
@@ -87,25 +86,11 @@ class Component<3> : public detail::ComponentBase<3>,
 
     public:
         /**
-         * A dimension-specific alias for size().
-         *
-         * See size() for further information.
-         */
-        size_t countTetrahedra() const;
-
-        /**
          * A dimension-specific alias for simplices().
          *
          * See simplices() for further information.
          */
         auto tetrahedra() const;
-
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        Tetrahedron<3>* tetrahedron(size_t index) const;
 
         /**
          * Returns the number of <i>subdim</i>-faces in this component.
@@ -236,16 +221,8 @@ class Component<3> : public detail::ComponentBase<3>,
 inline Component<3>::Component() : detail::ComponentBase<3>(), ideal_(false) {
 }
 
-inline size_t Component<3>::countTetrahedra() const {
-    return size();
-}
-
 inline auto Component<3>::tetrahedra() const {
     return simplices();
-}
-
-inline Tetrahedron<3>* Component<3>::tetrahedron(size_t index) const {
-    return simplex(index);
 }
 
 // Hide specialisations from doxygen, since it cannot handle them.

@@ -140,11 +140,13 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<dim>::edge,
             pybind11::return_value_policy::reference_internal)
-        .def("triangle", &Triangulation<dim>::triangle,
+        .def("triangle", overload_cast<size_t>(&Triangulation<dim>::triangle),
             pybind11::return_value_policy::reference_internal)
-        .def("tetrahedron", &Triangulation<dim>::tetrahedron,
+        .def("tetrahedron",
+            overload_cast<size_t>(&Triangulation<dim>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
-        .def("pentachoron", &Triangulation<dim>::pentachoron,
+        .def("pentachoron",
+            overload_cast<size_t>(&Triangulation<dim>::pentachoron),
             pybind11::return_value_policy::reference_internal)
         .def("isEmpty", &Triangulation<dim>::isEmpty)
         .def("isValid", &Triangulation<dim>::isValid)

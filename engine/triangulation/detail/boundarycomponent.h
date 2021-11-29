@@ -81,7 +81,6 @@ template <int dim>
 class BoundaryComponentBase :
         public Output<BoundaryComponentBase<dim>>,
         public alias::FacesOfTriangulation<BoundaryComponentBase<dim>, dim>,
-        public alias::FaceOfTriangulation<BoundaryComponentBase<dim>, dim>,
         public MarkedElement {
     public:
         static constexpr int dimension = dim;
@@ -264,6 +263,77 @@ class BoundaryComponentBase :
         }
 
         /**
+         * A dimension-specific alias for countFaces<0>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * See countFaces() for further information.
+         */
+        size_t countVertices() const {
+            static_assert(standardDim(dim), "countVertices() is only available "
+                "for boundary components in standard dimensions.");
+            return countFaces<0>();
+        }
+
+        /**
+         * A dimension-specific alias for countFaces<1>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * See countFaces() for further information.
+         */
+        size_t countEdges() const {
+            static_assert(standardDim(dim), "countEdges() is only available "
+                "for boundary components in standard dimensions.");
+            return countFaces<1>();
+        }
+
+        /**
+         * A dimension-specific alias for countFaces<2>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         *
+         * See countFaces() for further information.
+         */
+        size_t countTriangles() const {
+            static_assert(standardDim(dim) && dim >= 3,
+                "countTriangles() is only available "
+                "for boundary components in standard dimensions dim >= 3.");
+            return countFaces<2>();
+        }
+
+        /**
+         * A dimension-specific alias for countFaces<3>().
+         *
+         * This alias is only available for dimensions \a dim = 4 and 5.
+         *
+         * See countFaces() for further information.
+         */
+        size_t countTetrahedra() const {
+            static_assert((standardDim(dim) && dim >= 4) || dim == 5,
+                "countTetrahedra() is only available for boundary components "
+                "in dimensions dim = 4 or 5.");
+            return countFaces<3>();
+        }
+
+        /**
+         * A dimension-specific alias for countFaces<4>().
+         *
+         * This alias is only available for dimensions \a dim = 5 and 6.
+         *
+         * See countFaces() for further information.
+         */
+        size_t countPentachora() const {
+            static_assert(dim == 5 || dim == 6, "countPentachora() is only "
+                "available for boundary components in dimensions "
+                "dim = 5 or 6.");
+            return countFaces<4>();
+        }
+
+        /**
          * Returns an object that allows iteration through and random access
          * to all (<i>dim</i>-1)-faces in this boundary component.
          *
@@ -389,6 +459,76 @@ class BoundaryComponentBase :
                 "BoundaryComponent::face() cannot be used with this "
                 "(dim, subdim) combination.");
             return std::get<tupleIndex(subdim)>(faces_)[index];
+        }
+
+        /**
+         * A dimension-specific alias for face<0>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * See face() for further information.
+         */
+        Face<dim, 0>* vertex(size_t index) const {
+            static_assert(standardDim(dim), "vertex() is only available "
+                "for boundary components in standard dimensions.");
+            return face<0>(index);
+        }
+
+        /**
+         * A dimension-specific alias for face<1>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * See face() for further information.
+         */
+        Face<dim, 1>* edge(size_t index) const {
+            static_assert(standardDim(dim), "edge() is only available "
+                "for boundary components in standard dimensions.");
+            return face<1>(index);
+        }
+
+        /**
+         * A dimension-specific alias for face<2>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 2>* triangle(size_t index) const {
+            static_assert(standardDim(dim) && dim >= 3,
+                "triangle() is only available "
+                "for boundary components in standard dimensions dim >= 3.");
+            return face<2>(index);
+        }
+
+        /**
+         * A dimension-specific alias for face<3>().
+         *
+         * This alias is only available for dimension \a dim = 4.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 3>* tetrahedron(size_t index) const {
+            static_assert(standardDim(dim) && dim >= 4,
+                "tetrahedron() is only available for "
+                "boundary components in dimension dim = 4.");
+            return face<3>(index);
+        }
+
+        /**
+         * A dimension-specific alias for face<4>().
+         *
+         * This alias is only available for dimension \a dim = 5.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 4>* pentachoron(size_t index) const {
+            static_assert(dim == 5, "pentachoron() is only available for "
+                "boundary components in dimension dim = 5.");
+            return face<4>(index);
         }
 
         /**

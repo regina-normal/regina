@@ -136,9 +136,10 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<4>::edge,
             pybind11::return_value_policy::reference_internal)
-        .def("triangle", &Triangulation<4>::triangle,
+        .def("triangle", overload_cast<size_t>(&Triangulation<4>::triangle),
             pybind11::return_value_policy::reference_internal)
-        .def("tetrahedron", &Triangulation<4>::tetrahedron,
+        .def("tetrahedron",
+            overload_cast<size_t>(&Triangulation<4>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
         .def("isIdenticalTo", &Triangulation<4>::isIdenticalTo)
         .def("isIsomorphicTo", &Triangulation<4>::isIsomorphicTo)

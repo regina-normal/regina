@@ -133,7 +133,6 @@ class TriangulationBase :
         public Snapshottable<Triangulation<dim>>,
         public PacketData<Triangulation<dim>>,
         public Output<Triangulation<dim>>,
-        public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
         public alias::FacesOfTriangulation<TriangulationBase<dim>, dim> {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
@@ -592,6 +591,51 @@ class TriangulationBase :
         size_t countFaces(int subdim) const;
 
         /**
+         * A dimension-specific alias for countFaces<0>().
+         *
+         * This alias is available for all dimensions \a dim.
+         *
+         * See countFaces() for further information.
+         */
+        size_t countVertices() const;
+
+        /**
+         * A dimension-specific alias for countFaces<1>().
+         *
+         * This alias is available for all dimensions \a dim.
+         *
+         * See countFaces() for further information.
+         */
+        size_t countEdges() const;
+
+        /**
+         * A dimension-specific alias for countFaces<2>().
+         *
+         * This alias is available for all dimensions \a dim.
+         *
+         * See countFaces() for further information.
+         */
+        size_t countTriangles() const;
+
+        /**
+         * A dimension-specific alias for countFaces<3>().
+         *
+         * This alias is available for dimensions \a dim &ge; 3.
+         *
+         * See countFaces() for further information.
+         */
+        size_t countTetrahedra() const;
+
+        /**
+         * A dimension-specific alias for countFaces<4>().
+         *
+         * This alias is available for dimensions \a dim &ge; 4.
+         *
+         * See countFaces() for further information.
+         */
+        size_t countPentachora() const;
+
+        /**
          * Returns the f-vector of this triangulation, which counts the
          * number of faces of all dimensions.
          *
@@ -811,6 +855,95 @@ class TriangulationBase :
          * @return the requested face.
          */
         auto face(int subdim, size_t index) const;
+
+        /**
+         * A dimension-specific alias for face<0>().
+         *
+         * This alias is available for all dimensions \a dim.
+         * It returns a vertex pointer.
+         *
+         * See face() for further information.
+         */
+        auto vertex(size_t index) const;
+
+        /**
+         * A dimension-specific alias for face<1>().
+         *
+         * This alias is available for all dimensions \a dim.
+         * It returns an edge pointer.
+         *
+         * See face() for further information.
+         */
+        auto edge(size_t index) const;
+
+        /**
+         * A dimension-specific alias for face<2>(), or an alias for
+         * simplex() in dimension \a dim = 2.
+         *
+         * This alias is available for all dimensions \a dim.
+         * It returns non-const triangle pointer.
+         *
+         * See face() for further information.
+         */
+        auto triangle(size_t index);
+
+        /**
+         * A dimension-specific alias for face<2>(), or an alias for
+         * simplex() in dimension \a dim = 2.
+         *
+         * This alias is available for all dimensions \a dim.
+         * It returns const triangle pointer in dimension \a dim = 2,
+         * and a non-const triangle pointer in all higher dimensions.
+         *
+         * See face() for further information.
+         */
+        auto triangle(size_t index) const;
+
+        /**
+         * A dimension-specific alias for face<3>(), or an alias for
+         * simplex() in dimension \a dim = 3.
+         *
+         * This alias is available for dimensions \a dim &ge; 3.
+         * It returns non-const tetrahedron pointer.
+         *
+         * See face() for further information.
+         */
+        auto tetrahedron(size_t index);
+
+        /**
+         * A dimension-specific alias for face<3>(), or an alias for
+         * simplex() in dimension \a dim = 3.
+         *
+         * This alias is available for dimensions \a dim &ge; 3.
+         * It returns const tetrahedron pointer in dimension \a dim = 3,
+         * and a non-const tetrahedron pointer in all higher dimensions.
+         *
+         * See face() for further information.
+         */
+        auto tetrahedron(size_t index) const;
+
+        /**
+         * A dimension-specific alias for face<4>(), or an alias for
+         * simplex() in dimension \a dim = 4.
+         *
+         * This alias is available for dimensions \a dim &ge; 4.
+         * It returns non-const pentachoron pointer.
+         *
+         * See face() for further information.
+         */
+        auto pentachoron(size_t index);
+
+        /**
+         * A dimension-specific alias for face<4>(), or an alias for
+         * simplex() in dimension \a dim = 4.
+         *
+         * This alias is available for dimensions \a dim &ge; 4.
+         * It returns const pentachoron pointer in dimension \a dim = 4,
+         * and a non-const pentachoron pointer in all higher dimensions.
+         *
+         * See face() for further information.
+         */
+        auto pentachoron(size_t index) const;
 
         /*@}*/
         /**
@@ -2980,6 +3113,35 @@ inline size_t TriangulationBase<dim>::countFaces(int subdim) const {
 }
 
 template <int dim>
+inline size_t TriangulationBase<dim>::countVertices() const {
+    return countFaces<0>();
+}
+
+template <int dim>
+inline size_t TriangulationBase<dim>::countEdges() const {
+    return countFaces<1>();
+}
+
+template <int dim>
+inline size_t TriangulationBase<dim>::countTriangles() const {
+    return countFaces<2>();
+}
+
+template <int dim>
+inline size_t TriangulationBase<dim>::countTetrahedra() const {
+    static_assert(dim >= 3, "countTetrahedra() is only available "
+        "for triangulations of dimension >= 3.");
+    return countFaces<3>();
+}
+
+template <int dim>
+inline size_t TriangulationBase<dim>::countPentachora() const {
+    static_assert(dim >= 4, "countPentachora() is only available "
+        "for triangulations of dimension >= 4.");
+    return countFaces<4>();
+}
+
+template <int dim>
 inline std::vector<size_t> TriangulationBase<dim>::fVector() const {
     ensureSkeleton();
     return std::apply([this](auto&&... kFaces) {
@@ -3088,6 +3250,72 @@ inline auto TriangulationBase<dim>::face(int subdim, size_t index) const {
         throw InvalidArgument("face(): unsupported face dimension");
 
     return faceImpl(subdim, index, std::make_integer_sequence<int, dim>());
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::vertex(size_t index) const {
+    return face<0>(index);
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::edge(size_t index) const {
+    return face<1>(index);
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::triangle(size_t index) {
+    if constexpr (dim == 2)
+        return simplex(index);
+    else
+        return face<2>(index);
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::triangle(size_t index) const {
+    if constexpr (dim == 2)
+        return simplex(index);
+    else
+        return face<2>(index);
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::tetrahedron(size_t index) {
+    static_assert(dim >= 3, "tetrahedron() is only available "
+        "for triangulations of dimension >= 3.");
+    if constexpr (dim == 3)
+        return simplex(index);
+    else
+        return face<3>(index);
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::tetrahedron(size_t index) const {
+    static_assert(dim >= 3, "tetrahedron() is only available "
+        "for triangulations of dimension >= 3.");
+    if constexpr (dim == 3)
+        return simplex(index);
+    else
+        return face<3>(index);
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::pentachoron(size_t index) {
+    static_assert(dim >= 4, "pentachoron() is only available "
+        "for triangulations of dimension >= 4.");
+    if constexpr (dim == 4)
+        return simplex(index);
+    else
+        return face<4>(index);
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::pentachoron(size_t index) const {
+    static_assert(dim >= 4, "pentachoron() is only available "
+        "for triangulations of dimension >= 4.");
+    if constexpr (dim == 4)
+        return simplex(index);
+    else
+        return face<4>(index);
 }
 
 template <int dim>

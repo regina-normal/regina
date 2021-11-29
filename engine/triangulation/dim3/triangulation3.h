@@ -423,29 +423,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /*@{*/
 
         /**
-         * A dimension-specific alias for size().
-         *
-         * See size() for further information.
-         */
-        size_t countTetrahedra() const;
-        /**
          * A dimension-specific alias for simplices().
          *
          * See simplices() for further information.
          */
         auto tetrahedra() const;
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        Tetrahedron<3>* tetrahedron(size_t index);
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        const Tetrahedron<3>* tetrahedron(size_t index) const;
         /**
          * A dimension-specific alias for newSimplex().
          *
@@ -3596,20 +3578,8 @@ inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
         Triangulation<3>(copy, true) {
 }
 
-inline size_t Triangulation<3>::countTetrahedra() const {
-    return size();
-}
-
 inline auto Triangulation<3>::tetrahedra() const {
     return simplices();
-}
-
-inline Tetrahedron<3>* Triangulation<3>::tetrahedron(size_t index) {
-    return simplex(index);
-}
-
-inline const Tetrahedron<3>* Triangulation<3>::tetrahedron(size_t index) const {
-    return simplex(index);
 }
 
 inline Tetrahedron<3>* Triangulation<3>::newTetrahedron() {

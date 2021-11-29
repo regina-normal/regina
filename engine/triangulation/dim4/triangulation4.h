@@ -215,29 +215,11 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         /*@{*/
 
         /**
-         * A dimension-specific alias for size().
-         *
-         * See size() for further information.
-         */
-        size_t countPentachora() const;
-        /**
          * A dimension-specific alias for simplices().
          *
          * See simplices() for further information.
          */
         auto pentachora() const;
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        Pentachoron<4>* pentachoron(size_t index);
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        const Pentachoron<4>* pentachoron(size_t index) const;
         /**
          * A dimension-specific alias for newSimplex().
          *
@@ -1040,20 +1022,8 @@ inline Triangulation<4>::~Triangulation() {
     clearAllProperties();
 }
 
-inline size_t Triangulation<4>::countPentachora() const {
-    return size();
-}
-
 inline auto Triangulation<4>::pentachora() const {
     return simplices();
-}
-
-inline Pentachoron<4>* Triangulation<4>::pentachoron(size_t index) {
-    return simplex(index);
-}
-
-inline const Pentachoron<4>* Triangulation<4>::pentachoron(size_t index) const {
-    return simplex(index);
 }
 
 inline Pentachoron<4>* Triangulation<4>::newPentachoron() {
