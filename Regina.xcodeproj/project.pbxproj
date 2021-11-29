@@ -2017,6 +2017,8 @@
 		05E7DA2C275250BE00B01C09 /* link_complement.c in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA2B275250BE00B01C09 /* link_complement.c */; };
 		05E7DA2D275250BE00B01C09 /* link_complement.c in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA2B275250BE00B01C09 /* link_complement.c */; };
 		05E7DA2F2753A06100B01C09 /* algebra-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA2E2753A06100B01C09 /* algebra-impl.h */; };
+		05E7DA312755019600B01C09 /* markedabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA302755019600B01C09 /* markedabeliangroup.cpp */; };
+		05E7DA322755019600B01C09 /* markedabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA302755019600B01C09 /* markedabeliangroup.cpp */; };
 		05EA195719F30A0100D37501 /* EltMoves3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMoves3.mm */; };
 		05EBB418259DB49A00362FA5 /* censuslookup in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B011D9DC51600B1E33B /* censuslookup */; };
 		05EBB419259DB49E00362FA5 /* regconcat in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B0C1D9DC52200B1E33B /* regconcat */; };
@@ -4476,6 +4478,7 @@
 		05E5312E1C53C48600ECEB72 /* simplexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexchooser.h; sourceTree = "<group>"; };
 		05E7DA2B275250BE00B01C09 /* link_complement.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = link_complement.c; sourceTree = "<group>"; };
 		05E7DA2E2753A06100B01C09 /* algebra-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "algebra-impl.h"; sourceTree = "<group>"; };
+		05E7DA302755019600B01C09 /* markedabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = markedabeliangroup.cpp; sourceTree = "<group>"; };
 		05EA195519F30A0100D37501 /* EltMoves3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMoves3.h; sourceTree = "<group>"; };
 		05EA195619F30A0100D37501 /* EltMoves3.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EltMoves3.mm; sourceTree = "<group>"; };
 		05F09FBC1DBEF01800117BFC /* dim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2.h; sourceTree = "<group>"; };
@@ -7519,6 +7522,7 @@
 				05CAED55274F777400D0A35C /* abeliangroup.cpp */,
 				05772F1F270CFC1B00D26D8A /* covers.cpp */,
 				05FB46C61DD92CF500BB00E5 /* grouppresentation.cpp */,
+				05E7DA302755019600B01C09 /* markedabeliangroup.cpp */,
 				05A73CB919B2F14B0099C617 /* testalgebra.h */,
 			);
 			path = algebra;
@@ -9176,6 +9180,7 @@
 				05A6A66D258AD0FB00A05E70 /* polynomial.cpp in Sources */,
 				0591E8501C4F777100793A9C /* facetpairing4.cpp in Sources */,
 				05431F971C40F527009BC072 /* perm.cpp in Sources */,
+				05E7DA312755019600B01C09 /* markedabeliangroup.cpp in Sources */,
 				052FA1061806088B00FAE4DF /* census3.cpp in Sources */,
 				05772F26270CFC3400D26D8A /* perm6.cpp in Sources */,
 				053CAB161DA4A50700A92F98 /* anglestructures.cpp in Sources */,
@@ -9608,6 +9613,7 @@
 				05431FA01C40F544009BC072 /* facenumbering.cpp in Sources */,
 				05772ECE270CF99C00D26D8A /* xmlsnappeawriter.cpp in Sources */,
 				0586426B19D92D550019E056 /* SurfacesMatching.mm in Sources */,
+				05E7DA322755019600B01C09 /* markedabeliangroup.cpp in Sources */,
 				05249ECE1DBC16D6001FE29E /* pyforeign.cpp in Sources */,
 				05C1BEB81DCA7CB3007C946B /* boundary2.cpp in Sources */,
 				052FA23B180612DD00FAE4DF /* unix_file_io.c in Sources */,
