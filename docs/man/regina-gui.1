@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGINA-GUI" "1" "13 March 2021" "" "The Regina Handbook"
+.TH "REGINA-GUI" "1" "29 November 2021" "" "The Regina Handbook"
 
 .SH NAME
 regina-gui \- Regina's graphical user interface
@@ -24,6 +24,42 @@ Python bindings and a low-level C++ programming interface.
 This starts the full graphical user interface, and is the usual
 way of starting Regina.  Any files passed on the command-line
 will be opened on startup.
+.SH "ENVIRONMENT VARIABLES"
+.PP
+The following environment variables influence the behaviour of
+this program.
+.TP
+\fB\fIREGINA_PYLIBDIR\fB\fR
+The directory containing the Python module
+\fIregina\fR\&.
+
+If you have installed Regina's Python module in a standard
+Python location (i.e., Python can import it directly without
+extending sys.path), then
+\fIREGINA_PYLIBDIR\fR should be left empty or undefined.
+
+Normally you should not need to set this option yourself.
+This program should know how to find Regina's Python module
+in standard situations, which include
+fixed filesystem installations (e.g., \fBGNU/Linux\fR and \fBWindows\fR),
+relocatable app bundles (e.g., \fBmacOS\fR),
+and running directly from the source tree.
+.TP
+\fB\fIREGINA_HOME\fB\fR
+The directory beneath which Regina's data files are installed.
+These include (amongst other things) example files in
+\fI$REGINA_HOME/examples/\fR,
+API documentation in
+\fI$REGINA_HOME/engine-docs/\fR,
+and census databases in
+\fI$REGINA_HOME/data/census/\fR\&.
+
+Normally you should not need to set this option yourself.
+This program should know how to find its data files in standard
+situations, which include
+fixed filesystem installations (e.g., \fBGNU/Linux\fR and \fBWindows\fR),
+relocatable app bundles (e.g., \fBmacOS\fR),
+and running directly from the source tree.
 .SH "MACOS USERS"
 .PP
 If you downloaded a drag-and-drop app bundle, this is the

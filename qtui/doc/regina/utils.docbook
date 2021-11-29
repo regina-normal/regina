@@ -153,8 +153,7 @@
 
   <refnamediv>
    <refname>dgt</refname>
-   <refpurpose>Triangulate a 3-manifold or 4-manifold
-    from a framed link</refpurpose>
+   <refpurpose>Triangulate a 3-manifold or 4-manifold from a framed link</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
@@ -202,7 +201,7 @@
    </warning>
    <para>
     For more information, see the full &dgt; manual, available from
-    <ulink url='https://raburke.github.io/'/>.
+    <ulink url='https://raburke.github.io/'></ulink>.
    </para>
   </refsect1>
 
