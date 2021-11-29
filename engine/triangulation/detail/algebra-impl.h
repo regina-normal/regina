@@ -204,13 +204,13 @@ MatrixInt TriangulationBase<dim>::boundaryMap() const {
                         s->template faceMapping<dim - 1>(i).inverse()
                             * subface).sign() > 0) {
                     // The boundary face was not reflected.
-                    if (i % 2)
+                    if (i % 2 == 0)
                         ++ans.entry(facet->index(), row);
                     else
                         --ans.entry(facet->index(), row);
                 } else {
                     // The boundary face was reflected.
-                    if (i % 2)
+                    if (i % 2 == 0)
                         --ans.entry(facet->index(), row);
                     else
                         ++ans.entry(facet->index(), row);
@@ -237,7 +237,7 @@ MatrixInt TriangulationBase<dim>::boundaryMap() const {
                     // We do not need to worry about orientation of
                     // (subdim-1)-faces, since these are vertices
                     // (and there is no Perm<1> class).
-                    if (i % 2)
+                    if (i % 2 == 0)
                         ++ans.entry(facet->index(), row);
                     else
                         --ans.entry(facet->index(), row);
@@ -245,13 +245,13 @@ MatrixInt TriangulationBase<dim>::boundaryMap() const {
                         s->template faceMapping<subdim - 1>(facetNum).inverse()
                             * subface).sign() > 0) {
                     // The boundary face was not reflected.
-                    if (i % 2)
+                    if (i % 2 == 0)
                         ++ans.entry(facet->index(), row);
                     else
                         --ans.entry(facet->index(), row);
                 } else {
                     // The boundary face was reflected.
-                    if (i % 2)
+                    if (i % 2 == 0)
                         --ans.entry(facet->index(), row);
                     else
                         ++ans.entry(facet->index(), row);

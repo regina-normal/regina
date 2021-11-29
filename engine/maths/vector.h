@@ -233,7 +233,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * @param data the elements of the vector.
          */
         inline Vector(std::initializer_list<T> data) :
-                elts_(new T[data.size]), end_(elts_ + data.size()) {
+                elts_(new T[data.size()]), end_(elts_ + data.size()) {
             std::copy(data.begin(), data.end(), elts_);
         }
         /**
