@@ -127,17 +127,13 @@ public:
     }
     
     void print_edges() {
-        std::cout << "[\n";
-
         for (const auto& [vert, nbrs] : adjList) {
             for (int i=0; i<dim+1; i++) {
                 if ((vert < nbrs[i]) && (std::get<1>(vert) != 0)) {
-                    std::cout << "(" << vert << ", " << nbrs[i] << ", " << i << "),\n";
+                    std::cout << "[" << vert << ", " << nbrs[i] << ", " << i << "],\n";
                 }
             }
         }
-
-        std::cout << "]\n";
     }
         
     void disjoint_union(graph<dim> h) {
@@ -584,97 +580,58 @@ std::vector<int> pdc_orientations(pdcode code) {
 
     // TODO: Swap signs to be consistent with SnapPy (Currently just reflecting)
     
-    std::vector<int> orientations;
-    std::set<std::pair<int, int>> seen;
-    std::set<std::pair<int, int>> end_seen;
-    std::vector<std::array<int, 4>> inout(code.size(), {0,0,0,0});
-
     std::array<int, 4> negative = {1,-1,-1,1};
     std::array<int, 4> positive = {1,1,-1,-1};
+    
+    long pdlen = code.size();
 
-    for (int i=0; i<code.size(); i++) {
-        std::set<int> xset(begin(code[i]),end(code[i]));
-        if (xset.size() == 4) {
-            inout[i][0] = 1;
-            inout[i][2] = -1;
-            seen.insert(std::make_pair(code[i][0], 1));
-            seen.insert(std::make_pair(code[i][2], -1));
-            for (int j=0; j<code.size(); j++) {
-                if (i!=j) {
-                    if (code[i][2]==code[j][1]) {
-                        inout[j][1] = 1;
-                        inout[j][3] = -1;
-                        seen.insert(std::make_pair(code[j][1], 1));
-                        seen.insert(std::make_pair(code[j][3], -1));
-                    }
-                    else if (code[i][2]==code[j][3]) {
-                        inout[j][3] = 1;
-                        inout[j][1] = -1;
-                        seen.insert(std::make_pair(code[j][3], 1));
-                        seen.insert(std::make_pair(code[j][1], -1));
-                    }
-                    else if (code[i][0]==code[j][1]) {
-                        inout[j][1] = -1;
-                        inout[j][3] = 1;
-                        seen.insert(std::make_pair(code[j][1], -1));
-                        seen.insert(std::make_pair(code[j][3], 1));
-                    }
-                    else if (code[i][0]==code[j][3]) {
-                        inout[j][3] = -1;
-                        inout[j][1] = 1;
-                        seen.insert(std::make_pair(code[j][1], 1));
-                        seen.insert(std::make_pair(code[j][3], -1));
+    std::vector<std::array<int, 4>> orientations_extended(pdlen,{0,0,0,0});
+    
+    std::map<std::pair<int, int>, std::pair<int, int>> pairingIndexMap;
+    
+    std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> tempPairingList;
+
+    for (int a=0; a<pdlen; a++) {
+        for (int b=0; b<4; b++) {
+            for (int c=0; c<pdlen; c++) {
+                for (int d=0; d<4; d++) {
+                    if ((code[c][d] == code[a][b]) && (std::make_pair(a, b) != std::make_pair(c, d))) {
+                        pairingIndexMap.insert(std::make_pair(std::make_pair(a, b),std::make_pair(c, d)));
                     }
                 }
             }
+        }
+    }
+  
+    std::pair<int, int> pairingIndex(0,0);
+
+    int ocounter = 0;
+
+    for (int L=0; L<pdlen; L++) {
+        if (orientations_extended[L][0] == 0) {
+            ocounter = 0;
+            pairingIndex = std::make_pair(L, 0);
             
-        }
-        else if (xset.size() == 3) {
-            if (code[i][1] == code[i][2]) {
-                // (x,y,y,z)
-                inout[i] = positive;
-            }
-            else if (code[i][0] == code[i][3]) {
-                // (x,y,z,x)
-                inout[i] = positive;
-            }
-            else if (code[i][0] == code[i][1]) {
-                // (x,x,y,z)
-                inout[i] = negative;
-            }
-            else if (code[i][2] == code[i][3]) {
-                // (x,y,z,z)
-                inout[i] = negative;
+            while (ocounter<2*pdlen) {
+                
+                orientations_extended[pairingIndex.first][pairingIndex.second] = 1;
+                pairingIndex.second = (pairingIndex.second+2)%4;
+                orientations_extended[pairingIndex.first][pairingIndex.second] = -1;
+                pairingIndex = pairingIndexMap[pairingIndex];
+
+                ++ocounter;
+
             }
         }
     }
 
-    for (int i=0; i<code.size()*2; i++) {
-        end_seen.insert(std::make_pair(i+1, 1));
-        end_seen.insert(std::make_pair(i+1, -1));
-    }
-    
-    std::set<std::pair<int, int>> undecided;
-    
-    std::set_difference(end_seen.begin(), end_seen.end(), seen.begin(), seen.end(),
-        std::inserter(undecided, undecided.end()));
-    
-    for (const auto& elem : undecided) {
-        for (int i=0; i<code.size(); i++) {
-            for (int j=0; j<4; j++) {
-                if ((code[i][j] == elem.first) && (inout[i][j] != -1*elem.second)) {
-                    inout[i][j] = elem.second;
-                }
-            }
-        }
-    }
-    undecided.clear();
-    
-    for (const auto& elem : inout) {
-        if (elem == positive) {
+    std::vector<int> orientations;
+
+    for (const auto& x : orientations_extended) {
+        if (x == positive) {
             orientations.push_back(1);
         }
-        else if (elem == negative) {
+        else if (x == negative) {
             orientations.push_back(-1);
         }
     }
@@ -917,6 +874,7 @@ int main(int argc, char* argv[]) {
     negCurlA.from_simple_edges(negCurlA_el);
     negCurlB.from_simple_edges(negCurlB_el);
 
+    int dim_flag_int = 4; // Default to build a 4-manifold.
     bool output_type = false;
     bool bdy_type = false;
     /*
@@ -935,38 +893,29 @@ int main(int argc, char* argv[]) {
      */
     
     if (argc < 2) {
-        std::cout << "Please provide at least a single dimension flag (3 or 4). Optional: output type flag (isomorphism signature or graph edge list); \"boundary\" type (ideal or real).\n";
+        std::cout << "Please provide at least a single dimension flag: -3, --dim3, -4, or --dim4.\nOptional:\nOutput type: -g or --graph for graph edge list (default is isomorphism signature).\nBoundary type: -r or --real to build triangulation with real boundary (default is with ideal boundary, or closed depending on manifold).\n";
         exit(0);
     }
-    
-    if (argc == 3) {
-        if (std::string(argv[2]).find('g') != std::string::npos) {
-            output_type = true;
+    else if (2 <= argc && argc < 5) {
+        for (int i=1; i<argc; ++i) {
+            std::string arg = argv[i];
+            if (!strcmp(argv[i], "-g") || !strcmp(argv[i], "--graph")) {
+                output_type = true;
+            }
+            else if (!strcmp(argv[i], "-r") || !strcmp(argv[i], "--real")) {
+                bdy_type = true;
+            }
+            else if (!strcmp(argv[i], "-3") || !strcmp(argv[i], "--dim3")) {
+                dim_flag_int = 3;
+            }
+            else if (!strcmp(argv[i], "-4") || !strcmp(argv[i], "--dim4")) {
+                dim_flag_int = 4;
+            }
+            else {
+                std::cout << "Invalid dimension or option: " << argv[i] <<".\n";
+                exit(0);
+            }
         }
-        if (std::string(argv[2]).find('r') != std::string::npos) {
-            bdy_type = true;
-        }
-    }
-    if (argc == 4) {
-        if (std::string(argv[2]).find('g') != std::string::npos) {
-            output_type = true;
-        }
-        if (std::string(argv[3]).find('r') != std::string::npos) {
-            bdy_type = true;
-        }
-    }
-    
-    std::string dim_flag = argv[1];
-    int dim_flag_int;
-    if (std::string(argv[1]).find('3') != std::string::npos) {
-        dim_flag_int = 3;
-    }
-    else if (std::string(argv[1]).find('4') != std::string::npos) {
-        dim_flag_int = 4;
-    }
-    else {
-        std::cout << "Inavlid dimension. DGT is for 3 and 4 manifolds only.\n";
-        exit(0);
     }
     
     pdcode pdcTmp;
@@ -1098,19 +1047,22 @@ int main(int argc, char* argv[]) {
     for (int i=0; i<numComps; i++) {
         long w = compWrithes[i];
         if (w > inputFramingVect[i]) {
+            std::cout << "Self-framing component " << i << "...\n";
             do {
                 tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, -1, false, true);
                 --w;
             } while (w != inputFramingVect[i]);
         } else if (w < inputFramingVect[i]) {
+            std::cout << "Self-framing component " << i << "...\n";
             do {
                 tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, 1, false, true);
                 ++w;
             } while (w != inputFramingVect[i]);
         }
+        // If building a 4-manifold:
         // Check number of crossings in i-th component: if < |framing|+2, suggest adding pair of cancelling twists (in order to guarantee existence of a quadricolour).
-        if (compCrossingNums[i] < abs(inputFramingVect[i])+2) {
-            std::cout << "Adding additional pair of cancelling twists to this component to guarantee existence of a quadricolour...\n";
+        if ((dim_flag_int == 4) && (compCrossingNums[i] < abs(inputFramingVect[i])+2)) {
+            std::cout << "Adding additional pair of cancelling curls to component " << i << " to guarantee existence of a quadricolour...\n";
             tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, 1, false, true);
             tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, -1, false, true);
         }
@@ -1132,7 +1084,15 @@ int main(int argc, char* argv[]) {
 
     std::vector<std::pair<int, int>> pdc_xot = pdc_xotype(pdc);
 
+    long total_crossing_counter = 1;
     for (auto p : pdc_xot) {
+        if (total_crossing_counter < 10) {
+            std::cout << total_crossing_counter << "     ";
+        }
+        else {
+            std::cout << total_crossing_counter << "    ";
+        }
+        ++total_crossing_counter;
         if ((p.first == 0) && (p.second == 1)) {
             std::cout << "Generating Positive Crossing...\n";
             pdc_g.disjoint_union(posCross);
