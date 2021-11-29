@@ -73,6 +73,7 @@
   <!ENTITY csv "<acronym>CSV</acronym>">
   <!ENTITY cython "<application>Cython</application>">
   <!ENTITY debian "<application>Debian</application>">
+  <!ENTITY dgt "<application><acronym>DGT</acronym></application>">
   <!ENTITY dmanifold "<replaceable>d</replaceable>-manifold">
   <!ENTITY dsimplex "<replaceable>d</replaceable>-simplex">
   <!ENTITY dsimplices "<replaceable>d</replaceable>-simplices">
@@ -111,6 +112,7 @@
   <!ENTITY orb "<application>Orb</application>">
   <!ENTITY orbcasson "&orb; / &casson;">
   <!ENTITY orburl "<ulink url='http://www.ms.unimelb.edu.au/~snap/orb.html'>&orb;</ulink>">
+  <!ENTITY plink "<application>PLink</application>">
   <!ENTITY pdf "<acronym>PDF</acronym>">
   <!ENTITY poincare "Poincar&eacute;">
   <!ENTITY ppirr
@@ -127,6 +129,7 @@
    <application>Fedora</application>">
   <!ENTITY rpm "<acronym>RPM</acronym>">
   <!ENTITY s1 "S<superscript>1</superscript>">
+  <!ENTITY s3 "S<superscript>3</superscript>">
   <!ENTITY SFSLong "Seifert Fibred Space">
   <!ENTITY sfslong "Seifert fibred space">
   <!ENTITY snappea "<application>SnapPea</application>">
