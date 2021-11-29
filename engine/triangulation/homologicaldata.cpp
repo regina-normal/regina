@@ -1530,7 +1530,7 @@ void HomologicalData::computeTorsionLinkingForm() {
                     incrun=true; // tells while loop to increment at incind
 
                     while (incrun) {
-                        groupV[incind] = (groupV[incind] + Integer::one)
+                        groupV[incind] = (groupV[incind] + 1)
                             % ProperPrimePower[incind];
                         if (groupV[incind] == 0) {
                             incind++;
