@@ -15,6 +15,7 @@
 #include <set>
 #include <algorithm>
 #include <cctype>
+#include <cstring>
 #include <stack>
 #include <string>
 #include <sstream>
