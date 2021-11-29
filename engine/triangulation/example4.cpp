@@ -36,6 +36,31 @@
 
 namespace regina {
 
+Triangulation<4> Example<4>::cp2() {
+    // Built by Rhuaidi Burke using DGT from a Kirby diagram of the
+    // standard CP^2.
+    return Triangulation<4>::fromGluings(4, {
+        { 0, 0, 0, {1,0,2,3,4} }, { 0, 2, 0, {2,0,4,3,1} },
+        { 0, 3, 1, {0,1,2,3,4} }, { 1, 0, 2, {0,1,2,3,4} },
+        { 1, 1, 3, {0,1,2,3,4} }, { 1, 2, 1, {2,0,4,3,1} },
+        { 2, 1, 2, {0,4,2,3,1} }, { 2, 2, 3, {1,2,4,3,0} },
+        { 2, 3, 3, {1,0,2,3,4} }, { 3, 0, 3, {2,1,0,3,4} }});
+}
+
+Triangulation<4> Example<4>::s2xs2() {
+    // Built by Rhuaidi Burke using DGT from a Kirby diagram of the
+    // standard S2 x S2.
+    return Triangulation<4>::fromGluings(6, {
+        { 0, 0, 0, {4,1,2,3,0} }, { 0, 1, 0, {0,2,1,3,4} },
+        { 0, 3, 1, {0,1,2,3,4} }, { 1, 0, 2, {0,1,2,3,4} },
+        { 1, 1, 3, {0,1,2,3,4} }, { 1, 2, 2, {4,2,1,3,0} },
+        { 1, 4, 3, {0,1,2,3,4} }, { 2, 2, 2, {1,2,4,3,0} },
+        { 2, 3, 4, {0,1,2,3,4} }, { 3, 0, 3, {2,4,1,3,0} },
+        { 3, 3, 5, {0,1,2,3,4} }, { 4, 0, 4, {1,0,2,3,4} },
+        { 4, 2, 4, {1,2,4,3,0} }, { 5, 0, 5, {2,4,1,3,0} },
+        { 5, 1, 5, {0,4,2,3,1} }});
+}
+
 Triangulation<4> Example<4>::rp4() {
     Triangulation<4> ans;
 

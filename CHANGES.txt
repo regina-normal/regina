@@ -270,6 +270,8 @@ Version 7.0  [ TODO ]
             - Renamed poincareHomologySphere() to poincare().  The old name
               is kept but deprecated.
             - Added sfsOverSphere() and layeredLoop().
+        Class Example<4>:
+            - Added cp2() and s2xs2().
         Class Face<dim, subdim>:
             - New compile-time constants allowsNonOrientableLinks and
               allowsInvalidFaces.
@@ -1802,6 +1804,9 @@ Version 7.0  [ TODO ]
         - Gave some of the standard system icons (open, save, close, etc.)
           a long-awaited refresh.
     UTILITIES:
+        dgt:
+            - New utility for building triangulations from framed links.
+              Thanks to Rhuaidi Burke.
         regconvert:
             - Added options -3 and -7 to support old and new XML file formats.
         retriangulate:
