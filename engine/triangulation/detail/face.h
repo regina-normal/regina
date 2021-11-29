@@ -300,7 +300,6 @@ template <int dim, int subdim>
 class FaceBase :
         public FaceNumbering<dim, subdim>,
         public MarkedElement,
-        public alias::FaceOfSimplex<FaceBase<dim, subdim>, dim, subdim - 1>,
         public Output<Face<dim, subdim>> {
     static_assert(dim >= 2, "Face requires dimension >= 2.");
 
@@ -746,6 +745,51 @@ class FaceBase :
         Face<dim, lowerdim>* face(int face) const;
 
         /**
+         * A dimension-specific alias for face<0>().
+         *
+         * This alias is available for all facial dimensions \a subdim.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 0>* vertex(int i) const;
+
+        /**
+         * A dimension-specific alias for face<1>().
+         *
+         * This alias is available for all facial dimensions \a subdim.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 1>* edge(int i) const;
+
+        /**
+         * A dimension-specific alias for face<2>().
+         *
+         * This alias is available for facial dimensions \a subdim &ge; 3.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 2>* triangle(int i) const;
+
+        /**
+         * A dimension-specific alias for face<3>().
+         *
+         * This alias is available for facial dimensions \a subdim &ge; 4.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 3>* tetrahedron(int i) const;
+
+        /**
+         * A dimension-specific alias for face<4>().
+         *
+         * This alias is available for facial dimensions \a subdim &ge; 5.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 4>* pentachoron(int i) const;
+
+        /**
          * Examines the given <i>lowerdim</i>-dimensional subface of this face,
          * and returns the mapping between the underlying <i>lowerdim</i>-face
          * of the triangulation and the individual vertices of this face.
@@ -801,6 +845,51 @@ class FaceBase :
          */
         template <int lowerdim>
         Perm<dim + 1> faceMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<0>().
+         *
+         * This alias is available for all facial dimensions \a subdim.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> vertexMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<1>().
+         *
+         * This alias is available for all facial dimensions \a subdim.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> edgeMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<2>().
+         *
+         * This alias is available for facial dimensions \a subdim &ge; 3.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> triangleMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<3>().
+         *
+         * This alias is available for facial dimensions \a subdim &ge; 4.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> tetrahedronMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<4>().
+         *
+         * This alias is available for facial dimensions \a subdim &ge; 5.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> pentachoronMapping(int face) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -1024,6 +1113,37 @@ inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
 }
 
 template <int dim, int subdim>
+inline Face<dim, 0>* FaceBase<dim, subdim>::vertex(int i) const {
+    return face<0>(i);
+}
+
+template <int dim, int subdim>
+inline Face<dim, 1>* FaceBase<dim, subdim>::edge(int i) const {
+    return face<1>(i);
+}
+
+template <int dim, int subdim>
+inline Face<dim, 2>* FaceBase<dim, subdim>::triangle(int i) const {
+    static_assert(subdim >= 3, "triangle() is only available "
+        "for faces of dimension >= 3.");
+    return face<2>(i);
+}
+
+template <int dim, int subdim>
+inline Face<dim, 3>* FaceBase<dim, subdim>::tetrahedron(int i) const {
+    static_assert(subdim >= 4, "tetrahedron() is only available "
+        "for faces of dimension >= 4.");
+    return face<3>(i);
+}
+
+template <int dim, int subdim>
+inline Face<dim, 4>* FaceBase<dim, subdim>::pentachoron(int i) const {
+    static_assert(subdim >= 5, "pentachoron() is only available "
+        "for faces of dimension >= 5.");
+    return face<4>(i);
+}
+
+template <int dim, int subdim>
 template <int lowerdim>
 Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
     // Let S be the dim-simplex corresponding to the first embedding,
@@ -1055,6 +1175,37 @@ Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
         }
 
     return p;
+}
+
+template <int dim, int subdim>
+inline Perm<dim + 1> FaceBase<dim, subdim>::vertexMapping(int face) const {
+    return faceMapping<0>(face);
+}
+
+template <int dim, int subdim>
+inline Perm<dim + 1> FaceBase<dim, subdim>::edgeMapping(int face) const {
+    return faceMapping<1>(face);
+}
+
+template <int dim, int subdim>
+inline Perm<dim + 1> FaceBase<dim, subdim>::triangleMapping(int face) const {
+    static_assert(subdim >= 3, "triangleMapping() is only available "
+        "for faces of dimension >= 3.");
+    return faceMapping<2>(face);
+}
+
+template <int dim, int subdim>
+inline Perm<dim + 1> FaceBase<dim, subdim>::tetrahedronMapping(int face) const {
+    static_assert(subdim >= 4, "tetrahedronMapping() is only available "
+        "for faces of dimension >= 4.");
+    return faceMapping<3>(face);
+}
+
+template <int dim, int subdim>
+inline Perm<dim + 1> FaceBase<dim, subdim>::pentachoronMapping(int face) const {
+    static_assert(subdim >= 5, "pentachoronMapping() is only available "
+        "for faces of dimension >= 5.");
+    return faceMapping<4>(face);
 }
 
 template <int dim, int subdim>
