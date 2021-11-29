@@ -101,18 +101,18 @@ print("------------------------------------")
 print()
 
 try:
-	print(g1.snfRep(VectorInt([-6,0,0,0,5])))
+	print(g1.snfRep([-6,0,0,0,5]))
 except InvalidArgument as e:
 	print('Not in kernel')
-print(g1.snfRep(VectorInt([-6,0,0,0,6])))
-print(g1.snfRep(VectorInt([-4,2,-2,0,4])))
-print(g1.snfRep(VectorInt([-8,-2,2,0,8])))
-print(g1.snfRep(VectorInt([0,6,-6,0,0])))
+print(g1.snfRep([-6,0,0,0,6]))
+print(g1.snfRep([-4,2,-2,0,4]))
+print(g1.snfRep([-8,-2,2,0,8]))
+print(g1.snfRep([0,6,-6,0,0]))
 
 try:
-	print(g2.snfRep(VectorInt([0,-3,-1,3,0])))
+	print(g2.snfRep([0,-3,-1,3,0]))
 except InvalidArgument as e:
 	print('Not in kernel')
-print(g2.snfRep(VectorInt([0,-3,-1,3,1])))
-print(g2.snfRep(VectorInt([-3,0,-1,3,1])))
+print(g2.snfRep([0,-3,-1,3,1]))
+print(g2.snfRep([-3,0,-1,3,1]))
 

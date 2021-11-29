@@ -98,5 +98,8 @@ void addVectorInt(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(VectorInt&, VectorInt&))(regina::swap));
+
+    pybind11::implicitly_convertible<std::vector<int>, VectorInt>();
+    pybind11::implicitly_convertible<std::vector<regina::Integer>, VectorInt>();
 }
 

@@ -98,5 +98,9 @@ void addVectorLarge(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(VectorLarge&, VectorLarge&))(regina::swap));
+
+    pybind11::implicitly_convertible<std::vector<int>, VectorLarge>();
+    pybind11::implicitly_convertible<std::vector<regina::LargeInteger>,
+        VectorLarge>();
 }
 
