@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "regina-config.h" // for REGINA_HIGHDIM
 #include "packet/packettype.h"
 #include "../helpers.h"
 

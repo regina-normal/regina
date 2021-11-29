@@ -234,13 +234,6 @@ template class XMLWriter<Triangulation<5>>;
 template class XMLWriter<Triangulation<6>>;
 template class XMLWriter<Triangulation<7>>;
 template class XMLWriter<Triangulation<8>>;
-template class XMLWriter<Triangulation<9>>;
-template class XMLWriter<Triangulation<10>>;
-template class XMLWriter<Triangulation<11>>;
-template class XMLWriter<Triangulation<12>>;
-template class XMLWriter<Triangulation<13>>;
-template class XMLWriter<Triangulation<14>>;
-template class XMLWriter<Triangulation<15>>;
 
 template std::string PacketData<Triangulation<3>>::anonID() const;
 template std::string PacketData<Triangulation<4>>::anonID() const;
@@ -252,13 +245,6 @@ template void PacketOf<Triangulation<5>>::addPacketRefs(PacketRefs&) const;
 template void PacketOf<Triangulation<6>>::addPacketRefs(PacketRefs&) const;
 template void PacketOf<Triangulation<7>>::addPacketRefs(PacketRefs&) const;
 template void PacketOf<Triangulation<8>>::addPacketRefs(PacketRefs&) const;
-template void PacketOf<Triangulation<9>>::addPacketRefs(PacketRefs&) const;
-template void PacketOf<Triangulation<10>>::addPacketRefs(PacketRefs&) const;
-template void PacketOf<Triangulation<11>>::addPacketRefs(PacketRefs&) const;
-template void PacketOf<Triangulation<12>>::addPacketRefs(PacketRefs&) const;
-template void PacketOf<Triangulation<13>>::addPacketRefs(PacketRefs&) const;
-template void PacketOf<Triangulation<14>>::addPacketRefs(PacketRefs&) const;
-template void PacketOf<Triangulation<15>>::addPacketRefs(PacketRefs&) const;
 
 template void PacketOf<Triangulation<2>>::writeXMLPacketData(std::ostream&,
     FileFormat, bool, PacketRefs&) const;
@@ -274,6 +260,24 @@ template void PacketOf<Triangulation<7>>::writeXMLPacketData(std::ostream&,
     FileFormat, bool, PacketRefs&) const;
 template void PacketOf<Triangulation<8>>::writeXMLPacketData(std::ostream&,
     FileFormat, bool, PacketRefs&) const;
+
+#ifdef REGINA_HIGHDIM
+template class XMLWriter<Triangulation<9>>;
+template class XMLWriter<Triangulation<10>>;
+template class XMLWriter<Triangulation<11>>;
+template class XMLWriter<Triangulation<12>>;
+template class XMLWriter<Triangulation<13>>;
+template class XMLWriter<Triangulation<14>>;
+template class XMLWriter<Triangulation<15>>;
+
+template void PacketOf<Triangulation<9>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<10>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<11>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<12>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<13>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<14>>::addPacketRefs(PacketRefs&) const;
+template void PacketOf<Triangulation<15>>::addPacketRefs(PacketRefs&) const;
+
 template void PacketOf<Triangulation<9>>::writeXMLPacketData(std::ostream&,
     FileFormat, bool, PacketRefs&) const;
 template void PacketOf<Triangulation<10>>::writeXMLPacketData(std::ostream&,
@@ -288,6 +292,7 @@ template void PacketOf<Triangulation<14>>::writeXMLPacketData(std::ostream&,
     FileFormat, bool, PacketRefs&) const;
 template void PacketOf<Triangulation<15>>::writeXMLPacketData(std::ostream&,
     FileFormat, bool, PacketRefs&) const;
+#endif /* REGINA_HIGHDIM */
 
 } // namespace regina
 

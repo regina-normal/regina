@@ -31,6 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
+#include "regina-config.h" // for REGINA_HIGHDIM
 #include "hypersurface/normalhypersurfaces.h"
 #include "link/link.h"
 #include "packet/container.h"

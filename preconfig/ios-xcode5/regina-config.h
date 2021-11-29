@@ -1,18 +1,18 @@
 /* Define if both int128_t and uint128_t types are available.
    This macro is for internal use only; end users should use the macro
-   INT128_AVAILABLE and the typedefs from IntOfSize<16>, all of which
+   INT128_AVAILABLE and the type aliases from IntOfSize<16>, all of which
    are found in utilities/intutils.h. */
 /* #undef INTERNAL_INT128_T_FOUND */
 
 /* Define if both __int128 and __uint128 types are available.
    This macro is for internal use only; end users should use the macro
-   INT128_AVAILABLE and the typedefs from IntOfSize<16>, all of which
+   INT128_AVAILABLE and the type aliases from IntOfSize<16>, all of which
    are found in utilities/intutils.h. */
 /* #undef INTERNAL___INT128_FOUND */
 
 /* Define if both __int128_t and __uint128_t types are available.
    This macro is for internal use only; end users should use the macro
-   INT128_AVAILABLE and the typedefs from IntOfSize<16>, all of which
+   INT128_AVAILABLE and the type aliases from IntOfSize<16>, all of which
    are found in utilities/intutils.h. */
 #if __LP64__
 #define INTERNAL___INT128_T_FOUND
@@ -23,6 +23,9 @@
 
 /* Define if 64-bit integer literals are available using the LL suffix */
 #define NUMERIC_64_LL_FOUND
+
+/* Define if we are supporting triangulations of dimensions 9-15. */
+/* #undef REGINA_HIGHDIM */
 
 /* Define if we are building the Python bindings. */
 /* #undef BUILD_PYTHON_BINDINGS */

@@ -39,6 +39,7 @@
 #define __REGINA_PACKETTYPE_H
 #endif
 
+#include "regina-config.h" // for REGINA_HIGHDIM
 #include "regina-core.h"
 #include "triangulation/forward.h"
 

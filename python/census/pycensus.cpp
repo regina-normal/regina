@@ -30,6 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
+#include "regina-config.h" // for REGINA_HIGHDIM
+
 namespace pybind11 { class module_; }
 
 void addPurgeFlags(pybind11::module_& m);

@@ -33,10 +33,11 @@ ENDIF(NOT CMAKE_BUILD_TYPE)
 
 SET(HIGHDIM "OFF" CACHE BOOL INTERNAL)
 IF(HIGHDIM)
-  MESSAGE (STATUS "Dimensions 9-15 enabled.")
-  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DREGINA_HIGHDIM")
+  MESSAGE (STATUS "Dimensions 9-15: enabled")
+  SET (REGINA_HIGHDIM TRUE)
 ELSE(HIGHDIM)
-  MESSAGE (STATUS "Dimensions 9-15 disabled for performance. To enable these, pass -DHIGHDIM=1.")
+  MESSAGE (STATUS "Dimensions 9-15: disabled for performance - to enable these, pass -DHIGHDIM=1")
+  SET (REGINA_HIGHDIM FALSE)
 ENDIF(HIGHDIM)
 
 # Every year I swear I will drop windows support, and this year is no different.

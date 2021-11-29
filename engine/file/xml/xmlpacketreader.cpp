@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "regina-config.h" // for REGINA_HIGHDIM
 #include "packet/packet.h"
 #include "file/xml/xmlanglestructreader.h"
 #include "file/xml/xmlfilterreader.h"
