@@ -6,6 +6,7 @@
 //
 
 #include <iostream>
+#include <iomanip>
 #include <map>
 #include <vector>
 #include <iterator>
@@ -596,7 +597,7 @@ std::vector<int> pdc_orientations(pdcode code) {
             for (int c=0; c<pdlen; c++) {
                 for (int d=0; d<4; d++) {
                     if ((code[c][d] == code[a][b]) && (std::make_pair(a, b) != std::make_pair(c, d))) {
-                        pairingIndexMap.insert(std::make_pair(std::make_pair(a, b),std::make_pair(c, d)));
+                        pairingIndexMap.emplace(std::make_pair(a, b), std::make_pair(c, d));
                     }
                 }
             }
@@ -893,12 +894,11 @@ int main(int argc, char* argv[]) {
      */
     
     if (argc < 2) {
-        std::cout << "Please provide at least a single dimension flag: -3, --dim3, -4, or --dim4.\nOptional:\nOutput type: -g or --graph for graph edge list (default is isomorphism signature).\nBoundary type: -r or --real to build triangulation with real boundary (default is with ideal boundary, or closed depending on manifold).\n";
-        exit(0);
+        std::cerr << "Please provide at least a single dimension flag: -3, --dim3, -4, or --dim4.\nOptional:\nOutput type: -g or --graph for graph edge list (default is isomorphism signature).\nBoundary type: -r or --real to build triangulation with real boundary (default is with ideal boundary, or closed depending on manifold).\n";
+        exit(1);
     }
     else if (2 <= argc && argc < 5) {
         for (int i=1; i<argc; ++i) {
-            std::string arg = argv[i];
             if (!strcmp(argv[i], "-g") || !strcmp(argv[i], "--graph")) {
                 output_type = true;
             }
@@ -912,8 +912,8 @@ int main(int argc, char* argv[]) {
                 dim_flag_int = 4;
             }
             else {
-                std::cout << "Invalid dimension or option: " << argv[i] <<".\n";
-                exit(0);
+                std::cerr << "Invalid dimension or option: " << argv[i] <<".\n";
+                exit(1);
             }
         }
     }
@@ -1086,12 +1086,7 @@ int main(int argc, char* argv[]) {
 
     long total_crossing_counter = 1;
     for (auto p : pdc_xot) {
-        if (total_crossing_counter < 10) {
-            std::cout << total_crossing_counter << "     ";
-        }
-        else {
-            std::cout << total_crossing_counter << "    ";
-        }
+        std::cout << std::left << std::setw(6) << total_crossing_counter;
         ++total_crossing_counter;
         if ((p.first == 0) && (p.second == 1)) {
             std::cout << "Generating Positive Crossing...\n";
