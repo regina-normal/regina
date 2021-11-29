@@ -43,7 +43,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(unsigned long rk,
     rankOM(0),
     ornR(rk, rk), ornC(rk, rk), ornRi(rk, rk), ornCi(rk, rk),
     InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0), 
-    coeff(Integer::zero), TORLoc(0), TORVec(0), tensorIfLoc(0), 
+    coeff(0), TORLoc(0), TORVec(0), tensorIfLoc(0), 
     tensorIfNum(0), tensorInvFacList(0)
 {
     // special case p==1 trivial group
@@ -64,7 +64,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
     OM(std::move(tmpM)), ON(std::move(tmpN)),
     rankOM(0),
     InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0),
-    coeff(Integer::zero), TORLoc(0), TORVec(0), tensorIfLoc(0),
+    coeff(0), TORLoc(0), TORVec(0), tensorIfLoc(0),
     tensorIfNum(0), tensorInvFacList(0)
 {
     if (OM.columns() != ON.rows())
@@ -330,12 +330,12 @@ Vector<Integer> MarkedAbelianGroup::freeRep(unsigned long index) const {
     if (index >= snfrank)
         throw InvalidArgument("freeRep(): invalid index");
 
-    Vector<Integer> retval(OM.columns()); // initialised to zero
+    Vector<Integer> retval(OM.columns());
     // index corresponds to the (index+snffreeindex)-th column of ornCi
     // we then pad this vector (at the front) with rankOM 0's
     // and apply OMR to it.
 
-    Vector<Integer> temp(ornCi.rows()+rankOM); // initialised to zero
+    Vector<Integer> temp(ornCi.rows()+rankOM);
     for (unsigned long i=0;i<ornCi.rows();i++)
         temp[i+rankOM]=ornCi.entry(i,index+snffreeindex);
     // the above line takes the index+snffreeindex-th column of ornCi and
@@ -354,7 +354,7 @@ Vector<Integer> MarkedAbelianGroup::torsionRep(unsigned long index) const {
         throw InvalidArgument("torsionRep(): invalid index");
 
     if (coeff == 0) {
-        Vector<Integer> temp(ornCi.rows()+rankOM); // initialised to zero
+        Vector<Integer> temp(ornCi.rows()+rankOM);
         for (unsigned long i=0;i<ornCi.rows();i++)
             temp[i+TORLoc] = ornCi.entry(i,ifLoc+index);
         // the above line takes the index+snffreeindex-th column of ornCi and
@@ -365,7 +365,7 @@ Vector<Integer> MarkedAbelianGroup::torsionRep(unsigned long index) const {
         // the UCT splitting start with column column index + ifLoc of matrix
         // ornCi, split into two vectors
         // 1) first TORVec.size() entries and 2) remaining entries. 
-        Vector<Integer> retval(OM.columns()); // initialised to zero
+        Vector<Integer> retval(OM.columns());
         Vector<Integer> firstV(TORVec.size());
         Vector<Integer> secondV(ornC.rows()-TORVec.size());
         for (unsigned long i=0; i<firstV.size(); i++)
@@ -527,7 +527,7 @@ Vector<Integer> MarkedAbelianGroup::snfRep(const Vector<Integer>& element)
     }
 
     // The given vector is in the kernel.
-    Vector<Integer> retval(snfrank+ifNum); // initialised to zero
+    Vector<Integer> retval(snfrank+ifNum);
 
     if (coeff == 0) {
         for (unsigned long i=0;i<snfrank;i++)
@@ -538,7 +538,7 @@ Vector<Integer> MarkedAbelianGroup::snfRep(const Vector<Integer>& element)
                 retval[i] += ornC.entry(i+ifLoc,j-rankOM)*temp[j];
         // redundant for loops
     } else {
-        Vector<Integer> diagPresV(ornC.rows()); // initialised to zero
+        Vector<Integer> diagPresV(ornC.rows());
         for (unsigned long i=0; i<diagPresV.size(); i++) {
             // TOR part
             if (i < TORVec.size())
@@ -577,15 +577,12 @@ bool MarkedAbelianGroup::isCycle(const Vector<Integer> &input) const {
 }
 
 bool MarkedAbelianGroup::isBoundary(const Vector<Integer> &input) const {
-    if (input.size() != OM.columns())
+    try {
+        return snfRep(input).isZero();
+    } catch (const InvalidArgument&) {
+        // The input vector was the wrong size, or was not in the kernel.
         return false;
-    Vector<Integer> snF = snfRep(input);
-    if (snF.size() != countInvariantFactors() + rank())
-        return false;
-    for (const auto& i : snF)
-        if (i != 0)
-            return false;
-    return true;
+    }
 }
 
 Vector<Integer> MarkedAbelianGroup::boundaryMap(const Vector<Integer>& CCrep)
@@ -880,7 +877,7 @@ void HomMarkedAbelianGroup::computeReducedKernelLattice() {
             if (i<codomain_.countInvariantFactors())
                 dcL[i]=codomain_.invariantFactor(i);
             else
-                dcL[i]=Integer::zero;
+                dcL[i]=0;
 
         reducedKernelLattice_ = MatrixInt(preImageOfLattice(redMatrix, dcL));
     }

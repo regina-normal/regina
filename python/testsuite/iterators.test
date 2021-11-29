@@ -99,3 +99,11 @@ for i in range(c.countCells()):
 		bdry.append(str(a.node().index()) + ':' + str(a.arc()))
 	print(bdry)
 
+print('Vector<Integer> iteration:')
+for i in VectorInt([3,5,-1]):
+	print(i)
+
+print('Vector<LargeInteger> iteration:')
+for i in VectorLarge([3,5,-1]):
+	print(i)
+

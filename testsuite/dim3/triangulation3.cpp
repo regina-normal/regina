@@ -2086,9 +2086,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            regina::VectorInt v(t.countEdges());
-            v[e->index()] = 1;
-            regina::VectorInt snf = g.snfRep(v);
+            regina::VectorInt snf = g.snfRep(
+                regina::VectorInt::unit(t.countEdges(), e->index()));
             if (snf.size() != 1) {
                 std::ostringstream msg;
                 msg << "H1(LST) gives SNF reps of the wrong size: "
