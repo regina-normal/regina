@@ -171,8 +171,19 @@ class Matrix : public Output<Matrix<T>> {
         "Using Matrix with Regina's own integer types requires ring=true.");
 
     public:
-        using Coefficient = T;
-            /**< The type of each entry in the matrix. */
+        /**
+         * The type of element that is stored in this matrix.
+         */
+        using value_type = T;
+
+        /**
+         * Deprecated alias for the type of element that is stored in
+         * this matrix.
+         *
+         * \deprecated This has been renamed to value_type, for consistency
+         * with regina::Vector and the standard C++ container types.
+         */
+        using Coefficient [[deprecated]] = T;
 
     private:
         unsigned long rows_;
