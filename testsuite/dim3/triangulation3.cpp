@@ -4362,7 +4362,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         template <int k>
         void chainComplex() {
-            testManualAll(verifyChainComplex<k>);
+            testManualSmall(verifyChainComplex<k>);
         }
 
         static void verifyMinimiseBoundaryDoesNothing(
