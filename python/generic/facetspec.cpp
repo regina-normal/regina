@@ -70,11 +70,11 @@ void addFacetSpec(pybind11::module_& m) {
     addFacetSpec<2>(m, "FacetSpec2");
     addFacetSpec<3>(m, "FacetSpec3");
     addFacetSpec<4>(m, "FacetSpec4");
-#ifndef REGINA_LOWDIMONLY
     addFacetSpec<5>(m, "FacetSpec5");
     addFacetSpec<6>(m, "FacetSpec6");
     addFacetSpec<7>(m, "FacetSpec7");
     addFacetSpec<8>(m, "FacetSpec8");
+#ifdef REGINA_HIGHDIM
     addFacetSpec<9>(m, "FacetSpec9");
     addFacetSpec<10>(m, "FacetSpec10");
     addFacetSpec<11>(m, "FacetSpec11");

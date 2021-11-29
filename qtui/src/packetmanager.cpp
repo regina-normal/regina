@@ -122,7 +122,6 @@ QIcon PacketManager::icon(const Packet& packet) {
         case PACKET_TRIANGULATION4 :
             id = IconCache::packet_triangulation4;
             break;
-#ifndef REGINA_LOWDIMONLY
         // For generic dimensions, we don't cache the icons.
         case PACKET_TRIANGULATION5 :
             return ReginaSupport::regIcon("packet_triangulation5");
@@ -132,6 +131,7 @@ QIcon PacketManager::icon(const Packet& packet) {
             return ReginaSupport::regIcon("packet_triangulation7");
         case PACKET_TRIANGULATION8 :
             return ReginaSupport::regIcon("packet_triangulation8");
+#ifdef REGINA_HIGHDIM
         case PACKET_TRIANGULATION9 :
             return ReginaSupport::regIcon("packet_triangulation9");
         case PACKET_TRIANGULATION10 :
@@ -146,7 +146,7 @@ QIcon PacketManager::icon(const Packet& packet) {
             return ReginaSupport::regIcon("packet_triangulation14");
         case PACKET_TRIANGULATION15 :
             return ReginaSupport::regIcon("packet_triangulation15");
-#endif /* ! REGINA_LOWDIMONLY */
+#endif /* REGINA_HIGHDIM */
         default:
             // Unknown packet type.
             return QIcon();
@@ -211,7 +211,6 @@ PacketUI* PacketManager::createUI(regina::Packet& packet,
             return new Tri4UI(
                 static_cast<regina::PacketOf<Triangulation<4>>*>(&packet),
                 enclosingPane);
-#ifndef REGINA_LOWDIMONLY
         case PACKET_TRIANGULATION5:
             return new GenericTriangulationUI<5>(
                 static_cast<regina::PacketOf<Triangulation<5>>*>(&packet),
@@ -228,6 +227,7 @@ PacketUI* PacketManager::createUI(regina::Packet& packet,
             return new GenericTriangulationUI<8>(
                 static_cast<regina::PacketOf<Triangulation<8>>*>(&packet),
                 enclosingPane);
+#ifdef REGINA_HIGHDIM
         case PACKET_TRIANGULATION9:
             return new GenericTriangulationUI<9>(
                 static_cast<regina::PacketOf<Triangulation<9>>*>(&packet),
@@ -256,7 +256,7 @@ PacketUI* PacketManager::createUI(regina::Packet& packet,
             return new GenericTriangulationUI<15>(
                 static_cast<regina::PacketOf<Triangulation<15>>*>(&packet),
                 enclosingPane);
-#endif /* ! REGINA_LOWDIMONLY */
+#endif /* REGINA_HIGHDIM */
         default:
             return new DefaultPacketUI(&packet, enclosingPane);
     }

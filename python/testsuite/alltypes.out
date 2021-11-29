@@ -64,24 +64,6 @@ Equality type : EqualityType.BY_REFERENCE
 BoolSet : class
 Equality type : EqualityType.BY_VALUE
 
-BoundaryComponent10 : class
-Equality type : EqualityType.BY_REFERENCE
-
-BoundaryComponent11 : class
-Equality type : EqualityType.BY_REFERENCE
-
-BoundaryComponent12 : class
-Equality type : EqualityType.BY_REFERENCE
-
-BoundaryComponent13 : class
-Equality type : EqualityType.BY_REFERENCE
-
-BoundaryComponent14 : class
-Equality type : EqualityType.BY_REFERENCE
-
-BoundaryComponent15 : class
-Equality type : EqualityType.BY_REFERENCE
-
 BoundaryComponent2 : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -101,9 +83,6 @@ BoundaryComponent7 : class
 Equality type : EqualityType.BY_REFERENCE
 
 BoundaryComponent8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-BoundaryComponent9 : class
 Equality type : EqualityType.BY_REFERENCE
 
 Census : class
@@ -127,24 +106,6 @@ Equality type : EqualityType.BY_REFERENCE
 CompactSearcher : class
 Equality type : EqualityType.BY_REFERENCE
 
-Component10 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Component11 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Component12 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Component13 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Component14 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Component15 : class
-Equality type : EqualityType.BY_REFERENCE
-
 Component2 : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -164,9 +125,6 @@ Component7 : class
 Equality type : EqualityType.BY_REFERENCE
 
 Component8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Component9 : class
 Equality type : EqualityType.BY_REFERENCE
 
 ConstArray_Perm10_Sn : class
@@ -313,18 +271,6 @@ Equality type : EqualityType.BY_VALUE
 DoubleDescription : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
-Edge10 : typedef ->  Face10_1
-
-Edge11 : typedef ->  Face11_1
-
-Edge12 : typedef ->  Face12_1
-
-Edge13 : typedef ->  Face13_1
-
-Edge14 : typedef ->  Face14_1
-
-Edge15 : typedef ->  Face15_1
-
 Edge2 : typedef ->  Face2_1
 
 Edge3 : typedef ->  Face3_1
@@ -338,20 +284,6 @@ Edge6 : typedef ->  Face6_1
 Edge7 : typedef ->  Face7_1
 
 Edge8 : typedef ->  Face8_1
-
-Edge9 : typedef ->  Face9_1
-
-EdgeEmbedding10 : typedef ->  FaceEmbedding10_1
-
-EdgeEmbedding11 : typedef ->  FaceEmbedding11_1
-
-EdgeEmbedding12 : typedef ->  FaceEmbedding12_1
-
-EdgeEmbedding13 : typedef ->  FaceEmbedding13_1
-
-EdgeEmbedding14 : typedef ->  FaceEmbedding14_1
-
-EdgeEmbedding15 : typedef ->  FaceEmbedding15_1
 
 EdgeEmbedding2 : typedef ->  FaceEmbedding2_1
 
@@ -367,28 +299,8 @@ EdgeEmbedding7 : typedef ->  FaceEmbedding7_1
 
 EdgeEmbedding8 : typedef ->  FaceEmbedding8_1
 
-EdgeEmbedding9 : typedef ->  FaceEmbedding9_1
-
 EulerSearcher : class
 Equality type : EqualityType.BY_REFERENCE
-
-Example10 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-Example11 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-Example12 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-Example13 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-Example14 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-Example15 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
 
 Example2 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -411,251 +323,11 @@ Equality type : EqualityType.NEVER_INSTANTIATED
 Example8 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
-Example9 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
 ExampleLink : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 ExampleSnapPea : class
 Equality type : EqualityType.NEVER_INSTANTIATED
-
-Face10_0 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face10_1 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face10_10 : typedef ->  Simplex10
-
-Face10_2 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face10_3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face10_4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face10_5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face10_6 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face10_7 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face10_8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face10_9 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face11_0 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face11_1 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face11_10 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face11_11 : typedef ->  Simplex11
-
-Face11_2 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face11_3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face11_4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face11_5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face11_6 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face11_7 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face11_8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face11_9 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face12_0 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face12_1 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face12_10 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face12_11 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face12_12 : typedef ->  Simplex12
-
-Face12_2 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face12_3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face12_4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face12_5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face12_6 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face12_7 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face12_8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face12_9 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face13_0 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face13_1 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face13_10 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face13_11 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face13_12 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face13_13 : typedef ->  Simplex13
-
-Face13_2 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face13_3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face13_4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face13_5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face13_6 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face13_7 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face13_8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face13_9 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_0 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_1 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_10 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_11 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_12 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_13 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_14 : typedef ->  Simplex14
-
-Face14_2 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_6 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_7 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face14_9 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_0 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_1 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_10 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_11 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_12 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_13 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_14 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_15 : typedef ->  Simplex15
-
-Face15_2 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_6 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_7 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face15_9 : class
-Equality type : EqualityType.BY_REFERENCE
 
 Face2_0 : class
 Equality type : EqualityType.BY_REFERENCE
@@ -776,260 +448,6 @@ Equality type : EqualityType.BY_REFERENCE
 
 Face8_8 : typedef ->  Simplex8
 
-Face9_0 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face9_1 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face9_2 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face9_3 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face9_4 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face9_5 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face9_6 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face9_7 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face9_8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Face9_9 : typedef ->  Simplex9
-
-FaceEmbedding10_0 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding10_1 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding10_2 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding10_3 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding10_4 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding10_5 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding10_6 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding10_7 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding10_8 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding10_9 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding11_0 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding11_1 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding11_10 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding11_2 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding11_3 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding11_4 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding11_5 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding11_6 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding11_7 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding11_8 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding11_9 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding12_0 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding12_1 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding12_10 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding12_11 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding12_2 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding12_3 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding12_4 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding12_5 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding12_6 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding12_7 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding12_8 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding12_9 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding13_0 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding13_1 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding13_10 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding13_11 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding13_12 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding13_2 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding13_3 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding13_4 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding13_5 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding13_6 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding13_7 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding13_8 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding13_9 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_0 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_1 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_10 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_11 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_12 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_13 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_2 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_3 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_4 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_5 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_6 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_7 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_8 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding14_9 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_0 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_1 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_10 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_11 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_12 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_13 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_14 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_2 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_3 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_4 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_5 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_6 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_7 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_8 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding15_9 : class
-Equality type : EqualityType.BY_VALUE
-
 FaceEmbedding2_0 : class
 Equality type : EqualityType.BY_VALUE
 
@@ -1135,53 +553,8 @@ Equality type : EqualityType.BY_VALUE
 FaceEmbedding8_7 : class
 Equality type : EqualityType.BY_VALUE
 
-FaceEmbedding9_0 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding9_1 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding9_2 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding9_3 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding9_4 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding9_5 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding9_6 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding9_7 : class
-Equality type : EqualityType.BY_VALUE
-
-FaceEmbedding9_8 : class
-Equality type : EqualityType.BY_VALUE
-
 FacePair : class
 Equality type : EqualityType.BY_VALUE
-
-FacetPairing10 : class
-Equality type : EqualityType.BY_REFERENCE
-
-FacetPairing11 : class
-Equality type : EqualityType.BY_REFERENCE
-
-FacetPairing12 : class
-Equality type : EqualityType.BY_REFERENCE
-
-FacetPairing13 : class
-Equality type : EqualityType.BY_REFERENCE
-
-FacetPairing14 : class
-Equality type : EqualityType.BY_REFERENCE
-
-FacetPairing15 : class
-Equality type : EqualityType.BY_REFERENCE
 
 FacetPairing2 : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1204,27 +577,6 @@ Equality type : EqualityType.BY_REFERENCE
 FacetPairing8 : class
 Equality type : EqualityType.BY_REFERENCE
 
-FacetPairing9 : class
-Equality type : EqualityType.BY_REFERENCE
-
-FacetSpec10 : class
-Equality type : EqualityType.BY_VALUE
-
-FacetSpec11 : class
-Equality type : EqualityType.BY_VALUE
-
-FacetSpec12 : class
-Equality type : EqualityType.BY_VALUE
-
-FacetSpec13 : class
-Equality type : EqualityType.BY_VALUE
-
-FacetSpec14 : class
-Equality type : EqualityType.BY_VALUE
-
-FacetSpec15 : class
-Equality type : EqualityType.BY_VALUE
-
 FacetSpec2 : class
 Equality type : EqualityType.BY_VALUE
 
@@ -1244,9 +596,6 @@ FacetSpec7 : class
 Equality type : EqualityType.BY_VALUE
 
 FacetSpec8 : class
-Equality type : EqualityType.BY_VALUE
-
-FacetSpec9 : class
 Equality type : EqualityType.BY_VALUE
 
 FailedPrecondition : class
@@ -1306,24 +655,6 @@ Equality type : EqualityType.BY_REFERENCE
 GluingPermSearcher4 : class
 Equality type : EqualityType.BY_REFERENCE
 
-GluingPerms10 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GluingPerms11 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GluingPerms12 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GluingPerms13 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GluingPerms14 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GluingPerms15 : class
-Equality type : EqualityType.BY_REFERENCE
-
 GluingPerms2 : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1343,9 +674,6 @@ GluingPerms7 : class
 Equality type : EqualityType.BY_REFERENCE
 
 GluingPerms8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-GluingPerms9 : class
 Equality type : EqualityType.BY_REFERENCE
 
 GraphLoop : class
@@ -1411,24 +739,6 @@ Exception type
 InvalidInput : class
 Exception type
 
-IsoSigClassic10 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigClassic11 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigClassic12 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigClassic13 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigClassic14 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigClassic15 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
 IsoSigClassic2 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
@@ -1448,27 +758,6 @@ IsoSigClassic7 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 IsoSigClassic8 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigClassic9 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigEdgeDegrees10 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigEdgeDegrees11 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigEdgeDegrees12 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigEdgeDegrees13 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigEdgeDegrees14 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigEdgeDegrees15 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 IsoSigEdgeDegrees2 : class
@@ -1492,27 +781,6 @@ Equality type : EqualityType.NEVER_INSTANTIATED
 IsoSigEdgeDegrees8 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
-IsoSigEdgeDegrees9 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigPrintable10 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigPrintable11 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigPrintable12 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigPrintable13 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigPrintable14 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigPrintable15 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
 IsoSigPrintable2 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
@@ -1532,27 +800,6 @@ IsoSigPrintable7 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 IsoSigPrintable8 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigPrintable9 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigRidgeDegrees10 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigRidgeDegrees11 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigRidgeDegrees12 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigRidgeDegrees13 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigRidgeDegrees14 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-IsoSigRidgeDegrees15 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 IsoSigRidgeDegrees2 : class
@@ -1575,27 +822,6 @@ Equality type : EqualityType.NEVER_INSTANTIATED
 IsoSigRidgeDegrees8 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
-IsoSigRidgeDegrees9 : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
-Isomorphism10 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Isomorphism11 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Isomorphism12 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Isomorphism13 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Isomorphism14 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Isomorphism15 : class
-Equality type : EqualityType.BY_REFERENCE
-
 Isomorphism2 : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1615,9 +841,6 @@ Isomorphism7 : class
 Equality type : EqualityType.BY_REFERENCE
 
 Isomorphism8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Isomorphism9 : class
 Equality type : EqualityType.BY_REFERENCE
 
 L31Pillow : class
@@ -1799,24 +1022,6 @@ Equality type : EqualityType.BY_REFERENCE
 PacketOfSnapPeaTriangulation : class
 Equality type : EqualityType.BY_REFERENCE
 
-PacketOfTriangulation10 : class
-Equality type : EqualityType.BY_REFERENCE
-
-PacketOfTriangulation11 : class
-Equality type : EqualityType.BY_REFERENCE
-
-PacketOfTriangulation12 : class
-Equality type : EqualityType.BY_REFERENCE
-
-PacketOfTriangulation13 : class
-Equality type : EqualityType.BY_REFERENCE
-
-PacketOfTriangulation14 : class
-Equality type : EqualityType.BY_REFERENCE
-
-PacketOfTriangulation15 : class
-Equality type : EqualityType.BY_REFERENCE
-
 PacketOfTriangulation2 : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1838,23 +1043,8 @@ Equality type : EqualityType.BY_REFERENCE
 PacketOfTriangulation8 : class
 Equality type : EqualityType.BY_REFERENCE
 
-PacketOfTriangulation9 : class
-Equality type : EqualityType.BY_REFERENCE
-
 PacketShell : class
 Equality type : EqualityType.BY_VALUE
-
-Pentachoron10 : typedef ->  Face10_4
-
-Pentachoron11 : typedef ->  Face11_4
-
-Pentachoron12 : typedef ->  Face12_4
-
-Pentachoron13 : typedef ->  Face13_4
-
-Pentachoron14 : typedef ->  Face14_4
-
-Pentachoron15 : typedef ->  Face15_4
 
 Pentachoron4 : typedef ->  Simplex4
 
@@ -1866,20 +1056,6 @@ Pentachoron7 : typedef ->  Face7_4
 
 Pentachoron8 : typedef ->  Face8_4
 
-Pentachoron9 : typedef ->  Face9_4
-
-PentachoronEmbedding10 : typedef ->  FaceEmbedding10_4
-
-PentachoronEmbedding11 : typedef ->  FaceEmbedding11_4
-
-PentachoronEmbedding12 : typedef ->  FaceEmbedding12_4
-
-PentachoronEmbedding13 : typedef ->  FaceEmbedding13_4
-
-PentachoronEmbedding14 : typedef ->  FaceEmbedding14_4
-
-PentachoronEmbedding15 : typedef ->  FaceEmbedding15_4
-
 PentachoronEmbedding5 : typedef ->  FaceEmbedding5_4
 
 PentachoronEmbedding6 : typedef ->  FaceEmbedding6_4
@@ -1887,8 +1063,6 @@ PentachoronEmbedding6 : typedef ->  FaceEmbedding6_4
 PentachoronEmbedding7 : typedef ->  FaceEmbedding7_4
 
 PentachoronEmbedding8 : typedef ->  FaceEmbedding8_4
-
-PentachoronEmbedding9 : typedef ->  FaceEmbedding9_4
 
 Perm10 : class
 Equality type : EqualityType.BY_VALUE
@@ -2043,24 +1217,6 @@ Equality type : EqualityType.BY_REFERENCE
 SimpleSurfaceBundle : class
 Equality type : EqualityType.BY_VALUE
 
-Simplex10 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Simplex11 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Simplex12 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Simplex13 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Simplex14 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Simplex15 : class
-Equality type : EqualityType.BY_REFERENCE
-
 Simplex2 : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -2080,9 +1236,6 @@ Simplex7 : class
 Equality type : EqualityType.BY_REFERENCE
 
 Simplex8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Simplex9 : class
 Equality type : EqualityType.BY_REFERENCE
 
 SnapPeaCensusManifold : class
@@ -2145,18 +1298,6 @@ Equality type : EqualityType.BY_REFERENCE
 TautEnumeration : class
 Equality type : EqualityType.BY_REFERENCE
 
-Tetrahedron10 : typedef ->  Face10_3
-
-Tetrahedron11 : typedef ->  Face11_3
-
-Tetrahedron12 : typedef ->  Face12_3
-
-Tetrahedron13 : typedef ->  Face13_3
-
-Tetrahedron14 : typedef ->  Face14_3
-
-Tetrahedron15 : typedef ->  Face15_3
-
 Tetrahedron3 : typedef ->  Simplex3
 
 Tetrahedron4 : typedef ->  Face4_3
@@ -2169,20 +1310,6 @@ Tetrahedron7 : typedef ->  Face7_3
 
 Tetrahedron8 : typedef ->  Face8_3
 
-Tetrahedron9 : typedef ->  Face9_3
-
-TetrahedronEmbedding10 : typedef ->  FaceEmbedding10_3
-
-TetrahedronEmbedding11 : typedef ->  FaceEmbedding11_3
-
-TetrahedronEmbedding12 : typedef ->  FaceEmbedding12_3
-
-TetrahedronEmbedding13 : typedef ->  FaceEmbedding13_3
-
-TetrahedronEmbedding14 : typedef ->  FaceEmbedding14_3
-
-TetrahedronEmbedding15 : typedef ->  FaceEmbedding15_3
-
 TetrahedronEmbedding4 : typedef ->  FaceEmbedding4_3
 
 TetrahedronEmbedding5 : typedef ->  FaceEmbedding5_3
@@ -2192,8 +1319,6 @@ TetrahedronEmbedding6 : typedef ->  FaceEmbedding6_3
 TetrahedronEmbedding7 : typedef ->  FaceEmbedding7_3
 
 TetrahedronEmbedding8 : typedef ->  FaceEmbedding8_3
-
-TetrahedronEmbedding9 : typedef ->  FaceEmbedding9_3
 
 Text : class
 Equality type : EqualityType.BY_REFERENCE
@@ -2300,18 +1425,6 @@ Equality type : EqualityType.BY_REFERENCE
 TriSolidTorus : class
 Equality type : EqualityType.BY_REFERENCE
 
-Triangle10 : typedef ->  Face10_2
-
-Triangle11 : typedef ->  Face11_2
-
-Triangle12 : typedef ->  Face12_2
-
-Triangle13 : typedef ->  Face13_2
-
-Triangle14 : typedef ->  Face14_2
-
-Triangle15 : typedef ->  Face15_2
-
 Triangle2 : typedef ->  Simplex2
 
 Triangle3 : typedef ->  Face3_2
@@ -2326,20 +1439,6 @@ Triangle7 : typedef ->  Face7_2
 
 Triangle8 : typedef ->  Face8_2
 
-Triangle9 : typedef ->  Face9_2
-
-TriangleEmbedding10 : typedef ->  FaceEmbedding10_2
-
-TriangleEmbedding11 : typedef ->  FaceEmbedding11_2
-
-TriangleEmbedding12 : typedef ->  FaceEmbedding12_2
-
-TriangleEmbedding13 : typedef ->  FaceEmbedding13_2
-
-TriangleEmbedding14 : typedef ->  FaceEmbedding14_2
-
-TriangleEmbedding15 : typedef ->  FaceEmbedding15_2
-
 TriangleEmbedding3 : typedef ->  FaceEmbedding3_2
 
 TriangleEmbedding4 : typedef ->  FaceEmbedding4_2
@@ -2351,26 +1450,6 @@ TriangleEmbedding6 : typedef ->  FaceEmbedding6_2
 TriangleEmbedding7 : typedef ->  FaceEmbedding7_2
 
 TriangleEmbedding8 : typedef ->  FaceEmbedding8_2
-
-TriangleEmbedding9 : typedef ->  FaceEmbedding9_2
-
-Triangulation10 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Triangulation11 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Triangulation12 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Triangulation13 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Triangulation14 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Triangulation15 : class
-Equality type : EqualityType.BY_REFERENCE
 
 Triangulation2 : class
 Equality type : EqualityType.BY_REFERENCE
@@ -2391,9 +1470,6 @@ Triangulation7 : class
 Equality type : EqualityType.BY_REFERENCE
 
 Triangulation8 : class
-Equality type : EqualityType.BY_REFERENCE
-
-Triangulation9 : class
 Equality type : EqualityType.BY_REFERENCE
 
 TrieSet : class
@@ -2429,18 +1505,6 @@ Equality type : EqualityType.BY_VALUE
 VectorLarge : class
 Equality type : EqualityType.BY_VALUE
 
-Vertex10 : typedef ->  Face10_0
-
-Vertex11 : typedef ->  Face11_0
-
-Vertex12 : typedef ->  Face12_0
-
-Vertex13 : typedef ->  Face13_0
-
-Vertex14 : typedef ->  Face14_0
-
-Vertex15 : typedef ->  Face15_0
-
 Vertex2 : typedef ->  Face2_0
 
 Vertex3 : typedef ->  Face3_0
@@ -2455,20 +1519,6 @@ Vertex7 : typedef ->  Face7_0
 
 Vertex8 : typedef ->  Face8_0
 
-Vertex9 : typedef ->  Face9_0
-
-VertexEmbedding10 : typedef ->  FaceEmbedding10_0
-
-VertexEmbedding11 : typedef ->  FaceEmbedding11_0
-
-VertexEmbedding12 : typedef ->  FaceEmbedding12_0
-
-VertexEmbedding13 : typedef ->  FaceEmbedding13_0
-
-VertexEmbedding14 : typedef ->  FaceEmbedding14_0
-
-VertexEmbedding15 : typedef ->  FaceEmbedding15_0
-
 VertexEmbedding2 : typedef ->  FaceEmbedding2_0
 
 VertexEmbedding3 : typedef ->  FaceEmbedding3_0
@@ -2482,6 +1532,4 @@ VertexEmbedding6 : typedef ->  FaceEmbedding6_0
 VertexEmbedding7 : typedef ->  FaceEmbedding7_0
 
 VertexEmbedding8 : typedef ->  FaceEmbedding8_0
-
-VertexEmbedding9 : typedef ->  FaceEmbedding9_0
 

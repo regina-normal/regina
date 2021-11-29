@@ -6,6 +6,10 @@ SET ( FILES
   gluingperms2.cpp
   gluingperms3.cpp
   gluingperms4.cpp
+  gluingperms5.cpp
+  gluingperms6.cpp
+  gluingperms7.cpp
+  gluingperms8.cpp
   gluingpermsearcher2.cpp
   gluingpermsearcher3.cpp
   gluingpermsearcher4.cpp
@@ -18,11 +22,8 @@ FOREACH ( SOURCE_FILE ${FILES} )
   SET ( SOURCES ${SOURCES} census/${SOURCE_FILE})
 ENDFOREACH(SOURCE_FILE)
 
+# These files are only included if HIGHDIM is set
 SET ( FILES
-  gluingperms5.cpp
-  gluingperms6.cpp
-  gluingperms7.cpp
-  gluingperms8.cpp
   gluingperms9.cpp
   gluingperms10.cpp
   gluingperms11.cpp
@@ -32,11 +33,11 @@ SET ( FILES
   gluingperms15.cpp
   )
 
-IF(NOT LOWDIMONLY)
+IF(HIGHDIM)
   # Prepend folder name
   FOREACH ( SOURCE_FILE ${FILES} )
     SET ( SOURCES ${SOURCES} census/${SOURCE_FILE})
   ENDFOREACH(SOURCE_FILE)
-ENDIF(NOT LOWDIMONLY)
+ENDIF(HIGHDIM)
 
 SET(SOURCES ${SOURCES} PARENT_SCOPE)

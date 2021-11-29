@@ -57,11 +57,11 @@ void addCensusClasses(pybind11::module_& m) {
     addGluingPerms2(m);
     addGluingPerms3(m);
     addGluingPerms4(m);
-#ifndef REGINA_LOWDIMONLY
     addGluingPerms5(m);
     addGluingPerms6(m);
     addGluingPerms7(m);
     addGluingPerms8(m);
+#ifdef REGINA_HIGHDIM
     addGluingPerms9(m);
     addGluingPerms10(m);
     addGluingPerms11(m);
@@ -69,7 +69,7 @@ void addCensusClasses(pybind11::module_& m) {
     addGluingPerms13(m);
     addGluingPerms14(m);
     addGluingPerms15(m);
-#endif /* ! REGINA_LOWDIMONLY */
+#endif /* REGINA_HIGHDIM */
     addGluingPermSearcher2(m);
     addGluingPermSearcher3(m);
     addGluingPermSearcher4(m);

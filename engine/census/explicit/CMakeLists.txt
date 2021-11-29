@@ -3,6 +3,10 @@ SET ( FILES
   gluingperms2.cpp
   gluingperms3.cpp
   gluingperms4.cpp
+  gluingperms5.cpp
+  gluingperms6.cpp
+  gluingperms7.cpp
+  gluingperms8.cpp
   )
 
 # Prepend folder name
@@ -10,12 +14,8 @@ FOREACH ( SOURCE_FILE ${FILES} )
   SET ( SOURCES ${SOURCES} census/explicit/${SOURCE_FILE})
 ENDFOREACH (SOURCE_FILE)
 
-# These files are only included if LOWDIMONLY is not set
+# These files are only included if HIGHDIM is set
 SET ( FILES
-  gluingperms5.cpp
-  gluingperms6.cpp
-  gluingperms7.cpp
-  gluingperms8.cpp
   gluingperms9.cpp
   gluingperms10.cpp
   gluingperms11.cpp
@@ -24,12 +24,12 @@ SET ( FILES
   gluingperms14.cpp
   gluingperms15.cpp
   )
-IF(NOT LOWDIMONLY)
+IF(HIGHDIM)
   # Prepend folder name
   FOREACH ( SOURCE_FILE ${FILES} )
     SET ( SOURCES ${SOURCES} census/explicit/${SOURCE_FILE})
   ENDFOREACH (SOURCE_FILE)
-ENDIF(NOT LOWDIMONLY)
+ENDIF(HIGHDIM)
 
 # Set the variable in the parent directory
 SET(SOURCES ${SOURCES} PARENT_SCOPE)

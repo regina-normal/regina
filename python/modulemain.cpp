@@ -46,9 +46,7 @@ void addDim4Classes(pybind11::module_& m);
 void addEnumerateClasses(pybind11::module_& m);
 void addFileClasses(pybind11::module_& m);
 void addForeignClasses(pybind11::module_& m);
-#ifndef REGINA_LOWDIMONLY
 void addGenericClasses(pybind11::module_& m);
-#endif
 void addHypersurfaceClasses(pybind11::module_& m);
 void addLinkClasses(pybind11::module_& m);
 void addManifoldClasses(pybind11::module_& m);

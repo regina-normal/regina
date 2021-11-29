@@ -39,6 +39,13 @@ Version 7.0  [ TODO ]
         - Major simplifications to the triangulation template class hierarchies.
           A consequence is that the API docs are much more usable, since
           doxygen can finally understand the code again.
+        - All ready-made packages, and the default build configuration, now only
+          support dimensions 2-8.  This is because dimensions 9-15 added an
+          enormous amount of overhead (especially with Python) for features that
+          almost nobody was using in practice.  If you need dimensions 9-15:
+          (a) please drop Ben a note so he knows there is interest; and
+          (b) you can build Regina from source with the cmake flag -DHIGHDIM=1.
+          The old -DLOWDIMONLY=1 flag is no longer supported.
         - Removed all support for transversely oriented normal surfaces.
           These were originally hooked into the normal surface machinery
           as an "experimental" feature, but they are fundamentally different

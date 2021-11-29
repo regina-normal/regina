@@ -120,7 +120,6 @@ enum PacketType {
      * Represents a 4-dimensional triangulation, of class Triangulation<4>.
      */
     PACKET_TRIANGULATION4 = 11,
-#ifndef REGINA_LOWDIMONLY
     /**
      * Represents a 5-dimensional triangulation, of class Triangulation<5>.
      */
@@ -137,6 +136,7 @@ enum PacketType {
      * Represents a 8-dimensional triangulation, of class Triangulation<8>.
      */
     PACKET_TRIANGULATION8 = 108,
+#ifdef REGINA_HIGHDIM
     /**
      * Represents a 9-dimensional triangulation, of class Triangulation<9>.
      */
@@ -165,7 +165,7 @@ enum PacketType {
      * Represents a 15-dimensional triangulation, of class Triangulation<15>.
      */
     PACKET_TRIANGULATION15 = 115
-#endif /* ! REGINA_LOWDIMONLY */
+#endif /* REGINA_HIGHDIM */
 };
 
 /**
@@ -221,7 +221,6 @@ class PacketInfo {
                     return "3-D triangulation";
                 case PACKET_TRIANGULATION4:
                     return "4-D triangulation";
-            #ifndef REGINA_LOWDIMONLY
                 case PACKET_TRIANGULATION5:
                     return "5-D triangulation";
                 case PACKET_TRIANGULATION6:
@@ -230,6 +229,7 @@ class PacketInfo {
                     return "7-D triangulation";
                 case PACKET_TRIANGULATION8:
                     return "8-D triangulation";
+            #ifdef REGINA_HIGHDIM
                 case PACKET_TRIANGULATION9:
                     return "9-D triangulation";
                 case PACKET_TRIANGULATION10:
@@ -244,7 +244,7 @@ class PacketInfo {
                     return "14-D triangulation";
                 case PACKET_TRIANGULATION15:
                     return "15-D triangulation";
-            #endif /* ! REGINA_LOWDIMONLY */
+            #endif /* REGINA_HIGHDIM */
                 default:
                     return "Unknown";
             }
