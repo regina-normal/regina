@@ -565,7 +565,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         /**
          * Sets this to be a (deep) copy of the given graph.
          *
-         * @param copy the graph to copy.
+         * @param src the graph to copy.
          * @return a reference to this graph.
          */
         ModelLinkGraph& operator = (const ModelLinkGraph& src);
@@ -699,7 +699,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * For each link that is generated, this routine will call \a action
          * (which must be a function or some other callable object).
          *
-         * - The first argument passed to \action will be the link that was
+         * - The first argument passed to \a action will be the link that was
          *   generated.  This will be passed as an rvalue; a typical action
          *   could (for example) take it by const reference and query it,
          *   or take it by value and modify it, or take it by rvalue reference

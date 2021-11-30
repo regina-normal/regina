@@ -3529,6 +3529,8 @@ Triangulation<3>& static_triangulation3_cast(Packet& p);
  */
 const Triangulation<3>& static_triangulation3_cast(const Packet& p);
 
+// Doxygen struggles with specialisations; hide them from it.
+#ifndef __DOXYGEN
 template <>
 inline PacketData<Triangulation<3>>::ChangeEventSpan::ChangeEventSpan(
         PacketData& data) : data_(data) {
@@ -3567,6 +3569,7 @@ inline PacketData<Triangulation<3>>::ChangeEventSpan::~ChangeEventSpan() {
             break;
     }
 }
+#endif // ! __DOXYGEN
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
@@ -3620,7 +3623,7 @@ inline void Triangulation<3>::removeAllTetrahedra() {
 }
 
 inline Triangulation<3>& Triangulation<3>::operator = (
-        const Triangulation<3>& src) {
+        const Triangulation& src) {
     // We need to implement copy assignment ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.  This is so that the
     // final packetWasChanged event is fired *after* we modify the
@@ -3649,7 +3652,7 @@ inline Triangulation<3>& Triangulation<3>::operator = (
     return *this;
 }
 
-inline Triangulation<3>& Triangulation<3>::operator = (Triangulation<3>&& src) {
+inline Triangulation<3>& Triangulation<3>::operator = (Triangulation&& src) {
     // Like copy assignment, we implement this ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.
 

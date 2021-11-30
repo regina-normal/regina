@@ -239,8 +239,8 @@ class Attachment : public Packet {
          * This is safe to call even if this packet and/or \a other does not
          * contain a non-empty attachment (i.e., if isNull() returns \c true).
          *
-         * @other the attachment packet whose contents should be swapped with
-         * this.
+         * @param other the attachment packet whose contents should be swapped
+         * with this.
          */
         void swap(Attachment& other);
 

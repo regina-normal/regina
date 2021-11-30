@@ -132,7 +132,7 @@ class SFSAlt {
          * \pre The given Seifert fibred space has at least one torus
          * boundary.
          *
-         * @param sfs the original Seifert fibred space for which we are
+         * @param original the original Seifert fibred space for which we are
          * creating a set of alternative representations.
          */
         SFSAlt(const SFSpace& original);

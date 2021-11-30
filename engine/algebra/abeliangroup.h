@@ -425,7 +425,7 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
 
         /**
          * Writes the tight encoding of this abelian group to the given output
-         * stream.  See the page on \ref "tight encodings" for details.
+         * stream.  See the page on \ref tight "tight encodings" for details.
          *
          * \ifacespython Not present; use tightEncoding() instead.
          *
@@ -436,7 +436,7 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
 
         /**
          * Returns the tight encoding of this abelian group.
-         * See the page on \ref "tight encodings" for details.
+         * See the page on \ref tight "tight encodings" for details.
          *
          * @return the resulting encoded string.
          */

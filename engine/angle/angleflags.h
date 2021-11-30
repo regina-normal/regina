@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file angles/angleflags.h
+/*! \file angle/angleflags.h
  *  \brief Defines constants and flags for angle structure enumeration.
  */
 

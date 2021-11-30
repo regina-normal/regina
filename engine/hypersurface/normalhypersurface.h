@@ -285,7 +285,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \ifacespython Not present, but you can use the version that
          * takes a "pure" triangulation.
          *
-         * @param triangulation a snapshot, frozen in time, of the
+         * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * @param enc indicates precisely how the given vector encodes a normal
          * hypersurface.
@@ -314,7 +314,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \ifacespython Not present, but you can use the version that
          * takes a "pure" triangulation and copies \a vector.
          *
-         * @param triangulation a snapshot, frozen in time, of the
+         * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * @param enc indicates precisely how the given vector encodes a normal
          * hypersurface.
@@ -423,7 +423,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \ifacespython Not present, but you can use the version that
          * takes a "pure" triangulation.
          *
-         * @param triangulation a snapshot, frozen in time, of the
+         * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * @param coords the coordinate system from which the vector
          * encoding will be deduced.
@@ -456,7 +456,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \ifacespython Not present, but you can use the version that
          * takes a "pure" triangulation and copies \a vector.
          *
-         * @param triangulation a snapshot, frozen in time, of the
+         * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * @param coords the coordinate system from which the vector
          * encoding will be deduced.

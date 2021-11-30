@@ -2505,15 +2505,6 @@ class Link : public PacketData<Link>, public Output<Link> {
 
         /*@}*/
         /**
-         * \name Packet Administration
-         */
-        /*@{*/
-
-        void writeTextShort(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
-
-        /*@}*/
-        /**
          * \name Exporting Links
          */
         /*@{*/
@@ -3283,6 +3274,25 @@ class Link : public PacketData<Link>, public Output<Link> {
          */
         std::string knotSig(bool useReflection = true, bool useReversal = true)
             const;
+
+        /**
+         * Writes a short text representation of this link to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this link to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
         /*@}*/
         /**

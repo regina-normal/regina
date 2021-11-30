@@ -207,12 +207,12 @@ class AngleStructures :
          *
          * @param src the list to move.
          */
-        AngleStructures(AngleStructures&&) noexcept = default;
+        AngleStructures(AngleStructures&& src) noexcept = default;
 
         /**
          * Sets this to be a (deep) copy of the given list.
          *
-         * @param copy the list to copy.
+         * @param src the list to copy.
          * @return a reference to this list.
          */
         AngleStructures& operator = (const AngleStructures& src);

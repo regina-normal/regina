@@ -147,7 +147,8 @@ class Script : public Packet {
          * the packet infrastructure (e.g., it will not swap packet labels,
          * or change either packet's location in any packet tree).
          *
-         * @other the script packet whose contents should be swapped with this.
+         * @param other the script packet whose contents should be swapped
+         * with this.
          */
         void swap(Script& other);
 

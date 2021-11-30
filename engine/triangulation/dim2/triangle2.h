@@ -111,12 +111,15 @@ class Face<2, 2> : public detail::SimplexBase<2> {
         /**< Allow access to private members. */
 };
 
-// Specialisations to improve upon generic implementations from SimplexBase:
+// Specialisations to improve upon generic implementations from SimplexBase
+// (hide these from doxygen, which struggles with specialisations):
 
+#ifndef __DOXYGEN
 template <>
 inline Edge<2>* detail::SimplexBase<2>::edge(int i, int j) const {
     return (i == j ? nullptr : edge(3 - i - j));
 }
+#endif
 
 // Inline functions for Simplex<2>
 

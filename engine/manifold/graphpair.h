@@ -241,7 +241,7 @@ class GraphPair : public Manifold {
         /**
          * Sets this to be a clone of the given graph manifold.
          *
-         * @param return a reference to this graph manifold.
+         * @return a reference to this graph manifold.
          */
         GraphPair& operator = (const GraphPair&) = default;
         /**

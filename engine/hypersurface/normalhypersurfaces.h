@@ -242,12 +242,12 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          *
          * @param src the list to move.
          */
-        NormalHypersurfaces(NormalHypersurfaces&&) noexcept = default;
+        NormalHypersurfaces(NormalHypersurfaces&& src) noexcept = default;
 
         /**
          * Sets this to be a (deep) copy of the given list.
          *
-         * @param copy the list to copy.
+         * @param src the list to copy.
          * @return a reference to this list.
          */
         NormalHypersurfaces& operator = (const NormalHypersurfaces& src);

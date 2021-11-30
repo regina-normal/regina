@@ -308,6 +308,19 @@ class TriSolidTorus : public StandardTriangulation {
         TriSolidTorus() = default;
 };
 
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls TriSolidTorus::swap(); it is provided
+ * so that TriSolidTorus meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(TriSolidTorus& a, TriSolidTorus& b) noexcept;
+
 // Inline functions for TriSolidTorus
 
 inline void TriSolidTorus::swap(TriSolidTorus& other) noexcept {

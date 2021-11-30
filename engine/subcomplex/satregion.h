@@ -657,6 +657,11 @@ class SatRegion : public Output<SatRegion> {
          * @param tri the triangulation in which to search for starter blocks.
          * @param mustBeComplete \c true if you are searching for a region
          * that fills an entire triangulation component, as described above.
+         * @param action a function (or other callable object) to call
+         * for each embedding of a starter block that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial region and tetrahedron list
+         * arguments.
          * @return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
          */

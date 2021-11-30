@@ -1065,7 +1065,7 @@ inline void Triangulation<4>::removeAllPentachora() {
 }
 
 inline Triangulation<4>& Triangulation<4>::operator = (
-        const Triangulation<4>& src) {
+        const Triangulation& src) {
     // We need to implement copy assignment ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.  This is so that the
     // final packetWasChanged event is fired *after* we modify the
@@ -1082,7 +1082,7 @@ inline Triangulation<4>& Triangulation<4>::operator = (
     return *this;
 }
 
-inline Triangulation<4>& Triangulation<4>::operator = (Triangulation<4>&& src) {
+inline Triangulation<4>& Triangulation<4>::operator = (Triangulation&& src) {
     // Like copy assignment, we implement this ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.
 

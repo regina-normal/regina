@@ -2026,9 +2026,9 @@ class PacketOf : public Packet, public Held {
          * @param data the object to copy.
          * @return a reference to this packet.
          */
-        PacketOf<Held>& operator = (const Held& src) {
+        PacketOf<Held>& operator = (const Held& data) {
             // We assume that Held takes care of the necessary change events.
-            Held::operator = (src);
+            Held::operator = (data);
             return *this;
         }
         /**
@@ -2042,9 +2042,9 @@ class PacketOf : public Packet, public Held {
          * @param data the object to move.
          * @return a reference to this packet.
          */
-        PacketOf<Held>& operator = (Held&& src) {
+        PacketOf<Held>& operator = (Held&& data) {
             // We assume that Held takes care of the necessary change events.
-            Held::operator = (std::move(src));
+            Held::operator = (std::move(data));
             return *this;
         }
         /**

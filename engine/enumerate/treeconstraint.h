@@ -209,9 +209,9 @@ class LPConstraintBase {
          * underlying triangulation (LPInitialTableaux.tri()) and the
          * permutation of columns (LPInitialTableaux.columnPerm()).
          *
-         * For each subclass \a S of LPConstraintBase, the array \a col
-         * must be an array of objects of type LPCol<S>, and the tableaux
-         * \a init must be of type LPInitialTableaux<S>.
+         * For each subclass \a Sub of LPConstraintBase, the array \a col
+         * must be an array of objects of type LPCol<Sub>, and the tableaux
+         * \a init must be of type LPInitialTableaux<Sub>.
          *
          * This routine should only write to the coefficients stored in
          * LPCol::extra.  You may assume that these coefficients have all been

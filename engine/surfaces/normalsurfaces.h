@@ -395,12 +395,12 @@ class NormalSurfaces :
          *
          * @param src the list to move.
          */
-        NormalSurfaces(NormalSurfaces&&) noexcept = default;
+        NormalSurfaces(NormalSurfaces&& src) noexcept = default;
 
         /**
          * Sets this to be a (deep) copy of the given list.
          *
-         * @param copy the list to copy.
+         * @param src the list to copy.
          * @return a reference to this list.
          */
         NormalSurfaces& operator = (const NormalSurfaces& src);

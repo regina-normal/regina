@@ -532,10 +532,10 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * \exception InvalidArgument The size of the given vector was
          * not precisely snfRank().
          *
-         * @param SNFRep any vector in SNF coordinates.
+         * @param snf any vector in SNF coordinates.
          * @return a corresponding vector in chain complex coordinates.
          */
-        Vector<Integer> ccRep(const Vector<Integer>& SNFRep) const;
+        Vector<Integer> ccRep(const Vector<Integer>& snf) const;
 
         /**
          * A combination of freeRep() and torsionRep() that expresses
@@ -553,7 +553,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * or equal to the number of generators in SNF coordinates
          * (i.e., greater than or equal to snfRank()).
          *
-         * @param SNFRep specifies which standard basis vector to use from
+         * @param snfGen specifies which standard basis vector to use from
          * SNF coordinates; this must be between 0 and snfRank()-1 inclusive.
          * @return a corresponding vector in chain complex coordinates.
          */

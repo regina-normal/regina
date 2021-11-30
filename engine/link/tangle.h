@@ -322,7 +322,7 @@ class Tangle : public Output<Tangle> {
         /**
          * Sets this to be a (deep) copy of the given tangle.
          *
-         * @param copy the tangle to copy.
+         * @param src the tangle to copy.
          * @return a reference to this tangle.
          */
         Tangle& operator = (const Tangle& src);

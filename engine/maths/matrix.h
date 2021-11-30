@@ -611,8 +611,8 @@ class Matrix : public Output<Matrix<T>> {
          * This operation is constant time (unlike swapping columns,
          * which is linear time).
          *
-         * Unlike swapCols(), this operation does not take a \fromCol argument.
-         * This is because swapping rows is already as fast possible
+         * Unlike swapCols(), this operation does not take a \a fromCol
+         * argument.  This is because swapping rows is already as fast possible
          * (internally, just a single pointer swap), and so iterating along
          * only part of the row would slow the routine down considerably.
          *
@@ -1068,7 +1068,7 @@ class Matrix : public Output<Matrix<T>> {
          * rewriting column \a col2.
          * @param coeff22 the coefficient of column \a col2 to use when
          * rewriting column \a col2.
-         * @param fromCol the starting point in the columns from which the
+         * @param fromRow the starting point in the columns from which the
          * operation will be performed.
          */
         REGINA_ENABLE_FOR_RING(void) combCols(
