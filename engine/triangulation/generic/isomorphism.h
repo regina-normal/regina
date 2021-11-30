@@ -213,6 +213,10 @@ class Isomorphism :
          * Determines the image of the given source simplex under
          * this isomorphism.
          *
+         * If the dimension \a dim is 2, 3 or 4, then you can also access
+         * this image through the dimension-specific alias triImage(),
+         * tetImage() or pentImage() respectively.
+         *
          * \ifacespython Python users can only access the read-only version
          * of this function that returns by value: you cannot use simpImage()
          * to edit the isomorphism.  As an alternative however, Python users
@@ -228,6 +232,10 @@ class Isomorphism :
          * Determines the image of the given source simplex under
          * this isomorphism.
          *
+         * If the dimension \a dim is 2, 3 or 4, then you can also access
+         * this image through the dimension-specific alias triImage(),
+         * tetImage() or pentImage() respectively.
+         *
          * @param sourceSimp the index of the source simplex; this must
          * be between 0 and <tt>size()-1</tt> inclusive.
          * @return the index of the destination simplex
@@ -241,6 +249,10 @@ class Isomorphism :
          * Facet \a i of source simplex \a sourceSimp will be mapped to
          * facet <tt>facetPerm(sourceSimp)[i]</tt> of simplex
          * <tt>simpImage(sourceSimp)</tt>.
+         *
+         * If the dimension \a dim is 2 or 3, then you can also access
+         * this permutation through the dimension-specific alias
+         * edgePerm() or facePerm() respectively.
          *
          * \ifacespython Python users can only access the read-only version
          * of this function that returns by value: you cannot use facetPerm()
@@ -260,6 +272,10 @@ class Isomorphism :
          * Facet \a i of source simplex \a sourceSimp will be mapped to
          * face <tt>facetPerm(sourceSimp)[i]</tt> of simplex
          * <tt>simpImage(sourceSimp)</tt>.
+         *
+         * If the dimension \a dim is 2 or 3, then you can also access
+         * this permutation through the dimension-specific alias
+         * edgePerm() or facePerm() respectively.
          *
          * @param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and

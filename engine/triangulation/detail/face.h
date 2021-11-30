@@ -135,6 +135,10 @@ class FaceEmbeddingBase :
          * Returns the top-dimensional simplex in which the underlying
          * <i>subdim</i>-face of the triangulation is contained.
          *
+         * If the triangulation dimension \a dim is at most 4, then you can
+         * also access this simplex through a dimension-specific alias
+         * (e.g., tetrahedron() in the case \a dim = 3).
+         *
          * @return the top-dimensional simplex.
          */
         Simplex<dim>* simplex() const;
@@ -144,6 +148,10 @@ class FaceEmbeddingBase :
          * This identifies which face of the top-dimensional simplex
          * simplex() refers to the underlying <i>subdim</i>-face of the
          * triangulation.
+         *
+         * If the face dimension \a subdim is at most 4, then you can also
+         * access this face number through a dimension-specific alias
+         * (e.g., edge() in the case \a subdim = 1).
          *
          * @return the corresponding face number of the top-dimensional simplex.
          * This will be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
