@@ -724,6 +724,7 @@ Version 7.0  [ TODO ]
         Class Manifold:
             - Routines construct() and homology() now return by value, not by
               pointer, and throw exceptions on error instead of returning null.
+            - The alias homologyH1() is now deprecated.
             - Renamed TeXName() to texName().  The old name is kept but
               deprecated.
         Class MarkedAbelianGroup:
