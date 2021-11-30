@@ -1085,13 +1085,13 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
         /**
          * Returns the internal reduced matrix representing the homomorphism.
          * This is where the rows/columns of the matrix represent
-         * first the free generators, then the torsion summands in the order
-         * of the invariant factors:
+         * first the torsion summands in the order of the invariant factors,
+         * and then the free generators:
          *
-         *             Z^d + Z_{d0} + ... + Z_{dk}
+         *             Z_{d0} + ... + Z_{dk} + Z^r
          * where:
          *
-         * - \a d is the number of free generators, as returned by rank();
+         * - \a r is the number of free generators, as returned by rank();
          * - \a d1, ..., \a dk are the invariant factors that describe the
          *   torsion elements of the group, where
          *   1 < \a d1 | \a d2 | ... | \a dk.
