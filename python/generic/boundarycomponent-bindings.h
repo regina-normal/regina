@@ -95,13 +95,13 @@ void addBoundaryComponent(pybind11::module_& m, const char* name) {
         .def_readonly_static("canBuild", &BoundaryComponent<dim>::canBuild)
     ;
     if constexpr (dim == 5) {
-        c.def("countPentachora", &BoundaryComponent<dim>::size);
-        c.def("pentachoron", &BoundaryComponent<dim>::facet,
+        c.def("countPentachora", &BoundaryComponent<dim>::countPentachora);
+        c.def("pentachoron", &BoundaryComponent<dim>::pentachoron,
             pybind11::return_value_policy::reference);
         c.def("pentachora", &BoundaryComponent<dim>::pentachora);
     }
     if constexpr (dim == 6) {
-        c.def("countPentachora", &BoundaryComponent<dim>::countRidges);
+        c.def("countPentachora", &BoundaryComponent<dim>::countPentachora);
     }
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
