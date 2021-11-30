@@ -1703,6 +1703,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)
@@ -1744,6 +1747,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -1850,6 +1856,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will (trivially) preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a f)
@@ -1895,6 +1904,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will (trivially) preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a f)
@@ -1938,6 +1950,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will (trivially) preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -1983,6 +1998,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   performed, and its validity tests are expensive; pinchEdge() on
          *   the other hand can always be used for edges \a e of the
          *   type described above.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
