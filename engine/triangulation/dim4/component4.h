@@ -71,8 +71,7 @@ namespace regina {
  * \ingroup dim4
  */
 template <>
-class Component<4> : public detail::ComponentBase<4>,
-        public alias::FacesOfTriangulation<Component<4>, 4> {
+class Component<4> : public detail::ComponentBase<4> {
     private:
         std::vector<Tetrahedron<4>*> tetrahedra_;
             /**< List of tetrahedra in the component. */
@@ -87,13 +86,6 @@ class Component<4> : public detail::ComponentBase<4>,
             /**< Is the component ideal? */
 
     public:
-        /**
-         * A dimension-specific alias for simplices().
-         *
-         * See simplices() for further information.
-         */
-        auto pentachora() const;
-
         /**
          * Returns the number of <i>subdim</i>-faces in this component.
          *
@@ -225,10 +217,6 @@ class Component<4> : public detail::ComponentBase<4>,
 // Inline functions for Component<4>
 
 inline Component<4>::Component() : detail::ComponentBase<4>(), ideal_(false) {
-}
-
-inline auto Component<4>::pentachora() const {
-    return simplices();
 }
 
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.

@@ -173,12 +173,6 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
         /*@{*/
 
         /**
-         * A dimension-specific alias for simplices().
-         *
-         * See simplices() for further information.
-         */
-        auto triangles() const;
-        /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
@@ -433,10 +427,6 @@ inline Triangulation<2>::Triangulation(const Triangulation& cloneMe,
 inline Triangulation<2>::~Triangulation() {
     Snapshottable<Triangulation<2>>::takeSnapshot();
     clearAllProperties();
-}
-
-inline auto Triangulation<2>::triangles() const {
-    return simplices();
 }
 
 inline Triangle<2>* Triangulation<2>::newTriangle() {

@@ -215,12 +215,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         /*@{*/
 
         /**
-         * A dimension-specific alias for simplices().
-         *
-         * See simplices() for further information.
-         */
-        auto pentachora() const;
-        /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
@@ -1020,10 +1014,6 @@ namespace regina {
 inline Triangulation<4>::~Triangulation() {
     Snapshottable<Triangulation<4>>::takeSnapshot();
     clearAllProperties();
-}
-
-inline auto Triangulation<4>::pentachora() const {
-    return simplices();
 }
 
 inline Pentachoron<4>* Triangulation<4>::newPentachoron() {

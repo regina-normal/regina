@@ -43,7 +43,6 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/facenumbering.h"
-#include "triangulation/alias/face.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
 #include <array>
@@ -756,33 +755,38 @@ inline Face<dim, subdim>* SimplexBase<dim>::face(int face) const {
 
 template <int dim>
 inline Face<dim, 0>* SimplexBase<dim>::vertex(int i) const {
-    return face<0>(i);
+    triangulation().ensureSkeleton();
+    return std::get<0>(faces_)[i];
 }
 
 template <int dim>
 inline Face<dim, 1>* SimplexBase<dim>::edge(int i) const {
-    return face<1>(i);
+    triangulation().ensureSkeleton();
+    return std::get<1>(faces_)[i];
 }
 
 template <int dim>
 inline Face<dim, 2>* SimplexBase<dim>::triangle(int i) const {
     static_assert(dim >= 3, "triangle() is only available "
         "for simplices of dimension >= 3.");
-    return face<2>(i);
+    triangulation().ensureSkeleton();
+    return std::get<2>(faces_)[i];
 }
 
 template <int dim>
 inline Face<dim, 3>* SimplexBase<dim>::tetrahedron(int i) const {
     static_assert(dim >= 4, "tetrahedron() is only available "
         "for simplices of dimension >= 4.");
-    return face<3>(i);
+    triangulation().ensureSkeleton();
+    return std::get<3>(faces_)[i];
 }
 
 template <int dim>
 inline Face<dim, 4>* SimplexBase<dim>::pentachoron(int i) const {
     static_assert(dim >= 5, "pentachoron() is only available "
         "for simplices of dimension >= 5.");
-    return face<4>(i);
+    triangulation().ensureSkeleton();
+    return std::get<4>(faces_)[i];
 }
 
 template <int dim>
@@ -794,33 +798,38 @@ inline Perm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
 
 template <int dim>
 inline Perm<dim + 1> SimplexBase<dim>::vertexMapping(int face) const {
-    return faceMapping<0>(face);
+    triangulation().ensureSkeleton();
+    return std::get<0>(mappings_)[face];
 }
 
 template <int dim>
 inline Perm<dim + 1> SimplexBase<dim>::edgeMapping(int face) const {
-    return faceMapping<1>(face);
+    triangulation().ensureSkeleton();
+    return std::get<1>(mappings_)[face];
 }
 
 template <int dim>
 inline Perm<dim + 1> SimplexBase<dim>::triangleMapping(int face) const {
     static_assert(dim >= 3, "triangleMapping() is only available "
         "for simplices of dimension >= 3.");
-    return faceMapping<2>(face);
+    triangulation().ensureSkeleton();
+    return std::get<2>(mappings_)[face];
 }
 
 template <int dim>
 inline Perm<dim + 1> SimplexBase<dim>::tetrahedronMapping(int face) const {
     static_assert(dim >= 4, "tetrahedronMapping() is only available "
         "for simplices of dimension >= 4.");
-    return faceMapping<3>(face);
+    triangulation().ensureSkeleton();
+    return std::get<3>(mappings_)[face];
 }
 
 template <int dim>
 inline Perm<dim + 1> SimplexBase<dim>::pentachoronMapping(int face) const {
     static_assert(dim >= 5, "pentachoronMapping() is only available "
         "for simplices of dimension >= 5.");
-    return faceMapping<4>(face);
+    triangulation().ensureSkeleton();
+    return std::get<4>(mappings_)[face];
 }
 
 template <int dim>

@@ -214,6 +214,59 @@ class ComponentBase :
         size_t countBoundaryComponents() const;
 
         /**
+         * A dimension-specific alias for faces<0>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * See faces() for further information.
+         */
+        auto vertices() const;
+
+        /**
+         * A dimension-specific alias for faces<1>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * See faces() for further information.
+         */
+        auto edges() const;
+
+        /**
+         * A dimension-specific alias for faces<2>(), or an alias for
+         * simplices() in dimension \a dim = 2.
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * See faces() for further information.
+         */
+        auto triangles() const;
+
+        /**
+         * A dimension-specific alias for faces<3>(), or an alias for
+         * simplices() in dimension \a dim = 3.
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         *
+         * See faces() for further information.
+         */
+        auto tetrahedra() const;
+
+        /**
+         * A dimension-specific alias for faces<4>(), or an alias for
+         * simplices() in dimension \a dim = 4.
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions" and \a dim &ge; 4.
+         *
+         * See faces() for further information.
+         */
+        auto pentachora() const;
+
+        /**
          * Returns an object that allows iteration through and random access
          * to all boundary components in this component.
          *
@@ -457,6 +510,52 @@ inline size_t ComponentBase<dim>::countBoundaryComponents() const {
 }
 
 template <int dim>
+inline auto ComponentBase<dim>::vertices() const {
+    static_assert(standardDim(dim), "vertices() is only available "
+        "for components in standard dimensions.");
+    return static_cast<const Component<dim>*>(this)->template faces<0>();
+}
+
+template <int dim>
+inline auto ComponentBase<dim>::edges() const {
+    static_assert(standardDim(dim), "edges() is only available "
+        "for components in standard dimensions.");
+    return static_cast<const Component<dim>*>(this)->template faces<1>();
+}
+
+template <int dim>
+inline auto ComponentBase<dim>::triangles() const {
+    static_assert(standardDim(dim), "triangles() is only available "
+        "for components in standard dimensions.");
+    if constexpr (dim == 2)
+        return ListView(simplices_);
+    else
+        return static_cast<const Component<dim>*>(this)->template faces<2>();
+}
+
+template <int dim>
+inline auto ComponentBase<dim>::tetrahedra() const {
+    static_assert(standardDim(dim) && dim >= 3,
+        "tetrahedra() is only available for components in "
+        "standard dimensions dim >= 3.");
+    if constexpr (dim == 3)
+        return ListView(simplices_);
+    else
+        return static_cast<const Component<dim>*>(this)->template faces<3>();
+}
+
+template <int dim>
+inline auto ComponentBase<dim>::pentachora() const {
+    static_assert(standardDim(dim) && dim >= 4,
+        "pentachora() is only available for components in "
+        "standard dimensions dim >= 4.");
+    if constexpr (dim == 4)
+        return ListView(simplices_);
+    else
+        return static_cast<const Component<dim>*>(this)->template faces<4>();
+}
+
+template <int dim>
 inline auto ComponentBase<dim>::boundaryComponents() const {
     return ListView(boundaryComponents_);
 }
@@ -480,7 +579,7 @@ inline Face<dim, 2>* ComponentBase<dim>::triangle(size_t index) const {
     static_assert(standardDim(dim), "triangle() is only available "
         "for components in standard dimensions.");
     if constexpr (dim == 2)
-        return static_cast<const Component<dim>*>(this)->simplex(index);
+        return simplices_[index];
     else
         return static_cast<const Component<dim>*>(this)->
             template face<2>(index);
@@ -492,7 +591,7 @@ inline Face<dim, 3>* ComponentBase<dim>::tetrahedron(size_t index) const {
         "tetrahedron() is only available for components in "
         "standard dimensions dim >= 3.");
     if constexpr (dim == 3)
-        return static_cast<const Component<dim>*>(this)->simplex(index);
+        return simplices_[index];
     else
         return static_cast<const Component<dim>*>(this)->
             template face<3>(index);
@@ -504,7 +603,7 @@ inline Face<dim, 4>* ComponentBase<dim>::pentachoron(size_t index) const {
         "pentachoron() is only available for components in "
         "standard dimensions dim >= 4.");
     if constexpr (dim == 4)
-        return static_cast<const Component<dim>*>(this)->simplex(index);
+        return simplices_[index];
     else
         return static_cast<const Component<dim>*>(this)->
             template face<4>(index);

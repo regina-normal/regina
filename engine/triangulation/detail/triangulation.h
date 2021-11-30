@@ -57,7 +57,6 @@
 #include "triangulation/generic/face.h"
 #include "triangulation/generic/isomorphism.h"
 #include "triangulation/generic/simplex.h"
-#include "triangulation/alias/face.h"
 #include "triangulation/isosigencoding.h"
 #include "utilities/exception.h"
 #include "utilities/listview.h"
@@ -132,8 +131,7 @@ template <int dim>
 class TriangulationBase :
         public Snapshottable<Triangulation<dim>>,
         public PacketData<Triangulation<dim>>,
-        public Output<Triangulation<dim>>,
-        public alias::FacesOfTriangulation<TriangulationBase<dim>, dim> {
+        public Output<Triangulation<dim>> {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
     public:
@@ -778,6 +776,54 @@ class TriangulationBase :
          * @return access to the list of all <i>subdim</i>-faces.
          */
         auto faces(int subdim) const;
+
+        /**
+         * A dimension-specific alias for faces<0>().
+         *
+         * This alias is available for all dimensions \a dim.
+         *
+         * See faces() for further information.
+         */
+        auto vertices() const;
+
+        /**
+         * A dimension-specific alias for faces<1>().
+         *
+         * This alias is available for all dimensions \a dim.
+         *
+         * See faces() for further information.
+         */
+        auto edges() const;
+
+        /**
+         * A dimension-specific alias for faces<2>(), or an alias for
+         * simplices() in dimension \a dim = 2.
+         *
+         * This alias is available for all dimensions.
+         *
+         * See faces() for further information.
+         */
+        auto triangles() const;
+
+        /**
+         * A dimension-specific alias for faces<3>(), or an alias for
+         * simplices() in dimension \a dim = 3.
+         *
+         * This alias is available for dimensions \a dim &ge; 3.
+         *
+         * See faces() for further information.
+         */
+        auto tetrahedra() const;
+
+        /**
+         * A dimension-specific alias for faces<4>(), or an alias for
+         * simplices() in dimension \a dim = 4.
+         *
+         * This alias is available for dimensions \a dim &ge; 4.
+         *
+         * See faces() for further information.
+         */
+        auto pentachora() const;
 
         /**
          * Returns the requested connected component of this triangulation.
@@ -3109,31 +3155,48 @@ inline size_t TriangulationBase<dim>::countFaces(int subdim) const {
 
 template <int dim>
 inline size_t TriangulationBase<dim>::countVertices() const {
-    return countFaces<0>();
+    ensureSkeleton();
+    return std::get<0>(faces_).size();
 }
 
 template <int dim>
 inline size_t TriangulationBase<dim>::countEdges() const {
-    return countFaces<1>();
+    ensureSkeleton();
+    return std::get<1>(faces_).size();
 }
 
 template <int dim>
 inline size_t TriangulationBase<dim>::countTriangles() const {
-    return countFaces<2>();
+    if constexpr (dim == 2) {
+        return simplices_.size();
+    } else {
+        ensureSkeleton();
+        return std::get<2>(faces_).size();
+    }
 }
 
 template <int dim>
 inline size_t TriangulationBase<dim>::countTetrahedra() const {
     static_assert(dim >= 3, "countTetrahedra() is only available "
         "for triangulations of dimension >= 3.");
-    return countFaces<3>();
+    if constexpr (dim == 3) {
+        return simplices_.size();
+    } else {
+        ensureSkeleton();
+        return std::get<3>(faces_).size();
+    }
 }
 
 template <int dim>
 inline size_t TriangulationBase<dim>::countPentachora() const {
     static_assert(dim >= 4, "countPentachora() is only available "
         "for triangulations of dimension >= 4.");
-    return countFaces<4>();
+    if constexpr (dim == 4) {
+        return simplices_.size();
+    } else {
+        ensureSkeleton();
+        return std::get<4>(faces_).size();
+    }
 }
 
 template <int dim>
@@ -3193,6 +3256,52 @@ inline auto TriangulationBase<dim>::faces(int subdim) const {
 }
 
 template <int dim>
+inline auto TriangulationBase<dim>::vertices() const {
+    ensureSkeleton();
+    return ListView(std::get<0>(faces_));
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::edges() const {
+    ensureSkeleton();
+    return ListView(std::get<1>(faces_));
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::triangles() const {
+    if constexpr (dim == 2) {
+        return ListView(simplices_);
+    } else {
+        ensureSkeleton();
+        return ListView(std::get<2>(faces_));
+    }
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::tetrahedra() const {
+    static_assert(dim >= 3, "tetrahedra() is only available "
+        "for triangulations of dimension >= 3.");
+    if constexpr (dim == 3) {
+        return ListView(simplices_);
+    } else {
+        ensureSkeleton();
+        return ListView(std::get<3>(faces_));
+    }
+}
+
+template <int dim>
+inline auto TriangulationBase<dim>::pentachora() const {
+    static_assert(dim >= 4, "pentachora() is only available "
+        "for triangulations of dimension >= 4.");
+    if constexpr (dim == 4) {
+        return ListView(simplices_);
+    } else {
+        ensureSkeleton();
+        return ListView(std::get<4>(faces_));
+    }
+}
+
+template <int dim>
 template <int subdim, typename Iterator>
 inline void TriangulationBase<dim>::reorderFaces(Iterator begin, Iterator end) {
     std::get<subdim>(faces_).refill(begin, end);
@@ -3249,68 +3358,82 @@ inline auto TriangulationBase<dim>::face(int subdim, size_t index) const {
 
 template <int dim>
 inline Face<dim, 0>* TriangulationBase<dim>::vertex(size_t index) const {
-    return face<0>(index);
+    ensureSkeleton();
+    return std::get<0>(faces_)[index];
 }
 
 template <int dim>
 inline Face<dim, 1>* TriangulationBase<dim>::edge(size_t index) const {
-    return face<1>(index);
+    ensureSkeleton();
+    return std::get<1>(faces_)[index];
 }
 
 template <int dim>
 inline Face<dim, 2>* TriangulationBase<dim>::triangle(size_t index) {
-    if constexpr (dim == 2)
-        return simplex(index);
-    else
-        return face<2>(index);
+    if constexpr (dim == 2) {
+        return simplices_[index];
+    } else {
+        ensureSkeleton();
+        return std::get<2>(faces_)[index];
+    }
 }
 
 template <int dim>
 inline auto TriangulationBase<dim>::triangle(size_t index) const {
-    if constexpr (dim == 2)
-        return simplex(index);
-    else
-        return face<2>(index);
+    if constexpr (dim == 2) {
+        return simplices_[index];
+    } else {
+        ensureSkeleton();
+        return std::get<2>(faces_)[index];
+    }
 }
 
 template <int dim>
 inline Face<dim, 3>* TriangulationBase<dim>::tetrahedron(size_t index) {
     static_assert(dim >= 3, "tetrahedron() is only available "
         "for triangulations of dimension >= 3.");
-    if constexpr (dim == 3)
-        return simplex(index);
-    else
-        return face<3>(index);
+    if constexpr (dim == 3) {
+        return simplices_[index];
+    } else {
+        ensureSkeleton();
+        return std::get<3>(faces_)[index];
+    }
 }
 
 template <int dim>
 inline auto TriangulationBase<dim>::tetrahedron(size_t index) const {
     static_assert(dim >= 3, "tetrahedron() is only available "
         "for triangulations of dimension >= 3.");
-    if constexpr (dim == 3)
-        return simplex(index);
-    else
-        return face<3>(index);
+    if constexpr (dim == 3) {
+        return simplices_[index];
+    } else {
+        ensureSkeleton();
+        return std::get<3>(faces_)[index];
+    }
 }
 
 template <int dim>
 inline Face<dim, 4>* TriangulationBase<dim>::pentachoron(size_t index) {
     static_assert(dim >= 4, "pentachoron() is only available "
         "for triangulations of dimension >= 4.");
-    if constexpr (dim == 4)
-        return simplex(index);
-    else
-        return face<4>(index);
+    if constexpr (dim == 4) {
+        return simplices_[index];
+    } else {
+        ensureSkeleton();
+        return std::get<4>(faces_)[index];
+    }
 }
 
 template <int dim>
 inline auto TriangulationBase<dim>::pentachoron(size_t index) const {
     static_assert(dim >= 4, "pentachoron() is only available "
         "for triangulations of dimension >= 4.");
-    if constexpr (dim == 4)
-        return simplex(index);
-    else
-        return face<4>(index);
+    if constexpr (dim == 4) {
+        return simplices_[index];
+    } else {
+        ensureSkeleton();
+        return std::get<4>(faces_)[index];
+    }
 }
 
 template <int dim>

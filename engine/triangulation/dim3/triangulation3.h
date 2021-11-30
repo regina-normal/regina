@@ -423,12 +423,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /*@{*/
 
         /**
-         * A dimension-specific alias for simplices().
-         *
-         * See simplices() for further information.
-         */
-        auto tetrahedra() const;
-        /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
@@ -3576,10 +3570,6 @@ namespace regina {
 
 inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
         Triangulation<3>(copy, true) {
-}
-
-inline auto Triangulation<3>::tetrahedra() const {
-    return simplices();
 }
 
 inline Tetrahedron<3>* Triangulation<3>::newTetrahedron() {
