@@ -860,39 +860,36 @@ class TriangulationBase :
          * A dimension-specific alias for face<0>().
          *
          * This alias is available for all dimensions \a dim.
-         * It returns a vertex pointer.
          *
          * See face() for further information.
          */
-        auto vertex(size_t index) const;
+        Face<dim, 0>* vertex(size_t index) const;
 
         /**
          * A dimension-specific alias for face<1>().
          *
          * This alias is available for all dimensions \a dim.
-         * It returns an edge pointer.
          *
          * See face() for further information.
          */
-        auto edge(size_t index) const;
+        Face<dim, 1>* edge(size_t index) const;
 
         /**
          * A dimension-specific alias for face<2>(), or an alias for
          * simplex() in dimension \a dim = 2.
          *
          * This alias is available for all dimensions \a dim.
-         * It returns non-const triangle pointer.
          *
          * See face() for further information.
          */
-        auto triangle(size_t index);
+        Face<dim, 2>* triangle(size_t index);
 
         /**
          * A dimension-specific alias for face<2>(), or an alias for
          * simplex() in dimension \a dim = 2.
          *
          * This alias is available for all dimensions \a dim.
-         * It returns const triangle pointer in dimension \a dim = 2,
+         * It returns a const triangle pointer in dimension \a dim = 2,
          * and a non-const triangle pointer in all higher dimensions.
          *
          * See face() for further information.
@@ -904,18 +901,17 @@ class TriangulationBase :
          * simplex() in dimension \a dim = 3.
          *
          * This alias is available for dimensions \a dim &ge; 3.
-         * It returns non-const tetrahedron pointer.
          *
          * See face() for further information.
          */
-        auto tetrahedron(size_t index);
+        Face<dim, 3>* tetrahedron(size_t index);
 
         /**
          * A dimension-specific alias for face<3>(), or an alias for
          * simplex() in dimension \a dim = 3.
          *
          * This alias is available for dimensions \a dim &ge; 3.
-         * It returns const tetrahedron pointer in dimension \a dim = 3,
+         * It returns a const tetrahedron pointer in dimension \a dim = 3,
          * and a non-const tetrahedron pointer in all higher dimensions.
          *
          * See face() for further information.
@@ -927,18 +923,17 @@ class TriangulationBase :
          * simplex() in dimension \a dim = 4.
          *
          * This alias is available for dimensions \a dim &ge; 4.
-         * It returns non-const pentachoron pointer.
          *
          * See face() for further information.
          */
-        auto pentachoron(size_t index);
+        Face<dim, 4>* pentachoron(size_t index);
 
         /**
          * A dimension-specific alias for face<4>(), or an alias for
          * simplex() in dimension \a dim = 4.
          *
          * This alias is available for dimensions \a dim &ge; 4.
-         * It returns const pentachoron pointer in dimension \a dim = 4,
+         * It returns a const pentachoron pointer in dimension \a dim = 4,
          * and a non-const pentachoron pointer in all higher dimensions.
          *
          * See face() for further information.
@@ -3253,17 +3248,17 @@ inline auto TriangulationBase<dim>::face(int subdim, size_t index) const {
 }
 
 template <int dim>
-inline auto TriangulationBase<dim>::vertex(size_t index) const {
+inline Face<dim, 0>* TriangulationBase<dim>::vertex(size_t index) const {
     return face<0>(index);
 }
 
 template <int dim>
-inline auto TriangulationBase<dim>::edge(size_t index) const {
+inline Face<dim, 1>* TriangulationBase<dim>::edge(size_t index) const {
     return face<1>(index);
 }
 
 template <int dim>
-inline auto TriangulationBase<dim>::triangle(size_t index) {
+inline Face<dim, 2>* TriangulationBase<dim>::triangle(size_t index) {
     if constexpr (dim == 2)
         return simplex(index);
     else
@@ -3279,7 +3274,7 @@ inline auto TriangulationBase<dim>::triangle(size_t index) const {
 }
 
 template <int dim>
-inline auto TriangulationBase<dim>::tetrahedron(size_t index) {
+inline Face<dim, 3>* TriangulationBase<dim>::tetrahedron(size_t index) {
     static_assert(dim >= 3, "tetrahedron() is only available "
         "for triangulations of dimension >= 3.");
     if constexpr (dim == 3)
@@ -3299,7 +3294,7 @@ inline auto TriangulationBase<dim>::tetrahedron(size_t index) const {
 }
 
 template <int dim>
-inline auto TriangulationBase<dim>::pentachoron(size_t index) {
+inline Face<dim, 4>* TriangulationBase<dim>::pentachoron(size_t index) {
     static_assert(dim >= 4, "pentachoron() is only available "
         "for triangulations of dimension >= 4.");
     if constexpr (dim == 4)
