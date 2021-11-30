@@ -120,8 +120,9 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>())
         .def("simplices", &Triangulation<3>::simplices,
             pybind11::keep_alive<0, 1>())
-        .def("tetrahedron",
-            overload_cast<size_t>(&Triangulation<3>::tetrahedron),
+        // Use a C-style cast because GCC struggles with the overload_cast here:
+        .def("tetrahedron", (regina::Simplex<3>* (Triangulation<3>::*)(size_t))(
+            &Triangulation<3>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
         .def("simplex",
             overload_cast<size_t>(&Triangulation<3>::simplex),
@@ -192,7 +193,9 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<3>::edge,
             pybind11::return_value_policy::reference_internal)
-        .def("triangle", overload_cast<size_t>(&Triangulation<3>::triangle),
+        // Use a C-style cast because GCC struggles with the overload_cast here:
+        .def("triangle", (regina::Face<3, 2>* (Triangulation<3>::*)(size_t))(
+            &Triangulation<3>::triangle),
             pybind11::return_value_policy::reference_internal)
         .def("isIdenticalTo", &Triangulation<3>::isIdenticalTo)
         .def("isIsomorphicTo", &Triangulation<3>::isIsomorphicTo)

@@ -60,8 +60,9 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>())
         .def("simplices", &Triangulation<2>::simplices,
             pybind11::keep_alive<0, 1>())
-        .def("triangle",
-            overload_cast<size_t>(&Triangulation<2>::triangle),
+        // Use a C-style cast because GCC struggles with the overload_cast here:
+        .def("triangle", (regina::Simplex<2>* (Triangulation<2>::*)(size_t))(
+            &Triangulation<2>::triangle),
             pybind11::return_value_policy::reference_internal)
         .def("simplex",
             overload_cast<size_t>(&Triangulation<2>::simplex),

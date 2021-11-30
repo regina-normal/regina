@@ -140,13 +140,18 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<dim>::edge,
             pybind11::return_value_policy::reference_internal)
-        .def("triangle", overload_cast<size_t>(&Triangulation<dim>::triangle),
+        // Use C-style casts because GCC struggles with overload_cast here:
+        .def("triangle",
+            (regina::Face<dim, 2>* (Triangulation<dim>::*)(size_t))(
+                &Triangulation<dim>::triangle),
             pybind11::return_value_policy::reference_internal)
         .def("tetrahedron",
-            overload_cast<size_t>(&Triangulation<dim>::tetrahedron),
+            (regina::Face<dim, 3>* (Triangulation<dim>::*)(size_t))(
+                &Triangulation<dim>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
         .def("pentachoron",
-            overload_cast<size_t>(&Triangulation<dim>::pentachoron),
+            (regina::Face<dim, 4>* (Triangulation<dim>::*)(size_t))(
+                &Triangulation<dim>::pentachoron),
             pybind11::return_value_policy::reference_internal)
         .def("isEmpty", &Triangulation<dim>::isEmpty)
         .def("isValid", &Triangulation<dim>::isValid)
