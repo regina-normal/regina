@@ -742,6 +742,14 @@ Version 7.0  [ TODO ]
               just return an X by value (which can then be moved from).
             - Constructors that used to take (const MatrixInt&) arguments
               now take a MatrixInt by value.
+            - Removed isChainComplex(), since this should always be true
+              by the constructor preconditions.  If you need to test this
+              for debugging purposes, just check (M*N).isZero().
+            - Renamed several functions: M() to m(), N() to n(), rankCC() to
+              ccRank(), boundaryMap() to boundaryOf(), minNumberOfGenerators()
+              to snfRank(), minNumberCycleGens() to cycleRank(), and
+              writeAsBoundary() to asBoundary().
+              The old names are kept as deprecated aliases.
         Class MarkedVector:
             - New convenience routine clear_destructive().
             - New typedefs value_type, reference and const_reference.

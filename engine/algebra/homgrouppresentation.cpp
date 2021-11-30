@@ -54,7 +54,7 @@ HomGroupPresentation::HomGroupPresentation(
 HomMarkedAbelianGroup HomGroupPresentation::markedAbelianisation() const {
     MarkedAbelianGroup DOM = domain_.markedAbelianisation();
     MarkedAbelianGroup RAN = codomain_.markedAbelianisation();
-    MatrixInt ccMat( RAN.rankCC(), DOM.rankCC() );
+    MatrixInt ccMat( RAN.ccRank(), DOM.ccRank() );
     for (unsigned long j=0; j<ccMat.columns(); j++) {
         GroupExpression COLj( evaluate(j) );
         for (unsigned long i=0; i<COLj.countTerms(); i++)

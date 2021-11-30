@@ -54,28 +54,62 @@ class HomMarkedAbelianGroup;
  * Represents a finitely generated abelian group given by a chain complex.
  *
  * This class is initialized with a chain complex.  The chain complex is given
- * in terms of two integer matrices \a M and \a N such that M*N=0. The abelian
- * group is the kernel of \a M mod the image of \a N.
+ * in terms of two integer matrices \a M and \a N such that M*N=0.  These
+ * matrices should be thought of as acting on column vectors: this means for
+ * example that the product <tt>B*A</tt> applies the linear transformation
+ * \a A, then the linear transformation \a B.  This is consistent with the
+ * convention that Regina uses for for multiplying permutations.
  *
- * In other words, we are computing the homology of the chain complex
- * <tt>Z^a --N--> Z^b --M--> Z^c</tt>
- * where a=N.columns(), M.columns()=b=N.rows(), and c=M.rows().  An additional
- * constructor allows one to take the homology with coefficients in an arbitrary
- * cyclic group.
+ * The abelian group that this class computes is the kernel of \a M modulo the
+ * image of \a N.  In other words, we compute the homology of the chain complex
+ * <tt>Z^a --N--> Z^b --M--> Z^c</tt>,
+ * where \a a = N.columns(), \a b = M.columns() = N.rows(), and \a c = M.rows().
+ * An additional constructor allows you to take the homology with coefficients
+ * in an arbitrary cyclic group.
  *
- * This class allows one to retrieve the invariant factors, the rank, and
+ * Like the simpler class AbelianGroup, this group will be isomorphic to some
+ * <tt>Z_{d0} + ... + Z_{dk} + Z^r</tt>, where:
+ *
+ * - \a r is the number of free generators, as returned by rank();
+ *
+ * - \a d1, ..., \a dk are the <i>invariant factors</i> that describe the
+ *   torsion elements of the group, where 1 < \a d1 | \a d2 | ... | \a dk.
+ *
+ * This class allows you to retrieve the invariant factors, the rank, and
  * the corresponding vectors in the kernel of \a M.  Moreover, given a
  * vector in the kernel of \a M, it decribes the homology class of the
  * vector (the free part, and its position in the invariant factors).
  *
- * The purpose of this class is to allow one to not only
- * represent homology groups, but it gives coordinates on the group allowing
- * for the construction of homomorphisms, and keeping track of subgroups.
+ * The purpose of this class is to not just represent homology groups, but
+ * also to support coordinates on the group allowing for the construction of
+ * homomorphisms, and keeping track of subgroups.
  *
- * Some routines in this class refer to the internal <i>presentation
- * matrix</i>.  This is a proper presentation matrix for the abelian group,
- * and is created by constructing the product MRBi() * \a N, and then
- * removing the first rankM() rows.
+ * This routine makes frequent use of two coordinate systems:
+ *
+ * - <i>Chain complex coordinates</i> describe vectors of length \a b
+ *   (using the notation above); that is, elements of the domain of \a M,
+ *   or equivalently the codomain of \a N.
+ *
+ * - <i>SNF (or Smith normal form) coordinates</i> describe elements of this
+ *   abelian group in terms of the torsion and free generators.  A vector in
+ *   SNF coordinates has length (\a k + \a r), again using the notation above,
+ *   where the first \a k elements store coefficients for the generators of the
+ *   torsion components Z_{d1}, ..., Z_{dk}, and the remaining \a r elements
+ *   store coefficients for the \a r free generators.  You can see how the
+ *   torsion and free generators appear in chain complex coordinates by
+ *   calling torsionRep() or freeRep() respectively.
+ *
+ * Be aware that the choice of torsion and free generators is typically
+ * not unique, and this will affect the results of many member functions of
+ * this class.  These choices are subject to change between different versions
+ * of Regina; in particular, they depend upon the particular algorithm
+ * used for computing Smith normal forms.
+ *
+ * Some routines in this class refer to the <i>internal presentation
+ * matrix</i>.  This is a proper presentation matrix for the abelian group;
+ * if you are looking at the implementation details, this refers to the
+ * matrix \a pres, created by taking the product <tt>MRi_ * N</tt> and then
+ * removing the first \a rankM_ rows.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -84,83 +118,63 @@ class HomMarkedAbelianGroup;
  * @author Ryan Budney and B.B.
  *
  * \todo \optlong Look at using sparse matrices for storage of SNF and the like.
- * \todo Testsuite additions: isBoundary(), boundaryMap(), writeAsBdry(),
- * cycleGen().
  *
  * \ingroup algebra
  */
 class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
     private:
         /** Internal original M */
-        MatrixInt OM; // copy of initializing M
+        MatrixInt M_; // copy of initializing M
         /** Internal original N */
-        MatrixInt ON; // copy of initializing N assumes M*N == 0
-        /** Internal change of basis. SNF(OM) == OMC*OM*OMR */
-        MatrixInt OMR, OMC;
-        /** Internal change of basis. OM = OMCi*SNF(OM)*OMRi */
-        MatrixInt OMRi, OMCi;
+        MatrixInt N_; // copy of initializing N assumes M*N == 0
+        /** Internal change of basis. SNF(M_) == MC*M_*MR_ */
+        MatrixInt MR_;
+        /** Internal change of basis. M_ = MCi*SNF(M_)*MRi_ */
+        MatrixInt MRi_;
         /** Internal rank of M */
-        unsigned long rankOM; // this is the index of the first zero entry
-                              // in SNF(OM)
+        unsigned long rankM_; // this is the index of the first zero entry
+                              // in SNF(M_)
 
         /* Internal reduced N matrix: */
-        // In the notes below, ORN refers to the internal presentation
-        // matrix [OMRi * ON], where the brackets indicate removal of the
-        // first rankOM rows.
+        // In the notes below, pres refers to the internal presentation
+        // matrix [MRi_ * N_], where the brackets indicate removal of the
+        // first rankM_ rows.
 
-        /** Internal change of basis. ornC * ORN * ornR is the SNF(ORN). */
-        MatrixInt ornR, ornC;
-        /** Internal change of basis. These are the inverses of ornR and ornC
-            respectively. */
-        MatrixInt ornRi, ornCi; 
+        /** Internal change of basis. presC_ * pres * presR_ is the SNF(pres). */
+        MatrixInt presR_, presC_;
+        /** Internal change of basis. This is the inverse of presC_. */
+        MatrixInt presCi_;
         /** Internal change of basis matrix for homology with coefficents.
-            otC * tensorPres * otR == SNF(tensorPres) */
-        MatrixInt otR, otC, otRi, otCi;
+            tensorC_ * tensorPres * tensorR_ == SNF(tensorPres) */
+        MatrixInt tensorR_, tensorC_, tensorCi_;
 
         /** Internal list of invariant factors. */
-        std::vector<Integer> InvFacList;
-        /** The number of free generators, from SNF(ORN) */
-        unsigned long snfrank;
-        /** The row index of the first zero along the diagonal in SNF(ORN). */
-        unsigned long snffreeindex;
-        /** Number of invariant factors. */
-        unsigned long ifNum;
-        /** Row index of first invariant factor (ie entry > 1) in SNF(ORN) */
-        unsigned long ifLoc;
+        std::vector<Integer> invFac_;
+        /** The number of free generators, from SNF(pres) */
+        unsigned long snfFreeRank_;
+        /** The row index of the first zero along the diagonal in SNF(pres). */
+        unsigned long snfFreeIndex_;
+        /** Row index of first invariant factor (ie entry > 1) in SNF(pres) */
+        unsigned long ifLoc_;
 
         // These variables store information for mod-p homology computations.
         /** coefficients to use in homology computation **/
-        Integer coeff;
-        /** TORLoc stores the location of the first TOR entry from the SNF
-            of OM:  TORLoc == rankOM-TORVec.size() */
-        unsigned long TORLoc;
-        /** TORVec's i-th entry stores the entries q where Z_p --q-->Z_p
-            is the i-th TOR entry from the SNF of OM */
-        std::vector<Integer> TORVec;
+        Integer coeff_;
+        /** TORVec_'s i-th entry stores the entries q where Z_p --q-->Z_p
+            is the i-th TOR entry from the SNF of M_ */
+        std::vector<Integer> TORVec_;
 
         /** invariant factor data in the tensor product presentation matrix
             SNF */
-        unsigned long tensorIfLoc;
-        unsigned long tensorIfNum;
-        std::vector<Integer> tensorInvFacList;
-        // and HomMarkedAbelianGroup at present needs to see some of the
-        // internals of MarkedAbelianGroup
-        // at present this is only used for inverseHom().
-        friend class HomMarkedAbelianGroup;
+        unsigned long tensorIfLoc_;
+        std::vector<Integer> tensorInvFac_;
 
     public:
         /**
          * Creates a marked abelian group from a chain complex. This constructor
-         * assumes you are interested in homology with integer coefficents of
-         * the chain complex.
+         * assumes you are interested in homology with integer coefficents.
+         *
          * The abelian group is the kernel of \a M modulo the image of \a N.
-         *
-         * The matrices should be thought of as acting on column vectors:
-         * this means that the product <tt>B*A</tt> applies the linear
-         * transformation \a A, then the linear transformation \a B.
-         * This is consistent (for example) with the convention that
-         * Regina uses for for multiplying permutations.
-         *
          * See the class notes for further details.
          *
          * \pre M.columns() = N.rows().  This condition will be tested,
@@ -183,13 +197,9 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         /**
          * Creates a marked abelian group from a chain complex with
          * coefficients in Z_p.
-         * The abelian group is the kernel of \a M modulo the image of \a N.
          *
-         * The matrices should be thought of as acting on column vectors:
-         * this means that the product <tt>B*A</tt> applies the linear
-         * transformation \a A, then the linear transformation \a B.
-         * This is consistent (for example) with the convention that
-         * Regina uses for for multiplying permutations.
+         * The abelian group is the kernel of \a M modulo the image of \a N.
+         * See the class notes for further details.
          *
          * \pre M.columns() = N.rows().  This condition will be tested,
          * and an exception will be thrown if it does not hold.
@@ -205,25 +215,27 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * the matrix that one takes the kernel of when computing homology.
          * @param N the `left' matrix in the chain complex; that is, the
          * matrix that one takes the image of when computing homology.
-         * @param pcoeff specifies the coefficient ring, Z_pcoeff. We require
-         * \a pcoeff >= 0.  If you know beforehand that \a pcoeff=0, it's
-         * more efficient to use the previous constructor.
+         * @param pcoeff specifies the coefficient ring, Z_pcoeff.
+         * This must be non-negative; a value of 0 indicates that you
+         * are using integer coefficients (in which case it is more
+         * efficient to use the constructor that just takes two matrices).
          */
         MarkedAbelianGroup(MatrixInt M, MatrixInt N, Integer pcoeff);
 
         /**
          * Creates a free Z_p-module of a given rank using the direct sum
          * of the standard chain complex <tt>0 --> Z --p--> Z --> 0</tt>.
-         * So this group is isomorphic to <tt>n Z_p</tt>.  Moreover, if
-         * constructed using the previous constructor, \a M would be zero
-         * and \a N would be diagonal and square with \a p down the diagonal.
+         * This group is isomorphic to <tt>n Z_p</tt>.  Moreover, if
+         * constructed using the matrices-with-coefficients constructor,
+         * \a M would be zero and \a N would be diagonal and square with
+         * \a p down the diagonal.
          *
-         * @param rk the rank of the group as a Z_p-module.  That is, if the
-         * group is <tt>n Z_p</tt>, then \a rk should be \a n.
+         * @param rank the rank of the group as a Z_p-module.  That is, if the
+         * group is <tt>n Z_p</tt>, then \a rank should be \a n.
          * @param p describes the type of ring that we use to talk about
          * the "free" module.
          */
-        MarkedAbelianGroup(unsigned long rk, const Integer &p);
+        MarkedAbelianGroup(unsigned long rank, const Integer &p);
 
         /**
          * Creates a clone of the given group.
@@ -257,26 +269,73 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
             default;
 
         /**
-         * Swaps the contents of this and the given abelian group.
+         * Swaps the contents of this and the given group.
          *
          * @param other the group whose contents should be swapped with this.
          */
         void swap(MarkedAbelianGroup& other) noexcept;
 
         /**
-         * Determines whether or not the defining maps for this group
-         * actually give a chain complex.  This is helpful for debugging.
+         * Returns the "right" matrix that was used to define the chain complex.
+         * Our group was defined as the kernel of \a M modulo the image of \a N.
+         * This is the matrix \a M.
          *
-         * Specifically, this routine returns \c true if and only if
-         * M*N = 0 where M and N are the definining matrices.
+         * This is the matrix \a M that was originally passed to the
+         * class constructor.  See the class overview for further details on
+         * matrices \a M and \a N and their roles in defining the chain complex.
          *
-         * @return \c true if and only if M*N = 0.
+         * @return a reference to the defining matrix \a M.
          */
-        bool isChainComplex() const;
+        const MatrixInt& m() const;
+
+        /**
+         * Deprecated alias for m().
+         *
+         * \deprecated This routine has been renamed to lower-case m().
+         *
+         * @return a reference to the defining matrix \a M.
+         */
+        [[deprecated]] const MatrixInt& M() const;
+
+        /**
+         * Returns the "left" matrix that was used to define the chain complex.
+         * Our group was defined as the kernel of \a M modulo the image of \a N.
+         * This is the matrix \a N.
+         *
+         * This is the matrix \a N that was originally passed to the
+         * class constructor.  See the class overview for further details on
+         * matrices \a M and \a N and their roles in defining the chain complex.
+         *
+         * @return a reference to the defining matrix \a N.
+         */
+        const MatrixInt& n() const;
+
+        /**
+         * Deprecated alias for n().
+         *
+         * \deprecated This routine has been renamed to lower-case n().
+         *
+         * @return a reference to the defining matrix \a N.
+         */
+        [[deprecated]] const MatrixInt& N() const;
+
+        /**
+         * Returns the coefficients used for the computation of homology.
+         * That is, this routine returns the integer \a p where we use
+         * coefficients in Z_p.  If we use coefficients in the integers Z,
+         * then this routine returns 0.
+         *
+         * @return the coefficients used in the homology calculation.
+         */
+        const Integer& coefficients() const;
 
         /**
          * Returns the rank of the group.
          * This is the number of included copies of <i>Z</i>.
+         *
+         * Equivalently, the rank is the maximum number of linearly independent
+         * elements, and it indicates the size of the largest free abelian
+         * subgroup.  The rank effectively ignores all torsion elements.
          *
          * @return the rank of the group.
          */
@@ -329,11 +388,45 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         size_t countInvariantFactors() const;
 
         /**
-         * Returns the minimum number of generators for the group.
+         * Returns the rank of the chain complex supporting the homology
+         * computation.
+         *
+         * This is the dimension of a vector in chain complex coordinates.
+         * In the class notes, this is given by M.columns() and N.rows(),
+         * where \a M and \a N are the matrices used to define the chain
+         * complex.
+         *
+         * @return the rank of the chain complex.
+         */
+        unsigned long ccRank() const;
+
+        /**
+         * Deprecated alias for ccRank().
+         *
+         * \deprecated This routine has been renamed to ccRank().
+         *
+         * @return the rank of the chain complex.
+         */
+        [[deprecated]] unsigned long rankCC() const;
+
+        /**
+         * Returns the minimum number of generators for this group.
+         *
+         * This is the dimension of a vector in SNF coordinates.
+         * It will always be equal to rank() + countInvariantFactors().
          *
          * @return the minimum number of generators.
          */
-        unsigned long minNumberOfGenerators() const;
+        unsigned long snfRank() const;
+
+        /**
+         * Deprecated alias for snfRank().
+         *
+         * \deprecated This routine has been renamed to snfRank().
+         *
+         * @return the minimum number of generators.
+         */
+        [[deprecated]] unsigned long minNumberOfGenerators() const;
 
         /**
          * Returns the given invariant factor describing the torsion
@@ -375,8 +468,8 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
 
         /**
          * Determines whether or not the two MarkedAbelianGroups are
-         * identical, which means they have exactly the same presentation
-         * matrices.  This is useful for determining if two
+         * identical, which means they have exactly the same internal
+         * presentation matrices.  This is useful for determining if two
          * HomMarkedAbelianGroups are composable.  See isIsomorphicTo() if
          * all you care about is the isomorphism relation among groups
          * defined by presentation matrices.
@@ -389,6 +482,284 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         bool equalTo(const MarkedAbelianGroup& other) const;
 
         /**
+         * Returns the requested free generator of this group,
+         * represented in the original chain complex defining the group.
+         *
+         * The generator will be presented in chain complex coordinates.
+         *
+         * \warning The return value is not unique.  The specific choice
+         * of vector may change between different versions of Regina.
+         *
+         * \exception InvalidArgument The argument \a index is out of
+         * range (i.e., greater than or equal to rank()).
+         *
+         * @param index specifies which free generator to look up;
+         * this must be between 0 and rank()-1 inclusive.
+         * @return the (\a index)th free generator, presented in
+         * chain complex coordinates.
+         */
+        Vector<Integer> freeRep(unsigned long index) const;
+
+        /**
+         * Returns the requested generator of the torsion subgroup,
+         * represented in the original chain complex defining the group.
+         *
+         * The generator will be presented in chain complex coordinates.
+         *
+         * \warning The return value is not unique.  The specific choice
+         * of vector may change between different versions of Regina.
+         *
+         * \exception InvalidArgument The argument \a index is out of
+         * range (i.e., greater than or equal to countInvariantFactors()).
+         *
+         * @param index specifies which generator in the torsion subgroup;
+         * this must be between 0 and countInvariantFactors()-1 inclusive.
+         * @return the (\a index)th torsion generator, presented in
+         * chain complex coordinates.
+         */
+        Vector<Integer> torsionRep(unsigned long index) const;
+
+        /**
+         * A combination of freeRep and torsionRep, this routine takes
+         * a group element expressed in SNF coordinates and returns a
+         * corresponding vector in the original chain complex.
+         *
+         * This routine is, in some sense, an inverse to snfRep().
+         *
+         * \warning The return value is not unique.  The specific choice
+         * of vector may change between different versions of Regina.
+         *
+         * \exception InvalidArgument The size of the given vector was
+         * not precisely snfRank().
+         *
+         * @param SNFRep any vector in SNF coordinates.
+         * @return a corresponding vector in chain complex coordinates.
+         */
+        Vector<Integer> ccRep(const Vector<Integer>& SNFRep) const;
+
+        /**
+         * A combination of freeRep() and torsionRep() that expresses
+         * a group element as a vector in the original chain complex.
+         *
+         * This is similar to the variant of ccRep() that takes a vector
+         * as input, but it assumes that your input is a standard basis vector
+         * from SNF coordinates.  Calling ccRep(snfGen) is equivalent to
+         * passing the (\a snfGen)th unit vector to ccRep().
+         *
+         * \warning The return value is not unique.  The specific choice
+         * of vector may change between different versions of Regina.
+         *
+         * \exception InvalidArgument The given index was greater than
+         * or equal to the number of generators in SNF coordinates
+         * (i.e., greater than or equal to snfRank()).
+         *
+         * @param SNFRep specifies which standard basis vector to use from
+         * SNF coordinates; this must be between 0 and snfRank()-1 inclusive.
+         * @return a corresponding vector in chain complex coordinates.
+         */
+        Vector<Integer> ccRep(unsigned long snfGen) const;
+
+        /**
+         * Expresses the given cycle as a combination of free and torsion
+         * generators.
+         *
+         * This routine takes a single argument \a cycle, which should be a
+         * cycle in chain complex coordinates.  This routine then returns
+         * this cycle as a group element, expressed in SNF coordinates.
+         * See the class notes for a full explanation of what these
+         * concepts mean.
+         *
+         * In the vector that is returned, the coordinates that hold
+         * coefficients for the torsion generators will be non-negative
+         * integers modulo the corresponding invariant factors
+         * \a d1, ..., \a dk.
+         *
+         * Specifically, using the notation from the class notes,
+         * suppose \a cycle belongs to ker(\a M) and snfRep(\a cycle)
+         * returns the vector (\a b1, ..., \a bk, \a a1, ..., \a ar).
+         * Suppose furthermore that the free generators returned
+         * by freeRep(0..(r-1)) are \a f1, ..., \a fr respectively, and
+         * that the torsion generators returned by torsionRep(0..(k-1))
+         * are \a t1, ..., \a tk respectively.  Then
+         * \a cycle = \a b1.t1 + ... + \a bk.tk + \a a1.f1 + ... + \a ar.fr
+         * modulo img(\a N).
+         *
+         * \warning The return value is not unique.  The specific choice
+         * of vector may change between different versions of Regina.
+         *
+         * \exception InvalidArgument The given vector was the wrong
+         * size, or is not a cycle (i.e., not in the kernel of \a M).
+         *
+         * @param cycle a cycle, presented in chain complex coordinates.
+         * @return the group element corresponding to \a cycle, expressed in
+         * SNF coordinates.
+         */
+        Vector<Integer> snfRep(const Vector<Integer>& cycle) const;
+
+        /**
+         * Projects an element of the chain complex to the subspace of cycles.
+         *
+         * \warning The return value is not unique.  The specific choice
+         * of vector may change between different versions of Regina.
+         *
+         * \exception InvalidArgument The length of the given vector was
+         * not the dimension of the chain complex (i.e., the number of
+         * chain complex coordinates).
+         *
+         * @param ccelt any vector in chain complex coordinates.
+         * @return a corresponding vector, also in the chain complex
+         * coordinates.
+         */
+        Vector<Integer> cycleProjection(const Vector<Integer>& ccelt) const;
+
+        /**
+         * Projects a standard basis vector of the chain complex to the
+         * subspace of cycles.
+         *
+         * \warning The return value is not unique.  The specific choice
+         * of vector may change between different versions of Regina.
+         *
+         * \exception InvalidArgument The index \a ccindx was greater than or
+         * equal to the dimension of the chain complex (i.e., ccRank()).
+         *
+         * @param ccindx the index of the standard basis vector in chain
+         * complex coordinates.
+         * @return the resulting projection, in the chain complex
+         * coordinates.
+         */
+        Vector<Integer> cycleProjection(unsigned long ccindx) const;
+
+        /**
+         * Determines whether the given vector represents a cycle in the
+         * chain complex.
+         *
+         * @param chain any vector in chain complex coordinates.
+         * @return \c true if and only if the given vector represents a cycle.
+         */
+        bool isCycle(const Vector<Integer>& chain) const;
+
+        /**
+         * Computes the differential of the given vector in the chain
+         * complex whose kernel is the cycles.  In other words, this
+         * routine returns <tt>M*chain</tt>, where \a M is the "right"
+         * matrix passed to the class constructor.
+         *
+         * \exception InvalidArgument The given vector is not in chain
+         * complex coordinates; that is, its length is not M.columns().
+         *
+         * @param chain any vector in chain complex coordinates.
+         * @return the differential, expressed as a vector of length M.rows().
+         */
+        Vector<Integer> boundaryOf(const Vector<Integer>& chain) const;
+
+        /**
+         * Deprecated alias for boundaryOf().
+         *
+         * \deprecated This routine has been renamed to boundaryOf().
+         *
+         * \exception InvalidArgument The given vector is not in chain
+         * complex coordinates; that is, its length is not M.columns().
+         *
+         * @param chain any vector in chain complex coordinates.
+         * @return the differential, expressed as a vector of length M.rows().
+         */
+        [[deprecated]] Vector<Integer> boundaryMap(const Vector<Integer>& chain)
+            const;
+
+        /**
+         * Determines whether the given vector represents a boundary in the
+         * chain complex.
+         *
+         * @param chain any vector in chain complex coordinates.
+         * @return \c true if and only if the given vector represents a
+         * boundary.
+         */
+        bool isBoundary(const Vector<Integer>& chain) const;
+
+        /**
+         * Expresses the given vector as a boundary in the chain complex.
+         *
+         * \warning If you are using mod \a p coefficients and if your element
+         * projects to a non-trivial element of TOR, then N*v != bdry as
+         * elements of TOR are not in the image of \a N.  In this case,
+         * (\a bdry - N*v) represents the projection to TOR.
+         *
+         * \warning The return value is not unique.  The specific choice
+         * of vector may change between different versions of Regina.
+         *
+         * \exception InvalidArgument The given vector is not a boundary.
+         *
+         * @param bdry a boundary vector, given in chain complex coordinates.
+         * @return a vector \a v such that <tt>N*v=bdry</tt>.
+         */
+        Vector<Integer> asBoundary(const Vector<Integer>& bdry) const;
+
+        /**
+         * Deprecated alias for asBoundary().
+         *
+         * \deprecated This routine has been renamed to asBoundary().
+         *
+         * \exception InvalidArgument The given vector is not a boundary.
+         *
+         * @param bdry a boundary vector, given in chain complex coordinates.
+         * @return a vector \a v such that <tt>N*v=bdry</tt>.
+         */
+        [[deprecated]] Vector<Integer> writeAsBoundary(
+            const Vector<Integer>& bdry) const;
+
+        /**
+         * Returns the number of generators of the kernel of \a M, where
+         * \a M is the "right" matrix used to define the chain complex.
+         *
+         * @return the number of generators of ker(\a M).
+         */
+        unsigned long cycleRank() const;
+
+        /**
+         * Deprecated alias for cycleRank().
+         *
+         * \deprecated This routine has been renamed to cycleRank().
+         *
+         * @return the number of generators of ker(\a M).
+         */
+        [[deprecated]] unsigned long minNumberCycleGens() const;
+
+        /**
+         * Returns the requested generator of the cycles, i.e., the kernel of
+         * the "right" matrix \a M in the chain complex.
+         *
+         * \warning The return value is not unique.  The specific choice
+         * of vector may change between different versions of Regina.
+         *
+         * \exception InvalidArgument The argument \a index was out of range
+         * (i.e., greater than or equal to cycleRank()).
+         *
+         * @param index indicates which generator to return; this must be
+         * between 0 and cycleRank()-1 inclusive.
+         * @return the (\a index)th generator of the cycles, expressed in
+         * chain complex coordinates.
+         */
+        Vector<Integer> cycleGen(unsigned long index) const;
+
+        /**
+         * Returns the torsion subgroup of this group.
+         *
+         * @return the torsion subgroup.
+         */
+        MarkedAbelianGroup torsionSubgroup() const;
+
+        /**
+         * Returns a map representing the inclusion of the torsion subgroup
+         * into this group.
+         *
+         * @return the inclusion map for the torsion subgroup.
+         */
+        HomMarkedAbelianGroup torsionInclusion() const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
          * The text representation will be of the form
          * <tt>3 Z + 4 Z_2 + Z_120</tt>.
          * The torsion elements will be written in terms of the
@@ -404,327 +775,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          */
         void writeTextShort(std::ostream& out, bool utf8 = false) const;
 
-        /**
-         * Returns the requested free generator in the original chain
-         * complex defining the group.
-         *
-         * As described in the class overview, this marked abelian group
-         * is defined by matrices \a M and \a N where M*N = 0.
-         * If \a M is an \a m by \a l matrix and \a N is an \a l by \a n
-         * matrix, then this routine returns the (\a index)th free
-         * generator of ker(M)/img(N) in \a Z^l.
-         *
-         * \warning The return value may change from version to version
-         * of Regina, since it depends on the choice of Smith normal form.
-         *
-         * \exception InvalidArgument The argument \a index is out of
-         * range (i.e., greater than or equal to rank()).
-         *
-         * @param index specifies which free generator to look up;
-         * this must be between 0 and rank()-1 inclusive.
-         * @return the coordinates of the free generator in the nullspace of
-         * \a M; this vector will have length M.columns() (or
-         * equivalently, N.rows()).
-         */
-        Vector<Integer> freeRep(unsigned long index) const;
-
-        /**
-         * Returns the requested generator of the torsion subgroup but
-         * represented in the original chain complex defining the group.
-         *
-         * As described in the class overview, this marked abelian group
-         * is defined by matrices \a M and \a N where M*N = 0.
-         * If \a M is an \a m by \a l matrix and \a N is an \a l by \a n
-         * matrix, then this routine returns the (\a index)th torsion
-         * generator of ker(M)/img(N) in \a Z^l.
-         *
-         * \warning The return value may change from version to version
-         * of Regina, since it depends on the choice of Smith normal form.
-         *
-         * \exception InvalidArgument The argument \a index is out of
-         * range (i.e., greater than or equal to the number of non-trivial
-         * invariant factors).
-         *
-         * @param index specifies which generator in the torsion subgroup;
-         * this must be at least 0 and strictly less than the number of
-         * non-trivial invariant factors.
-         * @return the coordinates of the generator in the nullspace of
-         * \a M; this vector will have length M.columns() (or
-         * equivalently, N.rows()).
-         */
-        Vector<Integer> torsionRep(unsigned long index) const;
-
-        /**
-         * A combination of freeRep and torsionRep, this routine takes
-         * a vector which represents an element in the group in the SNF
-         * coordinates and returns a corresponding vector in the original
-         * chain complex.
-         *
-         * This routine is the inverse to snfRep() described below.
-         *
-         * \warning The return value may change from version to version
-         * of Regina, since it depends on the choice of Smith normal form.
-         *
-         * \exception InvalidArgument The size of the given vector was
-         * not the number of generators in SNF coordinates.
-         *
-         * @param SNFRep a vector of size the number of generators of
-         * the group, i.e., it must be valid in the SNF coordinates.
-         * @return a corresponding vector whose length is M.columns(),
-         * where \a M is one of the matrices that defines the chain
-         * complex; see the class notes for details.
-         */
-        Vector<Integer> ccRep(const Vector<Integer>& SNFRep) const;
-
-        /**
-         * Same as ccRep(const std::vector<Integer>&), but we assume you
-         * only want the chain complex representation of a standard basis
-         * vector from SNF coordinates.
-         *
-         * \warning The return value may change from version to version
-         * of Regina, since it depends on the choice of Smith normal form.
-         *
-         * \exception InvalidArgument The given index was greater than
-         * or equal to the number of generators in SNF coordinates
-         * (i.e., greater than or equal to minNumberOfGenerators()).
-         *
-         * @param SNFRep specifies which standard basis vector from SNF
-         * coordinates; this must be between 0 and
-         * minNumberOfGenerators()-1 inclusive.
-         * @return a corresponding vector whose length is M.columns(),
-         * where \a M is one of the matrices that defines the chain
-         * complex; see the class notes for details.
-         */
-        Vector<Integer> ccRep(unsigned long SNFRep) const;
-
-        /**
-         * Projects an element of the chain complex to the subspace of cycles.
-         *
-         * \warning The return value may change from version to version
-         * of Regina, since it depends on the choice of Smith normal form.
-         *
-         * \exception InvalidArgument The length of the given vector was
-         * not the dimension of the chain complex (i.e., the number of
-         * chain complex coordinates).
-         *
-         * @param ccelt a vector whose length is M.columns(),
-         * where \a M is one of the matrices that defines the chain
-         * complex (see the class notes for details).
-         * @return a corresponding vector, also in the chain complex
-         * coordinates.
-         */
-        Vector<Integer> cycleProjection(const Vector<Integer>& ccelt) const;
-
-        /**
-         * Projects an element of the chain complex to the subspace of cycles.
-         *
-         * \warning The return value may change from version to version
-         * of Regina, since it depends on the choice of Smith normal form.
-         *
-         * \exception InvalidArgument The index \a ccindx was greater than or
-         * equal to the dimension of the chain complex (i.e., the number of
-         * chain complex coordinates).
-         *
-         * @param ccindx the index of the standard basis vector in chain
-         * complex coordinates.
-         * @return the resulting projection, in the chain complex
-         * coordinates.
-         */
-        Vector<Integer> cycleProjection(unsigned long ccindx) const;
-
-        /**
-         * Given a vector, determines if it represents a cycle in the chain
-         * complex.
-         *
-         * @param input an input vector in chain complex coordinates.
-         * @return \c true if and only if the given vector represents a cycle.
-         */
-        bool isCycle(const Vector<Integer>& input) const;
-
-        /**
-         * Computes the differential of the given vector in the chain
-         * complex whose kernel is the cycles.  In other words, this
-         * routine returns <tt>M*CCrep</tt>.
-         *
-         * \exception InvalidArgument The given vector is not in chain
-         * complex coordinates; that is, its length is not <tt>M.columns()</tt>.
-         *
-         * @param CCrep a vector whose length is M.columns(),
-         * where \a M is one of the matrices that defines the chain
-         * complex (see the class notes for details).
-         * @return the differential, expressed as a vector of length M.rows().
-         */
-        Vector<Integer> boundaryMap(const Vector<Integer>& CCrep) const;
-
-        /**
-         * Given a vector, determines if it represents a boundary in the chain
-         * complex.
-         *
-         * @param input a vector whose length is M.columns(),
-         * where \a M is one of the matrices that defines the chain
-         * complex (see the class notes for details).
-         * @return \c true if and only if the given vector represents a
-         * boundary.
-         */
-        bool isBoundary(const Vector<Integer> &input) const;
-
-        /**
-         * Expresses the given vector as a boundary in the chain complex,
-         * using chain complex coordinates for both the input and the
-         * return value.
-         *
-         * \warning If you're using mod-p coefficients and if your element
-         * projects to a non-trivial element of TOR, then Nv != input as
-         * elements of TOR aren't in the image of N.  In this case,
-         * input-Nv represents the projection to TOR.
-         *
-         * \warning The return value may change from version to version
-         * of Regina, since it depends on the choice of Smith normal form.
-         *
-         * \exception InvalidArgument The given vector is not a boundary.
-         *
-         * @param input a boundary vector, given in chain complex coordinates.
-         * @return a vector \a v such that <tt>N*v=input</tt>.
-         */
-        Vector<Integer> writeAsBoundary(const Vector<Integer>& input) const;
-
-        /**
-         * Returns the rank of the chain complex supporting the homology
-         * computation. In the description of this class, this is also given
-         * by M.columns() and N.rows() from the constructor that takes as
-         * input two matrices, M and N.
-         *
-         * @return the rank of the chain complex.
-         */
-        unsigned long rankCC() const;
-
-        /**
-         * Expresses the given vector as a combination of free and torsion
-         * generators.  This answer is coordinate dependant, meaning the answer
-         * may change depending on how the Smith Normal Form is computed.
-         *
-         * Recall that this marked abelian was defined by matrices \a M
-         * and \a N with M*N=0; suppose that \a M is an \a m by \a l matrix
-         * and \a N is an \a l by \a n matrix.  This abelian group is then
-         * the quotient ker(M)/img(N) in \a Z^l.
-         *
-         * When it is constructed, this group is computed to be isomorphic to
-         * some Z_{d0} + ... + Z_{dk} + Z^d, where:
-         *
-         * - \a d is the number of free generators, as returned by rank();
-         * - \a d1, ..., \a dk are the invariant factors that describe the
-         *   torsion elements of the group, where
-         *   1 < \a d1 | \a d2 | ... | \a dk.
-         *
-         * This routine takes a single argument \a v, which must be a
-         * vector in \a Z^l.
-         *
-         * If \a v belongs to ker(M), this routine describes how it
-         * projects onto the group ker(M)/img(N).  Specifically, it
-         * returns a vector of length \a d + \a k, where:
-         *
-         * - The first \a k elements describe the projection of \a v
-         *   to the torsion component Z_{d1} + ... + Z_{dk}.  These
-         *   elements are returned as non-negative integers modulo
-         *   \a d1, ..., \a dk respectively.
-         * - The remaining \a d elements describe the projection of \a v
-         *   to the free component \a Z^d.
-         *
-         * In other words, suppose \a v belongs to ker(M) and snfRep(v)
-         * returns the vector (\a b1, ..., \a bk, \a a1, ..., \a ad).
-         * Suppose furthermore that the free generators returned
-         * by freeRep(0..(d-1)) are \a f1, ..., \a fd respectively, and
-         * that the torsion generators returned by torsionRep(0..(k-1))
-         * are \a t1, ..., \a tk respectively.  Then
-         * \a v = \a b1.t1 + ... + \a bk.tk + \a a1.f1 + ... + \a ad.fd
-         * modulo img(N).
-         *
-         * If \a v does not belong to ker(M), this routine throws an exception.
-         *
-         * \warning The return value may change from version to version
-         * of Regina, as it depends on the choice of Smith normal form.
-         *
-         * \pre Vector \a v has length M.columns(), or equivalently N.rows().
-         *
-         * \exception InvalidArgument The given vector was the wrong
-         * size, or is not in the kernel of \a M.
-         *
-         * @param v a vector of length M.columns(). M.columns() is also
-         * rankCC().
-         * @return a vector that describes \a v in the standard
-         * Z_{d1} + ... + Z_{dk} + Z^d form.  k+d is equal to 
-         * minNumberOfGenerators().
-         */
-        Vector<Integer> snfRep(const Vector<Integer>& v) const;
-
-        /**
-         * Returns the number of generators of ker(M), where M is one of
-         * the defining matrices of the chain complex.
-         *
-         * @return the number of generators of ker(M).
-         */
-        unsigned long minNumberCycleGens() const;
-
-        /**
-         * Returns the <i>i</i>th generator of the cycles, i.e., the kernel of
-         * M in the chain complex.
-         *
-         * \warning The return value may change from version to version
-         * of Regina, as it depends on the choice of Smith normal form.
-         *
-         * \exception InvalidArgument The argument \a i was out of range
-         * (i.e., greater than or equal to minNumberCycleGens()).
-         *
-         * @param i between 0 and minNumberCycleGens()-1.
-         * @return the corresponding generator in chain complex coordinates.
-         */
-        Vector<Integer> cycleGen(unsigned long i) const;
-
-        /**
-         * Returns the `right' matrix used in defining the chain complex.
-         * Our group was defined as the kernel of \a M mod the image of \a N.
-         * This is the matrix \a M.
-         *
-         * This is a copy of the matrix \a M that was originally passed to the
-         * class constructor.  See the class overview for further details on
-         * matrices \a M and \a N and their roles in defining the chain complex.
-         *
-         * @return a reference to the defining matrix M.
-         */
-        const MatrixInt& M() const;
-        /**
-         * Returns the `left' matrix used in defining the chain complex.
-         * Our group was defined as the kernel of \a M mod the image of \a N.
-         * This is the matrix \a N.
-         *
-         * This is a copy of the matrix \a N that was originally passed to the
-         * class constructor.  See the class overview for further details on
-         * matrices \a M and \a N and their roles in defining the chain complex.
-         *
-         * @return a reference to the defining matrix N.
-         */
-        const MatrixInt& N() const;
-        /**
-         * Returns the coefficients used for the computation of homology.
-         * That is, this routine returns the integer \a p where we use
-         * coefficients in Z_p.  If we use coefficients in the integers Z,
-         * then this routine returns 0.
-         *
-         * @return the coefficients used in the homology calculation.
-         */
-        const Integer& coefficients() const;
-
-        /**
-         * Returns a MarkedAbelianGroup representing the torsion subgroup
-         * of this group.
-         */
-        MarkedAbelianGroup torsionSubgroup() const;
-
-        /**
-         * Returns a HomMarkedAbelianGroup representing the inclusion of the
-         * torsion subgroup into this group.
-         */
-        HomMarkedAbelianGroup torsionInclusion() const;
+    friend class HomMarkedAbelianGroup;
 };
 
 /**
@@ -855,7 +906,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          *
          * @param dom the domain group.
          * @param codom the codomain group.
-         * @param mat the matrix that describes the homomorphism from 
+         * @param mat the matrix that describes the homomorphism from
          * \a dom to \a ran.
          */
         HomMarkedAbelianGroup(MarkedAbelianGroup dom, MarkedAbelianGroup codom,
@@ -1075,13 +1126,12 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * canonical.
          *
          * \exception InvalidArgument The given vector was not in domain SNF
-         * coordinates; that is, its length was not
-         * <tt>domain().minNumberOfGenerators()</tt>.
+         * coordinates; that is, its length was not <tt>domain().snfRank()</tt>.
          *
          * @param input an input vector in the domain SNF coordinates,
-         * of length domain().minNumberOfGenerators().
+         * of length domain().snfRank().
          * @return the image of this vector in the codomain chain complex's
-         * coordinates, of length codomain().minNumberOfGenerators().
+         * coordinates, of length codomain().snfRank().
          */
         Vector<Integer> evalSNF(const Vector<Integer>& input) const;
 
@@ -1153,14 +1203,14 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
 
     private:
         /**
-         * For those situations where you want to define an 
+         * For those situations where you want to define an
          * HomMarkedAbelianGroup from its reduced matrix, not from a chain
-         * map.  This is in the situation where the SNF coordinates have 
+         * map.  This is in the situation where the SNF coordinates have
          * particular meaning to the user.  At present I only use this
-         * for HomMarkedAbelianGroup::inverseHom().  Moreover, this routine 
-         * assumes redMat actually can be the reduced matrix of some 
+         * for HomMarkedAbelianGroup::inverseHom().  Moreover, this routine
+         * assumes redMat actually can be the reduced matrix of some
          * chain map -- this is not a restriction in
-         * the coeff==0 case, but it is if coeff > 0. 
+         * the coeff_==0 case, but it is if coeff_ > 0.
          *
          * \todo Erase completely once made obsolete by right/left inverse.
          */
@@ -1216,56 +1266,79 @@ inline unsigned long MarkedAbelianGroup::torsionRank(unsigned long degree)
 }
 
 inline size_t MarkedAbelianGroup::countInvariantFactors() const {
-    return ifNum;
+    return invFac_.size();
 }
 
 inline const Integer& MarkedAbelianGroup::invariantFactor(
         size_t index) const {
-    return InvFacList[index];
+    return invFac_[index];
 }
 
 inline unsigned long MarkedAbelianGroup::rank() const {
-    return snfrank;
+    return snfFreeRank_;
+}
+
+inline unsigned long MarkedAbelianGroup::snfRank() const {
+    return snfFreeRank_ + invFac_.size();
 }
 
 inline unsigned long MarkedAbelianGroup::minNumberOfGenerators() const {
-    return snfrank + ifNum;
+    return snfRank();
+}
+
+inline unsigned long MarkedAbelianGroup::ccRank() const {
+    return M_.columns();
 }
 
 inline unsigned long MarkedAbelianGroup::rankCC() const {
-    return OM.columns();
+    return M_.columns();
+}
+
+inline unsigned long MarkedAbelianGroup::cycleRank() const {
+    return M_.columns() - (rankM_ - TORVec_.size());
 }
 
 inline unsigned long MarkedAbelianGroup::minNumberCycleGens() const {
-    return OM.columns() - TORLoc;
+    return cycleRank();
 }
 
 inline bool MarkedAbelianGroup::isTrivial() const {
-    return ( (snfrank==0) && (InvFacList.size()==0) );
+    return ( (snfFreeRank_==0) && invFac_.empty() );
 }
 
 inline bool MarkedAbelianGroup::isZ() const {
-    return ( (snfrank==1) && (InvFacList.size()==0) );
+    return ( (snfFreeRank_==1) && invFac_.empty() );
 }
 
 inline bool MarkedAbelianGroup::equalTo(const MarkedAbelianGroup& other)
         const {
-    return ( (OM == other.OM) && (ON == other.ON) && (coeff == other.coeff) );
+    return ( (M_ == other.M_) && (N_ == other.N_) && (coeff_ == other.coeff_) );
 }
 
 inline bool MarkedAbelianGroup::isIsomorphicTo(
         const MarkedAbelianGroup &other) const {
-    return ((InvFacList == other.InvFacList) && (snfrank == other.snfrank));
+    return ((invFac_ == other.invFac_) && (snfFreeRank_ == other.snfFreeRank_));
 }
 
+inline const MatrixInt& MarkedAbelianGroup::m() const {
+    return M_;
+}
 inline const MatrixInt& MarkedAbelianGroup::M() const {
-    return OM;
+    return M_;
+}
+inline const MatrixInt& MarkedAbelianGroup::n() const {
+    return N_;
 }
 inline const MatrixInt& MarkedAbelianGroup::N() const {
-    return ON;
+    return N_;
 }
 inline const Integer& MarkedAbelianGroup::coefficients() const {
-    return coeff;
+    return coeff_;
+}
+
+inline Vector<Integer> MarkedAbelianGroup::boundaryMap(
+        const Vector<Integer>& CCrep) const {
+    return boundaryOf(CCrep);
 }
 
 inline void swap(MarkedAbelianGroup& a, MarkedAbelianGroup& b) noexcept {
@@ -1316,7 +1389,7 @@ inline bool HomMarkedAbelianGroup::isZero() const {
 
 inline Vector<Integer> HomMarkedAbelianGroup::evalCC(
        const Vector<Integer>& input) const {
-    if (input.size() != domain().M().columns())
+    if (input.size() != domain_.M_.columns())
         throw InvalidArgument(
             "The argument to evalCC() is a vector of the wrong size");
 

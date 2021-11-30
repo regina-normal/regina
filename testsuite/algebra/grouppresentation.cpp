@@ -222,8 +222,8 @@ class GroupPresentationTest : public CppUnit::TestFixture {
             GroupPresentation tPres( *g );
             tPres.homologicalAlignment();
             MarkedAbelianGroup mab = tPres.markedAbelianisation();
-            unsigned long N(mab.countInvariantFactors());
-            unsigned long M(mab.minNumberOfGenerators());
+            unsigned long N = mab.countInvariantFactors();
+            unsigned long M = mab.snfRank();
             /*
              * If the abelianisation of this group has rank N and M
              * invariant factors d0 | d2 | ... | d(M-1),
