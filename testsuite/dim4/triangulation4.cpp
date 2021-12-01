@@ -94,6 +94,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(homologyH2);
+    CPPUNIT_TEST(homologyH3);
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(vertexLinks);
@@ -1338,6 +1339,32 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyHomology<2>(idealCappellShaneson, "0",
                 "Ideal Cappell-Shaneson");
             verifyHomology<2>(mixedPoincareProduct, "0",
+                "(S^3 / P_120) x I (single cone)");
+        }
+
+        void homologyH3() {
+            verifyHomology<3>(empty, "0", "Empty");
+            verifyHomology<3>(sphere, "0", "Sphere");
+            verifyHomology<3>(simplicialSphere, "0", "Simplicial S^4");
+            verifyHomology<3>(s4_doubleConeS3, "0", "S^4 (double cone)");
+            verifyHomology<3>(sphereBundle, "Z", "Sphere bundle");
+            verifyHomology<3>(cp2, "0", "CP^2");
+            verifyHomology<3>(s2xs2, "0", "S^2 x S^2");
+            verifyHomology<3>(rp4, "Z_2", "RP^4");
+            verifyHomology<3>(twistedSphereBundle, "Z_2",
+                "Twisted sphere bundle");
+            verifyHomology<3>(ball, "0", "Ball");
+            verifyHomology<3>(ball_foldedPent, "0", "Folded pentachoron");
+            verifyHomology<3>(ball_singleConeS3, "0", "D^4 (single cone)");
+            verifyHomology<3>(ball_layerAndFold, "0",
+                "Layered and folded ball");
+            verifyHomology<3>(ballBundle, "0", "Ball bundle");
+            verifyHomology<3>(twistedBallBundle, "0", "Twisted ball bundle");
+            verifyHomology<3>(idealPoincareProduct, "Z",
+                "(S^3 / P_120) x I (double cone)");
+            verifyHomology<3>(idealCappellShaneson, "0",
+                "Ideal Cappell-Shaneson");
+            verifyHomology<3>(mixedPoincareProduct, "Z",
                 "(S^3 / P_120) x I (single cone)");
         }
 
