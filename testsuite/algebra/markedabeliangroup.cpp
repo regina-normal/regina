@@ -65,7 +65,7 @@ class MarkedAbelianGroupTest : public CppUnit::TestFixture {
         void lst() {
             Triangulation<3> t = regina::Example<3>::lst(3, 5);
 
-            MarkedAbelianGroup g(t.boundaryMap<1>(), t.boundaryMap<2>());
+            MarkedAbelianGroup g = t.markedHomology();
             if (! g.isZ()) {
                 std::ostringstream msg;
                 msg << "LST has incorrect H1 = " << g.str() << '.';
@@ -237,7 +237,7 @@ class MarkedAbelianGroupTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            MarkedAbelianGroup g(t.boundaryMap<1>(), t.boundaryMap<2>());
+            MarkedAbelianGroup g = t.markedHomology();
             if (g.str() != "Z + Z_2") {
                 std::ostringstream msg;
                 msg << "H1(Klein bottle) gives the wrong homology: " << g.str();

@@ -1439,7 +1439,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
 
             regina::AbelianGroup g1(m, n);
-            regina::MarkedAbelianGroup g2(m, n);
+            regina::MarkedAbelianGroup g2 = tri.template markedHomology<k>();
             if (g1.str() != g2.str()) {
                 std::ostringstream msg;
                 msg << name << ": computing H" << k << " via the "

@@ -173,6 +173,9 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::return_value_policy::reference_internal)
         .def("homologyH1", &Triangulation<dim>::homologyH1,
             pybind11::return_value_policy::reference_internal)
+        .def("markedHomology",
+            (regina::MarkedAbelianGroup (Triangulation<dim>::*)(int) const)(
+            &Triangulation<dim>::markedHomology))
         .def("boundaryMap", (MatrixInt (Triangulation<dim>::*)(int) const)(
             &Triangulation<dim>::boundaryMap))
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)

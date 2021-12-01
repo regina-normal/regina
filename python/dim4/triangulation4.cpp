@@ -194,6 +194,9 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("homologyH2", &Triangulation<4>::homologyH2,
             pybind11::return_value_policy::reference_internal)
+        .def("markedHomology",
+            (regina::MarkedAbelianGroup (Triangulation<4>::*)(int) const)(
+            &Triangulation<4>::markedHomology))
         .def("boundaryMap", (MatrixInt (Triangulation<4>::*)(int) const)(
             &Triangulation<4>::boundaryMap))
         .def("orient", &Triangulation<4>::orient)

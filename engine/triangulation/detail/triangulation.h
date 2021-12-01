@@ -51,6 +51,7 @@
 #include "core/output.h"
 #include "algebra/abeliangroup.h"
 #include "algebra/grouppresentation.h"
+#include "algebra/markedabeliangroup.h"
 #include "maths/matrix.h"
 #include "triangulation/generic/component.h"
 #include "triangulation/generic/boundarycomponent.h"
@@ -1244,6 +1245,83 @@ class TriangulationBase :
         const AbelianGroup& homologyH1() const;
 
         /**
+         * Returns the <i>k</i>th homology group of this triangulation,
+         * without truncating ideal vertices, but with explicit coordinates
+         * that track the individual <i>k</i>-faces of this triangulation.
+         *
+         * This is a specialised homology routine; you should only use
+         * it if you need to understand how individual <i>k</i>-faces
+         * (or chains of <i>k</i>-faces) appear within the homology group.
+         *
+         * - The major disadvantage of this routine is that it does not
+         *   truncate ideal vertices.  Instead it computes the homology
+         *   of the union of all top-dimensional simplices, working directly
+         *   with the boundary maps between (<i>k</i>+1)-faces, <i>k</i>-faces
+         *   and (<i>k</i>-1)-faces of the triangulation.  If your
+         *   triangulation is ideal, then this routine will almost certainly
+         *   \e not give the correct homology group for the underlying manifold.
+         *   If, however, all of your vertex links are spheres or balls
+         *   (i.e., the triangulation is closed or all of its boundary
+         *   components are built from unglued (<i>dim</i>-1)-faces),
+         *   then the homology of the manifold will be computed correctly.
+         *
+         * - The major advantage is that, instead of returning a simpler
+         *   AbelianGroup, this routine returns a MarkedAbelianGroup.
+         *   This allows you to track chains of individual <i>k</i>-faces of
+         *   the triangulation as they appear within the homology group.
+         *   Specifically, the chain complex cordinates with this
+         *   MarkedAbelianGroup represent precisely the <i>k</i>-faces of the
+         *   triangulation in the same order as they appear in the list
+         *   faces<k>(), using the inherent orientation provided by
+         *   Face<dim, k>.
+         *
+         * \pre This triangulation is valid and non-empty.
+         *
+         * \exception FailedPrecondition This triangulation is empty or invalid.
+         *
+         * \ifacespython Not present, since Python does not support templates.
+         * Python users can instead use the variant
+         * <tt>markedHomology(subdim)</tt>.
+         *
+         * \tparam k the dimension of the homology group to compute; this must
+         * be between 1 and (<i>dim</i>-1) inclusive.
+         *
+         * @return the <i>k</i>th homology group of the union of all
+         * simplices in this triangulation, as described above.
+         */
+        template <int k = 1>
+        MarkedAbelianGroup markedHomology() const;
+
+        /**
+         * Returns the <i>k</i>th homology group of this triangulation,
+         * without truncating ideal vertices, but with explicit coordinates
+         * that track the individual <i>k</i>-faces of this triangulation,
+         * where the parameter <i>k</i> does not need to be known until runtime.
+         *
+         * For C++ programmers who know \a k at compile time, you are better
+         * off using the template function markedHomology<k>() instead, which
+         * is slightly faster.
+         *
+         * See the templated markedHomology<k>() for full details on what
+         * this function computes, some important caveats to be aware of,
+         * and how the group that it returns should be interpreted.
+         *
+         * \pre This triangulation is valid and non-empty.
+         *
+         * \exception FailedPrecondition This triangulation is empty or invalid.
+         *
+         * \exception InvalidArgument the homology dimension \a k is outside
+         * the supported range (i.e., less than 1 or greater than or
+         * equal to \a dim).
+         *
+         * @param k the dimension of the homology group to compute; this must
+         * be between 1 and (<i>dim</i>-1) inclusive.
+         * @return the <i>k</i>th homology group of the union of all
+         * simplices in this triangulation, as described above.
+         */
+        MarkedAbelianGroup markedHomology(int k) const;
+
+        /**
          * Returns the boundary map from <i>subdim</i>-faces to
          * (<i>subdim</i>-1)-faces of the triangulation.
          *
@@ -1297,10 +1375,9 @@ class TriangulationBase :
          * (<i>subdim</i>-1)-faces of the triangulation, where the
          * face dimension does not need to be known until runtime.
          *
-         * This routine takes linear time in the dimension \a dim.  For C++
-         * programmers who know \a subdim at compile time, you are better off
-         * using the template function boundaryMap<subdim>() instead, which
-         * is slightly faster.
+         * For C++ programmers who know \a subdim at compile time, you are
+         * better off using the template function boundaryMap<subdim>()
+         * instead, which is slightly faster.
          *
          * See the templated boundaryMap<subdim>() for full details on
          * what this function computes and how the matrix it returns
@@ -2493,6 +2570,21 @@ class TriangulationBase :
          */
         template <int... k>
         auto facesImpl(int subdim, std::integer_sequence<int, 0, k...>) const;
+
+        /**
+         * Implements the non-templated markedHomology(homdim) function.
+         *
+         * The purpose of the std::integer_sequence argument is to give
+         * us the list of all homology dimensions as individual template
+         * parameters, which means we can use C++17 fold expressions.
+         *
+         * The reason for separating out homology dimension 0 is because
+         * markedHomology() only supports homology dimension >= 1
+         * (and so we wish to exclude 0 from our fold expression).
+         */
+        template <int... k>
+        MarkedAbelianGroup markedHomologyImpl(int homdim,
+                std::integer_sequence<int, 0, k...>) const;
 
         /**
          * Implements the non-templated boundaryMap(subdim) function.
@@ -4359,8 +4451,45 @@ inline const AbelianGroup& TriangulationBase<dim>::homologyH1() const {
 }
 
 template <int dim>
+template <int k>
+inline MarkedAbelianGroup TriangulationBase<dim>::markedHomology() const {
+    static_assert(1 <= k && k < dim);
+
+    if (isEmpty())
+        throw FailedPrecondition("markedHomology(): triangulation is empty");
+    if (! isValid())
+        throw FailedPrecondition("markedHomology(): triangulation is invalid");
+
+    return MarkedAbelianGroup(boundaryMap<k>(), boundaryMap<k + 1>());
+}
+
+template <int dim>
 template <int... k>
-MatrixInt TriangulationBase<dim>::boundaryMapImpl(int subdim,
+inline MarkedAbelianGroup TriangulationBase<dim>::markedHomologyImpl(int homdim,
+        std::integer_sequence<int, 0, k...>) const {
+    // We use a std::optional because MarkedAbelianGroup does not have a
+    // default constructor (but there must be a better solution than this?).
+    //
+    // We give the result a name (tmp) to avoid compiler warnings.
+    std::optional<MarkedAbelianGroup> ans;
+    auto tmp = (
+        (homdim == k && (void(ans = markedHomology<k>()), 1))
+        || ...);
+    return *ans;
+}
+
+template <int dim>
+inline MarkedAbelianGroup TriangulationBase<dim>::markedHomology(int k) const {
+    if (k < 1 || k >= dim)
+        throw InvalidArgument(
+            "markedHomology(): unsupported homology dimension");
+
+    return markedHomologyImpl(k, std::make_integer_sequence<int, dim>());
+}
+
+template <int dim>
+template <int... k>
+inline MatrixInt TriangulationBase<dim>::boundaryMapImpl(int subdim,
         std::integer_sequence<int, 0, k...>) const {
     // We give the result a name (tmp) to avoid compiler warnings.
     MatrixInt ans;
@@ -4371,7 +4500,7 @@ MatrixInt TriangulationBase<dim>::boundaryMapImpl(int subdim,
 }
 
 template <int dim>
-MatrixInt TriangulationBase<dim>::boundaryMap(int subdim) const {
+inline MatrixInt TriangulationBase<dim>::boundaryMap(int subdim) const {
     if (subdim < 1 || subdim > dim)
         throw InvalidArgument("boundaryMap(): unsupported face dimension");
 
@@ -4393,7 +4522,8 @@ void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
 }
 
 template <int dim>
-Triangulation<dim> TriangulationBase<dim>::fromSig(const std::string& sig) {
+inline Triangulation<dim> TriangulationBase<dim>::fromSig(
+        const std::string& sig) {
     return TriangulationBase<dim>::fromIsoSig(sig);
 }
 
