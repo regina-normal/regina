@@ -38,10 +38,12 @@
 #include <unistd.h>
 #include <vector>
 #include <cppunit/extensions/HelperMacros.h>
+#include "angle/anglestructures.h"
 #include "link/link.h"
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "split/signature.h"
+#include "snappea/snappeatriangulation.h"
 #include "subcomplex/standardtri.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim2.h"
@@ -104,6 +106,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(homologyBdry);
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(fundGroupVsH1);
+    CPPUNIT_TEST(angleStructures);
     CPPUNIT_TEST(zeroEfficiency);
     CPPUNIT_TEST(irreducibility);
     CPPUNIT_TEST(threeSphereRecognition);
@@ -2256,6 +2259,253 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Cusped solid genus 2 torus");
             verifyFundGroup(pinchedSolidTorus, "Z", "Pinched solid torus");
             verifyFundGroup(pinchedSolidKB, "Z", "Pinched solid Klein bottle");
+        }
+
+        static void verifyAngleStructures(const Triangulation<3>& tri,
+                bool general, bool strict, const char* name) {
+            regina::MatrixInt m = regina::makeAngleEquations(tri);
+
+            // Ensure the strict vs general computations are completely
+            // independent.
+            Triangulation<3> testGeneral = tri;
+            Triangulation<3> testStrict = tri;
+
+            if (strict || general) {
+                if (! testGeneral.hasGeneralAngleStructure()) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " is reported has having no generalised "
+                        "angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                try {
+                    const auto& a = testGeneral.generalAngleStructure();
+                    auto v = a.vector();
+                    if (v.size() != m.columns()) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a generalised angle structure "
+                            "of the wrong size.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (! (m * v).isZero()) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a generalised angle structure "
+                            "that does not satisfy the angle equations.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (v[v.size() - 1] <= 0) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a generalised angle structure "
+                            "with non-positive scaling coordinate.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } catch (const regina::NoSolution&) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " threw an exception when finding a generalised "
+                        "angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                if (testGeneral.hasGeneralAngleStructure()) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " is reported has having a generalised "
+                        "angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                try {
+                    const auto& a = testGeneral.generalAngleStructure();
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " did not throw an exception when finding a "
+                        "generalised angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                } catch (const regina::NoSolution&) {
+                }
+            }
+
+            if (strict) {
+                if (! testStrict.hasStrictAngleStructure()) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " is reported has having no strict "
+                        "angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                try {
+                    const auto& a = testStrict.strictAngleStructure();
+                    if (! a.isStrict()) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a strict angle structure "
+                            "that is not actually strict.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    auto v = a.vector();
+                    if (v.size() != m.columns()) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a strict angle structure "
+                            "of the wrong size.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (! (m * v).isZero()) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a strict angle structure "
+                            "that does not satisfy the angle equations.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (v[v.size() - 1] <= 0) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a strict angle structure "
+                            "with non-positive scaling coordinate.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } catch (const regina::NoSolution&) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " threw an exception when finding a strict "
+                        "angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                if (testStrict.hasStrictAngleStructure()) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " is reported has having a strict "
+                        "angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                try {
+                    const auto& a = testStrict.strictAngleStructure();
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " did not throw an exception when finding a "
+                        "strict angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                } catch (const regina::NoSolution&) {
+                }
+            }
+        }
+
+        static void testAngleStructures(const Triangulation<3>& t,
+                const char* name) {
+            // Should there be a generalised angle structure?
+            bool general = true;
+            for (auto v : t.vertices())
+                if (v->linkEulerChar() != 0) {
+                    general = false;
+                    break;
+                }
+
+            // Should there be a strict angle structure?
+            bool strict = false;
+            if (general) {
+                // Since we are only using this with a small census,
+                // we will optimistically assume that there is a strict
+                // angle structure iff SnapPea is able to find a
+                // geometric structure on the triangulation.
+                //
+                // While this is not a guaranteed theorem (*), it works very
+                // well in practice, and importantly it gives us a way to
+                // independently verify Regina's strict angle structure test.
+                //
+                // (*) The caveats: SnapPea could get things wrong due to
+                // round-off error, and also it is possible to have a
+                // strict angle structure without fully satisfying
+                // Thurston's gluing equations.  But again, neither of these
+                // discrepancies are actually observed in very small
+                // cases such as these, so we will happily assume that
+                // neither happens for the purpose of this test suite.
+                regina::SnapPeaTriangulation s(t);
+                if (s.solutionType() ==
+                        regina::SnapPeaTriangulation::geometric_solution)
+                    strict = true;
+            }
+
+            verifyAngleStructures(t, general, strict, name);
+        }
+
+        void angleStructures() {
+            verifyAngleStructures(empty, false, false, "Empty triangulation");
+
+            // Closed manifolds:
+            verifyAngleStructures(sphere, false, false, "Generic S^3");
+            verifyAngleStructures(simplicialSphere, false, false,
+                "Simplicial S^3");
+            verifyAngleStructures(sphereBundle, false, false, "S^2 x S^1");
+            verifyAngleStructures(twistedSphereBundle, false, false,
+                "S^2 x~ S^1");
+            verifyAngleStructures(s3, false, false, "S^3");
+            verifyAngleStructures(rp3_1, false, false, "RP^3 (1 vtx)");
+            verifyAngleStructures(rp3_2, false, false, "RP^3 (2 vtx)");
+            verifyAngleStructures(lens3_1, false, false, "L(3,1)");
+            verifyAngleStructures(lens7_1_loop, false, false,
+                "Layered loop L(7,1)");
+            verifyAngleStructures(lens8_3, false, false, "L(8,3)");
+            verifyAngleStructures(lens8_3_large, false, false, "Large L(8,3)");
+            verifyAngleStructures(rp3rp3, false, false, "RP^3 # RP^3");
+            verifyAngleStructures(q28, false, false, "S^3 / Q_28");
+            verifyAngleStructures(weberSeifert, false, false, "Weber-Seifert");
+            verifyAngleStructures(q32xz3, false, false, "S^3 / Q_32 x Z_3");
+            verifyAngleStructures(lens100_1, false, false, "L(100,1)");
+            verifyAngleStructures(rp2xs1, false, false, "RP^2 x S^1");
+
+            // Ideal triangulations:
+            verifyAngleStructures(figure8, true, true, "Figure eight");
+            verifyAngleStructures(trefoil, true, false, "Trefoil");
+            verifyAngleStructures(knot18, true, true, "18-crossing knot");
+            verifyAngleStructures(gieseking, true, true, "Gieseking");
+            verifyAngleStructures(twoProjPlaneCusps, false, false,
+                "Triangulation with RP^2 cusps");
+            verifyAngleStructures(cuspedGenusTwoTorus, false, false,
+                "Cusped solid genus 2 torus");
+            {
+                Triangulation<3> t = figure8;
+                t.insertTriangulation(gieseking);
+                verifyAngleStructures(t, true, true,
+                    "Figure eight U Gieseking");
+            }
+
+            // Mixed ideal/real triangulations:
+            verifyAngleStructures(fig8_bary, false, false,
+                "Subdivided figure eight");
+            verifyAngleStructures(disjoint2, false, false,
+                "Gieseking U (cusped genus 2 torus)");
+            verifyAngleStructures(disjoint3, false, false,
+                "(S^2 x S^1) U (B^3) U (Figure eight knot complement)");
+
+            // Triangulations with real boundary are not really important
+            // here, but throw in a couple of cases to make sure they
+            // behave as documented.
+            verifyAngleStructures(ball, true, true, "Single tetrahedron");
+            verifyAngleStructures(ball_large, false, false,
+                "4-tetrahedron ball");
+            verifyAngleStructures(ballBundle, true, true, "Solid torus");
+            verifyAngleStructures(twistedBallBundle, true, true,
+                "Solid Klein bottle");
+            verifyAngleStructures(lst3_4_7, true, true, "LST(3,4,7)");
+            verifyAngleStructures(ball_large_pillows, false, false,
+                "4-tetrahedron pillow ball");
+            verifyAngleStructures(ball_large_snapped, false, false,
+                "3-tetrahedron snapped ball");
+
+            // Likewise, invalid triangulations are not important, but
+            // ensure they behave as documented.
+            verifyAngleStructures(invalidEdges, false, false,
+                "Triangulation with invalid edges");
+            verifyAngleStructures(pinchedSolidTorus, true, true,
+                "Pinched solid torus");
+            verifyAngleStructures(pinchedSolidKB, true, true,
+                "Pinched solid Klein bottle");
+
+            runCensusAllIdeal(testAngleStructures);
         }
 
         static void testZeroEfficiency(const Triangulation<3>& tri,
