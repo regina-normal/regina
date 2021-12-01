@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 7.0  [ TODO ]
+Version 7.0  [ 10 December, 2021 ]
 
     GENERAL:
         - The file format has changed.  It is still XML-based, but older
