@@ -39,6 +39,10 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
     if (prop_.H1Rel_.has_value())
         return *prop_.H1Rel_;
 
+    if (! isValid())
+        throw FailedPrecondition(
+            "homologyRel() requires a valid triangulation");
+
     if (countBoundaryComponents() == 0)
         return *(prop_.H1Rel_ = homology());
 
@@ -119,6 +123,10 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
 const AbelianGroup& Triangulation<3>::homologyBdry() const {
     if (prop_.H1Bdry_.has_value())
         return *prop_.H1Bdry_;
+
+    if (! isValid())
+        throw FailedPrecondition(
+            "homologyBdry() requires a valid triangulation");
 
     // Run through the individual boundary components and add the
     // appropriate pieces to the homology group.

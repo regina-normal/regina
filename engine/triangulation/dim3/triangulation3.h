@@ -670,6 +670,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid.
          *
+         * \exception FailedPrecondition This triangulation is invalid.
+         *
          * @return the relative first homology group with respect to the
          * boundary.
          */
@@ -690,6 +692,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * it is.
          *
          * \pre This triangulation is valid.
+         *
+         * \exception FailedPrecondition This triangulation is invalid.
          *
          * @return the first homology group of the boundary.
          */
@@ -721,6 +725,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Z_2, so the number of Z_2 terms is returned.
          *
          * \pre This triangulation is valid.
+         *
+         * \exception FailedPrecondition This triangulation is invalid.
          *
          * @return the number of Z_2 terms in the second homology group
          * with coefficients in Z_2.
@@ -3754,6 +3760,7 @@ inline AbelianGroup Triangulation<3>::homologyH2() const {
 }
 
 inline unsigned long Triangulation<3>::homologyH2Z2() const {
+    // The call to homologyRel() will test the validity precondition.
     const AbelianGroup& h1Rel = homologyRel();
     return h1Rel.rank() + h1Rel.torsionRank(2);
 }

@@ -1568,6 +1568,9 @@ Version 7.0  [ TODO ]
               exists and throws an exception otherwise.
             - Renamed isThreeSphere() and knowsThreeSphere() to isSphere() and
               knowsSphere().  The old names are kept as deprecated aliases.
+            - For consistency with the new generic homology() routines,
+              homologyRel(), homologyBdry() and homologyH2Z2() now throw
+              exceptions if the validity precondition is not met.
             - New routines inAnyPacket() and isSnapPea().
             - Functions snapPea() and saveSnapPea() are no longer virtual.
             - The Link constructor is now deprecated, since Link::complement()
