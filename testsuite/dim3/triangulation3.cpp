@@ -4205,7 +4205,15 @@ class Triangulation3Test : public TriangulationTest<3> {
             Triangulation<3> t(tri);
             t.connectedSumWith(t);
 
-            // TODO: Check that homology doubles.
+            {
+                AbelianGroup g = tri.homology();
+                g.addGroup(g);
+                if (! (t.homology() == g)) {
+                    std::ostringstream msg;
+                    msg << name << ": tri # tri does not double the homology.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
 
             // All of our remaining tests are for closed manifolds.
             if (! tri.isClosed())
