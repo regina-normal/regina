@@ -451,7 +451,7 @@ template <int dim>
 struct PachnerHelperH2<dim, true> {
     static bool testH2(const Triangulation<dim>& orig,
             const Triangulation<dim>& altered) {
-        return (altered.homologyH2() == orig.homologyH2());
+        return (altered.template homology<2>() == orig.template homology<2>());
     };
 };
 
@@ -1461,12 +1461,12 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
 
             if constexpr (k == 2 && (dim == 3 || dim == 4)) {
-                const auto& h2 = tri.homologyH2();
+                const auto& h2 = tri.template homology<2>();
                 if (g1.str() != h2.str()) {
                     std::ostringstream msg;
                     msg << name << ": computing H" << k << " via the "
                         "chain complex gives " << g1.str()
-                        << ", but homologyH2() gives " << h2.str() << ".";
+                        << ", but homology<2>() gives " << h2.str() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }

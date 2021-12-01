@@ -123,13 +123,41 @@ AbelianGroup TriangulationBase<dim>::homology() const {
         // Build the group from the presentation matrix and tidy up.
         return H1_.emplace(std::move(pres));
     } else if constexpr (k == dim - 1 && dim == 3) {
-        // In dimension 3, we have both H1 and H1Rel, and so we can compute
+        // In dimension 3 we have both H1 and H1Rel, and so we can compute
         // H2 from those.
         if (! isValid())
             throw FailedPrecondition("Computing kth homology for k >= 2 "
                 "requires a valid triangulation");
 
-        return static_cast<const Triangulation<dim>*>(this)->homologyH2();
+        const auto* tri = static_cast<const Triangulation<dim>*>(this);
+        if (tri->prop_.H2_.has_value())
+            return *tri->prop_.H2_;
+
+        if (isEmpty())
+            return *(tri->prop_.H2_ = AbelianGroup());
+
+        const AbelianGroup& h1Rel = tri->homologyRel();
+
+        // We know the only summands of H2 will be Z and Z_2.
+        AbelianGroup ans;
+        if (isOrientable()) {
+            // Same as H1Rel without the torsion elements.
+            ans.addRank(h1Rel.rank());
+        } else {
+            // Non-orientable!
+            // Z_2 rank = # closed cmpts - # closed orientable cmpts
+            for (auto c : components())
+                if (c->isClosed() && ! c->isOrientable())
+                    ans.addTorsion(2);
+
+            if (H1_.has_value())
+                ans.addRank(h1Rel.rank() + h1Rel.torsionRank(2)
+                    - H1_->torsionRank(2) - ans.countInvariantFactors());
+            else
+                ans.addRank(h1Rel.rank() + h1Rel.torsionRank(2)
+                    - homology().torsionRank(2) - ans.countInvariantFactors());
+        }
+        return *(tri->prop_.H2_ = std::move(ans));
     } else {
         // Here we handle the remaining cases:
         //   2 <= k <= 3 in dimension 4;

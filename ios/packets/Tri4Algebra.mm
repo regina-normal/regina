@@ -149,8 +149,8 @@
     t.intelligentSimplify();
 
     if (self.packet->isValid()) {
-        self.h1.text = @(t.homologyH1().utf8().c_str());
-        self.h2.text = @(t.homologyH2().utf8().c_str());
+        self.h1.text = @(t.homology<1>().utf8().c_str());
+        self.h2.text = @(t.homology<2>().utf8().c_str());
     } else {
         self.h1.text = self.h2.text = @"Invalid";
     }

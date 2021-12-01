@@ -416,21 +416,18 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         /*@{*/
 
         /**
-         * Returns the second homology group for this triangulation.
-         * If this triangulation contains any ideal vertices, the homology
-         * group will be calculated as if each such vertex had been truncated.
+         * Deprecated routine that returns the second homology group for
+         * this triangulation.
          *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homologyH2() should be called again; this will be
-         * instantaneous if the group has already been calculated.
+         * \deprecated This is identical to calling homology<2>().
          *
          * \pre This triangulation is valid.
          *
+         * \exception FailedPrecondition This triangulation is invalid.
+         *
          * @return the second homology group.
          */
-        const AbelianGroup& homologyH2() const;
+        [[deprecated]] AbelianGroup homologyH2() const;
 
         /*@}*/
         /**
@@ -1113,6 +1110,10 @@ inline bool Triangulation<4>::isIdeal() const {
 inline bool Triangulation<4>::isClosed() const {
     ensureSkeleton();
     return boundaryComponents().empty();
+}
+
+inline AbelianGroup Triangulation<4>::homologyH2() const {
+    return homology<2>();
 }
 
 template <typename Action, typename... Args>

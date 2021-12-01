@@ -99,7 +99,8 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(vertexLinksSpecific);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(eulerChar);
-    CPPUNIT_TEST(homology);
+    CPPUNIT_TEST(homology1);
+    CPPUNIT_TEST(homology2);
     CPPUNIT_TEST(homologyBdry);
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(fundGroupVsH1);
@@ -191,7 +192,9 @@ class Triangulation3Test : public TriangulationTest<3> {
         Triangulation<3> twoProjPlaneCusps;
             /**< A subdivision of invalidEdges, resulting in all edges
                  valid but two projective plane cusps.  Note that this
-                 triangulation has a 3-sphere orientable double cover. */
+                 triangulation has a 3-sphere orientable double cover.
+                 The underlying manifold is RP^2 x I (but with the
+                 boundary expressed using ideal vertices). */
         Triangulation<3> cuspedGenusTwoTorus;
             /**< A solid genus two torus with a cusped boundary. */
         Triangulation<3> pinchedSolidTorus;
@@ -1928,7 +1931,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void homology() {
+        void homology1() {
             verifyGroup(empty.homology(),
                 "H1(empty triangulation)", 0);
             verifyGroup(ball.homology(),
@@ -1997,6 +2000,87 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "H1(pinched solid torus)", 1);
             verifyGroup(pinchedSolidKB.homology(),
                 "H1(pinched solid Klein bottle)", 1);
+            verifyGroup(singleTet_bary.homology(),
+                "H1(Subdivided tetrahedron", 0);
+            verifyGroup(fig8_bary.homology(),
+                "H1(Subdivided figure eight", 1);
+            verifyGroup(disjoint2.homology(),
+                "H1(Gieseking U (cusped genus 2 torus)", 3);
+            verifyGroup(disjoint3.homology(),
+                "H1((S^2 x S^1) U (B^3) U (Figure eight knot complement))", 2);
+        }
+
+        void homology2() {
+            verifyGroup(empty.homology<2>(),
+                "H2(empty triangulation)", 0);
+            verifyGroup(ball.homology<2>(),
+                "H2(single tetrahedron)", 0);
+            verifyGroup(s3.homology<2>(),
+                "H2(S^3)", 0);
+            verifyGroup(sphere.homology<2>(),
+                "H2(Generic S^3)", 0);
+            verifyGroup(simplicialSphere.homology<2>(),
+                "H2(Simplicial S^3)", 0);
+            verifyGroup(sphereBundle.homology<2>(),
+                "H2(S^2 x S^1)", 1);
+            verifyGroup(twistedSphereBundle.homology<2>(),
+                "H2(S^2 x~ S^1)", 0, 2);
+            verifyGroup(rp3_1.homology<2>(),
+                "H2(RP^3, 1 vtx)", 0);
+            verifyGroup(rp3_2.homology<2>(),
+                "H2(RP^3, 2 vtx)", 0);
+            verifyGroup(lens3_1.homology<2>(),
+                "H2(L(3,1))", 0);
+            verifyGroup(lens7_1_loop.homology<2>(),
+                "H2(Loop L(7,1))", 0);
+            verifyGroup(lens8_3.homology<2>(),
+                "H2(L(8,3))", 0);
+            verifyGroup(lens8_3_large.homology<2>(),
+                "H2(Large L(8,3))", 0);
+            verifyGroup(rp3rp3.homology<2>(),
+                "H2(RP^3 # RP^3)", 0);
+            verifyGroup(q28.homology<2>(),
+                "H2(S^3 / Q_28)", 0);
+            verifyGroup(weberSeifert.homology<2>(),
+                "H2(SeifertWeber)", 0);
+            verifyGroup(q32xz3.homology<2>(),
+                "H2(S^3 / Q_32 x Z_3)", 0);
+            verifyGroup(lens100_1.homology<2>(),
+                "H2(L(100,1))", 0);
+            verifyGroup(ball_large.homology<2>(),
+                "H2(4-tetrahedron ball)", 0);
+            verifyGroup(ball_large_pillows.homology<2>(),
+                "H2(4-tetrahedron pillow ball)", 0);
+            verifyGroup(ball_large_snapped.homology<2>(),
+                "H2(3-tetrahedron snapped ball)", 0);
+            verifyGroup(lst3_4_7.homology<2>(),
+                "H2(LST(3,4,7))", 0);
+            verifyGroup(figure8.homology<2>(),
+                "H2(figure eight)", 0);
+            verifyGroup(trefoil.homology<2>(),
+                "H2(trefoil)", 0);
+            verifyGroup(knot18.homology<2>(),
+                "H2(18-crossing knot)", 0);
+            verifyGroup(rp2xs1.homology<2>(),
+                "H2(RP^2 x S^1)", 0, 2);
+            verifyGroup(ballBundle.homology<2>(),
+                "H2(solid torus)", 0);
+            verifyGroup(twistedBallBundle.homology<2>(),
+                "H2(solid Klein bottle)", 0);
+            verifyGroup(gieseking.homology<2>(),
+                "H2(Gieseking)", 0);
+            verifyGroup(twoProjPlaneCusps.homology<2>(),
+                "H2(tri with projective plane cusps)", 0);
+            verifyGroup(cuspedGenusTwoTorus.homology<2>(),
+                "H2(cusped solid genus two torus)", 0);
+            verifyGroup(singleTet_bary.homology<2>(),
+                "H2(Subdivided tetrahedron", 0);
+            verifyGroup(fig8_bary.homology<2>(),
+                "H2(Subdivided figure eight", 0);
+            verifyGroup(disjoint2.homology<2>(),
+                "H2(Gieseking U (cusped genus 2 torus)", 0);
+            verifyGroup(disjoint3.homology<2>(),
+                "H2((S^2 x S^1) U (B^3) U (Figure eight knot complement))", 1);
         }
 
         void homologyBdry() {
@@ -3465,13 +3549,13 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri.homology() == b.homology())) {
+            if (! (tri.homology<1>() == b.homology<1>())) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri.homologyH2() == b.homologyH2())) {
+            if (! (tri.homology<2>() == b.homology<2>())) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks H2.";
                 CPPUNIT_FAIL(msg.str());
@@ -3834,8 +3918,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    AbelianGroup expectH2(tri.homologyH2());
-                    AbelianGroup foundH2(punc.homologyH2());
+                    AbelianGroup expectH2 = tri.homology<2>();
+                    AbelianGroup foundH2 = punc.homology<2>();
                     Component<3>* c = origTet->component();
                     if (! c->isClosed()) {
                         // X -> X + Z

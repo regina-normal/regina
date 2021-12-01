@@ -193,8 +193,7 @@ void addTriangulation4(pybind11::module_& m) {
             &Triangulation<4>::homology),
             pybind11::arg("k") = 1)
         .def("homologyH1", &Triangulation<4>::homology<1>) // deprecated
-        .def("homologyH2", &Triangulation<4>::homologyH2,
-            pybind11::return_value_policy::reference_internal)
+        .def("homologyH2", &Triangulation<4>::homology<2>) // deprecated
         .def("markedHomology",
             (regina::MarkedAbelianGroup (Triangulation<4>::*)(int) const)(
             &Triangulation<4>::markedHomology))

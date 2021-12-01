@@ -393,7 +393,7 @@ class Triangulation4Test : public TriangulationTest<4> {
 
                 void packetWasChanged(regina::Packet& p) {
                     rank = static_cast<regina::PacketOf<Triangulation<4>>&>
-                        (p).homologyH2().rank();
+                        (p).homology<2>().rank();
                     ++events;
                 }
             };
@@ -404,7 +404,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 Watcher w;
                 p->listen(&w);
 
-                if (p->homologyH2().rank() != 1) {
+                if (p->homology<2>().rank() != 1) {
                     CPPUNIT_FAIL("doubleCone(S2xS1) should have rank(H2) = 1.");
                 }
 
@@ -421,7 +421,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                     CPPUNIT_FAIL("Triangulation should have rank(H2) = 0 "
                         "in event handler after copy assignment.");
                 }
-                if (p->homologyH2().rank() != 0) {
+                if (p->homology<2>().rank() != 0) {
                     CPPUNIT_FAIL("Triangulation should have rank(H2) = 0"
                         "after copy assignment.");
                 }
@@ -432,7 +432,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 Watcher w;
                 p->listen(&w);
 
-                if (p->homologyH2().rank() != 1) {
+                if (p->homology<2>().rank() != 1) {
                     CPPUNIT_FAIL("doubleCone(S2xS1) should have rank(H2) = 1.");
                 }
 
@@ -453,7 +453,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                     CPPUNIT_FAIL("Triangulation should have rank(H2) = 0 "
                         "in event handler after move assignment.");
                 }
-                if (p->homologyH2().rank() != 0) {
+                if (p->homology<2>().rank() != 0) {
                     CPPUNIT_FAIL("Triangulation should have rank(H2) = 0"
                         "after move assignment.");
                 }
@@ -1426,7 +1426,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri.homologyH2() == b.homologyH2())) {
+            if (! (tri.homology<2>() == b.homology<2>())) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks H2.";
                 CPPUNIT_FAIL(msg.str());
@@ -1945,7 +1945,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if (! (other.homologyH2() == tri.homologyH2())) {
+                    if (! (other.homology<2>() == tri.homology<2>())) {
                         std::ostringstream msg;
                         msg << name << ": idealToFinite changes H2.";
                         CPPUNIT_FAIL(msg.str());
@@ -2029,7 +2029,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b.homologyH2() != tri.homologyH2()) {
+            if (b.homology<2>() != tri.homology<2>()) {
                 std::ostringstream msg;
                 msg << name << ": iBundle gives a mismatched H2.";
                 CPPUNIT_FAIL(msg.str());
@@ -2104,10 +2104,10 @@ class Triangulation4Test : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            regina::AbelianGroup expectH2(tri.homologyH2());
+            regina::AbelianGroup expectH2(tri.homology<2>());
             expectH2.addGroup(tri.homology());
 
-            if (b.homologyH2() != expectH2) {
+            if (b.homology<2>() != expectH2) {
                 std::ostringstream msg;
                 msg << name << ": s1Bundle gives incorrect H2.";
                 CPPUNIT_FAIL(msg.str());

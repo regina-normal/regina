@@ -695,25 +695,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         const AbelianGroup& homologyBdry() const;
         /**
-         * Returns the second homology group for this triangulation.
-         * If this triangulation contains any ideal vertices,
-         * the homology group will be
-         * calculated as if each such vertex had been truncated.
-         * The algorithm used calculates various first homology groups
-         * and uses homology and cohomology theorems to deduce the
-         * second homology group.
+         * Deprecated routine that returns the second homology group for
+         * this triangulation.
          *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homologyH2() should be called again; this will be
-         * instantaneous if the group has already been calculated.
+         * \deprecated This is identical to calling homology<2>().
          *
          * \pre This triangulation is valid.
          *
+         * \exception FailedPrecondition This triangulation is invalid.
+         *
          * @return the second homology group.
          */
-        const AbelianGroup& homologyH2() const;
+        [[deprecated]] AbelianGroup homologyH2() const;
         /**
          * Returns the second homology group with coefficients in Z_2
          * for this triangulation.
@@ -3756,8 +3749,13 @@ inline const AngleStructure& Triangulation<3>::generalAngleStructure() const {
         throw NoSolution();
 }
 
+inline AbelianGroup Triangulation<3>::homologyH2() const {
+    return homology<2>();
+}
+
 inline unsigned long Triangulation<3>::homologyH2Z2() const {
-    return homologyRel().rank() + homologyRel().torsionRank(2);
+    const AbelianGroup& h1Rel = homologyRel();
+    return h1Rel.rank() + h1Rel.torsionRank(2);
 }
 
 inline const Triangulation<3>::TuraevViroSet&

@@ -251,11 +251,10 @@ void addTriangulation3(pybind11::module_& m) {
             &Triangulation<3>::homology),
             pybind11::arg("k") = 1)
         .def("homologyH1", &Triangulation<3>::homology<1>) // deprecated
+        .def("homologyH2", &Triangulation<3>::homology<2>) // deprecated
         .def("homologyRel", &Triangulation<3>::homologyRel,
             pybind11::return_value_policy::reference_internal)
         .def("homologyBdry", &Triangulation<3>::homologyBdry,
-            pybind11::return_value_policy::reference_internal)
-        .def("homologyH2", &Triangulation<3>::homologyH2,
             pybind11::return_value_policy::reference_internal)
         .def("homologyH2Z2", &Triangulation<3>::homologyH2Z2)
         .def("markedHomology",

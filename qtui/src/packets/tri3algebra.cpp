@@ -232,7 +232,7 @@ void Tri3HomologyFundUI::refresh() {
         if (unicode) {
             H1Rel->setText(tri->homologyRel().utf8().c_str());
             H1Bdry->setText(tri->homologyBdry().utf8().c_str());
-            H2->setText(tri->homologyH2().utf8().c_str());
+            H2->setText(tri->homology<2>().utf8().c_str());
 
             if (coeffZ2 == 0)
                 H2Z2->setText("0");
@@ -243,7 +243,7 @@ void Tri3HomologyFundUI::refresh() {
         } else {
             H1Rel->setText(tri->homologyRel().str().c_str());
             H1Bdry->setText(tri->homologyBdry().str().c_str());
-            H2->setText(tri->homologyH2().str().c_str());
+            H2->setText(tri->homology<2>().str().c_str());
 
             if (coeffZ2 == 0)
                 H2Z2->setText("0");

@@ -145,43 +145,5 @@ const AbelianGroup& Triangulation<3>::homologyBdry() const {
     return *(prop_.H1Bdry_ = std::move(ans));
 }
 
-const AbelianGroup& Triangulation<3>::homologyH2() const {
-    if (prop_.H2_.has_value())
-        return *prop_.H2_;
-
-    if (isEmpty())
-        return *(prop_.H2_ = AbelianGroup());
-
-    // Calculations are different for orientable vs non-orientable
-    // components.
-    // We know the only components will be Z and Z_2.
-    long rank, z2rank;
-    if (isOrientable()) {
-        // Same as H1Rel without the torsion elements.
-        rank = homologyRel().rank();
-        z2rank = 0;
-    } else {
-        // Non-orientable!
-        // z2rank = # closed cmpts - # closed orientable cmpts
-        z2rank = 0;
-        for (auto c : components())
-            if (c->isClosed() && (! c->isOrientable()))
-                ++z2rank;
-
-        // Find rank(Z_2) + rank(Z) and take off z2rank.
-        rank = homologyRel().rank() +
-            homologyRel().torsionRank(2) -
-            homology().torsionRank(2) -
-            z2rank;
-    }
-
-    // Build the new group and tidy up.
-    AbelianGroup ans;
-    ans.addRank(rank);
-    for (long i = 0; i < z2rank; ++i)
-        ans.addTorsion(2);
-    return *(prop_.H2_ = std::move(ans));
-}
-
 } // namespace regina
 
