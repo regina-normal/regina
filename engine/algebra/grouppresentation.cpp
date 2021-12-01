@@ -308,11 +308,11 @@ AbelianGroup GroupPresentation::abelianisation() const {
     if (nGenerators_ == 0)
         return AbelianGroup();
 
-    AbelianGroup g;
-
     if (relations_.empty()) {
         // Free group becomes free abelian group.
+        AbelianGroup g;
         g.addRank(nGenerators_);
+        return g;
     } else {
         MatrixInt m(relations_.size(), nGenerators_);
 
@@ -322,10 +322,9 @@ AbelianGroup GroupPresentation::abelianisation() const {
                 m.entry(row, t.generator) += t.exponent;
             ++row;
         }
-        g.addGroup(m);
-    }
 
-    return g;
+        return AbelianGroup(std::move(m));
+    }
 }
 
 unsigned GroupPresentation::abelianRank() const {

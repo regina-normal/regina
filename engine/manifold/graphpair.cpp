@@ -154,9 +154,7 @@ AbelianGroup GraphPair::homology() const {
     m.entry(7 + fibres0 + fibres1 + ref0 + ref1, 1 + genus0) =
         matchingReln_[1][1];
 
-    AbelianGroup ans;
-    ans.addGroup(m);
-    return ans;
+    return AbelianGroup(std::move(m));
 }
 
 std::ostream& GraphPair::writeName(std::ostream& out) const {

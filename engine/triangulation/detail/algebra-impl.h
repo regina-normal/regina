@@ -114,9 +114,7 @@ const AbelianGroup& TriangulationBase<dim>::homology() const {
     delete[] genIndex;
 
     // Build the group from the presentation matrix and tidy up.
-    AbelianGroup ans;
-    ans.addGroup(pres);
-    return *(H1_ = std::move(ans));
+    return H1_.emplace(std::move(pres));
 }
 
 template <int dim>

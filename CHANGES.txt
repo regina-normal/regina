@@ -62,6 +62,7 @@ Version 7.0  [ TODO ]
     ENGINE:
         Class AbelianGroup:
             - Added a move constructor and move assignment operator.
+            - Added a presentation matrix constructor.
             - Added member and global swap() functions.
             - Added tightEncode() and tightEncoding() to help with perfect
               hashing.

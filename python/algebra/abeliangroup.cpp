@@ -45,9 +45,9 @@ void addAbelianGroup(pybind11::module_& m) {
     auto c = pybind11::class_<AbelianGroup>(m, "AbelianGroup")
         .def(pybind11::init<>())
         .def(pybind11::init<const AbelianGroup&>())
-        .def(pybind11::init<const MatrixInt&, const MatrixInt&>())
-        .def(pybind11::init<const MatrixInt&, const MatrixInt&,
-            const Integer&>())
+        .def(pybind11::init<MatrixInt>())
+        .def(pybind11::init<MatrixInt, MatrixInt>())
+        .def(pybind11::init<MatrixInt, MatrixInt, const Integer&>())
         .def("swap", &AbelianGroup::swap)
         .def("addRank", &AbelianGroup::addRank,
             pybind11::arg("extraRank") = 1)

@@ -174,8 +174,7 @@ const AbelianGroup& Triangulation<4>::homologyH2() const {
     // Pair of boundary maps to abelian group
     // --------------------------------------
 
-    AbelianGroup ans;
-    ans.addGroup(bdry32);
+    AbelianGroup ans(std::move(bdry32));
 
     smithNormalForm(bdry21);
     unsigned long lim = (bdry21.rows() < bdry21.columns() ?

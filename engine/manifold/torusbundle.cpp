@@ -44,10 +44,8 @@ AbelianGroup TorusBundle::homology() const {
     relns.entry(1, 0) = monodromy_[1][0];
     relns.entry(1, 1) = monodromy_[1][1] - 1;
 
-    AbelianGroup ans;
-    ans.addGroup(relns);
+    AbelianGroup ans(std::move(relns));
     ans.addRank();
-
     return ans;
 }
 

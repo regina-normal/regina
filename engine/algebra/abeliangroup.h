@@ -78,7 +78,7 @@ using MatrixInt = Matrix<Integer, true>;
  */
 class AbelianGroup : public ShortOutput<AbelianGroup, true> {
     protected:
-        unsigned rank_;
+        unsigned rank_ { 0 };
             /**< The rank of the group (the number of Z components). */
         std::vector<Integer> revInvFactors_;
             /**< The invariant factors <i>d0</i>,...,<i>dn</i> as
@@ -105,6 +105,15 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * The group that was passed will no longer be usable.
          */
         AbelianGroup(AbelianGroup&&) noexcept = default;
+        /**
+         * Creates the abelian group defined by the given presentation matrix.
+         *
+         * Each column of the matrix represents a generator, and each
+         * row of the matrix represents a relation.
+         *
+         * @param presentation a presentation matrix for the new group.
+         */
+        AbelianGroup(MatrixInt presentation);
         /**
          * Creates an abelian group as the homology of a chain complex.
          * The abelian group is the kernel of \a M modulo the image of \a N.
@@ -487,7 +496,7 @@ void swap(AbelianGroup& lhs, AbelianGroup& rhs) noexcept;
 
 // Inline functions for AbelianGroup
 
-inline AbelianGroup::AbelianGroup() : rank_(0) {
+inline AbelianGroup::AbelianGroup() {
 }
 
 inline void AbelianGroup::swap(AbelianGroup& other) noexcept {

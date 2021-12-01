@@ -113,9 +113,7 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
     delete[] genIndex;
 
     // Build the group from the presentation matrix and tidy up.
-    AbelianGroup ans;
-    ans.addGroup(pres);
-    return *(prop_.H1Rel_ = std::move(ans));
+    return prop_.H1Rel_.emplace(std::move(pres));
 }
 
 const AbelianGroup& Triangulation<3>::homologyBdry() const {

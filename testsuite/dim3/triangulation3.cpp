@@ -2081,9 +2081,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     m.entry(i, t.generator) += t.exponent;
             }
 
-            AbelianGroup abelian;
-            abelian.addGroup(m);
-
+            AbelianGroup abelian(std::move(m));
             if (abelian.detail() != tri.homology().detail()) {
                 std::ostringstream msg;
                 msg << "Abelianised fundamental group does not match H1 "
