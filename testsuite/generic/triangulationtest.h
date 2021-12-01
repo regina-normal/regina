@@ -905,14 +905,15 @@ class TriangulationTest : public CppUnit::TestFixture {
                 tri, name);
         }
 
+        template <int k = 1>
         static void verifyHomology(const Triangulation<dim>& tri,
-                const char* H1, const char* name) {
-            std::string ans = tri.homology().str();
-            if (ans != H1) {
+                const char* expect, const char* name) {
+            std::string ans = tri.template homology<k>().str();
+            if (ans != expect) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name
-                    << " has homology H1 = " << ans
-                    << " instead of the expected " << H1 << ".";
+                    << " has homology H" << k << " = " << ans
+                    << " instead of the expected " << expect << ".";
                 CPPUNIT_FAIL(msg.str());
             }
         }
