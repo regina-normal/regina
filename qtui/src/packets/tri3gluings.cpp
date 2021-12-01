@@ -1180,6 +1180,11 @@ void Tri3GluingsUI::connectedSumDecomposition() {
                 // 0-efficient triangulations.
                 auto small = std::static_pointer_cast<
                     regina::PacketOf<Triangulation<3>>>(base->firstChild());
+                // In the code that follows, we might call homology()
+                // multiple times; however, this only happens if there
+                // are at most 2 tetrahedra, and the second call will
+                // return a cached deep copy (not compute it from scratch).
+                // We can live with this.
                 if (small->size() <= 2 && small->homology().isZ()) {
                     // The only closed prime manifolds with
                     // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
@@ -1295,7 +1300,8 @@ void Tri3GluingsUI::makeZeroEfficient() {
             if (tri->size() <= 2 && ! tri->isZeroEfficient()) {
                 // We improved the triangulation but it's still not
                 // 0-efficient.  Tell the user why.
-                if (tri->homology().isZn(2)) {
+                regina::AbelianGroup h1 = tri->homology();
+                if (h1.isZn(2)) {
                     ReginaSupport::info(ui,
                         tr("<qt>This is the 3-manifold "
                         "RP<sup>3</sup>, which does not have a 0-efficient "
@@ -1303,7 +1309,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
                         tr("<qt>I have instead converted it to a minimal "
                         "two-tetrahedron triangulation of "
                         "RP<sup>3</sup>.</qt>"));
-                } else if (tri->homology().isZ()) {
+                } else if (h1.isZ()) {
                     ReginaSupport::info(ui,
                         tr("<qt>This is the 3-manifold "
                         "S<sup>2</sup> x S<sup>1</sup>, which does not have "
@@ -1321,7 +1327,8 @@ void Tri3GluingsUI::makeZeroEfficient() {
             // - we had a non-0-efficient, 1-vertex RP3 or S2xS1 that we
             //   could not improve.
             if (tri->size() == 2) {
-                if (tri->homology().isZn(2)) {
+                regina::AbelianGroup h1 = tri->homology();
+                if (h1.isZn(2)) {
                     // This is RP3.  We could have reduced the number of
                     // vertices, but it will still not be 0-efficient.
                     if (tri->countVertices() > 1) {
@@ -1343,7 +1350,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
                             "triangulation.</qt>"),
                             tr("I have left the triangulation unchanged."));
                     }
-                } else if (tri->homology().isZn(3)) {
+                } else if (h1.isZn(3)) {
                     // We could still have improved this L(3,1) by
                     // making it 0-efficient.
                     if (! tri->isZeroEfficient()) {
@@ -1353,7 +1360,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
                             tr("This triangulation is already 0-efficient."),
                             tr("No changes are necessary."));
                     }
-                } else if (tri->homology().isZ()) {
+                } else if (h1.isZ()) {
                     // No way to improve this case.
                     ReginaSupport::info(ui,
                         tr("<qt>This is the 3-manifold "

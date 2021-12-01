@@ -1193,36 +1193,31 @@ class TriangulationBase :
         void simplifiedFundamentalGroup(GroupPresentation newGroup);
 
         /**
-         * Returns the first homology group for this triangulation.
+         * Returns the <i>k</i>th homology group of this triangulation,
+         * treating any ideal vertices as though they had been truncated.
          *
-         * The homology is computed in the dual 2-skeleton.  This means:
+         * A problem here is that, if \a dim is not one of Regina's
+         * \ref stddim "standard dimensions", then Regina cannot actually
+         * \e detect ideal vertices (since in general this requires solving
+         * undecidable problems).  Currently we resolve this by insisting that,
+         * in higher dimensions, the homology dimension \a k is at most
+         * (<i>dim</i>-2); the underlying algorithm will then effectively
+         * truncate \e all vertices (since truncating "ordinary" vertices
+         * whose links are spheres or balls does not affect the <i>k</i>th
+         * homology in such cases).
          *
-         * - If the triangulation contains any ideal vertices, the homology
-         *   will be calculated as if each such vertex had been truncated.
-         *
-         * - Likewise, if the triangulation contains any invalid faces
-         *   of dimension 0,1,...,(<i>dim</i>-3), these will effectively
-         *   be truncated also.
-         *
-         * - In contrast, if the triangulation contains any invalid
-         *   (<i>dim</i>-2)-faces (i.e., codimension-2-faces that are
-         *   identified with themselves under a non-trivial map), the
-         *   homology will be computed \e without truncating the
-         *   centroid of the face.  For instance, if a 3-manifold
-         *   triangulation has an edge identified with itself in reverse,
-         *   then the homology will be computed without truncating the
-         *   resulting projective plane cusp.  This means that, if a
-         *   barycentric subdivision is performed on a such a
-         *   triangulation, the result of homology() might change.
-         *
-         * This routine can also be accessed via the alias homologyH1()
-         * (a name that is more specific, but a little longer to type).
-         *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homology() should be called again; this will be
-         * instantaneous if the group has already been calculated.
+         * In general, this routine insists on working with a valid
+         * triangulation (see isValid() for what this means).
+         * However, for historical reasons, if you are computing first
+         * homology (\a k = 1) then your triangulation is allowed to be
+         * invalid, though the results might or might not be useful to you.
+         * The homology will be computed using the dual skeleton: what this
+         * means is that any invalid faces of dimension 0,1,...,(<i>dim</i>-3)
+         * will be treated as though their centroids had been truncated,
+         * but any invalid (<i>dim</i>-2)-faces will be treated \e without
+         * such truncation.  A side-effect is that, after performing a
+         * barycentric on an invalid triangulation, the group returned by
+         * homology<1>() might change.
          *
          * \warning In dimension 3, if you are calling this from the subclass
          * SnapPeaTriangulation then <b>any fillings on the cusps will be
@@ -1230,19 +1225,79 @@ class TriangulationBase :
          * Regina's Triangulation<3> class.)  If you wish to compute homology
          * with fillings, call SnapPeaTriangulation::homologyFilled() instead.
          *
-         * @return the first homology group.
+         * \pre Unless you are computing first homology (\a k = 1), this
+         * triangulation must be valid, and every face that is not a vertex
+         * must have a ball or sphere link.  The link condition already
+         * forms part of the validity test if \a dim is one of Regina's
+         * \ref stddim "standard dimensions", but in higher dimensions it is
+         * the user's own responsibility to ensure this.  See isValid() for
+         * details.
+         *
+         * \exception FailedPrecondition This triangulation is invalid, and
+         * the homology dimension \a k is not 1.
+         *
+         * \ifacespython Not present, since Python does not support templates.
+         * Python users can instead use the variant <tt>homology(k)</tt>.
+         *
+         * \tparam k the dimension of the homology group to return;
+         * this must be between 1 and (\a dim - 1) inclusive if \a dim is
+         * one of Regina's \ref stddim "standard dimensions", or between
+         * 1 and (\a dim - 2) inclusive if not.
+         *
+         * @return the <i>k</i>th homology group.
          */
-        const AbelianGroup& homology() const;
+        template <int k = 1>
+        AbelianGroup homology() const;
 
         /**
-         * Returns the first homology group for this triangulation.
+         * Returns the <i>k</i>th homology group of this triangulation,
+         * treating any ideal vertices as though they had been truncated,
+         * where the parameter <i>k</i> does not need to be known until runtime.
          *
-         * This is identical to calling homology().  See the homology()
-         * documentation for further details.
+         * For C++ programmers who know \a k at compile time, you are better
+         * off using the template function homology<k>() instead, which
+         * is slightly faster.
+         *
+         * See the templated homology<k>() for full details on exactly what
+         * this function computes.
+         *
+         * \pre Unless you are computing first homology (\a k = 1), this
+         * triangulation must be valid, and every face that is not a vertex
+         * must have a ball or sphere link.  The link condition already
+         * forms part of the validity test if \a dim is one of Regina's
+         * \ref stddim "standard dimensions", but in higher dimensions it is
+         * the user's own responsibility to ensure this.  See isValid() for
+         * details.
+         *
+         * \exception FailedPrecondition This triangulation is invalid, and
+         * the homology dimension \a k is not 1.
+         *
+         * \exception InvalidArgument the homology dimension \a k is outside
+         * the supported range.  This range depends upon the triangulation
+         * dimension \a dim; for details see the documentation below for the
+         * argument \a k.
+         *
+         * \ifacespython Like the C++ template function homology<k>(),
+         * you can omit the homology dimension \a k; this will default to 1.
+         *
+         * @param k the dimension of the homology group to return;
+         * this must be between 1 and (\a dim - 1) inclusive if \a dim is
+         * one of Regina's \ref stddim "standard dimensions", or between
+         * 1 and (\a dim - 2) inclusive if not.
+         * @return the <i>k</i>th homology group.
+         */
+        AbelianGroup homology(int k) const;
+
+        /**
+         * Deprecated routine that returns the first homology group for this
+         * triangulation.
+         *
+         * \deprecated This is identical to calling homology<1>(), or
+         * just homology().
          *
          * @return the first homology group.
          */
-        const AbelianGroup& homologyH1() const;
+        [[deprecated]] const AbelianGroup& homologyH1() const;
 
         /**
          * Returns the <i>k</i>th homology group of this triangulation,
@@ -1280,8 +1335,7 @@ class TriangulationBase :
          * \exception FailedPrecondition This triangulation is empty or invalid.
          *
          * \ifacespython Not present, since Python does not support templates.
-         * Python users can instead use the variant
-         * <tt>markedHomology(subdim)</tt>.
+         * Python users can instead use the variant <tt>markedHomology(k)</tt>.
          *
          * \tparam k the dimension of the homology group to compute; this must
          * be between 1 and (<i>dim</i>-1) inclusive.
@@ -2572,6 +2626,21 @@ class TriangulationBase :
         auto facesImpl(int subdim, std::integer_sequence<int, 0, k...>) const;
 
         /**
+         * Implements the non-templated homology(homdim) function.
+         *
+         * The purpose of the std::integer_sequence argument is to give
+         * us the list of all homology dimensions as individual template
+         * parameters, which means we can use C++17 fold expressions.
+         *
+         * The reason for separating out homology dimension 0 is because
+         * homology() only supports homology dimension >= 1
+         * (and so we wish to exclude 0 from our fold expression).
+         */
+        template <int... k>
+        AbelianGroup homologyImpl(int homdim,
+                std::integer_sequence<int, 0, k...>) const;
+
+        /**
          * Implements the non-templated markedHomology(homdim) function.
          *
          * The purpose of the std::integer_sequence argument is to give
@@ -2803,6 +2872,58 @@ class TriangulationBase :
         template <int... useDim>
         bool sameDegreesAt(const TriangulationBase& other,
             std::integer_sequence<int, useDim...>) const;
+
+        /**
+         * Returns the boundary map from dual <i>subdim</i>-faces to
+         * dual (<i>subdim</i>-1)-faces of the triangulation.
+         *
+         * This is analogous to boundaryMap(), but is designed to work
+         * with dual faces instead of ordinary (primal) faces.  This is
+         * used in the implementation of homology(), which works with
+         * the dual skeleton in order to effectively truncate ideal vertices.
+         *
+         * Unlike boundaryMap(), this function is private for two reasons:
+         * (1) the interface is messier because of the need to pass lookup
+         * tables between face indices and chain complex coordinates; and
+         * (2) the choices of orientation are currently an implementation
+         * detail, and not yet set in stone in a way that lets us make
+         * promises in the API.
+         *
+         * The matrix that is returned should be thought of as acting on
+         * column vectors.  Specifically, the <i>c</i>th column of the matrix
+         * corresponds to the <i>c</i>th non-boundary dual <i>subdim</i>-face
+         * of this triangulation, and the <i>r</i>th row corresponds to the
+         * <i>r</i>th non-boundary dual (<i>subdim</i>-1)-face of this
+         * triangulation.
+         *
+         * The lookup table described above must describe how
+         * (<i>dim</i>-<i>subdim</i>)-faces of the triangulation are reindexed
+         * as coordinates in the chain complex.  This reindexing must
+         * preserve order but ignore boundary faces.
+         *
+         * \pre This triangulation is valid and non-empty.
+         *
+         * \tparam subdim the dual face dimension; this must be between
+         * 2 and \a dim inclusive if \a dim is one of Regina's standard
+         * dimensions, or between 2 and (\a dim - 1) inclusive otherwise.
+         *
+         * @param lookup the lookup table that converts
+         * (<i>dim</i>-<i>subdim</i>)-face indices of the triangulation into
+         * chain complex coordinates; this must be a vector whose length
+         * is the total number of (<i>dim</i>-<i>subdim</i>)-faces of the
+         * triangulation.
+         * @param domain the dimension of the domain of the
+         * boundary map; this must be the total number of non-boundary
+         * (<i>dim</i>-<i>subdim</i>)-faces of the triangulation.
+         * @param codomain the dimension of the codomain of the
+         * boundary map; this must be the total number of non-boundary
+         * (<i>dim</i>-<i>subdim</i>+1)-faces of the triangulation.
+         * @return the boundary map from dual <i>subdim</i>-faces to
+         * dual (<i>subdim</i>-1)-faces.
+         */
+        template <int subdim>
+        MatrixInt dualBoundaryMap(const std::vector<size_t>& lookup,
+            size_t domain, size_t codomain) const;
 
     protected:
         /**
@@ -4443,6 +4564,29 @@ template <int dim>
 inline void TriangulationBase<dim>::simplifiedFundamentalGroup(
         GroupPresentation newGroup) {
     fundGroup_ = std::move(newGroup);
+}
+
+template <int dim>
+template <int... k>
+inline AbelianGroup TriangulationBase<dim>::homologyImpl(int homdim,
+        std::integer_sequence<int, 0, k...>) const {
+    // We give the result a name (tmp) to avoid compiler warnings.
+    AbelianGroup ans;
+    auto tmp = (
+        (homdim == k && (void(ans = homology<k>()), 1))
+        || ...);
+    return ans;
+}
+
+template <int dim>
+inline AbelianGroup TriangulationBase<dim>::homology(int k) const {
+    // upperBound is one more than the largest allowed k.
+    constexpr int upperBound = (standardDim(dim) ? dim : (dim - 1));
+
+    if (k < 1 || k >= upperBound)
+        throw InvalidArgument("homology(): unsupported homology dimension");
+
+    return homologyImpl(k, std::make_integer_sequence<int, upperBound>());
 }
 
 template <int dim>

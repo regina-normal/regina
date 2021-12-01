@@ -1913,10 +1913,9 @@ bool HomologicalData::formIsHyperbolic() {
     if (torsionFormComputed)
         return torsionLinkingFormIsHyperbolic;
 
-    // Dereference the SnapshotRef just once.
-    const Triangulation<3>& tri(*tri_);
+    AbelianGroup h1 = tri_->homology();
 
-    unsigned long nif=tri.homology().countInvariantFactors();
+    unsigned long nif=h1.countInvariantFactors();
     if (nif == 0)
         return true;
 
@@ -1926,8 +1925,7 @@ bool HomologicalData::formIsHyperbolic() {
     // check invariant factors agree in pairs, if so call
     // computeTorsionLinkingForm
     for (unsigned long i=0;i<(nif/2);i++) {
-        if (tri.homology().invariantFactor(2*i) <
-                tri.homology().invariantFactor((2*i)+1))
+        if (h1.invariantFactor(2*i) < h1.invariantFactor((2*i)+1))
             return false;
     }
 

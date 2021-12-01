@@ -804,7 +804,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 }
 
                 SnapPeaTriangulation t = s.filledPartial();
-                const regina::AbelianGroup& reg = t.homology();
+                regina::AbelianGroup reg = t.homology();
                 if (reg.str() != expectedH1) {
                     std::ostringstream msg;
                     msg << "Permanent filling (" << m << ", " << l << ") for "
@@ -834,7 +834,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 }
 
                 Triangulation<3> t = s.filledAll();
-                const regina::AbelianGroup& ans = t.homology();
+                regina::AbelianGroup ans = t.homology();
                 if (ans.str() != expectedH1) {
                     std::ostringstream msg;
                     msg << "Permanent filling (" << m << ", " << l << ") for "
@@ -855,7 +855,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 }
 
                 SnapPeaTriangulation t = s.filledPartial();
-                const regina::AbelianGroup& reg = t.homology();
+                regina::AbelianGroup reg = t.homology();
                 if (reg.str() != expectedH1) {
                     std::ostringstream msg;
                     msg << "Permanent filling (" << m << ", " << l << ") for "

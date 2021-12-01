@@ -169,10 +169,12 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::return_value_policy::reference_internal)
         .def("simplifiedFundamentalGroup",
             &Triangulation<dim>::simplifiedFundamentalGroup)
-        .def("homology", &Triangulation<dim>::homology,
-            pybind11::return_value_policy::reference_internal)
-        .def("homologyH1", &Triangulation<dim>::homologyH1,
-            pybind11::return_value_policy::reference_internal)
+        .def("homology",
+            (regina::AbelianGroup (Triangulation<dim>::*)(int) const)(
+            &Triangulation<dim>::homology),
+            pybind11::arg("k") = 1)
+        .def("homologyH1",
+            &Triangulation<dim>::template homology<1>) // deprecated
         .def("markedHomology",
             (regina::MarkedAbelianGroup (Triangulation<dim>::*)(int) const)(
             &Triangulation<dim>::markedHomology))

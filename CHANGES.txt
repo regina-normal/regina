@@ -1496,7 +1496,9 @@ Version 7.0  [ TODO ]
               with dimension-specific aliases newTriangles(), newTetrahedra()
               and newPentachora().  The templated versions of these functions
               can be used with structured binding.
-            - New suite of boundaryMap() and markedHomology() routines.
+            - New suite of homology(), markedHomology() and boundaryMap()
+              routines, templated by dimension.  The old homologyH1() is
+              now a deprecated alias for homology<1>().
             - Routine splitIntoComponents() is replaced with a new routine
               triangulateComponents() with different behaviour: it does not
               insert the results into the packet tree or assign packet labels.

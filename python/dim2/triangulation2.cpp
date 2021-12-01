@@ -173,10 +173,11 @@ void addTriangulation2(pybind11::module_& m) {
         .def("orient", &Triangulation<2>::orient)
         .def("reflect", &Triangulation<2>::reflect)
         .def("triangulateComponents", &Triangulation<2>::triangulateComponents)
-        .def("homology", &Triangulation<2>::homology,
-            pybind11::return_value_policy::reference_internal)
-        .def("homologyH1", &Triangulation<2>::homologyH1,
-            pybind11::return_value_policy::reference_internal)
+        .def("homology",
+            (regina::AbelianGroup (Triangulation<2>::*)(int) const)(
+            &Triangulation<2>::homology),
+            pybind11::arg("k") = 1)
+        .def("homologyH1", &Triangulation<2>::homology<1>) // deprecated
         .def("markedHomology",
             (regina::MarkedAbelianGroup (Triangulation<2>::*)(int) const)(
             &Triangulation<2>::markedHomology))

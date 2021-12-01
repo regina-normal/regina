@@ -1420,7 +1420,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri.homologyH1() == b.homologyH1())) {
+            if (! (tri.homology() == b.homology())) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks H1.";
                 CPPUNIT_FAIL(msg.str());
@@ -1939,7 +1939,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                     // triangulations.
                     other.intelligentSimplify();
 
-                    if (! (other.homologyH1() == tri.homologyH1())) {
+                    if (! (other.homology() == tri.homology())) {
                         std::ostringstream msg;
                         msg << name << ": idealToFinite changes H1.";
                         CPPUNIT_FAIL(msg.str());
@@ -2023,7 +2023,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             // expensive tests.
             b.intelligentSimplify();
 
-            if (b.homologyH1() != tri.homologyH1()) {
+            if (b.homology() != tri.homology()) {
                 std::ostringstream msg;
                 msg << name << ": iBundle gives a mismatched H1.";
                 CPPUNIT_FAIL(msg.str());
@@ -2095,10 +2095,10 @@ class Triangulation4Test : public TriangulationTest<4> {
             // expensive tests.
             b.intelligentSimplify();
 
-            regina::AbelianGroup expectH1(tri.homologyH1());
+            regina::AbelianGroup expectH1 = tri.homology();
             expectH1.addRank();
 
-            if (b.homologyH1() != expectH1) {
+            if (b.homology() != expectH1) {
                 std::ostringstream msg;
                 msg << name << ": s1Bundle gives incorrect H1.";
                 CPPUNIT_FAIL(msg.str());

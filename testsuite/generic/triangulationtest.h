@@ -1318,7 +1318,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
 
                 if (tri.isValid()) {
-                    if (! (large.homologyH1() == tri.homologyH1())) {
+                    if (! (large.homology() == tri.homology())) {
                         std::ostringstream msg;
                         msg << name << ", face " << i << ": "
                             << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1450,12 +1450,12 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
 
             if constexpr (k == 1) {
-                const auto& h1 = tri.homologyH1();
+                regina::AbelianGroup h1 = tri.homology();
                 if (g1.str() != h1.str()) {
                     std::ostringstream msg;
                     msg << name << ": computing H" << k << " via the "
                         "chain complex gives " << g1.str()
-                        << ", but homologyH1() gives " << h1.str() << ".";
+                        << ", but homology() gives " << h1.str() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }

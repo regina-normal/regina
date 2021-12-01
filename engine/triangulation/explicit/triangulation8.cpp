@@ -48,6 +48,13 @@ template std::pair<std::string, Isomorphism<8>>
 template Triangulation<8> TriangulationBase<8>::fromIsoSig(const std::string&);
 template size_t TriangulationBase<8>::isoSigComponentSize(const std::string&);
 
+template AbelianGroup TriangulationBase<8>::homology<1>() const;
+template AbelianGroup TriangulationBase<8>::homology<2>() const;
+template AbelianGroup TriangulationBase<8>::homology<3>() const;
+template AbelianGroup TriangulationBase<8>::homology<4>() const;
+template AbelianGroup TriangulationBase<8>::homology<5>() const;
+template AbelianGroup TriangulationBase<8>::homology<6>() const;
+
 template MatrixInt TriangulationBase<8>::boundaryMap<1>() const;
 template MatrixInt TriangulationBase<8>::boundaryMap<2>() const;
 template MatrixInt TriangulationBase<8>::boundaryMap<3>() const;
@@ -57,7 +64,6 @@ template MatrixInt TriangulationBase<8>::boundaryMap<6>() const;
 template MatrixInt TriangulationBase<8>::boundaryMap<7>() const;
 template MatrixInt TriangulationBase<8>::boundaryMap<8>() const;
 
-template const AbelianGroup& TriangulationBase<8>::homology() const;
 template const GroupPresentation& TriangulationBase<8>::fundamentalGroup() const;
 
 template void TriangulationBase<8>::calculateSkeleton();

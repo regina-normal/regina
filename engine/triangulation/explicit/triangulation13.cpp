@@ -49,6 +49,18 @@ template Triangulation<13> TriangulationBase<13>::fromIsoSig(
     const std::string&);
 template size_t TriangulationBase<13>::isoSigComponentSize(const std::string&);
 
+template AbelianGroup TriangulationBase<13>::homology<1>() const;
+template AbelianGroup TriangulationBase<13>::homology<2>() const;
+template AbelianGroup TriangulationBase<13>::homology<3>() const;
+template AbelianGroup TriangulationBase<13>::homology<4>() const;
+template AbelianGroup TriangulationBase<13>::homology<5>() const;
+template AbelianGroup TriangulationBase<13>::homology<6>() const;
+template AbelianGroup TriangulationBase<13>::homology<7>() const;
+template AbelianGroup TriangulationBase<13>::homology<8>() const;
+template AbelianGroup TriangulationBase<13>::homology<9>() const;
+template AbelianGroup TriangulationBase<13>::homology<10>() const;
+template AbelianGroup TriangulationBase<13>::homology<11>() const;
+
 template MatrixInt TriangulationBase<13>::boundaryMap<1>() const;
 template MatrixInt TriangulationBase<13>::boundaryMap<2>() const;
 template MatrixInt TriangulationBase<13>::boundaryMap<3>() const;
@@ -63,7 +75,6 @@ template MatrixInt TriangulationBase<13>::boundaryMap<11>() const;
 template MatrixInt TriangulationBase<13>::boundaryMap<12>() const;
 template MatrixInt TriangulationBase<13>::boundaryMap<13>() const;
 
-template const AbelianGroup& TriangulationBase<13>::homology() const;
 template const GroupPresentation& TriangulationBase<13>::fundamentalGroup() const;
 
 template void TriangulationBase<13>::calculateSkeleton();
