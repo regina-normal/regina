@@ -174,20 +174,14 @@ const AbelianGroup& Triangulation<4>::homologyH2() const {
     // Pair of boundary maps to abelian group
     // --------------------------------------
 
+    // Note: what we do from here on is effectively the same as constructing
+    // AbelianGroup(bdry21.transpose(), bdry32.transpose()).
+
     AbelianGroup ans(std::move(bdry32));
 
-    smithNormalForm(bdry21);
-    unsigned long lim = (bdry21.rows() < bdry21.columns() ?
-        bdry21.rows() : bdry21.columns());
+    // Subtract the rank of bdry21.
+    ans.addRank(-bdry21.rowEchelonForm());
 
-    unsigned long extra = lim;
-    for (i = 0; i < lim; ++i)
-        if (bdry21.entry(i, i) == 0) {
-            extra = i;
-            break;
-        }
-
-    ans.addRank(-extra);
     return *(prop_.H2_ = std::move(ans));
 }
 
