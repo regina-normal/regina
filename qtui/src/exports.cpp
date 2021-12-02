@@ -51,11 +51,6 @@ void ReginaMain::exportCSVSurfaceList() {
         tr("Export CSV Surface List"));
 }
 
-void ReginaMain::exportAttachment() {
-    exportFile(AttachmentHandler::instance, tr(FILTER_ALL),
-        tr("Export Attachment"));
-}
-
 void ReginaMain::exportPython() {
     exportFile(PythonHandler::instance, tr(FILTER_PYTHON_SCRIPTS),
         tr("Export Python Script"));

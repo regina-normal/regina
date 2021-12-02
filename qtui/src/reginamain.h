@@ -324,7 +324,6 @@ class ReginaMain : public QMainWindow {
         /**
          * Packet export routines.
          */
-        void exportAttachment();
         void exportCSVSurfaceList();
         void exportPython();
         void exportRecogniser();

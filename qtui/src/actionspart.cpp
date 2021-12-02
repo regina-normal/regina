@@ -281,15 +281,6 @@ void ReginaMain::setupActions() {
     connect(act, SIGNAL(triggered()), this, SLOT(exportPython()) );
     exportMenu->addAction(act);
 
-    act = new QAction(this);
-    act->setText(tr("&Attachment"));
-    act->setIcon(IconCache::icon(IconCache::packet_attachment));
-    act->setToolTip(tr("Export a file attachment"));
-    act->setWhatsThis(tr("Export an attachment from this packet tree "
-        "to an external file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportAttachment()) );
-    exportMenu->addAction(act);
-
     fileMenu->addSeparator();
 
     act = new QAction(this);

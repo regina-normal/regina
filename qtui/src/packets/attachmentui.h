@@ -39,12 +39,53 @@
 
 #include "packetui.h"
 
+class QPushButton;
+
+namespace regina {
+    class Attachment;
+}
+
 /**
- * An external viewer for attachment packets.
+ * A packet interface for viewing or saving attachments.
  */
-class AttachmentExternalViewer {
+class AttachmentUI : public QObject, public PacketReadOnlyUI {
+    Q_OBJECT
+
+    private:
+        /**
+         * Packet details
+         */
+        regina::Attachment* attachment;
+
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+        QLabel* filename;
+        QLabel* size;
+        QPushButton* viewButton;
+        QPushButton* saveButton;
+
     public:
-        static void view(const regina::Packet& packet, QWidget* parentWidget);
+        /**
+         * Constructor.
+         */
+        AttachmentUI(regina::Attachment* packet, PacketPane* newEnclosingPane);
+
+        /**
+         * PacketUI overrides.
+         */
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        QString getPacketMenuText() const override;
+        void refresh() override;
+
+    public slots:
+        /**
+         * Access the attachment data.
+         */
+        void view();
+        void save();
 };
 
 #endif

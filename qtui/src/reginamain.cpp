@@ -160,11 +160,7 @@ void ReginaMain::setModified(bool modified) {
 
 void ReginaMain::packetView(regina::Packet& packet,
         bool makeVisibleInTree, bool selectInTree) {
-    PacketExternalViewer ext = PacketManager::externalViewer(packet);
-    if (ext) {
-        (*ext)(packet, this);
-    } else
-        view(new PacketPane(this, packet));
+    view(new PacketPane(this, packet));
 
     if (makeVisibleInTree || selectInTree) {
         PacketTreeItem* item = treeView->find(packet);
