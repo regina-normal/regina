@@ -41,7 +41,6 @@
 #include "foreign/recogniserhandler.h"
 #include "foreign/reginahandler.h"
 #include "foreign/snappeahandler.h"
-#include "foreign/sourcehandler.h"
 #include "reginafilter.h"
 
 #include <QFileDialog>
@@ -80,11 +79,6 @@ void ReginaMain::exportSnapPea() {
 void ReginaMain::exportRecogniser() {
     exportFile(RecogniserHandler::instance, tr(FILTER_RECOGNISER),
         tr("Export Triangulation to 3-Manifold Recogniser"));
-}
-
-void ReginaMain::exportSource() {
-    exportFile(SourceHandler::instance, tr(FILTER_CPP_SOURCE),
-        tr("Export C++ Source"));
 }
 
 void ReginaMain::exportFile(const PacketExporter& exporter,

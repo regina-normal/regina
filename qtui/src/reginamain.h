@@ -331,7 +331,6 @@ class ReginaMain : public QMainWindow {
         void exportRegina();
         void exportReginaUncompressed();
         void exportSnapPea();
-        void exportSource();
 
         /**
          * Python scripting routines.

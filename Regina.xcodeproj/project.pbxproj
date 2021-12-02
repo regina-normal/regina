@@ -1020,7 +1020,6 @@
 		0564A8101811D921002CC2AE /* recogniserhandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4391811D91E002CC2AE /* recogniserhandler.cpp */; };
 		0564A8111811D921002CC2AE /* reginahandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A43B1811D91E002CC2AE /* reginahandler.cpp */; };
 		0564A8121811D921002CC2AE /* snappeahandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A43D1811D91E002CC2AE /* snappeahandler.cpp */; };
-		0564A8131811D921002CC2AE /* sourcehandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A43F1811D91E002CC2AE /* sourcehandler.cpp */; };
 		0564A8141811D921002CC2AE /* iconcache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4411811D91E002CC2AE /* iconcache.cpp */; };
 		0564A93F1811D921002CC2AE /* imports.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A56F1811D91F002CC2AE /* imports.cpp */; };
 		0564A9401811D921002CC2AE /* introdialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5701811D920002CC2AE /* introdialog.cpp */; };
@@ -3419,8 +3418,6 @@
 		0564A43C1811D91E002CC2AE /* reginahandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reginahandler.h; sourceTree = "<group>"; };
 		0564A43D1811D91E002CC2AE /* snappeahandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = snappeahandler.cpp; sourceTree = "<group>"; };
 		0564A43E1811D91E002CC2AE /* snappeahandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = snappeahandler.h; sourceTree = "<group>"; };
-		0564A43F1811D91E002CC2AE /* sourcehandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sourcehandler.cpp; sourceTree = "<group>"; };
-		0564A4401811D91E002CC2AE /* sourcehandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sourcehandler.h; sourceTree = "<group>"; };
 		0564A4411811D91E002CC2AE /* iconcache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = iconcache.cpp; sourceTree = "<group>"; };
 		0564A4421811D91E002CC2AE /* iconcache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iconcache.h; sourceTree = "<group>"; };
 		0564A56F1811D91F002CC2AE /* imports.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = imports.cpp; sourceTree = "<group>"; };
@@ -6907,8 +6904,6 @@
 				057B0CB126A2B8B60017F5EA /* sighandler.h */,
 				0564A43D1811D91E002CC2AE /* snappeahandler.cpp */,
 				0564A43E1811D91E002CC2AE /* snappeahandler.h */,
-				0564A43F1811D91E002CC2AE /* sourcehandler.cpp */,
-				0564A4401811D91E002CC2AE /* sourcehandler.h */,
 			);
 			path = foreign;
 			sourceTree = "<group>";
@@ -10173,7 +10168,6 @@
 				0564A9481811D921002CC2AE /* packeteditiface.cpp in Sources */,
 				0564A94B1811D921002CC2AE /* packettreeview.cpp in Sources */,
 				054208E51DF0D2F70018AB24 /* syntaxhighlighter.cpp in Sources */,
-				0564A8131811D921002CC2AE /* sourcehandler.cpp in Sources */,
 				0564A99B1811D921002CC2AE /* treenav.cpp in Sources */,
 				0564A9701811D921002CC2AE /* patiencedialog.cpp in Sources */,
 				0564A94E1811D921002CC2AE /* tri2gluings.cpp in Sources */,
