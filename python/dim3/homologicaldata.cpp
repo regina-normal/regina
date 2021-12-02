@@ -32,7 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/stl.h"
-#include "triangulation/homologicaldata.h"
+#include "triangulation/dim3/homologicaldata.h"
 #include "../helpers.h"
 
 using regina::HomologicalData;

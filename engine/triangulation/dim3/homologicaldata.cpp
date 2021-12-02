@@ -40,7 +40,7 @@
 
 #include "maths/matrixops.h"
 #include "maths/primes.h"
-#include "triangulation/homologicaldata.h"
+#include "triangulation/dim3/homologicaldata.h"
 #include <list>
 #include <iostream>
 #include <sstream>

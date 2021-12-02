@@ -35,8 +35,8 @@
 #include "algebra/markedabeliangroup.h"
 #include "maths/numbertheory.h"
 #include "progress/progresstracker.h"
-#include "triangulation/homologicaldata.h"
 #include "triangulation/dim3.h"
+#include "triangulation/dim3/homologicaldata.h"
 
 // UI includes:
 #include "columnlayout.h"

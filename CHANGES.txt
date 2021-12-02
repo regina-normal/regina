@@ -519,6 +519,8 @@ Version 7.0  [ 10 December, 2021 ]
               exceptions.  This will only happen if an internal
               rational-to-double conversion fails; previously these
               routines just silently did the wrong thing.
+            - The header for this class has moved from triangulation/ into
+              triangulation/dim3/.
         Class HyperEncoding:
             - New class to describe how the internal integer vector is encoded.
         Class HyperInfo:
@@ -1798,6 +1800,8 @@ Version 7.0  [ 10 December, 2021 ]
             - Removed completely.
         Header surfaces/filterregistry.h, surfaces/filterregistry-impl.h:
             - Removed completely.
+        Header triangulation/homologicaldata.h:
+            - Moved to triangulation/dim3/homologicaldata.h.
         Header utilities/memutils.h:
             - Removed completely.
         Header utilities/property.h:

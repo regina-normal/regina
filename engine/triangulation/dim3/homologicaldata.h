@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file triangulation/homologicaldata.h
+/*! \file triangulation/dim3/homologicaldata.h
  *  \brief Deals with all the details of the cellular homology of a manifold.
  */
 
@@ -52,8 +52,25 @@
 namespace regina {
 
 /**
- * Data type that deals with all the detailed homological information in a
- * manifold.  This information includes:
+ * A specialised class that computes a large amount of detailed homological
+ * information for a 3-manifold triangulation.
+ *
+ * This class is both heavyweight and specialised.  If you just wish
+ * to compute homology or Euler characteristic, or even map faces of the
+ * skeleton to classes in the homology groups, the Triangulation class
+ * has simpler and slicker member functions that can do this for you.
+ * See for example the Triangulation functions homology(), eulerCharTri(),
+ * eulerCharManifold(), and markedHomology().
+ *
+ * The most important thing that HomologicalData adds is the ability to
+ * work with the torsion linking form.  Be aware however that the code that
+ * computes the torsion linking form includes some floating-point arithmetic,
+ * and this could be subject to round-off error.  Such errors are not expected,
+ * since the floating-point code is simply distinguishing different multiples
+ * of a known irrational, but nevertheless these results should be considered
+ * non-rigorous.
+ *
+ * Currently, the information computed by HomologicalData includes:
  *
  * - the manifold's homology;
  * - the boundary's homology;
@@ -114,7 +131,6 @@ namespace regina {
  * HomologicalData object and not copy or move it at all, if possible.
  *
  * This class will eventually be removed in a future release of Regina.
- * A new and more flexible class called CellularData will take its place.
  *
  * @author Ryan Budney
  *

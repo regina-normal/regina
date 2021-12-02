@@ -4,6 +4,7 @@ SET ( FILES
   crushtri.cpp
   decompose.cpp
   homology.cpp
+  homologicaldata.cpp
   hydrate.cpp
   insertlayered.cpp
   knot.cpp
@@ -32,6 +33,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     component3.h
+    homologicaldata.h
     tetrahedron3.h
     triangle3.h
     triangulation3.h

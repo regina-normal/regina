@@ -49,7 +49,7 @@
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "triangulation/generic.h"
-#include "triangulation/homologicaldata.h"
+#include "triangulation/dim3/homologicaldata.h"
 
 #define SHOW_SIZE(T) std::cout << #T << ": " \
     << sizeof(T) << " byte(s)" << std::endl;
