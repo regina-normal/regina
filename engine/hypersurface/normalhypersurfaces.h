@@ -633,7 +633,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                     default;
 
                 /**
-                 * Compares this with the given operator for equality.
+                 * Compares this with the given iterator for equality.
                  *
                  * @param other the iterator to compare this with.
                  * @return \c true if the iterators point to the same
@@ -643,7 +643,7 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                 bool operator == (const VectorIterator& other) const;
 
                 /**
-                 * Compares this with the given operator for inequality.
+                 * Compares this with the given iterator for inequality.
                  *
                  * @param other the iterator to compare this with.
                  * @return \c false if the iterators point to the same
