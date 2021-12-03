@@ -1476,7 +1476,6 @@ Version 7.0  [ 10 December, 2021 ]
             - Renamed nVisited() and nSolns() to visited() and solutions().
               The old names have been removed completely.
         Class Triangulation<dim>:
-            - New constructor that takes a link and builds its complement.
             - Now supports move construction and copy/move assignment.
             - Routine fromIsoSig() now returns by value (not pointer), and
               throws an exception on error (instead of returning null).
@@ -1540,6 +1539,7 @@ Version 7.0  [ 10 December, 2021 ]
               (if necessary) decltype(...) instead.
         Class Triangulation<3>:
             - All of the changes listed for Triangulation<dim> above.
+            - New constructor that takes a link and builds its complement.
             - New routine generalAngleStructure().
             - Routine connectedSumDecomposition() is replaced with a new routine
               summands() with different behaviour: it does not insert the
@@ -1811,7 +1811,7 @@ Version 7.0  [ 10 December, 2021 ]
         Header utilities/registryutils.h:
             - Removed completely.
     PYTHON:
-        - Much more of Regina's C++ interface is accessible to Python.
+        - Almost all of Regina's C++ interface is now accessible to Python.
           Essentially what remains unwrapped is that which makes no sense to
           wrap: direct interaction with C++ input/output streams, and code
           that is heavily templated using custom types as template arguments.
@@ -1828,6 +1828,7 @@ Version 7.0  [ 10 December, 2021 ]
           (e.g., Link::writePACE(std::ostream&).  Python users should just use
           the string versions of these functions instead (e.g., Link::pace()).
     USER INTERFACES:
+        - Incorporated many of the mathematical changes described above.
         - Removed the View/Edit action from the toolbar, since you might as
           well just double-click on the packet instead.
         - Gave some of the standard system icons (open, save, close, etc.)
