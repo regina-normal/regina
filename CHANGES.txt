@@ -1575,8 +1575,6 @@ Version 7.0  [ 10 December, 2021 ]
               exceptions if the validity precondition is not met.
             - New routines inAnyPacket() and isSnapPea().
             - Functions snapPea() and saveSnapPea() are no longer virtual.
-            - The Link constructor is now deprecated, since Link::complement()
-              is more efficient and now returns by value.
             - New static routine fromGluings().  This replaces the old
               insertConstruction(), which is now deprecated.
             - Function enterTextTriangulation() returns by value, not pointer.

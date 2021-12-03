@@ -68,10 +68,6 @@ Triangulation<3>::Triangulation(const std::string& description) {
         "as representing a 3-dimensional triangulation");
 }
 
-Triangulation<3>::Triangulation(const Link& link) :
-        Triangulation(link.complement()) {
-}
-
 void Triangulation<3>::clearAllProperties() {
     clearBaseProperties();
 

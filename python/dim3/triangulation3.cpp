@@ -104,9 +104,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<3>&>())
         .def(pybind11::init<const Triangulation<3>&, bool>())
-        .def(pybind11::init([](const regina::Link& link) { // deprecated
-            return new Triangulation<3>(link.complement());
-        }))
+        .def(pybind11::init<const regina::Link&, bool>(),
+            pybind11::arg(), pybind11::arg("simplify") = true)
         .def(pybind11::init<const std::string&>())
         .def(pybind11::init([](const regina::python::SnapPyObject& obj) {
             return new Triangulation<3>(obj.string_);

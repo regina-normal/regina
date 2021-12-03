@@ -258,23 +258,30 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
-         * Deprecated routine that creates a new ideal triangulation
-         * representing the complement of the given link in the 3-sphere.
+         * Creates a new ideal triangulation representing the complement
+         * of the given link in the 3-sphere.
+         *
+         * The triangulation will have one ideal vertex for each link
+         * component.  Assuming you pass \a simplify as \c true (the default),
+         * there will typically be no internal vertices; however, this
+         * is not guaranteed.
+         *
+         * Initially, each tetrahedron will be oriented according to a
+         * right-hand rule: the thumb of the right hand points from vertices
+         * 0 to 1, and the fingers curl around to point from vertices 2 to 3.
+         * If you pass \a simplify as \c true, then Regina will attempt to
+         * simplify the triangulation to as few tetrahedra as possible:
+         * this may relabel the tetrahedra, though their orientations will
+         * be preserved.
          *
          * This is the same triangulation that is produced by
-         * Link::complement(); however, this routine is slightly less
-         * efficient because it induces an additional move.
-         * See Link::complemenet() for further details.
-         *
-         * The triangulation will be simplified, but be aware that it
-         * might still contain internal vertices (i.e., vertices whose
-         * links are spheres).  This should, however, be a rare occurrence.
-         *
-         * \deprecated Just call the more efficient Link::complement() instead.
+         * Link::complement().
          *
          * @param link the link whose complement we should build.
+         * @param simplify \c true if and only if the triangulation
+         * should be simplified to use as few tetrahedra as possible.
          */
-        [[deprecated]] Triangulation(const Link& link);
+        Triangulation(const Link& link, bool simplify = true);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
@@ -3800,20 +3807,6 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
                 return action(std::move(obj), std::forward<Args>(args)...);
             });
     }
-}
-
-inline bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
-        ProgressTrackerOpen* tracker) {
-    return retriangulate(height, nThreads, tracker,
-        [](Triangulation<3>&& alt, Triangulation<3>& original, size_t minSimp) {
-            if (alt.size() < minSimp) {
-                ChangeEventSpan span(original);
-                original = std::move(alt);
-                original.intelligentSimplify();
-                return true;
-            } else
-                return false;
-        }, *this, size());
 }
 
 inline bool Triangulation<3>::minimizeBoundary() {

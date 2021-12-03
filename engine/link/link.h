@@ -51,6 +51,7 @@
 #include "packet/packet.h"
 #include "progress/progresstracker.h"
 #include "treewidth/treedecomposition.h"
+#include "triangulation/dim3.h"
 #include "triangulation/detail/retriangulate.h"
 #include "utilities/exception.h"
 #include "utilities/listview.h"
@@ -2050,26 +2051,19 @@ class Link : public PacketData<Link>, public Output<Link> {
          * there will typically be no internal vertices; however, this
          * is not guaranteed.
          *
-         * Initially, the triangulation will be oriented.  In particular,
-         * each tetrahedron will be oriented according to a right-hand rule:
-         * the thumb of the right hand points from vertices 0 to 1, and
-         * the fingers curl around to point from vertices 2 to 3.
+         * Initially, each tetrahedron will be oriented according to a
+         * right-hand rule: the thumb of the right hand points from vertices
+         * 0 to 1, and the fingers curl around to point from vertices 2 to 3.
+         * If you pass \a simplify as \c true, then Regina will attempt to
+         * simplify the triangulation to as few tetrahedra as possible:
+         * this may relabel the tetrahedra, though their orientations will
+         * be preserved.
          *
-         * What happens next depends upon the argument \a simplify:
+         * This is the same triangulation that would be produced by passing
+         * this link to the Triangulation<3> constructor.
          *
-         * - If you pass \a simplify as \c true, then Regina will attempt
-         *   to simplify the triangulation to as few tetrahedra as possible.
-         *   As a result, the orientation described above will be lost.
-         *
-         * - If you pass \a simplify as \c false, then Regina will leave the
-         *   triangulation as is.  This will preserve the orientation, but
-         *   it means that the triangulation will contain both ideal and
-         *   internal vertices (and, in general, far more tetrahedra
-         *   than are necessary).
-         *
-         * @param simplify \c true if and only if the triangulation of
-         * the complement should be simplified (thereby losing information
-         * about the orientation), as described above.
+         * @param simplify \c true if and only if the triangulation of the
+         * complement should be simplified to use as few tetrahedra as possible.
          * @return the complement of this link.
          */
         Triangulation<3> complement(bool simplify = true) const;
@@ -4646,6 +4640,10 @@ inline auto Link::components() const {
 inline StrandRef Link::strand(int id) const {
     return (id >= 0 ? StrandRef(crossings_[id >> 1]->strand(id & 1)) :
         StrandRef());
+}
+
+inline Triangulation<3> Link::complement(bool simplify) const {
+    return Triangulation<3>(*this, simplify);
 }
 
 inline long Link::writhe() const {
