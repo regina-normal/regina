@@ -1837,7 +1837,8 @@ Version 7.0  [ 10 December, 2021 ]
             - New utility for building triangulations from framed links.
               Thanks to Rhuaidi Burke.
         regconvert:
-            - Added options -3 and -7 to support old and new XML file formats.
+            - Added options -2 and -3 to support the old (second-generation)
+              and new (third-generation) file formats.
         retriangulate:
             - Now works with knots as well as 3/4-manifold triangulations.
     TEST SUITE:

@@ -473,6 +473,10 @@
    <cmdsynopsis>
     <command>regconvert</command>
     <group>
+     <arg><option>-2</option></arg>
+     <arg><option>-3</option></arg>
+    </group>
+    <group>
      <arg><option>-x</option></arg>
      <arg><option>-u</option></arg>
     </group>
@@ -487,12 +491,42 @@
     This utility converts back and forth between different &regina;
     file formats.
    </para>
+   <para>
+    &regina;'s file formats include:
+    <glosslist>
+     <glossentry>
+      <glossterm>Third-generation &xml;</glossterm>
+      <glossdef><para>
+       This is the modern &xml; format introduced in &regina;&nbsp;7.0.
+       Older versions of &regina; (6.0.1 and below) cannot read it at all.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>Second-generation &xml;</glossterm>
+      <glossdef><para>
+       This is the original &xml; format that was used in
+       &regina;&nbsp;3.0&ndash;6.0.1 (from 2002&ndash;2021).
+       Current versions of &regina; can still read and write this format
+       if required.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm>First-generation binary format</glossterm>
+      <glossdef><para>
+       This is the ancient binary format that was used in &regina;&nbsp;2.x
+       (from 2000&ndash;2002).
+       Support for this format was dropped completely in September&nbsp;2013,
+       and modern versions of &regina; cannot read or write it.
+      </para><para>
+       If you still have ancient files that use this format, you will need to
+       find a copy of &regina;&nbsp;3.0&ndash;4.93 (from 2002&ndash;2012),
+       which can convert these old binary files to the second-generation
+       &xml; format.
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
    <note><para>
-    As of September&nbsp;2013, the ancient binary file format that was
-    used with &regina;&nbsp;2.x is no longer supported.
-    This format has not been in use for over a decade now.
-    If you still have files in this format, you will need to
-    download &regina;&nbsp;4.93 to convert them.
    </para></note>
    <para>
     The argument <replaceable>old-file</replaceable> should be the file to
@@ -511,15 +545,29 @@
    <title>Options</title>
    <variablelist>
     <varlistentry>
+     <term><option>-2</option></term>
+     <listitem>
+      <para>Convert to the older second-generation &xml; format,
+       as used in &regina;&nbsp;3.0&ndash;6.0.1.</para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-3</option> (default)</term>
+     <listitem>
+      <para>Convert to the modern third-generation &xml; format,
+       introduced in &regina;&nbsp;7.0.</para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
      <term><option>-x</option> (default)</term>
      <listitem>
-      <para>Convert to compressed &xml;.</para>
+      <para>Write the output as compressed &xml;.</para>
      </listitem>
     </varlistentry>
     <varlistentry>
      <term><option>-u</option></term>
      <listitem>
-      <para>Convert to plain (uncompressed) &xml;.</para>
+      <para>Write the output as uncompressed (plain text) &xml;.</para>
      </listitem>
     </varlistentry>
    </variablelist>
