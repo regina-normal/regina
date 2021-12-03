@@ -1,0 +1,12 @@
+-5
+9
+inf
+3/8
+<regina.GroupPresentation: < a b | a b a^-1 b a b^-1, a b^-1 a^-1 b^-1 a b^2 >>
+<regina.GroupExpression: g0 g1 g0^-1 g1 g0 g1^-1>
+<regina.GroupExpressionTerm: g0^-1>
+<regina.AbelianGroup: 3 Z_5>
+<regina.Bitmask: 00010000000000000000000000000000>
+<regina.Bitmask8: 00010000>
+<regina.Qitmask8: 00020000>
+<regina.BoolSet: { true }>

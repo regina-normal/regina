@@ -1591,6 +1591,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          * including details of all generators and relations.
          * See writeTextCompact() for details on how this is formed.
          *
+         * Currently str() and compact() are identical functions, though the
+         * output from str() may change in future versions of Regina.
+         *
          * @return a compact representation of this group presentation.
          */
         std::string compact() const;
@@ -1603,6 +1606,10 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The full relations will be included, and the entire output
          * will be written on a single line.  There will be no final newline.
          *
+         * Currently writeTextShort() and writeTextCompact() are identical
+         * functions, though the output from writeTextShort() may change in
+         * future versions of Regina.
+         *
          * \ifacespython Not present; instead use the variant compact() that
          * takes no arguments and returns a string.
          *
@@ -1613,6 +1620,10 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Writes a short text representation of this object to the
          * given output stream.
+         *
+         * Currently writeTextShort() and writeTextCompact() are identical
+         * functions, though the output from writeTextShort() may change in
+         * future versions of Regina.
          *
          * \ifacespython Not present; use str() instead.
          *
@@ -2067,8 +2078,7 @@ inline std::string GroupPresentation::toTeX() const {
 }
 
 inline void GroupPresentation::writeTextShort(std::ostream& out) const {
-    out << "Group presentation: " << nGenerators_ << " generators, "
-        << relations_.size() << " relations";
+    writeTextCompact(out);
 }
 
 inline size_t GroupPresentation::relatorLength() const {

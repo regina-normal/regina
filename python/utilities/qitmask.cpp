@@ -54,7 +54,7 @@ void addQitmaskOpt(pybind11::module_& m, const char* name) {
         .def(pybind11::self -= pybind11::self)
         .def("hasNonZeroMatch", &Q::hasNonZeroMatch)
     ;
-    regina::python::add_output_ostream(c, true /* __repr__ */);
+    regina::python::add_output_ostream(c, name);
     regina::python::add_eq_operators(c);
 }
 

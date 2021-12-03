@@ -1,0 +1,63 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2007-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests the Python repr() output for some of Regina's classes.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+from __future__ import print_function
+
+print(repr(Integer(-5)))
+print(repr(LargeInteger(9)))
+print(repr(LargeInteger.infinity))
+print(repr(Rational(3,8)))
+
+g = Example3.poincare().fundamentalGroup()
+print(repr(g))
+print(repr(g.relation(0)))
+print(repr(g.relation(0).term(2)))
+
+g = Example3.weberSeifert().homology()
+print(repr(g))
+
+DiscSpec(4,1,2)
+
+b = Bitmask(5)
+b.set(3, True)
+print(repr(b))
+
+b = Bitmask8()
+b.set(3, True)
+print(repr(b))
+
+q = Qitmask8()
+q.set(3, 2)
+print(repr(q))
+
+print(repr(BoolSet(True)))

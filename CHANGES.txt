@@ -466,6 +466,7 @@ Version 7.0  [ 10 December, 2021 ]
               syntax should be largely unaffected, and the Python behaviour
               (returns None if there is no homomorphism) should remain the same.
             - Renamed toTeX() to tex().  The old name is kept but deprecated.
+            - The short text output from str() is now identical to compact().
             - Other major cleanup and reorganisation under the hood.
         Class Handlebody:
             - Added member and global swap() functions.

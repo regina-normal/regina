@@ -79,7 +79,7 @@ void addBitmaskOpt(pybind11::module_& m, const char* name) {
         .def("atMostOneBit", &B::atMostOneBit)
         .def_readonly_static("fixedSize", &B::fixedSize)
     ;
-    regina::python::add_output_ostream(c, true /* __repr__ */);
+    regina::python::add_output_ostream(c, name);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(B&, B&))(regina::swap));
@@ -123,7 +123,7 @@ void addBitmaskGeneric(pybind11::module_& m) {
         .def("atMostOneBit", &Bitmask::atMostOneBit)
         .def_readonly_static("fixedSize", &Bitmask::fixedSize)
     ;
-    regina::python::add_output_ostream(c, true /* __repr__ */);
+    regina::python::add_output_ostream(c, "Bitmask");
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(Bitmask&, Bitmask&))(regina::swap));
