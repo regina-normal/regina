@@ -374,26 +374,28 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Determines if this vector is equal to the given vector.
          *
-         * \pre This and the given vector have the same size.
+         * It is safe to call this operator if this and the given vector have
+         * different sizes (in which case the return value will be \c false).
          *
          * @param compare the vector with which this will be compared.
          * @return \c true if and only if the this and the given vector
          * are equal.
          */
         inline bool operator == (const Vector<T>& compare) const {
-            return std::equal(elts_, end_, compare.elts_);
+            return std::equal(elts_, end_, compare.elts_, compare.end_);
         }
         /**
          * Determines if this vector is different from the given vector.
          *
-         * \pre This and the given vector have the same size.
+         * It is safe to call this operator if this and the given vector have
+         * different sizes (in which case the return value will be \c true).
          *
          * @param compare the vector with which this will be compared.
          * @return \c true if and only if the this and the given vector
          * are not equal.
          */
         inline bool operator != (const Vector<T>& compare) const {
-            return ! std::equal(elts_, end_, compare.elts_);
+            return ! std::equal(elts_, end_, compare.elts_, compare.end_);
         }
         /**
          * Sets this vector equal to the given vector.

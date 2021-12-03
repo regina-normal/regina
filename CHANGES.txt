@@ -145,6 +145,9 @@ Version 7.0  [ 10 December, 2021 ]
         Class Bitmask, Bitmask1, Bitmask2:
             - Added compile-time constant fixedSize.
             - Added != to complement the already-existing == operator.
+              Also, Bitmask can now compare bitmasks of different lengths,
+              though the behaviour here has some important caveats; see the
+              documentation for details.
             - Bitmask now has a move constructor, move assignment, and
               member and global swap() functions.
         Class BitmaskLen8, BitmaskLen16, BitmaskLen32, BitmaskLen64:
@@ -1658,7 +1661,8 @@ Version 7.0  [ 10 December, 2021 ]
               old EnumConstraints.  It is easier to use within enumeration
               algorithms, and it carries significantly less overhead.
         Class Vector:
-            - New operator !=.
+            - New operator !=.  Also, both == and != can now compare vectors
+              of different sizes (which are always considered non-equal).
             - New constructors that take iterator ranges and initialiser lists.
             - New move constructor and move assignment operator.
             - New binary +, - and scalar * operators.
