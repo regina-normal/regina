@@ -248,7 +248,7 @@ Crossing : class
 Equality type : EqualityType.BY_REFERENCE
 
 Cusp : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Cyclotomic : class
 Equality type : EqualityType.BY_VALUE

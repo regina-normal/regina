@@ -244,6 +244,36 @@ class Cusp : public ShortOutput<Cusp> {
         int l() const;
 
         /**
+         * Determines whether this and the given object hold the
+         * same cusp information.
+         *
+         * Two Cusp objects are considered equal if they refer to the
+         * same vertex of the underlying triangulation (i.e., the
+         * pointers returned by vertex() are the same), \e and they have
+         * the same filling coefficients.
+         *
+         * @param other the cusp information to compare with this.
+         * @return \c true if and only this and the given object hold
+         * the same cusp information.
+         */
+        bool operator == (const Cusp& other) const;
+
+        /**
+         * Determines if this and the given object do not hold the
+         * same cusp information.
+         *
+         * Two Cusp objects are considered equal if they refer to the
+         * same vertex of the underlying triangulation (i.e., the
+         * pointers returned by vertex() are the same), \e and they have
+         * the same filling coefficients.
+         *
+         * @param other the cusp information to compare with this.
+         * @return \c true if and only this and the given object do not hold
+         * the same cusp information.
+         */
+        bool operator != (const Cusp& other) const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -2149,6 +2179,14 @@ inline int Cusp::m() const {
 
 inline int Cusp::l() const {
     return l_;
+}
+
+inline bool Cusp::operator == (const Cusp& other) const {
+    return vertex_ == other.vertex_ && m_ == other.m_ && l_ == other.l_;
+}
+
+inline bool Cusp::operator != (const Cusp& other) const {
+    return vertex_ != other.vertex_ || m_ != other.m_ || l_ != other.l_;
 }
 
 // Inline functions for SnapPeaTriangulation

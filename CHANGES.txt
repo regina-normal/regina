@@ -229,6 +229,7 @@ Version 7.0  [ 10 December, 2021 ]
             - These objects can now be passed around by value; their memory
               locations are not intended to uniquely identify a cusp.
             - Added a copy constructor and copy assignment operator.
+            - Added equality testing operators == and !=.
         Class Cyclotomic:
             - Added member and global swap() functions.
             - Changed polynomial() to return by value, not by pointer.
