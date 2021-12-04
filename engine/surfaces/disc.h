@@ -1245,6 +1245,10 @@ inline bool DiscSpec::operator != (const DiscSpec& other) const {
         number != other.number);
 }
 
+inline std::ostream& operator << (std::ostream& out, const DiscSpec& spec) {
+    return out << spec.tetIndex << ':' << spec.type << " #" << spec.number;
+}
+
 // Inline functions for DiscSetTet
 
 inline DiscSetTet::DiscSetTet(unsigned long tri0, unsigned long tri1,

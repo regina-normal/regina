@@ -103,7 +103,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def("torsionInclusion", &MarkedAbelianGroup::torsionInclusion)
         .def("utf8", &MarkedAbelianGroup::utf8)
     ;
-    regina::python::add_output(c1);
+    regina::python::add_output(c1, true /* __repr__ */);
     regina::python::add_eq_operators(c1);
 
     m.def("swap",

@@ -69,7 +69,7 @@ void addLink(pybind11::module_& m) {
         .def("prev", &StrandRef::prev)
         .def("jump", &StrandRef::jump)
     ;
-    regina::python::add_output_ostream(s, true /* __repr__ */);
+    regina::python::add_output_ostream(s);
     regina::python::add_eq_operators(s);
 
     auto c = pybind11::class_<Crossing>(m, "Crossing")

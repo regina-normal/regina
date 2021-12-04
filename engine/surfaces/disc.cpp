@@ -35,12 +35,6 @@
 
 namespace regina {
 
-std::ostream& operator << (std::ostream& out, const DiscSpec& spec) {
-    out << '(' << spec.tetIndex << ", " << spec.type << ", "
-        << spec.number << ')';
-    return out;
-}
-
 bool numberDiscsAwayFromVertex(int discType, int vertex) {
     if (discType < 4)
         return (vertex == discType);

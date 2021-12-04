@@ -41,6 +41,45 @@
 namespace regina::python {
 
 /**
+ * Indicates the style of output to use for the Python \a __repr__ function
+ * when wrapping a C++ class.
+ */
+enum ReprStyle {
+    /**
+     * Indicates a more detailed output style.
+     *
+     * The output will incorporate both the class name and the C++ short
+     * output (as returned by the C++ functions writeTextShort() or str(),
+     * or writing the C++ object directly to an output stream).
+     * It will be wrapped with angle brackets as suggested by Python's
+     * own documentation for what \a __repr__ should do.
+     *
+     * Most classes should use this output style.
+     */
+    PYTHON_REPR_DETAILED = 1,
+    /**
+     * Indicates a slimmed-down output style.
+     *
+     * The output will be exactly the same as the C++ short output
+     * (as returned by the C++ functions writeTextShort() or str(),
+     * or writing the C++ object directly to an output stream).
+     *
+     * This style should be used sparingly, since it does not indicate the
+     * underlying C++ type, and it does not conform to what the Python
+     * documentation says \a __repr__ should do.  Ideally this would
+     * only be used for simple numeric types (e.g., regina::Integer).
+     */
+    PYTHON_REPR_SLIM,
+    /**
+     * Indicates that there should be no custom \a __repr__ function at all.
+     *
+     * This will fall back to the (fairly uninformative) default provided by
+     * pybind11 and/or python.
+     */
+    PYTHON_REPR_NONE
+};
+
+/**
  * Adds rich string output functions to the python bindings for a C++ class.
  *
  * This will add str(), utf8() and detail() to the python class, as provided by
@@ -150,9 +189,8 @@ void add_output_basic(pybind11::class_<C, options...>& c,
  *
  * This will add a function \a __str__ to the python class to provide "native"
  * Python string output.  The implementation just writes the underlying C++
- * object to an output stream and collects the result.  If the optional
- * second argument \a reprAlso is passed as \c true, then an identical
- * \a __repr__ function will be added to the python class also.
+ * object to an output stream and collects the result.  This will also add
+ * a \a __repr__ function, using the given output style.
  *
  * To use this for some C++ class \a T in Regina, simply call
  * <t>regina::python::add_output_basic(c)</t>, where \a c is the
@@ -165,7 +203,7 @@ void add_output_basic(pybind11::class_<C, options...>& c,
  */
 template <class C, typename... options>
 void add_output_ostream(pybind11::class_<C, options...>& c,
-        bool reprAlso = false) {
+        ReprStyle style = PYTHON_REPR_DETAILED) {
     auto func = [](const C& x) {
         std::ostringstream s;
         s << x;
@@ -173,50 +211,25 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
     };
 
     c.def("__str__", func);
-    if (reprAlso)
-        c.def("__repr__", func);
-}
 
-/**
- * Adds output stream functionality to the python bindings for a C++ class.
- *
- * This will add a function \a __str__ to the python class to provide "native"
- * Python string output.  The implementation just writes the underlying C++
- * object to an output stream and collects the result.
- *
- * This will also add a \a __repr__ function.  If the argument \a reprClassName
- * is non-null, then the \a __repr__ output will incorporate this class name
- * (which should not include the \c regina module prefix) and the output
- * that the class writes to an output stream.  If \a reprClassName is \c null,
- * then \a __repr__ will return the same output as \a __str__.
- *
- * To use this for some C++ class \a T in Regina, simply call
- * <t>regina::python::add_output_basic(c)</t>, where \a c is the
- * pybind11::class_ object that wraps \a T.
- *
- * It is assumed that the wrapped class \a T does not derive from regina::Output
- * and does not provide a str() function (otherwise you should use add_output
- * or add_output_basic respectively).  Instead we simply assume that there is
- * a C++ operator for writing an object of type \a T to a C++ output stream.
- */
-template <class C, typename... options>
-void add_output_ostream(pybind11::class_<C, options...>& c,
-        const char* reprClassName) {
-    auto func = [](const C& x) {
-        std::ostringstream s;
-        s << x;
-        return s.str();
-    };
+    switch (style) {
+        case PYTHON_REPR_DETAILED:
+            c.def("__repr__", [](const C& c) {
+                std::ostringstream s;
+                s << "<regina.";
+                s << pybind11::str(pybind11::type::handle_of<C>().attr(
+                        "__name__")).cast<std::string_view>()
+                    << ": " << c << '>';
+                return s.str();
+            });
+            break;
 
-    c.def("__str__", func);
-    if (reprClassName) {
-        c.def("__repr__", [reprClassName](const C& c) {
-            std::ostringstream s;
-            s << "<regina." << reprClassName << ": " << c << '>';
-            return s.str();
-        });
-    } else {
-        c.def("__repr__", func);
+        case PYTHON_REPR_SLIM:
+            c.def("__repr__", func);
+            break;
+
+        case PYTHON_REPR_NONE:
+            break;
     }
 }
 

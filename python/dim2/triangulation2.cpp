@@ -180,7 +180,8 @@ void addTriangulation2(pybind11::module_& m) {
         .def("homologyH1", &Triangulation<2>::homology<1>) // deprecated
         .def("markedHomology",
             (regina::MarkedAbelianGroup (Triangulation<2>::*)(int) const)(
-            &Triangulation<2>::markedHomology))
+            &Triangulation<2>::markedHomology),
+            pybind11::arg("k") = 1)
         .def("boundaryMap", (MatrixInt (Triangulation<2>::*)(int) const)(
             &Triangulation<2>::boundaryMap))
         .def("pachner", &Triangulation<2>::pachner<2>,

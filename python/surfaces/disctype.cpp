@@ -50,7 +50,7 @@ void addDiscType(pybind11::module_& m) {
             return DiscType();
         })
     ;
-    regina::python::add_output_ostream(c, true /* __repr__ */);
+    regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c);
 }
 

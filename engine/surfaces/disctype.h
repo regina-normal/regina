@@ -204,7 +204,7 @@ inline constexpr bool DiscType::operator < (const DiscType& compare) const {
 }
 
 inline std::ostream& operator << (std::ostream& out, const DiscType& type) {
-    return out << '(' << type.tetIndex << ", " << type.type << ')';
+    return out << type.tetIndex << ':' << type.type;
 }
 
 } // namespace regina

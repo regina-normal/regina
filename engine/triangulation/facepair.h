@@ -382,7 +382,7 @@ inline FacePair FacePair::operator -- (int) {
 }
 
 inline std::ostream& operator << (std::ostream& out, const FacePair& pair) {
-    return out << '(' << pair.lower() << ',' << pair.upper() << ')';
+    return out << '{' << pair.lower() << ',' << pair.upper() << '}';
 }
 
 inline int FacePair::commonEdge() const {

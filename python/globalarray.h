@@ -158,7 +158,7 @@ class GlobalArray {
                     rvp)
                 .def("__len__", &GlobalArray<T, rvp>::size)
             ;
-            regina::python::add_output_ostream(c);
+            regina::python::add_output_ostream(c, PYTHON_REPR_NONE);
             regina::python::add_eq_operators(c);
         }
 
@@ -371,7 +371,7 @@ class GlobalArray2D {
                     pybind11::return_value_policy::reference_internal)
                 .def("__len__", &GlobalArray2D<T, rvp>::rows)
             ;
-            regina::python::add_output_ostream(c);
+            regina::python::add_output_ostream(c, PYTHON_REPR_NONE);
             regina::python::add_eq_operators(c);
         }
 
@@ -597,7 +597,7 @@ class GlobalArray3D {
                     pybind11::return_value_policy::reference_internal)
                 .def("__len__", &GlobalArray3D<T, rvp>::dim1)
             ;
-            regina::python::add_output_ostream(c);
+            regina::python::add_output_ostream(c, PYTHON_REPR_NONE);
             regina::python::add_eq_operators(c);
         }
 };

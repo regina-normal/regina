@@ -1368,6 +1368,9 @@ class TriangulationBase :
          * the supported range (i.e., less than 1 or greater than or
          * equal to \a dim).
          *
+         * \ifacespython Like the C++ template function markedHomology<k>(),
+         * you can omit the homology dimension \a k; this will default to 1.
+         *
          * @param k the dimension of the homology group to compute; this must
          * be between 1 and (<i>dim</i>-1) inclusive.
          * @return the <i>k</i>th homology group of the union of all

@@ -33,31 +33,82 @@
 
 from __future__ import print_function
 
-print(repr(Integer(-5)))
-print(repr(LargeInteger(9)))
-print(repr(LargeInteger.infinity))
-print(repr(Rational(3,8)))
+def dump(x):
+	print(x.__class__.__name__)
+	print(str(x))
+	print(repr(x))
+	print()
+
+dump(Integer(-5))
+dump(LargeInteger(9))
+dump(LargeInteger.infinity)
+dump(Rational(3,8))
+
+m = Matrix2(1,2,3,4)
+dump(m)
+dump(m[1])
+
+dump(Example3.weberSeifert().homology())
+dump(Example3.weberSeifert().markedHomology())
 
 g = Example3.poincare().fundamentalGroup()
-print(repr(g))
-print(repr(g.relation(0)))
-print(repr(g.relation(0).term(2)))
-
-g = Example3.weberSeifert().homology()
-print(repr(g))
-
-DiscSpec(4,1,2)
+dump(g)
+dump(g.relation(0))
+dump(g.relation(0).term(2))
 
 b = Bitmask(5)
 b.set(3, True)
-print(repr(b))
+dump(b)
 
 b = Bitmask8()
 b.set(3, True)
-print(repr(b))
+dump(b)
 
 q = Qitmask8()
 q.set(3, 2)
-print(repr(q))
+dump(q)
 
-print(repr(BoolSet(True)))
+dump(BoolSet(True))
+dump(DiscType(7,3))
+dump(DiscSpec(1,3,2))
+dump(PrismSpec(5,1))
+dump(FacetSpec3(6,2))
+dump(FacePair(1,3))
+dump(SFSFibre(5,-2))
+
+t = Example3.poincare()
+dump(t.turaevViro(5))
+dump(t.turaevViro(5).polynomial())
+
+g = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
+dump(g.node(0).arc(2))
+
+l = Link(1)
+dump(l.component(0))
+l = ExampleLink.figureEight()
+dump(l.component(0))
+dump(l.jones())
+dump(l.homfly())
+
+t = Example2.annulus()
+dump(t.vertex(0).front())
+dump(t.edge(0).front())
+
+t = Example3.poincare()
+dump(t.vertex(0).front())
+dump(t.edge(0).front())
+dump(t.triangle(0).front())
+
+t = Example4.cappellShaneson()
+dump(t.vertex(0).front())
+dump(t.edge(0).front())
+dump(t.triangle(0).front())
+dump(t.tetrahedron(0).front())
+
+t = Example5.sphere()
+dump(t.vertex(0).front())
+dump(t.edge(0).front())
+dump(t.triangle(0).front())
+dump(t.tetrahedron(0).front())
+dump(t.pentachoron(0).front())
+

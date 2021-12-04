@@ -51,7 +51,7 @@ void addVertex2(pybind11::module_& m) {
         .def("vertex", &VertexEmbedding<2>::vertex)
         .def("vertices", &VertexEmbedding<2>::vertices)
     ;
-    regina::python::add_output(e, true /* __repr__ */);
+    regina::python::add_output(e, "FaceEmbedding2_0");
     regina::python::add_eq_operators(e);
 
     auto c = pybind11::class_<Face<2, 0>>(m, "Face2_0")

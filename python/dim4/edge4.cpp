@@ -61,7 +61,7 @@ void addEdge4(pybind11::module_& m) {
         .def("edge", &EdgeEmbedding<4>::edge)
         .def("vertices", &EdgeEmbedding<4>::vertices)
     ;
-    regina::python::add_output(e, true /* __repr__ */);
+    regina::python::add_output(e, "FaceEmbedding4_1");
     regina::python::add_eq_operators(e);
 
     auto c = pybind11::class_<Face<4, 1>>(m, "Face4_1")

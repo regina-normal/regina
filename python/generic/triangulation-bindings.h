@@ -177,7 +177,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             &Triangulation<dim>::template homology<1>) // deprecated
         .def("markedHomology",
             (regina::MarkedAbelianGroup (Triangulation<dim>::*)(int) const)(
-            &Triangulation<dim>::markedHomology))
+            &Triangulation<dim>::markedHomology),
+            pybind11::arg("k") = 1)
         .def("boundaryMap", (MatrixInt (Triangulation<dim>::*)(int) const)(
             &Triangulation<dim>::boundaryMap))
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)

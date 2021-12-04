@@ -144,6 +144,10 @@ inline bool PrismSpec::operator != (const PrismSpec& other) const {
     return (tetIndex != other.tetIndex || edge != other.edge);
 }
 
+inline std::ostream& operator << (std::ostream& out, const PrismSpec& spec) {
+    return out << spec.tetIndex << ':' << spec.edge;
+}
+
 } // namespace regina
 
 #endif

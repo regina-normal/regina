@@ -1,12 +1,168 @@
+Integer
 -5
+-5
+
+LargeInteger
 9
+9
+
+LargeInteger
 inf
+inf
+
+Rational
 3/8
-<regina.GroupPresentation: < a b | a b a^-1 b a b^-1, a b^-1 a^-1 b^-1 a b^2 >>
-<regina.GroupExpression: g0 g1 g0^-1 g1 g0 g1^-1>
-<regina.GroupExpressionTerm: g0^-1>
+3/8
+
+Matrix2
+[[ 1 2 ] [ 3 4 ]]
+<regina.Matrix2: [[ 1 2 ] [ 3 4 ]]>
+
+Matrix2Row
+[ 3 4 ]
+<regina.Matrix2Row: [ 3 4 ]>
+
+AbelianGroup
+3 Z_5
 <regina.AbelianGroup: 3 Z_5>
+
+MarkedAbelianGroup
+3 Z_5
+3 Z_5
+
+GroupPresentation
+< a b | a b a^-1 b a b^-1, a b^-1 a^-1 b^-1 a b^2 >
+<regina.GroupPresentation: < a b | a b a^-1 b a b^-1, a b^-1 a^-1 b^-1 a b^2 >>
+
+GroupExpression
+g0 g1 g0^-1 g1 g0 g1^-1
+<regina.GroupExpression: g0 g1 g0^-1 g1 g0 g1^-1>
+
+GroupExpressionTerm
+g0^-1
+<regina.GroupExpressionTerm: g0^-1>
+
+Bitmask
+00010000000000000000000000000000
 <regina.Bitmask: 00010000000000000000000000000000>
+
+Bitmask8
+00010000
 <regina.Bitmask8: 00010000>
+
+Qitmask8
+00020000
 <regina.Qitmask8: 00020000>
+
+BoolSet
+{ true }
 <regina.BoolSet: { true }>
+
+DiscType
+7:3
+<regina.DiscType: 7:3>
+
+DiscSpec
+1:3 #2
+<regina.DiscSpec: 1:3 #2>
+
+PrismSpec
+5:1
+<regina.PrismSpec: 5:1>
+
+FacetSpec3
+6:2
+<regina.FacetSpec3: 6:2>
+
+FacePair
+{1,3}
+<regina.FacePair: {1,3}>
+
+SFSFibre
+(5,-2)
+<regina.SFSFibre: (5,-2)>
+
+Cyclotomic
+-2/5 x^3 + 2/5 x^2 + 7/10
+<regina.Cyclotomic: -2/5 x^3 + 2/5 x^2 + 7/10>
+
+Polynomial
+-2/5 x^3 + 2/5 x^2 + 7/10
+<regina.Polynomial: -2/5 x^3 + 2/5 x^2 + 7/10>
+
+ModelLinkGraphArc
+0:2
+<regina.ModelLinkGraphArc: 0:2>
+
+StrandRef
+(null)
+<regina.StrandRef: (null)>
+
+StrandRef
+_0
+<regina.StrandRef: _0>
+
+Laurent
+x^4 - x^2 + 1 - x^-2 + x^-4
+<regina.Laurent: x^4 - x^2 + 1 - x^-2 + x^-4>
+
+Laurent2
+x^2 - y^2 - 1 + x^-2
+<regina.Laurent2: x^2 - y^2 - 1 + x^-2>
+
+FaceEmbedding2_0
+0 (2)
+<regina.FaceEmbedding2_0: 0 (2)>
+
+FaceEmbedding2_1
+0 (01)
+<regina.FaceEmbedding2_1: 0 (01)>
+
+FaceEmbedding3_0
+0 (0)
+<regina.FaceEmbedding3_0: 0 (0)>
+
+FaceEmbedding3_1
+0 (01)
+<regina.FaceEmbedding3_1: 0 (01)>
+
+FaceEmbedding3_2
+0 (012)
+<regina.FaceEmbedding3_2: 0 (012)>
+
+FaceEmbedding4_0
+0 (0)
+<regina.FaceEmbedding4_0: 0 (0)>
+
+FaceEmbedding4_1
+0 (01)
+<regina.FaceEmbedding4_1: 0 (01)>
+
+FaceEmbedding4_2
+0 (234)
+<regina.FaceEmbedding4_2: 0 (234)>
+
+FaceEmbedding4_3
+0 (0123)
+<regina.FaceEmbedding4_3: 0 (0123)>
+
+FaceEmbedding5_0
+0 (0)
+<regina.FaceEmbedding5_0: 0 (0)>
+
+FaceEmbedding5_1
+0 (01)
+<regina.FaceEmbedding5_1: 0 (01)>
+
+FaceEmbedding5_2
+0 (012)
+<regina.FaceEmbedding5_2: 0 (012)>
+
+FaceEmbedding5_3
+0 (2345)
+<regina.FaceEmbedding5_3: 0 (2345)>
+
+FaceEmbedding5_4
+0 (01234)
+<regina.FaceEmbedding5_4: 0 (01234)>
+

@@ -516,7 +516,6 @@
 		052FA030180600FB00FAE4DF /* normalsurfaces.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0A180600FB00FAE4DF /* normalsurfaces.h */; };
 		052FA031180600FB00FAE4DF /* normalcoords.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0B180600FB00FAE4DF /* normalcoords.h */; };
 		052FA032180600FB00FAE4DF /* normalflags.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0C180600FB00FAE4DF /* normalflags.h */; };
-		052FA035180600FB00FAE4DF /* prism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E0F180600FB00FAE4DF /* prism.cpp */; };
 		052FA036180600FB00FAE4DF /* prism.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E10180600FB00FAE4DF /* prism.h */; };
 		052FA044180600FB00FAE4DF /* surfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1E180600FB00FAE4DF /* surfacefilter.cpp */; };
 		052FA045180600FB00FAE4DF /* surfacefilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E1F180600FB00FAE4DF /* surfacefilter.h */; };
@@ -617,7 +616,6 @@
 		052FA1DA1806129B00FAE4DF /* disctype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E05180600FB00FAE4DF /* disctype.cpp */; };
 		052FA1DB1806129B00FAE4DF /* normalsurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E07180600FB00FAE4DF /* normalsurface.cpp */; };
 		052FA1DC1806129B00FAE4DF /* normalsurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E09180600FB00FAE4DF /* normalsurfaces.cpp */; };
-		052FA1DD1806129B00FAE4DF /* prism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E0F180600FB00FAE4DF /* prism.cpp */; };
 		052FA1E41806129B00FAE4DF /* surfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1E180600FB00FAE4DF /* surfacefilter.cpp */; };
 		052FA1E91806129B00FAE4DF /* orientable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E27180600FB00FAE4DF /* orientable.cpp */; };
 		052FA1EA1806129B00FAE4DF /* quadtostd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E28180600FB00FAE4DF /* quadtostd.cpp */; };
@@ -2911,7 +2909,6 @@
 		052F9E0A180600FB00FAE4DF /* normalsurfaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalsurfaces.h; sourceTree = "<group>"; };
 		052F9E0B180600FB00FAE4DF /* normalcoords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalcoords.h; sourceTree = "<group>"; };
 		052F9E0C180600FB00FAE4DF /* normalflags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalflags.h; sourceTree = "<group>"; };
-		052F9E0F180600FB00FAE4DF /* prism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = prism.cpp; sourceTree = "<group>"; };
 		052F9E10180600FB00FAE4DF /* prism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prism.h; sourceTree = "<group>"; };
 		052F9E1E180600FB00FAE4DF /* surfacefilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surfacefilter.cpp; sourceTree = "<group>"; };
 		052F9E1F180600FB00FAE4DF /* surfacefilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacefilter.h; sourceTree = "<group>"; };
@@ -5972,7 +5969,6 @@
 				052F9E09180600FB00FAE4DF /* normalsurfaces.cpp */,
 				052F9E0A180600FB00FAE4DF /* normalsurfaces.h */,
 				052F9E27180600FB00FAE4DF /* orientable.cpp */,
-				052F9E0F180600FB00FAE4DF /* prism.cpp */,
 				052F9E10180600FB00FAE4DF /* prism.h */,
 				052F9E28180600FB00FAE4DF /* quadtostd.cpp */,
 				052F9E2E180600FB00FAE4DF /* stdtoquad.cpp */,
@@ -9195,7 +9191,6 @@
 				05CAE68927469131007C93F3 /* sigutils.cpp in Sources */,
 				05249EF51DBC16F1001FE29E /* isomorphism5.cpp in Sources */,
 				0542090F1DF0DA450018AB24 /* simplesurfacebundle.cpp in Sources */,
-				052FA1DD1806129B00FAE4DF /* prism.cpp in Sources */,
 				054208CF1DF0D2A60018AB24 /* simplesurfacebundle.cpp in Sources */,
 				05277ACE25CF9D16001E4134 /* perm.cpp in Sources */,
 				052FA1B01806129B00FAE4DF /* snappeatriangulation.cpp in Sources */,
@@ -10070,7 +10065,6 @@
 				05F0A0041DBF078800117BFC /* subdivide.cpp in Sources */,
 				052FA062180600FB00FAE4DF /* example3.cpp in Sources */,
 				052FA020180600FB00FAE4DF /* components.cpp in Sources */,
-				052FA035180600FB00FAE4DF /* prism.cpp in Sources */,
 				05F09FFC1DBF078800117BFC /* edge4.cpp in Sources */,
 				0512E08A26DF349800DDB222 /* tetrahedra.cpp in Sources */,
 				05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */,

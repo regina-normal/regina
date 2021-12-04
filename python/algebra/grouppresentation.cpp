@@ -58,7 +58,7 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("inverse", &GroupExpressionTerm::inverse)
         .def(pybind11::self += pybind11::self)
     ;
-    regina::python::add_output_ostream(c1, "GroupExpressionTerm");
+    regina::python::add_output_ostream(c1);
     regina::python::add_eq_operators(c1);
 
     auto c2 = pybind11::class_<GroupExpression>(m, "GroupExpression")

@@ -13,7 +13,6 @@ SET ( FILES
   matching.cpp
   normalsurface.cpp
   normalsurfaces.cpp
-  prism.cpp
   surfacefilter.cpp
   orientable.cpp
   quadtostd.cpp

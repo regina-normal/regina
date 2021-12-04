@@ -60,7 +60,7 @@ void addTriangle4(pybind11::module_& m) {
         .def("triangle", &TriangleEmbedding<4>::triangle)
         .def("vertices", &TriangleEmbedding<4>::vertices)
     ;
-    regina::python::add_output(e, true /* __repr__ */);
+    regina::python::add_output(e, "FaceEmbedding4_2");
     regina::python::add_eq_operators(e);
 
     auto c = pybind11::class_<Face<4, 2>>(m, "Face4_2")
