@@ -45,6 +45,7 @@ void addLensSpace(pybind11::module_& m) {
         .def("p", &LensSpace::p)
         .def("q", &LensSpace::q)
     ;
+    regina::python::add_output(c);
     // The LensSpace subclass defines its own equality tests, so we
     // should not just inherit the compare-by-pointer test from Manifold.
     regina::python::add_eq_operators(c);

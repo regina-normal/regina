@@ -45,7 +45,7 @@
 namespace regina {
 
 /**
- * Represents an arbitrary handlebody.
+ * Represents an orientable handlebody.
  *
  * All optional Manifold routines except for Manifold::construct() are
  * implemented for this class.
@@ -59,38 +59,46 @@ namespace regina {
  */
 class Handlebody : public Manifold {
     private:
-        unsigned long nHandles;
+        size_t genus_;
             /**< The number of handles. */
-        bool orientable;
-            /**< Is the handlebody orientable? */
 
     public:
         /**
-         * Creates a new handlebody with the given parameters.
+         * Creates a new orientable handlebody of the given genus.
          *
-         * @param newHandles the number of handles of the handlebody.
-         * @param newOrientable \c true if the handlebody is to be orientable
-         * or \c false if the handlebody is to be non-orientable.  This
-         * must be \c true if the handlebody has no handles.
+         * @param genus the number of handles.
          */
-        Handlebody(unsigned long newHandles, bool newOrientable);
+        Handlebody(size_t genus);
         /**
          * Creates a new copy of the given handlebody.
          */
         Handlebody(const Handlebody&) = default;
         /**
-         * Returns the number of handles of this handlebody.
+         * Returns the genus of this handlebody.
          *
-         * @return the number of handles.
+         * @return the genus; that is, number of handles.
          */
-        unsigned long handles() const;
+        size_t genus() const;
         /**
-         * Returns whether this handlebody is orientable.
+         * Deprecated alias for genus().
          *
-         * @return \c true if this handlebody is orientable, or \c false
-         * if this handlebody is non-orientable.
+         * \deprecated This routine has been renamed to genus().
+         *
+         * @return the genus of this handlebody; that is, number of handles.
          */
-        bool isOrientable() const;
+        [[deprecated]] size_t handles() const;
+        /**
+         * Deprecated routine that returns whether this handlebody is
+         * orientable.
+         *
+         * \deprecated Since Regina 7.0, this class only supports
+         * orientable handlebodies, and so this routine will always
+         * return \c true.
+         *
+         * @return \c true always, since only orientable handlebodies
+         * are supported by this class.
+         */
+        [[deprecated]] bool isOrientable() const;
         /**
          * Determines whether this and the given handlebody represent
          * the same 3-manifold.
@@ -146,28 +154,22 @@ void swap(Handlebody& a, Handlebody& b) noexcept;
 
 // Inline functions for Handlebody
 
-inline Handlebody::Handlebody(unsigned long newHandles, bool newOrientable) :
-        nHandles(newHandles), orientable(newOrientable) {
+inline Handlebody::Handlebody(size_t genus) : genus_(genus) {
+}
+inline unsigned long Handlebody::genus() const {
+    return genus_;
 }
 inline unsigned long Handlebody::handles() const {
-    return nHandles;
+    return genus_;
 }
 inline bool Handlebody::isOrientable() const {
-    return orientable;
+    return true;
 }
 inline bool Handlebody::operator == (const Handlebody& compare) const {
-    if (orientable && ! compare.orientable)
-        return false;
-    if (compare.orientable && ! orientable)
-        return false;
-    return (nHandles == compare.nHandles);
+    return (genus_ == compare.genus_);
 }
 inline bool Handlebody::operator != (const Handlebody& compare) const {
-    if (orientable && ! compare.orientable)
-        return true;
-    if (compare.orientable && ! orientable)
-        return true;
-    return (nHandles != compare.nHandles);
+    return (genus_ != compare.genus_);
 }
 
 inline bool Handlebody::isHyperbolic() const {
@@ -175,8 +177,7 @@ inline bool Handlebody::isHyperbolic() const {
 }
 
 inline void Handlebody::swap(Handlebody& other) noexcept {
-    std::swap(nHandles, other.nHandles);
-    std::swap(orientable, other.orientable);
+    std::swap(genus_, other.genus_);
 }
 
 inline void swap(Handlebody& a, Handlebody& b) noexcept {

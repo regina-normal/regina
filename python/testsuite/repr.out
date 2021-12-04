@@ -118,6 +118,18 @@ SurfaceExport
 0x0003
 <regina.SurfaceExport: 0x0003>
 
+NormalEncoding
+0x0203
+<regina.NormalEncoding: 0x0203>
+
+HyperEncoding
+0x011f
+<regina.HyperEncoding: 0x011f>
+
+LPSystem
+quad
+<regina.LPSystem: quad>
+
 AbelianGroup
 3 Z_5
 <regina.AbelianGroup: 3 Z_5>
@@ -206,6 +218,14 @@ Laurent2
 x^2 - y^2 - 1 + x^-2
 <regina.Laurent2: x^2 - y^2 - 1 + x^-2>
 
+Cusp
+(5,-2)-filled cusp at vertex 0
+<regina.Cusp: (5,-2)-filled cusp at vertex 0>
+
+Cusp
+Complete cusp at vertex 1
+<regina.Cusp: Complete cusp at vertex 1>
+
 FaceEmbedding2_0
 0 (2)
 <regina.FaceEmbedding2_0: 0 (2)>
@@ -261,4 +281,24 @@ FaceEmbedding5_3
 FaceEmbedding5_4
 0 (01234)
 <regina.FaceEmbedding5_4: 0 (01234)>
+
+LensSpace
+L(7,2)
+<regina.LensSpace: L(7,2)>
+
+SFSpace
+SFS [T/o2: (3,1) (4,-3)]
+<regina.SFSpace: SFS [T/o2: (3,1) (4,-3)]>
+
+SimpleSurfaceBundle
+RP2 x S1
+<regina.SimpleSurfaceBundle: RP2 x S1>
+
+SnapPeaCensusManifold
+SnapPea x101
+<regina.SnapPeaCensusManifold: SnapPea x101>
+
+Handlebody
+Handlebody(2)
+<regina.Handlebody: Handlebody(2)>
 

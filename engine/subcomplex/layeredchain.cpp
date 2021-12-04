@@ -104,7 +104,7 @@ void LayeredChain::invert() {
 }
 
 std::unique_ptr<Manifold> LayeredChain::manifold() const {
-    return std::make_unique<Handlebody>(index_ <= 1 ? 0 : 1, true);
+    return std::make_unique<Handlebody>(index_ <= 1 ? 0 : 1);
 }
 
 AbelianGroup LayeredChain::homology() const {

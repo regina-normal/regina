@@ -137,7 +137,7 @@ std::unique_ptr<Manifold> TrivialTri::manifold() const {
     if (type_ == SPHERE_4_VERTEX)
         return std::make_unique<LensSpace>(1, 0);
     else if (type_ == BALL_3_VERTEX || type_ == BALL_4_VERTEX)
-        return std::make_unique<Handlebody>(0, true);
+        return std::make_unique<Handlebody>(0);
     else if (type_ == N2)
         return std::make_unique<SimpleSurfaceBundle>(
             SimpleSurfaceBundle::S2xS1_TWISTED);

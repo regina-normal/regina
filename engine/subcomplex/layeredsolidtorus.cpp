@@ -612,7 +612,7 @@ std::unique_ptr<LayeredSolidTorus> LayeredSolidTorus::recognise(
 }
 
 std::unique_ptr<Manifold> LayeredSolidTorus::manifold() const {
-    return std::make_unique<Handlebody>(1, true);
+    return std::make_unique<Handlebody>(1);
 }
 
 AbelianGroup LayeredSolidTorus::homology() const {

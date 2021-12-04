@@ -52,7 +52,7 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def("m", &Cusp::m)
         .def("l", &Cusp::l)
     ;
-    regina::python::add_output(c1, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c1);
     regina::python::add_eq_operators(c1);
 
     auto c2 = pybind11::class_<SnapPeaTriangulation, regina::Triangulation<3>,

@@ -51,6 +51,7 @@ void addSnapPeaCensusManifold(pybind11::module_& m) {
         .def_readonly_static("SEC_7_OR", &SnapPeaCensusManifold::SEC_7_OR)
         .def_readonly_static("SEC_7_NOR", &SnapPeaCensusManifold::SEC_7_NOR)
     ;
+    regina::python::add_output(c);
     // The SnappeaCensusManifold subclass defines its own equality tests, so we
     // should not just inherit the compare-by-pointer test from Manifold.
     regina::python::add_eq_operators(c);

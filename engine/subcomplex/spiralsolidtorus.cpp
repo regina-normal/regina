@@ -202,7 +202,7 @@ std::unique_ptr<SpiralSolidTorus> SpiralSolidTorus::recognise(
 }
 
 std::unique_ptr<Manifold> SpiralSolidTorus::manifold() const {
-    return std::make_unique<Handlebody>(1, true);
+    return std::make_unique<Handlebody>(1);
 }
 
 AbelianGroup SpiralSolidTorus::homology() const {

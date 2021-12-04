@@ -74,6 +74,10 @@ dump(AngleAlg(AS_ALG_DD))
 dump(PURGE_NON_MINIMAL | PURGE_NON_PRIME)
 dump(surfaceExportName | surfaceExportEuler)
 
+dump(NormalEncoding(NS_QUAD))
+dump(HyperEncoding(HS_STANDARD))
+dump(LPSystem(NS_QUAD))
+
 dump(Example3.weberSeifert().homology())
 dump(Example3.weberSeifert().markedHomology())
 
@@ -116,6 +120,11 @@ dump(l.component(0))
 dump(l.jones())
 dump(l.homfly())
 
+s = ExampleSnapPea.whiteheadLink()
+s.fill(5,-2,0)
+dump(s.cusp(0))
+dump(s.cusp(1))
+
 t = Example2.annulus()
 dump(t.vertex(0).front())
 dump(t.edge(0).front())
@@ -137,4 +146,10 @@ dump(t.edge(0).front())
 dump(t.triangle(0).front())
 dump(t.tetrahedron(0).front())
 dump(t.pentachoron(0).front())
+
+dump(LensSpace(7,2))
+m = SFSpace(SFSpace.o2, 1); m.insertFibre(3,1); m.insertFibre(4,-3); dump(m)
+dump(SimpleSurfaceBundle(SimpleSurfaceBundle.RP2xS1))
+dump(SnapPeaCensusManifold('x', 101))
+dump(Handlebody(2))
 

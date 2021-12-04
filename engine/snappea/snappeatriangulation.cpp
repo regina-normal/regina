@@ -88,14 +88,11 @@ namespace {
 
 void Cusp::writeTextShort(std::ostream& out) const {
     if (complete())
-        out << "Complete cusp: ";
+        out << "Complete";
     else
-        out << "Filled cusp: ";
+        out << '(' << m_ << ',' << l_ << ")-filled";
 
-    out << "vertex " << vertex_->markedIndex();
-
-    if (! complete())
-        out << ", filling (" << m_ << ", " << l_ << ')';
+    out << " cusp at vertex " << vertex_->markedIndex();
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(

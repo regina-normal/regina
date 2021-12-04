@@ -164,6 +164,15 @@ void addTreeLP(pybind11::module_& m) {
         .def("standard", &LPSystem::standard)
         .def("quad", &LPSystem::quad)
         .def("coords", &LPSystem::coords)
+        .def("__str__", [](LPSystem s) {
+            return (s.standard() ? "standard" : s.quad() ? "quad" : "angle");
+        })
+        .def("__repr__", [](LPSystem s) {
+            return (
+                s.standard() ? "<regina.LPSystem: standard>" :
+                s.quad() ? "<regina.LPSystem: quad>" :
+                "<regina.LPSystem: angle>");
+        })
         ;
     regina::python::add_eq_operators(s);
 

@@ -166,7 +166,7 @@ AbelianGroup TriSolidTorus::homology() const {
 }
 
 std::unique_ptr<Manifold> TriSolidTorus::manifold() const {
-    return std::make_unique<Handlebody>(1, true);
+    return std::make_unique<Handlebody>(1);
 }
 
 } // namespace regina

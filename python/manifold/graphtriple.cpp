@@ -41,7 +41,7 @@ using regina::Matrix2;
 using regina::SFSpace;
 
 void addGraphTriple(pybind11::module_& m) {
-    pybind11::class_<GraphTriple, regina::Manifold>(m, "GraphTriple")
+    auto c = pybind11::class_<GraphTriple, regina::Manifold>(m, "GraphTriple")
         .def(pybind11::init<const SFSpace&, const SFSpace&, const SFSpace&,
             const Matrix2&, const Matrix2&>())
         .def(pybind11::init<const GraphTriple&>())
@@ -51,6 +51,10 @@ void addGraphTriple(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &GraphTriple::matchingReln,
             pybind11::return_value_policy::reference_internal)
+        .def("swap", &GraphTriple::swap)
     ;
+    regina::python::add_output(c);
+
+    m.def("swap", (void(*)(GraphTriple&, GraphTriple&))(regina::swap));
 }
 

@@ -55,7 +55,7 @@ std::unique_ptr<SnappedBall> SnappedBall::recognise(Tetrahedron<3>* tet) {
 }
 
 std::unique_ptr<Manifold> SnappedBall::manifold() const {
-    return std::make_unique<Handlebody>(0, true);
+    return std::make_unique<Handlebody>(0);
 }
 
 AbelianGroup SnappedBall::homology() const {

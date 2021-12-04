@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <iomanip>
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
 #include "surfaces/normalcoords.h"
@@ -68,6 +69,18 @@ void addNormalCoords(pybind11::module_& m) {
         .def("intValue", &NormalEncoding::intValue)
         .def_static("fromIntValue", &NormalEncoding::fromIntValue)
         .def(pybind11::self + pybind11::self)
+        .def("__str__", [](NormalEncoding e) {
+            std::ostringstream out;
+            out << "0x" << std::hex << std::setw(4) << std::setfill('0')
+                << e.intValue();
+            return out.str();
+        })
+        .def("__repr__", [](NormalEncoding e) {
+            std::ostringstream out;
+            out << "<regina.NormalEncoding: 0x" << std::hex << std::setw(4)
+                << std::setfill('0') << e.intValue() << '>';
+            return out.str();
+        })
         ;
     regina::python::add_eq_operators(e);
 

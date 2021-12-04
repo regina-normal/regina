@@ -56,7 +56,8 @@ void addManifold(pybind11::module_& m) {
             return lhs < rhs;
         })
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
+    // Leave the output routines for subclasses to wrap, since __repr__
+    // will include the (derived) class name.
     regina::python::add_eq_operators(c);
 }
 

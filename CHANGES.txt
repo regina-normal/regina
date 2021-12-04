@@ -469,6 +469,14 @@ Version 7.0  [ 10 December, 2021 ]
             - The short text output from str() is now identical to compact().
             - Other major cleanup and reorganisation under the hood.
         Class Handlebody:
+            - This class now only represents orientable handlebodies.
+              The old support for non-orientable handlebodies was incomplete
+              and was not being used anywhere within Regina.
+            - The constructor now takes only one argument (the old orientability
+              argument is gone).
+            - Renamed handles() to genus().  The old name is kept as a
+              deprecated alias.
+            - Deprecated isOrientable(), which now always returns true.
             - Added member and global swap() functions.
         Class HasReturnType:
             - Removed completely.
