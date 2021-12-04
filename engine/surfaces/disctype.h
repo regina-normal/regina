@@ -155,8 +155,8 @@ struct DiscType {
     constexpr bool operator != (const DiscType& compare) const;
     /**
      * Provides an ordering of disc types.  Types are ordered first by
-     * \a tetrahedron and then by \a type.  NONE is considered less than
-     * all "meaningful" disc types.
+     * \a tetrahedron and then by \a type.  The null disc type is considered
+     * less than all "meaningful" disc types.
      *
      * @return \c true if this disc type appears before the given disc type
      * in the ordering, or \c false if not.
