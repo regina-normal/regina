@@ -135,11 +135,11 @@ void add_output(pybind11::class_<C, options...>& c,
  *
  * This will add a str() function to the python class, and will also add
  * \a __str__ as an alias for this function to provide "native" Python string
- * output.  If the optional second argument \a reprAlso is passed as \c true,
- * then an identical \a __repr__ function will be added also.
+ * output.  This will also add a \a __repr__ function, using the given
+ * output style.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>regina::python::add_output_basic(c)</t>, where \a c is the
+ * <t>regina::python::add_output_basic(c, style)</t>, where \a c is the
  * pybind11::class_ object that wraps \a T.
  *
  * It is assumed that the wrapped class \a T does not derive from
@@ -149,14 +149,32 @@ void add_output(pybind11::class_<C, options...>& c,
  */
 template <class C, typename... options>
 void add_output_basic(pybind11::class_<C, options...>& c,
-        bool reprAlso = false) {
+        ReprStyle style = PYTHON_REPR_DETAILED) {
     using BaseType = typename regina::OutputBase<C>::type;
     using OutputFunctionType = std::string (BaseType::*)() const;
 
     c.def("str", OutputFunctionType(&BaseType::str));
     c.def("__str__", OutputFunctionType(&BaseType::str));
-    if (reprAlso)
-        c.def("__repr__", OutputFunctionType(&BaseType::str));
+
+    switch (style) {
+        case PYTHON_REPR_DETAILED:
+            c.def("__repr__", [](const C& c) {
+                std::ostringstream s;
+                s << "<regina."
+                    << pybind11::str(pybind11::type::handle_of<C>().attr(
+                        "__name__")).cast<std::string_view>()
+                    << ": " << c.str() << '>';
+                return s.str();
+            });
+            break;
+
+        case PYTHON_REPR_SLIM:
+            c.def("__repr__", OutputFunctionType(&BaseType::str));
+            break;
+
+        case PYTHON_REPR_NONE:
+            break;
+    }
 }
 
 /**
@@ -191,8 +209,8 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
         case PYTHON_REPR_DETAILED:
             c.def("__repr__", [](const C& c) {
                 std::ostringstream s;
-                s << "<regina.";
-                s << pybind11::str(pybind11::type::handle_of<C>().attr(
+                s << "<regina."
+                    << pybind11::str(pybind11::type::handle_of<C>().attr(
                         "__name__")).cast<std::string_view>()
                     << ": " << c << '>';
                 return s.str();

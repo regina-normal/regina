@@ -14,6 +14,46 @@ Rational
 3/8
 3/8
 
+Perm2
+10
+<regina.Perm2: 10>
+
+Perm3
+021
+<regina.Perm3: 021>
+
+Perm4
+0321
+<regina.Perm4: 0321>
+
+Perm5
+01324
+<regina.Perm5: 01324>
+
+Perm6
+013245
+<regina.Perm6: 013245>
+
+Perm7
+0132456
+<regina.Perm7: 0132456>
+
+Perm8
+01324567
+<regina.Perm8: 01324567>
+
+Perm15
+0132456789abcde
+<regina.Perm15: 0132456789abcde>
+
+VectorInt
+( 1 0 -2 )
+<regina.VectorInt: ( 1 0 -2 )>
+
+VectorLarge
+( 1 0 inf -2 )
+<regina.VectorLarge: ( 1 0 inf -2 )>
+
 Matrix2
 [[ 1 2 ] [ 3 4 ]]
 <regina.Matrix2: [[ 1 2 ] [ 3 4 ]]>
