@@ -52,7 +52,7 @@ void addTxICore(pybind11::module_& m) {
         .def("texName", &TxICore::texName)
         .def("TeXName", &TxICore::texName) // deprecated
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     pybind11::class_<TxIDiagonalCore, regina::TxICore>(m, "TxIDiagonalCore")

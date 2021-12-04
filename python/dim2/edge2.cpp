@@ -52,7 +52,7 @@ void addEdge2(pybind11::module_& m) {
         .def("edge", &EdgeEmbedding<2>::edge)
         .def("vertices", &EdgeEmbedding<2>::vertices)
     ;
-    regina::python::add_output(e, "FaceEmbedding2_1");
+    regina::python::add_output(e);
     regina::python::add_eq_operators(e);
 
     auto c = pybind11::class_<Face<2, 1>>(m, "Face2_1")
@@ -87,7 +87,7 @@ void addEdge2(pybind11::module_& m) {
         .def_readonly_static("dimension", &Edge<2>::dimension)
         .def_readonly_static("subdimension", &Edge<2>::subdimension)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<

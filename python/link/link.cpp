@@ -83,7 +83,7 @@ void addLink(pybind11::module_& m) {
         .def("next", &Crossing::next)
         .def("prev", &Crossing::prev)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     auto l = pybind11::class_<Link, std::shared_ptr<Link>>(m, "Link")
@@ -319,7 +319,7 @@ void addLink(pybind11::module_& m) {
         .def_readonly_static("homflyLMVarX", Link::homflyLMVarX)
         .def_readonly_static("homflyLMVarY", Link::homflyLMVarY)
     ;
-    regina::python::add_output(l);
+    regina::python::add_output(l, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(l);
 
     regina::python::addListView<decltype(Link().crossings())>(m);

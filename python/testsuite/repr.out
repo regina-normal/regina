@@ -28,7 +28,7 @@ AbelianGroup
 
 MarkedAbelianGroup
 3 Z_5
-3 Z_5
+<regina.MarkedAbelianGroup: 3 Z_5>
 
 GroupPresentation
 < a b | a b a^-1 b a b^-1, a b^-1 a^-1 b^-1 a b^2 >

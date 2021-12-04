@@ -93,7 +93,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
         })
     ;
     regina::python::add_eq_operators(c);
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
 
     m.def("swap", (void(*)(TypeTrie<nTypes>&, TypeTrie<nTypes>&))(regina::swap));
 }

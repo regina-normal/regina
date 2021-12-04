@@ -60,7 +60,7 @@ void addTriangle4(pybind11::module_& m) {
         .def("triangle", &TriangleEmbedding<4>::triangle)
         .def("vertices", &TriangleEmbedding<4>::vertices)
     ;
-    regina::python::add_output(e, "FaceEmbedding4_2");
+    regina::python::add_output(e);
     regina::python::add_eq_operators(e);
 
     auto c = pybind11::class_<Face<4, 2>>(m, "Face4_2")
@@ -99,7 +99,7 @@ void addTriangle4(pybind11::module_& m) {
         .def_readonly_static("dimension", &Triangle<4>::dimension)
         .def_readonly_static("subdimension", &Triangle<4>::subdimension)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<

@@ -49,7 +49,7 @@ void addFileInfo(pybind11::module_& m) {
         .def("swap", &FileInfo::swap)
         .def_static("identify", &FileInfo::identify)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(FileInfo&, FileInfo&))(regina::swap));

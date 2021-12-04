@@ -62,7 +62,7 @@ void addStandardTriangulation(pybind11::module_& m) {
             overload_cast<const regina::Triangulation<3>&>(
             &StandardTriangulation::recognise))
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 }
 

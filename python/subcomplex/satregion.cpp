@@ -83,7 +83,7 @@ void addSatRegion(pybind11::module_& m) {
             return SatRegion::beginsRegion(a, avoidTets);
         })
     ;
-    regina::python::add_output(r);
+    regina::python::add_output(r, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(r);
 
     m.def("swap", (void(*)(SatRegion&, SatRegion&))(regina::swap));

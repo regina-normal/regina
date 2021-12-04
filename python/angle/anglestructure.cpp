@@ -83,7 +83,7 @@ void addAngleStructure(pybind11::module_& m) {
             s.writeXMLData(std::cout);
         })
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(AngleStructure&, AngleStructure&))(regina::swap));

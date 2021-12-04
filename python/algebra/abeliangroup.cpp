@@ -99,7 +99,7 @@ void addAbelianGroup(pybind11::module_& m) {
             g.writeXMLData(std::cout);
         })
     ;
-    regina::python::add_output(c, "AbelianGroup");
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(AbelianGroup&, AbelianGroup&))(regina::swap));

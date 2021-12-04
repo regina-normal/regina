@@ -82,7 +82,7 @@ void addComponent4(pybind11::module_& m) {
         .def("countBoundaryTetrahedra", &Component<4>::countBoundaryTetrahedra)
         .def_readonly_static("dimension", &Component<4>::dimension)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     // No need for lower-dimensional faces here, since these reuse the same

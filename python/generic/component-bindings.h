@@ -56,7 +56,7 @@ void addComponent(pybind11::module_& m, const char* name) {
         .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets)
         .def_readonly_static("dimension", &Component<dim>::dimension)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<

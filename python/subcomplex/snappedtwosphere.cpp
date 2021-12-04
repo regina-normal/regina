@@ -62,7 +62,7 @@ void addSnappedTwoSphere(pybind11::module_& m) {
             overload_cast<regina::Tetrahedron<3>*, regina::Tetrahedron<3>*>(
             &SnappedTwoSphere::recognise))
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 }
 

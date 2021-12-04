@@ -96,7 +96,7 @@ void addTangle(pybind11::module_& m) {
             return Tangle::fromOrientedGauss(v.begin(), v.end());
         })
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     // No need to register the ListView class for crossings(), since

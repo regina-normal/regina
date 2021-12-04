@@ -230,7 +230,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def_readonly_static("dimension", &Triangulation<dim>::dimension)
     ;
     add_pachner<dim>::add(c);
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     // The ListView classes for faces() are wrapped in face-bindings.h,

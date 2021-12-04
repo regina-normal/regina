@@ -65,7 +65,7 @@ void addSatBlock(pybind11::module_& m) {
             return lhs < rhs;
         })
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     auto d = pybind11::class_<SatBlockModel>(m, "SatBlockModel")

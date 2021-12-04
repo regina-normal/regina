@@ -173,7 +173,7 @@ void addPacket(pybind11::module_& m) {
             return (s != p);
         }, pybind11::is_operator())
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     m.def("open", (std::shared_ptr<Packet> (*)(const char*)) &regina::open);

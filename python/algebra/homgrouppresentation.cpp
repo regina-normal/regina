@@ -81,7 +81,7 @@ void addHomGroupPresentation(pybind11::module_& m) {
         .def("markedAbelianisation",
             &HomGroupPresentation::markedAbelianisation)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     m.def("swap",

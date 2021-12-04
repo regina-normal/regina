@@ -218,7 +218,7 @@ void addTriangulation2(pybind11::module_& m) {
         .def("dumpConstruction", &Triangulation<2>::dumpConstruction)
         .def_readonly_static("dimension", &Triangulation<2>::dimension)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<decltype(Triangulation<2>().vertices())>(m);

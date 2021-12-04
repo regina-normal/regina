@@ -71,7 +71,7 @@ void addBoundaryComponent2(pybind11::module_& m) {
         .def_readonly_static("allowVertex", &BoundaryComponent<2>::allowVertex)
         .def_readonly_static("canBuild", &BoundaryComponent<2>::canBuild)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<

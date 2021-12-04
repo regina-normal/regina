@@ -166,7 +166,7 @@ void addNormalSurface(pybind11::module_& m) {
             &NormalSurface::reconstructTriangles)
         .def(pybind11::self + pybind11::self)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
     regina::python::add_eq_operators(c);
 
     // Global arrays:
