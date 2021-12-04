@@ -303,6 +303,22 @@ void MarkedAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
 
     if (! writtenSomething)
         out << '0';
+
+    if (utf8) {
+        out << " (\u2124" << superscript(N_.columns())
+            << " \u2192 \u2124" << superscript(N_.rows())
+            << " \u2192 \u2124" << superscript(M_.rows());
+        if (coeff_ != 0)
+            out << " with \u2124" << subscript(coeff_) << " coefficients";
+        out << ')';
+    } else {
+        out << " (Z^" << N_.columns()
+            << " -> Z^" << N_.rows()
+            << " -> Z^" << M_.rows();
+        if (coeff_ != 0)
+            out << " with Z_" << coeff_ << " coefficients";
+        out << ')';
+    }
 }
 
 /*
