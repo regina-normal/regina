@@ -62,6 +62,62 @@ Matrix2Row
 [ 3 4 ]
 <regina.Matrix2Row: [ 3 4 ]>
 
+HyperListFlags
+HyperListFlags.HS_VERTEX
+<HyperListFlags.HS_VERTEX: 4>
+
+HyperAlgFlags
+HyperAlgFlags.HS_VERTEX_DD
+<HyperAlgFlags.HS_VERTEX_DD: 32>
+
+NormalListFlags
+NormalListFlags.NS_VERTEX
+<NormalListFlags.NS_VERTEX: 4>
+
+NormalAlgFlags
+NormalAlgFlags.NS_VERTEX_DD
+<NormalAlgFlags.NS_VERTEX_DD: 32>
+
+AngleAlgFlags
+AngleAlgFlags.AS_ALG_DD
+<AngleAlgFlags.AS_ALG_DD: 32>
+
+CensusPurgeFlags
+CensusPurgeFlags.PURGE_NON_MINIMAL
+<CensusPurgeFlags.PURGE_NON_MINIMAL: 1>
+
+SurfaceExportFields
+SurfaceExportFields.surfaceExportName
+<SurfaceExportFields.surfaceExportName: 1>
+
+HyperList
+0x0004
+<regina.HyperList: 0x0004>
+
+HyperAlg
+0x0020
+<regina.HyperAlg: 0x0020>
+
+NormalList
+0x0004
+<regina.NormalList: 0x0004>
+
+NormalAlg
+0x0020
+<regina.NormalAlg: 0x0020>
+
+AngleAlg
+0x0020
+<regina.AngleAlg: 0x0020>
+
+CensusPurge
+0x03
+<regina.CensusPurge: 0x03>
+
+SurfaceExport
+0x0003
+<regina.SurfaceExport: 0x0003>
+
 AbelianGroup
 3 Z_5
 <regina.AbelianGroup: 3 Z_5>

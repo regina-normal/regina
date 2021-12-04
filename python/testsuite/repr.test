@@ -58,6 +58,22 @@ m = Matrix2(1,2,3,4)
 dump(m)
 dump(m[1])
 
+dump(HS_VERTEX)
+dump(HS_VERTEX_DD)
+dump(NS_VERTEX)
+dump(NS_VERTEX_DD)
+dump(AS_ALG_DD)
+dump(PURGE_NON_MINIMAL)
+dump(surfaceExportName)
+
+dump(HyperList(HS_VERTEX))
+dump(HyperAlg(HS_VERTEX_DD))
+dump(NormalList(NS_VERTEX))
+dump(NormalAlg(NS_VERTEX_DD))
+dump(AngleAlg(AS_ALG_DD))
+dump(PURGE_NON_MINIMAL | PURGE_NON_PRIME)
+dump(surfaceExportName | surfaceExportEuler)
+
 dump(Example3.weberSeifert().homology())
 dump(Example3.weberSeifert().markedHomology())
 
