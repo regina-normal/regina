@@ -85,7 +85,7 @@ namespace regina {
  *
  * \ingroup subcomplex
  */
-class SatBlockSpec {
+class SatBlockSpec : public ShortOutput<SatBlockSpec> {
     private:
         SatBlock* block_;
             /**< Details of the saturated block structure. */
@@ -182,6 +182,16 @@ class SatBlockSpec {
          * @return \c true if and only if the block is reflected horizontally.
          */
         bool refHoriz() const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 
         // Ensure the class is non-constructible (to the public) and
         // non-copyable.

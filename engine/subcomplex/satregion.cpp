@@ -58,6 +58,18 @@ namespace {
 
 std::list<SatBlockModel> SatRegion::starters_;
 
+void SatBlockSpec::writeTextShort(std::ostream& out) const {
+    block_->writeTextShort(out);
+    if (refVert_) {
+        if (refHoriz_)
+            out << ", reflected(H)";
+        else
+            out << ", reflected(V)";
+    } else if (refHoriz_) {
+        out << ", rotated";
+    }
+}
+
 void SatRegion::initStarters() {
     std::scoped_lock lock(startersMutex);
     if (starters_.empty()) {
@@ -500,9 +512,16 @@ void SatRegion::writeDetail(std::ostream& out, const std::string& title)
 }
 
 void SatRegion::writeTextShort(std::ostream& out) const {
-    size_t size = blocks_.size();
-    out << "Saturated region with " << size <<
-        (size == 1 ? " block" : " blocks");
+    out << "[ ";
+    bool first = true;
+    for (const auto& b : blocks_) {
+        if (first)
+            first = false;
+        else
+            out << " | ";
+        b.writeTextShort(out);
+    }
+    out << " ]";
 }
 
 void SatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {

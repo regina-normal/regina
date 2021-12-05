@@ -326,3 +326,31 @@ SnapPeaCensusTri
 SnapPea m004
 <regina.SnapPeaCensusTri: SnapPea m004>
 
+BlockedSFS
+Blocked SFS [Tri, LST(1, 2, 3), LST(1, 5, 6), Mob(v)]
+<regina.BlockedSFS: Blocked SFS [Tri, LST(1, 2, 3), LST(1, 5, 6), Mob(v)]>
+
+SatRegion
+[ Tri(major) {0,2,1} | LST(1,5,6) {4..7}, rotated | LST(1,2,3) {3}, rotated | Mobius(vert) {triangle 0}, rotated ]
+<regina.SatRegion: [ Tri(major) {0,2,1} | LST(1,5,6) {4..7}, rotated | LST(1,2,3) {3}, rotated | Mobius(vert) {triangle 0}, rotated ]>
+
+SatBlockSpec
+Tri(major) {0,2,1}
+<regina.SatBlockSpec: Tri(major) {0,2,1}>
+
+SatTriPrism
+Tri(major) {0,2,1}
+<regina.SatTriPrism: Tri(major) {0,2,1}>
+
+SatAnnulus
+0 (013), 2 (320)
+<regina.SatAnnulus: 0 (013), 2 (320)>
+
+CensusHit
+m004 : #1 -- Cusped hyperbolic census (orientable)
+<regina.CensusHit: m004 : #1 -- Cusped hyperbolic census (orientable)>
+
+CensusDB
+./../engine/data/census/cusped-hyp-or-census-9.tdb [Cusped hyperbolic census (orientable)]
+<regina.CensusDB: ./../engine/data/census/cusped-hyp-or-census-9.tdb [Cusped hyperbolic census (orientable)]>
+

@@ -392,19 +392,35 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          */
         bool isZn(unsigned long n) const;
         /**
-         * Determines whether this and the given abelian group are
-         * isomorphic.
+         * Determines whether this and the given abelian group have
+         * identical presentations (which means they are isomorphic).
+         *
+         * Since the AbelianGroup class stores \e only the invariants required
+         * to identify the isomorphism type, two groups will compare as equal
+         * if and only if they are isomorphic.  This is in contrast to the
+         * comparisons for GroupPresentation (which tests for identical
+         * generators and relations), or for MarkedAbelianGroup (which tests
+         * for identical chain complex presentations).
          *
          * @param other the group with which this should be compared.
-         * @return \c true if and only if the two groups are isomorphic.
+         * @return \c true if and only if the two groups have identical
+         * presentations (i.e., they are isomorphic).
          */
         bool operator == (const AbelianGroup& other) const;
         /**
-         * Determines whether this and the given abelian group are
-         * non-isomorphic.
+         * Determines whether this and the given abelian group have
+         * different presentations (which means they are non-isomorphic).
+         *
+         * Since the AbelianGroup class stores \e only the invariants required
+         * to identify the isomorphism type, two groups will compare as equal
+         * if and only if they are isomorphic.  This is in contrast to the
+         * comparisons for GroupPresentation (which tests for identical
+         * generators and relations), or for MarkedAbelianGroup (which tests
+         * for identical chain complex presentations).
          *
          * @param other the group with which this should be compared.
-         * @return \c true if and only if the two groups are non-isomorphic.
+         * @return \c true if and only if the two groups have different
+         * presentations (i.e., they are non-isomorphic).
          */
         bool operator != (const AbelianGroup& other) const;
 

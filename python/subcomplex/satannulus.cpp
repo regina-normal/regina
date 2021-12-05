@@ -75,6 +75,11 @@ void addSatAnnulus(pybind11::module_& m) {
         .def("image", &SatAnnulus::image)
         .def("attachLST", &SatAnnulus::attachLST)
     ;
+    regina::python::add_output_custom(c,
+            [](const SatAnnulus& a, std::ostream& s) {
+        s << a.tet[0]->index() << " (" << a.roles[0].trunc(3) << "), "
+            << a.tet[1]->index() << " (" << a.roles[1].trunc(3) << ')';
+    });
     regina::python::add_eq_operators(c);
 }
 

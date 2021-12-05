@@ -89,7 +89,7 @@ Census : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 CensusDB : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 CensusHit : class
 Equality type : EqualityType.BY_VALUE

@@ -158,16 +158,18 @@ void SatMobius::adjustSFS(SFSpace& sfs, bool reflect) const {
 }
 
 void SatMobius::writeTextShort(std::ostream& out) const {
-    out << "Saturated Mobius band, boundary on ";
+    out << "Mobius(";
     if (position_ == 0)
-        out << "diagonal";
+        out << "diag"; // roles swap 1,2
     else if (position_ == 1)
-        out << "horizontal";
+        out << "horiz"; // roles swap 0,2
     else if (position_ == 2)
-        out << "vertical";
+        out << "vert"; // roles swap 0,1
     else
         out << "invalid";
-    out << " edge";
+    out << ") {triangle "
+        << annulus_[0].tet[0]->triangle(annulus_[0].roles[0][3])->index()
+        << '}';
 }
 
 void SatMobius::writeAbbr(std::ostream& out, bool tex) const {
@@ -232,10 +234,14 @@ void SatLST::adjustSFS(SFSpace& sfs, bool reflect) const {
 }
 
 void SatLST::writeTextShort(std::ostream& out) const {
-    out << "Saturated ("
-        << lst_.meridinalCuts(0) << ", "
-        << lst_.meridinalCuts(1) << ", "
-        << lst_.meridinalCuts(2) << ") layered solid torus";
+    out << "LST("
+        << lst_.meridinalCuts(0) << ','
+        << lst_.meridinalCuts(1) << ','
+        << lst_.meridinalCuts(2) << ") {"
+        << lst_.topLevel()->index();
+    if (lst_.topLevel() != lst_.base())
+        out << ".." << lst_.base()->index();
+    out << '}';
 }
 
 void SatLST::writeAbbr(std::ostream& out, bool tex) const {
@@ -621,7 +627,7 @@ SatReflectorStrip* SatReflectorStrip::beginsRegion(const SatAnnulus& annulus,
 
     if (notUnique(middle, annulus.tet[0], annulus.tet[1]) ||
             isBad(middle, avoidTets))
-
+        return nullptr;
     if (middle != annulus.tet[0]->adjacentTetrahedron(
             annulus.roles[0][1]))
         return nullptr;
@@ -818,6 +824,22 @@ SatBlockModel SatReflectorStrip::model(unsigned length, bool twisted) {
         firstLeft->join(2, prevRight, Perm<4>(0, 1));
 
     return ans->modelWith(tri);
+}
+
+void SatReflectorStrip::writeTextShort(std::ostream& out) const {
+    out << "Reflector(" << countAnnuli();
+    if (twistedBoundary())
+        out << ", twisted";
+    out << ") {";
+    for (size_t i = 0; i < countAnnuli(); ++i) {
+        if (i > 0)
+            out << '|';
+        out << annulus_[i].tet[0]->index() << ','
+            << annulus_[i].tet[0]->adjacentTetrahedron(
+                annulus_[i].roles[0][0])->index() << ','
+            << annulus_[i].tet[1]->index();
+    }
+    out << '}';
 }
 
 void SatLayering::adjustSFS(SFSpace& sfs, bool reflect) const {

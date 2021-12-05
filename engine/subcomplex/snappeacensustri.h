@@ -169,6 +169,11 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * Determines whether this and the given structure represent
          * the same triangulation from the SnapPea census.
          *
+         * The SnapPea census manifolds \c x101 and \c x103 are homeomorphic;
+         * however, the corresponding triangulations represented by
+         * SnapPeaCensusTri will compare as different (since this class
+         * describes the specific triangulation, not the underlying manifold).
+         *
          * @param compare the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same SnapPea census triangulation.
@@ -178,6 +183,11 @@ class SnapPeaCensusTri: public StandardTriangulation {
         /**
          * Determines whether this and the given structure represent
          * different triangulations from the SnapPea census.
+         *
+         * The SnapPea census manifolds \c x101 and \c x103 are homeomorphic;
+         * however, the corresponding triangulations represented by
+         * SnapPeaCensusTri will compare as different (since this class
+         * describes the specific triangulation, not the underlying manifold).
          *
          * @param compare the structure with which this will be compared.
          * @return \c true if and only if this and the given structure

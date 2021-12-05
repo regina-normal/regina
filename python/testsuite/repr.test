@@ -174,3 +174,15 @@ dump(GraphTriple(sfsDisc, sfsAnnulus, sfsDisc, Matrix2(0,1,-1,2), Matrix2(-1,2,-
 # Try to get our hands on some StandardTriangulation subclasses.
 dump(StandardTriangulation.recognise(Example3.figureEight()))
 
+t = Example3.sfsOverSphere(3,4,5,1,2,-1)
+s = BlockedSFS.recognise(t)
+dump(s)
+dump(s.region())
+dump(s.region().block(0))
+dump(s.region().block(0).block())
+dump(s.region().block(0).block().annulus(0))
+
+h = Census.lookup('cPcbbbiht')[0]
+dump(h)
+dump(h.db())
+

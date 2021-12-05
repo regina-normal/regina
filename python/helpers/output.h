@@ -226,4 +226,43 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
     }
 }
 
+/**
+ * Adds custom string output functions to the python bindings for a C++ class.
+ *
+ * This will add a function \a __str__ to the python class to provide "native"
+ * Python string output.  The implementation will call \a outputFunction,
+ * which must be a callable object (typically a lambda) that can be called
+ * with arguments of the form <tt>outputFunction(const C&, std::ostream&)</tt>.
+ *
+ * This will also add a \a __repr__ function.  There is no choice of output
+ * style: if you use add_output_custom() then the output style will always be
+ * PYTHON_REPR_DETAILED.
+ *
+ * To use this for some C++ class \a T in Regina, simply call
+ * <t>regina::python::add_output_custom(c, style)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.
+ */
+template <class C, typename Function, typename... options>
+void add_output_custom(pybind11::class_<C, options...>& c,
+        Function&& outputFunction) {
+    // We make local copies of outputFunction, since this may have been
+    // passed as a temporary.
+
+    c.def("__str__", [outputFunction](const C& x) {
+        std::ostringstream s;
+        outputFunction(x, s);
+        return s.str();
+    });
+
+    c.def("__repr__", [outputFunction](const C& c) {
+        std::ostringstream s;
+        s << "<regina."
+            << pybind11::str(pybind11::type::handle_of<C>().attr(
+                "__name__")).cast<std::string_view>() << ": ";
+        outputFunction(c, s);
+        s << '>';
+        return s.str();
+    });
+}
+
 } // namespace regina::python

@@ -649,8 +649,10 @@ inline SatBlock* SatTriPrism::clone() const {
 }
 
 inline void SatTriPrism::writeTextShort(std::ostream& out) const {
-    out << "Saturated triangular prism of "
-        << (major_ ? "major" : "minor") << " type";
+    out << "Tri(" << (major_ ? "major" : "minor") << ") {"
+        << annulus_[0].tet[0]->index() << ','
+        << annulus_[1].tet[0]->index() << ','
+        << annulus_[2].tet[0]->index() << '}';
 }
 
 inline void SatTriPrism::writeAbbr(std::ostream& out, bool tex) const {
@@ -670,7 +672,11 @@ inline SatBlock* SatCube::clone() const {
 }
 
 inline void SatCube::writeTextShort(std::ostream& out) const {
-    out << "Saturated cube";
+    out << "Cube {"
+        << annulus_[0].tet[0]->index() << ','
+        << annulus_[1].tet[0]->index() << ','
+        << annulus_[2].tet[0]->index() << ','
+        << annulus_[3].tet[0]->index() << '}';
 }
 
 inline void SatCube::writeAbbr(std::ostream& out, bool tex) const {
@@ -688,12 +694,6 @@ inline SatReflectorStrip::SatReflectorStrip(unsigned length, bool twisted) :
 
 inline SatBlock* SatReflectorStrip::clone() const {
     return new SatReflectorStrip(*this);
-}
-
-inline void SatReflectorStrip::writeTextShort(std::ostream& out) const {
-    out << "Saturated reflector strip of length " << countAnnuli();
-    if (twistedBoundary())
-        out << " (twisted)";
 }
 
 inline void SatReflectorStrip::writeAbbr(std::ostream& out, bool tex) const {
@@ -725,13 +725,14 @@ inline SatBlock* SatLayering::clone() const {
 }
 
 inline void SatLayering::writeTextShort(std::ostream& out) const {
-    out << "Saturated single layering over "
-        << (overHorizontal_ ? "horizontal" : "diagonal") << " edge";
+    out << "Layer("
+        << (overHorizontal_ ? "horiz" : "diag") << ") {"
+        << annulus_[0].tet[0]->index() << '}';
 }
 
 inline void SatLayering::writeAbbr(std::ostream& out, bool tex) const {
     if (tex)
-        out << "lozenge";
+        out << "\\lozenge";
     else
         out << "Layer";
 }

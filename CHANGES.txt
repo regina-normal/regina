@@ -194,6 +194,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added eulerChar().
         Class CensusDB:
             - Added member and global swap() functions.
+            - Added comparision operators == and !=.
         Class Census, CensusHit, CensusHits, CensusHitIterator:
             - CensusHit objects can now be passed around by value: they
               now have copy/move construction and assignment, local and
@@ -1238,6 +1239,7 @@ Version 7.0  [ 10 December, 2021 ]
             - This class is also no longer constructible (except for the
               new move constructor): only SatRegion is permitted to create a
               SatBlockSpec with arbitrary content.
+            - Now derives from ShortOutput.
         Class SatBlockStarter:
             - Removed completely, and replaced with the new class SatBlockModel.
         Class SatBlockStarterSet:
