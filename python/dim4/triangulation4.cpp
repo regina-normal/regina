@@ -259,6 +259,10 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true)
+        .def("fourFourMove", &Triangulation<4>::fourFourMove,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true )
         .def("openBook", &Triangulation<4>::openBook,
             pybind11::arg(),
             pybind11::arg("check") = true,
