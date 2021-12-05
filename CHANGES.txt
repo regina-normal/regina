@@ -752,6 +752,8 @@ Version 7.0  [ 10 December, 2021 ]
             - New move constructor.
             - New copy assignment and move assignment operators.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.  The old equalTo() is
+              now a deprecated alias.
             - The chain complex constructors now explicitly check that
               the two matrices have compatible dimensions, and throw an
               exception if this is not true.

@@ -64,7 +64,10 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def("isTrivial", &MarkedAbelianGroup::isTrivial)
         .def("isZ", &MarkedAbelianGroup::isZ)
         .def("isIsomorphicTo", &MarkedAbelianGroup::isIsomorphicTo)
-        .def("equalTo", &MarkedAbelianGroup::equalTo)
+        .def("equalTo", [](const MarkedAbelianGroup& a, // deprecated
+                const MarkedAbelianGroup& b) {
+            return a == b;
+        })
         .def("freeRep", &MarkedAbelianGroup::freeRep)
         .def("torsionRep", &MarkedAbelianGroup::torsionRep)
         // Below, the overloads that take a std::vector must come *last*,

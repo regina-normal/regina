@@ -5,9 +5,9 @@ Integer:
 True False
 AbelianGroup:
 True False
-Triangulation3:
-False True
 GroupPresentation:
+True False
+Triangulation3:
 False True
 Packet:
 True False

@@ -1082,10 +1082,10 @@ void HomMarkedAbelianGroup::writeTextLong(std::ostream& out) const {
 
 
 bool HomMarkedAbelianGroup::isIdentity() const {
-    if (!(domain_.equalTo(codomain_))) return false;
+    if (domain_ != codomain_)
+        return false;
     const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
-    if (!reducedMatrix_->isIdentity()) return false;
-    return true;
+    return reducedMatrix_->isIdentity();
 }
 
 bool HomMarkedAbelianGroup::isCycleMap() const {

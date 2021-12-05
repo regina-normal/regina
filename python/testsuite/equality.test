@@ -53,16 +53,16 @@ a = AbelianGroup()
 b = AbelianGroup()
 print(a == b, a != b)
 
+print('GroupPresentation:')
+a = GroupPresentation()
+b = GroupPresentation()
+print(a == b, a != b)
+
 # Cases that should be reported as different (by C++ reference):
 
 print('Triangulation3:')
 a = Triangulation3()
 b = Triangulation3()
-print(a == b, a != b)
-
-print('GroupPresentation:')
-a = GroupPresentation()
-b = GroupPresentation()
 print(a == b, a != b)
 
 # Test == and != for objects that have the same underlying C++ pointers,

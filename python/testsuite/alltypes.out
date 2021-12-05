@@ -931,7 +931,7 @@ Manifold : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 MarkedAbelianGroup : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Matrix2 : class
 Equality type : EqualityType.BY_VALUE

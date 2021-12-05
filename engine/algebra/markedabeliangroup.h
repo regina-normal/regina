@@ -467,19 +467,46 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         bool isIsomorphicTo(const MarkedAbelianGroup &other) const;
 
         /**
-         * Determines whether or not the two MarkedAbelianGroups are
-         * identical, which means they have exactly the same internal
-         * presentation matrices.  This is useful for determining if two
-         * HomMarkedAbelianGroups are composable.  See isIsomorphicTo() if
-         * all you care about is the isomorphism relation among groups
-         * defined by presentation matrices.
+         * Determines whether this and the given group were formed from
+         * identical chain complex constructions.
          *
-         * @param other the MarkedAbelianGroup with which this should be
-         * compared.
-         * @return \c true if and only if the two groups have identical
-         * chain-complex definitions.
+         * This is \e not an isomorphism test.  For this comparison to return
+         * \c true, both groups must have been constructed from identical
+         * matrices \a M and \a N, using homology with the same coefficients.
+         *
+         * @param other the group with which this should be compared.
+         * @return \c true if and only if the this and the given group have
+         * identical chain complex definitions.
          */
-        bool equalTo(const MarkedAbelianGroup& other) const;
+        bool operator == (const MarkedAbelianGroup& other) const;
+
+        /**
+         * Determines whether this and the given group were formed from
+         * different chain complex constructions.
+         *
+         * This is \e not an isomorphism test.  For this comparison to return
+         * \c false (i.e., for the chain complex constructions to be considered
+         * identical), both groups must have been constructed from identical
+         * matrices \a M and \a N, using homology with the same coefficients.
+         *
+         * @param other the group with which this should be compared.
+         * @return \c true if and only if the this and the given group
+         * do not have identical chain complex definitions.
+         */
+        bool operator != (const MarkedAbelianGroup& other) const;
+
+        /**
+         * Deprecated routine that determines whether this and the given
+         * group were formed from identical chain complex constructions.
+         *
+         * \deprecated This routine is now offered as the equality
+         * comparison operator (==).
+         *
+         * @param other the group with which this should be compared.
+         * @return \c true if and only if the this and the given group have
+         * identical chain complex definitions.
+         */
+        [[deprecated]] bool equalTo(const MarkedAbelianGroup& other) const;
 
         /**
          * Returns the requested free generator of this group,
@@ -1310,9 +1337,18 @@ inline bool MarkedAbelianGroup::isZ() const {
     return ( (snfFreeRank_==1) && invFac_.empty() );
 }
 
-inline bool MarkedAbelianGroup::equalTo(const MarkedAbelianGroup& other)
+inline bool MarkedAbelianGroup::operator == (const MarkedAbelianGroup& other)
         const {
-    return ( (M_ == other.M_) && (N_ == other.N_) && (coeff_ == other.coeff_) );
+    return (M_ == other.M_) && (N_ == other.N_) && (coeff_ == other.coeff_);
+}
+
+inline bool MarkedAbelianGroup::operator != (const MarkedAbelianGroup& other)
+        const {
+    return (M_ != other.M_) || (N_ != other.N_) || (coeff_ != other.coeff_);
+}
+
+inline bool MarkedAbelianGroup::equalTo(const MarkedAbelianGroup& other) const {
+    return (M_ == other.M_) && (N_ == other.N_) && (coeff_ == other.coeff_);
 }
 
 inline bool MarkedAbelianGroup::isIsomorphicTo(
