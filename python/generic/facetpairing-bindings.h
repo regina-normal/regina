@@ -81,7 +81,7 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
                 const std::function<void(const FacetPairing<dim>&,
                     typename FacetPairing<dim>::IsoList)>&>)
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap",

@@ -62,6 +62,30 @@ Matrix2Row
 [ 3 4 ]
 <regina.Matrix2Row: [ 3 4 ]>
 
+MatrixBool
+[[ 1 0 ] [ 0 1 ]]
+<regina.MatrixBool: [[ 1 0 ] [ 0 1 ]]>
+
+MatrixInt
+[[ 2 -1 -1 2 -1 -1 ] [ -2 1 1 -2 1 1 ]]
+<regina.MatrixInt: [[ 2 -1 -1 2 -1 -1 ] [ -2 1 1 -2 1 1 ]]>
+
+Cyclotomic
+-2/5 x^3 + 2/5 x^2 + 7/10
+<regina.Cyclotomic: -2/5 x^3 + 2/5 x^2 + 7/10>
+
+Polynomial
+-2/5 x^3 + 2/5 x^2 + 7/10
+<regina.Polynomial: -2/5 x^3 + 2/5 x^2 + 7/10>
+
+Laurent
+x^4 - x^2 + 1 - x^-2 + x^-4
+<regina.Laurent: x^4 - x^2 + 1 - x^-2 + x^-4>
+
+Laurent2
+x^2 - y^2 - 1 + x^-2
+<regina.Laurent2: x^2 - y^2 - 1 + x^-2>
+
 HyperListFlags
 HyperListFlags.HS_VERTEX
 <HyperListFlags.HS_VERTEX: 4>
@@ -178,25 +202,17 @@ PrismSpec
 5:1
 <regina.PrismSpec: 5:1>
 
-FacetSpec3
-6:2
-<regina.FacetSpec3: 6:2>
+NormalSurface
+1 0 0 1 ; 1 0 0 || 1 0 0 1 ; 1 0 0
+<regina.NormalSurface: 1 0 0 1 ; 1 0 0 || 1 0 0 1 ; 1 0 0>
 
-FacePair
-{1,3}
-<regina.FacePair: {1,3}>
+NormalHypersurface
+0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0 || 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0
+<regina.NormalHypersurface: 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0 || 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0>
 
-SFSFibre
-(5,-2)
-<regina.SFSFibre: (5,-2)>
-
-Cyclotomic
--2/5 x^3 + 2/5 x^2 + 7/10
-<regina.Cyclotomic: -2/5 x^3 + 2/5 x^2 + 7/10>
-
-Polynomial
--2/5 x^3 + 2/5 x^2 + 7/10
-<regina.Polynomial: -2/5 x^3 + 2/5 x^2 + 7/10>
+AngleStructure
+1 0 0 ; 1 0 0
+<regina.AngleStructure: 1 0 0 ; 1 0 0>
 
 ModelLinkGraphArc
 0:2
@@ -210,14 +226,6 @@ StrandRef
 _0
 <regina.StrandRef: _0>
 
-Laurent
-x^4 - x^2 + 1 - x^-2 + x^-4
-<regina.Laurent: x^4 - x^2 + 1 - x^-2 + x^-4>
-
-Laurent2
-x^2 - y^2 - 1 + x^-2
-<regina.Laurent2: x^2 - y^2 - 1 + x^-2>
-
 Cusp
 (5,-2)-filled cusp at vertex 0
 <regina.Cusp: (5,-2)-filled cusp at vertex 0>
@@ -225,6 +233,22 @@ Cusp
 Cusp
 Complete cusp at vertex 1
 <regina.Cusp: Complete cusp at vertex 1>
+
+FacetSpec3
+6:2
+<regina.FacetSpec3: 6:2>
+
+FacePair
+{1,3}
+<regina.FacePair: {1,3}>
+
+FacetPairing3
+1:1 1:0 1:2 1:3 | 0:1 0:0 0:2 0:3
+<regina.FacetPairing3: 1:1 1:0 1:2 1:3 | 0:1 0:0 0:2 0:3>
+
+FacetPairing4
+1:4 1:1 1:2 1:3 1:0 | 0:4 0:1 0:2 0:3 0:0
+<regina.FacetPairing4: 1:4 1:1 1:2 1:3 1:0 | 0:4 0:1 0:2 0:3 0:0>
 
 FaceEmbedding2_0
 0 (2)
@@ -286,6 +310,10 @@ Isomorphism3
 0 -> 1 (1230), 1 -> 0 (2103)
 <regina.Isomorphism3: 0 -> 1 (1230), 1 -> 0 (2103)>
 
+SFSFibre
+(5,-2)
+<regina.SFSFibre: (5,-2)>
+
 LensSpace
 L(7,2)
 <regina.LensSpace: L(7,2)>
@@ -326,6 +354,14 @@ SnapPeaCensusTri
 SnapPea m004
 <regina.SnapPeaCensusTri: SnapPea m004>
 
+TxIDiagonalCore
+T6:1
+<regina.TxIDiagonalCore: T6:1>
+
+TxIParallelCore
+T6*
+<regina.TxIParallelCore: T6*>
+
 BlockedSFS
 Blocked SFS [Tri, LST(1, 2, 3), LST(1, 5, 6), Mob(v)]
 <regina.BlockedSFS: Blocked SFS [Tri, LST(1, 2, 3), LST(1, 5, 6), Mob(v)]>
@@ -349,8 +385,4 @@ SatAnnulus
 CensusHit
 m004 : #1 -- Cusped hyperbolic census (orientable)
 <regina.CensusHit: m004 : #1 -- Cusped hyperbolic census (orientable)>
-
-CensusDB
-../../engine/data/census/cusped-hyp-or-census-9.tdb [Cusped hyperbolic census (orientable)]
-<regina.CensusDB: ../../engine/data/census/cusped-hyp-or-census-9.tdb [Cusped hyperbolic census (orientable)]>
 

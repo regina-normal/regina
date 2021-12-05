@@ -39,6 +39,10 @@ def dump(x):
 	print(repr(x))
 	print()
 
+# ----------------------------------------------------------------------
+# maths/
+# ----------------------------------------------------------------------
+
 dump(Integer(-5))
 dump(LargeInteger(9))
 dump(LargeInteger.infinity)
@@ -57,6 +61,21 @@ dump(VectorLarge([1,0,LargeInteger.infinity,-2]))
 m = Matrix2(1,2,3,4)
 dump(m)
 dump(m[1])
+
+dump(MatrixBool([[True, False], [False, True]]))
+dump(makeMatchingEquations(Example3.figureEight(), NS_QUAD))
+
+t = Example3.poincare()
+dump(t.turaevViro(5))
+dump(t.turaevViro(5).polynomial())
+
+l = ExampleLink.figureEight()
+dump(l.jones())
+dump(l.homfly())
+
+# ----------------------------------------------------------------------
+# Flags and other enumerate/flag-like types
+# ----------------------------------------------------------------------
 
 dump(HS_VERTEX)
 dump(HS_VERTEX_DD)
@@ -78,6 +97,10 @@ dump(NormalEncoding(NS_QUAD))
 dump(HyperEncoding(HS_STANDARD))
 dump(LPSystem(NS_QUAD))
 
+# ----------------------------------------------------------------------
+# algebra/
+# ----------------------------------------------------------------------
+
 dump(Example3.weberSeifert().homology())
 dump(Example3.weberSeifert().markedHomology())
 
@@ -85,6 +108,10 @@ g = Example3.poincare().fundamentalGroup()
 dump(g)
 dump(g.relation(0))
 dump(g.relation(0).term(2))
+
+# ----------------------------------------------------------------------
+# utilities/
+# ----------------------------------------------------------------------
 
 b = Bitmask(5)
 b.set(3, True)
@@ -99,16 +126,25 @@ q.set(3, 2)
 dump(q)
 
 dump(BoolSet(True))
+
+# ----------------------------------------------------------------------
+# surfaces/, hypersurfaces/ and angles/
+# ----------------------------------------------------------------------
+
 dump(DiscType(7,3))
 dump(DiscSpec(1,3,2))
 dump(PrismSpec(5,1))
-dump(FacetSpec3(6,2))
-dump(FacePair(1,3))
-dump(SFSFibre(5,-2))
 
-t = Example3.poincare()
-dump(t.turaevViro(5))
-dump(t.turaevViro(5).polynomial())
+s = NormalSurfaces(Example3.s2xs1(), NS_QUAD)
+dump(s.surface(0))
+s = NormalHypersurfaces(Example4.s3xs1(), HS_PRISM)
+dump(s.hypersurface(0))
+s = AngleStructures(Example3.figureEight())
+dump(s.structure(0))
+
+# ----------------------------------------------------------------------
+# link/,
+# ----------------------------------------------------------------------
 
 g = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
 dump(g.node(0).arc(2))
@@ -117,13 +153,24 @@ l = Link(1)
 dump(l.component(0))
 l = ExampleLink.figureEight()
 dump(l.component(0))
-dump(l.jones())
-dump(l.homfly())
+
+# ----------------------------------------------------------------------
+# snappea/
+# ----------------------------------------------------------------------
 
 s = ExampleSnapPea.whiteheadLink()
 s.fill(5,-2,0)
 dump(s.cusp(0))
 dump(s.cusp(1))
+
+# ----------------------------------------------------------------------
+# triangulation/
+# ----------------------------------------------------------------------
+
+dump(FacetSpec3(6,2))
+dump(FacePair(1,3))
+dump(FacetPairing3(Example3.figureEight()))
+dump(FacetPairing4(Example4.s3xs1()))
 
 t = Example2.annulus()
 dump(t.vertex(0).front())
@@ -154,6 +201,12 @@ i.setFacetPerm(0, Perm4(1,2,3,0))
 i.setFacetPerm(1, Perm4(0,2))
 dump(i)
 
+# ----------------------------------------------------------------------
+# manifold/
+# ----------------------------------------------------------------------
+
+dump(SFSFibre(5,-2))
+
 sfsDisc = SFSpace(SFSpace.o2, 0, 1)
 sfsDisc.insertFibre(3,1)
 sfsDisc.insertFibre(4,-3)
@@ -171,8 +224,14 @@ dump(GraphLoop(sfsAnnulus, Matrix2(0,1,-1,2)))
 dump(GraphPair(sfsDisc, sfsDisc, Matrix2(0,1,-1,2)))
 dump(GraphTriple(sfsDisc, sfsAnnulus, sfsDisc, Matrix2(0,1,-1,2), Matrix2(-1,2,-3,5)))
 
-# Try to get our hands on some StandardTriangulation subclasses.
+# ----------------------------------------------------------------------
+# subcomplex/
+# ----------------------------------------------------------------------
+
 dump(StandardTriangulation.recognise(Example3.figureEight()))
+
+dump(TxIDiagonalCore(6,1))
+dump(TxIParallelCore())
 
 t = Example3.sfsOverSphere(3,4,5,1,2,-1)
 s = BlockedSFS.recognise(t)
@@ -182,7 +241,12 @@ dump(s.region().block(0))
 dump(s.region().block(0).block())
 dump(s.region().block(0).block().annulus(0))
 
+# ----------------------------------------------------------------------
+# census/
+# ----------------------------------------------------------------------
+
 h = Census.lookup('cPcbbbiht')[0]
 dump(h)
-dump(h.db())
+# Do not dump the CensusDB object, since the output is filesystem-dependent.
+# dump(h.db())
 

@@ -678,7 +678,17 @@ class Matrix : public Output<Matrix<T>> {
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
-            out << rows_ << " x " << cols_ << " matrix";
+            unsigned long r, c;
+            out << '[';
+            for (r = 0; r < rows_; ++r) {
+                if (r > 0)
+                    out << ' ';
+                out << '[';
+                for (c = 0; c < cols_; ++c)
+                    out << ' ' << data_[r][c];
+                out << " ]";
+            }
+            out << ']';
         }
         /**
          * Writes a detailed text representation of this object to the

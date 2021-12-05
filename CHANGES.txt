@@ -1672,6 +1672,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class TxIDiagonalCore, TxIParallelCore:
             - Added move/copy constructors and move/copy assignment operators.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
         Class TypeTrie:
             - Added move/copy constructors and move/copy assignment operators.
             - Added member and global swap() functions.

@@ -1479,13 +1479,13 @@ TrivialTri : class
 Equality type : EqualityType.BY_REFERENCE
 
 TxICore : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 TxIDiagonalCore : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 TxIParallelCore : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 TypeTrie4 : class
 Equality type : EqualityType.BY_REFERENCE
