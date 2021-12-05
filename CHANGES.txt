@@ -457,6 +457,7 @@ Version 7.0  [ 10 December, 2021 ]
             - New routine relations().
             - Function addRelation() now takes its argument by value.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Functions intelligentSimplify(), smallCancellation(),
               intelligentNielsen(), homologicalAlignment() and prettyRewriting()
               now return a std::optional<HomGroupPresentation>, not a bool
@@ -570,6 +571,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added member and global swap() functions to Isomorphism<dim>.
             - Removed the IsomorphismBase<dim> base class; all functionality
               now lives directly within Isomorphism<dim>.
+            - Added comparison operators == and !=.
             - Added composition operator (*) and inverse().
             - Functions apply() and applyInPlace() now take their
               arguments by reference, not pointer, and throw exceptions in some
@@ -1035,6 +1037,8 @@ Version 7.0  [ 10 December, 2021 ]
               return a shared_ptr instead.
             - All member functions that used to take a raw Packet pointer
               now take this either by shared_ptr or const reference.
+        Class PacketChildren, PacketDescendants:
+            - Added comparison operators == and !=.
         Class PacketData<Held>, PacketOf<Held>:
             - New template classes to support the new "wrapped" packet types.
         Class PacketInfo:
@@ -1841,6 +1845,8 @@ Version 7.0  [ 10 December, 2021 ]
           where this was assumed to be std::cout in Python
           (e.g., Link::writePACE(std::ostream&).  Python users should just use
           the string versions of these functions instead (e.g., Link::pace()).
+        - Many str() functions are now more informative, and all classes
+          now have their own customised repr() (where it makes sense to do so).
     USER INTERFACES:
         - Incorporated many of the mathematical changes described above.
         - Removed the View/Edit action from the toolbar, since you might as

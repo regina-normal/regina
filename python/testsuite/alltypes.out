@@ -692,7 +692,7 @@ GroupExpressionTerm : class
 Equality type : EqualityType.BY_VALUE
 
 GroupPresentation : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Handlebody : class
 Equality type : EqualityType.BY_VALUE
@@ -823,25 +823,25 @@ IsoSigRidgeDegrees8 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 Isomorphism2 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Isomorphism3 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Isomorphism4 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Isomorphism5 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Isomorphism6 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Isomorphism7 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Isomorphism8 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 L31Pillow : class
 Equality type : EqualityType.BY_REFERENCE
@@ -996,10 +996,10 @@ Packet : class
 Equality type : EqualityType.BY_REFERENCE
 
 PacketChildren : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketDescendants : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketInfo : class
 Equality type : EqualityType.NEVER_INSTANTIATED

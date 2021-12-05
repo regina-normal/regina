@@ -1429,6 +1429,36 @@ class GroupPresentation : public Output<GroupPresentation> {
             prettyRewritingDetail();
 
         /**
+         * Determines whether this and the given group presentation are
+         * identical.
+         *
+         * This routine does \e not test for isomorphism (which in
+         * general is an undecidable problem).  Instead it tests whether
+         * this and the given presentation use exactly the same generators
+         * and exactly the same relations, presented in exactly the same order.
+         *
+         * @param other the group presentation to compare with this.
+         * @return \c true if and only if this and the given group presentation
+         * are identical.
+         */
+        bool operator == (const GroupPresentation& other) const;
+
+        /**
+         * Determines whether this and the given group presentation are
+         * not identical.
+         *
+         * This routine does \e not test for isomorphism (which in
+         * general is an undecidable problem).  Instead it tests whether
+         * this and the given presentation use exactly the same generators
+         * and exactly the same relations, presented in exactly the same order.
+         *
+         * @param other the group presentation to compare with this.
+         * @return \c true if and only if this and the given group presentation
+         * are not identical.
+         */
+        bool operator != (const GroupPresentation& other) const;
+
+        /**
          * Attempts to prove that this and the given group presentation are
          * <i>simply isomorphic</i>.
          *
@@ -2086,6 +2116,16 @@ inline size_t GroupPresentation::relatorLength() const {
     for (const auto& r : relations_)
         retval += r.wordLength();
     return retval;
+}
+
+inline bool GroupPresentation::operator == (const GroupPresentation& other)
+        const {
+    return nGenerators_ == other.nGenerators_ && relations_ == other.relations_;
+}
+
+inline bool GroupPresentation::operator != (const GroupPresentation& other)
+        const {
+    return nGenerators_ != other.nGenerators_ || relations_ != other.relations_;
 }
 
 inline void swap(GroupPresentation& lhs, GroupPresentation& rhs) noexcept {

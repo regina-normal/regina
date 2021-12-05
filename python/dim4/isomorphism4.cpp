@@ -70,7 +70,7 @@ void addIsomorphism4(pybind11::module_& m) {
             pybind11::arg(), pybind11::arg("even") = false)
         .def_static("identity", &Isomorphism<4>::identity)
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(Isomorphism<4>&, Isomorphism<4>&))(regina::swap));

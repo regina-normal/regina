@@ -147,6 +147,13 @@ dump(t.triangle(0).front())
 dump(t.tetrahedron(0).front())
 dump(t.pentachoron(0).front())
 
+i = Isomorphism3(2)
+i.setSimpImage(0, 1)
+i.setSimpImage(1, 0)
+i.setFacetPerm(0, Perm4(1,2,3,0))
+i.setFacetPerm(1, Perm4(0,2))
+dump(i)
+
 sfsDisc = SFSpace(SFSpace.o2, 0, 1)
 sfsDisc.insertFibre(3,1)
 sfsDisc.insertFibre(4,-3)

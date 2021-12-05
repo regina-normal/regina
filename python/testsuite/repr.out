@@ -282,6 +282,10 @@ FaceEmbedding5_4
 0 (01234)
 <regina.FaceEmbedding5_4: 0 (01234)>
 
+Isomorphism3
+0 -> 1 (1230), 1 -> 0 (2103)
+<regina.Isomorphism3: 0 -> 1 (1230), 1 -> 0 (2103)>
+
 LensSpace
 L(7,2)
 <regina.LensSpace: L(7,2)>

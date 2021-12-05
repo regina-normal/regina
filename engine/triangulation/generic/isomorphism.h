@@ -435,6 +435,30 @@ class Isomorphism :
         void writeTextLong(std::ostream& out) const;
 
         /**
+         * Determines whether this and the given isomorphism are identical.
+         *
+         * It is safe to compare isomorphisms of different sizes (in
+         * which case this routine will return \c false).
+         *
+         * @param other the isomorphism to compare with this.
+         * @return \c true if and only if this and the given isomorphism
+         * are identical.
+         */
+        bool operator == (const Isomorphism& other) const;
+
+        /**
+         * Determines whether this and the given isomorphism are not identical.
+         *
+         * It is safe to compare isomorphisms of different sizes (in
+         * which case this routine will return \c true).
+         *
+         * @param other the isomorphism to compare with this.
+         * @return \c true if and only if this and the given isomorphism
+         * are not identical.
+         */
+        bool operator != (const Isomorphism& other) const;
+
+        /**
          * Returns the identity isomorphism for the given number of simplices.
          * This isomorphism sends every simplex and every vertex to itself.
          *
@@ -683,13 +707,29 @@ Isomorphism<dim> Isomorphism<dim>::inverse() const {
 
 template <int dim>
 inline void Isomorphism<dim>::writeTextShort(std::ostream& out) const {
-    out << "Isomorphism between " << dim << "-manifold triangulations";
+    for (unsigned i = 0; i < nSimplices_; ++i) {
+        if (i > 0)
+            out << ", ";
+        out << i << " -> " << simpImage_[i] << " (" << facetPerm_[i] << ')';
+    }
 }
 
 template <int dim>
 inline void Isomorphism<dim>::writeTextLong(std::ostream& out) const {
     for (unsigned i = 0; i < nSimplices_; ++i)
         out << i << " -> " << simpImage_[i] << " (" << facetPerm_[i] << ")\n";
+}
+
+template <int dim>
+inline bool Isomorphism<dim>::operator == (const Isomorphism& other) const {
+    return nSimplices_ == other.nSimplices_ &&
+        std::equal(simpImage_, simpImage_ + nSimplices_, other.simpImage_) &&
+        std::equal(facetPerm_, facetPerm_ + nSimplices_, other.facetPerm_);
+}
+
+template <int dim>
+inline bool Isomorphism<dim>::operator != (const Isomorphism& other) const {
+    return ! ((*this) == other);
 }
 
 template <int dim>
