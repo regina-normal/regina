@@ -98,9 +98,9 @@ void add_eq_operators(pybind11::class_<C, options...>& c);
  * wrapper class should not support the operators == or !=.
  *
  * This should only be used with C++ classes that are never instantiated (such
- * as Example<dim>, which consists entirely of static methods).
- * As such, it should be impossible to even call the == and != operators
- * under python.
+ * as Example<dim>, which consists entirely of static methods, or Manifold,
+ * which is an abstract base class).  As such, it should be impossible to
+ * even call the == and != operators under python.
  *
  * To use this for some C++ class \a T in Regina, simply call
  * <t>regina::python::no_eq_operators(c)</t>, where \a c is the

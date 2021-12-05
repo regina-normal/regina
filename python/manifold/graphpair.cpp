@@ -52,6 +52,7 @@ void addGraphPair(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("swap", &GraphPair::swap)
     ;
+    regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 
     m.def("swap", (void(*)(GraphPair&, GraphPair&))(regina::swap));

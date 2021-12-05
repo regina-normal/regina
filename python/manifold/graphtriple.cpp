@@ -53,6 +53,7 @@ void addGraphTriple(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("swap", &GraphTriple::swap)
     ;
+    regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 
     m.def("swap", (void(*)(GraphTriple&, GraphTriple&))(regina::swap));

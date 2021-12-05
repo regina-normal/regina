@@ -72,6 +72,8 @@ class AbelianGroup;
  * - must provide value semantics (including at least a copy constructor and
  *   assignment operator);
  *
+ * - must provide comparison operators (== and !=);
+ *
  * - must provide member and global swap functions, for consistency across all
  *   Manifold subclasses.
  *

@@ -677,13 +677,13 @@ GluingPerms8 : class
 Equality type : EqualityType.BY_REFERENCE
 
 GraphLoop : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 GraphPair : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 GraphTriple : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 GroupExpression : class
 Equality type : EqualityType.BY_VALUE
@@ -928,7 +928,7 @@ Locale : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 Manifold : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 MarkedAbelianGroup : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1324,7 +1324,7 @@ Text : class
 Equality type : EqualityType.BY_REFERENCE
 
 TorusBundle : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 TreeBag : class
 Equality type : EqualityType.BY_REFERENCE

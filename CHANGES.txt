@@ -423,6 +423,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added member and global swap() functions.
             - Constructors now check some preconditions and throw exceptions if
               they fail (these checks were previously done during homology()).
+            - Added comparison operators == and !=.
         Class GroupExpression:
             - Added move constructors and move assignment operators.
             - Added a constructor that takes a single term, or a single
@@ -1458,6 +1459,7 @@ Version 7.0  [ 10 December, 2021 ]
               take a string by value, allowing for more efficient moves.
         Class TorusBundle:
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
         Class TreeDecomposition:
             - Added a move constructor and move/copy assignment operators.
             - Added member and global swap() functions.

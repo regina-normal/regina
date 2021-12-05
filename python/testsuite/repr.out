@@ -287,8 +287,8 @@ L(7,2)
 <regina.LensSpace: L(7,2)>
 
 SFSpace
-SFS [T/o2: (3,1) (4,-3)]
-<regina.SFSpace: SFS [T/o2: (3,1) (4,-3)]>
+SFS [D/o2: (3,1) (4,-3)]
+<regina.SFSpace: SFS [D/o2: (3,1) (4,-3)]>
 
 SimpleSurfaceBundle
 RP2 x S1
@@ -301,4 +301,24 @@ SnapPea x101
 Handlebody
 Handlebody(2)
 <regina.Handlebody: Handlebody(2)>
+
+TorusBundle
+T x I / [ 0,1 | 1,0 ]
+<regina.TorusBundle: T x I / [ 0,1 | 1,0 ]>
+
+GraphLoop
+SFS [A/o2: (2,1) (5,3)] / [ 0,-1 | 1,0 ]
+<regina.GraphLoop: SFS [A/o2: (2,1) (5,3)] / [ 0,-1 | 1,0 ]>
+
+GraphPair
+SFS [D/o2: (3,1) (4,3)] U/m SFS [D/o2: (3,1) (4,3)], m = [ 0,1 | 1,2 ]
+<regina.GraphPair: SFS [D/o2: (3,1) (4,3)] U/m SFS [D/o2: (3,1) (4,3)], m = [ 0,1 | 1,2 ]>
+
+GraphTriple
+SFS [D/o2: (3,1) (4,3)] U/m SFS [A/o2: (2,1) (5,2)] U/n SFS [D/o2: (3,1) (4,3)], m = [ -2,1 | 1,0 ], n = [ 1,2 | 3,5 ]
+<regina.GraphTriple: SFS [D/o2: (3,1) (4,3)] U/m SFS [A/o2: (2,1) (5,2)] U/n SFS [D/o2: (3,1) (4,3)], m = [ -2,1 | 1,0 ], n = [ 1,2 | 3,5 ]>
+
+SnapPeaCensusTri
+SnapPea m004
+<regina.SnapPeaCensusTri: SnapPea m004>
 

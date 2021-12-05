@@ -58,6 +58,8 @@ void addManifold(pybind11::module_& m) {
     ;
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.
-    regina::python::add_eq_operators(c);
+    // Also leave the equality operators for subclasses to wrap, since
+    // each subclass of Manifold provides its own custom == and != operators.
+    regina::python::no_eq_operators(c);
 }
 

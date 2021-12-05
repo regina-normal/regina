@@ -51,6 +51,7 @@ void addGraphLoop(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("swap", &GraphLoop::swap)
     ;
+    regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 
     m.def("swap", (void(*)(GraphLoop&, GraphLoop&))(regina::swap));

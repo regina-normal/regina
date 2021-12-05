@@ -148,6 +148,36 @@ class TorusBundle : public Manifold {
          */
         void swap(TorusBundle& other) noexcept;
 
+        /**
+         * Determines whether this and the given object contain precisely
+         * the same presentations of the same torus bundle.
+         *
+         * This routine does \e not test for homeomorphism; instead it compares
+         * the specific monodromies.  If you have two objects that represent
+         * same torus bundle using two different monodromies, they will
+         * be treated as not equal by this routine.
+         *
+         * @param compare the presentation with which this will be compared.
+         * @return \c true if and only if this and the given object contain
+         * identical presentations of the same torus bundle.
+         */
+        bool operator == (const TorusBundle& compare) const;
+
+        /**
+         * Determines whether this and the given object do not contain
+         * precisely the same presentations of the same torus bundle.
+         *
+         * This routine does \e not test for homeomorphism; instead it compares
+         * the specific monodromies.  If you have two objects that represent
+         * same torus bundle using two different monodromies, they will
+         * be treated as not equal by this routine.
+         *
+         * @param compare the presentation with which this will be compared.
+         * @return \c true if and only if this and the given object do not
+         * contain identical presentations of the same torus bundle.
+         */
+        bool operator != (const TorusBundle& compare) const;
+
         AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
@@ -303,6 +333,14 @@ inline bool TorusBundle::isHyperbolic() const {
 
 inline void TorusBundle::swap(TorusBundle& other) noexcept {
     monodromy_.swap(other.monodromy_);
+}
+
+inline bool TorusBundle::operator == (const TorusBundle& compare) const {
+    return monodromy_ == compare.monodromy_;
+}
+
+inline bool TorusBundle::operator != (const TorusBundle& compare) const {
+    return monodromy_ != compare.monodromy_;
 }
 
 inline void swap(TorusBundle& a, TorusBundle& b) noexcept {

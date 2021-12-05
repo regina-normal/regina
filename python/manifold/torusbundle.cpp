@@ -49,6 +49,7 @@ void addTorusBundle(pybind11::module_& m) {
         .def("monodromy", &TorusBundle::monodromy,
             pybind11::return_value_policy::reference_internal)
     ;
+    regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 
     m.def("swap", (void(*)(TorusBundle&, TorusBundle&))(regina::swap));
