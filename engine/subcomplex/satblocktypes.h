@@ -851,6 +851,7 @@ inline SatBlock* SatTriPrism::clone() const {
 }
 
 inline void SatTriPrism::writeTextShort(std::ostream& out) const {
+    // Format was like: Saturated triangular prism of major type
     out << "Tri(" << (major_ ? "major" : "minor") << ") {"
         << annulus_[0].tet[0]->index() << ','
         << annulus_[1].tet[0]->index() << ','
@@ -890,6 +891,7 @@ inline void SatCube::writeTextShort(std::ostream& out) const {
 }
 
 inline void SatCube::writeAbbr(std::ostream& out, bool tex) const {
+    // Format was like: Saturated cube
     if (tex)
         out << "\\square";
     else
@@ -953,6 +955,7 @@ inline SatBlock* SatLayering::clone() const {
 }
 
 inline void SatLayering::writeTextShort(std::ostream& out) const {
+    // Format was like: Saturated single layering over horizontal edge
     out << "Layer("
         << (overHorizontal_ ? "horiz" : "diag") << ") {"
         << annulus_[0].tet[0]->index() << '}';

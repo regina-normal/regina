@@ -158,6 +158,7 @@ void SatMobius::adjustSFS(SFSpace& sfs, bool reflect) const {
 }
 
 void SatMobius::writeTextShort(std::ostream& out) const {
+    // Format was like: Saturated Mobius band, boundary on vertical edge
     out << "Mobius(";
     if (position_ == 0)
         out << "diag"; // roles swap 1,2
@@ -234,6 +235,7 @@ void SatLST::adjustSFS(SFSpace& sfs, bool reflect) const {
 }
 
 void SatLST::writeTextShort(std::ostream& out) const {
+    // Format was like: Saturated (1, 2, 3) layered solid torus
     out << "LST("
         << lst_.meridinalCuts(0) << ','
         << lst_.meridinalCuts(1) << ','
@@ -827,6 +829,7 @@ SatBlockModel SatReflectorStrip::model(unsigned length, bool twisted) {
 }
 
 void SatReflectorStrip::writeTextShort(std::ostream& out) const {
+    // Format was like: Saturated reflector strip of length 1
     out << "Reflector(" << countAnnuli();
     if (twistedBoundary())
         out << ", twisted";
