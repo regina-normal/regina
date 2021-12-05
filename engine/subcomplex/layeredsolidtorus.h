@@ -273,6 +273,42 @@ class LayeredSolidTorus : public StandardTriangulation {
         int topFace(int index) const;
 
         /**
+         * Determines if this and the given object represent the same
+         * presentation of the same layered solid torus.
+         *
+         * For two layered solid tori to be considered equal, they must not
+         * only represent the same subcomplex of the underlying triangulation,
+         * but they must also index the edges, triangles and tetrahedra in
+         * the same way.  So, for example, calling recogniseFromTop() but
+         * passing the two faces indices in the opposite order will typically
+         * produce a layered solid torus that is \e not considered equal to
+         * the original.
+         *
+         * @param other the layered solid torus to compare with this.
+         * @return \c true if and only if this and the given object
+         * represent the same presentation of the same layered solid torus.
+         */
+        bool operator == (const LayeredSolidTorus& other) const;
+
+        /**
+         * Determines if this and the given object do not represent the same
+         * presentation of the same layered solid torus.
+         *
+         * For two layered solid tori to be considered equal, they must not
+         * only represent the same subcomplex of the underlying triangulation,
+         * but they must also index the edges, triangles and tetrahedra in
+         * the same way.  So, for example, calling recogniseFromTop() but
+         * passing the two faces indices in the opposite order will typically
+         * produce a layered solid torus that is \e not considered equal to
+         * the original.
+         *
+         * @param other the layered solid torus to compare with this.
+         * @return \c true if and only if this and the given object do not
+         * represent the same presentation of the same layered solid torus.
+         */
+        bool operator != (const LayeredSolidTorus& other) const;
+
+        /**
          * Flattens this layered solid torus to a Mobius band.
          * A new modified triangulation is returned; the original triangulation
          * that contains this layered solid torus will be left unchanged.
@@ -498,6 +534,26 @@ inline int LayeredSolidTorus::topEdgeGroup(int edge) const {
 }
 inline int LayeredSolidTorus::topFace(int index) const {
     return (index == 0 ? topFace_.lower() : topFace_.upper());
+}
+
+inline bool LayeredSolidTorus::operator == (const LayeredSolidTorus& other)
+        const {
+    // We are possibly testing more things than we probably need to here.
+    // Once we have top_ and topFace_, this determines base_ uniquely from
+    // the triangulation, but for now we still check baseFace_ just in case
+    // the permutations differ by a 180 degree rotation.
+    return top_ == other.top_ && topFace_ == other.topFace_ &&
+        baseFace_ == other.baseFace_;
+}
+
+inline bool LayeredSolidTorus::operator != (const LayeredSolidTorus& other)
+        const {
+    // We are possibly testing more things than we probably need to here.
+    // Once we have top_ and topFace_, this determines base_ uniquely from
+    // the triangulation, but for now we still check baseFace_ just in case
+    // the permutations differ by a 180 degree rotation.
+    return top_ != other.top_ || topFace_ != other.topFace_ ||
+        baseFace_ != other.baseFace_;
 }
 
 inline std::ostream& LayeredSolidTorus::writeName(std::ostream& out) const {

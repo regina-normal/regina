@@ -515,6 +515,24 @@ class SatBlock : public Output<SatBlock> {
         virtual SatBlock* clone() const = 0;
 
         /**
+         * Determines whether this and the given block have identical
+         * boundaries.
+         *
+         * This requires not just that both boundaries represent the same
+         * subcomplex of the underlying triangulation, but also that the
+         * boundaries use identical saturated annuli, and that these
+         * annuli appear in the same order.
+         *
+         * This test would typically be used as part of the subclass comparison
+         * operators.
+         *
+         * @param other the block to compare with this.
+         * @return \c true if and only if this and the given block have
+         * identical boundaries, as described above.
+         */
+        bool identicalBoundary(const SatBlock& other) const;
+
+        /**
          * Determines whether the given tetrahedron is contained within the
          * given list.
          *
@@ -938,6 +956,13 @@ inline bool SatBlock::notUnique(const Tetrahedron<3>* test,
 
 inline SatBlockModel SatBlock::modelWith(Triangulation<3>* triangulation) {
     return SatBlockModel(triangulation, this);
+}
+
+inline bool SatBlock::identicalBoundary(const SatBlock& other) const {
+    return std::equal(annulus_, annulus_ + nAnnuli_,
+        other.annulus_, other.annulus_ + other.nAnnuli_) &&
+        (twistedBoundary_ == other.twistedBoundary_);
+
 }
 
 // Inline functions for SatBlockModel

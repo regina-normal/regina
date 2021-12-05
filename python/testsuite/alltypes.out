@@ -910,7 +910,7 @@ LayeredLoop : class
 Equality type : EqualityType.BY_REFERENCE
 
 LayeredSolidTorus : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 LayeredTorusBundle : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1173,7 +1173,7 @@ SatAnnulus : class
 Equality type : EqualityType.BY_VALUE
 
 SatBlock : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 SatBlockModel : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1182,25 +1182,25 @@ SatBlockSpec : class
 Equality type : EqualityType.BY_VALUE
 
 SatCube : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 SatLST : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 SatLayering : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 SatMobius : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 SatReflectorStrip : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 SatRegion : class
 Equality type : EqualityType.BY_REFERENCE
 
 SatTriPrism : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Script : class
 Equality type : EqualityType.BY_REFERENCE
