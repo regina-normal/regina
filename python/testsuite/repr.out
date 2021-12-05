@@ -351,6 +351,6 @@ m004 : #1 -- Cusped hyperbolic census (orientable)
 <regina.CensusHit: m004 : #1 -- Cusped hyperbolic census (orientable)>
 
 CensusDB
-./../engine/data/census/cusped-hyp-or-census-9.tdb [Cusped hyperbolic census (orientable)]
-<regina.CensusDB: ./../engine/data/census/cusped-hyp-or-census-9.tdb [Cusped hyperbolic census (orientable)]>
+../../engine/data/census/cusped-hyp-or-census-9.tdb [Cusped hyperbolic census (orientable)]
+<regina.CensusDB: ../../engine/data/census/cusped-hyp-or-census-9.tdb [Cusped hyperbolic census (orientable)]>
 

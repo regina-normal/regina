@@ -401,5 +401,5 @@ Component with 1 5-simplex : 0
 5-simplex : 0
 Boundary component : 0
 
-Complete cusp: vertex 0
-Complete cusp: vertex 1
+Complete cusp at vertex 0
+Complete cusp at vertex 1
