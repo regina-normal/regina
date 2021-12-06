@@ -108,21 +108,59 @@ bool SurfaceFilterProperties::accept(const NormalSurface& surface) const {
     return true;
 }
 
-void SurfaceFilterProperties::writeTextLong(std::ostream& o) const {
-    o << "Filter normal surfaces with restrictions:\n";
+void SurfaceFilterProperties::writeTextShort(std::ostream& o) const {
+    bool first = true;
 
     if (eulerChar_.size() > 0) {
-        o << "    Euler characteristic:";
+        first = false;
+
+        o << "Euler in {";
         for (auto it = eulerChar_.rbegin(); it != eulerChar_.rend(); ++it)
             o << ' ' << *it;
-        o << '\n';
+        o << " }";
     }
-    if (orientability_ != BoolSet(true, true))
-        o << "    Orientability: " << orientability_ << '\n';
-    if (compactness_ != BoolSet(true, true))
-        o << "    Compactness: " << compactness_ << '\n';
-    if (realBoundary_ != BoolSet(true, true))
-        o << "    Has real boundary: " << realBoundary_ << '\n';
+    if (orientability_ != BoolSet(true, true)) {
+        if (first)
+            first = false;
+        else
+            o << ", ";
+
+        if (orientability_.hasTrue())
+            o << "orientable only";
+        else if (orientability_.hasFalse())
+            o << "non-orientable only";
+        else
+            o << "reject all orientabilities";
+    }
+    if (compactness_ != BoolSet(true, true)) {
+        if (first)
+            first = false;
+        else
+            o << ", ";
+
+        if (compactness_.hasTrue())
+            o << "compact only";
+        else if (compactness_.hasFalse())
+            o << "non-compact only";
+        else
+            o << "reject all compactnesses";
+    }
+    if (realBoundary_ != BoolSet(true, true)) {
+        if (first)
+            first = false;
+        else
+            o << ", ";
+
+        if (realBoundary_.hasTrue())
+            o << "real boundary only";
+        else if (realBoundary_.hasFalse())
+            o << "no real boundary only";
+        else
+            o << "reject all boundary types";
+    }
+
+    if (first)
+        o << "Accept all surfaces";
 }
 
 void SurfaceFilterProperties::writeXMLPacketData(std::ostream& out,

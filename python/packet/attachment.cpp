@@ -90,6 +90,7 @@ void addAttachment(pybind11::module_& m) {
         .def("savePDF", &Attachment::save) // deprecated
         .def_readonly_static("typeID", &Attachment::typeID)
     ;
+    regina::python::add_output(c);
     regina::python::packet_eq_operators(c);
 
     m.def("swap", (void(*)(Attachment&, Attachment&))(regina::swap));

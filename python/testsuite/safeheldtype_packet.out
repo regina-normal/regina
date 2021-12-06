@@ -3,7 +3,7 @@
 Basic:
 
 fvPQcdecedekrsnrs
-Text packet
+Text of length 11
 Hello World
 
 -----------------------------------------------------------
@@ -33,15 +33,15 @@ fvPQcdecedekrsnrs
 True
 2
 Closed orientable 3-D triangulation, f = ( 1 6 10 5 )
-Attachment (0 bytes)
-Text packet
+Empty attachment
+Text of length 8
 Ideal orientable 3-D triangulation, f = ( 1 2 4 2 )
-Text packet
+Text of length 3
 
 Erase nested:
 -----------------------------------------------------------
 
-Text packet
+Text of length 8
 Ideal orientable 3-D triangulation, f = ( 1 2 4 2 )
 
 Make orphan:

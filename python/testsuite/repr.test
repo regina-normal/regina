@@ -126,6 +126,7 @@ q.set(3, 2)
 dump(q)
 
 dump(BoolSet(True))
+dump(TrieSet())
 
 # ----------------------------------------------------------------------
 # surfaces/, hypersurfaces/ and angles/
@@ -136,11 +137,18 @@ dump(DiscSpec(1,3,2))
 dump(PrismSpec(5,1))
 
 s = NormalSurfaces(Example3.s2xs1(), NS_QUAD)
+dump(s)
 dump(s.surface(0))
 s = NormalHypersurfaces(Example4.s3xs1(), HS_PRISM)
+dump(s)
 dump(s.hypersurface(0))
 s = AngleStructures(Example3.figureEight())
+dump(s)
 dump(s.structure(0))
+
+dump(SurfaceFilterCombination())
+f = SurfaceFilterProperties(); f.setEulerChars([0,1]); f.setOrientability(True)
+dump(f)
 
 # ----------------------------------------------------------------------
 # link/
@@ -258,4 +266,37 @@ h = Census.lookup('cPcbbbiht')[0]
 dump(h)
 # Do not dump the CensusDB object, since the output is filesystem-dependent.
 # dump(h.db())
+
+# ----------------------------------------------------------------------
+# enumerate/
+# ----------------------------------------------------------------------
+
+dump(TypeTrie4())
+dump(TypeTrie7())
+
+# ----------------------------------------------------------------------
+# split/
+# ----------------------------------------------------------------------
+
+dump(Signature.parse('abbc.ac'))
+
+# ----------------------------------------------------------------------
+# packet/
+# ----------------------------------------------------------------------
+
+c = Container()
+t = Text('Hello world!')
+t.setLabel('Welcome')
+c.insertChildLast(t)
+a = Attachment(b'foo', 'test.txt')
+t.insertChildLast(a)
+s = Script()
+s.setText('print("Hello world!")\nprint(0)')
+s.addVariable('text', t)
+s.addVariable('dummy', None)
+t.insertChildLast(s)
+dump(c)
+dump(t)
+dump(a)
+dump(s)
 

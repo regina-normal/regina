@@ -81,6 +81,7 @@ void addScript(pybind11::module_& m) {
         .def("listenVariables", &Script::listenVariables)
         .def("unlistenVariables", &Script::unlistenVariables)
     ;
+    regina::python::add_output(c);
     regina::python::packet_eq_operators(c);
 
     m.def("swap", (void(*)(Script&, Script&))(regina::swap));

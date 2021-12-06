@@ -424,10 +424,6 @@ inline void Script::unlistenVariables(PacketListener* listener) {
             shared->unlisten(listener);
 }
 
-inline void Script::writeTextShort(std::ostream& o) const {
-    o << "Python script";
-}
-
 inline void Script::addPacketRefs(PacketRefs& refs) const {
     for (const auto& v : variables_)
         if (auto shared = v.second.lock())

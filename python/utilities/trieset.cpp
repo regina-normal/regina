@@ -87,7 +87,7 @@ void addTrieSet(pybind11::module_& m) {
         #endif
     ;
     regina::python::add_eq_operators(c);
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c);
 
     m.def("swap", (void(*)(TrieSet&, TrieSet&))(regina::swap));
 }

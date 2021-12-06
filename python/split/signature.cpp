@@ -49,7 +49,7 @@ void addSignature(pybind11::module_& m) {
             const std::string&, const std::string&, const std::string&>(
             &Signature::str, pybind11::const_))
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(Signature&, Signature&))(regina::swap));

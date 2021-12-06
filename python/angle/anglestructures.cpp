@@ -86,7 +86,7 @@ void addAngleStructures(pybind11::module_& m) {
             return ans;
         })
     ;
-    regina::python::add_output(l, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(l);
     regina::python::packet_eq_operators(l);
     regina::python::add_packet_data(l);
 

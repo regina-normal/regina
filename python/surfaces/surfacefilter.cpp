@@ -61,6 +61,7 @@ void addSurfaceFilter(pybind11::module_& m) {
         .def_readonly_static("filterTypeID",
             &SurfaceFilterCombination::filterTypeID)
     ;
+    regina::python::add_output(c);
     regina::python::packet_eq_operators(c);
 
     m.def("swap", (void(*)(SurfaceFilterCombination&,
@@ -82,12 +83,17 @@ void addSurfaceFilter(pybind11::module_& m) {
         .def("removeEulerChar", &SurfaceFilterProperties::removeEulerChar)
         .def("removeAllEulerChars",
             &SurfaceFilterProperties::removeAllEulerChars)
+        .def("setEulerChars", [](SurfaceFilterProperties& f,
+                const std::vector<regina::LargeInteger>& v) {
+            f.setEulerChars(v.begin(), v.end());
+        })
         .def("setOrientability", &SurfaceFilterProperties::setOrientability)
         .def("setCompactness", &SurfaceFilterProperties::setCompactness)
         .def("setRealBoundary", &SurfaceFilterProperties::setRealBoundary)
         .def_readonly_static("filterTypeID",
             &SurfaceFilterProperties::filterTypeID)
     ;
+    regina::python::add_output(p);
     regina::python::packet_eq_operators(p);
 
     m.def("swap", (void(*)(SurfaceFilterProperties&,

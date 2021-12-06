@@ -97,7 +97,7 @@ class SurfaceFilterProperties;
  * - Perform all tasks required for this new innate packet type \a C, as
  *   outlined in the Packet class documentation;
  *
- * - Override the virtual function writeTextLong(), as well as all pure virtual
+ * - Override the virtual function writeTextShort(), as well as all pure virtual
  *   functions from both the Packet and SurfaceFilter base classes (except
  *   for those already provided by REGINA_PACKET and REGINA_SURFACE_FILTER).
  *
@@ -141,8 +141,6 @@ class SurfaceFilter : public Packet {
          * @return a string description of this filtering method.
          */
         virtual std::string filterTypeName() const = 0;
-
-        void writeTextShort(std::ostream& out) const override;
 
     protected:
         /**
@@ -243,7 +241,7 @@ class SurfaceFilterCombination : public SurfaceFilter {
         void setUsesAnd(bool value);
 
         bool accept(const NormalSurface& surface) const override;
-        void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& o) const override;
 
     protected:
         std::shared_ptr<Packet> internalClonePacket() const override;
@@ -397,14 +395,23 @@ class SurfaceFilterProperties : public SurfaceFilter {
         BoolSet realBoundary() const;
 
         /**
-         * Sets the allowable Euler characteristics to the given set.
-         * See eulerChars() for further details.
+         * Sets the allowable Euler characteristics to be all integers
+         * in the given iterator range.  See eulerChars() for further details.
          *
-         * \ifaces Not present.
+         * \ifacespython Instead of a pair of iterators, the set of
+         * allowable Euler characteristic should be passed as a Python list.
          *
-         * @param s the new set of allowable Euler characteristics.
+         * \tparam Iterator an iterator type that, when dereferenced,
+         * can be assigned to a LargeInteger.
+         *
+         * @param beginEuler the beginning of an iterator range that
+         * gives the new set of allowable Euler characteristics.
+         * @param endEuler the end of an iterator range (i.e., an iterator
+         * past the end of the list) that gives the new set of allowable
+         * Euler characteristics.
          */
-        void setEulerChars(const std::set<LargeInteger>& s);
+        template <typename Iterator>
+        void setEulerChars(Iterator beginEuler, Iterator endEuler);
 
         /**
          * Adds the given Euler characteristic to the set of allowable
@@ -458,7 +465,7 @@ class SurfaceFilterProperties : public SurfaceFilter {
         void setRealBoundary(BoolSet value);
 
         bool accept(const NormalSurface& surface) const override;
-        void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& o) const override;
 
     protected:
         std::shared_ptr<Packet> internalClonePacket() const override;
@@ -479,12 +486,6 @@ class SurfaceFilterProperties : public SurfaceFilter {
  * \ingroup surfaces
  */
 void swap(SurfaceFilterProperties& a, SurfaceFilterProperties& b);
-
-// Inline functions for SurfaceFilter
-
-inline void SurfaceFilter::writeTextShort(std::ostream& o) const {
-    o << filterTypeName();
-}
 
 // Inline functions for SurfaceFilterCombination
 
@@ -514,8 +515,8 @@ inline void SurfaceFilterCombination::setUsesAnd(bool value) {
     }
 }
 
-inline void SurfaceFilterCombination::writeTextLong(std::ostream& o) const {
-    o << (usesAnd_ ? "AND" : "OR") << " combination normal surface filter\n";
+inline void SurfaceFilterCombination::writeTextShort(std::ostream& o) const {
+    o << (usesAnd_ ? "AND" : "OR") << " filter";
 }
 
 inline std::shared_ptr<Packet> SurfaceFilterCombination::internalClonePacket()
@@ -574,13 +575,14 @@ inline BoolSet SurfaceFilterProperties::realBoundary() const {
     return realBoundary_;
 }
 
+template <typename Iterator>
 inline void SurfaceFilterProperties::setEulerChars(
-        const std::set<LargeInteger>& s) {
-    if (eulerChar_ != s) {
-        ChangeEventSpan span(*this);
-        eulerChar_ = s;
-    }
+        Iterator beginEuler, Iterator endEuler) {
+    ChangeEventSpan span(*this);
+    eulerChar_.clear();
+    eulerChar_.insert(beginEuler, endEuler);
 }
+
 inline void SurfaceFilterProperties::addEulerChar(const LargeInteger& ec) {
     ChangeEventSpan span(*this);
     eulerChar_.insert(ec);

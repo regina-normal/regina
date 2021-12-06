@@ -190,6 +190,10 @@ BoolSet
 { true }
 <regina.BoolSet: { true }>
 
+TrieSet
+Trie containing 0 sets
+<regina.TrieSet: Trie containing 0 sets>
+
 DiscType
 7:3
 <regina.DiscType: 7:3>
@@ -202,17 +206,37 @@ PrismSpec
 5:1
 <regina.PrismSpec: 5:1>
 
+NormalSurfaces
+3 embedded, vertex surfaces (Quad normal)
+<regina.NormalSurfaces: 3 embedded, vertex surfaces (Quad normal)>
+
 NormalSurface
 1 0 0 1 ; 1 0 0 || 1 0 0 1 ; 1 0 0
 <regina.NormalSurface: 1 0 0 1 ; 1 0 0 || 1 0 0 1 ; 1 0 0>
+
+NormalHypersurfaces
+4 embedded, vertex hypersurfaces (Prism normal)
+<regina.NormalHypersurfaces: 4 embedded, vertex hypersurfaces (Prism normal)>
 
 NormalHypersurface
 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0 || 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0
 <regina.NormalHypersurface: 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0 || 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0>
 
+AngleStructures
+5 vertex angle structures (no restrictions)
+<regina.AngleStructures: 5 vertex angle structures (no restrictions)>
+
 AngleStructure
 1 0 0 ; 1 0 0
 <regina.AngleStructure: 1 0 0 ; 1 0 0>
+
+SurfaceFilterCombination
+AND filter
+<regina.SurfaceFilterCombination: AND filter>
+
+SurfaceFilterProperties
+Euler in { 1 0 }, orientable only
+<regina.SurfaceFilterProperties: Euler in { 1 0 }, orientable only>
 
 ModelLinkGraphArc
 0:2
@@ -413,4 +437,32 @@ SatAnnulus
 CensusHit
 m004 : #1 -- Cusped hyperbolic census (orientable)
 <regina.CensusHit: m004 : #1 -- Cusped hyperbolic census (orientable)>
+
+TypeTrie4
+Trie for 4 types
+<regina.TypeTrie4: Trie for 4 types>
+
+TypeTrie7
+Trie for 7 types
+<regina.TypeTrie7: Trie for 7 types>
+
+Signature
+(abbc)(ac)
+<regina.Signature: (abbc)(ac)>
+
+Container
+Container with 1 child, 3 descendants
+<regina.Container: Container with 1 child, 3 descendants>
+
+Text
+Text of length 12
+<regina.Text: Text of length 12>
+
+Attachment
+Attachment (3 bytes): test.txt
+<regina.Attachment: Attachment (3 bytes): test.txt>
+
+Script
+2-line script, dummy = (null), text = <Welcome>
+<regina.Script: 2-line script, dummy = (null), text = <Welcome>>
 

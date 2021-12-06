@@ -177,7 +177,10 @@ inline void Text::setText(std::string text) {
 }
 
 inline void Text::writeTextShort(std::ostream& o) const {
-    o << "Text packet";
+    if (text_.empty())
+        o << "(empty)";
+    else
+        o << "Text of length " << text_.length();
 }
 
 inline void Text::writeTextLong(std::ostream& o) const {

@@ -159,17 +159,17 @@ void HomologicalData::writeTextShort(std::ostream& out) const {
     }
 
     if (bmMap0_) {
-        out<<"H_0(BM) --> H_0(M) = ";
+        out<<"H_0(BM) -> H_0(M) = ";
         bmMap0_->writeTextShort(out);
         out<<" ";
     }
     if (bmMap1_) {
-        out<<"H_1(BM) --> H_1(M) = ";
+        out<<"H_1(BM) -> H_1(M) = ";
         bmMap1_->writeTextShort(out);
         out<<" ";
     }
     if (bmMap2_) {
-        out<<"H_2(BM) --> H_2(M) = ";
+        out<<"H_2(BM) -> H_2(M) = ";
         bmMap2_->writeTextShort(out);
         out<<" ";
     }

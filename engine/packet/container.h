@@ -141,7 +141,15 @@ inline Container::Container(const std::string& label) {
 }
 
 inline void Container::writeTextShort(std::ostream& o) const {
-    o << "Container";
+    if (! firstChild())
+        o << "Empty container";
+    else {
+        size_t c = countChildren();
+        size_t d = countDescendants();
+        o << "Container with "
+            << c << (c == 1 ? " child" : " children") << ", "
+            << d << (d == 1 ? " descendant" : " descendants");
+    }
 }
 
 inline std::shared_ptr<Packet> Container::internalClonePacket() const {

@@ -174,8 +174,10 @@ void addPacket(pybind11::module_& m) {
             return (s != p);
         }, pybind11::is_operator())
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
-    // Leave equality tests for subclasses to implement.
+    // Leave the output routines for subclasses to wrap, since __repr__
+    // will include the (derived) class name.
+    // Also leave the equality operators for subclasses to wrap, since
+    // each subclass of Packet provides its own custom == and != operators.
     regina::python::no_eq_operators(c);
 
     m.def("open", (std::shared_ptr<Packet> (*)(const char*)) &regina::open);

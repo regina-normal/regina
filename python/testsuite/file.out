@@ -6,7 +6,7 @@
 *
 ************************************************************
 
-Container
+Container with 5 children, 17 descendants
 
 
 ************************************************************
@@ -40,7 +40,7 @@ Attachment (36228 bytes): attachment.pdf
 *
 ************************************************************
 
-Container
+Container with 4 children, 10 descendants
 
 
 ************************************************************
@@ -364,7 +364,7 @@ There are in fact two triangulations of this 3-manifold with three tetrahedra.
 *
 ************************************************************
 
-OR combination normal surface filter
+OR filter
 
 
 ************************************************************
@@ -375,10 +375,7 @@ OR combination normal surface filter
 *
 ************************************************************
 
-Filter normal surfaces with restrictions:
-    Euler characteristic: 0
-    Orientability: { true }
-    Compactness: { true }
+Euler in { 0 }, orientable only, compact only
 
 
 ************************************************************
@@ -389,11 +386,7 @@ Filter normal surfaces with restrictions:
 *
 ************************************************************
 
-Filter normal surfaces with restrictions:
-    Euler characteristic: 1
-    Orientability: { true }
-    Compactness: { true }
-    Has real boundary: { true }
+Euler in { 1 }, orientable only, compact only, real boundary only
 
 
 ************************************************************
@@ -424,7 +417,7 @@ while t != None:
 *
 ************************************************************
 
-Container
+Container with 6 children, 23 descendants
 
 
 ************************************************************
@@ -473,7 +466,7 @@ Attachment (36228 bytes): attachment.pdf
 *
 ************************************************************
 
-Container
+Container with 4 children, 11 descendants
 
 
 ************************************************************
@@ -849,7 +842,7 @@ There are in fact two triangulations of this 3-manifold with three tetrahedra.
 *
 ************************************************************
 
-Container
+Container with 3 children, 3 descendants
 
 
 ************************************************************
@@ -977,7 +970,7 @@ Edges:
 *
 ************************************************************
 
-Container
+Container with 1 child, 3 descendants
 
 
 ************************************************************
@@ -988,7 +981,7 @@ Container
 *
 ************************************************************
 
-OR combination normal surface filter
+OR filter
 
 
 ************************************************************
@@ -999,10 +992,7 @@ OR combination normal surface filter
 *
 ************************************************************
 
-Filter normal surfaces with restrictions:
-    Euler characteristic: 0
-    Orientability: { true }
-    Compactness: { true }
+Euler in { 0 }, orientable only, compact only
 
 
 ************************************************************
@@ -1013,11 +1003,7 @@ Filter normal surfaces with restrictions:
 *
 ************************************************************
 
-Filter normal surfaces with restrictions:
-    Euler characteristic: 1
-    Orientability: { true }
-    Compactness: { true }
-    Has real boundary: { true }
+Euler in { 1 }, orientable only, compact only, real boundary only
 
 
 ************************************************************
@@ -1050,7 +1036,7 @@ while t != None:
 *
 ************************************************************
 
-Container
+Container with 7 children, 7 descendants
 
 
 ************************************************************

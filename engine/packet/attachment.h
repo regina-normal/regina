@@ -491,9 +491,13 @@ inline const std::string& Attachment::filename() const {
 }
 
 inline void Attachment::writeTextShort(std::ostream& o) const {
-    o << "Attachment (" << size_ << (size_ == 1 ? " byte)" : " bytes)");
-    if (! filename_.empty())
-        o << ": " << filename_;
+    if (isNull())
+        o << "Empty attachment";
+    else {
+        o << "Attachment (" << size_ << (size_ == 1 ? " byte)" : " bytes)");
+        if (! filename_.empty())
+            o << ": " << filename_;
+    }
 }
 
 inline std::shared_ptr<Packet> Attachment::internalClonePacket() const {
