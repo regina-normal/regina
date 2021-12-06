@@ -542,28 +542,28 @@ void Tri3CellularInfoUI::refresh() {
         if (unicode) {
             H0H1H2H3->setText(QObject::tr("H\u2080 = %1,  H\u2081 = %2,  "
                     "H\u2082 = %3,  H\u2083 = %4").
-                arg(minfo.homology(0).utf8().c_str()).
-                arg(minfo.homology(1).utf8().c_str()).
-                arg(minfo.homology(2).utf8().c_str()).
-                arg(minfo.homology(3).utf8().c_str()));
+                arg(minfo.homology(0).unmarked().utf8().c_str()).
+                arg(minfo.homology(1).unmarked().utf8().c_str()).
+                arg(minfo.homology(2).unmarked().utf8().c_str()).
+                arg(minfo.homology(3).unmarked().utf8().c_str()));
 
             HBdry->setText(
                 QObject::tr("H\u2080 = %1,  H\u2081 = %2,  H\u2082 = %3").
-                arg(minfo.bdryHomology(0).utf8().c_str()).
-                arg(minfo.bdryHomology(1).utf8().c_str()).
-                arg(minfo.bdryHomology(2).utf8().c_str()));
+                arg(minfo.bdryHomology(0).unmarked().utf8().c_str()).
+                arg(minfo.bdryHomology(1).unmarked().utf8().c_str()).
+                arg(minfo.bdryHomology(2).unmarked().utf8().c_str()));
         } else {
             H0H1H2H3->setText(
                 QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
-                arg(minfo.homology(0).str().c_str()).
-                arg(minfo.homology(1).str().c_str()).
-                arg(minfo.homology(2).str().c_str()).
-                arg(minfo.homology(3).str().c_str()));
+                arg(minfo.homology(0).unmarked().str().c_str()).
+                arg(minfo.homology(1).unmarked().str().c_str()).
+                arg(minfo.homology(2).unmarked().str().c_str()).
+                arg(minfo.homology(3).unmarked().str().c_str()));
 
             HBdry->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3").
-                arg(minfo.bdryHomology(0).str().c_str()).
-                arg(minfo.bdryHomology(1).str().c_str()).
-                arg(minfo.bdryHomology(2).str().c_str()));
+                arg(minfo.bdryHomology(0).unmarked().str().c_str()).
+                arg(minfo.bdryHomology(1).unmarked().str().c_str()).
+                arg(minfo.bdryHomology(2).unmarked().str().c_str()));
         }
 
         BdryMap->setText(minfo.bdryHomologyMap(1).str().c_str());
