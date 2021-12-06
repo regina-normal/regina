@@ -190,7 +190,7 @@ bool NormalSurface::disjoint(const NormalSurface& other) const {
     // Note: splitIntoComponents() may return surfaces that use
     // different vector encodings, but sameSurface() can handle this.
     std::vector<NormalSurface> bits = ((*this) + other).components();
-    return (bits.size() == 2 && (sameSurface(bits[0]) || sameSurface(bits[1])));
+    return (bits.size() == 2 && ((*this) == bits[0] || (*this) == bits[1]));
 }
 
 } // namespace regina

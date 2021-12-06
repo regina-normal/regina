@@ -120,7 +120,7 @@ void addNormalHypersurface(pybind11::module_& m) {
         .def("homology", &NormalHypersurface::homology,
             pybind11::return_value_policy::reference_internal)
         .def("triangulate", &NormalHypersurface::triangulate)
-        .def("sameSurface", &NormalHypersurface::sameSurface)
+        .def("sameSurface", &NormalHypersurface::operator ==) // deprecated
         .def("embedded", &NormalHypersurface::embedded)
         .def("locallyCompatible", &NormalHypersurface::locallyCompatible)
         .def("vector", &NormalHypersurface::vector,

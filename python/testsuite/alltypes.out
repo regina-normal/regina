@@ -5,7 +5,7 @@ AngleAlg : class
 Equality type : EqualityType.BY_VALUE
 
 AngleStructure : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 AngleStructures : class
 Equality type : EqualityType.BY_REFERENCE
@@ -970,7 +970,7 @@ NormalEncoding : class
 Equality type : EqualityType.BY_VALUE
 
 NormalHypersurface : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 NormalHypersurfaces : class
 Equality type : EqualityType.BY_REFERENCE
@@ -982,7 +982,7 @@ NormalList : class
 Equality type : EqualityType.BY_VALUE
 
 NormalSurface : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 NormalSurfaces : class
 Equality type : EqualityType.BY_REFERENCE

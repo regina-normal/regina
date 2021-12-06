@@ -150,7 +150,7 @@ void addNormalSurface(pybind11::module_& m) {
         .def("isIncompressible", &NormalSurface::isIncompressible)
         .def("cutAlong", &NormalSurface::cutAlong)
         .def("crush", &NormalSurface::crush)
-        .def("sameSurface", &NormalSurface::sameSurface)
+        .def("sameSurface", &NormalSurface::operator ==) // deprecated
         .def("normal", &NormalSurface::normal)
         .def("embedded", &NormalSurface::embedded)
         .def("locallyCompatible", &NormalSurface::locallyCompatible)

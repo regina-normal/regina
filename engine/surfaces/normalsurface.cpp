@@ -202,7 +202,7 @@ size_t NormalSurface::isCentral() const {
     return tot;
 }
 
-bool NormalSurface::sameSurface(const NormalSurface& other) const {
+bool NormalSurface::operator == (const NormalSurface& other) const {
     if (enc_ == other.enc_) {
         // This is a common case, and a straight left-to-right scan
         // should be faster than jumping around the vectors.
@@ -210,6 +210,9 @@ bool NormalSurface::sameSurface(const NormalSurface& other) const {
     }
 
     size_t nTet = triangulation_->size();
+    if (nTet != other.triangulation_->size())
+        return false;
+
     bool checkAlmostNormal =
         (enc_.storesOctagons() || other.enc_.storesOctagons());
 

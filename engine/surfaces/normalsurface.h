@@ -1292,14 +1292,65 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * use different encodings, or if one but not the other supports
          * almost normal and/or spun-normal surfaces.
          *
-         * \pre Both this and the given normal surface live within the
-         * same 3-manifold triangulation.
+         * This routine is safe to call even if this and the given
+         * hypersurface do not belong to the same triangulation:
+         *
+         * - If the two triangulations have the same size, then this routine
+         *   will test whether this surface, if transplanted into the
+         *   other triangulation using the same tetrahedron numbering and the
+         *   same normal disc types, would be the same as \a other.
+         *
+         * - If the two triangulations have different sizes, then this
+         *   routine will return \c false.
          *
          * @param other the surface to be compared with this surface.
          * @return \c true if both surfaces represent the same normal or
          * almost normal surface, or \c false if not.
          */
-        bool sameSurface(const NormalSurface& other) const;
+        bool operator == (const NormalSurface& other) const;
+
+        /**
+         * Determines whether this and the given surface represent
+         * different normal (or almost normal) surfaces.
+         *
+         * Specifically, this routine examines (or computes) the number of
+         * normal or almost normal discs of each type, and returns \c true
+         * if and only if these counts are not the same for both surfaces.
+         *
+         * It does not matter what vector encodings the two surfaces
+         * use.  In particular, it does not matter if the two surfaces
+         * use different encodings, or if one but not the other supports
+         * almost normal and/or spun-normal surfaces.
+         *
+         * This routine is safe to call even if this and the given
+         * hypersurface do not belong to the same triangulation:
+         *
+         * - If the two triangulations have the same size, then this routine
+         *   will test whether this surface, if transplanted into the
+         *   other triangulation using the same tetrahedron numbering and the
+         *   same normal disc types, would be different from \a other.
+         *
+         * - If the two triangulations have different sizes, then this
+         *   routine will return \c true.
+         *
+         * @param other the surface to be compared with this surface.
+         * @return \c true if both surfaces represent different normal or
+         * almost normal surface, or \c false if not.
+         */
+        bool operator != (const NormalSurface& other) const;
+
+        /**
+         * Deprecated routine that determines whether this and the given
+         * surface in fact represent the same normal (or almost normal) surface.
+         *
+         * \deprecated This routine has been renamed to the comparison
+         * operator (==).
+         *
+         * @param other the surface to be compared with this surface.
+         * @return \c true if both surfaces represent the same normal or
+         * almost normal surface, or \c false if not.
+         */
+        [[deprecated]] bool sameSurface(const NormalSurface& other) const;
 
         /**
          * Determines whether this surface contains only triangle and/or
@@ -1794,6 +1845,14 @@ inline size_t NormalSurface::countBoundaries() const {
     if (! boundaries_.has_value())
         calculateBoundaries();
     return *boundaries_;
+}
+
+inline bool NormalSurface::operator != (const NormalSurface& other) const {
+    return ! ((*this) == other);
+}
+
+inline bool NormalSurface::sameSurface(const NormalSurface& other) const {
+    return (*this) == other;
 }
 
 inline bool NormalSurface::normal() const {
