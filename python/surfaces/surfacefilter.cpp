@@ -50,7 +50,7 @@ void addSurfaceFilter(pybind11::module_& m) {
         .def_readonly_static("typeID", &SurfaceFilter::typeID)
     ;
 
-    pybind11::class_<SurfaceFilterCombination, regina::SurfaceFilter,
+    auto c = pybind11::class_<SurfaceFilterCombination, regina::SurfaceFilter,
             std::shared_ptr<SurfaceFilterCombination>>
             (m, "SurfaceFilterCombination")
         .def(pybind11::init<>())
@@ -61,11 +61,12 @@ void addSurfaceFilter(pybind11::module_& m) {
         .def_readonly_static("filterTypeID",
             &SurfaceFilterCombination::filterTypeID)
     ;
+    regina::python::packet_eq_operators(c);
 
     m.def("swap", (void(*)(SurfaceFilterCombination&,
         SurfaceFilterCombination&))(regina::swap));
 
-    pybind11::class_<SurfaceFilterProperties, regina::SurfaceFilter,
+    auto p = pybind11::class_<SurfaceFilterProperties, regina::SurfaceFilter,
             std::shared_ptr<SurfaceFilterProperties>>
             (m, "SurfaceFilterProperties")
         .def(pybind11::init<>())
@@ -87,6 +88,7 @@ void addSurfaceFilter(pybind11::module_& m) {
         .def_readonly_static("filterTypeID",
             &SurfaceFilterProperties::filterTypeID)
     ;
+    regina::python::packet_eq_operators(p);
 
     m.def("swap", (void(*)(SurfaceFilterProperties&,
         SurfaceFilterProperties&))(regina::swap));

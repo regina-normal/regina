@@ -183,7 +183,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             &Triangulation<dim>::boundaryMap))
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
-        .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
+        .def("isIdenticalTo", &Triangulation<dim>::operator ==) // deprecated
         .def("isIsomorphicTo", &Triangulation<dim>::isIsomorphicTo)
         .def("isContainedIn", &Triangulation<dim>::isContainedIn)
         .def("findAllIsomorphisms", &Triangulation<dim>::template
@@ -230,8 +230,9 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def_readonly_static("dimension", &Triangulation<dim>::dimension)
     ;
     add_pachner<dim>::add(c);
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
-    regina::python::add_eq_operators(c);
+    regina::python::add_output(c);
+    regina::python::packet_eq_operators(c);
+    regina::python::add_packet_data(c);
 
     // The ListView classes for faces() are wrapped in face-bindings.h,
     // since this needs to be done for each subdimension.

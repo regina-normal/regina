@@ -36,14 +36,15 @@
 using regina::Container;
 
 void addContainer(pybind11::module_& m) {
-    pybind11::class_<Container, regina::Packet, std::shared_ptr<Container>>(
-            m, "Container")
+    auto c = pybind11::class_<Container, regina::Packet,
+            std::shared_ptr<Container>>(m, "Container")
         .def(pybind11::init<>())
         .def(pybind11::init<const std::string&>())
         .def(pybind11::init<const Container&>())
         .def("swap", &Container::swap)
         .def_readonly_static("typeID", &Container::typeID)
     ;
+    regina::python::packet_eq_operators(c);
 
     m.def("swap", (void(*)(Container&, Container&))(regina::swap));
 }

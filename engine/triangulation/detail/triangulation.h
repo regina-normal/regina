@@ -1712,11 +1712,60 @@ class TriangulationBase :
          * may be situations in which identical triangulations can acquire
          * different numberings for vertices, edges, and so on.)
          *
-         * @param other the triangulation to compare with this one.
+         * In Regina 6.0.1 and earlier, this comparison was called
+         * isIdenticalTo().
+         *
+         * @param other the triangulation to compare with this.
          * @return \c true if and only if the two triangulations are
          * combinatorially identical.
          */
-        bool isIdenticalTo(const Triangulation<dim>& other) const;
+        bool operator == (const Triangulation<dim>& other) const;
+
+        /**
+         * Determines if this triangulation is not combinatorially identical
+         * to the given triangulation.
+         *
+         * Here "identical" means that the triangulations have the same
+         * number of top-dimensional simplices, with gluings between the same
+         * pairs of numbered simplices using the same gluing permutations.
+         * In other words, "identical" means that the triangulations
+         * are isomorphic via the identity isomorphism.
+         *
+         * For the less strict notion of \e isomorphic triangulations,
+         * which allows relabelling of the top-dimensional simplices and their
+         * vertices, see isIsomorphicTo() instead.
+         *
+         * This test does \e not examine the textual simplex descriptions,
+         * as seen in Simplex<dim>::description(); these may still differ.
+         * It also does not test whether lower-dimensional faces are
+         * numbered identically (vertices, edges and so on); this routine
+         * is only concerned with top-dimensional simplices.
+         *
+         * (At the time of writing, two identical triangulations will
+         * always number their lower-dimensional faces in the same way.
+         * However, it is conceivable that in future versions of Regina there
+         * may be situations in which identical triangulations can acquire
+         * different numberings for vertices, edges, and so on.)
+         *
+         * @param other the triangulation to compare with this.
+         * @return \c true if and only if the two triangulations are
+         * not combinatorially identical.
+         */
+        bool operator != (const Triangulation<dim>& other) const;
+
+        /**
+         * Deprecated routine that determines if this triangulation is
+         * combinatorially identical to the given triangulation.
+         *
+         * \deprecated This routine has been renamed to the comparison
+         * operator (==).
+         *
+         * @param other the triangulation to compare with this.
+         * @return \c true if and only if the two triangulations are
+         * combinatorially identical.
+         */
+        [[deprecated]] bool isIdenticalTo(const Triangulation<dim>& other)
+            const;
 
         /**
          * Determines if this triangulation is combinatorially
@@ -3688,7 +3737,7 @@ inline bool TriangulationBase<dim>::isConnected() const {
 }
 
 template <int dim>
-bool TriangulationBase<dim>::isIdenticalTo(const Triangulation<dim>& other)
+bool TriangulationBase<dim>::operator == (const Triangulation<dim>& other)
         const {
     if (simplices_.size() != other.simplices_.size())
         return false;
@@ -3711,6 +3760,18 @@ bool TriangulationBase<dim>::isIdenticalTo(const Triangulation<dim>& other)
     }
 
     return true;
+}
+
+template <int dim>
+inline bool TriangulationBase<dim>::operator != (
+        const Triangulation<dim>& other) const {
+    return ! ((*this) == other);
+}
+
+template <int dim>
+inline bool TriangulationBase<dim>::isIdenticalTo(
+        const Triangulation<dim>& other) const {
+    return (*this) == other;
 }
 
 template <int dim>
@@ -3941,21 +4002,45 @@ std::string TriangulationBase<dim>::dumpConstruction() const {
 }
 
 template <int dim>
-inline void TriangulationBase<dim>::writeTextShort(std::ostream& out) const {
-    if (simplices_.size() == 0)
-        out << "Empty " << dim << "-dimensional triangulation";
-    else {
-        out << "Triangulation with " << simplices_.size() << ' ';
-        if constexpr (dim == 2)
-            out << (simplices_.size() == 1 ? "triangle" : "triangles");
-        else if constexpr (dim == 3)
-            out << (simplices_.size() == 1 ? "tetrahedron" : "tetrahedra");
-        else if constexpr (dim == 4)
-            out << (simplices_.size() == 1 ? "pentachoron" : "pentachora");
-        else
-            out << dim << '-'
-                << (simplices_.size() == 1 ? "simplex" : "simplices");
+void TriangulationBase<dim>::writeTextShort(std::ostream& out) const {
+    if (isEmpty()) {
+        out << "Empty " << dim << "-D triangulation";
+        return;
     }
+
+    if (! isValid())
+        out << "Invalid ";
+    else if constexpr (dim == 2) {
+        if (hasBoundaryFacets())
+            out << "Bounded ";
+        else
+            out << "Closed ";
+    } else if constexpr (standardDim(dim)) {
+        if (static_cast<const Triangulation<dim>*>(this)->isClosed())
+            out << "Closed ";
+        else if (static_cast<const Triangulation<dim>*>(this)->isIdeal()) {
+            if (hasBoundaryFacets())
+                out << "Ideal/bounded ";
+            else
+                out << "Ideal ";
+        } else
+            out << "Bounded ";
+    } else {
+        if (hasBoundaryFacets())
+            out << "Bounded ";
+        else
+            out << "Possibly closed ";
+    }
+
+    if (isOrientable())
+        out << "orientable ";
+    else
+        out << "non-orientable ";
+
+    out << dim << "-D triangulation, f = (";
+    for (auto f : fVector())
+        out << ' ' << f;
+    out << " )";
 }
 
 template <int dim>
@@ -3965,15 +4050,6 @@ void TriangulationBase<dim>::writeTextLong(std::ostream& out) const {
     if constexpr (dim > 4) {
         writeTextShort(out);
         out << "\n\n";
-
-        out << "f-vector: ";
-        int i;
-        {
-            std::vector<size_t> f = detail::TriangulationBase<dim>::fVector();
-            for (i = 0; i < dim; ++i)
-                out << f[i] << ", ";
-            out << f[dim] << "\n\n";
-        }
     } else {
         out << "Size of the skeleton:\n";
         if constexpr (dim >= 4)

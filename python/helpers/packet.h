@@ -61,6 +61,10 @@ namespace python {
  * std::shared_ptr (not the default std::unique_ptr that pybind11 uses
  * unless instructed otherwise).  If you do not do this, then Python
  * will raise an ImportError when loading Regina's module.
+ *
+ * Note that, when creating the bindings for the \a Held type, you should
+ * use packet_eq_operators() and not add_eq_operators().  See
+ * python/helpers/equality.h for further details.
  */
 template <class Held>
 auto add_packet_wrapper(pybind11::module_& m, const char* className) {
@@ -98,6 +102,22 @@ void add_packet_constructor(PythonClass& classWrapper, Options&&... options) {
         using WrappedType = typename PythonClass::type;
         return new WrappedType(std::in_place, std::forward<Args>(args)...);
     }), std::forward<Options>(options)...);
+}
+
+/**
+ * Adds wrappers for the member functions for a C++ type Held that are
+ * inherited from PacketData<Held>.
+ *
+ * The argument \a classWrapper should be the pybind11::class_ object
+ * that wraps the C++ class Held.
+ */
+template <typename PythonClass>
+void add_packet_data(PythonClass& classWrapper) {
+    using WrappedType = typename PythonClass::type;
+    classWrapper
+        .def("packet", pybind11::overload_cast<>(&WrappedType::packet))
+        .def("anonID", &WrappedType::anonID)
+        ;
 }
 
 } // namespace python

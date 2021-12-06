@@ -103,6 +103,7 @@ void addPacket(pybind11::module_& m) {
         .def("listen", &Packet::listen)
         .def("isListening", &Packet::isListening)
         .def("unlisten", &Packet::unlisten)
+        .def("samePacket", &Packet::samePacket)
         .def("hasParent", &Packet::hasParent)
         .def("parent", &Packet::parent)
         .def("firstChild", &Packet::firstChild)
@@ -174,7 +175,8 @@ void addPacket(pybind11::module_& m) {
         }, pybind11::is_operator())
     ;
     regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
-    regina::python::add_eq_operators(c);
+    // Leave equality tests for subclasses to implement.
+    regina::python::no_eq_operators(c);
 
     m.def("open", (std::shared_ptr<Packet> (*)(const char*)) &regina::open);
 }

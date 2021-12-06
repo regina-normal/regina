@@ -38,8 +38,8 @@ using pybind11::overload_cast;
 using regina::Attachment;
 
 void addAttachment(pybind11::module_& m) {
-    pybind11::class_<Attachment, regina::Packet, std::shared_ptr<Attachment>>(
-            m, "Attachment")
+    auto c = pybind11::class_<Attachment, regina::Packet,
+            std::shared_ptr<Attachment>>(m, "Attachment")
         .def(pybind11::init<>())
         .def(pybind11::init<const char*>())
         .def(pybind11::init<const Attachment&>())
@@ -90,6 +90,7 @@ void addAttachment(pybind11::module_& m) {
         .def("savePDF", &Attachment::save) // deprecated
         .def_readonly_static("typeID", &Attachment::typeID)
     ;
+    regina::python::packet_eq_operators(c);
 
     m.def("swap", (void(*)(Attachment&, Attachment&))(regina::swap));
 

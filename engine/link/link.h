@@ -1028,6 +1028,56 @@ class Link : public PacketData<Link>, public Output<Link> {
          */
         bool connected(const Crossing* a, const Crossing* b) const;
 
+        /**
+         * Determines if this link diagram is combinatorially identical to the
+         * given link diagram.
+         *
+         * Here "identical" means that:
+         *
+         * - the link diagrams have the same number of crossings and the
+         *   same number of components,
+         *
+         * - the same numbered crossings are positive and negative in both
+         *   diagrams;
+         *
+         * - the same pairs of numbered crossings have their
+         *   under/over-strands connected, with the same orientations;
+         *
+         * - for each \a i, the starting strand for the <i>th</i> component
+         *   is the same (under/over) strand of the same numbered crossing
+         *   in both diagrams.
+         *
+         * @param other the link diagram to compare with this.
+         * @return \c true if and only if the two link diagrams are
+         * combinatorially identical.
+         */
+        bool operator == (const Link& other) const;
+
+        /**
+         * Determines if this link diagram is not combinatorially identical
+         * to the given link diagram.
+         *
+         * Here "identical" means that:
+         *
+         * - the link diagrams have the same number of crossings and the
+         *   same number of components,
+         *
+         * - the same numbered crossings are positive and negative in both
+         *   diagrams;
+         *
+         * - the same pairs of numbered crossings have their
+         *   under/over-strands connected, with the same orientations;
+         *
+         * - for each \a i, the starting strand for the <i>th</i> component
+         *   is the same (under/over) strand of the same numbered crossing
+         *   in both diagrams.
+         *
+         * @param other the link diagram to compare with this.
+         * @return \c true if and only if the two link diagrams are
+         * not combinatorially identical.
+         */
+        bool operator != (const Link& other) const;
+
         /*@}*/
         /**
          * \name Editing
@@ -4640,6 +4690,10 @@ inline auto Link::components() const {
 inline StrandRef Link::strand(int id) const {
     return (id >= 0 ? StrandRef(crossings_[id >> 1]->strand(id & 1)) :
         StrandRef());
+}
+
+inline bool Link::operator != (const Link& other) const {
+    return ! ((*this) == other);
 }
 
 inline Triangulation<3> Link::complement(bool simplify) const {

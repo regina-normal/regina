@@ -1931,7 +1931,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 // The idealToFinite routine should leave tri unchanged.
                 Triangulation<4> other(tri);
                 other.idealToFinite();
-                if (! other.isIdenticalTo(tri)) {
+                if (other != tri) {
                     std::ostringstream msg;
                     msg << name << ": "
                         << "idealToFinite modifies a triangulation with "
@@ -1955,7 +1955,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 other.idealToFinite();
                 clearProperties(other);
 
-                if (other.isIdenticalTo(tri)) {
+                if (other == tri) {
                     std::ostringstream msg;
                     msg << name << ": "
                         << "idealToFinite does not modify a triangulation with "

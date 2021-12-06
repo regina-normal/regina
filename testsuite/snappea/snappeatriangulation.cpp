@@ -242,7 +242,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 return false;
             if (a.countFilledCusps() != b.countFilledCusps())
                 return false;
-            if (! a.isIdenticalTo(b))
+            if (a != b)
                 return false;
 
             if (a.isoSig() != b.isoSig())

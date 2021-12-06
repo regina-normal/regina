@@ -100,7 +100,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         }, pybind11::keep_alive<0, 1>()) // iterator keeps list alive
     ;
     regina::python::add_output(l, regina::python::PYTHON_REPR_NONE);
-    regina::python::add_eq_operators(l);
+    regina::python::packet_eq_operators(l);
+    regina::python::add_packet_data(l);
 
     auto wrap = regina::python::add_packet_wrapper<NormalHypersurfaces>(
         m, "PacketOfNormalHypersurfaces");

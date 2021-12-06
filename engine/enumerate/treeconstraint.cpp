@@ -154,7 +154,7 @@ void LPConstraintNonSpun::addRows(
 
     MatrixInt coeffs = snapPea.slopeEquations();
 
-    if (! snapPea.isIdenticalTo(tri))
+    if (snapPea != tri)
         throw UnsolvedCase("SnapPea retriangulated "
             "when attempting to use LPConstraintNonSpun");
 

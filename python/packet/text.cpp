@@ -38,7 +38,8 @@ using pybind11::overload_cast;
 using regina::Text;
 
 void addText(pybind11::module_& m) {
-    pybind11::class_<Text, regina::Packet, std::shared_ptr<Text>>(m, "Text")
+    auto c = pybind11::class_<Text, regina::Packet, std::shared_ptr<Text>>(
+            m, "Text")
         .def(pybind11::init<>())
         .def(pybind11::init<std::string>())
         .def(pybind11::init<const Text&>())
@@ -47,6 +48,7 @@ void addText(pybind11::module_& m) {
         .def("setText", &Text::setText)
         .def_readonly_static("typeID", &Text::typeID)
     ;
+    regina::python::packet_eq_operators(c);
 
     m.def("swap", (void(*)(Text&, Text&))(regina::swap));
 }

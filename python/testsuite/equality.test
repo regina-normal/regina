@@ -34,65 +34,87 @@
 from __future__ import print_function
 
 print(AbelianGroup.equalityType)
+print(GluingPermSearcher2.equalityType)
 print(Integer.equalityType)
-print(Triangulation3.equalityType)
+print(SigCensus.equalityType)
+
+print()
+
+def cmp(name, a, b, packet = False):
+	ans = ''
+	try:
+		if a == b:
+			ans += '=='
+		else:
+			ans += 'not =='
+	except:
+		ans += 'throws on =='
+	ans += ', '
+	try:
+		if a != b:
+			ans += '!='
+		else:
+			ans += 'not !='
+	except:
+		ans += 'throws on !='
+	if packet:
+		ans += ', '
+		try:
+			if a.samePacket(b):
+				ans += 'same packet'
+			else:
+				ans += 'different packets'
+		except:
+			ans += 'throws on samePacket()'
+	print(name, ':', ans)
 
 # Test == and != for objects that are equal by value but have different
 # underlying C++ pointers.
 # The behaviour should be different for different classes.
 
-# Cases that should be reported as equal (by value):
+# Classes that compare by value:
 
-print('Integer:')
-a = Integer(3)
-b = Integer(3)
-print(a == b, a != b)
+cmp('Integer', Integer(3), Integer(3))
+cmp('Integer', Integer(3), Integer(4))
 
-print('AbelianGroup:')
-a = AbelianGroup()
-b = AbelianGroup()
-print(a == b, a != b)
+cmp('AbelianGroup', AbelianGroup(), AbelianGroup())
+cmp('AbelianGroup', AbelianGroup(), AbelianGroup(1))
 
-print('GroupPresentation:')
-a = GroupPresentation()
-b = GroupPresentation()
-print(a == b, a != b)
+cmp('GroupPresentation', GroupPresentation(), GroupPresentation())
+cmp('GroupPresentation', GroupPresentation(), GroupPresentation(1))
 
-# Cases that should be reported as different (by C++ reference):
+cmp('Link', ExampleLink.trefoil(), ExampleLink.trefoilRight())
+cmp('Link', ExampleLink.trefoilLeft(), ExampleLink.trefoilRight())
+cmp('Link', Link(3), Link(3))
+cmp('Link', Link(3), Link(2))
+cmp('Link + Packet', Link(2), PacketOfLink(2), True)
+cmp('Link + Packet', PacketOfLink(2), Link(2), True)
+cmp('PacketOfLink', PacketOfLink(2), PacketOfLink(2), True)
+p = PacketOfLink(3)
+cmp('PacketOfLink', p, p.root(), True)
 
-print('Triangulation3:')
-a = Triangulation3()
-b = Triangulation3()
-print(a == b, a != b)
+cmp('Triangulation3', Triangulation3(), Triangulation3())
+cmp('Triangulation3', Example3.figureEight(), Example3.whiteheadLink())
+cmp('Triangulation3 + Packet', Triangulation3(), PacketOfTriangulation3(), True)
+cmp('Triangulation3 + Packet', PacketOfTriangulation3(), Triangulation3(), True)
+cmp('PacketOfTriangulation3', PacketOfTriangulation3(), PacketOfTriangulation3(), True)
+p = PacketOfTriangulation3()
+cmp('PacketOfTriangulation3', p, p.root(), True)
 
-# Test == and != for objects that have the same underlying C++ pointers,
-# but different python wrappers.
-# In all cases these objects should be reported as equal.
+# Classes that compare by reference:
 
-print('Packet:')
-a = Container()
-b = a.root()
-print(a == b, a != b)
-
-print('Triangulation3:')
-a = Triangulation3()
-b = a.newSimplex().triangulation()
-print(a == b, a != b)
-
-print('Tetrahedron3:')
 t = Triangulation3()
-a = t.newTetrahedron()
-b = t.tetrahedron(0)
-print(a == b, a != b)
+(a,b) = t.newTetrahedra(2)
+cmp('Tetrahedron3', a, t.tetrahedron(0))
+cmp('Tetrahedron3', a, t.tetrahedron(1))
 
-print('AbelianGroup:')
-t = Example3.lens(8,3)
-a = t.homology()
-b = t.homology()
-print(a == b, a != b)
+# More tests with packets:
 
-print('GroupPresentation:')
-t = Example3.lens(8,3)
-a = t.fundamentalGroup()
-b = t.fundamentalGroup()
-print(a == b, a != b)
+a = Container()
+cmp('Packet', a, a.root(), True)
+cmp('Different Packets', Container(), Text(), True)
+cmp('Different Packets', PacketOfLink(), Text(), True)
+cmp('Different Packets', Text(), PacketOfLink(), True)
+cmp('Different Packets', Text(), Link(), True)
+cmp('Different Packets', Link(), Text(), True)
+

@@ -45,7 +45,6 @@
 #endif
 
 #include "packet/packet.h"
-#include "utilities/base64.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -140,22 +139,6 @@ void PacketOf<Held>::addPacketRefs(PacketRefs& refs) const {
                 refs.insert({ p.get(), false });
         }
     }
-}
-
-template <typename Held>
-std::string PacketData<Held>::anonID() const {
-    char ptrAsBytes[sizeof(PacketData<Held>*)];
-    *(reinterpret_cast<const PacketData<Held>**>(&ptrAsBytes)) = this;
-
-    char* id = nullptr;
-    // NOLINTNEXTLINE(bugprone-sizeof-expression)
-    base64Encode(ptrAsBytes, sizeof(Packet*), &id);
-
-    std::string ans;
-    ans += regina::base64Spare[0];
-    ans += id;
-    delete[] id;
-    return ans;
 }
 
 } // namespace regina

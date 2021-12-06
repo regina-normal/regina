@@ -689,6 +689,7 @@ Version 7.0  [ 10 December, 2021 ]
               which allows the data to be constructed at runtime.
             - New routine brief(std::ostream&) to complement brief().
             - New alias fromSig(), which is is identical to fromKnotSig().
+            - Added comparison operators == and !=.
             - Class constants for Jones / HOMFLY-PT variable strings are
               now constexpr.
             - Renamed swapContents() to swap(); the old name is now a
@@ -1516,6 +1517,8 @@ Version 7.0  [ 10 December, 2021 ]
             - All "magic" string contructors likewise now throw exceptions
               on error (instead of constructing empty triangulations).
             - New alias fromSig(), which is is identical to fromIsoSig().
+            - Added comparison operators == and != to replace isIdenticalTo(),
+              which is now a deprecated alias.
             - Routine simplices(), faces(), components(), boundaryComponents(),
               and the aliases vertices(), edges(), etc. no longer return a
               const reference to a std::vector or FaceList.  Instead they
@@ -1849,10 +1852,13 @@ Version 7.0  [ 10 December, 2021 ]
           Essentially what remains unwrapped is that which makes no sense to
           wrap: direct interaction with C++ input/output streams, and code
           that is heavily templated using custom types as template arguments.
+        - Almost all classes now provide a useful __repr__(), and many classes
+          now have a more informative __str__().
+        - For most classes, == and != now compare by value.  The one case
+          where this becomes problematic is for packets, where you might
+          still need to test whether two Python wrappers refer to the same
+          underlying C++ object; for this you can now use Packet.samePacket().
         - Updated the included pybind11 library from 2.6.1 to 2.8.1.
-        - All face embedding classes now have a __repr__() for easier printing.
-          This means, for instance, that print(face.embeddings()) is now useful.
-        - Likewise, BoolSet and DiscType now have __repr__().
         - Wrapped Perm<n>::SnIndex() for n=2,3,4,5; this alias has been present
           in C++ for a long time but was somehow never wrapped in Python.
         - All regina functions that used to throw std::invalid_argument on
@@ -1861,8 +1867,6 @@ Version 7.0  [ 10 December, 2021 ]
           where this was assumed to be std::cout in Python
           (e.g., Link::writePACE(std::ostream&).  Python users should just use
           the string versions of these functions instead (e.g., Link::pace()).
-        - Many str() functions are now more informative, and all classes
-          now have their own customised repr() (where it makes sense to do so).
     USER INTERFACES:
         - Incorporated many of the mathematical changes described above.
         - Removed the View/Edit action from the toolbar, since you might as

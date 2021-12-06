@@ -175,7 +175,7 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
 
             MatrixInt coeffs = snapPea.slopeEquations();
 
-            if (! snapPea.isIdenticalTo(triangulation))
+            if (snapPea != triangulation)
                 throw UnsolvedCase("SnapPea retriangulated "
                     "when attempting to build the matching equations");
 

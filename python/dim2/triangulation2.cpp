@@ -130,7 +130,7 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<2>::edge,
             pybind11::return_value_policy::reference_internal)
-        .def("isIdenticalTo", &Triangulation<2>::isIdenticalTo)
+        .def("isIdenticalTo", &Triangulation<2>::operator ==) // deprecated
         .def("isIsomorphicTo", &Triangulation<2>::isIsomorphicTo)
         .def("findAllIsomorphisms", &Triangulation<2>::findAllIsomorphisms<
                 const std::function<bool(const Isomorphism<2>)>&>)
@@ -218,8 +218,9 @@ void addTriangulation2(pybind11::module_& m) {
         .def("dumpConstruction", &Triangulation<2>::dumpConstruction)
         .def_readonly_static("dimension", &Triangulation<2>::dimension)
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
-    regina::python::add_eq_operators(c);
+    regina::python::add_output(c);
+    regina::python::packet_eq_operators(c);
+    regina::python::add_packet_data(c);
 
     regina::python::addListView<decltype(Triangulation<2>().vertices())>(m);
     regina::python::addListView<decltype(Triangulation<2>().edges())>(m);

@@ -143,11 +143,15 @@ s = AngleStructures(Example3.figureEight())
 dump(s.structure(0))
 
 # ----------------------------------------------------------------------
-# link/,
+# link/
 # ----------------------------------------------------------------------
 
 g = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
 dump(g.node(0).arc(2))
+
+dump(Link())
+dump(Link(1))
+dump(ExampleLink.whitehead())
 
 l = Link(1)
 dump(l.component(0))
@@ -171,6 +175,11 @@ dump(FacetSpec3(6,2))
 dump(FacePair(1,3))
 dump(FacetPairing3(Example3.figureEight()))
 dump(FacetPairing4(Example4.s3xs1()))
+
+dump(Example2.mobius())
+dump(Example3.poincare())
+dump(Example4.cappellShaneson())
+dump(Example5.sphere())
 
 t = Example2.annulus()
 dump(t.vertex(0).front())

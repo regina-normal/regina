@@ -551,7 +551,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 return false;
             if (a.countComponents() != b.countComponents())
                 return false;
-            if (! a.isIdenticalTo(b))
+            if (a != b)
                 return false;
 
             // Test isosigs only in smaller dimensions, since the
@@ -1248,7 +1248,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     Triangulation<dim> oriented(tri);
                     if (tri.isOrientable())
                         oriented.orient();
-                    if (! large.isIdenticalTo(oriented)) {
+                    if (large != oriented) {
                         std::ostringstream msg;
                         msg << name << ", face " << i << ": "
                             "disallowed "

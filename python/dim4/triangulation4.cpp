@@ -144,7 +144,7 @@ void addTriangulation4(pybind11::module_& m) {
         .def("tetrahedron", (regina::Face<4, 3>* (Triangulation<4>::*)(size_t))(
             &Triangulation<4>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
-        .def("isIdenticalTo", &Triangulation<4>::isIdenticalTo)
+        .def("isIdenticalTo", &Triangulation<4>::operator ==) // deprecated
         .def("isIsomorphicTo", &Triangulation<4>::isIsomorphicTo)
         .def("makeCanonical", &Triangulation<4>::makeCanonical)
         .def("isContainedIn", &Triangulation<4>::isContainedIn)
@@ -298,8 +298,9 @@ void addTriangulation4(pybind11::module_& m) {
         .def("dumpConstruction", &Triangulation<4>::dumpConstruction)
         .def_readonly_static("dimension", &Triangulation<4>::dimension)
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
-    regina::python::add_eq_operators(c);
+    regina::python::add_output(c);
+    regina::python::packet_eq_operators(c);
+    regina::python::add_packet_data(c);
 
     regina::python::addListView<decltype(Triangulation<4>().vertices())>(m);
     regina::python::addListView<decltype(Triangulation<4>().edges())>(m);

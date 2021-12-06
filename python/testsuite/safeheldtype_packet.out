@@ -11,7 +11,7 @@ Basic container tests:
 
 1
 a
-Triangulation with 1 tetrahedron
+Bounded orientable 3-D triangulation, f = ( 4 6 4 1 )
 baa
 baa
 baabaa
@@ -32,27 +32,27 @@ True
 fvPQcdecedekrsnrs
 True
 2
-Triangulation with 5 tetrahedra
+Closed orientable 3-D triangulation, f = ( 1 6 10 5 )
 Attachment (0 bytes)
 Text packet
-Triangulation with 2 tetrahedra
+Ideal orientable 3-D triangulation, f = ( 1 2 4 2 )
 Text packet
 
 Erase nested:
 -----------------------------------------------------------
 
 Text packet
-Triangulation with 2 tetrahedra
+Ideal orientable 3-D triangulation, f = ( 1 2 4 2 )
 
 Make orphan:
 -----------------------------------------------------------
 
-Triangulation with 1 tetrahedron
-Triangulation with 2 tetrahedra
-Triangulation with 3 tetrahedra
-Triangulation with 1 tetrahedron
-Triangulation with 2 tetrahedra
-Triangulation with 3 tetrahedra
-Triangulation with 1 tetrahedron
+Bounded orientable 3-D triangulation, f = ( 4 6 4 1 )
+Bounded orientable 3-D triangulation, f = ( 8 12 8 2 )
+Bounded orientable 3-D triangulation, f = ( 12 18 12 3 )
+Bounded orientable 3-D triangulation, f = ( 4 6 4 1 )
+Bounded orientable 3-D triangulation, f = ( 8 12 8 2 )
+Bounded orientable 3-D triangulation, f = ( 12 18 12 3 )
+Bounded orientable 3-D triangulation, f = ( 4 6 4 1 )
 None
-Triangulation with 3 tetrahedra
+Bounded orientable 3-D triangulation, f = ( 12 18 12 3 )

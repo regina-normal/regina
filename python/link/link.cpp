@@ -319,8 +319,9 @@ void addLink(pybind11::module_& m) {
         .def_readonly_static("homflyLMVarX", Link::homflyLMVarX)
         .def_readonly_static("homflyLMVarY", Link::homflyLMVarY)
     ;
-    regina::python::add_output(l, regina::python::PYTHON_REPR_NONE);
-    regina::python::add_eq_operators(l);
+    regina::python::add_output(l);
+    regina::python::packet_eq_operators(l);
+    regina::python::add_packet_data(l);
 
     regina::python::addListView<decltype(Link().crossings())>(m);
     regina::python::addListView<decltype(Link().components())>(m);

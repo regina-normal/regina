@@ -50,6 +50,7 @@
 #include "core/output.h"
 #include "file/fileformat.h"
 #include "packet/packettype.h"
+#include "utilities/base64.h"
 
 namespace regina {
 
@@ -500,6 +501,33 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \name Tree Queries
          */
         /*@{*/
+
+        /**
+         * Determines whether this and the given object refer to the
+         * same packet.
+         *
+         * This is exactly the same as testing whether the underlying Packet
+         * pointers are equal, and so this routine is unnecessary for C++ users.
+         *
+         * Instead, this routine is designed for Python users, since:
+         *
+         * - the Python keyword \c is will not work, because there could
+         *   be many different Python wrappers all pointing to the same
+         *   C++ object;
+         *
+         * - the Python equality test (==) will not work, since as of
+         *   Regina 7.0 this compares objects by value (i.e., it tests
+         *   whether their contents are equal).
+         *
+         * A use case for this function could be (for example) iterating
+         * through a packet tree and identifying when a particular
+         * known packet has been found.
+         *
+         * @param other the packet to compare with this.
+         * @return \c true if and only if this and the given object refer to
+         * the same underlying packet.
+         */
+        bool samePacket(const Packet& other) const;
 
         /**
          * Determines if this packet has a parent in the tree structure.
@@ -3851,6 +3879,10 @@ inline bool Packet::isListening(PacketListener* listener) {
     return listeners_->count(listener);
 }
 
+inline bool Packet::samePacket(const Packet& other) const {
+    return this == std::addressof(other);
+}
+
 inline bool Packet::hasParent() const {
     // AFAICT, despite its name, expired() returns true for a null weak_ptr
     // that was never assigned to point to a real object.
@@ -3892,6 +3924,22 @@ inline size_t Packet::countDescendants() const {
 template <typename Held>
 inline std::shared_ptr<Packet> PacketOf<Held>::internalClonePacket() const {
     return std::make_shared<PacketOf<Held>>(static_cast<const Held&>(*this));
+}
+
+template <typename Held>
+std::string PacketData<Held>::anonID() const {
+    char ptrAsBytes[sizeof(PacketData<Held>*)];
+    *(reinterpret_cast<const PacketData<Held>**>(&ptrAsBytes)) = this;
+
+    char* id = nullptr;
+    // NOLINTNEXTLINE(bugprone-sizeof-expression)
+    base64Encode(ptrAsBytes, sizeof(Packet*), &id);
+
+    std::string ans;
+    ans += base64Spare[0];
+    ans += id;
+    delete[] id;
+    return ans;
 }
 
 template <typename Held>

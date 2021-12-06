@@ -922,7 +922,7 @@ LensSpace : class
 Equality type : EqualityType.BY_VALUE
 
 Link : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Locale : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -993,7 +993,7 @@ Exception type
 PDF : typedef ->  Attachment
 
 Packet : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 PacketChildren : class
 Equality type : EqualityType.BY_VALUE
@@ -1011,7 +1011,7 @@ PacketOfAngleStructures : class
 Equality type : EqualityType.BY_REFERENCE
 
 PacketOfLink : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketOfNormalHypersurfaces : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1020,28 +1020,28 @@ PacketOfNormalSurfaces : class
 Equality type : EqualityType.BY_REFERENCE
 
 PacketOfSnapPeaTriangulation : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketOfTriangulation2 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketOfTriangulation3 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketOfTriangulation4 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketOfTriangulation5 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketOfTriangulation6 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketOfTriangulation7 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketOfTriangulation8 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketShell : class
 Equality type : EqualityType.BY_VALUE
@@ -1254,7 +1254,7 @@ SnapPeaMemoryFull : class
 Exception type
 
 SnapPeaTriangulation : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 SnapPeaUnsolvedCase : class
 Exception type
@@ -1284,7 +1284,7 @@ SurfaceExport : class
 Equality type : EqualityType.BY_VALUE
 
 SurfaceFilter : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 SurfaceFilterCombination : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1452,25 +1452,25 @@ TriangleEmbedding7 : typedef ->  FaceEmbedding7_2
 TriangleEmbedding8 : typedef ->  FaceEmbedding8_2
 
 Triangulation2 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Triangulation3 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Triangulation4 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Triangulation5 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Triangulation6 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Triangulation7 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Triangulation8 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 TrieSet : class
 Equality type : EqualityType.BY_REFERENCE
