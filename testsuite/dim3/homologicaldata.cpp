@@ -271,15 +271,11 @@ class HomologicalDataTest : public CppUnit::TestFixture {
                 "zero map");
             verifyBdryManifoldMapH1(norA, "SFS [M_/n2: (2,1)]", "zero map");
             verifyBdryManifoldMapH1(s028, "SnapPea s028",
-                "kernel Z (Z^0 -> Z^1 -> Z^1) | "
-                "cokernel Z_16 (Z^3 -> Z^2 -> Z^1) | "
-                "image Z (Z^1 -> Z^2 -> Z^1)");
+                "kernel Z | cokernel Z_16 | image Z");
             verifyBdryManifoldMapH1(s955, "SnapPea s955",
-                "kernel Z (Z^0 -> Z^1 -> Z^1) | "
-                "cokernel Z_20 (Z^3 -> Z^2 -> Z^1) | "
-                "image Z + Z_2 (Z^1 -> Z^2 -> Z^1)");
+                "kernel Z | cokernel Z_20 | image Z + Z_2");
             verifyBdryManifoldMapH1(lst3_4_7, "LST(3,4,7)",
-                "epic, with kernel Z (Z^0 -> Z^1 -> Z^1)");
+                "epic, with kernel Z");
         }
 
         void verifyStandardCells(Triangulation<3>& tri, const char* name,
