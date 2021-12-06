@@ -62,11 +62,11 @@ void SatBlockSpec::writeTextShort(std::ostream& out) const {
     block_->writeTextShort(out);
     if (refVert_) {
         if (refHoriz_)
-            out << ", reflected(H)";
+            out << ", rotated";
         else
             out << ", reflected(V)";
     } else if (refHoriz_) {
-        out << ", rotated";
+        out << ", reflected(H)";
     }
 }
 
@@ -471,20 +471,9 @@ void SatRegion::writeDetail(std::ostream& out, const std::string& title)
     out << "  Blocks:\n";
     for (id = 0, it = blocks_.begin(); it != blocks_.end(); it++, id++) {
         out << "    " << id << ". ";
-        it->block()->writeTextShort(out);
+        it->writeTextShort(out);
         nAnnuli = it->block()->countAnnuli();
-        out << " (" << nAnnuli << (nAnnuli == 1 ? " annulus" : " annuli");
-        if (it->refVert() || it->refHoriz()) {
-            out << ", ";
-            if (it->refVert() && it->refHoriz())
-                out << "vert./horiz.";
-            else if (it->refVert())
-                out << "vert.";
-            else
-                out << "horiz.";
-            out << " reflection";
-        }
-        out << ")\n";
+        out << ", " << nAnnuli << (nAnnuli == 1 ? " annulus\n" : " annuli\n");
     }
 
     out << "  Adjacencies:\n";
