@@ -238,7 +238,7 @@ class MarkedAbelianGroupTest : public CppUnit::TestFixture {
             }
 
             MarkedAbelianGroup g = t.markedHomology();
-            if (g.str() != "Z + Z_2") {
+            if (g.str() != "Z + Z_2 (Z^4 -> Z^6 -> Z^2)") {
                 std::ostringstream msg;
                 msg << "H1(Klein bottle) gives the wrong homology: " << g.str();
                 CPPUNIT_FAIL(msg.str());

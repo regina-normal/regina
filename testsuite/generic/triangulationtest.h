@@ -1441,11 +1441,11 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             regina::AbelianGroup g1(m, n);
             regina::MarkedAbelianGroup g2 = tri.template markedHomology<k>();
-            if (g1.str() != g2.str()) {
+            if (g1.str() != g2.unmarked().str()) {
                 std::ostringstream msg;
                 msg << name << ": computing H" << k << " via the "
                     "chain complex gives " << g1.str()
-                    << " using AbelianGroup, but " << g2.str()
+                    << " using AbelianGroup, but " << g2.unmarked().str()
                     << " using MarkedAbelianGroup.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1474,12 +1474,12 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             regina::AbelianGroup g1z2(m, n, 2);
             regina::MarkedAbelianGroup g2z2(m, n, 2);
-            if (g1z2.str() != g2z2.str()) {
+            if (g1z2.str() != g2z2.unmarked().str()) {
                 std::ostringstream msg;
                 msg << name << ": computing H" << k
                     << " with Z_2 coefficients via the chain complex gives "
                     << g1z2.str() << " using AbelianGroup, but "
-                    << g2z2.str() << " using MarkedAbelianGroup.";
+                    << g2z2.unmarked().str() << " using MarkedAbelianGroup.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (g1z2.rank() != 0) {

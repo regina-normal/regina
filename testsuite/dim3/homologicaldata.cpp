@@ -189,8 +189,8 @@ class HomologicalDataTest : public CppUnit::TestFixture {
 
             std::string fromStandard, fromDual;
             for (int i = 0; i <= 3; ++i) {
-                fromStandard = dat.homology(i).str();
-                fromDual = dat.dualHomology(i).str();
+                fromStandard = dat.homology(i).unmarked().str();
+                fromDual = dat.dualHomology(i).unmarked().str();
 
                 if (fromStandard != fromDual) {
                     std::ostringstream msg;
@@ -203,7 +203,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             }
 
             std::string fromTri = tri.homology().str();
-            fromDual = dat.dualHomology(1).str();
+            fromDual = dat.dualHomology(1).unmarked().str();
 
             if (fromTri != fromDual) {
                 std::ostringstream msg;
@@ -271,11 +271,15 @@ class HomologicalDataTest : public CppUnit::TestFixture {
                 "zero map");
             verifyBdryManifoldMapH1(norA, "SFS [M_/n2: (2,1)]", "zero map");
             verifyBdryManifoldMapH1(s028, "SnapPea s028",
-                "kernel Z | cokernel Z_16 | image Z");
+                "kernel Z (Z^0 -> Z^1 -> Z^1) | "
+                "cokernel Z_16 (Z^3 -> Z^2 -> Z^1) | "
+                "image Z (Z^1 -> Z^2 -> Z^1)");
             verifyBdryManifoldMapH1(s955, "SnapPea s955",
-                "kernel Z | cokernel Z_20 | image Z + Z_2");
+                "kernel Z (Z^0 -> Z^1 -> Z^1) | "
+                "cokernel Z_20 (Z^3 -> Z^2 -> Z^1) | "
+                "image Z + Z_2 (Z^1 -> Z^2 -> Z^1)");
             verifyBdryManifoldMapH1(lst3_4_7, "LST(3,4,7)",
-                "epic, with kernel Z");
+                "epic, with kernel Z (Z^0 -> Z^1 -> Z^1)");
         }
 
         void verifyStandardCells(Triangulation<3>& tri, const char* name,

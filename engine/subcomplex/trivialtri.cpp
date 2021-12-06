@@ -148,16 +148,12 @@ std::unique_ptr<Manifold> TrivialTri::manifold() const {
 }
 
 AbelianGroup TrivialTri::homology() const {
-    AbelianGroup ans;
-
     if (type_ == N2)
-        ans.addRank();
-    else if (type_ == N3_1 || type_ == N3_2) {
-        ans.addRank();
-        ans.addTorsion(2);
-    }
-
-    return ans;
+        return AbelianGroup(1);
+    else if (type_ == N3_1 || type_ == N3_2)
+        return AbelianGroup(1, {2});
+    else
+        return AbelianGroup();
 }
 
 std::ostream& TrivialTri::writeName(std::ostream& out) const {

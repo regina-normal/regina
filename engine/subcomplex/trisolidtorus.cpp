@@ -160,9 +160,7 @@ std::unique_ptr<TriSolidTorus> TriSolidTorus::recognise(Tetrahedron<3>* tet,
 }
 
 AbelianGroup TriSolidTorus::homology() const {
-    AbelianGroup ans;
-    ans.addRank();
-    return ans;
+    return AbelianGroup(1);
 }
 
 std::unique_ptr<Manifold> TriSolidTorus::manifold() const {

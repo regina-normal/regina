@@ -63,11 +63,10 @@ Triangulation<3> SimpleSurfaceBundle::construct() const {
 }
 
 AbelianGroup SimpleSurfaceBundle::homology() const {
-    AbelianGroup ans;
-    ans.addRank();
     if (type_ == RP2xS1)
-        ans.addTorsion(2);
-    return ans;
+        return AbelianGroup(1, {2});
+    else
+        return AbelianGroup(1);
 }
 
 std::ostream& SimpleSurfaceBundle::writeName(std::ostream& out) const {

@@ -616,9 +616,7 @@ std::unique_ptr<Manifold> LayeredSolidTorus::manifold() const {
 }
 
 AbelianGroup LayeredSolidTorus::homology() const {
-    AbelianGroup ans;
-    ans.addRank();
-    return ans;
+    return AbelianGroup(1);
 }
 
 Triangulation<3> LayeredSolidTorus::flatten(int mobiusBandBdry) const {

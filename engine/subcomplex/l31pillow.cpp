@@ -90,9 +90,7 @@ std::unique_ptr<Manifold> L31Pillow::manifold() const {
 }
 
 AbelianGroup L31Pillow::homology() const {
-    AbelianGroup ans;
-    ans.addTorsion(3);
-    return ans;
+    return AbelianGroup(0, {3});
 }
 
 } // namespace regina

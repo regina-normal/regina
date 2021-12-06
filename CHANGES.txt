@@ -63,6 +63,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class AbelianGroup:
             - Added a move constructor and move assignment operator.
             - Added a presentation matrix constructor.
+            - Added rank and rank-with-invariant-factors constructors.
             - Added member and global swap() functions.
             - Added tightEncode() and tightEncoding() to help with perfect
               hashing.
@@ -764,6 +765,7 @@ Version 7.0  [ 10 December, 2021 ]
               throw exceptions instead.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
+            - New function unmarked() that returns a plain AbelianGroup.
             - Constructors that used to take (const MatrixInt&) arguments
               now take a MatrixInt by value.
             - Removed isChainComplex(), since this should always be true

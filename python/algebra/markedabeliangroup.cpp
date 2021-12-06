@@ -61,6 +61,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def("countInvariantFactors",
             &MarkedAbelianGroup::countInvariantFactors)
         .def("invariantFactor", &MarkedAbelianGroup::invariantFactor)
+        .def("unmarked", &MarkedAbelianGroup::unmarked)
         .def("isTrivial", &MarkedAbelianGroup::isTrivial)
         .def("isZ", &MarkedAbelianGroup::isZ)
         .def("isIsomorphicTo", &MarkedAbelianGroup::isIsomorphicTo)

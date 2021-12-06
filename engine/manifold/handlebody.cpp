@@ -36,10 +36,7 @@
 namespace regina {
 
 AbelianGroup Handlebody::homology() const {
-    AbelianGroup ans;
-    if (genus_)
-        ans.addRank(genus_);
-    return ans;
+    return AbelianGroup(genus_);
 }
 
 std::ostream& Handlebody::writeName(std::ostream& out) const {

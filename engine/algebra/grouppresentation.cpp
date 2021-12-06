@@ -310,9 +310,7 @@ AbelianGroup GroupPresentation::abelianisation() const {
 
     if (relations_.empty()) {
         // Free group becomes free abelian group.
-        AbelianGroup g;
-        g.addRank(nGenerators_);
-        return g;
+        return AbelianGroup(nGenerators_);
     } else {
         MatrixInt m(relations_.size(), nGenerators_);
 

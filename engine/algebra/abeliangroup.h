@@ -106,6 +106,54 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          */
         AbelianGroup(AbelianGroup&&) noexcept = default;
         /**
+         * Creates a free abelian group of the given rank.
+         *
+         * @param rank the rank of the new group.
+         */
+        AbelianGroup(unsigned rank);
+        /**
+         * Creates a new group with the given rank and invariant factors.
+         *
+         * \exception The invariant factors were not all greater than 1,
+         * and/or they did not satisfy the divisibily requirement (where
+         * each invariant factor must divide the one after it).
+         *
+         * \ifacespython Not available, but there is a constructor that
+         * takes the invariant factors as a Python list.
+         *
+         * \tparam T an integer type, which may be a native C++ integer
+         * type or one of Regina's own integer types.
+         *
+         * @param rank the rank of the new group (i.e., the number of
+         * copies of \a Z).
+         * @param invFac the list of invariant factors \a d0, \a d1, ...,
+         * as described in the class notes, where each invariant factor
+         * is greater than 1 and divides the invariant factor after it.
+         */
+        template <typename T>
+        AbelianGroup(unsigned rank, std::initializer_list<T> invFac);
+        /**
+         * Creates a new group with the given rank and invariant factors.
+         *
+         * \exception The invariant factors were not all greater than 1,
+         * and/or they did not satisfy the divisibily requirement (where
+         * each invariant factor must divide the one after it).
+         *
+         * \tparam Container a container or view that supports reverse
+         * iteration via rbegin(), rend(), that has an empty() function,
+         * and whose elements may be of a native C++ integer type or one of
+         * Regina's own integer types.  A suitable example might be
+         * std::vector<int>.
+         *
+         * @param rank the rank of the new group (i.e., the number of
+         * copies of \a Z).
+         * @param invFac the list of invariant factors \a d0, \a d1, ...,
+         * as described in the class notes, where each invariant factor
+         * is greater than 1 and divides the invariant factor after it.
+         */
+        template <typename Container>
+        AbelianGroup(unsigned rank, const Container& invFac);
+        /**
          * Creates the abelian group defined by the given presentation matrix.
          *
          * Each column of the matrix represents a generator, and each
@@ -513,6 +561,49 @@ void swap(AbelianGroup& lhs, AbelianGroup& rhs) noexcept;
 // Inline functions for AbelianGroup
 
 inline AbelianGroup::AbelianGroup() {
+}
+
+inline AbelianGroup::AbelianGroup(unsigned rank) : rank_(rank) {
+}
+
+template <typename T>
+inline AbelianGroup::AbelianGroup(unsigned rank,
+        std::initializer_list<T> invFac) : rank_(rank) {
+    if (invFac.size() > 0) {
+        auto it = std::rbegin(invFac);
+        while (true) {
+            if (*it <= 1)
+                throw InvalidArgument(
+                    "Each invariant factor must be strictly greater than 1");
+            revInvFactors_.push_back(*it);
+            auto prev = it++;
+            if (it == std::rend(invFac))
+                return;
+            if ((*prev) % (*it) != 0)
+                throw InvalidArgument(
+                    "Each invariant factor must divide the next");
+        }
+    }
+}
+
+template <typename Container>
+inline AbelianGroup::AbelianGroup(unsigned rank, const Container& invFac) :
+        rank_(rank) {
+    if (! invFac.empty()) {
+        auto it = invFac.rbegin();
+        while (true) {
+            if (*it <= 1)
+                throw InvalidArgument(
+                    "Each invariant factor must be strictly greater than 1");
+            revInvFactors_.push_back(*it);
+            auto prev = it++;
+            if (it == invFac.rend())
+                return;
+            if ((*prev) % (*it) != 0)
+                throw InvalidArgument(
+                    "Each invariant factor must divide the next");
+        }
+    }
 }
 
 inline void AbelianGroup::swap(AbelianGroup& other) noexcept {

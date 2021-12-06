@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/iostream.h"
+#include "../pybind11/stl.h"
 #include "algebra/abeliangroup.h"
 #include "maths/matrix.h"
 #include "../helpers.h"
@@ -45,6 +46,9 @@ void addAbelianGroup(pybind11::module_& m) {
     auto c = pybind11::class_<AbelianGroup>(m, "AbelianGroup")
         .def(pybind11::init<>())
         .def(pybind11::init<const AbelianGroup&>())
+        .def(pybind11::init<unsigned>())
+        .def(pybind11::init<unsigned, const std::vector<int>&>())
+        .def(pybind11::init<unsigned, const std::vector<Integer>&>())
         .def(pybind11::init<MatrixInt>())
         .def(pybind11::init<MatrixInt, MatrixInt>())
         .def(pybind11::init<MatrixInt, MatrixInt, const Integer&>())

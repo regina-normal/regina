@@ -206,9 +206,7 @@ std::unique_ptr<Manifold> SpiralSolidTorus::manifold() const {
 }
 
 AbelianGroup SpiralSolidTorus::homology() const {
-    AbelianGroup ans;
-    ans.addRank();
-    return ans;
+    return AbelianGroup(1);
 }
 
 } // namespace regina

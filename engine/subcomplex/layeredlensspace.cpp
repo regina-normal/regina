@@ -127,12 +127,12 @@ std::unique_ptr<Manifold> LayeredLensSpace::manifold() const {
 }
 
 AbelianGroup LayeredLensSpace::homology() const {
-    AbelianGroup ans;
     if (p_ == 0)
-        ans.addRank();
+        return AbelianGroup(1);
     else if (p_ > 1)
-        ans.addTorsion(p_);
-    return ans;
+        return AbelianGroup(0, {p_});
+    else
+        return AbelianGroup();
 }
 
 std::ostream& LayeredLensSpace::writeName(std::ostream& out) const {

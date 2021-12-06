@@ -108,10 +108,10 @@ std::unique_ptr<Manifold> LayeredChain::manifold() const {
 }
 
 AbelianGroup LayeredChain::homology() const {
-    AbelianGroup ans;
     if (index_ > 1)
-        ans.addRank();
-    return ans;
+        return AbelianGroup(1);
+    else
+        return AbelianGroup();
 }
 
 } // namespace regina

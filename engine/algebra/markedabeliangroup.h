@@ -43,6 +43,7 @@
 #include <vector>
 #include "regina-core.h"
 #include "core/output.h"
+#include "algebra/abeliangroup.h"
 #include "maths/matrix.h"
 #include "maths/vector.h"
 
@@ -386,6 +387,14 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * @return the number of invariant factors.
          */
         size_t countInvariantFactors() const;
+
+        /**
+         * Returns just the underlying abelian group, without any of the
+         * chain complex information.
+         *
+         * @return the abelian group.
+         */
+        AbelianGroup unmarked() const;
 
         /**
          * Returns the rank of the chain complex supporting the homology
@@ -1303,6 +1312,10 @@ inline const Integer& MarkedAbelianGroup::invariantFactor(
 
 inline unsigned long MarkedAbelianGroup::rank() const {
     return snfFreeRank_;
+}
+
+inline AbelianGroup MarkedAbelianGroup::unmarked() const {
+    return AbelianGroup(snfFreeRank_, invFac_);
 }
 
 inline unsigned long MarkedAbelianGroup::snfRank() const {
