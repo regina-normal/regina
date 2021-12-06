@@ -120,22 +120,30 @@ template <class T, bool supportsUtf8 = false>
 struct Output {
     /**
      * Returns a short text representation of this object.
-     * This text should be human-readable, should fit on a single line,
-     * and should not end with a newline.  Where possible, it should use
-     * plain ASCII characters.
+     * This text should be human-readable, should use plain ASCII characters
+     * where possible, and should not contain any newlines.
      *
-     * \ifacespython In addition to str(), this is also used as the
-     * Python "stringification" function <tt>__str__()</tt>.
+     * Within these limits, this short text ouptut should be as
+     * information-rich as possible, since in most cases this forms the
+     * basis for the Python <tt>__str__()</tt> and <tt>__repr__()</tt>
+     * functions.
+     *
+     * \ifacespython The Python "stringification" function <tt>__str__()</tt>
+     * will use precisely this function, and for most classes the Python
+     * <tt>__repr__()</tt> function will incorporate this into its output.
      *
      * @return a short text representation of this object.
      */
     std::string str() const;
     /**
      * Returns a short text representation of this object using unicode
-     * characters.  Like str(), this text should be human-readable, should
-     * fit on a single line, and should not end with a newline.  In
-     * addition, it may use unicode characters to make the output more
-     * pleasant to read.  This string will be encoded in UTF-8.
+     * characters.  Like str(), this text should be human-readable,
+     * should not contain any newlines, and (within these constraints)
+     * should be as information-rich as is reasonable.
+     *
+     * Unlike str(), this function may use unicode characters to make the
+     * output more pleasant to read.  The string that is returned
+     * will be encoded in UTF-8.
      *
      * @return a short text representation of this object.
      */
