@@ -897,11 +897,11 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
             factors.  This is no value if it has not yet been computed. */
         std::optional<MatrixInt> reducedMatrix_;
         /** pointer to kernel of map, or no value if not yet computed. */
-        std::optional<MarkedAbelianGroup> kernel_;
+        std::optional<AbelianGroup> kernel_;
         /** pointer to coKernel of map, or no value if not yet computed. */
-        std::optional<MarkedAbelianGroup> coKernel_;
+        std::optional<AbelianGroup> cokernel_;
         /** pointer to image, or no value if not yet computed. */
-        std::optional<MarkedAbelianGroup> image_;
+        std::optional<AbelianGroup> image_;
         /** pointer to a lattice which describes the kernel of the
             homomorphism, or no value if not yet computed. */
         std::optional<MatrixInt> reducedKernelLattice_;
@@ -1057,21 +1057,21 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
         /**
          * Returns the kernel of this homomorphism.
          *
-         * @return the kernel of the homomorphism, as a marked abelian group.
+         * @return the kernel of the homomorphism.
          */
-        const MarkedAbelianGroup& kernel() const;
+        const AbelianGroup& kernel() const;
         /**
          * Returns the cokernel of this homomorphism.
          *
-         * @return the cokernel of the homomorphism, as a marked abelian group.
+         * @return the cokernel of the homomorphism.
          */
-        const MarkedAbelianGroup& cokernel() const;
+        const AbelianGroup& cokernel() const;
         /**
          * Returns the image of this homomorphism.
          *
-         * @return the image of the homomorphism, as a marked abelian group.
+         * @return the image of the homomorphism.
          */
-        const MarkedAbelianGroup& image() const;
+        const AbelianGroup& image() const;
 
         /**
          * Short text representation.  This will state some basic
@@ -1270,7 +1270,7 @@ void swap(HomMarkedAbelianGroup& lhs, HomMarkedAbelianGroup& rhs) noexcept;
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
 
-inline const MarkedAbelianGroup& HomMarkedAbelianGroup::kernel() const {
+inline const AbelianGroup& HomMarkedAbelianGroup::kernel() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
@@ -1278,7 +1278,7 @@ inline const MarkedAbelianGroup& HomMarkedAbelianGroup::kernel() const {
     return *kernel_;
 }
 
-inline const MarkedAbelianGroup& HomMarkedAbelianGroup::image() const {
+inline const AbelianGroup& HomMarkedAbelianGroup::image() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
@@ -1286,12 +1286,12 @@ inline const MarkedAbelianGroup& HomMarkedAbelianGroup::image() const {
     return *image_;
 }
 
-inline const MarkedAbelianGroup& HomMarkedAbelianGroup::cokernel() const {
+inline const AbelianGroup& HomMarkedAbelianGroup::cokernel() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
     const_cast<HomMarkedAbelianGroup*>(this)->computeCokernel();
-    return *coKernel_;
+    return *cokernel_;
 }
 
 // Inline functions for MarkedAbelianGroup

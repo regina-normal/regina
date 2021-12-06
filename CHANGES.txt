@@ -515,6 +515,8 @@ Version 7.0  [ 10 December, 2021 ]
             - Added copy assignment and move assignment operators.
             - Added member and global swap() functions.
             - Renamed range() to codomain(), since this is what it actually is.
+            - Functions image(), kernel() and cokernel() now return a simpler
+              AbelianGroup, not a MarkedAbelianGroup.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
             - Constructors that used to take (const MarkedAbelianGroup&) and

@@ -25,9 +25,9 @@ New homomorphism
 ----------------
 
 Hom: 2 Z + 2 Z_2 (Z^2 -> Z^5 -> Z^1) --> Z + Z_6 (Z^3 -> Z^5 -> Z^1)
-Kernel: Z + Z_2 (Z^2 -> Z^3 -> Z^1)
-Cokernel: Z_5 (Z^5 -> Z^2 -> Z^1)
-Image: Z + Z_6 (Z^5 -> Z^4 -> Z^1)
+Kernel: Z + Z_2
+Cokernel: Z_5
+Image: Z + Z_6
 Reduced Matrix (torsion coordinates appear first):
 0 3 0 2
 0 0 5 0
@@ -37,9 +37,9 @@ New homomorphism
 ----------------
 
 Hom: 2 Z + 2 Z_2 (Z^2 -> Z^5 -> Z^1) --> Z + Z_6 (Z^3 -> Z^5 -> Z^1)
-Kernel: Z + Z_2 (Z^2 -> Z^3 -> Z^1)
-Cokernel: Z_15 (Z^5 -> Z^2 -> Z^1)
-Image: Z + Z_2 (Z^5 -> Z^4 -> Z^1)
+Kernel: Z + Z_2
+Cokernel: Z_15
+Image: Z + Z_2
 Reduced Matrix (torsion coordinates appear first):
 0 3 0 0
 0 0 10 15
@@ -49,9 +49,9 @@ New homomorphism
 ----------------
 
 Hom: 2 Z + 2 Z_2 (Z^2 -> Z^5 -> Z^1) --> Z + Z_6 (Z^3 -> Z^5 -> Z^1)
-Kernel: 2 Z + Z_2 (Z^2 -> Z^4 -> Z^1)
-Cokernel: Z (Z^5 -> Z^2 -> Z^1)
-Image: Z_6 (Z^6 -> Z^4 -> Z^1)
+Kernel: 2 Z + Z_2
+Cokernel: Z
+Image: Z_6
 Reduced Matrix (torsion coordinates appear first):
 3 3 2 4
 0 0 0 0

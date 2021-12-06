@@ -849,7 +849,7 @@ void HomMarkedAbelianGroup::swap(HomMarkedAbelianGroup& other) noexcept {
     matrix.swap(other.matrix);
     reducedMatrix_.swap(other.reducedMatrix_);
     kernel_.swap(other.kernel_);
-    coKernel_.swap(other.coKernel_);
+    cokernel_.swap(other.cokernel_);
     image_.swap(other.image_);
     reducedKernelLattice_.swap(other.reducedKernelLattice_);
 }
@@ -897,39 +897,37 @@ void HomMarkedAbelianGroup::computeKernel() {
         // the matrix representing the domain lattice in dcLpreimage
         // coordinates is given by domainLattice * R * (dcLpreimage inverse) * C
 
-        MatrixInt workMat( dcLpreimage.columns(),
-            domain_.countInvariantFactors() );
+        MatrixInt relators(domain_.countInvariantFactors(),
+            dcLpreimage.columns());
 
-        for (unsigned long i=0;i<workMat.rows();i++)
-            for (unsigned long j=0;j<workMat.columns();j++)
-                for (unsigned long k=0;k<R.columns();k++) {
-                    workMat.entry(i,j) += (domain_.invariantFactor(j) *
-                        R.entry(i,k) * C.entry(k,j) ) / dcLpreimage.entry(k,k);
-                }
+        for (unsigned long j = 0; j < relators.rows(); j++)
+            for (unsigned long i = 0; i < relators.columns(); i++)
+                for (unsigned long k = 0; k < R.columns(); k++)
+                    relators.entry(j, i) += (domain_.invariantFactor(j) *
+                        R.entry(i, k) * C.entry(k, j)) / dcLpreimage.entry(k,k);
 
-        kernel_ = MarkedAbelianGroup(MatrixInt(1, dcLpreimage.columns()),
-            std::move(workMat));
+        kernel_ = AbelianGroup(std::move(relators));
     }
 }
 
 
 
 void HomMarkedAbelianGroup::computeCokernel() {
-    if (!coKernel_) {
+    if (!cokernel_) {
         computeReducedMatrix();
 
-        MatrixInt ccrelators( reducedMatrix_->rows(),
-            reducedMatrix_->columns() + codomain_.countInvariantFactors() );
-        unsigned i,j;
-        for (i=0;i<reducedMatrix_->rows();i++)
-            for (j=0;j<reducedMatrix_->columns();j++)
-                ccrelators.entry(i,j)=reducedMatrix_->entry(i,j);
-        for (i=0;i<codomain_.countInvariantFactors();i++)
-            ccrelators.entry(i,i+reducedMatrix_->columns())=
+        MatrixInt relators(
+            reducedMatrix_->columns() + codomain_.countInvariantFactors(),
+            reducedMatrix_->rows());
+
+        for (unsigned long j = 0; j < reducedMatrix_->columns(); j++)
+            for (unsigned long i = 0; i < reducedMatrix_->rows(); i++)
+                relators.entry(j, i) = reducedMatrix_->entry(i, j);
+        for (unsigned long i = 0; i < codomain_.countInvariantFactors(); i++)
+            relators.entry(i + reducedMatrix_->columns(), i)=
                 codomain_.invariantFactor(i);
 
-        coKernel_ = MarkedAbelianGroup(MatrixInt(1, reducedMatrix_->rows()),
-            std::move(ccrelators));
+        cokernel_ = AbelianGroup(std::move(relators));
     }
 }
 
@@ -937,21 +935,20 @@ void HomMarkedAbelianGroup::computeCokernel() {
 void HomMarkedAbelianGroup::computeImage() {
     if (!image_) {
         computeReducedKernelLattice();
-        const MatrixInt& dcLpreimage( *reducedKernelLattice_ );
 
-        MatrixInt imgCCm(1, dcLpreimage.rows() );
-        MatrixInt imgCCn(dcLpreimage.rows(),
-            dcLpreimage.columns() + domain_.countInvariantFactors() );
+        MatrixInt relators(
+            reducedKernelLattice_->columns() + domain_.countInvariantFactors(),
+            reducedKernelLattice_->rows());
 
-        for (unsigned long i=0;i<domain_.countInvariantFactors();i++)
-            imgCCn.entry(i,i) = domain_.invariantFactor(i);
+        for (unsigned long i = 0; i < domain_.countInvariantFactors(); i++)
+            relators.entry(i, i) = domain_.invariantFactor(i);
 
-        for (unsigned long i=0;i<imgCCn.rows();i++)
-            for (unsigned long j=0;j< dcLpreimage.columns(); j++)
-                imgCCn.entry(i,j+domain_.countInvariantFactors()) =
-                    dcLpreimage.entry(i,j);
+        for (unsigned long j = 0; j < reducedKernelLattice_->columns(); j++)
+            for (unsigned long i = 0; i < relators.columns(); i++)
+                relators.entry(j + domain_.countInvariantFactors(), i) =
+                    reducedKernelLattice_->entry(i, j);
 
-        image_ = MarkedAbelianGroup(std::move(imgCCm), std::move(imgCCn));
+        image_ = AbelianGroup(std::move(relators));
     }
 }
 
