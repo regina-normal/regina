@@ -382,10 +382,10 @@ class MarkedAbelianGroupTest : public CppUnit::TestFixture {
 
 
             MarkedAbelianGroup tor = g.torsionSubgroup();
-            if (tor.str() != "Z_2") {
+            if (tor.unmarked().str() != "Z_2") {
                 std::ostringstream msg;
                 msg << "H1(Klein bottle) has wrong torsion subgroup: "
-                    << tor.str();
+                    << tor.unmarked().str();
                 CPPUNIT_FAIL(msg.str());
             }
 
