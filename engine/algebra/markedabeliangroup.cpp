@@ -771,14 +771,14 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
     // so we have a common Step 1.
     MatrixInt step1Mat(codomain_.presCi_.rows(), domain_.presC_.rows());
     for (unsigned long i=0; i<step1Mat.rows(); i++)
-        for (unsigned long j=0; j<step1Mat.columns(); j++)
-    { // ran->presCi_.entry(i, k)*reducedMatrix_.entry(k, l)*dom->presC_.entry(l, j)
-      for (unsigned long k=0; k<reducedMatrix_->rows(); k++)
-      for (unsigned long l=0;l<reducedMatrix_->columns(); l++)
-        step1Mat.entry(i,j) +=
-        codomain_.presCi_.entry(i,k+codomain_.ifLoc_)*reducedMatrix_->entry(k,l)*
-         domain_.presC_.entry(l+domain_.ifLoc_,j);
-    }
+        for (unsigned long j=0; j<step1Mat.columns(); j++) {
+            // ran->presCi_.entry(i, k)*reducedMatrix_.entry(k, l)*dom->presC_.entry(l, j)
+            for (unsigned long k=0; k<reducedMatrix_->rows(); k++)
+                for (unsigned long l=0;l<reducedMatrix_->columns(); l++)
+                    step1Mat.entry(i,j) += codomain_.presCi_.entry(
+                        i,k+codomain_.ifLoc_)*reducedMatrix_->entry(k,l) *
+                        domain_.presC_.entry(l+domain_.ifLoc_,j);
+        }
     // with mod p coefficients we have this fiddly middle step 2.
 
     MatrixInt step2Mat( step1Mat.rows()+codomain_.tensorIfLoc_,
@@ -787,68 +787,61 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
     // the tensor part by ran.tensorCi_, dom.tensorC_ resp.
     if (domain_.coeff_ == 0)
         for (unsigned long i=0; i<step2Mat.rows(); i++)
-         for (unsigned long j=0; j<step2Mat.columns(); j++)
-            step2Mat.entry(i,j) = step1Mat.entry(i,j);
+            for (unsigned long j=0; j<step2Mat.columns(); j++)
+                step2Mat.entry(i,j) = step1Mat.entry(i,j);
     else
-     for (unsigned long i=0; i<step2Mat.rows(); i++)
-      for (unsigned long j=0; j<step2Mat.columns(); j++)
-       { // (ID_TOR xran->tensorCi_.entry(i,k)*incl_tensorIfLoc_)*step1Mat.entry(k,l)*
-         // ID_TOR x trunc_tensorIfLoc_*dom->tensorC_.entry(l, j)) app shifted...
-        if (i < codomain_.TORVec_.size())
-         {
-          if (j < domain_.TORVec_.size())
-           { step2Mat.entry(i,j) = step1Mat.entry(i,j); } else
-           { // [step1 UR corner] * [dom->tensorC_ first tensorIfLoc_ rows cropped]
-             for (unsigned long k=domain_.tensorIfLoc_; k<domain_.tensorC_.rows(); k++)
-             step2Mat.entry(i,j) +=
-             step1Mat.entry(i,k-domain_.tensorIfLoc_+domain_.TORVec_.size())*
-                domain_.tensorC_.entry(k,j-domain_.TORVec_.size());
-           }
-         } else
-        if (j < domain_.TORVec_.size())
-         {
-          for (unsigned long k=codomain_.tensorIfLoc_; k<codomain_.tensorCi_.columns(); k++)
-           step2Mat.entry(i,j) += codomain_.tensorCi_.entry(i-codomain_.TORVec_.size(),k)*
-           step1Mat.entry(k-codomain_.tensorIfLoc_+codomain_.TORVec_.size(),j);
-         } else
-        {
-         for (unsigned long k=codomain_.tensorIfLoc_; k<codomain_.tensorCi_.rows(); k++)
-         for (unsigned long l=domain_.tensorIfLoc_; l<domain_.tensorC_.rows(); l++)
-         step2Mat.entry(i,j) += codomain_.tensorCi_.entry(i-codomain_.TORVec_.size(),k)*
-         step1Mat.entry(k-codomain_.tensorIfLoc_+codomain_.TORVec_.size(),
-         l-domain_.tensorIfLoc_+domain_.TORVec_.size())*
-         domain_.tensorC_.entry(l,j-domain_.TORVec_.size());
-        }
-      }
+        for (unsigned long i=0; i<step2Mat.rows(); i++)
+            for (unsigned long j=0; j<step2Mat.columns(); j++) {
+                // (ID_TOR xran->tensorCi_.entry(i,k)*incl_tensorIfLoc_)*step1Mat.entry(k,l)*
+                // ID_TOR x trunc_tensorIfLoc_*dom->tensorC_.entry(l, j)) app shifted...
+                if (i < codomain_.TORVec_.size()) {
+                    if (j < domain_.TORVec_.size()) {
+                        step2Mat.entry(i,j) = step1Mat.entry(i,j);
+                    } else {
+                        // [step1 UR corner] * [dom->tensorC_ first tensorIfLoc_ rows cropped]
+                        for (unsigned long k=domain_.tensorIfLoc_; k<domain_.tensorC_.rows(); k++)
+                            step2Mat.entry(i,j) += step1Mat.entry(i,k-domain_.tensorIfLoc_+domain_.TORVec_.size())*
+                                domain_.tensorC_.entry(k,j-domain_.TORVec_.size());
+                    }
+                } else if (j < domain_.TORVec_.size()) {
+                    for (unsigned long k=codomain_.tensorIfLoc_; k<codomain_.tensorCi_.columns(); k++)
+                        step2Mat.entry(i,j) += codomain_.tensorCi_.entry(i-codomain_.TORVec_.size(),k)*
+                            step1Mat.entry(k-codomain_.tensorIfLoc_+codomain_.TORVec_.size(),j);
+                } else {
+                    for (unsigned long k=codomain_.tensorIfLoc_; k<codomain_.tensorCi_.rows(); k++)
+                        for (unsigned long l=domain_.tensorIfLoc_; l<domain_.tensorC_.rows(); l++)
+                            step2Mat.entry(i,j) += codomain_.tensorCi_.entry(i-codomain_.TORVec_.size(),k)*
+                                step1Mat.entry(k-codomain_.tensorIfLoc_+codomain_.TORVec_.size(),
+                                l-domain_.tensorIfLoc_+domain_.TORVec_.size())*
+                                domain_.tensorC_.entry(l,j-domain_.TORVec_.size());
+                }
+            }
     // now we rescale the TOR components appropriately, various row/column
     // mult and divisions. multiply first ran.TORLoc rows by p/gcd(p,q)
     // divide first dom.TORLoc rows by p/gcd(p,q)
 
     for (unsigned long i=0; i<codomain_.TORVec_.size(); i++)
-      for (unsigned long j=0; j<step2Mat.columns(); j++)
-        step2Mat.entry(i,j) *=
-            codomain_.coeff_.divExact(codomain_.coeff_.gcd(codomain_.TORVec_[i]));
+        for (unsigned long j=0; j<step2Mat.columns(); j++)
+            step2Mat.entry(i,j) *=
+                codomain_.coeff_.divExact(codomain_.coeff_.gcd(codomain_.TORVec_[i]));
     for (unsigned long i=0; i<step2Mat.rows(); i++)
-      for (unsigned long j=0; j<domain_.TORVec_.size(); j++)
-        step2Mat.entry(i,j) /=
-            domain_.coeff_.divExact(domain_.coeff_.gcd(domain_.TORVec_[j]));
+        for (unsigned long j=0; j<domain_.TORVec_.size(); j++)
+            step2Mat.entry(i,j) /=
+                domain_.coeff_.divExact(domain_.coeff_.gcd(domain_.TORVec_[j]));
     // previous line of code divisibility is good thing to check when debugging.
     // step 3, move it all up to the CC coordinates.
     // ran.MR_ * incl_ifLoc_ * step2Mat * proj_ifLoc_ * dom.MRi_
     unsigned long domTORLoc = domain_.rankM_ - domain_.TORVec_.size();
     unsigned long codomTORLoc = codomain_.rankM_ - codomain_.TORVec_.size();
     for (unsigned long i=0; i<matrix.rows(); i++)
-     for (unsigned long j=0; j<matrix.columns(); j++)
-    {
-     for (unsigned long k=codomTORLoc; k<codomain_.MR_.columns(); k++)
-       for (unsigned long l=domTORLoc;l<domain_.MRi_.rows(); l++)
-          matrix.entry(i,j) += codomain_.MR_.entry(i,k) *
-          step2Mat.entry(k-codomTORLoc,l-domTORLoc) *
-          domain_.MRi_.entry(l,j);
-    }
- // done
+        for (unsigned long j=0; j<matrix.columns(); j++) {
+            for (unsigned long k=codomTORLoc; k<codomain_.MR_.columns(); k++)
+                for (unsigned long l=domTORLoc;l<domain_.MRi_.rows(); l++)
+                    matrix.entry(i,j) += codomain_.MR_.entry(i,k) *
+                        step2Mat.entry(k-codomTORLoc,l-domTORLoc) *
+                        domain_.MRi_.entry(l,j);
+        }
 }
-
 
 void HomMarkedAbelianGroup::swap(HomMarkedAbelianGroup& other) noexcept {
     domain_.swap(other.domain_);
@@ -1161,87 +1154,88 @@ bool HomMarkedAbelianGroup::isChainMap(const HomMarkedAbelianGroup &other)
 // So to do this we'll need a new matrixops.cpp command -- call it
 // torsionAutInverse.
 HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
- const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
- MatrixInt invMat( reducedMatrix_->columns(), reducedMatrix_->rows() );
- if (!isIsomorphism())
-    return HomMarkedAbelianGroup( std::move(invMat), codomain_, domain_ );
- // get A, B, D from reducedMatrix
- // A must be square with domain/codomain_.countInvariantFactors() columns
- // D must be square with domain/codomain_.rank() columns
- // B may not be square with domain_.rank() columns and
- //  codomain_.countInvariantFactors() rows.
- MatrixInt A(codomain_.countInvariantFactors(), domain_.countInvariantFactors());
- MatrixInt B(codomain_.countInvariantFactors(), domain_.rank());
- MatrixInt D(codomain_.rank(), domain_.rank());
- for (unsigned long i=0; i<A.rows(); i++)
-   for (unsigned long j=0; j<A.columns(); j++)
-     A.entry(i,j) = reducedMatrix_->entry(i,j);
- for (unsigned long i=0; i<B.rows(); i++)
-   for (unsigned long j=0; j<B.columns(); j++)
-     B.entry(i,j) = reducedMatrix_->entry(i, j + A.columns());
- for (unsigned long i=0; i<D.rows(); i++)
-   for (unsigned long j=0; j<D.columns(); j++)
-     D.entry(i,j) = reducedMatrix_->entry( i + A.rows(), j + A.columns() );
- // compute A', B', D'
- // use void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
- // const std::vector<unsigned> &rowList);
- //  from matrixOps to compute the inverse of D.
- MatrixInt Di(D.rows(), D.columns()); Di.makeIdentity();
- MatrixInt Dold(D.rows(), D.columns()); Dold.makeIdentity();
- std::vector<unsigned> rowList(D.rows());
- for (unsigned i=0; i<rowList.size(); i++) rowList[i]=i;
- columnEchelonForm(D, Di, Dold, rowList);
- // now Di is the inverse of the old D, and D is the identity,
- // and Dold is the old D.
- std::vector<Integer> invF(domain_.countInvariantFactors());
- for (unsigned long i=0; i<invF.size(); i++)
-    invF[i] = domain_.invariantFactor(i);
- MatrixInt Ai = torsionAutInverse( A, invF);
- // then Bi is given by Bi = -AiBDi
+    const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+    MatrixInt invMat( reducedMatrix_->columns(), reducedMatrix_->rows() );
+    if (!isIsomorphism())
+        return HomMarkedAbelianGroup( std::move(invMat), codomain_, domain_ );
+    // get A, B, D from reducedMatrix
+    // A must be square with domain/codomain_.countInvariantFactors() columns
+    // D must be square with domain/codomain_.rank() columns
+    // B may not be square with domain_.rank() columns and
+    //  codomain_.countInvariantFactors() rows.
+    MatrixInt A(codomain_.countInvariantFactors(),
+        domain_.countInvariantFactors());
+    MatrixInt B(codomain_.countInvariantFactors(), domain_.rank());
+    MatrixInt D(codomain_.rank(), domain_.rank());
+    for (unsigned long i=0; i<A.rows(); i++)
+        for (unsigned long j=0; j<A.columns(); j++)
+            A.entry(i,j) = reducedMatrix_->entry(i,j);
+    for (unsigned long i=0; i<B.rows(); i++)
+        for (unsigned long j=0; j<B.columns(); j++)
+            B.entry(i,j) = reducedMatrix_->entry(i, j + A.columns());
+    for (unsigned long i=0; i<D.rows(); i++)
+        for (unsigned long j=0; j<D.columns(); j++)
+            D.entry(i,j) = reducedMatrix_->entry(i + A.rows(), j + A.columns());
+    // compute A', B', D'
+    // use void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
+    // const std::vector<unsigned> &rowList);
+    //  from matrixOps to compute the inverse of D.
+    MatrixInt Di(D.rows(), D.columns()); Di.makeIdentity();
+    MatrixInt Dold(D.rows(), D.columns()); Dold.makeIdentity();
+    std::vector<unsigned> rowList(D.rows());
+    for (unsigned i=0; i<rowList.size(); i++)
+        rowList[i]=i;
+    columnEchelonForm(D, Di, Dold, rowList);
+    // now Di is the inverse of the old D, and D is the identity,
+    // and Dold is the old D.
+    std::vector<Integer> invF(domain_.countInvariantFactors());
+    for (unsigned long i=0; i<invF.size(); i++)
+        invF[i] = domain_.invariantFactor(i);
+    MatrixInt Ai = torsionAutInverse( A, invF);
+    // then Bi is given by Bi = -AiBDi
     MatrixInt Bi(codomain_.countInvariantFactors(), domain_.rank());
     MatrixInt Btemp(codomain_.countInvariantFactors(), domain_.rank());
     // Btemp will give -BDi
     // Bi will be AiBtemp
     for (unsigned long i=0; i<Btemp.rows(); i++)
-      for (unsigned long j=0; j<Btemp.columns(); j++)
-        for (unsigned long k=0; k<Btemp.columns(); k++)
-            Btemp.entry(i,j) -= B.entry(i,k)*Di.entry(k,j);
+        for (unsigned long j=0; j<Btemp.columns(); j++)
+            for (unsigned long k=0; k<Btemp.columns(); k++)
+                Btemp.entry(i,j) -= B.entry(i,k)*Di.entry(k,j);
     for (unsigned long i=0; i<Bi.rows(); i++)
-      for (unsigned long j=0; j<Bi.columns(); j++)
-        for (unsigned long k=0; k<Ai.columns(); k++)
-            Bi.entry(i,j) += Ai.entry(i,k)*Btemp.entry(k,j);
+        for (unsigned long j=0; j<Bi.columns(); j++)
+            for (unsigned long k=0; k<Ai.columns(); k++)
+                Bi.entry(i,j) += Ai.entry(i,k)*Btemp.entry(k,j);
     // reduce Ai and Bi respectively.
-    for (unsigned long i=0; i<Ai.rows(); i++)
-    {
-     for (unsigned long j=0; j<Ai.columns(); j++)
-      {
-       Ai.entry(i,j) %= domain_.invariantFactor(i);
-       if (Ai.entry(i,j) < 0) Ai.entry(i,j) += domain_.invariantFactor(i);
-      }
-     for (unsigned long j=0; j<Bi.columns(); j++)
-      {
-       Bi.entry(i,j) %= domain_.invariantFactor(i);
-       if (Bi.entry(i,j) < 0) Bi.entry(i,j) += domain_.invariantFactor(i);
-      }
+    for (unsigned long i=0; i<Ai.rows(); i++) {
+        for (unsigned long j=0; j<Ai.columns(); j++) {
+            Ai.entry(i,j) %= domain_.invariantFactor(i);
+            if (Ai.entry(i,j) < 0)
+                Ai.entry(i,j) += domain_.invariantFactor(i);
+        }
+        for (unsigned long j=0; j<Bi.columns(); j++) {
+            Bi.entry(i,j) %= domain_.invariantFactor(i);
+            if (Bi.entry(i,j) < 0)
+                Bi.entry(i,j) += domain_.invariantFactor(i);
+        }
     }
- // compute the coefficients of invMat.  We're in the funny situation where we
- // know what invMat's reduced matrix, not its chain-complex level defining
- // matrix.  So we use the alternative HomMarkedAbelianGroup constructor
- // designed specifically for this situation.
- // assemble into invMat  [A'|B']
- //                       [-----]
- //                       [0 |D']
+    // compute the coefficients of invMat.  We're in the funny situation where
+    // we know invMat's reduced matrix, not its chain-complex level defining
+    // matrix.  So we use the alternative HomMarkedAbelianGroup constructor
+    // designed specifically for this situation.
+    // assemble into invMat  [A'|B']
+    //                       [-----]
+    //                       [0 |D']
 
- for (unsigned long i=0; i<Ai.rows(); i++)
-   for (unsigned long j=0; j<Ai.columns(); j++)
-     invMat.entry(i,j) = Ai.entry(i,j);
- for (unsigned long i=0; i<Di.rows(); i++)
-   for (unsigned long j=0; j<Di.columns(); j++)
-     invMat.entry(i+Ai.rows(),j+Ai.columns()) = Di.entry(i,j);
- for (unsigned long i=0; i<Bi.rows(); i++)
-   for (unsigned long j=0; j<Bi.columns(); j++)
-     invMat.entry(i,j+Ai.columns()) = Bi.entry(i,j);
- return HomMarkedAbelianGroup(std::move(invMat), codomain_, domain_);
+    for (unsigned long i=0; i<Ai.rows(); i++)
+        for (unsigned long j=0; j<Ai.columns(); j++)
+            invMat.entry(i,j) = Ai.entry(i,j);
+    for (unsigned long i=0; i<Di.rows(); i++)
+        for (unsigned long j=0; j<Di.columns(); j++)
+            invMat.entry(i+Ai.rows(),j+Ai.columns()) = Di.entry(i,j);
+    for (unsigned long i=0; i<Bi.rows(); i++)
+        for (unsigned long j=0; j<Bi.columns(); j++)
+            invMat.entry(i,j+Ai.columns()) = Bi.entry(i,j);
+    return HomMarkedAbelianGroup(std::move(invMat), codomain_, domain_);
 }
 
 } // namespace regina
