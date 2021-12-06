@@ -191,7 +191,7 @@ void addTreeDecomposition(pybind11::module_& m) {
         .def_static("fromPACE",
             overload_cast<const std::string&>(&TreeDecomposition::fromPACE))
     ;
-    regina::python::add_output(td, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(td);
     regina::python::add_eq_operators(td);
 
     m.def("swap",

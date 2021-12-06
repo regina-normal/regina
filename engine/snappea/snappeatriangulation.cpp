@@ -891,8 +891,23 @@ MatrixInt SnapPeaTriangulation::slopeEquations() const {
 
 void SnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     if (data_) {
-        out << "SnapPea triangulation with " << data_->num_tetrahedra
-            << " tetrahedra";
+        Triangulation<3>::writeTextShort(out);
+        if (countBoundaryComponents() == 0)
+            out << ", no cusps";
+        else {
+            out << ", cusps: [ ";
+            bool first = true;
+            for (const auto& c : cusps()) {
+                if (first)
+                    first = false;
+                else
+                    out << ", ";
+                out << "vertex " << c.vertex_->markedIndex();
+                if (! c.complete())
+                    out << ": (" << c.m_ << ", " << c.l_ << ')';
+            }
+            out << " ]";
+        }
     } else {
         out << "Null SnapPea triangulation";
     }

@@ -98,7 +98,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("generateMinimalLinks", &ModelLinkGraph::generateMinimalLinks<
             const std::function<void(regina::Link&&)>&>)
     ;
-    regina::python::add_output(g, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(g);
     regina::python::add_eq_operators(g);
 
     regina::python::addListView<decltype(ModelLinkGraph().nodes())>(m);

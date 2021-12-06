@@ -1074,8 +1074,8 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
         const AbelianGroup& image() const;
 
         /**
-         * Short text representation.  This will state some basic
-         * properties of the homomorphism, such as:
+         * Returns a very brief summary of the type of map.
+         * This will state some basic properties of the homomorphism, such as:
          *
          * - whether the map is the identity;
          * - whether the map is an isomorphism;
@@ -1084,6 +1084,29 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * - if it is not epic, describes the co-kernel;
          * - if it is neither monic nor epic, describes the image.
          *
+         * @return a brief summary.
+         */
+        std::string summary() const;
+
+        /**
+         * Writes a very brief summary of the type of map to the given
+         * output stream.
+         *
+         * This writes exactly the same information as the no-argument variant
+         * of summary() returns; see that routine for further details.
+         *
+         * \ifacespython Not present, but you can call the no-argument
+         * variant of summary instead(), which returns this same
+         * information in string form.
+         *
+         * @param out the output stream to which to write.
+         */
+        void summary(std::ostream& out) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
          * \ifacespython Not present; use str() instead.
          *
          * @param out the stream to write to.
@@ -1091,7 +1114,8 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
         void writeTextShort(std::ostream& out) const;
 
         /**
-         * A more detailed text representation of the homomorphism.
+         * Writes a detailed text representation of this object to the
+         * given output stream.
          *
          * \ifacespython Not present; use detail() instead.
          *

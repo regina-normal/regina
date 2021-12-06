@@ -65,13 +65,27 @@ HomMarkedAbelianGroup HomGroupPresentation::markedAbelianisation() const {
 }
 
 void HomGroupPresentation::writeTextShort(std::ostream& out) const {
-    if (inv_)
-        out << "Isomorphism from ";
-    else
-        out << "Homomorphism from ";
-    domain_.writeTextShort(out);
-    out << " to ";
-    codomain_.writeTextShort(out);
+    if (map_.empty()) {
+        out << "Trivial map on no generators";
+    } else {
+        if (inv_)
+            out << "Isomorphism: ";
+        else
+            out << "Homomorphism: ";
+        /*
+        domain_.writeTextShort(out);
+        out << " to ";
+        codomain_.writeTextShort(out);
+        */
+
+        size_t gen = 0;
+        for (const auto &e : map_) {
+            if (gen > 0)
+                out << ", ";
+            out << 'g' << gen << " -> " << e;
+            ++gen;
+        }
+    }
 }
 
 void HomGroupPresentation::writeTextLong(std::ostream& out) const {

@@ -518,6 +518,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Renamed range() to codomain(), since this is what it actually is.
             - Functions image(), kernel() and cokernel() now return a simpler
               AbelianGroup, not a MarkedAbelianGroup.
+            - New routine summary().
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
             - Constructors that used to take (const MarkedAbelianGroup&) and
@@ -1469,6 +1470,7 @@ Version 7.0  [ 10 December, 2021 ]
               alias.  Also added a global regina::swap(Tangle&, Tangle&).
             - Routines numClosure and denClosure() now return by value,
               not pointer.
+            - Added brief() output routines.
             - Routine fromOrientedGauss() now returns by value (not pointer),
               and throws an exception on error (instead of returning null).
             - New routine crossings().

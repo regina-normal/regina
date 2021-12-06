@@ -40,7 +40,7 @@
 using regina::BlockedSFSTriple;
 
 void addBlockedSFSTriple(pybind11::module_& m) {
-    pybind11::class_<BlockedSFSTriple, regina::StandardTriangulation>
+    auto c = pybind11::class_<BlockedSFSTriple, regina::StandardTriangulation>
             (m, "BlockedSFSTriple")
         .def(pybind11::init<const BlockedSFSTriple&>())
         .def("swap", &BlockedSFSTriple::swap)
@@ -54,6 +54,7 @@ void addBlockedSFSTriple(pybind11::module_& m) {
         .def_static("isBlockedSFSTriple", // deprecated
             &BlockedSFSTriple::recognise)
     ;
+    regina::python::add_output(c);
 
     m.def("swap",
         (void(*)(BlockedSFSTriple&, BlockedSFSTriple&))(regina::swap));

@@ -121,73 +121,80 @@ void HomologicalData::swap(HomologicalData& other) noexcept {
 }
 
 void HomologicalData::writeTextShort(std::ostream& out) const {
+    bool first = true;
+
     if (mHomology0_) {
-        out<<"H_0(M) = ";
-        mHomology0_->writeTextShort(out);
-        out<<" ";
+        if (first) first = false; else out << ", ";
+        out<<"H0(M): ";
+        mHomology0_->unmarked().writeTextShort(out);
     }
     if (mHomology1_) {
-        out<<"H_1(M) = ";
-        mHomology1_->writeTextShort(out);
-        out<<" ";
+        if (first) first = false; else out << ", ";
+        out<<"H1(M): ";
+        mHomology1_->unmarked().writeTextShort(out);
     }
     if (mHomology2_) {
-        out<<"H_2(M) = ";
-        mHomology2_->writeTextShort(out);
-        out<<" ";
+        if (first) first = false; else out << ", ";
+        out<<"H2(M): ";
+        mHomology2_->unmarked().writeTextShort(out);
     }
     if (mHomology3_) {
-        out<<"H_3(M) = ";
-        mHomology3_->writeTextShort(out);
-        out<<" ";
+        if (first) first = false; else out << ", ";
+        out<<"H3(M): ";
+        mHomology3_->unmarked().writeTextShort(out);
     }
 
     if (bHomology0_) {
-        out<<"H_0(BM) = ";
-        bHomology0_->writeTextShort(out);
-        out<<" ";
+        if (first) first = false; else out << ", ";
+        out<<"H0(BM): ";
+        bHomology0_->unmarked().writeTextShort(out);
     }
     if (bHomology1_) {
-        out<<"H_1(BM) = ";
-        bHomology1_->writeTextShort(out);
-        out<<" ";
+        if (first) first = false; else out << ", ";
+        out<<"H1(BM): ";
+        bHomology1_->unmarked().writeTextShort(out);
     }
     if (bHomology2_) {
-        out<<"H_2(BM) = ";
-        bHomology2_->writeTextShort(out);
-        out<<" ";
+        if (first) first = false; else out << ", ";
+        out<<"H2(BM): ";
+        bHomology2_->unmarked().writeTextShort(out);
     }
 
     if (bmMap0_) {
-        out<<"H_0(BM) -> H_0(M) = ";
+        if (first) first = false; else out << ", ";
+        out<<"H0(BM) -> H0(M): ";
         bmMap0_->writeTextShort(out);
-        out<<" ";
     }
     if (bmMap1_) {
-        out<<"H_1(BM) -> H_1(M) = ";
+        if (first) first = false; else out << ", ";
+        out<<"H1(BM) -> H1(M): ";
         bmMap1_->writeTextShort(out);
-        out<<" ";
     }
     if (bmMap2_) {
-        out<<"H_2(BM) -> H_2(M) = ";
+        if (first) first = false; else out << ", ";
+        out<<"H2(BM) -> H2(M): ";
         bmMap2_->writeTextShort(out);
-        out<<" ";
     }
 
     if (dmTomMap1_) {
-        out<<"PD map = ";
+        if (first) first = false; else out << ", ";
+        out<<"PD map: ";
         dmTomMap1_->writeTextShort(out);
-        out<<" ";
     }
     if (torsionFormComputed) {
-        out<<"Torsion form rank vector: "<<torsionRankString<<" ";
-        out<<"Torsion sigma vector: "<<torsionSigmaString<<" ";
-        out<<"Torsion Legendre symbol vector: "<<torsionLegendreString<<" ";
+        if (first) first = false; else out << ", ";
+        out << "Torsion form rank = " << torsionRankString << ", "
+            << "sigma = " << torsionSigmaString << ", "
+            << "Legendre = " << torsionLegendreString;
     }
+    /*
     if (! embeddabilityString.empty()) {
+        if (first) first = false; else out << ", ";
         out<<"Embedability comment: "<<embeddabilityString<<" ";
     }
-
+    */
+    if (first)
+        out << "Nothing computed yet";
 }
 
 void HomologicalData::computeccIndexing() {

@@ -99,7 +99,12 @@ enum ReprStyle {
 template <class C, typename... options>
 void add_output(pybind11::class_<C, options...>& c,
         ReprStyle style = PYTHON_REPR_DETAILED) {
-    using BaseType = typename regina::OutputBase<C>::type;
+    // The messy std::conditional below is to resolve packets of type
+    // PacketOf<...>, which inherit from Output<...> via both Packet and Held.
+    using BaseType = typename std::conditional<
+        std::is_base_of<regina::Packet, C>::value,
+        Output<regina::Packet> /* choose the Output that comes via Packet */,
+        typename regina::OutputBase<C>::type>::type;
     using OutputFunctionType = std::string (BaseType::*)() const;
 
     c.def("str", OutputFunctionType(&BaseType::str));

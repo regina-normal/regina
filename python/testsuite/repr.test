@@ -33,6 +33,14 @@
 
 from __future__ import print_function
 
+# Fetch the python/testsuite path in the source tree, since we will need
+# to access external files.
+import sys
+if (len(sys.argv) > 1):
+	testpath = sys.argv[1]
+else:
+	testpath = '.'
+
 def dump(x):
 	print(x.__class__.__name__)
 	print(str(x))
@@ -103,11 +111,17 @@ dump(LPSystem(NS_QUAD))
 
 dump(Example3.weberSeifert().homology())
 dump(Example3.weberSeifert().markedHomology())
+dump(Example3.weberSeifert().markedHomology().torsionInclusion())
 
 g = Example3.poincare().fundamentalGroup()
 dump(g)
 dump(g.relation(0))
 dump(g.relation(0).term(2))
+
+g = GroupPresentation(3, ['aC', 'aBCb'])
+dump(g)
+dump(g.intelligentSimplifyDetail())
+dump(g)
 
 # ----------------------------------------------------------------------
 # utilities/
@@ -155,23 +169,30 @@ dump(f)
 # ----------------------------------------------------------------------
 
 g = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
+dump(g)
 dump(g.node(0).arc(2))
 
 dump(Link())
 dump(Link(1))
 dump(ExampleLink.whitehead())
+dump(PacketOfLink(ExampleLink.whitehead()))
 
 l = Link(1)
 dump(l.component(0))
 l = ExampleLink.figureEight()
 dump(l.component(0))
 
+dump(Tangle(3,2))
+
 # ----------------------------------------------------------------------
 # snappea/
 # ----------------------------------------------------------------------
 
 s = ExampleSnapPea.whiteheadLink()
+dump(s)
 s.fill(5,-2,0)
+dump(s)
+dump(PacketOfSnapPeaTriangulation(s))
 dump(s.cusp(0))
 dump(s.cusp(1))
 
@@ -186,6 +207,7 @@ dump(FacetPairing4(Example4.s3xs1()))
 
 dump(Example2.mobius())
 dump(Example3.poincare())
+dump(PacketOfTriangulation3(Example3.poincare()))
 dump(Example4.cappellShaneson())
 dump(Example5.sphere())
 
@@ -217,6 +239,11 @@ i.setSimpImage(1, 0)
 i.setFacetPerm(0, Perm4(1,2,3,0))
 i.setFacetPerm(1, Perm4(0,2))
 dump(i)
+
+h = HomologicalData(Example3.lst(3,4))
+dump(h)
+dump(h.bdryHomologyMap(1))
+dump(h)
 
 # ----------------------------------------------------------------------
 # manifold/
@@ -250,6 +277,24 @@ dump(StandardTriangulation.recognise(Example3.figureEight()))
 dump(TxIDiagonalCore(6,1))
 dump(TxIParallelCore())
 
+t = Triangulation3()
+(a,b) = t.newSimplices(2)
+a.join(0, a, Perm4(0,1))
+b.join(0, b, Perm4(0,1))
+a.join(2, b, Perm4(2,3))
+a.join(3, b, Perm4(2,3))
+dump(SnappedBall.recognise(b))
+dump(SnappedTwoSphere.recognise(a, b))
+
+t = Triangulation3()
+(a,b,c,d) = t.newSimplices(4)
+for i in [1,2,3]:
+	c.join(i, b, Perm4())
+	d.join(i, b, Perm4())
+a.join(0, c, Perm4())
+b.join(0, d, Perm4())
+dump(PillowTwoSphere.recognise(a.triangle(0), b.triangle(0)))
+
 t = Example3.sfsOverSphere(3,4,5,1,2,-1)
 s = BlockedSFS.recognise(t)
 dump(s)
@@ -257,6 +302,11 @@ dump(s.region())
 dump(s.region().block(0))
 dump(s.region().block(0).block())
 dump(s.region().block(0).block().annulus(0))
+
+dump(BlockedSFSLoop.recognise(Triangulation3('kLLLLPQkcddfjgihjijpkrkaspoadj')))
+dump(BlockedSFSPair.recognise(Triangulation3('hLAvQkbccefggglpksulwb')))
+dump(BlockedSFSTriple.recognise(Triangulation3('kLALALMkbccfefihijjlpkusuueotr')))
+dump(PluggedTorusBundle.recognise(Triangulation3('kLLvAPQkbdfehgjiijjdwuurwmmaxn')))
 
 # ----------------------------------------------------------------------
 # census/
@@ -275,10 +325,23 @@ dump(TypeTrie4())
 dump(TypeTrie7())
 
 # ----------------------------------------------------------------------
+# treewidth/
+# ----------------------------------------------------------------------
+
+dump(TreeDecomposition(ExampleLink.conway()))
+
+# ----------------------------------------------------------------------
 # split/
 # ----------------------------------------------------------------------
 
 dump(Signature.parse('abbc.ac'))
+
+# ----------------------------------------------------------------------
+# file/
+# ----------------------------------------------------------------------
+
+dump(FileInfo.identify(testpath + '/file3.rga'))
+dump(FileInfo.identify(testpath + '/pdf.test'))
 
 # ----------------------------------------------------------------------
 # packet/

@@ -37,6 +37,7 @@
 namespace regina {
 
 class Packet;
+template <class> class PacketData;
 template <class> class PacketOf;
 
 namespace python {
@@ -68,11 +69,13 @@ namespace python {
  */
 template <class Held>
 auto add_packet_wrapper(pybind11::module_& m, const char* className) {
-    return pybind11::class_<regina::PacketOf<Held>, Held, regina::Packet,
+    auto c = pybind11::class_<regina::PacketOf<Held>, Held, regina::Packet,
             std::shared_ptr<regina::PacketOf<Held>>>(m, className)
         .def(pybind11::init<const Held&>()) // also takes PacketOf<Held>
         .def_readonly_static("typeID", &regina::PacketOf<Held>::typeID)
     ;
+    regina::python::add_output(c);
+    return c;
 }
 
 /**
@@ -113,10 +116,10 @@ void add_packet_constructor(PythonClass& classWrapper, Options&&... options) {
  */
 template <typename PythonClass>
 void add_packet_data(PythonClass& classWrapper) {
-    using WrappedType = typename PythonClass::type;
+    using DataType = regina::PacketData<typename PythonClass::type>;
     classWrapper
-        .def("packet", pybind11::overload_cast<>(&WrappedType::packet))
-        .def("anonID", &WrappedType::anonID)
+        .def("packet", pybind11::overload_cast<>(&DataType::packet))
+        .def("anonID", &DataType::anonID)
         ;
 }
 

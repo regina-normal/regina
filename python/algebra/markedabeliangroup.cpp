@@ -140,13 +140,15 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("reducedMatrix", &HomMarkedAbelianGroup::reducedMatrix,
             pybind11::return_value_policy::reference_internal)
+        .def("summary", pybind11::overload_cast<>(
+            &HomMarkedAbelianGroup::summary, pybind11::const_))
         .def("torsionSubgroup", &HomMarkedAbelianGroup::torsionSubgroup)
         .def("evalCC", &HomMarkedAbelianGroup::evalCC)
         .def("evalSNF", &HomMarkedAbelianGroup::evalSNF)
         .def("inverseHom", &HomMarkedAbelianGroup::inverseHom)
         .def(pybind11::self * pybind11::self)
     ;
-    regina::python::add_output(c2, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c2);
     regina::python::add_eq_operators(c2);
 
     m.def("swap",

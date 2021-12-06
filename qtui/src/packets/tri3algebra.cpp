@@ -566,7 +566,7 @@ void Tri3CellularInfoUI::refresh() {
                 arg(minfo.bdryHomology(2).unmarked().str().c_str()));
         }
 
-        BdryMap->setText(minfo.bdryHomologyMap(1).str().c_str());
+        BdryMap->setText(minfo.bdryHomologyMap(1).summary().c_str());
 
         if (! tri->isConnected()) {
             QString msg(QObject::tr("Triangulation is disconnected."));

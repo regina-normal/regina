@@ -180,7 +180,7 @@ std::optional<FileInfo> FileInfo::identify(std::string idPathname) {
 }
 
 void FileInfo::writeTextShort(std::ostream& out) const {
-    out << "File information: " << formatDescription();
+    out << "Regina data: " << formatDescription();
     if (compressed_)
         out << ", compressed";
 }

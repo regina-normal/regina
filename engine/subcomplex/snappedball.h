@@ -179,7 +179,7 @@ class SnappedBall : public StandardTriangulation {
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
-        void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const override;
 
     private:
         /**
@@ -241,8 +241,11 @@ inline std::ostream& SnappedBall::writeName(std::ostream& out) const {
 inline std::ostream& SnappedBall::writeTeXName(std::ostream& out) const {
     return out << "\\mathit{Snap}";
 }
-inline void SnappedBall::writeTextLong(std::ostream& out) const {
-    out << "Snapped 3-ball";
+inline void SnappedBall::writeTextShort(std::ostream& out) const {
+    out << "Snapped 3-ball, internal edge "
+        << tet_->index() << " ("
+        << Edge<3>::edgeVertex[5 - equator_][0]
+        << Edge<3>::edgeVertex[5 - equator_][1] << ')';
 }
 
 inline std::unique_ptr<SnappedBall> SnappedBall::formsSnappedBall(

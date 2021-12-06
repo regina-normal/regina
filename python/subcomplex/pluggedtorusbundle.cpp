@@ -41,7 +41,7 @@
 using regina::PluggedTorusBundle;
 
 void addPluggedTorusBundle(pybind11::module_& m) {
-    pybind11::class_<PluggedTorusBundle, regina::StandardTriangulation>
+    auto c = pybind11::class_<PluggedTorusBundle, regina::StandardTriangulation>
             (m, "PluggedTorusBundle")
         .def(pybind11::init<const PluggedTorusBundle&>())
         .def("swap", &PluggedTorusBundle::swap)
@@ -57,6 +57,7 @@ void addPluggedTorusBundle(pybind11::module_& m) {
         .def_static("isPluggedTorusBundle", // deprecated
             &PluggedTorusBundle::recognise)
     ;
+    regina::python::add_output(c);
 
     m.def("swap",
         (void(*)(PluggedTorusBundle&, PluggedTorusBundle&))(regina::swap));

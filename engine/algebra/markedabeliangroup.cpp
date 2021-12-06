@@ -1006,25 +1006,46 @@ void HomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
     }
 }
 
-void HomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
+std::string HomMarkedAbelianGroup::summary() const {
+    std::ostringstream out;
+    summary(out);
+    return out.str();
+}
+
+void HomMarkedAbelianGroup::summary(std::ostream& out) const {
     if (isIsomorphism())
-        out<<"isomorphism";
+        out << "Isomorphism";
     else if (isZero())
-        out<<"zero map";
+        out << "Zero map";
     else if (isMonic()) { // monic not epic
-        out<<"monic, with cokernel ";
+        out << "Monic (cokernel ";
         cokernel().writeTextShort(out);
+        out << ')';
     } else if (isEpic()) { // epic not monic
-        out<<"epic, with kernel ";
+        out << "Epic (kernel ";
         kernel().writeTextShort(out);
+        out << ')';
     } else { // nontrivial not epic, not monic
-        out<<"kernel ";
+        out << "Map (kernel ";
         kernel().writeTextShort(out);
-        out<<" | cokernel ";
+        out << " | cokernel ";
         cokernel().writeTextShort(out);
-        out<<" | image ";
+        out << " | image ";
         image().writeTextShort(out);
+        out << ')';
     }
+}
+
+void HomMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
+    summary(out);
+    out << ": ";
+
+    // Cast away const to compute the reduced matrix -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+
+    reducedMatrix_->writeTextShort(out);
 }
 
 void HomMarkedAbelianGroup::writeTextLong(std::ostream& out) const {

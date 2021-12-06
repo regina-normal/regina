@@ -414,6 +414,33 @@ void Tangle::changeAll() {
             end_[i][j].strand_ ^= 1;
 }
 
+std::string Tangle::brief() const {
+    std::ostringstream out;
+    brief(out);
+    return out.str();
+}
+
+void Tangle::brief(std::ostream& out) const {
+    out << type_;
+
+    if (crossings_.empty()) {
+        out << " ( ) ( )";
+        return;
+    }
+
+    out << ' ';
+    for (Crossing* c : crossings_)
+        out << (c->sign() > 0 ? '+' : '-');
+
+    for (int i = 0; i < 2; ++i) {
+        out << " (";
+        for (StrandRef s = end_[i][0]; s; ++s) {
+            out << ' ' << s;
+        }
+        out << " )";
+    }
+}
+
 void Tangle::writeTextShort(std::ostream& out) const {
     out << crossings_.size() << "-crossing ";
     switch (type_) {
@@ -421,7 +448,8 @@ void Tangle::writeTextShort(std::ostream& out) const {
         case TANGLE_VERTICAL: out << "vertical"; break;
         case TANGLE_DIAGONAL: out << "diagonal"; break;
     }
-    out << " tangle";
+    out << " tangle: ";
+    brief(out);
 }
 
 void Tangle::writeTextLong(std::ostream& out) const {

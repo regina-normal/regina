@@ -162,6 +162,10 @@ MarkedAbelianGroup
 3 Z_5 (Z^46 -> Z^24 -> Z^1)
 <regina.MarkedAbelianGroup: 3 Z_5 (Z^46 -> Z^24 -> Z^1)>
 
+HomMarkedAbelianGroup
+Isomorphism: [[ 1 0 0 ] [ 0 1 0 ] [ 0 0 1 ]]
+<regina.HomMarkedAbelianGroup: Isomorphism: [[ 1 0 0 ] [ 0 1 0 ] [ 0 0 1 ]]>
+
 GroupPresentation
 < a b | a b a^-1 b a b^-1, a b^-1 a^-1 b^-1 a b^2 >
 <regina.GroupPresentation: < a b | a b a^-1 b a b^-1, a b^-1 a^-1 b^-1 a b^2 >>
@@ -173,6 +177,18 @@ g0 g1 g0^-1 g1 g0 g1^-1
 GroupExpressionTerm
 g0^-1
 <regina.GroupExpressionTerm: g0^-1>
+
+GroupPresentation
+< a b c | a c^-1, a b^-1 c^-1 b >
+<regina.GroupPresentation: < a b c | a c^-1, a b^-1 c^-1 b >>
+
+HomGroupPresentation
+Isomorphism: g0 -> g1, g1 -> g0, g2 -> g1
+<regina.HomGroupPresentation: Isomorphism: g0 -> g1, g1 -> g0, g2 -> g1>
+
+GroupPresentation
+< a b | a^-1 b^-1 a b >
+<regina.GroupPresentation: < a b | a^-1 b^-1 a b >>
 
 Bitmask
 00010000000000000000000000000000
@@ -238,6 +254,10 @@ SurfaceFilterProperties
 Euler in { 1 0 }, orientable only
 <regina.SurfaceFilterProperties: Euler in { 1 0 }, orientable only>
 
+ModelLinkGraph
+6-node graph: [1:0 2:0 3:0 3:3] [0:0 4:0 4:3 2:1] [0:1 1:3 5:0 3:1] [0:2 2:3 5:3 0:3] [1:1 5:2 5:1 1:2] [2:2 4:2 4:1 3:2]
+<regina.ModelLinkGraph: 6-node graph: [1:0 2:0 3:0 3:3] [0:0 4:0 4:3 2:1] [0:1 1:3 5:0 3:1] [0:2 2:3 5:3 0:3] [1:1 5:2 5:1 1:2] [2:2 4:2 4:1 3:2]>
+
 ModelLinkGraphArc
 0:2
 <regina.ModelLinkGraphArc: 0:2>
@@ -254,6 +274,10 @@ Link
 5-crossing, 2-component link: --++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )
 <regina.Link: 5-crossing, 2-component link: --++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )>
 
+PacketOfLink
+5-crossing, 2-component link: --++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )
+<regina.PacketOfLink: 5-crossing, 2-component link: --++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )>
+
 StrandRef
 (null)
 <regina.StrandRef: (null)>
@@ -261,6 +285,22 @@ StrandRef
 StrandRef
 _0
 <regina.StrandRef: _0>
+
+Tangle
+3-crossing vertical tangle: | --+ ( _0 ^1 ) ( ^2 _1 ^0 _2 )
+<regina.Tangle: 3-crossing vertical tangle: | --+ ( _0 ^1 ) ( ^2 _1 ^0 _2 )>
+
+SnapPeaTriangulation
+Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 0, vertex 1 ]
+<regina.SnapPeaTriangulation: Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 0, vertex 1 ]>
+
+SnapPeaTriangulation
+Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 0: (5, -2), vertex 1 ]
+<regina.SnapPeaTriangulation: Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 0: (5, -2), vertex 1 ]>
+
+PacketOfSnapPeaTriangulation
+Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 0: (5, -2), vertex 1 ]
+<regina.PacketOfSnapPeaTriangulation: Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 0: (5, -2), vertex 1 ]>
 
 Cusp
 (5,-2)-filled cusp at vertex 0
@@ -293,6 +333,10 @@ Bounded non-orientable 2-D triangulation, f = ( 1 2 1 )
 Triangulation3
 Closed orientable 3-D triangulation, f = ( 1 6 10 5 )
 <regina.Triangulation3: Closed orientable 3-D triangulation, f = ( 1 6 10 5 )>
+
+PacketOfTriangulation3
+Closed orientable 3-D triangulation, f = ( 1 6 10 5 )
+<regina.PacketOfTriangulation3: Closed orientable 3-D triangulation, f = ( 1 6 10 5 )>
 
 Triangulation4
 Ideal orientable 4-D triangulation, f = ( 1 1 4 5 2 )
@@ -362,6 +406,18 @@ Isomorphism3
 0 -> 1 (1230), 1 -> 0 (2103)
 <regina.Isomorphism3: 0 -> 1 (1230), 1 -> 0 (2103)>
 
+HomologicalData
+Nothing computed yet
+<regina.HomologicalData: Nothing computed yet>
+
+HomMarkedAbelianGroup
+Epic (kernel Z): [[ 4 3 ]]
+<regina.HomMarkedAbelianGroup: Epic (kernel Z): [[ 4 3 ]]>
+
+HomologicalData
+H0(M): Z, H1(M): Z, H2(M): 0, H3(M): 0, H0(BM): Z, H1(BM): 2 Z, H2(BM): Z, H1(BM) -> H1(M): Epic (kernel Z): [[ 4 3 ]]
+<regina.HomologicalData: H0(M): Z, H1(M): Z, H2(M): 0, H3(M): 0, H0(BM): Z, H1(BM): 2 Z, H2(BM): Z, H1(BM) -> H1(M): Epic (kernel Z): [[ 4 3 ]]>
+
 SFSFibre
 (5,-2)
 <regina.SFSFibre: (5,-2)>
@@ -414,6 +470,18 @@ TxIParallelCore
 T6*
 <regina.TxIParallelCore: T6*>
 
+SnappedBall
+Snapped 3-ball, internal edge 1 (23)
+<regina.SnappedBall: Snapped 3-ball, internal edge 1 (23)>
+
+SnappedTwoSphere
+Snapped 2-sphere, equator 0 (01) = 1 (01)
+<regina.SnappedTwoSphere: Snapped 2-sphere, equator 0 (01) = 1 (01)>
+
+PillowTwoSphere
+Pillow 2-sphere, triangles 3, 7
+<regina.PillowTwoSphere: Pillow 2-sphere, triangles 3, 7>
+
 BlockedSFS
 Blocked SFS [Tri, LST(1, 2, 3), LST(1, 5, 6), Mob(v)]
 <regina.BlockedSFS: Blocked SFS [Tri, LST(1, 2, 3), LST(1, 5, 6), Mob(v)]>
@@ -434,6 +502,22 @@ SatAnnulus
 0 (013), 2 (320)
 <regina.SatAnnulus: 0 (013), 2 (320)>
 
+BlockedSFSLoop
+Blocked SFS Loop [Tri, Tri, Tri, Mob(v), Layer]
+<regina.BlockedSFSLoop: Blocked SFS Loop [Tri, Tri, Tri, Mob(v), Layer]>
+
+BlockedSFSPair
+Blocked SFS Pair [Tri, Mob(v), Mob(v) | Tri, Layer]
+<regina.BlockedSFSPair: Blocked SFS Pair [Tri, Mob(v), Mob(v) | Tri, Layer]>
+
+BlockedSFSTriple
+Blocked SFS Triple [Tri, LST(1, 2, 3), Mob(v) | Tri, Mob(v) | Tri, Mob(v), Mob(v)]
+<regina.BlockedSFSTriple: Blocked SFS Triple [Tri, LST(1, 2, 3), Mob(v) | Tri, Mob(v) | Tri, Mob(v), Mob(v)]>
+
+PluggedTorusBundle
+Plugged Torus Bundle [T6:1 | Tri, Mob(v)]
+<regina.PluggedTorusBundle: Plugged Torus Bundle [T6:1 | Tri, Mob(v)]>
+
 CensusHit
 m004 : #1 -- Cusped hyperbolic census (orientable)
 <regina.CensusHit: m004 : #1 -- Cusped hyperbolic census (orientable)>
@@ -446,9 +530,21 @@ TypeTrie7
 Trie for 7 types
 <regina.TypeTrie7: Trie for 7 types>
 
+TreeDecomposition
+Width 4, size 11, bags 0: {0,1,5,6} -> 1, 1: {0,1,2,5,7} -> 2, 2: {0,2,4,5,7} -> 4, 3: {2,3,4,8} -> 4, 4: {0,2,4,7,8} -> 5, 5: {0,4,7,8} -> 6, 6: {0,4,8,10} -> 8, 7: {4,8,9,10} -> 8, 8: {4,8,10} -> 9, 9: {8,10} -> 10, 10: {10}
+<regina.TreeDecomposition: Width 4, size 11, bags 0: {0,1,5,6} -> 1, 1: {0,1,2,5,7} -> 2, 2: {0,2,4,5,7} -> 4, 3: {2,3,4,8} -> 4, 4: {0,2,4,7,8} -> 5, 5: {0,4,7,8} -> 6, 6: {0,4,8,10} -> 8, 7: {4,8,9,10} -> 8, 8: {4,8,10} -> 9, 9: {8,10} -> 10, 10: {10}>
+
 Signature
 (abbc)(ac)
 <regina.Signature: (abbc)(ac)>
+
+FileInfo
+Regina data: Second-generation XML format (Regina 3.0-6.0.1)
+<regina.FileInfo: Regina data: Second-generation XML format (Regina 3.0-6.0.1)>
+
+NoneType
+None
+None
 
 Container
 Container with 1 child, 3 descendants

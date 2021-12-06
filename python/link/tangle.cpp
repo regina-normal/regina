@@ -82,6 +82,7 @@ void addTangle(pybind11::module_& m) {
             pybind11::arg("perform") = true)
         .def("simplifyToLocalMinimum", &Tangle::simplifyToLocalMinimum,
             pybind11::arg("perform") = true)
+        .def("brief", overload_cast<>(&Tangle::brief, pybind11::const_))
         .def("orientedGauss",
             overload_cast<>(&Tangle::orientedGauss, pybind11::const_))
         // In the following overloads, we define functions twice because
@@ -96,7 +97,7 @@ void addTangle(pybind11::module_& m) {
             return Tangle::fromOrientedGauss(v.begin(), v.end());
         })
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     // No need to register the ListView class for crossings(), since

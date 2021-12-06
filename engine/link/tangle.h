@@ -631,6 +631,79 @@ class Tangle : public Output<Tangle> {
         /*@{*/
 
         /**
+         * Outputs this tangle in Regina's own brief write-only format.
+         * This format is concise, but contains enough information to
+         * manually reconstruct the complete tangle.
+         *
+         * This format cannot (yet) be used to read tangles back into Regina,
+         * and so it is not good for external storage, or for passing tangles
+         * between different programs (or even different instances of Regina).
+         * It was originally designed for use with the test suite, where it
+         * was used to ensure that tangles with being created and/or manipulated
+         * correctly.
+         *
+         * The output will contain the following elements, separated by
+         * single spaces:
+         *
+         * - one of the symbols \c -, \c | or \c x, indicating that the
+         *   tangle is of horizontal, vertical or diagonal type respectively
+         *   (as described in the class notes);
+         *
+         * - a sequence of signs (<tt>+</tt> or <tt>-</tt>), concatenated
+         *   together, giving the signs of the crossings in order from
+         *   crossing 0 to crossing size()-1;
+         *
+         * - a description of string 0 and then string 1.  Each string
+         *   will be written in the form <tt>( a b c ... )</tt>, indicating
+         *   the crossings that are encountered as we follow the string
+         *   in the forward direction from its starting endpoint.  Each element
+         *   \a a, \a b, \a c and so on will be written in the format used by
+         *   the StrandRef class: either <tt>^n</tt> when passing over
+         *   crossing \a n, or <tt>_n</tt> when passing under crossing \a n.
+         *
+         * For example, the rational tangle 3/2 as returned by
+         * Tangle(3,2) will give the following brief output:
+         *
+           \verbatim
+           | --+ ( _0 ^1 ) ( ^2 _1 ^0 _2 )
+           \endverbatim
+         *
+         * As a special case, if the tangle contains no crossings then
+         * the output will contain just one space, not two consecutive spaces,
+         * between the type symbol and the string descriptions (since
+         * the sequence of crossing signs that would normally sit between them
+         * will be empty).
+         *
+         * The string will not end in a newline.
+         *
+         * There is also a variant of brief() that writes directly to an
+         * output stream.
+         *
+         * @return a description of this tangle in Regina's brief format.
+         */
+        std::string brief() const;
+
+        /**
+         * Writes this tangle in Regina's own brief format to the given
+         * output stream.
+         *
+         * See brief() for a full description of Regina's brief format,
+         * as well as its limitations.
+         *
+         * The output from this routine is precisely the string that
+         * would be returned by brief().  In particular, the output does
+         * not contain any newlines.
+         *
+         * See also brief(), which returns the brief format as a string.
+         *
+         * \ifacespython Not present; instead use the variant
+         * brief() that takes no arguments and returns a string.
+         *
+         * @param out the output stream to which to write.
+         */
+        void brief(std::ostream& out) const;
+
+        /**
          * Outputs an oriented Gauss code for this tangle.
          *
          * Oriented Gauss codes for tangles are an extension of oriented

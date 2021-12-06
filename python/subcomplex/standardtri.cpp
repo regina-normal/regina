@@ -62,7 +62,11 @@ void addStandardTriangulation(pybind11::module_& m) {
             overload_cast<const regina::Triangulation<3>&>(
             &StandardTriangulation::recognise))
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
-    regina::python::add_eq_operators(c);
+    // Leave the output routines for subclasses to wrap, since __repr__
+    // will include the (derived) class name.
+    // Also leave the equality operators for subclasses to wrap, since
+    // each subclass of StandardTriangulation provides its own custom
+    // == and != operators.
+    regina::python::no_eq_operators(c);
 }
 

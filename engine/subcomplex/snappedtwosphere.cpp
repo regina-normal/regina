@@ -69,5 +69,16 @@ std::unique_ptr<SnappedTwoSphere> SnappedTwoSphere::recognise(
         ball1, ball2));
 }
 
+void SnappedTwoSphere::writeTextShort(std::ostream& out) const {
+    out << "Snapped 2-sphere, equator ";
+    for (int i = 0; i < 2; ++i) {
+        if (i == 1)
+            out << " = ";
+        int e = ball_[i].equatorEdge();
+        out << ball_[i].tetrahedron()->index() << " ("
+            << Edge<3>::edgeVertex[e][0] << Edge<3>::edgeVertex[e][1] << ')';
+    }
+}
+
 } // namespace regina
 
