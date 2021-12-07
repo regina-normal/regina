@@ -41,7 +41,7 @@
 
 #include <cstddef>
 #include <vector>
-#include "regina-core.h"
+#include "core/output.h"
 
 namespace regina {
 
@@ -107,7 +107,7 @@ namespace regina {
  *
  * \ingroup enumerate
  */
-class ValidityConstraints {
+class ValidityConstraints : public Output<ValidityConstraints> {
     public:
         /**
          * An empty set of constraints.
@@ -360,6 +360,26 @@ class ValidityConstraints {
          */
         template <typename BitmaskType>
         std::vector<BitmaskType> bitmasks() const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
