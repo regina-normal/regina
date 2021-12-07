@@ -919,7 +919,7 @@ void TreeDecomposition::writeTextShort(std::ostream& out) const {
 }
 
 void TreeDecomposition::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
+    out << "Tree decomposition: width " << width_ << ", size " << size_;
     out << std::endl;
 
     int indent = 0;
