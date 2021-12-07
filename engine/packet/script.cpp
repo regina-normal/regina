@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <algorithm>
 #include <iterator>
 #include <sstream>
 #include "packet/script.h"
