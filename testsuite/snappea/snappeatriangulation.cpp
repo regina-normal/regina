@@ -38,7 +38,7 @@
 #include "maths/matrix.h"
 #include "snappea/examplesnappea.h"
 #include "snappea/snappeatriangulation.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim3.h"
 

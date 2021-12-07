@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "surfaces/surfacefilter.h"
+#include "surface/surfacefilter.h"
 
 // UI includes:
 #include "iconcache.h"

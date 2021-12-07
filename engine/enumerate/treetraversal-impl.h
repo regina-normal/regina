@@ -48,7 +48,7 @@
 #include "angle/anglestructures.h"
 #include "enumerate/treetraversal.h"
 #include "progress/progresstracker.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "utilities/exception.h"
 

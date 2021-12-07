@@ -41,7 +41,7 @@
 
 #include "maths/integer.h"
 #include "maths/matrix.h"
-#include "surfaces/normalcoords.h"
+#include "surface/normalcoords.h"
 #include "triangulation/forward.h"
 #include <algorithm>
 

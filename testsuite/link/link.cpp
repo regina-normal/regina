@@ -40,8 +40,8 @@
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
 #include "packet/container.h"
-#include "surfaces/normalsurface.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurface.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 
 #include "testsuite/link/testlink.h"

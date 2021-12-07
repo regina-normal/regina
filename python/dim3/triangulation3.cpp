@@ -40,7 +40,7 @@
 #include "packet/container.h"
 #include "progress/progresstracker.h"
 #include "snappea/snappeatriangulation.h"
-#include "surfaces/normalsurface.h"
+#include "surface/normalsurface.h"
 #include "triangulation/example3.h"
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"

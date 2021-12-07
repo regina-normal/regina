@@ -52,7 +52,7 @@
 #include "testsuite/misc/testmisc.h"
 #include "testsuite/snappea/testsnappea.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
-#include "testsuite/surfaces/testsurfaces.h"
+#include "testsuite/surface/testsurface.h"
 #include "testsuite/utilities/testutilities.h"
 
 namespace {

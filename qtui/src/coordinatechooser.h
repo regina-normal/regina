@@ -41,7 +41,7 @@
 #include <QComboBox>
 #include <vector>
 #include "hypersurface/hypercoords.h"
-#include "surfaces/normalcoords.h"
+#include "surface/normalcoords.h"
 
 namespace regina {
     class NormalHypersurfaces;

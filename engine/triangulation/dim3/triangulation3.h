@@ -51,7 +51,7 @@
 #include "angle/anglestructure.h"
 #include "maths/cyclotomic.h"
 #include "progress/progresstracker.h"
-#include "surfaces/normalsurface.h"
+#include "surface/normalsurface.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/detail/retriangulate.h"
 #include "triangulation/generic/triangulation.h"

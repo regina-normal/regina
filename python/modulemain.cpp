@@ -56,7 +56,7 @@ void addProgressClasses(pybind11::module_& m);
 void addSnapPeaClasses(pybind11::module_& m);
 void addSplitClasses(pybind11::module_& m);
 void addSubcomplexClasses(pybind11::module_& m);
-void addSurfacesClasses(pybind11::module_& m);
+void addSurfaceClasses(pybind11::module_& m);
 void addTreewidthClasses(pybind11::module_& m);
 void addTriangulationClasses(pybind11::module_& m);
 void addUtilitiesClasses(pybind11::module_& m);
@@ -135,7 +135,7 @@ PYBIND11_MODULE(regina, m) {
     addSubcomplexClasses(m);
     addManifoldClasses(m);
     addAngleClasses(m);
-    addSurfacesClasses(m);
+    addSurfaceClasses(m);
     addHypersurfaceClasses(m);
     addDim2Classes(m);
     addGenericClasses(m);

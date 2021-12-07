@@ -32,8 +32,8 @@
 
 // Regina core includes:
 #include "maths/matrix.h"
-#include "surfaces/normalsurfaces.h"
-#include "surfaces/surfacefilter.h"
+#include "surface/normalsurfaces.h"
+#include "surface/surfacefilter.h"
 #include "triangulation/dim3.h"
 
 // UI includes:

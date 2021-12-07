@@ -36,8 +36,8 @@
 #include "enumerate/treetraversal.h"
 #include "packet/container.h"
 #include "subcomplex/snappedball.h"
-#include "surfaces/normalsurface.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurface.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 
 namespace regina {

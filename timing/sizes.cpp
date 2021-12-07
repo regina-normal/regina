@@ -43,7 +43,7 @@
 
 #include "angle/anglestructures.h"
 #include "hypersurface/normalhypersurfaces.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurfaces.h"
 
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"

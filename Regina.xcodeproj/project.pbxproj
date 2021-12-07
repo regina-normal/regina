@@ -4799,7 +4799,7 @@
 				050F5D4D1B9BAB9C00C1F681 /* snappea */,
 				050F5D521B9BAB9C00C1F681 /* split */,
 				050F5D561B9BAB9C00C1F681 /* subcomplex */,
-				050F5D751B9BAB9C00C1F681 /* surfaces */,
+				050F5D751B9BAB9C00C1F681 /* surface */,
 				050F5D841B9BAB9C00C1F681 /* testsuite */,
 				050F5DA61B9BAB9C00C1F681 /* treewidth */,
 				050F5DB91B9BAB9C00C1F681 /* utilities */,
@@ -4999,7 +4999,7 @@
 			path = subcomplex;
 			sourceTree = "<group>";
 		};
-		050F5D751B9BAB9C00C1F681 /* surfaces */ = {
+		050F5D751B9BAB9C00C1F681 /* surface */ = {
 			isa = PBXGroup;
 			children = (
 				050F5D761B9BAB9C00C1F681 /* CMakeLists.txt */,
@@ -5014,7 +5014,7 @@
 				050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */,
 				050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */,
 			);
-			path = surfaces;
+			path = surface;
 			sourceTree = "<group>";
 		};
 		050F5D841B9BAB9C00C1F681 /* testsuite */ = {
@@ -5493,7 +5493,7 @@
 				052F9D1C180600FA00FAE4DF /* snappea */,
 				052F9D9A180600FB00FAE4DF /* split */,
 				052F9DA2180600FB00FAE4DF /* subcomplex */,
-				052F9DF3180600FB00FAE4DF /* surfaces */,
+				052F9DF3180600FB00FAE4DF /* surface */,
 				0542084C1DF0D06F0018AB24 /* syntax */,
 				0541AF5B1B8BE3DC002E166B /* treewidth */,
 				052F9E2F180600FB00FAE4DF /* triangulation */,
@@ -5942,7 +5942,7 @@
 			path = subcomplex;
 			sourceTree = "<group>";
 		};
-		052F9DF3180600FB00FAE4DF /* surfaces */ = {
+		052F9DF3180600FB00FAE4DF /* surface */ = {
 			isa = PBXGroup;
 			children = (
 				051B97F42321C91A000A2DCA /* boundaries.cpp */,
@@ -5978,7 +5978,7 @@
 				05772ED3270CFA1900D26D8A /* transform.cpp */,
 				0512E09A26DF354500DDB222 /* triangles.cpp */,
 			);
-			path = surfaces;
+			path = surface;
 			sourceTree = "<group>";
 		};
 		052F9E2F180600FB00FAE4DF /* triangulation */ = {
@@ -6110,7 +6110,7 @@
 				052FA0E61806088B00FAE4DF /* runalltests.cpp */,
 				052FA0E71806088B00FAE4DF /* snappea */,
 				052FA0EB1806088B00FAE4DF /* subcomplex */,
-				052FA0EF1806088B00FAE4DF /* surfaces */,
+				052FA0EF1806088B00FAE4DF /* surface */,
 				05D1174919EE043F003BEC55 /* testsuite.cpp */,
 				05D1174A19EE043F003BEC55 /* testsuite.h */,
 				052FA0FE1806088B00FAE4DF /* utilities */,
@@ -6192,7 +6192,7 @@
 			path = subcomplex;
 			sourceTree = "<group>";
 		};
-		052FA0EF1806088B00FAE4DF /* surfaces */ = {
+		052FA0EF1806088B00FAE4DF /* surface */ = {
 			isa = PBXGroup;
 			children = (
 				052FA0F01806088B00FAE4DF /* CMakeLists.txt */,
@@ -6200,7 +6200,7 @@
 				052FA0F21806088B00FAE4DF /* normalsurfaces.cpp */,
 				052FA0F31806088B00FAE4DF /* testsurfaces.h */,
 			);
-			path = surfaces;
+			path = surface;
 			sourceTree = "<group>";
 		};
 		052FA0F61806088B00FAE4DF /* dim3 */ = {

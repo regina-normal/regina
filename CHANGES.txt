@@ -1841,9 +1841,11 @@ Version 7.0  [ 10 December, 2021 ]
             - No longer takes an initial class argument.
         Header packet/packetregistry.h, packet/packetregistry-impl.h:
             - Removed completely.
-        Header surfaces/coordregistry.h, surfaces/coordregistry-impl.h:
+        Header surfaces/*:
+            - Moved to surface/*.  The old headers are kept but deprecated.
+        Header surface/coordregistry.h, surface/coordregistry-impl.h:
             - Removed completely.
-        Header surfaces/filterregistry.h, surfaces/filterregistry-impl.h:
+        Header surface/filterregistry.h, surface/filterregistry-impl.h:
             - Removed completely.
         Header triangulation/homologicaldata.h:
             - Moved to triangulation/dim3/homologicaldata.h.

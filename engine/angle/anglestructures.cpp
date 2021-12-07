@@ -35,7 +35,7 @@
 #include "enumerate/treetraversal.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
-#include "surfaces/normalsurface.h"
+#include "surface/normalsurface.h"
 #include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
 #include <thread>

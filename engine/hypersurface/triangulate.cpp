@@ -32,7 +32,7 @@
 
 #include <cassert>
 #include "hypersurface/normalhypersurface.h"
-#include "surfaces/disc.h"
+#include "surface/disc.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 

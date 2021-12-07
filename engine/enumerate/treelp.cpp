@@ -33,7 +33,7 @@
 #include "angle/anglestructure.h"
 #include "enumerate/treeconstraint.h"
 #include "enumerate/treelp-impl.h"
-#include "surfaces/normalsurface.h"
+#include "surface/normalsurface.h"
 
 namespace regina {
 

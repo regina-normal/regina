@@ -18,7 +18,7 @@ ADD_SUBDIRECTORY("progress")
 ADD_SUBDIRECTORY("snappea")
 ADD_SUBDIRECTORY("split")
 ADD_SUBDIRECTORY("subcomplex")
-ADD_SUBDIRECTORY("surfaces")
+ADD_SUBDIRECTORY("surface")
 ADD_SUBDIRECTORY("treewidth")
 ADD_SUBDIRECTORY("utilities")
 

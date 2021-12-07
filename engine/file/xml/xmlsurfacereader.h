@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file surfaces/xmlsurfacereader.h
+/*! \file file/xml/xmlsurfacereader.h
  *  \brief Deals with parsing XML data for normal surface lists.
  */
 
@@ -42,7 +42,7 @@
 #include <optional>
 #include "regina-core.h"
 #include "file/xml/xmlpacketreader.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurfaces.h"
 
 namespace regina {
 

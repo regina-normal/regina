@@ -34,7 +34,7 @@
 #include "hypersurface/normalhypersurface.h"
 #include "maths/matrix.h"
 #include "maths/rational.h"
-#include "surfaces/normalsurface.h" // for quadDefn[][].
+#include "surface/normalsurface.h" // for quadDefn[][].
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
