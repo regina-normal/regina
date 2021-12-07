@@ -39,7 +39,8 @@
 using regina::L31Pillow;
 
 void addL31Pillow(pybind11::module_& m) {
-    pybind11::class_<L31Pillow, regina::StandardTriangulation>(m, "L31Pillow")
+    auto c = pybind11::class_<L31Pillow, regina::StandardTriangulation>(
+            m, "L31Pillow")
         .def(pybind11::init<const L31Pillow&>())
         .def("clone", [](const L31Pillow& s) { // deprecated
             return L31Pillow(s);
@@ -51,6 +52,7 @@ void addL31Pillow(pybind11::module_& m) {
         .def_static("recognise", &L31Pillow::recognise)
         .def_static("isL31Pillow", &L31Pillow::recognise) // deprecated
     ;
+    regina::python::add_output(c);
 
     m.def("swap", (void(*)(L31Pillow&, L31Pillow&))(regina::swap));
 }

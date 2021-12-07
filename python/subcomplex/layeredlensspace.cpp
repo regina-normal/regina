@@ -39,7 +39,7 @@
 using regina::LayeredLensSpace;
 
 void addLayeredLensSpace(pybind11::module_& m) {
-    pybind11::class_<LayeredLensSpace, regina::StandardTriangulation>
+    auto c = pybind11::class_<LayeredLensSpace, regina::StandardTriangulation>
             (m, "LayeredLensSpace")
         .def(pybind11::init<const LayeredLensSpace&>())
         .def("clone", [](const LayeredLensSpace& s) { // deprecated
@@ -57,5 +57,6 @@ void addLayeredLensSpace(pybind11::module_& m) {
         .def_static("isLayeredLensSpace", // deprecated
             &LayeredLensSpace::recognise)
     ;
+    regina::python::add_output(c);
 }
 

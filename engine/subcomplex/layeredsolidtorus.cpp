@@ -688,4 +688,23 @@ Triangulation<3> LayeredSolidTorus::flatten(int mobiusBandBdry) const {
     return ans;
 }
 
+void LayeredSolidTorus::writeTextShort(std::ostream& out) const {
+    out << "LST(" << meridinalCuts_[0] << ", " << meridinalCuts_[1] << ", "
+        << meridinalCuts_[2] << "), base "
+        << base_->index() << " (edges "
+        << baseEdge_[0] << '|' << baseEdge_[1] << baseEdge_[2] << '|'
+        << baseEdge_[3] << baseEdge_[4] << baseEdge_[5]
+        << "), top " << top_->index()
+        << " (edges ";
+    for (int i = 0; i < 3; ++i) {
+        if (i > 0)
+            out << '|';
+        out << topEdge(i, 0);
+        int e = topEdge(i, 1);
+        if (e >= 0)
+            out << e;
+    }
+    out << ')';
+}
+
 } // namespace regina

@@ -167,5 +167,11 @@ std::unique_ptr<Manifold> TriSolidTorus::manifold() const {
     return std::make_unique<Handlebody>(1);
 }
 
+void TriSolidTorus::writeTextShort(std::ostream& out) const {
+    out << "Triangular solid torus, tetrahedra";
+    for (int i = 0; i < 3; ++i)
+        out << ' ' << tet_[i]->index() << " (" << vertexRoles_[i] << ')';
+}
+
 } // namespace regina
 

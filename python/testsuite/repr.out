@@ -439,8 +439,8 @@ SnapPea x101
 <regina.SnapPeaCensusManifold: SnapPea x101>
 
 Handlebody
-Handlebody(2)
-<regina.Handlebody: Handlebody(2)>
+Genus 2 handlebody
+<regina.Handlebody: Genus 2 handlebody>
 
 TorusBundle
 T x I / [ 0,1 | 1,0 ]
@@ -517,6 +517,58 @@ Blocked SFS Triple [Tri, LST(1, 2, 3), Mob(v) | Tri, Mob(v) | Tri, Mob(v), Mob(v
 PluggedTorusBundle
 Plugged Torus Bundle [T6:1 | Tri, Mob(v)]
 <regina.PluggedTorusBundle: Plugged Torus Bundle [T6:1 | Tri, Mob(v)]>
+
+L31Pillow
+L'(3,1)
+<regina.L31Pillow: L'(3,1)>
+
+LayeredLoop
+C~(2)
+<regina.LayeredLoop: C~(2)>
+
+LayeredTorusBundle
+B(T6:1 | -1,-1 | -1,-2)
+<regina.LayeredTorusBundle: B(T6:1 | -1,-1 | -1,-2)>
+
+PlugTriSolidTorus
+P(0)
+<regina.PlugTriSolidTorus: P(0)>
+
+TrivialTri
+N(3,2)
+<regina.TrivialTri: N(3,2)>
+
+AugTriSolidTorus
+A(3,-1 | 5,-6)
+<regina.AugTriSolidTorus: A(3,-1 | 5,-6)>
+
+TriSolidTorus
+Triangular solid torus, tetrahedra 2 (2103) 1 (1032) 0 (0321)
+<regina.TriSolidTorus: Triangular solid torus, tetrahedra 2 (2103) 1 (1032) 0 (0321)>
+
+LayeredLensSpace
+L(8,3)
+<regina.LayeredLensSpace: L(8,3)>
+
+LayeredSolidTorus
+LST(2, 3, 5), base 0 (edges 5|23|401), top 1 (edges 41|32|5)
+<regina.LayeredSolidTorus: LST(2, 3, 5), base 0 (edges 5|23|401), top 1 (edges 41|32|5)>
+
+LayeredSolidTorus
+LST(2, 3, 5), base 1 (edges 0|41|352), top 0 (edges 23|41|0)
+<regina.LayeredSolidTorus: LST(2, 3, 5), base 1 (edges 0|41|352), top 0 (edges 23|41|0)>
+
+LayeredChainPair
+C(4,6)
+<regina.LayeredChainPair: C(4,6)>
+
+LayeredChain
+Chain(4), tetrahedra 3 (1302) .. 1 (0213)
+<regina.LayeredChain: Chain(4), tetrahedra 3 (1302) .. 1 (0213)>
+
+SpiralSolidTorus
+7-tetrahedron spiralled solid torus, tetrahedra 1 (0213), 0 (2130), 2 (0213), 6 (2130), 9 (0213), 8 (1302), 5 (3021)
+<regina.SpiralSolidTorus: 7-tetrahedron spiralled solid torus, tetrahedra 1 (0213), 0 (2130), 2 (0213), 6 (2130), 9 (0213), 8 (1302), 5 (3021)>
 
 CensusHit
 m004 : #1 -- Cusped hyperbolic census (orientable)

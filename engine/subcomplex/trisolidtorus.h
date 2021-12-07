@@ -299,7 +299,7 @@ class TriSolidTorus : public StandardTriangulation {
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
-        void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const override;
 
     private:
         /**
@@ -344,9 +344,6 @@ inline std::ostream& TriSolidTorus::writeName(std::ostream& out) const {
 }
 inline std::ostream& TriSolidTorus::writeTeXName(std::ostream& out) const {
     return out << "\\mathop{\\rm TST}";
-}
-inline void TriSolidTorus::writeTextLong(std::ostream& out) const {
-    out << "3-tetrahedron triangular solid torus";
 }
 
 inline std::unique_ptr<TriSolidTorus> TriSolidTorus::formsTriSolidTorus(

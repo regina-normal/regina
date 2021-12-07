@@ -70,6 +70,7 @@ void addLayeredSolidTorus(pybind11::module_& m) {
         .def_static("isLayeredSolidTorus", // deprecated
             &LayeredSolidTorus::recognise)
     ;
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap",

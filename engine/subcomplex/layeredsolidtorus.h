@@ -461,7 +461,7 @@ class LayeredSolidTorus : public StandardTriangulation {
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
-        void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const override;
 
     private:
         /**
@@ -563,10 +563,6 @@ inline std::ostream& LayeredSolidTorus::writeName(std::ostream& out) const {
 inline std::ostream& LayeredSolidTorus::writeTeXName(std::ostream& out) const {
     return out << "\\mathop{\\rm LST}(" << meridinalCuts_[0] << ','
         << meridinalCuts_[1] << ',' << meridinalCuts_[2] << ')';
-}
-inline void LayeredSolidTorus::writeTextLong(std::ostream& out) const {
-    out << "( " << meridinalCuts_[0] << ", " << meridinalCuts_[1] << ", "
-        << meridinalCuts_[2] << " ) layered solid torus";
 }
 
 inline std::unique_ptr<LayeredSolidTorus>

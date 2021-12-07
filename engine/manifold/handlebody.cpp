@@ -45,7 +45,7 @@ std::ostream& Handlebody::writeName(std::ostream& out) const {
     else if (genus_ == 1)
         out << "B2 x S1";
     else
-        out << "Handlebody(" << genus_ << ')';
+        out << "Genus " << genus_ << " handlebody";
     return out;
 }
 

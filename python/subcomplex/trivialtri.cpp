@@ -39,7 +39,8 @@
 using regina::TrivialTri;
 
 void addTrivialTri(pybind11::module_& m) {
-    pybind11::class_<TrivialTri, regina::StandardTriangulation>(m, "TrivialTri")
+    auto c = pybind11::class_<TrivialTri, regina::StandardTriangulation>(
+            m, "TrivialTri")
         .def(pybind11::init<const TrivialTri&>())
         .def("clone", [](const TrivialTri& s) { // deprecated
             return TrivialTri(s);
@@ -56,6 +57,7 @@ void addTrivialTri(pybind11::module_& m) {
         .def_readonly_static("N3_1", &TrivialTri::N3_1)
         .def_readonly_static("N3_2", &TrivialTri::N3_2)
     ;
+    regina::python::add_output(c);
 
     m.def("swap", (void(*)(TrivialTri&, TrivialTri&))(regina::swap));
 }

@@ -209,5 +209,14 @@ AbelianGroup SpiralSolidTorus::homology() const {
     return AbelianGroup(1);
 }
 
+void SpiralSolidTorus::writeTextShort(std::ostream& out) const {
+    out << nTet_ << "-tetrahedron spiralled solid torus, tetrahedra ";
+    for (size_t i = 0; i < nTet_; ++i) {
+        if (i > 0)
+            out << ", ";
+        out << tet_[i]->index() << " (" << vertexRoles_[i] << ')';
+    }
+}
+
 } // namespace regina
 

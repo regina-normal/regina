@@ -297,7 +297,7 @@ class SpiralSolidTorus : public StandardTriangulation {
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
-        void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const override;
 
     private:
         /**
@@ -379,9 +379,6 @@ inline std::ostream& SpiralSolidTorus::writeName(std::ostream& out) const {
 }
 inline std::ostream& SpiralSolidTorus::writeTeXName(std::ostream& out) const {
     return out << "\\mathit{Spiral}(" << nTet_ << ')';
-}
-inline void SpiralSolidTorus::writeTextLong(std::ostream& out) const {
-    out << nTet_ << "-tetrahedron spiralled solid torus";
 }
 
 inline std::unique_ptr<SpiralSolidTorus>

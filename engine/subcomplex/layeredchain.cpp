@@ -114,5 +114,16 @@ AbelianGroup LayeredChain::homology() const {
         return AbelianGroup();
 }
 
+void LayeredChain::writeTextShort(std::ostream& out) const {
+    if (index_ == 1) {
+        out << "Chain(1), tetrahedron "
+            << bottom_->index() << " (" << bottomVertexRoles_ << ")";
+    } else {
+        out << "Chain(" << index_ << "), tetrahedra "
+            << bottom_->index() << " (" << bottomVertexRoles_ << ") .. "
+            << top_->index() << " (" << topVertexRoles_ << ')';
+    }
+}
+
 } // namespace regina
 

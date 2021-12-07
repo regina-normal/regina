@@ -307,6 +307,27 @@ dump(BlockedSFSLoop.recognise(Triangulation3('kLLLLPQkcddfjgihjijpkrkaspoadj')))
 dump(BlockedSFSPair.recognise(Triangulation3('hLAvQkbccefggglpksulwb')))
 dump(BlockedSFSTriple.recognise(Triangulation3('kLALALMkbccfefihijjlpkusuueotr')))
 dump(PluggedTorusBundle.recognise(Triangulation3('kLLvAPQkbdfehgjiijjdwuurwmmaxn')))
+dump(L31Pillow.recognise(Triangulation3('cPcbbbaai').component(0)))
+dump(LayeredLoop.recognise(Triangulation3('cPcbbbqxh').component(0)))
+dump(LayeredTorusBundle.recognise(Triangulation3('hvLPQkcedgffggnnkaaeiw')))
+dump(PlugTriSolidTorus.recognise(Example3.poincare().component(0)))
+dump(TrivialTri.recognise(Example3.rp2xs1().component(0)))
+
+t = Example3.sfsOverSphere(3,4,5,1,2,-1)
+a = AugTriSolidTorus.recognise(t.component(0))
+dump(a)
+dump(a.core())
+
+l = Example3.lens(8,3)
+dump(LayeredLensSpace.recognise(l.component(0)))
+dump(LayeredSolidTorus.recogniseFromBase(l.tetrahedron(0)))
+dump(LayeredSolidTorus.recogniseFromBase(l.tetrahedron(l.size()-1)))
+
+t = Triangulation3('kLLLMAMkcegfhhhijjjhqhaqjshhrw')
+l = LayeredChainPair.recognise(t.component(0))
+dump(l)
+dump(l.chain(0))
+dump(SpiralSolidTorus.recognise(l.chain(0).top(), l.chain(0).topVertexRoles()))
 
 # ----------------------------------------------------------------------
 # census/
