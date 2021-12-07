@@ -295,6 +295,8 @@ a.join(0, c, Perm4())
 b.join(0, d, Perm4())
 dump(PillowTwoSphere.recognise(a.triangle(0), b.triangle(0)))
 
+dump(SatCube.model())
+
 t = Example3.sfsOverSphere(3,4,5,1,2,-1)
 s = BlockedSFS.recognise(t)
 dump(s)

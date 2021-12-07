@@ -77,6 +77,7 @@ void addSatBlock(pybind11::module_& m) {
         .def("triangulation", &SatBlockModel::triangulation)
         .def("block", &SatBlockModel::block)
     ;
+    regina::python::add_output(d);
     regina::python::add_eq_operators(d);
 
     m.def("swap", (void(*)(SatBlockModel&, SatBlockModel&))(regina::swap));

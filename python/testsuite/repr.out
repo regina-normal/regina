@@ -482,6 +482,10 @@ PillowTwoSphere
 Pillow 2-sphere, triangles 3, 7
 <regina.PillowTwoSphere: Pillow 2-sphere, triangles 3, 7>
 
+SatBlockModel
+Model of Cube {0,1,2,3}
+<regina.SatBlockModel: Model of Cube {0,1,2,3}>
+
 BlockedSFS
 Blocked SFS [Tri, LST(1, 2, 3), LST(1, 5, 6), Mob(v)]
 <regina.BlockedSFS: Blocked SFS [Tri, LST(1, 2, 3), LST(1, 5, 6), Mob(v)]>
