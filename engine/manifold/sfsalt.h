@@ -307,6 +307,10 @@ class SFSAlt {
          * generally more complex, and is returned as a matrix by the
          * conversion() routine.
          *
+         * You can also test whether a reflection was used by examining
+         * whether the conversion matrix has determinant 1 or -1.
+         * However, calling reflected() is both simpler and a little faster.
+         *
          * @return \c true if a reflection was used in creating this
          * alternative space, or \c false if no reflection was used.
          */
