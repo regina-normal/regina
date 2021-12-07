@@ -345,6 +345,19 @@ dump(h)
 dump(TypeTrie4())
 dump(TypeTrie7())
 
+t = Example3.figureEight()
+tab = LPInitialTableaux_NonSpun(t, NS_QUAD)
+dump(tab)
+m = LPMatrix(tab.rank(), tab.columns())
+tab.fillInitialTableaux(m)
+dump(m)
+dat = LPData_NonSpun()
+dump(dat)
+dat.reserve(tab)
+dump(dat)
+dat.initStart()
+dump(dat)
+
 # ----------------------------------------------------------------------
 # treewidth/
 # ----------------------------------------------------------------------

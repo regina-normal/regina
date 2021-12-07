@@ -741,10 +741,16 @@ Version 7.0  [ 10 December, 2021 ]
             - Routine reserve() now takes the tableaux by reference.
             - Routine extractSolution() now returns its vector by value,
               instead of using a reference argument.
+            - Now derives from Output.  The old dump() is now deprecated,
+              in favour of the usual Output routines.
         Class LPInitialTableaux:
             - The constraintsBroken() routines are gone; instead the class
               constructor throws an exception on error.
             - The enumeration constructor argument now defaults to true.
+            - Now derives from Output.
+        Class LPMatrix:
+            - Now derives from Output.  The old dump() is now deprecated,
+              in favour of the usual Output routines.
         Class LPSystem:
             - New class to translate coordinate systems into a layout
               for LPInitialTableaux.
