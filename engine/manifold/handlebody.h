@@ -100,21 +100,25 @@ class Handlebody : public Manifold {
          */
         [[deprecated]] bool isOrientable() const;
         /**
-         * Determines whether this and the given handlebody represent
-         * the same 3-manifold.
+         * Determines whether this and the given handlebody have the same
+         * genus.
+         *
+         * Handlebodies with the same genus are homeomorphic as 3-manifolds.
          *
          * @param compare the handlebody with which this will be compared.
          * @return \c true if and only if this and the given handlebody
-         * are homeomorphic.
+         * have the same genus.
          */
         bool operator == (const Handlebody& compare) const;
         /**
-         * Determines whether this and the given handlebody represent
-         * different 3-manifolds.
+         * Determines whether this and the given handlebody do not have
+         * the same genus.
+         *
+         * Handlebodies with the same genus are homeomorphic as 3-manifolds.
          *
          * @param compare the handlebody with which this will be compared.
          * @return \c true if and only if this and the given handlebody
-         * are not homeomorphic.
+         * do not have the same genus.
          */
         bool operator != (const Handlebody& compare) const;
 
