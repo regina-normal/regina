@@ -73,6 +73,13 @@ void addDisc(pybind11::module_& m) {
         .def("arcFromDisc", &DiscSetTet::arcFromDisc)
         .def("discFromArc", &DiscSetTet::discFromArc)
     ;
+    regina::python::add_output_custom(t, [](const DiscSetTet& d,
+            std::ostream& s) {
+        s << '(';
+        for (int i = 0; i < 10; ++i)
+            s << ' ' << d.nDiscs(i);
+        s << " )";
+    });
     regina::python::add_eq_operators(t);
 
     auto s = pybind11::class_<DiscSetSurface>(m, "DiscSetSurface")
@@ -88,6 +95,17 @@ void addDisc(pybind11::module_& m) {
             return DiscSpecIterator(d);
         })
     ;
+    regina::python::add_output_custom(s, [](const DiscSetSurface& d,
+            std::ostream& s) {
+        s << '(';
+        for (size_t i = 0; i < d.nTets(); ++i) {
+            if (i > 0)
+                s << " |";
+            for (int j = 0; j < 10; ++j)
+                s << ' ' << d.nDiscs(i, j);
+        }
+        s << " )";
+    });
     regina::python::add_eq_operators(s);
 
     m.def("swap", (void(*)(DiscSetSurface&, DiscSetSurface&))(regina::swap));

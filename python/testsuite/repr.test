@@ -143,7 +143,7 @@ dump(BoolSet(True))
 dump(TrieSet())
 
 # ----------------------------------------------------------------------
-# surfaces/, hypersurfaces/ and angles/
+# surface/, hypersurface/ and angle/
 # ----------------------------------------------------------------------
 
 dump(DiscType(7,3))
@@ -163,6 +163,12 @@ dump(s.structure(0))
 dump(SurfaceFilterCombination())
 f = SurfaceFilterProperties(); f.setEulerChars([0,1]); f.setOrientability(True)
 dump(f)
+
+t = Example3.poincare()
+st = NormalSurfaces.enumerate(t, NS_QUAD)
+dt = DiscSetSurface(st.surface(0))
+dump(dt)
+dump(dt.tetDiscs(0))
 
 # ----------------------------------------------------------------------
 # link/

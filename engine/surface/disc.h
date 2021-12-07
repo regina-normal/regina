@@ -284,12 +284,38 @@ class DiscSetTet {
         DiscSetTet& operator = (const DiscSetTet& src) = default;
 
         /**
+         * Determines whether this and the given set have the same
+         * number of discs of each type.
+         *
+         * This routine does not consider whether the two underlying
+         * tetrahedra are the same; it merely compares the ten disc
+         * counts in each set.
+         *
+         * @return \c true if and only if both sets are the same, as
+         * described above.
+         */
+        bool operator == (const DiscSetTet& other) const;
+
+        /**
+         * Determines whether this and the given set do not have the same
+         * number of discs of each type.
+         *
+         * This routine does not consider whether the two underlying
+         * tetrahedra are the same; it merely compares the ten disc
+         * counts in each set.
+         *
+         * @return \c true if and only if both sets are not the same, as
+         * described above.
+         */
+        bool operator != (const DiscSetTet& other) const;
+
+        /**
          * Determines the number of discs of the given type inside this
          * tetrahedron.
          *
          * @param type the disc type to examine; this should be between
          * 0 and 9 inclusive.  Disc types are outlined in
-         * the DiscSpec class notes.
+         * the DiscSpec class notes
          * @return the number of discs of the given type inside this
          * tetrahedron.
          */
@@ -565,11 +591,56 @@ class DiscSetTetData : public DiscSetTet {
         }
 
         /**
+         * Determines whether this and the given set have the same
+         * number of discs of each type, and contain the same data for
+         * corresponding discs.
+         *
+         * This routine does not consider whether the two underlying
+         * tetrahedra are the same; it merely compares the disc counts
+         * and associated data within each set.
+         *
+         * The associated data (of type \a T) will be compared using the
+         * equality operator (==).
+         *
+         * @return \c true if and only if both sets are the same, as
+         * described above.
+         */
+        bool operator == (const DiscSetTetData& other) const {
+            if (! std::equal(discs_, discs_ + 10, other.discs_))
+                return false;
+            for (int i = 0; i < 10; ++i)
+                if (! std::equal(data_[i], data_[i] + discs_[i],
+                        other.data_[i]))
+                    return false;
+            return true;
+        }
+
+        /**
+         * Determines whether this and the given set either do not have the
+         * same number of discs of each type, or do not contain the same data
+         * for corresponding discs.
+         *
+         * This routine does not consider whether the two underlying
+         * tetrahedra are the same; it merely compares the disc counts
+         * and associated data within each set.
+         *
+         * The associated data (of type \a T) will be compared using the
+         * equality operator (==).
+         *
+         * @return \c true if and only if both sets are not the same, as
+         * described above.
+         */
+        bool operator != (const DiscSetTetData& other) const {
+            return ! ((*this) == other);
+        }
+
+        /**
          * Swaps the contents of this and the given disc set.
          *
          * @param other the disc set whose contents should be swapped with this.
          */
         void swap(DiscSetTetData& other) noexcept {
+            std::swap_ranges(discs_, discs_ + 10, other.discs_);
             std::swap_ranges(data_, data_ + 10, other.data_);
         }
 
@@ -824,6 +895,55 @@ class DiscSetSurfaceDataImpl {
         void swap(DiscSetSurfaceDataImpl& other) noexcept {
             std::swap(discSets, other.discSets);
             triangulation_.swap(other.triangulation_);
+        }
+
+        /**
+         * Determines whether this and the given set have the same
+         * number of discs of each type in each tetrahedron, and contain the
+         * same data for corresponding discs.
+         *
+         * This routine does not consider whether the two underlying
+         * triangulations are the same; it merely compares the disc counts
+         * and associated data within each set.  If the two disc sets
+         * come from triangulations with different sizes, and/or
+         * surfaces with different disc counts in one or more tetarhedra,
+         * then this comparison will return \c false.
+         *
+         * The associated data (of type \a T) will be compared using the
+         * equality operator (==).
+         *
+         * @return \c true if and only if both sets are the same, as
+         * described above.
+         */
+        bool operator == (const DiscSetSurfaceDataImpl& other) const {
+            if (triangulation_->size() != other.triangulation_->size())
+                return false;
+            for (size_t i = 0; i < triangulation_->size(); ++i)
+                if ((*discSets[i]) != (*other.discSets[i]))
+                    return false;
+            return true;
+        }
+
+        /**
+         * Determines whether this and the given set have different
+         * numbers of discs of some type in some tetrahedron, or contain
+         * different data for some pair of corresponding discs.
+         *
+         * This routine does not consider whether the two underlying
+         * triangulations are the same; it merely compares the disc counts
+         * and associated data within each set.  If the two disc sets
+         * come from triangulations with different sizes, and/or
+         * surfaces with different disc counts in one or more tetarhedra,
+         * then this comparison will return \c true.
+         *
+         * The associated data (of type \a T) will be compared using the
+         * equality operator (==).
+         *
+         * @return \c true if and only if both sets are not the same, as
+         * described above.
+         */
+        bool operator != (const DiscSetSurfaceDataImpl& other) const {
+            return ! ((*this) == other);
         }
 
         /**
@@ -1256,6 +1376,14 @@ inline DiscSetTet::DiscSetTet(unsigned long tri0, unsigned long tri1,
         unsigned long quad0, unsigned long quad1, unsigned long quad2,
         unsigned long oct0, unsigned long oct1, unsigned long oct2) :
         discs_{ tri0, tri1, tri2, tri3, quad0, quad1, quad2, oct0, oct1, oct2 } {
+}
+
+inline bool DiscSetTet::operator == (const DiscSetTet& other) const {
+    return std::equal(discs_, discs_ + 10, other.discs_);
+}
+
+inline bool DiscSetTet::operator != (const DiscSetTet& other) const {
+    return ! std::equal(discs_, discs_ + 10, other.discs_);
 }
 
 inline unsigned long DiscSetTet::nDiscs(int type) const {

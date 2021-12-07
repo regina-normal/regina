@@ -31,3 +31,8 @@ Different Packets : throws on ==, throws on !=, different packets
 Different Packets : throws on ==, throws on !=, different packets
 Different Packets : throws on ==, throws on !=, throws on samePacket()
 Different Packets : throws on ==, throws on !=, throws on samePacket()
+DiscSetTet : ==, not !=
+DiscSetTet : not ==, !=
+DiscSetSurface : ==, not !=
+DiscSetSurface : not ==, !=
+DiscSetSurface : not ==, !=

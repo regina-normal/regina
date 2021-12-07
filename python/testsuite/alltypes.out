@@ -14,7 +14,7 @@ Attachment : class
 Equality type : EqualityType.BY_REFERENCE
 
 AugTriSolidTorus : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 BanBoundary : class
 Equality type : EqualityType.BY_REFERENCE
@@ -50,16 +50,16 @@ Bitmask8 : class
 Equality type : EqualityType.BY_VALUE
 
 BlockedSFS : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 BlockedSFSLoop : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 BlockedSFSPair : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 BlockedSFSTriple : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 BoolSet : class
 Equality type : EqualityType.BY_VALUE
@@ -254,10 +254,10 @@ Cyclotomic : class
 Equality type : EqualityType.BY_VALUE
 
 DiscSetSurface : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 DiscSetTet : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 DiscSpec : class
 Equality type : EqualityType.BY_VALUE
@@ -844,7 +844,7 @@ Isomorphism8 : class
 Equality type : EqualityType.BY_VALUE
 
 L31Pillow : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 LPConstraintEulerPositive : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -898,22 +898,22 @@ Laurent2 : class
 Equality type : EqualityType.BY_VALUE
 
 LayeredChain : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 LayeredChainPair : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 LayeredLensSpace : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 LayeredLoop : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 LayeredSolidTorus : class
 Equality type : EqualityType.BY_VALUE
 
 LayeredTorusBundle : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 Layering : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1113,10 +1113,10 @@ PillowTwoSphere : class
 Equality type : EqualityType.BY_REFERENCE
 
 PlugTriSolidTorus : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 PluggedTorusBundle : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 Polynomial : class
 Equality type : EqualityType.BY_VALUE
@@ -1260,7 +1260,7 @@ SnapPeaUnsolvedCase : class
 Exception type
 
 SnappedBall : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 SnappedTwoSphere : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1269,10 +1269,10 @@ SnapshotWriteError : class
 Exception type
 
 SpiralSolidTorus : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 StandardTriangulation : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 StrandRef : class
 Equality type : EqualityType.BY_VALUE
@@ -1423,7 +1423,7 @@ TreeTraversal_NonSpun : class
 Equality type : EqualityType.BY_REFERENCE
 
 TriSolidTorus : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 Triangle2 : typedef ->  Simplex2
 
@@ -1476,7 +1476,7 @@ TrieSet : class
 Equality type : EqualityType.BY_REFERENCE
 
 TrivialTri : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.NEVER_INSTANTIATED
 
 TxICore : class
 Equality type : EqualityType.NEVER_INSTANTIATED

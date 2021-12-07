@@ -118,3 +118,15 @@ cmp('Different Packets', Text(), PacketOfLink(), True)
 cmp('Different Packets', Text(), Link(), True)
 cmp('Different Packets', Link(), Text(), True)
 
+t = Example3.poincare()
+st = NormalSurfaces.enumerate(t, NS_QUAD)
+dt = DiscSetSurface(st.surface(0))
+u = Example3.s2xs1()
+su = NormalSurfaces.enumerate(u, NS_QUAD)
+du = DiscSetSurface(su.surface(0))
+cmp('DiscSetTet', du.tetDiscs(0), du.tetDiscs(1)) # should be equal
+cmp('DiscSetTet', dt.tetDiscs(0), dt.tetDiscs(1)) # should be different
+cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(0)))
+cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(1)))
+cmp('DiscSetSurface', dt, du)
+
