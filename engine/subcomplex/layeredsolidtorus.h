@@ -279,10 +279,7 @@ class LayeredSolidTorus : public StandardTriangulation {
          * For two layered solid tori to be considered equal, they must not
          * only represent the same subcomplex of the underlying triangulation,
          * but they must also index the edges, triangles and tetrahedra in
-         * the same way.  So, for example, calling recogniseFromTop() but
-         * passing the two faces indices in the opposite order will typically
-         * produce a layered solid torus that is \e not considered equal to
-         * the original.
+         * the same way.
          *
          * @param other the layered solid torus to compare with this.
          * @return \c true if and only if this and the given object
