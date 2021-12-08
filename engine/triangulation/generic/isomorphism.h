@@ -437,6 +437,17 @@ class Isomorphism :
         /**
          * Determines whether this and the given isomorphism are identical.
          *
+         * Two isomorphisms are considered \e identical if they act on the
+         * same number of top-dimensional simplices, and all destination
+         * simplex numbers and facet permutations are the same for both
+         * isomorphisms.
+         *
+         * In particular it is only the simplex, facet and vertex \e labels
+         * that matter: an isomorphism does not refer to a specific
+         * triangulation, and there is no sense in which the two isomorphisms
+         * need to act on the same triangulations and/or point to the same
+         * destination Simplex objects.
+         *
          * It is safe to compare isomorphisms of different sizes (in
          * which case this routine will return \c false).
          *
@@ -448,6 +459,17 @@ class Isomorphism :
 
         /**
          * Determines whether this and the given isomorphism are not identical.
+         *
+         * Two isomorphisms are considered \e identical if they act on the
+         * same number of top-dimensional simplices, and all destination
+         * simplex numbers and facet permutations are the same for both
+         * isomorphisms.
+         *
+         * In particular it is only the simplex, facet and vertex \e labels
+         * that matter: an isomorphism does not refer to a specific
+         * triangulation, and there is no sense in which the two isomorphisms
+         * need to act on the same triangulations and/or point to the same
+         * destination Simplex objects.
          *
          * It is safe to compare isomorphisms of different sizes (in
          * which case this routine will return \c true).
