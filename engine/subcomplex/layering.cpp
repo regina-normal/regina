@@ -188,4 +188,21 @@ bool Layering::matchesTop(const Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
     return true;
 }
 
+void Layering::writeTextShort(std::ostream& out) const {
+    out << "Layer ";
+    if (size_ == 1)
+        out << "1 tetrahedron: ";
+    else
+        out << size_ << " tetrahedra: ";
+
+    out << oldBdryTet_[0]->index() << " ("
+        << oldBdryRoles_[0].trunc(3) << "), "
+        << oldBdryTet_[1]->index() << " ("
+        << oldBdryRoles_[1].trunc(3) << ") -> "
+        << newBdryTet_[0]->index() << " ("
+        << newBdryRoles_[0].trunc(3) << "), "
+        << newBdryTet_[1]->index() << " ("
+        << newBdryRoles_[1].trunc(3) << ") via " << reln;
+}
+
 } // namespace regina

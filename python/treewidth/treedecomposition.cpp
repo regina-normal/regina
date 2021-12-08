@@ -87,7 +87,7 @@ void addTreeDecomposition(pybind11::module_& m) {
             pybind11::return_value_policy::reference)
         .def("isLeaf", &TreeBag::isLeaf)
     ;
-    regina::python::add_output(tb, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(tb);
     regina::python::add_eq_operators(tb);
 
     auto td = pybind11::class_<TreeDecomposition>(m, "TreeDecomposition")

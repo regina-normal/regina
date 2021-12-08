@@ -105,6 +105,22 @@ struct Strings {
      * An example for \a dim = 7 is "7-simplex".
      */
     static constexpr const char* Simplex;
+    /**
+     * A string that gives the plural name of a <i>dim</i>-simplex, all in
+     * lower case.
+     *
+     * An example for \a dim = 3 is "tetrahedra".
+     * An example for \a dim = 7 is "7-simplices".
+     */
+    static constexpr const char* simplices;
+    /**
+     * A string that gives the plural name of a <i>dim</i>-simplex, with the
+     * first word capitalised.
+     *
+     * An example for \a dim = 3 is "Tetrahedra".
+     * An example for \a dim = 7 is "7-simplices".
+     */
+    static constexpr const char* Simplex;
 #endif // __DOXYGEN
 };
 
@@ -119,6 +135,8 @@ struct Strings<0> {
     static constexpr const char* Faces = "Vertices";
     static constexpr const char* simplex = "vertex";
     static constexpr const char* Simplex = "Vertex";
+    static constexpr const char* simplices = "vertices";
+    static constexpr const char* Simplices = "Vertices";
 };
 
 template <>
@@ -130,6 +148,8 @@ struct Strings<1> {
     static constexpr const char* Faces = "Edges";
     static constexpr const char* simplex = "edge";
     static constexpr const char* Simplex = "Edge";
+    static constexpr const char* simplices = "edges";
+    static constexpr const char* Simplices = "Edges";
 };
 
 template <>
@@ -141,6 +161,8 @@ struct Strings<2> {
     static constexpr const char* Faces = "Triangles";
     static constexpr const char* simplex = "triangle";
     static constexpr const char* Simplex = "Triangle";
+    static constexpr const char* simplices = "triangles";
+    static constexpr const char* Simplices = "Triangles";
 };
 
 template <>
@@ -152,6 +174,8 @@ struct Strings<3> {
     static constexpr const char* Faces = "Tetrahedra";
     static constexpr const char* simplex = "tetrahedron";
     static constexpr const char* Simplex = "Tetrahedron";
+    static constexpr const char* simplices = "tetrahedra";
+    static constexpr const char* Simplices = "Tetrahedra";
 };
 
 template <>
@@ -163,6 +187,8 @@ struct Strings<4> {
     static constexpr const char* Faces = "Pentachora";
     static constexpr const char* simplex = "pentachoron";
     static constexpr const char* Simplex = "Pentachoron";
+    static constexpr const char* simplices = "pentachora";
+    static constexpr const char* Simplices = "Pentachora";
 };
 
 template <>
@@ -174,6 +200,8 @@ struct Strings<5> {
     static constexpr const char* Faces = "5-faces";
     static constexpr const char* simplex = "5-simplex";
     static constexpr const char* Simplex = "5-simplex";
+    static constexpr const char* simplices = "5-simplices";
+    static constexpr const char* Simplices = "5-simplices";
 };
 
 template <>
@@ -185,6 +213,8 @@ struct Strings<6> {
     static constexpr const char* Faces = "6-faces";
     static constexpr const char* simplex = "6-simplex";
     static constexpr const char* Simplex = "6-simplex";
+    static constexpr const char* simplices = "6-simplices";
+    static constexpr const char* Simplices = "6-simplices";
 };
 
 template <>
@@ -196,6 +226,8 @@ struct Strings<7> {
     static constexpr const char* Faces = "7-faces";
     static constexpr const char* simplex = "7-simplex";
     static constexpr const char* Simplex = "7-simplex";
+    static constexpr const char* simplices = "7-simplices";
+    static constexpr const char* Simplices = "7-simplices";
 };
 
 template <>
@@ -207,6 +239,8 @@ struct Strings<8> {
     static constexpr const char* Faces = "8-faces";
     static constexpr const char* simplex = "8-simplex";
     static constexpr const char* Simplex = "8-simplex";
+    static constexpr const char* simplices = "8-simplices";
+    static constexpr const char* Simplices = "8-simplices";
 };
 
 template <>
@@ -218,6 +252,8 @@ struct Strings<9> {
     static constexpr const char* Faces = "9-faces";
     static constexpr const char* simplex = "9-simplex";
     static constexpr const char* Simplex = "9-simplex";
+    static constexpr const char* simplices = "9-simplices";
+    static constexpr const char* Simplices = "9-simplices";
 };
 
 template <>
@@ -229,6 +265,8 @@ struct Strings<10> {
     static constexpr const char* Faces = "10-faces";
     static constexpr const char* simplex = "10-simplex";
     static constexpr const char* Simplex = "10-simplex";
+    static constexpr const char* simplices = "10-simplices";
+    static constexpr const char* Simplices = "10-simplices";
 };
 
 template <>
@@ -240,6 +278,8 @@ struct Strings<11> {
     static constexpr const char* Faces = "11-faces";
     static constexpr const char* simplex = "11-simplex";
     static constexpr const char* Simplex = "11-simplex";
+    static constexpr const char* simplices = "11-simplices";
+    static constexpr const char* Simplices = "11-simplices";
 };
 
 template <>
@@ -251,6 +291,8 @@ struct Strings<12> {
     static constexpr const char* Faces = "12-faces";
     static constexpr const char* simplex = "12-simplex";
     static constexpr const char* Simplex = "12-simplex";
+    static constexpr const char* simplices = "12-simplices";
+    static constexpr const char* Simplices = "12-simplices";
 };
 
 template <>
@@ -262,6 +304,8 @@ struct Strings<13> {
     static constexpr const char* Faces = "13-faces";
     static constexpr const char* simplex = "13-simplex";
     static constexpr const char* Simplex = "13-simplex";
+    static constexpr const char* simplices = "13-simplices";
+    static constexpr const char* Simplices = "13-simplices";
 };
 
 template <>
@@ -273,6 +317,8 @@ struct Strings<14> {
     static constexpr const char* Faces = "14-faces";
     static constexpr const char* simplex = "14-simplex";
     static constexpr const char* Simplex = "14-simplex";
+    static constexpr const char* simplices = "14-simplices";
+    static constexpr const char* Simplices = "14-simplices";
 };
 
 template <>
@@ -284,6 +330,8 @@ struct Strings<15> {
     static constexpr const char* Faces = "15-faces";
     static constexpr const char* simplex = "15-simplex";
     static constexpr const char* Simplex = "15-simplex";
+    static constexpr const char* simplices = "15-simplices";
+    static constexpr const char* Simplices = "15-simplices";
 };
 
 #endif // __DOXYGEN

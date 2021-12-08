@@ -87,7 +87,7 @@ void addEdge2(pybind11::module_& m) {
         .def_readonly_static("dimension", &Edge<2>::dimension)
         .def_readonly_static("subdimension", &Edge<2>::subdimension)
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<

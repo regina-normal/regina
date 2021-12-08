@@ -103,7 +103,7 @@ void addBoundaryComponent(pybind11::module_& m, const char* name) {
     if constexpr (dim == 6) {
         c.def("countPentachora", &BoundaryComponent<dim>::countPentachora);
     }
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<

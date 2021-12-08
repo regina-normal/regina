@@ -80,7 +80,7 @@ void addPentachoron4(pybind11::module_& m) {
         .def_readonly_static("dimension", &Pentachoron<4>::dimension)
         .def_readonly_static("subdimension", &Pentachoron<4>::subdimension)
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     m.attr("Pentachoron4") = m.attr("Simplex4");

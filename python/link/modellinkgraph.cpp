@@ -68,7 +68,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("arc", &ModelLinkGraphNode::arc)
         .def("adj", &ModelLinkGraphNode::adj)
     ;
-    regina::python::add_output(n, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(n);
     regina::python::add_eq_operators(n);
 
     auto g = pybind11::class_<ModelLinkGraph>(m, "ModelLinkGraph")
@@ -112,7 +112,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("cell", &ModelLinkGraphCells::cell)
         .def("cellPos", &ModelLinkGraphCells::cellPos)
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<decltype(ModelLinkGraph().cells().arcs(0))>(m);

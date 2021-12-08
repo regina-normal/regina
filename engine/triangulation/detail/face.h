@@ -308,7 +308,7 @@ template <int dim, int subdim>
 class FaceBase :
         public FaceNumbering<dim, subdim>,
         public MarkedElement,
-        public Output<Face<dim, subdim>> {
+        public ShortOutput<Face<dim, subdim>> {
     static_assert(dim >= 2, "Face requires dimension >= 2.");
 
     public:
@@ -913,20 +913,6 @@ class FaceBase :
          */
         void writeTextShort(std::ostream& out) const;
 
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * The class Face<dim, subdim> may safely override this function,
-         * since the output routines cast down to Face<dim, subdim>
-         * before calling it.
-         *
-         * \ifacespython Not present; use detail() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
-
         // Make this class non-copyable.
         FaceBase(const FaceBase&) = delete;
         FaceBase& operator = (const FaceBase&) = delete;
@@ -1222,20 +1208,54 @@ inline FaceBase<dim, subdim>::FaceBase(Component<dim>* component) :
 }
 
 template <int dim, int subdim>
-inline void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
-    out << (isBoundary() ? "Boundary " : "Internal ") << Strings<subdim>::face;
+void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
+    out << Strings<subdim>::Face << ' ' << index() << ", ";
+    if constexpr (dim == 3 && subdim == 0) {
+        // Identify vertex links in dimension 3 in more detail.
+        switch (static_cast<const Face<dim, subdim>*>(this)->linkType()) {
+            case Face<dim, subdim>::SPHERE:
+                out << "internal"; break;
+            case Face<dim, subdim>::DISC:
+                out << "boundary"; break;
+            case Face<dim, subdim>::TORUS:
+                out << "torus cusp"; break;
+            case Face<dim, subdim>::KLEIN_BOTTLE:
+                out << "Klein bottle cusp"; break;
+            case Face<dim, subdim>::NON_STANDARD_CUSP:
+                out << "ideal"; break;
+            case Face<dim, subdim>::INVALID:
+                out << "invalid"; break;
+        }
+    } else if constexpr (dim == 4 && subdim == 0) {
+        // Identify ideal vertices in dimension 4.
+        if (! isValid())
+            out << "invalid";
+        else if (static_cast<const Face<dim, subdim>*>(this)->isIdeal())
+            out << "ideal";
+        else if (isBoundary())
+            out << "boundary";
+        else
+            out << "internal";
+    } else {
+        if (! isValid())
+            out << "invalid";
+        else if (isBoundary())
+            out << "boundary";
+        else
+            out << "internal";
+    }
     if (subdim < dim - 1)
-        out << " of degree " << degree();
-}
+        out << ", degree " << degree();
+    out << ": ";
 
-template <int dim, int subdim>
-void FaceBase<dim, subdim>::writeTextLong(std::ostream& out) const {
-    static_cast<const Face<dim, subdim>*>(this)->writeTextShort(out);
-    out << std::endl;
-
-    out << "Appears as:" << std::endl;
-    for (const auto& emb : *this)
-        out << "  " << emb << std::endl;
+    bool first = true;
+    for (const auto& emb : *this) {
+        if (first)
+            first = false;
+        else
+            out << ", ";
+        out << emb;
+    }
 }
 
 } // namespace regina::detail

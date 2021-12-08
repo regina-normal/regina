@@ -43,6 +43,7 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/forward.h"
+#include "triangulation/detail/strings.h"
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
 
@@ -75,7 +76,7 @@ template <int> class TriangulationBase;
  */
 template <int dim>
 class ComponentBase :
-        public Output<ComponentBase<dim>>,
+        public ShortOutput<ComponentBase<dim>>,
         public MarkedElement {
     public:
         static constexpr int dimension = dim;
@@ -414,15 +415,6 @@ class ComponentBase :
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present; use detail() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
         // Make this class non-copyable.
         ComponentBase(const ComponentBase&) = delete;
@@ -638,21 +630,18 @@ inline size_t ComponentBase<dim>::countBoundaryFacets() const {
 template <int dim>
 void ComponentBase<dim>::writeTextShort(std::ostream& out) const {
     if (simplices_.size() == 1)
-        out << "Component with 1 " << dim << "-simplex";
+        out << "Component with 1 " << Strings<dim>::simplex;
     else
         out << "Component with " << simplices_.size() << ' '
-            << dim << "-simplices";
-}
+            << Strings<dim>::simplices;
+    out << ':';
 
-template <int dim>
-void ComponentBase<dim>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << (simplices_.size() == 1 ? "Simplex:" : "Simplices:");
-    for (auto it = simplices_.begin(); it != simplices_.end(); ++it)
-        out << ' ' << (*it)->markedIndex();
-    out << std::endl;
+    if (simplices_.front()->triangulation().countComponents() == 1) {
+        out << " entire triangulation";
+    } else {
+        for (auto it = simplices_.begin(); it != simplices_.end(); ++it)
+            out << ' ' << (*it)->index();
+    }
 }
 
 } // namespace regina::detail

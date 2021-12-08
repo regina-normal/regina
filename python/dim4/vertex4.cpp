@@ -89,7 +89,7 @@ void addVertex4(pybind11::module_& m) {
         .def_readonly_static("dimension", &Vertex<4>::dimension)
         .def_readonly_static("subdimension", &Vertex<4>::subdimension)
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<

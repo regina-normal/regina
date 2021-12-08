@@ -525,10 +525,25 @@ ModelLinkGraphCells::ModelLinkGraphCells(const ModelLinkGraph& g) :
 
 void ModelLinkGraphCells::writeTextShort(std::ostream& out) const {
     if (nCells_ == 0)
-        out << "invalid cell structure";
+        out << "Invalid cell structure";
     else {
         // Must have nCells_ >= 3, so use the plural.
-        out << "cell structure with " << nCells_ << " cells";
+        out << nCells_ << " cells:";
+
+        for (size_t i = 0; i < nCells_; ++i) {
+            out << " (";
+            for (auto a = begin(i); a != end(i); ++a) {
+                if (a != begin(i)) {
+                    out << ' ' << a->node()->index() << ':'
+                        << (a->arc() + 3) % 4 << '-' << a->arc();
+                } else {
+                    out << a->node()->index() << ':' << a->arc();
+                }
+            }
+            auto a = begin(i);
+            out << ' ' << a->node()->index() << ':'
+                << (a->arc() + 3) % 4 << ')';
+        }
     }
 }
 

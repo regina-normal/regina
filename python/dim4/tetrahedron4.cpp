@@ -93,7 +93,7 @@ void addTetrahedron4(pybind11::module_& m) {
         .def_readonly_static("dimension", &Tetrahedron<4>::dimension)
         .def_readonly_static("subdimension", &Tetrahedron<4>::subdimension)
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     regina::python::addListView<

@@ -435,7 +435,7 @@ std::ostream& operator << (std::ostream& out, const StrandRef& s);
  *
  * \ingroup link
  */
-class Crossing : public MarkedElement, public Output<Crossing> {
+class Crossing : public MarkedElement, public ShortOutput<Crossing> {
     private:
         int sign_;
             /**< The sign of the crossing, which must be +1 or -1.
@@ -563,15 +563,6 @@ class Crossing : public MarkedElement, public Output<Crossing> {
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present; use detail() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
         // Make this class non-copyable.
         Crossing(const Crossing&) = delete;
@@ -4608,35 +4599,9 @@ inline StrandRef Crossing::strand(int which) {
 }
 
 inline void Crossing::writeTextShort(std::ostream& out) const {
-    out << "crossing " << index();
-    if (sign_ == 1)
-        out << " (+)";
-    else
-        out << " (-)";
-}
-
-inline void Crossing::writeTextLong(std::ostream& out) const {
-    out << "Crossing " << index();
-    if (sign_ == 1)
-        out << " (+)";
-    else
-        out << " (-)";
-    out << '\n';
-
-    /*
-    if (sign_ == 1) {
-        out << "--\ /-->  " << next_[0] << '\n';
-        out << "   \\n"
-        out << "--/ \-->  " << next_[1] << std::endl;
-    } else {
-        out << "--\ /-->  " << next_[1] << '\n';
-        out << "   /\n"
-        out << "--/ \-->  " << next_[0] << std::endl;
-    }
-    */
-
-    out << prev_[1] << "  ->  over  ->  " << next_[1] << '\n';
-    out << prev_[0] << "  ->  under  ->  " << next_[0] << std::endl;
+    out << "Crossing " << index() << " (" << (sign_ == 1 ? '+' : '-')
+        << "): over " << prev_[1] << " -+-> " << next_[1]
+        << ", under " << prev_[0] << " -+-> " << next_[0];
 }
 
 inline Crossing::Crossing() : sign_(0) {

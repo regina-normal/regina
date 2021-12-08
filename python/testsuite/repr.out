@@ -266,9 +266,17 @@ ModelLinkGraph
 6-node graph: [1:0 2:0 3:0 3:3] [0:0 4:0 4:3 2:1] [0:1 1:3 5:0 3:1] [0:2 2:3 5:3 0:3] [1:1 5:2 5:1 1:2] [2:2 4:2 4:1 3:2]
 <regina.ModelLinkGraph: 6-node graph: [1:0 2:0 3:0 3:3] [0:0 4:0 4:3 2:1] [0:1 1:3 5:0 3:1] [0:2 2:3 5:3 0:3] [1:1 5:2 5:1 1:2] [2:2 4:2 4:1 3:2]>
 
+ModelLinkGraphNode
+Node 0: arcs 0, 1, 2, 3 -> 1:0, 2:0, 3:0, 3:3
+<regina.ModelLinkGraphNode: Node 0: arcs 0, 1, 2, 3 -> 1:0, 2:0, 3:0, 3:3>
+
 ModelLinkGraphArc
 0:2
 <regina.ModelLinkGraphArc: 0:2>
+
+ModelLinkGraphCells
+8 cells: (0:0 1:0-1 4:0-1 5:2-3 3:2-3 0:3) (0:1 2:0-1 1:3-0 0:0) (0:2 3:0-1 2:3-0 0:1) (0:3 3:3-0 0:2) (1:2 4:3-0 1:1) (1:3 2:1-2 5:0-1 4:2-3 1:2) (2:3 3:1-2 5:3-0 2:2) (4:2 5:1-2 4:1)
+<regina.ModelLinkGraphCells: 8 cells: (0:0 1:0-1 4:0-1 5:2-3 3:2-3 0:3) (0:1 2:0-1 1:3-0 0:0) (0:2 3:0-1 2:3-0 0:1) (0:3 3:3-0 0:2) (1:2 4:3-0 1:1) (1:3 2:1-2 5:0-1 4:2-3 1:2) (2:3 3:1-2 5:3-0 2:2) (4:2 5:1-2 4:1)>
 
 Link
 Empty link
@@ -294,9 +302,17 @@ StrandRef
 _0
 <regina.StrandRef: _0>
 
+Crossing
+Crossing 0 (+): over _1 -+-> _3, under ^2 -+-> ^1
+<regina.Crossing: Crossing 0 (+): over _1 -+-> _3, under ^2 -+-> ^1>
+
 Tangle
 3-crossing vertical tangle: | --+ ( _0 ^1 ) ( ^2 _1 ^0 _2 )
 <regina.Tangle: 3-crossing vertical tangle: | --+ ( _0 ^1 ) ( ^2 _1 ^0 _2 )>
+
+Crossing
+Crossing 0 (-): over _1 -+-> _2, under (null) -+-> ^1
+<regina.Crossing: Crossing 0 (-): over _1 -+-> _2, under (null) -+-> ^1>
 
 SnapPeaTriangulation
 Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 0, vertex 1 ]
@@ -354,61 +370,165 @@ Triangulation5
 Possibly closed orientable 5-D triangulation, f = ( 6 15 20 15 6 2 )
 <regina.Triangulation5: Possibly closed orientable 5-D triangulation, f = ( 6 15 20 15 6 2 )>
 
+Face2_0
+Vertex 0, boundary, degree 3: 0 (2), 1 (1), 0 (0)
+<regina.Face2_0: Vertex 0, boundary, degree 3: 0 (2), 1 (1), 0 (0)>
+
 FaceEmbedding2_0
 0 (2)
 <regina.FaceEmbedding2_0: 0 (2)>
+
+Face2_1
+Edge 0, internal: 0 (01), 1 (12)
+<regina.Face2_1: Edge 0, internal: 0 (01), 1 (12)>
 
 FaceEmbedding2_1
 0 (01)
 <regina.FaceEmbedding2_1: 0 (01)>
 
+Simplex2
+2-simplex 0: 01 -> 1 (12), 12 -> 1 (01)
+<regina.Simplex2: 2-simplex 0: 01 -> 1 (12), 12 -> 1 (01)>
+
+Component2
+Component with 2 triangles: entire triangulation
+<regina.Component2: Component with 2 triangles: entire triangulation>
+
+BoundaryComponent2
+Boundary component 0: 0 (02)
+<regina.BoundaryComponent2: Boundary component 0: 0 (02)>
+
+Face3_0
+Vertex 0, internal, degree 20: 0 (0), 2 (3), 3 (3), 4 (3), 1 (3), 3 (0), 1 (2), 4 (0), 1 (1), 2 (0), 0 (1), 4 (1), 0 (2), 2 (1), 0 (3), 3 (1), 3 (2), 2 (2), 4 (2), 1 (0)
+<regina.Face3_0: Vertex 0, internal, degree 20: 0 (0), 2 (3), 3 (3), 4 (3), 1 (3), 3 (0), 1 (2), 4 (0), 1 (1), 2 (0), 0 (1), 4 (1), 0 (2), 2 (1), 0 (3), 3 (1), 3 (2), 2 (2), 4 (2), 1 (0)>
+
 FaceEmbedding3_0
 0 (0)
 <regina.FaceEmbedding3_0: 0 (0)>
+
+Face3_1
+Edge 0, internal, degree 5: 0 (01), 3 (32), 1 (20), 2 (02), 4 (31)
+<regina.Face3_1: Edge 0, internal, degree 5: 0 (01), 3 (32), 1 (20), 2 (02), 4 (31)>
 
 FaceEmbedding3_1
 0 (01)
 <regina.FaceEmbedding3_1: 0 (01)>
 
+Face3_2
+Triangle 0, internal: 0 (012), 4 (312)
+<regina.Face3_2: Triangle 0, internal: 0 (012), 4 (312)>
+
 FaceEmbedding3_2
 0 (012)
 <regina.FaceEmbedding3_2: 0 (012)>
+
+Simplex3
+3-simplex 0: 012 -> 4 (312), 013 -> 3 (321), 023 -> 2 (312), 123 -> 1 (321)
+<regina.Simplex3: 3-simplex 0: 012 -> 4 (312), 013 -> 3 (321), 023 -> 2 (312), 123 -> 1 (321)>
+
+Component3
+Component with 5 tetrahedra: entire triangulation
+<regina.Component3: Component with 5 tetrahedra: entire triangulation>
+
+Face4_0
+Vertex 0, ideal, degree 10: 0 (0), 1 (0), 1 (1), 0 (1), 0 (2), 1 (2), 0 (3), 1 (3), 1 (4), 0 (4)
+<regina.Face4_0: Vertex 0, ideal, degree 10: 0 (0), 1 (0), 1 (1), 0 (1), 0 (2), 1 (2), 0 (3), 1 (3), 1 (4), 0 (4)>
 
 FaceEmbedding4_0
 0 (0)
 <regina.FaceEmbedding4_0: 0 (0)>
 
+Face4_1
+Edge 0, internal, degree 20: 0 (01), 1 (12), 0 (12), 1 (01), 0 (23), 1 (23), 1 (13), 0 (02), 1 (02), 1 (34), 0 (13), 0 (03), 1 (24), 1 (03), 0 (34), 1 (14), 1 (04), 0 (14), 0 (24), 0 (04)
+<regina.Face4_1: Edge 0, internal, degree 20: 0 (01), 1 (12), 0 (12), 1 (01), 0 (23), 1 (23), 1 (13), 0 (02), 1 (02), 1 (34), 0 (13), 0 (03), 1 (24), 1 (03), 0 (34), 1 (14), 1 (04), 0 (14), 0 (24), 0 (04)>
+
 FaceEmbedding4_1
 0 (01)
 <regina.FaceEmbedding4_1: 0 (01)>
+
+Face4_2
+Triangle 0, internal, degree 4: 0 (234), 0 (124), 0 (014), 1 (124)
+<regina.Face4_2: Triangle 0, internal, degree 4: 0 (234), 0 (124), 0 (014), 1 (124)>
 
 FaceEmbedding4_2
 0 (234)
 <regina.FaceEmbedding4_2: 0 (234)>
 
+Face4_3
+Tetrahedron 0, internal: 0 (0123), 1 (0134)
+<regina.Face4_3: Tetrahedron 0, internal: 0 (0123), 1 (0134)>
+
 FaceEmbedding4_3
 0 (0123)
 <regina.FaceEmbedding4_3: 0 (0123)>
+
+Simplex4
+4-simplex 0: 0123 -> 1 (0134), 0124 -> 0 (1234), 0134 -> 1 (1234), 0234 -> 1 (0124), 1234 -> 0 (0124)
+<regina.Simplex4: 4-simplex 0: 0123 -> 1 (0134), 0124 -> 0 (1234), 0134 -> 1 (1234), 0234 -> 1 (0124), 1234 -> 0 (0124)>
+
+Component4
+Component with 2 pentachora: entire triangulation
+<regina.Component4: Component with 2 pentachora: entire triangulation>
+
+BoundaryComponent4
+Boundary component 0, ideal at vertex 0: 0 (0), 1 (0), 1 (1), 0 (1), 0 (2), 1 (2), 0 (3), 1 (3), 1 (4), 0 (4)
+<regina.BoundaryComponent4: Boundary component 0, ideal at vertex 0: 0 (0), 1 (0), 1 (1), 0 (1), 0 (2), 1 (2), 0 (3), 1 (3), 1 (4), 0 (4)>
+
+Face5_0
+Vertex 0, internal, degree 2: 0 (0), 1 (0)
+<regina.Face5_0: Vertex 0, internal, degree 2: 0 (0), 1 (0)>
 
 FaceEmbedding5_0
 0 (0)
 <regina.FaceEmbedding5_0: 0 (0)>
 
+Face5_1
+Edge 0, internal, degree 2: 0 (01), 1 (01)
+<regina.Face5_1: Edge 0, internal, degree 2: 0 (01), 1 (01)>
+
 FaceEmbedding5_1
 0 (01)
 <regina.FaceEmbedding5_1: 0 (01)>
+
+Face5_2
+Triangle 0, internal, degree 2: 0 (012), 1 (012)
+<regina.Face5_2: Triangle 0, internal, degree 2: 0 (012), 1 (012)>
 
 FaceEmbedding5_2
 0 (012)
 <regina.FaceEmbedding5_2: 0 (012)>
 
+Face5_3
+Tetrahedron 0, internal, degree 2: 0 (2345), 1 (2345)
+<regina.Face5_3: Tetrahedron 0, internal, degree 2: 0 (2345), 1 (2345)>
+
 FaceEmbedding5_3
 0 (2345)
 <regina.FaceEmbedding5_3: 0 (2345)>
 
+Face5_4
+Pentachoron 0, internal: 0 (01234), 1 (01234)
+<regina.Face5_4: Pentachoron 0, internal: 0 (01234), 1 (01234)>
+
 FaceEmbedding5_4
 0 (01234)
 <regina.FaceEmbedding5_4: 0 (01234)>
+
+Simplex5
+5-simplex 0: 01234 -> 1 (01234), 01235 -> 1 (01235), 01245 -> 1 (01245), 01345 -> 1 (01345), 02345 -> 1 (02345), 12345 -> 1 (12345)
+<regina.Simplex5: 5-simplex 0: 01234 -> 1 (01234), 01235 -> 1 (01235), 01245 -> 1 (01245), 01345 -> 1 (01345), 02345 -> 1 (02345), 12345 -> 1 (12345)>
+
+Component5
+Component with 2 5-simplices: entire triangulation
+<regina.Component5: Component with 2 5-simplices: entire triangulation>
+
+Component5
+Component with 1 5-simplex: 2
+<regina.Component5: Component with 1 5-simplex: 2>
+
+BoundaryComponent5
+Boundary component 0: 2 (01235), 2 (01245), 2 (02345), 2 (01345)
+<regina.BoundaryComponent5: Boundary component 0: 2 (01235), 2 (01245), 2 (02345), 2 (01345)>
 
 Isomorphism3
 0 -> 1 (1230), 1 -> 0 (2103)
@@ -465,6 +585,16 @@ SFS [D/o2: (3,1) (4,3)] U/m SFS [D/o2: (3,1) (4,3)], m = [ 0,1 | 1,2 ]
 GraphTriple
 SFS [D/o2: (3,1) (4,3)] U/m SFS [A/o2: (2,1) (5,2)] U/n SFS [D/o2: (3,1) (4,3)], m = [ -2,1 | 1,0 ], n = [ 1,2 | 3,5 ]
 <regina.GraphTriple: SFS [D/o2: (3,1) (4,3)] U/m SFS [A/o2: (2,1) (5,2)] U/n SFS [D/o2: (3,1) (4,3)], m = [ -2,1 | 1,0 ], n = [ 1,2 | 3,5 ]>
+
+list of SFSAlt
+  SFS [D/o2: (3,1) (4,3)], via [[ 1 0 ] [ 0 1 ]], without reflection
+  SFS [D/o2: (3,1) (4,3)], via [[ 1 0 ] [ 0 -1 ]], using reflection
+[<regina.SFSAlt: SFS [D/o2: (3,1) (4,3)], via [[ 1 0 ] [ 0 1 ]], without reflection>, <regina.SFSAlt: SFS [D/o2: (3,1) (4,3)], via [[ 1 0 ] [ 0 -1 ]], using reflection>]
+
+list of SFSAlt
+  SFS [A/o2: (2,1) (5,2)], via [[ 1 0 ] [ 0 1 ]], without reflection
+  SFS [A/o2: (2,1) (5,2)], via [[ 1 0 ] [ 0 -1 ]], using reflection
+[<regina.SFSAlt: SFS [A/o2: (2,1) (5,2)], via [[ 1 0 ] [ 0 1 ]], without reflection>, <regina.SFSAlt: SFS [A/o2: (2,1) (5,2)], via [[ 1 0 ] [ 0 -1 ]], using reflection>]
 
 SnapPeaCensusTri
 SnapPea m004
@@ -570,6 +700,14 @@ LayeredSolidTorus
 LST(2, 3, 5), base 1 (edges 0|41|352), top 0 (edges 23|41|0)
 <regina.LayeredSolidTorus: LST(2, 3, 5), base 1 (edges 0|41|352), top 0 (edges 23|41|0)>
 
+Layering
+Layer 0 tetrahedra: 0 (230), 0 (321) -> 0 (230), 0 (321) via [[ 1 0 ] [ 0 1 ]]
+<regina.Layering: Layer 0 tetrahedra: 0 (230), 0 (321) -> 0 (230), 0 (321) via [[ 1 0 ] [ 0 1 ]]>
+
+Layering
+Layer 1 tetrahedron: 0 (230), 0 (321) -> 1 (123), 1 (032) via [[ 1 0 ] [ -1 1 ]]
+<regina.Layering: Layer 1 tetrahedron: 0 (230), 0 (321) -> 1 (123), 1 (032) via [[ 1 0 ] [ -1 1 ]]>
+
 LayeredChainPair
 C(4,6)
 <regina.LayeredChainPair: C(4,6)>
@@ -614,9 +752,21 @@ LPData_NonSpun
 Feasible basis: 0 1 3
 <regina.LPData_NonSpun: Feasible basis: 0 1 3>
 
+ValidityConstraints
+Blocks: 2 x 7, local: { 4 5 6 }
+<regina.ValidityConstraints: Blocks: 2 x 7, local: { 4 5 6 }>
+
+ValidityConstraints
+Blocks: 2 x 6, local: { 0 1 2 3 4 5 }, global: { 3 4 5 }
+<regina.ValidityConstraints: Blocks: 2 x 6, local: { 0 1 2 3 4 5 }, global: { 3 4 5 }>
+
 TreeDecomposition
 Width 4, size 11, bags 0: {0,1,5,6} -> 1, 1: {0,1,2,5,7} -> 2, 2: {0,2,4,5,7} -> 4, 3: {2,3,4,8} -> 4, 4: {0,2,4,7,8} -> 5, 5: {0,4,7,8} -> 6, 6: {0,4,8,10} -> 8, 7: {4,8,9,10} -> 8, 8: {4,8,10} -> 9, 9: {8,10} -> 10, 10: {10}
 <regina.TreeDecomposition: Width 4, size 11, bags 0: {0,1,5,6} -> 1, 1: {0,1,2,5,7} -> 2, 2: {0,2,4,5,7} -> 4, 3: {2,3,4,8} -> 4, 4: {0,2,4,7,8} -> 5, 5: {0,4,7,8} -> 6, 6: {0,4,8,10} -> 8, 7: {4,8,9,10} -> 8, 8: {4,8,10} -> 9, 9: {8,10} -> 10, 10: {10}>
+
+TreeBag
+Bag of 4 elements: 0 1 5 6
+<regina.TreeBag: Bag of 4 elements: 0 1 5 6>
 
 Signature
 (abbc)(ac)

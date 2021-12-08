@@ -60,6 +60,7 @@ void addValidityConstraints(pybind11::module_& m) {
             &ValidityConstraints::bitmasks<regina::Bitmask>, pybind11::const_))
         .def_readonly_static("none", &ValidityConstraints::none)
     ;
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap",

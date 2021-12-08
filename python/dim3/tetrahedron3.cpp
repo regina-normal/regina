@@ -78,7 +78,7 @@ void addTetrahedron3(pybind11::module_& m) {
         .def_readonly_static("dimension", &Tetrahedron<3>::dimension)
         .def_readonly_static("subdimension", &Tetrahedron<3>::subdimension)
     ;
-    regina::python::add_output(c, regina::python::PYTHON_REPR_NONE);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     m.attr("Tetrahedron3") = m.attr("Simplex3");

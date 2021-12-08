@@ -41,17 +41,6 @@ Face<4, 0>::~Face() {
     delete link_;
 }
 
-void Face<4, 0>::writeTextShort(std::ostream& out) const {
-    if (! link_->isClosed())
-        out << "Boundary ";
-    else if (link_->isSphere())
-        out << "Internal ";
-    else
-        out << "Ideal ";
-
-    out << "vertex of degree " << degree();
-}
-
 Isomorphism<4> Face<4, 0>::buildLinkInclusion() const {
     Isomorphism<4> inclusion(degree());
 

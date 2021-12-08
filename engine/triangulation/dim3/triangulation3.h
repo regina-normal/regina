@@ -99,7 +99,6 @@ template <int> class XMLTriangulationReader;
  * \todo \featurelong What is the Heegaard genus?
  * \todo \featurelong Have a subcomplex as a new type.  Include routines to
  * crush a subcomplex or to expand a subcomplex to a normal surface.
- * \todo \featurelong Implement writeTextLong() for skeletal objects.
  *
  * \headerfile triangulation/dim3.h
  *

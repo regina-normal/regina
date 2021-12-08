@@ -78,7 +78,7 @@ template <int> class TriangulationBase;
  */
 template <int dim>
 class BoundaryComponentBase :
-        public Output<BoundaryComponentBase<dim>>, public MarkedElement {
+        public ShortOutput<BoundaryComponentBase<dim>>, public MarkedElement {
     public:
         static constexpr int dimension = dim;
             /**< A compile-time constant that gives the dimension of the
@@ -876,46 +876,42 @@ class BoundaryComponentBase :
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
+            out << "Boundary component " << index();
             if constexpr (allowVertex) {
-                out << (isIdeal() ? "Ideal " :
-                        isInvalidVertex() ? "Invalid " :
-                        "Finite ") << "boundary component";
-            } else {
-                out << "Boundary component";
+                out << (isIdeal() ? ", ideal" :
+                        isInvalidVertex() ? ", invalid" : ", finite");
             }
-        }
-
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present; use detail() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const {
-            writeTextShort(out);
-            out << std::endl;
 
             if constexpr (allowVertex) {
                 if (isIdeal() || isInvalidVertex()) {
                     // We have no boundary facets.
                     Face<dim, 0>* v = std::get<tupleIndex(0)>(faces_).front();
-                    out << "Vertex: " << v->index() << std::endl;
-                    out << "Appears as:" << std::endl;
-                    for (auto& emb : *v)
-                        out << "  " << emb.simplex()->index()
-                            << " (" << emb.vertex() << ')' << std::endl;
+                    out << " at vertex " << v->index();
+                    bool first = true;
+                    for (auto& emb : *v) {
+                        if (first) {
+                            out << ": ";
+                            first = false;
+                        } else
+                            out << ", ";
+                        out << emb.simplex()->index()
+                            << " (" << emb.vertex() << ')';
+                    }
                     return;
                 }
             }
 
             // We have boundary facets.
-            out << (size() == 1 ? Strings<dim-1>::Face :
-                Strings<dim-1>::Faces) << ':' << std::endl;
-            for (auto s : facets())
-                out << "  " << s->front().simplex()->index() << " ("
-                    << s->front().vertices().trunc(dim) << ')' << std::endl;
+            bool first = true;
+            for (auto s : facets()) {
+                if (first) {
+                    out << ": ";
+                    first = false;
+                } else
+                    out << ", ";
+                out << s->front().simplex()->index() << " ("
+                    << s->front().vertices().trunc(dim) << ')';
+            }
         }
 
         // Make this class non-copyable.

@@ -846,9 +846,29 @@ inline bool SimplexBase<dim>::facetInMaximalForest(int facet) const {
 
 template <int dim>
 inline void SimplexBase<dim>::writeTextShort(std::ostream& out) const {
-    out << dim << "-simplex";
-    if (! description_.empty())
-        out << ": " << description_;
+    out << dim << "-simplex " << index();
+
+    int glued = 0;
+    int facet, j;
+    for (facet = dim; facet >= 0; --facet) {
+        if (! adj_[facet])
+            continue;
+
+        out << (glued == 0 ? ": " : ", ");
+        ++glued;
+
+        for (j = 0; j <= dim; ++j)
+            if (j != facet)
+                out << regina::digit(j);
+        out << " -> " << adj_[facet]->markedIndex() << " (";
+        for (j = 0; j <= dim; ++j)
+            if (j != facet)
+                out << regina::digit(gluing_[facet][j]);
+        out << ')';
+    }
+
+    if (glued == 0)
+        out << ": all facets boundary";
 }
 
 template <int dim>
@@ -909,8 +929,11 @@ void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
 
 template <int dim>
 void SimplexBase<dim>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
+    out << dim << "-simplex " << index();
+    if (! description_.empty())
+        out << ": " << description_;
     out << std::endl;
+
     int facet, j;
     for (facet = dim; facet >= 0; --facet) {
         for (j = 0; j <= dim; ++j)
