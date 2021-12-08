@@ -240,6 +240,26 @@ class SurfaceFilterCombination : public SurfaceFilter {
          */
         void setUsesAnd(bool value);
 
+        /**
+         * Determines if this and the given filter use the same boolean
+         * operation.
+         *
+         * @param other the filter to compare with this.
+         * @return \c true if and only if this and the given filter
+         * use the same boolean operation.
+         */
+        bool operator == (const SurfaceFilterCombination& other) const;
+
+        /**
+         * Determines if this and the given filter do not use the same
+         * boolean operation.
+         *
+         * @param other the filter to compare with this.
+         * @return \c true if and only if this and the given filter
+         * use different boolean operations.
+         */
+        bool operator != (const SurfaceFilterCombination& other) const;
+
         bool accept(const NormalSurface& surface) const override;
         void writeTextShort(std::ostream& o) const override;
 
@@ -464,6 +484,40 @@ class SurfaceFilterProperties : public SurfaceFilter {
          */
         void setRealBoundary(BoolSet value);
 
+        /**
+         * Determines if this and the given filter are configured to
+         * filter on the same set of constraints.
+         *
+         * Even if both filters are designed to reject \e every surface
+         * by having an empty BoolSet for one of the boolean conditions,
+         * they will still not compare as equal unless they use an empty
+         * BoolSet for the \e same boolean condition(s).  In other words,
+         * this test compares the precise configurations of the filters,
+         * not their deduced behaviour.
+         *
+         * @param other the filter to compare with this.
+         * @return \c true if and only if this and the given filters are
+         * identical.
+         */
+        bool operator == (const SurfaceFilterProperties& other) const;
+
+        /**
+         * Determines if this and the given filter are configured to
+         * filter on the different sets of constraints.
+         *
+         * Even if both filters are designed to reject \e every surface
+         * by having an empty BoolSet for one of the boolean conditions,
+         * they will still compare as different unless they use an empty
+         * BoolSet for the \e same boolean condition(s).  In other words,
+         * this test compares the precise configurations of the filters,
+         * not their deduced behaviour.
+         *
+         * @param other the filter to compare with this.
+         * @return \c true if and only if this and the given filters are
+         * not identical.
+         */
+        bool operator != (const SurfaceFilterProperties& other) const;
+
         bool accept(const NormalSurface& surface) const override;
         void writeTextShort(std::ostream& o) const override;
 
@@ -513,6 +567,16 @@ inline void SurfaceFilterCombination::setUsesAnd(bool value) {
         ChangeEventSpan span(*this);
         usesAnd_ = value;
     }
+}
+
+inline bool SurfaceFilterCombination::operator == (
+        const SurfaceFilterCombination& other) const {
+    return usesAnd_ == other.usesAnd_;
+}
+
+inline bool SurfaceFilterCombination::operator != (
+        const SurfaceFilterCombination& other) const {
+    return usesAnd_ != other.usesAnd_;
 }
 
 inline void SurfaceFilterCombination::writeTextShort(std::ostream& o) const {
@@ -612,6 +676,22 @@ inline void SurfaceFilterProperties::setRealBoundary(BoolSet value) {
         ChangeEventSpan span(*this);
         realBoundary_ = value;
     }
+}
+
+inline bool SurfaceFilterProperties::operator == (
+        const SurfaceFilterProperties& other) const {
+    return orientability_ == other.orientability_ &&
+        compactness_ == other.compactness_ &&
+        realBoundary_ == other.realBoundary_ &&
+        eulerChar_ == other.eulerChar_;
+}
+
+inline bool SurfaceFilterProperties::operator != (
+        const SurfaceFilterProperties& other) const {
+    return orientability_ != other.orientability_ ||
+        compactness_ != other.compactness_ ||
+        realBoundary_ != other.realBoundary_ ||
+        eulerChar_ != other.eulerChar_;
 }
 
 inline std::shared_ptr<Packet> SurfaceFilterProperties::internalClonePacket()

@@ -391,6 +391,36 @@ class Attachment : public Packet {
          */
         [[deprecated]] bool savePDF(const char* pathname) const;
 
+        /**
+         * Determines if this and the given attachment hold identical data.
+         *
+         * The filenames will not be compared.
+         *
+         * It is safe to call this operator if one or both attachments is
+         * empty (i.e., isNull() returns \c true), in which case an empty
+         * attachment will compare as equal to any other empty attachment.
+         *
+         * @param other the attachment to compare with this.
+         * @return \c true if and only if this and the given attachment
+         * contain identical data.
+         */
+        bool operator == (const Attachment& other) const;
+
+        /**
+         * Determines if this and the given attachment hold different data.
+         *
+         * The filenames will not be compared.
+         *
+         * It is safe to call this operator if one or both attachments is
+         * empty (i.e., isNull() returns \c true), in which case an empty
+         * attachment will compare as equal to any other empty attachment.
+         *
+         * @param other the attachment to compare with this.
+         * @return \c true if and only if this and the given attachment
+         * contain different data.
+         */
+        bool operator != (const Attachment& other) const;
+
         void writeTextShort(std::ostream& out) const override;
 
     protected:
@@ -488,6 +518,18 @@ inline size_t Attachment::size() const {
 
 inline const std::string& Attachment::filename() const {
     return filename_;
+}
+
+inline bool Attachment::operator == (const Attachment& other) const {
+    if (size_ != other.size_)
+        return false;
+    return size_ == 0 || ::memcmp(data_, other.data_, size_) == 0;
+}
+
+inline bool Attachment::operator != (const Attachment& other) const {
+    if (size_ != other.size_)
+        return true;
+    return size_ != 0 && ::memcmp(data_, other.data_, size_) != 0;
 }
 
 inline void Attachment::writeTextShort(std::ostream& o) const {

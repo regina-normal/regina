@@ -70,7 +70,13 @@ enum EqualityType {
      * no comparisons are ever made.  An example of such a class is
      * Example<dim>, which consists entirely of static functions.
      */
-    NEVER_INSTANTIATED = 3
+    NEVER_INSTANTIATED = 3,
+    /**
+     * Objects of the class \a C cannot be compared by value (because
+     * the comparison operators are not implemented), and they should not
+     * be compared by reference (because they are passed around by value).
+     */
+    DISABLED = 4
 };
 
 /**
@@ -139,16 +145,49 @@ void packet_eq_operators(pybind11::class_<C, options...>& c);
 template <class C, typename... options>
 void no_eq_operators(pybind11::class_<C, options...>& c);
 
+/**
+ * Explicitly disables the == and != operators for a C++ class.
+ *
+ * This should be used with classes that use value semantics (which
+ * means you should not compare by reference), but which have no
+ * comparison operators implemented (which means you cannot compare by value).
+ *
+ * If the user tries to test for equality or inequality, an exception
+ * will be thrown that contains useful information.
+ *
+ * To use this for some C++ class \a T in Regina, call
+ * <t>regina::python::disable_eq_operators(c)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.  The effect will be as follows:
+ *
+ * - Operators == and != will be added to the python wrapper class (thus
+ *   overriding any default provided by pybind11), and these operators will
+ *   throw python exceptions that contain useful explanations.
+ *
+ * - The attribute \a equalityType will be added to the python wrapper class.
+ *   Its value will be the EqualityType enum constant \a DISABLED.
+ */
+template <class C, typename... options>
+void disable_eq_operators(pybind11::class_<C, options...>& c);
+
 #ifndef __DOXYGEN
 namespace add_eq_operators_detail {
-    /**
-     * An equality test that throws an exception whenever it is called.
-     */
     template <typename T>
     static void no_equality_operators(const T&, const T&) {
         PyErr_SetString(PyExc_RuntimeError,
             "It should be impossible to create objects of this class, and so "
             "there are no operators == or !=.");
+    }
+
+    template <typename T>
+    static void disable_equality_operators(const T&, const T&) {
+        PyErr_SetString(PyExc_RuntimeError,
+            "You cannot compare two objects of this class.  These objects "
+            "use value semantics (they are designed to be moved and/or "
+            "copied), and so you probably do not mean to test whether "
+            "two Python wrappers reference the same internal object "
+            "(i.e., the same location in memory).  However, Regina does "
+            "not yet implement a test that compares the contents "
+            "of two objects of this class.");
     }
 
     /**
@@ -266,6 +305,13 @@ inline void no_eq_operators(pybind11::class_<C, options...>& c) {
     c.def("__eq__", &add_eq_operators_detail::no_equality_operators<C>);
     c.def("__ne__", &add_eq_operators_detail::no_equality_operators<C>);
     c.attr("equalityType") = EqualityType::NEVER_INSTANTIATED;
+}
+
+template <class C, typename... options>
+inline void disable_eq_operators(pybind11::class_<C, options...>& c) {
+    c.def("__eq__", &add_eq_operators_detail::disable_equality_operators<C>);
+    c.def("__ne__", &add_eq_operators_detail::disable_equality_operators<C>);
+    c.attr("equalityType") = EqualityType::DISABLED;
 }
 
 inline bool invalidPacketComparison(const regina::Packet&,

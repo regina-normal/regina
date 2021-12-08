@@ -23,6 +23,17 @@ Triangulation3 + Packet : ==, not !=, throws on samePacket()
 Triangulation3 + Packet : ==, not !=, throws on samePacket()
 PacketOfTriangulation3 : ==, not !=, different packets
 PacketOfTriangulation3 : ==, not !=, same packet
+FacetPairing2 : ==, not !=
+FacetPairing2 : not ==, !=
+Attachment : ==, not !=, different packets
+Attachment : not ==, !=, different packets
+Attachment : not ==, !=, different packets
+Attachment : not ==, !=, different packets
+Text : ==, not !=, different packets
+Text : not ==, !=, different packets
+GluingPerms2 : ==, not !=
+GluingPerms2 : not ==, !=
+GluingPerms2 : not ==, !=
 Tetrahedron3 : ==, not !=
 Tetrahedron3 : not ==, !=
 Packet : ==, not !=, same packet
@@ -36,3 +47,4 @@ DiscSetTet : not ==, !=
 DiscSetSurface : ==, not !=
 DiscSetSurface : not ==, !=
 DiscSetSurface : not ==, !=
+HomologicalData : throws on ==, throws on !=

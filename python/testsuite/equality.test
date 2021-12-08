@@ -101,6 +101,29 @@ cmp('PacketOfTriangulation3', PacketOfTriangulation3(), PacketOfTriangulation3()
 p = PacketOfTriangulation3()
 cmp('PacketOfTriangulation3', p, p.root(), True)
 
+cmp('FacetPairing2', FacetPairing2(Example2.kb()), FacetPairing2(Example2.kb()))
+cmp('FacetPairing2', FacetPairing2(Example2.mobius()), FacetPairing2(Example2.annulus()))
+
+cmp('Attachment', Attachment(b'foo', 'x'), Attachment(b'foo', 'y'), True)
+cmp('Attachment', Attachment(b'foo', 'x'), Attachment(), True)
+cmp('Attachment', Attachment(), Attachment(b'foo', 'x'), True)
+cmp('Attachment', Attachment(b'foof', 'x'), Attachment(b'foo', 'x'), True)
+cmp('Text', Text('foo'), Text('foo'), True)
+cmp('Text', Text('foo'), Text('foof'), True)
+
+x = None
+
+def foundGluings2(g):
+	global x
+	if not x:
+		x = GluingPerms2(g)
+	cmp('GluingPerms2', x, g)
+
+def foundPairing2(p, isos):
+	GluingPermSearcher2.findAllPerms(p, isos, True, foundGluings2)
+
+FacetPairing2.findAllPairings(2, False, 0, foundPairing2)
+
 # Classes that compare by reference:
 
 t = Triangulation3()
@@ -130,3 +153,7 @@ cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(0)))
 cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(1)))
 cmp('DiscSetSurface', dt, du)
 
+# Classes that cannot be compared:
+
+t = Example3.poincare()
+cmp('HomologicalData', HomologicalData(t), HomologicalData(t))

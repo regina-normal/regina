@@ -11,7 +11,7 @@ AngleStructures : class
 Equality type : EqualityType.BY_REFERENCE
 
 Attachment : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 AugTriSolidTorus : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -557,25 +557,25 @@ FacePair : class
 Equality type : EqualityType.BY_VALUE
 
 FacetPairing2 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 FacetPairing3 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 FacetPairing4 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 FacetPairing5 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 FacetPairing6 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 FacetPairing7 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 FacetPairing8 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 FacetSpec2 : class
 Equality type : EqualityType.BY_VALUE
@@ -656,25 +656,25 @@ GluingPermSearcher4 : class
 Equality type : EqualityType.BY_REFERENCE
 
 GluingPerms2 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 GluingPerms3 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 GluingPerms4 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 GluingPerms5 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 GluingPerms6 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 GluingPerms7 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 GluingPerms8 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 GraphLoop : class
 Equality type : EqualityType.BY_VALUE
@@ -713,7 +713,7 @@ HomMarkedAbelianGroup : class
 Equality type : EqualityType.BY_REFERENCE
 
 HomologicalData : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.DISABLED
 
 HyperAlg : class
 Equality type : EqualityType.BY_VALUE
@@ -1287,10 +1287,10 @@ SurfaceFilter : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 SurfaceFilterCombination : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 SurfaceFilterProperties : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Tangle : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1321,7 +1321,7 @@ TetrahedronEmbedding7 : typedef ->  FaceEmbedding7_3
 TetrahedronEmbedding8 : typedef ->  FaceEmbedding8_3
 
 Text : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 TorusBundle : class
 Equality type : EqualityType.BY_VALUE

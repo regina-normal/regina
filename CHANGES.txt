@@ -249,6 +249,7 @@ Version 7.0  [ 10 December, 2021 ]
               appropriate typedefs for DiscSetSurface and DiscSetSurfaceData.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Function adjacentDisc() now returns an optional pair by value,
               instead of taking output variables by reference and
               returning newly allocated pointers that could be null.
@@ -260,6 +261,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added copy construction and copy assignment.
             - Added move construction, move assignment, and member/global
               swap() functions to DiscSetTetData.
+            - Added comparison operators == and !=.
             - DiscSetTet::discFromArc() now returns a std::pair instead
               of taking output variables by reference.
         Class DoubleDescription:
@@ -327,6 +329,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added member swap(), and for FacetPairing<dim> a global swap().
             - Function fromTextRep() now returns by value (not pointer), and
               throws an exception on error (instead of returning null).
+            - Added comparison operators == and !=.
             - Type IsoList now stores isomorphisms by value, not by pointer.
             - Routine findAutomorphisms() now returns a list by value, instead
               of filling a given list.
@@ -367,6 +370,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class GluingPerms<dim>:
             - Added a move constructor and copy/move assignment operators.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Added a type alias Index, which is now used instead of int
               to properly represent permutation indices in higher dimensions.
             - Routine facetPairing() now returns by reference, not pointer.
@@ -1458,11 +1462,13 @@ Version 7.0  [ 10 December, 2021 ]
         Class SurfaceFilterCombination:
             - Added a copy assignment operator.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
         Class SurfaceFilterInfo<...>:
             - Removed completely.
         Class SurfaceFilterProperties:
             - Added a copy assignment operator.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Routines that took a (const BoolSet&) now just take a
               BoolSet by value.
         Enum SurfaceFilterType:
@@ -1483,6 +1489,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class Text:
             - Added a copy constructor and a copy assignment operator.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - The std::string constructor and assignment operator now
               take a string by value, allowing for more efficient moves.
         Class TorusBundle:
