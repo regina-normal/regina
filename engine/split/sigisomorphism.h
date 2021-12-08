@@ -40,7 +40,7 @@
 #define __REGINA_SIGISOMORPHISM_H
 #endif
 
-#include "regina-core.h"
+#include "core/output.h"
 #include "split/signature.h"
 
 namespace regina {
@@ -72,7 +72,7 @@ namespace regina {
  *
  * \ingroup split
  */
-class SigPartialIsomorphism {
+class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
     private:
         unsigned nLabels;
             /**< The number of symbols whose images are defined. */
@@ -240,6 +240,16 @@ class SigPartialIsomorphism {
          */
         int compareWithIdentity(const Signature& sig,
             unsigned fromCycleGroup = 0) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**

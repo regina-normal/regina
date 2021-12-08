@@ -458,3 +458,21 @@ dump(t)
 dump(a)
 dump(s)
 
+# ----------------------------------------------------------------------
+# Classes that are only accessible via callbacks:
+# ----------------------------------------------------------------------
+
+def foundGluings2(g):
+	dump(g)
+
+def foundPairing2(p, isos):
+	GluingPermSearcher2.findAllPerms(p, isos, True, foundGluings2)
+
+FacetPairing2.findAllPairings(2, False, 0, foundPairing2)
+
+def processSig(s, autos):
+	print(s)
+	dump(autos[-1])
+
+SigCensus.formCensus(2, processSig)
+

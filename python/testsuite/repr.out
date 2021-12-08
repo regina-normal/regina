@@ -796,3 +796,40 @@ Script
 2-line script, dummy = (null), text = <Welcome>
 <regina.Script: 2-line script, dummy = (null), text = <Welcome>>
 
+GluingPerms2
+0 (102), 0 (102), 1 (120) | 0 (201), 1 (021), 1 (021)
+<regina.GluingPerms2: 0 (102), 0 (102), 1 (120) | 0 (201), 1 (021), 1 (021)>
+
+GluingPerms2
+1 (012), 1 (012), 1 (012) | 0 (012), 0 (012), 0 (012)
+<regina.GluingPerms2: 1 (012), 1 (012), 1 (012) | 0 (012), 0 (012), 0 (012)>
+
+GluingPerms2
+1 (021), 1 (210), 1 (102) | 0 (021), 0 (210), 0 (102)
+<regina.GluingPerms2: 1 (021), 1 (210), 1 (102) | 0 (021), 0 (210), 0 (102)>
+
+(aabb)
+SigPartialIsomorphism
+Symbols: ab -> ba; cycles: 0 -> 0 (>> 3), all reversed
+<regina.SigPartialIsomorphism: Symbols: ab -> ba; cycles: 0 -> 0 (>> 3), all reversed>
+
+(abab)
+SigPartialIsomorphism
+Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), all reversed
+<regina.SigPartialIsomorphism: Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), all reversed>
+
+(aab)(b)
+SigPartialIsomorphism
+Symbols: ab -> ab; cycles: 0 -> 0 (>> 1), 1 -> 1, all reversed
+<regina.SigPartialIsomorphism: Symbols: ab -> ab; cycles: 0 -> 0 (>> 1), 1 -> 1, all reversed>
+
+(ab)(ab)
+SigPartialIsomorphism
+Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), 1 -> 1 (>> 1), all reversed
+<regina.SigPartialIsomorphism: Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), 1 -> 1 (>> 1), all reversed>
+
+(ab)(a)(b)
+SigPartialIsomorphism
+Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), 2 -> 1, 1 -> 2, all reversed
+<regina.SigPartialIsomorphism: Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), 2 -> 1, 1 -> 2, all reversed>
+

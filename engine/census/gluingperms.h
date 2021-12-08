@@ -40,7 +40,7 @@
 #define __REGINA_GLUINGPERMS_H
 #endif
 
-#include "regina-core.h"
+#include "core/output.h"
 #include "triangulation/facetspec.h"
 #include "triangulation/forward.h"
 #include "maths/perm.h"
@@ -101,7 +101,7 @@ namespace regina {
  * \ingroup census
  */
 template <int dim>
-class GluingPerms {
+class GluingPerms : public Output<GluingPerms<dim>> {
     public:
         /**
          * A native signed integer type large enough to count all permutations
@@ -593,6 +593,26 @@ class GluingPerms {
          */
         Perm<dim+1> indexToGluing(unsigned simp, unsigned facet, Index index)
             const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
         /**
          * Reads a new set of gluing permutations from the given string.
