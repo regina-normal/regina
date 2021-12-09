@@ -160,10 +160,10 @@ void swap(Handlebody& a, Handlebody& b) noexcept;
 
 inline Handlebody::Handlebody(size_t genus) : genus_(genus) {
 }
-inline unsigned long Handlebody::genus() const {
+inline size_t Handlebody::genus() const {
     return genus_;
 }
-inline unsigned long Handlebody::handles() const {
+inline size_t Handlebody::handles() const {
     return genus_;
 }
 inline bool Handlebody::isOrientable() const {
