@@ -19,8 +19,8 @@ int main(){
     std::cout << "Iso Sig: ";
     std::cin >> initIsoSig;
     
-    std::cout << "Lower bound goal: ";
-    std::cin >> edgeLowerbound;
+//    std::cout << "Lower bound goal: ";
+//    std::cin >> edgeLowerbound;
 
     std::cout << "Max. number of attempts per run: ";
     std::cin >> twoFourCap;
@@ -28,20 +28,18 @@ int main(){
     std::cout << "Max. number of 3-3 moves: ";
     std::cin >> threeThreeCap;
     
-    std::unique_ptr<regina::Triangulation<4>> init_mfld(regina::Triangulation<4>::fromIsoSig(initIsoSig));
+    regina::Triangulation<4> init_mfld = regina::Triangulation<4>::fromIsoSig(initIsoSig);
     
     size_t ogEdges, numEdges;
-    ogEdges = numEdges = init_mfld->countEdges();
+    ogEdges = numEdges = init_mfld.countEdges();
 
     std::cout << "Original number of edges: " << ogEdges << "\n";
     
     bool runaway = false;
     
-    int current_smallest = INFINITY;
-        
     clock_t time = clock();
     
-    while (numEdges > edgeLowerbound) {
+    while (numEdges > ogEdges-1) {
         bool doIT = true;
 
         int attempts = 1;
@@ -49,15 +47,15 @@ int main(){
         while (doIT) {
 
             for (int i=0; i<attempts; i++) {
-                for (regina::Tetrahedron<4>* tet : init_mfld->tetrahedra()) {
-                    if (init_mfld->pachner(tet,true,true)) {
+                for (regina::Tetrahedron<4>* tet : init_mfld.tetrahedra()) {
+                    if (init_mfld.pachner(tet,true,true)) {
                         break;
                     }
                 }
             }
         
-            init_mfld->intelligentSimplify();
-            numEdges = init_mfld->countEdges();
+            init_mfld.intelligentSimplify();
+            numEdges = init_mfld.countEdges();
         
             std::cout << attempts << ", " << numEdges << std::endl;
             
@@ -70,8 +68,8 @@ int main(){
             }
             
                 for (int i=0; i<threeThreeCap; i++) {
-                    for (regina::Triangle<4>* tri : init_mfld->triangles()) {
-                        if (init_mfld->pachner(tri,true,true)) {
+                    for (regina::Triangle<4>* tri : init_mfld.triangles()) {
+                        if (init_mfld.pachner(tri,true,true)) {
                             break;
                         }
                     }
@@ -98,7 +96,7 @@ int main(){
     double time_taken = ((double)time)/CLOCKS_PER_SEC;
     
     if (!runaway) {
-        std::cout << "Resultant isomorphism signature: " << init_mfld->isoSig() << "\n";
+        std::cout << "Resultant isomorphism signature: " << init_mfld.isoSig() << "\n";
     }
     else {
         std::cout << "Original isomorphism signature: " << initIsoSig << "\n";

@@ -93,20 +93,20 @@ int main() {
      END USER INPUT (PD CODE)
      */
     
-    regina::Link* tmpLinkObj = regina::Link::fromPD(pdcTmp.begin(), pdcTmp.end());
-    if (! tmpLinkObj) {
-        // TODO: Barf
-        // --- Benjamin Andrew Burton, 2021
-    }
+    regina::Link tmpLinkObj = regina::Link::fromPD(pdcTmp.begin(), pdcTmp.end());
+//    if (! tmpLinkObj) {
+//        // TODO: Barf
+//        // --- Benjamin Andrew Burton, 2021
+//    }
     
-    size_t numComps = tmpLinkObj -> countComponents();
+    size_t numComps = tmpLinkObj.countComponents();
     
     /*
      COMPUTE NUMBER OF CROSSINGS IN INDIVIDUAL COMPONENT
      */
     std::vector<regina::StrandRef> comps;
     for (int i=0; i<numComps; i++) {
-        comps.push_back(tmpLinkObj->component(i));
+        comps.push_back(tmpLinkObj.component(i));
     }
     
     /*
@@ -165,7 +165,7 @@ int main() {
     
     std::vector<long> compWrithes;
     for (int i=0; i<numComps; i++) {
-        compWrithes.push_back(tmpLinkObj -> writheOfComponent(i));
+        compWrithes.push_back(tmpLinkObj.writheOfComponent(i));
     }
     std::cout << "Writhe of\n";
     for (int i=0; i<compWrithes.size(); i++) {
@@ -205,13 +205,13 @@ int main() {
         if (w > framings[i]) {
             std::cout << "Self-framing component " << i << "...\n";
             do {
-                tmpLinkObj->r1(tmpLinkObj->component(i), 0 /* left */, -1, false, true);
+                tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, -1, false, true);
                 --w;
             } while (w != framings[i]);
         } else if (w < framings[i]) {
             std::cout << "Self-framing component " << i << "...\n";
             do {
-                tmpLinkObj->r1(tmpLinkObj->component(i), 0 /* left */, 1, false, true);
+                tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, 1, false, true);
                 ++w;
             } while (w != framings[i]);
         }
@@ -219,15 +219,15 @@ int main() {
         // Check number of crossings in i-th component: if < |framing|+2, suggest adding pair of cancelling twists (in order to guarantee existence of a quadricolour).
         if ((dim_flag_int == 4) && !(oneHandleBools[i]) && (compCrossingNums[i] < abs(framings[i])+2)) {
             std::cout << "Adding additional pair of cancelling curls to component " << i << " to guarantee existence of a quadricolour...\n";
-            tmpLinkObj->r1(tmpLinkObj->component(i), 0 /* left */, 1, false, true);
-            tmpLinkObj->r1(tmpLinkObj->component(i), 0 /* left */, -1, false, true);
+            tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, 1, false, true);
+            tmpLinkObj.r1(tmpLinkObj.component(i), 0 /* left */, -1, false, true);
         }
         
     }
     
     std::cout << "Link should now be self-framed:\n";
     for (int i=0; i<compWrithes.size(); i++) {
-        std::cout << "Component " << i << ": " << tmpLinkObj->writheOfComponent(i) << "\n";
+        std::cout << "Component " << i << ": " << tmpLinkObj.writheOfComponent(i) << "\n";
     }
     
 //    std::cout << std::endl;
@@ -251,7 +251,7 @@ int main() {
     // 1-handle components:
     std::vector<regina::StrandRef> oneHandleComponentRefs;
     for (auto &e : oneHandleLinkIndices) {
-        oneHandleComponentRefs.push_back(tmpLinkObj->component(e));
+        oneHandleComponentRefs.push_back(tmpLinkObj.component(e));
     }
 //    std::cout << tmpLinkObj->brief() << std::endl;
     size_t numOneHandles = oneHandleLinkIndices.size();
@@ -316,7 +316,7 @@ int main() {
     std::vector<regina::StrandRef> twoHandleComponentRefs;
     std::vector<std::vector<std::tuple<int, int,int>>> twoHandleStrandCrossingIndex(numTwoHandles);
     for (auto &e : twoHandleLinkIndices) {
-        twoHandleComponentRefs.push_back(tmpLinkObj->component(e));
+        twoHandleComponentRefs.push_back(tmpLinkObj.component(e));
     }
     for (int i=0; i<numTwoHandles; i++) {
         auto currentStrand = twoHandleComponentRefs[i];
@@ -394,12 +394,9 @@ int main() {
     }
     
     // Note: The reflection below is just a quick hack to fix orientations (that is, make consistent with SnapPy+Regina).
-    tmpLinkObj->reflect();
+    tmpLinkObj.reflect();
     
-    pdcode pdc = tmpLinkObj->pdData();
-    
-    delete tmpLinkObj;
-
+    pdcode pdc = tmpLinkObj.pdData();
     
     return 0;
 }
