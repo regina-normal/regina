@@ -285,7 +285,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \ifacespython Not present, but you can use the version that
          * takes a "pure" triangulation.
          *
-         * @param triangulation a snapshot, frozen in time, of the
+         * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * @param enc indicates precisely how the given vector encodes a normal
          * hypersurface.
@@ -314,7 +314,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \ifacespython Not present, but you can use the version that
          * takes a "pure" triangulation and copies \a vector.
          *
-         * @param triangulation a snapshot, frozen in time, of the
+         * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * @param enc indicates precisely how the given vector encodes a normal
          * hypersurface.
@@ -423,7 +423,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \ifacespython Not present, but you can use the version that
          * takes a "pure" triangulation.
          *
-         * @param triangulation a snapshot, frozen in time, of the
+         * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * @param coords the coordinate system from which the vector
          * encoding will be deduced.
@@ -456,7 +456,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \ifacespython Not present, but you can use the version that
          * takes a "pure" triangulation and copies \a vector.
          *
-         * @param triangulation a snapshot, frozen in time, of the
+         * @param triang a snapshot, frozen in time, of the
          * triangulation in which this normal hypersurface resides.
          * @param coords the coordinate system from which the vector
          * encoding will be deduced.
@@ -859,14 +859,65 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * given hypersurface use different encodings, or if one but not
          * the other supports non-compact surfaces.
          *
-         * \pre Both this and the given normal hypersurface live within the
-         * same 4-manifold triangulation.
+         * This routine is safe to call even if this and the given
+         * hypersurface do not belong to the same triangulation:
+         *
+         * - If the two triangulations have the same size, then this routine
+         *   will test whether this hypersurface, if transplanted into the
+         *   other triangulation using the same pentachoron numbering and the
+         *   same normal piece types, would be the same as \a other.
+         *
+         * - If the two triangulations have different sizes, then this
+         *   routine will return \c false.
          *
          * @param other the hypersurface to be compared with this hypersurface.
          * @return \c true if both hypersurfaces represent the same normal
          * hypersurface, or \c false if not.
          */
-        bool sameSurface(const NormalHypersurface& other) const;
+        bool operator == (const NormalHypersurface& other) const;
+
+        /**
+         * Determines whether this and the given hypersurface represent
+         * different normal hypersurfaces.
+         *
+         * Specifically, this routine examines (or computes) the number of
+         * normal pieces of each type, and returns \c true if and only if
+         * these counts are not the same for both hypersurfaces.
+         *
+         * It does not matter what vector encodings the two hypersurfaces
+         * use.  In particular, it does not matter if this and the
+         * given hypersurface use different encodings, or if one but not
+         * the other supports non-compact surfaces.
+         *
+         * This routine is safe to call even if this and the given
+         * hypersurface do not belong to the same triangulation:
+         *
+         * - If the two triangulations have the same size, then this routine
+         *   will test whether this hypersurface, if transplanted into the
+         *   other triangulation using the same pentachoron numbering and the
+         *   same normal piece types, would be different from \a other.
+         *
+         * - If the two triangulations have different sizes, then this
+         *   routine will return \c true.
+         *
+         * @param other the hypersurface to be compared with this hypersurface.
+         * @return \c true if both hypersurfaces represent different normal
+         * hypersurface, or \c false if not.
+         */
+        bool operator != (const NormalHypersurface& other) const;
+
+        /**
+         * Deprecated routine that determines whether this and the given
+         * hypersurface in fact represent the same normal hypersurface.
+         *
+         * \deprecated This routine has been renamed to the comparison
+         * operator (==).
+         *
+         * @param other the hypersurface to be compared with this hypersurface.
+         * @return \c true if both hypersurfaces represent the same normal
+         * hypersurface, or \c false if not.
+         */
+        [[deprecated]] bool sameSurface(const NormalHypersurface& other) const;
 
         /**
          * Determines whether this hypersurface is embedded.  This is true if
@@ -1175,6 +1226,16 @@ inline const Vector<LargeInteger>& NormalHypersurface::rawVector() const {
 
 inline HyperEncoding NormalHypersurface::encoding() const {
     return enc_;
+}
+
+inline bool NormalHypersurface::operator != (const NormalHypersurface& other)
+        const {
+    return ! ((*this) == other);
+}
+
+inline bool NormalHypersurface::sameSurface(const NormalHypersurface& other)
+        const {
+    return (*this) == other;
 }
 
 inline NormalHypersurface NormalHypersurface::operator + (

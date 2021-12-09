@@ -62,9 +62,9 @@ Rational::Rational(long newNum, unsigned long newDen) {
 
 Integer Rational::numerator() const {
     if (flavour == f_infinity)
-        return Integer::one;
+        return 1;
     else if (flavour == f_undefined)
-        return Integer::zero;
+        return 0;
 
     Integer ans;
     ans.setRaw(mpq_numref(data));
@@ -73,7 +73,7 @@ Integer Rational::numerator() const {
 
 Integer Rational::denominator() const {
     if (flavour != f_normal)
-        return Integer::zero;
+        return 0;
 
     Integer ans;
     ans.setRaw(mpq_denref(data));

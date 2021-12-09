@@ -41,7 +41,7 @@
 
 #include <cstddef>
 #include <vector>
-#include "regina-core.h"
+#include "core/output.h"
 
 namespace regina {
 
@@ -107,7 +107,7 @@ namespace regina {
  *
  * \ingroup enumerate
  */
-class ValidityConstraints {
+class ValidityConstraints : public Output<ValidityConstraints> {
     public:
         /**
          * An empty set of constraints.
@@ -361,6 +361,26 @@ class ValidityConstraints {
         template <typename BitmaskType>
         std::vector<BitmaskType> bitmasks() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
+
     private:
         /**
          * Constructs an empty set of constraints.
@@ -450,6 +470,76 @@ std::vector<BitmaskType> ValidityConstraints::bitmasks(size_t len) const {
 template <typename BitmaskType>
 inline std::vector<BitmaskType> ValidityConstraints::bitmasks() const {
     return bitmasks<BitmaskType>(blockSize_ * nBlocks_);
+}
+
+inline void ValidityConstraints::writeTextShort(std::ostream& out) const {
+    out << "Blocks: " << nBlocks_ << " x " << blockSize_;
+    if (! local_.empty()) {
+        out << ", local: ";
+        bool first = true;
+        for (const auto& v : local_) {
+            if (first)
+                first = false;
+            else
+                out << ", ";
+            out << "{ ";
+            for (int i : v)
+                out << i << ' ';
+            out << '}';
+        }
+    }
+    if (! global_.empty()) {
+        out << ", global: ";
+        bool first = true;
+        for (const auto& v : global_) {
+            if (first)
+                first = false;
+            else
+                out << ", ";
+            out << "{ ";
+            for (int i : v)
+                out << i << ' ';
+            out << '}';
+        }
+    }
+}
+
+inline void ValidityConstraints::writeTextLong(std::ostream& out) const {
+    out << nBlocks_ << " block(s) of size " << blockSize_ << std::endl;
+    if (local_.empty()) {
+        out << "No local constraints" << std::endl;
+    } else {
+        out << "Local: ";
+        bool first = true;
+        for (const auto& v : local_) {
+            if (first)
+                first = false;
+            else
+                out << ", ";
+            out << "{ ";
+            for (int i : v)
+                out << i << ' ';
+            out << '}';
+        }
+        out << std::endl;
+    }
+    if (global_.empty()) {
+        out << "No global constraints" << std::endl;
+    } else {
+        out << "Global: ";
+        bool first = true;
+        for (const auto& v : global_) {
+            if (first)
+                first = false;
+            else
+                out << ", ";
+            out << "{ ";
+            for (int i : v)
+                out << i << ' ';
+            out << '}';
+        }
+        out << std::endl;
+    }
 }
 
 inline void swap(ValidityConstraints& a, ValidityConstraints& b) noexcept {

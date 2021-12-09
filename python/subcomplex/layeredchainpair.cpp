@@ -39,7 +39,7 @@
 using regina::LayeredChainPair;
 
 void addLayeredChainPair(pybind11::module_& m) {
-    pybind11::class_<LayeredChainPair, regina::StandardTriangulation>
+    auto c = pybind11::class_<LayeredChainPair, regina::StandardTriangulation>
             (m, "LayeredChainPair")
         .def(pybind11::init<const LayeredChainPair&>())
         .def("clone", [](const LayeredChainPair& s) { // deprecated
@@ -52,6 +52,7 @@ void addLayeredChainPair(pybind11::module_& m) {
         .def_static("isLayeredChainPair", // deprecated
             &LayeredChainPair::recognise)
     ;
+    regina::python::add_output(c);
 
     m.def("swap",
         (void(*)(LayeredChainPair&, LayeredChainPair&))(regina::swap));

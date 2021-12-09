@@ -1542,7 +1542,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
 
         /**
          * Writes the tight encoding of this integer to the given output
-         * stream.  See the page on \ref "tight encodings" for details.
+         * stream.  See the page on \ref tight "tight encodings" for details.
          *
          * There is also a corresponding global regina::tightEncode()
          * function, for better compatibility with native C++ integer types.
@@ -1559,7 +1559,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
 
         /**
          * Returns the tight encoding of this integer.
-         * See the page on \ref "tight encodings" for details.
+         * See the page on \ref tight "tight encodings" for details.
          *
          * There is also a corresponding global regina::tightEncoding()
          * function, for better compatibility with native C++ integer types.
@@ -1715,7 +1715,8 @@ IntegerBase<supportInfinity> operator * (long lhs,
 
 /**
  * Writes the tight encoding of the given arbitrary precision integer to the
- * given output stream.  See the page on \ref "tight encodings" for details.
+ * given output stream.  See the page on \ref tight "tight encodings" for
+ * details.
  *
  * This global function does the same thing as the member function
  * IntegerBase::tightEncode().  However, this global function is more efficient
@@ -1734,7 +1735,7 @@ void tightEncode(std::ostream& out, IntegerBase<supportInfinity> value);
 
 /**
  * Returns the tight encoding of the given arbitrary precision integer.
- * See the page on \ref "tight encodings" for details.
+ * See the page on \ref tight "tight encodings" for details.
  *
  * This global function does the same thing as the member function
  * IntegerBase::tightEncoding().  However, this global function is more

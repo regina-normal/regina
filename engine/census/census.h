@@ -184,6 +184,32 @@ class CensusDB {
          * swapped with this.
          */
         void swap(CensusDB& other) noexcept;
+
+        /**
+         * Tests whether this and the given object represent the same database.
+         *
+         * Two databases are considered the same if they have identical
+         * filenames (as returned by the filename() function).  The database
+         * descriptions are irrelevant here.
+         *
+         * @param rhs the database to compare this against.
+         * @return \c true if and only if this and the given object represent
+         * the same database.
+         */
+        bool operator == (const CensusDB& rhs) const;
+        /**
+         * Tests whether this and the given object represent different
+         * databases.
+         *
+         * Two databases are considered the same if they have identical
+         * filenames (as returned by the filename() function).  The database
+         * descriptions are irrelevant here.
+         *
+         * @param rhs the database to compare this against.
+         * @return \c true if and only if this and the given object represent
+         * different databases.
+         */
+        bool operator != (const CensusDB& rhs) const;
 };
 
 /**
@@ -272,7 +298,7 @@ class CensusHit {
          *
          * Two census hits are considered the same if they have the same
          * human-readable name and also come from the same database
-         * (represented by the same underlying CensusDB object).
+         * (as identified by the CensusDB comparison operators).
          *
          * @param rhs the census hit to compare this against.
          * @return \c true if and only if this and the given hit are the same.
@@ -284,7 +310,7 @@ class CensusHit {
          *
          * Two census hits are considered the same if they have the same
          * human-readable name and also come from the same database
-         * (represented by the same underlying CensusDB object).
+         * (as identified by the CensusDB comparison operators).
          *
          * @param rhs the census hit to compare this against.
          * @return \c true if and only if this and the given hit are different.
@@ -455,6 +481,14 @@ inline void CensusDB::swap(CensusDB& other) noexcept {
     desc_.swap(other.desc_);
 }
 
+inline bool CensusDB::operator == (const CensusDB& rhs) const {
+    return filename_ == rhs.filename_;
+}
+
+inline bool CensusDB::operator != (const CensusDB& rhs) const {
+    return filename_ != rhs.filename_;
+}
+
 inline void swap(CensusDB& a, CensusDB& b) noexcept {
     a.swap(b);
 }
@@ -483,11 +517,11 @@ inline const CensusDB& CensusHit::db() const {
 }
 
 inline bool CensusHit::operator == (const CensusHit& rhs) const {
-    return (db_ == rhs.db_ && name_ == rhs.name_);
+    return ((*db_) == (*rhs.db_) && name_ == rhs.name_);
 }
 
 inline bool CensusHit::operator != (const CensusHit& rhs) const {
-    return (db_ != rhs.db_ || name_ != rhs.name_);
+    return ((*db_) != (*rhs.db_) || name_ != rhs.name_);
 }
 
 inline void swap(CensusHit& a, CensusHit& b) noexcept {

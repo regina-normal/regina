@@ -39,7 +39,7 @@
 using regina::LayeredSolidTorus;
 
 void addLayeredSolidTorus(pybind11::module_& m) {
-    pybind11::class_<LayeredSolidTorus, regina::StandardTriangulation>
+    auto c = pybind11::class_<LayeredSolidTorus, regina::StandardTriangulation>
             (m, "LayeredSolidTorus")
         .def(pybind11::init<const LayeredSolidTorus&>())
         .def("clone", [](const LayeredSolidTorus& s) { // deprecated
@@ -70,6 +70,8 @@ void addLayeredSolidTorus(pybind11::module_& m) {
         .def_static("isLayeredSolidTorus", // deprecated
             &LayeredSolidTorus::recognise)
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
     m.def("swap",
         (void(*)(LayeredSolidTorus&, LayeredSolidTorus&))(regina::swap));

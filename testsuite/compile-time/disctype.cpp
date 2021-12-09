@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/disctype.h"
+#include "surface/disctype.h"
 
 using regina::DiscType;
 

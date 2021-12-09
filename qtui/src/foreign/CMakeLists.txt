@@ -9,7 +9,6 @@ SET ( FILES
   recogniserhandler.cpp
   reginahandler.cpp
   snappeahandler.cpp
-  sourcehandler.cpp
   )
 
 FOREACH( FILE ${FILES} )

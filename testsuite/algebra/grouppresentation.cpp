@@ -222,8 +222,8 @@ class GroupPresentationTest : public CppUnit::TestFixture {
             GroupPresentation tPres( *g );
             tPres.homologicalAlignment();
             MarkedAbelianGroup mab = tPres.markedAbelianisation();
-            unsigned long N(mab.countInvariantFactors());
-            unsigned long M(mab.minNumberOfGenerators());
+            unsigned long N = mab.countInvariantFactors();
+            unsigned long M = mab.snfRank();
             /*
              * If the abelianisation of this group has rank N and M
              * invariant factors d0 | d2 | ... | d(M-1),
@@ -235,9 +235,8 @@ class GroupPresentationTest : public CppUnit::TestFixture {
              * will be mapped to zero.
              */
             for (unsigned long j=0; j<tPres.countGenerators(); j++) {
-                std::vector<Integer> epsilon( tPres.countGenerators() );
-                epsilon[j] = 1;
-                std::vector<Integer> temp( mab.snfRep(epsilon) );
+                regina::Vector<Integer> temp = mab.snfRep(
+                    regina::Vector<Integer>::unit(tPres.countGenerators(), j));
 
                 for (unsigned long k=0; k<M; k++) {
                     // case 1: columns of torsion abelianisations

@@ -42,18 +42,16 @@
 // for integer types (which is enough for us), a full implementation for all
 // types (with the feature test macro now defined) only appeared in gcc-11.1.
 //
+// Note that macOS provides <charconv> but only supports std::to_chars() when
+// targeting macOS 10.15 or above.  However, macOS 10.14 is now past its
+// end-of-life (as of October 2021); moreover, other parts of Regina also
+// require macOS 10.15 (e.g., parts that use std::filesystem::path).
+// So on macOS we will assume that std::to_chars() is available.
+//
 #if __has_include(<charconv>)
-  #ifndef __APPLE__
-    #include <charconv>
-    // We can use std::to_chars().
-    #define __regina_has_to_chars 1
-  #else
-    // On macOS, Xcode provides std::to_chars() but only enables it
-    // for macOS 10.15 / iOS 13 and above.
-    // Until we can check this properly, just use the same fallback as below.
-    #include <cstdio>
-    #undef __regina_has_to_chars
-  #endif
+  #include <charconv>
+  // We can use std::to_chars().
+  #define __regina_has_to_chars 1
 #else
   #warning This compiler does not support std::to_chars().
   // Fall back to snprintf().
@@ -142,7 +140,8 @@ std::string Link::gauss() const {
 
 void Link::gauss(std::ostream& out) const {
     if (components_.size() != 1)
-        return;
+        throw NotImplemented(
+            "Gauss codes are only implemented for single-component links");
     if (crossings_.empty())
         return;
 
@@ -162,7 +161,8 @@ void Link::gauss(std::ostream& out) const {
 
 std::vector<int> Link::gaussData() const {
     if (components_.size() != 1)
-        return std::vector<int>();
+        throw NotImplemented(
+            "Gauss codes are only implemented for single-component links");
     if (crossings_.empty())
         return std::vector<int>();
 
@@ -190,7 +190,8 @@ std::string Link::orientedGauss() const {
 
 void Link::orientedGauss(std::ostream& out) const {
     if (components_.size() != 1)
-        return;
+        throw NotImplemented(
+            "Gauss codes are only implemented for single-component links");
     if (crossings_.empty())
         return;
 
@@ -216,8 +217,11 @@ void Link::orientedGauss(std::ostream& out) const {
 }
 
 std::vector<std::string> Link::orientedGaussData() const {
-    if (components_.size() != 1 || crossings_.empty())
-        return std::vector<std::string>();
+    if (components_.size() != 1)
+        throw NotImplemented(
+            "Gauss codes are only implemented for single-component links");
+    if (crossings_.empty())
+        return {};
 
     std::vector<std::string> ans;
     ans.reserve(2 * crossings_.size());

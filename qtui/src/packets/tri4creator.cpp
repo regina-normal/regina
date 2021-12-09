@@ -75,8 +75,10 @@ namespace {
         ExampleCreator<4>(QObject::tr("4-sphere (minimal)"), &regina::Example<4>::sphere),
         ExampleCreator<4>(QObject::tr("4-sphere (simplex boundary)"), &regina::Example<4>::simplicialFourSphere),
         ExampleCreator<4>(QObject::tr("Cappell-Shaneson knot complement"), &regina::Example<4>::cappellShaneson),
+        ExampleCreator<4>(QObject::tr("ℂP²"), &regina::Example<4>::cp2),
         ExampleCreator<4>(QObject::tr("Product B³ × S¹"), &regina::Example<4>::ballBundle),
         ExampleCreator<4>(QObject::tr("Product S³ × S¹"), &regina::Example<4>::sphereBundle),
+        ExampleCreator<4>(QObject::tr("Product S² × S²"), &regina::Example<4>::s2xs2),
         ExampleCreator<4>(QObject::tr("ℝP⁴"), &regina::Example<4>::rp4),
         ExampleCreator<4>(QObject::tr("Twisted product B³ ×~ S¹"), &regina::Example<4>::twistedBallBundle),
         ExampleCreator<4>(QObject::tr("Twisted product S³ ×~ S¹"), &regina::Example<4>::twistedSphereBundle)
@@ -220,20 +222,19 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        auto ans = regina::makePacket<Triangulation<4>>();
+        auto ans = regina::make_packet<Triangulation<4>>();
         ans->setLabel("4-D triangulation");
         return ans;
     } else if (typeId == TRI_IBUNDLE) {
         auto fromPacket = iBundleFrom->selectedPacket();
-        auto from = std::dynamic_pointer_cast<
-            regina::Triangulation<3>>(fromPacket);
-        if (! from) {
+        if (! fromPacket) {
             ReginaSupport::info(parentWidget, QObject::tr(
                 "Please select a 3-manifold triangulation to build the "
                 "I-bundle from."));
             return nullptr;
         }
-        auto ans = regina::makePacket(Example<4>::iBundle(*from));
+        auto& from = regina::static_triangulation3_cast(*fromPacket);
+        auto ans = regina::make_packet(Example<4>::iBundle(from));
         ans->intelligentSimplify();
         if (fromPacket->label().empty())
             ans->setLabel("I-bundle");
@@ -242,15 +243,14 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
         return ans;
     } else if (typeId == TRI_S1BUNDLE) {
         auto fromPacket = s1BundleFrom->selectedPacket();
-        auto from = std::dynamic_pointer_cast<
-            regina::Triangulation<3>>(fromPacket);
-        if (! from) {
+        if (! fromPacket) {
             ReginaSupport::info(parentWidget, QObject::tr(
                 "Please select a 3-manifold triangulation to build the "
                 "S¹-bundle from."));
             return nullptr;
         }
-        auto ans = regina::makePacket(Example<4>::s1Bundle(*from));
+        auto& from = regina::static_triangulation3_cast(*fromPacket);
+        auto ans = regina::make_packet(Example<4>::s1Bundle(from));
         ans->intelligentSimplify();
         if (fromPacket->label().empty())
             ans->setLabel("S¹-bundle");
@@ -276,7 +276,7 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
         try {
-            return regina::makePacket(Triangulation<4>::fromIsoSig(sig), sig);
+            return regina::make_packet(Triangulation<4>::fromIsoSig(sig), sig);
         } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("I could not interpret the given "

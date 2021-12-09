@@ -900,12 +900,26 @@ std::string TreeDecomposition::pace() const {
 }
 
 void TreeDecomposition::writeTextShort(std::ostream& out) const {
-    out << "Tree decomposition: width " << width_
-        << ", size " << size_;
+    out << "Width " << width_ << ", size " << size_;
+    if (size_) {
+        out << ", bags ";
+        for (const TreeBag* b = first(); b; b = b->next()) {
+            out << b->index() << ": {";
+            for (size_t i = 0; i < b->size_; ++i) {
+                if (i > 0)
+                    out << ',';
+                out << b->elements_[i];
+            }
+            if (b->parent_)
+                out << "} -> " << b->parent_->index() << ", ";
+            else
+                out << '}';
+        }
+    }
 }
 
 void TreeDecomposition::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
+    out << "Tree decomposition: width " << width_ << ", size " << size_;
     out << std::endl;
 
     int indent = 0;

@@ -101,21 +101,21 @@ class SimpleSurfaceBundle : public Manifold {
          */
         int type() const;
         /**
-         * Determines whether this and the given surface bundle represent
-         * the same 3-manifold.
+         * Determines whether this and the given surface bundle are of
+         * the same type (i.e., they represent the same 3-manifold).
          *
          * @param compare the surface bundle with which this will be compared.
          * @return \c true if and only if this and the given surface bundle
-         * are homeomorphic.
+         * are of the same type.
          */
         bool operator == (const SimpleSurfaceBundle& compare) const;
         /**
-         * Determines whether this and the given surface bundle represent
-         * different 3-manifolds.
+         * Determines whether this and the given surface bundle are of
+         * different types (i.e., they represent different 3-manifolds).
          *
          * @param compare the surface bundle with which this will be compared.
          * @return \c true if and only if this and the given surface bundle
-         * are non-homeomorphic.
+         * are of different types.
          */
         bool operator != (const SimpleSurfaceBundle& compare) const;
 

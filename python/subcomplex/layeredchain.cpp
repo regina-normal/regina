@@ -39,7 +39,7 @@
 using regina::LayeredChain;
 
 void addLayeredChain(pybind11::module_& m) {
-    pybind11::class_<LayeredChain, regina::StandardTriangulation>
+    auto c = pybind11::class_<LayeredChain, regina::StandardTriangulation>
             (m, "LayeredChain")
         .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>())
         .def(pybind11::init<const LayeredChain&>())
@@ -57,6 +57,7 @@ void addLayeredChain(pybind11::module_& m) {
         .def("reverse", &LayeredChain::reverse)
         .def("invert", &LayeredChain::invert)
     ;
+    regina::python::add_output(c);
 
     m.def("swap", (void(*)(LayeredChain&, LayeredChain&))(regina::swap));
 }

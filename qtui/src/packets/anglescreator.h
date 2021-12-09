@@ -56,7 +56,7 @@ class AngleStructureCreator : public PacketCreator {
         /**
          * Constructor.
          */
-        AngleStructureCreator();
+        AngleStructureCreator(ReginaMain*);
 
         /**
          * PacketCreator overrides.
@@ -67,6 +67,7 @@ class AngleStructureCreator : public PacketCreator {
         std::shared_ptr<regina::Packet> createPacket(
             std::shared_ptr<regina::Packet> parentPacket,
             QWidget* parentWidget) override;
+        PacketFilter* filter() override;
         void explainNoParents() override;
 };
 

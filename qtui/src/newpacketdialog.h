@@ -77,17 +77,13 @@ class NewPacketDialog : public QDialog {
         /**
          * Constructor and destructor.
          *
-         * The filter passed is used to restrict the possible parents of
-         * the new packet.  It may be 0, in which case any parent will
-         * be allowed.
-         *
          * This dialog and its components will claim ownership of the
-         * given PacketCreator and PacketFilter.
+         * given PacketCreator.
          */
         NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
             std::shared_ptr<regina::Packet> packetTree,
             std::shared_ptr<regina::Packet> defaultParent,
-            PacketFilter* useFilter, const QString& dialogTitle);
+            const QString& dialogTitle);
         ~NewPacketDialog() override;
 
         /**

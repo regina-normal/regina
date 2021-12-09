@@ -198,8 +198,15 @@ Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
 
 std::string Triangulation<3>::dehydrate() const {
     // Can we even dehydrate at all?
-    if (simplices_.size() > 25 || hasBoundaryTriangles() || ! isConnected())
-        return "";
+    if (simplices_.size() > 25)
+        throw NotImplemented("Dehydration strings are only available "
+            "for triangulations with at most 25 tetrahedra");
+    if (hasBoundaryTriangles())
+        throw NotImplemented("Dehydration strings are only available "
+            "for triangulations with no boundary triangles");
+    if (! isConnected())
+        throw NotImplemented("Dehydration strings are only available "
+            "for connected triangulations");
 
     // Get the empty case out of the way, since it requires an
     // additional two redundant letters (two blocks of N+1 letters to

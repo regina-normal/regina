@@ -130,7 +130,7 @@ void addPerm3(pybind11::module_& m) {
         .def_readonly_static("code210", &Perm<3>::code210)
     ;
     Perm3_contract<4>::add_bindings(c);
-    regina::python::add_output_basic(c, true /* __repr__ */);
+    regina::python::add_output_basic(c);
     regina::python::add_eq_operators(c);
 }
 

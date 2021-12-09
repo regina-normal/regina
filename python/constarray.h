@@ -161,7 +161,7 @@ class ConstArray {
                 .def("__getitem__", &ConstArray<Array>::getItem)
                 .def("__len__", &ConstArray<Array>::size)
             ;
-            regina::python::add_output_ostream(c);
+            regina::python::add_output_ostream(c, PYTHON_REPR_NONE);
             regina::python::add_eq_operators(c);
         }
 };

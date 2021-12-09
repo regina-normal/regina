@@ -40,7 +40,7 @@
 using regina::BlockedSFSLoop;
 
 void addBlockedSFSLoop(pybind11::module_& m) {
-    pybind11::class_<BlockedSFSLoop, regina::StandardTriangulation>(
+    auto c = pybind11::class_<BlockedSFSLoop, regina::StandardTriangulation>(
             m, "BlockedSFSLoop")
         .def(pybind11::init<const BlockedSFSLoop&>())
         .def("swap", &BlockedSFSLoop::swap)
@@ -52,6 +52,7 @@ void addBlockedSFSLoop(pybind11::module_& m) {
         .def_static("isBlockedSFSLoop", // deprecated
             &BlockedSFSLoop::recognise)
     ;
+    regina::python::add_output(c);
 
     m.def("swap", (void(*)(BlockedSFSLoop&, BlockedSFSLoop&))(regina::swap));
 }

@@ -57,6 +57,7 @@ void addLayering(pybind11::module_& m) {
         .def("extend", &Layering::extend)
         .def("matchesTop", &Layering::matchesTop)
     ;
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 }
 

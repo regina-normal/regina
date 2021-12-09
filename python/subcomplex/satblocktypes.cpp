@@ -45,37 +45,44 @@ using regina::SatReflectorStrip;
 using regina::SatTriPrism;
 
 void addSatBlockTypes(pybind11::module_& m) {
-    pybind11::class_<SatMobius, regina::SatBlock>(m, "SatMobius")
+    auto mob = pybind11::class_<SatMobius, regina::SatBlock>(m, "SatMobius")
         .def("position", &SatMobius::position)
     ;
+    regina::python::add_output(mob);
+    regina::python::add_eq_operators(mob);
 
-
-    pybind11::class_<SatLST, regina::SatBlock>(m, "SatLST")
+    auto lst = pybind11::class_<SatLST, regina::SatBlock>(m, "SatLST")
         .def("lst", &SatLST::lst,
             pybind11::return_value_policy::reference_internal)
         .def("roles", &SatLST::roles)
     ;
+    regina::python::add_output(lst);
+    regina::python::add_eq_operators(lst);
 
-
-    pybind11::class_<SatTriPrism, regina::SatBlock>(m, "SatTriPrism")
+    auto tri = pybind11::class_<SatTriPrism, regina::SatBlock>(m, "SatTriPrism")
         .def("isMajor", &SatTriPrism::isMajor)
         .def_static("model", &SatTriPrism::model)
     ;
+    regina::python::add_output(tri);
+    regina::python::add_eq_operators(tri);
 
-
-    pybind11::class_<SatCube, regina::SatBlock>(m, "SatCube")
+    auto cube = pybind11::class_<SatCube, regina::SatBlock>(m, "SatCube")
         .def_static("model", &SatCube::model)
     ;
+    regina::python::add_output(cube);
+    regina::python::add_eq_operators(cube);
 
-
-    pybind11::class_<SatReflectorStrip, regina::SatBlock>(
+    auto ref = pybind11::class_<SatReflectorStrip, regina::SatBlock>(
             m, "SatReflectorStrip")
         .def_static("model", &SatReflectorStrip::model)
     ;
+    regina::python::add_output(ref);
+    regina::python::add_eq_operators(ref);
 
-
-    pybind11::class_<SatLayering, regina::SatBlock>(m, "SatLayering")
+    auto l = pybind11::class_<SatLayering, regina::SatBlock>(m, "SatLayering")
         .def("overHorizontal", &SatLayering::overHorizontal)
     ;
+    regina::python::add_output(l);
+    regina::python::add_eq_operators(l);
 }
 

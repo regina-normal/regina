@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "triangulation/detail/algebra-impl.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "triangulation/detail/pachner-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
@@ -46,6 +47,13 @@ template std::pair<std::string, Isomorphism<2>>
     IsoSigClassic<2>, IsoSigPrintable<2>>() const;
 template Triangulation<2> TriangulationBase<2>::fromIsoSig(const std::string&);
 template size_t TriangulationBase<2>::isoSigComponentSize(const std::string&);
+
+template AbelianGroup TriangulationBase<2>::homology<1>() const;
+
+template MatrixInt TriangulationBase<2>::boundaryMap<1>() const;
+template MatrixInt TriangulationBase<2>::boundaryMap<2>() const;
+
+template const GroupPresentation& TriangulationBase<2>::fundamentalGroup() const;
 
 template void TriangulationBase<2>::calculateSkeleton();
 template void TriangulationBase<2>::clearBaseProperties();

@@ -114,7 +114,7 @@ void ReginaMain::importFile(const PacketImporter& importer,
             treeView->selectedPacket(), parentFilter,
             importer.useImportEncoding(), dialogTitle);
         if (dlg.validate() && dlg.exec() == QDialog::Accepted)
-            packetView(newTree, true);
+            packetView(*newTree, true);
     }
 }
 

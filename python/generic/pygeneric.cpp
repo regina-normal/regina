@@ -30,6 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
+#include "regina-config.h" // for REGINA_HIGHDIM
+
 namespace pybind11 { class module_; }
 
 void addExample5(pybind11::module_& m);
@@ -95,11 +97,27 @@ void addGenericClasses(pybind11::module_& m) {
     addFacetSpec(m);
     addFacetPairing2(m);
     addFacetPairing4(m);
-#ifndef REGINA_LOWDIMONLY
     addExample5(m);
     addExample6(m);
     addExample7(m);
     addExample8(m);
+    addFacetPairing5(m);
+    addFacetPairing6(m);
+    addFacetPairing7(m);
+    addFacetPairing8(m);
+    addIsomorphism5(m);
+    addIsomorphism6(m);
+    addIsomorphism7(m);
+    addIsomorphism8(m);
+    addFace5(m);
+    addFace6(m);
+    addFace7(m);
+    addFace8(m);
+    addTriangulations5(m);
+    addTriangulations6(m);
+    addTriangulations7(m);
+    addTriangulations8(m);
+#ifdef REGINA_HIGHDIM
     addExample9(m);
     addExample10(m);
     addExample11(m);
@@ -107,10 +125,6 @@ void addGenericClasses(pybind11::module_& m) {
     addExample13(m);
     addExample14(m);
     addExample15(m);
-    addFacetPairing5(m);
-    addFacetPairing6(m);
-    addFacetPairing7(m);
-    addFacetPairing8(m);
     addFacetPairing9(m);
     addFacetPairing10(m);
     addFacetPairing11(m);
@@ -118,10 +132,6 @@ void addGenericClasses(pybind11::module_& m) {
     addFacetPairing13(m);
     addFacetPairing14(m);
     addFacetPairing15(m);
-    addIsomorphism5(m);
-    addIsomorphism6(m);
-    addIsomorphism7(m);
-    addIsomorphism8(m);
     addIsomorphism9(m);
     addIsomorphism10(m);
     addIsomorphism11(m);
@@ -129,10 +139,6 @@ void addGenericClasses(pybind11::module_& m) {
     addIsomorphism13(m);
     addIsomorphism14(m);
     addIsomorphism15(m);
-    addFace5(m);
-    addFace6(m);
-    addFace7(m);
-    addFace8(m);
     addFace9(m);
     addFace10(m);
     addFace11(m);
@@ -140,10 +146,6 @@ void addGenericClasses(pybind11::module_& m) {
     addFace13(m);
     addFace14(m);
     addFace15(m);
-    addTriangulations5(m);
-    addTriangulations6(m);
-    addTriangulations7(m);
-    addTriangulations8(m);
     addTriangulations9(m);
     addTriangulations10(m);
     addTriangulations11(m);
@@ -151,6 +153,6 @@ void addGenericClasses(pybind11::module_& m) {
     addTriangulations13(m);
     addTriangulations14(m);
     addTriangulations15(m);
-#endif /* ! REGINA_LOWDIMONLY */
+#endif /* REGINA_HIGHDIM */
 }
 

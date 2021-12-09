@@ -78,5 +78,10 @@ std::unique_ptr<PillowTwoSphere> PillowTwoSphere::recognise(
         tri1, tri2, perm));
 }
 
+void PillowTwoSphere::writeTextShort(std::ostream& out) const {
+    out << "Pillow 2-sphere, triangles "
+        << triangle_[0]->index() << ", " << triangle_[1]->index();
+}
+
 } // namespace regina
 

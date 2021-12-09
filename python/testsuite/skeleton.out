@@ -113,611 +113,147 @@ Triangles:
    22  |          44  45  37  42
 
 
-Vertex 0
-Internal vertex of degree 92
-Appears as:
-  0 (0)
-  2 (0)
-  3 (0)
-  4 (0)
-  10 (0)
-  9 (0)
-  7 (0)
-  12 (0)
-  14 (0)
-  15 (0)
-  8 (0)
-  21 (0)
-  19 (0)
-  18 (0)
-  1 (0)
-  5 (0)
-  11 (0)
-  17 (1)
-  22 (0)
-  5 (1)
-  16 (1)
-  17 (0)
-  15 (3)
-  6 (0)
-  16 (0)
-  20 (1)
-  6 (1)
-  19 (1)
-  21 (1)
-  12 (3)
-  20 (0)
-  22 (2)
-  4 (2)
-  13 (2)
-  14 (2)
-  10 (1)
-  1 (1)
-  7 (1)
-  18 (1)
-  11 (1)
-  13 (3)
-  19 (3)
-  14 (3)
-  4 (3)
-  9 (2)
-  8 (1)
-  2 (1)
-  0 (1)
-  9 (1)
-  3 (1)
-  6 (3)
-  17 (2)
-  16 (2)
-  0 (2)
-  18 (3)
-  10 (2)
-  4 (1)
-  13 (1)
-  12 (1)
-  1 (2)
-  22 (3)
-  21 (2)
-  5 (3)
-  1 (3)
-  2 (3)
-  7 (2)
-  15 (2)
-  20 (3)
-  15 (1)
-  11 (3)
-  0 (3)
-  10 (3)
-  8 (3)
-  5 (2)
-  8 (2)
-  3 (3)
-  11 (2)
-  16 (3)
-  18 (2)
-  3 (2)
-  2 (2)
-  20 (2)
-  12 (2)
-  14 (1)
-  21 (3)
-  7 (3)
-  9 (3)
-  13 (0)
-  6 (2)
-  17 (3)
-  22 (1)
-  19 (2)
-
-Edge 0
-Internal edge of degree 6
-Appears as:
-  0 (01)
-  3 (01)
-  12 (01)
-  11 (03)
-  15 (01)
-  4 (01)
-
-Edge 1
-Internal edge of degree 6
-Appears as:
-  0 (02)
-  4 (03)
-  14 (02)
-  8 (01)
-  10 (02)
-  2 (03)
-
-Edge 2
-Internal edge of degree 6
-Appears as:
-  0 (03)
-  2 (02)
-  9 (03)
-  19 (02)
-  7 (03)
-  3 (02)
-
-Edge 3
-Internal edge of degree 7
-Appears as:
-  0 (12)
-  1 (13)
-  7 (12)
-  18 (13)
-  9 (12)
-  13 (12)
-  4 (13)
-
-Edge 4
-Internal edge of degree 6
-Appears as:
-  0 (13)
-  3 (12)
-  11 (13)
-  12 (31)
-  6 (13)
-  1 (12)
-
-Edge 5
-Internal edge of degree 5
-Appears as:
-  0 (23)
-  1 (32)
-  5 (23)
-  8 (23)
-  2 (32)
-
-Edge 6
-Internal edge of degree 5
-Appears as:
-  1 (01)
-  7 (01)
-  19 (01)
-  17 (01)
-  6 (01)
-
-Edge 7
-Internal edge of degree 7
-Appears as:
-  1 (02)
-  6 (03)
-  13 (23)
-  4 (32)
-  14 (23)
-  16 (02)
-  5 (03)
-
-Edge 8
-Internal edge of degree 5
-Appears as:
-  1 (03)
-  5 (02)
-  12 (02)
-  3 (03)
-  7 (02)
-
-Edge 9
-Internal edge of degree 5
-Appears as:
-  2 (01)
-  10 (01)
-  21 (01)
-  18 (01)
-  9 (01)
-
-Edge 10
-Internal edge of degree 6
-Appears as:
-  2 (12)
-  8 (13)
-  10 (23)
-  20 (32)
-  13 (10)
-  9 (13)
-
-Edge 11
-Internal edge of degree 6
-Appears as:
-  2 (13)
-  10 (12)
-  20 (13)
-  16 (03)
-  14 (21)
-  8 (12)
-
-Edge 12
-Internal edge of degree 6
-Appears as:
-  3 (13)
-  12 (12)
-  6 (32)
-  13 (30)
-  20 (02)
-  11 (12)
-
-Edge 13
-Internal edge of degree 5
-Appears as:
-  3 (23)
-  11 (32)
-  15 (12)
-  18 (23)
-  7 (32)
-
-Edge 14
-Internal edge of degree 6
-Appears as:
-  4 (02)
-  15 (03)
-  22 (02)
-  19 (13)
-  17 (12)
-  14 (03)
-
-Edge 15
-Internal edge of degree 7
-Appears as:
-  4 (12)
-  13 (13)
-  20 (30)
-  16 (31)
-  21 (30)
-  18 (20)
-  15 (13)
-
-Edge 16
-Internal edge of degree 5
-Appears as:
-  5 (01)
-  16 (01)
-  20 (10)
-  11 (01)
-  12 (03)
-
-Edge 17
-Internal edge of degree 6
-Appears as:
-  5 (12)
-  8 (02)
-  14 (01)
-  17 (13)
-  6 (12)
-  12 (32)
-
-Edge 18
-Internal edge of degree 5
-Appears as:
-  5 (13)
-  16 (12)
-  21 (02)
-  10 (03)
-  8 (03)
-
-Edge 19
-Internal edge of degree 6
-Appears as:
-  6 (02)
-  17 (03)
-  22 (21)
-  19 (32)
-  9 (23)
-  13 (20)
-
-Edge 20
-Internal edge of degree 5
-Appears as:
-  7 (13)
-  19 (12)
-  22 (01)
-  21 (13)
-  18 (12)
-
-Edge 21
-Internal edge of degree 6
-Appears as:
-  9 (02)
-  18 (03)
-  15 (32)
-  22 (23)
-  17 (02)
-  19 (03)
-
-Edge 22
-Internal edge of degree 6
-Appears as:
-  10 (13)
-  21 (12)
-  22 (03)
-  15 (02)
-  11 (02)
-  20 (12)
-
-Edge 23
-Internal edge of degree 5
-Appears as:
-  14 (13)
-  17 (32)
-  22 (13)
-  21 (32)
-  16 (32)
-
-Triangle 0
-Internal triangle
-Appears as:
-  0 (012)
-  4 (013)
-
-Triangle 1
-Internal triangle
-Appears as:
-  0 (013)
-  3 (012)
-
-Triangle 2
-Internal triangle
-Appears as:
-  0 (023)
-  2 (032)
-
-Triangle 3
-Internal triangle
-Appears as:
-  0 (123)
-  1 (132)
-
-Triangle 4
-Internal triangle
-Appears as:
-  1 (012)
-  6 (013)
-
-Triangle 5
-Internal triangle
-Appears as:
-  1 (013)
-  7 (012)
-
-Triangle 6
-Internal triangle
-Appears as:
-  1 (023)
-  5 (032)
-
-Triangle 7
-Internal triangle
-Appears as:
-  2 (012)
-  9 (013)
-
-Triangle 8
-Internal triangle
-Appears as:
-  2 (013)
-  10 (012)
-
-Triangle 9
-Internal triangle
-Appears as:
-  2 (123)
-  8 (132)
-
-Triangle 10
-Internal triangle
-Appears as:
-  3 (013)
-  12 (012)
-
-Triangle 11
-Internal triangle
-Appears as:
-  3 (023)
-  7 (032)
-
-Triangle 12
-Internal triangle
-Appears as:
-  3 (123)
-  11 (132)
-
-Triangle 13
-Internal triangle
-Appears as:
-  4 (012)
-  15 (013)
-
-Triangle 14
-Internal triangle
-Appears as:
-  4 (023)
-  14 (032)
-
-Triangle 15
-Internal triangle
-Appears as:
-  4 (123)
-  13 (132)
-
-Triangle 16
-Internal triangle
-Appears as:
-  5 (012)
-  12 (032)
-
-Triangle 17
-Internal triangle
-Appears as:
-  5 (013)
-  16 (012)
-
-Triangle 18
-Internal triangle
-Appears as:
-  5 (123)
-  8 (023)
-
-Triangle 19
-Internal triangle
-Appears as:
-  6 (012)
-  17 (013)
-
-Triangle 20
-Internal triangle
-Appears as:
-  6 (023)
-  13 (203)
-
-Triangle 21
-Internal triangle
-Appears as:
-  6 (123)
-  12 (321)
-
-Triangle 22
-Internal triangle
-Appears as:
-  7 (013)
-  19 (012)
-
-Triangle 23
-Internal triangle
-Appears as:
-  7 (123)
-  18 (132)
-
-Triangle 24
-Internal triangle
-Appears as:
-  8 (012)
-  14 (021)
-
-Triangle 25
-Internal triangle
-Appears as:
-  8 (013)
-  10 (023)
-
-Triangle 26
-Internal triangle
-Appears as:
-  9 (012)
-  18 (013)
-
-Triangle 27
-Internal triangle
-Appears as:
-  9 (023)
-  19 (032)
-
-Triangle 28
-Internal triangle
-Appears as:
-  9 (123)
-  13 (120)
-
-Triangle 29
-Internal triangle
-Appears as:
-  10 (013)
-  21 (012)
-
-Triangle 30
-Internal triangle
-Appears as:
-  10 (123)
-  20 (132)
-
-Triangle 31
-Internal triangle
-Appears as:
-  11 (012)
-  20 (102)
-
-Triangle 32
-Internal triangle
-Appears as:
-  11 (013)
-  12 (031)
-
-Triangle 33
-Internal triangle
-Appears as:
-  11 (023)
-  15 (021)
-
-Triangle 34
-Internal triangle
-Appears as:
-  13 (013)
-  20 (230)
-
-Triangle 35
-Internal triangle
-Appears as:
-  14 (013)
-  17 (132)
-
-Triangle 36
-Internal triangle
-Appears as:
-  14 (123)
-  16 (302)
-
-Triangle 37
-Internal triangle
-Appears as:
-  15 (023)
-  22 (032)
-
-Triangle 38
-Internal triangle
-Appears as:
-  15 (123)
-  18 (230)
-
-Triangle 39
-Internal triangle
-Appears as:
-  16 (013)
-  20 (103)
-
-Triangle 40
-Internal triangle
-Appears as:
-  16 (123)
-  21 (023)
-
-Triangle 41
-Internal triangle
-Appears as:
-  17 (012)
-  19 (013)
-
-Triangle 42
-Internal triangle
-Appears as:
-  17 (023)
-  22 (231)
-
-Triangle 43
-Internal triangle
-Appears as:
-  18 (012)
-  21 (013)
-
-Triangle 44
-Internal triangle
-Appears as:
-  19 (123)
-  22 (012)
-
-Triangle 45
-Internal triangle
-Appears as:
-  21 (123)
-  22 (031)
+Vertex 0, internal, degree 92: 0 (0), 2 (0), 3 (0), 4 (0), 10 (0), 9 (0), 7 (0), 12 (0), 14 (0), 15 (0), 8 (0), 21 (0), 19 (0), 18 (0), 1 (0), 5 (0), 11 (0), 17 (1), 22 (0), 5 (1), 16 (1), 17 (0), 15 (3), 6 (0), 16 (0), 20 (1), 6 (1), 19 (1), 21 (1), 12 (3), 20 (0), 22 (2), 4 (2), 13 (2), 14 (2), 10 (1), 1 (1), 7 (1), 18 (1), 11 (1), 13 (3), 19 (3), 14 (3), 4 (3), 9 (2), 8 (1), 2 (1), 0 (1), 9 (1), 3 (1), 6 (3), 17 (2), 16 (2), 0 (2), 18 (3), 10 (2), 4 (1), 13 (1), 12 (1), 1 (2), 22 (3), 21 (2), 5 (3), 1 (3), 2 (3), 7 (2), 15 (2), 20 (3), 15 (1), 11 (3), 0 (3), 10 (3), 8 (3), 5 (2), 8 (2), 3 (3), 11 (2), 16 (3), 18 (2), 3 (2), 2 (2), 20 (2), 12 (2), 14 (1), 21 (3), 7 (3), 9 (3), 13 (0), 6 (2), 17 (3), 22 (1), 19 (2)
+
+Edge 0, internal, degree 6: 0 (01), 3 (01), 12 (01), 11 (03), 15 (01), 4 (01)
+
+Edge 1, internal, degree 6: 0 (02), 4 (03), 14 (02), 8 (01), 10 (02), 2 (03)
+
+Edge 2, internal, degree 6: 0 (03), 2 (02), 9 (03), 19 (02), 7 (03), 3 (02)
+
+Edge 3, internal, degree 7: 0 (12), 1 (13), 7 (12), 18 (13), 9 (12), 13 (12), 4 (13)
+
+Edge 4, internal, degree 6: 0 (13), 3 (12), 11 (13), 12 (31), 6 (13), 1 (12)
+
+Edge 5, internal, degree 5: 0 (23), 1 (32), 5 (23), 8 (23), 2 (32)
+
+Edge 6, internal, degree 5: 1 (01), 7 (01), 19 (01), 17 (01), 6 (01)
+
+Edge 7, internal, degree 7: 1 (02), 6 (03), 13 (23), 4 (32), 14 (23), 16 (02), 5 (03)
+
+Edge 8, internal, degree 5: 1 (03), 5 (02), 12 (02), 3 (03), 7 (02)
+
+Edge 9, internal, degree 5: 2 (01), 10 (01), 21 (01), 18 (01), 9 (01)
+
+Edge 10, internal, degree 6: 2 (12), 8 (13), 10 (23), 20 (32), 13 (10), 9 (13)
+
+Edge 11, internal, degree 6: 2 (13), 10 (12), 20 (13), 16 (03), 14 (21), 8 (12)
+
+Edge 12, internal, degree 6: 3 (13), 12 (12), 6 (32), 13 (30), 20 (02), 11 (12)
+
+Edge 13, internal, degree 5: 3 (23), 11 (32), 15 (12), 18 (23), 7 (32)
+
+Edge 14, internal, degree 6: 4 (02), 15 (03), 22 (02), 19 (13), 17 (12), 14 (03)
+
+Edge 15, internal, degree 7: 4 (12), 13 (13), 20 (30), 16 (31), 21 (30), 18 (20), 15 (13)
+
+Edge 16, internal, degree 5: 5 (01), 16 (01), 20 (10), 11 (01), 12 (03)
+
+Edge 17, internal, degree 6: 5 (12), 8 (02), 14 (01), 17 (13), 6 (12), 12 (32)
+
+Edge 18, internal, degree 5: 5 (13), 16 (12), 21 (02), 10 (03), 8 (03)
+
+Edge 19, internal, degree 6: 6 (02), 17 (03), 22 (21), 19 (32), 9 (23), 13 (20)
+
+Edge 20, internal, degree 5: 7 (13), 19 (12), 22 (01), 21 (13), 18 (12)
+
+Edge 21, internal, degree 6: 9 (02), 18 (03), 15 (32), 22 (23), 17 (02), 19 (03)
+
+Edge 22, internal, degree 6: 10 (13), 21 (12), 22 (03), 15 (02), 11 (02), 20 (12)
+
+Edge 23, internal, degree 5: 14 (13), 17 (32), 22 (13), 21 (32), 16 (32)
+
+Triangle 0, internal: 0 (012), 4 (013)
+
+Triangle 1, internal: 0 (013), 3 (012)
+
+Triangle 2, internal: 0 (023), 2 (032)
+
+Triangle 3, internal: 0 (123), 1 (132)
+
+Triangle 4, internal: 1 (012), 6 (013)
+
+Triangle 5, internal: 1 (013), 7 (012)
+
+Triangle 6, internal: 1 (023), 5 (032)
+
+Triangle 7, internal: 2 (012), 9 (013)
+
+Triangle 8, internal: 2 (013), 10 (012)
+
+Triangle 9, internal: 2 (123), 8 (132)
+
+Triangle 10, internal: 3 (013), 12 (012)
+
+Triangle 11, internal: 3 (023), 7 (032)
+
+Triangle 12, internal: 3 (123), 11 (132)
+
+Triangle 13, internal: 4 (012), 15 (013)
+
+Triangle 14, internal: 4 (023), 14 (032)
+
+Triangle 15, internal: 4 (123), 13 (132)
+
+Triangle 16, internal: 5 (012), 12 (032)
+
+Triangle 17, internal: 5 (013), 16 (012)
+
+Triangle 18, internal: 5 (123), 8 (023)
+
+Triangle 19, internal: 6 (012), 17 (013)
+
+Triangle 20, internal: 6 (023), 13 (203)
+
+Triangle 21, internal: 6 (123), 12 (321)
+
+Triangle 22, internal: 7 (013), 19 (012)
+
+Triangle 23, internal: 7 (123), 18 (132)
+
+Triangle 24, internal: 8 (012), 14 (021)
+
+Triangle 25, internal: 8 (013), 10 (023)
+
+Triangle 26, internal: 9 (012), 18 (013)
+
+Triangle 27, internal: 9 (023), 19 (032)
+
+Triangle 28, internal: 9 (123), 13 (120)
+
+Triangle 29, internal: 10 (013), 21 (012)
+
+Triangle 30, internal: 10 (123), 20 (132)
+
+Triangle 31, internal: 11 (012), 20 (102)
+
+Triangle 32, internal: 11 (013), 12 (031)
+
+Triangle 33, internal: 11 (023), 15 (021)
+
+Triangle 34, internal: 13 (013), 20 (230)
+
+Triangle 35, internal: 14 (013), 17 (132)
+
+Triangle 36, internal: 14 (123), 16 (302)
+
+Triangle 37, internal: 15 (023), 22 (032)
+
+Triangle 38, internal: 15 (123), 18 (230)
+
+Triangle 39, internal: 16 (013), 20 (103)
+
+Triangle 40, internal: 16 (123), 21 (023)
+
+Triangle 41, internal: 17 (012), 19 (013)
+
+Triangle 42, internal: 17 (023), 22 (231)
+
+Triangle 43, internal: 18 (012), 21 (013)
+
+Triangle 44, internal: 19 (123), 22 (012)
+
+Triangle 45, internal: 21 (123), 22 (031)
 
 Size of the skeleton:
   Triangles: 7
@@ -758,97 +294,29 @@ Edges:
          6  |           9   0   8
 
 
-Vertex 0
-Internal vertex of degree 17
-Appears as:
-  0 (0)
-  1 (0)
-  2 (0)
-  3 (0)
-  4 (0)
-  5 (0)
-  6 (0)
-  0 (1)
-  1 (1)
-  0 (2)
-  1 (2)
-  2 (1)
-  3 (1)
-  2 (2)
-  3 (2)
-  4 (1)
-  6 (2)
+Vertex 0, internal, degree 17: 0 (0), 1 (0), 2 (0), 3 (0), 4 (0), 5 (0), 6 (0), 0 (1), 1 (1), 0 (2), 1 (2), 2 (1), 3 (1), 2 (2), 3 (2), 4 (1), 6 (2)
 
-Vertex 1
-Boundary vertex of degree 4
-Appears as:
-  5 (1)
-  4 (2)
-  6 (1)
-  5 (2)
+Vertex 1, boundary, degree 4: 5 (1), 4 (2), 6 (1), 5 (2)
 
-Edge 0
-Internal edge
-Appears as:
-  0 (01)
-  6 (20)
+Edge 0, internal: 0 (01), 6 (20)
 
-Edge 1
-Internal edge
-Appears as:
-  0 (02)
-  1 (01)
+Edge 1, internal: 0 (02), 1 (01)
 
-Edge 2
-Internal edge
-Appears as:
-  0 (12)
-  1 (12)
+Edge 2, internal: 0 (12), 1 (12)
 
-Edge 3
-Internal edge
-Appears as:
-  1 (02)
-  2 (01)
+Edge 3, internal: 1 (02), 2 (01)
 
-Edge 4
-Internal edge
-Appears as:
-  2 (02)
-  3 (01)
+Edge 4, internal: 2 (02), 3 (01)
 
-Edge 5
-Internal edge
-Appears as:
-  2 (12)
-  3 (12)
+Edge 5, internal: 2 (12), 3 (12)
 
-Edge 6
-Internal edge
-Appears as:
-  3 (02)
-  4 (01)
+Edge 6, internal: 3 (02), 4 (01)
 
-Edge 7
-Internal edge
-Appears as:
-  4 (02)
-  5 (01)
+Edge 7, internal: 4 (02), 5 (01)
 
-Edge 8
-Internal edge
-Appears as:
-  4 (12)
-  6 (21)
+Edge 8, internal: 4 (12), 6 (21)
 
-Edge 9
-Internal edge
-Appears as:
-  5 (02)
-  6 (01)
+Edge 9, internal: 5 (02), 6 (01)
 
-Edge 10
-Boundary edge
-Appears as:
-  5 (12)
+Edge 10, boundary: 5 (12)
 

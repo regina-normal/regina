@@ -137,7 +137,7 @@ std::unique_ptr<Manifold> TrivialTri::manifold() const {
     if (type_ == SPHERE_4_VERTEX)
         return std::make_unique<LensSpace>(1, 0);
     else if (type_ == BALL_3_VERTEX || type_ == BALL_4_VERTEX)
-        return std::make_unique<Handlebody>(0, true);
+        return std::make_unique<Handlebody>(0);
     else if (type_ == N2)
         return std::make_unique<SimpleSurfaceBundle>(
             SimpleSurfaceBundle::S2xS1_TWISTED);
@@ -148,16 +148,12 @@ std::unique_ptr<Manifold> TrivialTri::manifold() const {
 }
 
 AbelianGroup TrivialTri::homology() const {
-    AbelianGroup ans;
-
     if (type_ == N2)
-        ans.addRank();
-    else if (type_ == N3_1 || type_ == N3_2) {
-        ans.addRank();
-        ans.addTorsion(2);
-    }
-
-    return ans;
+        return AbelianGroup(1);
+    else if (type_ == N3_1 || type_ == N3_2)
+        return AbelianGroup(1, {2});
+    else
+        return AbelianGroup();
 }
 
 std::ostream& TrivialTri::writeName(std::ostream& out) const {

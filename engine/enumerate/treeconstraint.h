@@ -41,8 +41,8 @@
 
 #include "enumerate/treelp.h" // for LPSystem
 #include "maths/integer.h"
-#include "surfaces/normalcoords.h"
-#include "surfaces/normalsurface.h"
+#include "surface/normalcoords.h"
+#include "surface/normalsurface.h"
 #include "triangulation/dim3.h" // for Triangulation<3>::size()
 
 namespace regina {
@@ -209,9 +209,9 @@ class LPConstraintBase {
          * underlying triangulation (LPInitialTableaux.tri()) and the
          * permutation of columns (LPInitialTableaux.columnPerm()).
          *
-         * For each subclass \a S of LPConstraintBase, the array \a col
-         * must be an array of objects of type LPCol<S>, and the tableaux
-         * \a init must be of type LPInitialTableaux<S>.
+         * For each subclass \a Sub of LPConstraintBase, the array \a col
+         * must be an array of objects of type LPCol<Sub>, and the tableaux
+         * \a init must be of type LPInitialTableaux<Sub>.
          *
          * This routine should only write to the coefficients stored in
          * LPCol::extra.  You may assume that these coefficients have all been
@@ -670,7 +670,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  *
  * \ingroup enumerate
  */
-class BanConstraintBase {
+class BanConstraintBase : public ShortOutput<BanConstraintBase> {
     protected:
         const Triangulation<3>& tri_;
             /**< The triangulation with which we are working. */
@@ -738,6 +738,57 @@ class BanConstraintBase {
          */
         bool marked(size_t column) const;
 
+        /**
+         * Determines if this and the given object ban and mark the same
+         * tableaux coordinates as each other.
+         *
+         * Even if this and the given object are of different subclasses
+         * of BanConstraintBase, as long as they ban the same coordinates
+         * and mark the same coordinates, they will compare as equal.
+         *
+         * It does not matter whether the two objects use the same underlying
+         * tableaux.  However, if the underlying tableaux use triangulations of
+         * different sizes and/or different broad classes of vector encodings
+         * (as described by LPSystem), then these two objects will compare as
+         * not equal.
+         *
+         * @param other the object to compare with this.
+         * @return \c true if and only if this and the object ban and
+         * mark the same tableaux coordinates, as described above.
+         */
+        bool operator == (const BanConstraintBase& other) const;
+
+        /**
+         * Determines if this and the given object do not ban and mark the same
+         * tableaux coordinates as each other.
+         *
+         * Even if this and the given object are of different subclasses
+         * of BanConstraintBase, as long as they ban the same coordinates
+         * and mark the same coordinates, they will compare as equal (i.e.,
+         * this inequality comparison will return \c false).
+         *
+         * It does not matter whether the two objects use the same underlying
+         * tableaux.  However, if the underlying tableaux use triangulations of
+         * different sizes and/or different broad classes of vector encodings
+         * (as described by LPSystem), then these two objects will compare as
+         * not equal.
+         *
+         * @param other the object to compare with this.
+         * @return \c true if and only if this and the object do not ban and
+         * mark the same tableaux coordinates, as described above.
+         */
+        bool operator != (const BanConstraintBase& other) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+
 #ifdef __DOXYGEN
         /**
          * Indicates whether the given coordinate system is supported by
@@ -802,13 +853,20 @@ class BanConstraintBase {
  *
  * \ingroup enumerate
  */
-class BanNone {
+class BanNone : public ShortOutput<BanNone> {
     public:
         template <class LPConstraint>
         BanNone(const LPInitialTableaux<LPConstraint>&) {}
 
         template <class LPConstraint, typename IntType>
         void enforceBans(LPData<LPConstraint, IntType>&) const {}
+
+        bool operator == (const BanNone& other) const { return true; }
+        bool operator != (const BanNone& other) const { return false; }
+
+        void writeTextShort(std::ostream& out) const {
+            out << "Nothing banned or marked";
+        }
 
         bool marked(size_t) const { return false; }
         static bool supported(NormalEncoding) { return true; }
@@ -1060,6 +1118,21 @@ inline void BanConstraintBase::enforceBans(LPData<LPConstraint, IntType>& lp)
 
 inline bool BanConstraintBase::marked(size_t column) const {
     return marked_[column];
+}
+
+inline bool BanConstraintBase::operator == (const BanConstraintBase& other)
+        const {
+    if (system_ != other.system_ || tri_.size() != other.tri_.size())
+        return false;
+
+    const size_t nCols = system_.coords(tri_.size());
+    return std::equal(banned_, banned_ + nCols, other.banned_) &&
+        std::equal(marked_, marked_ + nCols, other.marked_);
+}
+
+inline bool BanConstraintBase::operator != (const BanConstraintBase& other)
+        const {
+    return ! ((*this) == other);
 }
 
 inline bool BanBoundary::supported(NormalEncoding enc) {

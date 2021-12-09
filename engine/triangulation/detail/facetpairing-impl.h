@@ -109,6 +109,18 @@ bool FacetPairingBase<dim>::isClosed() const {
 }
 
 template <int dim>
+bool FacetPairingBase<dim>::operator == (const FacetPairing<dim>& other) const {
+    return size_ == other.size_ &&
+        std::equal(pairs_, pairs_ + (size_ * (dim + 1)), other.pairs_);
+}
+
+template <int dim>
+bool FacetPairingBase<dim>::operator != (const FacetPairing<dim>& other) const {
+    return size_ != other.size_ ||
+        ! std::equal(pairs_, pairs_ + (size_ * (dim + 1)), other.pairs_);
+}
+
+template <int dim>
 void FacetPairingBase<dim>::writeTextShort(std::ostream& out) const {
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
         if (f.facet == 0 && f.simp > 0)

@@ -39,7 +39,7 @@
 #define __REGINA_LAYERING_H
 #endif
 
-#include "regina-core.h"
+#include "core/output.h"
 #include "maths/matrix2.h"
 #include "maths/perm.h"
 #include "triangulation/forward.h"
@@ -108,7 +108,7 @@ namespace regina {
  *
  * \ingroup subcomplex
  */
-class Layering {
+class Layering : public ShortOutput<Layering> {
     private:
         unsigned long size_;
             /**< The number of tetrahedra that have been layered. */
@@ -419,6 +419,16 @@ class Layering {
         bool matchesTop(const Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
             const Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1,
             Matrix2& upperReln) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 };
 
 // Inline functions for Layering

@@ -384,7 +384,12 @@ class Bitmask {
         /**
          * Determines whether this and the given bitmask are identical.
          *
-         * \pre This and the given bitmask have the same length.
+         * \warning As explain in the class notes, bitmasks do not store
+         * their exact length; instead the length is rounded up to the
+         * next "raw unit of storage".  This means that two bitmasks
+         * that were initialised with different lengths may still be
+         * considered equal if the two lengths round up to the same value
+         * \e and the extra bits in the longer bitmask are all \c false.
          *
          * @param other the bitmask to compare against this.
          * @return \c true if and only if this and the given bitmask are
@@ -395,7 +400,12 @@ class Bitmask {
         /**
          * Determines whether this and the given bitmask are different.
          *
-         * \pre This and the given bitmask have the same length.
+         * \warning As explain in the class notes, bitmasks do not store
+         * their exact length; instead the length is rounded up to the
+         * next "raw unit of storage".  This means that two bitmasks
+         * that were initialised with different lengths may still be
+         * considered equal if the two lengths round up to the same value
+         * \e and the extra bits in the longer bitmask are all \c false.
          *
          * @param other the bitmask to compare against this.
          * @return \c true if and only if this and the given bitmask are
@@ -1636,11 +1646,13 @@ inline void Bitmask::flip() {
 }
 
 inline bool Bitmask::operator == (const Bitmask& other) const {
-    return std::equal(mask, mask + pieces, other.mask);
+    return std::equal(mask, mask + pieces,
+        other.mask, other.mask + other.pieces);
 }
 
 inline bool Bitmask::operator != (const Bitmask& other) const {
-    return ! std::equal(mask, mask + pieces, other.mask);
+    return ! std::equal(mask, mask + pieces,
+        other.mask, other.mask + other.pieces);
 }
 
 inline bool Bitmask::lessThan(const Bitmask& other) const {

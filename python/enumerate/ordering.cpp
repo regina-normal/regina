@@ -46,6 +46,16 @@ void addOrdering(pybind11::module_& m) {
             return p(i, j);
         })
     ;
+    regina::python::add_output_custom(c, [](const PosOrder& o,
+            std::ostream& s) {
+        // A PosOrder object is basically like a lambda that has captured
+        // a matrix by reference.  The main reason this class even exists
+        // is because it was written long before lambdas were a part of C++.
+        //
+        // It doesn't make a lot of sense to output the internal data for
+        // what is essentially a function object.
+        s << "Compare row indices using position vectors";
+    });
     regina::python::add_eq_operators(c);
 }
 

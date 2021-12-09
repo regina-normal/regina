@@ -36,6 +36,24 @@
 #include <cstdlib>
 #include <sstream>
 
+namespace {
+    inline constexpr bool isSymbolSep(char c) {
+        return ::isspace(c) || c == ',' ||
+            c == '[' || c == ']' ||
+            c == '(' || c == ')' ||
+            c == '{' || c == '}';
+    }
+
+    inline constexpr bool isDoubleAlphaSep(char a, char b) {
+        return (a == 'P' && b == 'D') ||
+            (a == 'X' && (b == 'p' || b == 'm'));
+    }
+
+    inline constexpr bool isSingleAlphaSep(char c) {
+        return c == 'X' || c == 'P';
+    }
+}
+
 namespace regina {
 
 Link Link::fromPD(const std::string& s) {
@@ -48,8 +66,18 @@ Link Link::fromPD(const std::string& s) {
     char* end;
     while (true) {
         // Find the next integer.
-        while (*begin && ! ::isdigit(*begin))
-            ++begin;
+        while (*begin) {
+            if (::isdigit(*begin))
+                break;
+            if (isSymbolSep(*begin))
+                ++begin;
+            else if (isDoubleAlphaSep(*begin, *(begin + 1)))
+                begin += 2;
+            else if (isSingleAlphaSep(*begin))
+                ++begin;
+            else
+                throw InvalidArgument("fromPD(): invalid separator symbol(s)");
+        }
         if (! *begin)
             break;
 

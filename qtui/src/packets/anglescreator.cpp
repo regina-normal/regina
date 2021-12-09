@@ -38,6 +38,7 @@
 // UI includes:
 #include "anglescreator.h"
 #include "../progressdialogs.h"
+#include "packetfilter.h"
 #include "reginasupport.h"
 #include "reginaprefset.h"
 
@@ -47,7 +48,7 @@
 #include <QLayout>
 #include <QWhatsThis>
 
-AngleStructureCreator::AngleStructureCreator() {
+AngleStructureCreator::AngleStructureCreator(ReginaMain*) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -77,16 +78,7 @@ QString AngleStructureCreator::parentWhatsThis() {
 std::shared_ptr<regina::Packet> AngleStructureCreator::createPacket(
         std::shared_ptr<regina::Packet> parentPacket, QWidget* parentWidget) {
     // Note that parent may be either Triangulation<3> or SnapPeaTriangulation.
-    auto tri = std::dynamic_pointer_cast<regina::Triangulation<3>>(
-        parentPacket);
-    if (! tri) {
-        ReginaSupport::sorry(ui,
-            ui->tr("The selected parent is not a 3-manifold triangulation."),
-            ui->tr("Angle structures must live within a 3-manifold "
-            "triangulation.  Please select the corresponding triangulation "
-            "as the location in the tree for your new angle structure list."));
-        return nullptr;
-    }
+    auto& tri = regina::static_triangulation3_cast(*parentPacket);
 
     // Remember our options for next time.
     ReginaPrefSet::global().anglesCreationTaut = tautOnly->isChecked();
@@ -98,8 +90,8 @@ std::shared_ptr<regina::Packet> AngleStructureCreator::createPacket(
         ui->tr("Enumerating vertex angle structures..."), parentWidget);
 
     std::thread([&, this]() {
-        ans = regina::makePacket<regina::AngleStructures>(std::in_place,
-            *tri, tautOnly->isChecked(), regina::AS_ALG_DEFAULT, &tracker);
+        ans = regina::make_packet<regina::AngleStructures>(std::in_place,
+            tri, tautOnly->isChecked(), regina::AS_ALG_DEFAULT, &tracker);
     }).detach();
 
     if (dlg.run()) {
@@ -107,13 +99,16 @@ std::shared_ptr<regina::Packet> AngleStructureCreator::createPacket(
             ans->setLabel("Taut angle structures");
         else
             ans->setLabel("Vertex angle structures");
-        parentPacket->insertChildLast(ans);
         return ans;
     } else {
         ReginaSupport::info(parentWidget,
             ui->tr("The angle structure enumeration was cancelled."));
         return nullptr;
     }
+}
+
+PacketFilter* AngleStructureCreator::filter() {
+    return new SubclassFilter<regina::Triangulation<3>>();
 }
 
 void AngleStructureCreator::explainNoParents() {

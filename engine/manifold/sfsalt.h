@@ -41,7 +41,7 @@
 #endif
 
 #include <vector>
-#include "regina-core.h"
+#include "core/output.h"
 #include "manifold/sfs.h"
 #include "maths/matrix2.h"
 
@@ -102,7 +102,7 @@ class SFSpace;
  *
  * \ingroup manifold
  */
-class SFSAlt {
+class SFSAlt : public ShortOutput<SFSAlt> {
     private:
         SFSpace alt_;
             /**< The alternative representation of the original Seifert fibred
@@ -132,7 +132,7 @@ class SFSAlt {
          * \pre The given Seifert fibred space has at least one torus
          * boundary.
          *
-         * @param sfs the original Seifert fibred space for which we are
+         * @param original the original Seifert fibred space for which we are
          * creating a set of alternative representations.
          */
         SFSAlt(const SFSpace& original);
@@ -307,10 +307,24 @@ class SFSAlt {
          * generally more complex, and is returned as a matrix by the
          * conversion() routine.
          *
+         * You can also test whether a reflection was used by examining
+         * whether the conversion matrix has determinant 1 or -1.
+         * However, calling reflected() is both simpler and a little faster.
+         *
          * @return \c true if a reflection was used in creating this
          * alternative space, or \c false if no reflection was used.
          */
         bool reflected() const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 };
 
 /**
@@ -369,6 +383,15 @@ inline std::vector<SFSAlt> SFSAlt::altSet(const SFSpace& sfs) {
     } else {
         return { base, SFSAlt(base, true) };
     }
+}
+
+inline void SFSAlt::writeTextShort(std::ostream& out) const {
+    alt_.writeTextShort(out);
+    out << ", via " << conversion_;
+    if (reflected_)
+        out << ", using reflection";
+    else
+        out << ", without reflection";
 }
 
 inline void swap(SFSAlt& a, SFSAlt& b) noexcept {

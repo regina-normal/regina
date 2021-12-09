@@ -257,7 +257,7 @@ class LayeredChain : public StandardTriangulation {
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
-        void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const override;
 };
 
 /**
@@ -310,9 +310,6 @@ inline std::ostream& LayeredChain::writeName(std::ostream& out) const {
 }
 inline std::ostream& LayeredChain::writeTeXName(std::ostream& out) const {
     return out << "\\mathit{Chain}(" << index_ << ')';
-}
-inline void LayeredChain::writeTextLong(std::ostream& out) const {
-    out << "Layered chain of index " << index_;
 }
 
 inline void swap(LayeredChain& a, LayeredChain& b) noexcept {

@@ -51,13 +51,13 @@ list2 = tri2.firstChild()
 s = list.surface(0)
 s2 = list2.surface(0)
 
-print(list.triangulation() == tri)
-print(list2.triangulation() == tri)
-print(list2.triangulation() != tri2)
+print(tri.samePacket(list.triangulation().packet()))
+print(tri.samePacket(list2.triangulation().packet()))
+print(not tri2.samePacket(list2.triangulation().packet()))
 
-print(s.triangulation() == tri)
-print(s2.triangulation() == tri)
-print(s2.triangulation() != tri2)
+print(tri.samePacket(s.triangulation().packet()))
+print(tri.samePacket(s2.triangulation().packet()))
+print(not tri2.samePacket(s2.triangulation().packet()))
 
 # 4-D hypersurface test:
 
@@ -72,13 +72,13 @@ list2 = tri2.firstChild()
 s = list.hypersurface(0)
 s2 = list2.hypersurface(0)
 
-print(list.triangulation() == tri)
-print(list2.triangulation() == tri)
-print(list2.triangulation() != tri2)
+print(tri.samePacket(list.triangulation().packet()))
+print(tri.samePacket(list2.triangulation().packet()))
+print(not tri2.samePacket(list2.triangulation().packet()))
 
-print(s.triangulation() == tri)
-print(s2.triangulation() == tri)
-print(s2.triangulation() != tri2)
+print(tri.samePacket(s.triangulation().packet()))
+print(tri.samePacket(s2.triangulation().packet()))
+print(not tri2.samePacket(s2.triangulation().packet()))
 
 # Angle structure test:
 
@@ -93,11 +93,11 @@ list2 = tri2.firstChild()
 s = list.structure(0)
 s2 = list2.structure(0)
 
-print(list.triangulation() == tri)
-print(list2.triangulation() == tri)
-print(list2.triangulation() != tri2)
+print(tri.samePacket(list.triangulation().packet()))
+print(tri.samePacket(list2.triangulation().packet()))
+print(not tri2.samePacket(list2.triangulation().packet()))
 
-print(s.triangulation() == tri)
-print(s2.triangulation() == tri)
-print(s2.triangulation() != tri2)
+print(tri.samePacket(s.triangulation().packet()))
+print(tri.samePacket(s2.triangulation().packet()))
+print(not tri2.samePacket(s2.triangulation().packet()))
 

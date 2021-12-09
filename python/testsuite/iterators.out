@@ -58,3 +58,11 @@ Model link graph cell arc iteration:
 ['1:3', '2:2', '5:1', '4:3']
 ['2:3', '3:2', '5:0']
 ['4:2', '5:2']
+Vector<Integer> iteration:
+3
+5
+-1
+Vector<LargeInteger> iteration:
+3
+5
+-1

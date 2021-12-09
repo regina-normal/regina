@@ -38,7 +38,7 @@ using pybind11::overload_cast;
 using regina::Script;
 
 void addScript(pybind11::module_& m) {
-    pybind11::class_<Script, regina::Packet, std::shared_ptr<Script>>(
+    auto c = pybind11::class_<Script, regina::Packet, std::shared_ptr<Script>>(
             m, "Script")
         .def(pybind11::init<>())
         .def(pybind11::init<const Script&>())
@@ -81,6 +81,8 @@ void addScript(pybind11::module_& m) {
         .def("listenVariables", &Script::listenVariables)
         .def("unlistenVariables", &Script::unlistenVariables)
     ;
+    regina::python::add_output(c);
+    regina::python::packet_eq_operators(c);
 
     m.def("swap", (void(*)(Script&, Script&))(regina::swap));
 }

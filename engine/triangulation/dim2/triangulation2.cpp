@@ -45,6 +45,9 @@ Triangulation<2>::Triangulation(const std::string& description) {
         return;
     } catch (const InvalidArgument&) {
     }
+
+    throw InvalidArgument("The given string could not be interpreted "
+        "as representing a 2-dimensional triangulation");
 }
 
 void Triangulation<2>::swap(Triangulation<2>& other) {

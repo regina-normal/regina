@@ -97,3 +97,13 @@ t.pachner(t.triangle(0))
 # See the SnapPeaTriangulation class notes for details on this issue.
 print(t.isNull())
 
+print()
+
+# Make sure we get the SnapPeaTriangulation output functions, not the
+# inherited ones from Triangulation3.
+
+t = SnapPeaTriangulation(ExampleLink.whitehead())
+t.fill(-3,7)
+print(t.str())
+print()
+print(t.detail())

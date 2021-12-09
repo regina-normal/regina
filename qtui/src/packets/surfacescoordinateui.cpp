@@ -32,8 +32,8 @@
 
 // Regina core includes:
 #include "maths/matrix.h"
-#include "surfaces/normalsurfaces.h"
-#include "surfaces/surfacefilter.h"
+#include "surface/normalsurfaces.h"
+#include "surface/surfacefilter.h"
 #include "triangulation/dim3.h"
 
 // UI includes:
@@ -589,7 +589,7 @@ void SurfacesCoordinateUI::refresh() {
         filterChanged = true;
         if (appliedFilter)
             appliedFilter->unlisten(this);
-        appliedFilter = dynamic_cast<regina::SurfaceFilter*>(
+        appliedFilter = static_cast<regina::SurfaceFilter*>(
             filter->selectedPacket().get());
         if (appliedFilter)
             appliedFilter->listen(this);
@@ -639,11 +639,11 @@ void SurfacesCoordinateUI::cutAlong() {
 
     // Go ahead and cut along the surface.
     // Be nice and simplify the triangulation, which could be very large.
-    auto ans = regina::makePacket(toCutAlong.cutAlong(),
+    auto ans = regina::make_packet(toCutAlong.cutAlong(),
         "Cut #" + std::to_string(whichSurface));
     ans->intelligentSimplify();
     surfaces->insertChildLast(ans);
-    enclosingPane->getMainWindow()->packetView(ans, true, true);
+    enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 
 void SurfacesCoordinateUI::crush() {
@@ -666,10 +666,10 @@ void SurfacesCoordinateUI::crush() {
     }
 
     // Go ahead and crush it.
-    auto ans = regina::makePacket(toCrush.crush(),
+    auto ans = regina::make_packet(toCrush.crush(),
         "Crushed #" + std::to_string(whichSurface));
     surfaces->insertChildLast(ans);
-    enclosingPane->getMainWindow()->packetView(ans, true, true);
+    enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }
 
 void SurfacesCoordinateUI::updateActionStates() {

@@ -293,7 +293,8 @@ QString GroupWidget::verifyGAPExec() {
         bool found = false;
         for (const auto& p : pathList) {
             QDir dir(p);
-            if ( dir.exists(useExec) ) {
+            if (dir.exists(useExec)) {
+                useExec = dir.filePath(useExec);
                 found = true;
                 break;
             }

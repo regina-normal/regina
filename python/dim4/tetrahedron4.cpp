@@ -52,7 +52,7 @@ void addTetrahedron4(pybind11::module_& m) {
         .def("tetrahedron", &TetrahedronEmbedding<4>::tetrahedron)
         .def("vertices", &TetrahedronEmbedding<4>::vertices)
     ;
-    regina::python::add_output(e, true /* __repr__ */);
+    regina::python::add_output(e);
     regina::python::add_eq_operators(e);
 
     auto c = pybind11::class_<Face<4, 3>>(m, "Face4_3")

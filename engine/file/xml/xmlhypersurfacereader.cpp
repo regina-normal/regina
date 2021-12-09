@@ -120,7 +120,7 @@ XMLNormalHypersurfacesReader::XMLNormalHypersurfacesReader(
             valueOf(props.lookup("type"), listType) &&
             valueOf(props.lookup("algorithm"), algorithm)) {
         // Parameters look sane; create the empty list.
-        list_ = makePacket<NormalHypersurfaces>(std::in_place,
+        list_ = make_packet<NormalHypersurfaces>(std::in_place,
             static_cast<HyperCoords>(coords),
             HyperList::fromInt(listType),
             HyperAlg::fromInt(algorithm),
@@ -142,7 +142,7 @@ void XMLNormalHypersurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (list_ && subTagName == "hypersurface")
-        if (auto& s = dynamic_cast<XMLNormalHypersurfaceReader*>(
+        if (auto& s = static_cast<XMLNormalHypersurfaceReader*>(
                 subReader)->hypersurface())
             list_->surfaces_.push_back(std::move(*s));
 }
@@ -165,14 +165,14 @@ XMLElementReader* XMLLegacyNormalHypersurfacesReader::startContentSubElement(
                 if (valueOf(props.lookup("type"), listType) &&
                         valueOf(props.lookup("algorithm"), algorithm)) {
                     // Parameters look sane; create the empty list.
-                    list_ = makePacket<NormalHypersurfaces>(std::in_place,
+                    list_ = make_packet<NormalHypersurfaces>(std::in_place,
                         static_cast<HyperCoords>(coords),
                         HyperList::fromInt(listType),
                         HyperAlg::fromInt(algorithm),
                         tri_);
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old prerelease format.
-                    list_ = makePacket<NormalHypersurfaces>(std::in_place,
+                    list_ = make_packet<NormalHypersurfaces>(std::in_place,
                         static_cast<HyperCoords>(coords),
                         HS_LEGACY | (embedded ?
                             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
@@ -189,7 +189,7 @@ void XMLLegacyNormalHypersurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (list_ && subTagName == "hypersurface")
-        if (auto& s = dynamic_cast<XMLNormalHypersurfaceReader*>(
+        if (auto& s = static_cast<XMLNormalHypersurfaceReader*>(
                 subReader)->hypersurface())
             list_->surfaces_.push_back(std::move(*s));
 }

@@ -49,7 +49,7 @@ void addSigIsomorphism(pybind11::module_& m) {
         .def("compareWithIdentity", &SigPartialIsomorphism::compareWithIdentity,
             pybind11::arg(), pybind11::arg("fromCycleGroup") = 0)
     ;
-    // TODO regina::python::add_output(c);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(SigPartialIsomorphism&, SigPartialIsomorphism&))(

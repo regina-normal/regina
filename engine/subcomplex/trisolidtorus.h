@@ -299,7 +299,7 @@ class TriSolidTorus : public StandardTriangulation {
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
-        void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const override;
 
     private:
         /**
@@ -307,6 +307,19 @@ class TriSolidTorus : public StandardTriangulation {
          */
         TriSolidTorus() = default;
 };
+
+/**
+ * Swaps the contents of the two given structures.
+ *
+ * This global routine simply calls TriSolidTorus::swap(); it is provided
+ * so that TriSolidTorus meets the C++ Swappable requirements.
+ *
+ * @param a the first structure whose contents should be swapped.
+ * @param b the second structure whose contents should be swapped.
+ *
+ * \ingroup subcomplex
+ */
+void swap(TriSolidTorus& a, TriSolidTorus& b) noexcept;
 
 // Inline functions for TriSolidTorus
 
@@ -331,9 +344,6 @@ inline std::ostream& TriSolidTorus::writeName(std::ostream& out) const {
 }
 inline std::ostream& TriSolidTorus::writeTeXName(std::ostream& out) const {
     return out << "\\mathop{\\rm TST}";
-}
-inline void TriSolidTorus::writeTextLong(std::ostream& out) const {
-    out << "3-tetrahedron triangular solid torus";
 }
 
 inline std::unique_ptr<TriSolidTorus> TriSolidTorus::formsTriSolidTorus(

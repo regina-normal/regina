@@ -103,6 +103,36 @@ class SatMobius : public SatBlock {
          */
         int position() const;
 
+        /**
+         * Determines if this and the given object represent the same
+         * presentation of the same saturated block.
+         *
+         * For two blocks to be considered equal, they must not only
+         * represent the same subcomplex of the underlying triangulation,
+         * but their boundaries must also use identical saturated annuli,
+         * presented in the same order.
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * represent the same presentation of the same block.
+         */
+        bool operator == (const SatMobius& other) const;
+
+        /**
+         * Determines if this and the given object do not represent the same
+         * presentation of the same saturated block.
+         *
+         * For two blocks to be considered equal, they must not only
+         * represent the same subcomplex of the underlying triangulation,
+         * but their boundaries must also use identical saturated annuli,
+         * presented in the same order.
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * do not represent the same presentation of the same block.
+         */
+        bool operator != (const SatMobius& other) const;
+
         void adjustSFS(SFSpace& sfs, bool reflect) const override;
         void writeTextShort(std::ostream& out) const override;
         void writeAbbr(std::ostream& out, bool tex = false) const override;
@@ -204,6 +234,38 @@ class SatLST : public SatBlock {
          */
         Perm<4> roles() const;
 
+        /**
+         * Determines if this and the given object represent the same
+         * presentation of the same saturated block.
+         *
+         * For two blocks to be considered equal, they must not only
+         * represent the same subcomplex of the underlying triangulation,
+         * but their boundaries must also use identical saturated annuli,
+         * presented in the same order, and their internal LayeredSolidTorus
+         * objects must be equal also.
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * represent the same presentation of the same block.
+         */
+        bool operator == (const SatLST& other) const;
+
+        /**
+         * Determines if this and the given object do not represent the same
+         * presentation of the same saturated block.
+         *
+         * For two blocks to be considered equal, they must not only
+         * represent the same subcomplex of the underlying triangulation,
+         * but their boundaries must also use identical saturated annuli,
+         * presented in the same order, and their internal LayeredSolidTorus
+         * objects must be equal also.
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * do not represent the same presentation of the same block.
+         */
+        bool operator != (const SatLST& other) const;
+
         void adjustSFS(SFSpace& sfs, bool reflect) const override;
         void writeTextShort(std::ostream& out) const override;
         void writeAbbr(std::ostream& out, bool tex = false) const override;
@@ -286,6 +348,38 @@ class SatTriPrism : public SatBlock {
          * if it is of minor type.
          */
         bool isMajor() const;
+
+        /**
+         * Determines if this and the given object represent the same
+         * presentation of the same saturated block.
+         *
+         * For two blocks to be considered equal, they must not only
+         * represent the same subcomplex of the underlying triangulation,
+         * but their boundaries must also use identical saturated annuli,
+         * presented in the same order, and their prisms must be of the same
+         * (major or minor) type.
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * represent the same presentation of the same block.
+         */
+        bool operator == (const SatTriPrism& other) const;
+
+        /**
+         * Determines if this and the given object do not represent the same
+         * presentation of the same saturated block.
+         *
+         * For two blocks to be considered equal, they must not only
+         * represent the same subcomplex of the underlying triangulation,
+         * but their boundaries must also use identical saturated annuli,
+         * presented in the same order, and their prisms must be of the same
+         * (major or minor) type.
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * do not represent the same presentation of the same block.
+         */
+        bool operator != (const SatTriPrism& other) const;
 
         void adjustSFS(SFSpace& sfs, bool reflect) const override;
         void writeTextShort(std::ostream& out) const override;
@@ -381,6 +475,36 @@ class SatCube : public SatBlock {
         void writeAbbr(std::ostream& out, bool tex = false) const override;
 
         /**
+         * Determines if this and the given object represent the same
+         * presentation of the same saturated block.
+         *
+         * For two blocks to be considered equal, they must not only
+         * represent the same subcomplex of the underlying triangulation,
+         * but their boundaries must also use identical saturated annuli,
+         * presented in the same order.
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * represent the same presentation of the same block.
+         */
+        bool operator == (const SatCube& other) const;
+
+        /**
+         * Determines if this and the given object do not represent the same
+         * presentation of the same saturated block.
+         *
+         * For two blocks to be considered equal, they must not only
+         * represent the same subcomplex of the underlying triangulation,
+         * but their boundaries must also use identical saturated annuli,
+         * presented in the same order.
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * do not represent the same presentation of the same block.
+         */
+        bool operator != (const SatCube& other) const;
+
+        /**
          * Creates a new model of a cube block.
          *
          * @return a full triangulated model of this type of block.
@@ -458,6 +582,36 @@ class SatReflectorStrip : public SatBlock {
         void adjustSFS(SFSpace& sfs, bool reflect) const override;
         void writeTextShort(std::ostream& out) const override;
         void writeAbbr(std::ostream& out, bool tex = false) const override;
+
+        /**
+         * Determines if this and the given object represent the same
+         * presentation of the same saturated block.
+         *
+         * For two blocks to be considered equal, they must not only
+         * represent the same subcomplex of the underlying triangulation,
+         * but their boundaries must also use identical saturated annuli,
+         * presented in the same order.
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * represent the same presentation of the same block.
+         */
+        bool operator == (const SatReflectorStrip& other) const;
+
+        /**
+         * Determines if this and the given object do not represent the same
+         * presentation of the same saturated block.
+         *
+         * For two blocks to be considered equal, they must not only
+         * represent the same subcomplex of the underlying triangulation,
+         * but their boundaries must also use identical saturated annuli,
+         * presented in the same order.
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * do not represent the same presentation of the same block.
+         */
+        bool operator != (const SatReflectorStrip& other) const;
 
         /**
          * Creates a new model of a reflector strip block.
@@ -560,6 +714,38 @@ class SatLayering : public SatBlock {
          */
         bool overHorizontal() const;
 
+        /**
+         * Determines if this and the given object represent the same
+         * presentation of the same saturated block.
+         *
+         * For two blocks to be considered equal, they must not only
+         * represent the same subcomplex of the underlying triangulation,
+         * but their boundaries must also use identical saturated annuli,
+         * presented in the same order, and the two layerings must be over
+         * the same type of annulus edge (horizontal or diagonal).
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * represent the same presentation of the same block.
+         */
+        bool operator == (const SatLayering& other) const;
+
+        /**
+         * Determines if this and the given object do not represent the same
+         * presentation of the same saturated block.
+         *
+         * For two blocks to be considered equal, they must not only
+         * represent the same subcomplex of the underlying triangulation,
+         * but their boundaries must also use identical saturated annuli,
+         * presented in the same order, and the two layerings must be over
+         * the same type of annulus edge (horizontal or diagonal).
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * do not represent the same presentation of the same block.
+         */
+        bool operator != (const SatLayering& other) const;
+
         void adjustSFS(SFSpace& sfs, bool reflect) const override;
         void writeTextShort(std::ostream& out) const override;
         void writeAbbr(std::ostream& out, bool tex = false) const override;
@@ -617,6 +803,14 @@ inline SatBlock* SatMobius::clone() const {
     return new SatMobius(*this);
 }
 
+inline bool SatMobius::operator == (const SatMobius& other) const {
+    return identicalBoundary(other) && position_ == other.position_;
+}
+
+inline bool SatMobius::operator != (const SatMobius& other) const {
+    return ! (identicalBoundary(other) && position_ == other.position_);
+}
+
 // Inline functions for SatLST
 
 inline SatLST::SatLST(const LayeredSolidTorus& lst, Perm<4> roles) :
@@ -635,6 +829,14 @@ inline SatBlock* SatLST::clone() const {
     return new SatLST(*this);
 }
 
+inline bool SatLST::operator == (const SatLST& other) const {
+    return identicalBoundary(other) && lst_ == other.lst_;
+}
+
+inline bool SatLST::operator != (const SatLST& other) const {
+    return ! (identicalBoundary(other) && lst_ == other.lst_);
+}
+
 // Inline functions for SatTriPrism
 
 inline SatTriPrism::SatTriPrism(bool major) : SatBlock(3), major_(major) {
@@ -649,8 +851,11 @@ inline SatBlock* SatTriPrism::clone() const {
 }
 
 inline void SatTriPrism::writeTextShort(std::ostream& out) const {
-    out << "Saturated triangular prism of "
-        << (major_ ? "major" : "minor") << " type";
+    // Format was like: Saturated triangular prism of major type
+    out << "Tri(" << (major_ ? "major" : "minor") << ") {"
+        << annulus_[0].tet[0]->index() << ','
+        << annulus_[1].tet[0]->index() << ','
+        << annulus_[2].tet[0]->index() << '}';
 }
 
 inline void SatTriPrism::writeAbbr(std::ostream& out, bool tex) const {
@@ -658,6 +863,14 @@ inline void SatTriPrism::writeAbbr(std::ostream& out, bool tex) const {
         out << "\\triangle";
     else
         out << "Tri";
+}
+
+inline bool SatTriPrism::operator == (const SatTriPrism& other) const {
+    return identicalBoundary(other) && major_ == other.major_;
+}
+
+inline bool SatTriPrism::operator != (const SatTriPrism& other) const {
+    return ! (identicalBoundary(other) && major_ == other.major_);
 }
 
 // Inline functions for SatCube
@@ -670,14 +883,27 @@ inline SatBlock* SatCube::clone() const {
 }
 
 inline void SatCube::writeTextShort(std::ostream& out) const {
-    out << "Saturated cube";
+    out << "Cube {"
+        << annulus_[0].tet[0]->index() << ','
+        << annulus_[1].tet[0]->index() << ','
+        << annulus_[2].tet[0]->index() << ','
+        << annulus_[3].tet[0]->index() << '}';
 }
 
 inline void SatCube::writeAbbr(std::ostream& out, bool tex) const {
+    // Format was like: Saturated cube
     if (tex)
         out << "\\square";
     else
         out << "Cube";
+}
+
+inline bool SatCube::operator == (const SatCube& other) const {
+    return identicalBoundary(other);
+}
+
+inline bool SatCube::operator != (const SatCube& other) const {
+    return ! identicalBoundary(other);
 }
 
 // Inline functions for SatReflectorStrip
@@ -688,12 +914,6 @@ inline SatReflectorStrip::SatReflectorStrip(unsigned length, bool twisted) :
 
 inline SatBlock* SatReflectorStrip::clone() const {
     return new SatReflectorStrip(*this);
-}
-
-inline void SatReflectorStrip::writeTextShort(std::ostream& out) const {
-    out << "Saturated reflector strip of length " << countAnnuli();
-    if (twistedBoundary())
-        out << " (twisted)";
 }
 
 inline void SatReflectorStrip::writeAbbr(std::ostream& out, bool tex) const {
@@ -708,6 +928,16 @@ inline void SatReflectorStrip::writeAbbr(std::ostream& out, bool tex) const {
         else
             out << "Ref(" << countAnnuli() << ')';
     }
+}
+
+inline bool SatReflectorStrip::operator == (const SatReflectorStrip& other)
+        const {
+    return identicalBoundary(other);
+}
+
+inline bool SatReflectorStrip::operator != (const SatReflectorStrip& other)
+        const {
+    return ! identicalBoundary(other);
 }
 
 // Inline functions for SatLayering
@@ -725,15 +955,26 @@ inline SatBlock* SatLayering::clone() const {
 }
 
 inline void SatLayering::writeTextShort(std::ostream& out) const {
-    out << "Saturated single layering over "
-        << (overHorizontal_ ? "horizontal" : "diagonal") << " edge";
+    // Format was like: Saturated single layering over horizontal edge
+    out << "Layer("
+        << (overHorizontal_ ? "horiz" : "diag") << ") {"
+        << annulus_[0].tet[0]->index() << '}';
 }
 
 inline void SatLayering::writeAbbr(std::ostream& out, bool tex) const {
     if (tex)
-        out << "lozenge";
+        out << "\\lozenge";
     else
         out << "Layer";
+}
+
+inline bool SatLayering::operator == (const SatLayering& other) const {
+    return identicalBoundary(other) && overHorizontal_ == other.overHorizontal_;
+}
+
+inline bool SatLayering::operator != (const SatLayering& other) const {
+    return ! (identicalBoundary(other) &&
+        overHorizontal_ == other.overHorizontal_);
 }
 
 } // namespace regina

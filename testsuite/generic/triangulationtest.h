@@ -451,7 +451,7 @@ template <int dim>
 struct PachnerHelperH2<dim, true> {
     static bool testH2(const Triangulation<dim>& orig,
             const Triangulation<dim>& altered) {
-        return (altered.homologyH2() == orig.homologyH2());
+        return (altered.template homology<2>() == orig.template homology<2>());
     };
 };
 
@@ -551,7 +551,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 return false;
             if (a.countComponents() != b.countComponents())
                 return false;
-            if (! a.isIdenticalTo(b))
+            if (a != b)
                 return false;
 
             // Test isosigs only in smaller dimensions, since the
@@ -905,14 +905,15 @@ class TriangulationTest : public CppUnit::TestFixture {
                 tri, name);
         }
 
+        template <int k = 1>
         static void verifyHomology(const Triangulation<dim>& tri,
-                const char* H1, const char* name) {
-            std::string ans = tri.homology().str();
-            if (ans != H1) {
+                const char* expect, const char* name) {
+            std::string ans = tri.template homology<k>().str();
+            if (ans != expect) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name
-                    << " has homology H1 = " << ans
-                    << " instead of the expected " << H1 << ".";
+                    << " has homology H" << k << " = " << ans
+                    << " instead of the expected " << expect << ".";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1247,7 +1248,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     Triangulation<dim> oriented(tri);
                     if (tri.isOrientable())
                         oriented.orient();
-                    if (! large.isIdenticalTo(oriented)) {
+                    if (large != oriented) {
                         std::ostringstream msg;
                         msg << name << ", face " << i << ": "
                             "disallowed "
@@ -1318,7 +1319,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
 
                 if (tri.isValid()) {
-                    if (! (large.homologyH1() == tri.homologyH1())) {
+                    if (! (large.homology() == tri.homology())) {
                         std::ostringstream msg;
                         msg << name << ", face " << i << ": "
                             << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1405,6 +1406,110 @@ class TriangulationTest : public CppUnit::TestFixture {
         template <int k>
         void verifyPachnerSimplicial() {
             verifyPachnerDetail<k>(simplicialSphere, true, "Simplicial sphere");
+        }
+
+        template <int k>
+        static void verifyChainComplex(const Triangulation<dim>& tri,
+                const char* name) {
+            static_assert(0 < k && k < dim);
+
+            // These tests use homology on the skeleton: invalid or empty
+            // triangulations are explicitly disallowed, and ideal
+            // triangluations will give wrong answers (since the ideal
+            // vertices will not be considered as truncated).
+            if (tri.isEmpty() || ! tri.isValid())
+                return;
+            if (tri.isIdeal())
+                return;
+
+            regina::MatrixInt m = tri.template boundaryMap<k>();
+            regina::MatrixInt n = tri.template boundaryMap<k + 1>();
+
+            if (m.columns() != n.rows()) {
+                std::ostringstream msg;
+                msg << name << ": boundary maps for computing H" << k
+                    << " have incompatible sizes.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! (m * n).isZero()) {
+                std::ostringstream msg;
+                msg << name << ": boundary maps for computing H" << k
+                    << " do not compose to give zero.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            regina::AbelianGroup g1(m, n);
+            regina::MarkedAbelianGroup g2 = tri.template markedHomology<k>();
+            if (g1.str() != g2.unmarked().str()) {
+                std::ostringstream msg;
+                msg << name << ": computing H" << k << " via the "
+                    "chain complex gives " << g1.str()
+                    << " using AbelianGroup, but " << g2.unmarked().str()
+                    << " using MarkedAbelianGroup.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if constexpr (k == 1) {
+                regina::AbelianGroup h1 = tri.homology();
+                if (g1.str() != h1.str()) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k << " via the "
+                        "chain complex gives " << g1.str()
+                        << ", but homology() gives " << h1.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            if constexpr (k == 2 && (dim == 3 || dim == 4)) {
+                const auto& h2 = tri.template homology<2>();
+                if (g1.str() != h2.str()) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k << " via the "
+                        "chain complex gives " << g1.str()
+                        << ", but homology<2>() gives " << h2.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            regina::AbelianGroup g1z2(m, n, 2);
+            regina::MarkedAbelianGroup g2z2(m, n, 2);
+            if (g1z2.str() != g2z2.unmarked().str()) {
+                std::ostringstream msg;
+                msg << name << ": computing H" << k
+                    << " with Z_2 coefficients via the chain complex gives "
+                    << g1z2.str() << " using AbelianGroup, but "
+                    << g2z2.unmarked().str() << " using MarkedAbelianGroup.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (g1z2.rank() != 0) {
+                std::ostringstream msg;
+                msg << name << ": computing H" << k
+                    << " with Z_2 coefficients via the chain complex gives "
+                    "a group with non-trivial rank " << g1z2.rank();
+                CPPUNIT_FAIL(msg.str());
+            }
+            size_t z2rank = g1z2.countInvariantFactors();
+            for (size_t i = 0; i < z2rank; ++i)
+                if (g1z2.invariantFactor(i) != 2) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k
+                        << " with Z_2 coefficients via the chain complex gives "
+                        "an unexpected invariant factor "
+                        << g1z2.invariantFactor(i);
+                    CPPUNIT_FAIL(msg.str());
+                }
+            if constexpr (k == 2 && dim == 3) {
+                unsigned long h2 = tri.homologyH2Z2();
+                if (h2 != z2rank) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k
+                        << " with Z_2 coefficients via the chain complex "
+                        "gives Z_2 rank " << z2rank
+                        << ", but homologyH2Z2() gives " << h2 << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
         }
 };
 

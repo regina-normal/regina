@@ -150,7 +150,7 @@ Edge<3>* Triangulation<3>::longitude() {
         return nullptr;
 
     long longCuts[3];
-    std::vector<Integer> v(countEdges()); // zero vector
+    Vector<Integer> v(countEdges()); // zero vector
     for (j = 0; j < 3; ++j) {
         v[bc->edge(j)->index()] = 1;
 

@@ -39,7 +39,7 @@
 #define __REGINA_PROGRESSTRACKER_H
 #endif
 
-#include "regina-core.h"
+#include "core/output.h"
 #include <mutex>
 #include <string>
 
@@ -134,7 +134,7 @@ class ProgressTrackerBase {
             /**< Has the writing thread declared that it has finished
                  all processing? */
 
-        std::mutex lock_;
+        mutable std::mutex lock_;
             /**< A mutex to stop the reading and writing threads from
                  interfering with each other. */
 
@@ -150,7 +150,7 @@ class ProgressTrackerBase {
          * @return \c true if and only if the writing thread has
          * finished all processing.
          */
-        bool isFinished();
+        bool isFinished() const;
         /**
          * Queries whether the stage description has changed since the
          * last call to descriptionChanged().  If this is the first time
@@ -160,7 +160,7 @@ class ProgressTrackerBase {
          *
          * @return \c true if and only if the stage description has changed.
          */
-        bool descriptionChanged();
+        bool descriptionChanged() const;
         /**
          * Returns the human-readable description of the current stage.
          *
@@ -168,7 +168,7 @@ class ProgressTrackerBase {
          *
          * @return \c the current stage description.
          */
-        std::string description();
+        std::string description() const;
         /**
          * Indicates to the writing thread that the user wishes to
          * cancel the operation.  The writing thread might not detect
@@ -191,7 +191,7 @@ class ProgressTrackerBase {
          * @return \c true if and only if a cancellation request has
          * been made.
          */
-        bool isCancelled();
+        bool isCancelled() const;
         /**
          * Used by the writing thread to indicate that it has finished
          * all processing.  The stage description will be updated to
@@ -238,7 +238,8 @@ class ProgressTrackerBase {
  *
  * \ingroup progress
  */
-class ProgressTracker : public ProgressTrackerBase {
+class ProgressTracker : public ProgressTrackerBase,
+        public ShortOutput<ProgressTracker> {
     private:
         double percent_;
             /**< The percentage progress through the current stage.
@@ -275,7 +276,7 @@ class ProgressTracker : public ProgressTrackerBase {
          *
          * @return \c true if and only if the percentage progress has changed.
          */
-        bool percentChanged();
+        bool percentChanged() const;
         /**
          * Returns the percentage progress through the entire operation.
          * This combines the progress through the current stage with all
@@ -286,7 +287,7 @@ class ProgressTracker : public ProgressTrackerBase {
          *
          * @return the current percentage progress.
          */
-        double percent();
+        double percent() const;
 
         /**
          * Used by the writing thread to indicate that it has moved on
@@ -340,6 +341,19 @@ class ProgressTracker : public ProgressTrackerBase {
          * This is typically called by the writing thread.
          */
         void setFinished();
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * Subclasses must not override this routine.  They should
+         * override writeName() instead.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 };
 
 /**
@@ -358,7 +372,8 @@ class ProgressTracker : public ProgressTrackerBase {
  *
  * \ingroup progress
  */
-class ProgressTrackerOpen : public ProgressTrackerBase {
+class ProgressTrackerOpen : public ProgressTrackerBase,
+        public ShortOutput<ProgressTrackerOpen> {
     private:
         unsigned long steps_;
             /**< The number of steps completed over all stages. */
@@ -387,7 +402,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase {
          * @return \c true if and only if the number of steps completed
          * has changed.
          */
-        bool stepsChanged();
+        bool stepsChanged() const;
         /**
          * Returns the number of steps completed throughout the entire
          * operation.  This counts the progress across all stages (both
@@ -397,7 +412,7 @@ class ProgressTrackerOpen : public ProgressTrackerBase {
          *
          * @return the current number of steps completed.
          */
-        unsigned long steps();
+        unsigned long steps() const;
 
         /**
          * Used by the writing thread to indicate that it has moved on
@@ -444,6 +459,19 @@ class ProgressTrackerOpen : public ProgressTrackerBase {
          * This is typically called by the writing thread.
          */
         void setFinished();
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * Subclasses must not override this routine.  They should
+         * override writeName() instead.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 };
 
 // Inline functions for ProgressTrackerBase
@@ -453,12 +481,12 @@ inline ProgressTrackerBase::ProgressTrackerBase() :
         cancelled_(false), finished_(false) {
 }
 
-inline bool ProgressTrackerBase::isFinished() {
+inline bool ProgressTrackerBase::isFinished() const {
     std::lock_guard<std::mutex> lock(lock_);
     return finished_;
 }
 
-inline bool ProgressTrackerBase::descriptionChanged() {
+inline bool ProgressTrackerBase::descriptionChanged() const {
     std::lock_guard<std::mutex> lock(lock_);
     if (descChanged_) {
         const_cast<ProgressTrackerBase*>(this)->descChanged_ = false;
@@ -467,7 +495,7 @@ inline bool ProgressTrackerBase::descriptionChanged() {
         return false;
 }
 
-inline std::string ProgressTrackerBase::description() {
+inline std::string ProgressTrackerBase::description() const {
     std::lock_guard<std::mutex> lock(lock_);
     return desc_;
 }
@@ -477,7 +505,7 @@ inline void ProgressTrackerBase::cancel() {
     cancelled_ = true;
 }
 
-inline bool ProgressTrackerBase::isCancelled() {
+inline bool ProgressTrackerBase::isCancelled() const {
     std::lock_guard<std::mutex> lock(lock_);
     return cancelled_;
 }
@@ -488,7 +516,7 @@ inline ProgressTracker::ProgressTracker() :
         percent_(0), percentChanged_(true), prevPercent_(0), currWeight_(0) {
 }
 
-inline bool ProgressTracker::percentChanged() {
+inline bool ProgressTracker::percentChanged() const {
     std::lock_guard<std::mutex> lock(lock_);
     if (percentChanged_) {
         const_cast<ProgressTracker*>(this)->percentChanged_ = false;
@@ -497,7 +525,7 @@ inline bool ProgressTracker::percentChanged() {
         return false;
 }
 
-inline double ProgressTracker::percent() {
+inline double ProgressTracker::percent() const {
     std::lock_guard<std::mutex> lock(lock_);
     return prevPercent_ + currWeight_ * percent_;
 }
@@ -528,13 +556,29 @@ inline void ProgressTracker::setFinished() {
     percentChanged_ = descChanged_ = true;
 }
 
+inline void ProgressTracker::writeTextShort(std::ostream& out) const {
+    std::lock_guard<std::mutex> lock(lock_);
+    if (cancelled_) {
+        if (finished_)
+            out << "Cancelled and finished";
+        else
+            out << "Cancelled but not finished";
+    } else if (finished_)
+        out << "Finished";
+    else {
+        auto prec = out.precision(2);
+        out << desc_ << " - " << (prevPercent_ + currWeight_ * percent_) << '%';
+        out.precision(prec);
+    }
+}
+
 // Inline functions for ProgressTrackerOpen
 
 inline ProgressTrackerOpen::ProgressTrackerOpen() :
         steps_(0), stepsChanged_(true) {
 }
 
-inline bool ProgressTrackerOpen::stepsChanged() {
+inline bool ProgressTrackerOpen::stepsChanged() const {
     std::lock_guard<std::mutex> lock(lock_);
     if (stepsChanged_) {
         const_cast<ProgressTrackerOpen*>(this)->stepsChanged_ = false;
@@ -543,7 +587,7 @@ inline bool ProgressTrackerOpen::stepsChanged() {
         return false;
 }
 
-inline unsigned long ProgressTrackerOpen::steps() {
+inline unsigned long ProgressTrackerOpen::steps() const {
     std::lock_guard<std::mutex> lock(lock_);
     return steps_;
 }
@@ -572,6 +616,19 @@ inline void ProgressTrackerOpen::setFinished() {
     std::lock_guard<std::mutex> lock(lock_);
     desc_ = "Finished";
     finished_ = descChanged_ = true;
+}
+
+inline void ProgressTrackerOpen::writeTextShort(std::ostream& out) const {
+    std::lock_guard<std::mutex> lock(lock_);
+    if (cancelled_) {
+        if (finished_)
+            out << "Cancelled and finished";
+        else
+            out << "Cancelled but not finished";
+    } else if (finished_)
+        out << "Finished";
+    else
+        out << desc_ << " - " << steps_ << " step(s)";
 }
 
 } // namespace regina

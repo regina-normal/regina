@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "triangulation/detail/algebra-impl.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "triangulation/detail/pachner-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
@@ -47,6 +48,28 @@ template std::pair<std::string, Isomorphism<10>>
 template Triangulation<10> TriangulationBase<10>::fromIsoSig(
     const std::string&);
 template size_t TriangulationBase<10>::isoSigComponentSize(const std::string&);
+
+template AbelianGroup TriangulationBase<10>::homology<1>() const;
+template AbelianGroup TriangulationBase<10>::homology<2>() const;
+template AbelianGroup TriangulationBase<10>::homology<3>() const;
+template AbelianGroup TriangulationBase<10>::homology<4>() const;
+template AbelianGroup TriangulationBase<10>::homology<5>() const;
+template AbelianGroup TriangulationBase<10>::homology<6>() const;
+template AbelianGroup TriangulationBase<10>::homology<7>() const;
+template AbelianGroup TriangulationBase<10>::homology<8>() const;
+
+template MatrixInt TriangulationBase<10>::boundaryMap<1>() const;
+template MatrixInt TriangulationBase<10>::boundaryMap<2>() const;
+template MatrixInt TriangulationBase<10>::boundaryMap<3>() const;
+template MatrixInt TriangulationBase<10>::boundaryMap<4>() const;
+template MatrixInt TriangulationBase<10>::boundaryMap<5>() const;
+template MatrixInt TriangulationBase<10>::boundaryMap<6>() const;
+template MatrixInt TriangulationBase<10>::boundaryMap<7>() const;
+template MatrixInt TriangulationBase<10>::boundaryMap<8>() const;
+template MatrixInt TriangulationBase<10>::boundaryMap<9>() const;
+template MatrixInt TriangulationBase<10>::boundaryMap<10>() const;
+
+template const GroupPresentation& TriangulationBase<10>::fundamentalGroup() const;
 
 template void TriangulationBase<10>::calculateSkeleton();
 template void TriangulationBase<10>::clearBaseProperties();

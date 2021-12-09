@@ -40,7 +40,7 @@
 
 #include "hypersurface/hypercoords.h"
 #include "maths/integer.h"
-#include "surfaces/normalcoords.h"
+#include "surface/normalcoords.h"
 #include "triangulation/forward.h"
 
 #include <QString>

@@ -108,7 +108,8 @@ SFSAlt::SFSAlt(const SFSAlt& base, bool reflect, bool negate) :
 
     long b = alt_.obstruction();
     alt_.insertFibre(1, -b);
-    conversion_ = Matrix2(1, 0, -b + extraTwist, -1) * conversion_;
+    conversion_ = Matrix2(1, 0, -b + extraTwist, reflect ? -1 : 1) *
+        conversion_;
 }
 
 } // namespace regina

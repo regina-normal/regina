@@ -93,9 +93,7 @@ void XMLAbelianGroupReader::startElement(const std::string&,
     long rank;
     if (valueOf(tagProps.lookup("rank"), rank))
         if (rank >= 0) {
-            group_ = AbelianGroup();
-            if (rank)
-                group_->addRank(rank);
+            group_ = AbelianGroup(rank);
         }
 }
 
@@ -136,7 +134,7 @@ void XMLGroupPresentationReader::endSubElement(const std::string& subTagName,
         XMLElementReader* subReader) {
     if (group_)
         if (subTagName == "reln") {
-            auto& exp = dynamic_cast<ExpressionReader*>(subReader)->expression();
+            auto& exp = static_cast<ExpressionReader*>(subReader)->expression();
             if (exp)
                 group_->addRelation(std::move(*exp));
         }

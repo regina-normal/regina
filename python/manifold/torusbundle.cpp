@@ -40,7 +40,7 @@ using regina::Matrix2;
 using regina::TorusBundle;
 
 void addTorusBundle(pybind11::module_& m) {
-    pybind11::class_<TorusBundle, regina::Manifold>(m, "TorusBundle")
+    auto c = pybind11::class_<TorusBundle, regina::Manifold>(m, "TorusBundle")
         .def(pybind11::init<>())
         .def(pybind11::init<const Matrix2&>())
         .def(pybind11::init<long, long, long, long>())
@@ -49,6 +49,8 @@ void addTorusBundle(pybind11::module_& m) {
         .def("monodromy", &TorusBundle::monodromy,
             pybind11::return_value_policy::reference_internal)
     ;
+    regina::python::add_eq_operators(c);
+    regina::python::add_output(c);
 
     m.def("swap", (void(*)(TorusBundle&, TorusBundle&))(regina::swap));
 }

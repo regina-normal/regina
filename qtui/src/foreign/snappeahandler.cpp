@@ -45,7 +45,7 @@ const SnapPeaHandler SnapPeaHandler::instance;
 std::shared_ptr<regina::Packet> SnapPeaHandler::importData(
         const QString& fileName, ReginaMain* parentWidget) const {
     try {
-        return regina::makePacket<regina::SnapPeaTriangulation>(std::in_place,
+        return regina::make_packet<regina::SnapPeaTriangulation>(std::in_place,
             static_cast<const char*>(QFile::encodeName(fileName)));
     } catch (const regina::FileError&) {
         ReginaSupport::sorry(parentWidget,
@@ -61,26 +61,26 @@ PacketFilter* SnapPeaHandler::canExport() const {
     return new SubclassFilter<regina::Triangulation<3>>();
 }
 
-bool SnapPeaHandler::exportData(std::shared_ptr<regina::Packet> data,
+bool SnapPeaHandler::exportData(const regina::Packet& data,
         const QString& fileName, QWidget* parentWidget) const {
     // Cast all the way up to Triangulation<3>, so that we catch both
     // Triangulation<3> and SnapPeaTriangulation packets.
-    auto tri = std::dynamic_pointer_cast<regina::Triangulation<3>>(data);
-    if (! tri->isValid()) {
+    auto& tri = regina::static_triangulation3_cast(data);
+    if (! tri.isValid()) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("This triangulation is not valid."),
             QObject::tr("I can only export valid triangulations "
                 "to SnapPea format."));
         return false;
     }
-    if (tri->hasBoundaryTriangles()) {
+    if (tri.hasBoundaryTriangles()) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("This triangulation has boundary triangles."),
             QObject::tr("I can only export closed or ideal triangulations "
                 "to SnapPea format."));
         return false;
     }
-    if (! tri->saveSnapPea(
+    if (! tri.saveSnapPea(
             static_cast<const char*>(QFile::encodeName(fileName)))) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."),

@@ -58,9 +58,9 @@ PacketFilter* ReginaHandler::canExport() const {
     return new AllPacketsFilter();
 }
 
-bool ReginaHandler::exportData(std::shared_ptr<regina::Packet> data,
+bool ReginaHandler::exportData(const regina::Packet& data,
         const QString& fileName, QWidget* parentWidget) const {
-    if (! data->save(QFile::encodeName(fileName), compressed)) {
+    if (! data.save(QFile::encodeName(fileName), compressed)) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 
             QObject::tr("<qt>An unknown error occurred, probably related "

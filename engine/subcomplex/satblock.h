@@ -109,8 +109,7 @@ class SFSpace;
  * - should override transform() if the subclass contains additional
  *   data that needs to be altered when an isomorphism is applied;
  *
- * - may optionally override writeTextLong(), if more detailed output
- *   could be useful.
+ * - should not override writeTextLong(), since SatBlock uses short output only.
  *
  * SatBlock does not support value semantics: blocks cannot be copied,
  * swapped, or manually constructed.  Their memory is managed by the
@@ -119,7 +118,7 @@ class SFSpace;
  *
  * \ingroup subcomplex
  */
-class SatBlock : public Output<SatBlock> {
+class SatBlock : public ShortOutput<SatBlock> {
     public:
         using TetList = std::set<const Tetrahedron<3>*>;
             /**< The data structure used to store a list of tetrahedra
@@ -459,19 +458,6 @@ class SatBlock : public Output<SatBlock> {
          */
         virtual void writeTextShort(std::ostream& out) const = 0;
 
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * This may be reimplemented by subclasses, but the parent
-         * SatBlock class offers a reasonable default implementation.
-         *
-         * \ifacespython Not present; use detail() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        virtual void writeTextLong(std::ostream& out) const;
-
         // Mark this class as non-assignable.
         // There is a copy constructor, but that is protected.
         SatBlock& operator = (const SatBlock&) = delete;
@@ -513,6 +499,24 @@ class SatBlock : public Output<SatBlock> {
          * @return a new clone of this block.
          */
         virtual SatBlock* clone() const = 0;
+
+        /**
+         * Determines whether this and the given block have identical
+         * boundaries.
+         *
+         * This requires not just that both boundaries represent the same
+         * subcomplex of the underlying triangulation, but also that the
+         * boundaries use identical saturated annuli, and that these
+         * annuli appear in the same order.
+         *
+         * This test would typically be used as part of the subclass comparison
+         * operators.
+         *
+         * @param other the block to compare with this.
+         * @return \c true if and only if this and the given block have
+         * identical boundaries, as described above.
+         */
+        bool identicalBoundary(const SatBlock& other) const;
 
         /**
          * Determines whether the given tetrahedron is contained within the
@@ -735,7 +739,7 @@ class SatBlock : public Output<SatBlock> {
  *
  * \ingroup subcomplex
  */
-class SatBlockModel {
+class SatBlockModel : public ShortOutput<SatBlockModel> {
     private:
         Triangulation<3>* triangulation_;
             /**< The triangulation of the saturated block. */
@@ -809,6 +813,16 @@ class SatBlockModel {
          */
         const SatBlock& block() const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+
     private:
         /**
          * Creates a new model filled with the given data.  The model will
@@ -852,11 +866,6 @@ inline SatBlock::~SatBlock() {
     delete[] adjAnnulus_;
     delete[] adjReflected_;
     delete[] adjBackwards_;
-}
-
-inline void SatBlock::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << '\n';
 }
 
 inline unsigned SatBlock::countAnnuli() const {
@@ -940,6 +949,13 @@ inline SatBlockModel SatBlock::modelWith(Triangulation<3>* triangulation) {
     return SatBlockModel(triangulation, this);
 }
 
+inline bool SatBlock::identicalBoundary(const SatBlock& other) const {
+    return std::equal(annulus_, annulus_ + nAnnuli_,
+        other.annulus_, other.annulus_ + other.nAnnuli_) &&
+        (twistedBoundary_ == other.twistedBoundary_);
+
+}
+
 // Inline functions for SatBlockModel
 
 inline SatBlockModel::SatBlockModel(Triangulation<3>* triangulation,
@@ -990,6 +1006,11 @@ inline const Triangulation<3>& SatBlockModel::triangulation() const {
 
 inline const SatBlock& SatBlockModel::block() const {
     return *block_;
+}
+
+inline void SatBlockModel::writeTextShort(std::ostream& out) const {
+    out << "Model of ";
+    block_->writeTextShort(out);
 }
 
 inline void swap(SatBlockModel& a, SatBlockModel& b) noexcept {

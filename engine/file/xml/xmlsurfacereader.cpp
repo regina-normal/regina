@@ -137,7 +137,7 @@ XMLNormalSurfacesReader::XMLNormalSurfacesReader(
             valueOf(props.lookup("type"), listType) &&
             valueOf(props.lookup("algorithm"), algorithm)) {
         // Parameters look sane; create the empty list.
-        list_ = makePacket<NormalSurfaces>(std::in_place,
+        list_ = make_packet<NormalSurfaces>(std::in_place,
             static_cast<NormalCoords>(coords),
             NormalList::fromInt(listType),
             NormalAlg::fromInt(algorithm),
@@ -159,7 +159,7 @@ void XMLNormalSurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (list_ && subTagName == "surface")
-        if (auto& s = dynamic_cast<XMLNormalSurfaceReader*>(subReader)->
+        if (auto& s = static_cast<XMLNormalSurfaceReader*>(subReader)->
                 surface())
             list_->surfaces_.push_back(std::move(*s));
 }
@@ -182,14 +182,14 @@ XMLElementReader* XMLLegacyNormalSurfacesReader::startContentSubElement(
                 if (valueOf(props.lookup("type"), listType) &&
                         valueOf(props.lookup("algorithm"), algorithm)) {
                     // Parameters look sane; create the empty list.
-                    list_ = makePacket<NormalSurfaces>(std::in_place,
+                    list_ = make_packet<NormalSurfaces>(std::in_place,
                         static_cast<NormalCoords>(coords),
                         NormalList::fromInt(listType),
                         NormalAlg::fromInt(algorithm),
                         tri_);
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old format.
-                    list_ = makePacket<NormalSurfaces>(std::in_place,
+                    list_ = make_packet<NormalSurfaces>(std::in_place,
                         static_cast<NormalCoords>(coords),
                         NS_LEGACY | (embedded ?
                             NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
@@ -206,7 +206,7 @@ void XMLLegacyNormalSurfacesReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
     if (list_ && subTagName == "surface")
-        if (auto& s = dynamic_cast<XMLNormalSurfaceReader*>(subReader)->
+        if (auto& s = static_cast<XMLNormalSurfaceReader*>(subReader)->
                 surface())
             list_->surfaces_.push_back(std::move(*s));
 }

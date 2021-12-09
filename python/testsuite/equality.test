@@ -34,65 +34,126 @@
 from __future__ import print_function
 
 print(AbelianGroup.equalityType)
+print(GluingPermSearcher2.equalityType)
 print(Integer.equalityType)
-print(Triangulation3.equalityType)
+print(SigCensus.equalityType)
+
+print()
+
+def cmp(name, a, b, packet = False):
+	ans = ''
+	try:
+		if a == b:
+			ans += '=='
+		else:
+			ans += 'not =='
+	except:
+		ans += 'throws on =='
+	ans += ', '
+	try:
+		if a != b:
+			ans += '!='
+		else:
+			ans += 'not !='
+	except:
+		ans += 'throws on !='
+	if packet:
+		ans += ', '
+		try:
+			if a.samePacket(b):
+				ans += 'same packet'
+			else:
+				ans += 'different packets'
+		except:
+			ans += 'throws on samePacket()'
+	print(name, ':', ans)
 
 # Test == and != for objects that are equal by value but have different
 # underlying C++ pointers.
 # The behaviour should be different for different classes.
 
-# Cases that should be reported as equal (by value):
+# Classes that compare by value:
 
-print('Integer:')
-a = Integer(3)
-b = Integer(3)
-print(a == b, a != b)
+cmp('Integer', Integer(3), Integer(3))
+cmp('Integer', Integer(3), Integer(4))
 
-print('AbelianGroup:')
-a = AbelianGroup()
-b = AbelianGroup()
-print(a == b, a != b)
+cmp('AbelianGroup', AbelianGroup(), AbelianGroup())
+cmp('AbelianGroup', AbelianGroup(), AbelianGroup(1))
 
-# Cases that should be reported as different (by C++ reference):
+cmp('GroupPresentation', GroupPresentation(), GroupPresentation())
+cmp('GroupPresentation', GroupPresentation(), GroupPresentation(1))
 
-print('Triangulation3:')
-a = Triangulation3()
-b = Triangulation3()
-print(a == b, a != b)
+cmp('Link', ExampleLink.trefoil(), ExampleLink.trefoilRight())
+cmp('Link', ExampleLink.trefoilLeft(), ExampleLink.trefoilRight())
+cmp('Link', Link(3), Link(3))
+cmp('Link', Link(3), Link(2))
+cmp('Link + Packet', Link(2), PacketOfLink(2), True)
+cmp('Link + Packet', PacketOfLink(2), Link(2), True)
+cmp('PacketOfLink', PacketOfLink(2), PacketOfLink(2), True)
+p = PacketOfLink(3)
+cmp('PacketOfLink', p, p.root(), True)
 
-print('GroupPresentation:')
-a = GroupPresentation()
-b = GroupPresentation()
-print(a == b, a != b)
+cmp('Triangulation3', Triangulation3(), Triangulation3())
+cmp('Triangulation3', Example3.figureEight(), Example3.whiteheadLink())
+cmp('Triangulation3 + Packet', Triangulation3(), PacketOfTriangulation3(), True)
+cmp('Triangulation3 + Packet', PacketOfTriangulation3(), Triangulation3(), True)
+cmp('PacketOfTriangulation3', PacketOfTriangulation3(), PacketOfTriangulation3(), True)
+p = PacketOfTriangulation3()
+cmp('PacketOfTriangulation3', p, p.root(), True)
 
-# Test == and != for objects that have the same underlying C++ pointers,
-# but different python wrappers.
-# In all cases these objects should be reported as equal.
+cmp('FacetPairing2', FacetPairing2(Example2.kb()), FacetPairing2(Example2.kb()))
+cmp('FacetPairing2', FacetPairing2(Example2.mobius()), FacetPairing2(Example2.annulus()))
 
-print('Packet:')
-a = Container()
-b = a.root()
-print(a == b, a != b)
+cmp('Attachment', Attachment(b'foo', 'x'), Attachment(b'foo', 'y'), True)
+cmp('Attachment', Attachment(b'foo', 'x'), Attachment(), True)
+cmp('Attachment', Attachment(), Attachment(b'foo', 'x'), True)
+cmp('Attachment', Attachment(b'foof', 'x'), Attachment(b'foo', 'x'), True)
+cmp('Text', Text('foo'), Text('foo'), True)
+cmp('Text', Text('foo'), Text('foof'), True)
 
-print('Triangulation3:')
-a = Triangulation3()
-b = a.newSimplex().triangulation()
-print(a == b, a != b)
+x = None
 
-print('Tetrahedron3:')
+def foundGluings2(g):
+	global x
+	if not x:
+		x = GluingPerms2(g)
+	cmp('GluingPerms2', x, g)
+
+def foundPairing2(p, isos):
+	GluingPermSearcher2.findAllPerms(p, isos, True, foundGluings2)
+
+FacetPairing2.findAllPairings(2, False, 0, foundPairing2)
+
+# Classes that compare by reference:
+
 t = Triangulation3()
-a = t.newTetrahedron()
-b = t.tetrahedron(0)
-print(a == b, a != b)
+(a,b) = t.newTetrahedra(2)
+cmp('Tetrahedron3', a, t.tetrahedron(0))
+cmp('Tetrahedron3', a, t.tetrahedron(1))
 
-print('AbelianGroup:')
-t = Example3.lens(8,3)
-a = t.homology()
-b = t.homology()
-print(a == b, a != b)
+# More tests with packets:
 
-print('GroupPresentation:')
-t = Example3.lens(8,3)
-a = t.fundamentalGroup()
-b = t.fundamentalGroup()
-print(a == b, a != b)
+a = Container()
+cmp('Packet', a, a.root(), True)
+cmp('Different Packets', Container(), Text(), True)
+cmp('Different Packets', PacketOfLink(), Text(), True)
+cmp('Different Packets', Text(), PacketOfLink(), True)
+cmp('Different Packets', Text(), Link(), True)
+cmp('Different Packets', Link(), Text(), True)
+
+t = Example3.poincare()
+st = NormalSurfaces.enumerate(t, NS_QUAD)
+dt = DiscSetSurface(st.surface(0))
+u = Example3.s2xs1()
+su = NormalSurfaces.enumerate(u, NS_QUAD)
+du = DiscSetSurface(su.surface(0))
+cmp('DiscSetTet', du.tetDiscs(0), du.tetDiscs(1)) # should be equal
+cmp('DiscSetTet', dt.tetDiscs(0), dt.tetDiscs(1)) # should be different
+cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(0)))
+cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(1)))
+cmp('DiscSetSurface', dt, du)
+
+# Classes that cannot be compared:
+
+t = Example3.poincare()
+cmp('HomologicalData', HomologicalData(t), HomologicalData(t))

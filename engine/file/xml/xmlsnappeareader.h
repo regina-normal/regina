@@ -110,7 +110,7 @@ inline XMLSnapPeaReader::XMLSnapPeaReader(
 inline std::shared_ptr<Packet> XMLSnapPeaReader::packetToCommit() {
     if (! snappea_) {
         // Null SnapPea triangulation:
-        snappea_ = makePacket<SnapPeaTriangulation>();
+        snappea_ = make_packet<SnapPeaTriangulation>();
     }
     return snappea_;
 }
@@ -128,7 +128,7 @@ inline XMLLegacySnapPeaReader::XMLLegacySnapPeaReader(
 inline std::shared_ptr<Packet> XMLLegacySnapPeaReader::packetToCommit() {
     if (! snappea_) {
         // Null SnapPea triangulation:
-        snappea_ = makePacket<SnapPeaTriangulation>();
+        snappea_ = make_packet<SnapPeaTriangulation>();
     }
     return snappea_;
 }

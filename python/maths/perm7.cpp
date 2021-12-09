@@ -142,7 +142,7 @@ void addPerm7(pybind11::module_& m) {
         .def_readonly_static("orderedSn", &Perm7_orderedS7_arr)
     ;
     Perm7_contract<8>::add_bindings(c);
-    regina::python::add_output_basic(c, true /* __repr__ */);
+    regina::python::add_output_basic(c);
     regina::python::add_eq_operators(c);
 }
 

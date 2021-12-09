@@ -83,5 +83,41 @@ template bool regina::detail::retriangulateInternal<Triangulation<3>, false>(
     const Triangulation<3>&, int, unsigned, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Triangulation<3>, false>&&);
 
+// This could be inlined, but we pull it out of the header because otherwise
+// it interferes with Link's rewrite() implementation.
+//
+// Basically the problem is that link/rewrite.cpp includes retriangulate-impl.h,
+// which then complains about the inlined Triangulation<3>::simplifyExhaustive()
+// using an undefined specialisation RetriangulateParams<Triangulation<3>>.
+//
+// This would not have been a problem if link.h did not have to include
+// triangulation/dim3.h (which is included just to inline Link::complement()).
+//
+// Since we're here anyway, implement this using retriangulateInternal(), not
+// retriangulate(), to avoid an extra level of lambdas/functionals.
+//
+bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
+        ProgressTrackerOpen* tracker) {
+    if (countComponents() != 1) {
+        if (tracker)
+            tracker->setFinished();
+        throw FailedPrecondition(
+            "simplifyExhaustive() requires a connected triangulation");
+    }
+
+    size_t minSimp = size();
+    return regina::detail::retriangulateInternal<Triangulation<3>, false>(
+        *this, height, nThreads, tracker,
+        [this, minSimp](Triangulation<3>&& alt) {
+            if (alt.size() < minSimp) {
+                ChangeEventSpan span(*this);
+                *this = std::move(alt);
+                intelligentSimplify();
+                return true;
+            } else
+                return false;
+        });
+}
+
 } // namespace regina
 

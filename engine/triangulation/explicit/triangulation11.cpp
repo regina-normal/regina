@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "triangulation/detail/algebra-impl.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "triangulation/detail/pachner-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
@@ -47,6 +48,30 @@ template std::pair<std::string, Isomorphism<11>>
 template Triangulation<11> TriangulationBase<11>::fromIsoSig(
     const std::string&);
 template size_t TriangulationBase<11>::isoSigComponentSize(const std::string&);
+
+template AbelianGroup TriangulationBase<11>::homology<1>() const;
+template AbelianGroup TriangulationBase<11>::homology<2>() const;
+template AbelianGroup TriangulationBase<11>::homology<3>() const;
+template AbelianGroup TriangulationBase<11>::homology<4>() const;
+template AbelianGroup TriangulationBase<11>::homology<5>() const;
+template AbelianGroup TriangulationBase<11>::homology<6>() const;
+template AbelianGroup TriangulationBase<11>::homology<7>() const;
+template AbelianGroup TriangulationBase<11>::homology<8>() const;
+template AbelianGroup TriangulationBase<11>::homology<9>() const;
+
+template MatrixInt TriangulationBase<11>::boundaryMap<1>() const;
+template MatrixInt TriangulationBase<11>::boundaryMap<2>() const;
+template MatrixInt TriangulationBase<11>::boundaryMap<3>() const;
+template MatrixInt TriangulationBase<11>::boundaryMap<4>() const;
+template MatrixInt TriangulationBase<11>::boundaryMap<5>() const;
+template MatrixInt TriangulationBase<11>::boundaryMap<6>() const;
+template MatrixInt TriangulationBase<11>::boundaryMap<7>() const;
+template MatrixInt TriangulationBase<11>::boundaryMap<8>() const;
+template MatrixInt TriangulationBase<11>::boundaryMap<9>() const;
+template MatrixInt TriangulationBase<11>::boundaryMap<10>() const;
+template MatrixInt TriangulationBase<11>::boundaryMap<11>() const;
+
+template const GroupPresentation& TriangulationBase<11>::fundamentalGroup() const;
 
 template void TriangulationBase<11>::calculateSkeleton();
 template void TriangulationBase<11>::clearBaseProperties();

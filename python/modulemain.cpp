@@ -46,9 +46,7 @@ void addDim4Classes(pybind11::module_& m);
 void addEnumerateClasses(pybind11::module_& m);
 void addFileClasses(pybind11::module_& m);
 void addForeignClasses(pybind11::module_& m);
-#ifndef REGINA_LOWDIMONLY
 void addGenericClasses(pybind11::module_& m);
-#endif
 void addHypersurfaceClasses(pybind11::module_& m);
 void addLinkClasses(pybind11::module_& m);
 void addManifoldClasses(pybind11::module_& m);
@@ -58,7 +56,7 @@ void addProgressClasses(pybind11::module_& m);
 void addSnapPeaClasses(pybind11::module_& m);
 void addSplitClasses(pybind11::module_& m);
 void addSubcomplexClasses(pybind11::module_& m);
-void addSurfacesClasses(pybind11::module_& m);
+void addSurfaceClasses(pybind11::module_& m);
 void addTreewidthClasses(pybind11::module_& m);
 void addTriangulationClasses(pybind11::module_& m);
 void addUtilitiesClasses(pybind11::module_& m);
@@ -96,6 +94,7 @@ PYBIND11_MODULE(regina, m) {
         .value("BY_VALUE", regina::python::BY_VALUE)
         .value("BY_REFERENCE", regina::python::BY_REFERENCE)
         .value("NEVER_INSTANTIATED", regina::python::NEVER_INSTANTIATED)
+        .value("DISABLED", regina::python::DISABLED)
         ;
 
     addGlobalArray(m);
@@ -137,7 +136,7 @@ PYBIND11_MODULE(regina, m) {
     addSubcomplexClasses(m);
     addManifoldClasses(m);
     addAngleClasses(m);
-    addSurfacesClasses(m);
+    addSurfaceClasses(m);
     addHypersurfaceClasses(m);
     addDim2Classes(m);
     addGenericClasses(m);

@@ -36,7 +36,11 @@
 
 #include <type_traits>
 
-namespace regina::python {
+namespace regina {
+
+class Packet;
+
+namespace python {
 
 /**
  * Indicates the different ways in which the equality (==) and inequality (!=)
@@ -66,7 +70,13 @@ enum EqualityType {
      * no comparisons are ever made.  An example of such a class is
      * Example<dim>, which consists entirely of static functions.
      */
-    NEVER_INSTANTIATED = 3
+    NEVER_INSTANTIATED = 3,
+    /**
+     * Objects of the class \a C cannot be compared by value (because
+     * the comparison operators are not implemented), and they should not
+     * be compared by reference (because they are passed around by value).
+     */
+    DISABLED = 4
 };
 
 /**
@@ -89,18 +99,37 @@ enum EqualityType {
  * Furthermore, this will add an attribute \a equalityType to the python
  * wrapper class, which will be the corresponding constant from the
  * EqualityType enum (either \a BY_VALUE or \a BY_REFERENCE).
+ *
+ * If \a C is a packet type (such as regina::Text) or is inherited by a packet
+ * type (such as regina::Link), then you should use packet_eq_operators()
+ * instead.
  */
 template <class C, typename... options>
 void add_eq_operators(pybind11::class_<C, options...>& c);
+
+/**
+ * Adds appropriate == and != operators to the python bindings for a C++ class
+ * that is either equal to a packet type (such as regina::Text), or inherited
+ * by a packet type (such as regina::Link).
+ *
+ * This routine performs the same task as add_eq_operators, and in addition
+ * it adds fallback == and != operators that throw exceptions if an object of
+ * the given type is compared against a packet of some different type.
+ * The intent is for these exceptions to be informative, so that users are
+ * aware that they should use samePacket() and not the comparison operators
+ * to test whether two Python objects wrap the same packet.
+ */
+template <class C, typename... options>
+void packet_eq_operators(pybind11::class_<C, options...>& c);
 
 /**
  * Indicates that a C++ class is never instantiated, and that its python
  * wrapper class should not support the operators == or !=.
  *
  * This should only be used with C++ classes that are never instantiated (such
- * as Example<dim>, which consists entirely of static methods).
- * As such, it should be impossible to even call the == and != operators
- * under python.
+ * as Example<dim>, which consists entirely of static methods, or Manifold,
+ * which is an abstract base class).  As such, it should be impossible to
+ * even call the == and != operators under python.
  *
  * To use this for some C++ class \a T in Regina, simply call
  * <t>regina::python::no_eq_operators(c)</t>, where \a c is the
@@ -116,16 +145,49 @@ void add_eq_operators(pybind11::class_<C, options...>& c);
 template <class C, typename... options>
 void no_eq_operators(pybind11::class_<C, options...>& c);
 
+/**
+ * Explicitly disables the == and != operators for a C++ class.
+ *
+ * This should be used with classes that use value semantics (which
+ * means you should not compare by reference), but which have no
+ * comparison operators implemented (which means you cannot compare by value).
+ *
+ * If the user tries to test for equality or inequality, an exception
+ * will be thrown that contains useful information.
+ *
+ * To use this for some C++ class \a T in Regina, call
+ * <t>regina::python::disable_eq_operators(c)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.  The effect will be as follows:
+ *
+ * - Operators == and != will be added to the python wrapper class (thus
+ *   overriding any default provided by pybind11), and these operators will
+ *   throw python exceptions that contain useful explanations.
+ *
+ * - The attribute \a equalityType will be added to the python wrapper class.
+ *   Its value will be the EqualityType enum constant \a DISABLED.
+ */
+template <class C, typename... options>
+void disable_eq_operators(pybind11::class_<C, options...>& c);
+
 #ifndef __DOXYGEN
 namespace add_eq_operators_detail {
-    /**
-     * An equality test that throws an exception whenever it is called.
-     */
     template <typename T>
     static void no_equality_operators(const T&, const T&) {
         PyErr_SetString(PyExc_RuntimeError,
             "It should be impossible to create objects of this class, and so "
             "there are no operators == or !=.");
+    }
+
+    template <typename T>
+    static void disable_equality_operators(const T&, const T&) {
+        PyErr_SetString(PyExc_RuntimeError,
+            "You cannot compare two objects of this class.  These objects "
+            "use value semantics (they are designed to be moved and/or "
+            "copied), and so you probably do not mean to test whether "
+            "two Python wrappers reference the same internal object "
+            "(i.e., the same location in memory).  However, Regina does "
+            "not yet implement a test that compares the contents "
+            "of two objects of this class.");
     }
 
     /**
@@ -223,7 +285,7 @@ namespace add_eq_operators_detail {
     };
 } // namespace add_eq_operators_detail
 
-// Implementation of add_eq_operators and no_eq_operators.
+// Implementation of the main ..._eq_operators() functions.
 // See the top of this header for their documentation.
 
 template <class C, typename... options>
@@ -245,6 +307,28 @@ inline void no_eq_operators(pybind11::class_<C, options...>& c) {
     c.attr("equalityType") = EqualityType::NEVER_INSTANTIATED;
 }
 
+template <class C, typename... options>
+inline void disable_eq_operators(pybind11::class_<C, options...>& c) {
+    c.def("__eq__", &add_eq_operators_detail::disable_equality_operators<C>);
+    c.def("__ne__", &add_eq_operators_detail::disable_equality_operators<C>);
+    c.attr("equalityType") = EqualityType::DISABLED;
+}
+
+inline bool invalidPacketComparison(const regina::Packet&,
+        const regina::Packet&) {
+    throw std::runtime_error("The comparison operators == and != "
+        "now compare packet contents by value, and can only be used with "
+        "two packets of the same type.  To test whether two Python objects "
+        "wrap the same underlying packet, use Packet.samePacket() instead.");
+}
+
+template <class C, typename... options>
+inline void packet_eq_operators(pybind11::class_<C, options...>& c) {
+    add_eq_operators(c);
+    c.def("__eq__", &invalidPacketComparison);
+    c.def("__ne__", &invalidPacketComparison);
+}
+
 #endif // __DOXYGEN
 
-} // namespace regina::python
+} } // namespace regina::python

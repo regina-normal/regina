@@ -45,16 +45,14 @@
 #include "testsuite/dim2/testdim2.h"
 #include "testsuite/dim3/testtriangulation.h"
 #include "testsuite/dim4/testdim4.h"
-#ifndef REGINA_LOWDIMONLY
 #include "testsuite/generic/testgeneric.h"
-#endif
 #include "testsuite/link/testlink.h"
 #include "testsuite/manifold/testmanifold.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/misc/testmisc.h"
 #include "testsuite/snappea/testsnappea.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
-#include "testsuite/surfaces/testsurfaces.h"
+#include "testsuite/surface/testsurface.h"
 #include "testsuite/utilities/testutilities.h"
 
 namespace {
@@ -142,6 +140,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("abeliangroup", &addAbelianGroup));
     sets.insert(std::make_pair("grouppresentation", &addGroupPresentation));
     sets.insert(std::make_pair("covers", &addCovers));
+    sets.insert(std::make_pair("markedabeliangroup", &addMarkedAbelianGroup));
 
     // 2-manifold triangulations:
     sets.insert(std::make_pair("triangulation2", &addTriangulation2));
@@ -158,12 +157,10 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     // 4-manifold triangulations:
     sets.insert(std::make_pair("triangulation4", &addTriangulation4));
 
-#ifndef REGINA_LOWDIMONLY
     // Higher-dimensional triangulations:
     sets.insert(std::make_pair("facenumbering", &addFaceNumbering));
     sets.insert(std::make_pair("generictriangulation",
         &addGenericTriangulation));
-#endif
 
     // Manifolds:
     sets.insert(std::make_pair("sfs", &addSFS));

@@ -106,7 +106,8 @@ class Text : public Packet {
          * the packet infrastructure (e.g., it will not swap packet labels,
          * or change either packet's location in any packet tree).
          *
-         * @other the text packet whose contents should be swapped with this.
+         * @param other the text packet whose contents should be swapped
+         * with this.
          */
         void swap(Text& other);
 
@@ -123,6 +124,24 @@ class Text : public Packet {
          * @param text the new value for the packet.
          */
         void setText(std::string text);
+
+        /**
+         * Determines if this and the given packet contain the same text.
+         *
+         * @param other the text packet to compare with this.
+         * @return \c true if and only if this and the given packet
+         * contain the same text.
+         */
+        bool operator == (const Text& other) const;
+
+        /**
+         * Determines if this and the given packet do not contain the same text.
+         *
+         * @param other the text packet to compare with this.
+         * @return \c true if and only if this and the given packet
+         * do not contain the same text.
+         */
+        bool operator != (const Text& other) const;
 
         void writeTextShort(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
@@ -175,8 +194,19 @@ inline void Text::setText(std::string text) {
     text_ = std::move(text);
 }
 
+inline bool Text::operator == (const Text& other) const {
+    return text_ == other.text_;
+}
+
+inline bool Text::operator != (const Text& other) const {
+    return text_ != other.text_;
+}
+
 inline void Text::writeTextShort(std::ostream& o) const {
-    o << "Text packet";
+    if (text_.empty())
+        o << "(empty)";
+    else
+        o << "Text of length " << text_.length();
 }
 
 inline void Text::writeTextLong(std::ostream& o) const {

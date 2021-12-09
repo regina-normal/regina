@@ -60,6 +60,8 @@ void addTreeTraversalBase(pybind11::module_& m, const char* name) {
         .def("buildSurface", &Tree::buildSurface)
         .def("buildStructure", &Tree::buildStructure)
     ;
+    // Leave the output routines for subclasses to wrap, since __repr__
+    // will include the (derived) class name.
     regina::python::add_eq_operators(c);
 }
 
@@ -78,6 +80,7 @@ void addTreeEnumeration(pybind11::module_& m, const char* name) {
         .def_static("writeTypes", &Tree::writeTypes)
         .def_static("writeSurface", &Tree::writeSurface)
     ;
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 }
 
@@ -96,6 +99,7 @@ void addTautEnumeration(pybind11::module_& m, const char* name) {
         .def_static("writeTypes", &Tree::writeTypes)
         .def_static("writeStructure", &Tree::writeStructure)
     ;
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 }
 
@@ -109,6 +113,7 @@ void addTreeSingleSoln(pybind11::module_& m, const char* name) {
         .def("find", &Tree::find)
         .def("cancel", &Tree::cancel)
     ;
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 }
 

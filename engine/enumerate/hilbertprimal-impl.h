@@ -63,7 +63,7 @@ void HilbertPrimal::enumerate(Action&& action,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
         const ValidityConstraints& constraints, ProgressTracker* tracker) {
     static_assert(
-        IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
+        IsReginaArbitraryPrecisionInteger<typename RayClass::value_type>::value,
         "HilbertPrimal::enumerate() requires the RayClass "
         "template parameter to be equal to or derived from Vector<T>, "
         "where T is one of Regina's arbitrary precision integer types.");
@@ -120,7 +120,7 @@ template <class RayClass, class BitmaskType,
 void HilbertPrimal::enumerateUsingBitmask(Action&& action,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
         const ValidityConstraints& constraints, ProgressTracker* tracker) {
-    using IntegerType = typename RayClass::Element;
+    using IntegerType = typename RayClass::value_type;
 
     // We know at this point that the dimension is non-zero.
     size_t dim = (*raysBegin).size();

@@ -303,8 +303,15 @@ class ListView<Element*> {
          * a pointer immediately after the last element).
          */
         ListView(const Element* begin, const Element* end);
-
+        /**
+         * Creates a new copy of the given list view.
+         */
         ListView(const ListView&) = default;
+        /**
+         * Sets this to be a copy of the given list view.
+         *
+         * @return a reference to this list view.
+         */
         ListView& operator = (const ListView&) = default;
 
         /**
@@ -357,8 +364,9 @@ class ListView<Element*> {
         const_iterator end() const;
 };
 
-// Deduction guides
+// Deduction guides (hide these from Doxygen, which cannot handle them):
 
+#ifndef __DOXYGEN
 template <typename Element>
 ListView(Element*, Element*) -> ListView<Element*>;
 
@@ -370,6 +378,7 @@ ListView(const Element*, const Element*) -> ListView<Element*>;
 
 template <typename Element>
 ListView(const Element*, size_t) -> ListView<Element*>;
+#endif
 
 // Inline functions for ListView
 

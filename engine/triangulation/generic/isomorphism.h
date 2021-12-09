@@ -213,6 +213,10 @@ class Isomorphism :
          * Determines the image of the given source simplex under
          * this isomorphism.
          *
+         * If the dimension \a dim is 2, 3 or 4, then you can also access
+         * this image through the dimension-specific alias triImage(),
+         * tetImage() or pentImage() respectively.
+         *
          * \ifacespython Python users can only access the read-only version
          * of this function that returns by value: you cannot use simpImage()
          * to edit the isomorphism.  As an alternative however, Python users
@@ -228,6 +232,10 @@ class Isomorphism :
          * Determines the image of the given source simplex under
          * this isomorphism.
          *
+         * If the dimension \a dim is 2, 3 or 4, then you can also access
+         * this image through the dimension-specific alias triImage(),
+         * tetImage() or pentImage() respectively.
+         *
          * @param sourceSimp the index of the source simplex; this must
          * be between 0 and <tt>size()-1</tt> inclusive.
          * @return the index of the destination simplex
@@ -241,6 +249,10 @@ class Isomorphism :
          * Facet \a i of source simplex \a sourceSimp will be mapped to
          * facet <tt>facetPerm(sourceSimp)[i]</tt> of simplex
          * <tt>simpImage(sourceSimp)</tt>.
+         *
+         * If the dimension \a dim is 2 or 3, then you can also access
+         * this permutation through the dimension-specific alias
+         * edgePerm() or facePerm() respectively.
          *
          * \ifacespython Python users can only access the read-only version
          * of this function that returns by value: you cannot use facetPerm()
@@ -260,6 +272,10 @@ class Isomorphism :
          * Facet \a i of source simplex \a sourceSimp will be mapped to
          * face <tt>facetPerm(sourceSimp)[i]</tt> of simplex
          * <tt>simpImage(sourceSimp)</tt>.
+         *
+         * If the dimension \a dim is 2 or 3, then you can also access
+         * this permutation through the dimension-specific alias
+         * edgePerm() or facePerm() respectively.
          *
          * @param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
@@ -417,6 +433,52 @@ class Isomorphism :
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+        /**
+         * Determines whether this and the given isomorphism are identical.
+         *
+         * Two isomorphisms are considered \e identical if they act on the
+         * same number of top-dimensional simplices, and all destination
+         * simplex numbers and facet permutations are the same for both
+         * isomorphisms.
+         *
+         * In particular it is only the simplex, facet and vertex \e labels
+         * that matter: an isomorphism does not refer to a specific
+         * triangulation, and there is no sense in which the two isomorphisms
+         * need to act on the same triangulations and/or point to the same
+         * destination Simplex objects.
+         *
+         * It is safe to compare isomorphisms of different sizes (in
+         * which case this routine will return \c false).
+         *
+         * @param other the isomorphism to compare with this.
+         * @return \c true if and only if this and the given isomorphism
+         * are identical.
+         */
+        bool operator == (const Isomorphism& other) const;
+
+        /**
+         * Determines whether this and the given isomorphism are not identical.
+         *
+         * Two isomorphisms are considered \e identical if they act on the
+         * same number of top-dimensional simplices, and all destination
+         * simplex numbers and facet permutations are the same for both
+         * isomorphisms.
+         *
+         * In particular it is only the simplex, facet and vertex \e labels
+         * that matter: an isomorphism does not refer to a specific
+         * triangulation, and there is no sense in which the two isomorphisms
+         * need to act on the same triangulations and/or point to the same
+         * destination Simplex objects.
+         *
+         * It is safe to compare isomorphisms of different sizes (in
+         * which case this routine will return \c true).
+         *
+         * @param other the isomorphism to compare with this.
+         * @return \c true if and only if this and the given isomorphism
+         * are not identical.
+         */
+        bool operator != (const Isomorphism& other) const;
 
         /**
          * Returns the identity isomorphism for the given number of simplices.
@@ -667,13 +729,29 @@ Isomorphism<dim> Isomorphism<dim>::inverse() const {
 
 template <int dim>
 inline void Isomorphism<dim>::writeTextShort(std::ostream& out) const {
-    out << "Isomorphism between " << dim << "-manifold triangulations";
+    for (unsigned i = 0; i < nSimplices_; ++i) {
+        if (i > 0)
+            out << ", ";
+        out << i << " -> " << simpImage_[i] << " (" << facetPerm_[i] << ')';
+    }
 }
 
 template <int dim>
 inline void Isomorphism<dim>::writeTextLong(std::ostream& out) const {
     for (unsigned i = 0; i < nSimplices_; ++i)
         out << i << " -> " << simpImage_[i] << " (" << facetPerm_[i] << ")\n";
+}
+
+template <int dim>
+inline bool Isomorphism<dim>::operator == (const Isomorphism& other) const {
+    return nSimplices_ == other.nSimplices_ &&
+        std::equal(simpImage_, simpImage_ + nSimplices_, other.simpImage_) &&
+        std::equal(facetPerm_, facetPerm_ + nSimplices_, other.facetPerm_);
+}
+
+template <int dim>
+inline bool Isomorphism<dim>::operator != (const Isomorphism& other) const {
+    return ! ((*this) == other);
 }
 
 template <int dim>

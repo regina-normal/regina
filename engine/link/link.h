@@ -51,6 +51,7 @@
 #include "packet/packet.h"
 #include "progress/progresstracker.h"
 #include "treewidth/treedecomposition.h"
+#include "triangulation/dim3.h"
 #include "triangulation/detail/retriangulate.h"
 #include "utilities/exception.h"
 #include "utilities/listview.h"
@@ -434,7 +435,7 @@ std::ostream& operator << (std::ostream& out, const StrandRef& s);
  *
  * \ingroup link
  */
-class Crossing : public MarkedElement, public Output<Crossing> {
+class Crossing : public MarkedElement, public ShortOutput<Crossing> {
     private:
         int sign_;
             /**< The sign of the crossing, which must be +1 or -1.
@@ -562,15 +563,6 @@ class Crossing : public MarkedElement, public Output<Crossing> {
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present; use detail() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
         // Make this class non-copyable.
         Crossing(const Crossing&) = delete;
@@ -828,8 +820,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * This list may grow in future versions of Regina.
          *
-         * If Regina cannot interpret the given string, this will be
-         * left as the empty link.
+         * \exception InvalidArgument Regina could not interpret the given
+         * string as representing a link using any of the supported string
+         * types.
          *
          * @param description a string that describes a knot or link.
          */
@@ -1025,6 +1018,56 @@ class Link : public PacketData<Link>, public Output<Link> {
          * connected.
          */
         bool connected(const Crossing* a, const Crossing* b) const;
+
+        /**
+         * Determines if this link diagram is combinatorially identical to the
+         * given link diagram.
+         *
+         * Here "identical" means that:
+         *
+         * - the link diagrams have the same number of crossings and the
+         *   same number of components,
+         *
+         * - the same numbered crossings are positive and negative in both
+         *   diagrams;
+         *
+         * - the same pairs of numbered crossings have their
+         *   under/over-strands connected, with the same orientations;
+         *
+         * - for each \a i, the starting strand for the <i>th</i> component
+         *   is the same (under/over) strand of the same numbered crossing
+         *   in both diagrams.
+         *
+         * @param other the link diagram to compare with this.
+         * @return \c true if and only if the two link diagrams are
+         * combinatorially identical.
+         */
+        bool operator == (const Link& other) const;
+
+        /**
+         * Determines if this link diagram is not combinatorially identical
+         * to the given link diagram.
+         *
+         * Here "identical" means that:
+         *
+         * - the link diagrams have the same number of crossings and the
+         *   same number of components,
+         *
+         * - the same numbered crossings are positive and negative in both
+         *   diagrams;
+         *
+         * - the same pairs of numbered crossings have their
+         *   under/over-strands connected, with the same orientations;
+         *
+         * - for each \a i, the starting strand for the <i>th</i> component
+         *   is the same (under/over) strand of the same numbered crossing
+         *   in both diagrams.
+         *
+         * @param other the link diagram to compare with this.
+         * @return \c true if and only if the two link diagrams are
+         * not combinatorially identical.
+         */
+        bool operator != (const Link& other) const;
 
         /*@}*/
         /**
@@ -1892,12 +1935,11 @@ class Link : public PacketData<Link>, public Output<Link> {
          * action should avoid expensive operations where possible (otherwise
          * it will become a serialisation bottleneck in the multithreading).
          *
-         * \pre This link has at most one component (i.e., it is empty
-         * or it is a knot).
+         * \pre This link has precisely one component (i.e., it is a knot).
          *
-         * \exception FailedPrecondition this link has more than one component.
-         * If a progress tracker was passed, it will be marked as finished
-         * before the exception is thrown.
+         * \exception FailedPrecondition this link is empty or has more than
+         * one component.  If a progress tracker was passed, it will be marked
+         * as finished before the exception is thrown.
          *
          * \apinotfinal
          *
@@ -2050,26 +2092,19 @@ class Link : public PacketData<Link>, public Output<Link> {
          * there will typically be no internal vertices; however, this
          * is not guaranteed.
          *
-         * Initially, the triangulation will be oriented.  In particular,
-         * each tetrahedron will be oriented according to a right-hand rule:
-         * the thumb of the right hand points from vertices 0 to 1, and
-         * the fingers curl around to point from vertices 2 to 3.
+         * Initially, each tetrahedron will be oriented according to a
+         * right-hand rule: the thumb of the right hand points from vertices
+         * 0 to 1, and the fingers curl around to point from vertices 2 to 3.
+         * If you pass \a simplify as \c true, then Regina will attempt to
+         * simplify the triangulation to as few tetrahedra as possible:
+         * this may relabel the tetrahedra, though their orientations will
+         * be preserved.
          *
-         * What happens next depends upon the argument \a simplify:
+         * This is the same triangulation that would be produced by passing
+         * this link to the Triangulation<3> constructor.
          *
-         * - If you pass \a simplify as \c true, then Regina will attempt
-         *   to simplify the triangulation to as few tetrahedra as possible.
-         *   As a result, the orientation described above will be lost.
-         *
-         * - If you pass \a simplify as \c false, then Regina will leave the
-         *   triangulation as is.  This will preserve the orientation, but
-         *   it means that the triangulation will contain both ideal and
-         *   internal vertices (and, in general, far more tetrahedra
-         *   than are necessary).
-         *
-         * @param simplify \c true if and only if the triangulation of
-         * the complement should be simplified (thereby losing information
-         * about the orientation), as described above.
+         * @param simplify \c true if and only if the triangulation of the
+         * complement should be simplified to use as few tetrahedra as possible.
          * @return the complement of this link.
          */
         Triangulation<3> complement(bool simplify = true) const;
@@ -2505,15 +2540,6 @@ class Link : public PacketData<Link>, public Output<Link> {
 
         /*@}*/
         /**
-         * \name Packet Administration
-         */
-        /*@{*/
-
-        void writeTextShort(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
-
-        /*@}*/
-        /**
          * \name Exporting Links
          */
         /*@{*/
@@ -2624,10 +2650,12 @@ class Link : public PacketData<Link>, public Output<Link> {
            1 -2 3 -1 2 -3
            \endverbatim
          *
-         * Currently Regina only supports Gauss codes for knots (i.e., links
-         * with exactly one component).  If you attempt to create a classical
-         * Gauss code for a link with zero or multiple components, an empty
-         * string will be returned.
+         * Currently Regina only supports Gauss codes for knots, not
+         * empty or multiple component links.  If this link does not
+         * have precisely one component, then this routine will throw an
+         * exception.  It is possible that in future versions of Regina,
+         * Gauss codes will be expanded to cover all possible link diagrams
+         * (hence the choice of NotImplemented as the exception type).
          *
          * This routine formats the list of integers as a string.  The integers
          * will be separated by single spaces, and there will be no newlines.
@@ -2637,8 +2665,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * used here (a string).  There is also another variant of gauss()
          * that writes directly to an output stream.
          *
-         * @return a classical Gauss code as described above, or the empty
-         * string if this link has zero or multiple components.
+         * \exception NotImplemented This link is empty or has multiple
+         * components.
+         *
+         * @return a classical Gauss code as described above.
          */
         std::string gauss() const;
 
@@ -2653,9 +2683,11 @@ class Link : public PacketData<Link>, public Output<Link> {
          * in contrast, gauss() returns the same data in human-readable format
          * (as a string).
          *
-         * @return a classical Gauss code for this knot in machine-readable
-         * form, or the empty vector if this link has zero or multiple
+         * \exception NotImplemented This link is empty or has multiple
          * components.
+         *
+         * @return a classical Gauss code for this knot in machine-readable
+         * form.
          */
         std::vector<int> gaussData() const;
 
@@ -2673,6 +2705,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * See also gauss(), which returns the Gauss code as a
          * human-readable string, and gaussData(), which returns it
          * as a machine-readable sequence of integers.
+         *
+         * \exception NotImplemented This link is empty or has multiple
+         * components.
          *
          * \ifacespython Not present; instead use the variants
          * gauss() or gaussData() that take no arguments.
@@ -2717,10 +2752,12 @@ class Link : public PacketData<Link>, public Output<Link> {
            +>1 -<2 +>3 -<1 +>2 -<3
            \endverbatim
          *
-         * Currently Regina only supports Gauss codes for knots (i.e., links
-         * with exactly one component).  If you attempt to create an oriented
-         * Gauss code for a link with zero or multiple components, an empty
-         * string will be returned.
+         * Currently Regina only supports Gauss codes for knots, not
+         * empty or multiple component links.  If this link does not
+         * have precisely one component, then this routine will throw an
+         * exception.  It is possible that in future versions of Regina,
+         * Gauss codes will be expanded to cover all possible link diagrams
+         * (hence the choice of NotImplemented as the exception type).
          *
          * This routine joins the tokens together as a single string.  The
          * tokens will be separated by single spaces, and there will be no
@@ -2732,8 +2769,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * There is also another variant of orientedGauss() that writes
          * directly to an output stream.
          *
-         * @return an oriented Gauss code as described above, or the empty
-         * string if this is a link with zero or multiple components.
+         * \exception NotImplemented This link is empty or has multiple
+         * components.
+         *
+         * @return an oriented Gauss code as described above.
          */
         std::string orientedGauss() const;
 
@@ -2760,9 +2799,11 @@ class Link : public PacketData<Link>, public Output<Link> {
          * in contrast, orientedGauss() returns the same data in
          * human-readable format (as a string).
          *
-         * @return an oriented Gauss code for this knot in machine-readable
-         * form, or the empty vector if this link has zero or multiple
+         * \exception NotImplemented This link is empty or has multiple
          * components.
+         *
+         * @return an oriented Gauss code for this knot in machine-readable
+         * form.
          */
         std::vector<std::string> orientedGaussData() const;
 
@@ -2780,6 +2821,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * See also orientedGauss(), which returns the oriented Gauss code as
          * a human-readable string, and orientedGaussData(), which returns it
          * as a machine-readable sequence of tokens.
+         *
+         * \exception NotImplemented This link is empty or has multiple
+         * components.
          *
          * \ifacespython Not present; instead use the variants
          * orientedGauss() or orientedGaussData() that take no arguments.
@@ -2927,8 +2971,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          *   and replacing negative integers (-2,-4,-6,...) with upper-case
          *   letters (\c A,\c B,\c C,...).  This alphabetical variant
          *   can only be used for knots with 26 crossings or fewer; for
-         *   larger knots this routine will return the empty string if
-         *   the alphabetical variant is requested.
+         *   larger knots this routine will throw an exception if the
+         *   alphabetical variant is requested.
          *
          * As an example, you can describe the trefoil using numerical
          * Dowker-Thistlethwaite notation as:
@@ -2943,10 +2987,13 @@ class Link : public PacketData<Link>, public Output<Link> {
            bca
            \endverbatim
          *
-         * Currently Regina only supports Dowker-Thistlethwaite notation for
-         * knots (i.e., links with exactly one component).  If you attempt to
-         * generate Dowker-Thistlethwaite notation for a link with zero or
-         * multiple components, an empty string will be returned.
+         * Currently Regina only supports Dowker-Thistlethwaite codes for
+         * knots, not empty or multiple component links.  If this link does not
+         * have precisely one component, then this routine will throw an
+         * exception.  It is possible that in future versions of Regina,
+         * Dowker-Thistlethwaite codes will be expanded to cover all possible
+         * link diagrams (hence the choice of NotImplemented as the exception
+         * type).
          *
          * For numerical Dowker-Thistlethwaite notation, this routine will
          * format the list of integers as a string.  The integers will be
@@ -2960,12 +3007,12 @@ class Link : public PacketData<Link>, public Output<Link> {
          * variant of dt() that can write either the numerical or the
          * alphabetical variant directly to an output stream.
          *
+         * \exception NotImplemented Either this link is empty or has multiple
+         * components, or \a alpha is true and it has more than 26 crossings.
+         *
          * @param alpha \c true to use alphabetical notation, or \c false
          * (the default) to use numerical notation.
          * @return the Dowker-Thistlethwaite notation for this knot diagram.
-         * This routine will return the empty string if this link has zero or
-         * multiple components, or if \a alpha is \c true and the knot
-         * has more than 26 crossings.
          */
         std::string dt(bool alpha = false) const;
 
@@ -2985,9 +3032,11 @@ class Link : public PacketData<Link>, public Output<Link> {
          * in contrast, calling <tt>dt()</tt> returns the same integer
          * sequence in human-readable format (as a string).
          *
+         * \exception NotImplemented This link is empty or has multiple
+         * components.
+         *
          * @return the numerical Dowker-Thistlethwaite notation in
-         * machine-readable form, or the empty vector if this link has zero
-         * or multiple components.
+         * machine-readable form.
          */
         std::vector<int> dtData() const;
 
@@ -3010,6 +3059,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * or alphabetical variant of Dowker-Thistlethwaite notation as a
          * human-readable string, and dtData(), which exports the numerical
          * variant only as a machine-readable sequence of integers.
+         *
+         * \exception NotImplemented Either this link is empty or has multiple
+         * components, or \a alpha is true and it has more than 26 crossings.
          *
          * \ifacespython Not present; instead use the variants
          * dt(bool) or dtData() that take no arguments.
@@ -3225,8 +3277,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * Currently signatures are only implemented for knots, not
          * empty or multiple component links.  If this link does not
-         * have precisely one component, then this routine will return
-         * the empty string.
+         * have precisely one component, then this routine will throw an
+         * exception.  It is possible that in future versions of Regina,
+         * knot signatures will be expanded to cover all possible link
+         * diagrams (hence the choice of NotImplemented as the exception type).
          *
          * The signature is constructed entirely of printable characters,
          * and has length proportional to <tt>n log n</tt>, where \a n
@@ -3240,6 +3294,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * This routine runs in quadratic time.
          *
+         * \exception NotImplemented This link is empty or has multiple
+         * components.
+         *
          * @param useReflection \c true if the reflection of a knot diagram
          * should have the same signature as the original, or \c false
          * if these should be distinct (assuming the diagram is not symmetric
@@ -3252,6 +3309,25 @@ class Link : public PacketData<Link>, public Output<Link> {
          */
         std::string knotSig(bool useReflection = true, bool useReversal = true)
             const;
+
+        /**
+         * Writes a short text representation of this link to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this link to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
         /*@}*/
         /**
@@ -4014,10 +4090,16 @@ class Link : public PacketData<Link>, public Output<Link> {
          * sequence of 4-tuples of integers, defined by a pair of iterators.
          *
          * In this variant (the string variant), the integers may be
-         * separated by any blocks of non-digit characters, and the string
-         * may containin additional non-digit prefix or suffix characters
-         * (which will be ignored).  Thus the follow strings all
-         * describe the same sequence:
+         * separated by any combination of the following:
+         *
+         * - any whitespace;
+         * - commas;
+         * - open or close round brackets, square brackets and/or braces;
+         * - the special symbols \c PD, \c X, \c Xp, \c Xm and \c P, which are
+         *   used by other sources (such as the Knot Atlas), but which
+         *   are ignored here.
+         *
+         * Thus the follow strings all describe the same sequence:
          *
            \verbatim
            [[1, 5, 2, 4], [3, 1, 4, 6], [5, 3, 6, 2]]
@@ -4025,11 +4107,13 @@ class Link : public PacketData<Link>, public Output<Link> {
            1 5 2 4 3 1 4 6 5 3 6 2
            \endverbatim
          *
-         * Some sources (such as the Knot Atlas) describe special symbols
-         * such as \c Xp, \c Xm and \c P, which change the meaning of the
-         * tuples.  Regina does \e not recognise these special symbols;
-         * any letters that appear in the string will be treated as separating
-         * characters between the integers, and nothing more.
+         * The string may containin separators (as defined above) at the
+         * beginning and/or the end; these will be ignored.
+         *
+         * Note that some sources (again, such as the Knot Atlas) use the
+         * special symbols \c Xp, \c Xm and \c P to change the meaning of the
+         * tuples.  Regina does \e not attribute any meaning to these symbols,
+         * and will treat them as nothing more than separators.
          *
          * \warning If the link contains an unknotted loop that sits
          * completely above all other link components (in other words,
@@ -4515,35 +4599,9 @@ inline StrandRef Crossing::strand(int which) {
 }
 
 inline void Crossing::writeTextShort(std::ostream& out) const {
-    out << "crossing " << index();
-    if (sign_ == 1)
-        out << " (+)";
-    else
-        out << " (-)";
-}
-
-inline void Crossing::writeTextLong(std::ostream& out) const {
-    out << "Crossing " << index();
-    if (sign_ == 1)
-        out << " (+)";
-    else
-        out << " (-)";
-    out << '\n';
-
-    /*
-    if (sign_ == 1) {
-        out << "--\ /-->  " << next_[0] << '\n';
-        out << "   \\n"
-        out << "--/ \-->  " << next_[1] << std::endl;
-    } else {
-        out << "--\ /-->  " << next_[1] << '\n';
-        out << "   /\n"
-        out << "--/ \-->  " << next_[0] << std::endl;
-    }
-    */
-
-    out << prev_[1] << "  ->  over  ->  " << next_[1] << '\n';
-    out << prev_[0] << "  ->  under  ->  " << next_[0] << std::endl;
+    out << "Crossing " << index() << " (" << (sign_ == 1 ? '+' : '-')
+        << "): over " << prev_[1] << " -+-> " << next_[1]
+        << ", under " << prev_[0] << " -+-> " << next_[0];
 }
 
 inline Crossing::Crossing() : sign_(0) {
@@ -4597,6 +4655,14 @@ inline auto Link::components() const {
 inline StrandRef Link::strand(int id) const {
     return (id >= 0 ? StrandRef(crossings_[id >> 1]->strand(id & 1)) :
         StrandRef());
+}
+
+inline bool Link::operator != (const Link& other) const {
+    return ! ((*this) == other);
+}
+
+inline Triangulation<3> Link::complement(bool simplify) const {
+    return Triangulation<3>(*this, simplify);
 }
 
 inline long Link::writhe() const {
@@ -4672,7 +4738,7 @@ inline bool Link::rewrite(int height, unsigned nThreads,
         if (tracker)
             tracker->setFinished();
         throw FailedPrecondition(
-            "rewrite() requires a link with at most one component");
+            "rewrite() requires a link with exactly one component");
     }
 
     // Use RetriangulateActionTraits to deduce whether the given action takes
@@ -4697,6 +4763,11 @@ inline bool Link::rewrite(int height, unsigned nThreads,
 
 inline bool Link::simplifyExhaustive(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker) {
+    if (isEmpty()) {
+        if (tracker)
+            tracker->setFinished();
+        return false;
+    }
     return rewrite(height, nThreads, tracker,
         [](Link&& alt, Link& original, size_t minCrossings) {
             if (alt.size() < minCrossings) {

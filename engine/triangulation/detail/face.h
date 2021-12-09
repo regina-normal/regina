@@ -135,6 +135,10 @@ class FaceEmbeddingBase :
          * Returns the top-dimensional simplex in which the underlying
          * <i>subdim</i>-face of the triangulation is contained.
          *
+         * If the triangulation dimension \a dim is at most 4, then you can
+         * also access this simplex through a dimension-specific alias
+         * (e.g., tetrahedron() in the case \a dim = 3).
+         *
          * @return the top-dimensional simplex.
          */
         Simplex<dim>* simplex() const;
@@ -144,6 +148,10 @@ class FaceEmbeddingBase :
          * This identifies which face of the top-dimensional simplex
          * simplex() refers to the underlying <i>subdim</i>-face of the
          * triangulation.
+         *
+         * If the face dimension \a subdim is at most 4, then you can also
+         * access this face number through a dimension-specific alias
+         * (e.g., edge() in the case \a subdim = 1).
          *
          * @return the corresponding face number of the top-dimensional simplex.
          * This will be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
@@ -300,8 +308,7 @@ template <int dim, int subdim>
 class FaceBase :
         public FaceNumbering<dim, subdim>,
         public MarkedElement,
-        public alias::FaceOfSimplex<FaceBase<dim, subdim>, dim, subdim - 1>,
-        public Output<Face<dim, subdim>> {
+        public ShortOutput<Face<dim, subdim>> {
     static_assert(dim >= 2, "Face requires dimension >= 2.");
 
     public:
@@ -746,6 +753,51 @@ class FaceBase :
         Face<dim, lowerdim>* face(int face) const;
 
         /**
+         * A dimension-specific alias for face<0>().
+         *
+         * This alias is available for all facial dimensions \a subdim.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 0>* vertex(int i) const;
+
+        /**
+         * A dimension-specific alias for face<1>().
+         *
+         * This alias is available for all facial dimensions \a subdim.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 1>* edge(int i) const;
+
+        /**
+         * A dimension-specific alias for face<2>().
+         *
+         * This alias is available for facial dimensions \a subdim &ge; 3.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 2>* triangle(int i) const;
+
+        /**
+         * A dimension-specific alias for face<3>().
+         *
+         * This alias is available for facial dimensions \a subdim &ge; 4.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 3>* tetrahedron(int i) const;
+
+        /**
+         * A dimension-specific alias for face<4>().
+         *
+         * This alias is available for facial dimensions \a subdim &ge; 5.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 4>* pentachoron(int i) const;
+
+        /**
          * Examines the given <i>lowerdim</i>-dimensional subface of this face,
          * and returns the mapping between the underlying <i>lowerdim</i>-face
          * of the triangulation and the individual vertices of this face.
@@ -803,6 +855,51 @@ class FaceBase :
         Perm<dim + 1> faceMapping(int face) const;
 
         /**
+         * A dimension-specific alias for faceMapping<0>().
+         *
+         * This alias is available for all facial dimensions \a subdim.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> vertexMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<1>().
+         *
+         * This alias is available for all facial dimensions \a subdim.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> edgeMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<2>().
+         *
+         * This alias is available for facial dimensions \a subdim &ge; 3.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> triangleMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<3>().
+         *
+         * This alias is available for facial dimensions \a subdim &ge; 4.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> tetrahedronMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<4>().
+         *
+         * This alias is available for facial dimensions \a subdim &ge; 5.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> pentachoronMapping(int face) const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -815,20 +912,6 @@ class FaceBase :
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * The class Face<dim, subdim> may safely override this function,
-         * since the output routines cast down to Face<dim, subdim>
-         * before calling it.
-         *
-         * \ifacespython Not present; use detail() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
         // Make this class non-copyable.
         FaceBase(const FaceBase&) = delete;
@@ -1024,6 +1107,37 @@ inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
 }
 
 template <int dim, int subdim>
+inline Face<dim, 0>* FaceBase<dim, subdim>::vertex(int i) const {
+    return face<0>(i);
+}
+
+template <int dim, int subdim>
+inline Face<dim, 1>* FaceBase<dim, subdim>::edge(int i) const {
+    return face<1>(i);
+}
+
+template <int dim, int subdim>
+inline Face<dim, 2>* FaceBase<dim, subdim>::triangle(int i) const {
+    static_assert(subdim >= 3, "triangle() is only available "
+        "for faces of dimension >= 3.");
+    return face<2>(i);
+}
+
+template <int dim, int subdim>
+inline Face<dim, 3>* FaceBase<dim, subdim>::tetrahedron(int i) const {
+    static_assert(subdim >= 4, "tetrahedron() is only available "
+        "for faces of dimension >= 4.");
+    return face<3>(i);
+}
+
+template <int dim, int subdim>
+inline Face<dim, 4>* FaceBase<dim, subdim>::pentachoron(int i) const {
+    static_assert(subdim >= 5, "pentachoron() is only available "
+        "for faces of dimension >= 5.");
+    return face<4>(i);
+}
+
+template <int dim, int subdim>
 template <int lowerdim>
 Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
     // Let S be the dim-simplex corresponding to the first embedding,
@@ -1058,25 +1172,90 @@ Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
 }
 
 template <int dim, int subdim>
+inline Perm<dim + 1> FaceBase<dim, subdim>::vertexMapping(int face) const {
+    return faceMapping<0>(face);
+}
+
+template <int dim, int subdim>
+inline Perm<dim + 1> FaceBase<dim, subdim>::edgeMapping(int face) const {
+    return faceMapping<1>(face);
+}
+
+template <int dim, int subdim>
+inline Perm<dim + 1> FaceBase<dim, subdim>::triangleMapping(int face) const {
+    static_assert(subdim >= 3, "triangleMapping() is only available "
+        "for faces of dimension >= 3.");
+    return faceMapping<2>(face);
+}
+
+template <int dim, int subdim>
+inline Perm<dim + 1> FaceBase<dim, subdim>::tetrahedronMapping(int face) const {
+    static_assert(subdim >= 4, "tetrahedronMapping() is only available "
+        "for faces of dimension >= 4.");
+    return faceMapping<3>(face);
+}
+
+template <int dim, int subdim>
+inline Perm<dim + 1> FaceBase<dim, subdim>::pentachoronMapping(int face) const {
+    static_assert(subdim >= 5, "pentachoronMapping() is only available "
+        "for faces of dimension >= 5.");
+    return faceMapping<4>(face);
+}
+
+template <int dim, int subdim>
 inline FaceBase<dim, subdim>::FaceBase(Component<dim>* component) :
         component_(component), boundaryComponent_(nullptr) {
 }
 
 template <int dim, int subdim>
-inline void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
-    out << (isBoundary() ? "Boundary " : "Internal ") << Strings<subdim>::face;
+void FaceBase<dim, subdim>::writeTextShort(std::ostream& out) const {
+    out << Strings<subdim>::Face << ' ' << index() << ", ";
+    if constexpr (dim == 3 && subdim == 0) {
+        // Identify vertex links in dimension 3 in more detail.
+        switch (static_cast<const Face<dim, subdim>*>(this)->linkType()) {
+            case Face<dim, subdim>::SPHERE:
+                out << "internal"; break;
+            case Face<dim, subdim>::DISC:
+                out << "boundary"; break;
+            case Face<dim, subdim>::TORUS:
+                out << "torus cusp"; break;
+            case Face<dim, subdim>::KLEIN_BOTTLE:
+                out << "Klein bottle cusp"; break;
+            case Face<dim, subdim>::NON_STANDARD_CUSP:
+                out << "ideal"; break;
+            case Face<dim, subdim>::INVALID:
+                out << "invalid"; break;
+        }
+    } else if constexpr (dim == 4 && subdim == 0) {
+        // Identify ideal vertices in dimension 4.
+        if (! isValid())
+            out << "invalid";
+        else if (static_cast<const Face<dim, subdim>*>(this)->isIdeal())
+            out << "ideal";
+        else if (isBoundary())
+            out << "boundary";
+        else
+            out << "internal";
+    } else {
+        if (! isValid())
+            out << "invalid";
+        else if (isBoundary())
+            out << "boundary";
+        else
+            out << "internal";
+    }
     if (subdim < dim - 1)
-        out << " of degree " << degree();
-}
+        out << ", degree " << degree();
+    out << ": ";
 
-template <int dim, int subdim>
-void FaceBase<dim, subdim>::writeTextLong(std::ostream& out) const {
-    static_cast<const Face<dim, subdim>*>(this)->writeTextShort(out);
-    out << std::endl;
-
-    out << "Appears as:" << std::endl;
-    for (const auto& emb : *this)
-        out << "  " << emb << std::endl;
+    bool first = true;
+    for (const auto& emb : *this) {
+        if (first)
+            first = false;
+        else
+            out << ", ";
+        out << emb;
+    }
 }
 
 } // namespace regina::detail

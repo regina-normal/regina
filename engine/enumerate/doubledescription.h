@@ -196,7 +196,7 @@ class DoubleDescription {
         template <class IntegerType, class BitmaskType>
         class RaySpec : private Vector<IntegerType> {
             private:
-                using Vector<IntegerType>::elements;
+                using Vector<IntegerType>::elts_;
 
                 BitmaskType facets_;
                     /**< A bitmask listing which original facets this ray
@@ -403,14 +403,14 @@ template <class IntegerType, class BitmaskType>
 inline DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
         const RaySpec<IntegerType, BitmaskType>& trunc) :
         Vector<IntegerType>(trunc.size() - 1), facets_(trunc.facets_) {
-    std::copy(trunc.elements + 1, trunc.end, elements);
+    std::copy(trunc.elts_ + 1, trunc.end_, elts_);
 }
 
 template <class IntegerType, class BitmaskType>
 inline int DoubleDescription::RaySpec<IntegerType, BitmaskType>::sign() const {
-    if (*elements < 0)
+    if (*elts_ < 0)
         return -1;
-    if (*elements > 0)
+    if (*elts_ > 0)
         return 1;
     return 0;
 }

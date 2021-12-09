@@ -44,6 +44,7 @@
 
 using pybind11::overload_cast;
 using regina::Isomorphism;
+using regina::MatrixInt;
 using regina::Triangulation;
 
 void addTriangulation4(pybind11::module_& m) {
@@ -60,8 +61,9 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>())
         .def("simplices", &Triangulation<4>::simplices,
             pybind11::keep_alive<0, 1>())
-        .def("pentachoron",
-            overload_cast<size_t>(&Triangulation<4>::pentachoron),
+        // Use a C-style cast because GCC struggles with the overload_cast here:
+        .def("pentachoron", (regina::Simplex<4>* (Triangulation<4>::*)(size_t))(
+            &Triangulation<4>::pentachoron),
             pybind11::return_value_policy::reference_internal)
         .def("simplex",
             overload_cast<size_t>(&Triangulation<4>::simplex),
@@ -135,11 +137,14 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<4>::edge,
             pybind11::return_value_policy::reference_internal)
-        .def("triangle", &Triangulation<4>::triangle,
+        // Use C-style casts because GCC struggles with overload_cast here:
+        .def("triangle", (regina::Face<4, 2>* (Triangulation<4>::*)(size_t))(
+            &Triangulation<4>::triangle),
             pybind11::return_value_policy::reference_internal)
-        .def("tetrahedron", &Triangulation<4>::tetrahedron,
+        .def("tetrahedron", (regina::Face<4, 3>* (Triangulation<4>::*)(size_t))(
+            &Triangulation<4>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
-        .def("isIdenticalTo", &Triangulation<4>::isIdenticalTo)
+        .def("isIdenticalTo", &Triangulation<4>::operator ==) // deprecated
         .def("isIsomorphicTo", &Triangulation<4>::isIsomorphicTo)
         .def("makeCanonical", &Triangulation<4>::makeCanonical)
         .def("isContainedIn", &Triangulation<4>::isContainedIn)
@@ -183,12 +188,18 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("simplifiedFundamentalGroup",
             &Triangulation<4>::simplifiedFundamentalGroup)
-        .def("homology", &Triangulation<4>::homology,
-            pybind11::return_value_policy::reference_internal)
-        .def("homologyH1", &Triangulation<4>::homologyH1,
-            pybind11::return_value_policy::reference_internal)
-        .def("homologyH2", &Triangulation<4>::homologyH2,
-            pybind11::return_value_policy::reference_internal)
+        .def("homology",
+            (regina::AbelianGroup (Triangulation<4>::*)(int) const)(
+            &Triangulation<4>::homology),
+            pybind11::arg("k") = 1)
+        .def("homologyH1", &Triangulation<4>::homology<1>) // deprecated
+        .def("homologyH2", &Triangulation<4>::homology<2>) // deprecated
+        .def("markedHomology",
+            (regina::MarkedAbelianGroup (Triangulation<4>::*)(int) const)(
+            &Triangulation<4>::markedHomology),
+            pybind11::arg("k") = 1)
+        .def("boundaryMap", (MatrixInt (Triangulation<4>::*)(int) const)(
+            &Triangulation<4>::boundaryMap))
         .def("orient", &Triangulation<4>::orient)
         .def("reflect", &Triangulation<4>::reflect)
         .def("triangulateComponents", &Triangulation<4>::triangulateComponents)
@@ -288,7 +299,8 @@ void addTriangulation4(pybind11::module_& m) {
         .def_readonly_static("dimension", &Triangulation<4>::dimension)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::packet_eq_operators(c);
+    regina::python::add_packet_data(c);
 
     regina::python::addListView<decltype(Triangulation<4>().vertices())>(m);
     regina::python::addListView<decltype(Triangulation<4>().edges())>(m);

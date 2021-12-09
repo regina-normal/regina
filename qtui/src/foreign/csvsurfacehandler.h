@@ -61,7 +61,7 @@ class CSVSurfaceHandler : public PacketExporter {
          * PacketExporter overrides:
          */
         PacketFilter* canExport() const override;
-        bool exportData(std::shared_ptr<regina::Packet> data,
+        bool exportData(const regina::Packet& data,
             const QString& fileName, QWidget* parentWidget) const override;
         QString defaultExtension(const regina::Packet& data) const override;
 

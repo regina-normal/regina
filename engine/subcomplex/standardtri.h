@@ -244,7 +244,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          *
          * This may be reimplemented by subclasses, but the parent
          * StandardTriangulation class offers a reasonable default
-         * implementation based on writeName().
+         * implementation based on writeTextShort().
          *
          * \ifacespython Not present; use detail() instead.
          *
@@ -353,7 +353,7 @@ inline void StandardTriangulation::writeTextShort(std::ostream& out) const {
 }
 
 inline void StandardTriangulation::writeTextLong(std::ostream& out) const {
-    writeName(out);
+    writeTextShort(out);
     out << '\n';
 }
 

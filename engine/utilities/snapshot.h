@@ -121,7 +121,7 @@ class SnapshotWriteError : public std::exception {
  *   used to be.
  *
  * - Each snapshot \a S is reference counted: when the last reference to it is
- *   destroyed, then \S is also destroyed (along with the deep copy of the
+ *   destroyed, then \a S is also destroyed (along with the deep copy of the
  *   original image, if one was ever made).
  *
  * Regarding access to the image:

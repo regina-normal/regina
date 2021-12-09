@@ -134,15 +134,13 @@ void Packet::insertChildFirst(std::shared_ptr<Packet> child) {
     child->prevTreeSibling_.reset();
     child->nextTreeSibling_ = firstTreeChild_;
 
-    if (firstTreeChild_) {
+    if (firstTreeChild_)
         firstTreeChild_->prevTreeSibling_ = child;
-        firstTreeChild_ = child;
-    } else {
-        firstTreeChild_ = child;
+    else
         lastTreeChild_ = child;
-    }
+    firstTreeChild_ = std::move(child);
 
-    fireEvent(&PacketListener::childWasAdded, *child);
+    fireEvent(&PacketListener::childWasAdded, *firstTreeChild_);
 }
 
 void Packet::insertChildLast(std::shared_ptr<Packet> child) {
@@ -152,33 +150,36 @@ void Packet::insertChildLast(std::shared_ptr<Packet> child) {
     child->prevTreeSibling_ = lastTreeChild_;
     child->nextTreeSibling_.reset();
 
-    if (lastTreeChild_) {
+    if (lastTreeChild_)
         lastTreeChild_->nextTreeSibling_ = child;
-        lastTreeChild_ = child;
-    } else {
+    else
         firstTreeChild_ = child;
-        lastTreeChild_ = child;
-    }
+    lastTreeChild_ = std::move(child);
 
-    fireEvent(&PacketListener::childWasAdded, *child);
+    fireEvent(&PacketListener::childWasAdded, *lastTreeChild_);
 }
 
 void Packet::insertChildAfter(std::shared_ptr<Packet> newChild,
         std::shared_ptr<Packet> prevChild) {
+    if (! prevChild) {
+        insertChildFirst(newChild);
+        return;
+    }
+
     fireEvent(&PacketListener::childToBeAdded, *newChild);
 
-    if (! prevChild)
-        insertChildFirst(newChild);
-    else {
-        newChild->treeParent_ = weak_from_this();
-        newChild->nextTreeSibling_ = prevChild->nextTreeSibling_;
-        newChild->prevTreeSibling_ = prevChild;
-        prevChild->nextTreeSibling_ = newChild;
-        if (newChild->nextTreeSibling_)
-            newChild->nextTreeSibling_->prevTreeSibling_ = newChild;
-        else
-            lastTreeChild_ = newChild;
-    }
+    // We could be fancy and reorder things so that we std::move() the
+    // shared pointer newChild, but this will decrease readability and
+    // this routine is rarely used anyway.
+
+    newChild->treeParent_ = weak_from_this();
+    newChild->nextTreeSibling_ = prevChild->nextTreeSibling_;
+    newChild->prevTreeSibling_ = prevChild;
+    prevChild->nextTreeSibling_ = newChild;
+    if (newChild->nextTreeSibling_)
+        newChild->nextTreeSibling_->prevTreeSibling_ = newChild;
+    else
+        lastTreeChild_ = newChild;
 
     fireEvent(&PacketListener::childWasAdded, *newChild);
 }
@@ -211,7 +212,7 @@ void Packet::makeOrphan() {
     parent->fireEvent(&PacketListener::childWasRemoved, *this);
 }
 
-void Packet::reparent(std::shared_ptr<Packet> newParent, bool first) {
+void Packet::reparent(const std::shared_ptr<Packet>& newParent, bool first) {
     if (! newParent) {
         makeOrphan();
         return;
@@ -230,7 +231,7 @@ void Packet::reparent(std::shared_ptr<Packet> newParent, bool first) {
         newParent->insertChildLast(me);
 }
 
-void Packet::transferChildren(std::shared_ptr<Packet> newParent) {
+void Packet::transferChildren(const std::shared_ptr<Packet>& newParent) {
     if (! firstTreeChild_)
         return;
 
@@ -611,7 +612,7 @@ std::shared_ptr<Packet> Packet::cloneAsSibling(bool cloneDescendants,
         parent->insertChildAfter(ans,
             const_cast<Packet*>(this)->shared_from_this());
     if (cloneDescendants)
-        internalCloneDescendants(ans);
+        internalCloneDescendants(*ans);
     return ans;
 }
 
@@ -645,12 +646,12 @@ bool Packet::save(std::ostream& s, bool compressed, FileFormat format) const {
     return true;
 }
 
-void Packet::internalCloneDescendants(std::shared_ptr<Packet> parent) const {
+void Packet::internalCloneDescendants(Packet& parent) const {
     for (auto child = firstTreeChild_; child; child = child->nextTreeSibling_) {
         auto clone = child->internalClonePacket();
         clone->setLabel(child->label_);
-        parent->insertChildLast(clone);
-        child->internalCloneDescendants(clone);
+        parent.insertChildLast(clone);
+        child->internalCloneDescendants(*clone);
     }
 }
 

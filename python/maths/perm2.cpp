@@ -115,7 +115,7 @@ void addPerm2(pybind11::module_& m) {
         .def_readonly_static("Sn_1", &Perm2_S1_arr)
     ;
     Perm2_contract<3>::add_bindings(c);
-    regina::python::add_output_basic(c, true /* __repr__ */);
+    regina::python::add_output_basic(c);
     regina::python::add_eq_operators(c);
 }
 

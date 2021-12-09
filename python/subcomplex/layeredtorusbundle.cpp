@@ -39,7 +39,7 @@
 using regina::LayeredTorusBundle;
 
 void addLayeredTorusBundle(pybind11::module_& m) {
-    pybind11::class_<LayeredTorusBundle, regina::StandardTriangulation>
+    auto c = pybind11::class_<LayeredTorusBundle, regina::StandardTriangulation>
             (m, "LayeredTorusBundle")
         .def(pybind11::init<const LayeredTorusBundle&>())
         .def("swap", &LayeredTorusBundle::swap)
@@ -53,5 +53,6 @@ void addLayeredTorusBundle(pybind11::module_& m) {
         .def_static("isLayeredTorusBundle", // deprecated
             &LayeredTorusBundle::recognise)
     ;
+    regina::python::add_output(c);
 }
 

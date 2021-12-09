@@ -130,11 +130,11 @@ QWidget* Tri4HomologyFundUI::getInterface() {
 void Tri4HomologyFundUI::refresh() {
     if (tri->isValid()) {
         if (ReginaPrefSet::global().displayUnicode) {
-            H1->setText(tri->homologyH1().utf8().c_str());
-            H2->setText(tri->homologyH2().utf8().c_str());
+            H1->setText(tri->homology<1>().utf8().c_str());
+            H2->setText(tri->homology<2>().utf8().c_str());
         } else {
-            H1->setText(tri->homologyH1().str().c_str());
-            H2->setText(tri->homologyH2().str().c_str());
+            H1->setText(tri->homology<1>().str().c_str());
+            H2->setText(tri->homology<2>().str().c_str());
         }
     } else {
         QString msg(QObject::tr("Invalid Triangulation"));

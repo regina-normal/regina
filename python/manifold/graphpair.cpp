@@ -41,7 +41,7 @@ using regina::Matrix2;
 using regina::SFSpace;
 
 void addGraphPair(pybind11::module_& m) {
-    pybind11::class_<GraphPair, regina::Manifold>(m, "GraphPair")
+    auto c = pybind11::class_<GraphPair, regina::Manifold>(m, "GraphPair")
         .def(pybind11::init<const SFSpace&, const SFSpace&,
             long, long, long, long>())
         .def(pybind11::init<const SFSpace&, const SFSpace&, const Matrix2&>())
@@ -50,6 +50,11 @@ void addGraphPair(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &GraphPair::matchingReln,
             pybind11::return_value_policy::reference_internal)
+        .def("swap", &GraphPair::swap)
     ;
+    regina::python::add_eq_operators(c);
+    regina::python::add_output(c);
+
+    m.def("swap", (void(*)(GraphPair&, GraphPair&))(regina::swap));
 }
 

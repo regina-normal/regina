@@ -36,43 +36,26 @@
 namespace regina {
 
 AbelianGroup Handlebody::homology() const {
-    AbelianGroup ans;
-    if (nHandles)
-        ans.addRank(nHandles);
-    return ans;
+    return AbelianGroup(genus_);
 }
 
 std::ostream& Handlebody::writeName(std::ostream& out) const {
-    if (nHandles == 0)
+    if (genus_ == 0)
         out << "B3";
-    else if (nHandles == 1) {
-        if (orientable)
-            out << "B2 x S1";
-        else
-            out << "B2 x~ S1";
-    } else {
-        if (orientable)
-            out << "Handle-Or(" << nHandles << ')';
-        else
-            out << "Handle-Nor(" << nHandles << ')';
-    }
+    else if (genus_ == 1)
+        out << "B2 x S1";
+    else
+        out << "Genus " << genus_ << " handlebody";
     return out;
 }
 
 std::ostream& Handlebody::writeTeXName(std::ostream& out) const {
-    if (nHandles == 0)
+    if (genus_ == 0)
         out << "B^3";
-    else if (nHandles == 1) {
-        if (orientable)
-            out << "B^2 \\times S^1";
-        else
-            out << "B^2 \\twisted S^1";
-    } else {
-        if (orientable)
-            out << "\\mathit{Handle-Or}(" << nHandles << ')';
-        else
-            out << "\\mathit{Handle-Nor}(" << nHandles << ')';
-    }
+    else if (genus_ == 1)
+        out << "B^2 \\times S^1";
+    else
+        out << "\\mathit{Handlebody}(" << genus_ << ')';
     return out;
 }
 

@@ -68,7 +68,7 @@ DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
             facets_.set(i, true);
 
     for (i = 0; i < Vector<IntegerType>::size(); ++i)
-        elements[i] = subspace.entry(hypOrder[i], axis);
+        elts_[i] = subspace.entry(hypOrder[i], axis);
 }
 
 template <class IntegerType, class BitmaskType>
@@ -77,11 +77,11 @@ DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
         const RaySpec<IntegerType, BitmaskType>& second) :
         Vector<IntegerType>(second.size() - 1), facets_(second.facets_) {
     for (size_t i = 0; i < Vector<IntegerType>::size(); ++i)
-        elements[i] = second.elements[i + 1] * (*first.elements) -
-            first.elements[i + 1] * (*second.elements);
+        elts_[i] = second.elts_[i + 1] * (*first.elts_) -
+            first.elts_[i + 1] * (*second.elts_);
     Vector<IntegerType>::scaleDown();
 
-    if (*first.elements < 0)
+    if (*first.elts_ < 0)
         Vector<IntegerType>::negate();
 
     // Compute the new set of facets.
@@ -209,7 +209,7 @@ void DoubleDescription::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
     static_assert(
-        IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
+        IsReginaArbitraryPrecisionInteger<typename RayClass::value_type>::value,
         "DoubleDescription::enumerate() requires the RayClass "
         "template parameter to be equal to or derived from Vector<T>, "
         "where T is one of Regina's arbitrary precision integer types.");
@@ -261,7 +261,7 @@ template <class RayClass, class BitmaskType, typename Action>
 void DoubleDescription::enumerateUsingBitmask(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
-    using IntegerType = typename RayClass::Element;
+    using IntegerType = typename RayClass::value_type;
 
     // Get the dimension of the entire space in which we are working.
     unsigned long dim = subspace.columns();

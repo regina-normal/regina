@@ -117,7 +117,7 @@ namespace {
     QRegExp reSignature(R"(^([\(\)\.,;:\|\-A-Za-z]+)$)");
 }
 
-Tri3Creator::Tri3Creator() {
+Tri3Creator::Tri3Creator(ReginaMain*) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -316,7 +316,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        auto ans = regina::makePacket<Triangulation<3>>();
+        auto ans = regina::make_packet<Triangulation<3>>();
         ans->setLabel("3-D triangulation");
         return ans;
     } else if (typeId == TRI_LAYERED_LENS_SPACE) {
@@ -352,7 +352,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         std::ostringstream s;
         s << "L(" << p << ',' << q << ')';
 
-        return regina::makePacket(Example<3>::lens(p, q), s.str());
+        return regina::make_packet(Example<3>::lens(p, q), s.str());
     } else if (typeId == TRI_LAYERED_SOLID_TORUS) {
         if (! reLSTParams.exactMatch(lstParams->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -399,7 +399,8 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         std::ostringstream s;
         s << "LST(" << param[0] << ',' << param[1] << ',' << param[2] << ')';
 
-        return regina::makePacket(Example<3>::lst(param[0], param[1]), s.str());
+        return regina::make_packet(Example<3>::lst(param[0], param[1]),
+            s.str());
     } else if (typeId == TRI_SFS_SPHERE) {
         if (! reSFSAllParams.exactMatch(sfsParams->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -472,7 +473,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
 
         // Note: Our SFS is over the sphere, and SFSpace::construct()
         // is implemented for all such manifolds.
-        return regina::makePacket(sfs.construct(), sfs.structure());
+        return regina::make_packet(sfs.construct(), sfs.structure());
     } else if (typeId == TRI_ISOSIG) {
         if (! reIsoSig.exactMatch(isoSig->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -490,7 +491,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
 
         std::string sig = reIsoSig.cap(1).toUtf8().constData();
         try {
-            return regina::makePacket(Triangulation<3>::fromIsoSig(sig), sig);
+            return regina::make_packet(Triangulation<3>::fromIsoSig(sig), sig);
         } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("I could not interpret the given "
@@ -517,7 +518,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
 
         std::string dehydString = reDehydration.cap(1).toUtf8().constData();
         try {
-            return regina::makePacket(Triangulation<3>::rehydrate(dehydString),
+            return regina::make_packet(Triangulation<3>::rehydrate(dehydString),
                 dehydString);
         } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget, 
@@ -548,7 +549,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
 
         std::string sigString = reSignature.cap(1).toUtf8().constData();
         try {
-            return regina::makePacket(
+            return regina::make_packet(
                 regina::Signature::parse(sigString).triangulate(), sigString);
         } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget, 

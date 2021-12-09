@@ -48,7 +48,7 @@ void addManifold(pybind11::module_& m) {
         .def("structure", &Manifold::structure)
         .def("construct", &Manifold::construct)
         .def("homology", &Manifold::homology)
-        .def("homologyH1", &Manifold::homologyH1)
+        .def("homologyH1", &Manifold::homology) // deprecated
         .def("isHyperbolic", &Manifold::isHyperbolic)
         // We cannot bind the < operator in the normal way:
         // see https://github.com/pybind/pybind11/issues/1487 for details.
@@ -56,7 +56,10 @@ void addManifold(pybind11::module_& m) {
             return lhs < rhs;
         })
     ;
-    regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    // Leave the output routines for subclasses to wrap, since __repr__
+    // will include the (derived) class name.
+    // Also leave the equality operators for subclasses to wrap, since
+    // each subclass of Manifold provides its own custom == and != operators.
+    regina::python::no_eq_operators(c);
 }
 

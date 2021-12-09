@@ -70,7 +70,7 @@ void addAngleStructures(pybind11::module_& m) {
             // This is deprecated, so we reimplement it here ourselves.
             // This means we can't use the progress tracker variant, which
             // requires threading code internal to the AngleStructures class.
-            auto ans = regina::makePacket<AngleStructures>(std::in_place,
+            auto ans = regina::make_packet<AngleStructures>(std::in_place,
                 owner, tautOnly);
             if (auto p = owner.packet())
                 p->insertChildLast(ans);
@@ -79,7 +79,7 @@ void addAngleStructures(pybind11::module_& m) {
             pybind11::arg("tautOnly") = false)
         .def_static("enumerateTautDD", [](Triangulation<3>& owner) {
             // This is deprecated, so we reimplement it here ourselves.
-            auto ans = regina::makePacket<AngleStructures>(std::in_place,
+            auto ans = regina::make_packet<AngleStructures>(std::in_place,
                 owner, true, regina::AS_ALG_DD);
             if (auto p = owner.packet())
                 p->insertChildLast(ans);
@@ -87,7 +87,8 @@ void addAngleStructures(pybind11::module_& m) {
         })
     ;
     regina::python::add_output(l);
-    regina::python::add_eq_operators(l);
+    regina::python::packet_eq_operators(l);
+    regina::python::add_packet_data(l);
 
     auto wrap = regina::python::add_packet_wrapper<AngleStructures>(
         m, "PacketOfAngleStructures");

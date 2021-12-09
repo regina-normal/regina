@@ -745,32 +745,36 @@ class SFSpace : public Manifold {
         std::optional<LensSpace> isLensSpace() const;
 
         /**
-         * Determines whether this and the given structure contain
-         * precisely the same representations of precisely the same
-         * Seifert fibred spaces.
+         * Determines whether this and the given object contain precisely
+         * the same presentations of the same Seifert fibred space.
          *
-         * Note that this routine examines the particular representation of
-         * the Seifert fibred space.  Different Seifert parameters that give
-         * the same 3-manifold will be regarded as not equal by this routine.
+         * This routine does \e not test for homeomorphism.  Instead it
+         * compares the exact presentations, including the precise details of
+         * the base orbifold and the exact parameters of the exceptional fibres,
+         * and determines whether or not these \e presentations are identical.
+         * If you have two different presentations of the same Seifert fibred
+         * space, they will be treated as not equal by this routine.
          *
-         * @param compare the representation with which this will be compared.
-         * @return \c true if and only if this and the given Seifert
-         * fibred space representations are identical.
+         * @param compare the presentation with which this will be compared.
+         * @return \c true if and only if this and the given object contain
+         * identical presentations of the same Seifert fibred space.
          */
         bool operator == (const SFSpace& compare) const;
 
         /**
-         * Determines whether this and the given structure do not contain
-         * precisely the same representations of precisely the same
-         * Seifert fibred spaces.
+         * Determines whether this and the given object do not contain
+         * precisely the same presentations of the same Seifert fibred space.
          *
-         * Note that this routine examines the particular representation of
-         * the Seifert fibred space.  Different Seifert parameters that give
-         * the same 3-manifold will be regarded as different by this routine.
+         * This routine does \e not test for homeomorphism.  Instead it
+         * compares the exact presentations, including the precise details of
+         * the base orbifold and the exact parameters of the exceptional fibres,
+         * and determines whether or not these \e presentations are identical.
+         * If you have two different presentations of the same Seifert fibred
+         * space, they will be treated as not equal by this routine.
          *
-         * @param compare the representation with which this will be compared.
-         * @return \c true if and only if this and the given Seifert
-         * fibred space representations are different.
+         * @param compare the presentation with which this will be compared.
+         * @return \c true if and only if this and the given object do not
+         * contain identical presentations of the same Seifert fibred space.
          */
         bool operator != (const SFSpace& compare) const;
 

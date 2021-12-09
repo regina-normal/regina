@@ -505,6 +505,33 @@ class TxIDiagonalCore : public TxICore {
          */
         void swap(TxIDiagonalCore& other) noexcept;
 
+        /**
+         * Determines if this and the given <tt>T x I</tt> triangulation
+         * have the same parameters.  Here the parameters refer to the
+         * size and the additional parameter \a k, as described in the
+         * class notes.
+         *
+         * If the parameters are the same, then the triangulations returned
+         * by core() should also be combinatorially identical.
+         *
+         * @param other the <tt>T x I</tt> triangulation to compare with this.
+         * @return \c true if and only if this and the given triangulation
+         * have the same parameters.
+         */
+        bool operator == (const TxIDiagonalCore& other) const;
+
+        /**
+         * Determines if this and the given <tt>T x I</tt> triangulation
+         * have different parameters.  Here the parameters refer to the
+         * size and the additional parameter \a k, as described in the
+         * class notes.
+         *
+         * @param other the <tt>T x I</tt> triangulation to compare with this.
+         * @return \c true if and only if this and the given triangulation
+         * have different parameters.
+         */
+        bool operator != (const TxIDiagonalCore& other) const;
+
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
@@ -609,6 +636,34 @@ class TxIParallelCore : public TxICore {
          */
         void swap(TxIParallelCore& other) noexcept;
 
+        /**
+         * Determines if this and the given <tt>T x I</tt> triangulation
+         * have the same parameters.
+         *
+         * This routine always returns \c true, since there is only one
+         * combinatorial type of TxIParallelCore.  It is provided for
+         * consistency with TxIDiagonalCore (where the comparison routines
+         * are more meaningful).
+         *
+         * @param other the <tt>T x I</tt> triangulation to compare with this.
+         * @return \c true, always.
+         */
+        bool operator == (const TxIParallelCore& other) const;
+
+        /**
+         * Determines if this and the given <tt>T x I</tt> triangulation
+         * have different parameters.
+         *
+         * This routine always returns \c false, since there is only one
+         * combinatorial type of TxIParallelCore.  It is provided for
+         * consistency with TxIDiagonalCore (where the comparison routines
+         * are more meaningful).
+         *
+         * @param other the <tt>T x I</tt> triangulation to compare with this.
+         * @return \c false, always.
+         */
+        bool operator != (const TxIParallelCore& other) const;
+
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
@@ -690,6 +745,14 @@ inline std::ostream& TxIDiagonalCore::writeTeXName(std::ostream& out) const {
     return out << "T_{" << size_ << ':' << k_ << '}';
 }
 
+inline bool TxIDiagonalCore::operator == (const TxIDiagonalCore& other) const {
+    return size_ == other.size_ && k_ == other.k_;
+}
+
+inline bool TxIDiagonalCore::operator != (const TxIDiagonalCore& other) const {
+    return size_ != other.size_ || k_ != other.k_;
+}
+
 inline void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs) {
     lhs.swap(rhs);
 }
@@ -704,6 +767,14 @@ inline std::ostream& TxIParallelCore::writeName(std::ostream& out) const {
 
 inline std::ostream& TxIParallelCore::writeTeXName(std::ostream& out) const {
     return out << "T_{6\\ast}";
+}
+
+inline bool TxIParallelCore::operator == (const TxIParallelCore& other) const {
+    return true;
+}
+
+inline bool TxIParallelCore::operator != (const TxIParallelCore& other) const {
+    return false;
 }
 
 inline void swap(TxIParallelCore& lhs, TxIParallelCore& rhs) {

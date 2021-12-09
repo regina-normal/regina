@@ -790,7 +790,6 @@ AbelianGroup SFSpace::homology() const {
     // abelianise.  The presentation without reflectors is given on
     // p91 of Orlik [1972].  Each reflector gives additional generators
     // y and z, for which y acts as a boundary component and z^2 = fibre.
-    AbelianGroup ans;
     unsigned long nRef = reflectors_ + reflectorsTwisted_;
     bool twisted = fibreReversing();
 
@@ -834,8 +833,9 @@ AbelianGroup SFSpace::homology() const {
         else if (twisted)
             pres.entry(nFibres_ + nRef + 1, nFibres_) = 2;
 
-        ans.addGroup(pres);
+        AbelianGroup ans(std::move(pres));
         ans.addRank(2 * genus_);
+        return ans;
     } else {
         // Non-orientable base surface.
         // Generators: v_1, v_2, ..., v_g, q_1, q_2, ..., q_r, h,
@@ -877,10 +877,8 @@ AbelianGroup SFSpace::homology() const {
         else if (twisted)
             pres.entry(nFibres_ + nRef + 1, nFibres_ + genus_) = 2;
 
-        ans.addGroup(pres);
+        return AbelianGroup(std::move(pres));
     }
-
-    return ans;
 }
 
 void SFSpace::writeBaseExtraCount(std::ostream& out, unsigned long count,

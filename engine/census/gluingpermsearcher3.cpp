@@ -230,6 +230,25 @@ void GluingPermSearcher<3>::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
+void GluingPermSearcher<3>::writeTextShort(std::ostream& out) const {
+    if (started)
+        out << "Running search";
+    else
+        out << "New search";
+
+    if (orientableOnly_)
+        out << ", orientable only";
+    if (finiteOnly_)
+        out << ", finite only";
+    if (whichPurge_ != PURGE_NONE)
+        out << ", purge 0x" << std::hex << std::setw(2) << std::setfill('0')
+            << whichPurge_.intValue();
+
+    out << ": stage " << orderElt << ", order:";
+    for (int i = 0; i < orderSize; ++i)
+        out << ' ' << order[i].simp << ':' << order[i].facet;
+}
+
 GluingPermSearcher<3>::GluingPermSearcher(std::istream& in) :
         perms_(in), autos_(perms_.pairing().findAutomorphisms()),
         orientation(nullptr), order(nullptr), orderSize(0), orderElt(0) {
