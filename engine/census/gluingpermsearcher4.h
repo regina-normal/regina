@@ -43,7 +43,7 @@
 #include <functional>
 #include <memory>
 #include <sstream>
-#include "regina-core.h"
+#include "core/output.h"
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
 #include "triangulation/facetpairing.h"
@@ -83,7 +83,7 @@ namespace regina {
  * \ingroup census
  */
 template <>
-class GluingPermSearcher<4> {
+class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
     protected:
         using ActionWrapper = std::function<void(const GluingPerms<4>&)>;
             /**< The type used to hold the user's action function and
@@ -797,6 +797,16 @@ class GluingPermSearcher<4> {
          * @param all of this object's internal data in plain text format.
          */
         std::string data() const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 
         /**
          * The main entry routine for running a search for all gluing

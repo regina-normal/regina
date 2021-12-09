@@ -418,6 +418,7 @@ Version 7.0  [ 10 December, 2021 ]
               exception on error instead of returning null.
             - Added string-based functions taggedData(), data(), and
               fromTaggedData(const std::string&).
+            - Derives from ShortOutput.
             - Renamed public constants ...::dataTag_ to ...::dataTag.
             - Renamed completePermSet() to isComplete().  The old name
               is kept as a deprecated alias.

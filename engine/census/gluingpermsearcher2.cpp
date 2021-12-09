@@ -214,6 +214,20 @@ void GluingPermSearcher<2>::dumpData(std::ostream& out) const {
     out << std::endl;
 }
 
+void GluingPermSearcher<2>::writeTextShort(std::ostream& out) const {
+    if (started)
+        out << "Running search";
+    else
+        out << "New search";
+
+    if (orientableOnly_)
+        out << ", orientable only";
+
+    out << ": stage " << orderElt << ", order:";
+    for (int i = 0; i < orderSize; ++i)
+        out << ' ' << order[i].simp << ':' << order[i].facet;
+}
+
 GluingPermSearcher<2>::GluingPermSearcher(std::istream& in) :
         perms_(in), autos_(perms_.pairing().findAutomorphisms()),
         orientation(nullptr), order(nullptr), orderSize(0), orderElt(0) {

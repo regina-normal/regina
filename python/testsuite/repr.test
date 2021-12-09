@@ -394,6 +394,22 @@ dump(h)
 # Do not dump the CensusDB object, since the output is filesystem-dependent.
 # dump(h.db())
 
+p = FacetPairing2(Example2.annulus())
+isos = p.findAutomorphisms()
+dump(GluingPermSearcher2(p, isos, True))
+
+p = FacetPairing3(Example3.sfsOverSphere(3,4,5,1,2,-1))
+isos = p.findAutomorphisms()
+dump(GluingPermSearcher3(p, isos, True, False, PURGE_NON_MINIMAL))
+dump(CompactSearcher(p, isos, True, PURGE_NON_MINIMAL))
+dump(HyperbolicMinSearcher(p, isos, True))
+dump(EulerSearcher(-2, p, isos, False, PURGE_NONE))
+dump(ClosedPrimeMinSearcher(p, isos, True))
+
+p = FacetPairing4(Example4.s3xs1())
+isos = p.findAutomorphisms()
+dump(GluingPermSearcher4(p, isos, False, True))
+
 # ----------------------------------------------------------------------
 # enumerate/
 # ----------------------------------------------------------------------
@@ -422,6 +438,8 @@ tab = LPInitialTableaux(t, NS_STANDARD)
 dump(BanNone(tab))
 dump(BanBoundary(tab))
 dump(BanTorusBoundary(tab))
+
+dump(PosOrder(MatrixInt.identity(3)))
 
 # ----------------------------------------------------------------------
 # treewidth/

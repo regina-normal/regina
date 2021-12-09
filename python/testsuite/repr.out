@@ -724,6 +724,34 @@ CensusHit
 m004 : #1 -- Cusped hyperbolic census (orientable)
 <regina.CensusHit: m004 : #1 -- Cusped hyperbolic census (orientable)>
 
+GluingPermSearcher2
+New search, orientable only: stage 0, order: 0:0 0:2
+<regina.GluingPermSearcher2: New search, orientable only: stage 0, order: 0:0 0:2>
+
+GluingPermSearcher3
+New search, orientable only, purge 0x01: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0
+<regina.GluingPermSearcher3: New search, orientable only, purge 0x01: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0>
+
+CompactSearcher
+New search, orientable only, finite only, purge 0x01: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0
+<regina.CompactSearcher: New search, orientable only, finite only, purge 0x01: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0>
+
+HyperbolicMinSearcher
+New search, orientable only, purge 0x09: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0
+<regina.HyperbolicMinSearcher: New search, orientable only, purge 0x09: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0>
+
+EulerSearcher
+New search: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0
+<regina.EulerSearcher: New search: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0>
+
+ClosedPrimeMinSearcher
+New search, orientable only, finite only, purge 0x07: stage 0, order: 3:0 7:0 6:0 6:1 5:0 5:1 4:0 4:1 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1
+<regina.ClosedPrimeMinSearcher: New search, orientable only, finite only, purge 0x07: stage 0, order: 3:0 7:0 6:0 6:1 5:0 5:1 4:0 4:1 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1>
+
+GluingPermSearcher4
+New search, finite only: stage 0, order: 0:0 0:1 0:2 0:3 0:4
+<regina.GluingPermSearcher4: New search, finite only: stage 0, order: 0:0 0:1 0:2 0:3 0:4>
+
 TypeTrie4
 Trie for 4 types
 <regina.TypeTrie4: Trie for 4 types>
@@ -771,6 +799,10 @@ Banned: 0 1 2 9 10 11 12, nothing marked
 BanTorusBoundary
 Banned: 0 1 2 9 10 11 12, marked: 9 10 11 12 13 14 15 16 17 18 19 20
 <regina.BanTorusBoundary: Banned: 0 1 2 9 10 11 12, marked: 9 10 11 12 13 14 15 16 17 18 19 20>
+
+PosOrder
+Compare row indices using position vectors
+<regina.PosOrder: Compare row indices using position vectors>
 
 TreeDecomposition
 Width 4, size 11, bags 0: {0,1,5,6} -> 1, 1: {0,1,2,5,7} -> 2, 2: {0,2,4,5,7} -> 4, 3: {2,3,4,8} -> 4, 4: {0,2,4,7,8} -> 5, 5: {0,4,7,8} -> 6, 6: {0,4,8,10} -> 8, 7: {4,8,9,10} -> 8, 8: {4,8,10} -> 9, 9: {8,10} -> 10, 10: {10}

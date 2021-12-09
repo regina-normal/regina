@@ -65,6 +65,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
                 &GluingPermSearcher<3>::fromTaggedData))
         .def_readonly_static("dataTag", &GluingPermSearcher<3>::dataTag)
         ;
+    regina::python::add_output(g);
     regina::python::add_eq_operators(g);
 
     // For backward compatibility; these inner class constants are deprecated.
@@ -81,6 +82,14 @@ void addGluingPermSearcher3(pybind11::module_& m) {
             bool, regina::CensusPurge>())
         .def_readonly_static("dataTag", &EulerSearcher::dataTag)
         ;
+    // It would be nice for EulerSearcher's output to include the Euler
+    // characteristic that we are searching for.  However, GluingPermSearcher<3>
+    // is *not* an abstract base class, and so attempting to re-derive from
+    // Output<EulerSearcher> would cause headaches with multiple base classes
+    // that provide str().  The work-to-benefit ratio is not worth it here;
+    // we will just use the more basic inherited output routines from
+    // GluingPermSearcher<3> instead.
+    regina::python::add_output(e);
     regina::python::add_eq_operators(e);
 
     auto c = pybind11::class_<CompactSearcher, GluingPermSearcher<3>>(
@@ -89,6 +98,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
             bool, regina::CensusPurge>())
         .def_readonly_static("dataTag", &CompactSearcher::dataTag)
         ;
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     auto p = pybind11::class_<ClosedPrimeMinSearcher, GluingPermSearcher<3>>(
@@ -96,6 +106,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList, bool>())
         .def_readonly_static("dataTag", &ClosedPrimeMinSearcher::dataTag)
         ;
+    regina::python::add_output(p);
     regina::python::add_eq_operators(p);
 
     auto h = pybind11::class_<HyperbolicMinSearcher, GluingPermSearcher<3>>(
@@ -103,6 +114,7 @@ void addGluingPermSearcher3(pybind11::module_& m) {
         .def(pybind11::init<FacetPairing<3>, FacetPairing<3>::IsoList, bool>())
         .def_readonly_static("dataTag", &HyperbolicMinSearcher::dataTag)
         ;
+    regina::python::add_output(h);
     regina::python::add_eq_operators(h);
 }
 
