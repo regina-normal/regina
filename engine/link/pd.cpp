@@ -37,7 +37,10 @@
 #include <sstream>
 
 namespace {
-    inline constexpr bool isSymbolSep(char c) {
+    /**
+     * We cannot make this constexpr due to the use of ::isspace().
+     */
+    inline bool isSymbolSep(char c) {
         return ::isspace(c) || c == ',' ||
             c == '[' || c == ']' ||
             c == '(' || c == ')' ||
