@@ -17,13 +17,13 @@ AugTriSolidTorus : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 BanBoundary : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 BanNone : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 BanTorusBoundary : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Base64SigEncoding : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -1131,6 +1131,9 @@ PrismSpec : class
 Equality type : EqualityType.BY_VALUE
 
 ProgressTracker : class
+Equality type : EqualityType.BY_REFERENCE
+
+ProgressTrackerBase : class
 Equality type : EqualityType.BY_REFERENCE
 
 ProgressTrackerOpen : class

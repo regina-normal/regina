@@ -417,6 +417,12 @@ dump(dat)
 dump(makeEmbeddedConstraints(t, NS_STANDARD));
 dump(makeEmbeddedConstraints(t, NS_AN_QUAD_OCT));
 
+t = Example3.lst(3,4)
+tab = LPInitialTableaux(t, NS_STANDARD)
+dump(BanNone(tab))
+dump(BanBoundary(tab))
+dump(BanTorusBoundary(tab))
+
 # ----------------------------------------------------------------------
 # treewidth/
 # ----------------------------------------------------------------------
@@ -439,6 +445,28 @@ dump(FileInfo.identify(testpath + '/file3.rga'))
 dump(FileInfo.identify(testpath + '/pdf.test'))
 
 # ----------------------------------------------------------------------
+# progress/
+# ----------------------------------------------------------------------
+
+p = ProgressTrackerOpen()
+dump(p)
+p.newStage('Doing stuff')
+p.incSteps(3)
+dump(p)
+p.setFinished()
+dump(p)
+
+p = ProgressTracker()
+dump(p)
+p.newStage('Doing stuff', 1)
+p.setPercent(5.87)
+dump(p)
+p.setPercent(75.87)
+dump(p)
+p.cancel()
+dump(p)
+
+# ----------------------------------------------------------------------
 # packet/
 # ----------------------------------------------------------------------
 
@@ -458,8 +486,14 @@ dump(t)
 dump(a)
 dump(s)
 
+# Do not dump PacketShell objects, since they write internal IDs which
+# are not consistent between runs.
+#
+# dump(PacketShell(s))
+# dump(PacketShell(t))
+
 # ----------------------------------------------------------------------
-# Classes that are only accessible via callbacks:
+# Classes that require us to use callbacks for non-trivial access:
 # ----------------------------------------------------------------------
 
 def foundGluings2(g):
@@ -475,4 +509,22 @@ def processSig(s, autos):
 	dump(autos[-1])
 
 SigCensus.formCensus(2, processSig)
+
+t = Example3.rp3rp3()
+tree = TreeSingleSoln_EulerPositive(t, NS_STANDARD)
+dump(tree)
+tree.find()
+dump(tree)
+
+t = Example3.figureEight()
+tree = TautEnumeration(t)
+tree.run(dump)
+
+t = Example3.figureEight()
+tree = TreeEnumeration(t, NS_QUAD)
+tree.run(dump)
+
+t = Example3.trefoil()
+tree = TreeEnumeration_NonSpun(t, NS_QUAD)
+tree.run(dump)
 

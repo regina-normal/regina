@@ -136,6 +136,8 @@ Version 7.0  [ 10 December, 2021 ]
             - The init() routines are removed; instead these are now
               rolled into the class constructors, which all now take a
               single LPInitialTableaux as argument.
+            - Added comparison operators == and !=.
+            - Now derive from ShortOutput.
             - BanNone no longer derives from BanConstraintBase; instead this is
               intended as a trivial drop-in replacement.
         Class Base64SigEncoding:
@@ -1195,6 +1197,9 @@ Version 7.0  [ 10 December, 2021 ]
             - Added member and global swap() functions.
             - Changed divisionAlg() to return a pair instead of using
               reference arguments.  The old version is kept but deprecated.
+        Class ProgressTracker, ProgressTrackerOpen:
+            - Now derives from ShortOutput.
+            - Many member functions are now const.
         Class Property<...>:
             - Removed completely.  Use either std::optional<...> or
               std::unique_ptr<...> instead (according to your storage policy).
@@ -1523,6 +1528,7 @@ Version 7.0  [ 10 December, 2021 ]
               void pointer argument, and now return false instead of true
               according to the new callback requirements described above.
             - New routine typeString() to complement dumpTypes().
+            - Now derives from ShortOutput.
             - Renamed nVisited() and nSolns() to visited() and solutions().
               The old names have been removed completely.
         Class Triangulation<dim>:

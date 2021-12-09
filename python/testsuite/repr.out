@@ -760,6 +760,18 @@ ValidityConstraints
 Blocks: 2 x 6, local: { 0 1 2 3 4 5 }, global: { 3 4 5 }
 <regina.ValidityConstraints: Blocks: 2 x 6, local: { 0 1 2 3 4 5 }, global: { 3 4 5 }>
 
+BanNone
+Nothing banned or marked
+<regina.BanNone: Nothing banned or marked>
+
+BanBoundary
+Banned: 0 1 2 9 10 11 12, nothing marked
+<regina.BanBoundary: Banned: 0 1 2 9 10 11 12, nothing marked>
+
+BanTorusBoundary
+Banned: 0 1 2 9 10 11 12, marked: 9 10 11 12 13 14 15 16 17 18 19 20
+<regina.BanTorusBoundary: Banned: 0 1 2 9 10 11 12, marked: 9 10 11 12 13 14 15 16 17 18 19 20>
+
 TreeDecomposition
 Width 4, size 11, bags 0: {0,1,5,6} -> 1, 1: {0,1,2,5,7} -> 2, 2: {0,2,4,5,7} -> 4, 3: {2,3,4,8} -> 4, 4: {0,2,4,7,8} -> 5, 5: {0,4,7,8} -> 6, 6: {0,4,8,10} -> 8, 7: {4,8,9,10} -> 8, 8: {4,8,10} -> 9, 9: {8,10} -> 10, 10: {10}
 <regina.TreeDecomposition: Width 4, size 11, bags 0: {0,1,5,6} -> 1, 1: {0,1,2,5,7} -> 2, 2: {0,2,4,5,7} -> 4, 3: {2,3,4,8} -> 4, 4: {0,2,4,7,8} -> 5, 5: {0,4,7,8} -> 6, 6: {0,4,8,10} -> 8, 7: {4,8,9,10} -> 8, 8: {4,8,10} -> 9, 9: {8,10} -> 10, 10: {10}>
@@ -779,6 +791,34 @@ Regina data: Second-generation XML format (Regina 3.0-6.0.1)
 NoneType
 None
 None
+
+ProgressTrackerOpen
+Initialising - 0 step(s)
+<regina.ProgressTrackerOpen: Initialising - 0 step(s)>
+
+ProgressTrackerOpen
+Doing stuff - 3 step(s)
+<regina.ProgressTrackerOpen: Doing stuff - 3 step(s)>
+
+ProgressTrackerOpen
+Finished
+<regina.ProgressTrackerOpen: Finished>
+
+ProgressTracker
+Initialising - 0%
+<regina.ProgressTracker: Initialising - 0%>
+
+ProgressTracker
+Doing stuff - 5.9%
+<regina.ProgressTracker: Doing stuff - 5.9%>
+
+ProgressTracker
+Doing stuff - 76%
+<regina.ProgressTracker: Doing stuff - 76%>
+
+ProgressTracker
+Cancelled but not finished
+<regina.ProgressTracker: Cancelled but not finished>
 
 Container
 Container with 1 child, 3 descendants
@@ -832,4 +872,44 @@ Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), 1 -> 1 (>> 1), all reversed
 SigPartialIsomorphism
 Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), 2 -> 1, 1 -> 2, all reversed
 <regina.SigPartialIsomorphism: Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), 2 -> 1, 1 -> 2, all reversed>
+
+TreeSingleSoln_EulerPositive
+Level 0 of 0..19, types: 0___________________
+<regina.TreeSingleSoln_EulerPositive: Level 0 of 0..19, types: 0___________________>
+
+TreeSingleSoln_EulerPositive
+Level 19 of 0..19, types: 00010000010010000000
+<regina.TreeSingleSoln_EulerPositive: Level 19 of 0..19, types: 00010000010010000000>
+
+TautEnumeration
+Level 1 of 0..1, types: 11
+<regina.TautEnumeration: Level 1 of 0..1, types: 11>
+
+TautEnumeration
+Level 1 of 0..1, types: 23
+<regina.TautEnumeration: Level 1 of 0..1, types: 23>
+
+TautEnumeration
+Level 1 of 0..1, types: 32
+<regina.TautEnumeration: Level 1 of 0..1, types: 32>
+
+TreeEnumeration
+Level 1 of 0..1, types: 12
+<regina.TreeEnumeration: Level 1 of 0..1, types: 12>
+
+TreeEnumeration
+Level 1 of 0..1, types: 13
+<regina.TreeEnumeration: Level 1 of 0..1, types: 13>
+
+TreeEnumeration
+Level 1 of 0..1, types: 21
+<regina.TreeEnumeration: Level 1 of 0..1, types: 21>
+
+TreeEnumeration
+Level 1 of 0..1, types: 31
+<regina.TreeEnumeration: Level 1 of 0..1, types: 31>
+
+TreeEnumeration_NonSpun
+Level 1 of 0..1, types: 11
+<regina.TreeEnumeration_NonSpun: Level 1 of 0..1, types: 11>
 
