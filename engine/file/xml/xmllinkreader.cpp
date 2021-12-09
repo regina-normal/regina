@@ -41,7 +41,7 @@ XMLLinkReader::XMLLinkReader(XMLTreeResolver& res,
         std::string id) :
         XMLPacketReader(res, std::move(parent), anon, std::move(label),
             std::move(id)),
-        link_(makePacket<Link>()) {
+        link_(make_packet<Link>()) {
 }
 
 std::shared_ptr<Packet> XMLLinkReader::packetToCommit() {

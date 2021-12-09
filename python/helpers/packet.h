@@ -37,6 +37,7 @@
 namespace regina {
 
 class Packet;
+template <class> class PacketData;
 template <class> class PacketOf;
 
 namespace python {
@@ -61,14 +62,20 @@ namespace python {
  * std::shared_ptr (not the default std::unique_ptr that pybind11 uses
  * unless instructed otherwise).  If you do not do this, then Python
  * will raise an ImportError when loading Regina's module.
+ *
+ * Note that, when creating the bindings for the \a Held type, you should
+ * use packet_eq_operators() and not add_eq_operators().  See
+ * python/helpers/equality.h for further details.
  */
 template <class Held>
 auto add_packet_wrapper(pybind11::module_& m, const char* className) {
-    return pybind11::class_<regina::PacketOf<Held>, Held, regina::Packet,
+    auto c = pybind11::class_<regina::PacketOf<Held>, Held, regina::Packet,
             std::shared_ptr<regina::PacketOf<Held>>>(m, className)
         .def(pybind11::init<const Held&>()) // also takes PacketOf<Held>
         .def_readonly_static("typeID", &regina::PacketOf<Held>::typeID)
     ;
+    regina::python::add_output(c);
+    return c;
 }
 
 /**
@@ -98,6 +105,22 @@ void add_packet_constructor(PythonClass& classWrapper, Options&&... options) {
         using WrappedType = typename PythonClass::type;
         return new WrappedType(std::in_place, std::forward<Args>(args)...);
     }), std::forward<Options>(options)...);
+}
+
+/**
+ * Adds wrappers for the member functions for a C++ type Held that are
+ * inherited from PacketData<Held>.
+ *
+ * The argument \a classWrapper should be the pybind11::class_ object
+ * that wraps the C++ class Held.
+ */
+template <typename PythonClass>
+void add_packet_data(PythonClass& classWrapper) {
+    using DataType = regina::PacketData<typename PythonClass::type>;
+    classWrapper
+        .def("packet", pybind11::overload_cast<>(&DataType::packet))
+        .def("anonID", &DataType::anonID)
+        ;
 }
 
 } // namespace python

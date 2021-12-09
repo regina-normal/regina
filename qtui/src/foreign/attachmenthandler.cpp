@@ -58,28 +58,3 @@ std::shared_ptr<regina::Packet> AttachmentHandler::importData(
     return ans;
 }
 
-PacketFilter* AttachmentHandler::canExport() const {
-    return new SingleTypeFilter<regina::Attachment>();
-}
-
-bool AttachmentHandler::exportData(std::shared_ptr<regina::Packet> data,
-        const QString& fileName, QWidget* parentWidget) const {
-    auto att = std::dynamic_pointer_cast<regina::Attachment>(data);
-    if (! att->data()) {
-        ReginaSupport::sorry(parentWidget,
-            QObject::tr("This attachment is empty."),
-            QObject::tr("I can only export packets that contain "
-                "non-empty file attachments."));
-        return false;
-    }
-    if (! att->save(static_cast<const char*>(QFile::encodeName(fileName)))) {
-        ReginaSupport::warn(parentWidget,
-            QObject::tr("The export failed."), 
-            QObject::tr("<qt>An unknown error occurred, probably related "
-            "to file I/O.  Please check that you have permissions to write "
-            "to the file <tt>%1</tt>.</qt>").arg(fileName.toHtmlEscaped()));
-        return false;
-    }
-    return true;
-}
-

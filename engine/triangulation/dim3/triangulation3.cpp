@@ -63,10 +63,9 @@ Triangulation<3>::Triangulation(const std::string& description) {
         return;
     } catch (const InvalidArgument&) {
     }
-}
 
-Triangulation<3>::Triangulation(const Link& link) :
-        Triangulation(link.complement()) {
+    throw InvalidArgument("The given string could not be interpreted "
+        "as representing a 3-dimensional triangulation");
 }
 
 void Triangulation<3>::clearAllProperties() {
@@ -297,8 +296,15 @@ std::string Triangulation<3>::snapPea() const {
 
 void Triangulation<3>::snapPea(std::ostream& out) const {
     // Sanity checks.
-    if ((! isValid()) || hasBoundaryTriangles() || simplices_.empty())
-        return;
+    if (! isValid())
+        throw NotImplemented("SnapPea exports are only available "
+            "for valid triangulations");
+    if (hasBoundaryTriangles())
+        throw NotImplemented("SnapPea exports are only available "
+            "for triangulations with no boundary triangles");
+    if (simplices_.empty())
+        throw NotImplemented("SnapPea exports are only available "
+            "for non-empty triangulations");
 
     // Write header information.
     out << "% Triangulation\n";
@@ -350,6 +356,8 @@ void Triangulation<3>::snapPea(std::ostream& out) const {
 
 bool Triangulation<3>::saveSnapPea(const char* filename) const {
     // Sanity checks.
+    // Although snapPea() will also check these conditions, we need to
+    // check them now so if we fail then we do so before the file is opened.
     if ((! isValid()) || hasBoundaryTriangles() || simplices_.empty())
         return false;
 
@@ -374,8 +382,12 @@ std::string Triangulation<3>::recognizer() const {
 
 void Triangulation<3>::recogniser(std::ostream& out) const {
     // Sanity checks.
-    if ((! isValid()) || hasBoundaryTriangles())
-        return;
+    if (! isValid())
+        throw NotImplemented("Recogniser exports are only available "
+            "for valid triangulations");
+    if (hasBoundaryTriangles())
+        throw NotImplemented("Recogniser exports are only available "
+            "for triangulations with no boundary triangles");
 
     // Write the header.
     out << "triangulation" << std::endl;
@@ -412,6 +424,8 @@ void Triangulation<3>::recogniser(std::ostream& out) const {
 
 bool Triangulation<3>::saveRecogniser(const char* filename) const {
     // Sanity checks.
+    // Although recogniser() will also check these conditions, we need to
+    // check them now so if we fail then we do so before the file is opened.
     if ((! isValid()) || hasBoundaryTriangles())
         return false;
 
@@ -495,6 +509,24 @@ void Triangulation<3>::snapPeaPostChange() {
     // happening.
     if (! s->reginaChangeEventSpans_)
         static_cast<SnapPeaTriangulation*>(this)->nullify();
+}
+
+Triangulation<3>& static_triangulation3_cast(Packet& p) {
+    // This is in the .cpp file so we can keep snappeatriangulation.h
+    // out of the main Triangulation<3> headers.
+    if (p.type() == PACKET_SNAPPEATRIANGULATION)
+        return static_packet_cast<SnapPeaTriangulation>(p);
+    else
+        return static_packet_cast<Triangulation<3>>(p);
+}
+
+const Triangulation<3>& static_triangulation3_cast(const Packet& p) {
+    // This is in the .cpp file so we can keep snappeatriangulation.h
+    // out of the main Triangulation<3> headers.
+    if (p.type() == PACKET_SNAPPEATRIANGULATION)
+        return static_packet_cast<const SnapPeaTriangulation>(p);
+    else
+        return static_packet_cast<const Triangulation<3>>(p);
 }
 
 } // namespace regina

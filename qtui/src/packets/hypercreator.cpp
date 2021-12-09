@@ -39,6 +39,7 @@
 #include "coordinatechooser.h"
 #include "./coordinates.h" // Use ./ to avoid picking up the iOS header.
 #include "hypercreator.h"
+#include "packetfilter.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
 #include "../progressdialogs.h"
@@ -62,7 +63,7 @@ namespace {
     };
 }
 
-HyperCreator::HyperCreator() {
+HyperCreator::HyperCreator(ReginaMain*) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -128,15 +129,7 @@ QString HyperCreator::parentWhatsThis() {
 
 std::shared_ptr<regina::Packet> HyperCreator::createPacket(
         std::shared_ptr<regina::Packet> parent, QWidget* parentWidget) {
-    auto tri = std::dynamic_pointer_cast<regina::Triangulation<4>>(parent);
-    if (! tri) {
-        ReginaSupport::sorry(ui,
-            ui->tr("The selected parent is not a 4-manifold triangulation."),
-            ui->tr("Normal hypersurfaces must live within a 4-manifold "
-            "triangulation.  Please select the corresponding triangulation "
-            "as the location in the tree for your new normal hypersurface list."));
-        return nullptr;
-    }
+    auto& tri = regina::static_packet_cast<regina::Triangulation<4>>(*parent);
 
     regina::HyperCoords coordSystem = coords->getCurrentSystem();
 
@@ -185,8 +178,8 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
             regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR);
     std::thread([&, coordSystem, which, this]() {
         try {
-            ans = regina::makePacket<NormalHypersurfaces>(std::in_place,
-                *tri, coordSystem, which, regina::HS_ALG_DEFAULT, &tracker);
+            ans = regina::make_packet<NormalHypersurfaces>(std::in_place,
+                tri, coordSystem, which, regina::HS_ALG_DEFAULT, &tracker);
         } catch (const regina::ReginaException&) {
             // Leave ans as null.
         }
@@ -198,7 +191,6 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
                 .arg(Coordinates::adjective(coordSystem, true))
                 .arg(sType)
                 .toStdString());
-            parent->insertChildLast(ans);
         } else {
             ReginaSupport::failure(parentWidget,
                 ui->tr("<qt>I could not enumerate %1 normal hypersurfaces.<p>"
@@ -211,6 +203,10 @@ std::shared_ptr<regina::Packet> HyperCreator::createPacket(
             ui->tr("The normal hypersurface enumeration was cancelled."));
         return nullptr;
     }
+}
+
+PacketFilter* HyperCreator::filter() {
+    return new SingleTypeFilter<regina::PacketOf<regina::Triangulation<4>>>();
 }
 
 void HyperCreator::explainNoParents() {

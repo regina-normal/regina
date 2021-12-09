@@ -1429,6 +1429,36 @@ class GroupPresentation : public Output<GroupPresentation> {
             prettyRewritingDetail();
 
         /**
+         * Determines whether this and the given group presentation are
+         * identical.
+         *
+         * This routine does \e not test for isomorphism (which in
+         * general is an undecidable problem).  Instead it tests whether
+         * this and the given presentation use exactly the same generators
+         * and exactly the same relations, presented in exactly the same order.
+         *
+         * @param other the group presentation to compare with this.
+         * @return \c true if and only if this and the given group presentation
+         * are identical.
+         */
+        bool operator == (const GroupPresentation& other) const;
+
+        /**
+         * Determines whether this and the given group presentation are
+         * not identical.
+         *
+         * This routine does \e not test for isomorphism (which in
+         * general is an undecidable problem).  Instead it tests whether
+         * this and the given presentation use exactly the same generators
+         * and exactly the same relations, presented in exactly the same order.
+         *
+         * @param other the group presentation to compare with this.
+         * @return \c true if and only if this and the given group presentation
+         * are not identical.
+         */
+        bool operator != (const GroupPresentation& other) const;
+
+        /**
          * Attempts to prove that this and the given group presentation are
          * <i>simply isomorphic</i>.
          *
@@ -1591,6 +1621,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          * including details of all generators and relations.
          * See writeTextCompact() for details on how this is formed.
          *
+         * Currently str() and compact() are identical functions, though the
+         * output from str() may change in future versions of Regina.
+         *
          * @return a compact representation of this group presentation.
          */
         std::string compact() const;
@@ -1603,6 +1636,10 @@ class GroupPresentation : public Output<GroupPresentation> {
          * The full relations will be included, and the entire output
          * will be written on a single line.  There will be no final newline.
          *
+         * Currently writeTextShort() and writeTextCompact() are identical
+         * functions, though the output from writeTextShort() may change in
+         * future versions of Regina.
+         *
          * \ifacespython Not present; instead use the variant compact() that
          * takes no arguments and returns a string.
          *
@@ -1613,6 +1650,10 @@ class GroupPresentation : public Output<GroupPresentation> {
         /**
          * Writes a short text representation of this object to the
          * given output stream.
+         *
+         * Currently writeTextShort() and writeTextCompact() are identical
+         * functions, though the output from writeTextShort() may change in
+         * future versions of Regina.
          *
          * \ifacespython Not present; use str() instead.
          *
@@ -2067,8 +2108,7 @@ inline std::string GroupPresentation::toTeX() const {
 }
 
 inline void GroupPresentation::writeTextShort(std::ostream& out) const {
-    out << "Group presentation: " << nGenerators_ << " generators, "
-        << relations_.size() << " relations";
+    writeTextCompact(out);
 }
 
 inline size_t GroupPresentation::relatorLength() const {
@@ -2076,6 +2116,16 @@ inline size_t GroupPresentation::relatorLength() const {
     for (const auto& r : relations_)
         retval += r.wordLength();
     return retval;
+}
+
+inline bool GroupPresentation::operator == (const GroupPresentation& other)
+        const {
+    return nGenerators_ == other.nGenerators_ && relations_ == other.relations_;
+}
+
+inline bool GroupPresentation::operator != (const GroupPresentation& other)
+        const {
+    return nGenerators_ != other.nGenerators_ || relations_ != other.relations_;
 }
 
 inline void swap(GroupPresentation& lhs, GroupPresentation& rhs) noexcept {

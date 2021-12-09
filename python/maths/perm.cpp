@@ -141,7 +141,7 @@ void addPerm(pybind11::module_& m, const char* name) {
     ;
     Perm_extend<n, n-1>::add_bindings(c);
     Perm_contract<n, n+1>::add_bindings(c);
-    regina::python::add_output_basic(c, true /* __repr__ */);
+    regina::python::add_output_basic(c);
     regina::python::add_eq_operators(c);
 }
 

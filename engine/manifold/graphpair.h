@@ -241,7 +241,7 @@ class GraphPair : public Manifold {
         /**
          * Sets this to be a clone of the given graph manifold.
          *
-         * @param return a reference to this graph manifold.
+         * @return a reference to this graph manifold.
          */
         GraphPair& operator = (const GraphPair&) = default;
         /**
@@ -261,6 +261,40 @@ class GraphPair : public Manifold {
          * with this.
          */
         void swap(GraphPair& other) noexcept;
+
+        /**
+         * Determines whether this and the given object contain precisely
+         * the same presentations of the same graph manifold.
+         *
+         * This routine does \e not test for homeomorphism.  Instead it
+         * compares the exact presentations, including the matching matrix
+         * and the specific presentations of the bounded Seifert fibred spaces,
+         * and determines whether or not these \e presentations are identical.
+         * If you have two different presentations of the same graph manifold,
+         * they will be treated as not equal by this routine.
+         *
+         * @param compare the presentation with which this will be compared.
+         * @return \c true if and only if this and the given object contain
+         * identical presentations of the same graph manifold.
+         */
+        bool operator == (const GraphPair& compare) const;
+
+        /**
+         * Determines whether this and the given object do not contain
+         * precisely the same presentations of the same graph manifold.
+         *
+         * This routine does \e not test for homeomorphism.  Instead it
+         * compares the exact presentations, including the matching matrix
+         * and the specific presentations of the bounded Seifert fibred spaces,
+         * and determines whether or not these \e presentations are identical.
+         * If you have two different presentations of the same graph manifold,
+         * they will be treated as not equal by this routine.
+         *
+         * @param compare the presentation with which this will be compared.
+         * @return \c true if and only if this and the given object do not
+         * contain identical presentations of the same graph manifold.
+         */
+        bool operator != (const GraphPair& compare) const;
 
         AbelianGroup homology() const override;
         bool isHyperbolic() const override;
@@ -356,6 +390,20 @@ inline const Matrix2& GraphPair::matchingReln() const {
 
 inline bool GraphPair::isHyperbolic() const {
     return false;
+}
+
+inline bool GraphPair::operator == (const GraphPair& compare) const {
+    return
+        sfs_[0] == compare.sfs_[0] &&
+        sfs_[1] == compare.sfs_[1] &&
+        matchingReln_ == compare.matchingReln_;
+}
+
+inline bool GraphPair::operator != (const GraphPair& compare) const {
+    return
+        sfs_[0] != compare.sfs_[0] ||
+        sfs_[1] != compare.sfs_[1] ||
+        matchingReln_ != compare.matchingReln_;
 }
 
 inline void swap(GraphPair& a, GraphPair& b) noexcept {

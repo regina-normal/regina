@@ -471,7 +471,7 @@ inline HilbertDual::VecSpec<IntegerType, BitmaskType>::VecSpec(
         Vector<IntegerType>(dim), mask_(dim) {
     // All coordinates are initialised to zero by default thanks to
     // the default constructors for Regina's integer types.
-    Vector<IntegerType>::elements[pos] = 1;
+    Vector<IntegerType>::elts_[pos] = 1;
     mask_.set(pos, true);
 }
 

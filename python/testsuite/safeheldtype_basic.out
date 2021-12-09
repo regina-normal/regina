@@ -1,17 +1,17 @@
 Constructor:
-Container
+Empty container
 Deleting parent:
-Container
+Empty container
 Deleting matriarch:
-Container
-Container
+Container with 1 child, 1 descendant
+Empty container
 Multiple references:
-Container
-Container
-Container
-Container
-Container
-Container
-Container
-Container
-Container
+Container with 1 child, 2 descendants
+Container with 1 child, 1 descendant
+Empty container
+Container with 1 child, 2 descendants
+Empty container
+Empty container
+Empty container
+Empty container
+Empty container

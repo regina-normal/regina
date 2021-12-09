@@ -43,6 +43,7 @@
 
 using pybind11::overload_cast;
 using regina::Isomorphism;
+using regina::MatrixInt;
 using regina::Triangulation;
 
 void addTriangulation2(pybind11::module_& m) {
@@ -59,8 +60,9 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>())
         .def("simplices", &Triangulation<2>::simplices,
             pybind11::keep_alive<0, 1>())
-        .def("triangle",
-            overload_cast<size_t>(&Triangulation<2>::triangle),
+        // Use a C-style cast because GCC struggles with the overload_cast here:
+        .def("triangle", (regina::Simplex<2>* (Triangulation<2>::*)(size_t))(
+            &Triangulation<2>::triangle),
             pybind11::return_value_policy::reference_internal)
         .def("simplex",
             overload_cast<size_t>(&Triangulation<2>::simplex),
@@ -128,7 +130,7 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<2>::edge,
             pybind11::return_value_policy::reference_internal)
-        .def("isIdenticalTo", &Triangulation<2>::isIdenticalTo)
+        .def("isIdenticalTo", &Triangulation<2>::operator ==) // deprecated
         .def("isIsomorphicTo", &Triangulation<2>::isIsomorphicTo)
         .def("findAllIsomorphisms", &Triangulation<2>::findAllIsomorphisms<
                 const std::function<bool(const Isomorphism<2>)>&>)
@@ -171,10 +173,17 @@ void addTriangulation2(pybind11::module_& m) {
         .def("orient", &Triangulation<2>::orient)
         .def("reflect", &Triangulation<2>::reflect)
         .def("triangulateComponents", &Triangulation<2>::triangulateComponents)
-        .def("homology", &Triangulation<2>::homology,
-            pybind11::return_value_policy::reference_internal)
-        .def("homologyH1", &Triangulation<2>::homologyH1,
-            pybind11::return_value_policy::reference_internal)
+        .def("homology",
+            (regina::AbelianGroup (Triangulation<2>::*)(int) const)(
+            &Triangulation<2>::homology),
+            pybind11::arg("k") = 1)
+        .def("homologyH1", &Triangulation<2>::homology<1>) // deprecated
+        .def("markedHomology",
+            (regina::MarkedAbelianGroup (Triangulation<2>::*)(int) const)(
+            &Triangulation<2>::markedHomology),
+            pybind11::arg("k") = 1)
+        .def("boundaryMap", (MatrixInt (Triangulation<2>::*)(int) const)(
+            &Triangulation<2>::boundaryMap))
         .def("pachner", &Triangulation<2>::pachner<2>,
             pybind11::arg(),
             pybind11::arg("check") = true,
@@ -210,7 +219,8 @@ void addTriangulation2(pybind11::module_& m) {
         .def_readonly_static("dimension", &Triangulation<2>::dimension)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::packet_eq_operators(c);
+    regina::python::add_packet_data(c);
 
     regina::python::addListView<decltype(Triangulation<2>().vertices())>(m);
     regina::python::addListView<decltype(Triangulation<2>().edges())>(m);

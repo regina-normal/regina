@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "hypersurface/normalhypersurfaces.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 

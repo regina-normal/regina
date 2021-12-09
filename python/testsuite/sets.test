@@ -33,11 +33,14 @@
 
 from __future__ import print_function
 
+def dump(s):
+	ans = [ x.str() for x in s]
+	ans.sort()
+	for x in ans:
+		print(x)
+
 t = Example3.simplicialSphere()
-for e in t.maximalForestInSkeleton():
-    print(e)
+dump(t.maximalForestInSkeleton())
 
 u = Example3.ball()
-for e in u.maximalForestInBoundary():
-    print(e)
-
+dump(u.maximalForestInBoundary())

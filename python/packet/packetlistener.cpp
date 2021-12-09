@@ -112,6 +112,15 @@ void addPacketListener(pybind11::module_& m) {
             return (s != p);
         }, pybind11::is_operator())
         ;
+    regina::python::add_output_custom(s, [](const PacketShell& p,
+            std::ostream& s) {
+        // Avoid calling any virtual functions, or functions specific to
+        // the packet type - the subclass destructor may well have already
+        // run by this point.
+        s << "Shell for packet [" << p.internalID() << ']';
+        if (! p.label().empty())
+            s << ": " << p.label();
+    });
     regina::python::add_eq_operators(s);
 
     auto l = pybind11::class_<PacketListener, PyPacketListener>(

@@ -45,6 +45,7 @@
 #endif
 
 #include <algorithm>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include "census/gluingperms.h"
@@ -141,6 +142,89 @@ GluingPerms<dim> GluingPerms<dim>::fromData(const std::string& data) {
         return GluingPerms<dim>(in);
     } catch (const InvalidInput& exc) {
         throw InvalidArgument(exc.what());
+    }
+}
+
+template <int dim>
+void GluingPerms<dim>::writeTextShort(std::ostream& out) const {
+    for (size_t simp = 0; simp < size(); ++simp) {
+        if (simp > 0)
+            out << " | ";
+        for (int i = 0; i <= dim; ++i) {
+            if (i > 0)
+                out << ", ";
+            if (pairing_.isUnmatched(simp, i))
+                out << "bdry";
+            else if (permIndex(simp, i) < 0)
+                out << "??";
+            else
+                out << pairing_.dest(simp, i).simp << " (" << perm(simp, i)
+                    << ')';
+        }
+    }
+}
+
+template <int dim>
+void GluingPerms<dim>::writeTextLong(std::ostream& out) const {
+    if constexpr (dim == 2)
+        out << "  Triangle  |  glued to:";
+    else if constexpr (dim == 3)
+        out << "  Tet  |  glued to:";
+    else if constexpr (dim == 4)
+        out << "  Pent  |  glued to:";
+    else
+        out << "  Simplex  |  glued to:";
+    for (int i = dim; i >= 0; --i) {
+        out << "     (";
+        for (int j = 0; j <= dim; ++j)
+            if (j != i)
+                out << regina::digit(j);
+        out << ')';
+    }
+    out << '\n';
+    if constexpr (dim == 2)
+        out << "  ----------+-----------";
+    else if constexpr (dim == 3)
+        out << "  -----+-----------";
+    else if constexpr (dim == 4)
+        out << "  ------+-----------";
+    else
+        out << "  ---------+-----------";
+    for (int i = dim; i >= 0; --i)
+        for (int j = 0; j < 7 + dim; ++j)
+            out << '-';
+    out << '\n';
+    for (size_t simp = 0; simp < size(); ++simp) {
+        if constexpr (dim == 2)
+            out << "      ";
+        else if constexpr (dim == 3)
+            out << ' ';
+        else if constexpr (dim == 4)
+            out << "  ";
+        else
+            out << "     ";
+        out << std::setw(4) << simp << "  |           ";
+        for (int i = dim; i >= 0; --i) {
+            if (pairing_.isUnmatched(simp, i)) {
+                for (int j = 0; j < dim - 1; ++j)
+                    out << ' ';
+                out << "boundary";
+            } else if (permIndex(simp, i) < 0) {
+                for (int j = 0; j < dim; ++j)
+                    out << ' ';
+                out << "unknown";
+            } else {
+                auto gluing = perm(simp, i);
+                out << std::setw(4)
+                    << pairing_.dest(simp, i).simp << " (";
+                for (int j = 0; j <= dim; ++j) {
+                    if (j != i)
+                        out << regina::digit(gluing[j]);
+                }
+                out << ")";
+            }
+        }
+        out << '\n';
     }
 }
 

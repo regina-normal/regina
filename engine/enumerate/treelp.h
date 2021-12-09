@@ -41,7 +41,7 @@
 
 #include "maths/integer.h"
 #include "maths/matrix.h"
-#include "surfaces/normalcoords.h"
+#include "surface/normalcoords.h"
 #include "triangulation/forward.h"
 #include <algorithm>
 
@@ -118,7 +118,7 @@ using MatrixInt = Matrix<Integer, true>;
  * \ingroup enumerate
  */
 template <typename IntType>
-class LPMatrix {
+class LPMatrix : public Output<LPMatrix<IntType>> {
     private:
         IntType* dat_;
             /**< The elements of this matrix as a single long array,
@@ -396,19 +396,40 @@ class LPMatrix {
         inline void negateRow(unsigned row);
 
         /**
-         * Writes this matrix to the given output stream.
-         * The output is "rough" and wasteful, and is intended for
+         * Deprecated routine that writes this matrix to the given output
+         * stream.  The output is "rough" and wasteful, and is intended for
          * debugging purposes only.  The precise output format is
          * subject to change in future versions of Regina.
          *
-         * \ifacespython Not present; instead this C++ routine provides the
-         * Python string representation for an LPMatrix.  In other words,
-         * to access this functionality for a matrix \a m in Python,
-         * you can just call <tt>print(m)</tt>.
+         * \deprecated This has been replaced by writeTextLong() (which
+         * uses a slightly tighter output format), for compatibility with
+         * Regina's usual text output facilities.
+         *
+         * \ifacespython Not present, but you can call detail() instead.
          *
          * @param out the output stream to write to.
          */
-        void dump(std::ostream& out) const;
+        [[deprecated]] void dump(std::ostream& out) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
         // Mark this class as non-copyable:
         LPMatrix(const LPMatrix&) = delete;
@@ -567,7 +588,7 @@ struct LPCol {
  *
  * \ingroup enumerate
  */
-class LPSystem {
+class LPSystem : public ShortOutput<LPSystem> {
     private:
         /**
          * The three possible classes of vector encodings.
@@ -687,6 +708,23 @@ class LPSystem {
                 default: return 0;
             }
         }
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const {
+            switch (system_) {
+                case LP_STANDARD: out << "standard"; return;
+                case LP_QUAD: out << "quad"; return;
+                case LP_ANGLE: out << "angle"; return;
+                default: out << "invalid"; return;
+            }
+        }
 };
 
 /**
@@ -782,7 +820,7 @@ class LPSystem {
  * \ingroup enumerate
  */
 template <class LPConstraint>
-class LPInitialTableaux {
+class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
     private:
         const Triangulation<3>* tri_;
             /**< The underlying triangulation.  This is stored by pointer
@@ -1121,6 +1159,26 @@ class LPInitialTableaux {
         template <typename IntType>
         void fillInitialTableaux(LPMatrix<IntType>& m) const;
 
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
+
     private:
         /**
          * Reorders the columns of the matching equation matrix.
@@ -1300,7 +1358,7 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
  * \ingroup enumerate
  */
 template <class LPConstraint, typename IntType>
-class LPData {
+class LPData : public Output<LPData<LPConstraint, IntType>> {
     private:
         const LPInitialTableaux<LPConstraint>* origTableaux_;
             /**< The original starting tableaux that holds the adjusted
@@ -1631,21 +1689,19 @@ class LPData {
         void constrainOct(unsigned quad1, unsigned quad2);
 
         /**
-         * Writes details of this tableaux to the given output stream.
-         * The output is "rough" and wasteful, and is intended for
-         * debugging purposes only.
+         * Deprecated routine that writes details of this tableaux to the
+         * given output stream.  The output is "rough" and wasteful, and is
+         * intended for debugging purposes only.
          *
-         * The precise output is subject to change in future versions
-         * of Regina.
+         * \deprecated This has been replaced by writeTextLong() (which
+         * uses a slightly tighter output format), for compatibility with
+         * Regina's usual text output facilities.
          *
-         * \ifacespython Not present; instead this C++ routine provides the
-         * Python string representation for an LPData object.  In other words,
-         * to access this functionality for a tableaux \a t in Python,
-         * you can just call <tt>print(t)</tt>.
+         * \ifacespython Not present, but you can call detail() instead.
          *
          * @param out the output stream to write to.
          */
-        void dump(std::ostream& out) const;
+        [[deprecated]] void dump(std::ostream& out) const;
 
         /**
          * Extracts the values of the individual variables from the
@@ -1706,6 +1762,26 @@ class LPData {
          */
         template <class RayClass>
         RayClass extractSolution(const char* type) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
         // Mark this class as non-copyable:
         LPData(const LPData&) = delete;
@@ -2232,7 +2308,7 @@ inline void swap(LPInitialTableaux<IntType>& a, LPInitialTableaux<IntType>& b)
 
 template <class LPConstraint, typename IntType>
 inline LPData<LPConstraint, IntType>::LPData() :
-        rhs_(nullptr), basis_(nullptr), basisRow_(nullptr) {
+        rhs_(nullptr), rank_(0), basis_(nullptr), basisRow_(nullptr) {
 }
 
 template <class LPConstraint, typename IntType>

@@ -194,8 +194,9 @@ using LinkCreator = regina::Link* (*)();
         return 0;
     }
 
-    regina::Link* l = new regina::Link(code);
-    if (l->isEmpty()) {
+    try {
+        regina::Link* l = new regina::Link(code);
+    } catch (const regina::InvalidArgument&) {
         UIAlertView* alert = [[UIAlertView alloc]
                               initWithTitle:@"Invalid Text Code"
                               message:nil
@@ -203,7 +204,6 @@ using LinkCreator = regina::Link* (*)();
                               cancelButtonTitle:@"Close"
                               otherButtonTitles:nil];
         [alert show];
-        delete l;
         return 0;
     }
 

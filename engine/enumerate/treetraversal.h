@@ -170,7 +170,8 @@ class ProgressTracker;
  * \ingroup enumerate
  */
 template <class LPConstraint, typename BanConstraint, typename IntType>
-class TreeTraversal {
+class TreeTraversal : public ShortOutput<
+        TreeTraversal<LPConstraint, BanConstraint, IntType>> {
     protected:
         // Global information about the search:
         const LPInitialTableaux<LPConstraint> origTableaux_;
@@ -341,6 +342,16 @@ class TreeTraversal {
          * @param the type vector in string form.
          */
         std::string typeString() const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 
         /**
          * Reconstructs the full normal surface that is represented by
@@ -1492,6 +1503,24 @@ inline std::string TreeTraversal<LPConstraint, BanConstraint, IntType>::
     std::ostringstream out;
     dumpTypes(out);
     return out.str();
+}
+
+template <class LPConstraint, typename BanConstraint, typename IntType>
+void TreeTraversal<LPConstraint, BanConstraint, IntType>::writeTextShort(
+        std::ostream& out) const {
+    out << "Level " << level_  << " of 0.." << (nTypes_-1) << ", types: ";
+
+    // We assume the possible types are all single-digit.
+    char* c = new char[nTypes_ + 1];
+    int i = 0;
+    for ( ; i <= level_; ++i)
+        c[typeOrder_[i]] = char(type_[typeOrder_[i]] + '0');
+    for ( ; i < nTypes_; ++i)
+        c[typeOrder_[i]] = '_';
+    c[i] = 0;
+
+    out << c;
+    delete[] c;
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>

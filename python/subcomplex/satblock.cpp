@@ -65,8 +65,11 @@ void addSatBlock(pybind11::module_& m) {
             return lhs < rhs;
         })
     ;
-    regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    // Leave the output routines for subclasses to wrap, since __repr__
+    // will include the (derived) class name.
+    // Also leave the equality operators for subclasses to wrap, since
+    // each subclass of SatBlock provides its own custom == and != operators.
+    regina::python::no_eq_operators(c);
 
     auto d = pybind11::class_<SatBlockModel>(m, "SatBlockModel")
         .def(pybind11::init<const SatBlockModel&>())
@@ -74,6 +77,7 @@ void addSatBlock(pybind11::module_& m) {
         .def("triangulation", &SatBlockModel::triangulation)
         .def("block", &SatBlockModel::block)
     ;
+    regina::python::add_output(d);
     regina::python::add_eq_operators(d);
 
     m.def("swap", (void(*)(SatBlockModel&, SatBlockModel&))(regina::swap));

@@ -147,7 +147,8 @@ class Script : public Packet {
          * the packet infrastructure (e.g., it will not swap packet labels,
          * or change either packet's location in any packet tree).
          *
-         * @other the script packet whose contents should be swapped with this.
+         * @param other the script packet whose contents should be swapped
+         * with this.
          */
         void swap(Script& other);
 
@@ -421,10 +422,6 @@ inline void Script::unlistenVariables(PacketListener* listener) {
     for (const auto& v : variables_)
         if (auto shared = v.second.lock())
             shared->unlisten(listener);
-}
-
-inline void Script::writeTextShort(std::ostream& o) const {
-    o << "Python script";
 }
 
 inline void Script::addPacketRefs(PacketRefs& refs) const {

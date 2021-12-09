@@ -181,7 +181,7 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def("face", &FaceEmbedding<dim, subdim>::face)
         .def("vertices", &FaceEmbedding<dim, subdim>::vertices)
     ;
-    regina::python::add_output(e, true /* __repr__ */);
+    regina::python::add_output(e);
     regina::python::add_eq_operators(e);
     embedding_aliases<dim, subdim>::add(e);
 

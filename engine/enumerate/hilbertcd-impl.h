@@ -57,7 +57,7 @@ template <class RayClass, typename Action>
 void HilbertCD::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints) {
     static_assert(
-        IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
+        IsReginaArbitraryPrecisionInteger<typename RayClass::value_type>::value,
         "HilbertCD::enumerate() requires the RayClass "
         "template parameter to be equal to or derived from Vector<T>, "
         "where T is one of Regina's arbitrary precision integer types.");
@@ -100,7 +100,7 @@ void HilbertCD::enumerate(Action&& action,
 template <class RayClass, class BitmaskType, typename Action>
 void HilbertCD::enumerateUsingBitmask(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints) {
-    using IntegerType = typename RayClass::Element;
+    using IntegerType = typename RayClass::value_type;
 
     // Stack-based Contejean-Devie algorithm (Information & Computation, 1994).
     size_t dim = subspace.columns();

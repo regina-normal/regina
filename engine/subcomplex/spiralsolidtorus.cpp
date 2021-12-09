@@ -202,13 +202,20 @@ std::unique_ptr<SpiralSolidTorus> SpiralSolidTorus::recognise(
 }
 
 std::unique_ptr<Manifold> SpiralSolidTorus::manifold() const {
-    return std::make_unique<Handlebody>(1, true);
+    return std::make_unique<Handlebody>(1);
 }
 
 AbelianGroup SpiralSolidTorus::homology() const {
-    AbelianGroup ans;
-    ans.addRank();
-    return ans;
+    return AbelianGroup(1);
+}
+
+void SpiralSolidTorus::writeTextShort(std::ostream& out) const {
+    out << nTet_ << "-tetrahedron spiralled solid torus, tetrahedra ";
+    for (size_t i = 0; i < nTet_; ++i) {
+        if (i > 0)
+            out << ", ";
+        out << tet_[i]->index() << " (" << vertexRoles_[i] << ')';
+    }
 }
 
 } // namespace regina

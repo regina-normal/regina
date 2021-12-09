@@ -66,12 +66,12 @@ Triangulation<3> LensSpace::construct() const {
 }
 
 AbelianGroup LensSpace::homology() const {
-    AbelianGroup ans;
     if (p_ == 0)
-        ans.addRank();
+        return AbelianGroup(1);
     else if (p_ > 1)
-        ans.addTorsion(p_);
-    return ans;
+        return AbelianGroup(0, {p_});
+    else
+        return AbelianGroup();
 }
 
 std::ostream& LensSpace::writeName(std::ostream& out) const {

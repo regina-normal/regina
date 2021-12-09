@@ -191,20 +191,19 @@ std::unique_ptr<LayeredLoop> LayeredLoop::recognise(const Component<3>* comp) {
 }
 
 AbelianGroup LayeredLoop::homology() const {
-    AbelianGroup ans;
     if (hinge_[1]) {
         // Untwisted.
         if (length_ > 1)
-            ans.addTorsion(length_);
+            return AbelianGroup(0, {length_});
+        else
+            return AbelianGroup();
     } else {
         // Twisted.
-        if (length_ % 2 == 0) {
-            ans.addTorsion(2);
-            ans.addTorsion(2);
-        } else
-            ans.addTorsion(4);
+        if (length_ % 2 == 0)
+            return AbelianGroup(0, {2,2});
+        else
+            return AbelianGroup(0, {4});
     }
-    return ans;
 }
 
 } // namespace regina

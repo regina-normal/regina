@@ -39,6 +39,10 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
     if (prop_.H1Rel_.has_value())
         return *prop_.H1Rel_;
 
+    if (! isValid())
+        throw FailedPrecondition(
+            "homologyRel() requires a valid triangulation");
+
     if (countBoundaryComponents() == 0)
         return *(prop_.H1Rel_ = homology());
 
@@ -113,14 +117,16 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
     delete[] genIndex;
 
     // Build the group from the presentation matrix and tidy up.
-    AbelianGroup ans;
-    ans.addGroup(pres);
-    return *(prop_.H1Rel_ = std::move(ans));
+    return prop_.H1Rel_.emplace(std::move(pres));
 }
 
 const AbelianGroup& Triangulation<3>::homologyBdry() const {
     if (prop_.H1Bdry_.has_value())
         return *prop_.H1Bdry_;
+
+    if (! isValid())
+        throw FailedPrecondition(
+            "homologyBdry() requires a valid triangulation");
 
     // Run through the individual boundary components and add the
     // appropriate pieces to the homology group.
@@ -140,49 +146,10 @@ const AbelianGroup& Triangulation<3>::homologyBdry() const {
     }
 
     // Build the group and tidy up.
-    AbelianGroup ans;
-    ans.addRank(rank);
+    AbelianGroup ans(rank);
     for (unsigned long i = 0; i < z2rank; ++i)
         ans.addTorsion(2);
     return *(prop_.H1Bdry_ = std::move(ans));
-}
-
-const AbelianGroup& Triangulation<3>::homologyH2() const {
-    if (prop_.H2_.has_value())
-        return *prop_.H2_;
-
-    if (isEmpty())
-        return *(prop_.H2_ = AbelianGroup());
-
-    // Calculations are different for orientable vs non-orientable
-    // components.
-    // We know the only components will be Z and Z_2.
-    long rank, z2rank;
-    if (isOrientable()) {
-        // Same as H1Rel without the torsion elements.
-        rank = homologyRel().rank();
-        z2rank = 0;
-    } else {
-        // Non-orientable!
-        // z2rank = # closed cmpts - # closed orientable cmpts
-        z2rank = 0;
-        for (auto c : components())
-            if (c->isClosed() && (! c->isOrientable()))
-                ++z2rank;
-
-        // Find rank(Z_2) + rank(Z) and take off z2rank.
-        rank = homologyRel().rank() +
-            homologyRel().torsionRank(2) -
-            homology().torsionRank(2) -
-            z2rank;
-    }
-
-    // Build the new group and tidy up.
-    AbelianGroup ans;
-    ans.addRank(rank);
-    for (long i = 0; i < z2rank; ++i)
-        ans.addTorsion(2);
-    return *(prop_.H2_ = std::move(ans));
 }
 
 } // namespace regina

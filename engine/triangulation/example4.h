@@ -89,9 +89,24 @@ class Example<4> : public detail::ExampleBase<4> {
          * 4-space.
          *
          * @return real projective 4-space.
-         * @author Ryan Budney
          */
         static Triangulation<4> rp4();
+
+        /**
+         * Returns a four-pentachoron triangulation of the standard
+         * complex projective plane.  This triangulation is minimal.
+         *
+         * @return the standard complex projective plane.
+         */
+        static Triangulation<4> cp2();
+
+        /**
+         * Returns a six-pentachoron triangulation of the standard product
+         * <tt>S^2 x S^2</tt>.  This triangulation is minimal.
+         *
+         * @return the standard product of two 2-spheres.
+         */
+        static Triangulation<4> s2xs2();
 
         /**
          * Returns a two-pentachoron triangulation of the product space

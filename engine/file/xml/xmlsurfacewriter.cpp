@@ -34,7 +34,7 @@
 #include "regina-core.h"
 #include "file/fileformat.h"
 #include "file/xml/xmlwriter.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "packet/packet-impl.h"
 

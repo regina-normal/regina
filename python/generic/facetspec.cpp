@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
+#include "regina-config.h" // for REGINA_HIGHDIM
 #include "triangulation/facetspec.h"
 #include "../helpers.h"
 
@@ -62,7 +63,7 @@ void addFacetSpec(pybind11::module_& m, const char* name) {
         .def(pybind11::self < pybind11::self)
         .def(pybind11::self <= pybind11::self)
     ;
-    regina::python::add_output_ostream(c, true /* __repr__ */);
+    regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c);
 }
 
@@ -70,11 +71,11 @@ void addFacetSpec(pybind11::module_& m) {
     addFacetSpec<2>(m, "FacetSpec2");
     addFacetSpec<3>(m, "FacetSpec3");
     addFacetSpec<4>(m, "FacetSpec4");
-#ifndef REGINA_LOWDIMONLY
     addFacetSpec<5>(m, "FacetSpec5");
     addFacetSpec<6>(m, "FacetSpec6");
     addFacetSpec<7>(m, "FacetSpec7");
     addFacetSpec<8>(m, "FacetSpec8");
+#ifdef REGINA_HIGHDIM
     addFacetSpec<9>(m, "FacetSpec9");
     addFacetSpec<10>(m, "FacetSpec10");
     addFacetSpec<11>(m, "FacetSpec11");

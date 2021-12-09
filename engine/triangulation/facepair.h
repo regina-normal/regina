@@ -88,8 +88,8 @@ class FacePair {
          * \pre The two given face numbers must be distinct integers
          * between 0 and 3 inclusive.
          *
-         * @param newFirst the first face number in the new pair.
-         * @param newSecond the second face number in the new pair.
+         * @param first the first face number in the new pair.
+         * @param second the second face number in the new pair.
          */
         FacePair(int first, int second);
         /**
@@ -382,7 +382,7 @@ inline FacePair FacePair::operator -- (int) {
 }
 
 inline std::ostream& operator << (std::ostream& out, const FacePair& pair) {
-    return out << '(' << pair.lower() << ',' << pair.upper() << ')';
+    return out << '{' << pair.lower() << ',' << pair.upper() << '}';
 }
 
 inline int FacePair::commonEdge() const {

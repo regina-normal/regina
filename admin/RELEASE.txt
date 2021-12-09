@@ -51,7 +51,7 @@ Don't forget:
     journal references (www, KDE docs, example files, headers;
         search for arXiv and "to appear")
     check that all headers are installed correctly
-    check for doxygen warnings
+    check for doxygen warnings (capture stderr when running doxygen)
     check for docbook warnings/errors
     run valgrind over the test suite and GUI
     python bindings for new routines

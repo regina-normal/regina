@@ -57,10 +57,8 @@ void addSnapPeaCensusTri(pybind11::module_& m) {
         .def_readonly_static("SEC_7_OR", &SnapPeaCensusTri::SEC_7_OR)
         .def_readonly_static("SEC_7_NOR", &SnapPeaCensusTri::SEC_7_NOR)
     ;
-    // The SnapPeaCensusTri subclass defines its own equality tests, so
-    // we should override the compare-by-pointer test that we inherit from
-    // StandardTriangulation.
     regina::python::add_eq_operators(c);
+    regina::python::add_output(c);
 
     m.def("swap",
         (void(*)(SnapPeaCensusTri&, SnapPeaCensusTri&))(regina::swap));

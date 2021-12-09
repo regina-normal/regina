@@ -40,8 +40,8 @@
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
 #include "packet/container.h"
-#include "surfaces/normalsurface.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurface.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 
 #include "testsuite/link/testlink.h"
@@ -79,6 +79,7 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(gauss);
     CPPUNIT_TEST(orientedGauss);
     CPPUNIT_TEST(pdCode);
+    CPPUNIT_TEST(magic);
     CPPUNIT_TEST(rewrite);
     CPPUNIT_TEST(swapping);
     CPPUNIT_TEST(group);
@@ -2613,6 +2614,36 @@ class LinkTest : public CppUnit::TestFixture {
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
+
+                // Try building a code with extra separator symbols.
+                auto data = link.pdData();
+
+                std::ostringstream longCode;
+                longCode << "PD[";
+                int i = 0;
+                for (const auto& tuple : data) {
+                    switch (i % 5) {
+                        case 0: longCode << " X(";
+                        case 1: longCode << " Xp {";
+                        case 2: longCode << " Xm[";
+                        case 3: longCode << " P[";
+                        default: longCode << ' ';
+                    }
+                    ++i;
+
+                    for (auto k : tuple)
+                        longCode << ' ' << k << ",\t";
+                    longCode << "), ";
+                }
+                longCode << "] ";
+
+                Link longLink = Link::fromPD(longCode.str());
+                if (longLink.brief() != recon.brief()) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction changes "
+                        "in the presence of extra separators.";
+                    CPPUNIT_FAIL(msg.str());
+                }
             } catch (const regina::InvalidArgument&) {
                 std::ostringstream msg;
                 msg << name << ": cannot reconstruct from code.";
@@ -2662,6 +2693,122 @@ class LinkTest : public CppUnit::TestFixture {
             verifyPDCode(unlink3_0, empty, "Unlink (3 components)");
             verifyPDCode(trefoil_unknot0, trefoilRight,
                 "Trefoil U unknot (separate)");
+        }
+
+        void verifyMagic(const Link& l, const char* name,
+                size_t trivialComponents = 0, bool gaussAmbiguous = false) {
+            if (l.countComponents() == 1) {
+                std::string sig = l.knotSig();
+
+                {
+                    Link recon(sig);
+                    if (recon.knotSig() != sig) {
+                        std::ostringstream msg;
+                        msg << name << ": cannot reconstruct from "
+                            "knot signature using magic constructor.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+                {
+                    Link recon(l.orientedGauss());
+                    if (recon.knotSig() != sig) {
+                        std::ostringstream msg;
+                        msg << name << ": cannot reconstruct from "
+                            "oriented Gauss code using magic constructor.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+                if (! gaussAmbiguous) {
+                    {
+                        Link recon(l.gauss());
+                        if (recon.knotSig() != sig) {
+                            std::ostringstream msg;
+                            msg << name << ": cannot reconstruct from "
+                                "classical Gauss code using magic constructor.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                    {
+                        Link recon(l.dt(false));
+                        if (recon.knotSig() != sig) {
+                            std::ostringstream msg;
+                            msg << name << ": cannot reconstruct from "
+                                "numeric DT code using magic constructor.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                    if (l.size() <= 26 && l.size() != 1) {
+                        // For the 1-crossing unknot, the alphabetic DT code
+                        // is "a", which is the same as the knot signature
+                        // for the 0-crossing unknot.
+                        Link recon(l.dt(true));
+                        if (recon.knotSig() != sig) {
+                            std::ostringstream msg;
+                            msg << name << ": cannot reconstruct from "
+                                "alphabetic DT code using magic constructor.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
+                    }
+                }
+            }
+
+            {
+                Link recon(l.pd());
+                // We should really insert trivialComponents additional
+                // 0-crossing unknots and then compare the two links up
+                // to isomorphism.  However, knotSig() only works on knots,
+                // so currently this is not easy.  Instead we verify
+                // that the PD code is preserved, which is a looser test.
+                if (recon.pd() != l.pd()) {
+                    std::ostringstream msg;
+                    msg << name << ": cannot reconstruct from "
+                        "PD code using magic constructor.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void magic() {
+            // The empty link:
+            verifyMagic(empty, "Empty");
+
+            // Single-component knots:
+            verifyMagic(unknot0, "Unknot (0 crossings)", 1);
+            verifyMagic(unknot1, "Unknot (1 crossing)");
+            verifyMagic(unknot3, "Unknot (3 crossings)");
+            verifyMagic(unknotMonster, "Monster unknot");
+            verifyMagic(unknotGordian, "Gordian unknot");
+            verifyMagic(trefoilLeft, "LH Trefoil");
+            verifyMagic(trefoilRight, "RH Trefoil");
+            verifyMagic(trefoil_r1x2, "Trefoil with 2 R1s", 0, true);
+            verifyMagic(trefoil_r1x6, "Trefoil with 6 R1s", 0, true);
+            verifyMagic(figureEight, "Figure eight");
+            verifyMagic(figureEight_r1x2, "Figure eight with 2 R1s", 0, true);
+            verifyMagic(conway, "Conway knot");
+            verifyMagic(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
+            verifyMagic(gst, "GST");
+            verifyMagic(rht_rht, "RH Trefoil # RH Trefoil", 0, true);
+            verifyMagic(rht_lht, "RH Trefoil # LH Trefoil", 0, true);
+
+            // Links with multiple components:
+            verifyMagic(unlink2_0, "Unlink (2 components)", 2);
+            verifyMagic(unlink3_0, "Unlink (3 components)", 3);
+            verifyMagic(unlink2_r2, "Unlink (2 components via R2)");
+            verifyMagic(unlink2_r1r1, "Unlink (2 components via R1+R1)");
+            verifyMagic(hopf, "Hopf link");
+            verifyMagic(whitehead, "Whitehead link");
+            verifyMagic(borromean, "Borromean rings");
+            verifyMagic(trefoil_unknot0, "Trefoil U unknot (separate)", 1);
+            verifyMagic(trefoil_unknot1, "Trefoil U unknot (separate + twist)");
+            verifyMagic(trefoil_unknot_overlap, "Trefoil U unknot (with R2)");
+            verifyMagic(adams6_28, "Adams Fig. 6.28");
+
+            try {
+                Link l("INVALID");
+                CPPUNIT_FAIL("The magic constructor did not throw an "
+                    "exception for an invalid link code.");
+            } catch (const regina::InvalidArgument&) {
+            }
         }
 
         void verifyRewrite(const Link& link, int height, int threads,
@@ -2720,12 +2867,16 @@ class LinkTest : public CppUnit::TestFixture {
 
         void rewrite() {
             // The counts here were computed using Regina 6.0 in
-            // single-threaded mode.
+            // single-threaded mode (except for the unknot0 cases, which
+            // were computed by hand).
             //
             // The expected counts should always be positive, so passing
             // an expected count of 0 will be treated as a request to display
             // the number of triangulations that were actually found.
             //
+            verifyRewrite(unknot0, 0, 1, "Unknot (0 crossings)");
+            verifyRewrite(unknot0, 1, 2, "Unknot (0 crossings)");
+            verifyRewrite(unknot0, 2, 6, "Unknot (0 crossings)");
             verifyRewrite(figureEight, 0, 1, "Figure eight");
             verifyRewrite(figureEight, 1, 8, "Figure eight");
             verifyRewrite(figureEight, 2, 137, "Figure eight");

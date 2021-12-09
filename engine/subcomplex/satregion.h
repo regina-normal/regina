@@ -85,7 +85,7 @@ namespace regina {
  *
  * \ingroup subcomplex
  */
-class SatBlockSpec {
+class SatBlockSpec : public ShortOutput<SatBlockSpec> {
     private:
         SatBlock* block_;
             /**< Details of the saturated block structure. */
@@ -182,6 +182,16 @@ class SatBlockSpec {
          * @return \c true if and only if the block is reflected horizontally.
          */
         bool refHoriz() const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 
         // Ensure the class is non-constructible (to the public) and
         // non-copyable.
@@ -657,6 +667,11 @@ class SatRegion : public Output<SatRegion> {
          * @param tri the triangulation in which to search for starter blocks.
          * @param mustBeComplete \c true if you are searching for a region
          * that fills an entire triangulation component, as described above.
+         * @param action a function (or other callable object) to call
+         * for each embedding of a starter block that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial region and tetrahedron list
+         * arguments.
          * @return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
          */

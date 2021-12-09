@@ -61,7 +61,7 @@ class SurfacesCreator : public PacketCreator {
         /**
          * Constructor.
          */
-        SurfacesCreator();
+        SurfacesCreator(ReginaMain*);
 
         /**
          * PacketCreator overrides.
@@ -72,6 +72,7 @@ class SurfacesCreator : public PacketCreator {
         std::shared_ptr<regina::Packet> createPacket(
             std::shared_ptr<regina::Packet> parentPacket,
             QWidget* parentWidget) override;
+        PacketFilter* filter() override;
         void explainNoParents() override;
 };
 

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 
 #include "csvsurfacehandler.h"
@@ -46,11 +46,10 @@ PacketFilter* CSVSurfaceHandler::canExport() const {
     return new SingleTypeFilter<regina::PacketOf<regina::NormalSurfaces>>();
 }
 
-bool CSVSurfaceHandler::exportData(std::shared_ptr<regina::Packet> data,
+bool CSVSurfaceHandler::exportData(const regina::Packet& data,
         const QString& fileName, QWidget* parentWidget) const {
-    auto list = std::dynamic_pointer_cast<
-        regina::PacketOf<regina::NormalSurfaces>>(data);
-    if (! list->saveCSVStandard(
+    auto& list = regina::static_packet_cast<regina::NormalSurfaces>(data);
+    if (! list.saveCSVStandard(
             static_cast<const char*>(QFile::encodeName(fileName)))) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("The export failed."), 

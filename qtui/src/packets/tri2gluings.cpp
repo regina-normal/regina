@@ -593,12 +593,13 @@ void Tri2GluingsUI::splitIntoComponents() {
         for (auto& c : tri->triangulateComponents()) {
             std::ostringstream label;
             label << "Component #" << ++which;
-            base->insertChildLast(regina::makePacket(std::move(c),
+            base->insertChildLast(regina::make_packet(std::move(c),
                 label.str()));
         }
 
         // Make sure the new components are visible.
-        enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
+        enclosingPane->getMainWindow()->ensureVisibleInTree(
+            *base->firstChild());
 
         // Tell the user what happened.
         ReginaSupport::info(ui,

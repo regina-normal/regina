@@ -177,9 +177,7 @@ AbelianGroup GraphTriple::homology() const {
     reln++;
 
     // Phew.
-    AbelianGroup ans;
-    ans.addGroup(m);
-    return ans;
+    return AbelianGroup(std::move(m));
 }
 
 std::ostream& GraphTriple::writeName(std::ostream& out) const {

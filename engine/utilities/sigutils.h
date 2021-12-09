@@ -272,7 +272,7 @@ struct Base64SigEncoding {
      * for details of the encoding.
      *
      * @param c the base64 character to decode.
-     * @param result an array containing the three trits that had been
+     * @return an array containing the three trits that had been
      * encoded in the given base64 character.
      */
     static constexpr std::array<uint8_t, 3> decodeTrits(char c) {

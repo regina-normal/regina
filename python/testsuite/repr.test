@@ -1,0 +1,548 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2007-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests the Python repr() output for some of Regina's classes.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+from __future__ import print_function
+
+# Fetch the python/testsuite path in the source tree, since we will need
+# to access external files.
+import sys
+if (len(sys.argv) > 1):
+	testpath = sys.argv[1]
+else:
+	testpath = '.'
+
+def dump(x):
+	if isinstance(x, list):
+		if len(x) > 0:
+			print('list of ' + x[0].__class__.__name__)
+			for i in x:
+				print('  ' + str(i))
+		else:
+			print('empty list')
+	else:
+		print(x.__class__.__name__)
+		print(str(x))
+	print(repr(x))
+	print()
+
+# ----------------------------------------------------------------------
+# maths/
+# ----------------------------------------------------------------------
+
+dump(Integer(-5))
+dump(LargeInteger(9))
+dump(LargeInteger.infinity)
+dump(Rational(3,8))
+dump(Perm2(0,1))
+dump(Perm3(1,2))
+dump(Perm4(1,3))
+dump(Perm5(2,3))
+dump(Perm6(2,3))
+dump(Perm7(2,3))
+dump(Perm8(2,3))
+dump(Perm15(2,3))
+dump(VectorInt([1,0,-2]))
+dump(VectorLarge([1,0,LargeInteger.infinity,-2]))
+
+m = Matrix2(1,2,3,4)
+dump(m)
+dump(m[1])
+
+dump(MatrixBool([[True, False], [False, True]]))
+dump(makeMatchingEquations(Example3.figureEight(), NS_QUAD))
+
+t = Example3.poincare()
+dump(t.turaevViro(5))
+dump(t.turaevViro(5).polynomial())
+
+l = ExampleLink.figureEight()
+dump(l.jones())
+dump(l.homfly())
+
+# ----------------------------------------------------------------------
+# Flags and other enumerate/flag-like types
+# ----------------------------------------------------------------------
+
+dump(HS_VERTEX)
+dump(HS_VERTEX_DD)
+dump(NS_VERTEX)
+dump(NS_VERTEX_DD)
+dump(AS_ALG_DD)
+dump(PURGE_NON_MINIMAL)
+dump(surfaceExportName)
+
+dump(HyperList(HS_VERTEX))
+dump(HyperAlg(HS_VERTEX_DD))
+dump(NormalList(NS_VERTEX))
+dump(NormalAlg(NS_VERTEX_DD))
+dump(AngleAlg(AS_ALG_DD))
+dump(PURGE_NON_MINIMAL | PURGE_NON_PRIME)
+dump(surfaceExportName | surfaceExportEuler)
+
+dump(NormalEncoding(NS_QUAD))
+dump(HyperEncoding(HS_STANDARD))
+dump(LPSystem(NS_QUAD))
+
+# ----------------------------------------------------------------------
+# algebra/
+# ----------------------------------------------------------------------
+
+dump(Example3.weberSeifert().homology())
+dump(Example3.weberSeifert().markedHomology())
+dump(Example3.weberSeifert().markedHomology().torsionInclusion())
+
+g = Example3.poincare().fundamentalGroup()
+dump(g)
+dump(g.relation(0))
+dump(g.relation(0).term(2))
+
+g = GroupPresentation(3, ['aC', 'aBCb'])
+dump(g)
+dump(g.intelligentSimplifyDetail())
+dump(g)
+
+# ----------------------------------------------------------------------
+# utilities/
+# ----------------------------------------------------------------------
+
+b = Bitmask(5)
+b.set(3, True)
+dump(b)
+
+b = Bitmask8()
+b.set(3, True)
+dump(b)
+
+q = Qitmask8()
+q.set(3, 2)
+dump(q)
+
+dump(BoolSet(True))
+dump(TrieSet())
+
+# ----------------------------------------------------------------------
+# surface/, hypersurface/ and angle/
+# ----------------------------------------------------------------------
+
+dump(DiscType(7,3))
+dump(DiscSpec(1,3,2))
+dump(PrismSpec(5,1))
+
+s = NormalSurfaces(Example3.s2xs1(), NS_QUAD)
+dump(s)
+dump(s.surface(0))
+s = NormalHypersurfaces(Example4.s3xs1(), HS_PRISM)
+dump(s)
+dump(s.hypersurface(0))
+s = AngleStructures(Example3.figureEight())
+dump(s)
+dump(s.structure(0))
+
+dump(SurfaceFilterCombination())
+f = SurfaceFilterProperties(); f.setEulerChars([0,1]); f.setOrientability(True)
+dump(f)
+
+t = Example3.poincare()
+st = NormalSurfaces.enumerate(t, NS_QUAD)
+dt = DiscSetSurface(st.surface(0))
+dump(dt)
+dump(dt.tetDiscs(0))
+
+# ----------------------------------------------------------------------
+# link/
+# ----------------------------------------------------------------------
+
+g = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
+dump(g)
+dump(g.node(0))
+dump(g.node(0).arc(2))
+dump(g.cells())
+
+dump(Link())
+dump(Link(1))
+dump(ExampleLink.whitehead())
+dump(PacketOfLink(ExampleLink.whitehead()))
+
+l = Link(1)
+dump(l.component(0))
+l = ExampleLink.figureEight()
+dump(l.component(0))
+dump(l.crossing(0))
+
+l = Tangle(3,2)
+dump(l)
+dump(l.crossing(0))
+
+# ----------------------------------------------------------------------
+# snappea/
+# ----------------------------------------------------------------------
+
+s = ExampleSnapPea.whiteheadLink()
+dump(s)
+s.fill(5,-2,0)
+dump(s)
+dump(PacketOfSnapPeaTriangulation(s))
+dump(s.cusp(0))
+dump(s.cusp(1))
+
+# ----------------------------------------------------------------------
+# triangulation/
+# ----------------------------------------------------------------------
+
+dump(FacetSpec3(6,2))
+dump(FacePair(1,3))
+dump(FacetPairing3(Example3.figureEight()))
+dump(FacetPairing4(Example4.s3xs1()))
+
+dump(Example2.mobius())
+dump(Example3.poincare())
+dump(PacketOfTriangulation3(Example3.poincare()))
+dump(Example4.cappellShaneson())
+dump(Example5.sphere())
+
+t = Example2.annulus()
+dump(t.vertex(0))
+dump(t.vertex(0).front())
+dump(t.edge(0))
+dump(t.edge(0).front())
+dump(t.triangle(0))
+dump(t.component(0))
+dump(t.boundaryComponent(0))
+
+t = Example3.poincare()
+dump(t.vertex(0))
+dump(t.vertex(0).front())
+dump(t.edge(0))
+dump(t.edge(0).front())
+dump(t.triangle(0))
+dump(t.triangle(0).front())
+dump(t.tetrahedron(0))
+dump(t.component(0))
+
+t = Example4.cappellShaneson()
+dump(t.vertex(0))
+dump(t.vertex(0).front())
+dump(t.edge(0))
+dump(t.edge(0).front())
+dump(t.triangle(0))
+dump(t.triangle(0).front())
+dump(t.tetrahedron(0))
+dump(t.tetrahedron(0).front())
+dump(t.pentachoron(0))
+dump(t.component(0))
+dump(t.boundaryComponent(0))
+
+t = Example5.sphere()
+dump(t.vertex(0))
+dump(t.vertex(0).front())
+dump(t.edge(0))
+dump(t.edge(0).front())
+dump(t.triangle(0))
+dump(t.triangle(0).front())
+dump(t.tetrahedron(0))
+dump(t.tetrahedron(0).front())
+dump(t.pentachoron(0))
+dump(t.pentachoron(0).front())
+dump(t.simplex(0))
+dump(t.component(0))
+t.insertTriangulation(Example5.ballBundle())
+dump(t.component(1))
+dump(t.boundaryComponent(0))
+
+i = Isomorphism3(2)
+i.setSimpImage(0, 1)
+i.setSimpImage(1, 0)
+i.setFacetPerm(0, Perm4(1,2,3,0))
+i.setFacetPerm(1, Perm4(0,2))
+dump(i)
+
+h = HomologicalData(Example3.lst(3,4))
+dump(h)
+dump(h.bdryHomologyMap(1))
+dump(h)
+
+# ----------------------------------------------------------------------
+# manifold/
+# ----------------------------------------------------------------------
+
+dump(SFSFibre(5,-2))
+
+sfsDisc = SFSpace(SFSpace.o2, 0, 1)
+sfsDisc.insertFibre(3,1)
+sfsDisc.insertFibre(4,-3)
+sfsAnnulus = SFSpace(SFSpace.o2, 0, 2)
+sfsAnnulus.insertFibre(2,1)
+sfsAnnulus.insertFibre(5,7)
+
+dump(LensSpace(7,2))
+dump(sfsDisc)
+dump(SimpleSurfaceBundle(SimpleSurfaceBundle.RP2xS1))
+dump(SnapPeaCensusManifold('x', 101))
+dump(Handlebody(2))
+dump(TorusBundle(0,1,1,0))
+dump(GraphLoop(sfsAnnulus, Matrix2(0,1,-1,2)))
+dump(GraphPair(sfsDisc, sfsDisc, Matrix2(0,1,-1,2)))
+dump(GraphTriple(sfsDisc, sfsAnnulus, sfsDisc, Matrix2(0,1,-1,2), Matrix2(-1,2,-3,5)))
+
+dump(SFSAlt.altSet(sfsDisc));
+dump(SFSAlt.altSet(sfsAnnulus));
+
+# ----------------------------------------------------------------------
+# subcomplex/
+# ----------------------------------------------------------------------
+
+dump(StandardTriangulation.recognise(Example3.figureEight()))
+
+dump(TxIDiagonalCore(6,1))
+dump(TxIParallelCore())
+
+t = Triangulation3()
+(a,b) = t.newSimplices(2)
+a.join(0, a, Perm4(0,1))
+b.join(0, b, Perm4(0,1))
+a.join(2, b, Perm4(2,3))
+a.join(3, b, Perm4(2,3))
+dump(SnappedBall.recognise(b))
+dump(SnappedTwoSphere.recognise(a, b))
+
+t = Triangulation3()
+(a,b,c,d) = t.newSimplices(4)
+for i in [1,2,3]:
+	c.join(i, b, Perm4())
+	d.join(i, b, Perm4())
+a.join(0, c, Perm4())
+b.join(0, d, Perm4())
+dump(PillowTwoSphere.recognise(a.triangle(0), b.triangle(0)))
+
+dump(SatCube.model())
+
+t = Example3.sfsOverSphere(3,4,5,1,2,-1)
+s = BlockedSFS.recognise(t)
+dump(s)
+dump(s.region())
+dump(s.region().block(0))
+dump(s.region().block(0).block())
+dump(s.region().block(0).block().annulus(0))
+
+dump(BlockedSFSLoop.recognise(Triangulation3('kLLLLPQkcddfjgihjijpkrkaspoadj')))
+dump(BlockedSFSPair.recognise(Triangulation3('hLAvQkbccefggglpksulwb')))
+dump(BlockedSFSTriple.recognise(Triangulation3('kLALALMkbccfefihijjlpkusuueotr')))
+dump(PluggedTorusBundle.recognise(Triangulation3('kLLvAPQkbdfehgjiijjdwuurwmmaxn')))
+dump(L31Pillow.recognise(Triangulation3('cPcbbbaai').component(0)))
+dump(LayeredLoop.recognise(Triangulation3('cPcbbbqxh').component(0)))
+dump(LayeredTorusBundle.recognise(Triangulation3('hvLPQkcedgffggnnkaaeiw')))
+dump(PlugTriSolidTorus.recognise(Example3.poincare().component(0)))
+dump(TrivialTri.recognise(Example3.rp2xs1().component(0)))
+
+t = Example3.sfsOverSphere(3,4,5,1,2,-1)
+a = AugTriSolidTorus.recognise(t.component(0))
+dump(a)
+dump(a.core())
+
+l = Example3.lens(8,3)
+dump(LayeredLensSpace.recognise(l.component(0)))
+dump(LayeredSolidTorus.recogniseFromBase(l.tetrahedron(0)))
+dump(LayeredSolidTorus.recogniseFromBase(l.tetrahedron(l.size()-1)))
+
+y = Layering(l.tetrahedron(0), Perm4(2,3,0,1), l.tetrahedron(0), Perm4(3,2,1,0))
+dump(y)
+y.extend()
+dump(y)
+
+t = Triangulation3('kLLLMAMkcegfhhhijjjhqhaqjshhrw')
+l = LayeredChainPair.recognise(t.component(0))
+dump(l)
+dump(l.chain(0))
+dump(SpiralSolidTorus.recognise(l.chain(0).top(), l.chain(0).topVertexRoles()))
+
+# ----------------------------------------------------------------------
+# census/
+# ----------------------------------------------------------------------
+
+h = Census.lookup('cPcbbbiht')[0]
+dump(h)
+# Do not dump the CensusDB object, since the output is filesystem-dependent.
+# dump(h.db())
+
+p = FacetPairing2(Example2.annulus())
+isos = p.findAutomorphisms()
+dump(GluingPermSearcher2(p, isos, True))
+
+p = FacetPairing3(Example3.sfsOverSphere(3,4,5,1,2,-1))
+isos = p.findAutomorphisms()
+dump(GluingPermSearcher3(p, isos, True, False, PURGE_NON_MINIMAL))
+dump(CompactSearcher(p, isos, True, PURGE_NON_MINIMAL))
+dump(HyperbolicMinSearcher(p, isos, True))
+dump(EulerSearcher(-2, p, isos, False, PURGE_NONE))
+dump(ClosedPrimeMinSearcher(p, isos, True))
+
+p = FacetPairing4(Example4.s3xs1())
+isos = p.findAutomorphisms()
+dump(GluingPermSearcher4(p, isos, False, True))
+
+# ----------------------------------------------------------------------
+# enumerate/
+# ----------------------------------------------------------------------
+
+dump(TypeTrie4())
+dump(TypeTrie7())
+
+t = Example3.figureEight()
+tab = LPInitialTableaux_NonSpun(t, NS_QUAD)
+dump(tab)
+m = LPMatrix(tab.rank(), tab.columns())
+tab.fillInitialTableaux(m)
+dump(m)
+dat = LPData_NonSpun()
+dump(dat)
+dat.reserve(tab)
+dump(dat)
+dat.initStart()
+dump(dat)
+
+dump(makeEmbeddedConstraints(t, NS_STANDARD));
+dump(makeEmbeddedConstraints(t, NS_AN_QUAD_OCT));
+
+t = Example3.lst(3,4)
+tab = LPInitialTableaux(t, NS_STANDARD)
+dump(BanNone(tab))
+dump(BanBoundary(tab))
+dump(BanTorusBoundary(tab))
+
+dump(PosOrder(MatrixInt.identity(3)))
+
+# ----------------------------------------------------------------------
+# treewidth/
+# ----------------------------------------------------------------------
+
+t = TreeDecomposition(ExampleLink.conway())
+dump(t)
+dump(t.bag(0))
+
+# ----------------------------------------------------------------------
+# split/
+# ----------------------------------------------------------------------
+
+dump(Signature.parse('abbc.ac'))
+
+# ----------------------------------------------------------------------
+# file/
+# ----------------------------------------------------------------------
+
+dump(FileInfo.identify(testpath + '/file3.rga'))
+dump(FileInfo.identify(testpath + '/pdf.test'))
+
+# ----------------------------------------------------------------------
+# progress/
+# ----------------------------------------------------------------------
+
+p = ProgressTrackerOpen()
+dump(p)
+p.newStage('Doing stuff')
+p.incSteps(3)
+dump(p)
+p.setFinished()
+dump(p)
+
+p = ProgressTracker()
+dump(p)
+p.newStage('Doing stuff', 1)
+p.setPercent(5.87)
+dump(p)
+p.setPercent(75.87)
+dump(p)
+p.cancel()
+dump(p)
+
+# ----------------------------------------------------------------------
+# packet/
+# ----------------------------------------------------------------------
+
+c = Container()
+t = Text('Hello world!')
+t.setLabel('Welcome')
+c.insertChildLast(t)
+a = Attachment(b'foo', 'test.txt')
+t.insertChildLast(a)
+s = Script()
+s.setText('print("Hello world!")\nprint(0)')
+s.addVariable('text', t)
+s.addVariable('dummy', None)
+t.insertChildLast(s)
+dump(c)
+dump(t)
+dump(a)
+dump(s)
+
+# Do not dump PacketShell objects, since they write internal IDs which
+# are not consistent between runs.
+#
+# dump(PacketShell(s))
+# dump(PacketShell(t))
+
+# ----------------------------------------------------------------------
+# Classes that require us to use callbacks for non-trivial access:
+# ----------------------------------------------------------------------
+
+def foundGluings2(g):
+	dump(g)
+
+def foundPairing2(p, isos):
+	GluingPermSearcher2.findAllPerms(p, isos, True, foundGluings2)
+
+FacetPairing2.findAllPairings(2, False, 0, foundPairing2)
+
+def processSig(s, autos):
+	print(s)
+	dump(autos[-1])
+
+SigCensus.formCensus(2, processSig)
+
+t = Example3.rp3rp3()
+tree = TreeSingleSoln_EulerPositive(t, NS_STANDARD)
+dump(tree)
+tree.find()
+dump(tree)
+
+t = Example3.figureEight()
+tree = TautEnumeration(t)
+tree.run(dump)
+
+t = Example3.figureEight()
+tree = TreeEnumeration(t, NS_QUAD)
+tree.run(dump)
+
+t = Example3.trefoil()
+tree = TreeEnumeration_NonSpun(t, NS_QUAD)
+tree.run(dump)
+

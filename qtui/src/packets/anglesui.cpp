@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "surfaces/normalsurface.h"
+#include "surface/normalsurface.h"
 #include "triangulation/dim3.h"
 
 // UI includes:
@@ -323,15 +323,15 @@ void AngleStructureUI::viewTriangulation() {
         if (msg.exec() != QMessageBox::Yes)
             return;
 
-        auto copy = regina::makePacket<regina::Triangulation<3>>(
+        auto copy = regina::make_packet<regina::Triangulation<3>>(
             std::in_place, tri);
         copy->setLabel(structures_->adornedLabel("Triangulation"));
         structures_->insertChildLast(copy);
 
-        enclosingPane->getMainWindow()->packetView(copy, true, true);
+        enclosingPane->getMainWindow()->packetView(*copy, true, true);
     } else {
         enclosingPane->getMainWindow()->packetView(
-            std::const_pointer_cast<Packet>(triPkt),
+            const_cast<regina::Packet&>(*triPkt),
             false /* visible in tree */, false /* select in tree */);
     }
 }

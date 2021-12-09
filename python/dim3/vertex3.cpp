@@ -53,7 +53,7 @@ void addVertex3(pybind11::module_& m) {
         .def("vertex", &VertexEmbedding<3>::vertex)
         .def("vertices", &VertexEmbedding<3>::vertices)
     ;
-    regina::python::add_output(e, true /* __repr__ */);
+    regina::python::add_output(e);
     regina::python::add_eq_operators(e);
 
     auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0")

@@ -3,13 +3,13 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "RETRIANGULATE" "1" "13 March 2021" "" "The Regina Handbook"
+.TH "RETRIANGULATE" "1" "29 November 2021" "" "The Regina Handbook"
 
 .SH NAME
 retriangulate \- Exhaustively search through triangulations or knot diagrams using local moves
 .SH SYNOPSIS
 
-\fBretriangulate\fR [ \fB-h, --height=\fIheight\fB\fR ] [ \fB-t, --threads=\fIthreads\fB\fR ] [ \fB-3, --dim3\fR | \fB-4, --dim4\fR | \fB-k, --knot\fR ] \fB\fIsignature\fB\fR
+\fBretriangulate\fR [ \fB-h, --height=\fIheight\fB\fR ] [ \fB-t, --threads=\fIthreads\fB\fR ] [ \fB-3, --dim3\fR | \fB-4, --dim4\fR | \fB-k, --knot\fR ] [ \fB-a, --anysig\fR ] \fB\fIsignature\fB\fR
 
 
 \fBretriangulate\fR \fB--help\fR
@@ -147,6 +147,49 @@ Indicates that the given signature is the isomorphism signature of a
 \fB-k, --knot\fR
 Indicates that the given signature is a knot signature.
 The local moves used will be the Reidemeister moves.
+.TP
+\fB-a, --anysig\fR
+Indicates that the output is not required to be
+classic isomorphism signatures.
+
+Regina\~7.0 introduced alternate \fBtypes\fR
+of isomorphism signatures.  Like the original isomorphism signatures
+that were introduced many years earlier, each type of signature
+uniquely identifies a triangulation up to combinatorial isomorphism.
+Moreover, Regina can reconstruct a triangulation or link from a
+signature of any type.
+
+Internally, this utility uses one of the newer, alternate types
+of signature that is faster to compute.  However, it still outputs
+\fBclassic signatures\fR; that is, the same isomorphism
+signatures that were originally introduced back in 2011.  This
+conversion from alternate to classic signatures adds extra overhead
+to the running time.
+
+If you pass the option \fB--anysig\fR, Regina will
+not convert its output back to classic signatures; instead it will
+output whatever alternate signature type it uses internally.
+This will be faster, and you can still use these alternate
+signatures to reconstruct triangulations; the only reason
+\fBnot\fR to do this is if you neeed to ensure
+compatibility with the original classical signatures (e.g., for
+matching against a list of signatures that was generated elsewhere).
+.sp
+.RS
+.B "Warning:"
+The internal signature type is subject to change in future versions
+of Regina.  That is, if you do use \fB--anysig\fR,
+then you may get different output depending upon which version of
+Regina you are using.
+.RE
+.sp
+.RS
+.B "Note:"
+Currently Regina only uses alternate signature types with
+triangulations.  For knot signatures, it still uses
+classic signatures, though again this is subject to change in
+future version of Regina.
+.RE
 .SH "EXAMPLES"
 .PP
 The following 3-manifold triangulation is non-minimal, but it requires a bit

@@ -149,7 +149,7 @@ TEST: regfiledump @TESTDIR@/tiny.rga
 *
 ************************************************************
 
-Container
+Container with 7 children, 25 descendants
 
 
 ************************************************************
@@ -171,7 +171,7 @@ Welcome to Regina!
 *
 ************************************************************
 
-Attachment (0 bytes)
+Empty attachment
 
 
 ************************************************************
@@ -193,7 +193,7 @@ Attachment (5 bytes): dummy.pdf
 *
 ************************************************************
 
-Container
+Container with 4 children, 7 descendants
 
 
 ************************************************************
@@ -402,7 +402,7 @@ Crossings: -0 -1 +2 +3 -4
 *
 ************************************************************
 
-Container
+Container with 1 child, 2 descendants
 
 
 ************************************************************
@@ -478,7 +478,7 @@ Number of hypersurfaces is 5
 *
 ************************************************************
 
-Container
+Container with 2 children, 2 descendants
 
 
 ************************************************************
@@ -555,7 +555,7 @@ Edges:
 *
 ************************************************************
 
-Container
+Container with 2 children, 2 descendants
 
 
 ************************************************************
@@ -566,9 +566,7 @@ Container
 *
 ************************************************************
 
-Triangulation with 2 5-simplices
-
-f-vector: 2, 10, 20, 20, 10, 2
+Bounded non-orientable 5-D triangulation, f = ( 2 10 20 20 10 2 )
 
   Simplex  |  glued to:     (01234)     (01235)     (01245)     (01345)     (02345)     (12345)
   ---------+-----------------------------------------------------------------------------------
@@ -585,9 +583,7 @@ f-vector: 2, 10, 20, 20, 10, 2
 *
 ************************************************************
 
-Triangulation with 2 8-simplices
-
-f-vector: 9, 36, 84, 126, 126, 84, 36, 9, 2
+Possibly closed orientable 8-D triangulation, f = ( 9 36 84 126 126 84 36 9 2 )
 
   Simplex  |  glued to:     (01234567)     (01234568)     (01234578)     (01234678)     (01235678)     (01245678)     (01345678)     (02345678)     (12345678)
   ---------+--------------------------------------------------------------------------------------------------------------------------------------------------
@@ -604,7 +600,7 @@ f-vector: 9, 36, 84, 126, 126, 84, 36, 9, 2
 *
 ************************************************************
 
-Container
+Container with 1 child, 3 descendants
 
 
 ************************************************************
@@ -615,7 +611,7 @@ Container
 *
 ************************************************************
 
-OR combination normal surface filter
+OR filter
 
 
 ************************************************************
@@ -626,10 +622,7 @@ OR combination normal surface filter
 *
 ************************************************************
 
-Filter normal surfaces with restrictions:
-    Euler characteristic: 1
-    Compactness: { true }
-    Has real boundary: { true }
+Euler in { 1 }, compact only, real boundary only
 
 
 ************************************************************
@@ -640,10 +633,7 @@ Filter normal surfaces with restrictions:
 *
 ************************************************************
 
-Filter normal surfaces with restrictions:
-    Euler characteristic: 0
-    Orientability: { true }
-    Compactness: { true }
+Euler in { 0 }, orientable only, compact only
 
 
 ************************************************************
@@ -681,7 +671,7 @@ TEST: regfiledump -c @TESTDIR@/tiny.rga
 *
 ************************************************************
 
-Container
+Container with 7 children, 25 descendants
 
 
 ************************************************************
@@ -703,7 +693,7 @@ Welcome to Regina!
 *
 ************************************************************
 
-Attachment (0 bytes)
+Empty attachment
 
 
 ************************************************************
@@ -725,7 +715,7 @@ Attachment (5 bytes): dummy.pdf
 *
 ************************************************************
 
-Container
+Container with 4 children, 7 descendants
 
 
 ************************************************************
@@ -934,7 +924,7 @@ Crossings: -0 -1 +2 +3 -4
 *
 ************************************************************
 
-Container
+Container with 1 child, 2 descendants
 
 
 ************************************************************
@@ -1010,7 +1000,7 @@ Number of hypersurfaces is 5
 *
 ************************************************************
 
-Container
+Container with 2 children, 2 descendants
 
 
 ************************************************************
@@ -1087,7 +1077,7 @@ Edges:
 *
 ************************************************************
 
-Container
+Container with 2 children, 2 descendants
 
 
 ************************************************************
@@ -1098,9 +1088,7 @@ Container
 *
 ************************************************************
 
-Triangulation with 2 5-simplices
-
-f-vector: 2, 10, 20, 20, 10, 2
+Bounded non-orientable 5-D triangulation, f = ( 2 10 20 20 10 2 )
 
   Simplex  |  glued to:     (01234)     (01235)     (01245)     (01345)     (02345)     (12345)
   ---------+-----------------------------------------------------------------------------------
@@ -1117,9 +1105,7 @@ f-vector: 2, 10, 20, 20, 10, 2
 *
 ************************************************************
 
-Triangulation with 2 8-simplices
-
-f-vector: 9, 36, 84, 126, 126, 84, 36, 9, 2
+Possibly closed orientable 8-D triangulation, f = ( 9 36 84 126 126 84 36 9 2 )
 
   Simplex  |  glued to:     (01234567)     (01234568)     (01234578)     (01234678)     (01235678)     (01245678)     (01345678)     (02345678)     (12345678)
   ---------+--------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1136,7 +1122,7 @@ f-vector: 9, 36, 84, 126, 126, 84, 36, 9, 2
 *
 ************************************************************
 
-Container
+Container with 1 child, 3 descendants
 
 
 ************************************************************
@@ -1147,7 +1133,7 @@ Container
 *
 ************************************************************
 
-OR combination normal surface filter
+OR filter
 
 
 ************************************************************
@@ -1158,10 +1144,7 @@ OR combination normal surface filter
 *
 ************************************************************
 
-Filter normal surfaces with restrictions:
-    Euler characteristic: 1
-    Compactness: { true }
-    Has real boundary: { true }
+Euler in { 1 }, compact only, real boundary only
 
 
 ************************************************************
@@ -1172,10 +1155,7 @@ Filter normal surfaces with restrictions:
 *
 ************************************************************
 
-Filter normal surfaces with restrictions:
-    Euler characteristic: 0
-    Orientability: { true }
-    Compactness: { true }
+Euler in { 0 }, orientable only, compact only
 
 
 ************************************************************
@@ -1381,7 +1361,7 @@ TEST: regfiledump @TESTDIR@/tags.rga
 *
 ************************************************************
 
-Container
+Container with 2 children, 2 descendants
 
 
 ************************************************************

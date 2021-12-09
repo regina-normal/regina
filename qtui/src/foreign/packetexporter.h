@@ -79,7 +79,7 @@ class PacketExporter {
          * argument \a parentWidget as the parent widget of the message
          * box).
          */
-        virtual bool exportData(std::shared_ptr<regina::Packet> data,
+        virtual bool exportData(const regina::Packet& data,
             const QString& fileName, QWidget* parentWidget) const = 0;
 
         /**

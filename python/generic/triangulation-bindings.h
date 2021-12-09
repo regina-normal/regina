@@ -41,6 +41,7 @@
 
 using pybind11::overload_cast;
 using regina::Isomorphism;
+using regina::MatrixInt;
 using regina::Triangulation;
 
 namespace {
@@ -139,11 +140,18 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<dim>::edge,
             pybind11::return_value_policy::reference_internal)
-        .def("triangle", &Triangulation<dim>::triangle,
+        // Use C-style casts because GCC struggles with overload_cast here:
+        .def("triangle",
+            (regina::Face<dim, 2>* (Triangulation<dim>::*)(size_t))(
+                &Triangulation<dim>::triangle),
             pybind11::return_value_policy::reference_internal)
-        .def("tetrahedron", &Triangulation<dim>::tetrahedron,
+        .def("tetrahedron",
+            (regina::Face<dim, 3>* (Triangulation<dim>::*)(size_t))(
+                &Triangulation<dim>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
-        .def("pentachoron", &Triangulation<dim>::pentachoron,
+        .def("pentachoron",
+            (regina::Face<dim, 4>* (Triangulation<dim>::*)(size_t))(
+                &Triangulation<dim>::pentachoron),
             pybind11::return_value_policy::reference_internal)
         .def("isEmpty", &Triangulation<dim>::isEmpty)
         .def("isValid", &Triangulation<dim>::isValid)
@@ -161,13 +169,21 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::return_value_policy::reference_internal)
         .def("simplifiedFundamentalGroup",
             &Triangulation<dim>::simplifiedFundamentalGroup)
-        .def("homology", &Triangulation<dim>::homology,
-            pybind11::return_value_policy::reference_internal)
-        .def("homologyH1", &Triangulation<dim>::homologyH1,
-            pybind11::return_value_policy::reference_internal)
+        .def("homology",
+            (regina::AbelianGroup (Triangulation<dim>::*)(int) const)(
+            &Triangulation<dim>::homology),
+            pybind11::arg("k") = 1)
+        .def("homologyH1",
+            &Triangulation<dim>::template homology<1>) // deprecated
+        .def("markedHomology",
+            (regina::MarkedAbelianGroup (Triangulation<dim>::*)(int) const)(
+            &Triangulation<dim>::markedHomology),
+            pybind11::arg("k") = 1)
+        .def("boundaryMap", (MatrixInt (Triangulation<dim>::*)(int) const)(
+            &Triangulation<dim>::boundaryMap))
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
-        .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
+        .def("isIdenticalTo", &Triangulation<dim>::operator ==) // deprecated
         .def("isIsomorphicTo", &Triangulation<dim>::isIsomorphicTo)
         .def("isContainedIn", &Triangulation<dim>::isContainedIn)
         .def("findAllIsomorphisms", &Triangulation<dim>::template
@@ -215,7 +231,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
     ;
     add_pachner<dim>::add(c);
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::packet_eq_operators(c);
+    regina::python::add_packet_data(c);
 
     // The ListView classes for faces() are wrapped in face-bindings.h,
     // since this needs to be done for each subdimension.

@@ -56,7 +56,7 @@ class FilterCreator : public PacketCreator {
         /**
          * Constructor and destructor.
          */
-        FilterCreator();
+        FilterCreator(ReginaMain*);
         ~FilterCreator() override;
 
         /**

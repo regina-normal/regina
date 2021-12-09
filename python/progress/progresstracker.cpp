@@ -36,41 +36,47 @@
 
 using pybind11::overload_cast;
 using regina::ProgressTracker;
+using regina::ProgressTrackerBase;
 using regina::ProgressTrackerOpen;
 
 void addProgressTracker(pybind11::module_& m) {
-    auto c1 = pybind11::class_<ProgressTracker>(m, "ProgressTracker")
+    auto c0 = pybind11::class_<ProgressTrackerBase>(m, "ProgressTrackerBase")
+        .def("isFinished", &ProgressTrackerBase::isFinished)
+        .def("descriptionChanged", &ProgressTrackerBase::descriptionChanged)
+        .def("description", &ProgressTrackerBase::description)
+        .def("cancel", &ProgressTrackerBase::cancel)
+        .def("isCancelled", &ProgressTrackerBase::isCancelled)
+    ;
+    // Leave the output routines for subclasses to wrap, since __repr__
+    // will include the (derived) class name.
+    regina::python::add_eq_operators(c0);
+
+    auto c1 = pybind11::class_<ProgressTracker, ProgressTrackerBase>(
+            m, "ProgressTracker")
         .def(pybind11::init<>())
-        .def("isFinished", &ProgressTracker::isFinished)
         .def("percentChanged", &ProgressTracker::percentChanged)
-        .def("descriptionChanged", &ProgressTracker::descriptionChanged)
         .def("percent", &ProgressTracker::percent)
-        .def("description", &ProgressTracker::description)
-        .def("cancel", &ProgressTracker::cancel)
         .def("newStage", &ProgressTracker::newStage,
             pybind11::arg(), pybind11::arg("weight") = 1)
-        .def("isCancelled", &ProgressTracker::isCancelled)
         .def("setPercent", &ProgressTracker::setPercent)
         .def("setFinished", &ProgressTracker::setFinished)
     ;
-    regina::python::add_eq_operators(c1);
+    regina::python::add_output(c1);
+    // We inherit equality-by-reference from the base class.
 
-    auto c2 = pybind11::class_<ProgressTrackerOpen>(m, "ProgressTrackerOpen")
+    auto c2 = pybind11::class_<ProgressTrackerOpen, ProgressTrackerBase>(
+            m, "ProgressTrackerOpen")
         .def(pybind11::init<>())
-        .def("isFinished", &ProgressTrackerOpen::isFinished)
         .def("stepsChanged", &ProgressTrackerOpen::stepsChanged)
-        .def("descriptionChanged", &ProgressTrackerOpen::descriptionChanged)
         .def("steps", &ProgressTrackerOpen::steps)
-        .def("description", &ProgressTrackerOpen::description)
-        .def("cancel", &ProgressTrackerOpen::cancel)
         .def("newStage", &ProgressTrackerOpen::newStage)
-        .def("isCancelled", &ProgressTrackerOpen::isCancelled)
         .def("incSteps", overload_cast<>(
             &ProgressTrackerOpen::incSteps))
         .def("incSteps", overload_cast<unsigned long>(
             &ProgressTrackerOpen::incSteps))
         .def("setFinished", &ProgressTrackerOpen::setFinished)
     ;
-    regina::python::add_eq_operators(c2);
+    regina::python::add_output(c2);
+    // We inherit equality-by-reference from the base class.
 }
 

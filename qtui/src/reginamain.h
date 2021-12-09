@@ -205,13 +205,13 @@ class ReginaMain : public QMainWindow {
         /**
          * View the given packet.
          */
-        void packetView(std::shared_ptr<regina::Packet> packet,
+        void packetView(regina::Packet& packet,
             bool makeVisibleInTree = true, bool selectInTree = false);
 
         /**
          * Ensure that the given packet is visible in the packet tree.
          */
-        void ensureVisibleInTree(std::shared_ptr<regina::Packet> packet);
+        void ensureVisibleInTree(const regina::Packet& packet);
 
         /**
          * Handles the deregistration of a packet pane from the list of
@@ -324,14 +324,12 @@ class ReginaMain : public QMainWindow {
         /**
          * Packet export routines.
          */
-        void exportAttachment();
         void exportCSVSurfaceList();
         void exportPython();
         void exportRecogniser();
         void exportRegina();
         void exportReginaUncompressed();
         void exportSnapPea();
-        void exportSource();
 
         /**
          * Python scripting routines.
@@ -405,8 +403,9 @@ class ReginaMain : public QMainWindow {
         /**
          * Generic packet operations.
          */
-        void newPacket(PacketCreator* creator, PacketFilter* parentFilter,
-            const QString& dialogTitle);
+        template <class PacketCreatorClass>
+        void newPacket(const QString& dialogTitle);
+
         void importFile(const PacketImporter& importer,
             PacketFilter* parentFilter, const QString& fileFilter,
             const QString& dialogTitle);

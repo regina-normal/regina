@@ -46,6 +46,9 @@ Triangulation<4>::Triangulation(const std::string& description) {
         return;
     } catch (const InvalidArgument&) {
     }
+
+    throw InvalidArgument("The given string could not be interpreted "
+        "as representing a 4-dimensional triangulation");
 }
 
 long Triangulation<4>::eulerCharManifold() const {

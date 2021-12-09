@@ -308,11 +308,9 @@ AbelianGroup GroupPresentation::abelianisation() const {
     if (nGenerators_ == 0)
         return AbelianGroup();
 
-    AbelianGroup g;
-
     if (relations_.empty()) {
         // Free group becomes free abelian group.
-        g.addRank(nGenerators_);
+        return AbelianGroup(nGenerators_);
     } else {
         MatrixInt m(relations_.size(), nGenerators_);
 
@@ -322,10 +320,9 @@ AbelianGroup GroupPresentation::abelianisation() const {
                 m.entry(row, t.generator) += t.exponent;
             ++row;
         }
-        g.addGroup(m);
-    }
 
-    return g;
+        return AbelianGroup(std::move(m));
+    }
 }
 
 unsigned GroupPresentation::abelianRank() const {
@@ -1081,18 +1078,17 @@ std::optional<HomGroupPresentation> GroupPresentation::homologicalAlignment() {
     std::optional<HomGroupPresentation> retval; // only allocate if appropriate.
     // step 1: compute abelianization and how generators map to abelianization.
     MarkedAbelianGroup abelianized = markedAbelianisation();
-    MatrixInt abMat( abelianized.minNumberOfGenerators(), countGenerators() );
+    MatrixInt abMat( abelianized.snfRank(), countGenerators() );
 
     for (unsigned long j=0; j<countGenerators(); j++) {
-        std::vector<Integer> epsilon( countGenerators() );
-        epsilon[j] = 1;
-        std::vector<Integer> temp( abelianized.snfRep(epsilon) );
-        for (unsigned long i=0; i<abelianized.minNumberOfGenerators(); i++)
+        Vector<Integer> temp = abelianized.snfRep(
+            Vector<Integer>::unit(countGenerators(), j));
+        for (unsigned long i=0; i<abelianized.snfRank(); i++)
             abMat.entry(i,j) = temp[i]; // columns are snfreps of abelianized gens.
     }
 
     unsigned long abNF( abelianized.countInvariantFactors() );
-    unsigned long abNG( abelianized.minNumberOfGenerators() );
+    unsigned long abNG( abelianized.snfRank() );
     // step 2: we will mimic the simple smith normal form algorithm algorithm
     //         using corresponding moves on the group presentation.
     //         first the free generators.

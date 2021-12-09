@@ -171,8 +171,19 @@ class Matrix : public Output<Matrix<T>> {
         "Using Matrix with Regina's own integer types requires ring=true.");
 
     public:
-        using Coefficient = T;
-            /**< The type of each entry in the matrix. */
+        /**
+         * The type of element that is stored in this matrix.
+         */
+        using value_type = T;
+
+        /**
+         * Deprecated alias for the type of element that is stored in
+         * this matrix.
+         *
+         * \deprecated This has been renamed to value_type, for consistency
+         * with regina::Vector and the standard C++ container types.
+         */
+        using Coefficient [[deprecated]] = T;
 
     private:
         unsigned long rows_;
@@ -600,8 +611,8 @@ class Matrix : public Output<Matrix<T>> {
          * This operation is constant time (unlike swapping columns,
          * which is linear time).
          *
-         * Unlike swapCols(), this operation does not take a \fromCol argument.
-         * This is because swapping rows is already as fast possible
+         * Unlike swapCols(), this operation does not take a \a fromCol
+         * argument.  This is because swapping rows is already as fast possible
          * (internally, just a single pointer swap), and so iterating along
          * only part of the row would slow the routine down considerably.
          *
@@ -667,7 +678,17 @@ class Matrix : public Output<Matrix<T>> {
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
-            out << rows_ << " x " << cols_ << " matrix";
+            unsigned long r, c;
+            out << '[';
+            for (r = 0; r < rows_; ++r) {
+                if (r > 0)
+                    out << ' ';
+                out << '[';
+                for (c = 0; c < cols_; ++c)
+                    out << ' ' << data_[r][c];
+                out << " ]";
+            }
+            out << ']';
         }
         /**
          * Writes a detailed text representation of this object to the
@@ -1057,7 +1078,7 @@ class Matrix : public Output<Matrix<T>> {
          * rewriting column \a col2.
          * @param coeff22 the coefficient of column \a col2 to use when
          * rewriting column \a col2.
-         * @param fromCol the starting point in the columns from which the
+         * @param fromRow the starting point in the columns from which the
          * operation will be performed.
          */
         REGINA_ENABLE_FOR_RING(void) combCols(

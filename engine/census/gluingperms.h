@@ -40,7 +40,7 @@
 #define __REGINA_GLUINGPERMS_H
 #endif
 
-#include "regina-core.h"
+#include "core/output.h"
 #include "triangulation/facetspec.h"
 #include "triangulation/forward.h"
 #include "maths/perm.h"
@@ -101,7 +101,7 @@ namespace regina {
  * \ingroup census
  */
 template <int dim>
-class GluingPerms {
+class GluingPerms : public Output<GluingPerms<dim>> {
     public:
         /**
          * A native signed integer type large enough to count all permutations
@@ -595,6 +595,51 @@ class GluingPerms {
             const;
 
         /**
+         * Determines if this and the given gluing permutation set are
+         * identical.
+         *
+         * To be identical, the two sets must use identical facet pairings
+         * and all of their corresponding permutations must be the same.
+         *
+         * @param other the gluing permutation set to compare with this.
+         * @return \c true if and only if this and the given set are identical.
+         */
+        bool operator == (const GluingPerms& other) const;
+
+        /**
+         * Determines if this and the given gluing permutation set are
+         * not identical.
+         *
+         * To be identical, the two sets must use identical facet pairings
+         * and all of their corresponding permutations must be the same.
+         *
+         * @param other the gluing permutation set to compare with this.
+         * @return \c true if and only if this and the given set are not
+         * identical.
+         */
+        bool operator != (const GluingPerms& other) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
+
+        /**
          * Reads a new set of gluing permutations from the given string.
          * This routine reads data in the format written by data().
          *
@@ -778,6 +823,18 @@ inline Perm<dim+1> GluingPerms<dim>::indexToGluing(
             Perm<dim+1>::extend(Perm<dim>::Sn[index]) *
             Perm<dim+1>(facet, dim);
     }
+}
+
+template <int dim>
+inline bool GluingPerms<dim>::operator == (const GluingPerms& other) const {
+    return pairing_ == other.pairing_ && std::equal(permIndices_,
+        permIndices_ + (size() * (dim + 1)), other.permIndices_);
+}
+
+template <int dim>
+inline bool GluingPerms<dim>::operator != (const GluingPerms& other) const {
+    return pairing_ != other.pairing_ || ! std::equal(permIndices_,
+        permIndices_ + (size() * (dim + 1)), other.permIndices_);
 }
 
 template <int dim>

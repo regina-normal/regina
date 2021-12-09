@@ -413,6 +413,46 @@ class AngleStructure : public ShortOutput<AngleStructure> {
         const Vector<Integer>& vector() const;
 
         /**
+         * Determines whether this and the given angle structure are identical.
+         *
+         * This routine is safe to call even if this and the given
+         * angle structure do not belong to the same triangulation:
+         *
+         * - If the two triangulations have the same size, then this routine
+         *   will test whether this angle structure, if transplanted into the
+         *   other triangulation using the same tetrahedron numbering,
+         *   would be the same as \a other.
+         *
+         * - If the two triangulations have different sizes, then this
+         *   routine will return \c false.
+         *
+         * @param other the angle structure to be compared with this structure.
+         * @return \c true if and only if this and the given structure
+         * are identical.
+         */
+        bool operator == (const AngleStructure& other) const;
+
+        /**
+         * Determines whether this and the given angle structure are different.
+         *
+         * This routine is safe to call even if this and the given
+         * angle structure do not belong to the same triangulation:
+         *
+         * - If the two triangulations have the same size, then this routine
+         *   will test whether this angle structure, if transplanted into the
+         *   other triangulation using the same tetrahedron numbering,
+         *   would be different from \a other.
+         *
+         * - If the two triangulations have different sizes, then this
+         *   routine will return \c true.
+         *
+         * @param other the angle structure to be compared with this structure.
+         * @return \c true if and only if this and the given structure
+         * are different.
+         */
+        bool operator != (const AngleStructure& other) const;
+
+        /**
          * A deprecated alias for vector().
          *
          * \deprecated This routine has been renamed to vector().
@@ -534,6 +574,14 @@ inline bool AngleStructure::isVeering() const {
     if ((flags_ & flagCalculatedType) == 0)
         calculateType();
     return ((flags_ & flagVeering) != 0);
+}
+
+inline bool AngleStructure::operator == (const AngleStructure& other) const {
+    return vector_ == other.vector_;
+}
+
+inline bool AngleStructure::operator != (const AngleStructure& other) const {
+    return vector_ != other.vector_;
 }
 
 inline const Vector<Integer>& AngleStructure::vector() const {

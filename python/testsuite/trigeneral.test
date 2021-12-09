@@ -126,7 +126,10 @@ def vitalStats(tri, name):
 	t.barycentricSubdivision()
 	print("Checksum =", checksum(t.detail()))
 
-	print("Dehydration:", tri.dehydrate())
+	try:
+		print("Dehydration:", tri.dehydrate())
+	except NotImplemented:
+		print("Dehydration: (none)")
 	print("Isomorphism signature:", tri.isoSig())
 	print("Result of splitIntoComponents:", len(tri.triangulateComponents()))
 

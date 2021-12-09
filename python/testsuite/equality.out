@@ -1,21 +1,50 @@
 EqualityType.BY_VALUE
-EqualityType.BY_VALUE
 EqualityType.BY_REFERENCE
-Integer:
-True False
-AbelianGroup:
-True False
-Triangulation3:
-False True
-GroupPresentation:
-False True
-Packet:
-True False
-Triangulation3:
-True False
-Tetrahedron3:
-True False
-AbelianGroup:
-True False
-GroupPresentation:
-True False
+EqualityType.BY_VALUE
+EqualityType.NEVER_INSTANTIATED
+
+Integer : ==, not !=
+Integer : not ==, !=
+AbelianGroup : ==, not !=
+AbelianGroup : not ==, !=
+GroupPresentation : ==, not !=
+GroupPresentation : not ==, !=
+Link : ==, not !=
+Link : not ==, !=
+Link : ==, not !=
+Link : not ==, !=
+Link + Packet : ==, not !=, throws on samePacket()
+Link + Packet : ==, not !=, throws on samePacket()
+PacketOfLink : ==, not !=, different packets
+PacketOfLink : ==, not !=, same packet
+Triangulation3 : ==, not !=
+Triangulation3 : not ==, !=
+Triangulation3 + Packet : ==, not !=, throws on samePacket()
+Triangulation3 + Packet : ==, not !=, throws on samePacket()
+PacketOfTriangulation3 : ==, not !=, different packets
+PacketOfTriangulation3 : ==, not !=, same packet
+FacetPairing2 : ==, not !=
+FacetPairing2 : not ==, !=
+Attachment : ==, not !=, different packets
+Attachment : not ==, !=, different packets
+Attachment : not ==, !=, different packets
+Attachment : not ==, !=, different packets
+Text : ==, not !=, different packets
+Text : not ==, !=, different packets
+GluingPerms2 : ==, not !=
+GluingPerms2 : not ==, !=
+GluingPerms2 : not ==, !=
+Tetrahedron3 : ==, not !=
+Tetrahedron3 : not ==, !=
+Packet : ==, not !=, same packet
+Different Packets : throws on ==, throws on !=, different packets
+Different Packets : throws on ==, throws on !=, different packets
+Different Packets : throws on ==, throws on !=, different packets
+Different Packets : throws on ==, throws on !=, throws on samePacket()
+Different Packets : throws on ==, throws on !=, throws on samePacket()
+DiscSetTet : ==, not !=
+DiscSetTet : not ==, !=
+DiscSetSurface : ==, not !=
+DiscSetSurface : not ==, !=
+DiscSetSurface : not ==, !=
+HomologicalData : throws on ==, throws on !=

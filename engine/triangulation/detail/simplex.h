@@ -43,7 +43,6 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/facenumbering.h"
-#include "triangulation/alias/face.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
 #include <array>
@@ -79,10 +78,7 @@ template <int> class TriangulationBase;
  * \ingroup detail
  */
 template <int dim>
-class SimplexBase :
-        public MarkedElement,
-        public Output<SimplexBase<dim>>,
-        public alias::FaceOfSimplex<SimplexBase<dim>, dim> {
+class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
 
     public:
@@ -370,9 +366,50 @@ class SimplexBase :
         template <int subdim>
         Face<dim, subdim>* face(int face) const;
 
-        // Since we are about to define edge(i,j), make sure the
-        // inherited edge(i) is not forgotten.
-        using alias::FaceOfSimplex<SimplexBase<dim>, dim>::edge;
+        /**
+         * A dimension-specific alias for face<0>().
+         *
+         * This alias is available for all dimensions \a dim.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 0>* vertex(int i) const;
+
+        /**
+         * A dimension-specific alias for face<1>().
+         *
+         * This alias is available for all dimensions \a dim.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 1>* edge(int i) const;
+
+        /**
+         * A dimension-specific alias for face<2>().
+         *
+         * This alias is available for dimensions \a dim &ge; 3.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 2>* triangle(int i) const;
+
+        /**
+         * A dimension-specific alias for face<3>().
+         *
+         * This alias is available for dimensions \a dim &ge; 4.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 3>* tetrahedron(int i) const;
+
+        /**
+         * A dimension-specific alias for face<4>().
+         *
+         * This alias is available for dimensions \a dim &ge; 5.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 4>* pentachoron(int i) const;
 
         /**
          * Returns the edge of this simplex that connects the
@@ -479,6 +516,51 @@ class SimplexBase :
          */
         template <int subdim>
         Perm<dim + 1> faceMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<0>().
+         *
+         * This alias is available for all dimensions \a dim.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> vertexMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<1>().
+         *
+         * This alias is available for all dimensions \a dim.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> edgeMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<2>().
+         *
+         * This alias is available for dimensions \a dim &ge; 3.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> triangleMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<3>().
+         *
+         * This alias is available for dimensions \a dim &ge; 4.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> tetrahedronMapping(int face) const;
+
+        /**
+         * A dimension-specific alias for faceMapping<4>().
+         *
+         * This alias is available for dimensions \a dim &ge; 5.
+         *
+         * See faceMapping() for further information.
+         */
+        Perm<dim + 1> pentachoronMapping(int face) const;
 
         /**
          * Returns the orientation of this simplex in the
@@ -672,10 +754,82 @@ inline Face<dim, subdim>* SimplexBase<dim>::face(int face) const {
 }
 
 template <int dim>
+inline Face<dim, 0>* SimplexBase<dim>::vertex(int i) const {
+    triangulation().ensureSkeleton();
+    return std::get<0>(faces_)[i];
+}
+
+template <int dim>
+inline Face<dim, 1>* SimplexBase<dim>::edge(int i) const {
+    triangulation().ensureSkeleton();
+    return std::get<1>(faces_)[i];
+}
+
+template <int dim>
+inline Face<dim, 2>* SimplexBase<dim>::triangle(int i) const {
+    static_assert(dim >= 3, "triangle() is only available "
+        "for simplices of dimension >= 3.");
+    triangulation().ensureSkeleton();
+    return std::get<2>(faces_)[i];
+}
+
+template <int dim>
+inline Face<dim, 3>* SimplexBase<dim>::tetrahedron(int i) const {
+    static_assert(dim >= 4, "tetrahedron() is only available "
+        "for simplices of dimension >= 4.");
+    triangulation().ensureSkeleton();
+    return std::get<3>(faces_)[i];
+}
+
+template <int dim>
+inline Face<dim, 4>* SimplexBase<dim>::pentachoron(int i) const {
+    static_assert(dim >= 5, "pentachoron() is only available "
+        "for simplices of dimension >= 5.");
+    triangulation().ensureSkeleton();
+    return std::get<4>(faces_)[i];
+}
+
+template <int dim>
 template <int subdim>
 inline Perm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
     triangulation().ensureSkeleton();
     return std::get<subdim>(mappings_)[face];
+}
+
+template <int dim>
+inline Perm<dim + 1> SimplexBase<dim>::vertexMapping(int face) const {
+    triangulation().ensureSkeleton();
+    return std::get<0>(mappings_)[face];
+}
+
+template <int dim>
+inline Perm<dim + 1> SimplexBase<dim>::edgeMapping(int face) const {
+    triangulation().ensureSkeleton();
+    return std::get<1>(mappings_)[face];
+}
+
+template <int dim>
+inline Perm<dim + 1> SimplexBase<dim>::triangleMapping(int face) const {
+    static_assert(dim >= 3, "triangleMapping() is only available "
+        "for simplices of dimension >= 3.");
+    triangulation().ensureSkeleton();
+    return std::get<2>(mappings_)[face];
+}
+
+template <int dim>
+inline Perm<dim + 1> SimplexBase<dim>::tetrahedronMapping(int face) const {
+    static_assert(dim >= 4, "tetrahedronMapping() is only available "
+        "for simplices of dimension >= 4.");
+    triangulation().ensureSkeleton();
+    return std::get<3>(mappings_)[face];
+}
+
+template <int dim>
+inline Perm<dim + 1> SimplexBase<dim>::pentachoronMapping(int face) const {
+    static_assert(dim >= 5, "pentachoronMapping() is only available "
+        "for simplices of dimension >= 5.");
+    triangulation().ensureSkeleton();
+    return std::get<4>(mappings_)[face];
 }
 
 template <int dim>
@@ -692,9 +846,29 @@ inline bool SimplexBase<dim>::facetInMaximalForest(int facet) const {
 
 template <int dim>
 inline void SimplexBase<dim>::writeTextShort(std::ostream& out) const {
-    out << dim << "-simplex";
-    if (! description_.empty())
-        out << ": " << description_;
+    out << dim << "-simplex " << index();
+
+    int glued = 0;
+    int facet, j;
+    for (facet = dim; facet >= 0; --facet) {
+        if (! adj_[facet])
+            continue;
+
+        out << (glued == 0 ? ": " : ", ");
+        ++glued;
+
+        for (j = 0; j <= dim; ++j)
+            if (j != facet)
+                out << regina::digit(j);
+        out << " -> " << adj_[facet]->markedIndex() << " (";
+        for (j = 0; j <= dim; ++j)
+            if (j != facet)
+                out << regina::digit(gluing_[facet][j]);
+        out << ')';
+    }
+
+    if (glued == 0)
+        out << ": all facets boundary";
 }
 
 template <int dim>
@@ -755,8 +929,11 @@ void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
 
 template <int dim>
 void SimplexBase<dim>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
+    out << dim << "-simplex " << index();
+    if (! description_.empty())
+        out << ": " << description_;
     out << std::endl;
+
     int facet, j;
     for (facet = dim; facet >= 0; --facet) {
         for (j = 0; j <= dim; ++j)

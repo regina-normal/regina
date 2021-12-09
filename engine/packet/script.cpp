@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <algorithm>
 #include <iterator>
 #include <sstream>
 #include "packet/script.h"
@@ -138,6 +139,28 @@ void Script::removeVariable(size_t index) {
     variables_.erase(it);
 }
 
+void Script::writeTextShort(std::ostream& o) const {
+    if (text_.empty())
+        o << "Empty script";
+    else {
+        size_t lines = std::count(text_.begin(), text_.end(), '\n');
+        if (lines > 0 && text_.back() != '\n')
+            ++lines; // there is an extra unfinished line
+        o << lines << "-line script";
+    }
+    if (variables_.empty())
+        o << ", no variables";
+    else {
+        for (const auto& v : variables_) {
+            o << ", " << v.first << " = ";
+            if (auto shared = v.second.lock())
+                o << '<' << shared->label() << '>';
+            else
+                o << "(null)";
+        }
+    }
+}
+
 void Script::writeTextLong(std::ostream& o) const {
     if (variables_.empty())
         o << "No variables.\n";
@@ -164,7 +187,7 @@ void Script::writeXMLPacketData(std::ostream& out, FileFormat format,
         bool anon, PacketRefs& refs) const {
     using regina::xml::xmlEncodeSpecialChars;
 
-    writeXMLHeader(out, "script", format, anon, refs);
+    writeXMLHeader(out, "script", format, anon, refs, true);
 
     for (const auto& v : variables_) {
         auto shared = v.second.lock();

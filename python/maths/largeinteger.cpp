@@ -139,7 +139,7 @@ void addLargeInteger(pybind11::module_& m) {
         .def_readonly_static("infinity", &LargeInteger::infinity)
     ;
     regina::python::add_eq_operators(c);
-    regina::python::add_output_ostream(c, true /* __repr__ */);
+    regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 
     m.def("swap", (void(*)(LargeInteger&, LargeInteger&))(regina::swap));
     m.def("tightEncoding",

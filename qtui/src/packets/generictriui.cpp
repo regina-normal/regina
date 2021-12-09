@@ -31,6 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
+#include "regina-config.h" // for REGINA_HIGHDIM
 #include "triangulation/generic.h"
 
 // UI includes:
@@ -190,6 +191,7 @@ template class GenericTriangulationUI<5>;
 template class GenericTriangulationUI<6>;
 template class GenericTriangulationUI<7>;
 template class GenericTriangulationUI<8>;
+#ifdef REGINA_HIGHDIM
 template class GenericTriangulationUI<9>;
 template class GenericTriangulationUI<10>;
 template class GenericTriangulationUI<11>;
@@ -197,3 +199,4 @@ template class GenericTriangulationUI<12>;
 template class GenericTriangulationUI<13>;
 template class GenericTriangulationUI<14>;
 template class GenericTriangulationUI<15>;
+#endif

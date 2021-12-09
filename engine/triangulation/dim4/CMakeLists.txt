@@ -1,7 +1,6 @@
 # Files to compile
 SET ( FILES
   edge4.cpp
-  homology.cpp
   retriangulate.cpp
   simplify.cpp
   simplifyglobal.cpp

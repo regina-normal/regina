@@ -41,7 +41,7 @@ using regina::Matrix2;
 using regina::SFSpace;
 
 void addGraphLoop(pybind11::module_& m) {
-    pybind11::class_<GraphLoop, regina::Manifold>(m, "GraphLoop")
+    auto c = pybind11::class_<GraphLoop, regina::Manifold>(m, "GraphLoop")
         .def(pybind11::init<const SFSpace&, long, long, long, long>())
         .def(pybind11::init<const SFSpace&, const Matrix2&>())
         .def(pybind11::init<const GraphLoop&>())
@@ -49,6 +49,11 @@ void addGraphLoop(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &GraphLoop::matchingReln,
             pybind11::return_value_policy::reference_internal)
+        .def("swap", &GraphLoop::swap)
     ;
+    regina::python::add_eq_operators(c);
+    regina::python::add_output(c);
+
+    m.def("swap", (void(*)(GraphLoop&, GraphLoop&))(regina::swap));
 }
 

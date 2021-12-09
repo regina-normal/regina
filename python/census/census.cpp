@@ -53,6 +53,10 @@ void addCensus(pybind11::module_& m) {
         .def("lookup", &CensusDB::lookup<const std::function<
             void(CensusHit&&)>&>)
     ;
+    regina::python::add_output_custom(db,
+            [](const CensusDB& db, std::ostream& s) {
+        s << db.filename() << " [" << db.desc() << ']';
+    });
     regina::python::add_eq_operators(db);
 
     m.def("swap", (void(*)(CensusDB&, CensusDB&))(regina::swap));
@@ -64,6 +68,10 @@ void addCensus(pybind11::module_& m) {
         .def("db", &CensusHit::db,
             pybind11::return_value_policy::reference)
     ;
+    regina::python::add_output_custom(h,
+            [](const CensusHit& hit, std::ostream& s) {
+        s << hit.name() << " -- " << hit.db().desc();
+    });
     regina::python::add_eq_operators(h);
 
     m.def("swap", (void(*)(CensusHit&, CensusHit&))(regina::swap));

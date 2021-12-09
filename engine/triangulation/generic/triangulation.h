@@ -43,6 +43,7 @@
 #define __REGINA_TRIANGULATION_H
 #endif
 
+#include "regina-config.h" // for REGINA_HIGHDIM
 #include "packet/packet.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
@@ -154,6 +155,12 @@ class Triangulation : public detail::TriangulationBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of Triangulation<dim> "
         "should not be used for Regina's standard dimensions.");
+#ifndef REGINA_HIGHDIM
+    static_assert(dim <= 8,
+        "This build has been configured without REGINA_HIGHDIM. "
+        "The Triangulation class should only be instantiated for "
+        "dimensions dim <= 8.");
+#endif
 
     protected:
         using detail::TriangulationBase<dim>::simplices_;

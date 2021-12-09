@@ -154,7 +154,7 @@ void LPConstraintNonSpun::addRows(
 
     MatrixInt coeffs = snapPea.slopeEquations();
 
-    if (! snapPea.isIdenticalTo(tri))
+    if (snapPea != tri)
         throw UnsolvedCase("SnapPea retriangulated "
             "when attempting to use LPConstraintNonSpun");
 
@@ -176,6 +176,35 @@ void LPConstraintNonSpun::addRows(
         throw UnsolvedCase("The coefficients of the slope equations "
             "do not fit into a native long integer");
     }
+}
+
+void BanConstraintBase::writeTextShort(std::ostream& out) const {
+    const size_t nCols = system_.coords(tri_.size());
+    bool foundBanned = false, foundMarked = false;
+
+    for (size_t i = 0; i < nCols; ++i)
+        if (banned_[i]) {
+            if (! foundBanned) {
+                out << "Banned:";
+                foundBanned = true;
+            }
+            out << ' ' << i;
+        }
+    if (! foundBanned)
+        out << "Nothing banned";
+
+    out << ", ";
+
+    for (size_t i = 0; i < nCols; ++i)
+        if (marked_[i]) {
+            if (! foundMarked) {
+                out << "marked:";
+                foundMarked = true;
+            }
+            out << ' ' << i;
+        }
+    if (! foundMarked)
+        out << "nothing marked";
 }
 
 } // namespace regina

@@ -222,7 +222,7 @@
     if (self.packet->isValid()) {
         self.h1Rel.text = @(t.homologyRel().utf8().c_str());
         self.h1Bdry.text = @(t.homologyBdry().utf8().c_str());
-        self.h2.text = @(t.homologyH2().utf8().c_str());
+        self.h2.text = @(t.homology<2>().utf8().c_str());
 
         unsigned long coeffZ2 = t.homologyH2Z2();
         if (coeffZ2 == 0)

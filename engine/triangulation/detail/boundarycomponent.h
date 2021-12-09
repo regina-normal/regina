@@ -43,7 +43,6 @@
 #include <vector>
 #include "regina-core.h"
 #include "core/output.h"
-#include "triangulation/alias/face.h"
 #include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"
 #include "utilities/listview.h"
@@ -79,10 +78,7 @@ template <int> class TriangulationBase;
  */
 template <int dim>
 class BoundaryComponentBase :
-        public Output<BoundaryComponentBase<dim>>,
-        public alias::FacesOfTriangulation<BoundaryComponentBase<dim>, dim>,
-        public alias::FaceOfTriangulation<BoundaryComponentBase<dim>, dim>,
-        public MarkedElement {
+        public ShortOutput<BoundaryComponentBase<dim>>, public MarkedElement {
     public:
         static constexpr int dimension = dim;
             /**< A compile-time constant that gives the dimension of the
@@ -264,6 +260,77 @@ class BoundaryComponentBase :
         }
 
         /**
+         * A dimension-specific alias for countFaces<0>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * See countFaces() for further information.
+         */
+        size_t countVertices() const {
+            static_assert(standardDim(dim), "countVertices() is only available "
+                "for boundary components in standard dimensions.");
+            return countFaces<0>();
+        }
+
+        /**
+         * A dimension-specific alias for countFaces<1>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * See countFaces() for further information.
+         */
+        size_t countEdges() const {
+            static_assert(standardDim(dim), "countEdges() is only available "
+                "for boundary components in standard dimensions.");
+            return countFaces<1>();
+        }
+
+        /**
+         * A dimension-specific alias for countFaces<2>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         *
+         * See countFaces() for further information.
+         */
+        size_t countTriangles() const {
+            static_assert(standardDim(dim) && dim >= 3,
+                "countTriangles() is only available "
+                "for boundary components in standard dimensions dim >= 3.");
+            return countFaces<2>();
+        }
+
+        /**
+         * A dimension-specific alias for countFaces<3>().
+         *
+         * This alias is only available for dimensions \a dim = 4 and 5.
+         *
+         * See countFaces() for further information.
+         */
+        size_t countTetrahedra() const {
+            static_assert((standardDim(dim) && dim >= 4) || dim == 5,
+                "countTetrahedra() is only available for boundary components "
+                "in dimensions dim = 4 or 5.");
+            return countFaces<3>();
+        }
+
+        /**
+         * A dimension-specific alias for countFaces<4>().
+         *
+         * This alias is only available for dimensions \a dim = 5 and 6.
+         *
+         * See countFaces() for further information.
+         */
+        size_t countPentachora() const {
+            static_assert(dim == 5 || dim == 6, "countPentachora() is only "
+                "available for boundary components in dimensions "
+                "dim = 5 or 6.");
+            return countFaces<4>();
+        }
+
+        /**
          * Returns an object that allows iteration through and random access
          * to all (<i>dim</i>-1)-faces in this boundary component.
          *
@@ -339,6 +406,76 @@ class BoundaryComponentBase :
         }
 
         /**
+         * A dimension-specific alias for faces<0>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * See faces() for further information.
+         */
+        auto vertices() const {
+            static_assert(standardDim(dim), "vertices() is only available "
+                "for boundary components in standard dimensions.");
+            return ListView(std::get<tupleIndex(0)>(faces_));
+        }
+
+        /**
+         * A dimension-specific alias for faces<1>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * See faces() for further information.
+         */
+        auto edges() const {
+            static_assert(standardDim(dim), "edges() is only available "
+                "for boundary components in standard dimensions.");
+            return ListView(std::get<tupleIndex(1)>(faces_));
+        }
+
+        /**
+         * A dimension-specific alias for faces<2>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         *
+         * See faces() for further information.
+         */
+        auto triangles() const {
+            static_assert(standardDim(dim) && dim >= 3,
+                "triangles() is only available "
+                "for boundary components in standard dimensions dim >= 3.");
+            return ListView(std::get<tupleIndex(2)>(faces_));
+        }
+
+        /**
+         * A dimension-specific alias for faces<3>().
+         *
+         * This alias is only available for dimension \a dim = 4.
+         *
+         * See faces() for further information.
+         */
+        auto tetrahedra() const {
+            static_assert(standardDim(dim) && dim >= 4,
+                "tetrahedra() is only available for "
+                "boundary components in dimension dim = 4.");
+            return ListView(std::get<tupleIndex(3)>(faces_));
+        }
+
+        /**
+         * A dimension-specific alias for faces<4>().
+         *
+         * This alias is only available for dimension \a dim = 5.
+         *
+         * See faces() for further information.
+         */
+        auto pentachora() const {
+            static_assert(dim == 5, "pentachora() is only available for "
+                "boundary components in dimension dim = 5.");
+            return ListView(std::get<tupleIndex(4)>(faces_));
+        }
+
+        /**
          * Returns the requested (<i>dim</i>-1)-face in this boundary component.
          * These are the top-dimensional faces for a real boundary component.
          *
@@ -389,6 +526,76 @@ class BoundaryComponentBase :
                 "BoundaryComponent::face() cannot be used with this "
                 "(dim, subdim) combination.");
             return std::get<tupleIndex(subdim)>(faces_)[index];
+        }
+
+        /**
+         * A dimension-specific alias for face<0>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * See face() for further information.
+         */
+        Face<dim, 0>* vertex(size_t index) const {
+            static_assert(standardDim(dim), "vertex() is only available "
+                "for boundary components in standard dimensions.");
+            return std::get<tupleIndex(0)>(faces_)[index];
+        }
+
+        /**
+         * A dimension-specific alias for face<1>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * See face() for further information.
+         */
+        Face<dim, 1>* edge(size_t index) const {
+            static_assert(standardDim(dim), "edge() is only available "
+                "for boundary components in standard dimensions.");
+            return std::get<tupleIndex(1)>(faces_)[index];
+        }
+
+        /**
+         * A dimension-specific alias for face<2>().
+         *
+         * This alias is available only when \a dim is one of Regina's
+         * \ref stddim "standard dimensions" and \a dim &ge; 3.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 2>* triangle(size_t index) const {
+            static_assert(standardDim(dim) && dim >= 3,
+                "triangle() is only available "
+                "for boundary components in standard dimensions dim >= 3.");
+            return std::get<tupleIndex(2)>(faces_)[index];
+        }
+
+        /**
+         * A dimension-specific alias for face<3>().
+         *
+         * This alias is only available for dimension \a dim = 4.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 3>* tetrahedron(size_t index) const {
+            static_assert(standardDim(dim) && dim >= 4,
+                "tetrahedron() is only available for "
+                "boundary components in dimension dim = 4.");
+            return std::get<tupleIndex(3)>(faces_)[index];
+        }
+
+        /**
+         * A dimension-specific alias for face<4>().
+         *
+         * This alias is only available for dimension \a dim = 5.
+         *
+         * See face() for further information.
+         */
+        Face<dim, 4>* pentachoron(size_t index) const {
+            static_assert(dim == 5, "pentachoron() is only available for "
+                "boundary components in dimension dim = 5.");
+            return std::get<tupleIndex(4)>(faces_)[index];
         }
 
         /**
@@ -669,46 +876,42 @@ class BoundaryComponentBase :
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
+            out << "Boundary component " << index();
             if constexpr (allowVertex) {
-                out << (isIdeal() ? "Ideal " :
-                        isInvalidVertex() ? "Invalid " :
-                        "Finite ") << "boundary component";
-            } else {
-                out << "Boundary component";
+                out << (isIdeal() ? ", ideal" :
+                        isInvalidVertex() ? ", invalid" : ", finite");
             }
-        }
-
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present; use detail() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const {
-            writeTextShort(out);
-            out << std::endl;
 
             if constexpr (allowVertex) {
                 if (isIdeal() || isInvalidVertex()) {
                     // We have no boundary facets.
                     Face<dim, 0>* v = std::get<tupleIndex(0)>(faces_).front();
-                    out << "Vertex: " << v->index() << std::endl;
-                    out << "Appears as:" << std::endl;
-                    for (auto& emb : *v)
-                        out << "  " << emb.simplex()->index()
-                            << " (" << emb.vertex() << ')' << std::endl;
+                    out << " at vertex " << v->index();
+                    bool first = true;
+                    for (auto& emb : *v) {
+                        if (first) {
+                            out << ": ";
+                            first = false;
+                        } else
+                            out << ", ";
+                        out << emb.simplex()->index()
+                            << " (" << emb.vertex() << ')';
+                    }
                     return;
                 }
             }
 
             // We have boundary facets.
-            out << (size() == 1 ? Strings<dim-1>::Face :
-                Strings<dim-1>::Faces) << ':' << std::endl;
-            for (auto s : facets())
-                out << "  " << s->front().simplex()->index() << " ("
-                    << s->front().vertices().trunc(dim) << ')' << std::endl;
+            bool first = true;
+            for (auto s : facets()) {
+                if (first) {
+                    out << ": ";
+                    first = false;
+                } else
+                    out << ", ";
+                out << s->front().simplex()->index() << " ("
+                    << s->front().vertices().trunc(dim) << ')';
+            }
         }
 
         // Make this class non-copyable.

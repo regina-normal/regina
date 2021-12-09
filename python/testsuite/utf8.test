@@ -31,13 +31,12 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-g = AbelianGroup()
-g.addRank(3)
+g = AbelianGroup(3)
 print(g)
 print(g.str())
 print(g.utf8())
 print(g.detail())
-g.addTorsionElement(17)
+g.addTorsion(17)
 print(g)
 print(g.str())
 print(g.utf8())

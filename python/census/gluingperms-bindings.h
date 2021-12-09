@@ -92,6 +92,7 @@ void addGluingPerms(pybind11::module_& m, const char* name) {
             &GluingPerms<dim>::indexToGluing, pybind11::const_))
         .def_static("fromData", &GluingPerms<dim>::fromData)
         ;
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap",

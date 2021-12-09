@@ -104,7 +104,7 @@ const int vertex_at_faces[4][4] =
 std::shared_ptr<PacketOf<Triangulation<3>>> cassonToTriangulation(
         CassonFormat *cf ) {
  int i;
- auto triang = makePacket<Triangulation<3>>();
+ auto triang = make_packet<Triangulation<3>>();
  // since CassonFormat does not allow naming of triangulations,
  //  triang is given a name in the readOrb() function.
  //  I try to mimic Triangulation<3>::fromSnapPea and

@@ -35,8 +35,8 @@
 #include "algebra/markedabeliangroup.h"
 #include "maths/numbertheory.h"
 #include "progress/progresstracker.h"
-#include "triangulation/homologicaldata.h"
 #include "triangulation/dim3.h"
+#include "triangulation/dim3/homologicaldata.h"
 
 // UI includes:
 #include "columnlayout.h"
@@ -232,7 +232,7 @@ void Tri3HomologyFundUI::refresh() {
         if (unicode) {
             H1Rel->setText(tri->homologyRel().utf8().c_str());
             H1Bdry->setText(tri->homologyBdry().utf8().c_str());
-            H2->setText(tri->homologyH2().utf8().c_str());
+            H2->setText(tri->homology<2>().utf8().c_str());
 
             if (coeffZ2 == 0)
                 H2Z2->setText("0");
@@ -243,7 +243,7 @@ void Tri3HomologyFundUI::refresh() {
         } else {
             H1Rel->setText(tri->homologyRel().str().c_str());
             H1Bdry->setText(tri->homologyBdry().str().c_str());
-            H2->setText(tri->homologyH2().str().c_str());
+            H2->setText(tri->homology<2>().str().c_str());
 
             if (coeffZ2 == 0)
                 H2Z2->setText("0");
@@ -500,7 +500,7 @@ bool Tri3TuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
     // Since we have already checked for duplicates, we can assume no
     // invariant with the same parameters exists.
     for (int i = 0; i < invariants->invisibleRootItem()->childCount(); ++i)
-        if (item->compare(dynamic_cast<TuraevViroItem*>(
+        if (item->compare(static_cast<TuraevViroItem*>(
                 invariants->invisibleRootItem()->child(i))) < 0) {
             invariants->insertTopLevelItem(i, item);
             return true;
@@ -542,31 +542,31 @@ void Tri3CellularInfoUI::refresh() {
         if (unicode) {
             H0H1H2H3->setText(QObject::tr("H\u2080 = %1,  H\u2081 = %2,  "
                     "H\u2082 = %3,  H\u2083 = %4").
-                arg(minfo.homology(0).utf8().c_str()).
-                arg(minfo.homology(1).utf8().c_str()).
-                arg(minfo.homology(2).utf8().c_str()).
-                arg(minfo.homology(3).utf8().c_str()));
+                arg(minfo.homology(0).unmarked().utf8().c_str()).
+                arg(minfo.homology(1).unmarked().utf8().c_str()).
+                arg(minfo.homology(2).unmarked().utf8().c_str()).
+                arg(minfo.homology(3).unmarked().utf8().c_str()));
 
             HBdry->setText(
                 QObject::tr("H\u2080 = %1,  H\u2081 = %2,  H\u2082 = %3").
-                arg(minfo.bdryHomology(0).utf8().c_str()).
-                arg(minfo.bdryHomology(1).utf8().c_str()).
-                arg(minfo.bdryHomology(2).utf8().c_str()));
+                arg(minfo.bdryHomology(0).unmarked().utf8().c_str()).
+                arg(minfo.bdryHomology(1).unmarked().utf8().c_str()).
+                arg(minfo.bdryHomology(2).unmarked().utf8().c_str()));
         } else {
             H0H1H2H3->setText(
                 QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
-                arg(minfo.homology(0).str().c_str()).
-                arg(minfo.homology(1).str().c_str()).
-                arg(minfo.homology(2).str().c_str()).
-                arg(minfo.homology(3).str().c_str()));
+                arg(minfo.homology(0).unmarked().str().c_str()).
+                arg(minfo.homology(1).unmarked().str().c_str()).
+                arg(minfo.homology(2).unmarked().str().c_str()).
+                arg(minfo.homology(3).unmarked().str().c_str()));
 
             HBdry->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3").
-                arg(minfo.bdryHomology(0).str().c_str()).
-                arg(minfo.bdryHomology(1).str().c_str()).
-                arg(minfo.bdryHomology(2).str().c_str()));
+                arg(minfo.bdryHomology(0).unmarked().str().c_str()).
+                arg(minfo.bdryHomology(1).unmarked().str().c_str()).
+                arg(minfo.bdryHomology(2).unmarked().str().c_str()));
         }
 
-        BdryMap->setText(minfo.bdryHomologyMap(1).str().c_str());
+        BdryMap->setText(minfo.bdryHomologyMap(1).summary().c_str());
 
         if (! tri->isConnected()) {
             QString msg(QObject::tr("Triangulation is disconnected."));

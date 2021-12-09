@@ -559,7 +559,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
 
         /**
          * Writes the tight encoding of this polynomial to the given output
-         * stream.  See the page on \ref "tight encodings" for details.
+         * stream.  See the page on \ref tight "tight encodings" for details.
          *
          * \pre The coefficient type \a T must have a corresponding global
          * regina::tightEncode() function.  This is true for native C++ integer
@@ -575,7 +575,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
 
         /**
          * Returns the tight encoding of this polynomial.
-         * See the page on \ref "tight encodings" for details.
+         * See the page on \ref tight "tight encodings" for details.
          *
          * \pre The coefficient type \a T must have a corresponding global
          * regina::tightEncode() function.  This is true for native C++ integer

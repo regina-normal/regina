@@ -270,7 +270,7 @@ class PacketPane : public QWidget, public regina::PacketListener {
          * An appropriate internal interface component will be selected
          * by way of the PacketManager class.
          */
-        PacketPane(ReginaMain* newMainWindow, regina::Packet* newPacket,
+        PacketPane(ReginaMain* newMainWindow, regina::Packet& newPacket,
             QWidget* parent = nullptr);
         ~PacketPane() override;
 
@@ -369,7 +369,7 @@ class PacketPane : public QWidget, public regina::PacketListener {
  * A packet-specific interface for opening a packet using an external
  * viewer.
  */
-using PacketExternalViewer = void (*)(regina::Packet* /* packet */,
+using PacketExternalViewer = void (*)(const regina::Packet& /* packet */,
     QWidget* /* parentWidget */);
 
 inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :

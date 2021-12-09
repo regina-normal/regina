@@ -51,7 +51,7 @@
 #include "angle/anglestructure.h"
 #include "maths/cyclotomic.h"
 #include "progress/progresstracker.h"
-#include "surfaces/normalsurface.h"
+#include "surface/normalsurface.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/detail/retriangulate.h"
 #include "triangulation/generic/triangulation.h"
@@ -99,7 +99,6 @@ template <int> class XMLTriangulationReader;
  * \todo \featurelong What is the Heegaard genus?
  * \todo \featurelong Have a subcomplex as a new type.  Include routines to
  * crush a subcomplex or to expand a subcomplex to a normal surface.
- * \todo \featurelong Implement writeTextLong() for skeletal objects.
  *
  * \headerfile triangulation/dim3.h
  *
@@ -258,23 +257,30 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
-         * Deprecated routine that creates a new ideal triangulation
-         * representing the complement of the given link in the 3-sphere.
+         * Creates a new ideal triangulation representing the complement
+         * of the given link in the 3-sphere.
+         *
+         * The triangulation will have one ideal vertex for each link
+         * component.  Assuming you pass \a simplify as \c true (the default),
+         * there will typically be no internal vertices; however, this
+         * is not guaranteed.
+         *
+         * Initially, each tetrahedron will be oriented according to a
+         * right-hand rule: the thumb of the right hand points from vertices
+         * 0 to 1, and the fingers curl around to point from vertices 2 to 3.
+         * If you pass \a simplify as \c true, then Regina will attempt to
+         * simplify the triangulation to as few tetrahedra as possible:
+         * this may relabel the tetrahedra, though their orientations will
+         * be preserved.
          *
          * This is the same triangulation that is produced by
-         * Link::complement(); however, this routine is slightly less
-         * efficient because it induces an additional move.
-         * See Link::complemenet() for further details.
-         *
-         * The triangulation will be simplified, but be aware that it
-         * might still contain internal vertices (i.e., vertices whose
-         * links are spheres).  This should, however, be a rare occurrence.
-         *
-         * \deprecated Just call the more efficient Link::complement() instead.
+         * Link::complement().
          *
          * @param link the link whose complement we should build.
+         * @param simplify \c true if and only if the triangulation
+         * should be simplified to use as few tetrahedra as possible.
          */
-        [[deprecated]] Triangulation(const Link& link);
+        Triangulation(const Link& link, bool simplify = true);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
@@ -288,14 +294,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * This list may grow in future versions of Regina.
          *
-         * If Regina cannot interpret the given string, this will be
-         * left as the empty triangulation.
-         *
          * \warning If you pass the contents of a SnapPea data file,
          * then only the tetrahedron gluings will be read; all other
          * SnapPea-specific information (such as peripheral curves) will
          * be lost.  See fromSnapPea() for details, and for other
          * alternatives that preserve SnapPea-specific data.
+         *
+         * \exception InvalidArgument Regina could not interpret the given
+         * string as representing a triangulation using any of the supported
+         * string types.
          *
          * @param description a string that describes a 3-manifold
          * triangulation.
@@ -421,30 +428,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         /*@{*/
 
-        /**
-         * A dimension-specific alias for size().
-         *
-         * See size() for further information.
-         */
-        size_t countTetrahedra() const;
-        /**
-         * A dimension-specific alias for simplices().
-         *
-         * See simplices() for further information.
-         */
-        auto tetrahedra() const;
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        Tetrahedron<3>* tetrahedron(size_t index);
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        const Tetrahedron<3>* tetrahedron(size_t index) const;
         /**
          * A dimension-specific alias for newSimplex().
          *
@@ -693,6 +676,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid.
          *
+         * \exception FailedPrecondition This triangulation is invalid.
+         *
          * @return the relative first homology group with respect to the
          * boundary.
          */
@@ -714,29 +699,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid.
          *
+         * \exception FailedPrecondition This triangulation is invalid.
+         *
          * @return the first homology group of the boundary.
          */
         const AbelianGroup& homologyBdry() const;
         /**
-         * Returns the second homology group for this triangulation.
-         * If this triangulation contains any ideal vertices,
-         * the homology group will be
-         * calculated as if each such vertex had been truncated.
-         * The algorithm used calculates various first homology groups
-         * and uses homology and cohomology theorems to deduce the
-         * second homology group.
+         * Deprecated routine that returns the second homology group for
+         * this triangulation.
          *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homologyH2() should be called again; this will be
-         * instantaneous if the group has already been calculated.
+         * \deprecated This is identical to calling homology<2>().
          *
          * \pre This triangulation is valid.
          *
+         * \exception FailedPrecondition This triangulation is invalid.
+         *
          * @return the second homology group.
          */
-        const AbelianGroup& homologyH2() const;
+        [[deprecated]] AbelianGroup homologyH2() const;
         /**
          * Returns the second homology group with coefficients in Z_2
          * for this triangulation.
@@ -751,6 +731,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Z_2, so the number of Z_2 terms is returned.
          *
          * \pre This triangulation is valid.
+         *
+         * \exception FailedPrecondition This triangulation is invalid.
          *
          * @return the number of Z_2 terms in the second homology group
          * with coefficients in Z_2.
@@ -1726,6 +1708,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)
@@ -1767,6 +1752,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -1873,6 +1861,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will (trivially) preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a f)
@@ -1918,6 +1909,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will (trivially) preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a f)
@@ -1961,6 +1955,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will (trivially) preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -2006,6 +2003,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   performed, and its validity tests are expensive; pinchEdge() on
          *   the other hand can always be used for edges \a e of the
          *   type described above.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -3075,11 +3075,11 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Callahan, Hildebrand and Weeks, Mathematics of Computation 68/225,
          * 1999.
          *
+         * \exception NotImplemented Either this triangulation is disconnected,
+         * it has boundary triangles, or it contains more than 25 tetrahedra.
+         *
          * @return a dehydrated representation of this triangulation
-         * (or an isomorphic variant of this triangulation), or the
-         * empty string if dehydration is not possible because the
-         * triangulation is disconnected, has boundary triangles or contains
-         * too many tetrahedra.
+         * (or an isomorphic variant of this triangulation).
          */
         std::string dehydrate() const;
 
@@ -3111,9 +3111,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * should call saveSnapPea() instead (which has better performance, and
          * does not require you to construct an enormous intermediate string).
          *
-         * If this triangulation is empty, invalid, or contains boundary
-         * triangles (which SnapPea cannot represent), then the resulting
-         * string will be empty.
+         * SnapPea cannot represent triangulations that are empty, invalid,
+         * or contain boundary triangles.  If any of these conditions is
+         * true then this routine will throw an exception.
+         *
+         * \exception NotImplemented This triangulation is either empty,
+         * invalid, or has boundary triangles.
          *
          * @return a string containing the contents of the corresponding
          * SnapPea data file.
@@ -3147,9 +3150,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * write to a real SnapPea data file on the filesystem, you should call
          * saveSnapPea() (which is also available in Python).
          *
-         * If this triangulation is empty, invalid, or contains boundary
-         * triangles (which SnapPea cannot represent), then nothing will
-         * be written to the output stream.
+         * SnapPea cannot represent triangulations that are empty, invalid,
+         * or contain boundary triangles.  If any of these conditions is
+         * true then this routine will throw an exception.
+         *
+         * \exception NotImplemented This triangulation is either empty,
+         * invalid, or has boundary triangles.
          *
          * \ifacespython Not present, but you can call snapPea() with
          * no arguments which returns this data as a string.
@@ -3181,9 +3187,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   (since Triangulation<3> is not a polymorphic class, and in
          *   particular this function is not virtual).
          *
-         * If this triangulation is empty, invalid, or contains boundary
-         * triangles (which SnapPea cannot represent), then the file
-         * will not be written and this routine will return \c false.
+         * SnapPea cannot represent triangulations that are empty, invalid,
+         * or contain boundary triangles.  If any of these conditions is
+         * true then the file will not be written and this routine will
+         * return \c false.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file \e name, and
@@ -3199,8 +3206,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Returns a string that expresses this triangulation in
          * Matveev's 3-manifold recogniser format.
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * Recogniser exports are currently not available for triangulations
+         * that are invalid or contain boundary triangles.  If either of these
+         * conditions is true then this routine will throw an exception.
+         *
+         * \exception NotImplemented This triangulation is either invalid
+         * or has boundary triangles.
          *
          * @return a string containing the 3-manifold recogniser data.
          */
@@ -3211,8 +3222,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * expresses this triangulation in Matveev's 3-manifold
          * recogniser format.
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * Recogniser exports are currently not available for triangulations
+         * that are invalid or contain boundary triangles.  If either of these
+         * conditions is true then this routine will throw an exception.
+         *
+         * \exception NotImplemented This triangulation is either invalid
+         * or has boundary triangles.
          *
          * @return a string containing the 3-manifold recogniser data.
          */
@@ -3222,8 +3237,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Writes a string expressing this triangulation in Matveev's
          * 3-manifold recogniser format to the given output stream.
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * Recogniser exports are currently not available for triangulations
+         * that are invalid or contain boundary triangles.  If either of these
+         * conditions is true then this routine will throw an exception.
+         *
+         * \exception NotImplemented This triangulation is either invalid
+         * or has boundary triangles.
          *
          * \ifacespython Not present, but you can call recogniser() with
          * no arguments which returns this data as a string.
@@ -3238,8 +3257,12 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * a string expressing this triangulation in Matveev's
          * 3-manifold recogniser format to the given output stream.
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * Recogniser exports are currently not available for triangulations
+         * that are invalid or contain boundary triangles.  If either of these
+         * conditions is true then this routine will throw an exception.
+         *
+         * \exception NotImplemented This triangulation is either invalid
+         * or has boundary triangles.
          *
          * \ifacespython Not present, but you can call recognizer() with
          * no arguments which returns this data as a string.
@@ -3253,8 +3276,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Writes this triangulation to the given file in Matveev's
          * 3-manifold recogniser format.
          *
-         * \pre This triangulation is not invalid, and does not contain
-         * any boundary triangles.
+         * Recogniser exports are currently not available for triangulations
+         * that are invalid or contain boundary triangles.  If either of these
+         * conditions is true then the file will not be written, and
+         * this routine will return \c false.
          *
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given file \e name, and
@@ -3455,6 +3480,62 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
     friend class regina::XMLWriter<Triangulation<3>>;
 };
 
+/**
+ * Casts a reference from Packet to Triangulation<3>, allowing for
+ * the packet to hold either a Triangulation<3> or a SnapPeaTriangulation.
+ *
+ * The behaviour of this routine is analogous to
+ * static_cast<Triangulation<3&>>() and
+ * regina::static_packet_cast<Triangulation<3>>().  It is provided because
+ * these other routines cannot simultaneously support packets that hold a
+ * Triangulation<3> and packets that hold a SnapPeaTriangulation - these
+ * two cases use separate (and unrelated) paths through the class hierarchy to
+ * get from Packet to Triangulation<3>.
+ *
+ * In particular, attempting to use regina::static_packet_cast<Triangulation<3>>
+ * with a packet holding a SnapPea triangulation is not allowed, and will result
+ * in undefined behaviour.  In contrast, calling
+ * regina::static_triangulation3_cast on such a packet is allowed and
+ * will return the expected Triangulation<3> reference.
+ *
+ * \ifacespython Not present, since casting is unnecessary in Python.
+ *
+ * @param p a reference, presented as a packet.
+ * @return the same reference, presented using the type \a Held.
+ *
+ * \ingroup dim3
+ */
+Triangulation<3>& static_triangulation3_cast(Packet& p);
+
+/**
+ * Casts a const reference from Packet to Triangulation<3>, allowing for
+ * the packet to hold either a Triangulation<3> or a SnapPeaTriangulation.
+ *
+ * The behaviour of this routine is analogous to
+ * static_cast<const Triangulation<3>&>() and
+ * regina::static_packet_cast<Triangulation<3>>().  It is provided because
+ * these other routines cannot simultaneously support packets that hold a
+ * Triangulation<3> and packets that hold a SnapPeaTriangulation - these
+ * two cases use separate (and unrelated) paths through the class hierarchy to
+ * get from Packet to Triangulation<3>.
+ *
+ * In particular, attempting to use regina::static_packet_cast<Triangulation<3>>
+ * with a packet holding a SnapPea triangulation is not allowed, and will result
+ * in undefined behaviour.  In contrast, calling
+ * regina::static_triangulation3_cast on such a packet is allowed and
+ * will return the expected Triangulation<3> reference.
+ *
+ * \ifacespython Not present, since casting is unnecessary in Python.
+ *
+ * @param p a reference, presented as a packet.
+ * @return the same reference, presented using the type \a Held.
+ *
+ * \ingroup dim3
+ */
+const Triangulation<3>& static_triangulation3_cast(const Packet& p);
+
+// Doxygen struggles with specialisations; hide them from it.
+#ifndef __DOXYGEN
 template <>
 inline PacketData<Triangulation<3>>::ChangeEventSpan::ChangeEventSpan(
         PacketData& data) : data_(data) {
@@ -3493,6 +3574,7 @@ inline PacketData<Triangulation<3>>::ChangeEventSpan::~ChangeEventSpan() {
             break;
     }
 }
+#endif // ! __DOXYGEN
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
@@ -3514,22 +3596,6 @@ namespace regina {
 
 inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
         Triangulation<3>(copy, true) {
-}
-
-inline size_t Triangulation<3>::countTetrahedra() const {
-    return size();
-}
-
-inline auto Triangulation<3>::tetrahedra() const {
-    return simplices();
-}
-
-inline Tetrahedron<3>* Triangulation<3>::tetrahedron(size_t index) {
-    return simplex(index);
-}
-
-inline const Tetrahedron<3>* Triangulation<3>::tetrahedron(size_t index) const {
-    return simplex(index);
 }
 
 inline Tetrahedron<3>* Triangulation<3>::newTetrahedron() {
@@ -3562,7 +3628,7 @@ inline void Triangulation<3>::removeAllTetrahedra() {
 }
 
 inline Triangulation<3>& Triangulation<3>::operator = (
-        const Triangulation<3>& src) {
+        const Triangulation& src) {
     // We need to implement copy assignment ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.  This is so that the
     // final packetWasChanged event is fired *after* we modify the
@@ -3591,7 +3657,7 @@ inline Triangulation<3>& Triangulation<3>::operator = (
     return *this;
 }
 
-inline Triangulation<3>& Triangulation<3>::operator = (Triangulation<3>&& src) {
+inline Triangulation<3>& Triangulation<3>::operator = (Triangulation&& src) {
     // Like copy assignment, we implement this ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.
 
@@ -3695,8 +3761,14 @@ inline const AngleStructure& Triangulation<3>::generalAngleStructure() const {
         throw NoSolution();
 }
 
+inline AbelianGroup Triangulation<3>::homologyH2() const {
+    return homology<2>();
+}
+
 inline unsigned long Triangulation<3>::homologyH2Z2() const {
-    return homologyRel().rank() + homologyRel().torsionRank(2);
+    // The call to homologyRel() will test the validity precondition.
+    const AbelianGroup& h1Rel = homologyRel();
+    return h1Rel.rank() + h1Rel.torsionRank(2);
 }
 
 inline const Triangulation<3>::TuraevViroSet&
@@ -3734,20 +3806,6 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
                 return action(std::move(obj), std::forward<Args>(args)...);
             });
     }
-}
-
-inline bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
-        ProgressTrackerOpen* tracker) {
-    return retriangulate(height, nThreads, tracker,
-        [](Triangulation<3>&& alt, Triangulation<3>& original, size_t minSimp) {
-            if (alt.size() < minSimp) {
-                ChangeEventSpan span(original);
-                original = std::move(alt);
-                original.intelligentSimplify();
-                return true;
-            } else
-                return false;
-        }, *this, size());
 }
 
 inline bool Triangulation<3>::minimizeBoundary() {

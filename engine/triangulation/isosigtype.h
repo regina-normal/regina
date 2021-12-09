@@ -145,7 +145,7 @@ class IsoSigClassic {
          *
          * @return the starting labelling, given as a permutation that
          * maps the current vertex labels of the starting simplex \a s
-         * to the "canonical" labels 0,1,\ldots,\a dim.
+         * to the "canonical" labels 0,1,...,\a dim.
          */
         Perm<dim+1> perm() const;
 
@@ -309,7 +309,7 @@ class IsoSigDegrees {
          *
          * @return the starting labelling, given as a permutation that
          * maps the current vertex labels of the starting simplex \a s
-         * to the "canonical" labels 0,1,\ldots,\a dim.
+         * to the "canonical" labels 0,1,...,\a dim.
          */
         Perm<dim+1> perm() const;
 

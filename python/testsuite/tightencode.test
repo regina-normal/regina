@@ -52,8 +52,7 @@ def doLarge(val):
 def doUnsigned(val):
 	# We can test encodings for unsigned types via AbelianGroup,
 	# which stores the rank as an unsigned integer.
-	a = AbelianGroup()
-	a.addRank(val)
+	a = AbelianGroup(val)
 	print(a.tightEncoding())
 
 doLong(0)

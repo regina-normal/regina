@@ -107,12 +107,15 @@ class Face<4, 4> : public detail::SimplexBase<4> {
         /**< Allow access to private members. */
 };
 
-// Specialisations to improve upon generic implementations from SimplexBase:
+// Specialisations to improve upon generic implementations from SimplexBase
+// (hide these from doxygen, which struggles with specialisations):
 
+#ifndef __DOXYGEN
 template <>
 inline Edge<4>* detail::SimplexBase<4>::edge(int i, int j) const {
     return (i == j ? nullptr : edge(FaceNumbering<4, 1>::edgeNumber[i][j]));
 }
+#endif
 
 // Inline functions for Pentachoron<4>
 

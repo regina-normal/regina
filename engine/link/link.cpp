@@ -118,6 +118,35 @@ Link& Link::operator = (const Link& src) {
     return *this;
 }
 
+bool Link::operator == (const Link& other) const {
+    if (crossings_.size() != other.crossings_.size())
+        return false;
+    if (components_.size() != other.components_.size())
+        return false;
+
+    for (size_t i = 0; i < crossings_.size(); ++i) {
+        Crossing* a = crossings_[i];
+        Crossing* b = other.crossings_[i];
+
+        if (a->sign() != b->sign())
+            return false;
+        if (a->next_[0] != translate(b->next_[0]))
+            return false;
+        if (a->next_[1] != translate(b->next_[1]))
+            return false;
+
+        // If everything is self-consistent then the prev strands should
+        // match also; we don't need to test those.
+    }
+
+    for (size_t i = 0; i < components_.size(); ++i) {
+        if (components_[i] != translate(other.components_[i]))
+            return false;
+    }
+
+    return true;
+}
+
 Link& Link::operator = (Link&& src) {
     ChangeEventSpan span(*this);
 
@@ -167,6 +196,9 @@ Link::Link(const std::string& description) {
         return;
     } catch (const InvalidArgument&) {
     }
+
+    throw InvalidArgument("The given string could not be interpreted "
+        "as representing a link");
 }
 
 bool Link::connected(const Crossing* a, const Crossing* b) const {
@@ -328,13 +360,18 @@ void Link::selfFrame() {
 }
 
 void Link::writeTextShort(std::ostream& out) const {
-    if (components_.empty())
-        out << "empty link";
-    else if (components_.size() == 1)
-        out << crossings_.size() << "-crossing knot";
+    if (components_.empty()) {
+        out << "Empty link";
+        return;
+    }
+
+    if (components_.size() == 1)
+        out << crossings_.size() << "-crossing knot: ";
     else
         out << crossings_.size() << "-crossing, "
-            << components_.size() << "-component link";
+            << components_.size() << "-component link: ";
+
+    brief(out);
 }
 
 void Link::writeTextLong(std::ostream& out) const {

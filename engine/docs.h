@@ -272,84 +272,126 @@ namespace regina {
 
 /*! \page pythonapi Python users
  *
- *  Regina's calculation engine is provided as a shared C++ library, and
- *  this API documentation describes the native C++ interface for
- *  working with this library.
+ *  Regina's calculation engine is provided as a shared C++ library, and this
+ *  API documentation is written to describe Regina's native C++ interface.
  *
- *  Regina also provides a Python module, which wraps many of the
- *  classes, functions, methods and so on from this library so that
- *  Python users can access them.
+ *  However, Regina also makes this library accessible through a Python module.
+ *  If you are using Python, the notes below explain (briefly) how you
+ *  should read this API documentation.
  *
- *  Python users should read this documentation as follows:
+ *  <h3>Python vs C++ types</h3>
  *
  *  - Standard C++ types become native Python types.  For example, the C++ type
- *    \c std::string becomes the native Python string type.
+ *    \c std::string becomes the native Python string type, the C++ type
+ *    \c std::vector<T> becomes a native Python list holding objects of type
+ *    \a T, and the C++ type \c std::optional<T> will either become a
+ *    Python object of type \a T or the Python value \c None.
  *
  *  - Everything within the C++ namespace \a regina becomes part of the
- *    Python module \a regina.  For example, the C++ class
- *    regina::Triangulation<3> becomes the Python class regina.Triangulation3.
+ *    Python module \c regina.  For example, the C++ class
+ *    regina::Link becomes the Python class \c regina.Link.
  *
- *  - Most of Regina's C++ classes and functions are wrapped in Python.
- *    However, not all classes and functions are wrapped.
- *    If a class or function is not available in Python then you will
- *    see a bold <b>Python:</b> note indicating this.  See for instance
- *    the class MarkedVector, or the function base64Encode().
- *
- *  - Most of Regina's classes and functions have the same interface
- *    in both C++ and Python, but occasionally there are differences.
- *    Again, you will see a bold <b>Python:</b> note indicating this.
- *    See for instance the method Link::rewrite(), or the global function
- *    writeResUsage().
+ *  - Regina has many templated classes, and Python does not support templates.
+ *    Typically Regina will replace the template arguments with an appropriate
+ *    suffix in the Python class name.  For example, the C++ class
+ *    Triangulation<3> becomes the Python class \c Triangulation3, and the
+ *    C++ class Matrix<regina::Integer> becomes the Python class \c MatrixInt.
+ *    See the individual class notes for how the Python class names are
+ *    constructed.
  *
  *  <h3>Testing equality</h3>
  *
- *  It is important to understand how Python's equality tests
+ *  - Since Regina 7.0, almost \e all of Regina's C++ classes and functions
+ *    are wrapped in Python - even the low-level and/or highly specialised
+ *    classes - wherever it is meaningful to do so.  However, sometimes there
+ *    is reason why a class or function cannot or should not be wrapped.
+ *    If a class or function is not available in Python then you will
+ *    see a bold <b>Python:</b> note indicating this.  See for instance
+ *    the class MarkedVector, or the function valueOf().
+ *
+ *  - Most of Regina's classes and functions use the same interface
+ *    in both C++ and Python, but occasionally there are differences
+ *    in how the classes or functions are used.  Again, you will see a bold
+ *    <b>Python:</b> note indicating this.  See for instance the method
+ *    Link::rewrite(), or the global function writeResUsage().
+ *
+ *  <h3>Testing equality</h3>
+ *
+ *  It is important to understand how the comparisons
  *  <tt>x == y</tt> and <tt>x is y</tt> operate under Python.
+ *  As of Regina 7.0, this behaviour has changed significantly: many
+ *  more classes now compare by value, and a few now have their comparisons
+ *  disabled.
  *
- *  If \a x is a Python variable representing one of Regina's objects, then
- *  internally \a x stores a reference to one of Regina's native C++ objects.
- *  Importantly, there may be \e many different Python variables that
- *  all stores references to the \e same underlying C++ object.
+ *  In general, you do \e not want to use the Python test <tt>x is y</tt>.
+ *  This is because each of Regina's Python objects is typically a "wrapper"
+ *  that points to one of Regina's native C++ objects.  Importantly, the
+ *  same native C++ object could have many Python wrappers, and so
+ *  <tt>x is y</tt> could return \c False even if both \a x and \a y wrap
+ *  the same native C++ object.
  *
- *  This means that the Python test <tt>x is y</tt> is unreliable.
- *  If <tt>x is y</tt> returns \c True then certainly \a x and \a y refer to
- *  the same C++ object; however, if <tt>x is y</tt> returns \c False then
- *  it is still possible that they refer to the same C++ object.
+ *  Instead, you should always use the tests <tt>x == y</tt> and/or
+ *  <tt>x != y</tt>.  Regina implements this in different ways, depending
+ *  on the type of class:
  *
- *  The solution is to always use the test <tt>x == y</tt>.  Regina
- *  offers three types of classes, and these behave differently under Python:
+ *  - Most of Regina's classes use <i>comparison by value</i>.  Here
+ *    <tt>x == y</tt> tests whether the \e contents of \a x and \a y are
+ *    the same.  What "the same " means will depend on the particular class;
+ *    for example, GroupPresentation tests for identical presentations (not
+ *    group isomorphism), Triangulation<3> tests for the same tetrahedron and
+ *    vertex labellings (not just combinatorial isomorphism), and Attachment
+ *    compares the attached file contents (ignoring the associated filenames).
+ *    For the core numeric classes such as Integer, Rational, Polynomial,
+ *    VectorInt and MatrixInt, this tests the usual mathematical equality.
  *
- *  - Some classes use <i>comparison by value</i>.  Here <tt>x == y</tt>
- *    tests whether the contents of \a x and \a y are mathematically
- *    equivalent.  Examples of such classes are \ref IntegerBase "Integer",
- *    Rational, and AbelianGroup.
+ *    For each such class, you can find out what is being compared by reading
+ *    the documentation for the C++ class operators == and !=.
+ *    See for example Link::operator==().
  *
- *    These classes all provide C++ comparison operators == and !=.  You
- *    can read the documentation for these operators to understand
- *    exactly what mathematical condition(s) are being tested.
+ *  - Some selected classes use <i>comparison by reference</i>.  Here
+ *    <tt>x == y</tt> tests whether \a x and \a y refer to the same underlying
+ *    C++ object (analogous to how <tt>x is y</tt> would normally behave in a
+ *    native Python application).  This is typically used for the few classes
+ *    that are passed around by pointer in C++, and whose location in memory
+ *    is what defines them; the most common examples you will see are
+ *    crossings within links (Crossing), and skeletal objects within
+ *    triangulations (e.g., Tetrahedron<3>, Vertex<4>, BoundaryComponent<2>).
  *
- *  - Some classes use <i>comparison by reference</i>.  Here <tt>x == y</tt>
- *    tests whether \a x and \a y refer to the same underlying C++ object.
- *    This is similar to how the test <tt>x is y</tt> would behave in a
- *    native Python application.  Examples of such classes are
- *    Triangulation<3> and Tetrahedron<3>.
+ *    These classes do not provide C++ class operators == or !=.
  *
- *    These classes do not provide C++ comparison operators == or !=.
+ *  - A few classes have explicitly disabled their comparison operators,
+ *    since they are designed to be moved and/or copied (which makes
+ *    it inappropriate to compare by reference), but they do not yet have
+ *    their own customised comparisons implemented (often because such a
+ *    test would be expensive and/or would be difficult to define cleanly).
  *
- *  - Some classes are never instantiated, and so can never be compared
- *    at all.  These classes typically contain only static methods.
- *    Examples of such classes are Example<dim> and
- *    \ref regina::i18n::Locale "Locale".
+ *    These classes do not provide C++ class operators == or !=.
+ *    If you attempt to compare two Python objects of such a class, you
+ *    will receive a Python error with a message explain essentially
+ *    what is written here.
+ *
+ *  - For some classes, comparisons are irrelevant because they only
+ *    contain static methods, and you cannot instantiate them.  Examples of
+ *    such classes are Example<3> and \ref regina::i18n::Locale "Locale".
  *
  *  If you wish to find out how a particular class \a C behaves, you can
  *  examine the attribute <tt>C.equalityType</tt>.  This will return one of
- *  the values \c BY_VALUE, \c BY_REFERENCE or \c NEVER_INSTANTIATED
- *  respectively:
+ *  the values \c BY_VALUE, \c BY_REFERENCE, \c DISABLED or
+ *  \c NEVER_INSTANTIATED respctively:
  *
  *  \code{.unparsed}
  *  >>> print Triangulation3.equalityType
- *  BY_REFERENCE
+ *  BY_VALUE
  *  \endcode
+ *
+ *  Packet subclasses are a special case: it is often meaningful to compare
+ *  packets by value (e.g., testing whether two triangulations are
+ *  combinatorially identical), but it is also useful to know whether
+ *  two Python wrappers identify the same underlying C++ packet (e.g., when
+ *  traversing the packet tree).  To resolve this, you can compare two
+ *  packets of the same type by value using the operators <tt>x == y</tt> and
+ *  <tt>x != y</tt>, and you can test whether two packets of any types
+ *  reference the same underlying object by calling Packet::samePacket().
  */
 
 } // namespace regina

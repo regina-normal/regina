@@ -71,9 +71,7 @@ namespace regina {
  * \ingroup dim2
  */
 template <>
-class Component<2> : public detail::ComponentBase<2>,
-        public alias::FaceOfTriangulation<Component<2>, 2>,
-        public alias::FacesOfTriangulation<Component<2>, 2> {
+class Component<2> : public detail::ComponentBase<2> {
     private:
         std::vector<Edge<2>*> edges_;
             /**< List of edges in the component. */
@@ -81,27 +79,6 @@ class Component<2> : public detail::ComponentBase<2>,
             /**< List of vertices in the component. */
 
     public:
-        /**
-         * A dimension-specific alias for size().
-         *
-         * See size() for further information.
-         */
-        size_t countTriangles() const;
-
-        /**
-         * A dimension-specific alias for simplices().
-         *
-         * See simplices() for further information.
-         */
-        auto triangles() const;
-
-        /**
-         * A dimension-specific alias for simplex().
-         *
-         * See simplex() for further information.
-         */
-        Triangle<2>* triangle(size_t index) const;
-
         /**
          * Returns the number of <i>subdim</i>-faces in this component.
          *
@@ -213,18 +190,6 @@ class Component<2> : public detail::ComponentBase<2>,
 };
 
 // Inline functions for Component<2>
-
-inline size_t Component<2>::countTriangles() const {
-    return size();
-}
-
-inline auto Component<2>::triangles() const {
-    return simplices();
-}
-
-inline Triangle<2>* Component<2>::triangle(size_t index) const {
-    return simplex(index);
-}
 
 // Hide specialisations from doxygen, since it cannot handle them.
 #ifndef __DOXYGEN

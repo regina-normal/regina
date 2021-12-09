@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "regina-config.h" // for REGINA_HIGHDIM
 #include "packet/packettype.h"
 #include "../helpers.h"
 
@@ -51,11 +52,11 @@ void addPacketType(pybind11::module_& m) {
         .value("PACKET_TRIANGULATION2", regina::PACKET_TRIANGULATION2)
         .value("PACKET_TRIANGULATION3", regina::PACKET_TRIANGULATION3)
         .value("PACKET_TRIANGULATION4", regina::PACKET_TRIANGULATION4)
-#ifndef REGINA_LOWDIMONLY
         .value("PACKET_TRIANGULATION5", regina::PACKET_TRIANGULATION5)
         .value("PACKET_TRIANGULATION6", regina::PACKET_TRIANGULATION6)
         .value("PACKET_TRIANGULATION7", regina::PACKET_TRIANGULATION7)
         .value("PACKET_TRIANGULATION8", regina::PACKET_TRIANGULATION8)
+#ifdef REGINA_HIGHDIM
         .value("PACKET_TRIANGULATION9", regina::PACKET_TRIANGULATION9)
         .value("PACKET_TRIANGULATION10", regina::PACKET_TRIANGULATION10)
         .value("PACKET_TRIANGULATION11", regina::PACKET_TRIANGULATION11)

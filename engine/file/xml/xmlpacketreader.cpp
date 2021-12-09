@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "regina-config.h" // for REGINA_HIGHDIM
 #include "packet/packet.h"
 #include "file/xml/xmlanglestructreader.h"
 #include "file/xml/xmlfilterreader.h"
@@ -260,7 +261,6 @@ XMLElementReader* XMLPacketReader::startSubElement(
                         std::move(childID), *tri);
                 else
                     return new XMLElementReader();
-#ifndef REGINA_LOWDIMONLY
             case PACKET_TRIANGULATION5:
                 return new XMLTriangulationReader<5>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
@@ -273,6 +273,7 @@ XMLElementReader* XMLPacketReader::startSubElement(
             case PACKET_TRIANGULATION8:
                 return new XMLTriangulationReader<8>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
+#ifdef REGINA_HIGHDIM
             case PACKET_TRIANGULATION9:
                 return new XMLTriangulationReader<9>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
@@ -294,7 +295,7 @@ XMLElementReader* XMLPacketReader::startSubElement(
             case PACKET_TRIANGULATION15:
                 return new XMLTriangulationReader<15>(resolver_, packet_, anon_,
                     std::move(childLabel), std::move(childID), size, permIndex);
-#endif /* ! REGINA_LOWDIMONLY */
+#endif /* REGINA_HIGHDIM */
             default:
                 return new XMLElementReader();
         }

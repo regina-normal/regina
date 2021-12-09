@@ -11,6 +11,7 @@ SET ( FILES
   filtercreator.cpp
   filterprop.cpp
   gaprunner.cpp
+  generictriui.cpp
   groupwidget.cpp
   hypercompatui.cpp
   hypercoordinateui.cpp
@@ -63,15 +64,5 @@ SET ( FILES
 FOREACH( FILE ${FILES} )
   SET( SOURCES ${SOURCES} packets/${FILE})
 ENDFOREACH(FILE)
-
-SET ( FILES
-  generictriui.cpp
-  )
-
-IF(NOT LOWDIMONLY)
-  FOREACH( FILE ${FILES} )
-    SET( SOURCES ${SOURCES} packets/${FILE})
-  ENDFOREACH(FILE)
-ENDIF(NOT LOWDIMONLY)
 
 SET( SOURCES ${SOURCES} PARENT_SCOPE)

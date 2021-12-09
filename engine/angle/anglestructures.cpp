@@ -35,7 +35,7 @@
 #include "enumerate/treetraversal.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
-#include "surfaces/normalsurface.h"
+#include "surface/normalsurface.h"
 #include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
 #include <thread>
@@ -173,7 +173,7 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
 std::shared_ptr<PacketOf<AngleStructures>> AngleStructures::enumerate(
         Triangulation<3>& triangulation, bool tautOnly,
         ProgressTracker* tracker) {
-    auto ans = makePacket<AngleStructures>(std::in_place, tautOnly,
+    auto ans = make_packet<AngleStructures>(std::in_place, tautOnly,
         AS_ALG_DEFAULT, triangulation);
     auto treeParent = triangulation.inAnyPacket();
 
@@ -194,7 +194,7 @@ std::shared_ptr<PacketOf<AngleStructures>> AngleStructures::enumerate(
 
 std::shared_ptr<PacketOf<AngleStructures>> AngleStructures::enumerateTautDD(
         Triangulation<3>& triangulation) {
-    auto ans = makePacket<AngleStructures>(std::in_place, true, AS_ALG_DD,
+    auto ans = make_packet<AngleStructures>(std::in_place, true, AS_ALG_DD,
         triangulation);
     auto treeParent = triangulation.inAnyPacket();
 

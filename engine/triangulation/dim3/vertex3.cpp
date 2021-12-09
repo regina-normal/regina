@@ -40,18 +40,6 @@ Vertex<3>::~Face() {
     delete linkTri_;
 }
 
-void Vertex<3>::writeTextShort(std::ostream& out) const {
-    switch(link_) {
-        case SPHERE: out << "Internal "; break;
-        case DISC: out << "Boundary "; break;
-        case TORUS: out << "Torus cusp "; break;
-        case KLEIN_BOTTLE: out << "Klein bottle cusp "; break;
-        case NON_STANDARD_CUSP: out << "Non-standard cusp "; break;
-        case INVALID: out << "Invalid boundary "; break;
-    }
-    out << "vertex of degree " << degree();
-}
-
 const Triangulation<2>& Face<3, 0>::buildLink() const {
     if (! linkTri_) {
         // Build the triangulation.

@@ -244,6 +244,36 @@ class Cusp : public ShortOutput<Cusp> {
         int l() const;
 
         /**
+         * Determines whether this and the given object hold the
+         * same cusp information.
+         *
+         * Two Cusp objects are considered equal if they refer to the
+         * same vertex of the underlying triangulation (i.e., the
+         * pointers returned by vertex() are the same), \e and they have
+         * the same filling coefficients.
+         *
+         * @param other the cusp information to compare with this.
+         * @return \c true if and only this and the given object hold
+         * the same cusp information.
+         */
+        bool operator == (const Cusp& other) const;
+
+        /**
+         * Determines if this and the given object do not hold the
+         * same cusp information.
+         *
+         * Two Cusp objects are considered equal if they refer to the
+         * same vertex of the underlying triangulation (i.e., the
+         * pointers returned by vertex() are the same), \e and they have
+         * the same filling coefficients.
+         *
+         * @param other the cusp information to compare with this.
+         * @return \c true if and only this and the given object do not hold
+         * the same cusp information.
+         */
+        bool operator != (const Cusp& other) const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -729,20 +759,21 @@ class SnapPeaTriangulation :
          * Creates a new ideal SnapPea triangulation representing the
          * complement of the given link in the 3-sphere.
          *
-         * This is the same triangulation that would be produced by calling
-         * Link::complement() to build a native Triangulation<3>, and then
-         * passing the resulting triangulation to the constructor
-         * SnapPeaTriangulation(const Triangulation<3>&).
+         * This is \e not the same triangulation that would be produced by
+         * calling <tt>SnapPeaTriangulation(link.complement())</tt>.
+         * By calling <tt>link.complement()</tt>, you through Regina's
+         * Triangulation<3> class and therefore lose the peripheral curves.
+         * Although the SnapPeaTriangulation constructor will install new
+         * periphereral curves, there is no guarantee that these are the same
+         * curves as before; in particular, there is no guarantee that these
+         * new curves will correspond in any way to the original link diagram.
          *
-         * Be aware that the peripheral curves are chosen by SnapPea
-         * according to the method outlined in the constructor
-         * SnapPeaTriangulation(const Triangulation<3>&); in particular,
-         * this is done with no knowledge of the original link diagram.
+         * In contrast, by calling <tt>SnapPeaTriangulation(link)</tt> directly,
+         * the link complement will be triangulated by the SnapPea kernel and
+         * not by Regina.  As a result, the peripheral curves installed by
+         * SnapPea will be precisely the curves from the link diagram.
          *
-         * Also, be aware that this could be a null SnapPea triangulation
-         * (if, for whatever reason, SnapPea is unable to do the conversion
-         * from the intermediate native Regina triangulation).  As always,
-         * you can (and should) test this by calling isNull().
+         * \exception InvalidArgument the given link is empty.
          *
          * @param link the link whose complement we should build.
          */
@@ -1916,8 +1947,7 @@ class SnapPeaTriangulation :
          * should call saveSnapPea() instead (which has better performance, and
          * does not require you to construct an enormous intermediate string).
          *
-         * If this is a null triangulation, then the string returned
-         * will be empty.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
          *
          * @return a string containing the contents of the corresponding
          * SnapPea data file.
@@ -1939,8 +1969,7 @@ class SnapPeaTriangulation :
          * write to a real SnapPea data file on the filesystem, you should call
          * saveSnapPea() (which is also available in Python).
          *
-         * If this is a null triangulation, then nothing will be written
-         * to the output stream.
+         * \exception SnapPeaIsNull this is a null SnapPea triangulation.
          *
          * \ifacespython Not present; instead you can use the variant of
          * snapPea() that takes no arguments and returns a string.
@@ -2150,6 +2179,14 @@ inline int Cusp::m() const {
 
 inline int Cusp::l() const {
     return l_;
+}
+
+inline bool Cusp::operator == (const Cusp& other) const {
+    return vertex_ == other.vertex_ && m_ == other.m_ && l_ == other.l_;
+}
+
+inline bool Cusp::operator != (const Cusp& other) const {
+    return vertex_ != other.vertex_ || m_ != other.m_ || l_ != other.l_;
 }
 
 // Inline functions for SnapPeaTriangulation

@@ -37,8 +37,12 @@ def tri3From(*args):
 	try:
 		t = Triangulation3(*args)
 		print(t.size(), t.isoSig())
-	except:
-		print('ERROR: Could not construct')
+	except InvalidArgument:
+		print('Could not construct')
+	except TypeError:
+		print('Invalid constructor arguments')
+	except Exception as e:
+		print('ERROR: Unexpected exception:', type(e))
 
 # Empty
 tri3From()
@@ -64,7 +68,7 @@ tri3From('cabbbbaei')
 # SnapPea data file contents
 tri3From(Example3.figureEight().snapPea())
 
-# Junk (should result in an empty triangulation)
+# Junk (constructor should throw an exception)
 tri3From('banana')
 
 # Simulate what happens if we try to pass a SnapPy manifold or triangulation:

@@ -40,7 +40,7 @@
 using regina::AugTriSolidTorus;
 
 void addAugTriSolidTorus(pybind11::module_& m) {
-    pybind11::class_<AugTriSolidTorus, regina::StandardTriangulation>
+    auto c = pybind11::class_<AugTriSolidTorus, regina::StandardTriangulation>
             (m, "AugTriSolidTorus")
         .def(pybind11::init<const AugTriSolidTorus&>())
         .def("clone", [](const AugTriSolidTorus& s) { // deprecated
@@ -63,5 +63,6 @@ void addAugTriSolidTorus(pybind11::module_& m) {
         .def_readonly_static("CHAIN_MAJOR", &AugTriSolidTorus::CHAIN_MAJOR)
         .def_readonly_static("CHAIN_AXIS", &AugTriSolidTorus::CHAIN_AXIS)
     ;
+    regina::python::add_output(c);
 }
 

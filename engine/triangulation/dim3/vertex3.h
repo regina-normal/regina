@@ -254,16 +254,6 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          */
         long linkEulerChar() const;
 
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present; use str() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-
     private:
         /**
          * Creates a new vertex and marks it as belonging to the

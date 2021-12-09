@@ -860,7 +860,7 @@ bool metricFindPivot(const unsigned long &currStage, const MatrixInt &matrix,
         const std::vector<Integer> &rowGCD) {
     bool pivotFound = false;
     // find the smallest positive rowGCD
-    Integer SProwGCD(Integer::zero);
+    Integer SProwGCD; // zero
 
     for (unsigned long i=currStage; i<matrix.rows(); i++)
         if (rowGCD[i] != 0) {
@@ -940,7 +940,7 @@ void metricColOp(const unsigned long &currStage, const unsigned long &i,
 {
     Integer t1, t2;
     // smart rowMetric recomputation and transformation
-    colNorm[i] = Integer::zero; colNorm[j] = Integer::zero;
+    colNorm[i] = 0; colNorm[j] = 0;
     for (unsigned long k=currStage; k<matrix.rows(); k++)
     {
         t1 = a*matrix.entry(k, i) + c*matrix.entry(k, j);
@@ -975,8 +975,8 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i,
 {
     Integer t1, t2;
     // smart norm recomputation and transformation
-    rowNorm[i] = Integer::zero; rowNorm[j] = Integer::zero;
-    rowGCD[i] = Integer::zero;  rowGCD[j] = Integer::zero;
+    rowNorm[i] = 0; rowNorm[j] = 0;
+    rowGCD[i] = 0;  rowGCD[j] = 0;
     for (unsigned long k=currStage; k<matrix.columns(); k++) {
         t1 = a*matrix.entry(i, k) + b*matrix.entry(j, k);
         t2 = c*matrix.entry(i, k) + d*matrix.entry(j, k);
@@ -1037,10 +1037,10 @@ void metricalSmithNormalForm(MatrixInt& matrix,
     colSpaceBasis = MatrixInt::identity(matrix.rows());
     colSpaceBasisInv = MatrixInt::identity(matrix.rows());
 
-    // set up metrics.
-    std::vector<Integer> rowNorm(matrix.rows(), Integer::zero);
-    std::vector<Integer> colNorm(matrix.columns(), Integer::zero);
-    std::vector<Integer> rowGCD(matrix.rows(), Integer::zero);
+    // set up metrics (all vectors are initialised to zero by default).
+    std::vector<Integer> rowNorm(matrix.rows());
+    std::vector<Integer> colNorm(matrix.columns());
+    std::vector<Integer> rowGCD(matrix.rows());
     for (unsigned long i=0; i<matrix.rows(); i++)
         for (unsigned long j=0; j<matrix.columns(); j++) {
             rowNorm[i] += matrix.entry(i,j).abs();

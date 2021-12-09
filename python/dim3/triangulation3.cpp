@@ -40,7 +40,7 @@
 #include "packet/container.h"
 #include "progress/progresstracker.h"
 #include "snappea/snappeatriangulation.h"
-#include "surfaces/normalsurface.h"
+#include "surface/normalsurface.h"
 #include "triangulation/example3.h"
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
@@ -50,6 +50,7 @@
 using pybind11::overload_cast;
 using regina::Example;
 using regina::Isomorphism;
+using regina::MatrixInt;
 using regina::Triangulation;
 
 /**
@@ -103,9 +104,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<3>&>())
         .def(pybind11::init<const Triangulation<3>&, bool>())
-        .def(pybind11::init([](const regina::Link& link) { // deprecated
-            return new Triangulation<3>(link.complement());
-        }))
+        .def(pybind11::init<const regina::Link&, bool>(),
+            pybind11::arg(), pybind11::arg("simplify") = true)
         .def(pybind11::init<const std::string&>())
         .def(pybind11::init([](const regina::python::SnapPyObject& obj) {
             return new Triangulation<3>(obj.string_);
@@ -119,8 +119,9 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>())
         .def("simplices", &Triangulation<3>::simplices,
             pybind11::keep_alive<0, 1>())
-        .def("tetrahedron",
-            overload_cast<size_t>(&Triangulation<3>::tetrahedron),
+        // Use a C-style cast because GCC struggles with the overload_cast here:
+        .def("tetrahedron", (regina::Simplex<3>* (Triangulation<3>::*)(size_t))(
+            &Triangulation<3>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
         .def("simplex",
             overload_cast<size_t>(&Triangulation<3>::simplex),
@@ -191,9 +192,11 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<3>::edge,
             pybind11::return_value_policy::reference_internal)
-        .def("triangle", &Triangulation<3>::triangle,
+        // Use a C-style cast because GCC struggles with the overload_cast here:
+        .def("triangle", (regina::Face<3, 2>* (Triangulation<3>::*)(size_t))(
+            &Triangulation<3>::triangle),
             pybind11::return_value_policy::reference_internal)
-        .def("isIdenticalTo", &Triangulation<3>::isIdenticalTo)
+        .def("isIdenticalTo", &Triangulation<3>::operator ==) // deprecated
         .def("isIsomorphicTo", &Triangulation<3>::isIsomorphicTo)
         .def("findAllIsomorphisms", &Triangulation<3>::findAllIsomorphisms<
                 const std::function<bool(const Isomorphism<3>)>&>)
@@ -242,17 +245,23 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("simplifiedFundamentalGroup",
             &Triangulation<3>::simplifiedFundamentalGroup)
-        .def("homology", &Triangulation<3>::homology,
-            pybind11::return_value_policy::reference_internal)
-        .def("homologyH1", &Triangulation<3>::homologyH1,
-            pybind11::return_value_policy::reference_internal)
+        .def("homology",
+            (regina::AbelianGroup (Triangulation<3>::*)(int) const)(
+            &Triangulation<3>::homology),
+            pybind11::arg("k") = 1)
+        .def("homologyH1", &Triangulation<3>::homology<1>) // deprecated
+        .def("homologyH2", &Triangulation<3>::homology<2>) // deprecated
         .def("homologyRel", &Triangulation<3>::homologyRel,
             pybind11::return_value_policy::reference_internal)
         .def("homologyBdry", &Triangulation<3>::homologyBdry,
             pybind11::return_value_policy::reference_internal)
-        .def("homologyH2", &Triangulation<3>::homologyH2,
-            pybind11::return_value_policy::reference_internal)
         .def("homologyH2Z2", &Triangulation<3>::homologyH2Z2)
+        .def("markedHomology",
+            (regina::MarkedAbelianGroup (Triangulation<3>::*)(int) const)(
+            &Triangulation<3>::markedHomology),
+            pybind11::arg("k") = 1)
+        .def("boundaryMap", (MatrixInt (Triangulation<3>::*)(int) const)(
+            &Triangulation<3>::boundaryMap))
         .def("turaevViro", &Triangulation<3>::turaevViro,
             pybind11::arg(), pybind11::arg("parity") = true,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
@@ -491,7 +500,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def_readonly_static("dimension", &Triangulation<3>::dimension)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::packet_eq_operators(c);
+    regina::python::add_packet_data(c);
 
     regina::python::addListView<decltype(Triangulation<3>().vertices())>(m);
     regina::python::addListView<decltype(Triangulation<3>().edges())>(m);
@@ -507,10 +517,10 @@ void addTriangulation3(pybind11::module_& m) {
     regina::python::add_packet_constructor<const Triangulation<3>&, bool>(wrap);
     regina::python::add_packet_constructor<const std::string&>(wrap);
     wrap.def(pybind11::init([](const regina::Link& link) { // deprecated
-        return regina::makePacket<Triangulation<3>>(link.complement());
+        return regina::make_packet<Triangulation<3>>(link.complement());
     }));
     wrap.def(pybind11::init([](const regina::python::SnapPyObject& obj) {
-        return regina::makePacket<Triangulation<3>>(std::in_place,
+        return regina::make_packet<Triangulation<3>>(std::in_place,
             obj.string_);
     }));
 

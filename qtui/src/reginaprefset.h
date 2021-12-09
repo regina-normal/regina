@@ -39,8 +39,8 @@
 
 #include "hypersurface/hypercoords.h"
 #include "hypersurface/hyperflags.h"
-#include "surfaces/normalcoords.h"
-#include "surfaces/normalflags.h"
+#include "surface/normalcoords.h"
+#include "surface/normalflags.h"
 #include <qmutex.h>
 #include <QFont>
 #include <QList>

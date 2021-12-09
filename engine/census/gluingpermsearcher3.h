@@ -42,7 +42,7 @@
 
 #include <functional>
 #include <memory>
-#include "regina-core.h"
+#include "core/output.h"
 #include "census/gluingperms.h"
 #include "census/gluingpermsearcher.h"
 #include "census/purgeflags.h"
@@ -100,7 +100,7 @@ namespace regina {
  * \ingroup census
  */
 template <>
-class GluingPermSearcher<3> {
+class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
     public:
         static constexpr char dataTag = 'g';
             /**< A character used to identify this class when reading
@@ -502,6 +502,16 @@ class GluingPermSearcher<3> {
          * @param all of this object's internal data in plain text format.
          */
         std::string data() const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 
         /**
          * The main entry routine for running a search for all gluing

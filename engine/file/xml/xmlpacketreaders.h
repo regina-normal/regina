@@ -358,7 +358,7 @@ inline XMLElementReader* XMLLegacyTextReader::startContentSubElement(
 inline void XMLLegacyTextReader::endContentSubElement(
         const std::string& subTagName, XMLElementReader* subReader) {
     if (subTagName == "text")
-        text->setText(dynamic_cast<XMLCharsReader*>(subReader)->chars());
+        text->setText(static_cast<XMLCharsReader*>(subReader)->chars());
 }
 
 } // namespace regina

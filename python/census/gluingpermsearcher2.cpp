@@ -60,6 +60,7 @@ void addGluingPermSearcher2(pybind11::module_& m) {
                 &GluingPermSearcher<2>::fromTaggedData))
         .def_readonly_static("dataTag", &GluingPermSearcher<2>::dataTag)
         ;
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 }
 

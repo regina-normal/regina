@@ -60,7 +60,7 @@ void addModelLinkGraph(pybind11::module_& m) {
            return a--;
         })
     ;
-    regina::python::add_output_ostream(a, true /* __repr__ */);
+    regina::python::add_output_ostream(a);
     regina::python::add_eq_operators(a);
 
     auto n = pybind11::class_<ModelLinkGraphNode>(m, "ModelLinkGraphNode")

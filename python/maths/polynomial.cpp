@@ -96,7 +96,7 @@ void addPolynomial(pybind11::module_& m) {
             &Polynomial<Rational>::divisionAlg, pybind11::const_))
         .def("gcdWithCoeffs", &Polynomial<Rational>::gcdWithCoeffs<Rational>)
     ;
-    regina::python::add_output(c, true /* __repr__ */);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(Polynomial<Rational>&,

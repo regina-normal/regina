@@ -41,6 +41,8 @@
 #include <qstring.h>
 
 class QWidget;
+class PacketFilter;
+class ReginaMain;
 
 /**
  * An interface component for creating a packet.  Such interface
@@ -90,14 +92,25 @@ class PacketCreator {
          * appropriate error must be displayed (using the argument
          * \a parentWidget as a parent for the message box).
          *
-         * This routine may ensure that the newly created packet is
-         * placed beneath the given parent packet, though if this is not
-         * done then it will be done elsewhere.  It does not need to assign
-         * a packet label; this will be also be done elsewhere.
+         * The parent is passed as a std::shared_ptr so that the creator
+         * can (for instance) run a long computation in a separate
+         * thread and guarantee that the parent packet survives.
+         *
+         * This routine should not insert the new packet beneath the
+         * given parent in the packet tree, and should not assign the
+         * new packet a label.  This will all be done elsewhere.
          */
         virtual std::shared_ptr<regina::Packet> createPacket(
             std::shared_ptr<regina::Packet> parentPacket,
             QWidget* parentWidget) = 0;
+
+        /**
+         * Returns a filter that restricts the possible parents of the
+         * new packet, or \c null if any parent is allowed.
+         *
+         * The default implementation simply returns \c null.
+         */
+        virtual PacketFilter* filter();
 
         /**
          * Show a message box to the user explaining why packets of this
@@ -121,6 +134,11 @@ template <class T>
 class BasicPacketCreator : public PacketCreator {
     public:
         /**
+         * Constructor.
+         */
+        BasicPacketCreator(ReginaMain*) {}
+
+        /**
          * PacketCreator overrides.
          */
         std::shared_ptr<regina::Packet> createPacket(
@@ -141,6 +159,10 @@ inline QString PacketCreator::parentPrompt() {
 
 inline QString PacketCreator::parentWhatsThis() {
     return QString();
+}
+
+inline PacketFilter* PacketCreator::filter() {
+    return nullptr;
 }
 
 #endif
