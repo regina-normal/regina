@@ -118,7 +118,7 @@
 		050F5E371B9BAB9C00C1F681 /* normalflags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7C1B9BAB9C00C1F681 /* normalflags.cpp */; };
 		050F5E381B9BAB9C00C1F681 /* prism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7D1B9BAB9C00C1F681 /* prism.cpp */; };
 		050F5E391B9BAB9C00C1F681 /* surfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7E1B9BAB9C00C1F681 /* surfacefilter.cpp */; };
-		050F5E3B1B9BAB9C00C1F681 /* pysurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */; };
+		050F5E3B1B9BAB9C00C1F681 /* pysurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D801B9BAB9C00C1F681 /* pysurface.cpp */; };
 		050F5E3E1B9BAB9C00C1F681 /* surfacefiltertype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */; };
 		050F5E3F1B9BAB9C00C1F681 /* treedecomposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DA81B9BAB9C00C1F681 /* treedecomposition.cpp */; };
 		050F5E401B9BAB9C00C1F681 /* pytreewidth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DA91B9BAB9C00C1F681 /* pytreewidth.cpp */; };
@@ -312,7 +312,7 @@
 		05249F681DBC1737001FE29E /* prism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7D1B9BAB9C00C1F681 /* prism.cpp */; };
 		05249F691DBC1737001FE29E /* surfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D7E1B9BAB9C00C1F681 /* surfacefilter.cpp */; };
 		05249F6A1DBC1737001FE29E /* surfacefiltertype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */; };
-		05249F6B1DBC1737001FE29E /* pysurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */; };
+		05249F6B1DBC1737001FE29E /* pysurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D801B9BAB9C00C1F681 /* pysurface.cpp */; };
 		05249F6C1DBC1741001FE29E /* treedecomposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DA81B9BAB9C00C1F681 /* treedecomposition.cpp */; };
 		05249F6D1DBC1741001FE29E /* pytreewidth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DA91B9BAB9C00C1F681 /* pytreewidth.cpp */; };
 		05249F6E1DBC1747001FE29E /* boundarycomponent3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAC1B9BAB9C00C1F681 /* boundarycomponent3.cpp */; };
@@ -2522,7 +2522,7 @@
 		050F5D7C1B9BAB9C00C1F681 /* normalflags.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalflags.cpp; sourceTree = "<group>"; };
 		050F5D7D1B9BAB9C00C1F681 /* prism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = prism.cpp; sourceTree = "<group>"; };
 		050F5D7E1B9BAB9C00C1F681 /* surfacefilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surfacefilter.cpp; sourceTree = "<group>"; };
-		050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pysurfaces.cpp; sourceTree = "<group>"; };
+		050F5D801B9BAB9C00C1F681 /* pysurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pysurface.cpp; sourceTree = "<group>"; };
 		050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surfacefiltertype.cpp; sourceTree = "<group>"; };
 		050F5D851B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D861B9BAB9C00C1F681 /* cube.orb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.orb; sourceTree = "<group>"; };
@@ -5012,7 +5012,7 @@
 				050F5D7D1B9BAB9C00C1F681 /* prism.cpp */,
 				050F5D7E1B9BAB9C00C1F681 /* surfacefilter.cpp */,
 				050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */,
-				050F5D801B9BAB9C00C1F681 /* pysurfaces.cpp */,
+				050F5D801B9BAB9C00C1F681 /* pysurface.cpp */,
 			);
 			path = surface;
 			sourceTree = "<group>";
@@ -8870,7 +8870,7 @@
 				05CAE6692745256E007C93F3 /* gluingperms7.cpp in Sources */,
 				05CAE67D2745256E007C93F3 /* gluingperms5.cpp in Sources */,
 				05226DF627422C82000A45D5 /* hilbertcd.cpp in Sources */,
-				050F5E3B1B9BAB9C00C1F681 /* pysurfaces.cpp in Sources */,
+				050F5E3B1B9BAB9C00C1F681 /* pysurface.cpp in Sources */,
 				050F5E441B9BAB9C00C1F681 /* example3.cpp in Sources */,
 				050F5DFA1B9BAB9C00C1F681 /* matrixint.cpp in Sources */,
 				05721F0F1F97162600A83FFC /* examplelink.cpp in Sources */,
@@ -9350,7 +9350,7 @@
 				052FA22E180612DD00FAE4DF /* orient.c in Sources */,
 				05870CAF1FAD24F000835F9E /* modellinkgraph.cpp in Sources */,
 				05721EF61F97156600A83FFC /* examplelink.cpp in Sources */,
-				05249F6B1DBC1737001FE29E /* pysurfaces.cpp in Sources */,
+				05249F6B1DBC1737001FE29E /* pysurface.cpp in Sources */,
 				05B22D1222D486210099008B /* registerIntFromPyIndex.cpp in Sources */,
 				05C064691C56C2ED006E6483 /* EltMoves4.mm in Sources */,
 				05249EE81DBC16EA001FE29E /* facetpairing4.cpp in Sources */,
