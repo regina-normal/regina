@@ -1305,6 +1305,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class Script:
             - Added a copy constructor and a copy assignment operator.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Routines addVariable(), addVariableName() and setVariableValue()
               now take their value arguments by std::weak_ptr, and support a
               default argument representing a null variable.
@@ -1389,6 +1390,7 @@ Version 7.0  [ 10 December, 2021 ]
               error, instead of creating a null SnapPea triangulation.
             - Now supports move construction and copy/move assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - The snapPea() export routines now throw an exception if the
               triangulation is null, instead of producing empty output.
             - New routine nullify().

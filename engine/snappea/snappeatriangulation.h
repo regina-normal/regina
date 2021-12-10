@@ -252,6 +252,11 @@ class Cusp : public ShortOutput<Cusp> {
          * pointers returned by vertex() are the same), \e and they have
          * the same filling coefficients.
          *
+         * In particular, two cusps that come from different triangulations
+         * can never be equal (since they will not use the same vertex
+         * pointers), even if the triangulations themselves \e do compare as
+         * equal using the SnapPeaTriangulation comparison operators.
+         *
          * @param other the cusp information to compare with this.
          * @return \c true if and only this and the given object hold
          * the same cusp information.
@@ -266,6 +271,11 @@ class Cusp : public ShortOutput<Cusp> {
          * same vertex of the underlying triangulation (i.e., the
          * pointers returned by vertex() are the same), \e and they have
          * the same filling coefficients.
+         *
+         * In particular, two cusps that come from different triangulations
+         * can never be equal (since they will not use the same vertex
+         * pointers), even if the triangulations themselves \e do compare as
+         * equal using the SnapPeaTriangulation comparison operators.
          *
          * @param other the cusp information to compare with this.
          * @return \c true if and only this and the given object do not hold
@@ -373,6 +383,14 @@ class Cusp : public ShortOutput<Cusp> {
  *   will return the first homology of the filled manifold).  See the
  *   individual notes for each member function for details on how it
  *   handles fillings.
+ *
+ * - In particular, if you are testing two triangulations for equality:
+ *   if either triangulation is presented as the parent class Triangulation<3>
+ *   then you will be calling the inherited Triangulation<3> comparision
+ *   operators, which \e only compare the tetrahedron labelling and gluings.
+ *   If you wish to compare cusps and fillings as well, you must ensure that
+ *   both triangulations are cast to SnapPeaTriangulation (in which case the
+ *   SnapPeaTriangulation comparison operators will be used).
  *
  * For now, SnapPeaTriangulation only supports the following types of filling
  * coefficients: on orientable cusps the filling coefficients must be
@@ -1127,6 +1145,72 @@ class SnapPeaTriangulation :
          * and (2 * \a number_of_tetrahedra + 1) columns as described above.
          */
         MatrixInt gluingEquationsRect() const;
+
+        /**
+         * Determines whether this and the given SnapPea triangulation
+         * are, at some elementary level, the same.
+         *
+         * This routine checks only those things that can be checked
+         * exactly, without going through the SnapPea kernel and without
+         * requiring floating-point comparisons.
+         *
+         * In particular, it \e does check whether:
+         *
+         * - the tetrahedron numbers, vertex labels and gluings are the
+         *   same in both triangulations (i.e., the tests performed by
+         *   Regina's native Triangulation<3> comparison operators);
+         *
+         * - the same numbered cusps correspond to the same numbered vertices
+         *   of the triangulation;
+         *
+         * - each pair of corresponding cusps are either both not filled,
+         *   or both filled using the same coefficients.
+         *
+         * It does \e not check wehether corresponding tetrahedron shapes are
+         * the same, or if the volumes are "sufficiently close", or even
+         * whether the SnapPea kernel has produced the same solution
+         * type for both triangulations.
+         *
+         * Two null SnapPea triangulations will be considered equal.
+         *
+         * @param other the SnapPea triangulation to compare with this.
+         * @return \c true if and only this and the given triangulation
+         * are the same, according to the criteria described above.
+         */
+        bool operator == (const SnapPeaTriangulation& other) const;
+
+        /**
+         * Determines whether this and the given SnapPea triangulation
+         * are, at some elementary level, different.
+         *
+         * This routine checks only those things that can be checked
+         * exactly, without going through the SnapPea kernel and without
+         * requiring floating-point comparisons.
+         *
+         * In particular, it \e does check whether:
+         *
+         * - the tetrahedron numbers, vertex labels and gluings are the
+         *   same in both triangulations (i.e., the tests performed by
+         *   Regina's native Triangulation<3> comparison operators);
+         *
+         * - the same numbered cusps correspond to the same numbered vertices
+         *   of the triangulation;
+         *
+         * - each pair of corresponding cusps are either both not filled,
+         *   or both filled using the same coefficients.
+         *
+         * It does \e not check wehether corresponding tetrahedron shapes are
+         * the same, or if the volumes are "sufficiently close", or even
+         * whether the SnapPea kernel has produced the same solution
+         * type for both triangulations.
+         *
+         * Two null SnapPea triangulations will be considered equal.
+         *
+         * @param other the SnapPea triangulation to compare with this.
+         * @return \c true if and only this and the given triangulation
+         * are different, according to the criteria described above.
+         */
+        bool operator != (const SnapPeaTriangulation& other) const;
 
         /*@}*/
         /**
@@ -2203,6 +2287,11 @@ inline bool SnapPeaTriangulation::isNull() const {
 inline const std::complex<double>& SnapPeaTriangulation::shape(unsigned tet)
         const {
     return (shape_ ? shape_[tet] : zero_);
+}
+
+inline bool SnapPeaTriangulation::operator != (
+        const SnapPeaTriangulation& other) const {
+    return ! ((*this) == other);
 }
 
 inline unsigned SnapPeaTriangulation::countCusps() const {

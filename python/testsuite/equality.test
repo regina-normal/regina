@@ -101,6 +101,13 @@ cmp('PacketOfTriangulation3', PacketOfTriangulation3(), PacketOfTriangulation3()
 p = PacketOfTriangulation3()
 cmp('PacketOfTriangulation3', p, p.root(), True)
 
+w = ExampleSnapPea.whiteheadLink()
+cmp('SnapPeaTriangulation', w, ExampleSnapPea.whiteheadLink())
+w.fill(3,4,0)
+cmp('SnapPeaTriangulation', w, ExampleSnapPea.whiteheadLink())
+cmp('SnapPeaTriangulation', ExampleSnapPea.whiteheadLink(), w)
+cmp('SnapPeaTriangulation', ExampleSnapPea.figureEight(), w)
+
 cmp('FacetPairing2', FacetPairing2(Example2.kb()), FacetPairing2(Example2.kb()))
 cmp('FacetPairing2', FacetPairing2(Example2.mobius()), FacetPairing2(Example2.annulus()))
 
@@ -110,6 +117,20 @@ cmp('Attachment', Attachment(), Attachment(b'foo', 'x'), True)
 cmp('Attachment', Attachment(b'foof', 'x'), Attachment(b'foo', 'x'), True)
 cmp('Text', Text('foo'), Text('foo'), True)
 cmp('Text', Text('foo'), Text('foof'), True)
+
+s = Script()
+s.setText('print("Hello world!")')
+s.addVariable('foo', None)
+s.addVariable('bar', s)
+t = Script()
+t.setText('print("Hello world!")')
+t.addVariable('foo', None)
+t.addVariable('bar', t)
+cmp('Script', s, t)
+t.removeVariable('bar')
+t.addVariable('bar', s)
+cmp('Script', s, t)
+cmp('Script', s, Script(s))
 
 x = None
 
@@ -134,8 +155,11 @@ cmp('Tetrahedron3', a, t.tetrahedron(1))
 # More tests with packets:
 
 a = Container()
-cmp('Packet', a, a.root(), True)
+cmp('Container', a, a.root(), True)
+t = Text()
+cmp('Text', t, t.root(), True)
 cmp('Different Packets', Container(), Text(), True)
+cmp('Different Packets', Text(), Container(), True)
 cmp('Different Packets', PacketOfLink(), Text(), True)
 cmp('Different Packets', Text(), PacketOfLink(), True)
 cmp('Different Packets', Text(), Link(), True)

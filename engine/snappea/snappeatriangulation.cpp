@@ -522,6 +522,30 @@ double SnapPeaTriangulation::minImaginaryShape() const {
     return ans;
 }
 
+bool SnapPeaTriangulation::operator == (const SnapPeaTriangulation& other)
+        const {
+    if (! data_)
+        return ! other.data_;
+    if (! other.data_)
+        return false;
+
+    // Neither triangulation is null.
+    if (! (Triangulation<3>::operator == (other)))
+        return false;
+
+    // This next test should be unnecessary.
+    for (size_t i = 0; i < countCusps(); ++i) {
+        if (cusp_[i].vertex_->index() != other.cusp_[i].vertex_->index())
+            return false;
+        if (cusp_[i].m_ != other.cusp_[i].m_)
+            return false;
+        if (cusp_[i].l_ != other.cusp_[i].l_)
+            return false;
+    }
+
+    return true;
+}
+
 void SnapPeaTriangulation::unfill(unsigned whichCusp) {
     if (! data_)
         return;

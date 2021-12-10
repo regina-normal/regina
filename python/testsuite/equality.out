@@ -23,6 +23,10 @@ Triangulation3 + Packet : ==, not !=, throws on samePacket()
 Triangulation3 + Packet : ==, not !=, throws on samePacket()
 PacketOfTriangulation3 : ==, not !=, different packets
 PacketOfTriangulation3 : ==, not !=, same packet
+SnapPeaTriangulation : ==, not !=
+SnapPeaTriangulation : not ==, !=
+SnapPeaTriangulation : not ==, !=
+SnapPeaTriangulation : not ==, !=
 FacetPairing2 : ==, not !=
 FacetPairing2 : not ==, !=
 Attachment : ==, not !=, different packets
@@ -31,12 +35,17 @@ Attachment : not ==, !=, different packets
 Attachment : not ==, !=, different packets
 Text : ==, not !=, different packets
 Text : not ==, !=, different packets
+Script : not ==, !=
+Script : ==, not !=
+Script : ==, not !=
 GluingPerms2 : ==, not !=
 GluingPerms2 : not ==, !=
 GluingPerms2 : not ==, !=
 Tetrahedron3 : ==, not !=
 Tetrahedron3 : not ==, !=
-Packet : ==, not !=, same packet
+Container : throws on ==, throws on !=, same packet
+Text : ==, not !=, same packet
+Different Packets : throws on ==, throws on !=, different packets
 Different Packets : throws on ==, throws on !=, different packets
 Different Packets : throws on ==, throws on !=, different packets
 Different Packets : throws on ==, throws on !=, different packets
