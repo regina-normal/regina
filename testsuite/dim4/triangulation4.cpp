@@ -1389,10 +1389,10 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyFundGroup(mixedPoincareProduct, "",
                 "(S^3 / P_120) x I (single cone)");
             verifyFundGroup(idealFigEightProduct,
-                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2",
+                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b^2 a^-1 b",
                 "Fig_8 x I (double cone)");
             verifyFundGroup(mixedFigEightProduct,
-                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2",
+                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b^2 a^-1 b",
                 "Fig_8 x I (single cone)");
         }
 

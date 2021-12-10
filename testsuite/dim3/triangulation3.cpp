@@ -2241,11 +2241,11 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "3-tetrahedron snapped ball");
             verifyFundGroup(lst3_4_7, "Z", "LST(3,4,7)");
             verifyFundGroup(figure8,
-                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2",
+                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b^2 a^-1 b",
                 "Figure eight");
                 // Note: \u21A6 is the unicode mapsto symbol.
             verifyFundGroup(trefoil,
-                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1",
+                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 a^-1 b",
                 "Trefoil");
                 // Note: \u21A6 is the unicode mapsto symbol.
             verifyFundGroup(rp2xs1, "Z + Z_2", "RP^2 x S^1");
