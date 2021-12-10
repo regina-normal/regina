@@ -231,6 +231,40 @@ bool NormalSurface::operator == (const NormalSurface& other) const {
     return true;
 }
 
+bool NormalSurface::operator < (const NormalSurface& other) const {
+    size_t nTet = triangulation_->size();
+    if (nTet != other.triangulation_->size())
+        return nTet < other.triangulation_->size();
+
+    bool checkAlmostNormal =
+        (enc_.storesOctagons() || other.enc_.storesOctagons());
+
+    for (size_t t = 0; t < nTet; ++t) {
+        for (int i = 0; i < 4; ++i) {
+            if (triangles(t, i) < other.triangles(t, i))
+                return true;
+            if (triangles(t, i) > other.triangles(t, i))
+                return false;
+        }
+        for (int i = 0; i < 3; ++i) {
+            if (quads(t, i) < other.quads(t, i))
+                return true;
+            if (quads(t, i) > other.quads(t, i))
+                return false;
+        }
+        if (checkAlmostNormal)
+            for (int i = 0; i < 3; ++i) {
+                if (octs(t, i) < other.octs(t, i))
+                    return true;
+                if (octs(t, i) > other.octs(t, i))
+                    return false;
+            }
+    }
+
+    // The surfaces are equal.
+    return false;
+}
+
 bool NormalSurface::embedded() const {
     size_t nTets = triangulation_->size();
 

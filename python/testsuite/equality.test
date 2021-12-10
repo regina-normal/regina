@@ -37,6 +37,8 @@ print(AbelianGroup.equalityType)
 print(GluingPermSearcher2.equalityType)
 print(Integer.equalityType)
 print(SigCensus.equalityType)
+print(HomologicalData.equalityType)
+print(Container.equalityType)
 
 print()
 
@@ -68,11 +70,9 @@ def cmp(name, a, b, packet = False):
 			ans += 'throws on samePacket()'
 	print(name, ':', ans)
 
-# Test == and != for objects that are equal by value but have different
-# underlying C++ pointers.
-# The behaviour should be different for different classes.
-
+# ----------------------------------------------------------------------
 # Classes that compare by value:
+# ----------------------------------------------------------------------
 
 cmp('Integer', Integer(3), Integer(3))
 cmp('Integer', Integer(3), Integer(4))
@@ -145,14 +145,42 @@ def foundPairing2(p, isos):
 
 FacetPairing2.findAllPairings(2, False, 0, foundPairing2)
 
+a = NormalSurfaces(Example3.poincare(), NS_STANDARD)
+b = NormalSurfaces(Example3.poincare(), NS_QUAD)
+c = NormalSurfaces(Example3.poincare(), NS_STANDARD)
+cmp('NormalSurfaces', a, b)
+cmp('NormalSurfaces', a, c)
+a.sort(lambda x,y: x.eulerChar() > y.eulerChar())
+c.sort(lambda x,y: x.eulerChar() < y.eulerChar())
+cmp('NormalSurfaces', a, c)
+
+a = NormalHypersurfaces(Example4.s3xs1(), HS_STANDARD)
+b = NormalHypersurfaces(Example4.s3xs1(), HS_PRISM)
+c = NormalHypersurfaces(Example4.s3xs1(), HS_STANDARD)
+cmp('NormalHypersurfaces', a, b)
+cmp('NormalHypersurfaces', a, c)
+a.sort(lambda x,y: x.homology().str() > y.homology().str())
+c.sort(lambda x,y: x.homology().str() < y.homology().str())
+cmp('NormalHypersurfaces', a, c)
+
+a = AngleStructures(Example3.figureEight())
+b = AngleStructures(Example3.figureEight(), True)
+c = AngleStructures(Example3.figureEight())
+cmp('AngleStructures', a, b)
+cmp('AngleStructures', a, c)
+
+# ----------------------------------------------------------------------
 # Classes that compare by reference:
+# ----------------------------------------------------------------------
 
 t = Triangulation3()
 (a,b) = t.newTetrahedra(2)
 cmp('Tetrahedron3', a, t.tetrahedron(0))
 cmp('Tetrahedron3', a, t.tetrahedron(1))
 
+# ----------------------------------------------------------------------
 # More tests with packets:
+# ----------------------------------------------------------------------
 
 a = Container()
 cmp('Container', a, a.root(), True)
@@ -177,7 +205,9 @@ cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(0)))
 cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(1)))
 cmp('DiscSetSurface', dt, du)
 
+# ----------------------------------------------------------------------
 # Classes that cannot be compared:
+# ----------------------------------------------------------------------
 
 t = Example3.poincare()
 cmp('HomologicalData', HomologicalData(t), HomologicalData(t))

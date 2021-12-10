@@ -90,6 +90,7 @@ Version 7.0  [ 10 December, 2021 ]
               assignment, and member and global swap() functions.  The old
               clone() is now deprecated; use the copy constructor instead.
             - Added comparison operators == and !=.
+            - Added operator < to impose a total order.
             - Changed triangulation() to return a reference, not a pointer.
             - Constructors now take their arguments by reference (and,
               for the vector constructor, optionally an rvalue reference).
@@ -109,6 +110,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
             - Added begin() and end() for iteration through angle strutures.
+            - Added comparison operators == and !=.
             - Changed triangulation() and surface() to return const references,
               not pointers.
             - Changed enumerate() and enumerateTautDD() to take the
@@ -891,6 +893,7 @@ Version 7.0  [ 10 December, 2021 ]
               functionality available to the outside world.
             - Renamed sameSurface() to operator ==, and added operator !=.
               The old routine sameSurface() is kept but deprecated.
+            - Added operator < to impose a total order.
             - Removed countCoords() completely, since its meaning is
               amgibuous as to whether it refers to the original
               coordinate system or the current internal encoding.
@@ -914,6 +917,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
             - Added begin() and end() for iteration through hypersurfaces.
+            - Added comparison operators == and !=.
             - Changed triangulation() and hypersurface() to return
               const references, not pointers.
             - Changed enumerate() to take the triangulation argument by
@@ -954,6 +958,7 @@ Version 7.0  [ 10 December, 2021 ]
               functionality available to the outside world.
             - Renamed sameSurface() to operator ==, and added operator !=.
               The old routine sameSurface() is kept but deprecated.
+            - Added operator < to impose a total order.
             - Removed countCoords() completely, since its meaning is
               amgibuous as to whether it refers to the original
               coordinate system or the current internal encoding.
@@ -996,6 +1001,7 @@ Version 7.0  [ 10 December, 2021 ]
               tree.  The old function is kept as a deprecated alias, but
               now takes its filter argument by reference (not by pointer).
             - Added begin() and end() for iteration through surfaces.
+            - Added comparison operators == and !=.
             - New filter() method that takes a SurfaceFilter.
             - Changed triangulation() and surface() to return const references,
               not pointers.

@@ -489,6 +489,73 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
         auto end() const;
 
         /**
+         * Determines whether this and the given list contain the same
+         * set of normal hypersurfaces.
+         *
+         * The lists will be compared as multisets: the order of the
+         * hypersurfaces in each list does not matter; however, in the unusual
+         * scenario where a list the same hypersurface multiple times,
+         * multiplicity does matter.
+         *
+         * Like the comparison operators for NormalHypersurface, it does not
+         * matter whether the lists work with different triangulations,
+         * or different encodings, or if one but not the other supports
+         * non-compact hypersurfaces.  The individual hypersurfaces will
+         * simply be compared by examining or computing the number of
+         * normal pieces of each type.
+         *
+         * In particular, this routine is safe to call even if this and the
+         * given list work with different triangulations:
+         *
+         * - If the two triangulations have the same size, then this routine
+         *   will compare hypersurfaces as though they were transplanted into
+         *   the same triangulation using the same pentachoron numbering and
+         *   the same normal piece types.
+         *
+         * - If the two triangulations have different sizes, then this
+         *   comparison will return \c false.
+         *
+         * @param other the list to be compared with this list.
+         * @return \c true if both lists represent the same multiset of
+         * normal hypersurfaces, or \c false if not.
+         */
+        bool operator == (const NormalHypersurfaces& other) const;
+
+        /**
+         * Determines whether this and the given list contain different
+         * sets of normal hypersurfaces.
+         *
+         * The lists will be compared as multisets: the order of the
+         * hypersurfaces in each list does not matter; however, in the unusual
+         * scenario where a list the same hypersurface multiple times,
+         * multiplicity does matter.
+         *
+         * Like the comparison operators for NormalHypersurface, it does not
+         * matter whether the lists work with different triangulations,
+         * or different encodings, or if one but not the other supports
+         * non-compact hypersurfaces.  The individual hypersurfaces will
+         * simply be compared by examining or computing the number of
+         * normal pieces of each type.
+         *
+         * In particular, this routine is safe to call even if this and the
+         * given list work with different triangulations:
+         *
+         * - If the two triangulations have the same size, then this routine
+         *   will compare hypersurfaces as though they were transplanted into
+         *   the same triangulation using the same pentachoron numbering and
+         *   the same normal piece types.
+         *
+         * - If the two triangulations have different sizes, then this
+         *   comparison will return \c true (i.e., the lists will be
+         *   considered different).
+         *
+         * @param other the list to be compared with this list.
+         * @return \c true if both lists do not represent the same multiset of
+         * normal hypersurfaces, or \c false if they do.
+         */
+        bool operator != (const NormalHypersurfaces& other) const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -1095,6 +1162,11 @@ inline NormalHypersurfaces::VectorIterator
 inline NormalHypersurfaces::VectorIterator
         NormalHypersurfaces::endVectors() const {
     return VectorIterator(surfaces_.end());
+}
+
+inline bool NormalHypersurfaces::operator != (const NormalHypersurfaces& other)
+        const {
+    return ! ((*this) == other);
 }
 
 inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,

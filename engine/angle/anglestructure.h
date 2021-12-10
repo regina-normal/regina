@@ -453,6 +453,30 @@ class AngleStructure : public ShortOutput<AngleStructure> {
         bool operator != (const AngleStructure& other) const;
 
         /**
+         * Imposes a total order on all angle structures.
+         *
+         * This order is not mathematically meaningful; it is merely
+         * provided for scenarios where you need to be able to sort
+         * angle structures (e.g., when using them as keys in a map).
+         *
+         * The order \e is well-defined, and will be preserved across
+         * copy/move operations, different program executions, and different
+         * platforms (since it is defined purely in terms of the angle
+         * coordinates, and does not use transient properties such as
+         * locations in memory).
+         *
+         * This operation is consistent with the equality test.  In
+         * particular, it does not matter whether the two angle structures
+         * belong to different triangulations.
+         * See the equality test operator==() for further details.
+         *
+         * @param other the angle structure to be compared with this structure.
+         * @return \c true if and only if this appears before the given
+         * structure in the total order.
+         */
+        bool operator < (const AngleStructure& other) const;
+
+        /**
          * A deprecated alias for vector().
          *
          * \deprecated This routine has been renamed to vector().

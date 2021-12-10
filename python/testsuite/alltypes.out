@@ -8,7 +8,7 @@ AngleStructure : class
 Equality type : EqualityType.BY_VALUE
 
 AngleStructures : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Attachment : class
 Equality type : EqualityType.BY_VALUE
@@ -973,7 +973,7 @@ NormalHypersurface : class
 Equality type : EqualityType.BY_VALUE
 
 NormalHypersurfaces : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 NormalInfo : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -985,7 +985,7 @@ NormalSurface : class
 Equality type : EqualityType.BY_VALUE
 
 NormalSurfaces : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 NotImplemented : class
 Exception type
@@ -1008,16 +1008,16 @@ PacketListener : class
 Equality type : EqualityType.BY_REFERENCE
 
 PacketOfAngleStructures : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketOfLink : class
 Equality type : EqualityType.BY_VALUE
 
 PacketOfNormalHypersurfaces : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketOfNormalSurfaces : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 PacketOfSnapPeaTriangulation : class
 Equality type : EqualityType.BY_VALUE

@@ -2,6 +2,8 @@ EqualityType.BY_VALUE
 EqualityType.BY_REFERENCE
 EqualityType.BY_VALUE
 EqualityType.NEVER_INSTANTIATED
+EqualityType.DISABLED
+EqualityType.DISABLED
 
 Integer : ==, not !=
 Integer : not ==, !=
@@ -41,6 +43,14 @@ Script : ==, not !=
 GluingPerms2 : ==, not !=
 GluingPerms2 : not ==, !=
 GluingPerms2 : not ==, !=
+NormalSurfaces : not ==, !=
+NormalSurfaces : ==, not !=
+NormalSurfaces : ==, not !=
+NormalHypersurfaces : not ==, !=
+NormalHypersurfaces : ==, not !=
+NormalHypersurfaces : ==, not !=
+AngleStructures : not ==, !=
+AngleStructures : ==, not !=
 Tetrahedron3 : ==, not !=
 Tetrahedron3 : not ==, !=
 Container : throws on ==, throws on !=, same packet

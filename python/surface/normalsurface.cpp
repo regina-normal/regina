@@ -165,6 +165,7 @@ void addNormalSurface(pybind11::module_& m) {
         .def_static("reconstructTriangles",
             &NormalSurface::reconstructTriangles)
         .def(pybind11::self + pybind11::self)
+        .def(pybind11::self < pybind11::self)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
