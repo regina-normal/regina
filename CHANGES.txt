@@ -319,6 +319,10 @@ Version 7.0  [ 10 December, 2021 ]
               permutations returned by vertices() need to be the same.
             - The old (simplex, face number) constructors are removed, with new
               (simplex, embedding permutation) constructors to replace them.
+            - For orientable components of triangulations, the sign of the
+              vertices() permutations now matches the orientation of the
+              corresponding simplex (with some necessary exceptions for
+              (dim-1)-faces).
         Class FaceNumbering<dim, subdim>:
             - Everything in this class is now constexpr.
             - New class constants lexNumbering and oppositeDim.
@@ -1364,6 +1368,9 @@ Version 7.0  [ 10 December, 2021 ]
             - Class constants are now constexpr.
             - Added member and global swap() functions.
         Class Simplex<dim>:
+            - In orientable components of triangulations, the signs of each
+              faceMapping() permutation now match the simplex orientation
+              (with some necessary exceptions for (dim-1)-faces).
             - Simplified the class hierarchy; SimplexFaces and
               SimplexFacesSuite are both gone.
             - New compile-time constants dimension and subdimension.
