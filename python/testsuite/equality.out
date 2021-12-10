@@ -57,6 +57,8 @@ TypeTrie : not ==, !=
 TrieSet : ==, not !=
 TrieSet : not ==, !=
 TrieSet : not ==, !=
+Signature : ==, not !=
+Signature : not ==, !=
 Tetrahedron3 : ==, not !=
 Tetrahedron3 : not ==, !=
 Container : throws on ==, throws on !=, same packet

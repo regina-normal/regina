@@ -187,6 +187,9 @@ b = Bitmask8(); b.set([0,4], True); t.insert(b)
 cmp('TrieSet', t, u)
 cmp('TrieSet', u, t)
 
+cmp('Signature', Signature('(aba)(b)'), Signature('aba.b'))
+cmp('Signature', Signature('(aba)(b)'), Signature('(ab)(a)(b)'))
+
 # ----------------------------------------------------------------------
 # Classes that compare by reference:
 # ----------------------------------------------------------------------

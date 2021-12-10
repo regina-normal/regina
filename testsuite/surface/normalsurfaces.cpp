@@ -190,9 +190,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             // Some non-minimal triangulations can be generated from
             // splitting surfaces.
-            largeS3 = Signature::parse("abcd.abe.c.d.e").triangulate();
+            largeS3 = Signature("abcd.abe.c.d.e").triangulate();
 
-            largeRP3 = Signature::parse("aabcd.be.c.d.e").triangulate();
+            largeRP3 = Signature("aabcd.be.c.d.e").triangulate();
 
             // A 3-tetrahedron non-orientable twisted I-bundle over the
             // Klein bottle is described in Chapter 3 of Burton's PhD thesis.

@@ -126,6 +126,23 @@ class Signature : public ShortOutput<Signature> {
 
     public:
         /**
+         * Creates a new signature by parsing the given signature string.
+         *
+         * Punctuation characters in the given string will be interpreted
+         * as separating cycles.  All whitespace will be ignored.
+         * 
+         * Examples of valid signatures are <tt>"(ab)(bC)(Ca)"</tt> and
+         * <tt>"AAb-bc-C"</tt>.  See the class notes for further details
+         * on what constitutes a valid signature.
+         *
+         * \exception InvalidArgument the given string was not a valid
+         * signature with a positive number of letters.
+         *
+         * @param str a string representation of a splitting surface signature.
+         */
+        Signature(const std::string& str);
+
+        /**
          * Creates a new copy of the given signature.
          *
          * @param sig the signature to copy.
@@ -197,22 +214,53 @@ class Signature : public ShortOutput<Signature> {
         unsigned order() const;
 
         /**
-         * Parses the given signature string.
+         * Determines whether this and the given signature are identical.
          *
-         * Punctuation characters in the given string will be interpreted
-         * as separating cycles.  All whitespace will be ignored.
-         * 
-         * Examples of valid signatures are <tt>"(ab)(bC)(Ca)"</tt> and
-         * <tt>"AAb-bc-C"</tt>.  See the class notes for further details
-         * on what constitutes a valid signature.
+         * To be considered identical, it is not enough for two signatures
+         * to be isomorphic: their cycles and cycle groups must be presented
+         * in the same order, using the same symbols which must likewise
+         * be presented in the same order.
+         *
+         * If either signature was parsed from a string, any choice of
+         * formatting (e.g., punctuation and/or whitespace) is irrelevant;
+         * only the mathematical content of the signatures is important here.
+         *
+         * @param other the signature to compare with this.
+         * @return \c true if and only if this and \a other are identical.
+         */
+        bool operator == (const Signature& other) const;
+
+        /**
+         * Determines whether this and the given signature are not identical.
+         *
+         * To be considered identical, it is not enough for two signatures
+         * to be isomorphic: their cycles and cycle groups must be presented
+         * in the same order, using the same symbols which must likewise
+         * be presented in the same order.
+         *
+         * If either signature was parsed from a string, any choice of
+         * formatting (e.g., punctuation and/or whitespace) is irrelevant;
+         * only the mathematical content of the signatures is important here.
+         *
+         * @param other the signature to compare with this.
+         * @return \c true if and only if this and \a other are not identical.
+         */
+        bool operator != (const Signature& other) const;
+
+        /**
+         * Deprecated routine that parses the given signature string.
+         *
+         * \deprecated This routine has been replaced with a string-based
+         * constructor.  See the constructor for further details.
          *
          * \exception InvalidArgument the given string was not a valid
          * signature with a positive number of letters.
          *
-         * @param sig a string representation of a splitting surface signature.
+         * @param str a string representation of a splitting surface signature.
          * @return the corresponding signature.
          */
-        static Signature parse(const std::string& sig);
+        [[deprecated]] static Signature parse(const std::string& str);
+
         /**
          * Returns the 3-manifold triangulation corresponding to
          * this splitting surface signature.
@@ -416,8 +464,16 @@ inline Signature::~Signature() {
     delete[] cycleGroupStart;
 }
 
+inline Signature Signature::parse(const std::string& str) {
+    return Signature(str);
+}
+
 inline unsigned Signature::order() const {
     return order_;
+}
+
+inline bool Signature::operator != (const Signature& other) const {
+    return ! ((*this) == other);
 }
 
 inline std::string Signature::str(const std::string& cycleOpen,

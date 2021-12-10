@@ -257,17 +257,17 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Some of our triangulations can be generated from
             // splitting surfaces.
-            rp3rp3 = Signature::parse("aabccd.b.d").triangulate();
+            rp3rp3 = Signature("aabccd.b.d").triangulate();
 
-            q32xz3 = Signature::parse("aabcdb.cedfef").triangulate();
+            q32xz3 = Signature("aabcdb.cedfef").triangulate();
 
-            s3_large = Signature::parse("abc.abd.cef.de.fg.g").triangulate();
+            s3_large = Signature("abc.abd.cef.de.fg.g").triangulate();
 
-            lens8_3_large = Signature::parse("aabcb.cd.d").triangulate();
+            lens8_3_large = Signature("aabcb.cd.d").triangulate();
 
-            rp3_large = Signature::parse("aabcdedcfb.fg.e.g").triangulate();
+            rp3_large = Signature("aabcdedcfb.fg.e.g").triangulate();
 
-            q20_large = Signature::parse("abcdeabcdef.fg.g").triangulate();
+            q20_large = Signature("abcdeabcdef.fg.g").triangulate();
 
             // Some are hard-coded in the calculation engine as sample
             // triangulations.
@@ -2750,12 +2750,11 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifySigThreeSphere(const std::string& sigStr) {
-            verifyThreeSphere(Signature::parse(sigStr).triangulate(),
-                sigStr.c_str());
+            verifyThreeSphere(Signature(sigStr).triangulate(), sigStr.c_str());
         }
 
         void verifySigNotThreeSphere(const std::string& sigStr) {
-            verifyNotThreeSphere(Signature::parse(sigStr).triangulate(),
+            verifyNotThreeSphere(Signature(sigStr).triangulate(),
                 sigStr.c_str());
         }
 

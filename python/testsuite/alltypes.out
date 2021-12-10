@@ -1212,10 +1212,10 @@ SigCensus : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 SigPartialIsomorphism : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 Signature : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 SimpleSurfaceBundle : class
 Equality type : EqualityType.BY_VALUE

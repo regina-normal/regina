@@ -1349,8 +1349,11 @@ Version 7.0  [ 10 December, 2021 ]
             - Added a copy assignment operator.
             - Added move constructors and move assignment operators.
             - Added member and global swap() functions.
-            - Function parse() now returns by value (not pointer), and throws
-              an exception on error (instead of returning null).
+            - Added comparison operators == and !=.
+            - Replaced the old parse() with a new string-based constructor.
+              The parse() function is deprecated, but it has also changed:
+              it now returns by value (not pointer), and throws an exception
+              on error instead of returning null.
             - Function triangulate() now returns by value.
             - Function cycleCmp() is now a private member function (it was
               very specialised).
@@ -1360,6 +1363,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added a copy assignment operator.
             - Added move constructors and move assignment operators.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Function compareWith() now takes the other isomorphism by
               reference, not by pointer; added function compareWithIdentity()
               to implement the (undocumented) previous behaviour when

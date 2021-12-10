@@ -69,7 +69,7 @@ Triangulation<3> Example<3>::rp2xs1() {
 Triangulation<3> Example<3>::rp3rp3() {
     // This can be generated as the enclosing triangulation of a splitting
     // surface, as described in chapter 4 of Benjamin Burton's PhD thesis.
-    return Signature::parse("aabccd.b.d").triangulate();
+    return Signature("aabccd.b.d").triangulate();
 }
 
 Triangulation<3> Example<3>::lens(size_t p, size_t q) {
