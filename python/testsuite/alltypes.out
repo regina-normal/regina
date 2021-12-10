@@ -1476,7 +1476,7 @@ Triangulation8 : class
 Equality type : EqualityType.BY_VALUE
 
 TrieSet : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 TrivialTri : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -1491,10 +1491,10 @@ TxIParallelCore : class
 Equality type : EqualityType.BY_VALUE
 
 TypeTrie4 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 TypeTrie7 : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 UnsolvedCase : class
 Exception type

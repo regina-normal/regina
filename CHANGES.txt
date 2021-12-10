@@ -1695,6 +1695,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added move/copy constructors and move/copy assignment operators.
             - Added member and global swap() functions.
             - Added short and detailed output functions.
+            - Added comparison operators == and !=.
         Class TriSolidTorus:
             - Routine formsTriSolidTorus() is now called recognise(), and
               returns a std::unique_ptr instead of a raw pointer.
@@ -1726,6 +1727,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added move/copy constructors and move/copy assignment operators.
             - Added member and global swap() functions.
             - Added short and detailed output functions.
+            - Added comparison operators == and !=.
         Class UnsolvedCase:
             - New exception class.
         Class ValidityConstraints:

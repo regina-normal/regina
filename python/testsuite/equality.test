@@ -169,6 +169,24 @@ c = AngleStructures(Example3.figureEight())
 cmp('AngleStructures', a, b)
 cmp('AngleStructures', a, c)
 
+t = TypeTrie4()
+t.insert([1,0,3])
+t.insert([0,0,2])
+u = TypeTrie4(t)
+cmp('TypeTrie', t, u)
+u.insert([0,1,1])
+cmp('TypeTrie', t, u)
+cmp('TypeTrie', u, t)
+
+t = TrieSet()
+b = Bitmask8(); b.set([1,2,4], True); t.insert(b)
+b = Bitmask8(); b.set([1,4,5], True); t.insert(b)
+u = TrieSet(t)
+cmp('TrieSet', t, u)
+b = Bitmask8(); b.set([0,4], True); t.insert(b)
+cmp('TrieSet', t, u)
+cmp('TrieSet', u, t)
+
 # ----------------------------------------------------------------------
 # Classes that compare by reference:
 # ----------------------------------------------------------------------
