@@ -326,7 +326,9 @@ inline void no_eq_operators(pybind11::class_<C, options...>& c) {
 template <class C, typename... options>
 inline void disable_eq_operators(pybind11::class_<C, options...>& c) {
     c.def("__eq__", &add_eq_operators_detail::disable_equality_operators<C>);
+    c.def("__eq__", [](const C&, std::nullptr_t) { return false; });
     c.def("__ne__", &add_eq_operators_detail::disable_equality_operators<C>);
+    c.def("__ne__", [](const C&, std::nullptr_t) { return true; });
     c.attr("equalityType") = EqualityType::DISABLED;
 }
 
@@ -359,7 +361,9 @@ inline void packet_disable_eq_operators(pybind11::class_<C, options...>& c) {
     };
 
     c.def("__eq__", func);
+    c.def("__eq__", [](const C&, std::nullptr_t) { return false; });
     c.def("__ne__", func);
+    c.def("__ne__", [](const C&, std::nullptr_t) { return true; });
     c.attr("equalityType") = EqualityType::DISABLED;
 }
 
