@@ -360,6 +360,7 @@ inline void packet_disable_eq_operators(pybind11::class_<C, options...>& c) {
 
     c.def("__eq__", func);
     c.def("__ne__", func);
+    c.attr("equalityType") = EqualityType::DISABLED;
 }
 
 #endif // __DOXYGEN

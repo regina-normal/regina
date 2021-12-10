@@ -242,7 +242,7 @@ ConstArray_Perm9_orderedSn : class
 Equality type : EqualityType.BY_REFERENCE
 
 Container : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.DISABLED
 
 Crossing : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1206,7 +1206,7 @@ SatTriPrism : class
 Equality type : EqualityType.BY_VALUE
 
 Script : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 SigCensus : class
 Equality type : EqualityType.NEVER_INSTANTIATED
