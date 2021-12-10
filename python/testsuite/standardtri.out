@@ -11957,7 +11957,7 @@ iLLLMQcceefghghhkkaakqqvq:
     Equator: 4 2 1
   Pillow 2-sphere
     Triangles: 6 2
-    Equator: 4 1 2
+    Equator: 4 2 1
 iLLLMQcceefghghhjjaajedve:
   IsoSig: iLLLMQcceefghghhjjaajedve
   Pillow 2-sphere
@@ -11965,12 +11965,12 @@ iLLLMQcceefghghhjjaajedve:
     Equator: 4 2 1
   Pillow 2-sphere
     Triangles: 6 2
-    Equator: 4 1 2
+    Equator: 4 2 1
 iLvMQPcbefgfehhhjaaaaaaas:
   IsoSig: iLvMQPcbefgfehhhjaaaaaaas
   Pillow 2-sphere
     Triangles: 1 14
-    Equator: 3 0 2
+    Equator: 3 2 0
   Pillow 2-sphere
     Triangles: 14 1
     Equator: 0 3 2

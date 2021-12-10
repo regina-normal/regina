@@ -179,11 +179,6 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                 f = new Face<dim, dim-1>(s->component_);
                 std::get<dim - 1>(tri->faces_).push_back(f);
                 auto map = Face<dim, dim-1>::ordering(facet);
-                if (map.sign() != s->orientation_)
-                    map = map * Perm<dim + 1>(dim - 1, dim - 2);
-
-                std::get<dim-1>(s->faces_)[facet] = f;
-                std::get<dim-1>(s->mappings_)[facet] = map;
 
                 adj = s->adjacentSimplex(facet);
                 if (adj) {
@@ -191,13 +186,32 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                     adjFacet = s->adjacentFacet(facet);
                     auto adjMap = s->adjacentGluing(facet) * map;
 
+                    std::get<dim-1>(s->faces_)[facet] = f;
+                    std::get<dim-1>(s->mappings_)[facet] = map;
+
                     std::get<dim-1>(adj->faces_)[adjFacet] = f;
                     std::get<dim-1>(adj->mappings_)[adjFacet] = adjMap;
 
-                    f->embeddings_.push_back({s, map});
-                    f->embeddings_.push_back({adj, adjMap});
+                    // We have an orientation match with exactly one of
+                    // {s, map} and {adj, adjMap}.  Ensure the one with
+                    // the orientation map becomes the first embedding.
+                    if (map.sign() == s->orientation_) {
+                        f->embeddings_.push_back({s, map});
+                        f->embeddings_.push_back({adj, adjMap});
+                    } else {
+                        f->embeddings_.push_back({adj, adjMap});
+                        f->embeddings_.push_back({s, map});
+                    }
                 } else {
-                    // This is a boundary facet.
+                    // This is a boundary facet, so we only get one embedding.
+                    // If the orientation does not match then we will need to
+                    // change the ordering of the vertices of the face.
+                    if (map.sign() != s->orientation_)
+                        map = map * Perm<dim + 1>(dim - 1, dim - 2);
+
+                    std::get<dim-1>(s->faces_)[facet] = f;
+                    std::get<dim-1>(s->mappings_)[facet] = map;
+
                     f->embeddings_.push_back({s, map});
                 }
             }

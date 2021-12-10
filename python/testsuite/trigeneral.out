@@ -967,7 +967,7 @@ Closed: False
 Orientable: True
 Connected: True
 
-Fundamental group: Z~Free(2) w/monodromy a ↦ b, b ↦ b a^-1 b^2
+Fundamental group: Z~Free(2) w/monodromy a ↦ b, b ↦ b^2 a^-1 b
 H1: Z
 H1Bdry: 2 Z
 H1Rel: 0

@@ -539,12 +539,12 @@ Nothing computed yet
 <regina.HomologicalData: Nothing computed yet>
 
 HomMarkedAbelianGroup
-Epic (kernel Z): [[ -4 -3 ]]
-<regina.HomMarkedAbelianGroup: Epic (kernel Z): [[ -4 -3 ]]>
+Epic (kernel Z): [[ 4 3 ]]
+<regina.HomMarkedAbelianGroup: Epic (kernel Z): [[ 4 3 ]]>
 
 HomologicalData
-H0(M): Z, H1(M): Z, H2(M): 0, H3(M): 0, H0(BM): Z, H1(BM): 2 Z, H2(BM): Z, H1(BM) -> H1(M): Epic (kernel Z): [[ -4 -3 ]]
-<regina.HomologicalData: H0(M): Z, H1(M): Z, H2(M): 0, H3(M): 0, H0(BM): Z, H1(BM): 2 Z, H2(BM): Z, H1(BM) -> H1(M): Epic (kernel Z): [[ -4 -3 ]]>
+H0(M): Z, H1(M): Z, H2(M): 0, H3(M): 0, H0(BM): Z, H1(BM): 2 Z, H2(BM): Z, H1(BM) -> H1(M): Epic (kernel Z): [[ 4 3 ]]
+<regina.HomologicalData: H0(M): Z, H1(M): Z, H2(M): 0, H3(M): 0, H0(BM): Z, H1(BM): 2 Z, H2(BM): Z, H1(BM) -> H1(M): Epic (kernel Z): [[ 4 3 ]]>
 
 SFSFibre
 (5,-2)
