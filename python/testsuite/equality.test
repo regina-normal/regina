@@ -101,6 +101,8 @@ g1 = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
 g2 = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,eedc')
 cmp('ModelLinkGraph', g1, ModelLinkGraph(g1))
 cmp('ModelLinkGraph', g1, g2)
+cmp('ModelLinkGraphCells', g1.cells(), ModelLinkGraph(g1).cells())
+cmp('ModelLinkGraphCells', g1.cells(), g2.cells())
 
 cmp('Triangulation3', Triangulation3(), Triangulation3())
 cmp('Triangulation3', Example3.figureEight(), Example3.whiteheadLink())

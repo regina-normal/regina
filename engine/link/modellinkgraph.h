@@ -1262,6 +1262,38 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
         size_t cellPos(const ModelLinkGraphArc& arc) const;
 
         /**
+         * Determines if this and the given cellular decomposition are
+         * combinatorially identical.
+         *
+         * Here "identical" means that both decompositions have the same
+         * number of cells, these cells are presented in the same order,
+         * and their boundaries enter and exit the same numbered arcs of the
+         * same numbered nodes, using the same directions of traversal and
+         * the same starting points on each cell boundary.
+         *
+         * @param other the cellular decomposition to compare with this.
+         * @return \c true if and only if the two cellular decompositions are
+         * combinatorially identical.
+         */
+        bool operator == (const ModelLinkGraphCells& other) const;
+
+        /**
+         * Determines if this and the given cellular decomposition are
+         * not combinatorially identical.
+         *
+         * Here "identical" means that both decompositions have the same
+         * number of cells, these cells are presented in the same order,
+         * and their boundaries enter and exit the same numbered arcs of the
+         * same numbered nodes, using the same directions of traversal and
+         * the same starting points on each cell boundary.
+         *
+         * @param other the cellular decomposition to compare with this.
+         * @return \c true if and only if the two cellular decompositions are
+         * not combinatorially identical.
+         */
+        bool operator != (const ModelLinkGraphCells& other) const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -1559,6 +1591,11 @@ inline size_t ModelLinkGraphCells::cell(const ModelLinkGraphArc& arc) const {
 
 inline size_t ModelLinkGraphCells::cellPos(const ModelLinkGraphArc& arc) const {
     return step_[(arc.node()->index() << 2) | arc.arc()];
+}
+
+inline bool ModelLinkGraphCells::operator != (const ModelLinkGraphCells& other)
+        const {
+    return ! ((*this) == other);
 }
 
 } // namespace regina

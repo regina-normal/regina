@@ -271,33 +271,33 @@ Equality type : EqualityType.BY_VALUE
 DoubleDescription : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
-Edge2 : typedef ->  Face2_1
+Edge2 : alias ->  Face2_1
 
-Edge3 : typedef ->  Face3_1
+Edge3 : alias ->  Face3_1
 
-Edge4 : typedef ->  Face4_1
+Edge4 : alias ->  Face4_1
 
-Edge5 : typedef ->  Face5_1
+Edge5 : alias ->  Face5_1
 
-Edge6 : typedef ->  Face6_1
+Edge6 : alias ->  Face6_1
 
-Edge7 : typedef ->  Face7_1
+Edge7 : alias ->  Face7_1
 
-Edge8 : typedef ->  Face8_1
+Edge8 : alias ->  Face8_1
 
-EdgeEmbedding2 : typedef ->  FaceEmbedding2_1
+EdgeEmbedding2 : alias ->  FaceEmbedding2_1
 
-EdgeEmbedding3 : typedef ->  FaceEmbedding3_1
+EdgeEmbedding3 : alias ->  FaceEmbedding3_1
 
-EdgeEmbedding4 : typedef ->  FaceEmbedding4_1
+EdgeEmbedding4 : alias ->  FaceEmbedding4_1
 
-EdgeEmbedding5 : typedef ->  FaceEmbedding5_1
+EdgeEmbedding5 : alias ->  FaceEmbedding5_1
 
-EdgeEmbedding6 : typedef ->  FaceEmbedding6_1
+EdgeEmbedding6 : alias ->  FaceEmbedding6_1
 
-EdgeEmbedding7 : typedef ->  FaceEmbedding7_1
+EdgeEmbedding7 : alias ->  FaceEmbedding7_1
 
-EdgeEmbedding8 : typedef ->  FaceEmbedding8_1
+EdgeEmbedding8 : alias ->  FaceEmbedding8_1
 
 EulerSearcher : class
 Equality type : EqualityType.BY_REFERENCE
@@ -335,7 +335,7 @@ Equality type : EqualityType.BY_REFERENCE
 Face2_1 : class
 Equality type : EqualityType.BY_REFERENCE
 
-Face2_2 : typedef ->  Simplex2
+Face2_2 : alias ->  Simplex2
 
 Face3_0 : class
 Equality type : EqualityType.BY_REFERENCE
@@ -346,7 +346,7 @@ Equality type : EqualityType.BY_REFERENCE
 Face3_2 : class
 Equality type : EqualityType.BY_REFERENCE
 
-Face3_3 : typedef ->  Simplex3
+Face3_3 : alias ->  Simplex3
 
 Face4_0 : class
 Equality type : EqualityType.BY_REFERENCE
@@ -360,7 +360,7 @@ Equality type : EqualityType.BY_REFERENCE
 Face4_3 : class
 Equality type : EqualityType.BY_REFERENCE
 
-Face4_4 : typedef ->  Simplex4
+Face4_4 : alias ->  Simplex4
 
 Face5_0 : class
 Equality type : EqualityType.BY_REFERENCE
@@ -377,7 +377,7 @@ Equality type : EqualityType.BY_REFERENCE
 Face5_4 : class
 Equality type : EqualityType.BY_REFERENCE
 
-Face5_5 : typedef ->  Simplex5
+Face5_5 : alias ->  Simplex5
 
 Face6_0 : class
 Equality type : EqualityType.BY_REFERENCE
@@ -397,7 +397,7 @@ Equality type : EqualityType.BY_REFERENCE
 Face6_5 : class
 Equality type : EqualityType.BY_REFERENCE
 
-Face6_6 : typedef ->  Simplex6
+Face6_6 : alias ->  Simplex6
 
 Face7_0 : class
 Equality type : EqualityType.BY_REFERENCE
@@ -420,7 +420,7 @@ Equality type : EqualityType.BY_REFERENCE
 Face7_6 : class
 Equality type : EqualityType.BY_REFERENCE
 
-Face7_7 : typedef ->  Simplex7
+Face7_7 : alias ->  Simplex7
 
 Face8_0 : class
 Equality type : EqualityType.BY_REFERENCE
@@ -446,7 +446,7 @@ Equality type : EqualityType.BY_REFERENCE
 Face8_7 : class
 Equality type : EqualityType.BY_REFERENCE
 
-Face8_8 : typedef ->  Simplex8
+Face8_8 : alias ->  Simplex8
 
 FaceEmbedding2_0 : class
 Equality type : EqualityType.BY_VALUE
@@ -707,10 +707,10 @@ HilbertPrimal : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 HomGroupPresentation : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 HomMarkedAbelianGroup : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.DISABLED
 
 HomologicalData : class
 Equality type : EqualityType.DISABLED
@@ -805,7 +805,7 @@ Equality type : EqualityType.NEVER_INSTANTIATED
 IsoSigRidgeDegrees2 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
-IsoSigRidgeDegrees3 : typedef ->  IsoSigEdgeDegrees3
+IsoSigRidgeDegrees3 : alias ->  IsoSigEdgeDegrees3
 
 IsoSigRidgeDegrees4 : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -955,7 +955,7 @@ ModelLinkGraphArc : class
 Equality type : EqualityType.BY_VALUE
 
 ModelLinkGraphCells : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 ModelLinkGraphNode : class
 Equality type : EqualityType.BY_REFERENCE
@@ -990,7 +990,7 @@ Equality type : EqualityType.BY_VALUE
 NotImplemented : class
 Exception type
 
-PDF : typedef ->  Attachment
+PDF : alias ->  Attachment
 
 Packet : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -1046,23 +1046,23 @@ Equality type : EqualityType.BY_VALUE
 PacketShell : class
 Equality type : EqualityType.BY_VALUE
 
-Pentachoron4 : typedef ->  Simplex4
+Pentachoron4 : alias ->  Simplex4
 
-Pentachoron5 : typedef ->  Face5_4
+Pentachoron5 : alias ->  Face5_4
 
-Pentachoron6 : typedef ->  Face6_4
+Pentachoron6 : alias ->  Face6_4
 
-Pentachoron7 : typedef ->  Face7_4
+Pentachoron7 : alias ->  Face7_4
 
-Pentachoron8 : typedef ->  Face8_4
+Pentachoron8 : alias ->  Face8_4
 
-PentachoronEmbedding5 : typedef ->  FaceEmbedding5_4
+PentachoronEmbedding5 : alias ->  FaceEmbedding5_4
 
-PentachoronEmbedding6 : typedef ->  FaceEmbedding6_4
+PentachoronEmbedding6 : alias ->  FaceEmbedding6_4
 
-PentachoronEmbedding7 : typedef ->  FaceEmbedding7_4
+PentachoronEmbedding7 : alias ->  FaceEmbedding7_4
 
-PentachoronEmbedding8 : typedef ->  FaceEmbedding8_4
+PentachoronEmbedding8 : alias ->  FaceEmbedding8_4
 
 Perm10 : class
 Equality type : EqualityType.BY_VALUE
@@ -1122,7 +1122,7 @@ Polynomial : class
 Equality type : EqualityType.BY_VALUE
 
 PosOrder : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.DISABLED
 
 Primes : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -1301,27 +1301,27 @@ Equality type : EqualityType.BY_VALUE
 TautEnumeration : class
 Equality type : EqualityType.BY_REFERENCE
 
-Tetrahedron3 : typedef ->  Simplex3
+Tetrahedron3 : alias ->  Simplex3
 
-Tetrahedron4 : typedef ->  Face4_3
+Tetrahedron4 : alias ->  Face4_3
 
-Tetrahedron5 : typedef ->  Face5_3
+Tetrahedron5 : alias ->  Face5_3
 
-Tetrahedron6 : typedef ->  Face6_3
+Tetrahedron6 : alias ->  Face6_3
 
-Tetrahedron7 : typedef ->  Face7_3
+Tetrahedron7 : alias ->  Face7_3
 
-Tetrahedron8 : typedef ->  Face8_3
+Tetrahedron8 : alias ->  Face8_3
 
-TetrahedronEmbedding4 : typedef ->  FaceEmbedding4_3
+TetrahedronEmbedding4 : alias ->  FaceEmbedding4_3
 
-TetrahedronEmbedding5 : typedef ->  FaceEmbedding5_3
+TetrahedronEmbedding5 : alias ->  FaceEmbedding5_3
 
-TetrahedronEmbedding6 : typedef ->  FaceEmbedding6_3
+TetrahedronEmbedding6 : alias ->  FaceEmbedding6_3
 
-TetrahedronEmbedding7 : typedef ->  FaceEmbedding7_3
+TetrahedronEmbedding7 : alias ->  FaceEmbedding7_3
 
-TetrahedronEmbedding8 : typedef ->  FaceEmbedding8_3
+TetrahedronEmbedding8 : alias ->  FaceEmbedding8_3
 
 Text : class
 Equality type : EqualityType.BY_VALUE
@@ -1428,31 +1428,31 @@ Equality type : EqualityType.BY_REFERENCE
 TriSolidTorus : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
-Triangle2 : typedef ->  Simplex2
+Triangle2 : alias ->  Simplex2
 
-Triangle3 : typedef ->  Face3_2
+Triangle3 : alias ->  Face3_2
 
-Triangle4 : typedef ->  Face4_2
+Triangle4 : alias ->  Face4_2
 
-Triangle5 : typedef ->  Face5_2
+Triangle5 : alias ->  Face5_2
 
-Triangle6 : typedef ->  Face6_2
+Triangle6 : alias ->  Face6_2
 
-Triangle7 : typedef ->  Face7_2
+Triangle7 : alias ->  Face7_2
 
-Triangle8 : typedef ->  Face8_2
+Triangle8 : alias ->  Face8_2
 
-TriangleEmbedding3 : typedef ->  FaceEmbedding3_2
+TriangleEmbedding3 : alias ->  FaceEmbedding3_2
 
-TriangleEmbedding4 : typedef ->  FaceEmbedding4_2
+TriangleEmbedding4 : alias ->  FaceEmbedding4_2
 
-TriangleEmbedding5 : typedef ->  FaceEmbedding5_2
+TriangleEmbedding5 : alias ->  FaceEmbedding5_2
 
-TriangleEmbedding6 : typedef ->  FaceEmbedding6_2
+TriangleEmbedding6 : alias ->  FaceEmbedding6_2
 
-TriangleEmbedding7 : typedef ->  FaceEmbedding7_2
+TriangleEmbedding7 : alias ->  FaceEmbedding7_2
 
-TriangleEmbedding8 : typedef ->  FaceEmbedding8_2
+TriangleEmbedding8 : alias ->  FaceEmbedding8_2
 
 Triangulation2 : class
 Equality type : EqualityType.BY_VALUE
@@ -1508,31 +1508,31 @@ Equality type : EqualityType.BY_VALUE
 VectorLarge : class
 Equality type : EqualityType.BY_VALUE
 
-Vertex2 : typedef ->  Face2_0
+Vertex2 : alias ->  Face2_0
 
-Vertex3 : typedef ->  Face3_0
+Vertex3 : alias ->  Face3_0
 
-Vertex4 : typedef ->  Face4_0
+Vertex4 : alias ->  Face4_0
 
-Vertex5 : typedef ->  Face5_0
+Vertex5 : alias ->  Face5_0
 
-Vertex6 : typedef ->  Face6_0
+Vertex6 : alias ->  Face6_0
 
-Vertex7 : typedef ->  Face7_0
+Vertex7 : alias ->  Face7_0
 
-Vertex8 : typedef ->  Face8_0
+Vertex8 : alias ->  Face8_0
 
-VertexEmbedding2 : typedef ->  FaceEmbedding2_0
+VertexEmbedding2 : alias ->  FaceEmbedding2_0
 
-VertexEmbedding3 : typedef ->  FaceEmbedding3_0
+VertexEmbedding3 : alias ->  FaceEmbedding3_0
 
-VertexEmbedding4 : typedef ->  FaceEmbedding4_0
+VertexEmbedding4 : alias ->  FaceEmbedding4_0
 
-VertexEmbedding5 : typedef ->  FaceEmbedding5_0
+VertexEmbedding5 : alias ->  FaceEmbedding5_0
 
-VertexEmbedding6 : typedef ->  FaceEmbedding6_0
+VertexEmbedding6 : alias ->  FaceEmbedding6_0
 
-VertexEmbedding7 : typedef ->  FaceEmbedding7_0
+VertexEmbedding7 : alias ->  FaceEmbedding7_0
 
-VertexEmbedding8 : typedef ->  FaceEmbedding8_0
+VertexEmbedding8 : alias ->  FaceEmbedding8_0
 

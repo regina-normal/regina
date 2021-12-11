@@ -540,6 +540,23 @@ ModelLinkGraphCells::ModelLinkGraphCells(const ModelLinkGraph& g) :
     }
 }
 
+bool ModelLinkGraphCells::operator == (const ModelLinkGraphCells& other) const {
+    if (nCells_ != other.nCells_)
+        return false;
+
+    if (! std::equal(start_, start_ + nCells_ + 1, other.start_))
+        return false;
+
+    for (size_t i = 0; i < start_[nCells_]; ++i) {
+        if (arcs_[i].node()->index() != other.arcs_[i].node()->index())
+            return false;
+        if (arcs_[i].arc() != other.arcs_[i].arc())
+            return false;
+    }
+
+    return true;
+}
+
 void ModelLinkGraphCells::writeTextShort(std::ostream& out) const {
     if (nCells_ == 0)
         out << "Invalid cell structure";

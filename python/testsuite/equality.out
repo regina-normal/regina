@@ -24,6 +24,8 @@ Tangle : not ==, !=
 Tangle : not ==, !=
 ModelLinkGraph : ==, not !=
 ModelLinkGraph : not ==, !=
+ModelLinkGraphCells : ==, not !=
+ModelLinkGraphCells : not ==, !=
 Triangulation3 : ==, not !=
 Triangulation3 : not ==, !=
 Triangulation3 + Packet : ==, not !=, throws on samePacket()
