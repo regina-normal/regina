@@ -360,6 +360,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class FileInfo:
             - Added a move constructor and move assignment operator.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Class constant TYPE_XML is now constexpr.
             - Routine identify() now returns a std::optional<FileInfo>,
               not a newly allocated pointer that could be null.
@@ -764,6 +765,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class LPMatrix:
             - Now derives from Output.  The old dump() is now deprecated,
               in favour of the usual Output routines.
+            - Added comparison operators == and !=.
         Class LPSystem:
             - New class to translate coordinate systems into a layout
               for LPInitialTableaux.
@@ -1525,6 +1527,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class TreeDecomposition:
             - Added a move constructor and move/copy assignment operators.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Changed the "raw graph" constructor from taking a raw C-style
               array to take either a Matrix<bool> or a std::vector of rows.
               The old constructor is removed completely.

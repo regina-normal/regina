@@ -67,8 +67,19 @@ TrieSet : not ==, !=
 LPMatrix : ==, not !=
 LPMatrix : ==, not !=
 LPMatrix : not ==, !=
+ValidityConstraints : ==, not !=
+ValidityConstraints : not ==, !=
 Signature : ==, not !=
 Signature : not ==, !=
+SFSAlt : ==, not !=
+SFSAlt : not ==, !=
+DiscSetTet : ==, not !=
+DiscSetTet : not ==, !=
+DiscSetSurface : ==, not !=
+DiscSetSurface : not ==, !=
+DiscSetSurface : not ==, !=
+TreeDecomposition : ==, not !=
+TreeDecomposition : not ==, !=
 Tetrahedron3 : ==, not !=
 Tetrahedron3 : not ==, !=
 Container : throws on ==, throws on !=, same packet
@@ -79,9 +90,4 @@ Different Packets : throws on ==, throws on !=, different packets
 Different Packets : throws on ==, throws on !=, different packets
 Different Packets : throws on ==, throws on !=, throws on samePacket()
 Different Packets : throws on ==, throws on !=, throws on samePacket()
-DiscSetTet : ==, not !=
-DiscSetTet : not ==, !=
-DiscSetSurface : ==, not !=
-DiscSetSurface : not ==, !=
-DiscSetSurface : not ==, !=
 HomologicalData : throws on ==, throws on !=

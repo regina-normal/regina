@@ -209,8 +209,41 @@ tab = LPInitialTableaux(t, NS_QUAD)
 m3 = LPMatrix(tab.rank(), tab.columns()); tab.fillInitialTableaux(m3)
 cmp('LPMatrix', m1, m3)
 
+v1 = ValidityConstraints(10, 4)
+v1.addLocal([4,5,6]); v1.addLocal([7,8,9]); v1.addGlobal([0])
+v2 = ValidityConstraints(10, 4)
+v2.addLocal([9,8,7]); v2.addLocal([6,5,4]); v2.addGlobal([0])
+v3 = ValidityConstraints(10, 4)
+v3.addLocal([9,8,7]); v3.addLocal([6,5,4]); v3.addGlobal([1])
+cmp('ValidityConstraints', v1, v2)
+cmp('ValidityConstraints', v1, v3)
+
 cmp('Signature', Signature('(aba)(b)'), Signature('aba.b'))
 cmp('Signature', Signature('(aba)(b)'), Signature('(ab)(a)(b)'))
+
+sfsDisc = SFSpace(SFSpace.o2, 0, 1)
+s1 = SFSAlt.altSet(sfsDisc)
+s2 = SFSAlt.altSet(sfsDisc)
+cmp('SFSAlt', s1[0], s2[0])
+cmp('SFSAlt', s1[0], s1[1])
+
+t = Example3.poincare()
+st = NormalSurfaces.enumerate(t, NS_QUAD)
+dt = DiscSetSurface(st.surface(0))
+u = Example3.s2xs1()
+su = NormalSurfaces.enumerate(u, NS_QUAD)
+du = DiscSetSurface(su.surface(0))
+cmp('DiscSetTet', du.tetDiscs(0), du.tetDiscs(1)) # should be equal
+cmp('DiscSetTet', dt.tetDiscs(0), dt.tetDiscs(1)) # should be different
+cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(0)))
+cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(1)))
+cmp('DiscSetSurface', dt, du)
+
+t1 = TreeDecomposition(ExampleLink.conway())
+t2 = TreeDecomposition(ExampleLink.conway())
+cmp('TreeDecomposition', t1, t2)
+t2.reroot(t2.bag(3))
+cmp('TreeDecomposition', t1, t2)
 
 # ----------------------------------------------------------------------
 # Classes that compare by reference:
@@ -235,18 +268,6 @@ cmp('Different Packets', PacketOfLink(), Text(), True)
 cmp('Different Packets', Text(), PacketOfLink(), True)
 cmp('Different Packets', Text(), Link(), True)
 cmp('Different Packets', Link(), Text(), True)
-
-t = Example3.poincare()
-st = NormalSurfaces.enumerate(t, NS_QUAD)
-dt = DiscSetSurface(st.surface(0))
-u = Example3.s2xs1()
-su = NormalSurfaces.enumerate(u, NS_QUAD)
-du = DiscSetSurface(su.surface(0))
-cmp('DiscSetTet', du.tetDiscs(0), du.tetDiscs(1)) # should be equal
-cmp('DiscSetTet', dt.tetDiscs(0), dt.tetDiscs(1)) # should be different
-cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(0)))
-cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(1)))
-cmp('DiscSetSurface', dt, du)
 
 # ----------------------------------------------------------------------
 # Classes that cannot be compared:

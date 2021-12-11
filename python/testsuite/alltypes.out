@@ -605,7 +605,7 @@ FileError : class
 Exception type
 
 FileInfo : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 GlobalArray2D_Perm4 : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1164,7 +1164,7 @@ ReginaException : class
 Exception type
 
 SFSAlt : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 SFSFibre : class
 Equality type : EqualityType.BY_VALUE
@@ -1333,7 +1333,7 @@ TreeBag : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeDecomposition : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 TreeEnumeration : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1500,7 +1500,7 @@ UnsolvedCase : class
 Exception type
 
 ValidityConstraints : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 VectorInt : class
 Equality type : EqualityType.BY_VALUE
