@@ -19,6 +19,11 @@ Link + Packet : ==, not !=, throws on samePacket()
 Link + Packet : ==, not !=, throws on samePacket()
 PacketOfLink : ==, not !=, different packets
 PacketOfLink : ==, not !=, same packet
+Tangle : ==, not !=
+Tangle : not ==, !=
+Tangle : not ==, !=
+ModelLinkGraph : ==, not !=
+ModelLinkGraph : not ==, !=
 Triangulation3 : ==, not !=
 Triangulation3 : not ==, !=
 Triangulation3 + Packet : ==, not !=, throws on samePacket()

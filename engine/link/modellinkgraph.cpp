@@ -89,6 +89,23 @@ ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
     return *this;
 }
 
+bool ModelLinkGraph::operator == (const ModelLinkGraph& other) const {
+    if (nodes_.size() != other.nodes_.size())
+        return false;
+
+    auto a = nodes_.begin();
+    auto b = other.nodes_.begin();
+    for ( ; a != nodes_.end(); ++a, ++b) {
+        for (int i = 0; i < 4; ++i) {
+            if ((*a)->adj_[i].node_->index() != (*b)->adj_[i].node_->index())
+                return false;
+            if ((*a)->adj_[i].arc_ != (*b)->adj_[i].arc_)
+                return false;
+        }
+    }
+    return true;
+}
+
 void ModelLinkGraph::reflect() {
     for (ModelLinkGraphNode* n : nodes_) {
         std::swap(n->adj_[1], n->adj_[3]);

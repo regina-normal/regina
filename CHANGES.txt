@@ -843,6 +843,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global
               regina::swap(ModelLinkGraph&, ModelLinkGraph&).
+            - Added comparison operators == and !=.
             - Routine generateMinimalLinks() now uses a type-safe template-based
               mechanism for its callback function, instead of a function
               pointer with void* arguments, and the callback now takes its
@@ -1505,6 +1506,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added a move constructor and move assignment operator.
             - Renamed swapContents() to swap(); the old name is now a deprecated
               alias.  Also added a global regina::swap(Tangle&, Tangle&).
+            - Added comparison operators == and !=.
             - Routines numClosure and denClosure() now return by value,
               not pointer.
             - Added brief() output routines.

@@ -949,7 +949,7 @@ MaxAdmissible : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 ModelLinkGraph : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 ModelLinkGraphArc : class
 Equality type : EqualityType.BY_VALUE
@@ -1296,7 +1296,7 @@ SurfaceFilterProperties : class
 Equality type : EqualityType.BY_VALUE
 
 Tangle : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 TautEnumeration : class
 Equality type : EqualityType.BY_REFERENCE

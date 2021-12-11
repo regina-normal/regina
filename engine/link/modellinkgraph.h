@@ -602,6 +602,34 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         [[deprecated]] void swapContents(ModelLinkGraph& other) noexcept;
 
         /**
+         * Determines if this graph is combinatorially identical to the
+         * given graph.
+         *
+         * Here "identical" means that both graphs have the same number
+         * of nodes, and in both graphs the same pairs of outgoing arcs of
+         * numbered nodes are connected by edges.
+         *
+         * @param other the graph to compare with this.
+         * @return \c true if and only if the two graphs are
+         * combinatorially identical.
+         */
+        bool operator == (const ModelLinkGraph& other) const;
+
+        /**
+         * Determines if this graph is not combinatorially identical to the
+         * given graph.
+         *
+         * Here "identical" means that both graphs have the same number
+         * of nodes, and in both graphs the same pairs of outgoing arcs of
+         * numbered nodes are connected by edges.
+         *
+         * @param other the graph to compare with this.
+         * @return \c true if and only if the two graphs are
+         * not combinatorially identical.
+         */
+        bool operator != (const ModelLinkGraph& other) const;
+
+        /**
          * Converts this graph into its reflection.
          *
          * This routine simply reverses (and also cycles) the order of
@@ -1466,6 +1494,10 @@ inline void ModelLinkGraph::swap(ModelLinkGraph& other) noexcept {
 
 inline void ModelLinkGraph::swapContents(ModelLinkGraph& other) noexcept {
     swap(other);
+}
+
+inline bool ModelLinkGraph::operator != (const ModelLinkGraph& other) const {
+    return ! ((*this) == other);
 }
 
 inline const ModelLinkGraphCells& ModelLinkGraph::cells() const {

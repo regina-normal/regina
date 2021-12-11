@@ -289,6 +289,36 @@ void Tangle::swap(Tangle& other) noexcept {
             std::swap(end_[i][j], other.end_[i][j]);
 }
 
+bool Tangle::operator == (const Tangle& other) const {
+    if (type_ != other.type_)
+        return false;
+    if (crossings_.size() != other.crossings_.size())
+        return false;
+
+    int i, j;
+    for (i = 0; i < 2; ++i)
+        for (j = 0; j < 2; ++j)
+            if (end_[i][j] != translate(other.end_[i][j]))
+                return false;
+
+    for (size_t i = 0; i < crossings_.size(); ++i) {
+        Crossing* a = crossings_[i];
+        Crossing* b = other.crossings_[i];
+
+        if (a->sign() != b->sign())
+            return false;
+        if (a->next_[0] != translate(b->next_[0]))
+            return false;
+        if (a->next_[1] != translate(b->next_[1]))
+            return false;
+
+        // If everything is self-consistent then the prev strands should
+        // match also; we don't need to test those.
+    }
+
+    return true;
+}
+
 void Tangle::twist(int sign) {
     Crossing* c;
 

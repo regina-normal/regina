@@ -93,6 +93,15 @@ cmp('PacketOfLink', PacketOfLink(2), PacketOfLink(2), True)
 p = PacketOfLink(3)
 cmp('PacketOfLink', p, p.root(), True)
 
+cmp('Tangle', Tangle(3,2), Tangle(3,2))
+cmp('Tangle', Tangle(3,2), Tangle(3,-2))
+cmp('Tangle', Tangle(1,0), Tangle(0,1))
+
+g1 = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
+g2 = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,eedc')
+cmp('ModelLinkGraph', g1, ModelLinkGraph(g1))
+cmp('ModelLinkGraph', g1, g2)
+
 cmp('Triangulation3', Triangulation3(), Triangulation3())
 cmp('Triangulation3', Example3.figureEight(), Example3.whiteheadLink())
 cmp('Triangulation3 + Packet', Triangulation3(), PacketOfTriangulation3(), True)

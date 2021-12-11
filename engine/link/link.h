@@ -1026,7 +1026,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * Here "identical" means that:
          *
          * - the link diagrams have the same number of crossings and the
-         *   same number of components,
+         *   same number of components;
          *
          * - the same numbered crossings are positive and negative in both
          *   diagrams;
@@ -1051,7 +1051,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * Here "identical" means that:
          *
          * - the link diagrams have the same number of crossings and the
-         *   same number of components,
+         *   same number of components;
          *
          * - the same numbered crossings are positive and negative in both
          *   diagrams;
