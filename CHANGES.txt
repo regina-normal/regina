@@ -314,9 +314,12 @@ Version 7.0  [ 10 December, 2021 ]
               the object size in Regina's standard dimensions, and it also
               speeds up calls to vertices(), but it does marginally slow
               down calls to face().
-            - The equality/inequality tests have changed meaning: not only do
-              the face *numbers* need to be the same, but the entire embedding
-              permutations returned by vertices() need to be the same.
+            - The equality/inequality tests have changed meaning.  They are
+              stronger in that not just the face *numbers* need to be the same,
+              but the entire embedding permutations returned by vertices()
+              need to be the same.  They are weaker in that only the simplex
+              numbers are compared, not the simplex pointers (so you can
+              now meaningfully compare objects from different triangulations).
             - The old (simplex, face number) constructors are removed, with new
               (simplex, embedding permutation) constructors to replace them.
             - For orientable components of triangulations, the sign of the

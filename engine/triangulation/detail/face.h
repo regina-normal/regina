@@ -183,12 +183,22 @@ class FaceEmbeddingBase :
         /**
          * Tests whether this and the given object are identical.
          *
-         * Since Regina 7.0, "identical" means that both objects refer to the
-         * same face of the same top-dimensional simplex, \e and have
+         * Here \e identical means that two FaceEmbedding objects refer to
+         * the same-numbered face of the same-numbered simplex, \e and have
          * the same embedding permutations as returned by vertices().
-         * This is a stronger (but more natural) condition than was used in
-         * Regina 6.0.1 and earlier, which merely required both objects to
-         * refer to the same face number of the same top-dimensional simplex.
+         *
+         * In particular, since this test only examines face/simplex/vertex
+         * \e numbers (not object pointers), it is meaningful to compare two
+         * FaceEmbedding objects from different underlying triangulations.
+         *
+         * \warning The meaning of this comparison changed in Regina 7.0.
+         * In older versions of Regina, to compare as equal, two FaceEmbedding
+         * objects (i) had to be faces of the same Simplex object (a stronger
+         * requirement that effectively restricted this test to faces of the
+         * same triangulation); but also (ii) only had to refer to the
+         * same-numbered face, not use the same full embedding permutations
+         * (a weaker requirement that nowadays would incur an unacceptable
+         * performance cost).
          *
          * @param rhs the object to compare with this.
          * @return \c true if and only if both object are identical.
@@ -198,12 +208,22 @@ class FaceEmbeddingBase :
         /**
          * Tests whether this and the given object are not identical.
          *
-         * Since Regina 7.0, "identical" means that both objects refer to the
-         * same face of the same top-dimensional simplex, \e and have
+         * Here \e identical means that two FaceEmbedding objects refer to
+         * the same-numbered face of the same-numbered simplex, \e and have
          * the same embedding permutations as returned by vertices().
-         * This is a stronger (but more natural) condition than was used in
-         * Regina 6.0.1 and earlier, which merely required both objects to
-         * refer to the same face number of the same top-dimensional simplex.
+         *
+         * In particular, since this test only examines face/simplex/vertex
+         * \e numbers (not object pointers), it is meaningful to compare two
+         * FaceEmbedding objects from different underlying triangulations.
+         *
+         * \warning The meaning of this comparison changed in Regina 7.0.
+         * In older versions of Regina, to compare as equal, two FaceEmbedding
+         * objects (i) had to be faces of the same Simplex object (a stronger
+         * requirement that effectively restricted this test to faces of the
+         * same triangulation); but also (ii) only had to refer to the
+         * same-numbered face, not use the same full embedding permutations
+         * (a weaker requirement that nowadays would incur an unacceptable
+         * performance cost).
          *
          * @param rhs the object to compare with this.
          * @return \c true if and only if both object are identical.
@@ -961,13 +981,15 @@ inline Perm<dim+1> FaceEmbeddingBase<dim, subdim>::vertices() const {
 template <int dim, int subdim>
 inline bool FaceEmbeddingBase<dim, subdim>::operator == (
         const FaceEmbeddingBase& rhs) const {
-    return ((simplex_ == rhs.simplex_) && (vertices_ == rhs.vertices_));
+    return simplex_->index() == rhs.simplex_->index() &&
+        vertices_ == rhs.vertices_;
 }
 
 template <int dim, int subdim>
 inline bool FaceEmbeddingBase<dim, subdim>::operator != (
         const FaceEmbeddingBase& rhs) const {
-    return ((simplex_ != rhs.simplex_) || (vertices_ != rhs.vertices_));
+    return simplex_->index() != rhs.simplex_->index() ||
+        vertices_ != rhs.vertices_;
 }
 
 template <int dim, int subdim>
