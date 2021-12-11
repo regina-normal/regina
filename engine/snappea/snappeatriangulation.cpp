@@ -533,17 +533,8 @@ bool SnapPeaTriangulation::operator == (const SnapPeaTriangulation& other)
     if (! (Triangulation<3>::operator == (other)))
         return false;
 
-    // This next test should be unnecessary.
-    for (size_t i = 0; i < countCusps(); ++i) {
-        if (cusp_[i].vertex_->index() != other.cusp_[i].vertex_->index())
-            return false;
-        if (cusp_[i].m_ != other.cusp_[i].m_)
-            return false;
-        if (cusp_[i].l_ != other.cusp_[i].l_)
-            return false;
-    }
-
-    return true;
+    // This next test *should* be unnecessary.
+    return std::equal(cusp_, cusp_ + countCusps(), other.cusp_);
 }
 
 void SnapPeaTriangulation::unfill(unsigned whichCusp) {

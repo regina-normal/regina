@@ -248,14 +248,10 @@ class Cusp : public ShortOutput<Cusp> {
          * same cusp information.
          *
          * Two Cusp objects are considered equal if they refer to the
-         * same vertex of the underlying triangulation (i.e., the
-         * pointers returned by vertex() are the same), \e and they have
-         * the same filling coefficients.
-         *
-         * In particular, two cusps that come from different triangulations
-         * can never be equal (since they will not use the same vertex
-         * pointers), even if the triangulations themselves \e do compare as
-         * equal using the SnapPeaTriangulation comparison operators.
+         * same vertex number of the underlying triangulation, and they
+         * have the same filling coefficients.  Note that the vertex
+         * \e pointers do not need to be the same (i.e., it is meaningful
+         * to compare cusps from different triangulations).
          *
          * @param other the cusp information to compare with this.
          * @return \c true if and only this and the given object hold
@@ -268,14 +264,10 @@ class Cusp : public ShortOutput<Cusp> {
          * same cusp information.
          *
          * Two Cusp objects are considered equal if they refer to the
-         * same vertex of the underlying triangulation (i.e., the
-         * pointers returned by vertex() are the same), \e and they have
-         * the same filling coefficients.
-         *
-         * In particular, two cusps that come from different triangulations
-         * can never be equal (since they will not use the same vertex
-         * pointers), even if the triangulations themselves \e do compare as
-         * equal using the SnapPeaTriangulation comparison operators.
+         * same vertex number of the underlying triangulation, and they
+         * have the same filling coefficients.  Note that the vertex
+         * \e pointers do not need to be the same (i.e., it is meaningful
+         * to compare cusps from different triangulations).
          *
          * @param other the cusp information to compare with this.
          * @return \c true if and only this and the given object do not hold
@@ -2266,11 +2258,13 @@ inline int Cusp::l() const {
 }
 
 inline bool Cusp::operator == (const Cusp& other) const {
-    return vertex_ == other.vertex_ && m_ == other.m_ && l_ == other.l_;
+    return vertex_->index() == other.vertex_->index() &&
+        m_ == other.m_ && l_ == other.l_;
 }
 
 inline bool Cusp::operator != (const Cusp& other) const {
-    return vertex_ != other.vertex_ || m_ != other.m_ || l_ != other.l_;
+    return vertex_->index() != other.vertex_->index() ||
+        m_ != other.m_ || l_ != other.l_;
 }
 
 // Inline functions for SnapPeaTriangulation
