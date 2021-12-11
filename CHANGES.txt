@@ -633,6 +633,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Add comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
             - Routine chain() now returns by reference, not by pointer.
         Class LayeredLensSpace:
@@ -1471,6 +1472,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy and move construction, and copy and move assignment.
             - Added member and global swap() functions.
+            - Add comparison operators == and !=.
             - Routines makeCanonical() and isCanonical() now take no
               arguments (the old triangulation argument was redundant).
             - Deprecated clone().  Just use the copy constructor instead.

@@ -901,7 +901,7 @@ LayeredChain : class
 Equality type : EqualityType.BY_VALUE
 
 LayeredChainPair : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 LayeredLensSpace : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -1272,7 +1272,7 @@ SnapshotWriteError : class
 Exception type
 
 SpiralSolidTorus : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 StandardTriangulation : class
 Equality type : EqualityType.NEVER_INSTANTIATED
