@@ -356,6 +356,8 @@ namespace regina {
  *    is what defines them; the most common examples you will see are
  *    crossings within links (Crossing), and skeletal objects within
  *    triangulations (e.g., Tetrahedron<3>, Vertex<4>, BoundaryComponent<2>).
+ *    This is also used with objects that manage or track long computations
+ *    (e.g., ProgressTracker, GluingPermSearcher4, or TreeEnumeration).
  *
  *    These classes do not provide C++ class operators == or !=.
  *
