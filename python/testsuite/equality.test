@@ -198,6 +198,17 @@ b = Bitmask8(); b.set([0,4], True); t.insert(b)
 cmp('TrieSet', t, u)
 cmp('TrieSet', u, t)
 
+t = Example3.figureEight()
+tab = LPInitialTableaux(t, NS_QUAD)
+m1 = LPMatrix(tab.rank(), tab.columns()); tab.fillInitialTableaux(m1)
+m2 = LPMatrix(tab.rank(), tab.columns()); tab.fillInitialTableaux(m2)
+cmp('LPMatrix', LPMatrix(), LPMatrix())
+cmp('LPMatrix', m1, m2)
+t = Example3.s2xs1()
+tab = LPInitialTableaux(t, NS_QUAD)
+m3 = LPMatrix(tab.rank(), tab.columns()); tab.fillInitialTableaux(m3)
+cmp('LPMatrix', m1, m3)
+
 cmp('Signature', Signature('(aba)(b)'), Signature('aba.b'))
 cmp('Signature', Signature('(aba)(b)'), Signature('(ab)(a)(b)'))
 

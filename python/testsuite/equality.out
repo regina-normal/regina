@@ -64,6 +64,9 @@ TypeTrie : not ==, !=
 TrieSet : ==, not !=
 TrieSet : not ==, !=
 TrieSet : not ==, !=
+LPMatrix : ==, not !=
+LPMatrix : ==, not !=
+LPMatrix : not ==, !=
 Signature : ==, not !=
 Signature : not ==, !=
 Tetrahedron3 : ==, not !=

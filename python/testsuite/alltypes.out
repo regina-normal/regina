@@ -859,31 +859,31 @@ LPConstraintNone : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 LPData : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.DISABLED
 
 LPData_EulerPositive : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.DISABLED
 
 LPData_EulerZero : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.DISABLED
 
 LPData_NonSpun : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.DISABLED
 
 LPInitialTableaux : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.DISABLED
 
 LPInitialTableaux_EulerPositive : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.DISABLED
 
 LPInitialTableaux_EulerZero : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.DISABLED
 
 LPInitialTableaux_NonSpun : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.DISABLED
 
 LPMatrix : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 LPSystem : class
 Equality type : EqualityType.BY_VALUE
