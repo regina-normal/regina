@@ -57,6 +57,7 @@ void addTrivialTri(pybind11::module_& m) {
         .def_readonly_static("N3_1", &TrivialTri::N3_1)
         .def_readonly_static("N3_2", &TrivialTri::N3_2)
     ;
+    regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 
     m.def("swap", (void(*)(TrivialTri&, TrivialTri&))(regina::swap));

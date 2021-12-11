@@ -626,6 +626,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class LayeredChain:
             - Added copy assignment operator.
             - Added member and global swap() functions.
+            - Add comparison operators == and !=.
         Class LayeredChainPair:
             - Routine isLayeredChainPair() is now called recognise(), and
               returns a std::unique_ptr instead of a raw pointer.
@@ -647,6 +648,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Add comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class LayeredSolidTorus:
             - Routines isLayeredSolidTorus(), formsLayeredSolidTorusBase()
@@ -1727,6 +1729,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class TxICore:
             - Renamed TeXName() to texName().  The old name is kept but

@@ -898,7 +898,7 @@ Laurent2 : class
 Equality type : EqualityType.BY_VALUE
 
 LayeredChain : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 LayeredChainPair : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -907,7 +907,7 @@ LayeredLensSpace : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 
 LayeredLoop : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 LayeredSolidTorus : class
 Equality type : EqualityType.BY_VALUE
@@ -1479,7 +1479,7 @@ TrieSet : class
 Equality type : EqualityType.BY_VALUE
 
 TrivialTri : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 TxICore : class
 Equality type : EqualityType.NEVER_INSTANTIATED

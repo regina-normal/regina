@@ -146,6 +146,46 @@ class LayeredLoop : public StandardTriangulation {
         Edge<3>* hinge(int which) const;
 
         /**
+         * Determines whether this and the given structure represent
+         * the same type of layered loop.
+         *
+         * Specifically, two layered loops will compare as equal if they
+         * have the same length and either both are twisted or both are
+         * untwisted.
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass means they describe isomorphic structures).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent the same type of layered loop.
+         */
+        bool operator == (const LayeredLoop& other) const;
+
+        /**
+         * Determines whether this and the given structure represent
+         * different types of layered loop.
+         *
+         * Specifically, two layered loops will compare as equal if they
+         * have the same length and either both are twisted or both are
+         * untwisted.
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass means they describe isomorphic structures).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent different types of layered loop.
+         */
+        bool operator != (const LayeredLoop& other) const;
+
+        /**
          * Determines if the given triangulation component is a layered loop.
          *
          * This function returns by (smart) pointer for consistency with
@@ -216,6 +256,18 @@ inline bool LayeredLoop::isTwisted() const {
 }
 inline Edge<3>* LayeredLoop::hinge(int which) const {
     return hinge_[which];
+}
+inline bool LayeredLoop::operator == (const LayeredLoop& other) const {
+    if (length_ != other.length_)
+        return false;
+    if (hinge_[1] && ! other.hinge_[1])
+        return false;
+    if (other.hinge_[1] && ! hinge_[1])
+        return false;
+    return true;
+}
+inline bool LayeredLoop::operator != (const LayeredLoop& other) const {
+    return ! ((*this) == other);
 }
 inline std::ostream& LayeredLoop::writeName(std::ostream& out) const {
     return out << (hinge_[1] ? "C(" : "C~(") << length_ << ')';
