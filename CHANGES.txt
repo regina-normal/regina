@@ -133,6 +133,8 @@ Version 7.0  [ 10 December, 2021 ]
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
             - Added comparison operators == and !=.
+            - Routine edgeGroupRoles() now returns a Perm<3>, not a Perm<4>
+              that always maps 3 to 3.
             - Deprecated clone().  Just use the copy constructor instead.
         Class BanConstraintBase, BanNone, BanBoundary, BanTorusBoundary:
             - All methods are now public, not protected.
@@ -1277,6 +1279,8 @@ Version 7.0  [ 10 December, 2021 ]
               as a deprecated alias.
             - Added comparison operators == and !=, which are customised for
               each subclass.
+            - Routine SatLST::roles() now returns a Perm<3>, not a Perm<4>
+              that always maps 3 to 3.
             - All access to the underlying triangulation is now const only.
         Class SatBlockModel:
             - New class to replace SatBlockStarter.

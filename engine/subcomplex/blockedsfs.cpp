@@ -358,7 +358,6 @@ std::optional<std::string> BlockedSFS::findPluggedTori(bool thin, int id,
 
     const SatLST* lst;
     const SatMobius* mobius;
-    Perm<4> roles;
 
     if ((mobius = dynamic_cast<const SatMobius*>(torus0))) {
         if (mobius->position() == 2) {
@@ -372,7 +371,7 @@ std::optional<std::string> BlockedSFS::findPluggedTori(bool thin, int id,
             q0 = (horiz0 ? 1 : -2);
         }
     } else if ((lst = dynamic_cast<const SatLST*>(torus0))) {
-        roles = lst->roles();
+        Perm<3> roles = lst->roles();
         p0 = lst->lst().meridinalCuts(roles[0]);
         q0 = lst->lst().meridinalCuts(roles[horiz0 ? 1 : 2]);
         if (! ((roles[2] == 2 && horiz0) || (roles[1] == 2 && ! horiz0)))
@@ -392,7 +391,7 @@ std::optional<std::string> BlockedSFS::findPluggedTori(bool thin, int id,
             q1 = (horiz1 ? 1 : -2);
         }
     } else if ((lst = dynamic_cast<const SatLST*>(torus1))) {
-        roles = lst->roles();
+        Perm<3> roles = lst->roles();
         p1 = lst->lst().meridinalCuts(roles[0]);
         q1 = lst->lst().meridinalCuts(roles[horiz1 ? 1 : 2]);
         if (! ((roles[2] == 2 && horiz1) || (roles[1] == 2 && ! horiz1)))

@@ -168,7 +168,7 @@ class SatLST : public SatBlock {
         LayeredSolidTorus lst_;
             /**< Contains details of the layered solid torus that this
                  block represents. */
-        Perm<4> roles_;
+        Perm<3> roles_;
             /**< Describes how the layered solid torus is attached to the
                  boundary annulus.  In particular, edge groups \a roles_[0],
                  \a roles_[1] and \a roles_[2] of the layered solid torus are
@@ -198,12 +198,10 @@ class SatLST : public SatBlock {
          * - edge group \a r[1] is attached to the horizontal annulus edges;
          * - edge group \a r[2] is attached to the diagonal annulus edges.
          *
-         * The image \a r[3] will always be 3.
-         *
          * @return a description of how the layered solid torus is
          * attached to the boundary annulus.
          */
-        Perm<4> roles() const;
+        Perm<3> roles() const;
 
         bool operator == (const SatBlock& other) const override;
         void adjustSFS(SFSpace& sfs, bool reflect) const override;
@@ -226,7 +224,7 @@ class SatLST : public SatBlock {
          * attached to the boundary annulus, as explained in the
          * \a roles_ data member documentation.
          */
-        SatLST(const LayeredSolidTorus& lst, Perm<4> roles);
+        SatLST(const LayeredSolidTorus& lst, Perm<3> roles);
 
         /**
          * Constructs a clone of the given block structure.
@@ -632,7 +630,7 @@ inline bool SatMobius::operator == (const SatBlock& other) const {
 
 // Inline functions for SatLST
 
-inline SatLST::SatLST(const LayeredSolidTorus& lst, Perm<4> roles) :
+inline SatLST::SatLST(const LayeredSolidTorus& lst, Perm<3> roles) :
         SatBlock(1), lst_(lst), roles_(roles) {
 }
 
@@ -640,7 +638,7 @@ inline const LayeredSolidTorus& SatLST::lst() const {
     return lst_;
 }
 
-inline Perm<4> SatLST::roles() const {
+inline Perm<3> SatLST::roles() const {
     return roles_;
 }
 
