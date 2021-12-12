@@ -266,6 +266,19 @@ cmp('TxICore', TxIDiagonalCore(7, 1), TxIDiagonalCore(7, 2))
 cmp('TxICore', TxIDiagonalCore(6, 1), TxIParallelCore())
 cmp('TxICore', TxIParallelCore(), TxIParallelCore())
 
+t = Triangulation3('kLALALMkbccfefihijjlpkusuueotr')
+b1 = BlockedSFSTriple.recognise(t)
+b2 = BlockedSFSTriple.recognise(t)
+cmp('BlockedSFSTriple', b1, b2)
+iso = Isomorphism3(t.size())
+for i in range(t.size()):
+	iso.setSimpImage(i, t.size() - i - 1)
+	iso.setFacetPerm(i, Perm4(3,2,1,0))
+t2 = iso.apply(t)
+b3 = BlockedSFSTriple.recognise(t2)
+cmp('BlockedSFSTriple', b1, b3)
+cmp('BlockedSFSTriple.manifold()', b1.manifold(), b3.manifold())
+
 # ----------------------------------------------------------------------
 # Classes that compare by reference:
 # ----------------------------------------------------------------------

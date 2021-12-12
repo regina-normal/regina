@@ -55,6 +55,7 @@ void addBlockedSFSTriple(pybind11::module_& m) {
             &BlockedSFSTriple::recognise)
     ;
     regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
     m.def("swap",
         (void(*)(BlockedSFSTriple&, BlockedSFSTriple&))(regina::swap));

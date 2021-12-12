@@ -53,6 +53,7 @@ void addBlockedSFSPair(pybind11::module_& m) {
             &BlockedSFSPair::recognise)
     ;
     regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(BlockedSFSPair&, BlockedSFSPair&))(regina::swap));
 }

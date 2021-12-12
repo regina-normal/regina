@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "maths/perm.h"
-#include "triangulation/forward.h"
+#include "triangulation/dim3.h"
 #include <tuple>
 
 namespace regina {

@@ -50,16 +50,16 @@ Bitmask8 : class
 Equality type : EqualityType.BY_VALUE
 
 BlockedSFS : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 BlockedSFSLoop : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 BlockedSFSPair : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 BlockedSFSTriple : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 BoolSet : class
 Equality type : EqualityType.BY_VALUE
@@ -1197,7 +1197,7 @@ SatReflectorStrip : class
 Equality type : EqualityType.BY_VALUE
 
 SatRegion : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 SatTriPrism : class
 Equality type : EqualityType.BY_VALUE

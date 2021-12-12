@@ -96,6 +96,9 @@ TxICore : ==, not !=
 TxICore : not ==, !=
 TxICore : not ==, !=
 TxICore : ==, not !=
+BlockedSFSTriple : ==, not !=
+BlockedSFSTriple : not ==, !=
+BlockedSFSTriple.manifold() : ==, not !=
 Tetrahedron3 : ==, not !=
 Tetrahedron3 : not ==, !=
 Container : throws on ==, throws on !=, same packet

@@ -168,6 +168,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old names are kept as deprecated aliases.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Changed BlockedSFS::isPluggedIBundle() to take no arguments,
               and instead return a std::optional<std::string>.
         Class BoolSet:
@@ -1253,6 +1254,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class SafePtr, SafePointeeBase:
             - Removed completely.
         Class SatAnnulus:
+            - Added comparison operators == and !=.
             - Routines transform() and image() now takes their arguments by
               reference.
             - Routine isAdjacent() now returns a tuple, instead of using
@@ -1327,6 +1329,7 @@ Version 7.0  [ 10 December, 2021 ]
               functions that construct regions will expand them automatically.
             - New routine blockAbbrs() that returns the output of
               writeBlockAbbrs() in string format.
+            - Added comparison operators == and !=.
             - All access to the underlying triangulation is now const only.
         Class Script:
             - Added a copy constructor and a copy assignment operator.
