@@ -676,6 +676,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added comparison operators == and !=.
         Class Layering:
             - Added copy construction and copy assignment.
+            - Added comparison operators == and !=.
             - All access to the underlying triangulation is now const only.
         Class LensSpace:
             - Added member and global swap() functions.
@@ -1196,6 +1197,7 @@ Version 7.0  [ 10 December, 2021 ]
               returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class PluggedTorusBundle:
             - Routine isPluggedTorusBundle() is now called recognise(), takes
@@ -1455,6 +1457,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class SnappedTwoSphere:
             - Routine formsSnappedTwoSphere() is now called recognise(), and
@@ -1464,6 +1467,7 @@ Version 7.0  [ 10 December, 2021 ]
               now takes these balls by reference, not pointer.  Likewise,
               snappedBall() now returns by reference, not pointer.
             - Added copy construction and copy assignment.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class Snapshot, SnapshotRef, Snapshottable, SnapshotWriteError:
             - A new suite of classes for taking snapshots of a large
@@ -1725,6 +1729,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
             - Changed isAnnulusSelfIdentified() to return a std::optional,
               instead of returning the permutation via a pointer argument.

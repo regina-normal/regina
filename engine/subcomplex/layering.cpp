@@ -67,8 +67,8 @@ bool Layering::extendOne() {
 
         // new a = old a         = reln00 p + reln01 q
         // new b = old a + old b = (reln00 + reln10) p + (reln01 + reln11) q
-        reln[1][0] += reln[0][0];
-        reln[1][1] += reln[0][1];
+        reln_[1][0] += reln_[0][0];
+        reln_[1][1] += reln_[0][1];
 
         return true;
     } else if (cross1 == cross0 * Perm<4>(2, 3, 0, 1)) {
@@ -82,8 +82,8 @@ bool Layering::extendOne() {
 
         // new a = old a         = reln00 p + reln01 q
         // new b = old b - old a = (reln10 - reln00) p + (reln11 - reln01) q
-        reln[1][0] -= reln[0][0];
-        reln[1][1] -= reln[0][1];
+        reln_[1][0] -= reln_[0][0];
+        reln_[1][1] -= reln_[0][1];
 
         return true;
     } else if (cross1 == cross0 * Perm<4>(1, 0, 3, 2)) {
@@ -97,8 +97,8 @@ bool Layering::extendOne() {
 
         // new a = old a - old b = (reln00 - reln10) p + (reln01 - reln11) q
         // new b = old b         = reln10 p + reln11 q
-        reln[0][0] -= reln[1][0];
-        reln[0][1] -= reln[1][1];
+        reln_[0][0] -= reln_[1][0];
+        reln_[0][1] -= reln_[1][1];
 
         return true;
     }
@@ -157,27 +157,27 @@ bool Layering::matchesTop(const Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
     // relationship matrix correct.
     if (cross == Perm<4>(0, 1, 2, 3)) {
         // It's the identity.
-        upperReln = reln;
+        upperReln = reln_;
     } else if (cross == Perm<4>(0, 2, 1, 3)) {
         // new a = + old b
         // new b = + old a
-        upperReln = Matrix2(0, 1, 1, 0) * reln;
+        upperReln = Matrix2(0, 1, 1, 0) * reln_;
     } else if (cross == Perm<4>(1, 0, 2, 3)) {
         // new a = - old a
         // new b = - old a + old b
-        upperReln = Matrix2(-1, 0, -1, 1) * reln;
+        upperReln = Matrix2(-1, 0, -1, 1) * reln_;
     } else if (cross == Perm<4>(1, 2, 0, 3)) {
         // new a = - old a + old b
         // new b = - old a
-        upperReln = Matrix2(-1, 1, -1, 0) * reln;
+        upperReln = Matrix2(-1, 1, -1, 0) * reln_;
     } else if (cross == Perm<4>(2, 0, 1, 3)) {
         // new a = - old b
         // new b = + old a - old b
-        upperReln = Matrix2(0, -1, 1, -1) * reln;
+        upperReln = Matrix2(0, -1, 1, -1) * reln_;
     } else if (cross == Perm<4>(2, 1, 0, 3)) {
         // new a = + old a - old b
         // new b = - old b
-        upperReln = Matrix2(1, -1, 0, -1) * reln;
+        upperReln = Matrix2(1, -1, 0, -1) * reln_;
     }
 
     // Don't forget to account for the 180 degree rotation if it
@@ -202,7 +202,7 @@ void Layering::writeTextShort(std::ostream& out) const {
         << newBdryTet_[0]->index() << " ("
         << newBdryRoles_[0].trunc(3) << "), "
         << newBdryTet_[1]->index() << " ("
-        << newBdryRoles_[1].trunc(3) << ") via " << reln;
+        << newBdryRoles_[1].trunc(3) << ") via " << reln_;
 }
 
 } // namespace regina

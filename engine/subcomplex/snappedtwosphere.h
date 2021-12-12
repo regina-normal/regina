@@ -53,7 +53,7 @@ class SnappedBall;
  * This occurs when two snapped 3-balls are glued together at their
  * equators (note that this gluing does not have to extend to triangular faces).
  * Each 3-ball has a central disc (bounded by the 3-ball's equator and bisecting
- * its internal edge), and these two discs together form an embedded
+ * its internal degree one edge), and these two discs together form an embedded
  * 2-sphere in the triangulation.
  *
  * This 2-sphere can be cut along and the two resulting 2-sphere
@@ -105,6 +105,44 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
          * @return the corresponding snapped 3-ball.
          */
         const SnappedBall& snappedBall(int index) const;
+
+        /**
+         * Determines whether this and the given object represent the same
+         * specific presentation of a snapped 2-sphere.
+         *
+         * Specifically, two snapped 2-spheres will compare as equal if and
+         * only if they slice through the same pair of numbered tetrahedra,
+         * presented in the same order, and bisecting the same numbered
+         * degree one edges within corresponding tetrahedra.
+         *
+         * Since this test looks at tetrahedron numbers and not the specific
+         * Tetrahedron objects, it is meaningful to compare snapped 2-spheres
+         * within different triangulations.
+         *
+         * @param other the snapped 2-sphere to compare with this.
+         * @return \c true if and only if this and the given object represent
+         * the same specific presentation of a snapped 2-sphere.
+         */
+        bool operator == (const SnappedTwoSphere& other) const;
+
+        /**
+         * Determines whether this and the given object represent different
+         * specific presentations of a snapped 2-sphere.
+         *
+         * Specifically, two snapped 2-spheres will compare as equal if and
+         * only if they slice through the same pair of numbered tetrahedra,
+         * presented in the same order, and bisecting the same numbered edges
+         * within corresponding tetrahedra.
+         *
+         * Since this test looks at tetrahedron numbers and not the specific
+         * Tetrahedron objects, it is meaningful to compare snapped 2-spheres
+         * within different triangulations.
+         *
+         * @param other the snapped 2-sphere to compare with this.
+         * @return \c true if and only if this and the given object represent
+         * different specific presentations of a snapped 2-sphere.
+         */
+        bool operator != (const SnappedTwoSphere& other) const;
 
         /**
          * Determines if the two given tetrahedra together form a snapped
@@ -197,6 +235,15 @@ inline SnappedTwoSphere* SnappedTwoSphere::clone() const {
 }
 inline const SnappedBall& SnappedTwoSphere::snappedBall(int index) const {
     return ball_[index];
+}
+
+inline bool SnappedTwoSphere::operator == (const SnappedTwoSphere& other)
+        const {
+    return ball_[0] == other.ball_[0] && ball_[1] == other.ball_[1];
+}
+inline bool SnappedTwoSphere::operator != (const SnappedTwoSphere& other)
+        const {
+    return ball_[0] != other.ball_[0] || ball_[1] != other.ball_[1];
 }
 
 inline std::unique_ptr<SnappedTwoSphere>

@@ -42,7 +42,7 @@
 #include "core/output.h"
 #include "maths/matrix2.h"
 #include "maths/perm.h"
-#include "triangulation/forward.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -126,7 +126,7 @@ class Layering : public ShortOutput<Layering> {
             /**< The corresponding two permutations of the new boundary.
                  See the class notes for details. */
 
-        Matrix2 reln;
+        Matrix2 reln_;
             /**< A matrix that expresses the new boundary curves in terms
                  of the old, assuming that the old boundary is in fact a
                  torus as described in the class notes.  The first row of
@@ -160,6 +160,56 @@ class Layering : public ShortOutput<Layering> {
          */
         Layering(const Tetrahedron<3>* bdry0, Perm<4> roles0,
             const Tetrahedron<3>* bdry1, Perm<4> roles1);
+
+        /**
+         * Determines whether this and the given object represent the same
+         * layering.
+         *
+         * Specifically, for two layerings to compare as equal, they must:
+         *
+         * - use the same numbered tetrahedra in the old boundary, presented
+         *   in the same order and using the same two permutations;
+         *
+         * - likewise use the same numbered tetrahedra in the new boundary,
+         *   presented in the same order and using the same two permutations;
+         *
+         * - contain the same number of layered tetrahedra, and use the
+         *   same matrix relating the old and new boundary curves.
+         *
+         * Since this test looks at tetrahedron numbers and not the specific
+         * Tetrahedron objects, it is meaningful to compare layerings
+         * within different triangulations.
+         *
+         * @param other the layering to compare with this.
+         * @return \c true if and only if this and the given object represent
+         * the same layering, as described above.
+         */
+        bool operator == (const Layering& other) const;
+
+        /**
+         * Determines whether this and the given object represent different
+         * layerings.
+         *
+         * Specifically, for two layerings to compare as equal, they must:
+         *
+         * - use the same numbered tetrahedra in the old boundary, presented
+         *   in the same order and using the same two permutations;
+         *
+         * - likewise use the same numbered tetrahedra in the new boundary,
+         *   presented in the same order and using the same two permutations;
+         *
+         * - contain the same number of layered tetrahedra, and use the
+         *   same matrix relating the old and new boundary curves.
+         *
+         * Since this test looks at tetrahedron numbers and not the specific
+         * Tetrahedron objects, it is meaningful to compare layerings
+         * within different triangulations.
+         *
+         * @param other the layering to compare with this.
+         * @return \c true if and only if this and the given object represent
+         * different layerings, as described above.
+         */
+        bool operator != (const Layering& other) const;
 
         /**
          * Creates a new copy of this layering structure.
@@ -440,7 +490,7 @@ inline Layering::Layering(const Tetrahedron<3>* bdry0, Perm<4> roles0,
         newBdryTet_ { bdry0, bdry1 },
         oldBdryRoles_ { roles0, roles1 },
         newBdryRoles_ { roles0, roles1 },
-        reln(1, 0, 0, 1) {
+        reln_(1, 0, 0, 1) {
 }
 
 inline unsigned long Layering::size() const {
@@ -464,7 +514,27 @@ inline Perm<4> Layering::newBoundaryRoles(unsigned which) const {
 }
 
 inline const Matrix2& Layering::boundaryReln() const {
-    return reln;
+    return reln_;
+}
+
+inline bool Layering::operator == (const Layering& other) const {
+    if (size_ != other.size_ || reln_ != other.reln_)
+        return false;
+    for (int i = 0; i < 2; ++i) {
+        if (oldBdryTet_[i]->index() != other.oldBdryTet_[i]->index())
+            return false;
+        if (newBdryTet_[i]->index() != other.newBdryTet_[i]->index())
+            return false;
+        if (oldBdryRoles_[i] != other.oldBdryRoles_[i])
+            return false;
+        if (newBdryRoles_[i] != other.newBdryRoles_[i])
+            return false;
+    }
+    return true;
+}
+
+inline bool Layering::operator != (const Layering& other) const {
+    return ! ((*this) == other);
 }
 
 } // namespace regina
