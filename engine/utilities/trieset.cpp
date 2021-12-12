@@ -77,6 +77,29 @@ TrieSet& TrieSet::operator = (const TrieSet& src) {
     return *this;
 }
 
+bool TrieSet::operator == (const TrieSet& other) const {
+    std::stack<std::pair<const Node*, const Node*>> toProcess;
+    toProcess.push({&root_, &other.root_});
+    while (! toProcess.empty()) {
+        auto next = toProcess.top();
+        toProcess.pop();
+
+        if (next.first->descendants_ != next.second->descendants_)
+            return false;
+        for (int i = 0; i < 2; ++i) {
+            if (! next.first->child_[i]) {
+                if (next.second->child_[i])
+                    return false;
+            } else {
+                if (! next.second->child_[i])
+                    return false;
+                toProcess.push({next.first->child_[i], next.second->child_[i]});
+            }
+        }
+    }
+    return true;
+}
+
 void TrieSet::writeTextLong(std::ostream& out) const {
     out << "Trie containing ";
     if (root_.descendants_ == 0) {

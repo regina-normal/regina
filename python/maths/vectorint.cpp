@@ -94,7 +94,7 @@ void addVectorInt(pybind11::module_& m) {
         .def_readonly_static("one", &one)
         .def_readonly_static("minusOne", &minusOne)
     ;
-    regina::python::add_output(c, true /* __repr__ */);
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(VectorInt&, VectorInt&))(regina::swap));

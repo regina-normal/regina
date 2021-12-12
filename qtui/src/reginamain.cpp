@@ -32,7 +32,7 @@
 
 #include "regina-config.h"
 #include "packet/container.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 
 #include "eventids.h"
@@ -160,11 +160,7 @@ void ReginaMain::setModified(bool modified) {
 
 void ReginaMain::packetView(regina::Packet& packet,
         bool makeVisibleInTree, bool selectInTree) {
-    PacketExternalViewer ext = PacketManager::externalViewer(packet);
-    if (ext) {
-        (*ext)(packet, this);
-    } else
-        view(new PacketPane(this, packet));
+    view(new PacketPane(this, packet));
 
     if (makeVisibleInTree || selectInTree) {
         PacketTreeItem* item = treeView->find(packet);

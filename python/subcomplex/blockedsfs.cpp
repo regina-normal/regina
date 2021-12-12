@@ -40,7 +40,8 @@
 using regina::BlockedSFS;
 
 void addBlockedSFS(pybind11::module_& m) {
-    pybind11::class_<BlockedSFS, regina::StandardTriangulation>(m, "BlockedSFS")
+    auto c = pybind11::class_<BlockedSFS, regina::StandardTriangulation>(
+            m, "BlockedSFS")
         .def(pybind11::init<const BlockedSFS&>())
         .def("swap", &BlockedSFS::swap)
         .def("region", &BlockedSFS::region,
@@ -49,6 +50,7 @@ void addBlockedSFS(pybind11::module_& m) {
         .def_static("recognise", &BlockedSFS::recognise)
         .def_static("isBlockedSFS", &BlockedSFS::recognise) // deprecated
     ;
+    regina::python::add_output(c);
 
     m.def("swap", (void(*)(BlockedSFS&, BlockedSFS&))(regina::swap));
 }

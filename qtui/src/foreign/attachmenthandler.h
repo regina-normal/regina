@@ -48,8 +48,7 @@
  * Rather than creating new objects of this class, the globally
  * available object AttachmentHandler::instance should always be used.
  */
-class AttachmentHandler : public PacketImporter, public PacketExporter {
-    using PacketExporter::exportData;
+class AttachmentHandler : public PacketImporter {
     using PacketImporter::importData;
     public:
         /**
@@ -64,24 +63,11 @@ class AttachmentHandler : public PacketImporter, public PacketExporter {
         std::shared_ptr<regina::Packet> importData(const QString& fileName,
             ReginaMain* parentWidget) const override;
 
-        /**
-         * PacketExporter overrides:
-         */
-        PacketFilter* canExport() const override;
-        bool exportData(const regina::Packet& data,
-            const QString& fileName, QWidget* parentWidget) const override;
-        QString defaultExtension(const regina::Packet& data) const override;
-
     private:
         /**
          * Don't allow people to construct their own attachment handlers.
          */
         AttachmentHandler() = default;
 };
-
-inline QString AttachmentHandler::defaultExtension(const regina::Packet& data)
-        const {
-    return static_cast<const regina::Attachment&>(data).extension().c_str();
-}
 
 #endif

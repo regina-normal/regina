@@ -32,7 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/stl.h"
-#include "triangulation/homologicaldata.h"
+#include "triangulation/dim3/homologicaldata.h"
 #include "../helpers.h"
 
 using regina::HomologicalData;
@@ -74,7 +74,7 @@ void addHomologicalData(pybind11::module_& m) {
             &HomologicalData::embeddabilityComment)
     ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::disable_eq_operators(c);
 
     m.def("swap", (void(*)(HomologicalData&, HomologicalData&))(regina::swap));
 }

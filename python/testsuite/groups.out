@@ -2,7 +2,7 @@
 New marked abelian group
 ------------------------
 
-Group: Z + Z_6
+Group: Z + Z_6 (Z^3 -> Z^5 -> Z^1)
 Free generators:
 0: ( -1 0 0 0 1 )
 Torsion generators:
@@ -12,7 +12,7 @@ Torsion generators:
 New marked abelian group
 ------------------------
 
-Group: 2 Z + 2 Z_2
+Group: 2 Z + 2 Z_2 (Z^2 -> Z^5 -> Z^1)
 Free generators:
 0: ( -1 0 0 1 0 )
 1: ( -1 0 0 0 1 )
@@ -24,7 +24,7 @@ Torsion generators:
 New homomorphism
 ----------------
 
-Hom: 2 Z + 2 Z_2 --> Z + Z_6
+Hom: 2 Z + 2 Z_2 (Z^2 -> Z^5 -> Z^1) --> Z + Z_6 (Z^3 -> Z^5 -> Z^1)
 Kernel: Z + Z_2
 Cokernel: Z_5
 Image: Z + Z_6
@@ -36,7 +36,7 @@ Reduced Matrix (torsion coordinates appear first):
 New homomorphism
 ----------------
 
-Hom: 2 Z + 2 Z_2 --> Z + Z_6
+Hom: 2 Z + 2 Z_2 (Z^2 -> Z^5 -> Z^1) --> Z + Z_6 (Z^3 -> Z^5 -> Z^1)
 Kernel: Z + Z_2
 Cokernel: Z_15
 Image: Z + Z_2
@@ -48,7 +48,7 @@ Reduced Matrix (torsion coordinates appear first):
 New homomorphism
 ----------------
 
-Hom: 2 Z + 2 Z_2 --> Z + Z_6
+Hom: 2 Z + 2 Z_2 (Z^2 -> Z^5 -> Z^1) --> Z + Z_6 (Z^3 -> Z^5 -> Z^1)
 Kernel: 2 Z + Z_2
 Cokernel: Z
 Image: Z_6

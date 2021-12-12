@@ -258,18 +258,6 @@ void ReginaMain::setupActions() {
     exportMenu->addAction(act);
 
     act = new QAction(this);
-    act->setText(tr("&C++ Source"));
-    act->setIcon(ReginaSupport::themeIcon("text-x-c++src"));
-    act->setToolTip(tr("Export a triangulation as C++ source"));
-    act->setWhatsThis(tr("Export a triangulation from this packet tree "
-        "to a C++ source file.<p>"
-        "The exported C++ code will reconstruct the original triangulation.  "
-        "See the users' handbook for further information on using Regina "
-        "in your own code."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportSource()) );
-    exportMenu->addAction(act);
-
-    act = new QAction(this);
     act->setText(tr("CS&V Surface List"));
     act->setIcon(ReginaSupport::regIcon("csvexport"));
     act->setToolTip(tr("Export a normal surface list as a "
@@ -291,15 +279,6 @@ void ReginaMain::setupActions() {
     act->setWhatsThis(tr("Export a script packet from this packet tree "
         "to a separate Python file."));
     connect(act, SIGNAL(triggered()), this, SLOT(exportPython()) );
-    exportMenu->addAction(act);
-
-    act = new QAction(this);
-    act->setText(tr("&Attachment"));
-    act->setIcon(IconCache::icon(IconCache::packet_attachment));
-    act->setToolTip(tr("Export a file attachment"));
-    act->setWhatsThis(tr("Export an attachment from this packet tree "
-        "to an external file."));
-    connect(act, SIGNAL(triggered()), this, SLOT(exportAttachment()) );
     exportMenu->addAction(act);
 
     fileMenu->addSeparator();

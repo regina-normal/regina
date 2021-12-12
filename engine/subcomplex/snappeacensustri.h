@@ -169,6 +169,17 @@ class SnapPeaCensusTri: public StandardTriangulation {
          * Determines whether this and the given structure represent
          * the same triangulation from the SnapPea census.
          *
+         * The SnapPea census manifolds \c x101 and \c x103 are homeomorphic;
+         * however, the corresponding triangulations represented by
+         * SnapPeaCensusTri will compare as different (since this class
+         * describes the specific triangulation, not the underlying manifold).
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass means they describe isomorphic structures).
+         *
          * @param compare the structure with which this will be compared.
          * @return \c true if and only if this and the given structure
          * represent the same SnapPea census triangulation.
@@ -178,6 +189,17 @@ class SnapPeaCensusTri: public StandardTriangulation {
         /**
          * Determines whether this and the given structure represent
          * different triangulations from the SnapPea census.
+         *
+         * The SnapPea census manifolds \c x101 and \c x103 are homeomorphic;
+         * however, the corresponding triangulations represented by
+         * SnapPeaCensusTri will compare as different (since this class
+         * describes the specific triangulation, not the underlying manifold).
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass means they describe isomorphic structures).
          *
          * @param compare the structure with which this will be compared.
          * @return \c true if and only if this and the given structure

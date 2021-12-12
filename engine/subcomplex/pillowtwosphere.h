@@ -186,9 +186,6 @@ inline Triangle<3>* PillowTwoSphere::triangle(int index) const {
 inline Perm<4> PillowTwoSphere::triangleMapping() const {
     return triMapping_;
 }
-inline void PillowTwoSphere::writeTextShort(std::ostream& out) const {
-    out << "Pillow 2-sphere";
-}
 
 inline std::unique_ptr<PillowTwoSphere> PillowTwoSphere::formsPillowTwoSphere(
         Triangle<3>* tri1, Triangle<3>* tri2) {

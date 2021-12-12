@@ -134,7 +134,7 @@ void addInteger(pybind11::module_& m) {
         .def_readonly_static("one", &Integer::one)
     ;
     regina::python::add_eq_operators(c);
-    regina::python::add_output_ostream(c, true /* __repr__ */);
+    regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 
     m.def("swap", (void(*)(Integer&, Integer&))(regina::swap));
     m.def("tightEncoding", (std::string(*)(Integer))(regina::tightEncoding));

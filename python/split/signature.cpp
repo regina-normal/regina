@@ -40,10 +40,13 @@ using regina::Signature;
 
 void addSignature(pybind11::module_& m) {
     auto c = pybind11::class_<Signature>(m, "Signature")
+        .def(pybind11::init<const std::string&>())
         .def(pybind11::init<const Signature&>())
         .def("swap", &Signature::swap)
         .def("order", &Signature::order)
-        .def_static("parse", &Signature::parse)
+        .def_static("parse", [](const std::string& s) { // deprecated
+            return Signature(s);
+        })
         .def("triangulate", &Signature::triangulate)
         .def("str", pybind11::overload_cast<
             const std::string&, const std::string&, const std::string&>(

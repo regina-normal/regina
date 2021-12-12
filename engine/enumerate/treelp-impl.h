@@ -61,7 +61,7 @@
 #include "angle/anglestructures.h"
 #include "enumerate/treelp.h"
 #include "maths/matrixops.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 #include "utilities/bitmask.h"
 #include <cstring>
@@ -108,14 +108,38 @@ IntType LPMatrix<IntType>::combRowAndNorm(const IntType& destCoeff,
 }
 
 template <typename IntType>
+void LPMatrix<IntType>::writeTextShort(std::ostream& out) const {
+    unsigned r, c;
+    const IntType* entry = dat_;
+    out << '[';
+    for (r = 0; r < rows_; ++r) {
+        if (r > 0)
+            out << ' ';
+        out << '[';
+        for (c = 0; c < cols_; ++c)
+            out << ' ' << *entry++;
+        out << " ]";
+    }
+    out << ']';
+}
+
+template <typename IntType>
+void LPMatrix<IntType>::writeTextLong(std::ostream& out) const {
+    unsigned r, c;
+    const IntType* entry = dat_;
+    for (r = 0; r < rows_; ++r) {
+        for (c = 0; c < cols_; ++c) {
+            if (c > 0) out << ' ';
+            out << *entry++;
+        }
+        out << '\n';
+    }
+}
+
+template <typename IntType>
 void LPMatrix<IntType>::dump(std::ostream& out) const {
     out << "---------------------------------" << std::endl;
-    unsigned r, c;
-    for (r = 0; r < rows_; ++r) {
-        for (c = 0; c < cols_; ++c)
-            out << entry(r, c) << ' ';
-        out << std::endl;
-    }
+    writeTextLong(out);
     out << "---------------------------------" << std::endl;
 }
 
@@ -445,6 +469,91 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         columnPerm_[cols_ - i - 1] = cols_ - i - 1;
 }
 #endif
+
+template <class LPConstraint>
+void LPInitialTableaux<LPConstraint>::writeTextShort(std::ostream& out) const {
+    out << "Columns:";
+    for (unsigned c = 0; c < eqns_.columns(); ++c) {
+        if (system_.angle() && c + 1 == eqns_.columns())
+            out << " {scaling " << scaling_ << '}';
+        else {
+            out << " {";
+            if (col_[c].nPlus) {
+                out << '+';
+                for (int i = 0; i < col_[c].nPlus; ++i) {
+                    if (i > 0)
+                        out << ',';
+                    out << col_[c].plus[i];
+                }
+            }
+            if (col_[c].nMinus) {
+                if (col_[c].nPlus)
+                    out << ' ';
+                out << '-';
+                for (int i = 0; i < col_[c].nMinus; ++i) {
+                    if (i > 0)
+                        out << ',';
+                    out << col_[c].minus[i];
+                }
+            }
+            out << '}';
+        }
+    }
+    if constexpr (LPConstraint::nConstraints > 0) {
+        out << ", constraints:";
+        for (int i = 0; i < LPConstraint::nConstraints; ++i) {
+            out << " [";
+            for (unsigned c = 0; c < cols_; ++c)
+                out << ' ' << col_[c].extra[i];
+            out << " ]";
+        }
+    }
+}
+
+template <class LPConstraint>
+void LPInitialTableaux<LPConstraint>::writeTextLong(std::ostream& out) const {
+    out << "System: ";
+    system_.writeTextShort(out);
+    out << "\nRank: " << rank_
+        << "\nColumn permutation:";
+    for (unsigned c = 0; c < cols_; ++c)
+        out << ' ' << columnPerm_[c];
+    out << '\n';
+    for (unsigned c = 0; c < eqns_.columns(); ++c) {
+        out << "Column " << c << ':';
+        if (system_.angle() && c + 1 == eqns_.columns())
+            out << " scaling -> " << scaling_;
+        else {
+            if (col_[c].nPlus) {
+                out << " + {";
+                for (int i = 0; i < col_[c].nPlus; ++i) {
+                    if (i > 0)
+                        out << ',';
+                    out << col_[c].plus[i];
+                }
+                out << '}';
+            }
+            if (col_[c].nMinus) {
+                out << " - {";
+                for (int i = 0; i < col_[c].nMinus; ++i) {
+                    if (i > 0)
+                        out << ',';
+                    out << col_[c].minus[i];
+                }
+                out << '}';
+            }
+        }
+        out << '\n';
+    }
+    if constexpr (LPConstraint::nConstraints > 0) {
+        for (int i = 0; i < LPConstraint::nConstraints; ++i) {
+            out << "Constraint " << i << ':';
+            for (unsigned c = 0; c < cols_; ++c)
+                out << ' ' << col_[c].extra[i];
+            out << '\n';
+        }
+    }
+}
 
 template <class LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::initStart() {
@@ -848,18 +957,52 @@ void LPData<LPConstraint, IntType>::constrainOct(
 }
 
 template <class LPConstraint, typename IntType>
-void LPData<LPConstraint, IntType>::dump(std::ostream& out) const {
-    unsigned r, c;
-    out << "========================" << std::endl;
-    for (r = 0; r < rank_; ++r)
-        out << basis_[r] << ' ';
-    out << std::endl;
-    out << "========================" << std::endl;
-    for (r = 0; r < rank_; ++r) {
-        for (c = 0; c < origTableaux_->columns(); ++c)
-            out << entry(r, c) << ' ';
-        out << std::endl;
+void LPData<LPConstraint, IntType>::writeTextShort(std::ostream& out) const {
+    if (! basis_) {
+        out << "Uninitialised";
+        return;
     }
+
+    if (feasible_)
+        out << "Feasible basis:";
+    else
+        out << "Infeasible basis:";
+    if (rank_ > 0)
+        for (unsigned r = 0; r < rank_; ++r)
+            out << ' ' << basis_[r];
+    else
+        out << " (empty)";
+}
+
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::writeTextLong(std::ostream& out) const {
+    if (! basis_) {
+        out << "Uninitialised";
+        return;
+    }
+
+    if (feasible_)
+        out << "Feasible basis:";
+    else
+        out << "Infeasible basis:";
+    if (rank_ > 0)
+        for (unsigned r = 0; r < rank_; ++r)
+            out << ' ' << basis_[r];
+    else
+        out << " (empty)";
+
+    out << "\nTableaux:\n";
+    for (unsigned r = 0; r < rank_; ++r) {
+        for (unsigned c = 0; c < origTableaux_->columns(); ++c)
+            out << entry(r, c) << ' ';
+        out << '\n';
+    }
+}
+
+template <class LPConstraint, typename IntType>
+void LPData<LPConstraint, IntType>::dump(std::ostream& out) const {
+    out << "========================" << std::endl;
+    writeTextLong(out);
     out << "========================" << std::endl;
 }
 

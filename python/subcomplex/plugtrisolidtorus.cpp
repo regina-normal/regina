@@ -39,7 +39,7 @@
 using regina::PlugTriSolidTorus;
 
 void addPlugTriSolidTorus(pybind11::module_& m) {
-    pybind11::class_<PlugTriSolidTorus, regina::StandardTriangulation>
+    auto c = pybind11::class_<PlugTriSolidTorus, regina::StandardTriangulation>
             (m, "PlugTriSolidTorus")
         .def(pybind11::init<const PlugTriSolidTorus&>())
         .def("clone", [](const PlugTriSolidTorus& s) { // deprecated
@@ -61,5 +61,7 @@ void addPlugTriSolidTorus(pybind11::module_& m) {
         .def_readonly_static("EQUATOR_MAJOR", &PlugTriSolidTorus::EQUATOR_MAJOR)
         .def_readonly_static("EQUATOR_MINOR", &PlugTriSolidTorus::EQUATOR_MINOR)
     ;
+    regina::python::add_eq_operators(c);
+    regina::python::add_output(c);
 }
 

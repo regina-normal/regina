@@ -3,7 +3,6 @@
 # Files to compile
 SET ( FILES
   algebra.cpp
-  complement.cpp
   dt.cpp
   examplelink.cpp
   flype.cpp

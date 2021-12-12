@@ -88,14 +88,11 @@ namespace {
 
 void Cusp::writeTextShort(std::ostream& out) const {
     if (complete())
-        out << "Complete cusp: ";
+        out << "Complete";
     else
-        out << "Filled cusp: ";
+        out << '(' << m_ << ',' << l_ << ")-filled";
 
-    out << "vertex " << vertex_->markedIndex();
-
-    if (! complete())
-        out << ", filling (" << m_ << ", " << l_ << ')';
+    out << " cusp at vertex " << vertex_->markedIndex();
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(
@@ -525,6 +522,21 @@ double SnapPeaTriangulation::minImaginaryShape() const {
     return ans;
 }
 
+bool SnapPeaTriangulation::operator == (const SnapPeaTriangulation& other)
+        const {
+    if (! data_)
+        return ! other.data_;
+    if (! other.data_)
+        return false;
+
+    // Neither triangulation is null.
+    if (! (Triangulation<3>::operator == (other)))
+        return false;
+
+    // This next test *should* be unnecessary.
+    return std::equal(cusp_, cusp_ + countCusps(), other.cusp_);
+}
+
 void SnapPeaTriangulation::unfill(unsigned whichCusp) {
     if (! data_)
         return;
@@ -894,8 +906,23 @@ MatrixInt SnapPeaTriangulation::slopeEquations() const {
 
 void SnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     if (data_) {
-        out << "SnapPea triangulation with " << data_->num_tetrahedra
-            << " tetrahedra";
+        Triangulation<3>::writeTextShort(out);
+        if (countBoundaryComponents() == 0)
+            out << ", no cusps";
+        else {
+            out << ", cusps: [ ";
+            bool first = true;
+            for (const auto& c : cusps()) {
+                if (first)
+                    first = false;
+                else
+                    out << ", ";
+                out << "vertex " << c.vertex_->markedIndex();
+                if (! c.complete())
+                    out << ": (" << c.m_ << ", " << c.l_ << ')';
+            }
+            out << " ]";
+        }
     } else {
         out << "Null SnapPea triangulation";
     }

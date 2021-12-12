@@ -67,15 +67,6 @@ class PacketManager {
          */
         static PacketUI* createUI(regina::Packet& packet,
             PacketPane* enclosingPane);
-
-        /**
-         * If this packet should be viewed using an external viewer
-         * (e.g., attachments), this routine returns an appropriate function.
-         * If this packet should be viewed using an internal viewer, this
-         * routine returns \c null.
-         */
-        static PacketExternalViewer externalViewer(
-            const regina::Packet& packet);
 };
 
 #endif

@@ -38,7 +38,7 @@
 #define __SURFACESCOORDINATEUI_H
 
 #include "packet/packet.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 
 #include "../packettabui.h"

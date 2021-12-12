@@ -38,12 +38,14 @@
 #include <unistd.h>
 #include <vector>
 #include <cppunit/extensions/HelperMacros.h>
+#include "angle/anglestructures.h"
 #include "link/link.h"
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "split/signature.h"
+#include "snappea/snappeatriangulation.h"
 #include "subcomplex/standardtri.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/example3.h"
@@ -100,10 +102,12 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(vertexLinksSpecific);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(eulerChar);
-    CPPUNIT_TEST(homology);
+    CPPUNIT_TEST(homology1);
+    CPPUNIT_TEST(homology2);
     CPPUNIT_TEST(homologyBdry);
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(fundGroupVsH1);
+    CPPUNIT_TEST(angleStructures);
     CPPUNIT_TEST(zeroEfficiency);
     CPPUNIT_TEST(irreducibility);
     CPPUNIT_TEST(threeSphereRecognition);
@@ -192,7 +196,9 @@ class Triangulation3Test : public TriangulationTest<3> {
         Triangulation<3> twoProjPlaneCusps;
             /**< A subdivision of invalidEdges, resulting in all edges
                  valid but two projective plane cusps.  Note that this
-                 triangulation has a 3-sphere orientable double cover. */
+                 triangulation has a 3-sphere orientable double cover.
+                 The underlying manifold is RP^2 x I (but with the
+                 boundary expressed using ideal vertices). */
         Triangulation<3> cuspedGenusTwoTorus;
             /**< A solid genus two torus with a cusped boundary. */
         Triangulation<3> pinchedSolidTorus;
@@ -252,17 +258,17 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Some of our triangulations can be generated from
             // splitting surfaces.
-            rp3rp3 = Signature::parse("aabccd.b.d").triangulate();
+            rp3rp3 = Signature("aabccd.b.d").triangulate();
 
-            q32xz3 = Signature::parse("aabcdb.cedfef").triangulate();
+            q32xz3 = Signature("aabcdb.cedfef").triangulate();
 
-            s3_large = Signature::parse("abc.abd.cef.de.fg.g").triangulate();
+            s3_large = Signature("abc.abd.cef.de.fg.g").triangulate();
 
-            lens8_3_large = Signature::parse("aabcb.cd.d").triangulate();
+            lens8_3_large = Signature("aabcb.cd.d").triangulate();
 
-            rp3_large = Signature::parse("aabcdedcfb.fg.e.g").triangulate();
+            rp3_large = Signature("aabcdedcfb.fg.e.g").triangulate();
 
-            q20_large = Signature::parse("abcdeabcdef.fg.g").triangulate();
+            q20_large = Signature("abcdeabcdef.fg.g").triangulate();
 
             // Some are hard-coded in the calculation engine as sample
             // triangulations.
@@ -1929,7 +1935,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        void homology() {
+        void homology1() {
             verifyGroup(empty.homology(),
                 "H1(empty triangulation)", 0);
             verifyGroup(ball.homology(),
@@ -1998,6 +2004,87 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "H1(pinched solid torus)", 1);
             verifyGroup(pinchedSolidKB.homology(),
                 "H1(pinched solid Klein bottle)", 1);
+            verifyGroup(singleTet_bary.homology(),
+                "H1(Subdivided tetrahedron", 0);
+            verifyGroup(fig8_bary.homology(),
+                "H1(Subdivided figure eight", 1);
+            verifyGroup(disjoint2.homology(),
+                "H1(Gieseking U (cusped genus 2 torus)", 3);
+            verifyGroup(disjoint3.homology(),
+                "H1((S^2 x S^1) U (B^3) U (Figure eight knot complement))", 2);
+        }
+
+        void homology2() {
+            verifyGroup(empty.homology<2>(),
+                "H2(empty triangulation)", 0);
+            verifyGroup(ball.homology<2>(),
+                "H2(single tetrahedron)", 0);
+            verifyGroup(s3.homology<2>(),
+                "H2(S^3)", 0);
+            verifyGroup(sphere.homology<2>(),
+                "H2(Generic S^3)", 0);
+            verifyGroup(simplicialSphere.homology<2>(),
+                "H2(Simplicial S^3)", 0);
+            verifyGroup(sphereBundle.homology<2>(),
+                "H2(S^2 x S^1)", 1);
+            verifyGroup(twistedSphereBundle.homology<2>(),
+                "H2(S^2 x~ S^1)", 0, 2);
+            verifyGroup(rp3_1.homology<2>(),
+                "H2(RP^3, 1 vtx)", 0);
+            verifyGroup(rp3_2.homology<2>(),
+                "H2(RP^3, 2 vtx)", 0);
+            verifyGroup(lens3_1.homology<2>(),
+                "H2(L(3,1))", 0);
+            verifyGroup(lens7_1_loop.homology<2>(),
+                "H2(Loop L(7,1))", 0);
+            verifyGroup(lens8_3.homology<2>(),
+                "H2(L(8,3))", 0);
+            verifyGroup(lens8_3_large.homology<2>(),
+                "H2(Large L(8,3))", 0);
+            verifyGroup(rp3rp3.homology<2>(),
+                "H2(RP^3 # RP^3)", 0);
+            verifyGroup(q28.homology<2>(),
+                "H2(S^3 / Q_28)", 0);
+            verifyGroup(weberSeifert.homology<2>(),
+                "H2(SeifertWeber)", 0);
+            verifyGroup(q32xz3.homology<2>(),
+                "H2(S^3 / Q_32 x Z_3)", 0);
+            verifyGroup(lens100_1.homology<2>(),
+                "H2(L(100,1))", 0);
+            verifyGroup(ball_large.homology<2>(),
+                "H2(4-tetrahedron ball)", 0);
+            verifyGroup(ball_large_pillows.homology<2>(),
+                "H2(4-tetrahedron pillow ball)", 0);
+            verifyGroup(ball_large_snapped.homology<2>(),
+                "H2(3-tetrahedron snapped ball)", 0);
+            verifyGroup(lst3_4_7.homology<2>(),
+                "H2(LST(3,4,7))", 0);
+            verifyGroup(figure8.homology<2>(),
+                "H2(figure eight)", 0);
+            verifyGroup(trefoil.homology<2>(),
+                "H2(trefoil)", 0);
+            verifyGroup(knot18.homology<2>(),
+                "H2(18-crossing knot)", 0);
+            verifyGroup(rp2xs1.homology<2>(),
+                "H2(RP^2 x S^1)", 0, 2);
+            verifyGroup(ballBundle.homology<2>(),
+                "H2(solid torus)", 0);
+            verifyGroup(twistedBallBundle.homology<2>(),
+                "H2(solid Klein bottle)", 0);
+            verifyGroup(gieseking.homology<2>(),
+                "H2(Gieseking)", 0);
+            verifyGroup(twoProjPlaneCusps.homology<2>(),
+                "H2(tri with projective plane cusps)", 0);
+            verifyGroup(cuspedGenusTwoTorus.homology<2>(),
+                "H2(cusped solid genus two torus)", 0);
+            verifyGroup(singleTet_bary.homology<2>(),
+                "H2(Subdivided tetrahedron", 0);
+            verifyGroup(fig8_bary.homology<2>(),
+                "H2(Subdivided figure eight", 0);
+            verifyGroup(disjoint2.homology<2>(),
+                "H2(Gieseking U (cusped genus 2 torus)", 0);
+            verifyGroup(disjoint3.homology<2>(),
+                "H2((S^2 x S^1) U (B^3) U (Figure eight knot complement))", 1);
         }
 
         void homologyBdry() {
@@ -2082,9 +2169,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     m.entry(i, t.generator) += t.exponent;
             }
 
-            AbelianGroup abelian;
-            abelian.addGroup(m);
-
+            AbelianGroup abelian(std::move(m));
             if (abelian.detail() != tri.homology().detail()) {
                 std::ostringstream msg;
                 msg << "Abelianised fundamental group does not match H1 "
@@ -2157,11 +2242,11 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "3-tetrahedron snapped ball");
             verifyFundGroup(lst3_4_7, "Z", "LST(3,4,7)");
             verifyFundGroup(figure8,
-                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2",
+                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b^2 a^-1 b",
                 "Figure eight");
                 // Note: \u21A6 is the unicode mapsto symbol.
             verifyFundGroup(trefoil,
-                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1",
+                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 a^-1 b",
                 "Trefoil");
                 // Note: \u21A6 is the unicode mapsto symbol.
             verifyFundGroup(rp2xs1, "Z + Z_2", "RP^2 x S^1");
@@ -2175,6 +2260,253 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Cusped solid genus 2 torus");
             verifyFundGroup(pinchedSolidTorus, "Z", "Pinched solid torus");
             verifyFundGroup(pinchedSolidKB, "Z", "Pinched solid Klein bottle");
+        }
+
+        static void verifyAngleStructures(const Triangulation<3>& tri,
+                bool general, bool strict, const char* name) {
+            regina::MatrixInt m = regina::makeAngleEquations(tri);
+
+            // Ensure the strict vs general computations are completely
+            // independent.
+            Triangulation<3> testGeneral = tri;
+            Triangulation<3> testStrict = tri;
+
+            if (strict || general) {
+                if (! testGeneral.hasGeneralAngleStructure()) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " is reported has having no generalised "
+                        "angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                try {
+                    const auto& a = testGeneral.generalAngleStructure();
+                    auto v = a.vector();
+                    if (v.size() != m.columns()) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a generalised angle structure "
+                            "of the wrong size.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (! (m * v).isZero()) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a generalised angle structure "
+                            "that does not satisfy the angle equations.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (v[v.size() - 1] <= 0) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a generalised angle structure "
+                            "with non-positive scaling coordinate.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } catch (const regina::NoSolution&) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " threw an exception when finding a generalised "
+                        "angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                if (testGeneral.hasGeneralAngleStructure()) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " is reported has having a generalised "
+                        "angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                try {
+                    const auto& a = testGeneral.generalAngleStructure();
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " did not throw an exception when finding a "
+                        "generalised angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                } catch (const regina::NoSolution&) {
+                }
+            }
+
+            if (strict) {
+                if (! testStrict.hasStrictAngleStructure()) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " is reported has having no strict "
+                        "angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                try {
+                    const auto& a = testStrict.strictAngleStructure();
+                    if (! a.isStrict()) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a strict angle structure "
+                            "that is not actually strict.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    auto v = a.vector();
+                    if (v.size() != m.columns()) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a strict angle structure "
+                            "of the wrong size.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (! (m * v).isZero()) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a strict angle structure "
+                            "that does not satisfy the angle equations.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (v[v.size() - 1] <= 0) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " returns a strict angle structure "
+                            "with non-positive scaling coordinate.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } catch (const regina::NoSolution&) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " threw an exception when finding a strict "
+                        "angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                if (testStrict.hasStrictAngleStructure()) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " is reported has having a strict "
+                        "angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                try {
+                    const auto& a = testStrict.strictAngleStructure();
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name
+                        << " did not throw an exception when finding a "
+                        "strict angle structure.";
+                    CPPUNIT_FAIL(msg.str());
+                } catch (const regina::NoSolution&) {
+                }
+            }
+        }
+
+        static void testAngleStructures(const Triangulation<3>& t,
+                const char* name) {
+            // Should there be a generalised angle structure?
+            bool general = true;
+            for (auto v : t.vertices())
+                if (v->linkEulerChar() != 0) {
+                    general = false;
+                    break;
+                }
+
+            // Should there be a strict angle structure?
+            bool strict = false;
+            if (general) {
+                // Since we are only using this with a small census,
+                // we will optimistically assume that there is a strict
+                // angle structure iff SnapPea is able to find a
+                // geometric structure on the triangulation.
+                //
+                // While this is not a guaranteed theorem (*), it works very
+                // well in practice, and importantly it gives us a way to
+                // independently verify Regina's strict angle structure test.
+                //
+                // (*) The caveats: SnapPea could get things wrong due to
+                // round-off error, and also it is possible to have a
+                // strict angle structure without fully satisfying
+                // Thurston's gluing equations.  But again, neither of these
+                // discrepancies are actually observed in very small
+                // cases such as these, so we will happily assume that
+                // neither happens for the purpose of this test suite.
+                regina::SnapPeaTriangulation s(t);
+                if (s.solutionType() ==
+                        regina::SnapPeaTriangulation::geometric_solution)
+                    strict = true;
+            }
+
+            verifyAngleStructures(t, general, strict, name);
+        }
+
+        void angleStructures() {
+            verifyAngleStructures(empty, false, false, "Empty triangulation");
+
+            // Closed manifolds:
+            verifyAngleStructures(sphere, false, false, "Generic S^3");
+            verifyAngleStructures(simplicialSphere, false, false,
+                "Simplicial S^3");
+            verifyAngleStructures(sphereBundle, false, false, "S^2 x S^1");
+            verifyAngleStructures(twistedSphereBundle, false, false,
+                "S^2 x~ S^1");
+            verifyAngleStructures(s3, false, false, "S^3");
+            verifyAngleStructures(rp3_1, false, false, "RP^3 (1 vtx)");
+            verifyAngleStructures(rp3_2, false, false, "RP^3 (2 vtx)");
+            verifyAngleStructures(lens3_1, false, false, "L(3,1)");
+            verifyAngleStructures(lens7_1_loop, false, false,
+                "Layered loop L(7,1)");
+            verifyAngleStructures(lens8_3, false, false, "L(8,3)");
+            verifyAngleStructures(lens8_3_large, false, false, "Large L(8,3)");
+            verifyAngleStructures(rp3rp3, false, false, "RP^3 # RP^3");
+            verifyAngleStructures(q28, false, false, "S^3 / Q_28");
+            verifyAngleStructures(weberSeifert, false, false, "Weber-Seifert");
+            verifyAngleStructures(q32xz3, false, false, "S^3 / Q_32 x Z_3");
+            verifyAngleStructures(lens100_1, false, false, "L(100,1)");
+            verifyAngleStructures(rp2xs1, false, false, "RP^2 x S^1");
+
+            // Ideal triangulations:
+            verifyAngleStructures(figure8, true, true, "Figure eight");
+            verifyAngleStructures(trefoil, true, false, "Trefoil");
+            verifyAngleStructures(knot18, true, true, "18-crossing knot");
+            verifyAngleStructures(gieseking, true, true, "Gieseking");
+            verifyAngleStructures(twoProjPlaneCusps, false, false,
+                "Triangulation with RP^2 cusps");
+            verifyAngleStructures(cuspedGenusTwoTorus, false, false,
+                "Cusped solid genus 2 torus");
+            {
+                Triangulation<3> t = figure8;
+                t.insertTriangulation(gieseking);
+                verifyAngleStructures(t, true, true,
+                    "Figure eight U Gieseking");
+            }
+
+            // Mixed ideal/real triangulations:
+            verifyAngleStructures(fig8_bary, false, false,
+                "Subdivided figure eight");
+            verifyAngleStructures(disjoint2, false, false,
+                "Gieseking U (cusped genus 2 torus)");
+            verifyAngleStructures(disjoint3, false, false,
+                "(S^2 x S^1) U (B^3) U (Figure eight knot complement)");
+
+            // Triangulations with real boundary are not really important
+            // here, but throw in a couple of cases to make sure they
+            // behave as documented.
+            verifyAngleStructures(ball, true, true, "Single tetrahedron");
+            verifyAngleStructures(ball_large, false, false,
+                "4-tetrahedron ball");
+            verifyAngleStructures(ballBundle, true, true, "Solid torus");
+            verifyAngleStructures(twistedBallBundle, true, true,
+                "Solid Klein bottle");
+            verifyAngleStructures(lst3_4_7, true, true, "LST(3,4,7)");
+            verifyAngleStructures(ball_large_pillows, false, false,
+                "4-tetrahedron pillow ball");
+            verifyAngleStructures(ball_large_snapped, false, false,
+                "3-tetrahedron snapped ball");
+
+            // Likewise, invalid triangulations are not important, but
+            // ensure they behave as documented.
+            verifyAngleStructures(invalidEdges, false, false,
+                "Triangulation with invalid edges");
+            verifyAngleStructures(pinchedSolidTorus, true, true,
+                "Pinched solid torus");
+            verifyAngleStructures(pinchedSolidKB, true, true,
+                "Pinched solid Klein bottle");
+
+            runCensusAllIdeal(testAngleStructures);
         }
 
         static void testZeroEfficiency(const Triangulation<3>& tri,
@@ -2419,12 +2751,11 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifySigThreeSphere(const std::string& sigStr) {
-            verifyThreeSphere(Signature::parse(sigStr).triangulate(),
-                sigStr.c_str());
+            verifyThreeSphere(Signature(sigStr).triangulate(), sigStr.c_str());
         }
 
         void verifySigNotThreeSphere(const std::string& sigStr) {
-            verifyNotThreeSphere(Signature::parse(sigStr).triangulate(),
+            verifyNotThreeSphere(Signature(sigStr).triangulate(),
                 sigStr.c_str());
         }
 
@@ -3468,13 +3799,13 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri.homology() == b.homology())) {
+            if (! (tri.homology<1>() == b.homology<1>())) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri.homologyH2() == b.homologyH2())) {
+            if (! (tri.homology<2>() == b.homology<2>())) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks H2.";
                 CPPUNIT_FAIL(msg.str());
@@ -3837,8 +4168,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    AbelianGroup expectH2(tri.homologyH2());
-                    AbelianGroup foundH2(punc.homologyH2());
+                    AbelianGroup expectH2 = tri.homology<2>();
+                    AbelianGroup foundH2 = punc.homology<2>();
                     Component<3>* c = origTet->component();
                     if (! c->isClosed()) {
                         // X -> X + Z
@@ -3874,7 +4205,15 @@ class Triangulation3Test : public TriangulationTest<3> {
             Triangulation<3> t(tri);
             t.connectedSumWith(t);
 
-            // TODO: Check that homology doubles.
+            {
+                AbelianGroup g = tri.homology();
+                g.addGroup(g);
+                if (! (t.homology() == g)) {
+                    std::ostringstream msg;
+                    msg << name << ": tri # tri does not double the homology.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
 
             // All of our remaining tests are for closed manifolds.
             if (! tri.isClosed())
@@ -4572,7 +4911,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! copy.isIdenticalTo(tri)) {
+            if (copy != tri) {
                 std::ostringstream msg;
                 msg << name << ": minimiseBoundary() "
                     "made changes when it should not.";
@@ -4756,8 +5095,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                             "triangulation.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                    const AbelianGroup& h1 = t.homology();
-                    if (! h1.isZn(lensP)) {
+                    if (! t.homology().isZn(lensP)) {
                         std::ostringstream msg;
                         msg << "Filling (" << p1 << "," << q1 << "," << r1
                             << ") <-> (" << p2 << "," << q2 << "," << r2

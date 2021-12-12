@@ -37,7 +37,6 @@ void addBlockedSFS(pybind11::module_& m);
 void addBlockedSFSLoop(pybind11::module_& m);
 void addBlockedSFSPair(pybind11::module_& m);
 void addBlockedSFSTriple(pybind11::module_& m);
-void addL31Pillow(pybind11::module_& m);
 void addLayeredChain(pybind11::module_& m);
 void addLayeredChainPair(pybind11::module_& m);
 void addLayeredLensSpace(pybind11::module_& m);
@@ -64,7 +63,6 @@ void addTxICore(pybind11::module_& m);
 void addSubcomplexClasses(pybind11::module_& m) {
     addStandardTriangulation(m);
     addAugTriSolidTorus(m);
-    addL31Pillow(m);
     addLayeredChain(m);
     addLayeredChainPair(m);
     addLayeredLensSpace(m);

@@ -34,65 +34,265 @@
 from __future__ import print_function
 
 print(AbelianGroup.equalityType)
+print(GluingPermSearcher2.equalityType)
 print(Integer.equalityType)
-print(Triangulation3.equalityType)
+print(SigCensus.equalityType)
+print(HomologicalData.equalityType)
+print(Container.equalityType)
 
-# Test == and != for objects that are equal by value but have different
-# underlying C++ pointers.
-# The behaviour should be different for different classes.
+print()
 
-# Cases that should be reported as equal (by value):
+def cmp(name, a, b, packet = False):
+	ans = ''
+	try:
+		if a == b:
+			ans += '=='
+		else:
+			ans += 'not =='
+	except:
+		ans += 'throws on =='
+	ans += ', '
+	try:
+		if a != b:
+			ans += '!='
+		else:
+			ans += 'not !='
+	except:
+		ans += 'throws on !='
+	if packet:
+		ans += ', '
+		try:
+			if a.samePacket(b):
+				ans += 'same packet'
+			else:
+				ans += 'different packets'
+		except:
+			ans += 'throws on samePacket()'
+	print(name, ':', ans)
 
-print('Integer:')
-a = Integer(3)
-b = Integer(3)
-print(a == b, a != b)
+# ----------------------------------------------------------------------
+# Classes that compare by value:
+# ----------------------------------------------------------------------
 
-print('AbelianGroup:')
-a = AbelianGroup()
-b = AbelianGroup()
-print(a == b, a != b)
+cmp('Integer', Integer(3), Integer(3))
+cmp('Integer', Integer(3), Integer(4))
 
-# Cases that should be reported as different (by C++ reference):
+cmp('AbelianGroup', AbelianGroup(), AbelianGroup())
+cmp('AbelianGroup', AbelianGroup(), AbelianGroup(1))
 
-print('Triangulation3:')
-a = Triangulation3()
-b = Triangulation3()
-print(a == b, a != b)
+cmp('GroupPresentation', GroupPresentation(), GroupPresentation())
+cmp('GroupPresentation', GroupPresentation(), GroupPresentation(1))
 
-print('GroupPresentation:')
-a = GroupPresentation()
-b = GroupPresentation()
-print(a == b, a != b)
+cmp('Link', ExampleLink.trefoil(), ExampleLink.trefoilRight())
+cmp('Link', ExampleLink.trefoilLeft(), ExampleLink.trefoilRight())
+cmp('Link', Link(3), Link(3))
+cmp('Link', Link(3), Link(2))
+cmp('Link + Packet', Link(2), PacketOfLink(2), True)
+cmp('Link + Packet', PacketOfLink(2), Link(2), True)
+cmp('PacketOfLink', PacketOfLink(2), PacketOfLink(2), True)
+p = PacketOfLink(3)
+cmp('PacketOfLink', p, p.root(), True)
 
-# Test == and != for objects that have the same underlying C++ pointers,
-# but different python wrappers.
-# In all cases these objects should be reported as equal.
+cmp('Tangle', Tangle(3,2), Tangle(3,2))
+cmp('Tangle', Tangle(3,2), Tangle(3,-2))
+cmp('Tangle', Tangle(1,0), Tangle(0,1))
 
-print('Packet:')
-a = Container()
-b = a.root()
-print(a == b, a != b)
+g1 = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,ceed')
+g2 = ModelLinkGraph.fromPlantri('bcdd,aeec,abfd,acfa,bffb,eedc')
+cmp('ModelLinkGraph', g1, ModelLinkGraph(g1))
+cmp('ModelLinkGraph', g1, g2)
+cmp('ModelLinkGraphCells', g1.cells(), ModelLinkGraph(g1).cells())
+cmp('ModelLinkGraphCells', g1.cells(), g2.cells())
 
-print('Triangulation3:')
-a = Triangulation3()
-b = a.newSimplex().triangulation()
-print(a == b, a != b)
+cmp('Triangulation3', Triangulation3(), Triangulation3())
+cmp('Triangulation3', Example3.figureEight(), Example3.whiteheadLink())
+cmp('Triangulation3 + Packet', Triangulation3(), PacketOfTriangulation3(), True)
+cmp('Triangulation3 + Packet', PacketOfTriangulation3(), Triangulation3(), True)
+cmp('PacketOfTriangulation3', PacketOfTriangulation3(), PacketOfTriangulation3(), True)
+p = PacketOfTriangulation3()
+cmp('PacketOfTriangulation3', p, p.root(), True)
 
-print('Tetrahedron3:')
+w = ExampleSnapPea.whiteheadLink()
+cmp('SnapPeaTriangulation', w, ExampleSnapPea.whiteheadLink())
+w.fill(3,4,0)
+cmp('SnapPeaTriangulation', w, ExampleSnapPea.whiteheadLink())
+cmp('SnapPeaTriangulation', ExampleSnapPea.whiteheadLink(), w)
+cmp('SnapPeaTriangulation', ExampleSnapPea.figureEight(), w)
+
+cmp('FacetPairing2', FacetPairing2(Example2.kb()), FacetPairing2(Example2.kb()))
+cmp('FacetPairing2', FacetPairing2(Example2.mobius()), FacetPairing2(Example2.annulus()))
+
+cmp('Attachment', Attachment(b'foo', 'x'), Attachment(b'foo', 'y'), True)
+cmp('Attachment', Attachment(b'foo', 'x'), Attachment(), True)
+cmp('Attachment', Attachment(), Attachment(b'foo', 'x'), True)
+cmp('Attachment', Attachment(b'foof', 'x'), Attachment(b'foo', 'x'), True)
+cmp('Text', Text('foo'), Text('foo'), True)
+cmp('Text', Text('foo'), Text('foof'), True)
+
+s = Script()
+s.setText('print("Hello world!")')
+s.addVariable('foo', None)
+s.addVariable('bar', s)
+t = Script()
+t.setText('print("Hello world!")')
+t.addVariable('foo', None)
+t.addVariable('bar', t)
+cmp('Script', s, t)
+t.removeVariable('bar')
+t.addVariable('bar', s)
+cmp('Script', s, t)
+cmp('Script', s, Script(s))
+
+x = None
+
+def foundGluings2(g):
+	global x
+	if not x:
+		x = GluingPerms2(g)
+	cmp('GluingPerms2', x, g)
+
+def foundPairing2(p, isos):
+	GluingPermSearcher2.findAllPerms(p, isos, True, foundGluings2)
+
+FacetPairing2.findAllPairings(2, False, 0, foundPairing2)
+
+a = NormalSurfaces(Example3.poincare(), NS_STANDARD)
+b = NormalSurfaces(Example3.poincare(), NS_QUAD)
+c = NormalSurfaces(Example3.poincare(), NS_STANDARD)
+cmp('NormalSurfaces', a, b)
+cmp('NormalSurfaces', a, c)
+a.sort(lambda x,y: x.eulerChar() > y.eulerChar())
+c.sort(lambda x,y: x.eulerChar() < y.eulerChar())
+cmp('NormalSurfaces', a, c)
+
+a = NormalHypersurfaces(Example4.s3xs1(), HS_STANDARD)
+b = NormalHypersurfaces(Example4.s3xs1(), HS_PRISM)
+c = NormalHypersurfaces(Example4.s3xs1(), HS_STANDARD)
+cmp('NormalHypersurfaces', a, b)
+cmp('NormalHypersurfaces', a, c)
+a.sort(lambda x,y: x.homology().str() > y.homology().str())
+c.sort(lambda x,y: x.homology().str() < y.homology().str())
+cmp('NormalHypersurfaces', a, c)
+
+a = AngleStructures(Example3.figureEight())
+b = AngleStructures(Example3.figureEight(), True)
+c = AngleStructures(Example3.figureEight())
+cmp('AngleStructures', a, b)
+cmp('AngleStructures', a, c)
+
+t = TypeTrie4()
+t.insert([1,0,3])
+t.insert([0,0,2])
+u = TypeTrie4(t)
+cmp('TypeTrie', t, u)
+u.insert([0,1,1])
+cmp('TypeTrie', t, u)
+cmp('TypeTrie', u, t)
+
+t = TrieSet()
+b = Bitmask8(); b.set([1,2,4], True); t.insert(b)
+b = Bitmask8(); b.set([1,4,5], True); t.insert(b)
+u = TrieSet(t)
+cmp('TrieSet', t, u)
+b = Bitmask8(); b.set([0,4], True); t.insert(b)
+cmp('TrieSet', t, u)
+cmp('TrieSet', u, t)
+
+t = Example3.figureEight()
+tab = LPInitialTableaux(t, NS_QUAD)
+m1 = LPMatrix(tab.rank(), tab.columns()); tab.fillInitialTableaux(m1)
+m2 = LPMatrix(tab.rank(), tab.columns()); tab.fillInitialTableaux(m2)
+cmp('LPMatrix', LPMatrix(), LPMatrix())
+cmp('LPMatrix', m1, m2)
+t = Example3.s2xs1()
+tab = LPInitialTableaux(t, NS_QUAD)
+m3 = LPMatrix(tab.rank(), tab.columns()); tab.fillInitialTableaux(m3)
+cmp('LPMatrix', m1, m3)
+
+v1 = ValidityConstraints(10, 4)
+v1.addLocal([4,5,6]); v1.addLocal([7,8,9]); v1.addGlobal([0])
+v2 = ValidityConstraints(10, 4)
+v2.addLocal([9,8,7]); v2.addLocal([6,5,4]); v2.addGlobal([0])
+v3 = ValidityConstraints(10, 4)
+v3.addLocal([9,8,7]); v3.addLocal([6,5,4]); v3.addGlobal([1])
+cmp('ValidityConstraints', v1, v2)
+cmp('ValidityConstraints', v1, v3)
+
+cmp('Signature', Signature('(aba)(b)'), Signature('aba.b'))
+cmp('Signature', Signature('(aba)(b)'), Signature('(ab)(a)(b)'))
+
+sfsDisc = SFSpace(SFSpace.o2, 0, 1)
+s1 = SFSAlt.altSet(sfsDisc)
+s2 = SFSAlt.altSet(sfsDisc)
+cmp('SFSAlt', s1[0], s2[0])
+cmp('SFSAlt', s1[0], s1[1])
+
+t = Example3.poincare()
+st = NormalSurfaces.enumerate(t, NS_QUAD)
+dt = DiscSetSurface(st.surface(0))
+u = Example3.s2xs1()
+su = NormalSurfaces.enumerate(u, NS_QUAD)
+du = DiscSetSurface(su.surface(0))
+cmp('DiscSetTet', du.tetDiscs(0), du.tetDiscs(1)) # should be equal
+cmp('DiscSetTet', dt.tetDiscs(0), dt.tetDiscs(1)) # should be different
+cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(0)))
+cmp('DiscSetSurface', dt, DiscSetSurface(st.surface(1)))
+cmp('DiscSetSurface', dt, du)
+
+t1 = TreeDecomposition(ExampleLink.conway())
+t2 = TreeDecomposition(ExampleLink.conway())
+cmp('TreeDecomposition', t1, t2)
+t2.reroot(t2.bag(3))
+cmp('TreeDecomposition', t1, t2)
+
+t = Triangulation3('kLALALMkbccfefihijjlpkusuueotr')
+b = BlockedSFSTriple.recognise(t)
+# [ Tri, Mob(v), LST(1,2,3) | Tri, Mob(v) | Tri, Mob(v), Mob(v) ]
+cmp('SatBlockSpec', b.end(0).block(0), b.centre().block(0))
+cmp('SatBlockSpec', b.end(0).block(0), b.centre().block(1))
+cmp('SatBlockSpec', b.end(0).block(1), b.centre().block(1))
+cmp('SatBlockSpec', b.end(0).block(1), b.centre().block(0))
+cmp('SatBlockSpec', b.end(0).block(2), b.end(0).block(2))
+cmp('SatBlockSpec', b.end(0).block(2), b.end(1).block(2))
+cmp('SatBlock', b.end(0).block(0).block(), b.centre().block(0).block())
+cmp('SatBlock', b.end(0).block(0).block(), b.centre().block(1).block())
+cmp('SatBlock', b.end(0).block(1).block(), b.centre().block(1).block())
+cmp('SatBlock', b.end(0).block(1).block(), b.centre().block(0).block())
+cmp('SatBlock', b.end(0).block(2).block(), b.end(0).block(2).block())
+cmp('SatBlock', b.end(0).block(2).block(), b.end(1).block(2).block())
+
+cmp('TxICore', TxIDiagonalCore(6, 1), TxIDiagonalCore(6, 1))
+cmp('TxICore', TxIDiagonalCore(7, 1), TxIDiagonalCore(7, 2))
+cmp('TxICore', TxIDiagonalCore(6, 1), TxIParallelCore())
+cmp('TxICore', TxIParallelCore(), TxIParallelCore())
+
+# ----------------------------------------------------------------------
+# Classes that compare by reference:
+# ----------------------------------------------------------------------
+
 t = Triangulation3()
-a = t.newTetrahedron()
-b = t.tetrahedron(0)
-print(a == b, a != b)
+(a,b) = t.newTetrahedra(2)
+cmp('Tetrahedron3', a, t.tetrahedron(0))
+cmp('Tetrahedron3', a, t.tetrahedron(1))
 
-print('AbelianGroup:')
-t = Example3.lens(8,3)
-a = t.homology()
-b = t.homology()
-print(a == b, a != b)
+# ----------------------------------------------------------------------
+# More tests with packets:
+# ----------------------------------------------------------------------
 
-print('GroupPresentation:')
-t = Example3.lens(8,3)
-a = t.fundamentalGroup()
-b = t.fundamentalGroup()
-print(a == b, a != b)
+a = Container()
+cmp('Container', a, a.root(), True)
+t = Text()
+cmp('Text', t, t.root(), True)
+cmp('Different Packets', Container(), Text(), True)
+cmp('Different Packets', Text(), Container(), True)
+cmp('Different Packets', PacketOfLink(), Text(), True)
+cmp('Different Packets', Text(), PacketOfLink(), True)
+cmp('Different Packets', Text(), Link(), True)
+cmp('Different Packets', Link(), Text(), True)
+
+# ----------------------------------------------------------------------
+# Classes that cannot be compared:
+# ----------------------------------------------------------------------
+
+t = Example3.poincare()
+cmp('HomologicalData', HomologicalData(t), HomologicalData(t))

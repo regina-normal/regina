@@ -833,7 +833,7 @@ Result = False
 Checksum = b8f13c90570ff1c969319ed7c6de977f
 Finite to ideal:
 Result = True
-Checksum = 662b84caee7f99a6cd6d1d961b94276a
+Checksum = 9d617eaa786a0791a2e8a1bae50ef73f
 Barycentric subdivision:
 Checksum = f8914f8f88fb2d7d38e15dfa67946104
 Dehydration: (none)
@@ -908,7 +908,7 @@ Result = False
 Checksum = 2aac2215d88c258693a5cfce6a769b18
 Finite to ideal:
 Result = True
-Checksum = ab2ae3ce95e1091a6c8dae6ad7b2370b
+Checksum = 5b6b154365637b5944477bbfc5a711c0
 Barycentric subdivision:
 Checksum = 6a2ca7b0e923ec1f28604165c925160d
 Dehydration: (none)
@@ -967,7 +967,7 @@ Closed: False
 Orientable: True
 Connected: True
 
-Fundamental group: Z~Free(2) w/monodromy a ↦ b, b ↦ b a^-1 b^2
+Fundamental group: Z~Free(2) w/monodromy a ↦ b, b ↦ b^2 a^-1 b
 H1: Z
 H1Bdry: 2 Z
 H1Rel: 0
@@ -1158,15 +1158,15 @@ Tetrahedron gluing:
   Tet  |  glued to:      (012)      (013)      (023)      (123)
   -----+-------------------------------------------------------
     0  |               4 (012)    3 (102)    2 (130)    1 (123)
-    1  |               2 (012)    5 (012)    6 (012)    0 (123)
-    2  |               1 (012)    0 (302)    3 (023)    7 (012)
+    1  |               2 (012)    5 (012)    6 (021)    0 (123)
+    2  |               1 (012)    0 (302)    3 (023)    7 (021)
     3  |               0 (103)    8 (012)    2 (023)    9 (012)
-    4  |               0 (012)    8 (103)    7 (023)    7 (013)
-    5  |               1 (013)    9 (103)    6 (023)    6 (013)
-    6  |               1 (023)    5 (123)    5 (023)    8 (203)
-    7  |               2 (123)    4 (123)    4 (023)    9 (123)
-    8  |               3 (013)    4 (103)    6 (213)    9 (023)
-    9  |               3 (123)    5 (103)    8 (123)    7 (123)
+    4  |               0 (012)    8 (103)    7 (013)    7 (023)
+    5  |               1 (013)    9 (103)    6 (013)    6 (023)
+    6  |               1 (032)    5 (023)    5 (123)    8 (023)
+    7  |               2 (132)    4 (023)    4 (123)    9 (213)
+    8  |               3 (013)    4 (103)    6 (123)    9 (023)
+    9  |               3 (123)    5 (103)    8 (123)    7 (213)
 
 Vertices:
   Tet  |  vertex:    0   1   2   3
@@ -1191,8 +1191,8 @@ Edges:
     3  |           0   4   5   2   8   7
     4  |           0   1   9   3   9   9
     5  |           2   6   9   4   9   9
-    6  |           4   6   9   5   9   9
-    7  |           3   1   9   7   9   9
+    6  |           6   4   9   5   9   9
+    7  |           1   3   9   7   9   9
     8  |           0   5   9   8   9   9
     9  |           2   8   9   7   9   9
 
@@ -1205,8 +1205,8 @@ Triangles:
     3  |           1   9   7  10
     4  |           0  11  12  13
     5  |           5  14  15  16
-    6  |           6  16  15  17
-    7  |           8  13  12  18
+    6  |           6  15  16  17
+    7  |           8  12  13  18
     8  |           9  11  17  19
     9  |          10  14  19  18
 
@@ -1236,15 +1236,15 @@ H2: 0
 H2Z2: 0 Z_2
 3-sphere: False
 Double cover:
-Checksum = b4496b146777140b4ea32aa5d314da77
+Checksum = a22f5942c84aefd5a42fd6b034d8a554
 Ideal to finite:
 Result = True
-Checksum = 3fb87a8e4ddb729d0217cd63873a06d9
+Checksum = 7a0f1df929c8391667ef9eec17deda95
 Finite to ideal:
 Result = False
-Checksum = 80d47498461e07605d11725c124832ef
+Checksum = 56db6b9872b2bf746f21ce4df12cd13c
 Barycentric subdivision:
-Checksum = 6e9c3495eb7a1a8b5b3adb8070bb6003
+Checksum = 9a275e9977a8e643f0a7b2a6e3391c11
 Dehydration: kdpahaacdhhjjggiijojuxxjvfojj
 Isomorphism signature: kLLvMMQkccghfihhjjjdwawwgggxxt
 Result of splitIntoComponents: 1

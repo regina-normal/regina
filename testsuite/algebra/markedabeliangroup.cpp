@@ -65,7 +65,7 @@ class MarkedAbelianGroupTest : public CppUnit::TestFixture {
         void lst() {
             Triangulation<3> t = regina::Example<3>::lst(3, 5);
 
-            MarkedAbelianGroup g(t.boundaryMap<1>(), t.boundaryMap<2>());
+            MarkedAbelianGroup g = t.markedHomology();
             if (! g.isZ()) {
                 std::ostringstream msg;
                 msg << "LST has incorrect H1 = " << g.str() << '.';
@@ -92,6 +92,120 @@ class MarkedAbelianGroupTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "H1(LST) has the degree 1 edge with the wrong "
                     "SNF rep: " << snf[0];
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        static void verifyNonCycle(const MarkedAbelianGroup& g,
+                const VectorInt& v) {
+            if (g.isCycle(v)) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) incorrectly identifies "
+                    << v << " as a cycle.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (g.isBoundary(v)) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) incorrectly identifies "
+                    << v << " as a boundary.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (g.cycleProjection(v) == v) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) incorrectly projects "
+                    << v << " onto itself via cycleProjection().";
+                CPPUNIT_FAIL(msg.str());
+            }
+            try {
+                g.snfRep(v);
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) does not throw an exception "
+                    "when writing " << v << " in SNF coordinates.";
+                CPPUNIT_FAIL(msg.str());
+            } catch (const regina::InvalidArgument&) {
+            }
+            try {
+                g.asBoundary(v);
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) does not throw an exception "
+                    "when writing " << v << " as a boundary.";
+                CPPUNIT_FAIL(msg.str());
+            } catch (const regina::InvalidArgument&) {
+            }
+        }
+
+        static void verifyCycleNonBoundary(const MarkedAbelianGroup& g,
+                const VectorInt& v) {
+            if (! g.isCycle(v)) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) incorrectly identifies "
+                    << v << " as a non-cycle.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (g.isBoundary(v)) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) incorrectly identifies "
+                    << v << " as a boundary.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (g.cycleProjection(v) != v) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) does not project "
+                    << v << " onto itself via cycleProjection().";
+                CPPUNIT_FAIL(msg.str());
+            }
+            try {
+                g.asBoundary(v);
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) does not throw an exception "
+                    "when writing " << v << " as a boundary.";
+                CPPUNIT_FAIL(msg.str());
+            } catch (const regina::InvalidArgument&) {
+            }
+        }
+
+        static void verifyCycleNonBoundary(const MarkedAbelianGroup& g,
+                const VectorInt& v, const VectorInt& snf) {
+            verifyCycleNonBoundary(g, v);
+
+            if (g.snfRep(v) != snf) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) incorrectly computes "
+                    "snfRep(" << v << ") as " << g.snfRep(v) << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        static void verifyBoundary(const MarkedAbelianGroup& g,
+                const VectorInt& v, const VectorInt& bdry) {
+            if (! g.isCycle(v)) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) incorrectly identifies "
+                    << v << " as a non-cycle.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! g.isBoundary(v)) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) incorrectly identifies "
+                    << v << " as a non-boundary.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (g.cycleProjection(v) != v) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) does not project "
+                    << v << " onto itself via cycleProjection().";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! g.snfRep(v).isZero()) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) does not give zero snfRep() for "
+                    << v << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (g.asBoundary(v) != bdry) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) incorrectly computes "
+                    "asBoundary(" << v << ") as " << g.asBoundary(v) << ".";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -123,8 +237,8 @@ class MarkedAbelianGroupTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            MarkedAbelianGroup g(t.boundaryMap<1>(), t.boundaryMap<2>());
-            if (g.str() != "Z + Z_2") {
+            MarkedAbelianGroup g = t.markedHomology();
+            if (g.str() != "Z + Z_2 (Z^4 -> Z^6 -> Z^2)") {
                 std::ostringstream msg;
                 msg << "H1(Klein bottle) gives the wrong homology: " << g.str();
                 CPPUNIT_FAIL(msg.str());
@@ -141,16 +255,22 @@ class MarkedAbelianGroupTest : public CppUnit::TestFixture {
                     << g.torsionRank(2);
                 CPPUNIT_FAIL(msg.str());
             }
-            if (g.minNumberOfGenerators() != 2) {
+            if (g.snfRank() != 2) {
                 std::ostringstream msg;
                 msg << "H1(Klein bottle) gives the wrong SNF dimension: "
-                    << g.minNumberOfGenerators();
+                    << g.snfRank();
                 CPPUNIT_FAIL(msg.str());
             }
-            if (g.rankCC() != 6) {
+            if (g.ccRank() != 6) {
                 std::ostringstream msg;
                 msg << "H1(Klein bottle) gives the wrong chain complex rank: "
-                    << g.rankCC();
+                    << g.ccRank();
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (g.cycleRank() != 5) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) gives the wrong kernel rank: "
+                    << g.cycleRank();
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -212,12 +332,7 @@ class MarkedAbelianGroupTest : public CppUnit::TestFixture {
                             << ") gives the wrong projection: " << p;
                         CPPUNIT_FAIL(msg.str());
                     }
-                    if (g.isCycle(VectorInt::unit(6, i))) {
-                        std::ostringstream msg;
-                        msg << "H1(Klein bottle) incorrectly recognises "
-                            "edge " << i << " as a cycle.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    verifyNonCycle(g, VectorInt::unit(6, i));
                 } else {
                     // This edge is not a cycle.
                     if (p != VectorInt::unit(6, i) + VectorInt::unit(6, 0)) {
@@ -226,12 +341,7 @@ class MarkedAbelianGroupTest : public CppUnit::TestFixture {
                             << ") gives the wrong projection: " << p;
                         CPPUNIT_FAIL(msg.str());
                     }
-                    if (g.isCycle(VectorInt::unit(6, i))) {
-                        std::ostringstream msg;
-                        msg << "H1(Klein bottle) incorrectly recognises "
-                            "edge " << i << " as a cycle.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
+                    verifyNonCycle(g, VectorInt::unit(6, i));
                 }
                 if (! g.isCycle(p)) {
                     std::ostringstream msg;
@@ -248,10 +358,46 @@ class MarkedAbelianGroupTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            // TODO: boundaryMap, isBoundary, writeAsBoundary
-            // TODO: snfRep
-            // TODO: minNumberCycleGens, cycleGen(0..)
-            // TODO: torsionSubgroup(), torsionInclusion()
+            // Examine some chains that are not cycles:
+            verifyNonCycle(g, {1,0,0,0,0,0});
+            verifyNonCycle(g, {1,0,0,0,-1,0});
+
+            // Examine some cycles that are not boundaries:
+            verifyCycleNonBoundary(g, {1,0,0,0,1,0}, {1,0});
+            verifyCycleNonBoundary(g, {3,0,0,0,3,0}, {1,0});
+            verifyCycleNonBoundary(g, {1,0,0,0,0,1}, {0,1});
+            verifyCycleNonBoundary(g, {0,1,0,0,0,0}, {0,-1});
+            verifyCycleNonBoundary(g, {0,3,0,0,0,0}, {0,-3});
+            verifyCycleNonBoundary(g, {1,1,1,0,0,0}, {0,-2});
+
+            // Examine some cycles that are boundaries:
+            verifyBoundary(g, {0,0,0,0,0,0}, {0,0,0,0});
+            verifyBoundary(g, {2,0,0,0,2,0}, {1,-1,-1,1}); // 2x Z_2 gen
+            verifyBoundary(g, {4,0,0,0,4,0}, {2,-2,-2,2}); // 4x Z_2 gen
+            verifyBoundary(g, {1,-1,1,0,0,0}, {1,0,0,0}); // Bdry of T0
+            verifyBoundary(g, {0,0,1,0,-2,1}, {0,1,1,0}); // Bdry of T1 u T2
+
+            for (unsigned long i = 0; i < g.cycleRank(); ++i)
+                verifyCycleNonBoundary(g, g.cycleGen(i));
+
+
+            MarkedAbelianGroup tor = g.torsionSubgroup();
+            if (tor.unmarked().str() != "Z_2") {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) has wrong torsion subgroup: "
+                    << tor.unmarked().str();
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            regina::HomMarkedAbelianGroup hom = g.torsionInclusion();
+            MatrixInt m = hom.reducedMatrix();
+            if (! (m.rows() == 2 && m.columns() == 1 &&
+                    m.entry(0,0) == 1 && m.entry(1,0) == 0)) {
+                std::ostringstream msg;
+                msg << "H1(Klein bottle) has wrong torsion inclusion: "
+                    << m.detail() << std::endl;
+                CPPUNIT_FAIL(msg.str());
+            }
         }
 };
 

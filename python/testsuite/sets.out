@@ -1,7 +1,7 @@
-Internal edge of degree 3
-Internal edge of degree 3
-Internal edge of degree 3
-Internal edge of degree 3
-Boundary edge of degree 1
-Boundary edge of degree 1
-Boundary edge of degree 1
+Edge 0, internal, degree 3: 0 (01), 3 (12), 4 (12)
+Edge 3, internal, degree 3: 0 (12), 1 (12), 4 (23)
+Edge 5, internal, degree 3: 0 (23), 1 (23), 2 (23)
+Edge 8, internal, degree 3: 1 (03), 3 (03), 2 (03)
+Edge 0, boundary, degree 1: 0 (01)
+Edge 3, boundary, degree 1: 0 (12)
+Edge 5, boundary, degree 1: 0 (23)

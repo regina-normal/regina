@@ -253,11 +253,51 @@ class LayeredChain : public StandardTriangulation {
          */
         void invert();
 
+        /**
+         * Determines whether this and the given structure represent
+         * the same type of layered chain.
+         *
+         * Specifically, two layered chains will compare as equal if and
+         * only if they have the same index (i.e., the same number of
+         * tetrahedra).
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass means they describe isomorphic structures).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent the same type of layered chain.
+         */
+        bool operator == (const LayeredChain& other) const;
+
+        /**
+         * Determines whether this and the given structure represent
+         * different types of layered chain.
+         *
+         * Specifically, two layered chains will compare as equal if and
+         * only if they have the same index (i.e., the same number of
+         * tetrahedra).
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass means they describe isomorphic structures).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent different types of layered chain.
+         */
+        bool operator != (const LayeredChain& other) const;
+
         std::unique_ptr<Manifold> manifold() const override;
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
-        void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const override;
 };
 
 /**
@@ -305,14 +345,19 @@ inline Perm<4> LayeredChain::topVertexRoles() const {
     return topVertexRoles_;
 }
 
+inline bool LayeredChain::operator == (const LayeredChain& other) const {
+    return index_ == other.index_;
+}
+
+inline bool LayeredChain::operator != (const LayeredChain& other) const {
+    return index_ != other.index_;
+}
+
 inline std::ostream& LayeredChain::writeName(std::ostream& out) const {
     return out << "Chain(" << index_ << ')';
 }
 inline std::ostream& LayeredChain::writeTeXName(std::ostream& out) const {
     return out << "\\mathit{Chain}(" << index_ << ')';
-}
-inline void LayeredChain::writeTextLong(std::ostream& out) const {
-    out << "Layered chain of index " << index_;
 }
 
 inline void swap(LayeredChain& a, LayeredChain& b) noexcept {

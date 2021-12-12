@@ -7,7 +7,6 @@ SET ( FILES
   example4.cpp
   facetpairing3.cpp
   facepair.cpp
-  homologicaldata.cpp
   )
 
 # Prepend folder name
@@ -43,7 +42,6 @@ if (${REGINA_INSTALL_DEV})
     facetspec.h
     generic.h
     graph.h
-    homologicaldata.h
     isosigencoding.h
     isosigtype.h
     pachner.h

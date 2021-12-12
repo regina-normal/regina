@@ -50,6 +50,7 @@
 #include "core/output.h"
 #include "file/fileformat.h"
 #include "packet/packettype.h"
+#include "utilities/base64.h"
 
 namespace regina {
 
@@ -500,6 +501,33 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \name Tree Queries
          */
         /*@{*/
+
+        /**
+         * Determines whether this and the given object refer to the
+         * same packet.
+         *
+         * This is exactly the same as testing whether the underlying Packet
+         * pointers are equal, and so this routine is unnecessary for C++ users.
+         *
+         * Instead, this routine is designed for Python users, since:
+         *
+         * - the Python keyword \c is will not work, because there could
+         *   be many different Python wrappers all pointing to the same
+         *   C++ object;
+         *
+         * - the Python equality test (==) will not work, since as of
+         *   Regina 7.0 this compares objects by value (i.e., it tests
+         *   whether their contents are equal).
+         *
+         * A use case for this function could be (for example) iterating
+         * through a packet tree and identifying when a particular
+         * known packet has been found.
+         *
+         * @param other the packet to compare with this.
+         * @return \c true if and only if this and the given object refer to
+         * the same underlying packet.
+         */
+        bool samePacket(const Packet& other) const;
 
         /**
          * Determines if this packet has a parent in the tree structure.
@@ -2026,9 +2054,9 @@ class PacketOf : public Packet, public Held {
          * @param data the object to copy.
          * @return a reference to this packet.
          */
-        PacketOf<Held>& operator = (const Held& src) {
+        PacketOf<Held>& operator = (const Held& data) {
             // We assume that Held takes care of the necessary change events.
-            Held::operator = (src);
+            Held::operator = (data);
             return *this;
         }
         /**
@@ -2042,9 +2070,9 @@ class PacketOf : public Packet, public Held {
          * @param data the object to move.
          * @return a reference to this packet.
          */
-        PacketOf<Held>& operator = (Held&& src) {
+        PacketOf<Held>& operator = (Held&& data) {
             // We assume that Held takes care of the necessary change events.
-            Held::operator = (std::move(src));
+            Held::operator = (std::move(data));
             return *this;
         }
         /**
@@ -2936,6 +2964,24 @@ class PacketChildren {
          * @return the past-the-end iterator.
          */
         ChildIterator<const_> end() const;
+
+        /**
+         * Determines whether this and the given object are designed to
+         * iterate over children of the same parent packet.
+         *
+         * @return \c true if and only if this object and \a rhs iterate
+         * over children of the same packet.
+         */
+        bool operator == (const PacketChildren& rhs) const;
+
+        /**
+         * Determines whether this and the given object are designed to
+         * iterate over children of different parent packets.
+         *
+         * @return \c true if and only if this object and \a rhs iterate
+         * over children of different packets.
+         */
+        bool operator != (const PacketChildren& rhs) const;
 };
 
 /**
@@ -3040,6 +3086,24 @@ class PacketDescendants {
          * @return the past-the-end iterator.
          */
         SubtreeIterator<const_> end() const;
+
+        /**
+         * Determines whether this and the given object are designed to
+         * iterate over strict descendants of the same packet.
+         *
+         * @return \c true if and only if this object and \a rhs iterate
+         * over descendants of the same packet.
+         */
+        bool operator == (const PacketDescendants& rhs) const;
+
+        /**
+         * Determines whether this and the given object are designed to
+         * iterate over strict descendants of different packets.
+         *
+         * @return \c true if and only if this object and \a rhs iterate
+         * over descendants of different packets.
+         */
+        bool operator != (const PacketDescendants& rhs) const;
 };
 
 /**
@@ -3815,6 +3879,10 @@ inline bool Packet::isListening(PacketListener* listener) {
     return listeners_->count(listener);
 }
 
+inline bool Packet::samePacket(const Packet& other) const {
+    return this == std::addressof(other);
+}
+
 inline bool Packet::hasParent() const {
     // AFAICT, despite its name, expired() returns true for a null weak_ptr
     // that was never assigned to point to a real object.
@@ -3856,6 +3924,22 @@ inline size_t Packet::countDescendants() const {
 template <typename Held>
 inline std::shared_ptr<Packet> PacketOf<Held>::internalClonePacket() const {
     return std::make_shared<PacketOf<Held>>(static_cast<const Held&>(*this));
+}
+
+template <typename Held>
+std::string PacketData<Held>::anonID() const {
+    char ptrAsBytes[sizeof(PacketData<Held>*)];
+    *(reinterpret_cast<const PacketData<Held>**>(&ptrAsBytes)) = this;
+
+    char* id = nullptr;
+    // NOLINTNEXTLINE(bugprone-sizeof-expression)
+    base64Encode(ptrAsBytes, sizeof(Packet*), &id);
+
+    std::string ans;
+    ans += base64Spare[0];
+    ans += id;
+    delete[] id;
+    return ans;
 }
 
 template <typename Held>
@@ -4084,6 +4168,16 @@ inline ChildIterator<const_> PacketChildren<const_>::end() const {
 }
 
 template <bool const_>
+bool PacketChildren<const_>::operator == (const PacketChildren& rhs) const {
+    return parent_ == rhs.parent_;
+}
+
+template <bool const_>
+bool PacketChildren<const_>::operator != (const PacketChildren& rhs) const {
+    return parent_ == rhs.parent_;
+}
+
+template <bool const_>
 inline SubtreeIterator<const_> PacketDescendants<const_>::begin() const {
     return SubtreeIterator<const_>(subtree_, subtree_->firstChild());
 }
@@ -4091,6 +4185,18 @@ inline SubtreeIterator<const_> PacketDescendants<const_>::begin() const {
 template <bool const_>
 inline SubtreeIterator<const_> PacketDescendants<const_>::end() const {
     return {};
+}
+
+template <bool const_>
+bool PacketDescendants<const_>::operator == (const PacketDescendants& rhs)
+        const {
+    return subtree_ == rhs.subtree_;
+}
+
+template <bool const_>
+bool PacketDescendants<const_>::operator != (const PacketDescendants& rhs)
+        const {
+    return subtree_ == rhs.subtree_;
 }
 
 // Inline functions for PacketShell

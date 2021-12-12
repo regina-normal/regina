@@ -34,12 +34,13 @@
 #include "regina-config.h" // for REGINA_HIGHDIM
 #include "hypersurface/normalhypersurfaces.h"
 #include "link/link.h"
+#include "packet/attachment.h"
 #include "packet/container.h"
 #include "packet/script.h"
 #include "packet/text.h"
 #include "snappea/snappeatriangulation.h"
-#include "surfaces/normalsurfaces.h"
-#include "surfaces/surfacefilter.h"
+#include "surface/normalsurfaces.h"
+#include "surface/surfacefilter.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
@@ -163,6 +164,9 @@ PacketUI* PacketManager::createUI(regina::Packet& packet,
             return new AngleStructureUI(
                 static_cast<regina::PacketOf<AngleStructures>*>(&packet),
                     enclosingPane);
+        case PACKET_ATTACHMENT:
+            return new AttachmentUI(
+                static_cast<Attachment*>(&packet), enclosingPane);
         case PACKET_CONTAINER:
             return new ContainerUI(
                 static_cast<Container*>(&packet), enclosingPane);
@@ -261,12 +265,5 @@ PacketUI* PacketManager::createUI(regina::Packet& packet,
         default:
             return new DefaultPacketUI(&packet, enclosingPane);
     }
-}
-
-PacketExternalViewer PacketManager::externalViewer(
-        const regina::Packet& packet) {
-    if (packet.type() == PACKET_ATTACHMENT)
-        return &AttachmentExternalViewer::view;
-    return nullptr;
 }
 

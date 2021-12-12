@@ -40,7 +40,7 @@
 #define __REGINA_SIGISOMORPHISM_H
 #endif
 
-#include "regina-core.h"
+#include "core/output.h"
 #include "split/signature.h"
 
 namespace regina {
@@ -72,7 +72,7 @@ namespace regina {
  *
  * \ingroup split
  */
-class SigPartialIsomorphism {
+class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
     private:
         unsigned nLabels;
             /**< The number of symbols whose images are defined. */
@@ -189,6 +189,24 @@ class SigPartialIsomorphism {
         void makeCanonical(const Signature& sig, unsigned fromCycleGroup = 0);
 
         /**
+         * Determines whether this and the given partial isomorphism are
+         * identical.
+         *
+         * @param other the partial isomorphism to compare with this.
+         * @return \c true if and only if this and \a other are identical.
+         */
+        bool operator == (const SigPartialIsomorphism& other) const;
+
+        /**
+         * Determines whether this and the given partial isomorphism are
+         * not identical.
+         *
+         * @param other the partial isomorphism to compare with this.
+         * @return \c true if and only if this and \a other are not identical.
+         */
+        bool operator != (const SigPartialIsomorphism& other) const;
+
+        /**
          * Lexicographically compares the results of applying this and
          * the given isomorphism to the given signature.
          *
@@ -240,6 +258,16 @@ class SigPartialIsomorphism {
          */
         int compareWithIdentity(const Signature& sig,
             unsigned fromCycleGroup = 0) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 
     private:
         /**
@@ -369,6 +397,11 @@ inline void SigPartialIsomorphism::swap(SigPartialIsomorphism& other) noexcept {
     std::swap(cyclePreImage, other.cyclePreImage);
     std::swap(cycleStart, other.cycleStart);
     std::swap(dir, other.dir);
+}
+
+inline bool SigPartialIsomorphism::operator != (
+        const SigPartialIsomorphism& other) const {
+    return ! ((*this) == other);
 }
 
 inline SigPartialIsomorphism::ShorterCycle::ShorterCycle(

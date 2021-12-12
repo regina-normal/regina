@@ -30,7 +30,7 @@ Was changed:
     Null
 True
 
-SnapPea triangulation with 4 tetrahedra
+Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 1: (-3, 7), vertex 0 ]
 
 Size of the skeleton:
   Tetrahedra: 4

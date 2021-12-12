@@ -9,10 +9,10 @@ Step 7
 Step 8
 Destroying: a1
 Step 9
-Triangulation with 1 tetrahedron
+Bounded orientable 3-D triangulation, f = ( 4 6 4 1 )
 b1
 None
-Python script
+Empty script, foo = <b1>
 c1
 None
 Script variables #2
@@ -29,10 +29,10 @@ Step 8
 Step 9
 Destroying: a2
 Step 10
-Triangulation with 1 tetrahedron
+Bounded orientable 3-D triangulation, f = ( 4 6 4 1 )
 b2
 None
-Python script
+Empty script, foo = (null)
 c2
 None
 Example triangulation
@@ -54,9 +54,9 @@ Step 3
 Destroying: t2
 Step 4
 Step 5
-Triangulation with 1 tetrahedron
+Bounded orientable 3-D triangulation, f = ( 4 6 4 1 )
 b2
 None
-Python script
+Empty script, foo = (null)
 c2
 None

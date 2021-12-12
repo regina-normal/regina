@@ -169,15 +169,21 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::return_value_policy::reference_internal)
         .def("simplifiedFundamentalGroup",
             &Triangulation<dim>::simplifiedFundamentalGroup)
-        .def("homology", &Triangulation<dim>::homology,
-            pybind11::return_value_policy::reference_internal)
-        .def("homologyH1", &Triangulation<dim>::homologyH1,
-            pybind11::return_value_policy::reference_internal)
+        .def("homology",
+            (regina::AbelianGroup (Triangulation<dim>::*)(int) const)(
+            &Triangulation<dim>::homology),
+            pybind11::arg("k") = 1)
+        .def("homologyH1",
+            &Triangulation<dim>::template homology<1>) // deprecated
+        .def("markedHomology",
+            (regina::MarkedAbelianGroup (Triangulation<dim>::*)(int) const)(
+            &Triangulation<dim>::markedHomology),
+            pybind11::arg("k") = 1)
         .def("boundaryMap", (MatrixInt (Triangulation<dim>::*)(int) const)(
             &Triangulation<dim>::boundaryMap))
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
-        .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
+        .def("isIdenticalTo", &Triangulation<dim>::operator ==) // deprecated
         .def("isIsomorphicTo", &Triangulation<dim>::isIsomorphicTo)
         .def("isContainedIn", &Triangulation<dim>::isContainedIn)
         .def("findAllIsomorphisms", &Triangulation<dim>::template
@@ -225,7 +231,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
     ;
     add_pachner<dim>::add(c);
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    regina::python::packet_eq_operators(c);
+    regina::python::add_packet_data(c);
 
     // The ListView classes for faces() are wrapped in face-bindings.h,
     // since this needs to be done for each subdimension.

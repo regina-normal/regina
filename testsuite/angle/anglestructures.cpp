@@ -32,7 +32,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include "angle/anglestructures.h"
-#include "surfaces/normalsurface.h"
+#include "surface/normalsurface.h"
 #include "triangulation/dim3.h"
 #include "triangulation/example3.h"
 

@@ -95,6 +95,18 @@ SigPartialIsomorphism& SigPartialIsomorphism::operator = (
     return *this;
 }
 
+bool SigPartialIsomorphism::operator == (const SigPartialIsomorphism& other)
+        const {
+    return
+        nLabels == other.nLabels &&
+        nCycles == other.nCycles &&
+        dir == other.dir &&
+        std::equal(labelImage, labelImage + nLabels, other.labelImage) &&
+        std::equal(cyclePreImage, cyclePreImage + nCycles,
+            other.cyclePreImage) &&
+        std::equal(cycleStart, cycleStart + nCycles, other.cycleStart);
+}
+
 void SigPartialIsomorphism::makeCanonical(const Signature& sig,
         unsigned fromCycleGroup) {
     unsigned fromCycle, toCycle;
@@ -174,6 +186,36 @@ int SigPartialIsomorphism::compareWithIdentity(const Signature& sig,
             return 1;
     }
     return 0;
+}
+
+void SigPartialIsomorphism::writeTextShort(std::ostream& out) const {
+    if (nLabels == 0)
+        out << "No symbols mapped";
+    else {
+        out << "Symbols: ";
+        for (unsigned i = 0; i < nLabels; ++i)
+            out << char('a' + i);
+        out << " -> ";
+        for (unsigned i = 0; i < nLabels; ++i)
+            out << char('a' + labelImage[i]);
+    }
+    out << "; ";
+
+    if (nCycles == 0)
+        out << "no cycles mapped";
+    else {
+        out << "cycles: ";
+        for (unsigned i = 0; i < nCycles; ++i) {
+            if (i > 0)
+                out << ", ";
+            out << cyclePreImage[i] << " -> " << i;
+            if (cycleStart[cyclePreImage[i]] > 0)
+                out << " (>> " << cycleStart[cyclePreImage[i]] << ')';
+        }
+    }
+
+    if (dir < 0)
+        out << ", all reversed";
 }
 
 } // namespace regina

@@ -110,6 +110,7 @@ void addBanConstraint(pybind11::module_& m, const char* name) {
         .def("marked", &BanConstraint::marked)
         .def_static("supported", &BanConstraint::supported)
         ;
+    regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 }
 

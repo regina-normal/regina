@@ -75,8 +75,10 @@ namespace {
         ExampleCreator<4>(QObject::tr("4-sphere (minimal)"), &regina::Example<4>::sphere),
         ExampleCreator<4>(QObject::tr("4-sphere (simplex boundary)"), &regina::Example<4>::simplicialFourSphere),
         ExampleCreator<4>(QObject::tr("Cappell-Shaneson knot complement"), &regina::Example<4>::cappellShaneson),
+        ExampleCreator<4>(QObject::tr("ℂP²"), &regina::Example<4>::cp2),
         ExampleCreator<4>(QObject::tr("Product B³ × S¹"), &regina::Example<4>::ballBundle),
         ExampleCreator<4>(QObject::tr("Product S³ × S¹"), &regina::Example<4>::sphereBundle),
+        ExampleCreator<4>(QObject::tr("Product S² × S²"), &regina::Example<4>::s2xs2),
         ExampleCreator<4>(QObject::tr("ℝP⁴"), &regina::Example<4>::rp4),
         ExampleCreator<4>(QObject::tr("Twisted product B³ ×~ S¹"), &regina::Example<4>::twistedBallBundle),
         ExampleCreator<4>(QObject::tr("Twisted product S³ ×~ S¹"), &regina::Example<4>::twistedSphereBundle)

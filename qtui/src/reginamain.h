@@ -324,14 +324,12 @@ class ReginaMain : public QMainWindow {
         /**
          * Packet export routines.
          */
-        void exportAttachment();
         void exportCSVSurfaceList();
         void exportPython();
         void exportRecogniser();
         void exportRegina();
         void exportReginaUncompressed();
         void exportSnapPea();
-        void exportSource();
 
         /**
          * Python scripting routines.

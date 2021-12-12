@@ -268,6 +268,33 @@ class TxICore : public Output<TxICore> {
         [[deprecated]] std::string TeXName() const;
 
         /**
+         * Determines if this and the given <tt>T x I</tt> triangulation
+         * are of the same type and have the same parameters.
+         *
+         * If this returns \c true, then the triangulations returned
+         * by core() should also be combinatorially identical.
+         *
+         * @param other the <tt>T x I</tt> triangulation to compare with this.
+         * @return \c true if and only if this and the given triangulation
+         * are of the same type and have the same parameters.
+         */
+        virtual bool operator == (const TxICore& other) const = 0;
+
+        /**
+         * Determines if this and the given <tt>T x I</tt> triangulation
+         * are of different types and/or have different parameters.
+         *
+         * If this returns \c false (i.e., both objects compare as equal),
+         * then the triangulations returned by core() should also be
+         * combinatorially identical.
+         *
+         * @param other the <tt>T x I</tt> triangulation to compare with this.
+         * @return \c true if and only if this and the given triangulation
+         * are of different types and/or have different parameters.
+         */
+        bool operator != (const TxICore& other) const;
+
+        /**
          * Writes the name of this specific triangulation of
          * <tt>T x I</tt> to the given output stream.  The name will be
          * written as a human-readable string.
@@ -505,6 +532,7 @@ class TxIDiagonalCore : public TxICore {
          */
         void swap(TxIDiagonalCore& other) noexcept;
 
+        bool operator == (const TxICore& other) const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
@@ -609,6 +637,7 @@ class TxIParallelCore : public TxICore {
          */
         void swap(TxIParallelCore& other) noexcept;
 
+        bool operator == (const TxICore& other) const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
@@ -652,6 +681,10 @@ inline const Matrix2& TxICore::parallelReln() const {
     return parallelReln_;
 }
 
+inline bool TxICore::operator != (const TxICore& other) const {
+    return ! ((*this) == other);
+}
+
 inline std::string TxICore::TeXName() const {
     return texName();
 }
@@ -690,6 +723,13 @@ inline std::ostream& TxIDiagonalCore::writeTeXName(std::ostream& out) const {
     return out << "T_{" << size_ << ':' << k_ << '}';
 }
 
+inline bool TxIDiagonalCore::operator == (const TxICore& other) const {
+    if (auto c = dynamic_cast<const TxIDiagonalCore*>(std::addressof(other)))
+        return size_ == c->size_ && k_ == c->k_;
+    else
+        return false;
+}
+
 inline void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs) {
     lhs.swap(rhs);
 }
@@ -704,6 +744,10 @@ inline std::ostream& TxIParallelCore::writeName(std::ostream& out) const {
 
 inline std::ostream& TxIParallelCore::writeTeXName(std::ostream& out) const {
     return out << "T_{6\\ast}";
+}
+
+inline bool TxIParallelCore::operator == (const TxICore& other) const {
+    return dynamic_cast<const TxIParallelCore*>(std::addressof(other));
 }
 
 inline void swap(TxIParallelCore& lhs, TxIParallelCore& rhs) {

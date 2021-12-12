@@ -182,6 +182,60 @@ TreeDecomposition::TreeDecomposition(const TreeDecomposition& cloneMe) :
     }
 }
 
+bool TreeDecomposition::operator == (const TreeDecomposition& other) const {
+    if (! root_)
+        return ! other.root_;
+    if (! other.root_)
+        return false;
+
+    // Both tree decompositions are non-empty.
+
+    const TreeBag *me = root_;
+    const TreeBag *myPrev = nullptr;
+    const TreeBag *you = other.root_;
+    const TreeBag *yourPrev = nullptr;
+
+    while (true) {
+        if (me->index_ != you->index_)
+            return false;
+        if (me->compare(*you) != BAG_EQUAL)
+            return false;
+
+        // myPrev / yourPrev either points to the previous sibling or,
+        // if there is none, the parent.
+        if (me->children_) {
+            if (! you->children_)
+                return false;
+
+            myPrev = me;
+            yourPrev = you;
+            me = me->children_;
+            you = you->children_;
+        } else {
+            if (you->children_)
+                return false;
+
+            while (me && ! me->sibling_) {
+                if (you->sibling_)
+                    return false;
+                me = me->parent_;
+                you = you->parent_;
+            }
+            if (! me)
+                break; // finished tree traversal
+
+            if (! you->sibling_)
+                return false;
+            myPrev = me;
+            yourPrev = you;
+            me = me->sibling_;
+            you = you->sibling_;
+        }
+    }
+
+    return true;
+}
+
 TreeDecomposition::TreeDecomposition(const Link& link,
         TreeDecompositionAlg alg) :
         width_(0), root_(nullptr) {
@@ -900,12 +954,26 @@ std::string TreeDecomposition::pace() const {
 }
 
 void TreeDecomposition::writeTextShort(std::ostream& out) const {
-    out << "Tree decomposition: width " << width_
-        << ", size " << size_;
+    out << "Width " << width_ << ", size " << size_;
+    if (size_) {
+        out << ", bags ";
+        for (const TreeBag* b = first(); b; b = b->next()) {
+            out << b->index() << ": {";
+            for (size_t i = 0; i < b->size_; ++i) {
+                if (i > 0)
+                    out << ',';
+                out << b->elements_[i];
+            }
+            if (b->parent_)
+                out << "} -> " << b->parent_->index() << ", ";
+            else
+                out << '}';
+        }
+    }
 }
 
 void TreeDecomposition::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
+    out << "Tree decomposition: width " << width_ << ", size " << size_;
     out << std::endl;
 
     int indent = 0;

@@ -7,7 +7,6 @@ SET ( FILES
   blockedsfsloop.cpp
   blockedsfspair.cpp
   blockedsfstriple.cpp
-  l31pillow.cpp
   layeredchain.cpp
   layeredchainpair.cpp
   layeredlensspace.cpp
@@ -47,7 +46,6 @@ if (${REGINA_INSTALL_DEV})
     blockedsfsloop.h
     blockedsfspair.h
     blockedsfstriple.h
-    l31pillow.h
     layeredchain.h
     layeredchainpair.h
     layeredlensspace.h

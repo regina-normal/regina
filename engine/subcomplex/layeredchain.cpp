@@ -104,14 +104,25 @@ void LayeredChain::invert() {
 }
 
 std::unique_ptr<Manifold> LayeredChain::manifold() const {
-    return std::make_unique<Handlebody>(index_ <= 1 ? 0 : 1, true);
+    return std::make_unique<Handlebody>(index_ <= 1 ? 0 : 1);
 }
 
 AbelianGroup LayeredChain::homology() const {
-    AbelianGroup ans;
     if (index_ > 1)
-        ans.addRank();
-    return ans;
+        return AbelianGroup(1);
+    else
+        return AbelianGroup();
+}
+
+void LayeredChain::writeTextShort(std::ostream& out) const {
+    if (index_ == 1) {
+        out << "Chain(1), tetrahedron "
+            << bottom_->index() << " (" << bottomVertexRoles_ << ")";
+    } else {
+        out << "Chain(" << index_ << "), tetrahedra "
+            << bottom_->index() << " (" << bottomVertexRoles_ << ") .. "
+            << top_->index() << " (" << topVertexRoles_ << ')';
+    }
 }
 
 } // namespace regina

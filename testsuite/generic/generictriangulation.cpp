@@ -34,9 +34,12 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "triangulation/dim4.h"
 #include "triangulation/example.h"
+#include "triangulation/example4.h"
 
 #include "testsuite/generic/triangulationtest.h"
 #include "testsuite/generic/testgeneric.h"
+
+using regina::Example;
 
 template <int dim>
 class GenericTriangulationTest : public TriangulationTest<dim> {
@@ -64,7 +67,6 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         using TriangulationTest<dim>::verifyEulerCharTri;
         using TriangulationTest<dim>::verifyBoundaryCount;
         using TriangulationTest<dim>::verifyBoundaryH1;
-        using TriangulationTest<dim>::verifyHomology;
         using TriangulationTest<dim>::verifyFundGroup;
 
     public:
@@ -184,14 +186,116 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         }
 
         void homologyH1() {
-            verifyHomology(empty, "0", "Empty");
-            verifyHomology(sphere, "0", "Sphere");
-            verifyHomology(simplicialSphere, "0", "Simplicial sphere");
-            verifyHomology(sphereBundle, "Z", "Sphere bundle");
-            verifyHomology(twistedSphereBundle, "Z", "Twisted sphere bundle");
-            verifyHomology(ball, "0", "Ball");
-            verifyHomology(ballBundle, "Z", "Ball bundle");
-            verifyHomology(twistedBallBundle, "Z", "Twisted ball bundle");
+            TriangulationTest<dim>::template verifyHomology(empty,
+                "0", "Empty");
+            TriangulationTest<dim>::template verifyHomology(sphere,
+                "0", "Sphere");
+            TriangulationTest<dim>::template verifyHomology(simplicialSphere,
+                "0", "Simplicial sphere");
+            TriangulationTest<dim>::template verifyHomology(sphereBundle,
+                "Z", "Sphere bundle");
+            TriangulationTest<dim>::template verifyHomology(twistedSphereBundle,
+                "Z", "Twisted sphere bundle");
+            TriangulationTest<dim>::template verifyHomology(ball,
+                "0", "Ball");
+            TriangulationTest<dim>::template verifyHomology(ballBundle,
+                "Z", "Ball bundle");
+            TriangulationTest<dim>::template verifyHomology(twistedBallBundle,
+                "Z", "Twisted ball bundle");
+        }
+
+        void homologyH2() {
+            static_assert(dim > 3); // otherwise expected H2 groups are wrong
+
+            // It's a pity that almost all of these examples have trivial H2.
+            // We need some more interesting generic constructions.
+
+            TriangulationTest<dim>::template verifyHomology<2>(empty,
+                "0", "Empty");
+            TriangulationTest<dim>::template verifyHomology<2>(sphere,
+                "0", "Sphere");
+            TriangulationTest<dim>::template verifyHomology<2>(simplicialSphere,
+                "0", "Simplicial sphere");
+            TriangulationTest<dim>::template verifyHomology<2>(sphereBundle,
+                "0", "Sphere bundle");
+            TriangulationTest<dim>::template verifyHomology<2>(
+                twistedSphereBundle, "0", "Twisted sphere bundle");
+            TriangulationTest<dim>::template verifyHomology<2>(ball,
+                "0", "Ball");
+            TriangulationTest<dim>::template verifyHomology<2>(ballBundle,
+                "0", "Ball bundle");
+            TriangulationTest<dim>::template verifyHomology<2>(
+                twistedBallBundle, "0", "Twisted ball bundle");
+
+            if constexpr (dim == 5) {
+                TriangulationTest<dim>::template verifyHomology<2>(
+                    Example<5>::singleCone(Example<4>::sphereBundle()),
+                    "0", "Real/ideal S3 x S1 x I");
+                TriangulationTest<dim>::template verifyHomology<2>(
+                    Example<5>::doubleCone(Example<4>::sphereBundle()),
+                    "0", "ideal S3 x S1 x I");
+
+                TriangulationTest<dim>::template verifyHomology<2>(
+                    Example<5>::singleCone(Example<4>::twistedSphereBundle()),
+                    "0", "Real/ideal S3 x~ S1 x I");
+                TriangulationTest<dim>::template verifyHomology<2>(
+                    Example<5>::doubleCone(Example<4>::twistedSphereBundle()),
+                    "0", "ideal S3 x~ S1 x I");
+
+                TriangulationTest<dim>::template verifyHomology<2>(
+                    Example<5>::singleCone(Example<4>::s2xs2()),
+                    "2 Z", "Real/ideal S2 x S2 x I");
+                TriangulationTest<dim>::template verifyHomology<2>(
+                    Example<5>::doubleCone(Example<4>::s2xs2()),
+                    "2 Z", "ideal S2 x S2 x I");
+            }
+        }
+
+        void homologyH3() {
+            static_assert(dim > 4); // otherwise expected H3 groups are wrong
+
+            // It's a pity that almost all of these examples have trivial H2.
+            // We need some more interesting generic constructions.
+
+            TriangulationTest<dim>::template verifyHomology<3>(empty,
+                "0", "Empty");
+            TriangulationTest<dim>::template verifyHomology<3>(sphere,
+                "0", "Sphere");
+            TriangulationTest<dim>::template verifyHomology<3>(simplicialSphere,
+                "0", "Simplicial sphere");
+            TriangulationTest<dim>::template verifyHomology<3>(sphereBundle,
+                "0", "Sphere bundle");
+            TriangulationTest<dim>::template verifyHomology<3>(
+                twistedSphereBundle, "0", "Twisted sphere bundle");
+            TriangulationTest<dim>::template verifyHomology<3>(ball,
+                "0", "Ball");
+            TriangulationTest<dim>::template verifyHomology<3>(ballBundle,
+                "0", "Ball bundle");
+            TriangulationTest<dim>::template verifyHomology<3>(
+                twistedBallBundle, "0", "Twisted ball bundle");
+
+            if constexpr (dim == 5) {
+                TriangulationTest<dim>::template verifyHomology<3>(
+                    Example<5>::singleCone(Example<4>::sphereBundle()),
+                    "Z", "Real/ideal S3 x S1 x I");
+                TriangulationTest<dim>::template verifyHomology<3>(
+                    Example<5>::doubleCone(Example<4>::sphereBundle()),
+                    "Z", "ideal S3 x S1 x I");
+
+                TriangulationTest<dim>::template verifyHomology<3>(
+                    Example<5>::singleCone(Example<4>::twistedSphereBundle()),
+                    "Z_2", "Real/ideal S3 x~ S1 x I");
+                TriangulationTest<dim>::template verifyHomology<3>(
+                    Example<5>::doubleCone(Example<4>::twistedSphereBundle()),
+                    "Z_2", "ideal S3 x~ S1 x I");
+
+                TriangulationTest<dim>::template verifyHomology<3>(
+                    Example<5>::singleCone(Example<4>::s2xs2()),
+                    "0", "Real/ideal S2 x S2 x I");
+                TriangulationTest<dim>::template verifyHomology<3>(
+                    Example<5>::doubleCone(Example<4>::s2xs2()),
+                    "0", "ideal S2 x S2 x I");
+            }
         }
 
         void fundGroup() {
@@ -231,6 +335,8 @@ class Triangulation5Test : public GenericTriangulationTest<5> {
     CPPUNIT_TEST(boundaryCount);
     CPPUNIT_TEST(boundaryHomology);
     CPPUNIT_TEST(homologyH1);
+    CPPUNIT_TEST(homologyH2);
+    CPPUNIT_TEST(homologyH3);
     CPPUNIT_TEST(fundGroup);
 
     CPPUNIT_TEST_SUITE_END();
@@ -262,6 +368,8 @@ class Triangulation6Test : public GenericTriangulationTest<6> {
     CPPUNIT_TEST(boundaryCount);
     CPPUNIT_TEST(boundaryHomology);
     CPPUNIT_TEST(homologyH1);
+    CPPUNIT_TEST(homologyH2);
+    CPPUNIT_TEST(homologyH3);
     CPPUNIT_TEST(fundGroup);
 
     CPPUNIT_TEST_SUITE_END();
@@ -304,6 +412,8 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
     CPPUNIT_TEST(boundaryCount);
     CPPUNIT_TEST(boundaryHomology);
     CPPUNIT_TEST(homologyH1);
+    CPPUNIT_TEST(homologyH2);
+    CPPUNIT_TEST(homologyH3);
     CPPUNIT_TEST(fundGroup);
 
     CPPUNIT_TEST_SUITE_END();

@@ -111,7 +111,7 @@ class IntegerBase;
 
 /**
  * Writes the tight encoding of the given signed integer to the given
- * output stream.  See the page on \ref "tight encodings" for details.
+ * output stream.  See the page on \ref tight "tight encodings" for details.
  *
  * \ifacespython Not present; use regina::tightEncoding(int) instead.
  *
@@ -124,7 +124,7 @@ void tightEncode(std::ostream& out, int value);
 
 /**
  * Returns the tight encoding of the given signed integer.
- * See the page on \ref "tight encodings" for details.
+ * See the page on \ref tight "tight encodings" for details.
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.
@@ -135,7 +135,7 @@ std::string tightEncoding(int value);
 
 /**
  * Writes the tight encoding of the given signed long integer to the given
- * output stream.  See the page on \ref "tight encodings" for details.
+ * output stream.  See the page on \ref tight "tight encodings" for details.
  *
  * \ifacespython Not present; use regina::tightEncoding(long) instead.
  *
@@ -148,7 +148,7 @@ void tightEncode(std::ostream& out, long value);
 
 /**
  * Returns the tight encoding of the given signed long integer.
- * See the page on \ref "tight encodings" for details.
+ * See the page on \ref tight "tight encodings" for details.
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.
@@ -159,7 +159,7 @@ std::string tightEncoding(long value);
 
 /**
  * Writes the tight encoding of the given signed long long integer to the given
- * output stream.  See the page on \ref "tight encodings" for details.
+ * output stream.  See the page on \ref tight "tight encodings" for details.
  *
  * \ifacespython Not present; use regina::tightEncoding(long long) instead.
  *
@@ -172,7 +172,7 @@ void tightEncode(std::ostream& out, long long value);
 
 /**
  * Returns the tight encoding of the given signed long long integer.
- * See the page on \ref "tight encodings" for details.
+ * See the page on \ref tight "tight encodings" for details.
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.
@@ -183,7 +183,7 @@ std::string tightEncoding(long long value);
 
 /**
  * Writes the tight encoding of the given unsigned integer to the given
- * output stream.  See the page on \ref "tight encodings" for details.
+ * output stream.  See the page on \ref tight "tight encodings" for details.
  *
  * \ifacespython Not present; use regina::tightEncoding(int) instead.
  *
@@ -196,7 +196,7 @@ void tightEncode(std::ostream& out, unsigned value);
 
 /**
  * Returns the tight encoding of the given unsigned integer.
- * See the page on \ref "tight encodings" for details.
+ * See the page on \ref tight "tight encodings" for details.
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.
@@ -207,7 +207,7 @@ std::string tightEncoding(unsigned value);
 
 /**
  * Writes the tight encoding of the given unsigned long integer to the given
- * output stream.  See the page on \ref "tight encodings" for details.
+ * output stream.  See the page on \ref tight "tight encodings" for details.
  *
  * \ifacespython Not present; use regina::tightEncoding(long) instead.
  *
@@ -220,7 +220,7 @@ void tightEncode(std::ostream& out, unsigned long value);
 
 /**
  * Returns the tight encoding of the given unsigned long integer.
- * See the page on \ref "tight encodings" for details.
+ * See the page on \ref tight "tight encodings" for details.
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.
@@ -231,7 +231,8 @@ std::string tightEncoding(unsigned long value);
 
 /**
  * Writes the tight encoding of the given unsigned long long integer to the
- * given output stream.  See the page on \ref "tight encodings" for details.
+ * given output stream.  See the page on \ref tight "tight encodings" for
+ * details.
  *
  * \ifacespython Not present; use regina::tightEncoding(long long) instead.
  *
@@ -244,7 +245,7 @@ void tightEncode(std::ostream& out, unsigned long long value);
 
 /**
  * Returns the tight encoding of the given unsigned long long integer.
- * See the page on \ref "tight encodings" for details.
+ * See the page on \ref tight "tight encodings" for details.
  *
  * @param value the integer to encode.
  * @return the resulting encoded string.

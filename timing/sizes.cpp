@@ -22,7 +22,6 @@
 #include "subcomplex/blockedsfsloop.h"
 #include "subcomplex/blockedsfspair.h"
 #include "subcomplex/blockedsfstriple.h"
-#include "subcomplex/l31pillow.h"
 #include "subcomplex/layeredchain.h"
 #include "subcomplex/layeredchainpair.h"
 #include "subcomplex/layeredlensspace.h"
@@ -43,13 +42,13 @@
 
 #include "angle/anglestructures.h"
 #include "hypersurface/normalhypersurfaces.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurfaces.h"
 
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "triangulation/generic.h"
-#include "triangulation/homologicaldata.h"
+#include "triangulation/dim3/homologicaldata.h"
 
 #define SHOW_SIZE(T) std::cout << #T << ": " \
     << sizeof(T) << " byte(s)" << std::endl;
@@ -96,7 +95,6 @@ int main() {
     SHOW_SIZE(BlockedSFSLoop);
     SHOW_SIZE(BlockedSFSPair);
     SHOW_SIZE(BlockedSFSTriple);
-    SHOW_SIZE(L31Pillow);
     SHOW_SIZE(LayeredChain);
     SHOW_SIZE(LayeredChainPair);
     SHOW_SIZE(LayeredLensSpace);

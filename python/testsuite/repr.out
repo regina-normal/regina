@@ -1,0 +1,947 @@
+Integer
+-5
+-5
+
+LargeInteger
+9
+9
+
+LargeInteger
+inf
+inf
+
+Rational
+3/8
+3/8
+
+Perm2
+10
+<regina.Perm2: 10>
+
+Perm3
+021
+<regina.Perm3: 021>
+
+Perm4
+0321
+<regina.Perm4: 0321>
+
+Perm5
+01324
+<regina.Perm5: 01324>
+
+Perm6
+013245
+<regina.Perm6: 013245>
+
+Perm7
+0132456
+<regina.Perm7: 0132456>
+
+Perm8
+01324567
+<regina.Perm8: 01324567>
+
+Perm15
+0132456789abcde
+<regina.Perm15: 0132456789abcde>
+
+VectorInt
+( 1 0 -2 )
+<regina.VectorInt: ( 1 0 -2 )>
+
+VectorLarge
+( 1 0 inf -2 )
+<regina.VectorLarge: ( 1 0 inf -2 )>
+
+Matrix2
+[[ 1 2 ] [ 3 4 ]]
+<regina.Matrix2: [[ 1 2 ] [ 3 4 ]]>
+
+Matrix2Row
+[ 3 4 ]
+<regina.Matrix2Row: [ 3 4 ]>
+
+MatrixBool
+[[ 1 0 ] [ 0 1 ]]
+<regina.MatrixBool: [[ 1 0 ] [ 0 1 ]]>
+
+MatrixInt
+[[ 2 -1 -1 2 -1 -1 ] [ -2 1 1 -2 1 1 ]]
+<regina.MatrixInt: [[ 2 -1 -1 2 -1 -1 ] [ -2 1 1 -2 1 1 ]]>
+
+Cyclotomic
+-2/5 x^3 + 2/5 x^2 + 7/10
+<regina.Cyclotomic: -2/5 x^3 + 2/5 x^2 + 7/10>
+
+Polynomial
+-2/5 x^3 + 2/5 x^2 + 7/10
+<regina.Polynomial: -2/5 x^3 + 2/5 x^2 + 7/10>
+
+Laurent
+x^4 - x^2 + 1 - x^-2 + x^-4
+<regina.Laurent: x^4 - x^2 + 1 - x^-2 + x^-4>
+
+Laurent2
+x^2 - y^2 - 1 + x^-2
+<regina.Laurent2: x^2 - y^2 - 1 + x^-2>
+
+HyperListFlags
+HyperListFlags.HS_VERTEX
+<HyperListFlags.HS_VERTEX: 4>
+
+HyperAlgFlags
+HyperAlgFlags.HS_VERTEX_DD
+<HyperAlgFlags.HS_VERTEX_DD: 32>
+
+NormalListFlags
+NormalListFlags.NS_VERTEX
+<NormalListFlags.NS_VERTEX: 4>
+
+NormalAlgFlags
+NormalAlgFlags.NS_VERTEX_DD
+<NormalAlgFlags.NS_VERTEX_DD: 32>
+
+AngleAlgFlags
+AngleAlgFlags.AS_ALG_DD
+<AngleAlgFlags.AS_ALG_DD: 32>
+
+CensusPurgeFlags
+CensusPurgeFlags.PURGE_NON_MINIMAL
+<CensusPurgeFlags.PURGE_NON_MINIMAL: 1>
+
+SurfaceExportFields
+SurfaceExportFields.surfaceExportName
+<SurfaceExportFields.surfaceExportName: 1>
+
+HyperList
+0x0004
+<regina.HyperList: 0x0004>
+
+HyperAlg
+0x0020
+<regina.HyperAlg: 0x0020>
+
+NormalList
+0x0004
+<regina.NormalList: 0x0004>
+
+NormalAlg
+0x0020
+<regina.NormalAlg: 0x0020>
+
+AngleAlg
+0x0020
+<regina.AngleAlg: 0x0020>
+
+CensusPurge
+0x03
+<regina.CensusPurge: 0x03>
+
+SurfaceExport
+0x0003
+<regina.SurfaceExport: 0x0003>
+
+NormalEncoding
+0x0203
+<regina.NormalEncoding: 0x0203>
+
+HyperEncoding
+0x011f
+<regina.HyperEncoding: 0x011f>
+
+LPSystem
+quad
+<regina.LPSystem: quad>
+
+AbelianGroup
+3 Z_5
+<regina.AbelianGroup: 3 Z_5>
+
+MarkedAbelianGroup
+3 Z_5 (Z^46 -> Z^24 -> Z^1)
+<regina.MarkedAbelianGroup: 3 Z_5 (Z^46 -> Z^24 -> Z^1)>
+
+HomMarkedAbelianGroup
+Isomorphism: [[ 1 0 0 ] [ 0 1 0 ] [ 0 0 1 ]]
+<regina.HomMarkedAbelianGroup: Isomorphism: [[ 1 0 0 ] [ 0 1 0 ] [ 0 0 1 ]]>
+
+GroupPresentation
+< a b | a b a^-1 b a b^-1, a b^-1 a^-1 b^-1 a b^2 >
+<regina.GroupPresentation: < a b | a b a^-1 b a b^-1, a b^-1 a^-1 b^-1 a b^2 >>
+
+GroupExpression
+g0 g1 g0^-1 g1 g0 g1^-1
+<regina.GroupExpression: g0 g1 g0^-1 g1 g0 g1^-1>
+
+GroupExpressionTerm
+g0^-1
+<regina.GroupExpressionTerm: g0^-1>
+
+GroupPresentation
+< a b c | a c^-1, a b^-1 c^-1 b >
+<regina.GroupPresentation: < a b c | a c^-1, a b^-1 c^-1 b >>
+
+HomGroupPresentation
+Isomorphism: g0 -> g1, g1 -> g0, g2 -> g1
+<regina.HomGroupPresentation: Isomorphism: g0 -> g1, g1 -> g0, g2 -> g1>
+
+GroupPresentation
+< a b | a^-1 b^-1 a b >
+<regina.GroupPresentation: < a b | a^-1 b^-1 a b >>
+
+Bitmask
+00010000000000000000000000000000
+<regina.Bitmask: 00010000000000000000000000000000>
+
+Bitmask8
+00010000
+<regina.Bitmask8: 00010000>
+
+Qitmask8
+00020000
+<regina.Qitmask8: 00020000>
+
+BoolSet
+{ true }
+<regina.BoolSet: { true }>
+
+TrieSet
+Trie containing 0 sets
+<regina.TrieSet: Trie containing 0 sets>
+
+DiscType
+7:3
+<regina.DiscType: 7:3>
+
+DiscSpec
+1:3 #2
+<regina.DiscSpec: 1:3 #2>
+
+PrismSpec
+5:1
+<regina.PrismSpec: 5:1>
+
+NormalSurfaces
+3 embedded, vertex surfaces (Quad normal)
+<regina.NormalSurfaces: 3 embedded, vertex surfaces (Quad normal)>
+
+NormalSurface
+1 0 0 1 ; 1 0 0 || 1 0 0 1 ; 1 0 0
+<regina.NormalSurface: 1 0 0 1 ; 1 0 0 || 1 0 0 1 ; 1 0 0>
+
+NormalHypersurfaces
+4 embedded, vertex hypersurfaces (Prism normal)
+<regina.NormalHypersurfaces: 4 embedded, vertex hypersurfaces (Prism normal)>
+
+NormalHypersurface
+0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0 || 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0
+<regina.NormalHypersurface: 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0 || 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0>
+
+AngleStructures
+5 vertex angle structures (no restrictions)
+<regina.AngleStructures: 5 vertex angle structures (no restrictions)>
+
+AngleStructure
+1 0 0 ; 1 0 0
+<regina.AngleStructure: 1 0 0 ; 1 0 0>
+
+SurfaceFilterCombination
+AND filter
+<regina.SurfaceFilterCombination: AND filter>
+
+SurfaceFilterProperties
+Euler in { 1 0 }, orientable only
+<regina.SurfaceFilterProperties: Euler in { 1 0 }, orientable only>
+
+DiscSetSurface
+( 0 1 0 1 0 1 0 0 0 0 | 0 0 1 1 1 0 0 0 0 0 | 1 0 1 0 0 1 0 0 0 0 | 0 1 0 1 0 1 0 0 0 0 | 1 1 0 0 1 0 0 0 0 0 )
+<regina.DiscSetSurface: ( 0 1 0 1 0 1 0 0 0 0 | 0 0 1 1 1 0 0 0 0 0 | 1 0 1 0 0 1 0 0 0 0 | 0 1 0 1 0 1 0 0 0 0 | 1 1 0 0 1 0 0 0 0 0 )>
+
+DiscSetTet
+( 0 1 0 1 0 1 0 0 0 0 )
+<regina.DiscSetTet: ( 0 1 0 1 0 1 0 0 0 0 )>
+
+ModelLinkGraph
+6-node graph: [1:0 2:0 3:0 3:3] [0:0 4:0 4:3 2:1] [0:1 1:3 5:0 3:1] [0:2 2:3 5:3 0:3] [1:1 5:2 5:1 1:2] [2:2 4:2 4:1 3:2]
+<regina.ModelLinkGraph: 6-node graph: [1:0 2:0 3:0 3:3] [0:0 4:0 4:3 2:1] [0:1 1:3 5:0 3:1] [0:2 2:3 5:3 0:3] [1:1 5:2 5:1 1:2] [2:2 4:2 4:1 3:2]>
+
+ModelLinkGraphNode
+Node 0: arcs 0, 1, 2, 3 -> 1:0, 2:0, 3:0, 3:3
+<regina.ModelLinkGraphNode: Node 0: arcs 0, 1, 2, 3 -> 1:0, 2:0, 3:0, 3:3>
+
+ModelLinkGraphArc
+0:2
+<regina.ModelLinkGraphArc: 0:2>
+
+ModelLinkGraphCells
+8 cells: (0:0 1:0-1 4:0-1 5:2-3 3:2-3 0:3) (0:1 2:0-1 1:3-0 0:0) (0:2 3:0-1 2:3-0 0:1) (0:3 3:3-0 0:2) (1:2 4:3-0 1:1) (1:3 2:1-2 5:0-1 4:2-3 1:2) (2:3 3:1-2 5:3-0 2:2) (4:2 5:1-2 4:1)
+<regina.ModelLinkGraphCells: 8 cells: (0:0 1:0-1 4:0-1 5:2-3 3:2-3 0:3) (0:1 2:0-1 1:3-0 0:0) (0:2 3:0-1 2:3-0 0:1) (0:3 3:3-0 0:2) (1:2 4:3-0 1:1) (1:3 2:1-2 5:0-1 4:2-3 1:2) (2:3 3:1-2 5:3-0 2:2) (4:2 5:1-2 4:1)>
+
+Link
+Empty link
+<regina.Link: Empty link>
+
+Link
+0-crossing knot: ( )
+<regina.Link: 0-crossing knot: ( )>
+
+Link
+5-crossing, 2-component link: --++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )
+<regina.Link: 5-crossing, 2-component link: --++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )>
+
+PacketOfLink
+5-crossing, 2-component link: --++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )
+<regina.PacketOfLink: 5-crossing, 2-component link: --++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )>
+
+StrandRef
+(null)
+<regina.StrandRef: (null)>
+
+StrandRef
+_0
+<regina.StrandRef: _0>
+
+Crossing
+Crossing 0 (+): over _1 -+-> _3, under ^2 -+-> ^1
+<regina.Crossing: Crossing 0 (+): over _1 -+-> _3, under ^2 -+-> ^1>
+
+Tangle
+3-crossing vertical tangle: | --+ ( _0 ^1 ) ( ^2 _1 ^0 _2 )
+<regina.Tangle: 3-crossing vertical tangle: | --+ ( _0 ^1 ) ( ^2 _1 ^0 _2 )>
+
+Crossing
+Crossing 0 (-): over _1 -+-> _2, under (null) -+-> ^1
+<regina.Crossing: Crossing 0 (-): over _1 -+-> _2, under (null) -+-> ^1>
+
+SnapPeaTriangulation
+Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 0, vertex 1 ]
+<regina.SnapPeaTriangulation: Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 0, vertex 1 ]>
+
+SnapPeaTriangulation
+Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 0: (5, -2), vertex 1 ]
+<regina.SnapPeaTriangulation: Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 0: (5, -2), vertex 1 ]>
+
+PacketOfSnapPeaTriangulation
+Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 0: (5, -2), vertex 1 ]
+<regina.PacketOfSnapPeaTriangulation: Ideal orientable 3-D triangulation, f = ( 2 4 8 4 ), cusps: [ vertex 0: (5, -2), vertex 1 ]>
+
+Cusp
+(5,-2)-filled cusp at vertex 0
+<regina.Cusp: (5,-2)-filled cusp at vertex 0>
+
+Cusp
+Complete cusp at vertex 1
+<regina.Cusp: Complete cusp at vertex 1>
+
+FacetSpec3
+6:2
+<regina.FacetSpec3: 6:2>
+
+FacePair
+{1,3}
+<regina.FacePair: {1,3}>
+
+FacetPairing3
+1:1 1:0 1:2 1:3 | 0:1 0:0 0:2 0:3
+<regina.FacetPairing3: 1:1 1:0 1:2 1:3 | 0:1 0:0 0:2 0:3>
+
+FacetPairing4
+1:4 1:1 1:2 1:3 1:0 | 0:4 0:1 0:2 0:3 0:0
+<regina.FacetPairing4: 1:4 1:1 1:2 1:3 1:0 | 0:4 0:1 0:2 0:3 0:0>
+
+Triangulation2
+Bounded non-orientable 2-D triangulation, f = ( 1 2 1 )
+<regina.Triangulation2: Bounded non-orientable 2-D triangulation, f = ( 1 2 1 )>
+
+Triangulation3
+Closed orientable 3-D triangulation, f = ( 1 6 10 5 )
+<regina.Triangulation3: Closed orientable 3-D triangulation, f = ( 1 6 10 5 )>
+
+PacketOfTriangulation3
+Closed orientable 3-D triangulation, f = ( 1 6 10 5 )
+<regina.PacketOfTriangulation3: Closed orientable 3-D triangulation, f = ( 1 6 10 5 )>
+
+Triangulation4
+Ideal orientable 4-D triangulation, f = ( 1 1 4 5 2 )
+<regina.Triangulation4: Ideal orientable 4-D triangulation, f = ( 1 1 4 5 2 )>
+
+Triangulation5
+Possibly closed orientable 5-D triangulation, f = ( 6 15 20 15 6 2 )
+<regina.Triangulation5: Possibly closed orientable 5-D triangulation, f = ( 6 15 20 15 6 2 )>
+
+Face2_0
+Vertex 0, boundary, degree 3: 0 (2), 1 (1), 0 (0)
+<regina.Face2_0: Vertex 0, boundary, degree 3: 0 (2), 1 (1), 0 (0)>
+
+FaceEmbedding2_0
+0 (2)
+<regina.FaceEmbedding2_0: 0 (2)>
+
+Face2_1
+Edge 0, internal: 0 (01), 1 (12)
+<regina.Face2_1: Edge 0, internal: 0 (01), 1 (12)>
+
+FaceEmbedding2_1
+0 (01)
+<regina.FaceEmbedding2_1: 0 (01)>
+
+Simplex2
+2-simplex 0: 01 -> 1 (12), 12 -> 1 (01)
+<regina.Simplex2: 2-simplex 0: 01 -> 1 (12), 12 -> 1 (01)>
+
+Component2
+Component with 2 triangles: entire triangulation
+<regina.Component2: Component with 2 triangles: entire triangulation>
+
+BoundaryComponent2
+Boundary component 0: 0 (20)
+<regina.BoundaryComponent2: Boundary component 0: 0 (20)>
+
+Face3_0
+Vertex 0, internal, degree 20: 0 (0), 2 (3), 3 (3), 4 (3), 1 (3), 3 (0), 1 (2), 4 (0), 1 (1), 2 (0), 0 (1), 4 (1), 0 (2), 2 (1), 0 (3), 3 (1), 3 (2), 2 (2), 4 (2), 1 (0)
+<regina.Face3_0: Vertex 0, internal, degree 20: 0 (0), 2 (3), 3 (3), 4 (3), 1 (3), 3 (0), 1 (2), 4 (0), 1 (1), 2 (0), 0 (1), 4 (1), 0 (2), 2 (1), 0 (3), 3 (1), 3 (2), 2 (2), 4 (2), 1 (0)>
+
+FaceEmbedding3_0
+0 (0)
+<regina.FaceEmbedding3_0: 0 (0)>
+
+Face3_1
+Edge 0, internal, degree 5: 0 (01), 3 (32), 1 (20), 2 (02), 4 (31)
+<regina.Face3_1: Edge 0, internal, degree 5: 0 (01), 3 (32), 1 (20), 2 (02), 4 (31)>
+
+FaceEmbedding3_1
+0 (01)
+<regina.FaceEmbedding3_1: 0 (01)>
+
+Face3_2
+Triangle 0, internal: 0 (012), 4 (312)
+<regina.Face3_2: Triangle 0, internal: 0 (012), 4 (312)>
+
+FaceEmbedding3_2
+0 (012)
+<regina.FaceEmbedding3_2: 0 (012)>
+
+Simplex3
+3-simplex 0: 012 -> 4 (312), 013 -> 3 (321), 023 -> 2 (312), 123 -> 1 (321)
+<regina.Simplex3: 3-simplex 0: 012 -> 4 (312), 013 -> 3 (321), 023 -> 2 (312), 123 -> 1 (321)>
+
+Component3
+Component with 5 tetrahedra: entire triangulation
+<regina.Component3: Component with 5 tetrahedra: entire triangulation>
+
+Face4_0
+Vertex 0, ideal, degree 10: 0 (0), 1 (0), 1 (1), 0 (1), 0 (2), 1 (2), 0 (3), 1 (3), 1 (4), 0 (4)
+<regina.Face4_0: Vertex 0, ideal, degree 10: 0 (0), 1 (0), 1 (1), 0 (1), 0 (2), 1 (2), 0 (3), 1 (3), 1 (4), 0 (4)>
+
+FaceEmbedding4_0
+0 (0)
+<regina.FaceEmbedding4_0: 0 (0)>
+
+Face4_1
+Edge 0, internal, degree 20: 0 (01), 1 (12), 0 (12), 1 (01), 0 (23), 1 (23), 1 (13), 0 (02), 1 (02), 1 (34), 0 (13), 0 (03), 1 (24), 1 (03), 0 (34), 1 (14), 1 (04), 0 (14), 0 (24), 0 (04)
+<regina.Face4_1: Edge 0, internal, degree 20: 0 (01), 1 (12), 0 (12), 1 (01), 0 (23), 1 (23), 1 (13), 0 (02), 1 (02), 1 (34), 0 (13), 0 (03), 1 (24), 1 (03), 0 (34), 1 (14), 1 (04), 0 (14), 0 (24), 0 (04)>
+
+FaceEmbedding4_1
+0 (01)
+<regina.FaceEmbedding4_1: 0 (01)>
+
+Face4_2
+Triangle 0, internal, degree 4: 0 (234), 0 (124), 0 (014), 1 (124)
+<regina.Face4_2: Triangle 0, internal, degree 4: 0 (234), 0 (124), 0 (014), 1 (124)>
+
+FaceEmbedding4_2
+0 (234)
+<regina.FaceEmbedding4_2: 0 (234)>
+
+Face4_3
+Tetrahedron 0, internal: 0 (0123), 1 (0134)
+<regina.Face4_3: Tetrahedron 0, internal: 0 (0123), 1 (0134)>
+
+FaceEmbedding4_3
+0 (0123)
+<regina.FaceEmbedding4_3: 0 (0123)>
+
+Simplex4
+4-simplex 0: 0123 -> 1 (0134), 0124 -> 0 (1234), 0134 -> 1 (1234), 0234 -> 1 (0124), 1234 -> 0 (0124)
+<regina.Simplex4: 4-simplex 0: 0123 -> 1 (0134), 0124 -> 0 (1234), 0134 -> 1 (1234), 0234 -> 1 (0124), 1234 -> 0 (0124)>
+
+Component4
+Component with 2 pentachora: entire triangulation
+<regina.Component4: Component with 2 pentachora: entire triangulation>
+
+BoundaryComponent4
+Boundary component 0, ideal at vertex 0: 0 (0), 1 (0), 1 (1), 0 (1), 0 (2), 1 (2), 0 (3), 1 (3), 1 (4), 0 (4)
+<regina.BoundaryComponent4: Boundary component 0, ideal at vertex 0: 0 (0), 1 (0), 1 (1), 0 (1), 0 (2), 1 (2), 0 (3), 1 (3), 1 (4), 0 (4)>
+
+Face5_0
+Vertex 0, internal, degree 2: 0 (0), 1 (0)
+<regina.Face5_0: Vertex 0, internal, degree 2: 0 (0), 1 (0)>
+
+FaceEmbedding5_0
+0 (0)
+<regina.FaceEmbedding5_0: 0 (0)>
+
+Face5_1
+Edge 0, internal, degree 2: 0 (01), 1 (01)
+<regina.Face5_1: Edge 0, internal, degree 2: 0 (01), 1 (01)>
+
+FaceEmbedding5_1
+0 (01)
+<regina.FaceEmbedding5_1: 0 (01)>
+
+Face5_2
+Triangle 0, internal, degree 2: 0 (012), 1 (012)
+<regina.Face5_2: Triangle 0, internal, degree 2: 0 (012), 1 (012)>
+
+FaceEmbedding5_2
+0 (012)
+<regina.FaceEmbedding5_2: 0 (012)>
+
+Face5_3
+Tetrahedron 0, internal, degree 2: 0 (2345), 1 (2345)
+<regina.Face5_3: Tetrahedron 0, internal, degree 2: 0 (2345), 1 (2345)>
+
+FaceEmbedding5_3
+0 (2345)
+<regina.FaceEmbedding5_3: 0 (2345)>
+
+Face5_4
+Pentachoron 0, internal: 0 (01234), 1 (01234)
+<regina.Face5_4: Pentachoron 0, internal: 0 (01234), 1 (01234)>
+
+FaceEmbedding5_4
+0 (01234)
+<regina.FaceEmbedding5_4: 0 (01234)>
+
+Simplex5
+5-simplex 0: 01234 -> 1 (01234), 01235 -> 1 (01235), 01245 -> 1 (01245), 01345 -> 1 (01345), 02345 -> 1 (02345), 12345 -> 1 (12345)
+<regina.Simplex5: 5-simplex 0: 01234 -> 1 (01234), 01235 -> 1 (01235), 01245 -> 1 (01245), 01345 -> 1 (01345), 02345 -> 1 (02345), 12345 -> 1 (12345)>
+
+Component5
+Component with 2 5-simplices: entire triangulation
+<regina.Component5: Component with 2 5-simplices: entire triangulation>
+
+Component5
+Component with 1 5-simplex: 2
+<regina.Component5: Component with 1 5-simplex: 2>
+
+BoundaryComponent5
+Boundary component 0: 2 (01253), 2 (01245), 2 (02345), 2 (01354)
+<regina.BoundaryComponent5: Boundary component 0: 2 (01253), 2 (01245), 2 (02345), 2 (01354)>
+
+Isomorphism3
+0 -> 1 (1230), 1 -> 0 (2103)
+<regina.Isomorphism3: 0 -> 1 (1230), 1 -> 0 (2103)>
+
+HomologicalData
+Nothing computed yet
+<regina.HomologicalData: Nothing computed yet>
+
+HomMarkedAbelianGroup
+Epic (kernel Z): [[ 4 3 ]]
+<regina.HomMarkedAbelianGroup: Epic (kernel Z): [[ 4 3 ]]>
+
+HomologicalData
+H0(M): Z, H1(M): Z, H2(M): 0, H3(M): 0, H0(BM): Z, H1(BM): 2 Z, H2(BM): Z, H1(BM) -> H1(M): Epic (kernel Z): [[ 4 3 ]]
+<regina.HomologicalData: H0(M): Z, H1(M): Z, H2(M): 0, H3(M): 0, H0(BM): Z, H1(BM): 2 Z, H2(BM): Z, H1(BM) -> H1(M): Epic (kernel Z): [[ 4 3 ]]>
+
+SFSFibre
+(5,-2)
+<regina.SFSFibre: (5,-2)>
+
+LensSpace
+L(7,2)
+<regina.LensSpace: L(7,2)>
+
+SFSpace
+SFS [D/o2: (3,1) (4,-3)]
+<regina.SFSpace: SFS [D/o2: (3,1) (4,-3)]>
+
+SimpleSurfaceBundle
+RP2 x S1
+<regina.SimpleSurfaceBundle: RP2 x S1>
+
+SnapPeaCensusManifold
+SnapPea x101
+<regina.SnapPeaCensusManifold: SnapPea x101>
+
+Handlebody
+Genus 2 handlebody
+<regina.Handlebody: Genus 2 handlebody>
+
+TorusBundle
+T x I / [ 0,1 | 1,0 ]
+<regina.TorusBundle: T x I / [ 0,1 | 1,0 ]>
+
+GraphLoop
+SFS [A/o2: (2,1) (5,3)] / [ 0,-1 | 1,0 ]
+<regina.GraphLoop: SFS [A/o2: (2,1) (5,3)] / [ 0,-1 | 1,0 ]>
+
+GraphPair
+SFS [D/o2: (3,1) (4,3)] U/m SFS [D/o2: (3,1) (4,3)], m = [ 0,1 | 1,2 ]
+<regina.GraphPair: SFS [D/o2: (3,1) (4,3)] U/m SFS [D/o2: (3,1) (4,3)], m = [ 0,1 | 1,2 ]>
+
+GraphTriple
+SFS [D/o2: (3,1) (4,3)] U/m SFS [A/o2: (2,1) (5,2)] U/n SFS [D/o2: (3,1) (4,3)], m = [ -2,1 | 1,0 ], n = [ 1,2 | 3,5 ]
+<regina.GraphTriple: SFS [D/o2: (3,1) (4,3)] U/m SFS [A/o2: (2,1) (5,2)] U/n SFS [D/o2: (3,1) (4,3)], m = [ -2,1 | 1,0 ], n = [ 1,2 | 3,5 ]>
+
+list of SFSAlt
+  SFS [D/o2: (3,1) (4,3)], via [[ 1 0 ] [ 0 1 ]], without reflection
+  SFS [D/o2: (3,1) (4,3)], via [[ 1 0 ] [ 0 -1 ]], using reflection
+[<regina.SFSAlt: SFS [D/o2: (3,1) (4,3)], via [[ 1 0 ] [ 0 1 ]], without reflection>, <regina.SFSAlt: SFS [D/o2: (3,1) (4,3)], via [[ 1 0 ] [ 0 -1 ]], using reflection>]
+
+list of SFSAlt
+  SFS [A/o2: (2,1) (5,2)], via [[ 1 0 ] [ 0 1 ]], without reflection
+  SFS [A/o2: (2,1) (5,2)], via [[ 1 0 ] [ 0 -1 ]], using reflection
+[<regina.SFSAlt: SFS [A/o2: (2,1) (5,2)], via [[ 1 0 ] [ 0 1 ]], without reflection>, <regina.SFSAlt: SFS [A/o2: (2,1) (5,2)], via [[ 1 0 ] [ 0 -1 ]], using reflection>]
+
+SnapPeaCensusTri
+SnapPea m004
+<regina.SnapPeaCensusTri: SnapPea m004>
+
+TxIDiagonalCore
+T6:1
+<regina.TxIDiagonalCore: T6:1>
+
+TxIParallelCore
+T6*
+<regina.TxIParallelCore: T6*>
+
+SnappedBall
+Snapped 3-ball, internal edge 1 (23)
+<regina.SnappedBall: Snapped 3-ball, internal edge 1 (23)>
+
+SnappedTwoSphere
+Snapped 2-sphere, equator 0 (01) = 1 (01)
+<regina.SnappedTwoSphere: Snapped 2-sphere, equator 0 (01) = 1 (01)>
+
+PillowTwoSphere
+Pillow 2-sphere, triangles 3, 7
+<regina.PillowTwoSphere: Pillow 2-sphere, triangles 3, 7>
+
+SatBlockModel
+Model of Cube {0,1,2,3}
+<regina.SatBlockModel: Model of Cube {0,1,2,3}>
+
+BlockedSFS
+Blocked SFS [Tri, LST(1, 2, 3), LST(1, 5, 6), Mob(v)]
+<regina.BlockedSFS: Blocked SFS [Tri, LST(1, 2, 3), LST(1, 5, 6), Mob(v)]>
+
+SatRegion
+[ Tri(major) {0,2,1} | LST(1,5,6) {4..7}, reflected(H) | LST(1,2,3) {3}, reflected(H) | Mobius(vert) {triangle 0}, reflected(H) ]
+<regina.SatRegion: [ Tri(major) {0,2,1} | LST(1,5,6) {4..7}, reflected(H) | LST(1,2,3) {3}, reflected(H) | Mobius(vert) {triangle 0}, reflected(H) ]>
+
+SatBlockSpec
+Tri(major) {0,2,1}
+<regina.SatBlockSpec: Tri(major) {0,2,1}>
+
+SatTriPrism
+Tri(major) {0,2,1}
+<regina.SatTriPrism: Tri(major) {0,2,1}>
+
+SatAnnulus
+0 (013), 2 (320)
+<regina.SatAnnulus: 0 (013), 2 (320)>
+
+BlockedSFSLoop
+Blocked SFS Loop [Tri, Tri, Tri, Mob(v), Layer]
+<regina.BlockedSFSLoop: Blocked SFS Loop [Tri, Tri, Tri, Mob(v), Layer]>
+
+BlockedSFSPair
+Blocked SFS Pair [Tri, Mob(v), Mob(v) | Tri, Layer]
+<regina.BlockedSFSPair: Blocked SFS Pair [Tri, Mob(v), Mob(v) | Tri, Layer]>
+
+BlockedSFSTriple
+Blocked SFS Triple [Tri, LST(1, 2, 3), Mob(v) | Tri, Mob(v) | Tri, Mob(v), Mob(v)]
+<regina.BlockedSFSTriple: Blocked SFS Triple [Tri, LST(1, 2, 3), Mob(v) | Tri, Mob(v) | Tri, Mob(v), Mob(v)]>
+
+PluggedTorusBundle
+Plugged Torus Bundle [T6:1 | Tri, Mob(v)]
+<regina.PluggedTorusBundle: Plugged Torus Bundle [T6:1 | Tri, Mob(v)]>
+
+TrivialTri
+L'(3,1)
+<regina.TrivialTri: L'(3,1)>
+
+LayeredLoop
+C~(2)
+<regina.LayeredLoop: C~(2)>
+
+LayeredTorusBundle
+B(T6:1 | -1,-1 | -1,-2)
+<regina.LayeredTorusBundle: B(T6:1 | -1,-1 | -1,-2)>
+
+PlugTriSolidTorus
+P(0)
+<regina.PlugTriSolidTorus: P(0)>
+
+TrivialTri
+N(3,2)
+<regina.TrivialTri: N(3,2)>
+
+AugTriSolidTorus
+A(3,-1 | 5,-6)
+<regina.AugTriSolidTorus: A(3,-1 | 5,-6)>
+
+TriSolidTorus
+Triangular solid torus, tetrahedra 2 (2103) 1 (1032) 0 (0321)
+<regina.TriSolidTorus: Triangular solid torus, tetrahedra 2 (2103) 1 (1032) 0 (0321)>
+
+LayeredLensSpace
+L(8,3)
+<regina.LayeredLensSpace: L(8,3)>
+
+LayeredSolidTorus
+LST(2, 3, 5), base 0 (edges 5|23|401), top 1 (edges 41|32|5)
+<regina.LayeredSolidTorus: LST(2, 3, 5), base 0 (edges 5|23|401), top 1 (edges 41|32|5)>
+
+LayeredSolidTorus
+LST(2, 3, 5), base 1 (edges 0|41|352), top 0 (edges 23|41|0)
+<regina.LayeredSolidTorus: LST(2, 3, 5), base 1 (edges 0|41|352), top 0 (edges 23|41|0)>
+
+Layering
+Layer 0 tetrahedra: 0 (230), 0 (321) -> 0 (230), 0 (321) via [[ 1 0 ] [ 0 1 ]]
+<regina.Layering: Layer 0 tetrahedra: 0 (230), 0 (321) -> 0 (230), 0 (321) via [[ 1 0 ] [ 0 1 ]]>
+
+Layering
+Layer 1 tetrahedron: 0 (230), 0 (321) -> 1 (123), 1 (032) via [[ 1 0 ] [ -1 1 ]]
+<regina.Layering: Layer 1 tetrahedron: 0 (230), 0 (321) -> 1 (123), 1 (032) via [[ 1 0 ] [ -1 1 ]]>
+
+LayeredChainPair
+C(4,6)
+<regina.LayeredChainPair: C(4,6)>
+
+LayeredChain
+Chain(4), tetrahedra 3 (1302) .. 1 (0213)
+<regina.LayeredChain: Chain(4), tetrahedra 3 (1302) .. 1 (0213)>
+
+SpiralSolidTorus
+7-tetrahedron spiralled solid torus, tetrahedra 1 (0213), 0 (2130), 2 (0213), 6 (2130), 9 (0213), 8 (1302), 5 (3021)
+<regina.SpiralSolidTorus: 7-tetrahedron spiralled solid torus, tetrahedra 1 (0213), 0 (2130), 2 (0213), 6 (2130), 9 (0213), 8 (1302), 5 (3021)>
+
+CensusHit
+m004 : #1 -- Cusped hyperbolic census (orientable)
+<regina.CensusHit: m004 : #1 -- Cusped hyperbolic census (orientable)>
+
+GluingPermSearcher2
+New search, orientable only: stage 0, order: 0:0 0:2
+<regina.GluingPermSearcher2: New search, orientable only: stage 0, order: 0:0 0:2>
+
+GluingPermSearcher3
+New search, orientable only, purge 0x01: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0
+<regina.GluingPermSearcher3: New search, orientable only, purge 0x01: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0>
+
+CompactSearcher
+New search, orientable only, finite only, purge 0x01: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0
+<regina.CompactSearcher: New search, orientable only, finite only, purge 0x01: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0>
+
+HyperbolicMinSearcher
+New search, orientable only, purge 0x09: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0
+<regina.HyperbolicMinSearcher: New search, orientable only, purge 0x09: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0>
+
+EulerSearcher
+New search: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0
+<regina.EulerSearcher: New search: stage 0, order: 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1 3:0 4:0 4:1 5:0 5:1 6:0 6:1 7:0>
+
+ClosedPrimeMinSearcher
+New search, orientable only, finite only, purge 0x07: stage 0, order: 3:0 7:0 6:0 6:1 5:0 5:1 4:0 4:1 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1
+<regina.ClosedPrimeMinSearcher: New search, orientable only, finite only, purge 0x07: stage 0, order: 3:0 7:0 6:0 6:1 5:0 5:1 4:0 4:1 0:0 0:1 0:2 0:3 1:0 1:2 2:0 2:1>
+
+GluingPermSearcher4
+New search, finite only: stage 0, order: 0:0 0:1 0:2 0:3 0:4
+<regina.GluingPermSearcher4: New search, finite only: stage 0, order: 0:0 0:1 0:2 0:3 0:4>
+
+TypeTrie4
+Trie for 4 types
+<regina.TypeTrie4: Trie for 4 types>
+
+TypeTrie7
+Trie for 7 types
+<regina.TypeTrie7: Trie for 7 types>
+
+LPInitialTableaux_NonSpun
+Columns: {+0,0} {-0} {-0} {+0,0} {-0} {-0}, constraints: [ 1 -1 0 1 0 -1 -1 0 ] [ 0 0 0 4 -2 -2 0 -1 ]
+<regina.LPInitialTableaux_NonSpun: Columns: {+0,0} {-0} {-0} {+0,0} {-0} {-0}, constraints: [ 1 -1 0 1 0 -1 -1 0 ] [ 0 0 0 4 -2 -2 0 -1 ]>
+
+LPMatrix
+[[ 2 -1 -1 2 -1 -1 0 0 ] [ 1 -1 0 1 0 -1 -1 0 ] [ 0 0 0 4 -2 -2 0 -1 ]]
+<regina.LPMatrix: [[ 2 -1 -1 2 -1 -1 0 0 ] [ 1 -1 0 1 0 -1 -1 0 ] [ 0 0 0 4 -2 -2 0 -1 ]]>
+
+LPData_NonSpun
+Uninitialised
+<regina.LPData_NonSpun: Uninitialised>
+
+LPData_NonSpun
+Feasible basis: (empty)
+<regina.LPData_NonSpun: Feasible basis: (empty)>
+
+LPData_NonSpun
+Feasible basis: 0 1 3
+<regina.LPData_NonSpun: Feasible basis: 0 1 3>
+
+ValidityConstraints
+Blocks: 2 x 7, local: { 4 5 6 }
+<regina.ValidityConstraints: Blocks: 2 x 7, local: { 4 5 6 }>
+
+ValidityConstraints
+Blocks: 2 x 6, local: { 0 1 2 3 4 5 }, global: { 3 4 5 }
+<regina.ValidityConstraints: Blocks: 2 x 6, local: { 0 1 2 3 4 5 }, global: { 3 4 5 }>
+
+BanNone
+Nothing banned or marked
+<regina.BanNone: Nothing banned or marked>
+
+BanBoundary
+Banned: 0 1 2 9 10 11 12, nothing marked
+<regina.BanBoundary: Banned: 0 1 2 9 10 11 12, nothing marked>
+
+BanTorusBoundary
+Banned: 0 1 2 9 10 11 12, marked: 9 10 11 12 13 14 15 16 17 18 19 20
+<regina.BanTorusBoundary: Banned: 0 1 2 9 10 11 12, marked: 9 10 11 12 13 14 15 16 17 18 19 20>
+
+PosOrder
+Compare row indices using position vectors
+<regina.PosOrder: Compare row indices using position vectors>
+
+TreeDecomposition
+Width 4, size 11, bags 0: {0,1,5,6} -> 1, 1: {0,1,2,5,7} -> 2, 2: {0,2,4,5,7} -> 4, 3: {2,3,4,8} -> 4, 4: {0,2,4,7,8} -> 5, 5: {0,4,7,8} -> 6, 6: {0,4,8,10} -> 8, 7: {4,8,9,10} -> 8, 8: {4,8,10} -> 9, 9: {8,10} -> 10, 10: {10}
+<regina.TreeDecomposition: Width 4, size 11, bags 0: {0,1,5,6} -> 1, 1: {0,1,2,5,7} -> 2, 2: {0,2,4,5,7} -> 4, 3: {2,3,4,8} -> 4, 4: {0,2,4,7,8} -> 5, 5: {0,4,7,8} -> 6, 6: {0,4,8,10} -> 8, 7: {4,8,9,10} -> 8, 8: {4,8,10} -> 9, 9: {8,10} -> 10, 10: {10}>
+
+TreeBag
+Bag of 4 elements: 0 1 5 6
+<regina.TreeBag: Bag of 4 elements: 0 1 5 6>
+
+Signature
+(abbc)(ac)
+<regina.Signature: (abbc)(ac)>
+
+FileInfo
+Regina data: Second-generation XML format (Regina 3.0-6.0.1)
+<regina.FileInfo: Regina data: Second-generation XML format (Regina 3.0-6.0.1)>
+
+NoneType
+None
+None
+
+ProgressTrackerOpen
+Initialising - 0 step(s)
+<regina.ProgressTrackerOpen: Initialising - 0 step(s)>
+
+ProgressTrackerOpen
+Doing stuff - 3 step(s)
+<regina.ProgressTrackerOpen: Doing stuff - 3 step(s)>
+
+ProgressTrackerOpen
+Finished
+<regina.ProgressTrackerOpen: Finished>
+
+ProgressTracker
+Initialising - 0%
+<regina.ProgressTracker: Initialising - 0%>
+
+ProgressTracker
+Doing stuff - 5.9%
+<regina.ProgressTracker: Doing stuff - 5.9%>
+
+ProgressTracker
+Doing stuff - 76%
+<regina.ProgressTracker: Doing stuff - 76%>
+
+ProgressTracker
+Cancelled but not finished
+<regina.ProgressTracker: Cancelled but not finished>
+
+Container
+Container with 1 child, 3 descendants
+<regina.Container: Container with 1 child, 3 descendants>
+
+Text
+Text of length 12
+<regina.Text: Text of length 12>
+
+Attachment
+Attachment (3 bytes): test.txt
+<regina.Attachment: Attachment (3 bytes): test.txt>
+
+Script
+2-line script, dummy = (null), text = <Welcome>
+<regina.Script: 2-line script, dummy = (null), text = <Welcome>>
+
+GluingPerms2
+0 (102), 0 (102), 1 (120) | 0 (201), 1 (021), 1 (021)
+<regina.GluingPerms2: 0 (102), 0 (102), 1 (120) | 0 (201), 1 (021), 1 (021)>
+
+GluingPerms2
+1 (012), 1 (012), 1 (012) | 0 (012), 0 (012), 0 (012)
+<regina.GluingPerms2: 1 (012), 1 (012), 1 (012) | 0 (012), 0 (012), 0 (012)>
+
+GluingPerms2
+1 (021), 1 (210), 1 (102) | 0 (021), 0 (210), 0 (102)
+<regina.GluingPerms2: 1 (021), 1 (210), 1 (102) | 0 (021), 0 (210), 0 (102)>
+
+(aabb)
+SigPartialIsomorphism
+Symbols: ab -> ba; cycles: 0 -> 0 (>> 3), all reversed
+<regina.SigPartialIsomorphism: Symbols: ab -> ba; cycles: 0 -> 0 (>> 3), all reversed>
+
+(abab)
+SigPartialIsomorphism
+Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), all reversed
+<regina.SigPartialIsomorphism: Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), all reversed>
+
+(aab)(b)
+SigPartialIsomorphism
+Symbols: ab -> ab; cycles: 0 -> 0 (>> 1), 1 -> 1, all reversed
+<regina.SigPartialIsomorphism: Symbols: ab -> ab; cycles: 0 -> 0 (>> 1), 1 -> 1, all reversed>
+
+(ab)(ab)
+SigPartialIsomorphism
+Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), 1 -> 1 (>> 1), all reversed
+<regina.SigPartialIsomorphism: Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), 1 -> 1 (>> 1), all reversed>
+
+(ab)(a)(b)
+SigPartialIsomorphism
+Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), 2 -> 1, 1 -> 2, all reversed
+<regina.SigPartialIsomorphism: Symbols: ab -> ba; cycles: 0 -> 0 (>> 1), 2 -> 1, 1 -> 2, all reversed>
+
+TreeSingleSoln_EulerPositive
+Level 0 of 0..19, types: 0___________________
+<regina.TreeSingleSoln_EulerPositive: Level 0 of 0..19, types: 0___________________>
+
+TreeSingleSoln_EulerPositive
+Level 19 of 0..19, types: 00010000010010000000
+<regina.TreeSingleSoln_EulerPositive: Level 19 of 0..19, types: 00010000010010000000>
+
+TautEnumeration
+Level 1 of 0..1, types: 11
+<regina.TautEnumeration: Level 1 of 0..1, types: 11>
+
+TautEnumeration
+Level 1 of 0..1, types: 23
+<regina.TautEnumeration: Level 1 of 0..1, types: 23>
+
+TautEnumeration
+Level 1 of 0..1, types: 32
+<regina.TautEnumeration: Level 1 of 0..1, types: 32>
+
+TreeEnumeration
+Level 1 of 0..1, types: 12
+<regina.TreeEnumeration: Level 1 of 0..1, types: 12>
+
+TreeEnumeration
+Level 1 of 0..1, types: 13
+<regina.TreeEnumeration: Level 1 of 0..1, types: 13>
+
+TreeEnumeration
+Level 1 of 0..1, types: 21
+<regina.TreeEnumeration: Level 1 of 0..1, types: 21>
+
+TreeEnumeration
+Level 1 of 0..1, types: 31
+<regina.TreeEnumeration: Level 1 of 0..1, types: 31>
+
+TreeEnumeration_NonSpun
+Level 1 of 0..1, types: 11
+<regina.TreeEnumeration_NonSpun: Level 1 of 0..1, types: 11>
+

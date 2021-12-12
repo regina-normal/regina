@@ -82,6 +82,7 @@ void addTangle(pybind11::module_& m) {
             pybind11::arg("perform") = true)
         .def("simplifyToLocalMinimum", &Tangle::simplifyToLocalMinimum,
             pybind11::arg("perform") = true)
+        .def("brief", overload_cast<>(&Tangle::brief, pybind11::const_))
         .def("orientedGauss",
             overload_cast<>(&Tangle::orientedGauss, pybind11::const_))
         // In the following overloads, we define functions twice because

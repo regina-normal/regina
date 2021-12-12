@@ -78,7 +78,7 @@ using MatrixInt = Matrix<Integer, true>;
  */
 class AbelianGroup : public ShortOutput<AbelianGroup, true> {
     protected:
-        unsigned rank_;
+        unsigned rank_ { 0 };
             /**< The rank of the group (the number of Z components). */
         std::vector<Integer> revInvFactors_;
             /**< The invariant factors <i>d0</i>,...,<i>dn</i> as
@@ -105,6 +105,63 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * The group that was passed will no longer be usable.
          */
         AbelianGroup(AbelianGroup&&) noexcept = default;
+        /**
+         * Creates a free abelian group of the given rank.
+         *
+         * @param rank the rank of the new group.
+         */
+        AbelianGroup(unsigned rank);
+        /**
+         * Creates a new group with the given rank and invariant factors.
+         *
+         * \exception The invariant factors were not all greater than 1,
+         * and/or they did not satisfy the divisibily requirement (where
+         * each invariant factor must divide the one after it).
+         *
+         * \ifacespython Not available, but there is a constructor that
+         * takes the invariant factors as a Python list.
+         *
+         * \tparam T an integer type, which may be a native C++ integer
+         * type or one of Regina's own integer types.
+         *
+         * @param rank the rank of the new group (i.e., the number of
+         * copies of \a Z).
+         * @param invFac the list of invariant factors \a d0, \a d1, ...,
+         * as described in the class notes, where each invariant factor
+         * is greater than 1 and divides the invariant factor after it.
+         */
+        template <typename T>
+        AbelianGroup(unsigned rank, std::initializer_list<T> invFac);
+        /**
+         * Creates a new group with the given rank and invariant factors.
+         *
+         * \exception The invariant factors were not all greater than 1,
+         * and/or they did not satisfy the divisibily requirement (where
+         * each invariant factor must divide the one after it).
+         *
+         * \tparam Container a container or view that supports reverse
+         * iteration via rbegin(), rend(), that has an empty() function,
+         * and whose elements may be of a native C++ integer type or one of
+         * Regina's own integer types.  A suitable example might be
+         * std::vector<int>.
+         *
+         * @param rank the rank of the new group (i.e., the number of
+         * copies of \a Z).
+         * @param invFac the list of invariant factors \a d0, \a d1, ...,
+         * as described in the class notes, where each invariant factor
+         * is greater than 1 and divides the invariant factor after it.
+         */
+        template <typename Container>
+        AbelianGroup(unsigned rank, const Container& invFac);
+        /**
+         * Creates the abelian group defined by the given presentation matrix.
+         *
+         * Each column of the matrix represents a generator, and each
+         * row of the matrix represents a relation.
+         *
+         * @param presentation a presentation matrix for the new group.
+         */
+        AbelianGroup(MatrixInt presentation);
         /**
          * Creates an abelian group as the homology of a chain complex.
          * The abelian group is the kernel of \a M modulo the image of \a N.
@@ -383,19 +440,35 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          */
         bool isZn(unsigned long n) const;
         /**
-         * Determines whether this and the given abelian group are
-         * isomorphic.
+         * Determines whether this and the given abelian group have
+         * identical presentations (which means they are isomorphic).
+         *
+         * Since the AbelianGroup class stores \e only the invariants required
+         * to identify the isomorphism type, two groups will compare as equal
+         * if and only if they are isomorphic.  This is in contrast to the
+         * comparisons for GroupPresentation (which tests for identical
+         * generators and relations), or for MarkedAbelianGroup (which tests
+         * for identical chain complex presentations).
          *
          * @param other the group with which this should be compared.
-         * @return \c true if and only if the two groups are isomorphic.
+         * @return \c true if and only if the two groups have identical
+         * presentations (i.e., they are isomorphic).
          */
         bool operator == (const AbelianGroup& other) const;
         /**
-         * Determines whether this and the given abelian group are
-         * non-isomorphic.
+         * Determines whether this and the given abelian group have
+         * different presentations (which means they are non-isomorphic).
+         *
+         * Since the AbelianGroup class stores \e only the invariants required
+         * to identify the isomorphism type, two groups will compare as equal
+         * if and only if they are isomorphic.  This is in contrast to the
+         * comparisons for GroupPresentation (which tests for identical
+         * generators and relations), or for MarkedAbelianGroup (which tests
+         * for identical chain complex presentations).
          *
          * @param other the group with which this should be compared.
-         * @return \c true if and only if the two groups are non-isomorphic.
+         * @return \c true if and only if the two groups have different
+         * presentations (i.e., they are non-isomorphic).
          */
         bool operator != (const AbelianGroup& other) const;
 
@@ -425,7 +498,7 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
 
         /**
          * Writes the tight encoding of this abelian group to the given output
-         * stream.  See the page on \ref "tight encodings" for details.
+         * stream.  See the page on \ref tight "tight encodings" for details.
          *
          * \ifacespython Not present; use tightEncoding() instead.
          *
@@ -436,7 +509,7 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
 
         /**
          * Returns the tight encoding of this abelian group.
-         * See the page on \ref "tight encodings" for details.
+         * See the page on \ref tight "tight encodings" for details.
          *
          * @return the resulting encoded string.
          */
@@ -487,7 +560,50 @@ void swap(AbelianGroup& lhs, AbelianGroup& rhs) noexcept;
 
 // Inline functions for AbelianGroup
 
-inline AbelianGroup::AbelianGroup() : rank_(0) {
+inline AbelianGroup::AbelianGroup() {
+}
+
+inline AbelianGroup::AbelianGroup(unsigned rank) : rank_(rank) {
+}
+
+template <typename T>
+inline AbelianGroup::AbelianGroup(unsigned rank,
+        std::initializer_list<T> invFac) : rank_(rank) {
+    if (invFac.size() > 0) {
+        auto it = std::rbegin(invFac);
+        while (true) {
+            if (*it <= 1)
+                throw InvalidArgument(
+                    "Each invariant factor must be strictly greater than 1");
+            revInvFactors_.push_back(*it);
+            auto prev = it++;
+            if (it == std::rend(invFac))
+                return;
+            if ((*prev) % (*it) != 0)
+                throw InvalidArgument(
+                    "Each invariant factor must divide the next");
+        }
+    }
+}
+
+template <typename Container>
+inline AbelianGroup::AbelianGroup(unsigned rank, const Container& invFac) :
+        rank_(rank) {
+    if (! invFac.empty()) {
+        auto it = invFac.rbegin();
+        while (true) {
+            if (*it <= 1)
+                throw InvalidArgument(
+                    "Each invariant factor must be strictly greater than 1");
+            revInvFactors_.push_back(*it);
+            auto prev = it++;
+            if (it == invFac.rend())
+                return;
+            if ((*prev) % (*it) != 0)
+                throw InvalidArgument(
+                    "Each invariant factor must divide the next");
+        }
+    }
 }
 
 inline void AbelianGroup::swap(AbelianGroup& other) noexcept {

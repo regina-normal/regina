@@ -36,8 +36,8 @@
 #include "enumerate/treetraversal.h"
 #include "packet/container.h"
 #include "subcomplex/snappedball.h"
-#include "surfaces/normalsurface.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurface.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
@@ -61,7 +61,7 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
 
     unsigned long initZ, initZ2, initZ3;
     {
-        const AbelianGroup& homology = start.homology();
+        AbelianGroup homology = start.homology();
         initZ = homology.rank();
         initZ2 = homology.torsionRank(2);
         initZ3 = homology.torsionRank(3);
@@ -152,7 +152,7 @@ std::vector<Triangulation<3>> Triangulation<3>::summands() const {
     // RP3 and L(3,1) terms.
     unsigned long finalZ = 0, finalZ2 = 0, finalZ3 = 0;
     for (const Triangulation<3>& c : primeComponents) {
-        const AbelianGroup& homology = c.homology();
+        AbelianGroup homology = c.homology();
         finalZ += homology.rank();
         finalZ2 += homology.torsionRank(2);
         finalZ3 += homology.torsionRank(3);
@@ -633,7 +633,7 @@ bool Triangulation<3>::isIrreducible() const {
 
     unsigned long Z, Z2, Z3;
     {
-        const AbelianGroup& homology = start.homology();
+        AbelianGroup homology = start.homology();
         Z = homology.rank();
         Z2 = homology.torsionRank(2);
         Z3 = homology.torsionRank(3);
@@ -708,7 +708,7 @@ bool Triangulation<3>::isIrreducible() const {
 
                     // Note which parts of our initial homology we have
                     // now accounted for.
-                    const AbelianGroup& h1 = top.homology();
+                    AbelianGroup h1 = top.homology();
                     Z -= h1.rank();
                     Z2 -= h1.torsionRank(2);
                     Z3 -= h1.torsionRank(3);

@@ -103,6 +103,7 @@ class SatMobius : public SatBlock {
          */
         int position() const;
 
+        bool operator == (const SatBlock& other) const override;
         void adjustSFS(SFSpace& sfs, bool reflect) const override;
         void writeTextShort(std::ostream& out) const override;
         void writeAbbr(std::ostream& out, bool tex = false) const override;
@@ -204,6 +205,7 @@ class SatLST : public SatBlock {
          */
         Perm<4> roles() const;
 
+        bool operator == (const SatBlock& other) const override;
         void adjustSFS(SFSpace& sfs, bool reflect) const override;
         void writeTextShort(std::ostream& out) const override;
         void writeAbbr(std::ostream& out, bool tex = false) const override;
@@ -287,6 +289,7 @@ class SatTriPrism : public SatBlock {
          */
         bool isMajor() const;
 
+        bool operator == (const SatBlock& other) const override;
         void adjustSFS(SFSpace& sfs, bool reflect) const override;
         void writeTextShort(std::ostream& out) const override;
         void writeAbbr(std::ostream& out, bool tex = false) const override;
@@ -376,6 +379,7 @@ class SatTriPrism : public SatBlock {
  */
 class SatCube : public SatBlock {
     public:
+        bool operator == (const SatBlock& other) const override;
         void adjustSFS(SFSpace& sfs, bool reflect) const override;
         void writeTextShort(std::ostream& out) const override;
         void writeAbbr(std::ostream& out, bool tex = false) const override;
@@ -455,6 +459,7 @@ class SatCube : public SatBlock {
  */
 class SatReflectorStrip : public SatBlock {
     public:
+        bool operator == (const SatBlock& other) const override;
         void adjustSFS(SFSpace& sfs, bool reflect) const override;
         void writeTextShort(std::ostream& out) const override;
         void writeAbbr(std::ostream& out, bool tex = false) const override;
@@ -560,6 +565,7 @@ class SatLayering : public SatBlock {
          */
         bool overHorizontal() const;
 
+        bool operator == (const SatBlock& other) const override;
         void adjustSFS(SFSpace& sfs, bool reflect) const override;
         void writeTextShort(std::ostream& out) const override;
         void writeAbbr(std::ostream& out, bool tex = false) const override;
@@ -617,6 +623,13 @@ inline SatBlock* SatMobius::clone() const {
     return new SatMobius(*this);
 }
 
+inline bool SatMobius::operator == (const SatBlock& other) const {
+    if (auto b = dynamic_cast<const SatMobius*>(std::addressof(other)))
+        return position_ == b->position_;
+    else
+        return false;
+}
+
 // Inline functions for SatLST
 
 inline SatLST::SatLST(const LayeredSolidTorus& lst, Perm<4> roles) :
@@ -635,6 +648,12 @@ inline SatBlock* SatLST::clone() const {
     return new SatLST(*this);
 }
 
+inline bool SatLST::operator == (const SatBlock& other) const {
+    if (auto b = dynamic_cast<const SatLST*>(std::addressof(other)))
+        return lst_ == b->lst_ && roles_ == b->roles_;
+    else
+        return false;
+}
 // Inline functions for SatTriPrism
 
 inline SatTriPrism::SatTriPrism(bool major) : SatBlock(3), major_(major) {
@@ -648,9 +667,19 @@ inline SatBlock* SatTriPrism::clone() const {
     return new SatTriPrism(*this);
 }
 
+inline bool SatTriPrism::operator == (const SatBlock& other) const {
+    if (auto b = dynamic_cast<const SatTriPrism*>(std::addressof(other)))
+        return major_ == b->major_;
+    else
+        return false;
+}
+
 inline void SatTriPrism::writeTextShort(std::ostream& out) const {
-    out << "Saturated triangular prism of "
-        << (major_ ? "major" : "minor") << " type";
+    // Format was like: Saturated triangular prism of major type
+    out << "Tri(" << (major_ ? "major" : "minor") << ") {"
+        << annulus_[0].tet[0]->index() << ','
+        << annulus_[1].tet[0]->index() << ','
+        << annulus_[2].tet[0]->index() << '}';
 }
 
 inline void SatTriPrism::writeAbbr(std::ostream& out, bool tex) const {
@@ -669,11 +698,20 @@ inline SatBlock* SatCube::clone() const {
     return new SatCube(*this);
 }
 
+inline bool SatCube::operator == (const SatBlock& other) const {
+    return dynamic_cast<const SatCube*>(std::addressof(other));
+}
+
 inline void SatCube::writeTextShort(std::ostream& out) const {
-    out << "Saturated cube";
+    out << "Cube {"
+        << annulus_[0].tet[0]->index() << ','
+        << annulus_[1].tet[0]->index() << ','
+        << annulus_[2].tet[0]->index() << ','
+        << annulus_[3].tet[0]->index() << '}';
 }
 
 inline void SatCube::writeAbbr(std::ostream& out, bool tex) const {
+    // Format was like: Saturated cube
     if (tex)
         out << "\\square";
     else
@@ -690,10 +728,12 @@ inline SatBlock* SatReflectorStrip::clone() const {
     return new SatReflectorStrip(*this);
 }
 
-inline void SatReflectorStrip::writeTextShort(std::ostream& out) const {
-    out << "Saturated reflector strip of length " << countAnnuli();
-    if (twistedBoundary())
-        out << " (twisted)";
+inline bool SatReflectorStrip::operator == (const SatBlock& other) const {
+    if (dynamic_cast<const SatReflectorStrip*>(std::addressof(other)))
+        return countAnnuli() == other.countAnnuli() &&
+            twistedBoundary() == other.twistedBoundary();
+    else
+        return false;
 }
 
 inline void SatReflectorStrip::writeAbbr(std::ostream& out, bool tex) const {
@@ -724,14 +764,23 @@ inline SatBlock* SatLayering::clone() const {
     return new SatLayering(*this);
 }
 
+inline bool SatLayering::operator == (const SatBlock& other) const {
+    if (auto b = dynamic_cast<const SatLayering*>(std::addressof(other)))
+        return overHorizontal_ == b->overHorizontal_;
+    else
+        return false;
+}
+
 inline void SatLayering::writeTextShort(std::ostream& out) const {
-    out << "Saturated single layering over "
-        << (overHorizontal_ ? "horizontal" : "diagonal") << " edge";
+    // Format was like: Saturated single layering over horizontal edge
+    out << "Layer("
+        << (overHorizontal_ ? "horiz" : "diag") << ") {"
+        << annulus_[0].tet[0]->index() << '}';
 }
 
 inline void SatLayering::writeAbbr(std::ostream& out, bool tex) const {
     if (tex)
-        out << "lozenge";
+        out << "\\lozenge";
     else
         out << "Layer";
 }

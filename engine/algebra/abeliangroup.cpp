@@ -37,6 +37,36 @@
 
 namespace regina {
 
+AbelianGroup::AbelianGroup(MatrixInt presentation) {
+    smithNormalForm(presentation);
+
+    // Run up the diagonal until we hit 1.
+    // Hopefully this will be faster than running down the diagonal
+    // looking for 0 because the SNF calculation should end up with
+    // many 1s for a unnecessarily large presentation matrix such as
+    // is produced for instance by homology calculations.
+    unsigned long i = presentation.columns();
+
+    unsigned long rows = presentation.rows();
+    if (rows < i) {
+        // There are more columns than rows; these extras cols must be zero.
+        rank_ += (i - rows);
+        i = rows;
+    }
+
+    // Now i is precisely the length of the diagonal.
+    while (i > 0) {
+        --i;
+        const auto& d = presentation.entry(i, i);
+        if (d == 0)
+            ++rank_;
+        else if (d == 1)
+            return;
+        else
+            revInvFactors_.push_back(d);
+    }
+}
+
 void AbelianGroup::addTorsion(Integer degree) {
     // Loop from the largest invariant factor to the smallest.
     for (auto it = revInvFactors_.begin(); it != revInvFactors_.end(); ++it) {
@@ -89,8 +119,11 @@ void AbelianGroup::addGroup(MatrixInt presentation) {
             ++rank_;
         else if (presentation.entry(i, i) == 1)
             return;
-        else
+        else {
+            // We use addTorsion() because there might have been other
+            // invariant factors present before we called addGroup().
             addTorsion(presentation.entry(i, i));
+        }
     }
 }
 
@@ -183,7 +216,7 @@ void AbelianGroup::writeXMLData(std::ostream& out) const {
 }
 
 // ---N--> CC --M-->  ie: M*N = 0.
-AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) : rank_(0) {
+AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) {
     if (M.columns() != N.rows())
         throw InvalidArgument("The chain complex constructor requires "
             "M.columns() == N.rows()");
@@ -212,25 +245,26 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) : rank_(0) {
     // exactly what we need to do.
     while (i > 0) {
         --i;
-        if (N.entry(i, i) == 0)
+        const auto& d = N.entry(i, i);
+        if (d == 0)
             ++rank_;
-        else if (N.entry(i, i) == 1)
+        else if (d == 1)
             break;
         else
-            revInvFactors_.push_back(N.entry(i, i));
+            revInvFactors_.push_back(d);
     }
 
     // Finally, subtract the rank of M.
     rank_ -= M.rowEchelonForm();
 }
 
-AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) {
+AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) :
+        rank_(N.rows()) {
     if (M.columns() != N.rows())
         throw InvalidArgument("The chain complex constructor requires "
             "M.columns() == N.rows()");
 
-    Integer cof(p.abs());
-    rank_ = N.rows();
+    Integer cof = p.abs();
 
     smithNormalForm(N);
     unsigned long lim = (N.rows() < N.columns() ? N.rows() : N.columns() );

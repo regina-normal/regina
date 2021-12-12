@@ -87,7 +87,8 @@ void addAngleStructures(pybind11::module_& m) {
         })
     ;
     regina::python::add_output(l);
-    regina::python::add_eq_operators(l);
+    regina::python::packet_eq_operators(l);
+    regina::python::add_packet_data(l);
 
     auto wrap = regina::python::add_packet_wrapper<AngleStructures>(
         m, "PacketOfAngleStructures");

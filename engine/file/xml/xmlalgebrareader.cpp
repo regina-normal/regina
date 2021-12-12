@@ -93,9 +93,7 @@ void XMLAbelianGroupReader::startElement(const std::string&,
     long rank;
     if (valueOf(tagProps.lookup("rank"), rank))
         if (rank >= 0) {
-            group_ = AbelianGroup();
-            if (rank)
-                group_->addRank(rank);
+            group_ = AbelianGroup(rank);
         }
 }
 

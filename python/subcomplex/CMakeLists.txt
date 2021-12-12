@@ -7,7 +7,6 @@ SET ( FILES
   blockedsfsloop.cpp
   blockedsfspair.cpp
   blockedsfstriple.cpp
-  l31pillow.cpp
   layeredchain.cpp
   layeredchainpair.cpp
   layeredlensspace.cpp

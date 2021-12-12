@@ -109,9 +109,7 @@ AbelianGroup GraphLoop::homology() const {
     m.entry(4 + fibres + ref, 0) = matchingReln_[1][0];
     m.entry(4 + fibres + ref, 2 + genus) = matchingReln_[1][1];
 
-    AbelianGroup ans;
-    ans.addGroup(m);
-    return ans;
+    return AbelianGroup(std::move(m));
 }
 
 std::ostream& GraphLoop::writeName(std::ostream& out) const {

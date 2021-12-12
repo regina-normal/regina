@@ -59,9 +59,7 @@ const AbelianGroup& SnapPeaTriangulation::homologyFilled() const {
     regina::snappea::free_relations(&sRelns);
 
     // Let Regina run Smith normal form.
-    AbelianGroup ans;
-    ans.addGroup(rRelns);
-    return *(h1Filled_ = std::move(ans));
+    return h1Filled_.emplace(std::move(rRelns));
 }
 
 } // namespace regina

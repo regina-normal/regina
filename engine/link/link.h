@@ -51,6 +51,7 @@
 #include "packet/packet.h"
 #include "progress/progresstracker.h"
 #include "treewidth/treedecomposition.h"
+#include "triangulation/dim3.h"
 #include "triangulation/detail/retriangulate.h"
 #include "utilities/exception.h"
 #include "utilities/listview.h"
@@ -434,7 +435,7 @@ std::ostream& operator << (std::ostream& out, const StrandRef& s);
  *
  * \ingroup link
  */
-class Crossing : public MarkedElement, public Output<Crossing> {
+class Crossing : public MarkedElement, public ShortOutput<Crossing> {
     private:
         int sign_;
             /**< The sign of the crossing, which must be +1 or -1.
@@ -562,15 +563,6 @@ class Crossing : public MarkedElement, public Output<Crossing> {
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present; use detail() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
         // Make this class non-copyable.
         Crossing(const Crossing&) = delete;
@@ -1026,6 +1018,56 @@ class Link : public PacketData<Link>, public Output<Link> {
          * connected.
          */
         bool connected(const Crossing* a, const Crossing* b) const;
+
+        /**
+         * Determines if this link diagram is combinatorially identical to the
+         * given link diagram.
+         *
+         * Here "identical" means that:
+         *
+         * - the link diagrams have the same number of crossings and the
+         *   same number of components;
+         *
+         * - the same numbered crossings are positive and negative in both
+         *   diagrams;
+         *
+         * - the same pairs of numbered crossings have their
+         *   under/over-strands connected, with the same orientations;
+         *
+         * - for each \a i, the starting strand for the <i>th</i> component
+         *   is the same (under/over) strand of the same numbered crossing
+         *   in both diagrams.
+         *
+         * @param other the link diagram to compare with this.
+         * @return \c true if and only if the two link diagrams are
+         * combinatorially identical.
+         */
+        bool operator == (const Link& other) const;
+
+        /**
+         * Determines if this link diagram is not combinatorially identical
+         * to the given link diagram.
+         *
+         * Here "identical" means that:
+         *
+         * - the link diagrams have the same number of crossings and the
+         *   same number of components;
+         *
+         * - the same numbered crossings are positive and negative in both
+         *   diagrams;
+         *
+         * - the same pairs of numbered crossings have their
+         *   under/over-strands connected, with the same orientations;
+         *
+         * - for each \a i, the starting strand for the <i>th</i> component
+         *   is the same (under/over) strand of the same numbered crossing
+         *   in both diagrams.
+         *
+         * @param other the link diagram to compare with this.
+         * @return \c true if and only if the two link diagrams are
+         * not combinatorially identical.
+         */
+        bool operator != (const Link& other) const;
 
         /*@}*/
         /**
@@ -2050,26 +2092,19 @@ class Link : public PacketData<Link>, public Output<Link> {
          * there will typically be no internal vertices; however, this
          * is not guaranteed.
          *
-         * Initially, the triangulation will be oriented.  In particular,
-         * each tetrahedron will be oriented according to a right-hand rule:
-         * the thumb of the right hand points from vertices 0 to 1, and
-         * the fingers curl around to point from vertices 2 to 3.
+         * Initially, each tetrahedron will be oriented according to a
+         * right-hand rule: the thumb of the right hand points from vertices
+         * 0 to 1, and the fingers curl around to point from vertices 2 to 3.
+         * If you pass \a simplify as \c true, then Regina will attempt to
+         * simplify the triangulation to as few tetrahedra as possible:
+         * this may relabel the tetrahedra, though their orientations will
+         * be preserved.
          *
-         * What happens next depends upon the argument \a simplify:
+         * This is the same triangulation that would be produced by passing
+         * this link to the Triangulation<3> constructor.
          *
-         * - If you pass \a simplify as \c true, then Regina will attempt
-         *   to simplify the triangulation to as few tetrahedra as possible.
-         *   As a result, the orientation described above will be lost.
-         *
-         * - If you pass \a simplify as \c false, then Regina will leave the
-         *   triangulation as is.  This will preserve the orientation, but
-         *   it means that the triangulation will contain both ideal and
-         *   internal vertices (and, in general, far more tetrahedra
-         *   than are necessary).
-         *
-         * @param simplify \c true if and only if the triangulation of
-         * the complement should be simplified (thereby losing information
-         * about the orientation), as described above.
+         * @param simplify \c true if and only if the triangulation of the
+         * complement should be simplified to use as few tetrahedra as possible.
          * @return the complement of this link.
          */
         Triangulation<3> complement(bool simplify = true) const;
@@ -2502,15 +2537,6 @@ class Link : public PacketData<Link>, public Output<Link> {
          * multigraph formed by this link diagram.
          */
         void useTreeDecomposition(TreeDecomposition td);
-
-        /*@}*/
-        /**
-         * \name Packet Administration
-         */
-        /*@{*/
-
-        void writeTextShort(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
 
         /*@}*/
         /**
@@ -3283,6 +3309,25 @@ class Link : public PacketData<Link>, public Output<Link> {
          */
         std::string knotSig(bool useReflection = true, bool useReversal = true)
             const;
+
+        /**
+         * Writes a short text representation of this link to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+        /**
+         * Writes a detailed text representation of this link to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
 
         /*@}*/
         /**
@@ -4554,35 +4599,9 @@ inline StrandRef Crossing::strand(int which) {
 }
 
 inline void Crossing::writeTextShort(std::ostream& out) const {
-    out << "crossing " << index();
-    if (sign_ == 1)
-        out << " (+)";
-    else
-        out << " (-)";
-}
-
-inline void Crossing::writeTextLong(std::ostream& out) const {
-    out << "Crossing " << index();
-    if (sign_ == 1)
-        out << " (+)";
-    else
-        out << " (-)";
-    out << '\n';
-
-    /*
-    if (sign_ == 1) {
-        out << "--\ /-->  " << next_[0] << '\n';
-        out << "   \\n"
-        out << "--/ \-->  " << next_[1] << std::endl;
-    } else {
-        out << "--\ /-->  " << next_[1] << '\n';
-        out << "   /\n"
-        out << "--/ \-->  " << next_[0] << std::endl;
-    }
-    */
-
-    out << prev_[1] << "  ->  over  ->  " << next_[1] << '\n';
-    out << prev_[0] << "  ->  under  ->  " << next_[0] << std::endl;
+    out << "Crossing " << index() << " (" << (sign_ == 1 ? '+' : '-')
+        << "): over " << prev_[1] << " -+-> " << next_[1]
+        << ", under " << prev_[0] << " -+-> " << next_[0];
 }
 
 inline Crossing::Crossing() : sign_(0) {
@@ -4636,6 +4655,14 @@ inline auto Link::components() const {
 inline StrandRef Link::strand(int id) const {
     return (id >= 0 ? StrandRef(crossings_[id >> 1]->strand(id & 1)) :
         StrandRef());
+}
+
+inline bool Link::operator != (const Link& other) const {
+    return ! ((*this) == other);
+}
+
+inline Triangulation<3> Link::complement(bool simplify) const {
+    return Triangulation<3>(*this, simplify);
 }
 
 inline long Link::writhe() const {

@@ -52,24 +52,29 @@ void addTxICore(pybind11::module_& m) {
         .def("texName", &TxICore::texName)
         .def("TeXName", &TxICore::texName) // deprecated
     ;
-    regina::python::add_output(c);
+    // Leave the output routines for subclasses to wrap, since __repr__
+    // will include the (derived) class name.
     regina::python::add_eq_operators(c);
 
-    pybind11::class_<TxIDiagonalCore, regina::TxICore>(m, "TxIDiagonalCore")
+    auto d = pybind11::class_<TxIDiagonalCore, regina::TxICore>(
+            m, "TxIDiagonalCore")
         .def(pybind11::init<unsigned long, unsigned long>())
         .def(pybind11::init<const TxIDiagonalCore&>())
         .def("swap", &TxIDiagonalCore::swap)
         .def("size", &TxIDiagonalCore::size)
         .def("k", &TxIDiagonalCore::k)
     ;
+    regina::python::add_output(d);
 
     m.def("swap", (void(*)(TxIDiagonalCore&, TxIDiagonalCore&))(regina::swap));
 
-    pybind11::class_<TxIParallelCore, regina::TxICore>(m, "TxIParallelCore")
+    auto p = pybind11::class_<TxIParallelCore, regina::TxICore>(
+            m, "TxIParallelCore")
         .def(pybind11::init<>())
         .def(pybind11::init<const TxIParallelCore&>())
         .def("swap", &TxIParallelCore::swap)
     ;
+    regina::python::add_output(p);
 
     m.def("swap", (void(*)(TxIParallelCore&, TxIParallelCore&))(regina::swap));
 }

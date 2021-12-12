@@ -53,7 +53,7 @@ void addVertex3(pybind11::module_& m) {
         .def("vertex", &VertexEmbedding<3>::vertex)
         .def("vertices", &VertexEmbedding<3>::vertices)
     ;
-    regina::python::add_output(e, true /* __repr__ */);
+    regina::python::add_output(e);
     regina::python::add_eq_operators(e);
 
     auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0")
@@ -70,7 +70,7 @@ void addVertex3(pybind11::module_& m) {
         .def("degree", &Vertex<3>::degree)
         .def("linkType", &Vertex<3>::linkType)
         .def("link", [](const Vertex<3>&) {
-            PyErr_SetString(PyExc_RuntimeError,
+            throw std::runtime_error(
                 "Vertex3::link() has been renamed to Vertex3::linkType().  "
                 "You should change your code now, because the name link() "
                 "will be used for a different function in the future.");

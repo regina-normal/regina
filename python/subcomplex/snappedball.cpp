@@ -39,7 +39,7 @@
 using regina::SnappedBall;
 
 void addSnappedBall(pybind11::module_& m) {
-    pybind11::class_<SnappedBall, regina::StandardTriangulation>
+    auto c = pybind11::class_<SnappedBall, regina::StandardTriangulation>
             (m, "SnappedBall")
         .def(pybind11::init<const SnappedBall&>())
         .def("clone", [](const SnappedBall& s) { // deprecated
@@ -55,6 +55,7 @@ void addSnappedBall(pybind11::module_& m) {
         .def_static("recognise", &SnappedBall::recognise)
         .def_static("formsSnappedBall", &SnappedBall::recognise) // deprecated
     ;
+    regina::python::add_output(c);
 
     m.def("swap", (void(*)(SnappedBall&, SnappedBall&))(regina::swap));
 }

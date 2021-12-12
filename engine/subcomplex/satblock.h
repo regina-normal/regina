@@ -109,8 +109,7 @@ class SFSpace;
  * - should override transform() if the subclass contains additional
  *   data that needs to be altered when an isomorphism is applied;
  *
- * - may optionally override writeTextLong(), if more detailed output
- *   could be useful.
+ * - should not override writeTextLong(), since SatBlock uses short output only.
  *
  * SatBlock does not support value semantics: blocks cannot be copied,
  * swapped, or manually constructed.  Their memory is managed by the
@@ -119,7 +118,7 @@ class SFSpace;
  *
  * \ingroup subcomplex
  */
-class SatBlock : public Output<SatBlock> {
+class SatBlock : public ShortOutput<SatBlock> {
     public:
         using TetList = std::set<const Tetrahedron<3>*>;
             /**< The data structure used to store a list of tetrahedra
@@ -448,6 +447,46 @@ class SatBlock : public Output<SatBlock> {
         bool operator < (const SatBlock& compare) const;
 
         /**
+         * Determines whether this and the given object represent saturated
+         * blocks of the same type with the same combinatorial parameters.
+         *
+         * As examples of what is meant by "combinatorial parameters":
+         *
+         * - Any two SatCube objects will compare as equal, since there
+         *   is only one combinatorial type of SatCube.
+         *
+         * - Two SatReflectorStrip objects will compare as equal if their
+         *   rings of bounary annuli have the same length and are either
+         *   both twisted or both untwisted.
+         *
+         * - Two SatLST objects will compare as equal if their internal
+         *   layered solid tori have the same three integer parameters
+         *   (identifying how the meridinal disc meets the three boundary
+         *   edges), \e and their corresponding boundary edges are attached
+         *   to the horizontal/vertical/diagonal edges of the boundary
+         *   annulus in the same way.
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * represent blocks of the same type with the same parameters.
+         */
+        virtual bool operator == (const SatBlock& other) const = 0;
+
+        /**
+         * Determines whether this and the given object do not represent
+         * saturated blocks of the same type with the same combinatorial
+         * parameters.
+         *
+         * See the equality test operator==() for examples of what is
+         * meant by "the same combinatorial parameters".
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * do not represent blocks of the same type with the same parameters.
+         */
+        bool operator != (const SatBlock& other) const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -458,19 +497,6 @@ class SatBlock : public Output<SatBlock> {
          * @param out the output stream to which to write.
          */
         virtual void writeTextShort(std::ostream& out) const = 0;
-
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * This may be reimplemented by subclasses, but the parent
-         * SatBlock class offers a reasonable default implementation.
-         *
-         * \ifacespython Not present; use detail() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        virtual void writeTextLong(std::ostream& out) const;
 
         // Mark this class as non-assignable.
         // There is a copy constructor, but that is protected.
@@ -513,6 +539,21 @@ class SatBlock : public Output<SatBlock> {
          * @return a new clone of this block.
          */
         virtual SatBlock* clone() const = 0;
+
+        /**
+         * Determines whether this and the given block have identical
+         * boundaries.
+         *
+         * This requires not just that both boundaries represent the same
+         * subcomplex of the underlying triangulation, but also that the
+         * boundaries use identical saturated annuli, and that these
+         * annuli appear in the same order.
+         *
+         * @param other the block to compare with this.
+         * @return \c true if and only if this and the given block have
+         * identical boundaries, as described above.
+         */
+        bool identicalBoundary(const SatBlock& other) const;
 
         /**
          * Determines whether the given tetrahedron is contained within the
@@ -735,7 +776,7 @@ class SatBlock : public Output<SatBlock> {
  *
  * \ingroup subcomplex
  */
-class SatBlockModel {
+class SatBlockModel : public ShortOutput<SatBlockModel> {
     private:
         Triangulation<3>* triangulation_;
             /**< The triangulation of the saturated block. */
@@ -809,6 +850,58 @@ class SatBlockModel {
          */
         const SatBlock& block() const;
 
+        /**
+         * Determines whether this and the given object model saturated
+         * blocks of the same type with the same combinatorial parameters.
+         *
+         * This is equivalent to testing whether the blocks returned by
+         * block() compare as equal.  See SatBlock::operator==() for
+         * further details on what this comparison means.
+         *
+         * Assuming you created your models using the block-specific factory
+         * routines (SatTriPrism::model(), SatCube::model(), etc.), if
+         * two models compare as equal then their triangulations should
+         * be combinatorially identical.  At the time of writing, the
+         * converse is also true: all models created from non-equal blocks
+         * yield non-identical (and moreover non-isomorphic) triangulations.
+         *
+         * @param other the model to compare with this.
+         * @return \c true if and only if this and the given object
+         * model the same block type with the same combinatorial parameters.
+         */
+        bool operator == (const SatBlockModel& other) const;
+
+        /**
+         * Determines whether this and the given object do not model saturated
+         * blocks of the same type with the same combinatorial parameters.
+         *
+         * This is equivalent to testing whether the blocks returned by
+         * block() compare as non-equal.  See SatBlock::operator==() for
+         * further details on what this comparison means.
+         *
+         * Assuming you created your models using the block-specific factory
+         * routines (SatTriPrism::model(), SatCube::model(), etc.), if
+         * two models compare as equal then their triangulations should
+         * be combinatorially identical.  At the time of writing, the
+         * converse is also true: all models created from non-equal blocks
+         * yield non-identical (and moreover non-isomorphic) triangulations.
+         *
+         * @param other the model to compare with this.
+         * @return \c true if and only if this and the given object do not
+         * model the same block type with the same combinatorial parameters.
+         */
+        bool operator != (const SatBlockModel& other) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+
     private:
         /**
          * Creates a new model filled with the given data.  The model will
@@ -852,11 +945,6 @@ inline SatBlock::~SatBlock() {
     delete[] adjAnnulus_;
     delete[] adjReflected_;
     delete[] adjBackwards_;
-}
-
-inline void SatBlock::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << '\n';
 }
 
 inline unsigned SatBlock::countAnnuli() const {
@@ -908,6 +996,10 @@ inline void SatBlock::setAdjacent(unsigned whichAnnulus, SatBlock* adjBlock,
     adjBlock->adjBackwards_[adjAnnulus] = adjBackwards;
 }
 
+inline bool SatBlock::operator != (const SatBlock& other) const {
+    return ! ((*this) == other);
+}
+
 inline bool SatBlock::notUnique(const Tetrahedron<3>* test) {
     return (test == nullptr);
 }
@@ -938,6 +1030,13 @@ inline bool SatBlock::notUnique(const Tetrahedron<3>* test,
 
 inline SatBlockModel SatBlock::modelWith(Triangulation<3>* triangulation) {
     return SatBlockModel(triangulation, this);
+}
+
+inline bool SatBlock::identicalBoundary(const SatBlock& other) const {
+    return std::equal(annulus_, annulus_ + nAnnuli_,
+        other.annulus_, other.annulus_ + other.nAnnuli_) &&
+        (twistedBoundary_ == other.twistedBoundary_);
+
 }
 
 // Inline functions for SatBlockModel
@@ -990,6 +1089,19 @@ inline const Triangulation<3>& SatBlockModel::triangulation() const {
 
 inline const SatBlock& SatBlockModel::block() const {
     return *block_;
+}
+
+inline bool SatBlockModel::operator == (const SatBlockModel& other) const {
+    return (*block_) == (*other.block_);
+}
+
+inline bool SatBlockModel::operator != (const SatBlockModel& other) const {
+    return (*block_) != (*other.block_);
+}
+
+inline void SatBlockModel::writeTextShort(std::ostream& out) const {
+    out << "Model of ";
+    block_->writeTextShort(out);
 }
 
 inline void swap(SatBlockModel& a, SatBlockModel& b) noexcept {

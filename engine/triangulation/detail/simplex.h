@@ -497,6 +497,24 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * (<i>dim</i>-<i>subdim</i>)!/2 possible mappings that yield the
          * correct orientation.
          *
+         * If this simplex (and therefore the face \a F) belongs to an
+         * \e orientable component of the triangulation, then there will also
+         * be connections between faceMapping() and the orientations of the
+         * top-dimensional simplices (as returned by orientation()):
+         *
+         * - If \a subdim is less than (\a dim - 1), then the sign of the
+         *   permutation returned by faceMapping() will always be equal to the
+         *   orientation of this simplex.
+         *
+         * - If \a subdim is equal to (\a dim - 1), then the face \a F can only
+         *   belong to either one or two top-dimensional simplices; let
+         *   \a s0 and \a s1 be the simplices corresponding to
+         *   <tt>F.embedding(0)</tt> and (if it exists) <tt>F.embedding(1)</tt>
+         *   respectively.  Then in the simplex \a s0, the sign of the
+         *   faceMapping() permutation will match the orientation of \a s0,
+         *   and in \a s1 (if it exists), the sign of the faceMapping()
+         *   permutation will be negative the orientation of \a s1.
+         *
          * \note This routine returns the same permutation as
          * FaceEmbedding<dim, subdim>::vertices(), in the context of the
          * FaceEmbedding<dim, subdim> object that refers to
@@ -574,7 +592,7 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * In a non-orientable component, orientations are arbitrary
          * (but they will still all be +1 or -1).
          *
-         * @return +1 or -1 according to the orientation of this triangle.
+         * @return +1 or -1 according to the orientation of this simplex.
          */
         int orientation() const;
 
@@ -846,9 +864,29 @@ inline bool SimplexBase<dim>::facetInMaximalForest(int facet) const {
 
 template <int dim>
 inline void SimplexBase<dim>::writeTextShort(std::ostream& out) const {
-    out << dim << "-simplex";
-    if (! description_.empty())
-        out << ": " << description_;
+    out << dim << "-simplex " << index();
+
+    int glued = 0;
+    int facet, j;
+    for (facet = dim; facet >= 0; --facet) {
+        if (! adj_[facet])
+            continue;
+
+        out << (glued == 0 ? ": " : ", ");
+        ++glued;
+
+        for (j = 0; j <= dim; ++j)
+            if (j != facet)
+                out << regina::digit(j);
+        out << " -> " << adj_[facet]->markedIndex() << " (";
+        for (j = 0; j <= dim; ++j)
+            if (j != facet)
+                out << regina::digit(gluing_[facet][j]);
+        out << ')';
+    }
+
+    if (glued == 0)
+        out << ": all facets boundary";
 }
 
 template <int dim>
@@ -909,8 +947,11 @@ void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
 
 template <int dim>
 void SimplexBase<dim>::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
+    out << dim << "-simplex " << index();
+    if (! description_.empty())
+        out << ": " << description_;
     out << std::endl;
+
     int facet, j;
     for (facet = dim; facet >= 0; --facet) {
         for (j = 0; j <= dim; ++j)

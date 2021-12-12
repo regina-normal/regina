@@ -92,17 +92,23 @@ void add_flags(pybind11::module_& m,
             &Flags::ensureOne))
         .def("ensureOne", pybind11::overload_cast<Enum, Enum, Enum, Enum>(
             &Flags::ensureOne))
+        .def("__str__", [](Flags f) {
+            std::ostringstream out;
+            out << "0x" << std::hex << std::setw(hexWidth) << std::setfill('0')
+                << f.intValue();
+            return out.str();
+        })
+        .def("__repr__", [](Flags f) {
+            std::ostringstream out;
+            out << "<regina."
+                << pybind11::str(pybind11::type::handle_of<Flags>().attr(
+                    "__name__")).cast<std::string_view>()
+                << ": 0x" << std::hex << std::setw(hexWidth)
+                << std::setfill('0') << f.intValue() << '>';
+            return out.str();
+        })
         ;
     regina::python::add_eq_operators(f);
-
-    auto repr = [](Flags f) {
-        std::ostringstream out;
-        out << "0x" << std::hex << std::setw(hexWidth) << std::setfill('0')
-            << f.intValue();
-        return out.str();
-    };
-    f.def("__str__", repr);
-    f.def("__repr__", repr);
 
     pybind11::implicitly_convertible<Enum, Flags>();
 }

@@ -198,9 +198,6 @@ inline SnappedTwoSphere* SnappedTwoSphere::clone() const {
 inline const SnappedBall& SnappedTwoSphere::snappedBall(int index) const {
     return ball_[index];
 }
-inline void SnappedTwoSphere::writeTextShort(std::ostream& out) const {
-    out << "Snapped 2-sphere";
-}
 
 inline std::unique_ptr<SnappedTwoSphere>
         SnappedTwoSphere::formsSnappedTwoSphere(

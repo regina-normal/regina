@@ -157,7 +157,7 @@ void NormalHypersurface::writeXMLData(std::ostream& out, FileFormat format,
     out << " </hypersurface>\n";
 }
 
-bool NormalHypersurface::sameSurface(const NormalHypersurface& other) const {
+bool NormalHypersurface::operator == (const NormalHypersurface& other) const {
     if (enc_ == other.enc_) {
         // This is a common case, and a straight left-to-right scan
         // should be faster than jumping around the vectors.
@@ -165,6 +165,8 @@ bool NormalHypersurface::sameSurface(const NormalHypersurface& other) const {
     }
 
     size_t nPents = triangulation_->size();
+    if (nPents != other.triangulation_->size())
+        return false;
 
     for (size_t p = 0; p < nPents; ++p) {
         for (int i = 0; i < 5; ++i)
@@ -175,6 +177,30 @@ bool NormalHypersurface::sameSurface(const NormalHypersurface& other) const {
                 return false;
     }
     return true;
+}
+
+bool NormalHypersurface::operator < (const NormalHypersurface& other) const {
+    size_t nPents = triangulation_->size();
+    if (nPents != other.triangulation_->size())
+        return nPents < other.triangulation_->size();
+
+    for (size_t t = 0; t < nPents; ++t) {
+        for (int i = 0; i < 5; ++i) {
+            if (tetrahedra(t, i) < other.tetrahedra(t, i))
+                return true;
+            if (tetrahedra(t, i) > other.tetrahedra(t, i))
+                return false;
+        }
+        for (int i = 0; i < 10; ++i) {
+            if (prisms(t, i) < other.prisms(t, i))
+                return true;
+            if (prisms(t, i) > other.prisms(t, i))
+                return false;
+        }
+    }
+
+    // The hypersurfaces are equal.
+    return false;
 }
 
 bool NormalHypersurface::embedded() const {

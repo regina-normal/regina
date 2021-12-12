@@ -65,7 +65,8 @@ void addSatBlock(pybind11::module_& m) {
             return lhs < rhs;
         })
     ;
-    regina::python::add_output(c);
+    // Leave the output routines for subclasses to wrap, since __repr__
+    // will include the (derived) class name.
     regina::python::add_eq_operators(c);
 
     auto d = pybind11::class_<SatBlockModel>(m, "SatBlockModel")
@@ -74,6 +75,7 @@ void addSatBlock(pybind11::module_& m) {
         .def("triangulation", &SatBlockModel::triangulation)
         .def("block", &SatBlockModel::block)
     ;
+    regina::python::add_output(d);
     regina::python::add_eq_operators(d);
 
     m.def("swap", (void(*)(SatBlockModel&, SatBlockModel&))(regina::swap));

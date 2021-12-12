@@ -6,7 +6,7 @@
 *
 ************************************************************
 
-Container
+Container with 5 children, 17 descendants
 
 
 ************************************************************
@@ -40,7 +40,7 @@ Attachment (36228 bytes): attachment.pdf
 *
 ************************************************************
 
-Container
+Container with 4 children, 10 descendants
 
 
 ************************************************************
@@ -364,7 +364,7 @@ There are in fact two triangulations of this 3-manifold with three tetrahedra.
 *
 ************************************************************
 
-OR combination normal surface filter
+OR filter
 
 
 ************************************************************
@@ -375,10 +375,7 @@ OR combination normal surface filter
 *
 ************************************************************
 
-Filter normal surfaces with restrictions:
-    Euler characteristic: 0
-    Orientability: { true }
-    Compactness: { true }
+Euler in { 0 }, orientable only, compact only
 
 
 ************************************************************
@@ -389,11 +386,7 @@ Filter normal surfaces with restrictions:
 *
 ************************************************************
 
-Filter normal surfaces with restrictions:
-    Euler characteristic: 1
-    Orientability: { true }
-    Compactness: { true }
-    Has real boundary: { true }
+Euler in { 1 }, orientable only, compact only, real boundary only
 
 
 ************************************************************
@@ -424,7 +417,7 @@ while t != None:
 *
 ************************************************************
 
-Container
+Container with 6 children, 23 descendants
 
 
 ************************************************************
@@ -473,7 +466,7 @@ Attachment (36228 bytes): attachment.pdf
 *
 ************************************************************
 
-Container
+Container with 4 children, 11 descendants
 
 
 ************************************************************
@@ -849,7 +842,7 @@ There are in fact two triangulations of this 3-manifold with three tetrahedra.
 *
 ************************************************************
 
-Container
+Container with 3 children, 3 descendants
 
 
 ************************************************************
@@ -977,7 +970,7 @@ Edges:
 *
 ************************************************************
 
-Container
+Container with 1 child, 3 descendants
 
 
 ************************************************************
@@ -988,7 +981,7 @@ Container
 *
 ************************************************************
 
-OR combination normal surface filter
+OR filter
 
 
 ************************************************************
@@ -999,10 +992,7 @@ OR combination normal surface filter
 *
 ************************************************************
 
-Filter normal surfaces with restrictions:
-    Euler characteristic: 0
-    Orientability: { true }
-    Compactness: { true }
+Euler in { 0 }, orientable only, compact only
 
 
 ************************************************************
@@ -1013,11 +1003,7 @@ Filter normal surfaces with restrictions:
 *
 ************************************************************
 
-Filter normal surfaces with restrictions:
-    Euler characteristic: 1
-    Orientability: { true }
-    Compactness: { true }
-    Has real boundary: { true }
+Euler in { 1 }, orientable only, compact only, real boundary only
 
 
 ************************************************************
@@ -1050,7 +1036,7 @@ while t != None:
 *
 ************************************************************
 
-Container
+Container with 7 children, 7 descendants
 
 
 ************************************************************
@@ -1181,9 +1167,7 @@ Tetrahedra:
 *
 ************************************************************
 
-Triangulation with 2 5-simplices
-
-f-vector: 2, 10, 20, 20, 10, 2
+Bounded orientable 5-D triangulation, f = ( 2 10 20 20 10 2 )
 
   Simplex  |  glued to:     (01234)     (01235)     (01245)     (01345)     (02345)     (12345)
   ---------+-----------------------------------------------------------------------------------
@@ -1200,9 +1184,7 @@ f-vector: 2, 10, 20, 20, 10, 2
 *
 ************************************************************
 
-Triangulation with 2 6-simplices
-
-f-vector: 2, 12, 30, 40, 30, 12, 2
+Bounded orientable 6-D triangulation, f = ( 2 12 30 40 30 12 2 )
 
   Simplex  |  glued to:     (012345)     (012346)     (012356)     (012456)     (013456)     (023456)     (123456)
   ---------+------------------------------------------------------------------------------------------------------
@@ -1219,9 +1201,7 @@ f-vector: 2, 12, 30, 40, 30, 12, 2
 *
 ************************************************************
 
-Triangulation with 2 7-simplices
-
-f-vector: 2, 14, 42, 70, 70, 42, 14, 2
+Bounded orientable 7-D triangulation, f = ( 2 14 42 70 70 42 14 2 )
 
   Simplex  |  glued to:     (0123456)     (0123457)     (0123467)     (0123567)     (0124567)     (0134567)     (0234567)     (1234567)
   ---------+---------------------------------------------------------------------------------------------------------------------------
@@ -1238,9 +1218,7 @@ f-vector: 2, 14, 42, 70, 70, 42, 14, 2
 *
 ************************************************************
 
-Triangulation with 2 8-simplices
-
-f-vector: 2, 16, 56, 112, 140, 112, 56, 16, 2
+Bounded orientable 8-D triangulation, f = ( 2 16 56 112 140 112 56 16 2 )
 
   Simplex  |  glued to:     (01234567)     (01234568)     (01234578)     (01234678)     (01235678)     (01245678)     (01345678)     (02345678)     (12345678)
   ---------+--------------------------------------------------------------------------------------------------------------------------------------------------

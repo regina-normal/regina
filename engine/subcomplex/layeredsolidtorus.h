@@ -273,6 +273,58 @@ class LayeredSolidTorus : public StandardTriangulation {
         int topFace(int index) const;
 
         /**
+         * Determines whether this and the given object represent the same
+         * type of layered solid torus.
+         *
+         * Specifically, two layered solid tori will compare as equal if
+         * and only if each has the same ordered triple of integer
+         * parameters (describing how many times the three top-level edge
+         * groups cut the meridinal disc).
+         *
+         * Note that it is possible for two non-isomorphic layered solid tori
+         * to compare as equal, since these integer parameters do not
+         * detect the presence of redundant layerings (i.e., consecutive
+         * layerings that topologically cancel each other out).
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass, as noted above, is weaker than combinatorial isomorphism).
+         *
+         * @param other the layered solid torus to compare with this.
+         * @return \c true if and only if this and the given object
+         * represent the same type of layered solid torus.
+         */
+        bool operator == (const LayeredSolidTorus& other) const;
+
+        /**
+         * Determines whether this and the given object do not represent the
+         * same type of layered solid torus.
+         *
+         * Specifically, two layered solid tori will compare as equal if
+         * and only if each has the same ordered triple of integer
+         * parameters (describing how many times the three top-level edge
+         * groups cut the meridinal disc).
+         *
+         * Note that it is possible for two non-isomorphic layered solid tori
+         * to compare as equal, since these integer parameters do not
+         * detect the presence of redundant layerings (i.e., consecutive
+         * layerings that topologically cancel each other out).
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass, as noted above, is weaker than combinatorial isomorphism).
+         *
+         * @param other the layered solid torus to compare with this.
+         * @return \c true if and only if this and the given object
+         * do not represent the same type of layered solid torus.
+         */
+        bool operator != (const LayeredSolidTorus& other) const;
+
+        /**
          * Flattens this layered solid torus to a Mobius band.
          * A new modified triangulation is returned; the original triangulation
          * that contains this layered solid torus will be left unchanged.
@@ -425,7 +477,7 @@ class LayeredSolidTorus : public StandardTriangulation {
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
-        void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const override;
 
     private:
         /**
@@ -500,6 +552,18 @@ inline int LayeredSolidTorus::topFace(int index) const {
     return (index == 0 ? topFace_.lower() : topFace_.upper());
 }
 
+inline bool LayeredSolidTorus::operator == (const LayeredSolidTorus& other)
+        const {
+    return std::equal(meridinalCuts_, meridinalCuts_ + 3,
+        other.meridinalCuts_);
+}
+
+inline bool LayeredSolidTorus::operator != (const LayeredSolidTorus& other)
+        const {
+    return ! std::equal(meridinalCuts_, meridinalCuts_ + 3,
+        other.meridinalCuts_);
+}
+
 inline std::ostream& LayeredSolidTorus::writeName(std::ostream& out) const {
     return out << "LST(" << meridinalCuts_[0] << ',' << meridinalCuts_[1] << ','
         << meridinalCuts_[2] << ')';
@@ -507,10 +571,6 @@ inline std::ostream& LayeredSolidTorus::writeName(std::ostream& out) const {
 inline std::ostream& LayeredSolidTorus::writeTeXName(std::ostream& out) const {
     return out << "\\mathop{\\rm LST}(" << meridinalCuts_[0] << ','
         << meridinalCuts_[1] << ',' << meridinalCuts_[2] << ')';
-}
-inline void LayeredSolidTorus::writeTextLong(std::ostream& out) const {
-    out << "( " << meridinalCuts_[0] << ", " << meridinalCuts_[1] << ", "
-        << meridinalCuts_[2] << " ) layered solid torus";
 }
 
 inline std::unique_ptr<LayeredSolidTorus>

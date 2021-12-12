@@ -73,7 +73,13 @@ namespace regina {
             bool operator != (const Matrix2Row& other) const {
                 return (row[0] != other.row[0] || row[1] != other.row[1]);
             }
+
+        friend std::ostream& operator << (std::ostream&, const Matrix2Row&);
     };
+
+    inline std::ostream& operator << (std::ostream& out, const Matrix2Row& r) {
+        return out << "[ " << r.row[0] << ' ' << r.row[1] << " ]";
+    }
 }
 
 using regina::Matrix2;
@@ -88,6 +94,7 @@ void addMatrix2(pybind11::module_& m) {
         })
         ;
     regina::python::add_eq_operators(c1);
+    regina::python::add_output_ostream(c1);
 
     auto c2 = pybind11::class_<Matrix2>(m, "Matrix2")
         .def(pybind11::init<>())

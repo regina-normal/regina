@@ -89,6 +89,23 @@ ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
     return *this;
 }
 
+bool ModelLinkGraph::operator == (const ModelLinkGraph& other) const {
+    if (nodes_.size() != other.nodes_.size())
+        return false;
+
+    auto a = nodes_.begin();
+    auto b = other.nodes_.begin();
+    for ( ; a != nodes_.end(); ++a, ++b) {
+        for (int i = 0; i < 4; ++i) {
+            if ((*a)->adj_[i].node_->index() != (*b)->adj_[i].node_->index())
+                return false;
+            if ((*a)->adj_[i].arc_ != (*b)->adj_[i].arc_)
+                return false;
+        }
+    }
+    return true;
+}
+
 void ModelLinkGraph::reflect() {
     for (ModelLinkGraphNode* n : nodes_) {
         std::swap(n->adj_[1], n->adj_[3]);
@@ -106,10 +123,25 @@ void ModelLinkGraph::reflect() {
 }
 
 void ModelLinkGraph::writeTextShort(std::ostream& out) const {
-    if (nodes_.empty())
-        out << "empty model link graph";
-    else
-        out << nodes_.size() << "-node model link graph";
+    if (nodes_.empty()) {
+        out << "Empty graph";
+        return;
+    }
+
+    out << nodes_.size() << "-node graph: ";
+    for (size_t i = 0; i < nodes_.size(); ++i) {
+        if (i > 0)
+            out << ' ';
+
+        auto n = nodes_[i];
+        out << '[';
+        for (int j = 0; j < 4; ++j) {
+            if (j > 0)
+                out << ' ';
+            out << n->adj_[j].node()->index() << ':' << n->adj_[j].arc();
+        }
+        out << ']';
+    }
 }
 
 void ModelLinkGraph::writeTextLong(std::ostream& out) const {
@@ -124,13 +156,10 @@ void ModelLinkGraph::writeTextLong(std::ostream& out) const {
     out << "  Node  |  adjacent:      (0)      (1)      (2)      (3)\n";
     out << "  ------+-----------------------------------------------\n";
 
-    size_t i;
-    int j;
-    ModelLinkGraphNode* n;
-    for (i = 0; i < nodes_.size(); ++i) {
-        n = nodes_[i];
+    for (size_t i = 0; i < nodes_.size(); ++i) {
+        auto n = nodes_[i];
         out << std::setw(6) << i << "  |           ";
-        for (j = 0; j < 4; ++j)
+        for (int j = 0; j < 4; ++j)
             out << "  " << std::setw(3) << n->adj_[j].node()->index() << " ("
                 << n->adj_[j].arc() << ')';
         out << '\n';
@@ -511,12 +540,44 @@ ModelLinkGraphCells::ModelLinkGraphCells(const ModelLinkGraph& g) :
     }
 }
 
+bool ModelLinkGraphCells::operator == (const ModelLinkGraphCells& other) const {
+    if (nCells_ != other.nCells_)
+        return false;
+
+    if (! std::equal(start_, start_ + nCells_ + 1, other.start_))
+        return false;
+
+    for (size_t i = 0; i < start_[nCells_]; ++i) {
+        if (arcs_[i].node()->index() != other.arcs_[i].node()->index())
+            return false;
+        if (arcs_[i].arc() != other.arcs_[i].arc())
+            return false;
+    }
+
+    return true;
+}
+
 void ModelLinkGraphCells::writeTextShort(std::ostream& out) const {
     if (nCells_ == 0)
-        out << "invalid cell structure";
+        out << "Invalid cell structure";
     else {
         // Must have nCells_ >= 3, so use the plural.
-        out << "cell structure with " << nCells_ << " cells";
+        out << nCells_ << " cells:";
+
+        for (size_t i = 0; i < nCells_; ++i) {
+            out << " (";
+            for (auto a = begin(i); a != end(i); ++a) {
+                if (a != begin(i)) {
+                    out << ' ' << a->node()->index() << ':'
+                        << (a->arc() + 3) % 4 << '-' << a->arc();
+                } else {
+                    out << a->node()->index() << ':' << a->arc();
+                }
+            }
+            auto a = begin(i);
+            out << ' ' << a->node()->index() << ':'
+                << (a->arc() + 3) % 4 << ')';
+        }
     }
 }
 

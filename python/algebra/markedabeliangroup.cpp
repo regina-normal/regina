@@ -50,22 +50,25 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def(pybind11::init<const MatrixInt&, const MatrixInt&,
             const Integer&>())
         .def(pybind11::init<unsigned long, const Integer&>())
-        .def("isChainComplex", &MarkedAbelianGroup::isChainComplex)
         .def("swap", &MarkedAbelianGroup::swap)
         .def("rank", &MarkedAbelianGroup::rank)
         .def("torsionRank", overload_cast<const regina::Integer&>(
             &MarkedAbelianGroup::torsionRank, pybind11::const_))
         .def("torsionRank", overload_cast<unsigned long>(
             &MarkedAbelianGroup::torsionRank, pybind11::const_))
-        .def("minNumberOfGenerators",
-            &MarkedAbelianGroup::minNumberOfGenerators)
+        .def("snfRank", &MarkedAbelianGroup::snfRank)
+        .def("minNumberOfGenerators", &MarkedAbelianGroup::snfRank)// deprecated
         .def("countInvariantFactors",
             &MarkedAbelianGroup::countInvariantFactors)
         .def("invariantFactor", &MarkedAbelianGroup::invariantFactor)
+        .def("unmarked", &MarkedAbelianGroup::unmarked)
         .def("isTrivial", &MarkedAbelianGroup::isTrivial)
         .def("isZ", &MarkedAbelianGroup::isZ)
         .def("isIsomorphicTo", &MarkedAbelianGroup::isIsomorphicTo)
-        .def("equalTo", &MarkedAbelianGroup::equalTo)
+        .def("equalTo", [](const MarkedAbelianGroup& a, // deprecated
+                const MarkedAbelianGroup& b) {
+            return a == b;
+        })
         .def("freeRep", &MarkedAbelianGroup::freeRep)
         .def("torsionRep", &MarkedAbelianGroup::torsionRep)
         // Below, the overloads that take a std::vector must come *last*,
@@ -80,16 +83,24 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def("cycleProjection", overload_cast<const regina::Vector<Integer>&>(
             &MarkedAbelianGroup::cycleProjection, pybind11::const_))
         .def("isCycle", &MarkedAbelianGroup::isCycle)
-        .def("boundaryMap", &MarkedAbelianGroup::boundaryMap)
+        .def("boundaryOf", &MarkedAbelianGroup::boundaryOf)
+        .def("boundaryMap", &MarkedAbelianGroup::boundaryOf) // deprecated
         .def("isBoundary", &MarkedAbelianGroup::isBoundary)
-        .def("writeAsBoundary", &MarkedAbelianGroup::writeAsBoundary)
+        .def("asBoundary", &MarkedAbelianGroup::asBoundary)
+        .def("writeAsBoundary", &MarkedAbelianGroup::asBoundary) // deprecated
         .def("snfRep", &MarkedAbelianGroup::snfRep)
-        .def("rankCC", &MarkedAbelianGroup::rankCC)
-        .def("minNumberCycleGens", &MarkedAbelianGroup::minNumberCycleGens)
+        .def("ccRank", &MarkedAbelianGroup::ccRank)
+        .def("rankCC", &MarkedAbelianGroup::ccRank) // deprecated
+        .def("cycleRank", &MarkedAbelianGroup::cycleRank)
+        .def("minNumberCycleGens", &MarkedAbelianGroup::cycleRank) // deprecated
         .def("cycleGen", &MarkedAbelianGroup::cycleGen)
-        .def("M", &MarkedAbelianGroup::M,
+        .def("m", &MarkedAbelianGroup::m,
             pybind11::return_value_policy::reference_internal)
-        .def("N", &MarkedAbelianGroup::N,
+        .def("M", &MarkedAbelianGroup::m, // deprecated
+            pybind11::return_value_policy::reference_internal)
+        .def("n", &MarkedAbelianGroup::n,
+            pybind11::return_value_policy::reference_internal)
+        .def("N", &MarkedAbelianGroup::n, // deprecated
             pybind11::return_value_policy::reference_internal)
         .def("coefficients", &MarkedAbelianGroup::coefficients)
         .def("torsionSubgroup", &MarkedAbelianGroup::torsionSubgroup)
@@ -129,6 +140,8 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("reducedMatrix", &HomMarkedAbelianGroup::reducedMatrix,
             pybind11::return_value_policy::reference_internal)
+        .def("summary", pybind11::overload_cast<>(
+            &HomMarkedAbelianGroup::summary, pybind11::const_))
         .def("torsionSubgroup", &HomMarkedAbelianGroup::torsionSubgroup)
         .def("evalCC", &HomMarkedAbelianGroup::evalCC)
         .def("evalSNF", &HomMarkedAbelianGroup::evalSNF)
@@ -136,7 +149,9 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def(pybind11::self * pybind11::self)
     ;
     regina::python::add_output(c2);
-    regina::python::add_eq_operators(c2);
+    // Deciding what we want comparisons to *mean* requires some thought.
+    // Let's not make a decision now that we might regret later.
+    regina::python::disable_eq_operators(c2);
 
     m.def("swap",
         (void(*)(HomMarkedAbelianGroup&, HomMarkedAbelianGroup&))(regina::swap));

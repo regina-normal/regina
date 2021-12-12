@@ -51,7 +51,7 @@
 #include "angle/anglestructure.h"
 #include "maths/cyclotomic.h"
 #include "progress/progresstracker.h"
-#include "surfaces/normalsurface.h"
+#include "surface/normalsurface.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/detail/retriangulate.h"
 #include "triangulation/generic/triangulation.h"
@@ -99,7 +99,6 @@ template <int> class XMLTriangulationReader;
  * \todo \featurelong What is the Heegaard genus?
  * \todo \featurelong Have a subcomplex as a new type.  Include routines to
  * crush a subcomplex or to expand a subcomplex to a normal surface.
- * \todo \featurelong Implement writeTextLong() for skeletal objects.
  *
  * \headerfile triangulation/dim3.h
  *
@@ -258,23 +257,30 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         Triangulation(Triangulation&& src) noexcept = default;
         /**
-         * Deprecated routine that creates a new ideal triangulation
-         * representing the complement of the given link in the 3-sphere.
+         * Creates a new ideal triangulation representing the complement
+         * of the given link in the 3-sphere.
+         *
+         * The triangulation will have one ideal vertex for each link
+         * component.  Assuming you pass \a simplify as \c true (the default),
+         * there will typically be no internal vertices; however, this
+         * is not guaranteed.
+         *
+         * Initially, each tetrahedron will be oriented according to a
+         * right-hand rule: the thumb of the right hand points from vertices
+         * 0 to 1, and the fingers curl around to point from vertices 2 to 3.
+         * If you pass \a simplify as \c true, then Regina will attempt to
+         * simplify the triangulation to as few tetrahedra as possible:
+         * this may relabel the tetrahedra, though their orientations will
+         * be preserved.
          *
          * This is the same triangulation that is produced by
-         * Link::complement(); however, this routine is slightly less
-         * efficient because it induces an additional move.
-         * See Link::complemenet() for further details.
-         *
-         * The triangulation will be simplified, but be aware that it
-         * might still contain internal vertices (i.e., vertices whose
-         * links are spheres).  This should, however, be a rare occurrence.
-         *
-         * \deprecated Just call the more efficient Link::complement() instead.
+         * Link::complement().
          *
          * @param link the link whose complement we should build.
+         * @param simplify \c true if and only if the triangulation
+         * should be simplified to use as few tetrahedra as possible.
          */
-        [[deprecated]] Triangulation(const Link& link);
+        Triangulation(const Link& link, bool simplify = true);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.
@@ -670,6 +676,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid.
          *
+         * \exception FailedPrecondition This triangulation is invalid.
+         *
          * @return the relative first homology group with respect to the
          * boundary.
          */
@@ -691,29 +699,24 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid.
          *
+         * \exception FailedPrecondition This triangulation is invalid.
+         *
          * @return the first homology group of the boundary.
          */
         const AbelianGroup& homologyBdry() const;
         /**
-         * Returns the second homology group for this triangulation.
-         * If this triangulation contains any ideal vertices,
-         * the homology group will be
-         * calculated as if each such vertex had been truncated.
-         * The algorithm used calculates various first homology groups
-         * and uses homology and cohomology theorems to deduce the
-         * second homology group.
+         * Deprecated routine that returns the second homology group for
+         * this triangulation.
          *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homologyH2() should be called again; this will be
-         * instantaneous if the group has already been calculated.
+         * \deprecated This is identical to calling homology<2>().
          *
          * \pre This triangulation is valid.
          *
+         * \exception FailedPrecondition This triangulation is invalid.
+         *
          * @return the second homology group.
          */
-        const AbelianGroup& homologyH2() const;
+        [[deprecated]] AbelianGroup homologyH2() const;
         /**
          * Returns the second homology group with coefficients in Z_2
          * for this triangulation.
@@ -728,6 +731,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * Z_2, so the number of Z_2 terms is returned.
          *
          * \pre This triangulation is valid.
+         *
+         * \exception FailedPrecondition This triangulation is invalid.
          *
          * @return the number of Z_2 terms in the second homology group
          * with coefficients in Z_2.
@@ -1703,6 +1708,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)
@@ -1744,6 +1752,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -2018,6 +2029,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will (trivially) preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a f)
@@ -2063,6 +2077,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will (trivially) preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a f)
@@ -2106,6 +2123,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will (trivially) preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -2151,6 +2171,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   performed, and its validity tests are expensive; pinchEdge() on
          *   the other hand can always be used for edges \a e of the
          *   type described above.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -2809,6 +2832,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   performed, and its validity tests are expensive; pinchEdge() on
          *   the other hand can always be used for edges \a e of the
          *   type described above.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -3679,6 +3705,8 @@ Triangulation<3>& static_triangulation3_cast(Packet& p);
  */
 const Triangulation<3>& static_triangulation3_cast(const Packet& p);
 
+// Doxygen struggles with specialisations; hide them from it.
+#ifndef __DOXYGEN
 template <>
 inline PacketData<Triangulation<3>>::ChangeEventSpan::ChangeEventSpan(
         PacketData& data) : data_(data) {
@@ -3717,6 +3745,7 @@ inline PacketData<Triangulation<3>>::ChangeEventSpan::~ChangeEventSpan() {
             break;
     }
 }
+#endif // ! __DOXYGEN
 
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
@@ -3770,7 +3799,7 @@ inline void Triangulation<3>::removeAllTetrahedra() {
 }
 
 inline Triangulation<3>& Triangulation<3>::operator = (
-        const Triangulation<3>& src) {
+        const Triangulation& src) {
     // We need to implement copy assignment ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.  This is so that the
     // final packetWasChanged event is fired *after* we modify the
@@ -3799,7 +3828,7 @@ inline Triangulation<3>& Triangulation<3>::operator = (
     return *this;
 }
 
-inline Triangulation<3>& Triangulation<3>::operator = (Triangulation<3>&& src) {
+inline Triangulation<3>& Triangulation<3>::operator = (Triangulation&& src) {
     // Like copy assignment, we implement this ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.
 
@@ -3903,8 +3932,14 @@ inline const AngleStructure& Triangulation<3>::generalAngleStructure() const {
         throw NoSolution();
 }
 
+inline AbelianGroup Triangulation<3>::homologyH2() const {
+    return homology<2>();
+}
+
 inline unsigned long Triangulation<3>::homologyH2Z2() const {
-    return homologyRel().rank() + homologyRel().torsionRank(2);
+    // The call to homologyRel() will test the validity precondition.
+    const AbelianGroup& h1Rel = homologyRel();
+    return h1Rel.rank() + h1Rel.torsionRank(2);
 }
 
 inline const Triangulation<3>::TuraevViroSet&
@@ -3942,20 +3977,6 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
                 return action(std::move(obj), std::forward<Args>(args)...);
             });
     }
-}
-
-inline bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
-        ProgressTrackerOpen* tracker) {
-    return retriangulate(height, nThreads, tracker,
-        [](Triangulation<3>&& alt, Triangulation<3>& original, size_t minSimp) {
-            if (alt.size() < minSimp) {
-                ChangeEventSpan span(original);
-                original = std::move(alt);
-                original.intelligentSimplify();
-                return true;
-            } else
-                return false;
-        }, *this, size());
 }
 
 inline bool Triangulation<3>::minimizeBoundary() {

@@ -39,9 +39,10 @@
 #define __REGINA_ENUMCONSTRAINTS_H
 #endif
 
+#include <algorithm>
 #include <cstddef>
 #include <vector>
-#include "regina-core.h"
+#include "core/output.h"
 
 namespace regina {
 
@@ -107,7 +108,7 @@ namespace regina {
  *
  * \ingroup enumerate
  */
-class ValidityConstraints {
+class ValidityConstraints : public Output<ValidityConstraints> {
     public:
         /**
          * An empty set of constraints.
@@ -361,6 +362,68 @@ class ValidityConstraints {
         template <typename BitmaskType>
         std::vector<BitmaskType> bitmasks() const;
 
+        /**
+         * Determines whether this and the given set contain the same
+         * constraints.
+         *
+         * This test compares the number of coordinates in each block,
+         * the total number of blocks, the set of local constraints, and
+         * the set of global constraints.  The local and global constraints
+         * may appear in any order, and their individual coordinates may
+         * likewise appear in any order; such reorderings will not
+         * affect the outcome of this test.
+         *
+         * \warning Because this test allows for reordering, the comparison is
+         * not very efficient.  It is assumed that this will not be a problem,
+         * because typical constraint sets are extremely small.
+         *
+         * @param other the constraint set to compare against this.
+         * @return \c true if and only if this and the given set
+         * contain the same constraints.
+         */
+        bool operator == (const ValidityConstraints& other) const;
+
+        /**
+         * Determines whether this and the given set do not contain the same
+         * constraints.
+         *
+         * This test compares the number of coordinates in each block,
+         * the total number of blocks, the set of local constraints, and
+         * the set of global constraints.  The local and global constraints
+         * may appear in any order, and their individual coordinates may
+         * likewise appear in any order; such reorderings will not
+         * affect the outcome of this test.
+         *
+         * \warning Because this test allows for reordering, the comparison is
+         * not very efficient.  It is assumed that this will not be a problem,
+         * because typical constraint sets are extremely small.
+         *
+         * @param other the constraint set to compare against this.
+         * @return \c true if and only if this and the given set
+         * do not contain the same constraints.
+         */
+        bool operator != (const ValidityConstraints& other) const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use detail() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const;
+
     private:
         /**
          * Constructs an empty set of constraints.
@@ -450,6 +513,109 @@ std::vector<BitmaskType> ValidityConstraints::bitmasks(size_t len) const {
 template <typename BitmaskType>
 inline std::vector<BitmaskType> ValidityConstraints::bitmasks() const {
     return bitmasks<BitmaskType>(blockSize_ * nBlocks_);
+}
+
+inline bool ValidityConstraints::operator == (const ValidityConstraints& other)
+        const {
+    if (blockSize_ != other.blockSize_ || nBlocks_ != other.nBlocks_)
+        return false;
+
+    // We could do better than is_permutation (which is quadratic in the
+    // vector size), but sets are typically small and probably nobody is
+    // using this operator anyway.
+
+    if (! std::is_permutation(local_.begin(), local_.end(),
+            other.local_.begin(), other.local_.end(),
+            [](const std::vector<int>& a, const std::vector<int>& b) {
+                return std::is_permutation(
+                    a.begin(), a.end(), b.begin(), b.end());
+            }))
+        return false;
+
+    if (! std::is_permutation(global_.begin(), global_.end(),
+            other.global_.begin(), other.global_.end(),
+            [](const std::vector<int>& a, const std::vector<int>& b) {
+                return std::is_permutation(
+                    a.begin(), a.end(), b.begin(), b.end());
+            }))
+        return false;
+
+    return true;
+}
+
+inline bool ValidityConstraints::operator != (const ValidityConstraints& other)
+        const {
+    return ! ((*this) == other);
+}
+
+inline void ValidityConstraints::writeTextShort(std::ostream& out) const {
+    out << "Blocks: " << nBlocks_ << " x " << blockSize_;
+    if (! local_.empty()) {
+        out << ", local: ";
+        bool first = true;
+        for (const auto& v : local_) {
+            if (first)
+                first = false;
+            else
+                out << ", ";
+            out << "{ ";
+            for (int i : v)
+                out << i << ' ';
+            out << '}';
+        }
+    }
+    if (! global_.empty()) {
+        out << ", global: ";
+        bool first = true;
+        for (const auto& v : global_) {
+            if (first)
+                first = false;
+            else
+                out << ", ";
+            out << "{ ";
+            for (int i : v)
+                out << i << ' ';
+            out << '}';
+        }
+    }
+}
+
+inline void ValidityConstraints::writeTextLong(std::ostream& out) const {
+    out << nBlocks_ << " block(s) of size " << blockSize_ << std::endl;
+    if (local_.empty()) {
+        out << "No local constraints" << std::endl;
+    } else {
+        out << "Local: ";
+        bool first = true;
+        for (const auto& v : local_) {
+            if (first)
+                first = false;
+            else
+                out << ", ";
+            out << "{ ";
+            for (int i : v)
+                out << i << ' ';
+            out << '}';
+        }
+        out << std::endl;
+    }
+    if (global_.empty()) {
+        out << "No global constraints" << std::endl;
+    } else {
+        out << "Global: ";
+        bool first = true;
+        for (const auto& v : global_) {
+            if (first)
+                first = false;
+            else
+                out << ", ";
+            out << "{ ";
+            for (int i : v)
+                out << i << ' ';
+            out << '}';
+        }
+        out << std::endl;
+    }
 }
 
 inline void swap(ValidityConstraints& a, ValidityConstraints& b) noexcept {

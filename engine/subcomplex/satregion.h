@@ -85,7 +85,7 @@ namespace regina {
  *
  * \ingroup subcomplex
  */
-class SatBlockSpec {
+class SatBlockSpec : public ShortOutput<SatBlockSpec> {
     private:
         SatBlock* block_;
             /**< Details of the saturated block structure. */
@@ -141,24 +141,35 @@ class SatBlockSpec {
         void swap(SatBlockSpec& other) noexcept;
 
         /**
-         * Determines whether this and the given structure contain identical
-         * information.  In particular, their block() pointers must be
-         * identical (not pointing to different blocks with the same contents).
+         * Determines whether this and the given structure contain
+         * combinatorially equivalent information.
+         *
+         * Specifically, to compare as equal, two SatBlockSpec objects
+         * must hold blocks of the same type with the same combinatorial
+         * parameters (as tested by the SatBlock equality comparison),
+         * and they must use the same horizontal/vertical reflection
+         * parameters within the larger region (as returned by refVert() and
+         * refHoriz()).
          *
          * @param other the structure to compare against this.
          * @return \c true if and only if this and \a other contain
-         * identical information.
+         * combinatorially equivalent information.
          */
         bool operator == (const SatBlockSpec& other) const;
         /**
-         * Determines whether this and the given structure contain different
-         * information.  In particular, they are considered different if their
-         * block() pointers are different (even if they point to different
-         * blocks with the same contents).
+         * Determines whether this and the given structure do not contain
+         * combinatorially equivalent information.
+         *
+         * Specifically, to compare as equal, two SatBlockSpec objects
+         * must hold blocks of the same type with the same combinatorial
+         * parameters (as tested by the SatBlock equality comparison),
+         * and they must use the same horizontal/vertical reflection
+         * parameters within the larger region (as returned by refVert() and
+         * refHoriz()).
          *
          * @param other the structure to compare against this.
-         * @return \c true if and only if this and \a other contain
-         * different information.
+         * @return \c true if and only if this and \a other do not contain
+         * combinatorially equivalent information.
          */
         bool operator != (const SatBlockSpec& other) const;
 
@@ -182,6 +193,16 @@ class SatBlockSpec {
          * @return \c true if and only if the block is reflected horizontally.
          */
         bool refHoriz() const;
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present; use str() instead.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 
         // Ensure the class is non-constructible (to the public) and
         // non-copyable.
@@ -657,6 +678,11 @@ class SatRegion : public Output<SatRegion> {
          * @param tri the triangulation in which to search for starter blocks.
          * @param mustBeComplete \c true if you are searching for a region
          * that fills an entire triangulation component, as described above.
+         * @param action a function (or other callable object) to call
+         * for each embedding of a starter block that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial region and tetrahedron list
+         * arguments.
          * @return \c true if \a action ever terminated the search by returning
          * \c true, or \c false if the search was allowed to run to completion.
          */
@@ -883,12 +909,12 @@ inline SatBlockSpec::SatBlockSpec(SatBlock* block, bool refVert,
 }
 
 inline bool SatBlockSpec::operator == (const SatBlockSpec& other) const {
-    return block_ == other.block_ && refVert_ == other.refVert_ &&
+    return (*block_) == (*other.block_) && refVert_ == other.refVert_ &&
         refHoriz_ == other.refHoriz_;
 }
 
 inline bool SatBlockSpec::operator != (const SatBlockSpec& other) const {
-    return block_ != other.block_ || refVert_ != other.refVert_ ||
+    return (*block_) != (*other.block_) || refVert_ != other.refVert_ ||
         refHoriz_ != other.refHoriz_;
 }
 

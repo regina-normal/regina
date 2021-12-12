@@ -289,6 +289,36 @@ void Tangle::swap(Tangle& other) noexcept {
             std::swap(end_[i][j], other.end_[i][j]);
 }
 
+bool Tangle::operator == (const Tangle& other) const {
+    if (type_ != other.type_)
+        return false;
+    if (crossings_.size() != other.crossings_.size())
+        return false;
+
+    int i, j;
+    for (i = 0; i < 2; ++i)
+        for (j = 0; j < 2; ++j)
+            if (end_[i][j] != translate(other.end_[i][j]))
+                return false;
+
+    for (size_t i = 0; i < crossings_.size(); ++i) {
+        Crossing* a = crossings_[i];
+        Crossing* b = other.crossings_[i];
+
+        if (a->sign() != b->sign())
+            return false;
+        if (a->next_[0] != translate(b->next_[0]))
+            return false;
+        if (a->next_[1] != translate(b->next_[1]))
+            return false;
+
+        // If everything is self-consistent then the prev strands should
+        // match also; we don't need to test those.
+    }
+
+    return true;
+}
+
 void Tangle::twist(int sign) {
     Crossing* c;
 
@@ -414,6 +444,33 @@ void Tangle::changeAll() {
             end_[i][j].strand_ ^= 1;
 }
 
+std::string Tangle::brief() const {
+    std::ostringstream out;
+    brief(out);
+    return out.str();
+}
+
+void Tangle::brief(std::ostream& out) const {
+    out << type_;
+
+    if (crossings_.empty()) {
+        out << " ( ) ( )";
+        return;
+    }
+
+    out << ' ';
+    for (Crossing* c : crossings_)
+        out << (c->sign() > 0 ? '+' : '-');
+
+    for (int i = 0; i < 2; ++i) {
+        out << " (";
+        for (StrandRef s = end_[i][0]; s; ++s) {
+            out << ' ' << s;
+        }
+        out << " )";
+    }
+}
+
 void Tangle::writeTextShort(std::ostream& out) const {
     out << crossings_.size() << "-crossing ";
     switch (type_) {
@@ -421,7 +478,8 @@ void Tangle::writeTextShort(std::ostream& out) const {
         case TANGLE_VERTICAL: out << "vertical"; break;
         case TANGLE_DIAGONAL: out << "diagonal"; break;
     }
-    out << " tangle";
+    out << " tangle: ";
+    brief(out);
 }
 
 void Tangle::writeTextLong(std::ostream& out) const {

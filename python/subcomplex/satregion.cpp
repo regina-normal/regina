@@ -52,6 +52,7 @@ void addSatRegion(pybind11::module_& m) {
         .def("refVert", &SatBlockSpec::refVert)
         .def("refHoriz", &SatBlockSpec::refHoriz)
     ;
+    regina::python::add_output(s);
     regina::python::add_eq_operators(s);
 
     auto r = pybind11::class_<SatRegion>(m, "SatRegion")

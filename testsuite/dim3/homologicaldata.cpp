@@ -33,8 +33,8 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "triangulation/dim3.h"
+#include "triangulation/dim3/homologicaldata.h"
 #include "triangulation/example3.h"
-#include "triangulation/homologicaldata.h"
 #include "testsuite/dim3/testtriangulation.h"
 
 using regina::Example;
@@ -189,8 +189,8 @@ class HomologicalDataTest : public CppUnit::TestFixture {
 
             std::string fromStandard, fromDual;
             for (int i = 0; i <= 3; ++i) {
-                fromStandard = dat.homology(i).str();
-                fromDual = dat.dualHomology(i).str();
+                fromStandard = dat.homology(i).unmarked().str();
+                fromDual = dat.dualHomology(i).unmarked().str();
 
                 if (fromStandard != fromDual) {
                     std::ostringstream msg;
@@ -203,7 +203,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
             }
 
             std::string fromTri = tri.homology().str();
-            fromDual = dat.dualHomology(1).str();
+            fromDual = dat.dualHomology(1).unmarked().str();
 
             if (fromTri != fromDual) {
                 std::ostringstream msg;
@@ -252,7 +252,7 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         void verifyBdryManifoldMapH1(const Triangulation<3>& tri,
                 const char* name, const char* ans) {
             HomologicalData dat(tri);
-            std::string val = dat.bdryHomologyMap(1).str();
+            std::string val = dat.bdryHomologyMap(1).summary();
             if (val != ans) {
                 std::ostringstream msg;
                 msg << name << ": Map from H1(bdry) to H1(mfd) is "
@@ -262,20 +262,20 @@ class HomologicalDataTest : public CppUnit::TestFixture {
         }
 
         void bdryManifoldMapH1() {
-            verifyBdryManifoldMapH1(lens7_1, "L(7,1)", "zero map");
-            verifyBdryManifoldMapH1(d88xz15, "S^3 / D_88 x Z_15", "zero map");
-            verifyBdryManifoldMapH1(weberSeifert, "Weber-Seifert", "zero map");
+            verifyBdryManifoldMapH1(lens7_1, "L(7,1)", "Zero map");
+            verifyBdryManifoldMapH1(d88xz15, "S^3 / D_88 x Z_15", "Zero map");
+            verifyBdryManifoldMapH1(weberSeifert, "Weber-Seifert", "Zero map");
             verifyBdryManifoldMapH1(closedHypA, "Closed Hyp (vol=1.01494161)",
-                "zero map");
+                "Zero map");
             verifyBdryManifoldMapH1(closedHypB, "Closed Hyp (vol=2.45402944)",
-                "zero map");
-            verifyBdryManifoldMapH1(norA, "SFS [M_/n2: (2,1)]", "zero map");
+                "Zero map");
+            verifyBdryManifoldMapH1(norA, "SFS [M_/n2: (2,1)]", "Zero map");
             verifyBdryManifoldMapH1(s028, "SnapPea s028",
-                "kernel Z | cokernel Z_16 | image Z");
+                "Map (kernel Z | cokernel Z_16 | image Z)");
             verifyBdryManifoldMapH1(s955, "SnapPea s955",
-                "kernel Z | cokernel Z_20 | image Z + Z_2");
+                "Map (kernel Z | cokernel Z_20 | image Z + Z_2)");
             verifyBdryManifoldMapH1(lst3_4_7, "LST(3,4,7)",
-                "epic, with kernel Z");
+                "Epic (kernel Z)");
         }
 
         void verifyStandardCells(Triangulation<3>& tri, const char* name,

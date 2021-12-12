@@ -35,7 +35,7 @@
 #include "enumerate/treetraversal.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
-#include "surfaces/normalsurface.h"
+#include "surface/normalsurface.h"
 #include "triangulation/dim3.h"
 #include "utilities/xmlutils.h"
 #include <thread>
@@ -292,6 +292,44 @@ void AngleStructures::calculateSpanTaut() const {
         }
     }
     doesSpanTaut_ = false;
+}
+
+bool AngleStructures::operator == (const AngleStructures& other) const {
+    size_t n = structures_.size();
+    if (n != other.structures_.size())
+        return false;
+    if (structures_.empty())
+        return other.structures_.empty();
+    if (other.structures_.empty())
+        return false;
+
+    // Both lists have the same size and are non-empty.
+    // Our algorithm will be to sort and then compare.
+    auto* lhs = new const AngleStructure*[n];
+    auto* rhs = new const AngleStructure*[n];
+
+    const AngleStructure** ptr = lhs;
+    for (const auto& s : structures_)
+        *ptr++ = std::addressof(s);
+
+    ptr = rhs;
+    for (const auto& s : other.structures_)
+        *ptr++ = std::addressof(s);
+
+    auto cmp = [](const AngleStructure* x, const AngleStructure* y) {
+        return (*x) < (*y);
+    };
+    std::sort(lhs, lhs + n, cmp);
+    std::sort(rhs, rhs + n, cmp);
+
+    bool ans = std::equal(lhs, lhs + n, rhs,
+            [](const AngleStructure* x, const AngleStructure* y) {
+        return (*x) == (*y);
+    });
+
+    delete[] lhs;
+    delete[] rhs;
+    return ans;
 }
 
 } // namespace regina

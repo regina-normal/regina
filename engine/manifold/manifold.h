@@ -72,6 +72,8 @@ class AbelianGroup;
  * - must provide value semantics (including at least a copy constructor and
  *   assignment operator);
  *
+ * - must provide comparison operators (== and !=);
+ *
  * - must provide member and global swap functions, for consistency across all
  *   Manifold subclasses.
  *
@@ -172,7 +174,10 @@ class Manifold : public Output<Manifold> {
          */
         virtual AbelianGroup homology() const;
         /**
-         * An alias for homology().  See homology() for further details.
+         * A deprecated alias for homology().
+         *
+         * \deprecated This routine can be accessed by the simpler name
+         * homology().
          *
          * \exception NotImplemented homology calculation has not yet been
          * implemented for this particular 3-manifold.
@@ -186,7 +191,7 @@ class Manifold : public Output<Manifold> {
          * @return the first homology group of this 3-manifold, if this
          * functionality has been implemented.
          */
-        AbelianGroup homologyH1() const;
+        [[deprecated]] AbelianGroup homologyH1() const;
 
         /**
          * Returns whether or not this is a finite-volume hyperbolic manifold.

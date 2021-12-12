@@ -363,7 +363,7 @@ std::ostream& operator << (std::ostream& out, const ModelLinkGraphArc& a);
  * \ingroup link
  */
 class ModelLinkGraphNode : public MarkedElement,
-        public Output<ModelLinkGraphNode> {
+        public ShortOutput<ModelLinkGraphNode> {
     private:
         ModelLinkGraphArc adj_[4];
             /**< Stores the arcs at the \e other endpoints of the four
@@ -426,15 +426,6 @@ class ModelLinkGraphNode : public MarkedElement,
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this node to the
-         * given output stream.
-         *
-         * \ifacespython Not present; use detail() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
         // Make this class non-copyable.
         ModelLinkGraphNode(const ModelLinkGraphNode&) = delete;
@@ -565,7 +556,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         /**
          * Sets this to be a (deep) copy of the given graph.
          *
-         * @param copy the graph to copy.
+         * @param src the graph to copy.
          * @return a reference to this graph.
          */
         ModelLinkGraph& operator = (const ModelLinkGraph& src);
@@ -609,6 +600,34 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * @param other the graph whose contents should be swapped with this.
          */
         [[deprecated]] void swapContents(ModelLinkGraph& other) noexcept;
+
+        /**
+         * Determines if this graph is combinatorially identical to the
+         * given graph.
+         *
+         * Here "identical" means that both graphs have the same number
+         * of nodes, and in both graphs the same pairs of outgoing arcs of
+         * numbered nodes are connected by edges.
+         *
+         * @param other the graph to compare with this.
+         * @return \c true if and only if the two graphs are
+         * combinatorially identical.
+         */
+        bool operator == (const ModelLinkGraph& other) const;
+
+        /**
+         * Determines if this graph is not combinatorially identical to the
+         * given graph.
+         *
+         * Here "identical" means that both graphs have the same number
+         * of nodes, and in both graphs the same pairs of outgoing arcs of
+         * numbered nodes are connected by edges.
+         *
+         * @param other the graph to compare with this.
+         * @return \c true if and only if the two graphs are
+         * not combinatorially identical.
+         */
+        bool operator != (const ModelLinkGraph& other) const;
 
         /**
          * Converts this graph into its reflection.
@@ -699,7 +718,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * For each link that is generated, this routine will call \a action
          * (which must be a function or some other callable object).
          *
-         * - The first argument passed to \action will be the link that was
+         * - The first argument passed to \a action will be the link that was
          *   generated.  This will be passed as an rvalue; a typical action
          *   could (for example) take it by const reference and query it,
          *   or take it by value and modify it, or take it by rvalue reference
@@ -1243,6 +1262,38 @@ class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
         size_t cellPos(const ModelLinkGraphArc& arc) const;
 
         /**
+         * Determines if this and the given cellular decomposition are
+         * combinatorially identical.
+         *
+         * Here "identical" means that both decompositions have the same
+         * number of cells, these cells are presented in the same order,
+         * and their boundaries enter and exit the same numbered arcs of the
+         * same numbered nodes, using the same directions of traversal and
+         * the same starting points on each cell boundary.
+         *
+         * @param other the cellular decomposition to compare with this.
+         * @return \c true if and only if the two cellular decompositions are
+         * combinatorially identical.
+         */
+        bool operator == (const ModelLinkGraphCells& other) const;
+
+        /**
+         * Determines if this and the given cellular decomposition are
+         * not combinatorially identical.
+         *
+         * Here "identical" means that both decompositions have the same
+         * number of cells, these cells are presented in the same order,
+         * and their boundaries enter and exit the same numbered arcs of the
+         * same numbered nodes, using the same directions of traversal and
+         * the same starting points on each cell boundary.
+         *
+         * @param other the cellular decomposition to compare with this.
+         * @return \c true if and only if the two cellular decompositions are
+         * not combinatorially identical.
+         */
+        bool operator != (const ModelLinkGraphCells& other) const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -1421,13 +1472,12 @@ inline const ModelLinkGraphArc& ModelLinkGraphNode::adj(int which) const {
 }
 
 inline void ModelLinkGraphNode::writeTextShort(std::ostream& out) const {
-    out << "node " << index();
-}
-
-inline void ModelLinkGraphNode::writeTextLong(std::ostream& out) const {
-    out << "Node " << index() << ":\n";
-    for (int i = 0; i < 4; ++i)
-        out << "  Arc " << i << " -> " << adj_[i] << std::endl;
+    out << "Node " << index() << ": arcs 0, 1, 2, 3 -> ";
+    for (int i = 0; i < 4; ++i) {
+        if (i > 0)
+            out << ", ";
+        out << adj_[i];
+    }
 }
 
 // Inline functions for ModelLinkGraph
@@ -1476,6 +1526,10 @@ inline void ModelLinkGraph::swap(ModelLinkGraph& other) noexcept {
 
 inline void ModelLinkGraph::swapContents(ModelLinkGraph& other) noexcept {
     swap(other);
+}
+
+inline bool ModelLinkGraph::operator != (const ModelLinkGraph& other) const {
+    return ! ((*this) == other);
 }
 
 inline const ModelLinkGraphCells& ModelLinkGraph::cells() const {
@@ -1537,6 +1591,11 @@ inline size_t ModelLinkGraphCells::cell(const ModelLinkGraphArc& arc) const {
 
 inline size_t ModelLinkGraphCells::cellPos(const ModelLinkGraphArc& arc) const {
     return step_[(arc.node()->index() << 2) | arc.arc()];
+}
+
+inline bool ModelLinkGraphCells::operator != (const ModelLinkGraphCells& other)
+        const {
+    return ! ((*this) == other);
 }
 
 } // namespace regina

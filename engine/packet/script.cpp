@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <algorithm>
 #include <iterator>
 #include <sstream>
 #include "packet/script.h"
@@ -136,6 +137,46 @@ void Script::removeVariable(size_t index) {
 
     ChangeEventSpan span(*this);
     variables_.erase(it);
+}
+
+bool Script::operator == (const Script& other) const {
+    if (text_ != other.text_)
+        return false;
+    if (variables_.size() != other.variables_.size())
+        return false;
+
+    auto a = variables_.begin();
+    auto b = other.variables_.begin();
+    for ( ; a != variables_.end(); ++a, ++b) {
+        if (a->first != b->first)
+            return false;
+        if (a->second.lock() != b->second.lock())
+            return false;
+    }
+
+    return true;
+}
+
+void Script::writeTextShort(std::ostream& o) const {
+    if (text_.empty())
+        o << "Empty script";
+    else {
+        size_t lines = std::count(text_.begin(), text_.end(), '\n');
+        if (lines > 0 && text_.back() != '\n')
+            ++lines; // there is an extra unfinished line
+        o << lines << "-line script";
+    }
+    if (variables_.empty())
+        o << ", no variables";
+    else {
+        for (const auto& v : variables_) {
+            o << ", " << v.first << " = ";
+            if (auto shared = v.second.lock())
+                o << '<' << shared->label() << '>';
+            else
+                o << "(null)";
+        }
+    }
 }
 
 void Script::writeTextLong(std::ostream& o) const {

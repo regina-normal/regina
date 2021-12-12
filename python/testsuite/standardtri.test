@@ -105,12 +105,6 @@ def describe(t, name):
 		else:
 			print(prefix(2) + 'No chain')
 
-	sub = L31Pillow.recognise(c)
-	if sub:
-		print(prefix(1) + 'L(3,1) pillow: ' + sub.name())
-		print(prefix(2) + 'Interior vertex:',
-			sub.tetrahedron(0).vertex(sub.interiorVertex(0)).index())
-
 	sub = LayeredChainPair.recognise(c)
 	if sub:
 		print(prefix(1) + 'Layered chain pair: ' + sub.name())

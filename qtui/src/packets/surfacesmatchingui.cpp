@@ -32,7 +32,7 @@
 
 // Regina core includes:
 #include "maths/matrix.h"
-#include "surfaces/normalsurfaces.h"
+#include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
 
 // UI includes:

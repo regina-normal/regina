@@ -37,7 +37,6 @@
 #include "subcomplex/blockedsfsloop.h"
 #include "subcomplex/blockedsfspair.h"
 #include "subcomplex/blockedsfstriple.h"
-#include "subcomplex/l31pillow.h"
 #include "subcomplex/layeredchain.h"
 #include "subcomplex/layeredchainpair.h"
 #include "subcomplex/layeredlensspace.h"
@@ -251,7 +250,6 @@ void Tri3CompositionUI::refresh() {
 
     // Look for complete closed triangulations.
     findAugTriSolidTori();
-    findL31Pillows();
     findLayeredChainPairs();
     findLayeredLensSpaces();
     findLayeredLoops();
@@ -463,7 +461,7 @@ void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
             thisAnnulus = tr("Annulus %1/%2").arg(b).arg(a);
             if (! spec.block()->hasAdjacentBlock(a))
                 (new QTreeWidgetItem(annuli))->setText(0,
-                    tr("%1 --> boundary").arg(thisAnnulus));
+                    tr("%1 \u2192 boundary").arg(thisAnnulus));
             else {
                 adjAnnulus = tr("Annulus %1/%2").
                     arg(region.blockIndex(spec.block()->adjacentBlock(a))).
@@ -473,19 +471,19 @@ void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
 
                 if (ref && back)
                     (new QTreeWidgetItem(annuli))->setText(0,
-                        tr("%1 --> %2 (reflected, backwards)").
+                        tr("%1 \u2192 %2 (reflected, backwards)").
                         arg(thisAnnulus).arg(adjAnnulus));
                 else if (ref)
                     (new QTreeWidgetItem(annuli))->setText(0,
-                        tr("%1 --> %2 (reflected)").
+                        tr("%1 \u2192 %2 (reflected)").
                         arg(thisAnnulus).arg(adjAnnulus));
                 else if (back)
                     (new QTreeWidgetItem(annuli))->setText(0,
-                        tr("%1 --> %2 (backwards)").
+                        tr("%1 \u2192 %2 (backwards)").
                         arg(thisAnnulus).arg(adjAnnulus));
                 else
                     (new QTreeWidgetItem(annuli))->setText(0,
-                        tr("%1 --> %2").
+                        tr("%1 \u2192 %2").
                         arg(thisAnnulus).arg(adjAnnulus));
             }
         }
@@ -566,7 +564,8 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         detailsItem->setText(0, tr("First region:"));
         describeSatRegion(pair->region(0), detailsItem);
 
-        (new QTreeWidgetItem(id))->setText(0, tr("Matching relation (first --> second): %1").
+        (new QTreeWidgetItem(id))->setText(0,
+            tr("Matching relation (first \u2192 second): %1").
             arg(matrixString(pair->matchingReln())));
     }
 
@@ -587,11 +586,11 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         describeSatRegion(triple->centre(), detailsItem);
 
         (new QTreeWidgetItem(id))->setText(0,
-            tr("Matching relation (centre --> second end): %1").
+            tr("Matching relation (centre \u2192 second end): %1").
             arg(matrixString(triple->matchingReln(1))));
 
         (new QTreeWidgetItem(id))->setText(0,
-            tr("Matching relation (centre --> first end): %1").
+            tr("Matching relation (centre \u2192 first end): %1").
             arg(matrixString(triple->matchingReln(0))));
     }
 
@@ -600,11 +599,11 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         id = addComponentSection(tr("Layered Torus Bundle"));
 
         (new QTreeWidgetItem(id))->setText(0,
-            tr("Layering relation (lower a/b --> upper a/b): %1").
+            tr("Layering relation (lower a/b \u2192 upper a/b): %1").
             arg(matrixString(bundle->layeringReln())));
 
         (new QTreeWidgetItem(id))->setText(0,
-            tr("Core relation (upper a/b --> lower a/b): %1").
+            tr("Core relation (upper a/b \u2192 lower a/b): %1").
             arg(matrixString(bundle->core().parallelReln())));
 
         (new QTreeWidgetItem(id))->setText(0,
@@ -627,30 +626,6 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         (new QTreeWidgetItem(id))->setText(0,
             tr("Thin I-bundle (T x I): %1").
             arg(pBundle->bundle().name().c_str()));
-    }
-}
-
-void Tri3CompositionUI::findL31Pillows() {
-    unsigned long nComps = tri_->countComponents();
-
-    QTreeWidgetItem* id = nullptr;
-    QTreeWidgetItem* detailsItem = nullptr;
-
-    for (unsigned long i = 0; i < nComps; i++) {
-        auto pillow = regina::L31Pillow::recognise(tri_->component(i));
-        if (pillow) {
-            id = addComponentSection(tr("L(3,1) pillow ") +
-                pillow->name().c_str());
-
-            detailsItem = new QTreeWidgetItem(id);
-            detailsItem->setText(0, tr("Component %1").arg(i));
-
-            detailsItem = new QTreeWidgetItem(id, detailsItem);
-            detailsItem->setText(0, 
-                tr("Pillow interior vertex: %1").
-                arg(pillow->tetrahedron(0)->vertex(pillow->interiorVertex(0))->
-                    index()));
-        }
     }
 }
 

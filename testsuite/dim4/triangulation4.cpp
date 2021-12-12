@@ -93,6 +93,8 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(vertexLinksSpecific);
     CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(homologyH1);
+    CPPUNIT_TEST(homologyH2);
+    CPPUNIT_TEST(homologyH3);
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(vertexLinks);
@@ -110,6 +112,10 @@ class Triangulation4Test : public TriangulationTest<4> {
         // Closed orientable:
         Triangulation<4> s4_doubleConeS3;
             /**< A double cone over the 3-sphere. */
+        Triangulation<4> cp2;
+            /**< The complex projective plane. */
+        Triangulation<4> s2xs2;
+            /**< The product of a 2-sphere with a 2-sphere. */
 
         // Closed non-orientable:
         Triangulation<4> rp4;
@@ -175,6 +181,8 @@ class Triangulation4Test : public TriangulationTest<4> {
 
             // We can pull some of our triangulations straight out of the can
             // via Example<4>.
+            cp2 = Example<4>::cp2();
+            s2xs2 = Example<4>::s2xs2();
             rp4 = Example<4>::rp4();
 
             // Some of our triangulations are built from 3-manifold
@@ -259,6 +267,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             f(simplicialSphere, "Simplicial S^4");
             f(s4_doubleConeS3, "S^4 (double cone)");
             f(sphereBundle, "Sphere bundle");
+            f(cp2, "CP^2");
+            f(s2xs2, "S^2 x S^2");
             f(rp4, "RP^4");
             f(twistedSphereBundle, "Twisted sphere bundle");
             f(ball, "Ball");
@@ -289,6 +299,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             f(simplicialSphere, "Simplicial S^4");
             f(s4_doubleConeS3, "S^4 (double cone)");
             f(sphereBundle, "Sphere bundle");
+            f(cp2, "CP^2");
+            f(s2xs2, "S^2 x S^2");
             f(rp4, "RP^4");
             f(twistedSphereBundle, "Twisted sphere bundle");
             f(ball, "Ball");
@@ -582,7 +594,7 @@ class Triangulation4Test : public TriangulationTest<4> {
 
                 void packetWasChanged(regina::Packet& p) {
                     rank = static_cast<regina::PacketOf<Triangulation<4>>&>
-                        (p).homologyH2().rank();
+                        (p).homology<2>().rank();
                     ++events;
                 }
             };
@@ -593,7 +605,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 Watcher w;
                 p->listen(&w);
 
-                if (p->homologyH2().rank() != 1) {
+                if (p->homology<2>().rank() != 1) {
                     CPPUNIT_FAIL("doubleCone(S2xS1) should have rank(H2) = 1.");
                 }
 
@@ -610,7 +622,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                     CPPUNIT_FAIL("Triangulation should have rank(H2) = 0 "
                         "in event handler after copy assignment.");
                 }
-                if (p->homologyH2().rank() != 0) {
+                if (p->homology<2>().rank() != 0) {
                     CPPUNIT_FAIL("Triangulation should have rank(H2) = 0"
                         "after copy assignment.");
                 }
@@ -621,7 +633,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 Watcher w;
                 p->listen(&w);
 
-                if (p->homologyH2().rank() != 1) {
+                if (p->homology<2>().rank() != 1) {
                     CPPUNIT_FAIL("doubleCone(S2xS1) should have rank(H2) = 1.");
                 }
 
@@ -642,7 +654,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                     CPPUNIT_FAIL("Triangulation should have rank(H2) = 0 "
                         "in event handler after move assignment.");
                 }
-                if (p->homologyH2().rank() != 0) {
+                if (p->homology<2>().rank() != 0) {
                     CPPUNIT_FAIL("Triangulation should have rank(H2) = 0"
                         "after move assignment.");
                 }
@@ -728,6 +740,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyValid(simplicialSphere, true, "Simplicial S^4");
             verifyValid(s4_doubleConeS3, true, "S^4 (double cone)");
             verifyValid(sphereBundle, true, "Sphere bundle");
+            verifyValid(cp2, true, "CP^2");
+            verifyValid(s2xs2, true, "S^2 x S^2");
             verifyValid(rp4, true, "RP^4");
             verifyValid(twistedSphereBundle, true, "Twisted sphere bundle");
             verifyValid(ball, true, "Ball");
@@ -759,6 +773,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyConnected(simplicialSphere, true, "Simplicial S^4");
             verifyConnected(s4_doubleConeS3, true, "S^4 (double cone)");
             verifyConnected(sphereBundle, true, "Sphere bundle");
+            verifyConnected(cp2, true, "CP^2");
+            verifyConnected(s2xs2, true, "S^2 x S^2");
             verifyConnected(rp4, true, "RP^4");
             verifyConnected(twistedSphereBundle, true, "Twisted sphere bundle");
             verifyConnected(ball, true, "Ball");
@@ -790,6 +806,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyOrientable(simplicialSphere, true, "Simplicial S^4");
             verifyOrientable(s4_doubleConeS3, true, "S^4 (double cone)");
             verifyOrientable(sphereBundle, true, "Sphere bundle");
+            verifyOrientable(cp2, true, "CP^2");
+            verifyOrientable(s2xs2, true, "S^2 x S^2");
             verifyOrientable(rp4, false, "RP^4");
             verifyOrientable(twistedSphereBundle, false,
                 "Twisted sphere bundle");
@@ -910,6 +928,8 @@ class Triangulation4Test : public TriangulationTest<4> {
                 "S^4 (double cone)");
             verifyBoundary(sphereBundle, false, 0, false, true,
                 "Sphere bundle");
+            verifyBoundary(cp2, false, 0, false, true, "CP^2");
+            verifyBoundary(s2xs2, false, 0, false, true, "S^2 x S^2");
             verifyBoundary(rp4, false, 0, false, true, "RP^4");
             verifyBoundary(twistedSphereBundle, false, 0, false, true,
                 "Twisted sphere bundle");
@@ -1050,6 +1070,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryCount(simplicialSphere, 0, 0, 0, "Simplicial S^4");
             verifyBoundaryCount(s4_doubleConeS3, 0, 0, 0, "S^4 (double cone)");
             verifyBoundaryCount(sphereBundle, 0, 0, 0, "Sphere bundle");
+            verifyBoundaryCount(cp2, 0, 0, 0, "CP^2");
+            verifyBoundaryCount(s2xs2, 0, 0, 0, "S^2 x S^2");
             verifyBoundaryCount(rp4, 0, 0, 0, "RP^4");
             verifyBoundaryCount(twistedSphereBundle, 0, 0, 0,
                 "Twisted sphere bundle");
@@ -1334,6 +1356,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyLinksSpheres(simplicialSphere, 6, "Simplicial S^4");
             verifyLinksSpheres(s4_doubleConeS3, 3, "S^4 (double cone)");
             verifyLinksSpheres(sphereBundle, 1, "Sphere bundle");
+            verifyLinksSpheres(cp2, 4, "CP^2");
+            verifyLinksSpheres(s2xs2, 5, "S^2 x S^2");
             verifyLinksSpheres(rp4, 3, "RP^4");
             verifyLinksSpheres(twistedSphereBundle, 1, "Twisted sphere bundle");
             verifyLinksBalls(ball, 5, "Ball");
@@ -1428,6 +1452,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyEulerChar(simplicialSphere, 2, 2, "Simplicial S^4");
             verifyEulerChar(s4_doubleConeS3, 2, 2, "S^4 (double cone)");
             verifyEulerChar(sphereBundle, 0, 0, "Sphere bundle");
+            verifyEulerChar(cp2, 3, 3, "CP^2");
+            verifyEulerChar(s2xs2, 4, 4, "S^2 x S^2");
             verifyEulerChar(rp4, 1, 1, "RP^4");
             verifyEulerChar(twistedSphereBundle, 0, 0, "Twisted sphere bundle");
             verifyEulerChar(ball, 1, 1, "Ball");
@@ -1450,28 +1476,85 @@ class Triangulation4Test : public TriangulationTest<4> {
         }
 
         void homologyH1() {
-            verifyHomology(empty, "0", "Empty");
-            verifyHomology(sphere, "0", "Sphere");
-            verifyHomology(simplicialSphere, "0", "Simplicial S^4");
-            verifyHomology(s4_doubleConeS3, "0", "S^4 (double cone)");
-            verifyHomology(sphereBundle, "Z", "Sphere bundle");
-            verifyHomology(rp4, "Z_2", "RP^4");
-            verifyHomology(twistedSphereBundle, "Z", "Twisted sphere bundle");
-            verifyHomology(ball, "0", "Ball");
-            verifyHomology(ball_foldedPent, "0", "Folded pentachoron");
-            verifyHomology(ball_singleConeS3, "0", "D^4 (single cone)");
-            verifyHomology(ball_layerAndFold, "0", "Layered and folded ball");
-            verifyHomology(ballBundle, "Z", "Ball bundle");
-            verifyHomology(twistedBallBundle, "Z", "Twisted ball bundle");
-            verifyHomology(idealPoincareProduct, "0",
+            verifyHomology<1>(empty, "0", "Empty");
+            verifyHomology<1>(sphere, "0", "Sphere");
+            verifyHomology<1>(simplicialSphere, "0", "Simplicial S^4");
+            verifyHomology<1>(s4_doubleConeS3, "0", "S^4 (double cone)");
+            verifyHomology<1>(sphereBundle, "Z", "Sphere bundle");
+            verifyHomology<1>(cp2, "0", "CP^2");
+            verifyHomology<1>(s2xs2, "0", "S^2 x S^2");
+            verifyHomology<1>(rp4, "Z_2", "RP^4");
+            verifyHomology<1>(twistedSphereBundle, "Z",
+                "Twisted sphere bundle");
+            verifyHomology<1>(ball, "0", "Ball");
+            verifyHomology<1>(ball_foldedPent, "0", "Folded pentachoron");
+            verifyHomology<1>(ball_singleConeS3, "0", "D^4 (single cone)");
+            verifyHomology<1>(ball_layerAndFold, "0",
+                "Layered and folded ball");
+            verifyHomology<1>(ballBundle, "Z", "Ball bundle");
+            verifyHomology<1>(twistedBallBundle, "Z", "Twisted ball bundle");
+            verifyHomology<1>(idealPoincareProduct, "0",
                 "(S^3 / P_120) x I (double cone)");
-            verifyHomology(idealCappellShaneson, "Z", "Ideal Cappell-Shaneson");
-            verifyHomology(mixedPoincareProduct, "0",
+            verifyHomology<1>(idealCappellShaneson, "Z",
+                "Ideal Cappell-Shaneson");
+            verifyHomology<1>(mixedPoincareProduct, "0",
                 "(S^3 / P_120) x I (single cone)");
-            verifyHomology(idealFigEightProduct, "Z",
+            verifyHomology<1>(idealFigEightProduct, "Z",
                 "Fig_8 x I (double cone)");
-            verifyHomology(mixedFigEightProduct, "Z",
+            verifyHomology<1>(mixedFigEightProduct, "Z",
                 "Fig_8 x I (single cone)");
+        }
+
+        void homologyH2() {
+            verifyHomology<2>(empty, "0", "Empty");
+            verifyHomology<2>(sphere, "0", "Sphere");
+            verifyHomology<2>(simplicialSphere, "0", "Simplicial S^4");
+            verifyHomology<2>(s4_doubleConeS3, "0", "S^4 (double cone)");
+            verifyHomology<2>(sphereBundle, "0", "Sphere bundle");
+            verifyHomology<2>(cp2, "Z", "CP^2");
+            verifyHomology<2>(s2xs2, "2 Z", "S^2 x S^2");
+            verifyHomology<2>(rp4, "0", "RP^4");
+            verifyHomology<2>(twistedSphereBundle, "0",
+                "Twisted sphere bundle");
+            verifyHomology<2>(ball, "0", "Ball");
+            verifyHomology<2>(ball_foldedPent, "0", "Folded pentachoron");
+            verifyHomology<2>(ball_singleConeS3, "0", "D^4 (single cone)");
+            verifyHomology<2>(ball_layerAndFold, "0",
+                "Layered and folded ball");
+            verifyHomology<2>(ballBundle, "0", "Ball bundle");
+            verifyHomology<2>(twistedBallBundle, "0", "Twisted ball bundle");
+            verifyHomology<2>(idealPoincareProduct, "0",
+                "(S^3 / P_120) x I (double cone)");
+            verifyHomology<2>(idealCappellShaneson, "0",
+                "Ideal Cappell-Shaneson");
+            verifyHomology<2>(mixedPoincareProduct, "0",
+                "(S^3 / P_120) x I (single cone)");
+        }
+
+        void homologyH3() {
+            verifyHomology<3>(empty, "0", "Empty");
+            verifyHomology<3>(sphere, "0", "Sphere");
+            verifyHomology<3>(simplicialSphere, "0", "Simplicial S^4");
+            verifyHomology<3>(s4_doubleConeS3, "0", "S^4 (double cone)");
+            verifyHomology<3>(sphereBundle, "Z", "Sphere bundle");
+            verifyHomology<3>(cp2, "0", "CP^2");
+            verifyHomology<3>(s2xs2, "0", "S^2 x S^2");
+            verifyHomology<3>(rp4, "Z_2", "RP^4");
+            verifyHomology<3>(twistedSphereBundle, "Z_2",
+                "Twisted sphere bundle");
+            verifyHomology<3>(ball, "0", "Ball");
+            verifyHomology<3>(ball_foldedPent, "0", "Folded pentachoron");
+            verifyHomology<3>(ball_singleConeS3, "0", "D^4 (single cone)");
+            verifyHomology<3>(ball_layerAndFold, "0",
+                "Layered and folded ball");
+            verifyHomology<3>(ballBundle, "0", "Ball bundle");
+            verifyHomology<3>(twistedBallBundle, "0", "Twisted ball bundle");
+            verifyHomology<3>(idealPoincareProduct, "Z",
+                "(S^3 / P_120) x I (double cone)");
+            verifyHomology<3>(idealCappellShaneson, "0",
+                "Ideal Cappell-Shaneson");
+            verifyHomology<3>(mixedPoincareProduct, "Z",
+                "(S^3 / P_120) x I (single cone)");
         }
 
         void fundGroup() {
@@ -1480,6 +1563,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyFundGroup(simplicialSphere, "0", "Simplicial S^4");
             verifyFundGroup(s4_doubleConeS3, "0", "S^4 (double cone)");
             verifyFundGroup(sphereBundle, "Z", "Sphere bundle");
+            verifyFundGroup(cp2, "0", "CP^2");
+            verifyFundGroup(s2xs2, "0", "S^2 x S^2");
             verifyFundGroup(rp4, "Z_2", "RP^4");
             verifyFundGroup(twistedSphereBundle, "Z", "Twisted sphere bundle");
             verifyFundGroup(ball, "0", "Ball");
@@ -1493,10 +1578,10 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyFundGroup(mixedPoincareProduct, "",
                 "(S^3 / P_120) x I (single cone)");
             verifyFundGroup(idealFigEightProduct,
-                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2",
+                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b^2 a^-1 b",
                 "Fig_8 x I (double cone)");
             verifyFundGroup(mixedFigEightProduct,
-                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2",
+                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b^2 a^-1 b",
                 "Fig_8 x I (single cone)");
         }
 
@@ -1609,13 +1694,13 @@ class Triangulation4Test : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri.homologyH1() == b.homologyH1())) {
+            if (! (tri.homology() == b.homology())) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri.homologyH2() == b.homologyH2())) {
+            if (! (tri.homology<2>() == b.homology<2>())) {
                 std::ostringstream msg;
                 msg << name << ": Barycentric subdivision breaks H2.";
                 CPPUNIT_FAIL(msg.str());
@@ -2035,7 +2120,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 // The idealToFinite routine should leave tri unchanged.
                 Triangulation<4> other(tri);
                 other.idealToFinite();
-                if (! other.isIdenticalTo(tri)) {
+                if (other != tri) {
                     std::ostringstream msg;
                     msg << name << ": "
                         << "idealToFinite modifies a triangulation with "
@@ -2059,7 +2144,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 other.idealToFinite();
                 clearProperties(other);
 
-                if (other.isIdenticalTo(tri)) {
+                if (other == tri) {
                     std::ostringstream msg;
                     msg << name << ": "
                         << "idealToFinite does not modify a triangulation with "
@@ -2128,13 +2213,13 @@ class Triangulation4Test : public TriangulationTest<4> {
                     // triangulations.
                     other.intelligentSimplify();
 
-                    if (! (other.homologyH1() == tri.homologyH1())) {
+                    if (! (other.homology() == tri.homology())) {
                         std::ostringstream msg;
                         msg << name << ": idealToFinite changes H1.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if (! (other.homologyH2() == tri.homologyH2())) {
+                    if (! (other.homology<2>() == tri.homology<2>())) {
                         std::ostringstream msg;
                         msg << name << ": idealToFinite changes H2.";
                         CPPUNIT_FAIL(msg.str());
@@ -2212,13 +2297,13 @@ class Triangulation4Test : public TriangulationTest<4> {
             // expensive tests.
             b.intelligentSimplify();
 
-            if (b.homologyH1() != tri.homologyH1()) {
+            if (b.homology() != tri.homology()) {
                 std::ostringstream msg;
                 msg << name << ": iBundle gives a mismatched H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b.homologyH2() != tri.homologyH2()) {
+            if (b.homology<2>() != tri.homology<2>()) {
                 std::ostringstream msg;
                 msg << name << ": iBundle gives a mismatched H2.";
                 CPPUNIT_FAIL(msg.str());
@@ -2284,19 +2369,19 @@ class Triangulation4Test : public TriangulationTest<4> {
             // expensive tests.
             b.intelligentSimplify();
 
-            regina::AbelianGroup expectH1(tri.homologyH1());
+            regina::AbelianGroup expectH1 = tri.homology();
             expectH1.addRank();
 
-            if (b.homologyH1() != expectH1) {
+            if (b.homology() != expectH1) {
                 std::ostringstream msg;
                 msg << name << ": s1Bundle gives incorrect H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            regina::AbelianGroup expectH2(tri.homologyH2());
+            regina::AbelianGroup expectH2(tri.homology<2>());
             expectH2.addGroup(tri.homology());
 
-            if (b.homologyH2() != expectH2) {
+            if (b.homology<2>() != expectH2) {
                 std::ostringstream msg;
                 msg << name << ": s1Bundle gives incorrect H2.";
                 CPPUNIT_FAIL(msg.str());

@@ -416,21 +416,18 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         /*@{*/
 
         /**
-         * Returns the second homology group for this triangulation.
-         * If this triangulation contains any ideal vertices, the homology
-         * group will be calculated as if each such vertex had been truncated.
+         * Deprecated routine that returns the second homology group for
+         * this triangulation.
          *
-         * Bear in mind that each time the triangulation changes, the
-         * homology groups will be deleted.  Thus the reference that is
-         * returned from this routine should not be kept for later use.
-         * Instead, homologyH2() should be called again; this will be
-         * instantaneous if the group has already been calculated.
+         * \deprecated This is identical to calling homology<2>().
          *
          * \pre This triangulation is valid.
          *
+         * \exception FailedPrecondition This triangulation is invalid.
+         *
          * @return the second homology group.
          */
-        const AbelianGroup& homologyH2() const;
+        [[deprecated]] AbelianGroup homologyH2() const;
 
         /*@}*/
         /**
@@ -701,6 +698,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (tetrahedra, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a f)
@@ -753,6 +753,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (tetrahedra, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a f)
@@ -793,6 +796,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
          * (tetrahedra, components, etc.) will be reconstructed, which means
@@ -892,6 +898,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will (trivially) preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (edges, components, etc.) will be reconstructed, which means
          * that any pointers to old skeletal objects (such as the argument
@@ -944,6 +953,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will (trivially) preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (edges, components, etc.) will be reconstructed, which means
          * that any pointers to old skeletal objects can no longer be used.
@@ -972,6 +984,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
          *
          * Note that after performing this move, all skeletal objects
          * (facets, components, etc.) will be reconstructed, which means
@@ -1093,7 +1108,7 @@ inline void Triangulation<4>::removeAllPentachora() {
 }
 
 inline Triangulation<4>& Triangulation<4>::operator = (
-        const Triangulation<4>& src) {
+        const Triangulation& src) {
     // We need to implement copy assignment ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.  This is so that the
     // final packetWasChanged event is fired *after* we modify the
@@ -1110,7 +1125,7 @@ inline Triangulation<4>& Triangulation<4>::operator = (
     return *this;
 }
 
-inline Triangulation<4>& Triangulation<4>::operator = (Triangulation<4>&& src) {
+inline Triangulation<4>& Triangulation<4>::operator = (Triangulation&& src) {
     // Like copy assignment, we implement this ourselves because it all
     // needs to be wrapped in a ChangeEventSpan.
 
@@ -1141,6 +1156,10 @@ inline bool Triangulation<4>::isIdeal() const {
 inline bool Triangulation<4>::isClosed() const {
     ensureSkeleton();
     return boundaryComponents().empty();
+}
+
+inline AbelianGroup Triangulation<4>::homologyH2() const {
+    return homology<2>();
 }
 
 template <typename Action, typename... Args>

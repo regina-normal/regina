@@ -209,6 +209,46 @@ class SpiralSolidTorus : public StandardTriangulation {
         Perm<4> vertexRoles(size_t index) const;
 
         /**
+         * Determines whether this and the given structure represent
+         * the same type of spiralled solid torus.
+         *
+         * Specifically, two spiralled solid tori will compare as equal if and
+         * only if they have the same size (i.e., the same number of
+         * tetrahedra).
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass means they describe isomorphic structures).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent the same type of spiralled solid torus.
+         */
+        bool operator == (const SpiralSolidTorus& other) const;
+
+        /**
+         * Determines whether this and the given structure represent
+         * different types of spiralled solid torus.
+         *
+         * Specifically, two spiralled solid tori will compare as equal if and
+         * only if they have the same size (i.e., the same number of
+         * tetrahedra).
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass means they describe isomorphic structures).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent different types of spiralled solid torus.
+         */
+        bool operator != (const SpiralSolidTorus& other) const;
+
+        /**
          * Reverses this spiralled solid torus.
          * Tetrahedra 0, 1, 2, ..., size()-1 will become tetrahedra
          * size()-1, ..., 2, 1, 0 respectively.  Note that this operation
@@ -297,7 +337,7 @@ class SpiralSolidTorus : public StandardTriangulation {
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
-        void writeTextLong(std::ostream& out) const override;
+        void writeTextShort(std::ostream& out) const override;
 
     private:
         /**
@@ -374,14 +414,21 @@ inline Perm<4> SpiralSolidTorus::vertexRoles(size_t index) const {
     return vertexRoles_[index];
 }
 
+inline bool SpiralSolidTorus::operator == (const SpiralSolidTorus& other)
+        const {
+    return nTet_ == other.nTet_;
+}
+
+inline bool SpiralSolidTorus::operator != (const SpiralSolidTorus& other)
+        const {
+    return nTet_ != other.nTet_;
+}
+
 inline std::ostream& SpiralSolidTorus::writeName(std::ostream& out) const {
     return out << "Spiral(" << nTet_ << ')';
 }
 inline std::ostream& SpiralSolidTorus::writeTeXName(std::ostream& out) const {
     return out << "\\mathit{Spiral}(" << nTet_ << ')';
-}
-inline void SpiralSolidTorus::writeTextLong(std::ostream& out) const {
-    out << nTet_ << "-tetrahedron spiralled solid torus";
 }
 
 inline std::unique_ptr<SpiralSolidTorus>
