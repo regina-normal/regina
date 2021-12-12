@@ -1684,6 +1684,8 @@ Version 7.0  [ 10 December, 2021 ]
               by passing ALG_BACKTRACK.
             - Routine connectedSumWith() now adds fewer tetrahedra (thanks
               to Adele Jackson).
+            - Calling pinchEdge() on an oriented triangulation now preserves
+              the orientation.
             - Changed maximalForestInSkeleton() to return by value
               instead of returning through a reference argument.
             - Changed maximalForestInBoundary() to return the edge set by

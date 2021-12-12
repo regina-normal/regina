@@ -3962,18 +3962,27 @@ class Triangulation3Test : public TriangulationTest<3> {
                 if (! tmp0.isSolidTorus())
                     CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 0 "
                         "does not give a solid torus.");
+                if (! tmp0.isOriented())
+                    CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 0 "
+                        "does not preserve orientation.");
 
                 Triangulation<3> tmp1(snap);
                 tmp1.pinchEdge(tmp1.edge(1));
                 if (! tmp1.isSphere())
                     CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 1 "
                         "does not give a 3-sphere.");
+                if (! tmp1.isOriented())
+                    CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 1 "
+                        "does not preserve orientation.");
 
                 Triangulation<3> tmp2(snap);
                 tmp2.pinchEdge(tmp2.edge(2));
                 if (! tmp2.isSolidTorus())
                     CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 2 "
                         "does not give a solid torus.");
+                if (! tmp2.isOriented())
+                    CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 2 "
+                        "does not preserve orientation.");
             }
 
             // Move on to the layered 1-tetrahedron triangulation of the
@@ -3995,12 +4004,18 @@ class Triangulation3Test : public TriangulationTest<3> {
                         (! tmp0.isSolidTorus())))
                     CPPUNIT_FAIL("Layered 3-sphere: pinching edge 0 "
                         "does not give a non-trivial knot complement.");
+                if (! tmp0.isOriented())
+                    CPPUNIT_FAIL("Layered 3-sphere: pinching edge 0 "
+                        "does not preserve orientation.");
 
                 Triangulation<3> tmp1(layer);
                 tmp1.pinchEdge(tmp1.edge(1));
                 if (! tmp1.isSolidTorus())
                     CPPUNIT_FAIL("Layered 3-sphere: pinching edge 1 "
                         "does not give a solid torus.");
+                if (! tmp1.isOriented())
+                    CPPUNIT_FAIL("Layered 3-sphere: pinching edge 1 "
+                        "does not preserve orientation.");
             }
 
             // Now try a 2-tetrahedron ball, where we pinch the internal edge
@@ -4009,12 +4024,16 @@ class Triangulation3Test : public TriangulationTest<3> {
             {
                 Triangulation<3> ball;
                 auto [a, b] = ball.newTetrahedra<2>();
-                a->join(0, b, Perm<4>());
-                a->join(1, b, Perm<4>());
+                a->join(0, b, Perm<4>(2, 3));
+                a->join(1, b, Perm<4>(2, 3));
 
                 // The internal edge joins vertices 2-3.
                 Triangulation<3> tmp(ball);
                 tmp.pinchEdge(tmp.tetrahedron(0)->edge(5));
+                if (! tmp.isOriented())
+                    CPPUNIT_FAIL("2-tetrahedron ball: pinching the "
+                        "internal edge does not preserve orientation.");
+
                 tmp.idealToFinite();
                 if (! tmp.isSolidTorus())
                     CPPUNIT_FAIL("2-tetrahedron ball: pinching the "
