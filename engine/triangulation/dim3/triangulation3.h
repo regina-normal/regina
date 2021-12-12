@@ -2665,6 +2665,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *   the other hand can always be used for edges \a e of the
          *   type described above.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)

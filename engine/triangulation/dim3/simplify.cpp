@@ -880,6 +880,12 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
     // Whatever vertices glue to t0: 0 and t0: 1=2 will have their links
     // joined by a connected sum.
 
+    // A note for oriented triangulations: Simplex::faceMapping() guarantees
+    // that e->front().vertices() has a sign equal to the orientation of the
+    // relevant tetrahedron, which for an oriented triangulation is always 1.
+    // Therefore all of the gluings that we make here use odd gluing
+    // permutations, and so the orientation is preserved.
+
     Tetrahedron<3>* adj = open->adjacentTetrahedron(vertices[3]);
     Perm<4> glue = open->adjacentGluing(vertices[3]);
     open->unjoin(vertices[3]);
