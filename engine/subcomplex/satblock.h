@@ -225,7 +225,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * @return the other block adjacent along this annulus, or \c null
          * if there is no adjacent block listed.
          */
-        SatBlock* adjacentBlock(unsigned whichAnnulus) const;
+        const SatBlock* adjacentBlock(unsigned whichAnnulus) const;
 
         /**
          * Returns which specific annulus of the adjacent block is
@@ -967,7 +967,7 @@ inline bool SatBlock::hasAdjacentBlock(unsigned whichAnnulus) const {
     return (adjBlock_[whichAnnulus] != nullptr);
 }
 
-inline SatBlock* SatBlock::adjacentBlock(unsigned whichAnnulus) const {
+inline const SatBlock* SatBlock::adjacentBlock(unsigned whichAnnulus) const {
     return adjBlock_[whichAnnulus];
 }
 
