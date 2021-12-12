@@ -447,6 +447,46 @@ class SatBlock : public ShortOutput<SatBlock> {
         bool operator < (const SatBlock& compare) const;
 
         /**
+         * Determines whether this and the given object represent saturated
+         * blocks of the same type with the same combinatorial parameters.
+         *
+         * As examples of what is meant by "combinatorial parameters":
+         *
+         * - Any two SatCube objects will compare as equal, since there
+         *   is only one combinatorial type of SatCube.
+         *
+         * - Two SatReflectorStrip objects will compare as equal if their
+         *   rings of bounary annuli have the same length and are either
+         *   both twisted or both untwisted.
+         *
+         * - Two SatLST objects will compare as equal if their internal
+         *   layered solid tori have the same three integer parameters
+         *   (identifying how the meridinal disc meets the three boundary
+         *   edges), \e and their corresponding boundary edges are attached
+         *   to the horizontal/vertical/diagonal edges of the boundary
+         *   annulus in the same way.
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * represent the same presentation of the same block.
+         */
+        virtual bool operator == (const SatBlock& other) const = 0;
+
+        /**
+         * Determines whether this and the given object do not represent
+         * saturated blocks of the same type with the same combinatorial
+         * parameters.
+         *
+         * See the equality test operator==() for examples of what is
+         * meant by "the same combinatorial parameters".
+         *
+         * @param other the saturated block to compare with this.
+         * @return \c true if and only if this and the given object
+         * do not represent the same presentation of the same block.
+         */
+        bool operator != (const SatBlock& other) const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -508,9 +548,6 @@ class SatBlock : public ShortOutput<SatBlock> {
          * subcomplex of the underlying triangulation, but also that the
          * boundaries use identical saturated annuli, and that these
          * annuli appear in the same order.
-         *
-         * This test would typically be used as part of the subclass comparison
-         * operators.
          *
          * @param other the block to compare with this.
          * @return \c true if and only if this and the given block have
@@ -915,6 +952,10 @@ inline void SatBlock::setAdjacent(unsigned whichAnnulus, SatBlock* adjBlock,
     adjBlock->adjAnnulus_[adjAnnulus] = whichAnnulus;
     adjBlock->adjReflected_[adjAnnulus] = adjReflected;
     adjBlock->adjBackwards_[adjAnnulus] = adjBackwards;
+}
+
+inline bool SatBlock::operator != (const SatBlock& other) const {
+    return ! ((*this) == other);
 }
 
 inline bool SatBlock::notUnique(const Tetrahedron<3>* test) {

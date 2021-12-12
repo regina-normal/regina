@@ -904,7 +904,7 @@ LayeredChainPair : class
 Equality type : EqualityType.BY_VALUE
 
 LayeredLensSpace : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 LayeredLoop : class
 Equality type : EqualityType.BY_VALUE
@@ -1176,7 +1176,7 @@ SatAnnulus : class
 Equality type : EqualityType.BY_VALUE
 
 SatBlock : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 SatBlockModel : class
 Equality type : EqualityType.BY_REFERENCE

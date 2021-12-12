@@ -245,6 +245,22 @@ cmp('TreeDecomposition', t1, t2)
 t2.reroot(t2.bag(3))
 cmp('TreeDecomposition', t1, t2)
 
+t = Triangulation3('kLALALMkbccfefihijjlpkusuueotr')
+b = BlockedSFSTriple.recognise(t)
+# [ Tri, Mob(v), LST(1,2,3) | Tri, Mob(v) | Tri, Mob(v), Mob(v) ]
+cmp('SatBlockSpec', b.end(0).block(0), b.centre().block(0))
+cmp('SatBlockSpec', b.end(0).block(0), b.centre().block(1))
+cmp('SatBlockSpec', b.end(0).block(1), b.centre().block(1))
+cmp('SatBlockSpec', b.end(0).block(1), b.centre().block(0))
+cmp('SatBlockSpec', b.end(0).block(2), b.end(0).block(2))
+cmp('SatBlockSpec', b.end(0).block(2), b.end(1).block(2))
+cmp('SatBlock', b.end(0).block(0).block(), b.centre().block(0).block())
+cmp('SatBlock', b.end(0).block(0).block(), b.centre().block(1).block())
+cmp('SatBlock', b.end(0).block(1).block(), b.centre().block(1).block())
+cmp('SatBlock', b.end(0).block(1).block(), b.centre().block(0).block())
+cmp('SatBlock', b.end(0).block(2).block(), b.end(0).block(2).block())
+cmp('SatBlock', b.end(0).block(2).block(), b.end(1).block(2).block())
+
 # ----------------------------------------------------------------------
 # Classes that compare by reference:
 # ----------------------------------------------------------------------

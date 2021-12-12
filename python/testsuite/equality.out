@@ -80,6 +80,18 @@ DiscSetSurface : not ==, !=
 DiscSetSurface : not ==, !=
 TreeDecomposition : ==, not !=
 TreeDecomposition : not ==, !=
+SatBlockSpec : ==, not !=
+SatBlockSpec : not ==, !=
+SatBlockSpec : ==, not !=
+SatBlockSpec : not ==, !=
+SatBlockSpec : ==, not !=
+SatBlockSpec : not ==, !=
+SatBlock : ==, not !=
+SatBlock : not ==, !=
+SatBlock : ==, not !=
+SatBlock : not ==, !=
+SatBlock : ==, not !=
+SatBlock : not ==, !=
 Tetrahedron3 : ==, not !=
 Tetrahedron3 : not ==, !=
 Container : throws on ==, throws on !=, same packet
