@@ -843,9 +843,6 @@ Equality type : EqualityType.BY_VALUE
 Isomorphism8 : class
 Equality type : EqualityType.BY_VALUE
 
-L31Pillow : class
-Equality type : EqualityType.NEVER_INSTANTIATED
-
 LPConstraintEulerPositive : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 

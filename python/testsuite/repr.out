@@ -660,9 +660,9 @@ PluggedTorusBundle
 Plugged Torus Bundle [T6:1 | Tri, Mob(v)]
 <regina.PluggedTorusBundle: Plugged Torus Bundle [T6:1 | Tri, Mob(v)]>
 
-L31Pillow
+TrivialTri
 L'(3,1)
-<regina.L31Pillow: L'(3,1)>
+<regina.TrivialTri: L'(3,1)>
 
 LayeredLoop
 C~(2)

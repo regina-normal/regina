@@ -78,9 +78,8 @@ std::unique_ptr<TrivialTri> TrivialTri::recognise(const Component<3>* comp) {
     // Is the triangulation valid?
     // Since the triangulations is closed we know that the vertices are
     // valid; all that remains is to check the edges.
-    unsigned long nEdges = comp->countEdges();
-    unsigned long i;
-    for (i = 0; i < nEdges; i++)
+    size_t nEdges = comp->countEdges();
+    for (size_t i = 0; i < nEdges; i++)
         if (! comp->edge(i)->isValid())
             return nullptr;
 
@@ -93,6 +92,18 @@ std::unique_ptr<TrivialTri> TrivialTri::recognise(const Component<3>* comp) {
                 // four-vertex orientable triangulation.
                 return std::unique_ptr<TrivialTri>(
                     new TrivialTri(SPHERE_4_VERTEX));
+            } else if (comp->countVertices() == 2) {
+                // The census says we have one of three triangulations:
+                // - cMcabbgig : S^3, edge degrees 6 4 1 1
+                // - cPcbbbaai : L(3,1), edge degrees 6 2 2 2
+                // - cPcbbbahh : RP^2, edge degrees 4 4 2 2
+                //
+                // The only one of these that *this* class is interested
+                // in detecting is the L(3,1).
+                for (const Edge<3>* e : comp->edges())
+                    if (e->degree() == 4)
+                        return nullptr;
+                return std::unique_ptr<TrivialTri>(new TrivialTri(L31_PILLOW));
             }
         } else {
             // There's only one closed valid two-tetrahedron non-orientable
@@ -111,8 +122,8 @@ std::unique_ptr<TrivialTri> TrivialTri::recognise(const Component<3>* comp) {
             if (comp->countEdges() != 4)
                 return nullptr;
 
-            long degree[4];
-            for (i = 0; i < 4; i++)
+            size_t degree[4];
+            for (int i = 0; i < 4; i++)
                 degree[i] = comp->edge(i)->degree();
             std::sort(degree, degree + 4);
 
@@ -120,8 +131,8 @@ std::unique_ptr<TrivialTri> TrivialTri::recognise(const Component<3>* comp) {
                     degree[3] == 6) {
                 // We have N(3,1) or N(3,2)!
                 // Search for Mobius band triangles.
-                unsigned long nTriangles = comp->countTriangles();
-                for (i = 0; i < nTriangles; i++)
+                size_t nTriangles = comp->countTriangles();
+                for (size_t i = 0; i < nTriangles; i++)
                     if (comp->triangle(i)->isMobiusBand())
                         return std::unique_ptr<TrivialTri>(
                             new TrivialTri(N3_2));
@@ -134,71 +145,95 @@ std::unique_ptr<TrivialTri> TrivialTri::recognise(const Component<3>* comp) {
 }
 
 std::unique_ptr<Manifold> TrivialTri::manifold() const {
-    if (type_ == SPHERE_4_VERTEX)
-        return std::make_unique<LensSpace>(1, 0);
-    else if (type_ == BALL_3_VERTEX || type_ == BALL_4_VERTEX)
-        return std::make_unique<Handlebody>(0);
-    else if (type_ == N2)
-        return std::make_unique<SimpleSurfaceBundle>(
-            SimpleSurfaceBundle::S2xS1_TWISTED);
-    else if (type_ == N3_1 || type_ == N3_2)
-        return std::make_unique<SimpleSurfaceBundle>(
-            SimpleSurfaceBundle::RP2xS1);
-    return nullptr;
+    switch (type_) {
+        case SPHERE_4_VERTEX:
+            return std::make_unique<LensSpace>(1, 0);
+        case BALL_3_VERTEX:
+        case BALL_4_VERTEX:
+            return std::make_unique<Handlebody>(0);
+        case L31_PILLOW:
+            return std::make_unique<LensSpace>(3, 1);
+        case N2:
+            return std::make_unique<SimpleSurfaceBundle>(
+                SimpleSurfaceBundle::S2xS1_TWISTED);
+        case N3_1:
+        case N3_2:
+            return std::make_unique<SimpleSurfaceBundle>(
+                SimpleSurfaceBundle::RP2xS1);
+        default:
+            return nullptr;
+    }
 }
 
 AbelianGroup TrivialTri::homology() const {
-    if (type_ == N2)
-        return AbelianGroup(1);
-    else if (type_ == N3_1 || type_ == N3_2)
-        return AbelianGroup(1, {2});
-    else
-        return AbelianGroup();
+    switch (type_) {
+        case L31_PILLOW:
+            return AbelianGroup(0, {3});
+        case N2:
+            return AbelianGroup(1);
+        case N3_1:
+        case N3_2:
+            return AbelianGroup(1, {2});
+        default:
+            return AbelianGroup();
+    }
 }
 
 std::ostream& TrivialTri::writeName(std::ostream& out) const {
-    if (type_ == SPHERE_4_VERTEX)
-        out << "S3 (4-vtx)";
-    else if (type_ == BALL_3_VERTEX)
-        out << "B3 (3-vtx)";
-    else if (type_ == BALL_4_VERTEX)
-        out << "B3 (4-vtx)";
-    else if (type_ == N2)
-        out << "N(2)";
-    else if (type_ == N3_1)
-        out << "N(3,1)";
-    else if (type_ == N3_2)
-        out << "N(3,2)";
+    switch (type_) {
+        case SPHERE_4_VERTEX:
+            out << "S3 (4-vtx)"; break;
+        case BALL_3_VERTEX:
+            out << "B3 (3-vtx)"; break;
+        case BALL_4_VERTEX:
+            out << "B3 (4-vtx)"; break;
+        case L31_PILLOW:
+            out << "L'(3,1)"; break;
+        case N2:
+            out << "N(2)"; break;
+        case N3_1:
+            out << "N(3,1)"; break;
+        case N3_2:
+            out << "N(3,2)"; break;
+    }
     return out;
 }
 std::ostream& TrivialTri::writeTeXName(std::ostream& out) const {
-    if (type_ == SPHERE_4_VERTEX)
-        out << "S^3_{v=4}";
-    else if (type_ == BALL_3_VERTEX)
-        out << "B^3_{v=3}";
-    else if (type_ == BALL_4_VERTEX)
-        out << "B^3_{v=4}";
-    else if (type_ == N2)
-        out << "N_{2}";
-    else if (type_ == N3_1)
-        out << "N_{3,1}";
-    else if (type_ == N3_2)
-        out << "N_{3,2}";
+    switch (type_) {
+        case SPHERE_4_VERTEX:
+            out << "S^3_{v=4}"; break;
+        case BALL_3_VERTEX:
+            out << "B^3_{v=3}"; break;
+        case BALL_4_VERTEX:
+            out << "B^3_{v=4}"; break;
+        case L31_PILLOW:
+            out << "L'_{3,1}"; break;
+        case N2:
+            out << "N_{2}"; break;
+        case N3_1:
+            out << "N_{3,1}"; break;
+        case N3_2:
+            out << "N_{3,2}"; break;
+    }
     return out;
 }
 void TrivialTri::writeTextLong(std::ostream& out) const {
-    if (type_ == SPHERE_4_VERTEX)
-        out << "Two-tetrahedron four-vertex 3-sphere";
-    else if (type_ == BALL_3_VERTEX)
-        out << "One-tetrahedron three-vertex ball";
-    else if (type_ == BALL_4_VERTEX)
-        out << "One-tetrahedron four-vertex ball";
-    else if (type_ == N2)
-        out << "Non-orientable triangulation N(2)";
-    else if (type_ == N3_1)
-        out << "Non-orientable triangulation N(3,1)";
-    else if (type_ == N3_2)
-        out << "Non-orientable triangulation N(3,2)";
+    switch (type_) {
+        case SPHERE_4_VERTEX:
+            out << "Two-tetrahedron four-vertex 3-sphere"; break;
+        case BALL_3_VERTEX:
+            out << "One-tetrahedron three-vertex ball"; break;
+        case BALL_4_VERTEX:
+            out << "One-tetrahedron four-vertex ball"; break;
+        case L31_PILLOW:
+            out << "Triangular pillow lens space L(3,1)"; break;
+        case N2:
+            out << "Non-orientable triangulation N(2)"; break;
+        case N3_1:
+            out << "Non-orientable triangulation N(3,1)"; break;
+        case N3_2:
+            out << "Non-orientable triangulation N(3,2)"; break;
+    }
 }
 
 } // namespace regina

@@ -209,8 +209,8 @@ class LayeredChainPair : public StandardTriangulation {
 /**
  * Swaps the contents of the two given structures.
  *
- * This global routine simply calls L31Pillow::swap(); it is provided
- * so that L31Pillow meets the C++ Swappable requirements.
+ * This global routine simply calls LayeredChainPair::swap(); it is provided
+ * so that LayeredChainPair meets the C++ Swappable requirements.
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.

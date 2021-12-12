@@ -609,12 +609,8 @@ Version 7.0  [ 10 December, 2021 ]
             - New type trait to identify Regina's arbitrary precision integer
               types.
         Class L31Pillow:
-            - Routine isL31Pillow() is now called recognise(), and
-              returns a std::unique_ptr instead of a raw pointer.
-              The old name is kept as a deprecated alias.
-            - Added copy construction and copy assignment.
-            - Added member and global swap() functions.
-            - Deprecated clone().  Just use the copy constructor instead.
+            - Removed completely.  This one-off triangulation is instead
+              rolled into the TrivialTri class.
         Class Laurent, Laurent2:
             - Added member and global swap() functions.
             - Added invertX(), and (for Laurent2 only) invertY().
@@ -1730,6 +1726,8 @@ Version 7.0  [ 10 December, 2021 ]
             - Removed completely.  These classes were not being used anywhere
               within Regina, and did not support tritmasks of arbitrary length.
         Class TrivialTri:
+            - Added a new triangulation L31_PILLOW, to replace the old
+              L31Pillow class.
             - Class constants are now constexpr.
             - Routine isTrivialTriangulation() is now called recognise(), and
               returns a std::unique_ptr instead of a raw pointer.

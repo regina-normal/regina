@@ -80,6 +80,12 @@ class TrivialTri : public StandardTriangulation {
          */
         static constexpr int BALL_4_VERTEX = 5101;
         /**
+         * Represents the two-tetrahedron two-vertex triangulation of
+         * the lens space L(3,1), formed by identifying the two
+         * boundary faces of a triangular pillow with a one-third twist.
+         */
+        static constexpr int L31_PILLOW = 5200;
+        /**
          * Represents the two-tetrahedron triangulation N(2) of the
          * twisted 2-sphere bundle over the circle.
          */
