@@ -1447,7 +1447,6 @@
 		05A066981DFA67D40047872E /* blockedsfsloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066601DFA67CB0047872E /* blockedsfsloop.cpp */; };
 		05A066991DFA67D40047872E /* blockedsfspair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066611DFA67CB0047872E /* blockedsfspair.cpp */; };
 		05A0669A1DFA67D40047872E /* blockedsfstriple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066621DFA67CB0047872E /* blockedsfstriple.cpp */; };
-		05A0669B1DFA67D40047872E /* l31pillow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066631DFA67CB0047872E /* l31pillow.cpp */; };
 		05A0669C1DFA67D40047872E /* layeredchain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066641DFA67CB0047872E /* layeredchain.cpp */; };
 		05A0669D1DFA67D40047872E /* layeredchainpair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066651DFA67CB0047872E /* layeredchainpair.cpp */; };
 		05A0669E1DFA67D40047872E /* layeredlensspace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066661DFA67CB0047872E /* layeredlensspace.cpp */; };
@@ -1475,7 +1474,6 @@
 		05A066B41DFA67D50047872E /* blockedsfsloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066601DFA67CB0047872E /* blockedsfsloop.cpp */; };
 		05A066B51DFA67D50047872E /* blockedsfspair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066611DFA67CB0047872E /* blockedsfspair.cpp */; };
 		05A066B61DFA67D50047872E /* blockedsfstriple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066621DFA67CB0047872E /* blockedsfstriple.cpp */; };
-		05A066B71DFA67D50047872E /* l31pillow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066631DFA67CB0047872E /* l31pillow.cpp */; };
 		05A066B81DFA67D50047872E /* layeredchain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066641DFA67CB0047872E /* layeredchain.cpp */; };
 		05A066B91DFA67D50047872E /* layeredchainpair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066651DFA67CB0047872E /* layeredchainpair.cpp */; };
 		05A066BA1DFA67D50047872E /* layeredlensspace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066661DFA67CB0047872E /* layeredlensspace.cpp */; };
@@ -1508,8 +1506,6 @@
 		05A0670F1DFA68190047872E /* blockedsfspair.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A066D51DFA68190047872E /* blockedsfspair.h */; };
 		05A067101DFA68190047872E /* blockedsfstriple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066D61DFA68190047872E /* blockedsfstriple.cpp */; };
 		05A067111DFA68190047872E /* blockedsfstriple.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A066D71DFA68190047872E /* blockedsfstriple.h */; };
-		05A067121DFA68190047872E /* l31pillow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066D81DFA68190047872E /* l31pillow.cpp */; };
-		05A067131DFA68190047872E /* l31pillow.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A066D91DFA68190047872E /* l31pillow.h */; };
 		05A067141DFA68190047872E /* layeredchain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066DA1DFA68190047872E /* layeredchain.cpp */; };
 		05A067151DFA68190047872E /* layeredchain.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A066DB1DFA68190047872E /* layeredchain.h */; };
 		05A067161DFA68190047872E /* layeredchainpair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066DC1DFA68190047872E /* layeredchainpair.cpp */; };
@@ -1557,7 +1553,6 @@
 		05A067441DFA68470047872E /* blockedsfsloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066D21DFA68190047872E /* blockedsfsloop.cpp */; };
 		05A067451DFA68470047872E /* blockedsfspair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066D41DFA68190047872E /* blockedsfspair.cpp */; };
 		05A067461DFA68470047872E /* blockedsfstriple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066D61DFA68190047872E /* blockedsfstriple.cpp */; };
-		05A067471DFA68470047872E /* l31pillow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066D81DFA68190047872E /* l31pillow.cpp */; };
 		05A067481DFA68470047872E /* layeredchain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066DA1DFA68190047872E /* layeredchain.cpp */; };
 		05A067491DFA68470047872E /* layeredchainpair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066DC1DFA68190047872E /* layeredchainpair.cpp */; };
 		05A0674A1DFA68470047872E /* layeredlensspace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066DE1DFA68190047872E /* layeredlensspace.cpp */; };
@@ -3954,7 +3949,6 @@
 		05A066601DFA67CB0047872E /* blockedsfsloop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = blockedsfsloop.cpp; sourceTree = "<group>"; };
 		05A066611DFA67CB0047872E /* blockedsfspair.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = blockedsfspair.cpp; sourceTree = "<group>"; };
 		05A066621DFA67CB0047872E /* blockedsfstriple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = blockedsfstriple.cpp; sourceTree = "<group>"; };
-		05A066631DFA67CB0047872E /* l31pillow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l31pillow.cpp; sourceTree = "<group>"; };
 		05A066641DFA67CB0047872E /* layeredchain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredchain.cpp; sourceTree = "<group>"; };
 		05A066651DFA67CB0047872E /* layeredchainpair.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredchainpair.cpp; sourceTree = "<group>"; };
 		05A066661DFA67CB0047872E /* layeredlensspace.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredlensspace.cpp; sourceTree = "<group>"; };
@@ -3987,8 +3981,6 @@
 		05A066D51DFA68190047872E /* blockedsfspair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blockedsfspair.h; sourceTree = "<group>"; };
 		05A066D61DFA68190047872E /* blockedsfstriple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = blockedsfstriple.cpp; sourceTree = "<group>"; };
 		05A066D71DFA68190047872E /* blockedsfstriple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = blockedsfstriple.h; sourceTree = "<group>"; };
-		05A066D81DFA68190047872E /* l31pillow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l31pillow.cpp; sourceTree = "<group>"; };
-		05A066D91DFA68190047872E /* l31pillow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = l31pillow.h; sourceTree = "<group>"; };
 		05A066DA1DFA68190047872E /* layeredchain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredchain.cpp; sourceTree = "<group>"; };
 		05A066DB1DFA68190047872E /* layeredchain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layeredchain.h; sourceTree = "<group>"; };
 		05A066DC1DFA68190047872E /* layeredchainpair.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredchainpair.cpp; sourceTree = "<group>"; };
@@ -4971,7 +4963,6 @@
 				05A066611DFA67CB0047872E /* blockedsfspair.cpp */,
 				05A066621DFA67CB0047872E /* blockedsfstriple.cpp */,
 				050F5D571B9BAB9C00C1F681 /* CMakeLists.txt */,
-				05A066631DFA67CB0047872E /* l31pillow.cpp */,
 				05A066641DFA67CB0047872E /* layeredchain.cpp */,
 				05A066651DFA67CB0047872E /* layeredchainpair.cpp */,
 				05A066661DFA67CB0047872E /* layeredlensspace.cpp */,
@@ -5885,8 +5876,6 @@
 				052F9DB0180600FB00FAE4DF /* diaginit.eps */,
 				052F9DB1180600FB00FAE4DF /* diaginit.fig */,
 				052F9DB2180600FB00FAE4DF /* diaginit.png */,
-				05A066D81DFA68190047872E /* l31pillow.cpp */,
-				05A066D91DFA68190047872E /* l31pillow.h */,
 				05A066DA1DFA68190047872E /* layeredchain.cpp */,
 				05A066DB1DFA68190047872E /* layeredchain.h */,
 				05A066DC1DFA68190047872E /* layeredchainpair.cpp */,
@@ -7813,7 +7802,6 @@
 				0512E09926DF352D00DDB222 /* satregion-impl.h in Headers */,
 				052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */,
 				054208BE1DF0D2740018AB24 /* sfs.h in Headers */,
-				05A067131DFA68190047872E /* l31pillow.h in Headers */,
 				0541AF4D1B8BE2F5002E166B /* polynomial.h in Headers */,
 				054208C61DF0D2740018AB24 /* torusbundle.h in Headers */,
 				05431F6E1C40F3C9009BC072 /* general.h in Headers */,
@@ -8897,7 +8885,6 @@
 				050F5E091B9BAB9C00C1F681 /* text.cpp in Sources */,
 				050F5E3F1B9BAB9C00C1F681 /* treedecomposition.cpp in Sources */,
 				05A066961DFA67D40047872E /* augtrisolidtorus.cpp in Sources */,
-				05A0669B1DFA67D40047872E /* l31pillow.cpp in Sources */,
 				050F5E5A1B9BAB9C00C1F681 /* dehydration.cpp in Sources */,
 				05A066AD1DFA67D40047872E /* spiralsolidtorus.cpp in Sources */,
 				057EE4CB1C600A3600C4D155 /* triangulation8.cpp in Sources */,
@@ -9125,7 +9112,6 @@
 				05A73C8519B2EEC50099C617 /* csv.cpp in Sources */,
 				05D1172B19EE0166003BEC55 /* bitmask.cpp in Sources */,
 				05C0644C1C55A2E6006E6483 /* HyperMatching.mm in Sources */,
-				05A066B71DFA67D50047872E /* l31pillow.cpp in Sources */,
 				05249F7C1DBC174E001FE29E /* i18nutils.cpp in Sources */,
 				05721F061F97160900A83FFC /* laurent2.cpp in Sources */,
 				054209111DF0DA450018AB24 /* torusbundle.cpp in Sources */,
@@ -9434,7 +9420,6 @@
 				05249F711DBC1747001FE29E /* example3.cpp in Sources */,
 				05721F121F97162600A83FFC /* pylink.cpp in Sources */,
 				05FEA07F19C2B96000A31924 /* PacketPicker.mm in Sources */,
-				05A067471DFA68470047872E /* l31pillow.cpp in Sources */,
 				05CAE67E2745256E007C93F3 /* gluingperms5.cpp in Sources */,
 				054208CA1DF0D29C0018AB24 /* handlebody.cpp in Sources */,
 				05D1173919EE0197003BEC55 /* matrixops.cpp in Sources */,
@@ -9970,7 +9955,6 @@
 				05F0A03B1DBF0B5E00117BFC /* decompose.cpp in Sources */,
 				05FB46E41DD92D4A00BB00E5 /* abeliangroup.cpp in Sources */,
 				05F0A04D1DBF0B5E00117BFC /* triangulation3.cpp in Sources */,
-				05A067121DFA68190047872E /* l31pillow.cpp in Sources */,
 				050C64851DA1249600C9420F /* fileinfo.cpp in Sources */,
 				05A0671A1DFA68190047872E /* layeredloop.cpp in Sources */,
 				05F0A0401DBF0B5E00117BFC /* hydrate.cpp in Sources */,
