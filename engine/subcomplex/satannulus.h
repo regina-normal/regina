@@ -161,22 +161,36 @@ struct SatAnnulus {
 
     /**
      * Determines whether or not this and the given structure describe
-     * the same annulus with the same representation.  This requires
-     * both structures to have identical \a tet[] and \a roles[] arrays.
+     * the same specific presentation of a saturated annulus.
+     *
+     * Specifically, in order to compare as equal, two saturated annuli
+     * must use the same two numbered tetrahedra, presented in the same
+     * order, and with the same \a roles permutations.
+     *
+     * Because this operation compares tetrahedron \e numbers and not
+     * the underlying Tetrahedron objects, it is meaningful to compare
+     * saturated annuli from different triangulations.
      *
      * @param other the structure to compare with this.
-     * @return \c true if the structures describe the same annulus with
-     * the same representation, or \c false if they do not.
+     * @return \c true if and only if both structures describe the same
+     * specific presentation of a saturated annulus.
      */
     bool operator == (const SatAnnulus& other) const;
     /**
      * Determines whether or not this and the given structure describe
-     * the same annulus with the same representation.  This requires
-     * both structures to have identical \a tet[] and \a roles[] arrays.
+     * different specific presentations of a saturated annulus.
+     *
+     * Specifically, in order to compare as equal, two saturated annuli
+     * must use the same two numbered tetrahedra, presented in the same
+     * order, and with the same \a roles permutations.
+     *
+     * Because this operation compares tetrahedron \e numbers and not
+     * the underlying Tetrahedron objects, it is meaningful to compare
+     * saturated annuli from different triangulations.
      *
      * @param other the structure to compare with this.
-     * @return \c true if the structures do not describe the same annulus
-     * with the same representation, or \c false if they do.
+     * @return \c true if and only if both structures describe different
+     * specific presentations of a saturated annulus.
      */
     bool operator != (const SatAnnulus& other) const;
 
@@ -449,12 +463,14 @@ inline SatAnnulus::SatAnnulus(const Tetrahedron<3>* t0, Perm<4> r0,
 }
 
 inline bool SatAnnulus::operator == (const SatAnnulus& other) const {
-    return (tet[0] == other.tet[0] && tet[1] == other.tet[1] &&
+    return (tet[0]->index() == other.tet[0]->index() &&
+            tet[1]->index() == other.tet[1]->index() &&
             roles[0] == other.roles[0] && roles[1] == other.roles[1]);
 }
 
 inline bool SatAnnulus::operator != (const SatAnnulus& other) const {
-    return (tet[0] != other.tet[0] || tet[1] != other.tet[1] ||
+    return (tet[0]->index() != other.tet[0]->index() ||
+            tet[1]->index() != other.tet[1]->index() ||
             roles[0] != other.roles[0] || roles[1] != other.roles[1]);
 }
 
