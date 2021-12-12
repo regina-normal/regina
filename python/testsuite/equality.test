@@ -261,6 +261,11 @@ cmp('SatBlock', b.end(0).block(1).block(), b.centre().block(0).block())
 cmp('SatBlock', b.end(0).block(2).block(), b.end(0).block(2).block())
 cmp('SatBlock', b.end(0).block(2).block(), b.end(1).block(2).block())
 
+cmp('TxICore', TxIDiagonalCore(6, 1), TxIDiagonalCore(6, 1))
+cmp('TxICore', TxIDiagonalCore(7, 1), TxIDiagonalCore(7, 2))
+cmp('TxICore', TxIDiagonalCore(6, 1), TxIParallelCore())
+cmp('TxICore', TxIParallelCore(), TxIParallelCore())
+
 # ----------------------------------------------------------------------
 # Classes that compare by reference:
 # ----------------------------------------------------------------------

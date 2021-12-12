@@ -14,7 +14,7 @@ Attachment : class
 Equality type : EqualityType.BY_VALUE
 
 AugTriSolidTorus : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 BanBoundary : class
 Equality type : EqualityType.BY_VALUE
@@ -913,7 +913,7 @@ LayeredSolidTorus : class
 Equality type : EqualityType.BY_VALUE
 
 LayeredTorusBundle : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 Layering : class
 Equality type : EqualityType.BY_REFERENCE
@@ -1113,7 +1113,7 @@ PillowTwoSphere : class
 Equality type : EqualityType.BY_REFERENCE
 
 PlugTriSolidTorus : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 PluggedTorusBundle : class
 Equality type : EqualityType.NEVER_INSTANTIATED
@@ -1179,7 +1179,7 @@ SatBlock : class
 Equality type : EqualityType.BY_VALUE
 
 SatBlockModel : class
-Equality type : EqualityType.BY_REFERENCE
+Equality type : EqualityType.BY_VALUE
 
 SatBlockSpec : class
 Equality type : EqualityType.BY_VALUE
@@ -1482,7 +1482,7 @@ TrivialTri : class
 Equality type : EqualityType.BY_VALUE
 
 TxICore : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 TxIDiagonalCore : class
 Equality type : EqualityType.BY_VALUE

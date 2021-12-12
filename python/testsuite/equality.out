@@ -92,6 +92,10 @@ SatBlock : ==, not !=
 SatBlock : not ==, !=
 SatBlock : ==, not !=
 SatBlock : not ==, !=
+TxICore : ==, not !=
+TxICore : not ==, !=
+TxICore : not ==, !=
+TxICore : ==, not !=
 Tetrahedron3 : ==, not !=
 Tetrahedron3 : not ==, !=
 Container : throws on ==, throws on !=, same packet

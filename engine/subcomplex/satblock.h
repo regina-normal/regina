@@ -468,7 +468,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          *
          * @param other the saturated block to compare with this.
          * @return \c true if and only if this and the given object
-         * represent the same presentation of the same block.
+         * represent blocks of the same type with the same parameters.
          */
         virtual bool operator == (const SatBlock& other) const = 0;
 
@@ -482,7 +482,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          *
          * @param other the saturated block to compare with this.
          * @return \c true if and only if this and the given object
-         * do not represent the same presentation of the same block.
+         * do not represent blocks of the same type with the same parameters.
          */
         bool operator != (const SatBlock& other) const;
 
@@ -851,6 +851,48 @@ class SatBlockModel : public ShortOutput<SatBlockModel> {
         const SatBlock& block() const;
 
         /**
+         * Determines whether this and the given object model saturated
+         * blocks of the same type with the same combinatorial parameters.
+         *
+         * This is equivalent to testing whether the blocks returned by
+         * block() compare as equal.  See SatBlock::operator==() for
+         * further details on what this comparison means.
+         *
+         * Assuming you created your models using the block-specific factory
+         * routines (SatTriPrism::model(), SatCube::model(), etc.), if
+         * two models compare as equal then their triangulations should
+         * be combinatorially identical.  At the time of writing, the
+         * converse is also true: all models created from non-equal blocks
+         * yield non-identical (and moreover non-isomorphic) triangulations.
+         *
+         * @param other the model to compare with this.
+         * @return \c true if and only if this and the given object
+         * model the same block type with the same combinatorial parameters.
+         */
+        bool operator == (const SatBlockModel& other) const;
+
+        /**
+         * Determines whether this and the given object do not model saturated
+         * blocks of the same type with the same combinatorial parameters.
+         *
+         * This is equivalent to testing whether the blocks returned by
+         * block() compare as non-equal.  See SatBlock::operator==() for
+         * further details on what this comparison means.
+         *
+         * Assuming you created your models using the block-specific factory
+         * routines (SatTriPrism::model(), SatCube::model(), etc.), if
+         * two models compare as equal then their triangulations should
+         * be combinatorially identical.  At the time of writing, the
+         * converse is also true: all models created from non-equal blocks
+         * yield non-identical (and moreover non-isomorphic) triangulations.
+         *
+         * @param other the model to compare with this.
+         * @return \c true if and only if this and the given object do not
+         * model the same block type with the same combinatorial parameters.
+         */
+        bool operator != (const SatBlockModel& other) const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -1047,6 +1089,14 @@ inline const Triangulation<3>& SatBlockModel::triangulation() const {
 
 inline const SatBlock& SatBlockModel::block() const {
     return *block_;
+}
+
+inline bool SatBlockModel::operator == (const SatBlockModel& other) const {
+    return (*block_) == (*other.block_);
+}
+
+inline bool SatBlockModel::operator != (const SatBlockModel& other) const {
+    return (*block_) != (*other.block_);
 }
 
 inline void SatBlockModel::writeTextShort(std::ostream& out) const {

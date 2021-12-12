@@ -61,6 +61,7 @@ void addPlugTriSolidTorus(pybind11::module_& m) {
         .def_readonly_static("EQUATOR_MAJOR", &PlugTriSolidTorus::EQUATOR_MAJOR)
         .def_readonly_static("EQUATOR_MINOR", &PlugTriSolidTorus::EQUATOR_MINOR)
     ;
+    regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 }
 
