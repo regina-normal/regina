@@ -1060,6 +1060,8 @@
 		0568743020C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		0568743120C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		056E071F1F994D9000DF136B /* graph.h in Headers */ = {isa = PBXBuildFile; fileRef = 056E071E1F994D9000DF136B /* graph.h */; };
+		056F746B276754CD00F7EAC9 /* linkalgebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 056F746A276754CC00F7EAC9 /* linkalgebra.cpp */; };
+		056F746C2767551F00F7EAC9 /* linkalgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 056F7469276754CC00F7EAC9 /* linkalgebra.h */; };
 		057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */; };
 		057118CB19B30A2D009FEDC5 /* snappea-census-sec6n.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */; };
 		057118CC19B30A2D009FEDC5 /* snappea-census-sec6o.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
@@ -3562,6 +3564,8 @@
 		0568742420C5D86B001C435B /* pass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pass.cpp; sourceTree = "<group>"; };
 		0568742F20C5D8D3001C435B /* tangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tangle.cpp; sourceTree = "<group>"; };
 		056E071E1F994D9000DF136B /* graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graph.h; sourceTree = "<group>"; };
+		056F7469276754CC00F7EAC9 /* linkalgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkalgebra.h; sourceTree = "<group>"; };
+		056F746A276754CC00F7EAC9 /* linkalgebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkalgebra.cpp; sourceTree = "<group>"; };
 		057118B119B308F8009FEDC5 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		057118B219B308F8009FEDC5 /* create-snappea-census-data.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "create-snappea-census-data.py"; sourceTree = "<group>"; };
 		057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "snappea-census-sec5.dat"; sourceTree = "<group>"; };
@@ -6835,6 +6839,8 @@
 				051691AA1C5AD59000DC69EC /* hypersummaryui.h */,
 				051691AB1C5AD59000DC69EC /* hyperui.cpp */,
 				051691AC1C5AD59000DC69EC /* hyperui.h */,
+				056F746A276754CC00F7EAC9 /* linkalgebra.cpp */,
+				056F7469276754CC00F7EAC9 /* linkalgebra.h */,
 				05D322D91FA1EC1400E5F9B8 /* linkcodes.cpp */,
 				05D322D81FA1EC1200E5F9B8 /* linkcodes.h */,
 				056184201F97F6910080E7E2 /* linkcreator.cpp */,
@@ -9805,6 +9811,7 @@
 				0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */,
 				0543AE9A1811E12A002758F8 /* examplesaction.h in Sources */,
 				05941EFA272A9E8600562586 /* elidedlabel.h in Sources */,
+				056F746C2767551F00F7EAC9 /* linkalgebra.h in Sources */,
 				0591E83F1C4F769100793A9C /* tri4algebra.cpp in Sources */,
 				0591E8441C4F772B00793A9C /* tri4algebra.h in Sources */,
 				0591E8461C4F773500793A9C /* tri4gluings.h in Sources */,
@@ -9856,6 +9863,7 @@
 				0543AEB31811E12A002758F8 /* textui.h in Sources */,
 				0543AEB41811E12A002758F8 /* tri3algebra.h in Sources */,
 				0543AEB51811E12A002758F8 /* tri3ui.h in Sources */,
+				056F746B276754CD00F7EAC9 /* linkalgebra.cpp in Sources */,
 				0543AEB61811E12A002758F8 /* tri3composition.h in Sources */,
 				0543AEB71811E12A002758F8 /* tri3gluings.h in Sources */,
 				0543AEB81811E12A002758F8 /* tri3skeleton.h in Sources */,

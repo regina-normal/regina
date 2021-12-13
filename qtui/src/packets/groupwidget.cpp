@@ -49,6 +49,7 @@
 #include <QPushButton>
 
 #define MAX_RELATIONS_FOR_PROLIFERATION 8
+#define MAX_RELATIONS_FOR_RECOGNITION 50
 
 GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) : QWidget() {
     QBoxLayout* layout = new QVBoxLayout(this);
@@ -138,12 +139,17 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) : QWidget() {
 void GroupWidget::refresh() {
     bool unicode = ReginaPrefSet::global().displayUnicode;
 
-    std::string name = group_.recogniseGroup(unicode);
-    if (name.length()) {
-        name_->setText(tr("Name: %1").arg(name.c_str()));
+    if (group_.countRelations() <= MAX_RELATIONS_FOR_RECOGNITION) {
+        std::string name = group_.recogniseGroup(unicode);
+        if (name.length()) {
+            name_->setText(tr("Name: %1").arg(name.c_str()));
+            name_->show();
+        } else
+            name_->hide();
+    } else {
+        name_->setText(tr("<qt><i>Not yet simplified<i></qt>"));
         name_->show();
-    } else
-        name_->hide();
+    }
 
     unsigned long nGens = group_.countGenerators();
     bool alphabetic = (nGens <= 26);
@@ -203,8 +209,12 @@ void GroupWidget::refresh() {
     } else {
         // Generators are g0, g1, ...
         // This is the default text that comes from the calculation engine.
-        for (const auto& r : group_.relations())
-            new QListWidgetItem(QString(r.str().c_str()), rels_);
+        if (unicode)
+            for (const auto& r : group_.relations())
+                new QListWidgetItem(QString(r.utf8().c_str()), rels_);
+        else
+            for (const auto& r : group_.relations())
+                new QListWidgetItem(QString(r.str().c_str()), rels_);
     }
 }
 

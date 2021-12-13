@@ -19,6 +19,7 @@ SET ( FILES
   hypermatchingui.cpp
   hypersummaryui.cpp
   hyperui.cpp
+  linkalgebra.cpp
   linkcodes.cpp
   linkcreator.cpp
   linkcrossings.cpp
