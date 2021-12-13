@@ -82,7 +82,7 @@
     Containers are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-container.png" hires="icon-container@2x.png"/>
+      <imagedata multires="icon-container"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -121,7 +121,7 @@
     2-manifold triangulations are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-triangulation2.png"/>
+      <imagedata multires="icon-triangulation2"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -149,7 +149,7 @@
     3-manifold triangulations are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-triangulation3.png"/>
+      <imagedata multires="icon-triangulation3"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -186,7 +186,7 @@
     &snappea; triangulations are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-snappea.png"/>
+      <imagedata multires="icon-snappea"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -214,7 +214,7 @@
     4-manifold triangulations are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-triangulation4.png"/>
+      <imagedata multires="icon-triangulation4"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -242,7 +242,7 @@
     simplex-shaped outline:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-triangulation8.png"/>
+      <imagedata multires="icon-triangulation8"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -275,7 +275,7 @@
     Knots and links are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-link.png"/>
+      <imagedata multires="icon-link"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -304,7 +304,7 @@
     Normal surface lists are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-surfaces.png"/>
+      <imagedata multires="icon-surfaces"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -339,7 +339,7 @@
     Normal hypersurface lists are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-hypersurfaces.png"/>
+      <imagedata multires="icon-hypersurfaces"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -375,7 +375,7 @@
     Angle structure lists are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-angles.png"/>
+      <imagedata multires="icon-angles"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -414,7 +414,7 @@
      Property filters are marked by the following icon:
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="icon-filterprop.png"/>
+       <imagedata multires="icon-filterprop"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -440,7 +440,7 @@
      Combination filters are marked by the following icon:
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="icon-filtercomb.png"/>
+       <imagedata multires="icon-filtercomb"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -474,7 +474,7 @@
     Text packets are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-text.png"/>
+      <imagedata multires="icon-text"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -502,7 +502,7 @@
     Script packets are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-script.png"/>
+      <imagedata multires="icon-script"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -534,7 +534,7 @@
     &pdf; packets are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-pdf.png"/>
+      <imagedata multires="icon-attachment"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -588,7 +588,7 @@
     in the menu, or press the toolbar button with the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-triangulation3.png"/>
+      <imagedata multires="icon-triangulation3"/>
      </imageobject>
     </inlinemediaobject>
    </para>
