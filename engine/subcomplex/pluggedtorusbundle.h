@@ -421,12 +421,12 @@ inline PluggedTorusBundle::PluggedTorusBundle(const TxICore& bundle,
 
 inline void PluggedTorusBundle::swap(PluggedTorusBundle& other) noexcept {
     std::swap(bundle_, other.bundle_);
-    std::swap(bundleIso_, other.bundleIso_);
+    bundleIso_.swap(other.bundleIso_);
     std::swap(layer_[0], other.layer_[0]);
     std::swap(layer_[1], other.layer_[1]);
-    std::swap(region_, other.region_);
+    region_.swap(other.region_);
     std::swap(upperConnection_, other.upperConnection_);
-    std::swap(matchingReln_, other.matchingReln_);
+    matchingReln_.swap(other.matchingReln_);
 }
 
 inline const TxICore& PluggedTorusBundle::bundle() const {
