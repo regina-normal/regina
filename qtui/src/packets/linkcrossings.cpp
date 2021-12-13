@@ -393,6 +393,16 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actParallel);
     connect(actParallel, SIGNAL(triggered()), this, SLOT(parallel()));
 
+    auto* actSelfFrame = new QAction(this);
+    actSelfFrame->setText(tr("Self Fr&ame"));
+    // TODO: actSelfFrame->setIcon(ReginaSupport::regIcon("parallel"));
+    actSelfFrame->setToolTip(tr("Self-frame by adding twists"));
+    actSelfFrame->setWhatsThis(tr("Adds twists "
+        "to ensure that each component has zero writhe.  "
+        "This link will be modified directly."));
+    actionList.push_back(actSelfFrame);
+    connect(actSelfFrame, SIGNAL(triggered()), this, SLOT(selfFrame()));
+
     auto* actComposeWith = new QAction(this);
     actComposeWith->setText(tr("Com&pose With..."));
     actComposeWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
@@ -685,6 +695,10 @@ void LinkCrossingsUI::reverse() {
 void LinkCrossingsUI::parallel() {
     ParallelDialog dlg(ui, *link);
     dlg.exec();
+}
+
+void LinkCrossingsUI::selfFrame() {
+    link->selfFrame();
 }
 
 void LinkCrossingsUI::composeWith() {

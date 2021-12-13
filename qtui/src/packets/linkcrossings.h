@@ -200,6 +200,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         void complement();
         void snapPea();
         void parallel();
+        void selfFrame();
         void composeWith();
 
         /**
