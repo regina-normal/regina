@@ -243,6 +243,8 @@ void ReginaPrefSet::readInternal() {
         linkCodeType = ReginaPrefSet::DowkerThistlethwaite;
     else if (str == "KnotSig")
         linkCodeType = ReginaPrefSet::KnotSig;
+    else if (str == "PlanarDiagram")
+        linkCodeType = ReginaPrefSet::PlanarDiagram;
     else if (str == "Jenkins")
         linkCodeType = ReginaPrefSet::Jenkins;
     else
@@ -384,6 +386,8 @@ void ReginaPrefSet::saveInternal() const {
             settings.setValue("CodeType", "DowkerThistlethwaite"); break;
         case ReginaPrefSet::KnotSig:
             settings.setValue("CodeType", "KnotSig"); break;
+        case ReginaPrefSet::PlanarDiagram:
+            settings.setValue("CodeType", "PlanarDiagram"); break;
         case ReginaPrefSet::Jenkins:
             settings.setValue("CodeType", "Jenkins"); break;
         default:
