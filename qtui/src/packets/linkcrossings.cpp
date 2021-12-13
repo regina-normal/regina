@@ -395,7 +395,7 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
 
     auto* actSelfFrame = new QAction(this);
     actSelfFrame->setText(tr("Self Fr&ame"));
-    // TODO: actSelfFrame->setIcon(ReginaSupport::regIcon("parallel"));
+    actSelfFrame->setIcon(ReginaSupport::regIcon("selfframe"));
     actSelfFrame->setToolTip(tr("Self-frame by adding twists"));
     actSelfFrame->setWhatsThis(tr("Adds twists "
         "to ensure that each component has zero writhe.  "
