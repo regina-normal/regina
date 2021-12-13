@@ -37,6 +37,7 @@
 #ifndef __REGINAHANDLER_H
 #define __REGINAHANDLER_H
 
+#include "file/fileformat.h"
 #include "packetexporter.h"
 #include "packetimporter.h"
 #include <QString>
@@ -51,12 +52,15 @@ class ReginaHandler : public PacketImporter, public PacketExporter {
     private:
         bool compressed_;
             /**< Should exported data files be compressed? */
+        regina::FileFormat format_;
+            /**< Indicates which of Regina's XML file formats to write. */
 
     public:
         /**
          * Constructor.
          */
-        ReginaHandler(bool compressed = true);
+        ReginaHandler(bool compressed = true,
+            regina::FileFormat format = regina::REGINA_CURRENT_FILE_FORMAT);
 
         /**
          * PacketImporter overrides:
@@ -73,8 +77,8 @@ class ReginaHandler : public PacketImporter, public PacketExporter {
         QString defaultExtension(const regina::Packet& data) const override;
 };
 
-inline ReginaHandler::ReginaHandler(bool newCompressed) :
-        compressed_(newCompressed) {
+inline ReginaHandler::ReginaHandler(bool compressed,
+        regina::FileFormat format) : compressed_(compressed), format_(format) {
 }
 
 inline QString ReginaHandler::defaultExtension(const regina::Packet&) const {

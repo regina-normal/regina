@@ -238,6 +238,17 @@ void ReginaMain::setupActions() {
     exportMenu->addAction(act);
 
     act = new QAction(this);
+    act->setText(tr("Legacy Regina Data File (≤ 6.0.1)"));
+    act->setIcon(IconCache::icon(IconCache::regina));
+    act->setToolTip(tr("Export a data file that can be read by Regina "
+        "≤ 6.0.1"));
+    act->setWhatsThis(tr("Export all or part of this packet tree "
+        "to a data file in Regina's legacy format, which was used by "
+        "Regina versions 3.0–6.0.1."));
+    connect(act, SIGNAL(triggered()), this, SLOT(exportReginaLegacy()) );
+    exportMenu->addAction(act);
+
+    act = new QAction(this);
     act->setText(tr("&SnapPea Triangulation"));
     act->setIcon(ReginaSupport::regIcon("packet_snappea"));
     act->setToolTip(tr("Export a SnapPea triangulation"));

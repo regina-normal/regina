@@ -66,6 +66,11 @@ void ReginaMain::exportReginaUncompressed() {
         tr("Export Regina Data File"));
 }
 
+void ReginaMain::exportReginaLegacy() {
+    exportFile(ReginaHandler(true, regina::REGINA_XML_GEN_2), tr(FILTER_REGINA),
+        tr("Export Legacy Regina Data File (v3.0–6.0.1)"));
+}
+
 void ReginaMain::exportSnapPea() {
     exportFile(SnapPeaHandler::instance, tr(FILTER_SNAPPEA),
         tr("Export SnapPea Triangulation"));
