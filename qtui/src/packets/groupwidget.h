@@ -49,6 +49,13 @@ namespace regina {
 
 /**
  * A triangulation page for viewing the fundamental group.
+ *
+ * If/when the user simplifies the fundamental group by pressing buttons
+ * in this widget, it will \e not automatically update the display.  Instead
+ * this widget will emit simplified(), under the assumption that some external
+ * entity will listen for this signal, incorporate the simplified group into
+ * its own data structure(s), and then call refresh() using the newly
+ * simplified group.
  */
 class GroupWidget : public QWidget {
     Q_OBJECT
@@ -71,6 +78,9 @@ class GroupWidget : public QWidget {
 
         /**
          * Refresh the contents of the widget.
+         *
+         * This widget will take a reference to \a group, which means \a group
+         * must have a lifespan that is longer than this widget's.
          */
         void refresh(const regina::GroupPresentation& group);
 

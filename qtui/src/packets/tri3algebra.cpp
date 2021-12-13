@@ -274,8 +274,10 @@ void Tri3HomologyFundUI::refresh() {
 
 void Tri3HomologyFundUI::fundGroupSimplified() {
     auto simp = fgGroup->takeSimplifiedGroup();
-    if (simp)
+    if (simp) {
         tri->simplifiedFundamentalGroup(std::move(*simp));
+        fgGroup->refresh(tri->fundamentalGroup());
+    }
 }
 
 void Tri3HomologyFundUI::refreshLabels() {

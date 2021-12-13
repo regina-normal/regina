@@ -137,7 +137,7 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
 }
 
 void GroupWidget::refresh(const regina::GroupPresentation& group) {
-    group_ = &group;
+    group_ = std::addressof(group);
 
     bool unicode = ReginaPrefSet::global().displayUnicode;
 
@@ -219,8 +219,6 @@ void GroupWidget::simplifyInternal() {
     // about race conditons with simplified_.
     simplified_ = *group_;
     simplified_->intelligentSimplify();
-
-    refresh(*simplified_);
     emit simplified();
 }
 
@@ -240,8 +238,6 @@ void GroupWidget::proliferateRelators() {
     // about race conditons with simplified_.
     simplified_ = *group_;
     simplified_->proliferateRelators(1);
-
-    refresh(*simplified_);
     emit simplified();
 }
 
@@ -259,8 +255,6 @@ void GroupWidget::simplifyGAP() {
         auto ans = dlg.simplifiedGroup();
         if (ans) {
             simplified_ = ans;
-
-            refresh(*simplified_);
             emit simplified();
         } else {
             ReginaSupport::sorry(this,
