@@ -4722,7 +4722,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                         }
 
                         if ( not legal ) {
-                            if ( not newTri.isIdenticalTo(oriented) ) {
+                            if ( newTri != oriented ) {
                                 std::ostringstream msg;
                                 msg << name << ", edge " << i
                                     << ", triangles " << j
@@ -4814,8 +4814,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                         }
 
                         if ( tri.isValid() ) {
-                            if ( not ( newTri.homologyH1() ==
-                                        tri.homologyH1() ) ) {
+                            if ( not ( newTri.homology() ==
+                                        tri.homology() ) ) {
                                 std::ostringstream msg;
                                 msg << name << ", edge " << i
                                     << ", triangles " << j
@@ -4824,8 +4824,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                                 CPPUNIT_FAIL( msg.str() );
                             }
 
-                            if ( not ( newTri.homologyH2() ==
-                                        tri.homologyH2() ) ) {
+                            if ( not ( newTri.homology<2>() ==
+                                        tri.homology<2>() ) ) {
                                 std::ostringstream msg;
                                 msg << name << ", edge " << i
                                     << ", triangles " << j

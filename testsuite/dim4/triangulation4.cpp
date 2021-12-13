@@ -373,7 +373,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                     if ( tri.isOrientable() ) {
                         oriented.orient();
                     }
-                    if ( not newTri.isIdenticalTo(oriented) ) {
+                    if ( newTri != oriented ) {
                         std::ostringstream msg;
                         msg << name << ", edge " << i << ": "
                             "disallowed 4-4 move is not identical.";
@@ -435,14 +435,14 @@ class Triangulation4Test : public TriangulationTest<4> {
                 }
 
                 if ( tri.isValid() ) {
-                    if ( not ( newTri.homologyH1() == tri.homologyH1() ) ) {
+                    if ( not ( newTri.homology() == tri.homology() ) ) {
                         std::ostringstream msg;
                         msg << name << ", edge " << i << ": "
                             "4-4 move changes H1.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if ( not ( newTri.homologyH2() == tri.homologyH2() ) ) {
+                    if ( not ( newTri.homology<2>() == tri.homology<2>() ) ) {
                         std::ostringstream msg;
                         msg << name << ", edge " << i << ": "
                             "4-4 move changes H2.";
