@@ -231,6 +231,10 @@
     </xsl:choose>
   </xsl:variable>
 
+  <xsl:variable name="hires">
+    <xsl:apply-templates select="@hires"/>
+  </xsl:variable>
+
   <xsl:variable name="intrinsicwidth">
     <!-- This funny compound test works around a bug in XSLTC -->
     <xsl:choose>
@@ -522,6 +526,14 @@ valign: <xsl:value-of select="@valign"/></xsl:message>
 	    </xsl:choose>
             <xsl:value-of select="$filename"/>
           </xsl:attribute>
+
+          <xsl:choose>
+            <xsl:when test="$hires != ''">
+              <xsl:attribute name="srcset">
+                <xsl:value-of select="$hires"/> 2x, <xsl:value-of select="$filename"/>
+              </xsl:attribute>
+            </xsl:when>
+          </xsl:choose>
 
           <xsl:if test="@align">
             <xsl:attribute name="align">

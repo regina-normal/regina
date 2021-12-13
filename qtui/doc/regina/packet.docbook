@@ -82,7 +82,7 @@
     Containers are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-container.png"/>
+      <imagedata fileref="icon-container.png" hires="icon-container@2x.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
