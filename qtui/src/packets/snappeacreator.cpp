@@ -31,6 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
+#include "link/link.h"
 #include "snappea/examplesnappea.h"
 #include "snappea/snappeatriangulation.h"
 
@@ -59,7 +60,8 @@ namespace {
      */
     enum {
         TRI_FILE,
-        TRI_CONVERT,
+        TRI_CONVERT_REGINA,
+        TRI_CONVERT_LINK,
         TRI_EXAMPLE
     };
 
@@ -134,12 +136,12 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
         "Select a native Regina triangulation to convert:"));
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
-    convertFrom = new PacketChooser(mainWindow->getPacketTree(),
+    convertFromRegina = new PacketChooser(mainWindow->getPacketTree(),
         new SingleTypeFilter<regina::PacketOf<regina::Triangulation<3>>>(),
         PacketChooser::ROOT_AS_PACKET);
-    convertFrom->setWhatsThis(expln);
-    convertFrom->selectPacket(mainWindow->selectedPacket());
-    subLayout->addWidget(convertFrom, 1);
+    convertFromRegina->setWhatsThis(expln);
+    convertFromRegina->selectPacket(mainWindow->selectedPacket());
+    subLayout->addWidget(convertFromRegina, 1);
     label = new QLabel("<qt><b>Peripheral curves:</b><p>"
         "Regina does not store peripheral curves with its "
         "own triangulations.<p>"
@@ -149,7 +151,32 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
     label->setWordWrap(true);
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
-    details->addWidget(area);//, TRI_CONVERT);
+    details->addWidget(area);//, TRI_CONVERT_REGINA);
+
+    type->addItem(QObject::tr("Link complement"));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    expln = QObject::tr("Select the link whose complement you wish to "
+        "triangulate.");
+    label = new QLabel(QObject::tr(
+        "Select a link to build the complement of:"));
+    label->setWhatsThis(expln);
+    subLayout->addWidget(label);
+    convertFromLink = new PacketChooser(mainWindow->getPacketTree(),
+        new SingleTypeFilter<regina::PacketOf<regina::Link>>(),
+        PacketChooser::ROOT_AS_PACKET);
+    convertFromLink->setWhatsThis(expln);
+    convertFromLink->selectPacket(mainWindow->selectedPacket());
+    subLayout->addWidget(convertFromLink, 1);
+    label = new QLabel("<qt><b>Peripheral curves:</b><p>"
+        "Regina will pass the link diagram directly to the SnapPea kernel, "
+        "which allows SnapPea to preserve the meridian and longitude.</qt>");
+    label->setWordWrap(true);
+    label->setWhatsThis(expln);
+    subLayout->addWidget(label);
+    details->addWidget(area);//, TRI_CONVERT_LINK);
 
     type->addItem(QObject::tr("Example triangulation"));
     area = new QWidget();
@@ -190,12 +217,11 @@ QWidget* SnapPeaTriangulationCreator::getInterface() {
 std::shared_ptr<regina::Packet> SnapPeaTriangulationCreator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
-    if (typeId == TRI_CONVERT) {
+    if (typeId == TRI_CONVERT_REGINA) {
         auto from = std::static_pointer_cast<
-            regina::PacketOf<Triangulation<3>>>(convertFrom->selectedPacket());
+            regina::PacketOf<Triangulation<3>>>(
+                convertFromRegina->selectedPacket());
         if (! from) {
-            // We didn't get either a SnapPeaTriangulation *or* a
-            // Triangulation<3>.
             ReginaSupport::info(parentWidget,
                 QObject::tr("Please select a triangulation to convert "
                     "into SnapPea format."));
@@ -238,6 +264,26 @@ std::shared_ptr<regina::Packet> SnapPeaTriangulationCreator::createPacket(
                     "fix this problem.</qt>"));
             return nullptr;
         }
+        ans->setLabel(from->label());
+        return ans;
+    } else if (typeId == TRI_CONVERT_LINK) {
+        auto from = std::static_pointer_cast<regina::PacketOf<regina::Link>>(
+            convertFromLink->selectedPacket());
+        if (! from) {
+            ReginaSupport::info(parentWidget,
+                QObject::tr("Please select a link whose complement should "
+                    "be triangulated."));
+            return nullptr;
+        }
+
+        if (from->isEmpty()) {
+            ReginaSupport::info(parentWidget,
+                QObject::tr("The link you have selected is empty."));
+            return nullptr;
+        }
+
+        auto ans = regina::make_packet<SnapPeaTriangulation>(std::in_place,
+            *from);
         ans->setLabel(from->label());
         return ans;
     } else if (typeId == TRI_FILE) {

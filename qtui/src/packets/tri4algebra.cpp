@@ -68,7 +68,7 @@ Tri4HomologyFundUI::Tri4HomologyFundUI(
 
     auto* homologyGrid = new QGridLayout();
     homologyGrid->setRowStretch(0, 1);
-    homologyGrid->setRowStretch(3, 1);
+    homologyGrid->setRowStretch(4, 1);
     homologyGrid->setColumnStretch(0, 1);
     homologyGrid->setColumnStretch(3, 1);
 
@@ -93,6 +93,14 @@ Tri4HomologyFundUI::Tri4HomologyFundUI(
     msg = QObject::tr("The second homology group of this triangulation.");
     labelH2->setWhatsThis(msg);
     H2->setWhatsThis(msg);
+
+    labelH3 = new QLabel();
+    homologyGrid->addWidget(labelH3, 3, 1);
+    H3 = new QLabel(ui);
+    homologyGrid->addWidget(H3, 3, 2);
+    msg = QObject::tr("The third homology group of this triangulation.");
+    labelH3->setWhatsThis(msg);
+    H3->setWhatsThis(msg);
 
     refreshLabels();
 
@@ -132,14 +140,17 @@ void Tri4HomologyFundUI::refresh() {
         if (ReginaPrefSet::global().displayUnicode) {
             H1->setText(tri->homology<1>().utf8().c_str());
             H2->setText(tri->homology<2>().utf8().c_str());
+            H3->setText(tri->homology<3>().utf8().c_str());
         } else {
             H1->setText(tri->homology<1>().str().c_str());
             H2->setText(tri->homology<2>().str().c_str());
+            H3->setText(tri->homology<3>().str().c_str());
         }
     } else {
         QString msg(QObject::tr("Invalid Triangulation"));
         H1->setText(msg);
         H2->setText(msg);
+        H3->setText(msg);
     }
 
     if (! tri->isValid()) {
@@ -169,9 +180,11 @@ void Tri4HomologyFundUI::refreshLabels() {
     if (ReginaPrefSet::global().displayUnicode) {
         labelH1->setText(QObject::tr("H\u2081(M):"));
         labelH2->setText(QObject::tr("H\u2082(M):"));
+        labelH3->setText(QObject::tr("H\u2083(M):"));
     } else {
         labelH1->setText(QObject::tr("H1(M):"));
         labelH2->setText(QObject::tr("H2(M):"));
+        labelH3->setText(QObject::tr("H3(M):"));
     }
 }
 
