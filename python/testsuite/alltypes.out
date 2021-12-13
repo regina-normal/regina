@@ -1113,7 +1113,7 @@ PlugTriSolidTorus : class
 Equality type : EqualityType.BY_VALUE
 
 PluggedTorusBundle : class
-Equality type : EqualityType.NEVER_INSTANTIATED
+Equality type : EqualityType.BY_VALUE
 
 Polynomial : class
 Equality type : EqualityType.BY_VALUE

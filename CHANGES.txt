@@ -1207,6 +1207,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
         Class PlugTriSolidTorus:
             - Class constants are now constexpr.
             - Routine chain() now returns a std::optional by const reference,
