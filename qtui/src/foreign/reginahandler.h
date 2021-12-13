@@ -49,14 +49,14 @@ class ReginaHandler : public PacketImporter, public PacketExporter {
     using PacketExporter::exportData;
     using PacketImporter::importData;
     private:
-        bool compressed;
+        bool compressed_;
             /**< Should exported data files be compressed? */
 
     public:
         /**
          * Constructor.
          */
-        ReginaHandler(bool newCompressed = true);
+        ReginaHandler(bool compressed = true);
 
         /**
          * PacketImporter overrides:
@@ -74,7 +74,7 @@ class ReginaHandler : public PacketImporter, public PacketExporter {
 };
 
 inline ReginaHandler::ReginaHandler(bool newCompressed) :
-        compressed(newCompressed) {
+        compressed_(newCompressed) {
 }
 
 inline QString ReginaHandler::defaultExtension(const regina::Packet&) const {
