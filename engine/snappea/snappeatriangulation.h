@@ -774,7 +774,7 @@ class SnapPeaTriangulation :
          * By calling <tt>link.complement()</tt>, you through Regina's
          * Triangulation<3> class and therefore lose the peripheral curves.
          * Although the SnapPeaTriangulation constructor will install new
-         * periphereral curves, there is no guarantee that these are the same
+         * peripheral curves, there is no guarantee that these are the same
          * curves as before; in particular, there is no guarantee that these
          * new curves will correspond in any way to the original link diagram.
          *
