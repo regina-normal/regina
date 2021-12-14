@@ -163,7 +163,7 @@
 
 <book lang="&language;">
  <bookinfo>
-  <title>&regina; &xml; File Format Reference</title>
+  <title>&regina; &regversion; File Format Reference</title>
 
   <authorgroup><author>
    <firstname>Benjamin</firstname>
@@ -180,7 +180,7 @@
 
   <legalnotice>
    <para>
-    Both &regina; and this manual are licensed under the terms of the
+    Both &regina; and this reference are licensed under the terms of the
     GNU General Public License.
     See the users' handbook for full license details.
    </para>
@@ -192,12 +192,13 @@
   <abstract>
    <para>
     This manual details the &xml; file format used by &regina;
-    for its data files.  For information on &regina; itself, see
+    for its data files.  It covers the current (third-generation) format
+    in full detail,
+    as well as some deprecated elements that were used in the older
+    (second-generation) format.
+    For information on &regina; itself, see
     the users' handbook or visit the
     <ulink url="http://regina-normal.github.io/">&regina; website</ulink>.
-   </para>
-   <para>
-    This manual is current as of &regina;&nbsp;&regversion;.
    </para>
   </abstract>
 

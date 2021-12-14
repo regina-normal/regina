@@ -26,11 +26,12 @@
     </para></listitem>
     <listitem><para>
      The <emphasis>second-generation</emphasis> format was used by &regina;
-     versions 3.0&ndash;6.0.1.
-     &regina; can transparently read second-generation data files, and it can
-     also write to them on request.
+     versions 3.0&ndash;6.0.1, and is described in full detail in the
+     <ulink url="https://regina-normal.github.io/6.0.1/docs/regina-xml/index.html">archived documentation from &regina;&nbsp;6.0.1</ulink>.
      This is also an &xml;-based format, but whose root element is
      &xml-reginadata;.
+     &regina; can transparently read second-generation data files, and it can
+     also write to them on request.
     </para></listitem>
     <listitem><para>
      The <emphasis>first-generation</emphasis> format was a binary format

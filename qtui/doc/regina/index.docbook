@@ -200,7 +200,7 @@
 
 <book lang="&language;">
  <bookinfo>
-  <title>The &regina; Handbook</title>
+  <title>The &regina; &regversion; Handbook</title>
 
   <authorgroup><author>
    <firstname>Benjamin</firstname>
@@ -227,9 +227,6 @@
 
   <abstract>
    &regabstract;
-   <para>
-    This handbook is current as of &regina;&nbsp;&regversion;.
-   </para>
    <para>
     Tip: You can also browse the
     <link linkend="taskindex">alphabetical index</link> of tasks.
