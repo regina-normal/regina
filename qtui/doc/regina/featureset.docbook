@@ -40,6 +40,10 @@
       dehydration strings <xref linkend="bib-cuspedcensus"/>;
      </para></listitem>
      <listitem><para>
+      building triangulations from framed links, using the command-line
+      <link linkend="man-dgt">&dgt;</link> tool;
+     </para></listitem>
+     <listitem><para>
       importing triangulations from &snappeapylink; (which now preserves
       fillings and peripheral curves), and also from &orburl;;
      </para></listitem>
@@ -194,7 +198,8 @@
    You can create 4-manifold triangulations using similar methods to
    3-manifolds, including manual gluings of pentachora,
    automatic generation of standard families, reconstruction from
-   isomorphism signatures, and construction of ready-made examples.
+   isomorphism signatures, building from framed links,
+   and constructing ready-made examples.
   </para>
   <para>
    To analyse 4-manifold triangulations, &regina; offers a similar
@@ -243,13 +248,15 @@
    &regina; now offers native support for knots and links.
   </para>
   <para>
-   You can create knots and links from Gauss or Dowker-Thistlethwaite codes,
-   from parameterised families of knots and links,
-   or by construction of ready-made examples.
+   You can create knots and links from Gauss, Dowker-Thistlethwaite
+   or planar diagram codes, knot signatures,
+   parameterised families of knots and links,
+   or construction of ready-made examples.
   </para>
   <para>
    &regina; computes several link invariants including the
-   Jones and &homflypt; polynomials, allows you to build and study the
+   Jones and &homflypt; polynomials and the link group,
+   allows you to build and study the
    underlying 4-valent graph and its tree decompositions, offers tools
    for isomorphism testing and isomorphism signatures, and allows you to
    build the knot/link complement as a 3-manifold triangulation.
@@ -417,9 +424,10 @@
   </para>
   <para>
    For <firstterm>strict</firstterm> angle structures (in which all angles
-   are strictly positive), &regina; can test for existence very quickly
-   (and find an explicit example if one exists),
-   using linear programming techniques.
+   are strictly positive) or <firstterm>generalised</firstterm> angle
+   structures (where negative angles are allowed),
+   &regina; can test for existence very quickly and find an explicit example
+   if one exists, using techniques from linear programming and linear algebra.
   </para>
  </sect2>
 
