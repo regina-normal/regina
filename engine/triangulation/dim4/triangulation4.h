@@ -821,6 +821,52 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         bool twoZeroMove(Vertex<4>* v, bool check = true, bool perform = true);
         /**
+         * Checks the eligibility of and/or performs a 4-4 move about the
+         * given edge.
+         *
+         * This involves replacing the four pentachora joined at that edge
+         * with four new pentachora joined along a new edge \a a. In more
+         * detail, the original configuration of four pentachora should be
+         * equivalent to the join of a double edge and a square with diagonal
+         * given by the edge \a e. The 4-4 move essentially performs a 2-2
+         * move on this square, with the new diagonal corresponding precisely
+         * to the new edge \a a. This move can be done if:
+         *
+         * - the link of edge \a e is a 2-2 move away from being
+         *   combinatorially isomorphic to the boundary of a tetrahedron, and
+         *
+         * - the four pentachora joined at \a e are distinct.
+         *
+         * If the routine is asked to both check and perform, the move will
+         * only be performed if the check shows it is legal.
+         *
+         * If this triangulation is currently oriented, then this 4-4 move
+         * will label the new pentachora in a way that preserves the
+         * orientation.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (triangles, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal.
+         * \pre The given edge \a e is an edge of this triangulation.
+         *
+         * @param e the edge about which to perform the move.
+         * @param check \c true if we are to check whether the move is allowed
+         * (defaults to \c true).
+         * @param perform \c true if we are to perform the move (defaults to
+         * \c true).
+         * @return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold. If \a check is \c false, the function
+         * simply returns \c true.
+         *
+         * @author Alex He
+         */
+        bool fourFourMove(Edge<4>* e, bool check = true, bool perform = true);
+        /**
          * Checks the eligibility of and/or performs a book opening move
          * about the given tetrahedron.
          * This involves taking a tetrahedron meeting the boundary along

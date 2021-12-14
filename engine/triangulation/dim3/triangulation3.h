@@ -1839,6 +1839,174 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         bool twoOneMove(Edge<3>* e, int edgeEnd,
                 bool check = true, bool perform = true);
         /**
+         * Checks the eligibility of and/or performs a 0-2 move about the
+         * (not necessarily distinct) triangles
+         * e0.tetrahedron()->triangle( e0.vertices()[t0] ) and
+         * e1.tetrahedron()->triangle( e1.vertices()[t1] ).
+         *
+         * This involves fattening up these two triangles into a new pair of
+         * tetrahedra around a new degree-two edge \a d; this is the inverse
+         * of performing a 2-0 move about the edge \a d. This can be done if
+         * and only if the following conditions are satisfied:
+         *
+         * - \a e0 and \a e1 are both embeddings of the same edge \a e.
+         *
+         * - \a t0 and \a t1 are both either 2 or 3; this ensures that the
+         *   triangles about which we perform the move are triangles that
+         *   are incident with \a e.
+         *
+         * - The edge \a e is valid.
+         *
+         * If the routine is asked to both check and perform, the move will
+         * only be performed if the check shows it is legal.
+         *
+         * If this triangulation is currently oriented, then this 0-2 move
+         * will label the new tetrahedra in a way that preserves the
+         * orientation.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (triangles, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the arguments \a e0
+         * and \a e1) can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run, it
+         * must by known in advance that the move is legal.
+         * \pre The edge \a e is an edge of this triangulation.
+         *
+         * @param e0 an embedding of the common edge \a e of the two
+         * triangles about which to perform the move.
+         * @param t0 one of the two triangles about which to perform the
+         * move (associated to the edge embedding \a e0).
+         * @param e1 another embedding of the edge \a e.
+         * @param t1 the other triangle about which to perform move
+         * (associated to the edge embedding \a e1).
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move (defaults to
+         * \c true).
+         * @return If \a check is \c true, the function returns \c true if
+         * and only if the requested move may be performed without changing
+         * the topology of the manifold. If \a check is false, the function
+         * simply returns \c true.
+         *
+         * @author Alex He
+         */
+        bool zeroTwoMove(
+                EdgeEmbedding<3> e0, int t0, EdgeEmbedding<3> e1, int t1,
+                bool check = true, bool perform = true );
+        /**
+         * Checks the eligibility of and/or performs a 0-2 move about the
+         * (not necessarily distinct) triangles incident to \a e that are
+         * numbered \a t0 and \a t1.
+         *
+         * This involves fattening up these two triangles into a new pair of
+         * tetrahedra around a new degree-two edge \a d; this is the inverse
+         * of performing a 2-0 move about the edge \a d. This can always be
+         * done as long as the edge \a e is valid.
+         *
+         * The triangles incident to \a e are numbered as follows:
+         *
+         * - For each \a i from 0 up to e->degree(), we assign the number
+         *   \a i to the triangle
+         *      e->embedding(i).tetrahedron()->triangle(
+         *          e->embedding(i).vertices()[3] )
+         *
+         * - If \a e is a boundary edge, then we additionally assign the
+         *   number e->degree() to the boundary triangle
+         *      e->embedding( e->degree() - 1 ).tetrahedron()->triangle(
+         *          e->embedding( e->degree() - 1 ).vertices()[2] )
+         *
+         * If the routine is asked to both check and perform, the move will
+         * only be performed if the check shows it is legal.
+         *
+         * If this triangulation is currently oriented, then this 0-2 move
+         * will label the new tetrahedra in a way that preserves the
+         * orientation.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (triangles, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run, it
+         * must by known in advance that the move is legal.
+         * \pre The given edge \a e is an edge of this triangulation.
+         * \pre The numbers \a t0 and \a t1 are both less than or equal to
+         * e->degree(), and strictly less than e->degree() if \a e is
+         * non-boundary.
+         *
+         * @param e the common edge of the two triangles about which to
+         * perform the move.
+         * @param t0 the number assigned to one of two triangles about which
+         * to perform the move.
+         * @param t1 the number assigned to the other triangle about which
+         * to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move (defaults to
+         * \c true).
+         * @return If \a check is \c true, the function returns \c true if
+         * and only if the requested move may be performed without changing
+         * the topology of the manifold. If \a check is false, the function
+         * simply returns \c true.
+         *
+         * @author Alex He
+         */
+        bool zeroTwoMove(
+                Edge<3>* e, size_t t0, size_t t1,
+                bool check = true, bool perform = true );
+        /**
+         * Checks the eligibility of and/or performs a 0-2 move about the
+         * (not necessarily distinct) triangles t0 and t1.
+         *
+         * This involves fattening up these two triangles into a new pair of
+         * tetrahedra around a new degree-two edge \a d; this is the inverse
+         * of performing a 2-0 move about the edge \a d. This can be done if
+         * and only if the following conditions are satisfied:
+         *
+         * - The edges t0->edge(e0) and t1->edge(e1) are the same edge \a e
+         *   of this triangulation.
+         *
+         * - The edge \a e is valid.
+         *
+         * If the routine is asked to both check and perform, the move will
+         * only be performed if the check shows it is legal.
+         *
+         * If this triangulation is currently oriented, then this 0-2 move
+         * will label the new tetrahedra in a way that preserves the
+         * orientation.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (triangles, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the arguments
+         * \a t0 and \a t1) can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run, it
+         * must by known in advance that the move is legal.
+         * \pre The given triangles \a t0 and \a t1 are triangles of this
+         * triangulation.
+         * \pre The numbers \a e0 and \a e1 are both 0, 1 or 2.
+         *
+         * @param t0 one of the two triangles about which to perform the move.
+         * @param e0 the edge at which \a t0 meets the other triangle about
+         * which to perform the move.
+         * @param t1 the other triangle about which to perform the move.
+         * @param e1 the edge at which \a t1 meets \a t0.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move (defaults to
+         * \c true).
+         * @return If \a check is \c true, the function returns \c true if
+         * and only if the requested move may be performed without changing
+         * the topology of the manifold. If \a check is false, the function
+         * simply returns \c true.
+         *
+         * @author Alex He
+         */
+        bool zeroTwoMove(
+                Triangle<3>* t0, int e0, Triangle<3>* t1, int e1,
+                bool check = true, bool perform = true );
+        /**
          * Checks the eligibility of and/or performs a book opening move
          * about the given triangle.
          * This involves taking a triangle meeting the boundary along two

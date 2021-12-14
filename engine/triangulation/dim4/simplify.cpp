@@ -30,6 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
+#include <set>
+#include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
@@ -424,6 +426,74 @@ bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
 
     return true;
 }
+
+bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
+    const Triangulation<2>& edgeLink = e->buildLink();
+    Isomorphism<4> linkInc = e->buildLinkInclusion();
+
+    if (check) {
+        // e should meet four distinct pentachora.
+        if (e->degree() != 4) {
+            return false;
+        }
+        std::set< Pentachoron<4>* > pentSet;
+        for ( auto& emb : *e ) {
+            if ( not pentSet.insert( emb.pentachoron() ).second ) {
+                return false;
+            }
+        }
+
+        // The link of e should be a 2-2 move away from being combinatorially
+        // isomorphic to the boundary of a tetrahedron.
+        if ( edgeLink.isoSig() != "eLPbddaaa" ) {
+            return false;
+        }
+    }
+
+    if ( not perform ) {
+        return true;
+    }
+
+    // Perform the 4-4 move as a 2-4 move followed by a 4-2 move.
+    // Note that we use pachner(), which ensures that we preserve orientation
+    // (if the triangulation was originally oriented).
+
+    // Start by working out where the 2-4 and 4-2 moves should take place.
+    Vertex<2>* topVert;
+    for ( int i = 0; i < 3; ++i ) {
+        if ( edgeLink.triangle(0)->vertex( i )->degree() == 2 ) {
+            topVert = edgeLink.triangle(0)->vertex( i );
+            break;
+        }
+    }
+    // Location of the 2-4 move.
+    size_t linkFront = topVert->embedding(0).triangle()->index();
+    int vertFront = topVert->embedding(0).vertex();
+    Pentachoron<4>* frontPent = pentachoron( linkInc.pentImage(linkFront) );
+    Tetrahedron<4>* tet24 = frontPent->tetrahedron(
+            linkInc.facetPerm( linkFront )[ vertFront ] );
+    // Location of the 4-2 move.
+    size_t linkBack = topVert->embedding(1).triangle()->index();
+    Pentachoron<4>* backPent = pentachoron( linkInc.pentImage(linkBack) );
+    int edge42;
+    for ( auto& emb : *e ) {
+        if ( emb.simplex() == backPent ) {
+            edge42 = emb.edge();
+            break;
+        }
+    }
+
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
+
+    pachner( tet24, false, true );
+    pachner( backPent->edge(edge42), false, true );
+
+    // Done!
+    return true;
+}
+
 bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
     const TetrahedronEmbedding<4>& emb = t->front();
     Pentachoron<4>* pent = emb.pentachoron();

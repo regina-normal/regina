@@ -103,6 +103,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(iBundle);
     CPPUNIT_TEST(s1Bundle);
     CPPUNIT_TEST(bundleWithMonodromy);
+    CPPUNIT_TEST(fourFourMove);
     CPPUNIT_TEST(retriangulate);
 
     CPPUNIT_TEST_SUITE_END();
@@ -354,6 +355,194 @@ class Triangulation4Test : public TriangulationTest<4> {
             runCensusAllBounded(verifyPachner<k>);
             runCensusAllNoBdry(verifyPachner<k>);
             verifyPachnerSimplicial<k>();
+        }
+
+        static void verifyFourFourMove(
+                const Triangulation<4>& tri, const char* name ) {
+            // Tests 4-4 moves on edges.
+            for ( int i = 0; i < tri.countEdges(); ++i ) {
+                Triangulation<4> newTri(tri);
+                if ( newTri.isOrientable() ) {
+                    newTri.orient();
+                }
+                bool legal = newTri.fourFourMove( newTri.edge(i) );
+                clearProperties( newTri );
+
+                if ( not legal ) {
+                    Triangulation<4> oriented(tri);
+                    if ( tri.isOrientable() ) {
+                        oriented.orient();
+                    }
+                    if ( newTri != oriented ) {
+                        std::ostringstream msg;
+                        msg << name << ", edge " << i << ": "
+                            "disallowed 4-4 move is not identical.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    continue;
+                }
+
+                // The move was performed (hopefully correctly).
+
+                if ( newTri.size() != tri.size() ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "4-4 move gives wrong triangulation size.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if ( newTri.isValid() != tri.isValid() ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "4-4 move changes validity.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if ( newTri.isOrientable() != tri.isOrientable() ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "4-4 move changes orientability.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if ( tri.isOrientable() and not newTri.isOriented() ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "4-4 move loses orientation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if ( newTri.isClosed() != tri.isClosed() ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "4-4 move loses closedness.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if ( newTri.countBoundaryComponents() !=
+                        tri.countBoundaryComponents() ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "4-4 move changes # boundary components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if ( newTri.eulerCharTri() != tri.eulerCharTri() ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "4-4 move changes Euler characteristic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if ( tri.isValid() ) {
+                    if ( not ( newTri.homology() == tri.homology() ) ) {
+                        std::ostringstream msg;
+                        msg << name << ", edge " << i << ": "
+                            "4-4 move changes H1.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if ( not ( newTri.homology<2>() == tri.homology<2>() ) ) {
+                        std::ostringstream msg;
+                        msg << name << ", edge " << i << ": "
+                            "4-4 move changes H2.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                // Randomly relabel the pentachora, but preserve orientation.
+                Isomorphism<4> iso = Isomorphism<4>::random(
+                        newTri.size(), true );
+                iso.applyInPlace( newTri );
+                clearProperties( newTri );
+
+                // Test the inverse 4-4 move.
+                {
+                    regina::Triangulation<4> copy(newTri);
+
+                    // Find the edge on which to perform the inverse move.
+                    // We perform a naive search that will find this edge if
+                    // it exists, but may produce additional false positives.
+                    // In the event that we do end up with false positives,
+                    // we give up on testing this particular inverse move.
+                    Edge<4>* edge = nullptr;
+                    bool giveUp = false;
+                    for ( int ii = 0; ii < copy.countEdges(); ++ii ) {
+                        if ( copy.edge(ii)->degree() != 4 ) {
+                            continue;
+                        }
+                        // A good edge meets four good pentachora.
+                        bool goodEdge = true;
+                        Edge<4>* e = copy.edge(ii);
+                        for ( auto& emb : *e ) {
+                            bool goodPent = false;
+                            for ( int j = 1; j < 5; ++j ) {
+                                if ( emb.pentachoron()->index() ==
+                                        iso.simpImage(
+                                            newTri.size() - j )
+                                        ) {
+                                    goodPent = true;
+                                    break;
+                                }
+                            }
+                            if ( not goodPent ) {
+                                goodEdge = false;
+                                break;
+                            }
+                        }
+                        if ( goodEdge ) {
+                            if ( edge == nullptr ) {
+                                edge = e;
+                            } else {
+                                giveUp = true;
+                                break;
+                            }
+                        }
+                    }
+                    if ( giveUp ) {
+                        continue;
+                    }
+
+                    if ( edge == nullptr ) {
+                        std::ostringstream msg;
+                        msg << name << ", edge " << i << ": "
+                            "could not find edge on which to perform "
+                            "inverse 4-4 move.";
+                    }
+
+                    legal = copy.fourFourMove( edge );
+                    clearProperties(copy);
+
+                    if ( not legal ) {
+                        std::ostringstream msg;
+                        msg << name << ", edge " << i << ": "
+                            "could not undo 4-4 move with inverse move.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if ( not copy.isIsomorphicTo(tri) ) {
+                        std::ostringstream msg;
+                        msg << name << ", edge " << i << ": "
+                            "4-4 move followed by inverse move is not "
+                            "isomorphic.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if ( tri.isOrientable() and not copy.isOriented() ) {
+                        std::ostringstream msg;
+                        msg << name << ", edge " << i << ": "
+                            "4-4 move followed by inverse move loses "
+                            "orientation.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
+        void fourFourMove() {
+            testManualAll( verifyFourFourMove );
+            runCensusAllBounded( verifyFourFourMove );
+            runCensusAllNoBdry( verifyFourFourMove );
         }
 
         template <int k>
