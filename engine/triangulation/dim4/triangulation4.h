@@ -1029,6 +1029,47 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         bool idealToFinite();
 
+        /**
+         * Snaps together the endpoints of an edge connecting an internal
+         * vertex with some different (possibly boundary) vertex, which reduces
+         * the number of vertices in this triangulation by one without changing
+         * the topology.
+         *
+         * This operation essentially works by taking a triangle \a t that
+         * meets the given edge \a e, and folding the other two edges of \a t
+         * together about their common vertex. This has no topological side
+         * effects as long as \a e is an edge of the type described above.
+         *
+         * Depending on your situation, collapseEdge() may be a more
+         * appropriate method for reducing the number of vertices without
+         * changing the topology.
+         *
+         * - The advantage of collapseEdge() is that it decreases the number
+         *   of tetrahedra, whereas snapEdge() increases this number (but only
+         *   by four).
+         *
+         * - The disadvantages of collapseEdge() are that it cannot always be
+         *   performed, and its validity tests are expensive; snapEdge() on
+         *   the other hand can always be used for edges \a e of the type
+         *   described above.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (triangles, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
+         *
+         * \pre The given edge joins two distinct vertices of this
+         * triangulation, and at least one of these vertices is internal.
+         *
+         * @param e the edge whose endpoints are to be snapped together.
+         *
+         * @author Alex He
+         */
+        void snapEdge(Edge<4>* e);
+
         /*@}*/
 
     private:

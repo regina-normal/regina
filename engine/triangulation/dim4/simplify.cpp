@@ -1026,4 +1026,59 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
     return true;
 }
 
+void Triangulation<4>::snapEdge(Edge<4>* e) {
+    if ( ( e->vertex(0) == e->vertex(1) ) or
+            ( e->vertex(0)->isBoundary() and e->vertex(1)->isBoundary() ) ) {
+        return; // Precondition fails.
+    }
+
+    // Find a tetrahedron containing e. Our plan is to insert four pentachora
+    // in its place.
+    Pentachoron<4>* open = e->front().pentachoron();
+    Perm<5> vertices = e->front().vertices();
+    Pentachoron<4>* adj = open->adjacentPentachoron( vertices[2] );
+    Perm<5> glue = open->adjacentGluing( vertices[2] );
+
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
+
+    // The four pentachora that we insert together form a "pinched 4-ball".
+    // Combinatorially, the boundary of this pinched 4-ball is isomorphic to
+    // the 3-sphere that forms the boundary of a tetrahedral pillow; however,
+    // two adjacent boundary edges a and b in this pinched 4-ball are pinched
+    // together to form a single edge whose link becomes an annulus. We insert
+    // this pinched 4-ball into the opened-up tetrahedron in such a way that
+    // edges a, b and e together bound a triangle in the 3-sphere that used to
+    // form the boundary of the pinched 4-ball (this is possible because edges
+    // a and b are adjacent). For our purposes, the most important consequence
+    // of this is that the endpoints of e will become snapped together.
+
+    auto p = newPentachora<4>();
+    p[0]->join( 0, p[1], Perm<5>(3, 4) );
+    p[0]->join( 2, p[1], Perm<5>(0, 2, 4, 1, 3) );
+    p[0]->join( 3, p[2], Perm<5>(3, 4) );
+    p[0]->join( 4, p[2], Perm<5>(3, 4) );
+    p[1]->join( 1, p[2], Perm<5>(1, 2) );
+    p[1]->join( 2, p[3], Perm<5>(3, 4) );
+    p[1]->join( 3, p[3], Perm<5>(3, 4) );
+    p[2]->join( 0, p[3], Perm<5>(3, 4) );
+    p[2]->join( 1, p[3], Perm<5>(3, 4) );
+
+    // The boundary tetrahedra of this auxiliary structure are p[0]: 0234 and
+    // p[3]: 0214.
+    // The edges that glue to p[0]: 02, p[0]: 03, p[0]: 04 or p[0]: 23 will
+    // remain (topologically) unaffected.
+    // The edges that glue to p[0]: 24 and p[0]: 34 will be snapped together.
+
+    // A note for oriented triangulations: Simplex::faceMapping() guarantees
+    // that e->front().vertices() has a sign equal to the orientation of the
+    // relevant pentachoron, which for an oriented triangulation is always 1.
+    // Therefore all of the gluings that we make here use odd gluing
+    // permutations, and hence the orientation is preserved.
+
+    open->unjoin( vertices[2] );
+    p[0]->join( 1, open, vertices * Perm<5>(3, 2, 0, 1, 4) );
+    p[3]->join( 3, adj, glue * vertices * Perm<5>(3, 1, 0, 2, 4) );
+}
+
 } // namespace regina

@@ -100,6 +100,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(edgeLinks);
     CPPUNIT_TEST(idealToFinite);
+    CPPUNIT_TEST(snapEdge);
     CPPUNIT_TEST(iBundle);
     CPPUNIT_TEST(s1Bundle);
     CPPUNIT_TEST(bundleWithMonodromy);
@@ -543,6 +544,112 @@ class Triangulation4Test : public TriangulationTest<4> {
             testManualAll( verifyFourFourMove );
             runCensusAllBounded( verifyFourFourMove );
             runCensusAllNoBdry( verifyFourFourMove );
+        }
+
+        static void verifySnapEdge(
+                const Triangulation<4>& tri, const char* name ) {
+            // Tests the snapEdge() operation.
+            Triangulation<4> oriented(tri);
+            if ( oriented.isOrientable() ) {
+                oriented.orient();
+            }
+            for ( int i = 0; i < tri.countEdges(); ++i ) {
+                Triangulation<4> newTri(oriented);
+                Edge<4>* e = newTri.edge(i);
+
+                // Start by working out whether e has the right properties
+                // for snapEdge() to work.
+                bool legal = ( e->vertex(0) != e->vertex(1) and
+                        not ( e->vertex(0)->isBoundary() and
+                            e->vertex(1)->isBoundary() ) );
+
+                newTri.snapEdge(e);
+                clearProperties( newTri );
+                if ( not legal ) {
+                    if ( newTri != oriented ) {
+                        std::ostringstream msg;
+                        msg << name << ", edge " << i << ": "
+                            "disallowed snapEdge() is not identical.";
+                        CPPUNIT_FAIL( msg.str() );
+                    }
+                    continue;
+                }
+
+                // The snapEdge() operation was performed.
+
+                if ( newTri.size() != tri.size() + 4 ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "snapEdge() gives wrong triangulation size.";
+                    CPPUNIT_FAIL( msg.str() );
+                }
+
+                if ( newTri.isValid() != tri.isValid() ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "snapEdge() changes validity.";
+                    CPPUNIT_FAIL( msg.str() );
+                }
+
+                if ( newTri.isOrientable() != tri.isOrientable() ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "snapEdge() changes orientability.";
+                    CPPUNIT_FAIL( msg.str() );
+                }
+
+                if ( tri.isOrientable() and not newTri.isOriented() ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "snapEdge() loses orientation.";
+                    CPPUNIT_FAIL( msg.str() );
+                }
+
+                if ( newTri.isClosed() != tri.isClosed() ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "snapEdge() loses closedness.";
+                    CPPUNIT_FAIL( msg.str() );
+                }
+
+                if ( newTri.countBoundaryComponents() !=
+                        tri.countBoundaryComponents() ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "snapEdge() changes # boundary components.";
+                    CPPUNIT_FAIL( msg.str() );
+                }
+
+                if ( newTri.eulerCharTri() != tri.eulerCharTri() ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "snapEdge() changes Euler characteristic.";
+                    CPPUNIT_FAIL( msg.str() );
+                }
+
+                if ( tri.isValid() ) {
+                    if ( not ( newTri.homology() == tri.homology() ) ) {
+                        std::ostringstream msg;
+                        msg << name << ", edge " << i << ": "
+                            "snapEdge() changes H1.";
+                        CPPUNIT_FAIL( msg.str() );
+                    }
+
+                    if ( not ( newTri.homology<2>() ==
+                                tri.homology<2>() ) ) {
+                        std::ostringstream msg;
+                        msg << name << ", edge " << i << ": "
+                            "snapEdge() changes H2.";
+                        CPPUNIT_FAIL( msg.str() );
+                    }
+                }
+            }
+        }
+
+        void snapEdge() {
+            testManualAll( verifySnapEdge );
+            runCensusAllBounded( verifySnapEdge );
+            runCensusAllNoBdry( verifySnapEdge );
         }
 
         template <int k>
