@@ -4,7 +4,7 @@
 
 # General options
 
-PROJECT_NAME         = "Regina Calculation Engine"
+PROJECT_NAME         = "Regina @PACKAGE_VERSION@ Calculation Engine"
 
 OUTPUT_DIRECTORY     = "@PROJECT_BINARY_DIR@/docs/engine"
 
