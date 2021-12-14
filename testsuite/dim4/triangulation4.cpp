@@ -509,6 +509,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                         msg << name << ", edge " << i << ": "
                             "could not find edge on which to perform "
                             "inverse 4-4 move.";
+                        CPPUNIT_FAIL(msg.str());
                     }
 
                     legal = copy.fourFourMove( edge );
@@ -569,6 +570,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                     std::ostringstream msg;
                     msg << name << ", edge " << i << ": "
                         "snapEdge() determines legality incorrectly.";
+                    CPPUNIT_FAIL( msg.str() );
                 }
                 if ( not legal ) {
                     if ( newTri != oriented ) {
