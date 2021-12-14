@@ -1026,19 +1026,27 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
     return true;
 }
 
-void Triangulation<4>::snapEdge(Edge<4>* e) {
-    if ( ( e->vertex(0) == e->vertex(1) ) or
-            ( e->vertex(0)->isBoundary() and e->vertex(1)->isBoundary() ) ) {
-        return; // Precondition fails.
+bool Triangulation<4>::snapEdge(
+        Edge<4>* e, bool check, bool perform ) {
+    if ( check and
+            ( ( e->vertex(0) == e->vertex(1) ) or
+            ( e->vertex(0)->isBoundary() and
+              e->vertex(1)->isBoundary() ) ) ) {
+        return false;
+    }
+    if ( not perform ) {
+        return true;
     }
 
-    // Find a tetrahedron containing e. Our plan is to insert four pentachora
-    // in its place.
+    // Our plan is to find a tetrahedron containing e, and then insert four
+    // pentachora in its place.
     Pentachoron<4>* open = e->front().pentachoron();
     Perm<5> vertices = e->front().vertices();
     Pentachoron<4>* adj = open->adjacentPentachoron( vertices[2] );
     Perm<5> glue = open->adjacentGluing( vertices[2] );
 
+    // Actually perform the move.
+    TopologyLock lock(*this);
     // Ensure only one event pair is fired in this sequence of changes.
     ChangeEventSpan span(*this);
 
@@ -1079,6 +1087,9 @@ void Triangulation<4>::snapEdge(Edge<4>* e) {
     open->unjoin( vertices[2] );
     p[0]->join( 1, open, vertices * Perm<5>(3, 2, 0, 1, 4) );
     p[3]->join( 3, adj, glue * vertices * Perm<5>(3, 1, 0, 2, 4) );
+
+    // Done!
+    return true;
 }
 
 } // namespace regina

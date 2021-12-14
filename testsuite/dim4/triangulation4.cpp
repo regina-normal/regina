@@ -563,8 +563,13 @@ class Triangulation4Test : public TriangulationTest<4> {
                         not ( e->vertex(0)->isBoundary() and
                             e->vertex(1)->isBoundary() ) );
 
-                newTri.snapEdge(e);
+                bool res = newTri.snapEdge(e);
                 clearProperties( newTri );
+                if ( res != legal ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "snapEdge() determines legality incorrectly.";
+                }
                 if ( not legal ) {
                     if ( newTri != oriented ) {
                         std::ostringstream msg;
@@ -581,6 +586,13 @@ class Triangulation4Test : public TriangulationTest<4> {
                     std::ostringstream msg;
                     msg << name << ", edge " << i << ": "
                         "snapEdge() gives wrong triangulation size.";
+                    CPPUNIT_FAIL( msg.str() );
+                }
+
+                if ( newTri.countVertices() != tri.countVertices() - 1 ) {
+                    std::ostringstream msg;
+                    msg << name << ", edge " << i << ": "
+                        "snapEdge() does not reduce # vertices by one.";
                     CPPUNIT_FAIL( msg.str() );
                 }
 

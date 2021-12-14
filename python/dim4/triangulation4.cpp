@@ -284,7 +284,10 @@ void addTriangulation4(pybind11::module_& m) {
         .def("barycentricSubdivision",
             &Triangulation<4>::barycentricSubdivision)
         .def("idealToFinite", &Triangulation<4>::idealToFinite)
-        .def("snapEdge", &Triangulation<4>::snapEdge)
+        .def("snapEdge", &Triangulation<4>::snapEdge,
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true )
         .def("insertTriangulation", &Triangulation<4>::insertTriangulation)
         .def("isoSig", &Triangulation<4>::isoSig<>)
         .def("isoSig_EdgeDegrees",

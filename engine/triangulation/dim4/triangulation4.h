@@ -1037,8 +1037,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          *
          * This operation essentially works by taking a triangle \a t that
          * meets the given edge \a e, and folding the other two edges of \a t
-         * together about their common vertex. This has no topological side
-         * effects as long as \a e is an edge of the type described above.
+         * together about their common vertex. This can be done if and only
+         * if \a e is an edge whose endpoints are distinct and not both
+         * boundary (i.e., an edge of the type described above).
          *
          * Depending on your situation, collapseEdge() may be a more
          * appropriate method for reducing the number of vertices without
@@ -1061,14 +1062,23 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * any pointers to old skeletal objects (such as the argument \a e)
          * can no longer be used.
          *
-         * \pre The given edge joins two distinct vertices of this
-         * triangulation, and at least one of these vertices is internal.
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal.
+         * \pre The given edge \a e is an edge of this triangulation.
          *
          * @param e the edge whose endpoints are to be snapped together.
+         * @param check \c true if we are to check whether the move is allowed
+         * (defaults to \c true).
+         * @param perform \c true if we are to perform the move (defaults to
+         * \c true).
+         * @return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold. If \a check is \c false, the function
+         * simply returns \c true.
          *
          * @author Alex He
          */
-        void snapEdge(Edge<4>* e);
+        bool snapEdge( Edge<4>* e, bool check = true, bool perform = true );
 
         /*@}*/
 
