@@ -1696,6 +1696,7 @@ Version 7.0  [ 19 December, 2021 ]
               by passing ALG_BACKTRACK.
             - Routine connectedSumWith() now adds fewer tetrahedra (thanks
               to Adele Jackson).
+            - New suite of zeroTwoMove() routines, thanks to Alex He.
             - Calling pinchEdge() on an oriented triangulation now preserves
               the orientation.
             - Changed maximalForestInSkeleton() to return by value
@@ -1720,6 +1721,7 @@ Version 7.0  [ 19 December, 2021 ]
             - Routine simplifyExhaustive() no longer runs in the background
               (even if a progress tracker is passed), and it now throws an
               exception if the triangulation has multiple components.
+            - New routines fourFourMove() and snapEdge(), thanks to Alex He.
         Class TrieSet:
             - This is no longer a template class (though its member
               functions are still templated on the bitmask type).
