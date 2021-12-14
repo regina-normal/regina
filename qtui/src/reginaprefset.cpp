@@ -156,18 +156,15 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
             }
         }
     } else {
-        if (handbook) {
+        // Fall back to the version of the handbook on the website.
+        if (! QDesktopServices::openUrl(QUrl(QString(
+                "https://regina-normal.github.io/" PACKAGE_VERSION
+                "/docs/%1/%2.html").arg(handbookName).arg(section)))) {
             ReginaSupport::warn(parentWidget,
-                QObject::tr("I could not find the requested handbook."),
+                QObject::tr("I could not find the requested documentation."),
                 QObject::tr("<qt>It should be installed at: "
-                "<tt>%1</tt><p>Please mail the authors for assistance.</qt>")
-                .arg(index.toHtmlEscaped()));
-        } else {
-            ReginaSupport::warn(parentWidget,
-                QObject::tr("I could not find the Regina handbook."),
-                QObject::tr("<qt>It should be installed at: "
-                "<tt>%1</tt><p>Please mail the authors for assistance.</qt>")
-                .arg(index.toHtmlEscaped()));
+                    "<tt>%1</tt><p>Please mail the authors for "
+                    "assistance.</qt>").arg(index.toHtmlEscaped()));
         }
     }
 }

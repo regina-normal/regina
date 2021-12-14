@@ -64,11 +64,16 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
     if (QFileInfo(index).exists()) {
         QDesktopServices::openUrl(QUrl::fromLocalFile(index));
     } else {
-        ReginaSupport::warn(topLevelWindow,
-            QObject::tr("I could not find the Python API reference."),
-            QObject::tr("<qt>It should be installed in: <tt>%1/</tt><p>"
-            "Please mail the authors for assistance.</qt>")
-            .arg(docDir.toHtmlEscaped()));
+        // Fall back to the version of the API docs on the website.
+        if (! QDesktopServices::openUrl(QUrl(
+                "https://regina-normal.github.io/" PACKAGE_VERSION
+                "/engine-docs/index.html"))) {
+            ReginaSupport::warn(topLevelWindow,
+                QObject::tr("I could not find the Python API reference."),
+                QObject::tr("<qt>It should be installed in: <tt>%1/</tt><p>"
+                "Please mail the authors for assistance.</qt>")
+                .arg(docDir.toHtmlEscaped()));
+        }
     }
 }
 
