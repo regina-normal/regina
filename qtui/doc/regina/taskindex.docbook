@@ -112,8 +112,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>(5&ndash;15)-manifold triangulation</primaryie>
-  <seeie>See: triangulation, (5&ndash;14)-manifold</seeie>
+  <primaryie>(5&ndash;15)-dimensional triangulation</primaryie>
+  <seeie>See: triangulation, (5&ndash;15)-dimensional</seeie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-A'><title>&mdash; A &mdash;</title>
@@ -1989,7 +1989,7 @@
 
  <indexentry>
   <primaryie><link linkend="packet-higherdim">triangulation,
-   (5&ndash;15)-manifold</link></primaryie>
+   (5&ndash;15)-dimensional</link></primaryie>
  </indexentry>
 
  <indexentry>

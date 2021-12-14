@@ -38,12 +38,33 @@
  <para>
   &regina; offers rich support for triangulations of dimensions 2, 3 and 4.
   However, it also offers more basic support for triangulations of
-  dimensions 5&nbsp;&le;&nbsp;<replaceable>d</replaceable>&nbsp;&le;&nbsp;15.
+  dimensions 5&nbsp;&le;&nbsp;<replaceable>d</replaceable>&nbsp;&le;&nbsp;8,
+  and if you make your own
+  <ulink url="https://regina-normal.github.io/buildtips.html#highdim">custom
+  build</ulink>,
+  dimensions 9&nbsp;&le;&nbsp;<replaceable>d</replaceable>&nbsp;&le;&nbsp;15.
   These higher-dimensional triangulations are not supported in the &gui;;
   instead you will
   need to use either <link linkend="python">&python; scripting</link>
   or <link linkend="compiling">&cpp; programming</link>.
  </para>
+ <warning><para>
+  If you have data files that contain triangulations of dimensions 9&ndash;15,
+  <emphasis>do not</emphasis> open and save them again using one of Regina's
+  ready-made packages.  These packages do not understand dimensions 9&ndash;15
+  at all, and so <emphasis>any triangulations in dimensions 9&mdash;15
+  will be lost</emphasis>.
+ </para><para>
+  The decision to drop dimensions 9&ndash;15 from the default builds was
+  for performance&mdash;they were causing significant overhead for Python in
+  particular.  If you need these higher dimensions, you can build
+  Regina yourself with the
+  <ulink
+  url="https://regina-normal.github.io/buildtips.html#highdim"><literal>HIGHDIM</literal>
+  flag</ulink>;
+  also please drop Ben an email so he knows that there is some demand for these
+  features.
+ </para></warning>
  <para>
   The remainder of this chapter talks through triangulations of
   dimensions 2, 3 and 4 only.

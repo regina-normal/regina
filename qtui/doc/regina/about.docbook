@@ -9,7 +9,9 @@
   and it now performs many high-level topological algorithms for 3-manifolds.
   &regina; also offers rich toolkits for knots and links and
   triangulated 4-manifolds, and offers more basic combinatorial support
-  for manifolds of dimension 5&ndash;15.
+  for manifolds of dimension 5&ndash;8 (and, if you make your own
+  <ulink url="https://regina-normal.github.io/buildtips.html#highdim">custom
+  build</ulink>, 9&ndash;15).
   For more on these and its many other features, see the
   <link linkend="featureset">full feature set</link>
   later in this introduction.

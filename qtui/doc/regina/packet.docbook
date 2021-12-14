@@ -231,13 +231,15 @@
    <title>Higher-Dimensional Triangulations</title>
    <para>
     &regina; currently offers very basic support for triangulations of
-    dimensions 5&ndash;15.  At present you cannot work with these
+    dimensions 5&ndash;8 (and, with your own
+    <ulink url="https://regina-normal.github.io/buildtips.html#highdim">custom
+    build</ulink>, 9&ndash;15).  At present you cannot work with these
     higher-dimensional triangulations in the &gui;&mdash;instead you will
     need to use either <link linkend="python">&python; scripting</link>
     or <link linkend="compiling">&cpp; programming</link>.
    </para>
    <para>
-    Triangulations of dimension 5&ndash;15 are marked by an icon similar
+    Triangulations of these higher dimensions are marked by an icon similar
     to the following, with the dimension marked inside the
     simplex-shaped outline:
     <inlinemediaobject>

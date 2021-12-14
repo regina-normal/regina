@@ -215,8 +215,10 @@
  <sect2 id="features-highdim">
   <title>Higher Dimensions</title>
   <para>
-   Beyond 4-manifolds, &regina; offers very basic support
-   support for triangulations of dimensions 5&ndash;15.
+   Beyond 4-manifolds, &regina; offers very basic support support for
+   triangulations of dimensions 5&ndash;8 (and, if you make your own
+   <ulink url="https://regina-normal.github.io/buildtips.html#highdim">custom
+   build</ulink>, 9&ndash;15).
    This support is <emphasis>not</emphasis> available through the &gui;:
    for this you will need to use either
    <link linkend="python">&python;</link> or
