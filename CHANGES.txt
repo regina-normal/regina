@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 7.0  [ 10 December, 2021 ]
+Version 7.0  [ 19 December, 2021 ]
 
     GENERAL:
         - The file format has changed.  It is still XML-based, but older
@@ -133,6 +133,8 @@ Version 7.0  [ 10 December, 2021 ]
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
             - Added comparison operators == and !=.
+            - Routine edgeGroupRoles() now returns a Perm<3>, not a Perm<4>
+              that always maps 3 to 3.
             - Deprecated clone().  Just use the copy constructor instead.
         Class BanConstraintBase, BanNone, BanBoundary, BanTorusBoundary:
             - All methods are now public, not protected.
@@ -166,6 +168,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old names are kept as deprecated aliases.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Changed BlockedSFS::isPluggedIBundle() to take no arguments,
               and instead return a std::optional<std::string>.
         Class BoolSet:
@@ -674,6 +677,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added comparison operators == and !=.
         Class Layering:
             - Added copy construction and copy assignment.
+            - Added comparison operators == and !=.
             - All access to the underlying triangulation is now const only.
         Class LensSpace:
             - Added member and global swap() functions.
@@ -1194,6 +1198,7 @@ Version 7.0  [ 10 December, 2021 ]
               returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class PluggedTorusBundle:
             - Routine isPluggedTorusBundle() is now called recognise(), takes
@@ -1202,6 +1207,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
         Class PlugTriSolidTorus:
             - Class constants are now constexpr.
             - Routine chain() now returns a std::optional by const reference,
@@ -1249,6 +1255,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class SafePtr, SafePointeeBase:
             - Removed completely.
         Class SatAnnulus:
+            - Added comparison operators == and !=.
             - Routines transform() and image() now takes their arguments by
               reference.
             - Routine isAdjacent() now returns a tuple, instead of using
@@ -1277,6 +1284,8 @@ Version 7.0  [ 10 December, 2021 ]
               as a deprecated alias.
             - Added comparison operators == and !=, which are customised for
               each subclass.
+            - Routine SatLST::roles() now returns a Perm<3>, not a Perm<4>
+              that always maps 3 to 3.
             - All access to the underlying triangulation is now const only.
         Class SatBlockModel:
             - New class to replace SatBlockStarter.
@@ -1321,6 +1330,7 @@ Version 7.0  [ 10 December, 2021 ]
               functions that construct regions will expand them automatically.
             - New routine blockAbbrs() that returns the output of
               writeBlockAbbrs() in string format.
+            - Added comparison operators == and !=.
             - All access to the underlying triangulation is now const only.
         Class Script:
             - Added a copy constructor and a copy assignment operator.
@@ -1451,6 +1461,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class SnappedTwoSphere:
             - Routine formsSnappedTwoSphere() is now called recognise(), and
@@ -1460,6 +1471,7 @@ Version 7.0  [ 10 December, 2021 ]
               now takes these balls by reference, not pointer.  Likewise,
               snappedBall() now returns by reference, not pointer.
             - Added copy construction and copy assignment.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class Snapshot, SnapshotRef, Snapshottable, SnapshotWriteError:
             - A new suite of classes for taking snapshots of a large
@@ -1684,6 +1696,8 @@ Version 7.0  [ 10 December, 2021 ]
               by passing ALG_BACKTRACK.
             - Routine connectedSumWith() now adds fewer tetrahedra (thanks
               to Adele Jackson).
+            - Calling pinchEdge() on an oriented triangulation now preserves
+              the orientation.
             - Changed maximalForestInSkeleton() to return by value
               instead of returning through a reference argument.
             - Changed maximalForestInBoundary() to return the edge set by
@@ -1719,6 +1733,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
             - Changed isAnnulusSelfIdentified() to return a std::optional,
               instead of returning the permutation via a pointer argument.

@@ -262,7 +262,7 @@ void Tri3HomologyFundUI::refresh() {
 
     if (tri->countComponents() <= 1) {
         fgMsg->hide();
-        fgGroup->refresh(tri->fundamentalGroup());
+        fgGroup->setGroup(tri->fundamentalGroup());
         fgGroup->show();
     } else {
         fgGroup->hide();
@@ -273,9 +273,7 @@ void Tri3HomologyFundUI::refresh() {
 }
 
 void Tri3HomologyFundUI::fundGroupSimplified() {
-    auto simp = fgGroup->takeSimplifiedGroup();
-    if (simp)
-        tri->simplifiedFundamentalGroup(std::move(*simp));
+    tri->simplifiedFundamentalGroup(fgGroup->group());
 }
 
 void Tri3HomologyFundUI::refreshLabels() {

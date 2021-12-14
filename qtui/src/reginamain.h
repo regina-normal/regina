@@ -329,6 +329,7 @@ class ReginaMain : public QMainWindow {
         void exportRecogniser();
         void exportRegina();
         void exportReginaUncompressed();
+        void exportReginaLegacy();
         void exportSnapPea();
 
         /**

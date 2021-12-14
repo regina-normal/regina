@@ -48,20 +48,19 @@ namespace regina {
 };
 
 /**
- * A triangulation page for viewing the fundamental group.
+ * A widget page for viewing and/or simplifying a group presentation.
  */
 class GroupWidget : public QWidget {
     Q_OBJECT
 
     private:
-        const regina::GroupPresentation* group_;
-        std::optional<regina::GroupPresentation> simplified_;
+        regina::GroupPresentation group_;
 
         QWidget* ui_;
-        QLabel* fundName_;
-        QLabel* fundGens_;
-        QLabel* fundRelCount_;
-        QListWidget* fundRels_;
+        QLabel* name_;
+        QLabel* gens_;
+        QLabel* relCount_;
+        QListWidget* rels_;
 
     public:
         /**
@@ -70,15 +69,19 @@ class GroupWidget : public QWidget {
         GroupWidget(bool allowSimplify, bool paddingStretch);
 
         /**
-         * Refresh the contents of the widget.
+         * Changes the group presentation currently being displayed.
          */
-        void refresh(const regina::GroupPresentation& group);
+        void setGroup(const regina::GroupPresentation& group);
+        void setGroup(regina::GroupPresentation&& group);
 
         /**
-         * The following routine moves data out of simplified_, and
-         * resets simplified_ to no value.
+         * Returns the group presentation currently being displayed.
+         *
+         * This may be useful for external listeners to collect the
+         * group after it has been simplified (i.e., when the simplified()
+         * signal is emitted).
          */
-        std::optional<regina::GroupPresentation> takeSimplifiedGroup();
+        const regina::GroupPresentation& group() const;
 
     signals:
         /**
@@ -108,13 +111,25 @@ class GroupWidget : public QWidget {
          * if the GAP executable does not appear to be valid.
          */
         QString verifyGAPExec();
+
+        /**
+         * Updates the display to reflect the current contents of \a group_.
+         */
+        void refresh();
 };
 
-inline std::optional<regina::GroupPresentation>
-        GroupWidget::takeSimplifiedGroup() {
-    std::optional<regina::GroupPresentation> ans; // no value
-    ans.swap(simplified_);
-    return ans;
+inline void GroupWidget::setGroup(const regina::GroupPresentation& group) {
+    group_ = group;
+    refresh();
+}
+
+inline void GroupWidget::setGroup(regina::GroupPresentation&& group) {
+    group_ = std::move(group);
+    refresh();
+}
+
+inline const regina::GroupPresentation& GroupWidget::group() const {
+    return group_;
 }
 
 #endif

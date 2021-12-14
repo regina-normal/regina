@@ -113,7 +113,7 @@ class AugTriSolidTorus : public StandardTriangulation {
                  triangle, the corresponding value will be std::nullopt.
                  Note that <tt>augTorus[i]</tt> will be attached to
                  annulus \c i of the triangular solid torus. */
-        Perm<4> edgeGroupRoles_[3];
+        Perm<3> edgeGroupRoles_[3];
             /**< Permutation <tt>edgeGroupRoles[i]</tt> describes the role
                  played by each top level edge group of layered solid torus
                  <tt>i</tt>.  For permutation <tt>p</tt>, group <tt>p[0]</tt>
@@ -189,7 +189,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * If the permutation returned is <tt>p</tt>, edge group <tt>p[0]</tt>
          * will be glued to an axis edge, group <tt>p[1]</tt> will be
          * glued to a major edge and group <tt>p[2]</tt> will be glued
-         * to a minor edge.  <tt>p[3]</tt> will always be 3.
+         * to a minor edge.
          *
          * Even if the corresponding layered solid torus is a degenerate
          * (2,1,1) mobius band (i.e., augTorus() returns \c null),
@@ -202,7 +202,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * @return a permutation describing the roles of the
          * corresponding top level edge groups.
          */
-        Perm<4> edgeGroupRoles(int annulus) const;
+        Perm<3> edgeGroupRoles(int annulus) const;
 
         /**
          * Returns the number of tetrahedra in the layered chain linking
@@ -401,7 +401,7 @@ inline const std::optional<LayeredSolidTorus>& AugTriSolidTorus::augTorus(
         int annulus) const {
     return augTorus_[annulus];
 }
-inline Perm<4> AugTriSolidTorus::edgeGroupRoles(int annulus) const {
+inline Perm<3> AugTriSolidTorus::edgeGroupRoles(int annulus) const {
     return edgeGroupRoles_[annulus];
 }
 inline unsigned long AugTriSolidTorus::chainLength() const {

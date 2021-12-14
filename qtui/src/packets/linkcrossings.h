@@ -154,11 +154,12 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         static QString explnText;
 
         /**
-         * Gluing actions
+         * Link actions
          */
         QAction* actReflect;
         QAction* actSimplify;
         QAction* actComplement;
+        QAction* actSnapPea;
         std::vector<QAction*> actionList;
 
     public:
@@ -197,7 +198,9 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         void reverse();
         void moves();
         void complement();
+        void snapPea();
         void parallel();
+        void selfFrame();
         void composeWith();
 
         /**

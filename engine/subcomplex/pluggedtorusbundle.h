@@ -42,13 +42,12 @@
 
 #include "regina-core.h"
 #include "maths/matrix2.h"
+#include "subcomplex/layering.h"
 #include "subcomplex/satregion.h"
 #include "subcomplex/standardtri.h"
+#include "subcomplex/txicore.h"
 
 namespace regina {
-
-class SatRegion;
-class TxICore;
 
 /**
  * Describes a triangulation of a graph manifold formed by joining a
@@ -132,8 +131,17 @@ class PluggedTorusBundle : public StandardTriangulation {
                  triangulation.  This is required since the thin I-bundle
                  \a bundle_ is external, and does not refer directly to this
                  triangulation. */
+        Layering layer_[2];
+            /**< The layerings applied to the upper and lower boundaries of the
+                 thin I-bundle (at indices 0 and 1 respectively). */
         SatRegion region_;
             /**< The saturated region that appears within this triangulation. */
+        int upperConnection_;
+            /**< One of the values 0, 1 or 2, indicating the rotation used to
+                 connect the layering on the upper boundary of the thin
+                 I-bundle to the first boundary annulus of the saturated region.
+                 See the \a regionPos variable in the implementation of hunt()
+                 for details. */
 
         Matrix2 matchingReln_;
             /**< Describes how the two torus boundaries of the saturated
@@ -232,6 +240,66 @@ class PluggedTorusBundle : public StandardTriangulation {
          */
         const Matrix2& matchingReln() const;
 
+        /**
+         * Determines whether this and the given structure represent
+         * the same type of plugged torus bundle.
+         *
+         * Specifically, two structures will compare as equal if and only if:
+         *
+         * - both structures use the same type of thin I-bundle with the
+         *   same parameters (as tested by the TxICore comparison operators);
+         *
+         * - both structures use saturated regions with the same combinatorial
+         *   presentation (as tested by the SatRegion comparison operators);
+         *
+         * - the layerings that connect the thin I-bundle and saturated region
+         *   in each structure are the same (as tested by the Layering
+         *   comparison operators), and use the same attaching matrices.
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass is more specific than combinatorial isomorphism, since
+         * this test does not account for the many possible symmetries in a
+         * plugged torus bundle).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent the same type of plugged torus bundle.
+         */
+        bool operator == (const PluggedTorusBundle& other) const;
+
+        /**
+         * Determines whether this and the given structure do not represent
+         * the same type of plugged torus bundle.
+         *
+         * Specifically, two structures will compare as equal if and only if:
+         *
+         * - both structures use the same type of thin I-bundle with the
+         *   same parameters (as tested by the TxICore comparison operators);
+         *
+         * - both structures use saturated regions with the same combinatorial
+         *   presentation (as tested by the SatRegion comparison operators);
+         *
+         * - the layerings that connect the thin I-bundle and saturated region
+         *   in each structure are the same (as tested by the Layering
+         *   comparison operators), and use the same attaching matrices.
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass is more specific than combinatorial isomorphism, since
+         * this test does not account for the many possible symmetries in a
+         * plugged torus bundle).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * do not represent the same type of plugged torus bundle.
+         */
+        bool operator != (const PluggedTorusBundle& other) const;
+
         std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
@@ -281,14 +349,23 @@ class PluggedTorusBundle : public StandardTriangulation {
          * within the triangulation described by the new object.
          * @param bundleIso the corresponding isomorphism from the given
          * thin I-bundle to the triangulation described by the new object.
+         * @param layerUpper the layering applied to the upper boundary
+         * of the thin I-bundle.
+         * @param layerLower the layering applied to the lower boundary
+         * of the thin I-bundle.
          * @param region the saturated region used within the new object.
-         * @param matchingReln the matching relation describing how the
+         * @param upperConnection 0, 1 or 2, indicating the rotation used to
+         * connect the layering on the upper boundary of the thin I-bundle to
+         * the first boundary annulus of the saturated region.  See the
+         * \a regionPos variable in the implementation of hunt() for details.
+         * @param matchingReln the full matching relation describing how the
          * two saturated region boundaries are joined by the thin
          * I-bundle and layerings, as described in the class notes above.
          */
         PluggedTorusBundle(const TxICore& bundle,
-            const Isomorphism<3>& bundleIso, SatRegion&& region,
-            const Matrix2& matchingReln);
+            const Isomorphism<3>& bundleIso,
+            Layering&& layerUpper, Layering&& layerLower, SatRegion&& region,
+            int upperConnection, const Matrix2& matchingReln);
 
         /**
          * Determines whether the given triangulation is of the form
@@ -333,17 +410,23 @@ void swap(PluggedTorusBundle& a, PluggedTorusBundle& b) noexcept;
 // Inline functions for PluggedTorusBundle
 
 inline PluggedTorusBundle::PluggedTorusBundle(const TxICore& bundle,
-        const Isomorphism<3>& bundleIso, SatRegion&& region,
-        const Matrix2& matchingReln) :
-        bundle_(&bundle), bundleIso_(bundleIso), region_(std::move(region)),
+        const Isomorphism<3>& bundleIso,
+        Layering&& layerUpper, Layering&& layerLower, SatRegion&& region,
+        int upperConnection, const Matrix2& matchingReln) :
+        bundle_(&bundle), bundleIso_(bundleIso),
+        layer_{ std::move(layerUpper), std::move(layerLower) },
+        region_(std::move(region)), upperConnection_(upperConnection),
         matchingReln_(matchingReln) {
 }
 
 inline void PluggedTorusBundle::swap(PluggedTorusBundle& other) noexcept {
     std::swap(bundle_, other.bundle_);
-    std::swap(bundleIso_, other.bundleIso_);
-    std::swap(region_, other.region_);
-    std::swap(matchingReln_, other.matchingReln_);
+    bundleIso_.swap(other.bundleIso_);
+    std::swap(layer_[0], other.layer_[0]);
+    std::swap(layer_[1], other.layer_[1]);
+    region_.swap(other.region_);
+    std::swap(upperConnection_, other.upperConnection_);
+    matchingReln_.swap(other.matchingReln_);
 }
 
 inline const TxICore& PluggedTorusBundle::bundle() const {
@@ -360,6 +443,30 @@ inline const SatRegion& PluggedTorusBundle::region() const {
 
 inline const Matrix2& PluggedTorusBundle::matchingReln() const {
     return matchingReln_;
+}
+
+inline bool PluggedTorusBundle::operator == (const PluggedTorusBundle& other)
+        const {
+    if ((*bundle_) != (*other.bundle_))
+        return false;
+    if (layer_[0] != other.layer_[0] || layer_[1] != other.layer_[1])
+        return false;
+    if (upperConnection_ != other.upperConnection_)
+        return false;
+    // Comparing the matching relations is equivalent to comparing the
+    // connections between the lower layering and the saturated region,
+    // since we are separately confirming that all other components of the
+    // matching are equivalent.
+    if (matchingReln_ != other.matchingReln_)
+        return false;
+    if (region_ != other.region_)
+        return false;
+    return true;
+}
+
+inline bool PluggedTorusBundle::operator != (const PluggedTorusBundle& other)
+        const {
+    return ! ((*this) == other);
 }
 
 inline std::unique_ptr<PluggedTorusBundle>

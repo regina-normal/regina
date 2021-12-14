@@ -61,7 +61,8 @@ class SnapPeaTriangulationCreator : public PacketCreator {
         /**
          * Details for specific triangulation types
          */
-        PacketChooser* convertFrom;
+        PacketChooser* convertFromRegina;
+        PacketChooser* convertFromLink;
         QTextEdit* fileContents;
         QComboBox* exampleWhich;
 
