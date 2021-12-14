@@ -41,6 +41,7 @@
   <!ENTITY menuapidocs "Help-&gt;&python; &api; Reference">
   <!ENTITY menuhandbook "Help-&gt;Regina Handbook">
   <!ENTITY menuimportsigs "File-&gt;Import-&gt;Isomorphism Signature List">
+  <!ENTITY ndash "-">
   <!ENTITY plink "<application>PLink</application>">
   <!ENTITY poincare "Poincare">
   <!ENTITY python "Python">

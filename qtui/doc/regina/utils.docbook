@@ -526,8 +526,6 @@
      </glossentry>
     </glosslist>
    </para>
-   <note><para>
-   </para></note>
    <para>
     The argument <replaceable>old-file</replaceable> should be the file to
     read and convert; the argument <replaceable>new-file</replaceable> should
@@ -838,6 +836,7 @@
      <arg><option>-k, --knot</option></arg>
     </group>
     <arg><option>-a, --anysig</option></arg>
+    <arg><option>--</option></arg>
     <arg choice="req"><replaceable>signature</replaceable></arg>
    </cmdsynopsis>
    <cmdsynopsis>
@@ -921,6 +920,20 @@
     orientable 3-manifold triangulations</emphasis>, Burton, 2011,
     arXiv:1110.6080.
    </para>
+   <tip>
+    <para>
+     Very large triangulations or knots have signatures that begin with a dash
+     (<literal>-</literal>).  Such a signature could be mistaken for an option
+     when passing it on the command line.  To avoid this, you can pass the
+     special option <option>--</option> immediately before it: this indicates
+     that all command-line options have finished, and whatever comes next should
+     be treated as the input signature.
+    </para>
+<screen>
+    <prompt>example$</prompt> <userinput>retriangulate -h1 -- -b-LLvALwvM...</userinput>
+</screen>
+   <!-- full sig is -b-LLvALwvMvzwvwvvzQvLPPQAQQQQAvLvMwzPQLQPQQQcehhkkppuurAwBADIzLBKQACQIJHFGGHHSRKRSQVXSW1X53756484294+598+79+aaaaaaaaaaafovfgtfubuqfbhaanjrkrscrcjvnaasgfollaliahabueelggnobs -->
+   </tip>
   </refsect1>
 
   <refsect1>
@@ -1070,6 +1083,19 @@
        classic signatures, though again this is subject to change in
        future version of &regina;.
       </para></note>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--</option></term>
+     <listitem>
+      <para>
+       Indicates that all other options have finished, and whatever comes
+       next on the command line should be treated as the input signature.
+      </para>
+      <para>
+       This is useful when your signature begins with a dash, to avoid
+       confusing your input signature with a regular command line option.
+      </para>
      </listitem>
     </varlistentry>
    </variablelist>
