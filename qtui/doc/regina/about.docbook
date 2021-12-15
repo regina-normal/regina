@@ -78,7 +78,7 @@
    brief summary below so you understand the most important changes.
   </para>
 
-  <sect2>
+  <sect2 id="regina7-fileformat">
    <title>A new, more flexible file format</title>
 
    <para>
@@ -111,7 +111,7 @@
    </para>
   </sect2>
 
-  <sect2>
+  <sect2 id="regina7-highdim">
    <title>Dimensions 9&ndash;15 removed by default</title>
 
    <para>
@@ -136,7 +136,7 @@
    </para>
   </sect2>
 
-  <sect2>
+  <sect2 id="regina7-python">
    <title>&python; is a first-class citizen</title>
 
    <para>
@@ -216,7 +216,7 @@ True
 7 embedded, vertex surfaces (Standard normal (tri-quad))</programlisting>
   </sect2>
 
-  <sect2>
+  <sect2 id="regina7-cpp">
    <title>&cpp; embraces modern standards and value semantics</title>
 
    <para>
@@ -320,7 +320,7 @@ True
    </para>
   </sect2>
 
-  <sect2>
+  <sect2 id="regina7-tons">
    <title>TONS removed temporarily</title>
 
    <para>

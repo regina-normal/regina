@@ -16,7 +16,7 @@
  <para>
   <inlinemediaobject>
    <imageobject>
-    <imagedata fileref="menu-options.png"/>
+    <imagedata multires="menu-options"/>
    </imageobject>
   </inlinemediaobject>
  </para>
@@ -35,7 +35,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="options-general.png"/>
+     <imagedata multires="options-general"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -137,7 +137,7 @@
      <para>
       <inlinemediaobject>
        <imageobject>
-        <imagedata fileref="helplink.png"/>
+        <imagedata multires="helplink"/>
        </imageobject>
       </inlinemediaobject>
      </para>
@@ -164,7 +164,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="options-python.png"/>
+     <imagedata multires="options-python"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -201,7 +201,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="options-tools.png"/>
+     <imagedata multires="options-tools"/>
     </imageobject>
    </inlinemediaobject>
   </para>

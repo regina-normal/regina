@@ -278,7 +278,8 @@
       You will also need
       <ulink url="http://regina-normal.github.io/source.html#sysreq"><application>CppUnit</application> installed</ulink>.
       Otherwise the test suite will run but only with the simpler &python;
-      tests, not the rich and detailed &cpp; calculation engine tests.
+      and command-line utilities tests, not the rich and detailed &cpp;
+      calculation engine tests.
      </para>
      <para>
       To run the test suite, move into your main build
@@ -291,26 +292,35 @@ Running tests...
 ...
 ... (some initial output)
 ...
-1: ---------------------------------------
-1: Test suite for Regina's python bindings
-1: ---------------------------------------
-1: 
-1: Running euler.test ... ok
-1: Running file.test ... ok
+1: ----------------------------------------------
+1: Test suite for Regina's command-line utilities
+1: ----------------------------------------------
+1:
+1: Running censuslookup.test ... ok
+1: Running regconcat.test (with filter) ... ok
 ...
 ... (more output)
 ...
-2: Regina calculation engine test suite
-2: 
-2: BitmaskTest::sizes... ok.
-2: BitmaskTest::firstLastBit... ok.
-2: BitmaskTest::truncate... ok.
+2: ---------------------------------------
+2: Test suite for Regina's python bindings
+2: ---------------------------------------
+2:
+2: Running alltypes.test ... ok
+2: Running angles.test ... ok
+...
+... (even more output)
+...
+3: Regina calculation engine test suite
+3:
+3: AbelianGroupTest::incrementalBuild... ok.
+3: AngleStructuresTest::empty... ok.
+3: AngleStructuresTest::oneTet... ok.
 ...
 ... (lots and lots of output)
 ...
-100% tests passed, 0 tests failed out of 2
+100% tests passed, 0 tests failed out of 3
 
-Total Test time (real) =  19.48 sec
+Total Test time (real) =  171.41 sec
 <prompt>example:~/source/regina/build&gt;</prompt>
 </screen>
      <para>

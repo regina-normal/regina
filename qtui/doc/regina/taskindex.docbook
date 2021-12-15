@@ -112,8 +112,13 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>(5&ndash;15)-dimensional triangulation</primaryie>
-  <seeie>See: triangulation, (5&ndash;15)-dimensional</seeie>
+  <primaryie>(5&ndash;8)-dimensional triangulations</primaryie>
+  <seeie>See: triangulation, (5&ndash;8)-dimensional</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>(9&ndash;15)-dimensional triangulations, removed</primaryie>
+  <seeie>See: triangulation, (9&ndash;15)-dimensional, removed</seeie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-A'><title>&mdash; A &mdash;</title>
@@ -541,6 +546,16 @@
   <primaryie>diagram graphs, for links</primaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decomposition of</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>dimensions 5&ndash;8</primaryie>
+  <seeie>See: triangulation, (5&ndash;8)-dimensional</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>dimensions 9&ndash;15, removed</primaryie>
+  <seeie>See: triangulation, (9&ndash;15)-dimensional, removed</seeie>
  </indexentry>
 
  <indexentry>
@@ -1248,6 +1263,8 @@
    (hyper)surfaces in a list</link></secondaryie>
   <secondaryie><link linkend="surfaces-proptype">splitting surfaces,
    recognising</link></secondaryie>
+  <secondaryie><link linkend="regina7-tons">transversely oriented
+   normal surfaces, removed</link></secondaryie>
   <secondaryie><link linkend="hypersurfaces-triangulate">triangulating a
    hypersurface</link></secondaryie>
   <secondaryie><link linkend="surfaces-proplink">vertex links,
@@ -1681,6 +1698,10 @@
    calculation engine</link></secondaryie>
   <secondaryie><link linkend="export-cpp">exporting triangulations to
    &cpp;</link></secondaryie>
+  <secondaryie><link linkend="regina7-cpp">major &cpp; changes in
+   &regina;&nbsp;7.0</link></secondaryie>
+  <secondaryie><link linkend="regina7-python">major &python; changes in
+   &regina;&nbsp;7.0</link></secondaryie>
   <secondaryie><link linkend="python">&python;
    scripting</link></secondaryie>
  </indexentry>
@@ -1828,6 +1849,11 @@
  <indexentry>
   <primaryie><link linkend="link-new-torus">torus knots and links,
    creating</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="regina7-tons">transversely oriented
+   normal surfaces, removed</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1982,7 +2008,12 @@
 
  <indexentry>
   <primaryie><link linkend="packet-higherdim">triangulation,
-   (5&ndash;15)-dimensional</link></primaryie>
+   (5&ndash;8)-dimensional</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="regina7-highdim">triangulation,
+   (9&ndash;15)-dimensional, removed</link></primaryie>
  </indexentry>
 
  <indexentry>
