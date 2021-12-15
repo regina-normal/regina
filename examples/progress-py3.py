@@ -8,6 +8,7 @@
 #
 ################################
 
+import threading
 import time
 
 # Create an 18-tetrahedron triangulation of a knot complement with real
@@ -17,27 +18,31 @@ import time
 # triangulation here.
 sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
 tri = Triangulation3(sig)
-print(tri.size(), 'tetrahedra')
+print(tri)
 
 # Create a progress tracker to use during the normal surface enumeration.
 # This will report the state of progress while the enumeration runs in
 # the background.
 tracker = ProgressTracker()
 
-# Start the normal surface enumeration.
-# Because we are passing a progress tracker to enumerate(), the
-# enumeration will start in the background and control will return
-# immediately to the python console.
-surfaces = NormalSurfaces.enumerate(tri, NS_STANDARD, NS_VERTEX,
-    NS_ALG_DEFAULT, tracker)
+# Start the normal surface enumeration in a new thread.
+surfaces = None
+def run():
+    global surfaces, tracker
+    surfaces = NormalSurfaces(tri, NS_STANDARD, NS_VERTEX,
+        NS_ALG_DEFAULT, tracker)
+
+thread = threading.Thread(target = run)
+thread.start()
 
 # At this point the enumeration is up and running.
-# Output a progress report every half-second until it finishes.
+# Output a progress report every quarter-second until it finishes.
 while not tracker.isFinished():
     print('Progress:', tracker.percent(), '%')
-    time.sleep(0.5)
+    time.sleep(0.25)
 
 
 # The surface enumeration is now complete.
-print(surfaces.size(), 'normal surfaces')
+thread.join()
+print(surfaces)
 

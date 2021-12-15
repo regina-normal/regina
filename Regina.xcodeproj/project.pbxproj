@@ -3946,6 +3946,9 @@
 		059AF9891C53BE4000FB1A14 /* facename.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facename.h; sourceTree = "<group>"; };
 		059BC6671DC7F77F00AB4206 /* boundarycomponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundarycomponent.h; sourceTree = "<group>"; };
 		059BC6691DC7F79600AB4206 /* boundarycomponent-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "boundarycomponent-bindings.h"; sourceTree = "<group>"; };
+		059BEC0B276AAEA7006DC425 /* triangulation.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = triangulation.session; sourceTree = "<group>"; };
+		059BEC0C276AAEA7006DC425 /* tree.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = tree.session; sourceTree = "<group>"; };
+		059BEC0D276AAEA7006DC425 /* progress.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = progress.session; sourceTree = "<group>"; };
 		059D017925B6A715004150F7 /* shell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shell.cpp; sourceTree = "<group>"; };
 		059D01A325B6A72C004150F7 /* Timing */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Timing; sourceTree = BUILT_PRODUCTS_DIR; };
 		059D01F625B6AA94004150F7 /* Timing.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Timing.entitlements; path = Timing/Timing.entitlements; sourceTree = "<group>"; };
@@ -4122,15 +4125,9 @@
 		05B4D2E422A02B0A00B7B11C /* sample-py3.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-py3.rga"; sourceTree = "<group>"; };
 		05B4D2F022A095D900B7B11C /* triangulation-py3.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "triangulation-py3.py"; sourceTree = "<group>"; };
 		05B4D2F122A095DA00B7B11C /* progress-py3.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "progress-py3.py"; sourceTree = "<group>"; };
-		05B4D2F222A095DB00B7B11C /* tree-py2.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = "tree-py2.session"; sourceTree = "<group>"; };
-		05B4D2F322A095DB00B7B11C /* tree-py3.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = "tree-py3.session"; sourceTree = "<group>"; };
-		05B4D2F422A095DC00B7B11C /* triangulation-py2.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = "triangulation-py2.session"; sourceTree = "<group>"; };
 		05B4D2F522A095DC00B7B11C /* triangulation-py2.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "triangulation-py2.py"; sourceTree = "<group>"; };
 		05B4D2F622A095DD00B7B11C /* tree-py3.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "tree-py3.py"; sourceTree = "<group>"; };
 		05B4D2F722A095DD00B7B11C /* tree-py2.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "tree-py2.py"; sourceTree = "<group>"; };
-		05B4D2F822A095DE00B7B11C /* progress-py2.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = "progress-py2.session"; sourceTree = "<group>"; };
-		05B4D2F922A095DF00B7B11C /* progress-py3.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = "progress-py3.session"; sourceTree = "<group>"; };
-		05B4D2FA22A095E000B7B11C /* triangulation-py3.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = "triangulation-py3.session"; sourceTree = "<group>"; };
 		05B4D2FB22A095E000B7B11C /* sample-py2.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-py2.rga"; sourceTree = "<group>"; };
 		05B4D2FC22A095E100B7B11C /* sample-py3.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-py3.rga"; sourceTree = "<group>"; };
 		05B4D2FD22A095E100B7B11C /* progress-py2.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "progress-py2.py"; sourceTree = "<group>"; };
@@ -7363,19 +7360,16 @@
 				050EA57925A2BDBC000E94F5 /* knot-census.rga */,
 				05B4D2FD22A095E100B7B11C /* progress-py2.py */,
 				05B4D2F122A095DA00B7B11C /* progress-py3.py */,
-				05B4D2F822A095DE00B7B11C /* progress-py2.session */,
-				05B4D2F922A095DF00B7B11C /* progress-py3.session */,
+				059BEC0D276AAEA7006DC425 /* progress.session */,
 				05A47FA01809CB7600F86BFD /* README.txt */,
 				05B4D2FB22A095E000B7B11C /* sample-py2.rga */,
 				05B4D2FC22A095E100B7B11C /* sample-py3.rga */,
 				05B4D2F722A095DD00B7B11C /* tree-py2.py */,
 				05B4D2F622A095DD00B7B11C /* tree-py3.py */,
-				05B4D2F222A095DB00B7B11C /* tree-py2.session */,
-				05B4D2F322A095DB00B7B11C /* tree-py3.session */,
+				059BEC0C276AAEA7006DC425 /* tree.session */,
 				05B4D2F522A095DC00B7B11C /* triangulation-py2.py */,
 				05B4D2F022A095D900B7B11C /* triangulation-py3.py */,
-				05B4D2F422A095DC00B7B11C /* triangulation-py2.session */,
-				05B4D2FA22A095E000B7B11C /* triangulation-py3.session */,
+				059BEC0B276AAEA7006DC425 /* triangulation.session */,
 				05998ECA19F9360200855238 /* ios */,
 			);
 			path = examples;

@@ -9,6 +9,9 @@ SET(examples_files
   cusped-hyp-or-census.rga
   cusped-hyp-nor-census.rga
   knot-census.rga
+  progress.session
+  tree.session
+  triangulation.session
   )
 INSTALL(FILES ${examples_files} DESTINATION "${examplesdir}")
 
@@ -17,11 +20,8 @@ INSTALL(FILES ${examples_files} DESTINATION "${examplesdir}")
 SET(py23_files
   sample-pyX.rga
   progress-pyX.py
-  progress-pyX.session
   tree-pyX.py
-  tree-pyX.session
   triangulation-pyX.py
-  triangulation-pyX.session
   )
 
 IF (Python_FOUND)

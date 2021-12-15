@@ -440,7 +440,7 @@ Cusps:
 
 &gt;&gt;&gt; print t.hasStrictAngleStructure()
 True
-&gt;&gt;&gt; print AngleStructures.enumerate(t).detail()
+&gt;&gt;&gt; print AngleStructures(t).detail()
 4 vertex angle structures (no restrictions):
 0 1 0 ; 1 0 0
 0 0 1 ; 1 0 0
