@@ -152,6 +152,14 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>attachments</primaryie>
+  <secondaryie><link linkend="packet-attachment">attachment
+   packets</link></secondaryie>
+  <secondaryie><link linkend="export-pdf">exporting</link></secondaryie>
+  <secondaryie><link linkend="import-pdf">importing</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="options-python">auto-indent</link></primaryie>
  </indexentry>
 
@@ -400,8 +408,6 @@
   <primaryie>configuration</primaryie>
   <secondaryie><link linkend="options-tools">&gaplong;</link></secondaryie>
   <secondaryie><link linkend="options-general">general</link></secondaryie>
-  <secondaryie><link linkend="options-tools">&pdf;
-   viewing</link></secondaryie>
   <secondaryie><link linkend="options-python">&python;
    scripting</link></secondaryie>
   <secondaryie><link linkend="options-tools">&snappea;
@@ -1357,12 +1363,7 @@
 
  <indexentry>
   <primaryie>&pdf; documents</primaryie>
-  <secondaryie><link linkend="export-pdf">exporting</link></secondaryie>
-  <secondaryie><link linkend="import-pdf">importing</link></secondaryie>
-  <secondaryie><link linkend="packet-pdf">&pdf;
-   packets</link></secondaryie>
-  <secondaryie><link linkend="options-tools">&pdf; viewer
-   configuration</link></secondaryie>
+  <seeie>See: attachments</seeie>
  </indexentry>
 
  <indexentry>

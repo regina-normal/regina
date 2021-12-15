@@ -289,7 +289,7 @@
 
    <para>
     You can import a &pdf; document, which will appear in your data file
-    as a <link linkend="packet-pdf">&pdf; packet</link>.
+    as an <link linkend="packet-attachment">attachment packet</link>.
     This you to document your work with formulae, diagrams and
     anything else that can appear on the printed page.
    </para>

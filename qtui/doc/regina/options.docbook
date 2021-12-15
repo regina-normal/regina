@@ -234,44 +234,6 @@
     </glossdef>
    </glossentry>
    <glossentry>
-    <glossterm><guilabel>Use default &pdf; viewer</guilabel></glossterm>
-    <glossdef>
-     <para>
-      If checked, &regina; will open
-      <link linkend="packet-pdf">&pdf; packets</link> using the default
-      &pdf; viewer on your computer (for instance, this might be
-      &evince; under &gnome;, or &previewapp; under &macosx;).
-      If unchecked, &regina; will use the custom &pdf; viewer specified in
-      the text box below.
-     </para>
-    </glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Custom &pdf; viewer</guilabel></glossterm>
-    <glossdef>
-     <para>
-      If you have unchecked <guilabel>Use default &pdf; viewer</guilabel>
-      (as described above),
-      here you can specify the command to start your preferred &pdf; viewer
-      (such as <literal>xpdf</literal>
-      under &linux;, or <literal>open</literal> under &macosx;).
-      &regina; will look for this command on the default search path.
-      If your viewer is installed somewhere unusual then you will need to
-      provide the full path to the executable
-      (such as <literal>/usr/local/bin/xpdf</literal>).
-     </para>
-     <para>
-      You may include additional command-line arguments here
-      (so, for instance, &macosx; users might enter
-      <literal>/usr/bin/open&nbsp;-a&nbsp;Preview</literal>).
-      &regina; will automatically add the location of the &pdf; document
-      to the end of
-      this command, and the entire command will be passed to a shell for
-      execution.
-     </para>
-    </glossdef>
-   </glossentry>
-   <glossentry>
     <glossterm><guilabel>&gap; executable</guilabel></glossterm>
     <glossdef>
      <para>

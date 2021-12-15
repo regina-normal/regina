@@ -381,6 +381,7 @@
  <sect1 id="surfaces-analysis">
   <title>Analysis</title>
 
+  <!--TODO: Talk about the triangulation-->
   <para>
    Once you have <link linkend="surfaces-creation">built
    a list of surfaces or hypersurfaces</link>, you can study them
