@@ -70,6 +70,8 @@
   <!ENTITY c "<application>C</application>">
   <!ENTITY ccpp "&c;/&cpp;">
   <!ENTITY cpp "<application>C++</application>">
+  <!ENTITY cpp11 "<application>C++11</application>">
+  <!ENTITY cpp17 "<application>C++17</application>">
   <!ENTITY csv "<acronym>CSV</acronym>">
   <!ENTITY cython "<application>Cython</application>">
   <!ENTITY debian "<application>Debian</application>">

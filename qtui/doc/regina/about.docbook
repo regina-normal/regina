@@ -60,6 +60,289 @@
 
  &reginafeatureset;
 
+ <sect1 id="regina7">
+  <title>Important Changes in &regina;&nbsp;7.0</title>
+
+  <para>
+   &regina;&nbsp;7.0 brings an enormous overhaul across the entire
+   codebase&mdash;possibly the largest overhaul in almost two decades.
+   There has been signficant work to insulate users from these changes:
+   the bulk of these changes should only be visible to &cpp; programmers, but
+   there are important behavioural changes that will affect everybody.
+  </para>
+  <para>
+   <emphasis>Some of these changes break backward compatibility.</emphasis>
+  </para>
+  <para>
+   If you are migrating from &regina;&nbsp;&le;&nbsp;6.0.1, you should read the
+   brief summary below so you understand the most important changes.
+  </para>
+
+  <sect2>
+   <title>A new, more flexible file format</title>
+
+   <para>
+    &regina;'s data file format has changed.  &regina;&nbsp;7.0 can read
+    your old data files, but &regina;&nbsp;6.0.1 and earlier will not be
+    able to read files from newer versions of &regina;.
+   </para>
+   <para>
+    If you need to export a file so that &regina;&nbsp;&le;&nbsp;6.0.1
+    can read it, you use the command-line
+    <link linkend="man-regconvert"><command>regconvert</command></link>
+    utility, or the
+    <link linkend="export-rga"><menuchoice>
+     <guimenu>File</guimenu><guisubmenu>Export</guisubmenu>
+    </menuchoice></link>
+    menu in the user interface.
+   </para>
+   <para>
+    A major advantage of the new file format is that different packets
+    no longer depend on each other.  In particular, if you create a
+    normal surface, hypersurface or angle structure list from a
+    triangulation, you can later change the triangulation, or move it to
+    a separate location in the tree, or even delete it.
+    The list will make its own copy of the original triangulation if
+    this becomes necessary (which you can
+    <link linkend="surfaces-analysis">access through the header</link>
+    of the normal surface, hypersurface or angle structure viewer).
+    Likewise, the list will bundle this copy of the original triangulation
+    into the data file if necessary.
+   </para>
+  </sect2>
+
+  <sect2>
+   <title>Dimensions 9&ndash;15 removed by default</title>
+
+   <para>
+    For several years, &regina; has supported triangulations of
+    dimensions 2&ndash;15.  However, these higher dimensions add
+    significant overhead (even if you are not using them), particularly
+    for &python; users.
+   </para>
+   <para>
+    For this reason, &regina;&nbsp;7.0 now only includes dimensions
+    2&ndash;8 by default.  In particular, if you open a data file
+    containing triangulations of dimension 9&ndash;15 and then save the
+    file again, <emphasis>these triangulations will be lost</emphasis>.
+   </para>
+   <para>
+    If you need to work with dimensions 9&ndash;15, you can make your own
+    <ulink url="https://regina-normal.github.io/buildtips.html#highdim">custom
+    build</ulink> of &regina;; be sure to pass the option
+    <literal>-DHIGHDIM=1</literal> to <command>cmake</command>.
+    Also perhaps drop Ben an email so he knows that there are users who
+    want these features.
+   </para>
+  </sect2>
+
+  <sect2>
+   <title>&python; is a first-class citizen</title>
+
+   <para>
+    For the first time, &python; users now have access to essentially
+    <emphasis>everything</emphasis> inside &regina;'s &cpp; calculation
+    engine.  You can use functions that take callbacks (e.g., the
+    exhaustive retriangulation code, census generation, and subgroup
+    enumeration), and you can access low-level algorithms (e.g., the linear
+    programming code, or the double description method and
+    Hilbert basis enumeration).
+   </para>
+   <para>
+    &python; now supports iteration wherever &cpp; does, using
+    lightweight iterator objects where possible:
+   </para>
+   <programlisting>
+&gt;&gt;&gt; for e in Example3.lens(8,3).edges():
+...     print(e)
+...
+Edge 0, internal, degree 4: 0 (01), 0 (20), 1 (10), 0 (13)
+Edge 1, internal, degree 4: 0 (03), 1 (02), 1 (31), 0 (21)
+Edge 2, internal, degree 4: 0 (23), 1 (30), 1 (23), 1 (12)</programlisting>
+   <para>
+    Almost all classes now provide a more informative &python; representation:
+   </para>
+   <programlisting>
+&gt;&gt;&gt; ExampleLink.trefoil().group()
+&lt;regina.GroupPresentation: &lt; a b | a^-2 b a b &gt;&gt;</programlisting>
+   <para>
+    The equality comparisons (<literal>==</literal> and <literal>!=</literal>)
+    now compare their <emphasis>contents</emphasis> by value for most classes.
+    The main exceptions are objects whose location in memory defines them
+    (e.g., faces and simplices in triangulations, or crossings in links),
+    and objects whose purpose is to manage an expensive computation
+    (e.g., progress trackers or census managers); these still compare by
+    reference.  Each class has an <literal>equalityType</literal>
+    constant that tells you how its objects are compared.
+   </para>
+   <programlisting>
+&gt;&gt;&gt; Example3.lens(8,3).homology() == AbelianGroup(0, [8])
+True
+&gt;&gt;&gt; AbelianGroup.equalityType
+&lt;EqualityType.BY_VALUE: 1&gt;</programlisting>
+   <para>
+    In line with the &cpp; changes described below, &regina; now throws
+    exceptions upon error in some settings instead of returning
+    <literal>None</literal>
+    (e.g., <literal>Triangulation3.fromIsoSig()</literal>);
+    see the &api; documentation for details on which exceptions
+    each function might throw (if any).
+   </para>
+   <para>
+    Mathematical objects such as triangulations and links are no longer
+    packets (i.e., they do not live in a packet tree or belong to a
+    data file by default); this is for performance reasons.
+    If you just want to work with a triangulation or link, you can
+    use <literal>Triangulation3</literal> or <literal>Link</literal> as before;
+    however, if you want to insert one of these objects into a packet tree
+    then you will need to use the corresponding classes
+    <literal>PacketOfTriangulation3</literal>
+    or <literal>PacketOfLink</literal> (and so on for other types of object).
+    These packet classes inherit from <literal>Triangulation3</literal>,
+    <literal>Link</literal>, etc., and can be used in much the same way.
+   </para>
+   <para>
+    Finally, although there are far fewer changes to the &python; &api;
+    than for &cpp;, there is one change that will likely affect most people:
+    to enumerate normal surfaces or angle structures, you no longer
+    use the old <literal>enumerate()</literal> functions.  Instead,
+    just create a new <literal>NormalSurfaces</literal> or
+    <literal>AngleStructures</literal> object:
+   </para>
+   <programlisting>
+&gt;&gt;&gt; t = Example3.poincare()
+&gt;&gt;&gt; s = NormalSurfaces(t, NS_STANDARD)
+&gt;&gt;&gt; print(s)
+7 embedded, vertex surfaces (Standard normal (tri-quad))</programlisting>
+  </sect2>
+
+  <sect2>
+   <title>&cpp; embraces modern standards and value semantics</title>
+
+   <para>
+    &regina; began in the late 1990s, before &cpp; was ever
+    standardised.  Since then, &regina;'s &api; has slowly evolved as
+    the language changed, incrementally making use of new language
+    features, and removing old workarounds as they became no longer
+    necessary.
+   </para>
+   <para>
+    One of the most important changes to the &cpp; language was the much
+    improved <emphasis>value semantics</emphasis> that came with &cpp11;.
+    When used with the new &cpp11; move operations, this made it both easy
+    and efficient to pass large objects around by value, not by pointer.
+    The resulting code reads more naturally, is typically less error-prone,
+    avoids the need for manual memory management, and still retains the
+    performance of the old pointer-based code.
+   </para>
+   <para>
+    In &regina;&nbsp;7.0, the &cpp; &api; has undergone a complete overhaul
+    from head to toe.  The &api; now uses the &cpp17; standard.
+    Widespread changes include:
+    <itemizedlist>
+     <listitem><para>
+      &regina; now uses value semantics across the board.  So, for
+      example, <literal>Triangulation&lt;3&gt;::fromIsoSig()</literal>
+      now returns a <literal>Triangulation&lt;3&gt;</literal> by value.
+      Most of your objects should now be able to live on the stack;
+      in general there should no need for manual memory management via
+      <literal>new</literal> and <literal>delete</literal>.
+      The main exceptions are objects that are defined by their locations
+      in memory, such as faces and simplices in triangulations,
+      or crossings in links: these are still passed by pointer, but
+      their memory is safely managed by their enclosing triangulations or links.
+     </para></listitem>
+     <listitem><para>
+      Likewise, functions that used to return newly-allocated pointers now
+      return by value.  If they used to return <literal>null</literal> when
+      unexpected errors occurred, they typically now throw exceptions;
+      if they used to return <literal>null</literal> in ordinary scenarios
+      where there is no solution, they typically now return a
+      <literal>std::optional</literal>.
+     </para></listitem>
+     <listitem><para>
+      When returning polymorphic objects (such as
+      <literal>Packet</literal> or <literal>StandardTriangulation</literal>),
+      you cannot avoid returning by pointer since the exact type is not known
+      at compile time.  In such cases, &regina; now returns a smart pointer
+      (typically <literal>std::shared_ptr</literal> for packets and
+      <literal>std::unique_ptr</literal> for other types of object).
+     </para></listitem>
+     <listitem><para>
+      Functions that used to take arguments by pointer now typically
+      take them either by value or by const reference.  Many functions
+      that used to return multiple values via reference arguments
+      now return a <literal>std::tuple</literal> instead.
+     </para></listitem>
+     <listitem><para>
+      The class hierarchies have been simplified considerably.  Hopefully
+      one side-effect of this is that the &api; documentation is easier to
+      navigate.
+     </para></listitem>
+     <listitem><para>
+      Functions that take callbacks (such as census generation or
+      exhaustive retriangulation) are now more flexible, and can work with
+      lambdas and arbitrary lists of properly-typed arguments.
+      They no longer take function pointers with untyped
+      <literal>(void*)</literal> arguments.
+     </para></listitem>
+     <listitem><para>
+      Packets are now managed <emphasis>exclusively</emphasis> by shared
+      pointers.  You should never be holding on to to a raw pointer to a
+      packet type.  The large mathematical classes such as
+      <literal>Triangulation&lt;dim&gt;</literal> and <literal>Link</literal>
+      are no longer packet types, since this frees them from considerable
+      overhead; if you need to insert them into a packet tree then you
+      should use <literal>PacketOf&lt;Triangulation&lt;3&gt;&gt;</literal>,
+      <literal>PacketOf&lt;Link&gt;</literal>, and so on.  There is a
+      new suite of <literal>make_packet()</literal> functions to help you
+      with this.
+     </para></listitem>
+    </itemizedlist>
+   </para>
+   <para>
+    Since &regina;&nbsp;7.0 is a &ldquo;big release&rdquo; that breaks backward
+    compatibility, this was a good time to clean up and simplify many other
+    unwieldy parts of the &api;.  These changes range from simple renamings
+    (e.g., <literal>StandardTriangulation::isStandardTriangulation</literal>
+    becomes <literal>StandardTriangulation::recognise</literal>) through to
+    major semantic changes (e.g., each normal surface now stores an
+    <emphasis>encoding</emphasis>, which is to some degree independent
+    of the coordinate system that was used to create it).
+   </para>
+   <para>
+    If you are writing &cpp; code that links against &regina;, you
+    <emphasis>will</emphasis> need to change your code.  Generally the
+    issues should be flagged by the compiler (not discovered at runtime),
+    and the necesssary changes should be obvious.  Some old functions
+    have been kept but marked as deprecated to ease the transition; your
+    compiler should warn you also if you are still using these.
+   </para>
+  </sect2>
+
+  <sect2>
+   <title>TONS removed temporarily</title>
+
+   <para>
+    For a long time, &regina; has offered &ldquo;experimental&rdquo;
+    support for transversely oriented normal surfaces (TONS).
+    This always came with large caveats and promises that things would break,
+    and needed to be explicitly enabled before it could be used.
+   </para>
+   <para>
+    Now that the normal surface classes have undergone a major redesign,
+    TONS no longer fits cleanly into the normal surface model (since in
+    some fundamental sense they are not normal surfaces), and so this support
+    has been removed completely from &regina;.
+   </para>
+   <para>
+    The intention is to reimplement TONS &ldquo;properly&rdquo;
+    in a future release, using their own separate suite of classes
+    that more accurately reflect what they are and how they behave.
+   </para>
+  </sect2>
+ </sect1>
+
  <sect1 id="genealogy">
   <title>Genealogy</title>
 
@@ -98,17 +381,32 @@
    Since then, <link linkend="acknowledgements">many more people</link>
    have been involved in both small ways and large.
    &regina; has also undergone some major structural changes over the years:
-   In late 2003 the old &java; user interface was completely removed in
-   favour of a faster and cleaner native &cpp; user interface (written
-   using the excellent &kde; libraries), and the scripting interface
-   switched from &jython; to standard &python; support.
-   By 2012 the user interface had been ported from &kde; to the more
-   portable &qt;, offering a much cleaner experience on &macosx; and
-   supporting &windows; for the first time.
-   In 2016 the underlying &cpp; code was redeveloped in a much more generic
-   style, merging the existing 3-manifolds code with a long-running
-   project with Ryan Budney on 4-manifolds, and creating a new
-   infrastructure for exploring triangulations in dimensions as high as 15.
+   <itemizedlist>
+    <listitem><para>
+     In late 2003 the old &java; user interface was completely removed in
+     favour of a faster and cleaner native &cpp; user interface using the
+     &kde; libraries.
+    </para></listitem>
+    <listitem><para>
+     In 2012 the interface was ported to &qt; with
+     enormous help from William Pettersson; this offered a much cleaner
+     experience on &macosx; and allowed &regina; to run properly on &windows;
+     for the first time.
+    </para></listitem>
+    <listitem><para>
+     In 2016 the underlying &cpp; code was redeveloped in a much more generic
+     style, merging the existing 3-manifolds code with a long-running
+     project with Ryan Budney on 4-manifolds, and creating a new
+     infrastructure for exploring triangulations in dimensions as high as 15.
+    </para></listitem>
+    <listitem><para>
+     In 2021 the entire &cpp; codebase was redeveloped to support and
+     embrace a cleaner style of programming that is supported by modern
+     &cpp; standards, and the &python; interface was redeveloped to make
+     &python; a &ldquo;first class citizen&rdquo;, with a consistent experience
+     and full access to all of &regina;'s internal code.
+    </para></listitem>
+   </itemizedlist>
   </para>
  </sect1>
 

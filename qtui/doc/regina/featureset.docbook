@@ -337,8 +337,6 @@
    this includes the 10<replaceable>n</replaceable> standard coordinates
    as well as the 6<replaceable>n</replaceable> quadrilateral-octagon
    coordinates <xref linkend="bib-burton-quadoct"/>.
-   &regina; also offers experimental support for
-   transversely oriented normal surfaces <xref linkend="bib-cooper-tons"/>.
   </para>
   <para>
    The enumeration

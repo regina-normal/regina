@@ -75,27 +75,6 @@
      only offers very basic support for them.
     </para></glossdef>
    </glossentry>
-   <glossentry>
-    <glossterm><guilabel>Support transversely oriented normal
-    surfaces</guilabel></glossterm>
-    <glossdef><para>
-     As of version&nbsp;4.92, &regina; offers support for transversely
-     oriented normal surfaces <xref linkend="bib-cooper-tons"/>.
-     However, this feature is highly experimental and still a work in
-     progress, and things <emphasis>will break</emphasis> if you use it.
-     Because of this, transversely oriented coordinate systems are hidden
-     from users by default.
-    </para><para>
-     If you check this box, &regina; will offer traversely oriented
-     coordinate systems for creating and viewing normal surfaces.
-     Once again, this is a work in progress, and you should
-     <emphasis>not trust any results</emphasis> in these coordinate systems.
-    </para><para>
-     Once this feature becomes stable in a later version of &regina;,
-     transversely oriented normal surfaces will be supported by default
-     (and this option will be removed).
-    </para></glossdef>
-   </glossentry>
    <glossentry id="options-fpg-labels">
     <glossterm><guilabel>Labels on face pairing graphs</guilabel></glossterm>
     <glossdef><para>

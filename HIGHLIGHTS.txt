@@ -35,6 +35,7 @@ Version 7.0  [ 19 December, 2021 ]
         - The retriangulate tool can now search Reidemeister graphs for knots.
         - New command-line tool DGT to triangulate manifolds from framed links
           (thanks to Rhuaidi Burke).
+        - New elementary moves on 4-manifold triangulations (thanks to Alex He).
         - Changed the old "PDF attachments" in the user interface to support
           file attachments of any type.
     Removed:
@@ -49,8 +50,8 @@ Version 7.0  [ 19 December, 2021 ]
           See http://regina-normal.github.io/regina7.html for details.
           Python users should require far fewer changes to their existing code,
           but you can now access *much* more of the C++ API.
-        - Python now offers more natural iteration, string representation, and
-          better compatibility with Sage.
+        - Python now offers more natural iteration, string representation,
+          equality testing by value, and better compatibility with Sage.
         - All of the code that was deprecated in version 6.0 has now been
           removed entirely.  See http://regina-normal.github.io/regina5to6.html
           for instructions on how to update your scripts.

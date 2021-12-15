@@ -451,24 +451,45 @@
     to the top of the export data file).
    </para>
    <para>
-    There are two menu items for exporting to a &regina; data
-    file.  If you choose
-    <menuchoice>
-     <guimenu>File</guimenu>
-     <guisubmenu>Export</guisubmenu>
-     <guimenuitem>&regina; Data File</guimenuitem>
-    </menuchoice>,
-    the data will be exported as compressed &xml; (the standard
-    file format).  If you choose
-    <menuchoice>
-     <guimenu>File</guimenu>
-     <guisubmenu>Export</guisubmenu>
-     <guimenuitem>&regina; Data File (Uncompressed)</guimenuitem>
-    </menuchoice>,
-    the data will be saved as plain &xml; (which means you
-    can view the &xml; in your favourite text editor).
-    &regina; is capable of reading data files in either compressed or
-    uncompressed format.
+    There are three menu items for exporting to a &regina; data
+    file:
+    <itemizedlist>
+     <listitem><para>
+      <menuchoice>
+       <guimenu>File</guimenu>
+       <guisubmenu>Export</guisubmenu>
+       <guimenuitem>&regina; Data File</guimenuitem>
+      </menuchoice>,
+      will export the data as compressed &xml; using the new file format
+      introduced with &regina;&nbsp;7.0.  This is the default file
+      format that is used when you select
+      <menuchoice>
+       <guimenu>File</guimenu>
+       <guimenuitem>Save</guimenuitem>
+      </menuchoice>.
+     </para></listitem>
+     <listitem><para>
+      <menuchoice>
+       <guimenu>File</guimenu>
+       <guisubmenu>Export</guisubmenu>
+       <guimenuitem>&regina; Data File (Uncompressed)</guimenuitem>
+      </menuchoice>,
+      will export the data as plain &xml; (which means you
+      can view the &xml; in your favourite text editor),
+      again using the new file format introduced with &regina;&nbsp;7.0.
+      Note that &regina; can happily read data files in either compressed or
+      uncompressed format.
+     </para></listitem>
+     <listitem><para>
+      <menuchoice>
+       <guimenu>File</guimenu>
+       <guisubmenu>Export</guisubmenu>
+       <guimenuitem>Legacy &regina; Data File (&le;&nbsp;6.0.1)</guimenuitem>
+      </menuchoice>,
+      will export the data as compressed &xml; using the old file format
+      from &regina;&nbsp;3.0&ndash;6.0.1.
+     </para></listitem>
+    </itemizedlist>
    </para>
    <para>
     If you simply want to view the raw &xml; content of an existing data
