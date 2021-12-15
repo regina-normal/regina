@@ -1841,8 +1841,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         /**
          * Checks the eligibility of and/or performs a 0-2 move about the
          * (not necessarily distinct) triangles
-         * e0.tetrahedron()->triangle( e0.vertices()[t0] ) and
-         * e1.tetrahedron()->triangle( e1.vertices()[t1] ).
+         * <tt>e0.tetrahedron()->triangle( e0.vertices()[t0] )</tt> and
+         * <tt>e1.tetrahedron()->triangle( e1.vertices()[t1] )</tt>.
          *
          * This involves fattening up these two triangles into a new pair of
          * tetrahedra around a new degree-two edge \a d; this is the inverse
@@ -1901,20 +1901,25 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * This involves fattening up these two triangles into a new pair of
          * tetrahedra around a new degree-two edge \a d; this is the inverse
-         * of performing a 2-0 move about the edge \a d. This can always be
-         * done as long as the edge \a e is valid.
+         * of performing a 2-0 move about the edge \a d. This can be done if
+         * and only if the following conditions are satisfied:
+         *
+         * - The edge \a e is valid.
+         *
+         * - The numbers \a t0 and \a t1 are both less than or equal to
+         *   <tt>e->degree()</tt>, and strictly less than <tt>e->degree()</tt>
+         *   if \a e is non-boundary. This ensures that \a t0 and \a t1
+         *   correspond to sensible triangle numbers (as described below).
          *
          * The triangles incident to \a e are numbered as follows:
          *
-         * - For each \a i from 0 up to e->degree(), we assign the number
-         *   \a i to the triangle
-         *      e->embedding(i).tetrahedron()->triangle(
-         *          e->embedding(i).vertices()[3] )
+         * - For each \a i from 0 up to <tt>e->degree()</tt>, we assign the
+         *   number \a i to the triangle
+         *   <tt>e->embedding(i).tetrahedron()->triangle( e->embedding(i).vertices()[3] )</tt>
          *
          * - If \a e is a boundary edge, then we additionally assign the
-         *   number e->degree() to the boundary triangle
-         *      e->embedding( e->degree() - 1 ).tetrahedron()->triangle(
-         *          e->embedding( e->degree() - 1 ).vertices()[2] )
+         *   number <tt>e->degree()</tt> to the boundary triangle
+         *   <tt>e->back().tetrahedron()->triangle( e->back().vertices()[2] )</tt>
          *
          * If the routine is asked to both check and perform, the move will
          * only be performed if the check shows it is legal.
@@ -1931,9 +1936,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \pre If the move is being performed and no check is being run, it
          * must by known in advance that the move is legal.
          * \pre The given edge \a e is an edge of this triangulation.
-         * \pre The numbers \a t0 and \a t1 are both less than or equal to
-         * e->degree(), and strictly less than e->degree() if \a e is
-         * non-boundary.
          *
          * @param e the common edge of the two triangles about which to
          * perform the move.
@@ -1957,15 +1959,15 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
                 bool check = true, bool perform = true );
         /**
          * Checks the eligibility of and/or performs a 0-2 move about the
-         * (not necessarily distinct) triangles t0 and t1.
+         * (not necessarily distinct) triangles \a t0 and \a t1.
          *
          * This involves fattening up these two triangles into a new pair of
          * tetrahedra around a new degree-two edge \a d; this is the inverse
          * of performing a 2-0 move about the edge \a d. This can be done if
          * and only if the following conditions are satisfied:
          *
-         * - The edges t0->edge(e0) and t1->edge(e1) are the same edge \a e
-         *   of this triangulation.
+         * - The edges <tt>t0->edge(e0)</tt> and <tt>t1->edge(e1)</tt> are
+         *   the same edge \a e of this triangulation.
          *
          * - The edge \a e is valid.
          *

@@ -985,6 +985,20 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If you are trying to reduce the number of vertices without changing
+         * the topology, and if \a e is an edge connecting an internal vertex
+         * with some different vertex, then either collapseEdge() or snapEdge()
+         * may be more appropriate for your situation.
+         *
+         * - The advantage of collapseEdge() is that it decreases the number
+         *   of tetrahedra, whereas snapEdge() increases this number (but only
+         *   by four).
+         *
+         * - The disadvantages of collapseEdge() are that it cannot always be
+         *   performed, and its validity tests are expensive; snapEdge() on
+         *   the other hand can always be used for edges \a e of the type
+         *   described above.
+         *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
@@ -1013,22 +1027,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         bool collapseEdge(Edge<4>* e, bool check = true, bool perform = true);
 
-        /*@}*/
-        /**
-         * \name Subdivisions and Covers
-         */
-        /*@{*/
-
-        /**
-         * Converts an ideal triangulation into a finite triangulation.
-         * All ideal or invalid vertices are truncated and thus
-         * converted into real boundary components made from unglued
-         * facets of pentachora.
-         *
-         * @return \c true if and only if the triangulation was changed.
-         */
-        bool idealToFinite();
-
         /**
          * Snaps together the endpoints of an edge connecting an internal
          * vertex with some different (possibly boundary) vertex, which reduces
@@ -1040,6 +1038,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * together about their common vertex. This can be done if and only
          * if \a e is an edge whose endpoints are distinct and not both
          * boundary (i.e., an edge of the type described above).
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
          *
          * Depending on your situation, collapseEdge() may be a more
          * appropriate method for reducing the number of vertices without
@@ -1079,6 +1080,22 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * @author Alex He
          */
         bool snapEdge( Edge<4>* e, bool check = true, bool perform = true );
+
+        /*@}*/
+        /**
+         * \name Subdivisions and Covers
+         */
+        /*@{*/
+
+        /**
+         * Converts an ideal triangulation into a finite triangulation.
+         * All ideal or invalid vertices are truncated and thus
+         * converted into real boundary components made from unglued
+         * facets of pentachora.
+         *
+         * @return \c true if and only if the triangulation was changed.
+         */
+        bool idealToFinite();
 
         /*@}*/
 
