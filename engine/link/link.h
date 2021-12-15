@@ -1839,6 +1839,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * If a progress tracker was passed, it will be marked as finished
          * before the exception is thrown.
          *
+         * \ifacespython The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
+         *
          * @param height the maximum number of \e additional crossings to
          * allow beyond the number of crossings originally present in this
          * diagram, or a negative number if this should not be bounded.
@@ -2164,6 +2168,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * will ignore your choice of algorithm and use the treewidth-based
          * algorithm regardless.
          *
+         * \ifacespython The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
+         *
          * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
@@ -2245,6 +2253,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * will ignore your choice of algorithm and use the treewidth-based
          * algorithm regardless.
          *
+         * \ifacespython The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
+         *
          * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
@@ -2319,6 +2331,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
+         * \ifacespython The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
+         *
          * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
@@ -2379,6 +2395,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
+         * \ifacespython The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
+         *
          * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
@@ -2407,6 +2427,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * returned from this routine should not be kept for later use.
          * Instead, homfly() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
+         *
+         * \ifacespython The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
          *
          * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.

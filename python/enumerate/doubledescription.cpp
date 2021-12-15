@@ -45,7 +45,8 @@ void addDoubleDescription(pybind11::module_& m) {
                 const std::function<void(VectorInt&&)>&>,
             pybind11::arg(), pybind11::arg(), pybind11::arg(),
             pybind11::arg("tracker") = nullptr,
-            pybind11::arg("initialRows") = 0)
+            pybind11::arg("initialRows") = 0,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def_static("enumerate", [](const regina::MatrixInt& s,
                 const regina::ValidityConstraints& c,
                 regina::ProgressTracker* p, unsigned long r) {
@@ -56,7 +57,8 @@ void addDoubleDescription(pybind11::module_& m) {
             return ans;
         }, pybind11::arg(), pybind11::arg(),
             pybind11::arg("tracker") = nullptr,
-            pybind11::arg("initialRows") = 0)
+            pybind11::arg("initialRows") = 0,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
     ;
     regina::python::no_eq_operators(c);
 }

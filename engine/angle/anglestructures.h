@@ -174,6 +174,10 @@ class AngleStructures :
          * Note that this enumeration can be extremely slow for larger
          * triangulations, and so there could be good reasons to do this.
          *
+         * \ifacespython The global interpreter lock will be released while
+         * this constructor runs, so you can use it with Python-based
+         * multithreading.
+         *
          * @param triangulation the triangulation for which the vertex
          * angle structures will be enumerated.
          * @param tautOnly \c true if only taut structures are to be

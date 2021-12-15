@@ -265,7 +265,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("turaevViro", &Triangulation<3>::turaevViro,
             pybind11::arg(), pybind11::arg("parity") = true,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def("turaevViroApprox", &Triangulation<3>::turaevViroApprox,
             pybind11::arg(), pybind11::arg("whichRoot") = 1,
             pybind11::arg("alg") = regina::ALG_DEFAULT)
@@ -315,7 +316,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("simplifyExhaustive", &Triangulation<3>::simplifyExhaustive,
             pybind11::arg("height") = 1,
             pybind11::arg("nThreads") = 1,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def("retriangulate", [](const Triangulation<3>& tri, int height,
                 int threads, const std::function<bool(const std::string&,
                     Triangulation<3>&&)>& action) {

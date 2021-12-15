@@ -200,23 +200,28 @@ void addLink(pybind11::module_& m) {
         .def("bracket", &Link::bracket,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def("jones", &Link::jones,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def("homfly", &Link::homfly,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def("homflyAZ", &Link::homflyAZ,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def("homflyLM", &Link::homflyLM,
             pybind11::return_value_policy::reference_internal,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def("knowsBracket", &Link::knowsBracket)
         .def("knowsJones", &Link::knowsJones)
         .def("knowsHomfly", &Link::knowsHomfly)
@@ -289,11 +294,12 @@ void addLink(pybind11::module_& m) {
         .def("selfFrame", &Link::selfFrame)
         .def("intelligentSimplify", &Link::intelligentSimplify)
         .def("simplifyToLocalMinimum", &Link::simplifyToLocalMinimum,
-             pybind11::arg("perform") = true)
+            pybind11::arg("perform") = true)
         .def("simplifyExhaustive", &Link::simplifyExhaustive,
-             pybind11::arg("height") = 1,
-             pybind11::arg("nThreads") = 1,
-             pybind11::arg("tracker") = nullptr)
+            pybind11::arg("height") = 1,
+            pybind11::arg("nThreads") = 1,
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def("rewrite", [](const Link& link, int height, int threads,
                 const std::function<bool(const std::string&, Link&&)>& action) {
             if (threads == 1) {

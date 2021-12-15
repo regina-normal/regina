@@ -51,7 +51,8 @@ void addAngleStructures(pybind11::module_& m) {
             pybind11::arg(),
             pybind11::arg("tautOnly") = false,
             pybind11::arg("algHints") = regina::AS_ALG_DEFAULT,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def(pybind11::init<const AngleStructures&>())
         .def("swap", &AngleStructures::swap)
         .def("triangulation", &AngleStructures::triangulation,
@@ -97,7 +98,8 @@ void addAngleStructures(pybind11::module_& m) {
         pybind11::arg(),
         pybind11::arg("tautOnly") = false,
         pybind11::arg("algHints") = regina::AS_ALG_DEFAULT,
-        pybind11::arg("tracker") = nullptr);
+        pybind11::arg("tracker") = nullptr,
+        pybind11::call_guard<pybind11::gil_scoped_release>());
 
     m.def("swap", (void(*)(AngleStructures&, AngleStructures&))(regina::swap));
 }

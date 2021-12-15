@@ -553,6 +553,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * than one connected component.  If a progress tracker was passed,
          * it will be marked as finished before the exception is thrown.
          *
+         * \ifacespython The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
+         *
          * @param height the maximum number of \e additional pentachora to
          * allow beyond the number of pentachora originally present in the
          * triangulation, or a negative number if this should not be bounded.

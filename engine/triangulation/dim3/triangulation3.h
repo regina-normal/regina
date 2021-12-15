@@ -806,6 +806,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * \pre This triangulation is valid, closed and non-empty.
          *
+         * \ifacespython The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
+         *
          * @param r the integer \a r as described above; this must be at
          * least 3.
          * @param parity determines for odd \a r whether \a q0 is a primitive
@@ -1458,6 +1462,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * \exception FailedPrecondition this triangulation has more
          * than one connected component.  If a progress tracker was passed,
          * it will be marked as finished before the exception is thrown.
+         *
+         * \ifacespython The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
          *
          * @param height the maximum number of \e additional tetrahedra to
          * allow beyond the number of tetrahedra originally present in the

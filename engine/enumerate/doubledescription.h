@@ -127,6 +127,8 @@ class DoubleDescription {
          * call <tt>enumerate(subspace, constraints, tracker, initialRows)</tt>,
          * and it returns a Python list containing all extremal rays.
          * In both versions, the argument \a RayClass is fixed as VectorInt.
+         * The global interpreter lock will be released while this function
+         * runs, so you can use it with Python-based multithreading.
          *
          * @param action a function (or other callable object) that will be
          * called for each extremal ray.  This function must take a single

@@ -143,6 +143,8 @@ class HilbertPrimal {
          * In both versions, the extremal rays must be passed as a Python list
          * of VectorInt objects, and the output type \a RayClass is likewise
          * fixed as VectorInt.
+         * The global interpreter lock will be released while this function
+         * runs, so you can use it with Python-based multithreading.
          *
          * @param action a function (or other callable object) that will be
          * called for each basis element.  This function must take a single

@@ -204,6 +204,10 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * Again this can only happen in certain coordinate systems, where
          * this is explicitly described in the HyperCoords enum documentation.
          *
+         * \ifacespython The global interpreter lock will be released while
+         * this constructor runs, so you can use it with Python-based
+         * multithreading.
+         *
          * @param triangulation the triangulation upon which this list of
          * normal hypersurfaces will be based.
          * @param coords the coordinate system to be used.  This must be

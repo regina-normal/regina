@@ -210,7 +210,8 @@ void addTriangulation4(pybind11::module_& m) {
         .def("simplifyExhaustive", &Triangulation<4>::simplifyExhaustive,
             pybind11::arg("height") = 1,
             pybind11::arg("nThreads") = 1,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def("retriangulate", [](const Triangulation<4>& tri, int height,
                 int threads, const std::function<bool(const std::string&,
                     Triangulation<4>&&)>& action) {
