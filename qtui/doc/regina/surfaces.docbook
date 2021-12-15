@@ -76,26 +76,6 @@
    coordinate system.
   </para>
   <para>
-   &regina; insists on keeping normal (hyper)surface lists together with their
-   corresponding triangulations, since normal (hyper)surfaces
-   are expressed using coordinates relative to these triangulations.
-   A normal surface list will always live immediately beneath the
-   corresponding 3-manifold triangulation in the packet tree, and
-   a normal hypersurface list will always live immediately beneath the
-   corresponding 4-manifold triangulation.
-   &regina; will <link linkend="packet-uneditable">not let you modify</link>
-   a triangulation that has any associated normal surfaces or
-   hypersurfaces (or <link linkend="angles">angle structures</link>),
-   and the triangulation will be marked with a padlock to remind you of this.
-  </para>
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="hypersurfaces-intree.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
-  <para>
    To create a new normal surface or hypersurface list, select either
    <menuchoice>
     <guimenu>Packet Tree</guimenu>

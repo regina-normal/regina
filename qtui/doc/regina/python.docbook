@@ -255,25 +255,6 @@
    two tetrahedra that belong to different triangulations).
    Please tread gently.
   </para>
-  <para>
-   In particular, you should note the following issues:
-  </para>
-  <sect2>
-   <title>Uneditable Packets</title>
-   <para>
-    If you cannot edit a packet within &regina;, there is generally
-    a reason for this.  For instance, a normal surface list needs its
-    parent triangulation to remain fixed, which means that any
-    triangulation with normal surface lists beneath it
-    will be <link linkend="packet-uneditable">uneditable</link>.
-   </para>
-   <para>
-    You should not use &python; as a way to get around this barrier.
-    Instead you can work around the problem by
-    <link linkend="packet-clone">cloning the packet</link>
-    and editing the clone instead.
-   </para>
-  </sect2>
 
   <sect2 id="python-i18n">
    <title>International and Special Characters</title>

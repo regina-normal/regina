@@ -1341,8 +1341,6 @@
    docking</link></secondaryie>
   <secondaryie><link linkend="packet-types">available packet
    types</link></secondaryie>
-  <secondaryie><link linkend="packet-uneditable">cannot be
-   edited</link></secondaryie>
   <secondaryie><link linkend="packet-clone">cloning</link></secondaryie>
   <secondaryie><link linkend="packet-new">creating new
    packets</link></secondaryie>
@@ -1351,12 +1349,6 @@
    tree</link></secondaryie>
   <secondaryie><link linkend="packet-tree">viewing and
    editing</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>padlock</primaryie>
-  <secondaryie><link linkend="packet-uneditable">in the packet
-   tree</link></secondaryie>
  </indexentry>
 
  <indexentry>

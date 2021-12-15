@@ -30,38 +30,6 @@
     </imageobject>
    </inlinemediaobject>
   </para>
-  <sect2 id="packet-uneditable">
-   <title>Uneditable Packets</title>
-
-   <para>
-    Sometimes you will find that &regina; does not let you make changes
-    to a packet.  This typically means that the packet is constrained by its
-    children.
-   </para>
-   <para>
-    For example, if a triangulation has normal surfaces or angle structures
-    that refer to it, then &regina; will not let you change the triangulation
-    because this would invalidate the normal coordinates and/or angle structure
-    coordinates.
-   </para>
-   <para>
-    Uneditable packets such as this will be marked with a padlock
-    in the packet viewer:
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="padlock.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-   <para>
-    If you find yourself in such a situation, you can always
-    <link linkend="packet-clone">clone the packet</link>.
-    This will create a new copy of the packet without any
-    children, and you will be able to edit your clone instead.
-   </para>
-  </sect2>
  </sect1>
 
  <sect1 id="packet-types">

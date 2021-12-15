@@ -226,38 +226,6 @@
   </qandadiv>
 
   <qandadiv id="trouble-misc"><title>Miscellaneous</title>
-   <qandaentry id="trouble-packet-uneditable">
-    <question><para>
-     I cannot edit a triangulation.  I can view it but I can't change anything.
-    </para></question>
-    <answer>
-     <para>
-      If a triangulation has any normal surface lists or angle structure
-      lists beneath it, that triangulation must not change.
-      This is because normal surfaces and angle structures store their
-      coordinates relative to the triangulation, and any changes to the
-      triangulation will invalidate these coordinates.
-     </para>
-     <para>
-      If you wish to modify the triangulation,
-      <link linkend="packet-clone">try cloning it</link>
-      (not the subtree, just the triangulation itself).
-      Then you can edit the clone instead.
-     </para>
-     <para>
-      Triangulations that cannot be edited will be marked with a
-      padlock in the triangulation viewer, as illustrated below.
-     </para>
-     <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="padlock.png"/>
-       </imageobject>
-      </inlinemediaobject>
-     </para>
-    </answer>
-   </qandaentry>
-
    <qandaentry id="trouble-compile">
     <question><para>
      I am having trouble compiling &regina;.

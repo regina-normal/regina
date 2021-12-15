@@ -85,25 +85,6 @@
    can be expressed as a convex combination of the vertex angle strutures.
   </para>
   <para>
-   As with normal surfaces, &regina; insists on keeping angle structure lists
-   tied to their corresponding triangulations
-   (this is because angle structures are expressed using coordinates
-   relative to these triangulations).
-   An angle structure list always lives immediately beneath the
-   corresponding triangulation in the packet tree, and &regina; will
-   <link linkend="packet-uneditable">not let you modify</link>
-   the triangulation as long as it has any angle structure or normal surface
-   lists beneath it.
-   The triangulation will be marked with a small padlock to remind you of this.
-  </para>
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="angles-intree.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
-  <para>
    To create a new angle structure list, select
    <menuchoice>
     <guimenu>Packet Tree</guimenu>
