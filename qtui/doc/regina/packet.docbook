@@ -26,7 +26,7 @@
   <para>
    <inlinemediaobject id="shot-packetview">
     <imageobject>
-     <imagedata fileref="packetview.png"/>
+     <imagedata multires="packetview"/>
     </imageobject>
    </inlinemediaobject>
   </para>
