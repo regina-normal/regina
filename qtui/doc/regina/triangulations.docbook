@@ -2929,6 +2929,14 @@
       </para></glossdef>
      </glossentry>
      <glossentry>
+      <glossterm><guilabel>4-4 Move</guilabel></glossterm>
+      <glossdef><para>
+       Replaces four pentachora joined along a degree&nbsp;4 edge
+       with four pentachora joined along a new degree&nbsp;4 edge
+       that is aligned in a different direction.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
       <glossterm><guilabel>2-0 Move (Triangle)</guilabel></glossterm>
       <glossdef><para>
        Takes two pentachora joined along a degree&nbsp;2 triangle and
@@ -2971,6 +2979,14 @@
        Takes an edge between two distinct vertices and collapses it to a point.
        Any pentachora that contained the edge will be &ldquo;flattened
        away&rdquo;.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Snap Edge</guilabel></glossterm>
+      <glossdef><para>
+       Takes an edge between two distinct vertices and snaps its endpoints
+       together. This involves taking a triangle that meets this edge and
+       folding the other two edges of this triangle together.
       </para></glossdef>
      </glossentry>
     </glosslist>
