@@ -1013,22 +1013,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         bool collapseEdge(Edge<4>* e, bool check = true, bool perform = true);
 
-        /*@}*/
-        /**
-         * \name Subdivisions and Covers
-         */
-        /*@{*/
-
-        /**
-         * Converts an ideal triangulation into a finite triangulation.
-         * All ideal or invalid vertices are truncated and thus
-         * converted into real boundary components made from unglued
-         * facets of pentachora.
-         *
-         * @return \c true if and only if the triangulation was changed.
-         */
-        bool idealToFinite();
-
         /**
          * Snaps together the endpoints of an edge connecting an internal
          * vertex with some different (possibly boundary) vertex, which reduces
@@ -1079,6 +1063,22 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * @author Alex He
          */
         bool snapEdge( Edge<4>* e, bool check = true, bool perform = true );
+
+        /*@}*/
+        /**
+         * \name Subdivisions and Covers
+         */
+        /*@{*/
+
+        /**
+         * Converts an ideal triangulation into a finite triangulation.
+         * All ideal or invalid vertices are truncated and thus
+         * converted into real boundary components made from unglued
+         * facets of pentachora.
+         *
+         * @return \c true if and only if the triangulation was changed.
+         */
+        bool idealToFinite();
 
         /*@}*/
 
