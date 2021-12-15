@@ -14,7 +14,7 @@
   <para>
    <inlinemediaobject id="shot-packettree">
     <imageobject>
-     <imagedata fileref="packettree.png"/>
+     <imagedata multires="packettree"/>
     </imageobject>
    </inlinemediaobject>
   </para>
