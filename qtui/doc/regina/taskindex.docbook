@@ -444,6 +444,8 @@
   <primaryie>conversion</primaryie>
   <secondaryie><link linkend="man-regconvert">between file
    formats</link></secondaryie>
+  <secondaryie><link linkend="link-complement">from
+   links to &regina; or &snappea; triangulations</link></secondaryie>
   <secondaryie><link linkend="snappea-fromregina">from
    native &regina; to &snappea; triangulations</link></secondaryie>
   <secondaryie><link linkend="snappea-toregina">from
@@ -807,8 +809,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-algebra-homfund">fundamental
-   group</link></primaryie>
+  <primaryie>fundamental group</primaryie>
+  <secondaryie><link linkend="tri-algebra-homfund">of a manifold or
+   triangulation</link></secondaryie>
+  <secondaryie><link linkend="link-algebra">of a link
+   complement</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -864,6 +869,16 @@
  <indexentry>
   <primaryie>graphs, face pairing</primaryie>
   <seeie>See: dual graphs</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>group, fundamental</primaryie>
+  <seeie>See: fundamental group</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>group, knot/link</primaryie>
+  <seeie>See: link group</seeie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-H'><title>&mdash; H &mdash;</title>
@@ -1024,6 +1039,10 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-algebra">knot group</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>knot signatures</primaryie>
   <secondaryie><link linkend="link-new-knotsig">described</link></secondaryie>
   <secondaryie><link linkend="link-new-code">reconstructing knots
@@ -1093,6 +1112,10 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-algebra">link group</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>links, knots and</primaryie>
   <secondaryie><link linkend="link-crossings">alternating</link></secondaryie>
   <secondaryie><link linkend="link-cables">blackboard framing</link></secondaryie>
@@ -1124,6 +1147,7 @@
    (classical or oriented), recreating from</link></secondaryie>
   <secondaryie><link linkend="link-codes">Gauss code
    (classical or oriented), viewing</link></secondaryie>
+  <secondaryie><link linkend="link-algebra">group</link></secondaryie>
   <secondaryie><link linkend="link-polynomials">&homflypt;
    polynomial</link></secondaryie>
   <secondaryie><link linkend="link-codes-construct">Jenkins format,
@@ -1142,12 +1166,17 @@
    decompositions</link></secondaryie>
   <secondaryie><link linkend="link-flip">orienting</link></secondaryie>
   <secondaryie><link linkend="link-cables">parallel cables</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">planar diagram code,
+   recreating from</link></secondaryie>
+  <secondaryie><link linkend="link-codes">planar diagram code,
+   viewing</link></secondaryie>
   <secondaryie><link linkend="link-flip">reflecting</link></secondaryie>
   <secondaryie><link linkend="link-reidemeister">Reidemeister
    moves</link></secondaryie>
   <secondaryie><link linkend="link-flip">reversing</link></secondaryie>
   <secondaryie><link linkend="link-flip">rotating</link></secondaryie>
   <secondaryie><link linkend="link-cables">Seifert framing</link></secondaryie>
+  <secondaryie><link linkend="link-selfframe">self framing</link></secondaryie>
   <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decompositions</link></secondaryie>
@@ -1377,18 +1406,35 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>PD code</primaryie>
+  <seeie>See: planar diagram code</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>&pdf; documents</primaryie>
   <seeie>See: attachments</seeie>
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="snappea">peripheral curves
-   on cusps</link></primaryie>
+  <primaryie>peripheral curves on cusps</primaryie>
+  <secondaryie><link linkend="link-complement">preserving in
+   link complements</link></secondaryie>
+  <secondaryie><link linkend="snappea">preserving in
+   triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
   <primaryie><link linkend="snappea-fill-permanent">permanently
    fill cusps</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>planar diagram code</primaryie>
+  <secondaryie><link linkend="link-new-pd">described</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">reconstructing links
+   from planar diagram codes</link></secondaryie>
+  <secondaryie><link linkend="link-codes">viewing
+   the planar diagram code for a link</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1578,6 +1624,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-selfframe">self framing of
+   links</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>settings</primaryie>
   <seeie>See: configuration</seeie>
  </indexentry>
@@ -1648,6 +1699,8 @@
   <primaryie>&snappea; triangulation</primaryie>
   <secondaryie><link linkend="snappea-canonical">canonical
    retriangulation</link></secondaryie>
+  <secondaryie><link linkend="link-complement">converting from
+   links</link></secondaryie>
   <secondaryie><link linkend="snappea-fromregina">converting from
    native &regina; triangulations</link></secondaryie>
   <secondaryie><link linkend="snappea-toregina">converting to
@@ -1914,6 +1967,8 @@
   <secondaryie><link linkend="tri-decomposition-connsum">connected
    sum, decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-propconn">connectedness</link></secondaryie>
+  <secondaryie><link linkend="link-complement">converting from a
+   link</link></secondaryie>
   <secondaryie><link linkend="snappea-toregina">converting from a
    &snappea; triangulations</link></secondaryie>
   <secondaryie><link linkend="snappea-fromregina">converting to a

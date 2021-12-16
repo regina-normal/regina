@@ -4123,7 +4123,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          *   used by other sources (such as the Knot Atlas), but which
          *   are ignored here.
          *
-         * Thus the follow strings all describe the same sequence:
+         * Thus the following strings all describe the same sequence:
          *
            \verbatim
            [[1, 5, 2, 4], [3, 1, 4, 6], [5, 3, 6, 2]]

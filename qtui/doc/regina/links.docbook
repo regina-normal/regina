@@ -2,8 +2,8 @@
  <title>Knots and Links</title>
 
  <para>
-  Since version&nbsp;5.96, &regina; now offers native support for
-  knots and links.  &regina; collectively refers to all such objects as
+  &regina; offers native support for knots and links.
+  &regina; collectively refers to all such objects as
   <firstterm>links</firstterm>:
   a link may have multiple components, or just one component
   (i.e., a knot), or zero components (i.e., the empty link).
@@ -51,7 +51,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="newlink.png"/>
+     <imagedata multires="newlink"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -60,14 +60,16 @@
    <title>Text Codes</title>
 
    <para>
-    This will reconstruct a knot from one of several common text codes.
+    This will reconstruct a link from one of several common text codes.
     At present, &regina; can only reconstruct single-component knots
-    from these codes, not links with multiple components.
+    from most types of codes;
+    the exception is <link linkend="link-new-pd">planar diagram codes</link>,
+    which support links with multiple components.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="newlink-code.png"/>
+      <imagedata multires="newlink-code"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -184,11 +186,54 @@
        or knot signatures instead.
       </para>
      </listitem>
+     <listitem id="link-new-pd">
+      <para>
+       <firstterm>Planar diagram codes</firstterm>,
+       which are sequences of 4-tuples that encode the local connections
+       around each crossing.  Unlike the other code types described
+       here, planar diagram codes can encode multiple-component links.
+      </para>
+      <para>
+       In a planar diagram code for a link with
+       <replaceable>n</replaceable> crossings, the strands are numbered
+       1,&hellip;,2<replaceable>n</replaceable>.  Each 4-tuple
+       represents a single crossing, and lists the four strands that
+       meet at that crossing in counter-clockwise order, beginning with
+       the incoming lower strand.  &regina; will number the crossings
+       0,&hellip;,(<replaceable>n</replaceable>-1) in the same order as
+       the tuples are presented.
+      </para>
+      <para>
+       An example of a planar diagram code is
+       <literal>[[1,4,2,5], [3,6,4,1], [5,2,6,3]]</literal>,
+       which represents the left-hand trefoil.
+      </para>
+      <para>
+       You may separate the integers with any combination of whitespace,
+       commas, round/square/curly brackets, and/or the special symbols
+       <literal>PD</literal>, <literal>X</literal>, <literal>Xp</literal>,
+       <literal>Xm</literal> or <literal>P</literal> (these symbols
+       appear in other sources, but have no special meaning for &regina;).
+       So, for example, the left-hand trefoil above could instead be
+       presented as <literal>PD[X[1,5,2,4], X[3,1,4,6], X[5,3,6,2]]</literal>,
+       or just <literal>1 5 2 4 3 1 4 6 5 3 6 2</literal>.
+      </para>
+      <para>
+       Planar diagram codes are used in the
+       <ulink url="http://katlas.org/wiki/Planar_Diagrams">Knot Atlas</ulink>
+       (for example).
+       They have two limitations:
+       they cannot represent zero-crossing unknot components; also, if
+       the link has a component that consists entirely of over-crossings
+       (i.e., an unknot placed &ldquo;on top&rdquo; of the diagram) then
+       the orientation of that component is not uniquely determined.
+      </para>
+     </listitem>
     </itemizedlist>
    </para>
    <para>
-    If you already have a knot and you wish to view these different text
-    codes, you can do this through the
+    If you already have a knot or link and you wish to view these different
+    text codes, you can do this through the
     <link linkend="link-codes">codes tab</link>.
    </para>
    <caution><para>
@@ -212,7 +257,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="newlink-torus.png"/>
+      <imagedata multires="newlink-torus"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -242,7 +287,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="newlink-example.png"/>
+      <imagedata multires="newlink-example"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -283,7 +328,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-header.png"/>
+      <imagedata multires="link-header"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -318,7 +363,7 @@
        <para>
         <inlinemediaobject>
          <imageobject>
-          <imagedata fileref="link-pictures.png"/>
+          <imagedata multires="link-pictures"/>
          </imageobject>
         </inlinemediaobject>
        </para>
@@ -362,7 +407,7 @@
        <para>
         <inlinemediaobject>
          <imageobject>
-          <imagedata fileref="link-text.png"/>
+          <imagedata multires="link-text"/>
          </imageobject>
         </inlinemediaobject>
        </para>
@@ -389,7 +434,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-polynomials.png"/>
+      <imagedata multires="link-polynomials"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -461,7 +506,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-polynomials-calculate.png"/>
+      <imagedata multires="link-polynomials-calculate"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -489,6 +534,48 @@
    </tip>
   </sect2>
 
+  <sect2 id="link-algebra">
+   <title>Algebraic Invariants</title>
+   <para>
+    On the <guilabel>Algebra</guilabel> tab, you can view
+    other algebraic invariants of the link.
+    Currently this shows the link group (i.e., the fundamental
+    group of the link complement).
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-algebra"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The link group is presented in the same format as the fundamental group
+    of a triangulation, and you are given the same tools to simplify it.
+    See the section on
+    <link linkend="tri-algebra-homfund">fundamental groups</link>
+    for further discussion of this.
+   </para>
+   <para>
+    Note that, although the link group is isomorphic to the fundamental
+    group of the link complement, it is constructed differently and so
+    will often have a different presentation.
+    If you are having difficulty simplifying it, you could perhaps try
+    working with the triangulated
+    <link linkend="link-complement">link complement</link> instead.
+   </para>
+   <tip>
+    <para>
+     If you find the exponents in the group presentation hard to read
+     (due to the superscripts being very small),
+     you can visit &regina;'s settings and
+     <link linkend="options-unicode">disable unicode symbols</link>.
+     This will change the display to use a simple
+     &ldquo;pidgin &tex;&rdquo; instead.
+    </para>
+   </tip>
+  </sect2>
+
   <sect2 id="link-codes">
    <title>Text Codes</title>
    <para>
@@ -500,7 +587,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-codes.png"/>
+      <imagedata multires="link-codes"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -577,6 +664,24 @@
        </para>
       </glossdef>
      </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Planar diagram codes</guilabel></glossterm>
+      <glossdef>
+       <para>
+        This displays the planar diagram code for the link.  Unlike most
+        of the codes here, planar diagram codes support
+        multiple-component links.
+        Their main limitations are that they cannot represent zero-crossing
+        unknot components, and they cannot fix the orientation of a link
+        component that consists entirely of over-crossings.
+       </para>
+       <para>
+        For a detailed description of planar diagram codes, see the
+        section on <link linkend="link-new-pd">creating
+        links from planar diagram codes</link>.
+       </para>
+      </glossdef>
+     </glossentry>
      <glossentry id="link-codes-jenkins">
       <glossterm><guilabel>Jenkins format</guilabel></glossterm>
       <glossdef>
@@ -585,7 +690,7 @@
         and used in his
         <ulink url="http://burtleburtle.net/bob/knot/homfly.html">&homflypt;
         polynomial software</ulink>.
-        Unlike most of the codes here, &regina; will happily display the
+        &regina; can happily display the
         Jenkins format for multiple-component links.
        </para>
        <para>
@@ -688,7 +793,7 @@
        <para>
         <inlinemediaobject>
          <imageobject>
-          <imagedata fileref="link-graphs-tree.png"/>
+          <imagedata multires="link-graphs-tree"/>
          </imageobject>
         </inlinemediaobject>
        </para>
@@ -719,7 +824,7 @@
        <para>
         <inlinemediaobject>
          <imageobject>
-          <imagedata fileref="link-graphs-nice.png"/>
+          <imagedata multires="link-graphs-nice"/>
          </imageobject>
         </inlinemediaobject>
        </para>
@@ -740,8 +845,7 @@
   <sect2 id="link-complement">
    <title>Link Complements</title>
    <para>
-    &regina; can do a lot more with
-    <link linkend="packet-triangulation3">3-manifold triangulations</link>
+    &regina; can do a lot more with 3-manifold triangulations
     than with knots and links directly. If you want access to these more
     powerful 3-manifold tools, you can build a triangulation of the
     link complement.
@@ -751,20 +855,49 @@
     describing the complement of your link in the 3-sphere.
    </para>
    <para>
-    To do this, select
-    <menuchoice>
-     <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
-     <guimenuitem>Complement</guimenuitem>
-    </menuchoice>
-    from the menu, or just press the <guilabel>Complement</guilabel>
-    toolbar button (circled in the picture below).
-    This will create a new triangulation immediately beneath
-    your link in the packet tree.
+    There are two ways you can build a link complement:
+    <itemizedlist>
+     <listitem><para>
+      If you select
+      <menuchoice>
+       <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+       <guimenuitem>Complement</guimenuitem>
+      </menuchoice>
+      from the menu, or press the <guilabel>Complement</guilabel>
+      toolbar button (circled below),
+      &regina; will use its own implementation to create a native
+      &regina; triangulation of the complement.
+      The triangulation will have access to the full suite of
+      <link linkend="triangulations">&regina;'s tools for triangulations</link>,
+      but the meridian and longitude curves from the diagram will be forgotten.
+     </para></listitem>
+     <listitem><para>
+      If you select
+      <menuchoice>
+       <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+       <guimenuitem>&snappea;</guimenuitem>
+      </menuchoice>
+      from the menu, or press the <guilabel>&snappea;</guilabel>
+      toolbar button (also circled below),
+      &regina; will pass the link to the &snappea; kernel to triangulate
+      instead; the result will be a hybrid <link linkend="snappea">&snappea;
+      triangulation</link>.
+      The peripheral curves from the diagram will be preserved in
+      &snappea;'s data structures; however, the available tools for
+      working with the triangulation combinatorially will be more limited.
+      See the introduction to the chapter on <link linkend="snappea">&snappea;
+      triangulations</link> for more information on these limitations.
+     </para></listitem>
+    </itemizedlist>
+   </para>
+   <para>
+    Regardless of which method you use, the new triangulation will be
+    inserted immediately beneath your link in the packet tree.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-complement.png"/>
+      <imagedata multires="link-complement"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -783,7 +916,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="menu-link.png"/>
+     <imagedata multires="menu-link"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -840,7 +973,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-editcrossing.png"/>
+      <imagedata multires="link-editcrossing"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -873,7 +1006,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-simplify.png"/>
+      <imagedata multires="link-simplify"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -897,7 +1030,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="link-simplify-fail.png"/>
+       <imagedata multires="link-simplify-fail"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -909,7 +1042,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="link-simplify-harder.png"/>
+       <imagedata multires="link-simplify-harder"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -931,7 +1064,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="link-simplify-keeptrying.png"/>
+       <imagedata multires="link-simplify-keeptrying"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -983,7 +1116,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-reidemeister.png"/>
+      <imagedata multires="link-reidemeister"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -994,7 +1127,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-reidemeisterbox.png"/>
+      <imagedata multires="link-reidemeisterbox"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1088,7 +1221,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-refrotrev.png"/>
+      <imagedata multires="link-refrotrev"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1160,7 +1293,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-cabling.png"/>
+      <imagedata multires="link-cabling"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1171,7 +1304,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-cablingbox.png"/>
+      <imagedata multires="link-cablingbox"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1222,6 +1355,33 @@
    </para></warning>
   </sect2>
 
+  <sect2 id="link-selfframe">
+   <title>Self Framing</title>
+   <para>
+    To <emphasis>self frame</emphasis> a link means to add any necessary
+    twists (i.e., Reidemeister&nbsp;1 moves) to ensure that each
+    individual component has zero writhe.
+   </para>
+   <para>
+    To do this, select
+    <menuchoice>
+     <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+     <guimenuitem>Self Frame</guimenuitem>
+    </menuchoice>
+    from the menu.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="link-selfframe"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Your link will be modified directly.
+   </para>
+  </sect2>
+
   <sect2 id="link-composewith">
    <title>Building Composite Links</title>
    <para>
@@ -1252,7 +1412,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-composewith.png"/>
+      <imagedata multires="link-composewith"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1268,7 +1428,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link-composewith-link.png"/>
+      <imagedata multires="link-composewith-link"/>
      </imageobject>
     </inlinemediaobject>
    </para>
