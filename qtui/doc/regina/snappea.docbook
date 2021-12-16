@@ -174,7 +174,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menu-newsnappea.png"/>
+      <imagedata multires="menu-newsnappea"/>
      </imageobject>
     </inlinemediaobject>
    </para>

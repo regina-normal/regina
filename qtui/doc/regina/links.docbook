@@ -39,7 +39,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="menu-newlink.png"/>
+     <imagedata multires="menu-newlink"/>
     </imageobject>
    </inlinemediaobject>
   </para>

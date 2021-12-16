@@ -112,7 +112,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menu-newtri.png"/>
+      <imagedata multires="menu-newtri"/>
      </imageobject>
     </inlinemediaobject>
    </para>

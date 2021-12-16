@@ -95,7 +95,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="menu-newangles.png"/>
+     <imagedata multires="menu-newangles"/>
     </imageobject>
    </inlinemediaobject>
   </para>

@@ -91,7 +91,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="menu-newsurfaces.png"/>
+     <imagedata multires="menu-newsurfaces"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -1391,7 +1391,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menu-newfilter.png"/>
+      <imagedata multires="menu-newfilter"/>
      </imageobject>
     </inlinemediaobject>
    </para>
