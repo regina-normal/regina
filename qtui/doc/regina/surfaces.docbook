@@ -11,7 +11,7 @@
  <para>
   <inlinemediaobject>
    <imageobject>
-    <imagedata fileref="normaldiscs.png" align="right"/>
+    <imagedata multires="normaldiscs" align="right"/>
    </imageobject>
   </inlinemediaobject>
   A <firstterm>normal surface</firstterm> within a 3-manifold triangulation
@@ -102,7 +102,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="newsurfaces.png"/>
+     <imagedata multires="newsurfaces"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -253,10 +253,8 @@
        </glosslist>
       </para>
       <para id="hypersurfaces-selectcoords">
-       For normal hypersurfaces in 4-manifold triangulations,
-       there is currently only one coordinate system available
-       for enumerating hypersurfaces (though &regina; can still
-       <emphasis>view</emphasis> hypersurfaces in other coordinate systems):
+       For normal hypersurfaces in 4-manifold triangulations, the available
+       coordinate systems are:
        <glosslist>
         <glossentry>
          <glossterm><guilabel>Standard normal (tet-prism)</guilabel></glossterm>
@@ -269,6 +267,23 @@
            coordinates, corresponding to the five vertices and ten edges
            respectively of the pentachoron that these tetrahedra and prisms
            truncate.
+          </para>
+         </glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Prism normal</guilabel></glossterm>
+         <glossdef>
+          <para>
+           These are the 10<replaceable>n</replaceable>-dimensional
+           <firstterm>prism coordinates</firstterm>,
+           obtained from standard normal coordinates by simply ignoring all
+           tetrahedron coordinates.
+          </para>
+          <para>
+           This is analogous to quad coordinates for normal surfaces.
+           Like quad coordinates, if the underlying manifold is compact
+           then the tetrahedron coordinates can be reconstructed up to
+           the addition and/or removal of vertex links.
           </para>
          </glossdef>
         </glossentry>
@@ -353,7 +368,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="surfaces-enumerating.png"/>
+     <imagedata multires="surfaces-enumerating"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -381,7 +396,6 @@
  <sect1 id="surfaces-analysis">
   <title>Analysis</title>
 
-  <!--TODO: Talk about the triangulation-->
   <para>
    Once you have <link linkend="surfaces-creation">built
    a list of surfaces or hypersurfaces</link>, you can study them
@@ -406,7 +420,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="surfaces-header.png"/>
+     <imagedata multires="surfaces-header"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -453,6 +467,60 @@
    <link linkend="python">&python; scripting</link>.
   </para>
 
+  <sect2 id="surfaces-viewtri">
+   <title>Viewing the Triangulation</title>
+
+   <para>
+    As of &regina;&nbsp;7.0, normal surfaces and hypersurfaces are no
+    longer linked to their source triangulations in the packet tree.
+    You can move a surface list and/or its triangulation around independently
+    in the tree, or you can modify or even delete the original
+    triangulation.  All of these operations are now allowed and safe.
+   </para>
+   <para>
+    Whatever happens, it is always possible to come back and view the original
+    triangulation from which a surface or hypersurface list was created.
+    You do this by following the link in the header:
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="surfaces-tri-public"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    If the original triangulation still exists in an unmodified form in
+    your packet tree, this link will open it directly.  If the original
+    has been modified or deleted, then this link will be marked as
+    <guilabel>private copy</guilabel>, which indicates that the
+    (hyper)surface list took its own copy of the original triangulation
+    for safekeeping.
+    These private copies are saved in &regina; data files,
+    so you do not need to worry about losing the original triangulation
+    if you close &regina; and reopen it later.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="surfaces-tri-private"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    If you try to open this private copy, &regina; will instead
+    offer to insert a fresh copy of the original triangulation in your
+    packet tree, for you to view and/or edit as you like.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="surfaces-tri-restore"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
   <sect2 id="surfaces-summary">
    <title>Summary of (Hyper)surfaces</title>
 
@@ -492,14 +560,14 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="surfaces-summary.png"/>
+      <imagedata multires="surfaces-summary"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="hypersurfaces-summary.png"/>
+      <imagedata multires="hypersurfaces-summary"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -526,14 +594,14 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="surfaces-coords.png"/>
+      <imagedata multires="surfaces-coords"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="hypersurfaces-coords.png"/>
+      <imagedata multires="hypersurfaces-coords"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -557,7 +625,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="hypersurfaces-rename.png"/>
+      <imagedata multires="hypersurfaces-rename"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -692,7 +760,7 @@
            <para>
             <inlinemediaobject>
              <imageobject>
-              <imagedata fileref="surfaces-slopes.png"/>
+              <imagedata multires="surfaces-slopes"/>
              </imageobject>
             </inlinemediaobject>
            </para>
@@ -787,7 +855,7 @@
         <para>
          <inlinemediaobject>
           <imageobject>
-           <imagedata fileref="surfaces-octagons.png"/>
+           <imagedata multires="surfaces-octagons"/>
           </imageobject>
          </inlinemediaobject>
         </para>
@@ -819,7 +887,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="hypersurfaces-coordbox.png"/>
+       <imagedata multires="hypersurfaces-coordbox"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -1093,10 +1161,6 @@
          obtained from standard normal (tet-prism) coordinates by ignoring
          all tetrahedra and considering only the prisms.
         </para>
-        <para>
-         Prism coordinates are (for the time being) offered for viewing only.
-         You cannot enumerate hypersurfaces in prism coordinates.
-        </para>
        </glossdef>
       </glossentry>
       <glossentry id="hypersurfaces-defedgewt">
@@ -1143,7 +1207,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="hypersurfaces-matching.png"/>
+      <imagedata multires="hypersurfaces-matching"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1232,7 +1296,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="surfaces-compat-local.png"/>
+      <imagedata multires="surfaces-compat-local"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1252,14 +1316,14 @@
    <para>
     For some normal surfaces in 3-manifolds,
     &regina; cannot test global compatibility.
-    These include surfaces that are empty, disconnected, or spun.
+    These include surfaces that are empty, disconnected, or spun-normal.
     In such cases the corresponding rows and columns will be hashed out,
     as illustrated below.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="surfaces-compat-hash.png"/>
+      <imagedata multires="surfaces-compat-hash"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1272,7 +1336,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="surfaces-compat-compute.png"/>
+      <imagedata multires="surfaces-compat-compute"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1313,7 +1377,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="hypersurfaces-tri.png"/>
+      <imagedata multires="hypersurfaces-tri"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1324,7 +1388,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="hypersurfaces-tri-results.png"/>
+      <imagedata multires="hypersurfaces-tri-results"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1362,7 +1426,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="surfaces-applyfilter.png"/>
+     <imagedata multires="surfaces-applyfilter"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -1403,7 +1467,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="newfilter.png"/>
+      <imagedata multires="newfilter"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1430,7 +1494,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="filter-prop.png"/>
+      <imagedata multires="filter-prop"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1480,13 +1544,6 @@
         characteristics.  You can allow more than one Euler
         characteristic; simply type them all into the box provided.
        </para>
-       <para>
-        <inlinemediaobject>
-         <imageobject>
-          <imagedata fileref="filter-euler.png"/>
-         </imageobject>
-        </inlinemediaobject>
-       </para>
       </listitem>
      </varlistentry>
     </variablelist>
@@ -1515,7 +1572,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="filtercomb.png"/>
+      <imagedata multires="filtercomb"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1539,7 +1596,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="filtercombtree.png"/>
+      <imagedata multires="filtercombtree"/>
      </imageobject>
     </inlinemediaobject>
    </para>

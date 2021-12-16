@@ -139,6 +139,7 @@
    angle structures</link></secondaryie>
   <secondaryie><link linkend="angles-tautonly">enumerating taut
    angle structures</link></secondaryie>
+  <secondaryie><link linkend="angles">generalised</link></secondaryie>
   <secondaryie><link linkend="angles-viewstructurecoords">individual
    angles</link></secondaryie>
   <secondaryie><link linkend="tri-strict">strict,
@@ -843,6 +844,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>generalised angle structures</primaryie>
+  <secondaryie><link linkend="angles">working with</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>globally compatible normal surfaces</primaryie>
   <seeie>See: compatibility matrices for normal surfaces</seeie>
  </indexentry>
@@ -1445,6 +1451,17 @@
  <indexentry>
   <primaryie>preferences</primaryie>
   <seeie>See: configuration</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>prism normal coordinates</primaryie>
+  <seeie>See: coordinate systems</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>private copy</primaryie>
+  <secondaryie><link linkend="surfaces-viewtri">of triangulation in a
+   surface, hypersurface or angle structure list</link></secondaryie>
  </indexentry>
 
  <indexentry>
