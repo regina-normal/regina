@@ -69,7 +69,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menu-python.png"/>
+      <imagedata multires="menu-python"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -86,7 +86,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="python-console.png"/>
+      <imagedata multires="python-console"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -140,7 +140,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="regina-python.png"/>
+      <imagedata multires="regina-python"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -168,7 +168,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menu-newscript.png"/>
+      <imagedata multires="menu-newscript"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -179,7 +179,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="script-edit.png"/>
+      <imagedata multires="script-edit"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -191,7 +191,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="script-var.png"/>
+      <imagedata multires="script-var"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -207,7 +207,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="script-run.png"/>
+      <imagedata multires="script-run"/>
      </imageobject>
     </inlinemediaobject>
    </para>
