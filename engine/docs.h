@@ -299,7 +299,7 @@ namespace regina {
  *    See the individual class notes for how the Python class names are
  *    constructed.
  *
- *  <h3>Testing equality</h3>
+ *  <h3>Python vs C++ APIs</h3>
  *
  *  - Since Regina 7.0, almost \e all of Regina's C++ classes and functions
  *    are wrapped in Python - even the low-level and/or highly specialised
@@ -394,6 +394,29 @@ namespace regina {
  *  packets of the same type by value using the operators <tt>x == y</tt> and
  *  <tt>x != y</tt>, and you can test whether two packets of any types
  *  reference the same underlying object by calling Packet::samePacket().
+ *
+ *  <h3>International and special characters</h3>
+ *
+ *  If you use special characters (such as accented letters, other
+ *  international characters, exotic punctuation, mathematical symbols and
+ *  so on), you may need to think about <i>text encodings</i> when passing
+ *  strings between Python and Regina.
+ *
+ *  For Python 3 users, this is simple: all strings in Python are unicode,
+ *  and these are converted seamlessly and transparently when moving between
+ *  Regina and Python.
+ *
+ *  For Python 2 users, you need to take some care.  All \c unicode objects
+ *  will be converted correctly and transparently.  If you have a Python
+ *  string, however, you will need to ensure it is encoded in UTF-8 when
+ *  passing it to Regina.  Conversely, you should assume that all strings
+ *  that Regina sends back to Python will be UTF-8-encoded.
+ *  See https://docs.python.org/2.7/howto/unicode.html for more information
+ *  on how to work with UTF-8 strings in Python 2.
+ *
+ *  See the page on \ref i18n "encodings for international strings" for
+ *  further discussion on text encodings within Regina, including an
+ *  important note regarding filenames.
  */
 
 } // namespace regina

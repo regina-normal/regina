@@ -32,9 +32,9 @@
   <!ENTITY regenginedocs
    "<link linkend='python-docs'>calculation engine documentation</link>">
   <!ENTITY regenginedocsurlbase
-   "<ulink url='http://regina-normal.github.io/engine-docs/'>regina-normal.github.io</ulink>">
+   "<ulink url='http://regina-normal.github.io/&regversion;/engine-docs/'>regina-normal.github.io</ulink>">
   <!ENTITY regmanapiurl
-   "<ulink url='http://regina-normal.github.io/engine-docs/'>regina-normal.github.io</ulink>">
+   "<ulink url='http://regina-normal.github.io/&regversion;/engine-docs/'>regina-normal.github.io</ulink>">
   <!ENTITY regmanhandbookurl
    "<ulink url='http://regina-normal.github.io/docs/'>regina-normal.github.io</ulink>">
   <!ENTITY regmanburtonthesisurl

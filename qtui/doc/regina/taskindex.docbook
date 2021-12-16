@@ -298,8 +298,6 @@
   <primaryie>character encodings</primaryie>
   <secondaryie><link linkend="foreign">in
    imports and exports</link></secondaryie>
-  <secondaryie><link linkend="python-i18n">in
-   &python;</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1542,8 +1540,6 @@
   <primaryie>scripting</primaryie>
   <secondaryie><link linkend="python-access">accessing &regina; objects,
    classes and methods</link></secondaryie>
-  <secondaryie><link linkend="python-caveats">caveats and
-   traps</link></secondaryie>
   <secondaryie><link linkend="man-regina-python">command-line scripting
    interface</link></secondaryie>
   <secondaryie><link linkend="options-python">configuration</link></secondaryie>
