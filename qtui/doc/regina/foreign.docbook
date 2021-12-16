@@ -4,10 +4,13 @@
  <para>
   By default, &regina; reads and writes
   <filename>.rga</filename> data files in its own compressed
-  &xml; file format.
-  However, &regina; can also import data from and export data to several
-  other file formats, which allows you to pass data between &regina; and
-  other applications.
+  &xml; file format.  The current (third-generation) file format was
+  <link linkend="regina7-fileformat">introduced in &regina;&nbsp;7.0</link>.
+ </para>
+ <para>
+  Besides this, &regina; can also import data from and export data to several
+  other file formats (including &regina;'s own older second-generation format).
+  This allows you to pass data between &regina; and other applications.
   This chapter outlines the available import and export formats.
  </para>
  <para>
@@ -17,6 +20,8 @@
    <guimenu>Help</guimenu>
    <guisubmenu>File Format Reference</guisubmenu>
   </menuchoice> from the menu.
+  You can also read the most up-to-date specification of &regina;'s file format
+  <ulink url="https://regina-normal.github.io/current/docs/regina-xml/index.html">on the &regina; website</ulink>.
  </para>
 
  <sect1 id="foreign-import">
@@ -36,7 +41,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="menu-import.png"/>
+     <imagedata multires="menu-import"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -53,7 +58,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="import-snappea.png"/>
+     <imagedata multires="import-snappea"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -92,6 +97,11 @@
     You can also merge data files from the command-line using the
     <link linkend="man-regconcat"><command>regconcat</command></link>
     utility.
+   </para>
+   <para>
+    &regina; can happily import either the new (third-generation, since
+    &regina;&nbsp;7.0) or older (second-generation, until &regina;&nbsp;6.0.1)
+    file formats, and can read both compressed and uncompressed &xml;.
    </para>
   </sect2>
 
@@ -177,17 +187,21 @@
   </sect2>
 
   <sect2 id="import-isosiglist">
-   <title>Isomorphism Signature Lists</title>
+   <title>Isomorphism / Knot Signature Lists</title>
 
    <para>
-    You can import a list of isomorphism signatures from a text file.
-    This is a space-efficient, plain-text method of storing a list
-    of 2-, 3- or 4-manifold triangulations.
+    You can import a list of isomorphism signatures or knot signatures
+    from a text file.
+    These signatures are a space-efficient, plain-text method of storing a
+    list of triangulations or knots.
    </para>
    <para>
     An <firstterm>isomorphism signature</firstterm> is a
     compact sequence of letters, digits and/or punctuation that identifies a
     triangulation uniquely up to combinatorial isomorphism.
+    A <firstterm>knot signature</firstterm> is a similar type sequence
+    of symbols that encodes a knot diagram up to relabelling, rotation,
+    reflection and/or reversal.
     See the <link linkend="tri-composition-isosig">composition viewer</link>
     for a more detailed discussion on isomorphism signatures, or
     <xref linkend="bib-burton-pachner-orprime"/> for examples of their use
@@ -195,10 +209,11 @@
    </para>
    <para>
     The list should be stored in a plain text file with one triangulation
-    per line.  Each line may contain an arbitrary amount of data, but the
-    first word of each line should be the isomorphism signature.
-    Note that isomorphism signatures are <emphasis>case sensitive</emphasis>
-    (i.e., upper-case and lower-case matter).  An example file is shown below.
+    or knot per line.  Each line may contain an arbitrary amount of data, but
+    the first word of each line should be the isomorphism or knot signature.
+    Note that signatures are <emphasis>case sensitive</emphasis>
+    (i.e., upper-case and lower-case matter).  An example file for
+    3-manifold triangulations is shown below.
    </para>
    <programlisting>
     dLQbcbchxjn   L(11,3)
@@ -209,13 +224,17 @@
    </programlisting>
    <para>
     In an isomorphism signature list, all signatures must represent
-    triangulations of the same dimension (so, for example, the list
-    cannot contain a mix of 3-manifold and 4-manifold signatures).  The
+    triangulations of the same dimension (so, for example, the list cannot
+    contain a mix of 3-manifold and 4-manifold signatures; likewise, it cannot
+    contain a mix of signatures for triangulations and knots).  The
     <menuchoice>
      <guimenu>File</guimenu>
      <guisubmenu>Import</guisubmenu>
     </menuchoice>
-    menu has different menu items for importing lists in each dimension.
+    menu has different menu items for importing lists in dimensions 2, 3 and 4,
+    and for importing lists of knot signatures.  &regina; does support
+    isomorphism signatures in higher dimensions, but for this you will
+    need to use <link linkend="python">&python;</link>.
    </para>
    <para>
     The import will appear in your packet tree as a new
@@ -226,15 +245,15 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="import-isosig.png"/>
+      <imagedata multires="import-isosig"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
-    If you just wish to reconstruct a triangulation from a single
-    isomorphism signature (not from many signatures), you can do this
-    more easily by creating a
-    <link linkend="tri-new-isosig">new triangulation</link>.
+    If you just wish to reconstruct a triangulation or knot from a single
+    signature (not from many signatures), you can do this more easily by
+    creating a <link linkend="tri-new-isosig">new triangulation</link>
+    or a <link linkend="link-new-knotsig">new link</link>.
    </para>
   </sect2>
 
@@ -281,27 +300,6 @@
     dehydration string (not from many strings), you can do this
     more easily by creating a
     <link linkend="tri-new-dehydration">new triangulation</link>.
-   </para>
-  </sect2>
-
-  <sect2 id="import-pdf">
-   <title>&pdf; Documents</title>
-
-   <para>
-    You can import a &pdf; document, which will appear in your data file
-    as an <link linkend="packet-attachment">attachment packet</link>.
-    This you to document your work with formulae, diagrams and
-    anything else that can appear on the printed page.
-   </para>
-   <para>
-    This is the only way of creating a &pdf; packet within &regina;.
-    If you select
-    <menuchoice>
-     <guimenu>Packet Tree</guimenu>
-     <guimenuitem>New PDF Document</guimenuitem>
-    </menuchoice>
-    from the menu, &regina; will go through exactly the same import
-    process as described here.
    </para>
   </sect2>
 
@@ -372,9 +370,35 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="i18n-import.png"/>
+      <imagedata multires="i18n-import"/>
      </imageobject>
     </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="import-attachment">
+   <title>Attachments</title>
+
+   <para>
+    You can insert <emphasis>any</emphasis> other file into your
+    &regina; data file by importing it
+    as an <link linkend="packet-attachment">attachment</link>.
+    For example, you could import a &pdf; document that documents your
+    work with detailed formulae and diagrams.
+   </para>
+   <para>
+    To do this, select
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>New Attachment</guimenuitem>
+    </menuchoice>
+    from the menu.  &regina; will go through the same import process as
+    described above.
+   </para>
+   <para>
+    Once you have imported your attachment, you can safely edit, move or even
+    delete the original file from your computer, since your &regina;
+    data file will keep its own internal copy.
    </para>
   </sect2>
  </sect1>
@@ -397,7 +421,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="menu-export.png"/>
+     <imagedata multires="menu-export"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -416,7 +440,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="export-snappea.png"/>
+     <imagedata multires="export-snappea"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -433,7 +457,7 @@
    <title>&regina; Data Files</title>
 
    <para>
-    This is &regina;'s native file format, in which data is saved as
+    This is &regina;'s native file format, which saves data as
     compressed &xml;.
     &regina; can export an entire packet subtree to this format:
     just choose the root of of the subtree as the packet to export.
@@ -459,8 +483,9 @@
        <guimenu>File</guimenu>
        <guisubmenu>Export</guisubmenu>
        <guimenuitem>&regina; Data File</guimenuitem>
-      </menuchoice>,
-      will export the data as compressed &xml; using the new file format
+      </menuchoice>
+      will export the data as compressed &xml; using the
+      <link linkend="regina7-fileformat">new file format</link>
       introduced with &regina;&nbsp;7.0.  This is the default file
       format that is used when you select
       <menuchoice>
@@ -473,7 +498,7 @@
        <guimenu>File</guimenu>
        <guisubmenu>Export</guisubmenu>
        <guimenuitem>&regina; Data File (Uncompressed)</guimenuitem>
-      </menuchoice>,
+      </menuchoice>
       will export the data as plain &xml; (which means you
       can view the &xml; in your favourite text editor),
       again using the new file format introduced with &regina;&nbsp;7.0.
@@ -485,7 +510,7 @@
        <guimenu>File</guimenu>
        <guisubmenu>Export</guisubmenu>
        <guimenuitem>Legacy &regina; Data File (&le;&nbsp;6.0.1)</guimenuitem>
-      </menuchoice>,
+      </menuchoice>
       will export the data as compressed &xml; using the old file format
       from &regina;&nbsp;3.0&ndash;6.0.1.
      </para></listitem>
@@ -529,8 +554,8 @@
     (such as fillings or peripheral curves) as unknown.
     If you are exporting one of &regina;'s hybrid
     <link linkend="packet-snappea">&snappea; triangulations</link>,
-    then &regina; will write this extra &snappea;-specific
-    information to the exported file.
+    then &regina; will include this extra &snappea;-specific
+    information in the exported file.
    </para>
    <para>
     Any international characters in the exported &snappea; file will be
@@ -556,48 +581,6 @@
     <link linkend="tri-propvalid">invalid</link>,
     and it may not have any boundary triangles.
     &regina; will tell you if your triangulation cannot be exported.
-   </para>
-  </sect2>
-
-  <sect2 id="export-cpp">
-   <title>&cpp; Source Code</title>
-
-   <para>
-    You can export a 3-manifold triangulation
-    (either one of &regina;'s <link linkend="packet-triangulation3">native
-    triangulations</link> or a hybrid
-    <link linkend="packet-snappea">&snappea; triangulation</link>)
-    as &cpp; source code.
-    This &cpp; code will use classes and routines from
-    &regina;'s calculation engine.  When run, this code will reconstruct
-    your triangulation.
-   </para>
-   <para>
-    Exporting to &cpp; can be useful if you wish to hard-code a
-    triangulation in your own &cpp; project.
-    See the separate chapter on
-    <link linkend="compiling">building &regina; into your own code</link>.
-   </para>
-   <para>
-    During the export, &regina; will tell you how it will write any
-    international characters (that is, letters or symbols
-    not found on a typical English keyboard).  Such characters are
-    stored using a <firstterm>text encoding</firstterm>, such as
-    &utf8; (a popular modern standard and the default in &regina;),
-    or &latin1; (which has a long history of use with many Western European
-    languages).
-    If you wish to use a different encoding, you will need to set this
-    in <link linkend="options-encoding">&regina;'s options</link>.
-    If you are not sure, the default of &utf8; is typically a good choice.
-    If you only ever use letters or symbols found on a typical English keyboard,
-    you do not need to worry about text encodings at all.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="i18n-export.png"/>
-     </imageobject>
-    </inlinemediaobject>
    </para>
   </sect2>
 
@@ -629,21 +612,6 @@
    </para>
   </sect2>
 
-  <sect2 id="export-pdf">
-   <title>&pdf; Documents</title>
-
-   <para>
-    You can export a &pdf; packet to an ordinary &pdf; document.
-   </para>
-   <para>
-    If you simply wish to view &pdf; packets in a different viewer,
-    you do not need to go to the trouble of exporting the
-    packet&mdash;instead you can
-    <link linkend="options-tools">configure &regina;</link> to use your
-    favourite viewer by default.
-   </para>
-  </sect2>
-
   <sect2 id="export-pyscript">
    <title>&python; Scripts</title>
 
@@ -657,11 +625,25 @@
     <link linkend="import-pyscript">&python; imports</link> for details.
    </para>
    <para>
-    During the export, &regina; will tell you how it will encode any
-    international characters in the script (i.e., letters or symbols
-    not found on a typical English keyboard).
-    See the <link linkend="export-cpp">&cpp; exports</link> section
-    above for more information on text encodings.
+    During the export, &regina; will tell you how it will write any
+    international characters in the script (that is, letters or symbols
+    not found on a typical English keyboard).  Such characters are
+    stored using a <firstterm>text encoding</firstterm>, such as
+    &utf8; (a popular modern standard and the default in &regina;),
+    or &latin1; (which has a long history of use with many Western European
+    languages).
+    If you wish to use a different encoding, you will need to set this
+    in <link linkend="options-encoding">&regina;'s options</link>.
+    If you are not sure, the default of &utf8; is typically a good choice.
+    If you only ever use letters or symbols found on a typical English keyboard,
+    you do not need to worry about text encodings at all.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="i18n-export"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
  </sect1>

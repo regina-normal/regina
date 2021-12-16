@@ -160,8 +160,8 @@
   <primaryie>attachments</primaryie>
   <secondaryie><link linkend="packet-attachment">attachment
    packets</link></secondaryie>
-  <secondaryie><link linkend="export-pdf">exporting</link></secondaryie>
-  <secondaryie><link linkend="import-pdf">importing</link></secondaryie>
+  <secondaryie><link linkend="packet-attachment">exporting</link></secondaryie>
+  <secondaryie><link linkend="import-attachment">importing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1692,8 +1692,6 @@
   <primaryie>source code</primaryie>
   <secondaryie><link linkend="compiling">combining with the &regina;
    calculation engine</link></secondaryie>
-  <secondaryie><link linkend="export-cpp">exporting triangulations to
-   &cpp;</link></secondaryie>
   <secondaryie><link linkend="regina7-cpp">major &cpp; changes in
    &regina;&nbsp;7.0</link></secondaryie>
   <secondaryie><link linkend="regina7-python">major &python; changes in
