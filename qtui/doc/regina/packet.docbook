@@ -314,10 +314,8 @@
     </inlinemediaobject>
    </para>
    <para>
-    At present, normal hypersurface lists can only be created in the
-    standard coordinate system (with 15 coordinates per pentachoron).
-    However, you can still view the hypersurfaces in a variety of different
-    coordinate systems.
+    Normal hypersurface lists can be also created using different sets of
+    matching equations, and can be viewed in different coordinate systems.
     Like normal surfaces, a normal hypersurface list can appear anywhere
     in the packet tree (it no longer needs to be linked to its source
     4-manifold triangulation).
