@@ -206,7 +206,14 @@ True
     or <literal>PacketOfLink</literal> (and so on for other types of object).
     These packet classes inherit from <literal>Triangulation3</literal>,
     <literal>Link</literal>, etc., and can be used in much the same way.
+    You can use the new <literal>make_packet()</literal> functions
+    to help you convert between the classes.
    </para>
+   <programlisting>
+&gt;&gt;&gt; ExampleLink.figureEight()
+&lt;regina.Link: 4-crossing knot: ++-- ( _0 ^1 _2 ^3 _1 ^0 _3 ^2 )&gt;
+&gt;&gt;&gt; make_packet(ExampleLink.figureEight())
+&lt;regina.PacketOfLink: 4-crossing knot: ++-- ( _0 ^1 _2 ^3 _1 ^0 _3 ^2 )&gt;</programlisting>
    <para>
     Finally, although there are far fewer changes to the &python; &api;
     than for &cpp;, there is one change that will likely affect most people:
