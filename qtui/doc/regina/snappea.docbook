@@ -104,7 +104,7 @@
       <para>
        <inlinemediaobject>
         <imageobject>
-         <imagedata fileref="menutosnappea.png"/>
+         <imagedata multires="menutosnappea"/>
         </imageobject>
        </inlinemediaobject>
       </para>
@@ -121,7 +121,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-snappea-convert.png"/>
+      <imagedata multires="tri-snappea-convert"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -133,7 +133,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-snappea-converted.png"/>
+      <imagedata multires="tri-snappea-converted"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -161,10 +161,39 @@
    </para>
   </sect2>
 
+  <sect2 id="snappea-fromlink">
+   <title>Converting from a Knot or Link</title>
+   <para>
+    You can create a &snappea; triangulation directly from one of
+    &regina;'s <link linkend="links">knots or links</link>.
+    This will ensure that &snappea; preserves the peripheral curves
+    (i.e., the meridian and longitude) from the link diagram.
+   </para>
+   <para>
+    To do this, open the link and then either select
+    <menuchoice>
+     <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+     <guimenuitem>&snappea;</guimenuitem>
+    </menuchoice>
+    from the menu, or press the corresponding toolbar button
+    (circled in the picture below).
+    As before, this will create a new &snappea; triangulation immediately
+    beneath your link in the packet tree.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="snappea-link"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
   <sect2 id="snappea-new">
    <title>New &snappea; Triangulations</title>
    <para>
-    To create a new &snappea; triangulation, select
+    Instead of using the conversion procedures described above,
+    you can instead create a new &snappea; triangulation by selecting
     <menuchoice>
      <guimenu>Packet Tree</guimenu>
      <guimenuitem>New &snappea; Triangulation</guimenuitem>
@@ -186,7 +215,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="newsnappea.png"/>
+      <imagedata multires="newsnappea"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -204,7 +233,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newsnappea-file.png"/>
+       <imagedata multires="newsnappea-file"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -231,7 +260,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newsnappea-convert.png"/>
+       <imagedata multires="newsnappea-convert"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -244,11 +273,31 @@
     </para>
    </sect3>
 
+   <sect3 id="snappea-new-link">
+    <title>Link complement</title>
+
+    <para>
+     This allows you to build the complement of a knot or link
+     as a &snappea; triangulation, preserving the meridian and longitude
+     as peripheral curves within the &snappea; kernel.
+     This is the same as opening the link and converting it via the
+     &snappea; button, as <link linkend="snappea-fromlink">described
+     earlier</link>.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="newsnappea-link"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </sect3>
+
    <sect3 id="snappea-new-example">
     <title>Example Triangulation</title>
 
     <para>
-     &regina; also offers a small selection of ready-made sample triangulations,
+     &regina; offers a small selection of ready-made sample triangulations,
      which you can play with to see how &snappea; triangulations work
      within &regina;.
      Simply select an example from the list provided and &regina; will build the
@@ -257,7 +306,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newsnappea-example.png"/>
+       <imagedata multires="newsnappea-example"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -304,7 +353,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="snappeaheader.png"/>
+      <imagedata multires="snappeaheader"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -417,7 +466,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="snappea-cusps.png"/>
+      <imagedata multires="snappea-cusps"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -458,7 +507,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-vertexlinks.png"/>
+       <imagedata multires="tri-vertexlinks"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -484,7 +533,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="snappea-fill.png"/>
+       <imagedata multires="snappea-fill"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -534,7 +583,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="snappea-algebra.png"/>
+      <imagedata multires="snappea-algebra"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -570,7 +619,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="snappea-randomise.png"/>
+       <imagedata multires="snappea-randomise"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -627,7 +676,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="snappea-canonical.png"/>
+       <imagedata multires="snappea-canonical"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -650,7 +699,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="snappea-file.png"/>
+      <imagedata multires="snappea-file"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -685,7 +734,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="snappea-toregina.png"/>
+       <imagedata multires="snappea-toregina"/>
       </imageobject>
      </inlinemediaobject>
     </para>
