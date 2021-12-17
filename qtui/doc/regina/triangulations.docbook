@@ -2351,7 +2351,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="menucomponents.png"/>
+       <imagedata multires="menucomponents"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -2388,7 +2388,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="menuconnsum.png"/>
+       <imagedata multires="menuconnsum"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -2460,7 +2460,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-vertexlinks.png"/>
+      <imagedata multires="tri-vertexlinks"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2509,7 +2509,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-tribdry.png"/>
+      <imagedata multires="tri-tribdry"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2769,7 +2769,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-eltmove.png"/>
+      <imagedata multires="tri-eltmove"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2782,7 +2782,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-eltmovebox-3d.png"/>
+      <imagedata multires="tri-eltmovebox-3d"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2908,7 +2908,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-eltmovebox-4d.png"/>
+      <imagedata multires="tri-eltmovebox-4d"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3039,7 +3039,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-make0eff.png"/>
+      <imagedata multires="tri-make0eff"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3089,7 +3089,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-truncate-makeideal.png"/>
+      <imagedata multires="tri-truncate-makeideal"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3166,7 +3166,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-barycentric.png"/>
+      <imagedata multires="tri-barycentric"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3191,7 +3191,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-orient.png"/>
+      <imagedata multires="tri-orient"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3210,7 +3210,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-reflect.png"/>
+      <imagedata multires="tri-reflect"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3227,7 +3227,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-doublecover.png"/>
+      <imagedata multires="tri-doublecover"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3248,7 +3248,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-puncture.png"/>
+      <imagedata multires="tri-puncture"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3268,7 +3268,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-drilledge.png"/>
+      <imagedata multires="tri-drilledge"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3283,7 +3283,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-drilledgebox.png"/>
+      <imagedata multires="tri-drilledgebox"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3365,7 +3365,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-connsumwith.png"/>
+      <imagedata multires="tri-connsumwith"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3377,7 +3377,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-connsumwith-tri.png"/>
+      <imagedata multires="tri-connsumwith-tri"/>
      </imageobject>
     </inlinemediaobject>
    </para>
