@@ -77,6 +77,12 @@
    If you are migrating from &regina;&nbsp;&le;&nbsp;6.0.1, you should read the
    brief summary below so you understand the most important changes.
   </para>
+  <para>
+   &cpp; and &python; programmers can find a more fine-grained
+   explanation of the &api; changes on the
+   <ulink url="https://regina-normal.github.io/api/regina7.html">&regina;
+   website</ulink>.
+  </para>
 
   <sect2 id="regina7-fileformat">
    <title>A new, more flexible file format</title>

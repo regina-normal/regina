@@ -10,8 +10,8 @@ Version 7.0  [ 19 December, 2021 ]
 
     Overview:
         - Regina has had the largest overhaul in its 20+ year history.
-          Some of these changes break backward compatibility, and you *should*
-          read https://regina-normal.github.io/docs/regina/regina7.html for
+          Some of these changes break backward compatibility, and everyone
+          *should* read https://regina-normal.github.io/docs/regina7.html for
           a quick overview of the most important changes.
         - In particular: the file format has changed, the native C++ interface
           has been reworked to take advantage of modern language features, and
@@ -47,7 +47,7 @@ Version 7.0  [ 19 December, 2021 ]
     Python / C++:
         - Regina now uses the C++17 standard, and no longer uses boost at all.
         - As noted above, there have been major sweeping changes to the C++ API.
-          See http://regina-normal.github.io/regina7.html for details.
+          See https://regina-normal.github.io/api/regina7.html for details.
           Python users should require far fewer changes to their existing code.
         - Python now has full access to essentially all of Regina's C++ code,
           wherever this makes sense.  It also has more natural iteration,
