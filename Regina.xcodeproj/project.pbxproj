@@ -1434,6 +1434,9 @@
 		05998ED519F9362D00855238 /* cusped-hyp-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECE19F9360200855238 /* cusped-hyp-nor-census.rga */; };
 		05998ED619F9362D00855238 /* cusped-hyp-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECF19F9360200855238 /* cusped-hyp-or-census.rga */; };
 		059BC6681DC7F77F00AB4206 /* boundarycomponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 059BC6671DC7F77F00AB4206 /* boundarycomponent.h */; };
+		059BEC0E276CB73C006DC425 /* progress.session in Copy Examples */ = {isa = PBXBuildFile; fileRef = 059BEC0D276AAEA7006DC425 /* progress.session */; };
+		059BEC0F276CB740006DC425 /* tree.session in Copy Examples */ = {isa = PBXBuildFile; fileRef = 059BEC0C276AAEA7006DC425 /* tree.session */; };
+		059BEC10276CB745006DC425 /* triangulation.session in Copy Examples */ = {isa = PBXBuildFile; fileRef = 059BEC0B276AAEA7006DC425 /* triangulation.session */; };
 		059D019D25B6A72C004150F7 /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
 		059D019E25B6A72C004150F7 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		059D019F25B6A72C004150F7 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
@@ -2403,6 +2406,9 @@
 				05B4D2EC22A0930300B7B11C /* cusped-hyp-or-census.rga in Copy Examples */,
 				05B4D2EE22A0931400B7B11C /* gap-tests.rga in Copy Examples */,
 				050EA57A25A2BDD1000E94F5 /* knot-census.rga in Copy Examples */,
+				059BEC0E276CB73C006DC425 /* progress.session in Copy Examples */,
+				059BEC0F276CB740006DC425 /* tree.session in Copy Examples */,
+				059BEC10276CB745006DC425 /* triangulation.session in Copy Examples */,
 				05B4D2EF22A0931D00B7B11C /* README.txt in Copy Examples */,
 			);
 			name = "Copy Examples";
@@ -8585,16 +8591,10 @@
 				"$(SRCROOT)/examples/sample-py3.rga",
 				"$(SRCROOT)/examples/progress-py2.py",
 				"$(SRCROOT)/examples/progress-py3.py",
-				"$(SRCROOT)/examples/progress-py2.session",
-				"$(SRCROOT)/examples/progress-py3.session",
 				"$(SRCROOT)/examples/tree-py2.py",
 				"$(SRCROOT)/examples/tree-py3.py",
-				"$(SRCROOT)/examples/tree-py2.session",
-				"$(SRCROOT)/examples/tree-py3.session",
 				"$(SRCROOT)/examples/triangulation-py2.py",
 				"$(SRCROOT)/examples/triangulation-py3.py",
-				"$(SRCROOT)/examples/triangulation-py2.session",
-				"$(SRCROOT)/examples/triangulation-py3.session",
 			);
 			name = "Copy Python 2/3 Examples";
 			outputFileListPaths = (
@@ -8602,15 +8602,12 @@
 			outputPaths = (
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/sample.rga",
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/progress.py",
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/progress.session",
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/tree.py",
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/tree.session",
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/triangulation.py",
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/triangulation.session",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "src=\"${PROJECT_DIR}/examples\"\ndest=\"${TARGET_BUILD_DIR}/Regina.app/Contents/Resources/examples\"\n\nif [ -n \"${REGINA_PYTHON_FRAMEWORK}\" ]; then\n  # Assume we are bundled our own python3.\n  pyx=\"-py3\"\nelse\n  # We are working with the system python, which\n  # we assume is python2.\n  pyx=\"-py2\"\nfi\n\nfor i in sample-pyx.rga {progress,tree,triangulation}-pyx.{py,session}; do\n  cp \"$src/${i/-pyx/$pyx}\" \"$dest/${i/-pyx/}\"\ndone\n";
+			shellScript = "src=\"${PROJECT_DIR}/examples\"\ndest=\"${TARGET_BUILD_DIR}/Regina.app/Contents/Resources/examples\"\n\nif [ -n \"${REGINA_PYTHON_FRAMEWORK}\" ]; then\n  # Assume we are bundled our own python3.\n  pyx=\"-py3\"\nelse\n  # We are working with the system python, which\n  # we assume is python2.\n  pyx=\"-py2\"\nfi\n\nfor i in sample-pyx.rga {progress,tree,triangulation}-pyx.py; do\n  cp \"$src/${i/-pyx/$pyx}\" \"$dest/${i/-pyx/}\"\ndone\n";
 		};
 		05B9295C259C148700A4503B /* Prepare and Sign Python */ = {
 			isa = PBXShellScriptBuildPhase;
