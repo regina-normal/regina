@@ -37,13 +37,13 @@
  </para>
  <para>
   &regina; offers rich support for triangulations of dimensions 2, 3 and 4.
-  However, it also offers more basic support for triangulations of
+  It also offers more basic support for triangulations of
   dimensions 5&nbsp;&le;&nbsp;<replaceable>d</replaceable>&nbsp;&le;&nbsp;8,
   and if you make your own
   <ulink url="https://regina-normal.github.io/buildtips.html#highdim">custom
   build</ulink>,
   dimensions 9&nbsp;&le;&nbsp;<replaceable>d</replaceable>&nbsp;&le;&nbsp;15.
-  These higher-dimensional triangulations are not supported in the &gui;;
+  These higher dimensions (&ge;&nbsp;5) are not supported in the &gui;;
   instead you will
   need to use either <link linkend="python">&python; scripting</link>
   or <link linkend="compiling">&cpp; programming</link>.
@@ -124,7 +124,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="newtri.png"/>
+      <imagedata multires="newtri"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -142,7 +142,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-empty.png"/>
+       <imagedata multires="newtri-empty"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -163,7 +163,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-example.png"/>
+       <imagedata multires="newtri-example"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -193,7 +193,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-isosig.png"/>
+       <imagedata multires="newtri-isosig"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -237,7 +237,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-nor.png"/>
+       <imagedata multires="newtri-nor"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -263,7 +263,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-lens.png"/>
+       <imagedata multires="newtri-lens"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -293,7 +293,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-sfs.png"/>
+       <imagedata multires="newtri-sfs"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -337,7 +337,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-lst.png"/>
+       <imagedata multires="newtri-lst"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -375,7 +375,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-dehydration.png"/>
+       <imagedata multires="newtri-dehydration"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -404,7 +404,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-splitting.png"/>
+       <imagedata multires="newtri-splitting"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -439,7 +439,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-bundle.png"/>
+       <imagedata multires="newtri-bundle"/>
       </imageobject>
      </inlinemediaobject>
     </para>
