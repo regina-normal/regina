@@ -117,6 +117,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             /**< The complex projective plane. */
         Triangulation<4> s2xs2;
             /**< The product of a 2-sphere with a 2-sphere. */
+        Triangulation<4> s2xs2Twisted;
+            /**< The twisted product of a 2-sphere with a 2-sphere. */
 
         // Closed non-orientable:
         Triangulation<4> rp4;
@@ -184,6 +186,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             // via Example<4>.
             cp2 = Example<4>::cp2();
             s2xs2 = Example<4>::s2xs2();
+            s2xs2Twisted = Example<4>::s2xs2Twisted();
             rp4 = Example<4>::rp4();
 
             // Some of our triangulations are built from 3-manifold
@@ -270,6 +273,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             f(sphereBundle, "Sphere bundle");
             f(cp2, "CP^2");
             f(s2xs2, "S^2 x S^2");
+            f(s2xs2Twisted, "S^2 x~ S^2");
             f(rp4, "RP^4");
             f(twistedSphereBundle, "Twisted sphere bundle");
             f(ball, "Ball");
@@ -302,6 +306,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             f(sphereBundle, "Sphere bundle");
             f(cp2, "CP^2");
             f(s2xs2, "S^2 x S^2");
+            f(s2xs2Twisted, "S^2 x~ S^2");
             f(rp4, "RP^4");
             f(twistedSphereBundle, "Twisted sphere bundle");
             f(ball, "Ball");
@@ -863,6 +868,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyValid(sphereBundle, true, "Sphere bundle");
             verifyValid(cp2, true, "CP^2");
             verifyValid(s2xs2, true, "S^2 x S^2");
+            verifyValid(s2xs2Twisted, true, "S^2 x~ S^2");
             verifyValid(rp4, true, "RP^4");
             verifyValid(twistedSphereBundle, true, "Twisted sphere bundle");
             verifyValid(ball, true, "Ball");
@@ -896,6 +902,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyConnected(sphereBundle, true, "Sphere bundle");
             verifyConnected(cp2, true, "CP^2");
             verifyConnected(s2xs2, true, "S^2 x S^2");
+            verifyConnected(s2xs2Twisted, true, "S^2 x~ S^2");
             verifyConnected(rp4, true, "RP^4");
             verifyConnected(twistedSphereBundle, true, "Twisted sphere bundle");
             verifyConnected(ball, true, "Ball");
@@ -929,6 +936,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyOrientable(sphereBundle, true, "Sphere bundle");
             verifyOrientable(cp2, true, "CP^2");
             verifyOrientable(s2xs2, true, "S^2 x S^2");
+            verifyOrientable(s2xs2Twisted, true, "S^2 x~ S^2");
             verifyOrientable(rp4, false, "RP^4");
             verifyOrientable(twistedSphereBundle, false,
                 "Twisted sphere bundle");
@@ -1051,6 +1059,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 "Sphere bundle");
             verifyBoundary(cp2, false, 0, false, true, "CP^2");
             verifyBoundary(s2xs2, false, 0, false, true, "S^2 x S^2");
+            verifyBoundary(s2xs2Twisted, false, 0, false, true, "S^2 x~ S^2");
             verifyBoundary(rp4, false, 0, false, true, "RP^4");
             verifyBoundary(twistedSphereBundle, false, 0, false, true,
                 "Twisted sphere bundle");
@@ -1193,6 +1202,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryCount(sphereBundle, 0, 0, 0, "Sphere bundle");
             verifyBoundaryCount(cp2, 0, 0, 0, "CP^2");
             verifyBoundaryCount(s2xs2, 0, 0, 0, "S^2 x S^2");
+            verifyBoundaryCount(s2xs2Twisted, 0, 0, 0, "S^2 x~ S^2");
             verifyBoundaryCount(rp4, 0, 0, 0, "RP^4");
             verifyBoundaryCount(twistedSphereBundle, 0, 0, 0,
                 "Twisted sphere bundle");
@@ -1479,6 +1489,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyLinksSpheres(sphereBundle, 1, "Sphere bundle");
             verifyLinksSpheres(cp2, 4, "CP^2");
             verifyLinksSpheres(s2xs2, 5, "S^2 x S^2");
+            verifyLinksSpheres(s2xs2Twisted, 5, "S^2 x~ S^2");
             verifyLinksSpheres(rp4, 3, "RP^4");
             verifyLinksSpheres(twistedSphereBundle, 1, "Twisted sphere bundle");
             verifyLinksBalls(ball, 5, "Ball");
@@ -1575,6 +1586,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyEulerChar(sphereBundle, 0, 0, "Sphere bundle");
             verifyEulerChar(cp2, 3, 3, "CP^2");
             verifyEulerChar(s2xs2, 4, 4, "S^2 x S^2");
+            verifyEulerChar(s2xs2Twisted, 4, 4, "S^2 x~ S^2");
             verifyEulerChar(rp4, 1, 1, "RP^4");
             verifyEulerChar(twistedSphereBundle, 0, 0, "Twisted sphere bundle");
             verifyEulerChar(ball, 1, 1, "Ball");
@@ -1604,6 +1616,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyHomology<1>(sphereBundle, "Z", "Sphere bundle");
             verifyHomology<1>(cp2, "0", "CP^2");
             verifyHomology<1>(s2xs2, "0", "S^2 x S^2");
+            verifyHomology<1>(s2xs2Twisted, "0", "S^2 x~ S^2");
             verifyHomology<1>(rp4, "Z_2", "RP^4");
             verifyHomology<1>(twistedSphereBundle, "Z",
                 "Twisted sphere bundle");
@@ -1634,6 +1647,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyHomology<2>(sphereBundle, "0", "Sphere bundle");
             verifyHomology<2>(cp2, "Z", "CP^2");
             verifyHomology<2>(s2xs2, "2 Z", "S^2 x S^2");
+            verifyHomology<2>(s2xs2Twisted, "2 Z", "S^2 x~ S^2");
             verifyHomology<2>(rp4, "0", "RP^4");
             verifyHomology<2>(twistedSphereBundle, "0",
                 "Twisted sphere bundle");
@@ -1660,6 +1674,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyHomology<3>(sphereBundle, "Z", "Sphere bundle");
             verifyHomology<3>(cp2, "0", "CP^2");
             verifyHomology<3>(s2xs2, "0", "S^2 x S^2");
+            verifyHomology<3>(s2xs2Twisted, "0", "S^2 x~ S^2");
             verifyHomology<3>(rp4, "Z_2", "RP^4");
             verifyHomology<3>(twistedSphereBundle, "Z_2",
                 "Twisted sphere bundle");
@@ -1686,6 +1701,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyFundGroup(sphereBundle, "Z", "Sphere bundle");
             verifyFundGroup(cp2, "0", "CP^2");
             verifyFundGroup(s2xs2, "0", "S^2 x S^2");
+            verifyFundGroup(s2xs2Twisted, "0", "S^2 x~ S^2");
             verifyFundGroup(rp4, "Z_2", "RP^4");
             verifyFundGroup(twistedSphereBundle, "Z", "Twisted sphere bundle");
             verifyFundGroup(ball, "0", "Ball");

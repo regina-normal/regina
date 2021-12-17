@@ -109,6 +109,17 @@ class Example<4> : public detail::ExampleBase<4> {
         static Triangulation<4> s2xs2();
 
         /**
+         * Returns a six-pentachoron triangulation of the twisted product
+         * <tt>S^2 x~ S^2</tt>.
+         * This manifold is diffeomorphic to <tt>CP^2 # -CP^2</tt>, where
+         * <tt>-CP^2</tt> denotes <tt>CP^2</tt> with its orientation reversed.
+         * This triangulation is minimal.
+         *
+         * @return the twisted product of two 2-spheres.
+         */
+        static Triangulation<4> s2xs2Twisted();
+
+        /**
          * Returns a two-pentachoron triangulation of the product space
          * <tt>S^3 x S^1</tt>.  This is identical to calling the
          * generic routine sphereBundle().

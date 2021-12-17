@@ -296,7 +296,7 @@ Version 7.0  [ 19 December, 2021 ]
               is kept but deprecated.
             - Added sfsOverSphere() and layeredLoop().
         Class Example<4>:
-            - Added cp2() and s2xs2().
+            - Added cp2(), s2xs2() and s2xs2Twisted(); thanks to Rhuaidi Burke.
         Class Face<dim, subdim>:
             - New compile-time constants allowsNonOrientableLinks and
               allowsInvalidFaces.
