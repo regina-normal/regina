@@ -1569,6 +1569,13 @@
      Kawauchi-Kojima invariants of the torsion linking form, and
      comments on where the triangulation might be embeddable.
     </para>
+    <warning><para>
+     All invariants of the torsion linking form, plus the final comments
+     on embeddability, use floating-point arithmetic in their computation.
+     While there are good reasons to expect that they will not suffer from
+     round-off errors, you should <emphasis>not</emphasis> treat these
+     invariants as rigorous.
+    </para></warning>
     <para>
      <inlinemediaobject>
       <imageobject>
