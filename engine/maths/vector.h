@@ -239,12 +239,12 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Creates a new vector that is a clone of the given vector.
          *
-         * @param cloneMe the vector to clone.
+         * @param src the vector to clone.
          */
-        inline Vector(const Vector<T>& cloneMe) :
-                elts_(new T[cloneMe.end_ - cloneMe.elts_]),
-                end_(elts_ + (cloneMe.end_ - cloneMe.elts_)) {
-            std::copy(cloneMe.elts_, cloneMe.end_, elts_);
+        inline Vector(const Vector<T>& src) :
+                elts_(new T[src.end_ - src.elts_]),
+                end_(elts_ + (src.end_ - src.elts_)) {
+            std::copy(src.elts_, src.end_, elts_);
         }
         /**
          * Moves the given vector into this new vector.
@@ -400,16 +400,26 @@ class Vector : public ShortOutput<Vector<T>> {
         /**
          * Sets this vector equal to the given vector.
          *
-         * \pre This and the given vector have the same size.
+         * It does not matter if this and the given vector have different
+         * sizes; if they do then this vector will be resized as a result.
          *
-         * @param cloneMe the vector whose value shall be assigned to this
+         * @param src the vector whose value shall be assigned to this
          * vector.
          */
-        inline Vector<T>& operator = (const Vector<T>& cloneMe) {
+        inline Vector<T>& operator = (const Vector<T>& src) {
             // std::copy() exhibits undefined behaviour with self-assignment.
-            if (std::addressof(cloneMe) == this)
+            if (std::addressof(src) == this)
                 return *this;
-            std::copy(cloneMe.elts_, cloneMe.end_, elts_);
+
+            if (end_ - elts_ != src.end_ - src.elts_) {
+                // Resize.  We currently do this always, for space
+                // efficiency; possibly we could look into only doing
+                // this if src is larger (for time efficiency).
+                delete[] elts_;
+                elts_ = new T[src.end_ - src.elts_];
+                end_ = elts_ + (src.end_ - src.elts_);
+            }
+            std::copy(src.elts_, src.end_, elts_);
             return *this;
         }
         /**

@@ -1776,6 +1776,8 @@ Version 7.0  [ 19 December, 2021 ]
               of different sizes (which are always considered non-equal).
             - New constructors that take iterator ranges and initialiser lists.
             - New move constructor and move assignment operator.
+            - The copy assignment operator can now work with vectors of
+              different sizes.
             - New binary +, - and scalar * operators.
             - New routine isZero().
             - New routine scaleDown() for vectors over Regina's integer classes.
