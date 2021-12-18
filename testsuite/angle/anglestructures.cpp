@@ -57,6 +57,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(tautVsAll);
     CPPUNIT_TEST(tautStrictTreeVsDD);
     CPPUNIT_TEST(generalAngleStructure);
+    CPPUNIT_TEST(copyMove);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -572,6 +573,91 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             runCensusAllIdeal(verifyGeneralAngleStructure);
             runCensusAllClosed(verifyGeneralAngleStructure);
             runCensusAllBounded(verifyGeneralAngleStructure);
+        }
+
+        void testCopyMove(const Triangulation<3>& tri, const char* name) {
+            // The main point of this test is to ensure that the move
+            // operations are *actually* move operations and not copies.
+            //
+            // We assume here that std::vector's move operations
+            // preserve the addresses of the underlying objects.
+            // I don't think this is required by the standard, but I'm
+            // also not aware of any implementation that doesn't do this,
+            // and I can't think of a better (and still non-intrusive)
+            // way to ensure that the move was a "real" move.
+
+            AngleStructures a(tri);
+            if (a.size() == 0) {
+                std::ostringstream msg;
+                msg << name << ": copy/move test requires a non-empty list.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            const AngleStructure* s = std::addressof(a.structure(0));
+
+            AngleStructures a1(a);
+            const AngleStructure* s1 = std::addressof(a1.structure(0));
+
+            if (a1.detail() != a.detail()) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (s1 == s) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed uses the same structures.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            AngleStructures a2(std::move(a1));
+            const AngleStructure* s2 = std::addressof(a2.structure(0));
+
+            if (a2.detail() != a.detail()) {
+                std::ostringstream msg;
+                msg << name << ": move constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (s2 != s1) {
+                std::ostringstream msg;
+                msg << name << ": move constructed does not the same structures.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            AngleStructures a3(Example<3>::trefoil());
+            a3 = a;
+            const AngleStructure* s3 = std::addressof(a3.structure(0));
+
+            if (a3.detail() != a.detail()) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (s3 == s) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned uses the same structures.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            AngleStructures a4(Example<3>::trefoil());
+            a4 = std::move(a3);
+            const AngleStructure* s4 = std::addressof(a4.structure(0));
+
+            if (a4.detail() != a.detail()) {
+                std::ostringstream msg;
+                msg << name << ": move assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (s4 != s3) {
+                std::ostringstream msg;
+                msg << name << ": move assigned does not the same structures.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void copyMove() {
+            testCopyMove(triGieseking, "Gieseking");
+            testCopyMove(triFigure8, "Figure Eight");
+            testCopyMove(Example<3>::whiteheadLink(), "Whitehead");
         }
 };
 

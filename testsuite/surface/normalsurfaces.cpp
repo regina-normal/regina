@@ -137,6 +137,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(disjointCensus);
     CPPUNIT_TEST(cutAlongConstructed);
     CPPUNIT_TEST(cutAlongCensus);
+    CPPUNIT_TEST(copyMove);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -2351,6 +2352,91 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             runCensusAllClosed(&testCutAlong, true);
             runCensusAllBounded(&testCutAlong, true);
             runCensusAllIdeal(&testCutAlong, true);
+        }
+
+        void testCopyMove(const Triangulation<3>& tri, const char* name) {
+            // The main point of this test is to ensure that the move
+            // operations are *actually* move operations and not copies.
+            //
+            // We assume here that std::vector's move operations
+            // preserve the addresses of the underlying objects.
+            // I don't think this is required by the standard, but I'm
+            // also not aware of any implementation that doesn't do this,
+            // and I can't think of a better (and still non-intrusive)
+            // way to ensure that the move was a "real" move.
+
+            NormalSurfaces a(tri, NS_STANDARD);
+            if (a.size() == 0) {
+                std::ostringstream msg;
+                msg << name << ": copy/move test requires a non-empty list.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            const NormalSurface* s = std::addressof(a.surface(0));
+
+            NormalSurfaces a1(a);
+            const NormalSurface* s1 = std::addressof(a1.surface(0));
+
+            if (a1.detail() != a.detail()) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (s1 == s) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed uses the same surfaces.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NormalSurfaces a2(std::move(a1));
+            const NormalSurface* s2 = std::addressof(a2.surface(0));
+
+            if (a2.detail() != a.detail()) {
+                std::ostringstream msg;
+                msg << name << ": move constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (s2 != s1) {
+                std::ostringstream msg;
+                msg << name << ": move constructed does not the same surfaces.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NormalSurfaces a3(Example<3>::s2xs1(), NS_STANDARD);
+            a3 = a;
+            const NormalSurface* s3 = std::addressof(a3.surface(0));
+
+            if (a3.detail() != a.detail()) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (s3 == s) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned uses the same surfaces.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NormalSurfaces a4(Example<3>::s2xs1(), NS_STANDARD);
+            a4 = std::move(a3);
+            const NormalSurface* s4 = std::addressof(a4.surface(0));
+
+            if (a4.detail() != a.detail()) {
+                std::ostringstream msg;
+                msg << name << ": move assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (s4 != s3) {
+                std::ostringstream msg;
+                msg << name << ": move assigned does not the same surfaces.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void copyMove() {
+            testCopyMove(Example<3>::poincare(), "Poincare homology sphere");
+            testCopyMove(Example<3>::weeks(), "Weeks manifold");
+            testCopyMove(Example<3>::whiteheadLink(), "Whitehead");
         }
 };
 
