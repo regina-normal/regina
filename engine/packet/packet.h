@@ -2147,7 +2147,7 @@ class PacketData {
          * This constructor is provided so that \a Held can (if it wants) use
          * an implicitly-declared copy or move constructor.
          */
-        PacketData(const PacketData&) {}
+        PacketData(const PacketData&) noexcept {}
         /**
          * Assignment operator that ignores its argument and does nothing.
          * This is because \a heldBy_ stores information about the C++ type
