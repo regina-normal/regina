@@ -2365,70 +2365,66 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             // and I can't think of a better (and still non-intrusive)
             // way to ensure that the move was a "real" move.
 
-            NormalSurfaces a(tri, NS_STANDARD);
+            const NormalSurfaces a(tri, NS_STANDARD);
             if (a.size() == 0) {
                 std::ostringstream msg;
                 msg << name << ": copy/move test requires a non-empty list.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            const NormalSurface* s = std::addressof(a.surface(0));
-
             NormalSurfaces a1(a);
-            const NormalSurface* s1 = std::addressof(a1.surface(0));
 
             if (a1.detail() != a.detail()) {
                 std::ostringstream msg;
                 msg << name << ": copy constructed not identical to original.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (s1 == s) {
+            if (a.size() == 0) {
                 std::ostringstream msg;
-                msg << name << ": copy constructed uses the same surfaces.";
+                msg << name << ": copy constructed empties the original.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             NormalSurfaces a2(std::move(a1));
-            const NormalSurface* s2 = std::addressof(a2.surface(0));
 
             if (a2.detail() != a.detail()) {
                 std::ostringstream msg;
                 msg << name << ": move constructed not identical to original.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (s2 != s1) {
+            if (a1.size() != 0) {
                 std::ostringstream msg;
-                msg << name << ": move constructed does not the same surfaces.";
+                msg << name << ": move constructed does not "
+                    "empty the original.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             NormalSurfaces a3(Example<3>::s2xs1(), NS_STANDARD);
             a3 = a;
-            const NormalSurface* s3 = std::addressof(a3.surface(0));
 
             if (a3.detail() != a.detail()) {
                 std::ostringstream msg;
                 msg << name << ": copy assigned not identical to original.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (s3 == s) {
+            if (a.size() == 0) {
                 std::ostringstream msg;
-                msg << name << ": copy assigned uses the same surfaces.";
+                msg << name << ": copy assigned empties the original.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             NormalSurfaces a4(Example<3>::s2xs1(), NS_STANDARD);
             a4 = std::move(a3);
-            const NormalSurface* s4 = std::addressof(a4.surface(0));
 
             if (a4.detail() != a.detail()) {
                 std::ostringstream msg;
                 msg << name << ": move assigned not identical to original.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (s4 != s3) {
+            if (a3.size() != 0) {
                 std::ostringstream msg;
-                msg << name << ": move assigned does not the same surfaces.";
+                msg << name << ": move assigned does not "
+                    "empty the original.";
                 CPPUNIT_FAIL(msg.str());
             }
         }

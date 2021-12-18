@@ -586,70 +586,66 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             // and I can't think of a better (and still non-intrusive)
             // way to ensure that the move was a "real" move.
 
-            AngleStructures a(tri);
+            const AngleStructures a(tri);
             if (a.size() == 0) {
                 std::ostringstream msg;
                 msg << name << ": copy/move test requires a non-empty list.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            const AngleStructure* s = std::addressof(a.structure(0));
-
             AngleStructures a1(a);
-            const AngleStructure* s1 = std::addressof(a1.structure(0));
 
             if (a1.detail() != a.detail()) {
                 std::ostringstream msg;
                 msg << name << ": copy constructed not identical to original.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (s1 == s) {
+            if (a.size() == 0) {
                 std::ostringstream msg;
-                msg << name << ": copy constructed uses the same structures.";
+                msg << name << ": copy constructed empties the original.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             AngleStructures a2(std::move(a1));
-            const AngleStructure* s2 = std::addressof(a2.structure(0));
 
             if (a2.detail() != a.detail()) {
                 std::ostringstream msg;
                 msg << name << ": move constructed not identical to original.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (s2 != s1) {
+            if (a1.size() != 0) {
                 std::ostringstream msg;
-                msg << name << ": move constructed does not the same structures.";
+                msg << name << ": move constructed does not "
+                    "empty the original.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             AngleStructures a3(Example<3>::trefoil());
             a3 = a;
-            const AngleStructure* s3 = std::addressof(a3.structure(0));
 
             if (a3.detail() != a.detail()) {
                 std::ostringstream msg;
                 msg << name << ": copy assigned not identical to original.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (s3 == s) {
+            if (a.size() == 0) {
                 std::ostringstream msg;
-                msg << name << ": copy assigned uses the same structures.";
+                msg << name << ": copy assigned empties the original.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             AngleStructures a4(Example<3>::trefoil());
             a4 = std::move(a3);
-            const AngleStructure* s4 = std::addressof(a4.structure(0));
 
             if (a4.detail() != a.detail()) {
                 std::ostringstream msg;
                 msg << name << ": move assigned not identical to original.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (s4 != s3) {
+            if (a3.size() != 0) {
                 std::ostringstream msg;
-                msg << name << ": move assigned does not the same structures.";
+                msg << name << ": move assigned does not "
+                    "empty the original.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
