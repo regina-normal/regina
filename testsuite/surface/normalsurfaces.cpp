@@ -2392,6 +2392,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 msg << name << ": move constructed not identical to original.";
                 CPPUNIT_FAIL(msg.str());
             }
+            // The std::vector move constructor promises to empty the source.
             if (a1.size() != 0) {
                 std::ostringstream msg;
                 msg << name << ": move constructed does not "
@@ -2421,12 +2422,17 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 msg << name << ": move assigned not identical to original.";
                 CPPUNIT_FAIL(msg.str());
             }
+            /*
+            // I'm not sure how to verify that the source was moved from
+            // and not copied, in a way that does not make assumptions
+            // about the standard library implementation...
             if (a3.size() != 0) {
                 std::ostringstream msg;
                 msg << name << ": move assigned does not "
                     "empty the original.";
                 CPPUNIT_FAIL(msg.str());
             }
+            */
         }
 
         void copyMove() {
