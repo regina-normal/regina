@@ -352,7 +352,7 @@ class TxICore : public Output<TxICore> {
         /**
          * Move constructor.
          */
-        TxICore(TxICore&& src) = default;
+        TxICore(TxICore&& src) noexcept = default;
         /**
          * Copy assignment operator.
          *
