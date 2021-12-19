@@ -372,7 +372,7 @@ class TxICore : public Output<TxICore> {
          * packet event listeners, and the internal triangulation here does
          * not belong to a packet.
          */
-        TxICore& operator = (TxICore&&) = default;
+        TxICore& operator = (TxICore&&) noexcept = default;
         /**
          * Swaps all data that is managed by this base class with the
          * given triangulation.
