@@ -298,7 +298,8 @@ while read -r -a line; do
     if [ -e "$testout" ]; then
         echo "--------------------"
         magic="`hexdump -n2 -e '/2 "%x\n"' "$testout"`"
-        if [ "$magic" = 8b1f ]; then
+        # On s390, the two bytes are output in reverse order.  Try both ways.
+        if [ "$magic" = 8b1f -o "$magic" = 1f8b ]; then
             echo "Output (compressed):"
             if [ -z "$filter" ]; then
                 cat "$testout" | gunzip
