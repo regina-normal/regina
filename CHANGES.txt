@@ -1709,7 +1709,7 @@ Version 7.0  [ 19 December, 2021 ]
               deprecated.  Use the routines from Example<3> instead.
             - Routine enterTextTriangulation() is now deprecated; this
               is a relic from Regina's ancient past.
-        Class Triangluation<4>:
+        Class Triangulation<4>:
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
