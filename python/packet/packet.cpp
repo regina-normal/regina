@@ -72,8 +72,7 @@ void addPacket(pybind11::module_& m) {
     regina::python::add_eq_operators(c2);
 
     auto c3 = pybind11::class_<ChildIterator<false>>(m, "ChildIterator")
-        .def("next", next<ChildIterator<false>>) // for python 2
-        .def("__next__", next<ChildIterator<false>>) // for python 3
+        .def("__next__", next<ChildIterator<false>>)
         ;
     regina::python::add_eq_operators(c3);
 
@@ -81,8 +80,7 @@ void addPacket(pybind11::module_& m) {
         .def("__iter__", [](pybind11::object const& it) {
             return it;
         })
-        .def("next", next<SubtreeIterator<false>>) // for python 2
-        .def("__next__", next<SubtreeIterator<false>>) // for python 3
+        .def("__next__", next<SubtreeIterator<false>>)
         ;
     regina::python::add_eq_operators(c4);
 

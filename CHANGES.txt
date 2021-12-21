@@ -7,6 +7,11 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 7.1  [ TODO ]
+
+    GENERAL:
+        - Regina now supports Python 3 only (not Python 2 or 3).
+
 Version 7.0  [ 19 December, 2021 ]
 
     GENERAL:

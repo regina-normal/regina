@@ -34,8 +34,6 @@
 # NOTE: Since Regina 5.96, python references to packets never expire.
 # Therefore we should never raise any exceptions in this test.
 
-from __future__ import print_function
-
 print()
 print("-----------------------------------------------------------")
 print("Basic:")

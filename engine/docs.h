@@ -399,20 +399,9 @@ namespace regina {
  *
  *  If you use special characters (such as accented letters, other
  *  international characters, exotic punctuation, mathematical symbols and
- *  so on), you may need to think about <i>text encodings</i> when passing
- *  strings between Python and Regina.
- *
- *  For Python 3 users, this is simple: all strings in Python are unicode,
- *  and these are converted seamlessly and transparently when moving between
- *  Regina and Python.
- *
- *  For Python 2 users, you need to take some care.  All \c unicode objects
- *  will be converted correctly and transparently.  If you have a Python
- *  string, however, you will need to ensure it is encoded in UTF-8 when
- *  passing it to Regina.  Conversely, you should assume that all strings
- *  that Regina sends back to Python will be UTF-8-encoded.
- *  See https://docs.python.org/2.7/howto/unicode.html for more information
- *  on how to work with UTF-8 strings in Python 2.
+ *  so on), all text encodings are converted seamlessly and transparently
+ *  when moving between Regina and Python.  (In Python, all strings are
+ *  unicode; within Regina, all strings are encoded in UTF-8.)
  *
  *  See the page on \ref i18n "encodings for international strings" for
  *  further discussion on text encodings within Regina, including an

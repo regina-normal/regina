@@ -676,6 +676,11 @@
 		0534FAE322DFDDA7000A96A3 /* memstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0534FADF22DFDDA6000A96A3 /* memstream.cpp */; };
 		0534FAE422DFDDA7000A96A3 /* zstr.h in Headers */ = {isa = PBXBuildFile; fileRef = 0534FAE022DFDDA7000A96A3 /* zstr.h */; };
 		0534FAE522DFDDA7000A96A3 /* memstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 0534FAE122DFDDA7000A96A3 /* memstream.h */; };
+		05373B172771739600E9418B /* progress.py in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B122771734D00E9418B /* progress.py */; };
+		05373B182771739900E9418B /* tree.py in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B102771734D00E9418B /* tree.py */; };
+		05373B192771739C00E9418B /* triangulation.py in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B112771734D00E9418B /* triangulation.py */; };
+		05373B1A277173A300E9418B /* sample.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05373B0F2771734D00E9418B /* sample.rga */; };
+		05373B1C2771742E00E9418B /* sample.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05373B1B2771740800E9418B /* sample.rga */; };
 		053CAB161DA4A50700A92F98 /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAB141DA4A4FB00A92F98 /* anglestructures.cpp */; };
 		053CAB171DA4A50800A92F98 /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAB141DA4A4FB00A92F98 /* anglestructures.cpp */; };
 		053CAB2C1DA710FE00A92F98 /* perm2.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB281DA710FE00A92F98 /* perm2.h */; };
@@ -2408,8 +2413,12 @@
 				05B4D2EC22A0930300B7B11C /* cusped-hyp-or-census.rga in Copy Examples */,
 				05B4D2EE22A0931400B7B11C /* gap-tests.rga in Copy Examples */,
 				050EA57A25A2BDD1000E94F5 /* knot-census.rga in Copy Examples */,
+				05373B1A277173A300E9418B /* sample.rga in Copy Examples */,
+				05373B172771739600E9418B /* progress.py in Copy Examples */,
 				059BEC0E276CB73C006DC425 /* progress.session in Copy Examples */,
+				05373B182771739900E9418B /* tree.py in Copy Examples */,
 				059BEC0F276CB740006DC425 /* tree.session in Copy Examples */,
+				05373B192771739C00E9418B /* triangulation.py in Copy Examples */,
 				059BEC10276CB745006DC425 /* triangulation.session in Copy Examples */,
 				05B4D2EF22A0931D00B7B11C /* README.txt in Copy Examples */,
 			);
@@ -2428,6 +2437,7 @@
 				05998ED519F9362D00855238 /* cusped-hyp-nor-census.rga in CopyFiles */,
 				05998ED619F9362D00855238 /* cusped-hyp-or-census.rga in CopyFiles */,
 				050EA59A25A2BE08000E94F5 /* knot-census.rga in CopyFiles */,
+				05373B1C2771742E00E9418B /* sample.rga in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3013,6 +3023,11 @@
 		0534FADF22DFDDA6000A96A3 /* memstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = memstream.cpp; sourceTree = "<group>"; };
 		0534FAE022DFDDA7000A96A3 /* zstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zstr.h; sourceTree = "<group>"; };
 		0534FAE122DFDDA7000A96A3 /* memstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memstream.h; sourceTree = "<group>"; };
+		05373B0F2771734D00E9418B /* sample.rga */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = sample.rga; sourceTree = "<group>"; };
+		05373B102771734D00E9418B /* tree.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = tree.py; sourceTree = "<group>"; };
+		05373B112771734D00E9418B /* triangulation.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = triangulation.py; sourceTree = "<group>"; };
+		05373B122771734D00E9418B /* progress.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = progress.py; sourceTree = "<group>"; };
+		05373B1B2771740800E9418B /* sample.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = sample.rga; sourceTree = "<group>"; };
 		053CAB141DA4A4FB00A92F98 /* anglestructures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructures.cpp; sourceTree = "<group>"; };
 		053CAB271DA710FE00A92F98 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		053CAB281DA710FE00A92F98 /* perm2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm2.h; sourceTree = "<group>"; };
@@ -4129,16 +4144,6 @@
 		05B4D2D3229F42D600B7B11C /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 		05B4D2D4229F42D600B7B11C /* engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
 		05B4D2D5229F42D700B7B11C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		05B4D2E322A02B0A00B7B11C /* sample-py2.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-py2.rga"; sourceTree = "<group>"; };
-		05B4D2E422A02B0A00B7B11C /* sample-py3.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-py3.rga"; sourceTree = "<group>"; };
-		05B4D2F022A095D900B7B11C /* triangulation-py3.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "triangulation-py3.py"; sourceTree = "<group>"; };
-		05B4D2F122A095DA00B7B11C /* progress-py3.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "progress-py3.py"; sourceTree = "<group>"; };
-		05B4D2F522A095DC00B7B11C /* triangulation-py2.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "triangulation-py2.py"; sourceTree = "<group>"; };
-		05B4D2F622A095DD00B7B11C /* tree-py3.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "tree-py3.py"; sourceTree = "<group>"; };
-		05B4D2F722A095DD00B7B11C /* tree-py2.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "tree-py2.py"; sourceTree = "<group>"; };
-		05B4D2FB22A095E000B7B11C /* sample-py2.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-py2.rga"; sourceTree = "<group>"; };
-		05B4D2FC22A095E100B7B11C /* sample-py3.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-py3.rga"; sourceTree = "<group>"; };
-		05B4D2FD22A095E100B7B11C /* progress-py2.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "progress-py2.py"; sourceTree = "<group>"; };
 		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		05B7001725AC2304003BAF5C /* nmz_nauty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmz_nauty.h; sourceTree = "<group>"; };
 		05B7001825AC2304003BAF5C /* dynamic_bitset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dynamic_bitset.h; sourceTree = "<group>"; };
@@ -7343,8 +7348,7 @@
 				05998ECE19F9360200855238 /* cusped-hyp-nor-census.rga */,
 				05998ECF19F9360200855238 /* cusped-hyp-or-census.rga */,
 				050EA59925A2BDF2000E94F5 /* knot-census.rga */,
-				05B4D2E322A02B0A00B7B11C /* sample-py2.rga */,
-				05B4D2E422A02B0A00B7B11C /* sample-py3.rga */,
+				05373B1B2771740800E9418B /* sample.rga */,
 			);
 			path = ios;
 			sourceTree = "<group>";
@@ -7368,17 +7372,13 @@
 				05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */,
 				05A47F9C1809CB7600F86BFD /* gap-tests.rga */,
 				050EA57925A2BDBC000E94F5 /* knot-census.rga */,
-				05B4D2FD22A095E100B7B11C /* progress-py2.py */,
-				05B4D2F122A095DA00B7B11C /* progress-py3.py */,
+				05373B122771734D00E9418B /* progress.py */,
 				059BEC0D276AAEA7006DC425 /* progress.session */,
+				05373B0F2771734D00E9418B /* sample.rga */,
 				05A47FA01809CB7600F86BFD /* README.txt */,
-				05B4D2FB22A095E000B7B11C /* sample-py2.rga */,
-				05B4D2FC22A095E100B7B11C /* sample-py3.rga */,
-				05B4D2F722A095DD00B7B11C /* tree-py2.py */,
-				05B4D2F622A095DD00B7B11C /* tree-py3.py */,
+				05373B102771734D00E9418B /* tree.py */,
 				059BEC0C276AAEA7006DC425 /* tree.session */,
-				05B4D2F522A095DC00B7B11C /* triangulation-py2.py */,
-				05B4D2F022A095D900B7B11C /* triangulation-py3.py */,
+				05373B112771734D00E9418B /* triangulation.py */,
 				059BEC0B276AAEA7006DC425 /* triangulation.session */,
 				05998ECA19F9360200855238 /* ios */,
 			);
@@ -8049,7 +8049,6 @@
 				05DADB1521927AEE00DC80E1 /* Copy Databases */,
 				057118CF19B30BAF009FEDC5 /* CopyFiles */,
 				05F9560919B5296D00377BEC /* CopyFiles */,
-				05B4D2E222A028DC00B7B11C /* Copy Python 2/3 examples */,
 				05B4D2A5229F31F100B7B11C /* Copy Python core */,
 				054209181DF17EB70018AB24 /* CopyFiles */,
 				057EDEB92582363B004F0068 /* Embed Frameworks */,
@@ -8202,7 +8201,6 @@
 				0564A1DD1811D6F8002CC2AE /* Resources */,
 				05DADB1021926A2300DC80E1 /* Copy Databases and Handbook */,
 				05B4D2E722A092EA00B7B11C /* Copy Examples */,
-				05B4D2E622A08FDD00B7B11C /* Copy Python 2/3 Examples */,
 				057118C919B30A13009FEDC5 /* Copy SnapPea Census Data */,
 				054208951DF0D1460018AB24 /* Copy Syntax Highlighting */,
 				05AB5EDE1B942813007034C8 /* Copy Qt Plugins (platforms) */,
@@ -8564,54 +8562,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "PYVER=38\nresdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app\"\n\n# We need to pick a single arch for pythonXY.zip.\ncase \"${PLATFORM_NAME}\" in\n  iphonesimulator|iPhoneSimulator)\n    # Use the arch we will be running the simulator on.\n    # We do not use $PLATFORM_PREFERRED_ARCH because for iphonesimulator\n    # this gives x86_64 when building (and thus running) the simulator\n    # on an arm64 machine.\n    usearch=\"${NATIVE_ARCH}\"\n    ;;\n  *)\n    usearch=\"${PLATFORM_PREFERRED_ARCH}\"\n    ;;\nesac\n\nmkdir -p \"$resdir\"/python\ncp ~/Library/Frameworks/python${PYVER}-${PLATFORM_NAME}-${usearch}.zip \"$resdir\"/python/python${PYVER}.zip\n";
-		};
-		05B4D2E222A028DC00B7B11C /* Copy Python 2/3 examples */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Python 2/3 examples";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "src=\"${PROJECT_DIR}/examples/ios\"\ndest=\"${CONFIGURATION_BUILD_DIR}/Regina.app/examples\"\n\n# We do not support python2 on iOS any more.\nsuffix=\"-py3.rga\"\n\nfor i in sample; do\n  cp \"$src/$i$suffix\" \"$dest/${i}.rga\"\ndone\n";
-		};
-		05B4D2E622A08FDD00B7B11C /* Copy Python 2/3 Examples */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/examples/sample-py2.rga",
-				"$(SRCROOT)/examples/sample-py3.rga",
-				"$(SRCROOT)/examples/progress-py2.py",
-				"$(SRCROOT)/examples/progress-py3.py",
-				"$(SRCROOT)/examples/tree-py2.py",
-				"$(SRCROOT)/examples/tree-py3.py",
-				"$(SRCROOT)/examples/triangulation-py2.py",
-				"$(SRCROOT)/examples/triangulation-py3.py",
-			);
-			name = "Copy Python 2/3 Examples";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/sample.rga",
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/progress.py",
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/tree.py",
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/triangulation.py",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "src=\"${PROJECT_DIR}/examples\"\ndest=\"${TARGET_BUILD_DIR}/Regina.app/Contents/Resources/examples\"\n\nif [ -n \"${REGINA_PYTHON_FRAMEWORK}\" ]; then\n  # Assume we are bundled our own python3.\n  pyx=\"-py3\"\nelse\n  # We are working with the system python, which\n  # we assume is python2.\n  pyx=\"-py2\"\nfi\n\nfor i in sample-pyx.rga {progress,tree,triangulation}-pyx.py; do\n  cp \"$src/${i/-pyx/$pyx}\" \"$dest/${i/-pyx/}\"\ndone\n";
 		};
 		05B9295C259C148700A4503B /* Prepare and Sign Python */ = {
 			isa = PBXShellScriptBuildPhase;
