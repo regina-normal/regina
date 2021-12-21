@@ -93,7 +93,7 @@ void addDisc(pybind11::module_& m) {
         .def("adjacentDisc", &DiscSetSurface::adjacentDisc)
         .def("__iter__", [](const DiscSetSurface& d) {
             return DiscSpecIterator(d);
-        })
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps disc set alive
     ;
     regina::python::add_output_custom(s, [](const DiscSetSurface& d,
             std::ostream& s) {

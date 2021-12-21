@@ -86,6 +86,10 @@ print('Normal surface iteration:')
 for s in NormalSurfaces(Example3.figureEight(), NS_QUAD):
     print(s)
 
+print('Normal disc iteration:')
+for d in DiscSetSurface(NormalSurfaces(Example3.poincare(), NS_STANDARD).surface(0)):
+    print(d)
+
 print('Normal hypersurface iteration:')
 for s in NormalHypersurfaces(Example4.rp4(), HS_STANDARD):
     print(s)
