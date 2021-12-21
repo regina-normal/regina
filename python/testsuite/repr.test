@@ -426,7 +426,6 @@ dump(m)
 dat = LPData_NonSpun()
 dump(dat)
 dat.reserve(tab)
-dump(dat)
 dat.initStart()
 dump(dat)
 

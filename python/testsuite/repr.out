@@ -773,10 +773,6 @@ Uninitialised
 <regina.LPData_NonSpun: Uninitialised>
 
 LPData_NonSpun
-Feasible basis: (empty)
-<regina.LPData_NonSpun: Feasible basis: (empty)>
-
-LPData_NonSpun
 Feasible basis: 0 1 3
 <regina.LPData_NonSpun: Feasible basis: 0 1 3>
 
