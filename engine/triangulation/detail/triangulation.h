@@ -1399,10 +1399,18 @@ class TriangulationBase :
          * column vectors.  Specifically, the <i>c</i>th column of the matrix
          * corresponds to the <i>c</i>th <i>subdim</i>-face of this
          * triangulation, and the <i>r</i>th row corresponds to the <i>r</i>th
-         * (<i>subdim</i>-1)-face of this triangulation.  All faces are
-         * oriented according to the permutations returned by
-         * Simplex::faceMapping(), or equivalently, by
-         * FaceEmbedding::vertices().
+         * (<i>subdim</i>-1)-face of this triangulation.
+         *
+         * For the boundary map, we fix orientations as follows.
+         * In simplicial homology, for any \a k, the orientation of a
+         * <i>k</i>-simplex is determined by assigning labels 0,...,<i>k</i>
+         * to its vertices.  For this routine, since every <i>k</i>-face \a f
+         * is already a <i>k</i>-simplex, these labels will just be the
+         * inherent vertex labels 0,...,<i>k</i> of the corresponding Face<k>
+         * object.  If you need to convert these labels into vertex numbers of
+         * a top-dimensional simplex containing \a f, you can use either
+         * Simplex<dim>::faceMapping<k>(), or the equivalent routine
+         * FaceEmbedding<k>::vertices().
          *
          * If you wish to convert these boundary maps to homology groups
          * yourself, either the AbelianGroup class (if you do not need
