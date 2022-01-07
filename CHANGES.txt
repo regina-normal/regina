@@ -1256,7 +1256,7 @@ Version 7.0  [ 19 December, 2021 ]
             - Removed completely.
         Class SatAnnulus:
             - Added comparison operators == and !=.
-            - Routines transform() and image() now takes their arguments by
+            - Routines transform() and image() now take their arguments by
               reference.
             - Routine isAdjacent() now returns a tuple, instead of using
               a mix of return values and pointer arguments for output.
