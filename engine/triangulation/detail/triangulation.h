@@ -1399,10 +1399,18 @@ class TriangulationBase :
          * column vectors.  Specifically, the <i>c</i>th column of the matrix
          * corresponds to the <i>c</i>th <i>subdim</i>-face of this
          * triangulation, and the <i>r</i>th row corresponds to the <i>r</i>th
-         * (<i>subdim</i>-1)-face of this triangulation.  All faces are
-         * oriented according to the permutations returned by
-         * Simplex::faceMapping(), or equivalently, by
-         * FaceEmbedding::vertices().
+         * (<i>subdim</i>-1)-face of this triangulation.
+         *
+         * For the boundary map, we fix orientations as follows.
+         * In simplicial homology, for any \a k, the orientation of a
+         * <i>k</i>-simplex is determined by assigning labels 0,...,<i>k</i>
+         * to its vertices.  For this routine, since every <i>k</i>-face \a f
+         * is already a <i>k</i>-simplex, these labels will just be the
+         * inherent vertex labels 0,...,<i>k</i> of the corresponding Face<k>
+         * object.  If you need to convert these labels into vertex numbers of
+         * a top-dimensional simplex containing \a f, you can use either
+         * Simplex<dim>::faceMapping<k>(), or the equivalent routine
+         * FaceEmbedding<k>::vertices().
          *
          * If you wish to convert these boundary maps to homology groups
          * yourself, either the AbelianGroup class (if you do not need
@@ -2934,12 +2942,9 @@ class TriangulationBase :
          * used in the implementation of homology(), which works with
          * the dual skeleton in order to effectively truncate ideal vertices.
          *
-         * Unlike boundaryMap(), this function is private for two reasons:
-         * (1) the interface is messier because of the need to pass lookup
-         * tables between face indices and chain complex coordinates; and
-         * (2) the choices of orientation are currently an implementation
-         * detail, and not yet set in stone in a way that lets us make
-         * promises in the API.
+         * Unlike boundaryMap(), this function is private.  This is because
+         * the interface is messier, due to the need to pass lookup tables
+         * between face indices and chain complex coordinates.
          *
          * The matrix that is returned should be thought of as acting on
          * column vectors.  Specifically, the <i>c</i>th column of the matrix
@@ -2951,7 +2956,48 @@ class TriangulationBase :
          * The lookup table described above must describe how
          * (<i>dim</i>-<i>subdim</i>)-faces of the triangulation are reindexed
          * as coordinates in the chain complex.  This reindexing must
-         * preserve order but ignore boundary faces.
+         * preserve order but ignore boundary faces.  In particular, if
+         * there are no boundary (<i>dim</i>-<i>subdim</i>)-faces, then
+         * this lookup table must be the identity map.
+         *
+         * For the dual boundary map, we fix orientations as follows:
+         *
+         * - In simplicial homology, for any \a k, the orientation of a
+         *   <i>k</i>-simplex is determined by assigning labels 0,...,<i>k</i>
+         *   to its vertices.
+         *
+         * - Consider a dual <i>k</i>-face \a d, and let this be dual to the
+         *   primal (<i>dim</i>-<i>k</i>)-face \a f.  In general, \a d will
+         *   \e not be a simplex.  Let \a B denote the barycentre of \a f
+         *   (which also appears as the "centre" point of \a d).
+         *
+         * - Let \a s be any top-dimensional simplex containing \a f, and let
+         *   \a emb be the corresponding FaceEmbedding<dim-k> object.
+         *
+         * - Now consider how \a d intersects the top-dimensional simplex \a s.
+         *   This intersection is a <i>k</i>-polytope with \a B as one of its
+         *   vertices.  We can extend this polytope away from \a B, pushing it
+         *   all the way through the simplex \a s, until it becomes a
+         *   <i>k</i>-simplex \a g whose vertices are \a B along with the
+         *   \a k "unused" vertices of \a s that do \e not appear in \a f.
+         *
+         * - We can now define the orientation of the dual <i>k</i>-face \a d
+         *   to be the orientation of this <i>k</i>-simplex \a g that contains
+         *   it.  All that remains now is to orient \a g by choosing a
+         *   labelling 0,...,<i>k</i> for its vertices.
+         *
+         * - To orient \a g, we assign the label 0 to \a B, and we
+         *   assign the labels 1,...,<i>k</i> to the "unused" vertices
+         *   <tt>v[dim-k+1]</tt>,...,<tt>v[dim]</tt> of \a s respectively,
+         *   where \a v is the permutation <tt>emb.vertices()</tt>.
+         *
+         * - Finally, we note that the orientation for \a d does not depend on
+         *   the particular choice of \a s and \a emb: by the preconditions and
+         *   the fact that this routine only considers duals of non-boundary
+         *   faces, the link of \a f must be a sphere, and therefore the images
+         *   of those "other" vertices are fixed in a way that preserves
+         *   orientation as you walk around the link.  See the documentation
+         *   for Simplex<dim>::faceMapping() for further details.
          *
          * \pre This triangulation is valid and non-empty.
          *
