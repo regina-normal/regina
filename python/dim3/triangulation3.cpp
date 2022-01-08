@@ -264,6 +264,8 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("k") = 1)
         .def("boundaryMap", (MatrixInt (Triangulation<3>::*)(int) const)(
             &Triangulation<3>::boundaryMap))
+        .def("dualBoundaryMap", (MatrixInt (Triangulation<3>::*)(int) const)(
+            &Triangulation<3>::dualBoundaryMap))
         .def("turaevViro", &Triangulation<3>::turaevViro,
             pybind11::arg(), pybind11::arg("parity") = true,
             pybind11::arg("alg") = regina::ALG_DEFAULT,

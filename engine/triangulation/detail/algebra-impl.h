@@ -168,29 +168,8 @@ AbelianGroup TriangulationBase<dim>::homology() const {
                 "requires a valid triangulation");
 
         // At this point we know that the triangulation is valid and non-empty.
-
-        // Our aim is to build a chain complex:
-        // A (dual (k+1)-faces) -> B (dual k-faces) -> C (dual (k-1)-faces).
-        //
-        // Begin by computing the dimensions of A, B and C, and also for
-        // spaces A and B building a map from face index to coordinate position.
-
-        size_t dimA = 0, dimB = 0, dimC = 0;
-        std::vector<size_t> indexA(countFaces<dim-k-1>());
-        std::vector<size_t> indexB(countFaces<dim-k>());
-
-        for (auto a : faces<dim-k-1>())
-            if (! a->isBoundary())
-                indexA[a->index()] = dimA++;
-        for (auto b : faces<dim-k>())
-            if (! b->isBoundary())
-                indexB[b->index()] = dimB++;
-        for (auto c : faces<dim-k+1>())
-            if (! c->isBoundary())
-                ++dimC;
-
-        return AbelianGroup(dualBoundaryMap<k>(indexB, dimB, dimC),
-            dualBoundaryMap<k + 1>(indexA, dimA, dimB));
+        // Compute the homology using the dual chain complex.
+        return AbelianGroup(dualBoundaryMap<k>(), dualBoundaryMap<k + 1>());
     }
 }
 
@@ -347,14 +326,25 @@ MatrixInt TriangulationBase<dim>::boundaryMap() const {
 
 template <int dim>
 template <int subdim>
-MatrixInt TriangulationBase<dim>::dualBoundaryMap(
-        const std::vector<size_t>& lookup, size_t domain, size_t codomain)
-        const {
+MatrixInt TriangulationBase<dim>::dualBoundaryMap() const {
     static_assert(subdim >= 2 && subdim <= dim);
     static_assert(standardDim(dim) || subdim < dim);
 
-    MatrixInt bdry(codomain, domain);
+    ensureSkeleton();
+
+    MatrixInt bdry(
+        std::get<dim-subdim+1>(faces_).size() - nBoundaryFaces_[dim-subdim+1],
+        std::get<dim-subdim>(faces_).size() - nBoundaryFaces_[dim-subdim]);
+
+    // For dual subdim-faces, build a map from (primal) face index in the
+    // triangulation to coordinate position in the chain complex.
     size_t row = 0;
+    std::vector<size_t> lookup(std::get<dim-subdim>(faces_).size());
+    for (auto f : faces<dim-subdim>())
+        if (! f->isBoundary())
+            lookup[f->index()] = row++;
+
+    row = 0;
     for (auto f : faces<dim-subdim+1>()) {
         if (f->isBoundary())
             continue;

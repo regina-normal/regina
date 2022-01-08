@@ -633,6 +633,7 @@ void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
     components_.swap(other.components_);
     boundaryComponents_.swap(other.boundaryComponents_);
     faces_.swap(other.faces_);
+    nBoundaryFaces_.swap(other.nBoundaryFaces_);
     fundGroup_.swap(other.fundGroup_);
     H1_.swap(other.H1_);
 }

@@ -70,6 +70,15 @@ template MatrixInt TriangulationBase<11>::boundaryMap<8>() const;
 template MatrixInt TriangulationBase<11>::boundaryMap<9>() const;
 template MatrixInt TriangulationBase<11>::boundaryMap<10>() const;
 template MatrixInt TriangulationBase<11>::boundaryMap<11>() const;
+template MatrixInt TriangulationBase<11>::dualBoundaryMap<2>() const;
+template MatrixInt TriangulationBase<11>::dualBoundaryMap<3>() const;
+template MatrixInt TriangulationBase<11>::dualBoundaryMap<4>() const;
+template MatrixInt TriangulationBase<11>::dualBoundaryMap<5>() const;
+template MatrixInt TriangulationBase<11>::dualBoundaryMap<6>() const;
+template MatrixInt TriangulationBase<11>::dualBoundaryMap<7>() const;
+template MatrixInt TriangulationBase<11>::dualBoundaryMap<8>() const;
+template MatrixInt TriangulationBase<11>::dualBoundaryMap<9>() const;
+template MatrixInt TriangulationBase<11>::dualBoundaryMap<10>() const;
 
 template const GroupPresentation& TriangulationBase<11>::fundamentalGroup() const;
 

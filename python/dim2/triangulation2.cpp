@@ -186,6 +186,8 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::arg("k") = 1)
         .def("boundaryMap", (MatrixInt (Triangulation<2>::*)(int) const)(
             &Triangulation<2>::boundaryMap))
+        .def("dualBoundaryMap", (MatrixInt (Triangulation<2>::*)(int) const)(
+            &Triangulation<2>::dualBoundaryMap))
         .def("pachner", &Triangulation<2>::pachner<2>,
             pybind11::arg(),
             pybind11::arg("check") = true,

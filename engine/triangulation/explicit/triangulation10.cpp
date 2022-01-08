@@ -68,6 +68,14 @@ template MatrixInt TriangulationBase<10>::boundaryMap<7>() const;
 template MatrixInt TriangulationBase<10>::boundaryMap<8>() const;
 template MatrixInt TriangulationBase<10>::boundaryMap<9>() const;
 template MatrixInt TriangulationBase<10>::boundaryMap<10>() const;
+template MatrixInt TriangulationBase<10>::dualBoundaryMap<2>() const;
+template MatrixInt TriangulationBase<10>::dualBoundaryMap<3>() const;
+template MatrixInt TriangulationBase<10>::dualBoundaryMap<4>() const;
+template MatrixInt TriangulationBase<10>::dualBoundaryMap<5>() const;
+template MatrixInt TriangulationBase<10>::dualBoundaryMap<6>() const;
+template MatrixInt TriangulationBase<10>::dualBoundaryMap<7>() const;
+template MatrixInt TriangulationBase<10>::dualBoundaryMap<8>() const;
+template MatrixInt TriangulationBase<10>::dualBoundaryMap<9>() const;
 
 template const GroupPresentation& TriangulationBase<10>::fundamentalGroup() const;
 

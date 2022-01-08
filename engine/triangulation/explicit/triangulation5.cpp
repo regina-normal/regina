@@ -57,6 +57,9 @@ template MatrixInt TriangulationBase<5>::boundaryMap<2>() const;
 template MatrixInt TriangulationBase<5>::boundaryMap<3>() const;
 template MatrixInt TriangulationBase<5>::boundaryMap<4>() const;
 template MatrixInt TriangulationBase<5>::boundaryMap<5>() const;
+template MatrixInt TriangulationBase<5>::dualBoundaryMap<2>() const;
+template MatrixInt TriangulationBase<5>::dualBoundaryMap<3>() const;
+template MatrixInt TriangulationBase<5>::dualBoundaryMap<4>() const;
 
 template const GroupPresentation& TriangulationBase<5>::fundamentalGroup() const;
 

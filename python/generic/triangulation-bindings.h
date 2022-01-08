@@ -183,6 +183,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::arg("k") = 1)
         .def("boundaryMap", (MatrixInt (Triangulation<dim>::*)(int) const)(
             &Triangulation<dim>::boundaryMap))
+        .def("dualBoundaryMap", (MatrixInt (Triangulation<dim>::*)(int) const)(
+            &Triangulation<dim>::dualBoundaryMap))
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
         .def("isIdenticalTo", &Triangulation<dim>::operator ==) // deprecated

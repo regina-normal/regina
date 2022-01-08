@@ -14,6 +14,8 @@ Version 7.1  [ TODO ]
     ENGINE:
         Class Triangulation<dim>:
             - New suite of routines countBoundaryFaces().
+            - New suite of public routines dualBoundaryMap() (these were
+              previously private, and had a more complex interface).
 
 Version 7.0  [ 19 December, 2021 ]
 

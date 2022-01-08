@@ -202,6 +202,8 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg("k") = 1)
         .def("boundaryMap", (MatrixInt (Triangulation<4>::*)(int) const)(
             &Triangulation<4>::boundaryMap))
+        .def("dualBoundaryMap", (MatrixInt (Triangulation<4>::*)(int) const)(
+            &Triangulation<4>::dualBoundaryMap))
         .def("orient", &Triangulation<4>::orient)
         .def("reflect", &Triangulation<4>::reflect)
         .def("triangulateComponents", &Triangulation<4>::triangulateComponents)
