@@ -70,6 +70,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
+    CPPUNIT_TEST(boundaryFaces);
     CPPUNIT_TEST(boundaryBuild);
     CPPUNIT_TEST(edgeAccess);
     CPPUNIT_TEST(pachner<0>);
@@ -349,6 +350,10 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         void boundaryFacets() {
             testManualAll(verifyBoundaryFacets);
+        }
+
+        void boundaryFaces() {
+            testManualAll(verifyBoundaryFaces);
         }
 
         void boundaryBuild() {

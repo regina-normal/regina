@@ -162,6 +162,7 @@ void Triangulation<4>::calculateVertexLinks() {
                 vertex->whyInvalid_.value |= Vertex<4>::INVALID_LINK;
                 foundNonSimpleLink = true;
                 vertex->boundaryComponent_ = new BoundaryComponent<4>();
+                ++nBoundaryFaces_[0];
                 vertex->boundaryComponent_->orientable_ =
                     vertex->isLinkOrientable();
                 vertex->boundaryComponent_->push_back(vertex);
@@ -173,6 +174,7 @@ void Triangulation<4>::calculateVertexLinks() {
                 ideal_ = vertex->component()->ideal_ = vertex->ideal_ = true;
                 foundNonSimpleLink = true;
                 vertex->boundaryComponent_ = new BoundaryComponent<4>();
+                ++nBoundaryFaces_[0];
                 vertex->boundaryComponent_->orientable_ =
                     vertex->isLinkOrientable();
                 vertex->boundaryComponent_->push_back(vertex);

@@ -51,6 +51,7 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryEdges);
+    CPPUNIT_TEST(boundaryFaces);
     CPPUNIT_TEST(boundaryEuler);
     CPPUNIT_TEST(edgeAccess);
     CPPUNIT_TEST(pachner<0>);
@@ -147,6 +148,10 @@ class Triangulation2Test : public TriangulationTest<2> {
 
         void boundaryEdges() {
             testManualAll(verifyBoundaryFacets);
+        }
+
+        void boundaryFaces() {
+            testManualAll(verifyBoundaryFaces);
         }
 
         void boundaryEuler() {

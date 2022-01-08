@@ -157,6 +157,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("isValid", &Triangulation<dim>::isValid)
         .def("hasBoundaryFacets", &Triangulation<dim>::hasBoundaryFacets)
         .def("countBoundaryFacets", &Triangulation<dim>::countBoundaryFacets)
+        .def("countBoundaryFaces", (size_t (Triangulation<dim>::*)(int) const)(
+            &Triangulation<dim>::countBoundaryFaces))
         .def("isOrientable", &Triangulation<dim>::isOrientable)
         .def("isOriented", &Triangulation<dim>::isOriented)
         .def("isConnected", &Triangulation<dim>::isConnected)

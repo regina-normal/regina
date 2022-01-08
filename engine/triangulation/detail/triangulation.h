@@ -203,6 +203,9 @@ class TriangulationBase :
         MarkedVector<BoundaryComponent<dim>> boundaryComponents_;
             /**< The components that form the boundary of the triangulation. */
 
+        std::array<size_t, dim> nBoundaryFaces_;
+            /**< The number of boundary faces of each dimension. */
+
         bool valid_;
             /**< Is this triangulation valid?  See isValid() for details
                  on what this means. */
@@ -1056,9 +1059,69 @@ class TriangulationBase :
          * This routine counts facets of top-dimensional simplices that are
          * not glued to some adjacent top-dimensional simplex.
          *
+         * This is equivalent to calling countBoundaryFaces<dim-1>().
+         *
          * @return the total number of boundary facets.
          */
         size_t countBoundaryFacets() const;
+
+        /**
+         * Returns the number of boundary <i>subdim</i>-faces in this
+         * triangulation.
+         *
+         * This is the fastest way to count faces if you know \a subdim
+         * at compile time.
+         *
+         * Specifically, this counts the number of <i>subdim</i>-faces
+         * for which isBoundary() returns \c true.  This may lead to some
+         * unexpected results in non-standard scenarios; for example:
+         *
+         * - In \ref stddim "non-standard dimensions", ideal vertices are not
+         *   recognised and so will not be counted as boundary;
+         *
+         * - In an invalid triangulation, the number of boundary faces reported
+         *   here may be smaller than the number of faces obtained when you
+         *   triangulate the boundary using BoundaryComponent::build().
+         *   This is because "pinched" faces (where separate parts of the
+         *   boundary are identified together) will only be counted once here,
+         *   but will "spring apart" into multiple faces when the boundary is
+         *   triangulated.
+         *
+         * \ifacespython Not present, since Python does not support templates.
+         * Python users can instead use the variant
+         * <tt>countBoundaryFaces(subdim)</tt>.
+         *
+         * \tparam subdim the face dimension; this must be between 0 and
+         * <i>dim</i>-1 inclusive.
+         *
+         * @return the number of boundary <i>subdim</i>-faces.
+         */
+        template <int subdim>
+        size_t countBoundaryFaces() const;
+
+        /**
+         * Returns the number of boundary <i>subdim</i>-faces in this
+         * triangulation, where the face dimension does not need to be known
+         * until runtime.
+         *
+         * This routine takes linear time in the dimension \a dim.  For C++
+         * programmers who know \a subdim at compile time, you are better off
+         * using the template function countBoundaryFaces<subdim>() instead,
+         * which is fast constant time.
+         *
+         * Specifically, this counts the number of <i>subdim</i>-faces
+         * for which isBoundary() returns \c true.  This may lead to some
+         * unexpected results in non-standard scenarios; see the documentation
+         * for the templated countBoundaryFaces<subdim>() for details.
+         *
+         * \exception InvalidArgument the face dimension \a subdim is outside
+         * the supported range (i.e., negative or greater than <i>dim</i>-1).
+         *
+         * @param subdim the face dimension; this must be between 0 and
+         * <i>dim</i>-1 inclusive.
+         * @return the number of boundary <i>subdim</i>-faces.
+         */
+        size_t countBoundaryFaces(int subdim) const;
 
         /**
          * Determines if this triangulation is orientable.
@@ -2686,6 +2749,17 @@ class TriangulationBase :
         auto facesImpl(int subdim, std::integer_sequence<int, 0, k...>) const;
 
         /**
+         * Implements the non-templated countBoundaryFaces(subdim) function.
+         *
+         * The purpose of the std::integer_sequence argument is to give
+         * us the list of all face dimensions as individual template
+         * parameters, which means we can use C++17 fold expressions.
+         */
+        template <int... k>
+        size_t countBoundaryFacesImpl(int subdim,
+                std::integer_sequence<int, k...>) const;
+
+        /**
          * Implements the non-templated homology(homdim) function.
          *
          * The purpose of the std::integer_sequence argument is to give
@@ -2768,14 +2842,9 @@ class TriangulationBase :
          * than <i>dim</i>-3 then this routine does nothing.
          *
          * See calculateRealBoundary() for further details.
-         *
-         * Like calculateFaces(), this was made a static member function to
-         * work around a gcc8 bug (#86594, fixed in gcc9).  However, everything
-         * this function needs is passed via \a bc and \a facet, so being
-         * static is harmless (and required no changes to the source code).
          */
         template <int subdim>
-        static void calculateBoundaryFaces(BoundaryComponent<dim>* bc,
+        void calculateBoundaryFaces(BoundaryComponent<dim>* bc,
             Face<dim, dim-1>* facet);
 
         /**
@@ -3172,6 +3241,7 @@ template <int dim>
 TriangulationBase<dim>::TriangulationBase(TriangulationBase<dim>&& src)
         noexcept :
         Snapshottable<Triangulation<dim>>(std::move(src)),
+        nBoundaryFaces_(std::move(src.nBoundaryFaces_)),
         valid_(src.valid_),
         topologyLock_(0), // locks cannot move between objects
         calculatedSkeleton_(src.calculatedSkeleton_),
@@ -3269,6 +3339,7 @@ TriangulationBase<dim>& TriangulationBase<dim>::operator =
 
     // Do not touch topologyLock_, since other objects are managing this.
 
+    nBoundaryFaces_.swap(src.nBoundaryFaces_);
     valid_ = src.valid_;
     calculatedSkeleton_ = src.calculatedSkeleton_;
     orientable_ = src.orientable_;
@@ -3761,13 +3832,44 @@ inline bool TriangulationBase<dim>::isValid() const {
 template <int dim>
 inline bool TriangulationBase<dim>::hasBoundaryFacets() const {
     ensureSkeleton();
-    return (2 * countFaces<dim - 1>() > (dim + 1) * simplices_.size());
+    return nBoundaryFaces_[dim - 1] > 0;
 }
 
 template <int dim>
 inline size_t TriangulationBase<dim>::countBoundaryFacets() const {
     ensureSkeleton();
-    return 2 * countFaces<dim - 1>() - (dim + 1) * simplices_.size();
+    return nBoundaryFaces_[dim - 1];
+}
+
+template <int dim>
+template <int subdim>
+inline size_t TriangulationBase<dim>::countBoundaryFaces() const {
+    static_assert(subdim >= 0 && subdim < dim,
+        "countBoundaryFaces() requires 0 <= subdim < dim.");
+    ensureSkeleton();
+    return nBoundaryFaces_[subdim];
+}
+
+template <int dim>
+template <int... k>
+size_t TriangulationBase<dim>::countBoundaryFacesImpl(int subdim,
+        std::integer_sequence<int, k...>) const {
+    // We give the result a name (tmp) to avoid compiler warnings.
+    size_t ans;
+    auto tmp = (
+        (subdim == k && (void(ans = countBoundaryFaces<k>()), 1))
+        || ...);
+    return ans;
+}
+
+template <int dim>
+inline size_t TriangulationBase<dim>::countBoundaryFaces(int subdim) const {
+    if (subdim < 0 || subdim >= dim)
+        throw InvalidArgument(
+            "countBoundaryFaces(): unsupported face dimension");
+
+    return countBoundaryFacesImpl(subdim,
+        std::make_integer_sequence<int, dim>());
 }
 
 template <int dim>

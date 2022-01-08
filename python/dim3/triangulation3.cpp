@@ -236,6 +236,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("hasBoundaryTriangles", &Triangulation<3>::hasBoundaryTriangles)
         .def("countBoundaryFacets", &Triangulation<3>::countBoundaryFacets)
         .def("countBoundaryTriangles", &Triangulation<3>::countBoundaryTriangles)
+        .def("countBoundaryFaces", (size_t (Triangulation<3>::*)(int) const)(
+            &Triangulation<3>::countBoundaryFaces))
         .def("isClosed", &Triangulation<3>::isClosed)
         .def("isOrientable", &Triangulation<3>::isOrientable)
         .def("isOriented", &Triangulation<3>::isOriented)

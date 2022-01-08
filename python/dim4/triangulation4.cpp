@@ -180,6 +180,8 @@ void addTriangulation4(pybind11::module_& m) {
         .def("countBoundaryFacets", &Triangulation<4>::countBoundaryFacets)
         .def("countBoundaryTetrahedra",
             &Triangulation<4>::countBoundaryTetrahedra)
+        .def("countBoundaryFaces", (size_t (Triangulation<4>::*)(int) const)(
+            &Triangulation<4>::countBoundaryFaces))
         .def("isClosed", &Triangulation<4>::isClosed)
         .def("isOrientable", &Triangulation<4>::isOrientable)
         .def("isOriented", &Triangulation<4>::isOriented)

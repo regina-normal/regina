@@ -1067,6 +1067,34 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
+        template <int subdim>
+        static void verifyBoundaryFacesToSubdim(const Triangulation<dim>& tri,
+                const char* name) {
+            static_assert(subdim >= 0 && subdim < dim);
+
+            if constexpr (subdim > 0)
+                verifyBoundaryFacesToSubdim<subdim - 1>(tri, name);
+
+            size_t found = 0;
+            for (auto f : tri.template faces<subdim>()) {
+                if (f->isBoundary())
+                    ++found;
+            }
+            if (found != tri.template countBoundaryFaces<subdim>()) {
+                std::ostringstream msg;
+                msg << name << " reports "
+                    << tri.template countBoundaryFaces<subdim>()
+                    << " boundary " << subdim << "-faces instead of the "
+                    "expected " << found << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        static void verifyBoundaryFaces(const Triangulation<dim>& tri,
+                const char* name) {
+            verifyBoundaryFacesToSubdim<dim - 1>(tri, name);
+        }
+
         static void verifyBoundaryCount(const Triangulation<dim>& tri,
                 size_t nReal, size_t nIdeal, size_t nInvalid,
                 const char* name) {
