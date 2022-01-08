@@ -90,6 +90,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(pachner<3>);
     CPPUNIT_TEST(chainComplex<1>);
     CPPUNIT_TEST(chainComplex<2>);
+    CPPUNIT_TEST(dualChainComplex<2>);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(zeroTwoMove);
@@ -4923,6 +4924,11 @@ class Triangulation3Test : public TriangulationTest<3> {
         template <int k>
         void chainComplex() {
             testManualSmall(verifyChainComplex<k>);
+        }
+
+        template <int k>
+        void dualChainComplex() {
+            testManualSmall(verifyDualChainComplex<k>);
         }
 
         static void verifyMinimiseBoundaryDoesNothing(

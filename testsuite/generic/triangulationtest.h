@@ -1539,5 +1539,77 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
             }
         }
+
+        template <int k>
+        static void verifyDualChainComplex(const Triangulation<dim>& tri,
+                const char* name) {
+            static_assert(2 <= k && k < dim);
+
+            // These tests use homology on the dual skeleton: invalid or
+            // empty triangulations are explicitly disallowed, but ideal
+            // triangulations are fine.
+            if (tri.isEmpty() || ! tri.isValid())
+                return;
+
+            regina::MatrixInt m = tri.template dualBoundaryMap<k>();
+            regina::MatrixInt n = tri.template dualBoundaryMap<k + 1>();
+
+            if (m.columns() != n.rows()) {
+                std::ostringstream msg;
+                msg << name << ": dual boundary maps for computing H" << k
+                    << " have incompatible sizes.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! (m * n).isZero()) {
+                std::ostringstream msg;
+                msg << name << ": dual boundary maps for computing H" << k
+                    << " do not compose to give zero.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            regina::AbelianGroup g1(m, n);
+            {
+                const auto& hom = tri.template homology<k>();
+                if (g1.str() != hom.str()) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k << " via the "
+                        "chain complex gives " << g1.str()
+                        << ", but homology<" << k << ">() gives "
+                        << hom.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            regina::AbelianGroup g1z2(m, n, 2);
+            if (g1z2.rank() != 0) {
+                std::ostringstream msg;
+                msg << name << ": computing H" << k
+                    << " with Z_2 coefficients via the chain complex gives "
+                    "a group with non-trivial rank " << g1z2.rank();
+                CPPUNIT_FAIL(msg.str());
+            }
+            size_t z2rank = g1z2.countInvariantFactors();
+            for (size_t i = 0; i < z2rank; ++i)
+                if (g1z2.invariantFactor(i) != 2) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k
+                        << " with Z_2 coefficients via the chain complex gives "
+                        "an unexpected invariant factor "
+                        << g1z2.invariantFactor(i);
+                    CPPUNIT_FAIL(msg.str());
+                }
+            if constexpr (k == 2 && dim == 3) {
+                unsigned long h2 = tri.homologyH2Z2();
+                if (h2 != z2rank) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k
+                        << " with Z_2 coefficients via the chain complex "
+                        "gives Z_2 rank " << z2rank
+                        << ", but homologyH2Z2() gives " << h2 << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
 };
 
