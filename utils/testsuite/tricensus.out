@@ -132,7 +132,7 @@ Exit code: 0
 --------------------
 Output (compressed):
 <?xml version="1.0"?>
-<regina engine="7.0">
+<regina engine="_">
 <container label="Command-line census">
 <textdata label="Parameters">Searching for 3-manifold triangulations
 1 tetrahedron
