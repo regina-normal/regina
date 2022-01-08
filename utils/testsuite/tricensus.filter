@@ -4,4 +4,5 @@ set -e
 # This filter adjusts the way that popt displays its standard help options,
 # since different popt installations appear to use different indenting styles.
 
-sed -e 's#^  --usage    #      --usage#'
+sed -e 's#^  --usage    #      --usage#' \
+    -e 's#<regina engine="[^"]\{1,\}">#<regina engine="_">#g'
