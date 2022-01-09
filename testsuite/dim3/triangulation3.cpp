@@ -90,6 +90,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(pachner<3>);
     CPPUNIT_TEST(chainComplex<1>);
     CPPUNIT_TEST(chainComplex<2>);
+    CPPUNIT_TEST(dualChainComplex<1>);
     CPPUNIT_TEST(dualChainComplex<2>);
 
     // Dimension-specific tests:

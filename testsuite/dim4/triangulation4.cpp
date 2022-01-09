@@ -81,6 +81,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(chainComplex<1>);
     CPPUNIT_TEST(chainComplex<2>);
     CPPUNIT_TEST(chainComplex<3>);
+    CPPUNIT_TEST(dualChainComplex<1>);
     CPPUNIT_TEST(dualChainComplex<2>);
     CPPUNIT_TEST(dualChainComplex<3>);
 

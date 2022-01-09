@@ -327,69 +327,89 @@ MatrixInt TriangulationBase<dim>::boundaryMap() const {
 template <int dim>
 template <int subdim>
 MatrixInt TriangulationBase<dim>::dualBoundaryMap() const {
-    static_assert(subdim >= 2 && subdim <= dim);
+    static_assert(subdim >= 1 && subdim <= dim);
     static_assert(standardDim(dim) || subdim < dim);
 
     ensureSkeleton();
 
-    MatrixInt bdry(
-        std::get<dim-subdim+1>(faces_).size() - nBoundaryFaces_[dim-subdim+1],
-        std::get<dim-subdim>(faces_).size() - nBoundaryFaces_[dim-subdim]);
+    if constexpr (subdim == 1) {
+        MatrixInt bdry(size(), countFaces<dim-1>() - nBoundaryFaces_[dim-1]);
 
-    // For dual subdim-faces, build a map from (primal) face index in the
-    // triangulation to coordinate position in the chain complex.
-    size_t row = 0;
-    std::vector<size_t> lookup(std::get<dim-subdim>(faces_).size());
-    for (auto f : faces<dim-subdim>())
-        if (! f->isBoundary())
-            lookup[f->index()] = row++;
+        // Just walk through each dual edge and record its boundary.
+        size_t col = 0;
+        for (auto f : faces<dim-1>()) {
+            if (f->isBoundary())
+                continue;
 
-    row = 0;
-    for (auto f : faces<dim-subdim+1>()) {
-        if (f->isBoundary())
-            continue;
+            // The endpoints of the dual edge are labelled (0, 1) according to
+            // (f->back(), f->front()).
+            ++bdry.entry(f->front().simplex()->index(), col);
+            --bdry.entry(f->back().simplex()->index(), col);
 
-        // The dual face to f sits on the boundary of which other dual faces?
-        Simplex<dim>* s = f->front().simplex();
-        Perm<dim + 1> subface = f->front().vertices();
-        int i = dim-subdim+1;
-        while (true) {
-            // Examine the facet that excludes vertex number i of the
-            // (dim-subdim+1)-face f.
-            unsigned facetNum = Face<dim, dim-subdim>::faceNumber(subface);
-            auto* facet = s->template face<dim-subdim>(facetNum);
-            if (! facet->isBoundary()) {
-                // The following permutation should map
-                // {0,...,dim-subdim} to {0,...,dim-subdim}, and should map
-                // {dim-subdim+1,...,dim} to {dim-subdim+1,...,dim}.
-                Perm p = s->template faceMapping<dim-subdim>(facetNum).inverse()
-                    * subface;
-
-                // We need the sign of the induced permutation of
-                // {dim-subdim+1,...,dim}.
-                if constexpr (subdim == dim) {
-                    if (p.sign() > 0)
-                        ++bdry.entry(row, lookup[facet->index()]);
-                    else
-                        --bdry.entry(row, lookup[facet->index()]);
-                } else {
-                    if (Perm<dim-subdim+1>::contract(p).sign() == p.sign())
-                        ++bdry.entry(row, lookup[facet->index()]);
-                    else
-                        --bdry.entry(row, lookup[facet->index()]);
-                }
-            }
-
-            if (i > 0) {
-                --i;
-                subface = subface * Perm<dim+1>(i, dim-subdim+1);
-            } else
-                break;
+            ++col;
         }
-        ++row;
-    }
 
-    return bdry;
+        return bdry;
+    } else {
+        MatrixInt bdry(
+            countFaces<dim-subdim+1>() - nBoundaryFaces_[dim-subdim+1],
+            countFaces<dim-subdim>() - nBoundaryFaces_[dim-subdim]);
+
+        // For dual subdim-faces, build a map from (primal) face index in the
+        // triangulation to coordinate position in the chain complex.
+        size_t row = 0;
+        std::vector<size_t> lookup(std::get<dim-subdim>(faces_).size());
+        for (auto f : faces<dim-subdim>())
+            if (! f->isBoundary())
+                lookup[f->index()] = row++;
+
+        row = 0;
+        for (auto f : faces<dim-subdim+1>()) {
+            if (f->isBoundary())
+                continue;
+
+            // The dual to f sits on the boundary of which other dual faces?
+            Simplex<dim>* s = f->front().simplex();
+            Perm<dim + 1> subface = f->front().vertices();
+            int i = dim-subdim+1;
+            while (true) {
+                // Examine the facet that excludes vertex number i of the
+                // (dim-subdim+1)-face f.
+                unsigned facetNum = Face<dim, dim-subdim>::faceNumber(subface);
+                auto* facet = s->template face<dim-subdim>(facetNum);
+                if (! facet->isBoundary()) {
+                    // The following permutation should map
+                    // {0,...,dim-subdim} to {0,...,dim-subdim}, and should map
+                    // {dim-subdim+1,...,dim} to {dim-subdim+1,...,dim}.
+                    Perm p = s->template faceMapping<dim-subdim>(facetNum).
+                        inverse() * subface;
+
+                    // We need the sign of the induced permutation of
+                    // {dim-subdim+1,...,dim}.
+                    if constexpr (subdim == dim) {
+                        if (p.sign() > 0)
+                            ++bdry.entry(row, lookup[facet->index()]);
+                        else
+                            --bdry.entry(row, lookup[facet->index()]);
+                    } else {
+                        if (Perm<dim-subdim+1>::contract(p).sign() == p.sign())
+                            ++bdry.entry(row, lookup[facet->index()]);
+                        else
+                            --bdry.entry(row, lookup[facet->index()]);
+                    }
+                }
+
+                if (i > 0) {
+                    --i;
+                    subface = subface * Perm<dim+1>(i, dim-subdim+1);
+                } else
+                    break;
+            }
+            ++row;
+        }
+
+        return bdry;
+    }
 }
 
 } // namespace regina::detail

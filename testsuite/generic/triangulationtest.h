@@ -1543,7 +1543,7 @@ class TriangulationTest : public CppUnit::TestFixture {
         template <int k>
         static void verifyDualChainComplex(const Triangulation<dim>& tri,
                 const char* name) {
-            static_assert(2 <= k && k < dim);
+            static_assert(1 <= k && k < dim);
 
             // These tests use homology on the dual skeleton: invalid or
             // empty triangulations are explicitly disallowed, but ideal

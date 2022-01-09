@@ -68,6 +68,7 @@ template MatrixInt TriangulationBase<10>::boundaryMap<7>() const;
 template MatrixInt TriangulationBase<10>::boundaryMap<8>() const;
 template MatrixInt TriangulationBase<10>::boundaryMap<9>() const;
 template MatrixInt TriangulationBase<10>::boundaryMap<10>() const;
+template MatrixInt TriangulationBase<10>::dualBoundaryMap<1>() const;
 template MatrixInt TriangulationBase<10>::dualBoundaryMap<2>() const;
 template MatrixInt TriangulationBase<10>::dualBoundaryMap<3>() const;
 template MatrixInt TriangulationBase<10>::dualBoundaryMap<4>() const;

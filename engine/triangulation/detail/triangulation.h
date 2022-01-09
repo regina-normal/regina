@@ -1544,19 +1544,24 @@ class TriangulationBase :
          * the dual face indices and the corresponding primal face indices
          * might not be equal.
          *
-         * For this dual boundary map, we fix orientations as follows:
+         * For this dual boundary map, for positive dual face dimensions \a k,
+         * we fix the orientations of the dual <i>k</i>-faces as follows:
          *
-         * - In simplicial homology, for any \a k, the orientation of a
-         *   <i>k</i>-simplex is determined by assigning labels 0,...,<i>k</i>
-         *   to its vertices.
+         * - In simplicial homology, the orientation of a <i>k</i>-simplex is
+         *   determined by assigning labels 0,...,<i>k</i> to its vertices.
          *
          * - Consider a dual <i>k</i>-face \a d, and let this be dual to the
          *   primal (<i>dim</i>-<i>k</i>)-face \a f.  In general, \a d will
          *   \e not be a simplex.  Let \a B denote the barycentre of \a f
          *   (which also appears as the "centre" point of \a d).
          *
-         * - Let \a s be any top-dimensional simplex containing \a f, and let
-         *   \a emb be the corresponding FaceEmbedding<dim-k> object.
+         * - Let \a emb be an arbitrary FaceEmbedding<dim-k> for \a f (i.e.,
+         *   chosen from <tt>f.embeddings()</tt>), and let \a s be the
+         *   corresponding top-dimensional simplex containing \a f (i.e.,
+         *   <tt>emb.simplex()</tt>).  For the special case of dual edges
+         *   (\a k = 1), this choice matters; here we choose \a emb to be the
+         *   first embedding (that is, <tt>f.front()</tt>).  For larger \a k
+         *   this choice does not matter; see below for the reasons why.
          *
          * - Now consider how \a d intersects the top-dimensional simplex \a s.
          *   This intersection is a <i>k</i>-polytope with \a B as one of its
@@ -1575,13 +1580,20 @@ class TriangulationBase :
          *   <tt>v[dim-k+1]</tt>,...,<tt>v[dim]</tt> of \a s respectively,
          *   where \a v is the permutation <tt>emb.vertices()</tt>.
          *
-         * - Finally, we note that the orientation for \a d does not depend on
-         *   the particular choice of \a s and \a emb: by the preconditions and
-         *   the fact that this routine only considers duals of non-boundary
-         *   faces, the link of \a f must be a sphere, and therefore the images
-         *   of those "other" vertices are fixed in a way that preserves
-         *   orientation as you walk around the link.  See the documentation
-         *   for Simplex<dim>::faceMapping() for further details.
+         * - Finally, we note that for \a k &gt; 1, the orientation for \a d
+         *   does not depend on the particular choice of \a s and \a emb: by
+         *   the preconditions and the fact that this routine only considers
+         *   duals of non-boundary faces, the link of \a f must be a sphere,
+         *   and therefore the images of those "other" vertices are fixed in a
+         *   way that preserves orientation as you walk around the link.  See
+         *   the documentation for Simplex<dim>::faceMapping() for details.
+         *
+         * - For the special case of dual edges (\a k = 1), the conditions
+         *   above can be described more simply: the two endpoints of the dual
+         *   edge \a d correspond to the two top-dimensional simplices on
+         *   either side of the (<i>dim</i>-1)-face \a f, and we orient \a d
+         *   by labelling these endpoints (0, 1) in the order
+         *   (<tt>f.back()</tt>, <tt>f.front()</tt>).
          *
          * If you wish to convert these boundary maps to homology groups
          * yourself, either the AbelianGroup class (if you do not need
@@ -1591,8 +1603,8 @@ class TriangulationBase :
          * \pre This triangulation is valid and non-empty.
          *
          * \tparam subdim the dual face dimension; this must be between
-         * 2 and \a dim inclusive if \a dim is one of Regina's standard
-         * dimensions, or between 2 and (\a dim - 1) inclusive otherwise.
+         * 1 and \a dim inclusive if \a dim is one of Regina's standard
+         * dimensions, or between 1 and (\a dim - 1) inclusive otherwise.
          *
          * @return the boundary map from dual <i>subdim</i>-faces to
          * dual (<i>subdim</i>-1)-faces.
@@ -1619,8 +1631,8 @@ class TriangulationBase :
          * the supported range (as documented for the \a subdim argument below).
          *
          * @param subdim the dual face dimension; this must be between
-         * 2 and \a dim inclusive if \a dim is one of Regina's standard
-         * dimensions, or between 2 and (\a dim - 1) inclusive otherwise.
+         * 1 and \a dim inclusive if \a dim is one of Regina's standard
+         * dimensions, or between 1 and (\a dim - 1) inclusive otherwise.
          * @return the boundary map from dual <i>subdim</i>-faces to
          * dual (<i>subdim</i>-1)-faces.
          */
@@ -2914,13 +2926,13 @@ class TriangulationBase :
          * us the list of all face dimensions as individual template
          * parameters, which means we can use C++17 fold expressions.
          *
-         * The reason for separating out face dimensions 0 and 1 is because
-         * dualBoundaryMap() can only be used with face dimension >= 2
-         * (and so we wish to exclude 0 and 1 from our fold expression).
+         * The reason for separating out face dimension 0 is because
+         * dualBoundaryMap() can only be used with face dimension >= 1
+         * (and so we wish to exclude 0 from our fold expression).
          */
         template <int... k>
         MatrixInt dualBoundaryMapImpl(int subdim,
-                std::integer_sequence<int, 0, 1, k...>) const;
+                std::integer_sequence<int, 0, k...>) const;
 
         /**
          * Internal to calculateSkeleton().
@@ -4909,7 +4921,7 @@ inline MatrixInt TriangulationBase<dim>::boundaryMap(int subdim) const {
 template <int dim>
 template <int... k>
 inline MatrixInt TriangulationBase<dim>::dualBoundaryMapImpl(int subdim,
-        std::integer_sequence<int, 0, 1, k...>) const {
+        std::integer_sequence<int, 0, k...>) const {
     // We give the result a name (tmp) to avoid compiler warnings.
     MatrixInt ans;
     auto tmp = (
@@ -4922,7 +4934,7 @@ template <int dim>
 inline MatrixInt TriangulationBase<dim>::dualBoundaryMap(int subdim) const {
     constexpr int maxSubdim = (standardDim(dim) ? dim : dim - 1);
 
-    if (subdim < 2 || subdim > maxSubdim)
+    if (subdim < 1 || subdim > maxSubdim)
         throw InvalidArgument(
             "dualBoundaryMap(): unsupported dual face dimension");
 
