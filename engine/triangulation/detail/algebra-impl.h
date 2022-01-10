@@ -412,6 +412,201 @@ MatrixInt TriangulationBase<dim>::dualBoundaryMap() const {
     }
 }
 
+template <int dim>
+template <int subdim>
+MatrixInt TriangulationBase<dim>::dualToPrimal() const {
+    static_assert(subdim >= 0 && subdim < dim);
+
+    ensureSkeleton();
+
+    if constexpr (subdim == 0) {
+        MatrixInt ans(std::get<0>(faces_).size(), size());
+
+        size_t col = 0;
+        for (auto dual : simplices_)
+            ans.entry(dual->vertex(0)->index(), col++) = 1;
+
+        return ans;
+    } else {
+        MatrixInt ans(
+            std::get<subdim>(faces_).size(),
+            std::get<dim-subdim>(faces_).size() - nBoundaryFaces_[dim-subdim]);
+
+        size_t col = 0;
+        for (auto dual : faces<dim-subdim>()) {
+            if (dual->isBoundary())
+                continue;
+
+            if constexpr (subdim == 1) {
+                // The endpoints of the dual edge are labelled (0, 1)
+                // according to (dual->back(), dual->front()).
+                {
+                    auto emb = dual->front();
+                    // Edge: centre of dual -> centre of simplex
+                    int v0 = emb.vertices()[0];
+                    if (v0 != 0) {
+                        // Add edge (v0, 0) of emb.simplex().
+                        int e = (dim == 2 ? 3 - v0 : v0 - 1);
+                        Edge<dim>* edge = emb.simplex()->edge(e);
+                        if (emb.simplex()->edgeMapping(e)[0] == 0)
+                            --ans.entry(edge->index(), col);
+                        else
+                            ++ans.entry(edge->index(), col);
+                    }
+                }
+                {
+                    auto emb = dual->back();
+                    // Edge: centre of simplex -> centre of dual
+                    int v0 = emb.vertices()[0];
+                    if (v0 != 0) {
+                        // Add edge (0, v0) of emb.simplex().
+                        int e = (dim == 2 ? 3 - v0 : v0 - 1);
+                        Edge<dim>* edge = emb.simplex()->edge(e);
+                        if (emb.simplex()->edgeMapping(e)[0] == 0)
+                            ++ans.entry(edge->index(), col);
+                        else
+                            --ans.entry(edge->index(), col);
+                    }
+                }
+            } else {
+                int v[subdim + 1];
+                v[subdim] = 0;
+
+                for (const auto& emb : *dual) {
+                    v[0] = emb.vertices()[0];
+                    if (v[0] == 0)
+                        continue;
+
+                    if constexpr (subdim == 2) {
+                        // This follows the generic code for higher face
+                        // dimensions below; however, it is streamlined here
+                        // since this is a common case (in particular, it is
+                        // used to compute 4-manifold intersection forms).
+                        v[1] = emb.simplex()->template faceMapping<dim-1>(
+                            Face<dim, dim-1>::faceNumber(emb.vertices()))[0];
+                        if (v[1] != 0 && v[1] != v[0]) {
+                            // Build a permutation (v0, v1, 0, junk...).
+                            Perm<dim+1> primal(0, v[0]);
+                            primal = Perm<dim+1>(primal[1], v[1]) * primal;
+                            primal = Perm<dim+1>(primal[2], 0) * primal;
+
+                            auto n = Face<dim, 2>::faceNumber(primal);
+                            size_t row = emb.simplex()->template face<2>(n)->
+                                index();
+
+                            // Get the inherent ordering of vertices {v0, v1, 0}
+                            // for the corresponding triangle.
+                            auto map = emb.simplex()->
+                                template faceMapping<2>(n);
+
+                            // Now we can find out how we have reordered
+                            // the inherent vertices {0,1,2}.
+                            if (Perm<3>::contract(map.inverse() * primal).
+                                    sign() > 0) {
+                                ++ans.entry(row, col);
+                            } else {
+                                --ans.entry(row, col);
+                            }
+                        }
+
+                        // This second piece of the dual triangle is reflected.
+                        v[1] = emb.simplex()->template faceMapping<dim-1>(
+                            Face<dim, dim-1>::faceNumber(emb.vertices() *
+                                Perm<dim+1>(dim-1, dim)))[0];
+                        if (v[1] != 0 && v[1] != v[0]) {
+                            // Build a permutation (v0, v1, 0, junk...).
+                            Perm<dim+1> primal(0, v[0]);
+                            primal = Perm<dim+1>(primal[1], v[1]) * primal;
+                            primal = Perm<dim+1>(primal[2], 0) * primal;
+
+                            auto n = Face<dim, 2>::faceNumber(primal);
+                            size_t row = emb.simplex()->template face<2>(n)->
+                                index();
+
+                            // Get the inherent ordering of vertices {v0, v1, 0}
+                            // for the corresponding triangle.
+                            auto map = emb.simplex()->
+                                template faceMapping<2>(n);
+
+                            // Now we can find out how we have reordered
+                            // the inherent vertices {0,1,2}.
+                            if (Perm<3>::contract(map.inverse() * primal).
+                                    sign() > 0) {
+                                --ans.entry(row, col);
+                            } else {
+                                ++ans.entry(row, col);
+                            }
+                        }
+                    } else {
+                        auto rot1 = Perm<dim + 1>::rot(subdim);
+                        auto rot2 = rot1.inverse();
+                        for (typename Perm<subdim>::Index p = 0;
+                                p < Perm<subdim>::nPerms; ++p) {
+                            // We need to apply Perm<subdim>::Sn[p] to the
+                            // last subdim elements of emb.vertices().
+                            Perm<dim + 1> vertices = emb.vertices() * rot2 *
+                                Perm<dim+1>::extend(Perm<subdim>::Sn[p]) * rot1;
+                            bool distinct = true;
+                            for_constexpr<1, subdim>([&](auto k) {
+                                if (distinct) {
+                                    v[k] = emb.simplex()->
+                                        template faceMapping<dim - subdim + k>(
+                                        Face<dim, dim - subdim + k>::faceNumber(
+                                        vertices))[0];
+                                    if (v[k] == 0)
+                                        distinct = false;
+                                    else {
+                                        for (int j = 0; j < k; ++j)
+                                            if (v[k] == v[j]) {
+                                                distinct = false;
+                                                break;
+                                            }
+                                    }
+                                }
+                            });
+                            if (! distinct)
+                                continue;
+
+                            // Build a permutation (v0, v1, ..., 0, junk...).
+                            Perm<dim+1> primal(subdim, 0);
+                            for (int k = 0; k < subdim; ++k)
+                                primal = Perm<dim+1>(primal[k], v[k]) * primal;
+
+                            auto n = Face<dim, subdim>::faceNumber(primal);
+                            size_t row = emb.simplex()->
+                                template face<subdim>(n)->index();
+
+                            // Get the inherent ordering of vertices
+                            // {v0, v1, ..., 0} for the corresponding face.
+                            auto map = emb.simplex()->
+                                template faceMapping<subdim>(n);
+
+                            // Now we can find out how we have reordered
+                            // the inherent vertices {0,1,...,subdim}.
+                            if (Perm<subdim+1>::contract(
+                                    map.inverse() * primal).sign() > 0) {
+                                if (p % 2 == 0)
+                                    ++ans.entry(row, col);
+                                else
+                                    --ans.entry(row, col);
+                            } else {
+                                if (p % 2 == 0)
+                                    --ans.entry(row, col);
+                                else
+                                    ++ans.entry(row, col);
+                            }
+                        }
+                    }
+                }
+            }
+
+            ++col;
+        }
+
+        return ans;
+    }
+}
+
 } // namespace regina::detail
 
 #endif

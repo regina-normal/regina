@@ -1611,5 +1611,70 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
             }
         }
+
+        template <int k>
+        static void verifyDualToPrimal(const Triangulation<dim>& tri,
+                const char* name) {
+            static_assert(0 <= k && k < dim);
+
+            // Do not try to work with triangulations that fail the
+            // preconditions for dualToPrimal().
+            if (tri.isEmpty() || ! tri.isValid())
+                return;
+            if constexpr (regina::standardDim(dim))
+                if (tri.isIdeal())
+                    return;
+
+            regina::MatrixInt map = tri.template dualToPrimal<k>();
+
+            // This map sends homologous cycles to homologous cycles;
+            // in particular, this means it must send boundaries to boundaries.
+            //
+            // Also, the map should describe an isomorphism between the dual
+            // and primal homology groups.
+
+            // Start with what is easy to test.
+
+            if constexpr (regina::standardDim(dim) || k < dim) {
+                auto dualBoundariesAsPrimal =
+                    map * tri.template dualBoundaryMap<k + 1>();
+
+                if constexpr (0 < k) {
+                    if (! (tri.template boundaryMap<k>() *
+                            dualBoundariesAsPrimal).isZero()) {
+                        std::ostringstream msg;
+                        msg << name << ": dual-to-primal map for " << k
+                            << "-faces does not send boundaries to cycles.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                if (! dualBoundariesAsPrimal.isZero()) {
+                    // Test whether the column space for dualBoundariesAsPrimal
+                    // lives within the column space for boundaryMap<k + 1>.
+                    auto b = tri.template boundaryMap<k + 1>();
+                    auto rank = b.columnEchelonForm();
+
+                    regina::MatrixInt comb(b.rows(),
+                        b.columns() + dualBoundariesAsPrimal.columns());
+                    for (size_t row = 0; row < b.rows(); ++row) {
+                        for (size_t col = 0; col < b.columns(); ++col)
+                            comb.entry(row, col) = b.entry(row, col);
+                        for (size_t col = 0;
+                                col < dualBoundariesAsPrimal.columns(); ++col)
+                            comb.entry(row, b.columns() + col) =
+                                dualBoundariesAsPrimal.entry(row, col);
+                    }
+                    auto combRank = comb.columnEchelonForm();
+
+                    if (rank != combRank) {
+                        std::ostringstream msg;
+                        msg << name << ": dual-to-primal map for " << k
+                            << "-faces does not send boundaries to boundaries.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
 };
 

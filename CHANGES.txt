@@ -16,6 +16,9 @@ Version 7.1  [ TODO ]
             - New suite of routines countBoundaryFaces().
             - New suite of public routines dualBoundaryMap() (these were
               previously private, and had a more complex interface).
+            - New suite of routines dualToPrimal().
+        Routine for_constexpr():
+            - New routine to support compile-time for loops.
 
 Version 7.0  [ 19 December, 2021 ]
 

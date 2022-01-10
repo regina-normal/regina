@@ -75,6 +75,32 @@ struct EnableIf<false, T, defaultValue> {
 };
 #endif // __DOXYGEN
 
+/**
+ * Implements a compile-time \c for loop over a range of integers.
+ *
+ * This function will call \a action for each integer \a i in the range
+ * <i>from</i>, ..., (<i>to</i>-1) inclusive.
+ *
+ * The action should be a templated callable object (e.g., a generic lambda)
+ * that takes a single argument whose type depends on the value of \a i.
+ * Any return value will be ignored.  For each integer \a i, the argument will
+ * be of type <tt>std::integral_constant<int, i></tt>, which means that \a i
+ * is accessible as a compile-time constant.
+ *
+ * If \a from is not less than \a to, then this routine safely does nothing.
+ *
+ * @param action the body of the \c for loop; that is, the action to
+ * perform for each integer \a i.  See above for the interface that
+ * \a action should adhere to.
+ */
+template <int from, int to, class Action>
+constexpr void for_constexpr(Action&& action) {
+    if constexpr (from < to) {
+        action(std::integral_constant<int, from>());
+        for_constexpr<from + 1, to>(std::forward<Action>(action));
+    }
+}
+
 } // namespace regina
 
 #endif

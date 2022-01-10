@@ -83,6 +83,18 @@ template MatrixInt TriangulationBase<12>::dualBoundaryMap<8>() const;
 template MatrixInt TriangulationBase<12>::dualBoundaryMap<9>() const;
 template MatrixInt TriangulationBase<12>::dualBoundaryMap<10>() const;
 template MatrixInt TriangulationBase<12>::dualBoundaryMap<11>() const;
+template MatrixInt TriangulationBase<12>::dualToPrimal<0>() const;
+template MatrixInt TriangulationBase<12>::dualToPrimal<1>() const;
+template MatrixInt TriangulationBase<12>::dualToPrimal<2>() const;
+template MatrixInt TriangulationBase<12>::dualToPrimal<3>() const;
+template MatrixInt TriangulationBase<12>::dualToPrimal<4>() const;
+template MatrixInt TriangulationBase<12>::dualToPrimal<5>() const;
+template MatrixInt TriangulationBase<12>::dualToPrimal<6>() const;
+template MatrixInt TriangulationBase<12>::dualToPrimal<7>() const;
+template MatrixInt TriangulationBase<12>::dualToPrimal<8>() const;
+template MatrixInt TriangulationBase<12>::dualToPrimal<9>() const;
+template MatrixInt TriangulationBase<12>::dualToPrimal<10>() const;
+template MatrixInt TriangulationBase<12>::dualToPrimal<11>() const;
 
 template const GroupPresentation& TriangulationBase<12>::fundamentalGroup() const;
 

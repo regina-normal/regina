@@ -1638,6 +1638,79 @@ class TriangulationBase :
          */
         MatrixInt dualBoundaryMap(int subdim) const;
 
+        /**
+         * Returns a map from dual chains to primal chains that preserves
+         * homology classes.
+         *
+         * The matrix that is returned should be thought of as acting on
+         * column vectors.  Specifically, the <i>c</i>th column of the matrix
+         * corresponds to the <i>c</i>th dual <i>subdim</i>-face of this
+         * triangulation, and the <i>r</i>th row corresponds to the <i>r</i>th
+         * primal <i>subdim</i>-face of this triangulation.
+         *
+         * We index and orient these dual and primal faces in the same manner
+         * as dualBoundaryMap() and boundaryMap() respectively.
+         * In particular, dual faces are indexed in the same order as the
+         * primal (<i>dim</i>-<i>subdim</i>)-faces of the triangulation that
+         * they are dual to, except that we omit primal boundary faces.
+         * See dualBoundaryMap() and boundaryMap() for further details.
+         *
+         * The key feature of this map is that, if a column vector \a v
+         * represents a cycle \a c in the dual chain complex (i.e., it is a
+         * chain with zero boundary), and if this map is represented by the
+         * matrix \a M, then the vector <tt>M*v</tt> represents a cycle in the
+         * primal chain complex that belongs to the same <i>subdim</i>th
+         * homology class as \a c.
+         *
+         * Regarding implementation: the map is constructed by (i) subdividing
+         * each dual face into smaller <i>subdim</i>-simplices whose vertices
+         * are barycentres of primal faces of different dimensions, (ii) moving
+         * each barycentre to vertex 0 of the corresponding face, and then
+         * (iii) discarding any resulting simplices with repeated vertices
+         * (which become "flattened" to a dimension less than \a subdim).
+         *
+         * \pre This trianguation is valid, non-empty, and non-ideal.
+         * Note that Regina can only detect ideal triangulations in
+         * \ref stddim "standard dimensions"; for higher dimensions it is
+         * the user's reponsibility to confirm this some other way.
+         *
+         * \tparam subdim the chain dimension; this must be between
+         * 0 and (\a dim - 1) inclusive.
+         *
+         * @return the map from dual <i>subdim</i>-chains to primal
+         * <i>subdim</i>-chains.
+         */
+        template <int subdim>
+        MatrixInt dualToPrimal() const;
+
+        /**
+         * Returns a map from dual chains to primal chains that preserves
+         * homology classes, where the chain dimension does not need to be
+         * known until runtime.
+         *
+         * For C++ programmers who know \a subdim at compile time, you are
+         * better off using the template function dualToPrimal<subdim>()
+         * instead, which is slightly faster.
+         *
+         * See the templated dualToPrimal<subdim>() for full details on
+         * what this function computes and how the matrix it returns
+         * should be interpreted.
+         *
+         * \pre This trianguation is valid, non-empty, and non-ideal.
+         * Note that Regina can only detect ideal triangulations in
+         * \ref stddim "standard dimensions"; for higher dimensions it is
+         * the user's reponsibility to confirm this some other way.
+         *
+         * \exception InvalidArgument the chain dimension \a subdim is outside
+         * the supported range (as documented for the \a subdim argument below).
+         *
+         * @param subdim the chain dimension; this must be between
+         * 0 and (\a dim - 1) inclusive.
+         * @return the map from dual <i>subdim</i>-chains to primal
+         * <i>subdim</i>-chains.
+         */
+        MatrixInt dualToPrimal(int subdim) const;
+
         /*@}*/
         /**
          * \name Skeletal Transformations
@@ -2933,6 +3006,17 @@ class TriangulationBase :
         template <int... k>
         MatrixInt dualBoundaryMapImpl(int subdim,
                 std::integer_sequence<int, 0, k...>) const;
+
+        /**
+         * Implements the non-templated dualToPrimal(subdim) function.
+         *
+         * The purpose of the std::integer_sequence argument is to give
+         * us the list of all face dimensions as individual template
+         * parameters, which means we can use C++17 fold expressions.
+         */
+        template <int... k>
+        MatrixInt dualToPrimalImpl(int subdim,
+                std::integer_sequence<int, k...>) const;
 
         /**
          * Internal to calculateSkeleton().
@@ -4940,6 +5024,27 @@ inline MatrixInt TriangulationBase<dim>::dualBoundaryMap(int subdim) const {
 
     return dualBoundaryMapImpl(subdim,
         std::make_integer_sequence<int, maxSubdim + 1>());
+}
+
+template <int dim>
+template <int... k>
+inline MatrixInt TriangulationBase<dim>::dualToPrimalImpl(int subdim,
+        std::integer_sequence<int, k...>) const {
+    // We give the result a name (tmp) to avoid compiler warnings.
+    MatrixInt ans;
+    auto tmp = (
+        (subdim == k && (void(ans = dualToPrimal<k>()), 1))
+        || ...);
+    return ans;
+}
+
+template <int dim>
+inline MatrixInt TriangulationBase<dim>::dualToPrimal(int subdim) const {
+    if (subdim < 0 || subdim >= dim)
+        throw InvalidArgument(
+            "dualToPrimal(): unsupported face dimension");
+
+    return dualToPrimalImpl(subdim, std::make_integer_sequence<int, dim>());
 }
 
 template <int dim>

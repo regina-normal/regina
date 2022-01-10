@@ -92,6 +92,21 @@ template MatrixInt TriangulationBase<15>::dualBoundaryMap<11>() const;
 template MatrixInt TriangulationBase<15>::dualBoundaryMap<12>() const;
 template MatrixInt TriangulationBase<15>::dualBoundaryMap<13>() const;
 template MatrixInt TriangulationBase<15>::dualBoundaryMap<14>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<0>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<1>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<2>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<3>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<4>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<5>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<6>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<7>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<8>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<9>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<10>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<11>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<12>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<13>() const;
+template MatrixInt TriangulationBase<15>::dualToPrimal<14>() const;
 
 template const GroupPresentation& TriangulationBase<15>::fundamentalGroup() const;
 
