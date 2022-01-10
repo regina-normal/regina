@@ -1635,7 +1635,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             // Start with what is easy to test.
 
-            if constexpr (regina::standardDim(dim) || k < dim) {
+            if constexpr (regina::standardDim(dim) || k + 1 < dim) {
                 auto dualBoundariesAsPrimal =
                     map * tri.template dualBoundaryMap<k + 1>();
 
@@ -1671,6 +1671,39 @@ class TriangulationTest : public CppUnit::TestFixture {
                         std::ostringstream msg;
                         msg << name << ": dual-to-primal map for " << k
                             << "-faces does not send boundaries to boundaries.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                if constexpr (0 < k) {
+                    // We can use HomMarkedAbelianGroup to verify that
+                    // this is indeed an isomorphism between homology groups.
+                    regina::MarkedAbelianGroup homDual(
+                        tri.template dualBoundaryMap<k>(),
+                        tri.template dualBoundaryMap<k+1>());
+                    regina::MarkedAbelianGroup homPrimal(
+                        tri.template boundaryMap<k>(),
+                        tri.template boundaryMap<k+1>());
+                    regina::HomMarkedAbelianGroup hom(homDual, homPrimal, map);
+
+                    if (! hom.isCycleMap()) {
+                        std::ostringstream msg;
+                        msg << name << ": dual-to-primal map for " << k
+                            << "-chains is not a cycle map.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (! hom.isEpic()) {
+                        std::ostringstream msg;
+                        msg << name << ": dual-to-primal map for " << k
+                            << "-chains is not epic on homology groups.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (! hom.isMonic()) {
+                        std::ostringstream msg;
+                        msg << name << ": dual-to-primal map for " << k
+                            << "-chains is not monic on homology groups.";
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
