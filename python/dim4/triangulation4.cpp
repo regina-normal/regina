@@ -206,6 +206,7 @@ void addTriangulation4(pybind11::module_& m) {
             &Triangulation<4>::dualBoundaryMap))
         .def("dualToPrimal", (MatrixInt (Triangulation<4>::*)(int) const)(
             &Triangulation<4>::dualToPrimal))
+        .def("intersectionForm", &Triangulation<4>::intersectionForm)
         .def("orient", &Triangulation<4>::orient)
         .def("reflect", &Triangulation<4>::reflect)
         .def("triangulateComponents", &Triangulation<4>::triangulateComponents)

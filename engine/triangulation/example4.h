@@ -96,6 +96,11 @@ class Example<4> : public detail::ExampleBase<4> {
          * Returns a four-pentachoron triangulation of the standard
          * complex projective plane.  This triangulation is minimal.
          *
+         * Under the orientation convention that we use for intersection
+         * forms, this triangulation gives the "plain" <tt>CP^2</tt> with
+         * intersection form [1], not the reflected <tt>CP^2</tt> with
+         * intersection form [-1].
+         *
          * @return the standard complex projective plane.
          */
         static Triangulation<4> cp2();

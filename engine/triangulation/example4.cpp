@@ -39,12 +39,18 @@ namespace regina {
 Triangulation<4> Example<4>::cp2() {
     // Built by Rhuaidi Burke using DGT from a Kirby diagram of the
     // standard CP^2.
-    return Triangulation<4>::fromGluings(4, {
+    Triangulation<4> ans = Triangulation<4>::fromGluings(4, {
         { 0, 0, 0, {1,0,2,3,4} }, { 0, 2, 0, {2,0,4,3,1} },
         { 0, 3, 1, {0,1,2,3,4} }, { 1, 0, 2, {0,1,2,3,4} },
         { 1, 1, 3, {0,1,2,3,4} }, { 1, 2, 1, {2,0,4,3,1} },
         { 2, 1, 2, {0,4,2,3,1} }, { 2, 2, 3, {1,2,4,3,0} },
         { 2, 3, 3, {1,0,2,3,4} }, { 3, 0, 3, {2,1,0,3,4} }});
+
+    // Using our orientation convention for intersection forms,
+    // the triangulation above describes \overline{CP^2}.
+    // Reflect it so we have plain CP^2.
+    ans.reflect();
+    return ans;
 }
 
 Triangulation<4> Example<4>::s2xs2() {

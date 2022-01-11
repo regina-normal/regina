@@ -12,11 +12,16 @@ Version 7.1  [ TODO ]
     GENERAL:
         - Regina now supports Python 3 only (not Python 2 or 3).
     ENGINE:
+        Class Example<4>:
+            - Reflected the result of cp2() so that it has intersection
+              form [1], not [-1].
         Class Triangulation<dim>:
             - New suite of routines countBoundaryFaces().
             - New suite of public routines dualBoundaryMap() (these were
               previously private, and had a more complex interface).
             - New suite of routines dualToPrimal().
+        Class Triangulation<4>:
+            - New routine intersectionForm().
         Routine for_constexpr():
             - New routine to support compile-time for loops.
 
