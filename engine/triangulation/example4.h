@@ -142,6 +142,15 @@ class Example<4> : public detail::ExampleBase<4> {
          */
         static Triangulation<4> s3xs1Twisted();
 
+        /**
+         * Returns a triangulation of the standard K3 surface.
+         *
+         * Be warned: this triangulation is extremely large.
+         *
+         * @return the K3 surface.
+         */
+        static Triangulation<4> k3();
+
         /*@}*/
         /**
          * (end: Closed Triangulations)

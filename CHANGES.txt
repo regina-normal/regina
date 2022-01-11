@@ -13,6 +13,7 @@ Version 7.1  [ TODO ]
         - Regina now supports Python 3 only (not Python 2 or 3).
     ENGINE:
         Class Example<4>:
+            - New routine k3().
             - Reflected the result of cp2() so that it has intersection
               form [1], not [-1].
         Class IntersectionForm:
