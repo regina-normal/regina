@@ -30,19 +30,29 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
+#include "algebra/intersectionform.h"
+#include "../helpers.h"
 
-void addAbelianGroup(pybind11::module_& m);
-void addGroupPresentation(pybind11::module_& m);
-void addHomGroupPresentation(pybind11::module_& m);
-void addMarkedAbelianGroup(pybind11::module_& m);
-void addIntersectionForm(pybind11::module_& m);
+using regina::IntersectionForm;
+using regina::MatrixInt;
 
-void addAlgebraClasses(pybind11::module_& m) {
-    addAbelianGroup(m);
-    addGroupPresentation(m);
-    addHomGroupPresentation(m);
-    addMarkedAbelianGroup(m);
-    addIntersectionForm(m);
+void addIntersectionForm(pybind11::module_& m) {
+    auto c = pybind11::class_<IntersectionForm>(m, "IntersectionForm")
+        .def(pybind11::init<MatrixInt>())
+        .def(pybind11::init<const IntersectionForm&>())
+        .def("swap", &IntersectionForm::swap)
+        .def("matrix", &IntersectionForm::matrix)
+        .def("rank", &IntersectionForm::rank)
+        .def("signature", &IntersectionForm::signature)
+        .def("even", &IntersectionForm::even)
+        .def("odd", &IntersectionForm::odd)
+    ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
+
+    m.def("swap",
+        (void(*)(IntersectionForm&, IntersectionForm&))(regina::swap));
 }
 

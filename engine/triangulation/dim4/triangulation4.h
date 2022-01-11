@@ -56,6 +56,7 @@
 
 namespace regina {
 
+class IntersectionForm;
 class ProgressTracker;
 class ProgressTrackerOpen;
 
@@ -432,10 +433,14 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
         /**
          * Returns the intersection form of this 4-manifold.
          *
-         * The intersection form is presented as a square matrix with respect
-         * to an arbitrary basis of the second homology group.  This matrix is
-         * guaranteed to be symmetric and unimodular, but will not be
-         * normalised in any way.
+         * The intersection form is stored as a square matrix with respect to
+         * an arbitrary basis of the second homology group; you can access this
+         * matrix via IntersectionForm::matrix().  This matrix is guaranteed
+         * to be symmetric and unimodular, but will not be normalised in any
+         * way.  You can, however, query invariants of the intersection form
+         * via routines such as IntersectionForm::signature() and
+         * IntersectionForm::even(), which in the simply connected case are
+         * enough to determine the topology of the underlying 4-manifold.
          *
          * (As an implementation detail, the basis is currently chosen to be
          * the one produced by constructing a MarkedAbelianGroup using the
@@ -452,10 +457,9 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \exception FailedPrecondition This triangulation is invalid,
          * empty, non-orientable, or not closed.
          *
-         * @return the intersection form, presented as an <i>r</i>-by-<i>r</i>
-         * matrix where \a r is the rank of the second homology group.
+         * @return the intersection form of this 4-manifold.
          */
-        MatrixInt intersectionForm() const;
+        IntersectionForm intersectionForm() const;
 
         /*@}*/
         /**

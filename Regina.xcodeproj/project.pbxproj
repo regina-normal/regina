@@ -154,6 +154,11 @@
 		050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */; };
 		050F5E8A1B9BD9C100C1F681 /* commandedit.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E751B9BD6F400C1F681 /* commandedit.h */; };
 		050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E771B9BD6F400C1F681 /* pythonconsole.h */; };
+		051261A7278D65B9006A55B1 /* intersectionform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051261A5278D65B8006A55B1 /* intersectionform.cpp */; };
+		051261A8278D65B9006A55B1 /* intersectionform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051261A5278D65B8006A55B1 /* intersectionform.cpp */; };
+		051261A9278D65B9006A55B1 /* intersectionform.h in Headers */ = {isa = PBXBuildFile; fileRef = 051261A6278D65B8006A55B1 /* intersectionform.h */; };
+		051261AB278D65D8006A55B1 /* intersectionform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051261AA278D65D8006A55B1 /* intersectionform.cpp */; };
+		051261AC278D65D8006A55B1 /* intersectionform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051261AA278D65D8006A55B1 /* intersectionform.cpp */; };
 		0512E08526DF346F00DDB222 /* census-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0512E08426DF346F00DDB222 /* census-impl.h */; };
 		0512E08826DF349800DDB222 /* matching.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0512E08626DF349800DDB222 /* matching.cpp */; };
 		0512E08926DF349800DDB222 /* matching.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0512E08626DF349800DDB222 /* matching.cpp */; };
@@ -2619,6 +2624,9 @@
 		050F5E751B9BD6F400C1F681 /* commandedit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commandedit.h; sourceTree = "<group>"; };
 		050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonconsole.cpp; sourceTree = "<group>"; };
 		050F5E771B9BD6F400C1F681 /* pythonconsole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythonconsole.h; sourceTree = "<group>"; };
+		051261A5278D65B8006A55B1 /* intersectionform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = intersectionform.cpp; sourceTree = "<group>"; };
+		051261A6278D65B8006A55B1 /* intersectionform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = intersectionform.h; sourceTree = "<group>"; };
+		051261AA278D65D8006A55B1 /* intersectionform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = intersectionform.cpp; sourceTree = "<group>"; };
 		0512E08426DF346F00DDB222 /* census-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "census-impl.h"; sourceTree = "<group>"; };
 		0512E08626DF349800DDB222 /* matching.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matching.cpp; sourceTree = "<group>"; };
 		0512E08726DF349800DDB222 /* tetrahedra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tetrahedra.cpp; sourceTree = "<group>"; };
@@ -4842,6 +4850,7 @@
 				050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */,
 				05FB46CB1DD92D2400BB00E5 /* grouppresentation.cpp */,
 				05FB46CC1DD92D2400BB00E5 /* homgrouppresentation.cpp */,
+				051261AA278D65D8006A55B1 /* intersectionform.cpp */,
 				05FB46CD1DD92D2400BB00E5 /* markedabeliangroup.cpp */,
 				050F5D061B9BAB9C00C1F681 /* pyalgebra.cpp */,
 			);
@@ -5543,6 +5552,8 @@
 				05FB46DD1DD92D4A00BB00E5 /* grouppresentation.h */,
 				05FB46DE1DD92D4A00BB00E5 /* homgrouppresentation.cpp */,
 				05FB46DF1DD92D4A00BB00E5 /* homgrouppresentation.h */,
+				051261A5278D65B8006A55B1 /* intersectionform.cpp */,
+				051261A6278D65B8006A55B1 /* intersectionform.h */,
 				05FB46E01DD92D4A00BB00E5 /* markedabeliangroup.cpp */,
 				05FB46E11DD92D4A00BB00E5 /* markedabeliangroup.h */,
 			);
@@ -7740,6 +7751,7 @@
 				054208891DF0D0B50018AB24 /* themedata_p.h in Headers */,
 				05F0A04A1DBF0B5E00117BFC /* tetrahedron3.h in Headers */,
 				055115021DCDF63000EC753C /* triangulation.h in Headers */,
+				051261A9278D65B9006A55B1 /* intersectionform.h in Headers */,
 				05721EFF1F9715C700A83FFC /* laurent2.h in Headers */,
 				055115011DCDF63000EC753C /* simplex.h in Headers */,
 				059802F626683C6D002D5D57 /* xmlpacketreader.h in Headers */,
@@ -8782,6 +8794,7 @@
 				05A066A31DFA67D40047872E /* pillowtwosphere.cpp in Sources */,
 				050F5DD71B9BAB9C00C1F681 /* pyalgebra.cpp in Sources */,
 				050F5DDE1B9BAB9C00C1F681 /* example2.cpp in Sources */,
+				051261AB278D65D8006A55B1 /* intersectionform.cpp in Sources */,
 				057EE4D61C600A3600C4D155 /* isomorphism8.cpp in Sources */,
 				05772EE1270CFAD200D26D8A /* exception.cpp in Sources */,
 				050F5DDA1B9BAB9C00C1F681 /* pyangle.cpp in Sources */,
@@ -9217,6 +9230,7 @@
 				05A067491DFA68470047872E /* layeredchainpair.cpp in Sources */,
 				052FA17F1806129B00FAE4DF /* treelp.cpp in Sources */,
 				05937AD519CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.m in Sources */,
+				051261AC278D65D8006A55B1 /* intersectionform.cpp in Sources */,
 				05249F801DBC174E001FE29E /* stringutils.cpp in Sources */,
 				058FADBD19D506160001B5B5 /* Tri3SnapPea.mm in Sources */,
 				0591E7E91C4F751B00793A9C /* normalhypersurface.cpp in Sources */,
@@ -9368,6 +9382,7 @@
 				0541AF631B8BE411002E166B /* treedecomposition.cpp in Sources */,
 				052FA1E41806129B00FAE4DF /* surfacefilter.cpp in Sources */,
 				05249EE61DBC16E4001FE29E /* facehelper.cpp in Sources */,
+				051261A8278D65B9006A55B1 /* intersectionform.cpp in Sources */,
 				05F0A05F1DBF0B7000117BFC /* skeleton.cpp in Sources */,
 				05249F001DBC16F1001FE29E /* pygeneric.cpp in Sources */,
 				05A067531DFA68470047872E /* satblock.cpp in Sources */,
@@ -10171,6 +10186,7 @@
 				05772EC0270CF98F00D26D8A /* xmlsnappeawriter.cpp in Sources */,
 				05B7FF9225AC22AA003BAF5C /* face_lattice.cpp in Sources */,
 				052F9EFA180600FB00FAE4DF /* treetraversal.cpp in Sources */,
+				051261A7278D65B9006A55B1 /* intersectionform.cpp in Sources */,
 				05A73CA619B2EF5A0099C617 /* sl2c_matrices.c in Sources */,
 				05A067241DFA68190047872E /* pluggedtorusbundle.cpp in Sources */,
 				052FA082180600FB00FAE4DF /* base64.cpp in Sources */,

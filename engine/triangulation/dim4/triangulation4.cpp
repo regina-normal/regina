@@ -34,6 +34,7 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include "algebra/intersectionform.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "utilities/xmlutils.h"
@@ -112,7 +113,7 @@ void Triangulation<4>::swap(Triangulation<4>& other) {
     prop_.H2_.swap(other.prop_.H2_);
 }
 
-MatrixInt Triangulation<4>::intersectionForm() const {
+IntersectionForm Triangulation<4>::intersectionForm() const {
     if (isEmpty())
         throw FailedPrecondition("Computing intersection form "
             "requires a non-empty triangulation.");
@@ -150,7 +151,7 @@ MatrixInt Triangulation<4>::intersectionForm() const {
             sign[i] = - emb.vertices().sign();
     }
 
-    MatrixInt ans(rank, rank);
+    MatrixInt form(rank, rank);
 
     for (unsigned long i = 0; i < rank; ++i)
         for (unsigned long j = i; j < rank; ++j) {
@@ -159,16 +160,16 @@ MatrixInt Triangulation<4>::intersectionForm() const {
                 Integer count = dualBasis[i][k] * primalBasis[j][k];
                 if (count != 0) {
                     if (sign[k] > 0)
-                        ans.entry(i, j) += count;
+                        form.entry(i, j) += count;
                     else
-                        ans.entry(i, j) -= count;
+                        form.entry(i, j) -= count;
                 }
             }
             if (j != i)
-                ans.entry(j, i) = ans.entry(i, j);
+                form.entry(j, i) = form.entry(i, j);
         }
 
-    return ans;
+    return IntersectionForm(std::move(form));
 }
 
 } // namespace regina

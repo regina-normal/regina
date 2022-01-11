@@ -5,6 +5,7 @@ SET ( FILES
   abeliangroup.cpp
   covers.cpp
   grouppresentation.cpp
+  intersectionform.cpp
   homgrouppresentation.cpp
   markedabeliangroup.cpp
   )
@@ -19,6 +20,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     abeliangroup.h
     grouppresentation.h
+    intersectionform.h
     homgrouppresentation.h
     markedabeliangroup.h
     DESTINATION "${INCLUDEDIR}/algebra" COMPONENT Development)

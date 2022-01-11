@@ -35,6 +35,7 @@
 #include "../pybind11/stl.h"
 #include "../helpers.h"
 #include "algebra/grouppresentation.h"
+#include "algebra/intersectionform.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
 #include "triangulation/isosigtype.h"
