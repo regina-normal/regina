@@ -69,12 +69,12 @@ IntersectionForm::IntersectionForm(MatrixInt form) :
                             "IntersectionForm requires a symmetric matrix.");
                     Integer gcd = d.gcd(e);
 
-                    d.divByExact(gcd);
+                    Integer dScaled = d.divExact(gcd);
                     e.divByExact(gcd);
 
-                    form.multRow(i, d, rank_);
+                    form.multRow(i, dScaled, rank_);
                     form.addRow(rank_, i, -e, rank_);
-                    form.multCol(i, d, rank_);
+                    form.multCol(i, dScaled, rank_);
                     form.addCol(rank_, i, -e, rank_);
                 }
             }
