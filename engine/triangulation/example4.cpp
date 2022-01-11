@@ -100,10 +100,12 @@ Triangulation<4> Example<4>::rp4() {
 }
 
 Triangulation<4> Example<4>::k3() {
-    // A placeholder until we decide which triangulation to use here.
-    // This is 140 pentachora, simplified with much effort from Spreer's
-    // 17-vertex standard K3 as a simplicial complex.
-    return Triangulation<4>::fromIsoSig("-cmcLLLzvwLvvvMvvvLQLLvvMLLMvALvzAAzPvLLPALwQvQLQLAwLMzPAMLAPPzPQvQAvMzQMQLQPMQQQQPLAQLAQQPQQPQzQPQQQAQQQMAMQQQAQQQQQQQQkbadacaeagaoanayaJasasaGazasasaTaEaNaSaAa1aZa5aMaZaCaCaCaabRaCaWa2aabMa8ambKaSaPaJarb3a+a+akbUaVaUaybvbqbRaebyb5aXa3asb+a3a2awb0a8aFbubCbMbObPbsb7a4axbEbPbnbHbKbgbFbub0bVbtbib0b2b0b2bUb4bzbibtbUbvbjb2bibybYbhbkb2bHbSbJb0bGbybRbrbxbBb7bpb+bIbNb1bObAbAbrb9b+bHbzb7bbc+b5bLbzb7b8bDb8b-bdcQbUb3bEb4bXbgcacdc7bVbdcacTb1bec1bKbhc8bLbXbQbWbZbac-bacfc5bgckchc9b9b6b9bgc4b5bfcdcWbbcYb-b-b6bkc6bkc+b8b3bccjcjclcicecicicecfckcjcjclclcaaqbqbvaaaaaaaaaaaaaaaaababaqbaaqbobsbqbaaobaapaaaPbPbPbJbaabasbwbNbrbrbaavaaaaavaaaGaoaoa2bPbPbPbaasbvaqbgaaapbqbQbPbIbQbfapayayazbfaIaTaaaaapbPboadaabMafa7a0atbaboaaapa6aPbaaaaaaaajbza4aPb6ajbEbyarbvaeazbcaoarbaaObsbTaObuawbtb3apaqaqbaaWaIauaqaTaTaoa4aJbObaapapafblbba2a2b5ayaVaHb8aCbpbgavasaYbtaubhbqbIbhbibRacbUacbcaiaqbqbvavayayaHbmbkaIaKaEbaaqaybtbFbtbMaUbub0asbbabayaOafa2bJb2bJblbJabaJaWaObzaEaJbUaUaqbcaSawawaFaba");
+    // This is (with much work by multiple authors) derived from Spreer's
+    // 17-vertex standard K3 simplicial complex.
+    // Rhuaidi Burke has managed to get this down to 60 pentachora thus far.
+    Triangulation<4> ans = Triangulation<4>::fromIsoSig("8ALLAvvzwwLQAMzwvQAQMvAzLvwQPMwPwQQQQQAQQQLAAvQQQQQaaddeekkpttjjppvwxyopCDrCszzzuAwBOISRIRQUUWFFYZHHSSJJKKLLMMOOQW0P0RWSTTVXXXZ011223344556677qbGanbLbLbLbaaeanbDbDb2aKafavavbUaaaVbnafaIaIaqb0aBb0aDb0a2bWagbRaVbJadaaaCb3aVbIaIaPaPb2bWbSbGacaVbWaqb6aPbTbrafaibgaJaTboajatafataBaNaBbqb6ava2abbbayagaqbSaPbJaPbJa2boaGacaNabaqbub");
+    ans.reflect(); // so sig = -16, not 16
+    return ans;
 }
 
 Triangulation<4> Example<4>::cappellShaneson() {
