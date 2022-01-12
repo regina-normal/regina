@@ -3211,6 +3211,8 @@
 		054C6A7D1DCC20DA005373F0 /* strings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = strings.h; sourceTree = "<group>"; };
 		054C6A811DCC2127005373F0 /* example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example.h; sourceTree = "<group>"; };
 		054C6A841DCC2148005373F0 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		054F7DF0278EA2970036B923 /* bool.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = bool.test; sourceTree = "<group>"; };
+		054F7DF1278EA2970036B923 /* bool.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = bool.out; sourceTree = "<group>"; };
 		054F7E27180B93770090B1F3 /* WelcomePopupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomePopupController.h; sourceTree = "<group>"; };
 		054F7E28180B93770090B1F3 /* WelcomePopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomePopupController.m; sourceTree = "<group>"; };
 		054F7E2A180B96AC0090B1F3 /* welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = welcome.html; sourceTree = "<group>"; };
@@ -5060,6 +5062,8 @@
 				05431FD11C40F67C009BC072 /* alltypes.test */,
 				05772F03270CFB6000D26D8A /* angles.out */,
 				05772F08270CFB6000D26D8A /* angles.test */,
+				054F7DF1278EA2970036B923 /* bool.out */,
+				054F7DF0278EA2970036B923 /* bool.test */,
 				05CAE6842746878C007C93F3 /* bytes.out */,
 				05CAE6832746878C007C93F3 /* bytes.test */,
 				059802762667067B002D5D57 /* callbacks.out */,
