@@ -1763,6 +1763,38 @@ class Triangulation4Test : public TriangulationTest<4> {
                 "Fig_8 x I (single cone)");
         }
 
+        static void verifyIntersectionFormBasic(
+                const Triangulation<4>& tri, const char* name ) {
+            if (! tri.isOrientable())
+                return;
+
+            IntersectionForm f = tri.intersectionForm();
+
+            auto det = f.matrix().det();
+            if (det != 1 && det != -1) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name << " gives "
+                    "intersection form with determinant " << det
+                    << " instead of the expected +/-1.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Tests for simply connected manifolds:
+            if (tri.fundamentalGroup().countGenerators() == 0) {
+                if (f.even()) {
+                    // Verify Rohlin's theorem:
+                    if (f.signature() % 16 != 0) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " is simply connected but has intersection form "
+                            "with signature " << f.signature()
+                            << ", which is not a multiple of 16.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
         void verifyIntersectionForm(const Triangulation<4>& tri,
                 unsigned long rank, long signature, bool even,
                 const char* name) {
@@ -1824,6 +1856,9 @@ class Triangulation4Test : public TriangulationTest<4> {
 
             // Not simply connected:
             verifyIntersectionForm(sphereBundle, 0, 0, true, "Sphere bundle");
+
+            // Census:
+            runCensusAllClosed(verifyIntersectionFormBasic);
         }
 
         static void verifyBary(const Triangulation<4>& tri, const char* name) {
