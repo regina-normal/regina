@@ -1768,15 +1768,13 @@ class Triangulation4Test : public TriangulationTest<4> {
                 const char* name) {
             IntersectionForm f = tri.intersectionForm();
 
-            if (rank > 0) {
-                auto det = f.matrix().det();
-                if (det != 1 && det != -1) {
-                    std::ostringstream msg;
-                    msg << "Triangulation " << name << " gives "
-                        "intersection form with determinant " << det
-                        << " instead of the expected +/-1.";
-                    CPPUNIT_FAIL(msg.str());
-                }
+            auto det = f.matrix().det();
+            if (det != 1 && det != -1) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name << " gives "
+                    "intersection form with determinant " << det
+                    << " instead of the expected +/-1.";
+                CPPUNIT_FAIL(msg.str());
             }
 
             if (f.rank() != rank) {

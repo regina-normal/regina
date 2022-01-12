@@ -18,6 +18,11 @@ Version 7.1  [ TODO ]
               form [1], not [-1].
         Class IntersectionForm:
             - New class to compute invariants of intersection forms.
+        Class Matrix:
+            - Routine det() now throws an exception if the matrix is not
+              square (this is a precondition), and now returns 1 if the
+              matrix is detected to be 0-by-0 (although such matrices are
+              formally not supported by the Matrix class).
         Class Triangulation<dim>:
             - New suite of routines countBoundaryFaces().
             - New suite of public routines dualBoundaryMap() (these were
