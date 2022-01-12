@@ -33,6 +33,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include <unistd.h>
+#include "algebra/intersectionform.h"
 #include "manifold/manifold.h"
 #include "progress/progresstracker.h"
 #include "subcomplex/standardtri.h"
@@ -53,6 +54,7 @@ using regina::AbelianGroup;
 using regina::Example;
 using regina::GroupPresentation;
 using regina::Isomorphism;
+using regina::IntersectionForm;
 using regina::Pentachoron;
 using regina::Perm;
 using regina::StandardTriangulation;
@@ -104,6 +106,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(homologyH2);
     CPPUNIT_TEST(homologyH3);
     CPPUNIT_TEST(fundGroup);
+    CPPUNIT_TEST(intersectionForm);
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(edgeLinks);
@@ -127,6 +130,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             /**< The product of a 2-sphere with a 2-sphere. */
         Triangulation<4> s2xs2Twisted;
             /**< The twisted product of a 2-sphere with a 2-sphere. */
+        Triangulation<4> k3;
+            /**< The K3 surface. */
 
         // Closed non-orientable:
         Triangulation<4> rp4;
@@ -196,6 +201,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             s2xs2 = Example<4>::s2xs2();
             s2xs2Twisted = Example<4>::s2xs2Twisted();
             rp4 = Example<4>::rp4();
+            k3 = Example<4>::k3();
 
             // Some of our triangulations are built from 3-manifold
             // triangulations.
@@ -1742,6 +1748,71 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyFundGroup(mixedFigEightProduct,
                 "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b^2 a^-1 b",
                 "Fig_8 x I (single cone)");
+        }
+
+        void verifyIntersectionForm(const Triangulation<4>& tri,
+                unsigned long rank, long signature, bool even,
+                const char* name) {
+            IntersectionForm f = tri.intersectionForm();
+
+            if (rank > 0) {
+                auto det = f.matrix().det();
+                if (det != 1 && det != -1) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name << " gives "
+                        "intersection form with determinant " << det
+                        << " instead of the expected +/-1.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            if (f.rank() != rank) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name << " gives "
+                    "intersection form with rank " << f.rank()
+                    << " instead of the expected " << rank << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (f.signature() != signature) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name << " gives "
+                    "intersection form with signature " << f.signature()
+                    << " instead of the expected " << signature << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (f.even() != even) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name << " gives "
+                    "intersection form with evenness " << f.even()
+                    << " instead of the expected " << even << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void intersectionForm() {
+            // Simply connected:
+            verifyIntersectionForm(sphere, 0, 0, true, "Sphere");
+            verifyIntersectionForm(simplicialSphere, 0, 0, true,
+                "Simplicial S^4");
+            verifyIntersectionForm(s4_doubleConeS3, 0, 0, true,
+                "S^4 (double cone)");
+            verifyIntersectionForm(cp2, 1, 1, false, "CP^2");
+            {
+                Triangulation<4> t(cp2);
+                t.reflect();
+                verifyIntersectionForm(t, 1, -1, false, "CP^2 reflected");
+            }
+            verifyIntersectionForm(s2xs2, 2, 0, true, "S^2 x S^2");
+            verifyIntersectionForm(s2xs2Twisted, 2, 0, false, "S^2 x~ S^2");
+            verifyIntersectionForm(k3, 22, -16, true, "K3");
+            {
+                Triangulation<4> t(k3);
+                t.reflect();
+                verifyIntersectionForm(t, 22, 16, true, "K3 reflected");
+            }
+
+            // Not simply connected:
+            verifyIntersectionForm(sphereBundle, 0, 0, true, "Sphere bundle");
         }
 
         static void verifyBary(const Triangulation<4>& tri, const char* name) {
