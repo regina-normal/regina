@@ -117,9 +117,6 @@ struct DiscType {
      * The implementation will assume that a non-null disc type
      * has non-negative \a type (as explained in the class notes).
      *
-     * \ifacespython This is not available to python users.
-     * Instead you can simply test whether \a type is negative.
-     *
      * @return \c true if and only if this is not a null disc type.
      */
     constexpr operator bool() const;

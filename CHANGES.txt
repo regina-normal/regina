@@ -32,6 +32,10 @@ Version 7.1  [ TODO ]
             - New routine intersectionForm().
         Routine for_constexpr():
             - New routine to support compile-time for loops.
+    PYTHON:
+        - For classes that have a bool() cast operator, this is now wrapped in
+          Python using the special __bool__() function (i.e., Python will now
+          cast such objects to bool in the same way).
 
 Version 7.0  [ 19 December, 2021 ]
 

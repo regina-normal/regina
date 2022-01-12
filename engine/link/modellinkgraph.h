@@ -322,9 +322,6 @@ class ModelLinkGraphArc {
         /**
          * Tests whether this is a non-null arc.
          *
-         * \ifacespython Not available; instead you can simply test whether
-         * <tt>node() == None</tt>.
-         *
          * @return \c true if this is not a null arc (i.e., node()
          * does not return a null pointer), or \c false if this is a null
          * arc.

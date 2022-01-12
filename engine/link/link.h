@@ -366,9 +366,6 @@ class StrandRef {
         /**
          * Tests whether this is a non-null reference.
          *
-         * \ifacespython This is not available to python users.
-         * Instead you can simply test whether <tt>crossing() == None</tt>.
-         *
          * @return \c true if this is not a null reference (i.e., crossing()
          * does not return a null pointer), or \c false if this is a null
          * reference.
