@@ -1859,6 +1859,72 @@ class Triangulation4Test : public TriangulationTest<4> {
 
             // Census:
             runCensusAllClosed(verifyIntersectionFormBasic);
+
+            // Some larger hard-coded examples of specific manifolds,
+            // created from framed links (thanks to Rhuaidi):
+            // S2x~S2:
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "KLvAvLPALLMLMAzQLwLQPMPQQQQAQMQcfflgjjmprrrtsnonswvvAAzDDBFFFGCCGECEEzBBEDDHHHIIIIJJJJaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, false, "Large S^2 x~ S^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "KLvAvLPALvQwMAPQLwvAPQQQQQvQQQQcfflgjjmpsrssrnonrtwvvzzAAGCGGGBBBDBDDEEEDCIIIIHJJJJHHHaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, false, "Large S^2 x~ S^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "KLvAvLPwLLLPwQAQAAPMLQwAQQQAAQQcfflgjjqstvquxxvxovttsrzsAABBEEBBDFCHFECCCAAEGHIIIIJJJJaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, false, "Large S^2 x~ S^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "KLvAvLPwLLLPwQAQQAPMvQMQQQLPQMQcfflgjjqstvquxxvxovttsrwwszzAAEAACFFBEDBBBzzGIGHIHGJJJJaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, false, "Large S^2 x~ S^2");
+            // S2xS2:
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "GLvAvPPALvzzQPwAvQMMQQQQQQPkcffiigjjlorrnmmwssyyxBBzAAEECAzzCBBDDDEAEDCCxFFFFaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, true, "Large S^2 x S^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "GLvAvLPALvQwMAPQLwLQPQQQQQPkcfflgjjmpsrssrnonrtwvvzzyCCAECEEEBBBDBDDyAADCFFFFaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, true, "Large S^2 x S^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "GLvAvLzALPwLAQMQQwPLQMPQQQPkcfflgnmqrrqusvvopouwtxttqtAAzBBBCDDDDECCzCEEEFFFFaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, true, "Large S^2 x S^2");
+            // CP^2 (with either orientation):
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "uLvAwPPAMMQLAPPQPkcfffgggjjkllllmnnpooqqrsrrsttttaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvLQALMMQPMwzQQQMQcffilgjjloopnnnmqmnmsmuwwwwttvuutxxxxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, -1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvMPwAzLPQQQALQAQQcfffkgjjnnpotrtpnqnqqporowvvwwwxvvxxxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvPPAvMQQAwwAAQQQQcffgggjjjpoqoopoqqmrsuuwwvxxxuwuvvvxwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, -1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvAAAvQAQLAwMQAQQQcffjhhgiloopppqqqsooruwvuvuuxxxwvvwwxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, -1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvAAAvQAQLQwMPQQMQcffjhhgiloopppqqqsoosrtvtwttuwuuwxxxxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "GLvAvMPwAPLPMPQQzQMMPLAPMPQkcfffkgjjnnpposqsnnuutoropvwwvvxvyzyBBADDCEFEFFEEFaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "GLvAvLQALMMQPMwvQMQMPPMPwQQkcffilgjjloopnnnmqmnmsmxxxxyvuutzAzBBBCDCBFFEFEEEFaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvAQAvMAQAzMAQAPQQcffjhhgkiknoooqqqnprtruurvssrxxxxwwwwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, -1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvMPAAPMMMQvPPQQMQcfffkgjjjmmoonnnnqpmpputwvwuututwxxxxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvMPAAPMMMQvPPQQMQcfffkgjjjmmoonnnnqpmpputwvwuututwxxxxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvAQAvMAQAzMAQAPQQcffjhhgkiknoooqqqnprtruurvssrxxxxwwwwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, -1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvMPwAPLPMPQQzQMQQcfffkgjjnnpposqsnnuutoropvwwvvxvxxwwxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, -1, false, "Large CP^2");
         }
 
         static void verifyBary(const Triangulation<4>& tri, const char* name) {
