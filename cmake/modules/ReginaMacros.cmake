@@ -30,6 +30,16 @@ macro (CHECK_STDFS)
     SET (STDFS_FOUND TRUE)
     SET (STDFS_LIBRARY)
     MESSAGE(STATUS "Checking for C++17 std::filesystem -- found")
+    IF (CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION MATCHES "^8\.")
+      # On newer ubuntu versions, an older gcc8 will happily link without
+      # libstdc++fs but will crash at runtime, since it will be linking with
+      # incompatible std::filesystem symbols from the newer libstdc++.
+      #
+      # Therefore, for gcc8, even though executables might *build* without
+      # libstdc++fs, we still need to explicitly link with libstdc++fs.
+      SET (STDFS_LIBRARY stdc++fs)
+      MESSAGE(STATUS "Explicitly linking with stdc++fs for GCC 8")
+    ENDIF ()
   ELSE (_REGINA_STDFS_RAW)
     try_compile(_REGINA_STDFS_LIB ${_BINDIR} ${_SRCFILE} LINK_LIBRARIES stdc++fs)
     IF (_REGINA_STDFS_LIB)
