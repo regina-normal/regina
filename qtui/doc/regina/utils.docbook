@@ -1341,6 +1341,7 @@
      <arg><option>-p, --genpairs</option></arg>
      <arg><option>-P, --usepairs</option></arg>
     </group>
+    <arg><option>--threads=</option><replaceable>num_threads</replaceable></arg>
     <arg choice="req"><replaceable>output-file</replaceable></arg>
    </cmdsynopsis>
    <cmdsynopsis>
@@ -1747,6 +1748,43 @@
        Instead you should pass these options earlier
        along with <option>--genpairs</option> when you split the original
        census into pieces.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--threads=</option><replaceable>num_threads</replaceable></term>
+     <listitem>
+      <para>
+       Run the census in parallel using the given number of threads.
+       This parallelisation is typically very effective (particularly
+       for larger censuses), in that the speed-up factor is usually close to
+       the theoretical maximum <replaceable>num_threads</replaceable>.
+      </para>
+      <para>
+       The way the parallelisation currently works is as follows.
+       For each individual facet pairing, the corresponding search tree
+       is broken into a many smaller subtrees (i.e., subsearches), each
+       of which can be processed independently by different threads.
+      </para>
+      <para>
+       This has two consequences:
+       <itemizedlist>
+        <listitem><para>
+         The <option>--threads</option> option cannot be used with
+         <option>--genpairs</option>, since the facet pairings are still
+         enumerated in serial.
+        </para></listitem>
+        <listitem><para>
+         The output that writes each facet pairing to the console will appear
+         deceptively fast.  This is because each facet pairing will be
+         written as soon as it is constructed by the main thread, and its many
+         subsearches will be placed in a queue for other threads to process
+         while the main thread moves on to the next facet pairing.
+         Once all of the pairings have been output, you may still face a
+         long wait while the threads together work their way through the
+         queue of subsearches that has accumulated.
+        </para></listitem>
+       </itemizedlist>
       </para>
      </listitem>
     </varlistentry>
