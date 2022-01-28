@@ -29,6 +29,8 @@
 
 # --- tricensus with errors:
 tricensus
+tricensus --threads 2 -2 -t4 -i -p
+tricensus --threads 0 -t2 -i -s @TESTOUT@
 # --- tricensus with signature output
 tricensus -t2 -i -s @TESTOUT@
 # --- tricensus with Regina data output
