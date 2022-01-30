@@ -3990,6 +3990,8 @@
 		059D024B25BB08F1004150F7 /* constarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = constarray.h; sourceTree = "<group>"; };
 		059D6168258866370011E905 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
 		059D61692588663B0011E905 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		059ED6AA27A758680065424A /* operators.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = operators.test; sourceTree = "<group>"; };
+		059ED6AB27A758680065424A /* operators.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = operators.out; sourceTree = "<group>"; };
 		05A0251D25D48E500091372D /* constructors.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = constructors.test; sourceTree = "<group>"; };
 		05A0251E25D48E500091372D /* constructors.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = constructors.out; sourceTree = "<group>"; };
 		05A0665E1DFA67CB0047872E /* augtrisolidtorus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = augtrisolidtorus.cpp; sourceTree = "<group>"; };
@@ -5136,6 +5138,8 @@
 				050F5D971B9BAB9C00C1F681 /* misc.test */,
 				050F5D981B9BAB9C00C1F681 /* O2_1.rga */,
 				050F5D991B9BAB9C00C1F681 /* O2_1.tri */,
+				059ED6AB27A758680065424A /* operators.out */,
+				059ED6AA27A758680065424A /* operators.test */,
 				050F5D9A1B9BAB9C00C1F681 /* orb.out */,
 				050F5D9B1B9BAB9C00C1F681 /* orb.test */,
 				05199A3125C63B7F0006B8FA /* perm.out */,
