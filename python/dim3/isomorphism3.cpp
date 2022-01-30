@@ -38,6 +38,7 @@
 using pybind11::overload_cast;
 using regina::Isomorphism;
 using regina::Perm;
+using regina::Triangulation;
 
 void addIsomorphism3(pybind11::module_& m) {
     auto c = pybind11::class_<Isomorphism<3>>(m, "Isomorphism3")
@@ -67,8 +68,15 @@ void addIsomorphism3(pybind11::module_& m) {
         })
         .def("__getitem__", &Isomorphism<3>::operator[])
         .def("isIdentity", &Isomorphism<3>::isIdentity)
-        .def("apply", &Isomorphism<3>::apply)
-        .def("applyInPlace", &Isomorphism<3>::applyInPlace)
+        .def("__call__", &Isomorphism<3>::operator())
+        .def("apply", // deprecated
+                [](const Isomorphism<3>& iso, const Triangulation<3>& tri) {
+            return iso(tri);
+        })
+        .def("applyInPlace", // deprecated
+                [](const Isomorphism<3>& iso, Triangulation<3>& tri) {
+            tri = iso(tri);
+        })
         .def(pybind11::self * pybind11::self)
         .def("inverse", &Isomorphism<3>::inverse)
         .def_static("random", &Isomorphism<3>::random,

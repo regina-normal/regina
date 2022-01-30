@@ -736,7 +736,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             for (int i = 0; i < trials; ++i) {
                 Triangulation<dim> t =
-                    Isomorphism<dim>::random(tri.size()).apply(tri);
+                    Isomorphism<dim>::random(tri.size())(tri);
 
                 t.orient();
                 clearProperties(t);
@@ -759,7 +759,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             for (int i = 0; i < trials; ++i) {
                 Triangulation<dim> t =
-                    Isomorphism<dim>::random(tri.size()).apply(tri);
+                    Isomorphism<dim>::random(tri.size())(tri);
 
                 t.makeCanonical();
                 clearProperties(t);
@@ -849,7 +849,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             std::string otherSig;
             for (unsigned i = 0; i < 10; ++i) {
                 Triangulation<dim> other =
-                    Isomorphism<dim>::random(tri.size()).apply(tri);
+                    Isomorphism<dim>::random(tri.size())(tri);
 
                 otherSig = other.template isoSig<Type<dim>>();
                 if (otherSig != sig) {
@@ -861,7 +861,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
             for (unsigned i = 0; i < 10; ++i) {
                 Triangulation<dim> other(tri);
-                Isomorphism<dim>::random(tri.size()).applyInPlace(other);
+                other = Isomorphism<dim>::random(tri.size())(other);
 
                 otherSig = other.template isoSig<Type<dim>>();
                 if (otherSig != sig) {
@@ -886,7 +886,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
                 Triangulation<dim> rebuild =
                     Triangulation<dim>::fromIsoSig(detail.first);
-                Triangulation<dim> relabel = detail.second.apply(tri);
+                Triangulation<dim> relabel = detail.second(tri);
 
                 if (relabel.detail() != rebuild.detail()) {
                     std::ostringstream msg;
@@ -1375,7 +1375,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 // Randomly relabel the simplices, but preserve orientation.
                 Isomorphism<dim> iso = Isomorphism<dim>::random(large.size(),
                     true);
-                iso.applyInPlace(large);
+                large = iso(large);
                 clearProperties(large);
 
                 if (k == dim) {

@@ -2482,7 +2482,7 @@ class TriangulationBase :
          * Specifically, if this routine returns the pair
          * (\a sig, \a relabelling), this means that the triangulation
          * reconstructed from <tt>fromIsoSig(sig)</tt> will be identical to
-         * <tt>relabelling.apply(this)</tt>.
+         * <tt>relabelling(this)</tt>.
          *
          * \ifacespython Although this is a templated function, all of the
          * variants supplied with Regina are available to Python users.  For

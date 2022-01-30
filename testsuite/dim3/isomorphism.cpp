@@ -192,7 +192,7 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             if (which % 11 != 0)
                 return;
 
-            Triangulation<3> image = iso.apply(rp2xs1);
+            Triangulation<3> image = iso(rp2xs1);
 
             // Clear all computed topological properties of image.
             image.newSimplex();
@@ -226,7 +226,7 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             if (which % 11 != 0)
                 return;
 
-            Triangulation<3> image = iso.apply(rp2xs1);
+            Triangulation<3> image = iso(rp2xs1);
             if (! rp2xs1.isIsomorphicTo(image)) {
                 std::ostringstream msg;
                 msg << "Isomorphism #" << which << " created a triangulation "

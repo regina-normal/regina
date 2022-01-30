@@ -335,28 +335,45 @@ class Isomorphism :
          * \exception InvalidArgument the number of simplices in the given
          * triangulation is not equal to size() for this isomorphism.
          *
-         * @param original the triangulation to which this isomorphism
+         * @param tri the triangulation to which this isomorphism
          * should be applied.
          * @return the new isomorphic triangulation.
          */
-        Triangulation<dim> apply(const Triangulation<dim>& original) const;
+        Triangulation<dim> operator ()(const Triangulation<dim>& tri) const;
 
         /**
-         * Applies this isomorphism to the given triangulation,
-         * modifying the given triangulation directly.
+         * Deprecated routine that applies this isomorphism to the given
+         * triangulation, and returns the result as a new triangulation.
          *
-         * This is similar to apply(), except that instead of creating a
-         * new triangulation, the simplices and vertices of the given
-         * triangulation are modified in-place.
-         *
-         * See apply() for further details on how this operation is performed.
+         * \deprecated If this isomorphism is \a iso, then this routine
+         * is equivalent to calling <tt>iso(tri)</tt>.  See the bracket
+         * operator for further details.
          *
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
-         * \todo Lock the topological properties of the underlying manifold,
-         * to avoid recomputing them after the isomorphism is applied.
+         * \exception InvalidArgument the number of simplices in the given
+         * triangulation is not equal to size() for this isomorphism.
+         *
+         * @param tri the triangulation to which this isomorphism
+         * should be applied.
+         * @return the new isomorphic triangulation.
+         */
+        [[deprecated]] Triangulation<dim> apply(const Triangulation<dim>& tri)
+            const;
+
+        /**
+         * Deprecated routine that applies this isomorphism to the given
+         * triangulation, modifying the given triangulation directly.
+         *
+         * \deprecated If this isomorphism is \a iso, then this routine
+         * is equivalent to calling <tt>tri = iso(tri)</tt>.  See the bracket
+         * operator for further details.
+         *
+         * \pre The simplex images are precisely 0,1,...,size()-1 in some
+         * order (i.e., this isomorphism does not represent a mapping from a
+         * smaller triangulation into a larger triangulation).
          *
          * \exception InvalidArgument the number of simplices in the given
          * triangulation is not equal to size() for this isomorphism.
@@ -364,7 +381,7 @@ class Isomorphism :
          * @param tri the triangulation to which this isomorphism
          * should be applied.
          */
-        void applyInPlace(Triangulation<dim>& tri) const;
+        [[deprecated]] void applyInPlace(Triangulation<dim>& tri) const;
 
         /**
          * Returns the composition of this isomorphism with the given
@@ -643,10 +660,10 @@ bool Isomorphism<dim>::isIdentity() const {
 }
 
 template <int dim>
-Triangulation<dim> Isomorphism<dim>::apply(
+Triangulation<dim> Isomorphism<dim>::operator ()(
         const Triangulation<dim>& original) const {
     if (original.size() != nSimplices_)
-        throw InvalidArgument("Isomorphism::apply() was given "
+        throw InvalidArgument("Isomorphism::operator() was given "
             "an input triangulation of the wrong size");
 
     if (nSimplices_ == 0)
@@ -692,9 +709,14 @@ Triangulation<dim> Isomorphism<dim>::apply(
 }
 
 template <int dim>
-void Isomorphism<dim>::applyInPlace(Triangulation<dim>& tri) const {
-    Triangulation<dim> staging = apply(tri);
-    tri.swap(staging);
+inline Triangulation<dim> Isomorphism<dim>::apply(
+        const Triangulation<dim>& original) const {
+    return (*this)(original);
+}
+
+template <int dim>
+inline void Isomorphism<dim>::applyInPlace(Triangulation<dim>& tri) const {
+    tri = (*this)(tri);
 }
 
 template <int dim>

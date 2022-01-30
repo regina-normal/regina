@@ -479,8 +479,8 @@ class Triangulation4Test : public TriangulationTest<4> {
                 // Randomly relabel the pentachora, but preserve orientation.
                 Isomorphism<4> iso = Isomorphism<4>::random(
                         newTri.size(), true );
-                iso.applyInPlace( newTri );
-                clearProperties( newTri );
+                newTri = iso(newTri);
+                clearProperties(newTri);
 
                 // Test the inverse 4-4 move.
                 {
@@ -2481,7 +2481,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             for (unsigned i = 0; i < 2; ++i) {
                 Triangulation<4> other(tri);
                 if (i > 0)
-                    Isomorphism<4>::random(other.size()).applyInPlace(other);
+                    other = Isomorphism<4>::random(other.size())(other);
 
                 other.idealToFinite();
                 clearProperties(other);

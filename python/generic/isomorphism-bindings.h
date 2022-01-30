@@ -37,6 +37,7 @@
 
 using pybind11::overload_cast;
 using regina::Isomorphism;
+using regina::Triangulation;
 
 template <int dim>
 void addIsomorphism(pybind11::module_& m, const char* name) {
@@ -58,8 +59,15 @@ void addIsomorphism(pybind11::module_& m, const char* name) {
         })
         .def("__getitem__", &Isomorphism<dim>::operator[])
         .def("isIdentity", &Isomorphism<dim>::isIdentity)
-        .def("apply", &Isomorphism<dim>::apply)
-        .def("applyInPlace", &Isomorphism<dim>::applyInPlace)
+        .def("__call__", &Isomorphism<dim>::operator())
+        .def("apply", // deprecated
+                [](const Isomorphism<dim>& iso, const Triangulation<dim>& tri) {
+            return iso(tri);
+        })
+        .def("applyInPlace", // deprecated
+                [](const Isomorphism<dim>& iso, Triangulation<dim>& tri) {
+            tri = iso(tri);
+        })
         .def(pybind11::self * pybind11::self)
         .def("inverse", &Isomorphism<dim>::inverse)
         .def_static("random", &Isomorphism<dim>::random,
