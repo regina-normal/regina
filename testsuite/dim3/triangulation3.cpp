@@ -4577,7 +4577,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             b.reorderTetrahedraBFS(true);
             clearProperties(b);
 
-            Triangulation<3> c = Isomorphism<3>::random(t.size()).apply(t);
+            Triangulation<3> c = Isomorphism<3>::random(t.size())(t);
             clearProperties(c);
 
             Triangulation<3> d(c);
@@ -4868,8 +4868,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                         // orientation.
                         Isomorphism<3> iso = Isomorphism<3>::random(
                                 newTri.size(), true );
-                        iso.applyInPlace( newTri );
-                        clearProperties( newTri );
+                        newTri = iso(newTri);
+                        clearProperties(newTri);
 
                         // Test the inverse 2-0 move.
                         {
@@ -5088,7 +5088,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     unsigned idx = bdry->index();
 
                     Isomorphism<3> iso = Isomorphism<3>::random(t.size());
-                    iso.applyInPlace(t);
+                    t = iso(t);
 
                     Perm<4> p = iso.facetPerm(idx);
                     if (r1 <= 2) {
