@@ -567,6 +567,9 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
 
     // Make sure the parent class can call the private constructor.
     friend class detail::FacetPairingBase<3>;
+
+    // Facet pairings are largely read-only: allow application of isomorphisms.
+    friend class Isomorphism<3>;
 };
 
 // Inline functions for FacetPairing<3>

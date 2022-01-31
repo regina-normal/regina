@@ -33,12 +33,12 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
 #include "triangulation/dim4.h"
+#include "triangulation/facetpairing.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
 using regina::Isomorphism;
 using regina::Perm;
-using regina::Triangulation;
 
 void addIsomorphism4(pybind11::module_& m) {
     auto c = pybind11::class_<Isomorphism<4>>(m, "Isomorphism4")
@@ -63,13 +63,16 @@ void addIsomorphism4(pybind11::module_& m) {
         })
         .def("__getitem__", &Isomorphism<4>::operator[])
         .def("isIdentity", &Isomorphism<4>::isIdentity)
-        .def("__call__", &Isomorphism<4>::operator())
-        .def("apply", // deprecated
-                [](const Isomorphism<4>& iso, const Triangulation<4>& tri) {
-            return iso(tri);
-        })
+        .def("__call__", overload_cast<const regina::Triangulation<4>&>(
+            &Isomorphism<4>::operator(), pybind11::const_))
+        .def("__call__", overload_cast<const regina::FacetSpec<4>&>(
+            &Isomorphism<4>::operator(), pybind11::const_))
+        .def("__call__", overload_cast<const regina::FacetPairing<4>&>(
+            &Isomorphism<4>::operator(), pybind11::const_))
+        .def("apply", overload_cast<const regina::Triangulation<4>&>(
+            &Isomorphism<4>::operator(), pybind11::const_)) // deprecated
         .def("applyInPlace", // deprecated
-                [](const Isomorphism<4>& iso, Triangulation<4>& tri) {
+                [](const Isomorphism<4>& iso, regina::Triangulation<4>& tri) {
             tri = iso(tri);
         })
         .def(pybind11::self * pybind11::self)

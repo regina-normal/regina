@@ -321,7 +321,7 @@ class Isomorphism :
          * In more detail: A new triangulation \a U is returned, so that this
          * isomorphism represents a one-to-one, onto and boundary complete
          * isomorphism from \a T to \a U.  That is, \a T and \a U will be
-         * combinatorially identical triangulations, and this isomorphism
+         * combinatorially isomorphic triangulations, and this isomorphism
          * describes the mapping from the simplices of \a T and their facets
          * to the simplices of \a U and their facets.
          *
@@ -332,14 +332,81 @@ class Isomorphism :
          * \todo Lock the topological properties of the underlying manifold,
          * to avoid recomputing them after the isomorphism is applied.
          *
-         * \exception InvalidArgument the number of simplices in the given
-         * triangulation is not equal to size() for this isomorphism.
+         * \exception InvalidArgument the number of top-dimensional simplices
+         * in the given triangulation is not equal to size() for this
+         * isomorphism.
          *
          * @param tri the triangulation to which this isomorphism
          * should be applied.
          * @return the new isomorphic triangulation.
          */
         Triangulation<dim> operator ()(const Triangulation<dim>& tri) const;
+
+        /**
+         * Returns the image of the given facet-of-simplex under this
+         * isomorphism.
+         *
+         * Specifically:
+         *
+         * - If <tt>f.simp</tt> is in the range 0,1,...,size()-1 inclusive
+         *   (i.e., \a f denotes a facet of an actual top-dimensional simplex),
+         *   then this routine will return an object denoting facet
+         *   <tt>facetPerm(f.facet)</tt> of simplex <tt>simpImage(f.simp)</tt>.
+         *
+         * - If <tt>f.simp</tt> is negative (i.e., \a f takes a
+         *   before-the-start value), or if <tt>f.simp</tt> is at least size()
+         *   (i.e., \a f takes a boundary or past-the-end value), then this
+         *   routine will return \a f unchanged (but see the precondition
+         *   below).
+         *
+         * \pre If this isomorphism maps a smaller triangulation into a larger
+         * triangulation (in particular, if the simplex images under this
+         * isomorphism are not just some reordering of 0,1,...,size()-1),
+         * then \a f must not denote a boundary or past-the-end value.
+         * This is because a boundary or past-the-end value is encoded
+         * by using a past-the-end value of <tt>FacetSpec::simp</tt>.
+         * If this isomorphism maps into a larger triangulation then this
+         * past-the-end simplex number would need to change, but the
+         * isomorphism does not actually know what the new value of
+         * <tt>FacetSpec::simp</tt> should be.
+         *
+         * @param f the facet-of-simplex which should be transformed by
+         * this isomorphism.
+         * @return the image of \a f under this isomorphism.
+         */
+        FacetSpec<dim> operator ()(const FacetSpec<dim>& f) const;
+
+        /**
+         * Applies this isomorphism to the given facet pairing, and
+         * returns the result as a new facet pairing.
+         *
+         * Although the Isomorphism class was designed to represent
+         * mappings between isomorphic triangulations, it can just as well
+         * describe mappings between isomorphic facet pairings.
+         * In particular, if \a iso represents this isomorphism and if \a p
+         * were the facet pairing of some triangulation \a tri, then
+         * <tt>iso(p)</tt> would be the facet pairing for the triangulation
+         * <tt>iso(tri)</tt>.  Of course, this routine works directly with
+         * the facet pairing, and does not actually construct any
+         * triangulations at all.
+         *
+         * This routine behaves correctly even if some facets of \a p are
+         * unmatched (i.e., if \a p models a triangulation with boundary
+         * facets).
+         *
+         * \pre The simplex images are precisely 0,1,...,size()-1 in some
+         * order (i.e., this isomorphism does not represent a mapping from a
+         * smaller triangulation into a larger triangulation).
+         *
+         * \exception InvalidArgument the number of top-dimensional simplices
+         * described by the given facet pairing is not equal to size() for
+         * this isomorphism.
+         *
+         * @param p the facet pairing to which this isomorphism should be
+         * applied.
+         * @return the new isomorphic facet pairing.
+         */
+        FacetPairing<dim> operator ()(const FacetPairing<dim>& p) const;
 
         /**
          * Deprecated routine that applies this isomorphism to the given
@@ -353,8 +420,9 @@ class Isomorphism :
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
-         * \exception InvalidArgument the number of simplices in the given
-         * triangulation is not equal to size() for this isomorphism.
+         * \exception InvalidArgument the number of top-dimensional simplices
+         * in the given triangulation is not equal to size() for this
+         * isomorphism.
          *
          * @param tri the triangulation to which this isomorphism
          * should be applied.
@@ -375,8 +443,9 @@ class Isomorphism :
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
-         * \exception InvalidArgument the number of simplices in the given
-         * triangulation is not equal to size() for this isomorphism.
+         * \exception InvalidArgument the number of top-dimensional simplices
+         * in the given triangulation is not equal to size() for this
+         * isomorphism.
          *
          * @param tri the triangulation to which this isomorphism
          * should be applied.
@@ -664,7 +733,7 @@ Triangulation<dim> Isomorphism<dim>::operator ()(
         const Triangulation<dim>& original) const {
     if (original.size() != nSimplices_)
         throw InvalidArgument("Isomorphism::operator() was given "
-            "an input triangulation of the wrong size");
+            "a triangulation of the wrong size");
 
     if (nSimplices_ == 0)
         return Triangulation<dim>();
@@ -705,6 +774,32 @@ Triangulation<dim> Isomorphism<dim>::operator ()(
     }
 
     delete[] tet;
+    return ans;
+}
+
+template <int dim>
+inline FacetSpec<dim> Isomorphism<dim>::operator ()(const FacetSpec<dim>& f)
+        const {
+    if (f.simp >= 0 && f.simp < nSimplices_) {
+        return FacetSpec<dim>(simpImage_[f.simp], facetPerm_[f.simp][f.facet]);
+    } else {
+        // Past-the-end or before-the-start values should be left alone.
+        return f;
+    }
+}
+
+template <int dim>
+FacetPairing<dim> Isomorphism<dim>::operator ()(
+        const FacetPairing<dim>& p) const {
+    if (p.size() != nSimplices_)
+        throw InvalidArgument("Isomorphism::operator() was given "
+            "a facet pairing of the wrong size");
+
+    FacetPairing<dim> ans(nSimplices_);
+
+    for (FacetSpec<dim> f(0, 0); f.simp < nSimplices_; ++f)
+        ans.dest((*this)(f)) = (*this)(p[f]);
+
     return ans;
 }
 
