@@ -69,6 +69,7 @@ int minimal = 0;
 int minimalPrime = 0;
 int minimalPrimeP2 = 0;
 int minimalHyp = 0;
+int allowInvalid = 0;
 int dim2 = 0;
 int dim4 = 0;
 int usePairs = 0;
@@ -195,7 +196,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
     // no such moves are possible (since it ensures no internal vertices
     // and no low-degree edges).
 
-    if (! tri.isValid())
+    if (! (allowInvalid || tri.isValid()))
         return;
     if ((! finiteness.hasFalse()) && tri.isIdeal())
         return;
@@ -411,6 +412,9 @@ int main(int argc, const char* argv[]) {
             "Ignore triangulations that are obviously not minimal ideal "
             "triangulations of cusped finite-volume hyperbolic 3-manifolds.  "
             "Implies --internal and --ideal.", nullptr },
+        { "allowinvalid", 0, POPT_ARG_NONE, &allowInvalid, 0,
+            "Do not test triangulations for validity before output.",
+            nullptr },
         { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
@@ -540,6 +544,15 @@ int main(int argc, const char* argv[]) {
     } else if (argFinite && argIdeal) {
         std::cerr << "Options -f/--finite and -d/--ideal "
             << "cannot be used together.\n";
+        broken = true;
+    } else if (allowInvalid && (argFinite || argIdeal)) {
+        std::cerr << "Option --allowinvalid cannot be used with finite/ideal "
+            << "options.\n";
+        broken = true;
+    } else if (allowInvalid &&
+            (minimal || minimalPrime || minimalPrimeP2 || minimalHyp)) {
+        std::cerr << "Option --allowinvalid cannot be used with minimality "
+            << "options.\n";
         broken = true;
     } else if (genPairs && usePairs) {
         std::cerr << "Options -p/--genpairs and -P/--usepairs "

@@ -35,6 +35,18 @@ tricensus --threads 0 -t2 -i -s @TESTOUT@
 tricensus -t2 -i -s @TESTOUT@
 # --- tricensus with Regina data output
 tricensus -t1 -i @TESTOUT@
+# --- allowing invalid triangulations:
+tricensus -t2 -B4 -s @TESTOUT@
+tricensus -t2 -B4 -s --allowinvalid @TESTOUT@
+tricensus -4 -t2 -B6 -s @TESTOUT@
+tricensus -4 -t2 -B6 -s --allowinvalid @TESTOUT@
+# --- cases where invalid triangulations will never occur:
+tricensus -2 -t2 -s @TESTOUT@
+tricensus -2 -t2 -s --allowinvalid @TESTOUT@
+tricensus -t1 -i -s @TESTOUT@
+tricensus -t1 -i -s --allowinvalid @TESTOUT@
+tricensus -4 -t2 -i -s @TESTOUT@
+tricensus -4 -t2 -i -s --allowinvalid @TESTOUT@
 # --- using tricensus to generate pairings:
 tricensus -2 -t4 -i -p
 tricensus -2 -t4 -b -p

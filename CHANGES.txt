@@ -44,6 +44,8 @@ Version 7.1  [ TODO ]
     UTILITIES:
         tricensus:
             - Now supports multithreading via the new --threads option.
+            - Now supports enumerating subcomplexes of triangulations
+              via the new option --allowinvalid.
 
 Version 7.0  [ 19 December, 2021 ]
 

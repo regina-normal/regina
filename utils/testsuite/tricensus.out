@@ -25,6 +25,8 @@ Usage: tricensus <output-file>
                                     not minimal ideal triangulations of cusped
                                     finite-volume hyperbolic 3-manifolds.
                                     Implies --internal and --ideal.
+      --allowinvalid                Do not test triangulations for validity
+                                    before output.
   -2, --dim2                        Run a census of 2-manifold triangulations,
                                     not 3-manifold triangulations.  Here
                                     --tetrahedra counts triangles, and
@@ -75,6 +77,8 @@ Usage: tricensus <output-file>
                                     not minimal ideal triangulations of cusped
                                     finite-volume hyperbolic 3-manifolds.
                                     Implies --internal and --ideal.
+      --allowinvalid                Do not test triangulations for validity
+                                    before output.
   -2, --dim2                        Run a census of 2-manifold triangulations,
                                     not 3-manifold triangulations.  Here
                                     --tetrahedra counts triangles, and
@@ -125,6 +129,8 @@ Usage: tricensus <output-file>
                                     not minimal ideal triangulations of cusped
                                     finite-volume hyperbolic 3-manifolds.
                                     Implies --internal and --ideal.
+      --allowinvalid                Do not test triangulations for validity
+                                    before output.
   -2, --dim2                        Run a census of 2-manifold triangulations,
                                     not 3-manifold triangulations.  Here
                                     --tetrahedra counts triangles, and
@@ -260,6 +266,252 @@ Orientable and non-orientable
 </container>
 </container>
 </regina>
+============================================================
+TEST: tricensus -t2 -B4 -s @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 1:0 bdry | 0:2 bdry bdry bdry
+1:0 1:1 bdry bdry | 0:0 0:1 bdry bdry
+Finished.
+Total triangulations: 6
+--------------------
+Exit code: 0
+--------------------
+Output:
+cHaaj
+cHaab
+cHaba
+cHabd
+cHabh
+cHabj
+============================================================
+TEST: tricensus -t2 -B4 -s --allowinvalid @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 1:0 bdry | 0:2 bdry bdry bdry
+1:0 1:1 bdry bdry | 0:0 0:1 bdry bdry
+Finished.
+Total triangulations: 10
+--------------------
+Exit code: 0
+--------------------
+Output:
+cHaad
+cHaaj
+cHaap
+cHaab
+cHaba
+cHabd
+cHabb
+cHabh
+cHabj
+cHabm
+============================================================
+TEST: tricensus -4 -t2 -B6 -s @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 1:0 bdry bdry | 0:2 bdry bdry bdry bdry
+1:0 1:1 bdry bdry bdry | 0:0 0:1 bdry bdry bdry
+Finished.
+Total triangulations: 8
+--------------------
+Exit code: 0
+--------------------
+Output:
+cGbaa0a
+cGbaaWb
+cGbaaca
+cHaabaa
+cHaab2b
+cHaab-a
+cHaab1b
+cHaab0b
+============================================================
+TEST: tricensus -4 -t2 -B6 -s --allowinvalid @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 1:0 bdry bdry | 0:2 bdry bdry bdry bdry
+1:0 1:1 bdry bdry bdry | 0:0 0:1 bdry bdry bdry
+Finished.
+Total triangulations: 14
+--------------------
+Exit code: 0
+--------------------
+Output:
+cGbaa0a
+cGbaaWb
+cGbaa1a
+cGbaaca
+cGbaa5a
+cHaabaa
+cHaab2b
+cHaabJb
+cHaab-a
+cHaab+a
+cHaab4a
+cHaab1b
+cHaab0b
+cHaabAa
+============================================================
+TEST: tricensus -2 -t2 -s @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 1:0 | 0:2 1:2 1:1
+0:1 0:0 1:0 | 0:2 bdry bdry
+1:0 1:1 1:2 | 0:0 0:1 0:2
+1:0 1:1 bdry | 0:0 0:1 bdry
+1:0 bdry bdry | 0:0 bdry bdry
+Finished.
+Total triangulations: 13
+--------------------
+Exit code: 0
+--------------------
+Output:
+cMabdd
+cMabcc
+cMabcd
+cbcbd
+cbcbb
+cPbbaa
+cPbbac
+cPbbbe
+cPbbde
+cHaba
+cHabb
+cHabe
+cba
+============================================================
+TEST: tricensus -2 -t2 -s --allowinvalid @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 1:0 | 0:2 1:2 1:1
+0:1 0:0 1:0 | 0:2 bdry bdry
+1:0 1:1 1:2 | 0:0 0:1 0:2
+1:0 1:1 bdry | 0:0 0:1 bdry
+1:0 bdry bdry | 0:0 bdry bdry
+Finished.
+Total triangulations: 13
+--------------------
+Exit code: 0
+--------------------
+Output:
+cMabdd
+cMabcc
+cMabcd
+cbcbd
+cbcbb
+cPbbaa
+cPbbac
+cPbbbe
+cPbbde
+cHaba
+cHabb
+cHabe
+cba
+============================================================
+TEST: tricensus -t1 -i -s @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 0:3 0:2
+Finished.
+Total triangulations: 5
+--------------------
+Exit code: 0
+--------------------
+Output:
+bkaajj
+bkaajn
+bkaaid
+bkaagb
+bkaagj
+============================================================
+TEST: tricensus -t1 -i -s --allowinvalid @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 0:3 0:2
+Finished.
+Total triangulations: 5
+--------------------
+Exit code: 0
+--------------------
+Output:
+bkaajj
+bkaajn
+bkaaid
+bkaagb
+bkaagj
+============================================================
+TEST: tricensus -4 -t2 -i -s @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 0:3 0:2 1:0 | 0:4 1:2 1:1 1:4 1:3
+0:1 0:0 1:0 1:1 1:2 | 0:2 0:3 0:4 1:4 1:3
+1:0 1:1 1:2 1:3 1:4 | 0:0 0:1 0:2 0:3 0:4
+Finished.
+Total triangulations: 23
+--------------------
+Exit code: 0
+--------------------
+Output:
+cAkaabb2aoa2aoa
+cAkaabb+aoaqbga
+cAkaabb+aoa+aoa
+cAkaabb+a+a+a+a
+cAkaabb+aKa+aKa
+cMkabbb-aaaaa-a
+cMkabbb2a-ataqb
+cMkabbb2a2bYbba
+cMkabbb2aHaua2a
+cMkabbb2aBaua2a
+cMkabbb2a4aaaca
+cMkabbb-aNaNaca
+cMkabbb+aaa0bPb
+cMkabbb2aaaaa2a
+cMkabbb+aAa3blb
+cMkabbb+aaaaa+a
+cPkbbbbaaaaaaaa
+cPkbbbb4aaaaa4a
+cPkbbbb+a1asaEb
+cPkbbbb+a+aAa+a
+cPkbbbb-a-a-aUa
+cPkbbbb3bSa3baa
+cPkbbbb+aDbDbaa
+============================================================
+TEST: tricensus -4 -t2 -i -s --allowinvalid @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 0:3 0:2 1:0 | 0:4 1:2 1:1 1:4 1:3
+0:1 0:0 1:0 1:1 1:2 | 0:2 0:3 0:4 1:4 1:3
+1:0 1:1 1:2 1:3 1:4 | 0:0 0:1 0:2 0:3 0:4
+Finished.
+Total triangulations: 23
+--------------------
+Exit code: 0
+--------------------
+Output:
+cAkaabb2aoa2aoa
+cAkaabb+aoaqbga
+cAkaabb+aoa+aoa
+cAkaabb+a+a+a+a
+cAkaabb+aKa+aKa
+cMkabbb-aaaaa-a
+cMkabbb2a-ataqb
+cMkabbb2a2bYbba
+cMkabbb2aHaua2a
+cMkabbb2aBaua2a
+cMkabbb2a4aaaca
+cMkabbb-aNaNaca
+cMkabbb+aaa0bPb
+cMkabbb2aaaaa2a
+cMkabbb+aAa3blb
+cMkabbb+aaaaa+a
+cPkbbbbaaaaaaaa
+cPkbbbb4aaaaa4a
+cPkbbbb+a1asaEb
+cPkbbbb+a+aAa+a
+cPkbbbb-a-a-aUa
+cPkbbbb3bSa3baa
+cPkbbbb+aDbDbaa
 ============================================================
 TEST: tricensus -2 -t4 -i -p
 --------------------
