@@ -1333,6 +1333,7 @@
      <arg><option>-N, --minprimep2</option></arg>
      <arg><option>-h, --minhyp</option></arg>
     </group>
+    <arg><option>--allowinvalid</option></arg>
     <group>
      <arg><option>-s, --sigs</option></arg>
      <arg><option>-c, --subcontainers</option></arg>
@@ -1624,6 +1625,40 @@
        will produce an error message).
        This option also cannot be used with <option>--dim2</option>
        or <option>--dim4</option>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--allowinvalid</option></term>
+     <listitem>
+      <para>
+       Normally, <command>tricensus</command> will test each triangulation that
+       is constructed for validity before including it in the final output.
+       If you pass <option>--allowinvalid</option> however, then these
+       validity tests will not be performed.
+      </para>
+      <para>
+       As a result, the output may include some invalid triangulations.
+       However, it will not include <emphasis>all</emphasis> invalid
+       triangulations of the given size, since some invalid constructions
+       are pruned at earlier levels of the search tree by the census algorithm
+       (as opposed to being detected by the validity test when each full
+       triangulation has been constructed).  For example, edges that are
+       identified with themselves in reverse are detected and pruned earlier
+       in this way, and so will never appear in the census output, even with
+       the <option>--allowinvalid</option> option.
+      </para>
+      <para>
+       The one guarantee that you <emphasis>do</emphasis> get from this option
+       is that the census will include all invalid triangulations that could
+       appear as a <emphasis>subcomplex</emphasis> of some valid triangulation.
+       For example, if a 3-dimensional triangulation is invalid only because
+       it has vertices whose links are spheres with multiple punctures,
+       then it will be included in the output.
+      </para>
+      <para>
+       This option cannot be used with finite/ideal options or minimality
+       options.
       </para>
      </listitem>
     </varlistentry>
