@@ -661,8 +661,7 @@ int runCensus() {
         }
 
         regina::FacetPairing<dim>::findAllPairings(nTet, boundary, nBdryFaces,
-                [](const regina::FacetPairing<dim>& pair,
-                   typename regina::FacetPairing<dim>::IsoList) {
+                [](const regina::FacetPairing<dim>& pair) {
             if (dumpStream.get())
                 (*dumpStream) << pair.toTextRep() << std::endl;
             else

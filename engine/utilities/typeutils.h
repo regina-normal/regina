@@ -101,13 +101,46 @@ constexpr void for_constexpr(Action&& action) {
     }
 }
 
+#ifndef __DOXYGEN
+
+namespace detail {
+
 /**
- * A variant of std::tuple_element that gracefully handles an out-of-range
- * index.
+ * Implementation details for safe_tuple_element.  This allows us to provide
+ * separate specialisations for the index-in-range and index-out-of-range
+ * cases, without ever instantiating an invalid std::tuple_element.
+ *
+ * See safe_tuple_element below for details.
+ */
+template <int pos, typename tuple, typename out_of_range,
+    bool pos_in_range = (pos >= 0 && pos < std::tuple_size<tuple>::value)>
+struct safe_tuple_element_impl;
+
+template <int pos, typename tuple, typename out_of_range>
+struct safe_tuple_element_impl<pos, tuple, out_of_range, true> {
+    using type = typename std::tuple_element<pos, tuple>::type;
+};
+
+template <int pos, typename tuple, typename out_of_range>
+struct safe_tuple_element_impl<pos, tuple, out_of_range, false> {
+    using type = out_of_range;
+};
+
+} // namespace detail
+
+#endif
+
+/**
+ * An alternative to std::tuple_element that gracefully handles an
+ * out-of-range index.
  *
  * If \a pos is a valid index into the tuple type \a tuple, then this
- * type alias is identical to std::tuple_element<pos, tuple>.  Otherwise
+ * type alias is identical to std::tuple_element<pos, tuple>::type.  Otherwise
  * this type alias is identical to the argument \a out_of_range.
+ *
+ * Note that you should not append ::type when using safe_tuple_element
+ * (i.e., this is really a drop-in replacement for the C++17 type alias
+ * std::tuple_element_t, and not the C++11 structure std::tuple_element).
  *
  * \tparam pos an index, which may take any integer value.
  * \tparam a std::tuple type (which is allowed to include \c const and/or
@@ -116,9 +149,8 @@ constexpr void for_constexpr(Action&& action) {
  * into \a tuple.
  */
 template <int pos, typename tuple, typename out_of_range = void>
-using safe_tuple_element =
-    typename std::conditional<(pos >= 0 && pos < std::tuple_size<tuple>::value),
-        typename std::tuple_element<pos, tuple>::type, out_of_range>::type;
+using safe_tuple_element = typename regina::detail::safe_tuple_element_impl<
+    pos, tuple, out_of_range>::type;
 
 /**
  * A traits class that deduces the type of the argument in a given position

@@ -19,6 +19,9 @@ Version 7.1  [ TODO ]
             - New routine k3().
             - Reflected the result of cp2() so that it has intersection
               form [1], not [-1].
+        Class FacetPairing<dim>:
+            - In findAllPairings(), the action is no longer required to
+              take the list of all automorphisms if it does not need them.
         Class IntersectionForm:
             - New class to compute invariants of intersection forms.
         Class Isomorphism:
@@ -52,6 +55,8 @@ Version 7.1  [ TODO ]
             - Now supports multithreading via the new --threads option.
             - Now supports enumerating subcomplexes of triangulations
               via the new option --allowinvalid.
+            - The --genpairs option is now much less memory-hungry when the
+              automorphism group is large (e.g., with many boundary facets).
 
 Version 7.0  [ 19 December, 2021 ]
 
