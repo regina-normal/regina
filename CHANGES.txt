@@ -12,6 +12,9 @@ Version 7.1  [ TODO ]
     GENERAL:
         - Regina now supports Python 3 only (not Python 2 or 3).
     ENGINE:
+        Class CallableArg<...>:
+            - Now a public helper class in the main regina:: namespace.
+            - Now behaves gracefully if the given index is out of range.
         Class Example<4>:
             - New routine k3().
             - Reflected the result of cp2() so that it has intersection
@@ -28,6 +31,9 @@ Version 7.1  [ TODO ]
               square (this is a precondition), and now returns 1 if the
               matrix is detected to be 0-by-0 (although such matrices are
               formally not supported by the Matrix class).
+        Type safe_tuple_element<...>:
+            - New type alias that is like std::tuple_element<...> but
+              with well-defined behaviour for an out-of-range index.
         Class Triangulation<dim>:
             - New suite of routines countBoundaryFaces().
             - New suite of public routines dualBoundaryMap() (these were

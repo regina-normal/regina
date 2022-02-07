@@ -42,83 +42,13 @@
 
 #include <functional>
 #include <string>
-#include "regina-core.h"
+#include "utilities/typeutils.h"
 
 namespace regina {
 
 class ProgressTrackerOpen;
 
 namespace detail {
-
-/**
- * A traits class that deduces the type of the argument in a given position
- * for a callable object.  It can (amongst other things) work with
- * function pointers, function references, member function pointers,
- * std::function wrappers, and lambdas.
- *
- * This struct provides a single member type alias, named \a type, which is
- * the type of the argument to \a Action that appears in position \a pos.
- *
- * If \a Action is a member function, then arguments will still be numbered
- * according to the "real" arguments (i.e., the numbering ignores the
- * object pointer \c this which is implicitly passed to every non-static
- * member function).
- *
- * If \a Action does not take enough arguments for the given \a pos,
- * then this will almost certainly generate an error deep with in the
- * standard library (most likely with std::tuple_element).
- *
- * \tparam Action the type of a callable object that takes at least
- * one argument.
- * \tparam pos the index of the argument being requested.  Positions are
- * numbered from 0 upwards.
- *
- * \ingroup detail
- */
-template <typename Action, int pos>
-struct CallableArg;
-
-#ifndef __DOXYGEN
-
-// Generic implementation which works for lambdas and classes with a
-// bracket operator.  For lambdas, this then falls through (via inheritance)
-// to the case for member function pointers, implemented separately below.
-template <typename Action, int pos>
-struct CallableArg : public CallableArg<decltype(&Action::operator()), pos> {
-};
-
-// Implementation for global function pointers and references:
-template <typename ReturnType, typename... Args, int pos>
-struct CallableArg<ReturnType(*)(Args...), pos> {
-    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
-};
-template <typename ReturnType, typename... Args, int pos>
-struct CallableArg<ReturnType(&)(Args...), pos> {
-    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
-};
-
-
-// Implementation for member function pointers:
-template <typename Class, typename ReturnType, typename... Args, int pos>
-struct CallableArg<ReturnType(Class::*)(Args...) const, pos> {
-    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
-};
-
-// Implementation for std::function objects:
-template <typename ReturnType, typename... Args, int pos>
-struct CallableArg<std::function<ReturnType(Args...)>, pos> {
-    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
-};
-template <typename ReturnType, typename... Args, int pos>
-struct CallableArg<std::function<ReturnType(Args...)>&, pos> {
-    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
-};
-template <typename ReturnType, typename... Args, int pos>
-struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
-    using type = typename std::tuple_element<pos, std::tuple<Args...>>::type;
-};
-
-#endif // __DOXYGEN
 
 /**
  * Declares the internal type used to store a callable action that is passed

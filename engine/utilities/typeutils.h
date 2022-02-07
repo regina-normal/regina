@@ -101,6 +101,94 @@ constexpr void for_constexpr(Action&& action) {
     }
 }
 
+/**
+ * A variant of std::tuple_element that gracefully handles an out-of-range
+ * index.
+ *
+ * If \a pos is a valid index into the tuple type \a tuple, then this
+ * type alias is identical to std::tuple_element<pos, tuple>.  Otherwise
+ * this type alias is identical to the argument \a out_of_range.
+ *
+ * \tparam pos an index, which may take any integer value.
+ * \tparam a std::tuple type (which is allowed to include \c const and/or
+ * \c volatile modifiers).
+ * \tparam out_of_range the type to use if \a pos is not a valid index
+ * into \a tuple.
+ */
+template <int pos, typename tuple, typename out_of_range = void>
+using safe_tuple_element =
+    typename std::conditional<(pos >= 0 && pos < std::tuple_size<tuple>::value),
+        typename std::tuple_element<pos, tuple>::type, out_of_range>::type;
+
+/**
+ * A traits class that deduces the type of the argument in a given position
+ * for a callable object.  It can (amongst other things) work with
+ * function pointers, function references, member function pointers,
+ * std::function wrappers, and lambdas.
+ *
+ * This struct provides a single member type alias, named \a type, which is
+ * the type of the argument to \a Action that appears in position \a pos.
+ *
+ * If \a Action is a member function, then arguments will still be numbered
+ * according to the "real" arguments (i.e., the numbering ignores the
+ * object pointer \c this which is implicitly passed to every non-static
+ * member function).
+ *
+ * If \a Action does not take enough arguments for the given position \a pos,
+ * then \a type will be \c void.
+ *
+ * \tparam Action the type of a callable object that takes at least
+ * one argument.
+ * \tparam pos the index of the argument being requested.  Positions are
+ * numbered from 0 upwards.
+ *
+ * \ingroup detail
+ */
+template <typename Action, int pos>
+struct CallableArg;
+
+#ifndef __DOXYGEN
+
+// Generic implementation which works for lambdas and classes with a
+// bracket operator.  For lambdas, this then falls through (via inheritance)
+// to the case for member function pointers, implemented separately below.
+template <typename Action, int pos>
+struct CallableArg : public CallableArg<decltype(&Action::operator()), pos> {
+};
+
+// Implementation for global function pointers and references:
+template <typename ReturnType, typename... Args, int pos>
+struct CallableArg<ReturnType(*)(Args...), pos> {
+    using type = safe_tuple_element<pos, std::tuple<Args...>>;
+};
+template <typename ReturnType, typename... Args, int pos>
+struct CallableArg<ReturnType(&)(Args...), pos> {
+    using type = safe_tuple_element<pos, std::tuple<Args...>>;
+};
+
+
+// Implementation for member function pointers:
+template <typename Class, typename ReturnType, typename... Args, int pos>
+struct CallableArg<ReturnType(Class::*)(Args...) const, pos> {
+    using type = safe_tuple_element<pos, std::tuple<Args...>>;
+};
+
+// Implementation for std::function objects:
+template <typename ReturnType, typename... Args, int pos>
+struct CallableArg<std::function<ReturnType(Args...)>, pos> {
+    using type = safe_tuple_element<pos, std::tuple<Args...>>;
+};
+template <typename ReturnType, typename... Args, int pos>
+struct CallableArg<std::function<ReturnType(Args...)>&, pos> {
+    using type = safe_tuple_element<pos, std::tuple<Args...>>;
+};
+template <typename ReturnType, typename... Args, int pos>
+struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
+    using type = safe_tuple_element<pos, std::tuple<Args...>>;
+};
+
+#endif // __DOXYGEN
+
 } // namespace regina
 
 #endif
