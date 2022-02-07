@@ -29,6 +29,8 @@ Version 7.1  [ TODO ]
               is now a deprecated alias.
             - Deprecated applyInPlace(), since this is no faster than
               calling tri = iso(tri).
+            - Added bracket operators to apply an isomorphism to a
+              FacetSpec or a FacetPairing.
         Class Matrix:
             - Routine det() now throws an exception if the matrix is not
               square (this is a precondition), and now returns 1 if the

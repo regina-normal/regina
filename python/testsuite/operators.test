@@ -39,6 +39,23 @@ iso.setFacetPerm(1, Perm4(0,2))
 print(iso)
 
 tri = Example3.s2xs1()
+p = FacetPairing3(tri)
+
 print(tri.detail())
 tri = iso(tri)
 print(tri.detail())
+
+print(p)
+p = iso(p)
+print(p)
+
+tri = Example3.lst(1,3)
+p = FacetPairing3(tri)
+
+print(tri.detail())
+tri = iso(tri)
+print(tri.detail())
+
+print(p)
+p = iso(p)
+print(p)
