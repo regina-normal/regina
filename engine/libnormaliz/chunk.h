@@ -21,26 +21,20 @@
  * terms of service.
  */
 
-#ifndef LIBNORMALIZ_H_
-#define LIBNORMALIZ_H_
+#ifndef NORMALIZ_CHUNK_H
+#define NORMALIZ_CHUNK_H
 
-#include "libnormaliz/general.h"
-#include "libnormaliz/integer.h"
-#include "libnormaliz/input_type.h"
-#include "libnormaliz/input.h"
-#include "libnormaliz/automorph.h"
-#include "libnormaliz/cone.h"
-#include "libnormaliz/cone_property.h"
-#include "libnormaliz/dynamic_bitset.h"
-#include "libnormaliz/HilbertSeries.h"
-#include "libnormaliz/list_and_map_operations.h"
-#include "libnormaliz/matrix.h"
-#include "libnormaliz/my_omp.h"
-#include "libnormaliz/normaliz_exception.h"
-#include "libnormaliz/options.h"
-#include "libnormaliz/output.h"
-#include "libnormaliz/sublattice_representation.h"
-#include "libnormaliz/vector_operations.h"
-#include "libnormaliz/version.h"
+#include <string>
 
-#endif
+
+namespace libnormaliz {
+using namespace std;
+
+void chunk();
+
+void add_chunks(const string& project);
+
+
+} // name space
+
+#endif  // NMZ_CHUNK_H

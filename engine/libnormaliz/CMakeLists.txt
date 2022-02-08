@@ -2,10 +2,11 @@
 
 # Files to compile.
 #
-# Currently we exclude: nmz_integral, nmz_nauty
+# Currently we exclude: nmz_hash, nmz_integral, nmz_nauty
 SET ( FILES
   HilbertSeries.cpp
   automorph.cpp
+  chunk.cpp
   collection.cpp
   cone.cpp
   cone_dual_mode.cpp
@@ -21,6 +22,7 @@ SET ( FILES
   output.cpp
   project_and_lift.cpp
   reduction.cpp
+  signed_dec.cpp
   simplex.cpp
   sublattice_representation.cpp
   )

@@ -27,8 +27,9 @@
 #include <list>
 #include <vector>
 #include <deque>
-#include <ctime>
+#include <chrono>
 //#include <set>
+#include <sys/time.h>
 
 #include "libnormaliz/general.h"
 #include "libnormaliz/cone.h"
@@ -42,12 +43,19 @@
 #include "libnormaliz/offload_handler.h"
 #include "libnormaliz/automorph.h"
 #include "libnormaliz/dynamic_bitset.h"
+#include "libnormaliz/signed_dec.h"
 
 namespace libnormaliz {
 using std::list;
 using std::map;
 using std::pair;
 using std::vector;
+
+struct HollowTriJob{
+    vector<size_t> Selection;
+    vector<key_t> PatternKey;
+    dynamic_bitset Pattern;
+};
 
 template <typename Integer>
 class Cone;
@@ -103,11 +111,14 @@ class Full_Cone {
     // bool explicit_h_vector; // to distinguish it from being set via default mode --DONE VIA do_default_mode
     bool do_determinants;
     bool do_multiplicity;
+    bool do_integral;
     bool do_integrally_closed;
     bool do_Hilbert_basis;
     bool do_deg1_elements;
     bool do_h_vector;
     bool keep_triangulation;
+    bool pulling_triangulation;
+    bool keep_triangulation_bitsets; // convert the triangulation keys into bitsets  and keep them
     bool do_Stanley_dec;
     bool do_default_mode;
     bool do_class_group;
@@ -116,6 +127,12 @@ class Full_Cone {
     bool do_cone_dec;
     bool do_supphyps_dynamic; // for integer hull computations where we want to insert extreme rays only
                               // more or less ...
+    bool do_multiplicity_by_signed_dec;
+    bool do_integral_by_signed_dec;
+    bool do_signed_dec;
+    bool do_virtual_multiplicity_by_signed_dec;
+    bool include_dualization; // can only be set in connection with signed dec
+    bool do_pure_triang; // no determinants
 
     bool exploit_automs_mult;
     bool exploit_automs_vectors;
@@ -125,6 +142,7 @@ class Full_Cone {
     bool do_hsop;
     bool do_extreme_rays;
     bool do_pointed;
+    bool believe_pointed; // sometimes set to suppress the check for pointedness
     bool do_triangulation_size;
 
     // algorithmic variants
@@ -161,12 +179,15 @@ class Full_Cone {
     long autom_codim_mult;     // bound ditto for multiplicity
     Integer HB_bound;          // only degree bound used in connection with automorphisms
                                // to discard vectors quickly
+    long block_size_hollow_tri;
+    long decimal_digits;
+    string project_name;
 
     bool time_measured;
     bool don_t_add_hyperplanes;   // blocks the addition of new hyperplanes during time measurement
     bool take_time_of_large_pyr;  // if true, the time of large pyrs is measured
-    vector<clock_t> time_of_large_pyr;
-    vector<clock_t> time_of_small_pyr;
+    vector<chrono::nanoseconds> time_of_large_pyr;
+    vector<chrono::nanoseconds> time_of_small_pyr;
     vector<size_t> nr_pyrs_timed;
 
     // data of the cone (input or output)
@@ -175,6 +196,7 @@ class Full_Cone {
     vector<Integer> IntHullNorm;        // used in computation of integer hulls for guessing extreme rays
     Integer TruncLevel;          // used for approximation of simplicial cones
     vector<Integer> Grading;
+    vector<Integer> GradingOnPrimal; // grading on ther cone whose multiplicity is comuted by signed dec
     vector<Integer> Sorting;
     mpq_class multiplicity;
 #ifdef ENFNORMALIZ
@@ -209,6 +231,7 @@ class Full_Cone {
     vector<Integer> gen_levels;                       // will contain the levels of the generators (in the inhomogeneous case)
     size_t TriangulationBufferSize;                   // number of elements in Triangulation, for efficiency
     list<SHORTSIMPLEX<Integer>> Triangulation;        // triangulation of cone
+    vector<pair<dynamic_bitset,dynamic_bitset> > Triangulation_ind;           // the same, but bitsets instead of keys
     list<SHORTSIMPLEX<Integer>> TriangulationBuffer;  // simplices to evaluate
     list<SimplexEvaluator<Integer>> LargeSimplices;   // Simplices for internal parallelization
     Integer detSum;                                   // sum of the determinants of the simplices
@@ -217,8 +240,13 @@ class Full_Cone {
         ClassGroup;  // the class group as a vector: ClassGroup[0]=its rank, then the orders of the finite cyclic summands
 
     Matrix<Integer> ProjToLevel0Quot;  // projection matrix onto quotient modulo level 0 sublattice
-    
+
     size_t index_covering_face; //used in checking emptyness of semiopen polyhedron
+
+    string Polynomial;
+    mpq_class Integral, VirtualMultiplicity;
+    nmz_float RawEuclideanIntegral;
+    long DegreeOfPolynomial;
 
     // ************************** Data for convex hull computations ****************************
     vector<size_t> HypCounter;  // counters used to give unique number to hyperplane
@@ -232,18 +260,6 @@ class Full_Cone {
                                  // of positive and negative hyperplanes needed for the first i generators
     size_t nrTotalComparisons;   // counts the comparisons in the current computation
 
-    /* struct FACETDATA<Integer>{
-        vector<Integer> Hyp;               // linear form of the hyperplane
-        dynamic_bitset GenInHyp;  // incidence hyperplane/generators
-        Integer ValNewGen;                 // value of linear form on the generator to be added
-        size_t BornAt;                      // number of generator (in order of insertion) at which this hyperplane was added,,
-    counting from 0 size_t Ident;                      // unique number identifying the hyperplane (derived from HypCounter)
-        size_t Mother;                     // Ident of positive mother if known, 0 if unknown
-        bool is_positive_on_all_original_gens;
-        bool is_negative_on_some_original_gen;
-        bool simplicial;                   // indicates whether facet is simplicial
-    };*/
-
     list<FACETDATA<Integer>> Facets;  // contains the data for Fourier-Motzkin and extension of triangulation
     size_t old_nr_supp_hyps;          // must be remembered since Facets gets extended before the current generators is finished
 
@@ -251,7 +267,7 @@ class Full_Cone {
 
     // Pointer to the cone by which the Full_Cone has been constructed (if any)
     // Cone<Integer>* Creator;
-    Matrix<Integer> Embedding;  // temporary solution
+    Matrix<Integer> Embedding;  // temporary solution -- at present used for integration with signed dec
 
     // the absolute top cone in recursive algorithms where faces are evalutated themselves
     // Full_Cone<Integer>* God_Father; // not used at present
@@ -274,8 +290,9 @@ class Full_Cone {
 
     // control of pyramids, recusrion and parallelization
     bool is_pyramid;             // false for top cone
-    long last_to_be_inserted;    // good to know in case of do_all_hyperplanes==false
-    bool recursion_allowed;      // to allow or block recursive formation of pytamids
+    long top_last_to_be_inserted;    // used for signed dec to avoid storage of hyperplanes that are not needed
+    bool pyramids_for_last_built_directly; // ditto
+    bool recursion_allowed;      // to allow or block recursive formation of pyamids
     bool multithreaded_pyramid;  // indicates that this cone is computed in parallel threads
     bool tri_recursion;          // true if we have gone to pyramids because of triangulation
 
@@ -297,8 +314,10 @@ class Full_Cone {
 
     list<SHORTSIMPLEX<Integer>> FreeSimpl;   // list of short simplices already evaluated, kept for recycling
     vector<list<SHORTSIMPLEX<Integer>>> FS;  // the same per thread
-    vector<Matrix<Integer>> RankTest;
-    vector<Matrix<nmz_float>> RankTest_float;  // helper matrices for rank test
+    vector<Matrix<Integer> > RankTest; // helper matrices for rank test
+    vector<Matrix<Integer>> WorkMat; // helper matrix for matrix inversion
+    Matrix<Integer> UnitMat; // prefabricated unit matrix
+    vector<Matrix<nmz_float> > RankTest_float;  // helper matrices for rank test
 
     // helpers for evaluation
     vector<SimplexEvaluator<Integer>> SimplexEval;  // one per thread
@@ -310,7 +329,7 @@ class Full_Cone {
     void try_offload_loc(long place, size_t max_level);
 
     template <typename IntegerCone>
-    void restore_previous_vcomputation(CONVEXHULLDATA<IntegerCone>& ConvHullData, bool goal);
+    void restore_previous_computation(CONVEXHULLDATA<IntegerCone>& ConvHullData, bool goal);
 
     template <typename IntegerCone>
     void dualize_and_restore(CONVEXHULLDATA<IntegerCone>& ConvHullData);
@@ -339,23 +358,27 @@ class Full_Cone {
 
     long renf_degree;
 
+    // vector<HollowTriJob> HTJlist;
+
     /* ---------------------------------------------------------------------------
      *              Private routines, used in the public routines
      * ---------------------------------------------------------------------------
      */
     void number_hyperplane(FACETDATA<Integer>& hyp, const size_t born_at, const size_t mother);
     bool is_hyperplane_included(FACETDATA<Integer>& hyp);
-    vector<Integer> FM_comb(const vector<Integer>& Pos,
+    /* vector<Integer> FM_comb(const vector<Integer>& Pos,
                             const Integer& PosVal,
                             const vector<Integer>& Neg,
                             const Integer& NegVal,
-                            bool extract_gcd = true);
+                            bool extract_gcd = true); */
     void add_hyperplane(const size_t& new_generator,
                         const FACETDATA<Integer>& positive,
                         const FACETDATA<Integer>& negative,
                         list<FACETDATA<Integer>>& NewHyps,
                         bool known_to_be_simplicial);
+    void make_pyramid_for_last_generator(const FACETDATA<Integer>& Fac); // used for signed dec
     void extend_triangulation(const size_t& new_generator);
+    void update_pulling_triangulation(const size_t& new_generator); // variant of extend_triangulation used for pulling tris
     void find_new_facets(const size_t& new_generator);
     void process_pyramids(const size_t new_generator, const bool recursive);
     void process_pyramid(const vector<key_t>& Pyramid_key,
@@ -365,7 +388,7 @@ class Full_Cone {
                          const bool recursive,
                          typename list<FACETDATA<Integer>>::iterator hyp,
                          size_t start_level);
-    void select_supphyps_from(const list<FACETDATA<Integer>>& NewFacets,
+    void select_supphyps_from(list<FACETDATA<Integer>>& NewFacets,
                               const size_t new_generator,
                               const vector<key_t>& Pyramid_key,
                               const vector<bool>& Pyr_in_triang);
@@ -373,11 +396,10 @@ class Full_Cone {
     void evaluate_stored_pyramids(const size_t level);
     void match_neg_hyp_with_pos_hyps(const FACETDATA<Integer>& Neg,
                                      size_t new_generator,
-                                     const list<FACETDATA<Integer>*>& PosHyps,
+                                     const vector<FACETDATA<Integer>*>& PosHyps,
                                      dynamic_bitset& Zero_P,
                                      vector<list<dynamic_bitset>>& Facets_0_1);
-    void collect_pos_supphyps(list<FACETDATA<Integer>*>& PosHyps, dynamic_bitset& Zero_P, size_t& nr_pos);
-    void evaluate_rec_pyramids(const size_t level);
+    void collect_pos_supphyps(vector<FACETDATA<Integer>*>& PosHyps, dynamic_bitset& Zero_P, size_t& nr_pos);
     void evaluate_large_rec_pyramids(size_t new_generator);
 
     void find_and_evaluate_start_simplex();
@@ -391,11 +413,15 @@ class Full_Cone {
 
     void convert_polyhedron_to_polytope();
 
+    void compute_multiplicity_or_integral_by_signed_dec();
+
+    /* void make_facet_triang(list<vector<key_t> >& FacetTriang, const FACETDATA<Integer>& Facet);*/
+
     void compute_deg1_elements_via_projection_simplicial(const vector<key_t>& key);  // for a simplicial subcone by projecion
     void compute_sub_div_elements(const Matrix<Integer>& gens,
                                   list<vector<Integer>>& sub_div_elements,
                                   bool best_point = false);  // computes subdividing elements via approximation
-    void select_deg1_elements(const Full_Cone& C);
+    // void select_deg1_elements(const Full_Cone& C);
     //    void select_Hilbert_Basis(const Full_Cone& C); //experimental, unused
 
     void build_top_cone();
@@ -406,16 +432,16 @@ class Full_Cone {
         bool with_extreme_rays = false);        // if evealuation starts before support hyperplanes are fully computed
     void update_reducers(bool forced = false);  // update list of reducers after evaluation of simplices
 
-    bool is_reducible(list<vector<Integer>*>& Irred, const vector<Integer>& new_element);
+    // bool is_reducible(list<vector<Integer>*>& Irred, const vector<Integer>& new_element);
     void global_reduction();
 
     vector<Integer> compute_degree_function() const;
 
-    Matrix<Integer> select_matrix_from_list(const list<vector<Integer>>& S, vector<size_t>& selection);
+    // Matrix<Integer> select_matrix_from_list(const list<vector<Integer>>& S, vector<size_t>& selection);
 
     bool contains(const vector<Integer>& v);
     bool subcone_contains(const vector<Integer>& v);
-    bool contains(const Full_Cone& C);
+    // bool contains(const Full_Cone& C);
     void extreme_rays_and_deg1_check();
     void find_grading();
     void find_grading_inhom();
@@ -443,11 +469,13 @@ class Full_Cone {
     void primal_algorithm_set_computed();
     void finish_Hilbert_series();
     void make_module_gens();
-    void make_module_gens_and_extract_HB();
+    void reset_degrees_and_merge_new_candidates();
     void remove_duplicate_ori_gens_from_HB();
     void compute_class_group();
     void compose_perm_gens(const vector<key_t>& perm);
     void check_grading_after_dual_mode();
+
+    // void multiplicity_by_signed_dec();
 
     void minimize_support_hyperplanes();
     void compute_extreme_rays(bool use_facets = false);
@@ -460,16 +488,15 @@ class Full_Cone {
     void check_deg1_extreme_rays();
     void check_deg1_hilbert_basis();
 
-    void compute_multiplicity();
+    // void compute_multiplicity();
 
     void minimize_excluded_faces();
     void prepare_inclusion_exclusion();
 
-    void set_implications();
+    void set_preconditions();
     void set_primal_algorithm_control_variables();
     void reset_tasks();
     void deactivate_completed_tasks();
-    void addMult(Integer& volume, const vector<key_t>& key, const int& tn);  // multiplicity sum over thread tn
 
     void check_simpliciality_hyperplane(const FACETDATA<Integer>& hyp) const;
     void check_facet(const FACETDATA<Integer>& Fac, const size_t& new_generator) const;  // debugging routine
@@ -505,22 +532,21 @@ class Full_Cone {
     Matrix<Integer> push_supphyps_to_cone_over_facet(const vector<Integer>& fixed_point, const key_t facet_nr);
     void import_HB_from(const IsoType<Integer>& copy);
     // bool check_extension_to_god_father();
-    void compute_multiplicity_via_recession_cone();
+    // void compute_multiplicity_via_recession_cone();
     void copy_autom_params(const Full_Cone<Integer>& C);
 
-    void recursive_revlex_triangulation(vector<key_t> simplex_so_far,
+    /* void recursive_revlex_triangulation(vector<key_t> simplex_so_far,
                                         const vector<key_t>& gens_in_face,
                                         const vector<typename list<FACETDATA<Integer>>::const_iterator>& mother_facets,
                                         size_t dim);
     void make_facets();
-    void revlex_triangulation();
+    void revlex_triangulation();*/
 
-    double rank_time();
-    double cmp_time();
-    double ticks_comp_per_supphyp;
-    double ticks_rank_per_row;
-    double ticks_per_cand;
-    double ticks_quot;
+    chrono::nanoseconds rank_time();
+    chrono::nanoseconds cmp_time();
+    chrono::nanoseconds ticks_comp_per_supphyp;
+    chrono::nanoseconds ticks_rank_per_row;
+    chrono::nanoseconds ticks_per_cand;
 
     void small_vs_large(const size_t new_generator);  // compares computation times of small vs. large pyramids
 
@@ -654,7 +680,7 @@ void Full_Cone<Integer>::dualize_and_restore(CONVEXHULLDATA<IntegerCone>& ConvHu
 
 template <typename Integer>
 template <typename IntegerCone>
-void Full_Cone<Integer>::restore_previous_vcomputation(CONVEXHULLDATA<IntegerCone>& ConvHullData, bool goal) {
+void Full_Cone<Integer>::restore_previous_computation(CONVEXHULLDATA<IntegerCone>& ConvHullData, bool goal) {
     // goal=true: to primal, goal=false: to dual
 
     /* ConvHullData.Generators.pretty_print(cout);
@@ -708,6 +734,7 @@ void Full_Cone<Integer>::restore_previous_vcomputation(CONVEXHULLDATA<IntegerCon
 
     use_existing_facets = true;
 }
+
 
 //---------------------------------------------------------------------------
 
