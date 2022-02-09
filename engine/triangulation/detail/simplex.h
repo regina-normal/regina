@@ -592,6 +592,10 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * In a non-orientable component, orientations are arbitrary
          * (but they will still all be +1 or -1).
          *
+         * In each component, the top-dimensional simplex with smallest index
+         * will always have orientation +1.  In particular, simplex 0 will
+         * always have orientation +1.
+         *
          * @return +1 or -1 according to the orientation of this simplex.
          */
         int orientation() const;

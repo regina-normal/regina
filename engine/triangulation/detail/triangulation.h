@@ -4658,6 +4658,11 @@ void TriangulationBase<dim>::makeDoubleCover() {
     // We use a breadth-first search to propagate orientations.
     // The underlying queue is implemented using a plain C array - since each
     // simplex is processed only once, an array of size sheetSize is enough.
+    //
+    // We will ignore the requirement that the lowest-index simplex in each
+    // component must have orientation +1: this is because our new orientations
+    // are temporary only.  (The calls to newSimplex() above will force a full
+    // recomputation of the skeleton when next required.)
     auto* queue = new size_t[sheetSize];
     size_t queueStart = 0, queueEnd = 0;
 
