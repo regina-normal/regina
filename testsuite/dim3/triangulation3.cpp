@@ -91,6 +91,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(chainComplex<2>);
 
     // Dimension-specific tests:
+    // TODO: isHandlebody()
     CPPUNIT_TEST(zeroTwoMove);
     CPPUNIT_TEST(magic);
     CPPUNIT_TEST(events);

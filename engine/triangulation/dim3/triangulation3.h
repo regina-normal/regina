@@ -154,6 +154,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
                 /**< Is this a triangulation of a 3-dimensional ball? */
             std::optional<bool> solidTorus_;
                 /**< Is this a triangulation of the solid torus? */
+            std::optional<int> handlebody_;
+                /**< Is this a triangulation of an orientable handlebody, and
+                 *   if so what is its genus? */
             std::optional<bool> TxI_;
                 /**< Is this a triangulation of the product TxI? */
             std::optional<bool> irreducible_;
@@ -2487,6 +2490,56 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * or trivial to calculate.
          */
         bool knowsSolidTorus() const;
+
+        /**
+         * Determines whether this is a triangulation of an orientable
+         * handlebody; returns the genus if this is a handlebody, and returns
+         * -1 otherwise. This routine can be used on a triangulation with
+         * real boundary triangles, or on an ideal triangulation (in which
+         * case all ideal vertices will be assumed to be truncated).
+         *
+         * \warning The algorithms used in this routine rely on normal
+         * surface theory and so might be very slow for larger triangulations
+         * (although faster tests are used where possible). The routine
+         * knowsHandlebody() can be called to see if this property is already
+         * known or if it happens to be very fast to calculate for this
+         * triangulation.
+         *
+         * @return the genus if this is a triangulation of an orientable
+         * handlebody, or -1 otherwise.
+         *
+         * @author Alex He
+         */
+        int isHandlebody() const;
+        /**
+         * Is it already known (or trivial to determine) whether or not this
+         * is a triangulation of an orientable handlebody? See isHandlebody()
+         * for further details.
+         *
+         * If this property is indeed already known, future calls to
+         * isHandlebody() will be very fast (simply returning the
+         * precalculated value).
+         *
+         * If this property is not already known, this routine will
+         * nevertheless run some very fast preliminary tests to see if the
+         * answer is obviously no. If so, it will store \c false as the
+         * precalculated value for isHandlebody() and this routine will
+         * return \c true.
+         *
+         * Otherwise a call to isHandlebody() may potentially require more
+         * significant work, and so this routine will return \c false.
+         *
+         * \warning This routine does not actually tell you \e whether this
+         * triangulation forms an orientable handlebody; it merely tells you
+         * whether the answer has already been computed (or is very easily
+         * computed).
+         *
+         * @return \c true if and only if this property is already known or
+         * trivial to calculate.
+         *
+         * @author Alex He
+         */
+        bool knowsHandlebody() const;
 
         /**
          * Determines whether or not the underlying 3-manifold is

@@ -509,7 +509,7 @@ bool Triangulation<3>::knowsSolidTorus() const {
     if (prop_.solidTorus_.has_value())
         return true;
 
-    // Run some very fast prelimiary tests before we give up and say no.
+    // Run some very fast preliminary tests before we give up and say no.
     if (! (isValid() && isOrientable() && isConnected())) {
         prop_.solidTorus_ = false;
         return true;
@@ -530,6 +530,200 @@ bool Triangulation<3>::knowsSolidTorus() const {
     return false;
 }
 
+// TODO: Answering this also determines some other properties.
+int Triangulation<3>::isHandlebody() const {
+    if ( prop_.handlebody_.has_value() ) {
+        return *prop_.handlebody_;
+    }
+
+    // Basic property checks.
+    if ( not ( isValid() and isOrientable() and isConnected() and
+                countBoundaryComponents() == 1 and
+                boundaryComponents().front()->isOrientable() ) ) {
+        prop_.threeBall_ = false;
+        prop_.solidTorus_ = false;
+        return *(prop_.handlebody_ = -1);
+    }
+
+    // Determine the genus.
+    // We can immediately check whether this is a 3-ball or a solid torus.
+    int genus = ( 2 - boundaryComponents().front()->eulerChar() ) / 2;
+    if ( genus == 0 ) {
+        prop_.solidTorus_ = false;
+        if ( isBall() ) {
+            return *(prop_.handlebody_ = 0);
+        } else {
+            return *(prop_.handlebody_ = -1);
+        }
+    }
+    else if ( genus == 1 ) {
+        prop_.threeBall_ = false;
+        if ( isSolidTorus() ) {
+            return *(prop_.handlebody_ = 1);
+        } else {
+            return *(prop_.handlebody_ = -1);
+        }
+    } else {
+        prop_.threeBall_ = false;
+        prop_.solidTorus_ = false;
+    }
+
+    // We now know that if this is indeed an orietnable handlebody, then it
+    // must have genus at least 2.
+    // Check that homology matches the genus.
+    if ( not ( homology().isFree(genus) ) ) {
+        return *(prop_.handlebody_ = -1);
+    }
+
+    // If it's ideal, make it a triangulation with real boundary.
+    // If it's not ideal, clone it anyway so we can modify it.
+    std::stack<Triangulation<3>> toProcess;
+    Triangulation<3>& start = toProcess.emplace( *this, false );
+    start.intelligentSimplify();
+    if ( start.isIdeal() ) {
+        start.idealToFinite();
+        start.intelligentSimplify();
+    }
+
+    // So:
+    // We are valid, orientable, compact and connected. There is exactly one
+    // boundary component, and this is a genus-g torus, where g >= 2. We also
+    // have H1 = gZ.
+    //
+    // Since "half of the boundary homology lives and the other half dies"
+    // (see Lemma 3.5 of Hatcher's "Notes on Basic 3-Manifold Topology"), we
+    // know that our manifold has g Z terms from the genus-g torus boundary.
+    // Therefore, our manifold cannot be a connected sum of something with
+    // S2xS1, as this would require additional Z terms in the homology.
+    // This observation simplifies the crushing cases later on.
+    //
+    // Hatcher's notes are available at:
+    //      https://pi.math.cornell.edu/~hatcher/3M/3Mdownloads.html
+    //
+    // Anyway, it's time to pull out normal surfaces.
+    while ( not toProcess.empty() ) {
+        // INVARIANT: Our triangulation is an orientable handlebody if and
+        // only if every child of toProcess is an orientable handlebody with
+        // positive genus.
+        Triangulation<3>& top = toProcess.top();
+        if ( top.countVertices() > 1 ) {
+            // Try *really* hard to get to a 1-vertex triangulation, since
+            // this will make nonTrivialSphereOrDisc() much faster (it will
+            // be able to use linear programming).
+            top.intelligentSimplify();
+            if ( top.countVertices() > 1 ) {
+                top.barycentricSubdivision();
+                top.intelligentSimplify();
+                top.intelligentSimplify();
+            }
+        }
+
+        // Find a non-trivial normal disc or sphere.
+        std::optional<NormalSurface> s = top.nonTrivialSphereOrDisc();
+        if ( not s ) {
+            // No non-trivial normal disc. This cannot be an orientable
+            // handlebody.
+            return *(prop_.handlebody_ = -1);
+        }
+
+        // Crush it and see what happens.
+        // Given what we know about the manifold so far, the only things that
+        // can happen during crushing are:
+        // ---> Gaining and/or losing 3-balls and/or 3-spheres.
+        // ---> Undoing connected sums.
+        //      --- If this happens to a component C with boundary B, then we
+        //          get a new closed piece together with a new piece with
+        //          boundary B. If C was an orientable handlebody, then the
+        //          new closed piece must be a 3-sphere. Thus, passing this
+        //          test tells us that the new piece with boundary B is
+        //          homeomorphic to the original component C.
+        //      --- If this happens to a closed component C, then we get two
+        //          new closed pieces. If the original triangulation is an
+        //          orientable handlebody, then C must have been a 3-sphere,
+        //          and hence the new closed pieces must also be 3-spheres.
+        // ---> Cutting along properly embedded discs.
+        //      --- If this happens along a two-sided disc, then the manifold
+        //          is an orientable handlebody if and only if each of the
+        //          two new pieces is an orientable handlebody.
+        //      --- If this happens along a one-sided disc whose boundary
+        //          curve is non-separating, then the manifold is an
+        //          orientable handlebody if and only if the newly-cut piece
+        //          is an orientable handlebody.
+        //      --- If this happens along a one-sided disc whose boundary
+        //          curve is separating, then we get a new connected piece
+        //          with two boundary components. This can never happen if we
+        //          started with an orientable handlebody.
+        Triangulation<3> crushed = s->crush();
+        s.reset(); // to avoid a deep copy of top when we pop
+        toProcess.pop();
+
+        crushed.intelligentSimplify();
+
+        for ( Triangulation<3>& comp : crushed.triangulateComponents() ) {
+            // Examine each connected component after crushing.
+            if ( comp.isClosed() ) {
+                // A closed piece.
+                // Must be a 3-sphere, or else we didn't have an orientable
+                // handlebody.
+                if ( not comp.isSphere() ) {
+                    return *(prop_.handlebody_ = -1);
+                }
+            } else if ( comp.countBoundaryComponents() > 1 ) {
+                // Multiple boundaries on the same component.
+                // This can never happen if we had an orientable handlebody.
+                // TODO: Should this case throw an error?
+                return *(prop_.handlebody_ = -1);
+            } else if ( comp.boundaryComponent(0)->eulerChar() == 2 ) {
+                // A component with sphere boundary.
+                // Must be a 3-ball, or else we didn't have a solid torus.
+                if ( not comp.isBall() ) {
+                    return *(prop_.handlebody_ = -1);
+                }
+            } else {
+                // The only other possibility is a component whose boundary
+                // has positive genus. We need to check that this component
+                // is an orientable handlebody, so insert it back into the
+                // list to process.
+                toProcess.push( std::move(comp) );
+            }
+        }
+
+        // If we survived to this point, then we still haven't conclusively
+        // determined whether we started with an orientable handlebody.
+        // However, we have made progress: by crushing a non-trivial normal
+        // surface, we guarantee that we have reduced the total number of
+        // tetrahedra in the list to process, so we won't keep reaching this
+        // point forever. This means that we must eventually terminate via
+        // one of the following pathways:
+        // ---> We detect a component that cannot occur if we started with an
+        //      orientable handlebody.
+        // ---> The list to process becomes empty. This can only happen if
+        //      everything fell apart into spheres and balls, which certifies
+        //      that we started with an orientable handlebody.
+    }
+
+    // The list to process became empty.
+    return *(prop_.handlebody_ = genus);
+}
+
+bool Triangulation<3>::knowsHandlebody() const {
+    if (prop_.handlebody_.has_value()) {
+        return true;
+    }
+
+    // Run some very fast preliminary tests before we give up and say no.
+    if ( not ( isValid() and isOrientable() and isConnected() and
+                countBoundaryComponents() == 1 and
+                boundaryComponents().front()->isOrientable() ) ) {
+        prop_.threeBall_ = false;
+        prop_.solidTorus_ = false;
+        prop_.handlebody_ = -1;
+        return true;
+    }
+
+    // More work is required.
+    return false;
+}
 
 bool Triangulation<3>::isTxI() const {
     // This call to knowsTxI checks basic things including validity and also
