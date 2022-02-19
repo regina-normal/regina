@@ -91,7 +91,10 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(chainComplex<2>);
 
     // Dimension-specific tests:
-    // TODO: isHandlebody()
+    // TODO Test Triangulation<3>::isHandlebody().
+    //      Use Example<3>::handlebody() to verify the yes case.
+    //      Use Example<3>::handlebody() and connected sum with Poincare
+    //      homology sphere to verify the no case.
     CPPUNIT_TEST(zeroTwoMove);
     CPPUNIT_TEST(magic);
     CPPUNIT_TEST(events);

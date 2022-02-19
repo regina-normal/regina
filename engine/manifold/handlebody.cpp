@@ -32,8 +32,13 @@
 
 #include "algebra/abeliangroup.h"
 #include "manifold/handlebody.h"
+#include "triangulation/example3.h"
 
 namespace regina {
+
+Triangulation<3> Handlebody::construct() const {
+    return Example<3>::handlebody(genus_);
+}
 
 AbelianGroup Handlebody::homology() const {
     return AbelianGroup(genus_);

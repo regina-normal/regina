@@ -34,6 +34,8 @@
 #include "split/signature.h"
 #include "triangulation/dim3.h"
 #include "triangulation/example3.h"
+#include "triangulation/dim2.h"
+#include "triangulation/example2.h"
 
 namespace regina {
 
@@ -333,6 +335,153 @@ Triangulation<3> Example<3>::lst(size_t a, size_t b) {
 
     Triangulation<3> ans;
     ans.insertLayeredSolidTorus(a, b);
+    return ans;
+}
+
+Triangulation<3> Example<3>::handlebody(size_t genus) {
+    if ( genus == 0 ) {
+        return Example<3>::ball();
+    }
+    Triangulation<3> ans;
+    size_t n = 3*genus - 2;
+    ans.newTetrahedra(n);
+    Triangulation<2> spine = Example<2>::oncePunctured(genus);
+
+    // Layer tetrahedra onto the internal edges of spine.
+    // We need to keep track of which tetrahedron faces are supposed to be
+    // "glued" to triangular faces of spine.
+    Tetrahedron<3>* topTet[n] = {0};
+    Tetrahedron<3>* botTet[n] = {0};
+    Perm<4> topPerm[n], botPerm[n];
+    size_t i = 0;
+    for ( Edge<2>* e2 : spine.edges() ) {
+        if ( e2->isBoundary() ) {
+            continue;
+        }
+        Tetrahedron<3>* tet = ans.tetrahedron(i++);
+        // Layer tet onto the internal edge e2.
+        size_t ind[2] = {
+            e2->embedding(0).simplex()->index(),
+            e2->embedding(1).simplex()->index() };
+        Perm<3> ver[2] = {
+            e2->embedding(0).vertices(),
+            e2->embedding(1).vertices() };
+        // Glue face 012 of tet to the "top" of e2->embedding(0).simplex(),
+        // unless the place is already occupied by another tetrahedron.
+        Tetrahedron<3>* occupant;
+        Perm<4> occPerm;
+        if ( not topTet[ ind[0] ] ) {
+            // No prior occupant.
+            occupant = nullptr;
+            topTet[ ind[0] ] = tet;
+            topPerm[ ind[0] ] = Perm<4>(
+                    ver[0][0], ver[0][1], ver[0][2], 3 );
+        } else {
+            occupant = topTet[ ind[0] ];
+            occPerm = topPerm[ ind[0] ];
+        }
+        if ( occupant ) {
+            // The place is already occupied, so we can glue directly to an
+            // actual tetrahedron.
+            Perm<4> v = occPerm.inverse() * Perm<4>(
+                    ver[0][0], ver[0][1], ver[0][2], 3 );
+            Edge<3>* edge3 = occupant->edge( v[0], v[1] );
+            Tetrahedron<3>* frontTet = edge3->front().simplex();
+            Perm<4> frontVer = edge3->front().vertices();
+            Tetrahedron<3>* backTet = edge3->back().simplex();
+            Perm<4> backVer = edge3->back().vertices();
+            if ( frontTet == occupant and
+                    v == frontVer ) {
+                // The front is glued to e2->embedding(0).simplex(), so we
+                // need to glue face 012 of tet to the back.
+                tet->join( 3, backTet, backVer * Perm<4>(2, 3) );
+            } else if ( frontTet == occupant and
+                    v == frontVer * Perm<4>(0, 1) ) {
+                // We still need to glue face 012 of tet to the back, but
+                // with a different permutation.
+                tet->join( 3, backTet, backVer * Perm<4>(1, 0, 3, 2) );
+            } else if ( v == backVer * Perm<4>(2, 3) ) {
+                // The back is glued to e2->embedding(0).simplex(), so we
+                // need to glue face 012 of tet to the front.
+                tet->join( 3, frontTet, frontVer );
+            } else {
+                // We still need to glue face 012 of tet to the front, but
+                // with a different permutation.
+                tet->join( 3, frontTet, frontVer * Perm<4>(0, 1) );
+            }
+        }
+        // Glue face 013 of tet to e2->embedding(1).simplex(), unless the
+        // place is already occupied by another tetrahedron.
+        if ( ver[1].sign() == ver[0].sign() ) {
+            // Glue to the "bottom" of e2->embedding(1).simplex().
+            if ( not botTet[ ind[1] ] ) {
+                // No prior occupant.
+                occupant = nullptr;
+                botTet[ ind[1] ] = tet;
+                botPerm[ ind[1] ] = Perm<4>(
+                        ver[1][0], ver[1][1], 3, ver[1][2] );
+            } else {
+                occupant = botTet[ ind[1] ];
+                occPerm = botPerm[ ind[1] ];
+            }
+        } else {
+            // Glue to the "top" of e2->embedding(1).simplex().
+            if ( not topTet[ ind[1] ] ) {
+                // No prior occupant.
+                occupant = nullptr;
+                topTet[ ind[1] ] = tet;
+                topPerm[ ind[1] ] = Perm<4>(
+                        ver[1][0], ver[1][1], 3, ver[1][2] );
+            } else {
+                occupant = topTet[ ind[1] ];
+                occPerm = topPerm[ ind[1] ];
+            }
+        }
+        if ( occupant ) {
+            // The place is already occupied, so we can glue directly to an
+            // actual tetrahedron.
+            Perm<4> v = occPerm.inverse() * Perm<4>(
+                    ver[1][0], ver[1][1], ver[1][2], 3 );
+            Edge<3>* edge3 = occupant->edge( v[0], v[1] );
+            Tetrahedron<3>* frontTet = edge3->front().simplex();
+            Perm<4> frontVer = edge3->front().vertices();
+            Tetrahedron<3>* backTet = edge3->back().simplex();
+            Perm<4> backVer = edge3->back().vertices();
+            if ( frontTet == occupant and
+                    v == frontVer ) {
+                // The front is glued to e2->embedding(1).simplex(), so we
+                // need to glue face 013 of tet to the back.
+                tet->join( 2, backTet, backVer );
+            } else if ( frontTet == occupant and
+                    v == frontVer * Perm<4>(0, 1) ) {
+                // We still need to glue face 013 of tet to the back, but
+                // with a different permutation.
+                tet->join( 2, backTet, backVer * Perm<4>(0, 1) );
+            } else if ( v == backVer * Perm<4>(2, 3) ) {
+                // The back is glued to e2->embedding(1).simplex(), so we
+                // need to glue face 013 of tet to the front.
+                tet->join( 2, frontTet, frontVer * Perm<4>(2, 3) );
+            } else {
+                // We still need to glue face 013 of tet to the back, but
+                // with a different permutation.
+                tet->join( 2, frontTet, frontVer * Perm<4>(1, 0, 3, 2) );
+            }
+        }
+    }
+
+    // For each triangular face of spine, if we are supposed to have
+    // tetrahedra glued to both the "top" and the "bottom", then these
+    // tetrahedra need to be glued together.
+    for ( i = 0; i < n; ++i ) {
+        if ( topTet[i] and botTet[i] ) {
+            topTet[i]->join(
+                    topPerm[i].inverse()[3],
+                    botTet[i],
+                    botPerm[i].inverse() * topPerm[i] );
+        }
+    }
+
+    // All done!
     return ans;
 }
 

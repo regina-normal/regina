@@ -47,8 +47,7 @@ namespace regina {
 /**
  * Represents an orientable handlebody.
  *
- * All optional Manifold routines except for Manifold::construct() are
- * implemented for this class.
+ * All optional Manifold routines are implemented for this class.
  *
  * This class supports copying but does not implement separate move operations,
  * since its internal data is so small that copying is just as efficient.
@@ -137,6 +136,7 @@ class Handlebody : public Manifold {
          */
         void swap(Handlebody& other) noexcept;
 
+        Triangulation<3> construct() const override;
         AbelianGroup homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
