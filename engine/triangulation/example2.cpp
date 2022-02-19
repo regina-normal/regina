@@ -98,6 +98,37 @@ Triangulation<2> Example<2>::nonOrientable(unsigned genus, unsigned punctures) {
     return ans;
 }
 
+Triangulation<2> Example<2>::oncePunctured( unsigned genus ) {
+    if ( genus == 0 ) {
+        // Just in case. This is not really a sensible output, but the input
+        // isn't sensible either.
+        return orientable(0, 1);
+    }
+
+    // Let g denote the given genus. We use g-1 "inner" triangles and g
+    // "outer" triangles, for a total of 2*g-1 triangles. We start by using
+    // the g-1 "inner" triangles to build a (g+1)-sided polygon P. We then
+    // form each of the g "outer" triangles into a one-triangle Mobius band,
+    // and attach the boundary of each of these Mobius bands to one of the
+    // sides of P. It is clear that the resulting surface is once-punctured
+    // and one-vertex, and has non-orientable genus g.
+    Triangulation<2> ans;
+    unsigned n = 2*genus - 1;
+    unsigned i;
+    ans.newTriangles(n);
+    // Form "outer" triangles into Mobius bands.
+    for ( i = genus - 1; i < n; ++i ) {
+        ans.triangle(i)->join(
+                0, ans.triangle(i), Perm<3>(1, 2, 0) );
+    }
+    // Glue everything together.
+    for ( i = 1; i < n; ++i ) {
+        ans.triangle(i)->join(
+                2, ans.triangle( (i-1)/2 ), Perm<3>( 2, i%2 ) );
+    }
+    return ans;
+}
+
 Triangulation<2> Example<2>::sphereOctahedron() {
     Triangulation<2> ans;
 
