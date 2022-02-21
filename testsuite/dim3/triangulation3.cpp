@@ -90,11 +90,6 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(chainComplex<1>);
     CPPUNIT_TEST(chainComplex<2>);
 
-    // Dimension-specific tests:
-    // TODO Test Triangulation<3>::isHandlebody().
-    //      Use Example<3>::handlebody() to verify the yes case.
-    //      Use Example<3>::handlebody() and connected sum with Poincare
-    //      homology sphere to verify the no case.
     CPPUNIT_TEST(zeroTwoMove);
     CPPUNIT_TEST(magic);
     CPPUNIT_TEST(events);
@@ -118,6 +113,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(threeSphereRecognitionLarge);
     CPPUNIT_TEST(threeBallRecognition);
     CPPUNIT_TEST(solidTorusRecognition);
+    CPPUNIT_TEST(handlebodyRecognition);
     CPPUNIT_TEST(torusXIntervalRecognition);
     CPPUNIT_TEST(turaevViro);
     CPPUNIT_TEST(barycentricSubdivision);
@@ -3374,6 +3370,179 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // An exhaustive census run:
             runCensusAllBounded(&testSolidTorus4);
+        }
+
+        void verifyHandlebody( const Triangulation<3>& tri,
+                const char* triName, const unsigned genus ) {
+            Triangulation<3> bounded(tri);
+            if ( bounded.isIdeal() ) {
+                bounded.idealToFinite();
+            }
+            clearProperties(bounded);
+
+            Triangulation<3> ideal(tri);
+            if ( ideal.hasBoundaryTriangles() ) {
+                ideal.finiteToIdeal();
+            }
+            clearProperties(ideal);
+
+            Triangulation<3> boundedBig(bounded);
+            boundedBig.barycentricSubdivision();
+            clearProperties(boundedBig);
+
+            Triangulation<3> idealBig(ideal);
+            idealBig.barycentricSubdivision();
+            clearProperties(idealBig);
+
+            if ( bounded.isHandlebody() != genus ) {
+                std::ostringstream msg;
+                msg << "The real handlebody " << triName
+                    << " was not recognised as such.";
+                CPPUNIT_FAIL( msg.str() );
+            }
+            if ( genus > 0 and ideal.isHandlebody() != genus ) {
+                std::ostringstream msg;
+                msg << "The ideal handlebody " << triName
+                    << " was not recognised as such.";
+                CPPUNIT_FAIL( msg.str() );
+            }
+            if ( boundedBig.isHandlebody() != genus ) {
+                std::ostringstream msg;
+                msg << "The subdivided real handlebody " << triName
+                    << " was not recognised as such.";
+                CPPUNIT_FAIL( msg.str() );
+            }
+            if ( genus > 0 and idealBig.isHandlebody() != genus ) {
+                std::ostringstream msg;
+                msg << "The subdivided ideal handlebody " << triName
+                    << " was not recognised as such.";
+                CPPUNIT_FAIL( msg.str() );
+            }
+        }
+
+        void verifyNotHandlebody( const Triangulation<3>& tri,
+                const char* triName ) {
+            Triangulation<3> bounded(tri);
+            if ( bounded.isIdeal() ) {
+                bounded.idealToFinite();
+            }
+            clearProperties(bounded);
+
+            Triangulation<3> ideal(tri);
+            if ( ideal.hasBoundaryTriangles() ) {
+                ideal.finiteToIdeal();
+            }
+            clearProperties(ideal);
+
+            Triangulation<3> boundedBig(bounded);
+            boundedBig.barycentricSubdivision();
+            clearProperties(boundedBig);
+
+            Triangulation<3> idealBig(ideal);
+            idealBig.barycentricSubdivision();
+            clearProperties(idealBig);
+
+            if ( bounded.isHandlebody() != -1 ) {
+                std::ostringstream msg;
+                msg << "The real non-handlebody " << triName
+                    << " was recognised as a handlebody.";
+                CPPUNIT_FAIL( msg.str() );
+            }
+            if ( ideal.isHandlebody() != -1 ) {
+                std::ostringstream msg;
+                msg << "The ideal non-handlebody " << triName
+                    << " was recognised as a handlebody.";
+                CPPUNIT_FAIL( msg.str() );
+            }
+            if ( boundedBig.isHandlebody() != -1 ) {
+                std::ostringstream msg;
+                msg << "The subdivided real non-handlebody " << triName
+                    << " was recognised as a handlebody.";
+                CPPUNIT_FAIL( msg.str() );
+            }
+            if ( idealBig.isHandlebody() != -1 ) {
+                std::ostringstream msg;
+                msg << "The subdivided ideal non-handlebody " << triName
+                    << " was recognised as a handlebody.";
+                CPPUNIT_FAIL( msg.str() );
+            }
+        }
+
+        void handlebodyRecognition() {
+            Triangulation<3>* tri;
+
+            verifyNotHandlebody( Triangulation<3>(), "Empty triangulation" );
+
+            {
+                Triangulation<3> tri;
+                Tetrahedron<3>* tet = tri.newTetrahedron();
+                tet->join( 0, tet, Perm<4>(3, 1, 2, 0) );
+                verifyHandlebody( tri, "Snapped tetrahedron", 0 );
+            }
+
+            // Manifolds with torus boundary and Z homology.
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredSolidTorus(1, 20);
+                verifyHandlebody( tri, "LST(1,20,21)", 1 );
+            }
+
+            {
+                Triangulation<3> tri;
+                tri.insertLayeredSolidTorus(0, 1);
+                verifyHandlebody( tri, "LST(0,1,1)", 1 );
+            }
+
+            verifyHandlebody( Triangulation<3>::fromIsoSig("cMcabbgds"),
+                    "Ideal solid torus", 1 );
+
+            verifyNotHandlebody( Example<3>::figureEight(),
+                    "Figure 8 Knot Complement" );
+
+            // Closed manifolds.
+            {
+                Triangulation<3> tri = Example<3>::lens(1, 0);
+                verifyNotHandlebody( tri, "L(1,0)" );
+            }
+
+            {
+                Triangulation<3> tri = Example<3>::lens(2, 1);
+                verifyNotHandlebody( tri, "L(2,1)" );
+            }
+
+            Triangulation<3> poincare = Example<3>::poincare();
+            verifyNotHandlebody( poincare, "Poincare homology sphere" );
+
+            // Disconnected triangulations.
+            verifyNotHandlebody( disjoint2, "2-component manifold" );
+            verifyNotHandlebody( disjoint3, "3-component manifold" );
+
+            // Higher genus.
+            for ( unsigned genus = 0; genus < 4; ++genus ) {
+                // Minimal layered triangulation.
+                Triangulation<3> tri = Example<3>::handlebody(genus);
+                std::ostringstream triName;
+                triName << "Genus-" << genus << " handlebody";
+                verifyHandlebody( tri, triName.str().c_str(), genus );
+
+                // Connected sum with RP3 (has correct basic properties, but
+                // incorrect homology).
+                Triangulation<3> wrongHom(tri);
+                wrongHom.connectedSumWith(rp3_1);
+                std::ostringstream wrongHomName;
+                wrongHomName << "(Genus-" << genus
+                    << " handlebody)#(RP3)";
+                verifyNotHandlebody( wrongHom, wrongHomName.str().c_str() );
+
+                // Connected sum with the Poincare homology sphere (even has
+                // correct homology, so must use normal surfaces).
+                Triangulation<3> rightHom(tri);
+                rightHom.connectedSumWith(poincare);
+                std::ostringstream rightHomName;
+                rightHomName << "(Genus-" << genus
+                    << " handlebody)#(Poincare)";
+                verifyNotHandlebody( rightHom, rightHomName.str().c_str() );
+            }
         }
 
         void verifyTxI(const Triangulation<3>& tri, const char* triName) {
