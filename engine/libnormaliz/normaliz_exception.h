@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2019  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -40,7 +40,7 @@ class NormalizException : public std::exception {
 class ArithmeticException : public NormalizException {
    public:
     ArithmeticException()
-        : msg("Overflow detected. A fatal size excess or  a computation overflow.\n If Normaliz has terminated and you are using "
+        : msg("Overflow detected. A fatal size excess or a computation overflow.\n If Normaliz has terminated and you are using "
               "LongLong, rerun without it.") {
     }
     ~ArithmeticException() noexcept {
@@ -55,7 +55,7 @@ class ArithmeticException : public NormalizException {
          assert(false);*/
         std::stringstream stream;
         stream << "Could not convert " << convert_number << ".\n";
-        stream << "Overflow detected. A fatal size excess or  a computation overflow.\n If Normaliz has terminated and you are "
+        stream << "Overflow detected. A fatal size excess or a computation overflow.\n If Normaliz has terminated and you are "
                   "using LongLong, rerun without it.";
         msg = stream.str();
     }

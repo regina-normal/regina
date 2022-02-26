@@ -84,14 +84,14 @@ class TxICore : public Output<TxICore> {
         Triangulation<3> core_;
             /**< A full copy of the <tt>T x I</tt> triangulation that is
                  described. */
-        unsigned bdryTet_[2][2];
+        std::array<std::array<unsigned, 2>, 2> bdryTet_;
             /**< The tetrahedra that provide the upper and lower
                  boundary triangles.  See bdryTet() for details. */
-        Perm<4> bdryRoles_[2][2];
+        std::array<std::array<Perm<4>, 2>, 2> bdryRoles_;
             /**< Describes which tetrahedron vertices play which roles
                  in the upper and lower boundary triangles.  See bdryRoles()
                  for details. */
-        Matrix2 bdryReln_[2];
+        std::array<Matrix2, 2> bdryReln_;
             /**< Expresses the \a alpha and \a beta curves for each
                  torus boundary in terms of specific tetrahedron edges and
                  vertices.  The elements \a bdryReln_[0] and \a bdryReln_[1]
@@ -352,7 +352,7 @@ class TxICore : public Output<TxICore> {
         /**
          * Move constructor.
          */
-        TxICore(TxICore&& src) = default;
+        TxICore(TxICore&& src) noexcept = default;
         /**
          * Copy assignment operator.
          *
@@ -372,7 +372,7 @@ class TxICore : public Output<TxICore> {
          * packet event listeners, and the internal triangulation here does
          * not belong to a packet.
          */
-        TxICore& operator = (TxICore&&) = default;
+        TxICore& operator = (TxICore&&) noexcept;
         /**
          * Swaps all data that is managed by this base class with the
          * given triangulation.
@@ -697,6 +697,29 @@ inline void TxICore::writeTextLong(std::ostream& out) const {
     out << "TxI core: ";
     writeName(out);
     out << std::endl;
+}
+
+inline TxICore& TxICore::operator = (TxICore&& src) noexcept {
+    // This is essentially what the default implementation would do; however,
+    // we need to reimplement it ourselves to work around the fact that this
+    // assignment operator is noexcept but the Triangulation<3> assignment
+    // operator is not.  Just using the default operator causes compile errors
+    // on old versions of clang (e.g., clang 7), and causes move assignment to
+    // fall back to a deep copy on old versions of gcc (e.g., gcc 7-9).
+    // (Both newer clang and newer gcc behave fine.)
+
+    // The core triangulation can be moved.
+    // Although Triangulation's move assignment can throw in general,
+    // in this setting it never will (since there is no surrounding packet).
+    core_ = std::move(src.core_);
+
+    // Everything else is so small that it can only be copied.
+    bdryTet_ = src.bdryTet_;
+    bdryRoles_ = src.bdryRoles_;
+    bdryReln_ = src.bdryReln_;
+    parallelReln_ = src.parallelReln_;
+
+    return *this;
 }
 
 // Inline functions for TxIDiagonalCore

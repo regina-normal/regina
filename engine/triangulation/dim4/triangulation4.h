@@ -56,6 +56,7 @@
 
 namespace regina {
 
+class IntersectionForm;
 class ProgressTracker;
 class ProgressTrackerOpen;
 
@@ -428,6 +429,37 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * @return the second homology group.
          */
         [[deprecated]] AbelianGroup homologyH2() const;
+
+        /**
+         * Returns the intersection form of this 4-manifold.
+         *
+         * The intersection form is stored as a square matrix with respect to
+         * an arbitrary basis of the second homology group; you can access this
+         * matrix via IntersectionForm::matrix().  This matrix is guaranteed
+         * to be symmetric and unimodular, but will not be normalised in any
+         * way.  You can, however, query invariants of the intersection form
+         * via routines such as IntersectionForm::signature() and
+         * IntersectionForm::even(), which in the simply connected case are
+         * enough to determine the topology of the underlying 4-manifold.
+         *
+         * (As an implementation detail, the basis is currently chosen to be
+         * the one produced by constructing a MarkedAbelianGroup using the
+         * boundary maps on the dual faces.  This specific choice of basis is
+         * subject to change in future releases of Regina.)
+         *
+         * The sign convention for counting intersections is as follows: in a
+         * pentachoron with positive orientation and vertices (0,1,2,3,4),
+         * the triangles with ordered vertices (0,1,2) and ordered vertices
+         * (2,3,4) have positive intersection.
+         *
+         * \pre This triangulation is valid, non-empty, orientable and closed.
+         *
+         * \exception FailedPrecondition This triangulation is invalid,
+         * empty, non-orientable, or not closed.
+         *
+         * @return the intersection form of this 4-manifold.
+         */
+        IntersectionForm intersectionForm() const;
 
         /*@}*/
         /**

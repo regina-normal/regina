@@ -41,16 +41,6 @@ using regina::DiscSetTet;
 using regina::DiscSetSurface;
 using regina::DiscSpecIterator;
 
-namespace {
-    // Support for iterables and iterators:
-    template <typename TetData>
-    DiscSpec nextDiscSpec(DiscSpecIterator<TetData>& it) {
-        if (! it.done())
-            return *it++;
-        else
-            throw pybind11::stop_iteration();
-    }
-}
 void addDisc(pybind11::module_& m) {
     auto d = pybind11::class_<DiscSpec>(m, "DiscSpec")
         .def(pybind11::init<>())
@@ -93,7 +83,7 @@ void addDisc(pybind11::module_& m) {
         .def("adjacentDisc", &DiscSetSurface::adjacentDisc)
         .def("__iter__", [](const DiscSetSurface& d) {
             return DiscSpecIterator(d);
-        })
+        }, pybind11::keep_alive<0, 1>()) // iterator keeps disc set alive
     ;
     regina::python::add_output_custom(s, [](const DiscSetSurface& d,
             std::ostream& s) {
@@ -110,10 +100,14 @@ void addDisc(pybind11::module_& m) {
 
     m.def("swap", (void(*)(DiscSetSurface&, DiscSetSurface&))(regina::swap));
 
-    auto it = pybind11::class_<DiscSpecIterator<DiscSetTet>>(m, "DiscSpecIterator")
-        .def("next", nextDiscSpec<DiscSetTet>) // for python 2
-        .def("__next__", nextDiscSpec<DiscSetTet>) // for python 3
-    ;
+    auto it = pybind11::class_<DiscSpecIterator<DiscSetTet>>(
+            m, "DiscSpecIterator")
+        .def("__next__", [](DiscSpecIterator<DiscSetTet>& it) {
+            if (! it.done())
+                return *it++;
+            else
+                throw pybind11::stop_iteration();
+        });
     regina::python::add_eq_operators(it);
 }
 

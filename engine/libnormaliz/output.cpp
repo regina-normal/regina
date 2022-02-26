@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2019  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -60,6 +60,7 @@ Output<Integer>::Output() {
     ht1 = false;
     dec = false;
     lat = false;
+    precomp = false;
     mod = false;
     msp = false;
     fac = false;
@@ -158,29 +159,20 @@ void Output<Number>::write_renf(ostream& os) const {
 }
 
 template <typename Number>
-void Output<Number>::set_renf(renf_class* renf, bool is_int_hull) {
+void Output<Number>::set_renf(const renf_class_shared renf, bool is_int_hull) {
 }
 
 #ifdef ENFNORMALIZ
 template <>
 void Output<renf_elem_class>::write_renf(ostream& os) const {
     if (print_renf) {
-        os << "Real embedded number field:" << endl;
-        // os << *Renf << endl;
-        char *res, *res1;
-        res = fmpq_poly_get_str_pretty(Renf->get_renf()->nf->pol, Renf->gen_name.c_str());
-        res1 = arb_get_str(Renf->get_renf()->emb, 64, 0);
-        os << "min_poly "
-           << "(" << res << ")"
-           << " embedding " << res1 << endl
-           << endl;
-        flint_free(res);
-        flint_free(res1);
+        auto polyemb = Cone<renf_elem_class>::getRenfData(&*Renf);
+        os << "Real embedded number field:" << std::endl << "min_poly (" << polyemb[0] << ") embedding " << polyemb[1] << std::endl << std::endl;
     }
 }
 
 template <>
-void Output<renf_elem_class>::set_renf(renf_class* renf, bool is_int_hull) {
+void Output<renf_elem_class>::set_renf(const renf_class_shared renf, bool is_int_hull) {
     Renf = renf;
     print_renf = !is_int_hull;
 }
@@ -275,6 +267,13 @@ void Output<Integer>::set_write_ht1(const bool& flag) {
 template <typename Integer>
 void Output<Integer>::set_write_dec(const bool& flag) {
     dec = flag;
+}
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
+void Output<Integer>::set_write_precomp(const bool& flag) {
+    precomp = flag;
 }
 
 //---------------------------------------------------------------------------
@@ -454,21 +453,38 @@ void Output<Integer>::write_perms_and_orbits(ofstream& out,
 
 template <typename Integer>
 void Output<Integer>::write_aut() const {
-    if (aut == false)
-        return;
 
     string file_name = name + ".aut";
     ofstream out(file_name.c_str());
 
     string qualities_string = Result->getAutomorphismGroup().getQualitiesString();
 
-    out << qualities_string << "automorphism group of order " << Result->getAutomorphismGroup().getOrder() << 
-    " (possibly only approximation)" << endl << endl;
+    out << qualities_string << "automorphism group of order " << Result->getAutomorphismGroup().getOrder() <<
+    " (possibly approximation if very large)" << endl;
 
     if (Result->getAutomorphismGroup().getOrder() == 1)
         return;
 
+    if (Result->getAutomorphismGroup().IsIntegralityChecked()) {
+        if(Result->getAutomorphismGroup().IsIntegral())
+            out << "Automorphisms are integral" << endl;
+        else
+            out << "Automorphisms are not integral" << endl;
+    }
+    else
+            out << "Integrality not known" << endl;
+
     out << "************************************************************************" << endl;
+
+    if(qualities_string.find("generators") != string::npos){
+        write_aut_ambient(out, "input generators");
+        return;
+    }
+
+    if(qualities_string.find("inequalities") != string::npos){
+        write_aut_ambient(out, "input inequalities");
+        return;
+    }
 
     string extrays_string = "extreme rays";
     if (Result->isInhomogeneous()) {
@@ -494,43 +510,120 @@ void Output<Integer>::write_aut() const {
 //---------------------------------------------------------------------------
 
 template <typename Integer>
+void Output<Integer>::write_aut_ambient(ofstream& out, const string& gen_name) const {
+
+    write_perms_and_orbits(out, Result->getAutomorphismGroup().getGensPerms(),
+                               Result->getAutomorphismGroup().getGensOrbits(), gen_name);
+    out << "************************************************************************" << endl;
+
+    string qualities_string = Result->getAutomorphismGroup().getQualitiesString();
+
+    if(qualities_string.find("Ambient") != string::npos){
+        write_perms_and_orbits(out, Result->getAutomorphismGroup().getLinFormsPerms(),
+                                Result->getAutomorphismGroup().getLinFormsOrbits(), "Coordinates");
+        out << "************************************************************************" << endl << endl;
+    }
+    out << gen_name << endl << endl;
+    Result->getAutomorphismGroup().getGens().pretty_print(out,true,true);
+    out.close();
+}
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
+void Output<Integer>::write_precomp() const {
+    
+    if(!precomp)
+        return;
+    
+    if(!Result->isComputed(ConeProperty::SupportHyperplanes) // not all required data computed
+    || !Result->isComputed(ConeProperty::ExtremeRays)
+    || !Result->isComputed(ConeProperty::MaximalSubspace)
+    || !Result->isComputed(ConeProperty::Sublattice))
+        return;
+    
+    string file_name = name + ".precomp.in";
+    ofstream out(file_name.c_str());
+    
+    out << "amb_space " << Result->getEmbeddingDim() << endl;
+#ifdef ENFNORMALIZ
+    if (using_renf<Integer>()) {
+        auto polyemb = Cone<renf_elem_class>::getRenfData(&*Renf);
+        out << "number_field min_poly (" << polyemb[0] << ") embedding " << polyemb[1] << endl;
+    }
+#endif
+    
+    out << "support_hyperplanes " << Result->getNrSupportHyperplanes() << endl;
+    Result->getSupportHyperplanesMatrix().pretty_print(out);
+    size_t nr_ext = Result->getNrExtremeRays();
+    if(Result->isComputed(ConeProperty::Dehomogenization))
+        nr_ext += Result->getNrVerticesOfPolyhedron();
+    out << "extreme_rays " << nr_ext << endl;
+    Result->getExtremeRaysMatrix().pretty_print(out);
+    if(Result->isComputed(ConeProperty::Dehomogenization))
+        Result->getVerticesOfPolyhedronMatrix().pretty_print(out);
+    const Sublattice_Representation<Integer>& BasisChange = Result->getSublattice();
+    const Matrix<Integer>& LB = BasisChange.getEmbeddingMatrix();
+    size_t nr_of_latt = LB.nr_of_rows();
+    if (nr_of_latt < dim || BasisChange.getExternalIndex() != 1){
+        out << "generated_sublattice " << nr_of_latt << endl;
+        LB.pretty_print(out);
+    }
+    if (Result->getDimMaximalSubspace() > 0) {
+        out << "maximal_subspace " << Result->getDimMaximalSubspace() << endl;
+        Result->getMaximalSubspaceMatrix().pretty_print(out);
+    }
+    if(Result->isComputed(ConeProperty::Grading)){
+        out << "grading" << endl;
+        out << Result->getGrading();
+    }
+    if(Result->isComputed(ConeProperty::Dehomogenization)){
+        out << "dehomogenization" << endl;
+        out << Result->getDehomogenization();
+    }    
+    out.close();
+}
+
+//---------------------------------------------------------------------------
+
+template <typename Integer>
 void Output<Integer>::write_tri() const {
     if (tri == true) {
         string file_name = name + ".tri";
         ofstream out(file_name.c_str());
 
-        const vector<pair<vector<libnormaliz::key_t>, Integer> >& Tri = Result->getTriangulation();
-        const vector<vector<bool> >& Dec =
-            Result->isComputed(ConeProperty::ConeDecomposition) ? Result->getOpenFacets() : vector<vector<bool> >();
-        auto idd = Dec.begin();
+        const pair<vector<SHORTSIMPLEX<Integer> >, Matrix<Integer> >& Tri = Result->getTriangulation();
+        //const vector<vector<bool> >& Dec =
+        //    Result->isComputed(ConeProperty::ConeDecomposition) ? Result->getOpenFacets() : vector<vector<bool> >();
+        // auto idd = Dec.begin();
 
-        out << Tri.size() << endl;
+        out << Tri.first.size() << endl;
         size_t nr_extra_entries = 1;
         if (Result->isComputed(ConeProperty::ConeDecomposition))
             nr_extra_entries += Result->getSublattice().getRank() - Result->getDimMaximalSubspace();
         out << Result->getSublattice().getRank() - Result->getDimMaximalSubspace() + nr_extra_entries
             << endl;  // works also for empty list
 
-        for (const auto& tit : Tri) {
-            for (size_t i = 0; i < tit.first.size(); i++) {
-                out << tit.first[i] + 1 << " ";
+        for (const auto& tit : Tri.first) {
+            for (size_t i = 0; i < tit.key.size(); i++) {
+                out << tit.key[i] + 1 << " ";
             }
-            out << "   " << tit.second;
+            out << "   " << tit.vol;
             if (Result->isComputed(ConeProperty::ConeDecomposition)) {
                 out << "   ";
-                for (size_t i = 0; i < tit.first.size(); i++) {
-                    out << " " << (*idd)[i];
+                for (size_t i = 0; i < tit.key.size(); i++) {
+                    out << " " << tit.Excluded[i];
                 }
-                idd++;
+                // idd++;
             }
             out << endl;
         }
-        if (Result->isTriangulationNested())
+        /* if (Result->isTriangulationNested())
             out << "nested" << endl;
         else
             out << "plain" << endl;
         if (Result->isTriangulationPartial())
-            out << "partial" << endl;
+            out << "partial" << endl;*/
         out.close();
     }
 }
@@ -563,7 +656,7 @@ void Output<Integer>::write_inc() const {
                 out << Result->getIncidence()[f][j + nr_vert];
             out << endl;
         }
-        
+
         out << "primal" << endl;
 
         out.close();
@@ -594,7 +687,7 @@ void Output<Integer>::write_dual_inc() const {
                     out << Result->getDualIncidence()[f][j];
                 out << endl;
         }
-        
+
         out << "dual" << endl;
 
         out.close();
@@ -616,7 +709,7 @@ void Output<Integer>::write_fac() const {
                 out << f.first[k];
             out << " " << f.second << endl;
         }
-        
+
         out << "primal" << endl;
 
         out.close();
@@ -644,7 +737,7 @@ void Output<Integer>::write_dual_fac() const {
                 out << f.first[k];
             out << " " << f.second << endl;
         }
-        
+
         out << "dual" << endl;
 
         out.close();
@@ -672,7 +765,7 @@ void Output<Integer>::write_Stanley_dec() const {
         }
 
         out << "Stanley_dec" << endl;
-        const list<STANLEYDATA<Integer> >& StanleyDec = Result->getStanleyDec();
+        const list<STANLEYDATA<Integer> >& StanleyDec = Result->getStanleyDec().first; // generators not needed here
         auto S = StanleyDec.begin();
         size_t i;
 
@@ -729,7 +822,7 @@ void Output<Integer>::write_inv_file() const {
         }
         if (Result->isComputed(ConeProperty::FVector)) {
             inv << "vector " << Result->getFVector().size() << " f_vector = " << Result->getFVector();
-        }    
+        }
         if (Result->isComputed(ConeProperty::DualFVector)) {
             inv << "vector " << Result->getDualFVector().size() << " dual_f_vector = " << Result->getDualFVector();
         }
@@ -940,9 +1033,9 @@ void Output<Integer>::writeWeightedEhrhartSeries(ofstream& out) const {
     if (HS.get_expansion_degree() > -1) {
         vector<mpz_class> expansion = HS.getExpansion();
         out << "Expansion of weighted Ehrhart series" << endl;
-        for (size_t i = 0; i < expansion.size(); ++i)
+        for (long i = 0; i < (long) expansion.size(); ++i)
             out << i + HS.getShift() << ": " << expansion[i] << endl;
-        out << "Common denominator of coefficients: ";
+        out << "Common denominator of coefficients: = ";
         out << Result->getIntData().getWeightedEhrhartSeries().second << endl;
         out << endl;
     }
@@ -953,7 +1046,7 @@ void Output<Integer>::writeWeightedEhrhartSeries(ofstream& out) const {
         for (const auto& i : HS.getHilbertQuasiPolynomial()[0])
             out << i << " ";
         out << endl;
-        out << "with common denominator: ";
+        out << "with common denominator = ";
         out << HS.getHilbertQuasiPolynomialDenom() * Result->getIntData().getNumeratorCommonDenom();
     }
     else {
@@ -962,7 +1055,7 @@ void Output<Integer>::writeWeightedEhrhartSeries(ofstream& out) const {
         num = HS.getCyclotomicNum();
         for (const auto& i : num)
             out << i << " ";
-        out << endl << "Common denominator of coefficients: ";
+        out << endl << "Common denominator of coefficients = ";
         out << Result->getIntData().getWeightedEhrhartSeries().second << endl;
         out << "Series cyclotomic denominator:" << endl;
         out << HS.getCyclotomicDenom();
@@ -991,15 +1084,18 @@ void Output<Integer>::writeWeightedEhrhartSeries(ofstream& out) const {
         out << "Degree of (quasi)polynomial: " << deg << endl;
 
         long virtDeg = Result->getRank() + Result->getIntData().getDegreeOfPolynomial() - 1;
-
-        out << endl << "Expected degree: " << virtDeg << endl;
+        out << endl << "Expected degree = " << virtDeg << endl;
     }
 
     if (Result->isComputed(ConeProperty::VirtualMultiplicity)) {
-        out << endl << "Virtual multiplicity: ";
+        string virtual_mult_string = "Virtual multiplicity";
+        if(Result->isComputed(ConeProperty::FixedPrecision))
+            virtual_mult_string += " (fixed precision)";
+        virtual_mult_string += " = ";
+        out << endl << virtual_mult_string;
         out << Result->getIntData().getVirtualMultiplicity() << endl;
         if (Result->getIntData().getVirtualMultiplicity().get_den() != 1)
-            out << "Virtual multiplicity (float): " << std::setprecision(12)
+            out << "Virtual multiplicity (float) = " << std::setprecision(12)
                 << mpq_to_nmz_float(Result->getIntData().getVirtualMultiplicity()) << endl;
         out << endl;
     }
@@ -1086,6 +1182,8 @@ template <typename Integer>
 void Output<Integer>::write_files() const {
     size_t i, nr;
     vector<libnormaliz::key_t> rees_ideal_key;
+    
+    write_precomp(); // only if asked for
 
     if (esp && Result->isComputed(ConeProperty::SupportHyperplanes) && Result->isComputed(ConeProperty::Sublattice)) {
         // write the suport hyperplanes of the full dimensional cone
@@ -1109,16 +1207,17 @@ void Output<Integer>::write_files() const {
         }
         esp_out.close();
     }
-    if (tgn && Result->isComputed(ConeProperty::TriangulationGenerators))
-        Result->getTriangulationGeneratorsMatrix().print(name, "tgn");
-    if (tri && Result->isComputed(ConeProperty::Triangulation)) {  // write triangulation
+    if (tgn && (Result->getTriangulation().first.size() > 0 || Result->isComputed(ConeProperty::StanleyDec)) )
+        Result->getTriangulation().second.print(name, "tgn");
+
+    if (tri &&  Result->getTriangulation().first.size() > 0) {  // write triangulation
         write_tri();
     }
 
     if (fac && Result->isComputed(ConeProperty::FaceLattice)) {  // write face lattice
         write_fac();
     }
-    
+
     if (fac && Result->isComputed(ConeProperty::DualFaceLattice)) {  // write dual face lattice
         write_dual_fac();
     }
@@ -1126,7 +1225,7 @@ void Output<Integer>::write_files() const {
     if (inc && Result->isComputed(ConeProperty::Incidence)) {  // write incidence lattice
         write_inc();
     }
-    
+
     if (inc && Result->isComputed(ConeProperty::DualIncidence)) {  // write incidence lattice
         write_dual_inc();
     }
@@ -1136,7 +1235,7 @@ void Output<Integer>::write_files() const {
         const char* file = name_open.c_str();
         ofstream out(file);
         if (out.fail()) {
-            throw FatalException("Cannot write to output file.");
+            throw BadInputException("Cannot write to output file. Typo in directory name?");
         }
 
         // write "header" of the .out file
@@ -1246,9 +1345,9 @@ void Output<Integer>::write_files() const {
         if(Result->isComputed(ConeProperty::AxesScaling)){
             out << "scaling of axes" << endl;
                 out << Result->getAxesScaling();
-                out << endl;            
+                out << endl;
         }
-        
+
         if (Result->isComputed(ConeProperty::TriangulationSize)) {
             out << "size of ";
             if (Result->isTriangulationNested())
@@ -1303,7 +1402,11 @@ void Output<Integer>::write_files() const {
             out << "module rank = " << Result->getModuleRank() << endl;
         }
         if (Result->isComputed(ConeProperty::Multiplicity)) {
-            out << "multiplicity = " << Result->getMultiplicity() << endl;
+            string mult_string = "multiplicity ";
+            if(Result->isComputed(ConeProperty::FixedPrecision))
+                mult_string += "(fixed precision) ";
+            mult_string += "= ";
+            out << mult_string << Result->getMultiplicity() << endl;
             if (Result->getMultiplicity().get_den() != 1)
                 out << "multiplicity (float) = " << std::setprecision(12) << mpq_to_nmz_float(Result->getMultiplicity()) << endl;
         }
@@ -1342,7 +1445,11 @@ void Output<Integer>::write_files() const {
         }
 
         if (Result->isComputed(ConeProperty::Integral)) {
-            out << "integral  = " << Result->getIntegral() << endl;
+            string integral_string = "integral ";
+            if(Result->isComputed(ConeProperty::FixedPrecision))
+                integral_string += "(fixed precision) ";
+            integral_string += "= ";
+            out << integral_string << Result->getIntegral() << endl;
             if (Result->getIntegral().get_den() != 1)
                 out << "integral (float) = " << std::setprecision(12) << mpq_to_nmz_float(Result->getIntegral()) << endl;
             if (Result->isComputed(ConeProperty::EuclideanIntegral))
@@ -1375,7 +1482,7 @@ void Output<Integer>::write_files() const {
                 out << endl;
             }
         }
-        
+
         if (Result->isComputed(ConeProperty::IsEmptySemiOpen)) {
             if (Result->isEmptySemiOpen()) {
                 out << "Semiopen polyhedron is empty" << endl;
@@ -1400,11 +1507,21 @@ void Output<Integer>::write_files() const {
 
         if (aut && (Result->isComputed(ConeProperty::Automorphisms) || Result->isComputed(ConeProperty::AmbientAutomorphisms) ||
                     Result->isComputed(ConeProperty::CombinatorialAutomorphisms) ||
+                    Result->isComputed(ConeProperty::InputAutomorphisms) ||
                     Result->isComputed(ConeProperty::RationalAutomorphisms) ||
                     Result->isComputed(ConeProperty::EuclideanAutomorphisms))) {
             write_aut();
             out << Result->getAutomorphismGroup().getQualitiesString() << "automorphism group has order "
-                << Result->getAutomorphismGroup().getOrder() << " (possibly only approximation)" << endl << endl;
+                << Result->getAutomorphismGroup().getOrder() << " (possibly approximation if very large)" << endl;
+
+            if (Result->getAutomorphismGroup().IsIntegralityChecked()) {
+                if(Result->getAutomorphismGroup().IsIntegral())
+                    out << "Automorphisms are integral" << endl;
+                else
+                    out << "Automorphisms are not integral" << endl;
+            }
+            else
+                    out << "Integrality not known" << endl;
         }
 
         out << "***********************************************************************" << endl << endl;
@@ -1497,7 +1614,7 @@ void Output<Integer>::write_files() const {
             out << Result->getNrVerticesOfPolyhedron() << " vertices of polyhedron:" << endl;
             if (Result->isComputed(ConeProperty::VerticesFloat))
                 Result->getVerticesFloatMatrix().pretty_print(
-                    out);  
+                    out);
             else
                 Result->getVerticesOfPolyhedronMatrix().pretty_print(out);
             out << endl;

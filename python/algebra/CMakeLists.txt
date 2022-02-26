@@ -5,6 +5,7 @@ SET ( FILES
   abeliangroup.cpp
   grouppresentation.cpp
   homgrouppresentation.cpp
+  intersectionform.cpp
   markedabeliangroup.cpp
   pyalgebra.cpp
   )

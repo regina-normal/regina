@@ -157,6 +157,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("isValid", &Triangulation<dim>::isValid)
         .def("hasBoundaryFacets", &Triangulation<dim>::hasBoundaryFacets)
         .def("countBoundaryFacets", &Triangulation<dim>::countBoundaryFacets)
+        .def("countBoundaryFaces", (size_t (Triangulation<dim>::*)(int) const)(
+            &Triangulation<dim>::countBoundaryFaces))
         .def("isOrientable", &Triangulation<dim>::isOrientable)
         .def("isOriented", &Triangulation<dim>::isOriented)
         .def("isConnected", &Triangulation<dim>::isConnected)
@@ -181,6 +183,10 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             pybind11::arg("k") = 1)
         .def("boundaryMap", (MatrixInt (Triangulation<dim>::*)(int) const)(
             &Triangulation<dim>::boundaryMap))
+        .def("dualBoundaryMap", (MatrixInt (Triangulation<dim>::*)(int) const)(
+            &Triangulation<dim>::dualBoundaryMap))
+        .def("dualToPrimal", (MatrixInt (Triangulation<dim>::*)(int) const)(
+            &Triangulation<dim>::dualToPrimal))
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
         .def("isIdenticalTo", &Triangulation<dim>::operator ==) // deprecated

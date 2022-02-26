@@ -55,7 +55,7 @@ namespace regina {
 class Link;
 template <int dim> class Triangulation;
 
-template <class PacketType>
+template <class ObjectType>
 std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
         int colLabels, unsigned long ignoreLines) {
     // Open the file.
@@ -110,7 +110,7 @@ std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
         if (! sig.empty()) {
             // Process this isomorphism signature.
             try {
-                ans->insertChildLast(make_packet(PacketType::fromSig(sig),
+                ans->insertChildLast(make_packet(ObjectType::fromSig(sig),
                     (label.empty() ? sig : label)));
             } catch (const InvalidArgument&) {
                 errStrings += '\n';
@@ -123,10 +123,10 @@ std::shared_ptr<Container> readSigList(const char *filename, unsigned colSigs,
     if (! errStrings.empty()) {
         std::ostringstream msg;
         msg << "The following signature(s) could not be interpreted as ";
-        if constexpr (std::is_same_v<PacketType, Link>)
+        if constexpr (std::is_same_v<ObjectType, Link>)
             msg << "knots:\n";
         else
-            msg << PacketType::dimension << "-manifold triangulations:\n";
+            msg << ObjectType::dimension << "-manifold triangulations:\n";
         msg << errStrings;
 
         auto errPkt = std::make_shared<Text>(msg.str());

@@ -1333,6 +1333,7 @@
      <arg><option>-N, --minprimep2</option></arg>
      <arg><option>-h, --minhyp</option></arg>
     </group>
+    <arg><option>--allowinvalid</option></arg>
     <group>
      <arg><option>-s, --sigs</option></arg>
      <arg><option>-c, --subcontainers</option></arg>
@@ -1341,6 +1342,7 @@
      <arg><option>-p, --genpairs</option></arg>
      <arg><option>-P, --usepairs</option></arg>
     </group>
+    <arg><option>--threads=</option><replaceable>num_threads</replaceable></arg>
     <arg choice="req"><replaceable>output-file</replaceable></arg>
    </cmdsynopsis>
    <cmdsynopsis>
@@ -1627,6 +1629,40 @@
      </listitem>
     </varlistentry>
     <varlistentry>
+     <term><option>--allowinvalid</option></term>
+     <listitem>
+      <para>
+       Normally, <command>tricensus</command> will test each triangulation that
+       is constructed for validity before including it in the final output.
+       If you pass <option>--allowinvalid</option> however, then these
+       validity tests will not be performed.
+      </para>
+      <para>
+       As a result, the output may include some invalid triangulations.
+       However, it will not include <emphasis>all</emphasis> invalid
+       triangulations of the given size, since some invalid constructions
+       are pruned at earlier levels of the search tree by the census algorithm
+       (as opposed to being detected by the validity test when each full
+       triangulation has been constructed).  For example, edges that are
+       identified with themselves in reverse are detected and pruned earlier
+       in this way, and so will never appear in the census output, even with
+       the <option>--allowinvalid</option> option.
+      </para>
+      <para>
+       The one guarantee that you <emphasis>do</emphasis> get from this option
+       is that the census will include all invalid triangulations that could
+       appear as a <emphasis>subcomplex</emphasis> of some valid triangulation.
+       For example, if a 3-dimensional triangulation is invalid only because
+       it has vertices whose links are spheres with multiple punctures,
+       then it will be included in the output.
+      </para>
+      <para>
+       This option cannot be used with finite/ideal options or minimality
+       options.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
      <term><option>-s, --sigs</option></term>
      <listitem>
       <para>
@@ -1747,6 +1783,43 @@
        Instead you should pass these options earlier
        along with <option>--genpairs</option> when you split the original
        census into pieces.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>--threads=</option><replaceable>num_threads</replaceable></term>
+     <listitem>
+      <para>
+       Run the census in parallel using the given number of threads.
+       This parallelisation is typically very effective (particularly
+       for larger censuses), in that the speed-up factor is usually close to
+       the theoretical maximum <replaceable>num_threads</replaceable>.
+      </para>
+      <para>
+       The way the parallelisation currently works is as follows.
+       For each individual facet pairing, the corresponding search tree
+       is broken into a many smaller subtrees (i.e., subsearches), each
+       of which can be processed independently by different threads.
+      </para>
+      <para>
+       This has two consequences:
+       <itemizedlist>
+        <listitem><para>
+         The <option>--threads</option> option cannot be used with
+         <option>--genpairs</option>, since the facet pairings are still
+         enumerated in serial.
+        </para></listitem>
+        <listitem><para>
+         The output that writes each facet pairing to the console will appear
+         deceptively fast.  This is because each facet pairing will be
+         written as soon as it is constructed by the main thread, and its many
+         subsearches will be placed in a queue for other threads to process
+         while the main thread moves on to the next facet pairing.
+         Once all of the pairings have been output, you may still face a
+         long wait while the threads together work their way through the
+         queue of subsearches that has accumulated.
+        </para></listitem>
+       </itemizedlist>
       </para>
      </listitem>
     </varlistentry>

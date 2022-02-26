@@ -58,6 +58,7 @@ void addExample4(pybind11::module_& m) {
         .def_static("s2xs2Twisted", &Example<4>::s2xs2Twisted)
         .def_static("s3xs1", &Example<4>::s3xs1)
         .def_static("s3xs1Twisted", &Example<4>::s3xs1Twisted)
+        .def_static("k3", &Example<4>::k3)
         .def_static("cappellShaneson", &Example<4>::cappellShaneson)
         .def_static("iBundle", &Example<4>::iBundle)
         .def_static("s1Bundle", &Example<4>::s1Bundle)

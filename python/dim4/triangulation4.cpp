@@ -35,6 +35,7 @@
 #include "../pybind11/stl.h"
 #include "../helpers.h"
 #include "algebra/grouppresentation.h"
+#include "algebra/intersectionform.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
 #include "triangulation/isosigtype.h"
@@ -180,6 +181,8 @@ void addTriangulation4(pybind11::module_& m) {
         .def("countBoundaryFacets", &Triangulation<4>::countBoundaryFacets)
         .def("countBoundaryTetrahedra",
             &Triangulation<4>::countBoundaryTetrahedra)
+        .def("countBoundaryFaces", (size_t (Triangulation<4>::*)(int) const)(
+            &Triangulation<4>::countBoundaryFaces))
         .def("isClosed", &Triangulation<4>::isClosed)
         .def("isOrientable", &Triangulation<4>::isOrientable)
         .def("isOriented", &Triangulation<4>::isOriented)
@@ -200,6 +203,11 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg("k") = 1)
         .def("boundaryMap", (MatrixInt (Triangulation<4>::*)(int) const)(
             &Triangulation<4>::boundaryMap))
+        .def("dualBoundaryMap", (MatrixInt (Triangulation<4>::*)(int) const)(
+            &Triangulation<4>::dualBoundaryMap))
+        .def("dualToPrimal", (MatrixInt (Triangulation<4>::*)(int) const)(
+            &Triangulation<4>::dualToPrimal))
+        .def("intersectionForm", &Triangulation<4>::intersectionForm)
         .def("orient", &Triangulation<4>::orient)
         .def("reflect", &Triangulation<4>::reflect)
         .def("triangulateComponents", &Triangulation<4>::triangulateComponents)

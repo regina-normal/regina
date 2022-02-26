@@ -733,6 +733,9 @@ Equality type : EqualityType.BY_REFERENCE
 Integer : class
 Equality type : EqualityType.BY_VALUE
 
+IntersectionForm : class
+Equality type : EqualityType.BY_VALUE
+
 InvalidArgument : class
 Exception type
 

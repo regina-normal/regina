@@ -171,6 +171,7 @@ void Triangulation<3>::calculateVertexLinks() {
                 bc->push_back(vertex);
                 bc->orientable_ = vertex->isLinkOrientable();
                 vertex->boundaryComponent_ = bc;
+                ++nBoundaryFaces_[0];
                 boundaryComponents_.push_back(bc);
                 vertex->component()->boundaryComponents_.push_back(bc);
             }

@@ -136,6 +136,8 @@ void TriangulationBase<dim>::calculateSkeleton() {
     // Faces of all dimensions 0, ..., dim-1
     // -----------------------------------------------------------------
 
+    std::fill(nBoundaryFaces_.begin(), nBoundaryFaces_.end(), 0);
+
     std::apply([this](auto&&... kFaces) {
         (calculateFaces<subdimOf<decltype(kFaces)>()>(this), ...);
     }, faces_);
@@ -453,6 +455,7 @@ void TriangulationBase<dim>::calculateRealBoundary() {
         // completely enumerate all (dim-1)-faces in this boundary component.
 
         loopFacet->boundaryComponent_ = label;
+        ++nBoundaryFaces_[dim - 1];
         label->push_back(loopFacet);
         orient[loopFacet->index()] = 1;
 
@@ -466,7 +469,7 @@ void TriangulationBase<dim>::calculateRealBoundary() {
 
             // Run through all faces of dimensions 0,...,(dim-3) within facet,
             // and include them in this boundary component.
-            std::apply([label, facet](auto&&... kFaces) {
+            std::apply([this, label, facet](auto&&... kFaces) {
                 (calculateBoundaryFaces<subdimOf<decltype(kFaces)>()>(
                     label, facet), ...);
             }, faces_);
@@ -483,6 +486,7 @@ void TriangulationBase<dim>::calculateRealBoundary() {
                 ridge = simp->template face<dim-2>(ridgeNum);
                 if (! ridge->boundaryComponent_) {
                     ridge->boundaryComponent_ = label;
+                    ++nBoundaryFaces_[dim - 2];
                     label->push_back(ridge);
                 }
 
@@ -526,6 +530,7 @@ void TriangulationBase<dim>::calculateRealBoundary() {
                         label->orientable_ = false;
                 } else {
                     adjFacet->boundaryComponent_ = label;
+                    ++nBoundaryFaces_[dim - 1];
                     label->push_back(adjFacet);
                     orient[adjFacet->index()] = adjOrient;
                     queue.push_back(adjFacet);
@@ -551,7 +556,11 @@ void TriangulationBase<dim>::calculateBoundaryFaces(BoundaryComponent<dim>* bc,
             for (int i = 0; i <= dim; ++i)
                 if (i != facetNum) {
                     Vertex<dim>* v = simp->vertex(i);
+                    // Note: in the case of (invalid) pinched faces,
+                    // v might already belong to some other boundary component.
                     if (v->boundaryComponent_ != bc) {
+                        if (! v->boundaryComponent_)
+                            ++nBoundaryFaces_[0];
                         v->boundaryComponent_ = bc;
                         // If allFaces is false, then the boundary component
                         // only wants to know about ridges and facets.
@@ -562,7 +571,11 @@ void TriangulationBase<dim>::calculateBoundaryFaces(BoundaryComponent<dim>* bc,
         } else {
             for (unsigned i = 0; i < binomSmall(dim, subdim + 1); ++i) {
                 Face<dim, subdim>* f = facet->template face<subdim>(i);
+                // Note: in the case of (invalid) pinched faces,
+                // f might already belong to some other boundary component.
                 if (f->boundaryComponent_ != bc) {
+                    if (! f->boundaryComponent_)
+                        ++nBoundaryFaces_[subdim];
                     f->boundaryComponent_ = bc;
                     // If allFaces is false, then the boundary component only
                     // wants to know about ridges and facets.
@@ -620,6 +633,7 @@ void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
     components_.swap(other.components_);
     boundaryComponents_.swap(other.boundaryComponents_);
     faces_.swap(other.faces_);
+    nBoundaryFaces_.swap(other.nBoundaryFaces_);
     fundGroup_.swap(other.fundGroup_);
     H1_.swap(other.H1_);
 }

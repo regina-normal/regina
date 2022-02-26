@@ -33,6 +33,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include <unistd.h>
+#include "algebra/intersectionform.h"
 #include "manifold/manifold.h"
 #include "progress/progresstracker.h"
 #include "subcomplex/standardtri.h"
@@ -53,6 +54,7 @@ using regina::AbelianGroup;
 using regina::Example;
 using regina::GroupPresentation;
 using regina::Isomorphism;
+using regina::IntersectionForm;
 using regina::Pentachoron;
 using regina::Perm;
 using regina::StandardTriangulation;
@@ -70,6 +72,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
+    CPPUNIT_TEST(boundaryFaces);
     CPPUNIT_TEST(boundaryBuild);
     CPPUNIT_TEST(edgeAccess);
     CPPUNIT_TEST(pachner<0>);
@@ -80,6 +83,13 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(chainComplex<1>);
     CPPUNIT_TEST(chainComplex<2>);
     CPPUNIT_TEST(chainComplex<3>);
+    CPPUNIT_TEST(dualChainComplex<1>);
+    CPPUNIT_TEST(dualChainComplex<2>);
+    CPPUNIT_TEST(dualChainComplex<3>);
+    CPPUNIT_TEST(dualToPrimal<0>);
+    CPPUNIT_TEST(dualToPrimal<1>);
+    CPPUNIT_TEST(dualToPrimal<2>);
+    CPPUNIT_TEST(dualToPrimal<3>);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(magic);
@@ -96,6 +106,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(homologyH2);
     CPPUNIT_TEST(homologyH3);
     CPPUNIT_TEST(fundGroup);
+    CPPUNIT_TEST(intersectionForm);
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(edgeLinks);
@@ -119,6 +130,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             /**< The product of a 2-sphere with a 2-sphere. */
         Triangulation<4> s2xs2Twisted;
             /**< The twisted product of a 2-sphere with a 2-sphere. */
+        Triangulation<4> k3;
+            /**< The K3 surface. */
 
         // Closed non-orientable:
         Triangulation<4> rp4;
@@ -187,6 +200,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             cp2 = Example<4>::cp2();
             s2xs2 = Example<4>::s2xs2();
             s2xs2Twisted = Example<4>::s2xs2Twisted();
+            k3 = Example<4>::k3();
             rp4 = Example<4>::rp4();
 
             // Some of our triangulations are built from 3-manifold
@@ -274,6 +288,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             f(cp2, "CP^2");
             f(s2xs2, "S^2 x S^2");
             f(s2xs2Twisted, "S^2 x~ S^2");
+            // f(k3, "K3"); -- still too large
             f(rp4, "RP^4");
             f(twistedSphereBundle, "Twisted sphere bundle");
             f(ball, "Ball");
@@ -307,6 +322,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             f(cp2, "CP^2");
             f(s2xs2, "S^2 x S^2");
             f(s2xs2Twisted, "S^2 x~ S^2");
+            // f(k3, "K3");
             f(rp4, "RP^4");
             f(twistedSphereBundle, "Twisted sphere bundle");
             f(ball, "Ball");
@@ -349,6 +365,10 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         void boundaryFacets() {
             testManualAll(verifyBoundaryFacets);
+        }
+
+        void boundaryFaces() {
+            testManualAll(verifyBoundaryFaces);
         }
 
         void boundaryBuild() {
@@ -459,8 +479,8 @@ class Triangulation4Test : public TriangulationTest<4> {
                 // Randomly relabel the pentachora, but preserve orientation.
                 Isomorphism<4> iso = Isomorphism<4>::random(
                         newTri.size(), true );
-                iso.applyInPlace( newTri );
-                clearProperties( newTri );
+                newTri = iso(newTri);
+                clearProperties(newTri);
 
                 // Test the inverse 4-4 move.
                 {
@@ -676,6 +696,16 @@ class Triangulation4Test : public TriangulationTest<4> {
             testManualAll(verifyChainComplex<k>);
         }
 
+        template <int k>
+        void dualChainComplex() {
+            testManualAll(verifyDualChainComplex<k>);
+        }
+
+        template <int k>
+        void dualToPrimal() {
+            testManualAll(verifyDualToPrimal<k>);
+        }
+
         static void verifyMagic(const Triangulation<4>& t, const char* name) {
             std::string sig = t.isoSig();
 
@@ -869,6 +899,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyValid(cp2, true, "CP^2");
             verifyValid(s2xs2, true, "S^2 x S^2");
             verifyValid(s2xs2Twisted, true, "S^2 x~ S^2");
+            verifyValid(k3, true, "K3");
             verifyValid(rp4, true, "RP^4");
             verifyValid(twistedSphereBundle, true, "Twisted sphere bundle");
             verifyValid(ball, true, "Ball");
@@ -903,6 +934,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyConnected(cp2, true, "CP^2");
             verifyConnected(s2xs2, true, "S^2 x S^2");
             verifyConnected(s2xs2Twisted, true, "S^2 x~ S^2");
+            verifyConnected(k3, true, "K3");
             verifyConnected(rp4, true, "RP^4");
             verifyConnected(twistedSphereBundle, true, "Twisted sphere bundle");
             verifyConnected(ball, true, "Ball");
@@ -937,6 +969,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyOrientable(cp2, true, "CP^2");
             verifyOrientable(s2xs2, true, "S^2 x S^2");
             verifyOrientable(s2xs2Twisted, true, "S^2 x~ S^2");
+            verifyOrientable(k3, true, "K3");
             verifyOrientable(rp4, false, "RP^4");
             verifyOrientable(twistedSphereBundle, false,
                 "Twisted sphere bundle");
@@ -1060,6 +1093,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundary(cp2, false, 0, false, true, "CP^2");
             verifyBoundary(s2xs2, false, 0, false, true, "S^2 x S^2");
             verifyBoundary(s2xs2Twisted, false, 0, false, true, "S^2 x~ S^2");
+            verifyBoundary(k3, false, 0, false, true, "K3");
             verifyBoundary(rp4, false, 0, false, true, "RP^4");
             verifyBoundary(twistedSphereBundle, false, 0, false, true,
                 "Twisted sphere bundle");
@@ -1203,6 +1237,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryCount(cp2, 0, 0, 0, "CP^2");
             verifyBoundaryCount(s2xs2, 0, 0, 0, "S^2 x S^2");
             verifyBoundaryCount(s2xs2Twisted, 0, 0, 0, "S^2 x~ S^2");
+            verifyBoundaryCount(k3, 0, 0, 0, "K3");
             verifyBoundaryCount(rp4, 0, 0, 0, "RP^4");
             verifyBoundaryCount(twistedSphereBundle, 0, 0, 0,
                 "Twisted sphere bundle");
@@ -1490,6 +1525,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyLinksSpheres(cp2, 4, "CP^2");
             verifyLinksSpheres(s2xs2, 5, "S^2 x S^2");
             verifyLinksSpheres(s2xs2Twisted, 5, "S^2 x~ S^2");
+            verifyLinksSpheres(k3, 22, "K3");
             verifyLinksSpheres(rp4, 3, "RP^4");
             verifyLinksSpheres(twistedSphereBundle, 1, "Twisted sphere bundle");
             verifyLinksBalls(ball, 5, "Ball");
@@ -1587,6 +1623,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyEulerChar(cp2, 3, 3, "CP^2");
             verifyEulerChar(s2xs2, 4, 4, "S^2 x S^2");
             verifyEulerChar(s2xs2Twisted, 4, 4, "S^2 x~ S^2");
+            verifyEulerChar(k3, 24, 24, "K3");
             verifyEulerChar(rp4, 1, 1, "RP^4");
             verifyEulerChar(twistedSphereBundle, 0, 0, "Twisted sphere bundle");
             verifyEulerChar(ball, 1, 1, "Ball");
@@ -1617,6 +1654,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyHomology<1>(cp2, "0", "CP^2");
             verifyHomology<1>(s2xs2, "0", "S^2 x S^2");
             verifyHomology<1>(s2xs2Twisted, "0", "S^2 x~ S^2");
+            verifyHomology<1>(k3, "0", "K3");
             verifyHomology<1>(rp4, "Z_2", "RP^4");
             verifyHomology<1>(twistedSphereBundle, "Z",
                 "Twisted sphere bundle");
@@ -1648,6 +1686,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyHomology<2>(cp2, "Z", "CP^2");
             verifyHomology<2>(s2xs2, "2 Z", "S^2 x S^2");
             verifyHomology<2>(s2xs2Twisted, "2 Z", "S^2 x~ S^2");
+            verifyHomology<2>(k3, "22 Z", "K3");
             verifyHomology<2>(rp4, "0", "RP^4");
             verifyHomology<2>(twistedSphereBundle, "0",
                 "Twisted sphere bundle");
@@ -1675,6 +1714,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyHomology<3>(cp2, "0", "CP^2");
             verifyHomology<3>(s2xs2, "0", "S^2 x S^2");
             verifyHomology<3>(s2xs2Twisted, "0", "S^2 x~ S^2");
+            verifyHomology<3>(k3, "0", "k3");
             verifyHomology<3>(rp4, "Z_2", "RP^4");
             verifyHomology<3>(twistedSphereBundle, "Z_2",
                 "Twisted sphere bundle");
@@ -1702,6 +1742,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyFundGroup(cp2, "0", "CP^2");
             verifyFundGroup(s2xs2, "0", "S^2 x S^2");
             verifyFundGroup(s2xs2Twisted, "0", "S^2 x~ S^2");
+            verifyFundGroup(k3, "0", "K3");
             verifyFundGroup(rp4, "Z_2", "RP^4");
             verifyFundGroup(twistedSphereBundle, "Z", "Twisted sphere bundle");
             verifyFundGroup(ball, "0", "Ball");
@@ -1720,6 +1761,170 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyFundGroup(mixedFigEightProduct,
                 "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b^2 a^-1 b",
                 "Fig_8 x I (single cone)");
+        }
+
+        static void verifyIntersectionFormBasic(
+                const Triangulation<4>& tri, const char* name ) {
+            if (! tri.isOrientable())
+                return;
+
+            IntersectionForm f = tri.intersectionForm();
+
+            auto det = f.matrix().det();
+            if (det != 1 && det != -1) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name << " gives "
+                    "intersection form with determinant " << det
+                    << " instead of the expected +/-1.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Tests for simply connected manifolds:
+            if (tri.fundamentalGroup().countGenerators() == 0) {
+                if (f.even()) {
+                    // Verify Rohlin's theorem:
+                    if (f.signature() % 16 != 0) {
+                        std::ostringstream msg;
+                        msg << "Triangulation " << name
+                            << " is simply connected but has intersection form "
+                            "with signature " << f.signature()
+                            << ", which is not a multiple of 16.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
+        void verifyIntersectionForm(const Triangulation<4>& tri,
+                unsigned long rank, long signature, bool even,
+                const char* name) {
+            IntersectionForm f = tri.intersectionForm();
+
+            auto det = f.matrix().det();
+            if (det != 1 && det != -1) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name << " gives "
+                    "intersection form with determinant " << det
+                    << " instead of the expected +/-1.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (f.rank() != rank) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name << " gives "
+                    "intersection form with rank " << f.rank()
+                    << " instead of the expected " << rank << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (f.signature() != signature) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name << " gives "
+                    "intersection form with signature " << f.signature()
+                    << " instead of the expected " << signature << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (f.even() != even) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name << " gives "
+                    "intersection form with evenness " << f.even()
+                    << " instead of the expected " << even << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void intersectionForm() {
+            // Simply connected:
+            verifyIntersectionForm(sphere, 0, 0, true, "Sphere");
+            verifyIntersectionForm(simplicialSphere, 0, 0, true,
+                "Simplicial S^4");
+            verifyIntersectionForm(s4_doubleConeS3, 0, 0, true,
+                "S^4 (double cone)");
+            verifyIntersectionForm(cp2, 1, 1, false, "CP^2");
+            {
+                Triangulation<4> t(cp2);
+                t.reflect();
+                verifyIntersectionForm(t, 1, -1, false, "CP^2 reflected");
+            }
+            verifyIntersectionForm(s2xs2, 2, 0, true, "S^2 x S^2");
+            verifyIntersectionForm(s2xs2Twisted, 2, 0, false, "S^2 x~ S^2");
+            verifyIntersectionForm(k3, 22, -16, true, "K3");
+            {
+                Triangulation<4> t(k3);
+                t.reflect();
+                verifyIntersectionForm(t, 22, 16, true, "K3 reflected");
+            }
+
+            // Not simply connected:
+            verifyIntersectionForm(sphereBundle, 0, 0, true, "Sphere bundle");
+
+            // Census:
+            runCensusAllClosed(verifyIntersectionFormBasic);
+
+            // Some larger hard-coded examples of specific manifolds,
+            // created from framed links (thanks to Rhuaidi):
+            // S2x~S2:
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "KLvAvLPALLMLMAzQLwLQPMPQQQQAQMQcfflgjjmprrrtsnonswvvAAzDDBFFFGCCGECEEzBBEDDHHHIIIIJJJJaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, false, "Large S^2 x~ S^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "KLvAvLPALvQwMAPQLwvAPQQQQQvQQQQcfflgjjmpsrssrnonrtwvvzzAAGCGGGBBBDBDDEEEDCIIIIHJJJJHHHaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, false, "Large S^2 x~ S^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "KLvAvLPwLLLPwQAQAAPMLQwAQQQAAQQcfflgjjqstvquxxvxovttsrzsAABBEEBBDFCHFECCCAAEGHIIIIJJJJaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, false, "Large S^2 x~ S^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "KLvAvLPwLLLPwQAQQAPMvQMQQQLPQMQcfflgjjqstvquxxvxovttsrwwszzAAEAACFFBEDBBBzzGIGHIHGJJJJaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, false, "Large S^2 x~ S^2");
+            // S2xS2:
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "GLvAvPPALvzzQPwAvQMMQQQQQQPkcffiigjjlorrnmmwssyyxBBzAAEECAzzCBBDDDEAEDCCxFFFFaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, true, "Large S^2 x S^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "GLvAvLPALvQwMAPQLwLQPQQQQQPkcfflgjjmpsrssrnonrtwvvzzyCCAECEEEBBBDBDDyAADCFFFFaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, true, "Large S^2 x S^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "GLvAvLzALPwLAQMQQwPLQMPQQQPkcfflgnmqrrqusvvopouwtxttqtAAzBBBCDDDDECCzCEEEFFFFaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                2, 0, true, "Large S^2 x S^2");
+            // CP^2 (with either orientation):
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "uLvAwPPAMMQLAPPQPkcfffgggjjkllllmnnpooqqrsrrsttttaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvLQALMMQPMwzQQQMQcffilgjjloopnnnmqmnmsmuwwwwttvuutxxxxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, -1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvMPwAzLPQQQALQAQQcfffkgjjnnpotrtpnqnqqporowvvwwwxvvxxxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvPPAvMQQAwwAAQQQQcffgggjjjpoqoopoqqmrsuuwwvxxxuwuvvvxwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, -1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvAAAvQAQLAwMQAQQQcffjhhgiloopppqqqsooruwvuvuuxxxwvvwwxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, -1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvAAAvQAQLQwMPQQMQcffjhhgiloopppqqqsoosrtvtwttuwuuwxxxxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "GLvAvMPwAPLPMPQQzQMMPLAPMPQkcfffkgjjnnpposqsnnuutoropvwwvvxvyzyBBADDCEFEFFEEFaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "GLvAvLQALMMQPMwvQMQMPPMPwQQkcffilgjjloopnnnmqmnmsmxxxxyvuutzAzBBBCDCBFFEFEEEFaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvAQAvMAQAzMAQAPQQcffjhhgkiknoooqqqnprtruurvssrxxxxwwwwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, -1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvMPAAPMMMQvPPQQMQcfffkgjjjmmoonnnnqpmpputwvwuututwxxxxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvMPAAPMMMQvPPQQMQcfffkgjjjmmoonnnnqpmpputwvwuututwxxxxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, 1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvAQAvMAQAzMAQAPQQcffjhhgkiknoooqqqnprtruurvssrxxxxwwwwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, -1, false, "Large CP^2");
+            verifyIntersectionForm(Triangulation<4>::fromIsoSig(
+                "yLvAvMPwAPLPMPQQzQMQQcfffkgjjnnpposqsnnuutoropvwwvvxvxxwwxaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+                1, -1, false, "Large CP^2");
         }
 
         static void verifyBary(const Triangulation<4>& tri, const char* name) {
@@ -2276,7 +2481,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             for (unsigned i = 0; i < 2; ++i) {
                 Triangulation<4> other(tri);
                 if (i > 0)
-                    Isomorphism<4>::random(other.size()).applyInPlace(other);
+                    other = Isomorphism<4>::random(other.size())(other);
 
                 other.idealToFinite();
                 clearProperties(other);

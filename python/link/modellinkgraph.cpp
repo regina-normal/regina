@@ -59,6 +59,7 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("dec", [](ModelLinkGraphArc& a) {
            return a--;
         })
+        .def("__bool__", &ModelLinkGraphArc::operator bool)
     ;
     regina::python::add_output_ostream(a);
     regina::python::add_eq_operators(a);

@@ -7,6 +7,60 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 7.1  [ TODO ]
+
+    GENERAL:
+        - Regina now supports Python 3 only (not Python 2 or 3).
+        - Updated the bundled copy of Normaliz to version 3.9.2 (7 Feb 2022).
+    ENGINE:
+        Class CallableArg<...>:
+            - Now a public helper class in the main regina:: namespace.
+            - Now behaves gracefully if the given index is out of range.
+        Class Example<4>:
+            - New routine k3().
+            - Reflected the result of cp2() so that it has intersection
+              form [1], not [-1].
+        Class FacetPairing<dim>:
+            - In findAllPairings(), the action is no longer required to
+              take the list of all automorphisms if it does not need them.
+        Class IntersectionForm:
+            - New class to compute invariants of intersection forms.
+        Class Isomorphism:
+            - Replaced apply() with the bracket operator.  The old apply()
+              is now a deprecated alias.
+            - Deprecated applyInPlace(), since this is no faster than
+              calling tri = iso(tri).
+            - Added bracket operators to apply an isomorphism to a
+              FacetSpec or a FacetPairing.
+        Class Matrix:
+            - Routine det() now throws an exception if the matrix is not
+              square (this is a precondition), and now returns 1 if the
+              matrix is detected to be 0-by-0 (although such matrices are
+              formally not supported by the Matrix class).
+        Type safe_tuple_element<...>:
+            - New type alias that is like std::tuple_element<...> but
+              with well-defined behaviour for an out-of-range index.
+        Class Triangulation<dim>:
+            - New suite of routines countBoundaryFaces().
+            - New suite of public routines dualBoundaryMap() (these were
+              previously private, and had a more complex interface).
+            - New suite of routines dualToPrimal().
+        Class Triangulation<4>:
+            - New routine intersectionForm().
+        Routine for_constexpr():
+            - New routine to support compile-time for loops.
+    PYTHON:
+        - For classes that have a bool() cast operator, this is now wrapped in
+          Python using the special __bool__() function (i.e., Python will now
+          cast such objects to bool in the same way).
+    UTILITIES:
+        tricensus:
+            - Now supports multithreading via the new --threads option.
+            - Now supports enumerating subcomplexes of triangulations
+              via the new option --allowinvalid.
+            - The --genpairs option is now much less memory-hungry when the
+              automorphism group is large (e.g., with many boundary facets).
+
 Version 7.0  [ 19 December, 2021 ]
 
     GENERAL:
@@ -1256,7 +1310,7 @@ Version 7.0  [ 19 December, 2021 ]
             - Removed completely.
         Class SatAnnulus:
             - Added comparison operators == and !=.
-            - Routines transform() and image() now takes their arguments by
+            - Routines transform() and image() now take their arguments by
               reference.
             - Routine isAdjacent() now returns a tuple, instead of using
               a mix of return values and pointer arguments for output.
@@ -1709,7 +1763,7 @@ Version 7.0  [ 19 December, 2021 ]
               deprecated.  Use the routines from Example<3> instead.
             - Routine enterTextTriangulation() is now deprecated; this
               is a relic from Regina's ancient past.
-        Class Triangluation<4>:
+        Class Triangulation<4>:
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
