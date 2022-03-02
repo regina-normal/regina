@@ -681,7 +681,19 @@ int Triangulation<3>::isHandlebody() const {
             }
         }
         // PROOF OF CLAIM.
-        // TODO
+        // Suppose crushing produced a component with multiple boundaries.
+        // We must have cut some piece P along a properly embedded disc D
+        // such that:
+        // ---> the boundary of D separates the boundary of P into two pieces
+        //      A and B; and
+        // ---> D itself is non-separating, so there exists a closed curve c
+        //      in P that meets D exactly once.
+        // Consider the union of A and D, and push this slightly off the
+        // boundary to get an embedded closed surface S in P that meets the
+        // curve c exactly once.
+        // TODO Argue that there exist discs that we can use to eliminate the
+        //      genus in S, and argue that we can always redirect the curve c
+        //      so that it never meets any of these discs.
 
         // If we survived to this point, then we still haven't conclusively
         // determined whether we started with an orientable handlebody.
