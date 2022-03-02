@@ -568,7 +568,7 @@ int Triangulation<3>::isHandlebody() const {
         prop_.solidTorus_ = false;
     }
 
-    // We now know that if this is indeed an orietnable handlebody, then it
+    // We now know that if this is indeed an orientable handlebody, then it
     // must have genus at least 2.
     // Check that homology matches the genus.
     if ( not ( homology().isFree(genus) ) ) {
