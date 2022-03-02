@@ -655,10 +655,10 @@ int Triangulation<3>::isHandlebody() const {
                 }
             } else if ( comp.countBoundaryComponents() > 1 ) {
                 // Multiple boundaries on the same component.
-                // CLAIM. If this happens, then comp has an S2xS1 summand,
-                //      which we have already noted is impossible.
-                // A proof of this claim is sketched at the end of this for
-                // loop.
+                // CLAIM. Given what we know about the homology, this can
+                //      never happen.
+                // A very rough sketch of a proof for this claim is given at
+                // the end of this for loop
                 // TODO Throw a proper exception.
                 std::cerr << "ERROR: S2xS1 summand detected in "
                     "isHandlebody() that should not exist." << std::endl;
@@ -681,6 +681,7 @@ int Triangulation<3>::isHandlebody() const {
             }
         }
         // PROOF OF CLAIM.
+        // ==================================================================
         // Suppose crushing produced a component with multiple boundaries.
         // We must have cut some piece P along a properly embedded disc D
         // such that:
@@ -688,12 +689,35 @@ int Triangulation<3>::isHandlebody() const {
         //      A and B; and
         // ---> D itself is non-separating, so there exists a closed curve c
         //      in P that meets D exactly once.
-        // Consider the union of A and D, and push this slightly off the
-        // boundary to get an embedded closed surface S in P that meets the
-        // curve c exactly once.
-        // TODO Argue that there exist discs that we can use to eliminate the
-        //      genus in S, and argue that we can always redirect the curve c
-        //      so that it never meets any of these discs.
+        // Our goal is to show that this, in combination with what we know
+        // about the homology of P, leads to a contradiction.
+        //
+        // We first consider the case where P is the original triangulation.
+        // In this case, we have already verified that the homology of P is
+        // gZ, where g is the genus of the boundary of P. With this in mind,
+        // take the union of A and D, and push this slightly off the boundary
+        // to obtain a closed surface S in P that meets the closed curve c
+        // exactly once. There are now two sub-cases to consider:
+        //  (1) If A is a disc, then S is an embedded sphere in P that meets
+        //      c exactly once. This implies that P has an S2xS1 summand,
+        //      which we already ruled out earlier.
+        //  (2) If A has genus h, where h>0, then S also has genus h.
+        //      Consider the surface of genus 2*h that bounds a small
+        //      neighbourhood of the union of S and c. This surface cuts P
+        //      into two subspaces. By looking at the Mayer-Vietoris sequence
+        //      for this pair of subspaces, and using the fact that h>0, we
+        //      obtain a contradiction.
+        //
+        // It remains to consider the case where P was obtained by some
+        // sequence of crushing operations. Topologically, we know that P
+        // was obtained from the original triangulation by cutting along
+        // properly embedded discs. This implies that the homology of P is
+        // gZ, where g is the genus of the boundary of P (one way to check
+        // that cutting along discs does indeed preserve this property of the
+        // homology is to again use Mayer-Vietoris sequences). Thus, by the
+        // same argument as above, it is impossible for P to contain an
+        // embedded disc with the properties of D.
+        // ==================================================================
 
         // If we survived to this point, then we still haven't conclusively
         // determined whether we started with an orientable handlebody.
