@@ -530,7 +530,7 @@ bool Triangulation<3>::knowsSolidTorus() const {
     return false;
 }
 
-// TODO: Answering this also determines some other properties.
+// TODO Answering this also determines some other properties.
 int Triangulation<3>::isHandlebody() const {
     if ( prop_.handlebody_.has_value() ) {
         return *prop_.handlebody_;
@@ -629,30 +629,15 @@ int Triangulation<3>::isHandlebody() const {
         // Crush it and see what happens.
         // Given what we know about the manifold so far, the only things that
         // can happen during crushing are:
-        // ---> Gaining and/or losing 3-balls and/or 3-spheres.
-        // ---> Undoing connected sums.
-        //      --- If this happens to a component C with boundary B, then we
-        //          get a new closed piece together with a new piece with
-        //          boundary B. If C was an orientable handlebody, then the
-        //          new closed piece must be a 3-sphere. Thus, passing this
-        //          test tells us that the new piece with boundary B is
-        //          homeomorphic to the original component C.
-        //      --- If this happens to a closed component C, then we get two
-        //          new closed pieces. If the original triangulation is an
-        //          orientable handlebody, then C must have been a 3-sphere,
-        //          and hence the new closed pieces must also be 3-spheres.
-        // ---> Cutting along properly embedded discs.
-        //      --- If this happens along a two-sided disc, then the manifold
-        //          is an orientable handlebody if and only if each of the
-        //          two new pieces is an orientable handlebody.
-        //      --- If this happens along a one-sided disc whose boundary
-        //          curve is non-separating, then the manifold is an
-        //          orientable handlebody if and only if the newly-cut piece
-        //          is an orientable handlebody.
-        //      --- If this happens along a one-sided disc whose boundary
-        //          curve is separating, then we get a new connected piece
-        //          with two boundary components. This can never happen if we
-        //          started with an orientable handlebody.
+        // - undoing connected sums;
+        // - cutting along properly embedded discs;
+        // - gaining and/or losing 3-balls and/or 3-spheres.
+        //
+        // Thus, if we started with a handlebody, then crushing can only
+        // result in pieces of the following types:
+        // - handlebodies;
+        // - 3-spheres;
+        // - 3-balls.
         Triangulation<3> crushed = s->crush();
         s.reset(); // to avoid a deep copy of top when we pop
         toProcess.pop();
@@ -670,8 +655,16 @@ int Triangulation<3>::isHandlebody() const {
                 }
             } else if ( comp.countBoundaryComponents() > 1 ) {
                 // Multiple boundaries on the same component.
-                // This can never happen if we had an orientable handlebody.
-                // TODO: Should this case throw an error?
+                // CLAIM. If this happens, then comp has an S2xS1 summand,
+                //      which we have already noted is impossible.
+                // A proof of this claim is sketched at the end of this for
+                // loop.
+                // TODO Throw a proper exception.
+                std::cerr << "ERROR: S2xS1 summand detected in "
+                    "isHandlebody() that should not exist." << std::endl;
+
+                // At any rate, it means we did not have an orientable
+                // handlebody.
                 return *(prop_.handlebody_ = -1);
             } else if ( comp.boundaryComponent(0)->eulerChar() == 2 ) {
                 // A component with sphere boundary.
@@ -687,6 +680,8 @@ int Triangulation<3>::isHandlebody() const {
                 toProcess.push( std::move(comp) );
             }
         }
+        // PROOF OF CLAIM.
+        // TODO
 
         // If we survived to this point, then we still haven't conclusively
         // determined whether we started with an orientable handlebody.
@@ -698,8 +693,8 @@ int Triangulation<3>::isHandlebody() const {
         // ---> We detect a component that cannot occur if we started with an
         //      orientable handlebody.
         // ---> The list to process becomes empty. This can only happen if
-        //      everything fell apart into spheres and balls, which certifies
-        //      that we started with an orientable handlebody.
+        //      everything fell apart into 3-spheres and 3-balls, which
+        //      certifies that we started with an orientable handlebody.
     }
 
     // The list to process became empty.
