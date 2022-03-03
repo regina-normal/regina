@@ -1503,6 +1503,11 @@ void HomologicalData::computeTorsionLinkingForm() {
                 twoPow = 2;
                 twoPow.raiseToPower(i+1);
 
+                // TODO: We have a Cyclotomic class that can work with
+                // roots of unity using exact arithmetic.  Can this be
+                // used here?  It would be *very* nice not to have to
+                // put "not rigorous" caveats on these results.
+
                 long double xlD=0.0;
                 long double ylD=0.0;
 

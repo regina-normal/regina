@@ -65,6 +65,23 @@ template MatrixInt TriangulationBase<9>::boundaryMap<6>() const;
 template MatrixInt TriangulationBase<9>::boundaryMap<7>() const;
 template MatrixInt TriangulationBase<9>::boundaryMap<8>() const;
 template MatrixInt TriangulationBase<9>::boundaryMap<9>() const;
+template MatrixInt TriangulationBase<9>::dualBoundaryMap<1>() const;
+template MatrixInt TriangulationBase<9>::dualBoundaryMap<2>() const;
+template MatrixInt TriangulationBase<9>::dualBoundaryMap<3>() const;
+template MatrixInt TriangulationBase<9>::dualBoundaryMap<4>() const;
+template MatrixInt TriangulationBase<9>::dualBoundaryMap<5>() const;
+template MatrixInt TriangulationBase<9>::dualBoundaryMap<6>() const;
+template MatrixInt TriangulationBase<9>::dualBoundaryMap<7>() const;
+template MatrixInt TriangulationBase<9>::dualBoundaryMap<8>() const;
+template MatrixInt TriangulationBase<9>::dualToPrimal<0>() const;
+template MatrixInt TriangulationBase<9>::dualToPrimal<1>() const;
+template MatrixInt TriangulationBase<9>::dualToPrimal<2>() const;
+template MatrixInt TriangulationBase<9>::dualToPrimal<3>() const;
+template MatrixInt TriangulationBase<9>::dualToPrimal<4>() const;
+template MatrixInt TriangulationBase<9>::dualToPrimal<5>() const;
+template MatrixInt TriangulationBase<9>::dualToPrimal<6>() const;
+template MatrixInt TriangulationBase<9>::dualToPrimal<7>() const;
+template MatrixInt TriangulationBase<9>::dualToPrimal<8>() const;
 
 template const GroupPresentation& TriangulationBase<9>::fundamentalGroup() const;
 

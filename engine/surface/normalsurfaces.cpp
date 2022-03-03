@@ -250,5 +250,43 @@ std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::filter(
     return ans;
 }
 
+bool NormalSurfaces::operator == (const NormalSurfaces& other) const {
+    size_t n = surfaces_.size();
+    if (n != other.surfaces_.size())
+        return false;
+    if (surfaces_.empty())
+        return other.surfaces_.empty();
+    if (other.surfaces_.empty())
+        return false;
+
+    // Both lists have the same size and are non-empty.
+    // Our algorithm will be to sort and then compare.
+    auto* lhs = new const NormalSurface*[n];
+    auto* rhs = new const NormalSurface*[n];
+
+    const NormalSurface** ptr = lhs;
+    for (const auto& s : surfaces_)
+        *ptr++ = std::addressof(s);
+
+    ptr = rhs;
+    for (const auto& s : other.surfaces_)
+        *ptr++ = std::addressof(s);
+
+    auto cmp = [](const NormalSurface* x, const NormalSurface* y) {
+        return (*x) < (*y);
+    };
+    std::sort(lhs, lhs + n, cmp);
+    std::sort(rhs, rhs + n, cmp);
+
+    bool ans = std::equal(lhs, lhs + n, rhs,
+            [](const NormalSurface* x, const NormalSurface* y) {
+        return (*x) == (*y);
+    });
+
+    delete[] lhs;
+    delete[] rhs;
+    return ans;
+}
+
 } // namespace regina
 

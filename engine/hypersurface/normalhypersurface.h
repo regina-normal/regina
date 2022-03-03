@@ -857,7 +857,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * It does not matter what vector encodings the two hypersurfaces
          * use.  In particular, it does not matter if this and the
          * given hypersurface use different encodings, or if one but not
-         * the other supports non-compact surfaces.
+         * the other supports non-compact hypersurfaces.
          *
          * This routine is safe to call even if this and the given
          * hypersurface do not belong to the same triangulation:
@@ -887,7 +887,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * It does not matter what vector encodings the two hypersurfaces
          * use.  In particular, it does not matter if this and the
          * given hypersurface use different encodings, or if one but not
-         * the other supports non-compact surfaces.
+         * the other supports non-compact hypersurfaces.
          *
          * This routine is safe to call even if this and the given
          * hypersurface do not belong to the same triangulation:
@@ -905,6 +905,31 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface, or \c false if not.
          */
         bool operator != (const NormalHypersurface& other) const;
+
+        /**
+         * Imposes a total order on all normal hypersurfaces.
+         *
+         * This order is not mathematically meaningful; it is merely
+         * provided for scenarios where you need to be able to sort
+         * hypersurfaces (e.g., when using them as keys in a map).
+         *
+         * The order \e is well-defined, and will be preserved across
+         * copy/move operations, different program executions, and different
+         * platforms (since it is defined purely in terms of the normal
+         * coordinates, and does not use transient properties such as
+         * locations in memory).
+         *
+         * This operation is consistent with the equality test.  In
+         * particular, it does not matter whether the two hypersurfaces
+         * belong to different triangulations, or use different encodings,
+         * or if one but not the other supports non-compact hypersurfaces.
+         * See the equality test operator==() for further details.
+         *
+         * @param other the hypersurface to be compared with this hypersurface.
+         * @return \c true if and only if this appears before the given
+         * hypersurface in the total order.
+         */
+        bool operator < (const NormalHypersurface& other) const;
 
         /**
          * Deprecated routine that determines whether this and the given

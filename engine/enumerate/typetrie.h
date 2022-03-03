@@ -99,7 +99,9 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
                 /**< If this node is \a k levels deeper than the root of
                      the trie (that is, it corresponds to the \a kth position
                      in the type vector), then child_[i] stores the subtrie
-                     of type vectors \a v for which v[k] == i. */
+                     of type vectors \a v for which v[k] == i.
+                     Every non-null child node corresponds to a non-empty
+                     subtrie (see \a elementHere_ for details). */
             bool elementHere_;
                 /**< \c true if the path from the root of the trie to this
                      node precisely describes the elements of some type
@@ -181,6 +183,26 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * @param other the trie whose contents should be swapped with this.
          */
         void swap(TypeTrie& other) noexcept;
+
+        /**
+         * Determines whether this and the given trie store exactly the
+         * same type vectors.
+         *
+         * @param other the trie to compare with this.
+         * @return \c true if and only if both tries store the same type
+         * vectors.
+         */
+        bool operator == (const TypeTrie& other) const;
+
+        /**
+         * Determines whether this and the given trie do not store exactly the
+         * same type vectors.
+         *
+         * @param other the trie to compare with this.
+         * @return \c true if and only if both tries do not store the same type
+         * vectors.
+         */
+        bool operator != (const TypeTrie& other) const;
 
         /**
          * Resets this to the empty trie.
@@ -333,6 +355,35 @@ template <int nTypes>
 inline void TypeTrie<nTypes>::swap(TypeTrie& other) noexcept {
     std::swap_ranges(root_.child_, root_.child_ + nTypes, other.root_.child_);
     std::swap(root_.elementHere_, other.root_.elementHere_);
+}
+
+template <int nTypes>
+bool TypeTrie<nTypes>::operator == (const TypeTrie& other) const {
+    std::stack<std::pair<const Node*, const Node*>> toProcess;
+    toProcess.push({&root_, &other.root_});
+    while (! toProcess.empty()) {
+        auto next = toProcess.top();
+        toProcess.pop();
+
+        if (next.first->elementHere_ != next.second->elementHere_)
+            return false;
+        for (int i = 0; i < nTypes; ++i) {
+            if (! next.first->child_[i]) {
+                if (next.second->child_[i])
+                    return false;
+            } else {
+                if (! next.second->child_[i])
+                    return false;
+                toProcess.push({next.first->child_[i], next.second->child_[i]});
+            }
+        }
+    }
+    return true;
+}
+
+template <int nTypes>
+inline bool TypeTrie<nTypes>::operator != (const TypeTrie& other) const {
+    return ! ((*this) == other);
 }
 
 template <int nTypes>

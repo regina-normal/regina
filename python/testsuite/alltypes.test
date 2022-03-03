@@ -31,8 +31,6 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from __future__ import print_function
-
 import re
 
 regex = re.compile("^<class 'regina\\.engine\\.(.+)'>$")
@@ -59,7 +57,7 @@ def classInfo(name, object):
                 else:
                     print('ERROR: No equality type')
         else:
-            print(name, ': typedef -> ', realName)
+            print(name, ': alias -> ', realName)
     print()
 
 def enumInfo(name, object):

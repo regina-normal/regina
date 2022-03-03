@@ -46,7 +46,7 @@ Acknowledgements (in addition to primary authors listed in the license):
 
 Don't forget:
     changes & highlights
-    appstream metainfo (new release tag)
+    appstream metainfo (new release tag), including screenshots on p.d.o
     documentation in handbook, feature set, troubleshooting, index & file format
     journal references (www, KDE docs, example files, headers;
         search for arXiv and "to appear")
@@ -61,6 +61,7 @@ Don't forget:
     update tips for building on different platforms
     update census download file sizes if there have been changes
     tag the git repository
-    update docs/ and engine-docs/ on the website (see regina-www/mkwww)
+    install the new handbook, file format and API docs on the website
+    update other data on the website (see regina-www/mkwww)
     update the citation years if necessary in private BibTeX databases
     mail regina-announce

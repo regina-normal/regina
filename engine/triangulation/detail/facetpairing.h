@@ -557,10 +557,13 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          *   deep copy (not a reference), since the facet pairing may be
          *   changed and reused after \a action returns.
          *
-         * - The second argument to \a action must be a
-         *   FacetPairing<dim>::IsoList (this will be passed by value using
-         *   move semantics).  This will be the list of all automorphisms
-         *   of the facet pairing that was found.
+         * - If \a action takes a FacetPairing<dim>::IsoList as its second
+         *   argument (which may be as a reference, and may have const/volatile
+         *   qualifiers), then this will be the list of all automorphisms of
+         *   the facet pairing that was found.  This list will be passed by
+         *   value using move semantics.  If \a action does not take a second
+         *   argument, or if the second argument is of a different type, then
+         *   the list of automorphisms will not be passed.
          *
          * - If there are any additional arguments supplied in the list \a args,
          *   then these will be passed as subsequent arguments to \a action.
@@ -571,6 +574,12 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * if the argument \a nSimplices is zero then no facet pairings
          * will be generated at all.
          *
+         * \warning If you are allowing a large number of boundary facets,
+         * then the automorphisms groups could be enormous.  In this case it is
+         * highly recommended that your action does \e not take the list of all
+         * automorphisms as its second argument, since this will avoid the
+         * enormous memory cost of storing and passing such a list.
+         *
          * \todo \optlong When generating facet pairings, do some checking to
          * eliminate cases in which simplex (\a k > 0) can be swapped
          * with simplex 0 to produce a smaller representation of the same
@@ -578,9 +587,11 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * \todo \feature Allow cancellation of facet pairing generation.
          *
          * \ifacespython This function is available, and \a action may be a
-         * pure Python function.  However, \a action cannot take any additional
-         * arguments beyond the facet pairing and its automorphisms (and
-         * therefore the additional \a args list is omitted here).
+         * pure Python function.  However, its form is more restricted:
+         * \a action must take both a facet pairing and its automorphisms
+         * (i.e., the automorphisms argument is not optional); moreover,
+         * it cannot take any additional arguments beyond these.
+         * As a consequence, the additional \a args list is omitted also.
          *
          * @param nSimplices the number of simplices whose facets should
          * be (potentially) matched.
@@ -604,8 +615,8 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * @param action a function (or other callable object) to call
          * for each facet pairing that is found.
          * @param args any additional arguments that should be passed to
-         * \a action, following the initial facet pairing and automorphism
-         * arguments.
+         * \a action, following the initial facet pairing argument and the
+         * optional automorphism argument.
          */
         template <typename Action, typename... Args>
         static void findAllPairings(size_t nSimplices, BoolSet boundary,
@@ -703,11 +714,15 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * (smallest lexicographical) form, given a small set of
          * assumptions.
          *
-         * If this facet pairing is in canonical form, the given list
-         * will be filled with the set of all combinatorial automorphisms
-         * of this facet pairing.  If not, the given list will be left empty.
+         * If the argument \a list is non-null, then:
          *
-         * \pre The given list is empty.
+         * - If this facet pairing is in canonical form, the given list will
+         *   be filled with the set of all combinatorial automorphisms of this
+         *   facet pairing.
+         *
+         * - If not, the given list will be returned empty.
+         *
+         * \pre The given list (if one is provided) is empty.
          * \pre For each simplex \a t, the only case in which
          * <tt>dest(t,i)</tt> is greater than <tt>dest(t,i+1)</tt> is where
          * facets <tt>(t,i)</tt> and <tt>(t,i+1)</tt> are paired together.
@@ -718,11 +733,12 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * \a n is the total number of simplices under investigation.
          *
          * @param list the list into which automorphisms will be placed
-         * if appropriate.
+         * if this facet pairing is indeed canonical, or \a null if the
+         * automorphisms are not requred.
          * @return \c true if and only if this facet pairing is in
          * canonical form.
          */
-        bool isCanonicalInternal(IsoList& list) const;
+        bool isCanonicalInternal(IsoList* list = nullptr) const;
 
     private:
         /**
@@ -871,7 +887,7 @@ template <int dim>
 inline typename FacetPairingBase<dim>::IsoList
         FacetPairingBase<dim>::findAutomorphisms() const {
     IsoList list;
-    isCanonicalInternal(list);
+    isCanonicalInternal(std::addressof(list));
     return list;
 }
 

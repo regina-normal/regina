@@ -99,7 +99,20 @@ Signature& Signature::operator = (const Signature& sig) {
     return *this;
 }
 
-Signature Signature::parse(const std::string& str) {
+bool Signature::operator == (const Signature& other) const {
+    // Note: we do not need to compare the sentinels at the end of
+    // cycleStart[] and cycleGroupStart[].
+    return order_ == other.order_ &&
+        nCycles == other.nCycles &&
+        nCycleGroups == other.nCycleGroups &&
+        std::equal(label, label + 2 * order_, other.label) &&
+        std::equal(labelInv, labelInv + 2 * order_, other.labelInv) &&
+        std::equal(cycleStart, cycleStart + nCycles, other.cycleStart) &&
+        std::equal(cycleGroupStart, cycleGroupStart + nCycleGroups,
+            other.cycleGroupStart);
+}
+
+Signature::Signature(const std::string& str) {
     // See if the string looks correctly formed.
     // Note that we're not yet counting the individual frequency of each
     // letter, just the overall number of letters.
@@ -131,15 +144,15 @@ Signature Signature::parse(const std::string& str) {
 
     // Looks fine so far.
     // Build the signature and cycle structure (but not cycle groups yet).
-    unsigned order = largestLetter + 1;
-    auto* label = new unsigned[nAlpha];
-    bool* labelInv = new bool[nAlpha];
-    unsigned nCycles = 0;
-    auto* cycleStart = new unsigned[nAlpha + 1];
+    order_ = largestLetter + 1;
+    label = new unsigned[nAlpha];
+    labelInv = new bool[nAlpha];
+    nCycles = 0;
+    cycleStart = new unsigned[nAlpha + 1];
     cycleStart[0] = 0;
 
-    auto* freq = new unsigned[order];
-    std::fill(freq, freq + order, 0);
+    auto* freq = new unsigned[order_];
+    std::fill(freq, freq + order_, 0);
 
     unsigned whichPos = 0;
         /* Position in the signature, as opposed to position in the string. */
@@ -184,25 +197,16 @@ Signature Signature::parse(const std::string& str) {
     }
 
     // We now have a valid signature!
-    Signature sig;
-    sig.order_ = order;
-    sig.label = label;
-    sig.labelInv = labelInv;
-    sig.nCycles = nCycles;
-    sig.cycleStart = cycleStart;
-
     // Fill in the rest of the data members.
-    sig.nCycleGroups = 0;
-    sig.cycleGroupStart = new unsigned[nCycles];
+    nCycleGroups = 0;
+    cycleGroupStart = new unsigned[nCycles];
     for (pos = 0; pos < nCycles; pos++)
-        if (pos == 0 || sig.cycleStart[pos + 1] - sig.cycleStart[pos] !=
-                sig.cycleStart[pos] - sig.cycleStart[pos - 1]) {
+        if (pos == 0 || cycleStart[pos + 1] - cycleStart[pos] !=
+                cycleStart[pos] - cycleStart[pos - 1]) {
             // New cycle group.
-            sig.cycleGroupStart[sig.nCycleGroups] = static_cast<unsigned>(pos);
-            sig.nCycleGroups++;
+            cycleGroupStart[nCycleGroups] = static_cast<unsigned>(pos);
+            nCycleGroups++;
         }
-
-    return sig;
 }
 
 Triangulation<3> Signature::triangulate() const {

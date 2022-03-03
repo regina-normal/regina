@@ -130,6 +130,52 @@ class BlockedSFS : public StandardTriangulation {
         const SatRegion& region() const;
 
         /**
+         * Determines whether this and the given structure represent
+         * the same type of blocked Seifert fibred space.
+         *
+         * Specifically, two structures will compare as equal if and only if
+         * both structures are formed from the same combinatorial presentation
+         * of a saturated region (as returned by the SatRegion
+         * comparison operators).
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass is more specific than combinatorial isomorphism, since
+         * this test does not account for the many symmetries in a
+         * blocked Seifert fibred space).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent the same type of blocked Seifert fibred space.
+         */
+        bool operator == (const BlockedSFS& other) const;
+
+        /**
+         * Determines whether this and the given structure do not represent
+         * the same type of blocked Seifert fibred space.
+         *
+         * Specifically, two structures will compare as equal if and only if
+         * both structures are formed from the same combinatorial presentation
+         * of a saturated region (as returned by the SatRegion
+         * comparison operators).
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass is more specific than combinatorial isomorphism, since
+         * this test does not account for the many symmetries in a
+         * blocked Seifert fibred space).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * do not represent the same type of blocked Seifert fibred space.
+         */
+        bool operator != (const BlockedSFS& other) const;
+
+        /**
          * Determines whether this triangulation is a plugged thin
          * I-bundle or a plugged thick I-bundle.  These structures are
          * described in "Structures of small closed non-orientable
@@ -260,6 +306,14 @@ inline void BlockedSFS::swap(BlockedSFS& other) noexcept {
 
 inline const SatRegion& BlockedSFS::region() const {
     return region_;
+}
+
+inline bool BlockedSFS::operator == (const BlockedSFS& other) const {
+    return region_ == other.region_;
+}
+
+inline bool BlockedSFS::operator != (const BlockedSFS& other) const {
+    return region_ != other.region_;
 }
 
 inline std::unique_ptr<BlockedSFS> BlockedSFS::isBlockedSFS(

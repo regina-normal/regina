@@ -17,12 +17,37 @@
  <para>
   All scripts in &regina; use the &python; programming language
   (<ulink url="http://www.python.org/"/>).
-  &regina; can work with either &python;&nbsp;2 or &python;&nbsp;3,
+  &regina; can work with either &python;&nbsp;3 or &python;&nbsp;2,
   but you must choose your &python; version when you build &regina;.
   If you download a ready-made package then the packager has already made this
   choice for you; the ready-made packages on the &regina; website use the
   default version of &python; on each system where possible.
  </para>
+ <para id="python-docs">
+  &regina; includes a complete &api; reference for its calculation engine,
+  which describes in detail the objects, classes and methods that are
+  available through &python;.  To read this documentation, select
+  <menuchoice>
+   <guimenu>Help</guimenu>
+   <guimenuitem>Python &api; Reference</guimenuitem>
+  </menuchoice>
+  from the menu, or read it online at &regenginedocsurlbase;.
+  There is a special page in the &api; documentation outlining the main
+  issues relevant to &python; users, and you should
+  <ulink url="https://regina-normal.github.io/&regversion;/engine-docs/pythonapi.html">read this also</ulink>.
+ </para>
+
+ <warning>
+  <para>
+   &regina;'s &python; interface typically assumes you know what you are
+   doing, and so the onus is on you to follow the rules.
+   All constraints, preconditions and so on are thoroughly documented in the
+   &api; documentation.
+   Probably the easiest way to crash &regina; is to bring up a &python;
+   console and do something &ldquo;illegal&rdquo; (like gluing together
+   two tetrahedra that belong to different triangulations).
+  </para>
+ </warning>
 
  <sect1 id="python-starting">
   <title>Starting a &python; Session</title>
@@ -44,7 +69,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menu-python.png"/>
+      <imagedata multires="menu-python"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -61,7 +86,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="python-console.png"/>
+      <imagedata multires="python-console"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -115,7 +140,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="regina-python.png"/>
+      <imagedata multires="regina-python"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -143,7 +168,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menu-newscript.png"/>
+      <imagedata multires="menu-newscript"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -154,7 +179,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="script-edit.png"/>
+      <imagedata multires="script-edit"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -166,7 +191,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="script-var.png"/>
+      <imagedata multires="script-var"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -182,7 +207,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="script-run.png"/>
+      <imagedata multires="script-run"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -214,103 +239,20 @@
    and it will import all of &regina;'s objects,
    classes and methods into the current namespace
    (i.e., &ldquo;<literal>from regina import&nbsp;*</literal>&rdquo;).
+   As a single exception, it will <emphasis>not</emphasis> import
+   <literal>regina.open</literal>, so as to not hide &python;'s own
+   <function>open()</function> function.
   </para>
   <para>
    This means, for instance, that you create a new triangulation by just
-   calling <literal>Triangulation3()</literal>, and you can read a data file
-   by calling <literal>open(filename)</literal>.
+   calling <literal>Triangulation3()</literal>, but to read a data file
+   you should still call <literal>regina.open(filename)</literal>.
    For command-line sessions, if you wish to avoid the heavy-handed
    &ldquo;<literal>from regina import&nbsp;*</literal>&rdquo;, you can pass
    the option <option>--noautoimport</option> (in which case you will need to
    use fully qualified names such as
-   <literal>regina.Triangulation3()</literal> and
-   <literal>regina.open(filename)</literal>).
+   <literal>regina.Triangulation3()</literal>.
   </para>
-
-  <sect2 id="python-docs">
-   <title>Documentation</title>
-   <para>
-    &regina; includes a complete &api; reference for its calculation engine,
-    which describes in detail the objects, classes and methods that
-    it makes available through &python;.  To read this documentation, select
-    <menuchoice>
-     <guimenu>Help</guimenu>
-     <guimenuitem>Python &api; Reference</guimenuitem>
-    </menuchoice>
-    from the menu.  The &api; reference should open in your web browser
-    (where you can bookmark it if you like).
-    You can also read it online at &regenginedocsurlbase;.
-   </para>
-  </sect2>
- </sect1>
-
- <sect1 id="python-caveats">
-  <title>Caveats and Traps</title>
-
-  <para>
-   &python; scripting gives you direct access to &regina;'s
-   mathematical core, and as such requires some care.
-   Probably the easiest way to crash &regina; is to bring up
-   a &python; console and do something untoward (like gluing together
-   two tetrahedra that belong to different triangulations).
-   Please tread gently.
-  </para>
-  <para>
-   In particular, you should note the following issues:
-  </para>
-  <sect2>
-   <title>Uneditable Packets</title>
-   <para>
-    If you cannot edit a packet within &regina;, there is generally
-    a reason for this.  For instance, a normal surface list needs its
-    parent triangulation to remain fixed, which means that any
-    triangulation with normal surface lists beneath it
-    will be <link linkend="packet-uneditable">uneditable</link>.
-   </para>
-   <para>
-    You should not use &python; as a way to get around this barrier.
-    Instead you can work around the problem by
-    <link linkend="packet-clone">cloning the packet</link>
-    and editing the clone instead.
-   </para>
-  </sect2>
-
-  <sect2 id="python-i18n">
-   <title>International and Special Characters</title>
-   <para>
-    If you use special characters (such as accented letters,
-    other international characters, exotic punctuation, mathematical
-    symbols and so on), you need to think about
-    <emphasis>text encodings</emphasis> when passing strings between
-    &python; and &regina;.
-   </para>
-   <para>
-    If you only ever deal with plain &ascii; text (plain English
-    letters, digits and basic punctuation), you do not need to
-    worry about text encodings at all (and you can stop reading this section).
-   </para>
-   <para>
-    &regina; uses &utf8; throughout for special characters.  If you ever
-    pass a string into one of &regina;'s functions, any special
-    characters must be encoded in &utf8;; conversely, when a string is
-    returned from a function you should assume that any special
-    characters are encoded in &utf8;.
-   </para>
-   <para>
-    &python;, on the other hand, does not use &utf8; strings by default.
-    See the
-    <ulink url="http://docs.python.org/howto/unicode.html">&python;
-    &utf8; HOWTO</ulink> for more information on how to work with
-    &utf8; strings in &python;.
-   </para>
-   <para>
-    As a single exception: for file <emphasis>names</emphasis>,
-    &regina; uses whatever encoding the operating system expects.
-    Any files names that you pass to &regina; will be sent
-    through to low-level &ccpp; I/O routines without any changes or
-    re-encoding.
-   </para>
-  </sect2>
  </sect1>
 
  <sect1 id="python-snappy">
@@ -385,6 +327,15 @@
    </itemizedlist>
   </para>
   <para>
+   If you wish to send the complement of a native &regina;
+   <classname>Link</classname> to &snappy;,
+   you can pass your link directly to the
+   <classname>SnapPeaTriangulation</classname> constructor, which will
+   preserve the peripheral curves from the link diagram; then you can
+   pass this to &snappy; via
+   <function>SnapPeaTriangulation.snapPea()</function> as above.
+  </para>
+  <para>
    Regarding the interface:
    the <classname>SnapPeaTriangulation</classname> class
    inherits from <classname>Triangulation3</classname>, and so you can
@@ -394,7 +345,7 @@
    maintain two synchronised copies of the triangulation (&regina;'s and
    &snappea;'s), it is essentially read-only: any attempt to modify the
    triangulation using &regina;'s native routines (e.g.,
-   <function>twoThreeMove()</function> or
+   <function>pachner()</function> or
    <function>barycentricSubdivision()</function>) will cause the
    &snappea; triangulation to delete itself and become a
    &ldquo;null triangulation&rdquo; instead.
@@ -413,7 +364,7 @@
   </para>
   <programlisting>
 bab@ember:~$ regina-python 
-Regina 7.0
+Regina 7.1
 Software for low-dimensional topology
 Copyright (c) 1999-2021, The Regina development team
 &gt;&gt;&gt; import snappy
@@ -459,7 +410,7 @@ Cusps:
 
 &gt;&gt;&gt; print t.hasStrictAngleStructure()
 True
-&gt;&gt;&gt; print AngleStructures.enumerate(t).detail()
+&gt;&gt;&gt; print AngleStructures(t).detail()
 4 vertex angle structures (no restrictions):
 0 1 0 ; 1 0 0
 0 0 1 ; 1 0 0

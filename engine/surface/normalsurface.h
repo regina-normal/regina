@@ -1293,7 +1293,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * almost normal and/or spun-normal surfaces.
          *
          * This routine is safe to call even if this and the given
-         * hypersurface do not belong to the same triangulation:
+         * surface do not belong to the same triangulation:
          *
          * - If the two triangulations have the same size, then this routine
          *   will test whether this surface, if transplanted into the
@@ -1323,7 +1323,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * almost normal and/or spun-normal surfaces.
          *
          * This routine is safe to call even if this and the given
-         * hypersurface do not belong to the same triangulation:
+         * surface do not belong to the same triangulation:
          *
          * - If the two triangulations have the same size, then this routine
          *   will test whether this surface, if transplanted into the
@@ -1338,6 +1338,31 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * almost normal surface, or \c false if not.
          */
         bool operator != (const NormalSurface& other) const;
+
+        /**
+         * Imposes a total order on all normal and almost normal surfaces.
+         *
+         * This order is not mathematically meaningful; it is merely
+         * provided for scenarios where you need to be able to sort
+         * surfaces (e.g., when using them as keys in a map).
+         *
+         * The order \e is well-defined, and will be preserved across
+         * copy/move operations, different program executions, and different
+         * platforms (since it is defined purely in terms of the normal
+         * coordinates, and does not use transient properties such as
+         * locations in memory).
+         *
+         * This operation is consistent with the equality test.  In particular,
+         * it does not matter whether the two surfaces belong to different
+         * triangulations, or use different encodings, or if one but not the
+         * other supports non-compact or almost normal surfaces.
+         * See the equality test operator==() for further details.
+         *
+         * @param other the surface to be compared with this surface.
+         * @return \c true if and only if this appears before the given
+         * surface in the total order.
+         */
+        bool operator < (const NormalSurface& other) const;
 
         /**
          * Deprecated routine that determines whether this and the given

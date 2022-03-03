@@ -59,6 +59,7 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         using TriangulationTest<dim>::verifyOrient;
         using TriangulationTest<dim>::verifyDoubleCover;
         using TriangulationTest<dim>::verifyBoundaryFacets;
+        using TriangulationTest<dim>::verifyBoundaryFaces;
         using TriangulationTest<dim>::verifyBoundaryBuild;
 
         using TriangulationTest<dim>::verifyValid;
@@ -107,6 +108,10 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
 
         void boundaryFacets() {
             testManualAll(TriangulationTest<dim>::verifyBoundaryFacets);
+        }
+
+        void boundaryFaces() {
+            testManualAll(TriangulationTest<dim>::verifyBoundaryFaces);
         }
 
         void boundaryBuild() {
@@ -319,6 +324,7 @@ class Triangulation5Test : public GenericTriangulationTest<5> {
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
+    CPPUNIT_TEST(boundaryFaces);
     CPPUNIT_TEST(boundaryBuild);
     CPPUNIT_TEST(edgeAccess);
     CPPUNIT_TEST(pachner<0>);
@@ -351,6 +357,7 @@ class Triangulation6Test : public GenericTriangulationTest<6> {
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
+    CPPUNIT_TEST(boundaryFaces);
     CPPUNIT_TEST(boundaryBuild);
     CPPUNIT_TEST(edgeAccess);
     CPPUNIT_TEST(pachner<0>);
@@ -388,6 +395,7 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
+    CPPUNIT_TEST(boundaryFaces);
     CPPUNIT_TEST(boundaryBuild);
     CPPUNIT_TEST(edgeAccess);
     /**

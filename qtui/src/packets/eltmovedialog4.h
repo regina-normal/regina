@@ -72,23 +72,27 @@ class EltMoveDialog4 : public QDialog, public regina::PacketListener {
         FaceChooser<4, 2>* box33;
         FaceChooser<4, 3>* box24;
         SimplexChooser<4>* box15;
+        FaceChooser<4, 1>* box44;
         FaceChooser<4, 2>* box20t;
         FaceChooser<4, 1>* box20e;
         FaceChooser<4, 0>* box20v;
         FaceChooser<4, 3>* boxOpenBook;
         SimplexChooser<4>* boxShellBdry;
         FaceChooser<4, 1>* boxCollapseEdge;
+        FaceChooser<4, 1>* boxSnapEdge;
         QRadioButton* use51;
         QRadioButton* use42;
         QRadioButton* use33;
         QRadioButton* use24;
         QRadioButton* use15;
+        QRadioButton* use44;
         QRadioButton* use20t;
         QRadioButton* use20e;
         QRadioButton* use20v;
         QRadioButton* useOpenBook;
         QRadioButton* useShellBdry;
         QRadioButton* useCollapseEdge;
+        QRadioButton* useSnapEdge;
         QButtonGroup* moveTypes;
         QDialogButtonBox* buttons;
 

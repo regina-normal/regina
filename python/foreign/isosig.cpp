@@ -44,7 +44,7 @@ void addForeignIsoSig(pybind11::module_& m) {
     m.def("readSigList", [](int dimension, const char* filename,
                 unsigned colSigs, int colLabels, unsigned long ignoreLines) {
             if (dimension > 4) {
-                PyErr_SetString(PyExc_RuntimeError,
+                throw regina::InvalidArgument(
                     "The python version of readSigList() can only work "
                     "with Regina's standard dimensions.");
             }
@@ -76,12 +76,12 @@ void addForeignIsoSig(pybind11::module_& m) {
     m.def("readIsoSigList", [](const char *filename, unsigned dimension,
                 unsigned colSigs, int colLabels, unsigned long ignoreLines) {
             if (dimension > 4) {
-                PyErr_SetString(PyExc_RuntimeError,
+                throw regina::InvalidArgument(
                     "readIsoSigList() (which is deprecated) can only work "
                     "with Regina's standard dimensions.");
             }
             if (dimension == 0) {
-                PyErr_SetString(PyExc_RuntimeError,
+                throw regina::InvalidArgument(
                     "readIsoSigList() (which is deprecated) cannot work "
                     "with links.  Use readSigList() instead.");
             }

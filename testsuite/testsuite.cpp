@@ -168,6 +168,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     // Subcomplexes:
     sets.insert(std::make_pair("standardtriangulation",
         &addStandardTriangulation));
+    sets.insert(std::make_pair("txicore", &addTxICore));
 
     // Surfaces:
     sets.insert(std::make_pair("normalsurfaces", &addNormalSurfaces));

@@ -167,6 +167,42 @@ class FileInfo : public Output<FileInfo> {
         void swap(FileInfo& other) noexcept;
 
         /**
+         * Determines whether this and the given file information
+         * describe the same format and version.
+         *
+         * For two FileInfo objects to compare as equal, they must have
+         * the same file formats, use the same version of the calculation
+         * engine, and use the same compression type.  The pathnames of
+         * the files being described are ignored.
+         *
+         * It is safe to compare FileInfo objects even if one or both is
+         * invalid.  Two invalid FileInfo objects will compare as equal.
+         *
+         * @param other the file information to compare with this.
+         * @return \c true if and only if this and the given file information
+         * describe the same format and version, as described above.
+         */
+        bool operator == (const FileInfo& other) const;
+
+        /**
+         * Determines whether this and the given file information
+         * do not describe the same format and version.
+         *
+         * For two FileInfo objects to compare as equal, they must have
+         * the same file formats, use the same version of the calculation
+         * engine, and use the same compression type.  The pathnames of
+         * the files being described are ignored.
+         *
+         * It is safe to compare FileInfo objects even if one or both is
+         * invalid.  Two invalid FileInfo objects will compare as equal.
+         *
+         * @param other the file information to compare with this.
+         * @return \c true if and only if this and the given file information
+         * do not describe the same format and version, as described above.
+         */
+        bool operator != (const FileInfo& other) const;
+
+        /**
          * Return information about the given Regina data file.
          *
          * \i18n This routine makes no assumptions about the
@@ -261,6 +297,18 @@ inline void FileInfo::swap(FileInfo& other) noexcept {
     engine_.swap(other.engine_);
     std::swap(compressed_, other.compressed_);
     std::swap(invalid_, other.invalid_);
+}
+
+inline bool FileInfo::operator == (const FileInfo& other) const {
+    if (invalid_)
+        return other.invalid_;
+    else
+        return (! other.invalid_) && format_ == other.format_ &&
+            compressed_ == other.compressed_ && engine_ == other.engine_;
+}
+
+inline bool FileInfo::operator != (const FileInfo& other) const {
+    return ! ((*this) == other);
 }
 
 inline void swap(FileInfo& a, FileInfo& b) noexcept {

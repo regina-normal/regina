@@ -180,6 +180,56 @@ class BlockedSFSLoop : public StandardTriangulation {
          */
         const Matrix2& matchingReln() const;
 
+        /**
+         * Determines whether this and the given structure represent
+         * the same type of self-identified blocked Seifert fibred space.
+         *
+         * Specifically, two structures will compare as equal if and only if
+         * both structures are formed from the same combinatorial presentation
+         * of a saturated region (as returned by the SatRegion
+         * comparison operators), with the two torus boundaries joined
+         * using the same 2-by-2 matrix.
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass is more specific than combinatorial isomorphism, since
+         * this test does not account for the many symmetries in a
+         * blocked Seifert fibred space).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent the same type of self-identified blocked Seifert fibred
+         * space.
+         */
+        bool operator == (const BlockedSFSLoop& other) const;
+
+        /**
+         * Determines whether this and the given structure do not represent
+         * the same type of self-identified blocked Seifert fibred space.
+         *
+         * Specifically, two structures will compare as equal if and only if
+         * both structures are formed from the same combinatorial presentation
+         * of a saturated region (as returned by the SatRegion
+         * comparison operators), with the two torus boundaries joined
+         * using the same 2-by-2 matrix.
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass is more specific than combinatorial isomorphism, since
+         * this test does not account for the many symmetries in a
+         * blocked Seifert fibred space).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * do not represent the same type of self-identified blocked Seifert
+         * fibred space.
+         */
+        bool operator != (const BlockedSFSLoop& other) const;
+
         std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
@@ -257,6 +307,14 @@ inline const SatRegion& BlockedSFSLoop::region() const {
 
 inline const Matrix2& BlockedSFSLoop::matchingReln() const {
     return matchingReln_;
+}
+
+inline bool BlockedSFSLoop::operator == (const BlockedSFSLoop& other) const {
+    return region_ == other.region_ && matchingReln_ == other.matchingReln_;
+}
+
+inline bool BlockedSFSLoop::operator != (const BlockedSFSLoop& other) const {
+    return region_ != other.region_ || matchingReln_ != other.matchingReln_;
 }
 
 inline std::unique_ptr<BlockedSFSLoop> BlockedSFSLoop::isBlockedSFSLoop(

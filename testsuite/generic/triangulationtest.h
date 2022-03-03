@@ -736,7 +736,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             for (int i = 0; i < trials; ++i) {
                 Triangulation<dim> t =
-                    Isomorphism<dim>::random(tri.size()).apply(tri);
+                    Isomorphism<dim>::random(tri.size())(tri);
 
                 t.orient();
                 clearProperties(t);
@@ -759,7 +759,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             for (int i = 0; i < trials; ++i) {
                 Triangulation<dim> t =
-                    Isomorphism<dim>::random(tri.size()).apply(tri);
+                    Isomorphism<dim>::random(tri.size())(tri);
 
                 t.makeCanonical();
                 clearProperties(t);
@@ -849,7 +849,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             std::string otherSig;
             for (unsigned i = 0; i < 10; ++i) {
                 Triangulation<dim> other =
-                    Isomorphism<dim>::random(tri.size()).apply(tri);
+                    Isomorphism<dim>::random(tri.size())(tri);
 
                 otherSig = other.template isoSig<Type<dim>>();
                 if (otherSig != sig) {
@@ -861,7 +861,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
             for (unsigned i = 0; i < 10; ++i) {
                 Triangulation<dim> other(tri);
-                Isomorphism<dim>::random(tri.size()).applyInPlace(other);
+                other = Isomorphism<dim>::random(tri.size())(other);
 
                 otherSig = other.template isoSig<Type<dim>>();
                 if (otherSig != sig) {
@@ -886,7 +886,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
                 Triangulation<dim> rebuild =
                     Triangulation<dim>::fromIsoSig(detail.first);
-                Triangulation<dim> relabel = detail.second.apply(tri);
+                Triangulation<dim> relabel = detail.second(tri);
 
                 if (relabel.detail() != rebuild.detail()) {
                     std::ostringstream msg;
@@ -1065,6 +1065,34 @@ class TriangulationTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
             }
+        }
+
+        template <int subdim>
+        static void verifyBoundaryFacesToSubdim(const Triangulation<dim>& tri,
+                const char* name) {
+            static_assert(subdim >= 0 && subdim < dim);
+
+            if constexpr (subdim > 0)
+                verifyBoundaryFacesToSubdim<subdim - 1>(tri, name);
+
+            size_t found = 0;
+            for (auto f : tri.template faces<subdim>()) {
+                if (f->isBoundary())
+                    ++found;
+            }
+            if (found != tri.template countBoundaryFaces<subdim>()) {
+                std::ostringstream msg;
+                msg << name << " reports "
+                    << tri.template countBoundaryFaces<subdim>()
+                    << " boundary " << subdim << "-faces instead of the "
+                    "expected " << found << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        static void verifyBoundaryFaces(const Triangulation<dim>& tri,
+                const char* name) {
+            verifyBoundaryFacesToSubdim<dim - 1>(tri, name);
         }
 
         static void verifyBoundaryCount(const Triangulation<dim>& tri,
@@ -1347,7 +1375,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 // Randomly relabel the simplices, but preserve orientation.
                 Isomorphism<dim> iso = Isomorphism<dim>::random(large.size(),
                     true);
-                iso.applyInPlace(large);
+                large = iso(large);
                 clearProperties(large);
 
                 if (k == dim) {
@@ -1508,6 +1536,176 @@ class TriangulationTest : public CppUnit::TestFixture {
                         "gives Z_2 rank " << z2rank
                         << ", but homologyH2Z2() gives " << h2 << ".";
                     CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        template <int k>
+        static void verifyDualChainComplex(const Triangulation<dim>& tri,
+                const char* name) {
+            static_assert(1 <= k && k < dim);
+
+            // These tests use homology on the dual skeleton: invalid or
+            // empty triangulations are explicitly disallowed, but ideal
+            // triangulations are fine.
+            if (tri.isEmpty() || ! tri.isValid())
+                return;
+
+            regina::MatrixInt m = tri.template dualBoundaryMap<k>();
+            regina::MatrixInt n = tri.template dualBoundaryMap<k + 1>();
+
+            if (m.columns() != n.rows()) {
+                std::ostringstream msg;
+                msg << name << ": dual boundary maps for computing H" << k
+                    << " have incompatible sizes.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! (m * n).isZero()) {
+                std::ostringstream msg;
+                msg << name << ": dual boundary maps for computing H" << k
+                    << " do not compose to give zero.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            regina::AbelianGroup g1(m, n);
+            {
+                const auto& hom = tri.template homology<k>();
+                if (g1.str() != hom.str()) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k << " via the "
+                        "chain complex gives " << g1.str()
+                        << ", but homology<" << k << ">() gives "
+                        << hom.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            regina::AbelianGroup g1z2(m, n, 2);
+            if (g1z2.rank() != 0) {
+                std::ostringstream msg;
+                msg << name << ": computing H" << k
+                    << " with Z_2 coefficients via the chain complex gives "
+                    "a group with non-trivial rank " << g1z2.rank();
+                CPPUNIT_FAIL(msg.str());
+            }
+            size_t z2rank = g1z2.countInvariantFactors();
+            for (size_t i = 0; i < z2rank; ++i)
+                if (g1z2.invariantFactor(i) != 2) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k
+                        << " with Z_2 coefficients via the chain complex gives "
+                        "an unexpected invariant factor "
+                        << g1z2.invariantFactor(i);
+                    CPPUNIT_FAIL(msg.str());
+                }
+            if constexpr (k == 2 && dim == 3) {
+                unsigned long h2 = tri.homologyH2Z2();
+                if (h2 != z2rank) {
+                    std::ostringstream msg;
+                    msg << name << ": computing H" << k
+                        << " with Z_2 coefficients via the chain complex "
+                        "gives Z_2 rank " << z2rank
+                        << ", but homologyH2Z2() gives " << h2 << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        template <int k>
+        static void verifyDualToPrimal(const Triangulation<dim>& tri,
+                const char* name) {
+            static_assert(0 <= k && k < dim);
+
+            // Do not try to work with triangulations that fail the
+            // preconditions for dualToPrimal().
+            if (tri.isEmpty() || ! tri.isValid())
+                return;
+            if constexpr (regina::standardDim(dim))
+                if (tri.isIdeal())
+                    return;
+
+            regina::MatrixInt map = tri.template dualToPrimal<k>();
+
+            // This map sends homologous cycles to homologous cycles;
+            // in particular, this means it must send boundaries to boundaries.
+            //
+            // Also, the map should describe an isomorphism between the dual
+            // and primal homology groups.
+
+            // Start with what is easy to test.
+
+            if constexpr (regina::standardDim(dim) || k + 1 < dim) {
+                auto dualBoundariesAsPrimal =
+                    map * tri.template dualBoundaryMap<k + 1>();
+
+                if constexpr (0 < k) {
+                    if (! (tri.template boundaryMap<k>() *
+                            dualBoundariesAsPrimal).isZero()) {
+                        std::ostringstream msg;
+                        msg << name << ": dual-to-primal map for " << k
+                            << "-faces does not send boundaries to cycles.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                if (! dualBoundariesAsPrimal.isZero()) {
+                    // Test whether the column space for dualBoundariesAsPrimal
+                    // lives within the column space for boundaryMap<k + 1>.
+                    auto b = tri.template boundaryMap<k + 1>();
+                    auto rank = b.columnEchelonForm();
+
+                    regina::MatrixInt comb(b.rows(),
+                        b.columns() + dualBoundariesAsPrimal.columns());
+                    for (size_t row = 0; row < b.rows(); ++row) {
+                        for (size_t col = 0; col < b.columns(); ++col)
+                            comb.entry(row, col) = b.entry(row, col);
+                        for (size_t col = 0;
+                                col < dualBoundariesAsPrimal.columns(); ++col)
+                            comb.entry(row, b.columns() + col) =
+                                dualBoundariesAsPrimal.entry(row, col);
+                    }
+                    auto combRank = comb.columnEchelonForm();
+
+                    if (rank != combRank) {
+                        std::ostringstream msg;
+                        msg << name << ": dual-to-primal map for " << k
+                            << "-faces does not send boundaries to boundaries.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                if constexpr (0 < k) {
+                    // We can use HomMarkedAbelianGroup to verify that
+                    // this is indeed an isomorphism between homology groups.
+                    regina::MarkedAbelianGroup homDual(
+                        tri.template dualBoundaryMap<k>(),
+                        tri.template dualBoundaryMap<k+1>());
+                    regina::MarkedAbelianGroup homPrimal(
+                        tri.template boundaryMap<k>(),
+                        tri.template boundaryMap<k+1>());
+                    regina::HomMarkedAbelianGroup hom(homDual, homPrimal, map);
+
+                    if (! hom.isCycleMap()) {
+                        std::ostringstream msg;
+                        msg << name << ": dual-to-primal map for " << k
+                            << "-chains is not a cycle map.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (! hom.isEpic()) {
+                        std::ostringstream msg;
+                        msg << name << ": dual-to-primal map for " << k
+                            << "-chains is not epic on homology groups.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (! hom.isMonic()) {
+                        std::ostringstream msg;
+                        msg << name << ": dual-to-primal map for " << k
+                            << "-chains is not monic on homology groups.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
                 }
             }
         }

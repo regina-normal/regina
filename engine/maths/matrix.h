@@ -1160,19 +1160,26 @@ class Matrix : public Output<Matrix<T>> {
          * Combinatorics, algorithms, and complexity", Chicago J. Theor.
          * Comput. Sci., Vol. 1997, Article 5.
          *
+         * Although the Matrix class does not formally support empty matrices,
+         * if this \e is found to be a 0-by-0 matrix then the determinant
+         * returned will be 1.
+         *
          * This routine is only available when the template argument \a ring
          * is \c true.
          *
          * \pre This is a square matrix.
          *
+         * \exception FailedPrecondition this matrix is not square.
+         *
          * @return the determinant of this matrix.
          */
         REGINA_ENABLE_FOR_RING(T) det() const {
             unsigned long n = this->rows_;
-
-            // Just in case...
-            if (n != this->cols_ || n == 0)
-                return 0;
+            if (n != this->cols_)
+                throw FailedPrecondition("Determinants can only be "
+                    "computed for square matrices.");
+            if (n == 0)
+                return 1;
 
             T* partial[2];
             partial[0] = new T[n * n];

@@ -54,6 +54,12 @@ template AbelianGroup TriangulationBase<3>::homology<2>() const;
 template MatrixInt TriangulationBase<3>::boundaryMap<1>() const;
 template MatrixInt TriangulationBase<3>::boundaryMap<2>() const;
 template MatrixInt TriangulationBase<3>::boundaryMap<3>() const;
+template MatrixInt TriangulationBase<3>::dualBoundaryMap<1>() const;
+template MatrixInt TriangulationBase<3>::dualBoundaryMap<2>() const;
+template MatrixInt TriangulationBase<3>::dualBoundaryMap<3>() const;
+template MatrixInt TriangulationBase<3>::dualToPrimal<0>() const;
+template MatrixInt TriangulationBase<3>::dualToPrimal<1>() const;
+template MatrixInt TriangulationBase<3>::dualToPrimal<2>() const;
 
 template const GroupPresentation& TriangulationBase<3>::fundamentalGroup() const;
 

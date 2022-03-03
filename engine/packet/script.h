@@ -354,6 +354,36 @@ class Script : public Packet {
          */
         void unlistenVariables(PacketListener* listener);
 
+        /**
+         * Determines if this and the given script are identical.
+         *
+         * Here \e identical means that both scripts contain exactly the
+         * same text, and they have the same set of variables.  For two
+         * variables to be considered the same, they must have the same
+         * variable name, and their values must be either both \c null or
+         * both pointers to the same packet.
+         *
+         * @param other the script to compare with this.
+         * @return \c true if and only if this and the given script are
+         * identical.
+         */
+        bool operator == (const Script& other) const;
+
+        /**
+         * Determines if this and the given script are not identical.
+         *
+         * Here \e identical means that both scripts contain exactly the
+         * same text, and they have the same set of variables.  For two
+         * variables to be considered the same, they must have the same
+         * variable name, and their values must be either both \c null or
+         * both pointers to the same packet.
+         *
+         * @param other the script to compare with this.
+         * @return \c true if and only if this and the given script are
+         * not identical.
+         */
+        bool operator != (const Script& other) const;
+
         void writeTextShort(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;
 
@@ -428,6 +458,10 @@ inline void Script::addPacketRefs(PacketRefs& refs) const {
     for (const auto& v : variables_)
         if (auto shared = v.second.lock())
             refs.insert({ shared.get(), false });
+}
+
+inline bool Script::operator != (const Script& other) const {
+    return ! ((*this) == other);
 }
 
 inline void swap(Script& a, Script& b) {

@@ -24,11 +24,11 @@ The types of files in this directory are:
 *.session:
     Transcripts of example Python sessions, showing both the user input and
     the corresponding Python output.  You can start a python session from
-	the command line by running "regina-python".
+    the command line by running "regina-python".
 
 *.py:
     The input for the example Python sessions described above.  You can
-	feed this input directly into Regina by running:
+    feed this input directly into Regina by running:
 
     regina-python file.py   (where file.py is your chosen input file)
 

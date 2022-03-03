@@ -22,7 +22,6 @@
 #include "subcomplex/blockedsfsloop.h"
 #include "subcomplex/blockedsfspair.h"
 #include "subcomplex/blockedsfstriple.h"
-#include "subcomplex/l31pillow.h"
 #include "subcomplex/layeredchain.h"
 #include "subcomplex/layeredchainpair.h"
 #include "subcomplex/layeredlensspace.h"
@@ -96,7 +95,6 @@ int main() {
     SHOW_SIZE(BlockedSFSLoop);
     SHOW_SIZE(BlockedSFSPair);
     SHOW_SIZE(BlockedSFSTriple);
-    SHOW_SIZE(L31Pillow);
     SHOW_SIZE(LayeredChain);
     SHOW_SIZE(LayeredChainPair);
     SHOW_SIZE(LayeredLensSpace);

@@ -178,6 +178,49 @@ std::tuple<const SatBlock*, unsigned, bool, bool>
         "SatRegion::boundaryAnnulus(): Invalid boundary annulus index");
 }
 
+bool SatRegion::operator == (const SatRegion& other) const {
+    if (blocks_ != other.blocks_)
+        return false;
+
+    // We have the same combinatorial types of blocks, presented in the same
+    // order with the same horizontal/vertical reflections.  What we need to
+    // do now is confirm that the blocks are glued together in the same way.
+
+    // For this, we need to be able to convert block pointers to indices.
+    std::map<const SatBlock*, size_t> index;
+    size_t i = 0;
+    for (const SatBlockSpec& spec : blocks_)
+        index.emplace(spec.block(), i++);
+
+    // Now check all the adjacencies.
+    auto me = blocks_.begin();
+    auto you = other.blocks_.begin();
+    for ( ; me != blocks_.end(); ++me, ++you) {
+        const SatBlock* b = me->block();
+        for (unsigned ann = 0; ann < b->countAnnuli(); ++ann) {
+            if (const SatBlock* adj = b->adjacentBlock(ann)) {
+                if (you->block()->adjacentBlock(ann) !=
+                        other.blocks_[index.at(adj)].block())
+                    return false;
+                if (you->block()->adjacentAnnulus(ann) !=
+                        b->adjacentAnnulus(ann))
+                    return false;
+                if (you->block()->adjacentReflected(ann) !=
+                        b->adjacentReflected(ann))
+                    return false;
+                if (you->block()->adjacentBackwards(ann) !=
+                        b->adjacentBackwards(ann))
+                    return false;
+            } else {
+                if (you->block()->hasAdjacentBlock(ann))
+                    return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 SFSpace SatRegion::createSFS(bool reflect) const {
     // Count boundary components.
     unsigned untwisted, twisted;

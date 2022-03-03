@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2019  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -50,6 +50,7 @@ class Output {
     bool ht1;
     bool dec;
     bool lat;
+    bool precomp;
     bool mod;
     bool msp;
     bool fac;
@@ -73,7 +74,7 @@ class Output {
     bool no_matrices_output;
 
 #ifdef ENFNORMALIZ
-    renf_class* Renf;
+    renf_class_shared Renf;
 #endif
 
     //---------------------------------------------------------------------------
@@ -107,6 +108,7 @@ class Output {
     void set_write_ht1(const bool& flag);  // sets the write .ht1 flag
     void set_write_dec(const bool& flag);  // sets the write .dec flag
     void set_write_lat(const bool& flag);  // sets the write .lat flag
+    void set_write_precomp(const bool& flag);  // sets the write .precomp flag
     void set_write_mod(const bool& flag);  // sets the write .mod flag
     void set_write_msp(const bool& flag);  // sets the write .msp flag
     void set_write_fac(const bool& flag);  // sets the write .fac flag
@@ -122,8 +124,10 @@ class Output {
     void write_matrix_gen(const Matrix<Number>& M) const;  // writes M to file name.gen
     void write_matrix_mod(const Matrix<Number>& M) const;  // writes M to file name.mod
     void write_matrix_msp(const Matrix<Number>& M) const;  // writes M to file name.msp
+    void write_precomp() const;
     void write_tri() const;                                // writes the .tri file
     void write_aut() const;                                // writes the .aut file
+    void write_aut_ambient(ofstream& out, const string& gen_name) const;                    // ... in a special case
     void write_fac() const;                                // writes the .fac file
     void write_dual_fac() const;                           // writes the .fac file with duual face lattice
     void write_inc() const;                                // writes the .inc file
@@ -138,7 +142,7 @@ class Output {
 
     void set_lattice_ideal_input(bool lattice_odeal_input);
 
-    void set_renf(renf_class* renf, bool is_int_hull = false);
+    void set_renf(const renf_class_shared renf, bool is_int_hull = false);
     /*
     // #ifdef ENFNORMALIZ
         void set_renf(renf_class *renf,bool is_int_hull=false);

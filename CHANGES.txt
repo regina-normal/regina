@@ -7,7 +7,61 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 7.0  [ 10 December, 2021 ]
+Version 7.1  [ TODO ]
+
+    GENERAL:
+        - Regina now supports Python 3 only (not Python 2 or 3).
+        - Updated the bundled copy of Normaliz to version 3.9.2 (7 Feb 2022).
+    ENGINE:
+        Class CallableArg<...>:
+            - Now a public helper class in the main regina:: namespace.
+            - Now behaves gracefully if the given index is out of range.
+        Class Example<4>:
+            - New routine k3().
+            - Reflected the result of cp2() so that it has intersection
+              form [1], not [-1].
+        Class FacetPairing<dim>:
+            - In findAllPairings(), the action is no longer required to
+              take the list of all automorphisms if it does not need them.
+        Class IntersectionForm:
+            - New class to compute invariants of intersection forms.
+        Class Isomorphism:
+            - Replaced apply() with the bracket operator.  The old apply()
+              is now a deprecated alias.
+            - Deprecated applyInPlace(), since this is no faster than
+              calling tri = iso(tri).
+            - Added bracket operators to apply an isomorphism to a
+              FacetSpec or a FacetPairing.
+        Class Matrix:
+            - Routine det() now throws an exception if the matrix is not
+              square (this is a precondition), and now returns 1 if the
+              matrix is detected to be 0-by-0 (although such matrices are
+              formally not supported by the Matrix class).
+        Type safe_tuple_element<...>:
+            - New type alias that is like std::tuple_element<...> but
+              with well-defined behaviour for an out-of-range index.
+        Class Triangulation<dim>:
+            - New suite of routines countBoundaryFaces().
+            - New suite of public routines dualBoundaryMap() (these were
+              previously private, and had a more complex interface).
+            - New suite of routines dualToPrimal().
+        Class Triangulation<4>:
+            - New routine intersectionForm().
+        Routine for_constexpr():
+            - New routine to support compile-time for loops.
+    PYTHON:
+        - For classes that have a bool() cast operator, this is now wrapped in
+          Python using the special __bool__() function (i.e., Python will now
+          cast such objects to bool in the same way).
+    UTILITIES:
+        tricensus:
+            - Now supports multithreading via the new --threads option.
+            - Now supports enumerating subcomplexes of triangulations
+              via the new option --allowinvalid.
+            - The --genpairs option is now much less memory-hungry when the
+              automorphism group is large (e.g., with many boundary facets).
+
+Version 7.0  [ 19 December, 2021 ]
 
     GENERAL:
         - The file format has changed.  It is still XML-based, but older
@@ -90,6 +144,7 @@ Version 7.0  [ 10 December, 2021 ]
               assignment, and member and global swap() functions.  The old
               clone() is now deprecated; use the copy constructor instead.
             - Added comparison operators == and !=.
+            - Added operator < to impose a total order.
             - Changed triangulation() to return a reference, not a pointer.
             - Constructors now take their arguments by reference (and,
               for the vector constructor, optionally an rvalue reference).
@@ -109,6 +164,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
             - Added begin() and end() for iteration through angle strutures.
+            - Added comparison operators == and !=.
             - Changed triangulation() and surface() to return const references,
               not pointers.
             - Changed enumerate() and enumerateTautDD() to take the
@@ -130,6 +186,9 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
+            - Routine edgeGroupRoles() now returns a Perm<3>, not a Perm<4>
+              that always maps 3 to 3.
             - Deprecated clone().  Just use the copy constructor instead.
         Class BanConstraintBase, BanNone, BanBoundary, BanTorusBoundary:
             - All methods are now public, not protected.
@@ -163,6 +222,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old names are kept as deprecated aliases.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Changed BlockedSFS::isPluggedIBundle() to take no arguments,
               and instead return a std::optional<std::string>.
         Class BoolSet:
@@ -290,7 +350,7 @@ Version 7.0  [ 10 December, 2021 ]
               is kept but deprecated.
             - Added sfsOverSphere() and layeredLoop().
         Class Example<4>:
-            - Added cp2() and s2xs2().
+            - Added cp2(), s2xs2() and s2xs2Twisted(); thanks to Rhuaidi Burke.
         Class Face<dim, subdim>:
             - New compile-time constants allowsNonOrientableLinks and
               allowsInvalidFaces.
@@ -312,11 +372,18 @@ Version 7.0  [ 10 December, 2021 ]
               the object size in Regina's standard dimensions, and it also
               speeds up calls to vertices(), but it does marginally slow
               down calls to face().
-            - The equality/inequality tests have changed meaning: not only do
-              the face *numbers* need to be the same, but the entire embedding
-              permutations returned by vertices() need to be the same.
+            - The equality/inequality tests have changed meaning.  They are
+              stronger in that not just the face *numbers* need to be the same,
+              but the entire embedding permutations returned by vertices()
+              need to be the same.  They are weaker in that only the simplex
+              numbers are compared, not the simplex pointers (so you can
+              now meaningfully compare objects from different triangulations).
             - The old (simplex, face number) constructors are removed, with new
               (simplex, embedding permutation) constructors to replace them.
+            - For orientable components of triangulations, the sign of the
+              vertices() permutations now matches the orientation of the
+              corresponding simplex (with some necessary exceptions for
+              (dim-1)-faces).
         Class FaceNumbering<dim, subdim>:
             - Everything in this class is now constexpr.
             - New class constants lexNumbering and oppositeDim.
@@ -354,6 +421,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class FileInfo:
             - Added a move constructor and move assignment operator.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Class constant TYPE_XML is now constexpr.
             - Routine identify() now returns a std::optional<FileInfo>,
               not a newly allocated pointer that could be null.
@@ -598,12 +666,8 @@ Version 7.0  [ 10 December, 2021 ]
             - New type trait to identify Regina's arbitrary precision integer
               types.
         Class L31Pillow:
-            - Routine isL31Pillow() is now called recognise(), and
-              returns a std::unique_ptr instead of a raw pointer.
-              The old name is kept as a deprecated alias.
-            - Added copy construction and copy assignment.
-            - Added member and global swap() functions.
-            - Deprecated clone().  Just use the copy constructor instead.
+            - Removed completely.  This one-off triangulation is instead
+              rolled into the TrivialTri class.
         Class Laurent, Laurent2:
             - Added member and global swap() functions.
             - Added invertX(), and (for Laurent2 only) invertY().
@@ -616,12 +680,14 @@ Version 7.0  [ 10 December, 2021 ]
         Class LayeredChain:
             - Added copy assignment operator.
             - Added member and global swap() functions.
+            - Add comparison operators == and !=.
         Class LayeredChainPair:
             - Routine isLayeredChainPair() is now called recognise(), and
               returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Add comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
             - Routine chain() now returns by reference, not by pointer.
         Class LayeredLensSpace:
@@ -630,6 +696,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Add comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class LayeredLoop:
             - Routine isLayeredLoop() is now called recognise(), and
@@ -637,6 +704,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Add comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class LayeredSolidTorus:
             - Routines isLayeredSolidTorus(), formsLayeredSolidTorusBase()
@@ -660,8 +728,10 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
         Class Layering:
             - Added copy construction and copy assignment.
+            - Added comparison operators == and !=.
             - All access to the underlying triangulation is now const only.
         Class LensSpace:
             - Added member and global swap() functions.
@@ -758,6 +828,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class LPMatrix:
             - Now derives from Output.  The old dump() is now deprecated,
               in favour of the usual Output routines.
+            - Added comparison operators == and !=.
         Class LPSystem:
             - New class to translate coordinate systems into a layout
               for LPInitialTableaux.
@@ -837,6 +908,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global
               regina::swap(ModelLinkGraph&, ModelLinkGraph&).
+            - Added comparison operators == and !=.
             - Routine generateMinimalLinks() now uses a type-safe template-based
               mechanism for its callback function, instead of a function
               pointer with void* arguments, and the callback now takes its
@@ -891,6 +963,7 @@ Version 7.0  [ 10 December, 2021 ]
               functionality available to the outside world.
             - Renamed sameSurface() to operator ==, and added operator !=.
               The old routine sameSurface() is kept but deprecated.
+            - Added operator < to impose a total order.
             - Removed countCoords() completely, since its meaning is
               amgibuous as to whether it refers to the original
               coordinate system or the current internal encoding.
@@ -914,6 +987,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
             - Added begin() and end() for iteration through hypersurfaces.
+            - Added comparison operators == and !=.
             - Changed triangulation() and hypersurface() to return
               const references, not pointers.
             - Changed enumerate() to take the triangulation argument by
@@ -954,6 +1028,7 @@ Version 7.0  [ 10 December, 2021 ]
               functionality available to the outside world.
             - Renamed sameSurface() to operator ==, and added operator !=.
               The old routine sameSurface() is kept but deprecated.
+            - Added operator < to impose a total order.
             - Removed countCoords() completely, since its meaning is
               amgibuous as to whether it refers to the original
               coordinate system or the current internal encoding.
@@ -996,6 +1071,7 @@ Version 7.0  [ 10 December, 2021 ]
               tree.  The old function is kept as a deprecated alias, but
               now takes its filter argument by reference (not by pointer).
             - Added begin() and end() for iteration through surfaces.
+            - Added comparison operators == and !=.
             - New filter() method that takes a SurfaceFilter.
             - Changed triangulation() and surface() to return const references,
               not pointers.
@@ -1176,6 +1252,7 @@ Version 7.0  [ 10 December, 2021 ]
               returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class PluggedTorusBundle:
             - Routine isPluggedTorusBundle() is now called recognise(), takes
@@ -1184,6 +1261,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy/move construction and copy/move assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
         Class PlugTriSolidTorus:
             - Class constants are now constexpr.
             - Routine chain() now returns a std::optional by const reference,
@@ -1193,6 +1271,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class Polynomial:
             - Added member and global swap() functions.
@@ -1230,7 +1309,8 @@ Version 7.0  [ 10 December, 2021 ]
         Class SafePtr, SafePointeeBase:
             - Removed completely.
         Class SatAnnulus:
-            - Routines transform() and image() now takes their arguments by
+            - Added comparison operators == and !=.
+            - Routines transform() and image() now take their arguments by
               reference.
             - Routine isAdjacent() now returns a tuple, instead of using
               a mix of return values and pointer arguments for output.
@@ -1256,7 +1336,10 @@ Version 7.0  [ 10 December, 2021 ]
               of using several reference arguments for output.
             - Renamed nAnnuli() to countAnnuli().  The old name is kept
               as a deprecated alias.
-            - All subclasses now have comparison operators == and !=.
+            - Added comparison operators == and !=, which are customised for
+              each subclass.
+            - Routine SatLST::roles() now returns a Perm<3>, not a Perm<4>
+              that always maps 3 to 3.
             - All access to the underlying triangulation is now const only.
         Class SatBlockModel:
             - New class to replace SatBlockStarter.
@@ -1301,10 +1384,12 @@ Version 7.0  [ 10 December, 2021 ]
               functions that construct regions will expand them automatically.
             - New routine blockAbbrs() that returns the output of
               writeBlockAbbrs() in string format.
+            - Added comparison operators == and !=.
             - All access to the underlying triangulation is now const only.
         Class Script:
             - Added a copy constructor and a copy assignment operator.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Routines addVariable(), addVariableName() and setVariableValue()
               now take their value arguments by std::weak_ptr, and support a
               default argument representing a null variable.
@@ -1338,8 +1423,11 @@ Version 7.0  [ 10 December, 2021 ]
             - Added a copy assignment operator.
             - Added move constructors and move assignment operators.
             - Added member and global swap() functions.
-            - Function parse() now returns by value (not pointer), and throws
-              an exception on error (instead of returning null).
+            - Added comparison operators == and !=.
+            - Replaced the old parse() with a new string-based constructor.
+              The parse() function is deprecated, but it has also changed:
+              it now returns by value (not pointer), and throws an exception
+              on error instead of returning null.
             - Function triangulate() now returns by value.
             - Function cycleCmp() is now a private member function (it was
               very specialised).
@@ -1349,6 +1437,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added a copy assignment operator.
             - Added move constructors and move assignment operators.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Function compareWith() now takes the other isomorphism by
               reference, not by pointer; added function compareWithIdentity()
               to implement the (undocumented) previous behaviour when
@@ -1357,6 +1446,9 @@ Version 7.0  [ 10 December, 2021 ]
             - Class constants are now constexpr.
             - Added member and global swap() functions.
         Class Simplex<dim>:
+            - In orientable components of triangulations, the signs of each
+              faceMapping() permutation now match the simplex orientation
+              (with some necessary exceptions for (dim-1)-faces).
             - Simplified the class hierarchy; SimplexFaces and
               SimplexFacesSuite are both gone.
             - New compile-time constants dimension and subdimension.
@@ -1389,6 +1481,7 @@ Version 7.0  [ 10 December, 2021 ]
               error, instead of creating a null SnapPea triangulation.
             - Now supports move construction and copy/move assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - The snapPea() export routines now throw an exception if the
               triangulation is null, instead of producing empty output.
             - New routine nullify().
@@ -1422,6 +1515,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class SnappedTwoSphere:
             - Routine formsSnappedTwoSphere() is now called recognise(), and
@@ -1431,6 +1525,7 @@ Version 7.0  [ 10 December, 2021 ]
               now takes these balls by reference, not pointer.  Likewise,
               snappedBall() now returns by reference, not pointer.
             - Added copy construction and copy assignment.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class Snapshot, SnapshotRef, Snapshottable, SnapshotWriteError:
             - A new suite of classes for taking snapshots of a large
@@ -1444,6 +1539,7 @@ Version 7.0  [ 10 December, 2021 ]
               The old name is kept as a deprecated alias.
             - Added copy and move construction, and copy and move assignment.
             - Added member and global swap() functions.
+            - Add comparison operators == and !=.
             - Routines makeCanonical() and isCanonical() now take no
               arguments (the old triangulation argument was redundant).
             - Deprecated clone().  Just use the copy constructor instead.
@@ -1486,6 +1582,7 @@ Version 7.0  [ 10 December, 2021 ]
             - Added a move constructor and move assignment operator.
             - Renamed swapContents() to swap(); the old name is now a deprecated
               alias.  Also added a global regina::swap(Tangle&, Tangle&).
+            - Added comparison operators == and !=.
             - Routines numClosure and denClosure() now return by value,
               not pointer.
             - Added brief() output routines.
@@ -1504,6 +1601,7 @@ Version 7.0  [ 10 December, 2021 ]
         Class TreeDecomposition:
             - Added a move constructor and move/copy assignment operators.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Changed the "raw graph" constructor from taking a raw C-style
               array to take either a Matrix<bool> or a std::vector of rows.
               The old constructor is removed completely.
@@ -1652,6 +1750,9 @@ Version 7.0  [ 10 December, 2021 ]
               by passing ALG_BACKTRACK.
             - Routine connectedSumWith() now adds fewer tetrahedra (thanks
               to Adele Jackson).
+            - New suite of zeroTwoMove() routines, thanks to Alex He.
+            - Calling pinchEdge() on an oriented triangulation now preserves
+              the orientation.
             - Changed maximalForestInSkeleton() to return by value
               instead of returning through a reference argument.
             - Changed maximalForestInBoundary() to return the edge set by
@@ -1662,7 +1763,7 @@ Version 7.0  [ 10 December, 2021 ]
               deprecated.  Use the routines from Example<3> instead.
             - Routine enterTextTriangulation() is now deprecated; this
               is a relic from Regina's ancient past.
-        Class Triangluation<4>:
+        Class Triangulation<4>:
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
@@ -1674,18 +1775,21 @@ Version 7.0  [ 10 December, 2021 ]
             - Routine simplifyExhaustive() no longer runs in the background
               (even if a progress tracker is passed), and it now throws an
               exception if the triangulation has multiple components.
+            - New routines fourFourMove() and snapEdge(), thanks to Alex He.
         Class TrieSet:
             - This is no longer a template class (though its member
               functions are still templated on the bitmask type).
             - Added move/copy constructors and move/copy assignment operators.
             - Added member and global swap() functions.
             - Added short and detailed output functions.
+            - Added comparison operators == and !=.
         Class TriSolidTorus:
             - Routine formsTriSolidTorus() is now called recognise(), and
               returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
             - Changed isAnnulusSelfIdentified() to return a std::optional,
               instead of returning the permutation via a pointer argument.
@@ -1693,24 +1797,28 @@ Version 7.0  [ 10 December, 2021 ]
             - Removed completely.  These classes were not being used anywhere
               within Regina, and did not support tritmasks of arbitrary length.
         Class TrivialTri:
+            - Added a new triangulation L31_PILLOW, to replace the old
+              L31Pillow class.
             - Class constants are now constexpr.
             - Routine isTrivialTriangulation() is now called recognise(), and
               returns a std::unique_ptr instead of a raw pointer.
               The old name is kept as a deprecated alias.
             - Added copy construction and copy assignment.
             - Added member and global swap() functions.
+            - Added comparison operators == and !=.
             - Deprecated clone().  Just use the copy constructor instead.
         Class TxICore:
             - Renamed TeXName() to texName().  The old name is kept but
               deprecated.
+            - Added comparison operators == and !=.
         Class TxIDiagonalCore, TxIParallelCore:
             - Added move/copy constructors and move/copy assignment operators.
             - Added member and global swap() functions.
-            - Added comparison operators == and !=.
         Class TypeTrie:
             - Added move/copy constructors and move/copy assignment operators.
             - Added member and global swap() functions.
             - Added short and detailed output functions.
+            - Added comparison operators == and !=.
         Class UnsolvedCase:
             - New exception class.
         Class ValidityConstraints:
@@ -1722,6 +1830,8 @@ Version 7.0  [ 10 December, 2021 ]
               of different sizes (which are always considered non-equal).
             - New constructors that take iterator ranges and initialiser lists.
             - New move constructor and move assignment operator.
+            - The copy assignment operator can now work with vectors of
+              different sizes.
             - New binary +, - and scalar * operators.
             - New routine isZero().
             - New routine scaleDown() for vectors over Regina's integer classes.

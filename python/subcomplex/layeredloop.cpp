@@ -53,6 +53,7 @@ void addLayeredLoop(pybind11::module_& m) {
         .def_static("recognise", &LayeredLoop::recognise)
         .def_static("isLayeredLoop", &LayeredLoop::recognise) // deprecated
     ;
+    regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 }
 

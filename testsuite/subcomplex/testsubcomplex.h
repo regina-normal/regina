@@ -43,4 +43,5 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 void addStandardTriangulation(CppUnit::TextUi::TestRunner& runner);
+void addTxICore(CppUnit::TextUi::TestRunner& runner);
 

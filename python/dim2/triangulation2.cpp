@@ -165,6 +165,8 @@ void addTriangulation2(pybind11::module_& m) {
         .def("hasBoundaryEdges", &Triangulation<2>::hasBoundaryEdges)
         .def("countBoundaryFacets", &Triangulation<2>::countBoundaryFacets)
         .def("countBoundaryEdges", &Triangulation<2>::countBoundaryEdges)
+        .def("countBoundaryFaces", (size_t (Triangulation<2>::*)(int) const)(
+            &Triangulation<2>::countBoundaryFaces))
         .def("isOrientable", &Triangulation<2>::isOrientable)
         .def("isOriented", &Triangulation<2>::isOriented)
         .def("isIdeal", &Triangulation<2>::isIdeal)
@@ -184,6 +186,10 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::arg("k") = 1)
         .def("boundaryMap", (MatrixInt (Triangulation<2>::*)(int) const)(
             &Triangulation<2>::boundaryMap))
+        .def("dualBoundaryMap", (MatrixInt (Triangulation<2>::*)(int) const)(
+            &Triangulation<2>::dualBoundaryMap))
+        .def("dualToPrimal", (MatrixInt (Triangulation<2>::*)(int) const)(
+            &Triangulation<2>::dualToPrimal))
         .def("pachner", &Triangulation<2>::pachner<2>,
             pybind11::arg(),
             pybind11::arg("check") = true,

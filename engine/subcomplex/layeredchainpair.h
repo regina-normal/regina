@@ -128,6 +128,48 @@ class LayeredChainPair : public StandardTriangulation {
         const LayeredChain& chain(int which) const;
 
         /**
+         * Determines whether this and the given structure represent
+         * the same type of layered chain pair.
+         *
+         * Specifically, two layered chain pairs will compare as equal if and
+         * only if they their constituent layered chains each have the same
+         * respective lengths, \e and appear in the same order.
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass is more specific than combinatorial isomorphism, due
+         * to the ordering requirement).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent the same type of layered chain pair.
+         */
+        bool operator == (const LayeredChainPair& other) const;
+
+        /**
+         * Determines whether this and the given structure represent
+         * different types of layered chain pair.
+         *
+         * Specifically, two layered chain pairs will compare as equal if and
+         * only if they their constituent layered chains each have the same
+         * respective lengths, \e and appear in the same order.
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass is more specific than combinatorial isomorphism, due
+         * to the ordering requirement).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent different types of layered chain pair.
+         */
+        bool operator != (const LayeredChainPair& other) const;
+
+        /**
          * Determines if the given triangulation component is a layered
          * chain pair.
          *
@@ -167,8 +209,8 @@ class LayeredChainPair : public StandardTriangulation {
 /**
  * Swaps the contents of the two given structures.
  *
- * This global routine simply calls L31Pillow::swap(); it is provided
- * so that L31Pillow meets the C++ Swappable requirements.
+ * This global routine simply calls LayeredChainPair::swap(); it is provided
+ * so that LayeredChainPair meets the C++ Swappable requirements.
  *
  * @param a the first structure whose contents should be swapped.
  * @param b the second structure whose contents should be swapped.
@@ -194,6 +236,14 @@ inline LayeredChainPair* LayeredChainPair::clone() const {
 
 inline const LayeredChain& LayeredChainPair::chain(int which) const {
     return chain_[which];
+}
+inline bool LayeredChainPair::operator == (const LayeredChainPair& other)
+        const {
+    return chain_[0] == other.chain_[0] && chain_[1] == other.chain_[1];
+}
+inline bool LayeredChainPair::operator != (const LayeredChainPair& other)
+        const {
+    return chain_[0] != other.chain_[0] || chain_[1] != other.chain_[1];
 }
 inline std::ostream& LayeredChainPair::writeName(std::ostream& out) const {
     return out << "C("

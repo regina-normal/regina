@@ -36,11 +36,13 @@ void addAbelianGroup(pybind11::module_& m);
 void addGroupPresentation(pybind11::module_& m);
 void addHomGroupPresentation(pybind11::module_& m);
 void addMarkedAbelianGroup(pybind11::module_& m);
+void addIntersectionForm(pybind11::module_& m);
 
 void addAlgebraClasses(pybind11::module_& m) {
     addAbelianGroup(m);
     addGroupPresentation(m);
     addHomGroupPresentation(m);
     addMarkedAbelianGroup(m);
+    addIntersectionForm(m);
 }
 

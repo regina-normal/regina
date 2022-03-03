@@ -139,6 +139,24 @@ void Script::removeVariable(size_t index) {
     variables_.erase(it);
 }
 
+bool Script::operator == (const Script& other) const {
+    if (text_ != other.text_)
+        return false;
+    if (variables_.size() != other.variables_.size())
+        return false;
+
+    auto a = variables_.begin();
+    auto b = other.variables_.begin();
+    for ( ; a != variables_.end(); ++a, ++b) {
+        if (a->first != b->first)
+            return false;
+        if (a->second.lock() != b->second.lock())
+            return false;
+    }
+
+    return true;
+}
+
 void Script::writeTextShort(std::ostream& o) const {
     if (text_.empty())
         o << "Empty script";

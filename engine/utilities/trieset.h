@@ -179,6 +179,25 @@ class TrieSet : public Output<TrieSet> {
         void swap(TrieSet& other) noexcept;
 
         /**
+         * Determines whether this and the given collection store
+         * exactly the same sets.
+         *
+         * @param other the collection to compare with this.
+         * @return \c true if and only if both collections store the same sets.
+         */
+        bool operator == (const TrieSet& other) const;
+
+        /**
+         * Determines whether this and the given collection do not store
+         * exactly the same sets.
+         *
+         * @param other the collection to compare with this.
+         * @return \c true if and only if both collections do not store the
+         * same sets.
+         */
+        bool operator != (const TrieSet& other) const;
+
+        /**
          * Insert the given set into this collection.  The same set may
          * be insert into this collection multiple times (and this
          * multiplicity will be recorded correctly).
@@ -325,6 +344,10 @@ inline void TrieSet::swap(TrieSet& other) noexcept {
     std::swap(root_.child_[0], other.root_.child_[0]);
     std::swap(root_.child_[1], other.root_.child_[1]);
     std::swap(root_.descendants_, other.root_.descendants_);
+}
+
+inline bool TrieSet::operator != (const TrieSet& other) const {
+    return ! ((*this) == other);
 }
 
 template <typename T>

@@ -86,7 +86,8 @@ class ReginaPrefSet : public QObject {
 
         // The preferences themselves:
 
-        enum LinkCodeType { Gauss, DowkerThistlethwaite, KnotSig, Jenkins };
+        enum LinkCodeType { Gauss, DowkerThistlethwaite, KnotSig, Jenkins,
+            PlanarDiagram };
             /**< Possible export codes that can be displayed for links. */
         enum LinkCrossingsStyle { PictorialCrossings, TextCrossings };
             /**< Possible styles for displaying crossings for links. */

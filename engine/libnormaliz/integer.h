@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2019  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -29,6 +29,7 @@
 #include <string>
 #include <climits>
 #include <cmath>
+#include <iosfwd>
 
 #include <libnormaliz/general.h>
 
@@ -39,8 +40,16 @@
 //---------------------------------------------------------------------------
 
 namespace libnormaliz {
-using namespace std;
 
+using std::cerr;
+using std::endl;
+using std::istream;
+using std::ostream;
+using std::ostringstream;
+using std::string;
+using std::stringstream;
+using std::vector;
+using std::ws;
 
 //---------------------------------------------------------------------------
 //                     Basic functions
@@ -189,7 +198,7 @@ inline bool using_renf<renf_elem_class>() {
 //--------------------------------------------------------------------
 
 // for the interpretation of a string as a decimal fraction or floating point number
-mpq_class dec_fraction_to_mpq(string s);
+mpq_class dec_fraction_to_mpq(std::string s);
 
 //--------------------------------------------------------------------
 
@@ -386,148 +395,8 @@ size_t decimal_length(Integer a);
 template <typename Integer>
 mpz_class nmz_factorial(Integer n);
 
-//---------------------------------------------------------------------------
-//                     Input
-//---------------------------------------------------------------------------
 
-inline mpq_class mpq_read(istream& in) {
-    const string numeric = "+-0123456789/.e";
-    in >> std::ws;
-    string s;
-    char c;
-    bool is_float = false;
-    while (in.good()) {
-        c = in.peek();
-        size_t pos = numeric.find(c);
-        if (pos == string::npos)
-            break;
-        if (pos > 12)
-            is_float = true;
-        in >> c;
-        s += c;
-    }
-
-    if (s == "") {
-        string t;
-        t += c;
-        throw BadInputException("Empty number string preceding character " + t +
-                                ". Most likely mismatch of amb_space and matrix format or forgotten keyword.");
-    }
-
-    // cout << "t " << s << " f " << is_float << endl;
-
-    if (s[0] == '+')
-        s = s.substr(1);  // must suppress + sign for mpq_class
-
-    try {
-        if (!is_float) {
-            return mpq_class(s);
-        }
-        else
-            return dec_fraction_to_mpq(s);
-    } catch (const std::exception& e) {
-        cerr << e.what() << endl;
-        throw BadInputException("Illegal number string " + s + " in input, Exiting.");
-    }
-}
-
-// To be used in input.cpp
-inline void string2coeff(mpq_class& coeff, istream& in, const string& s) {  // in here superfluous parameter
-    
-    stringstream sin(s);
-    coeff = mpq_read(sin);
-    // coeff=mpq_class(s);
-}
-
-// To be used from other sources
-inline void string2coeff(mpq_class& coeff, const string& s) {
-    
-    // cout << "SSSSSS " << s << endl;
-    
-    const string numeric = "+-0123456789/.e "; // must allow blank
-    for(auto& c: s){
-        size_t pos = numeric.find(c);
-        if(pos == string::npos)
-            throw BadInputException("Illegal character in numerical string");
-    }
-    
-    
-    stringstream sin(s);
-    coeff = mpq_read(sin);
-    // coeff=mpq_class(s);
-}
-
-inline void read_number(istream& in, mpq_class& number) {
-    number = mpq_read(in);
-}
-
-inline void read_number(istream& in, long& number) {
-    in >> number;
-}
-
-inline void read_number(istream& in, long long& number) {
-    in >> number;
-}
-
-inline void read_number(istream& in, nmz_float& number) {
-    in >> number;
-}
-
-inline void read_number(istream& in, mpz_class& number) {
-    in >> number;
-}
-
-#ifdef ENFNORMALIZ
-
-inline void string2coeff(renf_elem_class& coeff, istream& in, const string& s) {  // we need in to access the renf
-
-    try {
-        renf_class* K = (renf_class*)in.pword(renf_class::xalloc());
-        coeff = renf_elem_class(*K, s);
-    } catch (const std::exception& e) {
-        cerr << e.what() << endl;
-        throw BadInputException("Illegal number string " + s + " in input, Exiting.");
-    }
-}
-
-inline void read_number(istream& in, renf_elem_class& number) {
-    // in >> number;
-
-    char c;
-
-    in >> ws;
-    c = in.peek();
-    if (c != '(' && c != '\'' && c != '\"') {  // rational number
-        mpq_class rat = mpq_read(in);
-        number = renf_elem_class(rat);
-        return;
-    }
-
-    // now we have a proper field contains
-
-    in >> c;  // read (
-
-    string num_string;
-    bool skip = false;
-    while (in.good()) {
-        c = in.peek();
-        if (c == ')' || c == '\'' || c == '\"') {
-            in >> c;
-            break;
-        }
-        if (c == '~' || c == '=' || c == '[')  // skip the approximation
-            skip = true;
-        in.get(c);
-        if (in.fail())
-            throw BadInputException("Error in reading number: field element not terminated by )");
-        if (!skip)
-            num_string += c;
-    }
-    string2coeff(number, in, num_string);
-}
-#endif
-
-// formerly conver.h
+// formerly convert.h
 // conversion for integers, throws ArithmeticException if conversion fails
 template <typename ToType, typename FromType>
 inline void convert(ToType& ret, const FromType& val) {
@@ -574,7 +443,7 @@ inline  bool try_convert(mpz_class& ret, const renf_elem_class& val) {
     renf_elem_class help = val;
     if (!help.is_integer())
         throw ArithmeticException("field element cannot be converted to integer");
-    ret = help.get_num();
+    ret = help.num();
     return true;
 }
 
@@ -601,13 +470,13 @@ inline bool try_convert(long& ret, const renf_elem_class& val) {
 }
 
 inline bool try_convert(mpq_class& ret, const renf_elem_class& val) {
-    nmz_float ret_double = val.get_d();
+    nmz_float ret_double = static_cast<double>(val);
     ret = mpq_class(ret_double);
     return true;
 }
 
 inline bool try_convert(nmz_float& ret, const renf_elem_class& val) {
-    ret = val.get_d();
+    ret = static_cast<double>(val);
     return true;
 }
 #endif
@@ -1165,7 +1034,7 @@ long convertToLong(const Integer& val){
         throw LongException(val);
     }
     
-    return ret;    
+    return ret;
     
 }
 
@@ -1180,7 +1049,7 @@ long convertToLongLong(const Integer& val){
         throw LongLongException(val);
     }
     
-    return ret;    
+    return ret;
     
 }
 }  // namespace libnormaliz

@@ -141,24 +141,35 @@ class SatBlockSpec : public ShortOutput<SatBlockSpec> {
         void swap(SatBlockSpec& other) noexcept;
 
         /**
-         * Determines whether this and the given structure contain identical
-         * information.  In particular, their block() pointers must be
-         * identical (not pointing to different blocks with the same contents).
+         * Determines whether this and the given structure contain
+         * combinatorially equivalent information.
+         *
+         * Specifically, to compare as equal, two SatBlockSpec objects
+         * must hold blocks of the same type with the same combinatorial
+         * parameters (as tested by the SatBlock equality comparison),
+         * and they must use the same horizontal/vertical reflection
+         * parameters within the larger region (as returned by refVert() and
+         * refHoriz()).
          *
          * @param other the structure to compare against this.
          * @return \c true if and only if this and \a other contain
-         * identical information.
+         * combinatorially equivalent information.
          */
         bool operator == (const SatBlockSpec& other) const;
         /**
-         * Determines whether this and the given structure contain different
-         * information.  In particular, they are considered different if their
-         * block() pointers are different (even if they point to different
-         * blocks with the same contents).
+         * Determines whether this and the given structure do not contain
+         * combinatorially equivalent information.
+         *
+         * Specifically, to compare as equal, two SatBlockSpec objects
+         * must hold blocks of the same type with the same combinatorial
+         * parameters (as tested by the SatBlock equality comparison),
+         * and they must use the same horizontal/vertical reflection
+         * parameters within the larger region (as returned by refVert() and
+         * refHoriz()).
          *
          * @param other the structure to compare against this.
-         * @return \c true if and only if this and \a other contain
-         * different information.
+         * @return \c true if and only if this and \a other do not contain
+         * combinatorially equivalent information.
          */
         bool operator != (const SatBlockSpec& other) const;
 
@@ -480,6 +491,56 @@ class SatRegion : public Output<SatRegion> {
          */
         std::tuple<const SatBlock*, unsigned, bool, bool> boundaryAnnulus(
             size_t which) const;
+
+        /**
+         * Determines whether this and the given object represent the
+         * same combinatorial presentation of a saturated region.
+         *
+         * Specifically, in order to compare as equal, two saturated
+         * regions must be formed from saturated blocks with the same
+         * combinatorial parameters (as returned by the SatBlock
+         * comparison operators), and these blocks must be presented in
+         * the same order with the same horizontal/vertical reflections
+         * and joined together in the same way.
+         *
+         * Like the comparison operators for most parameterised subclasses
+         * of StandardTriangulation, it does not matter how the constituent
+         * tetrahedra and/or their vertices are numbered.  However, this
+         * test is more specific than combinatorial isomorphism of the
+         * underlying subcomplex of the triangulation, since it does not
+         * account for the many symmetries in how the same saturated
+         * region can be presented.
+         *
+         * @param other the saturated region to compare with this.
+         * @return \c true if and only if this and the given object represent
+         * the same combinatorial presentation of a saturated region.
+         */
+        bool operator == (const SatRegion& other) const;
+
+        /**
+         * Determines whether this and the given object represent
+         * diffrerent combinatorial presentations of a saturated region.
+         *
+         * Specifically, in order to compare as equal, two saturated
+         * regions must be formed from saturated blocks with the same
+         * combinatorial parameters (as returned by the SatBlock
+         * comparison operators), and these blocks must be presented in
+         * the same order with the same horizontal/vertical reflections
+         * and joined together in the same way.
+         *
+         * Like the comparison operators for most parameterised subclasses
+         * of StandardTriangulation, it does not matter how the constituent
+         * tetrahedra and/or their vertices are numbered.  However, this
+         * test is more specific than combinatorial isomorphism of the
+         * underlying subcomplex of the triangulation, since it does not
+         * account for the many symmetries in how the same saturated
+         * region can be presented.
+         *
+         * @param other the saturated region to compare with this.
+         * @return \c true if and only if this and the given object represent
+         * different combinatorial presentations of a saturated region.
+         */
+        bool operator != (const SatRegion& other) const;
 
         /**
          * Returns details of the Seifert fibred space represented by
@@ -898,12 +959,12 @@ inline SatBlockSpec::SatBlockSpec(SatBlock* block, bool refVert,
 }
 
 inline bool SatBlockSpec::operator == (const SatBlockSpec& other) const {
-    return block_ == other.block_ && refVert_ == other.refVert_ &&
+    return (*block_) == (*other.block_) && refVert_ == other.refVert_ &&
         refHoriz_ == other.refHoriz_;
 }
 
 inline bool SatBlockSpec::operator != (const SatBlockSpec& other) const {
-    return block_ != other.block_ || refVert_ != other.refVert_ ||
+    return (*block_) != (*other.block_) || refVert_ != other.refVert_ ||
         refHoriz_ != other.refHoriz_;
 }
 
@@ -951,6 +1012,10 @@ inline size_t SatRegion::countBoundaryAnnuli() const {
 
 inline size_t SatRegion::numberOfBoundaryAnnuli() const {
     return nBdryAnnuli_;
+}
+
+inline bool SatRegion::operator != (const SatRegion& other) const {
+    return ! ((*this) == other);
 }
 
 inline std::string SatRegion::blockAbbrs(bool tex) const {

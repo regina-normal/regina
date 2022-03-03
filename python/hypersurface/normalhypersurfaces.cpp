@@ -57,7 +57,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::HS_LIST_DEFAULT,
             pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def(pybind11::init<const NormalHypersurfaces&>())
         .def("swap", &NormalHypersurfaces::swap)
         .def_static("enumerate", [](Triangulation<4>& owner,
@@ -110,7 +111,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         pybind11::arg(), pybind11::arg(),
         pybind11::arg("which") = regina::HS_LIST_DEFAULT,
         pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
-        pybind11::arg("tracker") = nullptr);
+        pybind11::arg("tracker") = nullptr,
+        pybind11::call_guard<pybind11::gil_scoped_release>());
 
     m.def("swap",
         (void(*)(NormalHypersurfaces&, NormalHypersurfaces&))(regina::swap));

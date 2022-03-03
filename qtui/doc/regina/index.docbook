@@ -3,8 +3,8 @@
   <!ENTITY regina "<application>Regina</application>">
   <!ENTITY kappname "&regina;">
 
-  <!ENTITY regversion "7.0">
-  <!ENTITY regdate "2021-12-10">
+  <!ENTITY regversion "7.1">
+  <!ENTITY regdate "2021-12-19">
   <!ENTITY copyrightyears "1999&ndash;2021">
   <!ENTITY copyrightholder "The Regina development team">
   <!ENTITY copyrightnotice
@@ -32,9 +32,9 @@
   <!ENTITY regenginedocs
    "<link linkend='python-docs'>calculation engine documentation</link>">
   <!ENTITY regenginedocsurlbase
-   "<ulink url='http://regina-normal.github.io/engine-docs/'>regina-normal.github.io</ulink>">
+   "<ulink url='http://regina-normal.github.io/&regversion;/engine-docs/'>regina-normal.github.io</ulink>">
   <!ENTITY regmanapiurl
-   "<ulink url='http://regina-normal.github.io/engine-docs/'>regina-normal.github.io</ulink>">
+   "<ulink url='http://regina-normal.github.io/&regversion;/engine-docs/'>regina-normal.github.io</ulink>">
   <!ENTITY regmanhandbookurl
    "<ulink url='http://regina-normal.github.io/docs/'>regina-normal.github.io</ulink>">
   <!ENTITY regmanburtonthesisurl
@@ -70,6 +70,8 @@
   <!ENTITY c "<application>C</application>">
   <!ENTITY ccpp "&c;/&cpp;">
   <!ENTITY cpp "<application>C++</application>">
+  <!ENTITY cpp11 "<application>C++11</application>">
+  <!ENTITY cpp17 "<application>C++17</application>">
   <!ENTITY csv "<acronym>CSV</acronym>">
   <!ENTITY cython "<application>Cython</application>">
   <!ENTITY debian "<application>Debian</application>">
@@ -200,7 +202,7 @@
 
 <book lang="&language;">
  <bookinfo>
-  <title>The &regina; Handbook</title>
+  <title>The &regina; &regversion; Handbook</title>
 
   <authorgroup><author>
    <firstname>Benjamin</firstname>
@@ -227,9 +229,6 @@
 
   <abstract>
    &regabstract;
-   <para>
-    This handbook is current as of &regina;&nbsp;&regversion;.
-   </para>
    <para>
     Tip: You can also browse the
     <link linkend="taskindex">alphabetical index</link> of tasks.

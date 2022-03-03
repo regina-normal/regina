@@ -95,6 +95,18 @@ SigPartialIsomorphism& SigPartialIsomorphism::operator = (
     return *this;
 }
 
+bool SigPartialIsomorphism::operator == (const SigPartialIsomorphism& other)
+        const {
+    return
+        nLabels == other.nLabels &&
+        nCycles == other.nCycles &&
+        dir == other.dir &&
+        std::equal(labelImage, labelImage + nLabels, other.labelImage) &&
+        std::equal(cyclePreImage, cyclePreImage + nCycles,
+            other.cyclePreImage) &&
+        std::equal(cycleStart, cycleStart + nCycles, other.cycleStart);
+}
+
 void SigPartialIsomorphism::makeCanonical(const Signature& sig,
         unsigned fromCycleGroup) {
     unsigned fromCycle, toCycle;

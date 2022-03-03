@@ -57,6 +57,7 @@ void addLayeredLensSpace(pybind11::module_& m) {
         .def_static("isLayeredLensSpace", // deprecated
             &LayeredLensSpace::recognise)
     ;
+    regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 }
 

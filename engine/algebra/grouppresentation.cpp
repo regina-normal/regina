@@ -2079,8 +2079,13 @@ void GroupExpression::writeTextShort(std::ostream& out, bool utf8,
         out << '1';
     else {
         for (auto i = terms_.begin(); i!=terms_.end(); i++) {
-            if (i != terms_.begin())
-                out << ' ';
+            if (i != terms_.begin()) {
+                if (utf8 && ! alphaGen) {
+                    // Spaces get lost between g012 g456 ...
+                    out << " \u00b7 "; // \cdot
+                } else
+                    out << ' ';
+            }
             if (alphaGen)
                 out << char('a' + i->generator);
             else

@@ -31,8 +31,6 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from __future__ import print_function
-
 def dumpSurfaces(name, tri, triName, coords = regina.HS_STANDARD, which = regina.HS_LIST_DEFAULT, alg = regina.HS_ALG_DEFAULT):
 	try:
 		slist = regina.NormalHypersurfaces(tri, coords, which)

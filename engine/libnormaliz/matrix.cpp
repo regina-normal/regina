@@ -244,7 +244,7 @@ void Matrix<Integer>::print(ostream& out, bool with_format) const {
 //---------------------------------------------------------------------------
 
 template <typename Integer>
-void Matrix<Integer>::pretty_print(ostream& out, bool with_row_nr) const {
+void Matrix<Integer>::pretty_print(ostream& out, bool with_row_nr, bool count_from_one) const {
     if (nr > 1000000 && !with_row_nr) {
         print(out, false);
         return;
@@ -252,9 +252,14 @@ void Matrix<Integer>::pretty_print(ostream& out, bool with_row_nr) const {
     size_t i, j;
     vector<size_t> max_length = maximal_decimal_length_columnwise();
     size_t max_index_length = decimal_length(nr);
+    if(count_from_one)
+        max_index_length = decimal_length(nr+1);
     for (i = 0; i < nr; i++) {
         if (with_row_nr) {
-            out << std::setw(max_index_length + 1) << std::setprecision(6) << i << ": ";
+            size_t j = i;
+            if(count_from_one)
+                j++;
+            out << std::setw(max_index_length + 1) << std::setprecision(6) << j << ": ";
         }
         for (j = 0; j < nc; j++) {
             out << std::setw(max_length[j] + 1) << std::setprecision(6) << elem[i][j];
@@ -265,7 +270,7 @@ void Matrix<Integer>::pretty_print(ostream& out, bool with_row_nr) const {
 
 #ifdef ENFNORMALIZ
 template <>
-void Matrix<renf_elem_class>::pretty_print(ostream& out, bool with_row_nr) const {
+void Matrix<renf_elem_class>::pretty_print(ostream& out, bool with_row_nr, bool count_from_one) const {
     if (nr > 1000000 && !with_row_nr) {
         print(out);
         return;
@@ -273,12 +278,17 @@ void Matrix<renf_elem_class>::pretty_print(ostream& out, bool with_row_nr) const
     size_t i, j, k;
     vector<size_t> max_length = maximal_decimal_length_columnwise();
     size_t max_index_length = decimal_length(nr);
+    if(count_from_one)
+        max_index_length = decimal_length(nr+1);
     for (i = 0; i < nr; i++) {
         if (with_row_nr) {
-            for (k = 0; k <= max_index_length - decimal_length(i); k++) {
+            size_t j = i;
+            if(count_from_one)
+                j++;
+            for (k = 0; k <= max_index_length - decimal_length(j); k++) {
                 out << " ";
             }
-            out << i << ": ";
+            out << j << ": ";
         }
         for (j = 0; j < nc; j++) {
             ostringstream to_print;
@@ -296,10 +306,14 @@ void Matrix<renf_elem_class>::pretty_print(ostream& out, bool with_row_nr) const
 //---------------------------------------------------------------------------
 
 template <>
-void Matrix<nmz_float>::pretty_print(ostream& out, bool with_row_nr) const {
+void Matrix<nmz_float>::pretty_print(ostream& out, bool with_row_nr, bool count_from_one) const {
     for (size_t i = 0; i < nr; ++i) {
-        if (with_row_nr)
-            out << std::setw(7) << i << ": ";
+        if (with_row_nr){
+            size_t j = i;
+            if(count_from_one)
+                j++;
+            out << std::setw(7) << j << ": ";
+        }
         for (size_t j = 0; j < nc; ++j) {
             out << std::setw(10) << elem[i][j] << " ";
         }
@@ -1049,7 +1063,7 @@ void Matrix<Integer>::scalar_division(const Integer& scalar) {
 
 template <>
 void Matrix<nmz_float>::scalar_division(const nmz_float& scalar) {
-    
+
     assert(false);
 }
 /* body
@@ -1211,11 +1225,28 @@ Matrix<Integer> Matrix<Integer>::multiply_rows(const vector<Integer>& m) const {
 template <typename Integer>
 void Matrix<Integer>::standardize_basis() {
     row_echelon_reduce();
-#ifdef ENFNORMALIZ
-    if (using_renf<Integer>())
-        make_first_element_1_in_rows();
-#endif
 }
+
+#ifdef ENFNORMALIZ
+template <>
+void Matrix<renf_elem_class>::make_first_element_1_in_rows() {
+    for (size_t i = 0; i < nr; ++i) {
+        for (size_t j = 0; j < nc; ++j) {
+            if (elem[i][j] != 0) {
+                renf_elem_class pivot = elem[i][j];
+                v_scalar_division(elem[i], pivot);
+                break;
+            }
+        }
+    }
+}
+
+template <>
+void Matrix<renf_elem_class>::standardize_basis() {
+    row_echelon_reduce();
+    make_first_element_1_in_rows();
+}
+#endif
 
 template <typename Integer>
 bool Matrix<Integer>::standardize_rows(const vector<Integer>& Norm) {
@@ -1322,7 +1353,7 @@ vector<Integer> Matrix<Integer>::VxM(const vector<Integer>& v) const {
 
 template <>
 vector<mpq_class> Matrix<mpq_class>::VxM(const vector<mpq_class>& v) const {
-    
+
     assert(false);
     return {};
 }
@@ -1507,18 +1538,37 @@ bool Matrix<Integer>::reduce_row(size_t row, size_t col) {
     assert(row < nr);
     size_t i, j;
     Integer help;
-    for (i = row + 1; i < nr; i++) {
-        if (elem[i][col] != 0) {
-            help = elem[i][col] / elem[row][col];
-            for (j = col; j < nc; j++) {
-                elem[i][j] -= help * elem[row][j];
-                if (!check_range(elem[i][j])) {
-                    return false;
+    if (using_renf<Integer>()) {
+        for (i = row + 1; i < nr; i++) {
+            if (elem[i][col] != 0) {
+                elem[i][col] /= elem[row][col];
+                for (j = col + 1; j < nc; j++) {
+                    if (elem[row][j] != 0) {
+                        help = elem[i][col];
+                        help *= elem[row][j];
+                        elem[i][j] -= help;
+                    }
                 }
-            }
-            if (using_float<Integer>())
                 elem[i][col] = 0;
-            // v_el_trans<Integer>(elem[row],elem[i],-help,col);
+            }
+        }
+    } else {
+        Integer help1;
+        for (i = row + 1; i < nr; i++) {
+            if (elem[i][col] != 0) {
+                help = elem[i][col];
+                help /= elem[row][col];
+                for (j = col; j < nc; j++) {
+                    help1 = help;
+                    help1 *= elem[row][j];
+                    elem[i][j] -= help1;
+                    if (!check_range(elem[i][j])) {
+                        return false;
+                    }
+                }
+                if (using_float<Integer>())
+                    elem[i][col] = 0;
+            }
         }
     }
     return true;
@@ -1780,7 +1830,7 @@ long Matrix<mpq_class>::pivot_in_column(size_t row, size_t col) {
 */
 template <>
 size_t Matrix<mpq_class>::row_echelon_inner_elem(bool& success) {
-    
+
     assert(false);
     return 0;
 }
@@ -1845,7 +1895,6 @@ template <>
 long Matrix<renf_elem_class>::pivot_in_column(size_t row, size_t col) {
     size_t i;
     long j = -1;
-    renf_elem_class help = 0;
 
     for (i = row; i < nr; i++) {
         if (elem[i][col] != 0) {
@@ -1881,19 +1930,6 @@ size_t Matrix<renf_elem_class>::row_echelon_inner_elem(bool& success) {
     }
 
     return rk;
-}
-
-template <>
-void Matrix<renf_elem_class>::make_first_element_1_in_rows() {
-    for (size_t i = 0; i < nr; ++i) {
-        for (size_t j = 0; j < nc; ++j) {
-            if (elem[i][j] != 0) {
-                renf_elem_class pivot = elem[i][j];
-                v_scalar_division(elem[i], pivot);
-                break;
-            }
-        }
-    }
 }
 
 template <>
@@ -2050,7 +2086,7 @@ Integer Matrix<Integer>::full_rank_index(bool& success) {
 #ifdef ENFNORMALIZ
 template <>
 renf_elem_class Matrix<renf_elem_class>::full_rank_index(bool& success) {
-    
+
     assert(false);
     return 0;
 }
@@ -2103,7 +2139,7 @@ size_t Matrix<Integer>::row_echelon(bool& success, bool do_compute_vol, Integer&
 
 template <typename Integer>
 size_t Matrix<Integer>::row_echelon(bool& success) {
-    Integer dummy;
+    static Integer dummy;
     return row_echelon(success, false, dummy);
 }
 
@@ -2118,7 +2154,7 @@ size_t Matrix<Integer>::row_echelon(bool& success, Integer& det) {
 
 template <typename Integer>
 size_t Matrix<Integer>::rank_submatrix(const Matrix<Integer>& mother, const vector<key_t>& key) {
-    
+
     assert(nc >= mother.nc);
     if (nr < key.size()) {
         elem.resize(key.size(), vector<Integer>(nc, 0));
@@ -2148,7 +2184,7 @@ size_t Matrix<Integer>::rank_submatrix(const Matrix<Integer>& mother, const vect
 
 template <>
 size_t Matrix<mpq_class>::rank_submatrix(const Matrix<mpq_class>& mother, const vector<key_t>& key) {
-    
+
     assert(false);
     return 0;
 }
@@ -2292,7 +2328,7 @@ Integer Matrix<Integer>::vol_submatrix(const Matrix<Integer>& mother, const vect
 
 template <>
 mpq_class Matrix<mpq_class>::vol_submatrix(const Matrix<mpq_class>& mother, const vector<key_t>& key) {
-    
+
     assert(false);
     return {};
 }
@@ -2502,19 +2538,27 @@ bool Matrix<Integer>::solve_destructive_inner(bool ZZinvertible, Integer& denom)
 
         // make pivot elemnst 1 and multiply RHS by denom as in the case with
         // integer types for uniform behavior
+        Integer fact, help;
         for (int i = nr - 1; i >= 0; --i) {
-            Integer fact = 1 / elem[i][i];
+            fact = 1 / elem[i][i];
             Integer fact_times_denom = fact * denom;
             for (size_t j = i; j < nr; ++j)
-                elem[i][j] *= fact;
+                if (elem[i][j] != 0) elem[i][j] *= fact;
             for (size_t j = nr; j < nc; ++j)
-                elem[i][j] *= fact_times_denom;
+                if (elem[i][j] != 0) elem[i][j] *= fact_times_denom;
         }
         for (int i = nr - 1; i >= 0; --i) {
             for (int k = i - 1; k >= 0; --k) {
-                Integer fact = elem[k][i];
-                for (size_t j = i; j < nc; ++j)
-                    elem[k][j] -= elem[i][j] * fact;
+                if (elem[k][i] != 0) {
+                    fact = elem[k][i];
+                    for (size_t j = i; j < nc; ++j){
+                        if (elem[i][j] != 0) {
+                            help = elem[i][j];
+                            help *= fact;
+                           elem[k][j] -= help;
+                        }
+                    }
+                }
             }
         }
     }
@@ -2831,7 +2875,21 @@ void Matrix<Integer>::invert_submatrix(
     vector<vector<Integer>*> RS_pointers = unit_mat.row_pointers();
     M.solve_system_submatrix(*this, key, RS_pointers, denom, 0, 0, compute_denom, make_sol_prime);
     Inv = M.extract_solution();
-    ;
+}
+
+template <typename Integer>
+void Matrix<Integer>::invert_submatrix(
+                   const vector<key_t>& key, Integer& denom, Matrix<Integer>& Inv, Matrix<Integer>& Work,
+                   Matrix<Integer>& UnitMat, bool compute_denom, bool make_sol_prime) const {
+    assert(key.size() == nc);
+    // cout << "WWWWWWWWWWW " << key.size() << " -- " << Work.nr << " " << Work.nc << endl;
+    assert(Work.nr == key.size());
+    assert(Work.nc == 2*key.size());
+    assert(UnitMat.nc == key.size());
+
+    vector<vector<Integer>*> RS_pointers = UnitMat.row_pointers();
+    Work.solve_system_submatrix(*this, key, RS_pointers, denom, 0, 0, compute_denom, make_sol_prime);
+    Inv = Work.extract_solution();
 }
 
 //---------------------------------------------------------------------------
@@ -2840,6 +2898,17 @@ template <typename Integer>
 void Matrix<Integer>::simplex_data(const vector<key_t>& key, Matrix<Integer>& Supp, Integer& vol, bool compute_vol) const {
     assert(key.size() == nc);
     invert_submatrix(key, vol, Supp, compute_vol, true);
+    // Supp=Supp.transpose();
+    Supp.transpose_in_place();
+    // Supp.make_prime(); now done internally
+}
+
+template <typename Integer>
+void Matrix<Integer>::simplex_data(const vector<key_t>& key, Matrix<Integer>& Supp, Integer& vol,
+                                   Matrix<Integer>& Work, Matrix<Integer>& UnitMat, bool compute_vol) const {
+    assert(key.size() == nc);
+    // cout << "WWWWWWWWWWW " << key.size() << " -- " << Work.nr << " " << Work.nc << endl;
+    invert_submatrix(key, vol, Supp, Work, UnitMat,compute_vol, true);
     // Supp=Supp.transpose();
     Supp.transpose_in_place();
     // Supp.make_prime(); now done internally
@@ -2878,7 +2947,7 @@ vector<Integer> Matrix<Integer>::solve_rectangular(const vector<Integer>& v, Int
 
 template <>
 vector<mpq_class> Matrix<mpq_class>::solve_rectangular(const vector<mpq_class>& v, mpq_class& denom) const {
-    
+
     assert(false);
     return {};
 }
@@ -3025,11 +3094,11 @@ size_t Matrix<Integer>::row_echelon_reduce() {
 
 template <>
 size_t Matrix<mpq_class>::row_echelon_reduce() {
-    
+
     assert(false);
     return 0;
 }
-/* body    
+/* body
     size_t rk;
     Matrix<mpq_class> Copy(*this);
     bool success;
@@ -3060,7 +3129,7 @@ Integer Matrix<Integer>::full_rank_index() const {
 
 template <>
 mpq_class Matrix<mpq_class>::full_rank_index() const {
-    
+
     assert(false);
     return{};
 }
@@ -3077,7 +3146,7 @@ mpq_class Matrix<mpq_class>::full_rank_index() const {
 #ifdef ENFNORMALIZ
 template <>
 renf_elem_class Matrix<renf_elem_class>::full_rank_index() const {
-    
+
     assert(false);
     return{};
 }
@@ -3164,7 +3233,7 @@ size_t Matrix<nmz_float>::row_echelon_inner_elem(bool& success) {
 
 template <>
 size_t Matrix<nmz_float>::row_echelon() {
-    
+
     assert(false);
     return 0;
 }
@@ -3213,8 +3282,8 @@ Matrix<Integer> Matrix<Integer>::kernel(bool use_LLL) const {
 
 template <>
 Matrix<mpq_class> Matrix<mpq_class>::kernel(bool use_LLL) const {
-    
-    
+
+
     assert(false);
     return{};
 }
@@ -3774,22 +3843,22 @@ size_t Matrix<Integer>::extreme_points_first(bool verbose, const vector<Integer>
     vector<bool> marked(nr, false);
     size_t no_success = 0;
     // size_t nr_attempt=0;
-    
+
     size_t counter_100=0;
     while (true) {
         INTERRUPT_COMPUTATION_BY_EXCEPTION
 
         // nr_attempt++; cout << nr_attempt << endl;
-        
+
         vector< vector<key_t> > max_min_ind(10*nc);
         #pragma omp parallel for
         for(size_t j=0; j < 10*nc; ++j){
             vector<long long> L = v_random<long long>(nc, 5*nc);
             max_min_ind[j] = HelpMat.max_and_min(L, norm_copy);
         }
-        
+
         size_t new_hits=0;
-        
+
         for(size_t j=0; j < 10*nc; ++j){
             if(!marked[max_min_ind[j][0]])
                 new_hits++;
@@ -3798,7 +3867,7 @@ size_t Matrix<Integer>::extreme_points_first(bool verbose, const vector<Integer>
             marked[max_min_ind[j][0]] = true;
             marked[max_min_ind[j][1]] = true;
         }
-        
+
         counter_100+=new_hits;
 
         if (new_hits==0)
@@ -3860,35 +3929,20 @@ vector<Integer> Matrix<Integer>::find_inner_point() {
 //---------------------------------------------------
 
 template <typename Integer>
-Matrix<Integer> readMatrix(const string project) {
-    // reads one matrix from file with name project
-    // format: nr of rows, nr of colimns, entries
-    // all separated by white space
+bool Matrix<Integer>::zero_product_with_transpose_of(const Matrix& B){
 
-    string name_in = project;
-    const char* file_in = name_in.c_str();
-    ifstream in;
-    in.open(file_in, ifstream::in);
-    if (in.is_open() == false)
-        throw BadInputException("readMatrix cannot find file");
-    int nrows, ncols;
-    in >> nrows;
-    in >> ncols;
+    if(nr == 0 || B.nr == 0)
+        return true;
 
-    if (nrows == 0 || ncols == 0)
-        throw BadInputException("readMatrix finds matrix empty");
-
-    int i, j;
-    Matrix<Integer> result(nrows, ncols);
-
-    for (i = 0; i < nrows; ++i)
-        for (j = 0; j < ncols; ++j) {
-            read_number(in, result[i][j]);
-            if (in.fail())
-                throw BadInputException("readMatrix finds matrix corrupted");
-        }
-    return result;
+    assert(nc == B.nc);
+    for(size_t i = 0; i < nr; ++i)
+        for(size_t j= 0; j < B.nr; ++j)
+            if(v_scalar_product(elem[i],B[j]) != 0)
+                return false;
+    return true;
 }
+
+//---------------------------------------------------
 
 //---------------------------------------------------------------------------
 // version with full number of points
@@ -4208,12 +4262,6 @@ Matrix<Integer> Matrix<Integer>::LLL_transpose() const {
     return transpose().LLL().transpose();
 }
 
-#ifndef NMZ_MIC_OFFLOAD  // offload with long is not supported
-template Matrix<long> readMatrix(const string project);
-#endif  // NMZ_MIC_OFFLOAD
-template Matrix<long long> readMatrix(const string project);
-template Matrix<mpz_class> readMatrix(const string project);
-
 template class Matrix<long>;
 template class Matrix<long long>;
 template class Matrix<mpz_class>;
@@ -4232,7 +4280,8 @@ void BinaryMatrix<Integer>::insert(long val, key_t i, key_t j) {
     assert(i < nr_rows);
     assert(j < nr_columns);
 
-    vector<bool> bin_exp;
+    vector<bool> bin_exp= binary_expansion(val);
+    /*
     while (val != 0) {  // binary expansion of val
         Integer bin_digit = val % 2;
         if (bin_digit == 1)
@@ -4240,7 +4289,7 @@ void BinaryMatrix<Integer>::insert(long val, key_t i, key_t j) {
         else
             bin_exp.push_back(false);
         val /= 2;
-    }
+    }*/
 
     long add_layers = bin_exp.size() - get_nr_layers();
     if (add_layers > 0) {
@@ -4343,7 +4392,7 @@ void BinaryMatrix<Integer>::set_values(const vector<Integer>& V) {
 
 template <typename Integer>
 void BinaryMatrix<Integer>::get_data_mpz(BinaryMatrix<mpz_class>& BM_mpz) {
-    
+
     swap(Layers, BM_mpz.Layers);
     swap(mpz_values,BM_mpz.values);
     values.resize(0);
@@ -4366,12 +4415,12 @@ const vector<mpz_class>&  BinaryMatrix<Integer>::get_mpz_values() const{
 
 template <typename Integer>
 long BinaryMatrix<Integer>::val_entry(size_t i, size_t j) const {
-    
+
     assert(i < nr_rows);
     assert(j < nr_columns);
-    
+
     long v=0, p2=1;
-    
+
     for(size_t k=0;k < get_nr_layers(); ++k){
         long n=0;
         if(test(i,j,k))
@@ -4379,13 +4428,13 @@ long BinaryMatrix<Integer>::val_entry(size_t i, size_t j) const {
         v+=p2*n;
         p2*=2;
     }
-    return v;    
+    return v;
 }
-    
-    
+
+
 template <typename Integer>
 Matrix<Integer> BinaryMatrix<Integer>::get_value_mat() const {
-    
+
     Matrix<Integer> VM(nr_rows,nr_columns);
     for(size_t i = 0;i < nr_rows; ++i){
         for(size_t j = 0; j < nr_columns; ++j){
@@ -4398,7 +4447,7 @@ Matrix<Integer> BinaryMatrix<Integer>::get_value_mat() const {
 
 template <typename Integer>
 Matrix<mpz_class> BinaryMatrix<Integer>::get_mpz_value_mat() const {
-    
+
     Matrix<mpz_class> VM(nr_rows,nr_columns);
     for(size_t i = 0;i < nr_rows; ++i){
         for(size_t j = 0; j < nr_columns; ++j){
@@ -4411,15 +4460,15 @@ Matrix<mpz_class> BinaryMatrix<Integer>::get_mpz_value_mat() const {
 
 template <typename Integer>
 void BinaryMatrix<Integer>::pretty_print(std::ostream& out, bool with_row_nr) const{
-    
+
     if(values.size() > 0) {
         Matrix<Integer> PM=get_value_mat();
-        PM.pretty_print(cout,with_row_nr);  
+        PM.pretty_print(out,with_row_nr);
     }
     else if(mpz_values.size() > 0){
         Matrix<mpz_class> PM=get_mpz_value_mat();
-        PM.pretty_print(cout,with_row_nr);
-    }    
+        PM.pretty_print(out,with_row_nr);
+    }
 }
 
 template class BinaryMatrix<long>;
@@ -4434,20 +4483,20 @@ template class BinaryMatrix<renf_elem_class>;
 // determines the maximal subsets in a vector of subsets given by their indicator vectors
 // result returned in is_max_subset
 // if  is_max_subset has size 0, it is fully set in this routine
-// otherwise it is supposed to be pre-information: the entry false means: 
+// otherwise it is supposed to be pre-information: the entry false means:
 //   already known not to be not maximal (or irrelevant)
 // if a set occurs more than once, only the last instance is recognized as maximal
 template <typename IncidenceVector>
 void maximal_subsets(const vector<IncidenceVector>& ind, IncidenceVector& is_max_subset) {
     if (ind.size() == 0)
         return;
-    
+
     if(is_max_subset.size() == 0){
         is_max_subset.resize(ind.size());
         for(size_t i=0; i<is_max_subset.size();++i)
             is_max_subset[i] = true;
     }
-    
+
     assert(is_max_subset.size() == ind.size());
 
     size_t nr_sets = ind.size();
@@ -4481,35 +4530,76 @@ void maximal_subsets(const vector<IncidenceVector>& ind, IncidenceVector& is_max
         }
     }
 }
-    
+
 template <>
 void maximal_subsets(const vector<dynamic_bitset>& ind, dynamic_bitset& is_max_subset) {
     if (ind.size() == 0)
         return;
-    
+
     if(is_max_subset.size() == 0){
         is_max_subset.resize(ind.size());
         is_max_subset.set();
     }
-    
+
     assert(is_max_subset.size() == ind.size());
 
     size_t nr_sets = ind.size();
     for(size_t i=0; i< nr_sets; ++i){
         if(!is_max_subset[i])
             continue;
-        for(size_t j=0; j < nr_sets; ++j){            
+        for(size_t j=0; j < nr_sets; ++j){
             if(i==j || !is_max_subset[j])  // don't compare to itself or something known not to be maximal
                 continue;
             if(ind[i].is_subset_of(ind[j])){
                 is_max_subset[i] = false;
-                break;                
-            }        
+                break;
+            }
         }
     }
 }
 
 template void maximal_subsets(const vector<vector<bool> >&, vector<bool>&);
 // template void maximal_subsets(const vector<dynamic_bitset>&, dynamic_bitset&);
+
+template <typename Integer>
+void makeIncidenceMatrix(vector<dynamic_bitset>& IncidenceMatrix, const Matrix<Integer>& Gens, const Matrix<Integer>& LinForms){
+
+    IncidenceMatrix = vector<dynamic_bitset>(LinForms.nr_of_rows(), dynamic_bitset(Gens.nr_of_rows()) );
+
+    std::exception_ptr tmp_exception;
+    bool skip_remaining = false;
+
+#pragma omp parallel for
+    for (size_t i = 0; i < LinForms.nr_of_rows(); ++i) {
+
+        if(skip_remaining)
+            continue;
+
+        try {
+
+        INTERRUPT_COMPUTATION_BY_EXCEPTION
+
+        for (size_t j = 0; j < Gens.nr_of_rows(); ++j) {
+            if (v_scalar_product(LinForms[i], Gens[j]) == 0)
+                IncidenceMatrix[i][j] = 1;
+        }
+
+        } catch (const std::exception&) {
+            tmp_exception = std::current_exception();
+            skip_remaining = true;
+#pragma omp flush(skip_remaining)
+        }
+
+    }
+    if (!(tmp_exception == 0))
+        std::rethrow_exception(tmp_exception);
+}
+
+template void makeIncidenceMatrix(vector<dynamic_bitset> &, const Matrix<long>&, const Matrix<long>&);
+template void makeIncidenceMatrix(vector<dynamic_bitset> &, const Matrix<long long>&, const Matrix<long long>&);
+template void makeIncidenceMatrix(vector<dynamic_bitset> &, const Matrix<mpz_class>&, const Matrix<mpz_class>&);
+#ifdef ENFNORMALIZ
+template void makeIncidenceMatrix(vector<dynamic_bitset> &, const Matrix<renf_elem_class>&, const Matrix<renf_elem_class>&);
+#endif
 
 }  // namespace libnormaliz

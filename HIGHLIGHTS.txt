@@ -6,17 +6,22 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 7.0  [ 10 December, 2021 ]
+Version 7.1  [ TODO ]
 
     Overview:
-        - The Python / C++ interface has had its largest overhaul in the 20+
-          year history of this project.  The native C++ interface has undergone
-          major changes to take advantage of modern features of the language,
-          and the Python bindings now give access to essentially *all* of
-          Regina's native C++ code.
-        - The file format has changed!  Regina 7.0 can read your old files,
-          but Regina 6.x cannot read your new files (although there is still
-          an option to save in the old format).
+        - Regina now supports Python 3 only (not Python 2 or 3).
+
+Version 7.0  [ 19 December, 2021 ]
+
+    Overview:
+        - Regina has had the largest overhaul in its 20+ year history.
+          Some of these changes break backward compatibility, and everyone
+          *should* read https://regina-normal.github.io/docs/regina7.html for
+          a quick overview of the most important changes.
+        - In particular: the file format has changed, the native C++ interface
+          has been reworked to take advantage of modern language features, and
+          for the first time, Python is now a "first class citizen" with full
+          access to essentially all of Regina's native code.
     Features:
         - Links can now self-frame (adding twists to give each component
           zero writhe), they now support planar diagram codes, and you
@@ -30,11 +35,12 @@ Version 7.0  [ 10 December, 2021 ]
         - Each normal surface/hypersurface/angle structure list now keeps its
           own snapshot of its triangulation.  You can edit, move or even delete
           the original triangulation without causing problems.
+        - New elementary moves on 4-manifold triangulations (thanks to Alex He).
+        - New command-line tool DGT to triangulate manifolds from framed links
+          (thanks to Rhuaidi Burke).
         - You can now build a SnapPea triangulation directly from a Regina
           link, and the meridian and longitude will be respected.
         - The retriangulate tool can now search Reidemeister graphs for knots.
-        - New command-line tool DGT to triangulate manifolds from framed links
-          (thanks to Rhuaidi Burke).
         - Changed the old "PDF attachments" in the user interface to support
           file attachments of any type.
     Removed:
@@ -46,11 +52,12 @@ Version 7.0  [ 10 December, 2021 ]
     Python / C++:
         - Regina now uses the C++17 standard, and no longer uses boost at all.
         - As noted above, there have been major sweeping changes to the C++ API.
-          See http://regina-normal.github.io/regina7.html for details.
-          Python users should require far fewer changes to their existing code,
-          but you can now access *much* more of the C++ API.
-        - Python now offers more natural iteration, string representation, and
-          better compatibility with Sage.
+          See https://regina-normal.github.io/api/regina7.html for details.
+          Python users should require far fewer changes to their existing code.
+        - Python now has full access to essentially all of Regina's C++ code,
+          wherever this makes sense.  It also has more natural iteration,
+          string representation, equality testing by value, and better
+          compatibility with Sage.
         - All of the code that was deprecated in version 6.0 has now been
           removed entirely.  See http://regina-normal.github.io/regina5to6.html
           for instructions on how to update your scripts.

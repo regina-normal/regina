@@ -30,6 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
+#include <set>
+#include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
@@ -424,6 +426,74 @@ bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
 
     return true;
 }
+
+bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
+    const Triangulation<2>& edgeLink = e->buildLink();
+    Isomorphism<4> linkInc = e->buildLinkInclusion();
+
+    if (check) {
+        // e should meet four distinct pentachora.
+        if (e->degree() != 4) {
+            return false;
+        }
+        std::set< Pentachoron<4>* > pentSet;
+        for ( auto& emb : *e ) {
+            if ( not pentSet.insert( emb.pentachoron() ).second ) {
+                return false;
+            }
+        }
+
+        // The link of e should be a 2-2 move away from being combinatorially
+        // isomorphic to the boundary of a tetrahedron.
+        if ( edgeLink.isoSig() != "eLPbddaaa" ) {
+            return false;
+        }
+    }
+
+    if ( not perform ) {
+        return true;
+    }
+
+    // Perform the 4-4 move as a 2-4 move followed by a 4-2 move.
+    // Note that we use pachner(), which ensures that we preserve orientation
+    // (if the triangulation was originally oriented).
+
+    // Start by working out where the 2-4 and 4-2 moves should take place.
+    Vertex<2>* topVert;
+    for ( int i = 0; i < 3; ++i ) {
+        if ( edgeLink.triangle(0)->vertex( i )->degree() == 2 ) {
+            topVert = edgeLink.triangle(0)->vertex( i );
+            break;
+        }
+    }
+    // Location of the 2-4 move.
+    size_t linkFront = topVert->embedding(0).triangle()->index();
+    int vertFront = topVert->embedding(0).vertex();
+    Pentachoron<4>* frontPent = pentachoron( linkInc.pentImage(linkFront) );
+    Tetrahedron<4>* tet24 = frontPent->tetrahedron(
+            linkInc.facetPerm( linkFront )[ vertFront ] );
+    // Location of the 4-2 move.
+    size_t linkBack = topVert->embedding(1).triangle()->index();
+    Pentachoron<4>* backPent = pentachoron( linkInc.pentImage(linkBack) );
+    int edge42;
+    for ( auto& emb : *e ) {
+        if ( emb.simplex() == backPent ) {
+            edge42 = emb.edge();
+            break;
+        }
+    }
+
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
+
+    pachner( tet24, false, true );
+    pachner( backPent->edge(edge42), false, true );
+
+    // Done!
+    return true;
+}
+
 bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
     const TetrahedronEmbedding<4>& emb = t->front();
     Pentachoron<4>* pent = emb.pentachoron();
@@ -953,6 +1023,72 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
     delete[] embPent;
     delete[] embVert;
 
+    return true;
+}
+
+bool Triangulation<4>::snapEdge(
+        Edge<4>* e, bool check, bool perform ) {
+    if ( check and
+            ( ( e->vertex(0) == e->vertex(1) ) or
+            ( e->vertex(0)->isBoundary() and
+              e->vertex(1)->isBoundary() ) ) ) {
+        return false;
+    }
+    if ( not perform ) {
+        return true;
+    }
+
+    // Our plan is to find a tetrahedron containing e, and then insert four
+    // pentachora in its place.
+    Pentachoron<4>* open = e->front().pentachoron();
+    Perm<5> vertices = e->front().vertices();
+    Pentachoron<4>* adj = open->adjacentPentachoron( vertices[2] );
+    Perm<5> glue = open->adjacentGluing( vertices[2] );
+
+    // Actually perform the move.
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
+
+    // The four pentachora that we insert together form a "pinched 4-ball".
+    // Combinatorially, the boundary of this pinched 4-ball is isomorphic to
+    // the 3-sphere that forms the boundary of a tetrahedral pillow; however,
+    // two adjacent boundary edges a and b in this pinched 4-ball are pinched
+    // together to form a single edge whose link becomes an annulus. We insert
+    // this pinched 4-ball into the opened-up tetrahedron in such a way that
+    // edges a, b and e together bound a triangle in the 3-sphere that used to
+    // form the boundary of the pinched 4-ball (this is possible because edges
+    // a and b are adjacent). For our purposes, the most important consequence
+    // of this is that the endpoints of e will become snapped together.
+
+    auto p = newPentachora<4>();
+    p[0]->join( 0, p[1], Perm<5>(3, 4) );
+    p[0]->join( 2, p[1], Perm<5>(0, 2, 4, 1, 3) );
+    p[0]->join( 3, p[2], Perm<5>(3, 4) );
+    p[0]->join( 4, p[2], Perm<5>(3, 4) );
+    p[1]->join( 1, p[2], Perm<5>(1, 2) );
+    p[1]->join( 2, p[3], Perm<5>(3, 4) );
+    p[1]->join( 3, p[3], Perm<5>(3, 4) );
+    p[2]->join( 0, p[3], Perm<5>(3, 4) );
+    p[2]->join( 1, p[3], Perm<5>(3, 4) );
+
+    // The boundary tetrahedra of this auxiliary structure are p[0]: 0234 and
+    // p[3]: 0214.
+    // The edges that glue to p[0]: 02, p[0]: 03, p[0]: 04 or p[0]: 23 will
+    // remain (topologically) unaffected.
+    // The edges that glue to p[0]: 24 and p[0]: 34 will be snapped together.
+
+    // A note for oriented triangulations: Simplex::faceMapping() guarantees
+    // that e->front().vertices() has a sign equal to the orientation of the
+    // relevant pentachoron, which for an oriented triangulation is always 1.
+    // Therefore all of the gluings that we make here use odd gluing
+    // permutations, and hence the orientation is preserved.
+
+    open->unjoin( vertices[2] );
+    p[0]->join( 1, open, vertices * Perm<5>(3, 2, 0, 1, 4) );
+    p[3]->join( 3, adj, glue * vertices * Perm<5>(3, 1, 0, 2, 4) );
+
+    // Done!
     return true;
 }
 

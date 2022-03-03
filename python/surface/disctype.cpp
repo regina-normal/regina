@@ -43,6 +43,7 @@ void addDiscType(pybind11::module_& m) {
         .def(pybind11::init<unsigned long, int>())
         .def(pybind11::init<const DiscType&>())
         .def(pybind11::self < pybind11::self)
+        .def("__bool__", &DiscType::operator bool)
         .def_readwrite("tetIndex", &DiscType::tetIndex)
         .def_readwrite("type", &DiscType::type)
         // We don't use the C++ NONE constant here because it is deprecated.

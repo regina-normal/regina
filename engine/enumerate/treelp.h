@@ -72,9 +72,10 @@ using MatrixInt = Matrix<Integer, true>;
  * specifically for use with the dual simplex method in the context
  * of a repetitive backtracking search.  As a result, the API is
  * cumbersome and highly specialised, which makes this matrix class
- * inappropriate for general use.
+ * inappropriate for general use.  If you just want a general-use
+ * integer matrix class, use MatrixInt instead.
  *
- * It is \e critical that, before using such a matrix, you reserve space
+ * It is \e critical that, before using an LPMatrix, you reserve space
  * for its elements, and then fix a specific size.  A matrix for which
  * both tasks have been done will be called \a initialised.  You can
  * initialise a matrix in one of two ways:
@@ -318,6 +319,36 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * @return the number of columns.
          */
         inline unsigned columns() const;
+
+        /**
+         * Determines whether this and the given matrix are equal.
+         *
+         * Two matrices are equal if and only if their dimensions are the same,
+         * and the corresponding elements of each matrix are equal.
+         *
+         * It is safe to compare matrices of different dimensions, and
+         * it is safe to compare matrices that might not yet be initialised.
+         * Two uninitialised matrices will compare as equal.
+         *
+         * @param other the matrix to compare with this.
+         * @return \c true if and only if the two matrices are equal.
+         */
+        inline bool operator == (const LPMatrix& other) const;
+
+        /**
+         * Determines whether this and the given matrix are not equal.
+         *
+         * Two matrices are equal if and only if their dimensions are the same,
+         * and the corresponding elements of each matrix are equal.
+         *
+         * It is safe to compare matrices of different dimensions, and
+         * it is safe to compare matrices that might not yet be initialised.
+         * Two uninitialised matrices will compare as equal.
+         *
+         * @param other the matrix to compare with this.
+         * @return \c true if and only if the two matrices are not equal.
+         */
+        inline bool operator != (const LPMatrix& other) const;
 
         /**
          * Swaps the two given rows of this matrix.
@@ -2053,6 +2084,21 @@ inline unsigned LPMatrix<IntType>::rows() const {
 template <typename IntType>
 inline unsigned LPMatrix<IntType>::columns() const {
     return cols_;
+}
+
+template <typename IntType>
+inline bool LPMatrix<IntType>::operator == (const LPMatrix& other) const {
+    if (rows_ != other.rows_ || cols_ != other.cols_)
+        return false;
+    if (rows_ && cols_)
+        return std::equal(dat_, dat_ + rows_ * cols_, other.dat_);
+    else
+        return true;
+}
+
+template <typename IntType>
+inline bool LPMatrix<IntType>::operator != (const LPMatrix& other) const {
+    return ! ((*this) == other);
 }
 
 template <typename IntType>

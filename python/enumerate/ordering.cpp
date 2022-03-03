@@ -56,6 +56,7 @@ void addOrdering(pybind11::module_& m) {
         // what is essentially a function object.
         s << "Compare row indices using position vectors";
     });
-    regina::python::add_eq_operators(c);
+    // It doesn't really make sense to compare these objects either.
+    regina::python::disable_eq_operators(c);
 }
 

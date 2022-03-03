@@ -3,6 +3,7 @@ SET(man1dir ${MANDIR}/man1)
 
 SET(man1_files
   censuslookup.1
+  dgt.1
   regconcat.1
   regconvert.1
   regfiledump.1

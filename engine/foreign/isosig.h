@@ -51,7 +51,7 @@ class Container;
  * text file.  The file should contain one signature per line.
  * Signatures for knots or triangulations of any dimension are all accepted,
  * though the type of object must be known in advance and fixed for the
- * entire function call using the template parameter \a PacketType.
+ * entire function call using the template parameter \a ObjectType.
  * These signatures will be converted into knots and/or triangulations using
  * Link::fromKnotSig() and Triangulation<dim>::fromIsoSig() respectively.
  *
@@ -79,7 +79,7 @@ class Container;
  * simply passes it through unchanged to low-level C/C++ file I/O routines.
  * It assumes however that the \e contents of the file are in UTF-8.
  *
- * \tparam PacketType Indicates which types of signatures the file contains.
+ * \tparam ObjectType Indicates which types of signatures the file contains.
  * This must be either Link (indicating that the file contains knot signatures),
  * or one of the Triangulation<dim> classes (indicating that the file contains
  * isomorphism signatures for <i>dim</i>-dimensional triangulations).
@@ -104,7 +104,7 @@ class Container;
  *
  * \ingroup foreign
  */
-template <class PacketType>
+template <class ObjectType>
 std::shared_ptr<Container> readSigList(const char *filename,
     unsigned colSigs = 0, int colLabels = -1, unsigned long ignoreLines = 0);
 
@@ -116,7 +116,7 @@ std::shared_ptr<Container> readSigList(const char *filename,
  * work with 2-manifold, 3-manifold and 4-manifold triangulations.
  *
  * Also, unlike readSigList(), this is not a template function.  Instead of
- * the template argument \a PacketType used by readSigList() to indicate
+ * the template argument \a ObjectType used by readSigList() to indicate
  * what kind of object to construct, this function has an additional
  * \a dimension parameter.
  *

@@ -1,52 +1,57 @@
 example$ regina-python
-Regina 5.1
+Regina 7.0
 Software for low-dimensional topology
-Copyright (c) 1999-2017, The Regina development team
+Copyright (c) 1999-2021, The Regina development team
 &gt;&gt;&gt; ################################
-... #
-... #  Sample Python Script
-... #
-... #  Illustrates progress reporting during long operations.
-... #
-... #  See the file "progress.session" for the results of running this script.
-... #
-... ################################
-... 
+&gt;&gt;&gt; #
+&gt;&gt;&gt; #  Sample Python Script
+&gt;&gt;&gt; #
+&gt;&gt;&gt; #  Illustrates progress reporting during long operations.
+&gt;&gt;&gt; #
+&gt;&gt;&gt; #  See the file "progress.session" for the results of running this script.
+&gt;&gt;&gt; #
+&gt;&gt;&gt; ################################
+&gt;&gt;&gt;
+&gt;&gt;&gt; import threading
 &gt;&gt;&gt; import time
-&gt;&gt;&gt; 
+&gt;&gt;&gt;
 &gt;&gt;&gt; # Create an 18-tetrahedron triangulation of a knot complement with real
-... # boundary faces (not an ideal vertex).  The knot is L106003 from the
-... # knot/link census.  We used Regina to truncate the ideal vertex, and
-... # then copied the isomorphism signature so that we can reconstruct the
-... # triangulation here.
-... sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
+&gt;&gt;&gt; # boundary faces (not an ideal vertex).  The knot is L106003 from the
+&gt;&gt;&gt; # knot/link census.  We used Regina to truncate the ideal vertex, and
+&gt;&gt;&gt; # then copied the isomorphism signature so that we can reconstruct the
+&gt;&gt;&gt; # triangulation here.
+&gt;&gt;&gt; sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
 &gt;&gt;&gt; tri = Triangulation3(sig)
-&gt;&gt;&gt; print tri.size(), 'tetrahedra'
-18 tetrahedra
-&gt;&gt;&gt; 
+&gt;&gt;&gt; print(tri)
+Bounded orientable 3-D triangulation, f = ( 1 20 37 18 )
+&gt;&gt;&gt;
 &gt;&gt;&gt; # Create a progress tracker to use during the normal surface enumeration.
-... # This will report the state of progress while the enumeration runs in
-... # the background.
-... tracker = ProgressTracker()
-&gt;&gt;&gt; 
-&gt;&gt;&gt; # Start the normal surface enumeration.
-... # Because we are passing a progress tracker to enumerate(), the
-... # enumeration will start in the background and control will return
-... # immediately to the python console.
-... surfaces = NormalSurfaces.enumerate(tri, NS_STANDARD, NS_VERTEX,
-...     NS_ALG_DEFAULT, tracker)
-&gt;&gt;&gt; 
+&gt;&gt;&gt; # This will report the state of progress while the enumeration runs in
+&gt;&gt;&gt; # the background.
+&gt;&gt;&gt; tracker = ProgressTracker()
+&gt;&gt;&gt;
+&gt;&gt;&gt; # Start the normal surface enumeration in a new thread.
+&gt;&gt;&gt; surfaces = None
+&gt;&gt;&gt; def run():
+...     global surfaces, tracker
+...     surfaces = NormalSurfaces(tri, NS_STANDARD, NS_VERTEX,
+...         NS_ALG_DEFAULT, tracker)
+...
+&gt;&gt;&gt; thread = threading.Thread(target = run)
+&gt;&gt;&gt; thread.start()
+&gt;&gt;&gt;
 &gt;&gt;&gt; # At this point the enumeration is up and running.
-... # Output a progress report every half-second until it finishes.
-... while not tracker.isFinished():
-...     print 'Progress:', tracker.percent(), '%'
-...     time.sleep(0.5)
-... 
-Progress: 0.774536132812 %
-Progress: 51.85546875 %
-Progress: 89.0057373047 %
-&gt;&gt;&gt; 
+&gt;&gt;&gt; # Output a progress report every quarter-second until it finishes.
+&gt;&gt;&gt; while not tracker.isFinished():
+...     print('Progress:', tracker.percent(), '%')
+...     time.sleep(0.25)
+...
+Progress: 0.17578125 %
+Progress: 54.20654296875 %
+Progress: 91.80555555555556 %
+&gt;&gt;&gt;
 &gt;&gt;&gt; # The surface enumeration is now complete.
-... print surfaces.size(), 'normal surfaces'
-2319 normal surfaces
+&gt;&gt;&gt; thread.join()
+&gt;&gt;&gt; print(surfaces)
+2319 embedded, vertex surfaces (Standard normal (tri-quad))
 &gt;&gt;&gt;

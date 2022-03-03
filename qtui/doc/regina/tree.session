@@ -1,41 +1,44 @@
 example$ regina-python
-Regina 5.1
+Regina 7.0
 Software for low-dimensional topology
-Copyright (c) 1999-2017, The Regina development team
+Copyright (c) 1999-2021, The Regina development team
 &gt;&gt;&gt; ################################
-... #
-... #  Sample Python Script
-... #
-... #  Illustrates the traversal and manipulation of an entire packet tree.
-... #
-... #  See the file "tree.session" for the results of running this script.
-... #
-... ################################
-... 
+&gt;&gt;&gt; #
+&gt;&gt;&gt; #  Sample Python Script
+&gt;&gt;&gt; #
+&gt;&gt;&gt; #  Illustrates the traversal and manipulation of an entire packet tree.
+&gt;&gt;&gt; #
+&gt;&gt;&gt; #  See the file "tree.session" for the results of running this script.
+&gt;&gt;&gt; #
+&gt;&gt;&gt; ################################
+&gt;&gt;&gt;
 &gt;&gt;&gt; # Recreate the original SnapPea census of cusped hyperbolic manifolds
-... # triangulated by at most 5 tetrahedra.
-... census = Container()
+&gt;&gt;&gt; # triangulated by at most 5 tetrahedra.
+&gt;&gt;&gt; #
+&gt;&gt;&gt; # Since we are building a packet tree, we need to use PacketOfTriangulation3,
+&gt;&gt;&gt; # not the plain type Triangulation3 (which is not a packet type).
+&gt;&gt;&gt; census = Container()
 &gt;&gt;&gt; for i in range(415):
 ...     mfd = SnapPeaCensusManifold(SnapPeaCensusManifold.SEC_5, i)
-...     tri = mfd.construct()
-...     tri.setLabel(mfd.name())
-...     census.insertChildLast(tri)
-... 
+...     census.insertChildLast(make_packet(mfd.construct(), mfd.name()))
+...
 &gt;&gt;&gt; # The triangulations are now all children of the "census" container.
-... # Remove all triangulations with more than two tetrahedra.
-... tri = census.firstChild()
+&gt;&gt;&gt; # Remove all triangulations with more than two tetrahedra.
+&gt;&gt;&gt; #
+&gt;&gt;&gt; # Since we are deleting children, we step through the children manually
+&gt;&gt;&gt; # instead of just iterating over children().
+&gt;&gt;&gt; tri = census.firstChild()
 &gt;&gt;&gt; while tri != None:
 ...     next = tri.nextSibling()
 ...     if tri.size() &gt; 2:
 ...         tri.makeOrphan()
 ...     tri = next
-... 
+...
 &gt;&gt;&gt; # Print the homology of each remaining triangulation.
-... tri = census.firstChild()
-&gt;&gt;&gt; while tri != None:
-...     print tri.label() + ":", tri.homology()
-...     tri = tri.nextSibling()
-... 
+&gt;&gt;&gt; # This time we are not adding or removing children, so we can just iterate.
+&gt;&gt;&gt; for tri in census.children():
+...     print(tri.label() + ":", tri.homology())
+...
 Gieseking manifold: Z
 SnapPea m001: Z + Z_2
 SnapPea m002: Z + Z_2

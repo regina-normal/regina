@@ -113,7 +113,7 @@ class AugTriSolidTorus : public StandardTriangulation {
                  triangle, the corresponding value will be std::nullopt.
                  Note that <tt>augTorus[i]</tt> will be attached to
                  annulus \c i of the triangular solid torus. */
-        Perm<4> edgeGroupRoles_[3];
+        Perm<3> edgeGroupRoles_[3];
             /**< Permutation <tt>edgeGroupRoles[i]</tt> describes the role
                  played by each top level edge group of layered solid torus
                  <tt>i</tt>.  For permutation <tt>p</tt>, group <tt>p[0]</tt>
@@ -189,7 +189,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * If the permutation returned is <tt>p</tt>, edge group <tt>p[0]</tt>
          * will be glued to an axis edge, group <tt>p[1]</tt> will be
          * glued to a major edge and group <tt>p[2]</tt> will be glued
-         * to a minor edge.  <tt>p[3]</tt> will always be 3.
+         * to a minor edge.
          *
          * Even if the corresponding layered solid torus is a degenerate
          * (2,1,1) mobius band (i.e., augTorus() returns \c null),
@@ -202,7 +202,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * @return a permutation describing the roles of the
          * corresponding top level edge groups.
          */
-        Perm<4> edgeGroupRoles(int annulus) const;
+        Perm<3> edgeGroupRoles(int annulus) const;
 
         /**
          * Returns the number of tetrahedra in the layered chain linking
@@ -251,6 +251,64 @@ class AugTriSolidTorus : public StandardTriangulation {
          * the class notes is present.
          */
         bool hasLayeredChain() const;
+
+        /**
+         * Determines whether this and the given structure represent
+         * the same type of augmented triangular solid torus.
+         *
+         * Specifically, two structures will compare as equal if and only if:
+         *
+         * - in both structures, the layered solid tori attached to the
+         *   same numbered annuli have the same three integer parameters,
+         *   and have their top level edge groups attached to the annuli in
+         *   the same manner;
+         *
+         * - either both structures do not include a layered chain, or else
+         *   both structures do include a layered chain of the same type and
+         *   length, attached to the same numbered annulus.
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass is more specific than combinatorial isomorphism, since
+         * this test does not account for the many symmetries in an
+         * augmented triangular solid torus).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent the same type of augmented triangular solid torus.
+         */
+        bool operator == (const AugTriSolidTorus& other) const;
+
+        /**
+         * Determines whether this and the given structure represent
+         * different types of augmented triangular solid torus.
+         *
+         * Specifically, two structures will compare as equal if and only if:
+         *
+         * - in both structures, the layered solid tori attached to the
+         *   same numbered annuli have the same three integer parameters,
+         *   and have their top level edge groups attached to the annuli in
+         *   the same manner;
+         *
+         * - either both structures do not include a layered chain, or else
+         *   both structures do include a layered chain of the same type and
+         *   length, attached to the same numbered annulus.
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass is more specific than combinatorial isomorphism, since
+         * this test does not account for the many symmetries in an
+         * augmented triangular solid torus).
+         *
+         * @param other the structure with which this will be compared.
+         * @return \c true if and only if this and the given structure
+         * represent different types of augmented triangular solid torus.
+         */
+        bool operator != (const AugTriSolidTorus& other) const;
 
         /**
          * Determines if the given triangulation component is an
@@ -343,7 +401,7 @@ inline const std::optional<LayeredSolidTorus>& AugTriSolidTorus::augTorus(
         int annulus) const {
     return augTorus_[annulus];
 }
-inline Perm<4> AugTriSolidTorus::edgeGroupRoles(int annulus) const {
+inline Perm<3> AugTriSolidTorus::edgeGroupRoles(int annulus) const {
     return edgeGroupRoles_[annulus];
 }
 inline unsigned long AugTriSolidTorus::chainLength() const {
@@ -357,6 +415,31 @@ inline int AugTriSolidTorus::torusAnnulus() const {
 }
 inline bool AugTriSolidTorus::hasLayeredChain() const {
     return (chainIndex_ != 0);
+}
+
+inline bool AugTriSolidTorus::operator == (
+        const AugTriSolidTorus& other) const {
+    if (chainIndex_ != other.chainIndex_)
+        return false;
+
+    if (chainIndex_) {
+        return
+            chainType_ == other.chainType_ &&
+            torusAnnulus_ == other.torusAnnulus_ &&
+            edgeGroupRoles_[torusAnnulus_] ==
+                other.edgeGroupRoles_[torusAnnulus_] &&
+            augTorus_[torusAnnulus_] == other.augTorus_[torusAnnulus_];
+    } else {
+        return
+            std::equal(edgeGroupRoles_, edgeGroupRoles_ + 3,
+                other.edgeGroupRoles_) &&
+            std::equal(augTorus_, augTorus_ + 3, other.augTorus_);
+    }
+}
+
+inline bool AugTriSolidTorus::operator != (
+        const AugTriSolidTorus& other) const {
+    return ! ((*this) == other);
 }
 
 inline void swap(AugTriSolidTorus& a, AugTriSolidTorus& b) noexcept {

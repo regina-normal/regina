@@ -56,6 +56,7 @@ void addTriSolidTorus(pybind11::module_& m) {
         .def_static("formsTriSolidTorus", // deprecated
             &TriSolidTorus::recognise)
     ;
+    regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 
     m.def("swap", (void(*)(TriSolidTorus&, TriSolidTorus&))(regina::swap));

@@ -53,10 +53,12 @@ void addTrivialTri(pybind11::module_& m) {
         .def_readonly_static("SPHERE_4_VERTEX", &TrivialTri::SPHERE_4_VERTEX)
         .def_readonly_static("BALL_3_VERTEX", &TrivialTri::BALL_3_VERTEX)
         .def_readonly_static("BALL_4_VERTEX", &TrivialTri::BALL_4_VERTEX)
+        .def_readonly_static("L31_PILLOW", &TrivialTri::L31_PILLOW)
         .def_readonly_static("N2", &TrivialTri::N2)
         .def_readonly_static("N3_1", &TrivialTri::N3_1)
         .def_readonly_static("N3_2", &TrivialTri::N3_2)
     ;
+    regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 
     m.def("swap", (void(*)(TrivialTri&, TrivialTri&))(regina::swap));

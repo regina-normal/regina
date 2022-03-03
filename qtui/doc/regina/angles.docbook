@@ -36,6 +36,12 @@
    </para></listitem>
   </itemizedlist>
  </para>
+ <para>
+  &regina; also supports <firstterm>generalised angle structures</firstterm>,
+  which allow angles that are negative and/or larger than &twopi;,
+  but for these you will need to use <link linkend="python">&python;</link>
+  or <link linkend="compiling">&cpp;</link>.
+ </para>
 
  <sect1>
   <title>Strict Angle Structures</title>
@@ -61,7 +67,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="snappea-recognition.png"/>
+     <imagedata multires="snappea-recognition"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -85,25 +91,6 @@
    can be expressed as a convex combination of the vertex angle strutures.
   </para>
   <para>
-   As with normal surfaces, &regina; insists on keeping angle structure lists
-   tied to their corresponding triangulations
-   (this is because angle structures are expressed using coordinates
-   relative to these triangulations).
-   An angle structure list always lives immediately beneath the
-   corresponding triangulation in the packet tree, and &regina; will
-   <link linkend="packet-uneditable">not let you modify</link>
-   the triangulation as long as it has any angle structure or normal surface
-   lists beneath it.
-   The triangulation will be marked with a small padlock to remind you of this.
-  </para>
-  <para>
-   <inlinemediaobject>
-    <imageobject>
-     <imagedata fileref="angles-intree.png"/>
-    </imageobject>
-   </inlinemediaobject>
-  </para>
-  <para>
    To create a new angle structure list, select
    <menuchoice>
     <guimenu>Packet Tree</guimenu>
@@ -114,7 +101,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="menu-newangles.png"/>
+     <imagedata multires="menu-newangles"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -125,7 +112,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="newangles.png"/>
+     <imagedata multires="newangles"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -192,7 +179,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="angles-coords.png"/>
+     <imagedata multires="angles-coords"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -205,7 +192,7 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="angles-tautheader.png"/>
+     <imagedata multires="angles-tautheader"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -219,10 +206,29 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="angles-header.png"/>
+     <imagedata multires="angles-header"/>
     </imageobject>
    </inlinemediaobject>
   </para>
+
+  <sect2 id="angles-viewtri">
+   <title>Viewing the Triangulation</title>
+
+   <para>
+    Like normal surfaces, angle structures are (since &regina;&nbsp;7.0)
+    no longer linked to their source triangulations in the packet tree.
+    You can move an angle structure list and/or its triangulation
+    independently around in the tree, or you can modify or even delete the
+    original triangulation.  All of these operations are now allowed and safe.
+   </para>
+   <para>
+    Whatever happens, it is always possible to come back and view the original
+    triangulation from which an angle structure list was created.
+    You do this the same way as for normal surface lists; see the
+    <link linkend="surfaces-viewtri">normal surfaces chapter</link>
+    for details.
+   </para>
+  </sect2>
 
   <sect2 id="angles-viewstructurecoords">
    <title>Details of Individual Angle Structures</title>

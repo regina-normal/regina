@@ -51,6 +51,7 @@
 #include "maths/perm.h"
 #include "utilities/exception.h"
 #include "utilities/stringutils.h"
+#include "utilities/typeutils.h"
 
 namespace regina::detail {
 
@@ -286,13 +287,12 @@ bool FacetPairingBase<dim>::isCanonical() const {
 
     // We've met all the preconditions, so we can now run
     // isCanonicalInternal().
-    IsoList list;
-    return isCanonicalInternal(list);
+    return isCanonicalInternal();
 }
 
 template <int dim>
 bool FacetPairingBase<dim>::isCanonicalInternal(
-        typename FacetPairingBase<dim>::IsoList& list) const {
+        typename FacetPairingBase<dim>::IsoList* list) const {
     // Create the automorphisms one simplex at a time, selecting the
     // preimage of 0 first, then the preimage of 1 and so on.
 
@@ -300,11 +300,13 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
     // special-case the situation in which there are no facet gluings at all.
     if (isUnmatched(0, 0)) {
         // We must have just one simplex with no facet gluings at all.
-        for (int i = 0; i < Perm<dim+1>::nPerms; ++i) {
-            Isomorphism<dim> ans(1);
-            ans.simpImage(0) = 0;
-            ans.facetPerm(0) = Perm<dim+1>::orderedSn[i];
-            list.push_back(std::move(ans));
+        if (list) {
+            for (int i = 0; i < Perm<dim+1>::nPerms; ++i) {
+                Isomorphism<dim> ans(1);
+                ans.simpImage(0) = 0;
+                ans.facetPerm(0) = Perm<dim+1>::orderedSn[i];
+                list->push_back(std::move(ans));
+            }
         }
         return true;
     }
@@ -347,7 +349,8 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
         // If firstFace doesn't glue to the same simplex but this
         // facet does, we're not in canonical form.
         if (firstFaceDest.simp != 0 && firstDestPre.simp == preImage[0].simp) {
-            list.clear();
+            if (list)
+                list->clear();
             delete[] image;
             delete[] preImage;
             return false;
@@ -390,7 +393,8 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
                         permImg[j] = image[i * (dim + 1) + j].facet;
                     ans.facetPerm(i) = Perm<dim+1>(permImg);
                 }
-                list.push_back(std::move(ans));
+                if (list)
+                    list->push_back(std::move(ans));
                 stepDown = true;
             } else {
                 // Move to the next candidate.
@@ -422,7 +426,8 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
                             continue;
                         if (isUnmatched(trying) && (! isUnmatched(pre))) {
                             // We're not in canonical form.
-                            list.clear();
+                            if (list)
+                                list->clear();
                             delete[] image;
                             delete[] preImage;
                             return false;
@@ -511,7 +516,8 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
                         stepDown = true;
                     } else if (fPre < fImg) {
                         // Whapow, we're not in canonical form.
-                        list.clear();
+                        if (list)
+                            list->clear();
                         delete[] image;
                         delete[] preImage;
                         return false;
@@ -744,10 +750,21 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // Have we got a solution?
         if (trying.simp == static_cast<int>(size_)) {
             // Deal with the solution!
-            IsoList allAutomorphisms;
-            if (isCanonicalInternal(allAutomorphisms)) {
-                action(static_cast<FacetPairing<dim>&>(*this),
-                    std::move(allAutomorphisms), std::forward<Args>(args)...);
+            if constexpr (std::is_same_v<
+                    typename std::remove_cv_t<typename std::remove_reference_t<
+                        typename CallableArg<Action, 1>::type>>,
+                    IsoList>) {
+                IsoList allAutomorphisms;
+                if (isCanonicalInternal(std::addressof(allAutomorphisms))) {
+                    action(static_cast<FacetPairing<dim>&>(*this),
+                        std::move(allAutomorphisms),
+                        std::forward<Args>(args)...);
+                }
+            } else {
+                if (isCanonicalInternal()) {
+                    action(static_cast<FacetPairing<dim>&>(*this),
+                        std::forward<Args>(args)...);
+                }
             }
 
             // Head back down to the previous gluing and undo it, ready
