@@ -61,6 +61,16 @@
   </provides>
 
   <releases>
+    <release version="7.0" date="2021-12-19">
+      <description>
+        <p>
+          An enormous update for programmers: the native C++ interface is now
+          built around modern language features, and Python is now a
+          first-class citizen.  Plus several new topological and algebraic
+          features, and a new, more flexible file format.
+        </p>
+      </description>
+    </release>
     <release version="6.0.1" date="2021-02-12">
       <description>
         <p>

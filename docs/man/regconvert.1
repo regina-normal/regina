@@ -3,27 +3,41 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGCONVERT" "1" "29 November 2021" "" "The Regina Handbook"
+.TH "REGCONVERT" "1" "17 December 2021" "" "The Regina Handbook"
 
 .SH NAME
 regconvert \- Convert between different Regina file formats
 .SH SYNOPSIS
 
-\fBregconvert\fR [ \fB-x\fR | \fB-u\fR ] \fB\fIold-file\fB\fR [ \fB\fInew-file\fB\fR ]
+\fBregconvert\fR [ \fB-2\fR | \fB-3\fR ] [ \fB-x\fR | \fB-u\fR ] \fB\fIold-file\fB\fR [ \fB\fInew-file\fB\fR ]
 
 .SH "DESCRIPTION"
 .PP
 This utility converts back and forth between different Regina
 file formats.
-.sp
-.RS
-.B "Note:"
-As of September\~2013, the ancient binary file format that was
-used with Regina\~2.x is no longer supported.
-This format has not been in use for over a decade now.
-If you still have files in this format, you will need to
-download Regina\~4.93 to convert them.
-.RE
+.PP
+Regina's file formats include:
+.TP
+\fBThird-generation XML\fR
+This is the modern XML format introduced in Regina\~7.0.
+Older versions of Regina (6.0.1 and below) cannot read it at all.
+.TP
+\fBSecond-generation XML\fR
+This is the original XML format that was used in
+Regina\~3.0-6.0.1 (from 2002-2021).
+Current versions of Regina can still read and write this format
+if required.
+.TP
+\fBFirst-generation binary format\fR
+This is the ancient binary format that was used in Regina\~2.x
+(from 2000-2002).
+Support for this format was dropped completely in September\~2013,
+and modern versions of Regina cannot read or write it.
+
+If you still have ancient files that use this format, you will need to
+find a copy of Regina\~3.0-4.93 (from 2002-2012),
+which can convert these old binary files to the second-generation
+XML format.
 .PP
 The argument \fIold-file\fR should be the file to
 read and convert; the argument \fInew-file\fR should
@@ -35,11 +49,19 @@ new file will be written to standard output, which forces the output to be
 uncompressed XML (see option \fB-u\fR).
 .SH "OPTIONS"
 .TP
+\fB-2\fR
+Convert to the older second-generation XML format,
+as used in Regina\~3.0-6.0.1.
+.TP
+\fB-3 (default)\fR
+Convert to the modern third-generation XML format,
+introduced in Regina\~7.0.
+.TP
 \fB-x (default)\fR
-Convert to compressed XML\&.
+Write the output as compressed XML\&.
 .TP
 \fB-u\fR
-Convert to plain (uncompressed) XML\&.
+Write the output as uncompressed (plain text) XML\&.
 .SH "MACOS USERS"
 .PP
 If you downloaded a drag-and-drop app bundle, this utility is
@@ -53,7 +75,7 @@ The command-line utilities are installed beneath the
 machines this directory is called
 \fIProgram\~Files\~(x86)\fR\&.
 You can start this utility by running
-c:\\Program\~Files\\Regina\\Regina\~7.0\\bin\\regconvert.exe\&.
+c:\\Program\~Files\\Regina\\Regina\~7.1\\bin\\regconvert.exe\&.
 .SH "SEE ALSO"
 .PP
 regfiletype,

@@ -84,14 +84,14 @@ class TxICore : public Output<TxICore> {
         Triangulation<3> core_;
             /**< A full copy of the <tt>T x I</tt> triangulation that is
                  described. */
-        unsigned bdryTet_[2][2];
+        std::array<std::array<unsigned, 2>, 2> bdryTet_;
             /**< The tetrahedra that provide the upper and lower
                  boundary triangles.  See bdryTet() for details. */
-        Perm<4> bdryRoles_[2][2];
+        std::array<std::array<Perm<4>, 2>, 2> bdryRoles_;
             /**< Describes which tetrahedron vertices play which roles
                  in the upper and lower boundary triangles.  See bdryRoles()
                  for details. */
-        Matrix2 bdryReln_[2];
+        std::array<Matrix2, 2> bdryReln_;
             /**< Expresses the \a alpha and \a beta curves for each
                  torus boundary in terms of specific tetrahedron edges and
                  vertices.  The elements \a bdryReln_[0] and \a bdryReln_[1]
@@ -268,6 +268,33 @@ class TxICore : public Output<TxICore> {
         [[deprecated]] std::string TeXName() const;
 
         /**
+         * Determines if this and the given <tt>T x I</tt> triangulation
+         * are of the same type and have the same parameters.
+         *
+         * If this returns \c true, then the triangulations returned
+         * by core() should also be combinatorially identical.
+         *
+         * @param other the <tt>T x I</tt> triangulation to compare with this.
+         * @return \c true if and only if this and the given triangulation
+         * are of the same type and have the same parameters.
+         */
+        virtual bool operator == (const TxICore& other) const = 0;
+
+        /**
+         * Determines if this and the given <tt>T x I</tt> triangulation
+         * are of different types and/or have different parameters.
+         *
+         * If this returns \c false (i.e., both objects compare as equal),
+         * then the triangulations returned by core() should also be
+         * combinatorially identical.
+         *
+         * @param other the <tt>T x I</tt> triangulation to compare with this.
+         * @return \c true if and only if this and the given triangulation
+         * are of different types and/or have different parameters.
+         */
+        bool operator != (const TxICore& other) const;
+
+        /**
          * Writes the name of this specific triangulation of
          * <tt>T x I</tt> to the given output stream.  The name will be
          * written as a human-readable string.
@@ -325,7 +352,7 @@ class TxICore : public Output<TxICore> {
         /**
          * Move constructor.
          */
-        TxICore(TxICore&& src) = default;
+        TxICore(TxICore&& src) noexcept = default;
         /**
          * Copy assignment operator.
          *
@@ -345,7 +372,7 @@ class TxICore : public Output<TxICore> {
          * packet event listeners, and the internal triangulation here does
          * not belong to a packet.
          */
-        TxICore& operator = (TxICore&&) = default;
+        TxICore& operator = (TxICore&&) noexcept;
         /**
          * Swaps all data that is managed by this base class with the
          * given triangulation.
@@ -505,33 +532,7 @@ class TxIDiagonalCore : public TxICore {
          */
         void swap(TxIDiagonalCore& other) noexcept;
 
-        /**
-         * Determines if this and the given <tt>T x I</tt> triangulation
-         * have the same parameters.  Here the parameters refer to the
-         * size and the additional parameter \a k, as described in the
-         * class notes.
-         *
-         * If the parameters are the same, then the triangulations returned
-         * by core() should also be combinatorially identical.
-         *
-         * @param other the <tt>T x I</tt> triangulation to compare with this.
-         * @return \c true if and only if this and the given triangulation
-         * have the same parameters.
-         */
-        bool operator == (const TxIDiagonalCore& other) const;
-
-        /**
-         * Determines if this and the given <tt>T x I</tt> triangulation
-         * have different parameters.  Here the parameters refer to the
-         * size and the additional parameter \a k, as described in the
-         * class notes.
-         *
-         * @param other the <tt>T x I</tt> triangulation to compare with this.
-         * @return \c true if and only if this and the given triangulation
-         * have different parameters.
-         */
-        bool operator != (const TxIDiagonalCore& other) const;
-
+        bool operator == (const TxICore& other) const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
@@ -636,34 +637,7 @@ class TxIParallelCore : public TxICore {
          */
         void swap(TxIParallelCore& other) noexcept;
 
-        /**
-         * Determines if this and the given <tt>T x I</tt> triangulation
-         * have the same parameters.
-         *
-         * This routine always returns \c true, since there is only one
-         * combinatorial type of TxIParallelCore.  It is provided for
-         * consistency with TxIDiagonalCore (where the comparison routines
-         * are more meaningful).
-         *
-         * @param other the <tt>T x I</tt> triangulation to compare with this.
-         * @return \c true, always.
-         */
-        bool operator == (const TxIParallelCore& other) const;
-
-        /**
-         * Determines if this and the given <tt>T x I</tt> triangulation
-         * have different parameters.
-         *
-         * This routine always returns \c false, since there is only one
-         * combinatorial type of TxIParallelCore.  It is provided for
-         * consistency with TxIDiagonalCore (where the comparison routines
-         * are more meaningful).
-         *
-         * @param other the <tt>T x I</tt> triangulation to compare with this.
-         * @return \c false, always.
-         */
-        bool operator != (const TxIParallelCore& other) const;
-
+        bool operator == (const TxICore& other) const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
@@ -707,6 +681,10 @@ inline const Matrix2& TxICore::parallelReln() const {
     return parallelReln_;
 }
 
+inline bool TxICore::operator != (const TxICore& other) const {
+    return ! ((*this) == other);
+}
+
 inline std::string TxICore::TeXName() const {
     return texName();
 }
@@ -719,6 +697,29 @@ inline void TxICore::writeTextLong(std::ostream& out) const {
     out << "TxI core: ";
     writeName(out);
     out << std::endl;
+}
+
+inline TxICore& TxICore::operator = (TxICore&& src) noexcept {
+    // This is essentially what the default implementation would do; however,
+    // we need to reimplement it ourselves to work around the fact that this
+    // assignment operator is noexcept but the Triangulation<3> assignment
+    // operator is not.  Just using the default operator causes compile errors
+    // on old versions of clang (e.g., clang 7), and causes move assignment to
+    // fall back to a deep copy on old versions of gcc (e.g., gcc 7-9).
+    // (Both newer clang and newer gcc behave fine.)
+
+    // The core triangulation can be moved.
+    // Although Triangulation's move assignment can throw in general,
+    // in this setting it never will (since there is no surrounding packet).
+    core_ = std::move(src.core_);
+
+    // Everything else is so small that it can only be copied.
+    bdryTet_ = src.bdryTet_;
+    bdryRoles_ = src.bdryRoles_;
+    bdryReln_ = src.bdryReln_;
+    parallelReln_ = src.parallelReln_;
+
+    return *this;
 }
 
 // Inline functions for TxIDiagonalCore
@@ -745,12 +746,11 @@ inline std::ostream& TxIDiagonalCore::writeTeXName(std::ostream& out) const {
     return out << "T_{" << size_ << ':' << k_ << '}';
 }
 
-inline bool TxIDiagonalCore::operator == (const TxIDiagonalCore& other) const {
-    return size_ == other.size_ && k_ == other.k_;
-}
-
-inline bool TxIDiagonalCore::operator != (const TxIDiagonalCore& other) const {
-    return size_ != other.size_ || k_ != other.k_;
+inline bool TxIDiagonalCore::operator == (const TxICore& other) const {
+    if (auto c = dynamic_cast<const TxIDiagonalCore*>(std::addressof(other)))
+        return size_ == c->size_ && k_ == c->k_;
+    else
+        return false;
 }
 
 inline void swap(TxIDiagonalCore& lhs, TxIDiagonalCore& rhs) {
@@ -769,12 +769,8 @@ inline std::ostream& TxIParallelCore::writeTeXName(std::ostream& out) const {
     return out << "T_{6\\ast}";
 }
 
-inline bool TxIParallelCore::operator == (const TxIParallelCore& other) const {
-    return true;
-}
-
-inline bool TxIParallelCore::operator != (const TxIParallelCore& other) const {
-    return false;
+inline bool TxIParallelCore::operator == (const TxICore& other) const {
+    return dynamic_cast<const TxIParallelCore*>(std::addressof(other));
 }
 
 inline void swap(TxIParallelCore& lhs, TxIParallelCore& rhs) {

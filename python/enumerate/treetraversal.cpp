@@ -76,7 +76,8 @@ void addTreeEnumeration(pybind11::module_& m, const char* name) {
         .def("solutions", &Tree::solutions)
         .def("run", &Tree::template run<Action>)
         .def("next", &Tree::next,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def_static("writeTypes", &Tree::writeTypes)
         .def_static("writeSurface", &Tree::writeSurface)
     ;
@@ -95,7 +96,8 @@ void addTautEnumeration(pybind11::module_& m, const char* name) {
         .def("solutions", &Tree::solutions)
         .def("run", &Tree::template run<Action>)
         .def("next", &Tree::next,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def_static("writeTypes", &Tree::writeTypes)
         .def_static("writeStructure", &Tree::writeStructure)
     ;

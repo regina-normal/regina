@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2019  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -197,21 +197,20 @@ bool CandidateList<Integer>::is_reducible(vector<Integer> v, Candidate<Integer>&
 // Fourth version with parallelization and tables
 template <typename Integer>
 void CandidateList<Integer>::reduce_by(CandidateList<Integer>& Reducers) {
-    size_t cpos, csize = Candidates.size();
 
-    CandidateTable<Integer> ReducerTable(Reducers);
+    size_t  csize = Candidates.size();
 
     bool skip_remaining = false;
-    ;
     std::exception_ptr tmp_exception;
 
 // This parallel region cannot throw a NormalizException
-#pragma omp parallel private(cpos) firstprivate(ReducerTable)
+#pragma omp parallel
     {
+        CandidateTable<Integer> ReducerTable(Reducers);
         auto c = Candidates.begin();
-        cpos = 0;
+        size_t cpos = 0;
 
-#pragma omp for schedule(dynamic)
+#pragma omp for // schedule(dynamic) removed because of clang problems
         for (size_t k = 0; k < csize; ++k) {
             for (; k > cpos; ++cpos, ++c)
                 ;

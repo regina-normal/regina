@@ -147,7 +147,6 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
          */
         void findAugTriSolidTori();
         void findBlockedTriangulations();
-        void findL31Pillows();
         void findLayeredChainPairs();
         void findLayeredLensSpaces();
         void findLayeredLoops();

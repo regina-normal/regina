@@ -37,7 +37,6 @@
 #include "subcomplex/blockedsfsloop.h"
 #include "subcomplex/blockedsfspair.h"
 #include "subcomplex/blockedsfstriple.h"
-#include "subcomplex/l31pillow.h"
 #include "subcomplex/layeredchain.h"
 #include "subcomplex/layeredchainpair.h"
 #include "subcomplex/layeredlensspace.h"
@@ -251,7 +250,6 @@ void Tri3CompositionUI::refresh() {
 
     // Look for complete closed triangulations.
     findAugTriSolidTori();
-    findL31Pillows();
     findLayeredChainPairs();
     findLayeredLensSpaces();
     findLayeredLoops();
@@ -628,30 +626,6 @@ void Tri3CompositionUI::findBlockedTriangulations() {
         (new QTreeWidgetItem(id))->setText(0,
             tr("Thin I-bundle (T x I): %1").
             arg(pBundle->bundle().name().c_str()));
-    }
-}
-
-void Tri3CompositionUI::findL31Pillows() {
-    unsigned long nComps = tri_->countComponents();
-
-    QTreeWidgetItem* id = nullptr;
-    QTreeWidgetItem* detailsItem = nullptr;
-
-    for (unsigned long i = 0; i < nComps; i++) {
-        auto pillow = regina::L31Pillow::recognise(tri_->component(i));
-        if (pillow) {
-            id = addComponentSection(tr("L(3,1) pillow ") +
-                pillow->name().c_str());
-
-            detailsItem = new QTreeWidgetItem(id);
-            detailsItem->setText(0, tr("Component %1").arg(i));
-
-            detailsItem = new QTreeWidgetItem(id, detailsItem);
-            detailsItem->setText(0, 
-                tr("Pillow interior vertex: %1").
-                arg(pillow->tetrahedron(0)->vertex(pillow->interiorVertex(0))->
-                    index()));
-        }
     }
 }
 

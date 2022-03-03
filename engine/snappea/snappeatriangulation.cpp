@@ -522,6 +522,21 @@ double SnapPeaTriangulation::minImaginaryShape() const {
     return ans;
 }
 
+bool SnapPeaTriangulation::operator == (const SnapPeaTriangulation& other)
+        const {
+    if (! data_)
+        return ! other.data_;
+    if (! other.data_)
+        return false;
+
+    // Neither triangulation is null.
+    if (! (Triangulation<3>::operator == (other)))
+        return false;
+
+    // This next test *should* be unnecessary.
+    return std::equal(cusp_, cusp_ + countCusps(), other.cusp_);
+}
+
 void SnapPeaTriangulation::unfill(unsigned whichCusp) {
     if (! data_)
         return;

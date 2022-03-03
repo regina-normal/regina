@@ -299,7 +299,7 @@ namespace regina {
  *    See the individual class notes for how the Python class names are
  *    constructed.
  *
- *  <h3>Testing equality</h3>
+ *  <h3>Python vs C++ APIs</h3>
  *
  *  - Since Regina 7.0, almost \e all of Regina's C++ classes and functions
  *    are wrapped in Python - even the low-level and/or highly specialised
@@ -356,6 +356,8 @@ namespace regina {
  *    is what defines them; the most common examples you will see are
  *    crossings within links (Crossing), and skeletal objects within
  *    triangulations (e.g., Tetrahedron<3>, Vertex<4>, BoundaryComponent<2>).
+ *    This is also used with objects that manage or track long computations
+ *    (e.g., ProgressTracker, GluingPermSearcher4, or TreeEnumeration).
  *
  *    These classes do not provide C++ class operators == or !=.
  *
@@ -392,6 +394,18 @@ namespace regina {
  *  packets of the same type by value using the operators <tt>x == y</tt> and
  *  <tt>x != y</tt>, and you can test whether two packets of any types
  *  reference the same underlying object by calling Packet::samePacket().
+ *
+ *  <h3>International and special characters</h3>
+ *
+ *  If you use special characters (such as accented letters, other
+ *  international characters, exotic punctuation, mathematical symbols and
+ *  so on), all text encodings are converted seamlessly and transparently
+ *  when moving between Regina and Python.  (In Python, all strings are
+ *  unicode; within Regina, all strings are encoded in UTF-8.)
+ *
+ *  See the page on \ref i18n "encodings for international strings" for
+ *  further discussion on text encodings within Regina, including an
+ *  important note regarding filenames.
  */
 
 } // namespace regina

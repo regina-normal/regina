@@ -128,7 +128,8 @@ void AttachmentUI::refresh() {
 
 #if QT_VERSION >= QT_VERSION_CHECK(5,10,0)
         QLocale locale = ui->locale();
-        size->setText(locale.formattedDataSize(attachment->size()));
+        size->setText(locale.formattedDataSize(attachment->size(),
+            2 /* precision */, QLocale::DataSizeSIFormat));
 #else
         // Just write something brutal, since almost everyone should
         // have Qt 5.10 or above by now.  Even debian buster had Qt 5.11.

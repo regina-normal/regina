@@ -40,10 +40,15 @@ class Packet;
 template <class> class PacketData;
 template <class> class PacketOf;
 
+template <typename Held> std::shared_ptr<PacketOf<Held>> make_packet(Held&&);
+template <typename Held> std::shared_ptr<PacketOf<Held>> make_packet(Held&&,
+    const std::string&);
+
 namespace python {
 
 /**
- * Adds Python bindings for the class PacketOf<Held>.
+ * Adds Python bindings for the class PacketOf<Held>, as well as corresponding
+ * make_packet functions.
  *
  * The new packet class will be given a deep copy constructor, which takes a
  * single argument of type const Held&, and also acts as a copy constructor
@@ -75,6 +80,14 @@ auto add_packet_wrapper(pybind11::module_& m, const char* className) {
         .def_readonly_static("typeID", &regina::PacketOf<Held>::typeID)
     ;
     regina::python::add_output(c);
+    m.def("make_packet", [](const Held& h) {
+        // The C++ make_packet expects an rvalue reference.
+        return regina::make_packet(Held(h));
+    });
+    m.def("make_packet", [](const Held& h, const std::string& label) {
+        // The C++ make_packet expects an rvalue reference.
+        return regina::make_packet(Held(h), label);
+    });
     return c;
 }
 

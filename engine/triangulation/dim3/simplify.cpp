@@ -430,6 +430,220 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
     return true;
 }
 
+bool Triangulation<3>::zeroTwoMove(
+        EdgeEmbedding<3> e0, int t0, EdgeEmbedding<3> e1, int t1,
+        bool check, bool perform ) {
+    Edge<3>* e = e0.tetrahedron()->edge( e0.edge() );
+
+    if ( check ) {
+        if ( e != e1.tetrahedron()->edge( e1.edge() ) ) {
+            return false;
+        }
+        if ( t0 < 2 or t0 > 3 or t1 < 2 or t1 > 3 ) {
+            return false;
+        }
+        if ( not e->isValid() ) {
+            return false;
+        }
+    }
+
+    if ( not perform ) {
+        return true;
+    }
+
+    // Work out how to glue in the two new tetrahedra.
+    EdgeEmbedding<3> emb[2] = {e0, e1};
+    int t[2] = {t0, t1};
+    Perm<4> ident = Perm<4>();
+    Perm<4> trans = Perm<4>(2, 3);
+    int simTemp[2][2] = {};
+    Tetrahedron<3>* sim[2][2];
+    Perm<4> ver[2][2];
+
+    // Rather than separately handling all the corner cases when the 0-2
+    // move involves a boundary triangle, we will temporarily glue in up to
+    // two extra tetrahedra so that we can just perform the move as if it
+    // involves only non-boundary triangles. To do this, we first need to
+    // work out how our edge e meets the boundary.
+    size_t deg = e->degree();
+    bool bdy[2] = {
+        e0.tetrahedron()->triangle( e0.vertices()[t0] )->isBoundary(),
+        e1.tetrahedron()->triangle( e1.vertices()[t1] )->isBoundary()
+    };
+    Tetrahedron<3>* bdySim[2];
+    Perm<4> bdyVer[2];
+    bool distinct;
+    if ( bdy[0] or bdy[1] ) {
+        bdySim[0] = e->embedding(0).simplex();
+        bdyVer[0] = e->embedding(0).vertices();
+        bdySim[1] = e->embedding( deg - 1 ).simplex();
+        bdyVer[1] = e->embedding( deg - 1 ).vertices();
+        distinct = ( bdySim[0]->triangle( bdyVer[0][3] ) !=
+                bdySim[1]->triangle( bdyVer[1][2] ) );
+    }
+    Perm<4> tempGlu[2];
+    int tempFace[2];
+    for ( int k : {0, 1} ) {
+        if ( bdyVer[k].sign() > 0 ) {
+            tempGlu[k] = bdyVer[k] * trans;
+            tempFace[k] = 2 + k;
+        } else {
+            tempGlu[k] = bdyVer[k];
+            tempFace[k] = 3 - k;
+        }
+    }
+
+    for ( int i : {0, 1} ) {
+        if ( bdy[i] ) {
+            if ( t[i] == 2 ) {
+                sim[i][0] = bdySim[1];
+                ver[i][0] = bdyVer[1];
+                simTemp[i][1] = 2;
+                ver[i][1] = (
+                        (bdyVer[1].sign() > 0) ? ident : trans );
+            } else {
+                sim[i][1] = bdySim[0];
+                ver[i][1] = bdyVer[0];
+                simTemp[i][0] = 1;
+                ver[i][0] = (
+                        (bdyVer[0].sign() > 0) ? ident : trans );
+            }
+        } else {
+            if ( t[i] == 2 ) {
+                sim[i][0] = emb[i].simplex();
+                ver[i][0] = emb[i].vertices();
+                sim[i][1] = sim[i][0]->adjacentSimplex(
+                        ver[i][0][2] );
+                ver[i][1] = sim[i][0]->adjacentGluing(
+                        ver[i][0][2] ) * ver[i][0] * trans;
+            } else {
+                sim[i][1] = emb[i].simplex();
+                ver[i][1] = emb[i].vertices();
+                sim[i][0] = sim[i][1]->adjacentSimplex(
+                        ver[i][1][3] );
+                ver[i][0] = sim[i][1]->adjacentGluing(
+                        ver[i][1][3] ) * ver[i][1] * trans;
+            }
+        }
+    }
+
+    // Actually perform the move.
+    TopologyLock lock(*this);
+    // Ensure only one event pair is fired in this sequence of changes.
+    ChangeEventSpan span(*this);
+
+    auto tet = newTetrahedra<2>();
+
+    // Temporary tetrahedra for handling boundary triangles.
+    Tetrahedron<3>* temp[2];
+    if ( bdy[0] or bdy[1] ) {
+        temp[0] = newTetrahedron();
+        temp[0]->join( tempFace[0], bdySim[0], tempGlu[0] );
+        if ( distinct ) {
+            temp[1] = newTetrahedron();
+            temp[1]->join( tempFace[1], bdySim[1], tempGlu[1] );
+        } else {
+            temp[1] = temp[0];
+            for ( int i : {0, 1} ) {
+                if ( bdy[i] and t[i] == 2 ) {
+                    ver[i][1] = bdySim[1]->adjacentGluing( bdyVer[1][2] )
+                        * ver[i][0] * trans;
+                }
+            }
+        }
+        for ( int i : {0, 1} ) {
+            for ( int j : {0, 1} ) {
+                if ( simTemp[i][j] > 0 ) {
+                    sim[i][j] = temp[ simTemp[i][j] - 1 ];
+                }
+            }
+        }
+    }
+
+    // We use the orient permutation to ensure that if this triangulation
+    // was originally oriented, then this orientation will be preserved by
+    // the 0-2 move.`
+    Perm<4> orient = ( (ver[0][0].sign() > 0) ? trans : ident );
+    Perm<4> gluing = sim[0][0]->adjacentGluing( ver[0][0][2] );
+    for ( int i : {0, 1} ) {
+        sim[i][0]->unjoin( ver[i][0][2] );
+    }
+    tet[0]->join( orient[2], sim[0][0], ver[0][0] * orient );
+    for ( int i : {0, 1} ) {
+        tet[0]->join( i, tet[1], trans );
+    }
+    if ( sim[0][1] == sim[1][0] and ver[0][1][3] == ver[1][0][2] ) {
+        tet[1]->join( orient[2], sim[1][0], ver[1][0] * orient );
+        tet[1]->join( orient[3], tet[0],
+                trans * orient * ver[1][0].inverse() * gluing *
+                ver[0][0] * orient * trans );
+    } else if ( sim[0][1] == sim[1][1] and ver[0][1][3] == ver[1][1][3] ) {
+        tet[0]->join( orient[3], sim[1][1], ver[1][1] * orient );
+        tet[1]->join( orient[3], tet[1],
+                trans * orient * ver[1][1].inverse() * gluing *
+                ver[0][0] * orient * trans );
+    } else {
+        tet[1]->join( orient[3], sim[0][1], ver[0][1] * orient );
+        tet[1]->join( orient[2], sim[1][0], ver[1][0] * orient );
+        tet[0]->join( orient[3], sim[1][1], ver[1][1] * orient );
+    }
+    if ( bdy[0] or bdy[1] ) {
+        removeTetrahedron( temp[0] );
+        if ( distinct ) {
+            removeTetrahedron( temp[1] );
+        }
+    }
+
+    // Done!
+    return true;
+}
+
+bool Triangulation<3>::zeroTwoMove(
+        Edge<3>* e, size_t t0, size_t t1,
+        bool check, bool perform ) {
+    size_t deg = e->degree();
+    if ( check ) {
+        if ( e->isBoundary() and ( t0 > deg or t1 > deg ) ) {
+            return false;
+        } else if ( t0 >= deg or t1 >= deg ) {
+            return false;
+        }
+    }
+    size_t t[2] = {t0, t1};
+    EdgeEmbedding<3> emb[2];
+    int tri[2];
+    for ( int i : {0, 1} ) {
+        if ( t[i] == deg ) {
+            emb[i] = e->embedding( deg - 1 );
+            tri[i] = 2;
+        } else {
+            emb[i] = e->embedding( t[i] );
+            tri[i] = 3;
+        }
+    }
+    return zeroTwoMove( emb[0], tri[0], emb[1], tri[1], check, perform );
+}
+
+bool Triangulation<3>::zeroTwoMove(
+        Triangle<3>* t0, int e0, Triangle<3>* t1, int e1,
+        bool check, bool perform ) {
+    Triangle<3>* t[2] = {t0, t1};
+    int e[2] = {e0, e1};
+    EdgeEmbedding<3> emb[2];
+    int tri[2];
+    for ( int i : {0, 1} ) {
+        TriangleEmbedding<3> te = t[i]->embedding(0);
+        Perm<4> ve = te.vertices();
+        emb[i] = EdgeEmbedding<3>(
+                te.simplex(),
+                te.simplex()->faceMapping<1>(
+                    FaceNumbering<3,1>::faceNumber(
+                        ve * Perm<4>( 2, e[i] ) ) ) );
+        tri[i] = ( (emb[i].vertices()[2] == ve[3]) ? 2 : 3 );
+    }
+    return zeroTwoMove( emb[0], tri[0], emb[1], tri[1], check, perform );
+}
+
 bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
     const TriangleEmbedding<3>& emb = f->front();
     Tetrahedron<3>* tet = emb.tetrahedron();
@@ -879,6 +1093,12 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
     // Whatever vertex is glued to t0: 3 will be (topologically) unaffected.
     // Whatever vertices glue to t0: 0 and t0: 1=2 will have their links
     // joined by a connected sum.
+
+    // A note for oriented triangulations: Simplex::faceMapping() guarantees
+    // that e->front().vertices() has a sign equal to the orientation of the
+    // relevant tetrahedron, which for an oriented triangulation is always 1.
+    // Therefore all of the gluings that we make here use odd gluing
+    // permutations, and so the orientation is preserved.
 
     Tetrahedron<3>* adj = open->adjacentTetrahedron(vertices[3]);
     Perm<4> glue = open->adjacentGluing(vertices[3]);

@@ -125,9 +125,10 @@ LinkCreator::LinkCreator(ReginaMain*) {
     subSubLayout->setContentsMargins(0, 0, 0, 0);
     expln = QObject::tr("<qt>A knot signature, "
         "oriented Gauss code, classical Gauss code, "
-        "or Dowker-Thistlethwaite notation representing a knot.<p>"
-        "At present, these codes can only be used for knots, not "
-        "multiple-component links.<p>"
+        "Dowker-Thistlethwaite notation, or planar diagram code "
+        "representing a knot or link.<p>"
+        "At present, all except for planar diagram codes "
+        "can only be used for knots, not multiple-component links.<p>"
         "See the Regina Handbook for more information on each of these "
         "types of codes.</qt>");
         /*
@@ -158,16 +159,17 @@ LinkCreator::LinkCreator(ReginaMain*) {
     label = new QLabel("<qt>Here you can enter:<p>"
         "<ul><li>a knot signature;</li>"
         "<li>an oriented or classical Gauss code;</li>"
-        "<li>numerical or alphabetical Dowker-Thistlethwaite "
-        "notation.</li></ul><p>"
-        "At present, these codes can only represent knots in Regina, "
-        "not multiple-component links.<p>"
+        "<li>numerical or alphabetical Dowker-Thistlethwaite notation;</li>"
+        "<li>a planar diagram code.</li></ul><p>"
         "Examples for the trefoil include:<p>"
         "<ul><li><tt>dabcabcv-</tt></li>"
         "<li><tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></li>"
         "<li><tt>1 -2 3 -1 2 -3</tt></li>"
         "<li><tt>4 6 2</tt></li>"
-        "<li><tt>bca</tt></li></qt>");
+        "<li><tt>bca</tt></li>"
+        "<li><tt>[[1,4,2,5], [3,6,4,1], [5,2,6,3]]</tt></li></ul><p>"
+        "At present, all except planar diagram codes can only "
+        "represent knots, not multiple-component links.</qt>");
     label->setWordWrap(true);
     label->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     subLayout->addLayout(subSubLayout);
@@ -254,14 +256,16 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("I could not interpret the given text code."),
                 QObject::tr("<qt>Here you can enter a knot signature, "
-                    "an oriented or classical Gauss code, or numerical or "
-                    "alphabetical Dowker-Thistlethwaite notation.<p>"
+                    "an oriented or classical Gauss code, numerical or "
+                    "alphabetical Dowker-Thistlethwaite notation, or "
+                    "a planar diagram code.<p>"
                     "Examples for the trefoil include:<p>"
                     "<ul><li><tt>dabcabcv-</tt></li>"
                     "<li><tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></li>"
                     "<li><tt>1 -2 3 -1 2 -3</tt></li>"
                     "<li><tt>4 6 2</tt></li>"
-                    "<li><tt>bca</tt></li></ul><p>"
+                    "<li><tt>bca</tt></li>"
+                    "<li><tt>[[1,4,2,5], [3,6,4,1], [5,2,6,3]]</tt></li></ul><p>"
                     "For more information on what each type of code means, "
                     "see the Regina Handbook.</qt>"));
             return nullptr;

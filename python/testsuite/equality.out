@@ -2,6 +2,8 @@ EqualityType.BY_VALUE
 EqualityType.BY_REFERENCE
 EqualityType.BY_VALUE
 EqualityType.NEVER_INSTANTIATED
+EqualityType.DISABLED
+EqualityType.DISABLED
 
 Integer : ==, not !=
 Integer : not ==, !=
@@ -17,12 +19,23 @@ Link + Packet : ==, not !=, throws on samePacket()
 Link + Packet : ==, not !=, throws on samePacket()
 PacketOfLink : ==, not !=, different packets
 PacketOfLink : ==, not !=, same packet
+Tangle : ==, not !=
+Tangle : not ==, !=
+Tangle : not ==, !=
+ModelLinkGraph : ==, not !=
+ModelLinkGraph : not ==, !=
+ModelLinkGraphCells : ==, not !=
+ModelLinkGraphCells : not ==, !=
 Triangulation3 : ==, not !=
 Triangulation3 : not ==, !=
 Triangulation3 + Packet : ==, not !=, throws on samePacket()
 Triangulation3 + Packet : ==, not !=, throws on samePacket()
 PacketOfTriangulation3 : ==, not !=, different packets
 PacketOfTriangulation3 : ==, not !=, same packet
+SnapPeaTriangulation : ==, not !=
+SnapPeaTriangulation : not ==, !=
+SnapPeaTriangulation : not ==, !=
+SnapPeaTriangulation : not ==, !=
 FacetPairing2 : ==, not !=
 FacetPairing2 : not ==, !=
 Attachment : ==, not !=, different packets
@@ -31,20 +44,69 @@ Attachment : not ==, !=, different packets
 Attachment : not ==, !=, different packets
 Text : ==, not !=, different packets
 Text : not ==, !=, different packets
+Script : not ==, !=
+Script : ==, not !=
+Script : ==, not !=
 GluingPerms2 : ==, not !=
 GluingPerms2 : not ==, !=
 GluingPerms2 : not ==, !=
-Tetrahedron3 : ==, not !=
-Tetrahedron3 : not ==, !=
-Packet : ==, not !=, same packet
-Different Packets : throws on ==, throws on !=, different packets
-Different Packets : throws on ==, throws on !=, different packets
-Different Packets : throws on ==, throws on !=, different packets
-Different Packets : throws on ==, throws on !=, throws on samePacket()
-Different Packets : throws on ==, throws on !=, throws on samePacket()
+NormalSurfaces : not ==, !=
+NormalSurfaces : ==, not !=
+NormalSurfaces : ==, not !=
+NormalHypersurfaces : not ==, !=
+NormalHypersurfaces : ==, not !=
+NormalHypersurfaces : ==, not !=
+AngleStructures : not ==, !=
+AngleStructures : ==, not !=
+TypeTrie : ==, not !=
+TypeTrie : not ==, !=
+TypeTrie : not ==, !=
+TrieSet : ==, not !=
+TrieSet : not ==, !=
+TrieSet : not ==, !=
+LPMatrix : ==, not !=
+LPMatrix : ==, not !=
+LPMatrix : not ==, !=
+ValidityConstraints : ==, not !=
+ValidityConstraints : not ==, !=
+Signature : ==, not !=
+Signature : not ==, !=
+SFSAlt : ==, not !=
+SFSAlt : not ==, !=
 DiscSetTet : ==, not !=
 DiscSetTet : not ==, !=
 DiscSetSurface : ==, not !=
 DiscSetSurface : not ==, !=
 DiscSetSurface : not ==, !=
+TreeDecomposition : ==, not !=
+TreeDecomposition : not ==, !=
+SatBlockSpec : ==, not !=
+SatBlockSpec : not ==, !=
+SatBlockSpec : ==, not !=
+SatBlockSpec : not ==, !=
+SatBlockSpec : ==, not !=
+SatBlockSpec : not ==, !=
+SatBlock : ==, not !=
+SatBlock : not ==, !=
+SatBlock : ==, not !=
+SatBlock : not ==, !=
+SatBlock : ==, not !=
+SatBlock : not ==, !=
+TxICore : ==, not !=
+TxICore : not ==, !=
+TxICore : not ==, !=
+TxICore : ==, not !=
+BlockedSFSTriple : ==, not !=
+BlockedSFSTriple : not ==, !=
+BlockedSFSTriple.manifold() : ==, not !=
+Tetrahedron3 : ==, not !=
+Tetrahedron3 : not ==, !=
+Container : throws on ==, throws on !=, same packet
+Text : ==, not !=, same packet
+Different Packets : throws on ==, throws on !=, different packets
+Different Packets : throws on ==, throws on !=, different packets
+Different Packets : throws on ==, throws on !=, different packets
+Different Packets : throws on ==, throws on !=, different packets
+Different Packets : throws on ==, throws on !=, throws on samePacket()
+Different Packets : throws on ==, throws on !=, throws on samePacket()
 HomologicalData : throws on ==, throws on !=

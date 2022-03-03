@@ -550,7 +550,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         std::string sigString = reSignature.cap(1).toUtf8().constData();
         try {
             return regina::make_packet(
-                regina::Signature::parse(sigString).triangulate(), sigString);
+                regina::Signature(sigString).triangulate(), sigString);
         } catch (const regina::InvalidArgument&) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("I could not interpret the given "

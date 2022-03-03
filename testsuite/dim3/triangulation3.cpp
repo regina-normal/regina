@@ -81,6 +81,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryTriangles);
+    CPPUNIT_TEST(boundaryFaces);
     CPPUNIT_TEST(boundaryBuild);
     CPPUNIT_TEST(edgeAccess);
     CPPUNIT_TEST(pachner<0>);
@@ -89,8 +90,14 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(pachner<3>);
     CPPUNIT_TEST(chainComplex<1>);
     CPPUNIT_TEST(chainComplex<2>);
+    CPPUNIT_TEST(dualChainComplex<1>);
+    CPPUNIT_TEST(dualChainComplex<2>);
+    CPPUNIT_TEST(dualToPrimal<0>);
+    CPPUNIT_TEST(dualToPrimal<1>);
+    CPPUNIT_TEST(dualToPrimal<2>);
 
     // Dimension-specific tests:
+    CPPUNIT_TEST(zeroTwoMove);
     CPPUNIT_TEST(magic);
     CPPUNIT_TEST(events);
     CPPUNIT_TEST(validity);
@@ -257,17 +264,17 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Some of our triangulations can be generated from
             // splitting surfaces.
-            rp3rp3 = Signature::parse("aabccd.b.d").triangulate();
+            rp3rp3 = Signature("aabccd.b.d").triangulate();
 
-            q32xz3 = Signature::parse("aabcdb.cedfef").triangulate();
+            q32xz3 = Signature("aabcdb.cedfef").triangulate();
 
-            s3_large = Signature::parse("abc.abd.cef.de.fg.g").triangulate();
+            s3_large = Signature("abc.abd.cef.de.fg.g").triangulate();
 
-            lens8_3_large = Signature::parse("aabcb.cd.d").triangulate();
+            lens8_3_large = Signature("aabcb.cd.d").triangulate();
 
-            rp3_large = Signature::parse("aabcdedcfb.fg.e.g").triangulate();
+            rp3_large = Signature("aabcdedcfb.fg.e.g").triangulate();
 
-            q20_large = Signature::parse("abcdeabcdef.fg.g").triangulate();
+            q20_large = Signature("abcdeabcdef.fg.g").triangulate();
 
             // Some are hard-coded in the calculation engine as sample
             // triangulations.
@@ -453,6 +460,10 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void boundaryTriangles() {
             testManualAll(verifyBoundaryFacets);
+        }
+
+        void boundaryFaces() {
+            testManualAll(verifyBoundaryFaces);
         }
 
         void boundaryBuild() {
@@ -2241,11 +2252,11 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "3-tetrahedron snapped ball");
             verifyFundGroup(lst3_4_7, "Z", "LST(3,4,7)");
             verifyFundGroup(figure8,
-                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2",
+                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b^2 a^-1 b",
                 "Figure eight");
                 // Note: \u21A6 is the unicode mapsto symbol.
             verifyFundGroup(trefoil,
-                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1",
+                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 a^-1 b",
                 "Trefoil");
                 // Note: \u21A6 is the unicode mapsto symbol.
             verifyFundGroup(rp2xs1, "Z + Z_2", "RP^2 x S^1");
@@ -2750,12 +2761,11 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifySigThreeSphere(const std::string& sigStr) {
-            verifyThreeSphere(Signature::parse(sigStr).triangulate(),
-                sigStr.c_str());
+            verifyThreeSphere(Signature(sigStr).triangulate(), sigStr.c_str());
         }
 
         void verifySigNotThreeSphere(const std::string& sigStr) {
-            verifyNotThreeSphere(Signature::parse(sigStr).triangulate(),
+            verifyNotThreeSphere(Signature(sigStr).triangulate(),
                 sigStr.c_str());
         }
 
@@ -3963,18 +3973,27 @@ class Triangulation3Test : public TriangulationTest<3> {
                 if (! tmp0.isSolidTorus())
                     CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 0 "
                         "does not give a solid torus.");
+                if (! tmp0.isOriented())
+                    CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 0 "
+                        "does not preserve orientation.");
 
                 Triangulation<3> tmp1(snap);
                 tmp1.pinchEdge(tmp1.edge(1));
                 if (! tmp1.isSphere())
                     CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 1 "
                         "does not give a 3-sphere.");
+                if (! tmp1.isOriented())
+                    CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 1 "
+                        "does not preserve orientation.");
 
                 Triangulation<3> tmp2(snap);
                 tmp2.pinchEdge(tmp2.edge(2));
                 if (! tmp2.isSolidTorus())
                     CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 2 "
                         "does not give a solid torus.");
+                if (! tmp2.isOriented())
+                    CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 2 "
+                        "does not preserve orientation.");
             }
 
             // Move on to the layered 1-tetrahedron triangulation of the
@@ -3996,12 +4015,18 @@ class Triangulation3Test : public TriangulationTest<3> {
                         (! tmp0.isSolidTorus())))
                     CPPUNIT_FAIL("Layered 3-sphere: pinching edge 0 "
                         "does not give a non-trivial knot complement.");
+                if (! tmp0.isOriented())
+                    CPPUNIT_FAIL("Layered 3-sphere: pinching edge 0 "
+                        "does not preserve orientation.");
 
                 Triangulation<3> tmp1(layer);
                 tmp1.pinchEdge(tmp1.edge(1));
                 if (! tmp1.isSolidTorus())
                     CPPUNIT_FAIL("Layered 3-sphere: pinching edge 1 "
                         "does not give a solid torus.");
+                if (! tmp1.isOriented())
+                    CPPUNIT_FAIL("Layered 3-sphere: pinching edge 1 "
+                        "does not preserve orientation.");
             }
 
             // Now try a 2-tetrahedron ball, where we pinch the internal edge
@@ -4010,12 +4035,16 @@ class Triangulation3Test : public TriangulationTest<3> {
             {
                 Triangulation<3> ball;
                 auto [a, b] = ball.newTetrahedra<2>();
-                a->join(0, b, Perm<4>());
-                a->join(1, b, Perm<4>());
+                a->join(0, b, Perm<4>(2, 3));
+                a->join(1, b, Perm<4>(2, 3));
 
                 // The internal edge joins vertices 2-3.
                 Triangulation<3> tmp(ball);
                 tmp.pinchEdge(tmp.tetrahedron(0)->edge(5));
+                if (! tmp.isOriented())
+                    CPPUNIT_FAIL("2-tetrahedron ball: pinching the "
+                        "internal edge does not preserve orientation.");
+
                 tmp.idealToFinite();
                 if (! tmp.isSolidTorus())
                     CPPUNIT_FAIL("2-tetrahedron ball: pinching the "
@@ -4548,7 +4577,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             b.reorderTetrahedraBFS(true);
             clearProperties(b);
 
-            Triangulation<3> c = Isomorphism<3>::random(t.size()).apply(t);
+            Triangulation<3> c = Isomorphism<3>::random(t.size())(t);
             clearProperties(c);
 
             Triangulation<3> d(c);
@@ -4662,9 +4691,253 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyPachnerSimplicial<k>();
         }
 
+        static void verifyZeroTwoMove(
+                const Triangulation<3>& tri, const char* name ) {
+            // Tests 0-2 moves.
+            Triangulation<3> oriented(tri);
+            if ( oriented.isOrientable() ) {
+                oriented.orient();
+            }
+            for ( int i = 0; i < tri.countEdges(); ++i ) {
+                size_t deg = oriented.edge(i)->degree();
+                for ( size_t j = 0; j <= deg; ++j ) {
+                    for ( size_t jj = j; jj <= deg; ++jj ) {
+                        Triangulation<3> newTri(oriented);
+                        bool legal = newTri.zeroTwoMove(
+                                newTri.edge(i), j, jj );
+                        clearProperties( newTri );
+
+                        // Check that different versions of zeroTwoMove give
+                        // isomorphic results.
+                        Triangulation<3> overloadTri(oriented);
+                        size_t num[2] = {j, jj};
+                        Triangle<3>* t[2];
+                        int e[2];
+                        for ( int k : {0, 1} ) {
+                            if ( num[k] == deg ) {
+                                auto emb = overloadTri.edge(i)->embedding(
+                                        deg - 1 );
+                                t[k] = emb.simplex()->triangle(
+                                        emb.vertices()[2] );
+                                e[k] = regina::TriangleEmbedding<3>(
+                                        emb.simplex(),
+                                        emb.simplex()->faceMapping<2>(
+                                            emb.vertices()[2] )
+                                        ).vertices().inverse()[
+                                        emb.vertices()[3] ];
+                            } else {
+                                auto emb = overloadTri.edge(i)->embedding(
+                                        num[k] );
+                                t[k] = emb.simplex()->triangle(
+                                        emb.vertices()[3] );
+                                e[k] = regina::TriangleEmbedding<3>(
+                                        emb.simplex(),
+                                        emb.simplex()->faceMapping<2>(
+                                            emb.vertices()[3] )
+                                        ).vertices().inverse()[
+                                        emb.vertices()[2] ];
+                            }
+                        }
+                        bool overloadLegal = overloadTri.zeroTwoMove(
+                                t[0], e[0], t[1], e[1] );
+                        if ( j < deg and jj < deg and
+                                overloadLegal != legal ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "disagreement about legality of 0-2 move.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( not legal ) {
+                            if ( newTri != oriented ) {
+                                std::ostringstream msg;
+                                msg << name << ", edge " << i
+                                    << ", triangles " << j
+                                    << " and " << jj << ": "
+                                    "disallowed 0-2 move is not "
+                                    "identical.";
+                                CPPUNIT_FAIL( msg.str() );
+                            }
+                            continue;
+                        }
+
+                        // The move was performed (hopefully correctly).
+
+                        if ( not newTri.isIsomorphicTo( overloadTri ) ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "different versions of 0-2 move give "
+                                "non-isomorphic results.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( newTri.size() != tri.size() + 2 ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move gives wrong triangulation size.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( newTri.isValid() != tri.isValid() ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move changes validity.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( newTri.isOrientable() !=
+                                tri.isOrientable() ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move changes orientability.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( tri.isOrientable() and
+                                not newTri.isOriented() ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move loses orientation.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( newTri.isClosed() != tri.isClosed() ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move loses closedness.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( newTri.countBoundaryComponents() !=
+                                tri.countBoundaryComponents() ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move changes # boundary components.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( newTri.eulerCharTri() !=
+                                tri.eulerCharTri() ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move changes Euler characteristic.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( tri.isValid() ) {
+                            if ( not ( newTri.homology() ==
+                                        tri.homology() ) ) {
+                                std::ostringstream msg;
+                                msg << name << ", edge " << i
+                                    << ", triangles " << j
+                                    << " and " << jj << ": "
+                                    "0-2 move changes H1.";
+                                CPPUNIT_FAIL( msg.str() );
+                            }
+
+                            if ( not ( newTri.homology<2>() ==
+                                        tri.homology<2>() ) ) {
+                                std::ostringstream msg;
+                                msg << name << ", edge " << i
+                                    << ", triangles " << j
+                                    << " and " << jj << ": "
+                                    "0-2 move changes H2.";
+                                CPPUNIT_FAIL( msg.str() );
+                            }
+                        }
+
+                        // Randomly relabel the tetrahedra, but preserve
+                        // orientation.
+                        Isomorphism<3> iso = Isomorphism<3>::random(
+                                newTri.size(), true );
+                        newTri = iso(newTri);
+                        clearProperties(newTri);
+
+                        // Test the inverse 2-0 move.
+                        {
+                            regina::Triangulation<3> copy(newTri);
+                            legal = copy.twoZeroMove( copy.tetrahedron(
+                                        iso.simpImage(
+                                            copy.size() - 1 ) )->edge(
+                                        iso.facetPerm(copy.size() - 1)[2],
+                                        iso.facetPerm(copy.size() - 1)[3] )
+                                    );
+                            clearProperties(copy);
+
+                            if ( not legal ) {
+                                std::ostringstream msg;
+                                msg << name << ", edge " << i
+                                    << ", triangles " << j
+                                    << " and " << jj << ": "
+                                    "could not undo 0-2 move with inverse "
+                                    "move.";
+                                CPPUNIT_FAIL( msg.str() );
+                            }
+
+                            if ( not copy.isIsomorphicTo(tri) ) {
+                                std::ostringstream msg;
+                                msg << name << ", edge " << i
+                                    << ", triangles " << j
+                                    << " and " << jj << ": "
+                                    "0-2 move followed by inverse move is "
+                                    "not isomorphic.";
+                                CPPUNIT_FAIL( msg.str() );
+                            }
+
+                            if ( tri.isOrientable() and
+                                    not copy.isOriented() ) {
+                                std::ostringstream msg;
+                                msg << name << ", edge " << i
+                                    << ", triangles " << j
+                                    << " and " << jj << ": "
+                                    "0-2 move followed by inverse move "
+                                    "loses orientation.";
+                                CPPUNIT_FAIL( msg.str() );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        void zeroTwoMove() {
+            testManualSmall( verifyZeroTwoMove );
+            runCensusAllClosed( verifyZeroTwoMove, true );
+            runCensusAllBounded( verifyZeroTwoMove, true );
+            runCensusAllIdeal( verifyZeroTwoMove, true );
+        }
+
         template <int k>
         void chainComplex() {
             testManualSmall(verifyChainComplex<k>);
+        }
+
+        template <int k>
+        void dualChainComplex() {
+            testManualSmall(verifyDualChainComplex<k>);
+        }
+
+        template <int k>
+        void dualToPrimal() {
+            testManualSmall(verifyDualToPrimal<k>);
         }
 
         static void verifyMinimiseBoundaryDoesNothing(
@@ -4815,7 +5088,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     unsigned idx = bdry->index();
 
                     Isomorphism<3> iso = Isomorphism<3>::random(t.size());
-                    iso.applyInPlace(t);
+                    t = iso(t);
 
                     Perm<4> p = iso.facetPerm(idx);
                     if (r1 <= 2) {

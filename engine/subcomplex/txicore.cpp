@@ -49,18 +49,9 @@ std::string TxICore::texName() const {
 
 void TxICore::swapBaseData(TxICore& other) noexcept {
     core_.swap(other.core_);
-
-    for (int i = 0; i < 2; ++i)
-        for (int j = 0; j < 2; ++j)
-            std::swap(bdryTet_[i][j], other.bdryTet_[i][j]);
-
-    for (int i = 0; i < 2; ++i)
-        for (int j = 0; j < 2; ++j)
-            std::swap(bdryRoles_[i][j], other.bdryRoles_[i][j]);
-
-    for (int i = 0; i < 2; ++i)
-        std::swap(bdryReln_[i], other.bdryReln_[i]);
-
+    bdryTet_.swap(other.bdryTet_);
+    bdryRoles_.swap(other.bdryRoles_);
+    bdryReln_.swap(other.bdryReln_);
     parallelReln_.swap(other.parallelReln_);
 }
 

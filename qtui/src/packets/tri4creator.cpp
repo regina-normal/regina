@@ -81,7 +81,8 @@ namespace {
         ExampleCreator<4>(QObject::tr("Product S² × S²"), &regina::Example<4>::s2xs2),
         ExampleCreator<4>(QObject::tr("ℝP⁴"), &regina::Example<4>::rp4),
         ExampleCreator<4>(QObject::tr("Twisted product B³ ×~ S¹"), &regina::Example<4>::twistedBallBundle),
-        ExampleCreator<4>(QObject::tr("Twisted product S³ ×~ S¹"), &regina::Example<4>::twistedSphereBundle)
+        ExampleCreator<4>(QObject::tr("Twisted product S³ ×~ S¹"), &regina::Example<4>::twistedSphereBundle),
+        ExampleCreator<4>(QObject::tr("Twisted product S² ×~ S²"), &regina::Example<4>::s2xs2Twisted)
     };
 
     /**

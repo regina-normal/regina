@@ -189,6 +189,24 @@ class SigPartialIsomorphism : public ShortOutput<SigPartialIsomorphism> {
         void makeCanonical(const Signature& sig, unsigned fromCycleGroup = 0);
 
         /**
+         * Determines whether this and the given partial isomorphism are
+         * identical.
+         *
+         * @param other the partial isomorphism to compare with this.
+         * @return \c true if and only if this and \a other are identical.
+         */
+        bool operator == (const SigPartialIsomorphism& other) const;
+
+        /**
+         * Determines whether this and the given partial isomorphism are
+         * not identical.
+         *
+         * @param other the partial isomorphism to compare with this.
+         * @return \c true if and only if this and \a other are not identical.
+         */
+        bool operator != (const SigPartialIsomorphism& other) const;
+
+        /**
          * Lexicographically compares the results of applying this and
          * the given isomorphism to the given signature.
          *
@@ -379,6 +397,11 @@ inline void SigPartialIsomorphism::swap(SigPartialIsomorphism& other) noexcept {
     std::swap(cyclePreImage, other.cyclePreImage);
     std::swap(cycleStart, other.cycleStart);
     std::swap(dir, other.dir);
+}
+
+inline bool SigPartialIsomorphism::operator != (
+        const SigPartialIsomorphism& other) const {
+    return ! ((*this) == other);
 }
 
 inline SigPartialIsomorphism::ShorterCycle::ShorterCycle(

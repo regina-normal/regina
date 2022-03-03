@@ -534,6 +534,21 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     connect(actConnectedSumWith, SIGNAL(triggered()), this,
         SLOT(connectedSumWith()));
 
+    auto* actZeroEff = new QAction(this);
+    actZeroEff->setText(tr("Make &0-Efficient"));
+    actZeroEff->setToolTip(tr(
+        "Convert this into a 0-efficient triangulation if possible"));
+    actZeroEff->setWhatsThis(tr("<qt>Convert this into a 0-efficient "
+        "triangulation of the same underlying 3-manifold, if possible.  "
+        "This triangulation will be modified directly.<p>"
+        "Note that this operation is currently available only for "
+        "closed orientable 3-manifold triangulations.<p>"
+        "Note also that some 3-manifolds (such as composite 3-manifolds) "
+        "can never have 0-efficient triangulations.  You will be notified "
+        "if this is the case.</qt>"));
+    triActionList.push_back(actZeroEff);
+    connect(actZeroEff, SIGNAL(triggered()), this, SLOT(makeZeroEfficient()));
+
     sep = new QAction(this);
     sep->setSeparator(true);
     triActionList.push_back(sep);
@@ -597,21 +612,6 @@ Tri3GluingsUI::Tri3GluingsUI(regina::PacketOf<regina::Triangulation<3>>* packet,
     triActionList.push_back(actConnectedSumDecomposition);
     connect(actConnectedSumDecomposition, SIGNAL(triggered()), this,
         SLOT(connectedSumDecomposition()));
-
-    auto* actZeroEff = new QAction(this);
-    actZeroEff->setText(tr("Make &0-Efficient"));
-    actZeroEff->setToolTip(tr(
-        "Convert this into a 0-efficient triangulation if possible"));
-    actZeroEff->setWhatsThis(tr("<qt>Convert this into a 0-efficient "
-        "triangulation of the same underlying 3-manifold, if possible.  "
-        "This triangulation will be modified directly.<p>"
-        "Note that this operation is currently available only for "
-        "closed orientable 3-manifold triangulations.<p>"
-        "Note also that some 3-manifolds (such as composite 3-manifolds) "
-        "can never have 0-efficient triangulations.  You will be notified "
-        "if this is the case.</qt>"));
-    triActionList.push_back(actZeroEff);
-    connect(actZeroEff, SIGNAL(triggered()), this, SLOT(makeZeroEfficient()));
 
     sep = new QAction(this);
     sep->setSeparator(true);

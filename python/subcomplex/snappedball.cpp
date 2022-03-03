@@ -55,6 +55,7 @@ void addSnappedBall(pybind11::module_& m) {
         .def_static("recognise", &SnappedBall::recognise)
         .def_static("formsSnappedBall", &SnappedBall::recognise) // deprecated
     ;
+    regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 
     m.def("swap", (void(*)(SnappedBall&, SnappedBall&))(regina::swap));

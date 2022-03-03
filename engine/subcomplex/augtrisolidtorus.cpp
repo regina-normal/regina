@@ -201,13 +201,13 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                     for (j = 0; j < 3; j++) {
                         switch (annulusMap[j][0]) {
                             case 0:
-                                ans->edgeGroupRoles_[j] = Perm<4>(2, 0, 1, 3);
+                                ans->edgeGroupRoles_[j] = Perm<3>(2, 0, 1);
                                 break;
                             case 2:
-                                ans->edgeGroupRoles_[j] = Perm<4>(1, 2, 0, 3);
+                                ans->edgeGroupRoles_[j] = Perm<3>(1, 2, 0);
                                 break;
                             case 3:
-                                ans->edgeGroupRoles_[j] = Perm<4>(0, 1, 2, 3);
+                                ans->edgeGroupRoles_[j] = Perm<3>(0, 1, 2);
                                 break;
                         }
                     }
@@ -290,13 +290,13 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                         new AugTriSolidTorus(*core));
                     switch ((*gluing)[0]) {
                         case 0:
-                            ans->edgeGroupRoles_[torusAnnulus] = Perm<4>(2,0,1,3);
+                            ans->edgeGroupRoles_[torusAnnulus] = Perm<3>(2,0,1);
                             break;
                         case 2:
-                            ans->edgeGroupRoles_[torusAnnulus] = Perm<4>(1,2,0,3);
+                            ans->edgeGroupRoles_[torusAnnulus] = Perm<3>(1,2,0);
                             break;
                         case 3:
-                            ans->edgeGroupRoles_[torusAnnulus] = Perm<4>(0,1,2,3);
+                            ans->edgeGroupRoles_[torusAnnulus] = Perm<3>(0,1,2);
                             break;
                     }
                     ans->chainIndex_ = chainLen;
@@ -356,13 +356,13 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                                 new AugTriSolidTorus(*core));
                             switch ((*gluing)[0]) {
                                 case 0:
-                                    ans->edgeGroupRoles_[0] = Perm<4>(2, 0, 1, 3);
+                                    ans->edgeGroupRoles_[0] = Perm<3>(2, 0, 1);
                                     break;
                                 case 2:
-                                    ans->edgeGroupRoles_[0] = Perm<4>(1, 2, 0, 3);
+                                    ans->edgeGroupRoles_[0] = Perm<3>(1, 2, 0);
                                     break;
                                 case 3:
-                                    ans->edgeGroupRoles_[0] = Perm<4>(0, 1, 2, 3);
+                                    ans->edgeGroupRoles_[0] = Perm<3>(0, 1, 2);
                                     break;
                             }
                             ans->chainIndex_ = chain.index() - 1;
@@ -412,13 +412,13 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                                 new AugTriSolidTorus(*core));
                             switch ((*gluing)[0]) {
                                 case 0:
-                                    ans->edgeGroupRoles_[0] = Perm<4>(2, 0, 1, 3);
+                                    ans->edgeGroupRoles_[0] = Perm<3>(2, 0, 1);
                                     break;
                                 case 2:
-                                    ans->edgeGroupRoles_[0] = Perm<4>(1, 2, 0, 3);
+                                    ans->edgeGroupRoles_[0] = Perm<3>(1, 2, 0);
                                     break;
                                 case 3:
-                                    ans->edgeGroupRoles_[0] = Perm<4>(0, 1, 2, 3);
+                                    ans->edgeGroupRoles_[0] = Perm<3>(0, 1, 2);
                                     break;
                             }
                             ans->chainIndex_ = chain.index();
@@ -476,7 +476,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
     Perm<4> coreVertexRoles[3];
     int whichLayered[3];
     int usedLayered;
-    Perm<4> edgeGroupRoles[3];
+    Perm<3> edgeGroupRoles[3];
     int torusAnnulus;
     for (int p = 0; p < 6; p++) {
         core = TriSolidTorus::recognise(coreTet,
@@ -508,11 +508,11 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                     whichLayered[j] = -1;
                     switch ((*q)[0]) {
                         case 0:
-                            edgeGroupRoles[j] = Perm<4>(2, 0, 1, 3); break;
+                            edgeGroupRoles[j] = Perm<3>(2, 0, 1); break;
                         case 2:
-                            edgeGroupRoles[j] = Perm<4>(1, 2, 0, 3); break;
+                            edgeGroupRoles[j] = Perm<3>(1, 2, 0); break;
                         case 3:
-                            edgeGroupRoles[j] = Perm<4>(0, 1, 2, 3); break;
+                            edgeGroupRoles[j] = Perm<3>(0, 1, 2); break;
                     }
                 } else {
                     // There should be a layered solid torus glued in here.
@@ -532,14 +532,13 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                             // q maps vertex roles in core tetrahedron j+1 to
                             // vertices of the top tetrahedron in
                             // layered[whichLayered[j]].
-                            edgeGroupRoles[j] = Perm<4>(
+                            edgeGroupRoles[j] = Perm<3>(
                                 layered[whichLayered[j]]->topEdgeGroup(
                                     Edge<3>::edgeNumber[q[0]][q[3]]),
                                 layered[whichLayered[j]]->topEdgeGroup(
                                     Edge<3>::edgeNumber[q[0]][q[1]]),
                                 layered[whichLayered[j]]->topEdgeGroup(
-                                    Edge<3>::edgeNumber[q[1]][q[3]]),
-                                3);
+                                    Edge<3>::edgeNumber[q[1]][q[3]]));
                             usedLayered++;
                             break;
                         }
@@ -622,7 +621,7 @@ std::ostream& AugTriSolidTorus::writeCommonName(std::ostream& out,
         bool tex) const {
     if (chainIndex_) {
         // We have a layered solid torus and a layered chain.
-        Perm<4> roles = edgeGroupRoles_[torusAnnulus_];
+        Perm<3> roles = edgeGroupRoles_[torusAnnulus_];
         const auto& torus = augTorus_[torusAnnulus_];
 
         long params[3];
@@ -652,12 +651,11 @@ std::ostream& AugTriSolidTorus::writeCommonName(std::ostream& out,
         // We have three layered solid tori.
         std::pair<long, long> allParams[3];
         int nAllParams = 0;
-        Perm<4> roles;
         long params[3];
         std::pair<long, long> lstParams;
         int i;
         for (i = 0; i < 3; i++) {
-            roles = edgeGroupRoles_[i];
+            Perm<3> roles = edgeGroupRoles_[i];
             const auto& torus = augTorus_[i];
             if (torus) {
                 params[0] = torus->meridinalCuts(0);

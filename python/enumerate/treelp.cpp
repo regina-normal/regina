@@ -80,7 +80,9 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
             &Tableaux::template fillInitialTableaux<Integer>)
         ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    // We need to think more about what a comparison between tableaux should
+    // test.  In the meantime, don't make a decision we might regret later.
+    regina::python::disable_eq_operators(c);
 
     m.def("swap", (void(*)(Tableaux&, Tableaux&))(regina::swap));
 }
@@ -116,7 +118,10 @@ void addLPData(pybind11::module_& m, const char* name) {
         })
         ;
     regina::python::add_output(c);
-    regina::python::add_eq_operators(c);
+    // We need to think more about what a comparison between tableaux should
+    // test.  Do we just compare basis indices?  Do we do a deep comparison of
+    // all the internal data?  Let's not force a decision right now.
+    regina::python::disable_eq_operators(c);
 
     m.def("swap", (void(*)(Data&, Data&))(regina::swap));
 }

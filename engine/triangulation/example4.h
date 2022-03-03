@@ -96,6 +96,11 @@ class Example<4> : public detail::ExampleBase<4> {
          * Returns a four-pentachoron triangulation of the standard
          * complex projective plane.  This triangulation is minimal.
          *
+         * Under the orientation convention that we use for intersection
+         * forms, this triangulation gives the "plain" <tt>CP^2</tt> with
+         * intersection form [1], not the reflected <tt>CP^2</tt> with
+         * intersection form [-1].
+         *
          * @return the standard complex projective plane.
          */
         static Triangulation<4> cp2();
@@ -107,6 +112,17 @@ class Example<4> : public detail::ExampleBase<4> {
          * @return the standard product of two 2-spheres.
          */
         static Triangulation<4> s2xs2();
+
+        /**
+         * Returns a six-pentachoron triangulation of the twisted product
+         * <tt>S^2 x~ S^2</tt>.
+         * This manifold is diffeomorphic to <tt>CP^2 # -CP^2</tt>, where
+         * <tt>-CP^2</tt> denotes <tt>CP^2</tt> with its orientation reversed.
+         * This triangulation is minimal.
+         *
+         * @return the twisted product of two 2-spheres.
+         */
+        static Triangulation<4> s2xs2Twisted();
 
         /**
          * Returns a two-pentachoron triangulation of the product space
@@ -125,6 +141,15 @@ class Example<4> : public detail::ExampleBase<4> {
          * @return the twisted product <tt>S^3 x~ S^1</tt>.
          */
         static Triangulation<4> s3xs1Twisted();
+
+        /**
+         * Returns a triangulation of the standard K3 surface.
+         *
+         * Be warned: this triangulation is extremely large.
+         *
+         * @return the K3 surface.
+         */
+        static Triangulation<4> k3();
 
         /*@}*/
         /**

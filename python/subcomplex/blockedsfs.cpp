@@ -51,6 +51,7 @@ void addBlockedSFS(pybind11::module_& m) {
         .def_static("isBlockedSFS", &BlockedSFS::recognise) // deprecated
     ;
     regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(BlockedSFS&, BlockedSFS&))(regina::swap));
 }

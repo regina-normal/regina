@@ -13,7 +13,7 @@ SET (PACKAGE_PRETTY_NAME Regina)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # Version
-SET (PACKAGE_VERSION 7.0)
+SET (PACKAGE_VERSION 7.1)
 SET (SNAPPY_VERSION 2.8)
 SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
 
@@ -322,13 +322,12 @@ IF (NOT DISABLE_PYTHON)
     ENDIF(${CMAKE_VERSION} VERSION_LESS "3.16.0")
   ENDIF (Python_EXECUTABLE)
 
+  # Note: FindPython prioritises Python 3 (which is what we want also).
   FIND_PACKAGE(Python COMPONENTS Interpreter Development REQUIRED)
 
   IF (Python_FOUND)
     IF (${Python_VERSION_MAJOR} EQUAL 2)
-      IF (${Python_VERSION_MINOR} LESS 6)
-        MESSAGE(FATAL_ERROR "For Python 2.x, Regina needs Python >= 2.6.")
-      ENDIF ()
+      MESSAGE(FATAL_ERROR "Regina no longer supports Python 2.")
     ELSEIF (${Python_VERSION_MAJOR} EQUAL 3)
       IF (${Python_VERSION_MINOR} LESS 1)
         MESSAGE(FATAL_ERROR "For Python 3.x, Regina needs Python >= 3.1.")

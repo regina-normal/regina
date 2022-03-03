@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2019  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -28,6 +28,122 @@
 #include "libnormaliz/input.h"
 
 namespace libnormaliz {
+
+    //---------------------------------------------------------------------------
+//                     Number input
+//---------------------------------------------------------------------------
+
+// To be used in input.cpp
+inline void string2coeff(mpq_class& coeff, istream& in, const string& s) {  // in here superfluous parameter
+
+    stringstream sin(s);
+    coeff = mpq_read(sin);
+    // coeff=mpq_class(s);
+}
+
+inline void read_number(istream& in, mpq_class& number) {
+    number = mpq_read(in);
+}
+
+inline void read_number(istream& in, long& number) {
+    in >> number;
+}
+
+inline void read_number(istream& in, long long& number) {
+    in >> number;
+}
+
+inline void read_number(istream& in, nmz_float& number) {
+    in >> number;
+}
+
+inline void read_number(istream& in, mpz_class& number) {
+    in >> number;
+}
+
+#ifdef ENFNORMALIZ
+
+inline void string2coeff(renf_elem_class& coeff, istream& in, const string& s) {  // we need in to access the renf
+
+    try {
+        coeff = renf_elem_class(*renf_class::get_pword(in), s);
+    } catch (const std::exception& e) {
+        cerr << e.what() << endl;
+        throw BadInputException("Illegal number string " + s + " in input, Exiting.");
+    }
+}
+
+inline void read_number(istream& in, renf_elem_class& number) {
+    // in >> number;
+
+    char c;
+
+    in >> ws;
+    c = in.peek();
+    if (c != '(' && c != '\'' && c != '\"') {  // rational number
+        mpq_class rat = mpq_read(in);
+        number = renf_elem_class(rat);
+        return;
+    }
+
+    // now we have a proper field element
+
+    in >> c;  // read (
+
+    string num_string;
+    bool skip = false;
+    while (in.good()) {
+        c = in.peek();
+        if (c == ')' || c == '\'' || c == '\"') {
+            in >> c;
+            break;
+        }
+        if (c == '~' || c == '=' || c == '[')  // skip the approximation
+            skip = true;
+        in.get(c);
+        if (in.fail())
+            throw BadInputException("Error in reading number: field element not terminated");
+        if (!skip)
+            num_string += c;
+    }
+    string2coeff(number, in, num_string);
+}
+#endif
+
+// matrix input
+
+template <typename Integer>
+Matrix<Integer> readMatrix(const string project) {
+    // reads one matrix from file with name project
+    // format: nr of rows, nr of colimns, entries
+    // all separated by white space
+
+    string name_in = project;
+    const char* file_in = name_in.c_str();
+    ifstream in;
+    in.open(file_in, ifstream::in);
+    if (in.is_open() == false)
+        throw BadInputException("readMatrix cannot find file");
+    int nrows, ncols;
+    in >> nrows;
+    in >> ncols;
+
+    if (nrows == 0 || ncols == 0)
+        throw BadInputException("readMatrix finds matrix empty");
+
+    int i, j;
+    Matrix<Integer> result(nrows, ncols);
+
+    for (i = 0; i < nrows; ++i)
+        for (j = 0; j < ncols; ++j) {
+            read_number(in, result[i][j]);
+            if (in.fail())
+                throw BadInputException("readMatrix finds matrix corrupted");
+        }
+    return result;
+}
+
+//--------------------------------------------------------------------------
 
 // eats up a comment, stream must start with "/*", eats everything until "*/"
 void skip_comment(istream& in) {
@@ -117,8 +233,11 @@ void process_constraint(const string& rel,
             row[j] = -row[j];
         modified_rel = ">=";
     }
-    if (rel == "~")
+    if (rel == "~"){
+        if(using_renf<Number>())
+            throw BadInputException("Congruence not allowed for algebraic polyhedra");
         row.push_back(modulus);
+    }
 
     if (inhomogeneous && !forced_hom) {
         if (modified_rel == "=") {
@@ -153,6 +272,8 @@ void process_constraint(const string& rel,
 
 template <typename Number>
 bool read_modulus(istream& in, Number& modulus) {
+    if(using_renf<Number>())
+        throw BadInputException("Congruence not allowed for field coefficients");
     in >> std::ws;  // gobble any leading white space
     char dummy;
     in >> dummy;
@@ -167,6 +288,17 @@ bool read_modulus(istream& in, Number& modulus) {
         return false;
     return true;
 }
+
+void check_modulus(mpq_class& modulus){
+    if(modulus <= 0 || modulus.get_den() != 1)
+        throw BadInputException("Error in modulus of congruence");
+}
+
+#ifdef ENFNORMALIZ
+void check_modulus(renf_elem_class& modulus){
+    throw BadInputException("Congruences not allowed for algebraic polyhedra");
+}
+#endif
 
 template <typename Number>
 void read_symbolic_constraint(istream& in, string& rel, vector<Number>& left, Number& right, Number& modulus, bool forced_hom) {
@@ -287,6 +419,8 @@ void read_symbolic_constraint(istream& in, string& rel, vector<Number>& left, Nu
 
     // now we split off the modulus if necessary
     if (rel == "~") {
+        if(using_renf<Number>())
+            throw BadInputException("Congruence not allowed for algebraic polyhedra");
         string last_term = terms.back();
         size_t last_bracket_at = 0;
         bool has_bracket = false;
@@ -305,8 +439,7 @@ void read_symbolic_constraint(istream& in, string& rel, vector<Number>& left, Nu
         modulus = mpq_class(modulus_string);
         // modulus.canonicalize();
         // cout << "mod " << modulus << endl;
-        if (modulus <= 0 || modulus.get_den() != 1)
-            throw BadInputException("Error in modulus of congruence");
+        check_modulus(modulus);
     }
 
     // for(size_t i=0;i<terms.size();++i)
@@ -352,7 +485,7 @@ void read_symbolic_constraint(istream& in, string& rel, vector<Number>& left, Nu
         if (coeff_length == 0 || (coeff_length == 1 && coeff_string[0] == '+'))
             coeff = 1;
         if (coeff_length == 1 && coeff_string[0] == '-')
-            coeff = -11;
+            coeff = -1;
         if (coeff == 0) {
             // cout << i << " coeff string: " << coeff_string << endl;
             const string numeric = "+-0123456789/a^*().e";
@@ -443,7 +576,6 @@ void read_constraints(istream& in, long dim, map<Type::InputType, vector<vector<
             read_number(in, right);
             if (rel == "~") {
                 if (!read_modulus(in, modulus))
-                    // throw BadInputException("Congruence not allowed with field coefficients!");
                     throw BadInputException("Error while reading modulus!");
             }
             if (in.fail()) {
@@ -461,28 +593,48 @@ bool read_sparse_vector(istream& in, vector<Number>& input_vec, long length) {
 
     while (in.good()) {
         in >> std::ws;
-        int c = in.peek();
+        char c = in.peek();
         if (c == ';') {
             in >> dummy;  // swallow ;
             return true;
         }
-        long pos;
-        in >> pos;
-        if (in.fail())
-            return false;
-        pos--;
-        if (pos < 0 || pos >= length)
-            return false;
-        in >> std::ws;
-        c = in.peek();
-        if (c != ':')
-            return false;
-        in >> dummy;  // skip :
+        string range;
+        while(true){
+            in >> c;
+            if (in.fail())
+                return false;
+            if(c != ':')
+                range += c;
+            else
+                break;
+        }
+        int first_pos = -1, last_pos = -1;
+        size_t found_dots = range.find("..", 0);
+        if(found_dots != string::npos){
+            if(found_dots == 0)
+                return false;
+            first_pos = stoi(range.substr(0,found_dots));
+            first_pos--;
+            last_pos = stoi(range.substr(found_dots+2));
+            last_pos--;
+        }
+        else{
+            first_pos  = stoi(range);
+            first_pos--;
+            last_pos = first_pos;
+        }
+
+        if (first_pos < 0 || first_pos >= length)
+                return false;
+        if (last_pos < first_pos || last_pos >= length)
+                return false;
+
         Number value;
         read_number(in, value);
         if (in.fail())
             return false;
-        input_vec[pos] = value;
+        for(int i = first_pos; i <= last_pos;++i)
+            input_vec[i] = value;
     }
 
     return false;
@@ -569,14 +721,7 @@ bool read_formatted_matrix(istream& in, vector<vector<Number> >& input_mat, bool
     return false;
 }
 
-template <typename Number>
-void read_number_field(istream& in, renf_class& number_field) {
-    throw NumberFieldInputException();
-}
-
-#ifdef ENFNORMALIZ
-template <>
-void read_number_field<renf_elem_class>(istream& in, renf_class& renf) {
+void read_number_field_strings(istream& in, string& mp_string, string& indet, string& emb_string){
     char c;
     string s;
     in >> s;
@@ -588,7 +733,6 @@ void read_number_field<renf_elem_class>(istream& in, renf_class& renf) {
         throw BadInputException("Error in reading number field: min_poly does not start with (");
     in >> c;
 
-    string mp_string;
     while (in.good()) {
         c = in.peek();
         if (c == ')') {
@@ -601,16 +745,14 @@ void read_number_field<renf_elem_class>(istream& in, renf_class& renf) {
         mp_string += c;
     }
     // omp_set_num_threads(1);
-    
-    string indet;
-    
+
     for(auto& g:mp_string){
         if(isalpha(g)){
             indet = g;
             break;
         }
     }
-    
+
     if(indet == "e" || indet == "x")
         throw BadInputException("Letters e and x not allowed for field generator");
 
@@ -618,7 +760,6 @@ void read_number_field<renf_elem_class>(istream& in, renf_class& renf) {
     if (s != "embedding")
         throw BadInputException("Error in reading number field: expected keyword embedding");
     in >> ws;
-    string emb_string;
     c = in.peek();
     if (c == '[') {
         in >> c;
@@ -638,10 +779,18 @@ void read_number_field<renf_elem_class>(istream& in, renf_class& renf) {
     if (in.fail())
         throw BadInputException("Could not read number field!");
 
-    renf = renf_class(mp_string, indet, emb_string);
-    renf.gen_name = indet; // temporary fix for bug in renfxx.h
-    
-    renf.set_istream(in); 
+}
+
+#ifdef ENFNORMALIZ
+renf_class_shared read_number_field(istream& in) {
+
+    string mp_string, indet, emb_string;
+    read_number_field_strings(in, mp_string, indet, emb_string);
+
+    auto renf = renf_class::make(mp_string, indet, emb_string);
+    renf->set_pword(in);
+
+    return renf;
 }
 #endif
 
@@ -658,7 +807,7 @@ map<Type::InputType, vector<vector<Number> > > readNormalizInput(istream& in,
                                                                  OptionsHandler& options,
                                                                  map<NumParam::Param, long>& num_param_input,
                                                                  string& polynomial,
-                                                                 renf_class& number_field) {
+                                                                 renf_class_shared& number_field) {
     string type_string;
     long i, j;
     long nr_rows, nr_columns, nr_rows_or_columns;
@@ -755,7 +904,11 @@ map<Type::InputType, vector<vector<Number> > > readNormalizInput(istream& in,
 #ifndef ENFNORMALIZ
                     throw BadInputException("number_field only allowed for Normaliz with e-antic");
 #else
-                    read_number_field<Number>(in, number_field);
+                    if (!std::is_same<Number, renf_elem_class>::value) {
+                        throw NumberFieldInputException();
+                    }
+                    // TODO: Err if Number is not renf_elem_class
+                    number_field = read_number_field(in);
 #endif
                     continue;
                 }
@@ -875,7 +1028,7 @@ map<Type::InputType, vector<vector<Number> > > readNormalizInput(istream& in,
                     in >> std::ws;
                     c = in.peek();
 
-                    if (c != '[' && !std::isdigit(c)) {  // must be transpose
+                    if (c != '[' && c != 'u' && !std::isdigit(c)) {  // must be transpose
                         string transpose_str;
                         in >> transpose_str;
                         if (transpose_str != "transpose") {
@@ -908,7 +1061,28 @@ map<Type::InputType, vector<vector<Number> > > readNormalizInput(istream& in,
 
                         save_matrix(input_map, input_type, formatted_mat);
                         continue;
-                    }  // only plain matrix left
+                    }
+                    if( c == 'u') {   // must be unit matrix
+                        string unit_test;
+                        in >> unit_test;
+                        if (unit_test != "unit_matrix") {
+                            throw BadInputException("Error while reading " + type_string + ": unit matrix expected!");
+                        }
+                        if (!dim_known) {
+                            throw BadInputException("Dimension must be known for unit matrix!");
+                        }
+                        vector<vector<Number> > unit_mat;
+                        nr_columns = dim + type_nr_columns_correction(input_type);
+                        unit_mat.resize(nr_columns);
+                        for (long i = 0; i < nr_columns; ++i) {
+                            unit_mat[i] = vector<Number> (nr_columns,0);
+                            unit_mat[i][i] = 1;
+                        }
+                        save_matrix(input_map, input_type, unit_mat);
+                        continue;
+                    }
+
+                    // only plain matrix left
 
                     in >> nr_rows_or_columns;      // is number of columns if transposed
                     nr_rows = nr_rows_or_columns;  // most of the time
@@ -932,9 +1106,11 @@ map<Type::InputType, vector<vector<Number> > > readNormalizInput(istream& in,
                 }
 
                 vector<vector<Number> > M(nr_rows);
+                bool dense_matrix = true;
                 in >> std::ws;
                 c = in.peek();
                 if (c == 's') {  // must be sparse
+                    dense_matrix = false;
                     string sparse_test;
                     in >> sparse_test;
                     if (sparse_test != "sparse") {
@@ -947,7 +1123,7 @@ map<Type::InputType, vector<vector<Number> > > readNormalizInput(istream& in,
                         }
                     }
                 }
-                else {  // dense matrix
+                if(dense_matrix){   // dense matrix
                     for (i = 0; i < nr_rows; i++) {
                         M[i].resize(nr_columns);
                         for (j = 0; j < nr_columns; j++) {
@@ -1002,14 +1178,20 @@ template map<Type::InputType, vector<vector<mpq_class> > > readNormalizInput(ist
                                                                  OptionsHandler& options,
                                                                  map<NumParam::Param, long>& num_param_input,
                                                                  string& polynomial,
-                                                                 renf_class& number_field);
+                                                                 renf_class_shared& number_field);
 
 #ifdef ENFNORMALIZ
 template map<Type::InputType, vector<vector<renf_elem_class> > > readNormalizInput(istream& in,
                                                                  OptionsHandler& options,
                                                                  map<NumParam::Param, long>& num_param_input,
                                                                  string& polynomial,
-                                                                 renf_class& number_field);
+                                                                 renf_class_shared& number_field);
 #endif
+
+#ifndef NMZ_MIC_OFFLOAD  // offload with long is not supported
+template Matrix<long> readMatrix(const string project);
+#endif  // NMZ_MIC_OFFLOAD
+template Matrix<long long> readMatrix(const string project);
+template Matrix<mpz_class> readMatrix(const string project);
 
 } // namespace

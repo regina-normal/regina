@@ -2147,7 +2147,7 @@ class PacketData {
          * This constructor is provided so that \a Held can (if it wants) use
          * an implicitly-declared copy or move constructor.
          */
-        PacketData(const PacketData&) {}
+        PacketData(const PacketData&) noexcept {}
         /**
          * Assignment operator that ignores its argument and does nothing.
          * This is because \a heldBy_ stores information about the C++ type
@@ -2330,9 +2330,9 @@ class PacketData {
  * (and searchable) that you are correctly wrapping the new packet in a
  * std::shared_ptr, as is required for all packets in Regina.
  *
- * \ifacespython This is not made available to Python, since Python will
- * still maintain a reference to \a src (which will become unusable).
- * Instead you can make a deep copy using the PacketOf<Held> constructor.
+ * \ifacespython The \a src argument is a const reference, and this routine
+ * makes a deep copy of \a src.  This is because Python will still maintain a
+ * reference to \a src, and so it is not possible to move from \a src.
  *
  * @param src the \a Held object that will be moved into the new packet;
  * this will become unusable after this function returns.
@@ -2361,9 +2361,9 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
  * wrapping the new packet in a std::shared_ptr, as is required for all
  * packets in Regina.
  *
- * \ifacespython This is not made available to Python, since Python will
- * still maintain a reference to \a src (which will become unusable).
- * Instead you can make a deep copy using the PacketOf<Held> constructor.
+ * \ifacespython The \a src argument is a const reference, and this routine
+ * makes a deep copy of \a src.  This is because Python will still maintain a
+ * reference to \a src, and so it is not possible to move from \a src.
  *
  * @param src the \a Held object that will be moved into the new packet;
  * this will become unusable after this function returns.

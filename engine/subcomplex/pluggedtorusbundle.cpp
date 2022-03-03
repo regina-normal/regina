@@ -288,7 +288,8 @@ std::unique_ptr<PluggedTorusBundle> PluggedTorusBundle::hunt(
             // Note: we cannot use make_unique here, since the class
             // constructor is private.
             ans.reset(new PluggedTorusBundle(bundle, iso,
-                std::move(*region),
+                std::move(layerUpper), std::move(layerLower),
+                std::move(*region), regionPos,
                 curvesToBdryAnnulus * upperRolesToLower.inverse() *
                 curvesToLowerAnnulus));
             return true;

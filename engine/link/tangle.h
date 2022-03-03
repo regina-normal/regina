@@ -298,6 +298,50 @@ class Tangle : public Output<Tangle> {
         StrandRef end(int string) const;
 
         /**
+         * Determines if this tangle is combinatorially identical to the
+         * given tangle.
+         *
+         * Here "identical" means that:
+         *
+         * - the tangles are of the same type and have the same number of
+         *   crossings;
+         *
+         * - the same numbered crossings are positive and negative in both
+         *   tangles;
+         *
+         * - the corresponding strings in each tangle pass through the same
+         *   under/over-strands of the same numbered crossings in the same
+         *   order.
+         *
+         * @param other the tangle to compare with this.
+         * @return \c true if and only if the two tangles are
+         * combinatorially identical.
+         */
+        bool operator == (const Tangle& other) const;
+
+        /**
+         * Determines if this tangle is not combinatorially identical
+         * to the given tangle.
+         *
+         * Here "identical" means that:
+         *
+         * - the tangles are of the same type and have the same number of
+         *   crossings;
+         *
+         * - the same numbered crossings are positive and negative in both
+         *   tangles;
+         *
+         * - the corresponding strings in each tangle pass through the same
+         *   under/over-strands of the same numbered crossings in the same
+         *   order.
+         *
+         * @param other the tangle to compare with this.
+         * @return \c true if and only if the two tangles are
+         * not combinatorially identical.
+         */
+        bool operator != (const Tangle& other) const;
+
+        /**
          * Translates a strand reference for some other tangle into the
          * corresponding strand reference for this tangle.
          *
@@ -1007,6 +1051,10 @@ inline StrandRef Tangle::begin(int string) const {
 
 inline StrandRef Tangle::end(int string) const {
     return end_[string][1];
+}
+
+inline bool Tangle::operator != (const Tangle& other) const {
+    return ! ((*this) == other);
 }
 
 inline StrandRef Tangle::translate(const StrandRef& other) const {

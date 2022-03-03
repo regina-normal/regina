@@ -204,9 +204,8 @@ void addGroupPresentation(pybind11::module_& m) {
                 case 6: p.enumerateCovers<6>(push); break;
                 case 7: p.enumerateCovers<7>(push); break;
                 default:
-                    PyErr_SetString(PyExc_ValueError,
-                        "The index passed to enumerateCovers() must be between "
-                        "2 and 7 inclusive.");
+                    throw regina::InvalidArgument("The index passed to "
+                        "enumerateCovers() must be between 2 and 7 inclusive.");
             }
             return ans;
         })
@@ -221,10 +220,8 @@ void addGroupPresentation(pybind11::module_& m) {
                 case 6: return p.enumerateCovers<6>(action);
                 case 7: return p.enumerateCovers<7>(action);
             }
-            PyErr_SetString(PyExc_ValueError,
-                "The index passed to enumerateCovers() must be between "
-                "2 and 7 inclusive.");
-            return 0;
+            throw regina::InvalidArgument("The index passed to "
+                "enumerateCovers() must be between 2 and 7 inclusive.");
         })
         .def("incidence", &GroupPresentation::incidence)
         .def("tex", &GroupPresentation::tex)

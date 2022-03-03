@@ -136,6 +136,8 @@ void TriangulationBase<dim>::calculateSkeleton() {
     // Faces of all dimensions 0, ..., dim-1
     // -----------------------------------------------------------------
 
+    std::fill(nBoundaryFaces_.begin(), nBoundaryFaces_.end(), 0);
+
     std::apply([this](auto&&... kFaces) {
         (calculateFaces<subdimOf<decltype(kFaces)>()>(this), ...);
     }, faces_);
@@ -180,22 +182,38 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                 std::get<dim - 1>(tri->faces_).push_back(f);
                 auto map = Face<dim, dim-1>::ordering(facet);
 
-                std::get<dim-1>(s->faces_)[facet] = f;
-                std::get<dim-1>(s->mappings_)[facet] = map;
-
                 adj = s->adjacentSimplex(facet);
                 if (adj) {
                     // We have an adjacent simplex.
                     adjFacet = s->adjacentFacet(facet);
                     auto adjMap = s->adjacentGluing(facet) * map;
 
+                    std::get<dim-1>(s->faces_)[facet] = f;
+                    std::get<dim-1>(s->mappings_)[facet] = map;
+
                     std::get<dim-1>(adj->faces_)[adjFacet] = f;
                     std::get<dim-1>(adj->mappings_)[adjFacet] = adjMap;
 
-                    f->embeddings_.push_back({s, map});
-                    f->embeddings_.push_back({adj, adjMap});
+                    // We have an orientation match with exactly one of
+                    // {s, map} and {adj, adjMap}.  Ensure the one with
+                    // the orientation map becomes the first embedding.
+                    if (map.sign() == s->orientation_) {
+                        f->embeddings_.push_back({s, map});
+                        f->embeddings_.push_back({adj, adjMap});
+                    } else {
+                        f->embeddings_.push_back({adj, adjMap});
+                        f->embeddings_.push_back({s, map});
+                    }
                 } else {
-                    // This is a boundary facet.
+                    // This is a boundary facet, so we only get one embedding.
+                    // If the orientation does not match then we will need to
+                    // change the ordering of the vertices of the face.
+                    if (map.sign() != s->orientation_)
+                        map = map * Perm<dim + 1>(dim - 1, dim - 2);
+
+                    std::get<dim-1>(s->faces_)[facet] = f;
+                    std::get<dim-1>(s->mappings_)[facet] = map;
+
                     f->embeddings_.push_back({s, map});
                 }
             }
@@ -219,6 +237,8 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                 f = new Face<dim, dim-2>(s->component_);
                 std::get<dim - 2>(tri->faces_).push_back(f);
                 auto map = Face<dim, dim-2>::ordering(start);
+                if (map.sign() != s->orientation_)
+                    map = map * Perm<dim + 1>(dim - 1, dim);
 
                 // Since the link of a codimension-2-face is a path or loop, the
                 // depth-first search is really just a straight line in either
@@ -310,6 +330,8 @@ void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
                 f = new Face<dim, subdim>(s->component_);
                 std::get<subdim>(tri->faces_).push_back(f);
                 auto map = Face<dim, subdim>::ordering(start);
+                if (map.sign() != s->orientation_)
+                    map = map * Perm<dim + 1>(dim - 1, dim);
 
                 std::get<subdim>(s->faces_)[start] = f;
                 std::get<subdim>(s->mappings_)[start] = map;
@@ -433,6 +455,7 @@ void TriangulationBase<dim>::calculateRealBoundary() {
         // completely enumerate all (dim-1)-faces in this boundary component.
 
         loopFacet->boundaryComponent_ = label;
+        ++nBoundaryFaces_[dim - 1];
         label->push_back(loopFacet);
         orient[loopFacet->index()] = 1;
 
@@ -446,7 +469,7 @@ void TriangulationBase<dim>::calculateRealBoundary() {
 
             // Run through all faces of dimensions 0,...,(dim-3) within facet,
             // and include them in this boundary component.
-            std::apply([label, facet](auto&&... kFaces) {
+            std::apply([this, label, facet](auto&&... kFaces) {
                 (calculateBoundaryFaces<subdimOf<decltype(kFaces)>()>(
                     label, facet), ...);
             }, faces_);
@@ -463,6 +486,7 @@ void TriangulationBase<dim>::calculateRealBoundary() {
                 ridge = simp->template face<dim-2>(ridgeNum);
                 if (! ridge->boundaryComponent_) {
                     ridge->boundaryComponent_ = label;
+                    ++nBoundaryFaces_[dim - 2];
                     label->push_back(ridge);
                 }
 
@@ -506,6 +530,7 @@ void TriangulationBase<dim>::calculateRealBoundary() {
                         label->orientable_ = false;
                 } else {
                     adjFacet->boundaryComponent_ = label;
+                    ++nBoundaryFaces_[dim - 1];
                     label->push_back(adjFacet);
                     orient[adjFacet->index()] = adjOrient;
                     queue.push_back(adjFacet);
@@ -531,7 +556,11 @@ void TriangulationBase<dim>::calculateBoundaryFaces(BoundaryComponent<dim>* bc,
             for (int i = 0; i <= dim; ++i)
                 if (i != facetNum) {
                     Vertex<dim>* v = simp->vertex(i);
+                    // Note: in the case of (invalid) pinched faces,
+                    // v might already belong to some other boundary component.
                     if (v->boundaryComponent_ != bc) {
+                        if (! v->boundaryComponent_)
+                            ++nBoundaryFaces_[0];
                         v->boundaryComponent_ = bc;
                         // If allFaces is false, then the boundary component
                         // only wants to know about ridges and facets.
@@ -542,7 +571,11 @@ void TriangulationBase<dim>::calculateBoundaryFaces(BoundaryComponent<dim>* bc,
         } else {
             for (unsigned i = 0; i < binomSmall(dim, subdim + 1); ++i) {
                 Face<dim, subdim>* f = facet->template face<subdim>(i);
+                // Note: in the case of (invalid) pinched faces,
+                // f might already belong to some other boundary component.
                 if (f->boundaryComponent_ != bc) {
+                    if (! f->boundaryComponent_)
+                        ++nBoundaryFaces_[subdim];
                     f->boundaryComponent_ = bc;
                     // If allFaces is false, then the boundary component only
                     // wants to know about ridges and facets.
@@ -600,6 +633,7 @@ void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
     components_.swap(other.components_);
     boundaryComponents_.swap(other.boundaryComponents_);
     faces_.swap(other.faces_);
+    nBoundaryFaces_.swap(other.nBoundaryFaces_);
     fundGroup_.swap(other.fundGroup_);
     H1_.swap(other.H1_);
 }

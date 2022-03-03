@@ -14,7 +14,7 @@
   <para>
    <inlinemediaobject id="shot-packettree">
     <imageobject>
-     <imagedata fileref="packettree.png"/>
+     <imagedata multires="packettree"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -26,42 +26,10 @@
   <para>
    <inlinemediaobject id="shot-packetview">
     <imageobject>
-     <imagedata fileref="packetview.png"/>
+     <imagedata multires="packetview"/>
     </imageobject>
    </inlinemediaobject>
   </para>
-  <sect2 id="packet-uneditable">
-   <title>Uneditable Packets</title>
-
-   <para>
-    Sometimes you will find that &regina; does not let you make changes
-    to a packet.  This typically means that the packet is constrained by its
-    children.
-   </para>
-   <para>
-    For example, if a triangulation has normal surfaces or angle structures
-    that refer to it, then &regina; will not let you change the triangulation
-    because this would invalidate the normal coordinates and/or angle structure
-    coordinates.
-   </para>
-   <para>
-    Uneditable packets such as this will be marked with a padlock
-    in the packet viewer:
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="padlock.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-   <para>
-    If you find yourself in such a situation, you can always
-    <link linkend="packet-clone">clone the packet</link>.
-    This will create a new copy of the packet without any
-    children, and you will be able to edit your clone instead.
-   </para>
-  </sect2>
  </sect1>
 
  <sect1 id="packet-types">
@@ -82,7 +50,7 @@
     Containers are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-container.png"/>
+      <imagedata multires="icon-container"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -99,15 +67,16 @@
     opened for viewing).
    </para>
    <para>
+    Note that <emphasis>any</emphasis> packet (not just a container)
+    can contain other child packets.
+   </para>
+   <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="container.png"/>
+      <imagedata multires="container"/>
      </imageobject>
     </inlinemediaobject>
    </para>
-   <tip><para>
-    Any packet (not just a container) can contain other child packets.
-   </para></tip>
   </sect2>
 
   <sect2 id="packet-triangulation2">
@@ -121,14 +90,14 @@
     2-manifold triangulations are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-triangulation2.png"/>
+      <imagedata multires="icon-triangulation2"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="triangulation2.png"/>
+      <imagedata multires="triangulation2"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -149,14 +118,14 @@
     3-manifold triangulations are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-triangulation3.png"/>
+      <imagedata multires="icon-triangulation3"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="triangulation3.png"/>
+      <imagedata multires="triangulation3"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -186,14 +155,14 @@
     &snappea; triangulations are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-snappea.png"/>
+      <imagedata multires="icon-snappea"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="snappea.png"/>
+      <imagedata multires="snappea"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -205,8 +174,7 @@
     A <firstterm>4-manifold triangulation</firstterm> packet describes a
     triangulated 4-manifold, formed by gluing faces of pentachora
     (i.e., 4-simplices) together in pairs.
-    4-manifold triangulations were introduced in &regina;&nbsp;5.0,
-    and you can learn more about them by reading the
+    You can learn more about 4-manifold triangulations by reading the
     <link linkend="triangulations">triangulations chapter</link> in
     this handbook.
    </para>
@@ -214,14 +182,14 @@
     4-manifold triangulations are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-triangulation4.png"/>
+      <imagedata multires="icon-triangulation4"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="triangulation4.png"/>
+      <imagedata multires="triangulation4"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -231,18 +199,20 @@
    <title>Higher-Dimensional Triangulations</title>
    <para>
     &regina; currently offers very basic support for triangulations of
-    dimensions 5&ndash;15.  At present you cannot work with these
+    dimensions 5&ndash;8 (and, with your own
+    <ulink url="https://regina-normal.github.io/buildtips.html#highdim">custom
+    build</ulink>, 9&ndash;15).  At present you cannot work with these
     higher-dimensional triangulations in the &gui;&mdash;instead you will
     need to use either <link linkend="python">&python; scripting</link>
     or <link linkend="compiling">&cpp; programming</link>.
    </para>
    <para>
-    Triangulations of dimension 5&ndash;15 are marked by an icon similar
+    Triangulations of these higher dimensions are marked by an icon similar
     to the following, with the dimension marked inside the
     simplex-shaped outline:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-triangulation8.png"/>
+      <imagedata multires="icon-triangulation8"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -254,7 +224,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="triangulation5.png"/>
+      <imagedata multires="triangulation5"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -266,8 +236,7 @@
     A <firstterm>link</firstterm> packet describes a
     knot or link diagram, formed from a collection of crossings and
     strands that connect them.
-    Link packets were introduced in &regina;&nbsp;5.96,
-    and you can learn more about them by reading the
+    You can learn more about working with links by reading the
     <link linkend="links">knots and links chapter</link> in
     this handbook.
    </para>
@@ -275,14 +244,14 @@
     Knots and links are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-link.png"/>
+      <imagedata multires="icon-link"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="link.png"/>
+      <imagedata multires="link"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -304,20 +273,21 @@
     Normal surface lists are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-surfaces.png"/>
+      <imagedata multires="icon-surfaces"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
     Normal surface lists can be created using different sets of matching
     equations, and can then be viewed in a variety of coordinate systems.
-    In the packet tree, a normal surface list must always appear as a
-    child of the corresponding 3-manifold triangulation.
+    As of &regina;&nbsp;7.0, a normal surface list can appear anywhere
+    in the packet tree (it no longer needs to be linked to its source
+    3-manifold triangulation).
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="surfacelist.png"/>
+      <imagedata multires="surfacelist"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -339,22 +309,21 @@
     Normal hypersurface lists are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-hypersurfaces.png"/>
+      <imagedata multires="icon-hypersurfaces"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
-    At present, normal hypersurface lists can only be created in the
-    standard coordinate system (with 15 coordinates per pentachoron).
-    However, you can still view the hypersurfaces in a variety of different
-    coordinate systems.
-    In the packet tree, a normal hypersurface list must always appear as a
-    child of the corresponding 4-manifold triangulation.
+    Normal hypersurface lists can be also created using different sets of
+    matching equations, and can be viewed in different coordinate systems.
+    Like normal surfaces, a normal hypersurface list can appear anywhere
+    in the packet tree (it no longer needs to be linked to its source
+    4-manifold triangulation).
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="hypersurfacelist.png"/>
+      <imagedata multires="hypersurfacelist"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -375,18 +344,19 @@
     Angle structure lists are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-angles.png"/>
+      <imagedata multires="icon-angles"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
-    Like normal surface lists, an angle structure list must always appear as a
-    child of the corresponding 3-manifold triangulation.
+    Like normal surfaces, an angle structure list can appear anywhere
+    in the packet tree (it no longer needs to be linked to its source
+    3-manifold triangulation).
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="angles.png"/>
+      <imagedata multires="angles"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -414,14 +384,14 @@
      Property filters are marked by the following icon:
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="icon-filterprop.png"/>
+       <imagedata multires="icon-filterprop"/>
       </imageobject>
      </inlinemediaobject>
     </para>
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="filterprop.png"/>
+       <imagedata multires="filterprop"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -440,7 +410,7 @@
      Combination filters are marked by the following icon:
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="icon-filtercomb.png"/>
+       <imagedata multires="icon-filtercomb"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -455,7 +425,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="filtercomb.png"/>
+       <imagedata multires="filtercomb"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -474,14 +444,14 @@
     Text packets are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-text.png"/>
+      <imagedata multires="icon-text"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="text.png"/>
+      <imagedata multires="text"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -502,7 +472,7 @@
     Script packets are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-script.png"/>
+      <imagedata multires="icon-script"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -511,43 +481,66 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="script.png"/>
+      <imagedata multires="script"/>
      </imageobject>
     </inlinemediaobject>
    </para>
   </sect2>
 
-  <sect2 id="packet-pdf">
-   <title>&pdf; Documents</title>
+  <sect2 id="packet-attachment">
+   <title>Attachments</title>
    <para>
-    Like text packets, a <firstterm>&pdf;</firstterm> packet allows you
-    to document your work.  &pdf; packets support richer content,
-    including diagrams and formulae.  The &pdf; document must be created
-    outside &regina; (using &latex; or your favourite word processor),
-    and then imported into your &regina; data file by selecting
-    <menuchoice>
-     <guimenu>Packet Tree</guimenu>
-     <guimenuitem>New PDF Document</guimenuitem>
-    </menuchoice>.
+    An <firstterm>attachment</firstterm> packet allows you embed any
+    external file into your &regina; data file.  The external file will be
+    copied and saved as part of your &regina; data file (which means that
+    if you send a &regina; data file to someone, all attachments will be
+    automatically included).
    </para>
    <para>
     &pdf; packets are marked by the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-pdf.png"/>
+      <imagedata multires="icon-attachment"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <para>
-    When you open a &pdf; packet for viewing, it will open in your computer's
-    default &pdf; viewer (as illustrated below).  If you like, you can
-    specify a different &pdf; viewer in
-    <link linkend="options-tools">&regina;'s settings</link>.
+    One potential use of attachments is to help you document your work.
+    As seen in the example below, an attachment could be a &pdf; document
+    containing rich content such as diagrams and formulae.
+   </para>
+   <para>
+    When you open an attachment for viewing, you will be told the filename
+    and file size, and given the opportunity to either view it (using your
+    computer's default viewer for that type of file), or to save it.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="pdf.png"/>
+      <imagedata multires="attachment-choice"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    To insert a new attachment into your &regina; data file, select
+    <menuchoice>
+     <guimenu>Packet Tree</guimenu>
+     <guimenuitem>New Attachment</guimenuitem>
+    </menuchoice>.
+    Once your attachment has been inserted, you can edit, move or even
+    delete the original file from your computer, since your &regina;
+    data file will keep its own internal copy.
+   </para>
+   <para>
+    In &regina;&nbsp;6.0.1 and earlier, this type of packet was called a
+    <firstterm>&pdf; packet</firstterm>, and was used exclusively for
+    &pdf; documents.  As of &regina;&nbsp;7.0, you can now attach any
+    type of file.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata multires="attachment"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -575,7 +568,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menunew.png"/>
+      <imagedata multires="menunew"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -588,7 +581,7 @@
     in the menu, or press the toolbar button with the following icon:
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="icon-triangulation3.png"/>
+      <imagedata multires="icon-triangulation3"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -601,7 +594,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="newtriangulation.png"/>
+      <imagedata multires="newtriangulation"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -641,7 +634,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menuclone.png"/>
+      <imagedata multires="menuclone"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -675,7 +668,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menurename.png"/>
+      <imagedata multires="menurename"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -704,7 +697,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menudelete.png"/>
+      <imagedata multires="menudelete"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -733,7 +726,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menumove.png"/>
+      <imagedata multires="menumove"/>
      </imageobject>
     </inlinemediaobject>
    </para>

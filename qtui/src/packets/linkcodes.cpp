@@ -66,6 +66,8 @@ LinkCodesUI::LinkCodesUI(regina::PacketOf<regina::Link>* packet,
         "The <i>knot signature</i> is native to Regina, and identifies "
         "a knot projection on the sphere uniquely up to relabelling "
         "and/or reflection.<p>"
+        "The <i>planar diagram code</i> is used in the Knot Atlas, "
+        "and supports multiple-component links.<p>"
         "The <i>Jenkins format</i> is the text representation used by "
         "Bob Jenkins in his HOMFLY polynomial software.");
     label->setWhatsThis(msg);
@@ -74,6 +76,7 @@ LinkCodesUI::LinkCodesUI(regina::PacketOf<regina::Link>* packet,
     type->addItem(tr("Gauss codes"));
     type->addItem(tr("Dowker-Thistlethwaite notation"));
     type->addItem(tr("Knot signature"));
+    type->addItem(tr("Planar diagram code"));
     type->addItem(tr("Jenkins format"));
     type->setWhatsThis(msg);
     switch (ReginaPrefSet::global().linkCodeType) {
@@ -81,8 +84,10 @@ LinkCodesUI::LinkCodesUI(regina::PacketOf<regina::Link>* packet,
             type->setCurrentIndex(1); break;
         case ReginaPrefSet::KnotSig:
             type->setCurrentIndex(2); break;
-        case ReginaPrefSet::Jenkins:
+        case ReginaPrefSet::PlanarDiagram:
             type->setCurrentIndex(3); break;
+        case ReginaPrefSet::Jenkins:
+            type->setCurrentIndex(4); break;
         default:
             type->setCurrentIndex(0); break;
     }
@@ -127,6 +132,7 @@ void LinkCodesUI::refresh() {
         if (link->countComponents() != 1) {
             code->setPlainText(tr("Dowker-Thistlethwaite notation is currently "
                 "only available for knots."));
+            code->setWordWrapMode(QTextOption::WordWrap);
             return;
         }
         std::string alpha = link->dt(true);
@@ -146,12 +152,54 @@ void LinkCodesUI::refresh() {
         if (link->countComponents() != 1) {
             code->setPlainText(tr("Knot signatures are currently "
                 "only available for knots."));
+            code->setWordWrapMode(QTextOption::WordWrap);
             return;
         }
         ans = link->knotSig().c_str();
 
         code->setWordWrapMode(QTextOption::WrapAnywhere);
     } else if (type->currentIndex() == 3) {
+        // Does this link support PD codes?
+        code->setWhatsThis("A description of this link using a "
+            "planar diagram code.  This format is used in the Knot Atlas.<p>"
+            "You can copy this text to the clipboard if you need to send it "
+            "to some other application.");
+
+        bool hasAllOver = false;
+        for (regina::StrandRef c : link->components()) {
+            if (! c) {
+                code->setPlainText(tr("Planar diagram codes cannot represent "
+                    "zero-crossing unknot components."));
+                code->setWordWrapMode(QTextOption::WordWrap);
+                return;
+            }
+            
+            bool allOver = true;
+            regina::StrandRef s = c;
+            do {
+                if (s.strand() == 0) {
+                    allOver = false;
+                    break;
+                }
+                ++s;
+            } while (allOver && s != c);
+            
+            if (allOver) {
+                hasAllOver = true;
+                break;
+            }
+        }
+        
+        if (hasAllOver) {
+            ans = (link->pd() + "\n\nThis link has a component that "
+                "consists entirely of over-crossings. A planar diagram code "
+                "does not carry enough information to reconstruct the "
+                "orientation of such a component.\n").c_str();
+        } else {
+            ans = link->pd().c_str();
+        }
+        code->setWordWrapMode(QTextOption::WordWrap);
+    } else if (type->currentIndex() == 4) {
         code->setWhatsThis("A description of this link using the "
             "text format of Bob Jenkins.  This format is used "
             "in Jenkins' HOMFLY polynomial software.<p>"
@@ -173,6 +221,7 @@ void LinkCodesUI::refresh() {
         if (link->countComponents() != 1) {
             code->setPlainText(tr("Gauss codes are currently "
                 "only available for knots."));
+            code->setWordWrapMode(QTextOption::WordWrap);
             return;
         }
         ans = (std::string("Classical:\n") + link->gauss() +
@@ -201,6 +250,9 @@ void LinkCodesUI::typeChanged(int) {
             ReginaPrefSet::global().linkCodeType = ReginaPrefSet::KnotSig;
             break;
         case 3:
+            ReginaPrefSet::global().linkCodeType = ReginaPrefSet::PlanarDiagram;
+            break;
+        case 4:
             ReginaPrefSet::global().linkCodeType = ReginaPrefSet::Jenkins;
             break;
         default:

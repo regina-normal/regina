@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2019  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -40,7 +40,7 @@ namespace libnormaliz {
 using namespace std;
 
 //---------------------------------------------------------------------------
-    
+
 class OptionsHandler {
    public:
     OptionsHandler();
@@ -107,6 +107,14 @@ class OptionsHandler {
     inline bool isUseLongLong() const {
         return use_long_long;
     }
+    
+    inline bool isUseChunk() const {
+        return use_chunk;
+    }
+    
+    inline bool isUseAddChunks() const {
+        return use_add_chunks;
+    }
 
     inline bool isNoExtRaysOutput() const {
         return no_ext_rays_output;
@@ -140,6 +148,8 @@ private:
 
     // bool use_Big_Integer; now in ConeProperty
     bool use_long_long;
+    bool use_chunk;
+    bool use_add_chunks;
     bool no_ext_rays_output;
     bool no_supp_hyps_output;
     bool no_matrices_output;
@@ -156,7 +166,7 @@ private:
 
     // return true if help should be printed, false otherwise
     bool handle_options(vector<string>& LongOptions, string& ShortOptions);
-    
+
     void setProjectName(const string& s);
     void setOutputDirName(const string& s);
 };
@@ -169,6 +179,8 @@ inline OptionsHandler::OptionsHandler() {
     write_extra_files = false, write_all_files = false;
     // use_Big_Integer = false;
     use_long_long = false;
+    use_chunk = false;
+    use_add_chunks = false;
     ignoreInFileOpt = false;
     nr_threads = 0;
     no_ext_rays_output = false;
@@ -190,10 +202,11 @@ void OptionsHandler::applyOutputOptions(Output<Integer>& Out) {
     else if (write_extra_files) {
         Out.set_write_extra_files();
     }
-    if (to_compute.test(ConeProperty::Triangulation) || to_compute.test(ConeProperty::ConeDecomposition)
-        || to_compute.test(ConeProperty::UnimodularTriangulation) || to_compute.test(ConeProperty::LatticePointTriangulation) 
-        || to_compute.test(ConeProperty::AllGeneratorsTriangulation)
-    ) {
+    if (to_compute.test(ConeProperty::WritePreComp)){
+            Out.set_write_precomp(true);        
+    }
+    if (to_compute.test(ConeProperty::ConeDecomposition)
+        || to_compute.intersection_with(all_triangulations()).any() ){
         Out.set_write_tri(true);
         Out.set_write_tgn(true);
         Out.set_write_inv(true);
@@ -209,10 +222,7 @@ void OptionsHandler::applyOutputOptions(Output<Integer>& Out) {
     if (to_compute.test(ConeProperty::Incidence) || to_compute.test(ConeProperty::DualIncidence)) {
         Out.set_write_inc(true);
     }
-    if (to_compute.test(ConeProperty::ExploitAutomsVectors) || to_compute.test(ConeProperty::ExploitAutomsMult) ||
-        to_compute.test(ConeProperty::Automorphisms) || to_compute.test(ConeProperty::AmbientAutomorphisms) ||
-        to_compute.test(ConeProperty::CombinatorialAutomorphisms) || to_compute.test(ConeProperty::RationalAutomorphisms) ||
-        to_compute.test(ConeProperty::EuclideanAutomorphisms)) {
+    if (to_compute.intersection_with(all_automorphisms()).any()) {
         Out.set_write_aut(true);
     }
     for (const auto& OutFile : OutFiles) {
@@ -256,6 +266,10 @@ void OptionsHandler::applyOutputOptions(Output<Integer>& Out) {
             Out.set_write_msp(true);
             continue;
         }
+        if (OutFile == "precomp") {
+            Out.set_write_precomp(true);
+            continue;
+        }
         if (OutFile == "mod") {
             Out.set_write_mod(true);
             continue;
@@ -267,6 +281,29 @@ void OptionsHandler::applyOutputOptions(Output<Integer>& Out) {
         exit(1);
     }
     Out.set_name(output_file);
+}
+
+inline string package_string(){
+    string optional_packages;
+
+#ifdef NMZ_COCOA
+    optional_packages += " CoCoALib";
+#endif
+#ifdef NMZ_FLINT
+#ifndef ENFNORMALIZ
+    optional_packages += " Flint";
+#endif
+#endif
+#ifdef ENFNORMALIZ
+    optional_packages += " Flint antic arb e-antic";
+#endif
+#ifdef NMZ_NAUTY
+    optional_packages += " nauty";
+#endif
+#ifdef NMZ_HASHLIBRARY
+    optional_packages += " hash-library";
+#endif
+    return optional_packages;
 }
 
 } // name space

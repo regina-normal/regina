@@ -290,14 +290,13 @@ SatLST* SatLST::beginsRegion(const SatAnnulus& annulus, TetList& avoidTets) {
         return nullptr;
 
     // Make sure we're not about to create a (0,k) curve.
-    Perm<4> lstRoles(
+    Perm<3> lstRoles(
         lst->topEdgeGroup(
             Edge<3>::edgeNumber[annulus.roles[0][0]][annulus.roles[0][1]]),
         lst->topEdgeGroup(
             Edge<3>::edgeNumber[annulus.roles[0][0]][annulus.roles[0][2]]),
         lst->topEdgeGroup(
-            Edge<3>::edgeNumber[annulus.roles[0][1]][annulus.roles[0][2]]),
-        3);
+            Edge<3>::edgeNumber[annulus.roles[0][1]][annulus.roles[0][2]]));
 
     if (lst->meridinalCuts(lstRoles[0]) == 0)
         return nullptr;

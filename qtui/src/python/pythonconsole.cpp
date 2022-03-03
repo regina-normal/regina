@@ -35,7 +35,9 @@
 #include "file/globaldirs.h"
 #include "packet/packet.h"
 
-// Put this before any Qt/KDE stuff so Python 2.3 "slots" doesn't clash.
+// In the old days, this header had to come before any Qt stuff because
+// Python 2.3 also used "slots" and Qt was redefining that word.
+// I have not yet checked if this clash still exists with Python 3 and/or Qt5.
 #include "../python/gui/pythoninterpreter.h"
 
 #include "pythonmanager.h"

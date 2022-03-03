@@ -395,8 +395,8 @@ Component with 2 triangles: entire triangulation
 <regina.Component2: Component with 2 triangles: entire triangulation>
 
 BoundaryComponent2
-Boundary component 0: 0 (02)
-<regina.BoundaryComponent2: Boundary component 0: 0 (02)>
+Boundary component 0: 0 (20)
+<regina.BoundaryComponent2: Boundary component 0: 0 (20)>
 
 Face3_0
 Vertex 0, internal, degree 20: 0 (0), 2 (3), 3 (3), 4 (3), 1 (3), 3 (0), 1 (2), 4 (0), 1 (1), 2 (0), 0 (1), 4 (1), 0 (2), 2 (1), 0 (3), 3 (1), 3 (2), 2 (2), 4 (2), 1 (0)
@@ -527,8 +527,8 @@ Component with 1 5-simplex: 2
 <regina.Component5: Component with 1 5-simplex: 2>
 
 BoundaryComponent5
-Boundary component 0: 2 (01235), 2 (01245), 2 (02345), 2 (01345)
-<regina.BoundaryComponent5: Boundary component 0: 2 (01235), 2 (01245), 2 (02345), 2 (01345)>
+Boundary component 0: 2 (01253), 2 (01245), 2 (02345), 2 (01354)
+<regina.BoundaryComponent5: Boundary component 0: 2 (01253), 2 (01245), 2 (02345), 2 (01354)>
 
 Isomorphism3
 0 -> 1 (1230), 1 -> 0 (2103)
@@ -660,9 +660,9 @@ PluggedTorusBundle
 Plugged Torus Bundle [T6:1 | Tri, Mob(v)]
 <regina.PluggedTorusBundle: Plugged Torus Bundle [T6:1 | Tri, Mob(v)]>
 
-L31Pillow
+TrivialTri
 L'(3,1)
-<regina.L31Pillow: L'(3,1)>
+<regina.TrivialTri: L'(3,1)>
 
 LayeredLoop
 C~(2)
@@ -771,10 +771,6 @@ LPMatrix
 LPData_NonSpun
 Uninitialised
 <regina.LPData_NonSpun: Uninitialised>
-
-LPData_NonSpun
-Feasible basis: (empty)
-<regina.LPData_NonSpun: Feasible basis: (empty)>
 
 LPData_NonSpun
 Feasible basis: 0 1 3

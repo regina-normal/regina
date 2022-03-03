@@ -30,10 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
+#include <condition_variable>
 #include <cctype>
 #include <fstream>
 #include <memory>
+#include <mutex>
+#include <queue>
 #include <sstream>
+#include <thread>
 #include <popt.h>
 #include <unistd.h>
 #include "census/gluingpermsearcher2.h"
@@ -53,7 +57,7 @@
 #define WORD_Tetrahedron (dim4 ? "Pentachoron" : dim2 ? "Triangle" : "Tetrahedron")
 
 // Constants.
-const long MAXTET = 15;
+constexpr long MAXTET = 15;
 
 // Census parameters.
 long nTet = 0, nBdryFaces = -1;
@@ -65,6 +69,7 @@ int minimal = 0;
 int minimalPrime = 0;
 int minimalPrimeP2 = 0;
 int minimalHyp = 0;
+int allowInvalid = 0;
 int dim2 = 0;
 int dim4 = 0;
 int usePairs = 0;
@@ -73,6 +78,7 @@ regina::CensusPurge whichPurge;
 int genPairs = 0;
 int subContainers = 0;
 std::string outFile;
+int threads = 1;
 
 // Variables used for a dump of face pairings.
 std::unique_ptr<std::ostream> dumpStream;
@@ -82,9 +88,22 @@ unsigned long totPairings = 0;
 long long nSolns;
 std::ofstream sigStream;
 
+// Variables used for multithreaded operation.
+std::mutex casesMutex;
+std::mutex outputMutex;
+std::condition_variable cv;
+using Case = std::pair<std::string, std::shared_ptr<regina::Packet>>;
+std::queue<Case> cases;
+bool noMoreCases = false;
+
 // Forward declarations:
 template <int dim>
 void foundGluingPerms(const regina::GluingPerms<dim>&,
+    const std::shared_ptr<regina::Packet>&);
+
+template <int dim>
+void foundPartial(const regina::GluingPerms<dim>&,
+    const regina::GluingPermSearcher<dim>&,
     const std::shared_ptr<regina::Packet>&);
 
 template <int dim>
@@ -104,8 +123,15 @@ inline void findAllPerms<2>(const regina::FacetPairing<2>& p,
         regina::FacetPairing<2>::IsoList autos, bool orientableOnly,
         bool /* finiteOnly */, regina::CensusPurge,
         const std::shared_ptr<regina::Packet>& dest) {
-    regina::GluingPermSearcher<2>::findAllPerms(p, std::move(autos),
-        orientableOnly, foundGluingPerms<2>, dest);
+    if (threads > 1) {
+        constexpr int depth = 6; // want (dim!)^depth >> threads
+        auto searcher = regina::GluingPermSearcher<2>::bestSearcher(
+            p, std::move(autos), orientableOnly);
+        searcher->partialSearch(depth, foundPartial<2>, *searcher, dest);
+    } else {
+        regina::GluingPermSearcher<2>::findAllPerms(p, std::move(autos),
+            orientableOnly, foundGluingPerms<2>, dest);
+    }
 }
 
 template <>
@@ -118,8 +144,15 @@ inline void findAllPerms<3>(const regina::FacetPairing<3>& p,
         regina::FacetPairing<3>::IsoList autos, bool orientableOnly,
         bool finiteOnly, regina::CensusPurge usePurge,
         const std::shared_ptr<regina::Packet>& dest) {
-    regina::GluingPermSearcher<3>::findAllPerms(p, std::move(autos),
-        orientableOnly, finiteOnly, usePurge, foundGluingPerms<3>, dest);
+    if (threads > 1) {
+        constexpr int depth = 3; // want (dim!)^depth >> threads
+        auto searcher = regina::GluingPermSearcher<3>::bestSearcher(
+            p, std::move(autos), orientableOnly, finiteOnly, usePurge);
+        searcher->partialSearch(depth, foundPartial<3>, *searcher, dest);
+    } else {
+        regina::GluingPermSearcher<3>::findAllPerms(p, std::move(autos),
+            orientableOnly, finiteOnly, usePurge, foundGluingPerms<3>, dest);
+    }
 }
 
 template <>
@@ -132,8 +165,15 @@ inline void findAllPerms<4>(const regina::FacetPairing<4>& p,
         regina::FacetPairing<4>::IsoList autos, bool orientableOnly,
         bool finiteOnly, regina::CensusPurge,
         const std::shared_ptr<regina::Packet>& dest) {
-    regina::GluingPermSearcher<4>::findAllPerms(p, std::move(autos),
-        orientableOnly, finiteOnly, foundGluingPerms<4>, dest);
+    if (threads > 1) {
+        constexpr int depth = 2; // want (dim!)^depth >> threads
+        auto searcher = regina::GluingPermSearcher<4>::bestSearcher(
+            p, std::move(autos), orientableOnly, finiteOnly);
+        searcher->partialSearch(depth, foundPartial<4>, *searcher, dest);
+    } else {
+        regina::GluingPermSearcher<4>::findAllPerms(p, std::move(autos),
+            orientableOnly, finiteOnly, foundGluingPerms<4>, dest);
+    }
 }
 
 template <>
@@ -156,7 +196,7 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
     // no such moves are possible (since it ensures no internal vertices
     // and no low-degree edges).
 
-    if (! tri.isValid())
+    if (! (allowInvalid || tri.isValid()))
         return;
     if ((! finiteness.hasFalse()) && tri.isIdeal())
         return;
@@ -170,15 +210,49 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
 
     // Put it in the census!
     if (sigs) {
-        sigStream << tri.isoSig() << std::endl;
+        std::string sig = tri.isoSig();
+        if (threads > 1) {
+            std::unique_lock<std::mutex> lock(outputMutex);
+            sigStream << sig << std::endl;
+        } else {
+            sigStream << sig << std::endl;
+        }
     } else {
         std::ostringstream out;
         out << "Item " << (nSolns + 1);
 
-        container->insertChildLast(
-            regina::make_packet(std::move(tri), out.str()));
+        auto packet = regina::make_packet(std::move(tri), out.str());
+        if (threads > 1) {
+            std::unique_lock<std::mutex> lock(outputMutex);
+            container->insertChildLast(packet);
+        } else {
+            container->insertChildLast(packet);
+        }
     }
     ++nSolns;
+}
+
+/**
+ * What to do with each partially-constructed triangulation in a
+ * multi-threaded search.
+ */
+template <int dim>
+void foundPartial(const regina::GluingPerms<dim>& perms,
+        const regina::GluingPermSearcher<dim>& searcher,
+        const std::shared_ptr<regina::Packet>& container) {
+    if (searcher.isComplete()) {
+        // The search tree was extremely shallow, which means everything
+        // has essentially been enumerated by the main thread.
+        foundGluingPerms(perms, container);
+        return;
+    }
+
+    std::string data = searcher.taggedData();
+    {
+        std::unique_lock<std::mutex> lock(casesMutex);
+        cases.emplace(std::move(data), container);
+    }
+    cv.notify_one();
 }
 
 /**
@@ -203,6 +277,34 @@ void foundFacePairing(const regina::FacetPairing<dim>& pairing,
         findAllPerms<dim>(pairing, std::move(autos),
             ! orientability.hasFalse(), ! finiteness.hasFalse(),
             whichPurge, container);
+    }
+}
+
+/**
+ * The work performed by each thread in a multithreaded census.
+ */
+template <int dim>
+void processCases() {
+    Case c;
+    while (true) {
+        {
+            std::unique_lock<std::mutex> lock(casesMutex);
+            if (! cases.empty()) {
+                c = std::move(cases.front());
+                cases.pop();
+            } else if (noMoreCases)
+                return;
+            else {
+                // There are no cases available right now, but some
+                // might appear later.
+                cv.wait(lock);
+                continue;
+            }
+        }
+
+        // Process the subsearch encoded by data.
+        regina::GluingPermSearcher<dim>::fromTaggedData(c.first)->runSearch(
+            foundGluingPerms<dim>, c.second);
     }
 }
 
@@ -310,6 +412,9 @@ int main(int argc, const char* argv[]) {
             "Ignore triangulations that are obviously not minimal ideal "
             "triangulations of cusped finite-volume hyperbolic 3-manifolds.  "
             "Implies --internal and --ideal.", nullptr },
+        { "allowinvalid", 0, POPT_ARG_NONE, &allowInvalid, 0,
+            "Do not test triangulations for validity before output.",
+            nullptr },
         { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
@@ -328,6 +433,8 @@ int main(int argc, const char* argv[]) {
             "Only generate face pairings, not triangulations.", nullptr },
         { "usepairs", 'P', POPT_ARG_NONE, &usePairs, 0,
             "Only use face pairings read from standard input.", nullptr },
+        { "threads", 0, POPT_ARG_INT, &threads, 0,
+            "Number of parallel threads (default = 1).", "<threads>" },
         POPT_AUTOHELP
         { nullptr, 0, 0, nullptr, 0, nullptr, nullptr }
     };
@@ -374,13 +481,17 @@ int main(int argc, const char* argv[]) {
         broken = true;
     } else if (genPairs && (argOr || argNor)) {
         std::cerr << "Orientability options cannot be used with "
-            << "-p/--genpairs.\n";
+            "-p/--genpairs.\n";
         broken = true;
     } else if (genPairs && (argFinite || argIdeal)) {
         std::cerr << "Finiteness options cannot be used with -p/--genpairs.\n";
         broken = true;
     } else if (genPairs && sigs) {
         std::cerr << "Signature output cannot be used with -p/--genpairs.\n";
+        broken = true;
+    } else if (genPairs && threads != 1) {
+        std::cerr << "Multithreading options cannot be used with "
+            "-p/--genpairs.\n";
         broken = true;
     } else if (dim2 && dim4) {
         std::cerr << "Options -2/--dim2 and -4/--dim4 cannot be used together.\n";
@@ -434,6 +545,15 @@ int main(int argc, const char* argv[]) {
         std::cerr << "Options -f/--finite and -d/--ideal "
             << "cannot be used together.\n";
         broken = true;
+    } else if (allowInvalid && (argFinite || argIdeal)) {
+        std::cerr << "Option --allowinvalid cannot be used with finite/ideal "
+            << "options.\n";
+        broken = true;
+    } else if (allowInvalid &&
+            (minimal || minimalPrime || minimalPrimeP2 || minimalHyp)) {
+        std::cerr << "Option --allowinvalid cannot be used with minimality "
+            << "options.\n";
+        broken = true;
     } else if (genPairs && usePairs) {
         std::cerr << "Options -p/--genpairs and -P/--usepairs "
             << "cannot be used together.\n";
@@ -441,6 +561,9 @@ int main(int argc, const char* argv[]) {
     } else if (subContainers && sigs) {
         std::cerr << "Signatures (-s/--sigs) cannot be used with "
             << "sub-containers (-c/--subcontainers).\n";
+        broken = true;
+    } else if (threads < 1) {
+        std::cerr << "The number of threads must be strictly positive.\n";
         broken = true;
     }
 
@@ -538,8 +661,7 @@ int runCensus() {
         }
 
         regina::FacetPairing<dim>::findAllPairings(nTet, boundary, nBdryFaces,
-                [](const regina::FacetPairing<dim>& pair,
-                   typename regina::FacetPairing<dim>::IsoList) {
+                [](const regina::FacetPairing<dim>& pair) {
             if (dumpStream.get())
                 (*dumpStream) << pair.toTextRep() << std::endl;
             else
@@ -591,6 +713,13 @@ int runCensus() {
         whichPurge = regina::PURGE_NON_MINIMAL_HYP;
     else if (minimal)
         whichPurge = regina::PURGE_NON_MINIMAL;
+
+    std::thread** t = nullptr;
+    if (threads > 1) {
+        t = new std::thread*[threads - 1];
+        for (int i = 0; i < threads - 1; ++i)
+            t[i] = new std::thread(processCases<dim>);
+    }
 
     if (usePairs) {
         // Only use the face pairings read from standard input.
@@ -645,9 +774,30 @@ int runCensus() {
 
         regina::FacetPairing<dim>::findAllPairings(nTet, boundary, nBdryFaces,
             foundFacePairing<dim>, census /* dest */);
-
-        std::cout << "Finished." << std::endl;
     }
+
+    if (threads > 1) {
+        {
+            std::unique_lock<std::mutex> lock(casesMutex);
+            noMoreCases = true;
+        }
+        cv.notify_all();
+
+        std::cout << "Waiting for subsearches to finish..." << std::endl;
+
+        // In most scenarios this main thread will finish long before
+        // the workers.  The main thread should offer to help out since
+        // there is nothing else left for it to do.
+        processCases<dim>();
+
+        for (int i = 0; i < threads - 1; ++i) {
+            t[i]->join();
+            delete t[i];
+        }
+        delete[] t;
+    }
+
+    std::cout << "Finished." << std::endl;
 
     // Write the completed census to file.
     if (sigs) {

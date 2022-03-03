@@ -56,6 +56,7 @@
 
 namespace regina {
 
+class IntersectionForm;
 class ProgressTracker;
 class ProgressTrackerOpen;
 
@@ -429,6 +430,37 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         [[deprecated]] AbelianGroup homologyH2() const;
 
+        /**
+         * Returns the intersection form of this 4-manifold.
+         *
+         * The intersection form is stored as a square matrix with respect to
+         * an arbitrary basis of the second homology group; you can access this
+         * matrix via IntersectionForm::matrix().  This matrix is guaranteed
+         * to be symmetric and unimodular, but will not be normalised in any
+         * way.  You can, however, query invariants of the intersection form
+         * via routines such as IntersectionForm::signature() and
+         * IntersectionForm::even(), which in the simply connected case are
+         * enough to determine the topology of the underlying 4-manifold.
+         *
+         * (As an implementation detail, the basis is currently chosen to be
+         * the one produced by constructing a MarkedAbelianGroup using the
+         * boundary maps on the dual faces.  This specific choice of basis is
+         * subject to change in future releases of Regina.)
+         *
+         * The sign convention for counting intersections is as follows: in a
+         * pentachoron with positive orientation and vertices (0,1,2,3,4),
+         * the triangles with ordered vertices (0,1,2) and ordered vertices
+         * (2,3,4) have positive intersection.
+         *
+         * \pre This triangulation is valid, non-empty, orientable and closed.
+         *
+         * \exception FailedPrecondition This triangulation is invalid,
+         * empty, non-orientable, or not closed.
+         *
+         * @return the intersection form of this 4-manifold.
+         */
+        IntersectionForm intersectionForm() const;
+
         /*@}*/
         /**
          * \name Skeletal Transformations
@@ -552,6 +584,10 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \exception FailedPrecondition this triangulation has more
          * than one connected component.  If a progress tracker was passed,
          * it will be marked as finished before the exception is thrown.
+         *
+         * \ifacespython The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
          *
          * @param height the maximum number of \e additional pentachora to
          * allow beyond the number of pentachora originally present in the
@@ -821,6 +857,52 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          */
         bool twoZeroMove(Vertex<4>* v, bool check = true, bool perform = true);
         /**
+         * Checks the eligibility of and/or performs a 4-4 move about the
+         * given edge.
+         *
+         * This involves replacing the four pentachora joined at that edge
+         * with four new pentachora joined along a new edge \a a. In more
+         * detail, the original configuration of four pentachora should be
+         * equivalent to the join of a double edge and a square with diagonal
+         * given by the edge \a e. The 4-4 move essentially performs a 2-2
+         * move on this square, with the new diagonal corresponding precisely
+         * to the new edge \a a. This move can be done if:
+         *
+         * - the link of edge \a e is a 2-2 move away from being
+         *   combinatorially isomorphic to the boundary of a tetrahedron, and
+         *
+         * - the four pentachora joined at \a e are distinct.
+         *
+         * If the routine is asked to both check and perform, the move will
+         * only be performed if the check shows it is legal.
+         *
+         * If this triangulation is currently oriented, then this 4-4 move
+         * will label the new pentachora in a way that preserves the
+         * orientation.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (triangles, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal.
+         * \pre The given edge \a e is an edge of this triangulation.
+         *
+         * @param e the edge about which to perform the move.
+         * @param check \c true if we are to check whether the move is allowed
+         * (defaults to \c true).
+         * @param perform \c true if we are to perform the move (defaults to
+         * \c true).
+         * @return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold. If \a check is \c false, the function
+         * simply returns \c true.
+         *
+         * @author Alex He
+         */
+        bool fourFourMove(Edge<4>* e, bool check = true, bool perform = true);
+        /**
          * Checks the eligibility of and/or performs a book opening move
          * about the given tetrahedron.
          * This involves taking a tetrahedron meeting the boundary along
@@ -939,6 +1021,20 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If you are trying to reduce the number of vertices without changing
+         * the topology, and if \a e is an edge connecting an internal vertex
+         * with some different vertex, then either collapseEdge() or snapEdge()
+         * may be more appropriate for your situation.
+         *
+         * - The advantage of collapseEdge() is that it decreases the number
+         *   of tetrahedra, whereas snapEdge() increases this number (but only
+         *   by four).
+         *
+         * - The disadvantages of collapseEdge() are that it cannot always be
+         *   performed, and its validity tests are expensive; snapEdge() on
+         *   the other hand can always be used for edges \a e of the type
+         *   described above.
+         *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
@@ -966,6 +1062,60 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * is \c false, the function simply returns \c true.
          */
         bool collapseEdge(Edge<4>* e, bool check = true, bool perform = true);
+
+        /**
+         * Snaps together the endpoints of an edge connecting an internal
+         * vertex with some different (possibly boundary) vertex, which reduces
+         * the number of vertices in this triangulation by one without changing
+         * the topology.
+         *
+         * This operation essentially works by taking a triangle \a t that
+         * meets the given edge \a e, and folding the other two edges of \a t
+         * together about their common vertex. This can be done if and only
+         * if \a e is an edge whose endpoints are distinct and not both
+         * boundary (i.e., an edge of the type described above).
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Depending on your situation, collapseEdge() may be a more
+         * appropriate method for reducing the number of vertices without
+         * changing the topology.
+         *
+         * - The advantage of collapseEdge() is that it decreases the number
+         *   of tetrahedra, whereas snapEdge() increases this number (but only
+         *   by four).
+         *
+         * - The disadvantages of collapseEdge() are that it cannot always be
+         *   performed, and its validity tests are expensive; snapEdge() on
+         *   the other hand can always be used for edges \a e of the type
+         *   described above.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (triangles, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run, it
+         * must be known in advance that the move is legal.
+         * \pre The given edge \a e is an edge of this triangulation.
+         *
+         * @param e the edge whose endpoints are to be snapped together.
+         * @param check \c true if we are to check whether the move is allowed
+         * (defaults to \c true).
+         * @param perform \c true if we are to perform the move (defaults to
+         * \c true).
+         * @return If \a check is \c true, the function returns \c true if and
+         * only if the requested move may be performed without changing the
+         * topology of the manifold. If \a check is \c false, the function
+         * simply returns \c true.
+         *
+         * @author Alex He
+         */
+        bool snapEdge( Edge<4>* e, bool check = true, bool perform = true );
 
         /*@}*/
         /**

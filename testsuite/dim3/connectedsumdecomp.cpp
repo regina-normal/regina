@@ -80,7 +80,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
         }
 
         void verifySigThreeSphere(const std::string& sigStr) {
-            verifyThreeSphere(Signature::parse(sigStr).triangulate(), sigStr);
+            verifyThreeSphere(Signature(sigStr).triangulate(), sigStr);
         }
 
         void verifyPrime(const Triangulation<3>& tri,
@@ -120,8 +120,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
         void verifySigPrime(const std::string& sigStr,
                 const std::string& manifold) {
-            verifyPrime(Signature::parse(sigStr).triangulate(),
-                sigStr, manifold);
+            verifyPrime(Signature(sigStr).triangulate(), sigStr, manifold);
         }
 
         /**
@@ -195,7 +194,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
         void verifySigPair(const std::string& sigStr,
                 const std::string& manifold1, const std::string& manifold2) {
-            verifyPair(Signature::parse(sigStr).triangulate(), sigStr,
+            verifyPair(Signature(sigStr).triangulate(), sigStr,
                 manifold1, manifold2);
         }
 
@@ -259,7 +258,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
         }
 
         void verifySigRP3x3(const std::string& sigStr) {
-            verifyRP3x3(Signature::parse(sigStr).triangulate(), sigStr);
+            verifyRP3x3(Signature(sigStr).triangulate(), sigStr);
         }
 
         void threeSpheres() {

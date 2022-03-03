@@ -89,6 +89,23 @@ ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
     return *this;
 }
 
+bool ModelLinkGraph::operator == (const ModelLinkGraph& other) const {
+    if (nodes_.size() != other.nodes_.size())
+        return false;
+
+    auto a = nodes_.begin();
+    auto b = other.nodes_.begin();
+    for ( ; a != nodes_.end(); ++a, ++b) {
+        for (int i = 0; i < 4; ++i) {
+            if ((*a)->adj_[i].node_->index() != (*b)->adj_[i].node_->index())
+                return false;
+            if ((*a)->adj_[i].arc_ != (*b)->adj_[i].arc_)
+                return false;
+        }
+    }
+    return true;
+}
+
 void ModelLinkGraph::reflect() {
     for (ModelLinkGraphNode* n : nodes_) {
         std::swap(n->adj_[1], n->adj_[3]);
@@ -521,6 +538,23 @@ ModelLinkGraphCells::ModelLinkGraphCells(const ModelLinkGraph& g) :
             start_[++cell] = 4 * g.size();
         */
     }
+}
+
+bool ModelLinkGraphCells::operator == (const ModelLinkGraphCells& other) const {
+    if (nCells_ != other.nCells_)
+        return false;
+
+    if (! std::equal(start_, start_ + nCells_ + 1, other.start_))
+        return false;
+
+    for (size_t i = 0; i < start_[nCells_]; ++i) {
+        if (arcs_[i].node()->index() != other.arcs_[i].node()->index())
+            return false;
+        if (arcs_[i].arc() != other.arcs_[i].arc())
+            return false;
+    }
+
+    return true;
 }
 
 void ModelLinkGraphCells::writeTextShort(std::ostream& out) const {

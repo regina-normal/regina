@@ -236,6 +236,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("hasBoundaryTriangles", &Triangulation<3>::hasBoundaryTriangles)
         .def("countBoundaryFacets", &Triangulation<3>::countBoundaryFacets)
         .def("countBoundaryTriangles", &Triangulation<3>::countBoundaryTriangles)
+        .def("countBoundaryFaces", (size_t (Triangulation<3>::*)(int) const)(
+            &Triangulation<3>::countBoundaryFaces))
         .def("isClosed", &Triangulation<3>::isClosed)
         .def("isOrientable", &Triangulation<3>::isOrientable)
         .def("isOriented", &Triangulation<3>::isOriented)
@@ -262,10 +264,15 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("k") = 1)
         .def("boundaryMap", (MatrixInt (Triangulation<3>::*)(int) const)(
             &Triangulation<3>::boundaryMap))
+        .def("dualBoundaryMap", (MatrixInt (Triangulation<3>::*)(int) const)(
+            &Triangulation<3>::dualBoundaryMap))
+        .def("dualToPrimal", (MatrixInt (Triangulation<3>::*)(int) const)(
+            &Triangulation<3>::dualToPrimal))
         .def("turaevViro", &Triangulation<3>::turaevViro,
             pybind11::arg(), pybind11::arg("parity") = true,
             pybind11::arg("alg") = regina::ALG_DEFAULT,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def("turaevViroApprox", &Triangulation<3>::turaevViroApprox,
             pybind11::arg(), pybind11::arg("whichRoot") = 1,
             pybind11::arg("alg") = regina::ALG_DEFAULT)
@@ -315,7 +322,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("simplifyExhaustive", &Triangulation<3>::simplifyExhaustive,
             pybind11::arg("height") = 1,
             pybind11::arg("nThreads") = 1,
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def("retriangulate", [](const Triangulation<3>& tri, int height,
                 int threads, const std::function<bool(const std::string&,
                     Triangulation<3>&&)>& action) {
@@ -370,6 +378,35 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true)
+        .def("zeroTwoMove",
+            overload_cast< regina::EdgeEmbedding<3>, int,
+            regina::EdgeEmbedding<3>, int, bool, bool >(
+                &Triangulation<3>::zeroTwoMove ),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true )
+        .def("zeroTwoMove",
+            overload_cast< regina::Edge<3>*, size_t, size_t,
+            bool, bool >(
+                &Triangulation<3>::zeroTwoMove ),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true )
+        .def("zeroTwoMove",
+            overload_cast< regina::Triangle<3>*, int,
+            regina::Triangle<3>*, int, bool, bool >(
+                &Triangulation<3>::zeroTwoMove ),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true )
         .def("openBook", &Triangulation<3>::openBook,
             pybind11::arg(),
             pybind11::arg("check") = true,

@@ -273,35 +273,54 @@ class LayeredSolidTorus : public StandardTriangulation {
         int topFace(int index) const;
 
         /**
-         * Determines if this and the given object represent the same
-         * presentation of the same layered solid torus.
+         * Determines whether this and the given object represent the same
+         * type of layered solid torus.
          *
-         * For two layered solid tori to be considered equal, they must not
-         * only represent the same subcomplex of the underlying triangulation,
-         * but they must also index the edges, triangles and tetrahedra in
-         * the same way.
+         * Specifically, two layered solid tori will compare as equal if
+         * and only if each has the same ordered triple of integer
+         * parameters (describing how many times the three top-level edge
+         * groups cut the meridinal disc).
+         *
+         * Note that it is possible for two non-isomorphic layered solid tori
+         * to compare as equal, since these integer parameters do not
+         * detect the presence of redundant layerings (i.e., consecutive
+         * layerings that topologically cancel each other out).
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass, as noted above, is weaker than combinatorial isomorphism).
          *
          * @param other the layered solid torus to compare with this.
          * @return \c true if and only if this and the given object
-         * represent the same presentation of the same layered solid torus.
+         * represent the same type of layered solid torus.
          */
         bool operator == (const LayeredSolidTorus& other) const;
 
         /**
-         * Determines if this and the given object do not represent the same
-         * presentation of the same layered solid torus.
+         * Determines whether this and the given object do not represent the
+         * same type of layered solid torus.
          *
-         * For two layered solid tori to be considered equal, they must not
-         * only represent the same subcomplex of the underlying triangulation,
-         * but they must also index the edges, triangles and tetrahedra in
-         * the same way.  So, for example, calling recogniseFromTop() but
-         * passing the two faces indices in the opposite order will typically
-         * produce a layered solid torus that is \e not considered equal to
-         * the original.
+         * Specifically, two layered solid tori will compare as equal if
+         * and only if each has the same ordered triple of integer
+         * parameters (describing how many times the three top-level edge
+         * groups cut the meridinal disc).
+         *
+         * Note that it is possible for two non-isomorphic layered solid tori
+         * to compare as equal, since these integer parameters do not
+         * detect the presence of redundant layerings (i.e., consecutive
+         * layerings that topologically cancel each other out).
+         *
+         * This test follows the general rule for most subclasses of
+         * StandardTriangulation (excluding fixed structures such as
+         * SnappedBall and TriSolidTorus): two objects compare as equal if and
+         * only if they have the same combinatorial parameters (which for this
+         * subclass, as noted above, is weaker than combinatorial isomorphism).
          *
          * @param other the layered solid torus to compare with this.
-         * @return \c true if and only if this and the given object do not
-         * represent the same presentation of the same layered solid torus.
+         * @return \c true if and only if this and the given object
+         * do not represent the same type of layered solid torus.
          */
         bool operator != (const LayeredSolidTorus& other) const;
 
@@ -535,22 +554,14 @@ inline int LayeredSolidTorus::topFace(int index) const {
 
 inline bool LayeredSolidTorus::operator == (const LayeredSolidTorus& other)
         const {
-    // We are possibly testing more things than we probably need to here.
-    // Once we have top_ and topFace_, this determines base_ uniquely from
-    // the triangulation, but for now we still check baseFace_ just in case
-    // the permutations differ by a 180 degree rotation.
-    return top_ == other.top_ && topFace_ == other.topFace_ &&
-        baseFace_ == other.baseFace_;
+    return std::equal(meridinalCuts_, meridinalCuts_ + 3,
+        other.meridinalCuts_);
 }
 
 inline bool LayeredSolidTorus::operator != (const LayeredSolidTorus& other)
         const {
-    // We are possibly testing more things than we probably need to here.
-    // Once we have top_ and topFace_, this determines base_ uniquely from
-    // the triangulation, but for now we still check baseFace_ just in case
-    // the permutations differ by a 180 degree rotation.
-    return top_ != other.top_ || topFace_ != other.topFace_ ||
-        baseFace_ != other.baseFace_;
+    return ! std::equal(meridinalCuts_, meridinalCuts_ + 3,
+        other.meridinalCuts_);
 }
 
 inline std::ostream& LayeredSolidTorus::writeName(std::ostream& out) const {

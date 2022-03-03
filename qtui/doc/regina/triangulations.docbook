@@ -37,13 +37,34 @@
  </para>
  <para>
   &regina; offers rich support for triangulations of dimensions 2, 3 and 4.
-  However, it also offers more basic support for triangulations of
-  dimensions 5&nbsp;&le;&nbsp;<replaceable>d</replaceable>&nbsp;&le;&nbsp;15.
-  These higher-dimensional triangulations are not supported in the &gui;;
+  It also offers more basic support for triangulations of
+  dimensions 5&nbsp;&le;&nbsp;<replaceable>d</replaceable>&nbsp;&le;&nbsp;8,
+  and if you make your own
+  <ulink url="https://regina-normal.github.io/buildtips.html#highdim">custom
+  build</ulink>,
+  dimensions 9&nbsp;&le;&nbsp;<replaceable>d</replaceable>&nbsp;&le;&nbsp;15.
+  These higher dimensions (&ge;&nbsp;5) are not supported in the &gui;;
   instead you will
   need to use either <link linkend="python">&python; scripting</link>
   or <link linkend="compiling">&cpp; programming</link>.
  </para>
+ <warning><para>
+  If you have data files that contain triangulations of dimensions 9&ndash;15,
+  <emphasis>do not</emphasis> open and save them again using one of Regina's
+  ready-made packages.  These packages do not understand dimensions 9&ndash;15
+  at all, and so <emphasis>any triangulations in dimensions 9&mdash;15
+  will be lost</emphasis>.
+ </para><para>
+  The decision to drop dimensions 9&ndash;15 from the default builds was
+  for performance&mdash;they were causing significant overhead for Python in
+  particular.  If you need these higher dimensions, you can build
+  Regina yourself with the
+  <ulink
+  url="https://regina-normal.github.io/buildtips.html#highdim"><literal>HIGHDIM</literal>
+  flag</ulink>;
+  also please drop Ben an email so he knows that there is some demand for these
+  features.
+ </para></warning>
  <para>
   The remainder of this chapter talks through triangulations of
   dimensions 2, 3 and 4 only.
@@ -91,7 +112,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="menu-newtri.png"/>
+      <imagedata multires="menu-newtri"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -103,7 +124,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="newtri.png"/>
+      <imagedata multires="newtri"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -121,7 +142,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-empty.png"/>
+       <imagedata multires="newtri-empty"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -142,7 +163,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-example.png"/>
+       <imagedata multires="newtri-example"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -172,7 +193,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-isosig.png"/>
+       <imagedata multires="newtri-isosig"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -216,7 +237,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-nor.png"/>
+       <imagedata multires="newtri-nor"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -242,7 +263,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-lens.png"/>
+       <imagedata multires="newtri-lens"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -272,7 +293,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-sfs.png"/>
+       <imagedata multires="newtri-sfs"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -316,7 +337,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-lst.png"/>
+       <imagedata multires="newtri-lst"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -354,7 +375,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-dehydration.png"/>
+       <imagedata multires="newtri-dehydration"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -383,7 +404,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-splitting.png"/>
+       <imagedata multires="newtri-splitting"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -418,7 +439,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-bundle.png"/>
+       <imagedata multires="newtri-bundle"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -482,7 +503,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-id.png"/>
+      <imagedata multires="tri-id"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -510,7 +531,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-recognition-manifold.png"/>
+      <imagedata multires="tri-recognition-manifold"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -531,7 +552,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="triheader.png"/>
+      <imagedata multires="triheader"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -681,7 +702,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-viewgluings.png"/>
+      <imagedata multires="tri-viewgluings"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -694,20 +715,20 @@
    </para>
    <para>
     The contents of the cell show how the facet is glued.  In the example
-    above, the circled cell contains <literal>8&nbsp;(312)</literal>,
+    above, the circled cell contains <literal>3&nbsp;(213)</literal>,
     indicating that face&nbsp;123 of tetrahedron&nbsp;1 is glued to
-    face&nbsp;312 of tetrahedron&nbsp;8 using the affine map that
+    face&nbsp;213 of tetrahedron&nbsp;3 using the affine map that
     matches vertices 1,2,3 of tetrahedron&nbsp;1 with vertices
-    3,1,2 of tetrahedron&nbsp;8 respectively.
+    2,1,3 of tetrahedron&nbsp;3 respectively.
     The same gluing can be seen from the opposite direction in the row
-    for tetrahedron&nbsp;8.
+    for tetrahedron&nbsp;3.
    </para>
    <para>
     An empty cell indicates that a facet is not glued to anything at all;
     that is, the facet forms part of the <emphasis>boundary</emphasis> of
     the manifold.  In the table above there are two boundary triangles:
-    face&nbsp;013 of tetrahedron&nbsp;0, and face&nbsp;123 of
-    tetrahedron&nbsp;4.  In our example these join together to form the torus
+    face&nbsp;012 of tetrahedron&nbsp;0, and face&nbsp;123 of
+    tetrahedron&nbsp;2.  In our example these join together to form the torus
     boundary of the figure eight knot complement.
    </para>
    <para>
@@ -754,7 +775,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-skeleton.png"/>
+       <imagedata multires="tri-skeleton"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -800,7 +821,7 @@
      <para>
       <inlinemediaobject>
        <imageobject>
-        <imagedata fileref="tri-edges.png"/>
+        <imagedata multires="tri-edges"/>
        </imageobject>
       </inlinemediaobject>
      </para>
@@ -901,7 +922,7 @@
         <para>
          <inlinemediaobject>
           <imageobject>
-           <imagedata fileref="tri-triangles.png"/>
+           <imagedata multires="tri-triangles"/>
           </imageobject>
          </inlinemediaobject>
         </para>
@@ -1026,7 +1047,7 @@
      <para>
       <inlinemediaobject>
        <imageobject>
-        <imagedata fileref="tri-components.png"/>
+        <imagedata multires="tri-components"/>
        </imageobject>
       </inlinemediaobject>
      </para>
@@ -1134,12 +1155,12 @@
      <para>
       <inlinemediaobject>
        <imageobject>
-        <imagedata fileref="tri-bdrycomponents-real.png"/>
+        <imagedata multires="tri-bdrycomponents-real"/>
        </imageobject>
       </inlinemediaobject>
       <inlinemediaobject>
        <imageobject>
-        <imagedata fileref="tri-bdrycomponents-ideal.png"/>
+        <imagedata multires="tri-bdrycomponents-ideal"/>
        </imageobject>
       </inlinemediaobject>
      </para>
@@ -1213,7 +1234,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-graphs-dual.png"/>
+       <imagedata multires="tri-graphs-dual"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -1263,7 +1284,7 @@
         <para>
          <inlinemediaobject>
           <imageobject>
-           <imagedata fileref="tri-graphs-tree.png"/>
+           <imagedata multires="tri-graphs-tree"/>
           </imageobject>
          </inlinemediaobject>
         </para>
@@ -1367,6 +1388,8 @@
       the first homology group of the boundary; and
      H<subscript>2</subscript>(M&nbsp;;&nbsp;Z<subscript>2</subscript>),
       the second homology group with coefficients in Z<subscript>2</subscript>.
+     For 4-manifolds, the third homology group H<subscript>3</subscript>(M)
+     will be shown also.
     </para>
     <para>
      The fundamental group on the right will be
@@ -1379,7 +1402,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-homfund.png"/>
+       <imagedata multires="tri-homfund"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -1457,15 +1480,14 @@
      For 3-manifold triangulations, the
      <guilabel>Algebra</guilabel>&rarr;<guilabel>Turaev-Viro</guilabel>
      tab allows you to compute Turaev-Viro state sum invariants with
-     arbitrary parameters.
-     As of &regina;&nbsp;5.0, these invariants are computed using exact
-     arithmetic in an appropriate cyclotomic field (so, unlike previous
-     versions, there is no need to worry about floating-point inaccuracies).
+     arbitrary parameters.  These invariants are computed using exact
+     arithmetic in an appropriate cyclotomic field (so there is no need to
+     worry about floating-point inaccuracies).
     </para>
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-tv.png"/>
+       <imagedata multires="tri-tv"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -1500,7 +1522,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-tv-entry.png"/>
+       <imagedata multires="tri-tv-entry"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -1520,7 +1542,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-tv-results.png"/>
+       <imagedata multires="tri-tv-results"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -1532,7 +1554,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-tv-progress.png"/>
+       <imagedata multires="tri-tv-progress"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -1547,10 +1569,17 @@
      Kawauchi-Kojima invariants of the torsion linking form, and
      comments on where the triangulation might be embeddable.
     </para>
+    <warning><para>
+     All invariants of the torsion linking form, plus the final comments
+     on embeddability, use floating-point arithmetic in their computation.
+     While there are good reasons to expect that they will not suffer from
+     round-off errors, you should <emphasis>not</emphasis> treat these
+     invariants as rigorous.
+    </para></warning>
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-cellular.png"/>
+       <imagedata multires="tri-cellular"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -1772,7 +1801,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-composition.png"/>
+      <imagedata multires="tri-composition"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1803,7 +1832,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-composition-name.png"/>
+       <imagedata multires="tri-composition-name"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -1827,7 +1856,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-composition-isosig.png"/>
+       <imagedata multires="tri-composition-isosig"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -1875,7 +1904,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-composition-blocks.png"/>
+       <imagedata multires="tri-composition-blocks"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -1898,17 +1927,10 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-iso.png"/>
+       <imagedata multires="tri-iso"/>
       </imageobject>
      </inlinemediaobject>
     </para>
-    <!--para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata fileref="tri-iso-select.png"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para-->
     <para>
      Each time you select a different triangulation
      <replaceable>T</replaceable> in the drop-down box,
@@ -1934,13 +1956,15 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-iso-result.png"/>
+       <imagedata multires="tri-iso-result"/>
       </imageobject>
      </inlinemediaobject>
     </para>
     <para>
      The relationship, if any, will be reported immediately beneath
-     the drop-down box (as illustrated above).  If a relationship is found,
+     the drop-down box (as in the illustration above, which shows the
+     result of comparing a layered solid torus with a triangulated
+     Seifert fibred space).  If a relationship is found,
      you can click on the <guibutton>Details</guibutton> button for
      the precise relabelling (i.e., the mapping between tetrahedron
      labels and between vertices in each tetrahedron).
@@ -1964,7 +1988,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-surfaces.png"/>
+      <imagedata multires="tri-surfaces"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1979,7 +2003,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-s3-unknown.png"/>
+      <imagedata multires="tri-s3-unknown"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -1989,7 +2013,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-s3-known.png"/>
+      <imagedata multires="tri-s3-known"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2231,7 +2255,8 @@
      is inexact.  In particular, it may be subject to numerical instability
      or floating point error.
      If you wish to rigorously certify that a manifold is hyperbolic, see the
-     <link linkend="tri-hyperbolic">recognition tab</link>.
+     <link linkend="tri-hyperbolic">recognition tab</link> instead (which
+     performs exact calculations using angle structures).
     </para>
    </warning>
    <para>
@@ -2264,7 +2289,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-snappea.png"/>
+      <imagedata multires="tri-snappea"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2328,7 +2353,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="menucomponents.png"/>
+       <imagedata multires="menucomponents"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -2341,7 +2366,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-extract-components.png"/>
+       <imagedata multires="tri-extract-components"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -2365,7 +2390,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="menuconnsum.png"/>
+       <imagedata multires="menuconnsum"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -2379,7 +2404,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-connsum-results.png"/>
+       <imagedata multires="tri-connsum-results"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -2404,13 +2429,13 @@
      <xref linkend="bib-crushing-dcg"/>.
      If it does fail then &regina; will detect this and inform you.
     </para>
-    <para>
+    <!--para>
      <inlinemediaobject>
       <imageobject>
        <imagedata fileref="tri-connsum-rp2.png"/>
       </imageobject>
      </inlinemediaobject>
-    </para>
+    </para-->
     <caution><para>
      Connected sum decomposition can be very slow for larger
      triangulations, since the underlying normal surface algorithms have
@@ -2437,7 +2462,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-vertexlinks.png"/>
+      <imagedata multires="tri-vertexlinks"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2452,7 +2477,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-vertexlinksbox.png"/>
+      <imagedata multires="tri-vertexlinksbox"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2464,7 +2489,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-vertexlinksresult.png"/>
+      <imagedata multires="tri-vertexlinksresult"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2486,7 +2511,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-tribdry.png"/>
+      <imagedata multires="tri-tribdry"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2511,7 +2536,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-tribdrybox.png"/>
+      <imagedata multires="tri-tribdrybox"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2525,7 +2550,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-tribdryresult.png"/>
+      <imagedata multires="tri-tribdryresult"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2544,17 +2569,17 @@
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="menutri-2d.png"/>
+     <imagedata multires="menutri-2d" align="top"/>
     </imageobject>
    </inlinemediaobject>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="menutri-3d.png"/>
+     <imagedata multires="menutri-3d" align="top"/>
     </imageobject>
    </inlinemediaobject>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="menutri-4d.png"/>
+     <imagedata multires="menutri-4d" align="top"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -2590,7 +2615,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-editgluings.png"/>
+      <imagedata multires="tri-editgluings"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2605,7 +2630,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-editnames.png"/>
+      <imagedata multires="tri-editnames"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2635,7 +2660,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-simplify.png"/>
+      <imagedata multires="tri-simplify"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2664,7 +2689,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-simplify-fail.png"/>
+       <imagedata multires="tri-simplify-fail"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -2677,7 +2702,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-simplify-harder.png"/>
+       <imagedata multires="tri-simplify-harder"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -2700,7 +2725,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-simplify-keeptrying.png"/>
+       <imagedata multires="tri-simplify-keeptrying"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -2746,7 +2771,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-eltmove.png"/>
+      <imagedata multires="tri-eltmove"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2759,7 +2784,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-eltmovebox-3d.png"/>
+      <imagedata multires="tri-eltmovebox-3d"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2885,7 +2910,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-eltmovebox-4d.png"/>
+      <imagedata multires="tri-eltmovebox-4d"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2926,6 +2951,14 @@
       <glossdef><para>
        Replaces one pentachoron
        with five pentachora that meet at a new internal degree&nbsp;5 vertex.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>4-4 Move</guilabel></glossterm>
+      <glossdef><para>
+       Replaces four pentachora joined along a degree&nbsp;4 edge
+       with four pentachora joined along a new degree&nbsp;4 edge
+       that is aligned in a different direction.
       </para></glossdef>
      </glossentry>
      <glossentry>
@@ -2973,6 +3006,14 @@
        away&rdquo;.
       </para></glossdef>
      </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Snap Edge</guilabel></glossterm>
+      <glossdef><para>
+       Takes an edge between two distinct vertices and snaps its endpoints
+       together. This involves taking a triangle that meets this edge and
+       folding the other two edges of this triangle together.
+      </para></glossdef>
+     </glossentry>
     </glosslist>
    </para>
   </sect2>
@@ -3000,7 +3041,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-make0eff.png"/>
+      <imagedata multires="tri-make0eff"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3013,7 +3054,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-make0eff-connsum.png"/>
+      <imagedata multires="tri-make0eff-connsum"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3050,7 +3091,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-truncate-makeideal.png"/>
+      <imagedata multires="tri-truncate-makeideal"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3127,7 +3168,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-barycentric.png"/>
+      <imagedata multires="tri-barycentric"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3152,7 +3193,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-orient.png"/>
+      <imagedata multires="tri-orient"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3171,7 +3212,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-reflect.png"/>
+      <imagedata multires="tri-reflect"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3188,7 +3229,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-doublecover.png"/>
+      <imagedata multires="tri-doublecover"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3209,7 +3250,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-puncture.png"/>
+      <imagedata multires="tri-puncture"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3229,7 +3270,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-drilledge.png"/>
+      <imagedata multires="tri-drilledge"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3244,7 +3285,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-drilledgebox.png"/>
+      <imagedata multires="tri-drilledgebox"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3326,7 +3367,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-connsumwith.png"/>
+      <imagedata multires="tri-connsumwith"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3338,7 +3379,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-connsumwith-tri.png"/>
+      <imagedata multires="tri-connsumwith-tri"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3430,7 +3471,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-cutcrush.png"/>
+      <imagedata multires="tri-cutcrush"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -3449,7 +3490,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-cutcrush-results.png"/>
+      <imagedata multires="tri-cutcrush-results"/>
      </imageobject>
     </inlinemediaobject>
    </para>

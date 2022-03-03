@@ -44,7 +44,7 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/perm.h"
-#include "triangulation/forward.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -124,6 +124,42 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
         Perm<4> triangleMapping() const;
 
         /**
+         * Determines whether this and the given object represent the same
+         * specific presentation of a pillow 2-sphere.
+         *
+         * Specifically, two pillow 2-spheres will compare as equal if and
+         * only if they join the same two numbered triangles, presented
+         * in the same order, using the same mapping of triangle vertices.
+         *
+         * Since this test looks at triangle numbers and not the specific
+         * Triangle objects, it is meaningful to compare pillow 2-spheres
+         * within different triangulations.
+         *
+         * @param other the pillow 2-sphere to compare with this.
+         * @return \c true if and only if this and the given object represent
+         * the same specific presentation of a pillow 2-sphere.
+         */
+        bool operator == (const PillowTwoSphere& other) const;
+
+        /**
+         * Determines whether this and the given object represent different
+         * specific presentations of a pillow 2-sphere.
+         *
+         * Specifically, two pillow 2-spheres will compare as equal if and
+         * only if they join the same two numbered triangles, presented
+         * in the same order, using the same mapping of triangle vertices.
+         *
+         * Since this test looks at triangle numbers and not the specific
+         * Triangle objects, it is meaningful to compare pillow 2-spheres
+         * within different triangulations.
+         *
+         * @param other the pillow 2-sphere to compare with this.
+         * @return \c true if and only if this and the given object represent
+         * different specific presentations of a pillow 2-sphere.
+         */
+        bool operator != (const PillowTwoSphere& other) const;
+
+        /**
          * Determines if the two given triangles together form a pillow
          * 2-sphere.
          *
@@ -185,6 +221,19 @@ inline Triangle<3>* PillowTwoSphere::triangle(int index) const {
 }
 inline Perm<4> PillowTwoSphere::triangleMapping() const {
     return triMapping_;
+}
+
+inline bool PillowTwoSphere::operator == (const PillowTwoSphere& other) const {
+    return
+        triangle_[0]->index() == other.triangle_[0]->index() &&
+        triangle_[1]->index() == other.triangle_[1]->index() &&
+        triMapping_ == other.triMapping_;
+}
+inline bool PillowTwoSphere::operator != (const PillowTwoSphere& other) const {
+    return
+        triangle_[0]->index() != other.triangle_[0]->index() ||
+        triangle_[1]->index() != other.triangle_[1]->index() ||
+        triMapping_ != other.triMapping_;
 }
 
 inline std::unique_ptr<PillowTwoSphere> PillowTwoSphere::formsPillowTwoSphere(

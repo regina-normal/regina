@@ -845,6 +845,10 @@ class TreeEnumeration :
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
          *
+         * \ifacespython The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
+         *
          * @param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.
          * @return \c true if we found another vertex surface, or
@@ -1155,6 +1159,10 @@ class TautEnumeration :
          * That is, you have not called run() before, and if you have
          * called next() then it has always returned \c true (indicating
          * that it has not yet finished the search).
+         *
+         * \ifacespython The global interpreter lock will be released while
+         * this function runs, so you can use it with Python-based
+         * multithreading.
          *
          * @param tracker a progress tracker through which progress
          * will be reported, or \c null if no progress reporting is required.

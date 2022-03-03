@@ -134,7 +134,7 @@ void addTreeDecomposition(pybind11::module_& m) {
         .def("makeNice", [](TreeDecomposition& t) {
             t.makeNice();
         })
-        .def("makeNice", [](TreeDecomposition& t, nullptr_t) {
+        .def("makeNice", [](TreeDecomposition& t, std::nullptr_t) {
             t.makeNice();
         })
         .def("makeNice", [](TreeDecomposition& t, const std::vector<int>& h) {
@@ -160,7 +160,7 @@ void addTreeDecomposition(pybind11::module_& m) {
         .def("reroot", [](TreeDecomposition& t,
                 const std::vector<double>& costSame,
                 const std::vector<double>& costReverse,
-                nullptr_t) {
+                std::nullptr_t) {
             if (costSame.size() != t.size())
                 throw regina::InvalidArgument(
                     "Argument costSame is a list of the wrong size");

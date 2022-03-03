@@ -60,6 +60,7 @@ set (IMGS
   reverse
   rotate
   run
+  selfframe
   signature-2d
   signature-3d
   signature-4d

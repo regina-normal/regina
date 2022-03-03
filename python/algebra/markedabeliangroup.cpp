@@ -149,7 +149,9 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def(pybind11::self * pybind11::self)
     ;
     regina::python::add_output(c2);
-    regina::python::add_eq_operators(c2);
+    // Deciding what we want comparisons to *mean* requires some thought.
+    // Let's not make a decision now that we might regret later.
+    regina::python::disable_eq_operators(c2);
 
     m.def("swap",
         (void(*)(HomMarkedAbelianGroup&, HomMarkedAbelianGroup&))(regina::swap));

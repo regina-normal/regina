@@ -112,8 +112,13 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>(5&ndash;15)-manifold triangulation</primaryie>
-  <seeie>See: triangulation, (5&ndash;14)-manifold</seeie>
+  <primaryie>(5&ndash;8)-dimensional triangulations</primaryie>
+  <seeie>See: triangulation, (5&ndash;8)-dimensional</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>(9&ndash;15)-dimensional triangulations, removed</primaryie>
+  <seeie>See: triangulation, (9&ndash;15)-dimensional, removed</seeie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-A'><title>&mdash; A &mdash;</title>
@@ -134,6 +139,7 @@
    angle structures</link></secondaryie>
   <secondaryie><link linkend="angles-tautonly">enumerating taut
    angle structures</link></secondaryie>
+  <secondaryie><link linkend="angles">generalised</link></secondaryie>
   <secondaryie><link linkend="angles-viewstructurecoords">individual
    angles</link></secondaryie>
   <secondaryie><link linkend="tri-strict">strict,
@@ -149,6 +155,14 @@
  <indexentry>
   <primaryie>&api; documentation</primaryie>
   <seeie>See: documentation</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>attachments</primaryie>
+  <secondaryie><link linkend="packet-attachment">attachment
+   packets</link></secondaryie>
+  <secondaryie><link linkend="packet-attachment">exporting</link></secondaryie>
+  <secondaryie><link linkend="import-attachment">importing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -285,8 +299,6 @@
   <primaryie>character encodings</primaryie>
   <secondaryie><link linkend="foreign">in
    imports and exports</link></secondaryie>
-  <secondaryie><link linkend="python-i18n">in
-   &python;</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -400,8 +412,6 @@
   <primaryie>configuration</primaryie>
   <secondaryie><link linkend="options-tools">&gaplong;</link></secondaryie>
   <secondaryie><link linkend="options-general">general</link></secondaryie>
-  <secondaryie><link linkend="options-tools">&pdf;
-   viewing</link></secondaryie>
   <secondaryie><link linkend="options-python">&python;
    scripting</link></secondaryie>
   <secondaryie><link linkend="options-tools">&snappea;
@@ -435,6 +445,8 @@
   <primaryie>conversion</primaryie>
   <secondaryie><link linkend="man-regconvert">between file
    formats</link></secondaryie>
+  <secondaryie><link linkend="link-complement">from
+   links to &regina; or &snappea; triangulations</link></secondaryie>
   <secondaryie><link linkend="snappea-fromregina">from
    native &regina; to &snappea; triangulations</link></secondaryie>
   <secondaryie><link linkend="snappea-toregina">from
@@ -535,6 +547,16 @@
   <primaryie>diagram graphs, for links</primaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decomposition of</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>dimensions 5&ndash;8</primaryie>
+  <seeie>See: triangulation, (5&ndash;8)-dimensional</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>dimensions 9&ndash;15, removed</primaryie>
+  <seeie>See: triangulation, (9&ndash;15)-dimensional, removed</seeie>
  </indexentry>
 
  <indexentry>
@@ -788,8 +810,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-algebra-homfund">fundamental
-   group</link></primaryie>
+  <primaryie>fundamental group</primaryie>
+  <secondaryie><link linkend="tri-algebra-homfund">of a manifold or
+   triangulation</link></secondaryie>
+  <secondaryie><link linkend="link-algebra">of a link
+   complement</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -819,6 +844,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>generalised angle structures</primaryie>
+  <secondaryie><link linkend="angles">working with</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>globally compatible normal surfaces</primaryie>
   <seeie>See: compatibility matrices for normal surfaces</seeie>
  </indexentry>
@@ -845,6 +875,16 @@
  <indexentry>
   <primaryie>graphs, face pairing</primaryie>
   <seeie>See: dual graphs</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>group, fundamental</primaryie>
+  <seeie>See: fundamental group</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>group, knot/link</primaryie>
+  <seeie>See: link group</seeie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-H'><title>&mdash; H &mdash;</title>
@@ -1005,6 +1045,10 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-algebra">knot group</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>knot signatures</primaryie>
   <secondaryie><link linkend="link-new-knotsig">described</link></secondaryie>
   <secondaryie><link linkend="link-new-code">reconstructing knots
@@ -1074,6 +1118,10 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-algebra">link group</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>links, knots and</primaryie>
   <secondaryie><link linkend="link-crossings">alternating</link></secondaryie>
   <secondaryie><link linkend="link-cables">blackboard framing</link></secondaryie>
@@ -1105,6 +1153,7 @@
    (classical or oriented), recreating from</link></secondaryie>
   <secondaryie><link linkend="link-codes">Gauss code
    (classical or oriented), viewing</link></secondaryie>
+  <secondaryie><link linkend="link-algebra">group</link></secondaryie>
   <secondaryie><link linkend="link-polynomials">&homflypt;
    polynomial</link></secondaryie>
   <secondaryie><link linkend="link-codes-construct">Jenkins format,
@@ -1123,12 +1172,17 @@
    decompositions</link></secondaryie>
   <secondaryie><link linkend="link-flip">orienting</link></secondaryie>
   <secondaryie><link linkend="link-cables">parallel cables</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">planar diagram code,
+   recreating from</link></secondaryie>
+  <secondaryie><link linkend="link-codes">planar diagram code,
+   viewing</link></secondaryie>
   <secondaryie><link linkend="link-flip">reflecting</link></secondaryie>
   <secondaryie><link linkend="link-reidemeister">Reidemeister
    moves</link></secondaryie>
   <secondaryie><link linkend="link-flip">reversing</link></secondaryie>
   <secondaryie><link linkend="link-flip">rotating</link></secondaryie>
   <secondaryie><link linkend="link-cables">Seifert framing</link></secondaryie>
+  <secondaryie><link linkend="link-selfframe">self framing</link></secondaryie>
   <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decompositions</link></secondaryie>
@@ -1242,6 +1296,8 @@
    (hyper)surfaces in a list</link></secondaryie>
   <secondaryie><link linkend="surfaces-proptype">splitting surfaces,
    recognising</link></secondaryie>
+  <secondaryie><link linkend="regina7-tons">transversely oriented
+   normal surfaces, removed</link></secondaryie>
   <secondaryie><link linkend="hypersurfaces-triangulate">triangulating a
    hypersurface</link></secondaryie>
   <secondaryie><link linkend="surfaces-proplink">vertex links,
@@ -1341,8 +1397,6 @@
    docking</link></secondaryie>
   <secondaryie><link linkend="packet-types">available packet
    types</link></secondaryie>
-  <secondaryie><link linkend="packet-uneditable">cannot be
-   edited</link></secondaryie>
   <secondaryie><link linkend="packet-clone">cloning</link></secondaryie>
   <secondaryie><link linkend="packet-new">creating new
    packets</link></secondaryie>
@@ -1354,33 +1408,39 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>padlock</primaryie>
-  <secondaryie><link linkend="packet-uneditable">in the packet
-   tree</link></secondaryie>
- </indexentry>
-
- <indexentry>
   <primaryie><link linkend="link-cables">parallel cables</link></primaryie>
  </indexentry>
 
  <indexentry>
-  <primaryie>&pdf; documents</primaryie>
-  <secondaryie><link linkend="export-pdf">exporting</link></secondaryie>
-  <secondaryie><link linkend="import-pdf">importing</link></secondaryie>
-  <secondaryie><link linkend="packet-pdf">&pdf;
-   packets</link></secondaryie>
-  <secondaryie><link linkend="options-tools">&pdf; viewer
-   configuration</link></secondaryie>
+  <primaryie>PD code</primaryie>
+  <seeie>See: planar diagram code</seeie>
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="snappea">peripheral curves
-   on cusps</link></primaryie>
+  <primaryie>&pdf; documents</primaryie>
+  <seeie>See: attachments</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>peripheral curves on cusps</primaryie>
+  <secondaryie><link linkend="link-complement">preserving in
+   link complements</link></secondaryie>
+  <secondaryie><link linkend="snappea">preserving in
+   triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
   <primaryie><link linkend="snappea-fill-permanent">permanently
    fill cusps</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>planar diagram code</primaryie>
+  <secondaryie><link linkend="link-new-pd">described</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">reconstructing links
+   from planar diagram codes</link></secondaryie>
+  <secondaryie><link linkend="link-codes">viewing
+   the planar diagram code for a link</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1391,6 +1451,17 @@
  <indexentry>
   <primaryie>preferences</primaryie>
   <seeie>See: configuration</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>prism normal coordinates</primaryie>
+  <seeie>See: coordinate systems</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>private copy</primaryie>
+  <secondaryie><link linkend="surfaces-viewtri">of triangulation in a
+   surface, hypersurface or angle structure list</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1532,8 +1603,6 @@
   <primaryie>scripting</primaryie>
   <secondaryie><link linkend="python-access">accessing &regina; objects,
    classes and methods</link></secondaryie>
-  <secondaryie><link linkend="python-caveats">caveats and
-   traps</link></secondaryie>
   <secondaryie><link linkend="man-regina-python">command-line scripting
    interface</link></secondaryie>
   <secondaryie><link linkend="options-python">configuration</link></secondaryie>
@@ -1569,6 +1638,11 @@
  <indexentry>
   <primaryie>Seifert-Weber dodecahedral space</primaryie>
   <seeie>See: Weber-Seifert dodecahedral space</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-selfframe">self framing of
+   links</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1642,6 +1716,8 @@
   <primaryie>&snappea; triangulation</primaryie>
   <secondaryie><link linkend="snappea-canonical">canonical
    retriangulation</link></secondaryie>
+  <secondaryie><link linkend="link-complement">converting from
+   links</link></secondaryie>
   <secondaryie><link linkend="snappea-fromregina">converting from
    native &regina; triangulations</link></secondaryie>
   <secondaryie><link linkend="snappea-toregina">converting to
@@ -1686,8 +1762,10 @@
   <primaryie>source code</primaryie>
   <secondaryie><link linkend="compiling">combining with the &regina;
    calculation engine</link></secondaryie>
-  <secondaryie><link linkend="export-cpp">exporting triangulations to
-   &cpp;</link></secondaryie>
+  <secondaryie><link linkend="regina7-cpp">major &cpp; changes in
+   &regina;&nbsp;7.0</link></secondaryie>
+  <secondaryie><link linkend="regina7-python">major &python; changes in
+   &regina;&nbsp;7.0</link></secondaryie>
   <secondaryie><link linkend="python">&python;
    scripting</link></secondaryie>
  </indexentry>
@@ -1838,6 +1916,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="regina7-tons">transversely oriented
+   normal surfaces, removed</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>tree</primaryie>
   <seeie>See: packet tree</seeie>
  </indexentry>
@@ -1901,6 +1984,8 @@
   <secondaryie><link linkend="tri-decomposition-connsum">connected
    sum, decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-propconn">connectedness</link></secondaryie>
+  <secondaryie><link linkend="link-complement">converting from a
+   link</link></secondaryie>
   <secondaryie><link linkend="snappea-toregina">converting from a
    &snappea; triangulations</link></secondaryie>
   <secondaryie><link linkend="snappea-fromregina">converting to a
@@ -1989,7 +2074,12 @@
 
  <indexentry>
   <primaryie><link linkend="packet-higherdim">triangulation,
-   (5&ndash;15)-manifold</link></primaryie>
+   (5&ndash;8)-dimensional</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="regina7-highdim">triangulation,
+   (9&ndash;15)-dimensional, removed</link></primaryie>
  </indexentry>
 
  <indexentry>

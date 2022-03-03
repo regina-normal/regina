@@ -34,6 +34,7 @@
 #include "link/link.h"
 
 // UI includes:
+#include "linkalgebra.h"
 #include "linkcodes.h"
 #include "linkcrossings.h"
 #include "linkgraph.h"
@@ -64,6 +65,7 @@ LinkUI::LinkUI(regina::PacketOf<Link>* packet, PacketPane* newEnclosingPane) :
     addHeader(header);
     addTab(crossings, QObject::tr("&Crossings"));
     addTab(new LinkPolynomialUI(packet, this), QObject::tr("&Polynomials"));
+    addTab(new LinkAlgebraUI(packet, this), QObject::tr("&Algebra"));
     addTab(new LinkCodesUI(packet, this), QObject::tr("C&odes"));
     addTab(new LinkGraphUI(packet, this), QObject::tr("&Graphs"));
 

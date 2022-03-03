@@ -253,7 +253,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * \a maxDepth levels of this search tree.  Rather than
          * producing complete gluing permutation sets, this search will
          * produce a series of partially-constructed permutation sets.
-         * A partial searche can be continued by calling runSearch()
+         * A partial search can be continued by calling runSearch()
          * again on the underlying GluingPermSearcher (perhaps after being
          * frozen, or passed on to a different processor via taggedData() and
          * fromTaggedData()).  If necessary, the \a action routine may call

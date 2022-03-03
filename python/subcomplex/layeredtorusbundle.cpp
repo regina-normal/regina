@@ -53,6 +53,7 @@ void addLayeredTorusBundle(pybind11::module_& m) {
         .def_static("isLayeredTorusBundle", // deprecated
             &LayeredTorusBundle::recognise)
     ;
+    regina::python::add_eq_operators(c);
     regina::python::add_output(c);
 }
 

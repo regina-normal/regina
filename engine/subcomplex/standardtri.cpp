@@ -36,7 +36,6 @@
 #include "subcomplex/blockedsfsloop.h"
 #include "subcomplex/blockedsfspair.h"
 #include "subcomplex/blockedsfstriple.h"
-#include "subcomplex/l31pillow.h"
 #include "subcomplex/layeredchainpair.h"
 #include "subcomplex/layeredlensspace.h"
 #include "subcomplex/layeredloop.h"
@@ -69,8 +68,6 @@ std::string StandardTriangulation::texName() const {
 std::unique_ptr<StandardTriangulation> StandardTriangulation::recognise(
         Component<3>* comp) {
     if (auto ans = TrivialTri::recognise(comp))
-        return ans;
-    if (auto ans = L31Pillow::recognise(comp))
         return ans;
     if (auto ans = LayeredLensSpace::recognise(comp))
         return ans;

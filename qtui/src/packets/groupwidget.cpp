@@ -49,26 +49,26 @@
 #include <QPushButton>
 
 #define MAX_RELATIONS_FOR_PROLIFERATION 8
+#define MAX_RELATIONS_FOR_RECOGNITION 50
 
-GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
-        QWidget(), group_(nullptr) {
+GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) : QWidget() {
     QBoxLayout* layout = new QVBoxLayout(this);
 
     if (paddingStretch)
         layout->addStretch(1);
 
-    fundName_ = new QLabel();
-    // fundName_->setAlignment(Qt::AlignCenter);
-    fundName_->setWordWrap(true);
-    layout->addWidget(fundName_);
+    name_ = new QLabel();
+    // name_->setAlignment(Qt::AlignCenter);
+    name_->setWordWrap(true);
+    layout->addWidget(name_);
 
-    fundGens_ = new QLabel();
-    layout->addWidget(fundGens_);
-    fundRelCount_ = new QLabel();
-    layout->addWidget(fundRelCount_);
-    fundRels_ = new QListWidget();
-    fundRels_->setSelectionMode(QListWidget::NoSelection);
-    layout->addWidget(fundRels_, 3);
+    gens_ = new QLabel();
+    layout->addWidget(gens_);
+    relCount_ = new QLabel();
+    layout->addWidget(relCount_);
+    rels_ = new QListWidget();
+    rels_->setSelectionMode(QListWidget::NoSelection);
+    layout->addWidget(rels_, 3);
 
     // The simplification buttons:
     if (allowSimplify) {
@@ -100,8 +100,8 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
         btn = new QPushButton(tr("Using GAP"));
         btn->setToolTip(tr("Simplify the group presentation using "
             "GAP (Groups, Algorithms and Programming)"));
-        btn->setWhatsThis(tr("<qt>Simplify the presentation of the "
-            "fundamental group using the program GAP (Groups, Algorithms and "
+        btn->setWhatsThis(tr("<qt>Simplify the group presentation "
+            "using the program GAP (Groups, Algorithms and "
             "Programming).<p>Note that GAP will need to be installed "
             "separately on your system.</qt>"));
         connect(btn, SIGNAL(clicked()), this, SLOT(simplifyGAP()));
@@ -136,49 +136,52 @@ GroupWidget::GroupWidget(bool allowSimplify, bool paddingStretch) :
         layout->addStretch(1);
 }
 
-void GroupWidget::refresh(const regina::GroupPresentation& group) {
-    group_ = &group;
-
+void GroupWidget::refresh() {
     bool unicode = ReginaPrefSet::global().displayUnicode;
 
-    std::string name = group_->recogniseGroup(unicode);
-    if (name.length()) {
-        fundName_->setText(tr("Name: %1").arg(name.c_str()));
-        fundName_->show();
-    } else
-        fundName_->hide();
-
-    unsigned long nGens = group_->countGenerators();
-    bool alphabetic = (nGens <= 26);
-    if (nGens == 0)
-        fundGens_->setText(tr("No generators"));
-    else if (nGens == 1)
-        fundGens_->setText(tr("1 generator: a"));
-    else if (nGens == 2)
-        fundGens_->setText(tr("2 generators: a, b"));
-    else if (alphabetic)
-        fundGens_->setText(tr("%1 generators: a ... %2").
-            arg(nGens).arg(char('a' + nGens - 1)));
-    else
-        fundGens_->setText(tr("%1 generators: g0 ... g%2").
-            arg(nGens).arg(nGens - 1));
-
-    unsigned long nRels = group_->countRelations();
-    if (nRels == 0) {
-        fundRelCount_->setText(tr("No relations"));
-        fundRels_->hide();
-    } else if (nRels == 1) {
-        fundRelCount_->setText(tr("1 relation:"));
-        fundRels_->show();
+    if (group_.countRelations() <= MAX_RELATIONS_FOR_RECOGNITION) {
+        std::string name = group_.recogniseGroup(unicode);
+        if (name.length()) {
+            name_->setText(tr("Name: %1").arg(name.c_str()));
+            name_->show();
+        } else
+            name_->hide();
     } else {
-        fundRelCount_->setText(tr("%1 relations:").arg(nRels));
-        fundRels_->show();
+        name_->setText(tr("<qt><i>Not yet simplified<i></qt>"));
+        name_->show();
     }
 
-    fundRels_->clear();
+    unsigned long nGens = group_.countGenerators();
+    bool alphabetic = (nGens <= 26);
+    if (nGens == 0)
+        gens_->setText(tr("No generators"));
+    else if (nGens == 1)
+        gens_->setText(tr("1 generator: a"));
+    else if (nGens == 2)
+        gens_->setText(tr("2 generators: a, b"));
+    else if (alphabetic)
+        gens_->setText(tr("%1 generators: a ... %2").
+            arg(nGens).arg(char('a' + nGens - 1)));
+    else
+        gens_->setText(tr("%1 generators: g0 ... g%2").
+            arg(nGens).arg(nGens - 1));
+
+    unsigned long nRels = group_.countRelations();
+    if (nRels == 0) {
+        relCount_->setText(tr("No relations"));
+        rels_->hide();
+    } else if (nRels == 1) {
+        relCount_->setText(tr("1 relation:"));
+        rels_->show();
+    } else {
+        relCount_->setText(tr("%1 relations:").arg(nRels));
+        rels_->show();
+    }
+
+    rels_->clear();
     if (alphabetic) {
         // Generators are a, b, ...
-        for (const auto& r : group_->relations()) {
+        for (const auto& r : group_.relations()) {
             QString rel;
             const std::list<regina::GroupExpressionTerm>& terms(r.terms());
             if (terms.empty())
@@ -201,34 +204,30 @@ void GroupWidget::refresh(const regina::GroupPresentation& group) {
                     }
                 }
             }
-            new QListWidgetItem(rel, fundRels_);
+            new QListWidgetItem(rel, rels_);
         }
     } else {
         // Generators are g0, g1, ...
         // This is the default text that comes from the calculation engine.
-        for (const auto& r : group_->relations())
-            new QListWidgetItem(QString(r.str().c_str()), fundRels_);
+        if (unicode)
+            for (const auto& r : group_.relations())
+                new QListWidgetItem(QString(r.utf8().c_str()), rels_);
+        else
+            for (const auto& r : group_.relations())
+                new QListWidgetItem(QString(r.str().c_str()), rels_);
     }
 }
 
 void GroupWidget::simplifyInternal() {
-    if (! group_)
-        return;
-
     // This *should* block the UI, which means we don't need to worry
-    // about race conditons with simplified_.
-    simplified_ = *group_;
-    simplified_->intelligentSimplify();
-
-    refresh(*simplified_);
+    // about race conditons with group_.
+    group_.intelligentSimplify();
+    refresh();
     emit simplified();
 }
 
 void GroupWidget::proliferateRelators() {
-    if (! group_)
-        return;
-
-    if (group_->countRelations() > MAX_RELATIONS_FOR_PROLIFERATION)
+    if (group_.countRelations() > MAX_RELATIONS_FOR_PROLIFERATION)
         if (! ReginaSupport::warnYesNo(this,
                 tr("This group presentation is already large."),
                 tr("A relator explosion on a large group presentation "
@@ -237,30 +236,23 @@ void GroupWidget::proliferateRelators() {
             return;
 
     // This *should* block the UI, which means we don't need to worry
-    // about race conditons with simplified_.
-    simplified_ = *group_;
-    simplified_->proliferateRelators(1);
-
-    refresh(*simplified_);
+    // about race conditons with group_.
+    group_.proliferateRelators(1);
+    refresh();
     emit simplified();
 }
 
 void GroupWidget::simplifyGAP() {
-    if (! group_)
-        return;
-
     // Can we actually run GAP?
     QString useExec = verifyGAPExec();
     if (useExec.isNull())
         return;
 
-    GAPRunner dlg(this, useExec, *group_);
+    GAPRunner dlg(this, useExec, group_);
     if (dlg.exec() == GAPRunner::Accepted) {
-        auto ans = dlg.simplifiedGroup();
-        if (ans) {
-            simplified_ = ans;
-
-            refresh(*simplified_);
+        if (auto ans = dlg.simplifiedGroup()) {
+            group_ = *ans;
+            refresh();
             emit simplified();
         } else {
             ReginaSupport::sorry(this,

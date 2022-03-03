@@ -31,8 +31,6 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from __future__ import print_function
-
 # Fetch the python/testsuite path in the source tree, since we will need
 # to access external files.
 import sys
@@ -358,7 +356,7 @@ dump(BlockedSFSLoop.recognise(Triangulation3('kLLLLPQkcddfjgihjijpkrkaspoadj')))
 dump(BlockedSFSPair.recognise(Triangulation3('hLAvQkbccefggglpksulwb')))
 dump(BlockedSFSTriple.recognise(Triangulation3('kLALALMkbccfefihijjlpkusuueotr')))
 dump(PluggedTorusBundle.recognise(Triangulation3('kLLvAPQkbdfehgjiijjdwuurwmmaxn')))
-dump(L31Pillow.recognise(Triangulation3('cPcbbbaai').component(0)))
+dump(TrivialTri.recognise(Triangulation3('cPcbbbaai').component(0)))
 dump(LayeredLoop.recognise(Triangulation3('cPcbbbqxh').component(0)))
 dump(LayeredTorusBundle.recognise(Triangulation3('hvLPQkcedgffggnnkaaeiw')))
 dump(PlugTriSolidTorus.recognise(Example3.poincare().component(0)))
@@ -426,7 +424,6 @@ dump(m)
 dat = LPData_NonSpun()
 dump(dat)
 dat.reserve(tab)
-dump(dat)
 dat.initStart()
 dump(dat)
 
@@ -453,7 +450,7 @@ dump(t.bag(0))
 # split/
 # ----------------------------------------------------------------------
 
-dump(Signature.parse('abbc.ac'))
+dump(Signature('abbc.ac'))
 
 # ----------------------------------------------------------------------
 # file/

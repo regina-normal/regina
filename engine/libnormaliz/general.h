@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2019  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -28,6 +28,7 @@
 #include <cassert>
 #include <csignal>
 #include <cstddef>
+#include <string>
 
 #include <libnormaliz/dynamic_bitset.h>
 
@@ -54,14 +55,7 @@
 #include "libnormaliz/my_omp.h"
 
 
-/*
-// Regina will use GMP everywhere, even on Windows.
-#ifdef _WIN32     // for 32 and 64 bit windows
-#define NMZ_MPIR  // always use MPIR
-#endif
-*/
-
-#ifdef NMZ_MPIR  // use MPIR
+#ifdef USE_MPIR
 #include <mpirxx.h>
 #else  // otherwise use GMP 
 #include <gmpxx.h>
@@ -74,9 +68,17 @@
 
 #ifdef ENFNORMALIZ
 #include <e-antic/renfxx.h>
+namespace libnormaliz {
+using eantic::renf_elem_class;
+using eantic::renf_class;
+typedef boost::intrusive_ptr<const renf_class> renf_class_shared;
+}
 #else
+namespace libnormaliz {
 typedef long renf_elem_class;
-typedef long renf_class;
+struct renf_class{};
+typedef renf_class* renf_class_shared;
+}
 #endif
 
 namespace libnormaliz {
@@ -123,7 +125,7 @@ NORMALIZ_DLL_EXPORT extern volatile sig_atomic_t nmz_interrupted;
 // extern bool test_arithmetic_overflow;
 // extern long overflow_test_modulus;
 
-NORMALIZ_DLL_EXPORT extern long default_thread_limit;
+NORMALIZ_DLL_EXPORT extern const long default_thread_limit;
 NORMALIZ_DLL_EXPORT extern long thread_limit;
 NORMALIZ_DLL_EXPORT extern bool parallelization_set;
 long set_thread_limit(long t);
@@ -138,6 +140,9 @@ std::ostream& verboseOutput();
 std::ostream& errorOutput();
 
 void interrupt_signal_handler(int signal);
+
+void StartTime();
+void MeasureTime(bool verbose, const std::string& step);
 
 } /* end namespace libnormaliz */
 

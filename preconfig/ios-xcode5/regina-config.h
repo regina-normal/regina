@@ -93,16 +93,16 @@
 #define REGINA_DB_EXT "tdb"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Regina 7.0"
+#define PACKAGE_STRING "Regina 7.1"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "7.0"
+#define PACKAGE_VERSION "7.1"
 
 /* Major version number of the package. */
 #define PACKAGE_VERSION_MAJOR 7
 
 /* Minor version number of the package. */
-#define PACKAGE_VERSION_MINOR 0
+#define PACKAGE_VERSION_MINOR 1
 
 /* Define to the version of SnapPy that is bundled with Regina. */
 #define SNAPPY_VERSION "2.8"

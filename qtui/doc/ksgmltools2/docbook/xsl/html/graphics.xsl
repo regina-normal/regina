@@ -215,6 +215,8 @@
 
   <xsl:variable name="filename">
     <xsl:choose>
+      <xsl:when test="@multires != ''">
+        <xsl:apply-templates select="@multires"/>.png</xsl:when>
       <xsl:when test="local-name(.) = 'graphic'
                       or local-name(.) = 'inlinegraphic'">
         <!-- handle legacy graphic and inlinegraphic by new template --> 
@@ -229,6 +231,10 @@
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:variable>
+
+  <xsl:variable name="multires">
+    <xsl:apply-templates select="@multires"/>
   </xsl:variable>
 
   <xsl:variable name="intrinsicwidth">
@@ -522,6 +528,13 @@ valign: <xsl:value-of select="@valign"/></xsl:message>
 	    </xsl:choose>
             <xsl:value-of select="$filename"/>
           </xsl:attribute>
+
+          <xsl:choose>
+            <xsl:when test="$multires != ''">
+              <xsl:attribute name="srcset">
+                <xsl:value-of select="$multires"/>@2x.png 2x, <xsl:value-of select="$multires"/>.png</xsl:attribute>
+            </xsl:when>
+          </xsl:choose>
 
           <xsl:if test="@align">
             <xsl:attribute name="align">

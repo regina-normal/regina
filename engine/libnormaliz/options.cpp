@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2019  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -26,13 +26,13 @@
 #include <sstream>
 #include <fstream>
 
-namespace libnormaliz {
+namespace libnormaliz{
 using std::cout;
 using std::endl;
 using std::ifstream;
 
 static void printCopying() {
-    cout << "Copyright (C) 2007-2019  The Normaliz Team, University of Osnabrueck." << endl
+    cout << "Copyright (C) 2007-2022  The Normaliz Team, University of Osnabrueck." << endl
          << "This program comes with ABSOLUTELY NO WARRANTY; This is free software," << endl
          << "and you are welcome to redistribute it under certain conditions;" << endl
          << "See COPYING for details." << endl;
@@ -40,6 +40,11 @@ static void printCopying() {
 
 static void printVersion() {
     cout << "Normaliz " << string(STRINGIFY(NMZ_VERSION)) << endl;
+    string optional_packages = package_string();
+    if (optional_packages.size() > 0) {
+        cout << "------------------------------------------------------------" << endl;
+        cout << "with package(s)" << optional_packages << endl;
+    }
     printCopying();
 }
 
@@ -47,17 +52,16 @@ static string pureName(const string& fullName) {
     // extracts the pure filename
 
     string slash = "/";
-#ifdef _WIN32  // for 32 and 64 bit windows
-    slash = "\\";
-#endif
+	string back_slash = "\\";
+	
     size_t found = fullName.rfind(slash);
-    if (found == std::string::npos)
-        return (fullName);
+    if (found == std::string::npos){
+		found = fullName.rfind(back_slash);
+		if (found == std::string::npos)
+			return (fullName);
+	}		
     found++;
     size_t length = fullName.size() - found;
-
-    // cout << "**************************** " << fullName.substr(found,length) << endl;
-    // exit(1);
     return (fullName.substr(found, length));
 }
 
@@ -134,12 +138,13 @@ bool OptionsHandler::handle_commandline(int argc, char* argv[]) {
 
 
 void OptionsHandler::setOutputDirName(const string& s) {
+	if(s.size() == 0)
+		throw BadInputException("Empty output directory name");
     output_dir = s;
     char slash = '/';
-#ifdef _WIN32  // for 32 and 64 bit windows
-    slash = '\\';
-#endif
-    if (output_dir[output_dir.size() - 1] != slash)
+	char back_slash = '\\';
+    if (output_dir[output_dir.size() - 1] != slash && 
+			output_dir[output_dir.size() - 1] != back_slash)
         output_dir += slash;
     output_dir_set = true;
 }
@@ -327,6 +332,14 @@ bool OptionsHandler::handle_options(vector<string>& LongOptions, string& ShortOp
         }*/
         if (LongOption == "LongLong") {
             use_long_long = true;
+            continue;
+        }
+        if (LongOption == "Chunk") {
+            use_chunk = true;
+            continue;
+        }
+        if (LongOption == "AddChunks") {
+            use_add_chunks = true;
             continue;
         }
         if (LongOption == "NoExtRaysOutput") {

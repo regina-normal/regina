@@ -34,7 +34,7 @@
 #include "core/engine.h"
 #include "link/link.h"
 #include "progress/progresstracker.h"
-#include "triangulation/dim3.h"
+#include "snappea/snappeatriangulation.h"
 
 // UI includes:
 #include "linkcrossings.h"
@@ -393,6 +393,16 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actionList.push_back(actParallel);
     connect(actParallel, SIGNAL(triggered()), this, SLOT(parallel()));
 
+    auto* actSelfFrame = new QAction(this);
+    actSelfFrame->setText(tr("Self Fr&ame"));
+    actSelfFrame->setIcon(ReginaSupport::regIcon("selfframe"));
+    actSelfFrame->setToolTip(tr("Self-frame by adding twists"));
+    actSelfFrame->setWhatsThis(tr("Adds twists "
+        "to ensure that each component has zero writhe.  "
+        "This link will be modified directly."));
+    actionList.push_back(actSelfFrame);
+    connect(actSelfFrame, SIGNAL(triggered()), this, SLOT(selfFrame()));
+
     auto* actComposeWith = new QAction(this);
     actComposeWith->setText(tr("Com&pose With..."));
     actComposeWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
@@ -411,11 +421,24 @@ LinkCrossingsUI::LinkCrossingsUI(regina::PacketOf<regina::Link>* packet,
     actComplement = new QAction(this);
     actComplement->setText(tr("&Complement"));
     actComplement->setIcon(ReginaSupport::regIcon("packet_triangulation3"));
-    actComplement->setToolTip(tr("Triangulate the complement of this link."));
+    actComplement->setToolTip(tr("Triangulate the complement of this link "
+        "within Regina."));
     actComplement->setWhatsThis(tr("Construct the complement of this "
-        "knot or link as an ideal 3-manifold triangulation."));
+        "knot or link as an ideal Regina triangulation.  "
+        "The meridinal and longitudinal curves will be forgotten."));
     actionList.push_back(actComplement);
     connect(actComplement, SIGNAL(triggered()), this, SLOT(complement()));
+
+    actSnapPea = new QAction(this);
+    actSnapPea->setText(tr("S&napPea"));
+    actSnapPea->setIcon(ReginaSupport::regIcon("packet_snappea"));
+    actSnapPea->setToolTip(tr("Triangulate the complement of this link "
+        "within the SnapPea kernel."));
+    actSnapPea->setWhatsThis(tr("Construct the complement of this "
+        "knot or link as a SnapPea triangulation."
+        "The meridinal and longitudinal curves will be preserved."));
+    actionList.push_back(actSnapPea);
+    connect(actSnapPea, SIGNAL(triggered()), this, SLOT(snapPea()));
 
     connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
         this, SLOT(updatePreferences()));
@@ -436,6 +459,7 @@ void LinkCrossingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actSimplify);
     bar->addSeparator();
     bar->addAction(actComplement);
+    bar->addAction(actSnapPea);
 }
 
 regina::Packet* LinkCrossingsUI::getPacket() {
@@ -673,6 +697,10 @@ void LinkCrossingsUI::parallel() {
     dlg.exec();
 }
 
+void LinkCrossingsUI::selfFrame() {
+    link->selfFrame();
+}
+
 void LinkCrossingsUI::composeWith() {
     auto other = std::static_pointer_cast<regina::PacketOf<regina::Link>>(
         PacketDialog::choose(ui,
@@ -695,6 +723,20 @@ void LinkCrossingsUI::moves() {
 void LinkCrossingsUI::complement() {
     auto ans = make_packet(link->complement(),
         link->adornedLabel("Complement"));
+    link->insertChildLast(ans);
+    enclosingPane->getMainWindow()->packetView(*ans, true, true);
+}
+
+void LinkCrossingsUI::snapPea() {
+    if (link->isEmpty()) {
+        ReginaSupport::sorry(ui,
+            tr("The SnapPea kernel cannot triangulate the complement "
+                "of an empty link."));
+        return;
+    }
+    auto ans = regina::make_packet<regina::SnapPeaTriangulation>(
+        std::in_place, *link);
+    ans->setLabel(link->adornedLabel("Complement"));
     link->insertChildLast(ans);
     enclosingPane->getMainWindow()->packetView(*ans, true, true);
 }

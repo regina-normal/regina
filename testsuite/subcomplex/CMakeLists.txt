@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   standardtriangulation.cpp
+  txicore.cpp
   )
 
 # Prepend folder name

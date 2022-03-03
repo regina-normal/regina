@@ -47,7 +47,8 @@ void addHilbertPrimal(pybind11::module_& m) {
                 regina::ProgressTracker* p) {
             HilbertPrimal::enumerate<VectorInt>(a, r.begin(), r.end(), c, p);
         }, pybind11::arg(), pybind11::arg(), pybind11::arg(),
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
         .def_static("enumerate", [](const std::vector<VectorInt>& r,
                 const regina::ValidityConstraints& c,
                 regina::ProgressTracker* p) {
@@ -57,7 +58,8 @@ void addHilbertPrimal(pybind11::module_& m) {
             }, r.begin(), r.end(), c, p);
             return ans;
         }, pybind11::arg(), pybind11::arg(),
-            pybind11::arg("tracker") = nullptr)
+            pybind11::arg("tracker") = nullptr,
+            pybind11::call_guard<pybind11::gil_scoped_release>())
     ;
     regina::python::no_eq_operators(c);
 }

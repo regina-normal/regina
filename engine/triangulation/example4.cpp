@@ -39,12 +39,18 @@ namespace regina {
 Triangulation<4> Example<4>::cp2() {
     // Built by Rhuaidi Burke using DGT from a Kirby diagram of the
     // standard CP^2.
-    return Triangulation<4>::fromGluings(4, {
+    Triangulation<4> ans = Triangulation<4>::fromGluings(4, {
         { 0, 0, 0, {1,0,2,3,4} }, { 0, 2, 0, {2,0,4,3,1} },
         { 0, 3, 1, {0,1,2,3,4} }, { 1, 0, 2, {0,1,2,3,4} },
         { 1, 1, 3, {0,1,2,3,4} }, { 1, 2, 1, {2,0,4,3,1} },
         { 2, 1, 2, {0,4,2,3,1} }, { 2, 2, 3, {1,2,4,3,0} },
         { 2, 3, 3, {1,0,2,3,4} }, { 3, 0, 3, {2,1,0,3,4} }});
+
+    // Using our orientation convention for intersection forms,
+    // the triangulation above describes \overline{CP^2}.
+    // Reflect it so we have plain CP^2.
+    ans.reflect();
+    return ans;
 }
 
 Triangulation<4> Example<4>::s2xs2() {
@@ -59,6 +65,19 @@ Triangulation<4> Example<4>::s2xs2() {
         { 3, 3, 5, {0,1,2,3,4} }, { 4, 0, 4, {1,0,2,3,4} },
         { 4, 2, 4, {1,2,4,3,0} }, { 5, 0, 5, {2,4,1,3,0} },
         { 5, 1, 5, {0,4,2,3,1} }});
+}
+
+Triangulation<4> Example<4>::s2xs2Twisted() {
+    // Built by Rhuaidi Burke.
+    return Triangulation<4>::fromGluings(6, {
+        { 0, 0, 0, {2,3,1,0,4} }, { 0, 1, 0, {0,3,2,1,4} },
+        { 0, 4, 1, {0,1,2,4,3} }, { 1, 0, 1, {2,4,1,3,0} },
+        { 1, 1, 2, {0,1,2,4,3} }, { 1, 4, 2, {1,0,3,4,2} },
+        { 2, 0, 2, {3,1,2,0,4} }, { 2, 4, 5, {0,1,2,4,3} },
+        { 3, 0, 3, {2,4,1,3,0} }, { 3, 1, 3, {0,4,2,3,1} },
+        { 3, 3, 4, {0,1,2,4,3} }, { 4, 0, 4, {2,3,1,0,4} },
+        { 4, 1, 5, {0,1,2,4,3} }, { 4, 3, 5, {1,0,4,2,3} },
+        { 5, 0, 5, {4,1,2,3,0} }});
 }
 
 Triangulation<4> Example<4>::rp4() {
@@ -77,6 +96,15 @@ Triangulation<4> Example<4>::rp4() {
     r->join(2, s, Perm<5>());
     r->join(3, s, Perm<5>());
 
+    return ans;
+}
+
+Triangulation<4> Example<4>::k3() {
+    // This is (with much work by multiple authors) derived from Spreer's
+    // 17-vertex standard K3 simplicial complex.
+    // Rhuaidi Burke has managed to get this down to 60 pentachora thus far.
+    Triangulation<4> ans = Triangulation<4>::fromIsoSig("8ALLAvvzwwLQAMzwvQAQMvAzLvwQPMwPwQQQQQAQQQLAAvQQQQQaaddeekkpttjjppvwxyopCDrCszzzuAwBOISRIRQUUWFFYZHHSSJJKKLLMMOOQW0P0RWSTTVXXXZ011223344556677qbGanbLbLbLbaaeanbDbDb2aKafavavbUaaaVbnafaIaIaqb0aBb0aDb0a2bWagbRaVbJadaaaCb3aVbIaIaPaPb2bWbSbGacaVbWaqb6aPbTbrafaibgaJaTboajatafataBaNaBbqb6ava2abbbayagaqbSaPbJaPbJa2boaGacaNabaqbub");
+    ans.reflect(); // so sig = -16, not 16
     return ans;
 }
 

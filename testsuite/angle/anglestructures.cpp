@@ -57,6 +57,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(tautVsAll);
     CPPUNIT_TEST(tautStrictTreeVsDD);
     CPPUNIT_TEST(generalAngleStructure);
+    CPPUNIT_TEST(copyMove);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -572,6 +573,93 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             runCensusAllIdeal(verifyGeneralAngleStructure);
             runCensusAllClosed(verifyGeneralAngleStructure);
             runCensusAllBounded(verifyGeneralAngleStructure);
+        }
+
+        void testCopyMove(const Triangulation<3>& tri, const char* name) {
+            // The main point of this test is to ensure that the move
+            // operations are *actually* move operations and not copies.
+            //
+            // We assume here that std::vector's move operations
+            // preserve the addresses of the underlying objects.
+            // I don't think this is required by the standard, but I'm
+            // also not aware of any implementation that doesn't do this,
+            // and I can't think of a better (and still non-intrusive)
+            // way to ensure that the move was a "real" move.
+
+            const AngleStructures a(tri);
+            if (a.size() == 0) {
+                std::ostringstream msg;
+                msg << name << ": copy/move test requires a non-empty list.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            AngleStructures a1(a);
+
+            if (a1.detail() != a.detail()) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (a.size() == 0) {
+                std::ostringstream msg;
+                msg << name << ": copy constructed empties the original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            AngleStructures a2(std::move(a1));
+
+            if (a2.detail() != a.detail()) {
+                std::ostringstream msg;
+                msg << name << ": move constructed not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            // The std::vector move constructor promises to empty the source.
+            if (a1.size() != 0) {
+                std::ostringstream msg;
+                msg << name << ": move constructed does not "
+                    "empty the original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            AngleStructures a3(Example<3>::trefoil());
+            a3 = a;
+
+            if (a3.detail() != a.detail()) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (a.size() == 0) {
+                std::ostringstream msg;
+                msg << name << ": copy assigned empties the original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            AngleStructures a4(Example<3>::trefoil());
+            a4 = std::move(a3);
+
+            if (a4.detail() != a.detail()) {
+                std::ostringstream msg;
+                msg << name << ": move assigned not identical to original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            /*
+            // I'm not sure how to verify that the source was moved from
+            // and not copied, in a way that does not make assumptions
+            // about the standard library implementation...
+            if (a3.size() != 0) {
+                std::ostringstream msg;
+                msg << name << ": move assigned does not "
+                    "empty the original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            */
+        }
+
+        void copyMove() {
+            testCopyMove(triGieseking, "Gieseking");
+            testCopyMove(triFigure8, "Figure Eight");
+            testCopyMove(Example<3>::whiteheadLink(), "Whitehead");
         }
 };
 
