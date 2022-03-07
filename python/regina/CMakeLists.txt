@@ -9,7 +9,10 @@ FOREACH (SOURCE_FILE ${SOURCES})
   SET (RELSOURCES ${RELSOURCES} ../${SOURCE_FILE})
 ENDFOREACH (SOURCE_FILE)
 
-INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/engine" "${CMAKE_BINARY_DIR}/engine" ${Python_INCLUDE_DIRS})
+# Note that we need BEFORE here to ensure that our internal libnormaliz
+# headers are used before any external libnormaliz headers that may be
+# found from a users install.
+INCLUDE_DIRECTORIES(BEFORE "${CMAKE_SOURCE_DIR}/engine" "${CMAKE_BINARY_DIR}/engine" ${Python_INCLUDE_DIRS})
 ADD_LIBRARY("engine" MODULE ${RELSOURCES} )
 
 # Python modules on linux should not have the "lib" prefix
