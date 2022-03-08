@@ -64,8 +64,13 @@
 // #define LIBGVC_DYNAMIC_PLUGINS 1
 
 #ifndef LIBGVC_DYNAMIC_PLUGINS
+#if defined(_WIN32)
+__declspec(dllimport) gvplugin_library_t gvplugin_dot_layout_LTX_library;
+__declspec(dllimport) gvplugin_library_t gvplugin_core_LTX_library;
+#else
 extern gvplugin_library_t gvplugin_dot_layout_LTX_library;
 extern gvplugin_library_t gvplugin_core_LTX_library;
+#endif
 
 lt_symlist_t link_lt_preloaded_symbols[] = {
     { "gvplugin_dot_layout_LTX_library", &gvplugin_dot_layout_LTX_library },
