@@ -41,6 +41,7 @@
 #define __REGINA_TYPEUTILS_H
 #endif
 
+#include <functional>
 #include "regina-core.h"
 
 namespace regina {
