@@ -696,26 +696,41 @@ int Triangulation<3>::isHandlebody() const {
         // about the homology of P, leads to a contradiction.
         //
         // We first consider the case where P is the original triangulation.
-        // In this case, we have already verified that the homology of P is
-        // gZ, where g is the genus of the boundary of P. With this in mind,
-        // take the union of A and D, and push this slightly off the boundary
-        // to obtain a closed surface S in P that meets the closed curve c
-        // exactly once. There are now two sub-cases to consider:
-        //  (1) If A is a disc, then S is an embedded sphere in P that meets
-        //      c exactly once. This implies that P has an S2xS1 summand,
-        //      which we already ruled out earlier.
-        //  (2) If A has genus h, where h>0, then S also has genus h.
-        //      Consider the surface of genus 2*h that bounds a small
-        //      neighbourhood of the union of S and c. This surface cuts P
-        //      into two subspaces. By looking at the Mayer-Vietoris sequence
-        //      for this pair of subspaces, and using the fact that h>0, we
-        //      obtain a contradiction.
+        // Let g and h denote the genus of A and B, respectively, so that the
+        // boundary of P has genus g+h. At the beginning of the algorithm, we
+        // verified that the homology of P is (g+h)Z. With this in mind, take
+        // the union of A and D, and push this slightly off the boundary to
+        // obtain a closed genus-g surface S in P that meets the closed curve
+        // c exactly once. Let X' be a small neighbourhood of the union of S
+        // and c, and let Y' be the space given by removing the interior of X
+        // from P. The intersection of X and Y is a surface R of genus 2g.
+        // Let N be a thickening of R, let X be the union of X' and N, and
+        // let Y be the union of Y' and N; this gives subspaces X and Y whose
+        // interiors cover P, and the intersection of these two subspaces is
+        // exactly N. Thus, letting G = H1(X)+H1(Y), we have the following
+        // exact sequence (the Mayer-Vietoris sequence for the pair of
+        // subspaces X and Y):
+        //                        p       q
+        //      ... ----> H1(N) ----> G ----> H1(P) ----> ...
+        // We make the following homological observations:
+        // ---> H1(N) = (4g)Z, because N retracts to a surface of genus 2g.
+        // ---> H1(X) = (2g+1)Z, because X retracts to the union of S and c.
+        // ---> H1(Y) has rank at least 2g+(g+h) because it has two boundary
+        //      components, one of which has genus 2g, while the other has
+        //      genus g+h.
+        // ---> Thus, G has rank at least (4g+1)+(g+h)
+        // ---> H1(P) = (g+h)Z, by assumption.
+        // Notice that im(q) must be a free abelian group (of rank at most
+        // g+h), which implies that G is isomorphic to ker(q)+im(q). Thus,
+        // ker(q) must have rank at least 4g+1. By exactness, im(p) must also
+        // have rank at least 4g+1, which is impossible since H1(N) only has
+        // rank 4g.
         //
         // It remains to consider the case where P was obtained by some
         // sequence of crushing operations. Topologically, we know that P
         // was obtained from the original triangulation by cutting along
         // properly embedded discs. This implies that the homology of P is
-        // gZ, where g is the genus of the boundary of P (one way to check
+        // kZ, where k is the genus of the boundary of P (one way to check
         // that cutting along discs does indeed preserve this property of the
         // homology is to again use Mayer-Vietoris sequences). Thus, by the
         // same argument as above, it is impossible for P to contain an
