@@ -47,14 +47,12 @@
 #include "enumerate/hilbertprimal.h"
 #include "enumerate/maxadmissible.h"
 #include "enumerate/validityconstraints.h"
-#include "libnormaliz/cone.h"
 #include "maths/vector.h"
 #include "progress/progresstracker.h"
 #include "utilities/intutils.h"
 #include <list>
 #include <set>
 #include <vector>
-#include <gmpxx.h>
 
 namespace regina {
 
@@ -156,22 +154,9 @@ void HilbertPrimal::enumerateUsingBitmask(Action&& action,
                         v.push_back(mpz_class((*rit)[i].rawData()));
                 }
             }
-        libnormaliz::Cone<mpz_class> cone(
-            libnormaliz::Type::integral_closure, input);
-        libnormaliz::ConeProperties wanted(
-            libnormaliz::ConeProperty::HilbertBasis);
-        cone.deactivateChangeOfPrecision();
-        cone.compute(wanted);
 
-        if (! cone.isComputed(libnormaliz::ConeProperty::HilbertBasis)) {
-            // TODO: Bail properly.
-            std::cerr << "ERROR: Hilbert basis not computed!" << std::endl;
-            continue;
-        }
-        const std::vector<std::vector<mpz_class> > basis =
-            cone.getHilbertBasis();
-        for (hlit = basis.begin(); hlit != basis.end(); ++hlit)
-            finalBasis.insert(*hlit);
+        for (auto& b : normaliz(input))
+            finalBasis.insert(std::move(b));
     }
 
     if (tracker)

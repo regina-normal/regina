@@ -23,6 +23,9 @@ Version 7.1  [ TODO ]
         Class FacetPairing<dim>:
             - In findAllPairings(), the action is no longer required to
               take the list of all automorphisms if it does not need them.
+        Class HilbertPrimal:
+            - The header no longer includes the Normaliz headers (which
+              Regina does not actually ship with its development files).
         Class IntersectionForm:
             - New class to compute invariants of intersection forms.
         Class Isomorphism:

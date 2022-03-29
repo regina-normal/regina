@@ -37,6 +37,7 @@
 #include "enumerate/hilbertdual.h"
 #include "enumerate/hilbertprimal.h"
 #include "enumerate/treetraversal.h"
+#include "libnormaliz/cone.h"
 #include "maths/matrixops.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"

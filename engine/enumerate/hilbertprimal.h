@@ -41,6 +41,7 @@
 
 #include "regina-core.h"
 #include "maths/matrix.h"
+#include <gmpxx.h>
 #include <iterator>
 #include <vector>
 
@@ -133,6 +134,9 @@ class HilbertPrimal {
          * present implementation updates percentage progress very infrequently,
          * and may take a very long time to honour cancellation requests.
          *
+         * \exception UnsolvedCase Normaliz was unable to compute the
+         * Hilbert basis for one or more maximal admissible faces.
+         *
          * \ifacespython There are two versions of this function available
          * in Python.  The first version is
          * <tt>enumerate(action, rays, constraints, tracker)</tt>, which
@@ -182,12 +186,39 @@ class HilbertPrimal {
          * \pre The type \a BitmaskType can handle at least \a n bits,
          * where \a n is the dimension of the Euclidean space (i.e., the
          * number of columns in \a subspace).
+         *
+         * \exception UnsolvedCase Normaliz was unable to compute the
+         * Hilbert basis for one or more maximal admissible faces.
          */
         template <class RayClass, class BitmaskType,
             class RayIterator, typename Action>
         static void enumerateUsingBitmask(Action&& action,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
             const ValidityConstraints& constraints, ProgressTracker* tracker);
+
+        /**
+         * Uses Normaliz to enumerate the Hilbert basis on a single
+         * maximal admissible face.
+         *
+         * The purpose of this routine is simply to quarantine the code that
+         * relies on Normaliz data structures and functions.  This is
+         * because Regina does not ship the Normaliz headers for end users;
+         * instead it treats Normaliz as internal to the calculation engine.
+         *
+         * This function is non-templated, and so can be compiled directly into
+         * Regina's engine (unlike most of the other functions in this class,
+         * which are templated and therefore implemented in the headers).
+         *
+         * \exception UnsolvedCase Normaliz was unable to compute the
+         * requested Hilbert basis.
+         *
+         * @param input the extreme rays of a single maximal admissible face,
+         * presented in a form that Normaliz can understand (i.e., as vectors
+         * of GMP integers).
+         * @return the Hilbert basis for the given maximal admissible face.
+         */
+        static std::vector<std::vector<mpz_class>> normaliz(
+            const std::vector<std::vector<mpz_class>>& input);
 
         /**
          * Determines whether the given ray lies in the face specified
