@@ -144,7 +144,7 @@ struct safe_tuple_element_impl<pos, tuple, out_of_range, false> {
  * std::tuple_element_t, and not the C++11 structure std::tuple_element).
  *
  * \tparam pos an index, which may take any integer value.
- * \tparam a std::tuple type (which is allowed to include \c const and/or
+ * \tparam tuple a std::tuple type (which is allowed to include \c const and/or
  * \c volatile modifiers).
  * \tparam out_of_range the type to use if \a pos is not a valid index
  * into \a tuple.

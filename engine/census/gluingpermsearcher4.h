@@ -794,7 +794,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * input stream constructor is not.  Python users should use
          * taggedData() and fromTaggedData() instead.
          *
-         * @param all of this object's internal data in plain text format.
+         * @return all of this object's internal data in plain text format.
          */
         std::string data() const;
 

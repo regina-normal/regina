@@ -474,7 +474,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * @param all of this object's internal data in plain text format.
+         * @return all of this object's internal data in plain text format.
          */
         std::string data() const;
 
