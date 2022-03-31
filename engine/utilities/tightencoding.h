@@ -485,7 +485,7 @@ namespace detail {
         int next;
         if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
             // value might be out of bounds for long, but (value % 45) will not.
-            next = (value % 45).longValue();
+            next = static_cast<int>((value % 45).longValue());
         } else {
             next = value % 45;
         }
