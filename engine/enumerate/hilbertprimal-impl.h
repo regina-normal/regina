@@ -137,8 +137,6 @@ void HilbertPrimal::enumerateUsingBitmask(Action&& action,
     std::vector<const Vector<IntegerType>*> face;
     RayIterator rit;
     unsigned i;
-    std::vector<std::vector<mpz_class> >::const_iterator hlit;
-    std::set<std::vector<mpz_class> >::const_iterator hsit;
     std::vector<mpz_class>::const_iterator hvit;
     for (const auto& m : maxFaces) {
         // Locate the extremal rays that generate this face.
@@ -162,9 +160,9 @@ void HilbertPrimal::enumerateUsingBitmask(Action&& action,
     if (tracker)
         tracker->setPercent(90);
 
-    for (hsit = finalBasis.begin(); hsit != finalBasis.end(); ++hsit) {
+    for (const auto& b : finalBasis) {
         RayClass ans(dim);
-        for (i = 0, hvit = hsit->begin(); hvit != hsit->end(); ++hvit, ++i)
+        for (i = 0, hvit = b.begin(); hvit != b.end(); ++hvit, ++i)
             ans[i].setRaw(hvit->get_mpz_t());
         action(std::move(ans));
     }

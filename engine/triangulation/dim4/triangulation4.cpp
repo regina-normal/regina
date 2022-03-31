@@ -161,7 +161,6 @@ IntersectionForm Triangulation<4>::intersectionForm() const {
 
     for (unsigned long i = 0; i < rank; ++i)
         for (unsigned long j = i; j < rank; ++j) {
-            size_t intn = 0;
             for (unsigned long k = 0; k < dim; ++k) {
                 Integer count = dualBasis[i][k] * primalBasis[j][k];
                 if (count != 0) {
