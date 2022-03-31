@@ -198,11 +198,17 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * coordinate systems, and for all such coordinate systems this is
          * explicitly described in the HyperCoords enum documentation.
          *
-         * \exception UnsolvedCase the matching equations could not
+         * \exception UnsolvedCase the list of hypersurfaces could not be
          * be created for the given triangulation in the given coordinate
          * system, due to an error that was "genuinely" unforseeable.
-         * Again this can only happen in certain coordinate systems, where
-         * this is explicitly described in the HyperCoords enum documentation.
+         * Currently there are two scenarios in which this could happen:
+         * (i) the matching equations could not be constructed, which can
+         * only happen in certain coordinate systems where this is explicitly
+         * described in the HyperCoords enum documentation; or
+         * (ii) the arguments require enumerating \e fundamental normal
+         * surfaces using the primal Hilbert basis algorithm, and Normaliz
+         * was unable to complete its portion of the task, which in theory
+         * should never happen at all.
          *
          * \ifacespython The global interpreter lock will be released while
          * this constructor runs, so you can use it with Python-based
