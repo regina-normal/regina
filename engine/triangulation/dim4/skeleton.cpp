@@ -43,7 +43,6 @@ void Triangulation<4>::calculateSkeleton() {
     TriangulationBase<4>::calculateSkeleton();
 
     // Triangulations are valid and non-ideal until proven otherwise.
-    ideal_ = false;
 
     // Get rid of the empty triangulation now, so that all the helper routines
     // can happily assume at least one pentachoron.
@@ -55,17 +54,13 @@ void Triangulation<4>::calculateSkeleton() {
         // - Vertex<4>::link_
         // - valid_ and Vertex<4>::valid_ in the case of bad vertex links
         // - valid_ and Edge<4>::invalid_ in the case of bad edge links
-        // - ideal_, Vertex<4>::ideal_ and Component<4>::ideal_
+        // - Vertex<4>::ideal_ and Component<4>::ideal_
+        // - vertexLinkSummary_
 
     if (! valid_)
         calculateEdgeLinks();
         // Sets:
         // - Edge<4>::link_, but only for edges with bad self-identifications
-
-    // Recall that for 4-manifolds we restrict "ideal" to only include
-    // valid triangulations.
-    if (! valid_)
-        ideal_ = false;
 
     // Flesh out the details of each component.
     for (auto v : vertices())
@@ -82,8 +77,6 @@ void Triangulation<4>::calculateVertexLinks() {
     long n = simplices_.size();
     if (n == 0)
         return;
-
-    bool foundNonSimpleLink = false;
 
     // Construct the vertex linking tetrahedra, and insert them into each
     // vertex link in the correct order as described by the
@@ -142,13 +135,17 @@ void Triangulation<4>::calculateVertexLinks() {
 
     // Look at each vertex link and see what it says about this 4-manifold
     // triangulation.
+    long foundIdeal = 0; // -1 if we ever find an invalid vertex
+    long remaining = countVertices();
     for (Vertex<4>* vertex : vertices()) {
         if (vertex->link_->hasBoundaryTriangles()) {
             // It's a 3-ball or nothing.
-            if ((! knownSimpleLinks_) && ! vertex->link_->isBall()) {
+            // In particular, if vertexLinkSummary_ >= 0 then the
+            // triangulation is valid and therefore this must be a 3-ball.
+            if (vertexLinkSummary_ < 0 && ! vertex->link_->isBall()) {
                 valid_ = vertex->component_->valid_ =  false;
                 vertex->whyInvalid_.value |= Vertex<4>::INVALID_LINK;
-                foundNonSimpleLink = true;
+                foundIdeal = -1;
                 // The vertex belongs to some pentachoron with boundary
                 // tetrahedra, and so already belongs to a boundary component.
             }
@@ -160,28 +157,44 @@ void Triangulation<4>::calculateVertexLinks() {
                 // Bapow.
                 valid_ = vertex->component_->valid_ =  false;
                 vertex->whyInvalid_.value |= Vertex<4>::INVALID_LINK;
-                foundNonSimpleLink = true;
+                foundIdeal = -1;
                 vertex->boundaryComponent_ = new BoundaryComponent<4>();
                 ++nBoundaryFaces_[0];
                 vertex->boundaryComponent_->orientable_ =
                     vertex->isLinkOrientable();
                 vertex->boundaryComponent_->push_back(vertex);
                 boundaryComponents_.push_back(vertex->boundaryComponent_);
-            } else if ((! knownSimpleLinks_) &&
-                    ! vertex->link_->isSphere()) {
-                // The vertex is fine but it's not a 3-sphere.
-                // We have an ideal triangulation.
-                ideal_ = vertex->component()->ideal_ = vertex->ideal_ = true;
-                foundNonSimpleLink = true;
-                vertex->boundaryComponent_ = new BoundaryComponent<4>();
-                ++nBoundaryFaces_[0];
-                vertex->boundaryComponent_->orientable_ =
-                    vertex->isLinkOrientable();
-                vertex->boundaryComponent_->push_back(vertex);
-                boundaryComponents_.push_back(vertex->boundaryComponent_);
+            } else {
+                // If we have a 3-sphere link then there is nothing to do.
+                // Otherwise we have a non-sphere closed 3-manifold, and
+                // we get an ideal vertex.
+                //
+                // Note: if vertexLinkSummary_ >= 0 then all vertices
+                // are guaranteed to be valid, and so we can assume that
+                // foundIdeal >= 0 also.
+                if (
+                        // Every remaining vertex must be ideal:
+                        (vertexLinkSummary_ >= 0 &&
+                            foundIdeal + remaining == vertexLinkSummary_) ||
+                        // Either we don't know how many ideal vertices
+                        // to expect, or we know that some but not all
+                        // remaining vertices are ideal (and in either
+                        // case we must explicitly test isSphere()):
+                        ((vertexLinkSummary_ < 0 ||
+                                foundIdeal < vertexLinkSummary_) &&
+                            ! vertex->link_->isSphere())) {
+                    // We have an ideal vertex.
+                    vertex->component()->ideal_ = vertex->ideal_ = true;
+                    if (foundIdeal >= 0)
+                        ++foundIdeal;
+                    vertex->boundaryComponent_ = new BoundaryComponent<4>();
+                    ++nBoundaryFaces_[0];
+                    vertex->boundaryComponent_->orientable_ =
+                        vertex->isLinkOrientable();
+                    vertex->boundaryComponent_->push_back(vertex);
+                    boundaryComponents_.push_back(vertex->boundaryComponent_);
+                }
             }
-            // The only case not covered is a 3-sphere link, where we
-            // have nothing to do.
         }
 
         // Hunt down invalid edge links.
@@ -224,14 +237,13 @@ void Triangulation<4>::calculateVertexLinks() {
                 }
             }
         }
+
+        --remaining;
     }
 
     delete[] tet;
 
-    // If every vertex link was a 3-sphere or 3-ball, remember this for
-    // future optimisations.
-    if (! foundNonSimpleLink)
-        knownSimpleLinks_ = true;
+    vertexLinkSummary_ = foundIdeal;
 }
 
 void Triangulation<4>::calculateEdgeLinks() {

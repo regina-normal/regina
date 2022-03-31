@@ -91,17 +91,20 @@ template <int> class XMLTriangulationReader;
 template <>
 class Triangulation<4> : public detail::TriangulationBase<4> {
     private:
-        bool knownSimpleLinks_ { false };
-            /**< Is it known that all vertex links are 3-spheres or 3-balls?
-                 This may be \c true even if the skeleton has not yet been
-                 calculated (thereby allowing us to avoid costly 3-sphere or
-                 3-ball recognition when the skeleton is eventually computed).
-                 A value of \c false may mean that there are other vertex
-                 links, or it may mean that the vertex links have not yet
-                 been calculated. */
-
-        bool ideal_;
-            /**< Is the triangulation ideal? */
+        long vertexLinkSummary_ { -1 };
+            /**< This is a computed property that caches information about the
+                 vertex links, and is optimised for valid triangulations.
+                 If \a vertexLinkSummary_ is non-negative, this means that
+                 every vertex is valid (i.e., each vertex link is either
+                 a 3-ball or a closed 3-manifold); moreover, the numeric value
+                 of \a vertexLinkSummary_ indicates how many vertices are ideal
+                 (i.e., have links that are closed but not 3-spheres).
+                 If \a vertexLinkSummary_ is negative, this means that either
+                 one or more vertices are invalid, and/or the skeleton has
+                 not yet been computed.
+                 Crucially, this property may be known \e before the skeleton
+                 is computed (thereby allowing us to avoid costly 3-sphere or
+                 3-ball recognition when the skeleton is computed later on). */
 
         /**
          * A struct that holds all of our calculated properties.
@@ -1222,8 +1225,7 @@ inline Triangulation<4>& Triangulation<4>::operator = (
 
     TriangulationBase<4>::operator = (src);
 
-    knownSimpleLinks_ = src.knownSimpleLinks_;
-    ideal_ = src.ideal_;
+    vertexLinkSummary_ = src.vertexLinkSummary_;
     prop_ = src.prop_;
 
     return *this;
@@ -1237,8 +1239,7 @@ inline Triangulation<4>& Triangulation<4>::operator = (Triangulation&& src) {
 
     TriangulationBase<4>::operator = (std::move(src));
 
-    knownSimpleLinks_ = src.knownSimpleLinks_;
-    ideal_ = src.ideal_;
+    vertexLinkSummary_ = src.vertexLinkSummary_;
     prop_ = std::move(src.prop_);
 
     return *this;
@@ -1254,7 +1255,15 @@ inline size_t Triangulation<4>::countBoundaryTetrahedra() const {
 
 inline bool Triangulation<4>::isIdeal() const {
     ensureSkeleton();
-    return ideal_;
+
+    // Recall that for 4-manifolds we restrict "ideal" to only include
+    // valid triangulations.
+    if (! valid_)
+        return false;
+
+    // Since the triangulation is valid, we can deduce the answer from
+    // vertexLinkSummary_.
+    return (vertexLinkSummary_ > 0);
 }
 
 inline bool Triangulation<4>::isClosed() const {
