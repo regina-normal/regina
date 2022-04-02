@@ -1209,7 +1209,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * @return the rank of the abelianisation of this group.
          */
-        unsigned abelianRank() const;
+        unsigned long abelianRank() const;
 
         /**
          * Computes the abelianisation of this group.

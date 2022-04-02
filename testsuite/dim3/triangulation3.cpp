@@ -1854,7 +1854,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyGroup(const AbelianGroup& g, const std::string& grpName,
-                unsigned rank) {
+                unsigned long rank) {
             // Construct the error message.
             std::ostringstream msg;
             msg << grpName << " is " << g.str() << ", not ";
@@ -1874,7 +1874,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyGroup(const AbelianGroup& g, const std::string& grpName,
-                unsigned rank, unsigned long torsionDegree) {
+                unsigned long rank, unsigned long torsionDegree) {
             // Construct the error message.
             std::ostringstream msg;
             msg << grpName << " is " << g.str() << ", not ";
@@ -1896,7 +1896,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyGroup(const AbelianGroup& g, const std::string& grpName,
-                unsigned rank, unsigned long torsionDegree1,
+                unsigned long rank, unsigned long torsionDegree1,
                 unsigned long torsionDegree2) {
             // Construct the error message.
             std::ostringstream msg;
@@ -1920,7 +1920,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyGroup(const AbelianGroup& g, const std::string& grpName,
-                unsigned rank, unsigned long torsionDegree1,
+                unsigned long rank, unsigned long torsionDegree1,
                 unsigned long torsionDegree2, unsigned long torsionDegree3) {
             // Construct the error message.
             std::ostringstream msg;

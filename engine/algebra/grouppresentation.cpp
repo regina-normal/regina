@@ -325,7 +325,7 @@ AbelianGroup GroupPresentation::abelianisation() const {
     }
 }
 
-unsigned GroupPresentation::abelianRank() const {
+unsigned long GroupPresentation::abelianRank() const {
     if (nGenerators_ == 0)
         return 0;
     if (relations_.empty()) {
