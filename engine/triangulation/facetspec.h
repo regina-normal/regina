@@ -43,6 +43,7 @@
 #include "regina-core.h"
 #include <cstddef>
 #include <iostream>
+#include <sys/types.h> // for ssize_t
 
 namespace regina {
 
@@ -79,7 +80,7 @@ namespace regina {
  */
 template <int dim>
 struct FacetSpec {
-    int simp;
+    ssize_t simp;
         /**< The simplex referred to.  Simplex numbering begins
          *   at 0. */
     int facet;
@@ -100,7 +101,7 @@ struct FacetSpec {
      * @param newFacet the given facet; this should be between 0 and
      * \a dim inclusive.
      */
-    FacetSpec(int newSimp, int newFacet);
+    FacetSpec(ssize_t newSimp, int newFacet);
     /**
      * Creates a new specifier referring to the same simplex facet as
      * the given specifier.
@@ -282,13 +283,13 @@ std::ostream& operator << (std::ostream& out, const FacetSpec<dim>& spec);
 // Inline functions for FacetSpec
 
 template <int dim>
-inline FacetSpec<dim>::FacetSpec(int newSimp, int newFacet) :
+inline FacetSpec<dim>::FacetSpec(ssize_t newSimp, int newFacet) :
         simp(newSimp), facet(newFacet) {
 }
 
 template <int dim>
 inline bool FacetSpec<dim>::isBoundary(size_t nSimplices) const {
-    return (simp == static_cast<int>(nSimplices) && facet == 0);
+    return (simp == nSimplices && facet == 0);
 }
 
 template <int dim>
@@ -299,8 +300,7 @@ inline bool FacetSpec<dim>::isBeforeStart() const {
 template <int dim>
 inline bool FacetSpec<dim>::isPastEnd(size_t nSimplices, bool boundaryAlso)
         const {
-    return (simp == static_cast<int>(nSimplices) &&
-        (boundaryAlso || facet > 0));
+    return (simp == nSimplices && (boundaryAlso || facet > 0));
 }
 
 template <int dim>
