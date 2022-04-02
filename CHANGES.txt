@@ -50,6 +50,8 @@ Version 7.1  [ TODO ]
             - New suite of routines dualToPrimal().
         Class Triangulation<4>:
             - New routine intersectionForm().
+            - New optimisations that reduce the need for 3-sphere/3-ball
+              recognition when modifying a triangulation.
         Routine for_constexpr():
             - New routine to support compile-time for loops.
     PYTHON:
