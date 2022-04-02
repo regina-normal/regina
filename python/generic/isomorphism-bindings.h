@@ -43,17 +43,17 @@ template <int dim>
 void addIsomorphism(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<Isomorphism<dim>>(m, name)
         .def(pybind11::init<const Isomorphism<dim>&>())
-        .def(pybind11::init<unsigned>())
+        .def(pybind11::init<size_t>())
         .def("swap", &Isomorphism<dim>::swap)
         .def("size", &Isomorphism<dim>::size)
-        .def("simpImage", overload_cast<unsigned>(
+        .def("simpImage", overload_cast<size_t>(
             &Isomorphism<dim>::simpImage, pybind11::const_))
-        .def("setSimpImage", [](Isomorphism<dim>& iso, unsigned s, int image) {
+        .def("setSimpImage", [](Isomorphism<dim>& iso, size_t s, ssize_t image) {
             iso.simpImage(s) = image;
         })
-        .def("facetPerm", overload_cast<unsigned>(
+        .def("facetPerm", overload_cast<size_t>(
             &Isomorphism<dim>::facetPerm, pybind11::const_))
-        .def("setFacetPerm", [](Isomorphism<dim>& iso, unsigned s,
+        .def("setFacetPerm", [](Isomorphism<dim>& iso, size_t s,
                 regina::Perm<dim+1> p) {
             iso.facetPerm(s) = p;
         })

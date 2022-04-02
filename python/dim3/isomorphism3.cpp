@@ -43,27 +43,27 @@ using regina::Perm;
 void addIsomorphism3(pybind11::module_& m) {
     auto c = pybind11::class_<Isomorphism<3>>(m, "Isomorphism3")
         .def(pybind11::init<const Isomorphism<3>&>())
-        .def(pybind11::init<unsigned>())
+        .def(pybind11::init<size_t>())
         .def("swap", &Isomorphism<3>::swap)
         .def("size", &Isomorphism<3>::size)
-        .def("simpImage", overload_cast<unsigned>(
+        .def("simpImage", overload_cast<size_t>(
             &Isomorphism<3>::simpImage, pybind11::const_))
-        .def("setSimpImage", [](Isomorphism<3>& iso, unsigned s, int image) {
+        .def("setSimpImage", [](Isomorphism<3>& iso, size_t s, ssize_t image) {
             iso.simpImage(s) = image;
         })
-        .def("tetImage", overload_cast<unsigned>(
+        .def("tetImage", overload_cast<size_t>(
             &Isomorphism<3>::tetImage, pybind11::const_))
-        .def("setTetImage", [](Isomorphism<3>& iso, unsigned s, int image) {
+        .def("setTetImage", [](Isomorphism<3>& iso, size_t s, ssize_t image) {
             iso.tetImage(s) = image;
         })
-        .def("facetPerm", overload_cast<unsigned>(
+        .def("facetPerm", overload_cast<size_t>(
             &Isomorphism<3>::facetPerm, pybind11::const_))
-        .def("setFacetPerm", [](Isomorphism<3>& iso, unsigned s, Perm<4> p) {
+        .def("setFacetPerm", [](Isomorphism<3>& iso, size_t s, Perm<4> p) {
             iso.facetPerm(s) = p;
         })
-        .def("facePerm", overload_cast<unsigned>(
+        .def("facePerm", overload_cast<size_t>(
             &Isomorphism<3>::facePerm, pybind11::const_))
-        .def("setFacePerm", [](Isomorphism<3>& iso, unsigned s, Perm<4> p) {
+        .def("setFacePerm", [](Isomorphism<3>& iso, size_t s, Perm<4> p) {
             iso.facePerm(s) = p;
         })
         .def("__getitem__", &Isomorphism<3>::operator[])

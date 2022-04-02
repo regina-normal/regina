@@ -339,9 +339,8 @@ Triangulation<4> Example<4>::bundleWithMonodromy(
     // Ensure only one event pair is fired in this sequence of changes.
     Triangulation<4>::ChangeEventSpan span(ans);
 
-    unsigned long n = base.size();
-    unsigned long i;
-    for (i = 0; i < n; ++i)
+    size_t n = base.size();
+    for (size_t i = 0; i < n; ++i)
         ans.pentachoron(i)->join(4, ans.pentachoron(monodromy.simpImage(i) + n),
             Perm<5>::extend(monodromy.facetPerm(i)));
 

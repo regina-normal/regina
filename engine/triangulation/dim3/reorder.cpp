@@ -195,7 +195,7 @@ Isomorphism<3>* iso_from_edges(const Triangulation<3> &trig,
 
     // iterate through all tetrahedra
 
-    for(unsigned i = 0; i < trig.size(); i++) {
+    for(size_t i = 0; i < trig.size(); i++) {
 
         // consistency check
 

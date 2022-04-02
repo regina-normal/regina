@@ -200,10 +200,8 @@ bool SatAnnulus::isTwoSidedTorus() const {
 
 void SatAnnulus::transform(const Triangulation<3>& /* originalTri */,
         const Isomorphism<3>& iso, const Triangulation<3>& newTri) {
-    unsigned which;
-    unsigned long tetID;
-    for (which = 0; which < 2; which++) {
-        tetID = tet[which]->index();
+    for (int which = 0; which < 2; which++) {
+        size_t tetID = tet[which]->index();
         tet[which] = newTri.tetrahedron(iso.tetImage(tetID));
         roles[which] = iso.facePerm(tetID) * roles[which];
     }

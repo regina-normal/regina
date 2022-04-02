@@ -1692,12 +1692,11 @@ class Triangulation3Test : public TriangulationTest<3> {
                     }
                 }
 
-                unsigned j, k;
                 const Tetrahedron<3>* tet;
                 Perm<4> perm;
                 const regina::Triangle<2> *t, *adj;
                 unsigned vNum;
-                for (j = 0; j < v->degree(); ++j) {
+                for (size_t j = 0; j < v->degree(); ++j) {
                     tet = tri.tetrahedron(iso.tetImage(j));
                     perm = iso.facePerm(j);
                     vNum = perm[3];
@@ -1716,7 +1715,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                             "triangle correctly.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                    for (k = 0; k < 3; ++k) {
+                    for (int k = 0; k < 3; ++k) {
                         t = link.triangle(j);
                         adj = t->adjacentTriangle(k);
                         if (adj) {
@@ -5085,7 +5084,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     }
                 } else {
                     // Apply a random isomorphism.
-                    unsigned idx = bdry->index();
+                    size_t idx = bdry->index();
 
                     Isomorphism<3> iso = Isomorphism<3>::random(t.size());
                     t = iso(t);

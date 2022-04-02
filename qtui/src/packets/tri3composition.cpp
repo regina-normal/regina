@@ -344,7 +344,7 @@ void Tri3CompositionUI::viewIsomorphism() {
             "vertices.").
             arg(QString(compare_->humanLabel().c_str()).toHtmlEscaped());
 
-        for (unsigned long i = 0; i < isomorphism->size(); i++)
+        for (size_t i = 0; i < isomorphism->size(); i++)
             isoDetails += QString("%1 (0123)  &rarr;  %2 (%3)").
                 arg(i).
                 arg(isomorphism->tetImage(i)).
@@ -362,14 +362,14 @@ void Tri3CompositionUI::viewIsomorphism() {
             arg(QString(compare_->humanLabel().c_str()).toHtmlEscaped());
 
         if (isoType == IsSubcomplex)
-            for (unsigned long i = 0; i < isomorphism->size(); i++)
+            for (size_t i = 0; i < isomorphism->size(); i++)
                 isoDetails += QString("%1 (0123)  &rarr;  %2 (%3)").
                     arg(i).
                     arg(isomorphism->tetImage(i)).
                     arg(isomorphism->facePerm(i).str().c_str())
                     ;
         else
-            for (unsigned long i = 0; i < isomorphism->size(); i++)
+            for (size_t i = 0; i < isomorphism->size(); i++)
                 isoDetails += QString("%2 (%3)  &rarr;  %1 (0123)").
                     arg(i).
                     arg(isomorphism->tetImage(i)).

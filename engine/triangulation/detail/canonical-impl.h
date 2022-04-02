@@ -257,14 +257,14 @@ bool TriangulationBase<dim>::findIsomorphisms(
     size_t nSimplices = simplices_.size();
     size_t nDestSimplices = other.simplices_.size();
     size_t nComponents = components().size();
-    unsigned i;
+    size_t i;
 
     Isomorphism<dim> iso(nSimplices);
     for (i = 0; i < nSimplices; i++)
         iso.simpImage(i) = -1;
 
     // Which source component does each destination simplex correspond to?
-    long* whichComp = new long[nDestSimplices];
+    long* whichComp = new ssize_t[nDestSimplices];
     std::fill(whichComp, whichComp + nDestSimplices, -1);
 
     // The image of the first source simplex of each component.  The
@@ -426,8 +426,7 @@ bool TriangulationBase<dim>::findIsomorphisms(
                     if (iso.simpImage(adjIndex) >= 0) {
                         // We've already decided upon an image for this
                         // source simplex.  Does it match?
-                        if (static_cast<long>(destAdjIndex) !=
-                                iso.simpImage(adjIndex) ||
+                        if (destAdjIndex != iso.simpImage(adjIndex) ||
                                 adjPerm != iso.facetPerm(adjIndex)) {
                             broken = true;
                             break;
