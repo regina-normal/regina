@@ -56,24 +56,24 @@ void addGluingPerms(pybind11::module_& m, const char* name) {
             pybind11::return_value_policy::reference_internal)
         .def("perm", overload_cast<const FacetSpec<dim>&>(
             &GluingPerms<dim>::perm, pybind11::const_))
-        .def("perm", overload_cast<unsigned, unsigned>(
+        .def("perm", overload_cast<size_t, int>(
             &GluingPerms<dim>::perm, pybind11::const_))
         .def("gluingPerm", overload_cast<const FacetSpec<dim>&>( // deprecated
             &GluingPerms<dim>::perm, pybind11::const_))
-        .def("gluingPerm", overload_cast<unsigned, unsigned>( // deprecated
+        .def("gluingPerm", overload_cast<size_t, int>( // deprecated
             &GluingPerms<dim>::perm, pybind11::const_))
         .def("permIndex",
             overload_cast<const FacetSpec<dim>&>(
             &GluingPerms<dim>::permIndex, pybind11::const_))
         .def("permIndex",
-            overload_cast<unsigned, unsigned>(
+            overload_cast<size_t, int>(
             &GluingPerms<dim>::permIndex, pybind11::const_))
         .def("setPermIndex", [](GluingPerms<dim>& g,
                 const FacetSpec<dim>& s, Index val) {
             g.permIndex(s) = val;
         })
         .def("setPermIndex", [](GluingPerms<dim>& g,
-                unsigned s, unsigned f, Index val) {
+                size_t s, int f, Index val) {
             g.permIndex(s, f) = val;
         })
         .def("triangulate", &GluingPerms<dim>::triangulate)
@@ -82,13 +82,13 @@ void addGluingPerms(pybind11::module_& m, const char* name) {
             overload_cast<const FacetSpec<dim>&, const Perm<dim+1>&>(
             &GluingPerms<dim>::gluingToIndex, pybind11::const_))
         .def("gluingToIndex",
-            overload_cast<unsigned, unsigned, const Perm<dim+1>&>(
+            overload_cast<size_t, int, const Perm<dim+1>&>(
             &GluingPerms<dim>::gluingToIndex, pybind11::const_))
         .def("indexToGluing",
             overload_cast<const FacetSpec<dim>&, Index>(
             &GluingPerms<dim>::indexToGluing, pybind11::const_))
         .def("indexToGluing",
-            overload_cast<unsigned, unsigned, Index>(
+            overload_cast<size_t, int, Index>(
             &GluingPerms<dim>::indexToGluing, pybind11::const_))
         .def_static("fromData", &GluingPerms<dim>::fromData)
         ;

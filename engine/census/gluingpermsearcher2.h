@@ -125,10 +125,10 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
                  of the two identified triangle edges (unless otherwise
                  specified by a subclass that uses a specialised search
                  algorithm. */
-        int orderSize;
+        size_t orderSize;
             /**< The total number of edges in the edge pairing graph, i.e.,
                  the number of elements of interest in the order[] array. */
-        int orderElt;
+        ssize_t orderElt;
             /**< Marks which element of order[] we are currently examining
                  at this stage of the search. */
 

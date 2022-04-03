@@ -129,13 +129,13 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * the data members below.
          */
         struct PentEdgeState {
-            int parent;
+            ssize_t parent;
                 /**< The index of the parent object in the current tree,
                      or -1 if this object is the root of the tree. */
-            unsigned rank;
+            size_t rank;
                 /**< The depth of the subtree beneath this object (where
                      a leaf node has depth zero). */
-            unsigned bdry;
+            size_t bdry;
                 /**< The number of boundary triangle edges in the link
                      for this equivalence class of pentachoron edges.  Any
                      pentachoron facet whose gluing permutation has not yet
@@ -180,7 +180,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
                      pentachoron meeting this pentachoron edge that are not
                      yet joined to their partner facets.  This always takes
                      the value 0, 1, 2 or 3. */
-            int bdryNext[2];
+            size_t bdryNext[2];
                 /**< If the corresponding triangular piece of 4-manifold edge
                      link has any boundary edges, \a bdryNext stores the
                      indices of the pentachoron edges that provide the
@@ -235,7 +235,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
                      internal to the edge link, this array maintains the last
                      values it had when there was at least one boundary edge
                      earlier in the search (just like the \a bdryNext array). */
-            int bdryNextOld[2];
+            ssize_t bdryNextOld[2];
                 /**< Stores a snapshot of the values in the \a bdryNext
                      array from the last point in the search when
                      \a bdryEdges was precisely two.  If \a bdryEdges is
@@ -287,7 +287,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
              * @return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
-            bool readData(std::istream& in, unsigned long nStates);
+            bool readData(std::istream& in, size_t nStates);
 
             // Make this class non-copyable.
             PentEdgeState(const PentEdgeState&) = delete;
@@ -309,13 +309,13 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * structure.
          */
         struct PentTriangleState {
-            int parent;
+            ssize_t parent;
                 /**< The index of the parent object in the current tree,
                      or -1 if this object is the root of the tree. */
-            unsigned rank;
+            size_t rank;
                 /**< The depth of the subtree beneath this object (where
                      a leaf node has depth zero). */
-            unsigned size;
+            size_t size;
                 /**< The total number of objects in the subtree descending
                      from this object (where this object is counted also). */
             bool bounded;
@@ -391,7 +391,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
              * @return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
-            bool readData(std::istream& in, unsigned long nStates);
+            bool readData(std::istream& in, size_t nStates);
 
             // Make this class non-copyable.
             PentTriangleState(const PentTriangleState&) = delete;
@@ -443,14 +443,14 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
                  The specific pentachoron facet stored in this array for each
                  edge of the underlying facet pairing graph will be the smaller
                  of the two identified pentachoron facets. */
-        int orderSize_;
+        size_t orderSize_;
             /**< The total number of edges in the facet pairing graph, i.e.,
                  the number of elements of interest in the order_[] array. */
-        int orderElt_;
+        ssize_t orderElt_;
             /**< Marks which element of order_[] we are currently examining
                  at this stage of the search. */
 
-        unsigned nEdgeClasses_;
+        size_t nEdgeClasses_;
             /**< The number of equivalence classes of identified
                  pentachoron edges. */
         PentEdgeState* edgeState_;
@@ -458,7 +458,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
                  pentachoron edges.  See the PentEdgeState description
                  for details.  This array has size 10n, where edge e of
                  pentachoron p has index 10p+e. */
-        int* edgeStateChanged_;
+        ssize_t* edgeStateChanged_;
             /**< Tracks the way in which the edgeState_[] array has been
                  updated over time.  This array has size 25n.  Suppose
                  the gluing for order[i] affects facet k of pentachoron p.
@@ -472,7 +472,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
                  with root edgeState_[y], this array will store the value x.
                  Otherwise it will store the value -1. */
 
-        unsigned nTriangleClasses_;
+        size_t nTriangleClasses_;
             /**< The number of equivalence classes of identified
                  pentachoron triangles. */
         PentTriangleState* triState_;
@@ -480,7 +480,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
                  pentachoron triangles.  See the PentTriangleState description
                  for details.  This array has size 10n, where triangle f of
                  pentachoron p has index 10p+f. */
-        int* triStateChanged_;
+        ssize_t* triStateChanged_;
             /**< Tracks the way in which the triState_[] array has been
                  updated over time.  This array has size [25n/2].  Suppose
                  the gluing for order[i] affects facet k of pentachoron p.
@@ -999,7 +999,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
-        int findTriangleClass(int triID) const;
+        size_t findTriangleClass(size_t triID) const;
 
         /**
          * Returns the representative of the equivalence class containing
@@ -1029,7 +1029,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
-        int findTriangleClass(int triID, Perm<3>& twist) const;
+        size_t findTriangleClass(size_t triID, Perm<3>& twist) const;
 
         /**
          * Merges the classes of pentachoron edges as required by the
@@ -1102,7 +1102,8 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * oriented in opposite directions; see the \a bdryTwist
          * documentation for details.
          */
-        void edgeBdryJoin(int edgeID, char end, int adjEdgeID, char twist);
+        void edgeBdryJoin(size_t edgeID, char end, size_t adjEdgeID,
+            char twist);
 
         /**
          * Adjusts the \a bdryNext and \a bdryTwist arrays for
@@ -1136,7 +1137,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * be between 0 and 10n-1 inclusive, where \a n is the number of
          * pentachora.
          */
-        void edgeBdryFixAdj(int edgeID);
+        void edgeBdryFixAdj(size_t edgeID);
 
         /**
          * Copies the \a bdryNext and \a bdryTwist arrays to the
@@ -1149,7 +1150,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * must be between 0 and 10n-1 inclusive, where \a n is the number of
          * pentachora.
          */
-        void edgeBdryBackup(int edgeID);
+        void edgeBdryBackup(size_t edgeID);
 
         /**
          * Copies the \a bdryNextOld and \a bdryTwistOld arrays to the
@@ -1162,7 +1163,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * must be between 0 and 10n-1 inclusive, where \a n is the number of
          * pentachora.
          */
-        void edgeBdryRestore(int edgeID);
+        void edgeBdryRestore(size_t edgeID);
 
         /**
          * Assuming the given edge of the linking triangle for the
@@ -1215,8 +1216,8 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * boundary edge; see the PentEdgeState::bdryTwist notes for
          * further information on orientations in the link.
          */
-        void edgeBdryNext(int edgeID, int pent, int edge, int bdryFacet,
-            int next[2], char twist[2]);
+        void edgeBdryNext(size_t edgeID, size_t pent, int edge, int bdryFacet,
+            size_t next[2], char twist[2]);
 
         /**
          * Determines whether one of the edges of the linking triangle for
@@ -1231,7 +1232,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * @return \c true if a one-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
-        bool edgeBdryLength1(int edgeID);
+        bool edgeBdryLength1(size_t edgeID);
 
         /**
          * Determines whether edges of the linking triangles for each
@@ -1250,7 +1251,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
          * @return \c true if a two-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
-        bool edgeBdryLength2(int edgeID1, int edgeID2);
+        bool edgeBdryLength2(size_t edgeID1, size_t edgeID2);
 
         /**
          * Runs a number of tests on all pentachoron edges to locate
@@ -1337,14 +1338,14 @@ inline char GluingPermSearcher<4>::dataTagInternal() const {
     return GluingPermSearcher<4>::dataTag;
 }
 
-inline int GluingPermSearcher<4>::findTriangleClass(int triID) const {
+inline size_t GluingPermSearcher<4>::findTriangleClass(size_t triID) const {
     while (triState_[triID].parent >= 0)
         triID = triState_[triID].parent;
 
     return triID;
 }
 
-inline int GluingPermSearcher<4>::findTriangleClass(int triID, Perm<3>& twist)
+inline size_t GluingPermSearcher<4>::findTriangleClass(size_t triID, Perm<3>& twist)
         const {
     for ( ; triState_[triID].parent >= 0; triID = triState_[triID].parent)
         twist = triState_[triID].twistUp * twist;
@@ -1352,15 +1353,15 @@ inline int GluingPermSearcher<4>::findTriangleClass(int triID, Perm<3>& twist)
     return triID;
 }
 
-inline void GluingPermSearcher<4>::edgeBdryJoin(int edgeID, char end,
-        int adjEdgeID, char twist) {
-    edgeState_[edgeID].bdryNext[static_cast<int>(end)] = adjEdgeID;
-    edgeState_[edgeID].bdryTwist[static_cast<int>(end)] = twist;
+inline void GluingPermSearcher<4>::edgeBdryJoin(size_t edgeID, char end,
+        size_t adjEdgeID, char twist) {
+    edgeState_[edgeID].bdryNext[end] = adjEdgeID;
+    edgeState_[edgeID].bdryTwist[end] = twist;
     edgeState_[adjEdgeID].bdryNext[(end ^ 1) ^ twist] = edgeID;
     edgeState_[adjEdgeID].bdryTwist[(end ^ 1) ^ twist] = twist;
 }
 
-inline void GluingPermSearcher<4>::edgeBdryFixAdj(int edgeID) {
+inline void GluingPermSearcher<4>::edgeBdryFixAdj(size_t edgeID) {
     if (edgeState_[edgeID].bdryNext[0] != edgeID) {
         edgeState_[edgeState_[edgeID].bdryNext[0]].
             bdryNext[1 ^ edgeState_[edgeID].bdryTwist[0]] = edgeID;
@@ -1375,26 +1376,27 @@ inline void GluingPermSearcher<4>::edgeBdryFixAdj(int edgeID) {
     }
 }
 
-inline void GluingPermSearcher<4>::edgeBdryBackup(int edgeID) {
+inline void GluingPermSearcher<4>::edgeBdryBackup(size_t edgeID) {
     edgeState_[edgeID].bdryNextOld[0] = edgeState_[edgeID].bdryNext[0];
     edgeState_[edgeID].bdryNextOld[1] = edgeState_[edgeID].bdryNext[1];
     edgeState_[edgeID].bdryTwistOld[0] = edgeState_[edgeID].bdryTwist[0];
     edgeState_[edgeID].bdryTwistOld[1] = edgeState_[edgeID].bdryTwist[1];
 }
 
-inline void GluingPermSearcher<4>::edgeBdryRestore(int edgeID) {
+inline void GluingPermSearcher<4>::edgeBdryRestore(size_t edgeID) {
     edgeState_[edgeID].bdryNext[0] = edgeState_[edgeID].bdryNextOld[0];
     edgeState_[edgeID].bdryNext[1] = edgeState_[edgeID].bdryNextOld[1];
     edgeState_[edgeID].bdryTwist[0] = edgeState_[edgeID].bdryTwistOld[0];
     edgeState_[edgeID].bdryTwist[1] = edgeState_[edgeID].bdryTwistOld[1];
 }
 
-inline bool GluingPermSearcher<4>::edgeBdryLength1(int edgeID) {
+inline bool GluingPermSearcher<4>::edgeBdryLength1(size_t edgeID) {
     return (edgeState_[edgeID].bdryNext[0] == edgeID &&
             edgeState_[edgeID].bdryEdges == 1);
 }
 
-inline bool GluingPermSearcher<4>::edgeBdryLength2(int edgeID1, int edgeID2) {
+inline bool GluingPermSearcher<4>::edgeBdryLength2(size_t edgeID1,
+        size_t edgeID2) {
     return (edgeState_[edgeID1].bdryNext[0] == edgeID2 &&
             edgeState_[edgeID1].bdryNext[1] == edgeID2 &&
             edgeState_[edgeID1].bdryEdges == 1 &&

@@ -181,8 +181,7 @@ void FacetPairingBase<dim>::writeDot(std::ostream& out,
 
     // Ancient versions of graphviz seem to ignore the default label="".
     // Make this explicit for each node.
-    size_t p;
-    for (p = 0; p < size_; ++p) {
+    for (size_t p = 0; p < size_; ++p) {
         out << prefix << '_' << p << " [label=\"";
         if (labels)
             out << p;
@@ -191,12 +190,11 @@ void FacetPairingBase<dim>::writeDot(std::ostream& out,
 
     int f;
     FacetSpec<dim> adj;
-    for (p = 0; p < size_; ++p)
+    for (ssize_t p = 0; p < size_; ++p)
         for (f = 0; f < (dim + 1); ++f) {
             adj = dest(p, f);
-            if (adj.isBoundary(size_) ||
-                    adj.simp < static_cast<int>(p) ||
-                    (adj.simp == static_cast<int>(p) && adj.facet < f))
+            if (adj.isBoundary(size_) || adj.simp < p ||
+                    (adj.simp == p && adj.facet < f))
                 continue;
             out << prefix << '_' << p << " -- " << prefix << '_'
                 << adj.simp << ';' << std::endl;
@@ -225,13 +223,13 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     if (tokens.empty() || tokens.size() % (2 * (dim + 1)) != 0)
         throw InvalidArgument("fromTextRep(): invalid number of tokens");
 
-    long nSimp = tokens.size() / (2 * (dim + 1));
+    size_t nSimp = tokens.size() / (2 * (dim + 1));
     FacetPairing<dim> ans(nSimp);
 
     // Read the raw values.
     // Check the range of each value while we're at it.
     long val;
-    for (long i = 0; i < nSimp * (dim + 1); ++i) {
+    for (size_t i = 0; i < nSimp * (dim + 1); ++i) {
         if (! valueOf(tokens[2 * i], val))
             throw InvalidArgument(
                 "fromTextRep(): contains non-integer simplex");
@@ -241,12 +239,14 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
 
         if (! valueOf(tokens[2 * i + 1], val))
             throw InvalidArgument("fromTextRep(): contains non-integer facet");
-        if (val < 0 || val >= (dim + 1))
+        if (val < 0 || val > dim)
             throw InvalidArgument("fromTextRep(): facet out of range");
-        ans.pairs_[i].facet = val;
+        ans.pairs_[i].facet = static_cast<int>(val);
     }
 
     // Run a sanity check.
+    // Note: all destination simplices are known to be in the range [0..nSimp],
+    // and all destination facets are known to be in the range [0..dim].
     FacetSpec<dim> destFacet;
     bool broken = false;
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(nSimp, true); ++f) {
@@ -270,15 +270,15 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
 template <int dim>
 bool FacetPairingBase<dim>::isCanonical() const {
     // Check the preconditions for isCanonicalInternal().
-    size_t simp;
-    unsigned facet;
-    for (simp = 0; simp < size_; ++simp) {
-        for (facet = 0; facet < dim; ++facet)
+    for (size_t simp = 0; simp < size_; ++simp) {
+        for (int facet = 0; facet < dim; ++facet)
             if (dest(simp, facet + 1) < dest(simp, facet))
-                if (! (dest(simp, facet + 1) == FacetSpec<dim>(simp, facet)))
+                if (dest(simp, facet + 1) != FacetSpec<dim>(simp, facet))
                     return false;
+        // Note: any signed/unsigned comparisons between simplex numbers are
+        // okay, since every destination simplex should be non-negative anyway.
         if (simp > 0)
-            if (dest(simp, 0).simp >= static_cast<int>(simp))
+            if (dest(simp, 0).simp >= simp)
                 return false;
         if (simp > 1)
             if (dest(simp, 0) <= dest(simp - 1, 0))
@@ -333,7 +333,8 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
     FacetSpec<dim> trying;
     FacetSpec<dim> fImg, fPre;
     bool stepDown;
-    int simp, facet;
+    ssize_t simp;
+    int facet;
     for (preImage[0] = firstFace ; ! preImage[0].isPastEnd(size_, true);
             ++preImage[0]) {
         // Note that we know firstFace is not unmatched.
@@ -586,7 +587,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
     }
 
     // Initialise the pairings to unspecified (i.e., facet -> itself).
-    for (FacetSpec<dim> f(0,0); f.simp < static_cast<int>(size_); ++f)
+    for (FacetSpec<dim> f(0,0); f.simp < size_; ++f)
         dest(f) = f;
 
     // Note that we have at least one simplex.
@@ -594,7 +595,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         /**< The facet we're currently trying to match. */
     int boundaryFacets = 0;
         /**< How many (deliberately) unmatched facets do we currently have? */
-    int usedFacets = 0;
+    size_t usedFacets = 0;
         /**< How many facets have we already determined matchings for? */
 
     // Run through and find all possible matchings.
@@ -618,7 +619,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // and later we will avoid sending the last facet of a set to the
         // boundary.
         if (usedFacets % (dim + 1) == (dim - 1) &&
-                usedFacets < (dim + 1) * static_cast<int>(size_) - 2 &&
+                usedFacets < (dim + 1) * size_ - 2 &&
                 noDest((usedFacets / (dim + 1)) + 1, 0) &&
                 dest(trying).simp <= (usedFacets / (dim + 1))) {
             // Move to the first unused simplex.
@@ -636,17 +637,15 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
                 if (! boundary.hasFalse()) {
                     // We must have some boundary though.
                     if (boundaryFacets == 0 &&
-                            usedFacets ==
-                                (dim + 1) * static_cast<int>(size_) - 2 &&
-                            dest(trying).simp <
-                                static_cast<int>(size_))
+                            usedFacets == (dim + 1) * size_ - 2 &&
+                            dest(trying).simp < size_)
                         dest(trying).setBoundary(size_);
                 }
             } else {
                 // We're specific about the number of boundary facets.
                 if (usedFacets - boundaryFacets + nBdryFacets ==
-                        (dim + 1) * static_cast<int>(size_) &&
-                        dest(trying).simp < static_cast<int>(size_))
+                        (dim + 1) * size_ &&
+                        dest(trying).simp < size_)
                     // We've used our entire quota of non-boundary facets.
                     dest(trying).setBoundary(size_);
             }
@@ -656,15 +655,13 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // We still don't know whether this destination is valid however.
         while(true) {
             // Move onwards to the next free destination.
-            while (dest(trying).simp < static_cast<int>(size_) &&
-                    ! noDest(dest(trying)))
+            while (dest(trying).simp < size_ && ! noDest(dest(trying)))
                 ++dest(trying);
 
             // If we are past facet 0 of a simplex and the previous facet
             // was not used, we can't do anything with this simplex.
             // Move to the next simplex.
-            if (dest(trying).simp < static_cast<int>(size_) &&
-                    dest(trying).facet > 0 &&
+            if (dest(trying).simp < size_ && dest(trying).facet > 0 &&
                     noDest(dest(trying).simp, dest(trying).facet - 1)) {
                 ++dest(trying).simp;
                 dest(trying).facet = 0;
@@ -679,8 +676,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // unused.  Note that facet == 0 implies simp > 0.
         // In this case, we've passed the last sane choice; head
         // straight to the boundary.
-        if (dest(trying).simp < static_cast<int>(size_) &&
-                dest(trying).facet == 0 &&
+        if (dest(trying).simp < size_ && dest(trying).facet == 0 &&
                 noDest(dest(trying).simp - 1, 0))
             dest(trying).setBoundary(size_);
 
@@ -688,7 +684,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // set of simplices.  This time we will avoid sending the last
         // facet of a set of simplices to the boundary.
         if (usedFacets % (dim + 1) == dim &&
-                usedFacets < (dim + 1) * static_cast<int>(size_) - 1 &&
+                usedFacets < (dim + 1) * size_ - 1 &&
                 noDest((usedFacets / (dim + 1)) + 1, 0) &&
                 isUnmatched(trying)) {
             // Can't use the boundary; all we can do is push past the
@@ -744,11 +740,11 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // Now we increment trying to move to the next unmatched facet.
         oldTrying = trying;
         ++trying;
-        while (trying.simp < static_cast<int>(size_) && ! noDest(trying))
+        while (trying.simp < size_ && ! noDest(trying))
             ++trying;
 
         // Have we got a solution?
-        if (trying.simp == static_cast<int>(size_)) {
+        if (trying.simp == size_) {
             // Deal with the solution!
             if constexpr (std::is_same_v<
                     typename std::remove_cv_t<typename std::remove_reference_t<

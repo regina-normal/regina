@@ -66,7 +66,7 @@ void CompactSearcher::TetVertexState::dumpData(std::ostream& out)
 }
 
 bool CompactSearcher::TetVertexState::readData(std::istream& in,
-        unsigned long nStates) {
+        size_t nStates) {
     in >> parent >> rank >> bdry;
 
     // twistUp is a char, but we need to read it as an int.
@@ -90,7 +90,7 @@ bool CompactSearcher::TetVertexState::readData(std::istream& in,
     in >> bVal; bdryTwistOld[0] = bVal;
     in >> bVal; bdryTwistOld[1] = bVal;
 
-    if (parent < -1 || parent >= static_cast<long>(nStates))
+    if (parent < -1 || parent >= static_cast<ssize_t>(nStates))
         return false;
     if (rank >= nStates)
         return false;
@@ -102,13 +102,14 @@ bool CompactSearcher::TetVertexState::readData(std::istream& in,
         return false;
     if (bdryEdges > 3) /* Never < 0 since this is unsigned. */
         return false;
-    if (bdryNext[0] < 0 || bdryNext[0] >= static_cast<long>(nStates))
+    // Since bdryNext[...] is size_t, it is always non-negative.
+    if (bdryNext[0] >= nStates || bdryNext[1] >= nStates)
         return false;
-    if (bdryNext[1] < 0 || bdryNext[1] >= static_cast<long>(nStates))
+    // Since bdryNextOld[...] is ssize_t, we must be careful with
+    // signed/unsigned comparisons.
+    if (bdryNextOld[0] < -1 || bdryNextOld[0] >= static_cast<ssize_t>(nStates))
         return false;
-    if (bdryNextOld[0] < -1 || bdryNext[0] >= static_cast<long>(nStates))
-        return false;
-    if (bdryNextOld[1] < -1 || bdryNextOld[1] >= static_cast<long>(nStates))
+    if (bdryNextOld[1] < -1 || bdryNextOld[1] >= static_cast<ssize_t>(nStates))
         return false;
     if (bdryTwist[0] < 0 || bdryTwist[0] > 1)
         return false;
@@ -122,22 +123,21 @@ bool CompactSearcher::TetVertexState::readData(std::istream& in,
     return true;
 }
 
-void CompactSearcher::TetEdgeState::dumpData(std::ostream& out, unsigned nTets)
+void CompactSearcher::TetEdgeState::dumpData(std::ostream& out, size_t nTets)
         const {
     // Be careful with twistUp, which is a char but which should be
     // written as an int.
     out << parent << ' ' << rank << ' ' << size << ' '
         << (bounded ? 1 : 0) << ' ' << (twistUp ? 1 : 0) << ' '
         << (hadEqualRank ? 1 : 0) << ' ';
-    unsigned i;
-    for (i = 0; i < nTets * 4 && i < 64; ++i)
+    for (unsigned i = 0; i < 64 && i < nTets * 4; ++i)
         out << char(facesPos.get(i) + '0');
     out << ' ';
-    for (i = 0; i < nTets * 4 && i < 64; ++i)
+    for (unsigned i = 0; i < 64 && i < nTets * 4; ++i)
         out << char(facesNeg.get(i) + '0');
 }
 
-bool CompactSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
+bool CompactSearcher::TetEdgeState::readData(std::istream& in, size_t nTets) {
     in >> parent >> rank >> size;
 
     // bounded is a bool, but we need to read it as an int.
@@ -157,15 +157,14 @@ bool CompactSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
 
     char cFaces;
     bool facesBroken = false;
-    unsigned i;
-    for (i = 0; i < nTets * 4 && i < 64; ++i) {
+    for (unsigned i = 0; i < 64 && i < nTets * 4 ; ++i) {
         in >> cFaces;
         if (cFaces >= '0' && cFaces <= '3')
             facesPos.set(i, cFaces - '0');
         else
             facesBroken = true;
     }
-    for (i = 0; i < nTets * 4 && i < 64; ++i) {
+    for (unsigned i = 0; i < 64 && i < nTets * 4; ++i) {
         in >> cFaces;
         if (cFaces >= '0' && cFaces <= '3')
             facesNeg.set(i, cFaces - '0');
@@ -173,7 +172,7 @@ bool CompactSearcher::TetEdgeState::readData(std::istream& in, unsigned nTets) {
             facesBroken = true;
     }
 
-    if (parent < -1 || parent >= 6 * static_cast<long>(nTets))
+    if (parent < -1 || parent >= 6 * static_cast<ssize_t>(nTets))
         return false;
     if (rank >= 6 * nTets)
         return false;
@@ -199,17 +198,15 @@ CompactSearcher::CompactSearcher(FacetPairing<3> pairing,
     // Initialise the internal arrays to accurately reflect the underlying
     // face pairing.
 
-    unsigned nTets = perms_.size();
+    size_t nTets = perms_.size();
 
     // ---------- Tracking of vertex / edge equivalence classes ----------
 
-    unsigned i;
-
     nVertexClasses = nTets * 4;
     vertexState = new TetVertexState[nTets * 4];
-    vertexStateChanged = new int[nTets * 8];
+    vertexStateChanged = new ssize_t[nTets * 8];
     std::fill(vertexStateChanged, vertexStateChanged + nTets * 8, -1);
-    for (i = 0; i < nTets * 4; i++) {
+    for (size_t i = 0; i < nTets * 4; i++) {
         vertexState[i].bdryEdges = 3;
         vertexState[i].bdryNext[0] = vertexState[i].bdryNext[1] = i;
         vertexState[i].bdryTwist[0] = vertexState[i].bdryTwist[1] = 0;
@@ -221,14 +218,14 @@ CompactSearcher::CompactSearcher(FacetPairing<3> pairing,
 
     nEdgeClasses = nTets * 6;
     edgeState = new TetEdgeState[nTets * 6];
-    edgeStateChanged = new int[nTets * 8];
+    edgeStateChanged = new ssize_t[nTets * 8];
     std::fill(edgeStateChanged, edgeStateChanged + nTets * 8, -1);
 
     // Since our hard-coded Qitmask classes only support 64 faces, only work
     // with the first 16 tetrahedra.  If n > 16, this just weakens the
     // optimisation; however, this is no great loss since for n > 16 the
     // census code is at present infeasibly slow anyway.
-    for (i = 0; i < nTets && i < 16; ++i) {
+    for (unsigned i = 0; i < 16 && i < nTets; ++i) {
         /* 01 on +012, +013             */
         edgeState[6 * i    ].facesPos.set(4 * i + 3, 1);
         edgeState[6 * i    ].facesPos.set(4 * i + 2, 1);
@@ -252,7 +249,7 @@ CompactSearcher::CompactSearcher(FacetPairing<3> pairing,
 
 // TODO (net): See what was removed when we brought in vertex link checking.
 void CompactSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
-    unsigned nTets = perms_.size();
+    size_t nTets = perms_.size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
         maxDepth = nTets * 4 + 1;
@@ -281,14 +278,12 @@ void CompactSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
 
     // ---------- Selecting the individual gluing permutations ----------
 
-    int minOrder = orderElt;
-    int maxOrder = orderElt + maxDepth;
+    ssize_t minOrder = orderElt;
+    ssize_t maxOrder = orderElt + maxDepth;
 
-    FacetSpec<3> face, adj;
-    int mergeResult;
     while (orderElt >= minOrder) {
-        face = order[orderElt];
-        adj = perms_.pairing()[face];
+        FacetSpec<3> face = order[orderElt];
+        FacetSpec<3> adj = perms_.pairing()[face];
 
         // TODO (long-term): Check for cancellation.
 
@@ -328,7 +323,7 @@ void CompactSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
         }
 
         // Merge vertex links and run corresponding tests.
-        mergeResult = mergeVertexClasses();
+        int mergeResult = mergeVertexClasses();
         if (mergeResult & VLINK_NON_SPHERE) {
             // Our vertex link will never be a 2-sphere.  Stop now.
             splitVertexClasses();
@@ -412,7 +407,7 @@ void CompactSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
         if (nVertexClasses != 4 * nTets)
             std::cerr << "ERROR: nVertexClasses == "
                 << nVertexClasses << " at end of search!" << std::endl;
-        for (int i = 0; i < static_cast<int>(nTets) * 4; i++) {
+        for (size_t i = 0; i < nTets * 4; i++) {
             if (vertexState[i].parent != -1)
                 std::cerr << "ERROR: vertexState[" << i << "].parent == "
                     << vertexState[i].parent << " at end of search!"
@@ -445,7 +440,7 @@ void CompactSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
                 std::cerr << "ERROR: vertexState[" << i << "].bdryTwist == "
                     "true at end of search!" << std::endl;
         }
-        for (unsigned i = 0; i < nTets * 8; i++)
+        for (size_t i = 0; i < nTets * 8; i++)
             if (vertexStateChanged[i] != -1)
                 std::cerr << "ERROR: vertexStateChanged[" << i << "] == "
                     << vertexStateChanged[i] << " at end of search!"
@@ -455,7 +450,7 @@ void CompactSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
         if (nEdgeClasses != 6 * nTets)
             std::cerr << "ERROR: nEdgeClasses == "
                 << nEdgeClasses << " at end of search!" << std::endl;
-        for (unsigned i = 0; i < nTets * 6; i++) {
+        for (size_t i = 0; i < nTets * 6; i++) {
             if (edgeState[i].parent != -1)
                 std::cerr << "ERROR: edgeState[" << i << "].parent == "
                     << edgeState[i].parent << " at end of search!"
@@ -473,7 +468,7 @@ void CompactSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
                 std::cerr << "ERROR: edgeState[" << i << "].hadEqualRank == "
                     "true at end of search!" << std::endl;
         }
-        for (unsigned i = 0; i < nTets * 8; i++)
+        for (size_t i = 0; i < nTets * 8; i++)
             if (edgeStateChanged[i] != -1)
                 std::cerr << "ERROR: edgeStateChanged[" << i << "] == "
                     << edgeStateChanged[i] << " at end of search!"
@@ -484,15 +479,14 @@ void CompactSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
 void CompactSearcher::dumpData(std::ostream& out) const {
     GluingPermSearcher<3>::dumpData(out);
 
-    unsigned nTets = perms_.size();
-    unsigned i;
+    size_t nTets = perms_.size();
 
     out << nVertexClasses << std::endl;
-    for (i = 0; i < 4 * nTets; i++) {
+    for (size_t i = 0; i < 4 * nTets; i++) {
         vertexState[i].dumpData(out);
         out << std::endl;
     }
-    for (i = 0; i < 8 * nTets; i++) {
+    for (size_t i = 0; i < 8 * nTets; i++) {
         if (i)
             out << ' ';
         out << vertexStateChanged[i];
@@ -500,11 +494,11 @@ void CompactSearcher::dumpData(std::ostream& out) const {
     out << std::endl;
 
     out << nEdgeClasses << std::endl;
-    for (i = 0; i < 6 * nTets; i++) {
+    for (size_t i = 0; i < 6 * nTets; i++) {
         edgeState[i].dumpData(out, nTets);
         out << std::endl;
     }
-    for (i = 0; i < 8 * nTets; i++) {
+    for (size_t i = 0; i < 8 * nTets; i++) {
         if (i)
             out << ' ';
         out << edgeStateChanged[i];
@@ -516,8 +510,7 @@ CompactSearcher::CompactSearcher(std::istream& in) :
         GluingPermSearcher<3>(in),
         nVertexClasses(0), vertexState(nullptr), vertexStateChanged(nullptr),
         nEdgeClasses(0), edgeState(nullptr), edgeStateChanged(nullptr) {
-    unsigned nTets = perms_.size();
-    unsigned i;
+    size_t nTets = perms_.size();
 
     in >> nVertexClasses;
     if (nVertexClasses > 4 * nTets)
@@ -525,16 +518,16 @@ CompactSearcher::CompactSearcher(std::istream& in) :
             "while attempting to read CompactSearcher");
 
     vertexState = new TetVertexState[4 * nTets];
-    for (i = 0; i < 4 * nTets; i++)
+    for (size_t i = 0; i < 4 * nTets; i++)
         if (! vertexState[i].readData(in, 4 * nTets))
             throw InvalidInput("Invalid vertex state "
                 "while attempting to read CompactSearcher");
 
-    vertexStateChanged = new int[8 * nTets];
-    for (i = 0; i < 8 * nTets; i++) {
+    vertexStateChanged = new ssize_t[8 * nTets];
+    for (size_t i = 0; i < 8 * nTets; i++) {
         in >> vertexStateChanged[i];
         if (vertexStateChanged[i] < -1 ||
-                 vertexStateChanged[i] >= 4 * static_cast<int>(nTets))
+                 vertexStateChanged[i] >= 4 * static_cast<ssize_t>(nTets))
             throw InvalidInput("Invalid vertex state changed "
                 "while attempting to read CompactSearcher");
     }
@@ -545,16 +538,16 @@ CompactSearcher::CompactSearcher(std::istream& in) :
             "while attempting to read CompactSearcher");
 
     edgeState = new TetEdgeState[6 * nTets];
-    for (i = 0; i < 6 * nTets; i++)
+    for (size_t i = 0; i < 6 * nTets; i++)
         if (! edgeState[i].readData(in, nTets))
             throw InvalidInput("Invalid edge state "
                 "while attempting to read CompactSearcher");
 
-    edgeStateChanged = new int[8 * nTets];
-    for (i = 0; i < 8 * nTets; i++) {
+    edgeStateChanged = new ssize_t[8 * nTets];
+    for (size_t i = 0; i < 8 * nTets; i++) {
         in >> edgeStateChanged[i];
         if (edgeStateChanged[i] < -1 ||
-                 edgeStateChanged[i] >= 6 * static_cast<int>(nTets))
+                 edgeStateChanged[i] >= 6 * static_cast<ssize_t>(nTets))
             throw InvalidInput("Invalid edge state changed "
                 "while attempting to read CompactSearcher");
     }
@@ -572,22 +565,19 @@ int CompactSearcher::mergeVertexClasses() {
 
     int retVal = 0;
 
-    int v, w;
-    int vIdx, wIdx, tmpIdx, nextIdx;
-    unsigned orderIdx;
-    int vRep, wRep;
-    int vNext[2], wNext[2];
+    size_t vRep, wRep;
+    size_t vNext[2], wNext[2];
     char vTwist[2], wTwist[2];
     Perm<4> p = perms_.perm(face);
     char parentTwists, hasTwist, tmpTwist;
-    for (v = 0; v < 4; v++) {
+    for (int v = 0; v < 4; v++) {
         if (v == face.facet)
             continue;
 
-        w = p[v];
-        vIdx = v + 4 * face.simp;
-        wIdx = w + 4 * adj.simp;
-        orderIdx = v + 4 * orderElt;
+        int w = p[v];
+        size_t vIdx = v + 4 * face.simp;
+        size_t wIdx = w + 4 * adj.simp;
+        size_t orderIdx = v + 4 * orderElt;
 
         // Are the natural 012 representations of the two faces joined
         // with reversed orientations?
@@ -694,10 +684,10 @@ int CompactSearcher::mergeVertexClasses() {
                         // See if we are joining two different boundary cycles
                         // together; if so, we have created non-trivial genus in
                         // the vertex link.
-                        tmpIdx = vertexState[vIdx].bdryNext[0];
+                        size_t tmpIdx = vertexState[vIdx].bdryNext[0];
                         tmpTwist = vertexState[vIdx].bdryTwist[0];
                         while (tmpIdx != vIdx && tmpIdx != wIdx) {
-                            nextIdx = vertexState[tmpIdx].
+                            size_t nextIdx = vertexState[tmpIdx].
                                 bdryNext[0 ^ tmpTwist];
                             tmpTwist ^= vertexState[tmpIdx].
                                 bdryTwist[0 ^ tmpTwist];
@@ -823,29 +813,26 @@ void CompactSearcher::splitVertexClasses() {
     FacetSpec<3> face = order[orderElt];
     FacetSpec<3> adj = perms_.pairing()[face];
 
-    int v, w;
-    int vIdx, wIdx;
-    unsigned orderIdx;
-    int rep, subRep;
     Perm<4> p = perms_.perm(face);
     // Do everything in reverse.  This includes the loop over vertices.
-    for (v = 3; v >= 0; v--) {
+    for (int v = 3; v >= 0; v--) {
         if (v == face.facet)
             continue;
 
-        w = p[v];
-        vIdx = v + 4 * face.simp;
-        wIdx = w + 4 * adj.simp;
-        orderIdx = v + 4 * orderElt;
+        int w = p[v];
+        size_t vIdx = v + 4 * face.simp;
+        size_t wIdx = w + 4 * adj.simp;
+        size_t orderIdx = v + 4 * orderElt;
 
         if (vertexStateChanged[orderIdx] < 0) {
+            size_t rep;
             for (rep = vIdx; vertexState[rep].parent >= 0;
                     rep = vertexState[rep].parent)
                 ;
             vertexState[rep].bdry += 2;
         } else {
-            subRep = vertexStateChanged[orderIdx];
-            rep = vertexState[subRep].parent;
+            size_t subRep = vertexStateChanged[orderIdx];
+            size_t rep = vertexState[subRep].parent;
 
             vertexState[subRep].parent = -1;
             if (vertexState[subRep].hadEqualRank) {
@@ -917,26 +904,22 @@ bool CompactSearcher::mergeEdgeClasses() {
     bool retVal = false;
 
     Perm<4> p = perms_.perm(face);
-    int v1, w1, v2, w2;
-    int e, f;
-    int orderIdx;
-    int eRep, fRep;
 
-    v1 = face.facet;
-    w1 = p[v1];
+    int v1 = face.facet;
+    int w1 = p[v1];
 
     char parentTwists, hasTwist;
-    for (v2 = 0; v2 < 4; v2++) {
+    for (int v2 = 0; v2 < 4; v2++) {
         if (v2 == v1)
             continue;
 
-        w2 = p[v2];
+        int w2 = p[v2];
 
         // Look at the edge opposite v1-v2.
-        e = 5 - Edge<3>::edgeNumber[v1][v2];
-        f = 5 - Edge<3>::edgeNumber[w1][w2];
+        int e = 5 - Edge<3>::edgeNumber[v1][v2];
+        int f = 5 - Edge<3>::edgeNumber[w1][w2];
 
-        orderIdx = v2 + 4 * orderElt;
+        size_t orderIdx = v2 + 4 * orderElt;
 
         // We declare the natural orientation of an edge to be smaller
         // vertex to larger vertex.
@@ -944,8 +927,8 @@ bool CompactSearcher::mergeEdgeClasses() {
             1 : 0);
 
         parentTwists = 0;
-        eRep = findEdgeClass(e + 6 * face.simp, parentTwists);
-        fRep = findEdgeClass(f + 6 * adj.simp, parentTwists);
+        size_t eRep = findEdgeClass(e + 6 * face.simp, parentTwists);
+        size_t fRep = findEdgeClass(f + 6 * adj.simp, parentTwists);
 
         if (eRep == fRep) {
             edgeState[eRep].bounded = false;
@@ -984,28 +967,23 @@ bool CompactSearcher::mergeEdgeClasses() {
 void CompactSearcher::splitEdgeClasses() {
     FacetSpec<3> face = order[orderElt];
 
-    int v1, v2;
-    int e;
-    int eIdx, orderIdx;
-    int rep, subRep;
+    int v1 = face.facet;
 
-    v1 = face.facet;
-
-    for (v2 = 3; v2 >= 0; v2--) {
+    for (int v2 = 3; v2 >= 0; v2--) {
         if (v2 == v1)
             continue;
 
         // Look at the edge opposite v1-v2.
-        e = 5 - Edge<3>::edgeNumber[v1][v2];
+        int e = 5 - Edge<3>::edgeNumber[v1][v2];
 
-        eIdx = e + 6 * face.simp;
-        orderIdx = v2 + 4 * orderElt;
+        size_t eIdx = e + 6 * face.simp;
+        size_t orderIdx = v2 + 4 * orderElt;
 
         if (edgeStateChanged[orderIdx] < 0)
             edgeState[findEdgeClass(eIdx)].bounded = true;
         else {
-            subRep = edgeStateChanged[orderIdx];
-            rep = edgeState[subRep].parent;
+            size_t subRep = edgeStateChanged[orderIdx];
+            size_t rep = edgeState[subRep].parent;
 
             edgeState[subRep].parent = -1;
             if (edgeState[subRep].hadEqualRank) {
@@ -1022,11 +1000,10 @@ void CompactSearcher::splitEdgeClasses() {
 }
 
 void CompactSearcher::vtxBdryConsistencyCheck() {
-    int adj, id, end;
-    for (id = 0; id < static_cast<int>(perms_.size()) * 4; id++)
+    for (size_t id = 0; id < perms_.size() * 4; id++)
         if (vertexState[id].bdryEdges > 0)
-            for (end = 0; end < 2; end++) {
-                adj = vertexState[id].bdryNext[end];
+            for (int end = 0; end < 2; end++) {
+                size_t adj = vertexState[id].bdryNext[end];
                 if (vertexState[adj].bdryEdges == 0)
                     std::cerr << "CONSISTENCY ERROR: Vertex link boundary "
                         << id << '/' << end
@@ -1046,7 +1023,7 @@ void CompactSearcher::vtxBdryConsistencyCheck() {
 }
 
 void CompactSearcher::vtxBdryDump(std::ostream& out) {
-    for (unsigned id = 0; id < perms_.size() * 4; id++) {
+    for (size_t id = 0; id < perms_.size() * 4; id++) {
         if (id > 0)
             out << ' ';
         out << vertexState[id].bdryNext[0]

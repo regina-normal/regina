@@ -84,7 +84,7 @@ void GluingPermSearcher<4>::PentEdgeState::dumpData(std::ostream& out) const {
 }
 
 bool GluingPermSearcher<4>::PentEdgeState::readData(std::istream& in,
-        unsigned long nStates) {
+        size_t nStates) {
     in >> parent >> rank >> bdry;
 
     // The twist fields are chars, but we need to read them as ints.
@@ -112,7 +112,7 @@ bool GluingPermSearcher<4>::PentEdgeState::readData(std::istream& in,
     in >> bVal; bdryTwistOld[0] = bVal;
     in >> bVal; bdryTwistOld[1] = bVal;
 
-    if (parent < -1 || parent >= static_cast<long>(nStates))
+    if (parent < -1 || parent >= static_cast<ssize_t>(nStates))
         return false;
     if (rank >= nStates)
         return false;
@@ -126,13 +126,14 @@ bool GluingPermSearcher<4>::PentEdgeState::readData(std::istream& in,
         return false;
     if (bdryEdges > 3) /* Never < 0 since this is unsigned. */
         return false;
-    if (bdryNext[0] < 0 || bdryNext[0] >= static_cast<long>(nStates))
+    // Since bdryNext[...] is size_t, it is always non-negative.
+    if (bdryNext[0] >= nStates || bdryNext[1] >= nStates)
         return false;
-    if (bdryNext[1] < 0 || bdryNext[1] >= static_cast<long>(nStates))
+    // Since bdryNextOld[...] is ssize_t, we must be careful with
+    // signed/unsigned comparisons.
+    if (bdryNextOld[0] < -1 || bdryNextOld[0] >= static_cast<ssize_t>(nStates))
         return false;
-    if (bdryNextOld[0] < -1 || bdryNext[0] >= static_cast<long>(nStates))
-        return false;
-    if (bdryNextOld[1] < -1 || bdryNextOld[1] >= static_cast<long>(nStates))
+    if (bdryNextOld[1] < -1 || bdryNextOld[1] >= static_cast<ssize_t>(nStates))
         return false;
     if (bdryTwist[0] < 0 || bdryTwist[0] > 1)
         return false;
@@ -157,7 +158,7 @@ void GluingPermSearcher<4>::PentTriangleState::dumpData(std::ostream& out)
 }
 
 bool GluingPermSearcher<4>::PentTriangleState::readData(std::istream& in,
-        unsigned long nStates) {
+        size_t nStates) {
     in >> parent >> rank >> size;
 
     // bounded is a bool, but we need to read it as an int.
@@ -177,7 +178,7 @@ bool GluingPermSearcher<4>::PentTriangleState::readData(std::istream& in,
     in >> bRank;
     hadEqualRank = bRank;
 
-    if (parent < -1 || parent >= static_cast<long>(nStates))
+    if (parent < -1 || parent >= static_cast<ssize_t>(nStates))
         return false;
     if (rank >= nStates)
         return false;
@@ -203,7 +204,7 @@ GluingPermSearcher<4>::GluingPermSearcher(
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         started_(false), orientation_(new int[perms_.size()]) {
     // Initialise arrays.
-    unsigned nPent = perms_.size();
+    size_t nPent = perms_.size();
 
     std::fill(orientation_, orientation_ + nPent, 0);
 
@@ -224,9 +225,9 @@ GluingPermSearcher<4>::GluingPermSearcher(
     edgeState_ = new PentEdgeState[nPent * 10];
     // The length of triStateChanged_[] needs to be at least 10 * orderSize_.
     // Just be conservative here -- we know that orderSize_ <= 5 * nPent / 2.
-    edgeStateChanged_ = new int[nPent * 25];
+    edgeStateChanged_ = new ssize_t[nPent * 25];
     std::fill(edgeStateChanged_, edgeStateChanged_ + nPent * 25, -1);
-    for (unsigned i = 0; i < nPent * 10; ++i) {
+    for (size_t i = 0; i < nPent * 10; ++i) {
         edgeState_[i].bdryEdges = 3;
         edgeState_[i].bdryNext[0] = edgeState_[i].bdryNext[1] = i;
         edgeState_[i].bdryTwist[0] = edgeState_[i].bdryTwist[1] = 0;
@@ -240,7 +241,7 @@ GluingPermSearcher<4>::GluingPermSearcher(
     triState_ = new PentTriangleState[nPent * 10];
     // The length of triStateChanged_[] needs to be at least 5 * orderSize_.
     // Just be conservative here -- we know that orderSize_ <= 5 * nPent / 2.
-    triStateChanged_ = new int[25 * nPent / 2];
+    triStateChanged_ = new ssize_t[25 * nPent / 2];
     std::fill(triStateChanged_, triStateChanged_ + (25 * nPent / 2), -1);
 }
 
@@ -257,7 +258,7 @@ GluingPermSearcher<4>::~GluingPermSearcher() {
 void GluingPermSearcher<4>::searchImpl(long maxDepth, ActionWrapper&& action_) {
     // In this generation algorithm, each orientation is simply +/-1.
 
-    unsigned nPentachora = perms_.size();
+    size_t nPentachora = perms_.size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
         maxDepth = nPentachora * 5 + 1;
@@ -287,14 +288,12 @@ void GluingPermSearcher<4>::searchImpl(long maxDepth, ActionWrapper&& action_) {
 
     // ---------- Selecting the individual gluing permutations ----------
 
-    int minOrder = orderElt_;
-    int maxOrder = orderElt_ + maxDepth;
-
-    FacetSpec<4> facet, adj;
+    ssize_t minOrder = orderElt_;
+    ssize_t maxOrder = orderElt_ + maxDepth;
 
     while (orderElt_ >= minOrder) {
-        facet = order_[orderElt_];
-        adj = perms_.pairing()[facet];
+        FacetSpec<4> facet = order_[orderElt_];
+        FacetSpec<4> adj = perms_.pairing()[facet];
 
         // TODO: Check for cancellation.
 
@@ -430,7 +429,7 @@ void GluingPermSearcher<4>::searchImpl(long maxDepth, ActionWrapper&& action_) {
         if (nEdgeClasses_ != 10 * nPentachora)
             std::cerr << "ERROR: nEdgeClasses == "
                 << nEdgeClasses_ << " at end of search!" << std::endl;
-        for (int i = 0; i < static_cast<int>(nPentachora) * 10; ++i) {
+        for (size_t i = 0; i < nPentachora * 10; ++i) {
             if (edgeState_[i].parent != -1)
                 std::cerr << "ERROR: edgeState[" << i << "].parent == "
                     << edgeState_[i].parent << " at end of search!"
@@ -463,7 +462,7 @@ void GluingPermSearcher<4>::searchImpl(long maxDepth, ActionWrapper&& action_) {
                 std::cerr << "ERROR: edgeState[" << i << "].bdryTwist == "
                     "true at end of search!" << std::endl;
         }
-        for (unsigned i = 0; i < nPentachora * 25; ++i)
+        for (size_t i = 0; i < nPentachora * 25; ++i)
             if (edgeStateChanged_[i] != -1)
                 std::cerr << "ERROR: edgeStateChanged[" << i << "] == "
                     << edgeStateChanged_[i] << " at end of search!"
@@ -473,7 +472,7 @@ void GluingPermSearcher<4>::searchImpl(long maxDepth, ActionWrapper&& action_) {
         if (nTriangleClasses_ != 10 * nPentachora)
             std::cerr << "ERROR: nTriangleClasses == "
                 << nTriangleClasses_ << " at end of search!" << std::endl;
-        for (unsigned i = 0; i < nPentachora * 10; ++i) {
+        for (size_t i = 0; i < nPentachora * 10; ++i) {
             if (triState_[i].parent != -1)
                 std::cerr << "ERROR: triState[" << i << "].parent == "
                     << triState_[i].parent << " at end of search!"
@@ -491,7 +490,7 @@ void GluingPermSearcher<4>::searchImpl(long maxDepth, ActionWrapper&& action_) {
                 std::cerr << "ERROR: triState[" << i << "].hadEqualRank == "
                     "true at end of search!" << std::endl;
         }
-        for (unsigned i = 0; i < nPentachora * 25 / 2; ++i)
+        for (size_t i = 0; i < nPentachora * 25 / 2; ++i)
             if (triStateChanged_[i] != -1)
                 std::cerr << "ERROR: triStateChanged[" << i << "] == "
                     << triStateChanged_[i] << " at end of search!"
@@ -508,10 +507,9 @@ void GluingPermSearcher<4>::dumpData(std::ostream& out) const {
     out << (started_ ? 's' : '.');
     out << std::endl;
 
-    int nPent = perms_.size();
-    int i;
+    size_t nPent = perms_.size();
 
-    for (i = 0; i < nPent; ++i) {
+    for (size_t i = 0; i < nPent; ++i) {
         if (i)
             out << ' ';
         out << orientation_[i];
@@ -519,7 +517,7 @@ void GluingPermSearcher<4>::dumpData(std::ostream& out) const {
     out << std::endl;
 
     out << orderElt_ << ' ' << orderSize_ << std::endl;
-    for (i = 0; i < orderSize_; ++i) {
+    for (size_t i = 0; i < orderSize_; ++i) {
         if (i)
             out << ' ';
         out << order_[i].simp << ' ' << order_[i].facet;
@@ -529,11 +527,11 @@ void GluingPermSearcher<4>::dumpData(std::ostream& out) const {
     // ---------- Tracking of edge / triangle equivalence classes ----------
 
     out << nEdgeClasses_ << std::endl;
-    for (i = 0; i < 10 * nPent; ++i) {
+    for (size_t i = 0; i < 10 * nPent; ++i) {
         edgeState_[i].dumpData(out);
         out << std::endl;
     }
-    for (i = 0; i < 25 * nPent; ++i) {
+    for (size_t i = 0; i < 25 * nPent; ++i) {
         if (i)
             out << ' ';
         out << edgeStateChanged_[i];
@@ -541,11 +539,11 @@ void GluingPermSearcher<4>::dumpData(std::ostream& out) const {
     out << std::endl;
 
     out << nTriangleClasses_ << std::endl;
-    for (i = 0; i < 10 * nPent; ++i) {
+    for (size_t i = 0; i < 10 * nPent; ++i) {
         triState_[i].dumpData(out);
         out << std::endl;
     }
-    for (i = 0; i < 25 * nPent / 2; ++i) {
+    for (size_t i = 0; i < 25 * nPent / 2; ++i) {
         if (i)
             out << ' ';
         out << triStateChanged_[i];
@@ -565,7 +563,7 @@ void GluingPermSearcher<4>::writeTextShort(std::ostream& out) const {
         out << ", finite only";
 
     out << ": stage " << orderElt_ << ", order:";
-    for (int i = 0; i < orderSize_; ++i)
+    for (size_t i = 0; i < orderSize_; ++i)
         out << ' ' << order_[i].simp << ':' << order_[i].facet;
 }
 
@@ -584,7 +582,7 @@ GluingPermSearcher<4>::GluingPermSearcher(std::istream& in) :
         orientableOnly_ = false;
     else
         throw InvalidInput("Invalid orientability tag "
-            "while attempting to read GluingPermSearcher<3>");
+            "while attempting to read GluingPermSearcher<4>");
 
     in >> c;
     if (c == 'f')
@@ -593,7 +591,7 @@ GluingPermSearcher<4>::GluingPermSearcher(std::istream& in) :
         finiteOnly_ = false;
     else
         throw InvalidInput("Invalid finiteness tag "
-            "while attempting to read GluingPermSearcher<3>");
+            "while attempting to read GluingPermSearcher<4>");
 
     in >> c;
     if (c == 's')
@@ -602,23 +600,22 @@ GluingPermSearcher<4>::GluingPermSearcher(std::istream& in) :
         started_ = false;
     else
         throw InvalidInput("Invalid started tag "
-            "while attempting to read GluingPermSearcher<3>");
+            "while attempting to read GluingPermSearcher<4>");
 
-    int nPent = perms_.size();
-    int p;
+    size_t nPent = perms_.size();
 
     orientation_ = new int[nPent];
-    for (p = 0; p < nPent; ++p)
+    for (size_t p = 0; p < nPent; ++p)
         in >> orientation_[p];
 
     order_ = new FacetSpec<4>[(nPent * 5) / 2];
     in >> orderElt_ >> orderSize_;
-    for (p = 0; p < orderSize_; ++p) {
+    for (size_t p = 0; p < orderSize_; ++p) {
         in >> order_[p].simp >> order_[p].facet;
         if (order_[p].simp >= nPent || order_[p].simp < 0 ||
                 order_[p].facet >= 5 || order_[p].facet < 0)
             throw InvalidInput("Facet gluing out of range "
-                "while attempting to read GluingPermSearcher<3>");
+                "while attempting to read GluingPermSearcher<4>");
     }
 
     // Did we hit an unexpected EOF?
@@ -628,26 +625,24 @@ GluingPermSearcher<4>::GluingPermSearcher(std::istream& in) :
 
     // ---------- Tracking of edge / triangle equivalence classes ----------
 
-    unsigned i;
-
     in >> nEdgeClasses_;
     if (nEdgeClasses_ > 10 * nPent)
         throw InvalidInput("Edge classes out of range "
             "while attempting to read GluingPermSearcher<4>");
 
     edgeState_ = new PentEdgeState[10 * nPent];
-    for (i = 0; i < 10 * nPent; ++i)
+    for (size_t i = 0; i < 10 * nPent; ++i)
         if (! edgeState_[i].readData(in, 10 * nPent))
             throw InvalidInput("Invalid edge state "
-                "while attempting to read GluingPermSearcher<3>");
+                "while attempting to read GluingPermSearcher<4>");
 
-    edgeStateChanged_ = new int[25 * nPent];
-    for (i = 0; i < 25 * nPent; ++i) {
+    edgeStateChanged_ = new ssize_t[25 * nPent];
+    for (size_t i = 0; i < 25 * nPent; ++i) {
         in >> edgeStateChanged_[i];
         if (edgeStateChanged_[i] < -1 ||
-                 edgeStateChanged_[i] >= 10 * static_cast<int>(nPent))
+                 edgeStateChanged_[i] >= 10 * static_cast<ssize_t>(nPent))
             throw InvalidInput("Invalid edge state changed "
-                "while attempting to read GluingPermSearcher<3>");
+                "while attempting to read GluingPermSearcher<4>");
     }
 
     in >> nTriangleClasses_;
@@ -656,18 +651,18 @@ GluingPermSearcher<4>::GluingPermSearcher(std::istream& in) :
             "while attempting to read GluingPermSearcher<4>");
 
     triState_ = new PentTriangleState[10 * nPent];
-    for (i = 0; i < 10 * nPent; ++i)
+    for (size_t i = 0; i < 10 * nPent; ++i)
         if (! triState_[i].readData(in, 10 * nPent))
             throw InvalidInput("Invalid triangle state "
-                "while attempting to read GluingPermSearcher<3>");
+                "while attempting to read GluingPermSearcher<4>");
 
-    triStateChanged_ = new int[25 * nPent / 2];
-    for (i = 0; i < 25 * nPent / 2; ++i) {
+    triStateChanged_ = new ssize_t[25 * nPent / 2];
+    for (size_t i = 0; i < 25 * nPent / 2; ++i) {
         in >> triStateChanged_[i];
         if (triStateChanged_[i] < -1 ||
-                 triStateChanged_[i] >= 10 * static_cast<int>(nPent))
+                 triStateChanged_[i] >= 10 * static_cast<ssize_t>(nPent))
             throw InvalidInput("Invalid triangle state changed "
-                "while attempting to read GluingPermSearcher<3>");
+                "while attempting to read GluingPermSearcher<4>");
     }
 
     // Did we hit an unexpected EOF?
@@ -684,8 +679,7 @@ bool GluingPermSearcher<4>::isCanonical() const {
         // Compare the current set of gluing permutations with its
         // preimage under each facet pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
-        for (facet.setFirst(); facet.simp <
-                static_cast<int>(perms_.size()); facet++) {
+        for (facet.setFirst(); facet.simp < perms_.size(); facet++) {
             facetDest = perms_.pairing().dest(facet);
             if (perms_.pairing().isUnmatched(facet) || facetDest < facet)
                 continue;
@@ -714,12 +708,8 @@ bool GluingPermSearcher<4>::isCanonical() const {
 
 bool GluingPermSearcher<4>::badTriangleLink(const FacetSpec<4>& facet) const {
     // Run around all four triangles bounding the facet.
-    FacetSpec<4> adj;
-    unsigned pent;
-    Perm<5> current;
     Perm<5> start(facet.facet, 4);
-    bool started, incomplete;
-    for (unsigned permIdx = 0; permIdx < 4; ++permIdx) {
+    for (int permIdx = 0; permIdx < 4; ++permIdx) {
         start = start * Perm<5>(1, 2, 3, 0, 4);
 
         // start maps (0,1,2,3) to the four vertices of facet, with
@@ -729,13 +719,13 @@ bool GluingPermSearcher<4>::badTriangleLink(const FacetSpec<4>& facet) const {
         // facet, until either we hit a boundary or we return to the
         // original facet.
 
-        current = start;
-        pent = facet.simp;
+        Perm<5> current = start;
+        size_t pent = facet.simp;
 
-        started = false;
-        incomplete = false;
+        bool started = false;
+        bool incomplete = false;
 
-        while ((! started) || (static_cast<int>(pent) != facet.simp) ||
+        while ((! started) || (pent != facet.simp) ||
                 (start[3] != current[3]) || (start[4] != current[4])) {
             // Push through the current pentachoron.
             started = true;
@@ -746,7 +736,7 @@ bool GluingPermSearcher<4>::badTriangleLink(const FacetSpec<4>& facet) const {
                 incomplete = true;
                 break;
             }
-            adj = perms_.pairing().dest(pent, current[4]);
+            FacetSpec<4> adj = perms_.pairing().dest(pent, current[4]);
 
             if (perms_.permIndex(pent, current[4]) >= 0) {
                 current = perms_.perm(pent, current[4]) * current;
@@ -778,10 +768,8 @@ bool GluingPermSearcher<4>::mergeEdgeClasses() {
 
     int v1, w1, v2, w2, v3, w3;
     int e, f;
-    int eIdx, fIdx, tmpIdx, nextIdx;
-    int orderIdx;
-    int eRep, fRep;
-    int eNext[2], fNext[2];
+    ssize_t eRep, fRep;
+    size_t eNext[2], fNext[2];
     char eTwistTriangle[2], fTwistTriangle[2];
 
     Perm<5> p = perms_.perm(facet);
@@ -809,9 +797,9 @@ bool GluingPermSearcher<4>::mergeEdgeClasses() {
             // Look at the edge opposite v1, v2 and v3.
             e = Triangle<4>::triangleNumber[v1][v2][v3];
             f = Triangle<4>::triangleNumber[w1][w2][w3];
-            eIdx = e + 10 * facet.simp;
-            fIdx = f + 10 * adj.simp;
-            orderIdx = e + 10 * orderElt_;
+            size_t eIdx = e + 10 * facet.simp;
+            size_t fIdx = f + 10 * adj.simp;
+            size_t orderIdx = e + 10 * orderElt_;
 
             // We declare the natural orientation of an edge to be
             // smaller vertex to larger vertex.
@@ -947,10 +935,10 @@ bool GluingPermSearcher<4>::mergeEdgeClasses() {
                             // See if we are joining two different boundary
                             // cycles together; if so, we have created
                             // non-trivial genus in the edge link.
-                            tmpIdx = edgeState_[eIdx].bdryNext[0];
+                            size_t tmpIdx = edgeState_[eIdx].bdryNext[0];
                             tmpTwistTriangle = edgeState_[eIdx].bdryTwist[0];
                             while (tmpIdx != eIdx && tmpIdx != fIdx) {
-                                nextIdx = edgeState_[tmpIdx].
+                                size_t nextIdx = edgeState_[tmpIdx].
                                     bdryNext[0 ^ tmpTwistTriangle];
                                 tmpTwistTriangle ^= edgeState_[tmpIdx].
                                     bdryTwist[0 ^ tmpTwistTriangle];
@@ -1086,8 +1074,6 @@ void GluingPermSearcher<4>::splitEdgeClasses() {
 
     int v1, v2, v3, w1, w2, w3;
     int e, f;
-    int eIdx, fIdx, orderIdx;
-    int rep, subRep;
 
     Perm<5> p = perms_.perm(facet);
 
@@ -1111,19 +1097,20 @@ void GluingPermSearcher<4>::splitEdgeClasses() {
             // Look at the edge opposite v1, v2 and v3.
             e = Triangle<4>::triangleNumber[v1][v2][v3];
             f = Triangle<4>::triangleNumber[w1][w2][w3];
-            eIdx = e + 10 * facet.simp;
-            fIdx = f + 10 * adj.simp;
-            orderIdx = e + 10 * orderElt_;
+            size_t eIdx = e + 10 * facet.simp;
+            size_t fIdx = f + 10 * adj.simp;
+            size_t orderIdx = e + 10 * orderElt_;
 
             if (edgeStateChanged_[orderIdx] < 0) {
+                size_t rep;
                 for (rep = eIdx; edgeState_[rep].parent >= 0;
                         rep = edgeState_[rep].parent)
                     ;
                 edgeState_[rep].bdry += 2;
             } else {
                 // Separate a two trees that had been grafted together.
-                subRep = edgeStateChanged_[orderIdx];
-                rep = edgeState_[subRep].parent;
+                size_t subRep = edgeStateChanged_[orderIdx];
+                size_t rep = edgeState_[subRep].parent;
 
                 edgeState_[subRep].parent = -1;
                 if (edgeState_[subRep].hadEqualRank) {
@@ -1198,8 +1185,6 @@ bool GluingPermSearcher<4>::mergeTriangleClasses() {
     Perm<5> p = perms_.perm(facet);
     int v1, w1, v2, w2;
     int e, f;
-    int orderIdx;
-    int eRep, fRep;
 
     v1 = facet.facet;
     w1 = p[v1];
@@ -1215,7 +1200,7 @@ bool GluingPermSearcher<4>::mergeTriangleClasses() {
         e = Edge<4>::edgeNumber[v1][v2];
         f = Edge<4>::edgeNumber[w1][w2];
 
-        orderIdx = v2 + 5 * orderElt_;
+        size_t orderIdx = v2 + 5 * orderElt_;
 
         // Vertices of a triangle are labelled in order from smallest to
         // largest.
@@ -1242,8 +1227,8 @@ bool GluingPermSearcher<4>::mergeTriangleClasses() {
         }
 
         Perm<3> eTwist, fTwist; /* Initialise to identity permutations. */
-        eRep = findTriangleClass(e + 10 * facet.simp, eTwist);
-        fRep = findTriangleClass(f + 10 * adj.simp, fTwist);
+        size_t eRep = findTriangleClass(e + 10 * facet.simp, eTwist);
+        size_t fRep = findTriangleClass(f + 10 * adj.simp, fTwist);
 
         if (eRep == fRep) {
             triState_[eRep].bounded = false;
@@ -1284,28 +1269,23 @@ bool GluingPermSearcher<4>::mergeTriangleClasses() {
 void GluingPermSearcher<4>::splitTriangleClasses() {
     FacetSpec<4> facet = order_[orderElt_];
 
-    int v1, v2;
-    int f;
-    int fIdx, orderIdx;
-    int rep, subRep;
+    int v1 = facet.facet;
 
-    v1 = facet.facet;
-
-    for (v2 = 4; v2 >= 0; --v2) {
+    for (int v2 = 4; v2 >= 0; --v2) {
         if (v2 == v1)
             continue;
 
         // Look at the triangle opposite edge v1-v2.
-        f = Edge<4>::edgeNumber[v1][v2];
+        int f = Edge<4>::edgeNumber[v1][v2];
 
-        fIdx = f + 10 * facet.simp;
-        orderIdx = v2 + 5 * orderElt_;
+        size_t fIdx = f + 10 * facet.simp;
+        size_t orderIdx = v2 + 5 * orderElt_;
 
         if (triStateChanged_[orderIdx] < 0)
             triState_[findTriangleClass(fIdx)].bounded = true;
         else {
-            subRep = triStateChanged_[orderIdx];
-            rep = triState_[subRep].parent;
+            size_t subRep = triStateChanged_[orderIdx];
+            size_t rep = triState_[subRep].parent;
 
             triState_[subRep].parent = -1;
             if (triState_[subRep].hadEqualRank) {
@@ -1321,8 +1301,8 @@ void GluingPermSearcher<4>::splitTriangleClasses() {
     }
 }
 
-void GluingPermSearcher<4>::edgeBdryNext(int edgeID, int pent, int edge,
-        int bdryFacet, int next[2], char twist[2]) {
+void GluingPermSearcher<4>::edgeBdryNext(size_t edgeID, size_t pent, int edge,
+        int bdryFacet, size_t next[2], char twist[2]) {
     switch (edgeState_[edgeID].bdryEdges) {
         case 3: next[0] = next[1] = edgeID;
                 twist[0] = twist[1] = 0;
@@ -1376,11 +1356,10 @@ void GluingPermSearcher<4>::edgeBdryNext(int edgeID, int pent, int edge,
 }
 
 void GluingPermSearcher<4>::edgeBdryConsistencyCheck() {
-    int adj, id, end;
-    for (id = 0; id < static_cast<int>(perms_.size()) * 5; ++id)
+    for (size_t id = 0; id < perms_.size() * 5; ++id)
         if (edgeState_[id].bdryEdges > 0)
-            for (end = 0; end < 2; ++end) {
-                adj = edgeState_[id].bdryNext[end];
+            for (int end = 0; end < 2; ++end) {
+                size_t adj = edgeState_[id].bdryNext[end];
                 if (edgeState_[adj].bdryEdges == 0)
                     std::cerr << "CONSISTENCY ERROR: Edge link boundary "
                         << id << '/' << end
@@ -1400,7 +1379,7 @@ void GluingPermSearcher<4>::edgeBdryConsistencyCheck() {
 }
 
 void GluingPermSearcher<4>::edgeBdryDump(std::ostream& out) {
-    for (unsigned id = 0; id < perms_.size() * 5; ++id) {
+    for (size_t id = 0; id < perms_.size() * 5; ++id) {
         if (id > 0)
             out << ' ';
         out << edgeState_[id].bdryNext[0]

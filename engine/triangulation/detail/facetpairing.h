@@ -879,8 +879,7 @@ template <int dim>
 inline bool FacetPairingBase<dim>::noDest(
         size_t simp, unsigned facet) const {
     FacetSpec<dim>& f = pairs_[(dim + 1) * simp + facet];
-    return (f.simp == static_cast<int>(simp) &&
-        f.facet == static_cast<int>(facet));
+    return (f.simp == simp && f.facet == facet);
 }
 
 template <int dim>
