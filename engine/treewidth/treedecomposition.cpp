@@ -59,13 +59,13 @@ template TreeDecomposition::TreeDecomposition(
 
 template void TreeDecomposition::reroot(const int*, const int*, const int*);
 
-bool TreeBag::contains(int element) const {
+bool TreeBag::contains(size_t element) const {
     return std::binary_search(elements_, elements_ + size_, element);
 }
 
 BagComparison TreeBag::compare(const TreeBag& rhs) const {
-    int p1 = 0;
-    int p2 = 0;
+    size_t p1 = 0;
+    size_t p2 = 0;
     bool extraInLHS = false;
     bool extraInRHS = false;
 
@@ -120,12 +120,12 @@ void TreeBag::writeTextShort(std::ostream& out) const {
     else
         out << "Bag of " << size_ << " elements:";
 
-    for (int i = 0; i < size_; ++i)
+    for (size_t i = 0; i < size_; ++i)
         out << ' ' << elements_[i];
 }
 
 void TreeDecomposition::Graph::dump(std::ostream& out) const {
-    int i, j;
+    size_t i, j;
     for (i = 0; i < order_; ++i) {
         for (j = 0; j < order_; ++j)
             out << (adj_[i][j] ? '*' : '_');
@@ -241,11 +241,10 @@ TreeDecomposition::TreeDecomposition(const Link& link,
         width_(0), root_(nullptr) {
     Graph g(link.size());
 
-    int i, j;
     const Crossing* c;
-    for (i = 0; i < g.order_; ++i) {
+    for (size_t i = 0; i < g.order_; ++i) {
         c = link.crossing(i);
-        for (j = 0; j < 2; ++j) {
+        for (int j = 0; j < 2; ++j) {
             g.adj_[i][c->next(j).crossing()->index()] = true;
             g.adj_[i][c->prev(j).crossing()->index()] = true;
         }
@@ -266,7 +265,6 @@ TreeDecomposition TreeDecomposition::fromPACE(std::istream& in) {
 
     std::string line;
     char c;
-    int idx, i, j;
     std::string tmp;
     while (std::getline(in, line)) {
         if (line.empty())
@@ -286,6 +284,7 @@ TreeDecomposition TreeDecomposition::fromPACE(std::istream& in) {
             std::fill(bags, bags + nBags, nullptr);
         } else if (readBags < nBags) {
             // We are expecting a bag.
+            size_t idx;
             if (! ((s >> c >> idx) && (c == 'b') && (idx > 0) &&
                     (idx <= nBags) && (! bags[idx - 1]))) {
                 for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
@@ -323,7 +322,7 @@ TreeDecomposition TreeDecomposition::fromPACE(std::istream& in) {
                 bags[idx]->elements_ + bags[idx]->size_);
 
             // Make sure there are no duplicate vertices in the bag.
-            for (i = 0; i + 1 < bags[idx]->size_; ++i)
+            for (size_t i = 0; i + 1 < bags[idx]->size_; ++i)
                 if (bags[idx]->elements_[i] == bags[idx]->elements_[i + 1]) {
                     for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
                         delete *bag;
@@ -339,6 +338,7 @@ TreeDecomposition TreeDecomposition::fromPACE(std::istream& in) {
             ++readBags;
         } else if (readJoins + 1 < nBags) {
             // We are expecting a connection between two bags.
+            size_t i, j;
             if (! ((s >> i >> j) && (i != j) && (i > 0) && (j > 0) &&
                     (i <= nBags) && (j <= nBags) && ! (s >> tmp))) {
                 for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
@@ -389,7 +389,7 @@ TreeDecomposition TreeDecomposition::fromPACE(std::istream& in) {
     }
 
     TreeDecomposition ans;
-    ans.width_ = maxBagSize - 1;
+    ans.width_ = static_cast<ssize_t>(maxBagSize) - 1;
 
     for (ans.root_ = bags[nBags - 1]; ans.root_->parent_;
             ans.root_ = ans.root_->parent_)
@@ -430,32 +430,30 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
     // little tweaking we can improve this.
 
     bool* used = new bool[graph.order_];
-    int* elimOrder = new int[graph.order_]; // Elimination stage -> vertex
-    int* elimStage = new int[graph.order_]; // Vertex -> elimination stage
+    size_t* elimOrder = new size_t[graph.order_]; // Elimination stage -> vertex
+    size_t* elimStage = new size_t[graph.order_]; // Vertex -> elimination stage
     auto* bags = new TreeBag*[graph.order_];
 
     std::fill(used, used + graph.order_, false);
 
-    int elim, elimEdges, elimBagSize;
-    int bestElim, bestElimEdges, bestElimBagSize;
-    int stage, j, k, which;
-    for (stage = 0; stage < graph.order_; ++stage) {
-        bestElim = -1;
+    for (size_t stage = 0; stage < graph.order_; ++stage) {
+        ssize_t bestElim = -1;
+        size_t bestElimEdges, bestElimBagSize;
 
-        for (elim = 0; elim < graph.order_; ++elim) {
+        for (size_t elim = 0; elim < graph.order_; ++elim) {
             if (used[elim])
                 continue;
 
             // See how many edges we need to add if we eliminate this vertex.
-            elimEdges = 0;
-            elimBagSize = 1;
-            for (j = 0; j < graph.order_; ++j) {
+            size_t elimEdges = 0;
+            size_t elimBagSize = 1;
+            for (size_t j = 0; j < graph.order_; ++j) {
                 if (used[j] || j == elim || ! graph.adj_[elim][j])
                     continue;
 
                 // j is an unused neighbour of elim.
                 ++elimBagSize;
-                for (k = j + 1; k < graph.order_; ++k) {
+                for (size_t k = j + 1; k < graph.order_; ++k) {
                     if (used[k] || k == elim || ! graph.adj_[elim][k])
                         continue;
 
@@ -483,8 +481,8 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
         // This contains the eliminated vertex and all of its unused neighbours.
         // Ensure the elements are stored in sorted order.
         bags[stage] = new TreeBag(bestElimBagSize);
-        which = 0;
-        for (j = 0; j < graph.order_; ++j) {
+        size_t which = 0;
+        for (size_t j = 0; j < graph.order_; ++j) {
             if (j == bestElim) {
                 bags[stage]->elements_[which++] = j;
             } else if ((! used[j]) && graph.adj_[bestElim][j]) {
@@ -492,7 +490,7 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
 
                 // Add links between neighbours of bestElim so that this bag
                 // becomes a clique.
-                for (k = j + 1; k < graph.order_; ++k) {
+                for (size_t k = j + 1; k < graph.order_; ++k) {
                     if (used[k] || ! graph.adj_[bestElim][k])
                         continue;
                     if (! graph.adj_[j][k])
@@ -506,8 +504,7 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
     // Step 2: Set the parent relationships in the tree.
     root_ = bags[graph.order_ - 1];
 
-    int parent;
-    for (stage = 0; stage < graph.order_ - 1; ++stage) {
+    for (size_t stage = 0; stage < graph.order_ - 1; ++stage) {
         if (bags[stage]->size_ == 1) {
             // The graph must have been disconnected, and the resulting
             // tree decomposition becomes a forest.
@@ -516,9 +513,9 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
             continue;
         }
 
-        parent = graph.order_ - 1;
-        for (j = 0; j < bags[stage]->size_; ++j) {
-            k = elimStage[bags[stage]->elements_[j]];
+        size_t parent = graph.order_ - 1;
+        for (size_t j = 0; j < bags[stage]->size_; ++j) {
+            size_t k = elimStage[bags[stage]->elements_[j]];
             if (k > stage && k < parent)
                 parent = k;
         }
@@ -581,7 +578,7 @@ void TreeBag::makeRoot() {
     }
 }
 
-const TreeBag* TreeDecomposition::bag(int index) const {
+const TreeBag* TreeDecomposition::bag(size_t index) const {
     const TreeBag* b = root_;
     while (b->index() != index) {
         b = b->children();
@@ -712,7 +709,7 @@ void TreeDecomposition::makeNice(const int* heightHint) {
     // new empty bag.
     TreeBag* b = root_;
     TreeBag *tmp, *tmp2, *tmp3;
-    int forget;
+    size_t forget;
     while (root_->size_ > 0) {
         // Work out which node of root_ we wish to forget.
         if (heightHint) {
@@ -723,7 +720,7 @@ void TreeDecomposition::makeNice(const int* heightHint) {
             // too hard about this.
             forget = std::min_element(root_->elements_,
                 root_->elements_ + root_->size_,
-                [heightHint](int a, int b) {
+                [heightHint](auto a, auto b) {
                     return heightHint[a] < heightHint[b];
                 }) - root_->elements_;
         } else
@@ -744,8 +741,6 @@ void TreeDecomposition::makeNice(const int* heightHint) {
         tmp->subtype_ = forget;
     }
 
-    TreeBag* next;
-    int p1, p2;
     while (b) {
         // Invariants:
         // - b is not the root;
@@ -776,9 +771,10 @@ void TreeDecomposition::makeNice(const int* heightHint) {
             // Insert the necessary sequence of forgets and introduces.
             // Because we called compress() above, we know that we will
             // need at least one forget and at least one introduce.
-            next = b->children_;
+            TreeBag* next = b->children_;
 
-            p1 = p2 = 0;
+            size_t p1 = 0;
+            size_t p2 = 0;
             tmp = b;
             tmp2 = next;
             while (p1 < tmp->size_ || p2 < tmp2->size_) {
@@ -842,14 +838,15 @@ void TreeDecomposition::makeNice(const int* heightHint) {
             b = next;
         } else {
             // b is a leaf node.
+            // TODO: If b is empty, drop it.
             // Build a series of introduce nodes.
-            next = const_cast<TreeBag*>(b->nextPrefix());
+            TreeBag* next = const_cast<TreeBag*>(b->nextPrefix());
 
             b->type_ = NICE_INTRODUCE;
             b->subtype_ = b->size_ - 1;
 
             tmp = b;
-            for (int i = b->size_ - 1; i > 0; --i) {
+            for (size_t i = b->size_ - 1; i > 0; --i) {
                 tmp2 = new TreeBag(i);
                 std::copy(b->elements_, b->elements_ + i, tmp2->elements_);
                 tmp->children_ = tmp2;
@@ -886,12 +883,11 @@ void TreeDecomposition::writeDot(std::ostream& out) const {
         "node [style=filled,fontsize=9,fontcolor=\"#751010\"];\n";
 
     TreeBag* b = root_;
-    int i;
     while (b) {
         out << "b_" << b->index_ << " [label=\"";
         if (b->size_) {
             out << b->elements_[0];
-            for (i = 1; i < b->size_; ++i)
+            for (size_t i = 1; i < b->size_; ++i)
                 out << ", " << b->elements_[i];
         } else
             out << "empty";
@@ -924,9 +920,8 @@ void TreeDecomposition::writePACE(std::ostream& out) const {
         << std::endl;
 
     const TreeBag* b;
-    int i;
 
-    int nVert = 0;
+    size_t nVert = 0;
     for (b = first(); b; b = b->next()) {
         if (b->size() && nVert <= b->elements_[b->size_ - 1])
             nVert = b->elements_[b->size_ - 1] + 1;
@@ -936,7 +931,7 @@ void TreeDecomposition::writePACE(std::ostream& out) const {
 
     for (b = first(); b; b = b->next()) {
         out << "b " << (b->index() + 1);
-        for (i = 0; i < b->size_; ++i)
+        for (size_t i = 0; i < b->size_; ++i)
             out << ' ' << (b->elements_[i] + 1);
         out << std::endl;
     }
@@ -976,15 +971,14 @@ void TreeDecomposition::writeTextLong(std::ostream& out) const {
     out << "Tree decomposition: width " << width_ << ", size " << size_;
     out << std::endl;
 
-    int indent = 0;
+    size_t indent = 0;
     TreeBag* b = root_;
-    int i;
 
     while (b) {
-        for (i = 0; i < indent; ++i)
+        for (size_t i = 0; i < indent; ++i)
             out << "  ";
         out << "Bag " << b->index_ << " [" << b->size_ << "]:";
-        for (i = 0; i < b->size_; ++i)
+        for (size_t i = 0; i < b->size_; ++i)
             out << ' ' << b->elements_[i];
         out << std::endl;
 
