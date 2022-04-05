@@ -264,7 +264,7 @@ bool TriangulationBase<dim>::findIsomorphisms(
         iso.simpImage(i) = -1;
 
     // Which source component does each destination simplex correspond to?
-    long* whichComp = new ssize_t[nDestSimplices];
+    auto* whichComp = new ssize_t[nDestSimplices];
     std::fill(whichComp, whichComp + nDestSimplices, -1);
 
     // The image of the first source simplex of each component.  The
