@@ -551,7 +551,7 @@ int Triangulation<3>::isHandlebody() const {
         prop_.solidTorus_ = false;
         if ( isBall() ) {
             // A 3-ball never has a compressing disc.
-            prop_.compressingDisc_ = false
+            prop_.compressingDisc_ = false;
             return *(prop_.handlebody_ = 0);
         } else {
             return *(prop_.handlebody_ = -1);
@@ -561,7 +561,7 @@ int Triangulation<3>::isHandlebody() const {
         prop_.threeBall_ = false;
         if ( isSolidTorus() ) {
             // A solid torus always has a compressing disc.
-            prop_.compressingDisc_ = true
+            prop_.compressingDisc_ = true;
             return *(prop_.handlebody_ = 1);
         } else {
             return *(prop_.handlebody_ = -1);
@@ -754,7 +754,7 @@ int Triangulation<3>::isHandlebody() const {
     // The list to process became empty, so we must have started with an
     // orientable handlebody (of genus at least 2).
     // By the way, we know that this always has a compressing disc.
-    prop_.compressingDisc_ = true
+    prop_.compressingDisc_ = true;
     return *(prop_.handlebody_ = genus);
 }
 
