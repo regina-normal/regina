@@ -254,6 +254,19 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          */
         long linkEulerChar() const;
 
+        /**
+         * Returns the link of this vertex as a normal surface.
+         *
+         * Vertex linking surfaces only ever contain triangles (not
+         * quadrilaterals).  Moreover, after constructing the frontier of a
+         * regular neighbourhood of the vertex, such a surface will never
+         * require further normalisation steps (unlike edge links, which
+         * sometimes do).
+         *
+         * @return the corresponding vertex linking normal surface.
+         */
+        NormalSurface linkingSurface() const;
+
     private:
         /**
          * Creates a new vertex and marks it as belonging to the

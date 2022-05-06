@@ -70,7 +70,8 @@ template <int dim> class Face<dim, dim>;
 template <> class Face<2, 2>;
 template <> class Face<3, 3>;
 template <> class Face<3, 2>; // test shape
-template <> class Face<3, 0>; // build links, output type
+template <> class Face<3, 1>; // normal links
+template <> class Face<3, 0>; // build links, normal links, output type
 template <> class Face<4, 4>;
 template <> class Face<4, 1>; // build links
 template <> class Face<4, 0>; // build links, output ideal/etc.

@@ -109,4 +109,14 @@ Isomorphism<3> Face<3, 0>::buildLinkInclusion() const {
     return inclusion;
 }
 
+NormalSurface Face<3, 0>::linkingSurface() const {
+    const Triangulation<3>& tri = triangulation();
+    Vector<LargeInteger> coords(7 * tri.size());
+
+    for (auto& emb : *this)
+        coords[7 * emb.simplex()->index() + emb.vertex()] = 1;
+
+    return NormalSurface(tri, NS_STANDARD, std::move(coords));
+}
+
 } // namespace regina

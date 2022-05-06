@@ -83,6 +83,7 @@ void addEdge3(pybind11::module_& m) {
         .def("hasBadIdentification", &Edge<3>::hasBadIdentification)
         .def("hasBadLink", &Edge<3>::hasBadLink)
         .def("isLinkOrientable", &Edge<3>::isLinkOrientable)
+        .def("linkingSurface", &Edge<3>::linkingSurface)
         .def_static("ordering", &Edge<3>::ordering)
         .def_static("faceNumber", &Edge<3>::faceNumber)
         .def_static("containsVertex", &Edge<3>::containsVertex)
