@@ -217,6 +217,9 @@ void addMatrixInt(pybind11::module_& m) {
         .def("__mul__", [](const MatrixInt& m, const regina::VectorInt& v){
             return m * v;
         })
+        .def("__mul__", [](const MatrixInt& m, const regina::VectorLarge& v){
+            return m * v;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

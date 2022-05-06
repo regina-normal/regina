@@ -8,6 +8,7 @@ SET ( FILES
   eltmoves.cpp
   homologicaldata.cpp
   isomorphism.cpp
+  links.cpp
   triangulation3.cpp
   )
 

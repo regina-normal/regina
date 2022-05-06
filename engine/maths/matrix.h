@@ -1126,6 +1126,13 @@ class Matrix : public Output<Matrix<T>> {
          * Multiplies this matrix by the given vector, and returns the result.
          * The given vector is treated as a column vector.
          *
+         * The matrix and vector may use different underlying types
+         * (e.g., you can multiply a matrix of LargeInteger objects with a
+         * vector of native C++ long integers).  The type of object that is
+         * stored in the resulting vector will be deduced accordingly
+         * (specifically, it will be the type obtained by multiplying objects
+         * of types \a T and \a U using the binary multiplication operator).
+         *
          * This routine is only available when the template argument \a ring
          * is \c true.
          *
@@ -1136,13 +1143,17 @@ class Matrix : public Output<Matrix<T>> {
          * @return the product <tt>this * other</tt>, which will be a
          * vector whose length is the number of rows in this matrix.
          */
-        REGINA_ENABLE_FOR_RING(Vector<T>) operator * (const Vector<T>& other)
-                const {
-            Vector<T> ans(this->rows_);
+        template <typename U>
+        Vector<decltype(T() * U())> operator * (const Vector<U>& other) const {
+            static_assert(ring, "Matrix-vector multiplication can only be "
+                "used with matrices over a ring.");
+
+            using Ans = decltype(T() * U());
+            Vector<Ans> ans(this->rows_);
 
             unsigned long row, col;
             for (row = 0; row < rows_; ++row) {
-                T elt = 0;
+                Ans elt = 0;
                 for (col = 0; col < cols_; ++col)
                     elt += (data_[row][col] * other[col]);
                 ans[row] = elt;
