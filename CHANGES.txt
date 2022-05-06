@@ -43,8 +43,8 @@ Version 7.1  [ TODO ]
               square (this is a precondition), and now returns 1 if the
               matrix is detected to be 0-by-0 (although such matrices are
               formally not supported by the Matrix class).
-            - You can now multiply a matrix over type T with a vector over
-              type U, where T and U are different types.
+            - You can now multiply a matrix over type T with a matrix or vector
+              over type U, where T and U are different types.
         Type safe_tuple_element<...>:
             - New type alias that is like std::tuple_element<...> but
               with well-defined behaviour for an out-of-range index.

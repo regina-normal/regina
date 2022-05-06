@@ -1098,6 +1098,13 @@ class Matrix : public Output<Matrix<T>> {
          * Multiplies this by the given matrix, and returns the result.
          * This matrix is not changed.
          *
+         * The two matrices being multiplied may use different underlying types
+         * (e.g., you can multiply a matrix of LargeInteger objects with a
+         * matrix of native C++ long integers).  The type of object that is
+         * stored in the resulting matrix will be deduced accordingly
+         * (specifically, it will be the type obtained by multiplying objects
+         * of types \a T and \a U using the binary multiplication operator).
+         *
          * This routine is only available when the template argument \a ring
          * is \c true.
          *
@@ -1107,8 +1114,14 @@ class Matrix : public Output<Matrix<T>> {
          * @param other the other matrix to multiply this matrix by.
          * @return the product matrix <tt>this * other</tt>.
          */
-        REGINA_ENABLE_FOR_RING(Matrix) operator * (const Matrix& other) const {
-            Matrix ans(this->rows_, other.cols_);
+        template <typename U>
+        Matrix<decltype(T() * U())> operator * (
+                const Matrix<U, true /* ring */>& other) const {
+            static_assert(ring, "Matrix multiplication can only be "
+                "used with matrices over rings.");
+
+            using Ans = decltype(T() * U());
+            Matrix<Ans> ans(this->rows_, other.cols_);
 
             unsigned long row, col, k;
             for (row = 0; row < rows_; ++row)
