@@ -87,7 +87,7 @@ void addVectorLarge(pybind11::module_& m) {
         // (but not gcc8), where the compiler cannot determine the type of a
         // template member function.
         .def("scaleDown",
-            (void (VectorLarge::*)())
+            (regina::LargeInteger (VectorLarge::*)())
             &VectorLarge::scaleDown)
         .def_static("unit", &VectorLarge::unit)
         .def_readonly_static("zero", &zero)

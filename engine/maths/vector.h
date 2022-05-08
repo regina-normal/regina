@@ -714,7 +714,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * @return the integer by which this vector was divided (i.e.,
          * the gcd of its original elements).  This will be strictly positive.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, LargeInteger) scaleDown() {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) scaleDown() {
             T gcd; // Initialised to 0.
             for (const T* e = elts_; e != end_; ++e) {
                 if (e->isInfinite() || (*e) == 0)

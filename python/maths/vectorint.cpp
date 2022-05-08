@@ -87,7 +87,7 @@ void addVectorInt(pybind11::module_& m) {
         // (but not gcc8), where the compiler cannot determine the type of a
         // template member function.
         .def("scaleDown",
-            (void (VectorInt::*)())
+            (regina::Integer (VectorInt::*)())
             &VectorInt::scaleDown)
         .def_static("unit", &VectorInt::unit)
         .def_readonly_static("zero", &zero)
