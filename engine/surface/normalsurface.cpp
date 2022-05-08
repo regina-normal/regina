@@ -578,14 +578,15 @@ NormalSurface& NormalSurface::operator *= (const LargeInteger& coeff) {
     return *this;
 }
 
-void NormalSurface::scaleDown() {
-    vector_.scaleDown();
+LargeInteger NormalSurface::scaleDown() {
+    LargeInteger ans = vector_.scaleDown();
 
     // Update properties of the surface where necessary:
+    if (eulerChar_.has_value())
+        eulerChar_->divByExact(ans);
 
     // Some properties might change, and we will leave them to be
     // recomputed:
-    eulerChar_.reset();
     boundaries_.reset();
     orientable_.reset();
     twoSided_.reset();
@@ -593,6 +594,8 @@ void NormalSurface::scaleDown() {
 
     // All other properties are preserved:
     // - octPosition_, realBoundary_, compact_
+
+    return ans;
 }
 
 } // namespace regina

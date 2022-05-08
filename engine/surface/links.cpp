@@ -383,88 +383,105 @@ std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
     // we will make use of these cheaper tests also.)
 
     NormalSurface mult = *this;
-    mult.scaleDown();
-    if (kk == 0) {
-        // All non-zero edge weights were the same, and so this *could*
-        // be a scenario where we need to double again, as described above.
-        //
-        // For this we test whether the surface is separating.  However,
-        // in any scenario where doubling is necessary, all edge weights
-        // are 0 or 1, and so the separating test becomes just a test to see
-        // if we can find a path from some vertex back to itself through
-        // the 1-skeleton that traverses an *odd* number of weight-one edges
-        // (and any number of weight-zero edges).
-        //
-        // Here we use a fairly naive test based on Floyd-Warshall.  This
-        // could be sped up by using union-find.  However, our naive test
-        // is cubic in the number of *vertices*, which in typical scenarios
-        // is very small.  So let's not fuss too much about this for now.
+    LargeInteger scale = mult.scaleDown();
+    if (kk != 0) {
+        if (scale != k) {
+            // The edge weights were {0,k,2k}, but the normal coordinates were
+            // not.
+            return {};
+        }
+    } else {
+        // All non-zero edge weights were equal to k.
+        if (scale == k) {
+            // All non-zero edge weights have been scaled down to 1, and so
+            // this *could* be a scenario where we need to double again,
+            // as described above.
+            //
+            // For this we test whether the surface is separating.  However,
+            // in any scenario where doubling is necessary, all edge weights
+            // are 0 or 1, and so the separating test becomes just a test to see
+            // if we can find a path from some vertex back to itself through
+            // the 1-skeleton that traverses an *odd* number of weight-one edges
+            // (and any number of weight-zero edges).
+            //
+            // Here we use a fairly naive test based on Floyd-Warshall.  This
+            // could be sped up by using union-find.  However, our naive test
+            // is cubic in the number of *vertices*, which in typical scenarios
+            // is very small.  So let's not fuss too much about this for now.
 
-        size_t v = tri.countVertices();
-        int* join = new int[v * v]; // 0, 1, -1: no path, even path, odd path
-        std::fill(join, join + v * v, 0);
+            size_t v = tri.countVertices();
+            int* join = new int[v * v]; // 0,1,-1: no path, even path, odd path
+            std::fill(join, join + v * v, 0);
 
-        for (auto e : tri.edges()) {
-            LargeInteger w = mult.edgeWeight(e->index());
-            size_t a = e->vertex(0)->index();
-            size_t b = e->vertex(1)->index();
-            if (w == 0) {
-                if (a != b) {
-                    if (join[a * v + b] == -1) {
-                        // We have an odd cycle (a-b-a).
+            for (auto e : tri.edges()) {
+                LargeInteger w = mult.edgeWeight(e->index());
+                size_t a = e->vertex(0)->index();
+                size_t b = e->vertex(1)->index();
+                if (w == 0) {
+                    if (a != b) {
+                        if (join[a * v + b] == -1) {
+                            // We have an odd cycle (a-b-a).
+                            mult *= 2;
+                            goto noMoreScaling;
+                        } else {
+                            join[a * v + b] = join[b * v + a] = 1;
+                        }
+                    }
+                } else if (w == 1) {
+                    if (a == b) {
+                        // We have an odd cycle (a-a).
                         mult *= 2;
                         goto noMoreScaling;
                     } else {
-                        join[a * v + b] = join[b * v + a] = 1;
+                        if (join[a * v + b] == 1) {
+                            // We have an odd cycle (a-b-a).
+                            mult *= 2;
+                            goto noMoreScaling;
+                        } else {
+                            join[a * v + b] = join[b * v + a] = -1;
+                        }
                     }
-                }
-            } else if (w == 1) {
-                if (a == b) {
-                    // We have an odd cycle (a-a).
-                    mult *= 2;
+                } else if (w == 2) {
+                    // This could be an edge link, but it is not a case
+                    // where we need to double.
                     goto noMoreScaling;
                 } else {
-                    if (join[a * v + b] == 1) {
-                        // We have an odd cycle (a-b-a).
-                        mult *= 2;
-                        goto noMoreScaling;
-                    } else {
-                        join[a * v + b] = join[b * v + a] = -1;
-                    }
+                    // This can never be an edge link.
+                    return {};
                 }
-            } else if (w == 2) {
-                // This could be an edge link, but it is not a case
-                // where we need to double.
-                goto noMoreScaling;
-            } else {
-                // This can never be an edge link.
-                return {};
             }
-        }
 
-        for (size_t via = 0; via < v; ++via) {
-            for (size_t a = 0; a < v; ++a) {
-                if (join[a * v + via] != 0) {
-                    for (size_t b = 0; b < v; ++b) {
-                        if (a != b && join[b * v + via] != 0) {
-                            // Examine the path a-via-b.
-                            if (join[a * v + b] == 0)
-                                join[a * v + b] = join[b * v + a] =
-                                    join[a * v + via] * join[b * v + via];
-                            else if (join[a * v + b] !=
-                                    join[a * v + via] * join[b * v + via]) {
-                                // We have an odd cycle (a-via-b-a).
-                                mult *= 2;
-                                goto noMoreScaling;
+            for (size_t via = 0; via < v; ++via) {
+                for (size_t a = 0; a < v; ++a) {
+                    if (join[a * v + via] != 0) {
+                        for (size_t b = 0; b < v; ++b) {
+                            if (a != b && join[b * v + via] != 0) {
+                                // Examine the path a-via-b.
+                                if (join[a * v + b] == 0)
+                                    join[a * v + b] = join[b * v + a] =
+                                        join[a * v + via] * join[b * v + via];
+                                else if (join[a * v + b] !=
+                                        join[a * v + via] * join[b * v + via]) {
+                                    // We have an odd cycle (a-via-b-a).
+                                    mult *= 2;
+                                    goto noMoreScaling;
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-noMoreScaling:
-        delete[] join;
+    noMoreScaling:
+            delete[] join;
+        } else {
+            // All non-zero edge weights were k, but the scaling factor
+            // was not k.  In this case the edge weights should have been
+            // scaled down to 2; otherwise we cannot have a normalised
+            // edge link at all.
+            if (scale + scale != k)
+                return {};
+        }
     }
 
     std::vector<const Edge<3>*> ans;

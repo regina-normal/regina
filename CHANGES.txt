@@ -61,6 +61,8 @@ Version 7.1  [ TODO ]
             - New routine intersectionForm().
             - New optimisations that reduce the need for 3-sphere/3-ball
               recognition when modifying a triangulation.
+        Class Vector:
+            - Routine scaleDown() now returns the gcd that was used.
         Class Vertex<3>:
             - New routine linkingSurface().
         Routine for_constexpr():

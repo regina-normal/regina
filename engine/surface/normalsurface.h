@@ -756,8 +756,12 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * and integer octagon coordinates (which are stored in every
          * almost normal encoding) are enough to guarantee integer triangle
          * coordinates (which might or might not be stored).
+         *
+         * @return the integer by which the original surface was divided
+         * (i.e., the gcd of all normal coordinates in the original surface).
+         * This will always be strictly positive.
          */
-        void scaleDown();
+        LargeInteger scaleDown();
 
         /**
          * Returns the number of triangular discs of the given type in

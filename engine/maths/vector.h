@@ -710,23 +710,29 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * This routine is only available when \a T is one of Regina's
          * own integer classes (Integer, LargeInteger, or NativeInteger).
+         *
+         * @return the integer by which this vector was divided (i.e.,
+         * the gcd of its original elements).  This will be strictly positive.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) scaleDown() {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, LargeInteger) scaleDown() {
             T gcd; // Initialised to 0.
             for (const T* e = elts_; e != end_; ++e) {
                 if (e->isInfinite() || (*e) == 0)
                     continue;
                 gcd.gcdWith(*e); // Guaranteed non-negative result.
                 if (gcd == 1)
-                    return;
+                    return gcd;
             }
-            if (gcd == 0)
-                return;
+            if (gcd == 0) {
+                // All elements must have been 0 or infinity.
+                return 1;
+            }
             for (T* e = elts_; e != end_; ++e)
                 if ((! e->isInfinite()) && (*e) != 0) {
                     e->divByExact(gcd);
                     e->tryReduce();
                 }
+            return gcd;
         }
 
         /**
