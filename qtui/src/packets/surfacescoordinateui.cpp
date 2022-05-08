@@ -176,16 +176,53 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
 
             if ((v = s.isVertexLink()))
                 return tr("Vertex %1").arg(v->index());
-            else if ((e = s.isThinEdgeLink()).first) {
-                if (e.second)
+            else {
+                auto edgeLinks = s.isNormalEdgeLink();
+                if (edgeLinks.empty())
+                    return QVariant();
+                auto thin = s.isThinEdgeLink();
+                if (! thin.first) {
+                    auto it = edgeLinks.begin();
+                    if (edgeLinks.size() == 1) {
+                        return tr("Normal edge %1").
+                            arg((*it)->index());
+                    } else {
+                        QString ans = tr("Normal edges %1").
+                            arg((*it)->index());
+                        for (++it; it != edgeLinks.end(); ++it)
+                            ans.append(tr(", %1").arg((*it)->index()));
+                        return ans;
+                    }
+                } else if (! thin.second) {
+                    QString ans = tr("Thin edge %1").
+                        arg(thin.first->index());
+                    if (edgeLinks.size() > 1) {
+                        if (edgeLinks.size() == 2)
+                            ans.append(tr("; normal edge "));
+                        else
+                            ans.append(tr("; normal edges "));
+
+                        bool first = true;
+                        for (auto e : edgeLinks) {
+                            if (e == thin.first)
+                                continue;
+                            if (first)
+                                first = false;
+                            else
+                                ans.append(", ");
+                            ans.append(QString::number(e->index()));
+                        }
+                        return ans;
+                    }
+                    return ans;
+                } else {
+                    // A thin edge link of two distinct edges cannot be
+                    // a normalised edge link of any others.
                     return tr("Thin edges %1, %2").
-                        arg(e.first->index()).
-                        arg(e.second->index());
-                else
-                    return tr("Thin edge %1").
-                        arg(e.first->index());
-            } else
-                return QVariant();
+                        arg(thin.first->index()).
+                        arg(thin.second->index());
+                }
+            }
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 7) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 5)) {
             if (s.isSplitting())
