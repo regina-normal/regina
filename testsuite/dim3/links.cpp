@@ -139,6 +139,16 @@ class LinkingSurfacesTest : public CppUnit::TestFixture {
                     }
                 }
                 */
+
+                auto found = link.isNormalEdgeLink();
+                if (std::find(found.begin(), found.end(), e) == found.end()) {
+                    std::ostringstream msg;
+                    msg << "Triangulation " << name <<
+                        ", edge " << e->index() << ": linking surface "
+                        << link.vector() << " is not recognised as a "
+                        "normalised edge link of the edge in question.";
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
 
             // Check the precise coordinates for all *thin* edge links,

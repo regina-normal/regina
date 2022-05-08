@@ -697,6 +697,10 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         /**
          * Returns the double of this surface.
          *
+         * Since Regina 7.1, normal surfaces can now be multiplied by
+         * integer constants.  In particular, this (much older) routine has
+         * exactly the same effect as multiplying the surface by 2.
+         *
          * @return the double of this normal surface.
          */
         NormalSurface doubleSurface() const;
@@ -718,6 +722,42 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * @return the sum of both normal surfaces.
          */
         NormalSurface operator + (const NormalSurface& rhs) const;
+
+        /**
+         * Returns the given integer multiple of this surface.
+         *
+         * The resulting surface will use the same internal vector encoding
+         * as this surface.
+         *
+         * @param coeff the coefficient to multiply this surface by;
+         * this must be non-negative.
+         * @return the resulting multiple of this surface.
+         */
+        NormalSurface operator * (const LargeInteger& coeff) const;
+
+        /**
+         * Converts this surface into the given integer multiple of itself.
+         *
+         * The internal vector encoding used by this surface will not change.
+         *
+         * @param coeff the coefficient to multiply this surface by;
+         * this must be non-negative.
+         * @return a reference to this surface.
+         */
+        NormalSurface& operator *= (const LargeInteger& coeff);
+
+        /**
+         * Converts this surface into its smallest positive rational multiple
+         * with integer coordinates.
+         *
+         * Note that the scaling factor will be independent of which
+         * internal vector encoding is used.  This is essentially because
+         * integer quad coordinates (which are stored in every encoding)
+         * and integer octagon coordinates (which are stored in every
+         * almost normal encoding) are enough to guarantee integer triangle
+         * coordinates (which might or might not be stored).
+         */
+        void scaleDown();
 
         /**
          * Returns the number of triangular discs of the given type in
@@ -1050,11 +1090,14 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Determines whether or not this surface is vertex linking.
          * A <i>vertex linking</i> surface contains only triangles.
          *
+         * This behaves differently from isVertexLink(), which only detects
+         * the link of a single vertex (or a multiple of such a link).
+         * In contrast, this routine will also detect the union of
+         * several \e different vertex links.
+         *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
-         *
-         * \todo \opt Cache results.
          *
          * @return \c true if and only if this surface is vertex linking.
          */
@@ -1063,39 +1106,81 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Determines whether or not a rational multiple of this surface
          * is the link of a single vertex.
          *
+         * This behaves differently from isVertexLinking(), which will also
+         * detect a union of several different vertex links.  In contrast,
+         * this routine will only identify the link of a \e single vertex
+         * (or a multiple of such a link).
+         *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * \todo \opt Cache results.
-         *
-         * @return the vertex linked by this surface, or \c null if this
-         * surface is not the link of a single vertex.
+         * @return the vertex linked by a rational multiple of this surface,
+         * or \c null if this surface is not a multiple of a single vertex link.
          */
         const Vertex<3>* isVertexLink() const;
         /**
          * Determines whether or not a rational multiple of this surface
          * is the thin link of a single edge.
          *
-         * If there are two different edges <i>e1</i> and <i>e2</i> for
-         * which this surface could be expressed as the thin link of
-         * either <i>e1</i> or <i>e2</i>, the pair
-         * (<i>e1</i>, <i>e2</i>) will be returned.
-         * If this surface is the thin link of only one edge <i>e</i>,
-         * the pair (<i>e</i>, \c null) will be returned.
-         * If this surface is not the thin link of any edges, the pair
+         * Here a \e thin edge link is a normal surface which appears naturally
+         * as the frontier of a regular neighbourhood of an edge, with no need
+         * for any further normalisation.
+         *
+         * This behaves differently from isNormalEdgeLink(), which tests for a
+         * \e normalised edge link (which could end up far away from the
+         * edge, or could be normalised into a surface with different
+         * topology, or could even be normalised away to nothing).
+         *
+         * A surface (or its rational multiple) can be the \e thin edge link
+         * of at most two edges.  If there are indeed two different edges
+         * \a e1 and \a e2 for which a rational multiple of this surface can
+         * be expressed as the thin edge link, then the pair (\a e1, \a e2)
+         * will be returned.  If there is only one such edge \a e, then the
+         * pair (\a e, \c null) will be returned.  If no rational multiple of
+         * this surface is the thin link of any edge, then the pair
          * (\c null, \c null) will be returned.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
          *
-         * \todo \opt Cache results.
-         *
-         * @return a pair containing the edge(s) linked by this surface,
-         * as described above.
+         * @return a pair containing the edge(s) linked by a rational
+         * multiple of this surface, as described above.
          */
         std::pair<const Edge<3>*, const Edge<3>*> isThinEdgeLink() const;
+        /**
+         * Determines whether or not a rational multiple of this surface
+         * is the normalised link of a single edge.
+         *
+         * Here the phrase \e normalised link of an edge \a e means the
+         * frontier of a regular neighbourhood of \a e, converted into a
+         * normal surface by expanding away from the edge using the
+         * normalisation process.  It could be that there is no normalisation
+         * required at all (in which case it is also a \e thin edge link).
+         * However, it could be that the normalisation process expands
+         * the surface far away from the edge itself, or changes its
+         * topology, or disconnects the surface, or even normalises it
+         * away to an empty surface.
+         *
+         * In particular, this test behaves differently from isThinEdgeLink(),
+         * which tests for thin edge links only (where no additional
+         * normalisation is required).
+         *
+         * A surface (or its rational multiple) could be the normalised link
+         * of many edges.  The return value will be a vector containing all
+         * such edges, ordered by the index of each edge in the triangulation.
+         * If no rational multiple of this surface is the normalised link of
+         * any edge, then the empty vector will be returned.
+         *
+         * Note that the results of this routine are not cached.
+         * Thus the results will be reevaluated every time this routine is
+         * called.
+         *
+         * @return a vector containing the edge(s) linked by a rational
+         * multiple of this surface, as described above.
+         */
+        std::vector<const Edge<3>*> isNormalEdgeLink() const;
         /**
          * Determines whether or not this surface is a splitting surface.
          * A \a splitting surface is a compact surface containing
@@ -1105,8 +1190,6 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
-         *
-         * \todo \opt Cache results.
          *
          * @return \c true if and only if this is a splitting surface.
          */
@@ -1121,8 +1204,6 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
          * called.
-         *
-         * \todo \opt Cache results.
          *
          * @return the number of tetrahedra that this surface meets if it
          * is a central surface, or 0 if it is not a central surface.
@@ -1902,6 +1983,10 @@ inline bool NormalSurface::couldBeAlmostNormal() const {
 
 inline bool NormalSurface::couldBeNonCompact() const {
     return enc_.couldBeNonCompact();
+}
+
+inline NormalSurface NormalSurface::doubleSurface() const {
+    return (*this) * 2;
 }
 
 inline void swap(NormalSurface& a, NormalSurface& b) noexcept {

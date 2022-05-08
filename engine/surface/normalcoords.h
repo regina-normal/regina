@@ -235,6 +235,11 @@ enum NormalCoords {
  * assume that the encoding is \e not the special angle structure encoding,
  * unless the documentation explicitly says otherwise.
  *
+ * Encodings have the important property that any rational multiple of a
+ * normal surface \a s can always be stored using the same encoding as is
+ * used for \a s.  (In particular, taking a rational multiple will not
+ * invalidate any of the property flags in the encoding.)
+ *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *

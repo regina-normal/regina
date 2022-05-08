@@ -142,6 +142,8 @@ void addNormalSurface(pybind11::module_& m) {
             pybind11::return_value_policy::reference)
         .def("isThinEdgeLink", &NormalSurface::isThinEdgeLink,
             pybind11::return_value_policy::reference)
+        .def("isNormalEdgeLink", &NormalSurface::isNormalEdgeLink,
+            pybind11::return_value_policy::reference)
         .def("isSplitting", &NormalSurface::isSplitting)
         .def("isCentral", &NormalSurface::isCentral)
         .def("countBoundaries", &NormalSurface::countBoundaries)
@@ -162,9 +164,12 @@ void addNormalSurface(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("couldBeAlmostNormal", &NormalSurface::couldBeAlmostNormal)
         .def("couldBeNonCompact", &NormalSurface::couldBeNonCompact)
+        .def("scaleDown", &NormalSurface::scaleDown)
         .def_static("reconstructTriangles",
             &NormalSurface::reconstructTriangles)
         .def(pybind11::self + pybind11::self)
+        .def(pybind11::self * regina::LargeInteger())
+        .def(pybind11::self *= regina::LargeInteger())
         .def(pybind11::self < pybind11::self)
     ;
     regina::python::add_output(c);

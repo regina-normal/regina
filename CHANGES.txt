@@ -45,6 +45,10 @@ Version 7.1  [ TODO ]
               formally not supported by the Matrix class).
             - You can now multiply a matrix over type T with a matrix or vector
               over type U, where T and U are different types.
+        Class NormalSurface:
+            - New operators * and *= for taking integer multiples.
+            - New routine scaleDown().
+            - New routine isNormalEdgeLink().
         Type safe_tuple_element<...>:
             - New type alias that is like std::tuple_element<...> but
               with well-defined behaviour for an out-of-range index.
