@@ -46,6 +46,9 @@ Version 7.1  [ TODO ]
               formally not supported by the Matrix class).
             - You can now multiply a matrix over type T with a matrix or vector
               over type U, where T and U are different types.
+        Class NormalHypersurface:
+            - New operators * and *= for taking integer multiples.
+            - New routine scaleDown().
         Class NormalSurface:
             - New operators * and *= for taking integer multiples.
             - New routine scaleDown().

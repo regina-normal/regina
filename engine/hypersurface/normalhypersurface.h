@@ -539,6 +539,46 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         NormalHypersurface operator + (const NormalHypersurface& rhs) const;
 
         /**
+         * Returns the given integer multiple of this hypersurface.
+         *
+         * The resulting hypersurface will use the same internal vector
+         * encoding as this hypersurface.
+         *
+         * @param coeff the coefficient to multiply this hypersurface by;
+         * this must be non-negative.
+         * @return the resulting multiple of this hypersurface.
+         */
+        NormalHypersurface operator * (const LargeInteger& coeff) const;
+
+        /**
+         * Converts this hypersurface into the given integer multiple of itself.
+         *
+         * The internal vector encoding used by this hypersurface will not
+         * change.
+         *
+         * @param coeff the coefficient to multiply this hypersurface by;
+         * this must be non-negative.
+         * @return a reference to this hypersurface.
+         */
+        NormalHypersurface& operator *= (const LargeInteger& coeff);
+
+        /**
+         * Converts this hypersurface into its smallest positive rational
+         * multiple with integer coordinates.
+         *
+         * Note that the scaling factor will be independent of which
+         * internal vector encoding is used.  This is essentially because
+         * integer prism coordinates (which are stored in every encoding)
+         * are enough to guarantee integer tetrahedron coordinates (which
+         * might or might not be stored).
+         *
+         * @return the integer by which the original hypersurface was divided
+         * (i.e., the gcd of all normal coordinates in the original
+         * hypersurface).  This will always be strictly positive.
+         */
+        LargeInteger scaleDown();
+
+        /**
          * Returns the number of tetrahedron pieces of the given type in
          * this normal hypersurface.
          * A tetrahedron piece type is identified by specifying a
@@ -1203,6 +1243,10 @@ inline NormalHypersurface NormalHypersurface::operator + (
     // This means that we can just add the vectors directly.
     return NormalHypersurface(triangulation_, enc_ + rhs.enc_,
             vector_ + rhs.vector_);
+}
+
+inline NormalHypersurface NormalHypersurface::doubleHypersurface() const {
+    return (*this) * 2;
 }
 
 inline void swap(NormalHypersurface& a, NormalHypersurface& b) noexcept {

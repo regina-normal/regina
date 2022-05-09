@@ -115,9 +115,12 @@ void addNormalHypersurface(pybind11::module_& m) {
         .def("vector", &NormalHypersurface::vector,
             pybind11::return_value_policy::reference_internal)
         .def("encoding", &NormalHypersurface::encoding)
+        .def("scaleDown", &NormalHypersurface::scaleDown)
         .def_static("reconstructTetrahedra",
             &NormalHypersurface::reconstructTetrahedra)
         .def(pybind11::self + pybind11::self)
+        .def(pybind11::self * regina::LargeInteger())
+        .def(pybind11::self *= regina::LargeInteger())
         .def(pybind11::self < pybind11::self)
     ;
     regina::python::add_output(c);

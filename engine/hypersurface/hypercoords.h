@@ -97,6 +97,11 @@ enum HyperCoords {
  * knowledge that, even if the vector stores tetrahedron coordinates, the
  * surface cannot contain any vertex linking components).
  *
+ * Encodings have the important property that any rational multiple of a
+ * normal hypersurface \a s can always be stored using the same encoding as
+ * is used for \a s.  (In particular, taking a rational multiple will not
+ * invalidate any of the property flags in the encoding.)
+ *
  * These objects are small enough to pass by value and swap with std::swap(),
  * with no need for any specialised move operations or swap functions.
  *
