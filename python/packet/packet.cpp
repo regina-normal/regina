@@ -112,7 +112,6 @@ void addPacket(pybind11::module_& m) {
         .def("levelsDownTo", &Packet::levelsDownTo)
         .def("levelsUpTo", &Packet::levelsUpTo)
         .def("isAncestorOf", &Packet::isAncestorOf)
-        .def("isGrandparentOf", &Packet::isAncestorOf) // deprecated
         .def("countChildren", &Packet::countChildren)
         .def("countDescendants", &Packet::countDescendants)
         .def("totalTreeSize", &Packet::totalTreeSize)
@@ -143,12 +142,6 @@ void addPacket(pybind11::module_& m) {
             overload_cast<PacketType>(&Packet::firstTreePacket))
         .def("findPacketLabel",
             overload_cast<const std::string&>(&Packet::findPacketLabel))
-        .def("dependsOnParent", [](const Packet&) { // deprecated
-            return false;
-        })
-        .def("isPacketEditable", [](const Packet&) { // deprecated
-            return true;
-        })
         .def("cloneAsSibling", &Packet::cloneAsSibling,
             pybind11::arg("cloneDescendants") = false,
             pybind11::arg("end") = true)

@@ -281,38 +281,6 @@ class Perm<2> {
         constexpr Perm(const std::array<int, 2>& image);
 
         /**
-         * Deprecated constructor that creates a permutation mapping
-         * \a i to \a image[i] for each \a i = 0,1.
-         *
-         * \deprecated Use the two-integer constructor or the
-         * std::array constructor instead.
-         *
-         * \pre The array \a image contains two elements, which are
-         * 0 and 1 in some order.
-         *
-         * @param image the array of images.
-         */
-        [[deprecated]] constexpr Perm(const int* image);
-
-        /**
-         * Deprecated constructor that creates a permutation mapping
-         * (\a a[0], \a a[1]) to (\a b[0], \a b[1]) respectively.
-         *
-         * \deprecated Use the four-integer constructor or the
-         * std::array constructor instead.
-         *
-         * \pre Both arrays \a a and \a b contain two elements, which
-         * are 0 and 1 in some order.
-         *
-         * \ifacespython Not present; use the single-array constructor instead.
-         *
-         * @param a the array of preimages; this must have length 2.
-         * @param b the corresponding array of images; this must also have
-         * length 2.
-         */
-        [[deprecated]] constexpr Perm(const int* a, const int* b);
-
-        /**
          * Creates a permutation that is a clone of the given
          * permutation.
          *
@@ -447,18 +415,6 @@ class Perm<2> {
          * @return the preimage of \a image.
          */
         constexpr int pre(int image) const;
-
-        /**
-         * Deprecated routine that determines the preimage of the given
-         * integer under this permutation.
-         *
-         * \deprecated This routine has been renamed to pre().
-         *
-         * @param image the integer whose preimage we wish to find.  This
-         * should be 0 or 1.
-         * @return the preimage of \a image.
-         */
-        [[deprecated]] constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -680,28 +636,6 @@ class Perm<2> {
         constexpr Index orderedS2Index() const;
 
         /**
-         * Deprecated routine that returns the lexicographical index of this
-         * permutation.
-         *
-         * \deprecated Use the equivalent routine orderedSnIndex() instead.
-         *
-         * @return the lexicographical index of this permutation.
-         */
-        [[deprecated]] constexpr Index index() const;
-
-        /**
-         * Deprecated routine that returns the <i>i</i>th permutation on
-         * two elements, where permutations are numbered lexicographically.
-         *
-         * \deprecated Use orderedSn[\a i] instead.
-         *
-         * @param i the lexicographical index of the permutation; this
-         * must be 0 or 1.
-         * @return the <i>i</i>th permutation.
-         */
-        [[deprecated]] static constexpr Perm atIndex(Index i);
-
-        /**
          * Restricts a <i>k</i>-element permutation to an 2-element
          * permutation, where \a k &gt; 2.
          *
@@ -769,13 +703,6 @@ inline constexpr Perm<2>::Perm(const std::array<int, 2>& image) :
         code_(image[0]) {
 }
 
-inline constexpr Perm<2>::Perm(const int* image) : code_(image[0]) {
-}
-
-inline constexpr Perm<2>::Perm(const int* a, const int* b) :
-        code_(a[0] == b[0] ? 0 : 1) {
-}
-
 inline constexpr Perm<2>::Code Perm<2>::permCode() const {
     return code_;
 }
@@ -822,10 +749,6 @@ inline constexpr int Perm<2>::operator[](int source) const {
 }
 
 inline constexpr int Perm<2>::pre(int image) const {
-    return image ^ code_;
-}
-
-inline constexpr int Perm<2>::preImageOf(int image) const {
     return image ^ code_;
 }
 
@@ -906,14 +829,6 @@ inline constexpr Perm<2>::Index Perm<2>::orderedS2Index() const {
 
 inline constexpr Perm<2>::Index Perm<2>::orderedSnIndex() const {
     return code_;
-}
-
-inline constexpr Perm<2>::Index Perm<2>::index() const {
-    return code_;
-}
-
-inline constexpr Perm<2> Perm<2>::atIndex(Index i) {
-    return Perm<2>(static_cast<Code>(i));
 }
 
 inline constexpr bool Perm<2>::isConjugacyMinimal() const {

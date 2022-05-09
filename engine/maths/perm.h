@@ -214,10 +214,11 @@ class Perm {
          * Indicates the native unsigned integer type used to store the
          * internal permutation code.
          *
-         * This type alias is present for all values of \a n, though its
+         * This type alias is present for most values of \a n, though its
          * precise size depends on how the permutation code is constructed.
-         * For \a n = 4,...,7, it is a deprecated type alias that refers to
-         * older (first-generation) permutation codes that are no longer used.
+         * However, for \a n = 4,...,7 it is replaced by two type aliases
+         * \a Code1 and \a Code2, which describe the older first-generation
+         * and newer second-generation permutation codes respectively.
          */
         using Code = ImagePack;
 
@@ -370,37 +371,6 @@ class Perm {
          * @param image the array of images.
          */
         constexpr Perm(const std::array<int, n>& image);
-
-        /**
-         * Deprecated constructor that creates a permutation mapping
-         * \a i to \a image[\a i] for each 0 &le; \a i < \a n.
-         *
-         * \deprecated Use the std::array constructor instead.
-         *
-         * \pre The array \a image contains \a n elements, which are
-         * 0,...,<i>n</i>-1 in some order.
-         *
-         * @param image the array of images.
-         */
-        [[deprecated]] constexpr Perm(const int* image);
-
-        /**
-         * Deprecated constructor that creates a permutation mapping
-         * (\a a[0], ..., \a a[<i>n</i>-1]) to
-         * (\a b[0], ..., \a b[<i>n</i>-1]) respectively.
-         *
-         * \deprecated Use the std::array constructor instead.
-         *
-         * \pre Both arrays \a a and \a b contain \a n elements, which
-         * are 0,...,<i>n</i>-1 in some order.
-         *
-         * \ifacespython Not present; use the single-array constructor instead.
-         *
-         * @param a the array of preimages; this must have length \a n.
-         * @param b the corresponding array of images; this must also have
-         * length \a n.
-         */
-        [[deprecated]] constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -562,18 +532,6 @@ class Perm {
         constexpr int pre(int image) const;
 
         /**
-         * Deprecated routine that determines the preimage of the given
-         * integer under this permutation.
-         *
-         * \deprecated This routine has been renamed to pre().
-         *
-         * @param image the integer whose preimage we wish to find.  This
-         * should be between 0 and <i>n</i>-1 inclusive.
-         * @return the preimage of \a image.
-         */
-        [[deprecated]] constexpr int preImageOf(int image) const;
-
-        /**
          * Determines if this is equal to the given permutation.
          * This is true if and only if both permutations have the same
          * images for all 0 &le; \a i < \a n.
@@ -647,28 +605,6 @@ class Perm {
          * This will be between 0 and <i>n</i>!-1 inclusive.
          */
         constexpr Index orderedSnIndex() const;
-
-        /**
-         * Deprecated routine that returns the lexicographical index of this
-         * permutation.
-         *
-         * \deprecated Use the equivalent routine orderedSnIndex() instead.
-         *
-         * @return the lexicographical index of this permutation.
-         */
-        [[deprecated]] constexpr Index index() const;
-
-        /**
-         * Deprecated routine that returns the <i>i</i>th permutation on
-         * \a n elements, where permutations are numbered lexicographically.
-         *
-         * \deprecated Use orderedSn[\a i] instead.
-         *
-         * @param i the lexicographical index of the permutation; this
-         * must be between 0 and <i>n</i>!-1 inclusive.
-         * @return the <i>i</i>th permutation.
-         */
-        [[deprecated]] static constexpr Perm atIndex(Index i);
 
         /**
          * Returns a random permutation on \a n elements.
@@ -945,18 +881,6 @@ inline constexpr Perm<n>::Perm(const std::array<int, n>& image) : code_(0) {
 }
 
 template <int n>
-inline constexpr Perm<n>::Perm(const int* image) : code_(0) {
-    for (int i = 0; i < n; ++i)
-        code_ |= (static_cast<Code>(image[i]) << (imageBits * i));
-}
-
-template <int n>
-inline constexpr Perm<n>::Perm(const int* a, const int* b) : code_(0) {
-    for (int i = 0; i < n; ++i)
-        code_ |= (static_cast<Code>(b[i]) << (imageBits * a[i]));
-}
-
-template <int n>
 inline constexpr Perm<n>::Perm(Code code) : code_(code) {
 }
 
@@ -1054,11 +978,6 @@ inline constexpr int Perm<n>::pre(int image) const {
 }
 
 template <int n>
-inline constexpr int Perm<n>::preImageOf(int image) const {
-    return pre(image);
-}
-
-template <int n>
 inline constexpr bool Perm<n>::operator == (const Perm& other) const {
     return (code_ == other.code_);
 }
@@ -1140,16 +1059,6 @@ constexpr typename Perm<n>::Index Perm<n>::SnIndex() const {
         // From this point we never look at positions 0..pos1 again.
     }
     return (even == (ans % 2 == 0) ? ans : (ans ^ 1));
-}
-
-template <int n>
-inline constexpr typename Perm<n>::Index Perm<n>::index() const {
-    return orderedSnIndex();
-}
-
-template <int n>
-inline constexpr Perm<n> Perm<n>::atIndex(Index i) {
-    return orderedSn[i];
 }
 
 template <int n>

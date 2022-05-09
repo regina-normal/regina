@@ -3636,26 +3636,11 @@ inline bool Triangulation<3>::knowsZeroEfficient() const {
     return prop_.zeroEfficient_.has_value();
 }
 
-inline std::optional<NormalSurface>
-        Triangulation<3>::hasNonTrivialSphereOrDisc() const {
-    return nonTrivialSphereOrDisc();
-}
-
-inline std::optional<NormalSurface>
-        Triangulation<3>::hasOctagonalAlmostNormalSphere() const {
-    return octagonalAlmostNormalSphere();
-}
-
 inline const AngleStructure& Triangulation<3>::strictAngleStructure() const {
     if (hasStrictAngleStructure())
         return std::get<AngleStructure>(strictAngleStructure_);
     else
         throw NoSolution();
-}
-
-inline const AngleStructure& Triangulation<3>::findStrictAngleStructure()
-        const {
-    return strictAngleStructure();
 }
 
 inline const AngleStructure& Triangulation<3>::generalAngleStructure() const {

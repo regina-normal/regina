@@ -89,16 +89,12 @@ void addPerm5(pybind11::module_& m) {
         .def(pybind11::init<const Perm<5>&>())
         .def("permCode1", &Perm<5>::permCode1)
         .def("permCode2", &Perm<5>::permCode2)
-        .def("permCode", &Perm<5>::permCode1) // deprecated
         .def("setPermCode1", &Perm<5>::setPermCode1)
         .def("setPermCode2", &Perm<5>::setPermCode2)
-        .def("setPermCode", &Perm<5>::setPermCode1) // deprecated
         .def_static("fromPermCode1", &Perm<5>::fromPermCode1)
         .def_static("fromPermCode2", &Perm<5>::fromPermCode2)
-        .def_static("fromPermCode", &Perm<5>::fromPermCode1) // deprecated
         .def_static("isPermCode1", &Perm<5>::isPermCode1)
         .def_static("isPermCode2", &Perm<5>::isPermCode2)
-        .def_static("isPermCode", &Perm<5>::isPermCode1) // deprecated
         .def("imagePack", &Perm<5>::imagePack)
         .def_static("fromImagePack", &Perm<5>::fromImagePack)
         .def_static("isImagePack", &Perm<5>::isImagePack)
@@ -110,7 +106,6 @@ void addPerm5(pybind11::module_& m) {
         .def("sign", &Perm<5>::sign)
         .def("__getitem__", &Perm<5>::operator[])
         .def("pre", &Perm<5>::pre)
-        .def("preImageOf", &Perm<5>::pre) // deprecated
         .def("compareWith", &Perm<5>::compareWith)
         .def("isIdentity", &Perm<5>::isIdentity)
         .def("inc", [](Perm<5>& p) {
@@ -118,10 +113,6 @@ void addPerm5(pybind11::module_& m) {
         })
         .def(pybind11::self < pybind11::self)
         .def_static("rot", &Perm<5>::rot)
-        // index and atIndex are deprecated, so do not call them directly.
-        .def_static("atIndex",
-            [](Perm<5>::Index i) { return Perm<5>::orderedSn[i]; })
-        .def("index", &Perm<5>::orderedSnIndex)
         .def_static("rand", (Perm<5> (*)(bool))(&Perm<5>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<5>::trunc)

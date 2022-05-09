@@ -186,7 +186,7 @@
         }
 
         self.interactionFile = [TempFile tempFileWithExtension:@"pdf"];
-        if (! pdf->savePDF([self.interactionFile.filename UTF8String])) {
+        if (! pdf->save([self.interactionFile.filename UTF8String])) {
             UIAlertView* alert = [[UIAlertView alloc]
                                   initWithTitle:@"Could Not Save PDF"
                                   message:@"I was not able to save the PDF document to this device for viewing."

@@ -45,10 +45,8 @@ void addStandardTriangulation(pybind11::module_& m) {
     auto c = pybind11::class_<StandardTriangulation>(m, "StandardTriangulation")
         .def("name", &StandardTriangulation::name)
         .def("texName", &StandardTriangulation::texName)
-        .def("TeXName", &StandardTriangulation::texName) // deprecated
         .def("manifold", &StandardTriangulation::manifold)
         .def("homology", &StandardTriangulation::homology)
-        .def("homologyH1", &StandardTriangulation::homology) // deprecated
         .def_static("recognise",
             overload_cast<regina::Component<3>*>(
             &StandardTriangulation::recognise))

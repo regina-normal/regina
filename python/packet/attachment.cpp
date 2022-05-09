@@ -87,7 +87,6 @@ void addAttachment(pybind11::module_& m) {
             a.reset(in, inlen, Attachment::DEEP_COPY, filename);
         })
         .def("save", &Attachment::save)
-        .def("savePDF", &Attachment::save) // deprecated
         .def_readonly_static("typeID", &Attachment::typeID)
     ;
     regina::python::add_output(c);
