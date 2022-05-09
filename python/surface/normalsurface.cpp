@@ -102,16 +102,6 @@ void addNormalSurface(pybind11::module_& m) {
             }
             return new NormalSurface(t, enc, std::move(v));
         }))
-        .def("clone", [](const NormalSurface& s) {
-            // Since clone() is deprecated, we reimplement it here to
-            // avoid noisy compiler warnings.
-            // Here we use the copy constructor, which has the side-effect of
-            // cloning the surface name also (which the C++ clone() does not).
-            // To ensure no change in behaviour, we revert the name change here.
-            auto* ans = new NormalSurface(s);
-            ans->setName(std::string());
-            return ans;
-        })
         .def("swap", &NormalSurface::swap)
         .def("doubleSurface", &NormalSurface::doubleSurface)
         .def("triangles", &NormalSurface::triangles)

@@ -42,16 +42,12 @@ void addLayeredLoop(pybind11::module_& m) {
     auto c = pybind11::class_<LayeredLoop, regina::StandardTriangulation>
             (m, "LayeredLoop")
         .def(pybind11::init<const LayeredLoop&>())
-        .def("clone", [](const LayeredLoop& s) { // deprecated
-            return LayeredLoop(s);
-        })
         .def("swap", &LayeredLoop::swap)
         .def("length", &LayeredLoop::length)
         .def("isTwisted", &LayeredLoop::isTwisted)
         .def("hinge", &LayeredLoop::hinge,
             pybind11::return_value_policy::reference)
         .def_static("recognise", &LayeredLoop::recognise)
-        .def_static("isLayeredLoop", &LayeredLoop::recognise) // deprecated
     ;
     regina::python::add_eq_operators(c);
     regina::python::add_output(c);

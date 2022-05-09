@@ -62,11 +62,6 @@ void addAngleStructure(pybind11::module_& m) {
             }
             return new AngleStructure(t, std::move(v));
         }))
-        .def("clone", [](const AngleStructure& a) {
-            // Since clone() is deprecated, we reimplement it here to
-            // avoid noisy compiler warnings.
-            return new AngleStructure(a);
-        })
         .def("swap", &AngleStructure::swap)
         .def("angle", &AngleStructure::angle)
         .def("triangulation", &AngleStructure::triangulation,

@@ -50,8 +50,6 @@ void addLayeredTorusBundle(pybind11::module_& m) {
         .def("layeringReln", &LayeredTorusBundle::layeringReln,
             pybind11::return_value_policy::reference_internal)
         .def_static("recognise", &LayeredTorusBundle::recognise)
-        .def_static("isLayeredTorusBundle", // deprecated
-            &LayeredTorusBundle::recognise)
     ;
     regina::python::add_eq_operators(c);
     regina::python::add_output(c);

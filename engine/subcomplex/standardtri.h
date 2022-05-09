@@ -253,15 +253,6 @@ class StandardTriangulation : public Output<StandardTriangulation> {
         static std::unique_ptr<StandardTriangulation> recognise(
             Component<3>* component);
         /**
-         * A deprecated alias to determine whether a component represents
-         * one of the standard triangulations understood by Regina.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<StandardTriangulation>
-            isStandardTriangulation(Component<3>* component);
-        /**
          * Determines whether the given triangulation represents one of the
          * standard triangulations understood by Regina.  The list of
          * recognised triangulations is expected to grow between
@@ -282,15 +273,6 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          */
         static std::unique_ptr<StandardTriangulation> recognise(
             const Triangulation<3>& tri);
-        /**
-         * A deprecated alias to determine whether a triangulation represents
-         * one of the standard triangulations understood by Regina.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<StandardTriangulation>
-            isStandardTriangulation(const Triangulation<3>& tri);
 
     protected:
         /**
@@ -325,17 +307,6 @@ inline void StandardTriangulation::writeTextShort(std::ostream& out) const {
 inline void StandardTriangulation::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << '\n';
-}
-
-inline std::unique_ptr<StandardTriangulation>
-        StandardTriangulation::isStandardTriangulation(Component<3>* comp) {
-    return recognise(comp);
-}
-
-inline std::unique_ptr<StandardTriangulation>
-        StandardTriangulation::isStandardTriangulation(
-        const Triangulation<3>& tri) {
-    return recognise(tri);
 }
 
 } // namespace regina

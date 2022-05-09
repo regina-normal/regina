@@ -42,9 +42,6 @@ void addTriSolidTorus(pybind11::module_& m) {
     auto c = pybind11::class_<TriSolidTorus, regina::StandardTriangulation>
             (m, "TriSolidTorus")
         .def(pybind11::init<const TriSolidTorus&>())
-        .def("clone", [](const TriSolidTorus& s) { // deprecated
-            return TriSolidTorus(s);
-        })
         .def("swap", &TriSolidTorus::swap)
         .def("tetrahedron", &TriSolidTorus::tetrahedron,
             pybind11::return_value_policy::reference)
@@ -53,8 +50,6 @@ void addTriSolidTorus(pybind11::module_& m) {
         .def("areAnnuliLinkedMajor", &TriSolidTorus::areAnnuliLinkedMajor)
         .def("areAnnuliLinkedAxis", &TriSolidTorus::areAnnuliLinkedAxis)
         .def_static("recognise", &TriSolidTorus::recognise)
-        .def_static("formsTriSolidTorus", // deprecated
-            &TriSolidTorus::recognise)
     ;
     regina::python::add_eq_operators(c);
     regina::python::add_output(c);

@@ -155,15 +155,6 @@ class SpiralSolidTorus : public StandardTriangulation {
         void swap(SpiralSolidTorus& other) noexcept;
 
         /**
-         * Deprecated routine that returns a new copy of this structure.
-         *
-         * \deprecated Just use the copy constructor instead.
-         *
-         * @return a newly created clone.
-         */
-        [[deprecated]] SpiralSolidTorus* clone() const;
-
-        /**
          * Returns the number of tetrahedra in this spiralled solid torus.
          *
          * @return the number of tetrahedra.
@@ -323,15 +314,6 @@ class SpiralSolidTorus : public StandardTriangulation {
          */
         static std::unique_ptr<SpiralSolidTorus> recognise(Tetrahedron<3>* tet,
             Perm<4> useVertexRoles);
-        /**
-         * A deprecated alias to recognise if a tetrahedron forms part
-         * of a spiral solid torus with its vertices playing given roles.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<SpiralSolidTorus>
-            formsSpiralSolidTorus(Tetrahedron<3>* tet, Perm<4> useVertexRoles);
 
         std::unique_ptr<Manifold> manifold() const override;
         AbelianGroup homology() const override;
@@ -399,10 +381,6 @@ inline void SpiralSolidTorus::swap(SpiralSolidTorus& other) noexcept {
     std::swap(vertexRoles_, other.vertexRoles_);
 }
 
-inline SpiralSolidTorus* SpiralSolidTorus::clone() const {
-    return new SpiralSolidTorus(*this);
-}
-
 inline size_t SpiralSolidTorus::size() const {
     return nTet_;
 }
@@ -429,12 +407,6 @@ inline std::ostream& SpiralSolidTorus::writeName(std::ostream& out) const {
 }
 inline std::ostream& SpiralSolidTorus::writeTeXName(std::ostream& out) const {
     return out << "\\mathit{Spiral}(" << nTet_ << ')';
-}
-
-inline std::unique_ptr<SpiralSolidTorus>
-        SpiralSolidTorus::formsSpiralSolidTorus(
-        Tetrahedron<3>* tet, Perm<4> useVertexRoles) {
-    return recognise(tet, useVertexRoles);
 }
 
 inline SpiralSolidTorus::SpiralSolidTorus(size_t nTet) :

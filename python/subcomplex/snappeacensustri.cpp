@@ -42,15 +42,10 @@ void addSnapPeaCensusTri(pybind11::module_& m) {
     auto c = pybind11::class_<SnapPeaCensusTri, regina::StandardTriangulation>
             (m, "SnapPeaCensusTri")
         .def(pybind11::init<const SnapPeaCensusTri&>())
-        .def("clone", [](const SnapPeaCensusTri& s) { // deprecated
-            return SnapPeaCensusTri(s);
-        })
         .def("swap", &SnapPeaCensusTri::swap)
         .def("section", &SnapPeaCensusTri::section)
         .def("index", &SnapPeaCensusTri::index)
         .def_static("recognise", &SnapPeaCensusTri::recognise)
-        .def_static("isSmallSnapPeaCensusTri", // deprecated
-            &SnapPeaCensusTri::recognise)
         .def_readonly_static("SEC_5", &SnapPeaCensusTri::SEC_5)
         .def_readonly_static("SEC_6_OR", &SnapPeaCensusTri::SEC_6_OR)
         .def_readonly_static("SEC_6_NOR", &SnapPeaCensusTri::SEC_6_NOR)

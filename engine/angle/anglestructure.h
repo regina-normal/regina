@@ -237,16 +237,6 @@ class AngleStructure : public ShortOutput<AngleStructure> {
             Vector<Integer>&& vector);
 
         /**
-         * Deprecated routine that creates a newly allocated clone of this
-         * angle structure.
-         *
-         * \deprecated Simply use the copy constructor instead.
-         *
-         * @return a clone of this angle structure.
-         */
-        [[deprecated]] AngleStructure* clone() const;
-
-        /**
          * Sets this to be a copy of the given angle structure.
          *
          * This and the given angle structure do not need to be on the same
@@ -557,10 +547,6 @@ inline AngleStructure::AngleStructure(const AngleStructure& src,
         vector_(src.vector_),
         triangulation_(triangulation),
         flags_(src.flags_) {
-}
-
-inline AngleStructure* AngleStructure::clone() const {
-    return new AngleStructure(*this);
 }
 
 inline void AngleStructure::swap(AngleStructure& other) noexcept {

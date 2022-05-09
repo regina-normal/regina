@@ -41,15 +41,10 @@ using regina::PillowTwoSphere;
 void addPillowTwoSphere(pybind11::module_& m) {
     auto c = pybind11::class_<PillowTwoSphere>(m, "PillowTwoSphere")
         .def(pybind11::init<const PillowTwoSphere&>())
-        .def("clone", [](const PillowTwoSphere& s) { // deprecated
-            return PillowTwoSphere(s);
-        })
         .def("triangle", &PillowTwoSphere::triangle,
             pybind11::return_value_policy::reference)
         .def("triangleMapping", &PillowTwoSphere::triangleMapping)
         .def_static("recognise", &PillowTwoSphere::recognise)
-        .def_static("formsPillowTwoSphere", // deprecated
-            &PillowTwoSphere::recognise)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

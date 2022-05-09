@@ -321,15 +321,6 @@ class PluggedTorusBundle : public StandardTriangulation {
          */
         static std::unique_ptr<PluggedTorusBundle> recognise(
             const Triangulation<3>& tri);
-        /**
-         * A deprecated alias to recognise if a triangulation forms a
-         * saturated region joined to a think I-bundle via optional layerings.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<PluggedTorusBundle>
-            isPluggedTorusBundle(const Triangulation<3>& tri);
 
     private:
         /**
@@ -467,11 +458,6 @@ inline bool PluggedTorusBundle::operator == (const PluggedTorusBundle& other)
 inline bool PluggedTorusBundle::operator != (const PluggedTorusBundle& other)
         const {
     return ! ((*this) == other);
-}
-
-inline std::unique_ptr<PluggedTorusBundle>
-        PluggedTorusBundle::isPluggedTorusBundle(const Triangulation<3>& tri) {
-    return recognise(tri);
 }
 
 inline void swap(PluggedTorusBundle& a, PluggedTorusBundle& b) noexcept {

@@ -636,19 +636,6 @@ class NormalSurface : public ShortOutput<NormalSurface> {
             NormalCoords coords, Vector<LargeInteger>&& vector);
 
         /**
-         * Deprecated routine that creates a newly allocated clone of this
-         * normal surface.
-         *
-         * The name of the normal surface will \e not be copied to the
-         * clone; instead the clone will have an empty name.
-         *
-         * \deprecated Simply use the copy constructor instead.
-         *
-         * @return a clone of this normal surface.
-         */
-        [[deprecated]] NormalSurface* clone() const;
-
-        /**
          * Sets this to be a copy of the given normal surface.
          *
          * This and the given normal surface do not need to live in the same
@@ -1822,10 +1809,6 @@ inline NormalSurface::NormalSurface(const NormalSurface& src,
     // We will happily accept one redundant SnapshotRef assignment as the
     // cost of removing many lines of code.
     triangulation_ = triangulation;
-}
-
-inline NormalSurface* NormalSurface::clone() const {
-    return new NormalSurface(*this);
 }
 
 inline void NormalSurface::swap(NormalSurface& other) noexcept {

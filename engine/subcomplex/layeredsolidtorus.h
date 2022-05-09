@@ -115,15 +115,6 @@ class LayeredSolidTorus : public StandardTriangulation {
         LayeredSolidTorus& operator = (const LayeredSolidTorus&) = default;
 
         /**
-         * Deprecated routine that returns a new copy of this structure.
-         *
-         * \deprecated Just use the copy constructor instead.
-         *
-         * @return a newly created clone.
-         */
-        [[deprecated]] LayeredSolidTorus* clone() const;
-
-        /**
          * Swaps the contents of this and the given structure.
          *
          * @param other the structure whose contents should be swapped
@@ -444,15 +435,6 @@ class LayeredSolidTorus : public StandardTriangulation {
          */
         static std::unique_ptr<LayeredSolidTorus> recognise(
             Component<3>* comp);
-        /**
-         * A deprecated alias to recognise if a component forms a
-         * layered solid torus.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<LayeredSolidTorus>
-            isLayeredSolidTorus(Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         AbelianGroup homology() const override;
@@ -481,10 +463,6 @@ class LayeredSolidTorus : public StandardTriangulation {
 void swap(LayeredSolidTorus& a, LayeredSolidTorus& b) noexcept;
 
 // Inline functions for LayeredSolidTorus
-
-inline LayeredSolidTorus* LayeredSolidTorus::clone() const {
-    return new LayeredSolidTorus(*this);
-}
 
 inline void LayeredSolidTorus::swap(LayeredSolidTorus& other) noexcept {
     std::swap(size_, other.size_);
@@ -552,11 +530,6 @@ inline std::ostream& LayeredSolidTorus::writeName(std::ostream& out) const {
 inline std::ostream& LayeredSolidTorus::writeTeXName(std::ostream& out) const {
     return out << "\\mathop{\\rm LST}(" << meridinalCuts_[0] << ','
         << meridinalCuts_[1] << ',' << meridinalCuts_[2] << ')';
-}
-
-inline std::unique_ptr<LayeredSolidTorus>
-        LayeredSolidTorus::isLayeredSolidTorus(Component<3>* comp) {
-    return recognise(comp);
 }
 
 inline void swap(LayeredSolidTorus& a, LayeredSolidTorus& b) noexcept {

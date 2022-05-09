@@ -467,19 +467,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
             HyperCoords coords, Vector<LargeInteger>&& vector);
 
         /**
-         * Deprecated routine that creates a newly allocated clone of this
-         * normal hypersurface.
-         *
-         * The name of the normal hypersurface will \e not be copied to the
-         * clone; instead the clone will have an empty name.
-         *
-         * \deprecated Simply use the copy constructor instead.
-         *
-         * @return a clone of this normal hypersurface.
-         */
-        [[deprecated]] NormalHypersurface* clone() const;
-
-        /**
          * Sets this to be a copy of the given normal hypersurface.
          *
          * This and the given normal hypersurface do not need to live in the
@@ -1125,10 +1112,6 @@ inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& src,
     // We will happily accept one redundant SnapshotRef assignment as the
     // cost of removing many lines of code.
     triangulation_ = triangulation;
-}
-
-inline NormalHypersurface* NormalHypersurface::clone() const {
-    return new NormalHypersurface(*this);
 }
 
 inline void NormalHypersurface::swap(NormalHypersurface& other) noexcept {

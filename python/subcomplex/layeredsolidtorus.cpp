@@ -42,9 +42,6 @@ void addLayeredSolidTorus(pybind11::module_& m) {
     auto c = pybind11::class_<LayeredSolidTorus, regina::StandardTriangulation>
             (m, "LayeredSolidTorus")
         .def(pybind11::init<const LayeredSolidTorus&>())
-        .def("clone", [](const LayeredSolidTorus& s) { // deprecated
-            return LayeredSolidTorus(s);
-        })
         .def("swap", &LayeredSolidTorus::swap)
         .def("size", &LayeredSolidTorus::size)
         .def("base", &LayeredSolidTorus::base,
@@ -63,8 +60,6 @@ void addLayeredSolidTorus(pybind11::module_& m) {
         .def_static("recogniseFromBase", &LayeredSolidTorus::recogniseFromBase)
         .def_static("recogniseFromTop", &LayeredSolidTorus::recogniseFromTop)
         .def_static("recognise", &LayeredSolidTorus::recognise)
-        .def_static("isLayeredSolidTorus", // deprecated
-            &LayeredSolidTorus::recognise)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

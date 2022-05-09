@@ -44,21 +44,12 @@ using regina::SnappedTwoSphere;
 void addSnappedTwoSphere(pybind11::module_& m) {
     auto c = pybind11::class_<SnappedTwoSphere>(m, "SnappedTwoSphere")
         .def(pybind11::init<const SnappedTwoSphere&>())
-        .def("clone", [](const SnappedTwoSphere& s) { // deprecated
-            return SnappedTwoSphere(s);
-        })
         .def("snappedBall", &SnappedTwoSphere::snappedBall,
             pybind11::return_value_policy::reference_internal)
         .def_static("recognise",
             overload_cast<const SnappedBall&, const SnappedBall&>(
             &SnappedTwoSphere::recognise))
-        .def_static("formsSnappedTwoSphere", // deprecated
-            overload_cast<const SnappedBall&, const SnappedBall&>(
-            &SnappedTwoSphere::recognise))
         .def_static("recognise",
-            overload_cast<regina::Tetrahedron<3>*, regina::Tetrahedron<3>*>(
-            &SnappedTwoSphere::recognise))
-        .def_static("formsSnappedTwoSphere", // deprecated
             overload_cast<regina::Tetrahedron<3>*, regina::Tetrahedron<3>*>(
             &SnappedTwoSphere::recognise))
     ;

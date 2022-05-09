@@ -42,9 +42,6 @@ void addSpiralSolidTorus(pybind11::module_& m) {
     auto c = pybind11::class_<SpiralSolidTorus, regina::StandardTriangulation>
             (m, "SpiralSolidTorus")
         .def(pybind11::init<const SpiralSolidTorus&>())
-        .def("clone", [](const SpiralSolidTorus& s) { // deprecated
-            return SpiralSolidTorus(s);
-        })
         .def("swap", &SpiralSolidTorus::swap)
         .def("size", &SpiralSolidTorus::size)
         .def("tetrahedron", &SpiralSolidTorus::tetrahedron,
@@ -55,8 +52,6 @@ void addSpiralSolidTorus(pybind11::module_& m) {
         .def("makeCanonical", &SpiralSolidTorus::makeCanonical)
         .def("isCanonical", &SpiralSolidTorus::isCanonical)
         .def_static("recognise", &SpiralSolidTorus::recognise)
-        .def_static("formsSpiralSolidTorus", // deprecated
-            &SpiralSolidTorus::recognise)
     ;
     regina::python::add_eq_operators(c);
     regina::python::add_output(c);

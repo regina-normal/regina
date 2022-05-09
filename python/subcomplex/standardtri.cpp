@@ -50,13 +50,7 @@ void addStandardTriangulation(pybind11::module_& m) {
         .def_static("recognise",
             overload_cast<regina::Component<3>*>(
             &StandardTriangulation::recognise))
-        .def_static("isStandardTriangulation", // deprecated
-            overload_cast<regina::Component<3>*>(
-            &StandardTriangulation::recognise))
-        .def_static("recognise", // deprecated
-            overload_cast<const regina::Triangulation<3>&>(
-            &StandardTriangulation::recognise))
-        .def_static("isStandardTriangulation", // deprecated
+        .def_static("recognise",
             overload_cast<const regina::Triangulation<3>&>(
             &StandardTriangulation::recognise))
     ;
