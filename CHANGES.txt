@@ -1771,6 +1771,8 @@ Version 7.0  [ 19 December, 2021 ]
             - Routines insertLayeredLoop(), insertLayeredLensSpace(),
               insertAugTriSolidTorus() and insertSFSOverSphere() are all
               deprecated.  Use the routines from Example<3> instead.
+            - Routine insertRehydration() is deprecated.  Use rehydrate()
+              instead.
             - Routine enterTextTriangulation() is now deprecated; this
               is a relic from Regina's ancient past.
         Class Triangulation<4>:
