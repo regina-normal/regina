@@ -31,15 +31,15 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-a = VectorInt.zero
-b = VectorInt.zero
+a = Integer.zero
+b = Integer.zero
 c = Integer(0)
 d = Integer(0)
 
 print(a is b, c is d, a is c)
 
-p = VectorLarge.one
-q = VectorLarge.one
+p = Rational.one
+q = Rational.one
 r = LargeInteger(1)
 s = LargeInteger(1)
 

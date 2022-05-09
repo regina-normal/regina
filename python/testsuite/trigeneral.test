@@ -72,7 +72,7 @@ def vitalStats(tri, name):
 	if tri.isValid():
 		print("H1Bdry:", tri.homologyBdry())
 		print("H1Rel:", tri.homologyRel())
-		print("H2:", tri.homologyH2())
+		print("H2:", tri.homology(2))
 		print("H2Z2:", tri.homologyH2Z2(), "Z_2")
 	if tri.isValid() and tri.isClosed() and tri.countTetrahedra() > 0:
 		print("TV(5, 3) =", tri.turaevViro(5, 3))
@@ -98,7 +98,7 @@ def vitalStats(tri, name):
 
 	# Though this can use normal surfaces, its prechecks and
 	# optimisations should make it fast enough for our examples.
-	print("3-sphere:", tri.isThreeSphere())
+	print("3-sphere:", tri.isSphere())
 
 	# Some of the following operations can create large triangulations,
 	# which give *lots* of output when we try to dump their face gluings

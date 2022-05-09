@@ -171,7 +171,7 @@ f = SurfaceFilterProperties(); f.setEulerChars([0,1]); f.setOrientability(True)
 dump(f)
 
 t = Example3.poincare()
-st = NormalSurfaces.enumerate(t, NS_QUAD)
+st = NormalSurfaces(t, NS_QUAD)
 dt = DiscSetSurface(st.surface(0))
 dump(dt)
 dump(dt.tetDiscs(0))
