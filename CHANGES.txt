@@ -1084,13 +1084,9 @@ Version 7.0  [ 19 December, 2021 ]
               exception on error (instead of returning null), and will not
               insert the new list into the packet tree.  The old functions
               are kept as deprecated aliases.
-            - Replaced filter() with a class constructor that takes a
-              SurfaceFilter; this will not insert the new list into the packet
-              tree.  The old function is kept as a deprecated alias, but
-              now takes its filter argument by reference (not by pointer).
+            - Added a class constructor that takes a SurfaceFilter.
             - Added begin() and end() for iteration through surfaces.
             - Added comparison operators == and !=.
-            - New filter() method that takes a SurfaceFilter.
             - Changed triangulation() and surface() to return const references,
               not pointers.
             - Changed enumerate() to take the triangulation argument by
@@ -1119,10 +1115,6 @@ Version 7.0  [ 19 December, 2021 ]
             - New exception class.
         Class NotImplemented:
             - New exception class.
-        Class NSVectorMirrored:
-            - Changed makeMirror() to take its triangulation by reference,
-              not by pointer.  Also removed the static versions of makeMirror();
-              only the virtual (non-static) function is used.
         Class Packet:
             - Packets are now managed exclusively by std::shared_ptr.
               Creating a new packet *without* wrapping it in a std::shared_ptr
