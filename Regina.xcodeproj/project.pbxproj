@@ -398,7 +398,6 @@
 		052F9EFF180600FB00FAE4DF /* ordering.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C9A180600FA00FAE4DF /* ordering.h */; };
 		052F9F0C180600FB00FAE4DF /* dehydration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CAB180600FA00FAE4DF /* dehydration.cpp */; };
 		052F9F0D180600FB00FAE4DF /* dehydration.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CAC180600FA00FAE4DF /* dehydration.h */; };
-		052F9F0E180600FB00FAE4DF /* isosig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CAD180600FA00FAE4DF /* isosig.cpp */; };
 		052F9F0F180600FB00FAE4DF /* isosig.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CAE180600FA00FAE4DF /* isosig.h */; };
 		052F9F10180600FB00FAE4DF /* orb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CAF180600FA00FAE4DF /* orb.cpp */; };
 		052F9F11180600FB00FAE4DF /* orb.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CB0180600FA00FAE4DF /* orb.h */; };
@@ -590,7 +589,6 @@
 		052FA17F1806129B00FAE4DF /* treelp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C91180600FA00FAE4DF /* treelp.cpp */; };
 		052FA1801806129B00FAE4DF /* treetraversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C95180600FA00FAE4DF /* treetraversal.cpp */; };
 		052FA1871806129B00FAE4DF /* dehydration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CAB180600FA00FAE4DF /* dehydration.cpp */; };
-		052FA1881806129B00FAE4DF /* isosig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CAD180600FA00FAE4DF /* isosig.cpp */; };
 		052FA1891806129B00FAE4DF /* orb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CAF180600FA00FAE4DF /* orb.cpp */; };
 		052FA1991806129B00FAE4DF /* order.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CD9180600FA00FAE4DF /* order.cpp */; };
 		052FA19B1806129B00FAE4DF /* matrixops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CE1180600FA00FAE4DF /* matrixops.cpp */; };
@@ -2775,7 +2773,6 @@
 		052F9CA8180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9CAB180600FA00FAE4DF /* dehydration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dehydration.cpp; sourceTree = "<group>"; };
 		052F9CAC180600FA00FAE4DF /* dehydration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dehydration.h; sourceTree = "<group>"; };
-		052F9CAD180600FA00FAE4DF /* isosig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isosig.cpp; sourceTree = "<group>"; };
 		052F9CAE180600FA00FAE4DF /* isosig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isosig.h; sourceTree = "<group>"; };
 		052F9CAF180600FA00FAE4DF /* orb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = orb.cpp; sourceTree = "<group>"; };
 		052F9CB0180600FA00FAE4DF /* orb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = orb.h; sourceTree = "<group>"; };
@@ -5666,7 +5663,6 @@
 				052F9CAB180600FA00FAE4DF /* dehydration.cpp */,
 				052F9CAC180600FA00FAE4DF /* dehydration.h */,
 				055BC3EA265338E800E5E34C /* fromsiglist-impl.h */,
-				052F9CAD180600FA00FAE4DF /* isosig.cpp */,
 				052F9CAE180600FA00FAE4DF /* isosig.h */,
 				052F9CAF180600FA00FAE4DF /* orb.cpp */,
 				052F9CB0180600FA00FAE4DF /* orb.h */,
@@ -9140,7 +9136,6 @@
 				0542090B1DF0DA450018AB24 /* handlebody.cpp in Sources */,
 				05D1172E19EE0172003BEC55 /* eltmoves.cpp in Sources */,
 				05A73CAE19B2EFF90099C617 /* open.cpp in Sources */,
-				052FA1881806129B00FAE4DF /* isosig.cpp in Sources */,
 				05A067511DFA68470047872E /* plugtrisolidtorus.cpp in Sources */,
 				05A73CA319B2EF5A0099C617 /* matrix_generators.c in Sources */,
 				05B7708419C92A5000E2E558 /* ScriptViewController.mm in Sources */,
@@ -10253,7 +10248,6 @@
 				052F9F10180600FB00FAE4DF /* orb.cpp in Sources */,
 				05F0A00B1DBF078800117BFC /* vertex4.cpp in Sources */,
 				059802DE26683C6D002D5D57 /* xmlsurfacereader.cpp in Sources */,
-				052F9F0E180600FB00FAE4DF /* isosig.cpp in Sources */,
 				050C646B1DA1019B00C9420F /* anglestructures.cpp in Sources */,
 				052FA087180600FB00FAE4DF /* i18nutils.cpp in Sources */,
 				05B7FF8E25AC22AA003BAF5C /* general.cpp in Sources */,

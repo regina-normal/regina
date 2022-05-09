@@ -51,16 +51,6 @@
 
 namespace regina {
 
-template <bool supportInfinity>
-bool valueOf(const std::string& str, IntegerBase<supportInfinity>& dest) {
-    try {
-        dest = str;
-        return true;
-    } catch (const regina::InvalidArgument&) {
-        return false;
-    }
-}
-
 template <class OutputIterator>
 unsigned basicTokenise(OutputIterator results, const std::string& str) {
     std::string::size_type len = str.length();

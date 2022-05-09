@@ -3,7 +3,6 @@
 # Files to compile
 SET ( FILES
   dehydration.cpp
-  isosig.cpp
   orb.cpp
   )
 
