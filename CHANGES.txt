@@ -12,6 +12,7 @@ Version 7.1  [ TODO ]
     GENERAL:
         - Regina now supports Python 3 only (not Python 2 or 3).
         - Updated the bundled copy of Normaliz to version 3.9.2 (7 Feb 2022).
+        - Removed all code that was deprecated in or before version 7.0.
     ENGINE:
         Class CallableArg<...>:
             - Now a public helper class in the main regina:: namespace.
