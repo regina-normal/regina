@@ -1395,6 +1395,9 @@ Version 7.0  [ 19 December, 2021 ]
             - New routine blockAbbrs() that returns the output of
               writeBlockAbbrs() in string format.
             - Added comparison operators == and !=.
+            - Renamed numberOfBlocks() and numberOfBoundaryAnnuli() to
+              countBlocks() and countBoundaryAnnuli(); the old names are
+              kept as deprecated aliases.
             - All access to the underlying triangulation is now const only.
         Class Script:
             - Added a copy constructor and a copy assignment operator.
