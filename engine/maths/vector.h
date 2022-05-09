@@ -132,25 +132,6 @@ class Vector : public ShortOutput<Vector<T>> {
          */
         using const_iterator = const T*;
 
-        /**
-         * Zero in the underlying number system.
-         *
-         * \deprecated This constant is deprecated; just use 0 instead.
-         */
-        [[deprecated]] static const T zero;
-        /**
-         * One in the underlying number system.
-         *
-         * \deprecated This constant is deprecated; just use 1 instead.
-         */
-        [[deprecated]] static const T one;
-        /**
-         * Negative one in the underlying number system.
-         *
-         * \deprecated This constant is deprecated; just use -1 instead.
-         */
-        [[deprecated]] static const T minusOne;
-
     protected:
         T* elts_;
             /**< The internal array containing all vector elements. */
@@ -790,15 +771,6 @@ std::ostream& operator << (std::ostream& out, const Vector<T>& vector) {
         out << ' ' << vector[i];
     return out;
 }
-
-template <class T>
-const T Vector<T>::zero(0);
-
-template <class T>
-const T Vector<T>::one(1);
-
-template <class T>
-const T Vector<T>::minusOne(-1);
 
 /**
  * A vector of arbitrary-precision integers.

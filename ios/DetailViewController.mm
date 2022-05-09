@@ -165,7 +165,7 @@
         // Display an empty panel.
         self.navigationItem.title = @"";
         [self embedViewer:(emptySegue ? emptySegue : @"empty")];
-    } else if (p->type() == regina::PACKET_PDF) {
+    } else if (p->type() == regina::PACKET_ATTACHMENT) {
         regina::PDF* pdf = static_cast<regina::PDF*>(p);
 
         // Open the PDF using QuickLook.

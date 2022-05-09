@@ -68,32 +68,6 @@ class BoolSet {
 
     public:
         /**
-         * The empty set.
-         *
-         * \deprecated Just use BoolSet() instead.
-         */
-        static const BoolSet sNone [[deprecated]];
-        /**
-         * The set containing only \c true.
-         *
-         * \deprecated Just use \c true instead.
-         */
-        static const BoolSet sTrue [[deprecated]];
-        /**
-         * The set containing only \c false.
-         *
-         * \deprecated Just use \c false instead.
-         */
-        static const BoolSet sFalse [[deprecated]];
-        /**
-         * The set containing both \c true and \c false.
-         *
-         * \deprecated Just use BoolSet(true, true) instead.
-         */
-        static const BoolSet sBoth [[deprecated]];
-
-    public:
-        /**
          * Creates a new empty set.
          */
         constexpr BoolSet();

@@ -39,13 +39,6 @@
 using pybind11::overload_cast;
 using regina::VectorInt;
 
-namespace {
-    // The static variables zero, one, minusOne in the class VectorInt
-    // are deprecated in C++, and so generate compiler warnings if we attempt
-    // to use them here.  For now, make our own replacements instead.
-    regina::Integer zero(0), one(1), minusOne(-1);
-}
-
 void addVectorInt(pybind11::module_& m) {
     auto c = pybind11::class_<VectorInt>(m, "VectorInt")
         .def(pybind11::init<size_t>())
@@ -90,9 +83,6 @@ void addVectorInt(pybind11::module_& m) {
             (regina::Integer (VectorInt::*)())
             &VectorInt::scaleDown)
         .def_static("unit", &VectorInt::unit)
-        .def_readonly_static("zero", &zero)
-        .def_readonly_static("one", &one)
-        .def_readonly_static("minusOne", &minusOne)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
