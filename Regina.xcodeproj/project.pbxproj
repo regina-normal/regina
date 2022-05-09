@@ -426,7 +426,6 @@
 		052F9F53180600FB00FAE4DF /* container.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CFD180600FA00FAE4DF /* container.h */; };
 		052F9F54180600FB00FAE4DF /* packet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CFE180600FA00FAE4DF /* packet.cpp */; };
 		052F9F55180600FB00FAE4DF /* packet.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CFF180600FA00FAE4DF /* packet.h */; };
-		052F9F5A180600FB00FAE4DF /* pdf.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D04180600FA00FAE4DF /* pdf.h */; };
 		052F9F5B180600FB00FAE4DF /* script.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D05180600FA00FAE4DF /* script.cpp */; };
 		052F9F5C180600FB00FAE4DF /* script.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D06180600FA00FAE4DF /* script.h */; };
 		052F9F5D180600FB00FAE4DF /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* text.cpp */; };
@@ -513,7 +512,6 @@
 		052FA028180600FB00FAE4DF /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E02180600FB00FAE4DF /* links.cpp */; };
 		052FA029180600FB00FAE4DF /* disc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E03180600FB00FAE4DF /* disc.cpp */; };
 		052FA02A180600FB00FAE4DF /* disc.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E04180600FB00FAE4DF /* disc.h */; };
-		052FA02B180600FB00FAE4DF /* disctype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E05180600FB00FAE4DF /* disctype.cpp */; };
 		052FA02C180600FB00FAE4DF /* disctype.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E06180600FB00FAE4DF /* disctype.h */; };
 		052FA02D180600FB00FAE4DF /* normalsurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E07180600FB00FAE4DF /* normalsurface.cpp */; };
 		052FA02E180600FB00FAE4DF /* normalsurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E08180600FB00FAE4DF /* normalsurface.h */; };
@@ -618,7 +616,6 @@
 		052FA1D41806129B00FAE4DF /* enumerator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9DFC180600FB00FAE4DF /* enumerator.cpp */; };
 		052FA1D81806129B00FAE4DF /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E02180600FB00FAE4DF /* links.cpp */; };
 		052FA1D91806129B00FAE4DF /* disc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E03180600FB00FAE4DF /* disc.cpp */; };
-		052FA1DA1806129B00FAE4DF /* disctype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E05180600FB00FAE4DF /* disctype.cpp */; };
 		052FA1DB1806129B00FAE4DF /* normalsurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E07180600FB00FAE4DF /* normalsurface.cpp */; };
 		052FA1DC1806129B00FAE4DF /* normalsurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E09180600FB00FAE4DF /* normalsurfaces.cpp */; };
 		052FA1E41806129B00FAE4DF /* surfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1E180600FB00FAE4DF /* surfacefilter.cpp */; };
@@ -1907,15 +1904,6 @@
 		05E7DA372758760200B01C09 /* homologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA342758760100B01C09 /* homologicaldata.h */; };
 		05E7DA392759B41700B01C09 /* complement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA382759B41600B01C09 /* complement.cpp */; };
 		05E7DA3A2759B41700B01C09 /* complement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05E7DA382759B41600B01C09 /* complement.cpp */; };
-		05E7DA4A2766D47000B01C09 /* normalsurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA402766D47000B01C09 /* normalsurface.h */; };
-		05E7DA4B2766D47000B01C09 /* normalflags.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA412766D47000B01C09 /* normalflags.h */; };
-		05E7DA4C2766D47000B01C09 /* prism.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA422766D47000B01C09 /* prism.h */; };
-		05E7DA4D2766D47000B01C09 /* surfacefilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA432766D47000B01C09 /* surfacefilter.h */; };
-		05E7DA4E2766D47000B01C09 /* normalsurfaces.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA442766D47000B01C09 /* normalsurfaces.h */; };
-		05E7DA4F2766D47000B01C09 /* disctype.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA452766D47000B01C09 /* disctype.h */; };
-		05E7DA502766D47000B01C09 /* normalcoords.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA462766D47000B01C09 /* normalcoords.h */; };
-		05E7DA512766D47000B01C09 /* surfacefiltertype.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA472766D47000B01C09 /* surfacefiltertype.h */; };
-		05E7DA522766D47000B01C09 /* disc.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E7DA482766D47000B01C09 /* disc.h */; };
 		05EA195719F30A0100D37501 /* EltMoves3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMoves3.mm */; };
 		05EBB418259DB49A00362FA5 /* censuslookup in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B011D9DC51600B1E33B /* censuslookup */; };
 		05EBB419259DB49E00362FA5 /* regconcat in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B0C1D9DC52200B1E33B /* regconcat */; };
@@ -2821,7 +2809,6 @@
 		052F9CFD180600FA00FAE4DF /* container.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = container.h; sourceTree = "<group>"; };
 		052F9CFE180600FA00FAE4DF /* packet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = packet.cpp; sourceTree = "<group>"; };
 		052F9CFF180600FA00FAE4DF /* packet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packet.h; sourceTree = "<group>"; };
-		052F9D04180600FA00FAE4DF /* pdf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdf.h; sourceTree = "<group>"; };
 		052F9D05180600FA00FAE4DF /* script.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = script.cpp; sourceTree = "<group>"; };
 		052F9D06180600FA00FAE4DF /* script.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = script.h; sourceTree = "<group>"; };
 		052F9D07180600FA00FAE4DF /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
@@ -2947,7 +2934,6 @@
 		052F9E02180600FB00FAE4DF /* links.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = links.cpp; sourceTree = "<group>"; };
 		052F9E03180600FB00FAE4DF /* disc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = disc.cpp; sourceTree = "<group>"; };
 		052F9E04180600FB00FAE4DF /* disc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = disc.h; sourceTree = "<group>"; };
-		052F9E05180600FB00FAE4DF /* disctype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = disctype.cpp; sourceTree = "<group>"; };
 		052F9E06180600FB00FAE4DF /* disctype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = disctype.h; sourceTree = "<group>"; };
 		052F9E07180600FB00FAE4DF /* normalsurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalsurface.cpp; sourceTree = "<group>"; };
 		052F9E08180600FB00FAE4DF /* normalsurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalsurface.h; sourceTree = "<group>"; };
@@ -4390,16 +4376,6 @@
 		05E7DA3B2766D42600B01C09 /* repr.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = repr.test; sourceTree = "<group>"; };
 		05E7DA3C2766D42600B01C09 /* repr.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = repr.out; sourceTree = "<group>"; };
 		05E7DA3D2766D44500B01C09 /* testsurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testsurface.h; sourceTree = "<group>"; };
-		05E7DA3F2766D47000B01C09 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		05E7DA402766D47000B01C09 /* normalsurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalsurface.h; sourceTree = "<group>"; };
-		05E7DA412766D47000B01C09 /* normalflags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalflags.h; sourceTree = "<group>"; };
-		05E7DA422766D47000B01C09 /* prism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prism.h; sourceTree = "<group>"; };
-		05E7DA432766D47000B01C09 /* surfacefilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacefilter.h; sourceTree = "<group>"; };
-		05E7DA442766D47000B01C09 /* normalsurfaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalsurfaces.h; sourceTree = "<group>"; };
-		05E7DA452766D47000B01C09 /* disctype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = disctype.h; sourceTree = "<group>"; };
-		05E7DA462766D47000B01C09 /* normalcoords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalcoords.h; sourceTree = "<group>"; };
-		05E7DA472766D47000B01C09 /* surfacefiltertype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacefiltertype.h; sourceTree = "<group>"; };
-		05E7DA482766D47000B01C09 /* disc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = disc.h; sourceTree = "<group>"; };
 		05EA195519F30A0100D37501 /* EltMoves3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMoves3.h; sourceTree = "<group>"; };
 		05EA195619F30A0100D37501 /* EltMoves3.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EltMoves3.mm; sourceTree = "<group>"; };
 		05EDDA4727E3102A001743C1 /* chunk.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = chunk.cpp; sourceTree = "<group>"; };
@@ -5562,7 +5538,6 @@
 				052F9D9A180600FB00FAE4DF /* split */,
 				052F9DA2180600FB00FAE4DF /* subcomplex */,
 				052F9DF3180600FB00FAE4DF /* surface */,
-				05E7DA3E2766D47000B01C09 /* surfaces */,
 				0542084C1DF0D06F0018AB24 /* syntax */,
 				0541AF5B1B8BE3DC002E166B /* treewidth */,
 				052F9E2F180600FB00FAE4DF /* triangulation */,
@@ -5779,7 +5754,6 @@
 				052F9CFF180600FA00FAE4DF /* packet.h */,
 				05772ED1270CFA0B00D26D8A /* packet-impl.h */,
 				0588F1171808D43B006BDC79 /* packettype.h */,
-				052F9D04180600FA00FAE4DF /* pdf.h */,
 				052F9D05180600FA00FAE4DF /* script.cpp */,
 				052F9D06180600FA00FAE4DF /* script.h */,
 				052F9D07180600FA00FAE4DF /* text.cpp */,
@@ -6027,7 +6001,6 @@
 				052F9DFB180600FB00FAE4DF /* cut-trunctet.fig */,
 				052F9E03180600FB00FAE4DF /* disc.cpp */,
 				052F9E04180600FB00FAE4DF /* disc.h */,
-				052F9E05180600FB00FAE4DF /* disctype.cpp */,
 				052F9E06180600FB00FAE4DF /* disctype.h */,
 				052F9DFC180600FB00FAE4DF /* enumerator.cpp */,
 				052F9E02180600FB00FAE4DF /* links.cpp */,
@@ -7613,23 +7586,6 @@
 			path = explicit;
 			sourceTree = "<group>";
 		};
-		05E7DA3E2766D47000B01C09 /* surfaces */ = {
-			isa = PBXGroup;
-			children = (
-				05E7DA3F2766D47000B01C09 /* CMakeLists.txt */,
-				05E7DA482766D47000B01C09 /* disc.h */,
-				05E7DA452766D47000B01C09 /* disctype.h */,
-				05E7DA462766D47000B01C09 /* normalcoords.h */,
-				05E7DA412766D47000B01C09 /* normalflags.h */,
-				05E7DA402766D47000B01C09 /* normalsurface.h */,
-				05E7DA442766D47000B01C09 /* normalsurfaces.h */,
-				05E7DA422766D47000B01C09 /* prism.h */,
-				05E7DA432766D47000B01C09 /* surfacefilter.h */,
-				05E7DA472766D47000B01C09 /* surfacefiltertype.h */,
-			);
-			path = surfaces;
-			sourceTree = "<group>";
-		};
 		05F09FC21DBF018400117BFC /* dim2 */ = {
 			isa = PBXGroup;
 			children = (
@@ -7726,7 +7682,6 @@
 				054208B61DF0D2740018AB24 /* graphtriple.h in Headers */,
 				054208BC1DF0D2740018AB24 /* manifold.h in Headers */,
 				05431F861C40F3C9009BC072 /* vector_operations.h in Headers */,
-				05E7DA4D2766D47000B01C09 /* surfacefilter.h in Headers */,
 				052F9E9C180600FB00FAE4DF /* gluingpermsearcher2.h in Headers */,
 				05B7002825AC2305003BAF5C /* input_type.h in Headers */,
 				052F9F4D180600FB00FAE4DF /* ray.h in Headers */,
@@ -7774,7 +7729,6 @@
 				054208C21DF0D2740018AB24 /* simplesurfacebundle.h in Headers */,
 				052F9F8D180600FB00FAE4DF /* kernel_prototypes.h in Headers */,
 				052FA08D180600FB00FAE4DF /* boolset.h in Headers */,
-				05E7DA522766D47000B01C09 /* disc.h in Headers */,
 				05048A2126B274650088C978 /* perm6.h in Headers */,
 				059D023925BB08B7004150F7 /* retriangulate.h in Headers */,
 				05B7002925AC2305003BAF5C /* automorph.h in Headers */,
@@ -7784,7 +7738,6 @@
 				05B4D2D7229F42D700B7B11C /* output.h in Headers */,
 				05B4D2CE229F376B00B7B11C /* descent.h in Headers */,
 				055114FE1DCDF63000EC753C /* face.h in Headers */,
-				05E7DA502766D47000B01C09 /* normalcoords.h in Headers */,
 				052FA08F180600FB00FAE4DF /* markedvector.h in Headers */,
 				054208891DF0D0B50018AB24 /* themedata_p.h in Headers */,
 				05F0A04A1DBF0B5E00117BFC /* tetrahedron3.h in Headers */,
@@ -7839,7 +7792,6 @@
 				0583656518DB8876008B08D9 /* real_type.h in Headers */,
 				055114FF1DCDF63000EC753C /* facetpairing.h in Headers */,
 				05B4D2D6229F42D700B7B11C /* engine.h in Headers */,
-				05E7DA4F2766D47000B01C09 /* disctype.h in Headers */,
 				05F09FBF1DBEF01800117BFC /* dim2.h in Headers */,
 				052F9F3C180600FB00FAE4DF /* integer.h in Headers */,
 				052FA02E180600FB00FAE4DF /* normalsurface.h in Headers */,
@@ -7853,7 +7805,6 @@
 				05B7002325AC2305003BAF5C /* options.h in Headers */,
 				055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */,
 				05B7002425AC2305003BAF5C /* face_lattice.h in Headers */,
-				05E7DA4B2766D47000B01C09 /* normalflags.h in Headers */,
 				05C1BE991DCA7C77007C946B /* skeleton-impl.h in Headers */,
 				0583656318DB8876008B08D9 /* end_namespace.h in Headers */,
 				05F0A00C1DBF078800117BFC /* vertex4.h in Headers */,
@@ -7890,7 +7841,6 @@
 				05431F9E1C40F537009BC072 /* testgeneric.h in Headers */,
 				0512E08526DF346F00DDB222 /* census-impl.h in Headers */,
 				059802F926683C6D002D5D57 /* xmlsurfacereader.h in Headers */,
-				05E7DA512766D47000B01C09 /* surfacefiltertype.h in Headers */,
 				05772EC5270CF98F00D26D8A /* xmlwriter.h in Headers */,
 				052F9EF7180600FB00FAE4DF /* treelp.h in Headers */,
 				0512E09026DF34D100DDB222 /* sfsalt.h in Headers */,
@@ -7901,10 +7851,8 @@
 				05F2033320A17C1E00FC74ED /* dt-impl.h in Headers */,
 				0591E7E31C4F750200793A9C /* normalhypersurfaces.h in Headers */,
 				052F9F77180600FB00FAE4DF /* covers.h in Headers */,
-				05E7DA4E2766D47000B01C09 /* normalsurfaces.h in Headers */,
 				05431F661C40F3C9009BC072 /* cone_dual_mode.h in Headers */,
 				05F09FD41DBF01B600117BFC /* component2.h in Headers */,
-				052F9F5A180600FB00FAE4DF /* pdf.h in Headers */,
 				05772ED0270CF9F900D26D8A /* fileformat.h in Headers */,
 				052F9FDD180600FB00FAE4DF /* SnapPy.h in Headers */,
 				05B44D1521914FA300B1D343 /* binom.h in Headers */,
@@ -7960,11 +7908,9 @@
 				054208861DF0D0B50018AB24 /* textstyledata_p.h in Headers */,
 				05199A5C25C63CCE0006B8FA /* listview.h in Headers */,
 				0541AF4C1B8BE2F5002E166B /* cyclotomic.h in Headers */,
-				05E7DA4C2766D47000B01C09 /* prism.h in Headers */,
 				05AC685D1DFE729100FF1A4C /* layeredtorusbundle.h in Headers */,
 				054208B81DF0D2740018AB24 /* handlebody.h in Headers */,
 				054208781DF0D0B50018AB24 /* format_p.h in Headers */,
-				05E7DA4A2766D47000B01C09 /* normalsurface.h in Headers */,
 				059802E926683C6D002D5D57 /* xmlhypersurfacereader.h in Headers */,
 				0583656D18DB8B68008B08D9 /* kernel_namespace.h in Headers */,
 				05754CE7258D7D6400236ED7 /* randutils.h in Headers */,
@@ -9465,7 +9411,6 @@
 				05249F681DBC1737001FE29E /* prism.cpp in Sources */,
 				05249F371DBC1718001FE29E /* container.cpp in Sources */,
 				059802FE26683C9F002D5D57 /* xmlreader.cpp in Sources */,
-				052FA1DA1806129B00FAE4DF /* disctype.cpp in Sources */,
 				05A066C81DFA67D50047872E /* snappedtwosphere.cpp in Sources */,
 				05C265A02825FB0900232420 /* links.cpp in Sources */,
 				050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */,
@@ -10319,7 +10264,6 @@
 				05A0671C1DFA68190047872E /* layeredsolidtorus.cpp in Sources */,
 				052F9F91180600FB00FAE4DF /* o31_matrices.c in Sources */,
 				052FA04E180600FB00FAE4DF /* quadtostd.cpp in Sources */,
-				052FA02B180600FB00FAE4DF /* disctype.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
