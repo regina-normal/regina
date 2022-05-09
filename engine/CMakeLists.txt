@@ -36,7 +36,6 @@ ADD_SUBDIRECTORY("snappea")
 ADD_SUBDIRECTORY("split")
 ADD_SUBDIRECTORY("subcomplex")
 ADD_SUBDIRECTORY("surface")
-ADD_SUBDIRECTORY("surfaces") # deprecated
 ADD_SUBDIRECTORY("syntax")
 ADD_SUBDIRECTORY("treewidth")
 ADD_SUBDIRECTORY("triangulation")
