@@ -514,11 +514,15 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         void swap(NormalHypersurface& other) noexcept;
 
         /**
-         * Returns the double of this hypersurface.
+         * Deprecated routine that returns the double of this hypersurface.
+         *
+         * \deprecated Normal hypersurfaces can now be multiplied by integer
+         * constants.  In particular, this routine has exactly the same
+         * effect as multiplying the hypersurface by 2.
          *
          * @return the double of this normal hypersurface.
          */
-        NormalHypersurface doubleHypersurface() const;
+        [[deprecated]] NormalHypersurface doubleHypersurface() const;
 
         /**
          * Returns the sum of this and the given hypersurface.  This will

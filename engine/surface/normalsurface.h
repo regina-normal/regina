@@ -682,15 +682,15 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         void swap(NormalSurface& other) noexcept;
 
         /**
-         * Returns the double of this surface.
+         * Deprecated routine that returns the double of this surface.
          *
-         * Since Regina 7.1, normal surfaces can now be multiplied by
-         * integer constants.  In particular, this (much older) routine has
-         * exactly the same effect as multiplying the surface by 2.
+         * \deprecated Normal surfaces can now be multiplied by integer
+         * constants.  In particular, this routine has exactly the same
+         * effect as multiplying the surface by 2.
          *
          * @return the double of this normal surface.
          */
-        NormalSurface doubleSurface() const;
+        [[deprecated]] NormalSurface doubleSurface() const;
 
         /**
          * Returns the sum of this and the given surface.  This will combine

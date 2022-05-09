@@ -82,7 +82,10 @@ void addNormalHypersurface(pybind11::module_& m) {
             return new NormalHypersurface(t, enc, std::move(v));
         }))
         .def("swap", &NormalHypersurface::swap)
-        .def("doubleHypersurface", &NormalHypersurface::doubleHypersurface)
+        .def("doubleHypersurface", [](const NormalHypersurface& s) {
+            // This is deprecated, so we reimplement it ourselves.
+            return s * 2;
+        })
         .def("tetrahedra", &NormalHypersurface::tetrahedra)
         .def("prisms", &NormalHypersurface::prisms)
         .def("edgeWeight", &NormalHypersurface::edgeWeight)

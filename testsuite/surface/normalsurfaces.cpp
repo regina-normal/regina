@@ -2139,8 +2139,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 Triangulation<3> t = s.cutAlong();
                 t.intelligentSimplify();
 
-                NormalSurface sDouble = s.doubleSurface();
-                Triangulation<3> tDouble = sDouble.cutAlong();
+                Triangulation<3> tDouble = (s * 2).cutAlong();
                 tDouble.intelligentSimplify();
 
                 auto comp = t.triangulateComponents();

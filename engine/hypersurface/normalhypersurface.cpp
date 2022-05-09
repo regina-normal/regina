@@ -287,7 +287,7 @@ void NormalHypersurface::calculateFromTriangulation() const {
     connected_ = me.isConnected();
     H1_ = me.homology();
 
-    twoSided_ = (doubleHypersurface().triangulate().countComponents() ==
+    twoSided_ = (((*this) * 2).triangulate().countComponents() ==
         2 * me.countComponents());
 }
 

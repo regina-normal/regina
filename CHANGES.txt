@@ -47,10 +47,12 @@ Version 7.1  [ TODO ]
             - You can now multiply a matrix over type T with a matrix or vector
               over type U, where T and U are different types.
         Class NormalHypersurface:
-            - New operators * and *= for taking integer multiples.
+            - New operators * and *= for taking integer multiples.  The old
+              doubleHypersurface() is now deprecated.
             - New routine scaleDown().
         Class NormalSurface:
-            - New operators * and *= for taking integer multiples.
+            - New operators * and *= for taking integer multiples.  The old
+              doubleSurface() is now deprecated.
             - New routine scaleDown().
             - New routine isNormalEdgeLink().
         Type safe_tuple_element<...>:

@@ -103,7 +103,10 @@ void addNormalSurface(pybind11::module_& m) {
             return new NormalSurface(t, enc, std::move(v));
         }))
         .def("swap", &NormalSurface::swap)
-        .def("doubleSurface", &NormalSurface::doubleSurface)
+        .def("doubleSurface", [](const NormalSurface& s) {
+            // This is deprecated, so we reimplement it ourselves.
+            return s * 2;
+        })
         .def("triangles", &NormalSurface::triangles)
         .def("quads", &NormalSurface::quads)
         .def("octs", &NormalSurface::octs)
