@@ -417,7 +417,6 @@
 		052F9F49180600FB00FAE4DF /* primes.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF1180600FA00FAE4DF /* primes.h */; };
 		052F9F4A180600FB00FAE4DF /* rational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF2180600FA00FAE4DF /* rational.cpp */; };
 		052F9F4B180600FB00FAE4DF /* rational.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF3180600FA00FAE4DF /* rational.h */; };
-		052F9F4D180600FB00FAE4DF /* ray.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF5180600FA00FAE4DF /* ray.h */; };
 		052F9F4E180600FB00FAE4DF /* numbertheory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF6180600FA00FAE4DF /* numbertheory.cpp */; };
 		052F9F4F180600FB00FAE4DF /* numbertheory.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF7180600FA00FAE4DF /* numbertheory.h */; };
 		052F9F50180600FB00FAE4DF /* vector.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF8180600FA00FAE4DF /* vector.h */; };
@@ -2797,7 +2796,6 @@
 		052F9CF1180600FA00FAE4DF /* primes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = primes.h; sourceTree = "<group>"; };
 		052F9CF2180600FA00FAE4DF /* rational.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rational.cpp; sourceTree = "<group>"; };
 		052F9CF3180600FA00FAE4DF /* rational.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rational.h; sourceTree = "<group>"; };
-		052F9CF5180600FA00FAE4DF /* ray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ray.h; sourceTree = "<group>"; };
 		052F9CF6180600FA00FAE4DF /* numbertheory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = numbertheory.cpp; sourceTree = "<group>"; };
 		052F9CF7180600FA00FAE4DF /* numbertheory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = numbertheory.h; sourceTree = "<group>"; };
 		052F9CF8180600FA00FAE4DF /* vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
@@ -5731,7 +5729,6 @@
 				052F9CF1180600FA00FAE4DF /* primes.h */,
 				052F9CF2180600FA00FAE4DF /* rational.cpp */,
 				052F9CF3180600FA00FAE4DF /* rational.h */,
-				052F9CF5180600FA00FAE4DF /* ray.h */,
 				052F9CFA180600FA00FAE4DF /* seedprimes.cpp */,
 				052F9CF8180600FA00FAE4DF /* vector.h */,
 			);
@@ -7680,7 +7677,6 @@
 				05431F861C40F3C9009BC072 /* vector_operations.h in Headers */,
 				052F9E9C180600FB00FAE4DF /* gluingpermsearcher2.h in Headers */,
 				05B7002825AC2305003BAF5C /* input_type.h in Headers */,
-				052F9F4D180600FB00FAE4DF /* ray.h in Headers */,
 				052F9F3E180600FB00FAE4DF /* matrix.h in Headers */,
 				05A0670B1DFA68190047872E /* blockedsfs.h in Headers */,
 				05CAE6952747E62C007C93F3 /* treeconstraint-impl.h in Headers */,

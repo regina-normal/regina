@@ -36,7 +36,6 @@ if (${REGINA_INSTALL_DEV})
     polynomial.h
     primes.h
     rational.h
-    ray.h
     vector.h
     DESTINATION "${INCLUDEDIR}/maths" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
