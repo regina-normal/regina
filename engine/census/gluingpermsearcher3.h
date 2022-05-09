@@ -106,21 +106,6 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
-        /**
-         * Deprecated type alias for flags that indicate that our enumeration
-         * may ignore certain classes of triangulations.
-         *
-         * \deprecated This enumeration has now been renamed to
-         * regina::CensusPurgeFlags (and it now lives at the namespace level).
-         * Bitwise combinations of flags are now represented by
-         * regina::CensusPurge (not raw integers).
-         *
-         * \ifacespython The enumeration constants (but not the PurgeFlags
-         * type itself) are still available through the GluingPermSearcher<3>
-         * class for backward compatibility.
-         */
-        using PurgeFlags [[deprecated]] = CensusPurgeFlags;
-
     protected:
         using ActionWrapper = std::function<void(const GluingPerms<3>&)>;
             /**< The type used to hold the user's action function and

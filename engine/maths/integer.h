@@ -2478,18 +2478,6 @@ std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
  */
 using NativeLong = NativeInteger<sizeof(long)>;
 
-/**
- * A deprecated alias for the NativeLong type alias.
- *
- * \deprecated Use NativeLong instead.
- *
- * \ifacespython Not present, since NativeInteger is not available to
- * Python users.
- *
- * \ingroup maths
- */
-using NNativeLong [[deprecated]] = NativeLong;
-
 // Inline functions for IntegerBase
 
 template <bool supportInfinity>

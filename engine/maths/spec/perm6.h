@@ -198,14 +198,6 @@ class Perm<6> {
         using Code2 = uint16_t;
 
         /**
-         * An alias for the first-generation code type Code1.
-         *
-         * Instead of Code, you should use either Code1 or Code2 to more
-         * clearly express which kind of permutation code you are using.
-         */
-        using Code [[deprecated]] = Code1;
-
-        /**
          * Gives array-like access to all possible permutations of
          * six elements.
          *

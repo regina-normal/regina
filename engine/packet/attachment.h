@@ -439,17 +439,6 @@ class Attachment : public Packet {
  */
 void swap(Attachment& a, Attachment& b);
 
-/**
- * Deprecated alias for a packet that can hold an arbitrary file attachment.
- *
- * \deprecated The old PDF class has now been renamed to Attachment.  Instead
- * of exclusively storing PDF documents, it can now store any type of
- * file attachment.
- *
- * \ingroup packet
- */
-using PDF [[deprecated]] = Attachment;
-
 // Inline functions for Attachment
 
 inline Attachment::Attachment() : data_(nullptr), size_(0), alloc_(OWN_NEW) {

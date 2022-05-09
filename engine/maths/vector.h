@@ -133,15 +133,6 @@ class Vector : public ShortOutput<Vector<T>> {
         using const_iterator = const T*;
 
         /**
-         * Deprecated alias for the type of element that is stored in
-         * this vector.
-         *
-         * \deprecated This has been renamed to value_type, for
-         * consistency with standard C++ container types.
-         */
-        using Element [[deprecated]] = T;
-
-        /**
          * Zero in the underlying number system.
          *
          * \deprecated This constant is deprecated; just use 0 instead.
@@ -834,24 +825,6 @@ using VectorInt = Vector<Integer>;
  * \ingroup maths
  */
 using VectorLarge = Vector<LargeInteger>;
-
-/**
- * Deprecated alias for a vector of arbitrary-precision integers that
- * allows infinite elements.
- *
- * \deprecated In Regina 6.0.1 and earlier, Ray was its own separate subclass
- * of Vector<LargeInteger>.  As of Regina 7.0, the additional members of Ray
- * have been merged directly into the Vector class, and so you should just use
- * Vector<LargeInteger> (or the type alias VectorLarge) instead.  Note that
- * only the \e name Ray is deprecated; the \e class Vector<LargeInteger>
- * that it refers to remains in active use.
- *
- * \ifacespython Not present, but you can use the equivalent type VectorLarge
- * instead.
- *
- * \ingroup maths
- */
-using Ray [[deprecated]] = Vector<LargeInteger>;
 
 } // namespace regina
 

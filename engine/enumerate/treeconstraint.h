@@ -470,18 +470,6 @@ class LPConstraintEulerPositive : public LPConstraintBase {
 };
 
 /**
- * A deprecated type alias for LPConstraintEulerPositive.
- *
- * The old name LPConstraintEuler should no longer be used, since Regina
- * now provides multiple constraint types relating to Euler characteristic.
- *
- * \ifacespython Not present; use LPConstraintEulerPositive instead.
- *
- * \ingroup enumerate
- */
-using LPConstraintEuler [[deprecated]] = LPConstraintEulerPositive;
-
-/**
  * A class that constraints the tableaux of normal surface matching equations
  * to ensure that Euler characteristic is zero.
  *

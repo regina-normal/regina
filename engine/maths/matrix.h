@@ -176,15 +176,6 @@ class Matrix : public Output<Matrix<T>> {
          */
         using value_type = T;
 
-        /**
-         * Deprecated alias for the type of element that is stored in
-         * this matrix.
-         *
-         * \deprecated This has been renamed to value_type, for consistency
-         * with regina::Vector and the standard C++ container types.
-         */
-        using Coefficient [[deprecated]] = T;
-
     private:
         unsigned long rows_;
             /**< The number of rows in the matrix. */

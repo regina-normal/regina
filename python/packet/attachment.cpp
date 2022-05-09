@@ -94,7 +94,5 @@ void addAttachment(pybind11::module_& m) {
     regina::python::packet_eq_operators(c);
 
     m.def("swap", (void(*)(Attachment&, Attachment&))(regina::swap));
-
-    m.attr("PDF") = m.attr("Attachment"); // deprecated typedef
 }
 
