@@ -711,7 +711,10 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         bool isCompact() const;
         /**
          * Returns whether or not this hypersurface is orientable.
-         *·
+         *
+         * For our purposes, the empty hypersurface is considered to be
+         * orientable.
+         *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
@@ -729,6 +732,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         /**
          * Returns whether or not this hypersurface is two-sided.
          *
+         * For our purposes, the empty hypersurface is considered to be
+         * two-sided.
+         *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
@@ -745,6 +751,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         bool isTwoSided() const;
         /**
          * Returns whether or not this hypersurface is connected.
+         *
+         * For our purposes, the empty hypersurface is considered to be
+         * connected.
          *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
