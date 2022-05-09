@@ -51,37 +51,6 @@
 
 namespace regina {
 
-template <class OutputIterator>
-unsigned basicTokenise(OutputIterator results, const std::string& str) {
-    std::string::size_type len = str.length();
-    std::string::size_type pos = 0;
-
-    // Skip initial whitespace.
-    while (pos < len && isspace(str[pos]))
-        pos++;
-
-    if (pos == len)
-        return 0;
-
-    // Extract each token.
-    std::string::size_type total = 0;
-    std::string::size_type tokStart;
-    while (pos < len) {
-        // Find the characters making up this token.
-        tokStart = pos;
-        while (pos < len && ! isspace(str[pos]))
-            pos++;
-        *results++ = str.substr(tokStart, pos - tokStart);
-        total++;
-
-        // Skip the subsequent whitespace.
-        while (pos < len && isspace(str[pos]))
-            pos++;
-    }
-
-    return static_cast<unsigned>(total);
-}
-
 template <typename T>
 std::string superscript(T value) {
     std::string s = std::to_string(value);

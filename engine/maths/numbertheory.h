@@ -112,31 +112,6 @@ long gcd(long a, long b);
 std::tuple<long, long, long> gcdWithCoeffs(long a, long b);
 
 /**
- * Deprecated function that calculates the greatest common divisor of two
- * given integers and finds the smallest coefficients with which these
- * integers combine to give their gcd.  This routine is not recursive.
- *
- * \deprecated This function has been redesigned to take just \a a and \a b
- * as argument, and to return (\a gcd, \a u, \a v) as a tuple.
- * See that version of gcdWithCoeffs() for further details on how this
- * function operates.
- *
- * \ifacespython Not present; instead you can use the two-argument variant
- * that returns the tuple (\a gcd, \a u, \a v).
- *
- * @param a the first integer to compute the gcd of.
- * @param b the second integer to compute the gcd of.
- * @param u a variable into which the final coefficient of \a a will be
- * placed.  Any existing contents of \a u will be overwritten.
- * @param v a variable into which the final coefficient of \a b will be
- * placed.  Any existing contents of \a v will be overwritten.
- * @return the greatest common divisor of \a a and \a b.
- *
- * \ingroup maths
- */
-[[deprecated]] long gcdWithCoeffs(long a, long b, long& u, long& v);
-
-/**
  * Calculates the lowest common multiple of two signed integers.
  * Although the arguments may be negative, the result is guaranteed to
  * be non-negative.

@@ -378,35 +378,6 @@ bool valueOf(const std::string& str, BoolSet& dest);
 std::vector<std::string> basicTokenise(const std::string& str);
 
 /**
- * Deprecated routine to decompose a string into tokens.
- *
- * This is an extremely simple tokeniser; tokens are defined to be
- * separated by arbitrary blocks of whitespace.  Any leading or trailing
- * whitespace will be ignored.
- *
- * \warning This routine treats all strings as plain ASCII.  In
- * particular, characters are examined one at a time, and the C routine
- * isspace() is used to identify whitespace.  Use it on strings with
- * international characters at your own peril.
- *
- * \deprecated This routine has been rewritten to return the list of
- * tokens as a std::vector.  Use that variant of basicTokenise() instead.
- *
- * \ifacespython Not present; instead use the one-argument variant of
- * basicTokenise(), which returns the list of tokens.
- *
- * @param results the output iterator to which the resulting tokens will
- * be written; this must accept objects of type <tt>const std::string&</tt>.
- * @param str the string to decompose.
- * @return the number of tokens found.
- *
- * \ingroup utilities
- */
-template <class OutputIterator>
-[[deprecated]] unsigned basicTokenise(OutputIterator results,
-    const std::string& str);
-
-/**
  * Returns a token derived from the given string.
  * All whitespace characters in the given string will be replaced with
  * an underscore.

@@ -998,32 +998,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
             const IntegerBase& divisor) const;
 
         /**
-         * Deprecated function that uses the division algorithm to obtain a
-         * quotient and remainder when dividing by the given integer.
-         *
-         * This function performs the same task as the one-argument
-         * variant of divisionAlg(); however, instead of incorporating the
-         * remainder into the return value, it sends it back using a
-         * reference argument.
-         *
-         * See the one-argument variant of divisionAlg() for further details.
-         *
-         * \deprecated Use the one-argument variant of divisionAlg() instead.
-         *
-         * \pre Neither this nor the divisor are infinite.
-         *
-         * \ifacespython Not present; instead you can use the one-argument
-         * variant of divisionAlg().
-         *
-         * @param divisor the divisor.
-         * @param remainder an integer whose contents will be destroyed and
-         * replaced with the remainder.
-         * @return the quotient.
-         */
-        [[deprecated]] IntegerBase divisionAlg(const IntegerBase& divisor,
-            IntegerBase& remainder) const;
-
-        /**
          * Determines the negative of this integer.
          * This integer is not changed.
          *
@@ -2200,30 +2174,6 @@ class NativeInteger {
             const NativeInteger& divisor) const;
 
         /**
-         * Deprecated function that uses the division algorithm to obtain a
-         * quotient and remainder when dividing by the given integer.
-         *
-         * This function performs the same task as the one-argument
-         * variant of divisionAlg(); however, instead of incorporating the
-         * remainder into the return value, it sends it back using a
-         * reference argument.
-         *
-         * See the one-argument variant of divisionAlg() for further details.
-         *
-         * \deprecated Use the one-argument variant of divisionAlg() instead.
-         *
-         * \ifacespython Not present; instead you can use the one-argument
-         * variant of divisionAlg().
-         *
-         * @param divisor the divisor.
-         * @param remainder an integer whose contents will be destroyed and
-         * replaced with the remainder.
-         * @return the quotient.
-         */
-        [[deprecated]] NativeInteger divisionAlg(const NativeInteger& divisor,
-            NativeInteger& remainder) const;
-
-        /**
          * Determines the negative of this integer.
          * This integer is not changed.
          *
@@ -3305,15 +3255,6 @@ inline IntegerBase<supportInfinity>
 }
 
 template <bool supportInfinity>
-inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::divisionAlg(
-        const IntegerBase<supportInfinity>& divisor,
-        IntegerBase<supportInfinity>& remainder) const {
-    auto [q, r] = divisionAlg(divisor);
-    remainder = r;
-    return q;
-}
-
-template <bool supportInfinity>
 inline IntegerBase<supportInfinity>
         IntegerBase<supportInfinity>::operator %(
         const IntegerBase<supportInfinity>& other) const {
@@ -3822,15 +3763,6 @@ inline std::pair<NativeInteger<bytes>, NativeInteger<bytes>>
     }
 
     return ans;
-}
-
-template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::divisionAlg(
-        const NativeInteger<bytes>& divisor,
-        NativeInteger<bytes>& remainder) const {
-    auto [q, r] = divisionAlg(divisor);
-    remainder = r;
-    return q;
 }
 
 template <int bytes>

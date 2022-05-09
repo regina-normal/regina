@@ -290,15 +290,6 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         const MatrixInt& m() const;
 
         /**
-         * Deprecated alias for m().
-         *
-         * \deprecated This routine has been renamed to lower-case m().
-         *
-         * @return a reference to the defining matrix \a M.
-         */
-        [[deprecated]] const MatrixInt& M() const;
-
-        /**
          * Returns the "left" matrix that was used to define the chain complex.
          * Our group was defined as the kernel of \a M modulo the image of \a N.
          * This is the matrix \a N.
@@ -310,15 +301,6 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * @return a reference to the defining matrix \a N.
          */
         const MatrixInt& n() const;
-
-        /**
-         * Deprecated alias for n().
-         *
-         * \deprecated This routine has been renamed to lower-case n().
-         *
-         * @return a reference to the defining matrix \a N.
-         */
-        [[deprecated]] const MatrixInt& N() const;
 
         /**
          * Returns the coefficients used for the computation of homology.
@@ -410,15 +392,6 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         unsigned long ccRank() const;
 
         /**
-         * Deprecated alias for ccRank().
-         *
-         * \deprecated This routine has been renamed to ccRank().
-         *
-         * @return the rank of the chain complex.
-         */
-        [[deprecated]] unsigned long rankCC() const;
-
-        /**
          * Returns the minimum number of generators for this group.
          *
          * This is the dimension of a vector in SNF coordinates.
@@ -427,15 +400,6 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * @return the minimum number of generators.
          */
         unsigned long snfRank() const;
-
-        /**
-         * Deprecated alias for snfRank().
-         *
-         * \deprecated This routine has been renamed to snfRank().
-         *
-         * @return the minimum number of generators.
-         */
-        [[deprecated]] unsigned long minNumberOfGenerators() const;
 
         /**
          * Returns the given invariant factor describing the torsion
@@ -503,19 +467,6 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * do not have identical chain complex definitions.
          */
         bool operator != (const MarkedAbelianGroup& other) const;
-
-        /**
-         * Deprecated routine that determines whether this and the given
-         * group were formed from identical chain complex constructions.
-         *
-         * \deprecated This routine is now offered as the equality
-         * comparison operator (==).
-         *
-         * @param other the group with which this should be compared.
-         * @return \c true if and only if the this and the given group have
-         * identical chain complex definitions.
-         */
-        [[deprecated]] bool equalTo(const MarkedAbelianGroup& other) const;
 
         /**
          * Returns the requested free generator of this group,
@@ -689,20 +640,6 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         Vector<Integer> boundaryOf(const Vector<Integer>& chain) const;
 
         /**
-         * Deprecated alias for boundaryOf().
-         *
-         * \deprecated This routine has been renamed to boundaryOf().
-         *
-         * \exception InvalidArgument The given vector is not in chain
-         * complex coordinates; that is, its length is not M.columns().
-         *
-         * @param chain any vector in chain complex coordinates.
-         * @return the differential, expressed as a vector of length M.rows().
-         */
-        [[deprecated]] Vector<Integer> boundaryMap(const Vector<Integer>& chain)
-            const;
-
-        /**
          * Determines whether the given vector represents a boundary in the
          * chain complex.
          *
@@ -731,34 +668,12 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         Vector<Integer> asBoundary(const Vector<Integer>& bdry) const;
 
         /**
-         * Deprecated alias for asBoundary().
-         *
-         * \deprecated This routine has been renamed to asBoundary().
-         *
-         * \exception InvalidArgument The given vector is not a boundary.
-         *
-         * @param bdry a boundary vector, given in chain complex coordinates.
-         * @return a vector \a v such that <tt>N*v=bdry</tt>.
-         */
-        [[deprecated]] Vector<Integer> writeAsBoundary(
-            const Vector<Integer>& bdry) const;
-
-        /**
          * Returns the number of generators of the kernel of \a M, where
          * \a M is the "right" matrix used to define the chain complex.
          *
          * @return the number of generators of ker(\a M).
          */
         unsigned long cycleRank() const;
-
-        /**
-         * Deprecated alias for cycleRank().
-         *
-         * \deprecated This routine has been renamed to cycleRank().
-         *
-         * @return the number of generators of ker(\a M).
-         */
-        [[deprecated]] unsigned long minNumberCycleGens() const;
 
         /**
          * Returns the requested generator of the cycles, i.e., the kernel of
@@ -1327,24 +1242,12 @@ inline unsigned long MarkedAbelianGroup::snfRank() const {
     return snfFreeRank_ + invFac_.size();
 }
 
-inline unsigned long MarkedAbelianGroup::minNumberOfGenerators() const {
-    return snfRank();
-}
-
 inline unsigned long MarkedAbelianGroup::ccRank() const {
-    return M_.columns();
-}
-
-inline unsigned long MarkedAbelianGroup::rankCC() const {
     return M_.columns();
 }
 
 inline unsigned long MarkedAbelianGroup::cycleRank() const {
     return M_.columns() - (rankM_ - TORVec_.size());
-}
-
-inline unsigned long MarkedAbelianGroup::minNumberCycleGens() const {
-    return cycleRank();
 }
 
 inline bool MarkedAbelianGroup::isTrivial() const {
@@ -1365,10 +1268,6 @@ inline bool MarkedAbelianGroup::operator != (const MarkedAbelianGroup& other)
     return (M_ != other.M_) || (N_ != other.N_) || (coeff_ != other.coeff_);
 }
 
-inline bool MarkedAbelianGroup::equalTo(const MarkedAbelianGroup& other) const {
-    return (M_ == other.M_) && (N_ == other.N_) && (coeff_ == other.coeff_);
-}
-
 inline bool MarkedAbelianGroup::isIsomorphicTo(
         const MarkedAbelianGroup &other) const {
     return ((invFac_ == other.invFac_) && (snfFreeRank_ == other.snfFreeRank_));
@@ -1377,22 +1276,11 @@ inline bool MarkedAbelianGroup::isIsomorphicTo(
 inline const MatrixInt& MarkedAbelianGroup::m() const {
     return M_;
 }
-inline const MatrixInt& MarkedAbelianGroup::M() const {
-    return M_;
-}
 inline const MatrixInt& MarkedAbelianGroup::n() const {
-    return N_;
-}
-inline const MatrixInt& MarkedAbelianGroup::N() const {
     return N_;
 }
 inline const Integer& MarkedAbelianGroup::coefficients() const {
     return coeff_;
-}
-
-inline Vector<Integer> MarkedAbelianGroup::boundaryMap(
-        const Vector<Integer>& CCrep) const {
-    return boundaryOf(CCrep);
 }
 
 inline void swap(MarkedAbelianGroup& a, MarkedAbelianGroup& b) noexcept {

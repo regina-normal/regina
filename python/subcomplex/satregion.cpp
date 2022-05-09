@@ -59,13 +59,10 @@ void addSatRegion(pybind11::module_& m) {
         .def(pybind11::init<const SatRegion&>())
         .def("swap", &SatRegion::swap)
         .def("countBlocks", &SatRegion::countBlocks)
-        .def("numberOfBlocks", &SatRegion::countBlocks) // deprecated
         .def("block", &SatRegion::block,
             pybind11::return_value_policy::reference_internal)
         .def("blockIndex", &SatRegion::blockIndex)
         .def("countBoundaryAnnuli", &SatRegion::countBoundaryAnnuli)
-        .def("numberOfBoundaryAnnuli", // deprecated
-            &SatRegion::countBoundaryAnnuli)
         .def("boundaryAnnulus", &SatRegion::boundaryAnnulus,
             pybind11::return_value_policy::reference_internal)
         .def("createSFS", &SatRegion::createSFS)
