@@ -100,7 +100,6 @@ void addTriangulation4(pybind11::module_& m) {
         .def("removeAllPentachora", &Triangulation<4>::removeAllPentachora)
         .def("removeAllSimplices", &Triangulation<4>::removeAllSimplices)
         .def("swap", &Triangulation<4>::swap)
-        .def("swapContents", &Triangulation<4>::swap) // deprecated
         .def("moveContentsTo", &Triangulation<4>::moveContentsTo)
         .def("countComponents", &Triangulation<4>::countComponents)
         .def("countBoundaryComponents",
@@ -145,7 +144,6 @@ void addTriangulation4(pybind11::module_& m) {
         .def("tetrahedron", (regina::Face<4, 3>* (Triangulation<4>::*)(size_t))(
             &Triangulation<4>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
-        .def("isIdenticalTo", &Triangulation<4>::operator ==) // deprecated
         .def("isIsomorphicTo", &Triangulation<4>::isIsomorphicTo)
         .def("makeCanonical", &Triangulation<4>::makeCanonical)
         .def("isContainedIn", &Triangulation<4>::isContainedIn)
@@ -195,8 +193,6 @@ void addTriangulation4(pybind11::module_& m) {
             (regina::AbelianGroup (Triangulation<4>::*)(int) const)(
             &Triangulation<4>::homology),
             pybind11::arg("k") = 1)
-        .def("homologyH1", &Triangulation<4>::homology<1>) // deprecated
-        .def("homologyH2", &Triangulation<4>::homology<2>) // deprecated
         .def("markedHomology",
             (regina::MarkedAbelianGroup (Triangulation<4>::*)(int) const)(
             &Triangulation<4>::markedHomology),

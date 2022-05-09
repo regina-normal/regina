@@ -257,15 +257,6 @@ class TxICore : public Output<TxICore> {
          * @return the name of this triangulation in TeX format.
          */
         std::string texName() const;
-        /**
-         * Deprecated routine that returns the name of this specific
-         * triangulation of <tt>T x I</tt> in TeX format.
-         *
-         * \deprecated This routine has been renamed to texName().
-         *
-         * @return the name of this triangulation in TeX format.
-         */
-        [[deprecated]] std::string TeXName() const;
 
         /**
          * Determines if this and the given <tt>T x I</tt> triangulation
@@ -683,10 +674,6 @@ inline const Matrix2& TxICore::parallelReln() const {
 
 inline bool TxICore::operator != (const TxICore& other) const {
     return ! ((*this) == other);
-}
-
-inline std::string TxICore::TeXName() const {
-    return texName();
 }
 
 inline void TxICore::writeTextShort(std::ostream& out) const {

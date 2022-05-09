@@ -532,16 +532,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * swapped with this.
          */
         void swap(Triangulation<3>& other);
-        /**
-         * Deprecated routine that swaps the contents of this and the
-         * given triangulation.
-         *
-         * \deprecated Use swap() instead.
-         *
-         * @param other the triangulation whose contents should be
-         * swapped with this.
-         */
-        [[deprecated]] void swapContents(Triangulation<3>& other);
 
         /*@}*/
         /**
@@ -704,19 +694,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * @return the first homology group of the boundary.
          */
         const AbelianGroup& homologyBdry() const;
-        /**
-         * Deprecated routine that returns the second homology group for
-         * this triangulation.
-         *
-         * \deprecated This is identical to calling homology<2>().
-         *
-         * \pre This triangulation is valid.
-         *
-         * \exception FailedPrecondition This triangulation is invalid.
-         *
-         * @return the second homology group.
-         */
-        [[deprecated]] AbelianGroup homologyH2() const;
         /**
          * Returns the second homology group with coefficients in Z_2
          * for this triangulation.
@@ -1079,18 +1056,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         std::optional<NormalSurface> nonTrivialSphereOrDisc() const;
         /**
-         * A deprecated alias for nonTrivialSphereOrDisc(), which searches for
-         * a non-vertex-linking normal sphere or disc within this triangulation.
-         *
-         * \deprecated This routine has been renamed to
-         * nonTrivialSphereOrDisc().  See that routine for further details.
-         *
-         * @return a non-vertex-linking normal sphere or disc, or no value if
-         * none exists.
-         */
-        [[deprecated]] std::optional<NormalSurface> hasNonTrivialSphereOrDisc()
-            const;
-        /**
          * Searches for an octagonal almost normal 2-sphere within this
          * triangulation.  If such a surface exists, this routine is
          * guaranteed to find one.
@@ -1103,21 +1068,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * none exists.
          */
         std::optional<NormalSurface> octagonalAlmostNormalSphere() const;
-        /**
-         * A deprecated alias for octagonalAlmostNormalSphere(), which searches
-         * for an octagonal almost normal 2-sphere within this triangulation.
-         *
-         * \deprecated This routine has been renamed to
-         * octagonalAlmostNormalSphere().  See that routine for further details.
-         *
-         * \pre This triangulation is valid, closed, orientable, connected,
-         * and 0-efficient.
-         *
-         * @return an octagonal almost normal 2-sphere, or no value if
-         * none exists.
-         */
-        [[deprecated]] std::optional<NormalSurface>
-            hasOctagonalAlmostNormalSphere() const;
         /**
          * Returns a strict angle structure on this triangulation, if one
          * exists.  Recall that a \e strict angle structure is one in which
@@ -1157,20 +1107,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * one exists.
          */
         const AngleStructure& strictAngleStructure() const;
-        /**
-         * A deprecated alias for strictAngleStructure(), which returns
-         * a strict angle structure on this triangulation if one exists.
-         *
-         * \deprecated This routine has been renamed to strictAngleStructure().
-         * See that routine for further details.
-         *
-         * \exception NoSolution no strict angle structure exists on
-         * this triangulation.
-         *
-         * @return a strict angle structure on this triangulation, if
-         * one exists.
-         */
-        [[deprecated]] const AngleStructure& findStrictAngleStructure() const;
         /**
          * Determines whether this triangulation supports a strict angle
          * structure.  Recall that a \e strict angle structure is one
@@ -2358,14 +2294,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         bool isSphere() const;
         /**
-         * Deprecated function to test if this is a 3-sphere triangulation.
-         *
-         * \deprecated This routine has been renamed isSphere().
-         *
-         * @return \c true if and only if this is the 3-sphere.
-         */
-        [[deprecated]] bool isThreeSphere() const;
-        /**
          * Is it already known (or trivial to determine) whether or not this
          * is a triangulation of a 3-sphere?  See isSphere() for
          * further details.
@@ -2390,16 +2318,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * or trivial to calculate.
          */
         bool knowsSphere() const;
-        /**
-         * Deprecated function to determine if it is already known (or
-         * trivial to determine) whether this is a 3-sphere triangulation.
-         *
-         * \deprecated This routine has been renamed knowsSphere().
-         *
-         * @return \c true if and only if this property is already known
-         * or trivial to calculate.
-         */
-        [[deprecated]] bool knowsThreeSphere() const;
         /**
          * Determines whether this is a triangulation of a 3-dimensional ball.
          *
@@ -3037,138 +2955,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         Tetrahedron<3>* insertLayeredSolidTorus(unsigned long cuts0,
             unsigned long cuts1);
         /**
-         * Deprecated routine that inserts a new layered lens space L(p,q)
-         * into this triangulation.
-         * The lens space will be created by gluing together two layered
-         * solid tori in a way that uses the fewest possible tetrahedra.
-         *
-         * The new tetrahedra will be inserted at the end of the list of
-         * tetrahedra in the triangulation.
-         *
-         * \deprecated If you just wish to create a layered lens space,
-         * call <tt>Example<3>::lens(p, q)</tt>.  If you wish to insert a
-         * copy of it into an existing triangulation, call
-         * <tt>insertTriangulation(Example<3>::lens(p, q))</tt>.
-         *
-         * \pre \a p \> \a q \>= 0 unless (<i>p</i>,<i>q</i>) = (0,1);
-         * \pre gcd(\a p, \a q) = 1.
-         *
-         * @param p a parameter of the desired lens space.
-         * @param q a parameter of the desired lens space.
-         *
-         * @see LayeredLensSpace
-         */
-        [[deprecated]] void insertLayeredLensSpace(size_t p, size_t q);
-        /**
-         * Deprecated routine that inserts a layered loop of the given length
-         * into this triangulation.  Layered loops are described in more
-         * detail in the LayeredLoop class notes.
-         *
-         * The new tetrahedra will be inserted at the end of the list of
-         * tetrahedra in the triangulation.
-         *
-         * @param length the length of the new layered loop; this must
-         * be strictly positive.
-         * @param twisted \c true if the new layered loop should be twisted,
-         * or \c false if it should be untwisted.
-         *
-         * \deprecated If you just wish to create a layered loop, call
-         * <tt>Example<3>::layeredLoop(...)</tt>.  If you wish to
-         * insert a copy of it into an existing triangulation, call
-         * <tt>insertTriangulation(Example<3>::layeredLoop(...))</tt>.
-         *
-         * @see LayeredLoop
-         */
-        [[deprecated]] void insertLayeredLoop(size_t length, bool twisted);
-        /**
-         * Deprecated routine that inserts an augmented triangular solid torus
-         * with the given parameters into this triangulation.  Almost all
-         * augmented triangular solid tori represent Seifert fibred spaces with
-         * three or fewer exceptional fibres.  Augmented triangular solid tori
-         * are described in more detail in the AugTriSolidTorus class notes.
-         *
-         * The resulting Seifert fibred space will be
-         * SFS((\a a1, \a b1), (\a a2, \a b2), (\a a3, \a b3), (1,1)),
-         * where the parameters \a a1, ..., \a b3 are passed as arguments to
-         * this routine.  The three layered solid tori that are attached to
-         * the central triangular solid torus will be
-         * LST(|<i>a1</i>|, |<i>b1</i>|, |-<i>a1</i>-<i>b1</i>|), ...,
-         * LST(|<i>a3</i>|, |<i>b3</i>|, |-<i>a3</i>-<i>b3</i>|).
-         *
-         * The new tetrahedra will be inserted at the end of the list of
-         * tetrahedra in the triangulation.
-         *
-         * \deprecated If you just wish to create an augmented triangular solid
-         * torus, call <tt>Example<3>::augTriSolidTorus(...)</tt>.  If you wish
-         * to insert a copy of it into an existing triangulation, call
-         * <tt>insertTriangulation(Example<3>::augTriSolidTorus(...))</tt>.
-         *
-         * \pre gcd(\a a1, \a b1) = 1.
-         * \pre gcd(\a a2, \a b2) = 1.
-         * \pre gcd(\a a3, \a b3) = 1.
-         *
-         * @param a1 a parameter describing the first layered solid
-         * torus in the augmented triangular solid torus; this may be
-         * either positive or negative.
-         * @param b1 a parameter describing the first layered solid
-         * torus in the augmented triangular solid torus; this may be
-         * either positive or negative.
-         * @param a2 a parameter describing the second layered solid
-         * torus in the augmented triangular solid torus; this may be
-         * either positive or negative.
-         * @param b2 a parameter describing the second layered solid
-         * torus in the augmented triangular solid torus; this may be
-         * either positive or negative.
-         * @param a3 a parameter describing the third layered solid
-         * torus in the augmented triangular solid torus; this may be
-         * either positive or negative.
-         * @param b3 a parameter describing the third layered solid
-         * torus in the augmented triangular solid torus; this may be
-         * either positive or negative.
-         */
-        [[deprecated]] void insertAugTriSolidTorus(long a1, long b1,
-            long a2, long b2, long a3, long b3);
-        /**
-         * Deprecated routine that inserts an orientable Seifert fibred space
-         * with at most three exceptional fibres over the 2-sphere into this
-         * triangulation.
-         *
-         * The Seifert fibred space will be
-         * SFS((\a a1, \a b1), (\a a2, \a b2), (\a a3, \a b3)), where the
-         * parameters \a a1, ..., \a b3 are passed as arguments to this routine.
-         *
-         * The three pairs of parameters (\a a, \a b) do not need
-         * to be normalised, i.e., the parameters can be positive or
-         * negative and \a b may lie outside the range [0..\a a).
-         * There is no separate twisting parameter; each additional
-         * twist can be incorporated into the existing parameters by replacing
-         * some pair (\a a>, \a b) with the pair (\a a, \a a + \a b).
-         * For Seifert fibred spaces with less than three exceptional fibres,
-         * some or all of the parameter pairs may be (1, \a k) or even (1, 0).
-         *
-         * The new tetrahedra will be inserted at the end of the list of
-         * tetrahedra in the triangulation.
-         *
-         * \deprecated If you just wish to triangulate the given Seifert fibred
-         * space, call <tt>Example<3>::sfsOverSphere(...)</tt>.  If you wish
-         * to insert a copy of it into an existing triangulation, call
-         * <tt>insertTriangulation(Example<3>::sfsOverSphere(...))</tt>.
-         *
-         * \pre None of \a a1, \a a2 or \a a3 are 0.
-         * \pre gcd(\a a1, \a b1) = 1.
-         * \pre gcd(\a a2, \a b2) = 1.
-         * \pre gcd(\a a3, \a b3) = 1.
-         *
-         * @param a1 a parameter describing the first exceptional fibre.
-         * @param b1 a parameter describing the first exceptional fibre.
-         * @param a2 a parameter describing the second exceptional fibre.
-         * @param b2 a parameter describing the second exceptional fibre.
-         * @param a3 a parameter describing the third exceptional fibre.
-         * @param b3 a parameter describing the third exceptional fibre.
-         */
-        [[deprecated]] void insertSFSOverSphere(long a1 = 1, long b1 = 0,
-            long a2 = 1, long b2 = 0, long a3 = 1, long b3 = 0);
-        /**
          * Forms the connected sum of this triangulation with the given
          * triangulation.  This triangulation will be altered directly.
          *
@@ -3195,29 +2981,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * @param other the triangulation to sum with this.
          */
         void connectedSumWith(const Triangulation& other);
-        /**
-         * Deprecated routine that inserts the rehydration of the given string
-         * into this triangulation.  See dehydrate() and rehydrate() for
-         * more information on dehydration strings.
-         *
-         * This routine will first rehydrate the given string into a proper
-         * triangulation.  The tetrahedra from the rehydrated triangulation
-         * will then be inserted into this triangulation in the same order in
-         * which they appear in the rehydrated triangulation, and the
-         * numbering of their vertices (0-3) will not change.
-         *
-         * \deprecated If you just wish to rehydrate a dehydration string,
-         * simply call the static routine rehydrate().  If you wish to insert
-         * the rehydration into an existing triangulation, call rehydrate()
-         * followed by insertTriangulation().
-         *
-         * \exception InvalidArgument the given string could not be rehydrated.
-         *
-         * @param dehydration a dehydrated representation of the
-         * triangulation to insert.  Case is irrelevant; all letters
-         * will be treated as if they were lower case.
-         */
-        [[deprecated]] void insertRehydration(const std::string& dehydration);
 
         /*@}*/
         /**
@@ -3495,29 +3258,6 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         /*@{*/
 
-        /**
-         * Deprecated function that allows the user to interactively enter a
-         * triangulation in plain text.  Prompts will be sent to the given
-         * output stream and information will be read from the given input
-         * stream.
-         *
-         * \deprecated This is essentially an ancient piece of an interactive
-         * user interface, buried inside what is otherwise a mathematical
-         * library, and dating back to before Regina offered Python bindings.
-         * Nowadays there are better ways of interacting with Regina at a low
-         * level (e.g., Python), and so this routine will soon be removed
-         * completely.
-         *
-         * \ifacespython This routine takes no parameters; \a in and \a out
-         * are always assumed to be standard input and standard output
-         * respectively.
-         *
-         * @param in the input stream from which text will be read.
-         * @param out the output stream to which prompts will be written.
-         * @return the triangulation entered in by the user.
-         */
-        [[deprecated]] static Triangulation<3> enterTextTriangulation(
-                std::istream& in, std::ostream& out);
         /**
          * Rehydrates the given alphabetical string into a 3-dimensional
          * triangulation.
@@ -3857,10 +3597,6 @@ inline Triangulation<3>& Triangulation<3>::operator = (Triangulation&& src) {
     return *this;
 }
 
-inline void Triangulation<3>::swapContents(Triangulation<3>& other) {
-    swap(other);
-}
-
 inline bool Triangulation<3>::hasBoundaryTriangles() const {
     return hasBoundaryFacets();
 }
@@ -3894,14 +3630,6 @@ inline bool Triangulation<3>::isStandard() const {
 inline bool Triangulation<3>::isClosed() const {
     ensureSkeleton();
     return boundaryComponents().empty();
-}
-
-inline bool Triangulation<3>::isThreeSphere() const {
-    return isSphere();
-}
-
-inline bool Triangulation<3>::knowsThreeSphere() const {
-    return knowsSphere();
 }
 
 inline bool Triangulation<3>::knowsZeroEfficient() const {
@@ -3941,10 +3669,6 @@ inline const AngleStructure& Triangulation<3>::generalAngleStructure() const {
         return std::get<AngleStructure>(generalAngleStructure_);
     else
         throw NoSolution();
-}
-
-inline AbelianGroup Triangulation<3>::homologyH2() const {
-    return homology<2>();
 }
 
 inline unsigned long Triangulation<3>::homologyH2Z2() const {
@@ -4012,11 +3736,6 @@ inline void Triangulation<3>::recognizer(std::ostream& out) const {
 
 inline bool Triangulation<3>::saveRecognizer(const char* filename) const {
     return saveRecogniser(filename);
-}
-
-inline void Triangulation<3>::insertRehydration(
-        const std::string& dehydration) {
-    insertTriangulation(rehydrate(dehydration));
 }
 
 } // namespace regina

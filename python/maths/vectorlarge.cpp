@@ -52,10 +52,6 @@ void addVectorLarge(pybind11::module_& m) {
                 regina::LargeInteger& {
             return v[index];
         }, pybind11::return_value_policy::reference_internal)
-        .def("setElement", [](VectorLarge& v, size_t index, // deprecated
-                const regina::Integer& value) {
-            v[index] = value;
-        })
         .def("__setitem__", [](VectorLarge& v, size_t index,
                 const regina::Integer& value) {
             v[index] = value;

@@ -342,41 +342,5 @@ Tetrahedron<3>* Triangulation<3>::insertLayeredSolidTorus(
     return newTet;
 }
 
-void Triangulation<3>::insertLayeredLensSpace(size_t p, size_t q) {
-    insertTriangulation(Example<3>::lens(p, q));
-}
-
-void Triangulation<3>::insertLayeredLoop(size_t length, bool twisted) {
-    insertTriangulation(Example<3>::layeredLoop(length, twisted));
-}
-
-void Triangulation<3>::insertAugTriSolidTorus(long a1, long b1,
-        long a2, long b2, long a3, long b3) {
-    insertTriangulation(Example<3>::augTriSolidTorus(a1, b1, a2, b2, a3, b3));
-}
-
-void Triangulation<3>::insertSFSOverSphere(long a1, long b1, long a2, long b2,
-        long a3, long b3) {
-    // Construct the SFS that we seek.
-    SFSpace sfs;
-    if (a1 < 0)
-        sfs.insertFibre(-a1, -b1);
-    else
-        sfs.insertFibre(a1, b1);
-    if (a2 < 0)
-        sfs.insertFibre(-a2, -b2);
-    else
-        sfs.insertFibre(a2, b2);
-    if (a3 < 0)
-        sfs.insertFibre(-a3, -b3);
-    else
-        sfs.insertFibre(a3, b3);
-
-    sfs.reduce();
-
-    // Use the SFS construction routine, which can handle this type of SFS.
-    insertTriangulation(sfs.construct());
-}
-
 } // namespace regina
 

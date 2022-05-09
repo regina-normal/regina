@@ -50,7 +50,6 @@ void addTxICore(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("name", &TxICore::name)
         .def("texName", &TxICore::texName)
-        .def("TeXName", &TxICore::texName) // deprecated
     ;
     // Leave the output routines for subclasses to wrap, since __repr__
     // will include the (derived) class name.

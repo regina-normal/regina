@@ -322,16 +322,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * swapped with this.
          */
         void swap(Triangulation<4>& other);
-        /**
-         * Deprecated routine that swaps the contents of this and the
-         * given triangulation.
-         *
-         * \deprecated Use swap() instead.
-         *
-         * @param other the triangulation whose contents should be
-         * swapped with this.
-         */
-        [[deprecated]] void swapContents(Triangulation<4>& other);
 
         /*@}*/
         /**
@@ -418,20 +408,6 @@ class Triangulation<4> : public detail::TriangulationBase<4> {
          * \name Algebraic Properties
          */
         /*@{*/
-
-        /**
-         * Deprecated routine that returns the second homology group for
-         * this triangulation.
-         *
-         * \deprecated This is identical to calling homology<2>().
-         *
-         * \pre This triangulation is valid.
-         *
-         * \exception FailedPrecondition This triangulation is invalid.
-         *
-         * @return the second homology group.
-         */
-        [[deprecated]] AbelianGroup homologyH2() const;
 
         /**
          * Returns the intersection form of this 4-manifold.
@@ -1271,10 +1247,6 @@ inline bool Triangulation<4>::isClosed() const {
     return boundaryComponents().empty();
 }
 
-inline AbelianGroup Triangulation<4>::homologyH2() const {
-    return homology<2>();
-}
-
 template <typename Action, typename... Args>
 inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
@@ -1319,10 +1291,6 @@ inline bool Triangulation<4>::simplifyExhaustive(int height, unsigned nThreads,
             } else
                 return false;
         }, *this, size());
-}
-
-inline void Triangulation<4>::swapContents(Triangulation<4>& other) {
-    swap(other);
 }
 
 } // namespace regina

@@ -269,20 +269,6 @@ class Vector : public ShortOutput<Vector<T>> {
             return elts_[index];
         }
         /**
-         * Deprecated routine that sets the element at the given index
-         * in the vector to the given value.
-         *
-         * \deprecated Simply use the square bracker operator instead.
-         *
-         * \pre \c index is between 0 and size()-1 inclusive.
-         *
-         * @param index the vector index to examine.
-         * @param value the new value to assign to the element.
-         */
-        [[deprecated]] inline void setElement(size_t index, const T& value) {
-            elts_[index] = value;
-        }
-        /**
          * Returns the beginning of a non-const iterator range that runs
          * through all elements of this vector.
          *

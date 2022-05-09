@@ -275,16 +275,6 @@ class Triangulation<2> : public detail::TriangulationBase<2> {
          * swapped with this.
          */
         void swap(Triangulation<2>& other);
-        /**
-         * Deprecated routine that swaps the contents of this and the
-         * given triangulation.
-         *
-         * \deprecated Use swap() instead.
-         *
-         * @param other the triangulation whose contents should be
-         * swapped with this.
-         */
-        [[deprecated]] void swapContents(Triangulation<2>& other);
 
         /*@}*/
         /**
@@ -486,10 +476,6 @@ inline bool Triangulation<2>::isClosed() const {
 
 inline bool Triangulation<2>::isIdeal() const {
     return false;
-}
-
-inline void Triangulation<2>::swapContents(Triangulation<2>& other) {
-    swap(other);
 }
 
 } // namespace regina

@@ -98,7 +98,6 @@ void addTriangulation2(pybind11::module_& m) {
         .def("removeAllTriangles", &Triangulation<2>::removeAllTriangles)
         .def("removeAllSimplices", &Triangulation<2>::removeAllSimplices)
         .def("swap", &Triangulation<2>::swap)
-        .def("swapContents", &Triangulation<2>::swap) // deprecated
         .def("moveContentsTo", &Triangulation<2>::moveContentsTo)
         .def("countComponents", &Triangulation<2>::countComponents)
         .def("countBoundaryComponents",
@@ -130,7 +129,6 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<2>::edge,
             pybind11::return_value_policy::reference_internal)
-        .def("isIdenticalTo", &Triangulation<2>::operator ==) // deprecated
         .def("isIsomorphicTo", &Triangulation<2>::isIsomorphicTo)
         .def("findAllIsomorphisms", &Triangulation<2>::findAllIsomorphisms<
                 const std::function<bool(const Isomorphism<2>)>&>)
@@ -179,7 +177,6 @@ void addTriangulation2(pybind11::module_& m) {
             (regina::AbelianGroup (Triangulation<2>::*)(int) const)(
             &Triangulation<2>::homology),
             pybind11::arg("k") = 1)
-        .def("homologyH1", &Triangulation<2>::homology<1>) // deprecated
         .def("markedHomology",
             (regina::MarkedAbelianGroup (Triangulation<2>::*)(int) const)(
             &Triangulation<2>::markedHomology),
