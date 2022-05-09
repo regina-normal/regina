@@ -926,21 +926,6 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-        /**
-         * Deprecated routine that writes the underlying coordinate vector
-         * to the given output stream in text format.
-         * No indication will be given as to which coordinate
-         * system is being used or what each coordinate means.
-         * No newline will be written.
-         *
-         * \deprecated Just write vector() directly to the output stream.
-         *
-         * \ifacespython Not present; instead just write vector() to the
-         * appropriate output stream.
-         *
-         * @param out the output stream to which to write.
-         */
-        [[deprecated]] void writeRawVector(std::ostream& out) const;
 
         /**
          * Writes a chunk of XML containing this normal surface and all
@@ -1450,19 +1435,6 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         bool operator < (const NormalSurface& other) const;
 
         /**
-         * Deprecated routine that determines whether this and the given
-         * surface in fact represent the same normal (or almost normal) surface.
-         *
-         * \deprecated This routine has been renamed to the comparison
-         * operator (==).
-         *
-         * @param other the surface to be compared with this surface.
-         * @return \c true if both surfaces represent the same normal or
-         * almost normal surface, or \c false if not.
-         */
-        [[deprecated]] bool sameSurface(const NormalSurface& other) const;
-
-        /**
          * Determines whether this surface contains only triangle and/or
          * quadrilateral discs.  This is to distinguish normal surfaces
          * from more general surfaces such as almost normal surfaces
@@ -1642,15 +1614,6 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * @return the underlying integer vector.
          */
         const Vector<LargeInteger>& vector() const;
-
-        /**
-         * A deprecated alias for vector().
-         *
-         * \deprecated This routine has been renamed to vector().
-         *
-         * @return the underlying integer vector.
-         */
-        [[deprecated]] const Vector<LargeInteger>& rawVector() const;
 
         /**
          * Returns the specific integer vector encoding that this surface
@@ -1912,10 +1875,6 @@ inline void NormalSurface::setName(const std::string& name) {
     name_ = name;
 }
 
-inline void NormalSurface::writeRawVector(std::ostream& out) const {
-    out << vector_;
-}
-
 inline LargeInteger NormalSurface::eulerChar() const {
     if (! eulerChar_.has_value())
         calculateEulerChar();
@@ -1961,19 +1920,11 @@ inline bool NormalSurface::operator != (const NormalSurface& other) const {
     return ! ((*this) == other);
 }
 
-inline bool NormalSurface::sameSurface(const NormalSurface& other) const {
-    return (*this) == other;
-}
-
 inline bool NormalSurface::normal() const {
     return ! octPosition();
 }
 
 inline const Vector<LargeInteger>& NormalSurface::vector() const {
-    return vector_;
-}
-
-inline const Vector<LargeInteger>& NormalSurface::rawVector() const {
     return vector_;
 }
 

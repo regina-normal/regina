@@ -389,15 +389,6 @@ class LayeredSolidTorus : public StandardTriangulation {
          */
         static std::unique_ptr<LayeredSolidTorus> recogniseFromBase(
             const Tetrahedron<3>* tet);
-        /**
-         * A deprecated alias to recognise if a tetrahedron forms the
-         * base of a layered solid torus.
-         *
-         * \deprecated This function has been renamed to recogniseFromBase().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<LayeredSolidTorus>
-            formsLayeredSolidTorusBase(const Tetrahedron<3>* tet);
 
         /**
          * Determines if the given tetrahedron forms the top level
@@ -432,22 +423,12 @@ class LayeredSolidTorus : public StandardTriangulation {
          */
         static std::unique_ptr<LayeredSolidTorus> recogniseFromTop(
             const Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2);
-        /**
-         * A deprecated alias to recognise if a tetrahedron forms the
-         * top level of a layered solid torus.
-         *
-         * \deprecated This function has been renamed to recogniseFromTop().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<LayeredSolidTorus>
-            formsLayeredSolidTorusTop(const Tetrahedron<3>* tet,
-            unsigned topFace1, unsigned topFace2);
 
         /**
          * Determines if the given triangulation component forms a
          * layered solid torus in its entirity.
          *
-         * Note that, unlike formsLayeredSolidTorusBase(), this routine
+         * Note that, unlike recogniseFromBase(), this routine
          * tests for a component that is a layered solid torus with no
          * additional tetrahedra or gluings.  That is, the two boundary
          * triangles of the layered solid torus must in fact be boundary
@@ -571,18 +552,6 @@ inline std::ostream& LayeredSolidTorus::writeName(std::ostream& out) const {
 inline std::ostream& LayeredSolidTorus::writeTeXName(std::ostream& out) const {
     return out << "\\mathop{\\rm LST}(" << meridinalCuts_[0] << ','
         << meridinalCuts_[1] << ',' << meridinalCuts_[2] << ')';
-}
-
-inline std::unique_ptr<LayeredSolidTorus>
-        LayeredSolidTorus::formsLayeredSolidTorusBase(
-        const Tetrahedron<3>* tet) {
-    return recogniseFromBase(tet);
-}
-
-inline std::unique_ptr<LayeredSolidTorus>
-        LayeredSolidTorus::formsLayeredSolidTorusTop(
-        const Tetrahedron<3>* tet, unsigned topFace1, unsigned topFace2) {
-    return recogniseFromTop(tet, topFace1, topFace2);
 }
 
 inline std::unique_ptr<LayeredSolidTorus>

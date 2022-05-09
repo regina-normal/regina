@@ -86,26 +86,6 @@ void addMatrixBool(pybind11::module_& m) {
             return m;
         }))
         .def("initialise", &Matrix<bool>::initialise)
-        .def("initialise", [](Matrix<bool>& matrix, pybind11::list values) {
-            // Note: this routine is deprecated.
-            if (values.size() != matrix.rows() * matrix.columns())
-                throw regina::InvalidArgument(
-                    "Initialisation list has the wrong length");
-            unsigned long r, c;
-            unsigned i = 0;
-            for (r = 0; r < matrix.rows(); ++r)
-                for (c = 0; c < matrix.columns(); ++c) {
-                    // Accept any type that we know how to convert to a bool.
-                    try {
-                        matrix.entry(r, c) = values[i].cast<bool>();
-                        ++i;
-                        continue;
-                    } catch (pybind11::cast_error const &) {
-                        throw regina::InvalidArgument(
-                            "List element not convertible to boolean");
-                    }
-                }
-        })
         .def("swap", &Matrix<bool>::swap)
         .def("rows", &Matrix<bool>::rows)
         .def("columns", &Matrix<bool>::columns)
@@ -119,7 +99,6 @@ void addMatrixBool(pybind11::module_& m) {
         .def("transpose", &Matrix<bool>::transpose)
         .def("swapRows", &Matrix<bool>::swapRows)
         .def("swapCols", &Matrix<bool>::swapCols)
-        .def("swapColumns", &Matrix<bool>::swapCols) // deprecated
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

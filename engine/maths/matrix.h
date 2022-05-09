@@ -417,26 +417,6 @@ class Matrix : public Output<Matrix<T>> {
                     data_[r][c] = value;
         }
 
-#ifdef __DOXYGEN
-        /**
-         * A deprecated Python-only routine that fills the matrix with the
-         * given set of elements.
-         *
-         * The argument \a allValues must be a Python list of length
-         * rows() * columns().  Its values will be inserted into the
-         * matrix row by row (i.e., the first row will be filled, then
-         * the second row, and so on).
-         *
-         * \deprecated Use the list-based constructor instead, which is
-         * now available to Python users.
-         *
-         * \ifacescpp Not available; this routine is for Python only.
-         *
-         * @param allValues the individual elements to place into the matrix.
-         */
-        [[deprecated]] void initialise(List allValues);
-#endif
-
         /**
          * Swaps the contents of this and the given matrix.
          *
@@ -578,25 +558,6 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * Deprecated function that writes a complete representation of the
-         * matrix to the given output stream.
-         *
-         * Each row will be written on a separate line with elements in
-         * each row separated by single spaces.
-         *
-         * \deprecated This routine is identical to writeTextLong().
-         * Call writeTextLong() instead, or detail() if you want the text
-         * representation in string form.
-         *
-         * \ifacespython Not present; use detail() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        [[deprecated]] void writeMatrix(std::ostream& out) const {
-            writeTextLong(out);
-        }
-
-        /**
          * Swaps the elements of the two given rows in the matrix.
          *
          * This operation is constant time (unlike swapping columns,
@@ -643,21 +604,6 @@ class Matrix : public Output<Matrix<T>> {
                 for (unsigned long i = fromRow; i < rows_; i++)
                     swap(data_[i][first], data_[i][second]);
             }
-        }
-        /**
-         * Deprecated routine that swaps the elements of the two given columns
-         * in the matrix.
-         *
-         * \deprecated This routine has been renamed to swapCols().
-         *
-         * \pre The two given columns are between 0 and columns()-1 inclusive.
-         *
-         * @param first the first column to swap.
-         * @param second the second column to swap.
-         */
-        [[deprecated]] void swapColumns(unsigned long first,
-                unsigned long second) {
-            swapCols(first, second);
         }
 
         /**

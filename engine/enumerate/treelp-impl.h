@@ -136,13 +136,6 @@ void LPMatrix<IntType>::writeTextLong(std::ostream& out) const {
     }
 }
 
-template <typename IntType>
-void LPMatrix<IntType>::dump(std::ostream& out) const {
-    out << "---------------------------------" << std::endl;
-    writeTextLong(out);
-    out << "---------------------------------" << std::endl;
-}
-
 template <class LPConstraint>
 LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         const Triangulation<3>& tri, NormalEncoding enc, bool enumeration) :
@@ -997,13 +990,6 @@ void LPData<LPConstraint, IntType>::writeTextLong(std::ostream& out) const {
             out << entry(r, c) << ' ';
         out << '\n';
     }
-}
-
-template <class LPConstraint, typename IntType>
-void LPData<LPConstraint, IntType>::dump(std::ostream& out) const {
-    out << "========================" << std::endl;
-    writeTextLong(out);
-    out << "========================" << std::endl;
 }
 
 template <class LPConstraint, typename IntType>

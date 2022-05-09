@@ -364,22 +364,6 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         HomGroupPresentation operator * (HomGroupPresentation&& rhs) const;
 
         /**
-         * Deprecated routine that composes this homomorphism with the
-         * given homomorphism.
-         *
-         * \deprecated Instead of <tt>a.composeWith(b)</tt>, use the
-         * multiplication operator <tt>a * b</tt>.
-         *
-         * \pre the codomain of \a rhs must be the same as the domain of this
-         * homomorphism.
-         *
-         * @param rhs the homomorphism to compose this with.
-         * @return the composition of both homomorphisms.
-         */
-        [[deprecated]] HomGroupPresentation composeWith(
-            const HomGroupPresentation& rhs) const;
-
-        /**
          * Inverts the homomorphism.
          *
          * This is only possible if the homomorphism is in fact a
@@ -558,11 +542,6 @@ inline GroupExpression HomGroupPresentation::invEvaluate(GroupExpression arg)
 inline GroupExpression HomGroupPresentation::invEvaluate(unsigned long i)
         const {
     return (*inv_)[i];
-}
-
-inline HomGroupPresentation HomGroupPresentation::composeWith(
-        const HomGroupPresentation& rhs) const {
-    return (*this) * rhs;
 }
 
 inline void swap(HomGroupPresentation& a, HomGroupPresentation& b) noexcept {

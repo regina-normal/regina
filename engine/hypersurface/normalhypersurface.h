@@ -648,21 +648,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-        /**
-         * Deprecated routine that writes the underlying coordinate vector
-         * to the given output stream in text format.
-         * No indication will be given as to which coordinate
-         * system is being used or what each coordinate means.
-         * No newline will be written.
-         *
-         * \deprecated Just write vector() directly to the output stream.
-         *
-         * \ifacespython Not present; instead just write vector() to the
-         * appropriate output stream.
-         *
-         * @param out the output stream to which to write.
-         */
-        [[deprecated]] void writeRawVector(std::ostream& out) const;
 
         /**
          * Writes a chunk of XML containing this normal hypersurface and all
@@ -932,19 +917,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         bool operator < (const NormalHypersurface& other) const;
 
         /**
-         * Deprecated routine that determines whether this and the given
-         * hypersurface in fact represent the same normal hypersurface.
-         *
-         * \deprecated This routine has been renamed to the comparison
-         * operator (==).
-         *
-         * @param other the hypersurface to be compared with this hypersurface.
-         * @return \c true if both hypersurfaces represent the same normal
-         * hypersurface, or \c false if not.
-         */
-        [[deprecated]] bool sameSurface(const NormalHypersurface& other) const;
-
-        /**
          * Determines whether this hypersurface is embedded.  This is true if
          * and only if the surface contains no conflicting prism types.
          *
@@ -1006,15 +978,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * @return the underlying integer vector.
          */
         const Vector<LargeInteger>& vector() const;
-
-        /**
-         * A deprecated alias for vector().
-         *
-         * \deprecated This routine has been renamed to vector().
-         *
-         * @return the underlying integer vector.
-         */
-        [[deprecated]] const Vector<LargeInteger>& rawVector() const;
 
         /**
          * Returns the specific integer vector encoding that this hypersurface
@@ -1202,10 +1165,6 @@ inline void NormalHypersurface::setName(const std::string& name) {
     name_ = name;
 }
 
-inline void NormalHypersurface::writeRawVector(std::ostream& out) const {
-    out << vector_;
-}
-
 inline bool NormalHypersurface::isEmpty() const {
     // All vector encodings store the empty hypersurface as the zero vector.
     return vector_.isZero();
@@ -1245,10 +1204,6 @@ inline const Vector<LargeInteger>& NormalHypersurface::vector() const {
     return vector_;
 }
 
-inline const Vector<LargeInteger>& NormalHypersurface::rawVector() const {
-    return vector_;
-}
-
 inline HyperEncoding NormalHypersurface::encoding() const {
     return enc_;
 }
@@ -1256,11 +1211,6 @@ inline HyperEncoding NormalHypersurface::encoding() const {
 inline bool NormalHypersurface::operator != (const NormalHypersurface& other)
         const {
     return ! ((*this) == other);
-}
-
-inline bool NormalHypersurface::sameSurface(const NormalHypersurface& other)
-        const {
-    return (*this) == other;
 }
 
 inline NormalHypersurface NormalHypersurface::operator + (

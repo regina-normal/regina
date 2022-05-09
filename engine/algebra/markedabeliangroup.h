@@ -1242,25 +1242,6 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          */
         HomMarkedAbelianGroup torsionSubgroup() const;
 
-        /**
-         * Deprecated routine that writes a human-readable version of the
-         * reduced matrix to the given output stream.  This is a description
-         * of the homomorphism in some specific coordinates at present only
-         * meant to be internal to HomMarkedAbelianGroup.  At present, these
-         * coordinates have the torsion factors of the group appearing first,
-         * followed by the free factors.
-         *
-         * \deprecated All of the information that this routine outputs
-         * is now written by writeTextLong() and returned in string form
-         * by detail().  Use those routines instead.
-         *
-         * \ifacespython Not present; instead use detail(), which returns a
-         * string including all this information (plus a little more).
-         *
-         * @param out the output stream.
-         */
-        [[deprecated]] void writeReducedMatrix(std::ostream& out) const;
-
     private:
         /**
          * For those situations where you want to define an

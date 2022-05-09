@@ -86,28 +86,6 @@ void addMatrixInt(pybind11::module_& m) {
             return m;
         }))
         .def("initialise", &MatrixInt::initialise)
-        .def("initialise", [](MatrixInt& matrix, pybind11::list values) {
-            // Note: this routine is deprecated.
-            if (values.size() != matrix.rows() * matrix.columns())
-                throw regina::InvalidArgument(
-                    "Initialisation list has the wrong length");
-            unsigned long r, c;
-            unsigned i = 0;
-            for (r = 0; r < matrix.rows(); ++r)
-                for (c = 0; c < matrix.columns(); ++c) {
-                    // Accept any type that we know how to convert to a large
-                    // integer.  This includes (at least) regina::Integer,
-                    // python integers (both int and long), and strings.
-                    try {
-                        matrix.entry(r, c) = values[i].cast<regina::Integer>();
-                        ++i;
-                        continue;
-                    } catch (pybind11::cast_error const &) {
-                        throw regina::InvalidArgument(
-                            "List element not convertible to Integer");
-                    }
-                }
-        })
         .def("rows", &MatrixInt::rows)
         .def("columns", &MatrixInt::columns)
         .def("entry",
@@ -131,7 +109,6 @@ void addMatrixInt(pybind11::module_& m) {
         .def("swapRows", &MatrixInt::swapRows)
         .def("swapCols", &MatrixInt::swapCols,
             pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0)
-        .def("swapColumns", &MatrixInt::swapCols) // deprecated
         .def_static("identity",
             (MatrixInt (*)(unsigned long))
             &MatrixInt::identity<>)

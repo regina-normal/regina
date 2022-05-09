@@ -188,7 +188,7 @@ bool NormalSurface::disjoint(const NormalSurface& other) const {
     // whether we get our original two surfaces back.
     //
     // Note: splitIntoComponents() may return surfaces that use
-    // different vector encodings, but sameSurface() can handle this.
+    // different vector encodings, but equality testing can handle this.
     std::vector<NormalSurface> bits = ((*this) + other).components();
     return (bits.size() == 2 && ((*this) == bits[0] || (*this) == bits[1]));
 }
