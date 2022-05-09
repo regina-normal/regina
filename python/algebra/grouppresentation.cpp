@@ -88,24 +88,6 @@ void addGroupPresentation(pybind11::module_& m) {
             &GroupExpression::addTermLast))
         .def("addTermsFirst", &GroupExpression::addTermsFirst)
         .def("addTermsLast", &GroupExpression::addTermsLast)
-        .def("addStringFirst", [](GroupExpression& g, const std::string& s) {
-            // This is deprecated, so we reimplement it here.
-            try {
-                g.addTermsFirst(s);
-            } catch (const regina::InvalidArgument&) {
-                return false;
-            }
-            return true;
-        })
-        .def("addStringLast", [](GroupExpression& g, const std::string& s) {
-            // This is deprecated, so we reimplement it here.
-            try {
-                g.addTermsLast(s);
-            } catch (const regina::InvalidArgument&) {
-                return false;
-            }
-            return true;
-        })
         .def("cycleLeft", &GroupExpression::cycleLeft)
         .def("cycleRight", &GroupExpression::cycleRight)
         .def("inverse", &GroupExpression::inverse)
@@ -127,7 +109,6 @@ void addGroupPresentation(pybind11::module_& m) {
             e.writeXMLData(std::cout);
         })
         .def("tex", &GroupExpression::tex)
-        .def("toTeX", &GroupExpression::tex) // deprecated
         .def("str",
             overload_cast<bool>(&GroupExpression::str, pybind11::const_))
         .def("utf8",
@@ -155,11 +136,7 @@ void addGroupPresentation(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("isValid", &GroupPresentation::isValid)
         .def("intelligentSimplify", &GroupPresentation::intelligentSimplify)
-        .def("intelligentSimplifyDetail",
-            &GroupPresentation::intelligentSimplify) // deprecated
         .def("smallCancellation", &GroupPresentation::smallCancellation)
-        .def("smallCancellationDetail",
-            &GroupPresentation::smallCancellation) // deprecated
         .def("simplifyWord", &GroupPresentation::simplifyWord)
         .def("proliferateRelators", &GroupPresentation::proliferateRelators,
             pybind11::arg("depth") = 1)
@@ -170,14 +147,8 @@ void addGroupPresentation(pybind11::module_& m) {
             pybind11::arg(), pybind11::arg(), pybind11::arg(),
             pybind11::arg("rightMult") = true)
         .def("intelligentNielsen", &GroupPresentation::intelligentNielsen)
-        .def("intelligentNielsenDetail",
-            &GroupPresentation::intelligentNielsen) // deprecated
         .def("homologicalAlignment", &GroupPresentation::homologicalAlignment)
-        .def("homologicalAlignmentDetail",
-            &GroupPresentation::homologicalAlignment) // deprecated
         .def("prettyRewriting", &GroupPresentation::prettyRewriting)
-        .def("prettyRewritingDetail",
-            &GroupPresentation::prettyRewriting) // deprecated
         .def("identifySimplyIsomorphicTo",
             &GroupPresentation::identifySimplyIsomorphicTo)
         .def("recogniseGroup", &GroupPresentation::recogniseGroup,
@@ -225,7 +196,6 @@ void addGroupPresentation(pybind11::module_& m) {
         })
         .def("incidence", &GroupPresentation::incidence)
         .def("tex", &GroupPresentation::tex)
-        .def("toTeX", &GroupPresentation::tex) // deprecated
         .def("compact", &GroupPresentation::compact)
         .def("gap", &GroupPresentation::gap,
             pybind11::arg("groupVariable") = "g")

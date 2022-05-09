@@ -126,7 +126,7 @@ dump(g.relation(0).term(2))
 
 g = GroupPresentation(3, ['aC', 'aBCb'])
 dump(g)
-dump(g.intelligentSimplifyDetail())
+dump(g.intelligentSimplify())
 dump(g)
 
 # ----------------------------------------------------------------------

@@ -52,15 +52,9 @@ void addGluingPerms(pybind11::module_& m, const char* name) {
         .def("size", &GluingPerms<dim>::size)
         .def("pairing", &GluingPerms<dim>::pairing,
             pybind11::return_value_policy::reference_internal)
-        .def("facetPairing", &GluingPerms<dim>::pairing, // deprecated
-            pybind11::return_value_policy::reference_internal)
         .def("perm", overload_cast<const FacetSpec<dim>&>(
             &GluingPerms<dim>::perm, pybind11::const_))
         .def("perm", overload_cast<size_t, int>(
-            &GluingPerms<dim>::perm, pybind11::const_))
-        .def("gluingPerm", overload_cast<const FacetSpec<dim>&>( // deprecated
-            &GluingPerms<dim>::perm, pybind11::const_))
-        .def("gluingPerm", overload_cast<size_t, int>( // deprecated
             &GluingPerms<dim>::perm, pybind11::const_))
         .def("permIndex",
             overload_cast<const FacetSpec<dim>&>(

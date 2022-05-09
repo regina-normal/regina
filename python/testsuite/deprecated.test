@@ -31,38 +31,5 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-print(BoolSet.sBoth, BoolSet.sTrue, BoolSet.sFalse, BoolSet.sNone)
-
-t = Example3.s2xs1()
-s = NormalSurfaces.enumerate(t, NS_QUAD)
-print(s.detail())
-u = s.filterForPotentiallyIncompressible()
-print(u.detail())
-
-t = Example3.whiteheadLink()
-a = AngleStructures.enumerate(t)
-print(a.detail())
-a = AngleStructures.enumerateTautDD(t)
-print(a.detail())
-
-t = Example4.s3xs1()
-s = NormalHypersurfaces.enumerate(t, HS_STANDARD)
-print(s.detail())
-
-# The old enumeration() functions used to insert into the packet tree.
-
-t = PacketOfTriangulation3(Example3.s2xs1())
-s = NormalSurfaces.enumerate(t, NS_QUAD)
-print(t.firstChild().detail())
-u = s.filterForPotentiallyIncompressible()
-print(t.lastChild().detail())
-
-t = PacketOfTriangulation3(Example3.whiteheadLink())
-a = AngleStructures.enumerate(t)
-print(t.firstChild().detail())
-a = AngleStructures.enumerateTautDD(t)
-print(t.lastChild().detail())
-
-t = PacketOfTriangulation4(Example4.s3xs1())
-s = NormalHypersurfaces.enumerate(t, HS_STANDARD)
-print(t.firstChild().detail())
+# As of Regina 7.1, there are no deprecated functions that have
+# sufficiently interesting reimplementations that we need to test them here.

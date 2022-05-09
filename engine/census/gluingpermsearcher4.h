@@ -675,18 +675,6 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
         bool isComplete() const;
 
         /**
-         * Deprecated function that determines whether this search manager
-         * holds a complete gluing permutation set or just a partially
-         * completed search state.
-         *
-         * \deprecated This routine has been renamed to isComplete().
-         *
-         * @return \c true if a complete gluing permutation set is held,
-         * or \c false otherwise.
-         */
-        [[deprecated]] bool completePermSet() const;
-
-        /**
          * Dumps all internal data in a plain text format, along with a
          * marker to signify which precise class the data belongs to.
          * This routine can be used with fromTaggedData() to transport
@@ -1310,10 +1298,6 @@ inline GluingPermSearcher<4>::PentTriangleState::PentTriangleState() :
 }
 
 inline bool GluingPermSearcher<4>::isComplete() const {
-    return (orderElt_ == orderSize_);
-}
-
-inline bool GluingPermSearcher<4>::completePermSet() const {
     return (orderElt_ == orderSize_);
 }
 

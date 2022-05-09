@@ -703,26 +703,6 @@ GroupExpression::GroupExpression( const char* input )
     terms_.push_back(buildTerm);
 }
 
-bool GroupExpression::addStringFirst( const std::string& input)
-{
-    try {
-        addTermsFirst(GroupExpression(input));
-    } catch (const InvalidArgument&) {
-        return false;
-    }
-    return true;
-}
-
-bool GroupExpression::addStringLast( const std::string& input)
-{
-    try {
-        addTermsLast(GroupExpression(input));
-    } catch (const InvalidArgument&) {
-        return false;
-    }
-    return true;
-}
-
 //             **********  GroupPresentation below **************
 
 GroupPresentation::GroupPresentation(unsigned long nGens,

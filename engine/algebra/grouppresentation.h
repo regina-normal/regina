@@ -470,56 +470,6 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
         void addTermsLast(GroupExpression word);
 
         /**
-         * Deprecated routine that multiplies this expression on the left by
-         * the word respresented by the given string.
-         *
-         * \deprecated Simply call <tt>addTermsFirst(input)</tt>, which will
-         * automatically construct a GroupExpression from the string \a input.
-         * The only change is that you will need to use a try/catch block to
-         * detect errors, instead of checking a return value.
-         *
-         * See the string-based constructor
-         * GroupExpression(const std::string&) for further
-         * information on how this string should be formatted.
-         *
-         * If the given string cannot be interpreted as a word in a group,
-         * then this expression will be left untouched.
-         *
-         * @param input a string representation of the word to multiply with
-         * this expression.
-         * @return \c true if the given string could interpreted
-         * (and therefore the multiplication was completed successfully), or
-         * \c false if the given string could not be interpreted
-         * (in which case this expression will be left untouched).
-         */
-        [[deprecated]] bool addStringFirst(const std::string& input);
-
-        /**
-         * Deprecated routine that multiplies this expression on the right by
-         * the word respresented by the given string.
-         *
-         * \deprecated Simply call <tt>addTermsLast(input)</tt>, which will
-         * automatically construct a GroupExpression from the string \a input.
-         * The only change is that you will need to use a try/catch block to
-         * detect errors, instead of checking a return value.
-         *
-         * See the string-based constructor
-         * GroupExpression(const std::string&) for further
-         * information on how this string should be formatted.
-         *
-         * If the given string cannot be interpreted as a word in a group,
-         * then this expression will be left untouched.
-         *
-         * @param input a string representation of the word to multiply with
-         * this expression.
-         * @return \c true if the given string could interpreted
-         * (and therefore the multiplication was completed successfully), or
-         * \c false if the given string could not be interpreted
-         * (in which case this expression will be left untouched).
-         */
-        [[deprecated]] bool addStringLast(const std::string& input);
-
-        /**
          * Cycles this word by moving the leftmost term around to the rightmost.
          * All other terms shift one step to the left.
          *
@@ -675,16 +625,6 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
         std::string tex() const;
 
         /**
-         * Deprecated function that returns a TeX representation of this
-         * expression.  See writeTeX() for details on how this is formed.
-         *
-         * \deprecated This function has been renamed to tex().
-         *
-         * @return a TeX representation of this expression.
-         */
-        [[deprecated]] std::string toTeX() const;
-
-        /**
          * Writes a TeX represesentation of this expression to the given
          * output stream.
          *
@@ -745,36 +685,6 @@ class GroupExpression : public ShortOutput<GroupExpression, true> {
          * @return a short text representation of this group expression.
          */
         std::string utf8(bool alphaGen) const;
-
-        /**
-         * Deprecated routine that writes a text representation of this
-         * expression to the given output stream, using either numbered
-         * generators or alphabetic generators.
-         *
-         * Note that, prior to Regina 7.0, this routine output numbered
-         * generators in the form <tt>g_3</tt>, despite the documentation
-         * claiming that the format would be <tt>g3</tt>.  In Regina 7.0
-         * (which also deprecated this function), the behaviour was
-         * changed to match the documentation (and not vice versa).
-         *
-         * \deprecated This writes exactly the same text as writeTextShort(),
-         * though the optional arguments are given in a different order.
-         * Use writeTextShort() instead.
-         *
-         * \pre If \a alphaGen is \c true, the number of generators in
-         * the corresponding group must be 26 or fewer.
-         *
-         * \ifacespython Not present; use str() or utf8() instead.
-         *
-         * @param out the output stream to which to write.
-         * @param alphaGen indicates whether to use numbered or
-         * alphabetic generators, as described above.
-         * @param utf8 \c true if exponents should be written using
-         * unicode superscript characters, or \c false if they should be
-         * written using a caret (^) symbol.
-         */
-        [[deprecated]] void writeText(std::ostream& out, bool alphaGen = false,
-            bool utf8 = false) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -1029,19 +939,6 @@ class GroupPresentation : public Output<GroupPresentation> {
         std::optional<HomGroupPresentation> intelligentSimplify();
 
         /**
-         * Deprecated routine that attempts to simplify the group presentation
-         * as intelligently as possible without further input.
-         *
-         * \deprecated This routine has been renamed to intelligentSimplify().
-         *
-         * @return an isomorphism describing the reduction map from the
-         * original presentation to the new presentation, or no value if
-         * this presentation was not changed.
-         */
-        [[deprecated]] std::optional<HomGroupPresentation>
-            intelligentSimplifyDetail();
-
-        /**
          * Attempts to simplify the group presentation using small cancellation
          * theory. The simplification method is based on the Dehn algorithm
          * for hyperbolic groups, i.e. small cancellation theory.   This means
@@ -1070,19 +967,6 @@ class GroupPresentation : public Output<GroupPresentation> {
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> smallCancellation();
-
-        /**
-         * Deprecated routine that attempts to simplify the group presentation
-         * using small cancellation theory.
-         *
-         * \deprecated This routine has been renamed to smallCancellation().
-         *
-         * @return an isomorphism describing the reduction map from the
-         * original presentation to the new presentation, or no value if
-         * this presentation was not changed.
-         */
-        [[deprecated]] std::optional<HomGroupPresentation>
-            smallCancellationDetail();
 
         /**
          * Uses small cancellation theory to reduce the input word,
@@ -1324,19 +1208,6 @@ class GroupPresentation : public Output<GroupPresentation> {
         std::optional<HomGroupPresentation> intelligentNielsen();
 
         /**
-         * Deprecated routine that looks for Nielsen moves that will
-         * simplify the presentation.
-         *
-         * \deprecated This routine has been renamed to intelligentNielsen().
-         *
-         * @return an isomorphism describing the map from the
-         * original presentation to the new presentation, or no value if
-         * this presentation was not changed.
-         */
-        [[deprecated]] std::optional<HomGroupPresentation>
-            intelligentNielsenDetail();
-
-        /**
          * Rewrites the presentation so that generators
          * of the group map to generators of the abelianisation, with any
          * left-over generators mapping to zero (if possible).  Consider this a
@@ -1366,20 +1237,6 @@ class GroupPresentation : public Output<GroupPresentation> {
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> homologicalAlignment();
-
-        /**
-         * Deprecated routine that wewrites the presentation so that generators
-         * of the group map to generators of the abelianisation, with any
-         * left-over generators mapping to zero (if possible).
-         *
-         * \deprecated This routine has been renamed to homologicalAlignment().
-         *
-         * @return an isomorphism describing the reduction map from the
-         * original presentation to the new presentation, or no value if
-         * this presentation was not changed.
-         */
-        [[deprecated]] std::optional<HomGroupPresentation>
-            homologicalAlignmentDetail();
 
         /**
          * An entirely cosmetic re-writing of the presentation, which is
@@ -1414,19 +1271,6 @@ class GroupPresentation : public Output<GroupPresentation> {
          * this presentation was not changed.
          */
         std::optional<HomGroupPresentation> prettyRewriting();
-
-        /**
-         * Deprecated routine that performs an entirely cosmetic re-writing
-         * of the presentation, which is fast and superficial.
-         *
-         * \deprecated This routine has been renamed to prettyRewriting().
-         *
-         * @return an isomorphism describing the map from the
-         * original presentation to the new presentation, or no value if
-         * this presentation was not changed.
-         */
-        [[deprecated]] std::optional<HomGroupPresentation>
-            prettyRewritingDetail();
 
         /**
          * Determines whether this and the given group presentation are
@@ -1591,16 +1435,6 @@ class GroupPresentation : public Output<GroupPresentation> {
          * @return a TeX representation of this group presentation.
          */
         std::string tex() const;
-
-        /**
-         * Deprecated function that returns a TeX representation of this group
-         * presentation.  See writeTeX() for details on how this is formed.
-         *
-         * \deprecated This function has been renamed to tex().
-         *
-         * @return a TeX representation of this group presentation.
-         */
-        [[deprecated]] std::string toTeX() const;
 
         /**
          * Writes a TeX represesentation of this group presentation
@@ -2038,10 +1872,6 @@ inline void GroupExpression::erase() {
     terms_.clear();
 }
 
-inline std::string GroupExpression::toTeX() const {
-    return tex();
-}
-
 inline std::string GroupExpression::str(bool alphaGen) const {
     std::ostringstream out;
     writeTextShort(out, false, alphaGen);
@@ -2052,12 +1882,6 @@ inline std::string GroupExpression::utf8(bool alphaGen) const {
     std::ostringstream out;
     writeTextShort(out, true, alphaGen);
     return out.str();
-}
-
-inline void GroupExpression::writeText(std::ostream& out, bool alphaGen,
-        bool utf8) const {
-    // Note: argument are given in a different order.
-    writeTextShort(out, utf8, alphaGen);
 }
 
 inline void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept {
@@ -2103,10 +1927,6 @@ inline const std::vector<GroupExpression>& GroupPresentation::relations()
     return relations_;
 }
 
-inline std::string GroupPresentation::toTeX() const {
-    return tex();
-}
-
 inline void GroupPresentation::writeTextShort(std::ostream& out) const {
     writeTextCompact(out);
 }
@@ -2139,31 +1959,6 @@ inline void swap(GroupPresentation& lhs, GroupPresentation& rhs) noexcept {
 #include "algebra/homgrouppresentation.h"
 
 namespace regina {
-
-inline std::optional<HomGroupPresentation>
-        GroupPresentation::intelligentSimplifyDetail() {
-    return intelligentSimplify();
-}
-
-inline std::optional<HomGroupPresentation>
-        GroupPresentation::smallCancellationDetail() {
-    return smallCancellation();
-}
-
-inline std::optional<HomGroupPresentation>
-        GroupPresentation::intelligentNielsenDetail() {
-    return intelligentNielsen();
-}
-
-inline std::optional<HomGroupPresentation>
-        GroupPresentation::homologicalAlignmentDetail() {
-    return homologicalAlignment();
-}
-
-inline std::optional<HomGroupPresentation>
-        GroupPresentation::prettyRewritingDetail() {
-    return prettyRewriting();
-}
 
 template <int index, typename Action, typename... Args>
 inline size_t GroupPresentation::enumerateCovers(

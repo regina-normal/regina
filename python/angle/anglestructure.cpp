@@ -76,8 +76,6 @@ void addAngleStructure(pybind11::module_& m) {
         .def("isVeering", &AngleStructure::isVeering)
         .def("vector", &AngleStructure::vector,
             pybind11::return_value_policy::reference_internal)
-        .def("rawVector", &AngleStructure::vector, // deprecated
-            pybind11::return_value_policy::reference_internal)
         .def("writeXMLData", [](const AngleStructure& s,
                 pybind11::object file) {
             pybind11::scoped_ostream_redirect stream(std::cout, file);

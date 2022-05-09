@@ -153,16 +153,6 @@ class Example<3> : public detail::ExampleBase<3> {
         static Triangulation<3> poincare();
 
         /**
-         * Deprecated routine that returns the five-tetrahedron triangulation
-         * of the Poincare homology sphere.
-         *
-         * \deprecated This routine has been renamed to poincare().
-         *
-         * @return the Poincare homology sphere.
-         */
-        [[deprecated]] static Triangulation<3> poincareHomologySphere();
-
-        /**
          * Returns an augmented triangular solid torus with the given
          * parameters.  Almost all augmented triangular solid tori represent
          * Seifert fibred spaces with three or fewer exceptional fibres.
@@ -386,10 +376,6 @@ inline Triangulation<3> Example<3>::threeSphere() {
 
 inline Triangulation<3> Example<3>::s2xs1() {
     return sphereBundle();
-}
-
-inline Triangulation<3> Example<3>::poincareHomologySphere() {
-    return poincare();
 }
 
 inline Triangulation<3> Example<3>::solidKleinBottle() {

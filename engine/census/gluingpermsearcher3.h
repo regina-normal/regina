@@ -365,18 +365,6 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
         bool isComplete() const;
 
         /**
-         * Deprecated function that determines whether this search manager
-         * holds a complete gluing permutation set or just a partially
-         * completed search state.
-         *
-         * \deprecated This routine has been renamed to isComplete().
-         *
-         * @return \c true if a complete gluing permutation set is held,
-         * or \c false otherwise.
-         */
-        [[deprecated]] bool completePermSet() const;
-
-        /**
          * Dumps all internal data in a plain text format, along with a
          * marker to signify which precise class the data belongs to.
          * This routine can be used with fromTaggedData() to transport
@@ -2785,10 +2773,6 @@ inline void GluingPermSearcher<3>::partialSearch(long maxDepth,
 }
 
 inline bool GluingPermSearcher<3>::isComplete() const {
-    return (orderElt == orderSize);
-}
-
-inline bool GluingPermSearcher<3>::completePermSet() const {
     return (orderElt == orderSize);
 }
 

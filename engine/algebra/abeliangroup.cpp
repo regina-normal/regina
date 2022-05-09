@@ -90,11 +90,6 @@ void AbelianGroup::addTorsion(Integer degree) {
         revInvFactors_.push_back(degree);
 }
 
-void AbelianGroup::addTorsionElements(const std::multiset<Integer>& torsion) {
-    for (const Integer& i : torsion)
-        addTorsion(i);
-}
-
 void AbelianGroup::addGroup(MatrixInt presentation) {
     smithNormalForm(presentation);
 

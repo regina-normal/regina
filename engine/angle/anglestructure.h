@@ -477,15 +477,6 @@ class AngleStructure : public ShortOutput<AngleStructure> {
         bool operator < (const AngleStructure& other) const;
 
         /**
-         * A deprecated alias for vector().
-         *
-         * \deprecated This routine has been renamed to vector().
-         *
-         * @return the underlying integer vector.
-         */
-        [[deprecated]] const Vector<Integer>& rawVector() const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -609,10 +600,6 @@ inline bool AngleStructure::operator != (const AngleStructure& other) const {
 }
 
 inline const Vector<Integer>& AngleStructure::vector() const {
-    return vector_;
-}
-
-inline const Vector<Integer>& AngleStructure::rawVector() const {
     return vector_;
 }
 
