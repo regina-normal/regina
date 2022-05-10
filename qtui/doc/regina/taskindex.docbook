@@ -1001,6 +1001,8 @@
 
  <indexentry>
   <primaryie>isomorphism signatures</primaryie>
+  <secondaryie><link linkend="tri-composition-isosig">copying
+   to the clipboard</link></secondaryie>
   <secondaryie><link linkend="import-isosiglist">importing
    a list of isomorphism signatures</link></secondaryie>
   <secondaryie><link linkend="tri-new-isosig">reconstructing

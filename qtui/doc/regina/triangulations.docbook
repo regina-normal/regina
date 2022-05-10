@@ -1881,9 +1881,15 @@
     <para>
      Isomorphism signatures are case-sensitive (i.e., upper-case and
      lower-case matters).
-     To copy the isomorphism signature to the clipboard, simply select
-     the line in the box and choose
-     <menuchoice><guimenu>Edit</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>.
+     To copy the isomorphism signature to the clipboard,
+     right-click on the signature and a copy action will appear.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="tri-composition-isosig-copy"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
    </sect3>
 
