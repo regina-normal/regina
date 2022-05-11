@@ -1764,6 +1764,8 @@
 		05C2659C2824917A00232420 /* edge3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265982824917700232420 /* edge3.cpp */; };
 		05C2659F2825FB0800232420 /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C2659D2825FB0300232420 /* links.cpp */; };
 		05C265A02825FB0900232420 /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C2659D2825FB0300232420 /* links.cpp */; };
+		05C265A3282B3B3900232420 /* tri4composition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265A1282B3B3900232420 /* tri4composition.cpp */; };
+		05C265A4282B3B8200232420 /* tri4composition.h in Sources */ = {isa = PBXBuildFile; fileRef = 05C265A2282B3B3900232420 /* tri4composition.h */; };
 		05CAE6012741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
 		05CAE6022741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
 		05CAE60527427A8A007C93F3 /* ordering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60327427A8A007C93F3 /* ordering.cpp */; };
@@ -4238,6 +4240,8 @@
 		05C265982824917700232420 /* edge3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = edge3.cpp; sourceTree = "<group>"; };
 		05C265992824917700232420 /* edge3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = edge3.h; sourceTree = "<group>"; };
 		05C2659D2825FB0300232420 /* links.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = links.cpp; sourceTree = "<group>"; };
+		05C265A1282B3B3900232420 /* tri4composition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri4composition.cpp; sourceTree = "<group>"; };
+		05C265A2282B3B3900232420 /* tri4composition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri4composition.h; sourceTree = "<group>"; };
 		05CAE6002741C871007C93F3 /* validityconstraints.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = validityconstraints.cpp; sourceTree = "<group>"; };
 		05CAE60327427A8A007C93F3 /* ordering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ordering.cpp; sourceTree = "<group>"; };
 		05CAE60427427A8A007C93F3 /* maxadmissible.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maxadmissible.cpp; sourceTree = "<group>"; };
@@ -6938,6 +6942,8 @@
 				0564A5BB1811D920002CC2AE /* tri3ui.h */,
 				0591E82B1C4F767300793A9C /* tri4algebra.cpp */,
 				0591E82C1C4F767300793A9C /* tri4algebra.h */,
+				05C265A1282B3B3900232420 /* tri4composition.cpp */,
+				05C265A2282B3B3900232420 /* tri4composition.h */,
 				0591E82D1C4F767300793A9C /* tri4creator.cpp */,
 				0591E82E1C4F767300793A9C /* tri4creator.h */,
 				0591E82F1C4F767300793A9C /* tri4gluings.cpp */,
@@ -9760,6 +9766,7 @@
 				056F746C2767551F00F7EAC9 /* linkalgebra.h in Sources */,
 				0591E83F1C4F769100793A9C /* tri4algebra.cpp in Sources */,
 				0591E8441C4F772B00793A9C /* tri4algebra.h in Sources */,
+				05C265A4282B3B8200232420 /* tri4composition.h in Sources */,
 				0591E8461C4F773500793A9C /* tri4gluings.h in Sources */,
 				0591E8471C4F773800793A9C /* tri4skeleton.h in Sources */,
 				0591E8481C4F773C00793A9C /* tri4ui.h in Sources */,
@@ -9856,6 +9863,7 @@
 				0564A8081811D921002CC2AE /* csvsurfacehandler.cpp in Sources */,
 				0564A9811811D921002CC2AE /* reginapref.cpp in Sources */,
 				0564A80A1811D921002CC2AE /* exportdialog.cpp in Sources */,
+				05C265A3282B3B3900232420 /* tri4composition.cpp in Sources */,
 				0564A9671811D921002CC2AE /* tri3composition.cpp in Sources */,
 				0564A9591811D921002CC2AE /* surfacesui.cpp in Sources */,
 				05D322C31F9FE72E00E5F9B8 /* linkui.cpp in Sources */,

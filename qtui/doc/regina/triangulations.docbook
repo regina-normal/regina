@@ -1776,7 +1776,7 @@
   </sect2>
 
   <sect2 id="tri-composition">
-   <title>Combinatorial Composition (3-D)</title>
+   <title>Combinatorial Composition (3-D and 4-D)</title>
    <para>
     For 3-manifold triangulations, the <guilabel>Composition</guilabel> tab
     offers more detailed information about the combinatorial
@@ -1789,10 +1789,16 @@
     both the triangulation and the underlying 3-manifold; other times
     it yields little or no useful information.
    </para>
+   <para>
+    For 4-manifold triangulations, there is also a
+    <guilabel>Composition</guilabel> tab but this is much more
+    basic&mdash;currently it just offers the isomorphism signature and
+    isomorphism testing.
+   </para>
    <tip><para>
     If your aim is just to determine the underlying 3-manifold by any means
     possible, see the
-    <link linkend="tri-recognition">recognition tab</link> instead.
+    <link linkend="tri-recognition">3-manifold recognition tab</link> instead.
     The recognition tab combines the results of this combinatorial
     recognition with slower but stronger routines, including
     3-sphere, 3-ball, solid torus and &txi; recognition,
