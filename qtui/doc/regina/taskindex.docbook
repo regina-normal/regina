@@ -811,7 +811,7 @@
 
  <indexentry>
   <primaryie>fundamental group</primaryie>
-  <secondaryie><link linkend="tri-algebra-homfund">of a manifold or
+  <secondaryie><link linkend="tri-algebra-fund">of a manifold or
    triangulation</link></secondaryie>
   <secondaryie><link linkend="link-algebra">of a link
    complement</link></secondaryie>
@@ -827,7 +827,7 @@
  <indexentry>
   <primaryie>&gaplong;</primaryie>
   <secondaryie><link linkend="options-tools">configuration</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-homfund">using to
+  <secondaryie><link linkend="tri-algebra-fund">using to
    simplify group presentations</link></secondaryie>
  </indexentry>
 
@@ -900,11 +900,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-algebra-homfund">homology
-   groups</link></primaryie>
-  <secondaryie><link linkend="tri-algebra-cellular">all homology
-   groups</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-homfund">first homology
+  <primaryie>homology groups</primaryie>
+  <secondaryie><link linkend="tri-algebra-homiform">all homology
    group for native triangulations</link></secondaryie>
   <secondaryie><link linkend="snappea-algebra">first homology
    group for &snappea; triangulations</link></secondaryie>
@@ -987,6 +984,11 @@
  <indexentry>
   <primaryie>internationalisation</primaryie>
   <seeie>See: character encodings</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-algebra-homiform">intersection
+   form</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1681,7 +1683,7 @@
 
  <indexentry>
   <primaryie>simplifying</primaryie>
-  <secondaryie><link linkend="tri-algebra-homfund">group
+  <secondaryie><link linkend="tri-algebra-fund">group
    presentations</link></secondaryie>
   <secondaryie><link linkend="link-simplify">links</link></secondaryie>
   <secondaryie><link linkend="tri-simplification">triangulations</link></secondaryie>
@@ -2014,9 +2016,9 @@
    graph</link></secondaryie>
   <secondaryie><link linkend="tri-faces-shapes">faces,
    viewing shapes</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-homfund">fundamental
+  <secondaryie><link linkend="tri-algebra-fund">fundamental
    group</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-homfund">homology
+  <secondaryie><link linkend="tri-algebra-homiform">homology
    groups</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">hyperbolic solution
    type</link></secondaryie>
@@ -2030,6 +2032,8 @@
    truncation</link></secondaryie>
   <secondaryie><link linkend="foreign-import">importing from
    external files</link></secondaryie>
+  <secondaryie><link linkend="tri-algebra-homiform">intersection
+   form</link></secondaryie>
   <secondaryie><link linkend="tri-composition-isomorphism">isomorphism
    and subcomplex testing</link></secondaryie>
   <secondaryie><link linkend="tri-new-isosig">isomorphism signature,

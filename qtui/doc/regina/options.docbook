@@ -239,7 +239,7 @@
      <para>
       Tells &regina; where to find &gaplongurl;.  &gap; is not
       required by &regina;, but if it is installed then it can help
-      <link linkend="tri-algebra-homfund">simplify group presentations</link>.
+      <link linkend="tri-algebra-fund">simplify group presentations</link>.
      </para>
      <para>
       This setting should be the name of the command that starts
