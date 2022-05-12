@@ -114,15 +114,6 @@ class TriSolidTorus : public StandardTriangulation {
         TriSolidTorus& operator = (const TriSolidTorus&) = default;
 
         /**
-         * Deprecated routine that returns a new copy of this structure.
-         *
-         * \deprecated Just use the copy constructor instead.
-         *
-         * @return a newly created clone.
-         */
-        [[deprecated]] TriSolidTorus* clone() const;
-
-        /**
          * Swaps the contents of this and the given structure.
          *
          * @param other the structure whose contents should be swapped
@@ -334,15 +325,6 @@ class TriSolidTorus : public StandardTriangulation {
          */
         static std::unique_ptr<TriSolidTorus> recognise(Tetrahedron<3>* tet,
                 Perm<4> useVertexRoles);
-        /**
-         * A deprecated alias to recognise if a component forms one of
-         * the trivial triangulations recognised by this class.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<TriSolidTorus> formsTriSolidTorus(
-                Tetrahedron<3>* tet, Perm<4> useVertexRoles);
 
         std::unique_ptr<Manifold> manifold() const override;
         AbelianGroup homology() const override;
@@ -377,10 +359,6 @@ inline void TriSolidTorus::swap(TriSolidTorus& other) noexcept {
     std::swap_ranges(vertexRoles_, vertexRoles_ + 3, other.vertexRoles_);
 }
 
-inline TriSolidTorus* TriSolidTorus::clone() const {
-    return new TriSolidTorus(*this);
-}
-
 inline Tetrahedron<3>* TriSolidTorus::tetrahedron(int index) const {
     return tet_[index];
 }
@@ -405,11 +383,6 @@ inline std::ostream& TriSolidTorus::writeName(std::ostream& out) const {
 }
 inline std::ostream& TriSolidTorus::writeTeXName(std::ostream& out) const {
     return out << "\\mathop{\\rm TST}";
-}
-
-inline std::unique_ptr<TriSolidTorus> TriSolidTorus::formsTriSolidTorus(
-        Tetrahedron<3>* tet, Perm<4> useVertexRoles) {
-    return recognise(tet, useVertexRoles);
 }
 
 inline void swap(TriSolidTorus& a, TriSolidTorus& b) noexcept {

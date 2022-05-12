@@ -117,14 +117,9 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def("sign", &Perm<n>::sign)
         .def("__getitem__", &Perm<n>::operator[])
         .def("pre", &Perm<n>::pre)
-        .def("preImageOf", &Perm<n>::pre) // deprecated
         .def("compareWith", &Perm<n>::compareWith)
         .def("isIdentity", &Perm<n>::isIdentity)
         .def_static("rot", &Perm<n>::rot)
-        // index and atIndex are deprecated, so do not call them directly.
-        .def_static("atIndex",
-            [](typename Perm<n>::Index i) { return Perm<n>::orderedSn[i]; })
-        .def("index", &Perm<n>::orderedSnIndex)
         .def_static("rand", (Perm<n> (*)(bool))(&Perm<n>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<n>::trunc)

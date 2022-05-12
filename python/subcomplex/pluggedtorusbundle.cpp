@@ -54,8 +54,6 @@ void addPluggedTorusBundle(pybind11::module_& m) {
         .def("matchingReln", &PluggedTorusBundle::matchingReln,
             pybind11::return_value_policy::reference_internal)
         .def_static("recognise", &PluggedTorusBundle::recognise)
-        .def_static("isPluggedTorusBundle", // deprecated
-            &PluggedTorusBundle::recognise)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

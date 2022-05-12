@@ -73,14 +73,6 @@ namespace regina {
  * \ingroup surfaces
  */
 struct DiscType {
-    /**
-     * Represents a null disc type, as described in the class notes.
-     *
-     * \deprecated You can create a new null disc type using the default
-     * constructor, and you can test for null disc types by casting to \c bool.
-     */
-    static const DiscType NONE [[deprecated]];
-
     size_t tetIndex;
         /**< The index within the triangulation of the tetrahedron
              containing this disc type.  This must be between 0 and

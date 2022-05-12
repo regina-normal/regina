@@ -277,14 +277,6 @@ class Perm<5> {
         using Code2 = uint8_t;
 
         /**
-         * An alias for the first-generation code type Code1.
-         *
-         * Instead of Code, you should use either Code1 or Code2 to more
-         * clearly express which kind of permutation code you are using.
-         */
-        using Code [[deprecated]] = Code1;
-
-        /**
          * Gives array-like access to all possible permutations of
          * five elements.
          *
@@ -545,38 +537,6 @@ class Perm<5> {
         constexpr Perm(const std::array<int, 5>& image);
 
         /**
-         * Deprecated constructor that creates a permutation mapping
-         * \a i to \a image[i] for each \a i = 0,1,2,3,4.
-         *
-         * \deprecated Use the five-integer constructor or the
-         * std::array constructor instead.
-         *
-         * \pre The array \a image contains five elements, which are
-         * 0, 1, 2, 3 and 4 in some order.
-         *
-         * @param image the array of images.
-         */
-        [[deprecated]] constexpr Perm(const int* image);
-
-        /**
-         * Deprecated constuctor that creates a permutation mapping
-         * (\a a[0], ..., \a a[4]) to (\a b[0], ..., \a b[4]) respectively.
-         *
-         * \deprecated Use the ten-integer constructor or the
-         * std::array constructor instead.
-         *
-         * \pre Both arrays \a a and \a b contain 5 elements, which
-         * are 0,...,4 in some order.
-         *
-         * \ifacespython Not present; use the single-array constructor instead.
-         *
-         * @param a the array of preimages; this must have length 5.
-         * @param b the corresponding array of images; this must also have
-         * length 5.
-         */
-        [[deprecated]] constexpr Perm(const int* a, const int* b);
-
-        /**
          * Creates a permutation mapping
          * (<i>a0</i>,<i>b0</i>,<i>c0</i>,<i>d0</i>,<i>e0</i>) to
          * (<i>a1</i>,<i>b1</i>,<i>c1</i>,<i>d1</i>,<i>e1</i>) respectively.
@@ -637,26 +597,6 @@ class Perm<5> {
         constexpr Code2 permCode2() const;
 
         /**
-         * Deprecated routine that returns the first-generation code
-         * representing this permutation.
-         *
-         * The code returned will be a valid first-generation permutation
-         * code as determined by isPermCode1().
-         *
-         * \deprecated Use permCode1() to reproduce this behaviour.
-         * However, unless you need backward compatibility, it is
-         * strongly recommended to switch to the much faster
-         * second-generation codes instead.
-         *
-         * \warning This routine will incur additional overhead, since
-         * Perm<5> now uses second-generation codes internally.
-         * See the class notes and the routine permCode2() for details.
-         *
-         * @return the first-generation permutation code.
-         */
-        [[deprecated]] constexpr Code1 permCode() const;
-
-        /**
          * Sets this permutation to that represented by the given
          * first-generation permutation code.
          *
@@ -686,27 +626,6 @@ class Perm<5> {
          * new value of this permutation.
          */
         void setPermCode2(Code2 code);
-
-        /**
-         * Deprecated routine that sets this permutation to that represented
-         * by the given first-generation permutation code.
-         *
-         * \deprecated Use setPermCode1() to reproduce this behaviour.
-         * However, unless you need backward compatibility, it is
-         * strongly recommended to switch to the much faster
-         * second-generation codes instead.
-         *
-         * \pre the given code is a valid first-generation permutation code;
-         * see isPermCode1() for details.
-         *
-         * \warning This routine will incur additional overhead, since
-         * Perm<5> now uses second-generation codes internally.
-         * See the class notes and the routine setPermCode2() for details.
-         *
-         * @param code the first-generation code that will determine the
-         * new value of this permutation.
-         */
-        [[deprecated]] void setPermCode(Code1 code);
 
         /**
          * Creates a permutation from the given first-generation
@@ -740,27 +659,6 @@ class Perm<5> {
         static constexpr Perm<5> fromPermCode2(Code2 code);
 
         /**
-         * Deprecated routine that creates a permutation from the given
-         * first-generation permutation code.
-         *
-         * \pre the given code is a valid first-generation permutation code;
-         * see isPermCode1() for details.
-         *
-         * \deprecated Use fromPermCode1() to reproduce this behaviour.
-         * However, unless you need backward compatibility, it is
-         * strongly recommended to switch to the much faster
-         * second-generation codes instead.
-         *
-         * \warning This routine will incur additional overhead, since
-         * Perm<5> now uses second-generation codes internally.
-         * See the class notes and the routine fromPermCode2() for details.
-         *
-         * @param code the first-generation code for the new permutation.
-         * @return the permutation represented by the given code.
-         */
-        [[deprecated]] static constexpr Perm<5> fromPermCode(Code1 code);
-
-        /**
          * Determines whether the given character is a valid first-generation
          * permutation code.  Valid first-generation codes can be passed to
          * setPermCode1() or fromPermCode1(), and are returned by permCode1().
@@ -788,25 +686,6 @@ class Perm<5> {
          * second-generation permutation code.
          */
         static constexpr bool isPermCode2(Code2 code);
-
-        /**
-         * Deprecated routine that determines whether the given character
-         * is a valid first-generation permutation code.
-         *
-         * \deprecated Use isPermCode1() to reproduce this behaviour.
-         * However, unless you need backward compatibility, it is
-         * strongly recommended to switch to the much faster
-         * second-generation codes instead.
-         *
-         * \warning This routine will incur additional overhead, since
-         * Perm<5> now uses second-generation codes internally.
-         * See the class notes and the routine isPermCode2() for details.
-         *
-         * @param code the permutation code to test.
-         * @return \c true if and only if the given code is a valid
-         * first-generation permutation code.
-         */
-        [[deprecated]] static constexpr bool isPermCode(Code1 code);
 
         /**
          * Returns the image pack that represents this permutation.
@@ -934,18 +813,6 @@ class Perm<5> {
          * @return the preimage of \a image.
          */
         constexpr int pre(int image) const;
-
-        /**
-         * Deprecated routine that determines the preimage of the given
-         * integer under this permutation.
-         *
-         * \deprecated This routine has been renamed to pre().
-         *
-         * @param image the integer whose preimage we wish to find.  This
-         * should be between 0 and 4 inclusive.
-         * @return the preimage of \a image.
-         */
-        [[deprecated]] constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -1204,28 +1071,6 @@ class Perm<5> {
          * This will be between 0 and 119 inclusive.
          */
         constexpr Index orderedS5Index() const;
-
-        /**
-         * Deprecated routine that returns the lexicographical index of this
-         * permutation.
-         *
-         * \deprecated Use the equivalent routine orderedSnIndex() instead.
-         *
-         * @return the lexicographical index of this permutation.
-         */
-        [[deprecated]] constexpr Index index() const;
-
-        /**
-         * Deprecated routine that returns the <i>i</i>th permutation on
-         * five elements, where permutations are numbered lexicographically.
-         *
-         * \deprecated Use orderedSn[\a i] instead.
-         *
-         * @param i the lexicographical index of the permutation; this
-         * must be between 0 and 119 inclusive.
-         * @return the <i>i</i>th permutation.
-         */
-        [[deprecated]] static constexpr Perm atIndex(Index i);
 
         /**
          * Extends a <i>k</i>-element permutation to a 5-element permutation,
@@ -1624,11 +1469,6 @@ inline constexpr Perm<5>::Perm(const std::array<int, 5>& image) :
             image[0], image[1], image[2], image[3], image[4]))) {
 }
 
-inline constexpr Perm<5>::Perm(const int* image) :
-        code2_(static_cast<Code2>(S5Index(
-            image[0], image[1], image[2], image[3], image[4]))) {
-}
-
 inline constexpr Perm<5>::Perm(int a0, int a1, int b0, int b1,
         int c0, int c1, int d0, int d1, int e0, int e1) : code2_(0) {
     // TODO: When we move to C++20, we can get rid of the zero initialisers.
@@ -1638,18 +1478,6 @@ inline constexpr Perm<5>::Perm(int a0, int a1, int b0, int b1,
     image[c0] = c1;
     image[d0] = d1;
     image[e0] = e1;
-    code2_ = static_cast<Code2>(S5Index(
-        image[0], image[1], image[2], image[3], image[4]));
-}
-
-inline constexpr Perm<5>::Perm(const int* a, const int* b) : code2_(0) {
-    // TODO: When we move to C++20, we can get rid of the zero initialisers.
-    int image[5] = { 0, 0, 0, 0, 0 };
-    image[a[0]] = b[0];
-    image[a[1]] = b[1];
-    image[a[2]] = b[2];
-    image[a[3]] = b[3];
-    image[a[4]] = b[4];
     code2_ = static_cast<Code2>(S5Index(
         image[0], image[1], image[2], image[3], image[4]));
 }
@@ -1667,10 +1495,6 @@ inline constexpr Perm<5>::Code2 Perm<5>::permCode2() const {
     return code2_;
 }
 
-inline constexpr Perm<5>::Code1 Perm<5>::permCode() const {
-    return permCode1();
-}
-
 inline void Perm<5>::setPermCode1(Code1 code) {
     code2_ = static_cast<Code2>(S5Index(
         code & 0x07,
@@ -1682,10 +1506,6 @@ inline void Perm<5>::setPermCode1(Code1 code) {
 
 inline void Perm<5>::setPermCode2(Code2 code) {
     code2_ = code;
-}
-
-inline void Perm<5>::setPermCode(Code1 code) {
-    setPermCode1(code);
 }
 
 inline constexpr Perm<5> Perm<5>::fromPermCode1(Code1 code) {
@@ -1701,10 +1521,6 @@ inline constexpr Perm<5> Perm<5>::fromPermCode2(Code2 code) {
     return Perm<5>(code);
 }
 
-inline constexpr Perm<5> Perm<5>::fromPermCode(Code1 code) {
-    return fromPermCode1(code);
-}
-
 inline constexpr bool Perm<5>::isPermCode1(Code1 code) {
     unsigned mask = 0;
     for (int i = 0; i < 5; i++)
@@ -1716,10 +1532,6 @@ inline constexpr bool Perm<5>::isPermCode1(Code1 code) {
 inline constexpr bool Perm<5>::isPermCode2(Code2 code) {
     // code >= 0 is automatic because we are using an unsigned data type.
     return (code < 120);
-}
-
-inline constexpr bool Perm<5>::isPermCode(Code1 code) {
-    return isPermCode1(code);
 }
 
 inline constexpr Perm<5>::ImagePack Perm<5>::imagePack() const {
@@ -1784,10 +1596,6 @@ inline constexpr int Perm<5>::operator[](int source) const {
 }
 
 inline constexpr int Perm<5>::pre(int image) const {
-    return imageTable[invS5[code2_]][image];
-}
-
-inline constexpr int Perm<5>::preImageOf(int image) const {
     return imageTable[invS5[code2_]][image];
 }
 
@@ -1869,14 +1677,6 @@ inline constexpr Perm<5>::Index Perm<5>::orderedS5Index() const {
 
 inline constexpr Perm<5>::Index Perm<5>::orderedSnIndex() const {
     return convOrderedUnordered(code2_);
-}
-
-inline constexpr Perm<5>::Index Perm<5>::index() const {
-    return convOrderedUnordered(code2_);
-}
-
-inline constexpr Perm<5> Perm<5>::atIndex(Index i) {
-    return orderedS5[i];
 }
 
 inline constexpr int Perm<5>::S5Index(int a, int b, int c, int d, int e) {

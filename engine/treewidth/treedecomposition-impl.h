@@ -57,11 +57,10 @@ TreeDecomposition::TreeDecomposition(
         width_(0), root_(nullptr) {
     Graph g(triangulation.size());
 
-    int i, j;
     const Simplex<dim>* simp;
-    for (i = 0; i < g.order_; ++i) {
+    for (size_t i = 0; i < g.order_; ++i) {
         simp = triangulation.simplex(i);
-        for (j = 0; j <= dim; ++j)
+        for (int j = 0; j <= dim; ++j)
             if (simp->adjacentSimplex(j))
                 g.adj_[i][simp->adjacentSimplex(j)->index()] = true;
     }
@@ -76,9 +75,8 @@ TreeDecomposition::TreeDecomposition(
         width_(0), root_(nullptr) {
     Graph g(pairing.size());
 
-    int i, j;
-    for (i = 0; i < g.order_; ++i)
-        for (j = 0; j <= dim; ++j)
+    for (size_t i = 0; i < g.order_; ++i)
+        for (int j = 0; j <= dim; ++j)
             if (! pairing.isUnmatched(i, j))
                 g.adj_[i][pairing.dest(i, j).simp] = true;
 

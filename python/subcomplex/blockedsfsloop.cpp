@@ -49,8 +49,6 @@ void addBlockedSFSLoop(pybind11::module_& m) {
         .def("matchingReln", &BlockedSFSLoop::matchingReln,
             pybind11::return_value_policy::reference_internal)
         .def_static("recognise", &BlockedSFSLoop::recognise)
-        .def_static("isBlockedSFSLoop", // deprecated
-            &BlockedSFSLoop::recognise)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

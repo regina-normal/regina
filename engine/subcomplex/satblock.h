@@ -170,15 +170,6 @@ class SatBlock : public ShortOutput<SatBlock> {
          * @return the number of boundary annuli.
          */
         unsigned countAnnuli() const;
-        /**
-         * Deprecated routine that returns the number of annuli on the
-         * boundary of this saturated block.
-         *
-         * \deprecated This routine has been renamed countAnnuli().
-         *
-         * @return the number of boundary annuli.
-         */
-        [[deprecated]] unsigned nAnnuli() const;
 
         /**
          * Returns details of the requested annulus on the boundary of
@@ -948,10 +939,6 @@ inline SatBlock::~SatBlock() {
 }
 
 inline unsigned SatBlock::countAnnuli() const {
-    return nAnnuli_;
-}
-
-inline unsigned SatBlock::nAnnuli() const {
     return nAnnuli_;
 }
 

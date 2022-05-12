@@ -80,26 +80,6 @@ class Handlebody : public Manifold {
          */
         size_t genus() const;
         /**
-         * Deprecated alias for genus().
-         *
-         * \deprecated This routine has been renamed to genus().
-         *
-         * @return the genus of this handlebody; that is, number of handles.
-         */
-        [[deprecated]] size_t handles() const;
-        /**
-         * Deprecated routine that returns whether this handlebody is
-         * orientable.
-         *
-         * \deprecated Since Regina 7.0, this class only supports
-         * orientable handlebodies, and so this routine will always
-         * return \c true.
-         *
-         * @return \c true always, since only orientable handlebodies
-         * are supported by this class.
-         */
-        [[deprecated]] bool isOrientable() const;
-        /**
          * Determines whether this and the given handlebody have the same
          * genus.
          *
@@ -162,12 +142,6 @@ inline Handlebody::Handlebody(size_t genus) : genus_(genus) {
 }
 inline size_t Handlebody::genus() const {
     return genus_;
-}
-inline size_t Handlebody::handles() const {
-    return genus_;
-}
-inline bool Handlebody::isOrientable() const {
-    return true;
 }
 inline bool Handlebody::operator == (const Handlebody& compare) const {
     return (genus_ == compare.genus_);

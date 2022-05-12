@@ -128,8 +128,6 @@ void addPacketListener(pybind11::module_& m) {
         .def(pybind11::init<>()) // necessary for pure python subclasses
         .def("isListening", &PacketListener::isListening)
         .def("unlisten", &PacketListener::unlisten)
-        .def("unregisterFromAllPackets", // deprecated
-            &PacketListener::unlisten)
         .def("packetToBeChanged", overload_cast<Packet&>(
             &PacketListener::packetToBeChanged))
         .def("packetWasChanged", overload_cast<Packet&>(

@@ -30,18 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file maths/ray.h
- *  \brief Deprecated header.
- */
+#include "triangulation/detail/facetpairing-canonical-impl.h"
 
-#ifndef __REGINA_RAY_H
-#ifndef __DOXYGEN
-#define __REGINA_RAY_H
-#endif
+namespace regina::detail {
 
-#warning This header is deprecated; please use maths/vector.h instead.
+template bool FacetPairingBase<6>::isCanonical() const;
+template std::pair<FacetPairing<6>, Isomorphism<6>>
+    FacetPairingBase<6>::canonical() const;
+template bool FacetPairingBase<6>::isCanonicalInternal(
+    FacetPairingBase<6>::IsoList* list) const;
 
-#include "maths/vector.h"
-
-#endif
-
+} // namespace regina::detail

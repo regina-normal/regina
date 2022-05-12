@@ -57,7 +57,6 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def("torsionRank", overload_cast<unsigned long>(
             &MarkedAbelianGroup::torsionRank, pybind11::const_))
         .def("snfRank", &MarkedAbelianGroup::snfRank)
-        .def("minNumberOfGenerators", &MarkedAbelianGroup::snfRank)// deprecated
         .def("countInvariantFactors",
             &MarkedAbelianGroup::countInvariantFactors)
         .def("invariantFactor", &MarkedAbelianGroup::invariantFactor)
@@ -65,10 +64,6 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def("isTrivial", &MarkedAbelianGroup::isTrivial)
         .def("isZ", &MarkedAbelianGroup::isZ)
         .def("isIsomorphicTo", &MarkedAbelianGroup::isIsomorphicTo)
-        .def("equalTo", [](const MarkedAbelianGroup& a, // deprecated
-                const MarkedAbelianGroup& b) {
-            return a == b;
-        })
         .def("freeRep", &MarkedAbelianGroup::freeRep)
         .def("torsionRep", &MarkedAbelianGroup::torsionRep)
         // Below, the overloads that take a std::vector must come *last*,
@@ -84,23 +79,15 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
             &MarkedAbelianGroup::cycleProjection, pybind11::const_))
         .def("isCycle", &MarkedAbelianGroup::isCycle)
         .def("boundaryOf", &MarkedAbelianGroup::boundaryOf)
-        .def("boundaryMap", &MarkedAbelianGroup::boundaryOf) // deprecated
         .def("isBoundary", &MarkedAbelianGroup::isBoundary)
         .def("asBoundary", &MarkedAbelianGroup::asBoundary)
-        .def("writeAsBoundary", &MarkedAbelianGroup::asBoundary) // deprecated
         .def("snfRep", &MarkedAbelianGroup::snfRep)
         .def("ccRank", &MarkedAbelianGroup::ccRank)
-        .def("rankCC", &MarkedAbelianGroup::ccRank) // deprecated
         .def("cycleRank", &MarkedAbelianGroup::cycleRank)
-        .def("minNumberCycleGens", &MarkedAbelianGroup::cycleRank) // deprecated
         .def("cycleGen", &MarkedAbelianGroup::cycleGen)
         .def("m", &MarkedAbelianGroup::m,
             pybind11::return_value_policy::reference_internal)
-        .def("M", &MarkedAbelianGroup::m, // deprecated
-            pybind11::return_value_policy::reference_internal)
         .def("n", &MarkedAbelianGroup::n,
-            pybind11::return_value_policy::reference_internal)
-        .def("N", &MarkedAbelianGroup::n, // deprecated
             pybind11::return_value_policy::reference_internal)
         .def("coefficients", &MarkedAbelianGroup::coefficients)
         .def("torsionSubgroup", &MarkedAbelianGroup::torsionSubgroup)

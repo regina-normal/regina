@@ -42,9 +42,6 @@ void addPlugTriSolidTorus(pybind11::module_& m) {
     auto c = pybind11::class_<PlugTriSolidTorus, regina::StandardTriangulation>
             (m, "PlugTriSolidTorus")
         .def(pybind11::init<const PlugTriSolidTorus&>())
-        .def("clone", [](const PlugTriSolidTorus& s) { // deprecated
-            return PlugTriSolidTorus(s);
-        })
         .def("swap", &PlugTriSolidTorus::swap)
         .def("core", &PlugTriSolidTorus::core,
             pybind11::return_value_policy::reference_internal)
@@ -53,8 +50,6 @@ void addPlugTriSolidTorus(pybind11::module_& m) {
         .def("chainType", &PlugTriSolidTorus::chainType)
         .def("equatorType", &PlugTriSolidTorus::equatorType)
         .def_static("recognise", &PlugTriSolidTorus::recognise)
-        .def_static("isPlugTriSolidTorus", // deprecated
-            &PlugTriSolidTorus::recognise)
         .def_readonly_static("CHAIN_NONE", &PlugTriSolidTorus::CHAIN_NONE)
         .def_readonly_static("CHAIN_MAJOR", &PlugTriSolidTorus::CHAIN_MAJOR)
         .def_readonly_static("CHAIN_MINOR", &PlugTriSolidTorus::CHAIN_MINOR)

@@ -483,7 +483,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * @return \c true if and only if this face pairing contains a
          * broken double-ended chain as described above.
          */
-        bool hasBrokenDoubleEndedChain(size_t tet, unsigned face) const;
+        bool hasBrokenDoubleEndedChain(size_t tet, int face) const;
 
         /**
          * Internal to hasOneEndedChainWithDoubleHandle().  This routine
@@ -503,7 +503,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * @return \c true if and only if this face pairing contains a
          * one-ended chain with a double handle as described above.
          */
-        bool hasOneEndedChainWithDoubleHandle(size_t tet, unsigned face) const;
+        bool hasOneEndedChainWithDoubleHandle(size_t tet, int face) const;
 
         /**
          * Internal to hasWedgedDoubleEndedChain().  This routine assumes
@@ -523,7 +523,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * @return \c true if and only if this face pairing contains a
          * wedged double-ended chain as described above.
          */
-        bool hasWedgedDoubleEndedChain(size_t tet, unsigned face) const;
+        bool hasWedgedDoubleEndedChain(size_t tet, int face) const;
 
         /**
          * Internal to hasOneEndedChainWithStrayBigon().  This routine assumes
@@ -543,7 +543,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * @return \c true if and only if this face pairing contains a
          * one-ended chain with stray bigon as described above.
          */
-        bool hasOneEndedChainWithStrayBigon(size_t tet, unsigned face) const;
+        bool hasOneEndedChainWithStrayBigon(size_t tet, int face) const;
 
         /**
          * Internal to hasTripleOneEndedChain().  This routine assumes
@@ -563,7 +563,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * @return \c true if and only if this face pairing contains a
          * triple one-ended chain as described above.
          */
-        bool hasTripleOneEndedChain(size_t tet, unsigned face) const;
+        bool hasTripleOneEndedChain(size_t tet, int face) const;
 
     // Make sure the parent class can call the private constructor.
     friend class detail::FacetPairingBase<3>;

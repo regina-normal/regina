@@ -51,7 +51,7 @@ print()
 t1 = PacketOfTriangulation3()
 t2 = PacketOfTriangulation3(Example3.poincare())
 t3 = PacketOfTriangulation3(Example3.figureEight())
-p = PDF()
+p = Attachment()
 
 t = Text()
 

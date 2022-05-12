@@ -1692,12 +1692,11 @@ class Triangulation3Test : public TriangulationTest<3> {
                     }
                 }
 
-                unsigned j, k;
                 const Tetrahedron<3>* tet;
                 Perm<4> perm;
                 const regina::Triangle<2> *t, *adj;
                 unsigned vNum;
-                for (j = 0; j < v->degree(); ++j) {
+                for (size_t j = 0; j < v->degree(); ++j) {
                     tet = tri.tetrahedron(iso.tetImage(j));
                     perm = iso.facePerm(j);
                     vNum = perm[3];
@@ -1716,7 +1715,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                             "triangle correctly.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                    for (k = 0; k < 3; ++k) {
+                    for (int k = 0; k < 3; ++k) {
                         t = link.triangle(j);
                         adj = t->adjacentTriangle(k);
                         if (adj) {
@@ -1854,7 +1853,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyGroup(const AbelianGroup& g, const std::string& grpName,
-                unsigned rank) {
+                unsigned long rank) {
             // Construct the error message.
             std::ostringstream msg;
             msg << grpName << " is " << g.str() << ", not ";
@@ -1874,7 +1873,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyGroup(const AbelianGroup& g, const std::string& grpName,
-                unsigned rank, unsigned long torsionDegree) {
+                unsigned long rank, unsigned long torsionDegree) {
             // Construct the error message.
             std::ostringstream msg;
             msg << grpName << " is " << g.str() << ", not ";
@@ -1896,7 +1895,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyGroup(const AbelianGroup& g, const std::string& grpName,
-                unsigned rank, unsigned long torsionDegree1,
+                unsigned long rank, unsigned long torsionDegree1,
                 unsigned long torsionDegree2) {
             // Construct the error message.
             std::ostringstream msg;
@@ -1920,7 +1919,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyGroup(const AbelianGroup& g, const std::string& grpName,
-                unsigned rank, unsigned long torsionDegree1,
+                unsigned long rank, unsigned long torsionDegree1,
                 unsigned long torsionDegree2, unsigned long torsionDegree3) {
             // Construct the error message.
             std::ostringstream msg;
@@ -5085,7 +5084,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     }
                 } else {
                     // Apply a random isomorphism.
-                    unsigned idx = bdry->index();
+                    size_t idx = bdry->index();
 
                     Isomorphism<3> iso = Isomorphism<3>::random(t.size());
                     t = iso(t);

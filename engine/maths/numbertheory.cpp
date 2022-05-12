@@ -106,16 +106,6 @@ namespace {
     }
 }
 
-long gcdWithCoeffs(long a, long b, long& u, long& v) {
-    long signA = (a > 0 ? 1 : a == 0 ? 0 : -1);
-    long signB = (b > 0 ? 1 : b == 0 ? 0 : -1);
-    long ans = gcdWithCoeffsInternal(a >= 0 ? a : -a,
-        b >= 0 ? b : -b, u, v);
-    u *= signA;
-    v *= signB;
-    return ans;
-}
-
 std::tuple<long, long, long> gcdWithCoeffs(long a, long b) {
     long signA = (a > 0 ? 1 : a == 0 ? 0 : -1);
     long signB = (b > 0 ? 1 : b == 0 ? 0 : -1);

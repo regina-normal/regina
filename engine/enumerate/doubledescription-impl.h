@@ -406,7 +406,6 @@ bool DoubleDescription::intersectHyperplane(
     // pair of rays that are adjacent in the current solution space,
     // add the corresponding intersection with the new hyperplane to the
     // new solution set.
-    const BitmaskType* constraint;
     bool broken;
 
     // We use the TrieSet data structure to speed up adjacency testing

@@ -123,15 +123,6 @@ class TrivialTri : public StandardTriangulation {
         TrivialTri& operator = (const TrivialTri&) = default;
 
         /**
-         * Deprecated routine that returns a new copy of this structure.
-         *
-         * \deprecated Just use the copy constructor instead.
-         *
-         * @return a newly created clone.
-         */
-        [[deprecated]] TrivialTri* clone() const;
-
-        /**
          * Swaps the contents of this and the given structure.
          *
          * @param other the structure whose contents should be swapped
@@ -199,15 +190,6 @@ class TrivialTri : public StandardTriangulation {
          * recognised by this class.
          */
         static std::unique_ptr<TrivialTri> recognise(const Component<3>* comp);
-        /**
-         * A deprecated alias to recognise if a component forms one of
-         * the trivial triangulations recognised by this class.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<TrivialTri>
-            isTrivialTriangulation(const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         AbelianGroup homology() const override;
@@ -240,10 +222,6 @@ void swap(TrivialTri& a, TrivialTri& b) noexcept;
 inline TrivialTri::TrivialTri(int type) : type_(type) {
 }
 
-inline TrivialTri* TrivialTri::clone() const {
-    return new TrivialTri(*this);
-}
-
 inline void TrivialTri::swap(TrivialTri& other) noexcept {
     std::swap(type_, other.type_);
 }
@@ -258,11 +236,6 @@ inline bool TrivialTri::operator == (const TrivialTri& other) const {
 
 inline bool TrivialTri::operator != (const TrivialTri& other) const {
     return type_ != other.type_;
-}
-
-inline std::unique_ptr<TrivialTri> TrivialTri::isTrivialTriangulation(
-        const Component<3>* comp) {
-    return recognise(comp);
 }
 
 inline void swap(TrivialTri& a, TrivialTri& b) noexcept {

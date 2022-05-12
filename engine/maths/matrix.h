@@ -176,15 +176,6 @@ class Matrix : public Output<Matrix<T>> {
          */
         using value_type = T;
 
-        /**
-         * Deprecated alias for the type of element that is stored in
-         * this matrix.
-         *
-         * \deprecated This has been renamed to value_type, for consistency
-         * with regina::Vector and the standard C++ container types.
-         */
-        using Coefficient [[deprecated]] = T;
-
     private:
         unsigned long rows_;
             /**< The number of rows in the matrix. */
@@ -426,26 +417,6 @@ class Matrix : public Output<Matrix<T>> {
                     data_[r][c] = value;
         }
 
-#ifdef __DOXYGEN
-        /**
-         * A deprecated Python-only routine that fills the matrix with the
-         * given set of elements.
-         *
-         * The argument \a allValues must be a Python list of length
-         * rows() * columns().  Its values will be inserted into the
-         * matrix row by row (i.e., the first row will be filled, then
-         * the second row, and so on).
-         *
-         * \deprecated Use the list-based constructor instead, which is
-         * now available to Python users.
-         *
-         * \ifacescpp Not available; this routine is for Python only.
-         *
-         * @param allValues the individual elements to place into the matrix.
-         */
-        [[deprecated]] void initialise(List allValues);
-#endif
-
         /**
          * Swaps the contents of this and the given matrix.
          *
@@ -587,25 +558,6 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
-         * Deprecated function that writes a complete representation of the
-         * matrix to the given output stream.
-         *
-         * Each row will be written on a separate line with elements in
-         * each row separated by single spaces.
-         *
-         * \deprecated This routine is identical to writeTextLong().
-         * Call writeTextLong() instead, or detail() if you want the text
-         * representation in string form.
-         *
-         * \ifacespython Not present; use detail() instead.
-         *
-         * @param out the output stream to which to write.
-         */
-        [[deprecated]] void writeMatrix(std::ostream& out) const {
-            writeTextLong(out);
-        }
-
-        /**
          * Swaps the elements of the two given rows in the matrix.
          *
          * This operation is constant time (unlike swapping columns,
@@ -652,21 +604,6 @@ class Matrix : public Output<Matrix<T>> {
                 for (unsigned long i = fromRow; i < rows_; i++)
                     swap(data_[i][first], data_[i][second]);
             }
-        }
-        /**
-         * Deprecated routine that swaps the elements of the two given columns
-         * in the matrix.
-         *
-         * \deprecated This routine has been renamed to swapCols().
-         *
-         * \pre The two given columns are between 0 and columns()-1 inclusive.
-         *
-         * @param first the first column to swap.
-         * @param second the second column to swap.
-         */
-        [[deprecated]] void swapColumns(unsigned long first,
-                unsigned long second) {
-            swapCols(first, second);
         }
 
         /**
@@ -1098,6 +1035,13 @@ class Matrix : public Output<Matrix<T>> {
          * Multiplies this by the given matrix, and returns the result.
          * This matrix is not changed.
          *
+         * The two matrices being multiplied may use different underlying types
+         * (e.g., you can multiply a matrix of LargeInteger objects with a
+         * matrix of native C++ long integers).  The type of object that is
+         * stored in the resulting matrix will be deduced accordingly
+         * (specifically, it will be the type obtained by multiplying objects
+         * of types \a T and \a U using the binary multiplication operator).
+         *
          * This routine is only available when the template argument \a ring
          * is \c true.
          *
@@ -1107,8 +1051,14 @@ class Matrix : public Output<Matrix<T>> {
          * @param other the other matrix to multiply this matrix by.
          * @return the product matrix <tt>this * other</tt>.
          */
-        REGINA_ENABLE_FOR_RING(Matrix) operator * (const Matrix& other) const {
-            Matrix ans(this->rows_, other.cols_);
+        template <typename U>
+        Matrix<decltype(T() * U())> operator * (
+                const Matrix<U, true /* ring */>& other) const {
+            static_assert(ring, "Matrix multiplication can only be "
+                "used with matrices over rings.");
+
+            using Ans = decltype(T() * U());
+            Matrix<Ans> ans(this->rows_, other.cols_);
 
             unsigned long row, col, k;
             for (row = 0; row < rows_; ++row)
@@ -1126,6 +1076,13 @@ class Matrix : public Output<Matrix<T>> {
          * Multiplies this matrix by the given vector, and returns the result.
          * The given vector is treated as a column vector.
          *
+         * The matrix and vector may use different underlying types
+         * (e.g., you can multiply a matrix of LargeInteger objects with a
+         * vector of native C++ long integers).  The type of object that is
+         * stored in the resulting vector will be deduced accordingly
+         * (specifically, it will be the type obtained by multiplying objects
+         * of types \a T and \a U using the binary multiplication operator).
+         *
          * This routine is only available when the template argument \a ring
          * is \c true.
          *
@@ -1136,13 +1093,17 @@ class Matrix : public Output<Matrix<T>> {
          * @return the product <tt>this * other</tt>, which will be a
          * vector whose length is the number of rows in this matrix.
          */
-        REGINA_ENABLE_FOR_RING(Vector<T>) operator * (const Vector<T>& other)
-                const {
-            Vector<T> ans(this->rows_);
+        template <typename U>
+        Vector<decltype(T() * U())> operator * (const Vector<U>& other) const {
+            static_assert(ring, "Matrix-vector multiplication can only be "
+                "used with matrices over a ring.");
+
+            using Ans = decltype(T() * U());
+            Vector<Ans> ans(this->rows_);
 
             unsigned long row, col;
             for (row = 0; row < rows_; ++row) {
-                T elt = 0;
+                Ans elt = 0;
                 for (col = 0; col < cols_; ++col)
                     elt += (data_[row][col] * other[col]);
                 ans[row] = elt;

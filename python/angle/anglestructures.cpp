@@ -67,25 +67,6 @@ void addAngleStructures(pybind11::module_& m) {
         }, pybind11::keep_alive<0, 1>()) // iterator keeps list alive
         .def("spansStrict", &AngleStructures::spansStrict)
         .def("spansTaut", &AngleStructures::spansTaut)
-        .def_static("enumerate", [](Triangulation<3>& owner, bool tautOnly) {
-            // This is deprecated, so we reimplement it here ourselves.
-            // This means we can't use the progress tracker variant, which
-            // requires threading code internal to the AngleStructures class.
-            auto ans = regina::make_packet<AngleStructures>(std::in_place,
-                owner, tautOnly);
-            if (auto p = owner.packet())
-                p->insertChildLast(ans);
-            return ans;
-        }, pybind11::arg(),
-            pybind11::arg("tautOnly") = false)
-        .def_static("enumerateTautDD", [](Triangulation<3>& owner) {
-            // This is deprecated, so we reimplement it here ourselves.
-            auto ans = regina::make_packet<AngleStructures>(std::in_place,
-                owner, true, regina::AS_ALG_DD);
-            if (auto p = owner.packet())
-                p->insertChildLast(ans);
-            return ans;
-        })
     ;
     regina::python::add_output(l);
     regina::python::packet_eq_operators(l);

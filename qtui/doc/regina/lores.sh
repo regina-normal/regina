@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+# Note: to clear all extended attributes: xattr -c <file> ...
+
 for i in "$@"; do
   hires="$i@2x.png"
   lores="$i.png"

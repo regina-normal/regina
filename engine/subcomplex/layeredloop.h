@@ -102,15 +102,6 @@ class LayeredLoop : public StandardTriangulation {
         LayeredLoop& operator = (const LayeredLoop&) = default;
 
         /**
-         * Deprecated routine that returns a new copy of this structure.
-         *
-         * \deprecated Just use the copy constructor instead.
-         *
-         * @return a newly created clone.
-         */
-        [[deprecated]] LayeredLoop* clone() const;
-
-        /**
          * Swaps the contents of this and the given structure.
          *
          * @param other the structure whose contents should be swapped
@@ -197,14 +188,6 @@ class LayeredLoop : public StandardTriangulation {
          * \c null if the given component is not a layered loop.
          */
         static std::unique_ptr<LayeredLoop> recognise(const Component<3>* comp);
-        /**
-         * A deprecated alias to recognise if a component forms a layered loop.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<LayeredLoop> isLayeredLoop(
-            const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         AbelianGroup homology() const override;
@@ -236,10 +219,6 @@ void swap(LayeredLoop& a, LayeredLoop& b) noexcept;
 
 inline LayeredLoop::LayeredLoop(unsigned long length, Edge<3>* hinge0,
         Edge<3>* hinge1) : length_(length), hinge_ { hinge0, hinge1 } {
-}
-
-inline LayeredLoop* LayeredLoop::clone() const {
-    return new LayeredLoop(*this);
 }
 
 inline void LayeredLoop::swap(LayeredLoop& other) noexcept {
@@ -278,11 +257,6 @@ inline std::ostream& LayeredLoop::writeTeXName(std::ostream& out) const {
 inline void LayeredLoop::writeTextLong(std::ostream& out) const {
     out << "Layered loop (" << (hinge_[1] ? "not twisted" : "twisted") <<
         ") of length " << length_;
-}
-
-inline std::unique_ptr<LayeredLoop> LayeredLoop::isLayeredLoop(
-        const Component<3>* comp) {
-    return recognise(comp);
 }
 
 inline void swap(LayeredLoop& a, LayeredLoop& b) noexcept {

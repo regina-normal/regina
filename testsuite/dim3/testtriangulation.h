@@ -46,6 +46,7 @@ void addTriangulation3(CppUnit::TextUi::TestRunner& runner);
 void addElementaryMoves(CppUnit::TextUi::TestRunner& runner);
 void addConnectedSumDecomp(CppUnit::TextUi::TestRunner& runner);
 void addIsomorphism3(CppUnit::TextUi::TestRunner& runner);
+void addLinkingSurfaces(CppUnit::TextUi::TestRunner& runner);
 void addDualGraph3(CppUnit::TextUi::TestRunner& runner);
 void addHomologicalData(CppUnit::TextUi::TestRunner& runner);
 

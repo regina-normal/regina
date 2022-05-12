@@ -45,7 +45,7 @@ GluingPermSearcher<3>::GluingPermSearcher(
         whichPurge_(whichPurge),
         started(false), orientation(new int[perms_.size()]) {
     // Initialise arrays.
-    unsigned nTets = perms_.size();
+    size_t nTets = perms_.size();
 
     std::fill(orientation, orientation + nTets, 0);
 
@@ -69,7 +69,7 @@ GluingPermSearcher<3>::~GluingPermSearcher() {
 void GluingPermSearcher<3>::searchImpl(long maxDepth, ActionWrapper&& action_) {
     // In this generation algorithm, each orientation is simply +/-1.
 
-    unsigned nTetrahedra = perms_.size();
+    size_t nTetrahedra = perms_.size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
         maxDepth = nTetrahedra * 4 + 1;
@@ -99,14 +99,12 @@ void GluingPermSearcher<3>::searchImpl(long maxDepth, ActionWrapper&& action_) {
 
     // ---------- Selecting the individual gluing permutations ----------
 
-    int minOrder = orderElt;
-    int maxOrder = orderElt + maxDepth;
-
-    FacetSpec<3> face, adj;
+    ssize_t minOrder = orderElt;
+    ssize_t maxOrder = orderElt + maxDepth;
 
     while (orderElt >= minOrder) {
-        face = order[orderElt];
-        adj = perms_.pairing()[face];
+        FacetSpec<3> face = order[orderElt];
+        FacetSpec<3> adj = perms_.pairing()[face];
 
         // TODO: Check for cancellation.
 
@@ -211,10 +209,9 @@ void GluingPermSearcher<3>::dumpData(std::ostream& out) const {
     out << (started ? 's' : '.');
     out << ' ' << whichPurge_.intValue() << std::endl;
 
-    int nTets = perms_.size();
-    int i;
+    size_t nTets = perms_.size();
 
-    for (i = 0; i < nTets; i++) {
+    for (size_t i = 0; i < nTets; i++) {
         if (i)
             out << ' ';
         out << orientation[i];
@@ -222,7 +219,7 @@ void GluingPermSearcher<3>::dumpData(std::ostream& out) const {
     out << std::endl;
 
     out << orderElt << ' ' << orderSize << std::endl;
-    for (i = 0; i < orderSize; i++) {
+    for (size_t i = 0; i < orderSize; i++) {
         if (i)
             out << ' ';
         out << order[i].simp << ' ' << order[i].facet;
@@ -245,7 +242,7 @@ void GluingPermSearcher<3>::writeTextShort(std::ostream& out) const {
             << whichPurge_.intValue();
 
     out << ": stage " << orderElt << ", order:";
-    for (int i = 0; i < orderSize; ++i)
+    for (size_t i = 0; i < orderSize; ++i)
         out << ' ' << order[i].simp << ':' << order[i].facet;
 }
 
@@ -288,15 +285,15 @@ GluingPermSearcher<3>::GluingPermSearcher(std::istream& in) :
         whichPurge_ = CensusPurge::fromInt(whichPurge);
     }
 
-    int nTets = perms_.size();
+    size_t nTets = perms_.size();
 
     orientation = new int[nTets];
-    for (int t = 0; t < nTets; t++)
+    for (size_t t = 0; t < nTets; t++)
         in >> orientation[t];
 
     order = new FacetSpec<3>[2 * nTets];
     in >> orderElt >> orderSize;
-    for (int t = 0; t < orderSize; t++) {
+    for (size_t t = 0; t < orderSize; t++) {
         in >> order[t].simp >> order[t].facet;
         if (order[t].simp >= nTets || order[t].simp < 0 ||
                 order[t].facet >= 4 || order[t].facet < 0)
@@ -318,8 +315,7 @@ bool GluingPermSearcher<3>::isCanonical() const {
         // Compare the current set of gluing permutations with its
         // preimage under each face pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
-        for (face.setFirst(); face.simp <
-                static_cast<int>(perms_.size()); face++) {
+        for (face.setFirst(); face.simp < perms_.size(); face++) {
             faceDest = perms_.pairing().dest(face);
             if (perms_.pairing().isUnmatched(face) || faceDest < face)
                 continue;
@@ -349,11 +345,10 @@ bool GluingPermSearcher<3>::isCanonical() const {
 bool GluingPermSearcher<3>::badEdgeLink(const FacetSpec<3>& face) const {
     // Run around all three edges bounding the face.
     FacetSpec<3> adj;
-    unsigned tet;
     Perm<4> current;
     Perm<4> start(face.facet, 3);
     bool started, incomplete;
-    for (unsigned permIdx = 0; permIdx < 3; permIdx++) {
+    for (int permIdx = 0; permIdx < 3; permIdx++) {
         start = start * Perm<4>(1, 2, 0, 3);
 
         // start maps (0,1,2) to the three vertices of face, with
@@ -364,17 +359,17 @@ bool GluingPermSearcher<3>::badEdgeLink(const FacetSpec<3>& face) const {
         // original face.
 
         current = start;
-        tet = face.simp;
+        size_t tet = face.simp;
 
         started = false;
         incomplete = false;
 
-        while ((! started) || (static_cast<int>(tet) != face.simp) ||
+        while ((! started) || (tet != face.simp) ||
                 (start[2] != current[2]) || (start[3] != current[3])) {
             // Test for a return to the original tetrahedron with the
             // orientation reversed; this either means a bad edge link
             // or a bad vertex link.
-            if (started && finiteOnly_ && static_cast<int>(tet) == face.simp)
+            if (started && finiteOnly_ && tet == face.simp)
                 if (start[3] == current[3] && start.sign() != current.sign())
                     return true;
 
@@ -414,12 +409,11 @@ bool GluingPermSearcher<3>::lowDegreeEdge(const FacetSpec<3>& face,
         bool testDegree12, bool testDegree3) const {
     // Run around all three edges bounding the face.
     FacetSpec<3> adj;
-    unsigned tet;
     Perm<4> current;
     Perm<4> start(face.facet, 3);
     bool started, incomplete;
-    unsigned size;
-    for (unsigned permIdx = 0; permIdx < 3; permIdx++) {
+    int size;
+    for (int permIdx = 0; permIdx < 3; permIdx++) {
         start = start * Perm<4>(1, 2, 0, 3);
 
         // start maps (0,1,2) to the three vertices of face, with
@@ -430,13 +424,13 @@ bool GluingPermSearcher<3>::lowDegreeEdge(const FacetSpec<3>& face,
         // original face.
 
         current = start;
-        tet = face.simp;
+        size_t tet = face.simp;
 
         started = false;
         incomplete = false;
         size = 0;
 
-        while ((! started) || (static_cast<int>(tet) != face.simp) ||
+        while ((! started) || (tet != face.simp) ||
                 (start[2] != current[2]) || (start[3] != current[3])) {
             started = true;
 
@@ -477,8 +471,8 @@ bool GluingPermSearcher<3>::lowDegreeEdge(const FacetSpec<3>& face,
             if (testDegree3 && size == 3) {
                 // Only throw away a degree three edge if it involves
                 // three distinct tetrahedra.
-                int tet1 = perms_.pairing().dest(face.simp, start[2]).simp;
-                int tet2 = perms_.pairing().dest(face.simp, start[3]).simp;
+                auto tet1 = perms_.pairing().dest(face.simp, start[2]).simp;
+                auto tet2 = perms_.pairing().dest(face.simp, start[3]).simp;
                 if (face.simp != tet1 && tet1 != tet2 && tet2 != face.simp)
                     return true;
             }

@@ -384,15 +384,6 @@ class SatRegion : public Output<SatRegion> {
          */
         size_t countBlocks() const;
         /**
-         * Deprecated routine that returns the number of saturated blocks
-         * in this saturated region.
-         *
-         * \deprecated This routine has been renamed countBlocks().
-         *
-         * @return the total number of blocks.
-         */
-        [[deprecated]] size_t numberOfBlocks() const;
-        /**
          * Returns details of the requested saturated block within this
          * region.  The information will returned will include
          * structural information for the block, along with details of
@@ -427,15 +418,6 @@ class SatRegion : public Output<SatRegion> {
          * @return the number of boundary annuli.
          */
         size_t countBoundaryAnnuli() const;
-        /**
-         * Deprecated routine that returns the number of saturated annuli
-         * in the boundary of this region.
-         *
-         * \deprecated This routine has been renamed countBoundaryAnnuli().
-         *
-         * @return the total number of boundary annuli.
-         */
-        [[deprecated]] size_t numberOfBoundaryAnnuli() const;
         /**
          * Returns details of the requested saturated annulus on
          * the boundary of this region.
@@ -998,19 +980,11 @@ inline size_t SatRegion::countBlocks() const {
     return blocks_.size();
 }
 
-inline size_t SatRegion::numberOfBlocks() const {
-    return blocks_.size();
-}
-
 inline const SatBlockSpec& SatRegion::block(size_t which) const {
     return blocks_[which];
 }
 
 inline size_t SatRegion::countBoundaryAnnuli() const {
-    return nBdryAnnuli_;
-}
-
-inline size_t SatRegion::numberOfBoundaryAnnuli() const {
     return nBdryAnnuli_;
 }
 

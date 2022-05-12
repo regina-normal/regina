@@ -643,19 +643,6 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * ancestor of \c descendant.
          */
         bool isAncestorOf(const Packet& descendant) const;
-        /**
-         * Deprecated function that determines if this packet is equal to or
-         * an ancestor of the given packet in the tree structure.
-         *
-         * \deprecated This function has been renamed to isAncestorOf(),
-         * since "grandparent" is far too specific a word.
-         *
-         * @param descendant the other packet whose relationships we are
-         * examining.
-         * @return \c true if and only if this packet is equal to or an
-         * ancestor of \c descendant.
-         */
-        [[deprecated]] bool isGrandparentOf(const Packet& descendant) const;
 
         /**
          * Returns the number of immediate children of this packet.
@@ -1267,56 +1254,6 @@ class Packet : public std::enable_shared_from_this<Packet>,
          * \name Packet Dependencies
          */
         /*@{*/
-
-        /**
-         * Deprecated routine that always returns \c false.
-         *
-         * In Regina 6.0.1 and earlier, this routine was used to determine
-         * if this packet depends upon its parent (i.e., whether the parent
-         * cannot be altered without invalidating or otherwise upsetting this
-         * packet).  This used to be true for normal surface/hypersurface lists
-         * and angle structure lists, which would refer to the parent packet
-         * as their underlying triangulation.
-         *
-         * Since Regina 7.0, this behaviour has changed: no packets rely
-         * upon their location within the packet tree, and in particular
-         * normal surface/hypersurface lists and angle structure lists
-         * can be freely moved around, and triangulation packets that
-         * were used to create them can be modified or even deleted without
-         * causing problems.
-         *
-         * Therefore, as of Regina 7.0, this routine always returns \c false.
-         *
-         * (Also, as of Regina 7.0 this routine is no longer virtual,
-         * which means subclasses cannot override this new behaviour.)
-         *
-         * \deprecated This routine no longer has any purpose.
-         *
-         * @return \c false.
-         */
-        [[deprecated]] bool dependsOnParent() const;
-        /**
-         * Deprecated routine that always returns \c true.
-         *
-         * In Regina 6.0.1 and earlier, this routine was used to determine
-         * whether this packet could be altered without invalidating or
-         * otherwise upsetting any of its immediate children.  This used to be
-         * true for triangulations that contained normal surface/hypersurface
-         * lists and/or angle structure lists.
-         *
-         * Since Regina 7.0, this behaviour has changed: no packets rely
-         * upon their location within the packet tree, and in particular
-         * triangulations that contain normal surface/hypersurface lists
-         * or angle structure lists can be freely modified, moved around
-         * or even deleted without causing problems.
-         *
-         * Therefore, as of Regina 7.0, this routine always returns \c true.
-         *
-         * \deprecated This routine no longer has any purpose.
-         *
-         * @return \c true.
-         */
-        [[deprecated]] bool isPacketEditable() const;
 
         /*@}*/
         /**
@@ -3412,14 +3349,6 @@ class PacketListener {
         void unlisten();
 
         /**
-         * Deprecated routine that unregisters this listener from any packets
-         * to which it is currently listening.
-         *
-         * \deprecated This routine has been renamed to unlisten().
-         */
-        [[deprecated]] void unregisterFromAllPackets();
-
-        /**
          * Called before the contents of the packet are to be changed.
          * Once the contents are changed, packetWasChanged() will be
          * called also.
@@ -3913,10 +3842,6 @@ inline unsigned Packet::levelsUpTo(const Packet& ancestor) const {
     return ancestor.levelsDownTo(*this);
 }
 
-inline bool Packet::isGrandparentOf(const Packet& descendant) const {
-    return isAncestorOf(descendant);
-}
-
 inline size_t Packet::countDescendants() const {
     return totalTreeSize() - 1;
 }
@@ -4023,14 +3948,6 @@ inline std::shared_ptr<const Packet> Packet::nextTreePacket(PacketType t)
         if (ans->type() == t)
             return ans;
     return nullptr;
-}
-
-inline bool Packet::dependsOnParent() const {
-    return false;
-}
-
-inline bool Packet::isPacketEditable() const {
-    return true;
 }
 
 template <typename... Args>
@@ -4260,10 +4177,6 @@ inline PacketListener::~PacketListener() {
 
 inline bool PacketListener::isListening() const {
     return ! packets.empty();
-}
-
-inline void PacketListener::unregisterFromAllPackets() {
-    unlisten();
 }
 
 } // namespace regina

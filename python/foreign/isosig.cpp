@@ -70,39 +70,5 @@ void addForeignIsoSig(pybind11::module_& m) {
         pybind11::arg("colSigs") = 0,
         pybind11::arg("colLabels") = -1,
         pybind11::arg("ignoreLines") = 0);
-
-    // Since readIsoSigList() is deprecated, we reimplement it here
-    // to avoid noisy compiler warnings.
-    m.def("readIsoSigList", [](const char *filename, unsigned dimension,
-                unsigned colSigs, int colLabels, unsigned long ignoreLines) {
-            if (dimension > 4) {
-                throw regina::InvalidArgument(
-                    "readIsoSigList() (which is deprecated) can only work "
-                    "with Regina's standard dimensions.");
-            }
-            if (dimension == 0) {
-                throw regina::InvalidArgument(
-                    "readIsoSigList() (which is deprecated) cannot work "
-                    "with links.  Use readSigList() instead.");
-            }
-            switch (dimension) {
-                case 2:
-                    return regina::readSigList<regina::Triangulation<2>>(
-                        filename, colSigs, colLabels, ignoreLines);
-                case 3:
-                    return regina::readSigList<regina::Triangulation<3>>(
-                        filename, colSigs, colLabels, ignoreLines);
-                case 4:
-                    return regina::readSigList<regina::Triangulation<4>>(
-                        filename, colSigs, colLabels, ignoreLines);
-                default:
-                    return std::shared_ptr<regina::Container>();
-            }
-        },
-        pybind11::arg(),
-        pybind11::arg("dimension") = 3,
-        pybind11::arg("colSigs") = 0,
-        pybind11::arg("colLabels") = -1,
-        pybind11::arg("ignoreLines") = 0);
 }
 

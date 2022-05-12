@@ -92,15 +92,6 @@ class LayeredLensSpace : public StandardTriangulation {
         LayeredLensSpace& operator = (const LayeredLensSpace&) = default;
 
         /**
-         * Deprecated routine that returns a new copy of this structure.
-         *
-         * \deprecated Just use the copy constructor instead.
-         *
-         * @return a newly created clone.
-         */
-        [[deprecated]] LayeredLensSpace* clone() const;
-
-        /**
          * Swaps the contents of this and the given structure.
          *
          * @param other the structure whose contents should be swapped
@@ -214,15 +205,6 @@ class LayeredLensSpace : public StandardTriangulation {
          */
         static std::unique_ptr<LayeredLensSpace> recognise(
             const Component<3>* comp);
-        /**
-         * A deprecated alias to recognise if a component forms a
-         * layered lens space.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<LayeredLensSpace>
-            isLayeredLensSpace(const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         AbelianGroup homology() const override;
@@ -255,10 +237,6 @@ void swap(LayeredLensSpace& a, LayeredLensSpace& b) noexcept;
 
 inline LayeredLensSpace::LayeredLensSpace(const LayeredSolidTorus& torus) :
         torus_(torus) {
-}
-
-inline LayeredLensSpace* LayeredLensSpace::clone() const {
-    return new LayeredLensSpace(*this);
 }
 
 inline void LayeredLensSpace::swap(LayeredLensSpace& other) noexcept {
@@ -301,11 +279,6 @@ inline bool LayeredLensSpace::operator != (const LayeredLensSpace& other)
 inline void LayeredLensSpace::writeTextLong(std::ostream& out) const {
     out << "Layered lens space ";
     writeName(out);
-}
-
-inline std::unique_ptr<LayeredLensSpace> LayeredLensSpace::isLayeredLensSpace(
-        const Component<3>* comp) {
-    return recognise(comp);
 }
 
 inline void swap(LayeredLensSpace& a, LayeredLensSpace& b) noexcept {

@@ -81,18 +81,11 @@ void addNormalHypersurface(pybind11::module_& m) {
             }
             return new NormalHypersurface(t, enc, std::move(v));
         }))
-        .def("clone", [](const NormalHypersurface& s) {
-            // Since clone() is deprecated, we reimplement it here to
-            // avoid noisy compiler warnings.
-            // Here we use the copy constructor, which has the side-effect of
-            // cloning the surface name also (which the C++ clone() does not).
-            // To ensure no change in behaviour, we revert the name change here.
-            auto* ans = new NormalHypersurface(s);
-            ans->setName(std::string());
-            return ans;
-        })
         .def("swap", &NormalHypersurface::swap)
-        .def("doubleHypersurface", &NormalHypersurface::doubleHypersurface)
+        .def("doubleHypersurface", [](const NormalHypersurface& s) {
+            // This is deprecated, so we reimplement it ourselves.
+            return s * 2;
+        })
         .def("tetrahedra", &NormalHypersurface::tetrahedra)
         .def("prisms", &NormalHypersurface::prisms)
         .def("edgeWeight", &NormalHypersurface::edgeWeight)
@@ -120,17 +113,17 @@ void addNormalHypersurface(pybind11::module_& m) {
         .def("homology", &NormalHypersurface::homology,
             pybind11::return_value_policy::reference_internal)
         .def("triangulate", &NormalHypersurface::triangulate)
-        .def("sameSurface", &NormalHypersurface::operator ==) // deprecated
         .def("embedded", &NormalHypersurface::embedded)
         .def("locallyCompatible", &NormalHypersurface::locallyCompatible)
         .def("vector", &NormalHypersurface::vector,
             pybind11::return_value_policy::reference_internal)
-        .def("rawVector", &NormalHypersurface::vector, // deprecated
-            pybind11::return_value_policy::reference_internal)
         .def("encoding", &NormalHypersurface::encoding)
+        .def("scaleDown", &NormalHypersurface::scaleDown)
         .def_static("reconstructTetrahedra",
             &NormalHypersurface::reconstructTetrahedra)
         .def(pybind11::self + pybind11::self)
+        .def(pybind11::self * regina::LargeInteger())
+        .def(pybind11::self *= regina::LargeInteger())
         .def(pybind11::self < pybind11::self)
     ;
     regina::python::add_output(c);

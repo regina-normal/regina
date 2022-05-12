@@ -72,8 +72,6 @@ void addHomGroupPresentation(pybind11::module_& m) {
             &HomGroupPresentation::intelligentNielsen)
         .def("smallCancellation",
             &HomGroupPresentation::smallCancellation)
-        .def("composeWith", overload_cast<const HomGroupPresentation&>(
-            &HomGroupPresentation::operator *, pybind11::const_))
         .def(pybind11::self * pybind11::self)
         .def("invert", &HomGroupPresentation::invert)
         .def("verify", &HomGroupPresentation::verify)

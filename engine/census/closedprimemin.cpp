@@ -75,7 +75,7 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(FacetPairing<3> pairing,
     //
     // Note from the tests above that there are no triple edges.
 
-    unsigned nTets = perms_.size();
+    size_t nTets = perms_.size();
 
     orderType = new unsigned[nTets * 2];
 
@@ -86,7 +86,7 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(FacetPairing<3> pairing,
     // Hunt for structures within the face pairing graph.
 
     FacetSpec<3> face, adj;
-    unsigned orderDone = 0;
+    size_t orderDone = 0;
     std::fill(orderAssigned, orderAssigned + 4 * nTets, false);
 
     // Begin by searching for tetrahedra that are joined to themselves.
@@ -111,17 +111,15 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(FacetPairing<3> pairing,
 
     // Record the number of one-ended chains.
 
-    unsigned nChains = orderDone;
+    size_t nChains = orderDone;
 
     // Continue by following each one-ended chain whose base was
     // identified in the previous loop.
 
-    unsigned i;
-    int tet;
     FacetSpec<3> dest1, dest2;
     FacePair faces;
-    for (i = 0; i < nChains; i++) {
-        tet = order[i].simp;
+    for (size_t i = 0; i < nChains; i++) {
+        ssize_t tet = order[i].simp;
         faces = FacePair(order[i].facet,
             perms_.pairing()[order[i]].facet).complement();
         dest1 = perms_.pairing().dest(tet, faces.lower());
@@ -204,7 +202,7 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(FacetPairing<3> pairing,
 
     FacePair facesAdj, comp, compAdj;
     Perm<4> trial1, trial2;
-    for (i = 0; i < nChainEdges; i++) {
+    for (size_t i = 0; i < nChainEdges; i++) {
         if (orderType[i] == EDGE_CHAIN_END) {
             faces = FacePair(order[i].facet,
                 perms_.pairing().dest(order[i]).facet);
@@ -307,7 +305,7 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
     //     Only closed prime minimal P2-irreducible triangulations are needed.
     //     The given face pairing is closed with order >= 3.
 
-    unsigned nTets = perms_.size();
+    size_t nTets = perms_.size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
         maxDepth = nTets * 4 + 1;
@@ -334,7 +332,7 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
     }
 
     // Is it a partial search that has already finished?
-    if (orderElt == static_cast<int>(nTets) * 2) {
+    if (orderElt == nTets * 2) {
         if (isCanonical())
             action_(perms_);
         return;
@@ -356,15 +354,13 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
     // We won't bother assigning orientations to the tetrahedra internal
     // to the one-ended chains.
 
-    int minOrder = orderElt;
-    int maxOrder = orderElt + maxDepth;
+    ssize_t minOrder = orderElt;
+    ssize_t maxOrder = orderElt + maxDepth;
 
-    FacetSpec<3> face, adj;
     bool generic;
-    int mergeResult;
     while (orderElt >= minOrder) {
-        face = order[orderElt];
-        adj = perms_.pairing()[face];
+        FacetSpec<3> face = order[orderElt];
+        FacetSpec<3> adj = perms_.pairing()[face];
 
         // TODO (long-term): Check for cancellation.
 
@@ -470,12 +466,12 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
         }
 
         // Merge vertex links and run corresponding tests.
-        mergeResult = mergeVertexClasses();
+        int mergeResult = mergeVertexClasses();
         if (mergeResult & VLINK_CLOSED) {
             // We closed off a vertex link, which means we will end up
             // with more than one vertex (unless this was our very last
             // gluing).
-            if (orderElt + 1 < static_cast<int>(nTets) * 2) {
+            if (orderElt + 1 < nTets * 2) {
                 splitVertexClasses();
                 splitEdgeClasses();
                 continue;
@@ -511,7 +507,7 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (orderElt == static_cast<int>(nTets) * 2) {
+        if (orderElt == nTets * 2) {
             // We in fact have an entire triangulation.
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
@@ -573,7 +569,7 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
         if (nVertexClasses != 4 * nTets)
             std::cerr << "ERROR: nVertexClasses == "
                 << nVertexClasses << " at end of search!" << std::endl;
-        for (int i = 0; i < static_cast<int>(nTets) * 4; i++) {
+        for (size_t i = 0; i < nTets * 4; i++) {
             if (vertexState[i].parent != -1)
                 std::cerr << "ERROR: vertexState[" << i << "].parent == "
                     << vertexState[i].parent << " at end of search!"
@@ -606,7 +602,7 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
                 std::cerr << "ERROR: vertexState[" << i << "].bdryTwist == "
                     "true at end of search!" << std::endl;
         }
-        for (unsigned i = 0; i < nTets * 8; i++)
+        for (size_t i = 0; i < nTets * 8; i++)
             if (vertexStateChanged[i] != -1)
                 std::cerr << "ERROR: vertexStateChanged[" << i << "] == "
                     << vertexStateChanged[i] << " at end of search!"
@@ -616,7 +612,7 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
         if (nEdgeClasses != 6 * nTets)
             std::cerr << "ERROR: nEdgeClasses == "
                 << nEdgeClasses << " at end of search!" << std::endl;
-        for (unsigned i = 0; i < nTets * 6; i++) {
+        for (size_t i = 0; i < nTets * 6; i++) {
             if (edgeState[i].parent != -1)
                 std::cerr << "ERROR: edgeState[" << i << "].parent == "
                     << edgeState[i].parent << " at end of search!"
@@ -634,7 +630,7 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
                 std::cerr << "ERROR: edgeState[" << i << "].hadEqualRank == "
                     "true at end of search!" << std::endl;
         }
-        for (unsigned i = 0; i < nTets * 8; i++)
+        for (size_t i = 0; i < nTets * 8; i++)
             if (edgeStateChanged[i] != -1)
                 std::cerr << "ERROR: edgeStateChanged[" << i << "] == "
                     << edgeStateChanged[i] << " at end of search!"
@@ -651,8 +647,7 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
 void ClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
     CompactSearcher::dumpData(out);
 
-    int i;
-    for (i = 0; i < orderSize; i++) {
+    for (size_t i = 0; i < orderSize; i++) {
         if (i)
             out << ' ';
         out << orderType[i];
@@ -661,7 +656,7 @@ void ClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
 
     out << nChainEdges << std::endl;
     if (nChainEdges) {
-        for (i = 0; i < 2 * static_cast<int>(nChainEdges); i++) {
+        for (size_t i = 0; i < 2 * nChainEdges; i++) {
             if (i)
                 out << ' ';
             out << chainPermIndices[i];
@@ -679,11 +674,10 @@ void ClosedPrimeMinSearcher::dumpData(std::ostream& out) const {
 ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(std::istream& in) :
         CompactSearcher(in),
         orderType(nullptr), nChainEdges(0), chainPermIndices(nullptr) {
-    unsigned nTets = perms_.size();
-    int i;
+    size_t nTets = perms_.size();
 
     orderType = new unsigned[2 * nTets];
-    for (i = 0; i < orderSize; i++)
+    for (size_t i = 0; i < orderSize; i++)
         in >> orderType[i];
 
     in >> nChainEdges;
@@ -694,7 +688,7 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(std::istream& in) :
     */
     if (nChainEdges) {
         chainPermIndices = new int[nChainEdges * 2];
-        for (i = 0; i < 2 * static_cast<int>(nChainEdges); i++) {
+        for (size_t i = 0; i < 2 * nChainEdges; i++) {
             in >> chainPermIndices[i];
             if (chainPermIndices[i] < 0 || chainPermIndices[i] >= 6)
                 throw InvalidInput("Chain permutation index out of range "
@@ -705,8 +699,8 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(std::istream& in) :
 #if PRUNE_HIGH_DEG_EDGE_SET
     in >> highDegLimit >> highDegSum >> highDegBound;
     if (highDegLimit < 3 || highDegLimit > 4 || highDegSum < 0 ||
-            highDegSum > 6 * static_cast<int>(nTets) || highDegBound !=
-                (6 - highDegLimit) * static_cast<int>(nTets) - highDegLimit)
+            highDegSum > 6 * nTets || highDegBound !=
+                (6 - highDegLimit) * nTets - highDegLimit)
         throw InvalidInput("High degree edge data out of range "
             "while attempting to read ClosedPrimeMinSearcher");
 #endif
@@ -724,27 +718,22 @@ int ClosedPrimeMinSearcher::mergeEdgeClasses() {
     int retVal = 0;
 
     Perm<4> p = perms_.perm(face);
-    int v1, w1, v2, w2;
-    int e, f;
-    int orderIdx;
-    int eRep, fRep;
-    int middleTet;
 
-    v1 = face.facet;
-    w1 = p[v1];
+    int v1 = face.facet;
+    int w1 = p[v1];
 
     char parentTwists, hasTwist;
-    for (v2 = 0; v2 < 4; v2++) {
+    for (int v2 = 0; v2 < 4; v2++) {
         if (v2 == v1)
             continue;
 
-        w2 = p[v2];
+        int w2 = p[v2];
 
         // Look at the edge opposite v1-v2.
-        e = 5 - Edge<3>::edgeNumber[v1][v2];
-        f = 5 - Edge<3>::edgeNumber[w1][w2];
+        int e = 5 - Edge<3>::edgeNumber[v1][v2];
+        int f = 5 - Edge<3>::edgeNumber[w1][w2];
 
-        orderIdx = v2 + 4 * orderElt;
+        size_t orderIdx = v2 + 4 * orderElt;
 
         // We declare the natural orientation of an edge to be smaller
         // vertex to larger vertex.
@@ -752,8 +741,8 @@ int ClosedPrimeMinSearcher::mergeEdgeClasses() {
             1 : 0);
 
         parentTwists = 0;
-        eRep = findEdgeClass(e + 6 * face.simp, parentTwists);
-        fRep = findEdgeClass(f + 6 * adj.simp, parentTwists);
+        size_t eRep = findEdgeClass(e + 6 * face.simp, parentTwists);
+        size_t fRep = findEdgeClass(f + 6 * adj.simp, parentTwists);
 
         if (eRep == fRep) {
             edgeState[eRep].bounded = false;
@@ -762,7 +751,7 @@ int ClosedPrimeMinSearcher::mergeEdgeClasses() {
                 retVal |= ECLASS_LOWDEG;
             else if (edgeState[eRep].size == 3) {
                 // Flag as LOWDEG only if three distinct tetrahedra are used.
-                middleTet = perms_.pairing().dest(face.simp, v2).simp;
+                auto middleTet = perms_.pairing().dest(face.simp, v2).simp;
                 if (face.simp != adj.simp && adj.simp != middleTet &&
                         middleTet != face.simp)
                     retVal |= ECLASS_LOWDEG;
@@ -861,28 +850,23 @@ int ClosedPrimeMinSearcher::mergeEdgeClasses() {
 void ClosedPrimeMinSearcher::splitEdgeClasses() {
     FacetSpec<3> face = order[orderElt];
 
-    int v1, v2;
-    int e;
-    int eIdx, orderIdx;
-    int rep, subRep;
+    int v1 = face.facet;
 
-    v1 = face.facet;
-
-    for (v2 = 3; v2 >= 0; v2--) {
+    for (int v2 = 3; v2 >= 0; v2--) {
         if (v2 == v1)
             continue;
 
         // Look at the edge opposite v1-v2.
-        e = 5 - Edge<3>::edgeNumber[v1][v2];
+        int e = 5 - Edge<3>::edgeNumber[v1][v2];
 
-        eIdx = e + 6 * face.simp;
-        orderIdx = v2 + 4 * orderElt;
+        size_t eIdx = e + 6 * face.simp;
+        size_t orderIdx = v2 + 4 * orderElt;
 
         if (edgeStateChanged[orderIdx] < 0)
             edgeState[findEdgeClass(eIdx)].bounded = true;
         else {
-            subRep = edgeStateChanged[orderIdx];
-            rep = edgeState[subRep].parent;
+            size_t subRep = edgeStateChanged[orderIdx];
+            size_t rep = edgeState[subRep].parent;
 
             edgeState[subRep].parent = -1;
             if (edgeState[subRep].hadEqualRank) {

@@ -32,6 +32,7 @@
 
 // Regina core includes:
 #include "algebra/grouppresentation.h"
+#include "algebra/intersectionform.h"
 #include "algebra/markedabeliangroup.h"
 #include "maths/numbertheory.h"
 #include "triangulation/dim4.h"
@@ -65,6 +66,10 @@ Tri4HomologyFundUI::Tri4HomologyFundUI(
     auto* master = new ColumnLayout(ui);
 
     // Homology:
+
+    auto* homologyPane = new QVBoxLayout();
+
+    homologyPane->addStretch(1);
 
     auto* homologyGrid = new QGridLayout();
     homologyGrid->setRowStretch(0, 1);
@@ -104,7 +109,24 @@ Tri4HomologyFundUI::Tri4HomologyFundUI(
 
     refreshLabels();
 
-    master->addLayout(homologyGrid, tr("Homology"));
+    homologyPane->addLayout(homologyGrid);
+
+    homologyPane->addStretch(2);
+
+    auto* label = new QLabel(tr("<qt><b>Intersection form</b></qt>"), ui);
+    label->setAlignment(Qt::AlignCenter);
+    iform = new QLabel(ui);
+    iform->setAlignment(Qt::AlignCenter);
+    msg = QObject::tr("Invariants of the intersection form of this 4-manifold");
+    label->setWhatsThis(msg);
+    iform->setWhatsThis(msg);
+    homologyPane->addWidget(label);
+    homologyPane->addStretch(1);
+    homologyPane->addWidget(iform);
+
+    homologyPane->addStretch(2);
+
+    master->addLayout(homologyPane, tr("Homology"));
 
     // Fundamental group:
 
@@ -167,6 +189,26 @@ void Tri4HomologyFundUI::refresh() {
         fgMsg->hide();
         fgGroup->setGroup(tri->fundamentalGroup());
         fgGroup->show();
+    }
+
+    if (tri->isEmpty()) {
+        iform->setText(tr("—"));
+    } else if (! tri->isValid()) {
+        iform->setText(tr("Invalid triangulation"));
+    } else if (tri->isClosed() && tri->isOrientable()) {
+        auto f = tri->intersectionForm();
+
+        QString ans;
+        if (f.even())
+            ans = QObject::tr("Even type");
+        else
+            ans = QObject::tr("Odd type");
+        ans.append(QObject::tr("\nRank %1").arg(f.rank()));
+        ans.append(QObject::tr("\nSignature %1").arg(f.signature()));
+        iform->setText(ans);
+    } else {
+        iform->setText(tr("Only available for\n"
+            "closed orientable 4-manifolds"));
     }
 }
 

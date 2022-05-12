@@ -515,7 +515,7 @@ double SnapPeaTriangulation::minImaginaryShape() const {
 
     // Since shape_ is non-zero, there is at least one tetrahedron.
     double ans = shape_[0].imag();
-    for (unsigned i = 1; i < size(); ++i)
+    for (size_t i = 1; i < size(); ++i)
         if (ans > shape_[i].imag())
             ans = shape_[i].imag();
 
@@ -781,21 +781,19 @@ MatrixInt SnapPeaTriangulation::gluingEquationsRect() const {
     if (! data_)
         return MatrixInt(); // Should never happen, due to preconditions
 
-    unsigned n = size();
+    size_t n = size();
 
     MatrixInt matrix(countEdges() + data_->num_cusps + countCompleteCusps(),
         2 * n + 1);
     // Note: all entries are automatically initialised to zero.
 
-    int numRows, numCols;
-    int row, j;
-    int parity;
+    int numRows, numCols, row; // Using int to match the type used by SnapPy
 
     int** edgeEqns = regina::snappea::get_gluing_equations(data_,
         &numRows, &numCols);
     for (row = 0; row < numRows; ++row) {
-        parity = 0;
-        for (j = 0; j < n; ++j) {
+        int parity = 0;
+        for (size_t j = 0; j < n; ++j) {
             matrix.entry(row, j) += edgeEqns[row][3 * j];
             matrix.entry(row, j + n) -= edgeEqns[row][3 * j + 1];
             matrix.entry(row, j) -= edgeEqns[row][3 * j + 2];
@@ -807,14 +805,12 @@ MatrixInt SnapPeaTriangulation::gluingEquationsRect() const {
     }
     regina::snappea::free_gluing_equations(edgeEqns, numRows);
 
-    int c;
-    int* cuspEqn;
-    for (c = 0; c < data_->num_cusps; ++c) {
+    for (int c = 0; c < data_->num_cusps; ++c) {
         if (cusp_[c].complete()) {
-            cuspEqn = regina::snappea::get_cusp_equation(
+            int* cuspEqn = regina::snappea::get_cusp_equation(
                 data_, c, 1, 0, &numCols);
-            parity = 0;
-            for (j = 0; j < n; ++j) {
+            int parity = 0;
+            for (size_t j = 0; j < n; ++j) {
                 matrix.entry(row, j) += cuspEqn[3 * j];
                 matrix.entry(row, j + n) -= cuspEqn[3 * j + 1];
                 matrix.entry(row, j) -= cuspEqn[3 * j + 2];
@@ -829,7 +825,7 @@ MatrixInt SnapPeaTriangulation::gluingEquationsRect() const {
             cuspEqn = regina::snappea::get_cusp_equation(
                 data_, c, 0, 1, &numCols);
             parity = 0;
-            for (j = 0; j < n; ++j) {
+            for (size_t j = 0; j < n; ++j) {
                 matrix.entry(row, j) += cuspEqn[3 * j];
                 matrix.entry(row, j + n) -= cuspEqn[3 * j + 1];
                 matrix.entry(row, j) -= cuspEqn[3 * j + 2];
@@ -841,10 +837,10 @@ MatrixInt SnapPeaTriangulation::gluingEquationsRect() const {
             regina::snappea::free_cusp_equation(cuspEqn);
             ++row;
         } else {
-            cuspEqn = regina::snappea::get_cusp_equation(
+            int* cuspEqn = regina::snappea::get_cusp_equation(
                 data_, c, cusp_[c].m_, cusp_[c].l_, &numCols);
-            parity = 0;
-            for (j = 0; j < n; ++j) {
+            int parity = 0;
+            for (size_t j = 0; j < n; ++j) {
                 matrix.entry(row, j) += cuspEqn[3 * j];
                 matrix.entry(row, j + n) -= cuspEqn[3 * j + 1];
                 matrix.entry(row, j) -= cuspEqn[3 * j + 2];
@@ -936,10 +932,9 @@ void SnapPeaTriangulation::writeTextLong(std::ostream& out) const {
 
     Triangulation<3>::writeTextLong(out);
 
-    unsigned i;
     if (shape_) {
         out << "Tetrahedron shapes:" << std::endl;
-        for (i = 0; i < size(); ++i)
+        for (size_t i = 0; i < size(); ++i)
             out << "  " << i << ": ( " << shape_[i].real()
                 << ", " << shape_[i].imag() << " )" << std::endl;
     } else
@@ -948,7 +943,7 @@ void SnapPeaTriangulation::writeTextLong(std::ostream& out) const {
     out << std::endl;
 
     out << "Cusps:" << std::endl;
-    for (i = 0; i < countBoundaryComponents(); ++i) {
+    for (size_t i = 0; i < countBoundaryComponents(); ++i) {
         out << "  " << i
             << ": Vertex " << cusp_[i].vertex_->markedIndex();
         if (cusp_[i].complete())
@@ -1026,11 +1021,9 @@ void SnapPeaTriangulation::sync() {
                 regina::snappea::do_Dehn_filling(data_);
             }
 
-            unsigned i, j;
-
             cusp_ = new Cusp[data_->num_cusps];
             regina::snappea::Cusp* c = data_->cusp_list_begin.next;
-            for (i = 0; i < data_->num_cusps; ++i) {
+            for (int i = 0; i < data_->num_cusps; ++i) {
                 cusp_[c->index].vertex_ = nullptr;
                 if (c->is_complete) {
                     cusp_[c->index].m_ = cusp_[c->index].l_ = 0;
@@ -1059,8 +1052,8 @@ void SnapPeaTriangulation::sync() {
                 c = c->next;
             }
             regina::snappea::Tetrahedron* stet = data_->tet_list_begin.next;
-            for (i = 0; i < size(); ++i) {
-                for (j = 0; j < 4; ++j) {
+            for (size_t i = 0; i < size(); ++i) {
+                for (int j = 0; j < 4; ++j) {
                     c = stet->cusp[j];
                     if (cusp_[c->index].vertex_ == nullptr)
                         cusp_[c->index].vertex_ = tetrahedron(i)->vertex(j);
@@ -1098,7 +1091,7 @@ void SnapPeaTriangulation::fillingsHaveChanged() {
             shape_ = new std::complex<double>[size()];
             stet = data_->tet_list_begin.next;
             regina::snappea::ComplexWithLog* shape;
-            for (unsigned i = 0; i < size(); ++i) {
+            for (size_t i = 0; i < size(); ++i) {
                 shape = &stet->shape[regina::snappea::filled]->
                         cwl[regina::snappea::ultimate][0 /* fixed */];
                 shape_[i] = std::complex<double>(

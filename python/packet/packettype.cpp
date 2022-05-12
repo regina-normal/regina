@@ -42,7 +42,6 @@ void addPacketType(pybind11::module_& m) {
         .value("PACKET_TEXT", regina::PACKET_TEXT)
         .value("PACKET_SCRIPT", regina::PACKET_SCRIPT)
         .value("PACKET_ATTACHMENT", regina::PACKET_ATTACHMENT)
-        .value("PACKET_PDF", regina::PACKET_ATTACHMENT) // deprecated
         .value("PACKET_ANGLESTRUCTURES", regina::PACKET_ANGLESTRUCTURES)
         .value("PACKET_NORMALSURFACES", regina::PACKET_NORMALSURFACES)
         .value("PACKET_SURFACEFILTER", regina::PACKET_SURFACEFILTER)

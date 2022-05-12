@@ -3,13 +3,13 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRICENSUS" "1" "17 December 2021" "" "The Regina Handbook"
+.TH "TRICENSUS" "1" "29 March 2022" "" "The Regina Handbook"
 
 .SH NAME
 tricensus \- Form a census of triangulations
 .SH SYNOPSIS
 
-\fBtricensus\fR [ \fB-t, --tetrahedra=\fItetrahedra\fB\fR ] [ \fB-2, --dim2\fR | \fB-4, --dim4\fR ] [ \fB-b, --boundary\fR | \fB-i, --internal\fR | \fB-B, --bdryfaces=\fItriangles\fB\fR ] [ \fB-o, --orientable\fR | \fB-n, --nonorientable\fR ] [ \fB-f, --finite\fR | \fB-d, --ideal\fR ] [ \fB-m, --minimal\fR | \fB-M, --minprime\fR | \fB-N, --minprimep2\fR | \fB-h, --minhyp\fR ] [ \fB-s, --sigs\fR | \fB-c, --subcontainers\fR ] [ \fB-p, --genpairs\fR | \fB-P, --usepairs\fR ] \fB\fIoutput-file\fB\fR
+\fBtricensus\fR [ \fB-t, --tetrahedra=\fItetrahedra\fB\fR ] [ \fB-2, --dim2\fR | \fB-4, --dim4\fR ] [ \fB-b, --boundary\fR | \fB-i, --internal\fR | \fB-B, --bdryfaces=\fItriangles\fB\fR ] [ \fB-o, --orientable\fR | \fB-n, --nonorientable\fR ] [ \fB-f, --finite\fR | \fB-d, --ideal\fR ] [ \fB-m, --minimal\fR | \fB-M, --minprime\fR | \fB-N, --minprimep2\fR | \fB-h, --minhyp\fR ] [ \fB--allowinvalid\fR ] [ \fB-s, --sigs\fR | \fB-c, --subcontainers\fR ] [ \fB-p, --genpairs\fR | \fB-P, --usepairs\fR ] [ \fB--threads=\fInum_threads\fB\fR ] \fB\fIoutput-file\fB\fR
 
 
 \fBtricensus\fR \fB--help\fR
@@ -189,6 +189,32 @@ will produce an error message).
 This option also cannot be used with \fB--dim2\fR
 or \fB--dim4\fR\&.
 .TP
+\fB--allowinvalid\fR
+Normally, \fBtricensus\fR will test each triangulation that
+is constructed for validity before including it in the final output.
+If you pass \fB--allowinvalid\fR however, then these
+validity tests will not be performed.
+
+As a result, the output may include some invalid triangulations.
+However, it will not include \fBall\fR invalid
+triangulations of the given size, since some invalid constructions
+are pruned at earlier levels of the search tree by the census algorithm
+(as opposed to being detected by the validity test when each full
+triangulation has been constructed).  For example, edges that are
+identified with themselves in reverse are detected and pruned earlier
+in this way, and so will never appear in the census output, even with
+the \fB--allowinvalid\fR option.
+
+The one guarantee that you \fBdo\fR get from this option
+is that the census will include all invalid triangulations that could
+appear as a \fBsubcomplex\fR of some valid triangulation.
+For example, if a 3-dimensional triangulation is invalid only because
+it has vertices whose links are spheres with multiple punctures,
+then it will be included in the output.
+
+This option cannot be used with finite/ideal options or minimality
+options.
+.TP
 \fB-s, --sigs\fR
 Instead of writing a full Regina data file, just output a list
 of isomorphism signatures.
@@ -279,6 +305,36 @@ cannot be used with \fB--usepairs\fR\&.
 Instead you should pass these options earlier
 along with \fB--genpairs\fR when you split the original
 census into pieces.
+.TP
+\fB--threads=\fInum_threads\fB\fR
+Run the census in parallel using the given number of threads.
+This parallelisation is typically very effective (particularly
+for larger censuses), in that the speed-up factor is usually close to
+the theoretical maximum \fInum_threads\fR\&.
+
+The way the parallelisation currently works is as follows.
+For each individual facet pairing, the corresponding search tree
+is broken into a many smaller subtrees (i.e., subsearches), each
+of which can be processed independently by different threads.
+
+This has two consequences:
+.RS
+.TP 0.2i
+\(bu
+The \fB--threads\fR option cannot be used with
+\fB--genpairs\fR, since the facet pairings are still
+enumerated in serial.
+.TP 0.2i
+\(bu
+The output that writes each facet pairing to the console will appear
+deceptively fast.  This is because each facet pairing will be
+written as soon as it is constructed by the main thread, and its many
+subsearches will be placed in a queue for other threads to process
+while the main thread moves on to the next facet pairing.
+Once all of the pairings have been output, you may still face a
+long wait while the threads together work their way through the
+queue of subsearches that has accumulated.
+.RE
 .SH "EXAMPLES"
 .PP
 The following command forms a census of all 3-tetrahedron closed

@@ -88,15 +88,6 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
         SnappedTwoSphere& operator = (const SnappedTwoSphere&) = default;
 
         /**
-         * Deprecated routine that returns a new copy of this structure.
-         *
-         * \deprecated Just use the copy constructor instead.
-         *
-         * @return a newly created clone.
-         */
-        [[deprecated]] SnappedTwoSphere* clone() const;
-
-        /**
          * Returns one of the two snapped 3-balls whose equators are
          * joined.
          *
@@ -164,15 +155,6 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
         static std::unique_ptr<SnappedTwoSphere> recognise(Tetrahedron<3>* tet1,
             Tetrahedron<3>* tet2);
         /**
-         * A deprecated alias to recognise if two tetrahedra together
-         * form a snapped 2-sphere.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<SnappedTwoSphere>
-            formsSnappedTwoSphere(Tetrahedron<3>* tet1, Tetrahedron<3>* tet2);
-        /**
          * Determines if the two given snapped 3-balls together form a snapped
          * 2-sphere.
          *
@@ -197,17 +179,6 @@ class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
             const SnappedBall& ball1, const SnappedBall& ball2);
 
         /**
-         * A deprecated alias to recognise if two snapped 3-balls together
-         * form a snapped 2-sphere.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<SnappedTwoSphere>
-            formsSnappedTwoSphere(const SnappedBall& ball1,
-            const SnappedBall& ball2);
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -230,9 +201,6 @@ inline SnappedTwoSphere::SnappedTwoSphere(
         const SnappedBall& ball0, const SnappedBall& ball1) :
         ball_ { ball0, ball1 } {
 }
-inline SnappedTwoSphere* SnappedTwoSphere::clone() const {
-    return new SnappedTwoSphere(*this);
-}
 inline const SnappedBall& SnappedTwoSphere::snappedBall(int index) const {
     return ball_[index];
 }
@@ -244,18 +212,6 @@ inline bool SnappedTwoSphere::operator == (const SnappedTwoSphere& other)
 inline bool SnappedTwoSphere::operator != (const SnappedTwoSphere& other)
         const {
     return ball_[0] != other.ball_[0] || ball_[1] != other.ball_[1];
-}
-
-inline std::unique_ptr<SnappedTwoSphere>
-        SnappedTwoSphere::formsSnappedTwoSphere(
-        Tetrahedron<3>* tet1, Tetrahedron<3>* tet2) {
-    return recognise(tet1, tet2);
-}
-
-inline std::unique_ptr<SnappedTwoSphere>
-        SnappedTwoSphere::formsSnappedTwoSphere(
-        const SnappedBall& ball1, const SnappedBall& ball2) {
-    return recognise(ball1, ball2);
 }
 
 } // namespace regina

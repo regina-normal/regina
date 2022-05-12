@@ -581,7 +581,9 @@ class SnapPeaTriangulation :
                  internal SnapPea triangulation.  If this is a null
                  triangulation then cusp_ will be \c nullptr. */
         unsigned filledCusps_;
-            /**< The number of cusps that are currently filled. */
+            /**< The number of cusps that are currently filled.
+                 This has type \c unsigned (not \c size_t) to match
+                 the \c int type used to index cusps in the SnapPea kernel. */
 
         mutable std::optional<GroupPresentation> fundGroupFilled_;
             /**< The fundamental group of the filled triangulation.
@@ -1037,7 +1039,7 @@ class SnapPeaTriangulation :
          * 0 and size()-1 inclusive.
          * @return the shape of the given tetrahedron, in rectangular form.
          */
-        const std::complex<double>& shape(unsigned tet) const;
+        const std::complex<double>& shape(size_t tet) const;
 
         /**
          * Returns the minimum imaginary part found amongst all tetrahedron
@@ -2278,7 +2280,7 @@ inline bool SnapPeaTriangulation::isNull() const {
     return (data_ == nullptr);
 }
 
-inline const std::complex<double>& SnapPeaTriangulation::shape(unsigned tet)
+inline const std::complex<double>& SnapPeaTriangulation::shape(size_t tet)
         const {
     return (shape_ ? shape_[tet] : zero_);
 }
@@ -2289,11 +2291,13 @@ inline bool SnapPeaTriangulation::operator != (
 }
 
 inline unsigned SnapPeaTriangulation::countCusps() const {
-    return countBoundaryComponents();
+    // SnapPea indexes cusps by int; Regina indexes boundaries by size_t.
+    return static_cast<unsigned>(countBoundaryComponents());
 }
 
 inline unsigned SnapPeaTriangulation::countCompleteCusps() const {
-    return countBoundaryComponents() - filledCusps_;
+    // SnapPea indexes cusps by int; Regina indexes boundaries by size_t.
+    return static_cast<unsigned>(countBoundaryComponents()) - filledCusps_;
 }
 
 inline unsigned SnapPeaTriangulation::countFilledCusps() const {

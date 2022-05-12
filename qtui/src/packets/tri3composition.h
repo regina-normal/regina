@@ -115,6 +115,13 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
          */
         void packetBeingDestroyed(regina::PacketShell packet) override;
 
+        /**
+         * Context menu actions that are not slots because they take
+         * more arguments than the corresponding signal provides.
+         */
+        void contextStandardTri(const QPoint& pos, QWidget* fromWidget);
+        void contextIsoSig(const QPoint& pos, QWidget* fromWidget);
+
     public slots:
         /**
          * Update the isomorphism test panel.
@@ -129,8 +136,6 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         /**
          * Support clipboard actions.
          */
-        void contextStandardTri(const QPoint& pos);
-        void contextIsoSig(const QPoint& pos);
         void contextComposition(const QPoint& pos);
         void copyStandardTri();
         void copyIsoSig();

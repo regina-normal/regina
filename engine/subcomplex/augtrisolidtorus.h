@@ -144,15 +144,6 @@ class AugTriSolidTorus : public StandardTriangulation {
         AugTriSolidTorus& operator = (const AugTriSolidTorus&) = default;
 
         /**
-         * Deprecated routine that returns a new copy of this structure.
-         *
-         * \deprecated Just use the copy constructor instead.
-         *
-         * @return a newly created clone.
-         */
-        [[deprecated]] AugTriSolidTorus* clone() const;
-
-        /**
          * Swaps the contents of this and the given structure.
          *
          * @param other the structure whose contents should be swapped
@@ -325,15 +316,6 @@ class AugTriSolidTorus : public StandardTriangulation {
          */
         static std::unique_ptr<AugTriSolidTorus> recognise(
             const Component<3>* comp);
-        /**
-         * A deprecated alias to recognise if a component forms an
-         * augmented triangular solid torus.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<AugTriSolidTorus>
-            isAugTriSolidTorus(const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
@@ -376,10 +358,6 @@ void swap(AugTriSolidTorus& a, AugTriSolidTorus& b) noexcept;
 
 inline AugTriSolidTorus::AugTriSolidTorus(const TriSolidTorus& core) :
         core_(core), chainType_(CHAIN_NONE) {
-}
-
-inline AugTriSolidTorus* AugTriSolidTorus::clone() const {
-    return new AugTriSolidTorus(*this);
 }
 
 inline void AugTriSolidTorus::swap(AugTriSolidTorus& other) noexcept {
@@ -444,11 +422,6 @@ inline bool AugTriSolidTorus::operator != (
 
 inline void swap(AugTriSolidTorus& a, AugTriSolidTorus& b) noexcept {
     a.swap(b);
-}
-
-inline std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::isAugTriSolidTorus(
-        const Component<3>* comp) {
-    return recognise(comp);
 }
 
 } // namespace regina

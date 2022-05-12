@@ -376,19 +376,6 @@ class Attachment : public Packet {
         bool save(const char* pathname) const;
 
         /**
-         * A deprecated function that saves the contents of this
-         * attachment to the given file.
-         *
-         * \deprecated This routine has been renamed to save(), now that this
-         * class can store arbitrary attachments and not just PDF documents.
-         *
-         * @param pathname the full pathname of the file to write.
-         * @return \c true if the file was successfully written, or
-         * \c false otherwise.
-         */
-        [[deprecated]] bool savePDF(const char* pathname) const;
-
-        /**
          * Determines if this and the given attachment hold identical data.
          *
          * The filenames will not be compared.
@@ -438,17 +425,6 @@ class Attachment : public Packet {
  * \ingroup packet
  */
 void swap(Attachment& a, Attachment& b);
-
-/**
- * Deprecated alias for a packet that can hold an arbitrary file attachment.
- *
- * \deprecated The old PDF class has now been renamed to Attachment.  Instead
- * of exclusively storing PDF documents, it can now store any type of
- * file attachment.
- *
- * \ingroup packet
- */
-using PDF [[deprecated]] = Attachment;
 
 // Inline functions for Attachment
 
@@ -545,10 +521,6 @@ inline std::shared_ptr<Packet> Attachment::internalClonePacket() const {
 
 inline void swap(Attachment& a, Attachment& b) {
     a.swap(b);
-}
-
-inline bool Attachment::savePDF(const char* pathname) const {
-    return save(pathname);
 }
 
 } // namespace regina

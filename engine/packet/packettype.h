@@ -90,13 +90,6 @@ enum PacketType {
      */
     PACKET_ATTACHMENT = 10,
     /**
-     * A legacy constant that represents a PDF document.  This is stored
-     * using the Attachment class, which can now represent any kind of
-     * file attachment (not just a PDF document).  This legacy constant
-     * PACKET_PDF takes the same value as the new constant PACKET_ATTACHMENT.
-     */
-    PACKET_PDF [[deprecated]] = PACKET_ATTACHMENT,
-    /**
      * Represents a normal hypersurface list, of class NormalHypersurfaces.
      */
     PACKET_NORMALHYPERSURFACES = 13,

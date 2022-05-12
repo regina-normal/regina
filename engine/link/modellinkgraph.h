@@ -589,16 +589,6 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         void swap(ModelLinkGraph& other) noexcept;
 
         /**
-         * Deprecated routine that swaps the contents of this and the
-         * given graph.
-         *
-         * \deprecated Use swap() instead.
-         *
-         * @param other the graph whose contents should be swapped with this.
-         */
-        [[deprecated]] void swapContents(ModelLinkGraph& other) noexcept;
-
-        /**
          * Determines if this graph is combinatorially identical to the
          * given graph.
          *
@@ -1519,10 +1509,6 @@ inline void ModelLinkGraph::swap(ModelLinkGraph& other) noexcept {
         nodes_.swap(other.nodes_);
         std::swap(cells_, other.cells_);
     }
-}
-
-inline void ModelLinkGraph::swapContents(ModelLinkGraph& other) noexcept {
-    swap(other);
 }
 
 inline bool ModelLinkGraph::operator != (const ModelLinkGraph& other) const {

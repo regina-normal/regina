@@ -76,21 +76,6 @@ class Matrix2 {
          */
         Matrix2(const Matrix2&) = default;
         /**
-         * Deprecated constructor that initialises to the given integer values.
-         *
-         * Each given integer <tt>values[r][c]</tt> will be placed in
-         * row \a r, column \a c.
-         *
-         * \deprecated This class aims to remove its reliance on raw
-         * C-style arrays, and so this constructor will be removed at some
-         * point in the future.  Use the four-argument constructor instead.
-         *
-         * \ifacespython Not present; use the four-argument constructor instead.
-         *
-         * @param values the four values to insert into the new matrix.
-         */
-        [[deprecated]] Matrix2(const long values[2][2]);
-        /**
          * Initialises to the given integer values.
          *
          * @param val00 the value to place in row 0, column 0.
@@ -106,21 +91,6 @@ class Matrix2 {
          * @return a reference to this matrix.
          */
         Matrix2& operator = (const Matrix2&) = default;
-        /**
-         * Deprecated routine that sets the elements of this matrix to the
-         * given integer values.
-         *
-         * Each given integer <tt>values[r][c]</tt> will be placed in
-         * row \a r, column \a c.
-         *
-         * \deprecated This class aims to remove its reliance on raw
-         * C-style arrays, and so this operator will be removed at
-         * some point in the future.
-         *
-         * @param values the four values to copy into this matrix.
-         * @return a reference to this matrix.
-         */
-        [[deprecated]] Matrix2& operator = (const long values[2][2]);
 
         /**
          * Swaps the contents of this and the given matrix.
@@ -370,19 +340,8 @@ bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
 inline Matrix2::Matrix2() : data_ {{{ 0, 0 }, { 0, 0 }}} {
 }
 
-inline Matrix2::Matrix2(const long values[2][2]) :
-        data_ {{{ values[0][0], values[0][1] },
-                { values[1][0], values[1][1] }}} {
-}
-
 inline Matrix2::Matrix2(long val00, long val01, long val10, long val11) :
         data_ {{{ val00, val01 }, { val10, val11 }}} {
-}
-
-inline Matrix2& Matrix2::operator = (const long values[2][2]) {
-    data_[0][0] = values[0][0]; data_[0][1] = values[0][1];
-    data_[1][0] = values[1][0]; data_[1][1] = values[1][1];
-    return *this;
 }
 
 inline void Matrix2::swap(Matrix2& other) noexcept {

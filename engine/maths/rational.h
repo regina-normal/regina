@@ -413,9 +413,6 @@ class Rational {
          * \exception UnsolvedCase This rational lies outside double's
          * allowable range.
          *
-         * \ifacespython The old python-only routine doubleApproxCheck() is
-         * now deprecated.  Just call this routine inside a try/catch block.
-         *
          * @return the double approximation to this rational.
          *
          * @author Ryan Budney, B.B.
@@ -431,16 +428,6 @@ class Rational {
          * @author Ryan Budney
          */
         std::string tex() const;
-
-        /**
-         * Deprecated routine that returns this rational as written using TeX
-         * formatting.
-         *
-         * \deprecated This routine has been renamed to tex().
-         *
-         * @return this rational as written using TeX formatting.
-         */
-        [[deprecated]] std::string TeX() const;
 
         /**
          * Writes this rational in TeX format to the given output stream.
@@ -613,10 +600,6 @@ inline bool Rational::operator >= (const Rational& compare) const {
 }
 inline bool Rational::operator != (const Rational& compare) const {
     return ! (*this == compare);
-}
-
-inline std::string Rational::TeX() const {
-    return tex();
 }
 
 inline void swap(Rational& a, Rational& b) noexcept {

@@ -64,17 +64,16 @@ std::string GluingPerms<dim>::data() const {
 
 template <int dim>
 Triangulation<dim> GluingPerms<dim>::triangulate() const {
-    unsigned nSimp = size();
+    size_t nSimp = size();
 
     Triangulation<dim> ans;
     auto* simp = new Simplex<dim>*[nSimp];
 
-    unsigned t, facet;
-    for (t = 0; t < nSimp; ++t)
+    for (size_t t = 0; t < nSimp; ++t)
         simp[t] = ans.newSimplex();
 
-    for (t = 0; t < nSimp; ++t)
-        for (facet = 0; facet <= dim; ++facet)
+    for (size_t t = 0; t < nSimp; ++t)
+        for (int facet = 0; facet <= dim; ++facet)
             if ((! pairing_.isUnmatched(t, facet)) &&
                     (! simp[t]->adjacentSimplex(facet)))
                 simp[t]->join(facet, simp[pairing_.dest(t, facet).simp],
@@ -94,7 +93,7 @@ typename GluingPerms<dim>::Index GluingPerms<dim>::gluingToIndex(
 
 template <int dim>
 typename GluingPerms<dim>::Index GluingPerms<dim>::gluingToIndex(
-        unsigned simp, unsigned facet, const Perm<dim+1>& gluing) const {
+        size_t simp, int facet, const Perm<dim+1>& gluing) const {
     Perm<dim+1> permSn_1 =
         Perm<dim+1>(pairing_.dest(simp, facet).facet, dim) * gluing *
         Perm<dim+1>(facet, dim);
@@ -105,9 +104,8 @@ template <int dim>
 void GluingPerms<dim>::dumpData(std::ostream& out) const {
     out << pairing_.toTextRep() << std::endl;
 
-    unsigned simp, facet;
-    for (simp = 0; simp < size(); ++simp)
-        for (facet = 0; facet <= dim; ++facet) {
+    for (size_t simp = 0; simp < size(); ++simp)
+        for (int facet = 0; facet <= dim; ++facet) {
             if (simp || facet)
                 out << ' ';
             out << permIndex(simp, facet);
@@ -121,9 +119,8 @@ GluingPerms<dim>::GluingPerms(std::istream& in) :
     // The FacetPairing constructor has already skipped whitespace and
     // read a single line describing the facet pairing.
 
-    unsigned simp, facet;
-    for (simp = 0; simp < pairing_.size(); ++simp)
-        for (facet = 0; facet <= dim; ++facet) {
+    for (size_t simp = 0; simp < pairing_.size(); ++simp)
+        for (int facet = 0; facet <= dim; ++facet) {
             in >> permIndex(simp, facet);
             // Don't test the range of permIndex(simp, facet) since the
             // gluing permutation set could still be under construction.

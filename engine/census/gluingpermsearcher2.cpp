@@ -43,7 +43,7 @@ GluingPermSearcher<2>::GluingPermSearcher(FacetPairing<2> pairing,
         orientableOnly_(orientableOnly),
         started(false), orientation(new int[perms_.size()]) {
     // Initialise arrays.
-    unsigned nTris = perms_.size();
+    size_t nTris = perms_.size();
 
     std::fill(orientation, orientation + nTris, 0);
 
@@ -67,7 +67,7 @@ GluingPermSearcher<2>::~GluingPermSearcher() {
 void GluingPermSearcher<2>::searchImpl(long maxDepth, ActionWrapper&& action_) {
     // In this generation algorithm, each orientation is simply +/-1.
 
-    unsigned nTriangles = perms_.size();
+    size_t nTriangles = perms_.size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
         maxDepth = nTriangles * 3 + 1;
@@ -97,14 +97,12 @@ void GluingPermSearcher<2>::searchImpl(long maxDepth, ActionWrapper&& action_) {
 
     // ---------- Selecting the individual gluing permutations ----------
 
-    int minOrder = orderElt;
-    int maxOrder = orderElt + maxDepth;
-
-    FacetSpec<2> edge, adj;
+    ssize_t minOrder = orderElt;
+    ssize_t maxOrder = orderElt + maxDepth;
 
     while (orderElt >= minOrder) {
-        edge = order[orderElt];
-        adj = perms_.pairing()[edge];
+        FacetSpec<2> edge = order[orderElt];
+        FacetSpec<2> adj = perms_.pairing()[edge];
 
         // TODO: Check for cancellation.
 
@@ -195,10 +193,9 @@ void GluingPermSearcher<2>::dumpData(std::ostream& out) const {
     out << (started ? 's' : '.');
     out << std::endl;
 
-    int nTris = perms_.size();
-    int i;
+    size_t nTris = perms_.size();
 
-    for (i = 0; i < nTris; i++) {
+    for (size_t i = 0; i < nTris; i++) {
         if (i)
             out << ' ';
         out << orientation[i];
@@ -206,7 +203,7 @@ void GluingPermSearcher<2>::dumpData(std::ostream& out) const {
     out << std::endl;
 
     out << orderElt << ' ' << orderSize << std::endl;
-    for (i = 0; i < orderSize; i++) {
+    for (size_t i = 0; i < orderSize; i++) {
         if (i)
             out << ' ';
         out << order[i].simp << ' ' << order[i].facet;
@@ -224,7 +221,7 @@ void GluingPermSearcher<2>::writeTextShort(std::ostream& out) const {
         out << ", orientable only";
 
     out << ": stage " << orderElt << ", order:";
-    for (int i = 0; i < orderSize; ++i)
+    for (size_t i = 0; i < orderSize; ++i)
         out << ' ' << order[i].simp << ':' << order[i].facet;
 }
 
@@ -252,16 +249,15 @@ GluingPermSearcher<2>::GluingPermSearcher(std::istream& in) :
         throw InvalidInput("Invalid started tag "
             "while attempting to read GluingPermSearcher<2>");
 
-    int nTris = perms_.size();
-    int t;
+    size_t nTris = perms_.size();
 
     orientation = new int[nTris];
-    for (t = 0; t < nTris; t++)
+    for (size_t t = 0; t < nTris; t++)
         in >> orientation[t];
 
     order = new FacetSpec<2>[(nTris * 3) / 2];
     in >> orderElt >> orderSize;
-    for (t = 0; t < orderSize; t++) {
+    for (size_t t = 0; t < orderSize; t++) {
         in >> order[t].simp >> order[t].facet;
         if (order[t].simp >= nTris || order[t].simp < 0 ||
                 order[t].facet >= 3 || order[t].facet < 0)
@@ -283,8 +279,7 @@ bool GluingPermSearcher<2>::isCanonical() const {
         // Compare the current set of gluing permutations with its
         // preimage under each edge pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
-        for (edge.setFirst(); edge.simp <
-                static_cast<int>(perms_.size()); edge++) {
+        for (edge.setFirst(); edge.simp < perms_.size(); edge++) {
             edgeDest = perms_.pairing().dest(edge);
             if (perms_.pairing().isUnmatched(edge) || edgeDest < edge)
                 continue;

@@ -102,18 +102,11 @@ void addNormalSurface(pybind11::module_& m) {
             }
             return new NormalSurface(t, enc, std::move(v));
         }))
-        .def("clone", [](const NormalSurface& s) {
-            // Since clone() is deprecated, we reimplement it here to
-            // avoid noisy compiler warnings.
-            // Here we use the copy constructor, which has the side-effect of
-            // cloning the surface name also (which the C++ clone() does not).
-            // To ensure no change in behaviour, we revert the name change here.
-            auto* ans = new NormalSurface(s);
-            ans->setName(std::string());
-            return ans;
-        })
         .def("swap", &NormalSurface::swap)
-        .def("doubleSurface", &NormalSurface::doubleSurface)
+        .def("doubleSurface", [](const NormalSurface& s) {
+            // This is deprecated, so we reimplement it ourselves.
+            return s * 2;
+        })
         .def("triangles", &NormalSurface::triangles)
         .def("quads", &NormalSurface::quads)
         .def("octs", &NormalSurface::octs)
@@ -142,6 +135,8 @@ void addNormalSurface(pybind11::module_& m) {
             pybind11::return_value_policy::reference)
         .def("isThinEdgeLink", &NormalSurface::isThinEdgeLink,
             pybind11::return_value_policy::reference)
+        .def("isNormalEdgeLink", &NormalSurface::isNormalEdgeLink,
+            pybind11::return_value_policy::reference)
         .def("isSplitting", &NormalSurface::isSplitting)
         .def("isCentral", &NormalSurface::isCentral)
         .def("countBoundaries", &NormalSurface::countBoundaries)
@@ -150,7 +145,6 @@ void addNormalSurface(pybind11::module_& m) {
         .def("isIncompressible", &NormalSurface::isIncompressible)
         .def("cutAlong", &NormalSurface::cutAlong)
         .def("crush", &NormalSurface::crush)
-        .def("sameSurface", &NormalSurface::operator ==) // deprecated
         .def("normal", &NormalSurface::normal)
         .def("embedded", &NormalSurface::embedded)
         .def("locallyCompatible", &NormalSurface::locallyCompatible)
@@ -158,13 +152,14 @@ void addNormalSurface(pybind11::module_& m) {
         .def("boundaryIntersections", &NormalSurface::boundaryIntersections)
         .def("vector", &NormalSurface::vector,
             pybind11::return_value_policy::reference_internal)
-        .def("rawVector", &NormalSurface::vector, // deprecated
-            pybind11::return_value_policy::reference_internal)
         .def("couldBeAlmostNormal", &NormalSurface::couldBeAlmostNormal)
         .def("couldBeNonCompact", &NormalSurface::couldBeNonCompact)
+        .def("scaleDown", &NormalSurface::scaleDown)
         .def_static("reconstructTriangles",
             &NormalSurface::reconstructTriangles)
         .def(pybind11::self + pybind11::self)
+        .def(pybind11::self * regina::LargeInteger())
+        .def(pybind11::self *= regina::LargeInteger())
         .def(pybind11::self < pybind11::self)
     ;
     regina::python::add_output(c);

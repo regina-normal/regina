@@ -1352,17 +1352,6 @@ class TriangulationBase :
         AbelianGroup homology(int k) const;
 
         /**
-         * Deprecated routine that returns the first homology group for this
-         * triangulation.
-         *
-         * \deprecated This is identical to calling homology<1>(), or
-         * just homology().
-         *
-         * @return the first homology group.
-         */
-        [[deprecated]] const AbelianGroup& homologyH1() const;
-
-        /**
          * Returns the <i>k</i>th homology group of this triangulation,
          * without truncating ideal vertices, but with explicit coordinates
          * that track the individual <i>k</i>-faces of this triangulation.
@@ -2013,20 +2002,6 @@ class TriangulationBase :
         bool operator != (const Triangulation<dim>& other) const;
 
         /**
-         * Deprecated routine that determines if this triangulation is
-         * combinatorially identical to the given triangulation.
-         *
-         * \deprecated This routine has been renamed to the comparison
-         * operator (==).
-         *
-         * @param other the triangulation to compare with this.
-         * @return \c true if and only if the two triangulations are
-         * combinatorially identical.
-         */
-        [[deprecated]] bool isIdenticalTo(const Triangulation<dim>& other)
-            const;
-
-        /**
          * Determines if this triangulation is combinatorially
          * isomorphic to the given triangulation.
          *
@@ -2271,69 +2246,6 @@ class TriangulationBase :
          * @param source the triangulation whose copy will be inserted.
          */
         void insertTriangulation(const Triangulation<dim>& source);
-
-        /**
-         * Deprecated routine that inserts a given triangulation into this
-         * triangulation, where the given triangulation is described by a
-         * pair of integer arrays.
-         *
-         * The main purpose of this routine was to help users to hard-code
-         * triangulations into C++ source files.  Nowadays you are better off
-         * doing this through fromGluings() instead.
-         *
-         * This routine will insert an additional \a nSimplices top-dimensional
-         * simplices into this triangulation.  We number these simplices
-         * 0,1,...,<i>nSimplices</i>-1.  The gluings between these
-         * new simplices should be stored in the two arrays as follows.
-         *
-         * The \a adjacencies array describes which simplices are joined to
-         * which others.  Specifically, <tt>adjacencies[s][f]</tt> indicates
-         * which of the new simplices is joined to facet \a f of simplex \a s.
-         * This should be between 0 and <i>nSimplices</i>-1 inclusive, or -1
-         * if facet \a f of simplex \a s is to be left as a boundary facet.
-         *
-         * The \a gluings array describes the particular gluing permutations
-         * used to join these simplices together.  Specifically,
-         * <tt>gluings[s][f][0..\a dim]</tt> should describe the permutation
-         * used to join facet \a f of simplex \a s to its adjacent simplex.
-         * These <i>dim</i>+1 integers should be 0,1,...,\a dim in some
-         * order, so that <tt>gluings[s][f][i]</tt> contains the image of \a i
-         * under this permutation.  If facet \a f of simplex \a s is to be
-         * left as a boundary facet, then <tt>gluings[s][f][0..\a dim]</tt>
-         * may contain anything (and will be duly ignored).
-         *
-         * If this triangulation is empty before this routine is called, then
-         * the new simplices will be given indices 0,1,...,<i>nSimplices</i>-1
-         * according to the numbering described above.  Otherwise they will be
-         * inserted after any pre-existing simplices, and so they will be given
-         * larger indices instead.  In the latter case, the \a adjacencies
-         * array should still refer to the new simplices as
-         * 0,1,...,<i>nSimplices</i>-1, and this routine will handle any
-         * renumbering automatically at runtime.
-         *
-         * It is the responsibility of the caller of this routine to
-         * ensure that the given arrays are correct and consistent.
-         * No error checking will be performed by this routine.
-         *
-         * \deprecated Use the static routine fromGluings() instead.
-         * Code that uses fromGluings() is more compact and still readable;
-         * also fromGluings() performs error checking on the input.
-         *
-         * \ifacespython Not present; instead you can use fromGluings(),
-         * which is better in many ways (and which is not deprecated).
-         *
-         * @param nSimplices the number of additional simplices to insert.
-         * @param adjacencies describes which simplices are adjace to
-         * which others, as described above.  This array must have initial
-         * dimension at least \a nSimplices.
-         * @param gluings describes the specific gluing permutations, as
-         * described above.  This array must also have initial dimension
-         * at least \a nSimplices.
-         */
-        [[deprecated]] void insertConstruction(
-            size_t nSimplices,
-            const int adjacencies[][dim+1],
-            const int gluings[][dim+1][dim+1]);
 
         /*@}*/
         /**
@@ -4041,12 +3953,6 @@ inline bool TriangulationBase<dim>::operator != (
 }
 
 template <int dim>
-inline bool TriangulationBase<dim>::isIdenticalTo(
-        const Triangulation<dim>& other) const {
-    return (*this) == other;
-}
-
-template <int dim>
 inline std::optional<Isomorphism<dim>> TriangulationBase<dim>::isIsomorphicTo(
         const Triangulation<dim>& other) const {
     std::optional<Isomorphism<dim>> ans;
@@ -4172,65 +4078,6 @@ inline Triangulation<dim> TriangulationBase<dim>::fromGluings(size_t size,
         std::initializer_list<std::tuple<size_t, int, size_t, Perm<dim+1>>>
         gluings) {
     return fromGluings(size, gluings.begin(), gluings.end());
-}
-
-template <int dim>
-void TriangulationBase<dim>::insertConstruction(size_t nSimplices,
-        const int adjacencies[][dim+1], const int gluings[][dim+1][dim+1]) {
-    if (nSimplices == 0)
-        return;
-
-    Snapshottable<Triangulation<dim>>::takeSnapshot();
-    ChangeEventSpan span(static_cast<Triangulation<dim>&>(*this));
-
-    size_t nOrig = size();
-
-    // Each time we loop through simplices we must only make nSimplices
-    // iterations.  This ensures that the routine behaves correctly even
-    // if source is this triangulation.
-    size_t i;
-    for (i = 0; i < nSimplices; ++i)
-        simplices_.push_back(new Simplex<dim>(
-            static_cast<Triangulation<dim>*>(this)));
-
-    Simplex<dim>* s;
-    int f;
-    for (i = 0; i < nSimplices; ++i) {
-        s = simplices_[nOrig + i];
-        for (f = 0; f <= dim; ++f) {
-            if (adjacencies[i][f] >= 0) {
-                s->adj_[f] = simplices_[nOrig + adjacencies[i][f]];
-                if constexpr (dim == 2) {
-                    s->gluing_[f] = Perm<3>(
-                        gluings[i][f][0], gluings[i][f][1], gluings[i][f][2]);
-                } else if constexpr (dim == 3) {
-                    s->gluing_[f] = Perm<4>(
-                        gluings[i][f][0], gluings[i][f][1],
-                        gluings[i][f][2], gluings[i][f][3]);
-                } else if constexpr (dim == 4) {
-                    s->gluing_[f] = Perm<5>(
-                        gluings[i][f][0], gluings[i][f][1], gluings[i][f][2],
-                        gluings[i][f][3], gluings[i][f][4]);
-                } else {
-                    static_assert(! standardDim(dim));
-
-                    // This is inefficient in that it deep-copies each C-style
-                    // array of gluing images into a std::array.  However, we
-                    // presume it is rarely called since the dimension is high,
-                    // and regardless this is dwarfed by the cost of later
-                    // constructing the skeleton of the triangulation.
-
-                    std::array<int, dim + 1> img;
-                    std::copy(gluings[i][f], gluings[i][f] + dim + 1,
-                        img.begin());
-                    s->gluing_[f] = img;
-                }
-            } else
-                s->adj_[f] = nullptr;
-        }
-    }
-
-    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 }
 
 template <int dim>
@@ -4658,6 +4505,11 @@ void TriangulationBase<dim>::makeDoubleCover() {
     // We use a breadth-first search to propagate orientations.
     // The underlying queue is implemented using a plain C array - since each
     // simplex is processed only once, an array of size sheetSize is enough.
+    //
+    // We will ignore the requirement that the lowest-index simplex in each
+    // component must have orientation +1: this is because our new orientations
+    // are temporary only.  (The calls to newSimplex() above will force a full
+    // recomputation of the skeleton when next required.)
     auto* queue = new size_t[sheetSize];
     size_t queueStart = 0, queueEnd = 0;
 
@@ -4938,11 +4790,6 @@ inline AbelianGroup TriangulationBase<dim>::homology(int k) const {
         throw InvalidArgument("homology(): unsupported homology dimension");
 
     return homologyImpl(k, std::make_integer_sequence<int, upperBound>());
-}
-
-template <int dim>
-inline const AbelianGroup& TriangulationBase<dim>::homologyH1() const {
-    return homology();
 }
 
 template <int dim>

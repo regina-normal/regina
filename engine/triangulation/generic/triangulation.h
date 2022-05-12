@@ -299,16 +299,6 @@ class Triangulation : public detail::TriangulationBase<dim> {
          * swapped with this.
          */
         void swap(Triangulation<dim>& other);
-        /**
-         * Deprecated routine that swaps the contents of this and the
-         * given triangulation.
-         *
-         * \deprecated Use swap() instead.
-         *
-         * @param other the triangulation whose contents should be
-         * swapped with this.
-         */
-        [[deprecated]] void swapContents(Triangulation<dim>& other);
 
         /*@}*/
 
@@ -496,11 +486,6 @@ void Triangulation<dim>::swap(Triangulation<dim>& other) {
 
     // Note: swapBaseData() calls Snapshottable::swap().
     this->swapBaseData(other);
-}
-
-template <int dim>
-inline void Triangulation<dim>::swapContents(Triangulation<dim>& other) {
-    swap(other);
 }
 
 // Inline functions for DegreeLessThan / DegreeGreaterThan

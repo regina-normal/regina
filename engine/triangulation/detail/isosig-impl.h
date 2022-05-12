@@ -135,7 +135,7 @@ typename Encoding::Signature TriangulationBase<dim>::isoSigFrom(
     // ---------------------------------------------------------------------
 
     // The image for each simplex and its vertices:
-    auto* image = new ptrdiff_t[nSimp];
+    auto* image = new ssize_t[nSimp];
     auto* vertexMap = new Perm<dim+1>[nSimp];
 
     // The preimage for each simplex:

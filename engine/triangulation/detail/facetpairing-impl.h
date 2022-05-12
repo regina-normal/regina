@@ -181,8 +181,7 @@ void FacetPairingBase<dim>::writeDot(std::ostream& out,
 
     // Ancient versions of graphviz seem to ignore the default label="".
     // Make this explicit for each node.
-    size_t p;
-    for (p = 0; p < size_; ++p) {
+    for (size_t p = 0; p < size_; ++p) {
         out << prefix << '_' << p << " [label=\"";
         if (labels)
             out << p;
@@ -191,12 +190,11 @@ void FacetPairingBase<dim>::writeDot(std::ostream& out,
 
     int f;
     FacetSpec<dim> adj;
-    for (p = 0; p < size_; ++p)
+    for (ssize_t p = 0; p < size_; ++p)
         for (f = 0; f < (dim + 1); ++f) {
             adj = dest(p, f);
-            if (adj.isBoundary(size_) ||
-                    adj.simp < static_cast<int>(p) ||
-                    (adj.simp == static_cast<int>(p) && adj.facet < f))
+            if (adj.isBoundary(size_) || adj.simp < p ||
+                    (adj.simp == p && adj.facet < f))
                 continue;
             out << prefix << '_' << p << " -- " << prefix << '_'
                 << adj.simp << ';' << std::endl;
@@ -225,13 +223,13 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     if (tokens.empty() || tokens.size() % (2 * (dim + 1)) != 0)
         throw InvalidArgument("fromTextRep(): invalid number of tokens");
 
-    long nSimp = tokens.size() / (2 * (dim + 1));
+    size_t nSimp = tokens.size() / (2 * (dim + 1));
     FacetPairing<dim> ans(nSimp);
 
     // Read the raw values.
     // Check the range of each value while we're at it.
     long val;
-    for (long i = 0; i < nSimp * (dim + 1); ++i) {
+    for (size_t i = 0; i < nSimp * (dim + 1); ++i) {
         if (! valueOf(tokens[2 * i], val))
             throw InvalidArgument(
                 "fromTextRep(): contains non-integer simplex");
@@ -241,12 +239,14 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
 
         if (! valueOf(tokens[2 * i + 1], val))
             throw InvalidArgument("fromTextRep(): contains non-integer facet");
-        if (val < 0 || val >= (dim + 1))
+        if (val < 0 || val > dim)
             throw InvalidArgument("fromTextRep(): facet out of range");
-        ans.pairs_[i].facet = val;
+        ans.pairs_[i].facet = static_cast<int>(val);
     }
 
     // Run a sanity check.
+    // Note: all destination simplices are known to be in the range [0..nSimp],
+    // and all destination facets are known to be in the range [0..dim].
     FacetSpec<dim> destFacet;
     bool broken = false;
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(nSimp, true); ++f) {
@@ -268,309 +268,6 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
 }
 
 template <int dim>
-bool FacetPairingBase<dim>::isCanonical() const {
-    // Check the preconditions for isCanonicalInternal().
-    size_t simp;
-    unsigned facet;
-    for (simp = 0; simp < size_; ++simp) {
-        for (facet = 0; facet < dim; ++facet)
-            if (dest(simp, facet + 1) < dest(simp, facet))
-                if (! (dest(simp, facet + 1) == FacetSpec<dim>(simp, facet)))
-                    return false;
-        if (simp > 0)
-            if (dest(simp, 0).simp >= static_cast<int>(simp))
-                return false;
-        if (simp > 1)
-            if (dest(simp, 0) <= dest(simp - 1, 0))
-                return false;
-    }
-
-    // We've met all the preconditions, so we can now run
-    // isCanonicalInternal().
-    return isCanonicalInternal();
-}
-
-template <int dim>
-bool FacetPairingBase<dim>::isCanonicalInternal(
-        typename FacetPairingBase<dim>::IsoList* list) const {
-    // Create the automorphisms one simplex at a time, selecting the
-    // preimage of 0 first, then the preimage of 1 and so on.
-
-    // We want to cycle through all possible first facet gluings, so we'll
-    // special-case the situation in which there are no facet gluings at all.
-    if (isUnmatched(0, 0)) {
-        // We must have just one simplex with no facet gluings at all.
-        if (list) {
-            for (int i = 0; i < Perm<dim+1>::nPerms; ++i) {
-                Isomorphism<dim> ans(1);
-                ans.simpImage(0) = 0;
-                ans.facetPerm(0) = Perm<dim+1>::orderedSn[i];
-                list->push_back(std::move(ans));
-            }
-        }
-        return true;
-    }
-
-    // Now we know that facet 0 of simplex 0 is glued to something.
-
-    auto* image = new FacetSpec<dim>[size_ * (dim + 1)];
-        /**< The automorphism currently under construction. */
-    auto* preImage = new FacetSpec<dim>[size_ * (dim + 1)];
-        /**< The inverse of this automorphism. */
-
-    size_t i, j;
-    for (i = 0; i < size_ * (dim + 1); ++i) {
-        image[i].setBeforeStart();
-        preImage[i].setBeforeStart();
-    }
-
-    // Note that we know size_ >= 1.
-    // For the preimage of facet 0 of simplex 0 we simply cycle
-    // through all possibilities.
-    const FacetSpec<dim> firstFace(0, 0);
-    const FacetSpec<dim> firstFaceDest(dest(firstFace));
-    FacetSpec<dim> firstDestPre;
-    FacetSpec<dim> trying;
-    FacetSpec<dim> fImg, fPre;
-    bool stepDown;
-    int simp, facet;
-    for (preImage[0] = firstFace ; ! preImage[0].isPastEnd(size_, true);
-            ++preImage[0]) {
-        // Note that we know firstFace is not unmatched.
-        if (isUnmatched(preImage[0]))
-            continue;
-
-        // If firstFace glues to the same simplex and this facet
-        // doesn't, we can ignore this permutation.
-        firstDestPre = dest(preImage[0]);
-        if (firstFaceDest.simp == 0 && firstDestPre.simp != preImage[0].simp)
-            continue;
-
-        // If firstFace doesn't glue to the same simplex but this
-        // facet does, we're not in canonical form.
-        if (firstFaceDest.simp != 0 && firstDestPre.simp == preImage[0].simp) {
-            if (list)
-                list->clear();
-            delete[] image;
-            delete[] preImage;
-            return false;
-        }
-
-        // We can use this facet.  Set the corresponding reverse mapping
-        // and off we go.
-        image[preImage[0].simp * (dim + 1) + preImage[0].facet] = firstFace;
-        preImage[firstFaceDest.simp * (dim + 1) + firstFaceDest.facet] =
-            firstDestPre;
-        image[firstDestPre.simp * (dim + 1) + firstDestPre.facet] =
-            firstFaceDest;
-
-        // Step forwards to the next facet whose preimage is undetermined.
-        trying = firstFace;
-        ++trying;
-        if (trying == firstFaceDest)
-            ++trying;
-        while (! (trying == firstFace)) {
-            // INV: We've successfully selected preimages for all facets
-            // before trying.  We're currently looking at the last
-            // attempted candidate for the preimage of trying.
-
-            // Note that if preimage facet A is glued to preimage facet B
-            // and the image of A is earlier than the image of B, then
-            // the image of A will be selected whereas the image of B
-            // will be automatically derived.
-
-            stepDown = false;
-            FacetSpec<dim>& pre =
-                preImage[trying.simp * (dim + 1) + trying.facet];
-
-            if (trying.isPastEnd(size_, true)) {
-                // We have a complete automorphism!
-                Isomorphism<dim> ans(size_);
-                for (i = 0; i < size_; i++) {
-                    ans.simpImage(i) = image[i * (dim + 1)].simp;
-                    std::array<int, dim+1> permImg;
-                    for (j = 0; j <= dim; ++j)
-                        permImg[j] = image[i * (dim + 1) + j].facet;
-                    ans.facetPerm(i) = Perm<dim+1>(permImg);
-                }
-                if (list)
-                    list->push_back(std::move(ans));
-                stepDown = true;
-            } else {
-                // Move to the next candidate.
-                if (pre.simp >= 0 && pre.facet == dim) {
-                    // We're all out of candidates.
-                    pre.setBeforeStart();
-                    stepDown = true;
-                } else {
-                    if (pre.isBeforeStart()) {
-                        // Which simplex must we look in?
-                        // Note that this simplex will already have been
-                        // determined.
-                        pre.simp = preImage[trying.simp * (dim + 1)].simp;
-                        pre.facet = 0;
-                    } else
-                        ++pre.facet;
-
-                    // Step forwards until we have a preimage whose image
-                    // has not already been set.
-                    // If the preimage is unmatched and trying isn't,
-                    // we'll also skip it.
-                    // If trying is unmatched and the preimage isn't,
-                    // we're not in canonical form.
-                    for ( ; pre.facet <= dim; ++pre.facet) {
-                        if (! image[pre.simp * (dim + 1) + pre.facet].
-                                isBeforeStart())
-                            continue;
-                        if ((! isUnmatched(trying)) && isUnmatched(pre))
-                            continue;
-                        if (isUnmatched(trying) && (! isUnmatched(pre))) {
-                            // We're not in canonical form.
-                            if (list)
-                                list->clear();
-                            delete[] image;
-                            delete[] preImage;
-                            return false;
-                        }
-                        break;
-                    }
-                    while (pre.facet <= dim &&
-                            ! image[pre.simp * (dim + 1) + pre.facet].
-                            isBeforeStart())
-                        ++pre.facet;
-                    if (pre.facet == (dim + 1)) {
-                        pre.setBeforeStart();
-                        stepDown = true;
-                    }
-                }
-            }
-
-            if (! stepDown) {
-                // We found a candidate.
-                // We also know that trying is unmatched iff the preimage
-                // is unmatched.
-                image[pre.simp * (dim + 1) + pre.facet] = trying;
-                if (! isUnmatched(pre)) {
-                    fPre = dest(pre);
-                    if (image[fPre.simp * (dim + 1) + fPre.facet].
-                            isBeforeStart()) {
-                        // The image of fPre (the partner of the preimage
-                        // facet) can be determined at this point.
-                        // Specifically, it should go into the next
-                        // available slot.
-
-                        // Do we already know which simplex we should
-                        // be looking into?
-                        for (i = 0; i <= dim; i++)
-                            if (! image[fPre.simp * (dim + 1) + i].
-                                    isBeforeStart()) {
-                                // Here's the simplex!
-                                // Find the first available facet.
-                                simp = image[fPre.simp * (dim + 1) + i].simp;
-                                for (facet = 0;
-                                        ! preImage[simp * (dim + 1) + facet].
-                                        isBeforeStart(); ++facet)
-                                    ;
-                                image[fPre.simp * (dim + 1) +
-                                    fPre.facet].simp = simp;
-                                image[fPre.simp * (dim + 1) +
-                                    fPre.facet].facet = facet;
-                                break;
-                            }
-                        if (i == (dim + 1)) {
-                            // We need to map to a new simplex.
-                            // Find the first available simplex.
-                            for (simp = trying.simp + 1;
-                                    ! preImage[simp * (dim + 1)].
-                                    isBeforeStart();
-                                    ++simp)
-                                ;
-                            image[fPre.simp * (dim + 1) + fPre.facet].simp =
-                                simp;
-                            image[fPre.simp * (dim + 1) + fPre.facet].facet = 0;
-                        }
-
-                        // Set the corresponding preimage.
-                        fImg = image[fPre.simp * (dim + 1) + fPre.facet];
-                        preImage[fImg.simp * (dim + 1) + fImg.facet] = fPre;
-                    }
-                }
-
-                // Do a lexicographical comparison and shunt trying up
-                // if need be.
-                do {
-                    fImg = dest(trying);
-                    fPre = dest(preImage[trying.simp * (dim + 1) +
-                        trying.facet]);
-                    if (! fPre.isBoundary(size_))
-                        fPre = image[fPre.simp * (dim + 1) + fPre.facet];
-
-                    // Currently trying is glued to fImg.
-                    // After applying our isomorphism, trying will be
-                    // glued to fPre.
-
-                    if (fImg < fPre) {
-                        // This isomorphism will lead to a
-                        // lexicographically greater representation.
-                        // Ignore it.
-                        stepDown = true;
-                    } else if (fPre < fImg) {
-                        // Whapow, we're not in canonical form.
-                        if (list)
-                            list->clear();
-                        delete[] image;
-                        delete[] preImage;
-                        return false;
-                    }
-
-                    // What we have so far is consistent with an automorphism.
-                    ++trying;
-                } while (! (stepDown || trying.isPastEnd(size_, true) ||
-                        preImage[trying.simp * (dim + 1) + trying.facet].
-                        isBeforeStart()));
-            }
-
-            if (stepDown) {
-                // We're shunting trying back down.
-                --trying;
-                while (true) {
-                    fPre = preImage[trying.simp * (dim + 1) + trying.facet];
-                    if (! isUnmatched(fPre)) {
-                        fPre = dest(fPre);
-                        if (image[fPre.simp * (dim + 1) + fPre.facet] <
-                                trying) {
-                            // This preimage/image was automatically derived.
-                            --trying;
-                            continue;
-                        }
-                    }
-                    break;
-                }
-
-                // Note that this resetting of facets that follows will
-                // also take place when trying makes it all the way back
-                // down to firstFace.
-                fPre = preImage[trying.simp * (dim + 1) + trying.facet];
-                image[fPre.simp * (dim + 1) + fPre.facet].setBeforeStart();
-                if (! isUnmatched(fPre)) {
-                    fPre = dest(fPre);
-                    fImg = image[fPre.simp * (dim + 1) + fPre.facet];
-                    preImage[fImg.simp * (dim + 1) + fImg.facet].
-                        setBeforeStart();
-                    image[fPre.simp * (dim + 1) + fPre.facet].setBeforeStart();
-                }
-            }
-        }
-    }
-
-    // The pairing is in canonical form and we have all our automorphisms.
-    // Tidy up and return.
-    delete[] image;
-    delete[] preImage;
-    return true;
-}
-
-template <int dim>
 template <typename Action, typename... Args>
 void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         int nBdryFacets, Action&& action, Args&&... args) {
@@ -586,7 +283,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
     }
 
     // Initialise the pairings to unspecified (i.e., facet -> itself).
-    for (FacetSpec<dim> f(0,0); f.simp < static_cast<int>(size_); ++f)
+    for (FacetSpec<dim> f(0,0); f.simp < size_; ++f)
         dest(f) = f;
 
     // Note that we have at least one simplex.
@@ -594,7 +291,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         /**< The facet we're currently trying to match. */
     int boundaryFacets = 0;
         /**< How many (deliberately) unmatched facets do we currently have? */
-    int usedFacets = 0;
+    size_t usedFacets = 0;
         /**< How many facets have we already determined matchings for? */
 
     // Run through and find all possible matchings.
@@ -618,7 +315,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // and later we will avoid sending the last facet of a set to the
         // boundary.
         if (usedFacets % (dim + 1) == (dim - 1) &&
-                usedFacets < (dim + 1) * static_cast<int>(size_) - 2 &&
+                usedFacets < (dim + 1) * size_ - 2 &&
                 noDest((usedFacets / (dim + 1)) + 1, 0) &&
                 dest(trying).simp <= (usedFacets / (dim + 1))) {
             // Move to the first unused simplex.
@@ -636,17 +333,15 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
                 if (! boundary.hasFalse()) {
                     // We must have some boundary though.
                     if (boundaryFacets == 0 &&
-                            usedFacets ==
-                                (dim + 1) * static_cast<int>(size_) - 2 &&
-                            dest(trying).simp <
-                                static_cast<int>(size_))
+                            usedFacets == (dim + 1) * size_ - 2 &&
+                            dest(trying).simp < size_)
                         dest(trying).setBoundary(size_);
                 }
             } else {
                 // We're specific about the number of boundary facets.
                 if (usedFacets - boundaryFacets + nBdryFacets ==
-                        (dim + 1) * static_cast<int>(size_) &&
-                        dest(trying).simp < static_cast<int>(size_))
+                        (dim + 1) * size_ &&
+                        dest(trying).simp < size_)
                     // We've used our entire quota of non-boundary facets.
                     dest(trying).setBoundary(size_);
             }
@@ -656,15 +351,13 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // We still don't know whether this destination is valid however.
         while(true) {
             // Move onwards to the next free destination.
-            while (dest(trying).simp < static_cast<int>(size_) &&
-                    ! noDest(dest(trying)))
+            while (dest(trying).simp < size_ && ! noDest(dest(trying)))
                 ++dest(trying);
 
             // If we are past facet 0 of a simplex and the previous facet
             // was not used, we can't do anything with this simplex.
             // Move to the next simplex.
-            if (dest(trying).simp < static_cast<int>(size_) &&
-                    dest(trying).facet > 0 &&
+            if (dest(trying).simp < size_ && dest(trying).facet > 0 &&
                     noDest(dest(trying).simp, dest(trying).facet - 1)) {
                 ++dest(trying).simp;
                 dest(trying).facet = 0;
@@ -679,8 +372,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // unused.  Note that facet == 0 implies simp > 0.
         // In this case, we've passed the last sane choice; head
         // straight to the boundary.
-        if (dest(trying).simp < static_cast<int>(size_) &&
-                dest(trying).facet == 0 &&
+        if (dest(trying).simp < size_ && dest(trying).facet == 0 &&
                 noDest(dest(trying).simp - 1, 0))
             dest(trying).setBoundary(size_);
 
@@ -688,7 +380,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // set of simplices.  This time we will avoid sending the last
         // facet of a set of simplices to the boundary.
         if (usedFacets % (dim + 1) == dim &&
-                usedFacets < (dim + 1) * static_cast<int>(size_) - 1 &&
+                usedFacets < (dim + 1) * size_ - 1 &&
                 noDest((usedFacets / (dim + 1)) + 1, 0) &&
                 isUnmatched(trying)) {
             // Can't use the boundary; all we can do is push past the
@@ -744,11 +436,11 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // Now we increment trying to move to the next unmatched facet.
         oldTrying = trying;
         ++trying;
-        while (trying.simp < static_cast<int>(size_) && ! noDest(trying))
+        while (trying.simp < size_ && ! noDest(trying))
             ++trying;
 
         // Have we got a solution?
-        if (trying.simp == static_cast<int>(size_)) {
+        if (trying.simp == size_) {
             // Deal with the solution!
             if constexpr (std::is_same_v<
                     typename std::remove_cv_t<typename std::remove_reference_t<

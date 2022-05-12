@@ -51,6 +51,7 @@
 #include "maths/perm.h"
 #include "utilities/exception.h"
 #include "utilities/randutils.h"
+#include <sys/types.h> // for ssize_t
 #include <algorithm>
 
 namespace regina {
@@ -116,9 +117,9 @@ class Isomorphism :
     static_assert(dim >= 2, "Isomorphism requires dimension >= 2.");
 
     protected:
-        unsigned nSimplices_;
+        size_t nSimplices_;
             /**< The number of simplices in the source triangulation. */
-        int* simpImage_;
+        ssize_t* simpImage_;
             /**< Stores the simplex of the destination triangulation that
                  each simplex of the source triangulation maps to.
                  This array has size nSimplices_. */
@@ -140,7 +141,7 @@ class Isomorphism :
          * triangulation associated with this isomorphism.
          * This is allowed to be zero.
          */
-        Isomorphism(unsigned nSimplices);
+        Isomorphism(size_t nSimplices);
         /**
          * Creates a copy of the given isomorphism.
          *
@@ -207,15 +208,19 @@ class Isomorphism :
          *
          * @return the number of simplices in the source triangulation.
          */
-        unsigned size() const;
+        size_t size() const;
 
         /**
-         * Determines the image of the given source simplex under
-         * this isomorphism.
+         * Returns a read-write reference to the image of the given source
+         * simplex under this isomorphism.
          *
          * If the dimension \a dim is 2, 3 or 4, then you can also access
          * this image through the dimension-specific alias triImage(),
          * tetImage() or pentImage() respectively.
+         *
+         * This image is stored using type \c ssize_t, not \c size_t,
+         * and so you can safely use the special value -1 as a marker for an
+         * image that is unknown or not yet initialised.
          *
          * \ifacespython Python users can only access the read-only version
          * of this function that returns by value: you cannot use simpImage()
@@ -227,7 +232,7 @@ class Isomorphism :
          * @return a reference to the index of the destination simplex
          * that the source simplex maps to.
          */
-        int& simpImage(unsigned sourceSimp);
+        ssize_t& simpImage(size_t sourceSimp);
         /**
          * Determines the image of the given source simplex under
          * this isomorphism.
@@ -241,7 +246,7 @@ class Isomorphism :
          * @return the index of the destination simplex
          * that the source simplex maps to.
          */
-        int simpImage(unsigned sourceSimp) const;
+        ssize_t simpImage(size_t sourceSimp) const;
         /**
          * Returns a read-write reference to the permutation that is
          * applied to the (\a dim + 1) facets of the given source simplex
@@ -265,7 +270,7 @@ class Isomorphism :
          * @return a read-write reference to the permutation applied to the
          * facets of the source simplex.
          */
-        Perm<dim+1>& facetPerm(unsigned sourceSimp);
+        Perm<dim+1>& facetPerm(size_t sourceSimp);
         /**
          * Determines the permutation that is applied to the (\a dim + 1)
          * facets of the given source simplex under this isomorphism.
@@ -283,7 +288,7 @@ class Isomorphism :
          * @return the permutation applied to the facets of the
          * source simplex.
          */
-        Perm<dim+1> facetPerm(unsigned sourceSimp) const;
+        Perm<dim+1> facetPerm(size_t sourceSimp) const;
         /**
          * Determines the image of the given source simplex facet
          * under this isomorphism.  This operator returns by value:
@@ -574,7 +579,7 @@ class Isomorphism :
          * isomorphism should operate upon.
          * @return the identity isomorphism.
          */
-        static Isomorphism<dim> identity(unsigned nSimplices);
+        static Isomorphism<dim> identity(size_t nSimplices);
 
         /**
          * Returns a random isomorphism for the given number of simplices.
@@ -597,7 +602,7 @@ class Isomorphism :
          * it will preserve the orientation.
          * @return the new random isomorphism.
          */
-        static Isomorphism<dim> random(unsigned nSimplices, bool even = false);
+        static Isomorphism<dim> random(size_t nSimplices, bool even = false);
 };
 
 /**
@@ -617,16 +622,16 @@ void swap(Isomorphism<dim>& a, Isomorphism<dim>& b) noexcept;
 // Inline functions for Isomorphism
 
 template <int dim>
-inline Isomorphism<dim>::Isomorphism(unsigned nSimplices) :
+inline Isomorphism<dim>::Isomorphism(size_t nSimplices) :
         nSimplices_(nSimplices),
-        simpImage_(new int[nSimplices]),
+        simpImage_(new ssize_t[nSimplices]),
         facetPerm_(new Perm<dim+1>[nSimplices]) {
 }
 
 template <int dim>
 inline Isomorphism<dim>::Isomorphism(const Isomorphism<dim>& src) :
         nSimplices_(src.nSimplices_),
-        simpImage_(new int[src.nSimplices_]),
+        simpImage_(new ssize_t[src.nSimplices_]),
         facetPerm_(new Perm<dim+1>[src.nSimplices_]) {
     std::copy(src.simpImage_, src.simpImage_ + nSimplices_, simpImage_);
     std::copy(src.facetPerm_, src.facetPerm_ + nSimplices_, facetPerm_);
@@ -659,7 +664,7 @@ Isomorphism<dim>& Isomorphism<dim>::operator = (const Isomorphism<dim>& src) {
 
         nSimplices_ = src.nSimplices_;
 
-        simpImage_ = new int[nSimplices_];
+        simpImage_ = new ssize_t[nSimplices_];
         facetPerm_ = new Perm<dim+1>[nSimplices_];
     }
 
@@ -686,27 +691,27 @@ void Isomorphism<dim>::swap(Isomorphism<dim>& other) noexcept {
 }
 
 template <int dim>
-inline unsigned Isomorphism<dim>::size() const {
+inline size_t Isomorphism<dim>::size() const {
     return nSimplices_;
 }
 
 template <int dim>
-inline int& Isomorphism<dim>::simpImage(unsigned sourceSimp) {
+inline ssize_t& Isomorphism<dim>::simpImage(size_t sourceSimp) {
     return simpImage_[sourceSimp];
 }
 
 template <int dim>
-inline int Isomorphism<dim>::simpImage(unsigned sourceSimp) const {
+inline ssize_t Isomorphism<dim>::simpImage(size_t sourceSimp) const {
     return simpImage_[sourceSimp];
 }
 
 template <int dim>
-inline Perm<dim+1>& Isomorphism<dim>::facetPerm(unsigned sourceSimp) {
+inline Perm<dim+1>& Isomorphism<dim>::facetPerm(size_t sourceSimp) {
     return facetPerm_[sourceSimp];
 }
 
 template <int dim>
-inline Perm<dim+1> Isomorphism<dim>::facetPerm(unsigned sourceSimp) const {
+inline Perm<dim+1> Isomorphism<dim>::facetPerm(size_t sourceSimp) const {
     return facetPerm_[sourceSimp];
 }
 
@@ -719,7 +724,7 @@ inline FacetSpec<dim> Isomorphism<dim>::operator [] (
 
 template <int dim>
 bool Isomorphism<dim>::isIdentity() const {
-    for (unsigned p = 0; p < nSimplices_; ++p) {
+    for (size_t p = 0; p < nSimplices_; ++p) {
         if (simpImage_[p] != p)
             return false;
         if (! facetPerm_[p].isIdentity())
@@ -740,28 +745,24 @@ Triangulation<dim> Isomorphism<dim>::operator ()(
 
     Triangulation<dim> ans;
     auto* tet = new Simplex<dim>*[nSimplices_];
-    unsigned long t;
-    int f;
 
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(ans);
-    for (t = 0; t < nSimplices_; t++)
+    for (size_t t = 0; t < nSimplices_; t++)
         tet[t] = ans.newSimplex();
 
-    for (t = 0; t < nSimplices_; t++)
+    for (size_t t = 0; t < nSimplices_; t++)
         tet[simpImage_[t]]->setDescription(
             original.simplex(t)->description());
 
     const Simplex<dim> *myTet, *adjTet;
-    unsigned long adjTetIndex;
-    Perm<dim+1> gluingPerm;
-    for (t = 0; t < nSimplices_; t++) {
+    for (size_t t = 0; t < nSimplices_; t++) {
         myTet = original.simplex(t);
-        for (f = 0; f <= dim; f++)
+        for (int f = 0; f <= dim; f++)
             if ((adjTet = myTet->adjacentSimplex(f))) {
                 // We have an adjacent simplex.
-                adjTetIndex = adjTet->index();
-                gluingPerm = myTet->adjacentGluing(f);
+                size_t adjTetIndex = adjTet->index();
+                Perm<dim+1> gluingPerm = myTet->adjacentGluing(f);
 
                 // Make the gluing from one side only.
                 if (adjTetIndex > t || (adjTetIndex == t &&
@@ -817,7 +818,7 @@ inline void Isomorphism<dim>::applyInPlace(Triangulation<dim>& tri) const {
 template <int dim>
 Isomorphism<dim> Isomorphism<dim>::operator * (const Isomorphism& rhs) const {
     Isomorphism<dim> ans(rhs.nSimplices_);
-    for (unsigned i = 0; i < rhs.nSimplices_; ++i) {
+    for (size_t i = 0; i < rhs.nSimplices_; ++i) {
         ans.simpImage_[i] = simpImage_[rhs.simpImage_[i]];
         ans.facetPerm_[i] = facetPerm_[rhs.simpImage_[i]] * rhs.facetPerm_[i];
     }
@@ -827,7 +828,7 @@ Isomorphism<dim> Isomorphism<dim>::operator * (const Isomorphism& rhs) const {
 template <int dim>
 Isomorphism<dim> Isomorphism<dim>::operator * (Isomorphism&& rhs) const {
     // We will construct the result by overwriting rhs.
-    for (unsigned i = 0; i < rhs.nSimplices_; ++i) {
+    for (size_t i = 0; i < rhs.nSimplices_; ++i) {
         rhs.facetPerm_[i] = facetPerm_[rhs.simpImage_[i]] * rhs.facetPerm_[i];
         rhs.simpImage_[i] = simpImage_[rhs.simpImage_[i]];
     }
@@ -837,7 +838,7 @@ Isomorphism<dim> Isomorphism<dim>::operator * (Isomorphism&& rhs) const {
 template <int dim>
 Isomorphism<dim> Isomorphism<dim>::inverse() const {
     Isomorphism<dim> ans(nSimplices_);
-    for (unsigned i = 0; i < nSimplices_; ++i) {
+    for (size_t i = 0; i < nSimplices_; ++i) {
         ans.simpImage_[simpImage_[i]] = i;
         ans.facetPerm_[simpImage_[i]] = facetPerm_[i].inverse();
     }
@@ -846,7 +847,7 @@ Isomorphism<dim> Isomorphism<dim>::inverse() const {
 
 template <int dim>
 inline void Isomorphism<dim>::writeTextShort(std::ostream& out) const {
-    for (unsigned i = 0; i < nSimplices_; ++i) {
+    for (size_t i = 0; i < nSimplices_; ++i) {
         if (i > 0)
             out << ", ";
         out << i << " -> " << simpImage_[i] << " (" << facetPerm_[i] << ')';
@@ -855,7 +856,7 @@ inline void Isomorphism<dim>::writeTextShort(std::ostream& out) const {
 
 template <int dim>
 inline void Isomorphism<dim>::writeTextLong(std::ostream& out) const {
-    for (unsigned i = 0; i < nSimplices_; ++i)
+    for (size_t i = 0; i < nSimplices_; ++i)
         out << i << " -> " << simpImage_[i] << " (" << facetPerm_[i] << ")\n";
 }
 
@@ -872,19 +873,19 @@ inline bool Isomorphism<dim>::operator != (const Isomorphism& other) const {
 }
 
 template <int dim>
-inline Isomorphism<dim> Isomorphism<dim>::identity(unsigned nSimplices) {
+inline Isomorphism<dim> Isomorphism<dim>::identity(size_t nSimplices) {
     Isomorphism<dim> id(nSimplices);
-    for (unsigned i = 0; i < nSimplices; ++i)
+    for (size_t i = 0; i < nSimplices; ++i)
         id.simpImage_[i] = i;
     return id;
 }
 
 template <int dim>
-Isomorphism<dim> Isomorphism<dim>::random(unsigned nSimplices, bool even) {
+Isomorphism<dim> Isomorphism<dim>::random(size_t nSimplices, bool even) {
     Isomorphism<dim> ans(nSimplices);
 
     // Prepare the destination simplices.
-    unsigned i;
+    size_t i;
     for (i = 0; i < nSimplices; ++i)
         ans.simpImage_[i] = i;
 

@@ -427,22 +427,6 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
         inline void negateRow(unsigned row);
 
         /**
-         * Deprecated routine that writes this matrix to the given output
-         * stream.  The output is "rough" and wasteful, and is intended for
-         * debugging purposes only.  The precise output format is
-         * subject to change in future versions of Regina.
-         *
-         * \deprecated This has been replaced by writeTextLong() (which
-         * uses a slightly tighter output format), for compatibility with
-         * Regina's usual text output facilities.
-         *
-         * \ifacespython Not present, but you can call detail() instead.
-         *
-         * @param out the output stream to write to.
-         */
-        [[deprecated]] void dump(std::ostream& out) const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -1718,21 +1702,6 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * column index with respect to this tableaux.
          */
         void constrainOct(unsigned quad1, unsigned quad2);
-
-        /**
-         * Deprecated routine that writes details of this tableaux to the
-         * given output stream.  The output is "rough" and wasteful, and is
-         * intended for debugging purposes only.
-         *
-         * \deprecated This has been replaced by writeTextLong() (which
-         * uses a slightly tighter output format), for compatibility with
-         * Regina's usual text output facilities.
-         *
-         * \ifacespython Not present, but you can call detail() instead.
-         *
-         * @param out the output stream to write to.
-         */
-        [[deprecated]] void dump(std::ostream& out) const;
 
         /**
          * Extracts the values of the individual variables from the

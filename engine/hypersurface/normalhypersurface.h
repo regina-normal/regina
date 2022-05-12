@@ -467,19 +467,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
             HyperCoords coords, Vector<LargeInteger>&& vector);
 
         /**
-         * Deprecated routine that creates a newly allocated clone of this
-         * normal hypersurface.
-         *
-         * The name of the normal hypersurface will \e not be copied to the
-         * clone; instead the clone will have an empty name.
-         *
-         * \deprecated Simply use the copy constructor instead.
-         *
-         * @return a clone of this normal hypersurface.
-         */
-        [[deprecated]] NormalHypersurface* clone() const;
-
-        /**
          * Sets this to be a copy of the given normal hypersurface.
          *
          * This and the given normal hypersurface do not need to live in the
@@ -527,11 +514,15 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         void swap(NormalHypersurface& other) noexcept;
 
         /**
-         * Returns the double of this hypersurface.
+         * Deprecated routine that returns the double of this hypersurface.
+         *
+         * \deprecated Normal hypersurfaces can now be multiplied by integer
+         * constants.  In particular, this routine has exactly the same
+         * effect as multiplying the hypersurface by 2.
          *
          * @return the double of this normal hypersurface.
          */
-        NormalHypersurface doubleHypersurface() const;
+        [[deprecated]] NormalHypersurface doubleHypersurface() const;
 
         /**
          * Returns the sum of this and the given hypersurface.  This will
@@ -550,6 +541,46 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * @return the sum of both normal hypersurfaces.
          */
         NormalHypersurface operator + (const NormalHypersurface& rhs) const;
+
+        /**
+         * Returns the given integer multiple of this hypersurface.
+         *
+         * The resulting hypersurface will use the same internal vector
+         * encoding as this hypersurface.
+         *
+         * @param coeff the coefficient to multiply this hypersurface by;
+         * this must be non-negative.
+         * @return the resulting multiple of this hypersurface.
+         */
+        NormalHypersurface operator * (const LargeInteger& coeff) const;
+
+        /**
+         * Converts this hypersurface into the given integer multiple of itself.
+         *
+         * The internal vector encoding used by this hypersurface will not
+         * change.
+         *
+         * @param coeff the coefficient to multiply this hypersurface by;
+         * this must be non-negative.
+         * @return a reference to this hypersurface.
+         */
+        NormalHypersurface& operator *= (const LargeInteger& coeff);
+
+        /**
+         * Converts this hypersurface into its smallest positive rational
+         * multiple with integer coordinates.
+         *
+         * Note that the scaling factor will be independent of which
+         * internal vector encoding is used.  This is essentially because
+         * integer prism coordinates (which are stored in every encoding)
+         * are enough to guarantee integer tetrahedron coordinates (which
+         * might or might not be stored).
+         *
+         * @return the integer by which the original hypersurface was divided
+         * (i.e., the gcd of all normal coordinates in the original
+         * hypersurface).  This will always be strictly positive.
+         */
+        LargeInteger scaleDown();
 
         /**
          * Returns the number of tetrahedron pieces of the given type in
@@ -648,21 +679,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
-        /**
-         * Deprecated routine that writes the underlying coordinate vector
-         * to the given output stream in text format.
-         * No indication will be given as to which coordinate
-         * system is being used or what each coordinate means.
-         * No newline will be written.
-         *
-         * \deprecated Just write vector() directly to the output stream.
-         *
-         * \ifacespython Not present; instead just write vector() to the
-         * appropriate output stream.
-         *
-         * @param out the output stream to which to write.
-         */
-        [[deprecated]] void writeRawVector(std::ostream& out) const;
 
         /**
          * Writes a chunk of XML containing this normal hypersurface and all
@@ -699,7 +715,10 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         bool isCompact() const;
         /**
          * Returns whether or not this hypersurface is orientable.
-         *·
+         *
+         * For our purposes, the empty hypersurface is considered to be
+         * orientable.
+         *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
@@ -717,6 +736,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         /**
          * Returns whether or not this hypersurface is two-sided.
          *
+         * For our purposes, the empty hypersurface is considered to be
+         * two-sided.
+         *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
@@ -733,6 +755,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         bool isTwoSided() const;
         /**
          * Returns whether or not this hypersurface is connected.
+         *
+         * For our purposes, the empty hypersurface is considered to be
+         * connected.
          *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
@@ -932,19 +957,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         bool operator < (const NormalHypersurface& other) const;
 
         /**
-         * Deprecated routine that determines whether this and the given
-         * hypersurface in fact represent the same normal hypersurface.
-         *
-         * \deprecated This routine has been renamed to the comparison
-         * operator (==).
-         *
-         * @param other the hypersurface to be compared with this hypersurface.
-         * @return \c true if both hypersurfaces represent the same normal
-         * hypersurface, or \c false if not.
-         */
-        [[deprecated]] bool sameSurface(const NormalHypersurface& other) const;
-
-        /**
          * Determines whether this hypersurface is embedded.  This is true if
          * and only if the surface contains no conflicting prism types.
          *
@@ -1006,15 +1018,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * @return the underlying integer vector.
          */
         const Vector<LargeInteger>& vector() const;
-
-        /**
-         * A deprecated alias for vector().
-         *
-         * \deprecated This routine has been renamed to vector().
-         *
-         * @return the underlying integer vector.
-         */
-        [[deprecated]] const Vector<LargeInteger>& rawVector() const;
 
         /**
          * Returns the specific integer vector encoding that this hypersurface
@@ -1164,10 +1167,6 @@ inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& src,
     triangulation_ = triangulation;
 }
 
-inline NormalHypersurface* NormalHypersurface::clone() const {
-    return new NormalHypersurface(*this);
-}
-
 inline void NormalHypersurface::swap(NormalHypersurface& other) noexcept {
     std::swap(enc_, other.enc_);
     vector_.swap(other.vector_);
@@ -1200,10 +1199,6 @@ inline const std::string& NormalHypersurface::name() const {
 }
 inline void NormalHypersurface::setName(const std::string& name) {
     name_ = name;
-}
-
-inline void NormalHypersurface::writeRawVector(std::ostream& out) const {
-    out << vector_;
 }
 
 inline bool NormalHypersurface::isEmpty() const {
@@ -1245,10 +1240,6 @@ inline const Vector<LargeInteger>& NormalHypersurface::vector() const {
     return vector_;
 }
 
-inline const Vector<LargeInteger>& NormalHypersurface::rawVector() const {
-    return vector_;
-}
-
 inline HyperEncoding NormalHypersurface::encoding() const {
     return enc_;
 }
@@ -1258,11 +1249,6 @@ inline bool NormalHypersurface::operator != (const NormalHypersurface& other)
     return ! ((*this) == other);
 }
 
-inline bool NormalHypersurface::sameSurface(const NormalHypersurface& other)
-        const {
-    return (*this) == other;
-}
-
 inline NormalHypersurface NormalHypersurface::operator + (
         const NormalHypersurface& rhs) const {
     // Given our current conditions on vector storage, both underlying
@@ -1270,6 +1256,10 @@ inline NormalHypersurface NormalHypersurface::operator + (
     // This means that we can just add the vectors directly.
     return NormalHypersurface(triangulation_, enc_ + rhs.enc_,
             vector_ + rhs.vector_);
+}
+
+inline NormalHypersurface NormalHypersurface::doubleHypersurface() const {
+    return (*this) * 2;
 }
 
 inline void swap(NormalHypersurface& a, NormalHypersurface& b) noexcept {

@@ -139,7 +139,6 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
     Vector<IntegerType> *m;
     BitmaskType f(dim);
     BitmaskType mask(dim), tmpMask(dim);
-    BitmaskType* constraint;
     bool found, dom;
     while (stackSize) {
         c = coord[stackSize - 1];

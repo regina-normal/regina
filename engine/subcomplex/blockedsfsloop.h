@@ -251,15 +251,6 @@ class BlockedSFSLoop : public StandardTriangulation {
          */
         static std::unique_ptr<BlockedSFSLoop> recognise(
             const Triangulation<3>& tri);
-        /**
-         * A deprecated alias to recognise if a triangulation forms a
-         * saturated region joined to a think I-bundle via optional layerings.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<BlockedSFSLoop> isBlockedSFSLoop(
-            const Triangulation<3>& tri);
 
     private:
         /**
@@ -315,11 +306,6 @@ inline bool BlockedSFSLoop::operator == (const BlockedSFSLoop& other) const {
 
 inline bool BlockedSFSLoop::operator != (const BlockedSFSLoop& other) const {
     return region_ != other.region_ || matchingReln_ != other.matchingReln_;
-}
-
-inline std::unique_ptr<BlockedSFSLoop> BlockedSFSLoop::isBlockedSFSLoop(
-        const Triangulation<3>& tri) {
-    return recognise(tri);
 }
 
 inline void swap(BlockedSFSLoop& a, BlockedSFSLoop& b) noexcept {

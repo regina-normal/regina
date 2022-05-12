@@ -343,38 +343,6 @@ class Perm<3> {
         constexpr Perm(const std::array<int, 3>& image);
 
         /**
-         * Deprecated constructor that creates a permutation mapping
-         * \a i to \a image[i] for each \a i = 0,1,2.
-         *
-         * \deprecated Use the three-integer constructor or the
-         * std::array constructor instead.
-         *
-         * \pre The array \a image contains three elements, which are
-         * 0, 1 and 2 in some order.
-         *
-         * @param image the array of images.
-         */
-        [[deprecated]] constexpr Perm(const int* image);
-
-        /**
-         * Deprecated constructor that creates a permutation mapping
-         * (\a a[0], ..., \a a[2]) to (\a b[0], ..., \a b[2]) respectively.
-         *
-         * \deprecated Use the six-integer constructor or the
-         * std::array constructor instead.
-         *
-         * \pre Both arrays \a a and \a b contain 3 elements, which
-         * are 0,...,2 in some order.
-         *
-         * \ifacespython Not present; use the single-array constructor instead.
-         *
-         * @param a the array of preimages; this must have length 3.
-         * @param b the corresponding array of images; this must also have
-         * length 3.
-         */
-        [[deprecated]] constexpr Perm(const int* a, const int* b);
-
-        /**
          * Creates a permutation mapping (<i>a0</i>,<i>b0</i>,<i>c0</i>) to
          * (<i>a1</i>,<i>b1</i>,<i>c1</i>) respectively.
          *
@@ -527,18 +495,6 @@ class Perm<3> {
          * @return the preimage of \a image.
          */
         constexpr int pre(int image) const;
-
-        /**
-         * Deprecated routine that determines the preimage of the given
-         * integer under this permutation.
-         *
-         * \deprecated This routine has been renamed to pre().
-         *
-         * @param image the integer whose preimage we wish to find.  This
-         * should be between 0 and 2 inclusive.
-         * @return the preimage of \a image.
-         */
-        [[deprecated]] constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -779,28 +735,6 @@ class Perm<3> {
         constexpr Index orderedS3Index() const;
 
         /**
-         * Deprecated routine that returns the lexicographical index of this
-         * permutation.
-         *
-         * \deprecated Use the equivalent routine orderedSnIndex() instead.
-         *
-         * @return the lexicographical index of this permutation.
-         */
-        [[deprecated]] constexpr Index index() const;
-
-        /**
-         * Deprecated routine that returns the <i>i</i>th permutation on
-         * three elements, where permutations are numbered lexicographically.
-         *
-         * \deprecated Use orderedSn[\a i] instead.
-         *
-         * @param i the lexicographical index of the permutation; this
-         * must be between 0 and 5 inclusive.
-         * @return the <i>i</i>th permutation.
-         */
-        [[deprecated]] static constexpr Perm atIndex(Index i);
-
-        /**
          * Extends a <i>k</i>-element permutation to an 3-element permutation.
          * where 2 &le; \a k &lt; 3.  The only possible value of \a k is 2, but
          * this routine is kept as a template function for consistency
@@ -976,29 +910,6 @@ inline constexpr Perm<3>::Perm(const std::array<int, 3>& image) :
                               (image[1] == 0 ? 4 : 5)) {
 }
 
-inline constexpr Perm<3>::Perm(const int* image) :
-        code_(image[0] == 0 ? (image[1] == 1 ? 0 : 1) :
-              image[0] == 1 ? (image[1] == 2 ? 2 : 3) :
-                              (image[1] == 0 ? 4 : 5)) {
-}
-
-inline constexpr Perm<3>::Perm(const int* a, const int* b) : code_(0) {
-    // TODO: When we move to C++20, we can get rid of the zero initialisers.
-    int image[3] = { 0, 0, 0 };
-    image[a[0]] = b[0];
-    image[a[1]] = b[1];
-    image[a[2]] = b[2];
-
-    switch (image[0]) {
-        case 0:
-            code_ = static_cast<Code>(image[1] == 1 ? 0 : 1); break;
-        case 1:
-            code_ = static_cast<Code>(image[1] == 2 ? 2 : 3); break;
-        case 2:
-            code_ = static_cast<Code>(image[1] == 0 ? 4 : 5); break;
-    }
-}
-
 inline constexpr Perm<3>::Perm(int a0, int a1, int b0, int b1, int c0, int c1) :
         code_(0) {
     // TODO: When we move to C++20, we can get rid of the zero initialisers.
@@ -1083,10 +994,6 @@ inline constexpr int Perm<3>::pre(int image) const {
     return imageTable[invS3[code_]][image];
 }
 
-inline constexpr int Perm<3>::preImageOf(int image) const {
-    return imageTable[invS3[code_]][image];
-}
-
 inline constexpr bool Perm<3>::operator == (const Perm<3>& other) const {
     return (code_ == other.code_);
 }
@@ -1162,14 +1069,6 @@ inline constexpr Perm<3>::Index Perm<3>::orderedS3Index() const {
 
 inline constexpr Perm<3>::Index Perm<3>::orderedSnIndex() const {
     return convOrderedUnordered(code_);
-}
-
-inline constexpr Perm<3>::Index Perm<3>::index() const {
-    return convOrderedUnordered(code_);
-}
-
-inline constexpr Perm<3> Perm<3>::atIndex(Index i) {
-    return orderedS3[i];
 }
 
 inline constexpr bool Perm<3>::isConjugacyMinimal() const {

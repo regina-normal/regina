@@ -56,6 +56,7 @@ SET ( FILES
   tri3surfaces.cpp
   tri3ui.cpp
   tri4algebra.cpp
+  tri4composition.cpp
   tri4creator.cpp
   tri4gluings.cpp
   tri4skeleton.cpp

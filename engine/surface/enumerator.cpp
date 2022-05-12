@@ -37,6 +37,7 @@
 #include "enumerate/hilbertdual.h"
 #include "enumerate/hilbertprimal.h"
 #include "enumerate/treetraversal.h"
+#include "libnormaliz/cone.h"
 #include "maths/matrixops.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
@@ -106,45 +107,6 @@ namespace {
     inline constexpr bool useNonSpunConstraint(NormalCoords coords) {
         return (coords == NS_QUAD_CLOSED || coords == NS_AN_QUAD_OCT_CLOSED);
     }
-}
-
-std::shared_ptr<PacketOf<NormalSurfaces>> NormalSurfaces::enumerate(
-        Triangulation<3>& owner, NormalCoords coords, NormalList which,
-        NormalAlg algHints, ProgressTracker* tracker) {
-    // Like the constructor, but (1) we have tree insertion; and (2) we
-    // need to convert exceptions to null returns.
-    MatrixInt eqns;
-    try {
-        eqns = makeMatchingEquations(owner, coords);
-    } catch (const ReginaException&) {
-        if (tracker)
-            tracker->setFinished();
-        return nullptr;
-    }
-
-    auto ans = make_packet<NormalSurfaces>(std::in_place, coords, which,
-        algHints, owner);
-    auto treeParent = owner.inAnyPacket();
-
-    if (tracker) {
-        // We pass the matching equations as an argument to the thread
-        // function so we can be sure that the equations are moved into
-        // the thread before they are destroyed.
-        //
-        // Likewise, passing the shared pointers ans and treeParent into the
-        // thread ensures that they survive for the lifetime of the thread.
-        std::thread([tracker](
-                // NOLINTNEXTLINE(performance-unnecessary-value-param)
-                MatrixInt e,
-                // NOLINTNEXTLINE(performance-unnecessary-value-param)
-                std::shared_ptr<NormalSurfaces> s,
-                // NOLINTNEXTLINE(performance-unnecessary-value-param)
-                std::shared_ptr<Packet> p) {
-            Enumerator(s.get(), e, tracker, p.get()).enumerate();
-        }, std::move(eqns), ans, std::move(treeParent)).detach();
-    } else
-        Enumerator(ans.get(), eqns, tracker, treeParent.get()).enumerate();
-    return ans;
 }
 
 void NormalSurfaces::Enumerator::enumerate() {

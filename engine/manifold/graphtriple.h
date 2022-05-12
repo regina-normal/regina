@@ -123,7 +123,7 @@ namespace regina {
  *
  * \warning The 2-by-2 matrices used in this class are \e not the same
  * matrices that appear in the manifold name returned by name()
- * and TeXName() and seen in the census data files.  The matrices
+ * and texName() and seen in the census data files.  The matrices
  * used in this class work from the inside out, describing the boundary torus
  * on each end space in terms of a boundary torus on the central space.
  * The matrices used in the manifold name work from left to right in the

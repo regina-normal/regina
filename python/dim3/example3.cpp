@@ -57,8 +57,6 @@ void addExample3(pybind11::module_& m) {
         .def_static("lens", &Example<3>::lens)
         .def_static("layeredLoop", &Example<3>::layeredLoop)
         .def_static("poincare", &Example<3>::poincare)
-        .def_static("poincareHomologySphere", // deprecated
-            &Example<3>::poincare)
         .def_static("sfsOverSphere", &Example<3>::sfsOverSphere,
             pybind11::arg("a1") = 1, pybind11::arg("b1") = 0,
             pybind11::arg("a2") = 1, pybind11::arg("b2") = 0,

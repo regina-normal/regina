@@ -655,7 +655,7 @@ bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
         std::cout << "Types: ";
         dumpTypes(std::cout);
         std::cout << ", level: " << level_ << "\nTableaux:\n";
-        lpSlot_[level_ + 1]->dump(std::cout);
+        lpSlot_[level_ + 1]->writeTextLong(std::cout);
         std::cout.flush();
 #endif
         // Now all our constraints are enforced, and we can

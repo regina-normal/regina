@@ -132,34 +132,6 @@ class Vector : public ShortOutput<Vector<T>> {
          */
         using const_iterator = const T*;
 
-        /**
-         * Deprecated alias for the type of element that is stored in
-         * this vector.
-         *
-         * \deprecated This has been renamed to value_type, for
-         * consistency with standard C++ container types.
-         */
-        using Element [[deprecated]] = T;
-
-        /**
-         * Zero in the underlying number system.
-         *
-         * \deprecated This constant is deprecated; just use 0 instead.
-         */
-        [[deprecated]] static const T zero;
-        /**
-         * One in the underlying number system.
-         *
-         * \deprecated This constant is deprecated; just use 1 instead.
-         */
-        [[deprecated]] static const T one;
-        /**
-         * Negative one in the underlying number system.
-         *
-         * \deprecated This constant is deprecated; just use -1 instead.
-         */
-        [[deprecated]] static const T minusOne;
-
     protected:
         T* elts_;
             /**< The internal array containing all vector elements. */
@@ -295,20 +267,6 @@ class Vector : public ShortOutput<Vector<T>> {
          */
         inline T& operator[](size_t index) {
             return elts_[index];
-        }
-        /**
-         * Deprecated routine that sets the element at the given index
-         * in the vector to the given value.
-         *
-         * \deprecated Simply use the square bracker operator instead.
-         *
-         * \pre \c index is between 0 and size()-1 inclusive.
-         *
-         * @param index the vector index to examine.
-         * @param value the new value to assign to the element.
-         */
-        [[deprecated]] inline void setElement(size_t index, const T& value) {
-            elts_[index] = value;
         }
         /**
          * Returns the beginning of a non-const iterator range that runs
@@ -710,23 +668,29 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * This routine is only available when \a T is one of Regina's
          * own integer classes (Integer, LargeInteger, or NativeInteger).
+         *
+         * @return the integer by which this vector was divided (i.e.,
+         * the gcd of its original elements).  This will be strictly positive.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) scaleDown() {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) scaleDown() {
             T gcd; // Initialised to 0.
             for (const T* e = elts_; e != end_; ++e) {
                 if (e->isInfinite() || (*e) == 0)
                     continue;
                 gcd.gcdWith(*e); // Guaranteed non-negative result.
                 if (gcd == 1)
-                    return;
+                    return gcd;
             }
-            if (gcd == 0)
-                return;
+            if (gcd == 0) {
+                // All elements must have been 0 or infinity.
+                return 1;
+            }
             for (T* e = elts_; e != end_; ++e)
                 if ((! e->isInfinite()) && (*e) != 0) {
                     e->divByExact(gcd);
                     e->tryReduce();
                 }
+            return gcd;
         }
 
         /**
@@ -794,15 +758,6 @@ std::ostream& operator << (std::ostream& out, const Vector<T>& vector) {
     return out;
 }
 
-template <class T>
-const T Vector<T>::zero(0);
-
-template <class T>
-const T Vector<T>::one(1);
-
-template <class T>
-const T Vector<T>::minusOne(-1);
-
 /**
  * A vector of arbitrary-precision integers.
  *
@@ -828,24 +783,6 @@ using VectorInt = Vector<Integer>;
  * \ingroup maths
  */
 using VectorLarge = Vector<LargeInteger>;
-
-/**
- * Deprecated alias for a vector of arbitrary-precision integers that
- * allows infinite elements.
- *
- * \deprecated In Regina 6.0.1 and earlier, Ray was its own separate subclass
- * of Vector<LargeInteger>.  As of Regina 7.0, the additional members of Ray
- * have been merged directly into the Vector class, and so you should just use
- * Vector<LargeInteger> (or the type alias VectorLarge) instead.  Note that
- * only the \e name Ray is deprecated; the \e class Vector<LargeInteger>
- * that it refers to remains in active use.
- *
- * \ifacespython Not present, but you can use the equivalent type VectorLarge
- * instead.
- *
- * \ingroup maths
- */
-using Ray [[deprecated]] = Vector<LargeInteger>;
 
 } // namespace regina
 

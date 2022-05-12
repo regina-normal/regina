@@ -36,6 +36,7 @@
 // UI includes:
 #include "iconcache.h"
 #include "tri4algebra.h"
+#include "tri4composition.h"
 #include "tri4gluings.h"
 #include "tri4skeleton.h"
 #include "tri4ui.h"
@@ -65,6 +66,7 @@ Tri4UI::Tri4UI(regina::PacketOf<regina::Triangulation<4>>* packet,
     addTab(gluings, QObject::tr("&Gluings"));
     addTab(skeleton, QObject::tr("&Skeleton"));
     addTab(algebra, QObject::tr("&Algebra"));
+    addTab(new Tri4CompositionUI(packet, this), QObject::tr("&Composition"));
 }
 
 const std::vector<QAction*>& Tri4UI::getPacketTypeActions() {

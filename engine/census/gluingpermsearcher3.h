@@ -106,21 +106,6 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
-        /**
-         * Deprecated type alias for flags that indicate that our enumeration
-         * may ignore certain classes of triangulations.
-         *
-         * \deprecated This enumeration has now been renamed to
-         * regina::CensusPurgeFlags (and it now lives at the namespace level).
-         * Bitwise combinations of flags are now represented by
-         * regina::CensusPurge (not raw integers).
-         *
-         * \ifacespython The enumeration constants (but not the PurgeFlags
-         * type itself) are still available through the GluingPermSearcher<3>
-         * class for backward compatibility.
-         */
-        using PurgeFlags [[deprecated]] = CensusPurgeFlags;
-
     protected:
         using ActionWrapper = std::function<void(const GluingPerms<3>&)>;
             /**< The type used to hold the user's action function and
@@ -173,10 +158,10 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
                  of the two identified tetrahedron faces (unless otherwise
                  specified for a particular edge type; see
                  ClosedPrimeMinSearcher for examples). */
-        int orderSize;
+        size_t orderSize;
             /**< The total number of edges in the face pairing graph, i.e.,
                  the number of elements of interest in the order[] array. */
-        int orderElt;
+        ssize_t orderElt;
             /**< Marks which element of order[] we are currently examining
                  at this stage of the search. */
 
@@ -380,18 +365,6 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
         bool isComplete() const;
 
         /**
-         * Deprecated function that determines whether this search manager
-         * holds a complete gluing permutation set or just a partially
-         * completed search state.
-         *
-         * \deprecated This routine has been renamed to isComplete().
-         *
-         * @return \c true if a complete gluing permutation set is held,
-         * or \c false otherwise.
-         */
-        [[deprecated]] bool completePermSet() const;
-
-        /**
          * Dumps all internal data in a plain text format, along with a
          * marker to signify which precise class the data belongs to.
          * This routine can be used with fromTaggedData() to transport
@@ -499,7 +472,7 @@ class GluingPermSearcher<3> : public ShortOutput<GluingPermSearcher<3>> {
          * input stream constructor is not.  Python users should use
          * taggedData() and fromTaggedData() instead.
          *
-         * @param all of this object's internal data in plain text format.
+         * @return all of this object's internal data in plain text format.
          */
         std::string data() const;
 
@@ -836,13 +809,13 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * of the data members below.
          */
         struct TetVertexState {
-            int parent;
+            ssize_t parent;
                 /**< The index of the parent object in the current tree,
                      or -1 if this object is the root of the tree. */
-            unsigned rank;
+            size_t rank;
                 /**< The depth of the subtree beneath this object (where
                      a leaf node has depth zero). */
-            unsigned bdry;
+            size_t bdry;
                 /**< The number of boundary edges in the vertex link for
                      this equivalence class of vertices.  Any face whose
                      gluing permutation has not yet been decided is
@@ -854,7 +827,11 @@ class EulerSearcher : public GluingPermSearcher<3> {
                 /**< The Euler characteristic that the vertex link would have
                      if its punctures were all filled.  As above, this value
                      is only maintained correctly for the root of the
-                     corresponding object tree. */
+                     corresponding object tree.
+
+                     This is of type \c int, since the search algorithm
+                     ensures it will never drop more than a small constant
+                     below EulerSearcher::euler_. */
             char twistUp;
                 /**< The identification of this object and its parent in
                      the tree corresponds to a gluing of two triangles in the
@@ -883,7 +860,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
                      tetrahedron meeting this vertex that are not yet joined
                      to their partner faces.  This always takes the value
                      0, 1, 2 or 3. */
-            int bdryNext[2];
+            size_t bdryNext[2];
                 /**< If the corresponding triangular piece of vertex link has
                      any boundary edges, \a bdryNext stores the indices of the
                      tetrahedron vertices that provide the boundary edges
@@ -936,7 +913,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
                      the vertex link, this array maintains the last values
                      it had when there was at least one boundary edge earlier
                      in the search (just like the \a bdryNext array). */
-            int bdryNextOld[2];
+            ssize_t bdryNextOld[2];
                 /**< Stores a snapshot of the values in the \a bdryNext
                      array from the last point in the search when
                      \a bdryEdges was precisely two.  If \a bdryEdges is
@@ -989,7 +966,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
              * @return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
-            bool readData(std::istream& in, unsigned long nStates);
+            bool readData(std::istream& in, size_t nStates);
 
             // Mark this class as non-copyable.
             TetVertexState(const TetVertexState&) = delete;
@@ -1011,13 +988,13 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * structure.
          */
         struct TetEdgeState {
-            int parent;
+            ssize_t parent;
                 /**< The index of the parent object in the current tree,
                      or -1 if this object is the root of the tree. */
-            unsigned rank;
+            size_t rank;
                 /**< The depth of the subtree beneath this object (where
                      a leaf node has depth zero). */
-            unsigned size;
+            size_t size;
                 /**< The total number of objects in the subtree descending
                      from this object (where this object is counted also). */
             bool bounded;
@@ -1114,7 +1091,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
              * @param out the output stream to which the data should be
              * written.
              */
-            void dumpData(std::ostream& out, unsigned nTets) const;
+            void dumpData(std::ostream& out, size_t nTets) const;
 
             /**
              * Fills this state with data read from the given input stream.
@@ -1133,7 +1110,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
              * @return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
-            bool readData(std::istream& in, unsigned nTets);
+            bool readData(std::istream& in, size_t nTets);
 
             // Mark this class as non-copyable.
             TetEdgeState(const TetEdgeState&) = delete;
@@ -1152,7 +1129,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
                  of the closed surface that would be obtained if the
                  puncture in the vertex link were filled. */
 
-        unsigned nVertexClasses;
+        size_t nVertexClasses;
             /**< The number of equivalence classes of identified
                  tetrahedron vertices. */
         TetVertexState* vertexState;
@@ -1160,7 +1137,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
                  tetrahedron vertices.  See the TetVertexState description
                  for details.  This array has size 4n, where vertex v of
                  tetrahedron t has index 4t+v. */
-        int* vertexStateChanged;
+        ptrdiff_t* vertexStateChanged;
             /**< Tracks the way in which the vertexState[] array has been
                  updated over time.  This array has size 8n, where element
                  4i+v describes how the gluing for order[i] affects vertex v
@@ -1178,9 +1155,13 @@ class EulerSearcher : public GluingPermSearcher<3> {
 
                  The value \a VLINK_JOIN_INIT will be stored for positions in
                  the array that correspond to gluings that have not yet been
-                 made. */
+                 made.
 
-        unsigned nEdgeClasses;
+                 This is of type \c ptrdiff_t, not \c ssize_t, since
+                 it can take on several possible negative values (whereas
+                 \c ssize_t only strictly supports -1). */
+
+        size_t nEdgeClasses;
             /**< The number of equivalence classes of identified
                  tetrahedron edges. */
         TetEdgeState* edgeState;
@@ -1188,7 +1169,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
                  tetrahedron edges.  See the TetEdgeState description
                  for details.  This array has size 6n, where edge e of
                  tetrahedron t has index 6t+e. */
-        int* edgeStateChanged;
+        ssize_t* edgeStateChanged;
             /**< Tracks the way in which the edgeState[] array has been
                  updated over time.  This array has size 8n.  Suppose the
                  gluing for order[i] affects face f of tetrahedron t.  Then
@@ -1294,7 +1275,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
-        int findEdgeClass(int edgeID) const;
+        size_t findEdgeClass(size_t edgeID) const;
 
         /**
          * Returns the representative of the equivalence class containing
@@ -1325,7 +1306,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
-        int findEdgeClass(int edgeID, char& twisted) const;
+        size_t findEdgeClass(size_t edgeID, char& twisted) const;
 
         /**
          * Merge the classes of tetrahedron vertices as required by the
@@ -1401,7 +1382,8 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * oriented in opposite directions; see the \a bdryTwist
          * documentation for details.
          */
-        void vtxBdryJoin(int vertexID, char end, int adjVertexID, char twist);
+        void vtxBdryJoin(size_t vertexID, char end, size_t adjVertexID,
+            char twist);
 
         /**
          * Adjusts the \a bdryNext and \a bdryTwist arrays for
@@ -1435,7 +1417,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          */
-        void vtxBdryFixAdj(int vertexID);
+        void vtxBdryFixAdj(size_t vertexID);
 
         /**
          * Copies the \a bdryNext and \a bdryTwist arrays to the
@@ -1448,7 +1430,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          */
-        void vtxBdryBackup(int vertexID);
+        void vtxBdryBackup(size_t vertexID);
 
         /**
          * Copies the \a bdryNextOld and \a bdryTwistOld arrays to the
@@ -1461,7 +1443,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          */
-        void vtxBdryRestore(int vertexID);
+        void vtxBdryRestore(size_t vertexID);
 
         /**
          * Assuming the given edge of the vertex linking triangle for the
@@ -1515,8 +1497,8 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * boundary edge; see the TetVertexState::bdryTwist notes for
          * further information on orientations in the vertex link.
          */
-        void vtxBdryNext(int vertexID, int tet, int vertex, int bdryFace,
-            int next[2], char twist[2]);
+        void vtxBdryNext(size_t vertexID, size_t tet, int vertex, int bdryFace,
+            size_t next[2], char twist[2]);
 
         /**
          * Determines whether one of the edges of the vertex linking
@@ -1531,7 +1513,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * @return \c true if a one-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
-        bool vtxBdryLength1(int vertexID);
+        bool vtxBdryLength1(size_t vertexID);
 
         /**
          * Determines whether edges of the vertex linking triangles for each
@@ -1550,7 +1532,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * @return \c true if a two-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
-        bool vtxBdryLength2(int vertexID1, int vertexID2);
+        bool vtxBdryLength2(size_t vertexID1, size_t vertexID2);
 
         /**
          * Runs a number of tests on all tetrahedron vertices to locate
@@ -1656,13 +1638,13 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * of the data members below.
          */
         struct TetVertexState {
-            int parent;
+            ssize_t parent;
                 /**< The index of the parent object in the current tree,
                      or -1 if this object is the root of the tree. */
-            unsigned rank;
+            size_t rank;
                 /**< The depth of the subtree beneath this object (where
                      a leaf node has depth zero). */
-            unsigned bdry;
+            size_t bdry;
                 /**< The number of boundary edges in the vertex link for
                      this equivalence class of vertices.  Any face whose
                      gluing permutation has not yet been decided is
@@ -1698,7 +1680,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
                      tetrahedron meeting this vertex that are not yet joined
                      to their partner faces.  This always takes the value
                      0, 1, 2 or 3. */
-            int bdryNext[2];
+            size_t bdryNext[2];
                 /**< If the corresponding triangular piece of vertex link has
                      any boundary edges, \a bdryNext stores the indices of the
                      tetrahedron vertices that provide the boundary edges
@@ -1751,7 +1733,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
                      the vertex link, this array maintains the last values
                      it had when there was at least one boundary edge earlier
                      in the search (just like the \a bdryNext array). */
-            int bdryNextOld[2];
+            ssize_t bdryNextOld[2];
                 /**< Stores a snapshot of the values in the \a bdryNext
                      array from the last point in the search when
                      \a bdryEdges was precisely two.  If \a bdryEdges is
@@ -1804,7 +1786,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
              * @return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
-            bool readData(std::istream& in, unsigned long nStates);
+            bool readData(std::istream& in, size_t nStates);
 
             // Mark this class as non-copyable.
             TetVertexState(const TetVertexState&) = delete;
@@ -1826,13 +1808,13 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * structure.
          */
         struct TetEdgeState {
-            int parent;
+            ssize_t parent;
                 /**< The index of the parent object in the current tree,
                      or -1 if this object is the root of the tree. */
-            unsigned rank;
+            size_t rank;
                 /**< The depth of the subtree beneath this object (where
                      a leaf node has depth zero). */
-            unsigned size;
+            size_t size;
                 /**< The total number of objects in the subtree descending
                      from this object (where this object is counted also). */
             bool bounded;
@@ -1929,7 +1911,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
              * @param out the output stream to which the data should be
              * written.
              */
-            void dumpData(std::ostream& out, unsigned nTets) const;
+            void dumpData(std::ostream& out, size_t nTets) const;
 
             /**
              * Fills this state with data read from the given input stream.
@@ -1948,7 +1930,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
              * @return \c false if any errors were encountered during
              * reading, or \c true otherwise.
              */
-            bool readData(std::istream& in, unsigned nTets);
+            bool readData(std::istream& in, size_t nTets);
 
             // Mark this class as non-copyable.
             TetEdgeState(const TetEdgeState&) = delete;
@@ -1961,7 +1943,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
                  and writing tagged data in text format. */
 
     protected:
-        unsigned nVertexClasses;
+        size_t nVertexClasses;
             /**< The number of equivalence classes of identified
                  tetrahedron vertices. */
         TetVertexState* vertexState;
@@ -1969,7 +1951,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
                  tetrahedron vertices.  See the TetVertexState description
                  for details.  This array has size 4n, where vertex v of
                  tetrahedron t has index 4t+v. */
-        int* vertexStateChanged;
+        ssize_t* vertexStateChanged;
             /**< Tracks the way in which the vertexState[] array has been
                  updated over time.  This array has size 8n, where element
                  4i+v describes how the gluing for order[i] affects vertex v
@@ -1982,7 +1964,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
                  with root vertexState[q], this array will store the value p.
                  Otherwise it will store the value -1. */
 
-        unsigned nEdgeClasses;
+        size_t nEdgeClasses;
             /**< The number of equivalence classes of identified
                  tetrahedron edges. */
         TetEdgeState* edgeState;
@@ -1990,7 +1972,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
                  tetrahedron edges.  See the TetEdgeState description
                  for details.  This array has size 6n, where edge e of
                  tetrahedron t has index 6t+e. */
-        int* edgeStateChanged;
+        ssize_t* edgeStateChanged;
             /**< Tracks the way in which the edgeState[] array has been
                  updated over time.  This array has size 8n.  Suppose the
                  gluing for order[i] affects face f of tetrahedron t.  Then
@@ -2089,7 +2071,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
-        int findEdgeClass(int edgeID) const;
+        size_t findEdgeClass(size_t edgeID) const;
 
         /**
          * Returns the representative of the equivalence class containing
@@ -2120,7 +2102,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * union-find tree, i.e., the representative of the equivalence
          * class.
          */
-        int findEdgeClass(int edgeID, char& twisted) const;
+        size_t findEdgeClass(size_t edgeID, char& twisted) const;
 
         /**
          * Merge the classes of tetrahedron vertices as required by the
@@ -2196,7 +2178,8 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * oriented in opposite directions; see the \a bdryTwist
          * documentation for details.
          */
-        void vtxBdryJoin(int vertexID, char end, int adjVertexID, char twist);
+        void vtxBdryJoin(size_t vertexID, char end, size_t adjVertexID,
+            char twist);
 
         /**
          * Adjusts the \a bdryNext and \a bdryTwist arrays for
@@ -2230,7 +2213,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          */
-        void vtxBdryFixAdj(int vertexID);
+        void vtxBdryFixAdj(size_t vertexID);
 
         /**
          * Copies the \a bdryNext and \a bdryTwist arrays to the
@@ -2243,7 +2226,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          */
-        void vtxBdryBackup(int vertexID);
+        void vtxBdryBackup(size_t vertexID);
 
         /**
          * Copies the \a bdryNextOld and \a bdryTwistOld arrays to the
@@ -2256,7 +2239,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * must be between 0 and 4n-1 inclusive, where \a n is the number of
          * tetrahedra.
          */
-        void vtxBdryRestore(int vertexID);
+        void vtxBdryRestore(size_t vertexID);
 
         /**
          * Assuming the given edge of the vertex linking triangle for the
@@ -2310,8 +2293,8 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * boundary edge; see the TetVertexState::bdryTwist notes for
          * further information on orientations in the vertex link.
          */
-        void vtxBdryNext(int vertexID, int tet, int vertex, int bdryFace,
-            int next[2], char twist[2]);
+        void vtxBdryNext(size_t vertexID, size_t tet, int vertex, int bdryFace,
+            size_t next[2], char twist[2]);
 
         /**
          * Determines whether one of the edges of the vertex linking
@@ -2326,7 +2309,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * @return \c true if a one-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
-        bool vtxBdryLength1(int vertexID);
+        bool vtxBdryLength1(size_t vertexID);
 
         /**
          * Determines whether edges of the vertex linking triangles for each
@@ -2345,7 +2328,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * @return \c true if a two-edge boundary component is formed as
          * described above, or \c false otherwise.
          */
-        bool vtxBdryLength2(int vertexID1, int vertexID2);
+        bool vtxBdryLength2(size_t vertexID1, size_t vertexID2);
 
         /**
          * Runs a number of tests on all tetrahedron vertices to locate
@@ -2479,7 +2462,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
                  stored in the orderType[] array.  Categories are described
                  by the EDGE_... constants defined in this class. */
 
-        unsigned nChainEdges;
+        size_t nChainEdges;
             /**< The number of edges in the face pairing graph belonging
                  to one-ended chains. */
         int* chainPermIndices;
@@ -2501,13 +2484,13 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
             /**< The lowest allowable edge degree.  If the underlying
                  face pairing graph supports a (1,3,4) layered solid
                  torus, this will be 3.  Otherwise it will be 4. */
-        int highDegSum;
+        size_t highDegSum;
             /**< The sum of (\a degree - \a highDegLimit) over all edges whose
                  degree is \a highDegLimit or higher.  This sum is updated
                  throughout the search as part of the high-degree edge pruning
                  code.  See the PRUNE_HIGH_DEG_EDGE_SET macro for further
                  details. */
-        int highDegBound;
+        size_t highDegBound;
             /**< The maximum allowable value of \a highDegSum.  If the
                  sum \a highDegSum exceeds this bound then it can be proven
                  that some edge of the final triangulation must have degree
@@ -2793,10 +2776,6 @@ inline bool GluingPermSearcher<3>::isComplete() const {
     return (orderElt == orderSize);
 }
 
-inline bool GluingPermSearcher<3>::completePermSet() const {
-    return (orderElt == orderSize);
-}
-
 inline void GluingPermSearcher<3>::dumpTaggedData(std::ostream& out) const {
     out << dataTagInternal() << std::endl;
     dumpData(out);
@@ -2915,29 +2894,29 @@ inline char EulerSearcher::dataTagInternal() const {
     return EulerSearcher::dataTag;
 }
 
-inline int EulerSearcher::findEdgeClass(int edgeID) const {
+inline size_t EulerSearcher::findEdgeClass(size_t edgeID) const {
     while (edgeState[edgeID].parent >= 0)
         edgeID = edgeState[edgeID].parent;
 
     return edgeID;
 }
 
-inline int EulerSearcher::findEdgeClass(int edgeID, char& twisted) const {
+inline size_t EulerSearcher::findEdgeClass(size_t edgeID, char& twisted) const {
     for ( ; edgeState[edgeID].parent >= 0; edgeID = edgeState[edgeID].parent)
         twisted ^= edgeState[edgeID].twistUp;
 
     return edgeID;
 }
 
-inline void EulerSearcher::vtxBdryJoin(int vertexID, char end,
-        int adjVertexID, char twist) {
-    vertexState[vertexID].bdryNext[static_cast<int>(end)] = adjVertexID;
-    vertexState[vertexID].bdryTwist[static_cast<int>(end)] = twist;
+inline void EulerSearcher::vtxBdryJoin(size_t vertexID, char end,
+        size_t adjVertexID, char twist) {
+    vertexState[vertexID].bdryNext[end] = adjVertexID;
+    vertexState[vertexID].bdryTwist[end] = twist;
     vertexState[adjVertexID].bdryNext[(end ^ 1) ^ twist] = vertexID;
     vertexState[adjVertexID].bdryTwist[(end ^ 1) ^ twist] = twist;
 }
 
-inline void EulerSearcher::vtxBdryFixAdj(int vertexID) {
+inline void EulerSearcher::vtxBdryFixAdj(size_t vertexID) {
     if (vertexState[vertexID].bdryNext[0] != vertexID) {
         vertexState[vertexState[vertexID].bdryNext[0]].
             bdryNext[1 ^ vertexState[vertexID].bdryTwist[0]] = vertexID;
@@ -2952,22 +2931,22 @@ inline void EulerSearcher::vtxBdryFixAdj(int vertexID) {
     }
 }
 
-inline void EulerSearcher::vtxBdryBackup(int vertexID) {
+inline void EulerSearcher::vtxBdryBackup(size_t vertexID) {
     vertexState[vertexID].bdryNextOld[0] = vertexState[vertexID].bdryNext[0];
     vertexState[vertexID].bdryNextOld[1] = vertexState[vertexID].bdryNext[1];
     vertexState[vertexID].bdryTwistOld[0] = vertexState[vertexID].bdryTwist[0];
     vertexState[vertexID].bdryTwistOld[1] = vertexState[vertexID].bdryTwist[1];
 }
 
-inline void EulerSearcher::vtxBdryRestore(int vertexID) {
+inline void EulerSearcher::vtxBdryRestore(size_t vertexID) {
     vertexState[vertexID].bdryNext[0] = vertexState[vertexID].bdryNextOld[0];
     vertexState[vertexID].bdryNext[1] = vertexState[vertexID].bdryNextOld[1];
     vertexState[vertexID].bdryTwist[0] = vertexState[vertexID].bdryTwistOld[0];
     vertexState[vertexID].bdryTwist[1] = vertexState[vertexID].bdryTwistOld[1];
 }
 
-inline void EulerSearcher::vtxBdryNext(int vertexID,
-        int tet, int vertex, int bdryFace, int next[2], char twist[2]) {
+inline void EulerSearcher::vtxBdryNext(size_t vertexID,
+        size_t tet, int vertex, int bdryFace, size_t next[2], char twist[2]) {
     switch (vertexState[vertexID].bdryEdges) {
         case 3: next[0] = next[1] = vertexID;
                 twist[0] = twist[1] = 0;
@@ -3020,13 +2999,13 @@ inline void EulerSearcher::vtxBdryNext(int vertexID,
     }
 }
 
-inline bool EulerSearcher::vtxBdryLength1(int vertexID) {
+inline bool EulerSearcher::vtxBdryLength1(size_t vertexID) {
     return (vertexState[vertexID].bdryNext[0] == vertexID &&
             vertexState[vertexID].bdryEdges == 1);
 }
 
 inline bool EulerSearcher::vtxBdryLength2(
-        int vertexID1, int vertexID2) {
+        size_t vertexID1, size_t vertexID2) {
     return (vertexState[vertexID1].bdryNext[0] == vertexID2 &&
             vertexState[vertexID1].bdryNext[1] == vertexID2 &&
             vertexState[vertexID1].bdryEdges == 1 &&
@@ -3055,29 +3034,30 @@ inline char CompactSearcher::dataTagInternal() const {
     return CompactSearcher::dataTag;
 }
 
-inline int CompactSearcher::findEdgeClass(int edgeID) const {
+inline size_t CompactSearcher::findEdgeClass(size_t edgeID) const {
     while (edgeState[edgeID].parent >= 0)
         edgeID = edgeState[edgeID].parent;
 
     return edgeID;
 }
 
-inline int CompactSearcher::findEdgeClass(int edgeID, char& twisted) const {
+inline size_t CompactSearcher::findEdgeClass(size_t edgeID, char& twisted)
+        const {
     for ( ; edgeState[edgeID].parent >= 0; edgeID = edgeState[edgeID].parent)
         twisted ^= edgeState[edgeID].twistUp;
 
     return edgeID;
 }
 
-inline void CompactSearcher::vtxBdryJoin(int vertexID, char end,
-        int adjVertexID, char twist) {
-    vertexState[vertexID].bdryNext[static_cast<int>(end)] = adjVertexID;
-    vertexState[vertexID].bdryTwist[static_cast<int>(end)] = twist;
+inline void CompactSearcher::vtxBdryJoin(size_t vertexID, char end,
+        size_t adjVertexID, char twist) {
+    vertexState[vertexID].bdryNext[end] = adjVertexID;
+    vertexState[vertexID].bdryTwist[end] = twist;
     vertexState[adjVertexID].bdryNext[(end ^ 1) ^ twist] = vertexID;
     vertexState[adjVertexID].bdryTwist[(end ^ 1) ^ twist] = twist;
 }
 
-inline void CompactSearcher::vtxBdryFixAdj(int vertexID) {
+inline void CompactSearcher::vtxBdryFixAdj(size_t vertexID) {
     if (vertexState[vertexID].bdryNext[0] != vertexID) {
         vertexState[vertexState[vertexID].bdryNext[0]].
             bdryNext[1 ^ vertexState[vertexID].bdryTwist[0]] = vertexID;
@@ -3092,22 +3072,22 @@ inline void CompactSearcher::vtxBdryFixAdj(int vertexID) {
     }
 }
 
-inline void CompactSearcher::vtxBdryBackup(int vertexID) {
+inline void CompactSearcher::vtxBdryBackup(size_t vertexID) {
     vertexState[vertexID].bdryNextOld[0] = vertexState[vertexID].bdryNext[0];
     vertexState[vertexID].bdryNextOld[1] = vertexState[vertexID].bdryNext[1];
     vertexState[vertexID].bdryTwistOld[0] = vertexState[vertexID].bdryTwist[0];
     vertexState[vertexID].bdryTwistOld[1] = vertexState[vertexID].bdryTwist[1];
 }
 
-inline void CompactSearcher::vtxBdryRestore(int vertexID) {
+inline void CompactSearcher::vtxBdryRestore(size_t vertexID) {
     vertexState[vertexID].bdryNext[0] = vertexState[vertexID].bdryNextOld[0];
     vertexState[vertexID].bdryNext[1] = vertexState[vertexID].bdryNextOld[1];
     vertexState[vertexID].bdryTwist[0] = vertexState[vertexID].bdryTwistOld[0];
     vertexState[vertexID].bdryTwist[1] = vertexState[vertexID].bdryTwistOld[1];
 }
 
-inline void CompactSearcher::vtxBdryNext(int vertexID,
-        int tet, int vertex, int bdryFace, int next[2], char twist[2]) {
+inline void CompactSearcher::vtxBdryNext(size_t vertexID,
+        size_t tet, int vertex, int bdryFace, size_t next[2], char twist[2]) {
     switch (vertexState[vertexID].bdryEdges) {
         case 3: next[0] = next[1] = vertexID;
                 twist[0] = twist[1] = 0;
@@ -3160,13 +3140,13 @@ inline void CompactSearcher::vtxBdryNext(int vertexID,
     }
 }
 
-inline bool CompactSearcher::vtxBdryLength1(int vertexID) {
+inline bool CompactSearcher::vtxBdryLength1(size_t vertexID) {
     return (vertexState[vertexID].bdryNext[0] == vertexID &&
             vertexState[vertexID].bdryEdges == 1);
 }
 
 inline bool CompactSearcher::vtxBdryLength2(
-        int vertexID1, int vertexID2) {
+        size_t vertexID1, size_t vertexID2) {
     return (vertexState[vertexID1].bdryNext[0] == vertexID2 &&
             vertexState[vertexID1].bdryNext[1] == vertexID2 &&
             vertexState[vertexID1].bdryEdges == 1 &&

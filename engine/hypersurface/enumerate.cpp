@@ -89,45 +89,6 @@ namespace {
     };
 }
 
-std::shared_ptr<PacketOf<NormalHypersurfaces>> NormalHypersurfaces::enumerate(
-        Triangulation<4>& owner, HyperCoords coords, HyperList which,
-        HyperAlg algHints, ProgressTracker* tracker) {
-    // Like the constructor, but (1) we have tree insertion; and (2) we
-    // need to convert exceptions to null returns.
-    MatrixInt eqns;
-    try {
-        eqns = makeMatchingEquations(owner, coords);
-    } catch (const ReginaException&) {
-        if (tracker)
-            tracker->setFinished();
-        return nullptr;
-    }
-
-    auto ans = make_packet<NormalHypersurfaces>(std::in_place, coords, which,
-        algHints, owner);
-    auto treeParent = owner.packet();
-
-    if (tracker) {
-        // We pass the matching equations as an argument to the thread
-        // function so we can be sure that the equations are moved into
-        // the thread before they are destroyed.
-        //
-        // Likewise, passing the shared pointers ans and treeParent into the
-        // thread ensures that they survive for the lifetime of the thread.
-        std::thread([tracker](
-                // NOLINTNEXTLINE(performance-unnecessary-value-param)
-                MatrixInt e,
-                // NOLINTNEXTLINE(performance-unnecessary-value-param)
-                std::shared_ptr<NormalHypersurfaces> h,
-                // NOLINTNEXTLINE(performance-unnecessary-value-param)
-                std::shared_ptr<Packet> p) {
-            Enumerator(h.get(), e, tracker, p.get()).enumerate();
-        }, std::move(eqns), ans, std::move(treeParent)).detach();
-    } else
-        Enumerator(ans.get(), eqns, tracker, treeParent.get()).enumerate();
-    return ans;
-}
-
 void NormalHypersurfaces::Enumerator::enumerate() {
     // Clean up the "type of list" flag.
     list_->which_ &= (

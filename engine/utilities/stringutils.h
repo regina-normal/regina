@@ -293,32 +293,6 @@ bool valueOf(const std::string& str, long long& dest);
  */
 bool valueOf(const std::string& str, unsigned long long& dest);
 /**
- * Deprecated routine that converts the entire given string to an arbitrary
- * precision integer and reports whether this conversion was successful.
- *
- * The given string should contain no whitespace or other characters
- * that are not a part of the integer that the string represents.
- * If any unexpected characters are encountered, the routine will convert
- * the string as best it can but \c false will be returned.
- *
- * \deprecated Simply use the string constructor or string assignment operator
- * for Integer / LargeInteger (but note that these throw exceptions on error).
- *
- * \ifacespython Not present; instead use the Integer / LargeInteger
- * string constructor as noted above.
- *
- * @param str the string to convert.
- * @param dest the variable in which to store the resulting arbitrary
- * precision integer.
- * @return \c true if the conversion was completely successful or \c false
- * otherwise.
- *
- * \ingroup utilities
- */
-template <bool supportInfinity>
-[[deprecated]] bool valueOf(const std::string& str,
-    IntegerBase<supportInfinity>& dest);
-/**
  * Converts the entire given string to a double precision real number and
  * reports whether this conversion was successful.
  *
@@ -402,35 +376,6 @@ bool valueOf(const std::string& str, BoolSet& dest);
  * \ingroup utilities
  */
 std::vector<std::string> basicTokenise(const std::string& str);
-
-/**
- * Deprecated routine to decompose a string into tokens.
- *
- * This is an extremely simple tokeniser; tokens are defined to be
- * separated by arbitrary blocks of whitespace.  Any leading or trailing
- * whitespace will be ignored.
- *
- * \warning This routine treats all strings as plain ASCII.  In
- * particular, characters are examined one at a time, and the C routine
- * isspace() is used to identify whitespace.  Use it on strings with
- * international characters at your own peril.
- *
- * \deprecated This routine has been rewritten to return the list of
- * tokens as a std::vector.  Use that variant of basicTokenise() instead.
- *
- * \ifacespython Not present; instead use the one-argument variant of
- * basicTokenise(), which returns the list of tokens.
- *
- * @param results the output iterator to which the resulting tokens will
- * be written; this must accept objects of type <tt>const std::string&</tt>.
- * @param str the string to decompose.
- * @return the number of tokens found.
- *
- * \ingroup utilities
- */
-template <class OutputIterator>
-[[deprecated]] unsigned basicTokenise(OutputIterator results,
-    const std::string& str);
 
 /**
  * Returns a token derived from the given string.

@@ -553,7 +553,7 @@
     The link group is presented in the same format as the fundamental group
     of a triangulation, and you are given the same tools to simplify it.
     See the section on
-    <link linkend="tri-algebra-homfund">fundamental groups</link>
+    <link linkend="tri-algebra-fund">fundamental groups</link>
     for further discussion of this.
    </para>
    <para>

@@ -30,12 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file surfaces/disctype.h
- *  \brief Deprecated placeholder for a renamed header.
- *  \deprecated This header has been renamed to surface/disctype.h.
- */
+#include "triangulation/detail/facetpairing-canonical-impl.h"
 
-#warning This header has been renamed to surface/disctype.h.  This old header will be removed in a future version of Regina.
+namespace regina::detail {
 
-#include "surface/disctype.h"
+template bool FacetPairingBase<8>::isCanonical() const;
+template std::pair<FacetPairing<8>, Isomorphism<8>>
+    FacetPairingBase<8>::canonical() const;
+template bool FacetPairingBase<8>::isCanonicalInternal(
+    FacetPairingBase<8>::IsoList* list) const;
 
+} // namespace regina::detail

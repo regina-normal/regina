@@ -43,10 +43,6 @@ void addHandlebody(pybind11::module_& m) {
         .def(pybind11::init<const Handlebody&>())
         .def("swap", &Handlebody::swap)
         .def("genus", &Handlebody::genus)
-        .def("handles", &Handlebody::genus) // deprecated
-        .def("isOrientable", [](const Handlebody&) { // deprecated
-            return true;
-        })
     ;
     regina::python::add_eq_operators(c);
     regina::python::add_output(c);

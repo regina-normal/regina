@@ -108,42 +108,6 @@ template <class ObjectType>
 std::shared_ptr<Container> readSigList(const char *filename,
     unsigned colSigs = 0, int colLabels = -1, unsigned long ignoreLines = 0);
 
-/**
- * A deprecated weaker version of readSigList(), which reads a list of
- * isomorphism signatures for triangulations from the given text file.
- *
- * Unlike readSigList() (which is more general), this function can only
- * work with 2-manifold, 3-manifold and 4-manifold triangulations.
- *
- * Also, unlike readSigList(), this is not a template function.  Instead of
- * the template argument \a ObjectType used by readSigList() to indicate
- * what kind of object to construct, this function has an additional
- * \a dimension parameter.
- *
- * See readSigList() for further details on what this routine does.
- *
- * \deprecated Use readSigList<Triangulation<2>>, readSigList<Triangulation<3>>
- * or readSigList<Triangulation<4>> instead.
- *
- * @param filename the name of the text file from which to read.
- * @param dimension either 2, 3 or 4, indicating whether isomorphism
- * signatures should be expanded into 2-manifold, 3-manifold or 4-manifold
- * triangulations respectively.
- * @param colSigs the column of the text file containing the signatures.
- * @param colLabels the column of the text file containing the packet labels
- * for the resulting triangulations.  If this is negative then the
- * signatures themselves will be used as packet labels.
- * @param ignoreLines the number of lines at the beginning of the text
- * file that should be ignored completely.
- * @return a new container, or \c null if an I/O error
- * occurred whilst reading the given file.
- *
- * \ingroup foreign
- */
-[[deprecated]] std::shared_ptr<Container> readIsoSigList(const char *filename,
-    unsigned dimension = 3, unsigned colSigs = 0, int colLabels = -1,
-    unsigned long ignoreLines = 0);
-
 } // namespace regina
 
 #include "foreign/fromsiglist-impl.h"

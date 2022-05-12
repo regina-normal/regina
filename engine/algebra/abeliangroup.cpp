@@ -90,11 +90,6 @@ void AbelianGroup::addTorsion(Integer degree) {
         revInvFactors_.push_back(degree);
 }
 
-void AbelianGroup::addTorsionElements(const std::multiset<Integer>& torsion) {
-    for (const Integer& i : torsion)
-        addTorsion(i);
-}
-
 void AbelianGroup::addGroup(MatrixInt presentation) {
     smithNormalForm(presentation);
 
@@ -150,8 +145,8 @@ void AbelianGroup::addGroup(const AbelianGroup& group) {
     }
 }
 
-unsigned AbelianGroup::torsionRank(const Integer& degree) const {
-    unsigned ans = 0;
+unsigned long AbelianGroup::torsionRank(const Integer& degree) const {
+    unsigned long ans = 0;
     // Because we have SNF, we can bail as soon as we reach a factor
     // that is not divisible by degree.
     for (const auto& factor : revInvFactors_)
@@ -177,7 +172,7 @@ void AbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
 
     auto it = revInvFactors_.rbegin();
     Integer currDegree;
-    unsigned currMult = 0;
+    size_t currMult = 0;
     while(true) {
         if (it != revInvFactors_.rend()) {
             if ((*it) == currDegree) {

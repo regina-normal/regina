@@ -120,7 +120,7 @@ std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() const {
                 return s;
             } else if (! s.isTwoSided()) {
                 // A projective plane that doubles to a sphere.
-                return s.doubleSurface();
+                return s * 2;
             }
         }
     }

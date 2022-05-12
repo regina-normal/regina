@@ -131,15 +131,6 @@ class SnapPeaCensusTri: public StandardTriangulation {
         SnapPeaCensusTri& operator = (const SnapPeaCensusTri&) = default;
 
         /**
-         * Deprecated routine that returns a new copy of this structure.
-         *
-         * \deprecated Just use the copy constructor instead.
-         *
-         * @return a newly created clone.
-         */
-        [[deprecated]] SnapPeaCensusTri* clone() const;
-
-        /**
          * Swaps the contents of this and the given structure.
          *
          * @param other the structure whose contents should be swapped
@@ -228,15 +219,6 @@ class SnapPeaCensusTri: public StandardTriangulation {
          */
         static std::unique_ptr<SnapPeaCensusTri> recognise(
             const Component<3>* comp);
-        /**
-         * A deprecated alias to recognise if a component forms one of
-         * the smallest SnapPea census triangulations.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<SnapPeaCensusTri>
-            isSmallSnapPeaCensusTri(const Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         AbelianGroup homology() const override;
@@ -275,10 +257,6 @@ inline SnapPeaCensusTri::SnapPeaCensusTri(char section, unsigned long index) :
 
 // Inline functions for SnapPeaCensusTri
 
-inline SnapPeaCensusTri* SnapPeaCensusTri::clone() const {
-    return new SnapPeaCensusTri(*this);
-}
-
 inline void SnapPeaCensusTri::swap(SnapPeaCensusTri& other) noexcept {
     std::swap(section_, other.section_);
     std::swap(index_, other.index_);
@@ -300,11 +278,6 @@ inline bool SnapPeaCensusTri::operator == (const SnapPeaCensusTri& compare)
 inline bool SnapPeaCensusTri::operator != (const SnapPeaCensusTri& compare)
         const {
     return (section_ != compare.section_ || index_ != compare.index_);
-}
-
-inline std::unique_ptr<SnapPeaCensusTri>
-        SnapPeaCensusTri::isSmallSnapPeaCensusTri(const Component<3>* comp) {
-    return recognise(comp);
 }
 
 inline void swap(SnapPeaCensusTri& a, SnapPeaCensusTri& b) noexcept {

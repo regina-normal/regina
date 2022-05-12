@@ -64,6 +64,7 @@ void addFacetPairing3(pybind11::module_& m) {
         .def("isUnmatched", overload_cast<size_t, unsigned>(
             &FacetPairing<3>::isUnmatched, pybind11::const_))
         .def("isCanonical", &FacetPairing<3>::isCanonical)
+        .def("canonical", &FacetPairing<3>::canonical)
         .def("findAutomorphisms", &FacetPairing<3>::findAutomorphisms)
         .def("toTextRep", &FacetPairing<3>::toTextRep)
         .def_static("fromTextRep", &FacetPairing<3>::fromTextRep)

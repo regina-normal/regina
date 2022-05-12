@@ -10,6 +10,18 @@ Version 7.1  [ TODO ]
 
     Overview:
         - Regina now supports Python 3 only (not Python 2 or 3).
+    Features:
+        - Computes intersection forms of closed orientable 4-manifolds.
+        - Computes and recognises all normalised edge links (not just
+          thin edge links).
+        - The tricensus utility now supports multithreaded operation.
+        - Includes the standard K3 surface as a ready-made example 4-manifold.
+        - Several other smaller features and optimisations.
+    Python / C++:
+        - Everything that was deprecated in version 7.0 has now been removed
+          entirely.  See https://regina-normal.github.io/api/regina7.html
+          for instructions on how to update your scripts.
+        - Python now wraps all C++ bool() cast operators.
 
 Version 7.0  [ 19 December, 2021 ]
 

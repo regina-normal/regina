@@ -37,11 +37,11 @@ if (len(sys.argv) > 1):
 else:
     testpath = '.'
 
-pdf = PDF()
+pdf = Attachment()
 print('Null:', pdf.isNull())
 print('Size:', pdf.size())
 
-pdf = PDF(testpath + '/sample.pdf')
+pdf = Attachment(testpath + '/sample.pdf')
 print('Null:', pdf.isNull())
 print('Size:', pdf.size())
 

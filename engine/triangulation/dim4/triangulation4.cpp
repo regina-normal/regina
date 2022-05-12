@@ -59,7 +59,13 @@ long Triangulation<4>::eulerCharManifold() const {
     long ans = eulerCharTri();
 
     // Truncate any ideal vertices.
-    if (ideal_) {
+    if (vertexLinkSummary_ != 0) {
+        // There *might* be ideal vertices.
+        // (Actually, since this routine has validity as a precondition,
+        // and since the skeleton has been computed by this point, we should
+        // have vertexLinkSummary_ non-negative at this point, which means
+        // there *are* ideal vertices.  But this guarantee is stronger than
+        // we actually need here.)
         for (auto bc : boundaryComponents())
             if (bc->isIdeal()) {
                 // Because our 4-manifold triangulation is valid, all
@@ -75,22 +81,23 @@ long Triangulation<4>::eulerCharManifold() const {
 
 Triangulation<4>::Triangulation(const Triangulation& X, bool cloneProps) :
         TriangulationBase<4>(X, cloneProps),
-        knownSimpleLinks_(X.knownSimpleLinks_) /* always cloned */ {
+        vertexLinkSummary_(X.vertexLinkSummary_) /* always cloned */ {
     // For other properties, the user gets to decide:
     if (! cloneProps)
         return;
 
     prop_ = X.prop_;
 
-    // We do not need to copy skeletal properties (e.g., ideal_), since this
-    // is computed on demand with the rest of the skeleton.
+    // We do not need to copy any properties that are computed on demand with
+    // the rest of the skeleton; however, at the time of writing there
+    // are no such properties in the Triangulation<4> class anyway.
 }
 
 void Triangulation<4>::clearAllProperties() {
     clearBaseProperties();
 
     if (! topologyLock_) {
-        knownSimpleLinks_ = false;
+        vertexLinkSummary_ = -1; /* not yet computed */
         prop_.H2_.reset();
     }
 }
@@ -106,8 +113,7 @@ void Triangulation<4>::swap(Triangulation<4>& other) {
     swapBaseData(other);
 
     // Properties stored directly:
-    std::swap(knownSimpleLinks_, other.knownSimpleLinks_);
-    std::swap(ideal_, other.ideal_);
+    std::swap(vertexLinkSummary_, other.vertexLinkSummary_);
 
     // Properties stored using std::... helper classes:
     prop_.H2_.swap(other.prop_.H2_);
@@ -155,7 +161,6 @@ IntersectionForm Triangulation<4>::intersectionForm() const {
 
     for (unsigned long i = 0; i < rank; ++i)
         for (unsigned long j = i; j < rank; ++j) {
-            size_t intn = 0;
             for (unsigned long k = 0; k < dim; ++k) {
                 Integer count = dualBasis[i][k] * primalBasis[j][k];
                 if (count != 0) {

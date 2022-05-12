@@ -990,8 +990,6 @@ Equality type : EqualityType.BY_VALUE
 NotImplemented : class
 Exception type
 
-PDF : alias ->  Attachment
-
 Packet : class
 Equality type : EqualityType.NEVER_INSTANTIATED
 

@@ -98,10 +98,8 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
      *   2->3 represents the arrow in the tetrahedron list above
      */
 
-    size_t i, j;
-
     // Create the local structure around each crossing:
-    for (i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         ctet[i] = newTetrahedra<4>();
         if (link.crossing(i)->sign() > 0) {
             ctet[i][0]->join(0, ctet[i][1], Perm<4>(2,3));
@@ -118,7 +116,7 @@ Triangulation<3>::Triangulation(const Link& link, bool simplify) {
 
     // Connect the structures for adjacent crossings:
     StrandRef s, t;
-    for (i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         const Crossing* cr = link.crossing(i);
         // Make s the strand that follows forwards on the left, and
         // make t the strand that follows forwards on the right.

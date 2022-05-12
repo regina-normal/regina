@@ -76,21 +76,6 @@ bool NormalHypersurface::isCompact() const {
     return *(compact_ = true);
 }
 
-NormalHypersurface NormalHypersurface::doubleHypersurface() const {
-    // Don't use the copy constructor, since we want to choose which
-    // properties we keep.
-    NormalHypersurface ans(triangulation_, enc_, vector_);
-
-    ans.vector_ += ans.vector_;
-
-    // Some properties can be copied straight across.
-    ans.realBoundary_ = realBoundary_;
-    ans.compact_ = compact_;
-
-    // And some other properties are best left recalculated.
-    return ans;
-}
-
 void NormalHypersurface::writeTextShort(std::ostream& out) const {
     size_t nPents = triangulation_->size();
     for (size_t pent = 0; pent < nPents; pent++) {
@@ -302,8 +287,73 @@ void NormalHypersurface::calculateFromTriangulation() const {
     connected_ = me.isConnected();
     H1_ = me.homology();
 
-    twoSided_ = (doubleHypersurface().triangulate().countComponents() ==
+    twoSided_ = (((*this) * 2).triangulate().countComponents() ==
         2 * me.countComponents());
+}
+
+NormalHypersurface NormalHypersurface::operator * (const LargeInteger& coeff)
+        const {
+    NormalHypersurface ans(triangulation_, enc_, vector_ * coeff);
+
+    if (coeff == 0) {
+        ans.orientable_ = true;
+        ans.twoSided_ = true;
+        ans.connected_ = true;
+        ans.realBoundary_ = false;
+        ans.compact_ = true;
+        ans.H1_ = {};
+    } else {
+        // Deduce some basic properties.
+        ans.realBoundary_ = realBoundary_;
+        ans.compact_ = compact_;
+
+        // And some other properties are best left recalculated.
+    }
+
+    return ans;
+}
+
+NormalHypersurface& NormalHypersurface::operator *= (
+        const LargeInteger& coeff) {
+    vector_ *= coeff;
+
+    // Update properties of the hypersurface where necessary:
+    if (coeff == 0) {
+        orientable_ = true;
+        twoSided_ = true;
+        connected_ = true;
+        realBoundary_ = false;
+        compact_ = true;
+        H1_ = {};
+    } else {
+        // Some properties might change, and we will leave them to be
+        // recomputed:
+        orientable_.reset();
+        twoSided_.reset();
+        connected_.reset();
+        H1_.reset();
+
+        // All other properties are preserved:
+        // - realBoundary_, compact_
+    }
+
+    return *this;
+}
+
+LargeInteger NormalHypersurface::scaleDown() {
+    LargeInteger ans = vector_.scaleDown();
+
+    // Some properties might change, and we will leave them to be
+    // recomputed:
+    orientable_.reset();
+    twoSided_.reset();
+    connected_.reset();
+    H1_.reset();
+
+    // All other properties are preserved:
+    // - realBoundary_, compact_
+
+    return ans;
 }
 
 } // namespace regina

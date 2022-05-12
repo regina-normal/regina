@@ -157,7 +157,6 @@ void addTriangulation3(pybind11::module_& m) {
         .def("removeAllTetrahedra", &Triangulation<3>::removeAllTetrahedra)
         .def("removeAllSimplices", &Triangulation<3>::removeAllSimplices)
         .def("swap", &Triangulation<3>::swap)
-        .def("swapContents", &Triangulation<3>::swap) // deprecated
         .def("moveContentsTo", &Triangulation<3>::moveContentsTo)
         .def("countComponents", &Triangulation<3>::countComponents)
         .def("countBoundaryComponents",
@@ -196,7 +195,6 @@ void addTriangulation3(pybind11::module_& m) {
         .def("triangle", (regina::Face<3, 2>* (Triangulation<3>::*)(size_t))(
             &Triangulation<3>::triangle),
             pybind11::return_value_policy::reference_internal)
-        .def("isIdenticalTo", &Triangulation<3>::operator ==) // deprecated
         .def("isIsomorphicTo", &Triangulation<3>::isIsomorphicTo)
         .def("findAllIsomorphisms", &Triangulation<3>::findAllIsomorphisms<
                 const std::function<bool(const Isomorphism<3>)>&>)
@@ -251,8 +249,6 @@ void addTriangulation3(pybind11::module_& m) {
             (regina::AbelianGroup (Triangulation<3>::*)(int) const)(
             &Triangulation<3>::homology),
             pybind11::arg("k") = 1)
-        .def("homologyH1", &Triangulation<3>::homology<1>) // deprecated
-        .def("homologyH2", &Triangulation<3>::homology<2>) // deprecated
         .def("homologyRel", &Triangulation<3>::homologyRel,
             pybind11::return_value_policy::reference_internal)
         .def("homologyBdry", &Triangulation<3>::homologyBdry,
@@ -287,16 +283,9 @@ void addTriangulation3(pybind11::module_& m) {
         .def("hasSplittingSurface", &Triangulation<3>::hasSplittingSurface)
         .def("nonTrivialSphereOrDisc",
             &Triangulation<3>::nonTrivialSphereOrDisc)
-        .def("hasNonTrivialSphereOrDisc", // deprecated
-            &Triangulation<3>::nonTrivialSphereOrDisc)
         .def("octagonalAlmostNormalSphere",
             &Triangulation<3>::octagonalAlmostNormalSphere)
-        .def("hasOctagonalAlmostNormalSphere", // deprecated
-            &Triangulation<3>::octagonalAlmostNormalSphere)
         .def("strictAngleStructure",
-            &Triangulation<3>::strictAngleStructure,
-            pybind11::return_value_policy::reference_internal)
-        .def("findStrictAngleStructure", // deprecated
             &Triangulation<3>::strictAngleStructure,
             pybind11::return_value_policy::reference_internal)
         .def("hasStrictAngleStructure",
@@ -432,9 +421,7 @@ void addTriangulation3(pybind11::module_& m) {
         .def("triangulateComponents", &Triangulation<3>::triangulateComponents)
         .def("summands", &Triangulation<3>::summands)
         .def("isSphere", &Triangulation<3>::isSphere)
-        .def("isThreeSphere", &Triangulation<3>::isSphere) // deprecated
         .def("knowsSphere", &Triangulation<3>::knowsSphere)
-        .def("knowsThreeSphere", &Triangulation<3>::knowsSphere) // deprecated
         .def("isBall", &Triangulation<3>::isBall)
         .def("knowsBall", &Triangulation<3>::knowsBall)
         .def("isSolidTorus", &Triangulation<3>::isSolidTorus)
@@ -473,32 +460,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("insertLayeredSolidTorus",
             &Triangulation<3>::insertLayeredSolidTorus,
             pybind11::return_value_policy::reference)
-        .def("insertLayeredLensSpace", // deprecated
-                [](Triangulation<3>& t, size_t p, size_t q) {
-            t.insertTriangulation(Example<3>::lens(p, q));
-        })
-        .def("insertLayeredLoop", // deprecated
-                [](Triangulation<3>& t, size_t len, bool twisted) {
-            t.insertTriangulation(Example<3>::layeredLoop(len, twisted));
-        })
-        .def("insertAugTriSolidTorus", // deprecated
-                [](Triangulation<3>& t, long a1, long a2, long b1, long b2,
-                    long c1, long c2) {
-            t.insertTriangulation(Example<3>::augTriSolidTorus(
-                a1, a2, b1, b2, c1, c2));
-        })
-        .def("insertSFSOverSphere", // deprecated
-                [](Triangulation<3>& t, long a1, long a2, long b1, long b2,
-                    long c1, long c2) {
-            t.insertTriangulation(Example<3>::sfsOverSphere(
-                a1, a2, b1, b2, c1, c2));
-        })
         .def("connectedSumWith", &Triangulation<3>::connectedSumWith)
         .def("insertTriangulation", &Triangulation<3>::insertTriangulation)
-        .def("insertRehydration", [](Triangulation<3>& tri,
-                const std::string& str) { // deprecated
-            tri.insertTriangulation(Triangulation<3>::rehydrate(str));
-        })
         .def("dehydrate", &Triangulation<3>::dehydrate)
         .def_static("rehydrate", &Triangulation<3>::rehydrate)
         .def("isoSig", &Triangulation<3>::isoSig<>)
@@ -530,10 +493,6 @@ void addTriangulation3(pybind11::module_& m) {
         .def("saveRecogniser", &Triangulation<3>::saveRecogniser)
         .def("saveRecognizer", &Triangulation<3>::saveRecognizer)
         .def_static("fromSnapPea", &Triangulation<3>::fromSnapPea)
-        .def_static("enterTextTriangulation", []() { // deprecated
-            return Triangulation<3>::enterTextTriangulation(
-                std::cin, std::cout);
-        })
         .def_readonly_static("dimension", &Triangulation<3>::dimension)
     ;
     regina::python::add_output(c);
@@ -552,10 +511,9 @@ void addTriangulation3(pybind11::module_& m) {
         m, "PacketOfTriangulation3");
     regina::python::add_packet_constructor<>(wrap);
     regina::python::add_packet_constructor<const Triangulation<3>&, bool>(wrap);
+    regina::python::add_packet_constructor<const regina::Link&, bool>(wrap,
+        pybind11::arg(), pybind11::arg("simplify") = true);
     regina::python::add_packet_constructor<const std::string&>(wrap);
-    wrap.def(pybind11::init([](const regina::Link& link) { // deprecated
-        return regina::make_packet<Triangulation<3>>(link.complement());
-    }));
     wrap.def(pybind11::init([](const regina::python::SnapPyObject& obj) {
         return regina::make_packet<Triangulation<3>>(std::in_place,
             obj.string_);

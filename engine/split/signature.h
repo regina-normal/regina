@@ -248,20 +248,6 @@ class Signature : public ShortOutput<Signature> {
         bool operator != (const Signature& other) const;
 
         /**
-         * Deprecated routine that parses the given signature string.
-         *
-         * \deprecated This routine has been replaced with a string-based
-         * constructor.  See the constructor for further details.
-         *
-         * \exception InvalidArgument the given string was not a valid
-         * signature with a positive number of letters.
-         *
-         * @param str a string representation of a splitting surface signature.
-         * @return the corresponding signature.
-         */
-        [[deprecated]] static Signature parse(const std::string& str);
-
-        /**
          * Returns the 3-manifold triangulation corresponding to
          * this splitting surface signature.
          *
@@ -462,10 +448,6 @@ inline Signature::~Signature() {
     delete[] labelInv;
     delete[] cycleStart;
     delete[] cycleGroupStart;
-}
-
-inline Signature Signature::parse(const std::string& str) {
-    return Signature(str);
 }
 
 inline unsigned Signature::order() const {
