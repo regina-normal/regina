@@ -67,6 +67,7 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
             &FacetPairing<dim>::isUnmatched, pybind11::const_))
         .def("isClosed", &FacetPairing<dim>::isClosed)
         .def("isCanonical", &FacetPairing<dim>::isCanonical)
+        .def("canonical", &FacetPairing<dim>::canonical)
         .def("findAutomorphisms", &FacetPairing<dim>::findAutomorphisms)
         .def("toTextRep", &FacetPairing<dim>::toTextRep)
         .def_static("fromTextRep", &FacetPairing<dim>::fromTextRep)

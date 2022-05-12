@@ -322,17 +322,17 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         /*@{*/
 
         /**
-         * Determines whether this facet pairing is in canonical form,
-         * i.e., is a lexicographically minimal representative of its
-         * isomorphism class.
+         * Determines whether this facet pairing is in canonical form.  Here:
          *
-         * Isomorphisms of facet pairings correspond to relabellings of
-         * simplices and relabellings of the (\a dim + 1) facets within each
-         * simplex.
+         * - an \e isomorphism of a facet pairing means a relabelling of the
+         *   simplices and a relabelling of the (\a dim + 1) facets within
+         *   each simplex;
          *
-         * Facet pairings are ordered by lexicographical comparison of
-         * <tt>dest(0,0)</tt>, <tt>dest(0,1)</tt>, ...,
-         * <tt>dest(size()-1,\a dim)</tt>.
+         * - a facet pairing is in <i>canonical form</i> if it is a
+         *   lexicographically minimal representative of its isomorphism class,
+         *   where we order facet pairings by lexicographical comparison of
+         *   <tt>dest(0,0)</tt>, <tt>dest(0,1)</tt>, ...,
+         *   <tt>dest(size()-1,\a dim)</tt>.
          *
          * \pre This facet pairing is connected, i.e., it is possible
          * to reach any simplex from any other simplex via a
@@ -342,6 +342,34 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * canonical form.
          */
         bool isCanonical() const;
+
+        /**
+         * Returns the canonical form of this facet pairing, along with an
+         * isomorphism that transforms this pairing into canonial form.  Here:
+         *
+         * - an \e isomorphism of a facet pairing means a relabelling of the
+         *   simplices and a relabelling of the (\a dim + 1) facets within
+         *   each simplex;
+         *
+         * - a facet pairing is in <i>canonical form</i> if it is a
+         *   lexicographically minimal representative of its isomorphism class,
+         *   where we order facet pairings by lexicographical comparison of
+         *   <tt>dest(0,0)</tt>, <tt>dest(0,1)</tt>, ...,
+         *   <tt>dest(size()-1,\a dim)</tt>.
+         *
+         * Note that, while the canoncial form is uniquely determined,
+         * the isomorphism is not (since the facet pairing could have
+         * non-trivial automorphisms).
+         *
+         * \pre This facet pairing is connected, i.e., it is possible
+         * to reach any simplex from any other simplex via a
+         * series of matched facet pairs.
+         *
+         * @return a pair (\a c, \a iso), where \a c is the canonical form
+         * and \a iso is the isomorphism that converts this facet pairing
+         * into \a c.
+         */
+        std::pair<FacetPairing<dim>, Isomorphism<dim>> canonical() const;
 
         /**
          * Returns the set of all combinatorial automorphisms of this
