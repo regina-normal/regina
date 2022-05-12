@@ -7,6 +7,13 @@ SET ( FILES
   boundary6.cpp
   boundary7.cpp
   boundary8.cpp
+  facetpairing2.cpp
+  facetpairing3.cpp
+  facetpairing4.cpp
+  facetpairing5.cpp
+  facetpairing6.cpp
+  facetpairing7.cpp
+  facetpairing8.cpp
   triangulation2.cpp
   triangulation3.cpp
   triangulation4.cpp
@@ -29,6 +36,13 @@ SET ( FILES
   boundary13.cpp
   boundary14.cpp
   boundary15.cpp
+  facetpairing9.cpp
+  facetpairing10.cpp
+  facetpairing11.cpp
+  facetpairing12.cpp
+  facetpairing13.cpp
+  facetpairing14.cpp
+  facetpairing15.cpp
   triangulation9.cpp
   triangulation10.cpp
   triangulation11.cpp
