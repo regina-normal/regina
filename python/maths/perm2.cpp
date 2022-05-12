@@ -83,7 +83,6 @@ void addPerm2(pybind11::module_& m) {
         .def("sign", &Perm<2>::sign)
         .def("__getitem__", &Perm<2>::operator[])
         .def("pre", &Perm<2>::pre)
-        .def("preImageOf", &Perm<2>::pre) // deprecated
         .def("compareWith", &Perm<2>::compareWith)
         .def("isIdentity", &Perm<2>::isIdentity)
         .def("inc", [](Perm<2>& p) {
@@ -91,10 +90,6 @@ void addPerm2(pybind11::module_& m) {
         })
         .def(pybind11::self < pybind11::self)
         .def_static("rot", &Perm<2>::rot)
-        // index and atIndex are deprecated, so do not call them directly.
-        .def_static("atIndex",
-            [](Perm<2>::Index i) { return Perm<2>::orderedSn[i]; })
-        .def("index", &Perm<2>::orderedSnIndex)
         .def_static("rand", (Perm<2> (*)(bool))(&Perm<2>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<2>::trunc)

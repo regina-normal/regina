@@ -44,11 +44,9 @@ void addManifold(pybind11::module_& m) {
     auto c = pybind11::class_<Manifold>(m, "Manifold")
         .def("name", &Manifold::name)
         .def("texName", &Manifold::texName)
-        .def("TeXName", &Manifold::texName) // deprecated
         .def("structure", &Manifold::structure)
         .def("construct", &Manifold::construct)
         .def("homology", &Manifold::homology)
-        .def("homologyH1", &Manifold::homology) // deprecated
         .def("isHyperbolic", &Manifold::isHyperbolic)
         // We cannot bind the < operator in the normal way:
         // see https://github.com/pybind/pybind11/issues/1487 for details.

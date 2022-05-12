@@ -150,15 +150,6 @@ class PlugTriSolidTorus : public StandardTriangulation {
         PlugTriSolidTorus& operator = (const PlugTriSolidTorus&) = default;
 
         /**
-         * Deprecated routine that returns a new copy of this structure.
-         *
-         * \deprecated Just use the copy constructor instead.
-         *
-         * @return a newly created clone.
-         */
-        [[deprecated]] PlugTriSolidTorus* clone() const;
-
-        /**
          * Swaps the contents of this and the given structure.
          *
          * @param other the structure whose contents should be swapped
@@ -278,15 +269,6 @@ class PlugTriSolidTorus : public StandardTriangulation {
          * triangular solid torus.
          */
         static std::unique_ptr<PlugTriSolidTorus> recognise(Component<3>* comp);
-        /**
-         * A deprecated alias to recognise if a component forms a
-         * plugged triangular solid torus.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<PlugTriSolidTorus>
-            isPlugTriSolidTorus(Component<3>* comp);
 
         std::unique_ptr<Manifold> manifold() const override;
         std::ostream& writeName(std::ostream& out) const override;
@@ -320,10 +302,6 @@ void swap(PlugTriSolidTorus& a, PlugTriSolidTorus& b) noexcept;
 
 inline PlugTriSolidTorus::PlugTriSolidTorus(const TriSolidTorus& core) :
         core_(core), chainType_ { CHAIN_NONE, CHAIN_NONE, CHAIN_NONE } {
-}
-
-inline PlugTriSolidTorus* PlugTriSolidTorus::clone() const {
-    return new PlugTriSolidTorus(*this);
 }
 
 inline void PlugTriSolidTorus::swap(PlugTriSolidTorus& other) noexcept {
@@ -363,11 +341,6 @@ inline bool PlugTriSolidTorus::operator != (
 
 inline void swap(PlugTriSolidTorus& a, PlugTriSolidTorus& b) noexcept {
     a.swap(b);
-}
-
-inline std::unique_ptr<PlugTriSolidTorus>
-        PlugTriSolidTorus::isPlugTriSolidTorus(Component<3>* comp) {
-    return recognise(comp);
 }
 
 } // namespace regina

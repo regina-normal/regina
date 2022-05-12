@@ -170,38 +170,6 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
     }
 }
 
-std::shared_ptr<PacketOf<AngleStructures>> AngleStructures::enumerate(
-        Triangulation<3>& triangulation, bool tautOnly,
-        ProgressTracker* tracker) {
-    auto ans = make_packet<AngleStructures>(std::in_place, tautOnly,
-        AS_ALG_DEFAULT, triangulation);
-    auto treeParent = triangulation.inAnyPacket();
-
-    if (tracker) {
-        // We pass the shared pointers ans and treeParent into the thread
-        // to ensure that they survive for the lifetime of the thread.
-        std::thread([tracker](
-                // NOLINTNEXTLINE(performance-unnecessary-value-param)
-                std::shared_ptr<AngleStructures> a,
-                // NOLINTNEXTLINE(performance-unnecessary-value-param)
-                std::shared_ptr<Packet> p) {
-            a->enumerateInternal(tracker, p.get());
-        }, ans, std::move(treeParent)).detach();
-    } else
-        ans->enumerateInternal(nullptr, treeParent.get());
-    return ans;
-}
-
-std::shared_ptr<PacketOf<AngleStructures>> AngleStructures::enumerateTautDD(
-        Triangulation<3>& triangulation) {
-    auto ans = make_packet<AngleStructures>(std::in_place, true, AS_ALG_DD,
-        triangulation);
-    auto treeParent = triangulation.inAnyPacket();
-
-    ans->enumerateInternal(nullptr /* tracker */, treeParent.get());
-    return ans;
-}
-
 void AngleStructures::writeTextShort(std::ostream& o) const {
     o << structures_.size() << " vertex angle structure";
     if (structures_.size() != 1)

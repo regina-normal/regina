@@ -12,17 +12,25 @@ Version 7.1  [ TODO ]
     GENERAL:
         - Regina now supports Python 3 only (not Python 2 or 3).
         - Updated the bundled copy of Normaliz to version 3.9.2 (7 Feb 2022).
+        - Removed all code that was deprecated in or before version 7.0.
     ENGINE:
         Class CallableArg<...>:
             - Now a public helper class in the main regina:: namespace.
             - Now behaves gracefully if the given index is out of range.
+        Class Edge<3>:
+            - Now specialised (instead of using the generic Face template).
+            - New routine linkingSurface().
         Class Example<4>:
             - New routine k3().
             - Reflected the result of cp2() so that it has intersection
               form [1], not [-1].
         Class FacetPairing<dim>:
+            - New routine canonical().
             - In findAllPairings(), the action is no longer required to
               take the list of all automorphisms if it does not need them.
+        Class HilbertPrimal:
+            - The header no longer includes the Normaliz headers (which
+              Regina does not actually ship with its development files).
         Class IntersectionForm:
             - New class to compute invariants of intersection forms.
         Class Isomorphism:
@@ -37,6 +45,17 @@ Version 7.1  [ TODO ]
               square (this is a precondition), and now returns 1 if the
               matrix is detected to be 0-by-0 (although such matrices are
               formally not supported by the Matrix class).
+            - You can now multiply a matrix over type T with a matrix or vector
+              over type U, where T and U are different types.
+        Class NormalHypersurface:
+            - New operators * and *= for taking integer multiples.  The old
+              doubleHypersurface() is now deprecated.
+            - New routine scaleDown().
+        Class NormalSurface:
+            - New operators * and *= for taking integer multiples.  The old
+              doubleSurface() is now deprecated.
+            - New routine scaleDown().
+            - New routine isNormalEdgeLink().
         Type safe_tuple_element<...>:
             - New type alias that is like std::tuple_element<...> but
               with well-defined behaviour for an out-of-range index.
@@ -47,6 +66,12 @@ Version 7.1  [ TODO ]
             - New suite of routines dualToPrimal().
         Class Triangulation<4>:
             - New routine intersectionForm().
+            - New optimisations that reduce the need for 3-sphere/3-ball
+              recognition when modifying a triangulation.
+        Class Vector:
+            - Routine scaleDown() now returns the gcd that was used.
+        Class Vertex<3>:
+            - New routine linkingSurface().
         Routine for_constexpr():
             - New routine to support compile-time for loops.
     PYTHON:
@@ -1066,13 +1091,9 @@ Version 7.0  [ 19 December, 2021 ]
               exception on error (instead of returning null), and will not
               insert the new list into the packet tree.  The old functions
               are kept as deprecated aliases.
-            - Replaced filter() with a class constructor that takes a
-              SurfaceFilter; this will not insert the new list into the packet
-              tree.  The old function is kept as a deprecated alias, but
-              now takes its filter argument by reference (not by pointer).
+            - Added a class constructor that takes a SurfaceFilter.
             - Added begin() and end() for iteration through surfaces.
             - Added comparison operators == and !=.
-            - New filter() method that takes a SurfaceFilter.
             - Changed triangulation() and surface() to return const references,
               not pointers.
             - Changed enumerate() to take the triangulation argument by
@@ -1101,10 +1122,6 @@ Version 7.0  [ 19 December, 2021 ]
             - New exception class.
         Class NotImplemented:
             - New exception class.
-        Class NSVectorMirrored:
-            - Changed makeMirror() to take its triangulation by reference,
-              not by pointer.  Also removed the static versions of makeMirror();
-              only the virtual (non-static) function is used.
         Class Packet:
             - Packets are now managed exclusively by std::shared_ptr.
               Creating a new packet *without* wrapping it in a std::shared_ptr
@@ -1385,6 +1402,9 @@ Version 7.0  [ 19 December, 2021 ]
             - New routine blockAbbrs() that returns the output of
               writeBlockAbbrs() in string format.
             - Added comparison operators == and !=.
+            - Renamed numberOfBlocks() and numberOfBoundaryAnnuli() to
+              countBlocks() and countBoundaryAnnuli(); the old names are
+              kept as deprecated aliases.
             - All access to the underlying triangulation is now const only.
         Class Script:
             - Added a copy constructor and a copy assignment operator.
@@ -1761,6 +1781,8 @@ Version 7.0  [ 19 December, 2021 ]
             - Routines insertLayeredLoop(), insertLayeredLensSpace(),
               insertAugTriSolidTorus() and insertSFSOverSphere() are all
               deprecated.  Use the routines from Example<3> instead.
+            - Routine insertRehydration() is deprecated.  Use rehydrate()
+              instead.
             - Routine enterTextTriangulation() is now deprecated; this
               is a relic from Regina's ancient past.
         Class Triangulation<4>:

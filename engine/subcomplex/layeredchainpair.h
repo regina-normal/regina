@@ -100,15 +100,6 @@ class LayeredChainPair : public StandardTriangulation {
         LayeredChainPair& operator = (const LayeredChainPair&) = default;
 
         /**
-         * Deprecated routine that returns a new copy of this structure.
-         *
-         * \deprecated Just use the copy constructor instead.
-         *
-         * @return a newly created clone.
-         */
-        [[deprecated]] LayeredChainPair* clone() const;
-
-        /**
          * Swaps the contents of this and the given structure.
          *
          * @param other the structure whose contents should be swapped
@@ -183,16 +174,6 @@ class LayeredChainPair : public StandardTriangulation {
          */
         static std::unique_ptr<LayeredChainPair> recognise(
             const Component<3>* comp);
-        /**
-         * A deprecated alias to recognise if a component is a layered chain
-         * pair.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<LayeredChainPair>
-            isLayeredChainPair(const Component<3>* comp);
-
         std::unique_ptr<Manifold> manifold() const override;
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
@@ -230,10 +211,6 @@ inline void LayeredChainPair::swap(LayeredChainPair& other) noexcept {
     chain_[1].swap(other.chain_[1]);
 }
 
-inline LayeredChainPair* LayeredChainPair::clone() const {
-    return new LayeredChainPair(*this);
-}
-
 inline const LayeredChain& LayeredChainPair::chain(int which) const {
     return chain_[which];
 }
@@ -256,11 +233,6 @@ inline std::ostream& LayeredChainPair::writeTeXName(std::ostream& out) const {
 inline void LayeredChainPair::writeTextLong(std::ostream& out) const {
     out << "Layered chain pair (chain lengths "
         << chain_[0].index() << ", " << chain_[1].index() << ')';
-}
-
-inline std::unique_ptr<LayeredChainPair> LayeredChainPair::isLayeredChainPair(
-        const Component<3>* comp) {
-    return recognise(comp);
 }
 
 inline void swap(LayeredChainPair& a, LayeredChainPair& b) noexcept {

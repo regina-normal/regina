@@ -121,7 +121,5 @@ void addSFSpace(pybind11::module_& m) {
         .value("bn3", SFSpace::bn3)
         .export_values()
         ;
-
-    s.attr("classType") = s.attr("ClassType"); // deprecated type alias
 }
 

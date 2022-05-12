@@ -83,30 +83,6 @@ LargeInteger NormalSurface::arcs(size_t triIndex, int triVertex) const {
     return ans;
 }
 
-NormalSurface NormalSurface::doubleSurface() const {
-    // Don't use the copy constructor, because we want to choose which
-    // properties we keep.
-    NormalSurface ans(triangulation_, enc_, vector_);
-
-    ans.vector_ += ans.vector_;
-
-    // Some properties can be copied straight across.
-    ans.realBoundary_ = realBoundary_;
-    ans.compact_ = compact_;
-    if (eulerChar_.has_value())
-        ans.eulerChar_ = (*eulerChar_) * 2;
-
-    // The following three properties can be used together to deduce how
-    // they change in the clone.  However, until we sit down and check
-    // through all possible cases we'll just leave them marked unknown.
-
-    // TODO: ans.orientable_, ans.twoSided_, ans.connected_
-
-    // And some other properties are best left recalculated.
-
-    return ans;
-}
-
 void NormalSurface::writeTextShort(std::ostream& out) const {
     size_t nTets = triangulation_->size();
     for (size_t tet = 0; tet < nTets; tet++) {
@@ -536,6 +512,90 @@ NormalSurface NormalSurface::operator + (const NormalSurface& rhs) const {
         }
         return NormalSurface(triangulation_, enc_ + rhs.enc_, std::move(v));
     }
+}
+
+NormalSurface NormalSurface::operator * (const LargeInteger& coeff) const {
+    NormalSurface ans(triangulation_, enc_, vector_ * coeff);
+
+    if (coeff == 0) {
+        ans.octPosition_ = {};
+        ans.eulerChar_ = 0;
+        ans.boundaries_ = 0;
+        ans.orientable_ = true;
+        ans.twoSided_ = true;
+        ans.connected_ = true;
+        ans.realBoundary_ = false;
+        ans.compact_ = true;
+    } else {
+        // Deduce some basic properties.
+        ans.octPosition_ = octPosition_;
+        if (eulerChar_.has_value())
+            ans.eulerChar_ = (*eulerChar_) * coeff;
+        ans.realBoundary_ = realBoundary_;
+        ans.compact_ = compact_;
+
+        // The following three properties can be used together to deduce how
+        // they change in the result.  However, until we sit down and check
+        // through all possible cases we'll just leave them marked unknown.
+
+        // TODO: ans.orientable_, ans.twoSided_, ans.connected_
+
+        // And some other properties are best left recalculated.
+    }
+
+    return ans;
+}
+
+NormalSurface& NormalSurface::operator *= (const LargeInteger& coeff) {
+    vector_ *= coeff;
+
+    // Update properties of the surface where necessary:
+    if (coeff == 0) {
+        octPosition_ = {};
+        eulerChar_ = 0;
+        boundaries_ = 0;
+        orientable_ = true;
+        twoSided_ = true;
+        connected_ = true;
+        realBoundary_ = false;
+        compact_ = true;
+    } else {
+        // Some properties change, and we know how:
+        if (eulerChar_.has_value())
+            *eulerChar_ *= coeff;
+
+        // Some properties might change, and we will leave them to be
+        // recomputed:
+        boundaries_.reset();
+        orientable_.reset();
+        twoSided_.reset();
+        connected_.reset();
+
+        // All other properties are preserved:
+        // - octPosition_, realBoundary_, compact_
+    }
+
+    return *this;
+}
+
+LargeInteger NormalSurface::scaleDown() {
+    LargeInteger ans = vector_.scaleDown();
+
+    // Update properties of the surface where necessary:
+    if (eulerChar_.has_value())
+        eulerChar_->divByExact(ans);
+
+    // Some properties might change, and we will leave them to be
+    // recomputed:
+    boundaries_.reset();
+    orientable_.reset();
+    twoSided_.reset();
+    connected_.reset();
+
+    // All other properties are preserved:
+    // - octPosition_, realBoundary_, compact_
+
+    return ans;
 }
 
 } // namespace regina

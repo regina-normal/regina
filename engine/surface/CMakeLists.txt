@@ -7,7 +7,6 @@ SET ( FILES
   crushandcut.cpp
   csv.cpp
   disc.cpp
-  disctype.cpp
   enumerator.cpp
   links.cpp
   matching.cpp

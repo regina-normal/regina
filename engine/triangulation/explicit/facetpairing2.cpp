@@ -30,12 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file surfaces/prism.h
- *  \brief Deprecated placeholder for a renamed header.
- *  \deprecated This header has been renamed to surface/prism.h.
- */
+#include "triangulation/detail/facetpairing-canonical-impl.h"
 
-#warning This header has been renamed to surface/prism.h.  This old header will be removed in a future version of Regina.
+namespace regina::detail {
 
-#include "surface/prism.h"
+template bool FacetPairingBase<2>::isCanonical() const;
+template std::pair<FacetPairing<2>, Isomorphism<2>>
+    FacetPairingBase<2>::canonical() const;
+template bool FacetPairingBase<2>::isCanonicalInternal(
+    FacetPairingBase<2>::IsoList* list) const;
 
+} // namespace regina::detail

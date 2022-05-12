@@ -404,16 +404,6 @@ class Tangle : public Output<Tangle> {
         void swap(Tangle& other) noexcept;
 
         /**
-         * Deprecated routine that swaps the contents of this and the
-         * given tangle.
-         *
-         * \deprecated Use swap() instead.
-         *
-         * @param other the tangle whose contents should be swapped with this.
-         */
-        [[deprecated]] void swapContents(Tangle& other) noexcept;
-
-        /**
          * Adds a twist to the right-hand end of this tangle.
          *
          * @param sign either 1 if we should perform a positive twist
@@ -1023,10 +1013,6 @@ inline Tangle::Tangle() : type_('-') {
 inline Tangle::~Tangle() {
     for (Crossing* c : crossings_)
         delete c;
-}
-
-inline void Tangle::swapContents(Tangle& other) noexcept {
-    swap(other);
 }
 
 inline char Tangle::type() const {

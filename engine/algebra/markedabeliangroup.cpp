@@ -984,28 +984,6 @@ Vector<Integer> HomMarkedAbelianGroup::evalSNF(const Vector<Integer>& input)
 }
 
 
-void HomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
-    // Cast away const to compute the reduced matrix -- the only reason we're
-    // changing data members now is because we delayed calculations
-    // until they were really required.
-    const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
-
-    out<<"Reduced Matrix is "<<reducedMatrix_->rows()<<" by "
-        <<reducedMatrix_->columns()<<" corresponding to domain ";
-    domain_.writeTextShort(out);
-    out<<" and codomain ";
-    codomain_.writeTextShort(out);
-    out<<"\n";
-    for (unsigned long i=0;i<reducedMatrix_->rows();i++) {
-        out<<"[";
-        for (unsigned long j=0;j<reducedMatrix_->columns();j++) {
-            out<<reducedMatrix_->entry(i,j);
-            if (j+1 < reducedMatrix_->columns()) out<<" ";
-        }
-        out<<"]\n";
-    }
-}
-
 std::string HomMarkedAbelianGroup::summary() const {
     std::ostringstream out;
     summary(out);

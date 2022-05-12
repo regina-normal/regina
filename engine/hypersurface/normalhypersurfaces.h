@@ -198,11 +198,17 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * coordinate systems, and for all such coordinate systems this is
          * explicitly described in the HyperCoords enum documentation.
          *
-         * \exception UnsolvedCase the matching equations could not
+         * \exception UnsolvedCase the list of hypersurfaces could not be
          * be created for the given triangulation in the given coordinate
          * system, due to an error that was "genuinely" unforseeable.
-         * Again this can only happen in certain coordinate systems, where
-         * this is explicitly described in the HyperCoords enum documentation.
+         * Currently there are two scenarios in which this could happen:
+         * (i) the matching equations could not be constructed, which can
+         * only happen in certain coordinate systems where this is explicitly
+         * described in the HyperCoords enum documentation; or
+         * (ii) the arguments require enumerating \e fundamental normal
+         * surfaces using the primal Hilbert basis algorithm, and Normaliz
+         * was unable to complete its portion of the task, which in theory
+         * should never happen at all.
          *
          * \ifacespython The global interpreter lock will be released while
          * this constructor runs, so you can use it with Python-based
@@ -286,65 +292,6 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
          * @param other the list whose contents should be swapped with this.
          */
         void swap(NormalHypersurfaces& other);
-
-        /**
-         * Deprecated routine to enumerate normal hypersurfaces within a
-         * given triangulation.
-         *
-         * This static routine is identical to calling the class
-         * constructor with the given arguments, but with three differences:
-         *
-         * - If a progress tracker is passed, this routine will start the
-         *   enumeration in a detached background thread and return immediately
-         *   (unlike the class constructor, which does not return until the
-         *   enumeration is finished).
-         *
-         * - This routine wraps the new normal hypersurface list in a packet and
-         *   inserts it beneath \a owner in the packet tree (unlike the class
-         *   constructor, which creates a plain NormalHypersurfaces object).
-         *   If a progress tracker is passed (i.e., the enumeration runs in a
-         *   background thread) then this tree insertion will not happen until
-         *   the enumeration has finished, and if the user cancels the
-         *   operation then the insertion will not happen at all.
-         *
-         * - If there is an error, this routine will return \c null (unlike
-         *   the class constructor, which throws an exception).
-         *
-         * This function is safe to use even if \a owner is a "pure"
-         * Triangulation<4>, not a packet type.  In such a scenario, this
-         * routine will still build the normal hypersurface list, but the
-         * resulting packet will be orphaned.
-         *
-         * See the class constructor for details on how this routine works
-         * and what the arguments mean.
-         *
-         * \deprecated Just call the NormalHypersurfaces constructor.
-         *
-         * \ifacespython For this deprecated function, the progress tracker
-         * argument is omitted.  It is still possible to enumerate in
-         * the background with a progress tracker, but for that you will
-         * need to call the class constructor instead and create the new
-         * thread yourself.
-         *
-         * @param owner the triangulation upon which this list of normal
-         * hypersurfaces will be based.
-         * @param coords the coordinate system to be used.
-         * @param which indicates which normal hypersurfaces should be
-         * enumerated.
-         * @param algHints passes requests to Regina for which specific
-         * enumeration algorithm should be used.
-         * @param tracker a progress tracker through which progress will
-         * be reported, or \c null if no progress reporting is required.
-         * @return the new normal hypersurface list, or \c null if an error
-         * occured.
-         */
-        [[deprecated]] static std::shared_ptr<PacketOf<NormalHypersurfaces>>
-            enumerate(
-                Triangulation<4>& owner,
-                HyperCoords coords,
-                HyperList which = HS_LIST_DEFAULT,
-                HyperAlg algHints = HS_ALG_DEFAULT,
-                ProgressTracker* tracker = nullptr);
 
         /**
          * Returns the coordinate system that was originally used to enumerate

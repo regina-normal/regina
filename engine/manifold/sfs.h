@@ -272,16 +272,6 @@ class SFSpace : public Manifold {
                      precisely to its orientation-reversing paths. */
         };
 
-        /**
-         * Deprecated alias for the ClassType enumeration, which lists the
-         * different classes for base orbifolds.
-         *
-         * \deprecated This enumeration has been renamed from \a classType
-         * to \a ClassType, for consistency with the names of other
-         * enumeration types across Regina.
-         */
-        using classType [[deprecated]] = ClassType;
-
     private:
         ClassType class_;
             /**< Indicates which of the classes above this space belongs to. */

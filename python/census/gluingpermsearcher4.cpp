@@ -49,8 +49,6 @@ void addGluingPermSearcher4(pybind11::module_& m) {
         .def("runSearch", &GluingPermSearcher<4>::runSearch<Action>)
         .def("partialSearch", &GluingPermSearcher<4>::partialSearch<Action>)
         .def("isComplete", &GluingPermSearcher<4>::isComplete)
-        .def("completePermSet", // deprecated
-            &GluingPermSearcher<4>::isComplete)
         .def("taggedData", &GluingPermSearcher<4>::taggedData)
         .def("data", &GluingPermSearcher<4>::data)
         .def_static("findAllPerms",

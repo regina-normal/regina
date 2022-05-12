@@ -93,15 +93,6 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
         PillowTwoSphere& operator = (const PillowTwoSphere&) = default;
 
         /**
-         * Deprecated routine that returns a new copy of this structure.
-         *
-         * \deprecated Just use the copy constructor instead.
-         *
-         * @return a newly created clone.
-         */
-        [[deprecated]] PillowTwoSphere* clone() const;
-
-        /**
          * Returns one of the two triangles whose boundaries are joined.
          *
          * @param index specifies which of the two triangles to return;
@@ -180,16 +171,6 @@ class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
             Triangle<3>* tri1, Triangle<3>* tri2);
 
         /**
-         * A deprecated alias to recognise if two triangles together
-         * form a pillow 2-sphere.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<PillowTwoSphere>
-            formsPillowTwoSphere(Triangle<3>* tri1, Triangle<3>* tri2);
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -213,9 +194,6 @@ inline PillowTwoSphere::PillowTwoSphere(Triangle<3>* tri0, Triangle<3>* tri1,
         Perm<4> triMapping) :
         triangle_ { tri0, tri1 }, triMapping_(triMapping) {
 }
-inline PillowTwoSphere* PillowTwoSphere::clone() const {
-    return new PillowTwoSphere(*this);
-}
 inline Triangle<3>* PillowTwoSphere::triangle(int index) const {
     return triangle_[index];
 }
@@ -234,11 +212,6 @@ inline bool PillowTwoSphere::operator != (const PillowTwoSphere& other) const {
         triangle_[0]->index() != other.triangle_[0]->index() ||
         triangle_[1]->index() != other.triangle_[1]->index() ||
         triMapping_ != other.triMapping_;
-}
-
-inline std::unique_ptr<PillowTwoSphere> PillowTwoSphere::formsPillowTwoSphere(
-        Triangle<3>* tri1, Triangle<3>* tri2) {
-    return recognise(tri1, tri2);
 }
 
 } // namespace regina

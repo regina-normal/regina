@@ -1367,14 +1367,21 @@
     </para>
    </caution>
 
-   <sect3 id="tri-algebra-homfund">
-    <title>Homology and Fundamental Group</title>
+   <sect3 id="tri-algebra-homiform">
+    <title>Homology and Intersection Form</title>
     <para>
      The <guilabel>Algebra</guilabel>&rarr;<guilabel>Homology &amp;
      Fund. Group</guilabel>
      tab presents several homology groups of the triangulation
-     (on the left side of the panel),
-     as well as the fundamental group (on the right side of the panel).
+     on the left side of the panel.
+     For 4-manifolds, it also presents invariants of the intersection form.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="tri-iform"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
     <para>
      The homology groups on the left include the first homology group
@@ -1392,7 +1399,54 @@
      will be shown also.
     </para>
     <para>
-     The fundamental group on the right will be
+     The intersection form will only be presented for closed orientable
+     4-manifold triangulations.  It will be described using the
+     following invariants of a symmetric bilinear integral form:
+     <glosslist>
+      <glossentry>
+       <glossterm>Type</glossterm>
+       <glossdef>
+        <para>
+         A bilinear form <replaceable>Q</replaceable>
+         has <firstterm>even</firstterm> type if
+         <replaceable>Q</replaceable>(<replaceable>x</replaceable>,<replaceable>x</replaceable>)
+         is even for all <replaceable>x</replaceable>,
+         or has <firstterm>odd</firstterm> type otherwise.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Rank</glossterm>
+       <glossdef>
+        <para>
+         This is the rank of the underlying symmetric square matrix.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry>
+       <glossterm>Signature</glossterm>
+       <glossdef>
+        <para>
+         This is the number of positive eigenvalues minus the number of
+         negative eigenvalues of the underlying symmetric square matrix.
+        </para>
+       </glossdef>
+      </glossentry>
+     </glosslist>
+     For simply connected closed manifolds, these invariants are enough
+     to completely identify the 4-manifold up to homeomorphism.
+     If you wish to see the full underlying symmetric square matrix, you
+     can access this through <link linkend="python">&python;</link>
+     as <literal>tri.intersectionForm().matrix()</literal>
+     (where <literal>tri</literal> is your 4-manifold triangulation).
+    </para>
+   </sect3>
+   <sect3 id="tri-algebra-fund">
+    <title>Fundamental Group</title>
+    <para>
+     On the right hand side of the
+     <guilabel>Algebra</guilabel>&rarr;<guilabel>Homology &amp;
+     Fund. Group</guilabel> tab, you will see the fundamental group
      presented as a set of generators and relations.
      &regina; will also try to recognise the common name of this
      group (though the recognition code is fairly na&iuml;ve); if it can then
@@ -1776,7 +1830,7 @@
   </sect2>
 
   <sect2 id="tri-composition">
-   <title>Combinatorial Composition (3-D)</title>
+   <title>Combinatorial Composition (3-D and 4-D)</title>
    <para>
     For 3-manifold triangulations, the <guilabel>Composition</guilabel> tab
     offers more detailed information about the combinatorial
@@ -1789,10 +1843,16 @@
     both the triangulation and the underlying 3-manifold; other times
     it yields little or no useful information.
    </para>
+   <para>
+    For 4-manifold triangulations, there is also a
+    <guilabel>Composition</guilabel> tab but this is much more
+    basic&mdash;currently it just offers the isomorphism signature and
+    isomorphism testing.
+   </para>
    <tip><para>
     If your aim is just to determine the underlying 3-manifold by any means
     possible, see the
-    <link linkend="tri-recognition">recognition tab</link> instead.
+    <link linkend="tri-recognition">3-manifold recognition tab</link> instead.
     The recognition tab combines the results of this combinatorial
     recognition with slower but stronger routines, including
     3-sphere, 3-ball, solid torus and &txi; recognition,
@@ -1881,9 +1941,15 @@
     <para>
      Isomorphism signatures are case-sensitive (i.e., upper-case and
      lower-case matters).
-     To copy the isomorphism signature to the clipboard, simply select
-     the line in the box and choose
-     <menuchoice><guimenu>Edit</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>.
+     To copy the isomorphism signature to the clipboard,
+     right-click on the signature and a copy action will appear.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="tri-composition-isosig-copy"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
    </sect3>
 

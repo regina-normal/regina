@@ -1124,16 +1124,6 @@ class Link : public PacketData<Link>, public Output<Link> {
         void swap(Link& other);
 
         /**
-         * Deprecated routine that swaps the contents of this and the
-         * given link.
-         *
-         * \deprecated Use swap() instead.
-         *
-         * @param other the link whose contents should be swapped with this.
-         */
-        [[deprecated]] void swapContents(Link& other);
-
-        /**
          * Switches the upper and lower strands of the given crossing.
          *
          * @param c the crossing to change.
@@ -4639,10 +4629,6 @@ inline Link::Link(size_t unknots) {
 }
 
 inline Link::Link(const Link& cloneMe) : Link(cloneMe, true) {
-}
-
-inline void Link::swapContents(Link& other) {
-    swap(other);
 }
 
 inline size_t Link::size() const {

@@ -105,15 +105,6 @@ class Manifold : public Output<Manifold> {
          */
         std::string texName() const;
         /**
-         * Deprecated routine that returns the common name of this 3-manifold
-         * in TeX format.
-         *
-         * \deprecated This routine has been renamed to texName().
-         *
-         * @return the common name of this 3-manifold in TeX format.
-         */
-        [[deprecated]] std::string TeXName() const;
-        /**
          * Returns details of the structure of this 3-manifold that
          * might not be evident from its common name.  For instance, for
          * an orbit space S^3/G this routine might return the full
@@ -157,9 +148,6 @@ class Manifold : public Output<Manifold> {
          * The default implemention of this routine just throws a
          * NotImplemented exception.
          *
-         * This routine can also be accessed via the alias homologyH1()
-         * (a name that is more specific, but a little longer to type).
-         *
          * \exception NotImplemented homology calculation has not yet been
          * implemented for this particular 3-manifold.
          *
@@ -173,25 +161,6 @@ class Manifold : public Output<Manifold> {
          * functionality has been implemented.
          */
         virtual AbelianGroup homology() const;
-        /**
-         * A deprecated alias for homology().
-         *
-         * \deprecated This routine can be accessed by the simpler name
-         * homology().
-         *
-         * \exception NotImplemented homology calculation has not yet been
-         * implemented for this particular 3-manifold.
-         *
-         * \exception the homology needs to be read from file (as opposed to
-         * computed), but the file is inaccessible or its contents cannot be
-         * read and parsed correctly.  Currently this can only happen for the
-         * subclass SnapPeaCensusManifold, which reads its results from the
-         * SnapPea census databases that are installed with Regina.
-         *
-         * @return the first homology group of this 3-manifold, if this
-         * functionality has been implemented.
-         */
-        [[deprecated]] AbelianGroup homologyH1() const;
 
         /**
          * Returns whether or not this is a finite-volume hyperbolic manifold.
@@ -327,14 +296,6 @@ class Manifold : public Output<Manifold> {
 };
 
 // Inline functions for Manifold
-
-inline std::string Manifold::TeXName() const {
-    return texName();
-}
-
-inline AbelianGroup Manifold::homologyH1() const {
-    return homology();
-}
 
 inline std::ostream& Manifold::writeStructure(std::ostream& out) const {
     return out;

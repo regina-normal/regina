@@ -30,12 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file surfaces/surfacefiltertype.h
- *  \brief Deprecated placeholder for a renamed header.
- *  \deprecated This header has been renamed to surface/surfacefiltertype.h.
- */
+#include "triangulation/detail/facetpairing-canonical-impl.h"
 
-#warning This header has been renamed to surface/surfacefiltertype.h.  This old header will be removed in a future version of Regina.
+namespace regina::detail {
 
-#include "surface/surfacefiltertype.h"
+template bool FacetPairingBase<4>::isCanonical() const;
+template std::pair<FacetPairing<4>, Isomorphism<4>>
+    FacetPairingBase<4>::canonical() const;
+template bool FacetPairingBase<4>::isCanonicalInternal(
+    FacetPairingBase<4>::IsoList* list) const;
 
+} // namespace regina::detail

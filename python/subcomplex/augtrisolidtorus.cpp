@@ -43,9 +43,6 @@ void addAugTriSolidTorus(pybind11::module_& m) {
     auto c = pybind11::class_<AugTriSolidTorus, regina::StandardTriangulation>
             (m, "AugTriSolidTorus")
         .def(pybind11::init<const AugTriSolidTorus&>())
-        .def("clone", [](const AugTriSolidTorus& s) { // deprecated
-            return AugTriSolidTorus(s);
-        })
         .def("swap", &AugTriSolidTorus::swap)
         .def("core", &AugTriSolidTorus::core,
             pybind11::return_value_policy::reference_internal)
@@ -57,8 +54,6 @@ void addAugTriSolidTorus(pybind11::module_& m) {
         .def("torusAnnulus", &AugTriSolidTorus::torusAnnulus)
         .def("hasLayeredChain", &AugTriSolidTorus::hasLayeredChain)
         .def_static("recognise", &AugTriSolidTorus::recognise)
-        .def_static("isAugTriSolidTorus", // deprecated
-            &AugTriSolidTorus::recognise)
         .def_readonly_static("CHAIN_NONE", &AugTriSolidTorus::CHAIN_NONE)
         .def_readonly_static("CHAIN_MAJOR", &AugTriSolidTorus::CHAIN_MAJOR)
         .def_readonly_static("CHAIN_AXIS", &AugTriSolidTorus::CHAIN_AXIS)

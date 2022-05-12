@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  hilbertprimal
   treeconstraint.cpp
   treelp.cpp
   treetraversal.cpp

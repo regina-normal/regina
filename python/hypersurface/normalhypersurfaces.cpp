@@ -61,24 +61,6 @@ void addNormalHypersurfaces(pybind11::module_& m) {
             pybind11::call_guard<pybind11::gil_scoped_release>())
         .def(pybind11::init<const NormalHypersurfaces&>())
         .def("swap", &NormalHypersurfaces::swap)
-        .def_static("enumerate", [](Triangulation<4>& owner,
-                HyperCoords coords, regina::HyperList which,
-                regina::HyperAlg algHints) {
-            // This is deprecated, so we reimplement it here ourselves.
-            // This means we can't use the progress tracker variant, which
-            // requires threading code internal to NormalHypersurfaces.
-            try {
-                auto ans = regina::make_packet<NormalHypersurfaces>(
-                    std::in_place, owner, coords, which, algHints);
-                if (auto p = owner.packet())
-                    p->insertChildLast(ans);
-                return ans;
-            } catch (const regina::ReginaException&) {
-                return std::shared_ptr<regina::PacketOf<NormalHypersurfaces>>();
-            }
-        }, pybind11::arg(), pybind11::arg(),
-            pybind11::arg("which") = regina::HS_LIST_DEFAULT,
-            pybind11::arg("algHints") = regina::HS_ALG_DEFAULT)
         .def("sort", &NormalHypersurfaces::sort<const std::function<
             bool(const NormalHypersurface&, const NormalHypersurface&)>&>)
         .def("recreateMatchingEquations",

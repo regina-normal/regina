@@ -460,8 +460,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * \pre If \a bytes is larger than sizeof(long), then
          * \a bytes is a strict \e multiple of sizeof(long).  For
-         * instance, if longs are 8 bytes then you can use this
-         * routine with \a bytes=16 but not \a bytes=12.
+         * instance, if longs are 8 bytes then you can use this routine
+         * with \a bytes=4 or \a bytes=16 but not \a bytes=12.
          * This restriction is enforced through a compile-time assertion,
          * but may be lifted in future versions of Regina.
          *
@@ -996,32 +996,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          */
         std::pair<IntegerBase, IntegerBase> divisionAlg(
             const IntegerBase& divisor) const;
-
-        /**
-         * Deprecated function that uses the division algorithm to obtain a
-         * quotient and remainder when dividing by the given integer.
-         *
-         * This function performs the same task as the one-argument
-         * variant of divisionAlg(); however, instead of incorporating the
-         * remainder into the return value, it sends it back using a
-         * reference argument.
-         *
-         * See the one-argument variant of divisionAlg() for further details.
-         *
-         * \deprecated Use the one-argument variant of divisionAlg() instead.
-         *
-         * \pre Neither this nor the divisor are infinite.
-         *
-         * \ifacespython Not present; instead you can use the one-argument
-         * variant of divisionAlg().
-         *
-         * @param divisor the divisor.
-         * @param remainder an integer whose contents will be destroyed and
-         * replaced with the remainder.
-         * @return the quotient.
-         */
-        [[deprecated]] IntegerBase divisionAlg(const IntegerBase& divisor,
-            IntegerBase& remainder) const;
 
         /**
          * Determines the negative of this integer.
@@ -2200,30 +2174,6 @@ class NativeInteger {
             const NativeInteger& divisor) const;
 
         /**
-         * Deprecated function that uses the division algorithm to obtain a
-         * quotient and remainder when dividing by the given integer.
-         *
-         * This function performs the same task as the one-argument
-         * variant of divisionAlg(); however, instead of incorporating the
-         * remainder into the return value, it sends it back using a
-         * reference argument.
-         *
-         * See the one-argument variant of divisionAlg() for further details.
-         *
-         * \deprecated Use the one-argument variant of divisionAlg() instead.
-         *
-         * \ifacespython Not present; instead you can use the one-argument
-         * variant of divisionAlg().
-         *
-         * @param divisor the divisor.
-         * @param remainder an integer whose contents will be destroyed and
-         * replaced with the remainder.
-         * @return the quotient.
-         */
-        [[deprecated]] NativeInteger divisionAlg(const NativeInteger& divisor,
-            NativeInteger& remainder) const;
-
-        /**
          * Determines the negative of this integer.
          * This integer is not changed.
          *
@@ -2478,18 +2428,6 @@ std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
  */
 using NativeLong = NativeInteger<sizeof(long)>;
 
-/**
- * A deprecated alias for the NativeLong type alias.
- *
- * \deprecated Use NativeLong instead.
- *
- * \ifacespython Not present, since NativeInteger is not available to
- * Python users.
- *
- * \ingroup maths
- */
-using NNativeLong [[deprecated]] = NativeLong;
-
 // Inline functions for IntegerBase
 
 template <bool supportInfinity>
@@ -2621,54 +2559,61 @@ typename IntOfSize<bytes>::type
         IntegerBase<supportInfinity>::nativeValue() const {
     using Native = typename IntOfSize<bytes>::type;
     using UNative = typename IntOfSize<bytes>::utype;
-    static_assert(bytes % sizeof(long) == 0,
-        "IntegerBase::nativeValue(): native integer must partition exactly into long integers.");
 
-    if (sizeof(long) >= bytes || ! large_) {
-        // Suppose this integer lies within the given byte range.
-        // If sizeof(long) >= bytes, then it can be made to fit inside a long.
-        // If sizeof(long) < bytes but this is a native long, then we
-        // have already got it inside a long.
-        // Either way, we can just pass the long value across.
+    if constexpr (bytes <= sizeof(long)) {
+        // Since the requested type can fit inside a long, we can just
+        // extract the long value and cast down.
         return static_cast<Native>(longValue());
-    }
-    // From here: this is a GMP integer, and the return type is too
-    // large for a long.  Take one long-sized chunk at a time.
-    //
-    // We treat positive and negative numbers differently,
-    // because mpz_get_ui() *ignores* sign.  Gulp.
-    int sign = mpz_sgn(large_);
-    if (sign == 0)
-        return 0;
-
-    Native ans = 0;
-    unsigned blocks = bytes / sizeof(long);
-
-    mpz_t tmp;
-    mpz_init_set(tmp, large_);
-
-    if (sign > 0) {
-        // The positive case.
-        for (unsigned i = 0; i < blocks - 1; ++i) {
-            ans += (static_cast<UNative>(mpz_get_ui(tmp))
-                << (i * 8 * sizeof(long)));
-            mpz_fdiv_q_2exp(tmp, tmp, 8 * sizeof(long));
-        }
-        ans += (static_cast<Native>(mpz_get_ui(tmp))
-            << ((blocks - 1) * 8 * sizeof(long)));
     } else {
-        // The negative case.
-        for (unsigned i = 0; i < blocks - 1; ++i) {
-            ans -= (static_cast<UNative>(mpz_get_ui(tmp))
-                << (i * 8 * sizeof(long)));
-            mpz_tdiv_q_2exp(tmp, tmp, 8 * sizeof(long));
+        // The requested type is too big to fit inside a long.
+        if (! large_) {
+            // We are holding a native long, and so this is already
+            // safe to cast directly to the (larger) requested native type.
+            return longValue();
         }
-        ans += (static_cast<Native>(mpz_get_si(tmp))
-            << ((blocks - 1) * 8 * sizeof(long)));
-    }
 
-    mpz_clear(tmp);
-    return ans;
+        // This is a GMP integer, and the requested native type is too
+        // large for a long.  We will need to piece together the result
+        // one long-sized chunk at a time.
+        static_assert(bytes % sizeof(long) == 0,
+            "IntegerBase::nativeValue(): native integer must partition "
+            "exactly into long integers.");
+
+        // We treat positive and negative numbers differently,
+        // because mpz_get_ui() *ignores* sign.  Gulp.
+        int sign = mpz_sgn(large_);
+        if (sign == 0)
+            return 0;
+
+        Native ans = 0;
+        unsigned blocks = bytes / sizeof(long);
+
+        mpz_t tmp;
+        mpz_init_set(tmp, large_);
+
+        if (sign > 0) {
+            // The positive case.
+            for (unsigned i = 0; i < blocks - 1; ++i) {
+                ans += (static_cast<UNative>(mpz_get_ui(tmp))
+                    << (i * 8 * sizeof(long)));
+                mpz_fdiv_q_2exp(tmp, tmp, 8 * sizeof(long));
+            }
+            ans += (static_cast<Native>(mpz_get_ui(tmp))
+                << ((blocks - 1) * 8 * sizeof(long)));
+        } else {
+            // The negative case.
+            for (unsigned i = 0; i < blocks - 1; ++i) {
+                ans -= (static_cast<UNative>(mpz_get_ui(tmp))
+                    << (i * 8 * sizeof(long)));
+                mpz_tdiv_q_2exp(tmp, tmp, 8 * sizeof(long));
+            }
+            ans += (static_cast<Native>(mpz_get_si(tmp))
+                << ((blocks - 1) * 8 * sizeof(long)));
+        }
+
+        mpz_clear(tmp);
+        return ans;
+    }
 }
 
 template <bool supportInfinity>
@@ -3310,15 +3255,6 @@ inline IntegerBase<supportInfinity>
 }
 
 template <bool supportInfinity>
-inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::divisionAlg(
-        const IntegerBase<supportInfinity>& divisor,
-        IntegerBase<supportInfinity>& remainder) const {
-    auto [q, r] = divisionAlg(divisor);
-    remainder = r;
-    return q;
-}
-
-template <bool supportInfinity>
 inline IntegerBase<supportInfinity>
         IntegerBase<supportInfinity>::operator %(
         const IntegerBase<supportInfinity>& other) const {
@@ -3827,15 +3763,6 @@ inline std::pair<NativeInteger<bytes>, NativeInteger<bytes>>
     }
 
     return ans;
-}
-
-template <int bytes>
-inline NativeInteger<bytes> NativeInteger<bytes>::divisionAlg(
-        const NativeInteger<bytes>& divisor,
-        NativeInteger<bytes>& remainder) const {
-    auto [q, r] = divisionAlg(divisor);
-    remainder = r;
-    return q;
 }
 
 template <int bytes>

@@ -42,9 +42,6 @@ void addLayeredLensSpace(pybind11::module_& m) {
     auto c = pybind11::class_<LayeredLensSpace, regina::StandardTriangulation>
             (m, "LayeredLensSpace")
         .def(pybind11::init<const LayeredLensSpace&>())
-        .def("clone", [](const LayeredLensSpace& s) { // deprecated
-            return LayeredLensSpace(s);
-        })
         .def("swap", &LayeredLensSpace::swap)
         .def("p", &LayeredLensSpace::p)
         .def("q", &LayeredLensSpace::q)
@@ -54,8 +51,6 @@ void addLayeredLensSpace(pybind11::module_& m) {
         .def("isSnapped", &LayeredLensSpace::isSnapped)
         .def("isTwisted", &LayeredLensSpace::isTwisted)
         .def_static("recognise", &LayeredLensSpace::recognise)
-        .def_static("isLayeredLensSpace", // deprecated
-            &LayeredLensSpace::recognise)
     ;
     regina::python::add_eq_operators(c);
     regina::python::add_output(c);

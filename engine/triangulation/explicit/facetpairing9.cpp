@@ -30,31 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-#include "foreign/isosig.h"
-#include "link/link.h"
-#include "packet/container.h"
-#include "triangulation/dim2.h"
-#include "triangulation/dim3.h"
-#include "triangulation/dim4.h"
+#include "triangulation/detail/facetpairing-canonical-impl.h"
 
-namespace regina {
+namespace regina::detail {
 
-std::shared_ptr<Container> readIsoSigList(const char *filename,
-        unsigned dimension, unsigned colSigs, int colLabels,
-        unsigned long ignoreLines) {
-    switch (dimension) {
-        case 2:
-            return readSigList<Triangulation<2>>(filename, colSigs, colLabels,
-                ignoreLines);
-        case 3:
-            return readSigList<Triangulation<3>>(filename, colSigs, colLabels,
-                ignoreLines);
-        case 4:
-            return readSigList<Triangulation<4>>(filename, colSigs, colLabels,
-                ignoreLines);
-        default:
-            return nullptr;
-    }
-}
+template bool FacetPairingBase<9>::isCanonical() const;
+template std::pair<FacetPairing<9>, Isomorphism<9>>
+    FacetPairingBase<9>::canonical() const;
+template bool FacetPairingBase<9>::isCanonicalInternal(
+    FacetPairingBase<9>::IsoList* list) const;
 
-} // namespace regina
+} // namespace regina::detail

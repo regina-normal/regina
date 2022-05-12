@@ -62,11 +62,6 @@ void addAngleStructure(pybind11::module_& m) {
             }
             return new AngleStructure(t, std::move(v));
         }))
-        .def("clone", [](const AngleStructure& a) {
-            // Since clone() is deprecated, we reimplement it here to
-            // avoid noisy compiler warnings.
-            return new AngleStructure(a);
-        })
         .def("swap", &AngleStructure::swap)
         .def("angle", &AngleStructure::angle)
         .def("triangulation", &AngleStructure::triangulation,
@@ -75,8 +70,6 @@ void addAngleStructure(pybind11::module_& m) {
         .def("isTaut", &AngleStructure::isTaut)
         .def("isVeering", &AngleStructure::isVeering)
         .def("vector", &AngleStructure::vector,
-            pybind11::return_value_policy::reference_internal)
-        .def("rawVector", &AngleStructure::vector, // deprecated
             pybind11::return_value_policy::reference_internal)
         .def("writeXMLData", [](const AngleStructure& s,
                 pybind11::object file) {

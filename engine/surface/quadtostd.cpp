@@ -378,7 +378,6 @@ void NormalSurfaces::buildStandardFromReducedUsing(
     RaySpecList pos, neg;
 
     int sign;
-    BitmaskType* constraintMask;
     bool broken;
 
     unsigned long slices = 0;

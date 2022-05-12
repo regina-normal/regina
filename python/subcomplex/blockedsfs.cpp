@@ -48,7 +48,6 @@ void addBlockedSFS(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("isPluggedIBundle", &BlockedSFS::isPluggedIBundle)
         .def_static("recognise", &BlockedSFS::recognise)
-        .def_static("isBlockedSFS", &BlockedSFS::recognise) // deprecated
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

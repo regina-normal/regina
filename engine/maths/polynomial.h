@@ -510,41 +510,6 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
             const Polynomial& divisor) const;
 
         /**
-         * Deprecated function that divides this by the given divisor,
-         * and extracts both the quotient and the remainder.
-         *
-         * This function performs the same task as the one-argument
-         * variant of divisionAlg(); however, instead of send the
-         * quotient and remainder back through the return value, it
-         * sends them back via the given polynomial references.
-         *
-         * See the one-argument variant of divisionAlg() for further details.
-         *
-         * \deprecated Use the one-argument variant of divisionAlg() instead.
-         *
-         * \pre Neither \a quotient nor \a remainder is a reference to
-         * this polynomial.
-         *
-         * \pre The given divisor is not the zero polynomial.
-         *
-         * \pre The quotient as defined above exists.  If \a T is a field
-         * type (e.g., if \a T is Rational) then this is true automatically.
-         * If not (e.g., if \a T is Integer) then this requires some
-         * prior knowledge about the arguments.
-         *
-         * \ifacespython Not present; instead you can use the one-argument
-         * variant of divisionAlg().
-         *
-         * @param divisor the polynomial to divide this by.
-         * @param quotient a polynomial whose contents will be destroyed and
-         * replaced with the quotient.
-         * @param remainder a polynomial whose contents will be destroyed
-         * and replaced with the remainder.
-         */
-        [[deprecated]] void divisionAlg(const Polynomial& divisor,
-            Polynomial& quotient, Polynomial& remainder) const;
-
-        /**
          * Calculates the greatest common divisor of this and the given
          * polynomial, and finds a linear combination of these
          * polynomials that gives this gcd.
@@ -1312,57 +1277,6 @@ std::pair<Polynomial<T>, Polynomial<T>> Polynomial<T>::divisionAlg(
         --ans.second.degree_;
 
     return ans;
-}
-
-template <typename T>
-void Polynomial<T>::divisionAlg(const Polynomial<T>& divisor,
-        Polynomial<T>& quotient, Polynomial<T>& remainder) const {
-    // The code below breaks if divisor and *this are the same object, so
-    // treat this case specially.
-    if (&divisor == this) {
-        quotient.init(0);
-        remainder.init();
-        return;
-    }
-
-    if (divisor.degree_ > degree_) {
-        quotient.init();
-        remainder = *this;
-        return;
-    }
-
-    size_t i, j;
-    if (divisor.degree_ == 0) {
-        quotient = *this;
-        for (i = 0; i <= quotient.degree_; ++i)
-            quotient.coeff_[i] /= divisor.coeff_[0];
-        remainder.init();
-        return;
-    }
-
-    // From here we have: 0 < deg(divisor) <= deg(this).
-    // In particular, both this and divisor have strictly positive degree.
-
-    quotient.degree_ = degree_ - divisor.degree_;
-    delete[] quotient.coeff_;
-    // std::cerr << "Polynomial: deep copy (const divisionAlg)" << std::endl;
-    quotient.coeff_ = new T[quotient.degree_ + 1];
-
-    remainder = *this;
-
-    for (i = degree_; i >= divisor.degree_; --i) {
-        quotient.coeff_[i - divisor.degree_] = remainder.coeff_[i];
-        quotient.coeff_[i - divisor.degree_] /= divisor.coeff_[divisor.degree_];
-        for (j = 0; j <= divisor.degree_; ++j)
-            remainder.coeff_[j + i - divisor.degree_] -=
-                (quotient.coeff_[i - divisor.degree_] * divisor.coeff_[j]);
-    }
-
-    // Although the degree of the quotient is correct, the remainder
-    // might have zero coefficients at any (or all) positions.
-    remainder.degree_ = divisor.degree_ - 1;
-    while (remainder.degree_ > 0 && remainder.coeff_[remainder.degree_] == 0)
-        --remainder.degree_;
 }
 
 template <typename T>

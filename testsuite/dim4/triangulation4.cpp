@@ -2195,12 +2195,11 @@ class Triangulation4Test : public TriangulationTest<4> {
 
                 // Make sure the edge link matches what happens on
                 // the vertex links.
-                unsigned j, k;
                 const Pentachoron<4>* p;
                 Perm<5> perm;
                 const regina::Tetrahedron<3> *t, *adj;
                 unsigned vNum;
-                for (j = 0; j < v->degree(); ++j) {
+                for (size_t j = 0; j < v->degree(); ++j) {
                     p = tri.pentachoron(iso.pentImage(j));
                     perm = iso.facetPerm(j);
                     vNum = perm[4];
@@ -2220,7 +2219,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                             "tetrahedron correctly.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                    for (k = 0; k < 4; ++k) {
+                    for (int k = 0; k < 4; ++k) {
                         t = link.tetrahedron(j);
                         adj = t->adjacentTetrahedron(k);
                         if (adj) {
@@ -2322,11 +2321,10 @@ class Triangulation4Test : public TriangulationTest<4> {
 
                 // Make sure the edge link matches what happens on
                 // the vertex links.
-                unsigned j, k;
                 const Pentachoron<4>* p;
                 Vertex<4>* v;
                 Perm<5> perm;
-                for (j = 0; j < 2; ++j) {
+                for (int j = 0; j < 2; ++j) {
                     p = e->front().pentachoron();
                     perm = e->front().vertices();
 
@@ -2335,6 +2333,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                     v = p->vertex(perm[j]);
                     const Triangulation<3>& vLink = v->buildLink();
 
+                    size_t k;
                     for (k = 0; k < v->degree(); ++k)
                         if (v->embedding(k).pentachoron() == p &&
                                 v->embedding(k).vertex() == perm[j])
@@ -2372,7 +2371,7 @@ class Triangulation4Test : public TriangulationTest<4> {
 
                 const regina::Triangle<2> *t, *adj;
                 unsigned eNum;
-                for (j = 0; j < e->degree(); ++j) {
+                for (size_t j = 0; j < e->degree(); ++j) {
                     p = tri.pentachoron(iso.pentImage(j));
                     perm = iso.facetPerm(j);
                     eNum = Edge<4>::edgeNumber[perm[3]][perm[4]];
@@ -2393,7 +2392,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                             "triangle correctly.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                    for (k = 0; k < 3; ++k) {
+                    for (int k = 0; k < 3; ++k) {
                         t = link.triangle(j);
                         adj = t->adjacentTriangle(k);
                         if (adj) {

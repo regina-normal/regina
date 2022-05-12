@@ -53,8 +53,6 @@ void addGluingPermSearcher3(pybind11::module_& m) {
         .def("runSearch", &GluingPermSearcher<3>::runSearch<Action>)
         .def("partialSearch", &GluingPermSearcher<3>::partialSearch<Action>)
         .def("isComplete", &GluingPermSearcher<3>::isComplete)
-        .def("completePermSet", // deprecated
-            &GluingPermSearcher<3>::isComplete)
         .def("taggedData", &GluingPermSearcher<3>::taggedData)
         .def("data", &GluingPermSearcher<3>::data)
         .def_static("findAllPerms",
@@ -67,14 +65,6 @@ void addGluingPermSearcher3(pybind11::module_& m) {
         ;
     regina::python::add_output(g);
     regina::python::add_eq_operators(g);
-
-    // For backward compatibility; these inner class constants are deprecated.
-    g.attr("PURGE_NONE") = regina::PURGE_NONE;
-    g.attr("PURGE_NON_MINIMAL") = regina::PURGE_NON_MINIMAL;
-    g.attr("PURGE_NON_PRIME") = regina::PURGE_NON_PRIME;
-    g.attr("PURGE_NON_MINIMAL_PRIME") = regina::PURGE_NON_MINIMAL_PRIME;
-    g.attr("PURGE_NON_MINIMAL_HYP") = regina::PURGE_NON_MINIMAL_HYP;
-    g.attr("PURGE_P2_REDUCIBLE") = regina::PURGE_P2_REDUCIBLE;
 
     auto e = pybind11::class_<EulerSearcher, GluingPermSearcher<3>>(
             m, "EulerSearcher")

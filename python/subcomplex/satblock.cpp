@@ -44,7 +44,6 @@ using regina::SatBlockModel;
 void addSatBlock(pybind11::module_& m) {
     auto c = pybind11::class_<SatBlock>(m, "SatBlock")
         .def("countAnnuli", &SatBlock::countAnnuli)
-        .def("nAnnuli", &SatBlock::countAnnuli) // deprecated
         .def("annulus", &SatBlock::annulus,
             pybind11::return_value_policy::reference_internal)
         .def("twistedBoundary", &SatBlock::twistedBoundary)

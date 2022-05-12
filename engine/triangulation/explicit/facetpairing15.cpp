@@ -30,19 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file packet/pdf.h
- *  \brief Deprecated header for packets that contain arbitrary file
- *  attachments.
- */
+#include "triangulation/detail/facetpairing-canonical-impl.h"
 
-#ifndef __REGINA_PDF_H
-#ifndef __DOXYGEN
-#define __REGINA_PDF_H
-#endif
+namespace regina::detail {
 
-#warning This header is deprecated; please use packet/attachment.h instead.
+template bool FacetPairingBase<15>::isCanonical() const;
+template std::pair<FacetPairing<15>, Isomorphism<15>>
+    FacetPairingBase<15>::canonical() const;
+template bool FacetPairingBase<15>::isCanonicalInternal(
+    FacetPairingBase<15>::IsoList* list) const;
 
-#include "packet/attachment.h"
-
-#endif
-
+} // namespace regina::detail

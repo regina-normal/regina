@@ -98,7 +98,6 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("removeSimplexAt", &Triangulation<dim>::removeSimplexAt)
         .def("removeAllSimplices", &Triangulation<dim>::removeAllSimplices)
         .def("swap", &Triangulation<dim>::swap)
-        .def("swapContents", &Triangulation<dim>::swap) // deprecated
         .def("moveContentsTo", &Triangulation<dim>::moveContentsTo)
         .def("countComponents", &Triangulation<dim>::countComponents)
         .def("countBoundaryComponents",
@@ -175,8 +174,6 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             (regina::AbelianGroup (Triangulation<dim>::*)(int) const)(
             &Triangulation<dim>::homology),
             pybind11::arg("k") = 1)
-        .def("homologyH1",
-            &Triangulation<dim>::template homology<1>) // deprecated
         .def("markedHomology",
             (regina::MarkedAbelianGroup (Triangulation<dim>::*)(int) const)(
             &Triangulation<dim>::markedHomology),
@@ -189,7 +186,6 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             &Triangulation<dim>::dualToPrimal))
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
-        .def("isIdenticalTo", &Triangulation<dim>::operator ==) // deprecated
         .def("isIsomorphicTo", &Triangulation<dim>::isIsomorphicTo)
         .def("isContainedIn", &Triangulation<dim>::isContainedIn)
         .def("findAllIsomorphisms", &Triangulation<dim>::template

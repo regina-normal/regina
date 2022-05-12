@@ -51,8 +51,6 @@ void addBlockedSFSTriple(pybind11::module_& m) {
         .def("matchingReln", &BlockedSFSTriple::matchingReln,
             pybind11::return_value_policy::reference_internal)
         .def_static("recognise", &BlockedSFSTriple::recognise)
-        .def_static("isBlockedSFSTriple", // deprecated
-            &BlockedSFSTriple::recognise)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

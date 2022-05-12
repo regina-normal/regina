@@ -30,11 +30,26 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surface/disctype.h"
+#include "enumerate/hilbertprimal.h"
+#include "libnormaliz/cone.h"
 
 namespace regina {
 
-const DiscType DiscType::NONE;
+std::vector<std::vector<mpz_class>> HilbertPrimal::normaliz(
+        const std::vector<std::vector<mpz_class>>& input) {
+    libnormaliz::Cone<mpz_class> cone(
+        libnormaliz::Type::integral_closure, input);
+    libnormaliz::ConeProperties wanted(
+        libnormaliz::ConeProperty::HilbertBasis);
+    cone.deactivateChangeOfPrecision();
+    cone.compute(wanted);
+
+    if (! cone.isComputed(libnormaliz::ConeProperty::HilbertBasis))
+        throw UnsolvedCase("Normaliz was not able to compute the "
+            "Hilbert basis on a maximal face");
+
+    return cone.getHilbertBasis();
+}
 
 } // namespace regina
 

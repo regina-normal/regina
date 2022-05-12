@@ -217,7 +217,7 @@ struct Base64SigEncoding {
      *
      * The inverse to this routine is decodeTrits().
      *
-     * \tparam mTrits the number of trits to encode; this must be between
+     * \tparam nTrits the number of trits to encode; this must be between
      * 0 and 3 inclusive.
      *
      * @param trits the array of trits to encode.  Each trit must take

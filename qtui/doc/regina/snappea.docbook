@@ -577,7 +577,7 @@
    <para>
     Each fundamental group will be presented as a set of generators and
     relations, just as you would see in
-    the <link linkend="tri-algebra-homfund">algebra viewer for
+    the <link linkend="tri-algebra-fund">algebra viewer for
     &regina;'s native triangulations</link>.
    </para>
    <para>

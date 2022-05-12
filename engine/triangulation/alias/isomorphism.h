@@ -50,15 +50,15 @@ namespace regina::alias {
 
 /**
  * Helper class that provides dimension-specific aliases for both const and
- * non-const versions of simpImage(unsigned) and facetPerm(unsigned), where
+ * non-const versions of simpImage(size_t) and facetPerm(size_t), where
  * reasonable, for isomorphisms in dimension \a dim.
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
- * <tt>int& simpImage(unsigned)</tt>,
- * <tt>int simpImage(unsigned) const</tt>,
- * <tt>Perm<dim+1>& facetPerm(unsigned)</tt> and
- * <tt>Perm<dim+1> facetPerm(unsigned) const</tt>.
+ * <tt>int& simpImage(size_t)</tt>,
+ * <tt>int simpImage(size_t) const</tt>,
+ * <tt>Perm<dim+1>& facetPerm(size_t)</tt> and
+ * <tt>Perm<dim+1> facetPerm(size_t) const</tt>.
  *
  * The names of the aliases are determined by the dimension \a dim,
  * and these aliases are only provided for sufficiently small \a dim.
@@ -71,14 +71,14 @@ class IsomorphismImage {
 
 /**
  * Helper class that provides dimension-specific aliases for both const and
- * non-const versions of simpImage(unsigned) and facetPerm(unsigned).
+ * non-const versions of simpImage(size_t) and facetPerm(size_t).
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
- * <tt>int& simpImage(unsigned)</tt>,
- * <tt>int simpImage(unsigned) const</tt>,
- * <tt>Perm<dim+1>& facetPerm(unsigned)</tt> and
- * <tt>Perm<dim+1> facetPerm(unsigned) const</tt>.
+ * <tt>int& simpImage(size_t)</tt>,
+ * <tt>int simpImage(size_t) const</tt>,
+ * <tt>Perm<dim+1>& facetPerm(size_t)</tt> and
+ * <tt>Perm<dim+1> facetPerm(size_t) const</tt>.
  *
  * \ingroup alias
  */
@@ -90,7 +90,7 @@ class IsomorphismImage<Derived, 2> {
          *
          * See simpImage() for further information.
          */
-        int& triImage(unsigned sourceSimp) {
+        ssize_t& triImage(size_t sourceSimp) {
             return static_cast<Derived*>(this)->simpImage(sourceSimp);
         }
         /**
@@ -98,7 +98,7 @@ class IsomorphismImage<Derived, 2> {
          *
          * See simpImage() for further information.
          */
-        int triImage(unsigned sourceSimp) const {
+        ssize_t triImage(size_t sourceSimp) const {
             return static_cast<const Derived*>(this)->simpImage(sourceSimp);
         }
         /**
@@ -106,7 +106,7 @@ class IsomorphismImage<Derived, 2> {
          *
          * See facetPerm() for further information.
          */
-        Perm<3>& edgePerm(unsigned sourceSimp) {
+        Perm<3>& edgePerm(size_t sourceSimp) {
             return static_cast<Derived*>(this)->facetPerm(sourceSimp);
         }
         /**
@@ -114,21 +114,21 @@ class IsomorphismImage<Derived, 2> {
          *
          * See facetPerm() for further information.
          */
-        Perm<3> edgePerm(unsigned sourceSimp) const {
+        Perm<3> edgePerm(size_t sourceSimp) const {
             return static_cast<const Derived*>(this)->facetPerm(sourceSimp);
         }
 };
 
 /**
  * Helper class that provides dimension-specific aliases for both const and
- * non-const versions of simpImage(unsigned) and facetPerm(unsigned).
+ * non-const versions of simpImage(size_t) and facetPerm(size_t).
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
- * <tt>int& simpImage(unsigned)</tt>,
- * <tt>int simpImage(unsigned) const</tt>,
- * <tt>Perm<dim+1>& facetPerm(unsigned)</tt> and
- * <tt>Perm<dim+1> facetPerm(unsigned) const</tt>.
+ * <tt>int& simpImage(size_t)</tt>,
+ * <tt>int simpImage(size_t) const</tt>,
+ * <tt>Perm<dim+1>& facetPerm(size_t)</tt> and
+ * <tt>Perm<dim+1> facetPerm(size_t) const</tt>.
  *
  * \ingroup alias
  */
@@ -140,7 +140,7 @@ class IsomorphismImage<Derived, 3> {
          *
          * See simpImage() for further information.
          */
-        int& tetImage(unsigned sourceSimp) {
+        ssize_t& tetImage(size_t sourceSimp) {
             return static_cast<Derived*>(this)->simpImage(sourceSimp);
         }
         /**
@@ -148,7 +148,7 @@ class IsomorphismImage<Derived, 3> {
          *
          * See simpImage() for further information.
          */
-        int tetImage(unsigned sourceSimp) const {
+        ssize_t tetImage(size_t sourceSimp) const {
             return static_cast<const Derived*>(this)->simpImage(sourceSimp);
         }
         /**
@@ -156,7 +156,7 @@ class IsomorphismImage<Derived, 3> {
          *
          * See facetPerm() for further information.
          */
-        Perm<4>& facePerm(unsigned sourceSimp) {
+        Perm<4>& facePerm(size_t sourceSimp) {
             return static_cast<Derived*>(this)->facetPerm(sourceSimp);
         }
         /**
@@ -164,19 +164,19 @@ class IsomorphismImage<Derived, 3> {
          *
          * See facetPerm() for further information.
          */
-        Perm<4> facePerm(unsigned sourceSimp) const {
+        Perm<4> facePerm(size_t sourceSimp) const {
             return static_cast<const Derived*>(this)->facetPerm(sourceSimp);
         }
 };
 
 /**
  * Helper class that provides dimension-specific aliases for both const and
- * non-const versions of simpImage(unsigned).
+ * non-const versions of simpImage(size_t).
  *
  * This is inherited by the class \a Derived, which must provide functions
  * of the form
- * <tt>int& simpImage(unsigned)</tt> and
- * <tt>int simpImage(unsigned) const</tt>.
+ * <tt>int& simpImage(size_t)</tt> and
+ * <tt>int simpImage(size_t) const</tt>.
  *
  * \ingroup alias
  */
@@ -188,7 +188,7 @@ class IsomorphismImage<Derived, 4> {
          *
          * See simpImage() for further information.
          */
-        int& pentImage(unsigned sourceSimp) {
+        ssize_t& pentImage(size_t sourceSimp) {
             return static_cast<Derived*>(this)->simpImage(sourceSimp);
         }
         /**
@@ -196,7 +196,7 @@ class IsomorphismImage<Derived, 4> {
          *
          * See simpImage() for further information.
          */
-        int pentImage(unsigned sourceSimp) const {
+        ssize_t pentImage(size_t sourceSimp) const {
             return static_cast<const Derived*>(this)->simpImage(sourceSimp);
         }
 };

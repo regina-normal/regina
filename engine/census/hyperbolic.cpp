@@ -43,7 +43,7 @@ HyperbolicMinSearcher::HyperbolicMinSearcher(FacetPairing<3> pairing,
 }
 
 void HyperbolicMinSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
-    unsigned nTets = perms_.size();
+    size_t nTets = perms_.size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
         maxDepth = nTets * 4 + 1;
@@ -72,14 +72,12 @@ void HyperbolicMinSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
 
     // ---------- Selecting the individual gluing permutations ----------
 
-    int minOrder = orderElt;
-    int maxOrder = orderElt + maxDepth;
+    ssize_t minOrder = orderElt;
+    ssize_t maxOrder = orderElt + maxDepth;
 
-    FacetSpec<3> face, adj;
-    int mergeResult;
     while (orderElt >= minOrder) {
-        face = order[orderElt];
-        adj = perms_.pairing()[face];
+        FacetSpec<3> face = order[orderElt];
+        FacetSpec<3> adj = perms_.pairing()[face];
 
         // TODO (long-term): Check for cancellation.
 
@@ -119,7 +117,7 @@ void HyperbolicMinSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
         }
 
         // Merge vertex links and run corresponding tests.
-        mergeResult = mergeVertexClasses();
+        int mergeResult = mergeVertexClasses();
         if (mergeResult & VLINK_BAD_EULER) {
             // Our vertex link can never obtain the correct
             // Euler characteristic.  Stop now.
@@ -204,7 +202,7 @@ void HyperbolicMinSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
         if (nVertexClasses != 4 * nTets)
             std::cerr << "ERROR: nVertexClasses == "
                 << nVertexClasses << " at end of search!" << std::endl;
-        for (int i = 0; i < static_cast<int>(nTets) * 4; i++) {
+        for (size_t i = 0; i < nTets * 4; i++) {
             if (vertexState[i].parent != -1)
                 std::cerr << "ERROR: vertexState[" << i << "].parent == "
                     << vertexState[i].parent << " at end of search!"
@@ -241,7 +239,7 @@ void HyperbolicMinSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
                 std::cerr << "ERROR: vertexState[" << i << "].bdryTwist == "
                     "true at end of search!" << std::endl;
         }
-        for (unsigned i = 0; i < nTets * 8; i++)
+        for (size_t i = 0; i < nTets * 8; i++)
             if (vertexStateChanged[i] != VLINK_JOIN_INIT)
                 std::cerr << "ERROR: vertexStateChanged[" << i << "] == "
                     << vertexStateChanged[i] << " at end of search!"
@@ -251,7 +249,7 @@ void HyperbolicMinSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
         if (nEdgeClasses != 6 * nTets)
             std::cerr << "ERROR: nEdgeClasses == "
                 << nEdgeClasses << " at end of search!" << std::endl;
-        for (unsigned i = 0; i < nTets * 6; i++) {
+        for (size_t i = 0; i < nTets * 6; i++) {
             if (edgeState[i].parent != -1)
                 std::cerr << "ERROR: edgeState[" << i << "].parent == "
                     << edgeState[i].parent << " at end of search!"
@@ -269,7 +267,7 @@ void HyperbolicMinSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
                 std::cerr << "ERROR: edgeState[" << i << "].hadEqualRank == "
                     "true at end of search!" << std::endl;
         }
-        for (unsigned i = 0; i < nTets * 8; i++)
+        for (size_t i = 0; i < nTets * 8; i++)
             if (edgeStateChanged[i] != -1)
                 std::cerr << "ERROR: edgeStateChanged[" << i << "] == "
                     << edgeStateChanged[i] << " at end of search!"
@@ -296,27 +294,22 @@ int HyperbolicMinSearcher::mergeEdgeClasses() {
     int retVal = 0;
 
     Perm<4> p = perms_.perm(face);
-    int v1, w1, v2, w2;
-    int e, f;
-    int orderIdx;
-    int eRep, fRep;
-    int middleTet;
 
-    v1 = face.facet;
-    w1 = p[v1];
+    int v1 = face.facet;
+    int w1 = p[v1];
 
     char parentTwists, hasTwist;
-    for (v2 = 0; v2 < 4; v2++) {
+    for (int v2 = 0; v2 < 4; v2++) {
         if (v2 == v1)
             continue;
 
-        w2 = p[v2];
+        int w2 = p[v2];
 
         // Look at the edge opposite v1-v2.
-        e = 5 - Edge<3>::edgeNumber[v1][v2];
-        f = 5 - Edge<3>::edgeNumber[w1][w2];
+        int e = 5 - Edge<3>::edgeNumber[v1][v2];
+        int f = 5 - Edge<3>::edgeNumber[w1][w2];
 
-        orderIdx = v2 + 4 * orderElt;
+        size_t orderIdx = v2 + 4 * orderElt;
 
         // We declare the natural orientation of an edge to be smaller
         // vertex to larger vertex.
@@ -324,8 +317,8 @@ int HyperbolicMinSearcher::mergeEdgeClasses() {
             1 : 0);
 
         parentTwists = 0;
-        eRep = findEdgeClass(e + 6 * face.simp, parentTwists);
-        fRep = findEdgeClass(f + 6 * adj.simp, parentTwists);
+        size_t eRep = findEdgeClass(e + 6 * face.simp, parentTwists);
+        size_t fRep = findEdgeClass(f + 6 * adj.simp, parentTwists);
 
         if (eRep == fRep) {
             edgeState[eRep].bounded = false;
@@ -334,7 +327,7 @@ int HyperbolicMinSearcher::mergeEdgeClasses() {
                 retVal |= ECLASS_LOWDEG;
             else if (edgeState[eRep].size == 3) {
                 // Flag as LOWDEG only if three distinct tetrahedra are used.
-                middleTet = perms_.pairing().dest(face.simp, v2).simp;
+                auto middleTet = perms_.pairing().dest(face.simp, v2).simp;
                 if (face.simp != adj.simp && adj.simp != middleTet &&
                         middleTet != face.simp)
                     retVal |= ECLASS_LOWDEG;
@@ -374,28 +367,23 @@ int HyperbolicMinSearcher::mergeEdgeClasses() {
 void HyperbolicMinSearcher::splitEdgeClasses() {
     FacetSpec<3> face = order[orderElt];
 
-    int v1, v2;
-    int e;
-    int eIdx, orderIdx;
-    int rep, subRep;
+    int v1 = face.facet;
 
-    v1 = face.facet;
-
-    for (v2 = 3; v2 >= 0; v2--) {
+    for (int v2 = 3; v2 >= 0; v2--) {
         if (v2 == v1)
             continue;
 
         // Look at the edge opposite v1-v2.
-        e = 5 - Edge<3>::edgeNumber[v1][v2];
+        int e = 5 - Edge<3>::edgeNumber[v1][v2];
 
-        eIdx = e + 6 * face.simp;
-        orderIdx = v2 + 4 * orderElt;
+        size_t eIdx = e + 6 * face.simp;
+        size_t orderIdx = v2 + 4 * orderElt;
 
         if (edgeStateChanged[orderIdx] < 0)
             edgeState[findEdgeClass(eIdx)].bounded = true;
         else {
-            subRep = edgeStateChanged[orderIdx];
-            rep = edgeState[subRep].parent;
+            size_t subRep = edgeStateChanged[orderIdx];
+            size_t rep = edgeState[subRep].parent;
 
             edgeState[subRep].parent = -1;
             if (edgeState[subRep].hadEqualRank) {

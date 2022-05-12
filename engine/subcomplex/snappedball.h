@@ -83,15 +83,6 @@ class SnappedBall : public StandardTriangulation {
         SnappedBall& operator = (const SnappedBall&) = default;
 
         /**
-         * Deprecated routine that returns a new copy of this structure.
-         *
-         * \deprecated Just use the copy constructor instead.
-         *
-         * @return a newly created clone.
-         */
-        [[deprecated]] SnappedBall* clone() const;
-
-        /**
          * Swaps the contents of this and the given structure.
          *
          * @param other the structure whose contents should be swapped
@@ -210,16 +201,6 @@ class SnappedBall : public StandardTriangulation {
          */
         static std::unique_ptr<SnappedBall> recognise(Tetrahedron<3>* tet);
 
-        /**
-         * A deprecated alias to recognise if a tetrahedron forms a
-         * snapped 3-ball.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<SnappedBall> formsSnappedBall(
-            Tetrahedron<3>* tet);
-
         std::unique_ptr<Manifold> manifold() const override;
         AbelianGroup homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
@@ -250,10 +231,6 @@ void swap(SnappedBall& a, SnappedBall& b) noexcept;
 
 inline SnappedBall::SnappedBall(Tetrahedron<3>* tet, int equator) :
         tet_(tet), equator_(equator) {
-}
-
-inline SnappedBall* SnappedBall::clone() const {
-    return new SnappedBall(*this);
 }
 
 inline void SnappedBall::swap(SnappedBall& other) noexcept {
@@ -299,11 +276,6 @@ inline void SnappedBall::writeTextShort(std::ostream& out) const {
         << tet_->index() << " ("
         << Edge<3>::edgeVertex[5 - equator_][0]
         << Edge<3>::edgeVertex[5 - equator_][1] << ')';
-}
-
-inline std::unique_ptr<SnappedBall> SnappedBall::formsSnappedBall(
-        Tetrahedron<3>* tet) {
-    return recognise(tet);
 }
 
 inline void swap(SnappedBall& a, SnappedBall& b) noexcept {

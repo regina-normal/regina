@@ -237,16 +237,6 @@ class AngleStructure : public ShortOutput<AngleStructure> {
             Vector<Integer>&& vector);
 
         /**
-         * Deprecated routine that creates a newly allocated clone of this
-         * angle structure.
-         *
-         * \deprecated Simply use the copy constructor instead.
-         *
-         * @return a clone of this angle structure.
-         */
-        [[deprecated]] AngleStructure* clone() const;
-
-        /**
          * Sets this to be a copy of the given angle structure.
          *
          * This and the given angle structure do not need to be on the same
@@ -477,15 +467,6 @@ class AngleStructure : public ShortOutput<AngleStructure> {
         bool operator < (const AngleStructure& other) const;
 
         /**
-         * A deprecated alias for vector().
-         *
-         * \deprecated This routine has been renamed to vector().
-         *
-         * @return the underlying integer vector.
-         */
-        [[deprecated]] const Vector<Integer>& rawVector() const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -568,10 +549,6 @@ inline AngleStructure::AngleStructure(const AngleStructure& src,
         flags_(src.flags_) {
 }
 
-inline AngleStructure* AngleStructure::clone() const {
-    return new AngleStructure(*this);
-}
-
 inline void AngleStructure::swap(AngleStructure& other) noexcept {
     vector_.swap(other.vector_);
     triangulation_.swap(other.triangulation_);
@@ -609,10 +586,6 @@ inline bool AngleStructure::operator != (const AngleStructure& other) const {
 }
 
 inline const Vector<Integer>& AngleStructure::vector() const {
-    return vector_;
-}
-
-inline const Vector<Integer>& AngleStructure::rawVector() const {
     return vector_;
 }
 

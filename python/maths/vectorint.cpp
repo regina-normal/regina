@@ -39,13 +39,6 @@
 using pybind11::overload_cast;
 using regina::VectorInt;
 
-namespace {
-    // The static variables zero, one, minusOne in the class VectorInt
-    // are deprecated in C++, and so generate compiler warnings if we attempt
-    // to use them here.  For now, make our own replacements instead.
-    regina::Integer zero(0), one(1), minusOne(-1);
-}
-
 void addVectorInt(pybind11::module_& m) {
     auto c = pybind11::class_<VectorInt>(m, "VectorInt")
         .def(pybind11::init<size_t>())
@@ -59,10 +52,6 @@ void addVectorInt(pybind11::module_& m) {
                 regina::Integer& {
             return v[index];
         }, pybind11::return_value_policy::reference_internal)
-        .def("setElement", [](VectorInt& v, size_t index, // deprecated
-                const regina::Integer& value) {
-            v[index] = value;
-        })
         .def("__setitem__", [](VectorInt& v, size_t index,
                 const regina::Integer& value) {
             v[index] = value;
@@ -87,12 +76,9 @@ void addVectorInt(pybind11::module_& m) {
         // (but not gcc8), where the compiler cannot determine the type of a
         // template member function.
         .def("scaleDown",
-            (void (VectorInt::*)())
+            (regina::Integer (VectorInt::*)())
             &VectorInt::scaleDown)
         .def_static("unit", &VectorInt::unit)
-        .def_readonly_static("zero", &zero)
-        .def_readonly_static("one", &one)
-        .def_readonly_static("minusOne", &minusOne)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

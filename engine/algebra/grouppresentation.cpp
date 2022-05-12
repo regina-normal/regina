@@ -325,7 +325,7 @@ AbelianGroup GroupPresentation::abelianisation() const {
     }
 }
 
-unsigned GroupPresentation::abelianRank() const {
+unsigned long GroupPresentation::abelianRank() const {
     if (nGenerators_ == 0)
         return 0;
     if (relations_.empty()) {
@@ -701,26 +701,6 @@ GroupExpression::GroupExpression( const char* input )
 
     // we reached the end of input without any errors
     terms_.push_back(buildTerm);
-}
-
-bool GroupExpression::addStringFirst( const std::string& input)
-{
-    try {
-        addTermsFirst(GroupExpression(input));
-    } catch (const InvalidArgument&) {
-        return false;
-    }
-    return true;
-}
-
-bool GroupExpression::addStringLast( const std::string& input)
-{
-    try {
-        addTermsLast(GroupExpression(input));
-    } catch (const InvalidArgument&) {
-        return false;
-    }
-    return true;
 }
 
 //             **********  GroupPresentation below **************

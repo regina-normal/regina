@@ -290,5 +290,206 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink() const 
         return { ans[1], ans[0] };
 }
 
+std::vector<const Edge<3>*> NormalSurface::isNormalEdgeLink() const {
+    // Get a local reference to the triangulation so we do not have to
+    // repeatedly bounce through the snapshot.
+    const Triangulation<3>& tri(*triangulation_);
+
+    if (isEmpty()) {
+        // Treat the empty surface separately.
+        std::vector<const Edge<3>*> ans;
+        for (auto e : tri.edges())
+            if (e->linkingSurface().isEmpty())
+                ans.push_back(e);
+        return ans;
+    }
+
+    if (! normal())
+        return {};
+
+    // All edge weights should be in { 0, k, 2k } for some k, and the
+    // weight of an edge that we are linking should be zero.
+    std::vector<const Edge<3>*> weightZero;
+
+    // We store the values k and 2k as we find them; these are initialised to
+    // zero.  If only one value has been seen so far, we store it as k.
+    LargeInteger k, kk;
+
+    for (auto e : tri.edges()) {
+        LargeInteger w = edgeWeight(e->index());
+
+        if (w == 0) {
+            weightZero.push_back(e);
+        } else if (w.isInfinite()) {
+            return {};
+        } else if (k == 0) {
+            // First non-zero weight we've seen.
+            k = w;
+        } else if (kk == 0) {
+            // We've only seen one value so far; this is stored in k.
+            if (w != k) {
+                if (w == 2 * k) {
+                    kk = w;
+                } else if (2 * w == k) {
+                    // What we thought was k was really 2k.
+                    kk = k;
+                    k = w;
+                } else {
+                    // This cannot be an edge link.
+                    return {};
+                }
+            }
+        } else {
+            // Both k and 2k have already been seen.
+            if (w != k && w != kk)
+                return {};
+        }
+    }
+
+    if (weightZero.empty())
+        return {};
+
+    // We have one or more candidate edges that we could be linking
+    // (since they have weight zero), and the edge weights are
+    // consistent with a multiple of a normalised edge link.
+
+    // Now we construct the exact multiple of this surface that should be a
+    // single edge link.
+    //
+    // In any normalised edge link, all disc coordinates are 0, 1 or 2, and
+    // all edge weights are 0, 1 or 2.  It follows that the multiple we are
+    // looking for is either the scaled-down surface (i.e., divide the
+    // underlying vector by its gcd), or the double of the scaled-down surface.
+    //
+    // We will therefore call scaleDown(), and then double the surface
+    // if necessary.  To identify when doubling is necessary, we observe:
+    //
+    // - Any (non-empty) normalised edge link must be 2-sided and separating,
+    //   and even though the surface could be disconnected, the portion
+    //   of the 3-manifold on the side of the surface containing the original
+    //   edge must still be connected (call this portion X).
+    //
+    // - Doubling is only required for normalised edge links where all
+    //   non-zero normal coordinates are 2 (and therefore, using what else we
+    //   know, all edge weights are 2 also).  In such a scenario where doubling
+    //   is required, the scaled-down surface (where all non-zero coordinates
+    //   are 1) will be non-separating, since cutting the 3-manifold along
+    //   this scaled-down surface will result in X (and no other components).
+    //
+    // So, to summarise: doubling is required if and only if the
+    // scaled-down surface is non-separating.  (However, there are other
+    // necessary conditions for doubling that are cheaper to test, such
+    // as all normal coordinates and edge weights being 0 or 1, and so
+    // we will make use of these cheaper tests also.)
+
+    NormalSurface mult = *this;
+    LargeInteger scale = mult.scaleDown();
+    if (kk != 0) {
+        if (scale != k) {
+            // The edge weights were {0,k,2k}, but the normal coordinates were
+            // not.
+            return {};
+        }
+    } else {
+        // All non-zero edge weights were equal to k.
+        if (scale == k) {
+            // All non-zero edge weights have been scaled down to 1, and so
+            // this *could* be a scenario where we need to double again,
+            // as described above.
+            //
+            // For this we test whether the surface is separating.  However,
+            // in any scenario where doubling is necessary, all edge weights
+            // are 0 or 1, and so the separating test becomes just a test to see
+            // if we can find a path from some vertex back to itself through
+            // the 1-skeleton that traverses an *odd* number of weight-one edges
+            // (and any number of weight-zero edges).
+            //
+            // Here we use a fairly naive test based on Floyd-Warshall.  This
+            // could be sped up by using union-find.  However, our naive test
+            // is cubic in the number of *vertices*, which in typical scenarios
+            // is very small.  So let's not fuss too much about this for now.
+
+            size_t v = tri.countVertices();
+            int* join = new int[v * v]; // 0,1,-1: no path, even path, odd path
+            std::fill(join, join + v * v, 0);
+
+            for (auto e : tri.edges()) {
+                LargeInteger w = mult.edgeWeight(e->index());
+                size_t a = e->vertex(0)->index();
+                size_t b = e->vertex(1)->index();
+                if (w == 0) {
+                    if (a != b) {
+                        if (join[a * v + b] == -1) {
+                            // We have an odd cycle (a-b-a).
+                            mult *= 2;
+                            goto noMoreScaling;
+                        } else {
+                            join[a * v + b] = join[b * v + a] = 1;
+                        }
+                    }
+                } else if (w == 1) {
+                    if (a == b) {
+                        // We have an odd cycle (a-a).
+                        mult *= 2;
+                        goto noMoreScaling;
+                    } else {
+                        if (join[a * v + b] == 1) {
+                            // We have an odd cycle (a-b-a).
+                            mult *= 2;
+                            goto noMoreScaling;
+                        } else {
+                            join[a * v + b] = join[b * v + a] = -1;
+                        }
+                    }
+                } else if (w == 2) {
+                    // This could be an edge link, but it is not a case
+                    // where we need to double.
+                    goto noMoreScaling;
+                } else {
+                    // This can never be an edge link.
+                    return {};
+                }
+            }
+
+            for (size_t via = 0; via < v; ++via) {
+                for (size_t a = 0; a < v; ++a) {
+                    if (join[a * v + via] != 0) {
+                        for (size_t b = 0; b < v; ++b) {
+                            if (a != b && join[b * v + via] != 0) {
+                                // Examine the path a-via-b.
+                                if (join[a * v + b] == 0)
+                                    join[a * v + b] = join[b * v + a] =
+                                        join[a * v + via] * join[b * v + via];
+                                else if (join[a * v + b] !=
+                                        join[a * v + via] * join[b * v + via]) {
+                                    // We have an odd cycle (a-via-b-a).
+                                    mult *= 2;
+                                    goto noMoreScaling;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+    noMoreScaling:
+            delete[] join;
+        } else {
+            // All non-zero edge weights were k, but the scaling factor
+            // was not k.  In this case the edge weights should have been
+            // scaled down to 2; otherwise we cannot have a normalised
+            // edge link at all.
+            if (scale + scale != k)
+                return {};
+        }
+    }
+
+    std::vector<const Edge<3>*> ans;
+    for (auto e : weightZero)
+        if (e->linkingSurface() == mult)
+            ans.push_back(e);
+    return ans;
+}
+
 } // namespace regina
 

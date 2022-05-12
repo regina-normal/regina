@@ -91,6 +91,7 @@ void addVertex3(pybind11::module_& m) {
         .def("hasBadLink", &Vertex<3>::hasBadLink)
         .def("isLinkOrientable", &Vertex<3>::isLinkOrientable)
         .def("linkEulerChar", &Vertex<3>::linkEulerChar)
+        .def("linkingSurface", &Vertex<3>::linkingSurface)
         .def_static("ordering", &Vertex<3>::ordering)
         .def_static("faceNumber", &Vertex<3>::faceNumber)
         .def_static("containsVertex", &Vertex<3>::containsVertex)

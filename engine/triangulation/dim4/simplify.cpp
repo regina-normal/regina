@@ -459,7 +459,7 @@ bool Triangulation<4>::fourFourMove( Edge<4>* e, bool check, bool perform ) {
     // (if the triangulation was originally oriented).
 
     // Start by working out where the 2-4 and 4-2 moves should take place.
-    Vertex<2>* topVert;
+    Vertex<2>* topVert = nullptr;
     for ( int i = 0; i < 3; ++i ) {
         if ( edgeLink.triangle(0)->vertex( i )->degree() == 2 ) {
             topVert = edgeLink.triangle(0)->vertex( i );

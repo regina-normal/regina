@@ -239,7 +239,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          *
          * @return the number of simplices under consideration.
          */
-        unsigned size() const;
+        size_t size() const;
 
         /**
          * Returns the specific pairing of simplex facets that this
@@ -248,22 +248,13 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * @return the corresponding simplex facet pairing.
          */
         const FacetPairing<dim>& pairing() const;
-        /**
-         * Deprecated routine to return the facet pairing that this gluing
-         * permutation set complements.
-         *
-         * \deprecated This routine has been renamed to pairing().
-         *
-         * @return the corresponding simplex facet pairing.
-         */
-        [[deprecated]] const FacetPairing<dim>& facetPairing() const;
 
         /**
          * Returns the gluing permutation associated with the given
          * simplex facet.
          *
          * \pre The given facet is actually paired with some other facet in
-         * the underlying pairwise matching (see routine facetPairing()).
+         * the underlying pairwise matching (see routine pairing()).
          * \pre The given facet is a real simplex
          * facet (not boundary, before-the-start or past-the-end).
          * \pre The requested permutation is not the special "not yet chosen"
@@ -273,22 +264,13 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * @return the associated gluing permutation.
          */
         Perm<dim+1> perm(const FacetSpec<dim>& source) const;
-        /**
-         * Deprecated routine to return the gluing permutation
-         * associated with the given simplex facet.
-         *
-         * \deprecated This routine has been renamed to perm().  See perm()
-         * for details on the preconditions, parameters and return value.
-         */
-        [[deprecated]] Perm<dim+1> gluingPerm(const FacetSpec<dim>& source)
-            const;
 
         /**
          * Returns the gluing permutation associated with the given
          * simplex facet.
          *
          * \pre The given facet is actually paired with some other facet in
-         * the underlying pairwise matching (see routine facetPairing()).
+         * the underlying pairwise matching (see routine pairing()).
          * \pre The requested permutation is not the special "not yet chosen"
          * value (i.e., the internal index that is stored for it is not -1).
          *
@@ -299,16 +281,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * investigation (between 0 and \a dim inclusive).
          * @return the associated gluing permutation.
          */
-        Perm<dim+1> perm(unsigned simp, unsigned facet) const;
-        /**
-         * Deprecated routine to return the gluing permutation
-         * associated with the given simplex facet.
-         *
-         * \deprecated This routine has been renamed to perm().  See perm()
-         * for details on the preconditions, parameters and return value.
-         */
-        [[deprecated]] Perm<dim+1> gluingPerm(unsigned simp, unsigned facet)
-            const;
+        Perm<dim+1> perm(size_t simp, int facet) const;
 
         /**
          * Returns the index into array Perm<dim+1>::Sn_1 describing how the
@@ -357,7 +330,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * investigation (between 0 and \a dim inclusive).
          * @return a reference to the corresponding array index.
          */
-        Index permIndex(unsigned simp, unsigned facet) const;
+        Index permIndex(size_t simp, int facet) const;
 
         /**
          * Offers write access to the index into array Perm<dim+1>::Sn_1
@@ -416,7 +389,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * investigation (between 0 and \a dim inclusive).
          * @return a reference to the corresponding array index.
          */
-        Index& permIndex(unsigned simp, unsigned facet);
+        Index& permIndex(size_t simp, int facet);
 
         /**
          * Returns the triangulation modelled by this set of gluing
@@ -474,7 +447,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * releases.  Data in this format should be used on a short-term
          * temporary basis only.
          *
-         * @param all of this object's internal data in plain text format.
+         * @return all of this object's internal data in plain text format.
          */
         std::string data() const;
 
@@ -533,7 +506,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * given gluing permutation; this will be between 0 and \a dim!-1
          * inclusive.
          */
-        Index gluingToIndex(unsigned simp, unsigned facet,
+        Index gluingToIndex(size_t simp, int facet,
             const Perm<dim+1>& gluing) const;
 
         /**
@@ -591,8 +564,7 @@ class GluingPerms : public Output<GluingPerms<dim>> {
          * @return the gluing permutation corresponding to the given
          * index into Perm<dim+1>::Sn_1.
          */
-        Perm<dim+1> indexToGluing(unsigned simp, unsigned facet, Index index)
-            const;
+        Perm<dim+1> indexToGluing(size_t simp, int facet, Index index) const;
 
         /**
          * Determines if this and the given gluing permutation set are
@@ -737,7 +709,7 @@ inline void GluingPerms<dim>::swap(GluingPerms& other) noexcept {
 }
 
 template <int dim>
-inline unsigned GluingPerms<dim>::size() const {
+inline size_t GluingPerms<dim>::size() const {
     return pairing_.size();
 }
 
@@ -747,29 +719,12 @@ inline const FacetPairing<dim>& GluingPerms<dim>::pairing() const {
 }
 
 template <int dim>
-inline const FacetPairing<dim>& GluingPerms<dim>::facetPairing() const {
-    return pairing_;
-}
-
-template <int dim>
 inline Perm<dim+1> GluingPerms<dim>::perm(const FacetSpec<dim>& source) const {
     return indexToGluing(source, permIndex(source));
 }
 
 template <int dim>
-inline Perm<dim+1> GluingPerms<dim>::gluingPerm(
-        const FacetSpec<dim>& source) const {
-    return indexToGluing(source, permIndex(source));
-}
-
-template <int dim>
-inline Perm<dim+1> GluingPerms<dim>::perm(unsigned simp, unsigned facet) const {
-    return indexToGluing(simp, facet, permIndex(simp, facet));
-}
-
-template <int dim>
-inline Perm<dim+1> GluingPerms<dim>::gluingPerm(
-        unsigned simp, unsigned facet) const {
+inline Perm<dim+1> GluingPerms<dim>::perm(size_t simp, int facet) const {
     return indexToGluing(simp, facet, permIndex(simp, facet));
 }
 
@@ -781,7 +736,7 @@ inline typename GluingPerms<dim>::Index& GluingPerms<dim>::permIndex(
 
 template <int dim>
 inline typename GluingPerms<dim>::Index& GluingPerms<dim>::permIndex(
-        unsigned simp, unsigned facet) {
+        size_t simp, int facet) {
     return permIndices_[(dim + 1) * simp + facet];
 }
 
@@ -793,7 +748,7 @@ inline typename GluingPerms<dim>::Index GluingPerms<dim>::permIndex(
 
 template <int dim>
 inline typename GluingPerms<dim>::Index GluingPerms<dim>::permIndex(
-        unsigned simp, unsigned facet) const {
+        size_t simp, int facet) const {
     return permIndices_[(dim + 1) * simp + facet];
 }
 
@@ -813,7 +768,7 @@ inline Perm<dim+1> GluingPerms<dim>::indexToGluing(
 
 template <int dim>
 inline Perm<dim+1> GluingPerms<dim>::indexToGluing(
-        unsigned simp, unsigned facet, Index index) const {
+        size_t simp, int facet, Index index) const {
     if constexpr (standardDim(dim)) {
         return Perm<dim+1>(pairing_.dest(simp, facet).facet, dim) *
             Perm<dim+1>::Sn_1[index] * Perm<dim+1>(facet, dim);

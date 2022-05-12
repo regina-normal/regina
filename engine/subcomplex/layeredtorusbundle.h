@@ -281,15 +281,6 @@ class LayeredTorusBundle : public StandardTriangulation {
          */
         static std::unique_ptr<LayeredTorusBundle> recognise(
             const Triangulation<3>& tri);
-        /**
-         * A deprecated alias to recognise if a triangulation is a
-         * layered torus bundle.
-         *
-         * \deprecated This function has been renamed to recognise().
-         * See recognise() for details on the parameters and return value.
-         */
-        [[deprecated]] static std::unique_ptr<LayeredTorusBundle>
-            isLayeredTorusBundle(const Triangulation<3>& tri);
 
         std::unique_ptr<Manifold> manifold() const override;
         AbelianGroup homology() const override;
@@ -404,11 +395,6 @@ inline std::ostream& LayeredTorusBundle::writeName(std::ostream& out) const {
 inline std::ostream& LayeredTorusBundle::writeTeXName(std::ostream& out)
         const {
     return writeCommonName(out, true);
-}
-
-inline std::unique_ptr<LayeredTorusBundle>
-        LayeredTorusBundle::isLayeredTorusBundle(const Triangulation<3>& tri) {
-    return recognise(tri);
 }
 
 inline void swap(LayeredTorusBundle& a, LayeredTorusBundle& b) noexcept {

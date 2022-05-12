@@ -125,10 +125,10 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
                  of the two identified triangle edges (unless otherwise
                  specified by a subclass that uses a specialised search
                  algorithm. */
-        int orderSize;
+        size_t orderSize;
             /**< The total number of edges in the edge pairing graph, i.e.,
                  the number of elements of interest in the order[] array. */
-        int orderElt;
+        ssize_t orderElt;
             /**< Marks which element of order[] we are currently examining
                  at this stage of the search. */
 
@@ -294,18 +294,6 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
         bool isComplete() const;
 
         /**
-         * Deprecated function that determines whether this search manager
-         * holds a complete gluing permutation set or just a partially
-         * completed search state.
-         *
-         * \deprecated This routine has been renamed to isComplete().
-         *
-         * @return \c true if a complete gluing permutation set is held,
-         * or \c false otherwise.
-         */
-        [[deprecated]] bool completePermSet() const;
-
-        /**
          * Dumps all internal data in a plain text format, along with a
          * marker to signify which precise class the data belongs to.
          * This routine can be used with fromTaggedData() to transport
@@ -413,7 +401,7 @@ class GluingPermSearcher<2> : public ShortOutput<GluingPermSearcher<2>> {
          * input stream constructor is not.  Python users should use
          * taggedData() and fromTaggedData() instead.
          *
-         * @param all of this object's internal data in plain text format.
+         * @return all of this object's internal data in plain text format.
          */
         std::string data() const;
 
@@ -601,10 +589,6 @@ inline void GluingPermSearcher<2>::partialSearch(long maxDepth,
 }
 
 inline bool GluingPermSearcher<2>::isComplete() const {
-    return (orderElt == orderSize);
-}
-
-inline bool GluingPermSearcher<2>::completePermSet() const {
     return (orderElt == orderSize);
 }
 

@@ -212,9 +212,9 @@ enum NiceType {
  */
 class TreeBag : public ShortOutput<TreeBag> {
     private:
-        int size_;
+        size_t size_;
             /**< The number of nodes (of the graph \a G) stored in this bag. */
-        int* elements_;
+        size_t* elements_;
             /**< The individual nodes of this bag, sorted in ascending order. */
         TreeBag* parent_;
             /**< The parent of this bag in the underlying tree \a T,
@@ -228,11 +228,11 @@ class TreeBag : public ShortOutput<TreeBag> {
         int type_;
             /**< Used where necessary to indicate the role that this bag
                  plays in the tree decomposition.  See type() for details. */
-        int subtype_;
+        ssize_t subtype_;
             /**< Used where necessary to give more precise information
                  (in addition to \a type_) on the role that this bag plays
                  in the tree decomposition.  See subtype() for details. */
-        int index_;
+        size_t index_;
             /**< Indicates the index of this bag within the underlying
                  tree decomposition, following a leaves-to-root, left-to-right
                  ordering of the bags.  See index() for details. */
@@ -252,7 +252,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          *
          * @return the number of graph nodes in this bag.
          */
-        int size() const;
+        size_t size() const;
         /**
          * Used to query the individual graph nodes stored in this bag.
          *
@@ -268,7 +268,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * must be between 0 and size()-1 inclusive.
          * @return the number of the corresponding node stored in this bag.
          */
-        int element(int which) const;
+        size_t element(size_t which) const;
         /**
          * Queries whether a given graph node is contained in this bag.
          *
@@ -280,7 +280,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * @param element the number of some node in the graph \a G.
          * @return \c true if and only if the given node is in this bag.
          */
-        bool contains(int element) const;
+        bool contains(size_t element) const;
 
         /**
          * Returns the index of this bag within the full tree decomposition.
@@ -301,7 +301,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * @return the index of this bag within the full tree decomposition
          * \a d; this will be between 0 and <tt>d.size()-1</tt> inclusive.
          */
-        int index() const;
+        size_t index() const;
 
         /**
          * Returns auxiliary information associated with bags in special
@@ -356,7 +356,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * bag plays in this tree decomposition, or undefined if no
          * additional subtype information is stored for this bag.
          */
-        int subtype() const;
+        ssize_t subtype() const;
 
         /**
          * Determines if there is a subset/superset relationship between
@@ -500,7 +500,7 @@ class TreeBag : public ShortOutput<TreeBag> {
          * @param size the number of nodes that will be contained in the
          * new bag.
          */
-        TreeBag(int size);
+        TreeBag(size_t size);
 
         /**
          * Creates a new bag containing the same graph nodes as the given bag.
@@ -647,7 +647,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * decomposition algorithms.
          */
         struct Graph {
-            int order_;
+            size_t order_;
                 /**< The number of nodes in the graph. */
             bool** adj_;
                 /**< The adjacency matrix for the graph.  Specifically,
@@ -659,7 +659,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
              *
              * @param order the number of nodes in the new graph.
              */
-            Graph(int order);
+            Graph(size_t order);
             /**
              * Destroys this graph.
              */
@@ -682,10 +682,10 @@ class TreeDecomposition : public Output<TreeDecomposition> {
         };
 
     private:
-        int width_;
+        ssize_t width_;
             /**< The width of this tree decomposition; that is, one less
                  than the maximum bag size. */
-        int size_;
+        size_t size_;
             /**< The number of bags in this tree decomposition. */
         TreeBag* root_;
             /**< The bag at the root of the underlying tree. */
@@ -890,13 +890,13 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          *
          * @return the width of this tree decomposition.
          */
-        int width() const;
+        ssize_t width() const;
         /**
          * Returns the number of bags in this tree decomposition.
          *
          * @return the number of bags.
          */
-        int size() const;
+        size_t size() const;
 
         /**
          * Determines whether this and the given tree decomposition are
@@ -1010,7 +1010,7 @@ class TreeDecomposition : public Output<TreeDecomposition> {
          * size()-1 inclusive.
          * @return the bag with the given number.
          */
-        const TreeBag* bag(int index) const;
+        const TreeBag* bag(size_t index) const;
 
         /**
          * Removes redundant bags from this tree decomposition.
@@ -1461,9 +1461,9 @@ void swap(TreeDecomposition& a, TreeDecomposition& b) noexcept;
 
 // Inline functions for TreeBag
 
-inline TreeBag::TreeBag(int size) :
+inline TreeBag::TreeBag(size_t size) :
         size_(size),
-        elements_(new int[size_]),
+        elements_(new size_t[size_]),
         parent_(nullptr),
         sibling_(nullptr),
         children_(nullptr),
@@ -1473,14 +1473,13 @@ inline TreeBag::TreeBag(int size) :
 
 inline TreeBag::TreeBag(const TreeBag& src) :
         size_(src.size_),
-        elements_(new int[src.size_]),
+        elements_(new size_t[src.size_]),
         parent_(nullptr),
         sibling_(nullptr),
         children_(nullptr),
         type_(0),
         subtype_(0) {
-    for (int i = 0; i < size_; ++i)
-        elements_[i] = src.elements_[i];
+    std::copy(src.elements_, src.elements_ + size_, elements_);
 }
 
 inline TreeBag::~TreeBag() {
@@ -1493,15 +1492,15 @@ inline TreeBag::~TreeBag() {
     delete[] elements_;
 }
 
-inline int TreeBag::size() const {
+inline size_t TreeBag::size() const {
     return size_;
 }
 
-inline int TreeBag::element(int which) const {
+inline size_t TreeBag::element(size_t which) const {
     return elements_[which];
 }
 
-inline int TreeBag::index() const {
+inline size_t TreeBag::index() const {
     return index_;
 }
 
@@ -1509,7 +1508,7 @@ inline int TreeBag::type() const {
     return type_;
 }
 
-inline int TreeBag::subtype() const {
+inline ssize_t TreeBag::subtype() const {
     return subtype_;
 }
 
@@ -1559,8 +1558,8 @@ TreeDecomposition::TreeDecomposition(const Matrix<T>& graph,
 
     Graph g(graph.rows());
 
-    for (int i = 0; i < graph.rows(); ++i)
-        for (int j = 0; j < graph.columns(); ++j)
+    for (size_t i = 0; i < graph.rows(); ++i)
+        for (size_t j = 0; j < graph.columns(); ++j)
             g.adj_[i][j] = graph.entry(i, j) || graph.entry(j, i);
 
     construct(g, alg);
@@ -1572,9 +1571,9 @@ TreeDecomposition::TreeDecomposition(const std::vector<Row>& graph,
     size_t order = graph.size();
     Graph g(order);
 
-    int r = 0;
+    size_t r = 0;
     for (const auto& row : graph) {
-        int c = 0;
+        size_t c = 0;
         for (const auto& entry: row) {
             if (c >= order)
                 throw InvalidArgument("The adjacency matrix must be square");
@@ -1616,11 +1615,11 @@ inline void TreeDecomposition::swap(TreeDecomposition& other) noexcept {
     std::swap(root_, other.root_);
 }
 
-inline int TreeDecomposition::width() const {
+inline ssize_t TreeDecomposition::width() const {
     return width_;
 }
 
-inline int TreeDecomposition::size() const {
+inline size_t TreeDecomposition::size() const {
     return size_;
 }
 
@@ -1649,16 +1648,16 @@ inline void swap(TreeDecomposition& a, TreeDecomposition& b) noexcept {
 
 // Inline functions for TreeDecomposition::Graph
 
-inline TreeDecomposition::Graph::Graph(int order) :
+inline TreeDecomposition::Graph::Graph(size_t order) :
         order_(order), adj_(new bool*[order]) {
-    for (int i = 0; i < order; ++i) {
+    for (size_t i = 0; i < order; ++i) {
         adj_[i] = new bool[order];
         std::fill(adj_[i], adj_[i] + order, false);
     }
 }
 
 inline TreeDecomposition::Graph::~Graph() {
-    for (int i = 0; i < order_; ++i)
+    for (size_t i = 0; i < order_; ++i)
         delete[] adj_[i];
     delete[] adj_;
 }

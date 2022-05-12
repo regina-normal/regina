@@ -81,6 +81,7 @@ class Tri4HomologyFundUI : public QObject, public PacketViewerTab {
         QLabel* H1;
         QLabel* H2;
         QLabel* H3;
+        QLabel* iform;
         QLabel* fgMsg;
         GroupWidget* fgGroup;
 

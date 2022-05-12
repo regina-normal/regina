@@ -43,7 +43,7 @@ template <int dim>
 void addFacetSpec(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<FacetSpec<dim>>(m, name)
         .def(pybind11::init<>())
-        .def(pybind11::init<int, int>())
+        .def(pybind11::init<ssize_t, int>())
         .def(pybind11::init<const FacetSpec<dim>&>())
         .def_readwrite("simp", &FacetSpec<dim>::simp)
         .def_readwrite("facet", &FacetSpec<dim>::facet)

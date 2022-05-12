@@ -408,12 +408,6 @@ class DiscSetTetData : public DiscSetTet {
          * The type of data being stored alongside each normal disc.
          */
         using Data = T;
-        /**
-         * A pointer to the type of data stored alongside each normal disc.
-         *
-         * \deprecated Simply use <tt>Data*</tt> instead.
-         */
-        using DataPtr [[deprecated]] = T*;
 
     protected:
         T* data_[10];

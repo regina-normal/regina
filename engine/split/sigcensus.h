@@ -203,16 +203,6 @@ class SigCensus {
         void tryCycle(unsigned cycleLen, bool newCycleGroup, unsigned startPos);
 };
 
-/**
- * Deprecated type alias for a list of partial isomorphisms on splitting
- * surface signatures.
- *
- * \deprecated This has been renamed to SigCensus::IsoList.
- *
- * \ingroup split
- */
-using SigIsoList [[deprecated]] = SigCensus::IsoList;
-
 // Inline functions for SigCensus
 
 template <typename Action, typename... Args>

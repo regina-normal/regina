@@ -82,14 +82,13 @@ void TriangulationBase<dim>::calculateSkeleton() {
     auto* queue = new Simplex<dim>*[simplices_.size()];
     size_t queueStart = 0, queueEnd = 0;
 
-    Component<dim>* c;
-    Simplex<dim> *s, *adj;
-    int facet;
-    int yourOrientation;
+    // Note: we must work through simplices by increasing index, since
+    // Simplex::orientation() promises that the smallest-index simplex
+    // in each component will have orientation +1.
     for (auto it = simplices_.begin(); it != simplices_.end(); ++it) {
-        s = *it;
+        Simplex<dim>* s = *it;
         if (! s->component_) {
-            c = new Component<dim>();
+            auto* c = new Component<dim>();
             components_.push_back(c);
 
             s->component_ = c;
@@ -100,10 +99,10 @@ void TriangulationBase<dim>::calculateSkeleton() {
             while (queueStart < queueEnd) {
                 s = queue[queueStart++];
 
-                for (facet = 0; facet <= dim; ++facet) {
-                    adj = s->adjacentSimplex(facet);
+                for (int facet = 0; facet <= dim; ++facet) {
+                    Simplex<dim>* adj = s->adjacentSimplex(facet);
                     if (adj) {
-                        yourOrientation =
+                        int yourOrientation =
                             (s->adjacentGluing(facet).sign() == 1 ?
                             -s->orientation_ : s->orientation_);
                         if (adj->component_) {

@@ -42,9 +42,6 @@ void addSnappedBall(pybind11::module_& m) {
     auto c = pybind11::class_<SnappedBall, regina::StandardTriangulation>
             (m, "SnappedBall")
         .def(pybind11::init<const SnappedBall&>())
-        .def("clone", [](const SnappedBall& s) { // deprecated
-            return SnappedBall(s);
-        })
         .def("swap", &SnappedBall::swap)
         .def("tetrahedron", &SnappedBall::tetrahedron,
             pybind11::return_value_policy::reference)
@@ -53,7 +50,6 @@ void addSnappedBall(pybind11::module_& m) {
         .def("equatorEdge", &SnappedBall::equatorEdge)
         .def("internalEdge", &SnappedBall::internalEdge)
         .def_static("recognise", &SnappedBall::recognise)
-        .def_static("formsSnappedBall", &SnappedBall::recognise) // deprecated
     ;
     regina::python::add_eq_operators(c);
     regina::python::add_output(c);

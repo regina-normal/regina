@@ -30,12 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file surfaces/normalsurfaces.h
- *  \brief Deprecated placeholder for a renamed header.
- *  \deprecated This header has been renamed to surface/normalsurfaces.h.
- */
+#include "triangulation/detail/facetpairing-canonical-impl.h"
 
-#warning This header has been renamed to surface/normalsurfaces.h.  This old header will be removed in a future version of Regina.
+namespace regina::detail {
 
-#include "surface/normalsurfaces.h"
+template bool FacetPairingBase<11>::isCanonical() const;
+template std::pair<FacetPairing<11>, Isomorphism<11>>
+    FacetPairingBase<11>::canonical() const;
+template bool FacetPairingBase<11>::isCanonicalInternal(
+    FacetPairingBase<11>::IsoList* list) const;
 
+} // namespace regina::detail
