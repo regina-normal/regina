@@ -92,10 +92,11 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
     Isomorphism<dim> from(size_); // canonical -> this
 
     for (size_t i = 0; i < size_; ++i)
-        to.simpImage(i) = -1;
+        to.simpImage(i) = from.simpImage(i) = -1;
 
     auto* perm = new typename Perm<dim+1>::Index[size_];
-    auto* usedSimp = new ssize_t[size_];
+    auto* usedSimp = new ssize_t[size_ + 1];
+    usedSimp[0] = 1;
 
     // Run through all possible preimages of simplex 0.
     for (size_t pre0 = 0; pre0 < size_; ++pre0) {
@@ -150,11 +151,17 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                     if (lexSmallerFrom == currSimp)
                         --lexSmallerFrom;
                     --currSimp;
-                    ++perm[currSimp];
 
-                    for (ssize_t i = (currSimp = 0 ? 1 : usedSimp[currSimp-1]);
-                            i < usedSimp[currSimp]; ++i)
-                        to.simpImage(from.simpImage(i)) = -1;
+                    if (currSimp >= 0) {
+                        for (ssize_t i = usedSimp[currSimp];
+                                i < usedSimp[currSimp + 1]; ++i)
+                            if (from.simpImage(i) >= 0) {
+                                to.simpImage(from.simpImage(i)) = -1;
+                                from.simpImage(i) = -1;
+                            }
+
+                        ++perm[currSimp];
+                    }
 
                     break;
                 }
@@ -162,87 +169,113 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                 // We are sitting on the next permutation to try.
                 Perm<dim+1> p = Perm<dim+1>::Sn[perm[currSimp]];
 
-                usedSimp[currSimp] = (currSimp == 0 ? 1 :
-                    usedSimp[currSimp - 1]);
+                usedSimp[currSimp + 1] = usedSimp[currSimp];
                 bool smaller = (lexSmallerFrom < currSimp);
                 bool unusable = false;
                 FacetSpec<dim> prevDest(-1, dim);
                 for (int i = 0; i <= dim; ++i) {
                     // Examine the candiate canonical permutations's
                     // dest(currSimp, i).
-                    auto nextMe = dest(from.simpImage(currSimp), p[i]);
-                    auto nextCanon = to(nextMe);
-                    if (nextCanon.simp < 0) {
+                    FacetSpec<dim> nextMe =
+                        dest(from.simpImage(currSimp), p[i]);
+                    ssize_t nextSimp = to.simpImage(nextMe.simp);
+                    FacetSpec<dim> nextCanon;
+                    if (nextSimp < 0) {
                         // This gluing goes beyond the range of
                         // simplices that have been decided already.
                         // Make sure it goes to the next free simplex.
-                        nextCanon = FacetSpec<dim>(usedSimp[currSimp]++, 0);
+                        nextCanon = FacetSpec<dim>(usedSimp[currSimp + 1]++, 0);
                         from.simpImage(nextCanon.simp) = nextMe.simp;
                         to.simpImage(nextMe.simp) = nextCanon.simp;
-                        // TODO: How do we enforce facet 0?
-                    } else if (nextCanon.simp == currSimp) {
-                        if (currSimp < prevDest.simp) {
-                            // This cannot lead to something that is
-                            // lexicographically minimal.
-                            unusable = true;
-                            break;
-                        } else if (currSimp == prevDest.simp &&
-                                nextCanon < prevDest) {
-                            // The previous facet glued to this simplex.
-                            // If nextCanon < prevDest, then nextCanon
-                            // must refer exactly to that previous facet
-                            // (i.e., we are seeing the second side of
-                            // a gluing (s,f) <-> (s,f+1)).
-                            if (nextCanon.facet != i - 1) {
-                                // Again, this cannot lead to something that
-                                // is lexicographically minimal.
+                    } else {
+                        if (nextSimp == currSimp) {
+                            // This is glued to another facet of this simplex.
+                            nextCanon = { nextSimp, p.pre(nextMe.facet) };
+                            if (currSimp < prevDest.simp) {
+                                // This cannot lead to something that is
+                                // lexicographically minimal.
+                                unusable = true;
+                                break;
+                            } else if (currSimp == prevDest.simp &&
+                                    nextCanon < prevDest) {
+                                // The previous facet is also glued to this
+                                // simplex.  If nextCanon < prevDest, then
+                                // nextCanon must refer exactly to that
+                                // previous facet (i.e., we are seeing the
+                                // second side of a gluing (s,f) <-> (s,f+1)).
+                                if (nextCanon.facet != i - 1) {
+                                    // Again, this cannot lead to something that
+                                    // is lexicographically minimal.
+                                    unusable = true;
+                                    break;
+                                }
+                            }
+                        } else if (nextSimp < currSimp) {
+                            // This is glued to a facet of an earlier simplex,
+                            // whose permutation has already been decided.
+                            nextCanon = to(nextMe);
+                            if (nextCanon < prevDest) {
+                                // This cannot lead to something that is
+                                // lexicographically minimal.
                                 unusable = true;
                                 break;
                             }
-                        }
-                    } else if (nextCanon.simp < currSimp) {
-                        if (nextCanon < prevDest) {
-                            // This cannot lead to something that is
-                            // lexicographically minimal.
-                            unusable = true;
-                            break;
-                        }
 
-                        // This is the other side of a gluing that has
-                        // already been decided.  Check that the gluing
-                        // is consistent with the other direction.
-                        auto other = to(dest(from(nextCanon)));
-                        if (other.simp != currSimp || other.facet != i) {
-                            // TODO: Um, is this ever possible?
-                            unusable = true;
-                            break;
+                            // Since this is the other side of a gluing that has
+                            // already been decided, check that the gluing is
+                            // consistent with the other direction.
+                            auto other = dest(from(nextCanon));
+                            if (from.simpImage(currSimp) != other.simp ||
+                                    p[i] != other.facet) {
+                                unusable = true;
+                                break;
+                            }
+                        } else {
+                            // TODO: Boundary case is here also.
+                            // This destination is a simplex whose number has
+                            // been fixed but whose permutation has not.
+                            nextCanon = { nextSimp, 1 /* TODO */ };
                         }
                     }
                     prevDest = nextCanon;
 
                     if (! smaller) {
                         auto nextBest = best.dest(currSimp, i);
-                        if (nextCanon < nextBest)
-                            smaller = true;
-                        else if (nextBest < nextCanon) {
-                            unusable = true;
-                            break;
+                        if (nextCanon.simp > currSimp) {
+                            // TODO: explain
+                            if (nextBest.facet > 1)
+                                nextBest.facet = 1;
+                            if (nextCanon < nextBest)
+                                smaller = true;
+                            else if (nextBest < nextCanon) {
+                                unusable = true;
+                                break;
+                            }
+                        } else {
+                            if (nextCanon < nextBest)
+                                smaller = true;
+                            else if (nextBest < nextCanon) {
+                                unusable = true;
+                                break;
+                            }
                         }
                     }
                 }
                 if (unusable) {
-                    for (ssize_t i = (currSimp = 0 ? 1 : usedSimp[currSimp-1]);
-                            i < usedSimp[currSimp]; ++i)
-                        to.simpImage(from.simpImage(i)) = -1;
+                    for (ssize_t i = usedSimp[currSimp];
+                            i < usedSimp[currSimp + 1]; ++i)
+                        if (from.simpImage(i) >= 0) {
+                            to.simpImage(from.simpImage(i)) = -1;
+                            from.simpImage(i) = -1;
+                        }
                 } else {
                     // We are committing to this permutation.
-
                     from.facetPerm(currSimp) = p;
                     to.facetPerm(from.simpImage(currSimp)) = p.inverse();
 
                     // Go deeper.
                     ++currSimp;
-                    if (smaller)
+                    if (! smaller)
                         ++lexSmallerFrom;
                     perm[currSimp] = 0;
                     break;
@@ -253,6 +286,8 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                 ++perm[currSimp];
             }
         }
+
+        from.simpImage(0) = to.simpImage(pre0) = -1;
     }
 
     delete[] perm;
