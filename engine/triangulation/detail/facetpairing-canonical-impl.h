@@ -231,10 +231,30 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                                 break;
                             }
                         } else {
-                            // TODO: Boundary case is here also.
-                            // This destination is a simplex whose number has
-                            // been fixed but whose permutation has not.
-                            nextCanon = { nextSimp, 1 /* TODO */ };
+                            // There are two possible cases here:
+                            // (a) this destination is a simplex whose number
+                            // has been fixed but whose permutation has not;
+                            // (b) this destination is the boundary.
+                            //
+                            // In case (a), we do not know (easily) how
+                            // many facets of nextSimp have already been
+                            // accounted for, and so we do not know what
+                            // the canonical destination facet *should* be.
+                            // We just call it 1 here (since this is not the
+                            // first time we have visited this destination
+                            // simplex).  This weakens but does not break
+                            // the lexicographical comparison with prevDest;
+                            // if we do end up putting things in the wrong
+                            // order as a result then this will be noticed
+                            // when we process nextSimp.
+                            //
+                            // In case (b), setting the facet to 1 does not
+                            // hurt; we are just using a non-standard but still
+                            // well-defined representation of the boundary.
+                            //
+                            // In both cases, we *do* need to tweak the
+                            // comparison with best.dest(...) accordingly.
+                            nextCanon = { nextSimp, 1 };
                         }
                     }
                     prevDest = nextCanon;
@@ -242,9 +262,15 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                     if (! smaller) {
                         auto nextBest = best.dest(currSimp, i);
                         if (nextCanon.simp > currSimp) {
-                            // TODO: explain
+                            // Account for the fact that nextCanon might
+                            // be using the wrong facet number; see the
+                            // more detailed discussion above where we
+                            // set nextCanon = { nextSimp, 1 }.
                             if (nextBest.facet > 1)
                                 nextBest.facet = 1;
+
+                            // Now we can safely do our lexicographical
+                            // comparison.
                             if (nextCanon < nextBest)
                                 smaller = true;
                             else if (nextBest < nextCanon) {
