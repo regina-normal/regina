@@ -82,6 +82,9 @@ void addIsomorphism2(pybind11::module_& m) {
         })
         .def(pybind11::self * pybind11::self)
         .def("inverse", &Isomorphism<2>::inverse)
+        .def("inc", [](Isomorphism<2>& iso) {
+            ++iso;
+        })
         .def_static("random", &Isomorphism<2>::random,
             pybind11::arg(), pybind11::arg("even") = false)
         .def_static("identity", &Isomorphism<2>::identity)

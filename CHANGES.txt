@@ -40,6 +40,8 @@ Version 7.1  [ TODO ]
               calling tri = iso(tri).
             - Added bracket operators to apply an isomorphism to a
               FacetSpec or a FacetPairing.
+            - Added pre/postincrement operators for iterating through
+              all permutations of a given size.
         Class Matrix:
             - Routine det() now throws an exception if the matrix is not
               square (this is a precondition), and now returns 1 if the

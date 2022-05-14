@@ -507,6 +507,66 @@ class Isomorphism :
         Isomorphism inverse() const;
 
         /**
+         * A preincrement operator that changes this to be the next
+         * isomorphism in an iteration through all possible isomorphisms
+         * of this size.
+         *
+         * The order of iteration is lexicographical, by the sequence of
+         * simplex images and then by the sequence of facet permutations.
+         * Facet permutations, in turn, are ordered by their indices in
+         * the array Perm<dim>::Sn.
+         *
+         * In particular, the identity isomorphism is the first in such an
+         * iteration.  If this isomorphism is the \e last in such an
+         * iteration, then this operator will "wrap around" and set this
+         * to the identity.
+         *
+         * \pre The class Perm<dim+1> supports the preincrement operator;
+         * currently this means that \a dim must be at most 6.
+         *
+         * \ifacespython This routine is named inc() since python does
+         * not support the increment operator.  Unlike other Regina
+         * classes, here inc() wraps the preincrement operator (not the
+         * postincrement operator), since the postincrement operator is
+         * significantly more expensive.  To avoid confusion, the python
+         * inc() function returns \c None (not this isomorphism).
+         *
+         * @return a reference to this isomorphism after the increment.
+         */
+        Isomorphism<dim>& operator ++();
+
+        /**
+         * A postincrement operator that changes this to be the next
+         * isomorphism in an iteration through all possible isomorphisms
+         * of this size.
+         *
+         * The order of iteration is lexicographical, by the sequence of
+         * simplex images and then by the sequence of facet permutations.
+         * Facet permutations, in turn, are ordered by their indices in
+         * the array Perm<dim>::Sn.
+         *
+         * In particular, the identity isomorphism is the first in such an
+         * iteration.  If this isomorphism is the \e last in such an
+         * iteration, then this operator will "wrap around" and set this
+         * to the identity.
+         *
+         * \warning Since the postincrement operator returns an
+         * isomorphism by value, it is significantly more expensive than
+         * the preincrement operator (since it involves a deep copy of a
+         * large object).  You should use the preincrement operator unless
+         * you actually need a copy of the old value of this isomorphism.
+         *
+         * \pre The class Perm<dim+1> supports the preincrement operator;
+         * currently this means that \a dim must be at most 6.
+         *
+         * \ifacespython Not present, although the preincrement operator is
+         * present in python as the member function inc().
+         *
+         * @return a copy of this isomorphism before the increment took place.
+         */
+        Isomorphism<dim> operator ++(int);
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -843,6 +903,30 @@ Isomorphism<dim> Isomorphism<dim>::inverse() const {
         ans.facetPerm_[simpImage_[i]] = facetPerm_[i].inverse();
     }
     return ans;
+}
+
+template <int dim>
+Isomorphism<dim>& Isomorphism<dim>::operator ++() {
+    static_assert(dim <= 6,
+        "Currently the Isomorphism<dim> pre/postincrement operators "
+        "are only available for dimensions dim <= 6.");
+
+    if (nSimplices_ == 0)
+        return *this;
+
+    for (ssize_t i = nSimplices_ - 1; i >= 0; --i)
+        if (! (++facetPerm_[i]).isIdentity())
+            return *this;
+
+    std::next_permutation(simpImage_, simpImage_ + nSimplices_);
+    return *this;
+}
+
+template <int dim>
+inline Isomorphism<dim> Isomorphism<dim>::operator ++(int) {
+    Isomorphism<dim> prev(*this);
+    ++(*this);
+    return prev;
 }
 
 template <int dim>
