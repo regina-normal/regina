@@ -548,9 +548,7 @@
 		052FA0A1180600FB00FAE4DF /* xmlutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7F180600FB00FAE4DF /* xmlutils.cpp */; };
 		052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E80180600FB00FAE4DF /* xmlutils.h */; };
 		052FA1041806088B00FAE4DF /* census2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D11806088B00FAE4DF /* census2.cpp */; };
-		052FA1051806088B00FAE4DF /* facetpairing2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D21806088B00FAE4DF /* facetpairing2.cpp */; };
 		052FA1061806088B00FAE4DF /* census3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D31806088B00FAE4DF /* census3.cpp */; };
-		052FA1071806088B00FAE4DF /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D41806088B00FAE4DF /* facetpairing3.cpp */; };
 		052FA1081806088B00FAE4DF /* exhaustive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D71806088B00FAE4DF /* exhaustive.cpp */; };
 		052FA1091806088B00FAE4DF /* matrixops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0DB1806088B00FAE4DF /* matrixops.cpp */; };
 		052FA10A1806088B00FAE4DF /* integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0DC1806088B00FAE4DF /* integer.cpp */; };
@@ -1368,9 +1366,7 @@
 		0591E8471C4F773800793A9C /* tri4skeleton.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8321C4F767300793A9C /* tri4skeleton.h */; };
 		0591E8481C4F773C00793A9C /* tri4ui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8341C4F767300793A9C /* tri4ui.h */; };
 		0591E84D1C4F777000793A9C /* census4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8491C4F776A00793A9C /* census4.cpp */; };
-		0591E84E1C4F777000793A9C /* facetpairing4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E84A1C4F776A00793A9C /* facetpairing4.cpp */; };
 		0591E84F1C4F777100793A9C /* census4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8491C4F776A00793A9C /* census4.cpp */; };
-		0591E8501C4F777100793A9C /* facetpairing4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E84A1C4F776A00793A9C /* facetpairing4.cpp */; };
 		0591E8571C4F77A400793A9C /* triangulation4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8531C4F779B00793A9C /* triangulation4.cpp */; };
 		0591E8581C4F77A400793A9C /* triangulation4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8531C4F779B00793A9C /* triangulation4.cpp */; };
 		0591E85E1C50D28700793A9C /* enumerate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E85C1C50D28700793A9C /* enumerate.cpp */; };
@@ -1781,6 +1777,12 @@
 		05C265BF282C948F00232420 /* facetpairing5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265AA282C947C00232420 /* facetpairing5.cpp */; };
 		05C265C0282C948F00232420 /* facetpairing8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265AB282C947C00232420 /* facetpairing8.cpp */; };
 		05C265C228307D0600232420 /* facetpairing-canonical-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C265C128307D0500232420 /* facetpairing-canonical-impl.h */; };
+		05C265C42830A4AD00232420 /* facetpairing2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C32830A4AD00232420 /* facetpairing2.cpp */; };
+		05C265C52830A4AD00232420 /* facetpairing2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C32830A4AD00232420 /* facetpairing2.cpp */; };
+		05C265C72830A4B800232420 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C62830A4B800232420 /* facetpairing3.cpp */; };
+		05C265C82830A4B800232420 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C62830A4B800232420 /* facetpairing3.cpp */; };
+		05C265CA2830A4CA00232420 /* facetpairing4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C92830A4CA00232420 /* facetpairing4.cpp */; };
+		05C265CB2830A4CA00232420 /* facetpairing4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C92830A4CA00232420 /* facetpairing4.cpp */; };
 		05CAE6012741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
 		05CAE6022741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
 		05CAE60527427A8A007C93F3 /* ordering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60327427A8A007C93F3 /* ordering.cpp */; };
@@ -1866,9 +1868,7 @@
 		05D1174119EE0197003BEC55 /* permconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E31806088B00FAE4DF /* permconv.cpp */; };
 		05D1174219EE019D003BEC55 /* triangulation2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0583656818DB88D9008B08D9 /* triangulation2.cpp */; };
 		05D1174319EE01A1003BEC55 /* census2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D11806088B00FAE4DF /* census2.cpp */; };
-		05D1174419EE01A1003BEC55 /* facetpairing2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D21806088B00FAE4DF /* facetpairing2.cpp */; };
 		05D1174519EE01A1003BEC55 /* census3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D31806088B00FAE4DF /* census3.cpp */; };
-		05D1174619EE01A1003BEC55 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D41806088B00FAE4DF /* facetpairing3.cpp */; };
 		05D1174B19EE043F003BEC55 /* testsuite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D1174919EE043F003BEC55 /* testsuite.cpp */; };
 		05D1174C19EE043F003BEC55 /* testsuite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D1174919EE043F003BEC55 /* testsuite.cpp */; };
 		05D1C16F19C6542700CF92F2 /* ReginaHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1C16E19C6542700CF92F2 /* ReginaHelper.mm */; };
@@ -2990,9 +2990,7 @@
 		052FA0CE1806088B00FAE4DF /* testangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testangle.h; sourceTree = "<group>"; };
 		052FA0D01806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052FA0D11806088B00FAE4DF /* census2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = census2.cpp; sourceTree = "<group>"; };
-		052FA0D21806088B00FAE4DF /* facetpairing2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing2.cpp; sourceTree = "<group>"; };
 		052FA0D31806088B00FAE4DF /* census3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = census3.cpp; sourceTree = "<group>"; };
-		052FA0D41806088B00FAE4DF /* facetpairing3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing3.cpp; sourceTree = "<group>"; };
 		052FA0D51806088B00FAE4DF /* testcensus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testcensus.h; sourceTree = "<group>"; };
 		052FA0D61806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052FA0D71806088B00FAE4DF /* exhaustive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = exhaustive.cpp; sourceTree = "<group>"; };
@@ -3908,7 +3906,6 @@
 		0591E8331C4F767300793A9C /* tri4ui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri4ui.cpp; sourceTree = "<group>"; };
 		0591E8341C4F767300793A9C /* tri4ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri4ui.h; sourceTree = "<group>"; };
 		0591E8491C4F776A00793A9C /* census4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = census4.cpp; sourceTree = "<group>"; };
-		0591E84A1C4F776A00793A9C /* facetpairing4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing4.cpp; sourceTree = "<group>"; };
 		0591E8521C4F779B00793A9C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0591E8531C4F779B00793A9C /* triangulation4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation4.cpp; sourceTree = "<group>"; };
 		0591E8541C4F779B00793A9C /* testdim4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testdim4.h; sourceTree = "<group>"; };
@@ -4272,6 +4269,10 @@
 		05C265B1282C947D00232420 /* facetpairing14.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing14.cpp; sourceTree = "<group>"; };
 		05C265B2282C947D00232420 /* facetpairing7.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing7.cpp; sourceTree = "<group>"; };
 		05C265C128307D0500232420 /* facetpairing-canonical-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "facetpairing-canonical-impl.h"; sourceTree = "<group>"; };
+		05C265C32830A4AD00232420 /* facetpairing2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing2.cpp; sourceTree = "<group>"; };
+		05C265C62830A4B800232420 /* facetpairing3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing3.cpp; sourceTree = "<group>"; };
+		05C265C92830A4CA00232420 /* facetpairing4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing4.cpp; sourceTree = "<group>"; };
+		05C265CC2830A4DC00232420 /* facetpairingtest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairingtest.h; sourceTree = "<group>"; };
 		05CAE6002741C871007C93F3 /* validityconstraints.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = validityconstraints.cpp; sourceTree = "<group>"; };
 		05CAE60327427A8A007C93F3 /* ordering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ordering.cpp; sourceTree = "<group>"; };
 		05CAE60427427A8A007C93F3 /* maxadmissible.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maxadmissible.cpp; sourceTree = "<group>"; };
@@ -6205,9 +6206,6 @@
 				052FA0D11806088B00FAE4DF /* census2.cpp */,
 				052FA0D31806088B00FAE4DF /* census3.cpp */,
 				0591E8491C4F776A00793A9C /* census4.cpp */,
-				052FA0D21806088B00FAE4DF /* facetpairing2.cpp */,
-				052FA0D41806088B00FAE4DF /* facetpairing3.cpp */,
-				0591E84A1C4F776A00793A9C /* facetpairing4.cpp */,
 				052FA0D51806088B00FAE4DF /* testcensus.h */,
 			);
 			path = census;
@@ -6280,6 +6278,7 @@
 				052FA0F71806088B00FAE4DF /* CMakeLists.txt */,
 				052FA0F81806088B00FAE4DF /* connectedsumdecomp.cpp */,
 				052FA0F91806088B00FAE4DF /* eltmoves.cpp */,
+				05C265C62830A4B800232420 /* facetpairing3.cpp */,
 				05F904511F97F9F300893670 /* graph.cpp */,
 				052FA0FA1806088B00FAE4DF /* homologicaldata.cpp */,
 				052FA0FB1806088B00FAE4DF /* isomorphism.cpp */,
@@ -7234,6 +7233,7 @@
 			isa = PBXGroup;
 			children = (
 				0583656718DB88D9008B08D9 /* CMakeLists.txt */,
+				05C265C32830A4AD00232420 /* facetpairing2.cpp */,
 				0583656818DB88D9008B08D9 /* triangulation2.cpp */,
 				0583656918DB88D9008B08D9 /* testdim2.h */,
 			);
@@ -7295,6 +7295,7 @@
 			isa = PBXGroup;
 			children = (
 				0591E8521C4F779B00793A9C /* CMakeLists.txt */,
+				05C265C92830A4CA00232420 /* facetpairing4.cpp */,
 				0591E8531C4F779B00793A9C /* triangulation4.cpp */,
 				0591E8541C4F779B00793A9C /* testdim4.h */,
 			);
@@ -7440,6 +7441,7 @@
 			children = (
 				05A73CB419B2F1280099C617 /* CMakeLists.txt */,
 				05431F9B1C40F537009BC072 /* facenumbering.cpp */,
+				05C265CC2830A4DC00232420 /* facetpairingtest.h */,
 				0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */,
 				05431F9C1C40F537009BC072 /* testgeneric.h */,
 				05A73CB519B2F1280099C617 /* triangulationtest.h */,
@@ -8981,7 +8983,9 @@
 				051324F5258AF3FA001014F0 /* laurent.cpp in Sources */,
 				052FA11C1806088B00FAE4DF /* triangulation3.cpp in Sources */,
 				052FA10B1806088B00FAE4DF /* perm3.cpp in Sources */,
+				05C265CA2830A4CA00232420 /* facetpairing4.cpp in Sources */,
 				05277AC725CF9D16001E4134 /* intutils.cpp in Sources */,
+				05C265C42830A4AD00232420 /* facetpairing2.cpp in Sources */,
 				05FB46C81DD92CF900BB00E5 /* grouppresentation.cpp in Sources */,
 				052FA1121806088B00FAE4DF /* runalltests.cpp in Sources */,
 				05277B0225CF9D59001E4134 /* binom.cpp in Sources */,
@@ -8989,7 +8993,6 @@
 				052FA10C1806088B00FAE4DF /* perm4.cpp in Sources */,
 				052FA11B1806088B00FAE4DF /* isomorphism.cpp in Sources */,
 				052FA1161806088B00FAE4DF /* normalsurfaces.cpp in Sources */,
-				052FA1071806088B00FAE4DF /* facetpairing3.cpp in Sources */,
 				05A067611DFA69220047872E /* standardtriangulation.cpp in Sources */,
 				05277ACD25CF9D16001E4134 /* perm.cpp in Sources */,
 				052FA1191806088B00FAE4DF /* eltmoves.cpp in Sources */,
@@ -9008,7 +9011,6 @@
 				0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */,
 				052FA11D1806088B00FAE4DF /* base64.cpp in Sources */,
 				05277ACB25CF9D16001E4134 /* disctype.cpp in Sources */,
-				052FA1051806088B00FAE4DF /* facetpairing2.cpp in Sources */,
 				052FA1081806088B00FAE4DF /* exhaustive.cpp in Sources */,
 				052FA10F1806088B00FAE4DF /* rational.cpp in Sources */,
 				052FA1091806088B00FAE4DF /* matrixops.cpp in Sources */,
@@ -9032,9 +9034,9 @@
 				052FA1101806088B00FAE4DF /* numbertheory.cpp in Sources */,
 				052FA10E1806088B00FAE4DF /* primes.cpp in Sources */,
 				05A6A66D258AD0FB00A05E70 /* polynomial.cpp in Sources */,
-				0591E8501C4F777100793A9C /* facetpairing4.cpp in Sources */,
 				05431F971C40F527009BC072 /* perm.cpp in Sources */,
 				05E7DA312755019600B01C09 /* markedabeliangroup.cpp in Sources */,
+				05C265C72830A4B800232420 /* facetpairing3.cpp in Sources */,
 				052FA1061806088B00FAE4DF /* census3.cpp in Sources */,
 				05772F26270CFC3400D26D8A /* perm6.cpp in Sources */,
 				053CAB161DA4A50700A92F98 /* anglestructures.cpp in Sources */,
@@ -9193,7 +9195,6 @@
 				05F23E1319C1305A005B53B5 /* NewAnglesController.mm in Sources */,
 				050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */,
 				05721EF91F97156600A83FFC /* reidemeister.cpp in Sources */,
-				0591E84E1C4F777000793A9C /* facetpairing4.cpp in Sources */,
 				05F0A05D1DBF0B7000117BFC /* simplify.cpp in Sources */,
 				0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */,
 				05D1174319EE01A1003BEC55 /* census2.cpp in Sources */,
@@ -9355,6 +9356,7 @@
 				05F0A0631DBF0B7000117BFC /* triangle3.cpp in Sources */,
 				054535B919D8EA7100BED767 /* TextPopover.mm in Sources */,
 				05A066BD1DFA67D50047872E /* layeredtorusbundle.cpp in Sources */,
+				05C265CB2830A4CA00232420 /* facetpairing4.cpp in Sources */,
 				05249ECB1DBC16D6001FE29E /* dehydration.cpp in Sources */,
 				054208911DF0D0CF0018AB24 /* rule.cpp in Sources */,
 				05A73C9F19B2EF5A0099C617 /* homology.c in Sources */,
@@ -9382,7 +9384,6 @@
 				05F0A0181DBF079600117BFC /* vertex4.cpp in Sources */,
 				05772EFC270CFB3D00D26D8A /* sigcensus.cpp in Sources */,
 				052FA22F180612DD00FAE4DF /* peripheral_curves.c in Sources */,
-				05D1174619EE01A1003BEC55 /* facetpairing3.cpp in Sources */,
 				05249EDB1DBC16E4001FE29E /* face5.cpp in Sources */,
 				05249F2F1DBC1711001FE29E /* perm2.cpp in Sources */,
 				0542088E1DF0D0CF0018AB24 /* format.cpp in Sources */,
@@ -9396,7 +9397,6 @@
 				05C064691C56C2ED006E6483 /* EltMoves4.mm in Sources */,
 				05249EE81DBC16EA001FE29E /* facetpairing4.cpp in Sources */,
 				05249EBE1DBC16CA001FE29E /* component4.cpp in Sources */,
-				05D1174419EE01A1003BEC55 /* facetpairing2.cpp in Sources */,
 				05249F621DBC1737001FE29E /* disc.cpp in Sources */,
 				05D1173419EE0185003BEC55 /* exhaustive.cpp in Sources */,
 				05F09FE21DBF01D100117BFC /* triangulation2.cpp in Sources */,
@@ -9663,6 +9663,7 @@
 				05249F291DBC1711001FE29E /* largeinteger.cpp in Sources */,
 				05226DF327422C82000A45D5 /* hilbertprimal.cpp in Sources */,
 				057B0CAC26A2ABF60017F5EA /* base64.cpp in Sources */,
+				05C265C82830A4B800232420 /* facetpairing3.cpp in Sources */,
 				05249EF71DBC16F1001FE29E /* isomorphism7.cpp in Sources */,
 				052FA217180612DD00FAE4DF /* choose_generators.c in Sources */,
 				052FA19F1806129B00FAE4DF /* perm4.cpp in Sources */,
@@ -9723,6 +9724,7 @@
 				05772EFE270CFB3D00D26D8A /* sigisomorphism.cpp in Sources */,
 				05D1172C19EE0169003BEC55 /* base64.cpp in Sources */,
 				052FA1AA1806129B00FAE4DF /* script.cpp in Sources */,
+				05C265C52830A4AD00232420 /* facetpairing2.cpp in Sources */,
 				05F2033520A17C2500FC74ED /* dt.cpp in Sources */,
 				05249F0F1DBC16F9001FE29E /* triangulation8.cpp in Sources */,
 				05C0645E1C56B1F7006E6483 /* Tri4ViewController.mm in Sources */,

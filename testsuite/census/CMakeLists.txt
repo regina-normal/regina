@@ -5,9 +5,6 @@ SET ( FILES
   census2.cpp
   census3.cpp
   census4.cpp
-  facetpairing2.cpp
-  facetpairing3.cpp
-  facetpairing4.cpp
   )
 
 # Prepend folder name

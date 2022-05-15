@@ -32,53 +32,36 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "triangulation/dim2.h"
 #include "triangulation/facetpairing.h"
-#include "testsuite/census/testcensus.h"
+
+#include "testsuite/exhaustive.h"
+#include "testsuite/generic/facetpairingtest.h"
+#include "testsuite/dim2/testdim2.h"
 
 using regina::FacetPairing;
-using regina::BoolSet;
 
-class FacetPairing2Test : public CppUnit::TestFixture {
+class FacetPairing2Test : public FacetPairingTest<2> {
     CPPUNIT_TEST_SUITE(FacetPairing2Test);
 
-    CPPUNIT_TEST(rawCounts);
+    CPPUNIT_TEST(canonical);
+    CPPUNIT_TEST(rawCountsClosed);
 
     CPPUNIT_TEST_SUITE_END();
 
-    private:
-        unsigned count;
-            /**< Used to hold arbitrary totals. */
-
     public:
-        void setUp() override {
+        void canonical() {
+            FacetPairingTest<2>::canonicalAllClosed(0);
+            FacetPairingTest<2>::canonicalAllClosed(2);
+            FacetPairingTest<2>::canonicalAllClosed(4);
         }
 
-        void tearDown() override {
-        }
-
-        void rawCounts() {
+        void rawCountsClosed() {
             // Figures taken from the online encyclopedia of integer
             // sequences, #A005967.
-            unsigned nPairs[] = { 0, 0, 2, 0, 5, 0, 17, 0, 71, 0, 388,
-                0, 2592 };
+            size_t nPairs[] = { 0, 0, 2, 0, 5, 0, 17, 0, 71, 0, 388, 0, 2592 };
 
-            unsigned nTri;
-            for (nTri = 0; nTri <= 12; nTri++) {
-                count = 0;
-                FacetPairing<2>::findAllPairings(nTri, false, 0,
-                        [this](const FacetPairing<2>&,
-                               FacetPairing<2>::IsoList) {
-                    ++count;
-                });
-
-                std::ostringstream msg;
-                msg << "Edge pairing count for " << nTri
-                    << " triangles should be " << nPairs[nTri]
-                    << ", not " << count << '.';
-
-                CPPUNIT_ASSERT_MESSAGE(msg.str(), count == nPairs[nTri]);
-            }
+            for (size_t i = 0; i <= 12; ++i)
+                FacetPairingTest<2>::enumerateClosed(i, nPairs[i]);
         }
 };
 
