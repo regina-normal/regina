@@ -322,17 +322,10 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         /*@{*/
 
         /**
-         * Determines whether this facet pairing is in canonical form.  Here:
+         * Determines whether this facet pairing is in canonical form.
          *
-         * - an \e isomorphism of a facet pairing means a relabelling of the
-         *   simplices and a relabelling of the (\a dim + 1) facets within
-         *   each simplex;
-         *
-         * - a facet pairing is in <i>canonical form</i> if it is a
-         *   lexicographically minimal representative of its isomorphism class,
-         *   where we order facet pairings by lexicographical comparison of
-         *   <tt>dest(0,0)</tt>, <tt>dest(0,1)</tt>, ...,
-         *   <tt>dest(size()-1,\a dim)</tt>.
+         * See the FacetPairing class notes for more information on
+         * isomorphisms, automorphisms and canonical form.
          *
          * \pre This facet pairing is connected, i.e., it is possible
          * to reach any simplex from any other simplex via a
@@ -345,21 +338,14 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
 
         /**
          * Returns the canonical form of this facet pairing, along with an
-         * isomorphism that transforms this pairing into canonial form.  Here:
-         *
-         * - an \e isomorphism of a facet pairing means a relabelling of the
-         *   simplices and a relabelling of the (\a dim + 1) facets within
-         *   each simplex;
-         *
-         * - a facet pairing is in <i>canonical form</i> if it is a
-         *   lexicographically minimal representative of its isomorphism class,
-         *   where we order facet pairings by lexicographical comparison of
-         *   <tt>dest(0,0)</tt>, <tt>dest(0,1)</tt>, ...,
-         *   <tt>dest(size()-1,\a dim)</tt>.
+         * isomorphism that transforms this pairing into canonial form.
          *
          * Note that, while the canoncial form is uniquely determined,
          * the isomorphism is not (since the facet pairing could have
          * non-trivial automorphisms).
+         *
+         * See the FacetPairing class notes for more information on
+         * isomorphisms, automorphisms and canonical form.
          *
          * \pre This facet pairing is connected, i.e., it is possible
          * to reach any simplex from any other simplex via a
@@ -373,20 +359,18 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
 
         /**
          * Returns the set of all combinatorial automorphisms of this
-         * facet pairing.
+         * facet pairing, assuming the pairing is already in canonical form.
          *
-         * An automorphism is a relabelling of the simplices and/or a
-         * renumbering of the (\a dim + 1) facets of each simplex resulting
-         * in precisely the same facet pairing.
-         *
-         * This routine uses optimisations that can cause unpredictable
-         * breakages if this facet pairing is not in canonical form.
+         * See the FacetPairing class notes for more information on
+         * isomorphisms, automorphisms and canonical form.
          *
          * \pre This facet pairing is connected, i.e., it is possible
          * to reach any simplex from any other simplex via a
          * series of matched facet pairs.
-         * \pre This facet pairing is in canonical form as described by
-         * isCanonical().
+         *
+         * \pre This facet pairing is in canonical form.  This is crucial,
+         * since this routine uses optimisations that can cause unpredictable
+         * breakages if this facet pairing is not in canonical form.
          *
          * @return the list of all automorphisms.
          */
