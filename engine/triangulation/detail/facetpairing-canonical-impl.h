@@ -182,6 +182,11 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                     if (nextMe.simp == size_) {
                         // This is a boundary facet.
                         nextCanon = nextMe; // also boundary
+                    } else if (prevDest.simp == size_) {
+                        // Non-boundary can never come *after* boundary
+                        // in a lexicographically minimal representation.
+                        unusable = true;
+                        break;
                     } else {
                         ssize_t nextSimp = to.simpImage(nextMe.simp);
                         if (nextSimp < 0) {

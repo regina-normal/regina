@@ -55,12 +55,18 @@ class FacetPairing4Test : public FacetPairingTest<4> {
             FacetPairingTest<4>::isCanonicalAllClosed(0);
             FacetPairingTest<4>::isCanonicalAllClosed(2);
             FacetPairingTest<4>::isCanonicalAllClosed(4);
+            FacetPairingTest<4>::isCanonicalAllBounded(1);
+            FacetPairingTest<4>::isCanonicalAllBounded(2);
+            FacetPairingTest<4>::isCanonicalAllBounded(3);
+            FacetPairingTest<4>::isCanonicalAllBounded(4);
         }
 
         void makeCanonical() {
             FacetPairingTest<4>::makeCanonicalAllClosed(0);
             // Already too slow just for n=2. :/
             // FacetPairingTest<4>::makeCanonicalAllClosed(2);
+            FacetPairingTest<4>::makeCanonicalAllBounded(1);
+            // FacetPairingTest<4>::makeCanonicalAllBounded(2);
         }
 
         void rawCountsClosed() {

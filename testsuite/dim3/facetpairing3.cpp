@@ -73,12 +73,17 @@ class FacetPairing3Test : public FacetPairingTest<3> {
             FacetPairingTest<3>::isCanonicalAllClosed(0);
             FacetPairingTest<3>::isCanonicalAllClosed(1);
             FacetPairingTest<3>::isCanonicalAllClosed(2);
+            FacetPairingTest<3>::isCanonicalAllBounded(1);
+            FacetPairingTest<3>::isCanonicalAllBounded(2);
+            FacetPairingTest<3>::isCanonicalAllBounded(3);
         }
 
         void makeCanonical() {
             FacetPairingTest<3>::makeCanonicalAllClosed(0);
             FacetPairingTest<3>::makeCanonicalAllClosed(1);
             FacetPairingTest<3>::makeCanonicalAllClosed(2);
+            FacetPairingTest<3>::makeCanonicalAllBounded(1);
+            FacetPairingTest<3>::makeCanonicalAllBounded(2);
         }
 
         void rawCountsClosed() {
