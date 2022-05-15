@@ -178,17 +178,21 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                     // dest(currSimp, i).
                     FacetSpec<dim> nextMe =
                         dest(from.simpImage(currSimp), p[i]);
-                    ssize_t nextSimp = to.simpImage(nextMe.simp);
                     FacetSpec<dim> nextCanon;
-                    if (nextSimp < 0) {
-                        // This gluing goes beyond the range of
-                        // simplices that have been decided already.
-                        // Make sure it goes to the next free simplex.
-                        nextCanon = FacetSpec<dim>(usedSimp[currSimp + 1]++, 0);
-                        from.simpImage(nextCanon.simp) = nextMe.simp;
-                        to.simpImage(nextMe.simp) = nextCanon.simp;
+                    if (nextMe.simp == size_) {
+                        // This is a boundary facet.
+                        nextCanon = nextMe; // also boundary
                     } else {
-                        if (nextSimp == currSimp) {
+                        ssize_t nextSimp = to.simpImage(nextMe.simp);
+                        if (nextSimp < 0) {
+                            // This gluing goes beyond the range of
+                            // simplices that have been decided already.
+                            // Make sure it goes to the next free simplex.
+                            nextCanon = FacetSpec<dim>(
+                                usedSimp[currSimp + 1]++, 0);
+                            from.simpImage(nextCanon.simp) = nextMe.simp;
+                            to.simpImage(nextMe.simp) = nextCanon.simp;
+                        } else if (nextSimp == currSimp) {
                             // This is glued to another facet of this simplex.
                             nextCanon = { nextSimp, p.pre(nextMe.facet) };
                             if (currSimp < prevDest.simp) {
@@ -231,12 +235,10 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                                 break;
                             }
                         } else {
-                            // There are two possible cases here:
-                            // (a) this destination is a simplex whose number
-                            // has been fixed but whose permutation has not;
-                            // (b) this destination is the boundary.
+                            // This destination is a simplex whose number
+                            // has been fixed but whose permutation has not.
                             //
-                            // In case (a), we do not know (easily) how
+                            // In this case, we do not know (easily) how
                             // many facets of nextSimp have already been
                             // accounted for, and so we do not know what
                             // the canonical destination facet *should* be.
@@ -248,11 +250,7 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                             // order as a result then this will be noticed
                             // when we process nextSimp.
                             //
-                            // In case (b), setting the facet to 1 does not
-                            // hurt; we are just using a non-standard but still
-                            // well-defined representation of the boundary.
-                            //
-                            // In both cases, we *do* need to tweak the
+                            // Note that we also need to tweak the
                             // comparison with best.dest(...) accordingly.
                             nextCanon = { nextSimp, 1 };
                         }
@@ -266,6 +264,8 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                             // be using the wrong facet number; see the
                             // more detailed discussion above where we
                             // set nextCanon = { nextSimp, 1 }.
+                            // Note that the boundary is unaffected by this,
+                            // since the boundary is represented as size_:0.
                             if (nextBest.facet > 1)
                                 nextBest.facet = 1;
 
