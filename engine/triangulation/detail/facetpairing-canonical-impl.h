@@ -52,6 +52,47 @@
 
 namespace regina::detail {
 
+/**
+ * Gives a unified way to initialise and update the isomorphisms(s) that
+ * are returned by FacetPairingBase::canonicalInternal().
+ */
+template <int dim, bool allIsos>
+struct CanonicalInternalReturn;
+
+template <int dim>
+struct CanonicalInternalReturn<dim, true> {
+    typename FacetPairingBase<dim>::IsoList result;
+
+    CanonicalInternalReturn(size_t size) {
+        result.push_back(Isomorphism<dim>::identity(size));
+    }
+
+    void append(const Isomorphism<dim>& iso) {
+        result.push_back(iso);
+    }
+
+    void reset(const Isomorphism<dim>& iso) {
+        result.clear();
+        result.push_back(iso);
+    }
+};
+
+template <int dim>
+struct CanonicalInternalReturn<dim, false> {
+    Isomorphism<dim> result;
+
+    CanonicalInternalReturn(size_t size) :
+            result(Isomorphism<dim>::identity(size)) {}
+
+    void append(const Isomorphism<dim>&) {
+        // We only need to return one isomorphism, so just ignore any others.
+    }
+
+    void reset(const Isomorphism<dim>& iso) {
+        result = iso;
+    }
+};
+
 template <int dim>
 bool FacetPairingBase<dim>::isCanonical() const {
     // Check the preconditions for isCanonicalInternal().
@@ -76,15 +117,24 @@ bool FacetPairingBase<dim>::isCanonical() const {
 }
 
 template <int dim>
-std::pair<FacetPairing<dim>, Isomorphism<dim>>
-        FacetPairingBase<dim>::canonical() const {
+template <bool allIsos>
+std::pair<FacetPairing<dim>,
+        typename FacetPairingBase<dim>::template CanonicalIsos<allIsos>>
+        FacetPairingBase<dim>::canonicalInternal() const {
     const FacetPairing<dim>& me = static_cast<const FacetPairing<dim>&>(*this);
 
-    if (size_ == 0)
-        return { me, Isomorphism<dim>::identity(0) };
+    if (size_ == 0) {
+        if constexpr (allIsos) {
+            IsoList autos;
+            autos.push_back(Isomorphism<dim>::identity(0));
+            return { me, std::move(autos) };
+        } else {
+            return { me, Isomorphism<dim>::identity(0) };
+        }
+    }
 
     FacetPairing<dim> best(me);
-    Isomorphism<dim> bestIso = Isomorphism<dim>::identity(size_);
+    CanonicalInternalReturn<dim, allIsos> bestIso(size_);
 
     // Create the isomorphism (this -> canonical) one simplex at a time,
     // selecting the preimage of 0 first, then the preimage of 1 and so on.
@@ -118,13 +168,13 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                 // We have a complete pair of isomorphisms!
                 if (lexSmallerFrom == size_) {
                     // We have found an automorphism.
-                    // For now, we are not storing these.
+                    bestIso.append(to);
 
                     // Since we are about to decrement currSimp:
                     --lexSmallerFrom;
                 } else {
                     // This solution is strictly better.
-                    bestIso = to;
+                    bestIso.reset(to);
                     best = to(me);
                 }
 
@@ -331,7 +381,7 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
 
     delete[] perm;
     delete[] usedSimp;
-    return { best, bestIso };
+    return { std::move(best), std::move(bestIso.result) };
 }
 
 template <int dim>

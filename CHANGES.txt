@@ -25,7 +25,7 @@ Version 7.1  [ TODO ]
             - Reflected the result of cp2() so that it has intersection
               form [1], not [-1].
         Class FacetPairing<dim>:
-            - New routine canonical().
+            - New routines canonical() and canonicalAll().
             - In findAllPairings(), the action is no longer required to
               take the list of all automorphisms if it does not need them.
             - Renamed toTextRep() to textRep().  The old name is kept as

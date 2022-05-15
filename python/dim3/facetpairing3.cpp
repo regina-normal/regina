@@ -65,6 +65,7 @@ void addFacetPairing3(pybind11::module_& m) {
             &FacetPairing<3>::isUnmatched, pybind11::const_))
         .def("isCanonical", &FacetPairing<3>::isCanonical)
         .def("canonical", &FacetPairing<3>::canonical)
+        .def("canonicalAll", &FacetPairing<3>::canonicalAll)
         .def("findAutomorphisms", &FacetPairing<3>::findAutomorphisms)
         .def("textRep", &FacetPairing<3>::textRep)
         .def("toTextRep", &FacetPairing<3>::textRep) // deprecated

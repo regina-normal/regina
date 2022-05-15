@@ -36,7 +36,9 @@ namespace regina::detail {
 
 template bool FacetPairingBase<2>::isCanonical() const;
 template std::pair<FacetPairing<2>, Isomorphism<2>>
-    FacetPairingBase<2>::canonical() const;
+    FacetPairingBase<2>::canonicalInternal<false>() const;
+template std::pair<FacetPairing<2>, FacetPairing<2>::IsoList>
+    FacetPairingBase<2>::canonicalInternal<true>() const;
 template bool FacetPairingBase<2>::isCanonicalInternal(
     FacetPairingBase<2>::IsoList* list) const;
 

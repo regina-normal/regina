@@ -81,11 +81,9 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
     public:
         /**
          * A list of isomorphisms on facet pairings.
-         * Such an isomorphism can be used to convert one facet pairing
-         * into another.
          *
-         * This type is used to store all \e automorphisms of a facet pairing;
-         * that is, all isomorphisms that map the facet pairing to itself.
+         * In particular, this class uses the IsoList type to return
+         * the set of all \e automorphisms of a facet pairing.
          */
         using IsoList = std::list<Isomorphism<dim>>;
 
@@ -337,12 +335,13 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         bool isCanonical() const;
 
         /**
-         * Returns the canonical form of this facet pairing, along with an
+         * Returns the canonical form of this facet pairing, along with one
          * isomorphism that transforms this pairing into canonial form.
          *
          * Note that, while the canoncial form is uniquely determined,
          * the isomorphism is not (since the facet pairing could have
-         * non-trivial automorphisms).
+         * non-trivial automorphisms).  If you need \e all such isomorphisms
+         * then you should call canonicalAll() instead.
          *
          * See the FacetPairing class notes for more information on
          * isomorphisms, automorphisms and canonical form.
@@ -352,10 +351,35 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * series of matched facet pairs.
          *
          * @return a pair (\a c, \a iso), where \a c is the canonical form
-         * and \a iso is the isomorphism that converts this facet pairing
+         * and \a iso is one isomorphism that converts this facet pairing
          * into \a c.
          */
         std::pair<FacetPairing<dim>, Isomorphism<dim>> canonical() const;
+
+        /**
+         * Returns the canonical form of this facet pairing, along with
+         * the list of all isomorphisms that transform this pairing into
+         * canonial form.
+         *
+         * Note that the list that is returned will be a left coset of
+         * the automorphism group of this facet pairing, and also a
+         * right coset of the automorphism group of the canonical form.
+         *
+         * If you only need one such isomorphism (not all), then you
+         * should call canonical() instead.
+         *
+         * See the FacetPairing class notes for more information on
+         * isomorphisms, automorphisms and canonical form.
+         *
+         * \pre This facet pairing is connected, i.e., it is possible
+         * to reach any simplex from any other simplex via a
+         * series of matched facet pairs.
+         *
+         * @return a pair (\a c, \a isos), where \a c is the canonical form
+         * and \a isos is the list of all isomorphisms that convert this
+         * facet pairing into \a c.
+         */
+        std::pair<FacetPairing<dim>, IsoList> canonicalAll() const;
 
         /**
          * Returns the set of all combinatorial automorphisms of this
@@ -765,6 +789,23 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
 
     private:
         /**
+         * The part of the return value for canonicalInternal() that
+         * holds the isomorphism(s).
+         */
+        template <bool allIsos>
+        using CanonicalIsos = std::conditional_t<allIsos,
+            IsoList, Isomorphism<dim>>;
+
+        /**
+         * A single unified piece of code that implements both canonical() and
+         * canonicalAll().  The template argument \a allIsos indicates which
+         * of these two routines we are implementing.
+         */
+        template <bool allIsos>
+        std::pair<FacetPairing<dim>, CanonicalIsos<allIsos>>
+            canonicalInternal() const;
+
+        /**
          * Internal to findAllPairings().
          *
          * Performs the actual enumeration of facet pairings.  At most one
@@ -908,6 +949,18 @@ inline bool FacetPairingBase<dim>::noDest(
 template <int dim>
 inline std::string FacetPairingBase<dim>::toTextRep() const {
     return textRep();
+}
+
+template <int dim>
+inline std::pair<FacetPairing<dim>, Isomorphism<dim>>
+        FacetPairingBase<dim>::canonical() const {
+    return canonicalInternal<false>();
+}
+
+template <int dim>
+inline std::pair<FacetPairing<dim>, typename FacetPairingBase<dim>::IsoList>
+        FacetPairingBase<dim>::canonicalAll() const {
+    return canonicalInternal<true>();
 }
 
 template <int dim>
