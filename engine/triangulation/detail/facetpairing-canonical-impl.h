@@ -303,7 +303,8 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                     ++currSimp;
                     if (! smaller)
                         ++lexSmallerFrom;
-                    perm[currSimp] = 0;
+                    if (currSimp < size_)
+                        perm[currSimp] = 0;
                     break;
                 }
 
