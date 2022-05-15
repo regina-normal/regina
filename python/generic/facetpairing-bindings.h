@@ -69,7 +69,8 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
         .def("isCanonical", &FacetPairing<dim>::isCanonical)
         .def("canonical", &FacetPairing<dim>::canonical)
         .def("findAutomorphisms", &FacetPairing<dim>::findAutomorphisms)
-        .def("toTextRep", &FacetPairing<dim>::toTextRep)
+        .def("textRep", &FacetPairing<dim>::textRep)
+        .def("toTextRep", &FacetPairing<dim>::textRep) // deprecated
         .def_static("fromTextRep", &FacetPairing<dim>::fromTextRep)
         .def("dot", &FacetPairing<dim>::dot,
             pybind11::arg("prefix") = nullptr,

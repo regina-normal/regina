@@ -145,7 +145,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
 
         /**
          * Reads a new facet pairing from the given input stream.  This
-         * routine reads data in the format written by toTextRep().
+         * routine reads data in the format written by textRep().
          *
          * This routine will skip any initial whitespace in the given input
          * stream.  Once it finds its first non-whitespace character,

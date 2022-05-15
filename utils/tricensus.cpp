@@ -663,9 +663,9 @@ int runCensus() {
         regina::FacetPairing<dim>::findAllPairings(nTet, boundary, nBdryFaces,
                 [](const regina::FacetPairing<dim>& pair) {
             if (dumpStream.get())
-                (*dumpStream) << pair.toTextRep() << std::endl;
+                (*dumpStream) << pair.textRep() << std::endl;
             else
-                std::cout << pair.toTextRep() << std::endl;
+                std::cout << pair.textRep() << std::endl;
             totPairings++;
         });
         std::cerr << "Total " << WORD_face << " pairings: "

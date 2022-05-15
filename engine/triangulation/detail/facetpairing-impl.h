@@ -204,7 +204,7 @@ void FacetPairingBase<dim>::writeDot(std::ostream& out,
 }
 
 template <int dim>
-std::string FacetPairingBase<dim>::toTextRep() const {
+std::string FacetPairingBase<dim>::textRep() const {
     std::ostringstream ans;
 
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {

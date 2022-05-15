@@ -139,7 +139,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
 
         /**
          * Reads a new facet pairing from the given input stream.  This
-         * routine reads data in the format written by toTextRep().
+         * routine reads data in the format written by textRep().
          *
          * This routine will skip any initial whitespace in the given input
          * stream.  Once it finds its first non-whitespace character,
@@ -395,9 +395,9 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         void writeTextShort(std::ostream& out) const;
 
         /**
-         * Returns a text-based representation of this facet pairing that can be
-         * used to reconstruct the facet pairing.  This reconstruction is
-         * done through routine fromTextRep().
+         * Returns a text-based representation that can be used to reconstruct
+         * this facet pairing.  This reconstruction is done through the
+         * routine fromTextRep().
          *
          * The text produced is not particularly readable; for a
          * human-readable text representation, see routine str() instead.
@@ -406,7 +406,18 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          *
          * @return a text-based representation of this facet pairing.
          */
-        std::string toTextRep() const;
+        std::string textRep() const;
+
+        /**
+         * Deprecated routine that returns a text-based representation
+         * that can be used to reconstruct this facet pairing.
+         *
+         * \deprecated This routine has been renamed to textRep().
+         * See the textRep() documentation for further details.
+         *
+         * @return a text-based representation of this facet pairing.
+         */
+        [[deprecated]] std::string toTextRep() const;
 
         /**
          * Writes the graph corresponding to this facet pairing in
@@ -483,14 +494,14 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         /**
          * Reconstructs a facet pairing from a text-based representation.
          * This text-based representation must be in the format produced
-         * by routine toTextRep().
+         * by routine textRep().
          *
          * \exception InvalidArgument the given string was not a valid
          * text-based representation of a facet pairing on a positive
          * number of simplices.
          *
          * @param rep a text-based representation of a facet pairing, as
-         * produced by routine toTextRep().
+         * produced by routine textRep().
          * @return the corresponding facet pairing.
          */
         static FacetPairing<dim> fromTextRep(const std::string& rep);
@@ -892,6 +903,11 @@ inline bool FacetPairingBase<dim>::noDest(
         size_t simp, unsigned facet) const {
     FacetSpec<dim>& f = pairs_[(dim + 1) * simp + facet];
     return (f.simp == simp && f.facet == facet);
+}
+
+template <int dim>
+inline std::string FacetPairingBase<dim>::toTextRep() const {
+    return textRep();
 }
 
 template <int dim>

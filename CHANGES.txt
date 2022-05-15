@@ -28,6 +28,8 @@ Version 7.1  [ TODO ]
             - New routine canonical().
             - In findAllPairings(), the action is no longer required to
               take the list of all automorphisms if it does not need them.
+            - Renamed toTextRep() to textRep().  The old name is kept as
+              a deprecated alias.
         Class HilbertPrimal:
             - The header no longer includes the Normaliz headers (which
               Regina does not actually ship with its development files).
