@@ -182,17 +182,18 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                     if (nextMe.simp == size_) {
                         // This is a boundary facet.
                         nextCanon = nextMe; // also boundary
-                    } else if (prevDest.simp == size_) {
-                        // Non-boundary can never come *after* boundary
-                        // in a lexicographically minimal representation.
-                        unusable = true;
-                        break;
                     } else {
                         ssize_t nextSimp = to.simpImage(nextMe.simp);
                         if (nextSimp < 0) {
                             // This gluing goes beyond the range of
                             // simplices that have been decided already.
                             // Make sure it goes to the next free simplex.
+                            if (prevDest.simp == size_) {
+                                // Non-boundary cannot come *after* boundary in
+                                // a lexicographically minimal representation.
+                                unusable = true;
+                                break;
+                            }
                             nextCanon = FacetSpec<dim>(
                                 usedSimp[currSimp + 1]++, 0);
                             from.simpImage(nextCanon.simp) = nextMe.simp;
@@ -258,6 +259,12 @@ std::pair<FacetPairing<dim>, Isomorphism<dim>>
                             // Note that we also need to tweak the
                             // comparison with best.dest(...) accordingly.
                             nextCanon = { nextSimp, 1 };
+                            if (nextCanon < prevDest) {
+                                // This cannot lead to something that is
+                                // lexicographically minimal.
+                                unusable = true;
+                                break;
+                            }
                         }
                     }
                     prevDest = nextCanon;
