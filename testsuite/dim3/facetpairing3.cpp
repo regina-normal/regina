@@ -60,7 +60,8 @@ namespace {
 class FacetPairing3Test : public FacetPairingTest<3> {
     CPPUNIT_TEST_SUITE(FacetPairing3Test);
 
-    CPPUNIT_TEST(canonical);
+    CPPUNIT_TEST(isCanonical);
+    CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(rawCountsClosed);
     CPPUNIT_TEST(rawCountsBounded);
     CPPUNIT_TEST(badSubgraphs);
@@ -68,10 +69,16 @@ class FacetPairing3Test : public FacetPairingTest<3> {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        void canonical() {
-            FacetPairingTest<3>::canonicalAllClosed(0);
-            FacetPairingTest<3>::canonicalAllClosed(1);
-            FacetPairingTest<3>::canonicalAllClosed(2);
+        void isCanonical() {
+            FacetPairingTest<3>::isCanonicalAllClosed(0);
+            FacetPairingTest<3>::isCanonicalAllClosed(1);
+            FacetPairingTest<3>::isCanonicalAllClosed(2);
+        }
+
+        void makeCanonical() {
+            FacetPairingTest<3>::makeCanonicalAllClosed(0);
+            FacetPairingTest<3>::makeCanonicalAllClosed(1);
+            FacetPairingTest<3>::makeCanonicalAllClosed(2);
         }
 
         void rawCountsClosed() {

@@ -43,16 +43,23 @@ using regina::FacetPairing;
 class FacetPairing2Test : public FacetPairingTest<2> {
     CPPUNIT_TEST_SUITE(FacetPairing2Test);
 
-    CPPUNIT_TEST(canonical);
+    CPPUNIT_TEST(isCanonical);
+    CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(rawCountsClosed);
 
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        void canonical() {
-            FacetPairingTest<2>::canonicalAllClosed(0);
-            FacetPairingTest<2>::canonicalAllClosed(2);
-            FacetPairingTest<2>::canonicalAllClosed(4);
+        void isCanonical() {
+            FacetPairingTest<2>::isCanonicalAllClosed(0);
+            FacetPairingTest<2>::isCanonicalAllClosed(2);
+            FacetPairingTest<2>::isCanonicalAllClosed(4);
+        }
+
+        void makeCanonical() {
+            FacetPairingTest<2>::makeCanonicalAllClosed(0);
+            FacetPairingTest<2>::makeCanonicalAllClosed(2);
+            FacetPairingTest<2>::makeCanonicalAllClosed(4);
         }
 
         void rawCountsClosed() {
