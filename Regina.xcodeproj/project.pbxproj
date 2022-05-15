@@ -1780,6 +1780,7 @@
 		05C265BE282C948F00232420 /* facetpairing6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265AC282C947C00232420 /* facetpairing6.cpp */; };
 		05C265BF282C948F00232420 /* facetpairing5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265AA282C947C00232420 /* facetpairing5.cpp */; };
 		05C265C0282C948F00232420 /* facetpairing8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265AB282C947C00232420 /* facetpairing8.cpp */; };
+		05C265C228307D0600232420 /* facetpairing-canonical-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C265C128307D0500232420 /* facetpairing-canonical-impl.h */; };
 		05CAE6012741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
 		05CAE6022741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
 		05CAE60527427A8A007C93F3 /* ordering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60327427A8A007C93F3 /* ordering.cpp */; };
@@ -4270,6 +4271,7 @@
 		05C265B0282C947C00232420 /* facetpairing2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing2.cpp; sourceTree = "<group>"; };
 		05C265B1282C947D00232420 /* facetpairing14.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing14.cpp; sourceTree = "<group>"; };
 		05C265B2282C947D00232420 /* facetpairing7.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing7.cpp; sourceTree = "<group>"; };
+		05C265C128307D0500232420 /* facetpairing-canonical-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "facetpairing-canonical-impl.h"; sourceTree = "<group>"; };
 		05CAE6002741C871007C93F3 /* validityconstraints.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = validityconstraints.cpp; sourceTree = "<group>"; };
 		05CAE60327427A8A007C93F3 /* ordering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ordering.cpp; sourceTree = "<group>"; };
 		05CAE60427427A8A007C93F3 /* maxadmissible.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maxadmissible.cpp; sourceTree = "<group>"; };
@@ -6472,6 +6474,7 @@
 				054C6A7C1DCC20DA005373F0 /* example.h */,
 				05431F181C40F260009BC072 /* face.h */,
 				05431F191C40F260009BC072 /* facenumbering.h */,
+				05C265C128307D0500232420 /* facetpairing-canonical-impl.h */,
 				05431F1A1C40F260009BC072 /* facetpairing-impl.h */,
 				05431F1B1C40F260009BC072 /* facetpairing.h */,
 				05431F1D1C40F260009BC072 /* isosig-impl.h */,
@@ -7763,6 +7766,7 @@
 				05721EEA1F97153E00A83FFC /* graph.h in Headers */,
 				054208761DF0D0B50018AB24 /* definition.h in Headers */,
 				05A067251DFA68190047872E /* pluggedtorusbundle.h in Headers */,
+				05C265C228307D0600232420 /* facetpairing-canonical-impl.h in Headers */,
 				055115001DCDF63000EC753C /* isomorphism.h in Headers */,
 				05A0672F1DFA68190047872E /* satblocktypes.h in Headers */,
 				054209261DF28C990018AB24 /* keywordlist.h in Headers */,
