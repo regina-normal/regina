@@ -142,6 +142,23 @@ std::pair<FacetPairing<dim>,
     for (size_t i = 0; i < size_; ++i)
         to.simpImage(i) = from.simpImage(i) = -1;
 
+    // We can limit the options for the preimage of simplex 0 by counting
+    // at loops, double edges, boundaries, etc. at each node.
+    // This will involve a little work; for now we just count loops
+    // which are the first thing we need to compare and happily also
+    // easiest to count.
+    // Note: actually we are counting *twice* the number of loops, since
+    // this is easier to code.
+    int maxLoops = 0;
+    for (size_t i = 0; i < size_; ++i) {
+        int loops = 0;
+        for (int f = 0; f <= dim; ++f)
+            if (dest(i, f).simp == i)
+                ++loops;
+        if (loops > maxLoops)
+            maxLoops = loops;
+    }
+
     auto* perm = new typename Perm<dim+1>::Index[size_];
     auto* usedSimp = new ssize_t[size_ + 1];
     usedSimp[0] = 1;
@@ -160,6 +177,16 @@ std::pair<FacetPairing<dim>,
 
     // Run through all possible preimages of simplex 0.
     for (size_t pre0 = 0; pre0 < size_; ++pre0) {
+        // First, count loops to see if this option is even viable.
+        {
+            int loops = 0;
+            for (int f = 0; f <= dim; ++f)
+                if (dest(pre0, f).simp == pre0)
+                    ++loops;
+            if (loops != maxLoops)
+                continue;
+        }
+
         from.simpImage(0) = pre0;
         to.simpImage(pre0) = 0;
 
