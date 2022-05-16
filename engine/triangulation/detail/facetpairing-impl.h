@@ -122,6 +122,42 @@ bool FacetPairingBase<dim>::operator != (const FacetPairing<dim>& other) const {
 }
 
 template <int dim>
+bool FacetPairingBase<dim>::isConnected() const {
+    if (size_ <= 1)
+        return true;
+
+    bool* seen = new bool[size_];
+    auto* stack = new size_t[size_];
+
+    seen[0] = true;
+    std::fill(seen + 1, seen + size_, false);
+    stack[0] = 0;
+    size_t stackSize = 1;
+    size_t nSeen = 1;
+
+    while (stackSize > 0) {
+        size_t top = stack[--stackSize];
+        for (int i = 0; i <= dim; ++i) {
+            ssize_t adj = dest(top, i).simp;
+            if (adj >= 0 && adj < size_ && ! seen[adj]) {
+                seen[adj] = true;
+                stack[stackSize++] = adj;
+                ++nSeen;
+                if (nSeen == size_) {
+                    delete[] stack;
+                    delete[] seen;
+                    return true;
+                }
+            }
+        }
+    }
+
+    delete[] stack;
+    delete[] seen;
+    return false;
+}
+
+template <int dim>
 void FacetPairingBase<dim>::writeTextShort(std::ostream& out) const {
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
         if (f.facet == 0 && f.simp > 0)

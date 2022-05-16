@@ -315,6 +315,25 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
 
         /*@}*/
         /**
+         * \name Connected components
+         */
+        /*@{*/
+
+        /**
+         * Determines whether this facet pairing is connected.
+         *
+         * A facet pairing is \e connected if it is possible to reach any
+         * simplex from any other simplex via a series of matched facet pairs.
+         *
+         * For this purpose, the empty facet pairing is considered to be
+         * connected.
+         *
+         * @return \c true if and only if this pairing is connected.
+         */
+        bool isConnected() const;
+
+        /*@}*/
+        /**
          * \name Isomorphic Representations
          */
         /*@{*/
