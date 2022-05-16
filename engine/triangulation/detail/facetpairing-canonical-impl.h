@@ -64,7 +64,6 @@ struct CanonicalInternalReturn<dim, true> {
     typename FacetPairingBase<dim>::IsoList result;
 
     CanonicalInternalReturn(size_t size) {
-        result.push_back(Isomorphism<dim>::identity(size));
     }
 
     void append(const Isomorphism<dim>& iso) {
@@ -81,8 +80,7 @@ template <int dim>
 struct CanonicalInternalReturn<dim, false> {
     Isomorphism<dim> result;
 
-    CanonicalInternalReturn(size_t size) :
-            result(Isomorphism<dim>::identity(size)) {}
+    CanonicalInternalReturn(size_t size) : result(size) {}
 
     void append(const Isomorphism<dim>&) {
         // We only need to return one isomorphism, so just ignore any others.
@@ -161,7 +159,11 @@ std::pair<FacetPairing<dim>,
         // to being strictly lexicographically smaller.
         // If the current solution (as far as it has been determined) is still
         // lexicographically equal, then this will be the same as currSimp.
-        ssize_t lexSmallerFrom = 0;
+        //
+        // As a special case, if this is our first iteration through the loop
+        // then we initialise lexSmallerFrom to -1, since there is no
+        // previous best solution.
+        ssize_t lexSmallerFrom = (pre0 == 0 ? -1 : 0);
 
         while (currSimp >= 0) {
             if (currSimp == size_) {

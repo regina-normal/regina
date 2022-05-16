@@ -64,9 +64,9 @@ class FacetPairingTest : public CppUnit::TestFixture {
          * Pre: p is in canonical form.
          */
         static void verifyMakeCanonical(const FacetPairing<dim>& p,
-                const Isomorphism<dim>& iso) {
+                const Isomorphism<dim>& iso, size_t nAutos) {
             FacetPairing<dim> alt = iso(p);
-            auto [canon, canonIso] = alt.canonical();
+            auto [canon, canonIso] = alt.canonicalAll();
 
             if (canon != p) {
                 std::ostringstream msg;
@@ -74,11 +74,19 @@ class FacetPairingTest : public CppUnit::TestFixture {
                     "to the expected " << p.str() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
-            if (canonIso(alt) != p) {
+            if (canonIso.size() != nAutos) {
+                std::ostringstream msg;
+                msg << "Pairing " << alt.str() << " canonises with "
+                    << canonIso.size() << " isomorphisms instead of "
+                    << nAutos << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+            const auto& firstIso = canonIso.front();
+            if (firstIso(alt) != p) {
                 std::ostringstream msg;
                 msg << "Pairing " << alt.str() << " does not canonise "
                     "correctly under the returned isomorphism "
-                    << canonIso.str() << '.';
+                    << iso.str() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -103,9 +111,10 @@ class FacetPairingTest : public CppUnit::TestFixture {
          * Pre: p is in canonical form.
          */
         static void verifyMakeCanonical(const FacetPairing<dim>& p) {
+            size_t nAutos = p.findAutomorphisms().size();
             Isomorphism<dim> iso = Isomorphism<dim>::identity(p.size());
             do {
-                verifyMakeCanonical(p, iso);
+                verifyMakeCanonical(p, iso, nAutos);
                 ++iso;
             } while (! iso.isIdentity());
         }
