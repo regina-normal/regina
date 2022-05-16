@@ -176,6 +176,10 @@ std::pair<FacetPairing<dim>,
                     // This solution is strictly better.
                     bestIso.reset(to);
                     best = to(me);
+
+                    // We were strictly smaller before, but now we are
+                    // equal to the best known solution.
+                    lexSmallerFrom = size_ - 1;
                 }
 
                 --currSimp;
