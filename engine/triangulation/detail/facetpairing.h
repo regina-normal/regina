@@ -41,8 +41,8 @@
  */
 
 #include <iostream>
-#include <list>
 #include <optional>
+#include <vector>
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/facetspec.h"
@@ -85,7 +85,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * In particular, this class uses the IsoList type to return
          * the set of all \e automorphisms of a facet pairing.
          */
-        using IsoList = std::list<Isomorphism<dim>>;
+        using IsoList = std::vector<Isomorphism<dim>>;
 
     protected:
         size_t size_;
