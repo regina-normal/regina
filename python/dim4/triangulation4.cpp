@@ -38,6 +38,7 @@
 #include "algebra/intersectionform.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
+#include "triangulation/facetpairing.h"
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
@@ -144,6 +145,7 @@ void addTriangulation4(pybind11::module_& m) {
         .def("tetrahedron", (regina::Face<4, 3>* (Triangulation<4>::*)(size_t))(
             &Triangulation<4>::tetrahedron),
             pybind11::return_value_policy::reference_internal)
+        .def("pairing", &Triangulation<4>::pairing)
         .def("isIsomorphicTo", &Triangulation<4>::isIsomorphicTo)
         .def("makeCanonical", &Triangulation<4>::makeCanonical)
         .def("isContainedIn", &Triangulation<4>::isContainedIn)

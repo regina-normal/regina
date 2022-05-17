@@ -71,6 +71,7 @@ Version 7.1  [ TODO ]
             - New suite of public routines dualBoundaryMap() (these were
               previously private, and had a more complex interface).
             - New suite of routines dualToPrimal().
+            - New routine pairing().
         Class Triangulation<4>:
             - New routine intersectionForm().
             - New optimisations that reduce the need for 3-sphere/3-ball
