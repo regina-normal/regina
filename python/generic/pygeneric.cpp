@@ -34,6 +34,7 @@
 
 namespace pybind11 { class module_; }
 
+void addCut(pybind11::module_& m);
 void addExample5(pybind11::module_& m);
 void addExample6(pybind11::module_& m);
 void addExample7(pybind11::module_& m);
@@ -94,6 +95,7 @@ void addTriangulations14(pybind11::module_& m);
 void addTriangulations15(pybind11::module_& m);
 
 void addGenericClasses(pybind11::module_& m) {
+    addCut(m);
     addFacetSpec(m);
     addFacetPairing2(m);
     addFacetPairing4(m);

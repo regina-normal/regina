@@ -17,6 +17,9 @@ Version 7.1  [ TODO ]
         Class CallableArg<...>:
             - Now a public helper class in the main regina:: namespace.
             - Now behaves gracefully if the given index is out of range.
+        Class Cut:
+            - New class for describing graph-style cuts on triangulations or
+              facet pairings.
         Class Edge<3>:
             - Now specialised (instead of using the generic Face template).
             - New routine linkingSurface().

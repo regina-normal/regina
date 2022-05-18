@@ -182,6 +182,11 @@
 		0512E0A626DF356300DDB222 /* snapshot.h in Headers */ = {isa = PBXBuildFile; fileRef = 0512E0A226DF356300DDB222 /* snapshot.h */; };
 		051324F5258AF3FA001014F0 /* laurent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051324F4258AF3FA001014F0 /* laurent.cpp */; };
 		051324F6258AF3FA001014F0 /* laurent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051324F4258AF3FA001014F0 /* laurent.cpp */; };
+		05135ADC28347BE200C4BFDC /* cut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05135ADB28347BDD00C4BFDC /* cut.cpp */; };
+		05135ADD28347BE300C4BFDC /* cut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05135ADB28347BDD00C4BFDC /* cut.cpp */; };
+		05135AE028347BF600C4BFDC /* cut.h in Headers */ = {isa = PBXBuildFile; fileRef = 05135ADE28347BF600C4BFDC /* cut.h */; };
+		05135AE128347BF600C4BFDC /* cut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05135ADF28347BF600C4BFDC /* cut.cpp */; };
+		05135AE228347BFE00C4BFDC /* cut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05135ADF28347BF600C4BFDC /* cut.cpp */; };
 		0514CAEF1D9CE54200EDB2E6 /* docs.conf.in in Resources */ = {isa = PBXBuildFile; fileRef = 052F9C50180600FA00FAE4DF /* docs.conf.in */; };
 		051691B71C5AD5AC00DC69EC /* hypercompatui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A31C5AD59000DC69EC /* hypercompatui.cpp */; };
 		051691B81C5AD5AC00DC69EC /* hypercoordinateui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A51C5AD59000DC69EC /* hypercoordinateui.cpp */; };
@@ -2658,6 +2663,9 @@
 		0512E0A126DF356300DDB222 /* shortarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shortarray.h; sourceTree = "<group>"; };
 		0512E0A226DF356300DDB222 /* snapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = snapshot.h; sourceTree = "<group>"; };
 		051324F4258AF3FA001014F0 /* laurent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent.cpp; sourceTree = "<group>"; };
+		05135ADB28347BDD00C4BFDC /* cut.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cut.cpp; sourceTree = "<group>"; };
+		05135ADE28347BF600C4BFDC /* cut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cut.h; sourceTree = "<group>"; };
+		05135ADF28347BF600C4BFDC /* cut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cut.cpp; sourceTree = "<group>"; };
 		0514CAE71D9CD4B500EDB2E6 /* index.docbook */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = index.docbook; sourceTree = "<group>"; };
 		0514CAE81D9CD4CE00EDB2E6 /* index.docbook */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = index.docbook; sourceTree = "<group>"; };
 		051691A31C5AD59000DC69EC /* hypercompatui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercompatui.cpp; sourceTree = "<group>"; };
@@ -6063,6 +6071,8 @@
 				05C1BE9A1DCA7C93007C946B /* explicit */,
 				054C6A831DCC212F005373F0 /* generic */,
 				052F9E30180600FB00FAE4DF /* CMakeLists.txt */,
+				05135ADF28347BF600C4BFDC /* cut.cpp */,
+				05135ADE28347BF600C4BFDC /* cut.h */,
 				05F09FBC1DBEF01800117BFC /* dim2.h */,
 				05F09FBD1DBEF01800117BFC /* dim3.h */,
 				05F09FBE1DBEF01800117BFC /* dim4.h */,
@@ -6563,6 +6573,7 @@
 				059BC6691DC7F79600AB4206 /* boundarycomponent-bindings.h */,
 				05431FAC1C40F5CA009BC072 /* CMakeLists.txt */,
 				057EE4361C6009E600C4D155 /* component-bindings.h */,
+				05135ADB28347BDD00C4BFDC /* cut.cpp */,
 				054C6A4E1DCC1FE7005373F0 /* example-bindings.h */,
 				054C6A4F1DCC1FE7005373F0 /* example5.cpp */,
 				054C6A501DCC1FE7005373F0 /* example6.cpp */,
@@ -7852,6 +7863,7 @@
 				055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */,
 				05B7002425AC2305003BAF5C /* face_lattice.h in Headers */,
 				05C1BE991DCA7C77007C946B /* skeleton-impl.h in Headers */,
+				05135AE028347BF600C4BFDC /* cut.h in Headers */,
 				0583656318DB8876008B08D9 /* end_namespace.h in Headers */,
 				05F0A00C1DBF078800117BFC /* vertex4.h in Headers */,
 				052F9EF5180600FB00FAE4DF /* treelp-impl.h in Headers */,
@@ -8787,6 +8799,7 @@
 				05CAE66B2745256E007C93F3 /* gluingperms8.cpp in Sources */,
 				05CAE6152743F207007C93F3 /* bitmanip.cpp in Sources */,
 				05226DF027422C82000A45D5 /* hilbertdual.cpp in Sources */,
+				05135ADD28347BE300C4BFDC /* cut.cpp in Sources */,
 				050F5E311B9BAB9C00C1F681 /* pysubcomplex.cpp in Sources */,
 				05A0669F1DFA67D40047872E /* layeredloop.cpp in Sources */,
 				0550010A1C4D9EF900501C24 /* face6.cpp in Sources */,
@@ -9061,6 +9074,7 @@
 				05249F651DBC1737001FE29E /* normalflags.cpp in Sources */,
 				05249EC51DBC16CA001FE29E /* triangulation4.cpp in Sources */,
 				05A067431DFA68470047872E /* blockedsfs.cpp in Sources */,
+				05135AE228347BFE00C4BFDC /* cut.cpp in Sources */,
 				05D1173C19EE0197003BEC55 /* perm4.cpp in Sources */,
 				055FF38819C044FB0057462A /* NewTri2Controller.mm in Sources */,
 				05937AD219CECF4300160F9A /* MDSpreadViewCell.m in Sources */,
@@ -9375,6 +9389,7 @@
 				05FB46D81DD92D2900BB00E5 /* homgrouppresentation.cpp in Sources */,
 				05CAE64F27450D89007C93F3 /* gluingperms6.cpp in Sources */,
 				052FA236180612DD00FAE4DF /* tables.c in Sources */,
+				05135ADC28347BE200C4BFDC /* cut.cpp in Sources */,
 				052FA19D1806129B00FAE4DF /* matrix2.cpp in Sources */,
 				052FA215180612DD00FAE4DF /* change_peripheral_curves.c in Sources */,
 				05F0A0141DBF079600117BFC /* subdivide.cpp in Sources */,
@@ -10073,6 +10088,7 @@
 				052F9F76180600FB00FAE4DF /* core_geodesics.c in Sources */,
 				05754CE8258D7D6400236ED7 /* randutils.cpp in Sources */,
 				0591E7F31C4F75C300793A9C /* gluingpermsearcher4.cpp in Sources */,
+				05135AE128347BF600C4BFDC /* cut.cpp in Sources */,
 				05C265B9282C948700232420 /* facetpairing4.cpp in Sources */,
 				054208B91DF0D2740018AB24 /* lensspace.cpp in Sources */,
 				052F9F7C180600FB00FAE4DF /* cusps.c in Sources */,
