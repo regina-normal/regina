@@ -57,7 +57,8 @@ void addCut(pybind11::module_& m) {
         }))
         .def("side", &Cut::side)
         .def("set", &Cut::set)
-        .def("size", &Cut::size)
+        .def("size", overload_cast<>(&Cut::size, pybind11::const_))
+        .def("size", overload_cast<int>(&Cut::size, pybind11::const_))
         .def("weight", overload_cast<const Triangulation<2>&>(
             &Cut::weight<2>, pybind11::const_))
         .def("weight", overload_cast<const Triangulation<3>&>(
@@ -118,24 +119,85 @@ void addCut(pybind11::module_& m) {
         .def("weight", overload_cast<const FacetPairing<15>&>(
             &Cut::weight<15>, pybind11::const_))
 #endif /* REGINA_HIGHDIM */
-        // TODO: ()
-        .def("inclusion", [](const Cut& c, int dim) {
-            switch (dim) {
-                case 2: return nullptr; // TODO
-                case 3: return nullptr; // TODO
-                case 4: return nullptr; // TODO
-                case 5: return nullptr; // TODO
-                case 6: return nullptr; // TODO
-                case 7: return nullptr; // TODO
-                case 8: return nullptr; // TODO
+        .def("__call__", overload_cast<const Triangulation<2>&>(
+            &Cut::operator()<2>, pybind11::const_))
+        .def("__call__", overload_cast<const Triangulation<3>&>(
+            &Cut::operator()<3>, pybind11::const_))
+        .def("__call__", overload_cast<const Triangulation<4>&>(
+            &Cut::operator()<4>, pybind11::const_))
+        .def("__call__", overload_cast<const Triangulation<5>&>(
+            &Cut::operator()<5>, pybind11::const_))
+        .def("__call__", overload_cast<const Triangulation<6>&>(
+            &Cut::operator()<6>, pybind11::const_))
+        .def("__call__", overload_cast<const Triangulation<7>&>(
+            &Cut::operator()<7>, pybind11::const_))
+        .def("__call__", overload_cast<const Triangulation<8>&>(
+            &Cut::operator()<8>, pybind11::const_))
 #ifdef REGINA_HIGHDIM
-                case 9: return nullptr; // TODO
-                case 10: return nullptr; // TODO
-                case 11: return nullptr; // TODO
-                case 12: return nullptr; // TODO
-                case 13: return nullptr; // TODO
-                case 14: return nullptr; // TODO
-                case 15: return nullptr; // TODO
+        .def("__call__", overload_cast<const Triangulation<9>&>(
+            &Cut::operator()<9>, pybind11::const_))
+        .def("__call__", overload_cast<const Triangulation<10>&>(
+            &Cut::operator()<10>, pybind11::const_))
+        .def("__call__", overload_cast<const Triangulation<11>&>(
+            &Cut::operator()<11>, pybind11::const_))
+        .def("__call__", overload_cast<const Triangulation<12>&>(
+            &Cut::operator()<12>, pybind11::const_))
+        .def("__call__", overload_cast<const Triangulation<13>&>(
+            &Cut::operator()<13>, pybind11::const_))
+        .def("__call__", overload_cast<const Triangulation<14>&>(
+            &Cut::operator()<14>, pybind11::const_))
+        .def("__call__", overload_cast<const Triangulation<15>&>(
+            &Cut::operator()<15>, pybind11::const_))
+#endif /* REGINA_HIGHDIM */
+        .def("__call__", overload_cast<const FacetPairing<2>&>(
+            &Cut::operator()<2>, pybind11::const_))
+        .def("__call__", overload_cast<const FacetPairing<3>&>(
+            &Cut::operator()<3>, pybind11::const_))
+        .def("__call__", overload_cast<const FacetPairing<4>&>(
+            &Cut::operator()<4>, pybind11::const_))
+        .def("__call__", overload_cast<const FacetPairing<5>&>(
+            &Cut::operator()<5>, pybind11::const_))
+        .def("__call__", overload_cast<const FacetPairing<6>&>(
+            &Cut::operator()<6>, pybind11::const_))
+        .def("__call__", overload_cast<const FacetPairing<7>&>(
+            &Cut::operator()<7>, pybind11::const_))
+        .def("__call__", overload_cast<const FacetPairing<8>&>(
+            &Cut::operator()<8>, pybind11::const_))
+#ifdef REGINA_HIGHDIM
+        .def("__call__", overload_cast<const FacetPairing<9>&>(
+            &Cut::operator()<9>, pybind11::const_))
+        .def("__call__", overload_cast<const FacetPairing<10>&>(
+            &Cut::operator()<10>, pybind11::const_))
+        .def("__call__", overload_cast<const FacetPairing<11>&>(
+            &Cut::operator()<11>, pybind11::const_))
+        .def("__call__", overload_cast<const FacetPairing<12>&>(
+            &Cut::operator()<12>, pybind11::const_))
+        .def("__call__", overload_cast<const FacetPairing<13>&>(
+            &Cut::operator()<13>, pybind11::const_))
+        .def("__call__", overload_cast<const FacetPairing<14>&>(
+            &Cut::operator()<14>, pybind11::const_))
+        .def("__call__", overload_cast<const FacetPairing<15>&>(
+            &Cut::operator()<15>, pybind11::const_))
+#endif /* REGINA_HIGHDIM */
+        .def("inclusion", [](const Cut& c, int dim) {
+            // We use pybind11::cast() here so that the return type is
+            // consistent; otherwise the C++ compiler will complain.
+            switch (dim) {
+                case 2: return pybind11::cast(c.inclusion<2>());
+                case 3: return pybind11::cast(c.inclusion<3>());
+                case 4: return pybind11::cast(c.inclusion<4>());
+                case 5: return pybind11::cast(c.inclusion<5>());
+                case 6: return pybind11::cast(c.inclusion<6>());
+                case 7: return pybind11::cast(c.inclusion<7>());
+                case 8: return pybind11::cast(c.inclusion<8>());
+#ifdef REGINA_HIGHDIM
+                case 9: return pybind11::cast(c.inclusion<9>());
+                case 10: return pybind11::cast(c.inclusion<10>());
+                case 11: return pybind11::cast(c.inclusion<11>());
+                case 12: return pybind11::cast(c.inclusion<12>());
+                case 13: return pybind11::cast(c.inclusion<13>());
+                case 14: return pybind11::cast(c.inclusion<14>());
+                case 15: return pybind11::cast(c.inclusion<15>());
                 default:
                     throw regina::InvalidArgument("The argument to "
                         "Cut::inclusion() must be one of the supported "

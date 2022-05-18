@@ -212,8 +212,10 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
     // Make sure the parent class can call the private constructor.
     friend class detail::FacetPairingBase<dim>;
 
-    // Facet pairings are largely read-only: allow application of isomorphisms.
+    // Facet pairings are largely read-only: allow application of isomorphisms
+    // and graph cuts.
     friend class Isomorphism<dim>;
+    friend class Cut;
 };
 
 /**

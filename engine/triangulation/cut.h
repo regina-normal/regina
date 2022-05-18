@@ -47,8 +47,10 @@
 namespace regina {
 
 template <int dim> class FacetPairing;
+template <int dim> struct FacetSpec;
 template <int dim> class Isomorphism;
 template <int dim> class Triangulation;
+template <int n> class Perm;
 
 /**
  * A cut that separates a triangulation or facet pairing into two pieces.
@@ -160,6 +162,36 @@ class Cut : public ShortOutput<Cut> {
         Cut(iterator begin, iterator end);
 
         /**
+         * Returns the total number of top-dimensional simplices in the
+         * underlying triangulation or facet pairing.
+         *
+         * In other words, this returns the size of the underlying
+         * triangulation or facet pairing.
+         *
+         * @return the total number of top-dimensional simplices.
+         */
+        size_t size() const;
+
+        /**
+         * Returns the number of top-dimensional simplices on the given
+         * side of the partition described by this cut.
+         *
+         * It will always be true that <tt>size(0) + size(1) == size()</tt>.
+         *
+         * \warning This routine runs in linear time, since the sizes of
+         * the individual sides are not cached.  This is in contrast to
+         * the overall total size(), which \e is cached, and which runs
+         * in constant time.
+         *
+         * \exception InvalidArgument the given side is not 0 or 1.
+         *
+         * @param whichSide the side of the partition to query; this
+         * must be either 0 or 1.
+         * @return the number of top-dimensional simplices on the given side.
+         */
+        size_t size(int whichSide) const;
+
+        /**
          * Indicates which side of the partition the given simplex lies on.
          *
          * @param simplex the simplex being queried; this must be
@@ -181,17 +213,6 @@ class Cut : public ShortOutput<Cut> {
          * should lie on; this must be either 0 or 1.
          */
         void set(size_t simplex, int newSide);
-
-        /**
-         * Returns the total number of top-dimensional simplices in the
-         * underlying triangulation or facet pairing.
-         *
-         * In other words, this returns the size of the underlying
-         * triangulation or facet pairing.
-         *
-         * @return the total number of top-dimensional sipmlices.
-         */
-        size_t size() const;
 
         /**
          * Returns the weight of this cut with respect to the dual graph
@@ -368,6 +389,8 @@ class Cut : public ShortOutput<Cut> {
          * Then this routine returns two isomorphisms \a p and \a q,
          * where \a p describes how \a a appears as a subcomplex of \a from,
          * and \a q describes how \a b appears as a subcomplex of \a from.
+         * These isomorphisms will be in the direction from \a a and \a b
+         * to \a from.
          *
          * The only interesting parts of these isomorphisms are the
          * mappings between the indices of top-dimensional simplices;
@@ -478,6 +501,14 @@ Cut::Cut(iterator begin, iterator end) : size_(end - begin) {
     }
 }
 
+inline size_t Cut::size() const {
+    return size_;
+}
+
+inline size_t Cut::size(int whichSide) const {
+    return std::count(side_, side_ + size_, whichSide);
+}
+
 inline int Cut::side(size_t simplex) const {
     return side_[simplex];
 }
@@ -486,10 +517,6 @@ inline void Cut::set(size_t simplex, int newSide) {
     if (newSide != 0 && newSide != 1)
         throw InvalidArgument("Cut::set() requires the side to be 0 or 1.");
     side_[simplex] = newSide;
-}
-
-inline size_t Cut::size() const {
-    return size_;
 }
 
 template <int dim>
@@ -565,18 +592,109 @@ inline bool Cut::operator != (const Cut& rhs) const {
 template <int dim>
 std::pair<Triangulation<dim>, Triangulation<dim>> Cut::operator() (
         const Triangulation<dim>& tri) const {
-    // TODO
+    if (size_ == 0)
+        return {};
+
+    auto* reverse = new size_t[size_];
+    size_t part[2] { 0, 0 };
+    for (size_t i = 0; i < size_; ++i)
+        reverse[i] = part[side_[i]]++;
+
+    std::pair<Triangulation<dim>, Triangulation<dim>> ans;
+
+    for (size_t i = 0; i < part[0]; ++i)
+        ans.first.newSimplex();
+    for (size_t i = 0; i < part[1]; ++i)
+        ans.second.newSimplex();
+
+    for (size_t i = 0; i < size_; ++i) {
+        auto origFrom = tri.simplex(i);
+        if (side_[i] == 0) {
+            auto newFrom = ans.first.simplex(reverse[i]);
+            for (int j = 0; j <= dim; ++j) {
+                auto origTo = origFrom->adjacentSimplex(j);
+                if (origTo && side_[origTo->index()] == 0)
+                    newFrom->join(j,
+                        ans.first.simplex(reverse[origTo->index()]),
+                        origFrom->adjacentGluing(j));
+            }
+        } else {
+            auto newFrom = ans.second.simplex(reverse[i]);
+            for (int j = 0; j <= dim; ++j) {
+                auto origTo = origFrom->adjacentSimplex(j);
+                if (origTo && side_[origTo->index()] == 1)
+                    newFrom->join(j,
+                        ans.second.simplex(reverse[origTo->index()]),
+                        origFrom->adjacentGluing(j));
+            }
+        }
+    }
+
+    return ans;
 }
 
 template <int dim>
 std::pair<FacetPairing<dim>, FacetPairing<dim>> Cut::operator() (
         const FacetPairing<dim>& pairing) const {
-    // TODO
+    if (size_ == 0)
+        return { FacetPairing<dim>(0), FacetPairing<dim>(0) };
+
+    auto* reverse = new size_t[size_];
+    size_t part[2] { 0, 0 };
+    for (size_t i = 0; i < size_; ++i)
+        reverse[i] = part[side_[i]]++;
+
+    std::pair<FacetPairing<dim>, FacetPairing<dim>> ans {
+        FacetPairing<dim>(part[0]), FacetPairing<dim>(part[1]) };
+
+    for (size_t i = 0; i < size_; ++i) {
+        if (side_[i] == 0) {
+            for (int j = 0; j <= dim; ++j) {
+                auto origTo = pairing.dest(i, j);
+                if (origTo.isBoundary(size_) || side_[origTo.simp] != 0)
+                    ans.first.dest(reverse[i], j).setBoundary(part[0]);
+                else
+                    ans.first.dest(reverse[i], j) = FacetSpec<dim>(
+                        reverse[origTo.simp], origTo.facet);
+            }
+        } else {
+            for (int j = 0; j <= dim; ++j) {
+                auto origTo = pairing.dest(i, j);
+                if (origTo.isBoundary(size_) || side_[origTo.simp] != 1)
+                    ans.second.dest(reverse[i], j).setBoundary(part[1]);
+                else
+                    ans.second.dest(reverse[i], j) = FacetSpec<dim>(
+                        reverse[origTo.simp], origTo.facet);
+            }
+        }
+    }
+
+    return ans;
 }
 
 template <int dim>
 std::pair<Isomorphism<dim>, Isomorphism<dim>> Cut::inclusion() const {
-    // TODO
+    size_t part[2] { 0, 0 };
+    for (size_t i = 0; i < size_; ++i)
+        ++part[side_[i]];
+
+    std::pair<Isomorphism<dim>, Isomorphism<dim>> ans(std::piecewise_construct,
+        std::make_tuple(part[0]), std::make_tuple(part[1]));
+
+    size_t next[2] = { 0, 0 };
+    for (size_t i = 0; i < size_; ++i) {
+        if (side_[i] == 0) {
+            ans.first.simpImage(next[0]) = i;
+            ans.first.facetPerm(next[0]) = Perm<dim + 1>();
+            ++next[0];
+        } else {
+            ans.second.simpImage(next[1]) = i;
+            ans.second.facetPerm(next[1]) = Perm<dim + 1>();
+            ++next[1];
+        }
+    }
+
+    return ans;
 }
 
 inline bool Cut::incFixedSizes() {
