@@ -34,6 +34,15 @@
 
 namespace regina {
 
+bool Cut::isTrivial() const {
+    if (size_ == 0)
+        return true;
+    for (size_t i = 1; i < size_; ++i)
+        if (side_[i] != side_[0])
+            return false;
+    return true;
+}
+
 bool Cut::inc() {
     if (size_ == 0)
         return false;

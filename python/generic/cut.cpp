@@ -59,6 +59,7 @@ void addCut(pybind11::module_& m) {
         .def("set", &Cut::set)
         .def("size", overload_cast<>(&Cut::size, pybind11::const_))
         .def("size", overload_cast<int>(&Cut::size, pybind11::const_))
+        .def("isTrivial", &Cut::isTrivial)
         .def("weight", overload_cast<const Triangulation<2>&>(
             &Cut::weight<2>, pybind11::const_))
         .def("weight", overload_cast<const Triangulation<3>&>(

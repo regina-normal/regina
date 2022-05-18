@@ -220,6 +220,16 @@ class Cut : public ShortOutput<Cut> {
         void set(size_t simplex, int newSide);
 
         /**
+         * Determines whether this cut places all top-dimensional simplices
+         * on the same side of the partition.
+         *
+         * @return \c true if all simplices are on side 0 or all simplices
+         * are on side 1, or \c false if both sides of the partition are
+         * non-empty.
+         */
+        bool isTrivial() const;
+
+        /**
          * Returns the weight of this cut with respect to the dual graph
          * of the given triangulation.  This is the number of gluings in the
          * given triangulation that cross the partition described by this cut.
@@ -429,6 +439,12 @@ class Cut : public ShortOutput<Cut> {
          * then this routine will return \c false and convert this into
          * the \a first such partition.
          *
+         * The order of iteration using inc() is lexicographical in the
+         * sequence of sides.  In particular, if you wish to avoid
+         * seeing each cut again with sides 0 and 1 swapped, then you
+         * can use the fact that all cuts with <tt>side(0) == 0</tt>
+         * will be seen before any cuts with <tt>side(0) == 1</tt>.
+         *
          * @return \c true if the partition was successfully incremented, or
          * \c false if this was already the last partition in such an iteration.
          */
@@ -447,6 +463,12 @@ class Cut : public ShortOutput<Cut> {
          * If this is already the last partition in such an iteration,
          * then this routine will return \c false and convert this into
          * the \e first such permutation.
+         *
+         * The order of iteration using incFixedSizes() is lexicographical in
+         * the sequence of sides.  In particular, if you wish to avoid
+         * seeing each cut again with sides 0 and 1 swapped, then you
+         * can use the fact that all cuts with <tt>side(0) == 0</tt>
+         * will be seen before any cuts with <tt>side(0) == 1</tt>.
          *
          * @return \c true if the partition was successfully incremented, or
          * \c false if this was already the last partition in such an iteration.
