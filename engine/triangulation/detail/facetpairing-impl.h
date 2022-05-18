@@ -304,6 +304,31 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
 }
 
 template <int dim>
+std::optional<Cut> FacetPairingBase<dim>::divideConnected(size_t minSide)
+        const {
+    std::optional<Cut> ans;
+    size_t bestWeight;
+
+    for (size_t left = size() / 2; left >= minSide; --left) {
+        Cut c(left, size() - left);
+        while (true) {
+            size_t w = c.weight(static_cast<const FacetPairing<dim>&>(*this));
+            if ((! ans) || w < bestWeight) {
+                auto pieces = c(static_cast<const FacetPairing<dim>&>(*this));
+                if (pieces.first.isConnected() && pieces.second.isConnected()) {
+                    ans = c;
+                    bestWeight = w;
+                }
+            }
+            if (! c.incFixedSizes())
+                break;
+        }
+    }
+
+    return ans;
+}
+
+template <int dim>
 template <typename Action, typename... Args>
 void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         int nBdryFacets, Action&& action, Args&&... args) {

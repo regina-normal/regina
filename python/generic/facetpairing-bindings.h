@@ -80,6 +80,7 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
             pybind11::arg("labels") = false)
         .def_static("dotHeader", &FacetPairing<dim>::dotHeader,
             pybind11::arg("graphName") = nullptr)
+        .def("divideConnected", &FacetPairing<dim>::divideConnected)
         .def_static("findAllPairings",
             &FacetPairing<dim>::template findAllPairings<
                 const std::function<void(const FacetPairing<dim>&,

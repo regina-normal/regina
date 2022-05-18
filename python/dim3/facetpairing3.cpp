@@ -77,6 +77,7 @@ void addFacetPairing3(pybind11::module_& m) {
             pybind11::arg("labels") = false)
         .def_static("dotHeader", &FacetPairing<3>::dotHeader,
             pybind11::arg("graphName") = nullptr)
+        .def("divideConnected", &FacetPairing<3>::divideConnected)
         .def("isClosed", &FacetPairing<3>::isClosed)
         .def("hasTripleEdge", &FacetPairing<3>::hasTripleEdge)
         .def("followChain", &FacetPairing<3>::followChain)

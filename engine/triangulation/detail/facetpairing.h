@@ -45,6 +45,7 @@
 #include <vector>
 #include "regina-core.h"
 #include "core/output.h"
+#include "triangulation/cut.h"
 #include "triangulation/facetspec.h"
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
@@ -331,6 +332,33 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * @return \c true if and only if this pairing is connected.
          */
         bool isConnected() const;
+
+        /**
+         * Returns a cut that divides this facet pairing into two
+         * connected pieces, both of size at least \a minSide.
+         *
+         * If solutions exist, then the cut that is returned will have
+         * minimum weight amongst all solutions (i.e., will have the
+         * smallest number of matched simplex facets that cross the two
+         * sides of the resulting partition).  If there are still multiple
+         * solutions, then the cut that is returned will have the two pieces
+         * with sizes that are as close as possible to equal.  If there are
+         * \e still multiple solutions, then the choice will be arbitrary.
+         *
+         * Note that it is possible that no solution exists (e.g. this
+         * could happen if the matching is a star graph and \a minSide is
+         * greater than 1).
+         *
+         * \warning Currently the implementation of this routine is
+         * exhaustive, and so the running time is exponential in the
+         * size of this facet pairing.
+         *
+         * @param minSide the minimum number of simplices in each of the
+         * two connected pieces; this must be at least 1.
+         * @return the best possible cut as described above, or no value
+         * if no such cut exists.
+         */
+        std::optional<Cut> divideConnected(size_t minSide) const;
 
         /*@}*/
         /**
