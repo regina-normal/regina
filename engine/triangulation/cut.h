@@ -39,6 +39,8 @@
 #define __REGINA_CUT_H
 #endif
 
+#include <algorithm>
+#include <tuple>
 #include <utility>
 #include "regina-core.h"
 #include "core/output.h"
