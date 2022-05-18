@@ -2,8 +2,8 @@
 set -e
 
 # This filter adjusts the way that popt displays its standard help options,
-# since different popt installations appear to use different indenting styles.
+# since different popt installations appear to use different indenting styles
+# for options that only have a long form.
 
-sed -e 's#^  --usage    #      --usage#' \
-    -e 's#^  --threads=<threads>    #      --threads=<threads>#' \
+sed -e 's#^  --\(\S\+\)    #      --\1#' \
     -e 's#<regina engine="[^"]\{1,\}">#<regina engine="_">#g'
