@@ -66,6 +66,7 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
         .def("isUnmatched", overload_cast<size_t, unsigned>(
             &FacetPairing<dim>::isUnmatched, pybind11::const_))
         .def("isClosed", &FacetPairing<dim>::isClosed)
+        .def("isConnected", &FacetPairing<dim>::isConnected)
         .def("isCanonical", &FacetPairing<dim>::isCanonical)
         .def("canonical", &FacetPairing<dim>::canonical)
         .def("canonicalAll", &FacetPairing<dim>::canonicalAll)

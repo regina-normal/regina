@@ -41,8 +41,8 @@
  */
 
 #include <iostream>
-#include <list>
 #include <optional>
+#include <vector>
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/facetspec.h"
@@ -85,7 +85,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * In particular, this class uses the IsoList type to return
          * the set of all \e automorphisms of a facet pairing.
          */
-        using IsoList = std::list<Isomorphism<dim>>;
+        using IsoList = std::vector<Isomorphism<dim>>;
 
     protected:
         size_t size_;
@@ -312,6 +312,25 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * are not identical.
          */
         bool operator != (const FacetPairing<dim>& other) const;
+
+        /*@}*/
+        /**
+         * \name Connected components
+         */
+        /*@{*/
+
+        /**
+         * Determines whether this facet pairing is connected.
+         *
+         * A facet pairing is \e connected if it is possible to reach any
+         * simplex from any other simplex via a series of matched facet pairs.
+         *
+         * For this purpose, the empty facet pairing is considered to be
+         * connected.
+         *
+         * @return \c true if and only if this pairing is connected.
+         */
+        bool isConnected() const;
 
         /*@}*/
         /**

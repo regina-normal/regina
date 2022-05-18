@@ -136,6 +136,9 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          * simplices in the given triangulation are joined together, as
          * described in the class notes.
          *
+         * Calling <tt>FacetPairing<dim>(tri)</tt> is equivalent to calling
+         * <tt>tri.pairing()</tt>.
+         *
          * \pre The given triangulation is not empty.
          *
          * @param tri the triangulation whose facet pairing should

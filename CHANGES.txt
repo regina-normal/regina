@@ -28,11 +28,14 @@ Version 7.1  [ TODO ]
             - Reflected the result of cp2() so that it has intersection
               form [1], not [-1].
         Class FacetPairing<dim>:
+            - New routine isConnected().
             - New routines canonical() and canonicalAll().
             - In findAllPairings(), the action is no longer required to
               take the list of all automorphisms if it does not need them.
             - Renamed toTextRep() to textRep().  The old name is kept as
               a deprecated alias.
+            - The IsoList type alias has changed from std::list to std::vector,
+              for better performance.
         Class HilbertPrimal:
             - The header no longer includes the Normaliz headers (which
               Regina does not actually ship with its development files).
@@ -71,6 +74,7 @@ Version 7.1  [ TODO ]
             - New suite of public routines dualBoundaryMap() (these were
               previously private, and had a more complex interface).
             - New suite of routines dualToPrimal().
+            - New routine pairing().
         Class Triangulation<4>:
             - New routine intersectionForm().
             - New optimisations that reduce the need for 3-sphere/3-ball

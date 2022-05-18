@@ -64,7 +64,6 @@ struct CanonicalInternalReturn<dim, true> {
     typename FacetPairingBase<dim>::IsoList result;
 
     CanonicalInternalReturn(size_t size) {
-        result.push_back(Isomorphism<dim>::identity(size));
     }
 
     void append(const Isomorphism<dim>& iso) {
@@ -81,8 +80,7 @@ template <int dim>
 struct CanonicalInternalReturn<dim, false> {
     Isomorphism<dim> result;
 
-    CanonicalInternalReturn(size_t size) :
-            result(Isomorphism<dim>::identity(size)) {}
+    CanonicalInternalReturn(size_t size) : result(size) {}
 
     void append(const Isomorphism<dim>&) {
         // We only need to return one isomorphism, so just ignore any others.
@@ -144,26 +142,57 @@ std::pair<FacetPairing<dim>,
     for (size_t i = 0; i < size_; ++i)
         to.simpImage(i) = from.simpImage(i) = -1;
 
+    // We can limit the options for the preimage of simplex 0 by counting
+    // at loops, double edges, boundaries, etc. at each node.
+    // This will involve a little work; for now we just count loops
+    // which are the first thing we need to compare and happily also
+    // easiest to count.
+    // Note: actually we are counting *twice* the number of loops, since
+    // this is easier to code.
+    int maxLoops = 0;
+    for (size_t i = 0; i < size_; ++i) {
+        int loops = 0;
+        for (int f = 0; f <= dim; ++f)
+            if (dest(i, f).simp == i)
+                ++loops;
+        if (loops > maxLoops)
+            maxLoops = loops;
+    }
+
     auto* perm = new typename Perm<dim+1>::Index[size_];
     auto* usedSimp = new ssize_t[size_ + 1];
     usedSimp[0] = 1;
 
+    ssize_t currSimp = 0;
+
+    // Note the decision point at which the current selection moved
+    // from being lexicographically equal to the previous best solution
+    // to being strictly lexicographically smaller.
+    // If the current solution (as far as it has been determined) is still
+    // lexicographically equal, then this will be the same as currSimp.
+    //
+    // We begin by setting lexSmallerFrom to -1, since there is no
+    // previous best solution.
+    ssize_t lexSmallerFrom = -1;
+
     // Run through all possible preimages of simplex 0.
     for (size_t pre0 = 0; pre0 < size_; ++pre0) {
+        // First, count loops to see if this option is even viable.
+        {
+            int loops = 0;
+            for (int f = 0; f <= dim; ++f)
+                if (dest(pre0, f).simp == pre0)
+                    ++loops;
+            if (loops != maxLoops)
+                continue;
+        }
+
         from.simpImage(0) = pre0;
         to.simpImage(pre0) = 0;
 
-        ssize_t currSimp = 0;
         perm[0] = 0;
 
-        // Note the decision point at which the current selection moved
-        // from being lexicographically equal to the previous best solution
-        // to being strictly lexicographically smaller.
-        // If the current solution (as far as it has been determined) is still
-        // lexicographically equal, then this will be the same as currSimp.
-        ssize_t lexSmallerFrom = 0;
-
-        while (currSimp >= 0) {
+        while (true) {
             if (currSimp == size_) {
                 // We have a complete pair of isomorphisms!
                 if (lexSmallerFrom == size_) {
@@ -176,6 +205,10 @@ std::pair<FacetPairing<dim>,
                     // This solution is strictly better.
                     bestIso.reset(to);
                     best = to(me);
+
+                    // We were strictly smaller before, but now we are
+                    // equal to the best known solution.
+                    lexSmallerFrom = size_ - 1;
                 }
 
                 --currSimp;
@@ -197,22 +230,22 @@ std::pair<FacetPairing<dim>,
             while (true) {
                 if (perm[currSimp] == Perm<dim+1>::nPerms) {
                     // Out of options for this permutation.
+                    if (currSimp == 0)
+                        goto endPermSearch;
+
                     // Roll back.
                     if (lexSmallerFrom == currSimp)
                         --lexSmallerFrom;
                     --currSimp;
 
-                    if (currSimp >= 0) {
-                        for (ssize_t i = usedSimp[currSimp];
-                                i < usedSimp[currSimp + 1]; ++i)
-                            if (from.simpImage(i) >= 0) {
-                                to.simpImage(from.simpImage(i)) = -1;
-                                from.simpImage(i) = -1;
-                            }
+                    for (ssize_t i = usedSimp[currSimp];
+                            i < usedSimp[currSimp + 1]; ++i)
+                        if (from.simpImage(i) >= 0) {
+                            to.simpImage(from.simpImage(i)) = -1;
+                            from.simpImage(i) = -1;
+                        }
 
-                        ++perm[currSimp];
-                    }
-
+                    ++perm[currSimp];
                     break;
                 }
 
@@ -376,6 +409,7 @@ std::pair<FacetPairing<dim>,
             }
         }
 
+endPermSearch:
         from.simpImage(0) = to.simpImage(pre0) = -1;
     }
 

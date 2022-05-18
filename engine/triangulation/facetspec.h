@@ -35,9 +35,9 @@
  *  simplices.
  */
 
-#ifndef __REGINA_NFACETSPEC_H
+#ifndef __REGINA_FACETSPEC_H
 #ifndef __DOXYGEN
-#define __REGINA_NFACETSPEC_H
+#define __REGINA_FACETSPEC_H
 #endif
 
 #include "regina-core.h"

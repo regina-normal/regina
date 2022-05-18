@@ -65,6 +65,7 @@
 
 namespace regina {
 
+template <int dim> class FacetPairing;
 template <int dim> class IsoSigClassic;
 template <int dim> class XMLTriangulationReader;
 
@@ -989,6 +990,19 @@ class TriangulationBase :
          * See face() for further information.
          */
         auto pentachoron(size_t index) const;
+
+        /**
+         * Returns the dual graph of this triangulation, expressed as a
+         * facet pairing.
+         *
+         * Calling <tt>tri.pairing()</tt> is equivalent to calling
+         * <tt>FacetPairing<dim>(tri)</tt>.
+         *
+         * \pre This triangulation is not empty.
+         *
+         * @return the dual graph of this triangulation.
+         */
+        FacetPairing<dim> pairing() const;
 
         /*@}*/
         /**
@@ -3852,6 +3866,11 @@ inline auto TriangulationBase<dim>::pentachoron(size_t index) const {
         ensureSkeleton();
         return std::get<4>(faces_)[index];
     }
+}
+
+template <int dim>
+inline FacetPairing<dim> TriangulationBase<dim>::pairing() const {
+    return FacetPairing<dim>(static_cast<const Triangulation<dim>&>(*this));
 }
 
 template <int dim>

@@ -63,6 +63,7 @@ void addFacetPairing3(pybind11::module_& m) {
             &FacetPairing<3>::isUnmatched, pybind11::const_))
         .def("isUnmatched", overload_cast<size_t, unsigned>(
             &FacetPairing<3>::isUnmatched, pybind11::const_))
+        .def("isConnected", &FacetPairing<3>::isConnected)
         .def("isCanonical", &FacetPairing<3>::isCanonical)
         .def("canonical", &FacetPairing<3>::canonical)
         .def("canonicalAll", &FacetPairing<3>::canonicalAll)
