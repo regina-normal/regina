@@ -5,5 +5,5 @@ set -e
 # since different popt installations appear to use different indenting styles.
 
 sed -e 's#^  --usage    #      --usage#' \
-    -e 's#^  --threads    #      --threads#' \
+    -e 's#^  --threads=<threads>    #      --threads=<threads>#' \
     -e 's#<regina engine="[^"]\{1,\}">#<regina engine="_">#g'
