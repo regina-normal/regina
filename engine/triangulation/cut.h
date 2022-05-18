@@ -162,6 +162,11 @@ class Cut : public ShortOutput<Cut> {
         Cut(iterator begin, iterator end);
 
         /**
+         * Destroys this cut.
+         */
+        ~Cut();
+
+        /**
          * Returns the total number of top-dimensional simplices in the
          * underlying triangulation or facet pairing.
          *
@@ -365,9 +370,14 @@ class Cut : public ShortOutput<Cut> {
          *
          * \pre The given facet pairing has precisely size() top-dimensional
          * simplices.
+         * \pre Since empty facet pairings are not allowed, this cut
+         * must have at least one top-dimensional simplex on each side.
          *
          * \exception InvalidArgument The given facet pairing does not
          * have precisely size() top-dimensional simplices.
+         *
+         * \exception FailedPrecondition This cut has all of its
+         * top-dimensional simplices on the same side.
          *
          * @param pairing the facet pairing to partition.
          * @return the two resulting facet pairings, one for each side
@@ -501,6 +511,10 @@ Cut::Cut(iterator begin, iterator end) : size_(end - begin) {
     }
 }
 
+inline Cut::~Cut() {
+    delete[] side_;
+}
+
 inline size_t Cut::size() const {
     return size_;
 }
@@ -592,6 +606,10 @@ inline bool Cut::operator != (const Cut& rhs) const {
 template <int dim>
 std::pair<Triangulation<dim>, Triangulation<dim>> Cut::operator() (
         const Triangulation<dim>& tri) const {
+    if (tri.size() != size_)
+        throw InvalidArgument("To apply a cut to a triangulation, the "
+            "triangulation must have the same size as the cut.");
+
     if (size_ == 0)
         return {};
 
@@ -630,19 +648,26 @@ std::pair<Triangulation<dim>, Triangulation<dim>> Cut::operator() (
         }
     }
 
+    delete[] reverse;
     return ans;
 }
 
 template <int dim>
 std::pair<FacetPairing<dim>, FacetPairing<dim>> Cut::operator() (
         const FacetPairing<dim>& pairing) const {
-    if (size_ == 0)
-        return { FacetPairing<dim>(0), FacetPairing<dim>(0) };
+    if (pairing.size() != size_)
+        throw InvalidArgument("To apply a cut to a facet pairing, the "
+            "pairing must have the same size as the cut.");
 
     auto* reverse = new size_t[size_];
     size_t part[2] { 0, 0 };
     for (size_t i = 0; i < size_; ++i)
         reverse[i] = part[side_[i]]++;
+
+    if (part[0] == 0 || part[1] == 0)
+        throw FailedPrecondition("To apply a cut to a facet pairing, the "
+            "cut cannot have all its simplices on the same side of the "
+            "partition.");
 
     std::pair<FacetPairing<dim>, FacetPairing<dim>> ans {
         FacetPairing<dim>(part[0]), FacetPairing<dim>(part[1]) };
@@ -669,6 +694,7 @@ std::pair<FacetPairing<dim>, FacetPairing<dim>> Cut::operator() (
         }
     }
 
+    delete[] reverse;
     return ans;
 }
 
