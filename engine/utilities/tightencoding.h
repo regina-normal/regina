@@ -57,7 +57,7 @@ class IntegerBase;
  * Tight encodings have the following properties:
  *
  * - They use only printable ASCII characters (the 94 ASCII values from
- *   33 to 126 inclusive).
+ *   33 to 126 inclusive), and do not contain any whitespace.
  *
  * - They aim to be short (typically much shorter than the usual human-readable
  *   representations, such as decimal representations of integers or full text
