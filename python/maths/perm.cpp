@@ -123,6 +123,7 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def_static("rand", (Perm<n> (*)(bool))(&Perm<n>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<n>::trunc)
+        .def("tightEncoding", &Perm<n>::tightEncoding)
         .def("clear", &Perm<n>::clear)
         .def("SnIndex", &Perm<n>::SnIndex)
         .def("orderedSnIndex", &Perm<n>::orderedSnIndex)

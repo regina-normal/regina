@@ -996,5 +996,33 @@ class SmallPermTest : public CppUnit::TestFixture {
                     "wrap around together.");
             }
         }
+
+        void tightEncoding() {
+            for (Index i = 0; i < nPerms; ++i) {
+                Perm<n> p = Perm<n>::Sn[i];
+
+                std::ostringstream out;
+                p.tightEncode(out);
+
+                std::string enc = p.tightEncoding();
+
+                if (enc != out.str()) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i
+                        << " has inconsistent tightEncoding() vs "
+                            "tightEncode(): " << enc << ' ' << out.str();
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                for (char c : enc)
+                    if (c < 33 || c > 126) {
+                        std::ostringstream msg;
+                        msg << "Permutation #" << i
+                            << " has non-printable character "
+                            << static_cast<int>(c) << " in tight encoding.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+            }
+        }
 };
 

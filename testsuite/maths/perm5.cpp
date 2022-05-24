@@ -53,6 +53,7 @@ class Perm5Test : public SmallPermTest<5> {
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(conjugacy);
     CPPUNIT_TEST(increment);
+    CPPUNIT_TEST(tightEncoding);
 
     // Tests specific to Perm<5>:
     CPPUNIT_TEST(databases);

@@ -119,6 +119,7 @@ void addPerm5(pybind11::module_& m) {
         .def("trunc2", &Perm<5>::trunc2)
         .def("trunc3", &Perm<5>::trunc3)
         .def("trunc4", &Perm<5>::trunc4)
+        .def("tightEncoding", &Perm<5>::tightEncoding)
         .def("clear", &Perm<5>::clear)
         .def("S5Index", (int (Perm<5>::*)() const) &Perm<5>::S5Index)
         .def("SnIndex", &Perm<5>::SnIndex)

@@ -341,6 +341,27 @@ constexpr Perm<n> Perm<n>::contract(Perm<k> p) {
 }
 
 template <int n>
+void Perm<n>::tightEncode(std::ostream& out) const {
+    Index idx = SnIndex();
+    for (int i = 0; i < tightChars_; ++i) {
+        out << static_cast<char>((idx % 94) + 33);
+        idx /= 94;
+    }
+}
+
+template <int n>
+std::string Perm<n>::tightEncoding() const {
+    char ans[tightChars_ + 1];
+    Index idx = SnIndex();
+    for (int i = 0; i < tightChars_; ++i) {
+        ans[i] = static_cast<char>((idx % 94) + 33);
+        idx /= 94;
+    }
+    ans[tightChars_] = 0;
+    return ans;
+}
+
+template <int n>
 inline void Perm<n>::clear(unsigned from) {
     for (int i = from; i < n; ++i) {
         code_ &= ~(imageMask << (imageBits * i));

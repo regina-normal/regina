@@ -66,6 +66,9 @@ Version 7.1  [ TODO ]
               doubleSurface() is now deprecated.
             - New routine scaleDown().
             - New routine isNormalEdgeLink().
+        Class Perm<n>:
+            - Added tightEncode() and tightEncoding() to help with perfect
+              hashing.
         Type safe_tuple_element<...>:
             - New type alias that is like std::tuple_element<...> but
               with well-defined behaviour for an out-of-range index.

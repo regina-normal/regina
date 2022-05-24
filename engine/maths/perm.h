@@ -242,6 +242,16 @@ class Perm {
 
     private:
         /**
+         * The number of characters used in a tight encoding.
+         * This is the smallest exponent k for which 94^k >= n!.
+         *
+         * This is only relevant for the generic Perm<n> template, where
+         * tight encodings have a fixed length.
+         */
+        static constexpr int tightChars_ = (n == 8 || n == 9 ? 3 :
+             n == 10 || n == 11 ? 4 : n == 12 || n == 13 ? 5 : n == 14 ? 6 : 7);
+
+        /**
          * An array-like object used to implement Perm<n>::Sn.
          */
         struct SnLookup {
@@ -672,6 +682,39 @@ class Perm {
          * of this permutation.
          */
         std::string trunc(unsigned len) const;
+
+        /**
+         * Writes the tight encoding of this permutation to the given output
+         * stream.  See the page on \ref tight "tight encodings" for details.
+         *
+         * For all permutation classes Perm<n>, the tight encoding is based on
+         * the index into the full permutation group \a S_n.  For smaller
+         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * work with since the \a S_n index is used as the internal permutation
+         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * the \a S_n index requires some non-trivial work to compute.
+         *
+         * \ifacespython Not present; use tightEncoding() instead.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
+
+        /**
+         * Returns the tight encoding of this permutation.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * For all permutation classes Perm<n>, the tight encoding is based on
+         * the index into the full permutation group \a S_n.  For smaller
+         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * work with since the \a S_n index is used as the internal permutation
+         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * the \a S_n index requires some non-trivial work to compute.
+         *
+         * @return the resulting encoded string.
+         */
+        std::string tightEncoding() const;
 
         /**
          * Resets the images of all integers from \a from onwards to the

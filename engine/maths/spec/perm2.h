@@ -49,6 +49,7 @@
 #endif
 
 #include <cstdlib>
+#include <iostream>
 #include <string>
 #include "regina-core.h"
 
@@ -574,6 +575,39 @@ class Perm<2> {
         std::string trunc(unsigned len) const;
 
         /**
+         * Writes the tight encoding of this permutation to the given output
+         * stream.  See the page on \ref tight "tight encodings" for details.
+         *
+         * For all permutation classes Perm<n>, the tight encoding is based on
+         * the index into the full permutation group \a S_n.  For smaller
+         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * work with since the \a S_n index is used as the internal permutation
+         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * the \a S_n index requires some non-trivial work to compute.
+         *
+         * \ifacespython Not present; use tightEncoding() instead.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
+
+        /**
+         * Returns the tight encoding of this permutation.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * For all permutation classes Perm<n>, the tight encoding is based on
+         * the index into the full permutation group \a S_n.  For smaller
+         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * work with since the \a S_n index is used as the internal permutation
+         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * the \a S_n index requires some non-trivial work to compute.
+         *
+         * @return the resulting encoded string.
+         */
+        std::string tightEncoding() const;
+
+        /**
          * Resets the images of all integers from \a from onwards to the
          * identity map.
          *
@@ -813,6 +847,15 @@ inline std::string Perm<2>::trunc(unsigned len) const {
         case 1 : return (code_ == 0 ? "0" : "1");
         default : return std::string();
     }
+}
+
+inline void Perm<2>::tightEncode(std::ostream& out) const {
+    out << static_cast<char>(code_ + 33);
+}
+
+inline std::string Perm<2>::tightEncoding() const {
+    char ans[2] { static_cast<char>(code_ + 33), 0 };
+    return ans;
 }
 
 inline constexpr Perm<2>::Index Perm<2>::S2Index() const {

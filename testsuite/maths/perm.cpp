@@ -54,6 +54,7 @@ class PermTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -582,16 +583,44 @@ class PermTest : public CppUnit::TestFixture {
                     }
             }
         }
+
+        void tightEncoding() {
+            for (int i = 0; i < nIdx; ++i) {
+                Perm p = Perm::orderedSn[idx[i]];
+
+                std::ostringstream out;
+                p.tightEncode(out);
+
+                std::string enc = p.tightEncoding();
+
+                if (enc != out.str()) {
+                    std::ostringstream msg;
+                    msg << "Permutation " << p
+                        << " has inconsistent tightEncoding() vs "
+                            "tightEncode(): " << enc << ' ' << out.str();
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                for (char c : enc)
+                    if (c < 33 || c > 126) {
+                        std::ostringstream msg;
+                        msg << "Permutation " << p
+                            << " has non-printable character "
+                            << static_cast<int>(c) << " in tight encoding.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+            }
+        }
 };
 
 void addPerm(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(PermTest<8>::suite()); // 3-bit images, 32-bit code
     runner.addTest(PermTest<9>::suite()); // 4-bit images, 64-bit code
     // runner.addTest(PermTest<10>::suite());
-    // runner.addTest(PermTest<11>::suite());
+    runner.addTest(PermTest<11>::suite());
     // runner.addTest(PermTest<12>::suite());
     runner.addTest(PermTest<13>::suite());
-    // runner.addTest(PermTest<14>::suite());
+    runner.addTest(PermTest<14>::suite());
     // runner.addTest(PermTest<15>::suite());
     runner.addTest(PermTest<16>::suite()); // 4-bit images, 64-bit code
 }

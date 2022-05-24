@@ -112,6 +112,7 @@ void addPerm7(pybind11::module_& m) {
         .def_static("rand", (Perm<7> (*)(bool))(&Perm<7>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<7>::trunc)
+        .def("tightEncoding", &Perm<7>::tightEncoding)
         .def("clear", &Perm<7>::clear)
         .def("S7Index", (int (Perm<7>::*)() const) &Perm<7>::S7Index)
         .def("SnIndex", &Perm<7>::SnIndex)

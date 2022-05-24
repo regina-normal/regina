@@ -49,6 +49,7 @@
 #endif
 
 #include <cstdlib>
+#include <iostream>
 #include <string>
 #include "regina-core.h"
 
@@ -936,6 +937,39 @@ class Perm<7> {
          * of this permutation.
          */
         std::string trunc(unsigned len) const;
+
+        /**
+         * Writes the tight encoding of this permutation to the given output
+         * stream.  See the page on \ref tight "tight encodings" for details.
+         *
+         * For all permutation classes Perm<n>, the tight encoding is based on
+         * the index into the full permutation group \a S_n.  For smaller
+         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * work with since the \a S_n index is used as the internal permutation
+         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * the \a S_n index requires some non-trivial work to compute.
+         *
+         * \ifacespython Not present; use tightEncoding() instead.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
+
+        /**
+         * Returns the tight encoding of this permutation.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * For all permutation classes Perm<n>, the tight encoding is based on
+         * the index into the full permutation group \a S_n.  For smaller
+         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * work with since the \a S_n index is used as the internal permutation
+         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * the \a S_n index requires some non-trivial work to compute.
+         *
+         * @return the resulting encoded string.
+         */
+        std::string tightEncoding() const;
 
         /**
          * Resets the images of all integers from \a from onwards to the
@@ -1976,6 +2010,21 @@ inline Perm<7> Perm<7>::rand(URBG&& gen, bool even) {
         std::uniform_int_distribution<short> d(0, 5039);
         return S7[d(gen)];
     }
+}
+
+inline void Perm<7>::tightEncode(std::ostream& out) const {
+    // 94^2 = 8836 > 7! = 5040
+    out << static_cast<char>((code2_ / 94) + 33)
+        << static_cast<char>((code2_ % 94) + 33);
+}
+
+inline std::string Perm<7>::tightEncoding() const {
+    // 94^2 = 8836 > 7! = 5040
+    char ans[3] {
+        static_cast<char>((code2_ / 94) + 33),
+        static_cast<char>((code2_ % 94) + 33),
+        0 };
+    return ans;
 }
 
 inline constexpr Perm<7>::Index Perm<7>::S7Index() const {
