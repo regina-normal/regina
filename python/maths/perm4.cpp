@@ -114,6 +114,8 @@ void addPerm4(pybind11::module_& m) {
         .def("trunc2", &Perm<4>::trunc2)
         .def("trunc3", &Perm<4>::trunc3)
         .def("tightEncoding", &Perm<4>::tightEncoding)
+        .def_static("tightDecode",
+            (Perm<4> (*)(const std::string&))(&Perm<4>::tightDecode))
         .def("clear", &Perm<4>::clear)
         .def("S4Index", (int (Perm<4>::*)() const) &Perm<4>::S4Index)
         .def("SnIndex", &Perm<4>::SnIndex)

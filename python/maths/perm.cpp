@@ -124,6 +124,8 @@ void addPerm(pybind11::module_& m, const char* name) {
             pybind11::arg("even") = false)
         .def("trunc", &Perm<n>::trunc)
         .def("tightEncoding", &Perm<n>::tightEncoding)
+        .def_static("tightDecode",
+            (Perm<n> (*)(const std::string&))(&Perm<n>::tightDecode))
         .def("clear", &Perm<n>::clear)
         .def("SnIndex", &Perm<n>::SnIndex)
         .def("orderedSnIndex", &Perm<n>::orderedSnIndex)

@@ -48,11 +48,6 @@
 #define __REGINA_PERM2_H
 #endif
 
-#include <cstdlib>
-#include <iostream>
-#include <string>
-#include "regina-core.h"
-
 namespace regina {
 
 /**
@@ -608,6 +603,55 @@ class Perm<2> {
         std::string tightEncoding() const;
 
         /**
+         * Reconstructs a permutation from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be given as a string.  If this string
+         * contains leading whitespace or any trailing characters at all
+         * (including trailing whitespace), then it will be treated as
+         * an invalid encoding (i.e., this routine will throw an exception).
+         *
+         * Tight encodings are fast to work with for small permutation classes
+         * (\a n &le; 7), but slower for larger permutation classes
+         * (8 &le; \a n &le; 16).  See tightEncoding() for further details.
+         *
+         * \exception InvalidArgument the given string is not a tight encoding
+         * of a 2-element permutation.
+         *
+         * @param enc the tight encoding for a 2-element permutation.
+         * @return the permutation represented by the given tight encoding.
+         */
+        static Perm tightDecode(const std::string& enc);
+
+        /**
+         * Reconstructs a permutation from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.
+         * If the input stream contains leading whitespace then it will be
+         * treated as an invalid encoding (i.e., this routine will throw an
+         * exception).  The input routine \e may contain further data: if this
+         * routine is successful then the input stream will be left positioned
+         * immediately after the encoding, without skipping any trailing
+         * whitespace.
+         *
+         * Tight encodings are fast to work with for small permutation classes
+         * (\a n &le; 7), but slower for larger permutation classes
+         * (8 &le; \a n &le; 16).  See tightEncoding() for further details.
+         *
+         * \exception InvalidInput the given input stream does not begin with
+         * a tight encoding of a 2-element permutation.
+         *
+         * \ifacespython Not present, but the string version of this routine
+         * is available.
+         *
+         * @param input an input stream that begins with the tight encoding
+         * for a 2-element permutation.
+         * @return the permutation represented by the given tight encoding.
+         */
+        static Perm tightDecode(std::istream& input);
+
+        /**
          * Resets the images of all integers from \a from onwards to the
          * identity map.
          *
@@ -716,6 +760,39 @@ class Perm<2> {
          * permutation will be created.
          */
         constexpr Perm<2>(Code code);
+
+    private:
+        /**
+         * Reconstructs a permutation from its given tight encoding.
+         *
+         * The tight encoding will be extracted one character at a time
+         * beginning with the iterator \a start, in a single pass, without
+         * skipping any leading whitespace.  If the iterator ever reaches
+         * \a limit before the encoding is complete then the encoding is
+         * treated as invalid (i.e., this routine will throw an exception).
+         *
+         * If \a noTrailingData is \c true then the iterator is required to
+         * \e finish at \a limit, or else the encoding will be considered
+         * invalid also; if \a noTrailingData is \c false then there is no
+         * constraint on the final state of the iterator.
+         *
+         * \exception InvalidArgument the given iterator does not point to
+         * a tight encoding of a 2-element permutation.
+         *
+         * \tparam iterator an input iterator type.
+         *
+         * @param start an iterator that points to the beginning of a
+         * tight encoding.
+         * @param limit an iterator that, if reached, indicates that no more
+         * characters are available.
+         * @param noTrailingData \c true if iteration should reach \a limit
+         * immediately after the encoding is read, or \c false if there is
+         * allowed to be additional unread data.
+         * @return the permutation represented by the given tight encoding.
+         */
+        template <typename iterator>
+        static Perm tightDecode(iterator start, iterator limit,
+            bool noTrailingData);
 };
 
 // Inline functions for Perm<2>
@@ -856,6 +933,36 @@ inline void Perm<2>::tightEncode(std::ostream& out) const {
 inline std::string Perm<2>::tightEncoding() const {
     char ans[2] { static_cast<char>(code_ + 33), 0 };
     return ans;
+}
+
+inline Perm<2> Perm<2>::tightDecode(const std::string& enc) {
+    return tightDecode(enc.begin(), enc.end(), true);
+}
+
+inline Perm<2> Perm<2>::tightDecode(std::istream& input) {
+    try {
+        return tightDecode(std::istreambuf_iterator<char>(input),
+            std::istreambuf_iterator<char>(), false);
+    } catch (const InvalidArgument& exc) {
+        // For input streams we use a different exception type.
+        throw InvalidInput(exc.what());
+    }
+}
+
+template <typename iterator>
+Perm<2> Perm<2>::tightDecode(iterator start, iterator limit,
+        bool noTrailingData) {
+    if (start == limit)
+        throw InvalidArgument("The tight encoding is incomplete");
+
+    Code code = (*start++) - 33;
+    // code >= 0 because we are using an unsigned data type.
+    if (code > 1)
+        throw InvalidArgument("The tight encoding is invalid");
+    if (noTrailingData && (start != limit))
+        throw InvalidArgument("The tight encoding has trailing characters");
+
+    return Perm<2>(code);
 }
 
 inline constexpr Perm<2>::Index Perm<2>::S2Index() const {

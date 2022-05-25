@@ -342,6 +342,7 @@ constexpr Perm<n> Perm<n>::contract(Perm<k> p) {
 
 template <int n>
 void Perm<n>::tightEncode(std::ostream& out) const {
+    // Write the Sn index in base 94, least significant digit first.
     Index idx = SnIndex();
     for (int i = 0; i < tightChars_; ++i) {
         out << static_cast<char>((idx % 94) + 33);
@@ -351,6 +352,7 @@ void Perm<n>::tightEncode(std::ostream& out) const {
 
 template <int n>
 std::string Perm<n>::tightEncoding() const {
+    // Write the Sn index in base 94, least significant digit first.
     char ans[tightChars_ + 1];
     Index idx = SnIndex();
     for (int i = 0; i < tightChars_; ++i) {
@@ -359,6 +361,43 @@ std::string Perm<n>::tightEncoding() const {
     }
     ans[tightChars_] = 0;
     return ans;
+}
+
+template <int n>
+template <typename iterator>
+Perm<n> Perm<n>::tightDecode(iterator start, iterator limit,
+        bool noTrailingData) {
+    // Ensure that our calculations will not overflow, even when reading
+    // an *invalid* encoding.  Here we note that:
+    //   - 2^31 > 94^4;
+    //   - 2^63 > 94^7.
+    // We enforce this now so that we will notice that we could technically
+    // break things if we optimise the Index type at a later date.  (Though
+    // the only possible "breakage" is that an invalid encoding might be
+    // incorrectly recognised as valid due to an overflow wrap-around).
+    static_assert(sizeof(Index) >= (tightChars_ <= 4 ? 4 : 8),
+        "The Index type could potentially overflow when reading an "
+        "invalid tight encoding.");
+
+    Index idx = 0;
+    Index power = 1;
+    for (int i = 0; i < tightChars_; ++i) {
+        if (start == limit)
+            throw InvalidArgument("The tight encoding is incomplete");
+        Index piece = (*start++) - 33;
+        // code >= 0 because we are using an unsigned data type.
+        if (piece > 94)
+            throw InvalidArgument("The tight encoding is invalid");
+        idx += (piece * power);
+        power *= 94;
+    }
+
+    if (idx < 0 || idx >= nPerms)
+        throw InvalidArgument("The tight encoding is invalid");
+    if (noTrailingData && (start != limit))
+        throw InvalidArgument("The tight encoding has trailing characters");
+
+    return Sn[idx];
 }
 
 template <int n>

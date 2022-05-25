@@ -93,11 +93,12 @@ class IntegerBase;
  * of the objects are fixed) this will be enough to guarantee that
  * different \e sequences likewise have different encodngs.
  *
- * Regina does not provide \e decoding routines, though (as noted above) this
- * should be possible if the underlying types are known.  This is because
- * tight encodings were originally designed for applications such as
- * perfect hashing, where the aim is essentially to "compress" the data in a
- * short printable string whilst preserving the correctness of equality tests.
+ * For most types, Regina does not provide \e decoding routines, though
+ * (as noted above) this should be possible if the underlying types are known.
+ * This is because tight encodings were originally designed for applications
+ * such as perfect hashing, where the aim is essentially to "compress" the data
+ * in a short printable string whilst preserving the correctness of equality
+ * tests.
  *
  * For native C++ data types where tight encodings are supported, these
  * are provided in the header utilities/tightencoding.h through overloads of
@@ -106,7 +107,8 @@ class IntegerBase;
  *
  * For Regina's own data types where tight encodings are supported, these are
  * provided through tightEncode() and tightEncoding() member functions of the
- * corresopnding classes.
+ * corresponding classes.  The few classes that support decoding also have
+ * static tightDecode() functions.
  */
 
 /**

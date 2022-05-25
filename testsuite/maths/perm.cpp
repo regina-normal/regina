@@ -609,6 +609,33 @@ class PermTest : public CppUnit::TestFixture {
                             << static_cast<int>(c) << " in tight encoding.";
                         CPPUNIT_FAIL(msg.str());
                     }
+
+                try {
+                    Perm q = Perm::tightDecode(enc);
+                    if (q != p) {
+                        std::ostringstream msg;
+                        msg << "The tight encoding for permutation #" << i
+                            << " does not decode to the same permutation.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } catch (const regina::InvalidArgument&) {
+                    std::ostringstream msg;
+                    msg << "The tight encoding for permutation #" << i
+                        << " does not decode at all.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                try {
+                    enc += ' ';
+                    Perm::tightDecode(enc);
+
+                    std::ostringstream msg;
+                    msg << "The tight encoding for permutation #" << i
+                        << " decodes with trailing whitespace (which "
+                        "it should not).";
+                    CPPUNIT_FAIL(msg.str());
+                } catch (const regina::InvalidArgument&) {
+                }
             }
         }
 };
