@@ -73,6 +73,8 @@ void addAbelianGroup(pybind11::module_& m) {
         .def("isZn", &AbelianGroup::isZn)
         .def("utf8", &AbelianGroup::utf8)
         .def("tightEncoding", &AbelianGroup::tightEncoding)
+        .def("tightDecode", overload_cast<const std::string&>(
+            &AbelianGroup::tightDecode))
         .def("writeXMLData", [](const AbelianGroup& g, pybind11::object file) {
             pybind11::scoped_ostream_redirect stream(std::cout, file);
             g.writeXMLData(std::cout);

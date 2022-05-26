@@ -297,5 +297,30 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) :
         addTorsion(cof);
 }
 
+AbelianGroup AbelianGroup::tightDecode(std::istream& input) {
+    AbelianGroup ans(regina::tightDecode<unsigned long>(input));
+
+    // The invariant factors are encoded in increasing order.
+    // We need to store them in *decreasing* order; we will do this by
+    // reversing the sequence once the decoding is complete, since pushing
+    // onto the front of a vector one element at a time is expensive.
+    while (true) {
+        Integer fac = regina::tightDecode<Integer>(input);
+        if (fac == 0) {
+            // We have read all invariant factors.
+            std::reverse(ans.revInvFactors_.begin(), ans.revInvFactors_.end());
+            return ans;
+        }
+        if (fac <= 1)
+            throw InvalidInput("The tight encoding has an invalid "
+                "invariant factor");
+        if (! ans.revInvFactors_.empty())
+            if (fac % ans.revInvFactors_.back() != 0)
+                throw InvalidInput("The tight encoding has an invalid "
+                    "sequence of invariant factors");
+        ans.revInvFactors_.push_back(std::move(fac));
+    }
+}
+
 } // namespace regina
 
