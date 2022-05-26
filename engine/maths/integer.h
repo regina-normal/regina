@@ -1545,6 +1545,58 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          */
         std::string tightEncoding() const;
 
+        /**
+         * Reconstructs an integer from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be given as a string.  If this string
+         * contains leading whitespace or any trailing characters at all
+         * (including trailing whitespace), then it will be treated as an
+         * invalid encoding (i.e., this routine will throw an exception).
+         *
+         * This routine does recognise infinity in the case where \a
+         * supportInfinity is \c true.
+         *
+         * This routine is identical to calling the global template routine
+         * regina::tightDecode() with this type as the template argument.
+         *
+         * \exception InvalidArgument the given string is not a tight encoding
+         * of an integer of this type.
+         *
+         * @param enc the tight encoding for an integer.
+         * @return the integer represented by the given tight encoding.
+         */
+        static IntegerBase tightDecode(const std::string& enc);
+
+        /**
+         * Reconstructs an integer from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.  If the
+         * input stream contains leading whitespace then it will be treated as
+         * an invalid encoding (i.e., this routine will throw an exception).
+         * The input routine \e may contain further data: if this routine is
+         * successful then the input stream will be left positioned immediately
+         * after the encoding, without skipping any trailing whitespace.
+         *
+         * This routine does recognise infinity in the case where \a
+         * supportInfinity is \c true.
+         *
+         * This routine is identical to calling the global template routine
+         * regina::tightDecode() with this type as the template argument.
+         *
+         * \exception InvalidInput the given input stream does not begin with
+         * a tight encoding of an integer of this type.
+         *
+         * \ifacespython Not present, but the string version of this routine
+         * is available.
+         *
+         * @param input an input stream that begins with the tight encoding
+         * for an integer.
+         * @return the integer represented by the given tight encoding.
+         */
+        static IntegerBase tightDecode(std::istream& input);
+
     private:
         /**
          * Initialises this integer to infinity.
@@ -3457,6 +3509,26 @@ inline std::string IntegerBase<supportInfinity>::tightEncoding() const {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, *this);
     return out.str();
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::tightDecode(
+        const std::string& enc) {
+    return regina::detail::tightDecodeInteger<IntegerBase>(
+        enc.begin(), enc.end(), true);
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::tightDecode(
+        std::istream& input) {
+    try {
+        return regina::detail::tightDecodeInteger<IntegerBase>(
+            std::istreambuf_iterator<char>(input),
+            std::istreambuf_iterator<char>(), false);
+    } catch (const InvalidArgument& exc) {
+        // For input streams we use a different exception type.
+        throw InvalidInput(exc.what());
+    }
 }
 
 template <bool supportInfinity>

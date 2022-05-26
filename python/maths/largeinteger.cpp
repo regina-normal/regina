@@ -132,6 +132,8 @@ void addLargeInteger(pybind11::module_& m) {
         .def("makeLarge", &LargeInteger::makeLarge)
         .def("tryReduce", &LargeInteger::tryReduce)
         .def("tightEncoding", &LargeInteger::tightEncoding)
+        .def_static("tightDecode", overload_cast<const std::string&>(
+            &LargeInteger::tightDecode))
         .def(long() + pybind11::self)
         .def(long() * pybind11::self)
         .def_readonly_static("zero", &LargeInteger::zero)

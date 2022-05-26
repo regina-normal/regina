@@ -31,12 +31,30 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "maths/integer.h"
 #include "utilities/tightencoding.h"
 
 using pybind11::overload_cast;
 
 void addTightEncoding(pybind11::module_& m) {
-    m.def("tightEncoding", overload_cast<long>(&regina::tightEncoding));
-    m.def("tightEncoding", overload_cast<long long>(&regina::tightEncoding));
+    // We cannot use overload_cast here because there is a templated
+    // global tightEncoding() function.
+    m.def("tightEncoding", (std::string (*)(long))(&regina::tightEncoding));
+    m.def("tightEncoding", (std::string (*)(long long))(&regina::tightEncoding));
+    m.def("tightDecode", [](const std::string& enc) {
+        // Try a native integer conversion first.
+        try {
+            return pybind11::cast(regina::tightDecode<long>(enc));
+        } catch (const regina::InvalidArgument&) {
+            // It could have been out of range.  Try arbitrary precision
+            // integers before aborting.
+            regina::Integer ans = regina::tightDecode<regina::Integer>(enc);
+
+            // At this point we have a valid solution, so we should be
+            // able to convert to a Python long via strings without trouble.
+            return pybind11::reinterpret_steal<pybind11::object>(
+                PyLong_FromString(ans.stringValue().c_str(), nullptr, 10));
+        }
+    });
 }
 

@@ -1,0 +1,25 @@
+Scheme for tight encodings of integers
+--------------------------------------
+
+abc... are chars in the range 33..122 representing base 90 digits;
+multi-digit numbers are written as least significant -> most significant
+
+a: a-44 (covers -44..45)
+
+~a: a-89 if a <= 44 (covers -89..-45)
+    a+1  if a >= 45 (covers 46..90)
+
+|ab: ab-4139 if ab <= 4049 (covers -4139..-90)
+     ab-3959 if ab >= 4050 (covers 91..4140)
+
+}abc: abc-368639 if abc <= 364499 (covers -368639..-4140)
+      abc-360359 if abc >= 364500 (covers 4141..368640)
+
+{Sabc..}:  45*(abc..)+S+368640 if S <= 44 (covers 368641..)
+          -45*(abc..)-S-368595 if S >= 45 (covers ..-368640)
+
+{} -> infinity
+
+NOTE: {!} is unused; here ! represents the digit 0
+
+Supported types: (signed/unsigned) (int/long/long long), Integer/LargeInteger

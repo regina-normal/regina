@@ -114,6 +114,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     // Utilities:
     sets.insert(std::make_pair("base64", &addBase64));
     sets.insert(std::make_pair("bitmask", &addBitmask));
+    sets.insert(std::make_pair("tightencoding", &addTightEncoding));
 
     // Maths:
     sets.insert(std::make_pair("binomial", &addBinomial));

@@ -39,6 +39,8 @@ Version 7.1  [ TODO ]
         Class HilbertPrimal:
             - The header no longer includes the Normaliz headers (which
               Regina does not actually ship with its development files).
+        Class Integer:
+            - New tightDecode() routines.
         Class IntersectionForm:
             - New class to compute invariants of intersection forms.
         Class Isomorphism:
@@ -50,6 +52,8 @@ Version 7.1  [ TODO ]
               FacetSpec or a FacetPairing.
             - Added pre/postincrement operators for iterating through
               all permutations of a given size.
+        Class LargeInteger:
+            - New tightDecode() routines.
         Class Matrix:
             - Routine det() now throws an exception if the matrix is not
               square (this is a precondition), and now returns 1 if the
@@ -85,8 +89,14 @@ Version 7.1  [ TODO ]
             - Routine scaleDown() now returns the gcd that was used.
         Class Vertex<3>:
             - New routine linkingSurface().
-        Routine for_constexpr():
+        Function for_constexpr():
             - New routine to support compile-time for loops.
+        Function tightDecode():
+            - New template function that reconstructs integers from
+              tight encodings.
+        Global constants maxSafeFactor<...> and minSafeFactor<...>:
+            - Added to facilitate overflow checking with native integer
+              operations.
     PYTHON:
         - For classes that have a bool() cast operator, this is now wrapped in
           Python using the special __bool__() function (i.e., Python will now

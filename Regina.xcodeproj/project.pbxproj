@@ -1300,6 +1300,8 @@
 		05870CB21FAD250900835F9E /* modellinkgraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 05870CB01FAD250900835F9E /* modellinkgraph.h */; };
 		05870CB31FAD250900835F9E /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05870CB11FAD250900835F9E /* modellinkgraph.cpp */; };
 		05870CB41FAD250E00835F9E /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05870CB11FAD250900835F9E /* modellinkgraph.cpp */; };
+		05888BD3283F045300181D2D /* tightencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05888BD1283F044900181D2D /* tightencoding.cpp */; };
+		05888BD4283F045500181D2D /* tightencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05888BD1283F044900181D2D /* tightencoding.cpp */; };
 		0588C2A31FD8D1350093C2C9 /* rewrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A11FD8D1340093C2C9 /* rewrite.cpp */; };
 		0588C2A41FD8D1350093C2C9 /* sig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A21FD8D1340093C2C9 /* sig.cpp */; };
 		0588C2A51FD8D13C0093C2C9 /* rewrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A11FD8D1340093C2C9 /* rewrite.cpp */; };
@@ -3833,6 +3835,8 @@
 		05870CAC1FAD24EB00835F9E /* modellinkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
 		05870CB01FAD250900835F9E /* modellinkgraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modellinkgraph.h; sourceTree = "<group>"; };
 		05870CB11FAD250900835F9E /* modellinkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
+		05888BD0283F042400181D2D /* tight-notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "tight-notes.txt"; sourceTree = "<group>"; };
+		05888BD1283F044900181D2D /* tightencoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tightencoding.cpp; sourceTree = "<group>"; };
 		0588C2A11FD8D1340093C2C9 /* rewrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rewrite.cpp; sourceTree = "<group>"; };
 		0588C2A21FD8D1340093C2C9 /* sig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sig.cpp; sourceTree = "<group>"; };
 		0588C2A71FD8D1740093C2C9 /* representations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = representations.c; sourceTree = "<group>"; };
@@ -6131,6 +6135,7 @@
 				052F9E7B180600FB00FAE4DF /* stringutils-impl.h */,
 				052F9E7C180600FB00FAE4DF /* stringutils.cpp */,
 				052F9E7D180600FB00FAE4DF /* stringutils.h */,
+				05888BD0283F042400181D2D /* tight-notes.txt */,
 				057B0C9F26A2AB760017F5EA /* tightencoding.h */,
 				052F9E75180600FB00FAE4DF /* trieset.h */,
 				0512E0A026DF356300DDB222 /* trieset.cpp */,
@@ -6306,6 +6311,7 @@
 				052FA1011806088B00FAE4DF /* bitmask.cpp */,
 				052FA1001806088B00FAE4DF /* CMakeLists.txt */,
 				052FA1021806088B00FAE4DF /* testutilities.h */,
+				05888BD1283F044900181D2D /* tightencoding.cpp */,
 			);
 			path = utilities;
 			sourceTree = "<group>";
@@ -9033,6 +9039,7 @@
 				05C2659F2825FB0800232420 /* links.cpp in Sources */,
 				052FA10D1806088B00FAE4DF /* perm5.cpp in Sources */,
 				0591E84F1C4F777100793A9C /* census4.cpp in Sources */,
+				05888BD3283F045300181D2D /* tightencoding.cpp in Sources */,
 				0591E8571C4F77A400793A9C /* triangulation4.cpp in Sources */,
 				051FD39527257A9E00B3F60F /* callbacks.cpp in Sources */,
 				052FA1151806088B00FAE4DF /* incompressible.cpp in Sources */,
@@ -9254,6 +9261,7 @@
 				05A066BF1DFA67D50047872E /* pillowtwosphere.cpp in Sources */,
 				052FA1B31806129B00FAE4DF /* sigisomorphism.cpp in Sources */,
 				053CAB171DA4A50800A92F98 /* anglestructures.cpp in Sources */,
+				05888BD4283F045500181D2D /* tightencoding.cpp in Sources */,
 				05249EB71DBC16C4001FE29E /* example2.cpp in Sources */,
 				052FA19E1806129B00FAE4DF /* perm3.cpp in Sources */,
 				05277AC825CF9D16001E4134 /* intutils.cpp in Sources */,

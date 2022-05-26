@@ -40,8 +40,11 @@
 #endif
 
 #include <iostream>
+#include <limits>
 #include <string>
 #include <sstream>
+#include <type_traits>
+#include "utilities/exception.h"
 #include "utilities/intutils.h"
 
 namespace regina {
@@ -256,6 +259,80 @@ void tightEncode(std::ostream& out, unsigned long long value);
  */
 std::string tightEncoding(unsigned long long value);
 
+/**
+ * Reconstructs an integer from its given tight encoding.
+ * See the page on \ref tight "tight encodings" for details.
+ *
+ * The tight encoding will be given as a string.  If this string contains
+ * leading whitespace or any trailing characters at all (including trailing
+ * whitespace), then it will be treated as an invalid encoding (i.e., this
+ * routine will throw an exception).
+ *
+ * This routine does recognise infinity in the case where \a Int is the type
+ * regina::LargeInteger.
+ *
+ * If \a Int is one of Regina's arbitrary precision integer types, then
+ * this routine is identical to calling Int::tightDecode().
+ *
+ * \exception InvalidArgument the given string is not a tight encoding of
+ * an integer of type \a Int.  This includes the case where the encoding
+ * \e is a valid integer encoding but the integer itself is outside the
+ * allowed range for the \a Int type.
+ *
+ * \ifacespython Since Python does not support templates, the interface
+ * for this routine is a little different.  The global routine
+ * regina::tightDecode() will return a Python integer; since these are
+ * arbitrary precision, the decoding will never encounter an out-of-range
+ * exceptions as it might with a native C++ integer type.  If you want one of
+ * Regina's arbitrary precision integer types, you should call the corresponding
+ * tightDecode() member function instead (e.g., regina::Integer::tightDecode()).
+ *
+ * \tparam Int The type of integer to reconstruct; this must be either (i) a
+ * native C++ integer type (and not \c bool), or (ii) one of Regina's arbitrary
+ * precision integer types (i.e., regina::Integer or regina::LargeInteger).
+ *
+ * @param enc the tight encoding for an integer.
+ * @return the integer represented by the given tight encoding.
+ */
+template<typename Int>
+Int tightDecode(const std::string& enc);
+
+/**
+ * Reconstructs an integer from its given tight encoding.
+ * See the page on \ref tight "tight encodings" for details.
+ *
+ * The tight encoding will be read from the given input stream.  If the input
+ * stream contains leading whitespace then it will be treated as an invalid
+ * encoding (i.e., this routine will throw an exception).  The input routine
+ * \e may contain further data: if this routine is successful then the input
+ * stream will be left positioned immediately after the encoding, without
+ * skipping any trailing whitespace.
+ *
+ * This routine does recognise infinity in the case where \a Int is the type
+ * regina::LargeInteger.
+ *
+ * If \a Int is one of Regina's arbitrary precision integer types, then
+ * this routine is identical to calling Int::tightDecode().
+ *
+ * \exception InvalidInput the given input stream does not begin with
+ * a tight encoding of an integer of type \a Int.  This includes the case
+ * where the encoding \e is a valid integer encoding but the integer itself
+ * is outside the allowed range for the \a Int type.
+ *
+ * \ifacespython Not present, but the string version of this routine
+ * is available.
+ *
+ * \tparam Int The type of integer to reconstruct; this must be either (i) a
+ * native C++ integer type (and not \c bool), or (ii) one of Regina's arbitrary
+ * precision integer types (i.e., regina::Integer or regina::LargeInteger).
+ *
+ * @param input an input stream that begins with the tight encoding for an
+ * integer.
+ * @return the integer represented by the given tight encoding.
+ */
+template<typename Int>
+Int tightDecode(std::istream& input);
+
 namespace detail {
     /**
      * Internal function that writes the tight encoding of the given integer
@@ -279,6 +356,52 @@ namespace detail {
      */
     template <typename Int>
     void tightEncodeInteger(std::ostream& out, Int value);
+
+    /**
+     * Internal function that reconstructs an integer from its given tight
+     * encoding.  This should not be called directly; its purpose is to
+     * provide a common implementation for tightDecode() for all integer types.
+     *
+     * The tight encoding will be extracted one character at a time
+     * beginning with the iterator \a start, in a single pass, without
+     * skipping any leading whitespace.  If the iterator ever reaches
+     * \a limit before the encoding is complete then the encoding is
+     * treated as invalid (i.e., this routine will throw an exception).
+     *
+     * If \a noTrailingData is \c true then the iterator is required to
+     * \e finish at \a limit, or else the encoding will be considered
+     * invalid also; if \a noTrailingData is \c false then there is no
+     * constraint on the final state of the iterator.
+     *
+     * \exception InvalidArgument the given iterator does not point to
+     * a tight encoding of an integer of type \a Int.  This includes the
+     * case where the encoding \e is a valid integer encoding but the integer
+     * itself is outside the allowed range for the \a Int type.
+     *
+     * This routine does recognise infinity in the case where \a Int is
+     * the type regina::LargeInteger.
+     *
+     * \ifacespython Not present; use regina::tightDecode(...) instead.
+     *
+     * \tparam Int The type of integer to reconstruct; this must be either
+     * (i) a native C++ integer type, or (ii) one of Regina's arbitrary
+     * precision integer types (i.e., regina::Integer or regina::LargeInteger).
+     *
+     * \tparam iterator an input iterator type.
+     *
+     * @param start an iterator that points to the beginning of a
+     * tight encoding.
+     * @param limit an iterator that, if reached, indicates that no more
+     * characters are available.
+     * @param noTrailingData \c true if iteration should reach \a limit
+     * immediately after the encoding is read, or \c false if there is
+     * allowed to be additional unread data.
+     * @return the integer represented by the given tight encoding.
+     *
+     * \ingroup utilities
+     */
+    template <typename Int, typename iterator>
+    Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData);
 }
 
 // Inline functions:
@@ -343,13 +466,31 @@ inline std::string tightEncoding(unsigned long long value) {
     return out.str();
 }
 
+template<typename Int>
+inline Int tightDecode(const std::string& enc) {
+    return regina::detail::tightDecodeInteger<Int>(
+        enc.begin(), enc.end(), true);
+}
+
+template<typename Int>
+inline Int tightDecode(std::istream& input) {
+    try {
+        return regina::detail::tightDecodeInteger<Int>(
+            std::istreambuf_iterator<char>(input),
+            std::istreambuf_iterator<char>(), false);
+    } catch (const InvalidArgument& exc) {
+        // For input streams we use a different exception type.
+        throw InvalidInput(exc.what());
+    }
+}
+
 // Implementations of template functions:
 
 namespace detail {
     template <typename Int>
     void tightEncodeInteger(std::ostream& out, Int value) {
-        static_assert(std::is_integral_v<Int> ||
-                IsReginaArbitraryPrecisionInteger<Int>::value,
+        static_assert((std::is_integral_v<Int> && ! std::is_same_v<Int, bool>)
+                || IsReginaArbitraryPrecisionInteger<Int>::value,
             "tightEncodeInteger() requires either a native C++ integer type "
             "or one of Regina's arbitrary precision integer types.");
 
@@ -522,7 +663,257 @@ namespace detail {
 
         out << '}';
     }
-}
+
+    template <typename Int, typename iterator>
+    Int tightDecodeInteger(iterator start, iterator limit,
+            bool noTrailingData) {
+        static_assert((std::is_integral_v<Int> && ! std::is_same_v<Int, bool>)
+                || IsReginaArbitraryPrecisionInteger<Int>::value,
+            "tightEncodeInteger() requires either a native C++ integer type "
+            "or one of Regina's arbitrary precision integer types.");
+
+        Int result;
+        bool overflow = false;
+
+        if (start == limit)
+            throw InvalidArgument("The tight encoding is incomplete");
+        signed char c = *start++;
+        if (c >= 33 && c <= 122) {
+            // The result will fit into a single byte.
+            if constexpr (std::is_unsigned_v<Int>) {
+                if (c < 77)
+                    throw InvalidArgument("The tight encoding describes "
+                        "a negative integer but the integer type is unsigned");
+            }
+            result = c - 77;
+        } else if (c == '~') {
+            // The result will still fit into a single byte.
+            if (start == limit)
+                throw InvalidArgument("The tight encoding is incomplete");
+            c = *start++;
+            if (c < 33 || c > 122) {
+                throw InvalidArgument("The tight encoding is invalid");
+            } else if (c <= 77) {
+                if constexpr (std::is_unsigned_v<Int>) {
+                    throw InvalidArgument("The tight encoding describes "
+                        "a negative integer but the integer type is unsigned");
+                }
+                result = c - 122;
+            } else {
+                result = c - 32;
+            }
+        } else if (c == '|') {
+            // The result could need either 1 or 2 bytes.
+            // It is guaranteed to fit within an int.
+            if (start == limit)
+                throw InvalidArgument("The tight encoding is incomplete");
+            c = (*start++) - 33;
+            if (c < 0 || c >= 90)
+                throw InvalidArgument("The tight encoding is invalid");
+            int val = c;
+
+            if (start == limit)
+                throw InvalidArgument("The tight encoding is incomplete");
+            c = (*start++) - 33;
+            if (c < 0 || c >= 90)
+                throw InvalidArgument("The tight encoding is invalid");
+            val += 90 * static_cast<int>(c);
+
+            if (val < 4050) {
+                // This encodes a negative number.
+                if constexpr (std::is_unsigned_v<Int>) {
+                    throw InvalidArgument("The tight encoding describes "
+                        "a negative integer but the integer type is unsigned");
+                }
+                if constexpr (std::is_integral_v<Int> && sizeof(Int) == 1) {
+                    // One byte might not be enough.
+                    if (val < 4139 + int(std::numeric_limits<Int>::min())) {
+                        overflow = true;
+                        goto endDecoding;
+                    }
+                }
+                result = val - 4139;
+            } else {
+                // This encodes a positive number.
+                if constexpr (std::is_integral_v<Int> && sizeof(Int) == 1) {
+                    // One byte might not be enough.
+                    if (val > 3959 + int(std::numeric_limits<Int>::max())) {
+                        overflow = true;
+                        goto endDecoding;
+                    }
+                }
+                result = val - 3959;
+            }
+        } else if (c == '}') {
+            // The result could need either 2 or 4 bytes.
+            // It is guaranteed to fit within a long.
+            if (start == limit)
+                throw InvalidArgument("The tight encoding is incomplete");
+            c = (*start++) - 33;
+            if (c < 0 || c >= 90)
+                throw InvalidArgument("The tight encoding is invalid");
+            long val = c;
+
+            if (start == limit)
+                throw InvalidArgument("The tight encoding is incomplete");
+            c = (*start++) - 33;
+            if (c < 0 || c >= 90)
+                throw InvalidArgument("The tight encoding is invalid");
+            val += 90 * static_cast<int>(c);
+
+            if (start == limit)
+                throw InvalidArgument("The tight encoding is incomplete");
+            c = (*start++) - 33;
+            if (c < 0 || c >= 90)
+                throw InvalidArgument("The tight encoding is invalid");
+            val += 8100 * static_cast<int>(c);
+
+            if (val < 364500) {
+                // This encodes a negative number.
+                if constexpr (std::is_unsigned_v<Int>) {
+                    throw InvalidArgument("The tight encoding describes "
+                        "a negative integer but the integer type is unsigned");
+                }
+                if constexpr (std::is_integral_v<Int> && sizeof(Int) < 4) {
+                    if (val < 368639 + long(std::numeric_limits<Int>::min())) {
+                        overflow = true;
+                        goto endDecoding;
+                    }
+                }
+                result = val - 368639;
+            } else {
+                // This encodes a positive number.
+                if constexpr (std::is_integral_v<Int> && sizeof(Int) < 4) {
+                    if (val > 360359 + long(std::numeric_limits<Int>::max())) {
+                        overflow = true;
+                        goto endDecoding;
+                    }
+                }
+                result = val - 360359;
+            }
+        } else if (c == '{') {
+            if (start == limit)
+                throw InvalidArgument("The tight encoding is incomplete");
+            c = *start++;
+            if (c == '}') {
+                // This encodes infinity.
+                if constexpr (std::is_same_v<Int, regina::IntegerBase<true>>)
+                    result.makeInfinite();
+                else
+                    throw InvalidArgument("The tight encoding represents "
+                        "infinity, which is not supported by the chosen "
+                        "integer type");
+            } else if (c < 33 || c > 122) {
+                throw InvalidArgument("The tight encoding is invalid");
+            } else {
+                // The result needs at least 4 bytes, but possibly more.
+
+                // Identify whether this encodes a positive or negative number.
+                bool negative = (c > 77);
+
+                if (negative) {
+                    if constexpr (std::is_unsigned_v<Int>) {
+                        throw InvalidArgument("The tight encoding describes "
+                            "a negative integer but the integer type is "
+                            "unsigned");
+                    }
+                }
+                if constexpr (sizeof(Int) < 4) {
+                    overflow = true;
+                    goto endDecoding;
+                }
+
+                if (negative) {
+                    result = -368562;
+                    result -= c;
+                } else {
+                    result = 368607;
+                    result += c;
+                }
+
+                Int coeff = 45, coeffPrev = 0;
+                while (true) {
+                    if (start == limit)
+                        throw InvalidArgument(
+                            "The tight encoding is incomplete");
+                    c = *start++;
+                    if (c == '}')
+                        break;
+                    if (c < 33 || c > 122)
+                        throw InvalidArgument(
+                            "The tight encoding is invalid");
+
+                    if (coeffPrev != 0) {
+                        // Step up to the next power of 90.
+                        // This or a higher power should appear with a non-zero
+                        // coefficient (either now or later in the encoding),
+                        // so if this overflows then we can bail now.
+                        if constexpr (std::is_integral_v<Int>) {
+                            if (coeff > regina::maxSafeFactor<Int, 90>) {
+                                overflow = true;
+                                goto endDecoding;
+                            }
+                        }
+                        coeff *= 90;
+                    }
+
+                    if constexpr (! std::is_integral_v<Int>) {
+                        if (negative)
+                            result -= (coeff * (c - 33));
+                        else
+                            result += (coeff * (c - 33));
+                    } else {
+                        // We have to be careful about overflow here.
+                        // First work out what we need to add/subtract.
+                        Int term;
+                        if (coeffPrev == 0) {
+                            // This will not overflow.
+                            term = coeff * static_cast<Int>(c - 33);
+                        } else {
+                            // The first multiplication here will
+                            // not overflow; the second might.
+                            term = coeffPrev * static_cast<Int>(c - 33);
+                            if (term > regina::maxSafeFactor<Int, 90>) {
+                                overflow = true;
+                                goto endDecoding;
+                            }
+                            term *= 90;
+                        }
+                        // Now see if it's safe to add/subtract.
+                        if (negative) {
+                            if (result >=
+                                    std::numeric_limits<Int>::min() + term)
+                                result -= term;
+                            else {
+                                overflow = true;
+                                goto endDecoding;
+                            }
+                        } else {
+                            if (result <=
+                                    std::numeric_limits<Int>::max() - term)
+                                result += term;
+                            else {
+                                overflow = true;
+                                goto endDecoding;
+                            }
+                        }
+                    }
+                    coeffPrev = coeff;
+                }
+            }
+        } else
+            throw InvalidArgument("The tight encoding is invalid");
+
+endDecoding:
+        if (overflow)
+            throw InvalidArgument("The tight encoding describes an integer "
+                "that is out of range for the chosen integer type");
+        if (noTrailingData && (start != limit))
+            throw InvalidArgument("The tight encoding has trailing characters");
+        return result;
+    }
+
+} // namespace detail
 
 } // namespace regina
 
