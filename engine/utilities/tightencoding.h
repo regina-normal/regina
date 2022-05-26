@@ -93,22 +93,23 @@ class IntegerBase;
  * of the objects are fixed) this will be enough to guarantee that
  * different \e sequences likewise have different encodngs.
  *
- * For most types, Regina does not provide \e decoding routines, though
- * (as noted above) this should be possible if the underlying types are known.
- * This is because tight encodings were originally designed for applications
- * such as perfect hashing, where the aim is essentially to "compress" the data
- * in a short printable string whilst preserving the correctness of equality
- * tests.
+ * For most types, Regina also provides \e decoding routines.  Although these
+ * might not be offered for all types, it should (as noted above) be possible in
+ * theory if the underlying types are known.  The main reason for not offering
+ * a decoding function is simply that decoding is often not a priority for the
+ * developers - tight encodings were originally designed for applications such
+ * as perfect hashing, where the aim is essentially to "compress" the data in a
+ * short printable string whilst preserving the correctness of equality tests.
  *
- * For native C++ data types where tight encodings are supported, these
- * are provided in the header utilities/tightencoding.h through overloads of
- * the global functions tightEncoding() (which returns a string) and
- * tightEncode() (which writes to an output stream).
+ * For native C++ data types where tight encodings and/or decodings are
+ * supported, these are provided in the header utilities/tightencoding.h
+ * through overloads of the global functions tightEncoding() (which returns a
+ * string), tightEncode() (which writes to an output stream), and tightDecode()
+ * (which takes either a string or an input stream as its argument).
  *
- * For Regina's own data types where tight encodings are supported, these are
- * provided through tightEncode() and tightEncoding() member functions of the
- * corresponding classes.  The few classes that support decoding also have
- * static tightDecode() functions.
+ * For Regina's own data types where tight encodings and/or decodings are
+ * supported, these are provided through tightEncode(), tightEncoding(), and
+ * static tightDecode() member functions of the corresponding classes.
  */
 
 /**
