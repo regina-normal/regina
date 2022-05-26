@@ -370,8 +370,24 @@ Int tightDecodeInteger(iterator start, iterator limit,
                     "integer type");
         } else if (c < 33 || c > 122) {
             throw InvalidArgument("The tight encoding is invalid");
+        } else if constexpr (sizeof(Int) < 4) {
+            // The result needs at least 4 bytes, possibly more.
+            // This *will* overflow.
+
+            // We still do the negativity check, since as a general rule
+            // we prioritise "type is unsigned" errors over "type too small".
+            if constexpr (std::is_unsigned_v<Int>)
+                if (c > 77)
+                    throw InvalidArgument("The tight encoding describes "
+                        "a negative integer but the integer type is unsigned");
+
+            overflow = true;
+            goto endDecoding;
         } else {
             // The result needs at least 4 bytes, but possibly more.
+            // In this if/else branch we have a compile-time guarantee that
+            // Int has >= 4 bytes.  This *might* overflow - we won't know
+            // until we see more of the encoding.
 
             // Identify whether this encodes a positive or negative number.
             bool negative = (c > 77);
@@ -382,13 +398,6 @@ Int tightDecodeInteger(iterator start, iterator limit,
                         "a negative integer but the integer type is "
                         "unsigned");
                 }
-            }
-            if constexpr (sizeof(Int) < 4) {
-                overflow = true;
-                goto endDecoding;
-            }
-
-            if (negative) {
                 result = -368562;
                 result -= c;
             } else {
