@@ -1302,6 +1302,9 @@
 		05870CB41FAD250E00835F9E /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05870CB11FAD250900835F9E /* modellinkgraph.cpp */; };
 		05888BD3283F045300181D2D /* tightencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05888BD1283F044900181D2D /* tightencoding.cpp */; };
 		05888BD4283F045500181D2D /* tightencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05888BD1283F044900181D2D /* tightencoding.cpp */; };
+		05888BD7283F0F8B00181D2D /* tightencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05888BD5283F0F8B00181D2D /* tightencoding.cpp */; };
+		05888BD8283F0F8B00181D2D /* tightencoding-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05888BD6283F0F8B00181D2D /* tightencoding-impl.h */; };
+		05888BD9283F0FA100181D2D /* tightencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05888BD5283F0F8B00181D2D /* tightencoding.cpp */; };
 		0588C2A31FD8D1350093C2C9 /* rewrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A11FD8D1340093C2C9 /* rewrite.cpp */; };
 		0588C2A41FD8D1350093C2C9 /* sig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A21FD8D1340093C2C9 /* sig.cpp */; };
 		0588C2A51FD8D13C0093C2C9 /* rewrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A11FD8D1340093C2C9 /* rewrite.cpp */; };
@@ -3837,6 +3840,8 @@
 		05870CB11FAD250900835F9E /* modellinkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
 		05888BD0283F042400181D2D /* tight-notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "tight-notes.txt"; sourceTree = "<group>"; };
 		05888BD1283F044900181D2D /* tightencoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tightencoding.cpp; sourceTree = "<group>"; };
+		05888BD5283F0F8B00181D2D /* tightencoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tightencoding.cpp; sourceTree = "<group>"; };
+		05888BD6283F0F8B00181D2D /* tightencoding-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "tightencoding-impl.h"; sourceTree = "<group>"; };
 		0588C2A11FD8D1340093C2C9 /* rewrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rewrite.cpp; sourceTree = "<group>"; };
 		0588C2A21FD8D1340093C2C9 /* sig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sig.cpp; sourceTree = "<group>"; };
 		0588C2A71FD8D1740093C2C9 /* representations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = representations.c; sourceTree = "<group>"; };
@@ -6137,6 +6142,8 @@
 				052F9E7D180600FB00FAE4DF /* stringutils.h */,
 				05888BD0283F042400181D2D /* tight-notes.txt */,
 				057B0C9F26A2AB760017F5EA /* tightencoding.h */,
+				05888BD6283F0F8B00181D2D /* tightencoding-impl.h */,
+				05888BD5283F0F8B00181D2D /* tightencoding.cpp */,
 				052F9E75180600FB00FAE4DF /* trieset.h */,
 				0512E0A026DF356300DDB222 /* trieset.cpp */,
 				05199A5B25C63CCE0006B8FA /* typeutils.h */,
@@ -7889,6 +7896,7 @@
 				052FA066180600FB00FAE4DF /* facepair.h in Headers */,
 				055114CE1DCC476A00EC753C /* pachner.h in Headers */,
 				052F9F40180600FB00FAE4DF /* matrix2.h in Headers */,
+				05888BD8283F0F8B00181D2D /* tightencoding-impl.h in Headers */,
 				058C305F1DCAF6F8006162D2 /* forward.h in Headers */,
 				054209231DF28C990018AB24 /* context.h in Headers */,
 				05EDDA5527E31061001743C1 /* nmz_hash.h in Headers */,
@@ -9168,6 +9176,7 @@
 				05048A2326B274650088C978 /* perm6.cpp in Sources */,
 				052FA1EE1806129B00FAE4DF /* stdtoquad.cpp in Sources */,
 				05937A9A19CEC20900160F9A /* AngleViewController.mm in Sources */,
+				05888BD9283F0FA100181D2D /* tightencoding.cpp in Sources */,
 				052FA227180612DD00FAE4DF /* holonomy.c in Sources */,
 				052FA1A01806129B00FAE4DF /* perm5.cpp in Sources */,
 				05721EFC1F97156600A83FFC /* link.cpp in Sources */,
@@ -10253,6 +10262,7 @@
 				054208C11DF0D2740018AB24 /* simplesurfacebundle.cpp in Sources */,
 				052FA065180600FB00FAE4DF /* facepair.cpp in Sources */,
 				05870CB31FAD250900835F9E /* modellinkgraph.cpp in Sources */,
+				05888BD7283F0F8B00181D2D /* tightencoding.cpp in Sources */,
 				05AA71EE1FB17E0100186E30 /* flype.cpp in Sources */,
 				052F9F5D180600FB00FAE4DF /* text.cpp in Sources */,
 				05FB46E81DD92D4A00BB00E5 /* homgrouppresentation.cpp in Sources */,

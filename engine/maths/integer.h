@@ -46,6 +46,7 @@
 #include <gmp.h>
 #include "regina-core.h"
 #include "utilities/exception.h"
+#include "utilities/intutils.h"
 #include "utilities/tightencoding.h"
 
 /**

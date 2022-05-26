@@ -37,7 +37,7 @@
 #include "testsuite/utilities/testutilities.h"
 #include "maths/integer.h"
 #include "utilities/intutils.h"
-#include "utilities/tightencoding.h"
+#include "utilities/tightencoding-impl.h"
 
 using regina::Integer;
 using regina::LargeInteger;
