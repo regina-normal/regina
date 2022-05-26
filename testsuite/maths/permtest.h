@@ -36,6 +36,7 @@
 #include <type_traits>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/perm.h"
+#include "testsuite/utilities/tightencodingtest.h"
 
 using regina::Perm;
 
@@ -74,8 +75,12 @@ template <> inline std::array<int, 7> miscPermImg<7> { 4, 6, 2, 3, 0, 5, 1 };
  * classes Perm<n> whose codes are indices into S_n.
  */
 template <int n>
-class SmallPermTest : public CppUnit::TestFixture {
+class SmallPermTest :
+        public CppUnit::TestFixture, public TightEncodingTest<Perm<n>> {
     static_assert(Perm<n>::codeType == regina::PERM_CODE_INDEX);
+
+    public:
+        using TightEncodingTest<Perm<n>>::verifyTightEncoding;
 
     private:
         static constexpr bool requiresPrecompute = (n == 6 || n == 7);
@@ -998,58 +1003,8 @@ class SmallPermTest : public CppUnit::TestFixture {
         }
 
         void tightEncoding() {
-            for (Index i = 0; i < nPerms; ++i) {
-                Perm<n> p = Perm<n>::Sn[i];
-
-                std::ostringstream out;
-                p.tightEncode(out);
-
-                std::string enc = p.tightEncoding();
-
-                if (enc != out.str()) {
-                    std::ostringstream msg;
-                    msg << "Permutation #" << i
-                        << " has inconsistent tightEncoding() vs "
-                            "tightEncode(): " << enc << ' ' << out.str();
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                for (char c : enc)
-                    if (c < 33 || c > 126) {
-                        std::ostringstream msg;
-                        msg << "Permutation #" << i
-                            << " has non-printable character "
-                            << static_cast<int>(c) << " in tight encoding.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
-
-                try {
-                    Perm<n> q = Perm<n>::tightDecode(enc);
-                    if (q != p) {
-                        std::ostringstream msg;
-                        msg << "The tight encoding for permutation #" << i
-                            << " does not decode to the same permutation.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
-                } catch (const regina::InvalidArgument&) {
-                    std::ostringstream msg;
-                    msg << "The tight encoding for permutation #" << i
-                        << " does not decode at all.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                try {
-                    enc += ' ';
-                    Perm<n>::tightDecode(enc);
-
-                    std::ostringstream msg;
-                    msg << "The tight encoding for permutation #" << i
-                        << " decodes with trailing whitespace (which "
-                        "it should not).";
-                    CPPUNIT_FAIL(msg.str());
-                } catch (const regina::InvalidArgument&) {
-                }
-            }
+            for (Index i = 0; i < nPerms; ++i)
+                verifyTightEncoding(Perm<n>::Sn[i]);
         }
 };
 
