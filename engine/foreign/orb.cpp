@@ -156,8 +156,6 @@ std::shared_ptr<PacketOf<Triangulation<3>>> cassonToTriangulation(
                 tet[t1]->join( tei1->f1 , tet[t2], // 1st entry is the face of tet[t1]
                                 Perm<4>(a1,b2,a2,b1,a3,b3,a4,b4) ); // being attached to tet[t2]
 
-                tet[t2]->join( tei2->f2 , tet[t1],
-                                Perm<4>(b1,a2,b2,a1,b3,a3,b4,a4) );
 
                 tei1 = tei1->next;
                 }
