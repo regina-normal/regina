@@ -473,30 +473,49 @@ class Triangulation3Test : public TriangulationTest<3> {
         static void verifyMagic(const Triangulation<3>& t, const char* name) {
             std::string sig = t.isoSig();
 
-            {
+            try {
                 Triangulation<3> recon(sig);
                 if (recon.isoSig() != sig) {
                     std::ostringstream msg;
-                    msg << name << ": cannot reconstruct from "
+                    msg << name << ": cannot reconstruct correctly from "
                         "isomorphism signature using magic constructor.";
                     CPPUNIT_FAIL(msg.str());
                 }
+            } catch (const regina::InvalidArgument&) {
+                std::ostringstream msg;
+                msg << name << ": cannot reconstruct at all from "
+                    "isomorphism signature using magic constructor.";
+                CPPUNIT_FAIL(msg.str());
             }
             if (t.isConnected() && (! t.hasBoundaryTriangles()) &&
                     t.size() <= 25) {
-                Triangulation<3> recon(t.dehydrate());
-                if (recon.isoSig() != sig) {
+                try {
+                    Triangulation<3> recon(t.dehydrate());
+                    if (recon.isoSig() != sig) {
+                        std::ostringstream msg;
+                        msg << name << ": cannot reconstruct correctly from "
+                            "dehydration string using magic constructor.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } catch (const regina::InvalidArgument&) {
                     std::ostringstream msg;
-                    msg << name << ": cannot reconstruct from "
+                    msg << name << ": cannot reconstruct at all from "
                         "dehydration string using magic constructor.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
             if ((! t.isEmpty()) && t.isValid() && ! t.hasBoundaryTriangles()) {
-                Triangulation<3> recon(t.snapPea());
-                if (recon.isoSig() != sig) {
+                try {
+                    Triangulation<3> recon(t.snapPea());
+                    if (recon.isoSig() != sig) {
+                        std::ostringstream msg;
+                        msg << name << ": cannot reconstruct correctly from "
+                            "SnapPea data using magic constructor.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } catch (const regina::InvalidArgument&) {
                     std::ostringstream msg;
-                    msg << name << ": cannot reconstruct from "
+                    msg << name << ": cannot reconstruct at all from "
                         "SnapPea data using magic constructor.";
                     CPPUNIT_FAIL(msg.str());
                 }

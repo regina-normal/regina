@@ -85,6 +85,8 @@ Version 7.1  [ TODO ]
               previously private, and had a more complex interface).
             - New suite of routines dualToPrimal().
             - New routine pairing().
+            - The join() routine now checks all its preconditions, and
+              throws an exception if any precondition fails.
         Class Triangulation<4>:
             - New routine intersectionForm().
             - New optimisations that reduce the need for 3-sphere/3-ball

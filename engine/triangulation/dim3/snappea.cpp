@@ -126,9 +126,18 @@ Triangulation<3> Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
         }
 
         // Perform the gluings.
-        for (j=0; j<4; j++)
-            tet[i]->join(j, tet[g[j]],
-                Perm<4>(p[j][0], p[j][1], p[j][2], p[j][3]));
+        for (j=0; j<4; j++) {
+            Perm<4> gluing(p[j][0], p[j][1], p[j][2], p[j][3]);
+            if (auto adj = tet[i]->adjacentSimplex(j)) {
+                // This gluing has already been made from the other side.
+                if (adj != tet[g[j]] || tet[i]->adjacentGluing(j) != gluing) {
+                    delete[] tet;
+                    throw InvalidArgument("fromSnapPea(): "
+                        "inconsistent tetrahedron gluings");
+                }
+            } else
+                tet[i]->join(j, tet[g[j]], gluing);
+        }
 
         // Read in junk.
         for (j=0; j<4; j++)

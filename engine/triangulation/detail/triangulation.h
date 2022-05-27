@@ -4630,7 +4630,7 @@ void TriangulationBase<dim>::barycentricSubdivision() {
         newSimp[simp] = staging.newSimplex();
 
     // Do all of the internal gluings
-    int permIdx;
+    typename Perm<dim+1>::Index permIdx, adjIdx;
     Perm<dim+1> perm, glue;
     int i;
     for (simp=0; simp < nOld; ++simp)
@@ -4638,11 +4638,13 @@ void TriangulationBase<dim>::barycentricSubdivision() {
             perm = Perm<dim+1>::orderedSn[permIdx];
 
             // Internal gluings within the old simplex:
-            for (i = 0; i < dim; ++i)
-                newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[i],
-                    newSimp[Perm<dim+1>::nPerms * simp +
-                        (perm * Perm<dim+1>(i, i+1)).orderedSnIndex()],
-                    Perm<dim+1>(perm[i], perm[i+1]));
+            for (i = 0; i < dim; ++i) {
+                adjIdx = (perm * Perm<dim+1>(i, i+1)).orderedSnIndex();
+                if (permIdx < adjIdx)
+                    newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[i],
+                        newSimp[Perm<dim+1>::nPerms * simp + adjIdx],
+                        Perm<dim+1>(perm[i], perm[i+1]));
+            }
 
             // Adjacent gluings to the adjacent simplex:
             Simplex<dim>* oldSimp = simplex(simp);

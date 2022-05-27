@@ -93,8 +93,9 @@ bool Triangulation<3>::idealToFinite() {
         for (j=0; j<4; j++)
             for (k=0; k<4; k++)
                 if (j != k) {
-                    newTet[edge[j][k] + i * nDiv]->join(j,
-                        newTet[edge[k][j] + i * nDiv], Perm<4>(j,k));
+                    if (j < k)
+                        newTet[edge[j][k] + i * nDiv]->join(j,
+                            newTet[edge[k][j] + i * nDiv], Perm<4>(j,k));
 
                     for (l=0; l<4; l++)
                         if ( (l != j) && (l != k) )
@@ -113,6 +114,10 @@ bool Triangulation<3>::idealToFinite() {
             if (ot->adjacentTetrahedron(j)) {
                  oppTet = ot->adjacentTetrahedron(j)->index();
                  p = ot->adjacentGluing(j);
+
+                 // Do each gluing from one side only.
+                 if (oppTet < i || (oppTet == i && p[j] < j))
+                    continue;
 
                  // First deal with the tip tetrahedra.
                  for (k=0; k<4; k++)
