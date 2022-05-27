@@ -41,6 +41,7 @@ void addTightEncoding(pybind11::module_& m) {
     // global tightEncoding() function.
     m.def("tightEncoding", (std::string (*)(long))(&regina::tightEncoding));
     m.def("tightEncoding", (std::string (*)(long long))(&regina::tightEncoding));
+    m.def("tightEncoding", (std::string (*)(bool))(&regina::tightEncoding));
     m.def("tightDecode", [](const std::string& enc) {
         // Try a native integer conversion first.
         try {

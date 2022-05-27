@@ -47,6 +47,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST(integer);
     CPPUNIT_TEST(infinity);
+    CPPUNIT_TEST(boolean);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -510,6 +511,105 @@ class TightEncodingTest : public CppUnit::TestFixture {
             // supported in the standard library with iostreams/typeinfo/etc.
             verifyInfinityUsing<Integer>(enc);
             verifyInfinityUsing<LargeInteger>(enc);
+        }
+
+        static void verifyBoolean(bool value, const std::string& enc) {
+            {
+                std::string s = regina::tightEncoding(value);
+                if (s != enc) {
+                    std::ostringstream msg;
+                    msg << "The tight encoding as an output stream for "
+                        << value << " is not consistent with the "
+                        "corresponding integer encoding.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            {
+                std::ostringstream out;
+                regina::tightEncode(out, value);
+                if (out.str() != enc) {
+                    std::ostringstream msg;
+                    msg << "The tight encoding as an output stream for "
+                        << value << " is not consistent with the "
+                        "corresponding integer encoding.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            try {
+                bool dec = regina::tightDecode<bool>(enc);
+                if (dec != value) {
+                    std::ostringstream msg;
+                    msg << "The tight encoding for " << value
+                        << " does not decode as a string to the same value.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } catch (const regina::InvalidArgument&) {
+                std::ostringstream msg;
+                msg << "The tight encoding for " << value
+                    << " does not decode as a string at all.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            try {
+                std::istringstream input(enc);
+                bool dec = regina::tightDecode<bool>(input);
+                if (dec != value) {
+                    std::ostringstream msg;
+                    msg << "The tight encoding for " << value
+                        << " does not decode as an input stream "
+                        "to the same value.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } catch (const regina::InvalidInput&) {
+                std::ostringstream msg;
+                msg << "The tight encoding for " << value
+                    << " does not decode as an input stream at all.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            try {
+                regina::tightDecode<bool>(enc + ' ');
+
+                std::ostringstream msg;
+                msg << "The tight encoding for " << value
+                    << " decodes as a string with trailing whitespace "
+                    "(which it should not).";
+                CPPUNIT_FAIL(msg.str());
+            } catch (const regina::InvalidArgument&) {
+            }
+
+            try {
+                std::istringstream input(enc + "x y z");
+                bool dec = regina::tightDecode<bool>(input);
+                if (dec != value) {
+                    std::ostringstream msg;
+                    msg << "The tight encoding for " << value
+                        << " does not decode as an input stream "
+                        "with trailing characters to the same value.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                char c;
+                input >> c;
+                if ((! input) || (c != 'x')) {
+                    std::ostringstream msg;
+                    msg << "The tight encoding for " << value
+                        << " consumes trailing characters when "
+                        "decoding as an input stream.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } catch (const regina::InvalidInput&) {
+                std::ostringstream msg;
+                msg << "The tight encoding for " << value
+                    << " does not decode as an input stream "
+                    "with trailing characters at all.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void boolean() {
+            verifyBoolean(true, regina::tightEncoding(1));
+            verifyBoolean(false, regina::tightEncoding(0));
         }
 };
 

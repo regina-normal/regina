@@ -96,8 +96,10 @@ Version 7.1  [ TODO ]
         Function for_constexpr():
             - New routine to support compile-time for loops.
         Function tightDecode():
-            - New template function that reconstructs integers from
-              tight encodings.
+            - New template function that reconstructs integers and booleans
+              from tight encodings.
+        Functions tightEncode(), tightEncoding():
+            - Added a global function to encode booleans.
         Global constants maxSafeFactor<...> and minSafeFactor<...>:
             - Added to facilitate overflow checking with native integer
               operations.
