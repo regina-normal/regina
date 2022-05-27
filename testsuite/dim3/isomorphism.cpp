@@ -37,6 +37,7 @@
 #include "triangulation/dim3.h"
 #include "triangulation/example3.h"
 #include "testsuite/dim3/testtriangulation.h"
+#include "testsuite/utilities/tightencodingtest.h"
 
 using regina::AbelianGroup;
 using regina::Example;
@@ -45,7 +46,8 @@ using regina::Perm;
 using regina::Tetrahedron;
 using regina::Triangulation;
 
-class Isomorphism3Test : public CppUnit::TestFixture {
+class Isomorphism3Test :
+        public CppUnit::TestFixture, public TightEncodingTest<Isomorphism<3>> {
     CPPUNIT_TEST_SUITE(Isomorphism3Test);
 
     CPPUNIT_TEST(enumeration);
@@ -53,6 +55,7 @@ class Isomorphism3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(isomorphic);
     CPPUNIT_TEST(inverse);
     CPPUNIT_TEST(automorphismsAndSubcomplexes);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -372,6 +375,36 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             testAutomorphismsAndSubcomplexes(untwisted5, "C(5)", 20);
             testAutomorphismsAndSubcomplexes(aug, "A(3,-1 | 5,-3)", 1);
             testAutomorphismsAndSubcomplexes(ball, "Ball", 24);
+        }
+
+        void tightEncoding() {
+            // Cases where the isomorphism is empty:
+            verifyTightEncoding(Isomorphism<3>(0));
+
+            // Cases where the isomorphism is a permutation:
+            twisted5.findAllIsomorphisms(twisted5,
+                    [](const Isomorphism<3>& iso) {
+                verifyTightEncoding(iso);
+                return false;
+            });
+
+            // Cases where the isomorphism contains higher-numbered
+            // simplex images (i.e., there are "gaps" in the simplex images):
+            ball.findAllSubcomplexesIn(twisted5, [](const Isomorphism<3>& iso) {
+                verifyTightEncoding(iso);
+                return false;
+            });
+
+            // Cases where the isomorphism includes some uninitialised
+            // simplex images:
+            {
+                Isomorphism<3> iso(2);
+                iso.simpImage(0) = -1;
+                iso.simpImage(1) = 3;
+                iso.facetPerm(0) = Perm<4>(1,3,2,0);
+                iso.facetPerm(1) = Perm<4>(3,2,0,1);
+                verifyTightEncoding(iso);
+            }
         }
 };
 

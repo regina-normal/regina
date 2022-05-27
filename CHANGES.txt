@@ -45,7 +45,7 @@ Version 7.1  [ TODO ]
             - New tightDecoding() routines.
         Class IntersectionForm:
             - New class to compute invariants of intersection forms.
-        Class Isomorphism:
+        Class Isomorphism<dim>:
             - Replaced apply() with the bracket operator.  The old apply()
               is now a deprecated alias.
             - Deprecated applyInPlace(), since this is no faster than
@@ -54,6 +54,7 @@ Version 7.1  [ TODO ]
               FacetSpec or a FacetPairing.
             - Added pre/postincrement operators for iterating through
               all permutations of a given size.
+            - Added tightEncode(), tightEncoding() and tightDecoding().
         Class LargeInteger:
             - New tightDecoding() routines.
         Class Laurent<T>, Laurent2<T>:

@@ -51,7 +51,7 @@
 template <class T, bool hasDecoding = true>
 class TightEncodingTest {
     public:
-        void verifyTightEncoding(const T& obj) {
+        static void verifyTightEncoding(const T& obj) {
             std::string enc = obj.tightEncoding();
 
             {

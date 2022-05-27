@@ -85,6 +85,9 @@ void addIsomorphism2(pybind11::module_& m) {
         .def("inc", [](Isomorphism<2>& iso) {
             ++iso;
         })
+        .def("tightEncoding", &Isomorphism<2>::tightEncoding)
+        .def_static("tightDecoding", overload_cast<const std::string&>(
+            &Isomorphism<2>::tightDecoding))
         .def_static("random", &Isomorphism<2>::random,
             pybind11::arg(), pybind11::arg("even") = false)
         .def_static("identity", &Isomorphism<2>::identity)

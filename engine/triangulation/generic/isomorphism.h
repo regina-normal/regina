@@ -51,6 +51,7 @@
 #include "maths/perm.h"
 #include "utilities/exception.h"
 #include "utilities/randutils.h"
+#include "utilities/tightencoding.h"
 #include <sys/types.h> // for ssize_t
 #include <algorithm>
 
@@ -567,6 +568,68 @@ class Isomorphism :
         Isomorphism<dim> operator ++(int);
 
         /**
+         * Writes the tight encoding of this isomorphism to the given output
+         * stream.  See the page on \ref tight "tight encodings" for details.
+         *
+         * \ifacespython Not present; use tightEncoding() instead.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
+
+        /**
+         * Returns the tight encoding of this isomorphism.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * @return the resulting encoded string.
+         */
+        std::string tightEncoding() const;
+
+        /**
+         * Reconstructs an isomorphism from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be given as a string.  If this string
+         * contains leading whitespace or any trailing characters at all
+         * (including trailing whitespace), then it will be treated as
+         * an invalid encoding (i.e., this routine will throw an exception).
+         *
+         * \exception InvalidArgument the given string is not a tight encoding
+         * of an isomorphism on <i>dim</i>-dimensional triangulations.
+         *
+         * @param enc the tight encoding for an isomorphism on
+         * <i>dim</i>-dimensional triangulations.
+         * @return the isomorphism represented by the given tight encoding.
+         */
+        static Isomorphism tightDecoding(const std::string& enc);
+
+        /**
+         * Reconstructs an isomorphism from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.
+         * If the input stream contains leading whitespace then it will be
+         * treated as an invalid encoding (i.e., this routine will throw an
+         * exception).  The input routine \e may contain further data: if this
+         * routine is successful then the input stream will be left positioned
+         * immediately after the encoding, without skipping any trailing
+         * whitespace.
+         *
+         * \exception InvalidInput the given input stream does not begin with
+         * a tight encoding of an isomorphism on <i>dim</i>-dimensional
+         * triangulations.
+         *
+         * \ifacespython Not present, but the string version of this routine
+         * is available.
+         *
+         * @param input an input stream that begins with the tight encoding
+         * for an isomorphism on <i>dim</i>-dimensional triangulations.
+         * @return the isomorphism represented by the given tight encoding.
+         */
+        static Isomorphism tightDecoding(std::istream& input);
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -927,6 +990,55 @@ inline Isomorphism<dim> Isomorphism<dim>::operator ++(int) {
     Isomorphism<dim> prev(*this);
     ++(*this);
     return prev;
+}
+
+template <int dim>
+inline void Isomorphism<dim>::tightEncode(std::ostream& out) const {
+    regina::tightEncode(out, nSimplices_);
+    for (size_t i = 0; i < nSimplices_; ++i) {
+        regina::tightEncode(out, simpImage_[i]);
+        facetPerm_[i].tightEncode(out);
+    }
+}
+
+template <int dim>
+inline std::string Isomorphism<dim>::tightEncoding() const {
+    std::ostringstream out;
+    tightEncode(out);
+    return out.str();
+}
+
+template <int dim>
+inline Isomorphism<dim> Isomorphism<dim>::tightDecoding(
+        const std::string& enc) {
+    std::istringstream s(enc);
+    try {
+        Isomorphism ans = tightDecoding(s);
+        if (s.get() != EOF)
+            throw InvalidArgument("The tight encoding has trailing characters");
+        return ans;
+    } catch (const InvalidInput& exc) {
+        // For strings we use a different exception type.
+        throw InvalidArgument(exc.what());
+    }
+}
+
+template <int dim>
+inline Isomorphism<dim> Isomorphism<dim>::tightDecoding(std::istream& input) {
+    size_t n = regina::tightDecoding<size_t>(input);
+    Isomorphism ans(n);
+
+    for (size_t i = 0; i < n; ++i) {
+        // We don't check the values of simpImage_[...], since we want to
+        // support the negative "unknown" placeholder value for simpImage_[...].
+        ans.simpImage_[i] = regina::tightDecoding<ssize_t>(input);
+
+        // Perm<dim+1>::tightDecoding() will check the validity of the
+        // permutations that are read.
+        ans.facetPerm_[i] = Perm<dim+1>::tightDecoding(input);
+    }
+
+    return ans;
 }
 
 template <int dim>
