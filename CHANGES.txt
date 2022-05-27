@@ -56,6 +56,8 @@ Version 7.1  [ TODO ]
               all permutations of a given size.
         Class LargeInteger:
             - New tightDecode() routines.
+        Class Laurent<T>, Laurent2<T>:
+            - New tightDecode() routines.
         Class Matrix:
             - Routine det() now throws an exception if the matrix is not
               square (this is a precondition), and now returns 1 if the

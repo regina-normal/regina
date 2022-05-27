@@ -35,16 +35,19 @@
 #include "maths/integer.h"
 #include "maths/laurent.h"
 #include "utilities/stringutils.h"
-#include "testsuite/utilities/testutilities.h"
+#include "testsuite/maths/testmaths.h"
+#include "testsuite/utilities/tightencodingtest.h"
 
 using regina::Integer;
 using regina::Laurent;
 
-class LaurentTest : public CppUnit::TestFixture {
+class LaurentTest : public CppUnit::TestFixture,
+        public TightEncodingTest<Laurent<Integer>> {
     CPPUNIT_TEST_SUITE(LaurentTest);
 
     CPPUNIT_TEST(set);
     CPPUNIT_TEST(arithmetic);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -342,6 +345,20 @@ class LaurentTest : public CppUnit::TestFixture {
                 verifyEqual<Integer>(x * x, -2, {1, 0, 2, 0, 1});
                 verifyEqual<Integer>(x *= x, -2, {1, 0, 2, 0, 1});
             }
+        }
+
+        void tightEncoding() {
+            verifyTightEncoding(zero);
+            verifyTightEncoding(zero2);
+            verifyTightEncoding(zero3);
+            verifyTightEncoding(one);
+            verifyTightEncoding(two);
+            verifyTightEncoding(x2);
+            verifyTightEncoding(a);
+            verifyTightEncoding(b);
+            verifyTightEncoding(c);
+            verifyTightEncoding(d);
+            verifyTightEncoding(e);
         }
 };
 
