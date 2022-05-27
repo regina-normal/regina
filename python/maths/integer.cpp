@@ -128,8 +128,8 @@ void addInteger(pybind11::module_& m) {
         .def("makeLarge", &Integer::makeLarge)
         .def("tryReduce", &Integer::tryReduce)
         .def("tightEncoding", &Integer::tightEncoding)
-        .def_static("tightDecode", overload_cast<const std::string&>(
-            &Integer::tightDecode))
+        .def_static("tightDecoding", overload_cast<const std::string&>(
+            &Integer::tightDecoding))
         .def(long() + pybind11::self)
         .def(long() * pybind11::self)
         .def_readonly_static("zero", &Integer::zero)

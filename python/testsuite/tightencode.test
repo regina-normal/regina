@@ -38,7 +38,7 @@ def doLong(val):
 			Integer(val).tightEncoding(), LargeInteger(val).tightEncoding() ]:
 		if i != enc:
 			print("ERROR: Inconsistent encodings")
-	if tightDecode(enc) != val:
+	if tightDecoding(enc) != val:
 		print("ERROR: Inconsistent decoding")
 
 def doLarge(val):
@@ -48,7 +48,7 @@ def doLarge(val):
 			Integer(val).tightEncoding(), LargeInteger(val).tightEncoding() ]:
 		if i != enc:
 			print("ERROR: Inconsistent encodings")
-	if str(tightDecode(enc)) != val:
+	if str(tightDecoding(enc)) != val:
 		print("ERROR: Inconsistent decoding")
 
 def doUnsigned(val):

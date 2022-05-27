@@ -460,7 +460,7 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * @param enc the tight encoding for an abelian group.
          * @return the abelian group represented by the given tight encoding.
          */
-        static AbelianGroup tightDecode(const std::string& enc);
+        static AbelianGroup tightDecoding(const std::string& enc);
 
         /**
          * Reconstructs an abelian group from its given tight encoding.
@@ -484,7 +484,7 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * for an abelian group.
          * @return the abelian group represented by the given tight encoding.
          */
-        static AbelianGroup tightDecode(std::istream& input);
+        static AbelianGroup tightDecoding(std::istream& input);
 
         /**
          * Writes a chunk of XML containing this abelian group.
@@ -641,10 +641,10 @@ inline std::string AbelianGroup::tightEncoding() const {
     return out.str();
 }
 
-inline AbelianGroup AbelianGroup::tightDecode(const std::string& enc) {
+inline AbelianGroup AbelianGroup::tightDecoding(const std::string& enc) {
     std::istringstream s(enc);
     try {
-        AbelianGroup ans = tightDecode(s);
+        AbelianGroup ans = tightDecoding(s);
         if (s.get() != EOF)
             throw InvalidArgument("The tight encoding has trailing characters");
         return ans;

@@ -930,7 +930,7 @@ class Perm<6> {
          * @param enc the tight encoding for a 6-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
-        static Perm tightDecode(const std::string& enc);
+        static Perm tightDecoding(const std::string& enc);
 
         /**
          * Reconstructs a permutation from its given tight encoding.
@@ -958,7 +958,7 @@ class Perm<6> {
          * for a 6-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
-        static Perm tightDecode(std::istream& input);
+        static Perm tightDecoding(std::istream& input);
 
         /**
          * Resets the images of all integers from \a from onwards to the
@@ -3073,7 +3073,7 @@ class Perm<6> {
          * @return the permutation represented by the given tight encoding.
          */
         template <typename iterator>
-        static Perm tightDecode(iterator start, iterator limit,
+        static Perm tightDecoding(iterator start, iterator limit,
             bool noTrailingData);
 };
 
@@ -3377,22 +3377,22 @@ inline std::string Perm<6>::tightEncoding() const {
     return ans;
 }
 
-inline Perm<6> Perm<6>::tightDecode(const std::string& enc) {
+inline Perm<6> Perm<6>::tightDecoding(const std::string& enc) {
     try {
-        return tightDecode(enc.begin(), enc.end(), true);
+        return tightDecoding(enc.begin(), enc.end(), true);
     } catch (const InvalidInput& exc) {
         // For strings we use a different exception type.
         throw InvalidArgument(exc.what());
     }
 }
 
-inline Perm<6> Perm<6>::tightDecode(std::istream& input) {
-    return tightDecode(std::istreambuf_iterator<char>(input),
+inline Perm<6> Perm<6>::tightDecoding(std::istream& input) {
+    return tightDecoding(std::istreambuf_iterator<char>(input),
         std::istreambuf_iterator<char>(), false);
 }
 
 template <typename iterator>
-Perm<6> Perm<6>::tightDecode(iterator start, iterator limit,
+Perm<6> Perm<6>::tightDecoding(iterator start, iterator limit,
         bool noTrailingData) {
     // All codes are >= 0 because we are using an unsigned data type.
     if (start == limit)

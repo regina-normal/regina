@@ -230,7 +230,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
 }
 
 template <typename Int, typename iterator>
-Int tightDecodeInteger(iterator start, iterator limit,
+Int tightDecodingInteger(iterator start, iterator limit,
         bool noTrailingData) {
     static_assert((std::is_integral_v<Int> && ! std::is_same_v<Int, bool>)
             || IsReginaArbitraryPrecisionInteger<Int>::value,

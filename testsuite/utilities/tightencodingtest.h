@@ -77,7 +77,7 @@ class TightEncodingTest {
 
             if constexpr (hasDecoding) {
                 try {
-                    T dec = T::tightDecode(enc);
+                    T dec = T::tightDecoding(enc);
                     if (dec != obj) {
                         std::ostringstream msg;
                         msg << "The tight encoding for object " << obj.str()
@@ -94,7 +94,7 @@ class TightEncodingTest {
 
                 try {
                     std::istringstream input(enc);
-                    T dec = T::tightDecode(input);
+                    T dec = T::tightDecoding(input);
                     if (dec != obj) {
                         std::ostringstream msg;
                         msg << "The tight encoding for object " << obj.str()
@@ -111,7 +111,7 @@ class TightEncodingTest {
 
                 try {
                     enc += ' ';
-                    T::tightDecode(enc);
+                    T::tightDecoding(enc);
 
                     std::ostringstream msg;
                     msg << "The tight encoding for object " << obj.str()
@@ -123,7 +123,7 @@ class TightEncodingTest {
 
                 try {
                     std::istringstream input(enc + "x y z");
-                    T dec = T::tightDecode(input);
+                    T dec = T::tightDecoding(input);
                     if (dec != obj) {
                         std::ostringstream msg;
                         msg << "The tight encoding for object " << obj.str()

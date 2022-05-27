@@ -102,8 +102,8 @@ void addPerm3(pybind11::module_& m) {
         .def("trunc", &Perm<3>::trunc)
         .def("trunc2", &Perm<3>::trunc2)
         .def("tightEncoding", &Perm<3>::tightEncoding)
-        .def_static("tightDecode",
-            (Perm<3> (*)(const std::string&))(&Perm<3>::tightDecode))
+        .def_static("tightDecoding",
+            (Perm<3> (*)(const std::string&))(&Perm<3>::tightDecoding))
         .def("clear", &Perm<3>::clear)
         .def("S3Index", &Perm<3>::S3Index)
         .def("SnIndex", &Perm<3>::SnIndex)

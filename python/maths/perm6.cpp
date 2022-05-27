@@ -113,8 +113,8 @@ void addPerm6(pybind11::module_& m) {
             pybind11::arg("even") = false)
         .def("trunc", &Perm<6>::trunc)
         .def("tightEncoding", &Perm<6>::tightEncoding)
-        .def_static("tightDecode",
-            (Perm<6> (*)(const std::string&))(&Perm<6>::tightDecode))
+        .def_static("tightDecoding",
+            (Perm<6> (*)(const std::string&))(&Perm<6>::tightDecoding))
         .def("clear", &Perm<6>::clear)
         .def("S6Index", (int (Perm<6>::*)() const) &Perm<6>::S6Index)
         .def("SnIndex", &Perm<6>::SnIndex)

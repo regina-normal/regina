@@ -15,7 +15,7 @@ Version 7.1  [ TODO ]
         - Removed all code that was deprecated in or before version 7.0.
     ENGINE:
         Class AbelianGroup:
-            - New tightDecode() routines.
+            - New tightDecoding() routines.
         Class CallableArg<...>:
             - Now a public helper class in the main regina:: namespace.
             - Now behaves gracefully if the given index is out of range.
@@ -42,7 +42,7 @@ Version 7.1  [ TODO ]
             - The header no longer includes the Normaliz headers (which
               Regina does not actually ship with its development files).
         Class Integer:
-            - New tightDecode() routines.
+            - New tightDecoding() routines.
         Class IntersectionForm:
             - New class to compute invariants of intersection forms.
         Class Isomorphism:
@@ -55,9 +55,9 @@ Version 7.1  [ TODO ]
             - Added pre/postincrement operators for iterating through
               all permutations of a given size.
         Class LargeInteger:
-            - New tightDecode() routines.
+            - New tightDecoding() routines.
         Class Laurent<T>, Laurent2<T>:
-            - New tightDecode() routines.
+            - New tightDecoding() routines.
         Class Matrix:
             - Routine det() now throws an exception if the matrix is not
               square (this is a precondition), and now returns 1 if the
@@ -75,7 +75,7 @@ Version 7.1  [ TODO ]
             - New routine scaleDown().
             - New routine isNormalEdgeLink().
         Class Perm<n>:
-            - Added tightEncode(), tightEncoding() and tightDecode().
+            - Added tightEncode(), tightEncoding() and tightDecoding().
         Type safe_tuple_element<...>:
             - New type alias that is like std::tuple_element<...> but
               with well-defined behaviour for an out-of-range index.
@@ -95,7 +95,7 @@ Version 7.1  [ TODO ]
             - New routine linkingSurface().
         Function for_constexpr():
             - New routine to support compile-time for loops.
-        Function tightDecode():
+        Function tightDecoding():
             - New template function that reconstructs integers and booleans
               from tight encodings.
         Functions tightEncode(), tightEncoding():

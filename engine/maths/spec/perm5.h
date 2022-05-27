@@ -1051,7 +1051,7 @@ class Perm<5> {
          * @param enc the tight encoding for a 5-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
-        static Perm tightDecode(const std::string& enc);
+        static Perm tightDecoding(const std::string& enc);
 
         /**
          * Reconstructs a permutation from its given tight encoding.
@@ -1079,7 +1079,7 @@ class Perm<5> {
          * for a 5-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
-        static Perm tightDecode(std::istream& input);
+        static Perm tightDecoding(std::istream& input);
 
         /**
          * Resets the images of all integers from \a from onwards to the
@@ -1511,7 +1511,7 @@ class Perm<5> {
          * @return the permutation represented by the given tight encoding.
          */
         template <typename iterator>
-        static Perm tightDecode(iterator start, iterator limit,
+        static Perm tightDecoding(iterator start, iterator limit,
             bool noTrailingData);
 };
 
@@ -1798,22 +1798,22 @@ inline std::string Perm<5>::tightEncoding() const {
     }
 }
 
-inline Perm<5> Perm<5>::tightDecode(const std::string& enc) {
+inline Perm<5> Perm<5>::tightDecoding(const std::string& enc) {
     try {
-        return tightDecode(enc.begin(), enc.end(), true);
+        return tightDecoding(enc.begin(), enc.end(), true);
     } catch (const InvalidInput& exc) {
         // For strings we use a different exception type.
         throw InvalidArgument(exc.what());
     }
 }
 
-inline Perm<5> Perm<5>::tightDecode(std::istream& input) {
-    return tightDecode(std::istreambuf_iterator<char>(input),
+inline Perm<5> Perm<5>::tightDecoding(std::istream& input) {
+    return tightDecoding(std::istreambuf_iterator<char>(input),
         std::istreambuf_iterator<char>(), false);
 }
 
 template <typename iterator>
-Perm<5> Perm<5>::tightDecode(iterator start, iterator limit,
+Perm<5> Perm<5>::tightDecoding(iterator start, iterator limit,
         bool noTrailingData) {
     if (start == limit)
         throw InvalidInput("The tight encoding is incomplete");

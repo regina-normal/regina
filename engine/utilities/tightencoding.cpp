@@ -48,24 +48,24 @@ template void tightEncodeInteger<unsigned long long>(std::ostream&,
 template void tightEncodeInteger<Integer>(std::ostream&, Integer);
 template void tightEncodeInteger<LargeInteger>(std::ostream&, LargeInteger);
 
-template int tightDecodeInteger<int, it1>(it1, it1, bool);
-template int tightDecodeInteger<int, it2>(it2, it2, bool);
-template long tightDecodeInteger<long, it1>(it1, it1, bool);
-template long tightDecodeInteger<long, it2>(it2, it2, bool);
-template long long tightDecodeInteger<long long, it1>(it1, it1, bool);
-template long long tightDecodeInteger<long long, it2>(it2, it2, bool);
-template unsigned tightDecodeInteger<unsigned, it1>(it1, it1, bool);
-template unsigned tightDecodeInteger<unsigned, it2>(it2, it2, bool);
-template unsigned long tightDecodeInteger<unsigned long, it1>(it1, it1, bool);
-template unsigned long tightDecodeInteger<unsigned long, it2>(it2, it2, bool);
-template unsigned long long tightDecodeInteger<unsigned long long, it1>(
+template int tightDecodingInteger<int, it1>(it1, it1, bool);
+template int tightDecodingInteger<int, it2>(it2, it2, bool);
+template long tightDecodingInteger<long, it1>(it1, it1, bool);
+template long tightDecodingInteger<long, it2>(it2, it2, bool);
+template long long tightDecodingInteger<long long, it1>(it1, it1, bool);
+template long long tightDecodingInteger<long long, it2>(it2, it2, bool);
+template unsigned tightDecodingInteger<unsigned, it1>(it1, it1, bool);
+template unsigned tightDecodingInteger<unsigned, it2>(it2, it2, bool);
+template unsigned long tightDecodingInteger<unsigned long, it1>(it1, it1, bool);
+template unsigned long tightDecodingInteger<unsigned long, it2>(it2, it2, bool);
+template unsigned long long tightDecodingInteger<unsigned long long, it1>(
     it1, it1, bool);
-template unsigned long long tightDecodeInteger<unsigned long long, it2>(
+template unsigned long long tightDecodingInteger<unsigned long long, it2>(
     it2, it2, bool);
-template Integer tightDecodeInteger<Integer, it1>(it1, it1, bool);
-template Integer tightDecodeInteger<Integer, it2>(it2, it2, bool);
-template LargeInteger tightDecodeInteger<LargeInteger, it1>(it1, it1, bool);
-template LargeInteger tightDecodeInteger<LargeInteger, it2>(it2, it2, bool);
+template Integer tightDecodingInteger<Integer, it1>(it1, it1, bool);
+template Integer tightDecodingInteger<Integer, it2>(it2, it2, bool);
+template LargeInteger tightDecodingInteger<LargeInteger, it1>(it1, it1, bool);
+template LargeInteger tightDecodingInteger<LargeInteger, it2>(it2, it2, bool);
 
 } // namespace regina::detail
 

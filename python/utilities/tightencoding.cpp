@@ -42,14 +42,14 @@ void addTightEncoding(pybind11::module_& m) {
     m.def("tightEncoding", (std::string (*)(long))(&regina::tightEncoding));
     m.def("tightEncoding", (std::string (*)(long long))(&regina::tightEncoding));
     m.def("tightEncoding", (std::string (*)(bool))(&regina::tightEncoding));
-    m.def("tightDecode", [](const std::string& enc) {
+    m.def("tightDecoding", [](const std::string& enc) {
         // Try a native integer conversion first.
         try {
-            return pybind11::cast(regina::tightDecode<long>(enc));
+            return pybind11::cast(regina::tightDecoding<long>(enc));
         } catch (const regina::InvalidArgument&) {
             // It could have been out of range.  Try arbitrary precision
             // integers before aborting.
-            regina::Integer ans = regina::tightDecode<regina::Integer>(enc);
+            regina::Integer ans = regina::tightDecoding<regina::Integer>(enc);
 
             // At this point we have a valid solution, so we should be
             // able to convert to a Python long via strings without trouble.

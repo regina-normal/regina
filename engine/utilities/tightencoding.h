@@ -100,15 +100,15 @@ class IntegerBase;
  * does provide matching \e decoding routines if you need to reconstruct
  * objects from their tight encodings.
  *
- * For native C++ data types where tight encodings and decodings are
- * supported, these are provided in the header utilities/tightencoding.h
- * through overloads of the global functions tightEncoding() (which returns a
- * string), tightEncode() (which writes to an output stream), and tightDecode()
+ * For native C++ data types where tight encodings and decodings are supported,
+ * these are provided in the header utilities/tightencoding.h through overloads
+ * of the global functions tightEncoding() (which returns a string),
+ * tightEncode() (which writes to an output stream), and tightDecoding()
  * (which takes either a string or an input stream as its argument).
  *
  * For Regina's own data types where tight encodings and decodings are
  * supported, these are provided through member functions tightEncode(),
- * tightEncoding() and tightDecode() within the corresponding classes.
+ * tightEncoding() and tightDecoding() within the corresponding classes.
  */
 
 /**
@@ -299,7 +299,7 @@ std::string tightEncoding(bool value);
  * regina::LargeInteger.
  *
  * If \a Int is one of Regina's arbitrary precision integer types, then
- * this routine is identical to calling Int::tightDecode().
+ * this routine is identical to calling Int::tightDecoding().
  *
  * \headers Some components of this routine are implemented in a separate
  * header (tightencoding-impl.h), which is not included automatically by this
@@ -316,13 +316,13 @@ std::string tightEncoding(bool value);
  *
  * \ifacespython Since Python does not support templates, the interface
  * for this routine is a little different.  The global routine
- * regina::tightDecode() will return a Python integer; since these are
+ * regina::tightDecoding() will return a Python integer; since these are
  * arbitrary precision, the decoding will never encounter an out-of-range
  * exceptions as it might with a native C++ integer type.  If you are trying
  * to reconstruct a boolean, then the integer you receive will be either 1 or 0
  * to represent \c true or \c false respectively.  If you are trying to
  * reconstruct one of Regina's arbitrary precision integer types, you should
- * instead call Integer::tightDecode() or LargeInteger::tightDecode(), which
+ * instead call Integer::tightDecoding() or LargeInteger::tightDecoding(), which
  * will return a Regina integer instead of a Python integer.
  *
  * \tparam Int The type of integer/boolean to reconstruct; this must be either
@@ -333,7 +333,7 @@ std::string tightEncoding(bool value);
  * @return the integer or boolean represented by the given tight encoding.
  */
 template<typename Int>
-Int tightDecode(const std::string& enc);
+Int tightDecoding(const std::string& enc);
 
 /**
  * Reconstructs an integer or boolean from its given tight encoding.
@@ -350,7 +350,7 @@ Int tightDecode(const std::string& enc);
  * regina::LargeInteger.
  *
  * If \a Int is one of Regina's arbitrary precision integer types, then
- * this routine is identical to calling Int::tightDecode().
+ * this routine is identical to calling Int::tightDecoding().
  *
  * \headers Some components of this routine are implemented in a separate
  * header (tightencoding-impl.h), which is not included automatically by this
@@ -377,7 +377,7 @@ Int tightDecode(const std::string& enc);
  * @return the integer or boolean represented by the given tight encoding.
  */
 template<typename Int>
-Int tightDecode(std::istream& input);
+Int tightDecoding(std::istream& input);
 
 namespace detail {
     /**
@@ -406,8 +406,8 @@ namespace detail {
 
     /**
      * Internal function that reconstructs an integer from its given tight
-     * encoding.  This should not be called directly; its purpose is to
-     * provide a common implementation for tightDecode() for all integer types.
+     * encoding.  This should not be called directly; its purpose is to provide
+     * a common implementation for tightDecoding() for all integer types.
      *
      * The tight encoding will be extracted one character at a time
      * beginning with the iterator \a start, in a single pass, without
@@ -428,7 +428,7 @@ namespace detail {
      * This routine does recognise infinity in the case where \a Int is
      * the type regina::LargeInteger.
      *
-     * \ifacespython Not present; use regina::tightDecode(...) instead.
+     * \ifacespython Not present; use regina::tightDecoding(...) instead.
      *
      * \tparam Int The type of integer to reconstruct; this must be either
      * (i) a native C++ integer type, or (ii) one of Regina's arbitrary
@@ -449,7 +449,8 @@ namespace detail {
      * \ingroup utilities
      */
     template <typename Int, typename iterator>
-    Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData);
+    Int tightDecodingInteger(iterator start, iterator limit,
+        bool noTrailingData);
 }
 
 // Inline functions:
@@ -529,7 +530,7 @@ inline std::string tightEncoding(bool value) {
 }
 
 template <>
-inline bool tightDecode<bool>(const std::string& enc) {
+inline bool tightDecoding<bool>(const std::string& enc) {
     if (enc.empty())
         throw InvalidArgument("The tight encoding is incomplete");
     bool ans;
@@ -544,7 +545,7 @@ inline bool tightDecode<bool>(const std::string& enc) {
 }
 
 template <>
-inline bool tightDecode<bool>(std::istream& input) {
+inline bool tightDecoding<bool>(std::istream& input) {
     char c = input.get();
     if (! input)
         throw InvalidInput("The tight encoding is incomplete");
@@ -556,9 +557,9 @@ inline bool tightDecode<bool>(std::istream& input) {
 }
 
 template<typename Int>
-inline Int tightDecode(const std::string& enc) {
+inline Int tightDecoding(const std::string& enc) {
     try {
-        return regina::detail::tightDecodeInteger<Int>(
+        return regina::detail::tightDecodingInteger<Int>(
             enc.begin(), enc.end(), true);
     } catch (const InvalidInput& exc) {
         // For strings we use a different exception type.
@@ -567,8 +568,8 @@ inline Int tightDecode(const std::string& enc) {
 }
 
 template<typename Int>
-inline Int tightDecode(std::istream& input) {
-    return regina::detail::tightDecodeInteger<Int>(
+inline Int tightDecoding(std::istream& input) {
+    return regina::detail::tightDecodingInteger<Int>(
         std::istreambuf_iterator<char>(input),
         std::istreambuf_iterator<char>(), false);
 }

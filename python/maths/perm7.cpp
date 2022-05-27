@@ -113,8 +113,8 @@ void addPerm7(pybind11::module_& m) {
             pybind11::arg("even") = false)
         .def("trunc", &Perm<7>::trunc)
         .def("tightEncoding", &Perm<7>::tightEncoding)
-        .def_static("tightDecode",
-            (Perm<7> (*)(const std::string&))(&Perm<7>::tightDecode))
+        .def_static("tightDecoding",
+            (Perm<7> (*)(const std::string&))(&Perm<7>::tightDecoding))
         .def("clear", &Perm<7>::clear)
         .def("S7Index", (int (Perm<7>::*)() const) &Perm<7>::S7Index)
         .def("SnIndex", &Perm<7>::SnIndex)

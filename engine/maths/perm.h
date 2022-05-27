@@ -738,7 +738,7 @@ class Perm {
          * @param enc the tight encoding for an <i>n</i>-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
-        static Perm tightDecode(const std::string& enc);
+        static Perm tightDecoding(const std::string& enc);
 
         /**
          * Reconstructs a permutation from its given tight encoding.
@@ -766,7 +766,7 @@ class Perm {
          * for an <i>n</i>-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
-        static Perm tightDecode(std::istream& input);
+        static Perm tightDecoding(std::istream& input);
 
         /**
          * Resets the images of all integers from \a from onwards to the
@@ -865,7 +865,7 @@ class Perm {
          * @return the permutation represented by the given tight encoding.
          */
         template <typename iterator>
-        static Perm tightDecode(iterator start, iterator limit,
+        static Perm tightDecoding(iterator start, iterator limit,
             bool noTrailingData);
 };
 
@@ -1241,9 +1241,9 @@ std::string Perm<n>::trunc(unsigned len) const {
 }
 
 template <int n>
-inline Perm<n> Perm<n>::tightDecode(const std::string& enc) {
+inline Perm<n> Perm<n>::tightDecoding(const std::string& enc) {
     try {
-        return tightDecode(enc.begin(), enc.end(), true);
+        return tightDecoding(enc.begin(), enc.end(), true);
     } catch (const InvalidInput& exc) {
         // For strings we use a different exception type.
         throw InvalidArgument(exc.what());
@@ -1251,8 +1251,8 @@ inline Perm<n> Perm<n>::tightDecode(const std::string& enc) {
 }
 
 template <int n>
-inline Perm<n> Perm<n>::tightDecode(std::istream& input) {
-    return tightDecode(std::istreambuf_iterator<char>(input),
+inline Perm<n> Perm<n>::tightDecoding(std::istream& input) {
+    return tightDecoding(std::istreambuf_iterator<char>(input),
         std::istreambuf_iterator<char>(), false);
 }
 
