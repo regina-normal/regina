@@ -3058,7 +3058,7 @@ class Perm<6> {
          * invalid also; if \a noTrailingData is \c false then there is no
          * constraint on the final state of the iterator.
          *
-         * \exception InvalidArgument the given iterator does not point to
+         * \exception InvalidInput the given iterator does not point to
          * a tight encoding of a 6-element permutation.
          *
          * \tparam iterator an input iterator type.
@@ -3378,17 +3378,17 @@ inline std::string Perm<6>::tightEncoding() const {
 }
 
 inline Perm<6> Perm<6>::tightDecode(const std::string& enc) {
-    return tightDecode(enc.begin(), enc.end(), true);
+    try {
+        return tightDecode(enc.begin(), enc.end(), true);
+    } catch (const InvalidInput& exc) {
+        // For strings we use a different exception type.
+        throw InvalidArgument(exc.what());
+    }
 }
 
 inline Perm<6> Perm<6>::tightDecode(std::istream& input) {
-    try {
-        return tightDecode(std::istreambuf_iterator<char>(input),
-            std::istreambuf_iterator<char>(), false);
-    } catch (const InvalidArgument& exc) {
-        // For input streams we use a different exception type.
-        throw InvalidInput(exc.what());
-    }
+    return tightDecode(std::istreambuf_iterator<char>(input),
+        std::istreambuf_iterator<char>(), false);
 }
 
 template <typename iterator>
@@ -3396,22 +3396,22 @@ Perm<6> Perm<6>::tightDecode(iterator start, iterator limit,
         bool noTrailingData) {
     // All codes are >= 0 because we are using an unsigned data type.
     if (start == limit)
-        throw InvalidArgument("The tight encoding is incomplete");
+        throw InvalidInput("The tight encoding is incomplete");
     Code2 code0 = (*start++) - 33;
     if (code0 >= 94)
-        throw InvalidArgument("The tight encoding is invalid");
+        throw InvalidInput("The tight encoding is invalid");
 
     if (start == limit)
-        throw InvalidArgument("The tight encoding is incomplete");
+        throw InvalidInput("The tight encoding is incomplete");
     Code2 code1 = (*start++) - 33;
     if (code1 > 7 /* (6! / 94) */)
-        throw InvalidArgument("The tight encoding is invalid");
+        throw InvalidInput("The tight encoding is invalid");
 
     code0 += (94 * code1);
     if (code0 >= 720)
-        throw InvalidArgument("The tight encoding is invalid");
+        throw InvalidInput("The tight encoding is invalid");
     if (noTrailingData && (start != limit))
-        throw InvalidArgument("The tight encoding has trailing characters");
+        throw InvalidInput("The tight encoding has trailing characters");
 
     return Perm<6>(code0);
 }

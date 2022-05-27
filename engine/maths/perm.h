@@ -850,7 +850,7 @@ class Perm {
          * invalid also; if \a noTrailingData is \c false then there is no
          * constraint on the final state of the iterator.
          *
-         * \exception InvalidArgument the given iterator does not point to
+         * \exception InvalidInput the given iterator does not point to
          * a tight encoding of an <i>n</i>-element permutation.
          *
          * \tparam iterator an input iterator type.
@@ -1242,18 +1242,18 @@ std::string Perm<n>::trunc(unsigned len) const {
 
 template <int n>
 inline Perm<n> Perm<n>::tightDecode(const std::string& enc) {
-    return tightDecode(enc.begin(), enc.end(), true);
+    try {
+        return tightDecode(enc.begin(), enc.end(), true);
+    } catch (const InvalidInput& exc) {
+        // For strings we use a different exception type.
+        throw InvalidArgument(exc.what());
+    }
 }
 
 template <int n>
 inline Perm<n> Perm<n>::tightDecode(std::istream& input) {
-    try {
-        return tightDecode(std::istreambuf_iterator<char>(input),
-            std::istreambuf_iterator<char>(), false);
-    } catch (const InvalidArgument& exc) {
-        // For input streams we use a different exception type.
-        throw InvalidInput(exc.what());
-    }
+    return tightDecode(std::istreambuf_iterator<char>(input),
+        std::istreambuf_iterator<char>(), false);
 }
 
 } // namespace regina

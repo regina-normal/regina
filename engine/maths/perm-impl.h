@@ -383,19 +383,19 @@ Perm<n> Perm<n>::tightDecode(iterator start, iterator limit,
     Index power = 1;
     for (int i = 0; i < tightChars_; ++i) {
         if (start == limit)
-            throw InvalidArgument("The tight encoding is incomplete");
+            throw InvalidInput("The tight encoding is incomplete");
         Index piece = (*start++) - 33;
         // code >= 0 because we are using an unsigned data type.
         if (piece > 94)
-            throw InvalidArgument("The tight encoding is invalid");
+            throw InvalidInput("The tight encoding is invalid");
         idx += (piece * power);
         power *= 94;
     }
 
     if (idx < 0 || idx >= nPerms)
-        throw InvalidArgument("The tight encoding is invalid");
+        throw InvalidInput("The tight encoding is invalid");
     if (noTrailingData && (start != limit))
-        throw InvalidArgument("The tight encoding has trailing characters");
+        throw InvalidInput("The tight encoding has trailing characters");
 
     return Sn[idx];
 }

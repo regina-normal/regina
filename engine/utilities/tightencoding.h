@@ -387,7 +387,7 @@ namespace detail {
      * invalid also; if \a noTrailingData is \c false then there is no
      * constraint on the final state of the iterator.
      *
-     * \exception InvalidArgument the given iterator does not point to
+     * \exception InvalidInput the given iterator does not point to
      * a tight encoding of an integer of type \a Int.  This includes the
      * case where the encoding \e is a valid integer encoding but the integer
      * itself is outside the allowed range for the \a Int type.
@@ -482,20 +482,20 @@ inline std::string tightEncoding(unsigned long long value) {
 
 template<typename Int>
 inline Int tightDecode(const std::string& enc) {
-    return regina::detail::tightDecodeInteger<Int>(
-        enc.begin(), enc.end(), true);
+    try {
+        return regina::detail::tightDecodeInteger<Int>(
+            enc.begin(), enc.end(), true);
+    } catch (const InvalidInput& exc) {
+        // For strings we use a different exception type.
+        throw InvalidArgument(exc.what());
+    }
 }
 
 template<typename Int>
 inline Int tightDecode(std::istream& input) {
-    try {
-        return regina::detail::tightDecodeInteger<Int>(
-            std::istreambuf_iterator<char>(input),
-            std::istreambuf_iterator<char>(), false);
-    } catch (const InvalidArgument& exc) {
-        // For input streams we use a different exception type.
-        throw InvalidInput(exc.what());
-    }
+    return regina::detail::tightDecodeInteger<Int>(
+        std::istreambuf_iterator<char>(input),
+        std::istreambuf_iterator<char>(), false);
 }
 
 } // namespace regina

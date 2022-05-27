@@ -241,26 +241,26 @@ Int tightDecodeInteger(iterator start, iterator limit,
     bool overflow = false;
 
     if (start == limit)
-        throw InvalidArgument("The tight encoding is incomplete");
+        throw InvalidInput("The tight encoding is incomplete");
     signed char c = *start++;
     if (c >= 33 && c <= 122) {
         // The result will fit into a single byte.
         if constexpr (std::is_unsigned_v<Int>) {
             if (c < 77)
-                throw InvalidArgument("The tight encoding describes "
+                throw InvalidInput("The tight encoding describes "
                     "a negative integer but the integer type is unsigned");
         }
         result = c - 77;
     } else if (c == '~') {
         // The result will still fit into a single byte.
         if (start == limit)
-            throw InvalidArgument("The tight encoding is incomplete");
+            throw InvalidInput("The tight encoding is incomplete");
         c = *start++;
         if (c < 33 || c > 122) {
-            throw InvalidArgument("The tight encoding is invalid");
+            throw InvalidInput("The tight encoding is invalid");
         } else if (c <= 77) {
             if constexpr (std::is_unsigned_v<Int>) {
-                throw InvalidArgument("The tight encoding describes "
+                throw InvalidInput("The tight encoding describes "
                     "a negative integer but the integer type is unsigned");
             }
             result = c - 122;
@@ -271,23 +271,23 @@ Int tightDecodeInteger(iterator start, iterator limit,
         // The result could need either 1 or 2 bytes.
         // It is guaranteed to fit within an int.
         if (start == limit)
-            throw InvalidArgument("The tight encoding is incomplete");
+            throw InvalidInput("The tight encoding is incomplete");
         c = (*start++) - 33;
         if (c < 0 || c >= 90)
-            throw InvalidArgument("The tight encoding is invalid");
+            throw InvalidInput("The tight encoding is invalid");
         int val = c;
 
         if (start == limit)
-            throw InvalidArgument("The tight encoding is incomplete");
+            throw InvalidInput("The tight encoding is incomplete");
         c = (*start++) - 33;
         if (c < 0 || c >= 90)
-            throw InvalidArgument("The tight encoding is invalid");
+            throw InvalidInput("The tight encoding is invalid");
         val += 90 * static_cast<int>(c);
 
         if (val < 4050) {
             // This encodes a negative number.
             if constexpr (std::is_unsigned_v<Int>) {
-                throw InvalidArgument("The tight encoding describes "
+                throw InvalidInput("The tight encoding describes "
                     "a negative integer but the integer type is unsigned");
             }
             if constexpr (std::is_integral_v<Int> && sizeof(Int) == 1) {
@@ -313,30 +313,30 @@ Int tightDecodeInteger(iterator start, iterator limit,
         // The result could need either 2 or 4 bytes.
         // It is guaranteed to fit within a long.
         if (start == limit)
-            throw InvalidArgument("The tight encoding is incomplete");
+            throw InvalidInput("The tight encoding is incomplete");
         c = (*start++) - 33;
         if (c < 0 || c >= 90)
-            throw InvalidArgument("The tight encoding is invalid");
+            throw InvalidInput("The tight encoding is invalid");
         long val = c;
 
         if (start == limit)
-            throw InvalidArgument("The tight encoding is incomplete");
+            throw InvalidInput("The tight encoding is incomplete");
         c = (*start++) - 33;
         if (c < 0 || c >= 90)
-            throw InvalidArgument("The tight encoding is invalid");
+            throw InvalidInput("The tight encoding is invalid");
         val += 90 * static_cast<int>(c);
 
         if (start == limit)
-            throw InvalidArgument("The tight encoding is incomplete");
+            throw InvalidInput("The tight encoding is incomplete");
         c = (*start++) - 33;
         if (c < 0 || c >= 90)
-            throw InvalidArgument("The tight encoding is invalid");
+            throw InvalidInput("The tight encoding is invalid");
         val += 8100 * static_cast<int>(c);
 
         if (val < 364500) {
             // This encodes a negative number.
             if constexpr (std::is_unsigned_v<Int>) {
-                throw InvalidArgument("The tight encoding describes "
+                throw InvalidInput("The tight encoding describes "
                     "a negative integer but the integer type is unsigned");
             }
             if constexpr (std::is_integral_v<Int> && sizeof(Int) < 4) {
@@ -358,18 +358,18 @@ Int tightDecodeInteger(iterator start, iterator limit,
         }
     } else if (c == '{') {
         if (start == limit)
-            throw InvalidArgument("The tight encoding is incomplete");
+            throw InvalidInput("The tight encoding is incomplete");
         c = *start++;
         if (c == '}') {
             // This encodes infinity.
             if constexpr (std::is_same_v<Int, regina::IntegerBase<true>>)
                 result.makeInfinite();
             else
-                throw InvalidArgument("The tight encoding represents "
+                throw InvalidInput("The tight encoding represents "
                     "infinity, which is not supported by the chosen "
                     "integer type");
         } else if (c < 33 || c > 122) {
-            throw InvalidArgument("The tight encoding is invalid");
+            throw InvalidInput("The tight encoding is invalid");
         } else if constexpr (sizeof(Int) < 4) {
             // The result needs at least 4 bytes, possibly more.
             // This *will* overflow.
@@ -378,7 +378,7 @@ Int tightDecodeInteger(iterator start, iterator limit,
             // we prioritise "type is unsigned" errors over "type too small".
             if constexpr (std::is_unsigned_v<Int>)
                 if (c > 77)
-                    throw InvalidArgument("The tight encoding describes "
+                    throw InvalidInput("The tight encoding describes "
                         "a negative integer but the integer type is unsigned");
 
             overflow = true;
@@ -394,9 +394,8 @@ Int tightDecodeInteger(iterator start, iterator limit,
 
             if (negative) {
                 if constexpr (std::is_unsigned_v<Int>) {
-                    throw InvalidArgument("The tight encoding describes "
-                        "a negative integer but the integer type is "
-                        "unsigned");
+                    throw InvalidInput("The tight encoding describes "
+                        "a negative integer but the integer type is unsigned");
                 }
                 result = -368562;
                 result -= c;
@@ -408,14 +407,12 @@ Int tightDecodeInteger(iterator start, iterator limit,
             Int coeff = 45, coeffPrev = 0;
             while (true) {
                 if (start == limit)
-                    throw InvalidArgument(
-                        "The tight encoding is incomplete");
+                    throw InvalidInput("The tight encoding is incomplete");
                 c = *start++;
                 if (c == '}')
                     break;
                 if (c < 33 || c > 122)
-                    throw InvalidArgument(
-                        "The tight encoding is invalid");
+                    throw InvalidInput("The tight encoding is invalid");
 
                 if (coeffPrev != 0) {
                     // Step up to the next power of 90.
@@ -476,14 +473,14 @@ Int tightDecodeInteger(iterator start, iterator limit,
             }
         }
     } else
-        throw InvalidArgument("The tight encoding is invalid");
+        throw InvalidInput("The tight encoding is invalid");
 
 endDecoding:
     if (overflow)
-        throw InvalidArgument("The tight encoding describes an integer "
+        throw InvalidInput("The tight encoding describes an integer "
             "that is out of range for the chosen integer type");
     if (noTrailingData && (start != limit))
-        throw InvalidArgument("The tight encoding has trailing characters");
+        throw InvalidInput("The tight encoding has trailing characters");
     return result;
 }
 
