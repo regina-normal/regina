@@ -83,9 +83,9 @@ class IntegerBase;
  *   will have different encodings.
  *
  * A consequence of the last two points is that, if the \e type of an object
- * is known in advance, then its \e value can in theory be recovered from its
- * encoding.  However, the encoding does not contain enough information
- * to deduce the type if this is not already known.
+ * is known in advance, then its \e value can be recovered from its encoding.
+ * However, the encoding does not contain enough information to deduce the
+ * type if this is not already known.
  *
  * Because encodings contain enough information to identify where they end,
  * this means that you can encode a \e sequence of objects by concatenating
@@ -93,23 +93,22 @@ class IntegerBase;
  * of the objects are fixed) this will be enough to guarantee that
  * different \e sequences likewise have different encodngs.
  *
- * For most types, Regina also provides \e decoding routines.  Although these
- * might not be offered for all types, it should (as noted above) be possible in
- * theory if the underlying types are known.  The main reason for not offering
- * a decoding function is simply that decoding is often not a priority for the
- * developers - tight encodings were originally designed for applications such
- * as perfect hashing, where the aim is essentially to "compress" the data in a
- * short printable string whilst preserving the correctness of equality tests.
+ * Tight encodings were originally designed to support perfect hashing
+ * (essentially "compressing" data into a short printable string whilst
+ * preserving the correctness of equality tests).  As a result, they were
+ * originally intended to be used only in one direction.  However, Regina
+ * does provide matching \e decoding routines if you need to reconstruct
+ * objects from their tight encodings.
  *
- * For native C++ data types where tight encodings and/or decodings are
+ * For native C++ data types where tight encodings and decodings are
  * supported, these are provided in the header utilities/tightencoding.h
  * through overloads of the global functions tightEncoding() (which returns a
  * string), tightEncode() (which writes to an output stream), and tightDecode()
  * (which takes either a string or an input stream as its argument).
  *
- * For Regina's own data types where tight encodings and/or decodings are
- * supported, these are provided through tightEncode(), tightEncoding(), and
- * static tightDecode() member functions of the corresponding classes.
+ * For Regina's own data types where tight encodings and decodings are
+ * supported, these are provided through member functions tightEncode(),
+ * tightEncoding() and tightDecode() within the corresponding classes.
  */
 
 /**
