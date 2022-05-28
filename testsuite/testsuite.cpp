@@ -145,6 +145,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
 
     // 2-manifold triangulations:
     sets.insert(std::make_pair("triangulation2", &addTriangulation2));
+    sets.insert(std::make_pair("isomorphism2", &addIsomorphism2));
     sets.insert(std::make_pair("facetpairing2", &addFacetPairing2));
 
     // 3-manifold triangulations:
@@ -160,6 +161,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
 
     // 4-manifold triangulations:
     sets.insert(std::make_pair("triangulation4", &addTriangulation4));
+    sets.insert(std::make_pair("isomorphism4", &addIsomorphism4));
     sets.insert(std::make_pair("facetpairing4", &addFacetPairing4));
 
     // Higher-dimensional triangulations:

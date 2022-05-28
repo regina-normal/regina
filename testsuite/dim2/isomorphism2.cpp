@@ -30,19 +30,74 @@
  *                                                                        *
  **************************************************************************/
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
- */
+#include <sstream>
+#include <cppunit/extensions/HelperMacros.h>
+#include "triangulation/dim2.h"
+#include "testsuite/dim2/testdim2.h"
+#include "testsuite/utilities/tightencodingtest.h"
 
-#include <cppunit/ui/text/TestRunner.h>
+using regina::Isomorphism;
+using regina::Perm;
+using regina::Triangulation;
 
-void addTriangulation4(CppUnit::TextUi::TestRunner& runner);
-void addIsomorphism4(CppUnit::TextUi::TestRunner& runner);
-void addFacetPairing4(CppUnit::TextUi::TestRunner& runner);
+class Isomorphism2Test :
+        public CppUnit::TestFixture, public TightEncodingTest<Isomorphism<2>> {
+    CPPUNIT_TEST_SUITE(Isomorphism2Test);
+
+    CPPUNIT_TEST(tightEncoding);
+
+    CPPUNIT_TEST_SUITE_END();
+
+    public:
+        void setUp() override {
+        }
+
+        void tearDown() override {
+        }
+
+        void tightEncoding() {
+            // Cases where the isomorphism is empty:
+            verifyTightEncoding(Isomorphism<2>(0));
+
+            // Exhaustive run through all small isomorphisms (we need
+            // both odd and even sizes here since permutations are
+            // encoded in pairs):
+            {
+                Isomorphism<2> iso = Isomorphism<2>::identity(1);
+                do {
+                    verifyTightEncoding(iso);
+                    ++iso;
+                } while (! iso.isIdentity());
+            }
+            {
+                Isomorphism<2> iso = Isomorphism<2>::identity(2);
+                do {
+                    verifyTightEncoding(iso);
+                    ++iso;
+                } while (! iso.isIdentity());
+            }
+            {
+                Isomorphism<2> iso = Isomorphism<2>::identity(3);
+                do {
+                    verifyTightEncoding(iso);
+                    ++iso;
+                } while (! iso.isIdentity());
+            }
+
+            // Cases where the isomorphism includes higher-numbered
+            // simplex images, and also uninitialised simplex images:
+            {
+                Isomorphism<2> iso(2);
+                iso.simpImage(0) = -1;
+                iso.simpImage(1) = 3;
+                iso.facetPerm(0) = Perm<3>(1,2,0);
+                iso.facetPerm(1) = Perm<3>(2,0,1);
+                verifyTightEncoding(iso);
+            }
+        }
+};
+
+void addIsomorphism2(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(Isomorphism2Test::suite());
+}
 

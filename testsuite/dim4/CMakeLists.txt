@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   facetpairing4.cpp
+  isomorphism4.cpp
   triangulation4.cpp
   )
 

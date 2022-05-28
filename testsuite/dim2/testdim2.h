@@ -43,5 +43,5 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 void addTriangulation2(CppUnit::TextUi::TestRunner& runner);
+void addIsomorphism2(CppUnit::TextUi::TestRunner& runner);
 void addFacetPairing2(CppUnit::TextUi::TestRunner& runner);
-
