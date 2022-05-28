@@ -324,19 +324,19 @@ Total triangulations: 13
 Exit code: 0
 --------------------
 Output:
-cMabdd $"#!#
-cMabcc $"#!#
-cMabcd $"#!#
-cbcbd $#"!%
-cbcbb $#"!%
-cPbbaa $"#!!
-cPbbac $"#!!
-cPbbbe $"#$#
-cPbbde $"#!"
-cHaba $"#""
-cHabb $"##$
-cHabe $"#"!
-cba $"#!!
+cMabdd $"#.
+cMabcc $"#.
+cMabcd $"#.
+cbcbd $#":
+cbcbb $#":
+cPbbaa $"#"
+cPbbac $"#"
+cPbbbe $"#1
+cPbbde $"#(
+cHaba $"#)
+cHabb $"#6
+cHabe $"##
+cba $"#"
 ============================================================
 TEST: tricensus -t1 -i @TESTOUT@
 --------------------

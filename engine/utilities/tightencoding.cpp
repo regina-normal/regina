@@ -70,9 +70,11 @@ template LargeInteger tightDecodingInteger<LargeInteger, it2>(it2, it2, bool);
 // End users don't get to use the index routines, so what we instantiate
 // here simply needs to be whatever Regina uses internally.
 
+template void tightEncodeIndex<unsigned>(std::ostream&, unsigned);
 template void tightEncodeIndex<unsigned long>(std::ostream&, unsigned long);
 template void tightEncodeIndex<ssize_t>(std::ostream&, ssize_t);
 
+template unsigned tightDecodingIndex<unsigned>(std::istream&);
 template unsigned long tightDecodingIndex<unsigned long>(std::istream&);
 template ssize_t tightDecodingIndex<ssize_t>(std::istream&);
 

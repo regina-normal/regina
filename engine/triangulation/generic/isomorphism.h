@@ -993,14 +993,24 @@ inline Isomorphism<dim> Isomorphism<dim>::operator ++(int) {
 }
 
 template <int dim>
-inline void Isomorphism<dim>::tightEncode(std::ostream& out) const {
+void Isomorphism<dim>::tightEncode(std::ostream& out) const {
     regina::detail::tightEncodeIndex(out, nSimplices_);
     for (size_t i = 0; i < nSimplices_; ++i)
         regina::detail::tightEncodeIndex(out, simpImage_[i]);
-    // TODO: If dim == 2 then we could fit two permutations per character.
-    // Do we want to do this?
-    for (size_t i = 0; i < nSimplices_; ++i)
-        facetPerm_[i].tightEncode(out);
+    if constexpr (dim == 2) {
+        // We can fit two permutations per character here.
+        for (size_t i = 0; i < nSimplices_; i += 2) {
+            if (i + 1 == nSimplices_)
+                regina::detail::tightEncodeIndex(out, static_cast<unsigned>(
+                    facetPerm_[i].SnIndex()));
+            else
+                regina::detail::tightEncodeIndex(out, static_cast<unsigned>(
+                    facetPerm_[i].SnIndex() + 6 * facetPerm_[i+1].SnIndex()));
+        }
+    } else {
+        for (size_t i = 0; i < nSimplices_; ++i)
+            facetPerm_[i].tightEncode(out);
+    }
 }
 
 template <int dim>
@@ -1026,7 +1036,7 @@ inline Isomorphism<dim> Isomorphism<dim>::tightDecoding(
 }
 
 template <int dim>
-inline Isomorphism<dim> Isomorphism<dim>::tightDecoding(std::istream& input) {
+Isomorphism<dim> Isomorphism<dim>::tightDecoding(std::istream& input) {
     size_t n = regina::detail::tightDecodingIndex<size_t>(input);
     Isomorphism ans(n);
 
@@ -1036,8 +1046,26 @@ inline Isomorphism<dim> Isomorphism<dim>::tightDecoding(std::istream& input) {
     // permutations that are read.
     for (size_t i = 0; i < n; ++i)
         ans.simpImage_[i] = regina::detail::tightDecodingIndex<ssize_t>(input);
-    for (size_t i = 0; i < n; ++i)
-        ans.facetPerm_[i] = Perm<dim+1>::tightDecoding(input);
+    if constexpr (dim == 2) {
+        for (size_t i = 0; i < n; i += 2) {
+            unsigned p = regina::detail::tightDecodingIndex<unsigned>(input);
+            if (i + 1 == n) {
+                if (p >= 6)
+                    throw InvalidInput("The tight encoding contains "
+                        "invalid permutations");
+                ans.facetPerm_[i] = Perm<dim+1>::Sn[p];
+            } else {
+                if (p >= 36)
+                    throw InvalidInput("The tight encoding contains "
+                        "invalid permutations");
+                ans.facetPerm_[i] = Perm<dim+1>::Sn[p % 6];
+                ans.facetPerm_[i+1] = Perm<dim+1>::Sn[p / 6];
+            }
+        }
+    } else {
+        for (size_t i = 0; i < n; ++i)
+            ans.facetPerm_[i] = Perm<dim+1>::tightDecoding(input);
+    }
 
     return ans;
 }
