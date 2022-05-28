@@ -37,6 +37,9 @@ Usage: tricensus <output-file>
                                     --bdryfaces counts boundary facets.
   -s, --sigs                        Write isomorphism signatures only, not
                                     full Regina data files.
+  -S, --canonical                   Write isomorphism signatures with matching
+                                    isomorphisms away from canonical facet
+                                    pairings.
   -c, --subcontainers               For each face pairing, place resulting
                                     triangulations into different subcontainers
   -p, --genpairs                    Only generate face pairings, not
@@ -89,6 +92,9 @@ Usage: tricensus <output-file>
                                     --bdryfaces counts boundary facets.
   -s, --sigs                        Write isomorphism signatures only, not
                                     full Regina data files.
+  -S, --canonical                   Write isomorphism signatures with matching
+                                    isomorphisms away from canonical facet
+                                    pairings.
   -c, --subcontainers               For each face pairing, place resulting
                                     triangulations into different subcontainers
   -p, --genpairs                    Only generate face pairings, not
@@ -141,6 +147,9 @@ Usage: tricensus <output-file>
                                     --bdryfaces counts boundary facets.
   -s, --sigs                        Write isomorphism signatures only, not
                                     full Regina data files.
+  -S, --canonical                   Write isomorphism signatures with matching
+                                    isomorphisms away from canonical facet
+                                    pairings.
   -c, --subcontainers               For each face pairing, place resulting
                                     triangulations into different subcontainers
   -p, --genpairs                    Only generate face pairings, not
@@ -227,6 +236,79 @@ cPcbbbdei
 cPcbbbdxm
 cPcbbbcjt
 cPcbbbchw
+============================================================
+TEST: tricensus -t2 -i -S @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 1:0 1:1 | 0:2 0:3 1:3 1:2
+1:0 1:1 1:2 1:3 | 0:0 0:1 0:2 0:3
+Finished.
+Total triangulations: 61
+--------------------
+Exit code: 0
+--------------------
+Output:
+cMcabbjdw O"'#-
+cMcabbjds O"'#-
+cMcabbjqw O#1"+
+cMcabbjxr O"!#)
+cMcabbjij O"'#7
+cMcabbjik O"'#7
+cMcabbjaj O"!#1
+cMcabbjak O"!#1
+cMcabbjqs O"!#0
+cMcabbjmk O"'#2
+cMcabbidt O"(#0
+cMcabbidu O"(#0
+cMcabbifs O"(#0
+cMcabbifw O"(#0
+cMcabbiqt O"(#0
+cMcabbiqu O"(#0
+cMcabbijk O"!#)
+cMcabbijr O"!#)
+cMcabbile O"!#)
+cMcabbick O"(#8
+cMcabbicj O"(#8
+cMcabbiii O"(#8
+cMcabbiai O"!#1
+cMcabbgre O""#%
+cMcabbgdv O"(#0
+cMcabbgds O"(#0
+cMcabbgci O"'#2
+cMcabbgqv O""#4
+cMcabbgqs O""#4
+cMcabbgqw O""#4
+cMcabbgje O"'#$
+cMcabbgig O"'#7
+cMcabbgij O"'#7
+cMcabbgik O"'#7
+cMcabbgag O"!#1
+cMcabbgaj O"!#1
+cPcbbbaaa O"!#!
+cPcbbbaai O"!#!
+cPcbbbali O"!#!
+cPcbbbalm O"!#!
+cPcbbbabb O"1#2
+cPcbbbdht O"'#)
+cPcbbbdhq O"'#)
+cPcbbbabk O",#+
+cPcbbbcbd O"7#3
+cPcbbbqxh O"!##
+cPcbbbiht O"&#"
+cPcbbbihq O""#$
+cPcbbbade O"!#"
+cPcbbbadh O"!#"
+cPcbbbadu O"!#"
+cPcbbbajk O"!#"
+cPcbbbajs O"!#"
+cPcbbbahh O"!#"
+cPcbbbcbt O"'#)
+cPcbbbchn O"'#)
+cPcbbbcbq O"'#)
+cPcbbbdei O"&##
+cPcbbbdxm O"##&
+cPcbbbcjt O"5#7
+cPcbbbchw O"6#4
 ============================================================
 TEST: tricensus -t1 -i @TESTOUT@
 --------------------

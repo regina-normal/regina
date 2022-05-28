@@ -1336,6 +1336,7 @@
     <arg><option>--allowinvalid</option></arg>
     <group>
      <arg><option>-s, --sigs</option></arg>
+     <arg><option>-S, --canonical</option></arg>
      <arg><option>-c, --subcontainers</option></arg>
     </group>
     <group>
@@ -1688,6 +1689,44 @@
      </listitem>
     </varlistentry>
     <varlistentry>
+     <term><option>-S, --canonical</option></term>
+     <listitem>
+      <para>
+       A variant of <option>--sigs</option> that outputs a list of
+       isomorphism signatures along with matching isomorphisms.
+      </para>
+      <para>
+       The output file will be a plain text file.  Each line will
+       contain two short strings, separated by a single space.
+       The first string will be the same isomorphism signature that is
+       output by <option>--sigs</option>.  The second string encodes an
+       isomorphism <replaceable>F</replaceable> with the property that,
+       if we reconstruct a triangulation from the isomorphism signature
+       and apply the isomorphism <replaceable>F</replaceable>, then
+       the resulting triangulation will have a canonical facet pairing.
+      </para>
+      <para>
+       Here <firstterm>canonical</firstterm> has the same meaning as
+       described below under the <option>--usepairs</option> option:
+       a facet pairing is in canonical form if it is a minimal representative
+       of its isomorphism class.
+      </para>
+      <para>
+       The isomorphisms themselves will be encoded using
+       <firstterm>tight encodings</firstterm>, which (like isomorphisms
+       signatures) are short strings of letters, digits and punctuation.
+       Currently you will need to use either &cpp; or &python; to decode
+       these; for example, in dimension&nbsp;3 you would call
+       <literal>Isomorphism&lt;3&gt;::tightDecoding()</literal>.
+      </para>
+      <para>
+       If you do not need these isomorphisms, then you should use the
+       simpler (and slightly faster) option <option>--sigs</option>
+       instead.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
      <term><option>-c, --subcontainers</option></term>
      <listitem>
       <para>
@@ -1701,7 +1740,8 @@
        facet pairings.
       </para>
       <para>
-       This option cannot be used with <option>--sigs</option>.
+       This option cannot be used with <option>--sigs</option> or
+       <option>--canonical</option>.
       </para>
      </listitem>
     </varlistentry>
