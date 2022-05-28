@@ -100,6 +100,9 @@ const int vertex_at_faces[4][4] =
  *
  * The routine was changed to be compatible with Regina's Triangulation<3>
  * data structure.
+ *
+ * If the conversion cannot be performed (e.g., the Casson format has
+ * inconsistent tetrahedron gluings), then this routine returns \c null.
  */
 std::shared_ptr<PacketOf<Triangulation<3>>> cassonToTriangulation(
         CassonFormat *cf ) {
@@ -126,7 +129,6 @@ std::shared_ptr<PacketOf<Triangulation<3>>> cassonToTriangulation(
  //           p[j][k] is the permutation specifying how the faces are glued together.
  EdgeInfo *ei;
  TetEdgeInfo *tei1, *tei2;
- int t1, t2, a1, a2, a3, a4, b1, b2, b3, b4;
  ei = cf->head;
 
  // this routine goes through the edges of cf, picking off the adjacent
@@ -141,21 +143,28 @@ std::shared_ptr<PacketOf<Triangulation<3>>> cassonToTriangulation(
                         tei2 = ei->head;
                 else    tei2 = tei1->next;
 
-                t1 = tei1->tet_index;
-                a1 = tei1->f1;
-                a2 = tei1->f2;
-                a3 = vertex_at_faces[a1][a2];
-                a4 = vertex_at_faces[a2][a1];
+                Tetrahedron<3>* t1 = tet[tei1->tet_index];
+                Tetrahedron<3>* t2 = tet[tei2->tet_index];
 
-                t2 = tei2->tet_index;
-                b1 = tei2->f1;
-                b2 = tei2->f2;
-                b3 = vertex_at_faces[b1][b2];
-                b4 = vertex_at_faces[b2][b1];
+                int a1 = tei1->f1;
+                int a2 = tei1->f2;
+                int b1 = tei2->f1;
+                int b2 = tei2->f2;
 
-                tet[t1]->join( tei1->f1 , tet[t2], // 1st entry is the face of tet[t1]
-                                Perm<4>(a1,b2,a2,b1,a3,b3,a4,b4) ); // being attached to tet[t2]
+                Perm<4> gluing(a1, b2, a2, b1,
+                    vertex_at_faces[a1][a2], vertex_at_faces[b1][b2],
+                    vertex_at_faces[a2][a1], vertex_at_faces[b2][b1]);
 
+                if (auto adj = t1->adjacentTetrahedron(tei1->f1)) {
+                    if (adj != t2 || t1->adjacentGluing(tei1->f1) != gluing) {
+                        // The tetrahedron gluings are inconsistent.
+                        // The API promises to return null instead of
+                        // throwing an exception, so we do this.
+                        delete[] tet;
+                        return {};
+                    }
+                } else
+                    t1->join(tei1->f1, t2, gluing);
 
                 tei1 = tei1->next;
                 }
@@ -350,6 +359,8 @@ void freeCassonFormat( CassonFormat *cf )
  * The routine was changed to be compatible with Regina's Triangulation<3>
  * data structure, and to use standard C++ string and I/O streams
  * instead of Qt strings and I/O streams.
+ *
+ * This routine returns \c null in case of error.
  */
 std::shared_ptr<PacketOf<Triangulation<3>>> readTriangulation(std::istream &ts) {
     std::string line, file_id;
@@ -358,7 +369,7 @@ std::shared_ptr<PacketOf<Triangulation<3>>> readTriangulation(std::istream &ts) 
     if (line != "% orb") {
         std::cerr << "Orb / Casson file is not in the correct format."
             << std::endl;
-        return nullptr;
+        return {};
     }
 
     getline(ts, file_id);
@@ -367,11 +378,17 @@ std::shared_ptr<PacketOf<Triangulation<3>>> readTriangulation(std::istream &ts) 
     if (! verifyCassonFormat( cf )) {
         std::cerr << "Error verifying Orb / Casson file." << std::endl;
         freeCassonFormat( cf );
-        return nullptr;
+        return {};
     }
 
     auto manifold = cassonToTriangulation( cf );
     freeCassonFormat( cf );
+
+    if (! manifold) {
+        std::cerr << "Orb / Casson file contains invalid or inconsistent data."
+            << std::endl;
+        return {};
+    }
 
     manifold->setLabel(file_id);
     return manifold;
