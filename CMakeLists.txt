@@ -306,6 +306,15 @@ MACRO_LOG_FEATURE(JANSSON_FOUND
   "Essential: JSON support"
   "http://www.digip.org/jansson/"
   TRUE)
+  
+FIND_PACKAGE(MPFR)
+INCLUDE_DIRECTORIES(${MPFR_INCLUDE_DIR})
+MACRO_LOG_FEATURE(MPFR_FOUND
+  "MPFR"
+  "High precision computation"
+  "http://www.mpfr.org/"
+  TRUE)
+
 
 IF (NOT DISABLE_PYTHON)
   MESSAGE (STATUS "Searching for a Python installation")
