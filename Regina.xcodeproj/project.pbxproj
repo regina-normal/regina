@@ -1793,6 +1793,10 @@
 		05C265C82830A4B800232420 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C62830A4B800232420 /* facetpairing3.cpp */; };
 		05C265CA2830A4CA00232420 /* facetpairing4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C92830A4CA00232420 /* facetpairing4.cpp */; };
 		05C265CB2830A4CA00232420 /* facetpairing4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C92830A4CA00232420 /* facetpairing4.cpp */; };
+		05C278E928422B53009A2DA1 /* isomorphism2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C278E828422B53009A2DA1 /* isomorphism2.cpp */; };
+		05C278EA28422B53009A2DA1 /* isomorphism2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C278E828422B53009A2DA1 /* isomorphism2.cpp */; };
+		05C278EC28422B5C009A2DA1 /* isomorphism4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C278EB28422B5C009A2DA1 /* isomorphism4.cpp */; };
+		05C278ED28422B5C009A2DA1 /* isomorphism4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C278EB28422B5C009A2DA1 /* isomorphism4.cpp */; };
 		05CAE6012741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
 		05CAE6022741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
 		05CAE60527427A8A007C93F3 /* ordering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60327427A8A007C93F3 /* ordering.cpp */; };
@@ -3035,7 +3039,6 @@
 		052FA0FA1806088B00FAE4DF /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		052FA0FB1806088B00FAE4DF /* isomorphism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism.cpp; sourceTree = "<group>"; };
 		052FA0FC1806088B00FAE4DF /* triangulation3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation3.cpp; sourceTree = "<group>"; };
-		052FA0FD1806088B00FAE4DF /* testtriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testtriangulation.h; sourceTree = "<group>"; };
 		052FA0FF1806088B00FAE4DF /* base64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = base64.cpp; sourceTree = "<group>"; };
 		052FA1001806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052FA1011806088B00FAE4DF /* bitmask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitmask.cpp; sourceTree = "<group>"; };
@@ -4291,6 +4294,9 @@
 		05C265C92830A4CA00232420 /* facetpairing4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing4.cpp; sourceTree = "<group>"; };
 		05C265CC2830A4DC00232420 /* facetpairingtest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairingtest.h; sourceTree = "<group>"; };
 		05C278E528403312009A2DA1 /* tightencodingtest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tightencodingtest.h; sourceTree = "<group>"; };
+		05C278E728422B43009A2DA1 /* testdim3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testdim3.h; sourceTree = "<group>"; };
+		05C278E828422B53009A2DA1 /* isomorphism2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism2.cpp; sourceTree = "<group>"; };
+		05C278EB28422B5C009A2DA1 /* isomorphism4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism4.cpp; sourceTree = "<group>"; };
 		05CAE6002741C871007C93F3 /* validityconstraints.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = validityconstraints.cpp; sourceTree = "<group>"; };
 		05CAE60327427A8A007C93F3 /* ordering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ordering.cpp; sourceTree = "<group>"; };
 		05CAE60427427A8A007C93F3 /* maxadmissible.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maxadmissible.cpp; sourceTree = "<group>"; };
@@ -6306,8 +6312,8 @@
 				052FA0FA1806088B00FAE4DF /* homologicaldata.cpp */,
 				052FA0FB1806088B00FAE4DF /* isomorphism.cpp */,
 				05C2659D2825FB0300232420 /* links.cpp */,
+				05C278E728422B43009A2DA1 /* testdim3.h */,
 				052FA0FC1806088B00FAE4DF /* triangulation3.cpp */,
-				052FA0FD1806088B00FAE4DF /* testtriangulation.h */,
 			);
 			path = dim3;
 			sourceTree = "<group>";
@@ -7260,6 +7266,7 @@
 			children = (
 				0583656718DB88D9008B08D9 /* CMakeLists.txt */,
 				05C265C32830A4AD00232420 /* facetpairing2.cpp */,
+				05C278E828422B53009A2DA1 /* isomorphism2.cpp */,
 				0583656818DB88D9008B08D9 /* triangulation2.cpp */,
 				0583656918DB88D9008B08D9 /* testdim2.h */,
 			);
@@ -7322,6 +7329,7 @@
 			children = (
 				0591E8521C4F779B00793A9C /* CMakeLists.txt */,
 				05C265C92830A4CA00232420 /* facetpairing4.cpp */,
+				05C278EB28422B5C009A2DA1 /* isomorphism4.cpp */,
 				0591E8531C4F779B00793A9C /* triangulation4.cpp */,
 				0591E8541C4F779B00793A9C /* testdim4.h */,
 			);
@@ -9010,6 +9018,8 @@
 			files = (
 				05277ABE25CF9D16001E4134 /* snappea.cpp in Sources */,
 				051324F5258AF3FA001014F0 /* laurent.cpp in Sources */,
+				05C278E928422B53009A2DA1 /* isomorphism2.cpp in Sources */,
+				05C278EC28422B5C009A2DA1 /* isomorphism4.cpp in Sources */,
 				052FA11C1806088B00FAE4DF /* triangulation3.cpp in Sources */,
 				052FA10B1806088B00FAE4DF /* perm3.cpp in Sources */,
 				05C265CA2830A4CA00232420 /* facetpairing4.cpp in Sources */,
@@ -9190,6 +9200,7 @@
 				05226DF727422C82000A45D5 /* hilbertcd.cpp in Sources */,
 				05B7FFAF25AC22D2003BAF5C /* descent.cpp in Sources */,
 				05FB46EE1DD92D5100BB00E5 /* abeliangroup.cpp in Sources */,
+				05C278ED28422B5C009A2DA1 /* isomorphism4.cpp in Sources */,
 				05937AD619CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m in Sources */,
 				052FA214180612DD00FAE4DF /* canonize_result.c in Sources */,
 				054209081DF0DA450018AB24 /* graphloop.cpp in Sources */,
@@ -9666,6 +9677,7 @@
 				05B7FF8925AC22AA003BAF5C /* automorph.cpp in Sources */,
 				05A066BE1DFA67D50047872E /* layering.cpp in Sources */,
 				05FB46D61DD92D2900BB00E5 /* abeliangroup.cpp in Sources */,
+				05C278EA28422B53009A2DA1 /* isomorphism2.cpp in Sources */,
 				05B7FFB025AC22D2003BAF5C /* cone.cpp in Sources */,
 				05AC685E1DFE729900FF1A4C /* layeredtorusbundle.cpp in Sources */,
 				05F0A0601DBF0B7000117BFC /* snappea.cpp in Sources */,
