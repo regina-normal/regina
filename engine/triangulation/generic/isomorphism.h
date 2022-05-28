@@ -994,11 +994,13 @@ inline Isomorphism<dim> Isomorphism<dim>::operator ++(int) {
 
 template <int dim>
 inline void Isomorphism<dim>::tightEncode(std::ostream& out) const {
-    regina::tightEncode(out, nSimplices_);
-    for (size_t i = 0; i < nSimplices_; ++i) {
+    regina::detail::tightEncodeIndex(out, nSimplices_);
+    for (size_t i = 0; i < nSimplices_; ++i)
         regina::detail::tightEncodeIndex(out, simpImage_[i]);
+    // TODO: If dim == 2 then we could fit two permutations per character.
+    // Do we want to do this?
+    for (size_t i = 0; i < nSimplices_; ++i)
         facetPerm_[i].tightEncode(out);
-    }
 }
 
 template <int dim>
@@ -1025,18 +1027,17 @@ inline Isomorphism<dim> Isomorphism<dim>::tightDecoding(
 
 template <int dim>
 inline Isomorphism<dim> Isomorphism<dim>::tightDecoding(std::istream& input) {
-    size_t n = regina::tightDecoding<size_t>(input);
+    size_t n = regina::detail::tightDecodingIndex<size_t>(input);
     Isomorphism ans(n);
 
-    for (size_t i = 0; i < n; ++i) {
-        // We don't check the values of simpImage_[...], since we want to
-        // support the negative "unknown" placeholder value for simpImage_[...].
+    // We don't check the values of simpImage_[...], since we want to
+    // support the negative "unknown" placeholder value for simpImage_[...].
+    // Perm<dim+1>::tightDecoding() will check the validity of the
+    // permutations that are read.
+    for (size_t i = 0; i < n; ++i)
         ans.simpImage_[i] = regina::detail::tightDecodingIndex<ssize_t>(input);
-
-        // Perm<dim+1>::tightDecoding() will check the validity of the
-        // permutations that are read.
+    for (size_t i = 0; i < n; ++i)
         ans.facetPerm_[i] = Perm<dim+1>::tightDecoding(input);
-    }
 
     return ans;
 }
