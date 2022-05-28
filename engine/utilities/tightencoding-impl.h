@@ -486,11 +486,9 @@ endDecoding:
 
 template <typename Int>
 void tightEncodeIndex(std::ostream& out, Int value) {
-    static_assert(std::is_same_v<Int, size_t> || std::is_same_v<Int, ssize_t>,
-        "tightEncodeIndex() requires an integer type size_t or ssize_t.");
-
-    // The size_t type is guaranteed to hold at least 16 bits.
-    // However, ssize_t is not in the C++ standard, so verify this again now.
+    static_assert(std::is_unsigned_v<Int> || std::is_same_v<Int, ssize_t>,
+        "tightEncodeIndex() requires either ssize_t or an unsigned native "
+        "C++ integer type.");
     static_assert(sizeof(Int) >= 2,
         "tightEncodeIndex() requires an integer type with at least 16 bits.");
 
@@ -520,7 +518,7 @@ void tightEncodeIndex(std::ostream& out, Int value) {
     }
 
     if constexpr (sizeof(Int) == 2) {
-        // The next bound of 737278 is too large for the Int type.
+        // The next bound of 737278 is too large for our integer type.
         value -= 8279;
         out << '}' << char((value % 90) + 33);
         value /= 90;
@@ -553,11 +551,9 @@ void tightEncodeIndex(std::ostream& out, Int value) {
 
 template <typename Int>
 Int tightDecodingIndex(std::istream& input) {
-    static_assert(std::is_same_v<Int, size_t> || std::is_same_v<Int, ssize_t>,
-        "tightDecodeIndex() requires an integer type size_t or ssize_t.");
-
-    // The size_t type is guaranteed to hold at least 16 bits.
-    // However, ssize_t is not in the C++ standard, so verify this again now.
+    static_assert(std::is_unsigned_v<Int> || std::is_same_v<Int, ssize_t>,
+        "tightDecodeIndex() requires either ssize_t or an unsigned native "
+        "C++ integer type.");
     static_assert(sizeof(Int) >= 2,
         "tightDecodeIndex() requires an integer type with at least 16 bits.");
 
@@ -602,9 +598,11 @@ Int tightDecodingIndex(std::istream& input) {
             throw InvalidInput("The tight encoding is invalid");
         result += 90 * static_cast<Int>(c);
     } else if (c == '}') {
-        // This is the first case where we could encounter overflow.
-        // The integer that we read here *is* guaranteed to fit into a long,
-        // so we do our initial arithmetic there.
+        // This is the first case where we could encounter overflow,
+        // since the result could require either 2 or 4 bytes.
+        // The integer that we read here *will* fit into a long (which
+        // is guaranteed to hold at least 4 bytes), so we do our
+        // initial arithmetic there.
         long val = 8279;
 
         if (start == limit)

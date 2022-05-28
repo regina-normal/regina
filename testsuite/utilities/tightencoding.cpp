@@ -672,10 +672,14 @@ class TightEncodingTest : public CppUnit::TestFixture {
         }
 
         template <typename T>
-        static void verifyIndexBeyondMax() {
+        static void verifyIndexMax() {
+            // First test the maximum possible value.
+            static constexpr T max = std::numeric_limits<T>::max();
+            verifyIndex<T>(max);
+
+            // Now test what happens just beyond the maximum possible value.
             std::ostringstream out;
-            regina::detail::tightEncodeIndex(out,
-                std::numeric_limits<T>::max());
+            regina::detail::tightEncodeIndex(out, max);
             std::string enc = out.str();
 
             if (enc.length() < 2) {
@@ -732,23 +736,35 @@ class TightEncodingTest : public CppUnit::TestFixture {
             // Test *all* the one-digit and two-digit cases, plus a bit
             // into the three-digit cases.
             for (int i = 0; i <= 10000; ++i) {
+                verifyIndex<uint16_t>(i);
+                verifyIndex<uint32_t>(i);
+                verifyIndex<uint64_t>(i);
+                verifyIndex<unsigned long long>(i);
                 verifyIndex<size_t>(i);
                 verifyIndex<ssize_t>(i);
             }
 
             // Test the boundaries between the three-digit and general cases.
+            verifyIndex<uint16_t>(737278);
+            verifyIndex<uint16_t>(737279);
+            verifyIndex<uint32_t>(737278);
+            verifyIndex<uint32_t>(737279);
+            verifyIndex<uint64_t>(737278);
+            verifyIndex<uint64_t>(737279);
+            verifyIndex<unsigned long long>(737278);
+            verifyIndex<unsigned long long>(737279);
             verifyIndex<size_t>(737278);
             verifyIndex<size_t>(737279);
             verifyIndex<ssize_t>(737278);
             verifyIndex<ssize_t>(737279);
 
-            // Test the maximum possible values.
-            verifyIndex<size_t>(std::numeric_limits<size_t>::max());
-            verifyIndex<ssize_t>(std::numeric_limits<ssize_t>::max());
-
-            // Test encodings of (max possible) + 1.
-            verifyIndexBeyondMax<size_t>();
-            verifyIndexBeyondMax<ssize_t>();
+            // Test at and beyond the maximum possible values.
+            verifyIndexMax<uint16_t>();
+            verifyIndexMax<uint32_t>();
+            verifyIndexMax<uint64_t>();
+            verifyIndexMax<unsigned long long>();
+            verifyIndexMax<size_t>();
+            verifyIndexMax<ssize_t>();
         }
 };
 

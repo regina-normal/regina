@@ -465,9 +465,10 @@ namespace detail {
      *
      * \ifacespython Not present.
      *
-     * \tparam Int The type of integer to encode; currently the only
-     * supported types are \c size_t and \c ssize_t.  This list may be
-     * expanded in future versions of Regina.
+     * \tparam Int The type of integer to encode.  Currently this must be
+     * either \c ssize_t (the only allowed signed type), or one of the
+     * unsigned native C++ integer types that holds at least 16 bits.
+     * This list of types may be expanded in future versions of Regina.
      *
      * @param out the output stream to which the encoded string will be written.
      * @param value the integer to encode.
@@ -498,9 +499,10 @@ namespace detail {
      *
      * \ifacespython Not present.
      *
-     * \tparam Int The type of integer to reconstruct; currently the only
-     * supported types are \c size_t and \c ssize_t.  This list may be
-     * expanded in future versions of Regina.
+     * \tparam Int The type of integer to reconstruct.  Currently this must be
+     * either \c ssize_t (the only allowed signed type), or one of the
+     * unsigned native C++ integer types that holds at least 16 bits.
+     * This list of types may be expanded in future versions of Regina.
      *
      * @param input an input stream that begins with a tight encoding.
      * @return the integer represented by the given tight encoding.
