@@ -310,6 +310,34 @@ cPcbbbdxm $"##&
 cPcbbbcjt $"#57
 cPcbbbchw $"#64
 ============================================================
+TEST: tricensus -2 -t2 -S @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 1:0 | 0:2 1:2 1:1
+0:1 0:0 1:0 | 0:2 bdry bdry
+1:0 1:1 1:2 | 0:0 0:1 0:2
+1:0 1:1 bdry | 0:0 0:1 bdry
+1:0 bdry bdry | 0:0 bdry bdry
+Finished.
+Total triangulations: 13
+--------------------
+Exit code: 0
+--------------------
+Output:
+cMabdd $"#!#
+cMabcc $"#!#
+cMabcd $"#!#
+cbcbd $#"!%
+cbcbb $#"!%
+cPbbaa $"#!!
+cPbbac $"#!!
+cPbbbe $"#$#
+cPbbde $"#!"
+cHaba $"#""
+cHabb $"##$
+cHabe $"#"!
+cba $"#!!
+============================================================
 TEST: tricensus -t1 -i @TESTOUT@
 --------------------
 Starting census generation...
