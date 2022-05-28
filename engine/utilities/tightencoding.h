@@ -451,6 +451,64 @@ namespace detail {
     template <typename Int, typename iterator>
     Int tightDecodingInteger(iterator start, iterator limit,
         bool noTrailingData);
+
+    /**
+     * Internal function that writes the tight encoding of an integer
+     * whose value is either non-negative or -1.
+     *
+     * This should \e not be used for encoding standalone integers, since it
+     * uses a more compact format that is not compatible with Regina's general
+     * integer encodings.  Instead, it is intended to be used as part of the
+     * encoding for larger objects (e.g., triangulations or isomorphisms).
+     *
+     * \exception InvalidArgument the given integer is less than -1.
+     *
+     * \ifacespython Not present.
+     *
+     * \tparam Int The type of integer to encode; currently the only
+     * supported types are \c size_t and \c ssize_t.  This list may be
+     * expanded in future versions of Regina.
+     *
+     * @param out the output stream to which the encoded string will be written.
+     * @param value the integer to encode.
+     *
+     * \ingroup utilities
+     */
+    template <typename Int>
+    void tightEncodeIndex(std::ostream& out, Int value);
+
+    /**
+     * Internal function that reconstructs an integer that was encoded
+     * using tightEncodeIndex().  This encoding method is used for integers
+     * that are either non-negative or -1, and is not compatible with
+     * Regina's general integer encodings.
+     *
+     * The tight encoding will be read from the given input stream.  If the
+     * input stream contains leading whitespace then it will be treated as an
+     * invalid encoding (i.e., this routine will throw an exception).  The
+     * input routine \e may contain further data: if this routine is successful
+     * then the input stream will be left positioned immediately after the
+     * encoding, without skipping any trailing whitespace.
+     *
+     * \exception InvalidInput the given input stream does not begin with a
+     * tight encoding of an integer of type \a Int using the encoding scheme
+     * defined by tightEncodeIndex().  This includes the case where the
+     * encoding \e is a valid non-negative integer encoding but the integer
+     * itself is outside the allowed range for the \a Int type.
+     *
+     * \ifacespython Not present.
+     *
+     * \tparam Int The type of integer to reconstruct; currently the only
+     * supported types are \c size_t and \c ssize_t.  This list may be
+     * expanded in future versions of Regina.
+     *
+     * @param input an input stream that begins with a tight encoding.
+     * @return the integer represented by the given tight encoding.
+     *
+     * \ingroup utilities
+     */
+    template <typename Int>
+    Int tightDecodingIndex(std::istream& input);
 }
 
 // Inline functions:

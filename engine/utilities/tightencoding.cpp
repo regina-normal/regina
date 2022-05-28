@@ -67,5 +67,11 @@ template Integer tightDecodingInteger<Integer, it2>(it2, it2, bool);
 template LargeInteger tightDecodingInteger<LargeInteger, it1>(it1, it1, bool);
 template LargeInteger tightDecodingInteger<LargeInteger, it2>(it2, it2, bool);
 
+template void tightEncodeIndex<size_t>(std::ostream&, size_t);
+template void tightEncodeIndex<ssize_t>(std::ostream&, ssize_t);
+
+template size_t tightDecodingIndex<size_t>(std::istream&);
+template ssize_t tightDecodingIndex<ssize_t>(std::istream&);
+
 } // namespace regina::detail
 

@@ -48,6 +48,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(integer);
     CPPUNIT_TEST(infinity);
     CPPUNIT_TEST(boolean);
+    CPPUNIT_TEST(index);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -612,6 +613,142 @@ class TightEncodingTest : public CppUnit::TestFixture {
         void boolean() {
             verifyBoolean(true, regina::tightEncoding(1));
             verifyBoolean(false, regina::tightEncoding(0));
+        }
+
+        template <typename T>
+        static void verifyIndex(T val) {
+            std::ostringstream out;
+            regina::detail::tightEncodeIndex(out, val);
+            std::string enc = out.str();
+
+            try {
+                std::istringstream input(enc);
+                T dec = regina::detail::tightDecodingIndex<T>(input);
+                if (dec != val) {
+                    std::ostringstream msg;
+                    msg << "The tight encoding for " << val
+                        << " using " << typeDesc<T>()
+                        << " does not decode as an input stream "
+                        "to the same value.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } catch (const regina::InvalidInput&) {
+                std::ostringstream msg;
+                msg << "The tight encoding for " << val
+                    << " using " << typeDesc<T>()
+                    << " does not decode as an input stream at all.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            try {
+                std::istringstream input(enc + "x y z");
+                T dec = regina::detail::tightDecodingIndex<T>(input);
+                if (dec != val) {
+                    std::ostringstream msg;
+                    msg << "The tight encoding for " << val
+                        << " using " << typeDesc<T>()
+                        << " does not decode as an input stream "
+                        "with trailing characters to the same value.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                char c;
+                input >> c;
+                if ((! input) || (c != 'x')) {
+                    std::ostringstream msg;
+                    msg << "The tight encoding for " << val
+                        << " using " << typeDesc<T>()
+                        << " consumes trailing characters when "
+                        "decoding as an input stream.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } catch (const regina::InvalidInput&) {
+                std::ostringstream msg;
+                msg << "The tight encoding for " << val
+                    << " using " << typeDesc<T>()
+                    << " does not decode as an input stream "
+                    "with trailing characters at all.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        template <typename T>
+        static void verifyIndexBeyondMax() {
+            std::ostringstream out;
+            regina::detail::tightEncodeIndex(out,
+                std::numeric_limits<T>::max());
+            std::string enc = out.str();
+
+            if (enc.length() < 2) {
+                std::ostringstream msg;
+                msg << "The tight encoding for the maximum possible "
+                    << typeDesc<T>() << " is unexpectedly short.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Step up to encode the next integer value.
+            // In base 90, the first digit of the encoding should currently be
+            // (MAX_VALUE - 737279) mod 90 == (MAX_VALUE + 1) mod 90.
+            // In particular, we would expect MAX_VALUE to be odd, and so
+            // this first digit should not be 89.
+            // This means that we can safely increment the first digit.
+            if (enc[1] == 122) {
+                std::ostringstream msg;
+                msg << "The tight encoding for the maximum possible "
+                    << typeDesc<T>() << " has a first base 90 digit of 89, "
+                    "which is not expected from the usual native C++ types.  "
+                    "You may be on an exotic platform; please report this "
+                    "to the Regina developers so that we can take your "
+                    "platform into account.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            ++enc[1];
+
+            try {
+                std::istringstream input(enc);
+                regina::detail::tightDecodingIndex<T>(input);
+
+                std::ostringstream msg;
+                msg << "The tight encoding for one beyond the maximum possible "
+                    << typeDesc<T>() << " decodes as an input stream, "
+                    "even though it should be out of range.";
+                CPPUNIT_FAIL(msg.str());
+            } catch (const regina::InvalidInput&) {
+            }
+        }
+
+        void index() {
+            // First verify that negative indices do the right thing.
+            verifyIndex<ssize_t>(-1);
+
+            try {
+                std::ostringstream out;
+                regina::detail::tightEncodeIndex(out, static_cast<ssize_t>(-2));
+
+                CPPUNIT_FAIL("The index -2 has a tight encoding, but "
+                    "-1 should be the only supported negative index.");
+            } catch (const regina::InvalidArgument&) {
+            }
+
+            // Test *all* the one-digit and two-digit cases, plus a bit
+            // into the three-digit cases.
+            for (int i = 0; i <= 10000; ++i) {
+                verifyIndex<size_t>(i);
+                verifyIndex<ssize_t>(i);
+            }
+
+            // Test the boundaries between the three-digit and general cases.
+            verifyIndex<size_t>(737278);
+            verifyIndex<size_t>(737279);
+            verifyIndex<ssize_t>(737278);
+            verifyIndex<ssize_t>(737279);
+
+            // Test the maximum possible values.
+            verifyIndex<size_t>(std::numeric_limits<size_t>::max());
+            verifyIndex<ssize_t>(std::numeric_limits<ssize_t>::max());
+
+            // Test encodings of (max possible) + 1.
+            verifyIndexBeyondMax<size_t>();
+            verifyIndexBeyondMax<ssize_t>();
         }
 };
 

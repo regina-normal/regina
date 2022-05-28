@@ -996,7 +996,7 @@ template <int dim>
 inline void Isomorphism<dim>::tightEncode(std::ostream& out) const {
     regina::tightEncode(out, nSimplices_);
     for (size_t i = 0; i < nSimplices_; ++i) {
-        regina::tightEncode(out, simpImage_[i]);
+        regina::detail::tightEncodeIndex(out, simpImage_[i]);
         facetPerm_[i].tightEncode(out);
     }
 }
@@ -1031,7 +1031,7 @@ inline Isomorphism<dim> Isomorphism<dim>::tightDecoding(std::istream& input) {
     for (size_t i = 0; i < n; ++i) {
         // We don't check the values of simpImage_[...], since we want to
         // support the negative "unknown" placeholder value for simpImage_[...].
-        ans.simpImage_[i] = regina::tightDecoding<ssize_t>(input);
+        ans.simpImage_[i] = regina::detail::tightDecodingIndex<ssize_t>(input);
 
         // Perm<dim+1>::tightDecoding() will check the validity of the
         // permutations that are read.

@@ -484,6 +484,229 @@ endDecoding:
     return result;
 }
 
+template <typename Int>
+void tightEncodeIndex(std::ostream& out, Int value) {
+    static_assert(std::is_same_v<Int, size_t> || std::is_same_v<Int, ssize_t>,
+        "tightEncodeIndex() requires an integer type size_t or ssize_t.");
+
+    // The size_t type is guaranteed to hold at least 16 bits.
+    // However, ssize_t is not in the C++ standard, so verify this again now.
+    static_assert(sizeof(Int) >= 2,
+        "tightEncodeIndex() requires an integer type with at least 16 bits.");
+
+    // Here we use the 90 values 33..122 as "digit" characters,
+    // and the four values 123..126 as different types of markers.
+    // As characters, the four markers are: { | } ~
+
+    if constexpr (! std::is_unsigned_v<Int>)
+        if (value < -1)
+            throw InvalidArgument("tightEncodeIndex() can only encode "
+                "integers >= -1");
+
+    if (value <= 88) {
+        out << char(value + 34); // 33 <= char <= 122
+        return;
+    }
+
+    if (value <= 178) {
+        out << '~' << char(value - 56); // 33 <= char <= 122
+        return;
+    }
+
+    if (value <= 8278) {
+        value -= 179;
+        out << '|' << char((value % 90) + 33) << char((value / 90) + 33);
+        return;
+    }
+
+    if constexpr (sizeof(Int) == 2) {
+        // The next bound of 737278 is too large for the Int type.
+        value -= 8279;
+        out << '}' << char((value % 90) + 33);
+        value /= 90;
+        out << char((value % 90) + 33) << char((value / 90) + 33);
+        return;
+    } else {
+        if (value <= 737278) {
+            value -= 8279;
+            out << '}' << char((value % 90) + 33);
+            value /= 90;
+            out << char((value % 90) + 33) << char((value / 90) + 33);
+            return;
+        }
+
+        // Fall through to the general case.
+        value -= 737279;
+        out << '{';
+        if (value == 0) {
+            // Write one zero digit, as opposed to nothing at all.
+            out << char(33);
+        } else {
+            while (value > 0) {
+                out << char((value % 90) + 33);
+                value /= 90;
+            }
+        }
+        out << '}';
+    }
+}
+
+template <typename Int>
+Int tightDecodingIndex(std::istream& input) {
+    static_assert(std::is_same_v<Int, size_t> || std::is_same_v<Int, ssize_t>,
+        "tightDecodeIndex() requires an integer type size_t or ssize_t.");
+
+    // The size_t type is guaranteed to hold at least 16 bits.
+    // However, ssize_t is not in the C++ standard, so verify this again now.
+    static_assert(sizeof(Int) >= 2,
+        "tightDecodeIndex() requires an integer type with at least 16 bits.");
+
+    Int result;
+    bool overflow = false;
+
+    std::istreambuf_iterator<char> start(input);
+    std::istreambuf_iterator<char> limit; // end-of-input
+
+    if (start == limit)
+        throw InvalidInput("The tight encoding is incomplete");
+    signed char c = *start++;
+    if (c >= 33 && c <= 122) {
+        if constexpr (std::is_unsigned_v<Int>) {
+            if (c == 33)
+                throw InvalidInput("The tight encoding describes "
+                    "a negative index but the integer type is unsigned");
+        }
+        result = c - 34;
+    } else if (c == '~') {
+        if (start == limit)
+            throw InvalidInput("The tight encoding is incomplete");
+        c = *start++;
+        if (c < 33 || c > 122)
+            throw InvalidInput("The tight encoding is invalid");
+        else
+            result = c + 56;
+    } else if (c == '|') {
+        result = 179;
+
+        if (start == limit)
+            throw InvalidInput("The tight encoding is incomplete");
+        c = (*start++) - 33;
+        if (c < 0 || c >= 90)
+            throw InvalidInput("The tight encoding is invalid");
+        result += c;
+
+        if (start == limit)
+            throw InvalidInput("The tight encoding is incomplete");
+        c = (*start++) - 33;
+        if (c < 0 || c >= 90)
+            throw InvalidInput("The tight encoding is invalid");
+        result += 90 * static_cast<Int>(c);
+    } else if (c == '}') {
+        // This is the first case where we could encounter overflow.
+        // The integer that we read here *is* guaranteed to fit into a long,
+        // so we do our initial arithmetic there.
+        long val = 8279;
+
+        if (start == limit)
+            throw InvalidInput("The tight encoding is incomplete");
+        c = (*start++) - 33;
+        if (c < 0 || c >= 90)
+            throw InvalidInput("The tight encoding is invalid");
+        val += c;
+
+        if (start == limit)
+            throw InvalidInput("The tight encoding is incomplete");
+        c = (*start++) - 33;
+        if (c < 0 || c >= 90)
+            throw InvalidInput("The tight encoding is invalid");
+        val += 90 * static_cast<int>(c);
+
+        if (start == limit)
+            throw InvalidInput("The tight encoding is incomplete");
+        c = (*start++) - 33;
+        if (c < 0 || c >= 90)
+            throw InvalidInput("The tight encoding is invalid");
+        val += 8100 * static_cast<int>(c);
+
+        if constexpr (sizeof(Int) < 4) {
+            if (val > long(std::numeric_limits<Int>::max())) {
+                overflow = true;
+                goto endDecoding;
+            }
+        }
+        result = static_cast<Int>(val);
+    } else if (c == '{') {
+        // The result needs at least 4 bytes, possibly more.
+        if constexpr (sizeof(Int) < 4) {
+            // This *will* overflow.
+            overflow = true;
+            goto endDecoding;
+        } else {
+            // In this if/else branch we have a compile-time guarantee that
+            // Int has >= 4 bytes.  This *might* overflow - we won't know
+            // until we see more of the encoding.
+
+            result = 737279;
+            Int coeff = 1, coeffPrev = 0;
+            while (true) {
+                if (start == limit)
+                    throw InvalidInput("The tight encoding is incomplete");
+                c = *start++;
+                if (c == '}')
+                    break;
+                if (c < 33 || c > 122)
+                    throw InvalidInput("The tight encoding is invalid");
+
+                if (coeffPrev != 0) {
+                    // We have reached at least the second base 90 digit
+                    // in our encoding.
+                    // Step up to the next power of 90.
+                    // This or a higher power should appear with a non-zero
+                    // coefficient (either now or later in the encoding),
+                    // so if this overflows then we can bail now.
+                    if (coeff > regina::maxSafeFactor<Int, 90>) {
+                        overflow = true;
+                        goto endDecoding;
+                    }
+                    coeff *= 90;
+                }
+
+                // We have to be careful about overflow here.
+                // First work out what we need to add.
+                Int term;
+                if (coeffPrev == 0) {
+                    // This will not overflow.
+                    term = coeff * static_cast<Int>(c - 33);
+                } else {
+                    // The first multiplication here will
+                    // not overflow; the second might.
+                    term = coeffPrev * static_cast<Int>(c - 33);
+                    if (term > regina::maxSafeFactor<Int, 90>) {
+                        overflow = true;
+                        goto endDecoding;
+                    }
+                    term *= 90;
+                }
+                // Now see if it's safe to add.
+                if (result <= std::numeric_limits<Int>::max() - term)
+                    result += term;
+                else {
+                    overflow = true;
+                    goto endDecoding;
+                }
+                coeffPrev = coeff;
+            }
+        }
+    } else
+        throw InvalidInput("The tight encoding is invalid");
+
+endDecoding:
+    if (overflow)
+        throw InvalidInput("The tight encoding describes an index "
+            "that is out of range for the chosen integer type");
+    return result;
+}
+
 } // namespace regina::detail
 
 #endif

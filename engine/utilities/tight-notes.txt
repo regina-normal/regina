@@ -1,5 +1,5 @@
-Scheme for tight encodings of integers
---------------------------------------
+Scheme for tight encodings of general integers
+----------------------------------------------
 
 abc... are chars in the range 33..122 representing base 90 digits;
 multi-digit numbers are written as least significant -> most significant
@@ -23,3 +23,29 @@ a: a-44 (covers -44..45)
 NOTE: {!} is unused; here ! represents the digit 0
 
 Supported types: (signed/unsigned) (int/long/long long), Integer/LargeInteger
+
+
+
+Scheme for tight encodings of indices (integers >= -1)
+------------------------------------------------------
+
+abc... are chars in the range 33..122 representing base 90 digits;
+multi-digit numbers are written as least significant -> most significant
+
+a: a-1 (covers -1..88)
+
+~a: a+89 (covers 89..178)
+
+|ab: ab+179 (covers 179..8278)
+
+}abc: abc+8279 (covers 8279..737278)
+
+{abc..}: (abc..)+737279 (covers 737279..)
+
+{} -> reserved for infinity, in case we later support LargeInteger
+
+NOTE: 737279 is encoded as {!}, not {}; that is, we write a zero digit.
+      The encoding {} is reserved for infinity in case we wish to support
+      the LargeInteger type in the future.
+
+Supported types: size_t, ssize_t
