@@ -36,7 +36,7 @@
 #include "algebra/abeliangroup.h"
 #include "triangulation/dim3.h"
 #include "triangulation/example3.h"
-#include "testsuite/dim3/testtriangulation.h"
+#include "testsuite/dim3/testdim3.h"
 #include "testsuite/utilities/tightencodingtest.h"
 
 using regina::AbelianGroup;

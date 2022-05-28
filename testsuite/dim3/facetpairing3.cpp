@@ -36,7 +36,7 @@
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/generic/facetpairingtest.h"
-#include "testsuite/dim3/testtriangulation.h"
+#include "testsuite/dim3/testdim3.h"
 
 using regina::FacetPairing;
 

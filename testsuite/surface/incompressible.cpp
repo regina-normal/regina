@@ -38,7 +38,7 @@
 #include "surface/normalsurfaces.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim3.h"
-#include "testsuite/dim3/testtriangulation.h"
+#include "testsuite/dim3/testdim3.h"
 
 using regina::Example;
 using regina::NormalSurface;

@@ -52,7 +52,7 @@
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/generic/triangulationtest.h"
-#include "testsuite/dim3/testtriangulation.h"
+#include "testsuite/dim3/testdim3.h"
 
 using regina::AbelianGroup;
 using regina::BoundaryComponent;

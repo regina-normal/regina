@@ -43,7 +43,7 @@
 #include "testsuite/angle/testangle.h"
 #include "testsuite/census/testcensus.h"
 #include "testsuite/dim2/testdim2.h"
-#include "testsuite/dim3/testtriangulation.h"
+#include "testsuite/dim3/testdim3.h"
 #include "testsuite/dim4/testdim4.h"
 #include "testsuite/generic/testgeneric.h"
 #include "testsuite/link/testlink.h"
