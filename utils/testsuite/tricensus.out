@@ -38,7 +38,7 @@ Usage: tricensus <output-file>
   -s, --sigs                        Write isomorphism signatures only, not
                                     full Regina data files.
   -S, --canonical                   Write isomorphism signatures with matching
-                                    isomorphisms away from canonical facet
+                                    isomorphisms that yield canonical facet
                                     pairings.
   -c, --subcontainers               For each face pairing, place resulting
                                     triangulations into different subcontainers
@@ -93,7 +93,7 @@ Usage: tricensus <output-file>
   -s, --sigs                        Write isomorphism signatures only, not
                                     full Regina data files.
   -S, --canonical                   Write isomorphism signatures with matching
-                                    isomorphisms away from canonical facet
+                                    isomorphisms that yield canonical facet
                                     pairings.
   -c, --subcontainers               For each face pairing, place resulting
                                     triangulations into different subcontainers
@@ -148,7 +148,7 @@ Usage: tricensus <output-file>
   -s, --sigs                        Write isomorphism signatures only, not
                                     full Regina data files.
   -S, --canonical                   Write isomorphism signatures with matching
-                                    isomorphisms away from canonical facet
+                                    isomorphisms that yield canonical facet
                                     pairings.
   -c, --subcontainers               For each face pairing, place resulting
                                     triangulations into different subcontainers
