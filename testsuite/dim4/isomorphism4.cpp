@@ -62,19 +62,38 @@ class Isomorphism4Test :
             // Exhaustive run through all small isomorphisms (we need
             // both odd and even sizes here since permutations are
             // encoded in pairs):
+            static constexpr size_t expect[] = { 1, 120, 28800 };
             {
                 Isomorphism<4> iso = Isomorphism<4>::identity(1);
+                size_t count = 0;
                 do {
                     verifyTightEncoding(iso);
+                    ++count;
                     ++iso;
                 } while (! iso.isIdentity());
+                if (count != expect[1]) {
+                    std::ostringstream msg;
+                    msg << "Generated " << count << " isomorphisms "
+                        "of size 1 instead of the expected "
+                        << expect[1] << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
             {
                 Isomorphism<4> iso = Isomorphism<4>::identity(2);
+                size_t count = 0;
                 do {
                     verifyTightEncoding(iso);
+                    ++count;
                     ++iso;
                 } while (! iso.isIdentity());
+                if (count != expect[2]) {
+                    std::ostringstream msg;
+                    msg << "Generated " << count << " isomorphisms "
+                        "of size 2 instead of the expected "
+                        << expect[2] << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
 
             // Cases where the isomorphism includes higher-numbered

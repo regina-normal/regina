@@ -62,26 +62,54 @@ class Isomorphism2Test :
             // Exhaustive run through all small isomorphisms (we need
             // both odd and even sizes here since permutations are
             // encoded in pairs):
+            static constexpr size_t expect[] = { 1, 6, 72, 1296 };
             {
                 Isomorphism<2> iso = Isomorphism<2>::identity(1);
+                size_t count = 0;
                 do {
                     verifyTightEncoding(iso);
+                    ++count;
                     ++iso;
                 } while (! iso.isIdentity());
+                if (count != expect[1]) {
+                    std::ostringstream msg;
+                    msg << "Generated " << count << " isomorphisms "
+                        "of size 1 instead of the expected "
+                        << expect[1] << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
             {
                 Isomorphism<2> iso = Isomorphism<2>::identity(2);
+                size_t count = 0;
                 do {
                     verifyTightEncoding(iso);
+                    ++count;
                     ++iso;
                 } while (! iso.isIdentity());
+                if (count != expect[2]) {
+                    std::ostringstream msg;
+                    msg << "Generated " << count << " isomorphisms "
+                        "of size 2 instead of the expected "
+                        << expect[2] << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
             {
                 Isomorphism<2> iso = Isomorphism<2>::identity(3);
+                size_t count = 0;
                 do {
                     verifyTightEncoding(iso);
+                    ++count;
                     ++iso;
                 } while (! iso.isIdentity());
+                if (count != expect[3]) {
+                    std::ostringstream msg;
+                    msg << "Generated " << count << " isomorphisms "
+                        "of size 3 instead of the expected "
+                        << expect[3] << '.';
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
 
             // Cases where the isomorphism includes higher-numbered
