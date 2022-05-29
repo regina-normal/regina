@@ -75,6 +75,7 @@ int dim4 = 0;
 int usePairs = 0;
 int sigs = 0;
 int canonical = 0;
+int tight = 0;
 regina::CensusPurge whichPurge;
 int genPairs = 0;
 int subContainers = 0;
@@ -226,6 +227,14 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
             sigStream << sig << ' ' << isoEnc << std::endl;
         } else {
             sigStream << sig << ' ' << isoEnc << std::endl;
+        }
+    } else if (tight) {
+        std::string enc = tri.tightEncoding();
+        if (threads > 1) {
+            std::unique_lock<std::mutex> lock(outputMutex);
+            sigStream << enc << std::endl;
+        } else {
+            sigStream << enc << std::endl;
         }
     } else {
         std::ostringstream out;
@@ -442,6 +451,9 @@ int main(int argc, const char* argv[]) {
             "Write isomorphism signatures with matching isomorphisms "
             "that yield canonical facet pairings.",
             nullptr },
+        { "encodings", 'e', POPT_ARG_NONE, &tight, 0,
+            "Write tight encodings only, not full Regina data files.",
+            nullptr },
         { "subcontainers", 'c', POPT_ARG_NONE, &subContainers, 0,
             "For each face pairing, place resulting triangulations into "
             "different subcontainers",
@@ -503,8 +515,9 @@ int main(int argc, const char* argv[]) {
     } else if (genPairs && (argFinite || argIdeal)) {
         std::cerr << "Finiteness options cannot be used with -p/--genpairs.\n";
         broken = true;
-    } else if (genPairs && (sigs || canonical)) {
-        std::cerr << "Signature output cannot be used with -p/--genpairs.\n";
+    } else if (genPairs && (sigs || canonical || tight)) {
+        std::cerr << "Signature or tight encoding output cannot be used with "
+            "-p/--genpairs.\n";
         broken = true;
     } else if (genPairs && threads != 1) {
         std::cerr << "Multithreading options cannot be used with "
@@ -575,13 +588,14 @@ int main(int argc, const char* argv[]) {
         std::cerr << "Options -p/--genpairs and -P/--usepairs "
             "cannot be used together.\n";
         broken = true;
-    } else if (subContainers && (sigs || canonical)) {
-        std::cerr << "Signatures (-s/--sigs or -S/--canonical) cannot be "
-            "used with sub-containers (-c/--subcontainers).\n";
+    } else if (subContainers && (sigs || canonical || tight)) {
+        std::cerr << "Signatures (-s/--sigs or -S/--canonical) or "
+            "tight encodings (-e/--encodings) cannot be used with "
+            "sub-containers (-c/--subcontainers).\n";
         broken = true;
-    } else if (sigs && canonical) {
-        std::cerr << "Options -s/--sigs and -S/--canonical "
-            "cannot be used together.\n";
+    } else if ((sigs && canonical) || (sigs && tight) || (canonical && tight)) {
+        std::cerr << "At most one of the options -s/--sigs, -S/--canonical "
+            "or -e/--encodings can be used.\n";
         broken = true;
     } else if (threads < 1) {
         std::cerr << "The number of threads must be strictly positive.\n";
@@ -701,7 +715,7 @@ int runCensus() {
     std::shared_ptr<regina::Packet> parent;
     std::shared_ptr<regina::Packet> census;
     std::shared_ptr<regina::Packet> desc;
-    if (sigs || canonical) {
+    if (sigs || canonical || tight) {
         sigStream.open(outFile.c_str());
         if (! sigStream) {
             std::cerr << "Signature file " << outFile
@@ -782,7 +796,7 @@ int runCensus() {
         }
 
         // Store the face pairings used with the census.
-        if (! (sigs || canonical)) {
+        if (! (sigs || canonical || tight)) {
             auto pairingPacket = std::make_shared<regina::Text>(pairingList);
             pairingPacket->setLabel(
                 dim4 ? "Facet Pairings" : dim2 ? "Edge Pairings" :
@@ -821,7 +835,7 @@ int runCensus() {
     std::cout << "Finished." << std::endl;
 
     // Write the completed census to file.
-    if (sigs || canonical) {
+    if (sigs || canonical || tight) {
         sigStream.close();
     } else {
         if (! parent->save(outFile.c_str())) {

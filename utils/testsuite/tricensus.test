@@ -31,10 +31,12 @@
 tricensus
 tricensus --threads 2 -2 -t4 -i -p
 tricensus --threads 0 -t2 -i -s @TESTOUT@
-# --- tricensus with signature output
+# --- tricensus with signature or tight encoding output
 tricensus -t2 -i -s @TESTOUT@
 tricensus -t2 -i -S @TESTOUT@
+tricensus -t2 -i -e @TESTOUT@
 tricensus -2 -t2 -S @TESTOUT@
+tricensus -2 -t2 -e @TESTOUT@
 # --- tricensus with Regina data output
 tricensus -t1 -i @TESTOUT@
 # --- allowing invalid triangulations:

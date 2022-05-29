@@ -117,6 +117,8 @@ Version 7.1  [ TODO ]
     UTILITIES:
         tricensus:
             - Now supports multithreading via the new --threads option.
+            - Now supports additional text-based output formats via the new
+              options --canonical and --encodings.
             - Now supports enumerating subcomplexes of triangulations
               via the new option --allowinvalid.
             - The --genpairs option is now much less memory-hungry when the
