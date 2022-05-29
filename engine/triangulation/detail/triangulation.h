@@ -62,6 +62,7 @@
 #include "utilities/exception.h"
 #include "utilities/listview.h"
 #include "utilities/snapshot.h"
+#include "utilities/tightencoding.h"
 
 namespace regina {
 
@@ -2437,6 +2438,25 @@ class TriangulationBase :
             const;
 
         /**
+         * Writes the tight encoding of this triangulation to the given output
+         * stream.  See the page on \ref tight "tight encodings" for details.
+         *
+         * \ifacespython Not present; use tightEncoding() instead.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
+
+        /**
+         * Returns the tight encoding of this triangulation.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * @return the resulting encoded string.
+         */
+        std::string tightEncoding() const;
+
+        /**
          * Returns C++ code that can be used to reconstruct this triangulation.
          *
          * This code will call Triangulation<dim>::fromGluings(), passing
@@ -2696,6 +2716,48 @@ class TriangulationBase :
          * created using the default encoding.
          */
         static size_t isoSigComponentSize(const std::string& sig);
+
+        /**
+         * Reconstructs a triangulation from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be given as a string.  If this string
+         * contains leading whitespace or any trailing characters at all
+         * (including trailing whitespace), then it will be treated as
+         * an invalid encoding (i.e., this routine will throw an exception).
+         *
+         * \exception InvalidArgument the given string is not a tight encoding
+         * of a <i>dim</i>-dimensional triangulation.
+         *
+         * @param enc the tight encoding for a <i>dim</i>-dimensional
+         * triangulation.
+         * @return the triangulation represented by the given tight encoding.
+         */
+        static Triangulation<dim> tightDecoding(const std::string& enc);
+
+        /**
+         * Reconstructs a triangulation from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.
+         * If the input stream contains leading whitespace then it will be
+         * treated as an invalid encoding (i.e., this routine will throw an
+         * exception).  The input routine \e may contain further data: if this
+         * routine is successful then the input stream will be left positioned
+         * immediately after the encoding, without skipping any trailing
+         * whitespace.
+         *
+         * \exception InvalidInput the given input stream does not begin with
+         * a tight encoding of a <i>dim</i>-dimensional triangulation.
+         *
+         * \ifacespython Not present, but the string version of this routine
+         * is available.
+         *
+         * @param input an input stream that begins with the tight encoding
+         * for a <i>dim</i>-dimensional triangulation.
+         * @return the facet pairing represented by the given tight encoding.
+         */
+        static Triangulation<dim> tightDecoding(std::istream& input);
 
         /*@}*/
 
@@ -4045,6 +4107,94 @@ void TriangulationBase<dim>::insertTriangulation(
     }
 
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+}
+
+template <int dim>
+void TriangulationBase<dim>::tightEncode(std::ostream& out) const {
+    regina::detail::tightEncodeIndex(out, size());
+
+    // Write each gluing from one side only, in the forward direction.
+    for (auto* s : simplices_)
+        for (int i = 0; i <= dim; ++i)
+            if (auto* adj = s->adjacentSimplex(i)) {
+                // If we have already seen this gluing from the other side,
+                // skip over it completely.
+                if (adj->index() > s->index() ||
+                        (adj->index() == s->index() &&
+                        s->adjacentFacet(i) >= i)) {
+                    regina::detail::tightEncodeIndex(out, adj->index());
+                    // TODO: For dimension 2, we can combine pairs of
+                    // gluings in a single character.
+                    s->adjacentGluing(i).tightEncode(out);
+                }
+            } else
+                regina::detail::tightEncodeNoIndex(out);
+}
+
+template <int dim>
+inline std::string TriangulationBase<dim>::tightEncoding() const {
+    std::ostringstream out;
+    tightEncode(out);
+    return out.str();
+}
+
+template <int dim>
+inline Triangulation<dim> TriangulationBase<dim>::tightDecoding(
+        const std::string& enc) {
+    std::istringstream s(enc);
+    try {
+        Triangulation<dim> ans = tightDecoding(s);
+        if (s.get() != EOF)
+            throw InvalidArgument("The tight encoding has trailing characters");
+        return ans;
+    } catch (const InvalidInput& exc) {
+        // For strings we use a different exception type.
+        throw InvalidArgument(exc.what());
+    }
+}
+
+template <int dim>
+Triangulation<dim> TriangulationBase<dim>::tightDecoding(std::istream& input) {
+    size_t size = regina::detail::tightDecodingIndex<size_t>(input);
+    if (size < 0)
+        throw InvalidInput("The tight encoding has a negative number "
+            "of simplices");
+
+    Triangulation<dim> ans;
+    // Note: new simplices are initialised with all adj_[i] null.
+    for (size_t i = 0; i < size; ++i)
+        ans.simplices_.push_back(new Simplex<dim>(&ans));
+
+    for (auto* s : ans.simplices_)
+        for (int i = 0; i <= dim; ++i) {
+            if (s->adjacentSimplex(i))
+                continue;
+
+            ssize_t adjIdx = regina::detail::tightDecodingIndex<ssize_t>(input);
+            if (adjIdx >= 0) {
+                // This is a non-boundary facet.
+                if (adjIdx >= size)
+                    throw InvalidInput("The tight encoding contains "
+                        "invalid gluings");
+
+                Perm<dim+1> gluing = Perm<dim+1>::tightDecoding(input);
+                if (adjIdx < s->index() ||
+                        (adjIdx == s->index() && gluing[i] <= i))
+                    throw InvalidInput("The tight encoding contains "
+                        "unexpected gluings");
+
+                Simplex<dim>* adj = ans.simplices_[adjIdx];
+                if (adj->adjacentSimplex(gluing[i])) {
+                    // Some other gluing has already claimed this facet.
+                    throw InvalidInput("The tight encoding contains "
+                        "inconsistent gluings");
+                }
+
+                s->join(i, adj, gluing);
+            }
+        }
+
+    return ans;
 }
 
 template <int dim>

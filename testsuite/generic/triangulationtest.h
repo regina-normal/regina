@@ -35,6 +35,7 @@
 #include "packet/container.h"
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
+#include "testsuite/utilities/tightencodingtest.h"
 #include <cppunit/extensions/HelperMacros.h>
 
 using regina::Isomorphism;
@@ -502,7 +503,8 @@ struct PachnerHelperCollapseEdge<dim, true> {
  * Inherited by the test classes for all dimensions.
  */
 template <int dim>
-class TriangulationTest : public CppUnit::TestFixture {
+class TriangulationTest : public CppUnit::TestFixture,
+        public TightEncodingTest<Triangulation<dim>> {
     protected:
         // Trivial:
         Triangulation<dim> empty;
@@ -1708,6 +1710,11 @@ class TriangulationTest : public CppUnit::TestFixture {
                     }
                 }
             }
+        }
+
+        static void verifyTightEncodingWithName(const Triangulation<dim>& tri,
+                const char*) {
+            TightEncodingTest<Triangulation<dim>>::verifyTightEncoding(tri);
         }
 };
 

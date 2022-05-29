@@ -230,6 +230,9 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def_static("fromSig", &Triangulation<dim>::fromSig)
         .def_static("isoSigComponentSize",
             &Triangulation<dim>::isoSigComponentSize)
+        .def("tightEncoding", &Triangulation<dim>::tightEncoding)
+        .def_static("tightDecoding", overload_cast<const std::string&>(
+            &Triangulation<dim>::tightDecoding))
         .def("dumpConstruction", &Triangulation<dim>::dumpConstruction)
         .def_readonly_static("dimension", &Triangulation<dim>::dimension)
     ;

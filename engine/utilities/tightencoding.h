@@ -479,6 +479,21 @@ namespace detail {
     void tightEncodeIndex(std::ostream& out, Int value);
 
     /**
+     * Internal function that writes the tight encoding of -1, using an
+     * encoding that is compatible with tightEncodeIndex().  Note that this is
+     * \e not compatible with Regina's general integer encodings.
+     *
+     * This is identical to calling <tt>tightEncodeIndex<ssize_t>(out, -1)</tt>.
+     *
+     * \ifacespython Not present.
+     *
+     * @param out the output stream to which the encoded string will be written.
+     *
+     * \ingroup utilities
+     */
+    void tightEncodeNoIndex(std::ostream& out);
+
+    /**
      * Internal function that reconstructs an integer that was encoded
      * using tightEncodeIndex().  This encoding method is used for integers
      * that are either non-negative or -1, and is not compatible with
@@ -633,6 +648,14 @@ inline Int tightDecoding(std::istream& input) {
         std::istreambuf_iterator<char>(input),
         std::istreambuf_iterator<char>(), false);
 }
+
+namespace detail {
+
+inline void tightEncodeNoIndex(std::ostream& out) {
+    tightEncodeIndex<ssize_t>(out, -1);
+}
+
+} // namespace detail
 
 } // namespace regina
 

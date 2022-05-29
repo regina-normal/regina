@@ -69,6 +69,7 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST(orientability);
     CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(barycentricSubdivision);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -355,6 +356,9 @@ class Triangulation2Test : public TriangulationTest<2> {
             testManualAll(verifyBary);
         }
 
+        void tightEncoding() {
+            testManualAll(verifyTightEncodingWithName);
+        }
 };
 
 void addTriangulation2(CppUnit::TextUi::TestRunner& runner) {

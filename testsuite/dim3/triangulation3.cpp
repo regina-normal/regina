@@ -138,6 +138,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(meridianLongitude);
     CPPUNIT_TEST(retriangulate);
     CPPUNIT_TEST(swapping);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -5485,6 +5486,13 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(
                     "std::iter_swap() did not swap properties correctly.");
             }
+        }
+
+        void tightEncoding() {
+            testManualAll(verifyTightEncodingWithName);
+            runCensusAllClosed(verifyTightEncodingWithName);
+            runCensusAllBounded(verifyTightEncodingWithName);
+            runCensusAllIdeal(verifyTightEncodingWithName);
         }
 };
 

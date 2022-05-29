@@ -117,6 +117,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(bundleWithMonodromy);
     CPPUNIT_TEST(fourFourMove);
     CPPUNIT_TEST(retriangulate);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -2916,6 +2917,12 @@ class Triangulation4Test : public TriangulationTest<4> {
                 "Ideal Cappell-Shaneson");
             verifyRetriangulate(idealCappellShaneson, 4, 1610,
                 "Ideal Cappell-Shaneson");
+        }
+
+        void tightEncoding() {
+            testManualAll(verifyTightEncodingWithName);
+            runCensusAllBounded(verifyTightEncodingWithName);
+            runCensusAllNoBdry(verifyTightEncodingWithName);
         }
 };
 

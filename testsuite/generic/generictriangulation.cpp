@@ -69,6 +69,7 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
         using TriangulationTest<dim>::verifyBoundaryCount;
         using TriangulationTest<dim>::verifyBoundaryH1;
         using TriangulationTest<dim>::verifyFundGroup;
+        using TriangulationTest<dim>::verifyTightEncodingWithName;
 
     public:
         /**
@@ -313,6 +314,10 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
             verifyFundGroup(ballBundle, "Z", "Ball bundle");
             verifyFundGroup(twistedBallBundle, "Z", "Twisted ball bundle");
         }
+
+        void tightEncoding() {
+            testManualAll(verifyTightEncodingWithName);
+        }
 };
 
 class Triangulation5Test : public GenericTriangulationTest<5> {
@@ -344,6 +349,7 @@ class Triangulation5Test : public GenericTriangulationTest<5> {
     CPPUNIT_TEST(homologyH2);
     CPPUNIT_TEST(homologyH3);
     CPPUNIT_TEST(fundGroup);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 };
@@ -378,6 +384,7 @@ class Triangulation6Test : public GenericTriangulationTest<6> {
     CPPUNIT_TEST(homologyH2);
     CPPUNIT_TEST(homologyH3);
     CPPUNIT_TEST(fundGroup);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 };
@@ -423,6 +430,7 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
     CPPUNIT_TEST(homologyH2);
     CPPUNIT_TEST(homologyH3);
     CPPUNIT_TEST(fundGroup);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 };
