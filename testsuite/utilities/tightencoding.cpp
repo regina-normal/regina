@@ -745,8 +745,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
             }
 
             // Test the boundaries between the three-digit and general cases.
-            verifyIndex<uint16_t>(737278);
-            verifyIndex<uint16_t>(737279);
+            // (This is only relevant for 32-bit integers and larger.)
             verifyIndex<uint32_t>(737278);
             verifyIndex<uint32_t>(737279);
             verifyIndex<uint64_t>(737278);
