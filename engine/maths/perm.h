@@ -1205,10 +1205,10 @@ Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
     // requires the type argument to be one of short, int, long or long long.
     static_assert(sizeof(Index) <= sizeof(long long),
         "Permutation index cannot fit inside a long long");
-    using Arg = typename std::conditional<sizeof(Index) <= sizeof(short), short,
-        typename std::conditional<sizeof(Index) <= sizeof(int), int,
-        typename std::conditional<sizeof(Index) <= sizeof(long), long,
-        long long>::type>::type>::type;
+    using Arg = std::conditional_t<sizeof(Index) <= sizeof(short), short,
+        std::conditional_t<sizeof(Index) <= sizeof(int), int,
+        std::conditional_t<sizeof(Index) <= sizeof(long), long,
+        long long>>>;
 
     if (even) {
         std::uniform_int_distribution<Arg> d(0, (nPerms / 2) - 1);

@@ -147,12 +147,12 @@ class XMLWriterRequiresTriangulation {
  */
 template <typename T>
 class XMLWriter :
-        public std::conditional<
+        public std::conditional_t<
                 std::is_same_v<T, AngleStructures> ||
                 std::is_same_v<T, NormalHypersurfaces> ||
                 std::is_same_v<T, NormalSurfaces>,
             XMLWriterRequiresTriangulation<T>,
-            XMLWriterRequiresNoTriangulation>::type {
+            XMLWriterRequiresNoTriangulation> {
     private:
         const T& data_;
             /**< The object to be written in XML. */

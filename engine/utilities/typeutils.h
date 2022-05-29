@@ -119,7 +119,7 @@ struct safe_tuple_element_impl;
 
 template <int pos, typename tuple, typename out_of_range>
 struct safe_tuple_element_impl<pos, tuple, out_of_range, true> {
-    using type = typename std::tuple_element<pos, tuple>::type;
+    using type = std::tuple_element_t<pos, tuple>;
 };
 
 template <int pos, typename tuple, typename out_of_range>

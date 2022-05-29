@@ -80,9 +80,9 @@ namespace detail {
  * \ingroup detail
  */
 template <class Object, bool withSig>
-using RetriangulateActionFunc = typename std::conditional<withSig,
+using RetriangulateActionFunc = std::conditional_t<withSig,
     std::function<bool(const std::string&, Object&&)>,
-    std::function<bool(Object&&)>>::type;
+    std::function<bool(Object&&)>>;
 
 /**
  * The common implementation of all retriangulation and link rewriting
