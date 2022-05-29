@@ -4113,6 +4113,15 @@ template <int dim>
 void TriangulationBase<dim>::tightEncode(std::ostream& out) const {
     regina::detail::tightEncodeIndex(out, size());
 
+    // For dimension 2, we *could* squeeze two permutations into a single
+    // character.  However, this requires care: if we write the two
+    // permutations at the point where we see the first then this requires
+    // read-forward in the encoding routine, and if we write them at the point
+    // where we see the second then this makes decoding difficult (since we
+    // don't know in advance which simplex facets were skipped over in the
+    // encoding).  Since dimension 2 is not where our real space problems
+    // occur, we leave the encoding as is for now.
+
     // Write each gluing from one side only, in the forward direction.
     for (auto* s : simplices_)
         for (int i = 0; i <= dim; ++i)
