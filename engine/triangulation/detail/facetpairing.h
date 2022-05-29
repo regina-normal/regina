@@ -495,6 +495,15 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * Writes the tight encoding of this facet pairing to the given output
          * stream.  See the page on \ref tight "tight encodings" for details.
          *
+         * \pre Every simplex facet is either (i) paired to another simplex
+         * facet, (ii) marked as boundary, or (iii) paired to itself (which is
+         * often used as a placeholder to indicate that the real destination
+         * has not yet been decided).  In particular, before-the-start or
+         * past-the-end destinations are not allowed.
+         *
+         * \exception FailedPrecondition Some simplex facet has a destination
+         * that is explicitly disallowed by the precondition above.
+         *
          * \ifacespython Not present; use tightEncoding() instead.
          *
          * @param out the output stream to which the encoded string will
@@ -505,6 +514,15 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         /**
          * Returns the tight encoding of this facet pairing.
          * See the page on \ref tight "tight encodings" for details.
+         *
+         * \pre Every simplex facet is either (i) paired to another simplex
+         * facet, (ii) marked as boundary, or (iii) paired to itself (which is
+         * often used as a placeholder to indicate that the real destination
+         * has not yet been decided).  In particular, before-the-start or
+         * past-the-end destinations are not allowed.
+         *
+         * \exception FailedPrecondition Some simplex facet has a destination
+         * that is explicitly disallowed by the precondition above.
          *
          * @return the resulting encoded string.
          */
@@ -1063,10 +1081,25 @@ inline std::string FacetPairingBase<dim>::toTextRep() const {
 }
 
 template <int dim>
-inline void FacetPairingBase<dim>::tightEncode(std::ostream& out) const {
+void FacetPairingBase<dim>::tightEncode(std::ostream& out) const {
     regina::detail::tightEncodeIndex(out, size_);
-    for (size_t i = 0; i < size_ * (dim + 1); ++i)
-        pairs_[i].tightEncode(out);
+    // Write each pairing from one side only, in the forward direction.
+    // The test below will also write unmatched and undecided pairings
+    // correctly.
+    for (size_t i = 0; i < size_ * (dim + 1); ++i) {
+        if (pairs_[i].simp < 0)
+            throw FailedPrecondition("Before-the-start destinations "
+                "are not allowed in tight encodings");
+
+        ssize_t adjIdx = (dim + 1) * pairs_[i].simp + pairs_[i].facet;
+        if (adjIdx >= i) {
+            if (adjIdx > size_ * (dim + 1))
+                throw FailedPrecondition("Past-the-end destinations "
+                    "are not allowed in tight encodings");
+
+            regina::detail::tightEncodeIndex(out, adjIdx);
+        }
+    }
 }
 
 template <int dim>
@@ -1100,21 +1133,35 @@ FacetPairing<dim> FacetPairingBase<dim>::tightDecoding(std::istream& input) {
 
     FacetPairing<dim> ans(size);
 
-    for (size_t i = 0; i < size * (dim + 1); ++i) {
-        ans.pairs_[i] = FacetSpec<dim>::tightDecoding(input);
-        if (ans.pairs_[i].simp < 0)
+    for (size_t i = 0; i < size * (dim+1); ++i)
+        ans.pairs_[i].setBeforeStart();
+
+    for (size_t i = 0; i < size * (dim+1); ++i) {
+        if (! ans.pairs_[i].isBeforeStart())
+            continue;
+
+        ssize_t adjIdx = regina::detail::tightDecodingIndex<ssize_t>(input);
+        if (adjIdx < 0)
             throw InvalidInput("The tight encoding contains "
                 "uninitialised matchings of simplex facets");
-        if (! ans.pairs_[i].isBoundary(size)) {
-            if (ans.pairs_[i].simp >= size)
-                throw InvalidInput("The tight encoding contains "
-                    "invalid matchings of simplex facets");
-            ssize_t adjIdx = (dim + 1) * ans.pairs_[i].simp +
-                ans.pairs_[i].facet;
-            if (adjIdx < i && ((dim + 1) * ans.pairs_[adjIdx].simp +
-                    ans.pairs_[adjIdx].facet != i))
+        if (adjIdx > size * (dim+1))
+            throw InvalidInput("The tight encoding contains "
+                "invalid matchings of simplex facets");
+        if (adjIdx < i)
+            throw InvalidInput("The tight encoding contains "
+                "unexpected matchings of simplex facets");
+
+        ans.pairs_[i] = FacetSpec<dim>(adjIdx / (dim+1), adjIdx % (dim+1));
+
+        if (adjIdx < size * (dim + 1) && adjIdx > i) {
+            // This is a real gluing.  Make it from the other side also.
+            if (ans.pairs_[adjIdx].isBeforeStart())
+                ans.pairs_[adjIdx] = FacetSpec<dim>(i / (dim+1), i % (dim+1));
+            else {
+                // Some other pairing has already claimed this destination.
                 throw InvalidInput("The tight encoding contains "
                     "inconsistent matchings of simplex facets");
+            }
         }
     }
 
