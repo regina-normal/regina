@@ -241,9 +241,9 @@ namespace add_eq_operators_detail {
         using IneqType = decltype(makeRef() != makeRef());
 
         static constexpr bool hasEqOperator =
-            ! std::is_same<void, EqType>::value;
+            ! std::is_same_v<void, EqType>;
         static constexpr bool hasIneqOperator =
-            ! std::is_same<void, IneqType>::value;
+            ! std::is_same_v<void, IneqType>;
     };
 
     /**

@@ -1182,8 +1182,8 @@ template <typename T>
 inline std::string Laurent2<T>::str(const char* varX, const char* varY)
         const {
     // Make sure that python will be able to find the inherited str().
-    static_assert(std::is_same<typename OutputBase<Laurent2<T>>::type,
-        Output<Laurent2<T>, true>>::value,
+    static_assert(std::is_same_v<typename OutputBase<Laurent2<T>>::type,
+        Output<Laurent2<T>, true>>,
         "Laurent2<T> is not identified as being inherited from Output<...>");
 
     std::ostringstream out;

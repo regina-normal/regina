@@ -193,9 +193,9 @@ template <class Object, typename Action>
 struct RetriangulateActionTraits<Object, Action, const std::string&> {
     using SecondArg = typename CallableArg<Action, 1>::type;
     static constexpr bool valid =
-        std::is_same<SecondArg, Object>::value ||
-        std::is_same<SecondArg, Object&&>::value ||
-        std::is_same<SecondArg, const Object&>::value;
+        std::is_same_v<SecondArg, Object> ||
+        std::is_same_v<SecondArg, Object&&> ||
+        std::is_same_v<SecondArg, const Object&>;
     static constexpr bool withSig = true;
 };
 

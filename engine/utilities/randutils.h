@@ -196,12 +196,12 @@ Int RandomEngine::rand(Int range) {
     // A slight messiness here is that std::uniform_int_distribution
     // requires the type argument to be one of short, int, long or long long
     // (either signed or unsigned).
-    static_assert(std::is_integral<Int>::value,
+    static_assert(std::is_integral_v<Int>,
         "RandomEngine::rand() requires a native integer type");
     static_assert(sizeof(Int) <= sizeof(long long),
         "RandomEngine::rand() requires a type that can fit inside a long long");
 
-    using Arg = typename std::conditional<std::is_signed<Int>::value,
+    using Arg = typename std::conditional<std::is_signed_v<Int>,
         typename std::conditional<sizeof(Int) <= sizeof(short), short,
         typename std::conditional<sizeof(Int) <= sizeof(int), int,
         typename std::conditional<sizeof(Int) <= sizeof(long), long,

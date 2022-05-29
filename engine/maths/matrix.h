@@ -116,7 +116,7 @@ template <class> class Vector;
  * (thereby enabling member functions designed for matrices over rings)
  * when \a T is one of the following types:
  *
- * - native C++ integer types (i.e., where std::is_integral<T>::value
+ * - native C++ integer types (i.e., where std::is_integral_v<T>
  *   is \c true and \a T is not bool); or
  *
  * - Regina's own types Integer, LargeInteger, NativeInteger<...>, and Rational.
@@ -164,8 +164,8 @@ template <class> class Vector;
  * \ingroup maths
  */
 template <class T, bool ring =
-        ((std::is_integral<T>::value && ! std::is_same<T, bool>::value) ||
-        IsReginaInteger<T>::value || std::is_same<T, Rational>::value)>
+        ((std::is_integral_v<T> && ! std::is_same_v<T, bool>) ||
+        IsReginaInteger<T>::value || std::is_same_v<T, Rational>)>
 class Matrix : public Output<Matrix<T>> {
     static_assert(ring || ! IsReginaInteger<T>::value,
         "Using Matrix with Regina's own integer types requires ring=true.");

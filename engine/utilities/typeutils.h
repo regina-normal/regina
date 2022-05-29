@@ -114,7 +114,7 @@ namespace detail {
  * See safe_tuple_element below for details.
  */
 template <int pos, typename tuple, typename out_of_range,
-    bool pos_in_range = (pos >= 0 && pos < std::tuple_size<tuple>::value)>
+    bool pos_in_range = (pos >= 0 && pos < std::tuple_size_v<tuple>)>
 struct safe_tuple_element_impl;
 
 template <int pos, typename tuple, typename out_of_range>

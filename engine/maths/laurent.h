@@ -1560,8 +1560,8 @@ void Laurent<T>::writeTextShort(std::ostream& out, bool utf8,
 template <typename T>
 inline std::string Laurent<T>::str(const char* variable) const {
     // Make sure that python will be able to find the inherited str().
-    static_assert(std::is_same<typename OutputBase<Laurent<T>>::type,
-        Output<Laurent<T>, true>>::value,
+    static_assert(std::is_same_v<typename OutputBase<Laurent<T>>::type,
+        Output<Laurent<T>, true>>,
         "Laurent<T> is not identified as being inherited from Output<...>");
 
     std::ostringstream out;

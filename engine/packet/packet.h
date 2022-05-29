@@ -2279,7 +2279,7 @@ class PacketData {
  */
 template <typename Held>
 std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
-    static_assert(std::is_class<Held>::value,
+    static_assert(std::is_class_v<Held>,
         "The template argument to make_packet() must be a plain class type.");
     return std::make_shared<PacketOf<Held>>(std::forward<Held>(src));
 }
@@ -2312,7 +2312,7 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
 template <typename Held>
 std::shared_ptr<PacketOf<Held>> make_packet(Held&& src,
         const std::string& label) {
-    static_assert(std::is_class<Held>::value,
+    static_assert(std::is_class_v<Held>,
         "The template argument to make_packet() must be a plain class type.");
     auto ans = std::make_shared<PacketOf<Held>>(std::forward<Held>(src));
     ans->setLabel(label);

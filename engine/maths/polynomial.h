@@ -1420,8 +1420,8 @@ void Polynomial<T>::writeTextShort(std::ostream& out, bool utf8,
 template <typename T>
 inline std::string Polynomial<T>::str(const char* variable) const {
     // Make sure that python will be able to find the inherited str().
-    static_assert(std::is_same<typename OutputBase<Polynomial<T>>::type,
-        Output<Polynomial<T>, true>>::value,
+    static_assert(std::is_same_v<typename OutputBase<Polynomial<T>>::type,
+        Output<Polynomial<T>, true>>,
         "Polynomial<T> is not identified as being inherited from Output<...>");
 
     std::ostringstream out;

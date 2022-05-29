@@ -321,14 +321,14 @@ inline std::shared_ptr<Packet> XMLTreeResolver::resolve(const std::string& id)
 template <typename PacketType>
 inline std::shared_ptr<PacketType> XMLTreeResolver::resolveAs(
         const std::string& id) const {
-    static_assert(std::is_base_of<Packet, PacketType>::value,
+    static_assert(std::is_base_of_v<Packet, PacketType>,
         "XMLTreeResolver::resolveAs<T> requires T to be derived from Packet.");
     return std::dynamic_pointer_cast<PacketType>(resolve(id));
 }
 
 template <typename Held>
 inline Held* XMLTreeResolver::resolvePacketData(const std::string& id) const {
-    static_assert(std::is_base_of<PacketData<Held>, Held>::value,
+    static_assert(std::is_base_of_v<PacketData<Held>, Held>,
         "XMLTreeResolver::resolvePacketData<T> requires T to be a type "
         "that is held by PacketOf<T>.");
     auto ans = std::dynamic_pointer_cast<PacketOf<Held>>(resolve(id));
