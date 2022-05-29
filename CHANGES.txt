@@ -32,12 +32,15 @@ Version 7.1  [ TODO ]
         Class FacetPairing<dim>:
             - New routine isConnected().
             - New routines canonical() and canonicalAll().
+            - Added tightEncode(), tightEncoding() and tightDecoding().
             - In findAllPairings(), the action is no longer required to
               take the list of all automorphisms if it does not need them.
             - Renamed toTextRep() to textRep().  The old name is kept as
               a deprecated alias.
             - The IsoList type alias has changed from std::list to std::vector,
               for better performance.
+        Struct FacetSpec<dim>:
+            - Added tightEncode(), tightEncoding() and tightDecoding().
         Class HilbertPrimal:
             - The header no longer includes the Normaliz headers (which
               Regina does not actually ship with its development files).

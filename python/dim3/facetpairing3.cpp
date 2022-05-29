@@ -71,6 +71,9 @@ void addFacetPairing3(pybind11::module_& m) {
         .def("textRep", &FacetPairing<3>::textRep)
         .def("toTextRep", &FacetPairing<3>::textRep) // deprecated
         .def_static("fromTextRep", &FacetPairing<3>::fromTextRep)
+        .def("tightEncoding", &FacetPairing<3>::tightEncoding)
+        .def_static("tightDecoding", overload_cast<const std::string&>(
+            &FacetPairing<3>::tightDecoding))
         .def("dot", &FacetPairing<3>::dot,
             pybind11::arg("prefix") = nullptr,
             pybind11::arg("subgraph") = false,

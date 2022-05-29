@@ -62,6 +62,9 @@ void addFacetSpec(pybind11::module_& m, const char* name) {
         })
         .def(pybind11::self < pybind11::self)
         .def(pybind11::self <= pybind11::self)
+        .def("tightEncoding", &FacetSpec<dim>::tightEncoding)
+        .def_static("tightDecoding", overload_cast<const std::string&>(
+            &FacetSpec<dim>::tightDecoding))
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c);

@@ -32,7 +32,7 @@
 
 #include "triangulation/generic/isomorphism.h"
 #include "triangulation/facetpairing.h"
-#include <cppunit/extensions/HelperMacros.h>
+#include "testsuite/utilities/tightencodingtest.h"
 
 using regina::FacetPairing;
 using regina::Isomorphism;
@@ -41,7 +41,8 @@ using regina::Isomorphism;
  * Inherited by the test classes for all dimensions.
  */
 template <int dim>
-class FacetPairingTest : public CppUnit::TestFixture {
+class FacetPairingTest : public CppUnit::TestFixture,
+        public TightEncodingTest<FacetPairing<dim>> {
     public:
         void setUp() {
         }
@@ -152,6 +153,26 @@ class FacetPairingTest : public CppUnit::TestFixture {
                 [](const FacetPairing<dim>& p,
                         typename FacetPairing<dim>::IsoList) {
                     verifyIsCanonical(p);
+                });
+        }
+
+        static void tightEncodingAllClosed(size_t size) {
+            FacetPairing<dim>::findAllPairings(size,
+                false /* boundary */, 0 /* bdry facets */,
+                [](const FacetPairing<dim>& p,
+                        typename FacetPairing<dim>::IsoList) {
+                    TightEncodingTest<FacetPairing<dim>>::
+                        verifyTightEncoding(p);
+                });
+        }
+
+        static void tightEncodingAllBounded(size_t size) {
+            FacetPairing<dim>::findAllPairings(size,
+                true /* boundary */, -1 /* bdry facets */,
+                [](const FacetPairing<dim>& p,
+                        typename FacetPairing<dim>::IsoList) {
+                    TightEncodingTest<FacetPairing<dim>>::
+                        verifyTightEncoding(p);
                 });
         }
 

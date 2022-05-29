@@ -65,6 +65,7 @@ class FacetPairing3Test : public FacetPairingTest<3> {
     CPPUNIT_TEST(rawCountsClosed);
     CPPUNIT_TEST(rawCountsBounded);
     CPPUNIT_TEST(badSubgraphs);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -112,6 +113,14 @@ class FacetPairing3Test : public FacetPairingTest<3> {
 
             for (size_t i = 0; i <= 6; ++i)
                 FacetPairingTest<3>::enumerateBounded(i, nBdry[i]);
+        }
+
+        void tightEncoding() {
+            FacetPairingTest<3>::tightEncodingAllClosed(1);
+            FacetPairingTest<3>::tightEncodingAllClosed(2);
+            FacetPairingTest<3>::tightEncodingAllBounded(1);
+            FacetPairingTest<3>::tightEncodingAllBounded(2);
+            FacetPairingTest<3>::tightEncodingAllBounded(3);
         }
 
         void badSubgraphs() {

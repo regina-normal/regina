@@ -46,6 +46,7 @@ class FacetPairing2Test : public FacetPairingTest<2> {
     CPPUNIT_TEST(isCanonical);
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(rawCountsClosed);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -77,6 +78,15 @@ class FacetPairing2Test : public FacetPairingTest<2> {
 
             for (size_t i = 0; i <= 12; ++i)
                 FacetPairingTest<2>::enumerateClosed(i, nPairs[i]);
+        }
+
+        void tightEncoding() {
+            FacetPairingTest<2>::tightEncodingAllClosed(2);
+            FacetPairingTest<2>::tightEncodingAllClosed(4);
+            FacetPairingTest<2>::tightEncodingAllBounded(1);
+            FacetPairingTest<2>::tightEncodingAllBounded(2);
+            FacetPairingTest<2>::tightEncodingAllBounded(3);
+            FacetPairingTest<2>::tightEncodingAllBounded(4);
         }
 };
 
