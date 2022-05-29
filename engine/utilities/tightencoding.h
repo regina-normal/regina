@@ -57,7 +57,11 @@ class IntegerBase;
  * Tight encodings have the following properties:
  *
  * - They use only printable ASCII characters (the 94 ASCII values from
- *   33 to 126 inclusive), and do not contain any whitespace.
+ *   33 to 126 inclusive), and do not contain any whitespace.  This means
+ *   (for example) you can use them as whitespace-separated tokens in plain
+ *   text files.  However, they do make use of \e all of the ASCII punctuation
+ *   symbols, and so you must take care when (for example) trying to hard-code
+ *   them as strings in source code, or using them as components of filenames.
  *
  * - They aim to be short (typically much shorter than the usual human-readable
  *   representations, such as decimal representations of integers or full text
