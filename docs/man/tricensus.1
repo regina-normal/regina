@@ -3,13 +3,13 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRICENSUS" "1" "29 March 2022" "" "The Regina Handbook"
+.TH "TRICENSUS" "1" "30 May 2022" "" "The Regina Handbook"
 
 .SH NAME
 tricensus \- Form a census of triangulations
 .SH SYNOPSIS
 
-\fBtricensus\fR [ \fB-t, --tetrahedra=\fItetrahedra\fB\fR ] [ \fB-2, --dim2\fR | \fB-4, --dim4\fR ] [ \fB-b, --boundary\fR | \fB-i, --internal\fR | \fB-B, --bdryfaces=\fItriangles\fB\fR ] [ \fB-o, --orientable\fR | \fB-n, --nonorientable\fR ] [ \fB-f, --finite\fR | \fB-d, --ideal\fR ] [ \fB-m, --minimal\fR | \fB-M, --minprime\fR | \fB-N, --minprimep2\fR | \fB-h, --minhyp\fR ] [ \fB--allowinvalid\fR ] [ \fB-s, --sigs\fR | \fB-c, --subcontainers\fR ] [ \fB-p, --genpairs\fR | \fB-P, --usepairs\fR ] [ \fB--threads=\fInum_threads\fB\fR ] \fB\fIoutput-file\fB\fR
+\fBtricensus\fR [ \fB-t, --tetrahedra=\fItetrahedra\fB\fR ] [ \fB-2, --dim2\fR | \fB-4, --dim4\fR ] [ \fB-b, --boundary\fR | \fB-i, --internal\fR | \fB-B, --bdryfaces=\fItriangles\fB\fR ] [ \fB-o, --orientable\fR | \fB-n, --nonorientable\fR ] [ \fB-f, --finite\fR | \fB-d, --ideal\fR ] [ \fB-m, --minimal\fR | \fB-M, --minprime\fR | \fB-N, --minprimep2\fR | \fB-h, --minhyp\fR ] [ \fB--allowinvalid\fR ] [ \fB-s, --sigs\fR | \fB-S, --canonical\fR | \fB-e, --encodings\fR | \fB-c, --subcontainers\fR ] [ \fB-p, --genpairs\fR | \fB-P, --usepairs\fR ] [ \fB--threads=\fInum_threads\fB\fR ] \fB\fIoutput-file\fB\fR
 
 
 \fBtricensus\fR \fB--help\fR
@@ -52,7 +52,8 @@ with (such as 3 or 4 simplices), and work upwards to establish the
 limits of your machine.
 .PP
 For very large census runs, it is \fBhighly recommended\fR
-that you use the \fB--sigs\fR option, which will keep
+that you use the either the \fB--sigs\fR or
+\fB--encodings\fR option, which will keep
 the output file small and significantly reduce the memory footprint.
 .RE
 .SH "OPTIONS"
@@ -220,7 +221,7 @@ Instead of writing a full Regina data file, just output a list
 of isomorphism signatures.
 
 The output file will be a plain text file.  Each line will be a
-short string of letters, digits and punctuation that uniquely
+short string of letters, digits and/or punctuation that uniquely
 encodes a triangulation up to combinatorial isomorphism.
 You can import this text file from within Regina by selecting
 File->Import->Isomorphism Signature List from the menu.
@@ -233,6 +234,77 @@ triangulations can be written to the output file and forgotten
 immediately, instead of being kept in memory to construct a final
 Regina data file.
 .TP
+\fB-S, --canonical\fR
+A variant of \fB--sigs\fR that outputs a list of
+isomorphism signatures along with matching isomorphisms.
+
+The output file will be a plain text file.  Each line will
+contain two short strings, separated by a single space.
+The first string will be the same isomorphism signature that is
+output by \fB--sigs\fR\&.  The second string encodes an
+isomorphism \fIF\fR with the property that,
+if we reconstruct a triangulation from the isomorphism signature
+and apply the isomorphism \fIF\fR, then
+the resulting triangulation will have a canonical facet pairing.
+
+Here \fIcanonical\fR has the same meaning as
+described below under the \fB--usepairs\fR option:
+a facet pairing is in canonical form if it is a minimal representative
+of its isomorphism class.
+
+The isomorphisms themselves will be encoded using
+\fItight encodings\fR, which (like isomorphisms
+signatures) are short strings of letters, digits and/or punctuation.
+Currently you will need to use either C++ or Python to decode
+these; for example, in dimension\~3 you would call
+Isomorphism<3>::tightDecoding()\&.
+
+If you do not need these isomorphisms, then you should use the
+simpler (and slightly faster) option \fB--sigs\fR
+instead.
+.TP
+\fB-e, --encodings\fR
+Instead of writing a full Regina data file, just output a list
+of tight encodings.
+
+The output file will be a plain text file.  Each line will be a
+short string of letters, digits and/or punctuation that uniquely
+encodes a labelled triangulation as a
+\fItight encoding\fR\&.
+
+Tight encodings differ from isomorphism signatures (as output by
+\fB--sigs\fR) in the following ways:
+.RS
+.TP 0.2i
+\(bu
+The main reason for using tight encodings is that they preserve the
+labelling of simplices and their vertices (unlike isomorphism
+signatures, which only encode a triangulation up to combinatorial
+isomorphism).
+.TP 0.2i
+\(bu
+In general, tight encodings use slightly more characters and
+are slightly faster to compute than isomorphism signatures.
+.TP 0.2i
+\(bu
+Tight encodings are more difficult to work with.  They use a
+wider variety of punctuation symbols (which makes them
+inappropriate for filenames, and awkward to use as hard-coded
+strings in source code).  Moreover, at present you need to use
+either C++ or Python to reconstruct triangulations from them;
+for example, in dimension\~3 you would call
+Triangulation<3>::tightDecoding()\&.
+.RE
+If you are not sure whether to use isomorphism signatures or
+tight encodings, it is recommended that you choose isomorphism
+signatures (\fB--sigs\fR).
+
+Like \fB--sigs\fR, this option performs much better in
+large census enumerations than saving a full Regina data file:
+the output file will be considerably smaller, and the memory footprint
+of \fBtricensus\fR will also be much smaller.
+See the \fB--sigs\fR option for further details.
+.TP
 \fB-c, --subcontainers\fR
 For each facet pairing, a new container will be created, and
 resultant triangulations will be placed into these containers.
@@ -242,7 +314,8 @@ in no triangulations.
 See \fB--genpairs\fR below for further information on
 facet pairings.
 
-This option cannot be used with \fB--sigs\fR\&.
+This option cannot be used with \fB--sigs\fR,
+\fB--canonical\fR or \fB--encodings\fR\&.
 .TP
 \fB-p, --genpairs\fR
 Only generate facet pairings, not triangulations.
