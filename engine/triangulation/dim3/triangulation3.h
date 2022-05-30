@@ -847,12 +847,14 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * as described above.
          * @param alg the algorithm with which to compute the invariant.  If
          * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
+         * @param acc is the number of bits to be used by the computation: 
+         * under 64 included, doubles are used, otherwise mpfr is used.
          * @return the requested Turaev-Viro invariant.
          *
          * @see allCalculatedTuraevViro
          */
         double turaevViroApprox(unsigned long r, unsigned long whichRoot = 1,
-            Algorithm alg = ALG_DEFAULT) const;
+            Algorithm alg = ALG_DEFAULT, unsigned long prec = 64) const;
         /**
          * Returns the cache of all Turaev-Viro state sum invariants that
          * have been calculated for this 3-manifold.

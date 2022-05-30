@@ -40,12 +40,14 @@
 #include "libnormaliz/cone.h"
 #include "maths/cyclotomic.h"
 #include "maths/numbertheory.h"
+#include "maths/mfloat.h"
 #include "progress/progresstracker.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/dim3.h"
 #include "utilities/sequence.h"
 #include <gmpxx.h>
 #include <map>
+
 
 // #define TV_BACKTRACK_DUMP_COLOURINGS
 // #define TV_IGNORE_CACHE
@@ -62,13 +64,14 @@
 namespace regina {
 
 namespace {
-    template <bool exact>
+	enum calcType {exact, floating, multiPrecision};
+    template <calcType method>
     struct TuraevViroDetails;
 
     template <>
-    struct TuraevViroDetails<true> {
-        using TVType = Cyclotomic;
-        using TVResult = Cyclotomic;
+    struct TuraevViroDetails<exact> {
+        typedef Cyclotomic TVType;
+        typedef Cyclotomic TVResult;
 
         static TVResult zero() {
             return Cyclotomic(1);
@@ -76,12 +79,23 @@ namespace {
     };
 
     template <>
-    struct TuraevViroDetails<false> {
-        using TVType = std::complex<double>;
-        using TVResult = double;
+    struct TuraevViroDetails<floating> {
+        typedef std::complex<double> TVType;
+        typedef double TVResult;
 
         static TVResult zero() {
             return 0;
+        }
+    };
+
+    template <>
+    struct TuraevViroDetails<multiPrecision> {
+        typedef MFloat TVType;
+        typedef MFloat TVResult;
+
+        static TVResult zero() {
+            MFloat zero = MFloat(0.0);
+            return zero;
         }
     };
 
@@ -89,11 +103,11 @@ namespace {
      * Allows calculation of [n]! for arbitrary n.
      * Values are cached as they are calculated.
      */
-    template <bool exact>
+    template <calcType method>
     class BracketFactorial {
         public:
-            using TVType = typename TuraevViroDetails<exact>::TVType;
-            using TVResult = typename TuraevViroDetails<exact>::TVResult;
+            using TVType = typename TuraevViroDetails<method>::TVType;
+            using TVResult = typename TuraevViroDetails<method>::TVResult;
 
         private:
             TVResult* bracket_;
@@ -121,6 +135,11 @@ namespace {
             }
 
             /**
+             * To clean up the content of the arrays of the destuctor.
+             */
+            void clearMembers(unsigned long r);
+
+            /**
              * Returns the single value [index] (with no factorial symbol).
              * Requires index < r.
              */
@@ -146,7 +165,7 @@ namespace {
     };
 
     template <>
-    BracketFactorial<true>::BracketFactorial(
+    BracketFactorial<exact>::BracketFactorial(
             unsigned long r, unsigned long whichRoot) :
             bracket_(new TVResult[r]),
             fact_(new TVResult[r]),
@@ -185,7 +204,7 @@ namespace {
     }
 
     template <>
-    BracketFactorial<false>::BracketFactorial(
+    BracketFactorial<floating>::BracketFactorial(
             unsigned long r, unsigned long whichRoot) :
             bracket_(new TVResult[r]),
             fact_(new TVResult[r]),
@@ -199,26 +218,85 @@ namespace {
             inv_[i] = inv_[i - 1] / bracket_[i];
         }
     }
+    
+    template <>
+    BracketFactorial<multiPrecision>::BracketFactorial(
+            unsigned long r, unsigned long whichRoot) :
+            bracket_(new TVResult[r]),
+            fact_(new TVResult[r]),
+            inv_(new TVResult[r]) {
+
+        TVResult angle,sinangle,siniangle,facti,invi;
+        
+        angle.setPi();
+        angle *= whichRoot;
+        angle /= r;
+
+        unsigned long one = 1;
+
+        bracket_[0].set(one);
+        bracket_[1].set(one);
+        fact_[0].set(one);
+        fact_[1].set(one);
+        inv_[0].set(one);
+        inv_[1].set(one);
+
+        sinangle = angle;
+        sinangle.sin();
+
+        siniangle = angle;
+        facti = fact_[1];
+        invi = inv_[1];
+
+        for (unsigned long i = 2; i < r; i++) {
+            siniangle *= i;
+            siniangle.sin();
+            bracket_[i] = siniangle;
+            bracket_[i] /= sinangle;
+
+            facti *= bracket_[i];
+            fact_[i] = facti;
+            invi /= bracket_[i];
+            inv_[i] = invi;
+
+            siniangle = angle;
+        }
+
+        angle.clear();
+        sinangle.clear();
+        siniangle.clear();
+        facti.clear();
+        invi.clear();
+    }
 
     /**
      * Represents the initial data as described in Section 7 of Turaev
      * and Viro's paper.
      */
-    template <bool exact>
+    template <calcType method>
     struct InitialData {
-        using TVType = typename TuraevViroDetails<exact>::TVType;
-        using TVResult = typename TuraevViroDetails<exact>::TVResult;
+        using TVType = typename TuraevViroDetails<method>::TVType;
+        using TVResult = typename TuraevViroDetails<method>::TVResult;
 
         unsigned long r, whichRoot;
             /**< The Turaev-Viro parameters. */
         bool halfField;
-        BracketFactorial<exact> fact;
+        BracketFactorial<method> fact;
             /**< The cached values [n]!. */
         TVType vertexContrib;
             /**< The vertex-based contribution to the Turaev-Viro invariant;
                  this is the inverse square of the distinguished value w. */
 
         InitialData(unsigned long newR, unsigned long newWhichRoot);
+
+        /**
+         * To clear BracketFactorial, to clear and delete an array of TVType of size n and to clear an element of type TVType.
+         */
+        void clearData();
+        static void clearVar(TVType& var);
+        static void clearArray(TVType* ar,unsigned long n);
+//         template<class T>
+        static void clearMap(std::map<LightweightSequence<int>, TVType> *map);
 
         static void negate(TVType& x);
 
@@ -310,6 +388,7 @@ namespace {
                         ansToOverwrite -= term;
                 }
             }
+            clearVar(term);
         }
 
         /**
@@ -373,7 +452,7 @@ namespace {
     };
 
     template <>
-    InitialData<true>::InitialData(
+    InitialData<exact>::InitialData(
             unsigned long newR, unsigned long newWhichRoot) :
             r(newR),
             whichRoot(newWhichRoot),
@@ -392,7 +471,7 @@ namespace {
     }
 
     template <>
-    InitialData<false>::InitialData(
+    InitialData<floating>::InitialData(
             unsigned long newR, unsigned long newWhichRoot) :
             r(newR),
             whichRoot(newWhichRoot),
@@ -401,48 +480,151 @@ namespace {
         double tmp = sin(M_PI * whichRoot / r);
         vertexContrib = 2.0 * tmp * tmp / r;
     }
+    
+    template <>
+    InitialData<multiPrecision>::InitialData(
+            unsigned long newR, unsigned long newWhichRoot) :
+            r(newR),
+            whichRoot(newWhichRoot),
+            halfField(r % 2 != 0 && whichRoot % 2 == 0),
+            fact(r, whichRoot) {
+        TVResult tmp;
+        tmp.setPi();
+        tmp *= whichRoot;
+        tmp /= r;
+        tmp.sin();
+        tmp *= tmp;
+        unsigned long two = 2;
+        tmp *= two;
+        tmp /= r;
+        vertexContrib = tmp;
+        tmp.clear();
+    }
+
+        template <>
+    inline void BracketFactorial<multiPrecision>::clearMembers(unsigned long r) {
+        for (unsigned long i = 0; i<r;++i) {
+            bracket_[i].clear();
+            fact_[i].clear();
+            inv_[i].clear();
+        }
+    }
 
     template <>
-    inline void InitialData<true>::negate(InitialData<true>::TVType& x) {
+    inline void InitialData<multiPrecision>::clearData() {
+        fact.clearMembers(r);
+        vertexContrib.clear();
+    }
+
+
+
+    template <>
+    inline void InitialData<exact>::clearVar(TVType& var) {}
+
+    template <>
+    inline void InitialData<floating>::clearVar(TVType& var) {}
+
+    template <>
+    inline void InitialData<multiPrecision>::clearVar(TVType& var) {
+        var.clear();
+    }
+
+    template <>
+    inline void InitialData<exact>::clearArray(TVType* ar,unsigned long n) {
+        delete[] ar;
+    }
+
+    template <>
+    inline void InitialData<floating>::clearArray(TVType* ar,unsigned long n) {
+        delete[] ar;
+    }
+
+    template <>
+    inline void InitialData<multiPrecision>::clearArray(TVType* ar,unsigned long n) {
+        for (unsigned long i=0;i<n;++i) {
+            ar[i].clear();
+        }
+        delete[] ar;
+    }
+
+    template <>
+//     template <class T>
+    inline void InitialData<exact>::clearMap(std::map<LightweightSequence<int>, TVType>* map) {
+        delete map;
+    }
+
+    template <>
+//     template <class T>
+    inline void InitialData<floating>::clearMap(std::map<LightweightSequence<int>, TVType>* map) {
+        delete[] map;
+    }
+
+    template<>
+//     template <class T>
+    inline void InitialData<multiPrecision>::clearMap(std::map<LightweightSequence<int>, TVType>* map) {
+        for(auto &x:*map) {x.second.clear();}
+        delete map;
+    }
+
+
+    template <>
+    inline void InitialData<exact>::negate(InitialData<exact>::TVType& x) {
         x.negate();
     }
 
     template <>
-    inline void InitialData<false>::negate(InitialData<false>::TVType& x) {
+    inline void InitialData<floating>::negate(InitialData<floating>::TVType& x) {
         x = -x;
     }
 
     template <>
-    inline void InitialData<true>::initZero(InitialData<true>::TVType& x)
+    inline void InitialData<multiPrecision>::negate(InitialData<multiPrecision>::TVType& x) {
+        x.negate();
+    }
+
+    template <>
+    inline void InitialData<exact>::initZero(InitialData<exact>::TVType& x)
             const {
         x.init(halfField ? r : 2 * r);
     }
 
     template <>
-    inline void InitialData<false>::initZero(InitialData<false>::TVType& x)
+    inline void InitialData<floating>::initZero(InitialData<floating>::TVType& x)
             const {
         x = 0.0;
     }
 
     template <>
-    inline void InitialData<true>::initOne(InitialData<true>::TVType& x)
+    inline void InitialData<multiPrecision>::initZero(InitialData<multiPrecision>::TVType& x)
+            const {
+        x.set(0.0);
+    }
+
+    template <>
+    inline void InitialData<exact>::initOne(InitialData<exact>::TVType& x)
             const {
         x.init(halfField ? r : 2 * r);
         x[0] = 1;
     }
 
     template <>
-    inline void InitialData<false>::initOne(InitialData<false>::TVType& x)
+    inline void InitialData<floating>::initOne(InitialData<floating>::TVType& x)
             const {
         x = 1.0;
     }
 
-    template <bool exact>
-    typename InitialData<exact>::TVType turaevViroBacktrack(
+    template <>
+    inline void InitialData<multiPrecision>::initOne(InitialData<multiPrecision>::TVType& x)
+            const {
+        x.set(1.0);
+    }
+
+    template <calcType method>
+    typename InitialData<method>::TVType turaevViroBacktrack(
             const Triangulation<3>& tri,
-            const InitialData<exact>& init,
+            const InitialData<method>& init,
             ProgressTracker* tracker) {
-        using TVType = typename InitialData<exact>::TVType;
+        using TVType = typename InitialData<method>::TVType;
 
         if (tracker)
             tracker->newStage("Enumerating colourings");
@@ -648,14 +830,17 @@ namespace {
         delete[] tetDone;
         delete[] tetDoneStart;
 
-        delete[] edgeCache;
-        delete[] triangleCache;
-        delete[] tetCache;
+        InitialData<method>::clearArray(edgeCache,nEdges + 1);
+        InitialData<method>::clearArray(triangleCache,nEdges + 1);
+        InitialData<method>::clearArray(tetCache,nEdges + 1);
+
+        InitialData<method>::clearVar(valColour);
+        InitialData<method>::clearVar(tmpTVType);
 
         if (tracker) {
             delete[] coeff;
             if (tracker->isCancelled())
-                return TuraevViroDetails<exact>::zero();
+                return TuraevViroDetails<method>::zero();
         }
 
         // Compute the vertex contributions separately, since these are
@@ -666,12 +851,12 @@ namespace {
         return ans;
     }
 
-    template <bool exact>
-    typename InitialData<exact>::TVType turaevViroNaive(
+    template <calcType method>
+    typename InitialData<method>::TVType turaevViroNaive(
             const Triangulation<3>& tri,
-            const InitialData<exact>& init,
+            const InitialData<method>& init,
             ProgressTracker* tracker) {
-        using TVType = typename InitialData<exact>::TVType;
+        using TVType = typename InitialData<method>::TVType;
 
         if (tracker)
             tracker->newStage("Enumerating colourings");
@@ -810,7 +995,7 @@ namespace {
         if (tracker) {
             delete[] coeff;
             if (tracker->isCancelled())
-                return TuraevViroDetails<exact>::zero();
+                return TuraevViroDetails<method>::zero();
         }
 
         // Compute the vertex contributions separately, since these are
@@ -818,15 +1003,16 @@ namespace {
         for (i = 0; i < tri.countVertices(); i++)
             ans *= init.vertexContrib;
 
+        InitialData<method>::clearVar(valColour);
         return ans;
     }
 
-    template <bool exact>
-    typename InitialData<exact>::TVType turaevViroTreewidth(
+    template <calcType method>
+    typename InitialData<method>::TVType turaevViroTreewidth(
             const Triangulation<3>& tri,
-            InitialData<exact>& init,
+            InitialData<method>& init,
             ProgressTracker* tracker) {
-        using TVType = typename InitialData<exact>::TVType;
+        using TVType = typename InitialData<method>::TVType;
 
         // Progress:
         // - weight of forget/join bag processing is 0.9
@@ -850,7 +1036,7 @@ namespace {
 
         if (tracker) {
             if (tracker->isCancelled())
-                return TuraevViroDetails<exact>::zero();
+                return TuraevViroDetails<method>::zero();
             tracker->newStage("Analysing bags", 0.01);
         }
 
@@ -1050,9 +1236,10 @@ namespace {
                             // solutions if need be.
                             existingSoln = partial[index]->try_emplace(
                                 std::move(seq), std::move(val));
-                            if (! existingSoln.second)
+                            if (! existingSoln.second) {
                                 existingSoln.first->second += val;
-
+                                InitialData<method>::clearVar(val);
+                            }
                             ++level;
                             while (level < 6 && choiceType[level] != 0)
                                 ++level;
@@ -1103,7 +1290,7 @@ namespace {
                     }
                 }
 
-                delete partial[child->index()];
+                InitialData<method>::clearMap(partial[child->index()]);
                 partial[child->index()] = nullptr;
             } else {
                 // Join bag.
@@ -1195,7 +1382,8 @@ namespace {
                             // We have two compatible solutions.
                             // Combine them and store the corresponding
                             // value, again aggregating if necessary.
-                            TVType val = (*subit)->second * (*subit2)->second;
+                            TVType val = (*subit)->second;
+                            val *=(*subit2)->second;
 
                             LightweightSequence<int> seq(nEdges);
                             for (i = 0; i < nEdges; ++i)
@@ -1208,18 +1396,20 @@ namespace {
 
                             existingSoln = partial[index]->try_emplace(
                                 std::move(seq), std::move(val));
-                            if (! existingSoln.second)
+                            if (! existingSoln.second) {
                                 existingSoln.first->second += val;
+                                InitialData<method>::clearVar(val);
+                            }
                         }
                 }
 
                 delete[] leftIndexed;
                 delete[] rightIndexed;
 
-                delete partial[child->index()];
+                InitialData<method>::clearMap(partial[child->index()]);
                 partial[child->index()] = nullptr;
 
-                delete partial[sibling->index()];
+                InitialData<method>::clearMap(partial[sibling->index()]);
                 partial[sibling->index()] = nullptr;
             }
 
@@ -1245,7 +1435,7 @@ namespace {
                 delete partial[i];
             delete[] partial;
 
-            return TuraevViroDetails<exact>::zero();
+            return TuraevViroDetails<method>::zero();
         }
 
         // We made it to the end.
@@ -1255,7 +1445,7 @@ namespace {
         // only one colouring stored (in which all edge colours are aggregated).
         TVType ans = partial[nBags - 1]->begin()->second;
 
-        delete partial[nBags - 1];
+        InitialData<method>::clearMap(partial[nBags - 1]);
         delete[] partial;
 
         for (i = 0; i < tri.countVertices(); i++)
@@ -1263,11 +1453,11 @@ namespace {
         return ans;
     }
 
-    template <bool exact>
-    typename InitialData<exact>::TVType turaevViroPolytope(
+    template <calcType method>
+    typename InitialData<method>::TVType turaevViroPolytope(
             const Triangulation<3>& tri,
-            InitialData<exact>& init) {
-        using TVType = typename InitialData<exact>::TVType;
+            InitialData<method>& init) {
+        using TVType = typename InitialData<method>::TVType;
 
         std::vector<std::vector<mpz_class> > input;
         unsigned long nTri = tri.countTriangles();
@@ -1334,7 +1524,7 @@ namespace {
 }
 
 double Triangulation<3>::turaevViroApprox(unsigned long r,
-        unsigned long whichRoot, Algorithm alg) const {
+        unsigned long whichRoot, Algorithm alg, unsigned long prec) const {
     // Do some basic parameter checks.
     if (r < 3)
         return 0;
@@ -1343,36 +1533,60 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
     if (gcd(r, whichRoot) > 1)
         return 0;
 
-    // Set up our initial data.
-    InitialData<false> init(r, whichRoot);
+    if (prec<65) {
+    	// Set up our initial data.
+		InitialData<floating> init(r, whichRoot);
 
-    InitialData<false>::TVType ans;
-    switch (alg) {
-        case ALG_BACKTRACK:
-            ans = turaevViroBacktrack(*this, init, nullptr);
-            break;
-        case ALG_NAIVE:
-            ans = turaevViroNaive(*this, init, nullptr);
-            break;
-        default:
-            ans = turaevViroTreewidth(*this, init, nullptr);
-            break;
-    }
-    /*
-     * Disable this check for now, since testing whether img(z) == 0 is
-     * error-prone due to floating-point approximation.
-     *
-    if (isNonZero(ans.imag())) {
-        // This should never happen, since the Turaev-Viro invariant is the
-        // square of the modulus of the Witten invariant for sl_2.
-        std::cerr <<
-            "WARNING: The Turaev-Viro invariant has an imaginary component.\n"
-            "         This should never happen.\n"
-            "         Please report this (along with the 3-manifold that"
-            "         was used) to Regina's authors." << std::endl;
-    }
-     */
-    return ans.real();
+		InitialData<floating>::TVType ans;
+		switch (alg) {
+		    case ALG_BACKTRACK:
+		        ans = turaevViroBacktrack(*this, init, nullptr);
+		        break;
+		    case ALG_NAIVE:
+		        ans = turaevViroNaive(*this, init, nullptr);
+		        break;
+		    default:
+		        ans = turaevViroTreewidth(*this, init, nullptr);
+		        break;
+		}
+		/*
+		 * Disable this check for now, since testing whether img(z) == 0 is
+		 * error-prone due to floating-point approximation.
+		 *
+		if (isNonZero(ans.imag())) {
+		    // This should never happen, since the Turaev-Viro invariant is the
+		    // square of the modulus of the Witten invariant for sl_2.
+		    std::cerr <<
+		        "WARNING: The Turaev-Viro invariant has an imaginary component.\n"
+		        "         This should never happen.\n"
+		        "         Please report this (along with the 3-manifold that"
+		        "         was used) to Regina's authors." << std::endl;
+		}
+		 */
+		return ans.real();
+	} else {
+		// Set up our initial data.
+		MFloat::setPrec(prec);
+		InitialData<multiPrecision> init(r, whichRoot);
+
+		double ans;
+		switch (alg) {
+		    case ALG_BACKTRACK:
+		        ans = MFloat::extractDouble(turaevViroBacktrack(*this, init, 0));
+		        break;
+		    case ALG_NAIVE:
+		        ans = MFloat::extractDouble(turaevViroNaive(*this, init, 0));
+		        break;
+		    default:
+		        ans = MFloat::extractDouble(turaevViroTreewidth(*this, init, 0));
+		        break;
+		}
+		init.clearData();
+		MFloat::freeCache();
+		std::cout.flush();
+		return ans;
+	}
+	
 }
 
 Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
@@ -1398,9 +1612,9 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
 #endif
 
     // Set up our initial data.
-    InitialData<true> init(r, (parity ? 1 : 0));
+    InitialData<exact> init(r, (parity ? 1 : 0));
 
-    InitialData<true>::TVType ans;
+    InitialData<exact>::TVType ans;
     switch (alg) {
         case ALG_BACKTRACK:
             ans = turaevViroBacktrack(*this, init, tracker);

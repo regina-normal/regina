@@ -37,6 +37,7 @@
 
 #define MPFRRND MPFR_RNDN
 
+#include <string.h>
 #include "regina-core.h"
 #include <mpfr.h>
 
@@ -56,6 +57,10 @@ class MFloat {
 
         MFloat();
 
+        MFloat(const MFloat& other);
+
+        MFloat(MFloat&& other) noexcept;
+
         explicit MFloat(double value);
 
         explicit MFloat(unsigned long value);
@@ -64,20 +69,26 @@ class MFloat {
             prec_ = prec;
         }
 
+        static std::string str(const MFloat& value){
+            return std::to_string(value.getDouble());
+        }
+
         void set(double value);
 
         void set(unsigned long value);
 
-        double getDouble();
-
-        double getDoubleClear();
+        double getDouble() const;
 
         void setPi();
 
         ~MFloat();
         
         void clear();
+
+        void extract(MFloat&& rhs);
         
+        double static extractDouble(MFloat&& rhs);
+
         bool operator== ( const MFloat& rhs ) const;
 
         bool operator != (const MFloat& rhs) const;
@@ -123,6 +134,10 @@ class MFloat {
             mpfr_mp_memory_cleanup();
         }
 
+        friend std::ostream& operator<< ( std::ostream& out, const regina::MFloat& other);
+
+
+
 };
 
 unsigned long MFloat::prec_ = 32;
@@ -132,6 +147,18 @@ inline MFloat::MFloat() {
     isInit_ = true;
 }
 
+inline MFloat::MFloat(const MFloat& other) {
+    mpfr_init2(number_,prec_);
+    isInit_ = true;
+    mpfr_set(number_,other.number_,MPFRRND);
+}
+
+inline MFloat::MFloat(MFloat&& other) noexcept {
+    if(other.isInit_) {
+        isInit_ = true;
+        std::swap (number_,other.number_);
+    }
+}
 
 inline MFloat::MFloat(double value) {
     mpfr_init2(number_,prec_);
@@ -146,22 +173,46 @@ inline MFloat::MFloat(unsigned long value) {
 }
 
 inline void MFloat::set(double value) {
+	if (!isInit_) {
+        mpfr_init2(number_,prec_);
+    }
     mpfr_set_d(number_,value,MPFRRND);
 }
 
 inline void MFloat::set(unsigned long value) {
+	if (!isInit_) {
+        mpfr_init2(number_,prec_);
+    }
     mpfr_set_ui(number_,value,MPFRRND);
 }
 
-inline double MFloat::getDouble(){
+inline double MFloat::getDouble() const{
     return mpfr_get_d(number_,MPFRRND);
 }
 
-inline MFloat::~MFloat() {
-    if (!isInit_) {
+inline MFloat::~MFloat() {}
+
+inline void MFloat::clear() {
+    if (isInit_) {
         mpfr_clear(number_);
     }
     isInit_ = false;
+}
+
+inline void MFloat::extract(MFloat&& rhs) {
+    if (rhs.isInit_) {
+        mpfr_set(number_,rhs.number_,MPFRRND);
+        mpfr_clear(rhs.number_);
+    }
+}
+
+inline double MFloat::extractDouble(MFloat&& rhs) {
+    double d = 0;
+    if (rhs.isInit_) {
+        d=rhs.getDouble();
+        mpfr_clear(rhs.number_);
+    }
+    return d;
 }
 
 inline void MFloat::setPi() {
@@ -255,7 +306,10 @@ inline void MFloat::sin () {
     mpfr_sin(number_,number_,MPFRRND);
 };
 
-
+std::ostream& operator << (std::ostream& out, const MFloat& value) {
+    out << std::to_string(value.getDouble());
+    return out;
+}
 
 } // namespace regina
 

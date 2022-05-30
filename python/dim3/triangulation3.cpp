@@ -273,7 +273,8 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::call_guard<pybind11::gil_scoped_release>())
         .def("turaevViroApprox", &Triangulation<3>::turaevViroApprox,
             pybind11::arg(), pybind11::arg("whichRoot") = 1,
-            pybind11::arg("alg") = regina::ALG_DEFAULT)
+            pybind11::arg("alg") = regina::ALG_DEFAULT,
+            pybind11::arg("prec") = 128)
         .def("allCalculatedTuraevViro",
             &Triangulation<3>::allCalculatedTuraevViro)
         .def("longitude", &Triangulation<3>::longitude,
