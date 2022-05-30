@@ -2731,7 +2731,7 @@ class TriangulationBase :
          *
          * @param input an input stream that begins with the tight encoding
          * for a <i>dim</i>-dimensional triangulation.
-         * @return the facet pairing represented by the given tight encoding.
+         * @return the triangulation represented by the given tight encoding.
          */
         static Triangulation<dim> tightDecode(std::istream& input);
 
