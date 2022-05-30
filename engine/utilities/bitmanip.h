@@ -197,6 +197,9 @@ class BitManipulatorBySize {
         /**
          * Returns the number of bits that are set to 1 in the given integer.
          *
+         * Note that this routine will become redundant once we move to C++20,
+         * since we will be able to use std::popcount() instead.
+         *
          * @param x the integer of type \a T to examine.
          * @return the number of bits that are set.
          */
