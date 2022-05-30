@@ -1010,7 +1010,8 @@ class Perm<5> {
          * code.  For larger permutation classes however (8 &le; \a n &le; 16),
          * the \a S_n index requires some non-trivial work to compute.
          *
-         * \ifacespython Not present; use tightEncoding() instead.
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -1072,14 +1073,14 @@ class Perm<5> {
          * \exception InvalidInput the given input stream does not begin with
          * a tight encoding of a 5-element permutation.
          *
-         * \ifacespython Not present, but the string version of this routine
-         * is available.
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for a 5-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
-        static Perm tightDecoding(std::istream& input);
+        static Perm tightDecode(std::istream& input);
 
         /**
          * Resets the images of all integers from \a from onwards to the
@@ -1511,7 +1512,7 @@ class Perm<5> {
          * @return the permutation represented by the given tight encoding.
          */
         template <typename iterator>
-        static Perm tightDecoding(iterator start, iterator limit,
+        static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
 };
 
@@ -1800,20 +1801,20 @@ inline std::string Perm<5>::tightEncoding() const {
 
 inline Perm<5> Perm<5>::tightDecoding(const std::string& enc) {
     try {
-        return tightDecoding(enc.begin(), enc.end(), true);
+        return tightDecode(enc.begin(), enc.end(), true);
     } catch (const InvalidInput& exc) {
         // For strings we use a different exception type.
         throw InvalidArgument(exc.what());
     }
 }
 
-inline Perm<5> Perm<5>::tightDecoding(std::istream& input) {
-    return tightDecoding(std::istreambuf_iterator<char>(input),
+inline Perm<5> Perm<5>::tightDecode(std::istream& input) {
+    return tightDecode(std::istreambuf_iterator<char>(input),
         std::istreambuf_iterator<char>(), false);
 }
 
 template <typename iterator>
-Perm<5> Perm<5>::tightDecoding(iterator start, iterator limit,
+Perm<5> Perm<5>::tightDecode(iterator start, iterator limit,
         bool noTrailingData) {
     if (start == limit)
         throw InvalidInput("The tight encoding is incomplete");

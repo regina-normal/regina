@@ -72,15 +72,13 @@ void addAbelianGroup(pybind11::module_& m) {
         .def("isFree", &AbelianGroup::isFree)
         .def("isZn", &AbelianGroup::isZn)
         .def("utf8", &AbelianGroup::utf8)
-        .def("tightEncoding", &AbelianGroup::tightEncoding)
-        .def_static("tightDecoding", overload_cast<const std::string&>(
-            &AbelianGroup::tightDecoding))
         .def("writeXMLData", [](const AbelianGroup& g, pybind11::object file) {
             pybind11::scoped_ostream_redirect stream(std::cout, file);
             g.writeXMLData(std::cout);
         })
     ;
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(AbelianGroup&, AbelianGroup&))(regina::swap));

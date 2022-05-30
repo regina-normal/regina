@@ -134,7 +134,8 @@ template <int dim>
 class TriangulationBase :
         public Snapshottable<Triangulation<dim>>,
         public PacketData<Triangulation<dim>>,
-        public Output<Triangulation<dim>> {
+        public Output<Triangulation<dim>>,
+        public TightEncodable<Triangulation<dim>> {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
     public:
@@ -2441,20 +2442,13 @@ class TriangulationBase :
          * Writes the tight encoding of this triangulation to the given output
          * stream.  See the page on \ref tight "tight encodings" for details.
          *
-         * \ifacespython Not present; use tightEncoding() instead.
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
-
-        /**
-         * Returns the tight encoding of this triangulation.
-         * See the page on \ref tight "tight encodings" for details.
-         *
-         * @return the resulting encoded string.
-         */
-        std::string tightEncoding() const;
 
         /**
          * Returns C++ code that can be used to reconstruct this triangulation.
@@ -2721,24 +2715,6 @@ class TriangulationBase :
          * Reconstructs a triangulation from its given tight encoding.
          * See the page on \ref tight "tight encodings" for details.
          *
-         * The tight encoding will be given as a string.  If this string
-         * contains leading whitespace or any trailing characters at all
-         * (including trailing whitespace), then it will be treated as
-         * an invalid encoding (i.e., this routine will throw an exception).
-         *
-         * \exception InvalidArgument the given string is not a tight encoding
-         * of a <i>dim</i>-dimensional triangulation.
-         *
-         * @param enc the tight encoding for a <i>dim</i>-dimensional
-         * triangulation.
-         * @return the triangulation represented by the given tight encoding.
-         */
-        static Triangulation<dim> tightDecoding(const std::string& enc);
-
-        /**
-         * Reconstructs a triangulation from its given tight encoding.
-         * See the page on \ref tight "tight encodings" for details.
-         *
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
@@ -2750,14 +2726,14 @@ class TriangulationBase :
          * \exception InvalidInput the given input stream does not begin with
          * a tight encoding of a <i>dim</i>-dimensional triangulation.
          *
-         * \ifacespython Not present, but the string version of this routine
-         * is available.
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for a <i>dim</i>-dimensional triangulation.
          * @return the facet pairing represented by the given tight encoding.
          */
-        static Triangulation<dim> tightDecoding(std::istream& input);
+        static Triangulation<dim> tightDecode(std::istream& input);
 
         /*@}*/
 
@@ -4141,30 +4117,8 @@ void TriangulationBase<dim>::tightEncode(std::ostream& out) const {
 }
 
 template <int dim>
-inline std::string TriangulationBase<dim>::tightEncoding() const {
-    std::ostringstream out;
-    tightEncode(out);
-    return out.str();
-}
-
-template <int dim>
-inline Triangulation<dim> TriangulationBase<dim>::tightDecoding(
-        const std::string& enc) {
-    std::istringstream s(enc);
-    try {
-        Triangulation<dim> ans = tightDecoding(s);
-        if (s.get() != EOF)
-            throw InvalidArgument("The tight encoding has trailing characters");
-        return ans;
-    } catch (const InvalidInput& exc) {
-        // For strings we use a different exception type.
-        throw InvalidArgument(exc.what());
-    }
-}
-
-template <int dim>
-Triangulation<dim> TriangulationBase<dim>::tightDecoding(std::istream& input) {
-    size_t size = regina::detail::tightDecodingIndex<size_t>(input);
+Triangulation<dim> TriangulationBase<dim>::tightDecode(std::istream& input) {
+    size_t size = regina::detail::tightDecodeIndex<size_t>(input);
     if (size < 0)
         throw InvalidInput("The tight encoding has a negative number "
             "of simplices");
@@ -4179,14 +4133,14 @@ Triangulation<dim> TriangulationBase<dim>::tightDecoding(std::istream& input) {
             if (s->adjacentSimplex(i))
                 continue;
 
-            ssize_t adjIdx = regina::detail::tightDecodingIndex<ssize_t>(input);
+            ssize_t adjIdx = regina::detail::tightDecodeIndex<ssize_t>(input);
             if (adjIdx >= 0) {
                 // This is a non-boundary facet.
                 if (adjIdx >= size)
                     throw InvalidInput("The tight encoding contains "
                         "invalid gluings");
 
-                Perm<dim+1> gluing = Perm<dim+1>::tightDecoding(input);
+                Perm<dim+1> gluing = Perm<dim+1>::tightDecode(input);
                 if (adjIdx < s->index() ||
                         (adjIdx == s->index() && gluing[i] <= i))
                     throw InvalidInput("The tight encoding contains "

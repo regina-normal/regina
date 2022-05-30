@@ -697,7 +697,8 @@ class Perm {
          * code.  For larger permutation classes however (8 &le; \a n &le; 16),
          * the \a S_n index requires some non-trivial work to compute.
          *
-         * \ifacespython Not present; use tightEncoding() instead.
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -759,14 +760,14 @@ class Perm {
          * \exception InvalidInput the given input stream does not begin with
          * a tight encoding of an <i>n</i>-element permutation.
          *
-         * \ifacespython Not present, but the string version of this routine
-         * is available.
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for an <i>n</i>-element permutation.
          * @return the permutation represented by the given tight encoding.
          */
-        static Perm tightDecoding(std::istream& input);
+        static Perm tightDecode(std::istream& input);
 
         /**
          * Resets the images of all integers from \a from onwards to the
@@ -865,7 +866,7 @@ class Perm {
          * @return the permutation represented by the given tight encoding.
          */
         template <typename iterator>
-        static Perm tightDecoding(iterator start, iterator limit,
+        static Perm tightDecode(iterator start, iterator limit,
             bool noTrailingData);
 };
 
@@ -1243,7 +1244,7 @@ std::string Perm<n>::trunc(unsigned len) const {
 template <int n>
 inline Perm<n> Perm<n>::tightDecoding(const std::string& enc) {
     try {
-        return tightDecoding(enc.begin(), enc.end(), true);
+        return tightDecode(enc.begin(), enc.end(), true);
     } catch (const InvalidInput& exc) {
         // For strings we use a different exception type.
         throw InvalidArgument(exc.what());
@@ -1251,8 +1252,8 @@ inline Perm<n> Perm<n>::tightDecoding(const std::string& enc) {
 }
 
 template <int n>
-inline Perm<n> Perm<n>::tightDecoding(std::istream& input) {
-    return tightDecoding(std::istreambuf_iterator<char>(input),
+inline Perm<n> Perm<n>::tightDecode(std::istream& input) {
+    return tightDecode(std::istreambuf_iterator<char>(input),
         std::istreambuf_iterator<char>(), false);
 }
 

@@ -93,9 +93,6 @@ void addPerm2(pybind11::module_& m) {
         .def_static("rand", (Perm<2> (*)(bool))(&Perm<2>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<2>::trunc)
-        .def("tightEncoding", &Perm<2>::tightEncoding)
-        .def_static("tightDecoding",
-            (Perm<2> (*)(const std::string&))(&Perm<2>::tightDecoding))
         .def("clear", &Perm<2>::clear)
         .def("S2Index", &Perm<2>::S2Index)
         .def("SnIndex", &Perm<2>::SnIndex)
@@ -114,6 +111,7 @@ void addPerm2(pybind11::module_& m) {
     ;
     Perm2_contract<3>::add_bindings(c);
     regina::python::add_output_basic(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 }
 

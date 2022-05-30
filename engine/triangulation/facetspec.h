@@ -79,7 +79,7 @@ namespace regina {
  * \ingroup triangulation
  */
 template <int dim>
-struct FacetSpec {
+struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
     ssize_t simp;
         /**< The simplex referred to.  Simplex numbering begins
          *   at 0. */
@@ -274,43 +274,12 @@ struct FacetSpec {
      * Before-the-start, past-the-end and boundary specifiers can all be
      * safely encoded.
      *
-     * \ifacespython Not present; use tightEncoding() instead.
+     * \ifacespython Not present; use tightEncoding() instead, which
+     * returns a string.
      *
      * @param out the output stream to which the encoded string will be written.
      */
     void tightEncode(std::ostream& out) const;
-
-    /**
-     * Returns the tight encoding of this specifier.
-     * See the page on \ref tight "tight encodings" for details.
-     *
-     * Before-the-start, past-the-end and boundary specifiers can all be
-     * safely encoded.
-     *
-     * @return the resulting encoded string.
-     */
-    std::string tightEncoding() const;
-
-    /**
-     * Reconstructs a specifier from its given tight encoding.
-     * See the page on \ref tight "tight encodings" for details.
-     *
-     * The tight encoding will be given as a string.  If this string
-     * contains leading whitespace or any trailing characters at all
-     * (including trailing whitespace), then it will be treated as
-     * an invalid encoding (i.e., this routine will throw an exception).
-     *
-     * Before-the-start, past-the-end and boundary specifiers can all be
-     * safely reconstructed.
-     *
-     * \exception InvalidArgument the given string is not a tight encoding
-     * of a <i>dim</i>-dimensional facet specifier.
-     *
-     * @param enc the tight encoding for a <i>dim</i>-dimensional
-     * facet specifier.
-     * @return the specifier represented by the given tight encoding.
-     */
-    static FacetSpec<dim> tightDecoding(const std::string& enc);
 
     /**
      * Reconstructs a specifier from its given tight encoding.
@@ -330,14 +299,14 @@ struct FacetSpec {
      * \exception InvalidInput the given input stream does not begin with
      * a tight encoding of a <i>dim</i>-dimensional facet specifier.
      *
-     * \ifacespython Not present, but the string version of this routine
-     * is available.
+     * \ifacespython Not present; use tightDecoding() instead, which takes
+     * a string as its argument.
      *
      * @param input an input stream that begins with the tight encoding
      * for a <i>dim</i>-dimensional facet specifier.
      * @return the specifier represented by the given tight encoding.
      */
-    static FacetSpec<dim> tightDecoding(std::istream& input);
+    static FacetSpec<dim> tightDecode(std::istream& input);
 };
 
 /**
@@ -469,29 +438,8 @@ inline void FacetSpec<dim>::tightEncode(std::ostream& out) const {
 }
 
 template <int dim>
-inline std::string FacetSpec<dim>::tightEncoding() const {
-    std::ostringstream out;
-    tightEncode(out);
-    return out.str();
-}
-
-template <int dim>
-inline FacetSpec<dim> FacetSpec<dim>::tightDecoding(const std::string& enc) {
-    std::istringstream s(enc);
-    try {
-        FacetSpec<dim> ans = tightDecoding(s);
-        if (s.get() != EOF)
-            throw InvalidArgument("The tight encoding has trailing characters");
-        return ans;
-    } catch (const InvalidInput& exc) {
-        // For strings we use a different exception type.
-        throw InvalidArgument(exc.what());
-    }
-}
-
-template <int dim>
-inline FacetSpec<dim> FacetSpec<dim>::tightDecoding(std::istream& input) {
-    ssize_t enc = regina::detail::tightDecodingIndex<ssize_t>(input);
+inline FacetSpec<dim> FacetSpec<dim>::tightDecode(std::istream& input) {
+    ssize_t enc = regina::detail::tightDecodeIndex<ssize_t>(input);
     if (enc < 0)
         return FacetSpec(-1, dim);
     else

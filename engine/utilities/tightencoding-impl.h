@@ -230,8 +230,7 @@ void tightEncodeInteger(std::ostream& out, Int value) {
 }
 
 template <typename Int, typename iterator>
-Int tightDecodingInteger(iterator start, iterator limit,
-        bool noTrailingData) {
+Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
     static_assert((std::is_integral_v<Int> && ! std::is_same_v<Int, bool>)
             || IsReginaArbitraryPrecisionInteger<Int>::value,
         "tightEncodeInteger() requires either a native C++ integer type "
@@ -550,7 +549,7 @@ void tightEncodeIndex(std::ostream& out, Int value) {
 }
 
 template <typename Int>
-Int tightDecodingIndex(std::istream& input) {
+Int tightDecodeIndex(std::istream& input) {
     static_assert(std::is_unsigned_v<Int> || std::is_same_v<Int, ssize_t>,
         "tightDecodeIndex() requires either ssize_t or an unsigned native "
         "C++ integer type.");

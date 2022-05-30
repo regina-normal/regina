@@ -365,7 +365,7 @@ std::string Perm<n>::tightEncoding() const {
 
 template <int n>
 template <typename iterator>
-Perm<n> Perm<n>::tightDecoding(iterator start, iterator limit,
+Perm<n> Perm<n>::tightDecode(iterator start, iterator limit,
         bool noTrailingData) {
     // Ensure that our calculations will not overflow, even when reading
     // an *invalid* encoding.  Here we note that:

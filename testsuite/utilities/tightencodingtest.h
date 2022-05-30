@@ -94,7 +94,7 @@ class TightEncodingTest {
 
                 try {
                     std::istringstream input(enc);
-                    T dec = T::tightDecoding(input);
+                    T dec = T::tightDecode(input);
                     if (dec != obj) {
                         std::ostringstream msg;
                         msg << "The tight encoding for object " << obj.str()
@@ -123,7 +123,7 @@ class TightEncodingTest {
 
                 try {
                     std::istringstream input(enc + "x y z");
-                    T dec = T::tightDecoding(input);
+                    T dec = T::tightDecode(input);
                     if (dec != obj) {
                         std::ostringstream msg;
                         msg << "The tight encoding for object " << obj.str()

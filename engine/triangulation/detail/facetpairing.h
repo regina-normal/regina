@@ -77,7 +77,9 @@ namespace regina::detail {
  * \ingroup detail
  */
 template <int dim>
-class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
+class FacetPairingBase :
+        public ShortOutput<FacetPairingBase<dim>>,
+        public TightEncodable<FacetPairing<dim>> {
     static_assert(dim >= 2, "FacetPairing requires dimension >= 2.");
 
     public:
@@ -504,29 +506,13 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * \exception FailedPrecondition Some simplex facet has a destination
          * that is explicitly disallowed by the precondition above.
          *
-         * \ifacespython Not present; use tightEncoding() instead.
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
-
-        /**
-         * Returns the tight encoding of this facet pairing.
-         * See the page on \ref tight "tight encodings" for details.
-         *
-         * \pre Every simplex facet is either (i) paired to another simplex
-         * facet, (ii) marked as boundary, or (iii) paired to itself (which is
-         * often used as a placeholder to indicate that the real destination
-         * has not yet been decided).  In particular, before-the-start or
-         * past-the-end destinations are not allowed.
-         *
-         * \exception FailedPrecondition Some simplex facet has a destination
-         * that is explicitly disallowed by the precondition above.
-         *
-         * @return the resulting encoded string.
-         */
-        std::string tightEncoding() const;
 
         /**
          * Writes the graph corresponding to this facet pairing in
@@ -619,25 +605,6 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * Reconstructs a facet pairing from its given tight encoding.
          * See the page on \ref tight "tight encodings" for details.
          *
-         * The tight encoding will be given as a string.  If this string
-         * contains leading whitespace or any trailing characters at all
-         * (including trailing whitespace), then it will be treated as
-         * an invalid encoding (i.e., this routine will throw an exception).
-         *
-         * \exception InvalidArgument the given string is not a tight encoding
-         * of a <i>dim</i>-dimensional facet pairing on a positive number
-         * of simplices.
-         *
-         * @param enc the tight encoding for a <i>dim</i>-dimensional
-         * facet pairing.
-         * @return the facet pairing represented by the given tight encoding.
-         */
-        static FacetPairing<dim> tightDecoding(const std::string& enc);
-
-        /**
-         * Reconstructs a facet pairing from its given tight encoding.
-         * See the page on \ref tight "tight encodings" for details.
-         *
          * The tight encoding will be read from the given input stream.
          * If the input stream contains leading whitespace then it will be
          * treated as an invalid encoding (i.e., this routine will throw an
@@ -650,14 +617,14 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * a tight encoding of a <i>dim</i>-dimensional facet pairing on
          * a positive number of simplices.
          *
-         * \ifacespython Not present, but the string version of this routine
-         * is available.
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for a <i>dim</i>-dimensional facet pairing.
          * @return the facet pairing represented by the given tight encoding.
          */
-        static FacetPairing<dim> tightDecoding(std::istream& input);
+        static FacetPairing<dim> tightDecode(std::istream& input);
 
         /**
          * Writes header information for a Graphviz DOT file that will
@@ -1103,30 +1070,8 @@ void FacetPairingBase<dim>::tightEncode(std::ostream& out) const {
 }
 
 template <int dim>
-inline std::string FacetPairingBase<dim>::tightEncoding() const {
-    std::ostringstream out;
-    tightEncode(out);
-    return out.str();
-}
-
-template <int dim>
-inline FacetPairing<dim> FacetPairingBase<dim>::tightDecoding(
-        const std::string& enc) {
-    std::istringstream s(enc);
-    try {
-        FacetPairing<dim> ans = tightDecoding(s);
-        if (s.get() != EOF)
-            throw InvalidArgument("The tight encoding has trailing characters");
-        return ans;
-    } catch (const InvalidInput& exc) {
-        // For strings we use a different exception type.
-        throw InvalidArgument(exc.what());
-    }
-}
-
-template <int dim>
-FacetPairing<dim> FacetPairingBase<dim>::tightDecoding(std::istream& input) {
-    size_t size = regina::detail::tightDecodingIndex<size_t>(input);
+FacetPairing<dim> FacetPairingBase<dim>::tightDecode(std::istream& input) {
+    size_t size = regina::detail::tightDecodeIndex<size_t>(input);
     if (size <= 0)
         throw InvalidInput("The tight encoding has a non-positive number "
             "of simplices");
@@ -1140,7 +1085,7 @@ FacetPairing<dim> FacetPairingBase<dim>::tightDecoding(std::istream& input) {
         if (! ans.pairs_[i].isBeforeStart())
             continue;
 
-        ssize_t adjIdx = regina::detail::tightDecodingIndex<ssize_t>(input);
+        ssize_t adjIdx = regina::detail::tightDecodeIndex<ssize_t>(input);
         if (adjIdx < 0)
             throw InvalidInput("The tight encoding contains "
                 "uninitialised matchings of simplex facets");

@@ -220,13 +220,11 @@ void addTriangulation2(pybind11::module_& m) {
         .def_static("fromSig", &Triangulation<2>::fromSig)
         .def_static("isoSigComponentSize",
             &Triangulation<2>::isoSigComponentSize)
-        .def("tightEncoding", &Triangulation<2>::tightEncoding)
-        .def_static("tightDecoding", overload_cast<const std::string&>(
-            &Triangulation<2>::tightDecoding))
         .def("dumpConstruction", &Triangulation<2>::dumpConstruction)
         .def_readonly_static("dimension", &Triangulation<2>::dimension)
     ;
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c);
     regina::python::add_packet_data(c);
 

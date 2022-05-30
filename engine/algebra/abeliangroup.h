@@ -76,7 +76,9 @@ using MatrixInt = Matrix<Integer, true>;
  *
  * \ingroup algebra
  */
-class AbelianGroup : public ShortOutput<AbelianGroup, true> {
+class AbelianGroup :
+        public ShortOutput<AbelianGroup, true>,
+        public TightEncodable<AbelianGroup> {
     protected:
         unsigned long rank_ { 0 };
             /**< The rank of the group (the number of Z components). */
@@ -430,37 +432,13 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * Writes the tight encoding of this abelian group to the given output
          * stream.  See the page on \ref tight "tight encodings" for details.
          *
-         * \ifacespython Not present; use tightEncoding() instead.
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
-
-        /**
-         * Returns the tight encoding of this abelian group.
-         * See the page on \ref tight "tight encodings" for details.
-         *
-         * @return the resulting encoded string.
-         */
-        std::string tightEncoding() const;
-
-        /**
-         * Reconstructs an abelian group from its given tight encoding.
-         * See the page on \ref tight "tight encodings" for details.
-         *
-         * The tight encoding will be given as a string.  If this string
-         * contains leading whitespace or any trailing characters at all
-         * (including trailing whitespace), then it will be treated as
-         * an invalid encoding (i.e., this routine will throw an exception).
-         *
-         * \exception InvalidArgument the given string is not a tight encoding
-         * of an abelian group.
-         *
-         * @param enc the tight encoding for an abelian group.
-         * @return the abelian group represented by the given tight encoding.
-         */
-        static AbelianGroup tightDecoding(const std::string& enc);
 
         /**
          * Reconstructs an abelian group from its given tight encoding.
@@ -477,14 +455,14 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          * \exception InvalidInput the given input stream does not begin with
          * a tight encoding of an abelian group.
          *
-         * \ifacespython Not present, but the string version of this routine
-         * is available.
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for an abelian group.
          * @return the abelian group represented by the given tight encoding.
          */
-        static AbelianGroup tightDecoding(std::istream& input);
+        static AbelianGroup tightDecode(std::istream& input);
 
         /**
          * Writes a chunk of XML containing this abelian group.
@@ -633,25 +611,6 @@ inline void AbelianGroup::tightEncode(std::ostream& out) const {
     for (auto it = revInvFactors_.rbegin(); it != revInvFactors_.rend(); ++it)
         regina::tightEncode(out, *it);
     regina::tightEncode(out, 0);
-}
-
-inline std::string AbelianGroup::tightEncoding() const {
-    std::ostringstream out;
-    tightEncode(out);
-    return out.str();
-}
-
-inline AbelianGroup AbelianGroup::tightDecoding(const std::string& enc) {
-    std::istringstream s(enc);
-    try {
-        AbelianGroup ans = tightDecoding(s);
-        if (s.get() != EOF)
-            throw InvalidArgument("The tight encoding has trailing characters");
-        return ans;
-    } catch (const InvalidInput& exc) {
-        // For strings we use a different exception type.
-        throw InvalidArgument(exc.what());
-    }
 }
 
 inline void swap(AbelianGroup& a, AbelianGroup& b) noexcept {

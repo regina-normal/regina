@@ -1525,7 +1525,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * rvalue reference (since this const member function induces an extra
          * deep copy).
          *
-         * \ifacespython Not present; use tightEncoding() instead.
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -1584,19 +1585,19 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * supportInfinity is \c true.
          *
          * This routine is identical to calling the global template routine
-         * regina::tightDecoding() with this type as the template argument.
+         * regina::tightDecode() with this type as the template argument.
          *
          * \exception InvalidInput the given input stream does not begin with
          * a tight encoding of an integer of this type.
          *
-         * \ifacespython Not present, but the string version of this routine
-         * is available.
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for an integer.
          * @return the integer represented by the given tight encoding.
          */
-        static IntegerBase tightDecoding(std::istream& input);
+        static IntegerBase tightDecode(std::istream& input);
 
     private:
         /**
@@ -3515,15 +3516,15 @@ inline std::string IntegerBase<supportInfinity>::tightEncoding() const {
 template <bool supportInfinity>
 inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::tightDecoding(
         const std::string& enc) {
-    return regina::detail::tightDecodingInteger<IntegerBase>(
+    return regina::detail::tightDecodeInteger<IntegerBase>(
         enc.begin(), enc.end(), true);
 }
 
 template <bool supportInfinity>
-inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::tightDecoding(
+inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::tightDecode(
         std::istream& input) {
     try {
-        return regina::detail::tightDecodingInteger<IntegerBase>(
+        return regina::detail::tightDecodeInteger<IntegerBase>(
             std::istreambuf_iterator<char>(input),
             std::istreambuf_iterator<char>(), false);
     } catch (const InvalidArgument& exc) {

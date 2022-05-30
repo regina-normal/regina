@@ -156,7 +156,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
 
                     try {
                         std::istringstream input(enc);
-                        regina::tightDecoding<T>(input);
+                        regina::tightDecode<T>(input);
 
                         std::ostringstream msg;
                         msg << "The tight encoding for " << val
@@ -236,7 +236,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
 
             try {
                 std::istringstream input(enc);
-                T dec = regina::tightDecoding<T>(input);
+                T dec = regina::tightDecode<T>(input);
                 if (dec != native) {
                     std::ostringstream msg;
                     msg << "The tight encoding for " << val
@@ -267,7 +267,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
 
             try {
                 std::istringstream input(enc + "x y z");
-                T dec = regina::tightDecoding<T>(input);
+                T dec = regina::tightDecode<T>(input);
                 if (dec != native) {
                     std::ostringstream msg;
                     msg << "The tight encoding for " << val
@@ -391,7 +391,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
 
                 try {
                     std::istringstream input(enc);
-                    regina::tightDecoding<T>(input);
+                    regina::tightDecode<T>(input);
 
                     std::ostringstream msg;
                     msg << "The tight encoding for infinity using "
@@ -440,8 +440,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
 
                 try {
                     std::istringstream input(enc);
-                    LargeInteger dec = regina::tightDecoding<LargeInteger>(
-                        input);
+                    LargeInteger dec = regina::tightDecode<LargeInteger>(input);
                     if (! dec.isInfinite()) {
                         std::ostringstream msg;
                         msg << "The tight encoding for infinity "
@@ -469,8 +468,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
 
                 try {
                     std::istringstream input(enc + "x y z");
-                    LargeInteger dec = regina::tightDecoding<LargeInteger>(
-                        input);
+                    LargeInteger dec = regina::tightDecode<LargeInteger>(input);
                     if (! dec.isInfinite()) {
                         std::ostringstream msg;
                         msg << "The tight encoding for infinity "
@@ -556,7 +554,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
 
             try {
                 std::istringstream input(enc);
-                bool dec = regina::tightDecoding<bool>(input);
+                bool dec = regina::tightDecode<bool>(input);
                 if (dec != value) {
                     std::ostringstream msg;
                     msg << "The tight encoding for " << value
@@ -584,7 +582,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
 
             try {
                 std::istringstream input(enc + "x y z");
-                bool dec = regina::tightDecoding<bool>(input);
+                bool dec = regina::tightDecode<bool>(input);
                 if (dec != value) {
                     std::ostringstream msg;
                     msg << "The tight encoding for " << value
@@ -623,7 +621,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
 
             try {
                 std::istringstream input(enc);
-                T dec = regina::detail::tightDecodingIndex<T>(input);
+                T dec = regina::detail::tightDecodeIndex<T>(input);
                 if (dec != val) {
                     std::ostringstream msg;
                     msg << "The tight encoding for " << val
@@ -642,7 +640,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
 
             try {
                 std::istringstream input(enc + "x y z");
-                T dec = regina::detail::tightDecodingIndex<T>(input);
+                T dec = regina::detail::tightDecodeIndex<T>(input);
                 if (dec != val) {
                     std::ostringstream msg;
                     msg << "The tight encoding for " << val
@@ -709,7 +707,7 @@ class TightEncodingTest : public CppUnit::TestFixture {
 
             try {
                 std::istringstream input(enc);
-                regina::detail::tightDecodingIndex<T>(input);
+                regina::detail::tightDecodeIndex<T>(input);
 
                 std::ostringstream msg;
                 msg << "The tight encoding for one beyond the maximum possible "

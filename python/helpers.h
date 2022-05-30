@@ -56,5 +56,6 @@
 #include "helpers/output.h"
 #include "helpers/listview.h"
 #include "helpers/packet.h"
+#include "helpers/tightencoding.h"
 
 #endif

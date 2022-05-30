@@ -73,9 +73,6 @@ void addIsomorphism(pybind11::module_& m, const char* name) {
         })
         .def(pybind11::self * pybind11::self)
         .def("inverse", &Isomorphism<dim>::inverse)
-        .def("tightEncoding", &Isomorphism<dim>::tightEncoding)
-        .def_static("tightDecoding", overload_cast<const std::string&>(
-            &Isomorphism<dim>::tightDecoding))
         .def_static("random", &Isomorphism<dim>::random,
             pybind11::arg(), pybind11::arg("even") = false)
         .def_static("identity", &Isomorphism<dim>::identity)
@@ -86,6 +83,7 @@ void addIsomorphism(pybind11::module_& m, const char* name) {
         });
     }
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap",

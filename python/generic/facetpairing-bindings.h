@@ -74,9 +74,6 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
         .def("textRep", &FacetPairing<dim>::textRep)
         .def("toTextRep", &FacetPairing<dim>::textRep) // deprecated
         .def_static("fromTextRep", &FacetPairing<dim>::fromTextRep)
-        .def("tightEncoding", &FacetPairing<dim>::tightEncoding)
-        .def_static("tightDecoding", overload_cast<const std::string&>(
-            &FacetPairing<dim>::tightDecoding))
         .def("dot", &FacetPairing<dim>::dot,
             pybind11::arg("prefix") = nullptr,
             pybind11::arg("subgraph") = false,
@@ -90,6 +87,7 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
                     typename FacetPairing<dim>::IsoList)>&>)
     ;
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap",

@@ -114,6 +114,7 @@ namespace regina {
 template <int dim>
 class Isomorphism :
         public Output<Isomorphism<dim>>,
+        public TightEncodable<Isomorphism<dim>>,
         public alias::IsomorphismImage<Isomorphism<dim>, dim> {
     static_assert(dim >= 2, "Isomorphism requires dimension >= 2.");
 
@@ -571,38 +572,13 @@ class Isomorphism :
          * Writes the tight encoding of this isomorphism to the given output
          * stream.  See the page on \ref tight "tight encodings" for details.
          *
-         * \ifacespython Not present; use tightEncoding() instead.
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
-
-        /**
-         * Returns the tight encoding of this isomorphism.
-         * See the page on \ref tight "tight encodings" for details.
-         *
-         * @return the resulting encoded string.
-         */
-        std::string tightEncoding() const;
-
-        /**
-         * Reconstructs an isomorphism from its given tight encoding.
-         * See the page on \ref tight "tight encodings" for details.
-         *
-         * The tight encoding will be given as a string.  If this string
-         * contains leading whitespace or any trailing characters at all
-         * (including trailing whitespace), then it will be treated as
-         * an invalid encoding (i.e., this routine will throw an exception).
-         *
-         * \exception InvalidArgument the given string is not a tight encoding
-         * of an isomorphism on <i>dim</i>-dimensional triangulations.
-         *
-         * @param enc the tight encoding for an isomorphism on
-         * <i>dim</i>-dimensional triangulations.
-         * @return the isomorphism represented by the given tight encoding.
-         */
-        static Isomorphism tightDecoding(const std::string& enc);
 
         /**
          * Reconstructs an isomorphism from its given tight encoding.
@@ -620,14 +596,14 @@ class Isomorphism :
          * a tight encoding of an isomorphism on <i>dim</i>-dimensional
          * triangulations.
          *
-         * \ifacespython Not present, but the string version of this routine
-         * is available.
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for an isomorphism on <i>dim</i>-dimensional triangulations.
          * @return the isomorphism represented by the given tight encoding.
          */
-        static Isomorphism tightDecoding(std::istream& input);
+        static Isomorphism tightDecode(std::istream& input);
 
         /**
          * Writes a short text representation of this object to the
@@ -1014,41 +990,19 @@ void Isomorphism<dim>::tightEncode(std::ostream& out) const {
 }
 
 template <int dim>
-inline std::string Isomorphism<dim>::tightEncoding() const {
-    std::ostringstream out;
-    tightEncode(out);
-    return out.str();
-}
-
-template <int dim>
-inline Isomorphism<dim> Isomorphism<dim>::tightDecoding(
-        const std::string& enc) {
-    std::istringstream s(enc);
-    try {
-        Isomorphism ans = tightDecoding(s);
-        if (s.get() != EOF)
-            throw InvalidArgument("The tight encoding has trailing characters");
-        return ans;
-    } catch (const InvalidInput& exc) {
-        // For strings we use a different exception type.
-        throw InvalidArgument(exc.what());
-    }
-}
-
-template <int dim>
-Isomorphism<dim> Isomorphism<dim>::tightDecoding(std::istream& input) {
-    size_t n = regina::detail::tightDecodingIndex<size_t>(input);
+Isomorphism<dim> Isomorphism<dim>::tightDecode(std::istream& input) {
+    size_t n = regina::detail::tightDecodeIndex<size_t>(input);
     Isomorphism ans(n);
 
     // We don't check the values of simpImage_[...], since we want to
     // support the negative "unknown" placeholder value for simpImage_[...].
-    // Perm<dim+1>::tightDecoding() will check the validity of the
-    // permutations that are read.
+    // Perm<dim+1>::tightDecode() will check the validity of the permutations
+    // that are read.
     for (size_t i = 0; i < n; ++i)
-        ans.simpImage_[i] = regina::detail::tightDecodingIndex<ssize_t>(input);
+        ans.simpImage_[i] = regina::detail::tightDecodeIndex<ssize_t>(input);
     if constexpr (dim == 2) {
         for (size_t i = 0; i < n; i += 2) {
-            unsigned p = regina::detail::tightDecodingIndex<unsigned>(input);
+            unsigned p = regina::detail::tightDecodeIndex<unsigned>(input);
             if (i + 1 == n) {
                 if (p >= 6)
                     throw InvalidInput("The tight encoding contains "
@@ -1064,7 +1018,7 @@ Isomorphism<dim> Isomorphism<dim>::tightDecoding(std::istream& input) {
         }
     } else {
         for (size_t i = 0; i < n; ++i)
-            ans.facetPerm_[i] = Perm<dim+1>::tightDecoding(input);
+            ans.facetPerm_[i] = Perm<dim+1>::tightDecode(input);
     }
 
     return ans;

@@ -101,9 +101,6 @@ void addPerm3(pybind11::module_& m) {
             pybind11::arg("even") = false)
         .def("trunc", &Perm<3>::trunc)
         .def("trunc2", &Perm<3>::trunc2)
-        .def("tightEncoding", &Perm<3>::tightEncoding)
-        .def_static("tightDecoding",
-            (Perm<3> (*)(const std::string&))(&Perm<3>::tightDecoding))
         .def("clear", &Perm<3>::clear)
         .def("S3Index", &Perm<3>::S3Index)
         .def("SnIndex", &Perm<3>::SnIndex)
@@ -129,6 +126,7 @@ void addPerm3(pybind11::module_& m) {
     ;
     Perm3_contract<4>::add_bindings(c);
     regina::python::add_output_basic(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 }
 

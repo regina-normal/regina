@@ -81,7 +81,9 @@ namespace regina {
  * \ingroup maths
  */
 template <typename T>
-class Laurent2 : public ShortOutput<Laurent2<T>, true> {
+class Laurent2 :
+        public ShortOutput<Laurent2<T>, true>,
+        public TightEncodable<Laurent2<T>> {
     static_assert(! std::is_integral_v<T>,
         "Laurent2<T> requires the type T to have a default constructor that "
         "assigns a value of zero.");
@@ -574,45 +576,13 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * tightEncode() function.  This is true for Regina's arbitrary
          * precision integer types (Integer and LargeInteger).
          *
-         * \ifacespython Not present; use tightEncoding() instead.
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
          */
         void tightEncode(std::ostream& out) const;
-
-        /**
-         * Returns the tight encoding of this polynomial.
-         * See the page on \ref tight "tight encodings" for details.
-         *
-         * \pre The coefficient type \a T must have a corresponding
-         * tightEncode() function.  This is true for Regina's arbitrary
-         * precision integer types (Integer and LargeInteger).
-         *
-         * @return the resulting encoded string.
-         */
-        std::string tightEncoding() const;
-
-        /**
-         * Reconstructs a polynomial from its given tight encoding.
-         * See the page on \ref tight "tight encodings" for details.
-         *
-         * The tight encoding will be given as a string.  If this string
-         * contains leading whitespace or any trailing characters at all
-         * (including trailing whitespace), then it will be treated as
-         * an invalid encoding (i.e., this routine will throw an exception).
-         *
-         * \pre The coefficient type \a T must have a corresponding static
-         * tightDecoding() function.  This is true for Regina's arbitrary
-         * precision integer types (Integer and LargeInteger).
-         *
-         * \exception InvalidArgument the given string is not a tight encoding
-         * of a two-variable Laurent polynomial.
-         *
-         * @param enc the tight encoding for a two-variable Laurent polynomial.
-         * @return the polynomial represented by the given tight encoding.
-         */
-        static Laurent2 tightDecoding(const std::string& enc);
 
         /**
          * Reconstructs a polynomial from its given tight encoding.
@@ -627,20 +597,20 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * whitespace.
          *
          * \pre The coefficient type \a T must have a corresponding static
-         * tightDecoding() function.  This is true for Regina's arbitrary
+         * tightDecode() function.  This is true for Regina's arbitrary
          * precision integer types (Integer and LargeInteger).
          *
          * \exception InvalidInput the given input stream does not begin with
          * a tight encoding of a two-variable Laurent polynomial.
          *
-         * \ifacespython Not present, but the string version of this routine
-         * is available.
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
          *
          * @param input an input stream that begins with the tight encoding
          * for a two-variable Laurent polynomial.
          * @return the polynomial represented by the given tight encoding.
          */
-        static Laurent2 tightDecoding(std::istream& input);
+        static Laurent2 tightDecode(std::istream& input);
 
     private:
         /**
@@ -1326,37 +1296,16 @@ inline void Laurent2<T>::tightEncode(std::ostream& out) const {
 }
 
 template <typename T>
-inline std::string Laurent2<T>::tightEncoding() const {
-    std::ostringstream out;
-    tightEncode(out);
-    return out.str();
-}
-
-template <typename T>
-inline Laurent2<T> Laurent2<T>::tightDecoding(const std::string& enc) {
-    std::istringstream s(enc);
-    try {
-        Laurent2 ans = tightDecoding(s);
-        if (s.get() != EOF)
-            throw InvalidArgument("The tight encoding has trailing characters");
-        return ans;
-    } catch (const InvalidInput& exc) {
-        // For strings we use a different exception type.
-        throw InvalidArgument(exc.what());
-    }
-}
-
-template <typename T>
-inline Laurent2<T> Laurent2<T>::tightDecoding(std::istream& input) {
+inline Laurent2<T> Laurent2<T>::tightDecode(std::istream& input) {
     Laurent2 ans;
 
     while (true) {
-        T coeff = T::tightDecoding(input);
+        T coeff = T::tightDecode(input);
         if (coeff == 0)
             return ans;
 
-        long x = regina::tightDecoding<long>(input);
-        long y = regina::tightDecoding<long>(input);
+        long x = regina::tightDecode<long>(input);
+        long y = regina::tightDecode<long>(input);
         if (! ans.coeff_.emplace(Exponents(x, y), std::move(coeff)).second)
             throw InvalidInput("The tight encoding has a repeated "
                 "pair of exponents");

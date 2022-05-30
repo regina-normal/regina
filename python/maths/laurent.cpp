@@ -80,9 +80,6 @@ void addLaurent(pybind11::module_& m) {
             &Laurent<regina::Integer>::str, pybind11::const_))
         .def("utf8", overload_cast<const char*>(
             &Laurent<regina::Integer>::utf8, pybind11::const_))
-        .def("tightEncoding", &Laurent<regina::Integer>::tightEncoding)
-        .def_static("tightDecoding", overload_cast<const std::string&>(
-            &Laurent<regina::Integer>::tightDecoding))
         .def(pybind11::self < pybind11::self)
         .def(pybind11::self > pybind11::self)
         .def(pybind11::self <= pybind11::self)
@@ -101,6 +98,7 @@ void addLaurent(pybind11::module_& m) {
         .def(- pybind11::self)
     ;
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(Laurent<regina::Integer>&,

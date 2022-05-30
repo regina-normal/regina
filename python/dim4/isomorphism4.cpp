@@ -80,14 +80,12 @@ void addIsomorphism4(pybind11::module_& m) {
         .def("inc", [](Isomorphism<4>& iso) {
             ++iso;
         })
-        .def("tightEncoding", &Isomorphism<4>::tightEncoding)
-        .def_static("tightDecoding", overload_cast<const std::string&>(
-            &Isomorphism<4>::tightDecoding))
         .def_static("random", &Isomorphism<4>::random,
             pybind11::arg(), pybind11::arg("even") = false)
         .def_static("identity", &Isomorphism<4>::identity)
     ;
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(Isomorphism<4>&, Isomorphism<4>&))(regina::swap));

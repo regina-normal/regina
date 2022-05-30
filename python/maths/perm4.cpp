@@ -113,9 +113,6 @@ void addPerm4(pybind11::module_& m) {
         .def("trunc", &Perm<4>::trunc)
         .def("trunc2", &Perm<4>::trunc2)
         .def("trunc3", &Perm<4>::trunc3)
-        .def("tightEncoding", &Perm<4>::tightEncoding)
-        .def_static("tightDecoding",
-            (Perm<4> (*)(const std::string&))(&Perm<4>::tightDecoding))
         .def("clear", &Perm<4>::clear)
         .def("S4Index", (int (Perm<4>::*)() const) &Perm<4>::S4Index)
         .def("SnIndex", &Perm<4>::SnIndex)
@@ -141,6 +138,7 @@ void addPerm4(pybind11::module_& m) {
     ;
     Perm4_contract<5>::add_bindings(c);
     regina::python::add_output_basic(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 }
 
