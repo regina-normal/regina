@@ -295,7 +295,6 @@ namespace {
         void clearData();
         static void clearVar(TVType& var);
         static void clearArray(TVType* ar,unsigned long n);
-//         template<class T>
         static void clearMap(std::map<LightweightSequence<int>, TVType> *map);
 
         static void negate(TVType& x);
@@ -410,6 +409,7 @@ namespace {
             tetContrib(colour0, colour1, colour3, colour5, colour4, colour2,
                 tmp);
             ans *= tmp;
+            clearVar(tmp);
 
             int i;
             const Triangle<3>* triangle;
@@ -548,19 +548,16 @@ namespace {
     }
 
     template <>
-//     template <class T>
     inline void InitialData<exact>::clearMap(std::map<LightweightSequence<int>, TVType>* map) {
         delete map;
     }
 
     template <>
-//     template <class T>
     inline void InitialData<floating>::clearMap(std::map<LightweightSequence<int>, TVType>* map) {
-        delete[] map;
+        delete map;
     }
 
     template<>
-//     template <class T>
     inline void InitialData<multiPrecision>::clearMap(std::map<LightweightSequence<int>, TVType>* map) {
         for(auto &x:*map) {x.second.clear();}
         delete map;
