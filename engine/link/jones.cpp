@@ -55,7 +55,7 @@ namespace {
     const regina::Laurent<regina::Integer> noResult;
 }
 
-size_t Link::resolutionLoops(unsigned long mask, size_t* loopIDs,
+size_t Link::resolutionLoops(uint64_t mask, size_t* loopIDs,
         size_t* loopLengths) const {
     size_t n = crossings_.size();
 
@@ -90,8 +90,7 @@ size_t Link::resolutionLoops(unsigned long mask, size_t* loopIDs,
                 do {
                     //std::cerr << "At: " << s <<
                     //    (dir == 1 ? " ->" : " <-") << std::endl;
-                    const unsigned long bit =
-                        (unsigned long)(1) << s.crossing()->index();
+                    const uint64_t bit = (uint64_t)1 << s.crossing()->index();
 
                     if (    ((mask & bit) && s.crossing()->sign() < 0) ||
                             ((mask & bit) == 0 && s.crossing()->sign() > 0)) {
@@ -145,9 +144,9 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
         return Laurent<Integer>();
 
     size_t n = crossings_.size();
-    if (n >= sizeof(long) * 8) {
-        // We cannot use the backtracking algorithm, since an
-        // unsigned long (used for a bitmask) does not contain enough bits.
+    if (n >= 64) {
+        // We cannot use the backtracking algorithm, since our bitmask
+        // type (uint64_t) does not contain enough bits.
         return bracketTreewidth(tracker);
     }
 
@@ -167,7 +166,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
 
     size_t maxLoops = 0;
 
-    static_assert(BitManipulator<unsigned long>::specialised,
+    static_assert(BitManipulator<uint64_t>::specialised,
         "BitManipulator is not specialised for the mask type.");
 
     if (tracker)
@@ -175,8 +174,8 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
 
     size_t loops;
     long shift;
-    const unsigned long maskEnd = ((unsigned long)(1) << n);
-    for (unsigned long mask = 0; mask != maskEnd; ++mask) {
+    const uint64_t maskEnd = ((uint64_t)1 << n);
+    for (uint64_t mask = 0; mask != maskEnd; ++mask) {
         // std::cerr << "Mask: " << mask << std::endl;
 
         // Check for cancellation every 1024 steps.
@@ -192,7 +191,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
         --loops;
 
         // Set shift = #(0 bits) - #(1 bits) in mask.
-        shift = n - 2 * BitManipulator<unsigned long>::bits(mask);
+        shift = n - 2 * BitManipulator<uint64_t>::bits(mask);
         if (shift > count[loops].maxExp() || shift < count[loops].minExp())
             count[loops].set(shift, 1);
         else

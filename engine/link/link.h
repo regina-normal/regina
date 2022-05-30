@@ -2148,8 +2148,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * call this routine in a new detached thread.
          *
          * \warning The naive algorithm can only handle a limited number
-         * of crossings (currently less than the number of bits in a long,
-         * which on a typical machine is 64).  If you pass ALG_NAIVE and
+         * of crossings (currently at most 63).  If you pass ALG_NAIVE and
          * you have too many crossings (which is not advised, since the
          * naive algorithm requires 2^<i>n</i> time), then this routine
          * will ignore your choice of algorithm and use the treewidth-based
@@ -2239,8 +2238,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * call this routine in a new detached thread.
          *
          * \warning The naive algorithm can only handle a limited number
-         * of crossings (currently less than the number of bits in a long,
-         * which on a typical machine is 64).  If you pass ALG_NAIVE and
+         * of crossings (currently at most 63).  If you pass ALG_NAIVE and
          * you have too many crossings (which is not advised, since the
          * naive algorithm requires 2^<i>n</i> time), then this routine
          * will ignore your choice of algorithm and use the treewidth-based
@@ -4397,8 +4395,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * lengths will be placed in the array in the same order as the
          * loop IDs as described above.
          *
-         * \pre The number of crossings is less than the number of bits in
-         * an unsigned long.
+         * \pre The number of crossings is less than 64 (the length of
+         * the bitmask type).
          *
          * \pre If either or both the arrays \a loopIDs and \a loopLengths
          * are not null, then they are arrays whose size is at least the
@@ -4409,7 +4407,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * @return the resulting number of loops after all crossings are
          * resolved.
          */
-        size_t resolutionLoops(unsigned long mask, size_t* loopIDs = nullptr,
+        size_t resolutionLoops(uint64_t mask, size_t* loopIDs = nullptr,
             size_t* loopLengths = nullptr) const;
 
         /**
