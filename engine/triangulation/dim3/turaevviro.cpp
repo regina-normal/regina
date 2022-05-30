@@ -836,8 +836,10 @@ namespace {
 
         if (tracker) {
             delete[] coeff;
-            if (tracker->isCancelled())
+            if (tracker->isCancelled()) {
+                InitialData<method>::clearVar(ans);
                 return TuraevViroDetails<method>::zero();
+            }
         }
 
         // Compute the vertex contributions separately, since these are
@@ -988,11 +990,14 @@ namespace {
         delete[] colour;
         delete[] sortedEdges;
         delete[] edgePos;
+        InitialData<method>::clearVar(valColour);
 
         if (tracker) {
             delete[] coeff;
-            if (tracker->isCancelled())
+            if (tracker->isCancelled()) {
+                InitialData<method>::clearVar(ans);
                 return TuraevViroDetails<method>::zero();
+            }
         }
 
         // Compute the vertex contributions separately, since these are
@@ -1000,7 +1005,7 @@ namespace {
         for (i = 0; i < tri.countVertices(); i++)
             ans *= init.vertexContrib;
 
-        InitialData<method>::clearVar(valColour);
+
         return ans;
     }
 
@@ -1429,7 +1434,9 @@ namespace {
             // We don't know which elements of partial[] have been
             // deallocated, so check them all.
             for (i = 0; i < nBags; ++i)
-                delete partial[i];
+                if(partial[i]!=nullptr) {
+                    InitialData<method>::clearMap(partial[i]);
+                }
             delete[] partial;
 
             return TuraevViroDetails<method>::zero();
