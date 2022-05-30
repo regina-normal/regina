@@ -75,6 +75,8 @@ Version 7.1  [ TODO ]
               large enough to hold the values being returned.
             - The Jones and HOMFLY-PT routines now throw exceptions if the
               link is so insanely large that strand IDs cannot fit into ints.
+            - The Jones backtracking algorithm now supports 63 crossings on
+              all platforms, even if the long type has only 32 bits.
         Class Matrix:
             - Routine det() now throws an exception if the matrix is not
               square (this is a precondition), and now returns 1 if the
