@@ -30,6 +30,7 @@ if (${REGINA_INSTALL_DEV})
     matrix.h
     matrix2.h
     matrixops.h
+    mfloat.h
     numbertheory.h
     perm.h
     perm-impl.h
