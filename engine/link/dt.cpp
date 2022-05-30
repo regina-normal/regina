@@ -35,6 +35,7 @@
 
 #include "link/link.h"
 #include <cassert>
+#include <climits>
 #include <cstdlib>
 #include <iterator>
 
@@ -64,7 +65,7 @@ void Link::dt(std::ostream& out, bool alpha) const {
     size_t n = size();
 
     // Odd steps in traversal -> crossing index
-    int* oddCrossing = new int[n];
+    auto* oddCrossing = new size_t[n];
 
     // Crossing index -> even steps in traversal, negated if passing under
     int* evenStep = new int[n];
@@ -107,6 +108,9 @@ std::vector<int> Link::dtData() const {
             "only implemented for single-component links");
     if (crossings_.empty())
         return {};
+    if (2 * crossings_.size() > INT_MAX)
+        throw NotImplemented("This Dowker-Thistlethwaite notation has "
+            "entries that cannot fit into a C++ int");
 
     // Dowker-Thistlethwaite notation requires us to start on the lower strand.
     StrandRef start = components_.front();
@@ -116,7 +120,7 @@ std::vector<int> Link::dtData() const {
     size_t n = size();
 
     // Odd steps in traversal -> crossing index
-    int* oddCrossing = new int[n];
+    auto* oddCrossing = new size_t[n];
 
     // Crossing index -> even steps in traversal, negated if passing under
     int* evenStep = new int[n];

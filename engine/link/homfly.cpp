@@ -267,10 +267,9 @@ namespace {
                     forgetCrossing[b->children()->element(b->subtype())] =
                         b->index();
 
-            int from, to;
             for (int i = 0; i < 2 * l->size(); ++i) {
-                from = i / 2;
-                to = l->strand(i).next().crossing()->index();
+                int from = i / 2;
+                int to = l->strand(i).next().crossing()->index();
                 if (forgetCrossing[from] >= forgetCrossing[to]) {
                     lastCrossing[i] = from;
                     forgetStrand[i] = forgetCrossing[from];
@@ -375,18 +374,14 @@ namespace {
             // Identify all strands where one crossing is forgotten and
             // the other is not.
             int strandID;
-            StrandRef from, to;
-            int side, i;
-            for (side = 0; side < 2; ++side) {
+            for (int side = 0; side < 2; ++side) {
                 const auto* childKey =
                     (side == 0 ? &leftChildKey : &rightChildKey);
-                for (i = 0; i < childKey->size(); ++i) {
-                    strandID = (*childKey)[i];
-
+                for (int strandID : *childKey) {
                     // This strand runs between the bag and the forgotten zone.
 
-                    from = link->strand(strandID);
-                    to = from.next();
+                    StrandRef from = link->strand(strandID);
+                    StrandRef to = from.next();
 
                     if (lastCrossing[strandID] == from.crossing()->index()) {
                         // The strand runs from the bag into the forgotten zone.
@@ -513,7 +508,6 @@ namespace {
             // If firstCrossing is -1 then this remains always false.
             bool seenFirstChoice = false;
 
-            int c;
             auto pos = key.end();
             while (pos != key.begin()) {
                 // We decrement pos twice in each loop iteration.
@@ -552,7 +546,7 @@ namespace {
                     // the strand at pos+1 is the first that we see
                     // from some later closed loop in the link traversal.
                     if (pos + 1 != key.end()) {
-                        c = lastCrossing[*(pos + 1)];
+                        int c = lastCrossing[*(pos + 1)];
                         if ((mask[c] & 3) == 3) {
                             // We enter the forgotten zone from crossing c, and
                             // both incoming strands at c come back from the
@@ -578,7 +572,7 @@ namespace {
                         }
                     }
 
-                    c = lastCrossing[*pos];
+                    int c = lastCrossing[*pos];
                     if ((mask[c] & 12) == 12) {
                         // We exit the forgotten zone back into crossing c,
                         // and both outgoing strands at c lead back into the
@@ -683,7 +677,7 @@ namespace {
             if (key.size() > 0) {
                 // Check if the very first crossing must start a closed-off loop
                 // whose end should have been seen later in the key.
-                c = lastCrossing[*pos];
+                int c = lastCrossing[*pos];
                 if ((mask[c] & 3) == 3) {
                     if (couldEndLoop >> 1 != c)
                         return false;
@@ -814,10 +808,9 @@ namespace {
                         return false;
             }
 
-            int c;
             if (! couldConnect(key, pos + 2)) {
                 if (pos + 2 != key.end()) {
-                    c = lastCrossing[*(pos + 2)];
+                    int c = lastCrossing[*(pos + 2)];
                     if ((mask[c] & 3) == 3) {
                         if (data->couldEndLoop >> 1 == c) {
                             if (data->needStartLoop >= 0)
@@ -830,7 +823,7 @@ namespace {
                     }
                 }
 
-                c = lastCrossing[*(pos + 1)];
+                int c = lastCrossing[*(pos + 1)];
                 if ((mask[c] & 12) == 12) {
                     if (data->needStartLoop >= 0)
                         return false;
@@ -1296,6 +1289,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     //
     // An important fact: each bag is guaranteed to have at least one solution,
     // since there is always some way to traverse the link.
+    //
+    // We will be using ints for strand IDs, since we will be storing
+    // exponentially many keys in our key-value map and so space is at a
+    // premium.  Having strand IDs that fit into an int is enforced through
+    // our preconditions.
 
     using Key = LightweightSequence<int>;
     using Value = Laurent2<Integer>;
@@ -2978,6 +2976,10 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
             tracker->setFinished();
         return *homflyAZ_;
     }
+
+    if (size() > (INT_MAX >> 1))
+        throw NotImplemented("This link has so many crossings that "
+            "the largest strand ID cannot fit into a native C++ int");
 
     Laurent2<Integer> ans;
     switch (alg) {

@@ -32,6 +32,7 @@
 
 #include "link/tangle.h"
 #include "utilities/stringutils.h"
+#include <climits>
 #include <iterator>
 
 // We wish to use std::to_chars(), but GCC only implements it in gcc-8.1.
@@ -164,7 +165,10 @@ std::vector<int> Link::gaussData() const {
         throw NotImplemented(
             "Gauss codes are only implemented for single-component links");
     if (crossings_.empty())
-        return std::vector<int>();
+        return {};
+    if (crossings_.size() > INT_MAX)
+        throw NotImplemented("This Gauss code has entries that cannot "
+            "fit into a C++ int");
 
     std::vector<int> ans;
     ans.reserve(crossings_.size() * 2);
@@ -173,9 +177,9 @@ std::vector<int> Link::gaussData() const {
     StrandRef s = start;
     do {
         if (s.strand() == 0)
-            ans.push_back(-static_cast<int>(s.crossing()->index() + 1));
+            ans.push_back(- static_cast<int>(s.crossing()->index() + 1));
         else
-            ans.push_back(s.crossing()->index() + 1);
+            ans.push_back(static_cast<int>(s.crossing()->index() + 1));
         ++s;
     } while (s != start);
 

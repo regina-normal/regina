@@ -215,7 +215,7 @@ class StrandRef {
          *
          * @return the unique ID of this strand within the link.
          */
-        int id() const;
+        ssize_t id() const;
 
         /**
          * Tests whether this and the given reference are identical.
@@ -460,7 +460,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          *
          * @return the index of this crossing.
          */
-        int index() const;
+        size_t index() const;
         /**
          * Returns the sign of this crossing.  This will be +1 for a
          * positive crossing, or -1 for a negative crossing.
@@ -972,7 +972,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * @see StrandRef::id()
          */
-        StrandRef strand(int id) const;
+        StrandRef strand(ssize_t id) const;
 
         /**
          * Translates a strand reference for some other link into the
@@ -2155,6 +2155,12 @@ class Link : public PacketData<Link>, public Output<Link> {
          * will ignore your choice of algorithm and use the treewidth-based
          * algorithm regardless.
          *
+         * \exception NotImplemented This link is \e so large that the maximum
+         * possible strand ID cannot fit into an \c int.  (On a typical machine
+         * where \c int is 32-bit, this would require over a \e billion
+         * crossings).  Note that, if you have such a link, then this function
+         * (which is exponential time) would be intractably slow anyway.
+         *
          * \ifacespython The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
@@ -2240,6 +2246,12 @@ class Link : public PacketData<Link>, public Output<Link> {
          * will ignore your choice of algorithm and use the treewidth-based
          * algorithm regardless.
          *
+         * \exception NotImplemented This link is \e so large that the maximum
+         * possible strand ID cannot fit into an \c int.  (On a typical machine
+         * where \c int is 32-bit, this would require over a \e billion
+         * crossings).  Note that, if you have such a link, then this function
+         * (which is exponential time) would be intractably slow anyway.
+         *
          * \ifacespython The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
@@ -2318,6 +2330,12 @@ class Link : public PacketData<Link>, public Output<Link> {
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
+         * \exception NotImplemented This link is \e so large that the maximum
+         * possible strand ID cannot fit into an \c int.  (On a typical machine
+         * where \c int is 32-bit, this would require over a \e billion
+         * crossings).  Note that, if you have such a link, then this function
+         * (which is exponential time) would be intractably slow anyway.
+         *
          * \ifacespython The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
@@ -2382,6 +2400,12 @@ class Link : public PacketData<Link>, public Output<Link> {
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
+         * \exception NotImplemented This link is \e so large that the maximum
+         * possible strand ID cannot fit into an \c int.  (On a typical machine
+         * where \c int is 32-bit, this would require over a \e billion
+         * crossings).  Note that, if you have such a link, then this function
+         * (which is exponential time) would be intractably slow anyway.
+         *
          * \ifacespython The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
@@ -2414,6 +2438,12 @@ class Link : public PacketData<Link>, public Output<Link> {
          * returned from this routine should not be kept for later use.
          * Instead, homfly() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
+         *
+         * \exception NotImplemented This link is \e so large that the maximum
+         * possible strand ID cannot fit into an \c int.  (On a typical machine
+         * where \c int is 32-bit, this would require over a \e billion
+         * crossings).  Note that, if you have such a link, then this function
+         * (which is exponential time) would be intractably slow anyway.
          *
          * \ifacespython The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
@@ -2694,8 +2724,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * in contrast, gauss() returns the same data in human-readable format
          * (as a string).
          *
-         * \exception NotImplemented This link is empty or has multiple
-         * components.
+         * \exception NotImplemented This link is empty, or has multiple
+         * components, or has so many crossings that the Gauss code
+         * cannot be expressed using native C++ integers.
          *
          * @return a classical Gauss code for this knot in machine-readable
          * form.
@@ -2918,6 +2949,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * in contrast, jenkins() returns the same data in human-readable
          * format (as a string).
          *
+         * \exception NotImplemented This link has so many crossings
+         * and/or components that its description in Jenkins' format
+         * cannot be expressed using native C++ integers.
+         *
          * @return a description of this link using Jenkins' format
          * in machine-readable form.
          */
@@ -3043,8 +3078,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * in contrast, calling <tt>dt()</tt> returns the same integer
          * sequence in human-readable format (as a string).
          *
-         * \exception NotImplemented This link is empty or has multiple
-         * components.
+         * \exception NotImplemented This link is empty, or has multiple
+         * components, or has so many crossings that the Dowker-Thistlethwaite
+         * notation cannot be expressed using native C++ integers.
          *
          * @return the numerical Dowker-Thistlethwaite notation in
          * machine-readable form.
@@ -4361,7 +4397,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * lengths will be placed in the array in the same order as the
          * loop IDs as described above.
          *
-         * \pre The number of crossings is at most the number of bits in
+         * \pre The number of crossings is less than the number of bits in
          * an unsigned long.
          *
          * \pre If either or both the arrays \a loopIDs and \a loopLengths
@@ -4395,6 +4431,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * This routine does \e not mark the tracker as finished.
          *
          * See bracket() for further details.
+         *
+         * \pre The maximum possible strand ID can fit into an \c int.
+         * In other words, if an \c int contains \a b bits, then the
+         * number of crossings is less than 2^(<i>b</i>-2).
          */
         Laurent<Integer> bracketTreewidth(ProgressTracker* tracker) const;
 
@@ -4416,6 +4456,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * See homflyAZ() for further details.
          *
          * \pre This link contains at least one crossing.
+         *
+         * \pre The maximum possible strand ID can fit into an \c int.
+         * In other words, if an \c int contains \a b bits, then the
+         * number of crossings is less than 2^(<i>b</i>-2).
          */
         Laurent2<Integer> homflyTreewidth(ProgressTracker* tracker) const;
 
@@ -4499,7 +4543,7 @@ inline Link::~Link() {
         delete c;
 }
 
-inline int Crossing::index() const {
+inline size_t Crossing::index() const {
     return markedIndex();
 }
 
@@ -4528,8 +4572,11 @@ inline int StrandRef::strand() const {
     return strand_;
 }
 
-inline int StrandRef::id() const {
-    return (crossing_ ? ((crossing()->index() << 1) | strand_) : -1);
+inline ssize_t StrandRef::id() const {
+    if (crossing_)
+        return (crossing()->index() << 1) | static_cast<size_t>(strand_);
+    else
+        return -1;
 }
 
 inline bool StrandRef::operator == (const StrandRef& rhs) const {
@@ -4659,7 +4706,7 @@ inline auto Link::components() const {
     return ListView(components_);
 }
 
-inline StrandRef Link::strand(int id) const {
+inline StrandRef Link::strand(ssize_t id) const {
     return (id >= 0 ? StrandRef(crossings_[id >> 1]->strand(id & 1)) :
         StrandRef());
 }

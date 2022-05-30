@@ -90,11 +90,11 @@ size_t Link::resolutionLoops(unsigned long mask, size_t* loopIDs,
                 do {
                     //std::cerr << "At: " << s <<
                     //    (dir == 1 ? " ->" : " <-") << std::endl;
+                    const unsigned long bit =
+                        (unsigned long)(1) << s.crossing()->index();
 
-                    if (    ((mask & (1 << s.crossing()->index())) &&
-                                s.crossing()->sign() < 0) ||
-                            ((mask & (1 << s.crossing()->index())) == 0 &&
-                                s.crossing()->sign() > 0)) {
+                    if (    ((mask & bit) && s.crossing()->sign() < 0) ||
+                            ((mask & bit) == 0 && s.crossing()->sign() > 0)) {
                         // Turn in a way that is consistent with the arrows.
                         if (dir == 1) {
                             found[s.crossing()->index() +
@@ -175,12 +175,13 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
 
     size_t loops;
     long shift;
-    for (unsigned long mask = 0; mask != ((unsigned long)(1) << n); ++mask) {
+    const unsigned long maskEnd = ((unsigned long)(1) << n);
+    for (unsigned long mask = 0; mask != maskEnd; ++mask) {
         // std::cerr << "Mask: " << mask << std::endl;
 
         // Check for cancellation every 1024 steps.
         if (tracker && ((mask & 1023) == 0)) {
-            if (! tracker->setPercent(double(mask) * 100.0 / double(1 << n)))
+            if (! tracker->setPercent(double(mask) * 100.0 / double(maskEnd)))
                 break;
         }
 
@@ -282,6 +283,11 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     // We ignore any 0-crossing unknot components throughout this
     // calculation, and only factor them in at the very end when we
     // extract the final bracket polynomial.
+    //
+    // We will be using ints for strand IDs, since we will be storing
+    // exponentially many keys in our key-value map and so space is at a
+    // premium.  Having strand IDs that fit into an int is enforced through
+    // our preconditions.
 
     size_t nStrands = 2 * size();
     size_t loops;
@@ -593,6 +599,10 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
             tracker->setFinished();
         return *bracket_;
     }
+
+    if (size() > (INT_MAX >> 1))
+        throw NotImplemented("This link has so many crossings that "
+            "the largest strand ID cannot fit into a native C++ int");
 
     Laurent<Integer> ans;
     switch (alg) {

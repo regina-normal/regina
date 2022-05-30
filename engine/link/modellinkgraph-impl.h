@@ -87,14 +87,14 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
     // sign of crossing parent[i].  The signs are the same if flip[i] is false,
     // and the signs are different if flip[i] is true.
     // We guarantee for all nodes that parent[i] < i.
-    int* parent = new int[size()];
+    auto* parent = new ssize_t[size()];
     bool* flip = new bool[size()];
 
     std::fill(parent, parent + size(), -1);
 
     int i;
     ModelLinkGraphArc a1, a2;
-    int n1, n2, n3;
+    size_t n1, n2, n3;
     bool flip1, flip2, flip3;
     for (i = 0; i < cells_->nCells_; ++i)
         if (cells_->size(i) == 2) {
@@ -172,7 +172,7 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
     std::fill(sign, sign + size(), 0);
 
     int curr = 0;
-    int adj;
+    size_t adj;
     int adjStrand;
     while (curr >= 0) {
         // We have selected the signs for all crossings < curr, and we

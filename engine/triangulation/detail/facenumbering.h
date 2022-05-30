@@ -356,13 +356,13 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             static_assert(sizeof(unsigned) * 8 >= dim + 1);
             unsigned v = 0;
             for (int i = 0; i <= lexDim; ++i)
-                v |= (1 << vertices[i]);
+                v |= ((unsigned)1 << vertices[i]);
 
             // Walk through the vertices from highest to lowest.
             unsigned val = 0;
             int pos = 0;
             for (int i = dim; pos <= lexDim; --i) {
-              if (v & (1 << i)) {
+              if (v & ((unsigned)1 << i)) {
                 // Vertex i is the (pos)th last vertex of this face.
                 if (dim - i > pos) {
                   val += binomSmall_[dim-i][pos+1];

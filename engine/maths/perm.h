@@ -1032,13 +1032,16 @@ template <int n>
 constexpr bool Perm<n>::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < n; ++i)
-        mask |= (1 << ((code >> (imageBits * i)) & imageMask));
+        mask |= ((unsigned)1 << ((code >> (imageBits * i)) & imageMask));
     if constexpr (n < 16) {
-        return (mask + 1 == (1 << n) && (code >> (imageBits * n)) == 0);
+        return (mask + 1 == ((unsigned)1 << n) &&
+            (code >> (imageBits * n)) == 0);
     } else {
-        // There are no "spare bits" beyond the 16 * 4 bits used in the code.
-        // This means no need to check if any unwanted extra bits are set.
-        return (mask + 1 == (1 << n));
+        // We should not increment mask, since this could overflow on
+        // some platforms (since unsigned might be only 16 bits long).
+        // Also: code has no "spare bits" beyond the 16 * 4 bits that we use,
+        // and so we do not need to check if any unwanted extra bits are set.
+        return mask == 0xffff;
     }
 }
 

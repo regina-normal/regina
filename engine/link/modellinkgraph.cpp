@@ -186,8 +186,8 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
 
     // The image and preimage for each node, and the image of arc 0
     // for each node:
-    auto* image = new ptrdiff_t[size()];
-    auto* preimage = new ptrdiff_t[size()];
+    auto* image = new ssize_t[size()];
+    auto* preimage = new ssize_t[size()];
     int* arcOffset = new int[size()];
 
     size_t nextUnusedNode, nodeImg, nodeSrc, adjSrcNode;
@@ -297,7 +297,7 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
     if (n > 26)
         throw InvalidArgument("fromPlantri(): more than 26 nodes");
 
-    size_t i, j;
+    size_t i;
     for (i = 0; i < plantri.size(); ++i)
         if ((! tight) && i % 5 == 4) {
             if (plantri[i] != ',')
@@ -328,7 +328,7 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
         g.nodes_[0]->adj_[0].arc_ = -1;
 
         for (i = 0; i < n; ++i)
-            for (j = 1; j < 4; ++j) {
+            for (int j = 1; j < 4; ++j) {
                 g.nodes_[i]->adj_[j].node_ =
                     g.nodes_[plantri[3 * i + j - 1] - 'a'];
                 if (! g.nodes_[i]->adj_[j].node_->adj_[0].node_) {
@@ -341,7 +341,7 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
             }
     } else {
         for (i = 0; i < n; ++i)
-            for (j = 0; j < 4; ++j) {
+            for (int j = 0; j < 4; ++j) {
                 g.nodes_[i]->adj_[j].node_ =
                     g.nodes_[plantri[5 * i + j] - 'a'];
                 g.nodes_[i]->adj_[j].arc_ = -1;
@@ -356,7 +356,7 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
     ModelLinkGraphNode *src, *dest;
     for (i = 0; i < n; ++i) {
         src = g.nodes_[i];
-        for (j = 0; j < 4; ++j) {
+        for (int j = 0; j < 4; ++j) {
             if (src->adj_[j].arc_ >= 0)
                 continue;
 

@@ -127,7 +127,8 @@ int CrossingModel::columnCount(const QModelIndex& /* unused parent */) const {
 }
 
 QVariant CrossingModel::data(const QModelIndex& index, int role) const {
-    int crossing, strand, sign;
+    size_t crossing;
+    int strand, sign;
     if (index.isValid()) {
         const regina::StrandRef& s = strands_[index.row()];
         crossing = s.crossing()->index();

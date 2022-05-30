@@ -378,7 +378,7 @@ class ModelLinkGraphNode : public MarkedElement,
          *
          * @return the index of this node.
          */
-        int index() const;
+        size_t index() const;
         /**
          * Returns a reference to one of the four arcs of the graph that
          * exit this node.  This is equivalent to directly constructing
@@ -1446,7 +1446,7 @@ inline std::ostream& operator << (std::ostream& out,
 
 // Inline functions for ModelLinkGraphNode
 
-inline int ModelLinkGraphNode::index() const {
+inline size_t ModelLinkGraphNode::index() const {
     return markedIndex();
 }
 

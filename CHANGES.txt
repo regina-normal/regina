@@ -13,6 +13,13 @@ Version 7.1  [ TODO ]
         - Regina now supports Python 3 only (not Python 2 or 3).
         - Updated the bundled copy of Normaliz to version 3.9.2 (7 Feb 2022).
         - Removed all code that was deprecated in or before version 7.0.
+        - Several native integer types have been upgraded from smaller types
+          (e.g., int, long or unsigned long) to size_t, ssize_t or ptrdiff_t
+          where this is more appropriate.
+        - Several native integer types have changed between signed and
+          unsigned; e.g., many uses of unsigned to represent small integers
+          have been changed to the more natural int, and many uses of long
+          to represent indices have changed to the more appropriate size_t.
     ENGINE:
         Class AbelianGroup:
             - New tightDecoding() routines.
@@ -62,6 +69,12 @@ Version 7.1  [ TODO ]
             - New tightDecoding() routines.
         Class Laurent<T>, Laurent2<T>:
             - New tightDecoding() routines.
+        Class Link:
+            - Routines dtData(), gaussData() and jenkinsData() now throw
+              exceptions if the link is so large that the C++ int type is not
+              large enough to hold the values being returned.
+            - The Jones and HOMFLY-PT routines now throw exceptions if the
+              link is so insanely large that strand IDs cannot fit into ints.
         Class Matrix:
             - Routine det() now throws an exception if the matrix is not
               square (this is a precondition), and now returns 1 if the

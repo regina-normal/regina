@@ -887,13 +887,12 @@ Link Link::parallel(int k, Framing framing) const {
     // grid configuration, and (ii) leave this configuration.
 
     StrandRef s;
-    int idx;
-    int enterL, exitL;
+    ssize_t enterL, exitL;
     int enterStrand, exitStrand;
-    int enterDelta, exitDelta;
-    int startL;
+    ptrdiff_t enterDelta, exitDelta;
+    ssize_t startL;
     int startStrand;
-    int startDelta;
+    ptrdiff_t startDelta;
 
     int writhe;
     bool* seen = new bool[crossings_.size()];
@@ -911,7 +910,7 @@ Link Link::parallel(int k, Framing framing) const {
         s = start;
         exitL = -1;
         do {
-            idx = s.crossing()->index();
+            ssize_t idx = s.crossing()->index();
             if (s.crossing()->sign() > 0) {
                 if (s.strand() == 1) {
                     enterL = k*k * (idx+1) - k;

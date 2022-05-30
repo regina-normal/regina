@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "link.h"
+#include <climits>
 #include <iterator>
 #include <sstream>
 
@@ -91,6 +92,13 @@ void Link::jenkins(std::ostream& out) const {
 }
 
 std::vector<int> Link::jenkinsData() const {
+    // Note: we explicitly write #components, but we only write indices
+    // of individual crossings, not #crossings.
+    if (components_.size() > INT_MAX ||
+            ((! crossings_.empty()) && crossings_.size() - 1 > INT_MAX))
+        throw NotImplemented("This Jenkins format has entries that cannot "
+            "fit into a C++ int");
+
     std::vector<int> ans;
     ans.push_back(components_.size());
 
@@ -109,6 +117,9 @@ std::vector<int> Link::jenkinsData() const {
 
             // Output the component.
             // Note that s == start at this point.
+            if (len > INT_MAX)
+                throw NotImplemented("This Jenkins format has entries "
+                    "that cannot fit into a C++ int");
             ans.push_back(len);
             do {
                 ans.push_back(s.crossing()->index());
