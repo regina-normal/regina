@@ -65,7 +65,9 @@ namespace regina {
 template <typename Iterator>
 Link Link::fromDT(Iterator begin, Iterator end) {
     // Extract the number of crossings.
-    size_t aNumCrossings = end - begin;
+    // We use ptrdiff_t since the elements of the DT sequence may be
+    // negative, and so we need to do signed comparisons.
+    ptrdiff_t aNumCrossings = end - begin;
     if (aNumCrossings == 0)
         return Link(1);
 
