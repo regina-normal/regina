@@ -4358,8 +4358,8 @@ class Link :
          * @author This routine is based on the Dowker-Thistlethwaite
          * implementation from the SnapPea/SnapPy kernel.
          */
-        static bool realizeDT(int* anInvolution, bool* aRealization,
-            int aNumCrossings);
+        static bool realizeDT(size_t* anInvolution, bool* aRealization,
+            size_t aNumCrossings);
 
         /**
          * Internal to fromData().

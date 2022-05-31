@@ -68,10 +68,10 @@ void Link::dt(std::ostream& out, bool alpha) const {
     auto* oddCrossing = new size_t[n];
 
     // Crossing index -> even steps in traversal, negated if passing under
-    int* evenStep = new int[n];
+    auto* evenStep = new ptrdiff_t[n];
 
     StrandRef s = start;
-    unsigned step = 0;
+    ptrdiff_t step = 0;
     do {
         ++step;
         if (step % 2 == 1) {
@@ -159,7 +159,8 @@ Link Link::fromDT(const std::string& s) {
         return Link(1);
     }
 
-    std::vector<int> terms;
+    // Use ptrdiff_t since we need to be able to read negative terms also.
+    std::vector<ptrdiff_t> terms;
 
     if ((*it >= 'a' && *it <= 'z') || (*it >= 'A' && *it <= 'Z')) {
         // We have the alphabetical variant.
@@ -178,7 +179,7 @@ Link Link::fromDT(const std::string& s) {
         // We have the numerical variant.
         std::istringstream in(s);
 
-        int i;
+        ptrdiff_t i;
         while (true) {
             in >> i;
             if (! in) {
@@ -207,9 +208,9 @@ Link Link::fromDT(const std::string& s) {
 // -----------------------------------------------------------------------
 
 bool Link::realizeDT(
-    int     *anInvolution,
+    size_t  *anInvolution,
     bool    *aRealization,
-    int     aNumCrossings)
+    size_t  aNumCrossings)
 {
     /*
      *  Returns true iff the sequence was realizable.  If so, then
@@ -222,27 +223,27 @@ bool Link::realizeDT(
      *  it correctly.
      */
 
-    int N;
-    int i,j;
-    int *modTWO_N;
-    int *seq;
-    int *emb;
-    int *A,*D;
-    int Aempty,Dempty;
-    int OkSoFar;
-    int *phi;
-    int x;
+    size_t N;
+    size_t i,j;
+    size_t *modTWO_N;
+    ptrdiff_t *seq; // use ptrdiff_t because we call abs(seq[...]-seq[...])
+    int *emb; // +1 or -1, or 0 for uninitialised
+    bool *A,*D;
+    bool Aempty,Dempty;
+    bool OkSoFar;
+    int *phi; // +1 or -1
+    size_t x;
 
     N = aNumCrossings;
 
     /*
      *  Allocate local arrays.
      */
-    modTWO_N    = new int[4 * N];
-    seq         = new int[4 * N];
+    modTWO_N    = new size_t[4 * N];
+    seq         = new ptrdiff_t[4 * N];
     emb         = new int[2 * N];
-    A           = new int[2 * N];
-    D           = new int[2 * N];
+    A           = new bool[2 * N];
+    D           = new bool[2 * N];
     phi         = new int[2 * N];
 
     /*create the modTWO_N array*/
@@ -267,10 +268,11 @@ bool Link::realizeDT(
     /* begin realizability routine to recover embedding of projection */
     /*zero emb, A, and D. A and D will only contain zeroes and ones*/
     for(i=0;i<2*N;i++){
-        emb[i]=A[i]=D[i]=0;
+        emb[i]=0;
+        A[i]=D[i]=false;
     }
     /*set initial conditions*/
-    OkSoFar=A[0]=A[seq[0]]=1;
+    OkSoFar=A[0]=A[seq[0]]=true;
     emb[0]=1;
     emb[seq[0]]=-1;
 
@@ -291,9 +293,9 @@ bool Link::realizeDT(
         }
         /*establish D*/
         for(j=0; j<i; j++)
-            D[j]=1;
+            D[j]=true;
         for(j=seq[i]+1; j<2*N; j++)
-            D[j]=1;
+            D[j]=true;
         /* see if D is empty, ie is all zeroes*/
         for(j=0;j<2*N-1 && !D[j];j++)
             ;
@@ -305,50 +307,50 @@ bool Link::realizeDT(
             if(x<i){
                 if(seq[x]<i || seq[x]>seq[i]){
                     if(phi[x]*phi[seq[x]]==1){
-                        D[x]=D[seq[x]]=0;
+                        D[x]=D[seq[x]]=false;
                     }
                     else{
-                        OkSoFar=0;
+                        OkSoFar=false;
                     }
                 }
                 else{
                     if(emb[x] != 0){/* emb[x] is already defined*/
                         if(phi[x]*phi[seq[x]]*emb[i]==emb[x])
-                            D[x]=0;
+                            D[x]=false;
                         else
-                            OkSoFar=0;
+                            OkSoFar=false;
                     }
                     else{/* emb[x] is not yet defined. Hence x<>0 and
 x<>seq[0]*/
                         emb[x]=phi[x]*phi[seq[x]]*emb[i];
                         emb[seq[x]]=-emb[x];
-                        D[x]=0;
+                        D[x]=false;
                         if( modTWO_N[abs(seq[x]-seq[x-1])]==1){
                             /*nothing*/
                         }
                         else{
-                            A[x]=A[seq[x]]=1;
+                            A[x]=A[seq[x]]=true;
                         }
                     }
                 }
             }
             else{/*x>seq[i]*/
                 if(seq[x]<i || seq[x]>seq[i]){
-                    D[x]=D[seq[x]]=0;
+                    D[x]=D[seq[x]]=false;
                 }
                 else{
                     if(emb[x]!=0){
-                        D[x]=0;
+                        D[x]=false;
                     }
                     else{
                         emb[x]=phi[x]*phi[seq[x]]*emb[i];
                         emb[seq[x]]=-emb[x];
-                        D[x]=0;
+                        D[x]=false;
                         if( modTWO_N[abs(seq[x]-seq[x-1])]==1){
                             /*nothing*/
                         }
                         else{
-                            A[x]=A[seq[x]]=1;
+                            A[x]=A[seq[x]]=true;
                         }
                     }
                 }
@@ -358,8 +360,8 @@ x<>seq[0]*/
                 ;
             Dempty=!D[j];
         }/*end of while*/
-        A[i]=0;
-        A[seq[i]]=0;
+        A[i]=false;
+        A[seq[i]]=false;
         /* see if A is empty, ie is all zeroes*/
         for(j=0;j<2*N-1 && !A[j];j++)
             /*nothing*/;

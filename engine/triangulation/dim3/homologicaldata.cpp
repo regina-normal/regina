@@ -338,7 +338,6 @@ void HomologicalData::computeChainComplexes() {
     B1Incl_ = MatrixInt(numStandardCells[1], numBdryCells[1]);
     B2Incl_ = MatrixInt(numStandardCells[2], numBdryCells[2]);
 
-    long int temp;
     unsigned long i,j;
 
     Perm<4> p1;
@@ -346,7 +345,7 @@ void HomologicalData::computeChainComplexes() {
     // This fills out matrix A1
     for (i=0;i<tri.countEdges();i++) {
         // these are the standard edges
-        temp=sNIV.index(tri.edge(i)->vertex(0)->index());
+        ssize_t temp=sNIV.index(tri.edge(i)->vertex(0)->index());
         (A1_->entry( ((temp==(-1)) ?
             (sNIV.size()+sIEOE.index(2*i)) : temp ), i))-=1;
         temp=sNIV.index(tri.edge(i)->vertex(1)->index());
@@ -893,7 +892,7 @@ void HomologicalData::computeChainComplexes() {
     // cols==sBNIE.size()+sIEEOF.size()
     for (i=0;i<sBNIE.size();i++) { // these are the standard boundary edges
         // temp == -1 when the boundary edge end is ideal.
-        temp=sBNIV.index(tri.edge(sBNIE[i])->vertex(0)->index());
+        ssize_t temp=sBNIV.index(tri.edge(sBNIE[i])->vertex(0)->index());
         (Bd1_->entry( ((temp==(-1)) ? (sBNIV.size()+2*i) : temp ), i))-=1;
         temp=sBNIV.index(tri.edge(sBNIE[i])->vertex(1)->index());
         (Bd1_->entry( ((temp==(-1)) ? (sBNIV.size()+2*i+1) : temp), i))+=1;

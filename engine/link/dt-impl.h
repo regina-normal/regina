@@ -65,7 +65,7 @@ namespace regina {
 template <typename Iterator>
 Link Link::fromDT(Iterator begin, Iterator end) {
     // Extract the number of crossings.
-    int aNumCrossings = end - begin;
+    size_t aNumCrossings = end - begin;
     if (aNumCrossings == 0)
         return Link(1);
 
@@ -82,7 +82,7 @@ Link Link::fromDT(Iterator begin, Iterator end) {
 
     Link ans;
 
-    int i;
+    size_t i;
     for (i = 0; i < aNumCrossings; ++i)
         ans.crossings_.push_back(new Crossing);
 
@@ -90,7 +90,7 @@ Link Link::fromDT(Iterator begin, Iterator end) {
 
     // Here starts the SnapPea code!
 
-    int             *theAlternatingDT,
+    size_t          *theAlternatingDT,
                     *theInvolution;
     bool            *theRealization;
 
@@ -101,7 +101,7 @@ Link Link::fromDT(Iterator begin, Iterator end) {
      *  eight knot example, theAlternatingDT and the DT code are the same,
      *  because the figure eight knot is already alternating.
      */
-    theAlternatingDT = new int[aNumCrossings];
+    theAlternatingDT = new size_t[aNumCrossings];
     for (it = begin, i = 0; it != end; ++it, ++i)
         theAlternatingDT[i] = abs(*it);
 
@@ -125,7 +125,7 @@ Link Link::fromDT(Iterator begin, Iterator end) {
      *
      *  As an array, theInvolution = {3, 6, 5, 0, 7, 2, 1, 4}.
      */
-    theInvolution = new int[2 * aNumCrossings];
+    theInvolution = new size_t[2 * aNumCrossings];
     std::fill(theInvolution, theInvolution + 2 * aNumCrossings,
         1 /* a value that does not appear in theAlternatingDT[] */);
     for (i = 0; i < aNumCrossings; i++)
@@ -173,11 +173,11 @@ Link Link::fromDT(Iterator begin, Iterator end) {
      *  For each position in the involution, we also identify which
      *  crossing it represents.
      */
-    int* oddPos = new int[aNumCrossings];
-    int* evenPos = new int[aNumCrossings];
-    int* crossingForPos = new int[2 * aNumCrossings];
+    size_t* oddPos = new size_t[aNumCrossings];
+    size_t* evenPos = new size_t[aNumCrossings];
+    size_t* crossingForPos = new size_t[2 * aNumCrossings];
 
-    int nextUnused = 0;
+    size_t nextUnused = 0;
     for (i = 0; i < 2 * aNumCrossings; ++i) {
         // Examine position i from the involution.
         if (theInvolution[i] > i) {
