@@ -120,7 +120,7 @@ class Cut : public ShortOutput<Cut> {
         /**
          * Creates a new copy of the given cut.
          *
-         * @param other the cut to copy.
+         * @param src the cut to copy.
          */
         Cut(const Cut& src);
 
