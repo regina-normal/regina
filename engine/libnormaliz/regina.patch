@@ -110,3 +110,16 @@ index ad19e692c..c2edb1af3 100644
          while (true) {
              next = perm[next];
              if (next == i)
+diff --git a/engine/libnormaliz/matrix.cpp b/engine/libnormaliz/matrix.cpp
+index 6b325d607..4bebfdc3a 100644
+--- a/engine/libnormaliz/matrix.cpp
++++ b/engine/libnormaliz/matrix.cpp
+@@ -517,7 +517,7 @@ template <typename Integer>
+ Matrix<Integer> Matrix<Integer>::submatrix(const vector<bool>& rows) const {
+     assert(rows.size() == nr);
+     size_t size = 0;
+-    for (const auto& row : rows) {
++    for (bool row : rows) {
+         if (row) {
+             size++;
+         }
