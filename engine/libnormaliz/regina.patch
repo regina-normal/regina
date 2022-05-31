@@ -123,3 +123,260 @@ index 6b325d607..4bebfdc3a 100644
          if (row) {
              size++;
          }
+diff --git a/engine/libnormaliz/descent.cpp b/engine/libnormaliz/descent.cpp
+index 25434c1d2..3a51754c8 100644
+--- a/engine/libnormaliz/descent.cpp
++++ b/engine/libnormaliz/descent.cpp
+@@ -159,7 +159,7 @@ void DescentFace<Integer>::compute(
+     list<pair<dynamic_bitset, DescentFace<Integer> > >& Children  // the children of *this
+                                                                   // that are sent into the next lower codimension
+ ) {
+-    long omp_start_level = omp_get_level();
++    int omp_start_level = omp_get_level();
+ 
+     extrays_of_this.clear();
+     opposite_facets.clear();
+@@ -191,7 +191,7 @@ void DescentFace<Integer>::compute(
+ 
+     for (size_t i = 0; i < nr_gens; ++i)
+         if (GensInd[i])
+-            extrays_of_this.push_back(i);
++            extrays_of_this.push_back(static_cast<key_t>(i));
+ 
+     Matrix<Integer> Gens_this;
+ 
+@@ -264,7 +264,7 @@ void DescentFace<Integer>::compute(
+         vector<libnormaliz::key_t> facet_key;  // keys of extreme rays in current supphyp of cone
+         for (size_t k = 0; k < extrays_of_this.size(); ++k) {
+             if (FF.SuppHypInd[i][extrays_of_this[k]] == true)
+-                facet_key.push_back(k);
++                facet_key.push_back(static_cast<key_t>(k));
+         }
+         if (facet_key.size() < d - 1)  // can't be a facet(*this)
+             continue;
+@@ -292,7 +292,7 @@ void DescentFace<Integer>::compute(
+         // now we have a new potential facet
+         if (facet_key.size() == d - 1) {               // simplicial or not a facet
+             FacetInds[facet_ind] = dynamic_bitset(0);  // don't need support hyperplanes
+-            CutOutBy[facet_ind] = FF.nr_supphyps + 1;  // signalizes "simplicial facet"
++            CutOutBy[facet_ind] = static_cast<key_t>(FF.nr_supphyps + 1);  // signalizes "simplicial facet"
+             if (ind_better_than_keys) {                // choose shorter representation
+                 vector<bool> gen_ind(FF.nr_gens);
+                 for (unsigned int k : facet_key)
+@@ -309,7 +309,7 @@ void DescentFace<Integer>::compute(
+         else {
+             FacetInds[facet_ind] = cone_facets_cutting_this_out;
+             FacetInds[facet_ind][i] = true;  // plus the facet cutting out facet_ind
+-            CutOutBy[facet_ind] = i;         // memorize the facet that cuts it out
++            CutOutBy[facet_ind] = static_cast<key_t>(i); // memorize the facet that cuts it out
+         }
+     }
+ 
+@@ -365,12 +365,12 @@ void DescentFace<Integer>::compute(
+     for (size_t i = 1; i < count_in_facets.size(); ++i) {
+         if (count_in_facets[i] > m) {
+             m = count_in_facets[i];
+-            m_ind = i;
++            m_ind = static_cast<key_t>(i);
+             continue;
+         }
+         if (count_in_facets[i] == m &&
+             FF.OldNrFacetsContainingGen[extrays_of_this[i]] < FF.OldNrFacetsContainingGen[extrays_of_this[m_ind]]) {
+-            m_ind = i;
++            m_ind = static_cast<key_t>(i);
+         }
+     }
+ 
+diff --git a/engine/libnormaliz/output.cpp b/engine/libnormaliz/output.cpp
+index e31c22ec0..e381abd7d 100644
+--- a/engine/libnormaliz/output.cpp
++++ b/engine/libnormaliz/output.cpp
+@@ -1265,7 +1265,7 @@ void Output<Integer>::write_files() const {
+             nr = Hilbert_Basis.nr_of_rows();
+             for (i = 0; i < nr; i++) {
+                 if (Hilbert_Basis[i][dim - 1] == 1) {
+-                    rees_ideal_key.push_back(i);
++                    rees_ideal_key.push_back(static_cast<key_t>(i));
+                 }
+             }
+             out << rees_ideal_key.size() << " generators of integral closure of the ideal" << endl;
+diff --git a/engine/libnormaliz/project_and_lift.cpp b/engine/libnormaliz/project_and_lift.cpp
+index b63840ce8..0472827f2 100644
+--- a/engine/libnormaliz/project_and_lift.cpp
++++ b/engine/libnormaliz/project_and_lift.cpp
+@@ -185,10 +185,10 @@ void ProjectAndLift<IntegerPL, IntegerRet>::compute_projections(size_t dim,
+         if (Supps[i][dim1] > 0) {
+             if (IsEquation[i])
+                 PosEquAt = i;
+-            Pos.push_back(i);
++            Pos.push_back(static_cast<key_t>(i));
+             continue;
+         }
+-        Neg.push_back(i);
++        Neg.push_back(static_cast<key_t>(i));
+         if (IsEquation[i])
+             NegEquAt = i;
+     }
+@@ -290,7 +290,7 @@ void ProjectAndLift<IntegerPL, IntegerRet>::compute_projections(size_t dim,
+                 vector<key_t> PosKey;
+                 for (size_t k = 0; k < Ind[i].size(); ++k)
+                     if (Ind[p][k])
+-                        PosKey.push_back(k);
++                        PosKey.push_back(static_cast<key_t>(k));
+ 
+                 for (size_t n : Neg) {
+                     INTERRUPT_COMPUTATION_BY_EXCEPTION
+diff --git a/engine/libnormaliz/signed_dec.cpp b/engine/libnormaliz/signed_dec.cpp
+index 14c9cda18..260eb0255 100644
+--- a/engine/libnormaliz/signed_dec.cpp
++++ b/engine/libnormaliz/signed_dec.cpp
+@@ -634,7 +634,7 @@ size_t HollowTriangulation::make_hollow_triangulation_inner(const vector<size_t>
+     if (restricted) {
+         for (size_t i = 0; i < PatternKey.back(); ++i) {
+             if (!Pattern[i])
+-                NonPattern.push_back(i);
++                NonPattern.push_back(static_cast<key_t>(i));
+         }
+     }
+ 
+@@ -793,7 +793,7 @@ size_t HollowTriangulation::refine_and_process_selection(vector<size_t>& Selecti
+     vector<key_t> NonPattern;
+     for (size_t i = 0; i < PatternKey.back(); ++i) {
+         if (!Pattern[i])
+-            NonPattern.push_back(i);
++            NonPattern.push_back(static_cast<key_t>(i));
+     }
+ 
+     dynamic_bitset TwoInNonPattern(Selection.size());
+@@ -860,17 +860,17 @@ size_t HollowTriangulation::extend_selection_pattern(vector<size_t>& Selection,
+     else
+         start_gen = PatternKey.back() + 1;
+ 
+-    int total_nr_gaps = nr_gen - dim + 1;  // in a subfacet
+-    int gaps_already = (start_gen + 1) - PatternKey.size();
++    size_t total_nr_gaps = nr_gen + 1 - dim;  // in a subfacet
++    size_t gaps_already = (start_gen + 1) - PatternKey.size();
+     gaps_already--;  // one of the non-pattern places can be set. We stay on the safe size
+-    int nr_further_gaps = total_nr_gaps - gaps_already;
++    size_t nr_further_gaps = total_nr_gaps - gaps_already;
+     size_t last_gen = start_gen + nr_further_gaps + 1;
+     if (last_gen >= nr_gen)
+         last_gen = nr_gen - 1;
+ 
+     for (size_t i = start_gen; i <= last_gen; ++i) {
+         vector<key_t> PatternKeyRefinement = PatternKey;
+-        PatternKeyRefinement.push_back(i);
++        PatternKeyRefinement.push_back(static_cast<key_t>(i));
+ 
+         dynamic_bitset PatternRefinement = Pattern;
+         PatternRefinement[i] = 1;
+diff --git a/engine/libnormaliz/simplex.cpp b/engine/libnormaliz/simplex.cpp
+index 2ae8e04e8..be33f030e 100644
+--- a/engine/libnormaliz/simplex.cpp
++++ b/engine/libnormaliz/simplex.cpp
+@@ -175,7 +175,7 @@ bool bottom_points_inner(Matrix<Integer>& gens,
+ 
+     vector<Integer> grading = gens.find_linear_form();
+     Integer volume;
+-    int dim = gens[0].size();
++    size_t dim = gens[0].size();
+     Matrix<Integer> Support_Hyperplanes = gens.invert(volume);
+ 
+     if (volume < SubDivBound) {
+@@ -200,7 +200,7 @@ bool bottom_points_inner(Matrix<Integer>& gens,
+         Matrix<Integer> stellar_gens(gens);
+ 
+         int nr_hyps = 0;
+-        for (int i = 0; i < dim; ++i) {
++        for (size_t i = 0; i < dim; ++i) {
+             if (v_scalar_product(Support_Hyperplanes[i], new_point) != 0) {
+                 stellar_gens[i] = new_point;
+                 local_q_gens.emplace_back(stellar_gens);
+@@ -478,7 +478,7 @@ Integer SimplexEvaluator<Integer>::start_evaluation(SHORTSIMPLEX<Integer>& s, Co
+     if (potentially_unimodular)
+         for (i = 0; i < dim; i++)
+             if (Indicator[i] == 0)
+-                Ind0_key.push_back(i);
++                Ind0_key.push_back(static_cast<key_t>(i));
+     if (!unimodular || Ind0_key.size() > 0) {
+         if (Ind0_key.size() > 0) {
+             RS_pointers = unit_matrix.submatrix_pointers(Ind0_key);
+@@ -519,7 +519,7 @@ Integer SimplexEvaluator<Integer>::start_evaluation(SHORTSIMPLEX<Integer>& s, Co
+     if (!unimodular) {
+         for (i = 0; i < dim; ++i) {
+             if (GDiag[i] > 1)
+-                Last_key.push_back(i);
++                Last_key.push_back(static_cast<key_t>(i));
+         }
+ 
+         RS_pointers = unit_matrix.submatrix_pointers(Last_key);
+@@ -550,7 +550,7 @@ Integer SimplexEvaluator<Integer>::start_evaluation(SHORTSIMPLEX<Integer>& s, Co
+     if (!potentially_unimodular) {
+         for (i = 0; i < dim; i++)
+             if (Indicator[i] == 0)
+-                Ind0_key.push_back(i);
++                Ind0_key.push_back(static_cast<key_t>(i));
+         if (Ind0_key.size() > 0) {
+             RS_pointers = unit_matrix.submatrix_pointers(Ind0_key);
+             LinSys.solve_system_submatrix(Generators, id_key, RS_pointers, volume, 0, RS_pointers.size());
+@@ -1193,8 +1193,8 @@ void SimplexEvaluator<Integer>::Simplex_parallel_evaluation() {
+         if (!new_points.empty()) {
+             C.triangulation_is_nested = true;
+             // add new_points to the Top_Cone generators
+-            int nr_new_points = new_points.size();
+-            int nr_old_gen = C.nr_gen;
++            size_t nr_new_points = new_points.size();
++            size_t nr_old_gen = C.nr_gen;
+             Matrix<Integer> new_points_mat(new_points);
+             C.add_generators(new_points_mat);
+             // remove this simplex from det_sum and multiplicity
+@@ -1219,8 +1219,8 @@ void SimplexEvaluator<Integer>::Simplex_parallel_evaluation() {
+             for (size_t i = 0; i < C.dim; ++i) {
+                 subcone_key[i] = key[i];
+             }
+-            for (int i = 0; i < nr_new_points; ++i) {
+-                subcone_key[C.dim + i] = nr_old_gen + i;
++            for (size_t i = 0; i < nr_new_points; ++i) {
++                subcone_key[C.dim + i] = static_cast<key_t>(nr_old_gen + i);
+             }
+             Matrix<Integer> polytope_gens(C.Generators.submatrix(subcone_key));
+             polytope_gens.append_column(vector<Integer>(polytope_gens.nr_of_rows(), 1));
+diff --git a/engine/libnormaliz/cone_dual_mode.cpp b/engine/libnormaliz/cone_dual_mode.cpp
+index c23008a5b..c68c05599 100644
+--- a/engine/libnormaliz/cone_dual_mode.cpp
++++ b/engine/libnormaliz/cone_dual_mode.cpp
+@@ -866,7 +866,7 @@ void Cone_Dual_Mode<Integer>::extreme_rays_rank() {
+         zero_list.clear();
+         for (i = 0; i < nr_sh; i++) {
+             if (c.values[i] == 0) {
+-                zero_list.push_back(i);
++                zero_list.push_back(static_cast<key_t>(i));
+             }
+         }
+         k = zero_list.size();
+diff --git a/engine/libnormaliz/matrix.h b/engine/libnormaliz/matrix.h
+index 2c3fab9f8..35b55fb41 100644
+--- a/engine/libnormaliz/matrix.h
++++ b/engine/libnormaliz/matrix.h
+@@ -643,7 +643,7 @@ Matrix<Number> LLL_red(const Matrix<Number>& U, Matrix<Integer>& T, Matrix<Integ
+ 
+     Matrix<Number> Lred = U;
+     size_t dim = U.nr_of_columns();
+-    int n = U.nr_of_rows();
++    size_t n = U.nr_of_rows();
+     // pretty_print(cout);
+     assert((int)U.rank() == n);
+     if (n <= 1)
+diff --git a/engine/libnormaliz/list_and_map_operations.h b/engine/libnormaliz/list_and_map_operations.h
+index ee68d623f..bb7c809e4 100644
+--- a/engine/libnormaliz/list_and_map_operations.h
++++ b/engine/libnormaliz/list_and_map_operations.h
+@@ -186,7 +186,7 @@ template <typename T>
+ map<T, key_t> map_vector_to_indices(const vector<T>& v) {
+     map<T, key_t> index_map;
+     for (size_t i = 0; i < v.size(); ++i) {
+-        index_map[v[i]] = i;
++        index_map[v[i]] = static_cast<key_t>(i);
+     }
+     return index_map;
+ }
