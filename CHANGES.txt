@@ -71,9 +71,9 @@ Version 7.1  [ TODO ]
             - New tightDecoding() routines.
         Class Link:
             - New routines for tight encodings and decodings.
-            - Routines dtData(), gaussData() and jenkinsData() now throw
-              exceptions if the link is so large that the C++ int type is not
-              large enough to hold the values being returned.
+            - Routines dtData(), gaussData(), jenkinsData() and pdData() now
+              throw exceptions if the link is so large that the C++ int type
+              is not large enough to hold the values being returned.
             - The Jones and HOMFLY-PT routines now throw exceptions if the
               link is so insanely large that strand IDs cannot fit into ints.
             - The Jones backtracking algorithm now supports 63 crossings on

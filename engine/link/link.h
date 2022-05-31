@@ -3216,6 +3216,9 @@ class Link :
          * in contrast, pd() returns the same data in human-readable format
          * (as a string).
          *
+         * \exception NotImplemented This link has so many crossings that the
+         * planar diagram code cannot be expressed using native C++ integers.
+         *
          * @return the planar diagram code in machine-readable form.
          */
         std::vector<std::array<int, 4>> pdData() const;
