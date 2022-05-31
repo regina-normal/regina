@@ -3054,6 +3054,7 @@
 		052FA13E1806103000FAE4DF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		0530FEFF284595580069B227 /* tightencoding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tightencoding.h; sourceTree = "<group>"; };
 		0534FADF22DFDDA6000A96A3 /* memstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = memstream.cpp; sourceTree = "<group>"; };
 		0534FAE022DFDDA7000A96A3 /* zstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zstr.h; sourceTree = "<group>"; };
 		0534FAE122DFDDA7000A96A3 /* memstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memstream.h; sourceTree = "<group>"; };
@@ -6674,6 +6675,7 @@
 				05199A2C25C63AED0006B8FA /* listview.h */,
 				05D81A8B1C66B0E500DDCE64 /* output.h */,
 				05772EDD270CFAB300D26D8A /* packet.h */,
+				0530FEFF284595580069B227 /* tightencoding.h */,
 			);
 			path = helpers;
 			sourceTree = "<group>";
