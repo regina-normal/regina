@@ -42,8 +42,8 @@ using regina::python::ConstArray;
 
 namespace {
     // Note that S2 and S1 are the same C++ type.
-    ConstArray<decltype(Perm<2>::S2)> Perm2_S2_arr(Perm<2>::S2, 2);
-    ConstArray<decltype(Perm<2>::S2)> Perm2_S1_arr(Perm<2>::S1, 1);
+    ConstArray<decltype(Perm<2>::S2), int> Perm2_S2_arr(Perm<2>::S2, 2);
+    ConstArray<decltype(Perm<2>::S2), int> Perm2_S1_arr(Perm<2>::S1, 1);
 
     template <int k>
     struct Perm2_contract {

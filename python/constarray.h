@@ -75,12 +75,12 @@ namespace regina::python {
  * \pre The output operator &lt;&lt; is defined for the objects contained in
  * this array (i.e., for the return type of the square bracket operator).
  */
-template <typename Array>
+template <typename Array, typename Index = size_t>
 class ConstArray {
     private:
         const Array data_;
             /**< The underlying array. */
-        size_t size_;
+        Index size_;
             /**< The number of elements in the underlying array. */
 
     public:
@@ -93,27 +93,27 @@ class ConstArray {
          * @param data the array that is to be wrapped.
          * @param size the number of elements in this array.
          */
-        ConstArray(const Array& data, size_t size) : data_(data), size_(size) {
+        ConstArray(const Array& data, Index size) : data_(data), size_(size) {
         }
 
         /**
          * Constructs a new wrapper for the same underlying array as the
          * given wrapper.  Note that the underlying array itself is not copied.
          */
-        ConstArray(const ConstArray<Array>&) = default;
+        ConstArray(const ConstArray&) = default;
 
         /**
          * Sets this to wrap the same underlying array as the given wrapper.
          * Note that the underlying array itself is not copied.
          */
-        ConstArray<Array>& operator = (const ConstArray<Array>&) = default;
+        ConstArray& operator = (const ConstArray&) = default;
 
         /**
          * Return the number of elements in this array.
          *
          * @return the number of elements.
          */
-        size_t size() const {
+        Index size() const {
             return size_;
         }
 
@@ -124,7 +124,7 @@ class ConstArray {
          * @param index the given array index.
          * @return the element at the given index.
          */
-        auto getItem(size_t index) const {
+        auto getItem(Index index) const {
             if (index >= size_)
                 throw pybind11::index_error("Array index out of range");
             return data_[index];
@@ -139,7 +139,7 @@ class ConstArray {
          */
         std::ostream& writeText(std::ostream& out) const {
             out << "[ ";
-            for (size_t i = 0; i < size_; ++i)
+            for (Index i = 0; i < size_; ++i)
                 out << data_[i] << ' ';
             out << "]";
             return out;
@@ -157,9 +157,9 @@ class ConstArray {
          * class in Python.
          */
         static void wrapClass(pybind11::module_& m, const char* className) {
-            auto c = pybind11::class_<ConstArray<Array>>(m, className)
-                .def("__getitem__", &ConstArray<Array>::getItem)
-                .def("__len__", &ConstArray<Array>::size)
+            auto c = pybind11::class_<ConstArray>(m, className)
+                .def("__getitem__", &ConstArray::getItem)
+                .def("__len__", &ConstArray::size)
             ;
             regina::python::add_output_ostream(c, PYTHON_REPR_NONE);
             regina::python::add_eq_operators(c);
@@ -174,8 +174,9 @@ class ConstArray {
  * @param arr the array whose contents are to be written.
  * @return the given output stream.
  */
-template <typename Array>
-std::ostream& operator << (std::ostream& out, const ConstArray<Array>& arr) {
+template <typename Array, typename Index>
+std::ostream& operator << (std::ostream& out,
+        const ConstArray<Array, Index>& arr) {
     return arr.writeText(out);
 }
 

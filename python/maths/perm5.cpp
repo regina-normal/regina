@@ -41,17 +41,17 @@ using regina::Perm;
 using regina::python::ConstArray;
 
 namespace {
-    ConstArray<decltype(Perm<5>::S5)>
+    ConstArray<decltype(Perm<5>::S5), int>
         Perm5_S5_arr(Perm<5>::S5, 120);
-    ConstArray<decltype(Perm<5>::orderedS5)>
+    ConstArray<decltype(Perm<5>::orderedS5), int>
         Perm5_orderedS5_arr(Perm<5>::orderedS5, 120);
-    ConstArray<decltype(Perm<5>::S4)> Perm5_S4_arr(Perm<5>::S4, 24);
-    ConstArray<decltype(Perm<5>::orderedS4)>
+    ConstArray<decltype(Perm<5>::S4), int> Perm5_S4_arr(Perm<5>::S4, 24);
+    ConstArray<decltype(Perm<5>::orderedS4), int>
         Perm5_orderedS4_arr(Perm<5>::orderedS4, 24);
-    ConstArray<decltype(Perm<5>::S3)> Perm5_S3_arr(Perm<5>::S3, 6);
-    ConstArray<decltype(Perm<5>::orderedS3)>
+    ConstArray<decltype(Perm<5>::S3), int> Perm5_S3_arr(Perm<5>::S3, 6);
+    ConstArray<decltype(Perm<5>::orderedS3), int>
         Perm5_orderedS3_arr(Perm<5>::orderedS3, 6);
-    ConstArray<decltype(Perm<5>::S2)> Perm5_S2_arr(Perm<5>::S2, 2);
+    ConstArray<decltype(Perm<5>::S2), int> Perm5_S2_arr(Perm<5>::S2, 2);
 
     template <int k>
     struct Perm5_contract {

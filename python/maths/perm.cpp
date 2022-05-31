@@ -84,12 +84,12 @@ namespace {
     };
 
     template <int n>
-    ConstArray<decltype(Perm<n>::Sn)> Perm_Sn_arr(
+    ConstArray<decltype(Perm<n>::Sn), typename Perm<n>::Index> Perm_Sn_arr(
         Perm<n>::Sn, Perm<n>::nPerms);
 
     template <int n>
-    ConstArray<decltype(Perm<n>::orderedSn)> Perm_orderedSn_arr(
-        Perm<n>::orderedSn, Perm<n>::nPerms);
+    ConstArray<decltype(Perm<n>::orderedSn), typename Perm<n>::Index>
+        Perm_orderedSn_arr(Perm<n>::orderedSn, Perm<n>::nPerms);
 }
 
 template <int n>

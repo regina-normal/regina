@@ -41,11 +41,11 @@ using regina::Perm;
 using regina::python::ConstArray;
 
 namespace {
-    ConstArray<decltype(Perm<3>::S3)>
+    ConstArray<decltype(Perm<3>::S3), int>
         Perm3_S3_arr(Perm<3>::S3, 6);
-    ConstArray<decltype(Perm<3>::orderedS3)>
+    ConstArray<decltype(Perm<3>::orderedS3), int>
         Perm3_orderedS3_arr(Perm<3>::orderedS3, 6);
-    ConstArray<decltype(Perm<3>::S2)>
+    ConstArray<decltype(Perm<3>::S2), int>
         Perm3_S2_arr(Perm<3>::S2, 2);
 
     template <int k>

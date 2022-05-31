@@ -42,9 +42,9 @@ using regina::Perm;
 using regina::python::ConstArray;
 
 namespace {
-    ConstArray<decltype(Perm<6>::S6)>
+    ConstArray<decltype(Perm<6>::S6), int>
         Perm6_S6_arr(Perm<6>::S6, 720);
-    ConstArray<decltype(Perm<6>::orderedS6)>
+    ConstArray<decltype(Perm<6>::orderedS6), int>
         Perm6_orderedS6_arr(Perm<6>::orderedS6, 720);
 
     template <int k>
