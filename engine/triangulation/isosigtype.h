@@ -203,7 +203,7 @@ class IsoSigClassic {
 template <int dim, int subdim>
 class IsoSigDegrees {
     private:
-        static constexpr auto nFaces = FaceNumbering<dim, subdim>::nFaces;
+        static constexpr int nFaces = FaceNumbering<dim, subdim>::nFaces;
             /**< The number of subdim-faces in each top-dimensional simplex. */
 
         /**
@@ -212,7 +212,7 @@ class IsoSigDegrees {
          * information about which degree corresponds to which subdim-face.
          */
         struct SimplexMarking {
-            std::array<unsigned, nFaces> degree;
+            std::array<size_t, nFaces> degree;
                 /**< The sorted list of subdim-face degrees. */
 
             /**
@@ -220,7 +220,7 @@ class IsoSigDegrees {
              * for the given top-dimensional simplex.
              */
             void init(const Simplex<dim>& simplex) {
-                for (size_t i = 0; i < nFaces; ++i)
+                for (int i = 0; i < nFaces; ++i)
                     degree[i] = simplex.template face<subdim>(i)->degree();
                 std::sort(degree.begin(), degree.end());
             }

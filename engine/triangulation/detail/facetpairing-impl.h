@@ -307,7 +307,7 @@ template <int dim>
 std::optional<Cut> FacetPairingBase<dim>::divideConnected(size_t minSide)
         const {
     std::optional<Cut> ans;
-    size_t bestWeight;
+    size_t bestWeight = 0 /* Unnecessary, but silences warnings */;
 
     for (size_t left = size() / 2; left >= minSide; --left) {
         Cut c(left, size() - left);

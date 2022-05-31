@@ -360,11 +360,10 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
             throw InvalidArgument(
                 "fromIsoSig(): unexpected internal whitespace");
 
-    unsigned j;
-    size_t pos, nSimp, nChars;
     while (c != end) {
         // Read one component at a time.
-        nSimp = Base64SigEncoding::decodeSingle(*c++);
+        size_t nSimp = Base64SigEncoding::decodeSingle(*c++);
+        unsigned nChars;
         if (nSimp < 63)
             nChars = 1;
         else {
@@ -375,7 +374,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
             if (c + nChars > end)
                 throw InvalidArgument(
                     "fromIsoSig(): incomplete signature");
-            nSimp = Base64SigEncoding::decodeInt<unsigned>(c, nChars);
+            nSimp = Base64SigEncoding::decodeInt<size_t>(c, nChars);
             c += nChars;
         }
 
@@ -396,7 +395,7 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
                 throw InvalidArgument("fromIsoSig(): incomplete signature");
             }
             Base64SigEncoding::decodeTrits(*c++, facetAction + facetPos);
-            for (j = 0; j < 3; ++j) {
+            for (int j = 0; j < 3; ++j) {
                 // If we're already finished, make sure the leftover trits
                 // are zero.
                 if (nFacets == (dim+1) * nSimp) {
@@ -429,19 +428,19 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
         }
 
         auto* joinDest = new size_t[nJoins + 1];
-        for (pos = 0; pos < nJoins; ++pos) {
+        for (size_t pos = 0; pos < nJoins; ++pos) {
             if (c + nChars > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 throw InvalidArgument("fromIsoSig(): incomplete signature");
             }
 
-            joinDest[pos] = Base64SigEncoding::decodeInt<unsigned>(c, nChars);
+            joinDest[pos] = Base64SigEncoding::decodeInt<size_t>(c, nChars);
             c += nChars;
         }
 
         auto* joinGluing = new typename Perm<dim+1>::Index[nJoins + 1];
-        for (pos = 0; pos < nJoins; ++pos) {
+        for (size_t pos = 0; pos < nJoins; ++pos) {
             if (c + IsoSigPrintable<dim>::charsPerPerm > end) {
                 delete[] facetAction;
                 delete[] joinDest;
@@ -466,15 +465,15 @@ Triangulation<dim> TriangulationBase<dim>::fromIsoSig(const std::string& sig) {
 
         // End of component!
         auto* simp = new Simplex<dim>*[nSimp];
-        for (pos = 0; pos < nSimp; ++pos)
+        for (size_t pos = 0; pos < nSimp; ++pos)
             simp[pos] = ans.newSimplex();
 
         facetPos = 0;
         size_t nextUnused = 1;
         size_t joinPos = 0;
         Perm<dim+1> gluing;
-        for (pos = 0; pos < nSimp; ++pos)
-            for (j = 0; j <= dim; ++j) {
+        for (size_t pos = 0; pos < nSimp; ++pos)
+            for (int j = 0; j <= dim; ++j) {
                 // Already glued from the other side:
                 if (simp[pos]->adjacentSimplex(j))
                     continue;
@@ -539,12 +538,12 @@ size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
     ++c;
     if (! *c)
         return 0;
-    size_t nChars = Base64SigEncoding::decodeSingle(*c++);
+    unsigned nChars = Base64SigEncoding::decodeSingle(*c++);
 
     for (const char* d = c; d < c + nChars; ++d)
         if (! Base64SigEncoding::isValid(*d))
             return 0;
-    return Base64SigEncoding::decodeInt<unsigned>(c, nChars);
+    return Base64SigEncoding::decodeInt<size_t>(c, nChars);
 }
 
 } } // namespace regina::detail
