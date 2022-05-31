@@ -988,9 +988,8 @@ template <int dim>
 template <int useDim>
 inline bool SimplexBase<dim>::sameDegreesAt(
         const SimplexBase<dim>& other, Perm<dim + 1> p) const {
-    size_t i, j;
-    for (i = 0; i < FaceNumbering<dim, useDim>::nFaces; ++i) {
-        j = FaceNumbering<dim, useDim>::faceNumber(
+    for (int i = 0; i < FaceNumbering<dim, useDim>::nFaces; ++i) {
+        int j = FaceNumbering<dim, useDim>::faceNumber(
             p * FaceNumbering<dim, useDim>::ordering(i));
         if (std::get<useDim>(faces_)[i]->degree() !=
                 std::get<useDim>(other.faces_)[j]->degree())

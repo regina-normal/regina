@@ -86,7 +86,7 @@ typename IsoSigPrintable<dim>::Signature IsoSigPrintable<dim>::encode(
     encodeInt(ans, nCompSimp, nChars);
     for (i = 0; i < nFacetActions; i += 3)
         ans += encodeTrits(facetAction + i,
-            (nFacetActions >= i + 3 ? 3 : nFacetActions - i));
+            (nFacetActions >= i + 3 ? 3 : static_cast<int>(nFacetActions - i)));
     for (i = 0; i < nJoins; ++i)
         encodeInt(ans, joinDest[i], nChars);
     for (i = 0; i < nJoins; ++i)
