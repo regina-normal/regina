@@ -57,10 +57,10 @@
 #define WORD_Tetrahedron (dim4 ? "Pentachoron" : dim2 ? "Triangle" : "Tetrahedron")
 
 // Constants.
-constexpr long MAXTET = 15;
+constexpr int MAXTET = 20;
 
 // Census parameters.
-long nTet = 0, nBdryFaces = -1;
+int nTet = 0, nBdryFaces = -1;
 regina::BoolSet
     finiteness(true, true),
     orientability(true, true),
@@ -405,13 +405,13 @@ int main(int argc, const char* argv[]) {
     int argFinite = 0;
     int argIdeal = 0;
     poptOption opts[] = {
-        { "tetrahedra", 't', POPT_ARG_LONG, &nTet, 0,
+        { "tetrahedra", 't', POPT_ARG_INT, &nTet, 0,
             "Number of tetrahedra.", "<tetrahedra>" },
         { "boundary", 'b', POPT_ARG_NONE, &argBdry, 0,
             "Must have at least one boundary face.", nullptr },
         { "internal", 'i', POPT_ARG_NONE, &argNoBdry, 0,
             "Must have all faces internal (no boundary faces).", nullptr },
-        { "bdryfaces", 'B', POPT_ARG_LONG, &nBdryFaces, 0,
+        { "bdryfaces", 'B', POPT_ARG_INT, &nBdryFaces, 0,
             "Must have fixed number (>= 1) of boundary faces.", "<faces>" },
         { "orientable", 'o', POPT_ARG_NONE, &argOr, 0,
             "Must be orientable.", nullptr },
