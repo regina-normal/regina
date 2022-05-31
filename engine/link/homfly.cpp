@@ -373,7 +373,6 @@ namespace {
 
             // Identify all strands where one crossing is forgotten and
             // the other is not.
-            int strandID;
             for (int side = 0; side < 2; ++side) {
                 const auto* childKey =
                     (side == 0 ? &leftChildKey : &rightChildKey);

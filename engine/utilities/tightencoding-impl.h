@@ -344,7 +344,7 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
                     goto endDecoding;
                 }
             }
-            result = val - 368639;
+            result = static_cast<Int>(val - 368639);
         } else {
             // This encodes a positive number.
             if constexpr (std::is_integral_v<Int> && sizeof(Int) < 4) {
@@ -353,7 +353,7 @@ Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData) {
                     goto endDecoding;
                 }
             }
-            result = val - 360359;
+            result = static_cast<Int>(val - 360359);
         }
     } else if (c == '{') {
         if (start == limit)
