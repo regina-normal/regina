@@ -54,7 +54,7 @@ std::optional<Perm<4>> TriSolidTorus::isAnnulusSelfIdentified(int index) const {
         vertexRoles_[lower];
 }
 
-unsigned long TriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
+size_t TriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
     int right = (otherAnnulus + 1) % 3;
     int left = (otherAnnulus + 2) % 3;
     Tetrahedron<3>* adj = tet_[right]->adjacentTetrahedron(
@@ -83,7 +83,7 @@ unsigned long TriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
     return chain.index() - 1;
 }
 
-unsigned long TriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
+size_t TriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
     int right = (otherAnnulus + 1) % 3;
     int left = (otherAnnulus + 2) % 3;
     Tetrahedron<3>* adj = tet_[right]->adjacentTetrahedron(
