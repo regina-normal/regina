@@ -326,6 +326,7 @@ void addLink(pybind11::module_& m) {
         .def_readonly_static("homflyLMVarY", Link::homflyLMVarY)
     ;
     regina::python::add_output(l);
+    regina::python::add_tight_encoding(l);
     regina::python::packet_eq_operators(l);
     regina::python::add_packet_data(l);
 

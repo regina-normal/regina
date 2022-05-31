@@ -56,6 +56,7 @@
 #include "utilities/exception.h"
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
+#include "utilities/tightencoding.h"
 
 namespace regina {
 
@@ -623,7 +624,10 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
  *
  * \ingroup link
  */
-class Link : public PacketData<Link>, public Output<Link> {
+class Link :
+        public PacketData<Link>,
+        public Output<Link>,
+        public TightEncodable<Link> {
     private:
         MarkedVector<Crossing> crossings_;
             /**< The crossings in this link. */
@@ -3356,6 +3360,18 @@ class Link : public PacketData<Link>, public Output<Link> {
             const;
 
         /**
+         * Writes the tight encoding of this link to the given output stream.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
+
+        /**
          * Writes a short text representation of this link to the
          * given output stream.
          *
@@ -3584,6 +3600,30 @@ class Link : public PacketData<Link>, public Output<Link> {
          * @return the reconstructed knot.
          */
         static Link fromSig(const std::string& sig);
+
+        /**
+         * Reconstructs a link from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.
+         * If the input stream contains leading whitespace then it will be
+         * treated as an invalid encoding (i.e., this routine will throw an
+         * exception).  The input routine \e may contain further data: if this
+         * routine is successful then the input stream will be left positioned
+         * immediately after the encoding, without skipping any trailing
+         * whitespace.
+         *
+         * \exception InvalidInput the given input stream does not begin with
+         * a tight encoding of a link.
+         *
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
+         *
+         * @param input an input stream that begins with the tight encoding
+         * for a link.
+         * @return the link represented by the given tight encoding.
+         */
+        static Link tightDecode(std::istream& input);
 
         /**
          * Creates a new knot from a classical Gauss code, presented as

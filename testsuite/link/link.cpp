@@ -45,6 +45,7 @@
 #include "triangulation/dim3.h"
 
 #include "testsuite/link/testlink.h"
+#include "testsuite/utilities/tightencodingtest.h"
 
 using regina::Crossing;
 using regina::ExampleLink;
@@ -57,7 +58,7 @@ using regina::StrandRef;
 #define TREFOIL_SIGS { "cPcbbbadh", "cPcbbbadu", "dLQbcbcdlcj", "dLQbcbcdlcn", "dLQabccbrwj", "eLAkbbcddainqv" }
 #define FIG8_SIGS { "cPcbbbiht" }
 
-class LinkTest : public CppUnit::TestFixture {
+class LinkTest : public CppUnit::TestFixture, public TightEncodingTest<Link> {
     CPPUNIT_TEST_SUITE(LinkTest);
 
     CPPUNIT_TEST(copyMove);
@@ -83,6 +84,7 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(rewrite);
     CPPUNIT_TEST(swapping);
     CPPUNIT_TEST(group);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -3021,6 +3023,42 @@ class LinkTest : public CppUnit::TestFixture {
             verifyGroup(trefoil_unknot1, "Trefoil U unknot (separate + twist)");
             verifyGroup(trefoil_unknot_overlap, "Trefoil U unknot (with R2)");
             verifyGroup(adams6_28, "Adams Fig. 6.28");
+        }
+
+        void tightEncoding() {
+            // The empty link:
+            verifyTightEncoding(empty);
+
+            // Single-component knots:
+            verifyTightEncoding(unknot0);
+            verifyTightEncoding(unknot1);
+            verifyTightEncoding(unknot3);
+            verifyTightEncoding(unknotMonster);
+            verifyTightEncoding(unknotGordian);
+            verifyTightEncoding(trefoilLeft);
+            verifyTightEncoding(trefoilRight);
+            verifyTightEncoding(trefoil_r1x2);
+            verifyTightEncoding(trefoil_r1x6);
+            verifyTightEncoding(figureEight);
+            verifyTightEncoding(figureEight_r1x2);
+            verifyTightEncoding(conway);
+            verifyTightEncoding(kinoshitaTerasaka);
+            verifyTightEncoding(gst);
+            verifyTightEncoding(rht_rht);
+            verifyTightEncoding(rht_lht);
+
+            // Links with multiple components:
+            verifyTightEncoding(unlink2_0);
+            verifyTightEncoding(unlink3_0);
+            verifyTightEncoding(unlink2_r2);
+            verifyTightEncoding(unlink2_r1r1);
+            verifyTightEncoding(hopf);
+            verifyTightEncoding(whitehead);
+            verifyTightEncoding(borromean);
+            verifyTightEncoding(trefoil_unknot0);
+            verifyTightEncoding(trefoil_unknot1);
+            verifyTightEncoding(trefoil_unknot_overlap);
+            verifyTightEncoding(adams6_28);
         }
 };
 

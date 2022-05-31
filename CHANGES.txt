@@ -39,7 +39,7 @@ Version 7.1  [ TODO ]
         Class FacetPairing<dim>:
             - New routine isConnected().
             - New routines canonical() and canonicalAll().
-            - Added tightEncode(), tightEncoding() and tightDecoding().
+            - New routines for tight encodings and decodings.
             - In findAllPairings(), the action is no longer required to
               take the list of all automorphisms if it does not need them.
             - Renamed toTextRep() to textRep().  The old name is kept as
@@ -47,7 +47,7 @@ Version 7.1  [ TODO ]
             - The IsoList type alias has changed from std::list to std::vector,
               for better performance.
         Struct FacetSpec<dim>:
-            - Added tightEncode(), tightEncoding() and tightDecoding().
+            - New routines for tight encodings and decodings.
         Class HilbertPrimal:
             - The header no longer includes the Normaliz headers (which
               Regina does not actually ship with its development files).
@@ -64,12 +64,13 @@ Version 7.1  [ TODO ]
               FacetSpec or a FacetPairing.
             - Added pre/postincrement operators for iterating through
               all permutations of a given size.
-            - Added tightEncode(), tightEncoding() and tightDecoding().
+            - New routines for tight encodings and decodings.
         Class LargeInteger:
             - New tightDecoding() routines.
         Class Laurent<T>, Laurent2<T>:
             - New tightDecoding() routines.
         Class Link:
+            - New routines for tight encodings and decodings.
             - Routines dtData(), gaussData() and jenkinsData() now throw
               exceptions if the link is so large that the C++ int type is not
               large enough to hold the values being returned.
@@ -94,7 +95,7 @@ Version 7.1  [ TODO ]
             - New routine scaleDown().
             - New routine isNormalEdgeLink().
         Class Perm<n>:
-            - Added tightEncode(), tightEncoding() and tightDecoding().
+            - New routines for tight encodings and decodings.
         Type safe_tuple_element<...>:
             - New type alias that is like std::tuple_element<...> but
               with well-defined behaviour for an out-of-range index.
@@ -107,7 +108,7 @@ Version 7.1  [ TODO ]
               previously private, and had a more complex interface).
             - New suite of routines dualToPrimal().
             - New routine pairing().
-            - Added tightEncode(), tightEncoding() and tightDecoding().
+            - New routines for tight encodings and decodings.
             - The join() routine now checks all its preconditions, and
               throws an exception if any precondition fails.
         Class Triangulation<4>:
