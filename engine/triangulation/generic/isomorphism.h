@@ -732,8 +732,11 @@ inline Isomorphism<dim>::Isomorphism(const Isomorphism<dim>& src) :
         nSimplices_(src.nSimplices_),
         simpImage_(new ssize_t[src.nSimplices_]),
         facetPerm_(new Perm<dim+1>[src.nSimplices_]) {
-    std::copy(src.simpImage_, src.simpImage_ + nSimplices_, simpImage_);
-    std::copy(src.facetPerm_, src.facetPerm_ + nSimplices_, facetPerm_);
+    // We use src.nSimplices_, not nSimplices_, since otherwise gcc12 issues
+    // loud warnings about copying data from an empty range in the case where
+    // src is empty.  (The logic does work, but the compiler doesn't realise).
+    std::copy(src.simpImage_, src.simpImage_ + src.nSimplices_, simpImage_);
+    std::copy(src.facetPerm_, src.facetPerm_ + src.nSimplices_, facetPerm_);
 }
 
 template <int dim>
