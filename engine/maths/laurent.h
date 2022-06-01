@@ -1563,32 +1563,28 @@ template <typename T>
 Laurent<T> Laurent<T>::tightDecode(std::istream& input) {
     // Use a temporary std::vector to store non-zero coefficients, since we
     // don't know in advance how many there will be.
-    long firstExp, lastExp;
-    bool started = false;
     std::vector<std::pair<long, T>> coeffs;
 
     while (true) {
         T coeff = T::tightDecode(input);
         if (coeff == 0) {
             // The sequence of coefficients is finished.
-            if (! started)
+            if (coeffs.empty())
                 return Laurent();
 
+            long firstExp = coeffs.front().first;
+            long lastExp = coeffs.back().first;
             T* raw = new T[lastExp - firstExp + 1];
             for (auto& c : coeffs)
                 raw[c.first - firstExp] = std::move(c.second);
             return Laurent(firstExp, lastExp, raw);
         } else {
             long exp = regina::tightDecode<long>(input);
-            if (started) {
-                if (exp <= lastExp)
+            if (! coeffs.empty()) {
+                if (exp <= coeffs.back().first)
                     throw InvalidInput("The tight encoding has an invalid "
                         "sequence of exponents");
-            } else {
-                firstExp = exp;
-                started = true;
             }
-            lastExp = exp;
             coeffs.emplace_back(exp, std::move(coeff));
         }
     }

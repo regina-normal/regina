@@ -50,7 +50,7 @@ void addMatrixBool(pybind11::module_& m) {
                     "The number of rows must be strictly positive");
 
             Matrix<bool>* m = nullptr;
-            size_t cols;
+            size_t cols = 0; // zero is unnecessary but silences warnings
 
             pybind11::list row;
             for (size_t i = 0; i < rows; ++i) {
