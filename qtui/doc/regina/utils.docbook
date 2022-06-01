@@ -1776,6 +1776,15 @@
        of <command>tricensus</command> will also be much smaller.
        See the <option>--sigs</option> option for further details.
       </para>
+      <para>
+       You can also use <option>--encodings</option> with
+       <option>--genpairs</option>, in which case the facet pairings
+       will be written using tight encodings instead of human-readable
+       text representations.  Tight encodings of facet pairings cannot
+       be used as input with <option>--usepairs</option>, and again you
+       will need to use &cpp; or &python; to reconstruct facet pairings
+       from them.
+      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -1825,12 +1834,23 @@
       </para>
       <para>
        The list of all facet pairings will be written to the given output
-       file in text format (though you may omit the output file from the
-       command line, in which case the facet pairings will be written to
+       file in a plain text format (though you may omit the output file from
+       the command line, in which case the facet pairings will be written to
        standard output).
-       If you are coordinating your sub-censuses manually, you can use
-       the option <option>--usepairs</option> to generate triangulations
-       from a subset of these facet pairings.
+       By default, the output format will be a space-separated
+       numerical format, suitable for use with
+       <option>--usepairs</option> (see below).  However, if you pass
+       <option>--encodings</option> then the output format will use
+       tight encodings (which are shorter, contain no spaces, and are
+       much harder for humans to read).  See <option>--encodings</option>
+       for further details on tight encodings.
+      </para>
+      <para>
+       If you are coordinating your sub-censuses manually, you can
+       use the option <option>--usepairs</option> to generate triangulations
+       from a subset of these facet pairings.  In this case, the facet
+       pairings will need to be presented using the default
+       space-separated numerical format (not tight encodings).
       </para>
       <para>
        Options for orientability, finiteness or minimality cannot be
@@ -1859,8 +1879,8 @@
       </para>
       <para>
        Facet pairings should be supplied on standard input, one per line.
-       They should be listed in the format produced by the option
-       <option>--genpairs</option>.
+       They should be presented using the space-separated numerical format
+       produced by the option <option>--genpairs</option>.
       </para>
       <para>
        This option effectively lets you run a subset of a larger census.

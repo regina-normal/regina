@@ -515,9 +515,8 @@ int main(int argc, const char* argv[]) {
     } else if (genPairs && (argFinite || argIdeal)) {
         std::cerr << "Finiteness options cannot be used with -p/--genpairs.\n";
         broken = true;
-    } else if (genPairs && (sigs || canonical || tight)) {
-        std::cerr << "Signature or tight encoding output cannot be used with "
-            "-p/--genpairs.\n";
+    } else if (genPairs && (sigs || canonical)) {
+        std::cerr << "Signature output cannot be used with -p/--genpairs.\n";
         broken = true;
     } else if (genPairs && threads != 1) {
         std::cerr << "Multithreading options cannot be used with "
@@ -697,10 +696,19 @@ int runCensus() {
 
         regina::FacetPairing<dim>::findAllPairings(nTet, boundary, nBdryFaces,
                 [](const regina::FacetPairing<dim>& pair) {
-            if (dumpStream.get())
-                (*dumpStream) << pair.textRep() << std::endl;
-            else
-                std::cout << pair.textRep() << std::endl;
+            if (dumpStream.get()) {
+                if (tight)
+                    pair.tightEncode(*dumpStream);
+                else
+                    (*dumpStream) << pair.textRep();
+                (*dumpStream) << std::endl;
+            } else {
+                if (tight)
+                    pair.tightEncode(std::cout);
+                else
+                    std::cout << pair.textRep();
+                std::cout << std::endl;
+            }
             totPairings++;
         });
         std::cerr << "Total " << WORD_face << " pairings: "

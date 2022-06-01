@@ -53,14 +53,17 @@ tricensus -4 -t2 -i -s @TESTOUT@
 tricensus -4 -t2 -i -s --allowinvalid @TESTOUT@
 # --- using tricensus to generate pairings:
 tricensus -2 -t4 -i -p
+tricensus -2 -t4 -i -p --encodings
 tricensus -2 -t4 -b -p
 tricensus -2 -t4 -b -B2 -p
 tricensus -t3 -i -p
 tricensus -t3 -b -p
+tricensus -t3 -b -p --encodings
 tricensus -t3 -b -B2 -p
 tricensus -4 -t2 -i -p
 tricensus -4 -t2 -b -p
 tricensus -4 -t2 -b -B2 -p
+tricensus -4 -t2 -b -B2 -p --encodings
 # --- using tricensus to generate triangulations from pairings:
 tricensus -2 -s -o -P @TESTOUT@ < @TESTDIR@/dim2-bdry2-4.pairs
 tricensus -2 -s -o -P @TESTOUT@ < @TESTDIR@/dim2-internal-4.pairs
