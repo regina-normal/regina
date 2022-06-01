@@ -113,6 +113,24 @@ struct InfinityBase<false> {
 };
 #endif // __DOXYGEN
 
+namespace detail {
+    /**
+     * Returns a raw GMP integer holding the given value.
+     *
+     * @param value the value to assign to the new GMP integer.
+     * @return a corresponding newly created and initialised GMP integer.
+     */
+    mpz_ptr mpz_from_ll(long long value);
+
+    /**
+     * Returns a raw GMP integer holding the given value.
+     *
+     * @param value the value to assign to the new GMP integer.
+     * @return a corresponding newly created and initialised GMP integer.
+     */
+    mpz_ptr mpz_from_ull(unsigned long long value);
+}
+
 /**
  * Represents an arbitrary precision integer.
  * Calculations are always guaranteed to be exact, regardless of how
@@ -224,6 +242,24 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * @param value the new value of this integer.
          */
         IntegerBase(unsigned long value);
+        /**
+         * Initialises this integer to the given value.
+         *
+         * \ifacespython In Python, the only native-integer constructor
+         * is IntegerBase(long).
+         *
+         * @param value the new value of this integer.
+         */
+        IntegerBase(long long value);
+        /**
+         * Initialises this integer to the given value.
+         *
+         * \ifacespython In Python, the only native-integer constructor
+         * is IntegerBase(long).
+         *
+         * @param value the new value of this integer.
+         */
+        IntegerBase(unsigned long long value);
         /**
          * Initialises this integer to the given value.
          *
@@ -554,6 +590,20 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * @return a reference to this integer with its new value.
          */
         IntegerBase& operator =(unsigned long value);
+        /**
+         * Sets this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         * @return a reference to this integer with its new value.
+         */
+        IntegerBase& operator =(long long value);
+        /**
+         * Sets this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         * @return a reference to this integer with its new value.
+         */
+        IntegerBase& operator =(unsigned long long value);
         /**
          * Sets this integer to the given value which is
          * represented as a string of digits in base 10.
@@ -2530,6 +2580,25 @@ inline IntegerBase<supportInfinity>::IntegerBase(unsigned long value) :
 }
 
 template <bool supportInfinity>
+inline IntegerBase<supportInfinity>::IntegerBase(long long value) :
+        small_(static_cast<long>(value)), large_(nullptr) {
+    // Detect overflow.
+    if constexpr (sizeof(long) < sizeof(long long))
+        if (small_ != value)
+            large_ = regina::detail::mpz_from_ll(value);
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity>::IntegerBase(unsigned long long value) :
+        small_(static_cast<long>(value)), large_(nullptr) {
+    // Detect overflow.
+    // This could occur even if long and long long have the same size,
+    // due to the discrepancy between signed and unsigned ranges.
+    if (small_ < 0 || small_ != value)
+        large_ = regina::detail::mpz_from_ull(value);
+}
+
+template <bool supportInfinity>
 inline IntegerBase<supportInfinity>::IntegerBase(
         const IntegerBase<supportInfinity>& value) {
     if (value.isInfinite()) {
@@ -2882,6 +2951,41 @@ inline IntegerBase<supportInfinity>&
         // No overflow, but we must clear out any old large integer value.
         clearLarge();
     }
+    return *this;
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity>&
+        IntegerBase<supportInfinity>::operator =(long long value) {
+    makeFinite();
+    if (large_)
+        clearLarge();
+
+    small_ = value;
+
+    // Detect overflow.
+    if constexpr (sizeof(long) < sizeof(long long))
+        if (small_ != value)
+            large_ = regina::detail::mpz_from_ll(value);
+
+    return *this;
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity>&
+        IntegerBase<supportInfinity>::operator =(unsigned long long value) {
+    makeFinite();
+    if (large_)
+        clearLarge();
+
+    small_ = value;
+
+    // Detect overflow.
+    // This could occur even if long and long long have the same size,
+    // due to the discrepancy between signed and unsigned ranges.
+    if (small_ < 0 || small_ != value)
+        large_ = regina::detail::mpz_from_ull(value);
+
     return *this;
 }
 

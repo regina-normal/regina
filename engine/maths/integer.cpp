@@ -49,6 +49,15 @@ static_assert(
     ! std::is_void<typename regina::IntOfSize<2 * sizeof(long)>::type>(),
     "Regina requires a native integer type that is twice the size of a long. The developers are not currently aware of any cases where this fails, so if you see this error then _please_ write and let us know.");
 
+// The code in this file also requires that sizeof(long long) is a
+// multiple of sizeof(long).  Again, this is not mandated but I am not
+// aware of a platform on which it fails.
+static_assert(sizeof(long long) % sizeof(long) == 0,
+    "Regina requires that a the size of a long long is an exact multiple of "
+    "the size of a long. The developers are not currently aware of any cases "
+    "where this fails, so if you see this error then _please_ write and "
+    "let us know.");
+
 /**
  * Old macros for testing signed integer overflow, given in order from
  * fastest to slowest (by experimentation).  All are based on section
@@ -89,6 +98,48 @@ namespace {
     std::mutex randMutex;
     gmp_randstate_t randState;
     bool randInitialised(false);
+}
+
+namespace detail {
+    mpz_ptr mpz_from_ll(long long value) {
+        mpz_ptr ans = new __mpz_struct[1];
+        if constexpr (sizeof(long) == sizeof(long long)) {
+            mpz_init_set_si(ans, value);
+            return ans;
+        } else {
+            constexpr static int blocks = sizeof(long long) / sizeof(long);
+            constexpr static int block = 8 * sizeof(long);
+
+            mpz_init_set_si(ans, static_cast<long>(
+                value >> ((blocks - 1) * block)));
+            for (int i = 2; i <= blocks; ++i) {
+                mpz_mul_2exp(ans, ans, block);
+                mpz_add_ui(ans, ans, static_cast<unsigned long>(
+                    value >> ((blocks - i) * block)));
+            }
+        }
+        return ans;
+    }
+
+    mpz_ptr mpz_from_ull(unsigned long long value) {
+        mpz_ptr ans = new __mpz_struct[1];
+        if constexpr (sizeof(long) == sizeof(long long)) {
+            mpz_init_set_ui(ans, value);
+            return ans;
+        } else {
+            constexpr static int blocks = sizeof(long long) / sizeof(long);
+            constexpr static int block = 8 * sizeof(long);
+
+            mpz_init_set_ui(ans, static_cast<unsigned long>(
+                value >> ((blocks - 1) * block)));
+            for (int i = 2; i <= blocks; ++i) {
+                mpz_mul_2exp(ans, ans, block);
+                mpz_add_ui(ans, ans, static_cast<unsigned long>(
+                    value >> ((blocks - i) * block)));
+            }
+        }
+        return ans;
+    }
 }
 
 // The use of errno in this file should be threadsafe, since (as I

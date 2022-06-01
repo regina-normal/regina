@@ -72,10 +72,13 @@ template LargeInteger tightDecodeInteger<LargeInteger, it2>(it2, it2, bool);
 
 template void tightEncodeIndex<unsigned>(std::ostream&, unsigned);
 template void tightEncodeIndex<unsigned long>(std::ostream&, unsigned long);
+template void tightEncodeIndex<unsigned long long>(std::ostream&,
+    unsigned long long);
 template void tightEncodeIndex<ssize_t>(std::ostream&, ssize_t);
 
 template unsigned tightDecodeIndex<unsigned>(std::istream&);
 template unsigned long tightDecodeIndex<unsigned long>(std::istream&);
+template unsigned long long tightDecodeIndex<unsigned long long>(std::istream&);
 template ssize_t tightDecodeIndex<ssize_t>(std::istream&);
 
 } // namespace regina::detail

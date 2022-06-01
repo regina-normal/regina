@@ -51,6 +51,8 @@ Version 7.1  [ TODO ]
               Regina does not actually ship with its development files).
         Class Integer:
             - New tightDecoding() routines.
+            - Now supports creation and assignment from long long (both
+              signed and unsigned).
         Class IntersectionForm:
             - New class to compute invariants of intersection forms.
         Class Isomorphism<dim>:
@@ -65,6 +67,8 @@ Version 7.1  [ TODO ]
             - New routines for tight encodings and decodings.
         Class LargeInteger:
             - New tightDecoding() routines.
+            - Now supports creation and assignment from long long (both
+              signed and unsigned).
         Class Laurent<T>, Laurent2<T>:
             - New tightDecoding() routines.
         Class Link:
