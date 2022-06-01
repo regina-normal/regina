@@ -380,3 +380,47 @@ index ee68d623f..bb7c809e4 100644
      }
      return index_map;
  }
+diff --git a/engine/libnormaliz/general.cpp b/engine/libnormaliz/general.cpp
+index 679212eef..8d2b9ffd9 100644
+--- a/engine/libnormaliz/general.cpp
++++ b/engine/libnormaliz/general.cpp
+@@ -33,8 +33,8 @@ namespace libnormaliz {
+ bool verbose = false;
+ 
+ volatile sig_atomic_t nmz_interrupted = 0;
+-const long default_thread_limit = 8;
+-long thread_limit = default_thread_limit;
++const int default_thread_limit = 8;
++int thread_limit = default_thread_limit;
+ bool parallelization_set = false;
+ 
+ // bool test_arithmetic_overflow = false;
+@@ -89,8 +89,8 @@ bool setVerboseDefault(bool v) {
+     return old;
+ }
+ 
+-long set_thread_limit(long t) {
+-    long old = thread_limit;
++int set_thread_limit(int t) {
++    int old = thread_limit;
+     parallelization_set = true;
+     thread_limit = t;
+     CollectedAutoms.resize(t);
+diff --git a/engine/libnormaliz/general.h b/engine/libnormaliz/general.h
+index 6a70913e0..f2aa3f778 100644
+--- a/engine/libnormaliz/general.h
++++ b/engine/libnormaliz/general.h
+@@ -124,10 +124,10 @@ NORMALIZ_DLL_EXPORT extern volatile sig_atomic_t nmz_interrupted;
+ // extern bool test_arithmetic_overflow;
+ // extern long overflow_test_modulus;
+ 
+-NORMALIZ_DLL_EXPORT extern const long default_thread_limit;
+-NORMALIZ_DLL_EXPORT extern long thread_limit;
++NORMALIZ_DLL_EXPORT extern const int default_thread_limit;
++NORMALIZ_DLL_EXPORT extern int thread_limit;
+ NORMALIZ_DLL_EXPORT extern bool parallelization_set;
+-long set_thread_limit(long t);
++int set_thread_limit(int t);
+ 
+ // debugging helpers
+ NORMALIZ_DLL_EXPORT extern long cone_recursion_level;
