@@ -58,7 +58,7 @@ void XMLAngleStructureReader::initialChars(const std::string& chars) {
 
     long pos;
     Integer value;
-    for (unsigned long i = 0; i < tokens.size(); i += 2) {
+    for (size_t i = 0; i < tokens.size(); i += 2) {
         if (! valueOf(tokens[i], pos))
             return;
         if (pos < 0 || pos >= vecLen)

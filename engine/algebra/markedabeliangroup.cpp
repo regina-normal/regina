@@ -37,14 +37,14 @@
 
 namespace regina {
 
-MarkedAbelianGroup::MarkedAbelianGroup(unsigned long rk, const Integer &p) :
+MarkedAbelianGroup::MarkedAbelianGroup(size_t rk, const Integer &p) :
         M_(rk, rk), N_(rk,rk), MR_(rk,rk), MRi_(rk, rk),
         rankM_(0),
         presR_(rk, rk), presC_(rk, rk), presCi_(rk, rk),
         snfFreeRank_(0), snfFreeIndex_(0), ifLoc_(0),
         coeff_(0), tensorIfLoc_(0) {
     // special case p==1 trivial group
-    for (unsigned long i=0; i<rk; i++)
+    for (size_t i=0; i<rk; i++)
         N_.entry(i,i) = p;
     // everything is already in SNF, so these are identity matrices
     MR_.makeIdentity();
@@ -72,7 +72,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
     MatrixInt MC, MCi;
     metricalSmithNormalForm(tM, MR_, MRi_, MC, MCi);
 
-    for (unsigned long i=0; (i<tM.rows()) && (i<tM.columns()); i++)
+    for (size_t i=0; (i<tM.rows()) && (i<tM.columns()); i++)
         if (tM.entry(i,i) != 0)
             ++rankM_;
 
@@ -80,8 +80,8 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
     MatrixInt prod = MRi_ * N_;
     MatrixInt pres(N_.rows()-rankM_, N_.columns());
 
-    for (unsigned long i=0;i<pres.rows();i++)
-        for (unsigned long j=0;j<pres.columns();j++)
+    for (size_t i=0;i<pres.rows();i++)
+        for (size_t j=0;j<pres.columns();j++)
             pres.entry(i,j) = prod.entry(i+rankM_,j);
 
     // put the presentation matrix in Smith normal form, and
@@ -91,7 +91,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
     MatrixInt presRi;
     metricalSmithNormalForm(pres, presR_, presRi, presC_, presCi_);
 
-    for (unsigned long i=0; ( (i<pres.rows()) && (i<pres.columns()) ); i++) {
+    for (size_t i=0; ( (i<pres.rows()) && (i<pres.columns()) ); i++) {
         if (pres.entry(i,i)==1)
             ifLoc_++;
         else if (pres.entry(i,i)>1)
@@ -136,13 +136,13 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
     MatrixInt MC, MCi;
     metricalSmithNormalForm(tM, MR_, MRi_, MC, MCi);
 
-    for (unsigned i=0; ( (i<tM.rows()) && (i<tM.columns()) ); i++)
+    for (size_t i=0; ( (i<tM.rows()) && (i<tM.columns()) ); i++)
         if (tM.entry(i,i) != 0) rankM_++;
 
     // in the case coeff_ > 0 we need to consider the TOR part of homology.
 
     if (coeff_ > 0)
-        for (unsigned i=0; i<rankM_; i++)
+        for (size_t i=0; i<rankM_; i++)
             if (tM.entry(i,i).gcd(coeff_) > 1)
                 TORVec_.push_back(tM.entry(i,i));
 
@@ -156,10 +156,10 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
     if (coeff_ > 0) {
         MatrixInt tensorPres( MRi_N.rows() - rankM_,
                    MRi_N.columns() + MRi_N.rows() - rankM_ );
-        for (unsigned long i=0; i<tensorPres.rows(); i++)
-            for (unsigned long j=0; j<MRi_N.columns(); j++)
+        for (size_t i=0; i<tensorPres.rows(); i++)
+            for (size_t j=0; j<MRi_N.columns(); j++)
                  tensorPres.entry(i,j) = MRi_N.entry(i+rankM_, j);
-        for (unsigned long i=0; i< MRi_N.rows() - rankM_; i++)
+        for (size_t i=0; i< MRi_N.rows() - rankM_; i++)
              tensorPres.entry(i, MRi_N.columns() + i) = coeff_;
 
         MatrixInt tensorRi;
@@ -172,8 +172,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
         // these are not the invariant factors of the group, so we assemble
         // these numbers into a diagonal presentation matrix and apply SNF!
         // Determine the size of the matrix we'll need.
-        for (unsigned long i=0; i<tensorPres.rows() && i<tensorPres.columns();
-                ++i) {
+        for (size_t i=0; i<tensorPres.rows() && i<tensorPres.columns(); ++i) {
             if (tensorPres.entry(i,i) == 1)
                 tensorIfLoc_++;
             else if (tensorPres.entry(i,i) > 1)
@@ -185,7 +184,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
 
         MatrixInt diagPres( TORVec_.size() + tensorIfNum + snfFreeRank_,
                 TORVec_.size() + tensorIfNum + snfFreeRank_);
-        for (unsigned long i=0; i<diagPres.rows(); i++) {
+        for (size_t i=0; i<diagPres.rows(); i++) {
             if (i<TORVec_.size())
                 diagPres.entry(i,i) = TORVec_[i].gcd(coeff_);
             else
@@ -196,7 +195,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
 
         MatrixInt presRi;
         metricalSmithNormalForm(diagPres, presR_, presRi, presC_, presCi_);
-        for (unsigned long i=0; i<diagPres.rows(); i++) {
+        for (size_t i=0; i<diagPres.rows(); i++) {
             // should only have terms > 1 or == 0.
             if (diagPres.entry(i,i) > 1)
                 invFac_.push_back(diagPres.entry(i,i));
@@ -206,14 +205,14 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
     } else {
         // coeff_ == p == 0 case
         MatrixInt tensorPres( MRi_N.rows() - rankM_, MRi_N.columns() );
-        for (unsigned long i=0; i<tensorPres.rows(); i++)
-            for (unsigned long j=0; j<MRi_N.columns(); j++)
+        for (size_t i=0; i<tensorPres.rows(); i++)
+            for (size_t j=0; j<MRi_N.columns(); j++)
                 tensorPres.entry(i,j) = MRi_N.entry(i+rankM_, j);
 
         MatrixInt presRi;
         metricalSmithNormalForm(tensorPres, presR_, presRi, presC_, presCi_);
 
-        for (unsigned long i=0; i<tensorPres.rows() && i<tensorPres.columns();
+        for (size_t i=0; i<tensorPres.rows() && i<tensorPres.columns();
                 ++i) {
             if (tensorPres.entry(i,i) == 1)
                 ifLoc_++;
@@ -248,9 +247,8 @@ void MarkedAbelianGroup::swap(MarkedAbelianGroup& other) noexcept {
     tensorInvFac_.swap(other.tensorInvFac_);
 }
 
-unsigned long MarkedAbelianGroup::torsionRank(const Integer& degree)
-        const {
-    unsigned long ans = 0;
+size_t MarkedAbelianGroup::torsionRank(const Integer& degree) const {
+    size_t ans = 0;
     for (const auto& inv : invFac_) {
         if (inv % degree == 0)
             ++ans;
@@ -274,7 +272,7 @@ void MarkedAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
 
     auto it = invFac_.begin();
     Integer currDegree;
-    unsigned currMult = 0;
+    size_t currMult = 0;
     while(true) {
         if (it != invFac_.end()) {
             if ((*it) == currDegree) {
@@ -327,7 +325,7 @@ void MarkedAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
  * this routine returns the index-th free generator of the
  * ker(M)/img(N) in Z^l.
  */
-Vector<Integer> MarkedAbelianGroup::freeRep(unsigned long index) const {
+Vector<Integer> MarkedAbelianGroup::freeRep(size_t index) const {
     if (index >= snfFreeRank_)
         throw InvalidArgument("freeRep(): invalid index");
 
@@ -337,7 +335,7 @@ Vector<Integer> MarkedAbelianGroup::freeRep(unsigned long index) const {
     // and apply MR_ to it.
 
     Vector<Integer> temp(presCi_.rows()+rankM_);
-    for (unsigned long i=0;i<presCi_.rows();i++)
+    for (size_t i=0;i<presCi_.rows();i++)
         temp[i+rankM_]=presCi_.entry(i,index+snfFreeIndex_);
     // the above line takes the index+snfFreeIndex_-th column of presCi_ and
     // pads it.
@@ -350,13 +348,13 @@ Vector<Integer> MarkedAbelianGroup::freeRep(unsigned long index) const {
  * this routine returns the index-th torsion generator of the
  * ker(M)/img(N) in Z^l.
  */
-Vector<Integer> MarkedAbelianGroup::torsionRep(unsigned long index) const {
+Vector<Integer> MarkedAbelianGroup::torsionRep(size_t index) const {
     if (index >= invFac_.size())
         throw InvalidArgument("torsionRep(): invalid index");
 
     if (coeff_ == 0) {
         Vector<Integer> temp(presCi_.rows()+rankM_);
-        for (unsigned long i=0;i<presCi_.rows();i++)
+        for (size_t i=0;i<presCi_.rows();i++)
             temp[i+rankM_] = presCi_.entry(i,ifLoc_+index);
         // the above line takes the index+snfFreeIndex_-th column of presCi_ and
         // pads it suitably
@@ -369,25 +367,25 @@ Vector<Integer> MarkedAbelianGroup::torsionRep(unsigned long index) const {
         Vector<Integer> retval(M_.columns());
         Vector<Integer> firstV(TORVec_.size());
         Vector<Integer> secondV(presC_.rows()-TORVec_.size());
-        for (unsigned long i=0; i<firstV.size(); i++)
+        for (size_t i=0; i<firstV.size(); i++)
             firstV[i] = presCi_.entry( i, index + ifLoc_ );
-        for (unsigned long i=0; i<secondV.size(); i++)
+        for (size_t i=0; i<secondV.size(); i++)
             secondV[i] = presCi_.entry( i + firstV.size(), index + ifLoc_ );
         // 1st vec needs coords scaled appropriately by p/gcd(p,q) and
         //  multiplied by appropriate MR_ columns
-        for (unsigned long i=0; i<firstV.size(); i++)
+        for (size_t i=0; i<firstV.size(); i++)
             firstV[i] *= coeff_.divExact( TORVec_[i].gcd(coeff_) );
         Vector<Integer> tCiSecondV(tensorCi_.rows());
-        for (unsigned long i=0; i<tensorCi_.rows(); i++)
-            for (unsigned long j=tensorIfLoc_; j<tensorCi_.columns(); j++)
+        for (size_t i=0; i<tensorCi_.rows(); i++)
+            for (size_t j=tensorIfLoc_; j<tensorCi_.columns(); j++)
                 tCiSecondV[i] += tensorCi_.entry(i,j) * secondV[j-tensorIfLoc_];
         // 2nd vec needs be multiplied by tensorCi_, padded, then apply MR_.
-        unsigned long TORLoc = rankM_ - TORVec_.size();
-        for (unsigned long i=0; i<retval.size(); i++)
-            for (unsigned long j=0; j<firstV.size(); j++)
+        size_t TORLoc = rankM_ - TORVec_.size();
+        for (size_t i=0; i<retval.size(); i++)
+            for (size_t j=0; j<firstV.size(); j++)
                 retval[i] += MR_.entry(i, TORLoc + j)*firstV[j];
-        for (unsigned long i=0; i<retval.size(); i++)
-            for (unsigned long j=0; j<tCiSecondV.size(); j++)
+        for (size_t i=0; i<retval.size(); i++)
+            for (size_t j=0; j<tCiSecondV.size(); j++)
                 retval[i] += MR_.entry(i, rankM_+j) * tCiSecondV[j];
         // add answers together.
         return retval;
@@ -402,8 +400,8 @@ Vector<Integer> MarkedAbelianGroup::ccRep(const Vector<Integer>& SNFRep) const {
 
     if (coeff_ == 0) {
         Vector<Integer> temp(presCi_.rows()+rankM_);
-        for (unsigned long j=0; j<invFac_.size()+snfFreeRank_; j++)
-            for (unsigned long i=0; i<presCi_.rows(); i++)
+        for (size_t j=0; j<invFac_.size()+snfFreeRank_; j++)
+            for (size_t i=0; i<presCi_.rows(); i++)
                 temp[i+rankM_] += presCi_.entry(i,ifLoc_+j) * SNFRep[j];
         return MR_ * temp;
     } else {
@@ -411,40 +409,40 @@ Vector<Integer> MarkedAbelianGroup::ccRep(const Vector<Integer>& SNFRep) const {
         Vector<Integer> retval(M_.columns());
         Vector<Integer> firstV(TORVec_.size());
         Vector<Integer> secondV(presC_.rows()-TORVec_.size());
-        for (unsigned long i=0; i<firstV.size(); i++)
-            for (unsigned long j=0; j<SNFRep.size(); j++)
+        for (size_t i=0; i<firstV.size(); i++)
+            for (size_t j=0; j<SNFRep.size(); j++)
                 firstV[i] += presCi_.entry( i, j + ifLoc_ ) * SNFRep[j];
-        for (unsigned long i=0; i<secondV.size(); i++)
-            for (unsigned long j=0; j<SNFRep.size(); j++)
+        for (size_t i=0; i<secondV.size(); i++)
+            for (size_t j=0; j<SNFRep.size(); j++)
                 secondV[i] += presCi_.entry( i + firstV.size(), j + ifLoc_ ) * SNFRep[j];
         // 1st vec needs coords scaled appropriately by p/gcd(p,q) and
         //  multiplied by appropriate MR_ columns
-        for (unsigned long i=0; i<firstV.size(); i++)
+        for (size_t i=0; i<firstV.size(); i++)
             firstV[i] *= coeff_.divExact( TORVec_[i].gcd(coeff_) );
         Vector<Integer> tCiSecondV(tensorCi_.rows());
-        for (unsigned long i=0; i<tensorCi_.rows(); i++)
-            for (unsigned long j=tensorIfLoc_; j<tensorCi_.columns(); j++)
+        for (size_t i=0; i<tensorCi_.rows(); i++)
+            for (size_t j=tensorIfLoc_; j<tensorCi_.columns(); j++)
                 tCiSecondV[i] += tensorCi_.entry(i,j) * secondV[j-tensorIfLoc_];
         // 2nd vec needs be multiplied by tensorCi_, padded, then apply MR_.
-        unsigned long TORLoc = rankM_ - TORVec_.size();
-        for (unsigned long i=0; i<retval.size(); i++)
-            for (unsigned long j=0; j<firstV.size(); j++)
+        size_t TORLoc = rankM_ - TORVec_.size();
+        for (size_t i=0; i<retval.size(); i++)
+            for (size_t j=0; j<firstV.size(); j++)
                 retval[i] += MR_.entry(i, TORLoc + j)*firstV[j];
-        for (unsigned long i=0; i<retval.size(); i++)
-            for (unsigned long j=0; j<tCiSecondV.size(); j++)
+        for (size_t i=0; i<retval.size(); i++)
+            for (size_t j=0; j<tCiSecondV.size(); j++)
                 retval[i] += MR_.entry(i, rankM_+j) * tCiSecondV[j];
         return retval;
     }
 }
 
-Vector<Integer> MarkedAbelianGroup::ccRep(unsigned long SNFRep) const {
+Vector<Integer> MarkedAbelianGroup::ccRep(size_t SNFRep) const {
     if (SNFRep >= snfFreeRank_ + invFac_.size())
         throw InvalidArgument("The argument to ccRep() must be "
             "less than the number of SNF generators");
 
     if (coeff_ == 0) {
         Vector<Integer> temp(presCi_.rows()+rankM_);
-        for (unsigned long i=0; i<presCi_.rows(); i++)
+        for (size_t i=0; i<presCi_.rows(); i++)
             temp[i+rankM_] = presCi_.entry(i,ifLoc_+SNFRep);
         return MR_ * temp;
     } else {
@@ -452,25 +450,25 @@ Vector<Integer> MarkedAbelianGroup::ccRep(unsigned long SNFRep) const {
         Vector<Integer> retval(M_.columns());
         Vector<Integer> firstV(TORVec_.size());
         Vector<Integer> secondV(presC_.rows()-TORVec_.size());
-        for (unsigned long i=0; i<firstV.size(); i++)
+        for (size_t i=0; i<firstV.size(); i++)
             firstV[i] = presCi_.entry( i, SNFRep + ifLoc_ );
-        for (unsigned long i=0; i<secondV.size(); i++)
+        for (size_t i=0; i<secondV.size(); i++)
             secondV[i] = presCi_.entry( i + firstV.size(), SNFRep + ifLoc_ );
         // 1st vec needs coords scaled appropriately by p/gcd(p,q)
         //  and multiplied by appropriate MR_ columns
-        for (unsigned long i=0; i<firstV.size(); i++)
+        for (size_t i=0; i<firstV.size(); i++)
             firstV[i] *= coeff_.divExact( TORVec_[i].gcd(coeff_) );
         Vector<Integer> tCiSecondV(tensorCi_.rows());
-        for (unsigned long i=0; i<tensorCi_.rows(); i++)
-            for (unsigned long j=tensorIfLoc_; j<tensorCi_.columns(); j++)
+        for (size_t i=0; i<tensorCi_.rows(); i++)
+            for (size_t j=tensorIfLoc_; j<tensorCi_.columns(); j++)
                 tCiSecondV[i] += tensorCi_.entry(i,j) * secondV[j-tensorIfLoc_];
         // 2nd vec needs be multiplied by tensorCi_, padded, then apply MR_.
-        unsigned long TORLoc = rankM_ - TORVec_.size();
-        for (unsigned long i=0; i<retval.size(); i++)
-            for (unsigned long j=0; j<firstV.size(); j++)
+        size_t TORLoc = rankM_ - TORVec_.size();
+        for (size_t i=0; i<retval.size(); i++)
+            for (size_t j=0; j<firstV.size(); j++)
                 retval[i] += MR_.entry(i, TORLoc + j)*firstV[j];
-        for (unsigned long i=0; i<retval.size(); i++)
-            for (unsigned long j=0; j<tCiSecondV.size(); j++)
+        for (size_t i=0; i<retval.size(); i++)
+            for (size_t j=0; j<tCiSecondV.size(); j++)
                 retval[i] += MR_.entry(i, rankM_+j) * tCiSecondV[j];
         return retval;
     }
@@ -505,19 +503,19 @@ Vector<Integer> MarkedAbelianGroup::snfRep(const Vector<Integer>& element)
     // make judgement on if in kernel.
     // needs to be tweaked for mod p coefficients.
     if (coeff_ == 0) {
-        for (unsigned long i=0;i<rankM_;i++)
+        for (size_t i=0;i<rankM_;i++)
             if (temp[i] != 0)
                 throw InvalidArgument(
                     "The argument to snfRep() is not in the kernel");
     } else {
-        unsigned long TORLoc = rankM_ - TORVec_.size();
+        size_t TORLoc = rankM_ - TORVec_.size();
 
         // the first TORLoc-1 terms of tM were units mod p so we need only
         // check divisibility by p for temp[i] the remaining terms of tM were
         // given by TORVec_[i-TORLoc] and share a common factor with p==coeff_.
         // for element to be in ker(M), we need
         // temp[i]*TORVec_[i-TORLoc] % p == 0
-        for (unsigned long i=0; i<rankM_; i++) {
+        for (size_t i=0; i<rankM_; i++) {
             if (i<TORLoc) {
                 if (temp[i] % coeff_ != 0)
                     throw InvalidArgument(
@@ -536,23 +534,23 @@ Vector<Integer> MarkedAbelianGroup::snfRep(const Vector<Integer>& element)
     Vector<Integer> retval(snfFreeRank_+invFac_.size());
 
     if (coeff_ == 0) {
-        for (unsigned long i=0;i<snfFreeRank_;i++)
-            for (unsigned long j=rankM_;j<N_.rows();j++)
+        for (size_t i=0;i<snfFreeRank_;i++)
+            for (size_t j=rankM_;j<N_.rows();j++)
                 retval[i+invFac_.size()] +=
                     presC_.entry(i+snfFreeIndex_,j-rankM_)*temp[j];
-        for (unsigned long i=0;i<invFac_.size();i++)
-            for (unsigned long j=rankM_;j<N_.rows();j++)
+        for (size_t i=0;i<invFac_.size();i++)
+            for (size_t j=rankM_;j<N_.rows();j++)
                 retval[i] += presC_.entry(i+ifLoc_,j-rankM_)*temp[j];
         // redundant for loops
     } else {
-        unsigned long TORLoc = rankM_ - TORVec_.size();
+        size_t TORLoc = rankM_ - TORVec_.size();
         Vector<Integer> diagPresV(presC_.rows());
-        for (unsigned long i=0; i<diagPresV.size(); i++) {
+        for (size_t i=0; i<diagPresV.size(); i++) {
             // TOR part
             if (i < TORVec_.size())
                 diagPresV[i] = temp[ i + TORLoc ];
             else // tensor part
-                for (unsigned long j=0; j<tensorC_.columns(); j++)
+                for (size_t j=0; j<tensorC_.columns(); j++)
                     diagPresV[i] += tensorC_.entry( i - TORVec_.size() +
                         tensorIfLoc_, j) * temp[ j + rankM_ ];
         }
@@ -560,7 +558,7 @@ Vector<Integer> MarkedAbelianGroup::snfRep(const Vector<Integer>& element)
         retval = presC_ * diagPresV;
     }
     // do modular reduction to make things look nice...
-    for (unsigned long i=0; i<invFac_.size(); i++) {
+    for (size_t i=0; i<invFac_.size(); i++) {
         retval[i] %= invFac_[i];
         if (retval[i] < 0)
             retval[i] += invFac_[i];
@@ -571,9 +569,9 @@ Vector<Integer> MarkedAbelianGroup::snfRep(const Vector<Integer>& element)
 bool MarkedAbelianGroup::isCycle(const Vector<Integer> &input) const {
     if (input.size() != M_.columns())
         return false;
-    for (unsigned long i=0; i<M_.rows(); i++) {
+    for (size_t i=0; i<M_.rows(); i++) {
         Integer T; // zero
-        for (unsigned long j=0; j<M_.columns(); j++)
+        for (size_t j=0; j<M_.columns(); j++)
             T += input[j]*M_.entry(i,j);
         if (coeff_ == 0) {
             if (T != 0)
@@ -602,7 +600,7 @@ Vector<Integer> MarkedAbelianGroup::boundaryOf(const Vector<Integer>& CCrep)
     Vector<Integer> retval = M_ * CCrep;
 
     if (coeff_ > 0) {
-        for (unsigned long i=0; i<M_.rows(); i++) {
+        for (size_t i=0; i<M_.rows(); i++) {
             retval[i] %= coeff_;
             if (retval[i] < 0)
                 retval[i] += coeff_;
@@ -621,7 +619,7 @@ Vector<Integer> MarkedAbelianGroup::asBoundary(const Vector<Integer>& input)
             "is not a cycle");
     // okay, it's a cycle so lets determine whether or not it is a boundary.
     Vector<Integer> temp = MRi_ * input;
-    for (unsigned long i=0; i<TORVec_.size(); i++)
+    for (size_t i=0; i<TORVec_.size(); i++)
         if (temp[rankM_ - TORVec_.size() + i] % coeff_ != 0)
             throw InvalidArgument("The argument to asBoundary() "
                 "is not a boundary");
@@ -630,40 +628,40 @@ Vector<Integer> MarkedAbelianGroup::asBoundary(const Vector<Integer>& input)
     Vector<Integer> retval(N_.columns());
     if (coeff_ == 0) {
         Vector<Integer> snfV(presC_.rows());
-        for (unsigned long i=0;i<presC_.rows();i++)
-            for (unsigned long j=0;j<presC_.columns();j++)
+        for (size_t i=0;i<presC_.rows();i++)
+            for (size_t j=0;j<presC_.columns();j++)
                 snfV[i] += presC_.entry(i,j)*temp[j+rankM_];
         // check divisibility in the invFac coords
-        for (unsigned long i=0; i<invFac_.size(); i++) {
+        for (size_t i=0; i<invFac_.size(); i++) {
             if (snfV[i+ifLoc_] % invFac_[i] != 0)
                 throw InvalidArgument("The argument to asBoundary() "
                     "is not a boundary");
             snfV[i+ifLoc_] /= invFac_[i];
         }
         // check that it's zero on coords missed by N...
-        for (unsigned long i=0; i<snfFreeRank_; i++)
+        for (size_t i=0; i<snfFreeRank_; i++)
             if (snfV[i+snfFreeIndex_] != 0)
                 throw InvalidArgument("The argument to asBoundary() "
                     "is not a boundary");
         // we know it's in the image now.
-        for (unsigned long i=0; i<presR_.rows(); i++)
-            for (unsigned long j=0; j<snfFreeIndex_; j++)
+        for (size_t i=0; i<presR_.rows(); i++)
+            for (size_t j=0; j<snfFreeIndex_; j++)
                 retval[i] += presR_.entry(i, j) * snfV[j];
     } else {
         // find tensorV -- apply tensorC_.
         Vector<Integer> tensorV( tensorC_.rows());
-        for (unsigned long i=0; i<tensorC_.rows(); i++)
-            for (unsigned long j=0; j<tensorC_.columns(); j++)
+        for (size_t i=0; i<tensorC_.rows(); i++)
+            for (size_t j=0; j<tensorC_.columns(); j++)
                 tensorV[i] += tensorC_.entry(i, j) * temp[ j + rankM_ ];
-        for (unsigned long i=0; i<tensorInvFac_.size(); i++) {
+        for (size_t i=0; i<tensorInvFac_.size(); i++) {
             if (tensorV[i+tensorIfLoc_] % tensorInvFac_[i] != 0)
                 throw InvalidArgument("The argument to asBoundary() "
                     "is not a boundary");
             tensorV[i+tensorIfLoc_] /= tensorInvFac_[i];
         }
         // so we know it's where it comes from now...
-        for (unsigned long i=0; i<retval.size(); i++)
-            for (unsigned long j=0; j<tensorV.size(); j++)
+        for (size_t i=0; i<retval.size(); i++)
+            for (size_t j=0; j<tensorV.size(); j++)
                 retval[i] += tensorR_.entry(i,j) * tensorV[j];
         // ah! the other coefficients of tensorR_ gives the relevant congruence.
     }
@@ -672,13 +670,13 @@ Vector<Integer> MarkedAbelianGroup::asBoundary(const Vector<Integer>& input)
 
 // returns the j+TORLoc -th column of the matrix MR_, rescaled appropriately
 //  if it corresponds to a TOR vector.
-Vector<Integer> MarkedAbelianGroup::cycleGen(unsigned long j) const {
+Vector<Integer> MarkedAbelianGroup::cycleGen(size_t j) const {
     if (j >= cycleRank())
         throw InvalidArgument("The argument to cycleGen() must be "
             "less than cycleRank()");
     Vector<Integer> retval(M_.columns());
-    unsigned long TORLoc = rankM_ - TORVec_.size();
-    for (unsigned long i=0; i<retval.size(); i++)
+    size_t TORLoc = rankM_ - TORVec_.size();
+    for (size_t i=0; i<retval.size(); i++)
         retval[i] = MR_.entry(i, j+TORLoc);
     // if j < TORVec_.size() rescale by coeff_ / gcd(coeff_, TORVec_[j]
     if (j < TORVec_.size())
@@ -694,23 +692,23 @@ Vector<Integer> MarkedAbelianGroup::cycleProjection(
         throw InvalidArgument(
             "The argument to cycleProjection() is a vector of the wrong size");
     Vector<Integer> retval(MRi_.columns());
-    for (unsigned long i=0; i<retval.size(); i++) {
-        for (unsigned long j=rankM_; j<MRi_.rows(); j++)
-            for (unsigned long k=0; k<ccelt.size(); k++)
+    for (size_t i=0; i<retval.size(); i++) {
+        for (size_t j=rankM_; j<MRi_.rows(); j++)
+            for (size_t k=0; k<ccelt.size(); k++)
                 retval[i] += MR_.entry(i,j) * MRi_.entry(j,k) * ccelt[k];
     }
     return retval;
 }
 
-Vector<Integer> MarkedAbelianGroup::cycleProjection(unsigned long ccindx)
+Vector<Integer> MarkedAbelianGroup::cycleProjection(size_t ccindx)
         const {
     // truncate column cyclenum of MRi_, multiply by MR_
     if (ccindx >= MRi_.columns())
         throw InvalidArgument("The argument to cycleProjection() must be "
             "less than the number of chain complex coordinates");
     Vector<Integer> retval(MRi_.columns());
-    for (unsigned long i=0; i<retval.size(); i++)
-        for (unsigned long j=rankM_; j<MRi_.rows(); j++)
+    for (size_t i=0; i<retval.size(); i++)
+        for (size_t j=rankM_; j<MRi_.rows(); j++)
             retval[i] += MR_.entry(i,j) * MRi_.entry(j,ccindx);
     return retval;
 }
@@ -719,7 +717,7 @@ Vector<Integer> MarkedAbelianGroup::cycleProjection(unsigned long ccindx)
 MarkedAbelianGroup MarkedAbelianGroup::torsionSubgroup() const {
     MatrixInt dM(1, countInvariantFactors() );
     MatrixInt dN(countInvariantFactors(), countInvariantFactors() );
-    for (unsigned long i=0; i<countInvariantFactors(); i++)
+    for (size_t i=0; i<countInvariantFactors(); i++)
         dN.entry(i,i) = invariantFactor(i);
     return MarkedAbelianGroup(std::move(dM), std::move(dN));
 }
@@ -727,9 +725,9 @@ MarkedAbelianGroup MarkedAbelianGroup::torsionSubgroup() const {
 // and its canonical inclusion map
 HomMarkedAbelianGroup MarkedAbelianGroup::torsionInclusion() const {
     MatrixInt iM( ccRank(), countInvariantFactors() );
-    for (unsigned long j=0; j<iM.columns(); j++) {
+    for (size_t j=0; j<iM.columns(); j++) {
         Vector<Integer> jtor = torsionRep(j);
-        for (unsigned long i=0; i<iM.rows(); i++)
+        for (size_t i=0; i<iM.rows(); i++)
             iM.entry(i,j) = jtor[i];
     }
     return HomMarkedAbelianGroup(torsionSubgroup(), *this, std::move(iM));
@@ -770,11 +768,11 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
     // Step 3: MR_*(step 1)*[trunc MRi_]
     // so we have a common Step 1.
     MatrixInt step1Mat(codomain_.presCi_.rows(), domain_.presC_.rows());
-    for (unsigned long i=0; i<step1Mat.rows(); i++)
-        for (unsigned long j=0; j<step1Mat.columns(); j++) {
+    for (size_t i=0; i<step1Mat.rows(); i++)
+        for (size_t j=0; j<step1Mat.columns(); j++) {
             // ran->presCi_.entry(i, k)*reducedMatrix_.entry(k, l)*dom->presC_.entry(l, j)
-            for (unsigned long k=0; k<reducedMatrix_->rows(); k++)
-                for (unsigned long l=0;l<reducedMatrix_->columns(); l++)
+            for (size_t k=0; k<reducedMatrix_->rows(); k++)
+                for (size_t l=0;l<reducedMatrix_->columns(); l++)
                     step1Mat.entry(i,j) += codomain_.presCi_.entry(
                         i,k+codomain_.ifLoc_)*reducedMatrix_->entry(k,l) *
                         domain_.presC_.entry(l+domain_.ifLoc_,j);
@@ -786,12 +784,12 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
     // if coeff_==0, we'll just copy the step1Mat, if coeff_>0 we multiply
     // the tensor part by ran.tensorCi_, dom.tensorC_ resp.
     if (domain_.coeff_ == 0)
-        for (unsigned long i=0; i<step2Mat.rows(); i++)
-            for (unsigned long j=0; j<step2Mat.columns(); j++)
+        for (size_t i=0; i<step2Mat.rows(); i++)
+            for (size_t j=0; j<step2Mat.columns(); j++)
                 step2Mat.entry(i,j) = step1Mat.entry(i,j);
     else
-        for (unsigned long i=0; i<step2Mat.rows(); i++)
-            for (unsigned long j=0; j<step2Mat.columns(); j++) {
+        for (size_t i=0; i<step2Mat.rows(); i++)
+            for (size_t j=0; j<step2Mat.columns(); j++) {
                 // (ID_TOR xran->tensorCi_.entry(i,k)*incl_tensorIfLoc_)*step1Mat.entry(k,l)*
                 // ID_TOR x trunc_tensorIfLoc_*dom->tensorC_.entry(l, j)) app shifted...
                 if (i < codomain_.TORVec_.size()) {
@@ -799,17 +797,17 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
                         step2Mat.entry(i,j) = step1Mat.entry(i,j);
                     } else {
                         // [step1 UR corner] * [dom->tensorC_ first tensorIfLoc_ rows cropped]
-                        for (unsigned long k=domain_.tensorIfLoc_; k<domain_.tensorC_.rows(); k++)
+                        for (size_t k=domain_.tensorIfLoc_; k<domain_.tensorC_.rows(); k++)
                             step2Mat.entry(i,j) += step1Mat.entry(i,k-domain_.tensorIfLoc_+domain_.TORVec_.size())*
                                 domain_.tensorC_.entry(k,j-domain_.TORVec_.size());
                     }
                 } else if (j < domain_.TORVec_.size()) {
-                    for (unsigned long k=codomain_.tensorIfLoc_; k<codomain_.tensorCi_.columns(); k++)
+                    for (size_t k=codomain_.tensorIfLoc_; k<codomain_.tensorCi_.columns(); k++)
                         step2Mat.entry(i,j) += codomain_.tensorCi_.entry(i-codomain_.TORVec_.size(),k)*
                             step1Mat.entry(k-codomain_.tensorIfLoc_+codomain_.TORVec_.size(),j);
                 } else {
-                    for (unsigned long k=codomain_.tensorIfLoc_; k<codomain_.tensorCi_.rows(); k++)
-                        for (unsigned long l=domain_.tensorIfLoc_; l<domain_.tensorC_.rows(); l++)
+                    for (size_t k=codomain_.tensorIfLoc_; k<codomain_.tensorCi_.rows(); k++)
+                        for (size_t l=domain_.tensorIfLoc_; l<domain_.tensorC_.rows(); l++)
                             step2Mat.entry(i,j) += codomain_.tensorCi_.entry(i-codomain_.TORVec_.size(),k)*
                                 step1Mat.entry(k-codomain_.tensorIfLoc_+codomain_.TORVec_.size(),
                                 l-domain_.tensorIfLoc_+domain_.TORVec_.size())*
@@ -820,23 +818,23 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
     // mult and divisions. multiply first ran.TORLoc rows by p/gcd(p,q)
     // divide first dom.TORLoc rows by p/gcd(p,q)
 
-    for (unsigned long i=0; i<codomain_.TORVec_.size(); i++)
-        for (unsigned long j=0; j<step2Mat.columns(); j++)
+    for (size_t i=0; i<codomain_.TORVec_.size(); i++)
+        for (size_t j=0; j<step2Mat.columns(); j++)
             step2Mat.entry(i,j) *=
                 codomain_.coeff_.divExact(codomain_.coeff_.gcd(codomain_.TORVec_[i]));
-    for (unsigned long i=0; i<step2Mat.rows(); i++)
-        for (unsigned long j=0; j<domain_.TORVec_.size(); j++)
+    for (size_t i=0; i<step2Mat.rows(); i++)
+        for (size_t j=0; j<domain_.TORVec_.size(); j++)
             step2Mat.entry(i,j) /=
                 domain_.coeff_.divExact(domain_.coeff_.gcd(domain_.TORVec_[j]));
     // previous line of code divisibility is good thing to check when debugging.
     // step 3, move it all up to the CC coordinates.
     // ran.MR_ * incl_ifLoc_ * step2Mat * proj_ifLoc_ * dom.MRi_
-    unsigned long domTORLoc = domain_.rankM_ - domain_.TORVec_.size();
-    unsigned long codomTORLoc = codomain_.rankM_ - codomain_.TORVec_.size();
-    for (unsigned long i=0; i<matrix.rows(); i++)
-        for (unsigned long j=0; j<matrix.columns(); j++) {
-            for (unsigned long k=codomTORLoc; k<codomain_.MR_.columns(); k++)
-                for (unsigned long l=domTORLoc;l<domain_.MRi_.rows(); l++)
+    size_t domTORLoc = domain_.rankM_ - domain_.TORVec_.size();
+    size_t codomTORLoc = codomain_.rankM_ - codomain_.TORVec_.size();
+    for (size_t i=0; i<matrix.rows(); i++)
+        for (size_t j=0; j<matrix.columns(); j++) {
+            for (size_t k=codomTORLoc; k<codomain_.MR_.columns(); k++)
+                for (size_t l=domTORLoc;l<domain_.MRi_.rows(); l++)
                     matrix.entry(i,j) += codomain_.MR_.entry(i,k) *
                         step2Mat.entry(k-codomTORLoc,l-domTORLoc) *
                         domain_.MRi_.entry(l,j);
@@ -858,12 +856,12 @@ void HomMarkedAbelianGroup::computeReducedMatrix() {
     if (!reducedMatrix_) {
         reducedMatrix_ = MatrixInt( codomain_.snfRank(), domain_.snfRank() );
 
-        for (unsigned long j=0; j<reducedMatrix_->columns(); j++) {
+        for (size_t j=0; j<reducedMatrix_->columns(); j++) {
             Vector<Integer> colV = (j<domain_.countInvariantFactors()) ?
                 domain_.torsionRep(j) :
                 domain_.freeRep(j-domain_.countInvariantFactors());
             Vector<Integer> midge = codomain_.snfRep(matrix * colV);
-            for (unsigned long i=0; i<midge.size(); i++)
+            for (size_t i=0; i<midge.size(); i++)
                 reducedMatrix_->entry(i,j) = midge[i];
         }
     }
@@ -876,7 +874,7 @@ void HomMarkedAbelianGroup::computeReducedKernelLattice() {
 
         std::vector<Integer> dcL(codomain_.rank() +
             codomain_.countInvariantFactors() );
-        for (unsigned long i=0; i<dcL.size(); i++)
+        for (size_t i=0; i<dcL.size(); i++)
             if (i<codomain_.countInvariantFactors())
                 dcL[i]=codomain_.invariantFactor(i);
             else
@@ -900,9 +898,9 @@ void HomMarkedAbelianGroup::computeKernel() {
         MatrixInt relators(domain_.countInvariantFactors(),
             dcLpreimage.columns());
 
-        for (unsigned long j = 0; j < relators.rows(); j++)
-            for (unsigned long i = 0; i < relators.columns(); i++)
-                for (unsigned long k = 0; k < R.columns(); k++)
+        for (size_t j = 0; j < relators.rows(); j++)
+            for (size_t i = 0; i < relators.columns(); i++)
+                for (size_t k = 0; k < R.columns(); k++)
                     relators.entry(j, i) += (domain_.invariantFactor(j) *
                         R.entry(i, k) * C.entry(k, j)) / dcLpreimage.entry(k,k);
 
@@ -920,10 +918,10 @@ void HomMarkedAbelianGroup::computeCokernel() {
             reducedMatrix_->columns() + codomain_.countInvariantFactors(),
             reducedMatrix_->rows());
 
-        for (unsigned long j = 0; j < reducedMatrix_->columns(); j++)
-            for (unsigned long i = 0; i < reducedMatrix_->rows(); i++)
+        for (size_t j = 0; j < reducedMatrix_->columns(); j++)
+            for (size_t i = 0; i < reducedMatrix_->rows(); i++)
                 relators.entry(j, i) = reducedMatrix_->entry(i, j);
-        for (unsigned long i = 0; i < codomain_.countInvariantFactors(); i++)
+        for (size_t i = 0; i < codomain_.countInvariantFactors(); i++)
             relators.entry(i + reducedMatrix_->columns(), i)=
                 codomain_.invariantFactor(i);
 
@@ -940,11 +938,11 @@ void HomMarkedAbelianGroup::computeImage() {
             reducedKernelLattice_->columns() + domain_.countInvariantFactors(),
             reducedKernelLattice_->rows());
 
-        for (unsigned long i = 0; i < domain_.countInvariantFactors(); i++)
+        for (size_t i = 0; i < domain_.countInvariantFactors(); i++)
             relators.entry(i, i) = domain_.invariantFactor(i);
 
-        for (unsigned long j = 0; j < reducedKernelLattice_->columns(); j++)
-            for (unsigned long i = 0; i < relators.columns(); i++)
+        for (size_t j = 0; j < reducedKernelLattice_->columns(); j++)
+            for (size_t i = 0; i < relators.columns(); i++)
                 relators.entry(j + domain_.countInvariantFactors(), i) =
                     reducedKernelLattice_->entry(i, j);
 
@@ -975,7 +973,7 @@ Vector<Integer> HomMarkedAbelianGroup::evalSNF(const Vector<Integer>& input)
 
     Vector<Integer> retval = reducedMatrix() * input;
 
-    for (unsigned long i=0; i<codomain_.countInvariantFactors(); ++i) {
+    for (size_t i=0; i<codomain_.countInvariantFactors(); ++i) {
         retval[i] %= codomain_.invariantFactor(i);
         if (retval[i]<0)
             retval[i] += codomain_.invariantFactor(i);
@@ -1078,7 +1076,7 @@ bool HomMarkedAbelianGroup::isIdentity() const {
 }
 
 bool HomMarkedAbelianGroup::isCycleMap() const {
-    for (unsigned long j=0; j<domain_.cycleRank(); j++)
+    for (size_t j=0; j<domain_.cycleRank(); j++)
         if (! codomain_.isCycle(matrix * domain_.cycleGen(j)))
             return false;
     return true;
@@ -1092,10 +1090,10 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::torsionSubgroup() const {
 
     MatrixInt mat(codomain_.countInvariantFactors(),
         domain_.countInvariantFactors() );
-    for (unsigned long j=0; j<domain_.countInvariantFactors(); j++) {
+    for (size_t j=0; j<domain_.countInvariantFactors(); j++) {
         // vector in codomain's snfRep coords
         Vector<Integer> temp(codomain_.snfRep(evalCC(domain_.torsionRep(j))));
-        for (unsigned long i=0; i<codomain_.countInvariantFactors(); i++)
+        for (size_t i=0; i<codomain_.countInvariantFactors(); i++)
             mat.entry(i,j) = temp[i];
     }
 
@@ -1163,29 +1161,29 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
         domain_.countInvariantFactors());
     MatrixInt B(codomain_.countInvariantFactors(), domain_.rank());
     MatrixInt D(codomain_.rank(), domain_.rank());
-    for (unsigned long i=0; i<A.rows(); i++)
-        for (unsigned long j=0; j<A.columns(); j++)
+    for (size_t i=0; i<A.rows(); i++)
+        for (size_t j=0; j<A.columns(); j++)
             A.entry(i,j) = reducedMatrix_->entry(i,j);
-    for (unsigned long i=0; i<B.rows(); i++)
-        for (unsigned long j=0; j<B.columns(); j++)
+    for (size_t i=0; i<B.rows(); i++)
+        for (size_t j=0; j<B.columns(); j++)
             B.entry(i,j) = reducedMatrix_->entry(i, j + A.columns());
-    for (unsigned long i=0; i<D.rows(); i++)
-        for (unsigned long j=0; j<D.columns(); j++)
+    for (size_t i=0; i<D.rows(); i++)
+        for (size_t j=0; j<D.columns(); j++)
             D.entry(i,j) = reducedMatrix_->entry(i + A.rows(), j + A.columns());
     // compute A', B', D'
     // use void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
-    // const std::vector<unsigned> &rowList);
+    // const std::vector<size_t> &rowList);
     //  from matrixOps to compute the inverse of D.
     MatrixInt Di(D.rows(), D.columns()); Di.makeIdentity();
     MatrixInt Dold(D.rows(), D.columns()); Dold.makeIdentity();
-    std::vector<unsigned> rowList(D.rows());
-    for (unsigned i=0; i<rowList.size(); i++)
+    std::vector<size_t> rowList(D.rows());
+    for (size_t i=0; i<rowList.size(); i++)
         rowList[i]=i;
     columnEchelonForm(D, Di, Dold, rowList);
     // now Di is the inverse of the old D, and D is the identity,
     // and Dold is the old D.
     std::vector<Integer> invF(domain_.countInvariantFactors());
-    for (unsigned long i=0; i<invF.size(); i++)
+    for (size_t i=0; i<invF.size(); i++)
         invF[i] = domain_.invariantFactor(i);
     MatrixInt Ai = torsionAutInverse( A, invF);
     // then Bi is given by Bi = -AiBDi
@@ -1193,22 +1191,22 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
     MatrixInt Btemp(codomain_.countInvariantFactors(), domain_.rank());
     // Btemp will give -BDi
     // Bi will be AiBtemp
-    for (unsigned long i=0; i<Btemp.rows(); i++)
-        for (unsigned long j=0; j<Btemp.columns(); j++)
-            for (unsigned long k=0; k<Btemp.columns(); k++)
+    for (size_t i=0; i<Btemp.rows(); i++)
+        for (size_t j=0; j<Btemp.columns(); j++)
+            for (size_t k=0; k<Btemp.columns(); k++)
                 Btemp.entry(i,j) -= B.entry(i,k)*Di.entry(k,j);
-    for (unsigned long i=0; i<Bi.rows(); i++)
-        for (unsigned long j=0; j<Bi.columns(); j++)
-            for (unsigned long k=0; k<Ai.columns(); k++)
+    for (size_t i=0; i<Bi.rows(); i++)
+        for (size_t j=0; j<Bi.columns(); j++)
+            for (size_t k=0; k<Ai.columns(); k++)
                 Bi.entry(i,j) += Ai.entry(i,k)*Btemp.entry(k,j);
     // reduce Ai and Bi respectively.
-    for (unsigned long i=0; i<Ai.rows(); i++) {
-        for (unsigned long j=0; j<Ai.columns(); j++) {
+    for (size_t i=0; i<Ai.rows(); i++) {
+        for (size_t j=0; j<Ai.columns(); j++) {
             Ai.entry(i,j) %= domain_.invariantFactor(i);
             if (Ai.entry(i,j) < 0)
                 Ai.entry(i,j) += domain_.invariantFactor(i);
         }
-        for (unsigned long j=0; j<Bi.columns(); j++) {
+        for (size_t j=0; j<Bi.columns(); j++) {
             Bi.entry(i,j) %= domain_.invariantFactor(i);
             if (Bi.entry(i,j) < 0)
                 Bi.entry(i,j) += domain_.invariantFactor(i);
@@ -1222,14 +1220,14 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
     //                       [-----]
     //                       [0 |D']
 
-    for (unsigned long i=0; i<Ai.rows(); i++)
-        for (unsigned long j=0; j<Ai.columns(); j++)
+    for (size_t i=0; i<Ai.rows(); i++)
+        for (size_t j=0; j<Ai.columns(); j++)
             invMat.entry(i,j) = Ai.entry(i,j);
-    for (unsigned long i=0; i<Di.rows(); i++)
-        for (unsigned long j=0; j<Di.columns(); j++)
+    for (size_t i=0; i<Di.rows(); i++)
+        for (size_t j=0; j<Di.columns(); j++)
             invMat.entry(i+Ai.rows(),j+Ai.columns()) = Di.entry(i,j);
-    for (unsigned long i=0; i<Bi.rows(); i++)
-        for (unsigned long j=0; j<Bi.columns(); j++)
+    for (size_t i=0; i<Bi.rows(); i++)
+        for (size_t j=0; j<Bi.columns(); j++)
             invMat.entry(i,j+Ai.columns()) = Bi.entry(i,j);
     return HomMarkedAbelianGroup(std::move(invMat), codomain_, domain_);
 }

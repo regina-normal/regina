@@ -177,9 +177,9 @@ class Matrix : public Output<Matrix<T>> {
         using value_type = T;
 
     private:
-        unsigned long rows_;
+        size_t rows_;
             /**< The number of rows in the matrix. */
-        unsigned long cols_;
+        size_t cols_;
             /**< The number of columns in the matrix. */
         T** data_;
             /**< The actual entries in the matrix.
@@ -222,9 +222,9 @@ class Matrix : public Output<Matrix<T>> {
          *
          * @param size the number of rows and columns in the new matrix.
          */
-        Matrix(unsigned long size) :
+        Matrix(size_t size) :
                 rows_(size), cols_(size), data_(new T*[size]) {
-            for (unsigned long i = 0; i < size; ++i)
+            for (size_t i = 0; i < size; ++i)
                 data_[i] = new T[size];
         }
         /**
@@ -244,9 +244,9 @@ class Matrix : public Output<Matrix<T>> {
          * @param rows the number of rows in the new matrix.
          * @param cols the number of columns in the new matrix.
          */
-        Matrix(unsigned long rows, unsigned long cols) :
+        Matrix(size_t rows, size_t cols) :
                 rows_(rows), cols_(cols), data_(new T*[rows]) {
-            for (unsigned long i = 0; i < rows; ++i)
+            for (size_t i = 0; i < rows; ++i)
                 data_[i] = new T[cols];
         }
         /**
@@ -272,10 +272,10 @@ class Matrix : public Output<Matrix<T>> {
         Matrix(std::initializer_list<std::initializer_list<T>> data) :
                 rows_(data.size()), cols_(data.begin()->size()),
                 data_(new T*[data.size()]) {
-            unsigned long r = 0;
+            size_t r = 0;
             for (auto row : data) {
                 data_[r] = new T[cols_];
-                unsigned long c = 0;
+                size_t c = 0;
                 for (auto elt : row)
                     data_[r][c++] = elt;
                 ++r;
@@ -294,7 +294,7 @@ class Matrix : public Output<Matrix<T>> {
         Matrix(const Matrix& src) : rows_(src.rows_), cols_(src.cols_) {
             if (src.data_) {
                 data_ = new T*[src.rows_];
-                unsigned long r, c;
+                size_t r, c;
                 for (r = 0; r < rows_; r++) {
                     data_[r] = new T[cols_];
                     for (c = 0; c < cols_; c++)
@@ -326,7 +326,7 @@ class Matrix : public Output<Matrix<T>> {
          */
         ~Matrix() {
             if (data_) {
-                for (unsigned long i = 0; i < rows_; ++i)
+                for (size_t i = 0; i < rows_; ++i)
                     delete[] data_[i];
                 delete[] data_;
             }
@@ -354,7 +354,7 @@ class Matrix : public Output<Matrix<T>> {
             if (src.data_) {
                 if (rows_ != src.rows_ || cols_ != src.cols_ || ! data_) {
                     if (data_) {
-                        for (unsigned long i = 0; i < rows_; ++i)
+                        for (size_t i = 0; i < rows_; ++i)
                             delete[] data_[i];
                         delete[] data_;
                     }
@@ -363,15 +363,15 @@ class Matrix : public Output<Matrix<T>> {
                     cols_ = src.cols_;
 
                     data_ = new T*[rows_];
-                    for (unsigned long i = 0; i < rows_; ++i)
+                    for (size_t i = 0; i < rows_; ++i)
                         data_[i] = new T[cols_];
                 }
 
-                for (unsigned long i = 0; i < rows_; ++i)
+                for (size_t i = 0; i < rows_; ++i)
                     std::copy(src.data_[i], src.data_[i] + cols_, data_[i]);
             } else {
                 if (data_) {
-                    for (unsigned long i = 0; i < rows_; ++i)
+                    for (size_t i = 0; i < rows_; ++i)
                         delete[] data_[i];
                     delete[] data_;
                 }
@@ -411,7 +411,7 @@ class Matrix : public Output<Matrix<T>> {
          * @param value the value to assign to each entry.
          */
         void initialise(const T& value) {
-            unsigned long r, c;
+            size_t r, c;
             for (r = 0; r < rows_; r++)
                 for (c = 0; c < cols_; c++)
                     data_[r][c] = value;
@@ -433,7 +433,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * @return the number of rows.
          */
-        unsigned long rows() const {
+        size_t rows() const {
             return rows_;
         }
         /**
@@ -441,7 +441,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * @return the number of columns.
          */
-        unsigned long columns() const {
+        size_t columns() const {
             return cols_;
         }
 
@@ -466,7 +466,7 @@ class Matrix : public Output<Matrix<T>> {
          * @param column the column of the desired entry.
          * @return a reference to the entry in the given row and column.
          */
-        T& entry(unsigned long row, unsigned long column) {
+        T& entry(size_t row, size_t column) {
             return data_[row][column];
         }
         /**
@@ -480,7 +480,7 @@ class Matrix : public Output<Matrix<T>> {
          * @param column the column of the desired entry.
          * @return a reference to the entry in the given row and column.
          */
-        const T& entry(unsigned long row, unsigned long column) const {
+        const T& entry(size_t row, size_t column) const {
             return data_[row][column];
         }
 
@@ -492,7 +492,7 @@ class Matrix : public Output<Matrix<T>> {
         Matrix<T> transpose() const {
             Matrix<T> ans(cols_, rows_);
 
-            unsigned long r, c;
+            size_t r, c;
             for (r = 0; r < rows_; r++)
                 for (c = 0; c < cols_; c++)
                     ans.data_[c][r] = data_[r][c];
@@ -524,7 +524,7 @@ class Matrix : public Output<Matrix<T>> {
             if (rows_ != other.rows_ || cols_ != other.cols_)
                 return false;
 
-            unsigned long r, c;
+            size_t r, c;
             for (r = 0; r < rows_; ++r)
                 for (c = 0; c < cols_; ++c)
                     if (! (data_[r][c] == other.data_[r][c]))
@@ -573,7 +573,7 @@ class Matrix : public Output<Matrix<T>> {
          * @param first the first row to swap.
          * @param second the second row to swap.
          */
-        void swapRows(unsigned long first, unsigned long second) {
+        void swapRows(size_t first, size_t second) {
             if (first != second)
                 std::swap(data_[first], data_[second]);
         }
@@ -595,13 +595,12 @@ class Matrix : public Output<Matrix<T>> {
          * @param fromRow the starting point in each column from which the
          * operation will be performed.
          */
-        void swapCols(unsigned long first, unsigned long second,
-                unsigned long fromRow = 0) {
+        void swapCols(size_t first, size_t second, size_t fromRow = 0) {
             if (first != second) {
                 // Give ourselves a chance to use a customised swap(),
                 // if one exists for type T.
                 using std::swap;
-                for (unsigned long i = fromRow; i < rows_; i++)
+                for (size_t i = fromRow; i < rows_; i++)
                     swap(data_[i][first], data_[i][second]);
             }
         }
@@ -615,7 +614,7 @@ class Matrix : public Output<Matrix<T>> {
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
-            unsigned long r, c;
+            size_t r, c;
             out << '[';
             for (r = 0; r < rows_; ++r) {
                 if (r > 0)
@@ -636,7 +635,7 @@ class Matrix : public Output<Matrix<T>> {
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const {
-            unsigned long r, c;
+            size_t r, c;
             for (r = 0; r < rows_; r++) {
                 for (c = 0; c < cols_; c++) {
                     if (c > 0) out << ' ';
@@ -656,10 +655,10 @@ class Matrix : public Output<Matrix<T>> {
          * @param size the number of rows and columns of the matrix to build.
          * @return an identity matrix of the given size.
          */
-        REGINA_ENABLE_FOR_RING_STATIC(Matrix) identity(unsigned long size) {
+        REGINA_ENABLE_FOR_RING_STATIC(Matrix) identity(size_t size) {
             Matrix ans(size, size);
             ans.initialise(0);
-            for (unsigned long i = 0; i < size; ++i)
+            for (size_t i = 0; i < size; ++i)
                 ans.data_[i][i] = 1;
             return ans;
         }
@@ -674,7 +673,7 @@ class Matrix : public Output<Matrix<T>> {
          */
         REGINA_ENABLE_FOR_RING(void) makeIdentity() {
             this->initialise(0);
-            for (unsigned long i = 0; i < this->rows_ && i < this->cols_; i++)
+            for (size_t i = 0; i < this->rows_ && i < this->cols_; i++)
                 this->data_[i][i] = 1;
         }
 
@@ -697,7 +696,7 @@ class Matrix : public Output<Matrix<T>> {
             if (this->rows_ != this->cols_)
                 return false;
 
-            unsigned long r, c;
+            size_t r, c;
             for (r = 0; r < this->rows_; ++r)
                 for (c = 0; c < this->cols_; ++c) {
                     if (r == c && this->data_[r][c] != 1)
@@ -743,9 +742,8 @@ class Matrix : public Output<Matrix<T>> {
          * @param source the row to add.
          * @param dest the row that will be added to.
          */
-        REGINA_ENABLE_FOR_RING(void) addRow(
-                unsigned long source, unsigned long dest) {
-            for (unsigned long i = 0; i < this->cols_; i++)
+        REGINA_ENABLE_FOR_RING(void) addRow(size_t source, size_t dest) {
+            for (size_t i = 0; i < this->cols_; i++)
                 this->data_[dest][i] += this->data_[source][i];
         }
         /**
@@ -767,10 +765,9 @@ class Matrix : public Output<Matrix<T>> {
          * @param fromCol the starting point in the row from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) addRowFrom(
-                unsigned long source, unsigned long dest,
-                unsigned long fromCol) {
-            for (unsigned long i = fromCol; i < this->cols_; i++)
+        REGINA_ENABLE_FOR_RING(void) addRowFrom(size_t source, size_t dest,
+                size_t fromCol) {
+            for (size_t i = fromCol; i < this->cols_; i++)
                 this->data_[dest][i] += this->data_[source][i];
         }
         /**
@@ -797,10 +794,9 @@ class Matrix : public Output<Matrix<T>> {
          * @param fromCol the starting point in the row from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) addRow(
-                unsigned long source, unsigned long dest, T copies,
-                unsigned long fromCol = 0) {
-            for (unsigned long i = fromCol; i < this->cols_; i++)
+        REGINA_ENABLE_FOR_RING(void) addRow(size_t source, size_t dest,
+                T copies, size_t fromCol = 0) {
+            for (size_t i = fromCol; i < this->cols_; i++)
                 this->data_[dest][i] += copies * this->data_[source][i];
         }
         /**
@@ -821,9 +817,8 @@ class Matrix : public Output<Matrix<T>> {
          * @param source the columns to add.
          * @param dest the column that will be added to.
          */
-        REGINA_ENABLE_FOR_RING(void) addCol(
-                unsigned long source, unsigned long dest) {
-            for (unsigned long i = 0; i < this->rows_; i++)
+        REGINA_ENABLE_FOR_RING(void) addCol(size_t source, size_t dest) {
+            for (size_t i = 0; i < this->rows_; i++)
                 this->data_[i][dest] += this->data_[i][source];
         }
         /**
@@ -846,10 +841,9 @@ class Matrix : public Output<Matrix<T>> {
          * @param fromRow the starting point in the column from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) addColFrom(
-                unsigned long source, unsigned long dest,
-                unsigned long fromRow = 0) {
-            for (unsigned long i = fromRow; i < this->rows_; i++)
+        REGINA_ENABLE_FOR_RING(void) addColFrom(size_t source, size_t dest,
+                size_t fromRow = 0) {
+            for (size_t i = fromRow; i < this->rows_; i++)
                 this->data_[i][dest] += this->data_[i][source];
         }
         /**
@@ -876,10 +870,9 @@ class Matrix : public Output<Matrix<T>> {
          * @param fromRow the starting point in the column from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) addCol(
-                unsigned long source, unsigned long dest, T copies,
-                unsigned long fromRow = 0) {
-            for (unsigned long i = fromRow; i < this->rows_; i++)
+        REGINA_ENABLE_FOR_RING(void) addCol(size_t source, size_t dest,
+                T copies, size_t fromRow = 0) {
+            for (size_t i = fromRow; i < this->rows_; i++)
                 this->data_[i][dest] += copies * this->data_[i][source];
         }
         /**
@@ -903,9 +896,9 @@ class Matrix : public Output<Matrix<T>> {
          * @param fromCol the starting point in the row from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) multRow(unsigned long row, T factor,
-                unsigned long fromCol = 0) {
-            for (unsigned long i = fromCol; i < this->cols_; i++)
+        REGINA_ENABLE_FOR_RING(void) multRow(size_t row, T factor,
+                size_t fromCol = 0) {
+            for (size_t i = fromCol; i < this->cols_; i++)
                 this->data_[row][i] *= factor;
         }
         /**
@@ -929,9 +922,9 @@ class Matrix : public Output<Matrix<T>> {
          * @param fromRow the starting point in the column from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) multCol(unsigned long column, T factor,
-                unsigned long fromRow = 0) {
-            for (unsigned long i = fromRow; i < this->rows_; i++)
+        REGINA_ENABLE_FOR_RING(void) multCol(size_t column, T factor,
+                size_t fromRow = 0) {
+            for (size_t i = fromRow; i < this->rows_; i++)
                 this->data_[i][column] *= factor;
         }
         /**
@@ -970,11 +963,10 @@ class Matrix : public Output<Matrix<T>> {
          * @param fromCol the starting point in the rows from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) combRows(
-                unsigned long row1, unsigned long row2,
+        REGINA_ENABLE_FOR_RING(void) combRows(size_t row1, size_t row2,
                 T coeff11, T coeff12, T coeff21, T coeff22,
-                unsigned long fromCol = 0) {
-            for (unsigned long i = fromCol; i < this->cols_; ++i) {
+                size_t fromCol = 0) {
+            for (size_t i = fromCol; i < this->cols_; ++i) {
                 T tmp = coeff11 * this->data_[row1][i] +
                     coeff12 * this->data_[row2][i];
                 this->data_[row2][i] = coeff21 * this->data_[row1][i] +
@@ -1018,11 +1010,10 @@ class Matrix : public Output<Matrix<T>> {
          * @param fromRow the starting point in the columns from which the
          * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) combCols(
-                unsigned long col1, unsigned long col2,
+        REGINA_ENABLE_FOR_RING(void) combCols(size_t col1, size_t col2,
                 T coeff11, T coeff12, T coeff21, T coeff22,
-                unsigned long fromRow = 0) {
-            for (unsigned long i = fromRow; i < this->rows_; ++i) {
+                size_t fromRow = 0) {
+            for (size_t i = fromRow; i < this->rows_; ++i) {
                 T tmp = coeff11 * this->data_[i][col1] +
                     coeff12 * this->data_[i][col2];
                 this->data_[i][col2] = coeff21 * this->data_[i][col1] +
@@ -1060,7 +1051,7 @@ class Matrix : public Output<Matrix<T>> {
             using Ans = decltype(T() * U());
             Matrix<Ans> ans(this->rows_, other.cols_);
 
-            unsigned long row, col, k;
+            size_t row, col, k;
             for (row = 0; row < rows_; ++row)
                 for (col = 0; col < other.cols_; ++col) {
                     ans.data_[row][col] = 0;
@@ -1101,7 +1092,7 @@ class Matrix : public Output<Matrix<T>> {
             using Ans = decltype(T() * U());
             Vector<Ans> ans(this->rows_);
 
-            unsigned long row, col;
+            size_t row, col;
             for (row = 0; row < rows_; ++row) {
                 Ans elt = 0;
                 for (col = 0; col < cols_; ++col)
@@ -1135,7 +1126,7 @@ class Matrix : public Output<Matrix<T>> {
          * @return the determinant of this matrix.
          */
         REGINA_ENABLE_FOR_RING(T) det() const {
-            unsigned long n = this->rows_;
+            size_t n = this->rows_;
             if (n != this->cols_)
                 throw FailedPrecondition("Determinants can only be "
                     "computed for square matrices.");
@@ -1146,10 +1137,10 @@ class Matrix : public Output<Matrix<T>> {
             partial[0] = new T[n * n];
             partial[1] = new T[n * n];
 
-            unsigned long len, head, curr, prevHead, prevCurr;
+            size_t len, head, curr, prevHead, prevCurr;
 
             // Treat the smallest cases of len = 1 separately.
-            int layer = 0;
+            int layer = 0; // always 0 or 1
             for (head = 0; head < n; head++) {
                 partial[0][head + head * n] = 1;
                 for (curr = head + 1; curr < n; curr++)
@@ -1210,8 +1201,8 @@ class Matrix : public Output<Matrix<T>> {
          * divided by \a divBy.
          * @param divBy the integer to divide each row element by.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) divRowExact(
-                unsigned long row, const T& divBy) {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) divRowExact(size_t row,
+                const T& divBy) {
             for (T* x = this->data_[row]; x != this->data_[row] + cols_; ++x)
                 x->divByExact(divBy);
         }
@@ -1235,8 +1226,8 @@ class Matrix : public Output<Matrix<T>> {
          * divided by \a divBy.
          * @param divBy the integer to divide each column element by.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) divColExact(
-                unsigned long col, const T& divBy) {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) divColExact(size_t col,
+                const T& divBy) {
             for (T** row = this->data_; row != this->data_ + rows_; ++row)
                 (*row)[col].divByExact(divBy);
         }
@@ -1253,7 +1244,7 @@ class Matrix : public Output<Matrix<T>> {
          * @param row the index of the row whose gcd should be computed.
          * @return the greatest common divisor of all elements of this row.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) gcdRow(unsigned long row) {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) gcdRow(size_t row) {
             T* x = this->data_[row];
 
             T gcd = *x++;
@@ -1277,7 +1268,7 @@ class Matrix : public Output<Matrix<T>> {
          * @param col the index of the column whose gcd should be computed.
          * @return the greatest common divisor of all elements of this column.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) gcdCol(unsigned long col) {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) gcdCol(size_t col) {
             T** row = this->data_;
 
             T gcd = (*row++)[col];
@@ -1301,7 +1292,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * @param row the index of the row to reduce.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) reduceRow(unsigned long row) {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) reduceRow(size_t row) {
             T gcd = gcdRow(row);
             if (gcd != 0 && gcd != 1)
                 divRowExact(row, gcd);
@@ -1319,7 +1310,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * @param col the index of the column to reduce.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) reduceCol(unsigned long col) {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) reduceCol(size_t col) {
             T gcd = gcdCol(col);
             if (gcd != 0 && gcd != 1)
                 divColExact(col, gcd);
@@ -1351,14 +1342,14 @@ class Matrix : public Output<Matrix<T>> {
          * @return the rank of this matrix, i.e., the number of non-zero rows
          * remaining.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, unsigned long) rowEchelonForm() {
-            unsigned long i, j;
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, size_t) rowEchelonForm() {
+            size_t i, j;
 
             // The current working row and column:
             // The entries to the left of currCol will not change, and
             // above currRow all that can happen is some reduction.
-            unsigned long currRow = 0;
-            unsigned long currCol = 0;
+            size_t currRow = 0;
+            size_t currCol = 0;
 
             // The algorithm works from left to right.
             while (currRow < rows_ && currCol < cols_) {
@@ -1442,14 +1433,14 @@ class Matrix : public Output<Matrix<T>> {
          * @return the rank of this matrix, i.e., the number of non-zero
          * columns remaining.
          */
-        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, unsigned long) columnEchelonForm() {
-            unsigned long i, j;
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, size_t) columnEchelonForm() {
+            size_t i, j;
 
             // The current working row and column:
             // The entries above currRow will not change, and to the left of
             // currCol all that can happen is some reduction.
-            unsigned long currRow = 0;
-            unsigned long currCol = 0;
+            size_t currRow = 0;
+            size_t currCol = 0;
 
             // The algorithm works from top to bottom.
             while (currRow < rows_ && currCol < cols_) {

@@ -44,7 +44,6 @@
 
 #include <algorithm>
 #include <iterator>
-#include <set>
 #include "enumerate/hilbertdual.h"
 #include "enumerate/ordering.h"
 #include "enumerate/validityconstraints.h"
@@ -334,7 +333,6 @@ void HilbertDual::intersectHyperplane(
 
     // Keep enlarging these sets until they enlarge no more.
     BitmaskType comb, tmpMask;
-    std::set<unsigned long>::const_iterator coordit;
     bool broken;
     bool reachedPosPrevGen;
     VecSpec<IntegerType, BitmaskType> sum(subspace.columns());

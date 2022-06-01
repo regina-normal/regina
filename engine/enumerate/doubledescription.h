@@ -150,7 +150,7 @@ class DoubleDescription {
         template <class RayClass, typename Action>
         static void enumerate(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints,
-            ProgressTracker* tracker = nullptr, unsigned long initialRows = 0);
+            ProgressTracker* tracker = nullptr, size_t initialRows = 0);
 
         // Mark this class as non-constructible.
         DoubleDescription() = delete;
@@ -226,7 +226,7 @@ class DoubleDescription {
                  * <i>i</i>th hyperplane to intersect must be described
                  * by row <tt>hypOrder[i]</tt> of \a subspace.
                  */
-                inline RaySpec(unsigned long axis, const MatrixInt& subspace,
+                inline RaySpec(size_t axis, const MatrixInt& subspace,
                     const long* hypOrder);
 
                 /**
@@ -339,7 +339,7 @@ class DoubleDescription {
         template <class RayClass, class BitmaskType, typename Action>
         static void enumerateUsingBitmask(Action&& action,
             const MatrixInt& subspace, const ValidityConstraints& constraints,
-            ProgressTracker* tracker, unsigned long initialRows);
+            ProgressTracker* tracker, size_t initialRows);
 
         /**
          * A part of the full double description algorithm that
@@ -394,7 +394,7 @@ class DoubleDescription {
         static bool intersectHyperplane(
             std::vector<RaySpec<IntegerType, BitmaskType>*>& src,
             std::vector<RaySpec<IntegerType, BitmaskType>*>& dest,
-            unsigned long dim, unsigned long prevHyperplanes,
+            size_t dim, size_t prevHyperplanes,
             const std::vector<BitmaskType>& constraintMasks,
             ProgressTracker* tracker);
 };

@@ -39,8 +39,8 @@ IntersectionForm::IntersectionForm(MatrixInt form) :
     if (form.rows() != form.columns())
         throw InvalidArgument("IntersectionForm requires a square matrix.");
 
-    unsigned long n = form.rows();
-    unsigned long i;
+    size_t n = form.rows();
+    size_t i;
 
     for (i = 0; i < n; ++i)
         if (form.entry(i, i) % 2 != 0) {
@@ -100,7 +100,7 @@ IntersectionForm::IntersectionForm(MatrixInt form) :
 
         // All remaining diagonal entries are zero.
         // See if we can find a non-zero entry elsewhere to use.
-        for (unsigned long r = rank_; r < n; ++r)
+        for (size_t r = rank_; r < n; ++r)
             for (i = r + 1; i < n; ++i)
                 if (form.entry(r, i) != 0) {
                     // Got one.
@@ -116,7 +116,7 @@ IntersectionForm::IntersectionForm(MatrixInt form) :
         // All entries above the main diagonal are zero.
         // This should be the end of it, but we will check the below-diagonal
         // entries also to finish verifying that the matrix is symmetric.
-        for (unsigned long r = rank_; r < n; ++r)
+        for (size_t r = rank_; r < n; ++r)
             for (i = r + 1; i < n; ++i)
                 if (form.entry(i, r) != 0)
                     throw InvalidArgument(

@@ -309,7 +309,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     // The maximum number of columns in the tableaux that could be added
     // to form the right hand side, as a consequence of either
     // LPData::constrainPositive() or LPData::constrainOct():
-    unsigned long maxColsRHS;
+    size_t maxColsRHS;
 
     switch (list_->coords_) {
         case NS_STANDARD:
@@ -343,7 +343,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     Integer tmp;
 
     // The rank of the matching equation matrix:
-    unsigned long rank = rowBasis(eqns);
+    size_t rank = rowBasis(eqns);
 
     // The maximum entry in the matching equation matrix:
     Integer maxEqnEntry = 0;

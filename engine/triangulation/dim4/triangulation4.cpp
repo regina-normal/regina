@@ -136,13 +136,13 @@ IntersectionForm Triangulation<4>::intersectionForm() const {
     MarkedAbelianGroup h2(dualBoundaryMap<2>(), dualBoundaryMap<3>());
     MatrixInt map = dualToPrimal<2>();
 
-    unsigned long rank = h2.rank();
-    unsigned long dim = countTriangles();
+    size_t rank = h2.rank();
+    size_t dim = countTriangles();
 
     std::vector<VectorInt> dualBasis, primalBasis;
     dualBasis.reserve(dim);
     primalBasis.reserve(dim);
-    for (unsigned long i = 0; i < rank; ++i) {
+    for (size_t i = 0; i < rank; ++i) {
         dualBasis.emplace_back(h2.freeRep(i));
         primalBasis.emplace_back(map * dualBasis.back());
     }
@@ -159,9 +159,9 @@ IntersectionForm Triangulation<4>::intersectionForm() const {
 
     MatrixInt form(rank, rank);
 
-    for (unsigned long i = 0; i < rank; ++i)
-        for (unsigned long j = i; j < rank; ++j) {
-            for (unsigned long k = 0; k < dim; ++k) {
+    for (size_t i = 0; i < rank; ++i)
+        for (size_t j = i; j < rank; ++j) {
+            for (size_t k = 0; k < dim; ++k) {
                 Integer count = dualBasis[i][k] * primalBasis[j][k];
                 if (count != 0) {
                     if (sign[k] > 0)

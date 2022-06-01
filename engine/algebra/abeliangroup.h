@@ -80,7 +80,7 @@ class AbelianGroup :
         public ShortOutput<AbelianGroup, true>,
         public TightEncodable<AbelianGroup> {
     protected:
-        unsigned long rank_ { 0 };
+        size_t rank_ { 0 };
             /**< The rank of the group (the number of Z components). */
         std::vector<Integer> revInvFactors_;
             /**< The invariant factors <i>d0</i>,...,<i>dn</i> as
@@ -112,7 +112,7 @@ class AbelianGroup :
          *
          * @param rank the rank of the new group.
          */
-        AbelianGroup(unsigned long rank);
+        AbelianGroup(size_t rank);
         /**
          * Creates a new group with the given rank and invariant factors.
          *
@@ -133,7 +133,7 @@ class AbelianGroup :
          * is greater than 1 and divides the invariant factor after it.
          */
         template <typename T>
-        AbelianGroup(unsigned long rank, std::initializer_list<T> invFac);
+        AbelianGroup(size_t rank, std::initializer_list<T> invFac);
         /**
          * Creates a new group with the given rank and invariant factors.
          *
@@ -154,7 +154,7 @@ class AbelianGroup :
          * is greater than 1 and divides the invariant factor after it.
          */
         template <typename Container>
-        AbelianGroup(unsigned long rank, const Container& invFac);
+        AbelianGroup(size_t rank, const Container& invFac);
         /**
          * Creates the abelian group defined by the given presentation matrix.
          *
@@ -280,7 +280,7 @@ class AbelianGroup :
          *
          * @return the number of included copies of \e Z.
          */
-        unsigned long rank() const;
+        size_t rank() const;
         /**
          * Returns the rank in the group of the torsion term of given degree.
          * If the given degree is <i>d</i>, this routine will return the
@@ -297,7 +297,7 @@ class AbelianGroup :
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
-        unsigned long torsionRank(const Integer& degree) const;
+        size_t torsionRank(const Integer& degree) const;
         /**
          * Returns the rank in the group of the torsion term of given degree.
          * If the given degree is <i>d</i>, this routine will return the
@@ -314,7 +314,7 @@ class AbelianGroup :
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
-        unsigned long torsionRank(unsigned long degree) const;
+        size_t torsionRank(unsigned long degree) const;
         /**
          * Returns the number of invariant factors that describe the
          * torsion elements of this group.
@@ -357,7 +357,7 @@ class AbelianGroup :
          * @return \c true if and only if this is the free abelian group
          * of rank \a r.
          */
-        bool isFree(unsigned long r) const;
+        bool isFree(size_t r) const;
         /**
          * Determines whether this is the non-trivial cyclic group on
          * the given number of elements.
@@ -370,7 +370,7 @@ class AbelianGroup :
          * @param n the number of elements of the cyclic group in question.
          * @return \c true if and only if this is the cyclic group Z_n.
          */
-        bool isZn(unsigned long n) const;
+        bool isZn(size_t n) const;
         /**
          * Determines whether this and the given abelian group have
          * identical presentations (which means they are isomorphic).
@@ -512,11 +512,11 @@ void swap(AbelianGroup& lhs, AbelianGroup& rhs) noexcept;
 inline AbelianGroup::AbelianGroup() {
 }
 
-inline AbelianGroup::AbelianGroup(unsigned long rank) : rank_(rank) {
+inline AbelianGroup::AbelianGroup(size_t rank) : rank_(rank) {
 }
 
 template <typename T>
-inline AbelianGroup::AbelianGroup(unsigned long rank,
+inline AbelianGroup::AbelianGroup(size_t rank,
         std::initializer_list<T> invFac) : rank_(rank) {
     if (invFac.size() > 0) {
         auto it = std::rbegin(invFac);
@@ -536,7 +536,7 @@ inline AbelianGroup::AbelianGroup(unsigned long rank,
 }
 
 template <typename Container>
-inline AbelianGroup::AbelianGroup(unsigned long rank, const Container& invFac) :
+inline AbelianGroup::AbelianGroup(size_t rank, const Container& invFac) :
         rank_(rank) {
     if (! invFac.empty()) {
         auto it = invFac.rbegin();
@@ -564,11 +564,11 @@ inline void AbelianGroup::addRank(long extraRank) {
     rank_ += extraRank;
 }
 
-inline unsigned long AbelianGroup::rank() const {
+inline size_t AbelianGroup::rank() const {
     return rank_;
 }
 
-inline unsigned long AbelianGroup::torsionRank(unsigned long degree) const {
+inline size_t AbelianGroup::torsionRank(unsigned long degree) const {
     return torsionRank(Integer(degree));
 }
 
@@ -588,11 +588,11 @@ inline bool AbelianGroup::isZ() const {
     return (rank_ == 1 && revInvFactors_.empty());
 }
 
-inline bool AbelianGroup::isFree(unsigned long r) const {
+inline bool AbelianGroup::isFree(size_t r) const {
     return (rank_ == r && revInvFactors_.empty());
 }
 
-inline bool AbelianGroup::isZn(unsigned long n) const {
+inline bool AbelianGroup::isZn(size_t n) const {
     return (n == 0 ? isZ() : n == 1 ? isTrivial() :
         (rank_ == 0 && revInvFactors_.size() == 1 &&
             revInvFactors_.front() == n));

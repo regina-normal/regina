@@ -193,7 +193,7 @@ void AngleStructures::calculateSpanStrict() const {
         return;
     }
 
-    unsigned long nTets = triangulation().size();
+    size_t nTets = triangulation().size();
     if (nTets == 0) {
         doesSpanStrict_ = true;
         return;
@@ -201,17 +201,15 @@ void AngleStructures::calculateSpanStrict() const {
 
     // We run into trouble if there's a 0 or pi angle that never changes.
     auto* fixedAngles = new Rational[nTets * 3];
-    unsigned long nFixed = 0;
+    size_t nFixed = 0;
 
     // Get the list of bad unchanging angles from the first structure.
     auto it = structures_.begin();
     const AngleStructure& s = *it;
 
     Rational angle;
-    unsigned long tet;
-    int edges;
-    for (tet = 0; tet < nTets; tet++)
-        for (edges = 0; edges < 3; edges++) {
+    for (size_t tet = 0; tet < nTets; tet++)
+        for (int edges = 0; edges < 3; edges++) {
             angle = s.angle(tet, edges);
             if (angle == Rational::zero || angle == Rational::one) {
                 fixedAngles[3 * tet + edges] = angle;
@@ -230,8 +228,8 @@ void AngleStructures::calculateSpanStrict() const {
     // do ever change.
     for (it++; it != structures_.end(); it++) {
         const AngleStructure& s = *it;
-        for (tet = 0; tet < nTets; tet++)
-            for (edges = 0; edges < 3; edges++) {
+        for (size_t tet = 0; tet < nTets; tet++)
+            for (int edges = 0; edges < 3; edges++) {
                 if (fixedAngles[3 * tet + edges] == Rational::undefined)
                     continue;
                 if (s.angle(tet, edges) != fixedAngles[3 * tet + edges]) {

@@ -45,9 +45,9 @@ AbelianGroup::AbelianGroup(MatrixInt presentation) {
     // looking for 0 because the SNF calculation should end up with
     // many 1s for a unnecessarily large presentation matrix such as
     // is produced for instance by homology calculations.
-    unsigned long i = presentation.columns();
+    size_t i = presentation.columns();
 
-    unsigned long rows = presentation.rows();
+    size_t rows = presentation.rows();
     if (rows < i) {
         // There are more columns than rows; these extras cols must be zero.
         rank_ += (i - rows);
@@ -98,9 +98,9 @@ void AbelianGroup::addGroup(MatrixInt presentation) {
     // looking for 0 because the SNF calculation should end up with
     // many 1s for a unnecessarily large presentation matrix such as
     // is produced for instance by homology calculations.
-    unsigned long i = presentation.columns();
+    size_t i = presentation.columns();
 
-    unsigned long rows = presentation.rows();
+    size_t rows = presentation.rows();
     if (rows < i) {
         // There are more columns than rows; these extras cols must be zero.
         rank_ += (i - rows);
@@ -145,8 +145,8 @@ void AbelianGroup::addGroup(const AbelianGroup& group) {
     }
 }
 
-unsigned long AbelianGroup::torsionRank(const Integer& degree) const {
-    unsigned long ans = 0;
+size_t AbelianGroup::torsionRank(const Integer& degree) const {
+    size_t ans = 0;
     // Because we have SNF, we can bail as soon as we reach a factor
     // that is not divisible by degree.
     for (const auto& factor : revInvFactors_)
@@ -225,9 +225,9 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N) {
     // looking for 0 because the SNF calculation should end up with
     // many 1s for a unnecessarily large presentation matrix such as
     // is produced for instance by homology calculations.
-    unsigned long i = N.rows();
+    size_t i = N.rows();
 
-    unsigned long cols = N.columns();
+    size_t cols = N.columns();
     if (cols < i) {
         // There are more rows than columns; these extras rows must be zero.
         rank_ += (i - cols);
@@ -262,17 +262,17 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) :
     Integer cof = p.abs();
 
     smithNormalForm(N);
-    unsigned long lim = (N.rows() < N.columns() ? N.rows() : N.columns() );
+    size_t lim = (N.rows() < N.columns() ? N.rows() : N.columns() );
 
     if (cof == 0) {
-        for (unsigned long i=0; i<lim; i++)
+        for (size_t i=0; i<lim; i++)
             if (N.entry(i,i) != 0) {
                 rank_--;
                 if (N.entry(i,i) > 1)
                     addTorsion(N.entry(i,i));
             }
     } else {
-        for (unsigned long i=0; i<lim; i++)
+        for (size_t i=0; i<lim; i++)
             if (N.entry(i,i) !=0) {
                 rank_--;
                 Integer g( N.entry(i,i).gcd(cof) );
@@ -283,7 +283,7 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) :
 
     smithNormalForm(M);
     lim = (M.rows() < M.columns() ? M.rows() : M.columns() );
-    for (unsigned long i=0; i<lim; i++) {
+    for (size_t i=0; i<lim; i++) {
         if (M.entry(i,i) != 0) {
             rank_--;
             if (cof != 0) {
@@ -298,7 +298,7 @@ AbelianGroup::AbelianGroup(MatrixInt M, MatrixInt N, const Integer &p) :
 }
 
 AbelianGroup AbelianGroup::tightDecode(std::istream& input) {
-    AbelianGroup ans(regina::tightDecode<unsigned long>(input));
+    AbelianGroup ans(regina::tightDecode<size_t>(input));
 
     // The invariant factors are encoded in increasing order.
     // We need to store them in *decreasing* order; we will do this by

@@ -40,8 +40,8 @@ using regina::Matrix;
 
 void addMatrixBool(pybind11::module_& m) {
     auto c = pybind11::class_<Matrix<bool>>(m, "MatrixBool")
-        .def(pybind11::init<unsigned long>())
-        .def(pybind11::init<unsigned long, unsigned long>())
+        .def(pybind11::init<size_t>())
+        .def(pybind11::init<size_t, size_t>())
         .def(pybind11::init<const Matrix<bool>&>())
         .def(pybind11::init([](pybind11::list l) {
             size_t rows = l.size();
@@ -89,11 +89,9 @@ void addMatrixBool(pybind11::module_& m) {
         .def("swap", &Matrix<bool>::swap)
         .def("rows", &Matrix<bool>::rows)
         .def("columns", &Matrix<bool>::columns)
-        .def("entry",
-            overload_cast<unsigned long, unsigned long>(&Matrix<bool>::entry),
+        .def("entry", overload_cast<size_t, size_t>(&Matrix<bool>::entry),
             pybind11::return_value_policy::reference_internal)
-        .def("set", [](Matrix<bool>& m, unsigned long row, unsigned long col,
-                bool value){
+        .def("set", [](Matrix<bool>& m, size_t row, size_t col, bool value){
             m.entry(row, col) = value;
         })
         .def("transpose", &Matrix<bool>::transpose)

@@ -40,8 +40,8 @@ using regina::MatrixInt;
 
 void addMatrixInt(pybind11::module_& m) {
     auto c = pybind11::class_<MatrixInt>(m, "MatrixInt")
-        .def(pybind11::init<unsigned long>())
-        .def(pybind11::init<unsigned long, unsigned long>())
+        .def(pybind11::init<size_t>())
+        .def(pybind11::init<size_t, size_t>())
         .def(pybind11::init<const MatrixInt&>())
         .def(pybind11::init([](pybind11::list l) {
             size_t rows = l.size();
@@ -88,10 +88,9 @@ void addMatrixInt(pybind11::module_& m) {
         .def("initialise", &MatrixInt::initialise)
         .def("rows", &MatrixInt::rows)
         .def("columns", &MatrixInt::columns)
-        .def("entry",
-            overload_cast<unsigned long, unsigned long>(&MatrixInt::entry),
+        .def("entry", overload_cast<size_t, size_t>(&MatrixInt::entry),
             pybind11::return_value_policy::reference_internal)
-        .def("set", [](MatrixInt& m, unsigned long row, unsigned long col,
+        .def("set", [](MatrixInt& m, size_t row, size_t col,
                 const regina::Integer& value){
             m.entry(row, col) = value;
         })
@@ -110,54 +109,52 @@ void addMatrixInt(pybind11::module_& m) {
         .def("swapCols", &MatrixInt::swapCols,
             pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0)
         .def_static("identity",
-            (MatrixInt (*)(unsigned long))
+            (MatrixInt (*)(size_t))
             &MatrixInt::identity<>)
         .def("makeIdentity",
             (void (MatrixInt::*)())
             &MatrixInt::makeIdentity<>)
         .def("addRow",
-            (void (MatrixInt::*)(unsigned long, unsigned long))
+            (void (MatrixInt::*)(size_t, size_t))
             &MatrixInt::addRow<>)
         .def("addRowFrom",
-            (void (MatrixInt::*)(unsigned long, unsigned long, unsigned long))
+            (void (MatrixInt::*)(size_t, size_t, size_t))
             &MatrixInt::addRowFrom<>)
         .def("addRow",
-            (void (MatrixInt::*)(unsigned long, unsigned long,
-                regina::Integer, unsigned long))
+            (void (MatrixInt::*)(size_t, size_t, regina::Integer, size_t))
             &MatrixInt::addRow<>,
             pybind11::arg(), pybind11::arg(), pybind11::arg(),
                 pybind11::arg("fromCol") = 0)
         .def("addCol",
-            (void (MatrixInt::*)(unsigned long, unsigned long))
+            (void (MatrixInt::*)(size_t, size_t))
             &MatrixInt::addCol<>)
         .def("addColFrom",
-            (void (MatrixInt::*)(unsigned long, unsigned long, unsigned long))
+            (void (MatrixInt::*)(size_t, size_t, size_t))
             &MatrixInt::addColFrom<>)
         .def("addCol",
-            (void (MatrixInt::*)(unsigned long, unsigned long,
-                regina::Integer, unsigned long))
+            (void (MatrixInt::*)(size_t, size_t, regina::Integer, size_t))
             &MatrixInt::addCol<>,
             pybind11::arg(), pybind11::arg(), pybind11::arg(),
                 pybind11::arg("fromRow") = 0)
         .def("multRow",
-            (void (MatrixInt::*)(unsigned long, regina::Integer, unsigned long))
+            (void (MatrixInt::*)(size_t, regina::Integer, size_t))
             &MatrixInt::multRow<>,
             pybind11::arg(), pybind11::arg(), pybind11::arg("fromCol") = 0)
         .def("multCol",
-            (void (MatrixInt::*)(unsigned long, regina::Integer, unsigned long))
+            (void (MatrixInt::*)(size_t, regina::Integer, size_t))
             &MatrixInt::multCol<>,
             pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0)
         .def("combRows",
-            (void (MatrixInt::*)(unsigned long, unsigned long,
+            (void (MatrixInt::*)(size_t, size_t,
                 regina::Integer, regina::Integer,
-                regina::Integer, regina::Integer, unsigned long))
+                regina::Integer, regina::Integer, size_t))
             &MatrixInt::combRows<>,
             pybind11::arg(), pybind11::arg(), pybind11::arg(), pybind11::arg(),
                 pybind11::arg(), pybind11::arg(), pybind11::arg("fromCol") = 0)
         .def("combCols",
-            (void (MatrixInt::*)(unsigned long, unsigned long,
+            (void (MatrixInt::*)(size_t, size_t,
                 regina::Integer, regina::Integer,
-                regina::Integer, regina::Integer, unsigned long))
+                regina::Integer, regina::Integer, size_t))
             &MatrixInt::combCols<>,
             pybind11::arg(), pybind11::arg(), pybind11::arg(), pybind11::arg(),
                 pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0)
@@ -165,28 +162,28 @@ void addMatrixInt(pybind11::module_& m) {
             (regina::Integer (MatrixInt::*)() const)
             &MatrixInt::det<>)
         .def("divRowExact",
-            (void (MatrixInt::*)(unsigned long, const regina::Integer&))
+            (void (MatrixInt::*)(size_t, const regina::Integer&))
             &MatrixInt::divRowExact<>)
         .def("divColExact",
-            (void (MatrixInt::*)(unsigned long, const regina::Integer&))
+            (void (MatrixInt::*)(size_t, const regina::Integer&))
             &MatrixInt::divColExact<>)
         .def("gcdRow",
-            (regina::Integer (MatrixInt::*)(unsigned long))
+            (regina::Integer (MatrixInt::*)(size_t))
             &MatrixInt::gcdRow<>)
         .def("gcdCol",
-            (regina::Integer (MatrixInt::*)(unsigned long))
+            (regina::Integer (MatrixInt::*)(size_t))
             &MatrixInt::gcdCol<>)
         .def("reduceRow",
-            (void (MatrixInt::*)(unsigned long))
+            (void (MatrixInt::*)(size_t))
             &MatrixInt::reduceRow<>)
         .def("reduceCol",
-            (void (MatrixInt::*)(unsigned long))
+            (void (MatrixInt::*)(size_t))
             &MatrixInt::reduceCol<>)
         .def("rowEchelonForm",
-            (unsigned long (MatrixInt::*)())
+            (size_t (MatrixInt::*)())
             &MatrixInt::rowEchelonForm)
         .def("columnEchelonForm",
-            (unsigned long (MatrixInt::*)())
+            (size_t (MatrixInt::*)())
             &MatrixInt::columnEchelonForm)
         .def("__mul__", [](const MatrixInt& m1, const MatrixInt& m2){
             return m1 * m2;

@@ -63,7 +63,7 @@ class IntersectionForm : public Output<IntersectionForm> {
     private:
         MatrixInt matrix_;
             /**< The symmetric square integer matrix that describe this form. */
-        unsigned long rank_;
+        size_t rank_;
             /**< The rank of this form; that is, the rank of \a matrix_. */
         long signature_;
             /**< The signature of this form. */
@@ -147,7 +147,7 @@ class IntersectionForm : public Output<IntersectionForm> {
          *
          * @return the rank of this bilinear form.
          */
-        unsigned long rank() const;
+        size_t rank() const;
 
         /**
          * Returns the signature of this bilinear form.  This is the
@@ -259,7 +259,7 @@ inline const MatrixInt& IntersectionForm::matrix() const {
     return matrix_;
 }
 
-inline unsigned long IntersectionForm::rank() const {
+inline size_t IntersectionForm::rank() const {
     return rank_;
 }
 

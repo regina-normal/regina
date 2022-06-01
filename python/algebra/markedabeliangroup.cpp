@@ -49,7 +49,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def(pybind11::init<const MarkedAbelianGroup&>())
         .def(pybind11::init<const MatrixInt&, const MatrixInt&,
             const Integer&>())
-        .def(pybind11::init<unsigned long, const Integer&>())
+        .def(pybind11::init<size_t, const Integer&>())
         .def("swap", &MarkedAbelianGroup::swap)
         .def("rank", &MarkedAbelianGroup::rank)
         .def("torsionRank", overload_cast<const regina::Integer&>(
@@ -69,11 +69,11 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         // Below, the overloads that take a std::vector must come *last*,
         // since otherwise it treats func(x) as func([x]) never sees
         // the non-vector version.
-        .def("ccRep", overload_cast<unsigned long>(
+        .def("ccRep", overload_cast<size_t>(
             &MarkedAbelianGroup::ccRep, pybind11::const_))
         .def("ccRep", overload_cast<const regina::Vector<Integer>&>(
             &MarkedAbelianGroup::ccRep, pybind11::const_))
-        .def("cycleProjection", overload_cast<unsigned long>(
+        .def("cycleProjection", overload_cast<size_t>(
             &MarkedAbelianGroup::cycleProjection, pybind11::const_))
         .def("cycleProjection", overload_cast<const regina::Vector<Integer>&>(
             &MarkedAbelianGroup::cycleProjection, pybind11::const_))

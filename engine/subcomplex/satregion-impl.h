@@ -71,7 +71,7 @@ bool SatRegion::find(const Triangulation<3>& tri, bool mustBeComplete,
 
             // Create an initial blacklist of tetrahedra consisting of
             // those in the isomorphic image of the initial starting block.
-            for (unsigned long i = 0; i < model.triangulation().size(); i++)
+            for (size_t i = 0; i < model.triangulation().size(); i++)
                 usedTets.insert(tri.tetrahedron(iso.tetImage(i)));
 
             // Wrap an initial region around the block, and expand.

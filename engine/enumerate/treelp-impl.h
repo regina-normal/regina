@@ -1069,8 +1069,7 @@ RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
     } else {
         // For normal and almost normal surfaces, we need to work through
         // each past call to constrainPositive() and/or constrainOct().
-        const unsigned long nTets =
-            origTableaux_->tri().size();
+        const size_t nTets = origTableaux_->tri().size();
 
         // First take into account the quadrilateral types...
         for (i = 0; i < nTets; ++i)

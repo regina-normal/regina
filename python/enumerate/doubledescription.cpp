@@ -49,7 +49,7 @@ void addDoubleDescription(pybind11::module_& m) {
             pybind11::call_guard<pybind11::gil_scoped_release>())
         .def_static("enumerate", [](const regina::MatrixInt& s,
                 const regina::ValidityConstraints& c,
-                regina::ProgressTracker* p, unsigned long r) {
+                regina::ProgressTracker* p, size_t r) {
             std::vector<VectorInt> ans;
             DoubleDescription::enumerate<VectorInt>([&ans](VectorInt&& v) {
                 ans.push_back(std::move(v));

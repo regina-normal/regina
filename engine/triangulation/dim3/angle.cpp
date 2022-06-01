@@ -139,16 +139,16 @@ bool Triangulation<3>::hasGeneralAngleStructure() const {
     // column will not appear as a leading coefficient in row echelon form.
 
     MatrixInt eqns = regina::makeAngleEquations(*this);
-    unsigned long rank = eqns.rowEchelonForm();
+    size_t rank = eqns.rowEchelonForm();
 
     // Note: the rank is always positive, since the triangulation is
     // non-empty and so we always have tetrahedron equations present.
 
     // Go down through the matrix from top-left to bottom-right and work
     // out where the leading coefficients of each row appear.
-    auto* leading = new unsigned long[rank];
-    unsigned long row = 0;
-    unsigned long col = 0;
+    auto* leading = new size_t[rank];
+    size_t row = 0;
+    size_t col = 0;
 
     while (row < rank) {
         if (eqns.entry(row, col) != 0) {
