@@ -33,6 +33,7 @@
 #include <climits>
 #include <cstring>
 #include <mutex>
+#include <numeric> // for std::gcd()
 
 #include "link/link.h"
 #include "maths/matrix.h"
@@ -581,8 +582,7 @@ bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
 
     // Enforce other preconditions on the filling coefficients.
     if (cusp_[whichCusp].vertex_->isLinkOrientable()) {
-        // Note that the gcd() below is Regina's.
-        if (gcd(m, l) != 1)
+        if (std::gcd(m, l) != 1)
             return false;
     } else {
         if (! (l == 0 && (m == 1 || m == -1)))

@@ -34,6 +34,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <numeric> // for std::gcd()
 #include <sstream>
 #include <unistd.h>
 #include <vector>
@@ -3573,7 +3574,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // and Viro.
             double expectedTV, tv;
             for (unsigned q0 = 1; q0 < 2 * r; q0++) {
-                if (regina::gcd(q0, r) > 1)
+                if (std::gcd(q0, r) > 1)
                     continue;
 
                 expectedTV = 2 * sin(M_PI * q0 / static_cast<double>(r));
@@ -3615,7 +3616,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // The expected values are described in the paper of Turaev
             // and Viro.
             for (unsigned q0 = 1; q0 < 2 * r; q0++) {
-                if (regina::gcd(q0, r) > 1)
+                if (std::gcd(q0, r) > 1)
                     continue;
 
                 double tv = rp3_2.turaevViroApprox(r, q0);
@@ -3646,7 +3647,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // The expected values are described in the paper of Turaev
             // and Viro.
             for (unsigned q0 = 1; q0 < 2 * r; q0++) {
-                if (regina::gcd(q0, r) > 1)
+                if (std::gcd(q0, r) > 1)
                     continue;
 
                 double tv = lens3_1.turaevViroApprox(r, q0);
@@ -3673,7 +3674,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // The expected values are described in the paper of Turaev
             // and Viro.
             for (unsigned q0 = 1; q0 < 2 * r; q0++) {
-                if (regina::gcd(q0, r) > 1)
+                if (std::gcd(q0, r) > 1)
                     continue;
 
                 double tv = sphereBundle.turaevViroApprox(r, q0);

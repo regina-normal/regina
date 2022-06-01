@@ -43,6 +43,7 @@
 #include "choosers/cuspchooser.h"
 #include "choosers/facechooser.h"
 
+#include <numeric> // for std::gcd()
 #include <QAction>
 #include <QHeaderView>
 #include <QLabel>
@@ -175,7 +176,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
             return true;
         }
 
-        if (regina::gcd(m, l) != 1) {
+        if (std::gcd(m, l) != 1) {
             ReginaSupport::sorry(nullptr,
                 tr("The filling coefficients must be coprime."),
                 tr("Although SnapPea can handle more general filling "

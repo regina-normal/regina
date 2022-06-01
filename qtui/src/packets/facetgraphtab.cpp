@@ -246,7 +246,7 @@ void FacetGraphTab::refresh() {
     }
 
     std::string dot;
-    int width, bags;
+    size_t width, bags;
     switch (chooseType->currentIndex()) {
         case 1:
             dot = data->treeDecomp(false, bags, width);
@@ -342,7 +342,8 @@ std::string Dim2EdgeGraphData::dual(bool withLabels) {
     return pairing.dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
 }
 
-std::string Dim2EdgeGraphData::treeDecomp(bool nice, int& bags, int& width) {
+std::string Dim2EdgeGraphData::treeDecomp(bool nice, size_t& bags,
+        size_t& width) {
     regina::TreeDecomposition t(*tri_);
     if (nice)
         t.makeNice();
@@ -380,7 +381,8 @@ std::string Dim3FaceGraphData::dual(bool withLabels) {
     return pairing.dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
 }
 
-std::string Dim3FaceGraphData::treeDecomp(bool nice, int& bags, int& width) {
+std::string Dim3FaceGraphData::treeDecomp(bool nice, size_t& bags,
+        size_t& width) {
     regina::TreeDecomposition t(*tri_);
     if (nice)
         t.makeNice();
@@ -418,7 +420,8 @@ std::string Dim4FacetGraphData::dual(bool withLabels) {
     return pairing.dot(nullptr /* prefix */, false /* subgraphs */, withLabels);
 }
 
-std::string Dim4FacetGraphData::treeDecomp(bool nice, int& bags, int& width) {
+std::string Dim4FacetGraphData::treeDecomp(bool nice, size_t& bags,
+        size_t& width) {
     regina::TreeDecomposition t(*tri_);
     if (nice)
         t.makeNice();

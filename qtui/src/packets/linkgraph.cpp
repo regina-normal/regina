@@ -190,7 +190,7 @@ void LinkGraphUI::refresh() {
     }
 
     std::string dot;
-    int width, bags;
+    size_t width, bags;
     switch (chooseType->currentIndex()) {
         case 1:
             dot = treeDecomp(true, bags, width);
@@ -260,7 +260,7 @@ void LinkGraphUI::showError(const QString& msg) {
     stack->setCurrentWidget(layerError);
 }
 
-std::string LinkGraphUI::treeDecomp(bool nice, int& bags, int& width) {
+std::string LinkGraphUI::treeDecomp(bool nice, size_t& bags, size_t& width) {
     regina::TreeDecomposition t(*link);
     if (nice)
         t.makeNice();

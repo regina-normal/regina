@@ -45,7 +45,6 @@ Triangulation<3> Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
 
     // Check that this is a SnapPea triangulation.
     char name[1001];
-    unsigned len;
     in.getline(name, 1000);
     if (in.fail() || in.eof())
         throw InvalidArgument("fromSnapPea(): unexpected end of string");
@@ -60,6 +59,7 @@ Triangulation<3> Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
     in.getline(name, 1000);
     if (in.fail() || in.eof())
         throw InvalidArgument("fromSnapPea(): unexpected end of string");
+    size_t len;
     if ((len = strlen(name)) > 0 && name[len - 1] == '\r')
         name[len - 1] = 0;
 

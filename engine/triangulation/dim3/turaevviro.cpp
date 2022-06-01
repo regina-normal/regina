@@ -35,6 +35,7 @@
 #include <algorithm>
 #include <cmath>
 #include <complex>
+#include <numeric> // for std::gcd()
 #include <thread>
 #include "regina-config.h"
 #include "libnormaliz/cone.h"
@@ -1340,7 +1341,7 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
         return 0;
     if (whichRoot >= 2 * r)
         return 0;
-    if (gcd(r, whichRoot) > 1)
+    if (std::gcd(r, whichRoot) > 1)
         return 0;
 
     // Set up our initial data.

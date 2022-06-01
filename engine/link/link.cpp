@@ -34,6 +34,7 @@
 #include "maths/numbertheory.h"
 #include "triangulation/dim3.h"
 #include <algorithm>
+#include <numeric> // for std::gcd()
 #include <sstream>
 
 namespace regina {
@@ -1300,7 +1301,7 @@ void Link::insertTorusLink(int p, int q, bool positive) {
     // Use the standard diagram with p(q-1) crossings.
 
     int n = p * (q - 1);
-    int nComp = regina::gcd(p, q);
+    int nComp = std::gcd(p, q);
 
     ChangeEventSpan span(*this);
 

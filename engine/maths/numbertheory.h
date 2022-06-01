@@ -67,11 +67,13 @@ namespace regina {
 long reducedMod(long k, long modBase);
 
 /**
- * Calculates the greatest common divisor of two signed integers.
- * This routine is not recursive.
+ * Deprecated routine that calculates the greatest common divisor of
+ * two signed integers.  This routine is not recursive.
  *
  * Although the arguments may be negative, the result is guaranteed to
  * be non-negative.  As a special case, gcd(0,0) is considered to be zero.
+ *
+ * \deprecated Simply use std::gcd(), which was introduced with C++17.
  *
  * @param a one of the two integers to work with.
  * @param b the other integer with which to work.
@@ -79,7 +81,7 @@ long reducedMod(long k, long modBase);
  *
  * \ingroup maths
  */
-long gcd(long a, long b);
+[[deprecated]] long gcd(long a, long b);
 
 /**
  * Calculates the greatest common divisor of two given integers and finds the
@@ -112,14 +114,16 @@ long gcd(long a, long b);
 std::tuple<long, long, long> gcdWithCoeffs(long a, long b);
 
 /**
- * Calculates the lowest common multiple of two signed integers.
- * Although the arguments may be negative, the result is guaranteed to
- * be non-negative.
+ * Deprecated routine that calculates the lowest common multiple of
+ * two signed integers.  Although the arguments may be negative, the result
+ * is guaranteed to be non-negative.
  *
  * If either of the arguments is zero, the return value will also be zero.
  *
  * Regarding possible overflow:  This routine does not create any temporary
  * integers that are larger than the final LCM.
+ *
+ * \deprecated Simply use std::lcm(), which was introduced with C++17.
  *
  * @param a one of the two integers to work with.
  * @param b the other integer with which to work.
@@ -127,7 +131,7 @@ std::tuple<long, long, long> gcdWithCoeffs(long a, long b);
  *
  * \ingroup maths
  */
-long lcm(long a, long b);
+[[deprecated]] long lcm(long a, long b);
 
 /**
  * Calculates the multiplicative inverse of one integer modulo another.

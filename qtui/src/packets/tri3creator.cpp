@@ -42,6 +42,7 @@
 #include "tri3creator.h"
 #include "reginasupport.h"
 
+#include <numeric> // for std::gcd()
 #include <QCheckBox>
 #include <QComboBox>
 #include <QHBoxLayout>
@@ -342,7 +343,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
                 "are not.</qt>"));
             return nullptr;
         }
-        if (regina::gcd(p, q) != 1) {
+        if (std::gcd(p, q) != 1) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The two lens space "
                 "parameters must be relatively prime."));
@@ -379,7 +380,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
                 "positive."));
             return nullptr;
         }
-        if (regina::gcd(param[0], param[1]) != 1) {
+        if (std::gcd(param[0], param[1]) != 1) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The layered "
                 "solid torus parameters must be relatively prime."));

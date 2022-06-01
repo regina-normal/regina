@@ -123,6 +123,8 @@ Version 7.1  [ TODO ]
             - New routine linkingSurface().
         Function for_constexpr():
             - New routine to support compile-time for loops.
+        Functions gcd(), lcm():
+            - Deprecated in favour of the new C++17 std::gcd() and std::lcm().
         Function tightDecoding():
             - New template function that reconstructs integers and booleans
               from tight encodings.

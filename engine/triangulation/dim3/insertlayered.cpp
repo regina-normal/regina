@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/numbertheory.h"
+#include <numeric> // for std::gcd()
 #include "manifold/lensspace.h"
 #include "manifold/sfs.h"
 #include "triangulation/dim3.h"
@@ -82,7 +82,7 @@ bool Triangulation<3>::fillTorus(unsigned long cuts0, unsigned long cuts1,
     else
         return false;
 
-    if (regina::gcd(cuts0, cuts1) != 1)
+    if (std::gcd(cuts0, cuts1) != 1)
         return false;
 
     // Deduce the boundary component if one was not given.
