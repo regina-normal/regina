@@ -279,18 +279,6 @@ bool TriangulationBase<dim>::findIsomorphisms(
     // out the current component.
     std::queue<long> toProcess;
 
-    // Temporary variables.
-    size_t compSize;
-    Simplex<dim>* tri;
-    Simplex<dim>* adj;
-    Simplex<dim>* destSimp;
-    Simplex<dim>* destAdj;
-    size_t myIndex, adjIndex;
-    size_t destIndex, destAdjIndex;
-    Perm<dim+1> myPerm, adjPerm;
-    int facet;
-    bool broken;
-
     long comp = 0;
     while (comp >= 0) {
         // Continue trying to find a mapping for the current component.
@@ -334,7 +322,7 @@ bool TriangulationBase<dim>::findIsomorphisms(
         }
 
         // Be sure we're looking at a simplex we can use.
-        compSize = component(comp)->size();
+        size_t compSize = component(comp)->size();
         if (complete) {
             // Conditions:
             // 1) The destination simplex is unused.
@@ -382,21 +370,20 @@ bool TriangulationBase<dim>::findIsomorphisms(
         // image of its first source simplex.
         // Note that there is only one way of doing this (as seen by
         // following adjacent simplex gluings).  It either works or it doesn't.
-        myIndex = component(comp)->simplex(0)->index();
+        size_t myIndex = component(comp)->simplex(0)->index();
 
         whichComp[startSimp[comp]] = comp;
         iso.simpImage(myIndex) = startSimp[comp];
         iso.facetPerm(myIndex) = Perm<dim+1>::orderedSn[startPerm[comp]];
         toProcess.push(myIndex);
 
-        broken = false;
+        bool broken = false;
         while ((! broken) && (! toProcess.empty())) {
             myIndex = toProcess.front();
             toProcess.pop();
-            tri = simplices_[myIndex];
-            myPerm = iso.facetPerm(myIndex);
-            destIndex = iso.simpImage(myIndex);
-            destSimp = other.simplices_[destIndex];
+            Simplex<dim>* tri = simplices_[myIndex];
+            Perm<dim+1> myPerm = iso.facetPerm(myIndex);
+            Simplex<dim>* destSimp = other.simplices_[iso.simpImage(myIndex)];
 
             // If we are after a complete isomorphism, test whether the
             // simplices are a potential match.
@@ -406,20 +393,21 @@ bool TriangulationBase<dim>::findIsomorphisms(
                 break;
             }
 
-            for (facet = 0; facet <= dim; ++facet) {
-                adj = tri->adjacentSimplex(facet);
+            for (int facet = 0; facet <= dim; ++facet) {
+                Simplex<dim>* adj = tri->adjacentSimplex(facet);
                 if (adj) {
                     // There is an adjacent source simplex.
                     // Is there an adjacent destination simplex?
-                    destAdj = destSimp->adjacentSimplex(myPerm[facet]);
+                    Simplex<dim>* destAdj =
+                        destSimp->adjacentSimplex(myPerm[facet]);
                     if (! destAdj) {
                         broken = true;
                         break;
                     }
                     // Work out what the isomorphism *should* say.
-                    adjIndex = adj->index();
-                    destAdjIndex = destAdj->index();
-                    adjPerm =
+                    size_t adjIndex = adj->index();
+                    ssize_t destAdjIndex = destAdj->index();
+                    Perm<dim+1> adjPerm =
                         destSimp->adjacentGluing(myPerm[facet]) * myPerm *
                         tri->adjacentGluing(facet).inverse();
 
