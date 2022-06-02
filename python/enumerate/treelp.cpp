@@ -67,7 +67,7 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
         .def("columns", &Tableaux::columns)
         .def("coordinateColumns", &Tableaux::coordinateColumns)
         .def("columnPerm", [](const Tableaux& t) {
-            const int* perm = t.columnPerm();
+            const size_t* perm = t.columnPerm();
 
             pybind11::list ans;
             for (size_t i = 0; i < t.columns(); ++i)

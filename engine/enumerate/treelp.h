@@ -871,7 +871,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
                  ignored, since this column of the matrix is described by the
                  \a scaling_ member instead. */
 
-        int* columnPerm_;
+        size_t* columnPerm_;
             /**< A permutation of 0,...,cols_-1 that maps column numbers
                  in the adjusted matrix to column numbers in the original
                  (unmodified) matrix of matching equations that was originally
@@ -1087,7 +1087,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * @return details of the permutation describing how columns
          * were reordered.
          */
-        inline const int* columnPerm() const;
+        inline const size_t* columnPerm() const;
 
         /**
          * Computes the inner product of (i) the given row of the given
@@ -2133,7 +2133,7 @@ inline LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         cols_(src.cols_),
         scaling_(src.scaling_),
         col_(new LPCol<LPConstraint>[cols_]),
-        columnPerm_(new int[cols_]) {
+        columnPerm_(new size_t[cols_]) {
     std::copy(src.col_, src.col_ + cols_, col_);
     std::copy(src.columnPerm_, src.columnPerm_ + cols_, columnPerm_);
 }
@@ -2177,7 +2177,7 @@ inline LPInitialTableaux<LPConstraint>&
     col_ = new LPCol<LPConstraint>[cols_];
     std::copy(src.col_, src.col_ + cols_, col_);
 
-    columnPerm_ = new int[cols_];
+    columnPerm_ = new size_t[cols_];
     std::copy(src.columnPerm_, src.columnPerm_ + cols_, columnPerm_);
 
     return *this;
@@ -2240,7 +2240,7 @@ inline unsigned LPInitialTableaux<LPConstraint>::coordinateColumns() const {
 }
 
 template <class LPConstraint>
-inline const int* LPInitialTableaux<LPConstraint>::columnPerm() const {
+inline const size_t* LPInitialTableaux<LPConstraint>::columnPerm() const {
     return columnPerm_;
 }
 

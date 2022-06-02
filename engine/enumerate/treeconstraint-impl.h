@@ -53,24 +53,25 @@ namespace regina {
 template <class LPConstraint>
 BanBoundary::BanBoundary(const LPInitialTableaux<LPConstraint>& init) :
         BanConstraintBase(init) {
-    unsigned n = tri_.size();
-    unsigned tet, type, i, k;
+    size_t n = tri_.size();
+    size_t tet;
+    unsigned type;
 
     // The implementation here is a little inefficient (we repeat tests
     // three or four times over), but this routine is only called at
     // the beginning of the enumeration process so no need to worry.
 
-    const int* columnPerm = init.columnPerm();
+    const size_t* columnPerm = init.columnPerm();
 
     // Ban quadrilaterals in tetrahedra that meet the boundary
     // (every such quadrilateral meets a boundary face).
-    for (i = 0; i < 3 * n; ++i) {
+    for (size_t i = 0; i < 3 * n; ++i) {
         if (system_.quad())
             tet = columnPerm[i] / 3;
         else
             tet = columnPerm[i] / 7;
 
-        for (k = 0; k < 4; ++k)
+        for (int k = 0; k < 4; ++k)
             if (! tri_.tetrahedron(tet)->adjacentTetrahedron(k)) {
                 banned_[i] = true;
                 break;
@@ -80,11 +81,11 @@ BanBoundary::BanBoundary(const LPInitialTableaux<LPConstraint>& init) :
     // Ban normal triangles in tetrahedra that meet the boundary (but
     // only those normal triangles that meet the boundary faces).
     if (system_.standard())
-        for (i = 3 * n; i < 7 * n; ++i) {
+        for (size_t i = 3 * n; i < 7 * n; ++i) {
             tet = columnPerm[i] / 7;
             type = columnPerm[i] % 7;
 
-            for (k = 0; k < 4; ++k)
+            for (int k = 0; k < 4; ++k)
                 if (k != type &&
                         ! tri_.tetrahedron(tet)->adjacentTetrahedron(k)) {
                     banned_[i] = true;
@@ -97,28 +98,29 @@ template <class LPConstraint>
 BanTorusBoundary::BanTorusBoundary(
         const LPInitialTableaux<LPConstraint>& init) :
         BanConstraintBase(init) {
-    unsigned n = tri_.size();
-    unsigned tet, type, i, k;
+    size_t n = tri_.size();
+    size_t tet;
+    unsigned type;
 
     // Which boundary faces are we banning?
-    unsigned nTriangles = tri_.countTriangles();
+    size_t nTriangles = tri_.countTriangles();
     bool* banTriangle = new bool[nTriangles];
     std::fill(banTriangle, banTriangle + nTriangles, false);
 
     // Which vertex links are we marking normal triangles around?
-    unsigned nVertices = tri_.countVertices();
+    size_t nVertices = tri_.countVertices();
     bool* markVtx = new bool[nVertices];
     std::fill(markVtx, markVtx + nVertices, false);
 
     BoundaryComponent<3>* bc;
-    for (i = 0; i < tri_.countBoundaryComponents(); ++i) {
+    for (size_t i = 0; i < tri_.countBoundaryComponents(); ++i) {
         bc = tri_.boundaryComponent(i);
         if ((! bc->isIdeal()) && bc->isOrientable() &&
                 bc->eulerChar() == 0) {
             // We've found a real torus boundary.
-            for (k = 0; k < bc->countTriangles(); ++k)
+            for (size_t k = 0; k < bc->countTriangles(); ++k)
                 banTriangle[bc->triangle(k)->markedIndex()] = true;
-            for (k = 0; k < bc->countVertices(); ++k)
+            for (size_t k = 0; k < bc->countVertices(); ++k)
                 markVtx[bc->vertex(k)->markedIndex()] = true;
         }
     }
@@ -127,16 +129,16 @@ BanTorusBoundary::BanTorusBoundary(
     // three or four times over), but this routine is only called at
     // the beginning of the enumeration process so no need to worry.
 
-    const int* columnPerm = init.columnPerm();
+    const size_t* columnPerm = init.columnPerm();
 
     // Ban quadrilaterals that touch torus boundaries.
-    for (i = 0; i < 3 * n; ++i) {
+    for (size_t i = 0; i < 3 * n; ++i) {
         if (system_.quad())
             tet = columnPerm[i] / 3;
         else
             tet = columnPerm[i] / 7;
 
-        for (k = 0; k < 4; ++k)
+        for (int k = 0; k < 4; ++k)
             if (banTriangle[tri_.tetrahedron(tet)->triangle(k)->
                     markedIndex()]) {
                 banned_[i] = true;
@@ -148,7 +150,7 @@ BanTorusBoundary::BanTorusBoundary(
     // normal triangles that surround vertices on torus boundaries
     // (even if the normal triangles do not actually touch the boundary).
     if (system_.standard())
-        for (i = 3 * n; i < 7 * n; ++i) {
+        for (size_t i = 3 * n; i < 7 * n; ++i) {
             tet = columnPerm[i] / 7;
             type = columnPerm[i] % 7;
 
@@ -156,7 +158,7 @@ BanTorusBoundary::BanTorusBoundary(
                     markedIndex()])
                 marked_[i] = true;
 
-            for (k = 0; k < 4; ++k)
+            for (int k = 0; k < 4; ++k)
                 if (k != type &&
                         banTriangle[tri_.tetrahedron(tet)->triangle(k)->
                         markedIndex()]) {

@@ -174,7 +174,7 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
 
     // Reorder the columns using a good heuristic.
     cols_ = eqns_.columns() + LPConstraint::nConstraints;
-    columnPerm_ = new int[cols_];
+    columnPerm_ = new size_t[cols_];
     reorder(enumeration);
 
     // Create and fill the sparse columns.
@@ -193,18 +193,17 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
 template <class LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool) {
     // This is a "do-nothing" version of reorder().
-    int i, j;
     if (! system_.standard()) {
         // Leave the columns exactly as they were.
-        for (i = 0; i < cols_; ++i)
+        for (size_t i = 0; i < cols_; ++i)
             columnPerm_[i] = i;
         return;
     } else {
         // Keep the tetrahedra in the same order, but move
         // quadrilaterals to the front and triangles to the back
         // as required by columnPerm().
-        int n = tri_->size();
-        for (i = 0; i < n; ++i) {
+        size_t n = tri_->size();
+        for (size_t i = 0; i < n; ++i) {
             columnPerm_[3 * i] = 7 * i + 4;
             columnPerm_[3 * i + 1] = 7 * i + 5;
             columnPerm_[3 * i + 2] = 7 * i + 6;
@@ -222,9 +221,9 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
     //
     // From here on we copy code directly from the "real" reorder()
     // below.
-    int* tmp = new int[eqns_.columns()];
+    size_t* tmp = new size_t[eqns_.columns()];
     std::copy(columnPerm_, columnPerm_ + eqns_.columns(), tmp);
-    for (i = 0; i < eqns_.columns(); ++i) {
+    for (size_t i = 0; i < eqns_.columns(); ++i) {
         // Column tmp[i] of the matrix should be moved to
         // column i.
         if (tmp[i] == i)
@@ -233,6 +232,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
         eqns_.swapCols(i, tmp[i]);
 
         // Adjust links to the old column i, which is now column tmp[i].
+        size_t j;
         for (j = i + 1; j < eqns_.columns(); ++j)
             if (tmp[j] == i)
                 break; // This is the link we need to change.
@@ -250,14 +250,13 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
     // If we have extra variables for additional constraints or
     // objectives, append the corresponding entries to the end of
     // the permutation for completeness.
-    for (i = 0; i < LPConstraint::nConstraints; ++i)
+    for (int i = 0; i < LPConstraint::nConstraints; ++i)
         columnPerm_[cols_ - i - 1] = cols_ - i - 1;
 }
 #else
 template <class LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
-    int n = tri_->size();
-    int i, j, k;
+    size_t n = tri_->size();
 
     // Fill the columnPerm_ array according to what kind of
     // problem we're trying to solve.
@@ -274,8 +273,8 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         // never throw.
         LPInitialTableaux<LPConstraintNone> quad(*tri_, NS_QUAD,
             true /* enumeration */);
-        for (i = 0; i < n; ++i) {
-            k = quad.columnPerm()[3 * i] / 3;
+        for (size_t i = 0; i < n; ++i) {
+            size_t k = quad.columnPerm()[3 * i] / 3;
             columnPerm_[3 * i] = 7 * k + 4;
             columnPerm_[3 * i + 1] = 7 * k + 5;
             columnPerm_[3 * i + 2] = 7 * k + 6;
@@ -287,7 +286,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
     } else if (system_.angle()) {
         // TODO: Find a good heuristic to use for angle structure coordinates.
         // For now, we'll leave the columns exactly as they were.
-        for (i = 0; i < cols_; ++i)
+        for (size_t i = 0; i < cols_; ++i)
             columnPerm_[i] = i;
         return;
     } else {
@@ -308,22 +307,22 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         // Also track which tetrahedra have been used so far.
         bool* touched = new bool[n];
         std::fill(touched, touched + n, false);
-        int nTouched = 0;
+        size_t nTouched = 0;
 
         // Off we go, one row at a time.
-        int bestRow, best, curr;
-        for (i = 0; i < rank_; ++i) {
+        for (size_t i = 0; i < rank_; ++i) {
             // Seek out the ith row to process.
             // Because the first rank_ rows of the matrix are full rank,
             // we are guaranteed that this row will be non-zero.
 
-            best = n + 1; // No row touches more than n tetrahedra.
+            size_t best = n + 1; // No row touches more than n tetrahedra.
+            size_t bestRow;
 
-            for (j = 0; j < rank_; ++j) {
+            for (size_t j = 0; j < rank_; ++j) {
                 if (used[j])
                     continue;
-                curr = 0;
-                for (k = 0; k < n; ++k) {
+                size_t curr = 0;
+                for (size_t k = 0; k < n; ++k) {
                     if (touched[k])
                         continue;
                     if (system_.quad()) {
@@ -353,7 +352,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
             // haven't already used yet, and place the corresponding
             // columns at the end of the matrix.
             used[bestRow] = true;
-            for (k = 0; k < n; ++k) {
+            for (size_t k = 0; k < n; ++k) {
                 if (touched[k])
                     continue;
                 if (system_.quad()) {
@@ -399,7 +398,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         // We have now processed all rows.  However, there may be some
         // tetrahedra that appear in no rows at all.
         // Make sure we catch these tetrahedra as well.
-        for (k = 0; k < n; ++k) {
+        for (size_t k = 0; k < n; ++k) {
             if (touched[k])
                 continue;
             touched[k] = true;
@@ -430,9 +429,9 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
     // from LPConstraint, which we will deal with later).
     //
     // Now go ahead and actually move the columns around accordingly.
-    int* tmp = new int[eqns_.columns()];
+    size_t* tmp = new size_t[eqns_.columns()];
     std::copy(columnPerm_, columnPerm_ + eqns_.columns(), tmp);
-    for (i = 0; i < eqns_.columns(); ++i) {
+    for (size_t i = 0; i < eqns_.columns(); ++i) {
         // Column tmp[i] of the matrix should be moved to
         // column i.
         if (tmp[i] == i)
@@ -441,6 +440,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         eqns_.swapCols(i, tmp[i]);
 
         // Adjust links to the old column i, which is now column tmp[i].
+        size_t j;
         for (j = i + 1; j < eqns_.columns(); ++j)
             if (tmp[j] == i)
                 break; // This is the link we need to change.
@@ -458,7 +458,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
     // If we have extra variables for additional constraints or
     // objectives, append the corresponding entries to the end of
     // the permutation for completeness.
-    for (i = 0; i < LPConstraint::nConstraints; ++i)
+    for (int i = 0; i < LPConstraint::nConstraints; ++i)
         columnPerm_[cols_ - i - 1] = cols_ - i - 1;
 }
 #endif
@@ -509,10 +509,10 @@ void LPInitialTableaux<LPConstraint>::writeTextLong(std::ostream& out) const {
     system_.writeTextShort(out);
     out << "\nRank: " << rank_
         << "\nColumn permutation:";
-    for (unsigned c = 0; c < cols_; ++c)
+    for (size_t c = 0; c < cols_; ++c)
         out << ' ' << columnPerm_[c];
     out << '\n';
-    for (unsigned c = 0; c < eqns_.columns(); ++c) {
+    for (size_t c = 0; c < eqns_.columns(); ++c) {
         out << "Column " << c << ':';
         if (system_.angle() && c + 1 == eqns_.columns())
             out << " scaling -> " << scaling_;
@@ -541,7 +541,7 @@ void LPInitialTableaux<LPConstraint>::writeTextLong(std::ostream& out) const {
     if constexpr (LPConstraint::nConstraints > 0) {
         for (int i = 0; i < LPConstraint::nConstraints; ++i) {
             out << "Constraint " << i << ':';
-            for (unsigned c = 0; c < cols_; ++c)
+            for (size_t c = 0; c < cols_; ++c)
                 out << ' ' << col_[c].extra[i];
             out << '\n';
         }
@@ -1008,7 +1008,7 @@ RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
         "that stores one of Regina's own integer types.");
 
     // Fetch details on how to undo the column permutation.
-    const int* columnPerm = origTableaux_->columnPerm();
+    const size_t* columnPerm = origTableaux_->columnPerm();
 
     // We will multiply the solution vector by
     // lcm(basis coefficients in the tableaux), which will
