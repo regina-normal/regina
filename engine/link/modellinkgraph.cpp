@@ -40,7 +40,7 @@ namespace regina {
 ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) :
         cells_(nullptr) {
     nodes_.reserve(cloneMe.nodes_.size());
-    for (ModelLinkGraphNode* n : cloneMe.nodes_)
+    for (size_t i = 0; i < cloneMe.nodes_.size(); ++i)
         nodes_.push_back(new ModelLinkGraphNode());
 
     auto it = cloneMe.nodes_.begin();
@@ -66,7 +66,7 @@ ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
     nodes_.clear();
 
     nodes_.reserve(src.nodes_.size());
-    for (ModelLinkGraphNode* n : src.nodes_)
+    for (size_t i = 0; i < src.nodes_.size(); ++i)
         nodes_.push_back(new ModelLinkGraphNode());
 
     auto it = src.nodes_.begin();

@@ -58,6 +58,8 @@ template TreeDecomposition::TreeDecomposition(
     const FacetPairing<4>&, TreeDecompositionAlg);
 
 template void TreeDecomposition::reroot(const int*, const int*, const int*);
+template void TreeDecomposition::reroot(const size_t*, const size_t*,
+    const size_t*);
 
 bool TreeBag::contains(size_t element) const {
     return std::binary_search(elements_, elements_ + size_, element);

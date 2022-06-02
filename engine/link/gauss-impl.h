@@ -253,7 +253,7 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     for (size_t i = 1; i <= n; ++i) {
         ssize_t index1 = -1;
         ssize_t index2 = -1;
-        int temp1, temp2;
+        int temp1 = 0, temp2 = 0; // Zero unnecessary but quietens warnings
         // Find the two occurrences of crossing i in sequence Q0.
         for (size_t j=0; j < 2*n; ++j) {
             if (Q0[j] == static_cast<ssize_t>(i)) {

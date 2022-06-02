@@ -244,7 +244,6 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     size_t nBags = d.size();
 
     const TreeBag *bag, *child, *sibling;
-    int index;
 
     size_t nEasyBags = 0;
     double hardBagWeightSum = 0;
@@ -299,7 +298,7 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     std::fill(partial, partial + nBags, nullptr);
 
     for (bag = d.first(); bag; bag = bag->next()) {
-        index = bag->index();
+        size_t index = bag->index();
 #ifdef DUMP_STAGES
         if (! tracker)
             std::cerr << "Bag " << index << " [" << bag->size() << "] ";
@@ -388,13 +387,13 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
             }
             conn[0][1][1] = conn[1][1][1] = forget->upper();
 
-            size_t connIdx[2][2][2];
+            int connIdx[2][2][2];
             int i, j, k;
             for (i = 0; i < 2; ++i)
                 for (j = 0; j < 2; ++j)
                     for (k = 0; k < 2; ++k)
-                        connIdx[i][j][k] =
-                            2 * conn[i][j][k].crossing()->index() +
+                        connIdx[i][j][k] = 2 * static_cast<int>(
+                            conn[i][j][k].crossing()->index()) +
                             conn[i][j][k].strand();
 
             partial[index] = new SolnSet;
@@ -666,7 +665,7 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
     // query whether a given node appears in a given subtree.
     // Do some preprocessing to make these queries constant time.
     //
-    // For crossing i, crossingSubtree[i] will contain highest index
+    // For crossing i, crossingSubtree[i] will contain the highest index
     // bag that contains that crossing.
     //
     // For bag j, subtreeStart[j] will contain the lowest index bag
@@ -675,8 +674,8 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
     // rooted at j contains precisely those bags with indices k for
     // which subtreeStart[j] <= k <= j.
 
-    int* crossingSubtree = new int[size()];
-    int* subtreeStart = new int[td.size()];
+    size_t* crossingSubtree = new size_t[size()];
+    size_t* subtreeStart = new size_t[td.size()];
 
     const TreeBag* b;
     for (b = td.first(); b; b = b->next())
@@ -685,16 +684,15 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
         else
             subtreeStart[b->index()] = b->index();
 
-    int i;
     for (b = td.first(); b; b = b->next())
-        for (i = 0; i < b->size(); ++i)
+        for (size_t i = 0; i < b->size(); ++i)
             crossingSubtree[b->element(i)] = b->index();
 
     // Now we can build our cost estimates.
 
-    int* costSame = new int[td.size()];
-    int* costReverse = new int[td.size()];
-    int* costRoot = new int[td.size()];
+    size_t* costSame = new size_t[td.size()];
+    size_t* costReverse = new size_t[td.size()];
+    size_t* costRoot = new size_t[td.size()];
 
     // For a bag b:
     //
@@ -710,14 +708,13 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
     std::fill(costReverse, costReverse + td.size(), 0);
     std::fill(costRoot, costRoot + td.size(), 0);
 
-    int p, q;
     Crossing *c;
-    int adj, adjRoot;
+    size_t adj, adjRoot;
     for (b = td.first(); b; b = b->next()) {
-        for (i = 0; i < b->size(); ++i) {
+        for (size_t i = 0; i < b->size(); ++i) {
             c = crossings_[b->element(i)];
-            for (p = 0; p < 2; ++p)
-                for (q = 0; q < 2; ++q) {
+            for (int p = 0; p < 2; ++p)
+                for (int q = 0; q < 2; ++q) {
                     adj = (p == 0 ? c->prev(q).crossing() :
                         c->next(q).crossing())->index();
                     if (! b->contains(adj)) {
@@ -735,10 +732,10 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
         }
 
         if (b->parent()) {
-            for (i = 0; i < b->parent()->size(); ++i) {
+            for (size_t i = 0; i < b->parent()->size(); ++i) {
                 c = crossings_[b->parent()->element(i)];
-                for (p = 0; p < 2; ++p)
-                    for (q = 0; q < 2; ++q) {
+                for (int p = 0; p < 2; ++p)
+                    for (int q = 0; q < 2; ++q) {
                         adj = (p == 0 ? c->prev(q).crossing() :
                             c->next(q).crossing())->index();
                         if (! b->parent()->contains(adj)) {

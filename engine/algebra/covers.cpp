@@ -56,10 +56,13 @@ namespace {
     // directory as this source file.
     template <int n> constexpr int
         minimalAutGroup[nMinimalPerms[n]][maxMinimalAutGroup[n] + 1];
+#if 0
+    // We never actually use the group for n=2, so hide it from the compiler.
     template <> constexpr int minimalAutGroup<2>[][1] = {
         /* 0 */ { -1 },
         /* 1 */ { -1 }
     };
+#endif
     template <> constexpr int minimalAutGroup<3>[][4] = {
         /* 0 */ { -1 },
         /* 1 */ { 0, 1, -1 },

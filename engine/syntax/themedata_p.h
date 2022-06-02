@@ -84,7 +84,7 @@ public:
      */
     const std::string& name() const;
 
-    int revision() const;
+    long long revision() const;
 
     /**
      * Returns @c true if this Theme is read-only.
@@ -163,7 +163,7 @@ public:
     unsigned editorColor(Theme::EditorColorRole role) const;
 
 private:
-    int m_revision;
+    long long m_revision;
     std::string m_name;
     std::string m_author;
     std::string m_license;

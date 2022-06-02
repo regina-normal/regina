@@ -206,7 +206,7 @@ namespace {
          * This is only available for join bags, and is initialised by
          * initJoinBag().
          */
-        int pairs;
+        size_t pairs;
 
         /**
          * Contains copies of several local variables that are used
@@ -265,11 +265,12 @@ namespace {
             for (b = d.first(); b; b = b->next())
                 if (b->type() == NICE_FORGET)
                     forgetCrossing[b->children()->element(b->subtype())] =
-                        b->index();
+                        static_cast<int>(b->index());
 
             for (int i = 0; i < 2 * l->size(); ++i) {
                 int from = i / 2;
-                int to = l->strand(i).next().crossing()->index();
+                int to = static_cast<int>(
+                    l->strand(i).next().crossing()->index());
                 if (forgetCrossing[from] >= forgetCrossing[to]) {
                     lastCrossing[i] = from;
                     forgetStrand[i] = forgetCrossing[from];
@@ -295,7 +296,8 @@ namespace {
             } while (! (s == start /* finished a link component */ ||
                 (s.strand() == 0 && prefix[s.id() | 1] < 0) /* not a pass */));
 
-            firstChoice = (s == start ? -1 : s.crossing()->index());
+            firstChoice = (s == start ? -1 :
+                static_cast<int>(s.crossing()->index()));
         }
 
         ~ViabilityData() {
@@ -1244,7 +1246,6 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     size_t nBags = d.size();
 
     const TreeBag *bag, *child, *sibling;
-    int index;
 
     size_t nEasyBags = 0;
     double hardBagWeightSum = 0;
@@ -1304,7 +1305,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     ViabilityData vData(this, d);
 
     for (bag = d.first(); bag; bag = bag->next()) {
-        index = bag->index();
+        size_t index = bag->index();
 #ifdef DUMP_STAGES
         std::cerr << "Bag " << index << " [" << bag->size() << "] ";
 #endif
@@ -1414,10 +1415,10 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             int i, j;
             char mask;
 
-            id[0][0] = c->prev(0).id();
-            id[0][1] = c->lower().id();
-            id[1][0] = c->prev(1).id();
-            id[1][1] = c->upper().id();
+            id[0][0] = static_cast<int>(c->prev(0).id());
+            id[0][1] = static_cast<int>(c->lower().id());
+            id[1][0] = static_cast<int>(c->prev(1).id());
+            id[1][1] = static_cast<int>(c->upper().id());
 
             const Key& kFirst = partial[child->index()]->begin()->first;
 
@@ -2732,9 +2733,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             // The key size depends only on the bag, not the particular
             // key-value solution at that bag, and so we get this data
             // by looking at the first solution in each bag.
-            int pairs1 = partial[child->index()]->begin()->first.size()/2;
-            int pairs2 = partial[sibling->index()]->begin()->first.size()/2;
-            int pairs = pairs1 + pairs2;
+            size_t pairs1 = partial[child->index()]->begin()->first.size()/2;
+            size_t pairs2 = partial[sibling->index()]->begin()->first.size()/2;
+            size_t pairs = pairs1 + pairs2;
 
 #ifdef DUMP_STAGES
             std::cerr << "JOIN -> " <<
@@ -2790,10 +2791,6 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             // means we take a pair from k2.
             Bitmask choice(pairs);
 
-            Key::iterator pos;
-            Key::const_iterator pos1, pos2;
-            int idx;
-
             for (auto& soln1 : *(partial[child->index()])) {
                 if (tracker) {
                     percent += increment;
@@ -2816,10 +2813,10 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                     // Fill the final key from the end to the beginning, so
                     // that we can more aggressively test for non-viable keys.
                     choice.reset();
-                    pos = kNew.end() - 2;
-                    pos1 = k1.end() - 2;
-                    pos2 = k2.end() - 2;
-                    idx = pairs - 1;
+                    Key::iterator pos = kNew.end() - 2;
+                    Key::const_iterator pos1 = k1.end() - 2;
+                    Key::const_iterator pos2 = k2.end() - 2;
+                    ssize_t idx = pairs - 1;
 
                     while (pos != kNew.end()) {
                         // We are about to try the current option for the pair
