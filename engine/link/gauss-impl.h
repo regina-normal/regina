@@ -60,18 +60,17 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     // Run Adam's code to determine the handedness of each crossing.
 
     // Copy the sequence of crossing numbers, since we will need to modify it.
-    int* S = new int[2 * n];
+    ptrdiff_t* S = new ptrdiff_t[2 * n];
     std::copy(begin, end, S);
 
-    int pos1, pos2;
-    int i, j;
-    for (i=1; i <= n; ++i) {
+    for (ptrdiff_t i=1; i <= n; ++i) {
         // Find the two instances of crossing i,
         // and reverse the subsequence between them.
         //
         // Also, make each element of S[..] positive; we will not need
         // the under/over markers again until the end of this routine.
 
+        size_t pos1;
         for (pos1 = 0; pos1 < 2*n; ++pos1) {
             if (S[pos1] == i || S[pos1] == -i)
                 break;
@@ -82,6 +81,7 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
             throw InvalidArgument("fromGauss(): crossing not found");
         }
 
+        size_t pos2;
         for (pos2 = pos1+1; pos2 < 2*n; ++pos2) {
             if (S[pos2] == i || S[pos2] == -i)
                 break;
@@ -108,13 +108,13 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
 
     // Find the first and second position of each crossing number in the
     // permuted array S[].
-    int* indx0 = new int[n];
-    int* indx1 = new int[n];
+    ssize_t* indx0 = new ssize_t[n];
+    ssize_t* indx1 = new ssize_t[n];
     std::fill(indx0, indx0 + n, -1);
     std::fill(indx1, indx1 + n, -1);
 
-    for (pos1 = 0; pos1 < 2*n; ++pos1) {
-        i = S[pos1] - 1;
+    for (size_t pos1 = 0; pos1 < 2*n; ++pos1) {
+        ptrdiff_t i = S[pos1] - 1;
         if (indx0[i] < 0)
             indx0[i] = pos1;
         else if (indx1[i] < 0)
@@ -132,8 +132,8 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     bool* graph = new bool[n*n];
     std::fill(graph, graph + n*n, false);
 
-    for (i = 1; i < n + 1; i++){
-        for (j = 1; j < n + 1; j++){
+    for (size_t i = 1; i < n + 1; i++){
+        for (size_t j = 1; j < n + 1; j++){
             if ( ((indx0[i-1] < indx0[j-1]) && (indx1[i-1] > indx0[j-1]) && (indx1[i-1] < indx1[j-1])) ||
                  ((indx0[i-1] < indx1[j-1]) && (indx0[i-1] > indx0[j-1]) && (indx1[i-1] > indx1[j-1])) ) {
                 graph[n * (i-1) + (j-1)] = true;
@@ -147,13 +147,13 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     // Pull apart the nodes of the graph into opposite sides of a
     // bipartite graph.
     int* side = new int[n];
-    int* stack = new int[n];
-    int top = 0;
-    int pop = 0;
+    size_t* stack = new size_t[n];
+    ssize_t top = 0;
+    size_t pop = 0;
     std::fill(side, side + n, 0);
     std::fill(stack, stack + n, 0);
 
-    for (i = 0; i < n; i++){
+    for (size_t i = 0; i < n; i++){
         if (side[i] == 0){
             // Make an arbitrary decision for this node, and propagate
             // it through its connected component.
@@ -165,7 +165,7 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
                 pop = stack[top];
                 top--;
 
-                for (j = 0; j < n; j++){
+                for (size_t j = 0; j < n; j++){
                     if (graph[n * pop + j]) {
                         if (side[j] == 0) {
                             side[j] = - side[pop];
@@ -200,21 +200,21 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     bool* seen = new bool[n];
     std::fill(seen, seen + n, false);
 
-    for (i=0; i < 2*n; ++i) {
+    for (size_t i=0; i < 2*n; ++i) {
         J[i] = seen[S[i]-1];
         seen[S[i]-1] = true;
     }
 
     delete[] seen;
 
-    int* Q0 = new int[2*n];
+    ptrdiff_t* Q0 = new ptrdiff_t[2*n];
     bool* Q1 = new bool[2*n];
 
     Q0[0]=S[0];
     Q1[0]=false;
-    for (i=1; i < 2*n; ++i) {
+    for (size_t i=1; i < 2*n; ++i) {
         // Find the *other* occurrence of the crossing used at Q[i-1].
-        for (j=0; j < 2*n; ++j) {
+        for (size_t j=0; j < 2*n; ++j) {
             if (Q0[i-1] == S[j] && Q1[i-1] == ! J[j]) {
                 if (i % 2 == 1) {
                     Q0[i] = S[(j > 0 ? j-1 : 2*n-1)];
@@ -246,17 +246,17 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
 
     Link ans;
 
-    for (i = 0; i < n; ++i)
+    for (size_t i = 0; i < n; ++i)
         ans.crossings_.push_back(new Crossing);
 
     int crossHand;
-    for (i = 1; i <= n; ++i) {
-        int index1 = -1;
-        int index2 = -1;
+    for (size_t i = 1; i <= n; ++i) {
+        ssize_t index1 = -1;
+        ssize_t index2 = -1;
         int temp1, temp2;
         // Find the two occurrences of crossing i in sequence Q0.
-        for (j=0; j < 2*n; ++j) {
-            if (Q0[j]==i) {
+        for (size_t j=0; j < 2*n; ++j) {
+            if (Q0[j] == static_cast<ssize_t>(i)) {
                 if (j % 2 == 0) {
                     index1 = j;
                     temp1 = (Q1[j] ? -1 : 1);

@@ -65,9 +65,7 @@ namespace regina {
 template <typename Iterator>
 Link Link::fromDT(Iterator begin, Iterator end) {
     // Extract the number of crossings.
-    // We use ptrdiff_t since the elements of the DT sequence may be
-    // negative, and so we need to do signed comparisons.
-    ptrdiff_t aNumCrossings = end - begin;
+    size_t aNumCrossings = end - begin;
     if (aNumCrossings == 0)
         return Link(1);
 
@@ -78,7 +76,9 @@ Link Link::fromDT(Iterator begin, Iterator end) {
     for (it = begin; it != end; ++it) {
         if (*it % 2 != 0)
             throw InvalidArgument("fromDT(): code contains odd integer");
-        if (*it == 0 || *it > 2*aNumCrossings || *it < -2*aNumCrossings)
+        if (*it == 0 ||
+                *it > 2*static_cast<ptrdiff_t>(aNumCrossings) ||
+                *it < -2*static_cast<ptrdiff_t>(aNumCrossings))
             throw InvalidArgument("fromDT(): integer out of range in code");
     }
 
