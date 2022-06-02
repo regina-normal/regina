@@ -108,7 +108,7 @@ std::vector<int> Link::dtData() const {
             "only implemented for single-component links");
     if (crossings_.empty())
         return {};
-    if (2 * crossings_.size() > INT_MAX)
+    if (2 * size() > INT_MAX)
         throw NotImplemented("This Dowker-Thistlethwaite notation has "
             "entries that cannot fit into a C++ int");
 
@@ -117,20 +117,20 @@ std::vector<int> Link::dtData() const {
     if (start.strand() == 1)
         start.jump();
 
-    size_t n = size();
+    int n = static_cast<int>(size());
 
     // Odd steps in traversal -> crossing index
-    auto* oddCrossing = new size_t[n];
+    int* oddCrossing = new int[n];
 
     // Crossing index -> even steps in traversal, negated if passing under
     int* evenStep = new int[n];
 
     StrandRef s = start;
-    unsigned step = 0;
+    int step = 0;
     do {
         ++step;
         if (step % 2 == 1) {
-            oddCrossing[step >> 1] = s.crossing()->index();
+            oddCrossing[step >> 1] = static_cast<int>(s.crossing()->index());
         } else {
             evenStep[s.crossing()->index()] = (s.strand() == 1 ? step : -step);
         }
@@ -141,7 +141,7 @@ std::vector<int> Link::dtData() const {
     std::vector<int> ans;
     ans.reserve(n);
 
-    for (size_t i = 0; i < n; ++i)
+    for (int i = 0; i < n; ++i)
         ans.push_back(evenStep[oddCrossing[i]]);
 
     delete[] evenStep;

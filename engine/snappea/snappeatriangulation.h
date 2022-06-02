@@ -785,7 +785,10 @@ class SnapPeaTriangulation :
          * not by Regina.  As a result, the peripheral curves installed by
          * SnapPea will be precisely the curves from the link diagram.
          *
-         * \exception InvalidArgument the given link is empty.
+         * \exception InvalidArgument the given link is empty, or it has
+         * so many crossings and/or components that SnapPea cannot handle it.
+         * (The latter problem will only occur if the number of crossings
+         * and/or components does not fit into a native C++ \c int.)
          *
          * @param link the link whose complement we should build.
          */

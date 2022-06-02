@@ -471,7 +471,7 @@ class SatRegion : public Output<SatRegion> {
          * requested annulus is horizontally reflected within this region.
          * See SatBlockSpec for further details on these reflections.
          */
-        std::tuple<const SatBlock*, unsigned, bool, bool> boundaryAnnulus(
+        std::tuple<const SatBlock*, size_t, bool, bool> boundaryAnnulus(
             size_t which) const;
 
         /**
@@ -799,7 +799,7 @@ class SatRegion : public Output<SatRegion> {
          * @param twisted returns the number of twisted (Klein bottle)
          * boundary components.
          */
-        void countBoundaries(unsigned& untwisted, unsigned& twisted) const;
+        void countBoundaries(size_t& untwisted, size_t& twisted) const;
 
         /**
          * Expands this region as far as possible within the overall

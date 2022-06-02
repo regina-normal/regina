@@ -235,7 +235,7 @@ Link Link::fromKnotSig(const std::string& sig) {
             throw InvalidArgument(
                 "fromKnotSig(): unexpected internal whitespace");
 
-    size_t charsPerInt;
+    unsigned charsPerInt;
     size_t n = Base64SigEncoding::decodeSingle(*c++);
     if (n < 63)
         charsPerInt = 1;

@@ -65,7 +65,6 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
     const SatReflectorStrip* ref;
     const SatTriPrism* tri;
     const SatTriPrism* triAdj;
-    unsigned adjAnn;
     bool consistent;
     for (size_t i = 0; i < n; i++) {
         block = region_.block(i).block();
@@ -127,7 +126,7 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
                 if (! tri)
                     return std::nullopt;
 
-                adjAnn = ref->adjacentAnnulus(0);
+                size_t adjAnn = ref->adjacentAnnulus(0);
                 if (tri->isMajor())
                     return findPluggedTori(false, 4,
                         tri->adjacentBlock((adjAnn + 2) % 3), true,
@@ -169,7 +168,7 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
                     if (tri->adjacentBackwards((j + 2) % 3))
                         consistent = ! consistent;
 
-                    adjAnn = tri->adjacentAnnulus((j + 2) % 3);
+                    size_t adjAnn = tri->adjacentAnnulus((j + 2) % 3);
                     if (consistent) {
                         if (triAdj->isMajor())
                             return findPluggedTori(false, 2,
@@ -207,7 +206,7 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
                 if (tri->adjacentBackwards(j))
                     consistent = ! consistent;
 
-                adjAnn = tri->adjacentAnnulus(j);
+                size_t adjAnn = tri->adjacentAnnulus(j);
 
                 for (int delta = 1; delta <= 2; delta++)
                     if (tri->adjacentBlock((j + delta) % 3) == triAdj) {

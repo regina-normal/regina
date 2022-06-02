@@ -57,7 +57,7 @@ void addTxICore(pybind11::module_& m) {
 
     auto d = pybind11::class_<TxIDiagonalCore, regina::TxICore>(
             m, "TxIDiagonalCore")
-        .def(pybind11::init<unsigned long, unsigned long>())
+        .def(pybind11::init<size_t, size_t>())
         .def(pybind11::init<const TxIDiagonalCore&>())
         .def("swap", &TxIDiagonalCore::swap)
         .def("size", &TxIDiagonalCore::size)

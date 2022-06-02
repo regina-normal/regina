@@ -324,14 +324,18 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) :
         throw InvalidArgument("The SnapPeaTriangulation constructor "
             "requires a non-empty link");
 
+    // SnapPea uses int (not size_t) to index crossings and components.
+    if (link.size() > INT_MAX || link.countComponents() > INT_MAX)
+        throw InvalidArgument("This link is too large for SnapPea to handle");
+
     // In SnapPea's notation:
     // - For a positive crossing, the (x,y) strands are (over, under);
     // - For a negative crossing, the (x,y) strands are (under, over).
 
     regina::snappea::KLPProjection proj;
-    proj.num_crossings = link.size();
+    proj.num_crossings = static_cast<int>(link.size());
     proj.num_free_loops = 0; // We will fix this later.
-    proj.num_components = link.countComponents();
+    proj.num_components = static_cast<int>(link.countComponents());
 
     proj.crossings = new regina::snappea::KLPCrossing[link.size()];
     for (Crossing* c : link.crossings()) {
@@ -381,7 +385,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Link& link) :
         }
     }
 
-    size_t compIndex = 0;
+    int compIndex = 0;
     for (const StrandRef& comp : link.components()) {
         if (comp) {
             StrandRef s = comp;

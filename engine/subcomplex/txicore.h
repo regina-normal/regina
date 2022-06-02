@@ -84,7 +84,7 @@ class TxICore : public Output<TxICore> {
         Triangulation<3> core_;
             /**< A full copy of the <tt>T x I</tt> triangulation that is
                  described. */
-        std::array<std::array<unsigned, 2>, 2> bdryTet_;
+        std::array<std::array<size_t, 2>, 2> bdryTet_;
             /**< The tetrahedra that provide the upper and lower
                  boundary triangles.  See bdryTet() for details. */
         std::array<std::array<Perm<4>, 2>, 2> bdryRoles_;
@@ -140,7 +140,7 @@ class TxICore : public Output<TxICore> {
          * @param whichTri 0 if the first boundary triangle should be
          * examined, or 1 if the second boundary triangle should be examined.
          */
-        unsigned bdryTet(unsigned whichBdry, unsigned whichTri) const;
+        size_t bdryTet(int whichBdry, int whichTri) const;
         /**
          * Describes which tetrahedron vertices play which roles in the
          * upper and lower boundary triangles.
@@ -183,7 +183,7 @@ class TxICore : public Output<TxICore> {
          * @return the permutation mapping roles 0, 1 and 2 in the
          * diagram above to real tetrahedron vertex numbers.
          */
-        Perm<4> bdryRoles(unsigned whichBdry, unsigned whichTri) const;
+        Perm<4> bdryRoles(int whichBdry, int whichTri) const;
         /**
          * Returns a 2-by-2 matrix describing the \a alpha and \a beta curves
          * on a torus boundary in terms of specific tetrahedron edges.
@@ -212,7 +212,7 @@ class TxICore : public Output<TxICore> {
          * @return the relationship between the boundary curves and
          * tetrahedron edges.
          */
-        const Matrix2& bdryReln(unsigned whichBdry) const;
+        const Matrix2& bdryReln(int whichBdry) const;
         /**
          * Returns a 2-by-2 matrix describing the parallel relationship
          * between the upper and lower boundary curves.
@@ -447,10 +447,10 @@ class TxICore : public Output<TxICore> {
  */
 class TxIDiagonalCore : public TxICore {
     private:
-        unsigned long size_;
+        size_t size_;
             /**< The number of tetrahedra in this <tt>T x I</tt>
                  triangulation. */
-        unsigned long k_;
+        size_t k_;
             /**< The additional parameter \a k as described in the
                  class notes. */
 
@@ -459,13 +459,13 @@ class TxIDiagonalCore : public TxICore {
          * Creates a new <tt>T x I</tt> triangulation with the given
          * parameters.
          *
-         * @param newSize the number of tetrahedra in this
+         * @param size the number of tetrahedra in this
          * triangulation.  This must be at least 6.
-         * @param newK the additional parameter \a k as described in the
+         * @param k the additional parameter \a k as described in the
          * class notes.  This must be between 1 and (\a newSize - 5)
          * inclusive.
          */
-        TxIDiagonalCore(unsigned long newSize, unsigned long newK);
+        TxIDiagonalCore(size_t size, size_t k);
 
         /**
          * Creates a new copy of the given <tt>T x I</tt> triangulation.
@@ -504,7 +504,7 @@ class TxIDiagonalCore : public TxICore {
          *
          * @return the total number of tetrahedra.
          */
-        unsigned long size() const;
+        size_t size() const;
 
         /**
          * Returns the additional parameter \a k as described in the
@@ -512,7 +512,7 @@ class TxIDiagonalCore : public TxICore {
          *
          * @return the additional parameter \a k.
          */
-        unsigned long k() const;
+        size_t k() const;
 
         /**
          * Swaps the contents of this and the given
@@ -654,17 +654,15 @@ inline const Triangulation<3>& TxICore::core() const {
     return core_;
 }
 
-inline unsigned TxICore::bdryTet(unsigned whichBdry, unsigned whichTri)
-        const {
+inline size_t TxICore::bdryTet(int whichBdry, int whichTri) const {
     return bdryTet_[whichBdry][whichTri];
 }
 
-inline Perm<4> TxICore::bdryRoles(unsigned whichBdry, unsigned whichTri)
-        const {
+inline Perm<4> TxICore::bdryRoles(int whichBdry, int whichTri) const {
     return bdryRoles_[whichBdry][whichTri];
 }
 
-inline const Matrix2& TxICore::bdryReln(unsigned whichBdry) const {
+inline const Matrix2& TxICore::bdryReln(int whichBdry) const {
     return bdryReln_[whichBdry];
 }
 
@@ -717,11 +715,11 @@ inline void TxIDiagonalCore::swap(TxIDiagonalCore& other) noexcept {
     std::swap(k_, other.k_);
 }
 
-inline unsigned long TxIDiagonalCore::size() const {
+inline size_t TxIDiagonalCore::size() const {
     return size_;
 }
 
-inline unsigned long TxIDiagonalCore::k() const {
+inline size_t TxIDiagonalCore::k() const {
     return k_;
 }
 

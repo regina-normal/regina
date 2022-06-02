@@ -55,8 +55,7 @@ void TxICore::swapBaseData(TxICore& other) noexcept {
     parallelReln_.swap(other.parallelReln_);
 }
 
-TxIDiagonalCore::TxIDiagonalCore(unsigned long newSize, unsigned long newK) :
-        size_(newSize), k_(newK) {
+TxIDiagonalCore::TxIDiagonalCore(size_t size, size_t k) : size_(size), k_(k) {
     // We'll build the actual triangulation last.  Meanwhile, fill in
     // the remaining bits and pieces.
     bdryTet_[0][0] = 0;
@@ -72,9 +71,8 @@ TxIDiagonalCore::TxIDiagonalCore(unsigned long newSize, unsigned long newK) :
     parallelReln_ = Matrix2(1, size_ - 6, 0, 1);
 
     // Off we go!
-    unsigned i;
     auto* t = new Tetrahedron<3>*[size_];
-    for (i = 0; i < size_; i++)
+    for (size_t i = 0; i < size_; i++)
         t[i] = core_.newTetrahedron();
 
     // Glue together the pairs of triangles in the central surface.
@@ -84,7 +82,7 @@ TxIDiagonalCore::TxIDiagonalCore(unsigned long newSize, unsigned long newK) :
     // Glue together the long diagonal line of quads, and hook the ends
     // together using the first pair of triangles.
     t[0]->join(1, t[3], Perm<4>(2, 3, 1, 0));
-    for (i = 3; i < size_ - 3; i++)
+    for (size_t i = 3; i < size_ - 3; i++)
         t[i]->join(0, t[i + 1], Perm<4>(0, 3));
     t[size_ - 3]->join(0, t[1], Perm<4>(1, 0, 2, 3));
 
@@ -106,7 +104,7 @@ TxIDiagonalCore::TxIDiagonalCore(unsigned long newSize, unsigned long newK) :
         t[size_ - 1]->join(1, t[size_ - 1 - k_], Perm<4>(3, 2, 0, 1));
 
     // Glue in the lower edge of each quadrilateral.
-    for (i = 3; i <= size_ - 3; i++) {
+    for (size_t i = 3; i <= size_ - 3; i++) {
         if (i == size_ - 2 - k_)
             continue;
 
@@ -137,9 +135,8 @@ TxIParallelCore::TxIParallelCore() {
     // Off we go!
     // Just hard-code it.  It's only one triangulation, and it's highly
     // symmetric.
-    unsigned i;
-    auto* t = new Tetrahedron<3>*[6];
-    for (i = 0; i < 6; i++)
+    Tetrahedron<3>* t[6];
+    for (int i = 0; i < 6; i++)
         t[i] = core_.newTetrahedron();
 
     t[0]->join(0, t[1], Perm<4>(1, 2));
@@ -152,8 +149,6 @@ TxIParallelCore::TxIParallelCore() {
     t[5]->join(1, t[2], Perm<4>(2, 0, 3, 1));
     t[0]->join(1, t[3], Perm<4>(0, 3));
     t[4]->join(1, t[2], Perm<4>(0, 3));
-
-    delete[] t;
 }
 
 } // namespace regina

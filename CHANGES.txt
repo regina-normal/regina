@@ -103,6 +103,9 @@ Version 7.1  [ TODO ]
         Type safe_tuple_element<...>:
             - New type alias that is like std::tuple_element<...> but
               with well-defined behaviour for an out-of-range index.
+        Class SnaPeaTriangulation:
+            - The Link constructor now throws an exception if the link is so
+              large that SnapPea cannot handle it.
         Struct TightEncodable<T>:
             - New base class for classes that support tight encodings
               and decodings.

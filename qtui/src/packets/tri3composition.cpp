@@ -471,23 +471,19 @@ void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
     QTreeWidgetItem* detailsItem;
     QTreeWidgetItem* annuli;
 
-    regina::SatAnnulus ann;
-    unsigned long nAnnuli;
-    long a, b;
-    bool ref, back;
     QString thisAnnulus, adjAnnulus;
-    for (b = region.countBlocks() - 1; b >= 0; b--) {
+    for (ssize_t b = region.countBlocks() - 1; b >= 0; b--) {
         const regina::SatBlockSpec& spec = region.block(b);
         detailsItem = new QTreeWidgetItem(parent);
         detailsItem->setText(0,tr("Block %1: %2").
             arg(b).arg(spec.block()->abbr().c_str()));
 
-        nAnnuli = spec.block()->countAnnuli();
+        size_t nAnnuli = spec.block()->countAnnuli();
 
         annuli = new QTreeWidgetItem(detailsItem);
         annuli->setText(0,tr("Adjacencies:"));
 
-        for (a = nAnnuli - 1; a >= 0; a--) {
+        for (ssize_t a = nAnnuli - 1; a >= 0; a--) {
             thisAnnulus = tr("Annulus %1/%2").arg(b).arg(a);
             if (! spec.block()->hasAdjacentBlock(a))
                 (new QTreeWidgetItem(annuli))->setText(0,
@@ -496,8 +492,8 @@ void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
                 adjAnnulus = tr("Annulus %1/%2").
                     arg(region.blockIndex(spec.block()->adjacentBlock(a))).
                     arg(spec.block()->adjacentAnnulus(a));
-                ref = spec.block()->adjacentReflected(a);
-                back = spec.block()->adjacentBackwards(a);
+                bool ref = spec.block()->adjacentReflected(a);
+                bool back = spec.block()->adjacentBackwards(a);
 
                 if (ref && back)
                     (new QTreeWidgetItem(annuli))->setText(0,
@@ -525,9 +521,9 @@ void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
             annuli = new QTreeWidgetItem(detailsItem);
             annuli->setText(0,tr("%1 annuli").arg(nAnnuli));
         }
-        for (a = nAnnuli - 1; a >= 0; a--) {
+        for (ssize_t a = nAnnuli - 1; a >= 0; a--) {
             thisAnnulus = tr("Annulus %1/%2").arg(b).arg(a);
-            ann = spec.block()->annulus(a);
+            regina::SatAnnulus ann = spec.block()->annulus(a);
 
             (new QTreeWidgetItem(annuli))->setText(0,
                 tr("%1 : Tet %2 (%3%4%5), Tet %6 (%7%8%9)").

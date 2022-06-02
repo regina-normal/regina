@@ -100,7 +100,7 @@ std::vector<int> Link::jenkinsData() const {
             "fit into a C++ int");
 
     std::vector<int> ans;
-    ans.push_back(components_.size());
+    ans.push_back(static_cast<int>(components_.size()));
 
     StrandRef s;
     size_t len;
@@ -120,9 +120,9 @@ std::vector<int> Link::jenkinsData() const {
             if (len > INT_MAX)
                 throw NotImplemented("This Jenkins format has entries "
                     "that cannot fit into a C++ int");
-            ans.push_back(len);
+            ans.push_back(static_cast<int>(len));
             do {
-                ans.push_back(s.crossing()->index());
+                ans.push_back(static_cast<int>(s.crossing()->index()));
                 ans.push_back(s.strand() == 1 ? 1 : -1);
                 ++s;
             } while (s != start);
@@ -130,7 +130,7 @@ std::vector<int> Link::jenkinsData() const {
     }
 
     for (auto c : crossings_) {
-        ans.push_back(c->index());
+        ans.push_back(static_cast<int>(c->index()));
         ans.push_back(c->sign());
     }
 
