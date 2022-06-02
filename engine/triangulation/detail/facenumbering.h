@@ -141,7 +141,7 @@ class FaceNumberingAPI {
          * 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1 inclusive.
          * @return the corresponding canonical ordering of the simplex vertices.
          */
-        static constexpr Perm<dim + 1> ordering(unsigned face);
+        static constexpr Perm<dim + 1> ordering(int face);
 
         /**
          * Identifies which <i>subdim</i>-face in a <i>dim</i>-dimensional
@@ -158,7 +158,7 @@ class FaceNumberingAPI {
          * <i>dim</i>-simplex.  This will be between 0 and
          * (<i>dim</i>+1 choose <i>subdim</i>+1)-1 inclusive.
          */
-        static constexpr unsigned faceNumber(Perm<dim + 1> vertices);
+        static constexpr int faceNumber(Perm<dim + 1> vertices);
 
         /**
          * Tests whether the given <i>subdim</i>-face of a
@@ -173,7 +173,7 @@ class FaceNumberingAPI {
          * @return \c true if and only if the given <i>subdim</i>-face
          * contains the given vertex.
          */
-        static constexpr bool containsVertex(unsigned face, unsigned vertex);
+        static constexpr bool containsVertex(int face, int vertex);
 #endif // __DOXYGEN
 };
 
@@ -228,7 +228,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
     public:
         // The following routines are documented in FaceNumberingAPI.
-        static constexpr Perm<dim + 1> ordering(unsigned face) {
+        static constexpr Perm<dim + 1> ordering(int face) {
             // We always compute face numbering in dimension lexDim,
             // where faces are numbered in forward lexicographial order.
 
@@ -266,15 +266,15 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             int shift = 0;
 
             // reverse ordering
-            unsigned remaining = binomSmall_[dim+1][lexDim+1] - face - 1;
+            int remaining = binomSmall_[dim+1][lexDim+1] - face - 1;
 
-            unsigned k = lexDim+1;
-            unsigned max = dim;
+            int k = lexDim+1;
+            int max = dim;
 
             while (remaining > 0) {
               bool done = false;
               while (! done) {
-                unsigned val = (max < k ? 0 : binomSmall_[max][k]);
+                int val = (max < k ? 0 : binomSmall_[max][k]);
                 if (val <= remaining) {
                   --k;
                   // lexDim-k -> dim-max
@@ -318,7 +318,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
                 return Perm<dim + 1>::fromImagePack(code).reverse();
         }
 
-        static constexpr unsigned faceNumber(Perm<dim + 1> vertices) {
+        static constexpr int faceNumber(Perm<dim + 1> vertices) {
             // We always compute face numbering in dimension lexDim,
             // where faces are numbered in forward lexicographial order.
             //
@@ -359,7 +359,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
                 v |= ((unsigned)1 << vertices[i]);
 
             // Walk through the vertices from highest to lowest.
-            unsigned val = 0;
+            int val = 0;
             int pos = 0;
             for (int i = dim; pos <= lexDim; --i) {
               if (v & ((unsigned)1 << i)) {
@@ -373,7 +373,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             return binomSmall_[dim+1][lexDim+1]-1-val;
         }
 
-        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(int face, int vertex) {
             // We always compute face numbering in dimension lexDim,
             // where faces are numbered in forward lexicographial order.
             //
@@ -387,15 +387,15 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             // binomial coefficients are precomputed)
 
 
-            unsigned remaining = binomSmall_[dim+1][lexDim+1] - face - 1;
+            int remaining = binomSmall_[dim+1][lexDim+1] - face - 1;
 
-            unsigned k = lexDim+1;
-            unsigned max = dim;
+            int k = lexDim+1;
+            int max = dim;
 
             while (remaining > 0) {
               bool done = false;
               while (! done) {
-                unsigned val = (max < k ? 0 : binomSmall_[max][k]);
+                int val = (max < k ? 0 : binomSmall_[max][k]);
                 if (val <= remaining) {
                   --k;
                   if (vertex == dim-max)
@@ -426,7 +426,7 @@ class FaceNumberingImpl<dim, 0, codim> : public FaceNumberingAPI<dim, 0> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static constexpr Perm<dim + 1> ordering(unsigned face) {
+        static constexpr Perm<dim + 1> ordering(int face) {
             if constexpr (dim == 3) {
                 switch (face) {
                     case 1: return Perm<4>::fromPermCode2(6); // 1032
@@ -443,12 +443,12 @@ class FaceNumberingImpl<dim, 0, codim> : public FaceNumberingAPI<dim, 0> {
                 ImagePack code = face; // 0 -> face
 
                 int shift = Perm<dim + 1>::imageBits;
-                for (int i = dim; i >= static_cast<int>(face) + 1; --i) {
+                for (int i = dim; i >= face + 1; --i) {
                     // dim - i + 1 -> i;
                     code |= (static_cast<ImagePack>(i) << shift);
                     shift += Perm<dim + 1>::imageBits;
                 }
-                for (int i = static_cast<int>(face) - 1; i >= 0; --i) {
+                for (int i = face - 1; i >= 0; --i) {
                     // dim - i -> i
                     code |= (static_cast<ImagePack>(i) << shift);
                     shift += Perm<dim + 1>::imageBits;
@@ -457,11 +457,11 @@ class FaceNumberingImpl<dim, 0, codim> : public FaceNumberingAPI<dim, 0> {
             }
         }
 
-        static constexpr unsigned faceNumber(Perm<dim + 1> vertices) {
+        static constexpr int faceNumber(Perm<dim + 1> vertices) {
             return vertices[0];
         }
 
-        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(int face, int vertex) {
             return (face == vertex);
         }
 #endif // ! __DOXYGEN
@@ -479,7 +479,7 @@ class FaceNumberingImpl<dim, subdim, 0> : public FaceNumberingAPI<dim, dim - 1> 
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static constexpr Perm<dim + 1> ordering(unsigned face) {
+        static constexpr Perm<dim + 1> ordering(int face) {
             // Construct a permutation code from the individual images.
 
             using ImagePack = typename Perm<dim + 1>::ImagePack;
@@ -503,11 +503,11 @@ class FaceNumberingImpl<dim, subdim, 0> : public FaceNumberingAPI<dim, dim - 1> 
 
         }
 
-        static constexpr unsigned faceNumber(Perm<dim + 1> vertices) {
+        static constexpr int faceNumber(Perm<dim + 1> vertices) {
             return vertices[dim];
         }
 
-        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(int face, int vertex) {
             return (face != vertex);
         }
 #endif // ! __DOXYGEN
@@ -518,15 +518,15 @@ class FaceNumberingImpl<1, 0, 0> : public FaceNumberingAPI<1, 0> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static constexpr Perm<2> ordering(unsigned face) {
+        static constexpr Perm<2> ordering(int face) {
             return Perm<2>::rot(face);
         }
 
-        static constexpr unsigned faceNumber(Perm<2> vertices) {
+        static constexpr int faceNumber(Perm<2> vertices) {
             return vertices[0];
         }
 
-        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(int face, int vertex) {
             return (face == vertex);
         }
 #endif // ! __DOXYGEN
@@ -544,15 +544,15 @@ class FaceNumberingImpl<2, 1, 0> : public FaceNumberingAPI<2, 1> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static constexpr Perm<3> ordering(unsigned face) {
+        static constexpr Perm<3> ordering(int face) {
             return Perm<3>::fromPermCode(ordering_[face]);
         }
 
-        static constexpr unsigned faceNumber(Perm<3> vertices) {
+        static constexpr int faceNumber(Perm<3> vertices) {
             return vertices[2];
         }
 
-        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(int face, int vertex) {
             return (face != vertex);
         }
 #endif // ! __DOXYGEN
@@ -610,15 +610,15 @@ class FaceNumberingImpl<3, 1, 1> : public FaceNumberingAPI<3, 1> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static constexpr Perm<4> ordering(unsigned face) {
+        static constexpr Perm<4> ordering(int face) {
             return Perm<4>::fromPermCode2(ordering_[face]);
         }
 
-        static constexpr unsigned faceNumber(Perm<4> vertices) {
+        static constexpr int faceNumber(Perm<4> vertices) {
             return edgeNumber[vertices[0]][vertices[1]];
         }
 
-        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(int face, int vertex) {
             return (vertex == edgeVertex[face][0] ||
                     vertex == edgeVertex[face][1]);
         }
@@ -637,15 +637,15 @@ class FaceNumberingImpl<3, 2, 0> : public FaceNumberingAPI<3, 2> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static constexpr Perm<4> ordering(unsigned face) {
+        static constexpr Perm<4> ordering(int face) {
             return Perm<4>::fromPermCode2(ordering_[face]);
         }
 
-        static constexpr unsigned faceNumber(Perm<4> vertices) {
+        static constexpr int faceNumber(Perm<4> vertices) {
             return vertices[3];
         }
 
-        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(int face, int vertex) {
             return (face != vertex);
         }
 #endif // ! __DOXYGEN
@@ -707,15 +707,15 @@ class FaceNumberingImpl<4, 1, 2> : public FaceNumberingAPI<4, 1> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static constexpr Perm<5> ordering(unsigned face) {
+        static constexpr Perm<5> ordering(int face) {
             return Perm<5>::fromPermCode2(ordering_[face]);
         }
 
-        static constexpr unsigned faceNumber(Perm<5> vertices) {
+        static constexpr int faceNumber(Perm<5> vertices) {
             return edgeNumber[vertices[0]][vertices[1]];
         }
 
-        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(int face, int vertex) {
             return (vertex == edgeVertex[face][0] ||
                     vertex == edgeVertex[face][1]);
         }
@@ -787,15 +787,15 @@ class FaceNumberingImpl<4, 2, 1> : public FaceNumberingAPI<4, 2> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static constexpr Perm<5> ordering(unsigned face) {
+        static constexpr Perm<5> ordering(int face) {
             return Perm<5>::fromPermCode2(ordering_[face]);
         }
 
-        static constexpr unsigned faceNumber(Perm<5> vertices) {
+        static constexpr int faceNumber(Perm<5> vertices) {
             return triangleNumber[vertices[0]][vertices[1]][vertices[2]];
         }
 
-        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(int face, int vertex) {
             return (vertex == triangleVertex[face][0] ||
                     vertex == triangleVertex[face][1] ||
                     vertex == triangleVertex[face][2]);
@@ -815,15 +815,15 @@ class FaceNumberingImpl<4, 3, 0> : public FaceNumberingAPI<4, 3> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static constexpr Perm<5> ordering(unsigned face) {
+        static constexpr Perm<5> ordering(int face) {
             return Perm<5>::fromPermCode2(ordering_[face]);
         }
 
-        static constexpr unsigned faceNumber(Perm<5> vertices) {
+        static constexpr int faceNumber(Perm<5> vertices) {
             return vertices[4];
         }
 
-        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(int face, int vertex) {
             return (face != vertex);
         }
 #endif // ! __DOXYGEN

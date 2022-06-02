@@ -16,8 +16,10 @@ Version 7.1  [ TODO ]
         - Many native integer types (e.g., int, unsigned, long) have been
           changed, reflecting more natural and/or consistent choices.
           In particular, the types used for indices, sizes and/or lengths
-          now more consistently use size_t.  Note in particular that
-          some types have changed from signed to unsigned, and vice versa.
+          now more consistently use size_t (or ssize_t when needed), and
+          the types used for "small" integers now more consistently use int
+          instead of unsigned.  Note in particular that some types have
+          changed from signed to unsigned, and vice versa.
     ENGINE:
         Class AbelianGroup:
             - New tightDecoding() routines.
