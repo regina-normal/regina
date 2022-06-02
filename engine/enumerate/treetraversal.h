@@ -185,11 +185,11 @@ class TreeTraversal : public ShortOutput<
                  same encoding; see LPInitialTableaux for details. */
         const BanConstraint ban_;
             /**< Details of any banning/marking constraints that are in use. */
-        const int nTets_;
+        const size_t nTets_;
             /**< The number of tetrahedra in the underlying triangulation. */
-        const int nTypes_;
+        const size_t nTypes_;
             /**< The total length of a type vector. */
-        const int nTableaux_;
+        const size_t nTableaux_;
             /**< The maximum number of tableaux that we need to keep in memory
                  at any given time during the backtracking search. */
 
@@ -199,7 +199,7 @@ class TreeTraversal : public ShortOutput<
                  we modify this type vector in-place.  Any types beyond
                  the current level in the search tree will always be set
                  to zero. */
-        int* typeOrder_;
+        size_t* typeOrder_;
             /**< A permutation of 0,...,\a nTypes_-1 that indicates in
                  which order we select types: the first type we select
                  (at the root of the tree) is type_[typeOrder_[0]], and the
@@ -208,11 +208,11 @@ class TreeTraversal : public ShortOutput<
                  allowed to change as the algorithm runs (though of
                  course you can only change sections of the permutation
                  that correspond to types not yet selected). */
-        int level_;
+        ssize_t level_;
             /**< The current level in the search tree.
                  As the search runs, this holds the index into
                  typeOrder_ corresponding to the last type that we chose. */
-        int octLevel_;
+        ssize_t octLevel_;
             /**< The level at which we are enforcing an octagon type (with a
                  strictly positive number of octagons).  If we are working with
                  angle structures or normal surfaces only (and so we do not
@@ -480,7 +480,7 @@ class TreeTraversal : public ShortOutput<
          *
          * @param nextType the next type to process.
          */
-        void setNext(int nextType);
+        void setNext(size_t nextType);
 
         /**
          * Returns the next unmarked triangle type from a given starting
@@ -507,7 +507,7 @@ class TreeTraversal : public ShortOutput<
          * triangle type from \a startFrom onwards, or -1 if there are no
          * more remaining.
          */
-        int nextUnmarkedTriangleType(int startFrom);
+        ssize_t nextUnmarkedTriangleType(size_t startFrom);
 
         /**
          * Determines how many different values we could assign to the given
@@ -535,7 +535,7 @@ class TreeTraversal : public ShortOutput<
          * feasible system; this will be between 0 and 4 inclusive for
          * quadrilateral types, or between 0 and 3 inclusive for angle types.
          */
-        int feasibleBranches(int quadType);
+        int feasibleBranches(size_t quadType);
 
         /**
          * Gives a rough estimate as to what percentage of the way the
@@ -684,7 +684,7 @@ class TreeEnumeration :
         size_t nSolns_;
             /**< The number of vertex surfaces found so far. */
 
-        int lastNonZero_;
+        ssize_t lastNonZero_;
             /**< The index into typeOrder_ corresponding to the last non-zero
                  type that was selected, or -1 if we still have the zero
                  vector.  Here "last" means "last chosen"; that is, the
@@ -1381,7 +1381,7 @@ class TreeSingleSoln :
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::setNext;
 
     private:
-        int nextZeroLevel_;
+        size_t nextZeroLevel_;
             /**< The next level in the search tree at which we will force some
                  triangle coordinate to zero.  We use this to avoid vertex
                  links by dynamically reorganising the search tree as we run
@@ -1501,7 +1501,7 @@ inline size_t TreeTraversal<LPConstraint, BanConstraint, IntType>::visited()
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline void TreeTraversal<LPConstraint, BanConstraint, IntType>::dumpTypes(
         std::ostream& out) const {
-    for (unsigned i = 0; i < nTypes_; ++i)
+    for (size_t i = 0; i < nTypes_; ++i)
         out << static_cast<int>(type_[i]);
 }
 
@@ -1520,7 +1520,7 @@ void TreeTraversal<LPConstraint, BanConstraint, IntType>::writeTextShort(
 
     // We assume the possible types are all single-digit.
     char* c = new char[nTypes_ + 1];
-    int i = 0;
+    ssize_t i = 0;
     for ( ; i <= level_; ++i)
         c[typeOrder_[i]] = char(type_[typeOrder_[i]] + '0');
     for ( ; i < nTypes_; ++i)
@@ -1532,11 +1532,15 @@ void TreeTraversal<LPConstraint, BanConstraint, IntType>::writeTextShort(
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
-inline int TreeTraversal<LPConstraint, BanConstraint, IntType>::
-        nextUnmarkedTriangleType(int startFrom) {
+inline ssize_t TreeTraversal<LPConstraint, BanConstraint, IntType>::
+        nextUnmarkedTriangleType(size_t startFrom) {
     while (startFrom < nTypes_ && ban_.marked(2 * nTets_ + startFrom))
         ++startFrom;
-    return (startFrom == nTypes_ ? -1 : startFrom);
+    // Don't use ( ? : ), since we are combining signed/unsigned return values.
+    if (startFrom == nTypes_)
+        return -1;
+    else
+        return startFrom;
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
