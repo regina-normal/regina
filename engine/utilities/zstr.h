@@ -4,7 +4,9 @@
  *
  * It has been edited for use in Regina by removing the "internal stream"
  * classes zstr::ifstream and zstr::ofstream (since they caused some minor
- * porting problems, and Regina does not need them anyway).
+ * porting problems, and Regina does not need them anyway), by adding some
+ * explicit typecasts to fix compiler warnings, and by changing the default
+ * buffer size on 16-bit systems to something safe.
  *
  * This header should be considered "internal" to Regina: it is only
  * used at build time, it is never #included into any of Regina's public
@@ -214,9 +216,9 @@ public:
                     // run inflate() on input
                     if (! zstrm_p) zstrm_p = new detail::z_stream_wrapper(true);
                     zstrm_p->next_in = reinterpret_cast< decltype(zstrm_p->next_in) >(in_buff_start);
-                    zstrm_p->avail_in = in_buff_end - in_buff_start;
+                    zstrm_p->avail_in = static_cast<uInt>(in_buff_end - in_buff_start);
                     zstrm_p->next_out = reinterpret_cast< decltype(zstrm_p->next_out) >(out_buff_free_start);
-                    zstrm_p->avail_out = (out_buff + buff_size) - out_buff_free_start;
+                    zstrm_p->avail_out = static_cast<uInt>((out_buff + buff_size) - out_buff_free_start);
                     int ret = inflate(zstrm_p, Z_NO_FLUSH);
                     // process return code
                     if (ret != Z_OK && ret != Z_STREAM_END) throw Exception(zstrm_p, ret);
@@ -254,7 +256,9 @@ private:
     bool auto_detect_run;
     bool is_text;
 
-    static constexpr std::size_t default_buff_size = (std::size_t)1 << 20;
+    // The buffer size needs to fit inside a uInt.
+    static constexpr std::size_t default_buff_size =
+        (sizeof(uInt) >= 4 ? ((std::size_t)1 << 20) : ((std::size_t)1 << 10));
 }; // class istreambuf
 
 class ostreambuf
@@ -283,7 +287,7 @@ public:
         while (true)
         {
             zstrm_p->next_out = reinterpret_cast< decltype(zstrm_p->next_out) >(out_buff);
-            zstrm_p->avail_out = buff_size;
+            zstrm_p->avail_out = static_cast<uInt>(buff_size);
             int ret = deflate(zstrm_p, flush);
             if (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR) throw Exception(zstrm_p, ret);
             std::streamsize sz = sbuf_p->sputn(out_buff, reinterpret_cast< decltype(out_buff) >(zstrm_p->next_out) - out_buff);
@@ -318,7 +322,7 @@ public:
     std::streambuf::int_type overflow(std::streambuf::int_type c = traits_type::eof()) override
     {
         zstrm_p->next_in = reinterpret_cast< decltype(zstrm_p->next_in) >(pbase());
-        zstrm_p->avail_in = pptr() - pbase();
+        zstrm_p->avail_in = static_cast<uInt>(pptr() - pbase());
         while (zstrm_p->avail_in > 0)
         {
             int r = deflate_loop(Z_NO_FLUSH);
@@ -350,7 +354,9 @@ private:
     detail::z_stream_wrapper * zstrm_p;
     std::size_t buff_size;
 
-    static constexpr std::size_t default_buff_size = (std::size_t)1 << 20;
+    // The buffer size needs to fit inside a uInt.
+    static constexpr std::size_t default_buff_size =
+        (sizeof(uInt) >= 4 ? ((std::size_t)1 << 20) : ((std::size_t)1 << 10));
 }; // class ostreambuf
 
 class istream

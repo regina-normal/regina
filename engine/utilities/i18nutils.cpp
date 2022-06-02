@@ -161,9 +161,11 @@ IConvStreamBuffer::int_type IConvStreamBuffer::overflow(
     // Do we know how to translate between encodings?  If not, just
     // send the data straight through to the destination stream.
     if (cd == cdNone) {
+        // Note: since preBuffer is very small, we can safely cast
+        // n to an int.
         ptrdiff_t n = pptr() - preBuffer;
         sink->write(preBuffer, n);
-        pbump(-n);
+        pbump(- static_cast<int>(n));
 
         if (sink->fail())
             return traits_type::eof();
@@ -191,10 +193,13 @@ IConvStreamBuffer::int_type IConvStreamBuffer::overflow(
                 return traits_type::eof();
         }
 
+        // Note: all the int casts below are safe, since preBuffer has a
+        // very small size.
+
         // Are we completely finished?
         if (inBytes == 0) {
             // Yes!
-            pbump(- (inPtr - preBuffer));
+            pbump(- static_cast<int>(inPtr - preBuffer));
             return 0;
         }
 
@@ -204,7 +209,7 @@ IConvStreamBuffer::int_type IConvStreamBuffer::overflow(
             // anyway; move the leftover input to the front of the input
             // buffer and try again.
             ::memmove(preBuffer, inPtr, inBytes);
-            pbump(- (inPtr - preBuffer));
+            pbump(- static_cast<int>(inPtr - preBuffer));
             continue;
         }
         if (iconvErr == EINVAL) {
@@ -212,14 +217,14 @@ IConvStreamBuffer::int_type IConvStreamBuffer::overflow(
             // leftover input to the front of the buffer and stop, since
             // we need more input before we can continue translating.
             ::memmove(preBuffer, inPtr, inBytes);
-            pbump(- (inPtr - preBuffer));
+            pbump(- static_cast<int>(inPtr - preBuffer));
             return 0;
         }
         if (iconvErr == EILSEQ) {
             // We hit an invalid multibyte sequence.
             // Try to recover gracefully by just skipping over it.
             ::memmove(preBuffer, inPtr + 1, inBytes - 1);
-            pbump(- (inPtr + 1 - preBuffer));
+            pbump(- static_cast<int>(inPtr + 1 - preBuffer));
 
             sink->write("?", 1);
             if (sink->fail())
