@@ -112,10 +112,9 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
     typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator bit;
 
     auto* unitMatch = new Vector<IntegerType>*[dim];
-    int i, j;
-    for (i = 0; i < dim; ++i) {
+    for (size_t i = 0; i < dim; ++i) {
         unitMatch[i] = new Vector<IntegerType>(nEqns);
-        for (j = 0; j < nEqns; ++j)
+        for (size_t j = 0; j < nEqns; ++j)
             (*unitMatch[i])[j] = subspace.entry(j, i);
     }
 
@@ -126,7 +125,7 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
     auto* match = new Vector<IntegerType>*[dim];
     auto* frozen = new BitmaskType[dim];
 
-    for (i = 0; i < dim; ++i)
+    for (size_t i = 0; i < dim; ++i)
         frozen[i].reset(dim); // All false.
 
     // Push the zero vector.
@@ -152,7 +151,7 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
         // Do we have a non-zero solution?
         if (! first) {
             found = false;
-            for (i = 0; i < nEqns; ++i)
+            for (size_t i = 0; i < nEqns; ++i)
                 if ((*m)[i] != 0) {
                     found = true;
                     break;
@@ -166,7 +165,7 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
         }
 
         // Try incrementing along different coordinate axes.
-        for (i = 0; i < dim; ++i) {
+        for (size_t i = 0; i < dim; ++i) {
             if (f.get(i))
                 continue; // This coordinate is frozen.
             if (! first) {
@@ -204,7 +203,7 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
 
                     // Full check.
                     dom = true;
-                    for (j = 0; j < dim; ++j) {
+                    for (size_t j = 0; j < dim; ++j) {
                         if (    (j != i && (*c)[j] < (**bit)[j]) ||
                                 (j == i && (*c)[j] + 1 < (**bit)[j])) {
                             dom = false;
@@ -247,7 +246,7 @@ void HilbertCD::enumerateUsingBitmask(Action&& action,
     }
 
     // Clean up.
-    for (i = 0; i < dim; ++i)
+    for (size_t i = 0; i < dim; ++i)
         delete unitMatch[i];
 
     delete[] unitMatch;
