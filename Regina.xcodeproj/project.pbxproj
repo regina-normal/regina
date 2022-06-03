@@ -11616,6 +11616,7 @@
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11648,6 +11649,7 @@
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
