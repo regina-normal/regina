@@ -182,13 +182,13 @@ constexpr IntType nextPowerOfTwo(IntType n) {
  * The largest integer of the given type that can be multiplied by \a coeff
  * without overflowing.
  *
+ * The template parameter \a IntType may be any native C++ integer type, such
+ * as \c int, \c long, and so on.  This type may be either signed or unsigned,
+ * but it must be supported by std::numeric_limits.
+ *
+ * The template parameter \a coeff can be any positive integer.
+ *
  * \ifacespython Not present, since Python does not support templates.
- *
- * \tparam IntType any native C++ integer type, such as \c int, \c long,
- * and so on.  This type may be either signed or unsigned, but it must be
- * supported by std::numeric_limits.
- *
- * \tparam coeff a positive integer.
  *
  * \ingroup utilities
  */
@@ -200,13 +200,13 @@ inline constexpr IntType maxSafeFactor =
  * The largest integer of the given type that can be multiplied by \a coeff
  * without overflowing.
  *
+ * The template parameter \a IntType may be any native C++ integer type, such
+ * as \c int, \c long, and so on.  This type may be either signed or unsigned,
+ * but it must be supported by std::numeric_limits.
+ *
+ * The template parameter \a coeff can be any positive integer.
+ *
  * \ifacespython Not present, since Python does not support templates.
- *
- * \tparam IntType any native C++ integer type, such as \c int, \c long,
- * and so on.  This type may be either signed or unsigned, but it must be
- * supported by std::numeric_limits.
- *
- * \tparam coeff a positive integer.
  *
  * \ingroup utilities
  */
