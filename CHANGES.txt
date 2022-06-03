@@ -130,6 +130,9 @@ Version 7.1  [ TODO ]
             - New routine to support compile-time for loops.
         Functions gcd(), lcm():
             - Deprecated in favour of the new C++17 std::gcd() and std::lcm().
+        Functions select_constexpr(), select_constexpr_as_variant():
+            - New routine to support compile-time selection (similar to a
+              compile-time switch statement).
         Function tightDecoding():
             - New template function that reconstructs integers and booleans
               from tight encodings.
