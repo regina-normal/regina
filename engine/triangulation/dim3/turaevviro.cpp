@@ -333,10 +333,9 @@ namespace {
                 tmp);
             ans *= tmp;
 
-            int i;
             const Triangle<3>* triangle;
             const Edge<3>* edge;
-            for (i = 0; i < 4; ++i) {
+            for (int i = 0; i < 4; ++i) {
                 triangle = tet->triangle(i);
                 if (triangle->front().tetrahedron() == tet &&
                         triangle->front().triangle() == i) {
@@ -356,7 +355,7 @@ namespace {
                     }
                 }
             }
-            for (i = 0; i < 6; ++i) {
+            for (int i = 0; i < 6; ++i) {
                 edge = tet->edge(i);
                 if (edge->front().tetrahedron() == tet &&
                         edge->front().edge() == i) {
@@ -448,18 +447,18 @@ namespace {
         if (tracker)
             tracker->newStage("Enumerating colourings");
 
-        unsigned long nEdges = tri.countEdges();
-        unsigned long nTriangles = tri.countTriangles();
-        unsigned long nTet = tri.size();
+        size_t nEdges = tri.countEdges();
+        size_t nTriangles = tri.countTriangles();
+        size_t nTet = tri.size();
 
         // Our plan is to run through all admissible colourings via a
         // backtracking search, with the high-degree edges towards the root
         // of the search tree and the low-degree edges towards the leaves.
 
         // We first sort the edges by degree.
-        unsigned long i, j;
-        auto* sortedEdges = new unsigned long[nEdges];
-        auto* edgePos = new unsigned long[nEdges];
+        size_t i, j;
+        auto* sortedEdges = new size_t[nEdges];
+        auto* edgePos = new size_t[nEdges];
 
         for (i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
@@ -474,16 +473,16 @@ namespace {
         // The following code contains some quadratic loops; we don't
         // worry about this since it makes the code simpler and the
         // overall algorithm is much slower (exponential) anyway.
-        unsigned long* tmp;
+        size_t* tmp;
 
-        tmp = new unsigned long[nTriangles];
+        tmp = new size_t[nTriangles];
         for (i = 0; i < nEdges; ++i) {
             for (auto& emb : *tri.edge(sortedEdges[i]))
                 tmp[emb.tetrahedron()->
                     triangle(emb.vertices()[2])->index()] = i;
         }
-        auto* triDone = new unsigned long[nTriangles];
-        auto* triDoneStart = new unsigned long[nEdges + 1];
+        auto* triDone = new size_t[nTriangles];
+        auto* triDoneStart = new size_t[nEdges + 1];
         triDoneStart[0] = 0;
         for (i = 0; i < nEdges; ++i) {
             triDoneStart[i + 1] = triDoneStart[i];
@@ -493,12 +492,12 @@ namespace {
         }
         delete[] tmp;
 
-        tmp = new unsigned long[nTet];
+        tmp = new size_t[nTet];
         for (i = 0; i < nEdges; ++i)
             for (auto& emb : *tri.edge(sortedEdges[i]))
                 tmp[emb.tetrahedron()->index()] = i;
-        auto* tetDone = new unsigned long[nTet];
-        auto* tetDoneStart = new unsigned long[nEdges + 1];
+        auto* tetDone = new size_t[nTet];
+        auto* tetDoneStart = new size_t[nEdges + 1];
         tetDoneStart[0] = 0;
         for (i = 0; i < nEdges; ++i) {
             tetDoneStart[i + 1] = tetDoneStart[i];
@@ -526,7 +525,7 @@ namespace {
         auto* colour = new unsigned long[nEdges];
 
         std::fill(colour, colour + nEdges, 0);
-        long curr = 0;
+        ssize_t curr = 0;
         TVType valColour(init.halfField ? init.r : 2 * init.r);
         TVType tmpTVType(init.halfField ? init.r : 2 * init.r);
         bool admissible;
@@ -546,7 +545,7 @@ namespace {
 
         while (curr >= 0) {
             // Have we found an admissible colouring?
-            if (curr >= static_cast<long>(nEdges)) {
+            if (curr >= static_cast<ssize_t>(nEdges)) {
 #ifdef TV_BACKTRACK_DUMP_COLOURINGS
                 for (i = 0; i < nEdges; ++i) {
                     if (i > 0)
@@ -677,16 +676,16 @@ namespace {
         if (tracker)
             tracker->newStage("Enumerating colourings");
 
-        unsigned long nEdges = tri.countEdges();
+        size_t nEdges = tri.countEdges();
 
         // Our plan is to run through all admissible colourings via a
         // backtracking search, with the high-degree edges towards the root
         // of the search tree and the low-degree edges towards the leaves.
 
         // We first sort the edges by degree.
-        unsigned long i;
-        auto* sortedEdges = new unsigned long[nEdges];
-        auto* edgePos = new unsigned long[nEdges];
+        size_t i;
+        auto* sortedEdges = new size_t[nEdges];
+        auto* edgePos = new size_t[nEdges];
 
         for (i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
@@ -703,10 +702,9 @@ namespace {
         auto* colour = new unsigned long[nEdges];
 
         std::fill(colour, colour + nEdges, 0);
-        long curr = 0;
+        ssize_t curr = 0;
         TVType valColour(init.halfField ? init.r : 2 * init.r);
         bool admissible;
-        long index1, index2;
         const Tetrahedron<3>* tet;
 
         double percent;
@@ -722,7 +720,7 @@ namespace {
 
         while (curr >= 0) {
             // Have we found an admissible colouring?
-            if (curr >= static_cast<long>(nEdges)) {
+            if (curr >= static_cast<ssize_t>(nEdges)) {
 #ifdef TV_BACKTRACK_DUMP_COLOURINGS
                 for (i = 0; i < nEdges; ++i) {
                     if (i > 0)
@@ -779,10 +777,10 @@ namespace {
             // Does the current value for colour[curr] preserve admissibility?
             admissible = true;
             for (auto& emb : *tri.edge(sortedEdges[curr])) {
-                index1 = emb.tetrahedron()->edge(
+                size_t index1 = emb.tetrahedron()->edge(
                     Edge<3>::edgeNumber[emb.vertices()[0]]
                     [emb.vertices()[2]])->index();
-                index2 = emb.tetrahedron()->edge(
+                size_t index2 = emb.tetrahedron()->edge(
                     Edge<3>::edgeNumber[emb.vertices()[1]]
                     [emb.vertices()[2]])->index();
                 if (edgePos[index1] <= curr && edgePos[index2] <= curr) {
@@ -822,6 +820,9 @@ namespace {
         return ans;
     }
 
+    /**
+     * Precondition: init.r can fit into an \c int.
+     */
     template <bool exact>
     typename InitialData<exact>::TVType turaevViroTreewidth(
             const Triangulation<3>& tri,
@@ -839,13 +840,11 @@ namespace {
 
         const TreeDecomposition& d = tri.niceTreeDecomposition();
 
-        int nEdges = tri.countEdges();
+        size_t nEdges = tri.countEdges();
         size_t nBags = d.size();
         size_t nEasyBags = 0;
         double hardBagWeightSum = 0;
         const TreeBag *bag, *child, *sibling;
-        int i, j;
-        int index;
         const Tetrahedron<3>* tet;
         const Edge<3>* edge;
 
@@ -862,7 +861,7 @@ namespace {
         auto* seenDegree = new LightweightSequence<int>[nBags];
 
         for (bag = d.first(); bag; bag = bag->next()) {
-            index = bag->index();
+            size_t index = bag->index();
             seenDegree[index].init(nEdges);
 
             if (bag->isLeaf()) {
@@ -884,7 +883,7 @@ namespace {
                 std::copy(seenDegree[child->index()].begin(),
                     seenDegree[child->index()].end(),
                     seenDegree[index].begin());
-                for (i = 0; i < 6; ++i) {
+                for (int i = 0; i < 6; ++i) {
                     edge = tet->edge(i);
                     ++seenDegree[index][edge->index()];
                     if (seenDegree[index][edge->index()] == edge->degree())
@@ -895,7 +894,7 @@ namespace {
                 hardBagWeightSum += HARD_BAG_WEIGHT(bag);
                 child = bag->children();
                 sibling = child->sibling();
-                for (i = 0; i < nEdges; ++i) {
+                for (size_t i = 0; i < nEdges; ++i) {
                     seenDegree[index][i] = seenDegree[child->index()][i] +
                         seenDegree[sibling->index()][i];
                     if (seenDegree[index][i] == tri.edge(i)->degree())
@@ -911,7 +910,7 @@ namespace {
         std::fill(partial, partial + nBags, nullptr);
 
         std::pair<SolnIterator, bool> existingSoln;
-        int tetEdge[6];
+        size_t tetEdge[6];
         int colour[6];
         int level;
         bool ok;
@@ -938,7 +937,7 @@ namespace {
         int choiceType[6];
 
         for (bag = d.first(); bag; bag = bag->next()) {
-            index = bag->index();
+            size_t index = bag->index();
 
             if (bag->isLeaf()) {
                 if (tracker) {
@@ -987,14 +986,14 @@ namespace {
                 child = bag->children();
                 tet = tri.tetrahedron(child->element(bag->subtype()));
 
-                for (i = 5; i >= 0; --i) {
+                for (int i = 5; i >= 0; --i) {
                     tetEdge[i] = tet->edge(i)->index();
                     if (seenDegree[child->index()][tetEdge[i]] > 0) {
                         // The child will have already coloured this edge.
                         choiceType[i] = -1;
                     } else {
                         choiceType[i] = 0;
-                        for (j = 5; j > i; --j)
+                        for (int j = 5; j > i; --j)
                             if (tetEdge[j] == tetEdge[i]) {
                                 // We will have already coloured this edge
                                 // because it reappears as a higher-numbered
@@ -1016,7 +1015,7 @@ namespace {
                         if (! tracker->setPercent(percent))
                             break;
                     }
-                    for (i = 0; i < 6; ++i)
+                    for (int i = 0; i < 6; ++i)
                         colour[i] = (choiceType[i] < 0 ?
                             soln.first[tetEdge[i]] : -1);
 
@@ -1036,12 +1035,12 @@ namespace {
                             // For any edges that never appear beyond
                             // this bag, we mark them for aggregation.
                             LightweightSequence<int> seq(nEdges);
-                            for (i = 0; i < nEdges; ++i)
+                            for (size_t i = 0; i < nEdges; ++i)
                                 if (seenDegree[index][i] < 0)
                                     seq[i] = TV_AGGREGATED;
                                 else
                                     seq[i] = soln.first[i];
-                            for (i = 0; i < 6; ++i)
+                            for (int i = 0; i < 6; ++i)
                                 if (choiceType[i] == 0 &&
                                         seq[tetEdge[i]] != TV_AGGREGATED)
                                     seq[tetEdge[i]] = colour[i];
@@ -1063,8 +1062,7 @@ namespace {
                         if (choiceType[level] > 0)
                             colour[level] = colour[choiceType[level]];
                         else if (choiceType[level] == 0) {
-                            if (colour[level] <
-                                    static_cast<long>(init.r) - 2)
+                            if (colour[level] < static_cast<int>(init.r) - 2)
                                 ++colour[level];
                             else {
                                 // Out of choices at this level.
@@ -1123,7 +1121,7 @@ namespace {
                 sibling = child->sibling();
 
                 nOverlap = 0;
-                for (i = 0; i < nEdges; ++i)
+                for (size_t i = 0; i < nEdges; ++i)
                     if (seenDegree[child->index()][i] != 0 &&
                             seenDegree[sibling->index()][i] != 0)
                     overlap[nOverlap++] = i;
@@ -1199,7 +1197,7 @@ namespace {
                             TVType val = (*subit)->second * (*subit2)->second;
 
                             LightweightSequence<int> seq(nEdges);
-                            for (i = 0; i < nEdges; ++i)
+                            for (size_t i = 0; i < nEdges; ++i)
                                 if (seenDegree[index][i] < 0)
                                     seq[i] = TV_AGGREGATED;
                                 else if (seenDegree[child->index()][i] > 0)
@@ -1242,7 +1240,7 @@ namespace {
         if (tracker && tracker->isCancelled()) {
             // We don't know which elements of partial[] have been
             // deallocated, so check them all.
-            for (i = 0; i < nBags; ++i)
+            for (size_t i = 0; i < nBags; ++i)
                 delete partial[i];
             delete[] partial;
 
@@ -1259,7 +1257,7 @@ namespace {
         delete partial[nBags - 1];
         delete[] partial;
 
-        for (i = 0; i < tri.countVertices(); i++)
+        for (size_t i = 0; i < tri.countVertices(); i++)
             ans *= init.vertexContrib;
         return ans;
     }
@@ -1271,17 +1269,16 @@ namespace {
         using TVType = typename InitialData<exact>::TVType;
 
         std::vector<std::vector<mpz_class> > input;
-        unsigned long nTri = tri.countTriangles();
+        size_t nTri = tri.countTriangles();
 
         const Tetrahedron<3>* tet;
         Perm<4> p;
-        unsigned long i;
         for (Edge<3>* edge : tri.edges()) {
             for (auto& emb : *edge) {
                 std::vector<mpz_class>& v(input.emplace_back());
                 v.reserve(3 * nTri);
 
-                for (i = 0; i < 3 * nTri; ++i)
+                for (size_t i = 0; i < 3 * nTri; ++i)
                     v.emplace_back(long(0));
 
                 tet = emb.tetrahedron();
@@ -1323,9 +1320,8 @@ namespace {
         const std::vector<std::vector<mpz_class> > basis =
             cone.getHilbertBasis();
 
-        unsigned long j;
-        for (i = 0; i < basis.size(); ++i) {
-            for (j = 0; j < basis[i].size(); ++j)
+        for (size_t i = 0; i < basis.size(); ++i) {
+            for (size_t j = 0; j < basis[i].size(); ++j)
                 std::cout << basis[i][j] << ' ';
             std::cout << std::endl;
         }
@@ -1356,7 +1352,10 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
             ans = turaevViroNaive(*this, init, nullptr);
             break;
         default:
-            ans = turaevViroTreewidth(*this, init, nullptr);
+            if (r <= INT_MAX)
+                ans = turaevViroTreewidth(*this, init, nullptr);
+            else
+                ans = turaevViroBacktrack(*this, init, nullptr);
             break;
     }
     /*
@@ -1410,7 +1409,10 @@ Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,
             ans = turaevViroNaive(*this, init, tracker);
             break;
         default:
-            ans = turaevViroTreewidth(*this, init, tracker);
+            if (r <= INT_MAX)
+                ans = turaevViroTreewidth(*this, init, tracker);
+            else
+                ans = turaevViroBacktrack(*this, init, tracker);
             break;
     }
 

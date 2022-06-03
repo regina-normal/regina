@@ -118,6 +118,12 @@ Version 7.1  [ TODO ]
             - New routines for tight encodings and decodings.
             - The join() routine now checks all its preconditions, and
               throws an exception if any precondition fails.
+        Class Triangulation<3>:
+            - The Turaev-Viro routines now reserve the right to use a
+              different algorithm if your chosen algorithm does not
+              support the given parameters (r, parity).  Currently this
+              only happens if you ask for ALG_TREEWIDTH and your value
+              of r is so large that it cannot fit into a native C++ int.
         Class Triangulation<4>:
             - New routine intersectionForm().
             - New optimisations that reduce the need for 3-sphere/3-ball
