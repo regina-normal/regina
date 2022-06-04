@@ -115,14 +115,14 @@ std::vector<std::array<int, 4>> Link::pdData() const {
 
     // Build a lookup table from StrandRef::id() -> PD strand number:
     int* strand = new int[2 * n];
-    int next = 1;
+    int pdStrand = 1;
     for (auto start : components_) {
         if (! start)
             continue;
 
         StrandRef s = start;
         do {
-            strand[s.id()] = next++;
+            strand[s.id()] = pdStrand++;
             ++s;
         } while (s != start);
     }

@@ -47,6 +47,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
+#include <limits>
 
 namespace regina {
 
@@ -64,6 +65,11 @@ namespace regina {
 
 template <typename Iterator>
 Link Link::fromDT(Iterator begin, Iterator end) {
+    using InputInt = std::remove_cv_t<std::remove_reference_t<decltype(*begin)>>;
+    static_assert(std::is_integral_v<InputInt> &&
+        ! std::is_unsigned_v<InputInt>, "fromDT(): the iterator type "
+        "needs to dereference to give a native signed C++ integer type.");
+
     // Extract the number of crossings.
     size_t aNumCrossings = end - begin;
     if (aNumCrossings == 0)
@@ -72,13 +78,20 @@ Link Link::fromDT(Iterator begin, Iterator end) {
     // Some basic sanity checking.
     // We ensure that the integers are in range, but we do not yet check
     // that their absolute values are distinct (that will come later).
+
+    if constexpr (sizeof(InputInt) <= sizeof(size_t)) {
+        if (2 * aNumCrossings >
+                static_cast<size_t>(std::numeric_limits<InputInt>::max()))
+            throw InvalidArgument("fromDT(): too many crossings for "
+                "the given integer type");
+    }
+    const InputInt maxEntry = static_cast<InputInt>(2 * aNumCrossings);
+
     Iterator it;
     for (it = begin; it != end; ++it) {
         if (*it % 2 != 0)
             throw InvalidArgument("fromDT(): code contains odd integer");
-        if (*it == 0 ||
-                *it > 2*static_cast<ptrdiff_t>(aNumCrossings) ||
-                *it < -2*static_cast<ptrdiff_t>(aNumCrossings))
+        if (*it == 0 || *it > maxEntry || *it < -maxEntry)
             throw InvalidArgument("fromDT(): integer out of range in code");
     }
 

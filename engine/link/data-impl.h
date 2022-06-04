@@ -81,13 +81,20 @@ void Link::addComponents(size_t strandsRemaining,
         components_.emplace_back();
         ++strandsRemaining;
     } else {
-        long n = crossings_.size();
+        size_t n = crossings_.size();
+
+        if constexpr (sizeof(int) <= sizeof(size_t)) {
+            if (n > static_cast<size_t>(INT_MAX))
+                throw InvalidArgument("fromData(): too many crossings "
+                    "to hold using native C++ ints");
+        }
+        const int maxCrossing = static_cast<int>(n);
 
         int tmpCross;
         int tmpStrand;
 
         auto it = component.begin();
-        if (*it == 0 || *it > n || *it < -n)
+        if (*it == 0 || *it > maxCrossing || *it < -maxCrossing)
             throw InvalidArgument("fromData(): crossing out of range");
         if (*it > 0) {
             tmpCross = *it;
@@ -105,7 +112,7 @@ void Link::addComponents(size_t strandsRemaining,
         for (++it; it != component.end(); ++it) {
             prev = curr;
 
-            if (*it == 0 || *it > n || *it < -n)
+            if (*it == 0 || *it > maxCrossing || *it < -maxCrossing)
                 throw InvalidArgument("fromData(): crossing out of range");
             if (*it > 0) {
                 tmpCross = *it;
@@ -149,6 +156,12 @@ void Link::addComponents(size_t strandsRemaining,
 template <typename SignIterator, typename ComponentIterator>
 Link Link::fromData(SignIterator beginSigns, SignIterator endSigns,
         ComponentIterator beginComponents, ComponentIterator endComponents) {
+    using InputInt = std::remove_cv_t<std::remove_reference_t<
+        decltype(*beginComponents->begin())>>;
+    static_assert(std::is_integral_v<InputInt> &&
+        ! std::is_unsigned_v<InputInt>, "fromData(): the iterator type "
+        "needs to dereference to give a native signed C++ integer type.");
+
     Link ans;
 
     for (auto sit = beginSigns; sit != endSigns; ++sit) {
@@ -159,7 +172,14 @@ Link Link::fromData(SignIterator beginSigns, SignIterator endSigns,
     }
 
     size_t strandsFound = 0;
-    long n = ans.crossings_.size();
+    size_t n = ans.crossings_.size();
+
+    if constexpr (sizeof(InputInt) <= sizeof(size_t)) {
+        if (n > static_cast<size_t>(std::numeric_limits<InputInt>::max()))
+            throw InvalidArgument("fromData(): too many crossings for "
+                "the given integer type");
+    }
+    const InputInt maxCrossing = static_cast<InputInt>(n);
 
     for (auto cit = beginComponents; cit != endComponents; ++cit) {
         if (cit->size() == 0) {
@@ -172,12 +192,12 @@ Link Link::fromData(SignIterator beginSigns, SignIterator endSigns,
             bool first = true;
             StrandRef curr, prev;
             for (auto c : *cit) {
-                if (c == 0 || c > n || c < -n)
+                if (c == 0 || c > maxCrossing || c < -maxCrossing)
                     throw InvalidArgument("fromData(): crossing out of range");
                 if (c > 0)
                     curr = ans.crossings_[c - 1]->upper();
                 else
-                    curr = ans.crossings_[(-c) - 1]->lower();
+                    curr = ans.crossings_[-(c + 1)]->lower();
 
                 if (first) {
                     ans.components_.push_back(curr);

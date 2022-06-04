@@ -3714,7 +3714,9 @@ class Link :
          * pair of begin/end iterators.
          *
          * \pre \a Iterator is a random access iterator type, and
-         * dereferencing such an iterator produces an integer.
+         * dereferencing such an iterator produces a native C++ integer.
+         * (The specific native C++ integer type being used will be deduced
+         * from the type \a Iterator.)
          *
          * \warning In general, the classical Gauss code does not contain
          * enough information to uniquely reconstruct a knot.  For prime knots,
@@ -4088,7 +4090,9 @@ class Link :
          * the string-based variant of fromDT().
          *
          * \pre \a Iterator is a random access iterator type, and
-         * dereferencing such an iterator produces an integer.
+         * dereferencing such an iterator produces a native C++ integer.
+         * (The specific native C++ integer type being used will be deduced
+         * from the type \a Iterator.)
          *
          * \warning In general, Dowker-Thistlethwaite notation does not contain
          * enough information to uniquely reconstruct a knot.  For prime knots,
@@ -4248,7 +4252,9 @@ class Link :
          * \pre If \a it is such an iterator, then <tt>(*it)[0]</tt>,
          * <tt>(*it)[1]</tt>, <tt>(*it)[2]</tt> and <tt>(*it)[3]</tt>
          * will give the elements of the corresponding 4-tuple, which
-         * can then be treated as native C++ integers.
+         * can then be treated as native C++ integers.  (The specific native
+         * C++ integer type being used will be deduced from the type
+         * \a Iterator.)
          *
          * \warning If the link contains an unknotted loop that sits
          * completely above all other link components (in other words,

@@ -63,16 +63,18 @@
 namespace regina {
 
 Link Link::fromGauss(const std::string& s) {
+    // Work with the largest integer type that we could possibly need.
+    using Int = std::make_signed_t<size_t>;
     std::istringstream in(s);
-    std::vector<int> terms;
+    std::vector<Int> terms;
 
-    int i;
+    Int i;
     while (true) {
         in >> i;
         if (! in) {
             if (in.eof())
                 break;
-            throw InvalidArgument("fromGauss(): invalid character");
+            throw InvalidArgument("fromGauss(): invalid integer in sequence");
         }
         terms.push_back(i);
     }

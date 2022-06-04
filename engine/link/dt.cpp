@@ -39,6 +39,13 @@
 #include <cstdlib>
 #include <iterator>
 
+namespace {
+    // Computes abs(a-b) without using negative numbers.
+    size_t absdiff(size_t a, size_t b) {
+        return (a >= b ? a - b : b - a);
+    }
+}
+
 namespace regina {
 
 std::string Link::dt(bool alpha) const {
@@ -64,14 +71,17 @@ void Link::dt(std::ostream& out, bool alpha) const {
 
     size_t n = size();
 
+    // Work with the largest signed integer type that we could possibly need.
+    using Int = std::make_signed_t<size_t>;
+
     // Odd steps in traversal -> crossing index
     auto* oddCrossing = new size_t[n];
 
     // Crossing index -> even steps in traversal, negated if passing under
-    auto* evenStep = new ptrdiff_t[n];
+    auto* evenStep = new Int[n];
 
     StrandRef s = start;
-    ptrdiff_t step = 0;
+    Int step = 0;
     do {
         ++step;
         if (step % 2 == 1) {
@@ -83,7 +93,7 @@ void Link::dt(std::ostream& out, bool alpha) const {
         }
         ++s;
     } while (s != start);
-    assert(step == 2 * n);
+    assert(static_cast<size_t>(step) == 2 * n);
 
     if (alpha) {
         for (size_t i = 0; i < n; ++i)
@@ -159,8 +169,9 @@ Link Link::fromDT(const std::string& s) {
         return Link(1);
     }
 
-    // Use ptrdiff_t since we need to be able to read negative terms also.
-    std::vector<ptrdiff_t> terms;
+    // Work with the largest integer type that we could possibly need.
+    using Int = std::make_signed_t<size_t>;
+    std::vector<Int> terms;
 
     if ((*it >= 'a' && *it <= 'z') || (*it >= 'A' && *it <= 'Z')) {
         // We have the alphabetical variant.
@@ -179,7 +190,7 @@ Link Link::fromDT(const std::string& s) {
         // We have the numerical variant.
         std::istringstream in(s);
 
-        ptrdiff_t i;
+        Int i;
         while (true) {
             in >> i;
             if (! in) {
@@ -226,7 +237,7 @@ bool Link::realizeDT(
     size_t N;
     size_t i,j;
     size_t *modTWO_N;
-    ptrdiff_t *seq; // use ptrdiff_t because we call abs(seq[...]-seq[...])
+    size_t *seq;
     int *emb; // +1 or -1, or 0 for uninitialised
     bool *A,*D;
     bool Aempty,Dempty;
@@ -240,7 +251,7 @@ bool Link::realizeDT(
      *  Allocate local arrays.
      */
     modTWO_N    = new size_t[4 * N];
-    seq         = new ptrdiff_t[4 * N];
+    seq         = new size_t[4 * N];
     emb         = new int[2 * N];
     A           = new bool[2 * N];
     D           = new bool[2 * N];
@@ -325,7 +336,7 @@ x<>seq[0]*/
                         emb[x]=phi[x]*phi[seq[x]]*emb[i];
                         emb[seq[x]]=-emb[x];
                         D[x]=false;
-                        if( modTWO_N[abs(seq[x]-seq[x-1])]==1){
+                        if( modTWO_N[absdiff(seq[x], seq[x-1])]==1){
                             /*nothing*/
                         }
                         else{
@@ -346,7 +357,7 @@ x<>seq[0]*/
                         emb[x]=phi[x]*phi[seq[x]]*emb[i];
                         emb[seq[x]]=-emb[x];
                         D[x]=false;
-                        if( modTWO_N[abs(seq[x]-seq[x-1])]==1){
+                        if( modTWO_N[absdiff(seq[x], seq[x-1])]==1){
                             /*nothing*/
                         }
                         else{

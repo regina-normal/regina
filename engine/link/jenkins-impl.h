@@ -51,6 +51,9 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
         throw InvalidArgument("fromJenkins(): missing number of components");
 
     using InputInt = std::remove_cv_t<std::remove_reference_t<decltype(*begin)>>;
+    static_assert(std::is_integral_v<InputInt> &&
+        ! std::is_unsigned_v<InputInt>, "fromJenkins(): the iterator type "
+        "needs to dereference to give a native signed C++ integer type.");
 
     InputInt val = *begin++;
     if (val < 0)

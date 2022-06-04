@@ -48,6 +48,11 @@ namespace regina {
 
 template <typename Iterator>
 Link Link::fromGauss(Iterator begin, Iterator end) {
+    using InputInt = std::remove_cv_t<std::remove_reference_t<decltype(*begin)>>;
+    static_assert(std::is_integral_v<InputInt> &&
+        ! std::is_unsigned_v<InputInt>, "fromGauss(): the iterator type "
+        "needs to refer to a native signed C++ integer type.");
+
     // Extract the number of crossings.
     size_t n = end - begin;
     if (n % 2)
@@ -60,10 +65,10 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     // Run Adam's code to determine the handedness of each crossing.
 
     // Copy the sequence of crossing numbers, since we will need to modify it.
-    ptrdiff_t* S = new ptrdiff_t[2 * n];
+    InputInt* S = new InputInt[2 * n];
     std::copy(begin, end, S);
 
-    for (ptrdiff_t i=1; i <= n; ++i) {
+    for (size_t i=1; i <= n; ++i) {
         // Find the two instances of crossing i,
         // and reverse the subsequence between them.
         //
@@ -72,7 +77,8 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
 
         size_t pos1;
         for (pos1 = 0; pos1 < 2*n; ++pos1) {
-            if (S[pos1] == i || S[pos1] == -i)
+            if (S[pos1] == static_cast<InputInt>(i) ||
+                    S[pos1] == -static_cast<InputInt>(i))
                 break;
         }
         if (pos1 == 2*n) {
@@ -83,7 +89,8 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
 
         size_t pos2;
         for (pos2 = pos1+1; pos2 < 2*n; ++pos2) {
-            if (S[pos2] == i || S[pos2] == -i)
+            if (S[pos2] == static_cast<InputInt>(i) ||
+                    S[pos2] == -static_cast<InputInt>(i))
                 break;
         }
         if (pos2 == 2*n) {
@@ -114,7 +121,7 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     std::fill(indx1, indx1 + n, -1);
 
     for (size_t pos1 = 0; pos1 < 2*n; ++pos1) {
-        ptrdiff_t i = S[pos1] - 1;
+        InputInt i = S[pos1] - 1;
         if (indx0[i] < 0)
             indx0[i] = pos1;
         else if (indx1[i] < 0)
@@ -207,7 +214,7 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
 
     delete[] seen;
 
-    ptrdiff_t* Q0 = new ptrdiff_t[2*n];
+    InputInt* Q0 = new InputInt[2*n];
     bool* Q1 = new bool[2*n];
 
     Q0[0]=S[0];
@@ -256,7 +263,7 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
         int temp1 = 0, temp2 = 0; // Zero unnecessary but quietens warnings
         // Find the two occurrences of crossing i in sequence Q0.
         for (size_t j=0; j < 2*n; ++j) {
-            if (Q0[j] == static_cast<ssize_t>(i)) {
+            if (Q0[j] == static_cast<InputInt>(i)) {
                 if (j % 2 == 0) {
                     index1 = j;
                     temp1 = (Q1[j] ? -1 : 1);

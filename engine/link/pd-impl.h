@@ -49,6 +49,12 @@ namespace regina {
 
 template <typename Iterator>
 Link Link::fromPD(Iterator begin, Iterator end) {
+    using InputInt = std::remove_cv_t<std::remove_reference_t<
+        decltype((*begin)[0])>>;
+    static_assert(std::is_integral_v<InputInt> &&
+        ! std::is_unsigned_v<InputInt>, "fromPD(): the iterator type "
+        "needs to refer to a native signed C++ integer type.");
+
     // Extract the number of crossings.
     size_t n = end - begin;
     if (n == 0) {
@@ -57,6 +63,13 @@ Link Link::fromPD(Iterator begin, Iterator end) {
         return Link();
     }
 
+    if constexpr (sizeof(InputInt) <= sizeof(size_t)) {
+        if (2 * n > static_cast<size_t>(std::numeric_limits<InputInt>::max()))
+            throw InvalidArgument("fromPD(): too many crossings for "
+                "the given integer type");
+    }
+    const InputInt maxStrand = static_cast<InputInt>(2 * n);
+
     // Represents (crossing index, position in 4-tuple):
     using PDPos = std::pair<size_t, int>;
 
@@ -64,7 +77,7 @@ Link Link::fromPD(Iterator begin, Iterator end) {
     using PDOccurrence = std::pair<PDPos, PDPos>;
 
     // The zero-based strand numbers that will begin each component:
-    std::vector<size_t> components;
+    std::vector<InputInt> components;
 
     // Identify the two crossings that each strand meets.
     // A position of -1 in the 4-tuple means "not yet seen".
@@ -76,8 +89,8 @@ Link Link::fromPD(Iterator begin, Iterator end) {
     Iterator it;
     for (it = begin, index = 0; it != end; ++it, ++index) {
         for (int i = 0; i < 4; ++i) {
-            auto s = (*it)[i];
-            if (s <= 0 || s > 2 * n) {
+            InputInt s = (*it)[i];
+            if (s <= 0 || s > maxStrand) {
                 delete[] occ;
                 throw InvalidArgument("fromPD(): strand out of range");
             }
@@ -108,7 +121,7 @@ Link Link::fromPD(Iterator begin, Iterator end) {
     for (it = begin, index = 0; it != end; ++it, ++index) {
         // Examine the incoming lower strand (which is the only one
         // whose direction is predetermined):
-        auto start = (*it)[0] - 1;
+        InputInt start = (*it)[0] - 1;
         if (dir[start]) {
             // We have already processed this strand (and the entire
             // component that contains it).
@@ -122,9 +135,9 @@ Link Link::fromPD(Iterator begin, Iterator end) {
         // component (which will become its starting point).
         PDPos pos { index, 0 };
         dir[start] = (occ[start].first == pos ? -1 : 1);
-        size_t min = start;
+        InputInt min = start;
 
-        auto s = start;
+        InputInt s = start;
         while (true) {
             // Move s forward to the next strand on this component.
             if (dir[s] > 0)
@@ -155,7 +168,7 @@ Link Link::fromPD(Iterator begin, Iterator end) {
     // define their orientation).
     for (it = begin, index = 0; it != end; ++it, ++index) {
         // This time we look at one of the two (connected) upper strands.
-        auto start = (*it)[1] - 1;
+        InputInt start = (*it)[1] - 1;
         if (dir[start])
             continue;
 
@@ -165,9 +178,9 @@ Link Link::fromPD(Iterator begin, Iterator end) {
         // deduce this from the PD code).
         PDPos pos { index, 1 };
         dir[start] = 1;
-        size_t min = start;
+        InputInt min = start;
 
-        auto s = start;
+        InputInt s = start;
         while (true) {
             if (dir[s] > 0)
                 pos = occ[s].second;
