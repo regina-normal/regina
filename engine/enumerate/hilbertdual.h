@@ -483,7 +483,7 @@ inline void HilbertDual::VecSpec<IntegerType, BitmaskType>::initNextHyp(
     nextHyp_ = 0;
 
     IntegerType tmp;
-    for (int i = 0; i < subspace.columns(); ++i)
+    for (size_t i = 0; i < subspace.columns(); ++i)
         if (subspace.entry(row, i) != 0 && (*this)[i] != 0) {
             tmp = subspace.entry(row, i);
             tmp *= (*this)[i];

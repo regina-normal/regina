@@ -2594,7 +2594,7 @@ inline IntegerBase<supportInfinity>::IntegerBase(unsigned long long value) :
     // Detect overflow.
     // This could occur even if long and long long have the same size,
     // due to the discrepancy between signed and unsigned ranges.
-    if (small_ < 0 || small_ != value)
+    if (small_ < 0 || static_cast<unsigned long long>(small_) != value)
         large_ = regina::detail::mpz_from_ull(value);
 }
 
@@ -2983,7 +2983,7 @@ inline IntegerBase<supportInfinity>&
     // Detect overflow.
     // This could occur even if long and long long have the same size,
     // due to the discrepancy between signed and unsigned ranges.
-    if (small_ < 0 || small_ != value)
+    if (small_ < 0 || static_cast<unsigned long long>(small_) != value)
         large_ = regina::detail::mpz_from_ull(value);
 
     return *this;

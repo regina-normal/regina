@@ -139,7 +139,7 @@ bool FacetPairingBase<dim>::isConnected() const {
         size_t top = stack[--stackSize];
         for (int i = 0; i <= dim; ++i) {
             ssize_t adj = dest(top, i).simp;
-            if (adj >= 0 && adj < size_ && ! seen[adj]) {
+            if (adj >= 0 && adj < static_cast<ssize_t>(size_) && ! seen[adj]) {
                 seen[adj] = true;
                 stack[stackSize++] = adj;
                 ++nSeen;
@@ -224,10 +224,9 @@ void FacetPairingBase<dim>::writeDot(std::ostream& out,
         out << "\"]" << std::endl;
     }
 
-    int f;
     FacetSpec<dim> adj;
-    for (ssize_t p = 0; p < size_; ++p)
-        for (f = 0; f < (dim + 1); ++f) {
+    for (ssize_t p = 0; p < static_cast<ssize_t>(size_); ++p)
+        for (int f = 0; f < (dim + 1); ++f) {
             adj = dest(p, f);
             if (adj.isBoundary(size_) || adj.simp < p ||
                     (adj.simp == p && adj.facet < f))
@@ -259,13 +258,14 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     if (tokens.empty() || tokens.size() % (2 * (dim + 1)) != 0)
         throw InvalidArgument("fromTextRep(): invalid number of tokens");
 
-    size_t nSimp = tokens.size() / (2 * (dim + 1));
+    // We use ssize_t, not size_t, to avoid signed/unsigned comparisons below.
+    ssize_t nSimp = tokens.size() / (2 * (dim + 1));
     FacetPairing<dim> ans(nSimp);
 
     // Read the raw values.
     // Check the range of each value while we're at it.
     long val;
-    for (size_t i = 0; i < nSimp * (dim + 1); ++i) {
+    for (ssize_t i = 0; i < nSimp * (dim + 1); ++i) {
         if (! valueOf(tokens[2 * i], val))
             throw InvalidArgument(
                 "fromTextRep(): contains non-integer simplex");
@@ -344,7 +344,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
     }
 
     // Initialise the pairings to unspecified (i.e., facet -> itself).
-    for (FacetSpec<dim> f(0,0); f.simp < size_; ++f)
+    for (FacetSpec<dim> f(0,0); f.simp < static_cast<ssize_t>(size_); ++f)
         dest(f) = f;
 
     // Note that we have at least one simplex.

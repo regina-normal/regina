@@ -55,7 +55,6 @@ BanBoundary::BanBoundary(const LPInitialTableaux<LPConstraint>& init) :
         BanConstraintBase(init) {
     size_t n = tri_.size();
     size_t tet;
-    unsigned type;
 
     // The implementation here is a little inefficient (we repeat tests
     // three or four times over), but this routine is only called at
@@ -83,7 +82,7 @@ BanBoundary::BanBoundary(const LPInitialTableaux<LPConstraint>& init) :
     if (system_.standard())
         for (size_t i = 3 * n; i < 7 * n; ++i) {
             tet = columnPerm[i] / 7;
-            type = columnPerm[i] % 7;
+            int type = columnPerm[i] % 7;
 
             for (int k = 0; k < 4; ++k)
                 if (k != type &&
@@ -100,7 +99,6 @@ BanTorusBoundary::BanTorusBoundary(
         BanConstraintBase(init) {
     size_t n = tri_.size();
     size_t tet;
-    unsigned type;
 
     // Which boundary faces are we banning?
     size_t nTriangles = tri_.countTriangles();
@@ -152,7 +150,7 @@ BanTorusBoundary::BanTorusBoundary(
     if (system_.standard())
         for (size_t i = 3 * n; i < 7 * n; ++i) {
             tet = columnPerm[i] / 7;
-            type = columnPerm[i] % 7;
+            int type = columnPerm[i] % 7;
 
             if (markVtx[tri_.tetrahedron(tet)->vertex(type)->
                     markedIndex()])

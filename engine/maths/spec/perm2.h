@@ -567,7 +567,7 @@ class Perm<2> {
          * @return the corresponding prefix of the string representation
          * of this permutation.
          */
-        std::string trunc(unsigned len) const;
+        std::string trunc(int len) const;
 
         /**
          * Writes the tight encoding of this permutation to the given output
@@ -919,7 +919,7 @@ inline std::string Perm<2>::str() const {
     return (code_ == 0 ? "01" : "10");
 }
 
-inline std::string Perm<2>::trunc(unsigned len) const {
+inline std::string Perm<2>::trunc(int len) const {
     switch (len) {
         case 2 : return (code_ == 0 ? "01" : "10");
         case 1 : return (code_ == 0 ? "0" : "1");

@@ -55,13 +55,13 @@ void addFacetPairing3(pybind11::module_& m) {
         // Use the default policy for (const T&) which is to return by copy.
         .def("dest", overload_cast<const FacetSpec<3>&>(
             &FacetPairing<3>::dest, pybind11::const_))
-        .def("dest", overload_cast<size_t, unsigned>(
+        .def("dest", overload_cast<size_t, int>(
             &FacetPairing<3>::dest, pybind11::const_))
         .def("__getitem__", overload_cast<const FacetSpec<3>&>(
             &FacetPairing<3>::operator[], pybind11::const_))
         .def("isUnmatched", overload_cast<const FacetSpec<3>&>(
             &FacetPairing<3>::isUnmatched, pybind11::const_))
-        .def("isUnmatched", overload_cast<size_t, unsigned>(
+        .def("isUnmatched", overload_cast<size_t, int>(
             &FacetPairing<3>::isUnmatched, pybind11::const_))
         .def("isConnected", &FacetPairing<3>::isConnected)
         .def("isCanonical", &FacetPairing<3>::isCanonical)

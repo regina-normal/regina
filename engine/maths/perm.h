@@ -684,7 +684,7 @@ class Perm {
          * @return the corresponding prefix of the string representation
          * of this permutation.
          */
-        std::string trunc(unsigned len) const;
+        std::string trunc(int len) const;
 
         /**
          * Writes the tight encoding of this permutation to the given output
@@ -1235,7 +1235,7 @@ std::string Perm<n>::str() const {
 }
 
 template <int n>
-std::string Perm<n>::trunc(unsigned len) const {
+std::string Perm<n>::trunc(int len) const {
     char ans[n + 1];
     for (int i = 0; i < len; ++i)
         ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask);

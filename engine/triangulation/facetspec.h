@@ -330,7 +330,7 @@ inline FacetSpec<dim>::FacetSpec(ssize_t newSimp, int newFacet) :
 
 template <int dim>
 inline bool FacetSpec<dim>::isBoundary(size_t nSimplices) const {
-    return (simp == nSimplices && facet == 0);
+    return (simp == static_cast<ssize_t>(nSimplices) && facet == 0);
 }
 
 template <int dim>
@@ -341,7 +341,8 @@ inline bool FacetSpec<dim>::isBeforeStart() const {
 template <int dim>
 inline bool FacetSpec<dim>::isPastEnd(size_t nSimplices, bool boundaryAlso)
         const {
-    return (simp == nSimplices && (boundaryAlso || facet > 0));
+    return (simp == static_cast<ssize_t>(nSimplices) &&
+        (boundaryAlso || facet > 0));
 }
 
 template <int dim>

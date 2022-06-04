@@ -931,7 +931,7 @@ class Perm<7> {
          * @return the corresponding prefix of the string representation
          * of this permutation.
          */
-        std::string trunc(unsigned len) const;
+        std::string trunc(int len) const;
 
         /**
          * Writes the tight encoding of this permutation to the given output

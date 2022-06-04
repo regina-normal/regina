@@ -244,7 +244,7 @@ class FacetPairingBase :
          * investigation (between 0 and \a dim inclusive).
          * @return the other facet to which the given facet is paired.
          */
-        const FacetSpec<dim>& dest(size_t simp, unsigned facet) const;
+        const FacetSpec<dim>& dest(size_t simp, int facet) const;
 
         /**
          * Returns the other facet to which the given simplex facet is
@@ -291,7 +291,7 @@ class FacetPairingBase :
          * @return \c true if the given facet has been left unmatched, or
          * \c false if the given facet is paired with some other facet.
          */
-        bool isUnmatched(size_t simp, unsigned facet) const;
+        bool isUnmatched(size_t simp, int facet) const;
 
         /**
          * Determines whether this facet pairing is closed.
@@ -804,7 +804,7 @@ class FacetPairingBase :
          * investigation (between 0 and \a dim inclusive).
          * @return the other facet to which the given facet is paired.
          */
-        FacetSpec<dim>& dest(size_t simp, unsigned facet);
+        FacetSpec<dim>& dest(size_t simp, int facet);
 
         /**
          * Returns the other facet to which the given simplex facet is
@@ -850,7 +850,7 @@ class FacetPairingBase :
          * @return \c true if the matching for the given facet has not yet
          * been determined, or \c false otherwise.
          */
-        bool noDest(size_t simp, unsigned facet) const;
+        bool noDest(size_t simp, int facet) const;
 
         /**
          * Determines whether this facet pairing is in canonical
@@ -989,7 +989,7 @@ inline const FacetSpec<dim>& FacetPairingBase<dim>::dest(
 
 template <int dim>
 inline const FacetSpec<dim>& FacetPairingBase<dim>::dest(
-        size_t simp, unsigned facet) const {
+        size_t simp, int facet) const {
     return pairs_[(dim + 1) * simp + facet];
 }
 
@@ -1007,7 +1007,7 @@ inline bool FacetPairingBase<dim>::isUnmatched(
 
 template <int dim>
 inline bool FacetPairingBase<dim>::isUnmatched(
-        size_t simp, unsigned facet) const {
+        size_t simp, int facet) const {
     return pairs_[(dim + 1) * simp + facet].isBoundary(size_);
 }
 
@@ -1019,7 +1019,7 @@ inline FacetSpec<dim>& FacetPairingBase<dim>::dest(
 
 template <int dim>
 inline FacetSpec<dim>& FacetPairingBase<dim>::dest(
-        size_t simp, unsigned facet) {
+        size_t simp, int facet) {
     return pairs_[(dim + 1) * simp + facet];
 }
 
@@ -1037,9 +1037,9 @@ inline bool FacetPairingBase<dim>::noDest(
 
 template <int dim>
 inline bool FacetPairingBase<dim>::noDest(
-        size_t simp, unsigned facet) const {
+        size_t simp, int facet) const {
     FacetSpec<dim>& f = pairs_[(dim + 1) * simp + facet];
-    return (f.simp == simp && f.facet == facet);
+    return (f.simp == static_cast<ssize_t>(simp) && f.facet == facet);
 }
 
 template <int dim>
@@ -1058,7 +1058,7 @@ void FacetPairingBase<dim>::tightEncode(std::ostream& out) const {
             throw FailedPrecondition("Before-the-start destinations "
                 "are not allowed in tight encodings");
 
-        ssize_t adjIdx = (dim + 1) * pairs_[i].simp + pairs_[i].facet;
+        size_t adjIdx = (dim + 1) * pairs_[i].simp + pairs_[i].facet;
         if (adjIdx >= i) {
             if (adjIdx > size_ * (dim + 1))
                 throw FailedPrecondition("Past-the-end destinations "
@@ -1085,10 +1085,7 @@ FacetPairing<dim> FacetPairingBase<dim>::tightDecode(std::istream& input) {
         if (! ans.pairs_[i].isBeforeStart())
             continue;
 
-        ssize_t adjIdx = regina::detail::tightDecodeIndex<ssize_t>(input);
-        if (adjIdx < 0)
-            throw InvalidInput("The tight encoding contains "
-                "uninitialised matchings of simplex facets");
+        size_t adjIdx = regina::detail::tightDecodeIndex<size_t>(input);
         if (adjIdx > size * (dim+1))
             throw InvalidInput("The tight encoding contains "
                 "invalid matchings of simplex facets");
