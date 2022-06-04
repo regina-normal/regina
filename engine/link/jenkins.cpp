@@ -38,14 +38,18 @@
 namespace regina {
 
 Link Link::fromJenkins(std::istream& in) {
-    return fromJenkins(std::istream_iterator<int>(in),
-        std::istream_iterator<int>());
+    // Work with the largest integer type that we could possibly need.
+    using Int = std::make_signed_t<size_t>;
+    return fromJenkins(std::istream_iterator<Int>(in),
+        std::istream_iterator<Int>());
 }
 
 Link Link::fromJenkins(const std::string& str) {
+    // Work with the largest integer type that we could possibly need.
+    using Int = std::make_signed_t<size_t>;
     std::istringstream in(str);
-    return fromJenkins(std::istream_iterator<int>(in),
-        std::istream_iterator<int>());
+    return fromJenkins(std::istream_iterator<Int>(in),
+        std::istream_iterator<Int>());
 }
 
 std::string Link::jenkins() const {

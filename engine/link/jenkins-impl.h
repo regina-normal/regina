@@ -49,7 +49,16 @@ template <typename Iterator>
 Link Link::fromJenkins(Iterator begin, Iterator end) {
     if (begin == end)
         throw InvalidArgument("fromJenkins(): missing number of components");
-    int nComp = *begin++;
+
+    using InputInt = std::remove_cv_t<std::remove_reference_t<decltype(*begin)>>;
+
+    InputInt val = *begin++;
+    if (val < 0)
+        throw InvalidArgument("fromJenkins(): invalid number of components");
+    if constexpr (sizeof(InputInt) > sizeof(size_t))
+        if (val > static_cast<InputInt>(SIZE_MAX))
+            throw InvalidArgument("fromJenkins(): too many components");
+    size_t nComp = static_cast<size_t>(val);
 
     if (nComp == 0)
         return Link();
@@ -60,48 +69,66 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
     // We need to allocate the crossings first.
     // Alas, these appear last in the input.
     // Skip through (and remember) the link components, which appear first.
-    int* compLen = new int[nComp];
-    int** compInput = new int*[nComp];
-    unsigned c, i;
-    unsigned foundCrossings = 0;
+    using CompStep = std::pair<size_t, int>; // (crossing, side)
+    auto* compLen = new size_t[nComp];
+    auto* compInput = new CompStep*[nComp];
+    size_t foundCrossings = 0;
 
+    size_t c;
     try {
         for (c = 0; c < nComp; ++c) {
             if (begin == end)
                 throw InvalidArgument(
                     "fromJenkins(): missing length of component");
-            compLen[c] = *begin++;
-            if (compLen[c] < 0)
+            val = *begin++;
+            if (val < 0)
                 throw InvalidArgument(
                     "fromJenkins(): invalid length of component");
+            if constexpr (sizeof(InputInt) > sizeof(size_t))
+                if (val > static_cast<InputInt>(SIZE_MAX))
+                    throw InvalidArgument(
+                        "fromJenkins(): component too large");
+            compLen[c] = static_cast<size_t>(val);
 
-            compInput[c] = new int[2 * compLen[c]];
-            for (i = 0; i < compLen[c]; ++i) {
+            compInput[c] = new CompStep[compLen[c]];
+            for (size_t i = 0; i < compLen[c]; ++i) {
                 if (begin == end) {
                     ++c; // to ensure compInput[c] will be deleted also
                     throw InvalidArgument(
                         "fromJenkins(): incomplete component");
                 }
-                compInput[c][2 * i] = *begin++;
+                val = *begin++;
+                if (val < 0) {
+                    ++c; // to ensure compInput[c] will be deleted also
+                    throw InvalidArgument(
+                        "fromJenkins(): invalid crossing in component");
+                }
+                if constexpr (sizeof(InputInt) > sizeof(size_t))
+                    if (val > static_cast<InputInt>(SIZE_MAX)) {
+                        ++c; // to ensure compInput[c] will be deleted also
+                        throw InvalidArgument(
+                            "fromJenkins(): crossing too large in component");
+                    }
+                compInput[c][i].first = static_cast<size_t>(val);
+
                 if (begin == end) {
                     ++c; // to ensure compInput[c] will be deleted also
                     throw InvalidArgument(
                         "fromJenkins(): incomplete component");
                 }
-                compInput[c][2 * i + 1] = *begin++;
-                if (compInput[c][2 * i] < 0 ||
-                        (compInput[c][2 * i + 1] != 1 &&
-                         compInput[c][2 * i + 1] != -1)) {
+                val = *begin++;
+                if (val != 1 && val != -1) {
                     ++c; // to ensure compInput[c] will be deleted also
                     throw InvalidArgument(
-                        "fromJenkins(): invalid step in component");
+                        "fromJenkins(): invalid side in component");
                 }
+                compInput[c][i].second = static_cast<int>(val);
             }
 
             foundCrossings += compLen[c];
         }
     } catch (const InvalidArgument&) {
-        for (i = 0; i < c; ++i)
+        for (size_t i = 0; i < c; ++i)
             delete[] compInput[i];
         delete[] compInput;
         delete[] compLen;
@@ -111,27 +138,27 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
     // *Now* we have the number of crossings.
     if (foundCrossings % 2 != 0) {
         // Invalid input.
-        for (i = 0; i < nComp; ++i)
+        for (size_t i = 0; i < nComp; ++i)
             delete[] compInput[i];
         delete[] compInput;
         delete[] compLen;
         throw InvalidArgument("fromJenkins(): odd number of total steps");
     }
-    unsigned nCross = foundCrossings / 2;
+    size_t nCross = foundCrossings / 2;
 
     auto* tmpCross = new Crossing*[nCross];
     std::fill(tmpCross, tmpCross + nCross, nullptr);
 
     try {
-        int label, sign;
-        for (i = 0; i < nCross; ++i) {
+        for (size_t i = 0; i < nCross; ++i) {
             if (begin == end)
                 throw InvalidArgument(
                     "fromJenkins(): missing crossing label");
-            label = *begin++;
-            if (label < 0 || label >= nCross)
+            val = *begin++;
+            if (val < 0 || static_cast<size_t>(val) >= nCross)
                 throw InvalidArgument(
                     "fromJenkins(): invalid crossing label");
+            size_t label = static_cast<size_t>(val);
             if (tmpCross[label])
                 throw InvalidArgument(
                     "fromJenkins(): duplicate crossing label");
@@ -139,44 +166,43 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
             if (begin == end)
                 throw InvalidArgument(
                     "fromJenkins(): missing crossing sign");
-            sign = *begin++;
-            if (sign != 1 && sign != -1)
+            val = *begin++;
+            if (val != 1 && val != -1)
                 throw InvalidArgument(
                     "fromJenkins(): invalid crossing sign");
+            int sign = static_cast<int>(val);
 
             tmpCross[label] = new Crossing(sign);
         }
     } catch (const InvalidArgument&) {
-        for (i = 0; i < nCross; ++i)
+        for (size_t i = 0; i < nCross; ++i)
             delete tmpCross[i];
         delete[] tmpCross;
-        for (i = 0; i < nComp; ++i)
+        for (size_t i = 0; i < nComp; ++i)
             delete[] compInput[i];
         delete[] compInput;
         delete[] compLen;
         throw;
     }
 
-    for (i = 0; i < nCross; ++i)
+    for (size_t i = 0; i < nCross; ++i)
         ans.crossings_.push_back(tmpCross[i]);
     delete[] tmpCross;
 
     // Finally, we can connect the crossings together by following the
     // individual link components.
-    unsigned startCross, endCross;
-    unsigned startStrand, endStrand;
     for (c = 0; c < nComp; ++c) {
         if (compLen[c] == 0) {
             // The StrandRef() constructor already gives us a null reference.
             continue;
         }
 
-        for (i = 0; i < compLen[c]; ++i) {
-            startCross = compInput[c][2 * i];
-            startStrand = (compInput[c][2 * i + 1] > 0 ? 1 : 0);
-            endCross = compInput[c][i == compLen[c] - 1 ? 0 : 2 * i + 2];
-            endStrand = (compInput[c][i == compLen[c] - 1 ? 1 : 2 * i + 3] > 0 ?
-                1 : 0);
+        for (size_t i = 0; i < compLen[c]; ++i) {
+            size_t startCross = compInput[c][i].first;
+            int startStrand = (compInput[c][i].second > 0 ? 1 : 0);
+            size_t endCross = compInput[c][i == compLen[c]-1 ? 0 : i+1].first;
+            int endStrand =
+                (compInput[c][i == compLen[c]-1 ? 0 : i+1].second > 0 ? 1 : 0);
 
             if (ans.crossings_[startCross]->next_[startStrand]) {
                 for (i = 0; i < nComp; ++i)
@@ -190,12 +216,12 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
                 ans.crossings_[endCross]->strand(endStrand);
         }
 
-        ans.components_[c] = ans.crossings_[compInput[c][0]]->strand(
-            compInput[c][1] > 0 ? 1 : 0);
+        ans.components_[c] = ans.crossings_[compInput[c][0].first]->strand(
+            compInput[c][0].second > 0 ? 1 : 0);
     }
 
     // Start cleaning up.
-    for (i = 0; i < nComp; ++i)
+    for (size_t i = 0; i < nComp; ++i)
         delete[] compInput[i];
     delete[] compInput;
     delete[] compLen;

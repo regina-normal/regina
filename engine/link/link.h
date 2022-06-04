@@ -3973,7 +3973,9 @@ class Link :
          * pair of begin/end iterators.
          *
          * \pre \a Iterator is a forward iterator type, and
-         * dereferencing such an iterator produces an integer.
+         * dereferencing such an iterator produces a native C++ integer.
+         * (The specific native C++ integer type being used will be deduced
+         * from the type \a Iterator.)
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
