@@ -430,7 +430,7 @@ bool TypeTrie<nTypes>::dominates(const char* vec, size_t len) const {
     ssize_t level = 0;
     node[0] = &root_;
     while (level >= 0) {
-        if ((! node[level]) || level > len) {
+        if ((! node[level]) || level > static_cast<ssize_t>(len)) {
             // If node[level] is 0, then we ran out of siblings
             // at this level.
             // If level > len, then any vector in this subtree

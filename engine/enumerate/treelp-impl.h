@@ -613,14 +613,14 @@ void LPData<LPConstraint, IntType>::constrainZero(size_t pos) {
 
     // Is the variable currently in the basis?  If so, get it out.
     if (basisRow_[pos] >= 0) {
-        ssize_t r = basisRow_[pos];
+        size_t row = static_cast<size_t>(basisRow_[pos]);
         ssize_t c;
-        if (rhs_[r].isZero()) {
+        if (rhs_[row].isZero()) {
             // We can pivot in any other variable that appears in
             // this basis row.  Choose the one with largest index.
             for (c = origTableaux_->columns() - 1; c >= 0; --c)
                 if (basisRow_[c] < 0 /* c is active and non-basic */ &&
-                        entrySign(r, c))
+                        entrySign(row, c))
                     break;
             if (c >= 0) {
                 pivot(pos, c);
@@ -637,18 +637,18 @@ void LPData<LPConstraint, IntType>::constrainZero(size_t pos) {
                 // "Delete" the row by moving it to index rank_, which
                 // is now outside our scope of interest (since we are
                 // now only interested in rows 0,...,rank_-1).
-                if (r != rank_) {
-                    std::swap(rhs_[r], rhs_[rank_]);
-                    rowOps_.swapRows(r, rank_);
-                    basis_[r] = basis_[rank_];
-                    basisRow_[basis_[r]] = r;
+                if (row != rank_) {
+                    std::swap(rhs_[row], rhs_[rank_]);
+                    rowOps_.swapRows(row, rank_);
+                    basis_[row] = basis_[rank_];
+                    basisRow_[basis_[row]] = row;
                 }
 
                 // This column is already filled with zeroes
                 // from row 0 to rank_-1, because pos was in the basis.
                 // If we're in paranoid mode, check this.
 #ifdef REGINA_VERIFY_LPDATA
-                for (r = 0; r < rank_; ++r)
+                for (size_t r = 0; r < rank_; ++r)
                     if (! entry(r, pos).isZero()) {
                         std::cerr << "VERIFY: Drop error." << std::endl;
                         ::exit(1);
@@ -663,7 +663,7 @@ void LPData<LPConstraint, IntType>::constrainZero(size_t pos) {
             // no such variable, the entire system becomes infeasible.
             for (c = origTableaux_->columns() - 1; c >= 0; --c)
                 if (basisRow_[c] < 0 /* c is active and non-basic */ &&
-                        entrySign(r, c) > 0)
+                        entrySign(row, c) > 0)
                     break;
             if (c < 0) {
                 // There is no possible variable to pivot in.
@@ -720,21 +720,21 @@ void LPData<LPConstraint, IntType>::constrainPositive(size_t pos) {
     // If there is any possibility that some entry on the
     // right-hand side could become negative, we must remember to
     // pivot back to feasibility.
-    ssize_t r = basisRow_[pos];
+    ssize_t row = basisRow_[pos];
     IntType tmp;
-    if (r >= 0) {
+    if (row >= 0) {
         // This variable is in the basis, and so there is only
         // one non-zero entry in column pos.
         // This makes subtracting column pos from rhs_ very easy
         // (just a single operation):
-        entry(r, pos, tmp);
-        if ((rhs_[r] -= tmp) < 0)
+        entry(row, pos, tmp);
+        if ((rhs_[row] -= tmp) < 0)
             makeFeasible();
     } else {
         // This variable is not in the basis.
         // We know nothing about the column, so just do a full
         // element-by-element column subtraction.
-        for (r = 0; r < rank_; ++r) {
+        for (size_t r = 0; r < rank_; ++r) {
             entry(r, pos, tmp);
             rhs_[r] -= tmp;
         }
@@ -866,7 +866,7 @@ void LPData<LPConstraint, IntType>::constrainOct(size_t quad1, size_t quad2) {
 
             IntType coeff, gcdRow;
             for (size_t r = 0; r < rank_; ++r) {
-                if (r == row1)
+                if (r == static_cast<size_t>(row1))
                     continue;
 
                 // We will reuse coeff, to avoid too many temporary IntTypes.
@@ -934,7 +934,7 @@ void LPData<LPConstraint, IntType>::constrainOct(size_t quad1, size_t quad2) {
                     // Move the empty row out of the active area
                     // of the matrix.
                     --rank_;
-                    if (row1 != rank_) {
+                    if (row1 != static_cast<ssize_t>(rank_)) {
                         std::swap(rhs_[row1], rhs_[rank_]);
                         rowOps_.swapRows(row1, rank_);
                         basis_[row1] = basis_[rank_];

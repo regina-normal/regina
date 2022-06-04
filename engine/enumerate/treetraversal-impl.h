@@ -318,11 +318,12 @@ double TreeTraversal<LPConstraint, BanConstraint, IntType>::percent() const {
             percent += (range * type_[typeOrder_[i]]);
         } else {
             // Quadrilateral or octagon coordinate.
-            if (octLevel_ == nTypes_ || octLevel_ < i) {
+            if (octLevel_ == static_cast<ssize_t>(nTypes_) ||
+                    octLevel_ < static_cast<ssize_t>(i)) {
                 // Octagons have already been used, or were never available.
                 range /= 4.0;
                 percent += (range * type_[typeOrder_[i]]);
-            } else if (octLevel_ == i) {
+            } else if (octLevel_ == static_cast<ssize_t>(i)) {
                 // This coordinate is an octagon coordinate.
                 den = 3 * quadsRemaining + 4;
                 range /= den;
@@ -641,7 +642,7 @@ bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
         // We could not do this earlier because, even if we have
         // the zero vector, we still needed to spin off clones
         // for type_[idx] = 1, 2 and 3.
-        if (lastNonZero_ < 0 && level_ == nTypes_ - 1) {
+        if (lastNonZero_ < 0 && level_ == static_cast<ssize_t>(nTypes_ - 1)) {
             // We failed the zero test.
             // Abandon this subtree, increment the type at the
             // current level, and continue searching.
@@ -660,7 +661,7 @@ bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
         // Now all our constraints are enforced, and we can
         // simply test the tableaux for feasibility.
         if (lpSlot_[level_ + 1]->isFeasible()) {
-            if (level_ < nTypes_ - 1) {
+            if (level_ < static_cast<ssize_t>(nTypes_ - 1)) {
                 // We pass the feasibility test, but we're
                 // not at a leaf node.
                 // Head deeper into the tree.
@@ -862,7 +863,7 @@ bool TautEnumeration<LPConstraint, BanConstraint, IntType>::next(
         // Now all our constraints are enforced, and we can
         // simply test the tableaux for feasibility.
         if (lpSlot_[level_ + 1]->isFeasible()) {
-            if (level_ < nTypes_ - 1) {
+            if (level_ < static_cast<ssize_t>(nTypes_ - 1)) {
                 // We pass the feasibility test, but we're not at a leaf node.
                 // Head deeper into the tree.
                 ++level_;
@@ -1115,7 +1116,7 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
                 std::cout << f.str() << std::endl;
             }
 #endif
-            if (level_ < nTypes_ - 1) {
+            if (level_ < static_cast<ssize_t>(nTypes_ - 1)) {
                 // We pass the feasibility test, but we're
                 // not at a leaf node.
                 // Head deeper into the tree.

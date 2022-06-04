@@ -1381,12 +1381,13 @@ class TreeSingleSoln :
         using TreeTraversal<LPConstraint, BanConstraint, IntType>::setNext;
 
     private:
-        size_t nextZeroLevel_;
+        ssize_t nextZeroLevel_;
             /**< The next level in the search tree at which we will force some
                  triangle coordinate to zero.  We use this to avoid vertex
                  links by dynamically reorganising the search tree as we run
                  to ensure that at least one relevant triangle coordinate is
-                 set to zero at all stages and all levels of the search. */
+                 set to zero at all stages and all levels of the search.
+                 We make this type signed for consistenty with \a level_. */
 
         bool cancelled_;
             /**< Has the search been cancelled by another thread?
@@ -1523,7 +1524,7 @@ void TreeTraversal<LPConstraint, BanConstraint, IntType>::writeTextShort(
     ssize_t i = 0;
     for ( ; i <= level_; ++i)
         c[typeOrder_[i]] = char(type_[typeOrder_[i]] + '0');
-    for ( ; i < nTypes_; ++i)
+    for ( ; i < static_cast<ssize_t>(nTypes_); ++i)
         c[typeOrder_[i]] = '_';
     c[i] = 0;
 

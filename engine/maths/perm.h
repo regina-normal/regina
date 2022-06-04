@@ -1156,7 +1156,7 @@ constexpr typename Perm<n>::Index Perm<n>::orderedSnIndex() const {
     int p = 0, pos1 = 0;
     for ( ; p < n - 1; ++p, pos1 += imageBits) {
         // position pos1 holds the (p)th image
-        int pImg = (c >> pos1) & imageMask; // image at pos1
+        Code pImg = (c >> pos1) & imageMask; // image at pos1
         for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;
                 pos2 += imageBits)
             if (((c >> pos2) & imageMask) > pImg)
@@ -1175,7 +1175,7 @@ constexpr typename Perm<n>::Index Perm<n>::SnIndex() const {
     int p = 0, pos1 = 0;
     for ( ; p < n - 1; ++p, pos1 += imageBits) {
         // position pos1 holds the (p)th image
-        int pImg = (c >> pos1) & imageMask; // image at pos1
+        Code pImg = (c >> pos1) & imageMask; // image at pos1
         // The following loop preserves the relative order of the images
         // at positions *after* pos1.
         for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;

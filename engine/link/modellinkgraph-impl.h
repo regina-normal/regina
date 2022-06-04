@@ -92,18 +92,15 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
 
     std::fill(parent, parent + size(), -1);
 
-    int i;
-    ModelLinkGraphArc a1, a2;
-    size_t n1, n2, n3;
-    bool flip1, flip2, flip3;
-    for (i = 0; i < cells_->nCells_; ++i)
+    for (size_t i = 0; i < cells_->nCells_; ++i)
         if (cells_->size(i) == 2) {
             // Both crossings on the bigon should have the same sign.
-            a1 = cells_->arc(i, 0);
-            a2 = cells_->arc(i, 1);
-            n1 = a1.node()->index();
-            n2 = a2.node()->index();
-            flip1 = flip2 = false;
+            ModelLinkGraphArc a1 = cells_->arc(i, 0);
+            ModelLinkGraphArc a2 = cells_->arc(i, 1);
+            size_t n1 = a1.node()->index();
+            size_t n2 = a2.node()->index();
+            bool flip1 = false;
+            bool flip2 = false;
             while (parent[n1] >= 0) {
                 if (flip[n1])
                     flip1 = ! flip1;
@@ -128,8 +125,8 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
             if (cells_->size(cells_->cell(a1)) == 3) {
                 // We have a triangle beside the original arc a1.
                 // The third crossing of the triangle has its sign forced also.
-                n3 = a1.traverse().node()->index();
-                flip3 = (
+                size_t n3 = a1.traverse().node()->index();
+                bool flip3 = (
                     ((dir[a1.node()->index()] >> a1.arc()) & 1) ==
                     ((dir[a2.node()->index()] >> a2.arc()) & 1));
                 while (parent[n3] >= 0) {
@@ -148,8 +145,8 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
             if (cells_->size(cells_->cell(a2)) == 3) {
                 // We have a triangle beside the original arc a2.
                 // As above.
-                n3 = a2.traverse().node()->index();
-                flip3 = (
+                size_t n3 = a2.traverse().node()->index();
+                bool flip3 = (
                     ((dir[a1.node()->index()] >> a1.arc()) & 1) ==
                     ((dir[a2.node()->index()] >> a2.arc()) & 1));
                 while (parent[n3] >= 0) {
@@ -171,18 +168,18 @@ void ModelLinkGraph::generateMinimalLinks(Action&& action, Args&&... args)
     int* sign = new int[size()];
     std::fill(sign, sign + size(), 0);
 
-    int curr = 0;
+    ssize_t curr = 0;
     size_t adj;
     int adjStrand;
     while (curr >= 0) {
         // We have selected the signs for all crossings < curr, and we
         // need to move to the next available sign at crossing curr.
-        if (curr == size()) {
+        if (curr == static_cast<ssize_t>(size())) {
             // We have a complete selection of crossings.
             Link l;
-            for (i = 0; i < size(); ++i)
+            for (size_t i = 0; i < size(); ++i)
                 l.crossings_.push_back(new Crossing(sign[i]));
-            for (i = 0; i < size(); ++i) {
+            for (size_t i = 0; i < size(); ++i) {
                 // Upper outgoing arc:
                 a = nodes_[i]->adj_[upperOutArc[sign[i] > 0 ? 1 : 0][dir[i]]];
                 adj = a.node_->index();

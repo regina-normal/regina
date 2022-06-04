@@ -3955,9 +3955,6 @@ void TriangulationBase<dim>::tightEncode(std::ostream& out) const {
 template <int dim>
 Triangulation<dim> TriangulationBase<dim>::tightDecode(std::istream& input) {
     size_t size = regina::detail::tightDecodeIndex<size_t>(input);
-    if (size < 0)
-        throw InvalidInput("The tight encoding has a negative number "
-            "of simplices");
 
     Triangulation<dim> ans;
     // Note: new simplices are initialised with all adj_[i] null.
@@ -3972,13 +3969,14 @@ Triangulation<dim> TriangulationBase<dim>::tightDecode(std::istream& input) {
             ssize_t adjIdx = regina::detail::tightDecodeIndex<ssize_t>(input);
             if (adjIdx >= 0) {
                 // This is a non-boundary facet.
-                if (adjIdx >= size)
+                if (adjIdx >= static_cast<ssize_t>(size))
                     throw InvalidInput("The tight encoding contains "
                         "invalid gluings");
 
                 Perm<dim+1> gluing = Perm<dim+1>::tightDecode(input);
-                if (adjIdx < s->index() ||
-                        (adjIdx == s->index() && gluing[i] <= i))
+                if (adjIdx < static_cast<ssize_t>(s->index()) ||
+                        (adjIdx == static_cast<ssize_t>(s->index()) &&
+                        gluing[i] <= i))
                     throw InvalidInput("The tight encoding contains "
                         "unexpected gluings");
 

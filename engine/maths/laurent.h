@@ -986,7 +986,7 @@ inline Laurent<T>::Laurent(const Laurent<T>& value) :
         minExp_(value.minExp_), maxExp_(value.maxExp_), base_(value.minExp_),
         coeff_(new T[value.maxExp_ - value.minExp_ + 1]) {
     // std::cerr << "Laurent: deep copy (init)" << std::endl;
-    for (size_t i = 0; i <= maxExp_ - minExp_; ++i)
+    for (size_t i = 0; i <= static_cast<size_t>(maxExp_ - minExp_); ++i)
         coeff_[i] = value.coeff_[i + value.minExp_ - value.base_];
 }
 

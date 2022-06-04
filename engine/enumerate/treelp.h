@@ -2433,7 +2433,7 @@ inline IntType LPData<LPConstraint, IntType>::entry(size_t row, size_t col)
         const {
     // Remember to take into account any changes of variable due
     // to previous calls to constrainOct().
-    if (octPrimary_ != col)
+    if (octPrimary_ != static_cast<ssize_t>(col))
         return origTableaux_->multColByRow(rowOps_, row, col);
     else {
         IntType ans = origTableaux_->multColByRowOct(rowOps_, row, col);
@@ -2447,7 +2447,7 @@ inline void LPData<LPConstraint, IntType>::entry(size_t row, size_t col,
         IntType& ans) const {
     // Remember to take into account any changes of variable due
     // to previous calls to constrainOct().
-    if (octPrimary_ != col)
+    if (octPrimary_ != static_cast<ssize_t>(col))
         ans = origTableaux_->multColByRow(rowOps_, row, col);
     else {
         ans = origTableaux_->multColByRowOct(rowOps_, row, col);
@@ -2460,7 +2460,7 @@ inline int LPData<LPConstraint, IntType>::entrySign(size_t row, size_t col)
         const {
     // Remember to take into account any changes of variable due
     // to previous calls to constrainOct().
-    if (octPrimary_ != col)
+    if (octPrimary_ != static_cast<ssize_t>(col))
         return origTableaux_->multColByRow(rowOps_, row, col).sign();
     else {
         IntType ans = origTableaux_->multColByRowOct(rowOps_, row, col);
