@@ -303,7 +303,7 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
             if (plantri[i] != ',')
                 throw InvalidArgument("fromPlantri(): missing comma");
         } else {
-            if (plantri[i] < 'a' || plantri[i] >= ('a' + n))
+            if (plantri[i] < 'a' || plantri[i] >= static_cast<char>('a' + n))
                 throw InvalidArgument("fromPlantri(): invalid node letter");
         }
 

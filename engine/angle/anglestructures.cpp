@@ -97,9 +97,6 @@ void AngleStructures::swap(AngleStructures& other) {
 
 void AngleStructures::enumerateInternal(ProgressTracker* tracker,
         Packet* treeParent) {
-    // Form the matching equations.
-    MatrixInt eqns = regina::makeAngleEquations(*triangulation_);
-
     // Clean up the algorithms flag.
     algorithm_ &= (AS_ALG_TREE | AS_ALG_DD);
 
@@ -154,6 +151,9 @@ void AngleStructures::enumerateInternal(ProgressTracker* tracker,
         if (tracker)
             tracker->newStage("Enumerating vertex angle structures");
 
+        // Form the matching equations.
+        MatrixInt eqns = regina::makeAngleEquations(*triangulation_);
+
         // Find the angle structures.
         DoubleDescription::enumerate<VectorInt>([this](VectorInt&& v) {
                 structures_.emplace_back(triangulation_, std::move(v));
@@ -205,12 +205,12 @@ void AngleStructures::calculateSpanStrict() const {
 
     // Get the list of bad unchanging angles from the first structure.
     auto it = structures_.begin();
-    const AngleStructure& s = *it;
+    const AngleStructure& first = *it;
 
     Rational angle;
     for (size_t tet = 0; tet < nTets; tet++)
         for (int edges = 0; edges < 3; edges++) {
-            angle = s.angle(tet, edges);
+            angle = first.angle(tet, edges);
             if (angle == Rational::zero || angle == Rational::one) {
                 fixedAngles[3 * tet + edges] = angle;
                 nFixed++;

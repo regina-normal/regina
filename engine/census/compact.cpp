@@ -270,7 +270,7 @@ void CompactSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
     }
 
     // Is it a partial search that has already finished?
-    if (orderElt == orderSize) {
+    if (orderElt == static_cast<ssize_t>(orderSize)) {
         if (isCanonical())
             action_(perms_);
         return;
@@ -345,7 +345,7 @@ void CompactSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (orderElt == orderSize) {
+        if (orderElt == static_cast<ssize_t>(orderSize)) {
             // We in fact have an entire triangulation.
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.

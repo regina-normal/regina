@@ -946,7 +946,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                     // and we have their automorphism group stored.
                     nAut[pos] = 0;
                     Perm<index> conj;
-                    for (int a = 0; a < nAut[pos - 1]; ++a) {
+                    for (size_t a = 0; a < nAut[pos - 1]; ++a) {
                         Perm<index> p = aut[pos - 1][a];
                         if constexpr (RelationScheme<index>::cacheProducts) {
                             conj = p.cachedComp(scheme.rep[pos], p.inverse());

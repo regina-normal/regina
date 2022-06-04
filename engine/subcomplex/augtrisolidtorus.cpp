@@ -495,7 +495,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                 // Check annulus j.
                 // Recall that the 3-manifold is orientable so we don't
                 // have to check for wacky reversed gluings.
-                if (auto q = core->isAnnulusSelfIdentified(j)) {
+                if (auto id = core->isAnnulusSelfIdentified(j)) {
                     // We have a degenerate (2,1,1) glued in here.
                     if (needChain) {
                         // We already know there is a non-degenerate
@@ -506,7 +506,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                         break;
                     }
                     whichLayered[j] = -1;
-                    switch ((*q)[0]) {
+                    switch ((*id)[0]) {
                         case 0:
                             edgeGroupRoles[j] = Perm<3>(2, 0, 1); break;
                         case 2:

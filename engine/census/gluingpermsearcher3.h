@@ -2773,7 +2773,7 @@ inline void GluingPermSearcher<3>::partialSearch(long maxDepth,
 }
 
 inline bool GluingPermSearcher<3>::isComplete() const {
-    return (orderElt == orderSize);
+    return (orderElt == static_cast<ssize_t>(orderSize));
 }
 
 inline void GluingPermSearcher<3>::dumpTaggedData(std::ostream& out) const {

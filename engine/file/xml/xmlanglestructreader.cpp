@@ -113,7 +113,6 @@ XMLElementReader* XMLAngleStructuresReader::startContentSubElement(
         if (valueOf(props.lookup("value"), b))
             list_->doesSpanStrict_ = b;
     } else if (subTagName == "spantaut") {
-        bool b;
         if (valueOf(props.lookup("value"), b))
             list_->doesSpanTaut_ = b;
     }

@@ -501,13 +501,13 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
  */
 template <class LPConstraint>
 struct LPCol {
-    unsigned nPlus;
+    int nPlus;
         /**< The total number of +1 entries in this column. */
     size_t plus[4];
         /**< The rows containing these +1 entries, in any order.
              The same row may appear in this list more than once
              (indicating a +2, +3 or +4 entry in the matrix). */
-    unsigned nMinus;
+    int nMinus;
         /**< The total number of -1 entries in this column. */
     size_t minus[4];
         /**< The rows containing these -1 entries, in any order.
@@ -2259,12 +2259,11 @@ inline IntType LPInitialTableaux<LPConstraint>::multColByRow(
         // Just pick out individual coefficients using the sparse
         // representation of the column.
         IntType ans; // Initialised to 0, due to LPMatrix requirements.
-        unsigned i;
-        for (i = 0; i < col_[thisCol].nPlus; ++i)
+        for (int i = 0; i < col_[thisCol].nPlus; ++i)
             ans += m.entry(mRow, col_[thisCol].plus[i]);
-        for (i = 0; i < col_[thisCol].nMinus; ++i)
+        for (int i = 0; i < col_[thisCol].nMinus; ++i)
             ans -= m.entry(mRow, col_[thisCol].minus[i]);
-        for (i = 0; i < LPConstraint::nConstraints; ++i)
+        for (int i = 0; i < LPConstraint::nConstraints; ++i)
             ans += m.entry(mRow, m.rows() - LPConstraint::nConstraints + i) *
                 col_[thisCol].extra[i];
         return ans;
@@ -2279,12 +2278,11 @@ inline IntType LPInitialTableaux<LPConstraint>::multColByRowOct(
     // or almost normal coordinate system, and so there is no scaling
     // coordinate to worry about.
     IntType ans; // Initialised to 0, due to LPMatrix requirements.
-    unsigned i;
-    for (i = 0; i < col_[thisCol].nPlus; ++i)
+    for (int i = 0; i < col_[thisCol].nPlus; ++i)
         ans += m.entry(mRow, col_[thisCol].plus[i]);
-    for (i = 0; i < col_[thisCol].nMinus; ++i)
+    for (int i = 0; i < col_[thisCol].nMinus; ++i)
         ans -= m.entry(mRow, col_[thisCol].minus[i]);
-    for (i = 0; i < LPConstraint::nConstraints; ++i)
+    for (int i = 0; i < LPConstraint::nConstraints; ++i)
         ans += m.entry(mRow, m.rows() - LPConstraint::nConstraints + i) *
             (col_[thisCol].extra[i] + LPConstraint::octAdjustment);
     return ans;
@@ -2295,9 +2293,9 @@ template <typename IntType>
 inline void LPInitialTableaux<LPConstraint>::fillInitialTableaux(
         LPMatrix<IntType>& m) const {
     for (size_t c = 0; c < cols_; ++c) {
-        for (unsigned i = 0; i < col_[c].nPlus; ++i)
+        for (int i = 0; i < col_[c].nPlus; ++i)
             ++m.entry(col_[c].plus[i], c);
-        for (unsigned i = 0; i < col_[c].nMinus; ++i)
+        for (int i = 0; i < col_[c].nMinus; ++i)
             --m.entry(col_[c].minus[i], c);
 
         // Don't forget any additional constraints that we added

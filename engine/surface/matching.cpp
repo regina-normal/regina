@@ -212,23 +212,18 @@ MatrixInt makeMatchingEquations(const Triangulation<3>& triangulation,
             // Run through each ideal vertex and add the corresponding meridian
             // and longitude equations.
             //
-            // The coefficients here are differences of terms from
-            // SnapPy's get_cusp_equation(), which works in native
-            // integers; therefore we will happily convert them back
-            // to native integers now.
-            //
             // Note: from preconditions, #vertices == #boundaries.
             for (size_t i = 0; i < triangulation.countVertices(); ++i) {
                 // These two branches could be merged a bit better.
                 // Note: the cusp equations are always expressed in terms of
                 // quad coordinates.
                 if (coords == NS_QUAD_CLOSED) {
-                    for (int j = 0; j < 3 * triangulation.size(); ++j) {
+                    for (size_t j = 0; j < 3 * triangulation.size(); ++j) {
                         ans.entry(row, j) = coeffs.entry(2 * i, j);
                         ans.entry(row + 1, j) = coeffs.entry(2 * i + 1, j);
                     }
                 } else {
-                    for (int j = 0; j < triangulation.size(); ++j) {
+                    for (size_t j = 0; j < triangulation.size(); ++j) {
                         for (int k = 0; k < 3; ++k){
                             // Quad contributions
                             ans.entry(row, 6*j + k) =

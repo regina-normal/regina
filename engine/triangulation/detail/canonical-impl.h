@@ -78,7 +78,7 @@ struct CanonicalHelper {
         size_t simplex;
 
         for (simplex = 0; simplex < nSimp; ++simplex)
-            if (simplex != currentInv.simpImage(0))
+            if (simplex != static_cast<size_t>(currentInv.simpImage(0)))
                 current.simpImage(simplex) = -1;
 
         int facet;

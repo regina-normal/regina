@@ -476,7 +476,7 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
         elimOrder[stage] = bestElim;
         elimStage[bestElim] = stage;
 
-        if (bestElimBagSize > width_ + 1)
+        if (bestElimBagSize > static_cast<size_t>(width_ + 1))
             width_ = bestElimBagSize - 1;
 
         // Build the corresponding bag.
@@ -485,7 +485,7 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
         bags[stage] = new TreeBag(bestElimBagSize);
         size_t which = 0;
         for (size_t j = 0; j < graph.order_; ++j) {
-            if (j == bestElim) {
+            if (static_cast<ssize_t>(j) == bestElim) {
                 bags[stage]->elements_[which++] = j;
             } else if ((! used[j]) && graph.adj_[bestElim][j]) {
                 bags[stage]->elements_[which++] = j;

@@ -365,12 +365,14 @@ void GroupPresentation::dehnAlgorithmSubMetric(
     const GroupExpression &that_word,
     std::set<WordSubstitutionData> &sub_list, unsigned long step )
 {
-    unsigned long this_length ( this_word.wordLength() );
-    unsigned long that_length ( that_word.wordLength() );
+    size_t this_length = this_word.wordLength();
+    size_t that_length = that_word.wordLength();
     // generic early exit strategy
-    if ( (this_length < 2) || (that_length==0) ) return;
+    if ( (this_length < 2) || (that_length==0) )
+        return;
     // early exit strategy based on step.
-    if ( (step==1) && ((step+1)*this_length < that_length) ) return;
+    if ( (step==1) && ((step+1)*this_length < that_length) )
+        return;
     // TODO: should check to whatever extent the above is of much use...
 
     // this -> splayed to this_word, that_word -> reducer
@@ -378,23 +380,23 @@ void GroupPresentation::dehnAlgorithmSubMetric(
     this_word_vec.reserve( this_length );
     reducer.reserve( that_length );
     for (const auto& t : this_word.terms()) {
-        for (unsigned long i=0; i<std::abs(t.exponent); i++)
+        for (long i=0; i<std::abs(t.exponent); i++)
             this_word_vec.emplace_back( t.generator,
                                         (t.exponent>0) ? 1 : -1 );
     }
     for (const auto& t : that_word.terms()) {
-        for (unsigned long i=0; i<std::abs(t.exponent); i++)
+        for (long i=0; i<std::abs(t.exponent); i++)
             reducer.emplace_back( t.generator,
                                   (t.exponent>0) ? 1 : -1 );
     }
     std::vector< GroupExpressionTerm > inv_reducer( that_length );
-    for (unsigned long i=0; i<reducer.size(); i++)
+    for (size_t i=0; i<reducer.size(); i++)
         inv_reducer[that_length-(i+1)] = reducer[i].inverse();
 
     // search for cyclic subwords of reducer in this_word_vec...
-    for (unsigned long i=0; i<this_length; i++)
-        for (unsigned long j=0; j<that_length; j++) {
-            unsigned long comp_length = 0;
+    for (size_t i=0; i<this_length; i++)
+        for (size_t j=0; j<that_length; j++) {
+            size_t comp_length = 0;
             while ( (this_word_vec[(i+comp_length) % this_length] ==
                      reducer[(j+comp_length) % that_length]) &&
                     (comp_length < that_length) && (comp_length < this_length) )
@@ -406,7 +408,7 @@ void GroupPresentation::dehnAlgorithmSubMetric(
             subData.start_from=j;
             if (comp_length == that_length) {
                 subData.score = that_length;
-                unsigned long a=1;
+                size_t a=1;
                 while ( (this_word_vec[( (i+this_length)-a )%this_length].inverse()==
                          this_word_vec[( (i+comp_length)+(a-1) )%this_length]) &&
                         (2*a+that_length <= this_length ) ) {
@@ -429,7 +431,7 @@ void GroupPresentation::dehnAlgorithmSubMetric(
             subData.sub_length=comp_length;
             if (comp_length == that_length) {
                 subData.score = that_length;
-                unsigned long a=1;
+                size_t a=1;
                 while ( (this_word_vec[( (i+this_length)-a )%this_length].inverse()==
                          this_word_vec[( (i+comp_length)+(a-1) )%this_length]) &&
                         (2*a+that_length <= this_length ) ) {
@@ -454,8 +456,8 @@ void GroupPresentation::applySubstitution( GroupExpression& this_word,
 {
     // okay, so let's do a quick cut-and-replace, reduce the word and
     // hand it back.
-    unsigned long this_length ( this_word.wordLength() );
-    unsigned long that_length ( that_word.wordLength() );
+    size_t this_length = this_word.wordLength();
+    size_t that_length = that_word.wordLength();
     std::vector<GroupExpressionTerm> this_word_vec, reducer;
     // we'll splay-out *this and that_word so that it's easier to search
     // for commonalities.
@@ -463,33 +465,33 @@ void GroupPresentation::applySubstitution( GroupExpression& this_word,
     reducer.reserve( that_length );
     // start the splaying of terms
     for (const auto& t : this_word.terms()) {
-        for (unsigned long i=0; i<std::abs(t.exponent); i++)
+        for (long i=0; i<std::abs(t.exponent); i++)
             this_word_vec.emplace_back( t.generator,
                                         (t.exponent>0) ? 1 : -1 );
     }
     // and that_word
     for (const auto& t : that_word.terms()) {
-        for (unsigned long i=0; i<std::abs(t.exponent); i++)
+        for (long i=0; i<std::abs(t.exponent); i++)
             reducer.emplace_back( t.generator,
                                   (t.exponent>0) ? 1 : -1 );
     }
     // done splaying, produce inv_reducer
     std::vector< GroupExpressionTerm > inv_reducer( that_length );
-    for (unsigned long i=0; i<that_length; i++) inv_reducer[that_length-(i+1)] =
-            reducer[i].inverse();
+    for (size_t i=0; i<that_length; i++)
+        inv_reducer[that_length-(i+1)] = reducer[i].inverse();
     // done with inv_reducer, erase terms
     this_word.terms().clear();
 
     // *this word is some conjugate of AB and the relator is some conjugate of AC.
     //  We are performing the substitution
     // A=C^{-1}, thus we need to produce the word C^{-1}B. Put in C^{-1} first..
-    for (unsigned long i=0; i<(that_length - sub_data.sub_length); i++)
+    for (size_t i=0; i<(that_length - sub_data.sub_length); i++)
         this_word.terms().push_back( sub_data.invertB ?
                                         reducer[(that_length - sub_data.start_from + i) % that_length] :
                                         inv_reducer[(that_length - sub_data.start_from + i) % that_length] );
     // iterate through remainder of this_word_vec, starting from
     //     sub_data.start_sub_at + sub_length, ie fill in B
-    for (unsigned long i=0; i<(this_length - sub_data.sub_length); i++)
+    for (size_t i=0; i<(this_length - sub_data.sub_length); i++)
         this_word.terms().push_back(
             this_word_vec[(sub_data.start_sub_at + sub_data.sub_length + i) %
                           this_length] );
@@ -1880,17 +1882,17 @@ namespace { // anonymous namespace
         first_word_vec.reserve( first.wordLength() );
         second_word_vec.reserve( second.wordLength() );
         for (const auto& t : first.terms()) {
-            for (unsigned long I=0; I<std::abs(t.exponent); I++)
+            for (long I=0; I<std::abs(t.exponent); I++)
                 first_word_vec.emplace_back( t.generator,
                                              (t.exponent>0) ? 1 : -1 );
         }
         for (const auto& t : second.terms()) {
-            for (unsigned long I=0; I<std::abs(t.exponent); I++)
+            for (long I=0; I<std::abs(t.exponent); I++)
                 second_word_vec.emplace_back( t.generator,
                                               (t.exponent>0) ? 1 : -1 );
         }
     // now we compare termwise
-        for (unsigned long I=0; I<first_word_vec.size(); I++) {
+        for (size_t I=0; I<first_word_vec.size(); I++) {
             if (first_word_vec[I].generator < second_word_vec[I].generator) return true;
             if (first_word_vec[I].generator > second_word_vec[I].generator) return false;
             if (first_word_vec[I].exponent  < second_word_vec[I].exponent) return true;

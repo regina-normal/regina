@@ -75,7 +75,7 @@ void FacetPairing<3>::followChain(size_t& tet, FacePair& faces) const {
             return;
 
         // Do the two faces lead to a *different* tetrahedron?
-        if (dest1.simp == tet)
+        if (dest1.simp == static_cast<ssize_t>(tet))
             return;
 
         // Follow the chain along.
@@ -89,7 +89,7 @@ bool FacetPairing<3>::hasBrokenDoubleEndedChain() const {
     // Skip the last tetrahedron -- any of the two ends will do.
     for (size_t baseTet = 0; baseTet + 1 < size_; baseTet++)
         for (int baseFace = 0; baseFace < 3; baseFace++)
-            if (dest(baseTet, baseFace).simp == baseTet) {
+            if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
                 if (hasBrokenDoubleEndedChain(baseTet, baseFace))
                     return true;
@@ -116,7 +116,7 @@ bool FacetPairing<3>::hasBrokenDoubleEndedChain(size_t baseTet,
     // Here's where we must diverge and move into the second chain.
 
     // We cannot glue the working pair of faces to each other.
-    if (dest(bdryTet, bdryFaces.lower()).simp == bdryTet)
+    if (dest(bdryTet, bdryFaces.lower()).simp == static_cast<ssize_t>(bdryTet))
         return false;
 
     // Try each possible direction away from the working faces into the
@@ -139,7 +139,8 @@ bool FacetPairing<3>::hasBrokenDoubleEndedChain(size_t baseTet,
             followChain(chainTet, chainFaces);
 
             // Did we reach an end edge of the second chain?
-            if (dest(chainTet, chainFaces.lower()).simp == chainTet)
+            if (dest(chainTet, chainFaces.lower()).simp ==
+                    static_cast<ssize_t>(chainTet))
                 return true;
         }
     }
@@ -152,7 +153,7 @@ bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle() const {
     // Search for the end edge of the chain.
     for (size_t baseTet = 0; baseTet < size_; baseTet++)
         for (int baseFace = 0; baseFace < 3; baseFace++)
-            if (dest(baseTet, baseFace).simp == baseTet) {
+            if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
                 if (hasOneEndedChainWithDoubleHandle(baseTet, baseFace))
                     return true;
@@ -204,7 +205,7 @@ bool FacetPairing<3>::hasWedgedDoubleEndedChain() const {
     // Skip the last tetrahedron -- any of the two ends will do.
     for (size_t baseTet = 0; baseTet + 1 < size_; baseTet++)
         for (int baseFace = 0; baseFace < 3; baseFace++)
-            if (dest(baseTet, baseFace).simp == baseTet) {
+            if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
                 if (hasWedgedDoubleEndedChain(baseTet, baseFace))
                     return true;
@@ -291,7 +292,7 @@ bool FacetPairing<3>::hasOneEndedChainWithStrayBigon() const {
     // Search for the end edge of the chain.
     for (size_t baseTet = 0; baseTet < size_; baseTet++)
         for (int baseFace = 0; baseFace < 3; baseFace++)
-            if (dest(baseTet, baseFace).simp == baseTet) {
+            if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
                 if (hasOneEndedChainWithStrayBigon(baseTet, baseFace))
                     return true;
@@ -327,7 +328,7 @@ bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(size_t baseTet,
             i == 0 ? bdryFaces.lower() : bdryFaces.upper());
         if (destFace.isBoundary(size_))
             continue;
-        size_t bigonTet = destFace.simp;
+        ssize_t bigonTet = destFace.simp;
 
         for (int ignoreFace = 0; ignoreFace < 4; ignoreFace++) {
             if (destFace.facet == ignoreFace)
@@ -338,7 +339,7 @@ bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(size_t baseTet,
             FacePair bigonFaces =
                 FacePair(destFace.facet, ignoreFace).complement();
 
-            size_t farTet = dest(bigonTet, bigonFaces.upper()).simp;
+            ssize_t farTet = dest(bigonTet, bigonFaces.upper()).simp;
             if (farTet != bigonTet &&
                     farTet < size_ /* non-bdry */ &&
                     farTet == dest(bigonTet, bigonFaces.lower()).simp) {
@@ -347,7 +348,7 @@ bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(size_t baseTet,
                 // can prove that bdryTet != farTet using 4-valency.
 
                 // Ensure that we don't have one of our special exceptions.
-                size_t extraTet = dest(bdryTet,
+                ssize_t extraTet = dest(bdryTet,
                     i == 0 ? bdryFaces.upper() : bdryFaces.lower()).simp;
                 // We know extraTet != bigonTet, since otherwise our
                 // one-ended chain would not have stopped when it did.
@@ -388,7 +389,7 @@ bool FacetPairing<3>::hasTripleOneEndedChain() const {
     // Skip the last two tetrahedra -- any of the three chains will do.
     for (size_t baseTet = 0; baseTet + 2 < size_; baseTet++)
         for (int baseFace = 0; baseFace < 3; baseFace++)
-            if (dest(baseTet, baseFace).simp == baseTet) {
+            if (dest(baseTet, baseFace).simp == static_cast<ssize_t>(baseTet)) {
                 // Here's a face that matches to the same tetrahedron.
                 if (hasTripleOneEndedChain(baseTet, baseFace))
                     return true;
@@ -415,7 +416,7 @@ bool FacetPairing<3>::hasTripleOneEndedChain(size_t baseTet,
     // Here's where we must diverge and hunt for the other two chains.
 
     // We cannot glue the working pair of faces to each other.
-    if (dest(bdryTet, bdryFaces.lower()).simp == bdryTet)
+    if (dest(bdryTet, bdryFaces.lower()).simp == static_cast<ssize_t>(bdryTet))
         return false;
 
     FacetSpec<3> axis1 = dest(bdryTet, bdryFaces.lower());
@@ -438,7 +439,7 @@ bool FacetPairing<3>::hasTripleOneEndedChain(size_t baseTet,
         if (exit1 == axis1.facet)
             continue;
         arrive1 = dest(axis1.simp, exit1);
-        if (arrive1.simp == bdryTet ||
+        if (arrive1.simp == static_cast<ssize_t>(bdryTet) ||
                 arrive1.simp == axis1.simp || arrive1.simp == axis2.simp ||
                 arrive1.isBoundary(size_))
             continue;

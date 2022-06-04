@@ -102,7 +102,7 @@ bool FacetPairingBase<dim>::isCanonical() const {
         // Note: any signed/unsigned comparisons between simplex numbers are
         // okay, since every destination simplex should be non-negative anyway.
         if (simp > 0)
-            if (dest(simp, 0).simp >= simp)
+            if (dest(simp, 0).simp >= static_cast<ssize_t>(simp))
                 return false;
         if (simp > 1)
             if (dest(simp, 0) <= dest(simp - 1, 0))
@@ -153,7 +153,7 @@ std::pair<FacetPairing<dim>,
     for (size_t i = 0; i < size_; ++i) {
         int loops = 0;
         for (int f = 0; f <= dim; ++f)
-            if (dest(i, f).simp == i)
+            if (dest(i, f).simp == static_cast<ssize_t>(i))
                 ++loops;
         if (loops > maxLoops)
             maxLoops = loops;
@@ -181,7 +181,7 @@ std::pair<FacetPairing<dim>,
         {
             int loops = 0;
             for (int f = 0; f <= dim; ++f)
-                if (dest(pre0, f).simp == pre0)
+                if (dest(pre0, f).simp == static_cast<ssize_t>(pre0))
                     ++loops;
             if (loops != maxLoops)
                 continue;
@@ -193,9 +193,9 @@ std::pair<FacetPairing<dim>,
         perm[0] = 0;
 
         while (true) {
-            if (currSimp == size_) {
+            if (currSimp == static_cast<ssize_t>(size_)) {
                 // We have a complete pair of isomorphisms!
-                if (lexSmallerFrom == size_) {
+                if (lexSmallerFrom == static_cast<ssize_t>(size_)) {
                     // We have found an automorphism.
                     bestIso.append(to);
 
@@ -262,7 +262,7 @@ std::pair<FacetPairing<dim>,
                     FacetSpec<dim> nextMe =
                         dest(from.simpImage(currSimp), p[i]);
                     FacetSpec<dim> nextCanon;
-                    if (nextMe.simp == size_) {
+                    if (nextMe.simp == static_cast<ssize_t>(size_)) {
                         // This is a boundary facet.
                         nextCanon = nextMe; // also boundary
                     } else {
@@ -271,7 +271,7 @@ std::pair<FacetPairing<dim>,
                             // This gluing goes beyond the range of
                             // simplices that have been decided already.
                             // Make sure it goes to the next free simplex.
-                            if (prevDest.simp == size_) {
+                            if (prevDest.simp == static_cast<ssize_t>(size_)) {
                                 // Non-boundary cannot come *after* boundary in
                                 // a lexicographically minimal representation.
                                 unusable = true;
@@ -398,7 +398,7 @@ std::pair<FacetPairing<dim>,
                     ++currSimp;
                     if (! smaller)
                         ++lexSmallerFrom;
-                    if (currSimp < size_)
+                    if (currSimp < static_cast<ssize_t>(size_))
                         perm[currSimp] = 0;
                     break;
                 }

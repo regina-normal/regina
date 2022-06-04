@@ -79,10 +79,8 @@ Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
     // Determine which face gluings should involve new tetrahedra.
     bool* newTetGluings = new bool[2 * nTet];
 
-    unsigned val;
-    int i, j;
-    for (i = 0; i < lenNewTet; i++) {
-        val = VAL(proper[i + 1]);
+    for (unsigned i = 0; i < lenNewTet; i++) {
+        int val = VAL(proper[i + 1]);
         if (val > 15) {
             delete[] newTetGluings;
             throw InvalidArgument("rehydrate(): invalid letter "
@@ -91,11 +89,11 @@ Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
 
         if (i % 2 == 0) {
             // This letter stores values 4i+4 -> 4i+7.
-            for (j = 0; (j < 4) && (4*i + 4 + j < 2 * nTet); j++)
+            for (int j = 0; (j < 4) && (4*i + 4 + j < 2 * nTet); j++)
                 newTetGluings[4*i + 4 + j] = ((val & (1 << j)) != 0);
         } else {
             // This letter stores values 4i-4 -> 4i-1.
-            for (j = 0; (j < 4) && (4*i - 4 + j < 2 * nTet); j++)
+            for (int j = 0; (j < 4) && (4*i - 4 + j < 2 * nTet); j++)
                 newTetGluings[4*i - 4 + j] = ((val & (1 << j)) != 0);
         }
     }
@@ -106,7 +104,7 @@ Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
     ChangeEventSpan span(ans);
 
     auto* tet = new Tetrahedron<3>*[nTet];
-    for (i = 0; i < nTet; i++)
+    for (unsigned i = 0; i < nTet; i++)
         tet[i] = ans.newTetrahedron();
 
     unsigned currTet = 0;       // Tetrahedron of the next face to glue.

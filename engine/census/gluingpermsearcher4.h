@@ -1298,7 +1298,7 @@ inline GluingPermSearcher<4>::PentTriangleState::PentTriangleState() :
 }
 
 inline bool GluingPermSearcher<4>::isComplete() const {
-    return (orderElt_ == orderSize_);
+    return (orderElt_ == static_cast<ssize_t>(orderSize_));
 }
 
 inline void GluingPermSearcher<4>::dumpTaggedData(std::ostream& out) const {

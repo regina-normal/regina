@@ -683,15 +683,14 @@ namespace {
         // of the search tree and the low-degree edges towards the leaves.
 
         // We first sort the edges by degree.
-        size_t i;
         auto* sortedEdges = new size_t[nEdges];
         auto* edgePos = new size_t[nEdges];
 
-        for (i = 0; i < nEdges; ++i)
+        for (size_t i = 0; i < nEdges; ++i)
             sortedEdges[i] = i;
         std::sort(sortedEdges, sortedEdges + nEdges,
             DegreeGreaterThan<3, 1>(tri));
-        for (i = 0; i < nEdges; ++i)
+        for (size_t i = 0; i < nEdges; ++i)
             edgePos[sortedEdges[i]] = i;
 
         // Run through all admissible colourings.
@@ -713,7 +712,7 @@ namespace {
             coeff = new double[nEdges];
             if (nEdges) {
                 coeff[0] = 100.0 / (init.r - 1);
-                for (i = 1; i < nEdges; ++i)
+                for (size_t i = 1; i < nEdges; ++i)
                     coeff[i] = coeff[i - 1] / (init.r - 1);
             }
         }
@@ -730,7 +729,7 @@ namespace {
 #endif
                 // Increment ans appropriately.
                 valColour = 1;
-                for (i = 0; i < tri.size(); i++) {
+                for (size_t i = 0; i < tri.size(); i++) {
                     tet = tri.tetrahedron(i);
                     init.tetContrib(tet,
                         colour[tet->edge(0)->index()],
@@ -758,7 +757,7 @@ namespace {
 
             if (tracker) {
                 percent = 0;
-                for (i = 0; i <= curr; ++i)
+                for (ssize_t i = 0; i <= curr; ++i)
                     percent += coeff[i] * colour[sortedEdges[i]];
 
                 if (! tracker->setPercent(percent))
@@ -814,7 +813,7 @@ namespace {
 
         // Compute the vertex contributions separately, since these are
         // constant.
-        for (i = 0; i < tri.countVertices(); i++)
+        for (size_t i = 0; i < tri.countVertices(); i++)
             ans *= init.vertexContrib;
 
         return ans;
