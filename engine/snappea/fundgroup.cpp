@@ -63,16 +63,14 @@ const GroupPresentation& SnapPeaTriangulation::fundamentalGroupFilled(
     // the same generator, even if simplifyPresentation is false.
     GroupPresentation ans;
     ans.addGenerator(regina::snappea::fg_get_num_generators(pres));
-    unsigned i;
-    int *sReln, *sPos;
-    int gen, currGen, currExp;
-    for (i = 0; i < regina::snappea::fg_get_num_relations(pres); ++i) {
-        sReln = regina::snappea::fg_get_relation(pres, i);
+    for (int i = 0; i < regina::snappea::fg_get_num_relations(pres); ++i) {
+        int* sReln = regina::snappea::fg_get_relation(pres, i);
 
         GroupExpression rReln;
-        currGen = currExp = 0;
-        for (sPos = sReln; *sPos; ++sPos) {
-            gen = (*sPos > 0 ? *sPos : -*sPos);
+        int currGen = 0;
+        long currExp = 0;
+        for (int* sPos = sReln; *sPos; ++sPos) {
+            int gen = (*sPos > 0 ? *sPos : -*sPos);
             if (gen != currGen) {
                 if (currExp)
                     rReln.addTermLast(currGen - 1, currExp);

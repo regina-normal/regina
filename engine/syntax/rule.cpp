@@ -160,7 +160,13 @@ MatchResult Rule::match(Matcher& m, int offset)
     assert(! m.textEmpty());
 
     const auto result = doMatch(m, offset);
-    if (result.offset() == offset || result.offset() == m.textSize())
+
+    // Hmm. Currently matches use int but the text size can be size_t.
+    // Having said this, Regina only uses this code with Qt, which current
+    // stores most things using ints anyway.  So we acknowledge the problem
+    // but cast things silently down to int for now.
+    if (result.offset() == offset ||
+            result.offset() == static_cast<int>(m.textSize()))
         return result;
 
     for (const auto &subRule : m_subRules) {

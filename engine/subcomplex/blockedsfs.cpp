@@ -148,7 +148,8 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
             for (int j = 0; j < 3; j++) {
                 // Try the thick case...
                 if (tri->adjacentBlock(j) == tri &&
-                        tri->adjacentAnnulus(j) == ((j + 1) % 3)) {
+                        static_cast<int>(tri->adjacentAnnulus(j)) ==
+                        ((j + 1) % 3)) {
                     if (tri->adjacentReflected(j) || tri->adjacentBackwards(j))
                         return std::nullopt;
 

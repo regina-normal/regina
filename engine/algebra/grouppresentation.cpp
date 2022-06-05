@@ -1617,8 +1617,7 @@ std::optional<HomGroupPresentation> GroupPresentation::identifyExtensionOverZ()
         for (auto k=terms.rbegin(); k!=terms.rend(); k++) {
             // right to left through the relator
             if (k->generator > 0) {
-                lifts[l].push_back( std::pair< GroupExpressionTerm, signed long >
-                                    ( *k, lift ) );
+                lifts[l].emplace_back( *k, lift );
                 // special case if maxCell and minCell not yet initialized.
                 if (maxCell==0) {
                     maxLift = lift;
@@ -1670,14 +1669,14 @@ std::optional<HomGroupPresentation> GroupPresentation::identifyExtensionOverZ()
                 I.second -= minLift; // adjust the lifts to have min lift 0
         }
         // cyclically permute lifts so that the max-weight rep appears first
-        while (lifts[l].front().second != cellWidth[l]) {
-            std::pair< GroupExpressionTerm, signed long > temp(lifts[l].front());
+        while (lifts[l].front().second != static_cast<long>(cellWidth[l])) {
+            auto temp = lifts[l].front();
             lifts[l].pop_front();
             lifts[l].push_back( temp );
         }
         // ensure word starts with highest-weight element as inverted.
         if (lifts[l].front().first.exponent == 1) {
-            std::pair< GroupExpressionTerm, signed long > temp(lifts[l].front());
+            auto temp = lifts[l].front();
             lifts[l].pop_front();
             lifts[l].reverse();
             lifts[l].push_front(temp); // now run and change the exponents

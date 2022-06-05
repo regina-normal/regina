@@ -80,7 +80,8 @@ void addFacetPairing3(pybind11::module_& m) {
         .def("divideConnected", &FacetPairing<3>::divideConnected)
         .def("isClosed", &FacetPairing<3>::isClosed)
         .def("hasTripleEdge", &FacetPairing<3>::hasTripleEdge)
-        .def("followChain", &FacetPairing<3>::followChain)
+        .def("followChain", overload_cast<ssize_t&, regina::FacePair&>(
+            &FacetPairing<3>::followChain, pybind11::const_))
         .def("hasBrokenDoubleEndedChain", overload_cast<>(
             &FacetPairing<3>::hasBrokenDoubleEndedChain, pybind11::const_))
         .def("hasOneEndedChainWithDoubleHandle", overload_cast<>(

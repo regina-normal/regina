@@ -206,7 +206,7 @@ EulerSearcher::EulerSearcher(int useEuler, FacetPairing<3> pairing,
 
     nVertexClasses = nTets * 4;
     vertexState = new TetVertexState[nTets * 4];
-    vertexStateChanged = new ptrdiff_t[nTets * 8];
+    vertexStateChanged = new std::make_signed_t<size_t>[nTets * 8];
     std::fill(vertexStateChanged, vertexStateChanged + nTets * 8,
         VLINK_JOIN_INIT);
     for (size_t i = 0; i < nTets * 4; i++) {
@@ -538,10 +538,11 @@ EulerSearcher::EulerSearcher(std::istream& in) :
             throw InvalidInput("Invalid vertex state "
                 "while attempting to read EulerSearcher");
 
-    vertexStateChanged = new ptrdiff_t[8 * nTets];
+    using VertexStateChanged = std::make_signed_t<size_t>;
+    vertexStateChanged = new VertexStateChanged[8 * nTets];
     for (size_t i = 0; i < 8 * nTets; i++) {
         in >> vertexStateChanged[i];
-        if (vertexStateChanged[i] >= 4 * static_cast<ptrdiff_t>(nTets))
+        if (vertexStateChanged[i] >= 4 * static_cast<VertexStateChanged>(nTets))
             throw InvalidInput("Invalid vertex state changed "
                 "while attempting to read EulerSearcher");
     }

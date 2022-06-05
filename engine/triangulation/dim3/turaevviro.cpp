@@ -574,7 +574,7 @@ namespace {
 
             if (tracker) {
                 percent = 0;
-                for (i = 0; i <= curr; ++i)
+                for (i = 0; i <= static_cast<size_t>(curr); ++i)
                     percent += coeff[i] * colour[sortedEdges[i]];
 
                 if (! tracker->setPercent(percent))
@@ -782,7 +782,8 @@ namespace {
                 size_t index2 = emb.tetrahedron()->edge(
                     Edge<3>::edgeNumber[emb.vertices()[1]]
                     [emb.vertices()[2]])->index();
-                if (edgePos[index1] <= curr && edgePos[index2] <= curr) {
+                if (static_cast<ssize_t>(edgePos[index1]) <= curr &&
+                        static_cast<ssize_t>(edgePos[index2]) <= curr) {
                     // We've decided upon colours for all three edges of
                     // this triangle containing the current edge.
                     if (! init.isAdmissible(colour[index1], colour[index2],
@@ -885,7 +886,8 @@ namespace {
                 for (int i = 0; i < 6; ++i) {
                     edge = tet->edge(i);
                     ++seenDegree[index][edge->index()];
-                    if (seenDegree[index][edge->index()] == edge->degree())
+                    if (seenDegree[index][edge->index()] ==
+                            static_cast<ssize_t>(edge->degree()))
                         seenDegree[index][edge->index()] = -1;
                 }
             } else {
@@ -896,7 +898,8 @@ namespace {
                 for (size_t i = 0; i < nEdges; ++i) {
                     seenDegree[index][i] = seenDegree[child->index()][i] +
                         seenDegree[sibling->index()][i];
-                    if (seenDegree[index][i] == tri.edge(i)->degree())
+                    if (seenDegree[index][i] ==
+                            static_cast<ssize_t>(tri.edge(i)->degree()))
                         seenDegree[index][i] = -1;
                 }
             }

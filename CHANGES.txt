@@ -46,6 +46,9 @@ Version 7.1  [ TODO ]
               a deprecated alias.
             - The IsoList type alias has changed from std::list to std::vector,
               for better performance.
+        Class FacetPairing<3>:
+            - Routine followChain() now uses ssize_t for the tetrahedron index.
+              The old size_t version is still present but deprecated.
         Struct FacetSpec<dim>:
             - New routines for tight encodings and decodings.
         Class HilbertPrimal:

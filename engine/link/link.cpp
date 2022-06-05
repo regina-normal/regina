@@ -890,10 +890,9 @@ Link Link::parallel(int k, Framing framing) const {
     StrandRef s;
     ssize_t enterL, exitL;
     int enterStrand, exitStrand;
-    ptrdiff_t enterDelta, exitDelta;
+    std::make_signed_t<size_t> enterDelta, exitDelta, startDelta;
     ssize_t startL;
     int startStrand;
-    ptrdiff_t startDelta;
 
     int writhe;
     bool* seen = new bool[crossings_.size()];
