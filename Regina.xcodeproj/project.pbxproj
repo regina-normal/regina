@@ -33,6 +33,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		050302EE284DAE060050903D /* QtSvgWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 050302ED284DAE060050903D /* QtSvgWidgets.framework */; };
+		050302EF284DAE060050903D /* QtSvgWidgets.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 050302ED284DAE060050903D /* QtSvgWidgets.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		050313C11812DB06007F0CBE /* TextViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C01812DB06007F0CBE /* TextViewController.mm */; };
 		050313C41812DB1E007F0CBE /* DefaultPacketViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */; };
 		0503DCD419B7D8AA0085F3CC /* regina-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 0503DCD219B7D8950085F3CC /* regina-doc-64.png */; };
@@ -1204,19 +1206,19 @@
 		057B0CC426A506D90017F5EA /* dgt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057B0CB326A5064A0017F5EA /* dgt.cpp */; };
 		057B0CC826A507C50017F5EA /* dgt in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 057B0CC326A506B20017F5EA /* dgt */; };
 		057ED8EE2581B49E004F0068 /* QtSvg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E72581B49E004F0068 /* QtSvg.framework */; };
-		057ED8EF2581B49E004F0068 /* QtSvg.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E72581B49E004F0068 /* QtSvg.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8EF2581B49E004F0068 /* QtSvg.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E72581B49E004F0068 /* QtSvg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED8F02581B49E004F0068 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E82581B49E004F0068 /* QtCore.framework */; };
-		057ED8F12581B49E004F0068 /* QtCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E82581B49E004F0068 /* QtCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F12581B49E004F0068 /* QtCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E82581B49E004F0068 /* QtCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED8F22581B49E004F0068 /* QtPrintSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E92581B49E004F0068 /* QtPrintSupport.framework */; };
-		057ED8F32581B49E004F0068 /* QtPrintSupport.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E92581B49E004F0068 /* QtPrintSupport.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F32581B49E004F0068 /* QtPrintSupport.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E92581B49E004F0068 /* QtPrintSupport.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED8F42581B49E004F0068 /* QtNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EA2581B49E004F0068 /* QtNetwork.framework */; };
-		057ED8F52581B49E004F0068 /* QtNetwork.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EA2581B49E004F0068 /* QtNetwork.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F52581B49E004F0068 /* QtNetwork.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EA2581B49E004F0068 /* QtNetwork.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED8F62581B49E004F0068 /* QtDBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EB2581B49E004F0068 /* QtDBus.framework */; };
-		057ED8F72581B49E004F0068 /* QtDBus.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EB2581B49E004F0068 /* QtDBus.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F72581B49E004F0068 /* QtDBus.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EB2581B49E004F0068 /* QtDBus.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED8F82581B49E004F0068 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EC2581B49E004F0068 /* QtGui.framework */; };
-		057ED8F92581B49E004F0068 /* QtGui.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EC2581B49E004F0068 /* QtGui.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F92581B49E004F0068 /* QtGui.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EC2581B49E004F0068 /* QtGui.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED8FA2581B49E004F0068 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8ED2581B49E004F0068 /* QtWidgets.framework */; };
-		057ED8FB2581B49E004F0068 /* QtWidgets.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8ED2581B49E004F0068 /* QtWidgets.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8FB2581B49E004F0068 /* QtWidgets.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8ED2581B49E004F0068 /* QtWidgets.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED9C42581BAAE004F0068 /* graphviz.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED9C32581BAAE004F0068 /* graphviz.xcframework */; };
 		057EDA022581BC16004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057EDA032581BC16004F0068 /* libgmp.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -2090,7 +2092,7 @@
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
 			);
 			runOncePerArchitecture = 0;
-			script = "~/Qt/5.15.2-macos/bin/moc \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtCore.framework/Headers \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtGui.framework/Headers \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtSvg.framework/Headers \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx\" \"${INPUT_FILE_PATH}\"\n";
+			script = "~/Qt/6.3.0-macos/libexec/moc \\\n-I${HOME}/Qt/6.3.0-macos/lib/QtCore.framework/Headers \\\n-I${HOME}/Qt/6.3.0-macos/lib/QtGui.framework/Headers \\\n-I${HOME}/Qt/6.3.0-macos/lib/QtSvg.framework/Headers \\\n-I${HOME}/Qt/6.3.0-macos/lib/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx\" \"${INPUT_FILE_PATH}\"\n";
 		};
 		05617AD71D9D3CBD00B1E33B /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -2352,6 +2354,7 @@
 				057EDBAE2581EA83004F0068 /* libtokyocabinet.xcframework in Embed Frameworks */,
 				057ED8FB2581B49E004F0068 /* QtWidgets.framework in Embed Frameworks */,
 				057ED8F52581B49E004F0068 /* QtNetwork.framework in Embed Frameworks */,
+				050302EF284DAE060050903D /* QtSvgWidgets.framework in Embed Frameworks */,
 				057ED8EF2581B49E004F0068 /* QtSvg.framework in Embed Frameworks */,
 				057ED8F92581B49E004F0068 /* QtGui.framework in Embed Frameworks */,
 				051A656C2594277900A52E30 /* popt.xcframework in Embed Frameworks */,
@@ -2479,6 +2482,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		050302ED284DAE060050903D /* QtSvgWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvgWidgets.framework; path = "../../Qt/6.3.0-macos/lib/QtSvgWidgets.framework"; sourceTree = "<group>"; };
 		050313BF1812DB06007F0CBE /* TextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewController.h; sourceTree = "<group>"; };
 		050313C01812DB06007F0CBE /* TextViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextViewController.mm; sourceTree = "<group>"; };
 		050313C21812DB1E007F0CBE /* DefaultPacketViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultPacketViewController.h; sourceTree = "<group>"; };
@@ -3752,25 +3756,25 @@
 		057B0CB326A5064A0017F5EA /* dgt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dgt.cpp; sourceTree = "<group>"; };
 		057B0CB526A5067B0017F5EA /* covers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = covers.cpp; sourceTree = "<group>"; };
 		057B0CC326A506B20017F5EA /* dgt */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dgt; sourceTree = BUILT_PRODUCTS_DIR; };
-		057ED8E72581B49E004F0068 /* QtSvg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvg.framework; path = "../../Qt/5.15.2-macos/lib/QtSvg.framework"; sourceTree = "<group>"; };
-		057ED8E82581B49E004F0068 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = "../../Qt/5.15.2-macos/lib/QtCore.framework"; sourceTree = "<group>"; };
-		057ED8E92581B49E004F0068 /* QtPrintSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtPrintSupport.framework; path = "../../Qt/5.15.2-macos/lib/QtPrintSupport.framework"; sourceTree = "<group>"; };
-		057ED8EA2581B49E004F0068 /* QtNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtNetwork.framework; path = "../../Qt/5.15.2-macos/lib/QtNetwork.framework"; sourceTree = "<group>"; };
-		057ED8EB2581B49E004F0068 /* QtDBus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtDBus.framework; path = "../../Qt/5.15.2-macos/lib/QtDBus.framework"; sourceTree = "<group>"; };
-		057ED8EC2581B49E004F0068 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = "../../Qt/5.15.2-macos/lib/QtGui.framework"; sourceTree = "<group>"; };
-		057ED8ED2581B49E004F0068 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = "../../Qt/5.15.2-macos/lib/QtWidgets.framework"; sourceTree = "<group>"; };
+		057ED8E72581B49E004F0068 /* QtSvg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvg.framework; path = "../../Qt/6.3.0-macos/lib/QtSvg.framework"; sourceTree = "<group>"; };
+		057ED8E82581B49E004F0068 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = "../../Qt/6.3.0-macos/lib/QtCore.framework"; sourceTree = "<group>"; };
+		057ED8E92581B49E004F0068 /* QtPrintSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtPrintSupport.framework; path = "../../Qt/6.3.0-macos/lib/QtPrintSupport.framework"; sourceTree = "<group>"; };
+		057ED8EA2581B49E004F0068 /* QtNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtNetwork.framework; path = "../../Qt/6.3.0-macos/lib/QtNetwork.framework"; sourceTree = "<group>"; };
+		057ED8EB2581B49E004F0068 /* QtDBus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtDBus.framework; path = "../../Qt/6.3.0-macos/lib/QtDBus.framework"; sourceTree = "<group>"; };
+		057ED8EC2581B49E004F0068 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = "../../Qt/6.3.0-macos/lib/QtGui.framework"; sourceTree = "<group>"; };
+		057ED8ED2581B49E004F0068 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = "../../Qt/6.3.0-macos/lib/QtWidgets.framework"; sourceTree = "<group>"; };
 		057ED9C32581BAAE004F0068 /* graphviz.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = graphviz.xcframework; path = ../../Library/Frameworks/graphviz.xcframework; sourceTree = "<group>"; };
 		057EDA312581BC97004F0068 /* cppunit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = cppunit.xcframework; path = ../../Library/Frameworks/cppunit.xcframework; sourceTree = "<group>"; };
-		057EDAE42581D83A004F0068 /* libqtuiotouchplugin.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtuiotouchplugin.dylib; path = "../../Qt/5.15.2-macos/plugins/generic/libqtuiotouchplugin.dylib"; sourceTree = "<group>"; };
-		057EDAE62581D877004F0068 /* libqsvgicon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvgicon.dylib; path = "../../Qt/5.15.2-macos/plugins/iconengines/libqsvgicon.dylib"; sourceTree = "<group>"; };
-		057EDAE82581D8BA004F0068 /* libqgif.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqgif.dylib; path = "../../Qt/5.15.2-macos/plugins/imageformats/libqgif.dylib"; sourceTree = "<group>"; };
-		057EDAE92581D8BA004F0068 /* libqjpeg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqjpeg.dylib; path = "../../Qt/5.15.2-macos/plugins/imageformats/libqjpeg.dylib"; sourceTree = "<group>"; };
-		057EDAEA2581D8BA004F0068 /* libqico.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqico.dylib; path = "../../Qt/5.15.2-macos/plugins/imageformats/libqico.dylib"; sourceTree = "<group>"; };
-		057EDAEB2581D8BA004F0068 /* libqsvg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvg.dylib; path = "../../Qt/5.15.2-macos/plugins/imageformats/libqsvg.dylib"; sourceTree = "<group>"; };
-		057EDAF02581D92E004F0068 /* libqmacstyle.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqmacstyle.dylib; path = "../../Qt/5.15.2-macos/plugins/styles/libqmacstyle.dylib"; sourceTree = "<group>"; };
-		057EDAF22581D95B004F0068 /* libqminimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqminimal.dylib; path = "../../Qt/5.15.2-macos/plugins/platforms/libqminimal.dylib"; sourceTree = "<group>"; };
-		057EDAF32581D95B004F0068 /* libqoffscreen.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqoffscreen.dylib; path = "../../Qt/5.15.2-macos/plugins/platforms/libqoffscreen.dylib"; sourceTree = "<group>"; };
-		057EDAF42581D95B004F0068 /* libqcocoa.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqcocoa.dylib; path = "../../Qt/5.15.2-macos/plugins/platforms/libqcocoa.dylib"; sourceTree = "<group>"; };
+		057EDAE42581D83A004F0068 /* libqtuiotouchplugin.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtuiotouchplugin.dylib; path = "../../Qt/6.3.0-macos/plugins/generic/libqtuiotouchplugin.dylib"; sourceTree = "<group>"; };
+		057EDAE62581D877004F0068 /* libqsvgicon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvgicon.dylib; path = "../../Qt/6.3.0-macos/plugins/iconengines/libqsvgicon.dylib"; sourceTree = "<group>"; };
+		057EDAE82581D8BA004F0068 /* libqgif.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqgif.dylib; path = "../../Qt/6.3.0-macos/plugins/imageformats/libqgif.dylib"; sourceTree = "<group>"; };
+		057EDAE92581D8BA004F0068 /* libqjpeg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqjpeg.dylib; path = "../../Qt/6.3.0-macos/plugins/imageformats/libqjpeg.dylib"; sourceTree = "<group>"; };
+		057EDAEA2581D8BA004F0068 /* libqico.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqico.dylib; path = "../../Qt/6.3.0-macos/plugins/imageformats/libqico.dylib"; sourceTree = "<group>"; };
+		057EDAEB2581D8BA004F0068 /* libqsvg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvg.dylib; path = "../../Qt/6.3.0-macos/plugins/imageformats/libqsvg.dylib"; sourceTree = "<group>"; };
+		057EDAF02581D92E004F0068 /* libqmacstyle.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqmacstyle.dylib; path = "../../Qt/6.3.0-macos/plugins/styles/libqmacstyle.dylib"; sourceTree = "<group>"; };
+		057EDAF22581D95B004F0068 /* libqminimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqminimal.dylib; path = "../../Qt/6.3.0-macos/plugins/platforms/libqminimal.dylib"; sourceTree = "<group>"; };
+		057EDAF32581D95B004F0068 /* libqoffscreen.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqoffscreen.dylib; path = "../../Qt/6.3.0-macos/plugins/platforms/libqoffscreen.dylib"; sourceTree = "<group>"; };
+		057EDAF42581D95B004F0068 /* libqcocoa.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqcocoa.dylib; path = "../../Qt/6.3.0-macos/plugins/platforms/libqcocoa.dylib"; sourceTree = "<group>"; };
 		057EDEF82582370B004F0068 /* Python.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Python.xcframework; path = ../../Library/Frameworks/Python.xcframework; sourceTree = "<group>"; };
 		057EDF1925823779004F0068 /* XZ.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = XZ.xcframework; path = ../../Library/Frameworks/XZ.xcframework; sourceTree = "<group>"; };
 		057EE01C2582416B004F0068 /* DBChooser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DBChooser.framework; path = ../../Library/Frameworks/DBChooser.framework; sourceTree = "<group>"; };
@@ -4675,6 +4679,7 @@
 				057ED8EE2581B49E004F0068 /* QtSvg.framework in Frameworks */,
 				057EDBBF2581EA9D004F0068 /* libgmpxx.xcframework in Frameworks */,
 				057ED8F42581B49E004F0068 /* QtNetwork.framework in Frameworks */,
+				050302EE284DAE060050903D /* QtSvgWidgets.framework in Frameworks */,
 				05E0F1532582426400965440 /* libxml2.tbd in Frameworks */,
 				05E0F1432582426100965440 /* libz.tbd in Frameworks */,
 			);
@@ -6165,6 +6170,7 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				050302ED284DAE060050903D /* QtSvgWidgets.framework */,
 				057EDA312581BC97004F0068 /* cppunit.xcframework */,
 				057ED9C32581BAAE004F0068 /* graphviz.xcframework */,
 				0567B49A2581AB9A0022EA5D /* jansson.xcframework */,
@@ -8299,7 +8305,6 @@
 				052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */,
 				057ED8FC2581B49E004F0068 /* Embed Frameworks */,
 				052DB59E1D9E587C00EDEA68 /* Sign Utilities */,
-				0514CAE31D9C9A5800EDB2E6 /* Sign Qt */,
 				05B9295C259C148700A4503B /* Prepare and Sign Python */,
 			);
 			buildRules = (
@@ -8572,20 +8577,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\n\nfor i in __init__.py plainCompleter.py sageSetup.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
-		};
-		0514CAE31D9C9A5800EDB2E6 /* Sign Qt */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Sign Qt";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "# Qt was copied normally, but Xcode's code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n/usr/bin/codesign --force --sign 'Apple Development:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
 		};
 		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -11401,7 +11392,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(HOME)/Qt/5.15.2-macos/lib",
+					"$(HOME)/Qt/6.3.0-macos/lib",
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks,
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -11420,10 +11411,11 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtCore.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtGui.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtSvg.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtCore.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtGui.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtSvg.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtSvgWidgets.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtWidgets.framework/Headers",
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
@@ -11455,7 +11447,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(HOME)/Qt/5.15.2-macos/lib",
+					"$(HOME)/Qt/6.3.0-macos/lib",
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks,
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -11472,10 +11464,11 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtCore.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtGui.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtSvg.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtCore.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtGui.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtSvg.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtSvgWidgets.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtWidgets.framework/Headers",
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
