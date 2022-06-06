@@ -350,12 +350,12 @@ bool HilbertSeries::get_period_bounded() const {
     return period_bounded;
 }
 // add another HilbertSeries to this
-void HilbertSeries::add(const vector<num_t>& num, const vector<denom_t>& gen_degrees) {
+void HilbertSeries::add(const vector<num_t>& num_, const vector<denom_t>& gen_degrees) {
     vector<denom_t> sorted_gd(gen_degrees);
     sort(sorted_gd.begin(), sorted_gd.end());
     if (gen_degrees.size() > 0)
         assert(sorted_gd[0] > 0);  // TODO InputException?
-    poly_add_to(denom_classes[sorted_gd], num);
+    poly_add_to(denom_classes[sorted_gd], num_);
     if (denom_classes.size() > DENOM_CLASSES_BOUND)
         collectData();
     is_simplified = false;
@@ -535,12 +535,12 @@ void HilbertSeries::simplify() const {
             long k = 1;
             bool empty = true;
             vector<mpz_class> existing_factor(1, 1);  // collects the existing cyclotomic gactors in the denom
-            for (auto& it : cdenom) {                 // with multiplicvity 1
-                if (it.second > 0) {
+            for (auto& d : cdenom) {                 // with multiplicvity 1
+                if (d.second > 0) {
                     empty = false;
-                    k = libnormaliz::lcm(k, it.first);
-                    existing_factor = poly_mult(existing_factor, cyclotomicPoly<mpz_class>(it.first));
-                    it.second--;
+                    k = libnormaliz::lcm(k, d.first);
+                    existing_factor = poly_mult(existing_factor, cyclotomicPoly<mpz_class>(d.first));
+                    d.second--;
                 }
             }
             if (empty)
@@ -668,7 +668,7 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
     long reduced_period;
     if (nr_coeff_quasipol >= 0) {
         reduced_period = 1;
-        for (long j = 0; j < nr_coeff_quasipol; ++j)
+        for (j = 0; j < nr_coeff_quasipol; ++j)
             reduced_period = lcm(reduced_period, denom_vec[j]);
     }
     else
@@ -727,9 +727,9 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
     if (nr_coeff_quasipol >= 0)
         delete_coeff = (long)quasi_poly[0].size() - nr_coeff_quasipol;
 
-    for (auto& i : quasi_poly)  // delete coefficients that have not been computed completely
-        for (long j = 0; j < delete_coeff; ++j)
-            i[j] = 0;
+    for (auto& p : quasi_poly)  // delete coefficients that have not been computed completely
+        for (j = 0; j < delete_coeff; ++j)
+            p[j] = 0;
 
     if (verbose && period > 1) {
         verboseOutput() << " done." << endl;
@@ -754,8 +754,8 @@ long HilbertSeries::get_expansion_degree() const {
     return expansion_degree;
 }
 
-void HilbertSeries::set_expansion_degree(long degree) {
-    expansion_degree = degree;
+void HilbertSeries::set_expansion_degree(long degree_) {
+    expansion_degree = degree_;
 }
 
 vector<mpz_class> HilbertSeries::expand_denom() const {

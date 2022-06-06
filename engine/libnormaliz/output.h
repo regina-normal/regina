@@ -36,8 +36,8 @@ using namespace std;
 template <typename Number>
 class Output {
     string name;
-    bool out;
-    bool inv;
+    bool write_out;
+    bool write_inv;
     bool ext;
     bool esp;
     bool typ;

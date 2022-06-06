@@ -503,7 +503,7 @@ void v_el_trans(const vector<Integer>& av, vector<Integer>& bv, const Integer& F
     if (n > 0)
         b[0] += F * a[0];
 
-    for (size_t i = 0; i < bv.size(); ++i)
+    for (i = 0; i < bv.size(); ++i)
         if (!check_range(bv[i]))
             throw ArithmeticException("Vector entry out of range. Imminent danger of arithmetic overflow.");
 }

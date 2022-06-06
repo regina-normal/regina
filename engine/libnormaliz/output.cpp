@@ -47,8 +47,8 @@ using namespace std;
 
 template <typename Integer>
 Output<Integer>::Output() {
-    out = true;
-    inv = false;
+    write_out = true;
+    write_inv = false;
     ext = false;
     esp = false;
     typ = false;
@@ -190,14 +190,14 @@ void Output<renf_elem_class>::set_renf(const renf_class_shared renf, bool is_int
 
 template <typename Integer>
 void Output<Integer>::set_write_out(const bool& flag) {
-    out = flag;
+    write_out = flag;
 }
 
 //---------------------------------------------------------------------------
 
 template <typename Integer>
 void Output<Integer>::set_write_inv(const bool& flag) {
-    inv = flag;
+    write_inv = flag;
 }
 
 //---------------------------------------------------------------------------
@@ -321,8 +321,8 @@ void Output<Integer>::set_write_inc(const bool& flag) {
 
 template <typename Integer>
 void Output<Integer>::set_write_extra_files() {
-    out = true;
-    inv = true;
+    write_out = true;
+    write_inv = true;
     gen = true;
     cst = true;
 }
@@ -331,8 +331,8 @@ void Output<Integer>::set_write_extra_files() {
 
 template <typename Integer>
 void Output<Integer>::set_write_all_files() {
-    out = true;
-    inv = true;
+    write_out = true;
+    write_inv = true;
     ext = true;
     esp = true;
     typ = true;
@@ -440,9 +440,9 @@ void Output<Integer>::write_perms_and_orbits(ofstream& out,
     out << "Cycle decompositions " << endl << endl;
 
     for (size_t i = 0; i < nr_items; ++i) {
-        vector<vector<libnormaliz::key_t> > dec = cycle_decomposition(Perms[i]);
+        vector<vector<libnormaliz::key_t> > decomp = cycle_decomposition(Perms[i]);
         out << "Perm " << i + 1 << ": ";
-        pretty_print_cycle_dec(dec, out);
+        pretty_print_cycle_dec(decomp, out);
     }
     out << endl;
 
@@ -804,7 +804,7 @@ string is_maximal(long a, long b) {
 
 template <typename Integer>
 void Output<Integer>::write_inv_file() const {
-    if (inv == true) {  // printing .inv file
+    if (write_inv == true) {  // printing .inv file
         size_t i;
         string name_open = name + ".inv";  // preparing output files
         const char* file = name_open.c_str();
@@ -1184,7 +1184,7 @@ void Output<Integer>::writeSeries(ofstream& out, const HilbertSeries& HS, string
 
 template <typename Integer>
 void Output<Integer>::write_files() const {
-    size_t i, nr;
+    size_t nr;
     vector<libnormaliz::key_t> rees_ideal_key;
 
     write_precomp();  // only if asked for
@@ -1234,7 +1234,7 @@ void Output<Integer>::write_files() const {
         write_dual_inc();
     }
 
-    if (out == true) {                     // printing .out file
+    if (write_out == true) {                     // printing .out file
         string name_open = name + ".out";  // preparing output files
         const char* file = name_open.c_str();
         ofstream out(file);
@@ -1263,7 +1263,7 @@ void Output<Integer>::write_files() const {
         if (Result->isComputed(ConeProperty::IsReesPrimary) && Result->isComputed(ConeProperty::HilbertBasis)) {
             const Matrix<Integer>& Hilbert_Basis = Result->getHilbertBasisMatrix();
             nr = Hilbert_Basis.nr_of_rows();
-            for (i = 0; i < nr; i++) {
+            for (size_t i = 0; i < nr; i++) {
                 if (Hilbert_Basis[i][dim - 1] == 1) {
                     rees_ideal_key.push_back(static_cast<key_t>(i));
                 }
@@ -1381,7 +1381,7 @@ void Output<Integer>::write_files() const {
                 out << "degrees of extreme rays:" << endl;
                 map<Integer, long> deg_count;
                 vector<Integer> degs = Result->getExtremeRaysMatrix().MxV(Result->getGrading());
-                for (i = 0; i < degs.size(); ++i) {
+                for (size_t i = 0; i < degs.size(); ++i) {
                     deg_count[degs[i] / denom]++;
                 }
                 out << deg_count;

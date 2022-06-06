@@ -384,7 +384,6 @@ class Full_Cone {
     void process_pyramids(const size_t new_generator, const bool recursive);
     void process_pyramid(const vector<key_t>& Pyramid_key,
                          const size_t new_generator,
-                         const size_t store_level,
                          Integer height,
                          const bool recursive,
                          typename list<FACETDATA<Integer>>::iterator hyp,

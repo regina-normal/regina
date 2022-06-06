@@ -309,7 +309,7 @@ template <typename Integer, typename number>
 void LLL_coordinates_without_1st_col(Sublattice_Representation<Integer>& LLL_Coordinates,
                                      const Matrix<number> Supps,
                                      const Matrix<number> Vertices,
-                                     bool verbose) {
+                                     bool verbose_) {
     // used when the 1st column is the grading or the dehomogenization and should bot be changed
     // Important in project_and_lift
     // Computed SLR is returned in LLL_Coordinates
@@ -328,7 +328,7 @@ void LLL_coordinates_without_1st_col(Sublattice_Representation<Integer>& LLL_Coo
         convert(HelpA, HelpCoord.getEmbeddingMatrix());
         convert(HelpB, HelpCoord.getProjectionMatrix());
         convert(HelpC, HelpCoord.getAnnihilator());
-        if (verbose)
+        if (verbose_)
             verboseOutput() << "LLL based on support hyperplanes" << endl;
     }
     else {  // use Vertices for LLL coordinates
@@ -339,7 +339,7 @@ void LLL_coordinates_without_1st_col(Sublattice_Representation<Integer>& LLL_Coo
         convert(HelpA, HelpCoord.getEmbeddingMatrix());
         convert(HelpB, HelpCoord.getProjectionMatrix());
         convert(HelpC, HelpCoord.getAnnihilator());
-        if (verbose)
+        if (verbose_)
             verboseOutput() << "LLL based on vertices" << endl;
     }
 

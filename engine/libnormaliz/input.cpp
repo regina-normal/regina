@@ -838,7 +838,6 @@ InputMap<Number> readNormalizInput(istream& in,
                                                                  string& polynomial,
                                                                  renf_class_shared& number_field) {
     string type_string;
-    long i, j;
     long nr_rows, nr_columns, nr_rows_or_columns;
     InputType input_type;
     Number number;
@@ -1157,9 +1156,9 @@ InputMap<Number> readNormalizInput(istream& in,
                     }
                 }
                 if (dense_matrix) {  // dense matrix
-                    for (i = 0; i < nr_rows; i++) {
+                    for (long i = 0; i < nr_rows; i++) {
                         M[i].resize(nr_columns);
-                        for (j = 0; j < nr_columns; j++) {
+                        for (long j = 0; j < nr_columns; j++) {
                             read_number(in, M[i][j]);
                             // cout << M[i][j] << endl;
                         }
@@ -1186,8 +1185,8 @@ InputMap<Number> readNormalizInput(istream& in,
                 throw BadInputException("Error while reading a " + toString(nr_rows) + "x" + toString(nr_columns) + " matrix !");
             }
             Matrix<Number> M(nr_rows, nr_columns);
-            for (i = 0; i < nr_rows; i++) {
-                for (j = 0; j < nr_columns; j++) {
+            for (long i = 0; i < nr_rows; i++) {
+                for (long j = 0; j < nr_columns; j++) {
                     read_number(in, M[i][j]);
                 }
             }

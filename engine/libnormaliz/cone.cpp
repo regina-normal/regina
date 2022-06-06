@@ -446,19 +446,19 @@ InputMap<Integer> Cone<Integer>::mpqclass_input_to_integer(
     // special treatment of polytope. We convert it o cone
     // and define the grading
     if (contains(multi_input_data, Type::polytope)) {
-        size_t dim;
+        size_t cone_dim;
         if (multi_input_data[Type::polytope].nr_of_rows() > 0) {
-            dim = multi_input_data[Type::polytope][0].size() + 1;
-            Matrix<Integer> grading(0,dim);
-            grading.append(vector<Integer>(dim));
-            grading[0][dim - 1] = 1;
+            cone_dim = multi_input_data[Type::polytope][0].size() + 1;
+            Matrix<Integer> grading(0,cone_dim);
+            grading.append(vector<Integer>(cone_dim));
+            grading[0][cone_dim - 1] = 1;
             multi_input_data_ZZ[Type::grading] = grading;
         }
         vector<vector<mpq_class> >  Help = multi_input_data[Type::polytope].get_elements();
         multi_input_data.erase(Type::polytope);
         for (size_t i = 0; i < Help.size(); ++i) {
-            Help[i].resize(dim);
-            Help[i][dim - 1] = 1;
+            Help[i].resize(cone_dim);
+            Help[i][cone_dim - 1] = 1;
         }
         multi_input_data[Type::cone]=Matrix<mpq_class>(Help);
     }
@@ -494,10 +494,10 @@ Matrix<Integer> sign_inequalities(const Matrix<Integer>& Signs) {
     if (Signs.nr_of_rows() != 1) {
         throw BadInputException("ERROR: Bad signs matrix, has " + toString(Signs.nr_of_rows()) + " rows (should be 1)!");
     }
-    size_t dim = Signs[0].size();
-    Matrix<Integer> Inequ(0, dim);
-    vector<Integer> ineq(dim, 0);
-    for (size_t i = 0; i < dim; i++) {
+    size_t ineq_dim = Signs[0].size();
+    Matrix<Integer> Inequ(0, ineq_dim);
+    vector<Integer> ineq(ineq_dim, 0);
+    for (size_t i = 0; i < ineq_dim; i++) {
         Integer sign = Signs[0][i];
         if (sign == 1 || sign == -1) {
             ineq[i] = sign;
@@ -516,11 +516,11 @@ Matrix<Integer> strict_sign_inequalities(const Matrix<Integer>& Signs) {
     if (Signs.nr_of_rows() != 1) {
         throw BadInputException("ERROR: Bad signs matrix, has " + toString(Signs.nr_of_rows()) + " rows (should be 1)!");
     }
-    size_t dim = Signs[0].size();
-    Matrix<Integer> Inequ(0, dim);
-    vector<Integer> ineq(dim, 0);
-    ineq[dim - 1] = -1;
-    for (size_t i = 0; i < dim - 1; i++) {  // last component of strict_signs always 0
+    size_t ineq_dim = Signs[0].size();
+    Matrix<Integer> Inequ(0, ineq_dim);
+    vector<Integer> ineq(ineq_dim, 0);
+    ineq[ineq_dim - 1] = -1;
+    for (size_t i = 0; i < ineq_dim - 1; i++) {  // last component of strict_signs always 0
         Integer sign = Signs[0][i];
         if (sign == 1 || sign == -1) {
             ineq[i] = sign;
@@ -881,7 +881,7 @@ void Cone<Integer>::process_multi_input_inner(InputMap<Integer>& multi_input_dat
     }
     if (contains(multi_input_data, Type::open_facets)) {
         size_t allowed = 0;
-        auto it = multi_input_data.begin();
+        it = multi_input_data.begin();
         for (; it != multi_input_data.end(); ++it) {
             switch (it->first) {
                 case Type::open_facets:
@@ -1702,12 +1702,12 @@ void Cone<Integer>::convert_equations_to_inequalties(){
 
 template <typename Integer>
 void Cone<Integer>::process_lattice_data(const Matrix<Integer>& LatticeGenerators,
-                                         Matrix<Integer>& Congruences,
-                                         Matrix<Integer>& Equations) {
+                                         Matrix<Integer>& LatticeCongruences,
+                                         Matrix<Integer>& LatticeEquations) {
     if (!BC_set)
         compose_basis_change(Sublattice_Representation<Integer>(dim));
 
-    bool no_constraints = (Congruences.nr_of_rows() == 0) && (Equations.nr_of_rows() == 0);
+    bool no_constraints = (LatticeCongruences.nr_of_rows() == 0) && (LatticeEquations.nr_of_rows() == 0);
     bool only_cone_gen = (Generators.nr_of_rows() != 0) && no_constraints && (LatticeGenerators.nr_of_rows() == 0);
 
     INTERRUPT_COMPUTATION_BY_EXCEPTION
@@ -1727,24 +1727,24 @@ void Cone<Integer>::process_lattice_data(const Matrix<Integer>& LatticeGenerator
     }
 
     if (Generators.nr_of_rows() != 0) {
-        Equations.append(Generators.kernel(!using_renf<Integer>()));
+        LatticeEquations.append(Generators.kernel(!using_renf<Integer>()));
     }
 
     if (LatticeGenerators.nr_of_rows() != 0) {
         Sublattice_Representation<Integer> GenSublattice(LatticeGenerators, false);
-        if ((Equations.nr_of_rows() == 0) && (Congruences.nr_of_rows() == 0)) {
+        if ((LatticeEquations.nr_of_rows() == 0) && (LatticeCongruences.nr_of_rows() == 0)) {
             compose_basis_change(GenSublattice);
             return;
         }
-        Congruences.append(GenSublattice.getCongruencesMatrix());
-        Equations.append(GenSublattice.getEquationsMatrix());
+        LatticeCongruences.append(GenSublattice.getCongruencesMatrix());
+        LatticeEquations.append(GenSublattice.getEquationsMatrix());
     }
 
     INTERRUPT_COMPUTATION_BY_EXCEPTION
 
-    if (Congruences.nr_of_rows() > 0) {
+    if (LatticeCongruences.nr_of_rows() > 0) {
         bool zero_modulus;
-        Matrix<Integer> Ker_Basis = Congruences.solve_congruences(zero_modulus);
+        Matrix<Integer> Ker_Basis = LatticeCongruences.solve_congruences(zero_modulus);
         if (zero_modulus) {
             throw BadInputException("Modulus 0 in congruence!");
         }
@@ -1754,8 +1754,8 @@ void Cone<Integer>::process_lattice_data(const Matrix<Integer>& LatticeGenerator
 
     INTERRUPT_COMPUTATION_BY_EXCEPTION
 
-    if (Equations.nr_of_rows() > 0) {
-        Matrix<Integer> Ker_Basis = BasisChange.to_sublattice_dual(Equations).kernel(!using_renf<Integer>());
+    if (LatticeEquations.nr_of_rows() > 0) {
+        Matrix<Integer> Ker_Basis = BasisChange.to_sublattice_dual(LatticeEquations).kernel(!using_renf<Integer>());
         Sublattice_Representation<Integer> Basis_Change(Ker_Basis, true);
         compose_basis_change(Basis_Change);
     }
@@ -1764,8 +1764,8 @@ void Cone<Integer>::process_lattice_data(const Matrix<Integer>& LatticeGenerator
 //---------------------------------------------------------------------------
 
 template <typename Integer>
-void Cone<Integer>::insert_default_inequalities(Matrix<Integer>& Inequalities) {
-    if (Generators.nr_of_rows() == 0 && Inequalities.nr_of_rows() == 0 && !inequalities_in_input) {
+void Cone<Integer>::insert_default_inequalities(Matrix<Integer>& CurrentInequalities) {
+    if (Generators.nr_of_rows() == 0 && CurrentInequalities.nr_of_rows() == 0 && !inequalities_in_input) {
         if (verbose) {
             verboseOutput() << "No inequalities specified in constraint mode, using non-negative orthant." << endl;
         }
@@ -1775,12 +1775,12 @@ void Cone<Integer>::insert_default_inequalities(Matrix<Integer>& Inequalities) {
             size_t matsize = dim;
             if (test == Dehomogenization)  // in this case "last coordinate >= 0" will come in through the dehomogenization
                 matsize = dim - 1;         // we don't check for any other coincidence
-            Inequalities = Matrix<Integer>(matsize, dim);
+            CurrentInequalities = Matrix<Integer>(matsize, dim);
             for (size_t j = 0; j < matsize; ++j)
-                Inequalities[j][j] = 1;
+                CurrentInequalities[j][j] = 1;
         }
         else
-            Inequalities = Matrix<Integer>(dim);
+            CurrentInequalities = Matrix<Integer>(dim);
     }
 }
 
@@ -1792,11 +1792,11 @@ Matrix<Integer> Cone<Integer>::prepare_input_type_2(const Matrix<Integer>& Input
     size_t j;
     size_t nr = Input.nr_of_rows();
     // append a column of 1
-    Matrix<Integer> Generators(nr, dim);
+    Matrix<Integer> GensFromInput(nr, dim);
     for (size_t i = 0; i < nr; i++) {
         for (j = 0; j < dim - 1; j++)
-            Generators[i][j] = Input[i][j];
-        Generators[i][dim - 1] = 1;
+            GensFromInput[i][j] = Input[i][j];
+        GensFromInput[i][dim - 1] = 1;
     }
     // use the added last component as grading
     Grading = vector<Integer>(dim, 0);
@@ -1804,7 +1804,7 @@ Matrix<Integer> Cone<Integer>::prepare_input_type_2(const Matrix<Integer>& Input
     setComputed(ConeProperty::Grading);
     GradingDenom = 1;
     setComputed(ConeProperty::GradingDenom);
-    return Generators;
+    return GensFromInput;
 }
 
 //---------------------------------------------------------------------------
@@ -6572,34 +6572,34 @@ bool Cone<Integer>::check_parallelotope() {
     if (inhomogeneous)
         Supps.remove_row(Grad);
 
-    size_t dim = Supps.nr_of_columns() - 1;  // affine dimension
-    if (Supps.nr_of_rows() != 2 * dim)
+    size_t aff_dim = Supps.nr_of_columns() - 1;  // affine dimension
+    if (Supps.nr_of_rows() != 2 * aff_dim)
         return false;
-    Pair.resize(2 * dim);
-    ParaInPair.resize(2 * dim);
-    for (size_t i = 0; i < 2 * dim; ++i) {
-        Pair[i].resize(dim);
+    Pair.resize(2 * aff_dim);
+    ParaInPair.resize(2 * aff_dim);
+    for (size_t i = 0; i < 2 * aff_dim; ++i) {
+        Pair[i].resize(aff_dim);
         Pair[i].reset();
-        ParaInPair[i].resize(dim);
+        ParaInPair[i].resize(aff_dim);
         ParaInPair[i].reset();
     }
 
-    vector<bool> done(2 * dim);
-    Matrix<Integer> M2(2, dim + 1), M3(3, dim + 1);
+    vector<bool> done(2 * aff_dim);
+    Matrix<Integer> M2(2, aff_dim + 1), M3(3, aff_dim + 1);
     M3[2] = Grad;
     size_t pair_counter = 0;
 
     vector<key_t> Supp_1;  // to find antipodal vertices
     vector<key_t> Supp_2;
 
-    for (size_t i = 0; i < 2 * dim; ++i) {
+    for (size_t i = 0; i < 2 * aff_dim; ++i) {
         if (done[i])
             continue;
         bool parallel_found = false;
         M2[0] = Supps[i];
         M3[0] = Supps[i];
         size_t j = i + 1;
-        for (; j < 2 * dim; ++j) {
+        for (; j < 2 * aff_dim; ++j) {
             if (done[j])
                 continue;
             M2[1] = Supps[j];
@@ -6729,7 +6729,7 @@ nmz_float Cone<Integer>::euclidean_corr_factor() {
     if (get_rank_internal() - BasisMaxSubspace.nr_of_rows() == 0)
         return 1.0;
 
-    Integer GradingDenom = 1;
+    Integer UseGradingDenom = 1;
 
     vector<Integer> Grad;
     if (inhomogeneous)
@@ -6785,7 +6785,7 @@ nmz_float Cone<Integer>::euclidean_corr_factor() {
     convert(Bas, Simplex);
     for (size_t i = 0; i < n; ++i) {
         v_scalar_division(Bas[i], convertTo<nmz_float>(degrees[i]));
-        v_scalar_multiplication(Bas[i], convertTo<nmz_float>(GradingDenom));
+        v_scalar_multiplication(Bas[i], convertTo<nmz_float>(UseGradingDenom));
     }
     // choose an origin, namely Bas[0]
     Matrix<nmz_float> Bas1(n - 1, dim);
@@ -6796,7 +6796,7 @@ nmz_float Cone<Integer>::euclidean_corr_factor() {
     // orthogonalize Bas1
     Matrix<double> G(n, dim);
     Matrix<double> M(n, n);
-    Bas1.GramSchmidt(G, M, 0, static_cast<int>(n - 1));
+    Bas1.GramSchmidt(G, M, 0, n - 1);
     // compute euclidean volume
     nmz_float eucl_vol_simpl = 1;
     for (size_t i = 0; i < n - 1; ++i)

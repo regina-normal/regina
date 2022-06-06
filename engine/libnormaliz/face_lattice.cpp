@@ -128,7 +128,7 @@ bool face_compare(const pair<dynamic_bitset, FaceInfo>& a, const pair<dynamic_bi
 }
 
 template <typename Integer>
-void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbose, bool change_integer_type) {
+void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbose_, bool change_integer_type) {
     bool bound_codim = false;
     if (face_codim_bound >= 0)
         bound_codim = true;
@@ -145,7 +145,7 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
             nr_simpl++;
         }
     }
-    if (verbose)
+    if (verbose_)
         verboseOutput() << "Cosimplicial gens " << nr_simpl << " of " << nr_gens << endl;
 
     bool use_simple_vert = (10 * nr_simpl > nr_gens);
@@ -209,7 +209,7 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
         if (bound_codim && codimension_so_far > face_codim_bound + 1)
             break;
         size_t nr_faces = WorkFaces.size();
-        if (verbose) {
+        if (verbose_) {
             if (report_written)
                 verboseOutput() << endl;
             verboseOutput() << "codim " << codimension_so_far - 1 << " faces to process " << nr_faces << endl;
@@ -243,7 +243,7 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
                 for (; kkk < Fpos; --Fpos, --F)
                     ;
 
-                if (verbose && nr_faces >= RepBound) {
+                if (verbose_ && nr_faces >= RepBound) {
 #pragma omp critical(VERBOSE)
                     while ((long)(kkk * VERBOSE_STEPS) >= step_x_size) {
                         step_x_size += nr_faces;
@@ -377,13 +377,13 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
                         if (simple)
                             codim_of_face = codimension_so_far;
                         else {
-                            dynamic_bitset Containing(nr_supphyps);
+                            dynamic_bitset FaceContaining(nr_supphyps);
                             for (size_t j = 0; j < nr_supphyps; ++j) {  // beta_F
-                                if (Containing[j] == 0 && Fac->first.is_subset_of(SuppHypInd[j])) {
-                                    Containing[j] = 1;
+                                if (FaceContaining[j] == 0 && Fac->first.is_subset_of(SuppHypInd[j])) {
+                                    FaceContaining[j] = 1;
                                 }
                             }
-                            vector<bool> selection = bitset_to_bool(Containing);
+                            vector<bool> selection = bitset_to_bool(FaceContaining);
                             if (change_integer_type) {
                                 try {
                                     codim_of_face = SuppHyps_MI.submatrix(selection).rank();
@@ -481,7 +481,7 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
 
     // cout << " Total " << FaceLattice.size() << endl;
 
-    if (verbose) {
+    if (verbose_) {
         verboseOutput() << endl << "Total number of faces computed " << total_nr_faces << endl;
         verboseOutput() << "f-vector " << f_vector;
     }

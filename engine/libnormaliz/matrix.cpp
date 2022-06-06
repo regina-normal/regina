@@ -55,11 +55,10 @@ using namespace std;
 // slight efficiency advantage compared to specialized version below
 template <typename Integer>
 vector<size_t> Matrix<Integer>::maximal_decimal_length_columnwise() const {
-    size_t i, j = 0;
     vector<size_t> maxim(nc, 0);
     vector<Integer> pos_max(nc, 0), neg_max(nc, 0);
-    for (i = 0; i < nr; i++) {
-        for (j = 0; j < nc; j++) {
+    for (size_t i = 0; i < nr; i++) {
+        for (size_t j = 0; j < nc; j++) {
             // maxim[j]=max(maxim[j],decimal_length(elem[i][j]));
             if (elem[i][j] < 0) {
                 if (elem[i][j] < neg_max[j])
@@ -260,19 +259,18 @@ void Matrix<Integer>::pretty_print(ostream& out, bool with_row_nr, bool count_fr
         print(out, false);
         return;
     }
-    size_t i, j;
     vector<size_t> max_length = maximal_decimal_length_columnwise();
     size_t max_index_length = decimal_length(nr);
     if (count_from_one)
         max_index_length = decimal_length(nr + 1);
-    for (i = 0; i < nr; i++) {
+    for (size_t i = 0; i < nr; i++) {
         if (with_row_nr) {
             size_t j = i;
             if (count_from_one)
                 j++;
             out << std::setw((int)max_index_length + 1) << std::setprecision(6) << j << ": ";
         }
-        for (j = 0; j < nc; j++) {
+        for (size_t j = 0; j < nc; j++) {
             out << std::setw((int)max_length[j] + 1) << std::setprecision(6) << elem[i][j];
         }
         out << endl;
@@ -3744,15 +3742,14 @@ vector<key_t> Matrix<Integer>::perm_by_weights(const Matrix<Integer>& Weights, v
 template <typename Integer>
 Matrix<Integer> Matrix<Integer>::solve_congruences(bool& zero_modulus) const {
     zero_modulus = false;
-    size_t i, j;
     size_t nr_cong = nr, dim = nc - 1;
     if (nr_cong == 0)
         return Matrix<Integer>(dim);  // give back unit matrix
 
     // add slack variables to convert congruences into equaitions
     Matrix<Integer> Cong_Slack(nr_cong, dim + nr_cong);
-    for (i = 0; i < nr_cong; i++) {
-        for (j = 0; j < dim; j++) {
+    for (size_t i = 0; i < nr_cong; i++) {
+        for (size_t j = 0; j < dim; j++) {
             Cong_Slack[i][j] = elem[i][j];
         }
         Cong_Slack[i][dim + i] = elem[i][dim];
@@ -3848,18 +3845,18 @@ vector<key_t> max_and_min_values(const vector<nmz_float> Values) {
 }
 
 template <typename Integer>
-size_t Matrix<Integer>::extreme_points_first(bool verbose, vector<key_t>& perm) {
+size_t Matrix<Integer>::extreme_points_first(bool verbose_, vector<key_t>& perm) {
     assert(false);
     return 0;
 }
 
 template <>
-size_t Matrix<nmz_float>::extreme_points_first(bool verbose, vector<key_t>& perm) {
+size_t Matrix<nmz_float>::extreme_points_first(bool verbose_, vector<key_t>& perm) {
 
     if (nr == 0)
         return 0;
 
-    if (verbose)
+    if (verbose_)
         verboseOutput() << "Trying to find extreme points" << endl;
 
     size_t nr_extr = 0;
@@ -3946,7 +3943,7 @@ size_t Matrix<nmz_float>::extreme_points_first(bool verbose, vector<key_t>& perm
         else {
             no_success = 0;
             nr_extr += new_hits;
-            if (verbose && counter_100 >= 100) {
+            if (verbose_ && counter_100 >= 100) {
                 verboseOutput() << "Extreme points " << nr_extr << endl;
                 counter_100 = 0;
             }
@@ -4151,15 +4148,15 @@ vector<renf_elem_class> Matrix<renf_elem_class>::optimal_subdivision_point_inner
 // The orthogonal matrix is B
 // Coefficients in M
 template <typename Integer>
-void Matrix<Integer>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, int from, int to) {
+void Matrix<Integer>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, size_t from, size_t to) {
     // from=0;
-    // to= (int) nr_of_rows();
-    assert(to <= (int)nr_of_rows());
+    // to=nr_of_rows();
+    assert(to <= nr_of_rows());
     size_t dim = nr_of_columns();
-    for (int i = from; i < to; ++i) {
+    for (size_t i = from; i < to; ++i) {
         convert(B[i], elem[i]);
         // cout << B[i];
-        for (int j = 0; j < i; ++j) {
+        for (size_t j = 0; j < i; ++j) {
             nmz_float sp = 0;
             for (size_t k = 0; k < dim; ++k) {
                 nmz_float fact;
@@ -4175,18 +4172,18 @@ void Matrix<Integer>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, in
 }
 
 template <>
-void Matrix<mpq_class>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, int from, int to) {
+void Matrix<mpq_class>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, size_t from, size_t to) {
     assert(false);
 
     /*
         // from=0;
-        // to= (int) nr_of_rows();
-        assert(to <= (int) nr_of_rows());
+        // to=nr_of_rows();
+        assert(to <= nr_of_rows());
         size_t dim=nr_of_columns();
-        for(int i=from;i<to;++i){
+        for(size_t i=from;i<to;++i){
             convert(B[i],elem[i]);
             // cout << B[i];
-            for(int j=0;j<i;++j){
+            for(size_t j=0;j<i;++j){
                 nmz_float sp=0;
                 for(size_t k=0;k<dim;++k){
                     nmz_float fact;
@@ -4203,18 +4200,18 @@ void Matrix<mpq_class>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, 
 
 #ifdef ENFNORMALIZ
 template <>
-void Matrix<renf_elem_class>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, int from, int to) {
+void Matrix<renf_elem_class>::GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, size_t from, size_t to) {
     assert(false);
 
     /*
         // from=0;
-        // to= (int) nr_of_rows();
-        assert(to <= (int) nr_of_rows());
+        // to=nr_of_rows();
+        assert(to <= nr_of_rows());
         size_t dim=nr_of_columns();
-        for(int i=from;i<to;++i){
+        for(size_t i=from;i<to;++i){
             convert(B[i],elem[i]);
             // cout << B[i];
-            for(int j=0;j<i;++j){
+            for(size_t j=0;j<i;++j){
                 nmz_float sp=0;
                 for(size_t k=0;k<dim;++k){
                     nmz_float fact;

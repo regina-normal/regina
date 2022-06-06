@@ -120,12 +120,12 @@ void StartTime() {
     gettimeofday(&TIME_begin, 0);
 }
 
-void MeasureTime(bool verbose, const std::string& step) {
+void MeasureTime(bool verbose_, const std::string& step) {
     gettimeofday(&TIME_end, 0);
     long seconds = TIME_end.tv_sec - TIME_begin.tv_sec;
     long microseconds = TIME_end.tv_usec - TIME_begin.tv_usec;
     double elapsed = seconds + microseconds * 1e-6;
-    if (verbose)
+    if (verbose_)
         verboseOutput() << step << ": " << elapsed << " sec" << endl;
     TIME_begin = TIME_end;
 }
@@ -133,7 +133,7 @@ void MeasureTime(bool verbose, const std::string& step) {
 void StartTime() {
     return;
 }
-void MeasureTime(bool verbose, const std::string& step) {
+void MeasureTime(bool verbose_, const std::string& step) {
     return;
 }
 #endif

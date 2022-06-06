@@ -467,7 +467,6 @@ void DescentFace<Integer>::compute(
         bool skip_remaining = false;
         vector<mpq_class> thread_mult(omp_get_max_threads(), 0);
         Matrix<Integer> Embedded_Gens(d, d);
-        Matrix<Integer> Gens_this(d, FF.dim);
 
         std::exception_ptr tmp_exception;
 

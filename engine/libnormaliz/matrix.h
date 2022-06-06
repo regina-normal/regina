@@ -531,7 +531,7 @@ class Matrix {
 
     Matrix<Integer> LLL_transpose() const;
 
-    void GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, int from, int to);
+    void GramSchmidt(Matrix<nmz_float>& B, Matrix<nmz_float>& M, size_t from, size_t to);
 
     // check maztrix for defining a projection and using it
 
@@ -654,9 +654,9 @@ Matrix<Number> LLL_red(const Matrix<Number>& U, Matrix<Integer>& T, Matrix<Integ
 
     Lred.GramSchmidt(G, M, 0, 2);
 
-    int i = 1;
+    ssize_t i = 1;
     while (true) {
-        for (int j = i - 1; j >= 0; --j) {
+        for (ssize_t j = i - 1; j >= 0; --j) {
             Integer fact;
             /* cout << "MMMMM " << i << " " << j << " " << M[i][j] << endl;
             cout << i << "---" << G[i];
@@ -692,7 +692,7 @@ Matrix<Number> LLL_red(const Matrix<Number>& U, Matrix<Integer>& T, Matrix<Integ
         }
         else {
             i++;
-            if (i >= n)
+            if (i >= static_cast<ssize_t>(n))
                 break;
             Lred.GramSchmidt(G, M, i, i + 1);
         }

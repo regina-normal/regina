@@ -199,10 +199,8 @@ void chunk() {
 void add_chunks(const string& project) {
     size_t nr_blocks;
 
-    string name_in = project + ".basic.data";
-    const char* file_in = name_in.c_str();
     ifstream in;
-    in.open(file_in, ifstream::in);
+    in.open(project + ".basic.data", ifstream::in);
     if (in.is_open() == false) {
         throw BadInputException("Cannot find basic.data");
     }
@@ -223,22 +221,19 @@ void add_chunks(const string& project) {
     cout << "Summing " << nr_blocks << " partial multiplicities" << endl;
     for (size_t i = 0; i < nr_blocks; ++i) {
         cout << "Reading block " << i << endl;
-        string name_in = project + ".mult." + to_string(i);
-        const char* file_in = name_in.c_str();
-        ifstream in;
-        in.open(file_in, ifstream::in);
-        string type;
-        in >> type;
+        ifstream in_block;
+        in_block.open(project + ".mult." + to_string(i), ifstream::in);
+        in_block >> type;
         if (type != "multiplicity") {
             throw BadInputException("spoiled mult " + to_string(i));
         }
         size_t this_chunk;
-        in >> this_chunk;
+        in_block >> this_chunk;
         if (i != this_chunk) {
             throw BadInputException("spoiled mult " + to_string(i));
         }
         mpq_class mult;
-        in >> mult;
+        in_block >> mult;
         total_mult += mult;
     }
     cout << "Toatl miultiplicity" << endl;
