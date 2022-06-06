@@ -53,7 +53,6 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QCompleter>
-#include <QDesktopWidget>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QHBoxLayout>
@@ -61,6 +60,7 @@
 #include <QMenuBar>
 #include <QRegularExpression>
 #include <QTextCodec>
+#include <QScreen>
 #include <QTextDocument>
 #include <QTextEdit>
 #include <QTextStream>
@@ -483,7 +483,7 @@ QSize PythonConsole::sizeHint() const {
     if (ReginaPrefSet::global().windowPythonSize.isValid())
         return ReginaPrefSet::global().windowPythonSize;
 
-    QRect d = QApplication::desktop()->availableGeometry(this);
+    QRect d = QGuiApplication::primaryScreen()->availableGeometry();
     return QSize(d.width() / 2,
                  d.height() * 2 / 3); // A little taller for its size.
 }

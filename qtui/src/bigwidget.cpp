@@ -34,10 +34,10 @@
 #include "bigwidget.h"
 
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 
 QSize BigWidget::sizeHint() const {
-    QSize d = QApplication::desktop()->availableGeometry(this).size();
+    QSize d = QGuiApplication::primaryScreen()->availableGeometry().size();
     if (desktopNum_ != 1)
         d *= desktopNum_;
     if (desktopDen_ != 1)

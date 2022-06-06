@@ -38,11 +38,11 @@
 #include "../packetui.h"
 
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QHeaderView>
 #include <QLayout>
 #include <QPainter>
+#include <QScreen>
 #include <QScrollBar>
 #include <QStyle>
 
@@ -69,7 +69,8 @@ QSize SkeletonTreeView::sizeHint() const {
     int preferredWidth = header()->length();
 
     // Wide, but not insanely wide.
-    int desktopWidth = QApplication::desktop()->availableGeometry(this).width();
+    int desktopWidth = QGuiApplication::primaryScreen()->availableGeometry().
+        width();
     if (preferredWidth > desktopWidth / 2)
         preferredWidth = desktopWidth / 2;
 
