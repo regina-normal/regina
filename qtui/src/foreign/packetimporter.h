@@ -41,7 +41,6 @@
 #include <memory>
 
 class QString;
-class QTextCodec;
 class ReginaMain;
 
 namespace regina {

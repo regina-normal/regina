@@ -39,7 +39,6 @@
 #include "reginamanager.h"
 #include "reginaprefset.h"
 
-#include <QTextCodec>
 #include <QApplication>
 #include <QFile>
 

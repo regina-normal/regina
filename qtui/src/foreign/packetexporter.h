@@ -40,7 +40,6 @@
 
 class PacketFilter;
 class QString;
-class QTextCodec;
 class QWidget;
 
 namespace regina {
