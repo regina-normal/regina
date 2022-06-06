@@ -34,9 +34,24 @@
 #include "codecchooser.h"
 
 #include <algorithm>
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
 #include <QTextCodec>
+#endif
 
 CodecChooser::CodecChooser() : QComboBox() {
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+    addItem(QStringConverter::nameForEncoding(QStringConverter::Utf8));
+    addItem(QStringConverter::nameForEncoding(QStringConverter::Utf16));
+    addItem(QStringConverter::nameForEncoding(QStringConverter::Utf16BE));
+    addItem(QStringConverter::nameForEncoding(QStringConverter::Utf16LE));
+    addItem(QStringConverter::nameForEncoding(QStringConverter::Utf32));
+    addItem(QStringConverter::nameForEncoding(QStringConverter::Utf32BE));
+    addItem(QStringConverter::nameForEncoding(QStringConverter::Utf32LE));
+    addItem(QStringConverter::nameForEncoding(QStringConverter::Latin1));
+    addItem(QStringConverter::nameForEncoding(QStringConverter::System));
+
+    setCurrentIndex(0); // UTF-8
+#else
     QList<QByteArray> all = QTextCodec::availableCodecs();
     std::sort(all.begin(), all.end());
 
@@ -49,6 +64,7 @@ CodecChooser::CodecChooser() : QComboBox() {
 
     if (defaultIndex >= 0)
         setCurrentIndex(defaultIndex);
+#endif
 }
 
 QByteArray CodecChooser::selectedCodecName() {

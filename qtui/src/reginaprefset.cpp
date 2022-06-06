@@ -46,7 +46,6 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QTextCodec>
 #include <QTextDocument>
 #include <QTextStream>
 #include <QDesktopServices>
@@ -489,10 +488,17 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 }
 
-QTextCodec* ReginaPrefSet::importExportCodec() {
+ReginaPrefSet::Codec ReginaPrefSet::importExportCodec() {
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+    auto enc = QStringConverter::encodingForName(global().fileImportExportCodec);
+    if (! enc)
+        enc = QStringConverter::Utf8;
+    return *enc;
+#else
     QTextCodec* ans = QTextCodec::codecForName(global().fileImportExportCodec);
     if (! ans)
         ans = QTextCodec::codecForName("UTF-8");
     return ans;
+#endif
 }
 
