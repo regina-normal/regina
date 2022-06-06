@@ -38,7 +38,9 @@
 #define __SNAPPEACOMPONENTS_H
 
 #include "triangulation/forward.h"
-#include <qlabel.h>
+
+#include "reginaqt.h"
+#include <QLabel>
 
 /**
  * Displays a piece of text explaining that SnapPea calculations are not

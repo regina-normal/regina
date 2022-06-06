@@ -41,7 +41,6 @@
 #include "shortrunner.h"
 
 #include <fstream>
-#include <qglobal.h>
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>

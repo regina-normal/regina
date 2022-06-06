@@ -38,7 +38,8 @@
 #ifndef __PACKETEDITIFACE_H
 #define __PACKETEDITIFACE_H
 
-#include <qobject.h>
+#include "reginaqt.h"
+#include <QObject>
 
 class PacketUI;
 class PacketTabbedUI;

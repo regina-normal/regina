@@ -41,9 +41,11 @@
 #include "hypersurface/hyperflags.h"
 #include "surface/normalcoords.h"
 #include "surface/normalflags.h"
-#include <qmutex.h>
+
+#include "reginaqt.h"
 #include <QFont>
 #include <QList>
+#include <QMutex>
 #include <QString>
 #include <QSize>
 #include <QUrl>

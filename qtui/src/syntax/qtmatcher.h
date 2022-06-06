@@ -39,6 +39,8 @@
 #define __SYNTAX_QTMATCHER_H
 
 #include "syntax/matcher.h"
+
+#include "reginaqt.h"
 #include <QString>
 #include <QRegularExpression>
 

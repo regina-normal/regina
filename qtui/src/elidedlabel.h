@@ -37,6 +37,7 @@
 #ifndef __ELIDEDLABEL_H
 #define __ELIDEDLABEL_H
 
+#include "reginaqt.h"
 #include <QFontMetrics>
 #include <QWidget>
 

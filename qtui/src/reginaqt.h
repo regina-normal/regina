@@ -30,38 +30,23 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file codec.h
- *  \brief Provides a widget for selecting a codec to use for text encodings.
+/*! \file reginaqt.h
+ *  \brief Provides Qt configuration for Regina.  This must be included
+ *  in all of Regina's GUI sources, \e before any Qt headers.
  */
 
-#ifndef __CODECCHOOSER_H
-#define __CODECCHOOSER_H
+#ifndef __REGINAQT_H
+#define __REGINAQT_H
 
-#include "reginaqt.h"
-#include <QComboBox>
-#include <vector>
+#include <QtGlobal>
 
-/**
- * A widget through which a codec can be selected.
- */
-class CodecChooser : public QComboBox {
-    public:
-        /**
-         * Constructor that fills the chooser with all available codecs.
-         * The default UTF-8 codec will be selected.
-         */
-        CodecChooser();
-
-        /**
-         * Get the currently selected codec name.  This may return NULL.
-         */
-        QByteArray selectedCodecName();
-
-        /**
-         * Selects the given codec name, if it is available.  If not, the
-         * selection will not be changed.
-         */
-        void setCodecName(const QByteArray& codec);
-};
+// If we are building against Qt6, then explicitly disable everything
+// from Qt5 that is now deprecated in Qt6.
+#ifndef QT_DISABLE_DEPRECATED_BEFORE
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#define QT_DISABLE_DEPRECATED_BEFORE QT_VERSION_CHECK(6,0,0)
+#endif
+#endif
 
 #endif
+

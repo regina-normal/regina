@@ -43,6 +43,7 @@
 #include "surface/normalcoords.h"
 #include "triangulation/forward.h"
 
+#include "reginaqt.h"
 #include <QString>
 #include <QObject>
 

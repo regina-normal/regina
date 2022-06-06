@@ -37,6 +37,7 @@
 #ifndef __REGINASUPPORT_H
 #define __REGINASUPPORT_H
 
+#include "reginaqt.h"
 #include <QIcon>
 #include <QString> 
 

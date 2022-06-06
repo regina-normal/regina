@@ -37,6 +37,7 @@
 #ifndef __EDITTREEVIEW_H
 #define __EDITTREEVIEW_H
 
+#include "reginaqt.h"
 #include <QTreeView>
 
 /**

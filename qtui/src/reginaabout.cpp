@@ -39,10 +39,10 @@
 #include "reginasupport.h"
 
 #include <cstdlib>
-#include <qdatetime.h>
-#include <qfile.h>
 
+#include <QDateTime>
 #include <QDialogButtonBox>
+#include <QFile>
 #include <QLabel>
 #include <QScrollBar>
 #include <QTabWidget>

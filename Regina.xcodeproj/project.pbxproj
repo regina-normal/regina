@@ -2483,6 +2483,7 @@
 
 /* Begin PBXFileReference section */
 		050302ED284DAE060050903D /* QtSvgWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvgWidgets.framework; path = "../../Qt/6.3.0-macos/lib/QtSvgWidgets.framework"; sourceTree = "<group>"; };
+		050302F0284E17D40050903D /* reginaqt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reginaqt.h; sourceTree = "<group>"; };
 		050313BF1812DB06007F0CBE /* TextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewController.h; sourceTree = "<group>"; };
 		050313C01812DB06007F0CBE /* TextViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextViewController.mm; sourceTree = "<group>"; };
 		050313C21812DB1E007F0CBE /* DefaultPacketViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultPacketViewController.h; sourceTree = "<group>"; };
@@ -6828,6 +6829,7 @@
 				0564A5EE1811D920002CC2AE /* reginapref.h */,
 				0564A5EF1811D920002CC2AE /* reginaprefset.cpp */,
 				0564A5F01811D920002CC2AE /* reginaprefset.h */,
+				050302F0284E17D40050903D /* reginaqt.h */,
 				0564A5F11811D920002CC2AE /* reginasupport.cpp */,
 				0564A5F21811D920002CC2AE /* reginasupport.h */,
 				0564A5F31811D920002CC2AE /* sharedtempfile.cpp */,

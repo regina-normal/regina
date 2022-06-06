@@ -37,6 +37,8 @@
 #ifndef __REGINAFILTER_H
 #define __REGINAFILTER_H
 
+#include "reginaqt.h"
+
 /**
  * Filename filter for all supported files.
  */

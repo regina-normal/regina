@@ -38,7 +38,8 @@
 #define __PACKETCREATOR_H
 
 #include "packet/packet.h"
-#include <qstring.h>
+#include "reginaqt.h"
+#include <QString>
 
 class QWidget;
 class PacketFilter;

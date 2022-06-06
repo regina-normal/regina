@@ -37,6 +37,7 @@
 #ifndef __REGEVENTS_H
 #define __REGEVENTS_H
 
+#include "reginaqt.h"
 #include <QEvent>
 
 class PacketTreeItem;
