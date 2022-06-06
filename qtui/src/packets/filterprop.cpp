@@ -55,16 +55,17 @@ namespace {
     /**
      * For a validator that ensures we're using the right characters.
      */
-    QRegExp reECChars(R"((\d|\s|,|-)*)");
+    const QRegularExpression reECChars(R"(^(\d|\s|,|-)*$)");
     /**
      * For tokenising an list of Euler characteristics.
      */
-    QRegExp reECSeps(R"(\s|,)");
+    const QRegularExpression reECSeps(R"(\s|,)");
     /**
      * For strict verification that we in fact have an Euler
      * characteristic list.
      */
-    QRegExp reECList(R"(\s*(?:(?:(-?\d+)\s*[,|\s]\s*)*(-?\d+))?\s*)");
+    const QRegularExpression reECList(
+        R"(^\s*(?:(?:(-?\d+)\s*[,|\s]\s*)*(-?\d+))?\s*$)");
 }
 
 FilterPropUI::FilterPropUI(SurfaceFilterProperties* packet,
@@ -144,7 +145,8 @@ FilterPropUI::FilterPropUI(SurfaceFilterProperties* packet,
 
     ecBox->addSpacing(5);
     eulerList = new QLineEdit(ui);
-    eulerList->setValidator(new QRegExpValidator(reECChars, eulerList));
+    eulerList->setValidator(new QRegularExpressionValidator(
+        reECChars, eulerList));
     ecBox->addWidget(eulerList);
 
     eulerExpln = new QLabel(tr(
@@ -237,7 +239,7 @@ bool FilterPropUI::notifyOptionsChanged() {
     if (ecText.isEmpty()) {
         // No Euler characteristics have been entered.
         filter->removeAllEulerChars();
-    } else if (! reECList.exactMatch(ecText)) {
+    } else if (! reECList.match(ecText).hasMatch()) {
         ReginaSupport::info(eulerList,
             tr("The list of Euler characteristics is invalid."),
             tr("This should be a sequence of integers, separated by "

@@ -54,7 +54,7 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QPushButton>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QToolBar>
 
 using regina::Packet;
@@ -64,7 +64,7 @@ namespace {
     /**
      * Represents a destination for a single facet gluing.
      */
-    QRegExp reFacetGluing(
+    const QRegularExpression reFacetGluing(
         "^\\s*"
         "(\\d+)"
         "(?:\\s*\\(\\s*|\\s+)"
@@ -74,7 +74,7 @@ namespace {
     /**
      * Represents a single pentachoron facet.
      */
-    QRegExp reFacet("^[0-4][0-4][0-4][0-4]$");
+    const QRegularExpression reFacet("^[0-4][0-4][0-4][0-4]$");
 }
 
 GluingsModel4::GluingsModel4(Triangulation<4>* tri) : tri_(tri) {
@@ -177,31 +177,34 @@ bool GluingsModel4::setData(const QModelIndex& index, const QVariant& value,
     if (text.isEmpty()) {
         // Boundary facet.
         newAdjPent = -1;
-    } else if (! reFacetGluing.exactMatch(text)) {
-        // Bad string.
-        showError(tr("<qt>The facet gluing should be entered in the "
-            "form: <i>pent (facet)</i>.  An example is <i>6 (0342)</i>, "
-            "which represents facet 0342 of pentachoron 6.</qt>"));
-        return false;
     } else {
-        // Real facet.
-        newAdjPent = reFacetGluing.cap(1).toInt();
-        QString pentFacet = reFacetGluing.cap(2);
-
-        // Check explicitly for a negative pentachoron number
-        // since isFacetStringValid() takes an unsigned integer.
-        if (newAdjPent < 0 || newAdjPent >= tri_->size()) {
-            showError(tr("There is no pentachoron number %1.").
-                arg(newAdjPent));
+        auto match = reFacetGluing.match(text);
+        if (! match.hasMatch()) {
+            // Bad string.
+            showError(tr("<qt>The facet gluing should be entered in the "
+                "form: <i>pent (facet)</i>.  An example is <i>6 (0342)</i>, "
+                "which represents facet 0342 of pentachoron 6.</qt>"));
             return false;
-        }
+        } else {
+            // Real facet.
+            newAdjPent = match.captured(1).toInt();
+            QString pentFacet = match.captured(2);
 
-        // Do we have a valid gluing?
-        QString err = isFacetStringValid(index.row(), facet, newAdjPent,
-            pentFacet, &newAdjPerm);
-        if (! err.isNull()) {
-            showError(err);
-            return false;
+            // Check explicitly for a negative pentachoron number
+            // since isFacetStringValid() takes an unsigned integer.
+            if (newAdjPent < 0 || newAdjPent >= tri_->size()) {
+                showError(tr("There is no pentachoron number %1.").
+                    arg(newAdjPent));
+                return false;
+            }
+
+            // Do we have a valid gluing?
+            QString err = isFacetStringValid(index.row(), facet, newAdjPent,
+                pentFacet, &newAdjPerm);
+            if (! err.isNull()) {
+                showError(err);
+                return false;
+            }
         }
     }
 
@@ -245,7 +248,7 @@ QString GluingsModel4::isFacetStringValid(unsigned long srcPent,
     if (destPent >= tri_->size())
         return tr("There is no pentachoron number %1.").arg(destPent);
 
-    if (! reFacet.exactMatch(destFacet))
+    if (! reFacet.match(destFacet).hasMatch())
         return tr("<qt>%1 is not a valid pentachoron facet.  A pentachoron "
             "facet must be described by a sequence of four vertices, each "
             "between 0 and 4 inclusive.  An example is <i>0342</i>.</qt>").

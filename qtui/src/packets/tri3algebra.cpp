@@ -58,7 +58,6 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QPushButton>
-#include <QRegExp>
 #include <QScrollArea>
 #include <QStyle>
 #include <QTreeWidgetItem>
