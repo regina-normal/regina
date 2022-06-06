@@ -397,7 +397,7 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
 }
 
-unsigned SurfaceModel::propertyColCount() const {
+int SurfaceModel::propertyColCount() const {
     return (surfaces_->isEmbeddedOnly() ? 8 : 6) +
         (surfaces_->allowsAlmostNormal() ? 1 : 0);
 }
