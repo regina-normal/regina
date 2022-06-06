@@ -50,7 +50,7 @@
 // UI includes:
 #include "compatcanvas.h"
 
-#include <qcolor.h>
+#include <QColor>
 #include <QGraphicsSimpleTextItem>
 
 using regina::NormalHypersurface;

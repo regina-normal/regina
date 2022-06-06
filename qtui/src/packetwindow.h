@@ -37,6 +37,7 @@
 #ifndef __PACKETWINDOW_H
 #define __PACKETWINDOW_H
 
+#include "reginaqt.h"
 #include <QMainWindow>
 
 class PacketPane;

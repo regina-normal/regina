@@ -41,6 +41,7 @@
 #include "triangulation/forward.h"
 #include "packet/packet.h"
 
+#include "reginaqt.h"
 #include <QDialog>
 #include <vector>
 

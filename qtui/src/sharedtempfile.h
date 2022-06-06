@@ -39,6 +39,7 @@
 #define __SHAREDTEMPFILE_H
 
 // UI includes:
+#include "reginaqt.h"
 #include <QFile>
 #include <QUrl>
 

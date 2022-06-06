@@ -38,9 +38,10 @@
 #ifndef __SIMPLEXCHOOSER_H
 #define __SIMPLEXCHOOSER_H
 
-#include "choosers/facename.h"
 #include "packet/packet.h"
 #include "triangulation/forward.h"
+
+#include "choosers/facename.h"
 
 #include <QBoxLayout>
 #include <QDialog>

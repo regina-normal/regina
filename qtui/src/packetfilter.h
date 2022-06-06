@@ -39,6 +39,8 @@
 
 #include "packet/packet.h"
 
+#include "reginaqt.h"
+
 /**
  * Represents a means by which packets can be either accepted or
  * rejected.  Different acceptance algorithms should correspond to

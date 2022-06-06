@@ -34,8 +34,8 @@
 #include "packettabui.h"
 
 #include <iostream>
-#include <qlayout.h>
-#include <qtabwidget.h>
+#include <QLayout>
+#include <QTabWidget>
 
 using regina::Packet;
 

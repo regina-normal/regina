@@ -41,16 +41,23 @@
 #include "hypersurface/hyperflags.h"
 #include "surface/normalcoords.h"
 #include "surface/normalflags.h"
-#include <qmutex.h>
+
+#include "reginaqt.h"
 #include <QFont>
 #include <QList>
+#include <QMutex>
 #include <QString>
 #include <QSize>
 #include <QUrl>
 
 class QSettings;
-class QTextCodec;
 class QWidget;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#include <QStringConverter> // for QStringConverter::Encoding
+#else
+class QTextCodec;
+#endif
 
 /**
  * A structure holding all Regina preferences.
@@ -80,6 +87,13 @@ class ReginaPrefSet : public QObject {
                  initial value is read from the configuration file. */
 
     public:
+        // The type used to represent text encodings:
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+        using Codec = QStringConverter::Encoding;
+#else
+        using Codec = QTextCodec*;
+#endif
+
         // Some defaults that other classes may need to access:
         static const char* defaultGAPExec;
             /**< The default setting for \a triGAPExec. */
@@ -263,7 +277,7 @@ class ReginaPrefSet : public QObject {
          *
          * This routine will never return null.
          */
-        static QTextCodec* importExportCodec();
+        static Codec importExportCodec();
 
         /**
          * Opens the given section of an arbitrary handbook in an appropriate

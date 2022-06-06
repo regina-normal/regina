@@ -37,6 +37,7 @@
 #ifndef __REGINAMANAGER_H_
 #define __REGINAMANAGER_H_
 
+#include "reginaqt.h"
 #include <QApplication>
 
 class ReginaMain;

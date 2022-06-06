@@ -68,7 +68,7 @@ using regina::Packet;
 using regina::Script;
 
 namespace {
-    QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
+    const QRegularExpression rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
 
     // The syntax highlighting repository of definitions and themes is
     // a singleton: it is created on demand, and never deleted.
@@ -185,18 +185,20 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
                 tr("Variable names cannot be empty."));
             return false;
         }
-        if (! rePythonIdentifier.exactMatch(data)) {
+        auto match = rePythonIdentifier.match(data);
+        if (! match.hasMatch()) {
             QString oldData(data);
 
             // Construct a better variable name.
-            data.replace(QRegExp("[^A-Za-z0-9_]"), "");
+            data.replace(QRegularExpression("[^A-Za-z0-9_]"), "");
             if (data.isEmpty()) {
                 ReginaSupport::info(nullptr,
                     tr("<qt><tt>%1</tt> is not a valid Python "
                         "variable name.</qt>").arg(oldData.toHtmlEscaped()));
                 return false;
             }
-            if (! rePythonIdentifier.exactMatch(data))
+            match = rePythonIdentifier.match(data);
+            if (! match.hasMatch())
                 data.prepend('_');
 
             ReginaSupport::info(nullptr,

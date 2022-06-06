@@ -38,9 +38,9 @@
 #ifndef __PACKETMANAGER_H
 #define __PACKETMANAGER_H
 
-#include <QIcon>
 #include "iconcache.h"
 #include "packetui.h"
+#include <QIcon>
 
 class QPlainTextEdit;
 

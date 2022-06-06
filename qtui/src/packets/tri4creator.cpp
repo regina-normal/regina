@@ -48,7 +48,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QHBoxLayout>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QValidator>
 #include <QStackedWidget>
 
@@ -89,7 +89,7 @@ namespace {
     /**
      * Regular expressions describing different sets of parameters.
      */
-    QRegExp reIsoSig("^([A-Za-z0-9+-]+)$");
+    const QRegularExpression reIsoSig("^([A-Za-z0-9+-]+)$");
 }
 
 Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
@@ -183,7 +183,7 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     isoSig = new QLineEdit();
-    isoSig->setValidator(new QRegExpValidator(reIsoSig, area));
+    isoSig->setValidator(new QRegularExpressionValidator(reIsoSig, area));
     isoSig->setWhatsThis(expln);
     subLayout->addWidget(isoSig, 1);
     details->addWidget(area);
@@ -260,7 +260,8 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
             ans->setLabel(fromPacket->label() + " × S¹");
         return ans;
     } else if (typeId == TRI_ISOSIG) {
-        if (! reIsoSig.exactMatch(isoSig->text())) {
+        auto match = reIsoSig.match(isoSig->text());
+        if (! match.hasMatch()) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The isomorphism signature is not valid."),
                 QObject::tr("<qt>An isomorphism "
@@ -276,7 +277,7 @@ std::shared_ptr<regina::Packet> Tri4Creator::createPacket(
             return nullptr;
         }
 
-        std::string sig = reIsoSig.cap(1).toUtf8().constData();
+        std::string sig = match.captured(1).toUtf8().constData();
         try {
             return regina::make_packet(Triangulation<4>::fromIsoSig(sig), sig);
         } catch (const regina::InvalidArgument&) {

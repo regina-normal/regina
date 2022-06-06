@@ -39,10 +39,10 @@
 #include "reginasupport.h"
 
 #include <cstdlib>
-#include <qdatetime.h>
-#include <qfile.h>
 
+#include <QDateTime>
 #include <QDialogButtonBox>
+#include <QFile>
 #include <QLabel>
 #include <QScrollBar>
 #include <QTabWidget>
@@ -219,7 +219,6 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
     auto* titleGrid = new QGridLayout(title);
     titleGrid->setColumnStretch(1, 1);
-    titleGrid->setMargin(6);
 
     auto* titleIcon = new QLabel(this);
     titleIcon->setPixmap(IconCache::icon(IconCache::regina).pixmap(64));

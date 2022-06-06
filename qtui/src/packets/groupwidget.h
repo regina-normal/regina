@@ -38,6 +38,8 @@
 #define __GROUPWIDGET_H
 
 #include "algebra/grouppresentation.h"
+
+#include "reginaqt.h"
 #include <QWidget>
 
 class QLabel;

@@ -37,6 +37,7 @@
 #ifndef __ICONCACHE_H
 #define __ICONCACHE_H
 
+#include "reginaqt.h"
 #include <QIcon>
 
 /**

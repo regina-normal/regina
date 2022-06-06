@@ -38,6 +38,7 @@
 #ifndef __DOCREGISTRY_H
 #define __DOCREGISTRY_H
 
+#include "reginaqt.h"
 #include <QHash>
 #include <QPlainTextDocumentLayout>
 #include <QTextDocument>

@@ -53,19 +53,21 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QCompleter>
-#include <QDesktopWidget>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMenuBar>
 #include <QRegularExpression>
-#include <QTextCodec>
+#include <QScreen>
 #include <QTextDocument>
 #include <QTextEdit>
 #include <QTextStream>
 #include <QVBoxLayout>
 #include <QWhatsThis>
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+#include <QTextCodec>
+#endif
 
 class GUICompleter : public regina::python::PrefixCompleter {
     public:
@@ -456,7 +458,11 @@ void PythonConsole::saveLog() {
                 arg(fileName.toHtmlEscaped()));
         else {
             QTextStream out(&f);
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+            out.setEncoding(QStringConverter::Utf8);
+#else
             out.setCodec(QTextCodec::codecForName("UTF-8"));
+#endif
             out << session->toPlainText();
 #if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
             Qt::endl(out);
@@ -483,7 +489,7 @@ QSize PythonConsole::sizeHint() const {
     if (ReginaPrefSet::global().windowPythonSize.isValid())
         return ReginaPrefSet::global().windowPythonSize;
 
-    QRect d = QApplication::desktop()->availableGeometry(this);
+    QRect d = QGuiApplication::primaryScreen()->availableGeometry();
     return QSize(d.width() / 2,
                  d.height() * 2 / 3); // A little taller for its size.
 }
