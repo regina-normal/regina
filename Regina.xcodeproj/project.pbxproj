@@ -11398,6 +11398,7 @@
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks,
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -11453,6 +11454,7 @@
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks,
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
