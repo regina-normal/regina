@@ -61,7 +61,7 @@ DefinitionData::DefinitionData() :
     repo(nullptr),
     delimiters("\t !%&()*+,-./:;<=>?[\\]^{|}~"), // must be sorted!
     caseSensitive(true),
-    version(0.0f)
+    version(0)
 {
 }
 
@@ -251,7 +251,7 @@ void DefinitionData::clear()
     license.clear();
     delimiters = "\t !%&()*+,-./:;<=>?[\\]^{|}~"; // must be sorted!
     caseSensitive = true;
-    version = 0.0f;
+    version = 0;
 }
 
 bool DefinitionData::loadMetaData(const std::string& definitionFileName)
@@ -287,7 +287,7 @@ bool DefinitionData::loadLanguage(xmlTextReaderPtr reader)
     license = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"license"));
 
     // Since valueOf() does not have defaults, we must explicitly test validity.
-    double ver;
+    int ver;
     if (regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"version")), ver))
         version = ver;
 
