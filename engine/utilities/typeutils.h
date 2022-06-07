@@ -44,6 +44,10 @@
 #include <functional>
 #include "regina-core.h"
 
+namespace std {
+    template <class...> class variant;
+};
+
 namespace regina {
 
 /**
