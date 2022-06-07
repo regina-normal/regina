@@ -49,8 +49,7 @@ class MFloat {
     private:
         
         mpfr_t number_;
-        bool isInit_ = false;
-
+        int flag = 0;
         static unsigned long prec_;
 
     public:
@@ -60,6 +59,8 @@ class MFloat {
         MFloat(const MFloat& other);
 
         MFloat(MFloat&& other) noexcept;
+
+        MFloat& operator=(MFloat&& other);
 
         explicit MFloat(double value);
 
@@ -82,10 +83,6 @@ class MFloat {
         void setPi();
 
         ~MFloat();
-        
-        void clear();
-
-        void extract(MFloat&& rhs);
         
         double static extractDouble(MFloat&& rhs);
 
@@ -137,52 +134,47 @@ class MFloat {
         friend std::ostream& operator<< ( std::ostream& out, const regina::MFloat& other);
 
 
-
 };
 
 unsigned long MFloat::prec_ = 32;
 
 inline MFloat::MFloat() {
     mpfr_init2(number_,prec_);
-    isInit_ = true;
+    mpfr_set_d(number_,0,MPFRRND);
 }
 
 inline MFloat::MFloat(const MFloat& other) {
     mpfr_init2(number_,prec_);
-    isInit_ = true;
     mpfr_set(number_,other.number_,MPFRRND);
 }
 
 inline MFloat::MFloat(MFloat&& other) noexcept {
-    if(other.isInit_) {
-        isInit_ = true;
-        std::swap (number_,other.number_);
+    number_->_mpfr_d = 0;
+    mpfr_swap (number_,other.number_);
+}
+
+inline MFloat& MFloat::operator=(MFloat&& other) {
+    if (this != &other) {
+        mpfr_swap(number_,other.number_);
     }
+    return *this;
 }
 
 inline MFloat::MFloat(double value) {
     mpfr_init2(number_,prec_);
-    isInit_ = true;
     mpfr_set_d(number_,value,MPFRRND);
 }
 
 inline MFloat::MFloat(unsigned long value) {
     mpfr_init2(number_,prec_);
-    isInit_ = true;
     mpfr_set_ui(number_,value,MPFRRND);
 }
 
 inline void MFloat::set(double value) {
-	if (!isInit_) {
-        mpfr_init2(number_,prec_);
-    }
     mpfr_set_d(number_,value,MPFRRND);
 }
 
 inline void MFloat::set(unsigned long value) {
-	if (!isInit_) {
-        mpfr_init2(number_,prec_);
-    }
     mpfr_set_ui(number_,value,MPFRRND);
 }
 
@@ -190,29 +182,13 @@ inline double MFloat::getDouble() const{
     return mpfr_get_d(number_,MPFRRND);
 }
 
-inline MFloat::~MFloat() {}
-
-inline void MFloat::clear() {
-    if (isInit_) {
+inline MFloat::~MFloat() {
+    if(0 != number_->_mpfr_d)
         mpfr_clear(number_);
-    }
-    isInit_ = false;
-}
-
-inline void MFloat::extract(MFloat&& rhs) {
-    if (rhs.isInit_) {
-        mpfr_set(number_,rhs.number_,MPFRRND);
-        mpfr_clear(rhs.number_);
-    }
 }
 
 inline double MFloat::extractDouble(MFloat&& rhs) {
-    double d = 0;
-    if (rhs.isInit_) {
-        d=rhs.getDouble();
-        mpfr_clear(rhs.number_);
-    }
-    return d;
+    return rhs.getDouble();
 }
 
 inline void MFloat::setPi() {

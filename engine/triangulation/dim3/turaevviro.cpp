@@ -135,11 +135,6 @@ namespace {
             }
 
             /**
-             * To clean up the content of the arrays of the destuctor.
-             */
-            void clearMembers(unsigned long r);
-
-            /**
              * Returns the single value [index] (with no factorial symbol).
              * Requires index < r.
              */
@@ -261,12 +256,6 @@ namespace {
 
             siniangle = angle;
         }
-
-        angle.clear();
-        sinangle.clear();
-        siniangle.clear();
-        facti.clear();
-        invi.clear();
     }
 
     /**
@@ -288,14 +277,6 @@ namespace {
                  this is the inverse square of the distinguished value w. */
 
         InitialData(unsigned long newR, unsigned long newWhichRoot);
-
-        /**
-         * To clear BracketFactorial, to clear and delete an array of TVType of size n and to clear an element of type TVType.
-         */
-        void clearData();
-        static void clearVar(TVType& var);
-        static void clearArray(TVType* ar,unsigned long n);
-        static void clearMap(std::map<LightweightSequence<int>, TVType> *map);
 
         static void negate(TVType& x);
 
@@ -387,7 +368,6 @@ namespace {
                         ansToOverwrite -= term;
                 }
             }
-            clearVar(term);
         }
 
         /**
@@ -409,7 +389,6 @@ namespace {
             tetContrib(colour0, colour1, colour3, colour5, colour4, colour2,
                 tmp);
             ans *= tmp;
-            clearVar(tmp);
 
             int i;
             const Triangle<3>* triangle;
@@ -498,69 +477,6 @@ namespace {
         tmp *= two;
         tmp /= r;
         vertexContrib = tmp;
-        tmp.clear();
-    }
-
-        template <>
-    inline void BracketFactorial<multiPrecision>::clearMembers(unsigned long r) {
-        for (unsigned long i = 0; i<r;++i) {
-            bracket_[i].clear();
-            fact_[i].clear();
-            inv_[i].clear();
-        }
-    }
-
-    template <>
-    inline void InitialData<multiPrecision>::clearData() {
-        fact.clearMembers(r);
-        vertexContrib.clear();
-    }
-
-
-
-    template <>
-    inline void InitialData<exact>::clearVar(TVType& var) {}
-
-    template <>
-    inline void InitialData<floating>::clearVar(TVType& var) {}
-
-    template <>
-    inline void InitialData<multiPrecision>::clearVar(TVType& var) {
-        var.clear();
-    }
-
-    template <>
-    inline void InitialData<exact>::clearArray(TVType* ar,unsigned long n) {
-        delete[] ar;
-    }
-
-    template <>
-    inline void InitialData<floating>::clearArray(TVType* ar,unsigned long n) {
-        delete[] ar;
-    }
-
-    template <>
-    inline void InitialData<multiPrecision>::clearArray(TVType* ar,unsigned long n) {
-        for (unsigned long i=0;i<n;++i) {
-            ar[i].clear();
-        }
-        delete[] ar;
-    }
-
-    template <>
-    inline void InitialData<exact>::clearMap(std::map<LightweightSequence<int>, TVType>* map) {
-        delete map;
-    }
-
-    template <>
-    inline void InitialData<floating>::clearMap(std::map<LightweightSequence<int>, TVType>* map) {
-        delete map;
-    }
-
-    template<>
-    inline void InitialData<multiPrecision>::clearMap(std::map<LightweightSequence<int>, TVType>* map) {
-        for(auto &x:*map) {x.second.clear();}
-        delete map;
     }
 
 
@@ -827,17 +743,14 @@ namespace {
         delete[] tetDone;
         delete[] tetDoneStart;
 
-        InitialData<method>::clearArray(edgeCache,nEdges + 1);
-        InitialData<method>::clearArray(triangleCache,nEdges + 1);
-        InitialData<method>::clearArray(tetCache,nEdges + 1);
 
-        InitialData<method>::clearVar(valColour);
-        InitialData<method>::clearVar(tmpTVType);
+        delete[] edgeCache;
+        delete[] triangleCache;
+        delete[] tetCache;;
 
         if (tracker) {
             delete[] coeff;
             if (tracker->isCancelled()) {
-                InitialData<method>::clearVar(ans);
                 return TuraevViroDetails<method>::zero();
             }
         }
@@ -990,12 +903,10 @@ namespace {
         delete[] colour;
         delete[] sortedEdges;
         delete[] edgePos;
-        InitialData<method>::clearVar(valColour);
 
         if (tracker) {
             delete[] coeff;
             if (tracker->isCancelled()) {
-                InitialData<method>::clearVar(ans);
                 return TuraevViroDetails<method>::zero();
             }
         }
@@ -1240,7 +1151,6 @@ namespace {
                                 std::move(seq), std::move(val));
                             if (! existingSoln.second) {
                                 existingSoln.first->second += val;
-                                InitialData<method>::clearVar(val);
                             }
                             ++level;
                             while (level < 6 && choiceType[level] != 0)
@@ -1292,7 +1202,7 @@ namespace {
                     }
                 }
 
-                InitialData<method>::clearMap(partial[child->index()]);
+                delete partial[child->index()];
                 partial[child->index()] = nullptr;
             } else {
                 // Join bag.
@@ -1400,7 +1310,6 @@ namespace {
                                 std::move(seq), std::move(val));
                             if (! existingSoln.second) {
                                 existingSoln.first->second += val;
-                                InitialData<method>::clearVar(val);
                             }
                         }
                 }
@@ -1408,10 +1317,10 @@ namespace {
                 delete[] leftIndexed;
                 delete[] rightIndexed;
 
-                InitialData<method>::clearMap(partial[child->index()]);
+                delete partial[child->index()];
                 partial[child->index()] = nullptr;
 
-                InitialData<method>::clearMap(partial[sibling->index()]);
+                delete partial[child->index()];
                 partial[sibling->index()] = nullptr;
             }
 
@@ -1434,9 +1343,8 @@ namespace {
             // We don't know which elements of partial[] have been
             // deallocated, so check them all.
             for (i = 0; i < nBags; ++i)
-                if(partial[i]!=nullptr) {
-                    InitialData<method>::clearMap(partial[i]);
-                }
+                if(partial[i]!=nullptr)
+                    delete partial[i];
             delete[] partial;
 
             return TuraevViroDetails<method>::zero();
@@ -1449,7 +1357,7 @@ namespace {
         // only one colouring stored (in which all edge colours are aggregated).
         TVType ans = partial[nBags - 1]->begin()->second;
 
-        InitialData<method>::clearMap(partial[nBags - 1]);
+        delete partial[nBags - 1];
         delete[] partial;
 
         for (i = 0; i < tri.countVertices(); i++)
@@ -1573,22 +1481,20 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
 		MFloat::setPrec(prec);
 		InitialData<multiPrecision> init(r, whichRoot);
 
-		double ans;
+		InitialData<multiPrecision>::TVType ans;
 		switch (alg) {
 		    case ALG_BACKTRACK:
-		        ans = MFloat::extractDouble(turaevViroBacktrack(*this, init, 0));
+		        ans = turaevViroBacktrack(*this, init, 0);
 		        break;
 		    case ALG_NAIVE:
-		        ans = MFloat::extractDouble(turaevViroNaive(*this, init, 0));
+		        ans = turaevViroNaive(*this, init, 0);
 		        break;
 		    default:
-		        ans = MFloat::extractDouble(turaevViroTreewidth(*this, init, 0));
+		        ans = turaevViroTreewidth(*this, init, 0);
 		        break;
 		}
-		init.clearData();
-		MFloat::freeCache();
-		std::cout.flush();
-		return ans;
+
+		return ans.getDouble();
 	}
 	
 }
