@@ -37,13 +37,12 @@
 
 namespace regina {
 
-ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) :
-        cells_(nullptr) {
-    nodes_.reserve(cloneMe.nodes_.size());
-    for (size_t i = 0; i < cloneMe.nodes_.size(); ++i)
+ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& copy) : cells_(nullptr) {
+    nodes_.reserve(copy.nodes_.size());
+    for (size_t i = 0; i < copy.nodes_.size(); ++i)
         nodes_.push_back(new ModelLinkGraphNode());
 
-    auto it = cloneMe.nodes_.begin();
+    auto it = copy.nodes_.begin();
     for (ModelLinkGraphNode* n : nodes_) {
         for (int i = 0; i < 4; ++i) {
             n->adj_[i].node_ = nodes_[(*it)->adj_[i].node_->index()];
@@ -55,6 +54,24 @@ ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) :
     // The cellular decomposition takes linear time to copy and linear
     // time to compute, so just recompute it on demand and don't attempt
     // to copy it here.
+}
+
+ModelLinkGraph::ModelLinkGraph(const Link& link) : cells_(nullptr) {
+    nodes_.reserve(link.size());
+    for (size_t i = 0; i < link.size(); ++i)
+        nodes_.push_back(new ModelLinkGraphNode());
+
+    auto it = link.crossings_.begin();
+    for (ModelLinkGraphNode* n : nodes_) {
+        for (int strand = 0; strand < 2; ++strand) {
+            ModelLinkGraphArc out = outgoingArc((*it)->strand(strand));
+            ModelLinkGraphArc in = incomingArc((*it)->next(strand));
+            out.node_->adj_[out.arc_] = in;
+            in.node_->adj_[in.arc_] = out;
+        }
+
+        ++it;
+    }
 }
 
 ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
@@ -464,6 +481,24 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
     }
 
     return g;
+}
+
+ModelLinkGraphArc ModelLinkGraph::outgoingArc(const StrandRef& s) {
+    if (s.strand() == 0)
+        return { nodes_[s.crossing()->index()], 0 };
+    else if (s.crossing()->sign() > 0)
+        return { nodes_[s.crossing()->index()], 1 };
+    else
+        return { nodes_[s.crossing()->index()], 3 };
+}
+
+ModelLinkGraphArc ModelLinkGraph::incomingArc(const StrandRef& s) {
+    if (s.strand() == 0)
+        return { nodes_[s.crossing()->index()], 2 };
+    else if (s.crossing()->sign() > 0)
+        return { nodes_[s.crossing()->index()], 3 };
+    else
+        return { nodes_[s.crossing()->index()], 1 };
 }
 
 ModelLinkGraphCells::ModelLinkGraphCells(const ModelLinkGraphCells& c) :

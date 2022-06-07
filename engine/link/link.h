@@ -58,6 +58,8 @@
 #include "utilities/markedvector.h"
 #include "utilities/tightencoding.h"
 
+// Note: there are more includes after the main class definitions.
+
 namespace regina {
 
 /**
@@ -67,6 +69,7 @@ namespace regina {
 
 class Crossing;
 class Link;
+class ModelLinkGraph;
 class ProgressTracker;
 class Tangle;
 template <typename T> class Laurent;
@@ -1069,6 +1072,22 @@ class Link :
          * not combinatorially identical.
          */
         bool operator != (const Link& other) const;
+
+        /**
+         * Returns the 4-valent planar graph that models this link.
+         *
+         * Any zero-component unknot components of this link will be ignored.
+         *
+         * The nodes of the resulting graph will be numbered in the same way
+         * as the crossings of this link.  For each node, arc 0 will represent
+         * the outgoing lower strand of the corresponding crossing.
+         *
+         * Calling graph() is identical to passing this link to the
+         * ModelLinkGraph constructor.
+         *
+         * @return the graph that models this link.
+         */
+        ModelLinkGraph graph() const;
 
         /*@}*/
         /**
@@ -4575,6 +4594,13 @@ class Link :
  */
 void swap(Link& lhs, Link& rhs);
 
+} // namespace regina
+
+// Headers that cannot be included until after the Link class is defined:
+#include "link/modellinkgraph.h"
+
+namespace regina {
+
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
 
@@ -4762,6 +4788,10 @@ inline StrandRef Link::strand(ssize_t id) const {
 
 inline bool Link::operator != (const Link& other) const {
     return ! ((*this) == other);
+}
+
+inline ModelLinkGraph Link::graph() const {
+    return ModelLinkGraph(*this);
 }
 
 inline Triangulation<3> Link::complement(bool simplify) const {

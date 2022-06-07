@@ -79,6 +79,7 @@ Version 7.1  [ TODO ]
             - New tightDecoding() routines.
         Class Link:
             - New routines for tight encodings and decodings.
+            - New function graph() that returns the model 4-valent planar graph.
             - Routines dtData(), gaussData(), jenkinsData() and pdData() now
               throw exceptions if the link is so large that the C++ int type
               is not large enough to hold the values being returned.
@@ -93,6 +94,8 @@ Version 7.1  [ TODO ]
               formally not supported by the Matrix class).
             - You can now multiply a matrix over type T with a matrix or vector
               over type U, where T and U are different types.
+        Class ModelLinkGraph:
+            - New constructor that takes a link to model.
         Class NormalHypersurface:
             - New operators * and *= for taking integer multiples.  The old
               doubleHypersurface() is now deprecated.
