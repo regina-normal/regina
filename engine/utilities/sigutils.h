@@ -258,7 +258,7 @@ struct Base64SigEncoding {
      */
     template <typename OutputIterator>
     static void decodeTrits(char c, OutputIterator result) {
-        uint8_t val = static_cast<uint8_t>(decodeSingle(c));
+        auto val = static_cast<uint8_t>(decodeSingle(c));
         *result++ = val & 3;
         *result++ = (val >> 2) & 3;
         *result++ = (val >> 4) & 3;
@@ -276,7 +276,7 @@ struct Base64SigEncoding {
      * encoded in the given base64 character.
      */
     static constexpr std::array<uint8_t, 3> decodeTrits(char c) {
-        uint8_t val = static_cast<uint8_t>(decodeSingle(c));
+        auto val = static_cast<uint8_t>(decodeSingle(c));
         return { static_cast<uint8_t>(val & 3),
                  static_cast<uint8_t>((val >> 2) & 3),
                  static_cast<uint8_t>((val >> 4) & 3) };

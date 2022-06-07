@@ -68,7 +68,7 @@ Link Link::fromPD(Iterator begin, Iterator end) {
             throw InvalidArgument("fromPD(): too many crossings for "
                 "the given integer type");
     }
-    const InputInt maxStrand = static_cast<InputInt>(2 * n);
+    const auto maxStrand = static_cast<InputInt>(2 * n);
 
     // Represents (crossing index, position in 4-tuple):
     using PDPos = std::pair<size_t, int>;

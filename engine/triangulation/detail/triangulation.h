@@ -3954,7 +3954,7 @@ void TriangulationBase<dim>::tightEncode(std::ostream& out) const {
 
 template <int dim>
 Triangulation<dim> TriangulationBase<dim>::tightDecode(std::istream& input) {
-    size_t size = regina::detail::tightDecodeIndex<size_t>(input);
+    auto size = regina::detail::tightDecodeIndex<size_t>(input);
 
     Triangulation<dim> ans;
     // Note: new simplices are initialised with all adj_[i] null.
@@ -3966,7 +3966,7 @@ Triangulation<dim> TriangulationBase<dim>::tightDecode(std::istream& input) {
             if (s->adjacentSimplex(i))
                 continue;
 
-            ssize_t adjIdx = regina::detail::tightDecodeIndex<ssize_t>(input);
+            auto adjIdx = regina::detail::tightDecodeIndex<ssize_t>(input);
             if (adjIdx >= 0) {
                 // This is a non-boundary facet.
                 if (adjIdx >= static_cast<ssize_t>(size))

@@ -173,7 +173,7 @@ void Link::pd(std::ostream& out) const {
     bool nonEmpty = false;
 
     // Build a lookup table from StrandRef::id() -> PD strand number:
-    size_t* strand = new size_t[2 * n];
+    auto* strand = new size_t[2 * n];
     size_t pdStrand = 1;
     for (auto start : components_) {
         if (! start)

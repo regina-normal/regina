@@ -61,7 +61,7 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
     if constexpr (sizeof(InputInt) > sizeof(size_t))
         if (val > static_cast<InputInt>(SIZE_MAX))
             throw InvalidArgument("fromJenkins(): too many components");
-    size_t nComp = static_cast<size_t>(val);
+    auto nComp = static_cast<size_t>(val);
 
     if (nComp == 0)
         return Link();
@@ -161,7 +161,7 @@ Link Link::fromJenkins(Iterator begin, Iterator end) {
             if (val < 0 || static_cast<size_t>(val) >= nCross)
                 throw InvalidArgument(
                     "fromJenkins(): invalid crossing label");
-            size_t label = static_cast<size_t>(val);
+            auto label = static_cast<size_t>(val);
             if (tmpCross[label])
                 throw InvalidArgument(
                     "fromJenkins(): duplicate crossing label");

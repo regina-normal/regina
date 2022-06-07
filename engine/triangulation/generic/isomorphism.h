@@ -997,7 +997,7 @@ void Isomorphism<dim>::tightEncode(std::ostream& out) const {
 
 template <int dim>
 Isomorphism<dim> Isomorphism<dim>::tightDecode(std::istream& input) {
-    size_t n = regina::detail::tightDecodeIndex<size_t>(input);
+    auto n = regina::detail::tightDecodeIndex<size_t>(input);
     Isomorphism ans(n);
 
     // We don't check the values of simpImage_[...], since we want to
@@ -1008,7 +1008,7 @@ Isomorphism<dim> Isomorphism<dim>::tightDecode(std::istream& input) {
         ans.simpImage_[i] = regina::detail::tightDecodeIndex<ssize_t>(input);
     if constexpr (dim == 2) {
         for (size_t i = 0; i < n; i += 2) {
-            unsigned p = regina::detail::tightDecodeIndex<unsigned>(input);
+            auto p = regina::detail::tightDecodeIndex<unsigned>(input);
             if (i + 1 == n) {
                 if (p >= 6)
                     throw InvalidInput("The tight encoding contains "

@@ -71,7 +71,7 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
     MatrixInt pres(nRels, nGens);
 
     // Find out which edge corresponds to which generator.
-    ssize_t* genIndex = new ssize_t[countEdges()];
+    auto* genIndex = new ssize_t[countEdges()];
     size_t i = 0;
     for (Edge<3>* e : edges()) {
         if (e->isBoundary())

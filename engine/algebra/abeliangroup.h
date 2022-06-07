@@ -95,7 +95,7 @@ class AbelianGroup :
         /**
          * Creates a new trivial group.
          */
-        AbelianGroup();
+        AbelianGroup() = default;
         /**
          * Creates a clone of the given group.
          */
@@ -508,9 +508,6 @@ class AbelianGroup :
 void swap(AbelianGroup& lhs, AbelianGroup& rhs) noexcept;
 
 // Inline functions for AbelianGroup
-
-inline AbelianGroup::AbelianGroup() {
-}
 
 inline AbelianGroup::AbelianGroup(size_t rank) : rank_(rank) {
 }

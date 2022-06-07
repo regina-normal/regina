@@ -102,7 +102,7 @@ namespace {
 
 namespace detail {
     mpz_ptr mpz_from_ll(long long value) {
-        mpz_ptr ans = new __mpz_struct[1];
+        auto ans = new __mpz_struct[1];
         if constexpr (sizeof(long) == sizeof(long long)) {
             mpz_init_set_si(ans, value);
             return ans;
@@ -122,7 +122,7 @@ namespace detail {
     }
 
     mpz_ptr mpz_from_ull(unsigned long long value) {
-        mpz_ptr ans = new __mpz_struct[1];
+        auto ans = new __mpz_struct[1];
         if constexpr (sizeof(long) == sizeof(long long)) {
             mpz_init_set_ui(ans, value);
             return ans;

@@ -230,7 +230,7 @@ std::string Triangulation<3>::dehydrate() const {
     // describe whether the gluings for some corresponding 8 tetrahedron faces
     // point to previously-seen or previously-unseen tetrahedra.
     // See the Callahan, Hildebrand and Weeks paper for details.
-    unsigned nTets = static_cast<unsigned>(simplices_.size());
+    auto nTets = static_cast<unsigned>(simplices_.size());
     int* image = new int[nTets];
     int* preImage = new int[nTets];
     auto* vertexMap = new Perm<4>[nTets];

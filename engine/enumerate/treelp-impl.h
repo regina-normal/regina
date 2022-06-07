@@ -432,7 +432,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
     // from LPConstraint, which we will deal with later).
     //
     // Now go ahead and actually move the columns around accordingly.
-    size_t* tmp = new size_t[eqns_.columns()];
+    auto* tmp = new size_t[eqns_.columns()];
     std::copy(columnPerm_, columnPerm_ + eqns_.columns(), tmp);
     for (size_t i = 0; i < eqns_.columns(); ++i) {
         // Column tmp[i] of the matrix should be moved to
@@ -613,7 +613,7 @@ void LPData<LPConstraint, IntType>::constrainZero(size_t pos) {
 
     // Is the variable currently in the basis?  If so, get it out.
     if (basisRow_[pos] >= 0) {
-        size_t row = static_cast<size_t>(basisRow_[pos]);
+        auto row = static_cast<size_t>(basisRow_[pos]);
         ssize_t c;
         if (rhs_[row].isZero()) {
             // We can pivot in any other variable that appears in

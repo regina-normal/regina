@@ -440,7 +440,7 @@ inline void FacetSpec<dim>::tightEncode(std::ostream& out) const {
 
 template <int dim>
 inline FacetSpec<dim> FacetSpec<dim>::tightDecode(std::istream& input) {
-    ssize_t enc = regina::detail::tightDecodeIndex<ssize_t>(input);
+    auto enc = regina::detail::tightDecodeIndex<ssize_t>(input);
     if (enc < 0)
         return FacetSpec(-1, dim);
     else

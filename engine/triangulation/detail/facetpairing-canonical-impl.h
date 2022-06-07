@@ -119,7 +119,7 @@ template <bool allIsos>
 std::pair<FacetPairing<dim>,
         typename FacetPairingBase<dim>::template CanonicalIsos<allIsos>>
         FacetPairingBase<dim>::canonicalInternal() const {
-    const FacetPairing<dim>& me = static_cast<const FacetPairing<dim>&>(*this);
+    const auto& me = static_cast<const FacetPairing<dim>&>(*this);
 
     if (size_ == 0) {
         if constexpr (allIsos) {

@@ -1107,7 +1107,7 @@ void Link::tightEncode(std::ostream& out) const {
 Link Link::tightDecode(std::istream& input) {
     // Read size as a signed type, since this will make comparisons
     // with (signed) strand IDs simpler.
-    ssize_t size = regina::detail::tightDecodeIndex<ssize_t>(input);
+    auto size = regina::detail::tightDecodeIndex<ssize_t>(input);
     if (size < 0)
         throw InvalidInput("The tight encoding has a negative number "
             "of crossings");
@@ -1131,7 +1131,7 @@ Link Link::tightDecode(std::istream& input) {
 
     for (auto* c : ans.crossings_)
         for (int side = 0; side < 2; ++side) {
-            ssize_t id = regina::detail::tightDecodeIndex<ssize_t>(input);
+            auto id = regina::detail::tightDecodeIndex<ssize_t>(input);
             if (id < 0 || id >= 2 * size)
                 throw InvalidInput("The tight encoding has invalid "
                     "connections");
@@ -1143,7 +1143,7 @@ Link Link::tightDecode(std::istream& input) {
             join(StrandRef(c, side), dest);
         }
 
-    size_t cmpts = regina::detail::tightDecodeIndex<size_t>(input);
+    auto cmpts = regina::detail::tightDecodeIndex<size_t>(input);
     if (cmpts < 0)
         throw InvalidInput("The tight encoding has a negative number "
             "of components");
@@ -1152,7 +1152,7 @@ Link Link::tightDecode(std::istream& input) {
             "of components");
 
     for (size_t i = 0; i < cmpts; ++i) {
-        ssize_t destID = regina::detail::tightDecodeIndex<ssize_t>(input);
+        auto destID = regina::detail::tightDecodeIndex<ssize_t>(input);
         if (destID >= 2 * size)
             throw InvalidInput("The tight encoding contains an invalid "
                 "component");

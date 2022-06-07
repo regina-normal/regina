@@ -65,7 +65,7 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     // Run Adam's code to determine the handedness of each crossing.
 
     // Copy the sequence of crossing numbers, since we will need to modify it.
-    InputInt* S = new InputInt[2 * n];
+    auto* S = new InputInt[2 * n];
     std::copy(begin, end, S);
 
     for (size_t i=1; i <= n; ++i) {
@@ -115,8 +115,8 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
 
     // Find the first and second position of each crossing number in the
     // permuted array S[].
-    ssize_t* indx0 = new ssize_t[n];
-    ssize_t* indx1 = new ssize_t[n];
+    auto* indx0 = new ssize_t[n];
+    auto* indx1 = new ssize_t[n];
     std::fill(indx0, indx0 + n, -1);
     std::fill(indx1, indx1 + n, -1);
 
@@ -154,7 +154,7 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
     // Pull apart the nodes of the graph into opposite sides of a
     // bipartite graph.
     int* side = new int[n];
-    size_t* stack = new size_t[n];
+    auto* stack = new size_t[n];
     ssize_t top = 0;
     size_t pop = 0;
     std::fill(side, side + n, 0);
@@ -214,7 +214,7 @@ Link Link::fromGauss(Iterator begin, Iterator end) {
 
     delete[] seen;
 
-    InputInt* Q0 = new InputInt[2*n];
+    auto* Q0 = new InputInt[2*n];
     bool* Q1 = new bool[2*n];
 
     Q0[0]=S[0];

@@ -159,9 +159,9 @@ void ModelLinkGraph::writeTextLong(std::ostream& out) const {
     for (size_t i = 0; i < nodes_.size(); ++i) {
         auto n = nodes_[i];
         out << std::setw(6) << i << "  |           ";
-        for (int j = 0; j < 4; ++j)
-            out << "  " << std::setw(3) << n->adj_[j].node()->index() << " ("
-                << n->adj_[j].arc() << ')';
+        for (const auto& arc : n->adj_)
+            out << "  " << std::setw(3) << arc.node()->index() << " ("
+                << arc.arc() << ')';
         out << '\n';
     }
     out << std::endl;

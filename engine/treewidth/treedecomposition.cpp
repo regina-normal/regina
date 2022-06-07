@@ -432,8 +432,8 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
     // little tweaking we can improve this.
 
     bool* used = new bool[graph.order_];
-    size_t* elimOrder = new size_t[graph.order_]; // Elimination stage -> vertex
-    size_t* elimStage = new size_t[graph.order_]; // Vertex -> elimination stage
+    auto* elimOrder = new size_t[graph.order_]; // Elimination stage -> vertex
+    auto* elimStage = new size_t[graph.order_]; // Vertex -> elimination stage
     auto* bags = new TreeBag*[graph.order_];
 
     std::fill(used, used + graph.order_, false);
@@ -842,7 +842,7 @@ void TreeDecomposition::makeNice(const int* heightHint) {
             // b is a leaf node.
             // TODO: If b is empty, drop it.
             // Build a series of introduce nodes.
-            TreeBag* next = const_cast<TreeBag*>(b->nextPrefix());
+            auto* next = const_cast<TreeBag*>(b->nextPrefix());
 
             b->type_ = NICE_INTRODUCE;
             b->subtype_ = b->size_ - 1;

@@ -85,7 +85,7 @@ Link Link::fromDT(Iterator begin, Iterator end) {
             throw InvalidArgument("fromDT(): too many crossings for "
                 "the given integer type");
     }
-    const InputInt maxEntry = static_cast<InputInt>(2 * aNumCrossings);
+    const auto maxEntry = static_cast<InputInt>(2 * aNumCrossings);
 
     Iterator it;
     for (it = begin; it != end; ++it) {
@@ -188,9 +188,9 @@ Link Link::fromDT(Iterator begin, Iterator end) {
      *  For each position in the involution, we also identify which
      *  crossing it represents.
      */
-    size_t* oddPos = new size_t[aNumCrossings];
-    size_t* evenPos = new size_t[aNumCrossings];
-    size_t* crossingForPos = new size_t[2 * aNumCrossings];
+    auto* oddPos = new size_t[aNumCrossings];
+    auto* evenPos = new size_t[aNumCrossings];
+    auto* crossingForPos = new size_t[2 * aNumCrossings];
 
     size_t nextUnused = 0;
     for (i = 0; i < 2 * aNumCrossings; ++i) {

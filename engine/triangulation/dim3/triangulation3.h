@@ -3591,7 +3591,7 @@ inline Triangulation<3>& Triangulation<3>::operator = (Triangulation&& src) {
 
     ChangeEventSpan span(*this);
 
-    TriangulationBase<3>::operator = (std::move(src));
+    // The parent class assignment goes last, since its move invalidates src.
 
     ideal_ = src.ideal_;
     standard_ = src.standard_;
@@ -3599,6 +3599,8 @@ inline Triangulation<3>& Triangulation<3>::operator = (Triangulation&& src) {
 
     strictAngleStructure_ = std::move(src.strictAngleStructure_);
     generalAngleStructure_ = std::move(src.generalAngleStructure_);
+
+    TriangulationBase<3>::operator = (std::move(src));
 
     return *this;
 }

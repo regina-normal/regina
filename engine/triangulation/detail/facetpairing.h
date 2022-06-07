@@ -1071,7 +1071,7 @@ void FacetPairingBase<dim>::tightEncode(std::ostream& out) const {
 
 template <int dim>
 FacetPairing<dim> FacetPairingBase<dim>::tightDecode(std::istream& input) {
-    size_t size = regina::detail::tightDecodeIndex<size_t>(input);
+    auto size = regina::detail::tightDecodeIndex<size_t>(input);
     if (size <= 0)
         throw InvalidInput("The tight encoding has a non-positive number "
             "of simplices");
@@ -1085,7 +1085,7 @@ FacetPairing<dim> FacetPairingBase<dim>::tightDecode(std::istream& input) {
         if (! ans.pairs_[i].isBeforeStart())
             continue;
 
-        size_t adjIdx = regina::detail::tightDecodeIndex<size_t>(input);
+        auto adjIdx = regina::detail::tightDecodeIndex<size_t>(input);
         if (adjIdx > size * (dim+1))
             throw InvalidInput("The tight encoding contains "
                 "invalid matchings of simplex facets");

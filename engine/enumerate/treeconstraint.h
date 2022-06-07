@@ -849,8 +849,8 @@ class BanNone : public ShortOutput<BanNone> {
         template <class LPConstraint, typename IntType>
         void enforceBans(LPData<LPConstraint, IntType>&) const {}
 
-        bool operator == (const BanNone& other) const { return true; }
-        bool operator != (const BanNone& other) const { return false; }
+        bool operator == (const BanNone&) const { return true; }
+        bool operator != (const BanNone&) const { return false; }
 
         void writeTextShort(std::ostream& out) const {
             out << "Nothing banned or marked";

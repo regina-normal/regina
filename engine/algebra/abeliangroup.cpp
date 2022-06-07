@@ -69,17 +69,17 @@ AbelianGroup::AbelianGroup(MatrixInt presentation) {
 
 void AbelianGroup::addTorsion(Integer degree) {
     // Loop from the largest invariant factor to the smallest.
-    for (auto it = revInvFactors_.begin(); it != revInvFactors_.end(); ++it) {
+    for (auto& fac : revInvFactors_) {
         // INV: We still need to introduce a torsion element of degree,
-        // and we know that degree divides all invariant factors beyond it
+        // and we know that degree divides all invariant factors beyond fac
         // (i.e. all invariant factors that have already been seen in
         // this loop).
 
-        // Replace (degree, *it) with (gcd, lcm).
+        // Replace (degree, fac) with (gcd, lcm).
 
-        Integer g = degree.gcd(*it);
+        Integer g = degree.gcd(fac);
         degree.divByExact(g);
-        (*it) *= degree;
+        fac *= degree;
 
         degree = g;
         if (degree == 1)
@@ -305,7 +305,7 @@ AbelianGroup AbelianGroup::tightDecode(std::istream& input) {
     // reversing the sequence once the decoding is complete, since pushing
     // onto the front of a vector one element at a time is expensive.
     while (true) {
-        Integer fac = regina::tightDecode<Integer>(input);
+        auto fac = regina::tightDecode<Integer>(input);
         if (fac == 0) {
             // We have read all invariant factors.
             std::reverse(ans.revInvFactors_.begin(), ans.revInvFactors_.end());

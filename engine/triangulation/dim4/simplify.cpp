@@ -721,10 +721,10 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
             // Although we might not use many of these edges, it's fast
             // and simple.  The "unified boundary" is assigned the edge
             // number nEdges.
-            ssize_t* parent = new ssize_t[nEdges + 1];
+            auto* parent = new ssize_t[nEdges + 1];
 
             // The depth of each subtree in the union-find tree.
-            size_t* depth = new size_t[nEdges + 1];
+            auto* depth = new size_t[nEdges + 1];
 
             Edge<4> *upper, *lower;
 
@@ -840,10 +840,10 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
             // Although we might not use many of these triangles, it's fast
             // and simple.  The "unified boundary" is assigned the triangle
             // number nTriangles.
-            ssize_t* parent = new ssize_t[nTriangles + 1];
+            auto* parent = new ssize_t[nTriangles + 1];
 
             // The depth of each subtree in the union-find tree.
-            size_t* depth = new size_t[nTriangles + 1];
+            auto* depth = new size_t[nTriangles + 1];
 
             Triangle<4> *upper, *lower;
 
@@ -945,11 +945,11 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
             //
             // This array is indexed by tetrahedron number in the triangulation.
             // The "unified boundary" is assigned the triangle number nTets.
-            ssize_t* parent = new ssize_t[nTets + 1];
+            auto* parent = new ssize_t[nTets + 1];
             std::fill(parent, parent + nTets + 1, -1);
 
             // The depth of each subtree in the union-find tree.
-            size_t* depth = new size_t[nTets + 1];
+            auto* depth = new size_t[nTets + 1];
             std::fill(depth, depth + nTets + 1, 0);
 
             Tetrahedron<4> *upper, *lower;

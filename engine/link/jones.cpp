@@ -674,8 +674,8 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
     // rooted at j contains precisely those bags with indices k for
     // which subtreeStart[j] <= k <= j.
 
-    size_t* crossingSubtree = new size_t[size()];
-    size_t* subtreeStart = new size_t[td.size()];
+    auto* crossingSubtree = new size_t[size()];
+    auto* subtreeStart = new size_t[td.size()];
 
     const TreeBag* b;
     for (b = td.first(); b; b = b->next())
@@ -690,9 +690,9 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
 
     // Now we can build our cost estimates.
 
-    size_t* costSame = new size_t[td.size()];
-    size_t* costReverse = new size_t[td.size()];
-    size_t* costRoot = new size_t[td.size()];
+    auto* costSame = new size_t[td.size()];
+    auto* costReverse = new size_t[td.size()];
+    auto* costRoot = new size_t[td.size()];
 
     // For a bag b:
     //

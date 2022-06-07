@@ -179,7 +179,7 @@ Link Link::fromData(SignIterator beginSigns, SignIterator endSigns,
             throw InvalidArgument("fromData(): too many crossings for "
                 "the given integer type");
     }
-    const InputInt maxCrossing = static_cast<InputInt>(n);
+    const auto maxCrossing = static_cast<InputInt>(n);
 
     for (auto cit = beginComponents; cit != endComponents; ++cit) {
         if (cit->size() == 0) {

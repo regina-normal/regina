@@ -590,8 +590,8 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
 
     for (size_t i=0; i<homModL.columns(); i++) {
         zeroCol=true;
-        for (size_t j=0; j<freeList.size(); j++)
-            if (homModL.entry( freeList[j], i) != 0)
+        for (auto pos : freeList)
+            if (homModL.entry( pos, i) != 0)
                 zeroCol=false;
         if (zeroCol)
             torCol.push_back(i);
@@ -660,8 +660,8 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
             gcd = tHom.entry(torList[CR], rowNZlist[0]).gcd( L[torList[CR]] );
             d = L[torList[CR]].divExact(gcd); 
             // multiply column  rowNZlist[0] of tHom by d.
-            for (size_t i=0;i<torList.size();i++)
-                tHom.entry( torList[i], rowNZlist[0] ) *= d;
+            for (auto pos : torList)
+                tHom.entry( pos, rowNZlist[0] ) *= d;
             // corresponding operation on tBasis.
             for (size_t i=0;i<tBasis.rows();i++)
                 tBasis.entry( i, rowNZlist[0] ) *= d;
@@ -685,13 +685,13 @@ MatrixInt preImageOfLattice(const MatrixInt& hom,
             // so multiplication on the right by the above matrix corresponds
             // to replacing column r[0] by u r[0] + v r[1] and column r[1] by
             // -b r[0] + a r[1].
-            for (size_t i=0;i<torList.size();i++) {
-                tmp = u * tHom.entry( torList[i], rowNZlist[0] ) +
-                    v * tHom.entry( torList[i], rowNZlist[1] );
-                tHom.entry( torList[i],rowNZlist[1]) =
-                    a * tHom.entry( torList[i], rowNZlist[1]) -
-                    b * tHom.entry( torList[i], rowNZlist[0]);
-                tHom.entry( torList[i],rowNZlist[0]) = tmp;
+            for (auto pos : torList) {
+                tmp = u * tHom.entry( pos, rowNZlist[0] ) +
+                    v * tHom.entry( pos, rowNZlist[1] );
+                tHom.entry( pos,rowNZlist[1]) =
+                    a * tHom.entry( pos, rowNZlist[1]) -
+                    b * tHom.entry( pos, rowNZlist[0]);
+                tHom.entry( pos,rowNZlist[0]) = tmp;
             }
             // modify tBasis
             for (size_t i=0;i<tBasis.rows();i++) {

@@ -620,7 +620,7 @@ inline FacetPairing<3>::FacetPairing(size_t size) :
 }
 
 inline void FacetPairing<3>::followChain(size_t& tet, FacePair& faces) const {
-    ssize_t t = static_cast<ssize_t>(tet);
+    auto t = static_cast<ssize_t>(tet);
     followChain(t, faces);
     tet = static_cast<size_t>(t);
 }

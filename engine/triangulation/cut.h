@@ -596,6 +596,10 @@ size_t Cut::weight(const FacetPairing<dim>& pairing) const {
 }
 
 inline Cut& Cut::operator = (const Cut& src) {
+    // std::copy does not promise to behave well under self-assignment.
+    if (std::addressof(src) == this)
+        return *this;
+
     if (size_ != src.size_) {
         size_ = src.size_;
 

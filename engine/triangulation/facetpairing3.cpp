@@ -111,7 +111,7 @@ bool FacetPairing<3>::hasBrokenDoubleEndedChain(size_t baseTet,
     // Follow the chain along and see how far we get.
     FacePair bdryFaces =
         FacePair(baseFace, dest(baseTet, baseFace).facet).complement();
-    ssize_t bdryTet = static_cast<ssize_t>(baseTet);
+    auto bdryTet = static_cast<ssize_t>(baseTet);
     followChain(bdryTet, bdryFaces);
 
     // Here's where we must diverge and move into the second chain.
@@ -174,7 +174,7 @@ bool FacetPairing<3>::hasOneEndedChainWithDoubleHandle(size_t baseTet,
     // Follow the chain along and see how far we get.
     FacePair bdryFaces =
         FacePair(baseFace, dest(baseTet, baseFace).facet).complement();
-    ssize_t bdryTet = static_cast<ssize_t>(baseTet);
+    auto bdryTet = static_cast<ssize_t>(baseTet);
     followChain(bdryTet, bdryFaces);
 
     // Here's where we must diverge and create the double handle.
@@ -226,7 +226,7 @@ bool FacetPairing<3>::hasWedgedDoubleEndedChain(size_t baseTet,
     // Follow the chain along and see how far we get.
     FacePair bdryFaces =
         FacePair(baseFace, dest(baseTet, baseFace).facet).complement();
-    ssize_t bdryTet = static_cast<ssize_t>(baseTet);
+    auto bdryTet = static_cast<ssize_t>(baseTet);
     followChain(bdryTet, bdryFaces);
 
     // Here we expect to find the wedge.
@@ -313,7 +313,7 @@ bool FacetPairing<3>::hasOneEndedChainWithStrayBigon(size_t baseTet,
     // Follow the chain along and see how far we get.
     FacePair bdryFaces =
         FacePair(baseFace, dest(baseTet, baseFace).facet).complement();
-    ssize_t bdryTet = static_cast<ssize_t>(baseTet);
+    auto bdryTet = static_cast<ssize_t>(baseTet);
     followChain(bdryTet, bdryFaces);
 
     // Here's where we must diverge and create the stray bigon.
@@ -411,7 +411,7 @@ bool FacetPairing<3>::hasTripleOneEndedChain(size_t baseTet,
     // Follow the chain along and see how far we get.
     FacePair bdryFaces =
         FacePair(baseFace, dest(baseTet, baseFace).facet).complement();
-    ssize_t bdryTet = static_cast<ssize_t>(baseTet);
+    auto bdryTet = static_cast<ssize_t>(baseTet);
     followChain(bdryTet, bdryFaces);
 
     // Here's where we must diverge and hunt for the other two chains.
