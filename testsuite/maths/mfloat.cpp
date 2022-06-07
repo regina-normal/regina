@@ -81,7 +81,6 @@ class MFloatTest : public CppUnit::TestFixture {
                     " incorrectly assigned from ul.";
                 CPPUNIT_FAIL(msg.str());
             }
-            num.clear();
         }
 
         void verifyConstructd(double val) {
@@ -92,7 +91,6 @@ class MFloatTest : public CppUnit::TestFixture {
                     " incorrectly assigned from ul.";
                 CPPUNIT_FAIL(msg.str());
             }
-            num.clear();
         }
 
         void constructFromInteger() {
@@ -126,9 +124,6 @@ class MFloatTest : public CppUnit::TestFixture {
                 msg << "Incorrect MFloat assignment.";
                 CPPUNIT_FAIL(msg.str());
             }
-            a.clear();
-			b.clear();
-			c.clear();
 		}
 
         void verifyArithmetic(double v1, double v2) {
@@ -176,14 +171,6 @@ class MFloatTest : public CppUnit::TestFixture {
                     ".";
                 CPPUNIT_FAIL(msg.str());
             }
-			//MFloat::toStr(num1);
-            num1.clear();
-			num2.clear();
-			tmp.clear();
-			sum.clear();
-			diff.clear();
-			prod.clear();
-			diff.clear();
         }
 
         void basicArithmetic() {
