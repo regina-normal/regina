@@ -812,7 +812,7 @@ inline constexpr Perm<2>::Perm(int a, int b) : code_(a == b ? 0 : 1) {
 }
 
 inline constexpr Perm<2>::Perm(const std::array<int, 2>& image) :
-        code_(image[0]) {
+        code_(static_cast<Code>(image[0])) {
 }
 
 inline constexpr Perm<2>::Code Perm<2>::permCode() const {

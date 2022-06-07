@@ -333,7 +333,7 @@ public:
             }
         }
         setp(in_buff, in_buff + buff_size);
-        return traits_type::eq_int_type(c, traits_type::eof()) ? traits_type::eof() : sputc(c);
+        return traits_type::eq_int_type(c, traits_type::eof()) ? traits_type::eof() : sputc(static_cast<char_type>(c));
     }
     int sync() override
     {

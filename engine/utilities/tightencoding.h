@@ -732,8 +732,8 @@ inline bool tightDecoding<bool>(const std::string& enc) {
 
 template <>
 inline bool tightDecode<bool>(std::istream& input) {
-    char c = input.get();
-    if (! input)
+    int c = input.get();
+    if (c == EOF)
         throw InvalidInput("The tight encoding is incomplete");
     switch (c) {
         case 'M': return false;

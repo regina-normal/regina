@@ -154,7 +154,7 @@ IConvStreamBuffer::int_type IConvStreamBuffer::overflow(
 
     // Add the extra character to the end of the buffer before processing.
     if (c != traits_type::eof()) {
-        *pptr() = c;
+        *pptr() = static_cast<char_type>(c);
         pbump(1);
     }
 

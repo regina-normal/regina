@@ -72,7 +72,8 @@ namespace regina {
  * \ingroup maths
  */
 inline constexpr char digit(int i) {
-    return (i < 10 ? '0' + i : 'a' + i - 10);
+    return (i < 10 ? '0' + static_cast<char>(i) :
+        'a' + static_cast<char>(i) - 10);
 }
 
 /**

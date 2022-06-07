@@ -2647,7 +2647,8 @@ template <bool supportInfinity>
 template <int bytes>
 inline IntegerBase<supportInfinity>::IntegerBase(
         const NativeInteger<bytes>& value) :
-        small_(value.nativeValue()), large_(nullptr) {
+        // This cast may lose information, but we will fix this in a moment.
+        small_(static_cast<long>(value.nativeValue())), large_(nullptr) {
     static_assert(bytes % sizeof(long) == 0,
         "IntegerBase native constructor: native integer must partition exactly into long integers.");
     if (sizeof(long) < bytes && value.nativeValue() != static_cast<typename IntOfSize<bytes>::type>(small_)) {
@@ -2666,7 +2667,7 @@ inline IntegerBase<supportInfinity>::IntegerBase(
 
 template <bool supportInfinity>
 inline IntegerBase<supportInfinity>::IntegerBase(double value) :
-        small_(value), large_(nullptr) {
+        large_(nullptr) {
     // We start with a large representation, since we want to use GMP's
     // double-to-integer conversion.
     large_ = new __mpz_struct[1];

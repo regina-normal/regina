@@ -853,7 +853,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
                      This information is used to maintain the ranks correctly
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
-            unsigned char bdryEdges;
+            uint8_t bdryEdges;
                 /**< The number of edges of the triangular piece of vertex
                      link that are in fact boundary edges of the vertex link.
                      Equivalently, this measures the number of faces of this
@@ -1673,7 +1673,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
                      This information is used to maintain the ranks correctly
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
-            unsigned char bdryEdges;
+            uint8_t bdryEdges;
                 /**< The number of edges of the triangular piece of vertex
                      link that are in fact boundary edges of the vertex link.
                      Equivalently, this measures the number of faces of this

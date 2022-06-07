@@ -173,7 +173,7 @@ class GluingPermSearcher<4> : public ShortOutput<GluingPermSearcher<4>> {
                      This information is used to maintain the ranks correctly
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
-            unsigned char bdryEdges;
+            uint8_t bdryEdges;
                 /**< The number of edges of the triangular piece of 4-manifold
                      edge link that are in fact boundary edges of this link.
                      Equivalently, this measures the number of facets of this

@@ -90,11 +90,11 @@ bool GluingPermSearcher<4>::PentEdgeState::readData(std::istream& in,
     // The twist fields are chars, but we need to read them as ints.
     int twistEdge;
     in >> twistEdge;
-    twistUpEdge = twistEdge;
+    twistUpEdge = static_cast<char>(twistEdge);
 
     int twistTriangle;
     in >> twistTriangle;
-    twistUpTriangle = twistTriangle;
+    twistUpTriangle = static_cast<char>(twistTriangle);
 
     // hadEqualRank is a bool, but we need to read it as an int.
     int bRank;
@@ -104,13 +104,13 @@ bool GluingPermSearcher<4>::PentEdgeState::readData(std::istream& in,
     // More chars to ints coming.
     int bVal;
 
-    in >> bVal; bdryEdges = bVal;
+    in >> bVal; bdryEdges = static_cast<uint8_t>(bVal);
     in >> bdryNext[0] >> bdryNext[1];
-    in >> bVal; bdryTwist[0] = bVal;
-    in >> bVal; bdryTwist[1] = bVal;
+    in >> bVal; bdryTwist[0] = static_cast<char>(bVal);
+    in >> bVal; bdryTwist[1] = static_cast<char>(bVal);
     in >> bdryNextOld[0] >> bdryNextOld[1];
-    in >> bVal; bdryTwistOld[0] = bVal;
-    in >> bVal; bdryTwistOld[1] = bVal;
+    in >> bVal; bdryTwistOld[0] = static_cast<char>(bVal);
+    in >> bVal; bdryTwistOld[1] = static_cast<char>(bVal);
 
     if (parent < -1 || parent >= static_cast<ssize_t>(nStates))
         return false;

@@ -1114,11 +1114,11 @@ Link Link::tightDecode(std::istream& input) {
 
     Link ans;
     int pos = 0;
-    char bits;
+    int bits;
     for (ssize_t i = 0; i < size; ++i) {
         if (pos == 0) {
             bits = input.get();
-            if (! input)
+            if (bits == EOF)
                 throw InvalidInput("The tight encoding is incomplete");
             bits -= 33;
         }

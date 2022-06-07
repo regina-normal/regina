@@ -61,16 +61,13 @@ ModelLinkGraph::ModelLinkGraph(const Link& link) : cells_(nullptr) {
     for (size_t i = 0; i < link.size(); ++i)
         nodes_.push_back(new ModelLinkGraphNode());
 
-    auto it = link.crossings_.begin();
-    for (ModelLinkGraphNode* n : nodes_) {
+    for (Crossing* c : link.crossings_) {
         for (int strand = 0; strand < 2; ++strand) {
-            ModelLinkGraphArc out = outgoingArc((*it)->strand(strand));
-            ModelLinkGraphArc in = incomingArc((*it)->next(strand));
+            ModelLinkGraphArc out = outgoingArc(c->strand(strand));
+            ModelLinkGraphArc in = incomingArc(c->next(strand));
             out.node_->adj_[out.arc_] = in;
             in.node_->adj_[in.arc_] = out;
         }
-
-        ++it;
     }
 }
 

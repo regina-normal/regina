@@ -288,12 +288,12 @@ inline void Perm<7>::clear(unsigned from) {
         case 3:
             // When rounded down to the nearest multiple of 24,
             // the code is the correct *ordered* S7 index.
-            code2_ = convOrderedUnordered(code2_ - (code2_ % 24));
+            code2_ = convOrderedUnordered<Code2>(code2_ - (code2_ % 24));
             break;
         case 4:
             // When rounded down to the nearest multiple of 6,
             // the code is the correct *ordered* S7 index.
-            code2_ = convOrderedUnordered(code2_ - (code2_ % 6));
+            code2_ = convOrderedUnordered<Code2>(code2_ - (code2_ % 6));
             break;
         case 5:
             if ((*this)[5] == 6)
