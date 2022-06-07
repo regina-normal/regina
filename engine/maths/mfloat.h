@@ -49,7 +49,6 @@ class MFloat {
     private:
         
         mpfr_t number_;
-        int flag = 0;
         static unsigned long prec_;
 
     public:
