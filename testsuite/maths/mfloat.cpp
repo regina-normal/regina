@@ -29,6 +29,7 @@
  *  MA 02110-1301, USA.                                                   *
  *                                                                        *
  **************************************************************************/
+#ifdef __REGINA_MFLOAT
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
@@ -181,4 +182,4 @@ class MFloatTest : public CppUnit::TestFixture {
 		}
 
 };
-
+#endif

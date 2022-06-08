@@ -68,6 +68,7 @@ namespace {
     template <calcType method>
     struct TuraevViroDetails;
 
+
     template <>
     struct TuraevViroDetails<exact> {
         typedef Cyclotomic TVType;
@@ -88,6 +89,7 @@ namespace {
         }
     };
 
+#ifdef __REGINA_MFLOAT
     template <>
     struct TuraevViroDetails<multiPrecision> {
         typedef MFloat TVType;
@@ -98,6 +100,7 @@ namespace {
             return zero;
         }
     };
+#endif
 
     /**
      * Allows calculation of [n]! for arbitrary n.
@@ -124,6 +127,7 @@ namespace {
              * Requires r >= 3.
              */
             BracketFactorial(unsigned long r, unsigned long whichRoot);
+            BracketFactorial(unsigned long r, unsigned long whichRoot, unsigned long prec);
 
             /**
              * Clean up memory.
@@ -213,28 +217,29 @@ namespace {
             inv_[i] = inv_[i - 1] / bracket_[i];
         }
     }
-    
+
+#ifdef __REGINA_MFLOAT
     template <>
     BracketFactorial<multiPrecision>::BracketFactorial(
-            unsigned long r, unsigned long whichRoot) :
+            unsigned long r, unsigned long whichRoot, unsigned long prec) :
             bracket_(new TVResult[r]),
             fact_(new TVResult[r]),
             inv_(new TVResult[r]) {
 
         TVResult angle,sinangle,siniangle,facti,invi;
-        
-        angle.setPi();
+
+        angle.setPi(prec);
         angle *= whichRoot;
         angle /= r;
 
         unsigned long one = 1;
 
-        bracket_[0].set(one);
-        bracket_[1].set(one);
-        fact_[0].set(one);
-        fact_[1].set(one);
-        inv_[0].set(one);
-        inv_[1].set(one);
+        bracket_[0].set(one,prec);
+        bracket_[1].set(one,prec);
+        fact_[0].set(one,prec);
+        fact_[1].set(one,prec);
+        inv_[0].set(one,prec);
+        inv_[1].set(one,prec);
 
         sinangle = angle;
         sinangle.sin();
@@ -257,6 +262,7 @@ namespace {
             siniangle = angle;
         }
     }
+#endif
 
     /**
      * Represents the initial data as described in Section 7 of Turaev
@@ -267,8 +273,8 @@ namespace {
         using TVType = typename TuraevViroDetails<method>::TVType;
         using TVResult = typename TuraevViroDetails<method>::TVResult;
 
-        unsigned long r, whichRoot;
-            /**< The Turaev-Viro parameters. */
+        unsigned long r, whichRoot, prec;
+            /**< The Turaev-Viro parameters. Prec is used only for multiPrecision. */
         bool halfField;
         BracketFactorial<method> fact;
             /**< The cached values [n]!. */
@@ -276,12 +282,17 @@ namespace {
             /**< The vertex-based contribution to the Turaev-Viro invariant;
                  this is the inverse square of the distinguished value w. */
 
+        /**
+         * Constructor, prec is for multiPrecision.
+         */
         InitialData(unsigned long newR, unsigned long newWhichRoot);
+        InitialData(unsigned long newR, unsigned long newWhichRoot, unsigned long prec);
 
         static void negate(TVType& x);
 
         void initZero(TVType& x) const;
         void initOne(TVType& x) const;
+        void initLongInt(TVType& x, unsigned long i) const;
 
         /**
          * Determines whether (i/2, j/2, k/2) is an admissible triple.
@@ -385,7 +396,8 @@ namespace {
                 unsigned long colour2, unsigned long colour3,
                 unsigned long colour4, unsigned long colour5,
                 TVType& ans) const {
-            TVType tmp(halfField ? r : 2 * r);
+            TVType tmp;
+            initLongInt(tmp,halfField ? r : 2 * r);
             tetContrib(colour0, colour1, colour3, colour5, colour4, colour2,
                 tmp);
             ans *= tmp;
@@ -459,16 +471,18 @@ namespace {
         double tmp = sin(M_PI * whichRoot / r);
         vertexContrib = 2.0 * tmp * tmp / r;
     }
-    
+
+#ifdef __REGINA_MFLOAT
     template <>
     InitialData<multiPrecision>::InitialData(
-            unsigned long newR, unsigned long newWhichRoot) :
+            unsigned long newR, unsigned long newWhichRoot, unsigned long prec) :
             r(newR),
             whichRoot(newWhichRoot),
+            prec(prec),
             halfField(r % 2 != 0 && whichRoot % 2 == 0),
-            fact(r, whichRoot) {
+            fact(r, whichRoot,prec) {
         TVResult tmp;
-        tmp.setPi();
+        tmp.setPi(prec);
         tmp *= whichRoot;
         tmp /= r;
         tmp.sin();
@@ -478,7 +492,7 @@ namespace {
         tmp /= r;
         vertexContrib = tmp;
     }
-
+#endif
 
     template <>
     inline void InitialData<exact>::negate(InitialData<exact>::TVType& x) {
@@ -490,10 +504,12 @@ namespace {
         x = -x;
     }
 
+#ifdef __REGINA_MFLOAT
     template <>
     inline void InitialData<multiPrecision>::negate(InitialData<multiPrecision>::TVType& x) {
         x.negate();
     }
+#endif
 
     template <>
     inline void InitialData<exact>::initZero(InitialData<exact>::TVType& x)
@@ -507,11 +523,13 @@ namespace {
         x = 0.0;
     }
 
+#ifdef __REGINA_MFLOAT
     template <>
     inline void InitialData<multiPrecision>::initZero(InitialData<multiPrecision>::TVType& x)
             const {
-        x.set(0.0);
+        x.set(0.0,prec);
     }
+#endif
 
     template <>
     inline void InitialData<exact>::initOne(InitialData<exact>::TVType& x)
@@ -526,11 +544,34 @@ namespace {
         x = 1.0;
     }
 
+#ifdef __REGINA_MFLOAT
     template <>
     inline void InitialData<multiPrecision>::initOne(InitialData<multiPrecision>::TVType& x)
             const {
-        x.set(1.0);
+        x.set(1.0,prec);
     }
+#endif
+
+    template <>
+    inline void InitialData<exact>::initLongInt(InitialData<exact>::TVType& x, unsigned long i)
+            const {
+        x.init(halfField ? r : 2 * r);
+        x[0] = i;
+    }
+
+    template <>
+    inline void InitialData<floating>::initLongInt(InitialData<floating>::TVType& x, unsigned long i)
+            const {
+        x = (double) i;
+    }
+
+#ifdef __REGINA_MFLOAT
+    template <>
+    inline void InitialData<multiPrecision>::initLongInt(InitialData<multiPrecision>::TVType& x, unsigned long i)
+            const {
+        x.set(i,prec);
+    }
+#endif
 
     template <calcType method>
     typename InitialData<method>::TVType turaevViroBacktrack(
@@ -621,8 +662,10 @@ namespace {
 
         std::fill(colour, colour + nEdges, 0);
         long curr = 0;
-        TVType valColour(init.halfField ? init.r : 2 * init.r);
-        TVType tmpTVType(init.halfField ? init.r : 2 * init.r);
+        TVType valColour;
+        init.initLongInt(valColour,init.halfField ? init.r : 2 * init.r);
+        TVType tmpTVType;
+        init.initLongInt(tmpTVType,init.halfField ? init.r : 2 * init.r);
         bool admissible;
         const Tetrahedron<3>* tet;
         const Triangle<3>* triangle;
@@ -800,7 +843,8 @@ namespace {
 
         std::fill(colour, colour + nEdges, 0);
         long curr = 0;
-        TVType valColour(init.halfField ? init.r : 2 * init.r);
+        TVType valColour;
+        init.initLongInt(valColour,init.halfField ? init.r : 2 * init.r);
         bool admissible;
         long index1, index2;
         const Tetrahedron<3>* tet;
@@ -1444,8 +1488,9 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
         return 0;
     if (gcd(r, whichRoot) > 1)
         return 0;
-
-    if (prec<65) {
+#ifdef __REGINA_MFLOAT
+    if (prec<=sizeof(double)) {
+#endif
     	// Set up our initial data.
 		InitialData<floating> init(r, whichRoot);
 
@@ -1476,10 +1521,11 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
 		}
 		 */
 		return ans.real();
+#ifdef __REGINA_MFLOAT
 	} else {
 		// Set up our initial data.
-		MFloat::setPrec(prec);
-		InitialData<multiPrecision> init(r, whichRoot);
+		InitialData<multiPrecision> init(r, whichRoot,prec);
+
 
 		InitialData<multiPrecision>::TVType ans;
 		switch (alg) {
@@ -1496,7 +1542,7 @@ double Triangulation<3>::turaevViroApprox(unsigned long r,
 
 		return ans.getDouble();
 	}
-	
+#endif
 }
 
 Cyclotomic Triangulation<3>::turaevViro(unsigned long r, bool parity,

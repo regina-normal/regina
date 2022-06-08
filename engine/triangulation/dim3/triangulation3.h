@@ -854,7 +854,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * @see allCalculatedTuraevViro
          */
         double turaevViroApprox(unsigned long r, unsigned long whichRoot = 1,
-            Algorithm alg = ALG_DEFAULT, unsigned long prec = 64) const;
+            Algorithm alg = ALG_DEFAULT, unsigned long prec = sizeof(double)) const;
         /**
          * Returns the cache of all Turaev-Viro state sum invariants that
          * have been calculated for this 3-manifold.

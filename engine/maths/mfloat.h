@@ -49,7 +49,8 @@ class MFloat {
     private:
         
         mpfr_t number_;
-        static unsigned long prec_;
+        unsigned long prec_=defaultPrec_;
+        static unsigned long defaultPrec_;
 
     public:
 
@@ -63,23 +64,34 @@ class MFloat {
 
         explicit MFloat(double value);
 
+        explicit MFloat(double value, unsigned long prec);
+
         explicit MFloat(unsigned long value);
 
-        static void setPrec(unsigned long prec) {
-            prec_ = prec;
+        explicit MFloat(unsigned long value, unsigned long prec);
+
+        void setPrec(unsigned long prec) {
+            if (prec_ != prec)
+                prec_ = prec;
+            if (mpfr_get_prec(number_) != prec)
+                mpfr_set_prec(number_,prec);
+        }
+        static void setDefaultPrec(unsigned long prec) {
+            defaultPrec_ = prec;
         }
 
         static std::string str(const MFloat& value){
             return std::to_string(value.getDouble());
         }
 
-        void set(double value);
+        void set(double value, unsigned long prec);
 
-        void set(unsigned long value);
+        void set(unsigned long value, unsigned long prec);
 
         double getDouble() const;
 
         void setPi();
+        void setPi(unsigned long prec);
 
         ~MFloat();
         
@@ -135,7 +147,7 @@ class MFloat {
 
 };
 
-unsigned long MFloat::prec_ = 32;
+unsigned long MFloat::defaultPrec_ = sizeof(double);
 
 inline MFloat::MFloat() {
     mpfr_init2(number_,prec_);
@@ -143,17 +155,20 @@ inline MFloat::MFloat() {
 }
 
 inline MFloat::MFloat(const MFloat& other) {
-    mpfr_init2(number_,prec_);
+    mpfr_init2(number_,other.prec_);
+    prec_ = other.prec_;
     mpfr_set(number_,other.number_,MPFRRND);
 }
 
 inline MFloat::MFloat(MFloat&& other) noexcept {
+    prec_ = other.prec_;
     number_->_mpfr_d = 0;
     mpfr_swap (number_,other.number_);
 }
 
 inline MFloat& MFloat::operator=(MFloat&& other) {
     if (this != &other) {
+        prec_ = other.prec_;
         mpfr_swap(number_,other.number_);
     }
     return *this;
@@ -164,16 +179,30 @@ inline MFloat::MFloat(double value) {
     mpfr_set_d(number_,value,MPFRRND);
 }
 
+inline MFloat::MFloat(double value, unsigned long prec) {
+    mpfr_init2(number_,prec);
+    this->setPrec(prec);
+    mpfr_set_d(number_,value,MPFRRND);
+}
+
 inline MFloat::MFloat(unsigned long value) {
     mpfr_init2(number_,prec_);
     mpfr_set_ui(number_,value,MPFRRND);
 }
 
-inline void MFloat::set(double value) {
+inline MFloat::MFloat(unsigned long value, unsigned long prec) {
+    mpfr_init2(number_,prec);
+    this->setPrec(prec);
+    mpfr_set_ui(number_,value,MPFRRND);
+}
+
+inline void MFloat::set(double value, unsigned long prec) {
+    this->setPrec(prec);
     mpfr_set_d(number_,value,MPFRRND);
 }
 
-inline void MFloat::set(unsigned long value) {
+inline void MFloat::set(unsigned long value, unsigned long prec) {
+    this->setPrec(prec);
     mpfr_set_ui(number_,value,MPFRRND);
 }
 
@@ -182,8 +211,9 @@ inline double MFloat::getDouble() const{
 }
 
 inline MFloat::~MFloat() {
-    if(0 != number_->_mpfr_d)
+    if(0 != number_->_mpfr_d) {
         mpfr_clear(number_);
+    }
 }
 
 inline double MFloat::extractDouble(MFloat&& rhs) {
@@ -191,6 +221,11 @@ inline double MFloat::extractDouble(MFloat&& rhs) {
 }
 
 inline void MFloat::setPi() {
+    mpfr_const_pi(number_,MPFRRND);
+}
+
+inline void MFloat::setPi(unsigned long prec) {
+    this->setPrec(prec);
     mpfr_const_pi(number_,MPFRRND);
 }
 
@@ -203,6 +238,7 @@ inline bool MFloat::operator != (const MFloat& rhs) const {
 }
 
 inline MFloat& MFloat::operator = (const MFloat& other) {
+    this->setPrec(other.prec_);
     mpfr_set(number_,other.number_,MPFRRND);
     return *this;
 }
