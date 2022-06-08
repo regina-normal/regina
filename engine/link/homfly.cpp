@@ -32,7 +32,6 @@
 
 #include "link/link.h"
 #include "maths/laurent2.h"
-#include "utilities/bitmask.h"
 #include "utilities/bitmanip.h"
 #include "utilities/sequence.h"
 #include <algorithm>
@@ -2803,7 +2802,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             // The bits of choice correspond to the positions of pairs in the
             // final key.  A 0 bit means we take a pair from k1, and a 1 bit
             // means we take a pair from k2.
-            Bitmask choice(pairs);
+            std::vector<bool> choice(pairs, false);
 
             for (auto& soln1 : *(partial[child->index()])) {
                 if (tracker) {
@@ -2826,7 +2825,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                     // Fill the final key from the end to the beginning, so
                     // that we can more aggressively test for non-viable keys.
-                    choice.reset();
+                    std::fill(choice.begin(), choice.end(), false);
                     Key::iterator pos = kNew.end() - 2;
                     Key::const_iterator pos1 = k1.end() - 2;
                     Key::const_iterator pos2 = k2.end() - 2;
@@ -2850,7 +2849,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                         "bag are not unique" << std::endl;
                             }
                             // Fall through to the backtrack step.
-                        } else if (! choice.get(idx)) {
+                        } else if (! choice[idx]) {
                             // Try key 1, if we can.
                             if (pos1 >= k1.begin()) {
                                 *pos = *pos1;
@@ -2865,7 +2864,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             }
                             // We cannot use key 1.
                             // Try key 2 instead.
-                            choice.set(idx, true);
+                            choice[idx] = true;
                             continue;
                         } else {
                             // Try key 2, if we can.
@@ -2883,7 +2882,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             // We cannot use key 2.
                             // Reset this bit, and fall through to the
                             // backtrack step.
-                            choice.set(idx, false);
+                            choice[idx] = false;
                         }
 
                         // Backtrack!
@@ -2891,15 +2890,15 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                         ++idx;
                         while (pos != kNew.end()) {
                             // Try the next option at this position.
-                            if (! choice.get(idx)) {
+                            if (! choice[idx]) {
                                 pos1 += 2;
-                                choice.set(idx, true);
+                                choice[idx] = true;
                                 break;
                             } else {
                                 pos2 += 2;
                                 // We are out of options for this bit.
                                 // Reset the bit and move further up.
-                                choice.set(idx, false);
+                                choice[idx] = false;
                                 pos += 2;
                                 ++idx;
                             }
