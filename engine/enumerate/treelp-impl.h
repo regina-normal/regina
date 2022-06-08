@@ -63,7 +63,6 @@
 #include "maths/matrixops.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
-#include "utilities/bitmask.h"
 #include <cstring>
 
 namespace regina {
@@ -1259,10 +1258,10 @@ void LPData<LPConstraint, IntType>::makeFeasible() {
     // overall is at most three times the total number of pivots
     // before the first repeated basis).
     size_t nCols = origTableaux_->columns();
-    Bitmask currBasis(nCols);
+    std::vector<bool> currBasis(nCols, false);
     for (size_t r = 0; r < rank_; ++r)
-        currBasis.set(basis_[r], true);
-    Bitmask oldBasis(currBasis);
+        currBasis[basis_[r]] = true;
+    std::vector<bool> oldBasis = currBasis;
     unsigned long pow2 = 1;
     unsigned long nPivots = 0;
 
@@ -1318,8 +1317,8 @@ void LPData<LPConstraint, IntType>::makeFeasible() {
         pivot(outCol, c);
 
         // Run our cycle-detection machinery.
-        currBasis.set(outCol, false);
-        currBasis.set(c, true);
+        currBasis[outCol] = false;
+        currBasis[c] = true;
 
         if (currBasis == oldBasis) {
             // We've cycled!
