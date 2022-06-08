@@ -2801,7 +2801,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
             // The bits of choice correspond to the positions of pairs in the
             // final key.  A 0 bit means we take a pair from k1, and a 1 bit
-            // means we take a pair from k2.
+            // means we take a pair from k2.  We store these using
+            // std::vector<bool>, which is typically a specialised
+            // bit-packed vector (just like the old regina::Bitmask).
             std::vector<bool> choice(pairs, false);
 
             for (auto& soln1 : *(partial[child->index()])) {

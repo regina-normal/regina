@@ -1248,6 +1248,8 @@ void LPData<LPConstraint, IntType>::makeFeasible() {
     // The bits in oldBasis are a snapshot of which variables were in
     // the basis at some point in the past, and the bits in currBasis
     // indicate which variables are in the basis right now.
+    // We store these using std::vector<bool>, which is typically a
+    // specialised bit-packed vector (just like the old regina::Bitmask).
     //
     // We use Brent's method for detecting cycles:
     // We store a snapshot in oldBasis after 2^k pivots, for all k.
