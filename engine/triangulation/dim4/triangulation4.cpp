@@ -150,11 +150,7 @@ IntersectionForm Triangulation<4>::intersectionForm() const {
     std::vector<bool> sign(dim);
     for (size_t i = 0; i < dim; ++i) {
         const auto emb = triangle(i)->front();
-
-        if (emb.simplex()->orientation() > 0)
-            sign[i] = emb.vertices().sign();
-        else
-            sign[i] = - emb.vertices().sign();
+        sign[i] = (emb.simplex()->orientation() == emb.vertices().sign());
     }
 
     MatrixInt form(rank, rank);
@@ -164,7 +160,7 @@ IntersectionForm Triangulation<4>::intersectionForm() const {
             for (size_t k = 0; k < dim; ++k) {
                 Integer count = dualBasis[i][k] * primalBasis[j][k];
                 if (count != 0) {
-                    if (sign[k] > 0)
+                    if (sign[k])
                         form.entry(i, j) += count;
                     else
                         form.entry(i, j) -= count;
