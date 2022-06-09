@@ -37,6 +37,7 @@
 #ifndef __MESSAGELAYER_H
 #define __MESSAGELAYER_H
 
+#include "reginaqt.h"
 #include <QLabel>
 
 /**

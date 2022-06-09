@@ -62,9 +62,11 @@
 #include "utilities/exception.h"
 #include "utilities/listview.h"
 #include "utilities/snapshot.h"
+#include "utilities/tightencoding.h"
 
 namespace regina {
 
+template <int dim> class FacetPairing;
 template <int dim> class IsoSigClassic;
 template <int dim> class XMLTriangulationReader;
 
@@ -132,7 +134,8 @@ template <int dim>
 class TriangulationBase :
         public Snapshottable<Triangulation<dim>>,
         public PacketData<Triangulation<dim>>,
-        public Output<Triangulation<dim>> {
+        public Output<Triangulation<dim>>,
+        public TightEncodable<Triangulation<dim>> {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
     public:
@@ -170,7 +173,7 @@ class TriangulationBase :
          * A compile-time constant function that returns the facial dimension
          * corresponding to an element of the \a faces_ tuple.
          *
-         * This is to assist code that calls std::apply() on \a faces,
+         * This is to assist code that calls std::apply() on \a faces_,
          * since functions in TriangulationBase have easy access to the
          * tuple type but not the corresponding integer parameter pack
          * of face dimensions.
@@ -989,6 +992,19 @@ class TriangulationBase :
          * See face() for further information.
          */
         auto pentachoron(size_t index) const;
+
+        /**
+         * Returns the dual graph of this triangulation, expressed as a
+         * facet pairing.
+         *
+         * Calling <tt>tri.pairing()</tt> is equivalent to calling
+         * <tt>FacetPairing<dim>(tri)</tt>.
+         *
+         * \pre This triangulation is not empty.
+         *
+         * @return the dual graph of this triangulation.
+         */
+        FacetPairing<dim> pairing() const;
 
         /*@}*/
         /**
@@ -2423,6 +2439,18 @@ class TriangulationBase :
             const;
 
         /**
+         * Writes the tight encoding of this triangulation to the given output
+         * stream.  See the page on \ref tight "tight encodings" for details.
+         *
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
+
+        /**
          * Returns C++ code that can be used to reconstruct this triangulation.
          *
          * This code will call Triangulation<dim>::fromGluings(), passing
@@ -2683,6 +2711,30 @@ class TriangulationBase :
          */
         static size_t isoSigComponentSize(const std::string& sig);
 
+        /**
+         * Reconstructs a triangulation from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.
+         * If the input stream contains leading whitespace then it will be
+         * treated as an invalid encoding (i.e., this routine will throw an
+         * exception).  The input routine \e may contain further data: if this
+         * routine is successful then the input stream will be left positioned
+         * immediately after the encoding, without skipping any trailing
+         * whitespace.
+         *
+         * \exception InvalidInput the given input stream does not begin with
+         * a tight encoding of a <i>dim</i>-dimensional triangulation.
+         *
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
+         *
+         * @param input an input stream that begins with the tight encoding
+         * for a <i>dim</i>-dimensional triangulation.
+         * @return the triangulation represented by the given tight encoding.
+         */
+        static Triangulation<dim> tightDecode(std::istream& input);
+
         /*@}*/
 
     protected:
@@ -2816,120 +2868,6 @@ class TriangulationBase :
         void writeXMLBaseProperties(std::ostream& out) const;
 
     private:
-        /**
-         * Implements the non-templated countFaces(subdim) function.
-         *
-         * The purpose of the std::integer_sequence argument is to give
-         * us the list of all face dimensions as individual template
-         * parameters, which means we can use C++17 fold expressions.
-         */
-        template <int... k>
-        size_t countFacesImpl(int subdim,
-                std::integer_sequence<int, k...>) const;
-
-        /**
-         * Implements the non-templated face(subdim, index) function.
-         *
-         * The purpose of the std::integer_sequence argument is to give
-         * us the list of all face dimensions as individual template
-         * parameters, which means we can use C++17 fold expressions.
-         */
-        template <int... k>
-        auto faceImpl(int subdim, size_t index,
-                std::integer_sequence<int, k...>) const;
-
-        /**
-         * Implements the non-templated faces(subdim) function.
-         *
-         * The purpose of the std::integer_sequence argument is to give
-         * us the list of all face dimensions as individual template
-         * parameters, which means we can use C++17 fold expressions.
-         */
-        template <int... k>
-        auto facesImpl(int subdim, std::integer_sequence<int, 0, k...>) const;
-
-        /**
-         * Implements the non-templated countBoundaryFaces(subdim) function.
-         *
-         * The purpose of the std::integer_sequence argument is to give
-         * us the list of all face dimensions as individual template
-         * parameters, which means we can use C++17 fold expressions.
-         */
-        template <int... k>
-        size_t countBoundaryFacesImpl(int subdim,
-                std::integer_sequence<int, k...>) const;
-
-        /**
-         * Implements the non-templated homology(homdim) function.
-         *
-         * The purpose of the std::integer_sequence argument is to give
-         * us the list of all homology dimensions as individual template
-         * parameters, which means we can use C++17 fold expressions.
-         *
-         * The reason for separating out homology dimension 0 is because
-         * homology() only supports homology dimension >= 1
-         * (and so we wish to exclude 0 from our fold expression).
-         */
-        template <int... k>
-        AbelianGroup homologyImpl(int homdim,
-                std::integer_sequence<int, 0, k...>) const;
-
-        /**
-         * Implements the non-templated markedHomology(homdim) function.
-         *
-         * The purpose of the std::integer_sequence argument is to give
-         * us the list of all homology dimensions as individual template
-         * parameters, which means we can use C++17 fold expressions.
-         *
-         * The reason for separating out homology dimension 0 is because
-         * markedHomology() only supports homology dimension >= 1
-         * (and so we wish to exclude 0 from our fold expression).
-         */
-        template <int... k>
-        MarkedAbelianGroup markedHomologyImpl(int homdim,
-                std::integer_sequence<int, 0, k...>) const;
-
-        /**
-         * Implements the non-templated boundaryMap(subdim) function.
-         *
-         * The purpose of the std::integer_sequence argument is to give
-         * us the list of all face dimensions as individual template
-         * parameters, which means we can use C++17 fold expressions.
-         *
-         * The reason for separating out face dimension 0 is because
-         * boundaryMap() can only be used with face dimension >= 1
-         * (and so we wish to exclude 0 from our fold expression).
-         */
-        template <int... k>
-        MatrixInt boundaryMapImpl(int subdim,
-                std::integer_sequence<int, 0, k...>) const;
-
-        /**
-         * Implements the non-templated dualBoundaryMap(subdim) function.
-         *
-         * The purpose of the std::integer_sequence argument is to give
-         * us the list of all face dimensions as individual template
-         * parameters, which means we can use C++17 fold expressions.
-         *
-         * The reason for separating out face dimension 0 is because
-         * dualBoundaryMap() can only be used with face dimension >= 1
-         * (and so we wish to exclude 0 from our fold expression).
-         */
-        template <int... k>
-        MatrixInt dualBoundaryMapImpl(int subdim,
-                std::integer_sequence<int, 0, k...>) const;
-
-        /**
-         * Implements the non-templated dualToPrimal(subdim) function.
-         *
-         * The purpose of the std::integer_sequence argument is to give
-         * us the list of all face dimensions as individual template
-         * parameters, which means we can use C++17 fold expressions.
-         */
-        template <int... k>
-        MatrixInt dualToPrimalImpl(int subdim,
-                std::integer_sequence<int, k...>) const;
-
         /**
          * Internal to calculateSkeleton().
          *
@@ -3550,25 +3488,15 @@ inline size_t TriangulationBase<dim>::countFaces() const {
 }
 
 template <int dim>
-template <int... k>
-size_t TriangulationBase<dim>::countFacesImpl(int subdim,
-        std::integer_sequence<int, k...>) const {
-    // We give the result a name (tmp) to avoid compiler warnings.
-    size_t ans;
-    auto tmp = (
-        (subdim == k && (void(ans = countFaces<k>()), 1))
-        || ...);
-    return ans;
-}
-
-template <int dim>
 inline size_t TriangulationBase<dim>::countFaces(int subdim) const {
     if (subdim == dim)
         return size();
     if (subdim < 0 || subdim > dim)
         throw InvalidArgument("countFaces(): unsupported face dimension");
 
-    return countFacesImpl(subdim, std::make_integer_sequence<int, dim>());
+    return select_constexpr<0, dim, size_t>(subdim, [this](auto k) {
+        return countFaces<k>();
+    });
 }
 
 template <int dim>
@@ -3645,32 +3573,13 @@ inline auto TriangulationBase<dim>::faces() const {
 }
 
 template <int dim>
-template <int... k>
-auto TriangulationBase<dim>::facesImpl(int subdim,
-        std::integer_sequence<int, 0, k...>) const {
-    // Since none of our ListView types have default constructors,
-    // our std::variant return type does not have one either.
-    // We therefore set it to faces<0>(), which is cheap since
-    // ListView is lightweight, and we adjust it afterwards if subdim
-    // is something different.
-
-    std::variant<decltype(faces<0>()), decltype(faces<k>())...>
-        ans = faces<0>();
-    if (subdim > 0) {
-        // We give the result a name (tmp) to avoid compiler warnings.
-        auto tmp = (
-            (subdim == k && (void(ans = faces<k>()), 1))
-            || ...);
-    }
-    return ans;
-}
-
-template <int dim>
 inline auto TriangulationBase<dim>::faces(int subdim) const {
     if (subdim < 0 || subdim >= dim)
         throw InvalidArgument("faces(): unsupported face dimension");
 
-    return facesImpl(subdim, std::make_integer_sequence<int, dim>());
+    return select_constexpr_as_variant<0, dim>(subdim, [this](auto k) {
+        return faces<k>();
+    });
 }
 
 template <int dim>
@@ -3755,23 +3664,13 @@ inline Face<dim, subdim>* TriangulationBase<dim>::face(size_t index) const {
 }
 
 template <int dim>
-template <int... k>
-auto TriangulationBase<dim>::faceImpl(int subdim, size_t index,
-        std::integer_sequence<int, k...>) const {
-    // We give the result a name (tmp) to avoid compiler warnings.
-    std::variant<Face<dim, k>*...> ans;
-    auto tmp = (
-        (subdim == k && (void(ans = face<k>(index)), 1))
-        || ...);
-    return ans;
-}
-
-template <int dim>
 inline auto TriangulationBase<dim>::face(int subdim, size_t index) const {
     if (subdim < 0 || subdim >= dim)
         throw InvalidArgument("face(): unsupported face dimension");
 
-    return faceImpl(subdim, index, std::make_integer_sequence<int, dim>());
+    return select_constexpr_as_variant<0, dim>(subdim, [this, index](auto k) {
+        return face<k>(index);
+    });
 }
 
 template <int dim>
@@ -3855,6 +3754,11 @@ inline auto TriangulationBase<dim>::pentachoron(size_t index) const {
 }
 
 template <int dim>
+inline FacetPairing<dim> TriangulationBase<dim>::pairing() const {
+    return FacetPairing<dim>(static_cast<const Triangulation<dim>&>(*this));
+}
+
+template <int dim>
 inline bool TriangulationBase<dim>::isEmpty() const {
     return simplices_.empty();
 }
@@ -3887,25 +3791,14 @@ inline size_t TriangulationBase<dim>::countBoundaryFaces() const {
 }
 
 template <int dim>
-template <int... k>
-size_t TriangulationBase<dim>::countBoundaryFacesImpl(int subdim,
-        std::integer_sequence<int, k...>) const {
-    // We give the result a name (tmp) to avoid compiler warnings.
-    size_t ans;
-    auto tmp = (
-        (subdim == k && (void(ans = countBoundaryFaces<k>()), 1))
-        || ...);
-    return ans;
-}
-
-template <int dim>
 inline size_t TriangulationBase<dim>::countBoundaryFaces(int subdim) const {
     if (subdim < 0 || subdim >= dim)
         throw InvalidArgument(
             "countBoundaryFaces(): unsupported face dimension");
 
-    return countBoundaryFacesImpl(subdim,
-        std::make_integer_sequence<int, dim>());
+    return select_constexpr<0, dim, size_t>(subdim, [this](auto k) {
+        return countBoundaryFaces<k>();
+    });
 }
 
 template <int dim>
@@ -4026,6 +3919,79 @@ void TriangulationBase<dim>::insertTriangulation(
     }
 
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+}
+
+template <int dim>
+void TriangulationBase<dim>::tightEncode(std::ostream& out) const {
+    regina::detail::tightEncodeIndex(out, size());
+
+    // For dimension 2, we *could* squeeze two permutations into a single
+    // character.  However, this requires care: if we write the two
+    // permutations at the point where we see the first then this requires
+    // read-forward in the encoding routine, and if we write them at the point
+    // where we see the second then this makes decoding difficult (since we
+    // don't know in advance which simplex facets were skipped over in the
+    // encoding).  Since dimension 2 is not where our real space problems
+    // occur, we leave the encoding as is for now.
+
+    // Write each gluing from one side only, in the forward direction.
+    for (auto* s : simplices_)
+        for (int i = 0; i <= dim; ++i)
+            if (auto* adj = s->adjacentSimplex(i)) {
+                // If we have already seen this gluing from the other side,
+                // skip over it completely.
+                if (adj->index() > s->index() ||
+                        (adj->index() == s->index() &&
+                        s->adjacentFacet(i) >= i)) {
+                    regina::detail::tightEncodeIndex(out, adj->index());
+                    // TODO: For dimension 2, we can combine pairs of
+                    // gluings in a single character.
+                    s->adjacentGluing(i).tightEncode(out);
+                }
+            } else
+                regina::detail::tightEncodeNoIndex(out);
+}
+
+template <int dim>
+Triangulation<dim> TriangulationBase<dim>::tightDecode(std::istream& input) {
+    auto size = regina::detail::tightDecodeIndex<size_t>(input);
+
+    Triangulation<dim> ans;
+    // Note: new simplices are initialised with all adj_[i] null.
+    for (size_t i = 0; i < size; ++i)
+        ans.simplices_.push_back(new Simplex<dim>(&ans));
+
+    for (auto* s : ans.simplices_)
+        for (int i = 0; i <= dim; ++i) {
+            if (s->adjacentSimplex(i))
+                continue;
+
+            auto adjIdx = regina::detail::tightDecodeIndex<ssize_t>(input);
+            if (adjIdx >= 0) {
+                // This is a non-boundary facet.
+                if (adjIdx >= static_cast<ssize_t>(size))
+                    throw InvalidInput("The tight encoding contains "
+                        "invalid gluings");
+
+                Perm<dim+1> gluing = Perm<dim+1>::tightDecode(input);
+                if (adjIdx < static_cast<ssize_t>(s->index()) ||
+                        (adjIdx == static_cast<ssize_t>(s->index()) &&
+                        gluing[i] <= i))
+                    throw InvalidInput("The tight encoding contains "
+                        "unexpected gluings");
+
+                Simplex<dim>* adj = ans.simplices_[adjIdx];
+                if (adj->adjacentSimplex(gluing[i])) {
+                    // Some other gluing has already claimed this facet.
+                    throw InvalidInput("The tight encoding contains "
+                        "inconsistent gluings");
+                }
+
+                s->join(i, adj, gluing);
+            }
+        }
+
+    return ans;
 }
 
 template <int dim>
@@ -4611,7 +4577,7 @@ void TriangulationBase<dim>::barycentricSubdivision() {
         newSimp[simp] = staging.newSimplex();
 
     // Do all of the internal gluings
-    int permIdx;
+    typename Perm<dim+1>::Index permIdx, adjIdx;
     Perm<dim+1> perm, glue;
     int i;
     for (simp=0; simp < nOld; ++simp)
@@ -4619,11 +4585,13 @@ void TriangulationBase<dim>::barycentricSubdivision() {
             perm = Perm<dim+1>::orderedSn[permIdx];
 
             // Internal gluings within the old simplex:
-            for (i = 0; i < dim; ++i)
-                newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[i],
-                    newSimp[Perm<dim+1>::nPerms * simp +
-                        (perm * Perm<dim+1>(i, i+1)).orderedSnIndex()],
-                    Perm<dim+1>(perm[i], perm[i+1]));
+            for (i = 0; i < dim; ++i) {
+                adjIdx = (perm * Perm<dim+1>(i, i+1)).orderedSnIndex();
+                if (permIdx < adjIdx)
+                    newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[i],
+                        newSimp[Perm<dim+1>::nPerms * simp + adjIdx],
+                        Perm<dim+1>(perm[i], perm[i+1]));
+            }
 
             // Adjacent gluings to the adjacent simplex:
             Simplex<dim>* oldSimp = simplex(simp);
@@ -4770,26 +4738,15 @@ inline void TriangulationBase<dim>::simplifiedFundamentalGroup(
 }
 
 template <int dim>
-template <int... k>
-inline AbelianGroup TriangulationBase<dim>::homologyImpl(int homdim,
-        std::integer_sequence<int, 0, k...>) const {
-    // We give the result a name (tmp) to avoid compiler warnings.
-    AbelianGroup ans;
-    auto tmp = (
-        (homdim == k && (void(ans = homology<k>()), 1))
-        || ...);
-    return ans;
-}
-
-template <int dim>
 inline AbelianGroup TriangulationBase<dim>::homology(int k) const {
     // upperBound is one more than the largest allowed k.
     constexpr int upperBound = (standardDim(dim) ? dim : (dim - 1));
-
     if (k < 1 || k >= upperBound)
         throw InvalidArgument("homology(): unsupported homology dimension");
 
-    return homologyImpl(k, std::make_integer_sequence<int, upperBound>());
+    return select_constexpr<1, upperBound, AbelianGroup>(k, [this](auto k) {
+        return homology<k>();
+    });
 }
 
 template <int dim>
@@ -4806,39 +4763,14 @@ inline MarkedAbelianGroup TriangulationBase<dim>::markedHomology() const {
 }
 
 template <int dim>
-template <int... k>
-inline MarkedAbelianGroup TriangulationBase<dim>::markedHomologyImpl(int homdim,
-        std::integer_sequence<int, 0, k...>) const {
-    // We use a std::optional because MarkedAbelianGroup does not have a
-    // default constructor (but there must be a better solution than this?).
-    //
-    // We give the result a name (tmp) to avoid compiler warnings.
-    std::optional<MarkedAbelianGroup> ans;
-    auto tmp = (
-        (homdim == k && (void(ans = markedHomology<k>()), 1))
-        || ...);
-    return *ans;
-}
-
-template <int dim>
 inline MarkedAbelianGroup TriangulationBase<dim>::markedHomology(int k) const {
     if (k < 1 || k >= dim)
         throw InvalidArgument(
             "markedHomology(): unsupported homology dimension");
 
-    return markedHomologyImpl(k, std::make_integer_sequence<int, dim>());
-}
-
-template <int dim>
-template <int... k>
-inline MatrixInt TriangulationBase<dim>::boundaryMapImpl(int subdim,
-        std::integer_sequence<int, 0, k...>) const {
-    // We give the result a name (tmp) to avoid compiler warnings.
-    MatrixInt ans;
-    auto tmp = (
-        (subdim == k && (void(ans = boundaryMap<k>()), 1))
-        || ...);
-    return ans;
+    return select_constexpr<1, dim, MarkedAbelianGroup>(k, [this](auto k) {
+        return markedHomology<k>();
+    });
 }
 
 template <int dim>
@@ -4846,43 +4778,21 @@ inline MatrixInt TriangulationBase<dim>::boundaryMap(int subdim) const {
     if (subdim < 1 || subdim > dim)
         throw InvalidArgument("boundaryMap(): unsupported face dimension");
 
-    return boundaryMapImpl(subdim, std::make_integer_sequence<int, dim + 1>());
-}
-
-template <int dim>
-template <int... k>
-inline MatrixInt TriangulationBase<dim>::dualBoundaryMapImpl(int subdim,
-        std::integer_sequence<int, 0, k...>) const {
-    // We give the result a name (tmp) to avoid compiler warnings.
-    MatrixInt ans;
-    auto tmp = (
-        (subdim == k && (void(ans = dualBoundaryMap<k>()), 1))
-        || ...);
-    return ans;
+    return select_constexpr<1, dim + 1, MatrixInt>(subdim, [this](auto k) {
+        return boundaryMap<k>();
+    });
 }
 
 template <int dim>
 inline MatrixInt TriangulationBase<dim>::dualBoundaryMap(int subdim) const {
     constexpr int maxSubdim = (standardDim(dim) ? dim : dim - 1);
-
     if (subdim < 1 || subdim > maxSubdim)
         throw InvalidArgument(
             "dualBoundaryMap(): unsupported dual face dimension");
 
-    return dualBoundaryMapImpl(subdim,
-        std::make_integer_sequence<int, maxSubdim + 1>());
-}
-
-template <int dim>
-template <int... k>
-inline MatrixInt TriangulationBase<dim>::dualToPrimalImpl(int subdim,
-        std::integer_sequence<int, k...>) const {
-    // We give the result a name (tmp) to avoid compiler warnings.
-    MatrixInt ans;
-    auto tmp = (
-        (subdim == k && (void(ans = dualToPrimal<k>()), 1))
-        || ...);
-    return ans;
+    return select_constexpr<1, maxSubdim+1, MatrixInt>(subdim, [this](auto k) {
+        return dualBoundaryMap<k>();
+    });
 }
 
 template <int dim>
@@ -4891,7 +4801,9 @@ inline MatrixInt TriangulationBase<dim>::dualToPrimal(int subdim) const {
         throw InvalidArgument(
             "dualToPrimal(): unsupported face dimension");
 
-    return dualToPrimalImpl(subdim, std::make_integer_sequence<int, dim>());
+    return select_constexpr<0, dim, MatrixInt>(subdim, [this](auto k) {
+        return dualToPrimal<k>();
+    });
 }
 
 template <int dim>

@@ -65,8 +65,8 @@ class MatrixTest : public CppUnit::TestFixture {
                 // Use the more complex global columnEchelonForm() to compare.
                 MatrixInt r = MatrixInt::identity(init.columns());
                 MatrixInt ri = MatrixInt::identity(init.columns());
-                std::vector<unsigned> rowList;
-                for (unsigned i = 0; i < init.rows(); ++i)
+                std::vector<size_t> rowList;
+                for (size_t i = 0; i < init.rows(); ++i)
                     rowList.push_back(i);
                 regina::columnEchelonForm(init, r, ri, rowList);
             }

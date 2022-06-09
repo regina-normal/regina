@@ -91,7 +91,7 @@ void GluingPermSearcher<3>::searchImpl(long maxDepth, ActionWrapper&& action_) {
     }
 
     // Is it a partial search that has already finished?
-    if (orderElt == orderSize) {
+    if (orderElt == static_cast<ssize_t>(orderSize)) {
         if (isCanonical())
             action_(perms_);
         return;
@@ -156,7 +156,7 @@ void GluingPermSearcher<3>::searchImpl(long maxDepth, ActionWrapper&& action_) {
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (orderElt == orderSize) {
+        if (orderElt == static_cast<ssize_t>(orderSize)) {
             // We in fact have an entire triangulation.
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
@@ -295,7 +295,7 @@ GluingPermSearcher<3>::GluingPermSearcher(std::istream& in) :
     in >> orderElt >> orderSize;
     for (size_t t = 0; t < orderSize; t++) {
         in >> order[t].simp >> order[t].facet;
-        if (order[t].simp >= nTets || order[t].simp < 0 ||
+        if (order[t].simp >= static_cast<ssize_t>(nTets) || order[t].simp < 0 ||
                 order[t].facet >= 4 || order[t].facet < 0)
             throw InvalidInput("Face gluing out of range "
                 "while attempting to read GluingPermSearcher<3>");
@@ -315,7 +315,8 @@ bool GluingPermSearcher<3>::isCanonical() const {
         // Compare the current set of gluing permutations with its
         // preimage under each face pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
-        for (face.setFirst(); face.simp < perms_.size(); face++) {
+        for (face.setFirst(); face.simp < static_cast<ssize_t>(perms_.size());
+                ++face) {
             faceDest = perms_.pairing().dest(face);
             if (perms_.pairing().isUnmatched(face) || faceDest < face)
                 continue;
@@ -347,7 +348,7 @@ bool GluingPermSearcher<3>::badEdgeLink(const FacetSpec<3>& face) const {
     FacetSpec<3> adj;
     Perm<4> current;
     Perm<4> start(face.facet, 3);
-    bool started, incomplete;
+    bool startedEdge, incomplete;
     for (int permIdx = 0; permIdx < 3; permIdx++) {
         start = start * Perm<4>(1, 2, 0, 3);
 
@@ -359,22 +360,22 @@ bool GluingPermSearcher<3>::badEdgeLink(const FacetSpec<3>& face) const {
         // original face.
 
         current = start;
-        size_t tet = face.simp;
+        ssize_t tet = face.simp;
 
-        started = false;
+        startedEdge = false;
         incomplete = false;
 
-        while ((! started) || (tet != face.simp) ||
+        while ((! startedEdge) || (tet != face.simp) ||
                 (start[2] != current[2]) || (start[3] != current[3])) {
             // Test for a return to the original tetrahedron with the
             // orientation reversed; this either means a bad edge link
             // or a bad vertex link.
-            if (started && finiteOnly_ && tet == face.simp)
+            if (startedEdge && finiteOnly_ && tet == face.simp)
                 if (start[3] == current[3] && start.sign() != current.sign())
                     return true;
 
             // Push through the current tetrahedron.
-            started = true;
+            startedEdge = true;
             current = current * Perm<4>(2, 3);
 
             // Push across a face.
@@ -411,7 +412,7 @@ bool GluingPermSearcher<3>::lowDegreeEdge(const FacetSpec<3>& face,
     FacetSpec<3> adj;
     Perm<4> current;
     Perm<4> start(face.facet, 3);
-    bool started, incomplete;
+    bool startedEdge, incomplete;
     int size;
     for (int permIdx = 0; permIdx < 3; permIdx++) {
         start = start * Perm<4>(1, 2, 0, 3);
@@ -424,15 +425,15 @@ bool GluingPermSearcher<3>::lowDegreeEdge(const FacetSpec<3>& face,
         // original face.
 
         current = start;
-        size_t tet = face.simp;
+        ssize_t tet = face.simp;
 
-        started = false;
+        startedEdge = false;
         incomplete = false;
         size = 0;
 
-        while ((! started) || (tet != face.simp) ||
+        while ((! startedEdge) || (tet != face.simp) ||
                 (start[2] != current[2]) || (start[3] != current[3])) {
-            started = true;
+            startedEdge = true;
 
             // We're about to push through the current tetrahedron; see
             // if we've already exceeded the size of edge links that we

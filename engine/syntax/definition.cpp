@@ -61,7 +61,7 @@ DefinitionData::DefinitionData() :
     repo(nullptr),
     delimiters("\t !%&()*+,-./:;<=>?[\\]^{|}~"), // must be sorted!
     caseSensitive(true),
-    version(0.0f)
+    version(0)
 {
 }
 
@@ -163,18 +163,18 @@ Context* DefinitionData::initialContext() const
     return contexts.front();
 }
 
-Context* DefinitionData::contextByName(const std::string& name) const
+Context* DefinitionData::contextByName(const std::string& name_) const
 {
     for (auto context : contexts) {
-        if (context->name() == name)
+        if (context->name() == name_)
             return context;
     }
     return nullptr;
 }
 
-const KeywordList& DefinitionData::keywordList(const std::string& name) const
+const KeywordList& DefinitionData::keywordList(const std::string& name_) const
 {
-    const auto it = keywordLists.find(name);
+    const auto it = keywordLists.find(name_);
     if (it != keywordLists.end())
         return *(it->second);
 
@@ -186,9 +186,9 @@ bool DefinitionData::isDelimiter(char c) const
     return std::binary_search(delimiters.begin(), delimiters.end(), c);
 }
 
-Format DefinitionData::formatByName(const std::string& name) const
+Format DefinitionData::formatByName(const std::string& name_) const
 {
-    const auto it = formats.find(name);
+    const auto it = formats.find(name_);
     if (it != formats.end())
         return it->second;
 
@@ -210,15 +210,14 @@ bool DefinitionData::load()
     if (! reader)
         return false; // could not open
 
-    std::string name;
     while (xmlTextReaderRead(reader) == 1) {
         if (xmlTextReaderNodeType(reader) != 1 /* start element */)
             continue;
 
-        name = regina::xml::xmlString(xmlTextReaderName(reader));
-        if (name == "highlighting")
+        std::string name_ = regina::xml::xmlString(xmlTextReaderName(reader));
+        if (name_ == "highlighting")
             loadHighlighting(reader);
-        else if (name == "general")
+        else if (name_ == "general")
             loadGeneral(reader);
     }
     xmlFreeTextReader(reader);
@@ -252,7 +251,7 @@ void DefinitionData::clear()
     license.clear();
     delimiters = "\t !%&()*+,-./:;<=>?[\\]^{|}~"; // must be sorted!
     caseSensitive = true;
-    version = 0.0f;
+    version = 0;
 }
 
 bool DefinitionData::loadMetaData(const std::string& definitionFileName)
@@ -288,7 +287,7 @@ bool DefinitionData::loadLanguage(xmlTextReaderPtr reader)
     license = regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"license"));
 
     // Since valueOf() does not have defaults, we must explicitly test validity.
-    double ver;
+    int ver;
     if (regina::valueOf(regina::xml::xmlString(xmlTextReaderGetAttribute(reader, (const xmlChar*)"version")), ver))
         version = ver;
 
@@ -306,18 +305,18 @@ void DefinitionData::loadHighlighting(xmlTextReaderPtr reader)
     if (xmlTextReaderRead(reader) != 1)
         return;
 
-    std::string name;
+    std::string name_;
     while (true) {
         switch (xmlTextReaderNodeType(reader)) {
             case 1 /* start element */:
-                name = regina::xml::xmlString(xmlTextReaderName(reader));
-                if (name == "list") {
+                name_ = regina::xml::xmlString(xmlTextReaderName(reader));
+                if (name_ == "list") {
                     KeywordList* keywords = new KeywordList;
                     keywords->load(reader);
                     keywordLists.insert(std::make_pair(keywords->name(), std::shared_ptr<KeywordList>(keywords)));
-                } else if (name == "contexts") {
+                } else if (name_ == "contexts") {
                     loadContexts(reader);
-                } else if (name == "itemDatas") {
+                } else if (name_ == "itemDatas") {
                     loadItemData(reader);
                 }
                 if (xmlTextReaderRead(reader) != 1)

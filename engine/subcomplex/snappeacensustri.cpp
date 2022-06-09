@@ -61,16 +61,15 @@ std::unique_ptr<SnapPeaCensusTri> SnapPeaCensusTri::recognise(
     if (comp->isClosed())
         return nullptr;
 
-    unsigned long nVertices = comp->countVertices();
-    unsigned long nEdges = comp->countEdges();
-    unsigned long i;
+    size_t nVertices = comp->countVertices();
+    size_t nEdges = comp->countEdges();
     int link;
-    for (i = 0; i < nVertices; i++) {
+    for (size_t i = 0; i < nVertices; i++) {
         link = comp->vertex(i)->linkType();
         if (link != Vertex<3>::TORUS && link != Vertex<3>::KLEIN_BOTTLE)
             return nullptr;
     }
-    for (i = 0; i < nEdges; i++)
+    for (size_t i = 0; i < nEdges; i++)
         if (! comp->edge(i)->isValid())
             return nullptr;
 

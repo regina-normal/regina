@@ -44,7 +44,7 @@ std::unique_ptr<LayeredChainPair> LayeredChainPair::recognise(
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return nullptr;
 
-    unsigned long nTet = comp->size();
+    size_t nTet = comp->size();
     if (nTet < 2)
         return nullptr;
     if (comp->countVertices() != 1)
@@ -59,20 +59,14 @@ std::unique_ptr<LayeredChainPair> LayeredChainPair::recognise(
 
     // Note that we only need check permutations in S3 since we can
     // arbitrarily assign the role of one vertex in the tetrahedron.
-    Tetrahedron<3>* firstBottom;
-    Tetrahedron<3>* firstTop;
-    Tetrahedron<3>* secondBottom;
-    Tetrahedron<3>* secondTop;
-    Perm<4> firstBottomRoles, firstTopRoles, secondBottomRoles, secondTopRoles;
-
     for (int p = 0; p < 6; p++) {
         LayeredChain first(base, Perm<4>::S3[p]);
         first.extendMaximal();
 
-        firstTop = first.top();
-        firstBottom = first.bottom();
-        firstTopRoles = first.topVertexRoles();
-        firstBottomRoles = first.bottomVertexRoles();
+        Tetrahedron<3>* firstTop = first.top();
+        Tetrahedron<3>* firstBottom = first.bottom();
+        Perm<4> firstTopRoles = first.topVertexRoles();
+        Perm<4> firstBottomRoles = first.bottomVertexRoles();
 
         // Check to see if the first chain fills the entire component.
         if (first.index() == nTet) {
@@ -108,7 +102,8 @@ std::unique_ptr<LayeredChainPair> LayeredChainPair::recognise(
         }
 
         // At this point we must have run into the second chain.
-        secondBottom = firstTop->adjacentTetrahedron(firstTopRoles[3]);
+        Tetrahedron<3>* secondBottom = firstTop->adjacentTetrahedron(
+            firstTopRoles[3]);
         if (secondBottom == firstTop || secondBottom == firstBottom ||
                 ! secondBottom) {
             continue;
@@ -123,9 +118,9 @@ std::unique_ptr<LayeredChainPair> LayeredChainPair::recognise(
         if (second.index() + first.index() != nTet)
             continue;
 
-        secondTop = second.top();
-        secondTopRoles = second.topVertexRoles();
-        secondBottomRoles = second.bottomVertexRoles();
+        Tetrahedron<3>* secondTop = second.top();
+        Perm<4> secondTopRoles = second.topVertexRoles();
+        Perm<4> secondBottomRoles = second.bottomVertexRoles();
 
         // At this point we have two chains that together have the
         // correct number of tetrahedra.  All we need do is check the

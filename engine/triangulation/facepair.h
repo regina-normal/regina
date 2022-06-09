@@ -312,9 +312,9 @@ inline FacePair::FacePair() : code_(1) {
 }
 
 inline FacePair::FacePair(int first, int second) :
-        code_(first < second ?
+        code_(static_cast<uint8_t>(first < second ?
               ((first << 2) | second) :
-              ((second << 2) | first)) {
+              ((second << 2) | first))) {
 }
 
 inline FacePair::FacePair(uint8_t code) : code_(code) {

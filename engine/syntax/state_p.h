@@ -68,7 +68,7 @@ public:
 
     bool isEmpty() const;
     void clear();
-    int size() const;
+    size_t size() const;
     void push(Context *context);
     void pop();
     Context* topContext() const;

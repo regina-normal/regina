@@ -192,7 +192,7 @@ const std::string& ThemeData::name() const
     return m_name;
 }
 
-int ThemeData::revision() const
+long long ThemeData::revision() const
 {
     return m_revision;
 }

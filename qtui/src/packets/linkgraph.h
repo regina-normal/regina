@@ -97,7 +97,7 @@ class LinkGraphUI : public QObject, public PacketViewerTab {
         void showInfo(const QString& msg);
         void showError(const QString& msg);
 
-        std::string treeDecomp(bool nice, int& bags, int& width);
+        std::string treeDecomp(bool nice, size_t& bags, size_t& width);
 
     private slots:
         /**

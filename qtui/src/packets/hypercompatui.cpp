@@ -46,10 +46,10 @@
 #include <QComboBox>
 #include <QGraphicsView>
 #include <QHBoxLayout>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <qmessagebox.h>
-#include <qpushbutton.h>
+#include <QLabel>
+#include <QLayout>
+#include <QMessageBox>
+#include <QPushButton>
 #include <QVBoxLayout>
 #include <QStackedWidget>
 

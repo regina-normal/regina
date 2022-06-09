@@ -78,7 +78,7 @@ NORMALIZ LIBRARY:
 
 Regina includes a copy of libnormaliz, which it uses to help with the
 enumeration of fundamental normal surfaces.  Normaliz was written by Winfried
-Bruns, Bogdan Ichim and Christof Soeger.  It is distributed under the terms of
+Bruns, Christof Soeger and others.  It is distributed under the terms of
 the GNU General Public License as published by the Free Software Foundation,
 either version 3 of the License, or (at your option) any later version.
 

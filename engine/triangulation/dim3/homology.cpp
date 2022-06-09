@@ -55,9 +55,9 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
     // Build a presentation matrix.
     // Each non-boundary not-in-forest edge is a generator.
     // Each non-boundary triangle is a relation.
-    unsigned long nBdryVertices = 0;
-    unsigned long nBdryEdges = 0;
-    unsigned long nClosedComponents = 0;
+    size_t nBdryVertices = 0;
+    size_t nBdryEdges = 0;
+    size_t nClosedComponents = 0;
     for (auto bc : boundaryComponents()) {
         nBdryVertices += bc->countVertices();
         nBdryEdges += bc->countEdges();
@@ -65,30 +65,27 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
     for (Component<3>* c : components())
         if (c->isClosed())
             nClosedComponents++;
-    long nGens = countEdges() - nBdryEdges
-        - countVertices() + nBdryVertices
-        + nClosedComponents;
-    long nRels = countTriangles() - countBoundaryFacets();
+    size_t nGens = (countEdges() - nBdryEdges)
+        + nClosedComponents - (countVertices() - nBdryVertices);
+    size_t nRels = countTriangles() - countBoundaryFacets();
     MatrixInt pres(nRels, nGens);
 
     // Find out which edge corresponds to which generator.
-    long* genIndex = new long[countEdges()];
-    long i = 0;
+    auto* genIndex = new ssize_t[countEdges()];
+    size_t i = 0;
     for (Edge<3>* e : edges()) {
         if (e->isBoundary())
             genIndex[e->index()] = -1;
         else if (forest.count(e))
             genIndex[e->index()] = -1;
-        else {
-            genIndex[e->index()] = i;
-            i++;
-        }
+        else
+            genIndex[e->index()] = i++;
     }
 
     // Run through each triangle and put the relations in the matrix.
     Tetrahedron<3>* currTet;
     Perm<4> currTetVertices;
-    long edgeGenIndex;
+    ssize_t edgeGenIndex;
     i = 0;
     int triEdge, currEdgeStart, currEdgeEnd, currEdge;
     for (Triangle<3>* f : triangles()) {
@@ -130,8 +127,8 @@ const AbelianGroup& Triangulation<3>::homologyBdry() const {
 
     // Run through the individual boundary components and add the
     // appropriate pieces to the homology group.
-    unsigned long rank = 0;
-    unsigned long z2rank = 0;
+    size_t rank = 0;
+    size_t z2rank = 0;
 
     // Ensure that the skeleton has been calculated.
     ensureSkeleton();
@@ -147,7 +144,7 @@ const AbelianGroup& Triangulation<3>::homologyBdry() const {
 
     // Build the group and tidy up.
     AbelianGroup ans(rank);
-    for (unsigned long i = 0; i < z2rank; ++i)
+    for (size_t i = 0; i < z2rank; ++i)
         ans.addTorsion(2);
     return *(prop_.H1Bdry_ = std::move(ans));
 }

@@ -39,7 +39,8 @@
 #ifndef __PYTHONMANAGER_H
 #define __PYTHONMANAGER_H
 
-#include <qstring.h>
+#include "reginaqt.h"
+#include <QString>
 #include <memory>
 #include <set>
 

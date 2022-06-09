@@ -55,18 +55,21 @@ void addFacetPairing3(pybind11::module_& m) {
         // Use the default policy for (const T&) which is to return by copy.
         .def("dest", overload_cast<const FacetSpec<3>&>(
             &FacetPairing<3>::dest, pybind11::const_))
-        .def("dest", overload_cast<size_t, unsigned>(
+        .def("dest", overload_cast<size_t, int>(
             &FacetPairing<3>::dest, pybind11::const_))
         .def("__getitem__", overload_cast<const FacetSpec<3>&>(
             &FacetPairing<3>::operator[], pybind11::const_))
         .def("isUnmatched", overload_cast<const FacetSpec<3>&>(
             &FacetPairing<3>::isUnmatched, pybind11::const_))
-        .def("isUnmatched", overload_cast<size_t, unsigned>(
+        .def("isUnmatched", overload_cast<size_t, int>(
             &FacetPairing<3>::isUnmatched, pybind11::const_))
+        .def("isConnected", &FacetPairing<3>::isConnected)
         .def("isCanonical", &FacetPairing<3>::isCanonical)
         .def("canonical", &FacetPairing<3>::canonical)
+        .def("canonicalAll", &FacetPairing<3>::canonicalAll)
         .def("findAutomorphisms", &FacetPairing<3>::findAutomorphisms)
-        .def("toTextRep", &FacetPairing<3>::toTextRep)
+        .def("textRep", &FacetPairing<3>::textRep)
+        .def("toTextRep", &FacetPairing<3>::textRep) // deprecated
         .def_static("fromTextRep", &FacetPairing<3>::fromTextRep)
         .def("dot", &FacetPairing<3>::dot,
             pybind11::arg("prefix") = nullptr,
@@ -74,9 +77,11 @@ void addFacetPairing3(pybind11::module_& m) {
             pybind11::arg("labels") = false)
         .def_static("dotHeader", &FacetPairing<3>::dotHeader,
             pybind11::arg("graphName") = nullptr)
+        .def("divideConnected", &FacetPairing<3>::divideConnected)
         .def("isClosed", &FacetPairing<3>::isClosed)
         .def("hasTripleEdge", &FacetPairing<3>::hasTripleEdge)
-        .def("followChain", &FacetPairing<3>::followChain)
+        .def("followChain", overload_cast<ssize_t&, regina::FacePair&>(
+            &FacetPairing<3>::followChain, pybind11::const_))
         .def("hasBrokenDoubleEndedChain", overload_cast<>(
             &FacetPairing<3>::hasBrokenDoubleEndedChain, pybind11::const_))
         .def("hasOneEndedChainWithDoubleHandle", overload_cast<>(
@@ -96,6 +101,7 @@ void addFacetPairing3(pybind11::module_& m) {
                 FacetPairing<3>::IsoList)>&>)
     ;
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap",

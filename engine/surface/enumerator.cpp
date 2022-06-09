@@ -309,7 +309,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     // The maximum number of columns in the tableaux that could be added
     // to form the right hand side, as a consequence of either
     // LPData::constrainPositive() or LPData::constrainOct():
-    unsigned long maxColsRHS;
+    size_t maxColsRHS;
 
     switch (list_->coords_) {
         case NS_STANDARD:
@@ -343,7 +343,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     Integer tmp;
 
     // The rank of the matching equation matrix:
-    unsigned long rank = rowBasis(eqns);
+    size_t rank = rowBasis(eqns);
 
     // The maximum entry in the matching equation matrix:
     Integer maxEqnEntry = 0;
@@ -615,15 +615,15 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
     // This is okay, since fillFundamentalFullCone() is only used as a
     // top-level enumeration routine (and is never used at all unless
     // the user explicitly chooses this algorithm).
-    unsigned rank = rowBasis(const_cast<MatrixInt&>(eqns_));
+    size_t rank = rowBasis(const_cast<MatrixInt&>(eqns_));
     size_t dim = eqns_.columns();
 
     std::vector<std::vector<mpz_class>> input;
     input.reserve(rank);
-    for (unsigned r = 0; r < rank; ++r) {
+    for (size_t r = 0; r < rank; ++r) {
         std::vector<mpz_class> v;
         v.reserve(eqns_.columns());
-        for (unsigned c = 0; c < eqns_.columns(); ++c) {
+        for (size_t c = 0; c < eqns_.columns(); ++c) {
             const Integer& entry(eqns_.entry(r, c));
             if (entry.isNative())
                 v.emplace_back(entry.longValue());

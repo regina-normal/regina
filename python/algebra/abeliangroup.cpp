@@ -46,9 +46,9 @@ void addAbelianGroup(pybind11::module_& m) {
     auto c = pybind11::class_<AbelianGroup>(m, "AbelianGroup")
         .def(pybind11::init<>())
         .def(pybind11::init<const AbelianGroup&>())
-        .def(pybind11::init<unsigned long>())
-        .def(pybind11::init<unsigned long, const std::vector<int>&>())
-        .def(pybind11::init<unsigned long, const std::vector<Integer>&>())
+        .def(pybind11::init<size_t>())
+        .def(pybind11::init<size_t, const std::vector<int>&>())
+        .def(pybind11::init<size_t, const std::vector<Integer>&>())
         .def(pybind11::init<MatrixInt>())
         .def(pybind11::init<MatrixInt, MatrixInt>())
         .def(pybind11::init<MatrixInt, MatrixInt, const Integer&>())
@@ -72,13 +72,13 @@ void addAbelianGroup(pybind11::module_& m) {
         .def("isFree", &AbelianGroup::isFree)
         .def("isZn", &AbelianGroup::isZn)
         .def("utf8", &AbelianGroup::utf8)
-        .def("tightEncoding", &AbelianGroup::tightEncoding)
         .def("writeXMLData", [](const AbelianGroup& g, pybind11::object file) {
             pybind11::scoped_ostream_redirect stream(std::cout, file);
             g.writeXMLData(std::cout);
         })
     ;
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(AbelianGroup&, AbelianGroup&))(regina::swap));

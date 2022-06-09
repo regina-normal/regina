@@ -40,7 +40,7 @@ SatBlock::SatBlock(const SatBlock& cloneMe) :
         annulus_(new SatAnnulus[cloneMe.nAnnuli_]),
         twistedBoundary_(cloneMe.twistedBoundary_),
         adjBlock_(new SatBlock*[cloneMe.nAnnuli_]),
-        adjAnnulus_(new unsigned[cloneMe.nAnnuli_]),
+        adjAnnulus_(new size_t[cloneMe.nAnnuli_]),
         adjReflected_(new bool[cloneMe.nAnnuli_]),
         adjBackwards_(new bool[cloneMe.nAnnuli_]) {
     for (unsigned i = 0; i < nAnnuli_; i++) {
@@ -58,14 +58,14 @@ void SatBlock::transform(const Triangulation<3>& originalTri,
         annulus_[i].transform(originalTri, iso, newTri);
 }
 
-std::tuple<const SatBlock*, unsigned, bool, bool>
-        SatBlock::nextBoundaryAnnulus(unsigned thisAnnulus, bool followPrev)
+std::tuple<const SatBlock*, size_t, bool, bool>
+        SatBlock::nextBoundaryAnnulus(size_t thisAnnulus, bool followPrev)
         const {
     // Don't worry about testing the precondition (this annulus has no
     // adjacency) -- things won't break even if it's false.
 
     const SatBlock* nextBlock = this;
-    unsigned nextAnnulus;
+    size_t nextAnnulus;
     if (followPrev)
         nextAnnulus = (thisAnnulus == 0 ? nAnnuli_ - 1 : thisAnnulus - 1);
     else
@@ -73,7 +73,6 @@ std::tuple<const SatBlock*, unsigned, bool, bool>
     bool refVert = false;
     bool refHoriz = false;
 
-    unsigned tmp;
     while (nextBlock->hasAdjacentBlock(nextAnnulus)) {
         // Push through to the next block...
         if (nextBlock->adjReflected_[nextAnnulus])
@@ -81,7 +80,7 @@ std::tuple<const SatBlock*, unsigned, bool, bool>
         if (! nextBlock->adjBackwards_[nextAnnulus])
             refHoriz = ! refHoriz;
 
-        tmp = nextBlock->adjAnnulus_[nextAnnulus];
+        size_t tmp = nextBlock->adjAnnulus_[nextAnnulus];
         nextBlock = nextBlock->adjBlock_[nextAnnulus];
         nextAnnulus = tmp;
 

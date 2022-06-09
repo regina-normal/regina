@@ -32,38 +32,42 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "triangulation/dim4.h"
 #include "triangulation/facetpairing.h"
-#include "testsuite/census/testcensus.h"
+
+#include "testsuite/exhaustive.h"
+#include "testsuite/generic/facetpairingtest.h"
+#include "testsuite/dim4/testdim4.h"
 
 using regina::FacetPairing;
-using regina::BoolSet;
 
-/**
- * Simply increment the given count when a face pairing is found.
- */
-void countFacetPairings(const FacetPairing<4>& pair,
-        FacetPairing<4>::IsoList, unsigned& count) {
-    ++count;
-}
-
-class FacetPairing4Test : public CppUnit::TestFixture {
+class FacetPairing4Test : public FacetPairingTest<4> {
     CPPUNIT_TEST_SUITE(FacetPairing4Test);
 
+    CPPUNIT_TEST(isCanonical);
+    CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(rawCountsClosed);
     CPPUNIT_TEST(rawCountsBounded);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
-    private:
-        unsigned count;
-            /**< Used to hold arbitrary totals. */
-
     public:
-        void setUp() override {
+        void isCanonical() {
+            FacetPairingTest<4>::isCanonicalAllClosed(0);
+            FacetPairingTest<4>::isCanonicalAllClosed(2);
+            FacetPairingTest<4>::isCanonicalAllClosed(4);
+            FacetPairingTest<4>::isCanonicalAllBounded(1);
+            FacetPairingTest<4>::isCanonicalAllBounded(2);
+            FacetPairingTest<4>::isCanonicalAllBounded(3);
+            FacetPairingTest<4>::isCanonicalAllBounded(4);
         }
 
-        void tearDown() override {
+        void makeCanonical() {
+            FacetPairingTest<4>::makeCanonicalAllClosed(0);
+            // Already too slow just for n=2. :/
+            // FacetPairingTest<4>::makeCanonicalAllClosed(2);
+            FacetPairingTest<4>::makeCanonicalAllBounded(1);
+            // FacetPairingTest<4>::makeCanonicalAllBounded(2);
         }
 
         void rawCountsClosed() {
@@ -72,21 +76,8 @@ class FacetPairing4Test : public CppUnit::TestFixture {
             // Brendan McKay using the software Nauty.
             unsigned nPairs[] = { 0, 0, 3, 0, 26, 0, 639, 0, 40264 };
 
-            unsigned size;
-            for (size = 0; size <= 5; ++size) {
-                count = 0;
-                FacetPairing<4>::findAllPairings(size, false,
-                    0, countFacetPairings, count);
-
-                if (count != nPairs[size]) {
-                    std::ostringstream msg;
-                    msg << "Facet pairing count for " << size
-                        << " pentachora (closed) should be "
-                        << nPairs[size] << ", not " << count << '.';
-
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
+            for (size_t i = 0; i <= 5; ++i)
+                FacetPairingTest<4>::enumerateClosed(i, nPairs[i]);
         }
 
         void rawCountsBounded() {
@@ -96,52 +87,23 @@ class FacetPairing4Test : public CppUnit::TestFixture {
             unsigned nBdry1[] = { 0, 1, 0, 10, 0, 284, 0, 17761 };
             unsigned nBdry2[] = { 0, 0, 4, 0, 91, 0, 4665 };
 
-            unsigned size;
+            for (size_t i = 0; i <= 6; ++i)
+                FacetPairingTest<4>::enumerateBounded(i, 1, nBdry1[i]);
 
-            for (size = 0; size <= 6; ++size) {
-                count = 0;
-                FacetPairing<4>::findAllPairings(size, true,
-                    1, countFacetPairings, count);
+            for (size_t i = 0; i <= 5; ++i)
+                FacetPairingTest<4>::enumerateBounded(i, 2, nBdry2[i]);
 
-                if (count != nBdry1[size]) {
-                    std::ostringstream msg;
-                    msg << "Facet pairing count for " << size
-                        << " pentachora (1 bdry face) should be "
-                        << nBdry1[size] << ", not " << count << '.';
+            for (size_t i = 0; i <= 4; ++i)
+                FacetPairingTest<4>::enumerateBounded(i, nBdry[i]);
+        }
 
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-
-            for (size = 0; size <= 5; ++size) {
-                count = 0;
-                FacetPairing<4>::findAllPairings(size, true,
-                    2, countFacetPairings, count);
-
-                if (count != nBdry2[size]) {
-                    std::ostringstream msg;
-                    msg << "Facet pairing count for " << size
-                        << " pentachora (2 bdry faces) should be "
-                        << nBdry2[size] << ", not " << count << '.';
-
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-
-            for (size = 0; size <= 4; ++size) {
-                count = 0;
-                FacetPairing<4>::findAllPairings(size, true,
-                    -1, countFacetPairings, count);
-
-                if (count != nBdry[size]) {
-                    std::ostringstream msg;
-                    msg << "Facet pairing count for " << size
-                        << " pentachora (closed) should be "
-                        << nBdry[size] << ", not " << count << '.';
-
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
+        void tightEncoding() {
+            FacetPairingTest<4>::tightEncodingAllClosed(2);
+            FacetPairingTest<4>::tightEncodingAllClosed(4);
+            FacetPairingTest<4>::tightEncodingAllBounded(1);
+            FacetPairingTest<4>::tightEncodingAllBounded(2);
+            FacetPairingTest<4>::tightEncodingAllBounded(3);
+            FacetPairingTest<4>::tightEncodingAllBounded(4);
         }
 };
 

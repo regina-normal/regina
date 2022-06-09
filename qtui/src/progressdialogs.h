@@ -38,6 +38,7 @@
 #ifndef __PROGRESSDIALOGS_H
 #define __PROGRESSDIALOGS_H
 
+#include "reginaqt.h"
 #include <QFontMetrics>
 #include <QProgressDialog>
 

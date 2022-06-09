@@ -465,14 +465,14 @@ inline void ValidityConstraints::addLocal(iterator begin, iterator end) {
     local_.emplace_back(begin, end);
 }
 inline void ValidityConstraints::addLocal(std::initializer_list<int> pattern) {
-    local_.emplace_back(std::move(pattern));
+    local_.emplace_back(pattern);
 }
 template <typename iterator>
 inline void ValidityConstraints::addGlobal(iterator begin, iterator end) {
     global_.emplace_back(begin, end);
 }
 inline void ValidityConstraints::addGlobal(std::initializer_list<int> pattern) {
-    global_.emplace_back(std::move(pattern));
+    global_.emplace_back(pattern);
 }
 
 inline void ValidityConstraints::swap(ValidityConstraints& other) noexcept {

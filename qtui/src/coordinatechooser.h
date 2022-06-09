@@ -38,10 +38,12 @@
 #ifndef __COORDINATECHOOSER_H
 #define __COORDINATECHOOSER_H
 
-#include <QComboBox>
-#include <vector>
 #include "hypersurface/hypercoords.h"
 #include "surface/normalcoords.h"
+
+#include "reginaqt.h"
+#include <QComboBox>
+#include <vector>
 
 namespace regina {
     class NormalHypersurfaces;

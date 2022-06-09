@@ -34,6 +34,7 @@
 #include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "../helpers.h"
+#include "triangulation/facetpairing.h"
 #include "triangulation/generic.h"
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
@@ -152,6 +153,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             (regina::Face<dim, 4>* (Triangulation<dim>::*)(size_t))(
                 &Triangulation<dim>::pentachoron),
             pybind11::return_value_policy::reference_internal)
+        .def("pairing", &Triangulation<dim>::pairing)
         .def("isEmpty", &Triangulation<dim>::isEmpty)
         .def("isValid", &Triangulation<dim>::isValid)
         .def("hasBoundaryFacets", &Triangulation<dim>::hasBoundaryFacets)
@@ -233,6 +235,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
     ;
     add_pachner<dim>::add(c);
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c);
     regina::python::add_packet_data(c);
 

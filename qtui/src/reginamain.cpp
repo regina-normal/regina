@@ -53,7 +53,6 @@
 #include <QApplication>
 #include <QBoxLayout>
 #include <QColor>
-#include <QDesktopWidget>
 #include <QDrag>
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -66,6 +65,7 @@
 #include <QMessageBox>
 #include <QMimeData>
 #include <QPushButton>
+#include <QScreen>
 #include <QSize>
 #include <QSplitter>
 #include <QTextDocument>
@@ -269,7 +269,7 @@ QSize ReginaMain::sizeHint() const {
     // Use the suggested width, but expand to 2/3 the screen height.
     QSize ans = QMainWindow::sizeHint();
 
-    int ht = QApplication::desktop()->availableGeometry(this).height();
+    int ht = QGuiApplication::primaryScreen()->availableGeometry().height();
     ht *= 2;
     ht /= 3;
     if (ht > ans.height())

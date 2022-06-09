@@ -571,7 +571,7 @@ namespace {
              * tetrahedra in the vertex neighbourhoods) will be automatically
              * inserted into the given triangulation.
              */
-            TetBlockSet(const NormalSurface* s, unsigned long tetIndex,
+            TetBlockSet(const NormalSurface* s, size_t tetIndex,
                 Triangulation<3>& insertInto);
 
             /**
@@ -1002,10 +1002,9 @@ namespace {
         outerVertices_ = outerVertices_ * Perm<4>(1, 2, 0, 3);
     }
 
-    TetBlockSet::TetBlockSet(const NormalSurface* s, unsigned long tetIndex,
+    TetBlockSet::TetBlockSet(const NormalSurface* s, size_t tetIndex,
             Triangulation<3>& insertInto) {
-        unsigned long i, j;
-        for (i = 0; i < 4; ++i)
+        for (int i = 0; i < 4; ++i)
             triCount_[i] = s->triangles(tetIndex, i).longValue();
 
         LargeInteger coord;
@@ -1029,12 +1028,12 @@ namespace {
         // Note in all of this that we insert an extra "fake" triangle at each
         // vertex (i.e., the entire surface gains a fake set of extra vertex
         // links).
-        for (i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
             if (triCount_[i] == 0)
                 triPrism_[i] = nullptr;
             else {
                 triPrism_[i] = new Block*[triCount_[i]];
-                for (j = 0; j < triCount_[i]; ++j)
+                for (unsigned long j = 0; j < triCount_[i]; ++j)
                     triPrism_[i][j] = new TriPrism(tet, i, insertInto);
             }
         }
@@ -1046,7 +1045,7 @@ namespace {
         } else {
             if (quadCount_ > 1) {
                 quadPrism_ = new Block*[quadCount_ - 1];
-                for (j = 0; j < quadCount_ - 1; ++j)
+                for (unsigned long j = 0; j < quadCount_ - 1; ++j)
                     quadPrism_[j] = new QuadPrism(tet, quadType_, insertInto);
             } else
                 quadPrism_ = nullptr;
@@ -1057,7 +1056,7 @@ namespace {
             truncTet_ = nullptr;
         }
 
-        for (i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
             vertexNbd_[i] = insertInto.newTetrahedron();
 
             if (triCount_[i] > 0)
@@ -1073,10 +1072,9 @@ namespace {
     }
 
     TetBlockSet::~TetBlockSet() {
-        unsigned long i, j;
-        for (i = 0; i < 4; ++i)
+        for (int i = 0; i < 4; ++i)
             if (triPrism_[i]) {
-                for (j = 0; j < triCount_[i]; ++j)
+                for (unsigned long j = 0; j < triCount_[i]; ++j)
                     delete triPrism_[i][j];
                 delete[] triPrism_[i];
             }
@@ -1085,7 +1083,7 @@ namespace {
             delete truncTet_;
         } else {
             if (quadPrism_) {
-                for (j = 0; j < quadCount_ - 1; ++j)
+                for (unsigned long j = 0; j < quadCount_ - 1; ++j)
                     delete quadPrism_[j];
                 delete[] quadPrism_;
             }
@@ -1153,38 +1151,33 @@ Triangulation<3> NormalSurface::cutAlong() const {
     // Ensure only one event pair is fired in this sequence of changes.
     Triangulation<3>::ChangeEventSpan span(ans);
 
-    unsigned long nTet = triangulation().size();
+    size_t nTet = triangulation().size();
     if (nTet == 0)
         return ans;
 
-    unsigned long i;
     auto* sets = new TetBlockSet*[nTet];
-    for (i = 0; i < nTet; ++i)
+    for (size_t i = 0; i < nTet; ++i)
         sets[i] = new TetBlockSet(this, i, ans);
 
-    unsigned long tet0, tet1;
-    int face0, face1;
-    int fromVertex0, fromVertex1;
-    Perm<4> gluing;
-    unsigned long quadBlocks;
     for (Triangle<3>* f : triangulation().triangles()) {
         if (f->isBoundary())
             continue;
 
-        tet0 = f->embedding(0).tetrahedron()->markedIndex();
-        tet1 = f->embedding(1).tetrahedron()->markedIndex();
-        face0 = f->embedding(0).triangle();
-        face1 = f->embedding(1).triangle();
+        size_t tet0 = f->embedding(0).tetrahedron()->markedIndex();
+        size_t tet1 = f->embedding(1).tetrahedron()->markedIndex();
+        int face0 = f->embedding(0).triangle();
+        int face1 = f->embedding(1).triangle();
 
-        gluing = f->front().tetrahedron()->adjacentGluing(face0);
+        Perm<4> gluing = f->front().tetrahedron()->adjacentGluing(face0);
 
-        for (fromVertex0 = 0; fromVertex0 < 4; ++fromVertex0) {
+        for (int fromVertex0 = 0; fromVertex0 < 4; ++fromVertex0) {
             if (fromVertex0 == face0)
                 continue;
-            fromVertex1 = gluing[fromVertex0];
+            int fromVertex1 = gluing[fromVertex0];
 
-            quadBlocks = sets[tet0]->numQuadBlocks(face0, fromVertex0);
-            for (i = 0; i < quadBlocks; ++i)
+            unsigned long quadBlocks = sets[tet0]->numQuadBlocks(
+                face0, fromVertex0);
+            for (unsigned long i = 0; i < quadBlocks; ++i)
                 sets[tet0]->quadBlock(fromVertex0, i)->join(
                     face0, sets[tet1]->quadBlock(fromVertex1, i));
 
@@ -1195,7 +1188,7 @@ Triangulation<3> NormalSurface::cutAlong() const {
     }
 
     // All done!  Clean up.
-    for (i = 0; i < nTet; ++i)
+    for (size_t i = 0; i < nTet; ++i)
         delete sets[i];
     delete[] sets;
 
@@ -1208,14 +1201,13 @@ Triangulation<3> NormalSurface::cutAlong() const {
 
 Triangulation<3> NormalSurface::crush() const {
     Triangulation<3> ans(*triangulation_, false);
-    unsigned long nTet = ans.size();
+    size_t nTet = ans.size();
     if (nTet == 0)
         return ans;
 
     // Work out which tetrahedra contain which quad types.
     int* quadTypes = new int[nTet];
-    long whichTet = 0;
-    for (whichTet = 0; whichTet < static_cast<long>(nTet); whichTet++) {
+    for (size_t whichTet = 0; whichTet < nTet; whichTet++) {
         if (quads(whichTet, 0) != 0)
             quadTypes[whichTet] = 0;
         else if (quads(whichTet, 1) != 0)
@@ -1233,7 +1225,7 @@ Triangulation<3> NormalSurface::crush() const {
     Perm<4> adjPerm;
     Perm<4> swap;
     int face, adjFace;
-    for (whichTet = 0; whichTet < static_cast<long>(nTet); whichTet++)
+    for (size_t whichTet = 0; whichTet < nTet; whichTet++)
         if (quadTypes[whichTet] == -1) {
             // We want to keep this tetrahedron, so make sure it's glued
             // up correctly.
@@ -1276,7 +1268,7 @@ Triangulation<3> NormalSurface::crush() const {
         }
 
     // Delete unwanted tetrahedra.
-    for (whichTet = nTet - 1; whichTet >= 0; whichTet--)
+    for (ssize_t whichTet = nTet - 1; whichTet >= 0; whichTet--)
         if (quadTypes[whichTet] >= 0)
             ans.removeTetrahedronAt(whichTet);
 
@@ -1300,7 +1292,7 @@ bool NormalSurface::isCompressingDisc(bool knownConnected) const {
 
     // Count the number of boundary spheres that our triangulation has
     // to begin with.
-    unsigned long origSphereCount = 0;
+    size_t origSphereCount = 0;
     for (BoundaryComponent<3>* bc : triangulation().boundaryComponents())
         if (bc->eulerChar() == 2)
             ++origSphereCount;
@@ -1319,7 +1311,7 @@ bool NormalSurface::isCompressingDisc(bool knownConnected) const {
         return true;
     }
 
-    unsigned long newSphereCount = 0;
+    size_t newSphereCount = 0;
     for (BoundaryComponent<3>* bc : cut.boundaryComponents())
         if (bc->eulerChar() == 2)
             ++newSphereCount;

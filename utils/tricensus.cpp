@@ -57,10 +57,10 @@
 #define WORD_Tetrahedron (dim4 ? "Pentachoron" : dim2 ? "Triangle" : "Tetrahedron")
 
 // Constants.
-constexpr long MAXTET = 15;
+constexpr int MAXTET = 20;
 
 // Census parameters.
-long nTet = 0, nBdryFaces = -1;
+int nTet = 0, nBdryFaces = -1;
 regina::BoolSet
     finiteness(true, true),
     orientability(true, true),
@@ -74,6 +74,8 @@ int dim2 = 0;
 int dim4 = 0;
 int usePairs = 0;
 int sigs = 0;
+int canonical = 0;
+int tight = 0;
 regina::CensusPurge whichPurge;
 int genPairs = 0;
 int subContainers = 0;
@@ -216,6 +218,23 @@ void foundGluingPerms(const regina::GluingPerms<dim>& perms,
             sigStream << sig << std::endl;
         } else {
             sigStream << sig << std::endl;
+        }
+    } else if (canonical) {
+        auto [sig, iso] = tri.isoSigDetail();
+        std::string isoEnc = iso.inverse().tightEncoding();
+        if (threads > 1) {
+            std::unique_lock<std::mutex> lock(outputMutex);
+            sigStream << sig << ' ' << isoEnc << std::endl;
+        } else {
+            sigStream << sig << ' ' << isoEnc << std::endl;
+        }
+    } else if (tight) {
+        std::string enc = tri.tightEncoding();
+        if (threads > 1) {
+            std::unique_lock<std::mutex> lock(outputMutex);
+            sigStream << enc << std::endl;
+        } else {
+            sigStream << enc << std::endl;
         }
     } else {
         std::ostringstream out;
@@ -386,13 +405,13 @@ int main(int argc, const char* argv[]) {
     int argFinite = 0;
     int argIdeal = 0;
     poptOption opts[] = {
-        { "tetrahedra", 't', POPT_ARG_LONG, &nTet, 0,
+        { "tetrahedra", 't', POPT_ARG_INT, &nTet, 0,
             "Number of tetrahedra.", "<tetrahedra>" },
         { "boundary", 'b', POPT_ARG_NONE, &argBdry, 0,
             "Must have at least one boundary face.", nullptr },
         { "internal", 'i', POPT_ARG_NONE, &argNoBdry, 0,
             "Must have all faces internal (no boundary faces).", nullptr },
-        { "bdryfaces", 'B', POPT_ARG_LONG, &nBdryFaces, 0,
+        { "bdryfaces", 'B', POPT_ARG_INT, &nBdryFaces, 0,
             "Must have fixed number (>= 1) of boundary faces.", "<faces>" },
         { "orientable", 'o', POPT_ARG_NONE, &argOr, 0,
             "Must be orientable.", nullptr },
@@ -405,9 +424,11 @@ int main(int argc, const char* argv[]) {
         { "minimal", 'm', POPT_ARG_NONE, &minimal, 0,
             "Ignore obviously non-minimal triangulations.", nullptr },
         { "minprime", 'M', POPT_ARG_NONE, &minimalPrime, 0,
-            "Ignore obviously non-minimal, non-prime and/or disc-reducible triangulations.", nullptr },
+            "Ignore obviously non-minimal, non-prime and/or "
+            "disc-reducible triangulations.", nullptr },
         { "minprimep2", 'N', POPT_ARG_NONE, &minimalPrimeP2, 0,
-            "Ignore obviously non-minimal, non-prime, disc-reducible and/or P2-reducible triangulations.", nullptr },
+            "Ignore obviously non-minimal, non-prime, disc-reducible and/or "
+            "P2-reducible triangulations.", nullptr },
         { "minhyp", 'h', POPT_ARG_NONE, &minimalHyp, 0,
             "Ignore triangulations that are obviously not minimal ideal "
             "triangulations of cusped finite-volume hyperbolic 3-manifolds.  "
@@ -426,8 +447,16 @@ int main(int argc, const char* argv[]) {
         { "sigs", 's', POPT_ARG_NONE, &sigs, 0,
             "Write isomorphism signatures only, not full Regina data files.",
             nullptr },
+        { "canonical", 'S', POPT_ARG_NONE, &canonical, 0,
+            "Write isomorphism signatures with matching isomorphisms "
+            "that yield canonical facet pairings.",
+            nullptr },
+        { "encodings", 'e', POPT_ARG_NONE, &tight, 0,
+            "Write tight encodings only, not full Regina data files.",
+            nullptr },
         { "subcontainers", 'c', POPT_ARG_NONE, &subContainers, 0,
-            "For each face pairing, place resulting triangulations into different subcontainers",
+            "For each face pairing, place resulting triangulations into "
+            "different subcontainers",
             nullptr },
         { "genpairs", 'p', POPT_ARG_NONE, &genPairs, 0,
             "Only generate face pairings, not triangulations.", nullptr },
@@ -486,7 +515,7 @@ int main(int argc, const char* argv[]) {
     } else if (genPairs && (argFinite || argIdeal)) {
         std::cerr << "Finiteness options cannot be used with -p/--genpairs.\n";
         broken = true;
-    } else if (genPairs && sigs) {
+    } else if (genPairs && (sigs || canonical)) {
         std::cerr << "Signature output cannot be used with -p/--genpairs.\n";
         broken = true;
     } else if (genPairs && threads != 1) {
@@ -527,40 +556,45 @@ int main(int argc, const char* argv[]) {
         broken = true;
     } else if (argBdry && minimalHyp) {
         std::cerr << "Options -b/--boundary and -h/--minhyp "
-            << "cannot be used together.\n";
+            "cannot be used together.\n";
         broken = true;
     } else if (argBdry && argNoBdry) {
         std::cerr << "Options -b/--boundary and -i/--internal "
-            << "cannot be used together.\n";
+            "cannot be used together.\n";
         broken = true;
     } else if (argOr && argNor) {
         std::cerr << "Options -o/--orientable and -n/--nonorientable "
-            << "cannot be used together.\n";
+            "cannot be used together.\n";
         broken = true;
     } else if (argFinite && minimalHyp) {
-        std::cerr << "Options -f/--finite and -h/--minhyp"
-            << "cannot be used together.\n";
+        std::cerr << "Options -f/--finite and -h/--minhyp "
+            "cannot be used together.\n";
         broken = true;
     } else if (argFinite && argIdeal) {
         std::cerr << "Options -f/--finite and -d/--ideal "
-            << "cannot be used together.\n";
+            "cannot be used together.\n";
         broken = true;
     } else if (allowInvalid && (argFinite || argIdeal)) {
         std::cerr << "Option --allowinvalid cannot be used with finite/ideal "
-            << "options.\n";
+            "options.\n";
         broken = true;
     } else if (allowInvalid &&
             (minimal || minimalPrime || minimalPrimeP2 || minimalHyp)) {
         std::cerr << "Option --allowinvalid cannot be used with minimality "
-            << "options.\n";
+            "options.\n";
         broken = true;
     } else if (genPairs && usePairs) {
         std::cerr << "Options -p/--genpairs and -P/--usepairs "
-            << "cannot be used together.\n";
+            "cannot be used together.\n";
         broken = true;
-    } else if (subContainers && sigs) {
-        std::cerr << "Signatures (-s/--sigs) cannot be used with "
-            << "sub-containers (-c/--subcontainers).\n";
+    } else if (subContainers && (sigs || canonical || tight)) {
+        std::cerr << "Signatures (-s/--sigs or -S/--canonical) or "
+            "tight encodings (-e/--encodings) cannot be used with "
+            "sub-containers (-c/--subcontainers).\n";
+        broken = true;
+    } else if ((sigs && canonical) || (sigs && tight) || (canonical && tight)) {
+        std::cerr << "At most one of the options -s/--sigs, -S/--canonical "
+            "or -e/--encodings can be used.\n";
         broken = true;
     } else if (threads < 1) {
         std::cerr << "The number of threads must be strictly positive.\n";
@@ -662,10 +696,19 @@ int runCensus() {
 
         regina::FacetPairing<dim>::findAllPairings(nTet, boundary, nBdryFaces,
                 [](const regina::FacetPairing<dim>& pair) {
-            if (dumpStream.get())
-                (*dumpStream) << pair.toTextRep() << std::endl;
-            else
-                std::cout << pair.toTextRep() << std::endl;
+            if (dumpStream.get()) {
+                if (tight)
+                    pair.tightEncode(*dumpStream);
+                else
+                    (*dumpStream) << pair.textRep();
+                (*dumpStream) << std::endl;
+            } else {
+                if (tight)
+                    pair.tightEncode(std::cout);
+                else
+                    std::cout << pair.textRep();
+                std::cout << std::endl;
+            }
             totPairings++;
         });
         std::cerr << "Total " << WORD_face << " pairings: "
@@ -680,7 +723,7 @@ int runCensus() {
     std::shared_ptr<regina::Packet> parent;
     std::shared_ptr<regina::Packet> census;
     std::shared_ptr<regina::Packet> desc;
-    if (sigs) {
+    if (sigs || canonical || tight) {
         sigStream.open(outFile.c_str());
         if (! sigStream) {
             std::cerr << "Signature file " << outFile
@@ -761,7 +804,7 @@ int runCensus() {
         }
 
         // Store the face pairings used with the census.
-        if (! sigs) {
+        if (! (sigs || canonical || tight)) {
             auto pairingPacket = std::make_shared<regina::Text>(pairingList);
             pairingPacket->setLabel(
                 dim4 ? "Facet Pairings" : dim2 ? "Edge Pairings" :
@@ -800,7 +843,7 @@ int runCensus() {
     std::cout << "Finished." << std::endl;
 
     // Write the completed census to file.
-    if (sigs) {
+    if (sigs || canonical || tight) {
         sigStream.close();
     } else {
         if (! parent->save(outFile.c_str())) {

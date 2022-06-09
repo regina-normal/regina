@@ -90,11 +90,11 @@ bool GluingPermSearcher<4>::PentEdgeState::readData(std::istream& in,
     // The twist fields are chars, but we need to read them as ints.
     int twistEdge;
     in >> twistEdge;
-    twistUpEdge = twistEdge;
+    twistUpEdge = static_cast<char>(twistEdge);
 
     int twistTriangle;
     in >> twistTriangle;
-    twistUpTriangle = twistTriangle;
+    twistUpTriangle = static_cast<char>(twistTriangle);
 
     // hadEqualRank is a bool, but we need to read it as an int.
     int bRank;
@@ -104,13 +104,13 @@ bool GluingPermSearcher<4>::PentEdgeState::readData(std::istream& in,
     // More chars to ints coming.
     int bVal;
 
-    in >> bVal; bdryEdges = bVal;
+    in >> bVal; bdryEdges = static_cast<uint8_t>(bVal);
     in >> bdryNext[0] >> bdryNext[1];
-    in >> bVal; bdryTwist[0] = bVal;
-    in >> bVal; bdryTwist[1] = bVal;
+    in >> bVal; bdryTwist[0] = static_cast<char>(bVal);
+    in >> bVal; bdryTwist[1] = static_cast<char>(bVal);
     in >> bdryNextOld[0] >> bdryNextOld[1];
-    in >> bVal; bdryTwistOld[0] = bVal;
-    in >> bVal; bdryTwistOld[1] = bVal;
+    in >> bVal; bdryTwistOld[0] = static_cast<char>(bVal);
+    in >> bVal; bdryTwistOld[1] = static_cast<char>(bVal);
 
     if (parent < -1 || parent >= static_cast<ssize_t>(nStates))
         return false;
@@ -280,7 +280,7 @@ void GluingPermSearcher<4>::searchImpl(long maxDepth, ActionWrapper&& action_) {
     }
 
     // Is it a partial search that has already finished?
-    if (orderElt_ == orderSize_) {
+    if (orderElt_ == static_cast<ssize_t>(orderSize_)) {
         if (isCanonical())
             action_(perms_);
         return;
@@ -362,7 +362,7 @@ void GluingPermSearcher<4>::searchImpl(long maxDepth, ActionWrapper&& action_) {
         orderElt_++;
 
         // If we're at the end, try the solution and step back.
-        if (orderElt_ == orderSize_) {
+        if (orderElt_ == static_cast<ssize_t>(orderSize_)) {
             // We in fact have an entire triangulation.
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
@@ -612,7 +612,8 @@ GluingPermSearcher<4>::GluingPermSearcher(std::istream& in) :
     in >> orderElt_ >> orderSize_;
     for (size_t p = 0; p < orderSize_; ++p) {
         in >> order_[p].simp >> order_[p].facet;
-        if (order_[p].simp >= nPent || order_[p].simp < 0 ||
+        if (order_[p].simp >= static_cast<ssize_t>(nPent) ||
+                order_[p].simp < 0 ||
                 order_[p].facet >= 5 || order_[p].facet < 0)
             throw InvalidInput("Facet gluing out of range "
                 "while attempting to read GluingPermSearcher<4>");
@@ -679,7 +680,8 @@ bool GluingPermSearcher<4>::isCanonical() const {
         // Compare the current set of gluing permutations with its
         // preimage under each facet pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
-        for (facet.setFirst(); facet.simp < perms_.size(); facet++) {
+        for (facet.setFirst(); facet.simp < static_cast<ssize_t>(perms_.size());
+                ++facet) {
             facetDest = perms_.pairing().dest(facet);
             if (perms_.pairing().isUnmatched(facet) || facetDest < facet)
                 continue;
@@ -720,7 +722,7 @@ bool GluingPermSearcher<4>::badTriangleLink(const FacetSpec<4>& facet) const {
         // original facet.
 
         Perm<5> current = start;
-        size_t pent = facet.simp;
+        ssize_t pent = facet.simp;
 
         bool started = false;
         bool incomplete = false;

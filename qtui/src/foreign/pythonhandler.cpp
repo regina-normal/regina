@@ -41,9 +41,11 @@
 
 #include <fstream>
 #include <QFile>
-#include <QTextCodec>
 #include <QTextDocument>
 #include <QTextStream>
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+#include <QTextCodec>
+#endif
 
 namespace {
     const QString scriptMarker("Regina Script:");
@@ -65,7 +67,11 @@ std::shared_ptr<regina::Packet> PythonHandler::importData(
     }
     QTextStream in(&f);
 
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+    in.setEncoding(ReginaPrefSet::importExportCodec());
+#else
     in.setCodec(ReginaPrefSet::importExportCodec());
+#endif
 
     std::shared_ptr<regina::Script> ans = std::make_shared<regina::Script>();
     ans->setLabel(QObject::tr("Imported Script").toUtf8().constData());
@@ -144,7 +150,11 @@ bool PythonHandler::exportData(const regina::Packet& data,
     }
     QTextStream out(&f);
 
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+    out.setEncoding(ReginaPrefSet::importExportCodec());
+#else
     out.setCodec(ReginaPrefSet::importExportCodec());
+#endif
 
     // Write the name of the script.
     out << "### " << scriptMarker << ' ';

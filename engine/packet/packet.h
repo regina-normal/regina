@@ -2279,7 +2279,7 @@ class PacketData {
  */
 template <typename Held>
 std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
-    static_assert(std::is_class<Held>::value,
+    static_assert(std::is_class_v<Held>,
         "The template argument to make_packet() must be a plain class type.");
     return std::make_shared<PacketOf<Held>>(std::forward<Held>(src));
 }
@@ -2312,7 +2312,7 @@ std::shared_ptr<PacketOf<Held>> make_packet(Held&& src) {
 template <typename Held>
 std::shared_ptr<PacketOf<Held>> make_packet(Held&& src,
         const std::string& label) {
-    static_assert(std::is_class<Held>::value,
+    static_assert(std::is_class_v<Held>,
         "The template argument to make_packet() must be a plain class type.");
     auto ans = std::make_shared<PacketOf<Held>>(std::forward<Held>(src));
     ans->setLabel(label);
@@ -2514,8 +2514,7 @@ std::shared_ptr<Packet> open(std::istream& in);
 template <bool const_>
 class ChildIterator {
     public:
-        using value_type =
-                typename std::conditional<const_, const Packet, Packet>::type;
+        using value_type = std::conditional_t<const_, const Packet, Packet>;
             /**< Indicates what the iterator points to.
                  This is either <tt>Packet</tt> or <tt>const Packet</tt>,
                  according to the template argument \a const_. */
@@ -2655,8 +2654,7 @@ class ChildIterator {
 template <bool const_>
 class SubtreeIterator {
     public:
-        using value_type =
-                typename std::conditional<const_, const Packet, Packet>::type;
+        using value_type = std::conditional_t<const_, const Packet, Packet>;
             /**< Indicates what the iterator points to.
                  This is either <tt>Packet</tt> or <tt>const Packet</tt>,
                  according to the template argument \a const_. */
@@ -2850,8 +2848,7 @@ class SubtreeIterator {
 template <bool const_>
 class PacketChildren {
     public:
-        using packet_type =
-                typename std::conditional<const_, const Packet, Packet>::type;
+        using packet_type = std::conditional_t<const_, const Packet, Packet>;
             /**< Either <tt>Packet</tt> or <tt>const Packet</tt>, according to
                  the template argument \a const_. */
 
@@ -2969,8 +2966,7 @@ class PacketChildren {
 template <bool const_>
 class PacketDescendants {
     public:
-        using packet_type =
-                typename std::conditional<const_, const Packet, Packet>::type;
+        using packet_type = std::conditional_t<const_, const Packet, Packet>;
             /**< Either <tt>Packet</tt> or <tt>const Packet</tt>, according to
                  the template argument \a const_. */
 

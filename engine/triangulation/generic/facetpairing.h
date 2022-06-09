@@ -48,26 +48,48 @@
 namespace regina {
 
 /**
- * Represents the dual graph of a <i>dim</i>-manifold triangulation;
- * that is, the pairwise matching of facets of <i>dim</i>-dimensional simplices.
+ * Represents the dual graph of a <i>dim</i>-manifold triangulation; that is,
+ * the pairwise matching of facets of <i>dim</i>-dimensional simplices.
  *
- * Given a fixed number of <i>dim</i>-dimensional simplices,
- * each facet of each simplex is either paired with some other simplex facet
- * (which is in turn paired with it) or remains unmatched.
- * A simplex facet cannot be paired with itself.
+ * Given a fixed number of <i>dim</i>-dimensional simplices, each facet of
+ * each simplex is either paired with some other simplex facet (which is
+ * in turn paired with it) or remains unmatched.  A simplex facet cannot be
+ * paired with itself.
  *
  * Such a matching models part of the structure of a <i>dim</i>-manifold
  * triangulation, in which each simplex facet is either glued to some
  * other simplex facet (which is in turn glued to it) or is an unglued
- * boundary facet.
+ * boundary facet.  Note however that a facet pairing does not contain
+ * enough information to fully reconstruct a triangulation, since
+ * the permutations used for each individual gluing are not stored.
  *
- * Note that if this pairing is used to construct an actual
- * triangulation, the individual gluing permutations will still need to
- * be specified; they are not a part of this structure.
+ * Facet pairings are \e labelled, in that the simplices are explicitly
+ * numbered 0,1,..., and the facets of each simplex are explicitly numbered
+ * 0,...,\a dim (just like in a triangulation).  Facet pairings do also come
+ * with code to help identify and work with relabellings, via isomorphisms,
+ * automorphisms, and canonical representations.  In this context:
  *
- * For dimension 3, this template is specialised and offers more functionality.
- * In order to use this specialised class, you will need to include the
- * corresponding header triangulation/facetpairing3.h.
+ * - An \e isomorphism of a facet pairing means a relabelling of the simplices
+ *   and a relabelling of the (\a dim + 1) facets within each simplex;
+ *   this can be represented by the same class Isomorphism<dim> that is used
+ *   for isomorphisms of triangulations.
+ *
+ * - An \e automorphism of a facet pairing is an isomorphism that, when
+ *   applied, results in an identical facet pairing (i.e., where exactly the
+ *   same pairs of labelled simplex facets are matched together).
+ *
+ * - A facet pairing is in <i>canonical form</i> if it is a
+ *   lexicographically minimal representative of its isomorphism class.
+ *   Here we order facet pairings by lexicographical comparison of the
+ *   sequence <tt>dest(0,0)</tt>, <tt>dest(0,1)</tt>, ...,
+ *   <tt>dest(size()-1,\a dim)</tt> (which in turn uses the ordering
+ *   defined by FacetSpec<dim>, where each simplex facet is ordered
+ *   first by simplex number and then by facet number, and where the
+ *   boundary is ordered last).
+ *
+ * For dimension 3, this FacetPairing class template is specialised and offers
+ * more functionality.  In order to use this specialised class, you will need
+ * to include the corresponding header triangulation/facetpairing3.h.
  *
  * This class implements C++ move semantics and adheres to the C++ Swappable
  * requirement.  It is designed to avoid deep copies wherever possible,
@@ -114,6 +136,9 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
          * simplices in the given triangulation are joined together, as
          * described in the class notes.
          *
+         * Calling <tt>FacetPairing<dim>(tri)</tt> is equivalent to calling
+         * <tt>tri.pairing()</tt>.
+         *
          * \pre The given triangulation is not empty.
          *
          * @param tri the triangulation whose facet pairing should
@@ -123,7 +148,7 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
 
         /**
          * Reads a new facet pairing from the given input stream.  This
-         * routine reads data in the format written by toTextRep().
+         * routine reads data in the format written by textRep().
          *
          * This routine will skip any initial whitespace in the given input
          * stream.  Once it finds its first non-whitespace character,
@@ -187,8 +212,10 @@ class FacetPairing : public detail::FacetPairingBase<dim> {
     // Make sure the parent class can call the private constructor.
     friend class detail::FacetPairingBase<dim>;
 
-    // Facet pairings are largely read-only: allow application of isomorphisms.
+    // Facet pairings are largely read-only: allow application of isomorphisms
+    // and graph cuts.
     friend class Isomorphism<dim>;
+    friend class Cut;
 };
 
 /**

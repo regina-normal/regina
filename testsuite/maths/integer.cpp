@@ -74,6 +74,8 @@ class IntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(constructAssignCopyInfinity);
     CPPUNIT_TEST(constructSpecial<Integer>);
     CPPUNIT_TEST(constructSpecial<LargeInteger>);
+    CPPUNIT_TEST(constructLongLong<Integer>);
+    CPPUNIT_TEST(constructLongLong<LargeInteger>);
 #ifdef INT128_AVAILABLE
     CPPUNIT_TEST(constructNative128<Integer>);
     CPPUNIT_TEST(constructNative128<LargeInteger>);
@@ -1087,6 +1089,55 @@ class IntegerTest : public CppUnit::TestFixture {
                     << " is " << ans << ", not " << value << ".";
                 CPPUNIT_FAIL(msg.str());
             }
+        }
+
+        template <typename IntType>
+        void testLongLong(long long value) {
+            std::ostringstream out;
+            out << value;
+
+            IntType large(value);
+            testStringValue(large, 10, out.str().c_str());
+
+            IntType assigned = 1;
+            testStringValue(assigned, 10, "1");
+            assigned = value;
+            testStringValue(assigned, 10, out.str().c_str());
+        }
+
+        template <typename IntType>
+        void testUnsignedLongLong(unsigned long long value) {
+            std::ostringstream out;
+            out << value;
+
+            IntType large(value);
+            testStringValue(large, 10, out.str().c_str());
+
+            IntType assigned = 1;
+            testStringValue(assigned, 10, "1");
+            assigned = value;
+            testStringValue(assigned, 10, out.str().c_str());
+        }
+
+        template <typename IntType>
+        void constructLongLong() {
+            testLongLong<IntType>(0);
+            testLongLong<IntType>(1);
+            testLongLong<IntType>(-1);
+            testLongLong<IntType>(INT_MAX);
+            testLongLong<IntType>(INT_MIN);
+            testLongLong<IntType>(LONG_MAX);
+            testLongLong<IntType>(LONG_MIN);
+            testLongLong<IntType>(LLONG_MAX);
+            testLongLong<IntType>(LLONG_MIN);
+
+            testUnsignedLongLong<IntType>(0);
+            testUnsignedLongLong<IntType>(1);
+            testUnsignedLongLong<IntType>(INT_MAX);
+            testUnsignedLongLong<IntType>(LONG_MAX);
+            testUnsignedLongLong<IntType>(ULONG_MAX);
+            testUnsignedLongLong<IntType>(LLONG_MAX);
+            testUnsignedLongLong<IntType>(ULLONG_MAX);
         }
 
 #ifdef INT128_AVAILABLE

@@ -45,6 +45,7 @@
 #include "triangulation/dim3.h"
 
 #include "testsuite/link/testlink.h"
+#include "testsuite/utilities/tightencodingtest.h"
 
 using regina::Crossing;
 using regina::ExampleLink;
@@ -57,7 +58,7 @@ using regina::StrandRef;
 #define TREFOIL_SIGS { "cPcbbbadh", "cPcbbbadu", "dLQbcbcdlcj", "dLQbcbcdlcn", "dLQabccbrwj", "eLAkbbcddainqv" }
 #define FIG8_SIGS { "cPcbbbiht" }
 
-class LinkTest : public CppUnit::TestFixture {
+class LinkTest : public CppUnit::TestFixture, public TightEncodingTest<Link> {
     CPPUNIT_TEST_SUITE(LinkTest);
 
     CPPUNIT_TEST(copyMove);
@@ -78,11 +79,13 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(dt);
     CPPUNIT_TEST(gauss);
     CPPUNIT_TEST(orientedGauss);
+    CPPUNIT_TEST(jenkins);
     CPPUNIT_TEST(pdCode);
     CPPUNIT_TEST(magic);
     CPPUNIT_TEST(rewrite);
     CPPUNIT_TEST(swapping);
     CPPUNIT_TEST(group);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -2566,6 +2569,66 @@ class LinkTest : public CppUnit::TestFixture {
             verifyOrientedGauss(rht_lht, "RH Trefoil # LH Trefoil");
         }
 
+        void verifyJenkins(const Link& l, const char* name) {
+            std::string code = l.jenkins();
+
+            try {
+                Link recon = Link::fromJenkins(code);
+
+                if (recon != l) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction gives a different link.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (recon.jenkins() != code) {
+                    std::ostringstream msg;
+                    msg << name << ": reconstruction has different code.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } catch (const regina::InvalidArgument&) {
+                std::ostringstream msg;
+                msg << name << ": cannot reconstruct from code.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void jenkins() {
+            // The empty link:
+            verifyJenkins(empty, "Empty");
+
+            // Single-component knots:
+            verifyJenkins(unknot0, "Unknot (0 crossings)");
+            verifyJenkins(unknot1, "Unknot (1 crossing)");
+            verifyJenkins(unknot3, "Unknot (3 crossings)");
+            verifyJenkins(unknotMonster, "Monster unknot");
+            verifyJenkins(unknotGordian, "Gordian unknot");
+            verifyJenkins(trefoilLeft, "LH Trefoil");
+            verifyJenkins(trefoilRight, "RH Trefoil");
+            verifyJenkins(trefoil_r1x2, "Trefoil with 2 R1s");
+            verifyJenkins(trefoil_r1x6, "Trefoil with 6 R1s");
+            verifyJenkins(figureEight, "Figure eight");
+            verifyJenkins(figureEight_r1x2, "Figure eight with 2 R1s");
+            verifyJenkins(conway, "Conway knot");
+            verifyJenkins(kinoshitaTerasaka, "Kinoshita-Terasaka knot");
+            verifyJenkins(gst, "GST");
+            verifyJenkins(rht_rht, "RH Trefoil # RH Trefoil");
+            verifyJenkins(rht_lht, "RH Trefoil # LH Trefoil");
+
+            // Links with multiple components:
+            verifyJenkins(unlink2_0, "Unlink (2 components)");
+            verifyJenkins(unlink3_0, "Unlink (3 components)");
+            verifyJenkins(unlink2_r2, "Unlink (2 components via R2)");
+            verifyJenkins(unlink2_r1r1, "Unlink (2 components via R1+R1)");
+            verifyJenkins(hopf, "Hopf link");
+            verifyJenkins(whitehead, "Whitehead link");
+            verifyJenkins(borromean, "Borromean rings");
+            verifyJenkins(trefoil_unknot0, "Trefoil U unknot (separate)");
+            verifyJenkins(trefoil_unknot1,
+                "Trefoil U unknot (separate + twist)");
+            verifyJenkins(trefoil_unknot_overlap, "Trefoil U unknot (with R2)");
+            verifyJenkins(adams6_28, "Adams Fig. 6.28");
+        }
+
         void verifyPDCode(const Link& link, const Link& expect,
                 const char* name) {
             // The PD code will throw away zero-crossing components;
@@ -3021,6 +3084,42 @@ class LinkTest : public CppUnit::TestFixture {
             verifyGroup(trefoil_unknot1, "Trefoil U unknot (separate + twist)");
             verifyGroup(trefoil_unknot_overlap, "Trefoil U unknot (with R2)");
             verifyGroup(adams6_28, "Adams Fig. 6.28");
+        }
+
+        void tightEncoding() {
+            // The empty link:
+            verifyTightEncoding(empty);
+
+            // Single-component knots:
+            verifyTightEncoding(unknot0);
+            verifyTightEncoding(unknot1);
+            verifyTightEncoding(unknot3);
+            verifyTightEncoding(unknotMonster);
+            verifyTightEncoding(unknotGordian);
+            verifyTightEncoding(trefoilLeft);
+            verifyTightEncoding(trefoilRight);
+            verifyTightEncoding(trefoil_r1x2);
+            verifyTightEncoding(trefoil_r1x6);
+            verifyTightEncoding(figureEight);
+            verifyTightEncoding(figureEight_r1x2);
+            verifyTightEncoding(conway);
+            verifyTightEncoding(kinoshitaTerasaka);
+            verifyTightEncoding(gst);
+            verifyTightEncoding(rht_rht);
+            verifyTightEncoding(rht_lht);
+
+            // Links with multiple components:
+            verifyTightEncoding(unlink2_0);
+            verifyTightEncoding(unlink3_0);
+            verifyTightEncoding(unlink2_r2);
+            verifyTightEncoding(unlink2_r1r1);
+            verifyTightEncoding(hopf);
+            verifyTightEncoding(whitehead);
+            verifyTightEncoding(borromean);
+            verifyTightEncoding(trefoil_unknot0);
+            verifyTightEncoding(trefoil_unknot1);
+            verifyTightEncoding(trefoil_unknot_overlap);
+            verifyTightEncoding(adams6_28);
         }
 };
 

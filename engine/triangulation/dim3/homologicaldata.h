@@ -214,7 +214,7 @@ private:
              * @return the array index that holds the given integer,
              * or -1 if the given integer is not stored in this array.
              */
-            inline ptrdiff_t index(unsigned long value) const {
+            inline ssize_t index(unsigned long value) const {
                 auto it = std::lower_bound(data_.begin(), data_.end(), value);
                 if (it != data_.end() && *it == value)
                     return (it - data_.begin());

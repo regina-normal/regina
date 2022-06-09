@@ -55,7 +55,7 @@ namespace {
     const regina::Laurent<regina::Integer> noResult;
 }
 
-size_t Link::resolutionLoops(unsigned long mask, size_t* loopIDs,
+size_t Link::resolutionLoops(uint64_t mask, size_t* loopIDs,
         size_t* loopLengths) const {
     size_t n = crossings_.size();
 
@@ -90,11 +90,10 @@ size_t Link::resolutionLoops(unsigned long mask, size_t* loopIDs,
                 do {
                     //std::cerr << "At: " << s <<
                     //    (dir == 1 ? " ->" : " <-") << std::endl;
+                    const uint64_t bit = (uint64_t)1 << s.crossing()->index();
 
-                    if (    ((mask & (1 << s.crossing()->index())) &&
-                                s.crossing()->sign() < 0) ||
-                            ((mask & (1 << s.crossing()->index())) == 0 &&
-                                s.crossing()->sign() > 0)) {
+                    if (    ((mask & bit) && s.crossing()->sign() < 0) ||
+                            ((mask & bit) == 0 && s.crossing()->sign() > 0)) {
                         // Turn in a way that is consistent with the arrows.
                         if (dir == 1) {
                             found[s.crossing()->index() +
@@ -145,9 +144,9 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
         return Laurent<Integer>();
 
     size_t n = crossings_.size();
-    if (n >= sizeof(long) * 8) {
-        // We cannot use the backtracking algorithm, since an
-        // unsigned long (used for a bitmask) does not contain enough bits.
+    if (n >= 64) {
+        // We cannot use the backtracking algorithm, since our bitmask
+        // type (uint64_t) does not contain enough bits.
         return bracketTreewidth(tracker);
     }
 
@@ -167,7 +166,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
 
     size_t maxLoops = 0;
 
-    static_assert(BitManipulator<unsigned long>::specialised,
+    static_assert(BitManipulator<uint64_t>::specialised,
         "BitManipulator is not specialised for the mask type.");
 
     if (tracker)
@@ -175,12 +174,13 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
 
     size_t loops;
     long shift;
-    for (unsigned long mask = 0; mask != ((unsigned long)(1) << n); ++mask) {
+    const uint64_t maskEnd = ((uint64_t)1 << n);
+    for (uint64_t mask = 0; mask != maskEnd; ++mask) {
         // std::cerr << "Mask: " << mask << std::endl;
 
         // Check for cancellation every 1024 steps.
         if (tracker && ((mask & 1023) == 0)) {
-            if (! tracker->setPercent(double(mask) * 100.0 / double(1 << n)))
+            if (! tracker->setPercent(double(mask) * 100.0 / double(maskEnd)))
                 break;
         }
 
@@ -191,7 +191,7 @@ Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
         --loops;
 
         // Set shift = #(0 bits) - #(1 bits) in mask.
-        shift = n - 2 * BitManipulator<unsigned long>::bits(mask);
+        shift = n - 2 * BitManipulator<uint64_t>::bits(mask);
         if (shift > count[loops].maxExp() || shift < count[loops].minExp())
             count[loops].set(shift, 1);
         else
@@ -244,7 +244,6 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     size_t nBags = d.size();
 
     const TreeBag *bag, *child, *sibling;
-    int index;
 
     size_t nEasyBags = 0;
     double hardBagWeightSum = 0;
@@ -282,6 +281,11 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     // We ignore any 0-crossing unknot components throughout this
     // calculation, and only factor them in at the very end when we
     // extract the final bracket polynomial.
+    //
+    // We will be using ints for strand IDs, since we will be storing
+    // exponentially many keys in our key-value map and so space is at a
+    // premium.  Having strand IDs that fit into an int is enforced through
+    // our preconditions.
 
     size_t nStrands = 2 * size();
     size_t loops;
@@ -294,7 +298,7 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     std::fill(partial, partial + nBags, nullptr);
 
     for (bag = d.first(); bag; bag = bag->next()) {
-        index = bag->index();
+        size_t index = bag->index();
 #ifdef DUMP_STAGES
         if (! tracker)
             std::cerr << "Bag " << index << " [" << bag->size() << "] ";
@@ -383,13 +387,13 @@ Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
             }
             conn[0][1][1] = conn[1][1][1] = forget->upper();
 
-            size_t connIdx[2][2][2];
+            int connIdx[2][2][2];
             int i, j, k;
             for (i = 0; i < 2; ++i)
                 for (j = 0; j < 2; ++j)
                     for (k = 0; k < 2; ++k)
-                        connIdx[i][j][k] =
-                            2 * conn[i][j][k].crossing()->index() +
+                        connIdx[i][j][k] = 2 * static_cast<int>(
+                            conn[i][j][k].crossing()->index()) +
                             conn[i][j][k].strand();
 
             partial[index] = new SolnSet;
@@ -594,6 +598,10 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
         return *bracket_;
     }
 
+    if (size() > (INT_MAX >> 1))
+        throw NotImplemented("This link has so many crossings that "
+            "the largest strand ID cannot fit into a native C++ int");
+
     Laurent<Integer> ans;
     switch (alg) {
         case ALG_NAIVE:
@@ -657,7 +665,7 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
     // query whether a given node appears in a given subtree.
     // Do some preprocessing to make these queries constant time.
     //
-    // For crossing i, crossingSubtree[i] will contain highest index
+    // For crossing i, crossingSubtree[i] will contain the highest index
     // bag that contains that crossing.
     //
     // For bag j, subtreeStart[j] will contain the lowest index bag
@@ -666,8 +674,8 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
     // rooted at j contains precisely those bags with indices k for
     // which subtreeStart[j] <= k <= j.
 
-    int* crossingSubtree = new int[size()];
-    int* subtreeStart = new int[td.size()];
+    auto* crossingSubtree = new size_t[size()];
+    auto* subtreeStart = new size_t[td.size()];
 
     const TreeBag* b;
     for (b = td.first(); b; b = b->next())
@@ -676,16 +684,15 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
         else
             subtreeStart[b->index()] = b->index();
 
-    int i;
     for (b = td.first(); b; b = b->next())
-        for (i = 0; i < b->size(); ++i)
+        for (size_t i = 0; i < b->size(); ++i)
             crossingSubtree[b->element(i)] = b->index();
 
     // Now we can build our cost estimates.
 
-    int* costSame = new int[td.size()];
-    int* costReverse = new int[td.size()];
-    int* costRoot = new int[td.size()];
+    auto* costSame = new size_t[td.size()];
+    auto* costReverse = new size_t[td.size()];
+    auto* costRoot = new size_t[td.size()];
 
     // For a bag b:
     //
@@ -701,14 +708,13 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
     std::fill(costReverse, costReverse + td.size(), 0);
     std::fill(costRoot, costRoot + td.size(), 0);
 
-    int p, q;
     Crossing *c;
-    int adj, adjRoot;
+    size_t adj, adjRoot;
     for (b = td.first(); b; b = b->next()) {
-        for (i = 0; i < b->size(); ++i) {
+        for (size_t i = 0; i < b->size(); ++i) {
             c = crossings_[b->element(i)];
-            for (p = 0; p < 2; ++p)
-                for (q = 0; q < 2; ++q) {
+            for (int p = 0; p < 2; ++p)
+                for (int q = 0; q < 2; ++q) {
                     adj = (p == 0 ? c->prev(q).crossing() :
                         c->next(q).crossing())->index();
                     if (! b->contains(adj)) {
@@ -726,10 +732,10 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
         }
 
         if (b->parent()) {
-            for (i = 0; i < b->parent()->size(); ++i) {
+            for (size_t i = 0; i < b->parent()->size(); ++i) {
                 c = crossings_[b->parent()->element(i)];
-                for (p = 0; p < 2; ++p)
-                    for (q = 0; q < 2; ++q) {
+                for (int p = 0; p < 2; ++p)
+                    for (int q = 0; q < 2; ++q) {
                         adj = (p == 0 ? c->prev(q).crossing() :
                             c->next(q).crossing())->index();
                         if (! b->parent()->contains(adj)) {

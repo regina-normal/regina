@@ -9,6 +9,7 @@ SET ( FILES
   osutils.cpp
   randutils.cpp
   stringutils.cpp
+  tightencoding.cpp
   trieset.cpp
   xmlutils.cpp
   )
@@ -44,6 +45,7 @@ if (${REGINA_INSTALL_DEV})
     stringutils.h
     stringutils-impl.h
     tightencoding.h
+    tightencoding-impl.h
     trieset.h
     typeutils.h
     xmlutils.h

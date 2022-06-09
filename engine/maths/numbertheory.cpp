@@ -32,6 +32,7 @@
 
 #include <algorithm>
 #include <functional>
+#include <numeric> // for std::gcd()
 #include "maths/numbertheory.h"
 
 namespace regina {
@@ -122,7 +123,7 @@ long lcm(long a, long b) {
     if (a == 0 || b == 0)
         return 0;
 
-    long tmp = regina::gcd(a, b);
+    long tmp = std::gcd(a, b);
     tmp = (a / tmp) * b;
     return (tmp >= 0 ? tmp : -tmp);
 }

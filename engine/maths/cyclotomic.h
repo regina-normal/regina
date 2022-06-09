@@ -1030,8 +1030,8 @@ inline Cyclotomic& Cyclotomic::operator /= (const Cyclotomic& other) {
 
 inline std::string Cyclotomic::str(const char* variable) const {
     // Make sure that python will be able to find the inherited str().
-    static_assert(std::is_same<typename OutputBase<Cyclotomic>::type,
-        Output<Cyclotomic, true>>::value,
+    static_assert(std::is_same_v<typename OutputBase<Cyclotomic>::type,
+        Output<Cyclotomic, true>>,
         "Cyclotomic is not identified as being inherited from Output<...>");
 
     std::ostringstream out;

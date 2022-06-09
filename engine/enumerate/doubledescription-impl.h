@@ -59,7 +59,7 @@ namespace regina {
 
 template <class IntegerType, class BitmaskType>
 DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
-        unsigned long axis, const MatrixInt& subspace, const long* hypOrder) :
+        size_t axis, const MatrixInt& subspace, const long* hypOrder) :
         Vector<IntegerType>(subspace.rows()), facets_(subspace.columns()) {
     size_t i;
 
@@ -92,13 +92,13 @@ template <class IntegerType, class BitmaskType>
 template <typename RayClass>
 void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
         RayClass& dest, const MatrixInt& subspace) const {
-    unsigned long i, j;
+    size_t i, j;
 
-    unsigned long rows = subspace.rows();
-    unsigned long cols = subspace.columns() - facets_.bits();
+    size_t rows = subspace.rows();
+    size_t cols = subspace.columns() - facets_.bits();
 
     // Extract the set of columns that we actually care about.
-    auto* use = new unsigned long[cols];
+    auto* use = new size_t[cols];
     for (i = 0, j = 0; i < subspace.columns(); ++i)
         if (facets_.get(i)) {
             // We know in advance that this coordinate will be zero.
@@ -128,14 +128,13 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
     // Put this submatrix in echelon form; moreover, for the leading
     // entry in each row, set all other entries in the corresponding
     // column to zero.
-    auto* lead = new unsigned long[cols];
+    auto* lead = new size_t[cols];
     for (i = 0; i < cols; ++i)
         lead[i] = i;
 
     // More or less a stripped-down copy of rowBasisAndOrthComp() from here.
     // See rowBasisAndOrthComp() for further details on how this works.
-    unsigned long done = 0;
-    unsigned long tmp;
+    size_t done = 0;
     IntegerType coeff1, coeff2, common;
     while (done < rows) {
         // Find the first non-zero entry in row done.
@@ -153,7 +152,7 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
         } else {
             // We have a non-zero row.
             // Save the column in which we found our non-zero entry.
-            tmp = lead[done]; lead[done] = lead[i]; lead[i] = tmp;
+            std::swap(lead[done], lead[i]);
 
             // Make all other entries in column lead[done] equal to zero.
             coeff1 = m[done * cols + lead[done]];
@@ -207,14 +206,14 @@ void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
 template <class RayClass, typename Action>
 void DoubleDescription::enumerate(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
-        ProgressTracker* tracker, unsigned long initialRows) {
+        ProgressTracker* tracker, size_t initialRows) {
     static_assert(
         IsReginaArbitraryPrecisionInteger<typename RayClass::value_type>::value,
         "DoubleDescription::enumerate() requires the RayClass "
         "template parameter to be equal to or derived from Vector<T>, "
         "where T is one of Regina's arbitrary precision integer types.");
 
-    unsigned long nFacets = subspace.columns();
+    size_t nFacets = subspace.columns();
 
     // If the space has dimension zero, return no results.
     if (nFacets == 0)
@@ -260,17 +259,17 @@ void DoubleDescription::enumerate(Action&& action,
 template <class RayClass, class BitmaskType, typename Action>
 void DoubleDescription::enumerateUsingBitmask(Action&& action,
         const MatrixInt& subspace, const ValidityConstraints& constraints,
-        ProgressTracker* tracker, unsigned long initialRows) {
+        ProgressTracker* tracker, size_t initialRows) {
     using IntegerType = typename RayClass::value_type;
 
     // Get the dimension of the entire space in which we are working.
-    unsigned long dim = subspace.columns();
+    size_t dim = subspace.columns();
 
     // Are there any hyperplanes at all in the subspace?
-    unsigned long nEqns = subspace.rows();
+    size_t nEqns = subspace.rows();
     if (nEqns == 0) {
         // No!  Just send back the vertices of the non-negative orthant.
-        for (unsigned long i = 0; i < dim; ++i) {
+        for (size_t i = 0; i < dim; ++i) {
             RayClass ans(dim);
             ans[i] = IntegerType::one;
             action(std::move(ans));
@@ -294,7 +293,7 @@ void DoubleDescription::enumerateUsingBitmask(Action&& action,
     // Sort the integers 0..(nEqns-1) into the order in which we plan to
     // process the hyperplanes.
     long* hyperplanes = new long[nEqns];
-    unsigned long i;
+    size_t i;
     for (i = 0; i < nEqns; ++i)
         hyperplanes[i] = i;
 
@@ -319,7 +318,7 @@ void DoubleDescription::enumerateUsingBitmask(Action&& action,
     // At any point we should have the latest results in
     // list[workingList], with the other list empty.
     int workingList = 0;
-    unsigned long used = 0;
+    size_t used = 0;
     for (i=0; i<nEqns; i++) {
         // Do not increment used if the old solution set sits entirely in
         // and/or to only one side of the new hyperplane.  This gives the
@@ -370,7 +369,7 @@ template <class IntegerType, class BitmaskType>
 bool DoubleDescription::intersectHyperplane(
         std::vector<RaySpec<IntegerType, BitmaskType>*>& src,
         std::vector<RaySpec<IntegerType, BitmaskType>*>& dest,
-        unsigned long dim, unsigned long prevHyperplanes,
+        size_t dim, size_t prevHyperplanes,
         const std::vector<BitmaskType>& constraintMasks,
         ProgressTracker* tracker) {
     if (src.empty())

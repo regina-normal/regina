@@ -57,7 +57,7 @@
 #include <QMessageBox>
 #include <QPainter>
 #include <QPushButton>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QToolBar>
 
 #define NEG_COLOUR QColor(0xb8, 0x86, 0x0b, 0xff)
@@ -78,7 +78,7 @@ QString LinkCrossingsUI::explnText;
 QString LinkCrossingsUI::explnPictorial;
 
 namespace {
-    QRegExp reCables(R"(^\s*(\d+)\s*$)");
+    const QRegularExpression reCables(R"(^\s*(\d+)\s*$)");
 }
 
 inline CrossingModel::CrossingModel(bool pictorial, regina::Link& link,
@@ -127,7 +127,8 @@ int CrossingModel::columnCount(const QModelIndex& /* unused parent */) const {
 }
 
 QVariant CrossingModel::data(const QModelIndex& index, int role) const {
-    int crossing, strand, sign;
+    size_t crossing;
+    int strand, sign;
     if (index.isValid()) {
         const regina::StrandRef& s = strands_[index.row()];
         crossing = s.crossing()->index();
@@ -818,7 +819,7 @@ ParallelDialog::ParallelDialog(QWidget* parent, regina::Link& link) :
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     nCables = new QLineEdit(this);
-    nCables->setValidator(new QRegExpValidator(reCables, this));
+    nCables->setValidator(new QRegularExpressionValidator(reCables, this));
     nCables->setWhatsThis(expln);
     subLayout->addWidget(nCables, 1);
 
@@ -846,13 +847,14 @@ ParallelDialog::ParallelDialog(QWidget* parent, regina::Link& link) :
 }
 
 void ParallelDialog::slotOk() {
-    if (! reCables.exactMatch(nCables->text())) {
+    auto match = reCables.match(nCables->text());
+    if (! match.hasMatch()) {
         ReginaSupport::sorry(this,
             tr("Please enter a positive integer number of cables."));
         return;
     }
 
-    unsigned long n = reCables.cap(1).toULong();
+    unsigned long n = match.captured(1).toULong();
     if (n < 1) {
         ReginaSupport::sorry(this,
             tr("The number of cables should be positive."));

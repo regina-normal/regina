@@ -117,6 +117,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(bundleWithMonodromy);
     CPPUNIT_TEST(fourFourMove);
     CPPUNIT_TEST(retriangulate);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1830,6 +1831,22 @@ class Triangulation4Test : public TriangulationTest<4> {
                     << " instead of the expected " << even << ".";
                 CPPUNIT_FAIL(msg.str());
             }
+
+            // Flip some top-dimensional simplices, but not the first
+            // since we want to preserve the orientation.
+            auto iso = Isomorphism<4>::identity(tri.size());
+            for (size_t i = 1; i < tri.size(); i += 2)
+                iso.facetPerm(i) = Perm<5>(1,3);
+            IntersectionForm flip = iso(tri).intersectionForm();
+            if (flip.rank() != f.rank() || flip.signature() != f.signature() ||
+                    flip.even() != f.even()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << name << " gives "
+                    "non-congruent intersection form after reflecting "
+                    "some top-dimensional simplices: "
+                    << flip << " != " << f;
+                CPPUNIT_FAIL(msg.str());
+            }
         }
 
         void intersectionForm() {
@@ -2916,6 +2933,12 @@ class Triangulation4Test : public TriangulationTest<4> {
                 "Ideal Cappell-Shaneson");
             verifyRetriangulate(idealCappellShaneson, 4, 1610,
                 "Ideal Cappell-Shaneson");
+        }
+
+        void tightEncoding() {
+            testManualAll(verifyTightEncodingWithName);
+            runCensusAllBounded(verifyTightEncodingWithName);
+            runCensusAllNoBdry(verifyTightEncodingWithName);
         }
 };
 

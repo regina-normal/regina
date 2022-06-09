@@ -44,6 +44,7 @@
 
 #include <stdexcept>
 #include <string>
+#include "regina-core.h"
 
 namespace regina {
 

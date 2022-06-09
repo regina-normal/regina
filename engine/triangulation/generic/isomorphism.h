@@ -51,6 +51,7 @@
 #include "maths/perm.h"
 #include "utilities/exception.h"
 #include "utilities/randutils.h"
+#include "utilities/tightencoding.h"
 #include <sys/types.h> // for ssize_t
 #include <algorithm>
 
@@ -113,19 +114,20 @@ namespace regina {
 template <int dim>
 class Isomorphism :
         public Output<Isomorphism<dim>>,
+        public TightEncodable<Isomorphism<dim>>,
         public alias::IsomorphismImage<Isomorphism<dim>, dim> {
     static_assert(dim >= 2, "Isomorphism requires dimension >= 2.");
 
     protected:
-        size_t nSimplices_;
+        size_t size_;
             /**< The number of simplices in the source triangulation. */
         ssize_t* simpImage_;
             /**< Stores the simplex of the destination triangulation that
                  each simplex of the source triangulation maps to.
-                 This array has size nSimplices_. */
+                 This array has size size_. */
         Perm<dim+1>* facetPerm_;
             /**< The permutation applied to the facets of each
-                 source simplex.  This array has size nSimplices_. */
+                 source simplex.  This array has size size_. */
 
     public:
         /**
@@ -507,6 +509,103 @@ class Isomorphism :
         Isomorphism inverse() const;
 
         /**
+         * A preincrement operator that changes this to be the next
+         * isomorphism in an iteration through all possible isomorphisms
+         * of this size.
+         *
+         * The order of iteration is lexicographical, by the sequence of
+         * simplex images and then by the sequence of facet permutations.
+         * Facet permutations, in turn, are ordered by their indices in
+         * the array Perm<dim>::Sn.
+         *
+         * In particular, the identity isomorphism is the first in such an
+         * iteration.  If this isomorphism is the \e last in such an
+         * iteration, then this operator will "wrap around" and set this
+         * to the identity.
+         *
+         * \pre The class Perm<dim+1> supports the preincrement operator;
+         * currently this means that \a dim must be at most 6.
+         *
+         * \ifacespython This routine is named inc() since python does
+         * not support the increment operator.  Unlike other Regina
+         * classes, here inc() wraps the preincrement operator (not the
+         * postincrement operator), since the postincrement operator is
+         * significantly more expensive.  To avoid confusion, the python
+         * inc() function returns \c None (not this isomorphism).
+         *
+         * @return a reference to this isomorphism after the increment.
+         */
+        Isomorphism<dim>& operator ++();
+
+        /**
+         * A postincrement operator that changes this to be the next
+         * isomorphism in an iteration through all possible isomorphisms
+         * of this size.
+         *
+         * The order of iteration is lexicographical, by the sequence of
+         * simplex images and then by the sequence of facet permutations.
+         * Facet permutations, in turn, are ordered by their indices in
+         * the array Perm<dim>::Sn.
+         *
+         * In particular, the identity isomorphism is the first in such an
+         * iteration.  If this isomorphism is the \e last in such an
+         * iteration, then this operator will "wrap around" and set this
+         * to the identity.
+         *
+         * \warning Since the postincrement operator returns an
+         * isomorphism by value, it is significantly more expensive than
+         * the preincrement operator (since it involves a deep copy of a
+         * large object).  You should use the preincrement operator unless
+         * you actually need a copy of the old value of this isomorphism.
+         *
+         * \pre The class Perm<dim+1> supports the preincrement operator;
+         * currently this means that \a dim must be at most 6.
+         *
+         * \ifacespython Not present, although the preincrement operator is
+         * present in python as the member function inc().
+         *
+         * @return a copy of this isomorphism before the increment took place.
+         */
+        Isomorphism<dim> operator ++(int);
+
+        /**
+         * Writes the tight encoding of this isomorphism to the given output
+         * stream.  See the page on \ref tight "tight encodings" for details.
+         *
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
+
+        /**
+         * Reconstructs an isomorphism from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.
+         * If the input stream contains leading whitespace then it will be
+         * treated as an invalid encoding (i.e., this routine will throw an
+         * exception).  The input routine \e may contain further data: if this
+         * routine is successful then the input stream will be left positioned
+         * immediately after the encoding, without skipping any trailing
+         * whitespace.
+         *
+         * \exception InvalidInput the given input stream does not begin with
+         * a tight encoding of an isomorphism on <i>dim</i>-dimensional
+         * triangulations.
+         *
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
+         *
+         * @param input an input stream that begins with the tight encoding
+         * for an isomorphism on <i>dim</i>-dimensional triangulations.
+         * @return the isomorphism represented by the given tight encoding.
+         */
+        static Isomorphism tightDecode(std::istream& input);
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -623,23 +722,26 @@ void swap(Isomorphism<dim>& a, Isomorphism<dim>& b) noexcept;
 
 template <int dim>
 inline Isomorphism<dim>::Isomorphism(size_t nSimplices) :
-        nSimplices_(nSimplices),
+        size_(nSimplices),
         simpImage_(new ssize_t[nSimplices]),
         facetPerm_(new Perm<dim+1>[nSimplices]) {
 }
 
 template <int dim>
 inline Isomorphism<dim>::Isomorphism(const Isomorphism<dim>& src) :
-        nSimplices_(src.nSimplices_),
-        simpImage_(new ssize_t[src.nSimplices_]),
-        facetPerm_(new Perm<dim+1>[src.nSimplices_]) {
-    std::copy(src.simpImage_, src.simpImage_ + nSimplices_, simpImage_);
-    std::copy(src.facetPerm_, src.facetPerm_ + nSimplices_, facetPerm_);
+        size_(src.size_),
+        simpImage_(new ssize_t[src.size_]),
+        facetPerm_(new Perm<dim+1>[src.size_]) {
+    // We use src.size_, not size_, since otherwise gcc12 issues
+    // loud warnings about copying data from an empty range in the case where
+    // src is empty.  (The logic does work, but the compiler doesn't realise).
+    std::copy(src.simpImage_, src.simpImage_ + src.size_, simpImage_);
+    std::copy(src.facetPerm_, src.facetPerm_ + src.size_, facetPerm_);
 }
 
 template <int dim>
 inline Isomorphism<dim>::Isomorphism(Isomorphism<dim>&& src) noexcept:
-        nSimplices_(src.nSimplices_),
+        size_(src.size_),
         simpImage_(src.simpImage_),
         facetPerm_(src.facetPerm_) {
     src.simpImage_ = nullptr;
@@ -658,25 +760,28 @@ Isomorphism<dim>& Isomorphism<dim>::operator = (const Isomorphism<dim>& src) {
     if (std::addressof(src) == this)
         return *this;
 
-    if (nSimplices_ != src.nSimplices_) {
+    if (size_ != src.size_) {
         delete[] simpImage_;
         delete[] facetPerm_;
 
-        nSimplices_ = src.nSimplices_;
+        size_ = src.size_;
 
-        simpImage_ = new ssize_t[nSimplices_];
-        facetPerm_ = new Perm<dim+1>[nSimplices_];
+        simpImage_ = new ssize_t[size_];
+        facetPerm_ = new Perm<dim+1>[size_];
     }
 
-    std::copy(src.simpImage_, src.simpImage_ + nSimplices_, simpImage_);
-    std::copy(src.facetPerm_, src.facetPerm_ + nSimplices_, facetPerm_);
+    // We use src.size_, not size_, since otherwise gcc12 issues
+    // loud warnings about copying data from an empty range in the case where
+    // src is empty.  (The logic does work, but the compiler doesn't realise).
+    std::copy(src.simpImage_, src.simpImage_ + src.size_, simpImage_);
+    std::copy(src.facetPerm_, src.facetPerm_ + src.size_, facetPerm_);
     return *this;
 }
 
 template <int dim>
 Isomorphism<dim>& Isomorphism<dim>::operator = (Isomorphism<dim>&& src)
         noexcept{
-    nSimplices_ = src.nSimplices_;
+    size_ = src.size_;
     std::swap(simpImage_, src.simpImage_);
     std::swap(facetPerm_, src.facetPerm_);
     // Let src dispose of the original contents in its own destructor.
@@ -685,14 +790,14 @@ Isomorphism<dim>& Isomorphism<dim>::operator = (Isomorphism<dim>&& src)
 
 template <int dim>
 void Isomorphism<dim>::swap(Isomorphism<dim>& other) noexcept {
-    std::swap(nSimplices_, other.nSimplices_);
+    std::swap(size_, other.size_);
     std::swap(simpImage_, other.simpImage_);
     std::swap(facetPerm_, other.facetPerm_);
 }
 
 template <int dim>
 inline size_t Isomorphism<dim>::size() const {
-    return nSimplices_;
+    return size_;
 }
 
 template <int dim>
@@ -724,8 +829,8 @@ inline FacetSpec<dim> Isomorphism<dim>::operator [] (
 
 template <int dim>
 bool Isomorphism<dim>::isIdentity() const {
-    for (size_t p = 0; p < nSimplices_; ++p) {
-        if (simpImage_[p] != p)
+    for (size_t p = 0; p < size_; ++p) {
+        if (simpImage_[p] != static_cast<ssize_t>(p))
             return false;
         if (! facetPerm_[p].isIdentity())
             return false;
@@ -736,27 +841,27 @@ bool Isomorphism<dim>::isIdentity() const {
 template <int dim>
 Triangulation<dim> Isomorphism<dim>::operator ()(
         const Triangulation<dim>& original) const {
-    if (original.size() != nSimplices_)
+    if (original.size() != size_)
         throw InvalidArgument("Isomorphism::operator() was given "
             "a triangulation of the wrong size");
 
-    if (nSimplices_ == 0)
+    if (size_ == 0)
         return Triangulation<dim>();
 
     Triangulation<dim> ans;
-    auto* tet = new Simplex<dim>*[nSimplices_];
+    auto* tet = new Simplex<dim>*[size_];
 
     // Ensure only one event pair is fired in this sequence of changes.
     typename Triangulation<dim>::ChangeEventSpan span(ans);
-    for (size_t t = 0; t < nSimplices_; t++)
+    for (size_t t = 0; t < size_; t++)
         tet[t] = ans.newSimplex();
 
-    for (size_t t = 0; t < nSimplices_; t++)
+    for (size_t t = 0; t < size_; t++)
         tet[simpImage_[t]]->setDescription(
             original.simplex(t)->description());
 
     const Simplex<dim> *myTet, *adjTet;
-    for (size_t t = 0; t < nSimplices_; t++) {
+    for (size_t t = 0; t < size_; t++) {
         myTet = original.simplex(t);
         for (int f = 0; f <= dim; f++)
             if ((adjTet = myTet->adjacentSimplex(f))) {
@@ -781,7 +886,7 @@ Triangulation<dim> Isomorphism<dim>::operator ()(
 template <int dim>
 inline FacetSpec<dim> Isomorphism<dim>::operator ()(const FacetSpec<dim>& f)
         const {
-    if (f.simp >= 0 && f.simp < nSimplices_) {
+    if (f.simp >= 0 && f.simp < static_cast<ssize_t>(size_)) {
         return FacetSpec<dim>(simpImage_[f.simp], facetPerm_[f.simp][f.facet]);
     } else {
         // Past-the-end or before-the-start values should be left alone.
@@ -792,13 +897,13 @@ inline FacetSpec<dim> Isomorphism<dim>::operator ()(const FacetSpec<dim>& f)
 template <int dim>
 FacetPairing<dim> Isomorphism<dim>::operator ()(
         const FacetPairing<dim>& p) const {
-    if (p.size() != nSimplices_)
+    if (p.size() != size_)
         throw InvalidArgument("Isomorphism::operator() was given "
             "a facet pairing of the wrong size");
 
-    FacetPairing<dim> ans(nSimplices_);
+    FacetPairing<dim> ans(size_);
 
-    for (FacetSpec<dim> f(0, 0); f.simp < nSimplices_; ++f)
+    for (FacetSpec<dim> f(0, 0); f.simp < static_cast<ssize_t>(size_); ++f)
         ans.dest((*this)(f)) = (*this)(p[f]);
 
     return ans;
@@ -817,8 +922,8 @@ inline void Isomorphism<dim>::applyInPlace(Triangulation<dim>& tri) const {
 
 template <int dim>
 Isomorphism<dim> Isomorphism<dim>::operator * (const Isomorphism& rhs) const {
-    Isomorphism<dim> ans(rhs.nSimplices_);
-    for (size_t i = 0; i < rhs.nSimplices_; ++i) {
+    Isomorphism<dim> ans(rhs.size_);
+    for (size_t i = 0; i < rhs.size_; ++i) {
         ans.simpImage_[i] = simpImage_[rhs.simpImage_[i]];
         ans.facetPerm_[i] = facetPerm_[rhs.simpImage_[i]] * rhs.facetPerm_[i];
     }
@@ -828,7 +933,7 @@ Isomorphism<dim> Isomorphism<dim>::operator * (const Isomorphism& rhs) const {
 template <int dim>
 Isomorphism<dim> Isomorphism<dim>::operator * (Isomorphism&& rhs) const {
     // We will construct the result by overwriting rhs.
-    for (size_t i = 0; i < rhs.nSimplices_; ++i) {
+    for (size_t i = 0; i < rhs.size_; ++i) {
         rhs.facetPerm_[i] = facetPerm_[rhs.simpImage_[i]] * rhs.facetPerm_[i];
         rhs.simpImage_[i] = simpImage_[rhs.simpImage_[i]];
     }
@@ -837,8 +942,8 @@ Isomorphism<dim> Isomorphism<dim>::operator * (Isomorphism&& rhs) const {
 
 template <int dim>
 Isomorphism<dim> Isomorphism<dim>::inverse() const {
-    Isomorphism<dim> ans(nSimplices_);
-    for (size_t i = 0; i < nSimplices_; ++i) {
+    Isomorphism<dim> ans(size_);
+    for (size_t i = 0; i < size_; ++i) {
         ans.simpImage_[simpImage_[i]] = i;
         ans.facetPerm_[simpImage_[i]] = facetPerm_[i].inverse();
     }
@@ -846,8 +951,88 @@ Isomorphism<dim> Isomorphism<dim>::inverse() const {
 }
 
 template <int dim>
+Isomorphism<dim>& Isomorphism<dim>::operator ++() {
+    static_assert(dim <= 6,
+        "Currently the Isomorphism<dim> pre/postincrement operators "
+        "are only available for dimensions dim <= 6.");
+
+    if (size_ == 0)
+        return *this;
+
+    for (ssize_t i = size_ - 1; i >= 0; --i)
+        if (! (++facetPerm_[i]).isIdentity())
+            return *this;
+
+    std::next_permutation(simpImage_, simpImage_ + size_);
+    return *this;
+}
+
+template <int dim>
+inline Isomorphism<dim> Isomorphism<dim>::operator ++(int) {
+    Isomorphism<dim> prev(*this);
+    ++(*this);
+    return prev;
+}
+
+template <int dim>
+void Isomorphism<dim>::tightEncode(std::ostream& out) const {
+    regina::detail::tightEncodeIndex(out, size_);
+    for (size_t i = 0; i < size_; ++i)
+        regina::detail::tightEncodeIndex(out, simpImage_[i]);
+    if constexpr (dim == 2) {
+        // We can fit two permutations per character here.
+        for (size_t i = 0; i < size_; i += 2) {
+            if (i + 1 == size_)
+                regina::detail::tightEncodeIndex(out, static_cast<unsigned>(
+                    facetPerm_[i].SnIndex()));
+            else
+                regina::detail::tightEncodeIndex(out, static_cast<unsigned>(
+                    facetPerm_[i].SnIndex() + 6 * facetPerm_[i+1].SnIndex()));
+        }
+    } else {
+        for (size_t i = 0; i < size_; ++i)
+            facetPerm_[i].tightEncode(out);
+    }
+}
+
+template <int dim>
+Isomorphism<dim> Isomorphism<dim>::tightDecode(std::istream& input) {
+    auto n = regina::detail::tightDecodeIndex<size_t>(input);
+    Isomorphism ans(n);
+
+    // We don't check the values of simpImage_[...], since we want to
+    // support the negative "unknown" placeholder value for simpImage_[...].
+    // Perm<dim+1>::tightDecode() will check the validity of the permutations
+    // that are read.
+    for (size_t i = 0; i < n; ++i)
+        ans.simpImage_[i] = regina::detail::tightDecodeIndex<ssize_t>(input);
+    if constexpr (dim == 2) {
+        for (size_t i = 0; i < n; i += 2) {
+            auto p = regina::detail::tightDecodeIndex<unsigned>(input);
+            if (i + 1 == n) {
+                if (p >= 6)
+                    throw InvalidInput("The tight encoding contains "
+                        "invalid permutations");
+                ans.facetPerm_[i] = Perm<dim+1>::Sn[p];
+            } else {
+                if (p >= 36)
+                    throw InvalidInput("The tight encoding contains "
+                        "invalid permutations");
+                ans.facetPerm_[i] = Perm<dim+1>::Sn[p % 6];
+                ans.facetPerm_[i+1] = Perm<dim+1>::Sn[p / 6];
+            }
+        }
+    } else {
+        for (size_t i = 0; i < n; ++i)
+            ans.facetPerm_[i] = Perm<dim+1>::tightDecode(input);
+    }
+
+    return ans;
+}
+
+template <int dim>
 inline void Isomorphism<dim>::writeTextShort(std::ostream& out) const {
-    for (size_t i = 0; i < nSimplices_; ++i) {
+    for (size_t i = 0; i < size_; ++i) {
         if (i > 0)
             out << ", ";
         out << i << " -> " << simpImage_[i] << " (" << facetPerm_[i] << ')';
@@ -856,15 +1041,15 @@ inline void Isomorphism<dim>::writeTextShort(std::ostream& out) const {
 
 template <int dim>
 inline void Isomorphism<dim>::writeTextLong(std::ostream& out) const {
-    for (size_t i = 0; i < nSimplices_; ++i)
+    for (size_t i = 0; i < size_; ++i)
         out << i << " -> " << simpImage_[i] << " (" << facetPerm_[i] << ")\n";
 }
 
 template <int dim>
 inline bool Isomorphism<dim>::operator == (const Isomorphism& other) const {
-    return nSimplices_ == other.nSimplices_ &&
-        std::equal(simpImage_, simpImage_ + nSimplices_, other.simpImage_) &&
-        std::equal(facetPerm_, facetPerm_ + nSimplices_, other.facetPerm_);
+    return size_ == other.size_ &&
+        std::equal(simpImage_, simpImage_ + size_, other.simpImage_) &&
+        std::equal(facetPerm_, facetPerm_ + size_, other.facetPerm_);
 }
 
 template <int dim>

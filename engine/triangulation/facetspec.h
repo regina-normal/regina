@@ -35,12 +35,12 @@
  *  simplices.
  */
 
-#ifndef __REGINA_NFACETSPEC_H
+#ifndef __REGINA_FACETSPEC_H
 #ifndef __DOXYGEN
-#define __REGINA_NFACETSPEC_H
+#define __REGINA_FACETSPEC_H
 #endif
 
-#include "regina-core.h"
+#include "utilities/tightencoding.h"
 #include <cstddef>
 #include <iostream>
 #include <sys/types.h> // for ssize_t
@@ -79,7 +79,7 @@ namespace regina {
  * \ingroup triangulation
  */
 template <int dim>
-struct FacetSpec {
+struct FacetSpec : public TightEncodable<FacetSpec<dim>> {
     ssize_t simp;
         /**< The simplex referred to.  Simplex numbering begins
          *   at 0. */
@@ -266,6 +266,47 @@ struct FacetSpec {
      * the given specifier.
      */
     bool operator <= (const FacetSpec<dim>& other) const;
+
+    /**
+     * Writes the tight encoding of this specifier to the given output
+     * stream.  See the page on \ref tight "tight encodings" for details.
+     *
+     * Before-the-start, past-the-end and boundary specifiers can all be
+     * safely encoded.
+     *
+     * \ifacespython Not present; use tightEncoding() instead, which
+     * returns a string.
+     *
+     * @param out the output stream to which the encoded string will be written.
+     */
+    void tightEncode(std::ostream& out) const;
+
+    /**
+     * Reconstructs a specifier from its given tight encoding.
+     * See the page on \ref tight "tight encodings" for details.
+     *
+     * The tight encoding will be read from the given input stream.
+     * If the input stream contains leading whitespace then it will be
+     * treated as an invalid encoding (i.e., this routine will throw an
+     * exception).  The input routine \e may contain further data: if this
+     * routine is successful then the input stream will be left positioned
+     * immediately after the encoding, without skipping any trailing
+     * whitespace.
+     *
+     * Before-the-start, past-the-end and boundary specifiers can all be
+     * safely reconstructed.
+     *
+     * \exception InvalidInput the given input stream does not begin with
+     * a tight encoding of a <i>dim</i>-dimensional facet specifier.
+     *
+     * \ifacespython Not present; use tightDecoding() instead, which takes
+     * a string as its argument.
+     *
+     * @param input an input stream that begins with the tight encoding
+     * for a <i>dim</i>-dimensional facet specifier.
+     * @return the specifier represented by the given tight encoding.
+     */
+    static FacetSpec<dim> tightDecode(std::istream& input);
 };
 
 /**
@@ -289,7 +330,7 @@ inline FacetSpec<dim>::FacetSpec(ssize_t newSimp, int newFacet) :
 
 template <int dim>
 inline bool FacetSpec<dim>::isBoundary(size_t nSimplices) const {
-    return (simp == nSimplices && facet == 0);
+    return (simp == static_cast<ssize_t>(nSimplices) && facet == 0);
 }
 
 template <int dim>
@@ -300,7 +341,8 @@ inline bool FacetSpec<dim>::isBeforeStart() const {
 template <int dim>
 inline bool FacetSpec<dim>::isPastEnd(size_t nSimplices, bool boundaryAlso)
         const {
-    return (simp == nSimplices && (boundaryAlso || facet > 0));
+    return (simp == static_cast<ssize_t>(nSimplices) &&
+        (boundaryAlso || facet > 0));
 }
 
 template <int dim>
@@ -388,6 +430,21 @@ template <int dim>
 inline std::ostream& operator << (std::ostream& out,
         const FacetSpec<dim>& spec) {
     return out << spec.simp << ':' << spec.facet;
+}
+
+template <int dim>
+inline void FacetSpec<dim>::tightEncode(std::ostream& out) const {
+    ssize_t enc = (simp < 0 ? -1 : simp * (dim + 1) + facet);
+    regina::detail::tightEncodeIndex(out, enc);
+}
+
+template <int dim>
+inline FacetSpec<dim> FacetSpec<dim>::tightDecode(std::istream& input) {
+    auto enc = regina::detail::tightDecodeIndex<ssize_t>(input);
+    if (enc < 0)
+        return FacetSpec(-1, dim);
+    else
+        return FacetSpec(enc / (dim + 1), enc % (dim + 1));
 }
 
 } // namespace regina

@@ -38,6 +38,8 @@ def doLong(val):
 			Integer(val).tightEncoding(), LargeInteger(val).tightEncoding() ]:
 		if i != enc:
 			print("ERROR: Inconsistent encodings")
+	if tightDecoding(enc) != val:
+		print("ERROR: Inconsistent decoding")
 
 def doLarge(val):
 	enc = tightEncoding(Integer(val))
@@ -46,6 +48,8 @@ def doLarge(val):
 			Integer(val).tightEncoding(), LargeInteger(val).tightEncoding() ]:
 		if i != enc:
 			print("ERROR: Inconsistent encodings")
+	if str(tightDecoding(enc)) != val:
+		print("ERROR: Inconsistent decoding")
 
 def doUnsigned(val):
 	# We can test encodings for unsigned types via AbelianGroup,

@@ -37,6 +37,7 @@
 #ifndef __CODECCHOOSER_H
 #define __CODECCHOOSER_H
 
+#include "reginaqt.h"
 #include <QComboBox>
 #include <vector>
 

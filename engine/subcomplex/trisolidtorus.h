@@ -216,7 +216,7 @@ class TriSolidTorus : public StandardTriangulation {
          * @return the number of tetrahedra in the layered chain if the
          * two annuli are linked as described, or 0 otherwise.
          */
-        unsigned long areAnnuliLinkedMajor(int otherAnnulus) const;
+        size_t areAnnuliLinkedMajor(int otherAnnulus) const;
 
         /**
          * Determines whether the two given annuli are linked in a
@@ -249,7 +249,7 @@ class TriSolidTorus : public StandardTriangulation {
          * @return the number of tetrahedra in the layered chain if the
          * two annuli are linked as described, or 0 otherwise.
          */
-        unsigned long areAnnuliLinkedAxis(int otherAnnulus) const;
+        size_t areAnnuliLinkedAxis(int otherAnnulus) const;
 
         /**
          * Determines whether this and the given object represent the same

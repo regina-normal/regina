@@ -159,7 +159,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
 
     // We have a 1-vertex closed orientable triangulation.
 
-    unsigned long nTet = comp->size();
+    size_t nTet = comp->size();
     if (nTet < 3)
         return nullptr;
 
@@ -231,8 +231,8 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
     // to itself.
     int nLayered = 0;
     std::unique_ptr<LayeredSolidTorus> layered[4];
-    unsigned long usedTets = 0;
-    for (unsigned long t = 0; t < nTet; t++) {
+    size_t usedTets = 0;
+    for (size_t t = 0; t < nTet; t++) {
         layered[nLayered] = LayeredSolidTorus::recogniseFromBase(
             comp->tetrahedron(t));
         if (layered[nLayered]) {
@@ -259,7 +259,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
         std::optional<Perm<4>> gluing;
         std::unique_ptr<TriSolidTorus> core;
         int torusAnnulus;
-        unsigned long chainLen;
+        size_t chainLen;
         for (i = 0; i < 24; i++) {
             p = Perm<4>::S4[i];
             if (p[0] > p[3])
@@ -495,7 +495,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                 // Check annulus j.
                 // Recall that the 3-manifold is orientable so we don't
                 // have to check for wacky reversed gluings.
-                if (auto q = core->isAnnulusSelfIdentified(j)) {
+                if (auto id = core->isAnnulusSelfIdentified(j)) {
                     // We have a degenerate (2,1,1) glued in here.
                     if (needChain) {
                         // We already know there is a non-degenerate
@@ -506,7 +506,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                         break;
                     }
                     whichLayered[j] = -1;
-                    switch ((*q)[0]) {
+                    switch ((*id)[0]) {
                         case 0:
                             edgeGroupRoles[j] = Perm<3>(2, 0, 1); break;
                         case 2:
@@ -570,7 +570,7 @@ std::unique_ptr<AugTriSolidTorus> AugTriSolidTorus::recognise(
                 // We found our one layered solid torus.  The other two
                 // boundary annuli *must* be linked via a layered chain.
                 int chainType = CHAIN_NONE;
-                unsigned long chainLen;
+                size_t chainLen;
 
                 if ((chainLen = core->areAnnuliLinkedMajor(torusAnnulus)))
                     chainType = CHAIN_MAJOR;

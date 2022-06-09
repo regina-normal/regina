@@ -37,6 +37,8 @@
 #ifndef __EVENTIDS_H
 #define __EVENTIDS_H
 
+#include "reginaqt.h"
+
 // Note that QEvent::User is 1000.
 
 enum {

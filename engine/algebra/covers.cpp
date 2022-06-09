@@ -56,10 +56,13 @@ namespace {
     // directory as this source file.
     template <int n> constexpr int
         minimalAutGroup[nMinimalPerms[n]][maxMinimalAutGroup[n] + 1];
+#if 0
+    // We never actually use the group for n=2, so hide it from the compiler.
     template <> constexpr int minimalAutGroup<2>[][1] = {
         /* 0 */ { -1 },
         /* 1 */ { -1 }
     };
+#endif
     template <> constexpr int minimalAutGroup<3>[][4] = {
         /* 0 */ { -1 },
         /* 1 */ { 0, 1, -1 },
@@ -943,7 +946,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                     // and we have their automorphism group stored.
                     nAut[pos] = 0;
                     Perm<index> conj;
-                    for (int a = 0; a < nAut[pos - 1]; ++a) {
+                    for (size_t a = 0; a < nAut[pos - 1]; ++a) {
                         Perm<index> p = aut[pos - 1][a];
                         if constexpr (RelationScheme<index>::cacheProducts) {
                             conj = p.cachedComp(scheme.rep[pos], p.inverse());

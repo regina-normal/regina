@@ -102,12 +102,20 @@ bool CensusDB::lookup(const std::string& isoSig, Action&& action) const {
         return false;
     }
 
-    TCLIST* records = tcbdbget4(db, isoSig.c_str(), isoSig.length());
-    if (records) {
-        int n = tclistnum(records);
-        for (int i = 0; i < n; ++i)
-            action(CensusHit(tclistval2(records, i), this));
-        tclistdel(records);
+    if (isoSig.length() > INT_MAX) {
+        // This key is too long for Tokyo Cabinet to handle.
+        // However.. this also means that we know the database does not
+        // contain it.  So instead of writing an error, just treat this
+        // as item-not-found.
+    } else {
+        TCLIST* records = tcbdbget4(db, isoSig.c_str(),
+            static_cast<int>(isoSig.length()));
+        if (records) {
+            int n = tclistnum(records);
+            for (int i = 0; i < n; ++i)
+                action(CensusHit(tclistval2(records, i), this));
+            tclistdel(records);
+        }
     }
 
     tcbdbclose(db);

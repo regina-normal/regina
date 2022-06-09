@@ -60,8 +60,8 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
     // We send permutation indices directly to the output stream.
     // This requires them to be numeric types (not character types).
     static_assert(! (
-            std::is_same<typename Perm<dim + 1>::Index, char>::value ||
-            std::is_same<typename Perm<dim + 1>::Index, unsigned char>::value
+            std::is_same_v<typename Perm<dim + 1>::Index, char> ||
+            std::is_same_v<typename Perm<dim + 1>::Index, unsigned char>
         ),
         "XMLWriter<Triangulation<dim>> requires permutation indices to be "
         "numeric types.");

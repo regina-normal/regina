@@ -35,6 +35,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/perm.h"
 #include "testsuite/maths/testmaths.h"
+#include "testsuite/utilities/tightencodingtest.h"
 
 static const int64_t increment[] = {
     // All of these increments are coprime with n.
@@ -44,7 +45,8 @@ static const int64_t increment[] = {
 };
 
 template <int n>
-class PermTest : public CppUnit::TestFixture {
+class PermTest :
+        public CppUnit::TestFixture, public TightEncodingTest<regina::Perm<n>> {
     CPPUNIT_TEST_SUITE(PermTest);
 
     CPPUNIT_TEST(index);
@@ -54,8 +56,12 @@ class PermTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
+
+    public:
+        using TightEncodingTest<regina::Perm<n>>::verifyTightEncoding;
 
     private:
         using Perm = regina::Perm<n>;
@@ -582,16 +588,21 @@ class PermTest : public CppUnit::TestFixture {
                     }
             }
         }
+
+        void tightEncoding() {
+            for (int i = 0; i < nIdx; ++i)
+                verifyTightEncoding(Perm::orderedSn[idx[i]]);
+        }
 };
 
 void addPerm(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(PermTest<8>::suite()); // 3-bit images, 32-bit code
     runner.addTest(PermTest<9>::suite()); // 4-bit images, 64-bit code
     // runner.addTest(PermTest<10>::suite());
-    // runner.addTest(PermTest<11>::suite());
+    runner.addTest(PermTest<11>::suite());
     // runner.addTest(PermTest<12>::suite());
     runner.addTest(PermTest<13>::suite());
-    // runner.addTest(PermTest<14>::suite());
+    runner.addTest(PermTest<14>::suite());
     // runner.addTest(PermTest<15>::suite());
     runner.addTest(PermTest<16>::suite()); // 4-bit images, 64-bit code
 }

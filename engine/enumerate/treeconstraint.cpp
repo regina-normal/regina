@@ -59,7 +59,7 @@ void LPConstraintEulerPositive::addRows(
     const Triangulation<3>& tri = init.tri();
 
     int* obj = new int[7 * tri.size()];
-    unsigned tet, i;
+    size_t tet, i;
     Perm<4> p;
     for (i = 0; i < 7 * tri.size(); ++i)
         obj[i] = 1;
@@ -96,7 +96,7 @@ void LPConstraintEulerZero::addRows(
     const Triangulation<3>& tri = init.tri();
 
     int* obj = new int[7 * tri.size()];
-    unsigned tet, i;
+    size_t tet, i;
     Perm<4> p;
     for (i = 0; i < 7 * tri.size(); ++i)
         obj[i] = 1;
@@ -166,7 +166,7 @@ void LPConstraintNonSpun::addRows(
     // integers; therefore we *should* be able to happily convert them
     // back to native integers now.  However, just in case:
     try {
-        for (int i = 0; i < 3 * tri.size(); ++i) {
+        for (size_t i = 0; i < 3 * tri.size(); ++i) {
             col[i].extra[0] =
                 coeffs.entry(0, init.columnPerm()[i]).safeLongValue();
             col[i].extra[1] =

@@ -116,7 +116,7 @@ void CoordinateChooser::setCurrentSystem(regina::NormalCoords newSystem) {
     }
 
     if (it != systems.end())
-        setCurrentIndex(it - systems.begin());
+        setCurrentIndex(static_cast<int>(it - systems.begin()));
 }
 
 void HyperCoordinateChooser::insertSystem(regina::HyperCoords coordSystem) {
@@ -140,6 +140,6 @@ void HyperCoordinateChooser::setCurrentSystem(regina::HyperCoords newSystem) {
     auto it = std::find(systems.begin(), systems.end(), newSystem);
 
     if (it != systems.end())
-        setCurrentIndex(it - systems.begin());
+        setCurrentIndex(static_cast<int>(it - systems.begin()));
 }
 

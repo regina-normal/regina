@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
+ * Copyright (C) 2007-2022  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * As an exception, when this program is distributed through (i) the App Store
  * by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or (iii) Google Play
@@ -120,7 +120,7 @@ class Sublattice_Representation {
 
     /* compose with the dual of SR */
     void compose_dual(const Sublattice_Representation<Integer>& SR);
-    
+
     void compose_with_passage_to_quotient(Matrix<Integer>& Sub, Matrix<Integer>& Perp);
 
     //---------------------------------------------------------------------------
@@ -309,7 +309,7 @@ template <typename Integer, typename number>
 void LLL_coordinates_without_1st_col(Sublattice_Representation<Integer>& LLL_Coordinates,
                                      const Matrix<number> Supps,
                                      const Matrix<number> Vertices,
-                                     bool verbose) {
+                                     bool verbose_) {
     // used when the 1st column is the grading or the dehomogenization and should bot be changed
     // Important in project_and_lift
     // Computed SLR is returned in LLL_Coordinates
@@ -328,7 +328,7 @@ void LLL_coordinates_without_1st_col(Sublattice_Representation<Integer>& LLL_Coo
         convert(HelpA, HelpCoord.getEmbeddingMatrix());
         convert(HelpB, HelpCoord.getProjectionMatrix());
         convert(HelpC, HelpCoord.getAnnihilator());
-        if (verbose)
+        if (verbose_)
             verboseOutput() << "LLL based on support hyperplanes" << endl;
     }
     else {  // use Vertices for LLL coordinates
@@ -339,7 +339,7 @@ void LLL_coordinates_without_1st_col(Sublattice_Representation<Integer>& LLL_Coo
         convert(HelpA, HelpCoord.getEmbeddingMatrix());
         convert(HelpB, HelpCoord.getProjectionMatrix());
         convert(HelpC, HelpCoord.getAnnihilator());
-        if (verbose)
+        if (verbose_)
             verboseOutput() << "LLL based on vertices" << endl;
     }
 

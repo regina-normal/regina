@@ -39,6 +39,7 @@
 
 #include "packet/packet.h"
 
+#include "reginaqt.h"
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 

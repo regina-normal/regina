@@ -42,6 +42,7 @@
 #include "snappea/snappeatriangulation.h"
 #include "surface/normalsurface.h"
 #include "triangulation/example3.h"
+#include "triangulation/facetpairing3.h"
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
@@ -195,6 +196,7 @@ void addTriangulation3(pybind11::module_& m) {
         .def("triangle", (regina::Face<3, 2>* (Triangulation<3>::*)(size_t))(
             &Triangulation<3>::triangle),
             pybind11::return_value_policy::reference_internal)
+        .def("pairing", &Triangulation<3>::pairing)
         .def("isIsomorphicTo", &Triangulation<3>::isIsomorphicTo)
         .def("findAllIsomorphisms", &Triangulation<3>::findAllIsomorphisms<
                 const std::function<bool(const Isomorphism<3>)>&>)
@@ -496,6 +498,7 @@ void addTriangulation3(pybind11::module_& m) {
         .def_readonly_static("dimension", &Triangulation<3>::dimension)
     ;
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c);
     regina::python::add_packet_data(c);
 

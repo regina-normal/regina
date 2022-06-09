@@ -56,6 +56,9 @@
 #include "utilities/exception.h"
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
+#include "utilities/tightencoding.h"
+
+// Note: there are more includes after the main class definitions.
 
 namespace regina {
 
@@ -66,6 +69,7 @@ namespace regina {
 
 class Crossing;
 class Link;
+class ModelLinkGraph;
 class ProgressTracker;
 class Tangle;
 template <typename T> class Laurent;
@@ -215,7 +219,7 @@ class StrandRef {
          *
          * @return the unique ID of this strand within the link.
          */
-        int id() const;
+        ssize_t id() const;
 
         /**
          * Tests whether this and the given reference are identical.
@@ -460,7 +464,7 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
          *
          * @return the index of this crossing.
          */
-        int index() const;
+        size_t index() const;
         /**
          * Returns the sign of this crossing.  This will be +1 for a
          * positive crossing, or -1 for a negative crossing.
@@ -623,7 +627,10 @@ class Crossing : public MarkedElement, public ShortOutput<Crossing> {
  *
  * \ingroup link
  */
-class Link : public PacketData<Link>, public Output<Link> {
+class Link :
+        public PacketData<Link>,
+        public Output<Link>,
+        public TightEncodable<Link> {
     private:
         MarkedVector<Crossing> crossings_;
             /**< The crossings in this link. */
@@ -972,7 +979,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          *
          * @see StrandRef::id()
          */
-        StrandRef strand(int id) const;
+        StrandRef strand(ssize_t id) const;
 
         /**
          * Translates a strand reference for some other link into the
@@ -1065,6 +1072,22 @@ class Link : public PacketData<Link>, public Output<Link> {
          * not combinatorially identical.
          */
         bool operator != (const Link& other) const;
+
+        /**
+         * Returns the 4-valent planar graph that models this link.
+         *
+         * Any zero-component unknot components of this link will be ignored.
+         *
+         * The nodes of the resulting graph will be numbered in the same way
+         * as the crossings of this link.  For each node, arc 0 will represent
+         * the outgoing lower strand of the corresponding crossing.
+         *
+         * Calling graph() is identical to passing this link to the
+         * ModelLinkGraph constructor.
+         *
+         * @return the graph that models this link.
+         */
+        ModelLinkGraph graph() const;
 
         /*@}*/
         /**
@@ -2148,12 +2171,17 @@ class Link : public PacketData<Link>, public Output<Link> {
          * call this routine in a new detached thread.
          *
          * \warning The naive algorithm can only handle a limited number
-         * of crossings (currently less than the number of bits in a long,
-         * which on a typical machine is 64).  If you pass ALG_NAIVE and
+         * of crossings (currently at most 63).  If you pass ALG_NAIVE and
          * you have too many crossings (which is not advised, since the
          * naive algorithm requires 2^<i>n</i> time), then this routine
          * will ignore your choice of algorithm and use the treewidth-based
          * algorithm regardless.
+         *
+         * \exception NotImplemented This link is \e so large that the maximum
+         * possible strand ID cannot fit into an \c int.  (On a typical machine
+         * where \c int is 32-bit, this would require over a \e billion
+         * crossings).  Note that, if you have such a link, then this function
+         * (which is exponential time) would be intractably slow anyway.
          *
          * \ifacespython The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
@@ -2233,12 +2261,17 @@ class Link : public PacketData<Link>, public Output<Link> {
          * call this routine in a new detached thread.
          *
          * \warning The naive algorithm can only handle a limited number
-         * of crossings (currently less than the number of bits in a long,
-         * which on a typical machine is 64).  If you pass ALG_NAIVE and
+         * of crossings (currently at most 63).  If you pass ALG_NAIVE and
          * you have too many crossings (which is not advised, since the
          * naive algorithm requires 2^<i>n</i> time), then this routine
          * will ignore your choice of algorithm and use the treewidth-based
          * algorithm regardless.
+         *
+         * \exception NotImplemented This link is \e so large that the maximum
+         * possible strand ID cannot fit into an \c int.  (On a typical machine
+         * where \c int is 32-bit, this would require over a \e billion
+         * crossings).  Note that, if you have such a link, then this function
+         * (which is exponential time) would be intractably slow anyway.
          *
          * \ifacespython The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
@@ -2318,6 +2351,12 @@ class Link : public PacketData<Link>, public Output<Link> {
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
+         * \exception NotImplemented This link is \e so large that the maximum
+         * possible strand ID cannot fit into an \c int.  (On a typical machine
+         * where \c int is 32-bit, this would require over a \e billion
+         * crossings).  Note that, if you have such a link, then this function
+         * (which is exponential time) would be intractably slow anyway.
+         *
          * \ifacespython The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
@@ -2382,6 +2421,12 @@ class Link : public PacketData<Link>, public Output<Link> {
          * tracker caused the computation to start in the background), simply
          * call this routine in a new detached thread.
          *
+         * \exception NotImplemented This link is \e so large that the maximum
+         * possible strand ID cannot fit into an \c int.  (On a typical machine
+         * where \c int is 32-bit, this would require over a \e billion
+         * crossings).  Note that, if you have such a link, then this function
+         * (which is exponential time) would be intractably slow anyway.
+         *
          * \ifacespython The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
          * multithreading.
@@ -2414,6 +2459,12 @@ class Link : public PacketData<Link>, public Output<Link> {
          * returned from this routine should not be kept for later use.
          * Instead, homfly() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
+         *
+         * \exception NotImplemented This link is \e so large that the maximum
+         * possible strand ID cannot fit into an \c int.  (On a typical machine
+         * where \c int is 32-bit, this would require over a \e billion
+         * crossings).  Note that, if you have such a link, then this function
+         * (which is exponential time) would be intractably slow anyway.
          *
          * \ifacespython The global interpreter lock will be released while
          * this function runs, so you can use it with Python-based
@@ -2694,8 +2745,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * in contrast, gauss() returns the same data in human-readable format
          * (as a string).
          *
-         * \exception NotImplemented This link is empty or has multiple
-         * components.
+         * \exception NotImplemented This link is empty, or has multiple
+         * components, or has so many crossings that the Gauss code
+         * cannot be expressed using native C++ integers.
          *
          * @return a classical Gauss code for this knot in machine-readable
          * form.
@@ -2918,6 +2970,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * in contrast, jenkins() returns the same data in human-readable
          * format (as a string).
          *
+         * \exception NotImplemented This link has so many crossings
+         * and/or components that its description in Jenkins' format
+         * cannot be expressed using native C++ integers.
+         *
          * @return a description of this link using Jenkins' format
          * in machine-readable form.
          */
@@ -3043,8 +3099,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * in contrast, calling <tt>dt()</tt> returns the same integer
          * sequence in human-readable format (as a string).
          *
-         * \exception NotImplemented This link is empty or has multiple
-         * components.
+         * \exception NotImplemented This link is empty, or has multiple
+         * components, or has so many crossings that the Dowker-Thistlethwaite
+         * notation cannot be expressed using native C++ integers.
          *
          * @return the numerical Dowker-Thistlethwaite notation in
          * machine-readable form.
@@ -3177,6 +3234,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * This routine returns machine-readable data (as a C++ vector);
          * in contrast, pd() returns the same data in human-readable format
          * (as a string).
+         *
+         * \exception NotImplemented This link has so many crossings that the
+         * planar diagram code cannot be expressed using native C++ integers.
          *
          * @return the planar diagram code in machine-readable form.
          */
@@ -3320,6 +3380,18 @@ class Link : public PacketData<Link>, public Output<Link> {
          */
         std::string knotSig(bool useReflection = true, bool useReversal = true)
             const;
+
+        /**
+         * Writes the tight encoding of this link to the given output stream.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
 
         /**
          * Writes a short text representation of this link to the
@@ -3552,6 +3624,30 @@ class Link : public PacketData<Link>, public Output<Link> {
         static Link fromSig(const std::string& sig);
 
         /**
+         * Reconstructs a link from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.
+         * If the input stream contains leading whitespace then it will be
+         * treated as an invalid encoding (i.e., this routine will throw an
+         * exception).  The input routine \e may contain further data: if this
+         * routine is successful then the input stream will be left positioned
+         * immediately after the encoding, without skipping any trailing
+         * whitespace.
+         *
+         * \exception InvalidInput the given input stream does not begin with
+         * a tight encoding of a link.
+         *
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
+         *
+         * @param input an input stream that begins with the tight encoding
+         * for a link.
+         * @return the link represented by the given tight encoding.
+         */
+        static Link tightDecode(std::istream& input);
+
+        /**
          * Creates a new knot from a classical Gauss code, presented as
          * a string.
          *
@@ -3637,7 +3733,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * pair of begin/end iterators.
          *
          * \pre \a Iterator is a random access iterator type, and
-         * dereferencing such an iterator produces an integer.
+         * dereferencing such an iterator produces a native C++ integer.
+         * (The specific native C++ integer type being used will be deduced
+         * from the type \a Iterator.)
          *
          * \warning In general, the classical Gauss code does not contain
          * enough information to uniquely reconstruct a knot.  For prime knots,
@@ -3896,7 +3994,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * pair of begin/end iterators.
          *
          * \pre \a Iterator is a forward iterator type, and
-         * dereferencing such an iterator produces an integer.
+         * dereferencing such an iterator produces a native C++ integer.
+         * (The specific native C++ integer type being used will be deduced
+         * from the type \a Iterator.)
          *
          * \warning While this routine does some error checking on the
          * input, these checks are not exhaustive.  In particular,
@@ -4009,7 +4109,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * the string-based variant of fromDT().
          *
          * \pre \a Iterator is a random access iterator type, and
-         * dereferencing such an iterator produces an integer.
+         * dereferencing such an iterator produces a native C++ integer.
+         * (The specific native C++ integer type being used will be deduced
+         * from the type \a Iterator.)
          *
          * \warning In general, Dowker-Thistlethwaite notation does not contain
          * enough information to uniquely reconstruct a knot.  For prime knots,
@@ -4169,7 +4271,9 @@ class Link : public PacketData<Link>, public Output<Link> {
          * \pre If \a it is such an iterator, then <tt>(*it)[0]</tt>,
          * <tt>(*it)[1]</tt>, <tt>(*it)[2]</tt> and <tt>(*it)[3]</tt>
          * will give the elements of the corresponding 4-tuple, which
-         * can then be treated as native C++ integers.
+         * can then be treated as native C++ integers.  (The specific native
+         * C++ integer type being used will be deduced from the type
+         * \a Iterator.)
          *
          * \warning If the link contains an unknotted loop that sits
          * completely above all other link components (in other words,
@@ -4284,8 +4388,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * @author This routine is based on the Dowker-Thistlethwaite
          * implementation from the SnapPea/SnapPy kernel.
          */
-        static bool realizeDT(int* anInvolution, bool* aRealization,
-            int aNumCrossings);
+        static bool realizeDT(size_t* anInvolution, bool* aRealization,
+            size_t aNumCrossings);
 
         /**
          * Internal to fromData().
@@ -4361,8 +4465,8 @@ class Link : public PacketData<Link>, public Output<Link> {
          * lengths will be placed in the array in the same order as the
          * loop IDs as described above.
          *
-         * \pre The number of crossings is at most the number of bits in
-         * an unsigned long.
+         * \pre The number of crossings is less than 64 (the length of
+         * the bitmask type).
          *
          * \pre If either or both the arrays \a loopIDs and \a loopLengths
          * are not null, then they are arrays whose size is at least the
@@ -4373,7 +4477,7 @@ class Link : public PacketData<Link>, public Output<Link> {
          * @return the resulting number of loops after all crossings are
          * resolved.
          */
-        size_t resolutionLoops(unsigned long mask, size_t* loopIDs = nullptr,
+        size_t resolutionLoops(uint64_t mask, size_t* loopIDs = nullptr,
             size_t* loopLengths = nullptr) const;
 
         /**
@@ -4395,6 +4499,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * This routine does \e not mark the tracker as finished.
          *
          * See bracket() for further details.
+         *
+         * \pre The maximum possible strand ID can fit into an \c int.
+         * In other words, if an \c int contains \a b bits, then the
+         * number of crossings is less than 2^(<i>b</i>-2).
          */
         Laurent<Integer> bracketTreewidth(ProgressTracker* tracker) const;
 
@@ -4416,6 +4524,10 @@ class Link : public PacketData<Link>, public Output<Link> {
          * See homflyAZ() for further details.
          *
          * \pre This link contains at least one crossing.
+         *
+         * \pre The maximum possible strand ID can fit into an \c int.
+         * In other words, if an \c int contains \a b bits, then the
+         * number of crossings is less than 2^(<i>b</i>-2).
          */
         Laurent2<Integer> homflyTreewidth(ProgressTracker* tracker) const;
 
@@ -4482,6 +4594,13 @@ class Link : public PacketData<Link>, public Output<Link> {
  */
 void swap(Link& lhs, Link& rhs);
 
+} // namespace regina
+
+// Headers that cannot be included until after the Link class is defined:
+#include "link/modellinkgraph.h"
+
+namespace regina {
+
 // Inline functions that need to be defined before *other* inline funtions
 // that use them (this fixes DLL-related warnings in the windows port)
 
@@ -4499,7 +4618,7 @@ inline Link::~Link() {
         delete c;
 }
 
-inline int Crossing::index() const {
+inline size_t Crossing::index() const {
     return markedIndex();
 }
 
@@ -4528,8 +4647,11 @@ inline int StrandRef::strand() const {
     return strand_;
 }
 
-inline int StrandRef::id() const {
-    return (crossing_ ? ((crossing()->index() << 1) | strand_) : -1);
+inline ssize_t StrandRef::id() const {
+    if (crossing_)
+        return (crossing()->index() << 1) | static_cast<size_t>(strand_);
+    else
+        return -1;
 }
 
 inline bool StrandRef::operator == (const StrandRef& rhs) const {
@@ -4659,13 +4781,17 @@ inline auto Link::components() const {
     return ListView(components_);
 }
 
-inline StrandRef Link::strand(int id) const {
+inline StrandRef Link::strand(ssize_t id) const {
     return (id >= 0 ? StrandRef(crossings_[id >> 1]->strand(id & 1)) :
         StrandRef());
 }
 
 inline bool Link::operator != (const Link& other) const {
     return ! ((*this) == other);
+}
+
+inline ModelLinkGraph Link::graph() const {
+    return ModelLinkGraph(*this);
 }
 
 inline Triangulation<3> Link::complement(bool simplify) const {

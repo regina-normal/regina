@@ -80,9 +80,9 @@ namespace detail {
  * \ingroup detail
  */
 template <class Object, bool withSig>
-using RetriangulateActionFunc = typename std::conditional<withSig,
+using RetriangulateActionFunc = std::conditional_t<withSig,
     std::function<bool(const std::string&, Object&&)>,
-    std::function<bool(Object&&)>>::type;
+    std::function<bool(Object&&)>>;
 
 /**
  * The common implementation of all retriangulation and link rewriting
@@ -193,9 +193,9 @@ template <class Object, typename Action>
 struct RetriangulateActionTraits<Object, Action, const std::string&> {
     using SecondArg = typename CallableArg<Action, 1>::type;
     static constexpr bool valid =
-        std::is_same<SecondArg, Object>::value ||
-        std::is_same<SecondArg, Object&&>::value ||
-        std::is_same<SecondArg, const Object&>::value;
+        std::is_same_v<SecondArg, Object> ||
+        std::is_same_v<SecondArg, Object&&> ||
+        std::is_same_v<SecondArg, const Object&>;
     static constexpr bool withSig = true;
 };
 

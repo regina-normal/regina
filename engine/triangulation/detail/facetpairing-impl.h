@@ -122,6 +122,42 @@ bool FacetPairingBase<dim>::operator != (const FacetPairing<dim>& other) const {
 }
 
 template <int dim>
+bool FacetPairingBase<dim>::isConnected() const {
+    if (size_ <= 1)
+        return true;
+
+    bool* seen = new bool[size_];
+    auto* stack = new size_t[size_];
+
+    seen[0] = true;
+    std::fill(seen + 1, seen + size_, false);
+    stack[0] = 0;
+    size_t stackSize = 1;
+    size_t nSeen = 1;
+
+    while (stackSize > 0) {
+        size_t top = stack[--stackSize];
+        for (int i = 0; i <= dim; ++i) {
+            ssize_t adj = dest(top, i).simp;
+            if (adj >= 0 && adj < static_cast<ssize_t>(size_) && ! seen[adj]) {
+                seen[adj] = true;
+                stack[stackSize++] = adj;
+                ++nSeen;
+                if (nSeen == size_) {
+                    delete[] stack;
+                    delete[] seen;
+                    return true;
+                }
+            }
+        }
+    }
+
+    delete[] stack;
+    delete[] seen;
+    return false;
+}
+
+template <int dim>
 void FacetPairingBase<dim>::writeTextShort(std::ostream& out) const {
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
         if (f.facet == 0 && f.simp > 0)
@@ -188,10 +224,9 @@ void FacetPairingBase<dim>::writeDot(std::ostream& out,
         out << "\"]" << std::endl;
     }
 
-    int f;
     FacetSpec<dim> adj;
-    for (ssize_t p = 0; p < size_; ++p)
-        for (f = 0; f < (dim + 1); ++f) {
+    for (ssize_t p = 0; p < static_cast<ssize_t>(size_); ++p)
+        for (int f = 0; f < (dim + 1); ++f) {
             adj = dest(p, f);
             if (adj.isBoundary(size_) || adj.simp < p ||
                     (adj.simp == p && adj.facet < f))
@@ -204,7 +239,7 @@ void FacetPairingBase<dim>::writeDot(std::ostream& out,
 }
 
 template <int dim>
-std::string FacetPairingBase<dim>::toTextRep() const {
+std::string FacetPairingBase<dim>::textRep() const {
     std::ostringstream ans;
 
     for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
@@ -223,13 +258,14 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     if (tokens.empty() || tokens.size() % (2 * (dim + 1)) != 0)
         throw InvalidArgument("fromTextRep(): invalid number of tokens");
 
-    size_t nSimp = tokens.size() / (2 * (dim + 1));
+    // We use ssize_t, not size_t, to avoid signed/unsigned comparisons below.
+    ssize_t nSimp = tokens.size() / (2 * (dim + 1));
     FacetPairing<dim> ans(nSimp);
 
     // Read the raw values.
     // Check the range of each value while we're at it.
     long val;
-    for (size_t i = 0; i < nSimp * (dim + 1); ++i) {
+    for (ssize_t i = 0; i < nSimp * (dim + 1); ++i) {
         if (! valueOf(tokens[2 * i], val))
             throw InvalidArgument(
                 "fromTextRep(): contains non-integer simplex");
@@ -268,6 +304,31 @@ FacetPairing<dim> FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
 }
 
 template <int dim>
+std::optional<Cut> FacetPairingBase<dim>::divideConnected(size_t minSide)
+        const {
+    std::optional<Cut> ans;
+    size_t bestWeight = 0 /* Unnecessary, but silences warnings */;
+
+    for (size_t left = size() / 2; left >= minSide; --left) {
+        Cut c(left, size() - left);
+        while (true) {
+            size_t w = c.weight(static_cast<const FacetPairing<dim>&>(*this));
+            if ((! ans) || w < bestWeight) {
+                auto pieces = c(static_cast<const FacetPairing<dim>&>(*this));
+                if (pieces.first.isConnected() && pieces.second.isConnected()) {
+                    ans = c;
+                    bestWeight = w;
+                }
+            }
+            if (! c.incFixedSizes())
+                break;
+        }
+    }
+
+    return ans;
+}
+
+template <int dim>
 template <typename Action, typename... Args>
 void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         int nBdryFacets, Action&& action, Args&&... args) {
@@ -283,7 +344,7 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
     }
 
     // Initialise the pairings to unspecified (i.e., facet -> itself).
-    for (FacetSpec<dim> f(0,0); f.simp < size_; ++f)
+    for (FacetSpec<dim> f(0,0); f.simp < static_cast<ssize_t>(size_); ++f)
         dest(f) = f;
 
     // Note that we have at least one simplex.
@@ -317,7 +378,8 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         if (usedFacets % (dim + 1) == (dim - 1) &&
                 usedFacets < (dim + 1) * size_ - 2 &&
                 noDest((usedFacets / (dim + 1)) + 1, 0) &&
-                dest(trying).simp <= (usedFacets / (dim + 1))) {
+                static_cast<size_t>(dest(trying).simp) <=
+                    (usedFacets / (dim + 1))) {
             // Move to the first unused simplex.
             dest(trying).simp = (usedFacets / (dim + 1)) + 1;
             dest(trying).facet = 0;
@@ -334,14 +396,14 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
                     // We must have some boundary though.
                     if (boundaryFacets == 0 &&
                             usedFacets == (dim + 1) * size_ - 2 &&
-                            dest(trying).simp < size_)
+                            dest(trying).simp < static_cast<ssize_t>(size_))
                         dest(trying).setBoundary(size_);
                 }
             } else {
                 // We're specific about the number of boundary facets.
                 if (usedFacets - boundaryFacets + nBdryFacets ==
                         (dim + 1) * size_ &&
-                        dest(trying).simp < size_)
+                        dest(trying).simp < static_cast<ssize_t>(size_))
                     // We've used our entire quota of non-boundary facets.
                     dest(trying).setBoundary(size_);
             }
@@ -351,13 +413,15 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // We still don't know whether this destination is valid however.
         while(true) {
             // Move onwards to the next free destination.
-            while (dest(trying).simp < size_ && ! noDest(dest(trying)))
+            while (dest(trying).simp < static_cast<ssize_t>(size_) &&
+                    ! noDest(dest(trying)))
                 ++dest(trying);
 
             // If we are past facet 0 of a simplex and the previous facet
             // was not used, we can't do anything with this simplex.
             // Move to the next simplex.
-            if (dest(trying).simp < size_ && dest(trying).facet > 0 &&
+            if (dest(trying).simp < static_cast<ssize_t>(size_) &&
+                    dest(trying).facet > 0 &&
                     noDest(dest(trying).simp, dest(trying).facet - 1)) {
                 ++dest(trying).simp;
                 dest(trying).facet = 0;
@@ -372,8 +436,8 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // unused.  Note that facet == 0 implies simp > 0.
         // In this case, we've passed the last sane choice; head
         // straight to the boundary.
-        if (dest(trying).simp < size_ && dest(trying).facet == 0 &&
-                noDest(dest(trying).simp - 1, 0))
+        if (dest(trying).simp < static_cast<ssize_t>(size_) &&
+                dest(trying).facet == 0 && noDest(dest(trying).simp - 1, 0))
             dest(trying).setBoundary(size_);
 
         // Finally, return to the issue of prematurely closing off a
@@ -436,11 +500,11 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         // Now we increment trying to move to the next unmatched facet.
         oldTrying = trying;
         ++trying;
-        while (trying.simp < size_ && ! noDest(trying))
+        while (trying.simp < static_cast<ssize_t>(size_) && ! noDest(trying))
             ++trying;
 
         // Have we got a solution?
-        if (trying.simp == size_) {
+        if (trying.simp == static_cast<ssize_t>(size_)) {
             // Deal with the solution!
             if constexpr (std::is_same_v<
                     typename std::remove_cv_t<typename std::remove_reference_t<

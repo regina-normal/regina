@@ -1213,10 +1213,12 @@ inline Triangulation<4>& Triangulation<4>::operator = (Triangulation&& src) {
 
     ChangeEventSpan span(*this);
 
-    TriangulationBase<4>::operator = (std::move(src));
+    // The parent class assignment goes last, since its move invalidates src.
 
     vertexLinkSummary_ = src.vertexLinkSummary_;
     prop_ = std::move(src.prop_);
+
+    TriangulationBase<4>::operator = (std::move(src));
 
     return *this;
 }

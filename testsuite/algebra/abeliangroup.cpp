@@ -37,6 +37,7 @@
 #include "maths/matrix.h"
 
 #include "testsuite/algebra/testalgebra.h"
+#include "testsuite/utilities/tightencodingtest.h"
 
 using regina::Integer;
 using regina::AbelianGroup;
@@ -44,10 +45,12 @@ using regina::MatrixInt;
 
 // These are a pretty limited set of tests.  But they're a start. -ryan
 
-class AbelianGroupTest : public CppUnit::TestFixture {
+class AbelianGroupTest :
+        public CppUnit::TestFixture, public TightEncodingTest<AbelianGroup> {
     CPPUNIT_TEST_SUITE(AbelianGroupTest);
 
     CPPUNIT_TEST(incrementalBuild);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -123,6 +126,18 @@ class AbelianGroupTest : public CppUnit::TestFixture {
         // Back to self-addition:
         g.addGroup(g); verifyGroup(g, 10,
             { 2, 2, 2, 2, 6, 6, 6, 6, 12, 12, 12, 12, 420, 420, 420, 420 });
+    }
+
+    void tightEncoding() {
+        verifyTightEncoding(AbelianGroup());
+        verifyTightEncoding(AbelianGroup(1));
+        verifyTightEncoding(AbelianGroup(1000000));
+        verifyTightEncoding(AbelianGroup(0, { 2 }));
+        verifyTightEncoding(AbelianGroup(1, { 2 }));
+        verifyTightEncoding(AbelianGroup(1, { 2, 12 }));
+        verifyTightEncoding(AbelianGroup(3, { 2, 2, 12, 420 }));
+        verifyTightEncoding(AbelianGroup(0, { 2, 2, 12, 420, 420 }));
+        verifyTightEncoding(AbelianGroup(3, { 2, 2, 12, 420, 420 }));
     }
 };
 

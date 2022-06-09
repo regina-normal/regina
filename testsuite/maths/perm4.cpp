@@ -55,6 +55,7 @@ class Perm4Test : public SmallPermTest<4> {
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(conjugacy);
     CPPUNIT_TEST(increment);
+    CPPUNIT_TEST(tightEncoding);
 
     // Tests specific to Perm<4>:
     CPPUNIT_TEST(pairs);

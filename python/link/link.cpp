@@ -105,6 +105,7 @@ void addLink(pybind11::module_& m) {
             pybind11::keep_alive<0, 1>())
         .def("strand", &Link::strand)
         .def("translate", &Link::translate)
+        .def("graph", &Link::graph)
         // In the following overloads, we define functions twice because
         // overload_cast gets confused between templated/non-templated variants.
         // Also: the versions that take a std::vector must come *last*,
@@ -326,6 +327,7 @@ void addLink(pybind11::module_& m) {
         .def_readonly_static("homflyLMVarY", Link::homflyLMVarY)
     ;
     regina::python::add_output(l);
+    regina::python::add_tight_encoding(l);
     regina::python::packet_eq_operators(l);
     regina::python::add_packet_data(l);
 

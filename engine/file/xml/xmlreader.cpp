@@ -156,9 +156,11 @@ void XMLParser::parse_stream(XMLParserCallback& callback, std::istream& file,
     while (true) {
         // Read in the next chunk.
         for (chunkRead = 0; chunkRead < chunkSize; chunkRead++) {
-            buf[chunkRead] = file.get();
-            if (file.eof())
+            int c = file.get();
+            if (c == EOF)
                 break;
+            else
+                buf[chunkRead] = static_cast<char>(c);
         }
         if (chunkRead == 0)
             break;

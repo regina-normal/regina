@@ -138,7 +138,7 @@ void RepositoryPrivate::addDefinition(const Definition &def)
     m_defs.insert(std::make_pair(def.name(), def));
 }
 
-static int themeRevision(const Theme &theme)
+static long long themeRevision(const Theme &theme)
 {
     auto data = ThemeData::get(theme);
     return data->revision();

@@ -48,9 +48,10 @@ namespace {
     // This routine is a direct clone of the corresponding routine for
     // Triangulation<3>::collapseEdge().  It would be nice to reuse this
     // routine instead of duplicate it, but that is for another day.
-    bool unionFindInsert(long* parent, long* depth, long vtx1, long vtx2) {
+    bool unionFindInsert(ssize_t* parent, size_t* depth,
+            size_t vtx1, size_t vtx2) {
         // Find the root of the tree containing vtx1 and vtx2.
-        long top1, top2;
+        ssize_t top1, top2;
 
         for (top1 = vtx1; parent[top1] >= 0; top1 = parent[top1])
             ;
@@ -215,12 +216,9 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
 
     // Unglue facets from the doomed pentachora and glue them to each other.
     Perm<5> crossover = pent[0]->adjacentGluing(perm[0][3]);
-    Perm<5> gluing;
-    Pentachoron<4> *top, *bottom;
-    int topFacet;
     for (i = 0; i < 3; ++i) {
-        top = pent[0]->adjacentPentachoron(perm[0][i]);
-        bottom = pent[1]->adjacentPentachoron(perm[1][i]);
+        Pentachoron<4>* top = pent[0]->adjacentPentachoron(perm[0][i]);
+        Pentachoron<4>* bottom = pent[1]->adjacentPentachoron(perm[1][i]);
 
         if (! top) {
             // Bottom facet becomes boundary.
@@ -230,8 +228,8 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
             pent[0]->unjoin(perm[0][i]);
         } else {
             // Bottom and top facets join.
-            topFacet = pent[0]->adjacentFacet(perm[0][i]);
-            gluing = pent[1]->adjacentGluing(perm[1][i]) *
+            int topFacet = pent[0]->adjacentFacet(perm[0][i]);
+            Perm<5> gluing = pent[1]->adjacentGluing(perm[1][i]) *
                 crossover * top->adjacentGluing(topFacet);
             pent[0]->unjoin(perm[0][i]);
             pent[1]->unjoin(perm[1][i]);
@@ -315,12 +313,9 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
 
     // Unglue facets from the doomed pentachora and glue them to each other.
     Perm<5> crossover = pent[0]->adjacentGluing(perm[0][2]);
-    Perm<5> gluing;
-    Pentachoron<4> *top, *bottom;
-    int topFacet;
     for (i = 0; i < 2; ++i) {
-        top = pent[0]->adjacentPentachoron(perm[0][i]);
-        bottom = pent[1]->adjacentPentachoron(perm[1][i]);
+        Pentachoron<4>* top = pent[0]->adjacentPentachoron(perm[0][i]);
+        Pentachoron<4>* bottom = pent[1]->adjacentPentachoron(perm[1][i]);
 
         if (! top) {
             // Bottom facet becomes boundary.
@@ -330,8 +325,8 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
             pent[0]->unjoin(perm[0][i]);
         } else {
             // Bottom and top facets join.
-            topFacet = pent[0]->adjacentFacet(perm[0][i]);
-            gluing = pent[1]->adjacentGluing(perm[1][i]) *
+            int topFacet = pent[0]->adjacentFacet(perm[0][i]);
+            Perm<5> gluing = pent[1]->adjacentGluing(perm[1][i]) *
                 crossover * top->adjacentGluing(topFacet);
             pent[0]->unjoin(perm[0][i]);
             pent[1]->unjoin(perm[1][i]);
@@ -410,8 +405,7 @@ bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
     } else if (! bottom) {
         pent[0]->unjoin(vertex[0]);
     } else {
-        Perm<5> crossover;
-        crossover = pent[0]->adjacentGluing(vertex[0] == 0 ? 1 : 0);
+        Perm<5> crossover = pent[0]->adjacentGluing(vertex[0] == 0 ? 1 : 0);
         int topFacet = pent[0]->adjacentFacet(vertex[0]);
         Perm<5> gluing = pent[1]->adjacentGluing(vertex[1]) *
             crossover * top->adjacentGluing(topFacet);
@@ -718,7 +712,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
         // dilemma as before but one dimension down, and we must test this
         // separately.
         {
-            long nEdges = countEdges();
+            size_t nEdges = countEdges();
 
             // The parent of each edge in the union-find tree, or -1 if
             // an edge is at the root of a tree.
@@ -727,14 +721,12 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
             // Although we might not use many of these edges, it's fast
             // and simple.  The "unified boundary" is assigned the edge
             // number nEdges.
-            long* parent = new long[nEdges + 1];
+            auto* parent = new ssize_t[nEdges + 1];
 
             // The depth of each subtree in the union-find tree.
-            long* depth = new long[nEdges + 1];
+            auto* depth = new size_t[nEdges + 1];
 
             Edge<4> *upper, *lower;
-            long id1, id2;
-            int i;
 
             if (e->isBoundary()) {
                 // Search for cycles in boundary bigons.
@@ -747,6 +739,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
                     if (! triangle->isBoundary())
                         continue;
 
+                    int i;
                     for (i = 0; i < 3; ++i)
                         if (triangle->edge(i) == e)
                             break;
@@ -769,7 +762,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
 
                     // This bigon joins nodes id1 and id2 in the graph G.
                     if (! unionFindInsert(parent, depth,
-                            upper->markedIndex(), lower->markedIndex())) {
+                            upper->index(), lower->index())) {
                         delete[] depth;
                         delete[] parent;
                         return false;
@@ -789,6 +782,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
                 if (triangle->isBoundary())
                     continue;
 
+                int i;
                 for (i = 0; i < 3; ++i)
                     if (triangle->edge(i) == e)
                         break;
@@ -809,10 +803,10 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
                     return false;
                 }
 
-                id1 = ((upper->isBoundary() || ! upper->isValid()) ?
-                    nEdges : upper->markedIndex());
-                id2 = ((lower->isBoundary() || ! lower->isValid()) ?
-                    nEdges : lower->markedIndex());
+                size_t id1 = ((upper->isBoundary() || ! upper->isValid()) ?
+                    nEdges : upper->index());
+                size_t id2 = ((lower->isBoundary() || ! lower->isValid()) ?
+                    nEdges : lower->index());
 
                 // This bigon joins nodes id1 and id2 in the graph G.
                 if (! unionFindInsert(parent, depth, id1, id2)) {
@@ -837,7 +831,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
         // to edges.  Again, we must treat internal pillows and
         // boundary pillows separately.
         {
-            long nTriangles = countTriangles();
+            size_t nTriangles = countTriangles();
 
             // The parent of each triangle in the union-find tree, or -1 if
             // a triangle is at the root of a tree.
@@ -846,14 +840,12 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
             // Although we might not use many of these triangles, it's fast
             // and simple.  The "unified boundary" is assigned the triangle
             // number nTriangles.
-            long* parent = new long[nTriangles + 1];
+            auto* parent = new ssize_t[nTriangles + 1];
 
             // The depth of each subtree in the union-find tree.
-            long* depth = new long[nTriangles + 1];
+            auto* depth = new size_t[nTriangles + 1];
 
             Triangle<4> *upper, *lower;
-            long id1, id2;
-            int i;
 
             if (e->isBoundary()) {
                 // Search for cycles in boundary pillows.
@@ -866,6 +858,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
                     if (! tet->isBoundary())
                         continue;
 
+                    int i;
                     for (i = 0; i < 6; ++i)
                         if (tet->edge(i) == e)
                             break;
@@ -879,7 +872,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
                     lower = tet->triangle(Edge<3>::edgeVertex[i][1]);
 
                     if (! unionFindInsert(parent, depth,
-                            upper->markedIndex(), lower->markedIndex())) {
+                            upper->index(), lower->index())) {
                         delete[] depth;
                         delete[] parent;
                         return false;
@@ -899,6 +892,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
                 if (tet->isBoundary())
                     continue;
 
+                int i;
                 for (i = 0; i < 6; ++i)
                     if (tet->edge(i) == e)
                         break;
@@ -911,10 +905,10 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
                 upper = tet->triangle(Edge<3>::edgeVertex[i][0]);
                 lower = tet->triangle(Edge<3>::edgeVertex[i][1]);
 
-                id1 = ((upper->isBoundary() || ! upper->isValid()) ?
-                    nTriangles : upper->markedIndex());
-                id2 = ((lower->isBoundary() || ! lower->isValid()) ?
-                    nTriangles : lower->markedIndex());
+                size_t id1 = ((upper->isBoundary() || ! upper->isValid()) ?
+                    nTriangles : upper->index());
+                size_t id2 = ((lower->isBoundary() || ! lower->isValid()) ?
+                    nTriangles : lower->index());
 
                 // This pillow joins nodes id1 and id2 in the graph G.
                 if (! unionFindInsert(parent, depth, id1, id2)) {
@@ -944,29 +938,28 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
         // overkill, since each vertex in the corresponding graph G will
         // have degree <= 2, but it's fast so we'll do it.
         {
-            long nTets = countTetrahedra();
+            size_t nTets = countTetrahedra();
 
             // The parent of each tetrahedron in the union-find tree,
             // or -1 if a tetrahedron is at the root of a tree.
             //
             // This array is indexed by tetrahedron number in the triangulation.
             // The "unified boundary" is assigned the triangle number nTets.
-            long* parent = new long[nTets + 1];
+            auto* parent = new ssize_t[nTets + 1];
             std::fill(parent, parent + nTets + 1, -1);
 
             // The depth of each subtree in the union-find tree.
-            long* depth = new long[nTets + 1];
+            auto* depth = new size_t[nTets + 1];
             std::fill(depth, depth + nTets + 1, 0);
 
             Tetrahedron<4> *upper, *lower;
-            long id1, id2;
 
             for (auto& emb : *e) {
                 upper = emb.simplex()->tetrahedron(emb.vertices()[0]);
                 lower = emb.simplex()->tetrahedron(emb.vertices()[1]);
 
-                id1 = (upper->isBoundary() ? nTets : upper->index());
-                id2 = (lower->isBoundary() ? nTets : lower->index());
+                size_t id1 = (upper->isBoundary() ? nTets : upper->index());
+                size_t id2 = (lower->isBoundary() ? nTets : lower->index());
 
                 // This 4-pillow joins nodes id1 and id2 in the graph G.
                 if (! unionFindInsert(parent, depth, id1, id2)) {
@@ -994,11 +987,11 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
-    unsigned nEmbs = e->degree();
+    size_t nEmbs = e->degree();
     auto* embPent = new Pentachoron<4>*[nEmbs];
     auto* embVert = new Perm<5>[nEmbs];
 
-    unsigned i = 0;
+    size_t i = 0;
     for (auto& emb : *e) {
         embPent[i] = emb.simplex();
         embVert[i] = emb.vertices();

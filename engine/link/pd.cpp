@@ -104,21 +104,25 @@ Link Link::fromPD(const std::string& s) {
 }
 
 std::vector<std::array<int, 4>> Link::pdData() const {
-    const int n = crossings_.size();
+    if (2 * crossings_.size() > INT_MAX)
+        throw NotImplemented("This planar diagram code has "
+            "entries that cannot fit into a C++ int");
+
+    const int n = static_cast<int>(crossings_.size());
 
     std::vector<std::array<int, 4>> ans;
     ans.reserve(n);
 
     // Build a lookup table from StrandRef::id() -> PD strand number:
     int* strand = new int[2 * n];
-    int next = 1;
+    int pdStrand = 1;
     for (auto start : components_) {
         if (! start)
             continue;
 
         StrandRef s = start;
         do {
-            strand[s.id()] = next++;
+            strand[s.id()] = pdStrand++;
             ++s;
         } while (s != start);
     }
@@ -163,21 +167,21 @@ std::string Link::pd() const {
 }
 
 void Link::pd(std::ostream& out) const {
-    const int n = crossings_.size();
+    const size_t n = crossings_.size();
 
     out << "PD[";
     bool nonEmpty = false;
 
     // Build a lookup table from StrandRef::id() -> PD strand number:
-    int* strand = new int[2 * n];
-    int next = 1;
+    auto* strand = new size_t[2 * n];
+    size_t pdStrand = 1;
     for (auto start : components_) {
         if (! start)
             continue;
 
         StrandRef s = start;
         do {
-            strand[s.id()] = next++;
+            strand[s.id()] = pdStrand++;
             ++s;
         } while (s != start);
     }

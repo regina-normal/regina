@@ -43,12 +43,13 @@
 #include "choosers/cuspchooser.h"
 #include "choosers/facechooser.h"
 
+#include <numeric> // for std::gcd()
 #include <QAction>
 #include <QHeaderView>
 #include <QLabel>
 #include <QLayout>
 #include <QMessageBox>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QToolBar>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
@@ -57,7 +58,8 @@ using regina::Packet;
 using regina::SnapPeaTriangulation;
 
 namespace {
-    QRegExp reIntPair(R"(^[^0-9\-]*(-?\d+)[^0-9\-]+(-?\d+)[^0-9\-]*$)");
+    const QRegularExpression reIntPair(
+        R"(^[^0-9\-]*(-?\d+)[^0-9\-]+(-?\d+)[^0-9\-]*$)");
 }
 
 void CuspModel::rebuild() {
@@ -151,7 +153,8 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
             tri_->unfill(index.row());
             return true;
         }
-        if (! reIntPair.exactMatch(data)) {
+        auto match = reIntPair.match(data);
+        if (! match.hasMatch()) {
             ReginaSupport::info(nullptr,
                 tr("Please enter a pair of filling coefficients."),
                 tr("<qt>This should be a pair of integers, such as "
@@ -160,8 +163,8 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
         }
 
         bool mOk, lOk;
-        int m = reIntPair.cap(1).toInt(&mOk);
-        int l = reIntPair.cap(2).toInt(&lOk);
+        int m = match.captured(1).toInt(&mOk);
+        int l = match.captured(2).toInt(&lOk);
         if (! (mOk && lOk)) {
             ReginaSupport::sorry(nullptr,
                 tr("The filling coefficients are too large."),
@@ -175,7 +178,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
             return true;
         }
 
-        if (regina::gcd(m, l) != 1) {
+        if (std::gcd(m, l) != 1) {
             ReginaSupport::sorry(nullptr,
                 tr("The filling coefficients must be coprime."),
                 tr("Although SnapPea can handle more general filling "

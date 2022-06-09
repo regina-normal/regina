@@ -37,6 +37,7 @@
 #ifndef __RECENTFILESACTION_H
 #define __RECENTFILESACTION_H
 
+#include "reginaqt.h"
 #include <QList>
 #include <QMenu>
 

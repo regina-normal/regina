@@ -42,9 +42,9 @@ using regina::Perm;
 using regina::python::ConstArray;
 
 namespace {
-    ConstArray<decltype(Perm<7>::S7)>
+    ConstArray<decltype(Perm<7>::S7), int>
         Perm7_S7_arr(Perm<7>::S7, 5040);
-    ConstArray<decltype(Perm<7>::orderedS7)>
+    ConstArray<decltype(Perm<7>::orderedS7), int>
         Perm7_orderedS7_arr(Perm<7>::orderedS7, 5040);
 
     template <int k>
@@ -134,6 +134,7 @@ void addPerm7(pybind11::module_& m) {
     ;
     Perm7_contract<8>::add_bindings(c);
     regina::python::add_output_basic(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 }
 

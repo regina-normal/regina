@@ -127,9 +127,9 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
                  elements as were originally reserved, which might be
                  more than (but can never be less than) the current size
                  of the matrix according to \a rows_ and \a cols_. */
-        unsigned rows_;
+        size_t rows_;
             /**< The number of rows in this matrix. */
-        unsigned cols_;
+        size_t cols_;
             /**< The number of columns in this matrix. */
 
     public:
@@ -155,7 +155,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * @param cols the number of columns in the new matrix.  This must
          * be strictly positive.
          */
-        inline LPMatrix(unsigned rows, unsigned cols);
+        inline LPMatrix(size_t rows, size_t cols);
 
         /**
          * Moves the contents of the given matrix into this new matrix.
@@ -228,7 +228,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * @param maxCols an upper bound on the number of columns that
          * you will need for this matrix.  This must be strictly positive.
          */
-        inline void reserve(unsigned maxRows, unsigned maxCols);
+        inline void reserve(size_t maxRows, size_t maxCols);
 
         /**
          * Initialises this matrix to a copy of the given matrix.
@@ -270,7 +270,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * columns, that will be assigned to this matrix.
          * This must be strictly positive.
          */
-        void initIdentity(unsigned size);
+        void initIdentity(size_t size);
 
         /**
          * Returns a read-write reference to the given element of this matrix.
@@ -290,7 +290,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * @param col the column of the requested element.  This must be
          * between 0 and columns()-1 inclusive.
          */
-        inline IntType& entry(unsigned row, unsigned col);
+        inline IntType& entry(size_t row, size_t col);
 
         /**
          * Returns a read-only reference to the given element of this matrix.
@@ -300,7 +300,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * @param col the column of the requested element.  This must be
          * between 0 and columns()-1 inclusive.
          */
-        inline const IntType& entry(unsigned row, unsigned col) const;
+        inline const IntType& entry(size_t row, size_t col) const;
 
         /**
          * Returns the number of rows in this matrix.  This relates to
@@ -309,7 +309,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          *
          * @return the number of rows.
          */
-        inline unsigned rows() const;
+        inline size_t rows() const;
 
         /**
          * Returns the number of columns in this matrix.  This relates to
@@ -318,7 +318,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          *
          * @return the number of columns.
          */
-        inline unsigned columns() const;
+        inline size_t columns() const;
 
         /**
          * Determines whether this and the given matrix are equal.
@@ -360,7 +360,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * @param r2 the index of the second row to swap.  This must be
          * between 0 and rows()-1 inclusive.
          */
-        inline void swapRows(unsigned r1, unsigned r2);
+        inline void swapRows(size_t r1, size_t r2);
 
         /**
          * Applies a particular row operation to this matrix.
@@ -386,8 +386,8 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * @param div the integer to divide the final row by.  This must
          * be non-zero.
          */
-        void combRow(const IntType& destCoeff, unsigned dest,
-                const IntType& srcCoeff, unsigned src,
+        void combRow(const IntType& destCoeff, size_t dest,
+                const IntType& srcCoeff, size_t src,
                 const IntType& div);
 
         /**
@@ -416,7 +416,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * or 0 if row \a dest is entirely zero.
          */
         IntType combRowAndNorm(const IntType& destCoeff,
-                unsigned dest, const IntType& srcCoeff, unsigned src);
+                size_t dest, const IntType& srcCoeff, size_t src);
 
         /**
          * Negates all elements in the given row of this matrix.
@@ -424,7 +424,7 @@ class LPMatrix : public Output<LPMatrix<IntType>> {
          * @param row the row whose elements should be negated.
          * This must be between 0 and rows()-1 inclusive.
          */
-        inline void negateRow(unsigned row);
+        inline void negateRow(size_t row);
 
         /**
          * Writes a short text representation of this object to the
@@ -501,15 +501,15 @@ inline void swap(LPMatrix<IntType>& a, LPMatrix<IntType>& b) noexcept;
  */
 template <class LPConstraint>
 struct LPCol {
-    unsigned nPlus;
+    int nPlus;
         /**< The total number of +1 entries in this column. */
-    unsigned plus[4];
+    size_t plus[4];
         /**< The rows containing these +1 entries, in any order.
              The same row may appear in this list more than once
              (indicating a +2, +3 or +4 entry in the matrix). */
-    unsigned nMinus;
+    int nMinus;
         /**< The total number of -1 entries in this column. */
-    unsigned minus[4];
+    size_t minus[4];
         /**< The rows containing these -1 entries, in any order.
              The same row may appear in this list more than once
              (indicating a -2, -3 or -4 entry in the matrix). */
@@ -570,7 +570,7 @@ struct LPCol {
      * @param row the row containing the given value.
      * @param val the value at this location in the matrix.
      */
-    inline void push(unsigned row, int val);
+    inline void push(size_t row, int val);
 };
 
 /**
@@ -847,10 +847,10 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
             /**< The adjusted matching equation matrix, in dense form.
                  The precise adjustments that we make are described in the
                  LPInitialTableaux class notes. */
-        unsigned rank_;
+        size_t rank_;
             /**< The rank of this tableaux, taking into account any additional
                  constraints from the template parameter LPConstraint. */
-        unsigned cols_;
+        size_t cols_;
             /**< The number of columns in this tableaux, taking into account
                  any additional constraints from the template parameter
                  LPConstraint. */
@@ -871,7 +871,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
                  ignored, since this column of the matrix is described by the
                  \a scaling_ member instead. */
 
-        int* columnPerm_;
+        size_t* columnPerm_;
             /**< A permutation of 0,...,cols_-1 that maps column numbers
                  in the adjusted matrix to column numbers in the original
                  (unmodified) matrix of matching equations that was originally
@@ -1007,7 +1007,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          *
          * @return the matrix rank.
          */
-        inline unsigned rank() const;
+        inline size_t rank() const;
 
         /**
          * Returns the number of columns in this matrix.
@@ -1019,7 +1019,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          *
          * @return the number of columns.
          */
-        inline unsigned columns() const;
+        inline size_t columns() const;
 
         /**
          * Returns the number of columns that correspond to normal coordinates
@@ -1028,7 +1028,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          *
          * @return the number of normal or angle structure coordinate columns.
          */
-        inline unsigned coordinateColumns() const;
+        inline size_t coordinateColumns() const;
 
         /**
          * Returns the permutation that describes how the columns of
@@ -1087,7 +1087,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * @return details of the permutation describing how columns
          * were reordered.
          */
-        inline const int* columnPerm() const;
+        inline const size_t* columnPerm() const;
 
         /**
          * Computes the inner product of (i) the given row of the given
@@ -1104,8 +1104,8 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * @return the resulting inner product.
          */
         template <typename IntType>
-        inline IntType multColByRow(const LPMatrix<IntType>& m, unsigned mRow,
-                unsigned thisCol) const;
+        inline IntType multColByRow(const LPMatrix<IntType>& m, size_t mRow,
+                size_t thisCol) const;
 
         /**
          * A variant of multColByRow() that takes into account any adjustments
@@ -1156,7 +1156,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          */
         template <typename IntType>
         inline IntType multColByRowOct(const LPMatrix<IntType>& m,
-                unsigned mRow, unsigned thisCol) const;
+                size_t mRow, size_t thisCol) const;
 
         /**
          * Fills the given matrix with the contents of this matrix.
@@ -1167,7 +1167,7 @@ class LPInitialTableaux : public Output<LPInitialTableaux<LPConstraint>> {
          * \pre The given matrix has already been initialised to size
          * rank() * columns(), and all of its elements have already been
          * set to zero.  Note that this can all be arranged by calling
-         * the constructor LPMatrix::LPMatrix(unsigned, unsigned).
+         * the constructor LPMatrix::LPMatrix(size_t, size_t).
          *
          * @param m the matrix to fill.
          */
@@ -1394,14 +1394,14 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
                  notes.  In the notation of Burton and Ozlen, this is
                  the matrix M_beta^{-1}.  This is a square matrix of
                  side length origTableaux_->rank(). */
-        unsigned rank_;
+        size_t rank_;
             /**< The rank of the current tableaux, taking into account
                  any changes such as deactivation of variables.  This
                  will be at most (but quite possibly less than)
                  origTableaux_->rank().  We guarantee that the first
                  \a rank_ rows of the current tableaux are full rank (and so
                  any subsequent rows should simply be ignored from here on). */
-        int* basis_;
+        size_t* basis_;
             /**< An array of length origTableaux_->rank() that stores the
                  \a rank_ variables that form the current basis.  In
                  particular, for each i = 0,...,rank_-1, basis_[i] is the
@@ -1409,14 +1409,14 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
                  If \a rank_ is smaller than origTableaux_->rank() then any
                  trailing entries in this array have undefined values,
                  and should simply be ignored. */
-        int* basisRow_;
+        ssize_t* basisRow_;
             /**< An array of length origTableaux_->columns() that indicates
                  which row of the current tableaux holds the defining equation
                  for each basis variable.  Specifically:
                  - if column \a i corresponds to a basic variable, then the
                    defining row for this basis variable is row basisRow_[i];
                  - if column \a i corresponds to an active non-basic variable,
-                   then basisRow_[i] will be strictly negative;
+                   then basisRow_[i] will be -1;
                  - if column \a i has been deactivated, then basisRow_[i]
                    will be zero.
 
@@ -1424,7 +1424,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
         bool feasible_;
             /**< Indicates whether or not the current system of
                  constraints is feasible. */
-        int octPrimary_;
+        ssize_t octPrimary_;
             /**< If we have declared an octagon type, this stores the
                  column that we use to count the octagons.
                  This will be one of the two quadrilateral columns that
@@ -1432,7 +1432,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
                  the class notes.
                  If we have not declared an octagon type (or if we are
                  working with angle structures), this is -1. */
-        int octSecondary_;
+        size_t octSecondary_;
             /**< If we have declared an octagon type, this stores the
                  second of the two quadrilateral columns that together
                  "represent" the octagon type, as described in the class
@@ -1548,7 +1548,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          *
          * @return the number of columns.
          */
-        inline unsigned columns() const;
+        inline size_t columns() const;
 
         /**
          * Returns the number of columns in this tableaux that correspond to
@@ -1558,7 +1558,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          *
          * @return the number of normal or angle structure coordinate columns.
          */
-        inline unsigned coordinateColumns() const;
+        inline size_t coordinateColumns() const;
 
         /**
          * Returns whether or not this system is feasible.
@@ -1587,7 +1587,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * take into account any permutation of columns from the original
          * matching equations).
          */
-        inline bool isActive(unsigned pos) const;
+        inline bool isActive(size_t pos) const;
 
         /**
          * Returns the sign of the given variable under the current
@@ -1609,7 +1609,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * @return the sign of the variable as described above;
          * this will be either 1, 0 or -1.
          */
-        inline int sign(unsigned pos) const;
+        inline int sign(size_t pos) const;
 
         /**
          * Constrains this system further by setting the given variable
@@ -1632,7 +1632,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * take into account any permutation of columns from the original
          * matching equations).
          */
-        void constrainZero(unsigned pos);
+        void constrainZero(size_t pos);
 
         /**
          * Constrains this system further by constraining the given variable
@@ -1658,7 +1658,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * (i.e., it must take into account any permutation of columns from
          * the original matching equations).
          */
-        void constrainPositive(unsigned pos);
+        void constrainPositive(size_t pos);
 
         /**
          * Declares that two quadrilateral coordinates within a tetrahedron
@@ -1701,7 +1701,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * combine to form the new octagon type.  Again this should be a
          * column index with respect to this tableaux.
          */
-        void constrainOct(unsigned quad1, unsigned quad2);
+        void constrainOct(size_t quad1, size_t quad2);
 
         /**
          * Extracts the values of the individual variables from the
@@ -1804,7 +1804,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * and origTableaux_->columns()-1 inclusive.
          * @return the requested entry in this tableaux.
          */
-        inline IntType entry(unsigned row, unsigned col) const;
+        inline IntType entry(size_t row, size_t col) const;
 
         /**
          * Sets \a ans to the given entry in this tableaux.
@@ -1824,7 +1824,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * @param ans an integer that will be set to the requested entry
          * in this tableaux.
          */
-        inline void entry(unsigned row, unsigned col, IntType& ans) const;
+        inline void entry(size_t row, size_t col, IntType& ans) const;
 
         /**
          * Determines the sign of the given entry in this tableaux.
@@ -1840,7 +1840,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * @return +1, -1 or 0 according to whether the requested entry
          * is positive, negative or zero.
          */
-        inline int entrySign(unsigned row, unsigned col) const;
+        inline int entrySign(size_t row, size_t col) const;
 
         /**
          * Performs a pivot in the dual simplex method.
@@ -1863,7 +1863,7 @@ class LPData : public Output<LPData<LPConstraint, IntType>> {
          * @param outCol the index of the variable to pivot out of the basis.
          * @param inCol the index of the variable to pivot into the basis.
          */
-        void pivot(unsigned outCol, unsigned inCol);
+        void pivot(size_t outCol, size_t inCol);
 
         /**
          * Finds an initial basis for the system using Gauss-Jordan
@@ -1977,7 +1977,7 @@ inline LPMatrix<IntType>::LPMatrix() : rows_(0), cols_(0), dat_(nullptr) {
 }
 
 template <typename IntType>
-inline LPMatrix<IntType>::LPMatrix(unsigned rows, unsigned cols) :
+inline LPMatrix<IntType>::LPMatrix(size_t rows, size_t cols) :
         dat_(new IntType[rows * cols]),
         rows_(rows), cols_(cols) {
 }
@@ -2011,7 +2011,7 @@ inline void LPMatrix<IntType>::swap(LPMatrix& other) noexcept {
 }
 
 template <typename IntType>
-inline void LPMatrix<IntType>::reserve(unsigned maxRows, unsigned maxCols) {
+inline void LPMatrix<IntType>::reserve(size_t maxRows, size_t maxCols) {
     dat_ = new IntType[maxRows * maxCols];
 }
 
@@ -2023,35 +2023,35 @@ inline void LPMatrix<IntType>::initClone(const LPMatrix& clone) {
 }
 
 template <typename IntType>
-inline void LPMatrix<IntType>::initIdentity(unsigned size) {
+inline void LPMatrix<IntType>::initIdentity(size_t size) {
     // Don't fuss about optimising this, since we only call it once
     // in the entire tree traversal algorithm.
     rows_ = cols_ = size;
 
-    unsigned r, c;
+    size_t r, c;
     for (r = 0; r < rows_; ++r)
         for (c = 0; c < cols_; ++c)
             entry(r, c) = (r == c ? 1 : long(0));
 }
 
 template <typename IntType>
-inline IntType& LPMatrix<IntType>::entry(unsigned row, unsigned col) {
+inline IntType& LPMatrix<IntType>::entry(size_t row, size_t col) {
     return dat_[row * cols_ + col];
 }
 
 template <typename IntType>
-inline const IntType& LPMatrix<IntType>::entry(unsigned row, unsigned col)
+inline const IntType& LPMatrix<IntType>::entry(size_t row, size_t col)
         const {
     return dat_[row * cols_ + col];
 }
 
 template <typename IntType>
-inline unsigned LPMatrix<IntType>::rows() const {
+inline size_t LPMatrix<IntType>::rows() const {
     return rows_;
 }
 
 template <typename IntType>
-inline unsigned LPMatrix<IntType>::columns() const {
+inline size_t LPMatrix<IntType>::columns() const {
     return cols_;
 }
 
@@ -2071,16 +2071,16 @@ inline bool LPMatrix<IntType>::operator != (const LPMatrix& other) const {
 }
 
 template <typename IntType>
-inline void LPMatrix<IntType>::swapRows(unsigned r1, unsigned r2) {
+inline void LPMatrix<IntType>::swapRows(size_t r1, size_t r2) {
     if (r1 != r2)
         std::swap_ranges(dat_ + r1 * cols_, dat_ + r1 * cols_ + cols_,
             dat_ + r2 * cols_);
 }
 
 template <typename IntType>
-inline void LPMatrix<IntType>::negateRow(unsigned row) {
+inline void LPMatrix<IntType>::negateRow(size_t row) {
     IntType *p = dat_ + row * cols_;
-    for (unsigned i = 0; i < cols_; ++p, ++i)
+    for (size_t i = 0; i < cols_; ++p, ++i)
         p->negate();
 }
 
@@ -2107,7 +2107,7 @@ inline LPCol<LPConstraint>::LPCol() : nPlus(0), nMinus(0) {
 }
 
 template <class LPConstraint>
-inline void LPCol<LPConstraint>::push(unsigned row, int val) {
+inline void LPCol<LPConstraint>::push(size_t row, int val) {
 #ifdef REGINA_VERIFY_LPDATA
     if ((val > 0 && val + nPlus > 4) ||
             (val < 0 && val - nMinus < -4)) {
@@ -2133,7 +2133,7 @@ inline LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         cols_(src.cols_),
         scaling_(src.scaling_),
         col_(new LPCol<LPConstraint>[cols_]),
-        columnPerm_(new int[cols_]) {
+        columnPerm_(new size_t[cols_]) {
     std::copy(src.col_, src.col_ + cols_, col_);
     std::copy(src.columnPerm_, src.columnPerm_ + cols_, columnPerm_);
 }
@@ -2177,7 +2177,7 @@ inline LPInitialTableaux<LPConstraint>&
     col_ = new LPCol<LPConstraint>[cols_];
     std::copy(src.col_, src.col_ + cols_, col_);
 
-    columnPerm_ = new int[cols_];
+    columnPerm_ = new size_t[cols_];
     std::copy(src.columnPerm_, src.columnPerm_ + cols_, columnPerm_);
 
     return *this;
@@ -2225,33 +2225,33 @@ inline LPSystem LPInitialTableaux<LPConstraint>::system() const {
 }
 
 template <class LPConstraint>
-inline unsigned LPInitialTableaux<LPConstraint>::rank() const {
+inline size_t LPInitialTableaux<LPConstraint>::rank() const {
     return rank_;
 }
 
 template <class LPConstraint>
-inline unsigned LPInitialTableaux<LPConstraint>::columns() const {
+inline size_t LPInitialTableaux<LPConstraint>::columns() const {
     return cols_;
 }
 
 template <class LPConstraint>
-inline unsigned LPInitialTableaux<LPConstraint>::coordinateColumns() const {
+inline size_t LPInitialTableaux<LPConstraint>::coordinateColumns() const {
     return eqns_.columns();
 }
 
 template <class LPConstraint>
-inline const int* LPInitialTableaux<LPConstraint>::columnPerm() const {
+inline const size_t* LPInitialTableaux<LPConstraint>::columnPerm() const {
     return columnPerm_;
 }
 
 template <class LPConstraint>
 template <typename IntType>
 inline IntType LPInitialTableaux<LPConstraint>::multColByRow(
-        const LPMatrix<IntType>& m, unsigned mRow, unsigned thisCol) const {
+        const LPMatrix<IntType>& m, size_t mRow, size_t thisCol) const {
     if (scaling_ && thisCol == coordinateColumns() - 1) {
         // Multiply the entire row by the scaling coefficient.
         IntType ans; // Initialised to zero.
-        for (unsigned i = 0; i < rank_; ++i)
+        for (size_t i = 0; i < rank_; ++i)
             ans += m.entry(mRow, i);
         ans *= scaling_;
         return ans;
@@ -2259,12 +2259,11 @@ inline IntType LPInitialTableaux<LPConstraint>::multColByRow(
         // Just pick out individual coefficients using the sparse
         // representation of the column.
         IntType ans; // Initialised to 0, due to LPMatrix requirements.
-        unsigned i;
-        for (i = 0; i < col_[thisCol].nPlus; ++i)
+        for (int i = 0; i < col_[thisCol].nPlus; ++i)
             ans += m.entry(mRow, col_[thisCol].plus[i]);
-        for (i = 0; i < col_[thisCol].nMinus; ++i)
+        for (int i = 0; i < col_[thisCol].nMinus; ++i)
             ans -= m.entry(mRow, col_[thisCol].minus[i]);
-        for (i = 0; i < LPConstraint::nConstraints; ++i)
+        for (int i = 0; i < LPConstraint::nConstraints; ++i)
             ans += m.entry(mRow, m.rows() - LPConstraint::nConstraints + i) *
                 col_[thisCol].extra[i];
         return ans;
@@ -2274,17 +2273,16 @@ inline IntType LPInitialTableaux<LPConstraint>::multColByRow(
 template <class LPConstraint>
 template <typename IntType>
 inline IntType LPInitialTableaux<LPConstraint>::multColByRowOct(
-        const LPMatrix<IntType>& m, unsigned mRow, unsigned thisCol) const {
+        const LPMatrix<IntType>& m, size_t mRow, size_t thisCol) const {
     // By the preconditions of this routine, we must be working in some normal
     // or almost normal coordinate system, and so there is no scaling
     // coordinate to worry about.
     IntType ans; // Initialised to 0, due to LPMatrix requirements.
-    unsigned i;
-    for (i = 0; i < col_[thisCol].nPlus; ++i)
+    for (int i = 0; i < col_[thisCol].nPlus; ++i)
         ans += m.entry(mRow, col_[thisCol].plus[i]);
-    for (i = 0; i < col_[thisCol].nMinus; ++i)
+    for (int i = 0; i < col_[thisCol].nMinus; ++i)
         ans -= m.entry(mRow, col_[thisCol].minus[i]);
-    for (i = 0; i < LPConstraint::nConstraints; ++i)
+    for (int i = 0; i < LPConstraint::nConstraints; ++i)
         ans += m.entry(mRow, m.rows() - LPConstraint::nConstraints + i) *
             (col_[thisCol].extra[i] + LPConstraint::octAdjustment);
     return ans;
@@ -2294,22 +2292,21 @@ template <class LPConstraint>
 template <typename IntType>
 inline void LPInitialTableaux<LPConstraint>::fillInitialTableaux(
         LPMatrix<IntType>& m) const {
-    unsigned c, i;
-    for (c = 0; c < cols_; ++c) {
-        for (i = 0; i < col_[c].nPlus; ++i)
+    for (size_t c = 0; c < cols_; ++c) {
+        for (int i = 0; i < col_[c].nPlus; ++i)
             ++m.entry(col_[c].plus[i], c);
-        for (i = 0; i < col_[c].nMinus; ++i)
+        for (int i = 0; i < col_[c].nMinus; ++i)
             --m.entry(col_[c].minus[i], c);
 
         // Don't forget any additional constraints that we added
         // as final rows to the matrix.
-        for (i = 0; i < LPConstraint::nConstraints; ++i)
+        for (int i = 0; i < LPConstraint::nConstraints; ++i)
             m.entry(m.rows() - LPConstraint::nConstraints + i, c) =
                 col_[c].extra[i];
     }
 
     if (scaling_)
-        for (i = 0; i < rank_; ++i)
+        for (size_t i = 0; i < rank_; ++i)
             m.entry(i, coordinateColumns() - 1) = scaling_;
 }
 
@@ -2386,17 +2383,17 @@ inline void LPData<LPConstraint, IntType>::reserve(
     origTableaux_ = std::addressof(origTableaux);
     rhs_ = new IntType[origTableaux.rank()];
     rowOps_.reserve(origTableaux.rank(), origTableaux.rank());
-    basis_ = new int[origTableaux.rank()];
-    basisRow_ = new int[origTableaux.columns()];
+    basis_ = new size_t[origTableaux.rank()];
+    basisRow_ = new ssize_t[origTableaux.columns()];
 }
 
 template <class LPConstraint, typename IntType>
-inline unsigned LPData<LPConstraint, IntType>::columns() const {
+inline size_t LPData<LPConstraint, IntType>::columns() const {
     return origTableaux_->columns();
 }
 
 template <class LPConstraint, typename IntType>
-inline unsigned LPData<LPConstraint, IntType>::coordinateColumns() const {
+inline size_t LPData<LPConstraint, IntType>::coordinateColumns() const {
     return origTableaux_->coordinateColumns();
 }
 
@@ -2406,7 +2403,7 @@ inline bool LPData<LPConstraint, IntType>::isFeasible() const {
 }
 
 template <class LPConstraint, typename IntType>
-inline bool LPData<LPConstraint, IntType>::isActive(unsigned pos) const {
+inline bool LPData<LPConstraint, IntType>::isActive(size_t pos) const {
     // If basisRow_[pos] < 0, the variable is active and non-basic.
     // If basisRow_[pos] > 0, the variable is active and basic.
     // If basisRow_[pos] == 0, then:
@@ -2418,7 +2415,7 @@ inline bool LPData<LPConstraint, IntType>::isActive(unsigned pos) const {
 }
 
 template <class LPConstraint, typename IntType>
-inline int LPData<LPConstraint, IntType>::sign(unsigned pos) const {
+inline int LPData<LPConstraint, IntType>::sign(size_t pos) const {
     // If basisRow_[pos] < 0, the variable is active and non-basic.
     // If basisRow_[pos] > 0, the variable is active and basic.
     // If basisRow_[pos] == 0, then:
@@ -2430,11 +2427,11 @@ inline int LPData<LPConstraint, IntType>::sign(unsigned pos) const {
 }
 
 template <class LPConstraint, typename IntType>
-inline IntType LPData<LPConstraint, IntType>::entry(unsigned row, unsigned col)
+inline IntType LPData<LPConstraint, IntType>::entry(size_t row, size_t col)
         const {
     // Remember to take into account any changes of variable due
     // to previous calls to constrainOct().
-    if (octPrimary_ != col)
+    if (octPrimary_ != static_cast<ssize_t>(col))
         return origTableaux_->multColByRow(rowOps_, row, col);
     else {
         IntType ans = origTableaux_->multColByRowOct(rowOps_, row, col);
@@ -2444,11 +2441,11 @@ inline IntType LPData<LPConstraint, IntType>::entry(unsigned row, unsigned col)
 }
 
 template <class LPConstraint, typename IntType>
-inline void LPData<LPConstraint, IntType>::entry(unsigned row, unsigned col,
+inline void LPData<LPConstraint, IntType>::entry(size_t row, size_t col,
         IntType& ans) const {
     // Remember to take into account any changes of variable due
     // to previous calls to constrainOct().
-    if (octPrimary_ != col)
+    if (octPrimary_ != static_cast<ssize_t>(col))
         ans = origTableaux_->multColByRow(rowOps_, row, col);
     else {
         ans = origTableaux_->multColByRowOct(rowOps_, row, col);
@@ -2457,11 +2454,11 @@ inline void LPData<LPConstraint, IntType>::entry(unsigned row, unsigned col,
 }
 
 template <class LPConstraint, typename IntType>
-inline int LPData<LPConstraint, IntType>::entrySign(unsigned row, unsigned col)
+inline int LPData<LPConstraint, IntType>::entrySign(size_t row, size_t col)
         const {
     // Remember to take into account any changes of variable due
     // to previous calls to constrainOct().
-    if (octPrimary_ != col)
+    if (octPrimary_ != static_cast<ssize_t>(col))
         return origTableaux_->multColByRow(rowOps_, row, col).sign();
     else {
         IntType ans = origTableaux_->multColByRowOct(rowOps_, row, col);

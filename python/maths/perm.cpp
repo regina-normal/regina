@@ -84,12 +84,12 @@ namespace {
     };
 
     template <int n>
-    ConstArray<decltype(Perm<n>::Sn)> Perm_Sn_arr(
+    ConstArray<decltype(Perm<n>::Sn), typename Perm<n>::Index> Perm_Sn_arr(
         Perm<n>::Sn, Perm<n>::nPerms);
 
     template <int n>
-    ConstArray<decltype(Perm<n>::orderedSn)> Perm_orderedSn_arr(
-        Perm<n>::orderedSn, Perm<n>::nPerms);
+    ConstArray<decltype(Perm<n>::orderedSn), typename Perm<n>::Index>
+        Perm_orderedSn_arr(Perm<n>::orderedSn, Perm<n>::nPerms);
 }
 
 template <int n>
@@ -137,6 +137,7 @@ void addPerm(pybind11::module_& m, const char* name) {
     Perm_extend<n, n-1>::add_bindings(c);
     Perm_contract<n, n+1>::add_bindings(c);
     regina::python::add_output_basic(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 }
 

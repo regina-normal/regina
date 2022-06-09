@@ -150,8 +150,10 @@ class Qitmask1 {
          * @return the value of the (\a index)th qit; this will be
          * either 0, 1, 2 or 3.
          */
-        inline uint8_t get(unsigned index) const {
-            T bit = T(1) << index;
+        inline uint8_t get(size_t index) const {
+            // We cast back down to T because, if T is smaller than int, then
+            // the shift operator promotes up to an int.
+            T bit = static_cast<T>(T(1) << index);
             return ((mask1 & bit) ? 1 : 0) | ((mask2 & bit) ? 2 : 0);
         }
 
@@ -163,7 +165,7 @@ class Qitmask1 {
          * @param value the value that will be assigned to the (\a index)th
          * qit; this must be 0, 1, 2 or 3.
          */
-        inline void set(unsigned index, uint8_t value) {
+        inline void set(size_t index, uint8_t value) {
             mask1 |= (T(1) << index);
             if (! (value & 1))
                 mask1 ^= (T(1) << index);
@@ -386,7 +388,7 @@ class Qitmask2 {
          * @return the value of the (\a index)th qit; this will be
          * either 0, 1, 2 or 3.
          */
-        inline uint8_t get(unsigned index) const {
+        inline uint8_t get(size_t index) const {
             if (index < 8 * sizeof(T)) {
                 T bit = T(1) << index;
                 return ((low1 & bit) ? 1 : 0) | ((low2 & bit) ? 2 : 0);
@@ -404,7 +406,7 @@ class Qitmask2 {
          * @param value the value that will be assigned to the (\a index)th
          * qit; this must be 0, 1, 2 or 3.
          */
-        inline void set(unsigned index, uint8_t value) {
+        inline void set(size_t index, uint8_t value) {
             if (index < 8 * sizeof(T)) {
                 low1 |= (T(1) << index);
                 if (! (value & 1))

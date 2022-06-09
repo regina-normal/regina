@@ -127,12 +127,12 @@ void addInteger(pybind11::module_& m) {
         .def_static("randomCornerBinary", &Integer::randomCornerBinary)
         .def("makeLarge", &Integer::makeLarge)
         .def("tryReduce", &Integer::tryReduce)
-        .def("tightEncoding", &Integer::tightEncoding)
         .def(long() + pybind11::self)
         .def(long() * pybind11::self)
         .def_readonly_static("zero", &Integer::zero)
         .def_readonly_static("one", &Integer::one)
     ;
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
     regina::python::add_output_ostream(c, regina::python::PYTHON_REPR_SLIM);
 

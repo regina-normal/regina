@@ -69,12 +69,12 @@
 namespace regina {
 
 template <typename IntType>
-void LPMatrix<IntType>::combRow(const IntType& destCoeff, unsigned dest,
-        const IntType& srcCoeff, unsigned src, const IntType& div) {
+void LPMatrix<IntType>::combRow(const IntType& destCoeff, size_t dest,
+        const IntType& srcCoeff, size_t src, const IntType& div) {
     IntType* ps = dat_ + src * cols_;
     IntType* pd = dat_ + dest * cols_;
     IntType tmp; // Use this to avoid spurious temporary IntTypes.
-    for (unsigned i = 0; i < cols_; ++i) {
+    for (size_t i = 0; i < cols_; ++i) {
         *pd *= destCoeff;
         tmp = srcCoeff;
         tmp *= *ps++;
@@ -85,12 +85,12 @@ void LPMatrix<IntType>::combRow(const IntType& destCoeff, unsigned dest,
 
 template <typename IntType>
 IntType LPMatrix<IntType>::combRowAndNorm(const IntType& destCoeff,
-        unsigned dest, const IntType& srcCoeff, unsigned src) {
+        size_t dest, const IntType& srcCoeff, size_t src) {
     IntType gcdRow; // Initialised to zero.
     IntType* ps = dat_ + src * cols_;
     IntType* pd = dat_ + dest * cols_;
     IntType tmp; // Use this to avoid spurious temporary IntTypes.
-    unsigned i;
+    size_t i;
     for (i = 0; i < cols_; ++i, ++pd, ++ps) {
         *pd *= destCoeff;
         tmp = srcCoeff;
@@ -109,7 +109,7 @@ IntType LPMatrix<IntType>::combRowAndNorm(const IntType& destCoeff,
 
 template <typename IntType>
 void LPMatrix<IntType>::writeTextShort(std::ostream& out) const {
-    unsigned r, c;
+    size_t r, c;
     const IntType* entry = dat_;
     out << '[';
     for (r = 0; r < rows_; ++r) {
@@ -125,7 +125,7 @@ void LPMatrix<IntType>::writeTextShort(std::ostream& out) const {
 
 template <typename IntType>
 void LPMatrix<IntType>::writeTextLong(std::ostream& out) const {
-    unsigned r, c;
+    size_t r, c;
     const IntType* entry = dat_;
     for (r = 0; r < rows_; ++r) {
         for (c = 0; c < cols_; ++c) {
@@ -140,7 +140,7 @@ template <class LPConstraint>
 LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         const Triangulation<3>& tri, NormalEncoding enc, bool enumeration) :
         tri_(&tri), system_(enc) {
-    unsigned r, c;
+    size_t r, c;
 
     // Fetch the original (unadjusted) matrix of matching equations.
     if (system_.normal()) {
@@ -174,15 +174,18 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
 
     // Reorder the columns using a good heuristic.
     cols_ = eqns_.columns() + LPConstraint::nConstraints;
-    columnPerm_ = new int[cols_];
+    columnPerm_ = new size_t[cols_];
     reorder(enumeration);
 
     // Create and fill the sparse columns.
     col_ = new LPCol<LPConstraint>[cols_];
     for (c = 0; c < eqns_.columns() - (scaling_ ? 1 : 0); ++c)
         for (r = 0; r < rank_; ++r)
-            if (eqns_.entry(r, c) != 0)
-                col_[c].push(r, eqns_.entry(r, c).longValue());
+            if (eqns_.entry(r, c) != 0) {
+                // Each entry should have absolute value. <= 4
+                col_[c].push(r,
+                    static_cast<int>(eqns_.entry(r, c).longValue()));
+            }
 
     // Add in the final row(s) for any additional constraints.
     LPConstraint::addRows(col_, *this);
@@ -193,18 +196,17 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
 template <class LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool) {
     // This is a "do-nothing" version of reorder().
-    int i, j;
     if (! system_.standard()) {
         // Leave the columns exactly as they were.
-        for (i = 0; i < cols_; ++i)
+        for (size_t i = 0; i < cols_; ++i)
             columnPerm_[i] = i;
         return;
     } else {
         // Keep the tetrahedra in the same order, but move
         // quadrilaterals to the front and triangles to the back
         // as required by columnPerm().
-        int n = tri_->size();
-        for (i = 0; i < n; ++i) {
+        size_t n = tri_->size();
+        for (size_t i = 0; i < n; ++i) {
             columnPerm_[3 * i] = 7 * i + 4;
             columnPerm_[3 * i + 1] = 7 * i + 5;
             columnPerm_[3 * i + 2] = 7 * i + 6;
@@ -222,9 +224,9 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
     //
     // From here on we copy code directly from the "real" reorder()
     // below.
-    int* tmp = new int[eqns_.columns()];
+    size_t* tmp = new size_t[eqns_.columns()];
     std::copy(columnPerm_, columnPerm_ + eqns_.columns(), tmp);
-    for (i = 0; i < eqns_.columns(); ++i) {
+    for (size_t i = 0; i < eqns_.columns(); ++i) {
         // Column tmp[i] of the matrix should be moved to
         // column i.
         if (tmp[i] == i)
@@ -233,6 +235,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
         eqns_.swapCols(i, tmp[i]);
 
         // Adjust links to the old column i, which is now column tmp[i].
+        size_t j;
         for (j = i + 1; j < eqns_.columns(); ++j)
             if (tmp[j] == i)
                 break; // This is the link we need to change.
@@ -250,14 +253,13 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
     // If we have extra variables for additional constraints or
     // objectives, append the corresponding entries to the end of
     // the permutation for completeness.
-    for (i = 0; i < LPConstraint::nConstraints; ++i)
+    for (int i = 0; i < LPConstraint::nConstraints; ++i)
         columnPerm_[cols_ - i - 1] = cols_ - i - 1;
 }
 #else
 template <class LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
-    int n = tri_->size();
-    int i, j, k;
+    size_t n = tri_->size();
 
     // Fill the columnPerm_ array according to what kind of
     // problem we're trying to solve.
@@ -274,8 +276,8 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         // never throw.
         LPInitialTableaux<LPConstraintNone> quad(*tri_, NS_QUAD,
             true /* enumeration */);
-        for (i = 0; i < n; ++i) {
-            k = quad.columnPerm()[3 * i] / 3;
+        for (size_t i = 0; i < n; ++i) {
+            size_t k = quad.columnPerm()[3 * i] / 3;
             columnPerm_[3 * i] = 7 * k + 4;
             columnPerm_[3 * i + 1] = 7 * k + 5;
             columnPerm_[3 * i + 2] = 7 * k + 6;
@@ -287,7 +289,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
     } else if (system_.angle()) {
         // TODO: Find a good heuristic to use for angle structure coordinates.
         // For now, we'll leave the columns exactly as they were.
-        for (i = 0; i < cols_; ++i)
+        for (size_t i = 0; i < cols_; ++i)
             columnPerm_[i] = i;
         return;
     } else {
@@ -308,22 +310,22 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         // Also track which tetrahedra have been used so far.
         bool* touched = new bool[n];
         std::fill(touched, touched + n, false);
-        int nTouched = 0;
+        size_t nTouched = 0;
 
         // Off we go, one row at a time.
-        int bestRow, best, curr;
-        for (i = 0; i < rank_; ++i) {
+        for (size_t i = 0; i < rank_; ++i) {
             // Seek out the ith row to process.
             // Because the first rank_ rows of the matrix are full rank,
             // we are guaranteed that this row will be non-zero.
 
-            best = n + 1; // No row touches more than n tetrahedra.
+            size_t best = n + 1; // No row touches more than n tetrahedra.
+            size_t bestRow;
 
-            for (j = 0; j < rank_; ++j) {
+            for (size_t j = 0; j < rank_; ++j) {
                 if (used[j])
                     continue;
-                curr = 0;
-                for (k = 0; k < n; ++k) {
+                size_t curr = 0;
+                for (size_t k = 0; k < n; ++k) {
                     if (touched[k])
                         continue;
                     if (system_.quad()) {
@@ -353,7 +355,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
             // haven't already used yet, and place the corresponding
             // columns at the end of the matrix.
             used[bestRow] = true;
-            for (k = 0; k < n; ++k) {
+            for (size_t k = 0; k < n; ++k) {
                 if (touched[k])
                     continue;
                 if (system_.quad()) {
@@ -399,7 +401,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         // We have now processed all rows.  However, there may be some
         // tetrahedra that appear in no rows at all.
         // Make sure we catch these tetrahedra as well.
-        for (k = 0; k < n; ++k) {
+        for (size_t k = 0; k < n; ++k) {
             if (touched[k])
                 continue;
             touched[k] = true;
@@ -430,9 +432,9 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
     // from LPConstraint, which we will deal with later).
     //
     // Now go ahead and actually move the columns around accordingly.
-    int* tmp = new int[eqns_.columns()];
+    auto* tmp = new size_t[eqns_.columns()];
     std::copy(columnPerm_, columnPerm_ + eqns_.columns(), tmp);
-    for (i = 0; i < eqns_.columns(); ++i) {
+    for (size_t i = 0; i < eqns_.columns(); ++i) {
         // Column tmp[i] of the matrix should be moved to
         // column i.
         if (tmp[i] == i)
@@ -441,6 +443,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         eqns_.swapCols(i, tmp[i]);
 
         // Adjust links to the old column i, which is now column tmp[i].
+        size_t j;
         for (j = i + 1; j < eqns_.columns(); ++j)
             if (tmp[j] == i)
                 break; // This is the link we need to change.
@@ -458,7 +461,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
     // If we have extra variables for additional constraints or
     // objectives, append the corresponding entries to the end of
     // the permutation for completeness.
-    for (i = 0; i < LPConstraint::nConstraints; ++i)
+    for (int i = 0; i < LPConstraint::nConstraints; ++i)
         columnPerm_[cols_ - i - 1] = cols_ - i - 1;
 }
 #endif
@@ -466,7 +469,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
 template <class LPConstraint>
 void LPInitialTableaux<LPConstraint>::writeTextShort(std::ostream& out) const {
     out << "Columns:";
-    for (unsigned c = 0; c < eqns_.columns(); ++c) {
+    for (size_t c = 0; c < eqns_.columns(); ++c) {
         if (system_.angle() && c + 1 == eqns_.columns())
             out << " {scaling " << scaling_ << '}';
         else {
@@ -496,7 +499,7 @@ void LPInitialTableaux<LPConstraint>::writeTextShort(std::ostream& out) const {
         out << ", constraints:";
         for (int i = 0; i < LPConstraint::nConstraints; ++i) {
             out << " [";
-            for (unsigned c = 0; c < cols_; ++c)
+            for (size_t c = 0; c < cols_; ++c)
                 out << ' ' << col_[c].extra[i];
             out << " ]";
         }
@@ -509,10 +512,10 @@ void LPInitialTableaux<LPConstraint>::writeTextLong(std::ostream& out) const {
     system_.writeTextShort(out);
     out << "\nRank: " << rank_
         << "\nColumn permutation:";
-    for (unsigned c = 0; c < cols_; ++c)
+    for (size_t c = 0; c < cols_; ++c)
         out << ' ' << columnPerm_[c];
     out << '\n';
-    for (unsigned c = 0; c < eqns_.columns(); ++c) {
+    for (size_t c = 0; c < eqns_.columns(); ++c) {
         out << "Column " << c << ':';
         if (system_.angle() && c + 1 == eqns_.columns())
             out << " scaling -> " << scaling_;
@@ -541,7 +544,7 @@ void LPInitialTableaux<LPConstraint>::writeTextLong(std::ostream& out) const {
     if constexpr (LPConstraint::nConstraints > 0) {
         for (int i = 0; i < LPConstraint::nConstraints; ++i) {
             out << "Constraint " << i << ':';
-            for (unsigned c = 0; c < cols_; ++c)
+            for (size_t c = 0; c < cols_; ++c)
                 out << ' ' << col_[c].extra[i];
             out << '\n';
         }
@@ -584,14 +587,15 @@ void LPData<LPConstraint, IntType>::initClone(const LPData& parent) {
     std::copy(parent.rhs_, parent.rhs_ + parent.rank_, rhs_);
     rowOps_.initClone(parent.rowOps_);
     rank_ = parent.rank_;
-    memcpy(basis_, parent.basis_, parent.rank_ * sizeof(int));
-    memcpy(basisRow_, parent.basisRow_, origTableaux_->columns() * sizeof(int));
+    memcpy(basis_, parent.basis_, parent.rank_ * sizeof(size_t));
+    memcpy(basisRow_, parent.basisRow_,
+        origTableaux_->columns() * sizeof(ssize_t));
     octPrimary_ = parent.octPrimary_;
     octSecondary_ = parent.octSecondary_;
 }
 
 template <class LPConstraint, typename IntType>
-void LPData<LPConstraint, IntType>::constrainZero(unsigned pos) {
+void LPData<LPConstraint, IntType>::constrainZero(size_t pos) {
     // If the variable has already been deactivated, there is
     // nothing to do.
     if (! isActive(pos))
@@ -609,14 +613,14 @@ void LPData<LPConstraint, IntType>::constrainZero(unsigned pos) {
 
     // Is the variable currently in the basis?  If so, get it out.
     if (basisRow_[pos] >= 0) {
-        int r = basisRow_[pos];
-        int c;
-        if (rhs_[r].isZero()) {
+        auto row = static_cast<size_t>(basisRow_[pos]);
+        ssize_t c;
+        if (rhs_[row].isZero()) {
             // We can pivot in any other variable that appears in
             // this basis row.  Choose the one with largest index.
             for (c = origTableaux_->columns() - 1; c >= 0; --c)
                 if (basisRow_[c] < 0 /* c is active and non-basic */ &&
-                        entrySign(r, c))
+                        entrySign(row, c))
                     break;
             if (c >= 0) {
                 pivot(pos, c);
@@ -633,18 +637,18 @@ void LPData<LPConstraint, IntType>::constrainZero(unsigned pos) {
                 // "Delete" the row by moving it to index rank_, which
                 // is now outside our scope of interest (since we are
                 // now only interested in rows 0,...,rank_-1).
-                if (r != rank_) {
-                    std::swap(rhs_[r], rhs_[rank_]);
-                    rowOps_.swapRows(r, rank_);
-                    basis_[r] = basis_[rank_];
-                    basisRow_[basis_[r]] = r;
+                if (row != rank_) {
+                    std::swap(rhs_[row], rhs_[rank_]);
+                    rowOps_.swapRows(row, rank_);
+                    basis_[row] = basis_[rank_];
+                    basisRow_[basis_[row]] = row;
                 }
 
                 // This column is already filled with zeroes
                 // from row 0 to rank_-1, because pos was in the basis.
                 // If we're in paranoid mode, check this.
 #ifdef REGINA_VERIFY_LPDATA
-                for (r = 0; r < rank_; ++r)
+                for (size_t r = 0; r < rank_; ++r)
                     if (! entry(r, pos).isZero()) {
                         std::cerr << "VERIFY: Drop error." << std::endl;
                         ::exit(1);
@@ -659,7 +663,7 @@ void LPData<LPConstraint, IntType>::constrainZero(unsigned pos) {
             // no such variable, the entire system becomes infeasible.
             for (c = origTableaux_->columns() - 1; c >= 0; --c)
                 if (basisRow_[c] < 0 /* c is active and non-basic */ &&
-                        entrySign(r, c) > 0)
+                        entrySign(row, c) > 0)
                     break;
             if (c < 0) {
                 // There is no possible variable to pivot in.
@@ -697,7 +701,7 @@ void LPData<LPConstraint, IntType>::constrainZero(unsigned pos) {
 }
 
 template <class LPConstraint, typename IntType>
-void LPData<LPConstraint, IntType>::constrainPositive(unsigned pos) {
+void LPData<LPConstraint, IntType>::constrainPositive(size_t pos) {
     // If the variable has already been deactivated, it cannot
     // be positive.
     if (! isActive(pos)) {
@@ -716,21 +720,21 @@ void LPData<LPConstraint, IntType>::constrainPositive(unsigned pos) {
     // If there is any possibility that some entry on the
     // right-hand side could become negative, we must remember to
     // pivot back to feasibility.
-    int r = basisRow_[pos];
+    ssize_t row = basisRow_[pos];
     IntType tmp;
-    if (r >= 0) {
+    if (row >= 0) {
         // This variable is in the basis, and so there is only
         // one non-zero entry in column pos.
         // This makes subtracting column pos from rhs_ very easy
         // (just a single operation):
-        entry(r, pos, tmp);
-        if ((rhs_[r] -= tmp) < 0)
+        entry(row, pos, tmp);
+        if ((rhs_[row] -= tmp) < 0)
             makeFeasible();
     } else {
         // This variable is not in the basis.
         // We know nothing about the column, so just do a full
         // element-by-element column subtraction.
-        for (r = 0; r < rank_; ++r) {
+        for (size_t r = 0; r < rank_; ++r) {
             entry(r, pos, tmp);
             rhs_[r] -= tmp;
         }
@@ -739,8 +743,7 @@ void LPData<LPConstraint, IntType>::constrainPositive(unsigned pos) {
 }
 
 template <class LPConstraint, typename IntType>
-void LPData<LPConstraint, IntType>::constrainOct(
-        unsigned quad1, unsigned quad2) {
+void LPData<LPConstraint, IntType>::constrainOct(size_t quad1, size_t quad2) {
     // If either variable has already been deactivated, it cannot
     // be positive.
     if (! (isActive(quad1) && isActive(quad2))) {
@@ -783,8 +786,8 @@ void LPData<LPConstraint, IntType>::constrainOct(
     // remember to reorganise the tableaux so that the column once
     // again contains all zeroes except for a single positive entry.
 
-    int row1 = basisRow_[quad1];
-    int row2 = basisRow_[quad2];
+    ssize_t row1 = basisRow_[quad1];
+    ssize_t row2 = basisRow_[quad2];
 
     if (row1 < 0) {
         if (row2 < 0) {
@@ -862,8 +865,8 @@ void LPData<LPConstraint, IntType>::constrainOct(
             }
 
             IntType coeff, gcdRow;
-            for (int r = 0; r < rank_; ++r) {
-                if (r == row1)
+            for (size_t r = 0; r < rank_; ++r) {
+                if (r == static_cast<size_t>(row1))
                     continue;
 
                 // We will reuse coeff, to avoid too many temporary IntTypes.
@@ -896,7 +899,7 @@ void LPData<LPConstraint, IntType>::constrainOct(
             // non-zero coefficient are in non-basic columns.
 
             // Choose the column with largest index.
-            int c;
+            ssize_t c;
             for (c = origTableaux_->columns() - 1; c >= 0; --c)
                 if (basisRow_[c] < 0 /* active and non-basic */ &&
                         entrySign(row1, c))
@@ -931,7 +934,7 @@ void LPData<LPConstraint, IntType>::constrainOct(
                     // Move the empty row out of the active area
                     // of the matrix.
                     --rank_;
-                    if (row1 != rank_) {
+                    if (row1 != static_cast<ssize_t>(rank_)) {
                         std::swap(rhs_[row1], rhs_[rank_]);
                         rowOps_.swapRows(row1, rank_);
                         basis_[row1] = basis_[rank_];
@@ -961,7 +964,7 @@ void LPData<LPConstraint, IntType>::writeTextShort(std::ostream& out) const {
     else
         out << "Infeasible basis:";
     if (rank_ > 0)
-        for (unsigned r = 0; r < rank_; ++r)
+        for (size_t r = 0; r < rank_; ++r)
             out << ' ' << basis_[r];
     else
         out << " (empty)";
@@ -979,14 +982,14 @@ void LPData<LPConstraint, IntType>::writeTextLong(std::ostream& out) const {
     else
         out << "Infeasible basis:";
     if (rank_ > 0)
-        for (unsigned r = 0; r < rank_; ++r)
+        for (size_t r = 0; r < rank_; ++r)
             out << ' ' << basis_[r];
     else
         out << " (empty)";
 
     out << "\nTableaux:\n";
-    for (unsigned r = 0; r < rank_; ++r) {
-        for (unsigned c = 0; c < origTableaux_->columns(); ++c)
+    for (size_t r = 0; r < rank_; ++r) {
+        for (size_t c = 0; c < origTableaux_->columns(); ++c)
             out << entry(r, c) << ' ';
         out << '\n';
     }
@@ -1008,7 +1011,7 @@ RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
         "that stores one of Regina's own integer types.");
 
     // Fetch details on how to undo the column permutation.
-    const int* columnPerm = origTableaux_->columnPerm();
+    const size_t* columnPerm = origTableaux_->columnPerm();
 
     // We will multiply the solution vector by
     // lcm(basis coefficients in the tableaux), which will
@@ -1017,7 +1020,7 @@ RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
     // vector down again at the end of this routine.
     //
     // First compute this lcm.
-    unsigned i;
+    size_t i;
     typename RayClass::value_type lcm(1);
     for (i = 0; i < rank_; ++i)
         lcm = lcm.lcm(entry(i, basis_[i]));
@@ -1069,8 +1072,7 @@ RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
     } else {
         // For normal and almost normal surfaces, we need to work through
         // each past call to constrainPositive() and/or constrainOct().
-        const unsigned long nTets =
-            origTableaux_->tri().size();
+        const size_t nTets = origTableaux_->tri().size();
 
         // First take into account the quadrilateral types...
         for (i = 0; i < nTets; ++i)
@@ -1101,8 +1103,8 @@ RayClass LPData<LPConstraint, IntType>::extractSolution(const char* type)
 }
 
 template <class LPConstraint, typename IntType>
-void LPData<LPConstraint, IntType>::pivot(unsigned outCol, unsigned inCol) {
-    unsigned defRow = basisRow_[outCol];
+void LPData<LPConstraint, IntType>::pivot(size_t outCol, size_t inCol) {
+    size_t defRow = basisRow_[outCol];
     basisRow_[outCol] = -1;
     basisRow_[inCol] = defRow;
     basis_[defRow] = inCol;
@@ -1120,8 +1122,7 @@ void LPData<LPConstraint, IntType>::pivot(unsigned outCol, unsigned inCol) {
     // to ensure that the only non-zero entry in column \a inCol
     // is the entry base in row defRow (as extracted above).
     IntType coeff, gcdRow;
-    unsigned r;
-    for (r = 0; r < rank_; ++r) {
+    for (size_t r = 0; r < rank_; ++r) {
         if (r == defRow)
             continue;
 
@@ -1173,8 +1174,8 @@ void LPData<LPConstraint, IntType>::findInitialBasis() {
     // Off we go with our Gauss-Jordan elimination.
     // Since the original tableaux is full rank, we know in
     // advance that every row will define some basic variable.
-    unsigned row;
-    unsigned r, c;
+    size_t row;
+    size_t r, c;
     Integer base, coeff;
     Integer gcdRow;
     for (row = 0; row < rank_; ++row) {
@@ -1239,7 +1240,8 @@ void LPData<LPConstraint, IntType>::findInitialBasis() {
 
 template <class LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::makeFeasible() {
-    int r, c, outCol, outRow;
+    ssize_t outCol;
+    size_t outRow;
     IntType outEntry, tmp, v1, v2;
 
     // Variables for detecting cycling.
@@ -1256,9 +1258,9 @@ void LPData<LPConstraint, IntType>::makeFeasible() {
     // (in particular, the total number of pivots that we take
     // overall is at most three times the total number of pivots
     // before the first repeated basis).
-    unsigned nCols = origTableaux_->columns();
+    size_t nCols = origTableaux_->columns();
     Bitmask currBasis(nCols);
-    for (r = 0; r < rank_; ++r)
+    for (size_t r = 0; r < rank_; ++r)
         currBasis.set(basis_[r], true);
     Bitmask oldBasis(currBasis);
     unsigned long pow2 = 1;
@@ -1273,7 +1275,7 @@ void LPData<LPConstraint, IntType>::makeFeasible() {
         // If there are many, choose the variable with largest 
         // magnitude negative value.
         outCol = -1;
-        for (r = 0; r < rank_; ++r)
+        for (size_t r = 0; r < rank_; ++r)
             if (rhs_[r] < 0) {
                 if (outCol < 0) {
                     // First candidate we've seen.
@@ -1302,6 +1304,7 @@ void LPData<LPConstraint, IntType>::makeFeasible() {
         // Fix this bad variable by pivoting it out.
         // The pivot-in variable must be the largest-index
         // column with negative coefficient in this row.
+        ssize_t c;
         for (c = nCols - 1; c >= 0; --c)
             if (basisRow_[c] < 0 /* active, non-basic variable */ &&
                     entrySign(outRow, c) < 0)
@@ -1342,9 +1345,9 @@ void LPData<LPConstraint, IntType>::makeFeasible() {
 
 template <class LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::makeFeasibleAntiCycling() {
-    int r, c, outCol;
+    ssize_t outCol;
 #ifdef REGINA_COUNT_PIVOTS
-    unsigned nPivots = 0;
+    unsigned long nPivots = 0;
 #endif
     while (true) {
 #ifdef REGINA_COUNT_PIVOTS
@@ -1355,9 +1358,9 @@ void LPData<LPConstraint, IntType>::makeFeasibleAntiCycling() {
         // Locate a variable in the basis with negative value.
         // If there are many, choose the one with largest index.
         outCol = -1;
-        for (r = 0; r < rank_; ++r)
+        for (size_t r = 0; r < rank_; ++r)
             if (rhs_[r] < 0) {
-                if (basis_[r] > outCol)
+                if (static_cast<ssize_t>(basis_[r]) > outCol)
                     outCol = basis_[r];
             }
         if (outCol < 0) {
@@ -1369,6 +1372,7 @@ void LPData<LPConstraint, IntType>::makeFeasibleAntiCycling() {
         // Fix this bad variable by pivoting it out.
         // The pivot-in variable must be the largest-index
         // column with negative coefficient in this row.
+        ssize_t c;
         for (c = origTableaux_->columns() - 1; c >= 0; --c)
             if (basisRow_[c] < 0 /* active, non-basic variable */ &&
                     entrySign(basisRow_[outCol], c) < 0)
@@ -1385,7 +1389,7 @@ void LPData<LPConstraint, IntType>::makeFeasibleAntiCycling() {
 
 template <class LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::verify() const {
-    unsigned r, c;
+    size_t r, c;
     for (r = 0; r < rank_; ++r) {
         // Check that rowOps_ is an inverse matrix.
         for (c = 0; c < rank_; ++c)

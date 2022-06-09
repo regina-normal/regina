@@ -41,14 +41,14 @@ using regina::Perm;
 using regina::python::ConstArray;
 
 namespace {
-    ConstArray<decltype(Perm<4>::S4)>
+    ConstArray<decltype(Perm<4>::S4), int>
         Perm4_S4_arr(Perm<4>::S4, 24);
-    ConstArray<decltype(Perm<4>::orderedS4)>
+    ConstArray<decltype(Perm<4>::orderedS4), int>
         Perm4_orderedS4_arr(Perm<4>::orderedS4, 24);
-    ConstArray<decltype(Perm<4>::S3)> Perm4_S3_arr(Perm<4>::S3, 6);
-    ConstArray<decltype(Perm<4>::orderedS3)>
+    ConstArray<decltype(Perm<4>::S3), int> Perm4_S3_arr(Perm<4>::S3, 6);
+    ConstArray<decltype(Perm<4>::orderedS3), int>
         Perm4_orderedS3_arr(Perm<4>::orderedS3, 6);
-    ConstArray<decltype(Perm<4>::S2)> Perm4_S2_arr(Perm<4>::S2, 2);
+    ConstArray<decltype(Perm<4>::S2), int> Perm4_S2_arr(Perm<4>::S2, 2);
 
     template <int k>
     struct Perm4_contract {
@@ -138,6 +138,7 @@ void addPerm4(pybind11::module_& m) {
     ;
     Perm4_contract<5>::add_bindings(c);
     regina::python::add_output_basic(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 }
 

@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
+ * Copyright (C) 2007-2022  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * As an exception, when this program is distributed through (i) the App Store
  * by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or (iii) Google Play
@@ -33,8 +33,8 @@ namespace libnormaliz {
 bool verbose = false;
 
 volatile sig_atomic_t nmz_interrupted = 0;
-const long default_thread_limit = 8;
-long thread_limit = default_thread_limit;
+const int default_thread_limit = 8;
+int thread_limit = default_thread_limit;
 bool parallelization_set = false;
 
 // bool test_arithmetic_overflow = false;
@@ -45,12 +45,15 @@ size_t GMP_hyp = 0;
 size_t GMP_scal_prod = 0;
 size_t TotDet = 0;
 
+long cone_recursion_level = 0;
+long full_cone_recursion_level = 0;
+
 bool int_max_value_dual_long_computed = false;
 bool int_max_value_dual_long_long_computed = false;
 bool int_max_value_primary_long_computed = false;
 bool int_max_value_primary_long_long_computed = false;
 
-vector<vector<vector<long> > > CollectedAutoms(default_thread_limit); // for use in nmz_nauty.cpp
+vector<vector<vector<long> > > CollectedAutoms(default_thread_limit);  // for use in nmz_nauty.cpp
 
 #ifdef NMZ_EXTENDED_TESTS
 bool test_arith_overflow_full_cone = false;
@@ -86,8 +89,8 @@ bool setVerboseDefault(bool v) {
     return old;
 }
 
-long set_thread_limit(long t) {
-    long old = thread_limit;
+int set_thread_limit(int t) {
+    int old = thread_limit;
     parallelization_set = true;
     thread_limit = t;
     CollectedAutoms.resize(t);
@@ -113,25 +116,24 @@ std::ostream& errorOutput() {
 #ifdef NMZ_DEVELOP
 struct timeval TIME_begin, TIME_end;
 
-void StartTime(){
-    gettimeofday(&TIME_begin, 0);    
+void StartTime() {
+    gettimeofday(&TIME_begin, 0);
 }
 
-void MeasureTime(bool verbose, const std::string& step){
-    
+void MeasureTime(bool verbose_, const std::string& step) {
     gettimeofday(&TIME_end, 0);
     long seconds = TIME_end.tv_sec - TIME_begin.tv_sec;
     long microseconds = TIME_end.tv_usec - TIME_begin.tv_usec;
-    double elapsed = seconds + microseconds*1e-6;
-    if(verbose)
+    double elapsed = seconds + microseconds * 1e-6;
+    if (verbose_)
         verboseOutput() << step << ": " << elapsed << " sec" << endl;
     TIME_begin = TIME_end;
 }
 #else
-void StartTime(){
-    return; 
+void StartTime() {
+    return;
 }
-void MeasureTime(bool verbose, const std::string& step){
+void MeasureTime(bool verbose_, const std::string& step) {
     return;
 }
 #endif

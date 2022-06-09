@@ -66,7 +66,6 @@ void addLaurent2(pybind11::module_& m) {
         .def("utf8", overload_cast<const char*, const char*>(
             &Laurent2<regina::Integer>::utf8, pybind11::const_),
             pybind11::arg(), pybind11::arg("varY") = nullptr)
-        .def("tightEncoding", &Laurent2<regina::Integer>::tightEncoding)
         .def("__getitem__", [](const Laurent2<regina::Integer>& p,
                 std::pair<long, long> exponents) {
             return p(exponents.first, exponents.second);
@@ -93,6 +92,7 @@ void addLaurent2(pybind11::module_& m) {
         .def(- pybind11::self)
     ;
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(Laurent2<regina::Integer>&,

@@ -89,7 +89,7 @@ void GluingPermSearcher<2>::searchImpl(long maxDepth, ActionWrapper&& action_) {
     }
 
     // Is it a partial search that has already finished?
-    if (orderElt == orderSize) {
+    if (orderElt == static_cast<ssize_t>(orderSize)) {
         if (isCanonical())
             action_(perms_);
         return;
@@ -141,7 +141,7 @@ void GluingPermSearcher<2>::searchImpl(long maxDepth, ActionWrapper&& action_) {
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (orderElt == orderSize) {
+        if (orderElt == static_cast<ssize_t>(orderSize)) {
             // We in fact have an entire triangulation.
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
@@ -259,7 +259,7 @@ GluingPermSearcher<2>::GluingPermSearcher(std::istream& in) :
     in >> orderElt >> orderSize;
     for (size_t t = 0; t < orderSize; t++) {
         in >> order[t].simp >> order[t].facet;
-        if (order[t].simp >= nTris || order[t].simp < 0 ||
+        if (order[t].simp >= static_cast<ssize_t>(nTris) || order[t].simp < 0 ||
                 order[t].facet >= 3 || order[t].facet < 0)
             throw InvalidInput("Edge gluing out of range "
                 "while attempting to read GluingPermSearcher<2>");
@@ -279,7 +279,8 @@ bool GluingPermSearcher<2>::isCanonical() const {
         // Compare the current set of gluing permutations with its
         // preimage under each edge pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
-        for (edge.setFirst(); edge.simp < perms_.size(); edge++) {
+        for (edge.setFirst(); edge.simp < static_cast<ssize_t>(perms_.size());
+                ++edge) {
             edgeDest = perms_.pairing().dest(edge);
             if (perms_.pairing().isUnmatched(edge) || edgeDest < edge)
                 continue;

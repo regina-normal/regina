@@ -210,7 +210,7 @@ class SnapshotWriteError : public std::exception {
  */
 template <class T>
 class Snapshot {
-    static_assert(std::is_base_of<Snapshottable<T>, T>::value,
+    static_assert(std::is_base_of_v<Snapshottable<T>, T>,
         "Snapshot<T> requires T to be derived from Snapshottable<T>.");
 
     private:

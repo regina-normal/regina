@@ -270,7 +270,7 @@ class LPConstraintBase {
          */
         template <typename IntType>
         static void constrain(LPData<LPConstraintNone, IntType>& lp,
-            unsigned numCols);
+            size_t numCols);
 
         /**
          * Ensures that the given normal surface satisfies the extra
@@ -398,7 +398,7 @@ class LPConstraintNone : public LPConstraintSubspace {
             const LPInitialTableaux<LPConstraintNone>& init);
         template<typename IntType>
         static void constrain(
-            LPData<regina::LPConstraintNone, IntType>&, unsigned);
+            LPData<regina::LPConstraintNone, IntType>&, size_t);
         static bool verify(const NormalSurface&);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
@@ -463,7 +463,7 @@ class LPConstraintEulerPositive : public LPConstraintBase {
         template<typename IntType>
         static void constrain(
             LPData<regina::LPConstraintEulerPositive, IntType>& lp,
-            unsigned numCols);
+            size_t numCols);
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
@@ -514,7 +514,7 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
         template<typename IntType>
         static void constrain(
             LPData<regina::LPConstraintEulerZero, IntType>& lp,
-            unsigned numCols);
+            size_t numCols);
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
@@ -579,7 +579,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
         template <typename IntType>
         static void constrain(
             LPData<regina::LPConstraintNonSpun, IntType>& lp,
-            unsigned numCols);
+            size_t numCols);
         static bool verify(const NormalSurface& s);
         static bool verify(const AngleStructure&);
         static bool supported(NormalEncoding enc);
@@ -849,8 +849,8 @@ class BanNone : public ShortOutput<BanNone> {
         template <class LPConstraint, typename IntType>
         void enforceBans(LPData<LPConstraint, IntType>&) const {}
 
-        bool operator == (const BanNone& other) const { return true; }
-        bool operator != (const BanNone& other) const { return false; }
+        bool operator == (const BanNone&) const { return true; }
+        bool operator != (const BanNone&) const { return false; }
 
         void writeTextShort(std::ostream& out) const {
             out << "Nothing banned or marked";
@@ -1007,7 +1007,7 @@ inline void LPConstraintNone::addRows(
 
 template <typename IntType>
 inline void LPConstraintNone::constrain(
-        LPData<regina::LPConstraintNone, IntType>&, unsigned) {
+        LPData<regina::LPConstraintNone, IntType>&, size_t) {
 }
 
 inline bool LPConstraintNone::verify(const NormalSurface&) {
@@ -1025,7 +1025,7 @@ inline bool LPConstraintNone::supported(NormalEncoding) {
 template <typename IntType>
 inline void LPConstraintEulerPositive::constrain(
         LPData<regina::LPConstraintEulerPositive, IntType>& lp,
-        unsigned numCols) {
+        size_t numCols) {
     lp.constrainPositive(numCols - 1);
 }
 
@@ -1044,7 +1044,7 @@ inline bool LPConstraintEulerPositive::supported(NormalEncoding enc) {
 
 template <typename IntType>
 inline void LPConstraintEulerZero::constrain(
-        LPData<regina::LPConstraintEulerZero, IntType>& lp, unsigned numCols) {
+        LPData<regina::LPConstraintEulerZero, IntType>& lp, size_t numCols) {
     lp.constrainZero(numCols - 1);
 }
 
@@ -1063,7 +1063,7 @@ inline bool LPConstraintEulerZero::supported(NormalEncoding enc) {
 
 template <typename IntType>
 inline void LPConstraintNonSpun::constrain(
-        LPData<regina::LPConstraintNonSpun, IntType>& lp, unsigned numCols) {
+        LPData<regina::LPConstraintNonSpun, IntType>& lp, size_t numCols) {
     lp.constrainZero(numCols - 2);
     lp.constrainZero(numCols - 1);
 }
@@ -1099,7 +1099,7 @@ inline BanConstraintBase::~BanConstraintBase() {
 template <class LPConstraint, typename IntType>
 inline void BanConstraintBase::enforceBans(LPData<LPConstraint, IntType>& lp)
         const {
-    for (unsigned i = 0; i < lp.coordinateColumns(); ++i)
+    for (size_t i = 0; i < lp.coordinateColumns(); ++i)
         if (banned_[i])
             lp.constrainZero(i);
 }

@@ -64,7 +64,8 @@ class FacetGraphData {
 
         virtual regina::Packet* getPacket() = 0;
         virtual std::string dual(bool withLabels) = 0;
-        virtual std::string treeDecomp(bool nice, int& bags, int& width) = 0;
+        virtual std::string treeDecomp(bool nice, size_t& bags,
+            size_t& width) = 0;
         virtual size_t numberOfSimplices() = 0;
         virtual QString simplexName() = 0;
         virtual QString simplicesName() = 0;
@@ -82,7 +83,7 @@ class Dim2EdgeGraphData : public FacetGraphData {
 
         regina::Packet* getPacket() override;
         std::string dual(bool withLabels) override;
-        std::string treeDecomp(bool nice, int& bags, int& width) override;
+        std::string treeDecomp(bool nice, size_t& bags, size_t& width) override;
         size_t numberOfSimplices() override;
         QString simplexName() override;
         QString simplicesName() override;
@@ -104,7 +105,7 @@ class Dim3FaceGraphData : public FacetGraphData {
 
         regina::Packet* getPacket() override;
         std::string dual(bool withLabels) override;
-        std::string treeDecomp(bool nice, int& bags, int& width) override;
+        std::string treeDecomp(bool nice, size_t& bags, size_t& width) override;
         size_t numberOfSimplices() override;
         QString simplexName() override;
         QString simplicesName() override;
@@ -122,7 +123,7 @@ class Dim4FacetGraphData : public FacetGraphData {
 
         regina::Packet* getPacket() override;
         std::string dual(bool withLabels) override;
-        std::string treeDecomp(bool nice, int& bags, int& width) override;
+        std::string treeDecomp(bool nice, size_t& bags, size_t& width) override;
         size_t numberOfSimplices() override;
         QString simplexName() override;
         QString simplicesName() override;

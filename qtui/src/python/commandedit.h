@@ -37,6 +37,7 @@
 #ifndef __COMMANDEDIT_H
 #define __COMMANDEDIT_H
 
+#include "reginaqt.h"
 #include <QStringList>
 #include <QLineEdit>
 

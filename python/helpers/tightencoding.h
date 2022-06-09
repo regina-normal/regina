@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Test Suite                                                            *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,23 +30,31 @@
  *                                                                        *
  **************************************************************************/
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
+/*! \file python/helpers/tightencoding.h
+ *  \brief Assists with wrapping Regina's tight encoding and decoding routines.
  */
 
-#include <cppunit/ui/text/TestRunner.h>
+namespace regina::python {
 
-void addTriangulation3(CppUnit::TextUi::TestRunner& runner);
-void addElementaryMoves(CppUnit::TextUi::TestRunner& runner);
-void addConnectedSumDecomp(CppUnit::TextUi::TestRunner& runner);
-void addIsomorphism3(CppUnit::TextUi::TestRunner& runner);
-void addLinkingSurfaces(CppUnit::TextUi::TestRunner& runner);
-void addDualGraph3(CppUnit::TextUi::TestRunner& runner);
-void addHomologicalData(CppUnit::TextUi::TestRunner& runner);
+/**
+ * Adds tight encoding and decoding functions to the python bindings for a
+ * C++ class.
+ *
+ * This will add tightEncoding() and tightDecoding() to the python class,
+ * as provided by the regina::TightEncodable (templated) C++ base class.
+ *
+ * To use this for some C++ class \a T in Regina, simply call
+ * <t>regina::python::add_tight_encoding(c)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.
+ *
+ * The wrapped class \a T should either derive from regina::TightEncodable, or
+ * should provide tightEncoding() and tightDecoding() functions in a way that
+ * is consistent with the regina::TightEncodable interface.
+ */
+template <class C, typename... options>
+void add_tight_encoding(pybind11::class_<C, options...>& c) {
+    c.def("tightEncoding", &C::tightEncoding);
+    c.def("tightDecoding", &C::tightDecoding);
+}
 
+} // namespace regina::python

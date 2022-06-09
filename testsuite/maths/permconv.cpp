@@ -33,7 +33,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/perm.h"
-#include "testsuite/dim3/testtriangulation.h"
+#include "testsuite/dim3/testdim3.h"
 
 using regina::Perm;
 

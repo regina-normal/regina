@@ -59,7 +59,6 @@ std::vector<BitmaskType> MaxAdmissible::enumerate(
     }
 
     size_t dim = (*beginExtremalRays).size();
-    int i;
 
     auto constMasks = constraints.bitmasks<BitmaskType>(dim);
 
@@ -68,7 +67,7 @@ std::vector<BitmaskType> MaxAdmissible::enumerate(
     std::vector<BitmaskType> rays;
     BitmaskType b(dim);
     for (auto rit = beginExtremalRays; rit != endExtremalRays; ++rit) {
-        for (i = 0; i < dim; ++i)
+        for (size_t i = 0; i < dim; ++i)
             b.set(i, (*rit)[i] != 0);
         rays.push_back(b);
     }

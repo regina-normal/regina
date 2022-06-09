@@ -288,6 +288,12 @@ class SimplexBase : public MarkedElement, public Output<SimplexBase<dim>> {
          * (i.e., we do not have both \a you == \c this and
          * \a gluing[\a myFacet] == \a myFacet).
          *
+         * \exception InvalidArgument At least one of the conditions above
+         * fails; that is, either the two simplices being joined belong
+         * to different triangulations, or one of the two facets being
+         * joined is already joined to something, or you are trying to
+         * join the same facet of the same simplex to itself.
+         *
          * @param myFacet the facet of this simplex that will be glued
          * to the given simplex \a you.  This facet number must be between
          * 0 and \a dim inclusive.
@@ -929,20 +935,23 @@ Simplex<dim>* SimplexBase<dim>::unjoin(int myFacet) {
 template <int dim>
 void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
         Perm<dim+1> gluing) {
+    if (tri_ != you->tri_)
+        throw InvalidArgument("You cannot join simplices from "
+            "two different triangulations");
+
+    int yourFacet = gluing[myFacet];
+
+    if (adj_[myFacet] || you->adj_[yourFacet])
+        throw InvalidArgument("You cannot join facets of simplices that "
+            "are already joined to something");
+    if (you == this && yourFacet == myFacet)
+        throw InvalidArgument("You cannot join a facet of a simplex to itself");
+
     tri_->takeSnapshot();
     typename Triangulation<dim>::ChangeEventSpan span(*tri_);
 
-    assert(tri_ == you->tri_);
-    assert((! adj_[myFacet]) ||
-        (adj_[myFacet] == you && gluing_[myFacet] == gluing));
-
     adj_[myFacet] = you;
     gluing_[myFacet] = gluing;
-    int yourFacet = gluing[myFacet];
-    assert((! you->adj_[yourFacet]) ||
-        (you->adj_[yourFacet] == this &&
-            you->gluing_[yourFacet] == gluing.inverse()));
-    assert(! (you == this && yourFacet == myFacet));
     you->adj_[yourFacet] = static_cast<Simplex<dim>*>(this);
     you->gluing_[yourFacet] = gluing.inverse();
 
@@ -979,9 +988,8 @@ template <int dim>
 template <int useDim>
 inline bool SimplexBase<dim>::sameDegreesAt(
         const SimplexBase<dim>& other, Perm<dim + 1> p) const {
-    size_t i, j;
-    for (i = 0; i < FaceNumbering<dim, useDim>::nFaces; ++i) {
-        j = FaceNumbering<dim, useDim>::faceNumber(
+    for (int i = 0; i < FaceNumbering<dim, useDim>::nFaces; ++i) {
+        int j = FaceNumbering<dim, useDim>::faceNumber(
             p * FaceNumbering<dim, useDim>::ordering(i));
         if (std::get<useDim>(faces_)[i]->degree() !=
                 std::get<useDim>(other.faces_)[j]->degree())

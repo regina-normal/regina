@@ -11,12 +11,25 @@ Version 7.1  [ TODO ]
 
     GENERAL:
         - Regina now supports Python 3 only (not Python 2 or 3).
-        - Updated the bundled copy of Normaliz to version 3.9.2 (7 Feb 2022).
+        - The GUI can now build against either Qt5 or Qt6.
+        - Updated the bundled copy of Normaliz to version 3.9.3 (20 Apr 2022).
         - Removed all code that was deprecated in or before version 7.0.
+        - Many native integer types (e.g., int, unsigned, long) have been
+          changed, reflecting more natural and/or consistent choices.
+          In particular, the types used for indices, sizes and/or lengths
+          now more consistently use size_t (or ssize_t when needed), and
+          the types used for "small" integers now more consistently use int
+          instead of unsigned.  Note in particular that some types have
+          changed from signed to unsigned, and vice versa.
     ENGINE:
+        Class AbelianGroup:
+            - New tightDecoding() routines.
         Class CallableArg<...>:
             - Now a public helper class in the main regina:: namespace.
             - Now behaves gracefully if the given index is out of range.
+        Class Cut:
+            - New class for describing graph-style cuts on triangulations or
+              facet pairings.
         Class Edge<3>:
             - Now specialised (instead of using the generic Face template).
             - New routine linkingSurface().
@@ -25,21 +38,55 @@ Version 7.1  [ TODO ]
             - Reflected the result of cp2() so that it has intersection
               form [1], not [-1].
         Class FacetPairing<dim>:
-            - New routine canonical().
+            - New routine isConnected().
+            - New routines canonical() and canonicalAll().
+            - New routines for tight encodings and decodings.
             - In findAllPairings(), the action is no longer required to
               take the list of all automorphisms if it does not need them.
+            - Renamed toTextRep() to textRep().  The old name is kept as
+              a deprecated alias.
+            - The IsoList type alias has changed from std::list to std::vector,
+              for better performance.
+        Class FacetPairing<3>:
+            - Routine followChain() now uses ssize_t for the tetrahedron index.
+              The old size_t version is still present but deprecated.
+        Struct FacetSpec<dim>:
+            - New routines for tight encodings and decodings.
         Class HilbertPrimal:
             - The header no longer includes the Normaliz headers (which
               Regina does not actually ship with its development files).
+        Class Integer:
+            - New tightDecoding() routines.
+            - Now supports creation and assignment from long long (both
+              signed and unsigned).
         Class IntersectionForm:
             - New class to compute invariants of intersection forms.
-        Class Isomorphism:
+        Class Isomorphism<dim>:
             - Replaced apply() with the bracket operator.  The old apply()
               is now a deprecated alias.
             - Deprecated applyInPlace(), since this is no faster than
               calling tri = iso(tri).
             - Added bracket operators to apply an isomorphism to a
               FacetSpec or a FacetPairing.
+            - Added pre/postincrement operators for iterating through
+              all permutations of a given size.
+            - New routines for tight encodings and decodings.
+        Class LargeInteger:
+            - New tightDecoding() routines.
+            - Now supports creation and assignment from long long (both
+              signed and unsigned).
+        Class Laurent<T>, Laurent2<T>:
+            - New tightDecoding() routines.
+        Class Link:
+            - New routines for tight encodings and decodings.
+            - New function graph() that returns the model 4-valent planar graph.
+            - Routines dtData(), gaussData(), jenkinsData() and pdData() now
+              throw exceptions if the link is so large that the C++ int type
+              is not large enough to hold the values being returned.
+            - The Jones and HOMFLY-PT routines now throw exceptions if the
+              link is so insanely large that strand IDs cannot fit into ints.
+            - The Jones backtracking algorithm now supports 63 crossings on
+              all platforms, even if the long type has only 32 bits.
         Class Matrix:
             - Routine det() now throws an exception if the matrix is not
               square (this is a precondition), and now returns 1 if the
@@ -47,6 +94,8 @@ Version 7.1  [ TODO ]
               formally not supported by the Matrix class).
             - You can now multiply a matrix over type T with a matrix or vector
               over type U, where T and U are different types.
+        Class ModelLinkGraph:
+            - New constructor that takes a link to model.
         Class NormalHypersurface:
             - New operators * and *= for taking integer multiples.  The old
               doubleHypersurface() is now deprecated.
@@ -56,14 +105,32 @@ Version 7.1  [ TODO ]
               doubleSurface() is now deprecated.
             - New routine scaleDown().
             - New routine isNormalEdgeLink().
+        Class Perm<n>:
+            - New routines for tight encodings and decodings.
         Type safe_tuple_element<...>:
             - New type alias that is like std::tuple_element<...> but
               with well-defined behaviour for an out-of-range index.
+        Class SnaPeaTriangulation:
+            - The Link constructor now throws an exception if the link is so
+              large that SnapPea cannot handle it.
+        Struct TightEncodable<T>:
+            - New base class for classes that support tight encodings
+              and decodings.
         Class Triangulation<dim>:
             - New suite of routines countBoundaryFaces().
             - New suite of public routines dualBoundaryMap() (these were
               previously private, and had a more complex interface).
             - New suite of routines dualToPrimal().
+            - New routine pairing().
+            - New routines for tight encodings and decodings.
+            - The join() routine now checks all its preconditions, and
+              throws an exception if any precondition fails.
+        Class Triangulation<3>:
+            - The Turaev-Viro routines now reserve the right to use a
+              different algorithm if your chosen algorithm does not
+              support the given parameters (r, parity).  Currently this
+              only happens if you ask for ALG_TREEWIDTH and your value
+              of r is so large that it cannot fit into a native C++ int.
         Class Triangulation<4>:
             - New routine intersectionForm().
             - New optimisations that reduce the need for 3-sphere/3-ball
@@ -72,8 +139,21 @@ Version 7.1  [ TODO ]
             - Routine scaleDown() now returns the gcd that was used.
         Class Vertex<3>:
             - New routine linkingSurface().
-        Routine for_constexpr():
+        Function for_constexpr():
             - New routine to support compile-time for loops.
+        Functions gcd(), lcm():
+            - Deprecated in favour of the new C++17 std::gcd() and std::lcm().
+        Functions select_constexpr(), select_constexpr_as_variant():
+            - New routine to support compile-time selection (similar to a
+              compile-time switch statement).
+        Function tightDecoding():
+            - New template function that reconstructs integers and booleans
+              from tight encodings.
+        Functions tightEncode(), tightEncoding():
+            - Added a global function to encode booleans.
+        Global constants maxSafeFactor<...> and minSafeFactor<...>:
+            - Added to facilitate overflow checking with native integer
+              operations.
     PYTHON:
         - For classes that have a bool() cast operator, this is now wrapped in
           Python using the special __bool__() function (i.e., Python will now
@@ -81,6 +161,8 @@ Version 7.1  [ TODO ]
     UTILITIES:
         tricensus:
             - Now supports multithreading via the new --threads option.
+            - Now supports additional text-based output formats via the new
+              options --canonical and --encodings.
             - Now supports enumerating subcomplexes of triangulations
               via the new option --allowinvalid.
             - The --genpairs option is now much less memory-hungry when the

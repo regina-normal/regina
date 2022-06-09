@@ -43,6 +43,7 @@
 #include "syntax/theme.h"
 #include <memory>
 
+#include "reginaqt.h"
 #include <QSyntaxHighlighter>
 
 namespace regina::syntax {

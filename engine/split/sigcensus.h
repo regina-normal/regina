@@ -216,8 +216,8 @@ template <typename Action, typename... Args>
 inline SigCensus::SigCensus(unsigned order, Action&& action, Args&&... args) :
         sig(order), used(new unsigned[order]),
         automorph(new IsoList[order + 2]),
-        action_([&](const Signature& sig, const IsoList& isos) {
-            action(sig, isos, std::forward<Args>(args)...);
+        action_([&](const Signature& s, const IsoList& isos) {
+            action(s, isos, std::forward<Args>(args)...);
         }) {
 }
 

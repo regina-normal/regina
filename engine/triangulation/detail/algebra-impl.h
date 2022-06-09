@@ -285,7 +285,7 @@ MatrixInt TriangulationBase<dim>::boundaryMap() const {
             Perm<dim + 1> subface = f->front().vertices();
             int i = subdim;
             while (true) {
-                unsigned facetNum = Face<dim, subdim - 1>::faceNumber(subface);
+                int facetNum = Face<dim, subdim - 1>::faceNumber(subface);
                 auto* facet = s->template face<subdim - 1>(facetNum);
                 if constexpr (subdim == 1) {
                     // We do not need to worry about orientation of
@@ -375,7 +375,7 @@ MatrixInt TriangulationBase<dim>::dualBoundaryMap() const {
             while (true) {
                 // Examine the facet that excludes vertex number i of the
                 // (dim-subdim+1)-face f.
-                unsigned facetNum = Face<dim, dim-subdim>::faceNumber(subface);
+                int facetNum = Face<dim, dim-subdim>::faceNumber(subface);
                 auto* facet = s->template face<dim-subdim>(facetNum);
                 if (! facet->isBoundary()) {
                     // The following permutation should map
@@ -490,7 +490,7 @@ MatrixInt TriangulationBase<dim>::dualToPrimal() const {
                             primal = Perm<dim+1>(primal[1], v[1]) * primal;
                             primal = Perm<dim+1>(primal[2], 0) * primal;
 
-                            auto n = Face<dim, 2>::faceNumber(primal);
+                            int n = Face<dim, 2>::faceNumber(primal);
                             size_t row = emb.simplex()->template face<2>(n)->
                                 index();
 
@@ -519,7 +519,7 @@ MatrixInt TriangulationBase<dim>::dualToPrimal() const {
                             primal = Perm<dim+1>(primal[1], v[1]) * primal;
                             primal = Perm<dim+1>(primal[2], 0) * primal;
 
-                            auto n = Face<dim, 2>::faceNumber(primal);
+                            int n = Face<dim, 2>::faceNumber(primal);
                             size_t row = emb.simplex()->template face<2>(n)->
                                 index();
 
@@ -572,7 +572,7 @@ MatrixInt TriangulationBase<dim>::dualToPrimal() const {
                             for (int k = 0; k < subdim; ++k)
                                 primal = Perm<dim+1>(primal[k], v[k]) * primal;
 
-                            auto n = Face<dim, subdim>::faceNumber(primal);
+                            int n = Face<dim, subdim>::faceNumber(primal);
                             size_t row = emb.simplex()->
                                 template face<subdim>(n)->index();
 

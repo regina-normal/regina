@@ -133,8 +133,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         /** Internal change of basis. M_ = MCi*SNF(M_)*MRi_ */
         MatrixInt MRi_;
         /** Internal rank of M */
-        unsigned long rankM_; // this is the index of the first zero entry
-                              // in SNF(M_)
+        size_t rankM_; // this is the index of the first zero entry in SNF(M_)
 
         /* Internal reduced N matrix: */
         // In the notes below, pres refers to the internal presentation
@@ -152,11 +151,11 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
         /** Internal list of invariant factors. */
         std::vector<Integer> invFac_;
         /** The number of free generators, from SNF(pres) */
-        unsigned long snfFreeRank_;
+        size_t snfFreeRank_;
         /** The row index of the first zero along the diagonal in SNF(pres). */
-        unsigned long snfFreeIndex_;
+        size_t snfFreeIndex_;
         /** Row index of first invariant factor (ie entry > 1) in SNF(pres) */
-        unsigned long ifLoc_;
+        size_t ifLoc_;
 
         // These variables store information for mod-p homology computations.
         /** coefficients to use in homology computation **/
@@ -167,7 +166,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
 
         /** invariant factor data in the tensor product presentation matrix
             SNF */
-        unsigned long tensorIfLoc_;
+        size_t tensorIfLoc_;
         std::vector<Integer> tensorInvFac_;
 
     public:
@@ -236,7 +235,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * @param p describes the type of ring that we use to talk about
          * the "free" module.
          */
-        MarkedAbelianGroup(unsigned long rank, const Integer &p);
+        MarkedAbelianGroup(size_t rank, const Integer &p);
 
         /**
          * Creates a clone of the given group.
@@ -322,7 +321,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * @return the rank of the group.
          */
-        unsigned long rank() const;
+        size_t rank() const;
 
         /**
          * Returns the rank in the group of the torsion term of given degree.
@@ -340,7 +339,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
-        unsigned long torsionRank(const Integer& degree) const;
+        size_t torsionRank(const Integer& degree) const;
 
         /**
          * Returns the rank in the group of the torsion term of given degree.
@@ -358,7 +357,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
-        unsigned long torsionRank(unsigned long degree) const;
+        size_t torsionRank(unsigned long degree) const;
 
         /**
          * Returns the number of invariant factors that describe the
@@ -389,7 +388,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * @return the rank of the chain complex.
          */
-        unsigned long ccRank() const;
+        size_t ccRank() const;
 
         /**
          * Returns the minimum number of generators for this group.
@@ -399,7 +398,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * @return the minimum number of generators.
          */
-        unsigned long snfRank() const;
+        size_t snfRank() const;
 
         /**
          * Returns the given invariant factor describing the torsion
@@ -485,7 +484,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * @return the (\a index)th free generator, presented in
          * chain complex coordinates.
          */
-        Vector<Integer> freeRep(unsigned long index) const;
+        Vector<Integer> freeRep(size_t index) const;
 
         /**
          * Returns the requested generator of the torsion subgroup,
@@ -504,7 +503,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * @return the (\a index)th torsion generator, presented in
          * chain complex coordinates.
          */
-        Vector<Integer> torsionRep(unsigned long index) const;
+        Vector<Integer> torsionRep(size_t index) const;
 
         /**
          * A combination of freeRep and torsionRep, this routine takes
@@ -544,7 +543,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * SNF coordinates; this must be between 0 and snfRank()-1 inclusive.
          * @return a corresponding vector in chain complex coordinates.
          */
-        Vector<Integer> ccRep(unsigned long snfGen) const;
+        Vector<Integer> ccRep(size_t snfGen) const;
 
         /**
          * Expresses the given cycle as a combination of free and torsion
@@ -614,7 +613,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * @return the resulting projection, in the chain complex
          * coordinates.
          */
-        Vector<Integer> cycleProjection(unsigned long ccindx) const;
+        Vector<Integer> cycleProjection(size_t ccindx) const;
 
         /**
          * Determines whether the given vector represents a cycle in the
@@ -673,7 +672,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * @return the number of generators of ker(\a M).
          */
-        unsigned long cycleRank() const;
+        size_t cycleRank() const;
 
         /**
          * Returns the requested generator of the cycles, i.e., the kernel of
@@ -690,7 +689,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          * @return the (\a index)th generator of the cycles, expressed in
          * chain complex coordinates.
          */
-        Vector<Integer> cycleGen(unsigned long index) const;
+        Vector<Integer> cycleGen(size_t index) const;
 
         /**
          * Returns the torsion subgroup of this group.
@@ -1216,8 +1215,7 @@ inline const AbelianGroup& HomMarkedAbelianGroup::cokernel() const {
 
 // Inline functions for MarkedAbelianGroup
 
-inline unsigned long MarkedAbelianGroup::torsionRank(unsigned long degree)
-        const {
+inline size_t MarkedAbelianGroup::torsionRank(unsigned long degree) const {
     return torsionRank(Integer(degree));
 }
 
@@ -1230,7 +1228,7 @@ inline const Integer& MarkedAbelianGroup::invariantFactor(
     return invFac_[index];
 }
 
-inline unsigned long MarkedAbelianGroup::rank() const {
+inline size_t MarkedAbelianGroup::rank() const {
     return snfFreeRank_;
 }
 
@@ -1238,15 +1236,15 @@ inline AbelianGroup MarkedAbelianGroup::unmarked() const {
     return AbelianGroup(snfFreeRank_, invFac_);
 }
 
-inline unsigned long MarkedAbelianGroup::snfRank() const {
+inline size_t MarkedAbelianGroup::snfRank() const {
     return snfFreeRank_ + invFac_.size();
 }
 
-inline unsigned long MarkedAbelianGroup::ccRank() const {
+inline size_t MarkedAbelianGroup::ccRank() const {
     return M_.columns();
 }
 
-inline unsigned long MarkedAbelianGroup::cycleRank() const {
+inline size_t MarkedAbelianGroup::cycleRank() const {
     return M_.columns() - (rankM_ - TORVec_.size());
 }
 

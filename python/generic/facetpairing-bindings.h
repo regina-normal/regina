@@ -57,19 +57,22 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
         // Use the default policy for (const T&) which is to return by copy.
         .def("dest", overload_cast<const FacetSpec<dim>&>(
             &FacetPairing<dim>::dest, pybind11::const_))
-        .def("dest", overload_cast<size_t, unsigned>(
+        .def("dest", overload_cast<size_t, int>(
             &FacetPairing<dim>::dest, pybind11::const_))
         .def("__getitem__", overload_cast<const FacetSpec<dim>&>(
             &FacetPairing<dim>::operator[], pybind11::const_))
         .def("isUnmatched", overload_cast<const FacetSpec<dim>&>(
             &FacetPairing<dim>::isUnmatched, pybind11::const_))
-        .def("isUnmatched", overload_cast<size_t, unsigned>(
+        .def("isUnmatched", overload_cast<size_t, int>(
             &FacetPairing<dim>::isUnmatched, pybind11::const_))
         .def("isClosed", &FacetPairing<dim>::isClosed)
+        .def("isConnected", &FacetPairing<dim>::isConnected)
         .def("isCanonical", &FacetPairing<dim>::isCanonical)
         .def("canonical", &FacetPairing<dim>::canonical)
+        .def("canonicalAll", &FacetPairing<dim>::canonicalAll)
         .def("findAutomorphisms", &FacetPairing<dim>::findAutomorphisms)
-        .def("toTextRep", &FacetPairing<dim>::toTextRep)
+        .def("textRep", &FacetPairing<dim>::textRep)
+        .def("toTextRep", &FacetPairing<dim>::textRep) // deprecated
         .def_static("fromTextRep", &FacetPairing<dim>::fromTextRep)
         .def("dot", &FacetPairing<dim>::dot,
             pybind11::arg("prefix") = nullptr,
@@ -77,12 +80,14 @@ void addFacetPairing(pybind11::module_& m, const char* name) {
             pybind11::arg("labels") = false)
         .def_static("dotHeader", &FacetPairing<dim>::dotHeader,
             pybind11::arg("graphName") = nullptr)
+        .def("divideConnected", &FacetPairing<dim>::divideConnected)
         .def_static("findAllPairings",
             &FacetPairing<dim>::template findAllPairings<
                 const std::function<void(const FacetPairing<dim>&,
                     typename FacetPairing<dim>::IsoList)>&>)
     ;
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap",

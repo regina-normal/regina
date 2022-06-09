@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
+ * Copyright (C) 2007-2022  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * As an exception, when this program is distributed through (i) the App Store
  * by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or (iii) Google Play
@@ -185,10 +185,10 @@ void ProjectAndLift<IntegerPL, IntegerRet>::compute_projections(size_t dim,
         if (Supps[i][dim1] > 0) {
             if (IsEquation[i])
                 PosEquAt = i;
-            Pos.push_back(i);
+            Pos.push_back(static_cast<key_t>(i));
             continue;
         }
-        Neg.push_back(i);
+        Neg.push_back(static_cast<key_t>(i));
         if (IsEquation[i])
             NegEquAt = i;
     }
@@ -290,7 +290,7 @@ void ProjectAndLift<IntegerPL, IntegerRet>::compute_projections(size_t dim,
                 vector<key_t> PosKey;
                 for (size_t k = 0; k < Ind[i].size(); ++k)
                     if (Ind[p][k])
-                        PosKey.push_back(k);
+                        PosKey.push_back(static_cast<key_t>(k));
 
                 for (size_t n : Neg) {
                     INTERRUPT_COMPUTATION_BY_EXCEPTION
@@ -906,10 +906,10 @@ void ProjectAndLift<IntegerPL, IntegerRet>::compute(bool all_points, bool liftin
     // a grading denominator 1=1 can be accomodated.
     // We need only the support hyperplanes Supps and the facet-vertex incidence matrix Ind.
     // Its rows correspond to facets.
-    
+
 #ifdef NMZ_EXTENDED_TESTS
-    if(!using_GMP<IntegerRet>() && !using_renf<IntegerRet>() && test_arith_overflow_proj_and_lift)
-        throw ArithmeticException(0);    
+    if (!using_GMP<IntegerRet>() && !using_renf<IntegerRet>() && test_arith_overflow_proj_and_lift)
+        throw ArithmeticException(0);
 #endif
 
     assert(all_points || !lifting_float);  // only all points allowed with float

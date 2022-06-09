@@ -38,6 +38,8 @@
 #define __EXAMPLECREATOR_H
 
 #include "triangulation/forward.h"
+
+#include "reginaqt.h"
 #include <QString>
 
 /**

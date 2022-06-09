@@ -43,4 +43,6 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 void addTriangulation4(CppUnit::TextUi::TestRunner& runner);
+void addIsomorphism4(CppUnit::TextUi::TestRunner& runner);
+void addFacetPairing4(CppUnit::TextUi::TestRunner& runner);
 

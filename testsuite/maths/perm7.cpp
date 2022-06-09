@@ -55,6 +55,7 @@ class Perm7Test : public SmallPermTest<7> {
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(conjugacy);
     CPPUNIT_TEST(increment);
+    CPPUNIT_TEST(tightEncoding);
 
     // Tests specific to Perm<7>:
     CPPUNIT_TEST(aliases);

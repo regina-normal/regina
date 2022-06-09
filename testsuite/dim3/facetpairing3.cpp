@@ -32,20 +32,13 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "testsuite/census/testcensus.h"
-#include "triangulation/dim3.h"
 #include "triangulation/facetpairing3.h"
 
-using regina::FacetPairing;
-using regina::BoolSet;
+#include "testsuite/exhaustive.h"
+#include "testsuite/generic/facetpairingtest.h"
+#include "testsuite/dim3/testdim3.h"
 
-/**
- * Simply increment the given count when a face pairing is found.
- */
-void countFacePairings(const FacetPairing<3>& pair,
-        FacetPairing<3>::IsoList, unsigned& count) {
-    ++count;
-}
+using regina::FacetPairing;
 
 /**
  * Increment counts for face pairing graphs with interesting properties.
@@ -64,24 +57,34 @@ namespace {
     };
 }
 
-class FacetPairing3Test : public CppUnit::TestFixture {
+class FacetPairing3Test : public FacetPairingTest<3> {
     CPPUNIT_TEST_SUITE(FacetPairing3Test);
 
+    CPPUNIT_TEST(isCanonical);
+    CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(rawCountsClosed);
     CPPUNIT_TEST(rawCountsBounded);
     CPPUNIT_TEST(badSubgraphs);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
-    private:
-        unsigned count;
-            /**< Used to hold arbitrary totals. */
-
     public:
-        void setUp() override {
+        void isCanonical() {
+            FacetPairingTest<3>::isCanonicalAllClosed(0);
+            FacetPairingTest<3>::isCanonicalAllClosed(1);
+            FacetPairingTest<3>::isCanonicalAllClosed(2);
+            FacetPairingTest<3>::isCanonicalAllBounded(1);
+            FacetPairingTest<3>::isCanonicalAllBounded(2);
+            FacetPairingTest<3>::isCanonicalAllBounded(3);
         }
 
-        void tearDown() override {
+        void makeCanonical() {
+            FacetPairingTest<3>::makeCanonicalAllClosed(0);
+            FacetPairingTest<3>::makeCanonicalAllClosed(1);
+            FacetPairingTest<3>::makeCanonicalAllClosed(2);
+            FacetPairingTest<3>::makeCanonicalAllBounded(1);
+            FacetPairingTest<3>::makeCanonicalAllBounded(2);
         }
 
         void rawCountsClosed() {
@@ -91,23 +94,10 @@ class FacetPairing3Test : public CppUnit::TestFixture {
             //
             // See also sequence A085549 from the On-Line Encyclopedia
             // of Integer Sequences.
-            unsigned nPairs[] = { 0, 1, 2, 4, 10, 28, 97, 359, 1635 };
+            size_t nPairs[] = { 0, 1, 2, 4, 10, 28, 97, 359, 1635 };
 
-            unsigned nTets;
-            for (nTets = 0; nTets <= 8; nTets++) {
-                count = 0;
-                FacetPairing<3>::findAllPairings(nTets, false,
-                    0, countFacePairings, count);
-
-                if (count != nPairs[nTets]) {
-                    std::ostringstream msg;
-                    msg << "Face pairing count for " << nTets
-                        << " tetrahedra (closed) should be " << nPairs[nTets]
-                        << ", not " << count << '.';
-
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
+            for (size_t i = 0; i <= 8; ++i)
+                FacetPairingTest<3>::enumerateClosed(i, nPairs[i]);
         }
 
         void rawCountsBounded() {
@@ -115,52 +105,22 @@ class FacetPairing3Test : public CppUnit::TestFixture {
             unsigned nBdry[] = { 0, 2, 6, 21, 100, 521, 3234, 22304 };
             unsigned nBdry2[] = { 0, 1, 3, 8, 30, 118, 548, 2790, 16029 };
 
-            unsigned nTets;
+            for (size_t i = 0; i <= 8; ++i)
+                FacetPairingTest<3>::enumerateBounded(i, 1, 0);
 
-            for (nTets = 0; nTets <= 8; nTets++) {
-                count = 0;
-                FacetPairing<3>::findAllPairings(nTets, true,
-                    1, countFacePairings, count);
+            for (size_t i = 0; i <= 7; ++i)
+                FacetPairingTest<3>::enumerateBounded(i, 2, nBdry2[i]);
 
-                if (count != 0) {
-                    std::ostringstream msg;
-                    msg << "Face pairing count for " << nTets
-                        << " tetrahedra (1 bdry face) should be "
-                        << 0 << ", not " << count << '.';
+            for (size_t i = 0; i <= 6; ++i)
+                FacetPairingTest<3>::enumerateBounded(i, nBdry[i]);
+        }
 
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-
-            for (nTets = 0; nTets <= 7; nTets++) {
-                count = 0;
-                FacetPairing<3>::findAllPairings(nTets, true,
-                    2, countFacePairings, count);
-
-                if (count != nBdry2[nTets]) {
-                    std::ostringstream msg;
-                    msg << "Face pairing count for " << nTets
-                        << " tetrahedra (2 bdry faces) should be "
-                        << nBdry2[nTets] << ", not " << count << '.';
-
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-
-            for (nTets = 0; nTets <= 6; nTets++) {
-                count = 0;
-                FacetPairing<3>::findAllPairings(nTets, true,
-                    -1, countFacePairings, count);
-
-                if (count != nBdry[nTets]) {
-                    std::ostringstream msg;
-                    msg << "Face pairing count for " << nTets
-                        << " tetrahedra (any bdry faces) should be "
-                        << nBdry[nTets] << ", not " << count << '.';
-
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
+        void tightEncoding() {
+            FacetPairingTest<3>::tightEncodingAllClosed(1);
+            FacetPairingTest<3>::tightEncodingAllClosed(2);
+            FacetPairingTest<3>::tightEncodingAllBounded(1);
+            FacetPairingTest<3>::tightEncodingAllBounded(2);
+            FacetPairingTest<3>::tightEncodingAllBounded(3);
         }
 
         void badSubgraphs() {

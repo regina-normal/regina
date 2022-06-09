@@ -72,7 +72,7 @@ bool CompactSearcher::TetVertexState::readData(std::istream& in,
     // twistUp is a char, but we need to read it as an int.
     int twist;
     in >> twist;
-    twistUp = twist;
+    twistUp = static_cast<char>(twist);
 
     // hadEqualRank is a bool, but we need to read it as an int.
     int bRank;
@@ -82,13 +82,13 @@ bool CompactSearcher::TetVertexState::readData(std::istream& in,
     // More chars to ints coming.
     int bVal;
 
-    in >> bVal; bdryEdges = bVal;
+    in >> bVal; bdryEdges = static_cast<uint8_t>(bVal);
     in >> bdryNext[0] >> bdryNext[1];
-    in >> bVal; bdryTwist[0] = bVal;
-    in >> bVal; bdryTwist[1] = bVal;
+    in >> bVal; bdryTwist[0] = static_cast<char>(bVal);
+    in >> bVal; bdryTwist[1] = static_cast<char>(bVal);
     in >> bdryNextOld[0] >> bdryNextOld[1];
-    in >> bVal; bdryTwistOld[0] = bVal;
-    in >> bVal; bdryTwistOld[1] = bVal;
+    in >> bVal; bdryTwistOld[0] = static_cast<char>(bVal);
+    in >> bVal; bdryTwistOld[1] = static_cast<char>(bVal);
 
     if (parent < -1 || parent >= static_cast<ssize_t>(nStates))
         return false;
@@ -148,7 +148,7 @@ bool CompactSearcher::TetEdgeState::readData(std::istream& in, size_t nTets) {
     // twistUp is a char, but we need to read it as an int.
     int twist;
     in >> twist;
-    twistUp = twist;
+    twistUp = static_cast<char>(twist);
 
     // hadEqualRank is a bool, but we need to read it as an int.
     int bRank;
@@ -270,7 +270,7 @@ void CompactSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
     }
 
     // Is it a partial search that has already finished?
-    if (orderElt == orderSize) {
+    if (orderElt == static_cast<ssize_t>(orderSize)) {
         if (isCanonical())
             action_(perms_);
         return;
@@ -345,7 +345,7 @@ void CompactSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (orderElt == orderSize) {
+        if (orderElt == static_cast<ssize_t>(orderSize)) {
             // We in fact have an entire triangulation.
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.

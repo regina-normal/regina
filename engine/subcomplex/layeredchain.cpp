@@ -54,7 +54,7 @@ bool LayeredChain::extendAbove() {
     // We can extend the layered chain.
     top_ = adj;
     topVertexRoles_ = adjRoles;
-    index_++;
+    ++index_;
     return true;
 }
 
@@ -75,7 +75,7 @@ bool LayeredChain::extendBelow() {
     // We can extend the layered chain.
     bottom_ = adj;
     bottomVertexRoles_ = adjRoles;
-    index_++;
+    ++index_;
     return true;
 }
 
@@ -89,9 +89,7 @@ bool LayeredChain::extendMaximal() {
 }
 
 void LayeredChain::reverse() {
-    Tetrahedron<3>* tmp = top_;
-    top_ = bottom_;
-    bottom_ = tmp;
+    std::swap(bottom_, top_);
 
     Perm<4> pTmp = topVertexRoles_ * Perm<4>(1, 0, 3, 2);
     topVertexRoles_ = bottomVertexRoles_ * Perm<4>(1, 0, 3, 2);

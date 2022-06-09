@@ -37,6 +37,7 @@
 #ifndef __EXAMPLESACTION_H
 #define __EXAMPLESACTION_H
 
+#include "reginaqt.h"
 #include <QMap>
 #include <QMenu>
 #include <QUrl>

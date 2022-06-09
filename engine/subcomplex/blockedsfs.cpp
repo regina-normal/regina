@@ -55,7 +55,7 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
     if (region_.countBoundaryAnnuli() > 0)
         return std::nullopt;
 
-    unsigned long n = region_.countBlocks();
+    size_t n = region_.countBlocks();
     if (n < 3 || n > 4)
         return std::nullopt;
 
@@ -65,11 +65,8 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
     const SatReflectorStrip* ref;
     const SatTriPrism* tri;
     const SatTriPrism* triAdj;
-    unsigned adjAnn;
-    unsigned long i, j;
-    int delta, deltaAdj;
     bool consistent;
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
         block = region_.block(i).block();
 
         cube = dynamic_cast<const SatCube*>(block);
@@ -129,7 +126,7 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
                 if (! tri)
                     return std::nullopt;
 
-                adjAnn = ref->adjacentAnnulus(0);
+                size_t adjAnn = ref->adjacentAnnulus(0);
                 if (tri->isMajor())
                     return findPluggedTori(false, 4,
                         tri->adjacentBlock((adjAnn + 2) % 3), true,
@@ -148,10 +145,11 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
 
         tri = dynamic_cast<const SatTriPrism*>(block);
         if (tri) {
-            for (j = 0; j < 3; j++) {
+            for (int j = 0; j < 3; j++) {
                 // Try the thick case...
                 if (tri->adjacentBlock(j) == tri &&
-                        tri->adjacentAnnulus(j) == ((j + 1) % 3)) {
+                        static_cast<int>(tri->adjacentAnnulus(j)) ==
+                        ((j + 1) % 3)) {
                     if (tri->adjacentReflected(j) || tri->adjacentBackwards(j))
                         return std::nullopt;
 
@@ -171,7 +169,7 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
                     if (tri->adjacentBackwards((j + 2) % 3))
                         consistent = ! consistent;
 
-                    adjAnn = tri->adjacentAnnulus((j + 2) % 3);
+                    size_t adjAnn = tri->adjacentAnnulus((j + 2) % 3);
                     if (consistent) {
                         if (triAdj->isMajor())
                             return findPluggedTori(false, 2,
@@ -209,9 +207,9 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
                 if (tri->adjacentBackwards(j))
                     consistent = ! consistent;
 
-                adjAnn = tri->adjacentAnnulus(j);
+                size_t adjAnn = tri->adjacentAnnulus(j);
 
-                for (delta = 1; delta <= 2; delta++)
+                for (int delta = 1; delta <= 2; delta++)
                     if (tri->adjacentBlock((j + delta) % 3) == triAdj) {
                         if (regXor(tri->adjacentReflected(j),
                                 tri->adjacentReflected((j + delta) % 3)))
@@ -222,7 +220,7 @@ std::optional<std::string> BlockedSFS::isPluggedIBundle() const {
 
                         // We have our Mobius strip!
                         // Make sure we come at it via the correct joining.
-                        deltaAdj = (tri->adjacentBackwards(j) ?
+                        int deltaAdj = (tri->adjacentBackwards(j) ?
                             3 - delta : delta);
                         if (tri->adjacentAnnulus((j + delta) % 3) !=
                                 (adjAnn + deltaAdj) % 3) {

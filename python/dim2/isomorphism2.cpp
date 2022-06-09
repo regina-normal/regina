@@ -82,11 +82,15 @@ void addIsomorphism2(pybind11::module_& m) {
         })
         .def(pybind11::self * pybind11::self)
         .def("inverse", &Isomorphism<2>::inverse)
+        .def("inc", [](Isomorphism<2>& iso) {
+            ++iso;
+        })
         .def_static("random", &Isomorphism<2>::random,
             pybind11::arg(), pybind11::arg("even") = false)
         .def_static("identity", &Isomorphism<2>::identity)
     ;
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap", (void(*)(Isomorphism<2>&, Isomorphism<2>&))(regina::swap));

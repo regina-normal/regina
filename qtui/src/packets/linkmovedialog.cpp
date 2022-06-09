@@ -409,7 +409,6 @@ void LinkMoveDialog::fill() {
     options2down.clear();
     options3.clear();
 
-    unsigned long i;
     int strand, side;
 
     // R1 twist moves on arcs are always valid.
@@ -506,7 +505,7 @@ void LinkMoveDialog::changedR2UpOver(int) {
     // TODO: Make this faster by walking around the region (and then sorting),
     // instead of iterating through all potential strands.
 
-    int i, strand, side;
+    int strand, side;
     for (regina::Crossing* c : link->crossings())
         for (strand = 0; strand < 2; ++strand)
             for (side = 0; side < 2; ++side)

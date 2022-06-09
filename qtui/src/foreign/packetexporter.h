@@ -38,9 +38,10 @@
 #ifndef __PACKETEXPORTER_H
 #define __PACKETEXPORTER_H
 
+#include "reginaqt.h"
+
 class PacketFilter;
 class QString;
-class QTextCodec;
 class QWidget;
 
 namespace regina {

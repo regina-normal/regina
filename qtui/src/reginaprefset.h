@@ -41,16 +41,23 @@
 #include "hypersurface/hyperflags.h"
 #include "surface/normalcoords.h"
 #include "surface/normalflags.h"
-#include <qmutex.h>
+
+#include "reginaqt.h"
 #include <QFont>
 #include <QList>
+#include <QMutex>
 #include <QString>
 #include <QSize>
 #include <QUrl>
 
 class QSettings;
-class QTextCodec;
 class QWidget;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+#include <QStringConverter> // for QStringConverter::Encoding
+#else
+class QTextCodec;
+#endif
 
 /**
  * A structure holding all Regina preferences.
@@ -80,6 +87,13 @@ class ReginaPrefSet : public QObject {
                  initial value is read from the configuration file. */
 
     public:
+        // The type used to represent text encodings:
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+        using Codec = QStringConverter::Encoding;
+#else
+        using Codec = QTextCodec*;
+#endif
+
         // Some defaults that other classes may need to access:
         static const char* defaultGAPExec;
             /**< The default setting for \a triGAPExec. */
@@ -151,43 +165,43 @@ class ReginaPrefSet : public QObject {
             /**< Should we offer support for transversely oriented normal
                  surfaces in 3-manifold triangulations?  This is still
                  highly experimental. */
-        unsigned tabDim2Tri;
+        int tabDim2Tri;
             /**< The index of the initial tab to open in a 2-manifold
                  triangulation viewer. */
-        unsigned tabDim2TriSkeleton;
+        int tabDim2TriSkeleton;
             /**< The index of the initial sub-tab to open in a 2-manifold
                  triangulation skeleton viewer. */
-        unsigned tabDim3Tri;
+        int tabDim3Tri;
             /**< The index of the initial tab to open in a 3-manifold
                  triangulation viewer. */
-        unsigned tabDim3TriAlgebra;
+        int tabDim3TriAlgebra;
             /**< The index of the initial sub-tab to open in a 3-manifold
                  triangulation algebra viewer. */
-        unsigned tabDim3TriSkeleton;
+        int tabDim3TriSkeleton;
             /**< The index of the initial sub-tab to open in a 3-manifold
                  triangulation skeleton viewer. */
-        unsigned tabDim4Tri;
+        int tabDim4Tri;
             /**< The index of the initial tab to open in a 4-manifold
                  triangulation viewer. */
-        unsigned tabDim4TriAlgebra;
+        int tabDim4TriAlgebra;
             /**< The index of the initial sub-tab to open in a 4-manifold
                  triangulation algebra viewer. */
-        unsigned tabDim4TriSkeleton;
+        int tabDim4TriSkeleton;
             /**< The index of the initial sub-tab to open in a 4-manifold
                  triangulation skeleton viewer. */
-        unsigned tabHypersurfaceList;
+        int tabHypersurfaceList;
             /**< The index of the initial sub-tab to open in a normal
                  hypersurface list viewer. */
-        unsigned tabLink;
+        int tabLink;
             /**< The index of the initial sub-tab to open in a knot/link
                  viewer. */
-        unsigned tabSnapPeaTri;
+        int tabSnapPeaTri;
             /**< The index of the initial tab to open in a SnapPea
                  triangulation viewer. */
-        unsigned tabSnapPeaTriAlgebra;
+        int tabSnapPeaTriAlgebra;
             /**< The index of the initial sub-tab to open in a SnapPea
                  triangulation algebra viewer. */
-        unsigned tabSurfaceList;
+        int tabSurfaceList;
             /**< The index of the initial sub-tab to open in a normal
                  surface list viewer. */
         unsigned treeJumpSize;
@@ -263,7 +277,7 @@ class ReginaPrefSet : public QObject {
          *
          * This routine will never return null.
          */
-        static QTextCodec* importExportCodec();
+        static Codec importExportCodec();
 
         /**
          * Opens the given section of an arbitrary handbook in an appropriate

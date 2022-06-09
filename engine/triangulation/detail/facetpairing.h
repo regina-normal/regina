@@ -41,13 +41,15 @@
  */
 
 #include <iostream>
-#include <list>
 #include <optional>
+#include <vector>
 #include "regina-core.h"
 #include "core/output.h"
+#include "triangulation/cut.h"
 #include "triangulation/facetspec.h"
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
+#include "utilities/tightencoding.h"
 
 namespace regina::detail {
 
@@ -75,19 +77,19 @@ namespace regina::detail {
  * \ingroup detail
  */
 template <int dim>
-class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
+class FacetPairingBase :
+        public ShortOutput<FacetPairingBase<dim>>,
+        public TightEncodable<FacetPairing<dim>> {
     static_assert(dim >= 2, "FacetPairing requires dimension >= 2.");
 
     public:
         /**
          * A list of isomorphisms on facet pairings.
-         * Such an isomorphism can be used to convert one facet pairing
-         * into another.
          *
-         * This type is used to store all \e automorphisms of a facet pairing;
-         * that is, all isomorphisms that map the facet pairing to itself.
+         * In particular, this class uses the IsoList type to return
+         * the set of all \e automorphisms of a facet pairing.
          */
-        using IsoList = std::list<Isomorphism<dim>>;
+        using IsoList = std::vector<Isomorphism<dim>>;
 
     protected:
         size_t size_;
@@ -139,7 +141,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
 
         /**
          * Reads a new facet pairing from the given input stream.  This
-         * routine reads data in the format written by toTextRep().
+         * routine reads data in the format written by textRep().
          *
          * This routine will skip any initial whitespace in the given input
          * stream.  Once it finds its first non-whitespace character,
@@ -242,7 +244,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * investigation (between 0 and \a dim inclusive).
          * @return the other facet to which the given facet is paired.
          */
-        const FacetSpec<dim>& dest(size_t simp, unsigned facet) const;
+        const FacetSpec<dim>& dest(size_t simp, int facet) const;
 
         /**
          * Returns the other facet to which the given simplex facet is
@@ -289,7 +291,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * @return \c true if the given facet has been left unmatched, or
          * \c false if the given facet is paired with some other facet.
          */
-        bool isUnmatched(size_t simp, unsigned facet) const;
+        bool isUnmatched(size_t simp, int facet) const;
 
         /**
          * Determines whether this facet pairing is closed.
@@ -317,22 +319,61 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
 
         /*@}*/
         /**
+         * \name Connected components
+         */
+        /*@{*/
+
+        /**
+         * Determines whether this facet pairing is connected.
+         *
+         * A facet pairing is \e connected if it is possible to reach any
+         * simplex from any other simplex via a series of matched facet pairs.
+         *
+         * For this purpose, the empty facet pairing is considered to be
+         * connected.
+         *
+         * @return \c true if and only if this pairing is connected.
+         */
+        bool isConnected() const;
+
+        /**
+         * Returns a cut that divides this facet pairing into two
+         * connected pieces, both of size at least \a minSide.
+         *
+         * If solutions exist, then the cut that is returned will have
+         * minimum weight amongst all solutions (i.e., will have the
+         * smallest number of matched simplex facets that cross the two
+         * sides of the resulting partition).  If there are still multiple
+         * solutions, then the cut that is returned will have the two pieces
+         * with sizes that are as close as possible to equal.  If there are
+         * \e still multiple solutions, then the choice will be arbitrary.
+         *
+         * Note that it is possible that no solution exists (e.g. this
+         * could happen if the matching is a star graph and \a minSide is
+         * greater than 1).
+         *
+         * \warning Currently the implementation of this routine is
+         * exhaustive, and so the running time is exponential in the
+         * size of this facet pairing.
+         *
+         * @param minSide the minimum number of simplices in each of the
+         * two connected pieces; this must be at least 1.
+         * @return the best possible cut as described above, or no value
+         * if no such cut exists.
+         */
+        std::optional<Cut> divideConnected(size_t minSide) const;
+
+        /*@}*/
+        /**
          * \name Isomorphic Representations
          */
         /*@{*/
 
         /**
-         * Determines whether this facet pairing is in canonical form.  Here:
+         * Determines whether this facet pairing is in canonical form.
          *
-         * - an \e isomorphism of a facet pairing means a relabelling of the
-         *   simplices and a relabelling of the (\a dim + 1) facets within
-         *   each simplex;
-         *
-         * - a facet pairing is in <i>canonical form</i> if it is a
-         *   lexicographically minimal representative of its isomorphism class,
-         *   where we order facet pairings by lexicographical comparison of
-         *   <tt>dest(0,0)</tt>, <tt>dest(0,1)</tt>, ...,
-         *   <tt>dest(size()-1,\a dim)</tt>.
+         * See the FacetPairing class notes for more information on
+         * isomorphisms, automorphisms and canonical form.
          *
          * \pre This facet pairing is connected, i.e., it is possible
          * to reach any simplex from any other simplex via a
@@ -344,49 +385,66 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         bool isCanonical() const;
 
         /**
-         * Returns the canonical form of this facet pairing, along with an
-         * isomorphism that transforms this pairing into canonial form.  Here:
-         *
-         * - an \e isomorphism of a facet pairing means a relabelling of the
-         *   simplices and a relabelling of the (\a dim + 1) facets within
-         *   each simplex;
-         *
-         * - a facet pairing is in <i>canonical form</i> if it is a
-         *   lexicographically minimal representative of its isomorphism class,
-         *   where we order facet pairings by lexicographical comparison of
-         *   <tt>dest(0,0)</tt>, <tt>dest(0,1)</tt>, ...,
-         *   <tt>dest(size()-1,\a dim)</tt>.
+         * Returns the canonical form of this facet pairing, along with one
+         * isomorphism that transforms this pairing into canonial form.
          *
          * Note that, while the canoncial form is uniquely determined,
          * the isomorphism is not (since the facet pairing could have
-         * non-trivial automorphisms).
+         * non-trivial automorphisms).  If you need \e all such isomorphisms
+         * then you should call canonicalAll() instead.
+         *
+         * See the FacetPairing class notes for more information on
+         * isomorphisms, automorphisms and canonical form.
          *
          * \pre This facet pairing is connected, i.e., it is possible
          * to reach any simplex from any other simplex via a
          * series of matched facet pairs.
          *
          * @return a pair (\a c, \a iso), where \a c is the canonical form
-         * and \a iso is the isomorphism that converts this facet pairing
+         * and \a iso is one isomorphism that converts this facet pairing
          * into \a c.
          */
         std::pair<FacetPairing<dim>, Isomorphism<dim>> canonical() const;
 
         /**
-         * Returns the set of all combinatorial automorphisms of this
-         * facet pairing.
+         * Returns the canonical form of this facet pairing, along with
+         * the list of all isomorphisms that transform this pairing into
+         * canonial form.
          *
-         * An automorphism is a relabelling of the simplices and/or a
-         * renumbering of the (\a dim + 1) facets of each simplex resulting
-         * in precisely the same facet pairing.
+         * Note that the list that is returned will be a left coset of
+         * the automorphism group of this facet pairing, and also a
+         * right coset of the automorphism group of the canonical form.
          *
-         * This routine uses optimisations that can cause unpredictable
-         * breakages if this facet pairing is not in canonical form.
+         * If you only need one such isomorphism (not all), then you
+         * should call canonical() instead.
+         *
+         * See the FacetPairing class notes for more information on
+         * isomorphisms, automorphisms and canonical form.
          *
          * \pre This facet pairing is connected, i.e., it is possible
          * to reach any simplex from any other simplex via a
          * series of matched facet pairs.
-         * \pre This facet pairing is in canonical form as described by
-         * isCanonical().
+         *
+         * @return a pair (\a c, \a isos), where \a c is the canonical form
+         * and \a isos is the list of all isomorphisms that convert this
+         * facet pairing into \a c.
+         */
+        std::pair<FacetPairing<dim>, IsoList> canonicalAll() const;
+
+        /**
+         * Returns the set of all combinatorial automorphisms of this
+         * facet pairing, assuming the pairing is already in canonical form.
+         *
+         * See the FacetPairing class notes for more information on
+         * isomorphisms, automorphisms and canonical form.
+         *
+         * \pre This facet pairing is connected, i.e., it is possible
+         * to reach any simplex from any other simplex via a
+         * series of matched facet pairs.
+         *
+         * \pre This facet pairing is in canonical form.  This is crucial,
+         * since this routine uses optimisations that can cause unpredictable
+         * breakages if this facet pairing is not in canonical form.
          *
          * @return the list of all automorphisms.
          */
@@ -411,9 +469,9 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         void writeTextShort(std::ostream& out) const;
 
         /**
-         * Returns a text-based representation of this facet pairing that can be
-         * used to reconstruct the facet pairing.  This reconstruction is
-         * done through routine fromTextRep().
+         * Returns a text-based representation that can be used to reconstruct
+         * this facet pairing.  This reconstruction is done through the
+         * routine fromTextRep().
          *
          * The text produced is not particularly readable; for a
          * human-readable text representation, see routine str() instead.
@@ -422,7 +480,39 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          *
          * @return a text-based representation of this facet pairing.
          */
-        std::string toTextRep() const;
+        std::string textRep() const;
+
+        /**
+         * Deprecated routine that returns a text-based representation
+         * that can be used to reconstruct this facet pairing.
+         *
+         * \deprecated This routine has been renamed to textRep().
+         * See the textRep() documentation for further details.
+         *
+         * @return a text-based representation of this facet pairing.
+         */
+        [[deprecated]] std::string toTextRep() const;
+
+        /**
+         * Writes the tight encoding of this facet pairing to the given output
+         * stream.  See the page on \ref tight "tight encodings" for details.
+         *
+         * \pre Every simplex facet is either (i) paired to another simplex
+         * facet, (ii) marked as boundary, or (iii) paired to itself (which is
+         * often used as a placeholder to indicate that the real destination
+         * has not yet been decided).  In particular, before-the-start or
+         * past-the-end destinations are not allowed.
+         *
+         * \exception FailedPrecondition Some simplex facet has a destination
+         * that is explicitly disallowed by the precondition above.
+         *
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
 
         /**
          * Writes the graph corresponding to this facet pairing in
@@ -499,17 +589,42 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         /**
          * Reconstructs a facet pairing from a text-based representation.
          * This text-based representation must be in the format produced
-         * by routine toTextRep().
+         * by routine textRep().
          *
          * \exception InvalidArgument the given string was not a valid
          * text-based representation of a facet pairing on a positive
          * number of simplices.
          *
          * @param rep a text-based representation of a facet pairing, as
-         * produced by routine toTextRep().
+         * produced by routine textRep().
          * @return the corresponding facet pairing.
          */
         static FacetPairing<dim> fromTextRep(const std::string& rep);
+
+        /**
+         * Reconstructs a facet pairing from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.
+         * If the input stream contains leading whitespace then it will be
+         * treated as an invalid encoding (i.e., this routine will throw an
+         * exception).  The input routine \e may contain further data: if this
+         * routine is successful then the input stream will be left positioned
+         * immediately after the encoding, without skipping any trailing
+         * whitespace.
+         *
+         * \exception InvalidInput the given input stream does not begin with
+         * a tight encoding of a <i>dim</i>-dimensional facet pairing on
+         * a positive number of simplices.
+         *
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
+         *
+         * @param input an input stream that begins with the tight encoding
+         * for a <i>dim</i>-dimensional facet pairing.
+         * @return the facet pairing represented by the given tight encoding.
+         */
+        static FacetPairing<dim> tightDecode(std::istream& input);
 
         /**
          * Writes header information for a Graphviz DOT file that will
@@ -689,7 +804,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * investigation (between 0 and \a dim inclusive).
          * @return the other facet to which the given facet is paired.
          */
-        FacetSpec<dim>& dest(size_t simp, unsigned facet);
+        FacetSpec<dim>& dest(size_t simp, int facet);
 
         /**
          * Returns the other facet to which the given simplex facet is
@@ -735,7 +850,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * @return \c true if the matching for the given facet has not yet
          * been determined, or \c false otherwise.
          */
-        bool noDest(size_t simp, unsigned facet) const;
+        bool noDest(size_t simp, int facet) const;
 
         /**
          * Determines whether this facet pairing is in canonical
@@ -769,6 +884,23 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
         bool isCanonicalInternal(IsoList* list = nullptr) const;
 
     private:
+        /**
+         * The part of the return value for canonicalInternal() that
+         * holds the isomorphism(s).
+         */
+        template <bool allIsos>
+        using CanonicalIsos = std::conditional_t<allIsos,
+            IsoList, Isomorphism<dim>>;
+
+        /**
+         * A single unified piece of code that implements both canonical() and
+         * canonicalAll().  The template argument \a allIsos indicates which
+         * of these two routines we are implementing.
+         */
+        template <bool allIsos>
+        std::pair<FacetPairing<dim>, CanonicalIsos<allIsos>>
+            canonicalInternal() const;
+
         /**
          * Internal to findAllPairings().
          *
@@ -857,7 +989,7 @@ inline const FacetSpec<dim>& FacetPairingBase<dim>::dest(
 
 template <int dim>
 inline const FacetSpec<dim>& FacetPairingBase<dim>::dest(
-        size_t simp, unsigned facet) const {
+        size_t simp, int facet) const {
     return pairs_[(dim + 1) * simp + facet];
 }
 
@@ -875,7 +1007,7 @@ inline bool FacetPairingBase<dim>::isUnmatched(
 
 template <int dim>
 inline bool FacetPairingBase<dim>::isUnmatched(
-        size_t simp, unsigned facet) const {
+        size_t simp, int facet) const {
     return pairs_[(dim + 1) * simp + facet].isBoundary(size_);
 }
 
@@ -887,7 +1019,7 @@ inline FacetSpec<dim>& FacetPairingBase<dim>::dest(
 
 template <int dim>
 inline FacetSpec<dim>& FacetPairingBase<dim>::dest(
-        size_t simp, unsigned facet) {
+        size_t simp, int facet) {
     return pairs_[(dim + 1) * simp + facet];
 }
 
@@ -905,9 +1037,89 @@ inline bool FacetPairingBase<dim>::noDest(
 
 template <int dim>
 inline bool FacetPairingBase<dim>::noDest(
-        size_t simp, unsigned facet) const {
+        size_t simp, int facet) const {
     FacetSpec<dim>& f = pairs_[(dim + 1) * simp + facet];
-    return (f.simp == simp && f.facet == facet);
+    return (f.simp == static_cast<ssize_t>(simp) && f.facet == facet);
+}
+
+template <int dim>
+inline std::string FacetPairingBase<dim>::toTextRep() const {
+    return textRep();
+}
+
+template <int dim>
+void FacetPairingBase<dim>::tightEncode(std::ostream& out) const {
+    regina::detail::tightEncodeIndex(out, size_);
+    // Write each pairing from one side only, in the forward direction.
+    // The test below will also write unmatched and undecided pairings
+    // correctly.
+    for (size_t i = 0; i < size_ * (dim + 1); ++i) {
+        if (pairs_[i].simp < 0)
+            throw FailedPrecondition("Before-the-start destinations "
+                "are not allowed in tight encodings");
+
+        size_t adjIdx = (dim + 1) * pairs_[i].simp + pairs_[i].facet;
+        if (adjIdx >= i) {
+            if (adjIdx > size_ * (dim + 1))
+                throw FailedPrecondition("Past-the-end destinations "
+                    "are not allowed in tight encodings");
+
+            regina::detail::tightEncodeIndex(out, adjIdx);
+        }
+    }
+}
+
+template <int dim>
+FacetPairing<dim> FacetPairingBase<dim>::tightDecode(std::istream& input) {
+    auto size = regina::detail::tightDecodeIndex<size_t>(input);
+    if (size <= 0)
+        throw InvalidInput("The tight encoding has a non-positive number "
+            "of simplices");
+
+    FacetPairing<dim> ans(size);
+
+    for (size_t i = 0; i < size * (dim+1); ++i)
+        ans.pairs_[i].setBeforeStart();
+
+    for (size_t i = 0; i < size * (dim+1); ++i) {
+        if (! ans.pairs_[i].isBeforeStart())
+            continue;
+
+        auto adjIdx = regina::detail::tightDecodeIndex<size_t>(input);
+        if (adjIdx > size * (dim+1))
+            throw InvalidInput("The tight encoding contains "
+                "invalid matchings of simplex facets");
+        if (adjIdx < i)
+            throw InvalidInput("The tight encoding contains "
+                "unexpected matchings of simplex facets");
+
+        ans.pairs_[i] = FacetSpec<dim>(adjIdx / (dim+1), adjIdx % (dim+1));
+
+        if (adjIdx < size * (dim + 1) && adjIdx > i) {
+            // This is a real gluing.  Make it from the other side also.
+            if (ans.pairs_[adjIdx].isBeforeStart())
+                ans.pairs_[adjIdx] = FacetSpec<dim>(i / (dim+1), i % (dim+1));
+            else {
+                // Some other pairing has already claimed this destination.
+                throw InvalidInput("The tight encoding contains "
+                    "inconsistent matchings of simplex facets");
+            }
+        }
+    }
+
+    return ans;
+}
+
+template <int dim>
+inline std::pair<FacetPairing<dim>, Isomorphism<dim>>
+        FacetPairingBase<dim>::canonical() const {
+    return canonicalInternal<false>();
+}
+
+template <int dim>
+inline std::pair<FacetPairing<dim>, typename FacetPairingBase<dim>::IsoList>
+        FacetPairingBase<dim>::canonicalAll() const {
+    return canonicalInternal<true>();
 }
 
 template <int dim>

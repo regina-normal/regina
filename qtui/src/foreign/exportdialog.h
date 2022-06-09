@@ -38,6 +38,7 @@
 #ifndef __EXPORTDIALOG_H
 #define __EXPORTDIALOG_H
 
+#include "reginaqt.h"
 #include <QDialog>
 #include <memory>
 

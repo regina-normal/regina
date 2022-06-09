@@ -42,13 +42,14 @@
 #include "tri3creator.h"
 #include "reginasupport.h"
 
+#include <numeric> // for std::gcd()
 #include <QCheckBox>
 #include <QComboBox>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QTextDocument>
 #include <QValidator>
 #include <QStackedWidget>
@@ -100,21 +101,18 @@ namespace {
     /**
      * Regular expressions describing different sets of parameters.
      */
-    QRegExp reLensParams(R"(^[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]*$)");
-    QRegExp reLSTParams(
+    const QRegularExpression reLensParams(
+        R"(^[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]*$)");
+    const QRegularExpression reLSTParams(
         R"(^[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]+(\d+)[^0-9\-]*$)");
-    QRegExp reSFS3Params(
-        R"(^[^0-9\-]*(-?\d+)[^0-9\-]+(-?\d+))"
-        R"([^0-9\-]+(-?\d+)[^0-9\-]+(-?\d+))"
-        R"([^0-9\-]+(-?\d+)[^0-9\-]+(-?\d+)[^0-9\-]*$)");
-    QRegExp reSFSAllParams(
+    const QRegularExpression reSFSAllParams(
         R"(^[^0-9\-]*(-?\d+)[^0-9\-]+(-?\d+))"
         R"((?:[^0-9\-]+(-?\d+)[^0-9\-]+(-?\d+))*)"
         R"([^0-9\-]*$)");
-    QRegExp reSFSParamPair(R"((-?\d+)[^0-9\-]+(-?\d+))");
-    QRegExp reIsoSig(R"(^([A-Za-z0-9+-]+)$)");
-    QRegExp reDehydration(R"(^([A-Za-z]+)$)");
-    QRegExp reSignature(R"(^([\(\)\.,;:\|\-A-Za-z]+)$)");
+    const QRegularExpression reSFSParamPair(R"((-?\d+)[^0-9\-]+(-?\d+))");
+    const QRegularExpression reIsoSig(R"(^([A-Za-z0-9+-]+)$)");
+    const QRegularExpression reDehydration(R"(^([A-Za-z]+)$)");
+    const QRegularExpression reSignature(R"(^([\(\)\.,;:\|\-A-Za-z]+)$)");
 }
 
 Tri3Creator::Tri3Creator(ReginaMain*) {
@@ -159,7 +157,8 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     lensParams = new QLineEdit();
-    lensParams->setValidator(new QRegExpValidator(reLensParams, hArea));
+    lensParams->setValidator(new QRegularExpressionValidator(
+        reLensParams, hArea));
     lensParams->setWhatsThis(expln);
     hLayout->addWidget(lensParams, 1);
     details->addWidget(hArea);//, TRI_LAYERED_LENS_SPACE);
@@ -193,7 +192,8 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     sfsParams = new QLineEdit();
-    sfsParams->setValidator(new QRegExpValidator(reSFSAllParams, hArea));
+    sfsParams->setValidator(new QRegularExpressionValidator(
+        reSFSAllParams, hArea));
     sfsParams->setWhatsThis(expln);
     hLayout->addWidget(sfsParams, 1);
     details->addWidget(hArea);//, TRI_SFS_SPHERE);
@@ -212,7 +212,8 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     lstParams = new QLineEdit();
-    lstParams->setValidator(new QRegExpValidator(reLSTParams, hArea));
+    lstParams->setValidator(new QRegularExpressionValidator(
+        reLSTParams, hArea));
     lstParams->setWhatsThis(expln);
     hLayout->addWidget(lstParams, 1);
     details->addWidget(hArea);//, TRI_LAYERED_SOLID_TORUS);
@@ -234,7 +235,7 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     isoSig = new QLineEdit();
-    isoSig->setValidator(new QRegExpValidator(reIsoSig, hArea));
+    isoSig->setValidator(new QRegularExpressionValidator(reIsoSig, hArea));
     isoSig->setWhatsThis(expln);
     hLayout->addWidget(isoSig, 1);
     details->addWidget(hArea);//, TRI_ISOSIG);
@@ -255,7 +256,8 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     dehydrationString = new QLineEdit(hArea);
-    dehydrationString->setValidator(new QRegExpValidator(reDehydration, hArea));
+    dehydrationString->setValidator(new QRegularExpressionValidator(
+        reDehydration, hArea));
     dehydrationString->setWhatsThis(expln);
     hLayout->addWidget(dehydrationString, 1);
     details->addWidget(hArea);//, TRI_DEHYDRATION);
@@ -275,7 +277,8 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     splittingSignature = new QLineEdit(hArea);
-    splittingSignature->setValidator(new QRegExpValidator(reSignature, hArea));
+    splittingSignature->setValidator(new QRegularExpressionValidator(
+        reSignature, hArea));
     splittingSignature->setWhatsThis(expln);
     hLayout->addWidget(splittingSignature, 1);
     details->addWidget(hArea);//, TRI_SPLITTING_SURFACE);
@@ -320,7 +323,8 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         ans->setLabel("3-D triangulation");
         return ans;
     } else if (typeId == TRI_LAYERED_LENS_SPACE) {
-        if (! reLensParams.exactMatch(lensParams->text())) {
+        auto match = reLensParams.match(lensParams->text());
+        if (! match.hasMatch()) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("<qt>The lens space "
                 "parameters (<i>p</i>,<i>q</i>) "
@@ -330,8 +334,8 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             return nullptr;
         }
 
-        unsigned long p = reLensParams.cap(1).toULong();
-        unsigned long q = reLensParams.cap(2).toULong();
+        unsigned long p = match.captured(1).toULong();
+        unsigned long q = match.captured(2).toULong();
 
         if (p <= q && ! (p == 0 && q == 1)) {
             ReginaSupport::sorry(parentWidget,
@@ -342,7 +346,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
                 "are not.</qt>"));
             return nullptr;
         }
-        if (regina::gcd(p, q) != 1) {
+        if (std::gcd(p, q) != 1) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The two lens space "
                 "parameters must be relatively prime."));
@@ -354,7 +358,8 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
 
         return regina::make_packet(Example<3>::lens(p, q), s.str());
     } else if (typeId == TRI_LAYERED_SOLID_TORUS) {
-        if (! reLSTParams.exactMatch(lstParams->text())) {
+        auto match = reLSTParams.match(lstParams->text());
+        if (! match.hasMatch()) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("<qt>The layered solid "
                 "torus parameters (<i>a</i>,<i>b</i>,<i>c</i>) "
@@ -364,9 +369,9 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         }
 
         unsigned long param[3] {
-            reLSTParams.cap(1).toULong(),
-            reLSTParams.cap(2).toULong(),
-            reLSTParams.cap(3).toULong()
+            match.captured(1).toULong(),
+            match.captured(2).toULong(),
+            match.captured(3).toULong()
         };
 
         std::sort(param, param + 3);
@@ -379,7 +384,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
                 "positive."));
             return nullptr;
         }
-        if (regina::gcd(param[0], param[1]) != 1) {
+        if (std::gcd(param[0], param[1]) != 1) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The layered "
                 "solid torus parameters must be relatively prime."));
@@ -402,7 +407,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         return regina::make_packet(Example<3>::lst(param[0], param[1]),
             s.str());
     } else if (typeId == TRI_SFS_SPHERE) {
-        if (! reSFSAllParams.exactMatch(sfsParams->text())) {
+        if (! reSFSAllParams.match(sfsParams->text()).hasMatch()) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The Seifert fibred space parameters "
                 "are not valid."),
@@ -434,12 +439,13 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         // Build the Seifert fibred space.
         regina::SFSpace sfs;
         long a, b;
-        long pos = 0;
         long whichPair = 1;
 
-        while ((pos = reSFSParamPair.indexIn(sfsParams->text(), pos)) >= 0) {
-            a = reSFSParamPair.cap(1).toLong();
-            b = reSFSParamPair.cap(2).toLong();
+        auto matchIt = reSFSParamPair.globalMatch(sfsParams->text());
+        while (matchIt.hasNext()) {
+            auto match = matchIt.next();
+            a = match.captured(1).toLong();
+            b = match.captured(2).toLong();
 
             if (a == 0) {
                 ReginaSupport::sorry(parentWidget,
@@ -467,7 +473,6 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             else
                 sfs.insertFibre(a, b);
 
-            pos += reSFSParamPair.matchedLength();
             whichPair++;
         }
 
@@ -475,7 +480,8 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         // is implemented for all such manifolds.
         return regina::make_packet(sfs.construct(), sfs.structure());
     } else if (typeId == TRI_ISOSIG) {
-        if (! reIsoSig.exactMatch(isoSig->text())) {
+        auto match = reIsoSig.match(isoSig->text());
+        if (! match.hasMatch()) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The isomorphism signature is not valid."),
                 QObject::tr("<qt>An isomorphism "
@@ -489,7 +495,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             return nullptr;
         }
 
-        std::string sig = reIsoSig.cap(1).toUtf8().constData();
+        std::string sig = match.captured(1).toUtf8().constData();
         try {
             return regina::make_packet(Triangulation<3>::fromIsoSig(sig), sig);
         } catch (const regina::InvalidArgument&) {
@@ -503,7 +509,8 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             return nullptr;
         }
     } else if (typeId == TRI_DEHYDRATION) {
-        if (! reDehydration.exactMatch(dehydrationString->text())) {
+        auto match = reDehydration.match(dehydrationString->text());
+        if (! match.hasMatch()) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("The dehydration string is not valid."),
                 QObject::tr("<qt>A dehydration "
@@ -516,7 +523,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             return nullptr;
         }
 
-        std::string dehydString = reDehydration.cap(1).toUtf8().constData();
+        std::string dehydString = match.captured(1).toUtf8().constData();
         try {
             return regina::make_packet(Triangulation<3>::rehydrate(dehydString),
                 dehydString);
@@ -532,7 +539,8 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             return nullptr;
         }
     } else if (typeId == TRI_SPLITTING_SURFACE) {
-        if (! reSignature.exactMatch(splittingSignature->text())) {
+        auto match = reSignature.match(splittingSignature->text());
+        if (! match.hasMatch()) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("The splitting surface signature is not valid."),
                 QObject::tr("<qt>A splitting "
@@ -547,7 +555,7 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
             return nullptr;
         }
 
-        std::string sigString = reSignature.cap(1).toUtf8().constData();
+        std::string sigString = match.captured(1).toUtf8().constData();
         try {
             return regina::make_packet(
                 regina::Signature(sigString).triangulate(), sigString);

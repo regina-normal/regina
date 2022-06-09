@@ -38,7 +38,8 @@
 #define __REGINAABOUT_H
 
 // UI includes:
-#include <qstring.h>
+#include "reginaqt.h"
+#include <QString>
 #include <QDialog>
 
 /**

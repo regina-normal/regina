@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
+ * Copyright (C) 2007-2022  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * As an exception, when this program is distributed through (i) the App Store
  * by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or (iii) Google Play
@@ -145,7 +145,7 @@ void poly_div(vector<Integer>& q, vector<Integer>& r, const vector<Integer>& a, 
     r = a;
     remove_zeros(r);
     size_t b_size = b.size();
-    int degdiff = r.size() - b_size;  // degree differenz
+    size_t degdiff = r.size() - b_size;  // degree differenz
     if (r.size() < b_size) {
         q = vector<Integer>();
     }
@@ -317,7 +317,7 @@ HilbertSeries::HilbertSeries(const vector<mpz_class>& numerator, const map<long,
     initialize();
 }
 
-/* 
+/*
 // Constructor, string as created by to_string_rep
 HilbertSeries::HilbertSeries(const string& str) {
     from_string_rep(str);
@@ -350,12 +350,12 @@ bool HilbertSeries::get_period_bounded() const {
     return period_bounded;
 }
 // add another HilbertSeries to this
-void HilbertSeries::add(const vector<num_t>& num, const vector<denom_t>& gen_degrees) {
+void HilbertSeries::add(const vector<num_t>& num_, const vector<denom_t>& gen_degrees) {
     vector<denom_t> sorted_gd(gen_degrees);
     sort(sorted_gd.begin(), sorted_gd.end());
     if (gen_degrees.size() > 0)
         assert(sorted_gd[0] > 0);  // TODO InputException?
-    poly_add_to(denom_classes[sorted_gd], num);
+    poly_add_to(denom_classes[sorted_gd], num_);
     if (denom_classes.size() > DENOM_CLASSES_BOUND)
         collectData();
     is_simplified = false;
@@ -535,12 +535,12 @@ void HilbertSeries::simplify() const {
             long k = 1;
             bool empty = true;
             vector<mpz_class> existing_factor(1, 1);  // collects the existing cyclotomic gactors in the denom
-            for (auto& it : cdenom) {                 // with multiplicvity 1
-                if (it.second > 0) {
+            for (auto& d : cdenom) {                 // with multiplicvity 1
+                if (d.second > 0) {
                     empty = false;
-                    k = libnormaliz::lcm(k, it.first);
-                    existing_factor = poly_mult(existing_factor, cyclotomicPoly<mpz_class>(it.first));
-                    it.second--;
+                    k = libnormaliz::lcm(k, d.first);
+                    existing_factor = poly_mult(existing_factor, cyclotomicPoly<mpz_class>(d.first));
+                    d.second--;
                 }
             }
             if (empty)
@@ -668,7 +668,7 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
     long reduced_period;
     if (nr_coeff_quasipol >= 0) {
         reduced_period = 1;
-        for (long j = 0; j < nr_coeff_quasipol; ++j)
+        for (j = 0; j < nr_coeff_quasipol; ++j)
             reduced_period = lcm(reduced_period, denom_vec[j]);
     }
     else
@@ -690,7 +690,7 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
     for (j = 0; j < reduced_period; ++j) {
         INTERRUPT_COMPUTATION_BY_EXCEPTION
 
-        quasi_poly[j] = compute_polynomial(quasi_poly[j], dim);
+        quasi_poly[j] = compute_polynomial(quasi_poly[j], static_cast<int>(dim));
     }
 
     // substitute t by t/period:
@@ -727,9 +727,9 @@ void HilbertSeries::computeHilbertQuasiPolynomial() const {
     if (nr_coeff_quasipol >= 0)
         delete_coeff = (long)quasi_poly[0].size() - nr_coeff_quasipol;
 
-    for (auto& i : quasi_poly)  // delete coefficients that have not been computed completely
-        for (long j = 0; j < delete_coeff; ++j)
-            i[j] = 0;
+    for (auto& p : quasi_poly)  // delete coefficients that have not been computed completely
+        for (j = 0; j < delete_coeff; ++j)
+            p[j] = 0;
 
     if (verbose && period > 1) {
         verboseOutput() << " done." << endl;
@@ -754,8 +754,8 @@ long HilbertSeries::get_expansion_degree() const {
     return expansion_degree;
 }
 
-void HilbertSeries::set_expansion_degree(long degree) {
-    expansion_degree = degree;
+void HilbertSeries::set_expansion_degree(long degree_) {
+    expansion_degree = degree_;
 }
 
 vector<mpz_class> HilbertSeries::expand_denom() const {
@@ -1111,7 +1111,7 @@ vector<Integer> compute_e_vector(vector<Integer> Q, int dim) {
     vector<Integer> E_Vector(dim, 0);
     // cout << "QQQ " << Q;
     // Q.resize(dim+1);
-    int bound = Q.size();
+    int bound = static_cast<int>(Q.size());
     if (bound > dim)
         bound = dim;
     for (i = 0; i < bound; i++) {

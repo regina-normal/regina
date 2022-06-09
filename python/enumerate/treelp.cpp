@@ -67,7 +67,7 @@ void addLPInitialTableaux(pybind11::module_& m, const char* name) {
         .def("columns", &Tableaux::columns)
         .def("coordinateColumns", &Tableaux::coordinateColumns)
         .def("columnPerm", [](const Tableaux& t) {
-            const int* perm = t.columnPerm();
+            const size_t* perm = t.columnPerm();
 
             pybind11::list ans;
             for (size_t i = 0; i < t.columns(); ++i)
@@ -129,15 +129,14 @@ void addLPData(pybind11::module_& m, const char* name) {
 void addTreeLP(pybind11::module_& m) {
     auto c = pybind11::class_<LPMatrix<Integer>>(m, "LPMatrix")
         .def(pybind11::init<>())
-        .def(pybind11::init<unsigned, unsigned>())
+        .def(pybind11::init<size_t, size_t>())
         .def("swap", &LPMatrix<Integer>::swap)
         .def("reserve", &LPMatrix<Integer>::reserve)
         .def("initClone", &LPMatrix<Integer>::initClone)
         .def("initIdentity", &LPMatrix<Integer>::initIdentity)
-        .def("entry",
-            overload_cast<unsigned, unsigned>(&LPMatrix<Integer>::entry),
+        .def("entry", overload_cast<size_t, size_t>(&LPMatrix<Integer>::entry),
             pybind11::return_value_policy::reference_internal)
-        .def("set", [](LPMatrix<Integer>& m, unsigned row, unsigned col,
+        .def("set", [](LPMatrix<Integer>& m, size_t row, size_t col,
                 const regina::Integer& value){
             m.entry(row, col) = value;
         })

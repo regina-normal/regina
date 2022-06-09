@@ -34,13 +34,13 @@
 #include "packettabui.h"
 
 #include <iostream>
-#include <qlayout.h>
-#include <qtabwidget.h>
+#include <QLayout>
+#include <QTabWidget>
 
 using regina::Packet;
 
 PacketTabbedUI::PacketTabbedUI(PacketPane* enclosingPane,
-        unsigned& indexPref) : PacketUI(enclosingPane),
+        int& indexPref) : PacketUI(enclosingPane),
         editorTab(nullptr), header(nullptr), visibleViewer(nullptr),
         indexPref_(indexPref), rememberTabSelection_(true) {
     ui = new QWidget();
@@ -212,7 +212,7 @@ void PacketTabbedUI::notifyTabSelected(int newTab) {
 }
 
 PacketTabbedViewerTab::PacketTabbedViewerTab(PacketTabbedUI* useParentUI,
-        unsigned& indexPref) : PacketViewerTab(useParentUI),
+        int& indexPref) : PacketViewerTab(useParentUI),
         header(nullptr), visibleViewer(nullptr),
         indexPref_(indexPref), rememberTabSelection_(true) {
     ui = new QWidget();
