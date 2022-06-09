@@ -207,77 +207,77 @@ void HomologicalData::computeccIndexing() {
 
     // Off we go...
 
-    unsigned long i=0;
+    size_t idx = 0;
     for (Vertex<3>* v : tri.vertices()) {
         if (!(v->isIdeal()))
-            sNIV.push_back(i);
-        i++;
+            sNIV.push_back(idx);
+        idx++;
     } // sNIV
 
-    unsigned long j=0;
+    idx = 0;
     for (Edge<3>* e : tri.edges()) {
-        for (i=0;i<2;i++) {
+        for (int i=0;i<2;i++) {
             if (e->vertex(i)->isIdeal())
-                sIEOE.push_back(2*j+i);
+                sIEOE.push_back(2*idx+i);
         }
-        j++;
+        idx++;
     }
 
-    j=0; // sIEOE
+    idx = 0; // sIEOE
     for (Triangle<3>* t : tri.triangles()) {
-        for (i=0;i<3;i++) {
+        for (int i=0;i<3;i++) {
             if (t->vertex(i)->isIdeal())
-                sIEEOF.push_back(3*j+i);
+                sIEEOF.push_back(3*idx+i);
         }
-        j++;
+        idx++;
     }
 
-    j=0; // sIEEOF
+    idx = 0; // sIEEOF
     for (Tetrahedron<3>* tet : tri.tetrahedra()) {
-        for (i=0;i<4;i++)  {
+        for (int i=0;i<4;i++)  {
             if (tet->vertex(i)->isIdeal()) {
-                sIEFOT.push_back(4*j+i);
+                sIEFOT.push_back(4*idx+i);
             }
         }
-        j++;
+        idx++;
     }
 
-    j=0;// sIEFOT
+    idx = 0;// sIEFOT
     for (Vertex<3>* v : tri.vertices()) { // dNINBV
         if ((!(v->isIdeal())) && (!(v->isBoundary())))
-            dNINBV.push_back(j);
-        j++;
+            dNINBV.push_back(idx);
+        idx++;
     }
-    j=0;
+    idx = 0;
     for (Edge<3>* e : tri.edges()) {
         if (!(e->isBoundary()))
-            dNBE.push_back(j);
-        j++;
+            dNBE.push_back(idx);
+        idx++;
     }
-    j=0; // dNBE
+    idx = 0; // dNBE
     for (Triangle<3>* t : tri.triangles()) {
         if (!(t->isBoundary()))
-            dNBF.push_back(j);
-        j++;
+            dNBF.push_back(idx);
+        idx++;
     }
 
-    i=0;
+    idx = 0;
     for (Vertex<3>* v : tri.vertices()) { // sBNIV
         if ( (!(v->isIdeal())) && (v->isBoundary()))
-            sBNIV.push_back(i);
-        i++;
+            sBNIV.push_back(idx);
+        idx++;
     }
-    i=0;
+    idx = 0;
     for (Edge<3>* e : tri.edges()) { // sBNIE
         if (e->isBoundary())
-            sBNIE.push_back(i);
-        i++;
+            sBNIE.push_back(idx);
+        idx++;
     }
-    i=0;
+    idx = 0;
     for (Triangle<3>* t : tri.triangles()) { // sBNIF
         if (t->isBoundary())
-            sBNIF.push_back(i);
-        i++;
+            sBNIF.push_back(idx);
+        idx++;
     }
 
     ccIndexingComputed_ = true;
@@ -338,15 +338,12 @@ void HomologicalData::computeChainComplexes() {
     B1Incl_ = MatrixInt(numStandardCells[1], numBdryCells[1]);
     B2Incl_ = MatrixInt(numStandardCells[2], numBdryCells[2]);
 
-    long int temp;
-    unsigned long i,j;
-
     Perm<4> p1;
 
     // This fills out matrix A1
-    for (i=0;i<tri.countEdges();i++) {
+    for (size_t i=0;i<tri.countEdges();i++) {
         // these are the standard edges
-        temp=sNIV.index(tri.edge(i)->vertex(0)->index());
+        ssize_t temp=sNIV.index(tri.edge(i)->vertex(0)->index());
         (A1_->entry( ((temp==(-1)) ?
             (sNIV.size()+sIEOE.index(2*i)) : temp ), i))-=1;
         temp=sNIV.index(tri.edge(i)->vertex(1)->index());
@@ -354,7 +351,7 @@ void HomologicalData::computeChainComplexes() {
             (sNIV.size()+sIEOE.index(2*i+1)) : temp), i))+=1;
     } // ok
 
-    for (i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
+    for (size_t i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
         // sIEEOF[i] /3 is the triangle index, and sIEEOF[i] % 3 tells us
         // the vertex of this triangle
         p1=tri.triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 1) % 3);
@@ -381,9 +378,9 @@ void HomologicalData::computeChainComplexes() {
     // that handles matrix A1.
 
     // start filling out A2...
-    for (i=0;i<tri.countTriangles();i++) {
+    for (size_t i=0;i<tri.countTriangles();i++) {
         // put boundary edges into A2..
-        for (j=0;j<6;j++) {
+        for (int j=0;j<6;j++) {
             // run through the 6 possible boundary edges of the triangle
             // the first 3 are standard, the last three are the ideal
             // edges (if they exist)
@@ -401,7 +398,7 @@ void HomologicalData::computeChainComplexes() {
         }
     }
 
-    for (i=0;i<sIEFOT.size();i++) {
+    for (size_t i=0;i<sIEFOT.size();i++) {
         // boundary edges from ideal faces of tetrahedra.
         // sIEFOT[i] /4 is the tetrahedron number
         // sIEFOT[i] % 4 is the vertex number for this tetrahedron
@@ -414,7 +411,7 @@ void HomologicalData::computeChainComplexes() {
         // tetrahedra[ sIEFOT[i]/4 ].triangleMapping(
         // sIEFOT[i] + 1,2,3 % 4)^{-1} applied to sIEFOT[i] % 4 is the
         // vertex of this triangle.
-        for (j=1;j<4;j++) {
+        for (int j=1;j<4;j++) {
             p1=tri.tetrahedron( sIEFOT[i]/4 )->triangleMapping(
                 (sIEFOT[i] + j) % 4);
             A2_->entry( tri.countEdges() + sIEEOF.index(
@@ -427,8 +424,8 @@ void HomologicalData::computeChainComplexes() {
     // end A2
 
     // start A3
-    for (i=0;i<tri.size();i++) {
-        for (j=0;j<4;j++) {
+    for (size_t i=0;i<tri.size();i++) {
+        for (int j=0;j<4;j++) {
             // first go through standard faces 0 through 3
             p1=tri.tetrahedron(i)->triangleMapping(j);
             A3_->entry( tri.tetrahedron(i)->triangle(j)->index(), i) +=
@@ -446,7 +443,7 @@ void HomologicalData::computeChainComplexes() {
 
     // start B1: for each dual edge == non-boundary triangle,
     //              find the tetrahedra that bound it
-    for (i=0;i<dNBF.size();i++) {
+    for (size_t i=0;i<dNBF.size();i++) {
         B1_->entry(
             tri.triangle(dNBF[i])->embedding(1).tetrahedron()->index(), i)+=1;
         B1_->entry(
@@ -456,7 +453,7 @@ void HomologicalData::computeChainComplexes() {
 
     // start B2: for each dual triangle == non-boundary edge,
     // find dual edges it bounds == link of tetrahedra that contain it
-    for (i=0;i<dNBE.size();i++) {
+    for (size_t i=0;i<dNBE.size();i++) {
         for (auto& emb : *tri.edge(dNBE[i])) {
             p1=emb.vertices();
             // the face of the tetrahedron corresponding to vertex 2 is
@@ -480,12 +477,11 @@ void HomologicalData::computeChainComplexes() {
     std::vector<int> tetor;
     long int ind1;
     long int ind2;
-    int k;
 
     // start B3: for each dual tetrahedron==nonboundary vertex,
     //           find the corresp edges==non-boundary boundary triangles
 
-    for (i=0;i<dNINBV.size();i++) {
+    for (size_t i=0;i<dNINBV.size();i++) {
         // dNINBV[i] is the vertices.index() of this vertex.
         Vertex<3>* vtet = tri.vertex(dNINBV[i]);
         tetor.resize(vtet->degree(),0);
@@ -497,7 +493,7 @@ void HomologicalData::computeChainComplexes() {
         // Values are (index into vtet's list of embeddings, already oriented).
         unorientedlist.resize(4 * tri.size());
 
-        for (j=0;j<vtet->degree();j++) {
+        for (size_t j=0;j<vtet->degree();j++) {
             // unoriented list stores the tetrahedra adjacent to the vertex
             // plus the vertex index in that tetrahedra's coords
             unorientedlist[
@@ -519,7 +515,7 @@ void HomologicalData::computeChainComplexes() {
 
         size_t stillToOrient = vtet->degree() - 1;
         while (stillToOrient > 0)
-          for (j=0;j<vtet->degree();j++)
+          for (size_t j=0;j<vtet->degree();j++)
             // go through all oriented tetrahedra and orient
             // the adjacent tetrahedra
             {
@@ -530,7 +526,7 @@ void HomologicalData::computeChainComplexes() {
                     // this tetrahedron has been oriented check to see
                     // if any of the adjacent
                     // tetrahedra are unoriented, and if so, orient them.
-                    for (k=0;k<4;k++) {
+                    for (int k=0;k<4;k++) {
                         if (k!= (ind1 % 4))
                         {
                             p1=vtet->embedding(j).tetrahedron() ->
@@ -559,8 +555,8 @@ void HomologicalData::computeChainComplexes() {
         // 4*(edge index) + 2*(endpt index) + sign stored as 0 or 1.
         std::set<long> edge_adjacency;
 
-        for (j=0;j<vtet->degree();j++)
-            for (k=0;k<6;k++) {
+        for (size_t j=0;j<vtet->degree();j++)
+            for (int k=0;k<6;k++) {
                 ind2=vtet->embedding(j).tetrahedron()->edgeMapping(k).
                     pre( vtet->embedding(j).vertex() );
                 if ( ind2<2 ) {
@@ -603,16 +599,16 @@ void HomologicalData::computeChainComplexes() {
     // regular 0-cell associated to a dual 0-cell must be contained in
     // the same ideal simplex.
 
-    std::vector<unsigned long> zeroCellMap(tri.size());
+    std::vector<unsigned> zeroCellMap(tri.size());
     // zeroCellMap[i] describes the vertex of tetrahedra[i] that the dual
     // 0-cell is sent to. It will be stored as
     // 4*(vertex number 0,1,2,3) + 0,1,2,3 (equal to prev. number if
     // non-ideal
 
-    for (i=0; i<zeroCellMap.size(); i++) {
+    for (size_t i=0; i<zeroCellMap.size(); i++) {
         // cycle through the vertices, take the first non-ideal one if
         // it exists.
-        j=0;
+        int j=0;
         while ( j<4 && tri.tetrahedron(i)->vertex(j)->isIdeal())
             j++;
         if (j<4) zeroCellMap[i]=4*j+j;
@@ -627,7 +623,7 @@ void HomologicalData::computeChainComplexes() {
     // the triangle corresponding to the dual 1-cell once. (and no other
     // triangles).
 
-    for (j=0; j<H1map_->columns(); j++) // H1map_.columns()==dNBF.size() 
+    for (size_t j=0; j<H1map_->columns(); j++) // H1map_.columns()==dNBF.size()
         // while H1map_.rows() is edges.size()+sIEEOF.size()
     {
         // now we have to decide where dual edge j == ideal triangulation
@@ -891,15 +887,15 @@ void HomologicalData::computeChainComplexes() {
 
     // This fills out matrix Bd1: rows==sBNIV.size()+sIEOE.size(),
     // cols==sBNIE.size()+sIEEOF.size()
-    for (i=0;i<sBNIE.size();i++) { // these are the standard boundary edges
+    for (size_t i=0;i<sBNIE.size();i++) { // these are the standard boundary edges
         // temp == -1 when the boundary edge end is ideal.
-        temp=sBNIV.index(tri.edge(sBNIE[i])->vertex(0)->index());
+        ssize_t temp=sBNIV.index(tri.edge(sBNIE[i])->vertex(0)->index());
         (Bd1_->entry( ((temp==(-1)) ? (sBNIV.size()+2*i) : temp ), i))-=1;
         temp=sBNIV.index(tri.edge(sBNIE[i])->vertex(1)->index());
         (Bd1_->entry( ((temp==(-1)) ? (sBNIV.size()+2*i+1) : temp), i))+=1;
     } // ok
 
-    for (i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
+    for (size_t i=0;i<sIEEOF.size();i++) { // these are the ideal edges...
         // sIEEOF[i] /3 is the triangle index, and sIEEOF[i] % 3 tells us
         // the vertex of this triangle
         p1=tri.triangle(sIEEOF[i]/3)->edgeMapping( (sIEEOF[i] + 1) % 3);
@@ -927,9 +923,9 @@ void HomologicalData::computeChainComplexes() {
 
     // start filling out Bd2: rows==sBNIE.size()+sIEEOF.size(),
     // cols==sBNIF.size()+sIEFOT.size()
-    for (i=0;i<sBNIF.size();i++) // boundary non-ideal triangles...
+    for (size_t i=0;i<sBNIF.size();i++) // boundary non-ideal triangles...
     { // put boundary edges into Bd2..
-        for (j=0;j<6;j++) {
+        for (int j=0;j<6;j++) {
             // run through the 6 possible boundary edges of the triangle
             // the first 3 are standard, the last three are the ideal
             // edges (if they exist)
@@ -947,7 +943,7 @@ void HomologicalData::computeChainComplexes() {
         }
     }
 
-    for (i=0;i<sIEFOT.size();i++) // ideal triangles...
+    for (size_t i=0;i<sIEFOT.size();i++) // ideal triangles...
     { // boundary edges from ideal faces of tetrahedra.
         // sIEFOT[i] /4 is the tetrahedron number
         // sIEFOT[i] % 4 is the vertex number for this tetrahedron
@@ -960,7 +956,7 @@ void HomologicalData::computeChainComplexes() {
         // triangle number, and tetrahedra[ sIEFOT[i]/4 ].triangleMapping(
         //     sIEFOT[i] + 1,2,3 % 4)^{-1}
         // applied to sIEFOT[i] % 4 is the vertex of this triangle.
-        for (j=1;j<4;j++) {
+        for (int j=1;j<4;j++) {
             p1=tri.tetrahedron( sIEFOT[i]/4 )->triangleMapping(
                 (sIEFOT[i] + j) % 4);
             Bd2_->entry( sBNIE.size() + sIEEOF.index(3*
@@ -973,16 +969,16 @@ void HomologicalData::computeChainComplexes() {
 
     // fill out b0Incl
     // boundary 0-cells:
-    for (i=0;i<B0Incl_->columns();i++)
+    for (size_t i=0;i<B0Incl_->columns();i++)
         B0Incl_->entry( ( ( i < sBNIV.size()) ? sNIV.index(sBNIV[i]) :
                 sNIV.size() + i - sBNIV.size() ) ,i)+=1;
     // fill out b1Incl
-    for (i=0;i<B1Incl_->columns();i++)
+    for (size_t i=0;i<B1Incl_->columns();i++)
         // each boundary edge corresponds to a triangulation edge
         B1Incl_->entry( ( ( i < sBNIE.size() ) ? sBNIE[i] :
                 tri.countEdges() + i - sBNIE.size() ) ,i)+=1;
     // fill out b2Incl
-    for (i=0;i<B2Incl_->columns();i++)
+    for (size_t i=0;i<B2Incl_->columns();i++)
         B2Incl_->entry( ( ( i < sBNIF.size() ) ? sBNIF[i] :
                 tri.countTriangles() + i - sBNIF.size() ) ,i)+=1;
 }

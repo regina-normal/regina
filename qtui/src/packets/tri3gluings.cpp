@@ -63,7 +63,7 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QPushButton>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QTextDocument>
 #include <QToolBar>
 #include <set>
@@ -75,7 +75,7 @@ namespace {
     /**
      * Represents a destination for a single face gluing.
      */
-    QRegExp reFaceGluing(
+    const QRegularExpression reFaceGluing(
         "^\\s*"
         "(\\d+)"
         "(?:\\s*\\(\\s*|\\s+)"
@@ -85,7 +85,7 @@ namespace {
     /**
      * Represents a single tetrahedron face.
      */
-    QRegExp reFace("^[0-3][0-3][0-3]$");
+    const QRegularExpression reFace("^[0-3][0-3][0-3]$");
 }
 
 GluingsModel3::GluingsModel3(regina::Triangulation<3>* tri, bool readWrite) :
@@ -191,31 +191,34 @@ bool GluingsModel3::setData(const QModelIndex& index, const QVariant& value,
     if (text.isEmpty()) {
         // Boundary face.
         newAdjTet = -1;
-    } else if (! reFaceGluing.exactMatch(text)) {
-        // Bad string.
-        showError(tr("<qt>The face gluing should be of the "
-            "form: <i>tet (face)</i>.  An example is <i>5 (032)</i>, "
-            "which represents face 032 of tetrahedron 5.</qt>"));
-        return false;
     } else {
-        // Real face.
-        newAdjTet = reFaceGluing.cap(1).toInt();
-        QString tetFace = reFaceGluing.cap(2);
-
-        // Check explicitly for a negative tetrahedron number
-        // since isFaceStringValid() takes an unsigned integer.
-        if (newAdjTet < 0 || newAdjTet >= tri_->size()) {
-            showError(tr("There is no tetrahedron number %1.").
-                arg(newAdjTet));
+        auto match = reFaceGluing.match(text);
+        if (! match.hasMatch()) {
+            // Bad string.
+            showError(tr("<qt>The face gluing should be of the "
+                "form: <i>tet (face)</i>.  An example is <i>5 (032)</i>, "
+                "which represents face 032 of tetrahedron 5.</qt>"));
             return false;
-        }
+        } else {
+            // Real face.
+            newAdjTet = match.captured(1).toInt();
+            QString tetFace = match.captured(2);
 
-        // Do we have a valid gluing?
-        QString err = isFaceStringValid(index.row(), face, newAdjTet, tetFace,
-            &newAdjPerm);
-        if (! err.isNull()) {
-            showError(err);
-            return false;
+            // Check explicitly for a negative tetrahedron number
+            // since isFaceStringValid() takes an unsigned integer.
+            if (newAdjTet < 0 || newAdjTet >= tri_->size()) {
+                showError(tr("There is no tetrahedron number %1.").
+                    arg(newAdjTet));
+                return false;
+            }
+
+            // Do we have a valid gluing?
+            QString err = isFaceStringValid(index.row(), face, newAdjTet, tetFace,
+                &newAdjPerm);
+            if (! err.isNull()) {
+                showError(err);
+                return false;
+            }
         }
     }
 
@@ -259,7 +262,7 @@ QString GluingsModel3::isFaceStringValid(unsigned long srcTet, int srcFace,
     if (destTet >= tri_->size())
         return tr("There is no tetrahedron number %1.").arg(destTet);
 
-    if (! reFace.exactMatch(destFace))
+    if (! reFace.match(destFace).hasMatch())
         return tr("<qt>%1 is not a valid tetrahedron face.  A tetrahedron "
             "face must be described by a sequence of three vertices, each "
             "between 0 and 3 inclusive.  An example is <i>032</i>.</qt>").

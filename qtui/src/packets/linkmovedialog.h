@@ -41,6 +41,7 @@
 #include "link/link.h"
 #include "packet/packet.h"
 
+#include "reginaqt.h"
 #include <QDialog>
 #include <vector>
 
@@ -92,7 +93,7 @@ struct R2UpArg {
  */
 struct R2DownArg {
     regina::Crossing* crossing;
-    int displayCrossing[2];
+    size_t displayCrossing[2];
 
     R2DownArg() = default;
     R2DownArg(regina::Crossing* c);
@@ -107,7 +108,7 @@ struct R2DownArg {
 struct R3Arg {
     regina::Crossing* crossing;
     int side;
-    int displayCrossing[3];
+    size_t displayCrossing[3];
 
     R3Arg() = default;
     R3Arg(regina::Crossing* c, int useSide);

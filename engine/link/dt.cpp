@@ -35,8 +35,16 @@
 
 #include "link/link.h"
 #include <cassert>
+#include <climits>
 #include <cstdlib>
 #include <iterator>
+
+namespace {
+    // Computes abs(a-b) without using negative numbers.
+    size_t absdiff(size_t a, size_t b) {
+        return (a >= b ? a - b : b - a);
+    }
+}
 
 namespace regina {
 
@@ -63,14 +71,17 @@ void Link::dt(std::ostream& out, bool alpha) const {
 
     size_t n = size();
 
+    // Work with the largest signed integer type that we could possibly need.
+    using Int = std::make_signed_t<size_t>;
+
     // Odd steps in traversal -> crossing index
-    int* oddCrossing = new int[n];
+    auto* oddCrossing = new size_t[n];
 
     // Crossing index -> even steps in traversal, negated if passing under
-    int* evenStep = new int[n];
+    auto* evenStep = new Int[n];
 
     StrandRef s = start;
-    unsigned step = 0;
+    Int step = 0;
     do {
         ++step;
         if (step % 2 == 1) {
@@ -82,7 +93,7 @@ void Link::dt(std::ostream& out, bool alpha) const {
         }
         ++s;
     } while (s != start);
-    assert(step == 2 * n);
+    assert(static_cast<size_t>(step) == 2 * n);
 
     if (alpha) {
         for (size_t i = 0; i < n; ++i)
@@ -107,13 +118,16 @@ std::vector<int> Link::dtData() const {
             "only implemented for single-component links");
     if (crossings_.empty())
         return {};
+    if (2 * size() > INT_MAX)
+        throw NotImplemented("This Dowker-Thistlethwaite notation has "
+            "entries that cannot fit into a C++ int");
 
     // Dowker-Thistlethwaite notation requires us to start on the lower strand.
     StrandRef start = components_.front();
     if (start.strand() == 1)
         start.jump();
 
-    size_t n = size();
+    int n = static_cast<int>(size());
 
     // Odd steps in traversal -> crossing index
     int* oddCrossing = new int[n];
@@ -122,11 +136,11 @@ std::vector<int> Link::dtData() const {
     int* evenStep = new int[n];
 
     StrandRef s = start;
-    unsigned step = 0;
+    int step = 0;
     do {
         ++step;
         if (step % 2 == 1) {
-            oddCrossing[step >> 1] = s.crossing()->index();
+            oddCrossing[step >> 1] = static_cast<int>(s.crossing()->index());
         } else {
             evenStep[s.crossing()->index()] = (s.strand() == 1 ? step : -step);
         }
@@ -137,7 +151,7 @@ std::vector<int> Link::dtData() const {
     std::vector<int> ans;
     ans.reserve(n);
 
-    for (size_t i = 0; i < n; ++i)
+    for (int i = 0; i < n; ++i)
         ans.push_back(evenStep[oddCrossing[i]]);
 
     delete[] evenStep;
@@ -155,7 +169,9 @@ Link Link::fromDT(const std::string& s) {
         return Link(1);
     }
 
-    std::vector<int> terms;
+    // Work with the largest integer type that we could possibly need.
+    using Int = std::make_signed_t<size_t>;
+    std::vector<Int> terms;
 
     if ((*it >= 'a' && *it <= 'z') || (*it >= 'A' && *it <= 'Z')) {
         // We have the alphabetical variant.
@@ -174,7 +190,7 @@ Link Link::fromDT(const std::string& s) {
         // We have the numerical variant.
         std::istringstream in(s);
 
-        int i;
+        Int i;
         while (true) {
             in >> i;
             if (! in) {
@@ -203,9 +219,9 @@ Link Link::fromDT(const std::string& s) {
 // -----------------------------------------------------------------------
 
 bool Link::realizeDT(
-    int     *anInvolution,
+    size_t  *anInvolution,
     bool    *aRealization,
-    int     aNumCrossings)
+    size_t  aNumCrossings)
 {
     /*
      *  Returns true iff the sequence was realizable.  If so, then
@@ -218,27 +234,27 @@ bool Link::realizeDT(
      *  it correctly.
      */
 
-    int N;
-    int i,j;
-    int *modTWO_N;
-    int *seq;
-    int *emb;
-    int *A,*D;
-    int Aempty,Dempty;
-    int OkSoFar;
-    int *phi;
-    int x;
+    size_t N;
+    size_t i,j;
+    size_t *modTWO_N;
+    size_t *seq;
+    int *emb; // +1 or -1, or 0 for uninitialised
+    bool *A,*D;
+    bool Aempty,Dempty;
+    bool OkSoFar;
+    int *phi; // +1 or -1
+    size_t x;
 
     N = aNumCrossings;
 
     /*
      *  Allocate local arrays.
      */
-    modTWO_N    = new int[4 * N];
-    seq         = new int[4 * N];
+    modTWO_N    = new size_t[4 * N];
+    seq         = new size_t[4 * N];
     emb         = new int[2 * N];
-    A           = new int[2 * N];
-    D           = new int[2 * N];
+    A           = new bool[2 * N];
+    D           = new bool[2 * N];
     phi         = new int[2 * N];
 
     /*create the modTWO_N array*/
@@ -263,10 +279,11 @@ bool Link::realizeDT(
     /* begin realizability routine to recover embedding of projection */
     /*zero emb, A, and D. A and D will only contain zeroes and ones*/
     for(i=0;i<2*N;i++){
-        emb[i]=A[i]=D[i]=0;
+        emb[i]=0;
+        A[i]=D[i]=false;
     }
     /*set initial conditions*/
-    OkSoFar=A[0]=A[seq[0]]=1;
+    OkSoFar=A[0]=A[seq[0]]=true;
     emb[0]=1;
     emb[seq[0]]=-1;
 
@@ -287,9 +304,9 @@ bool Link::realizeDT(
         }
         /*establish D*/
         for(j=0; j<i; j++)
-            D[j]=1;
+            D[j]=true;
         for(j=seq[i]+1; j<2*N; j++)
-            D[j]=1;
+            D[j]=true;
         /* see if D is empty, ie is all zeroes*/
         for(j=0;j<2*N-1 && !D[j];j++)
             ;
@@ -301,50 +318,50 @@ bool Link::realizeDT(
             if(x<i){
                 if(seq[x]<i || seq[x]>seq[i]){
                     if(phi[x]*phi[seq[x]]==1){
-                        D[x]=D[seq[x]]=0;
+                        D[x]=D[seq[x]]=false;
                     }
                     else{
-                        OkSoFar=0;
+                        OkSoFar=false;
                     }
                 }
                 else{
                     if(emb[x] != 0){/* emb[x] is already defined*/
                         if(phi[x]*phi[seq[x]]*emb[i]==emb[x])
-                            D[x]=0;
+                            D[x]=false;
                         else
-                            OkSoFar=0;
+                            OkSoFar=false;
                     }
                     else{/* emb[x] is not yet defined. Hence x<>0 and
 x<>seq[0]*/
                         emb[x]=phi[x]*phi[seq[x]]*emb[i];
                         emb[seq[x]]=-emb[x];
-                        D[x]=0;
-                        if( modTWO_N[abs(seq[x]-seq[x-1])]==1){
+                        D[x]=false;
+                        if( modTWO_N[absdiff(seq[x], seq[x-1])]==1){
                             /*nothing*/
                         }
                         else{
-                            A[x]=A[seq[x]]=1;
+                            A[x]=A[seq[x]]=true;
                         }
                     }
                 }
             }
             else{/*x>seq[i]*/
                 if(seq[x]<i || seq[x]>seq[i]){
-                    D[x]=D[seq[x]]=0;
+                    D[x]=D[seq[x]]=false;
                 }
                 else{
                     if(emb[x]!=0){
-                        D[x]=0;
+                        D[x]=false;
                     }
                     else{
                         emb[x]=phi[x]*phi[seq[x]]*emb[i];
                         emb[seq[x]]=-emb[x];
-                        D[x]=0;
-                        if( modTWO_N[abs(seq[x]-seq[x-1])]==1){
+                        D[x]=false;
+                        if( modTWO_N[absdiff(seq[x], seq[x-1])]==1){
                             /*nothing*/
                         }
                         else{
-                            A[x]=A[seq[x]]=1;
+                            A[x]=A[seq[x]]=true;
                         }
                     }
                 }
@@ -354,8 +371,8 @@ x<>seq[0]*/
                 ;
             Dempty=!D[j];
         }/*end of while*/
-        A[i]=0;
-        A[seq[i]]=0;
+        A[i]=false;
+        A[seq[i]]=false;
         /* see if A is empty, ie is all zeroes*/
         for(j=0;j<2*N-1 && !A[j];j++)
             /*nothing*/;

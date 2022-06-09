@@ -77,7 +77,13 @@ void addIsomorphism(pybind11::module_& m, const char* name) {
             pybind11::arg(), pybind11::arg("even") = false)
         .def_static("identity", &Isomorphism<dim>::identity)
     ;
+    if constexpr (dim <= 6) {
+        c.def("inc", [](Isomorphism<dim>& iso) {
+            ++iso;
+        });
+    }
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 
     m.def("swap",

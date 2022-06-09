@@ -66,8 +66,8 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
     auto* curr = new SigData[2 * n];
 
     // The image and preimage for each crossing.
-    auto* image = new ptrdiff_t[n];
-    auto* preimage = new ptrdiff_t[n];
+    auto* image = new ssize_t[n];
+    auto* preimage = new ssize_t[n];
 
     bool currBetter;
     StrandRef currStrand;
@@ -235,7 +235,7 @@ Link Link::fromKnotSig(const std::string& sig) {
             throw InvalidArgument(
                 "fromKnotSig(): unexpected internal whitespace");
 
-    size_t charsPerInt;
+    unsigned charsPerInt;
     size_t n = Base64SigEncoding::decodeSingle(*c++);
     if (n < 63)
         charsPerInt = 1;

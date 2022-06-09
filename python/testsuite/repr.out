@@ -617,8 +617,8 @@ Snapped 2-sphere, equator 0 (01) = 1 (01)
 <regina.SnappedTwoSphere: Snapped 2-sphere, equator 0 (01) = 1 (01)>
 
 PillowTwoSphere
-Pillow 2-sphere, triangles 3, 7
-<regina.PillowTwoSphere: Pillow 2-sphere, triangles 3, 7>
+Pillow 2-sphere, triangles 3, 4
+<regina.PillowTwoSphere: Pillow 2-sphere, triangles 3, 4>
 
 SatBlockModel
 Model of Cube {0,1,2,3}

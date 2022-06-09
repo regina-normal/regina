@@ -33,6 +33,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		050302EE284DAE060050903D /* QtSvgWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 050302ED284DAE060050903D /* QtSvgWidgets.framework */; };
+		050302EF284DAE060050903D /* QtSvgWidgets.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 050302ED284DAE060050903D /* QtSvgWidgets.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		050313C11812DB06007F0CBE /* TextViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C01812DB06007F0CBE /* TextViewController.mm */; };
 		050313C41812DB1E007F0CBE /* DefaultPacketViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050313C31812DB1E007F0CBE /* DefaultPacketViewController.mm */; };
 		0503DCD419B7D8AA0085F3CC /* regina-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 0503DCD219B7D8950085F3CC /* regina-doc-64.png */; };
@@ -182,6 +184,11 @@
 		0512E0A626DF356300DDB222 /* snapshot.h in Headers */ = {isa = PBXBuildFile; fileRef = 0512E0A226DF356300DDB222 /* snapshot.h */; };
 		051324F5258AF3FA001014F0 /* laurent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051324F4258AF3FA001014F0 /* laurent.cpp */; };
 		051324F6258AF3FA001014F0 /* laurent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051324F4258AF3FA001014F0 /* laurent.cpp */; };
+		05135ADC28347BE200C4BFDC /* cut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05135ADB28347BDD00C4BFDC /* cut.cpp */; };
+		05135ADD28347BE300C4BFDC /* cut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05135ADB28347BDD00C4BFDC /* cut.cpp */; };
+		05135AE028347BF600C4BFDC /* cut.h in Headers */ = {isa = PBXBuildFile; fileRef = 05135ADE28347BF600C4BFDC /* cut.h */; };
+		05135AE128347BF600C4BFDC /* cut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05135ADF28347BF600C4BFDC /* cut.cpp */; };
+		05135AE228347BFE00C4BFDC /* cut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05135ADF28347BF600C4BFDC /* cut.cpp */; };
 		0514CAEF1D9CE54200EDB2E6 /* docs.conf.in in Resources */ = {isa = PBXBuildFile; fileRef = 052F9C50180600FA00FAE4DF /* docs.conf.in */; };
 		051691B71C5AD5AC00DC69EC /* hypercompatui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A31C5AD59000DC69EC /* hypercompatui.cpp */; };
 		051691B81C5AD5AC00DC69EC /* hypercoordinateui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A51C5AD59000DC69EC /* hypercoordinateui.cpp */; };
@@ -548,9 +555,7 @@
 		052FA0A1180600FB00FAE4DF /* xmlutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7F180600FB00FAE4DF /* xmlutils.cpp */; };
 		052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E80180600FB00FAE4DF /* xmlutils.h */; };
 		052FA1041806088B00FAE4DF /* census2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D11806088B00FAE4DF /* census2.cpp */; };
-		052FA1051806088B00FAE4DF /* facetpairing2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D21806088B00FAE4DF /* facetpairing2.cpp */; };
 		052FA1061806088B00FAE4DF /* census3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D31806088B00FAE4DF /* census3.cpp */; };
-		052FA1071806088B00FAE4DF /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D41806088B00FAE4DF /* facetpairing3.cpp */; };
 		052FA1081806088B00FAE4DF /* exhaustive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D71806088B00FAE4DF /* exhaustive.cpp */; };
 		052FA1091806088B00FAE4DF /* matrixops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0DB1806088B00FAE4DF /* matrixops.cpp */; };
 		052FA10A1806088B00FAE4DF /* integer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0DC1806088B00FAE4DF /* integer.cpp */; };
@@ -1201,19 +1206,19 @@
 		057B0CC426A506D90017F5EA /* dgt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057B0CB326A5064A0017F5EA /* dgt.cpp */; };
 		057B0CC826A507C50017F5EA /* dgt in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 057B0CC326A506B20017F5EA /* dgt */; };
 		057ED8EE2581B49E004F0068 /* QtSvg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E72581B49E004F0068 /* QtSvg.framework */; };
-		057ED8EF2581B49E004F0068 /* QtSvg.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E72581B49E004F0068 /* QtSvg.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8EF2581B49E004F0068 /* QtSvg.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E72581B49E004F0068 /* QtSvg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED8F02581B49E004F0068 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E82581B49E004F0068 /* QtCore.framework */; };
-		057ED8F12581B49E004F0068 /* QtCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E82581B49E004F0068 /* QtCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F12581B49E004F0068 /* QtCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E82581B49E004F0068 /* QtCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED8F22581B49E004F0068 /* QtPrintSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E92581B49E004F0068 /* QtPrintSupport.framework */; };
-		057ED8F32581B49E004F0068 /* QtPrintSupport.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E92581B49E004F0068 /* QtPrintSupport.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F32581B49E004F0068 /* QtPrintSupport.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E92581B49E004F0068 /* QtPrintSupport.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED8F42581B49E004F0068 /* QtNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EA2581B49E004F0068 /* QtNetwork.framework */; };
-		057ED8F52581B49E004F0068 /* QtNetwork.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EA2581B49E004F0068 /* QtNetwork.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F52581B49E004F0068 /* QtNetwork.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EA2581B49E004F0068 /* QtNetwork.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED8F62581B49E004F0068 /* QtDBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EB2581B49E004F0068 /* QtDBus.framework */; };
-		057ED8F72581B49E004F0068 /* QtDBus.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EB2581B49E004F0068 /* QtDBus.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F72581B49E004F0068 /* QtDBus.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EB2581B49E004F0068 /* QtDBus.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED8F82581B49E004F0068 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EC2581B49E004F0068 /* QtGui.framework */; };
-		057ED8F92581B49E004F0068 /* QtGui.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EC2581B49E004F0068 /* QtGui.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F92581B49E004F0068 /* QtGui.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EC2581B49E004F0068 /* QtGui.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED8FA2581B49E004F0068 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8ED2581B49E004F0068 /* QtWidgets.framework */; };
-		057ED8FB2581B49E004F0068 /* QtWidgets.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8ED2581B49E004F0068 /* QtWidgets.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8FB2581B49E004F0068 /* QtWidgets.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8ED2581B49E004F0068 /* QtWidgets.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057ED9C42581BAAE004F0068 /* graphviz.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED9C32581BAAE004F0068 /* graphviz.xcframework */; };
 		057EDA022581BC16004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057EDA032581BC16004F0068 /* libgmp.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -1297,6 +1302,11 @@
 		05870CB21FAD250900835F9E /* modellinkgraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 05870CB01FAD250900835F9E /* modellinkgraph.h */; };
 		05870CB31FAD250900835F9E /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05870CB11FAD250900835F9E /* modellinkgraph.cpp */; };
 		05870CB41FAD250E00835F9E /* modellinkgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05870CB11FAD250900835F9E /* modellinkgraph.cpp */; };
+		05888BD3283F045300181D2D /* tightencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05888BD1283F044900181D2D /* tightencoding.cpp */; };
+		05888BD4283F045500181D2D /* tightencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05888BD1283F044900181D2D /* tightencoding.cpp */; };
+		05888BD7283F0F8B00181D2D /* tightencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05888BD5283F0F8B00181D2D /* tightencoding.cpp */; };
+		05888BD8283F0F8B00181D2D /* tightencoding-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05888BD6283F0F8B00181D2D /* tightencoding-impl.h */; };
+		05888BD9283F0FA100181D2D /* tightencoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05888BD5283F0F8B00181D2D /* tightencoding.cpp */; };
 		0588C2A31FD8D1350093C2C9 /* rewrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A11FD8D1340093C2C9 /* rewrite.cpp */; };
 		0588C2A41FD8D1350093C2C9 /* sig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A21FD8D1340093C2C9 /* sig.cpp */; };
 		0588C2A51FD8D13C0093C2C9 /* rewrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0588C2A11FD8D1340093C2C9 /* rewrite.cpp */; };
@@ -1368,9 +1378,7 @@
 		0591E8471C4F773800793A9C /* tri4skeleton.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8321C4F767300793A9C /* tri4skeleton.h */; };
 		0591E8481C4F773C00793A9C /* tri4ui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8341C4F767300793A9C /* tri4ui.h */; };
 		0591E84D1C4F777000793A9C /* census4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8491C4F776A00793A9C /* census4.cpp */; };
-		0591E84E1C4F777000793A9C /* facetpairing4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E84A1C4F776A00793A9C /* facetpairing4.cpp */; };
 		0591E84F1C4F777100793A9C /* census4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8491C4F776A00793A9C /* census4.cpp */; };
-		0591E8501C4F777100793A9C /* facetpairing4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E84A1C4F776A00793A9C /* facetpairing4.cpp */; };
 		0591E8571C4F77A400793A9C /* triangulation4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8531C4F779B00793A9C /* triangulation4.cpp */; };
 		0591E8581C4F77A400793A9C /* triangulation4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8531C4F779B00793A9C /* triangulation4.cpp */; };
 		0591E85E1C50D28700793A9C /* enumerate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E85C1C50D28700793A9C /* enumerate.cpp */; };
@@ -1780,6 +1788,17 @@
 		05C265BE282C948F00232420 /* facetpairing6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265AC282C947C00232420 /* facetpairing6.cpp */; };
 		05C265BF282C948F00232420 /* facetpairing5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265AA282C947C00232420 /* facetpairing5.cpp */; };
 		05C265C0282C948F00232420 /* facetpairing8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265AB282C947C00232420 /* facetpairing8.cpp */; };
+		05C265C228307D0600232420 /* facetpairing-canonical-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C265C128307D0500232420 /* facetpairing-canonical-impl.h */; };
+		05C265C42830A4AD00232420 /* facetpairing2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C32830A4AD00232420 /* facetpairing2.cpp */; };
+		05C265C52830A4AD00232420 /* facetpairing2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C32830A4AD00232420 /* facetpairing2.cpp */; };
+		05C265C72830A4B800232420 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C62830A4B800232420 /* facetpairing3.cpp */; };
+		05C265C82830A4B800232420 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C62830A4B800232420 /* facetpairing3.cpp */; };
+		05C265CA2830A4CA00232420 /* facetpairing4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C92830A4CA00232420 /* facetpairing4.cpp */; };
+		05C265CB2830A4CA00232420 /* facetpairing4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C265C92830A4CA00232420 /* facetpairing4.cpp */; };
+		05C278E928422B53009A2DA1 /* isomorphism2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C278E828422B53009A2DA1 /* isomorphism2.cpp */; };
+		05C278EA28422B53009A2DA1 /* isomorphism2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C278E828422B53009A2DA1 /* isomorphism2.cpp */; };
+		05C278EC28422B5C009A2DA1 /* isomorphism4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C278EB28422B5C009A2DA1 /* isomorphism4.cpp */; };
+		05C278ED28422B5C009A2DA1 /* isomorphism4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C278EB28422B5C009A2DA1 /* isomorphism4.cpp */; };
 		05CAE6012741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
 		05CAE6022741C871007C93F3 /* validityconstraints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE6002741C871007C93F3 /* validityconstraints.cpp */; };
 		05CAE60527427A8A007C93F3 /* ordering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAE60327427A8A007C93F3 /* ordering.cpp */; };
@@ -1865,9 +1884,7 @@
 		05D1174119EE0197003BEC55 /* permconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E31806088B00FAE4DF /* permconv.cpp */; };
 		05D1174219EE019D003BEC55 /* triangulation2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0583656818DB88D9008B08D9 /* triangulation2.cpp */; };
 		05D1174319EE01A1003BEC55 /* census2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D11806088B00FAE4DF /* census2.cpp */; };
-		05D1174419EE01A1003BEC55 /* facetpairing2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D21806088B00FAE4DF /* facetpairing2.cpp */; };
 		05D1174519EE01A1003BEC55 /* census3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D31806088B00FAE4DF /* census3.cpp */; };
-		05D1174619EE01A1003BEC55 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D41806088B00FAE4DF /* facetpairing3.cpp */; };
 		05D1174B19EE043F003BEC55 /* testsuite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D1174919EE043F003BEC55 /* testsuite.cpp */; };
 		05D1174C19EE043F003BEC55 /* testsuite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D1174919EE043F003BEC55 /* testsuite.cpp */; };
 		05D1C16F19C6542700CF92F2 /* ReginaHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1C16E19C6542700CF92F2 /* ReginaHelper.mm */; };
@@ -2075,7 +2092,7 @@
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
 			);
 			runOncePerArchitecture = 0;
-			script = "~/Qt/5.15.2-macos/bin/moc \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtCore.framework/Headers \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtGui.framework/Headers \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtSvg.framework/Headers \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx\" \"${INPUT_FILE_PATH}\"\n";
+			script = "~/Qt/6.3.0-macos/libexec/moc \\\n-I${HOME}/Qt/6.3.0-macos/lib/QtCore.framework/Headers \\\n-I${HOME}/Qt/6.3.0-macos/lib/QtGui.framework/Headers \\\n-I${HOME}/Qt/6.3.0-macos/lib/QtSvg.framework/Headers \\\n-I${HOME}/Qt/6.3.0-macos/lib/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx\" \"${INPUT_FILE_PATH}\"\n";
 		};
 		05617AD71D9D3CBD00B1E33B /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -2337,6 +2354,7 @@
 				057EDBAE2581EA83004F0068 /* libtokyocabinet.xcframework in Embed Frameworks */,
 				057ED8FB2581B49E004F0068 /* QtWidgets.framework in Embed Frameworks */,
 				057ED8F52581B49E004F0068 /* QtNetwork.framework in Embed Frameworks */,
+				050302EF284DAE060050903D /* QtSvgWidgets.framework in Embed Frameworks */,
 				057ED8EF2581B49E004F0068 /* QtSvg.framework in Embed Frameworks */,
 				057ED8F92581B49E004F0068 /* QtGui.framework in Embed Frameworks */,
 				051A656C2594277900A52E30 /* popt.xcframework in Embed Frameworks */,
@@ -2464,6 +2482,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		050302ED284DAE060050903D /* QtSvgWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvgWidgets.framework; path = "../../Qt/6.3.0-macos/lib/QtSvgWidgets.framework"; sourceTree = "<group>"; };
+		050302F0284E17D40050903D /* reginaqt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = reginaqt.h; sourceTree = "<group>"; };
 		050313BF1812DB06007F0CBE /* TextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewController.h; sourceTree = "<group>"; };
 		050313C01812DB06007F0CBE /* TextViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextViewController.mm; sourceTree = "<group>"; };
 		050313C21812DB1E007F0CBE /* DefaultPacketViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultPacketViewController.h; sourceTree = "<group>"; };
@@ -2657,6 +2677,9 @@
 		0512E0A126DF356300DDB222 /* shortarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shortarray.h; sourceTree = "<group>"; };
 		0512E0A226DF356300DDB222 /* snapshot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = snapshot.h; sourceTree = "<group>"; };
 		051324F4258AF3FA001014F0 /* laurent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent.cpp; sourceTree = "<group>"; };
+		05135ADB28347BDD00C4BFDC /* cut.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = cut.cpp; sourceTree = "<group>"; };
+		05135ADE28347BF600C4BFDC /* cut.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cut.h; sourceTree = "<group>"; };
+		05135ADF28347BF600C4BFDC /* cut.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cut.cpp; sourceTree = "<group>"; };
 		0514CAE71D9CD4B500EDB2E6 /* index.docbook */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = index.docbook; sourceTree = "<group>"; };
 		0514CAE81D9CD4CE00EDB2E6 /* index.docbook */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = index.docbook; sourceTree = "<group>"; };
 		051691A31C5AD59000DC69EC /* hypercompatui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercompatui.cpp; sourceTree = "<group>"; };
@@ -2989,9 +3012,7 @@
 		052FA0CE1806088B00FAE4DF /* testangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testangle.h; sourceTree = "<group>"; };
 		052FA0D01806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052FA0D11806088B00FAE4DF /* census2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = census2.cpp; sourceTree = "<group>"; };
-		052FA0D21806088B00FAE4DF /* facetpairing2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing2.cpp; sourceTree = "<group>"; };
 		052FA0D31806088B00FAE4DF /* census3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = census3.cpp; sourceTree = "<group>"; };
-		052FA0D41806088B00FAE4DF /* facetpairing3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing3.cpp; sourceTree = "<group>"; };
 		052FA0D51806088B00FAE4DF /* testcensus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testcensus.h; sourceTree = "<group>"; };
 		052FA0D61806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052FA0D71806088B00FAE4DF /* exhaustive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = exhaustive.cpp; sourceTree = "<group>"; };
@@ -3023,7 +3044,6 @@
 		052FA0FA1806088B00FAE4DF /* homologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = homologicaldata.cpp; sourceTree = "<group>"; };
 		052FA0FB1806088B00FAE4DF /* isomorphism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism.cpp; sourceTree = "<group>"; };
 		052FA0FC1806088B00FAE4DF /* triangulation3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation3.cpp; sourceTree = "<group>"; };
-		052FA0FD1806088B00FAE4DF /* testtriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testtriangulation.h; sourceTree = "<group>"; };
 		052FA0FF1806088B00FAE4DF /* base64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = base64.cpp; sourceTree = "<group>"; };
 		052FA1001806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052FA1011806088B00FAE4DF /* bitmask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitmask.cpp; sourceTree = "<group>"; };
@@ -3039,6 +3059,7 @@
 		052FA13E1806103000FAE4DF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		0530FEFF284595580069B227 /* tightencoding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tightencoding.h; sourceTree = "<group>"; };
 		0534FADF22DFDDA6000A96A3 /* memstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = memstream.cpp; sourceTree = "<group>"; };
 		0534FAE022DFDDA7000A96A3 /* zstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zstr.h; sourceTree = "<group>"; };
 		0534FAE122DFDDA7000A96A3 /* memstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memstream.h; sourceTree = "<group>"; };
@@ -3736,25 +3757,25 @@
 		057B0CB326A5064A0017F5EA /* dgt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dgt.cpp; sourceTree = "<group>"; };
 		057B0CB526A5067B0017F5EA /* covers.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = covers.cpp; sourceTree = "<group>"; };
 		057B0CC326A506B20017F5EA /* dgt */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = dgt; sourceTree = BUILT_PRODUCTS_DIR; };
-		057ED8E72581B49E004F0068 /* QtSvg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvg.framework; path = "../../Qt/5.15.2-macos/lib/QtSvg.framework"; sourceTree = "<group>"; };
-		057ED8E82581B49E004F0068 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = "../../Qt/5.15.2-macos/lib/QtCore.framework"; sourceTree = "<group>"; };
-		057ED8E92581B49E004F0068 /* QtPrintSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtPrintSupport.framework; path = "../../Qt/5.15.2-macos/lib/QtPrintSupport.framework"; sourceTree = "<group>"; };
-		057ED8EA2581B49E004F0068 /* QtNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtNetwork.framework; path = "../../Qt/5.15.2-macos/lib/QtNetwork.framework"; sourceTree = "<group>"; };
-		057ED8EB2581B49E004F0068 /* QtDBus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtDBus.framework; path = "../../Qt/5.15.2-macos/lib/QtDBus.framework"; sourceTree = "<group>"; };
-		057ED8EC2581B49E004F0068 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = "../../Qt/5.15.2-macos/lib/QtGui.framework"; sourceTree = "<group>"; };
-		057ED8ED2581B49E004F0068 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = "../../Qt/5.15.2-macos/lib/QtWidgets.framework"; sourceTree = "<group>"; };
+		057ED8E72581B49E004F0068 /* QtSvg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvg.framework; path = "../../Qt/6.3.0-macos/lib/QtSvg.framework"; sourceTree = "<group>"; };
+		057ED8E82581B49E004F0068 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = "../../Qt/6.3.0-macos/lib/QtCore.framework"; sourceTree = "<group>"; };
+		057ED8E92581B49E004F0068 /* QtPrintSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtPrintSupport.framework; path = "../../Qt/6.3.0-macos/lib/QtPrintSupport.framework"; sourceTree = "<group>"; };
+		057ED8EA2581B49E004F0068 /* QtNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtNetwork.framework; path = "../../Qt/6.3.0-macos/lib/QtNetwork.framework"; sourceTree = "<group>"; };
+		057ED8EB2581B49E004F0068 /* QtDBus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtDBus.framework; path = "../../Qt/6.3.0-macos/lib/QtDBus.framework"; sourceTree = "<group>"; };
+		057ED8EC2581B49E004F0068 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = "../../Qt/6.3.0-macos/lib/QtGui.framework"; sourceTree = "<group>"; };
+		057ED8ED2581B49E004F0068 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = "../../Qt/6.3.0-macos/lib/QtWidgets.framework"; sourceTree = "<group>"; };
 		057ED9C32581BAAE004F0068 /* graphviz.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = graphviz.xcframework; path = ../../Library/Frameworks/graphviz.xcframework; sourceTree = "<group>"; };
 		057EDA312581BC97004F0068 /* cppunit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = cppunit.xcframework; path = ../../Library/Frameworks/cppunit.xcframework; sourceTree = "<group>"; };
-		057EDAE42581D83A004F0068 /* libqtuiotouchplugin.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtuiotouchplugin.dylib; path = "../../Qt/5.15.2-macos/plugins/generic/libqtuiotouchplugin.dylib"; sourceTree = "<group>"; };
-		057EDAE62581D877004F0068 /* libqsvgicon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvgicon.dylib; path = "../../Qt/5.15.2-macos/plugins/iconengines/libqsvgicon.dylib"; sourceTree = "<group>"; };
-		057EDAE82581D8BA004F0068 /* libqgif.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqgif.dylib; path = "../../Qt/5.15.2-macos/plugins/imageformats/libqgif.dylib"; sourceTree = "<group>"; };
-		057EDAE92581D8BA004F0068 /* libqjpeg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqjpeg.dylib; path = "../../Qt/5.15.2-macos/plugins/imageformats/libqjpeg.dylib"; sourceTree = "<group>"; };
-		057EDAEA2581D8BA004F0068 /* libqico.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqico.dylib; path = "../../Qt/5.15.2-macos/plugins/imageformats/libqico.dylib"; sourceTree = "<group>"; };
-		057EDAEB2581D8BA004F0068 /* libqsvg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvg.dylib; path = "../../Qt/5.15.2-macos/plugins/imageformats/libqsvg.dylib"; sourceTree = "<group>"; };
-		057EDAF02581D92E004F0068 /* libqmacstyle.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqmacstyle.dylib; path = "../../Qt/5.15.2-macos/plugins/styles/libqmacstyle.dylib"; sourceTree = "<group>"; };
-		057EDAF22581D95B004F0068 /* libqminimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqminimal.dylib; path = "../../Qt/5.15.2-macos/plugins/platforms/libqminimal.dylib"; sourceTree = "<group>"; };
-		057EDAF32581D95B004F0068 /* libqoffscreen.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqoffscreen.dylib; path = "../../Qt/5.15.2-macos/plugins/platforms/libqoffscreen.dylib"; sourceTree = "<group>"; };
-		057EDAF42581D95B004F0068 /* libqcocoa.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqcocoa.dylib; path = "../../Qt/5.15.2-macos/plugins/platforms/libqcocoa.dylib"; sourceTree = "<group>"; };
+		057EDAE42581D83A004F0068 /* libqtuiotouchplugin.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtuiotouchplugin.dylib; path = "../../Qt/6.3.0-macos/plugins/generic/libqtuiotouchplugin.dylib"; sourceTree = "<group>"; };
+		057EDAE62581D877004F0068 /* libqsvgicon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvgicon.dylib; path = "../../Qt/6.3.0-macos/plugins/iconengines/libqsvgicon.dylib"; sourceTree = "<group>"; };
+		057EDAE82581D8BA004F0068 /* libqgif.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqgif.dylib; path = "../../Qt/6.3.0-macos/plugins/imageformats/libqgif.dylib"; sourceTree = "<group>"; };
+		057EDAE92581D8BA004F0068 /* libqjpeg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqjpeg.dylib; path = "../../Qt/6.3.0-macos/plugins/imageformats/libqjpeg.dylib"; sourceTree = "<group>"; };
+		057EDAEA2581D8BA004F0068 /* libqico.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqico.dylib; path = "../../Qt/6.3.0-macos/plugins/imageformats/libqico.dylib"; sourceTree = "<group>"; };
+		057EDAEB2581D8BA004F0068 /* libqsvg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvg.dylib; path = "../../Qt/6.3.0-macos/plugins/imageformats/libqsvg.dylib"; sourceTree = "<group>"; };
+		057EDAF02581D92E004F0068 /* libqmacstyle.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqmacstyle.dylib; path = "../../Qt/6.3.0-macos/plugins/styles/libqmacstyle.dylib"; sourceTree = "<group>"; };
+		057EDAF22581D95B004F0068 /* libqminimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqminimal.dylib; path = "../../Qt/6.3.0-macos/plugins/platforms/libqminimal.dylib"; sourceTree = "<group>"; };
+		057EDAF32581D95B004F0068 /* libqoffscreen.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqoffscreen.dylib; path = "../../Qt/6.3.0-macos/plugins/platforms/libqoffscreen.dylib"; sourceTree = "<group>"; };
+		057EDAF42581D95B004F0068 /* libqcocoa.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqcocoa.dylib; path = "../../Qt/6.3.0-macos/plugins/platforms/libqcocoa.dylib"; sourceTree = "<group>"; };
 		057EDEF82582370B004F0068 /* Python.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Python.xcframework; path = ../../Library/Frameworks/Python.xcframework; sourceTree = "<group>"; };
 		057EDF1925823779004F0068 /* XZ.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = XZ.xcframework; path = ../../Library/Frameworks/XZ.xcframework; sourceTree = "<group>"; };
 		057EE01C2582416B004F0068 /* DBChooser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DBChooser.framework; path = ../../Library/Frameworks/DBChooser.framework; sourceTree = "<group>"; };
@@ -3826,6 +3847,10 @@
 		05870CAC1FAD24EB00835F9E /* modellinkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
 		05870CB01FAD250900835F9E /* modellinkgraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = modellinkgraph.h; sourceTree = "<group>"; };
 		05870CB11FAD250900835F9E /* modellinkgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modellinkgraph.cpp; sourceTree = "<group>"; };
+		05888BD0283F042400181D2D /* tight-notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "tight-notes.txt"; sourceTree = "<group>"; };
+		05888BD1283F044900181D2D /* tightencoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tightencoding.cpp; sourceTree = "<group>"; };
+		05888BD5283F0F8B00181D2D /* tightencoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tightencoding.cpp; sourceTree = "<group>"; };
+		05888BD6283F0F8B00181D2D /* tightencoding-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "tightencoding-impl.h"; sourceTree = "<group>"; };
 		0588C2A11FD8D1340093C2C9 /* rewrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rewrite.cpp; sourceTree = "<group>"; };
 		0588C2A21FD8D1340093C2C9 /* sig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sig.cpp; sourceTree = "<group>"; };
 		0588C2A71FD8D1740093C2C9 /* representations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = representations.c; sourceTree = "<group>"; };
@@ -3907,7 +3932,6 @@
 		0591E8331C4F767300793A9C /* tri4ui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tri4ui.cpp; sourceTree = "<group>"; };
 		0591E8341C4F767300793A9C /* tri4ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tri4ui.h; sourceTree = "<group>"; };
 		0591E8491C4F776A00793A9C /* census4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = census4.cpp; sourceTree = "<group>"; };
-		0591E84A1C4F776A00793A9C /* facetpairing4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing4.cpp; sourceTree = "<group>"; };
 		0591E8521C4F779B00793A9C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0591E8531C4F779B00793A9C /* triangulation4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation4.cpp; sourceTree = "<group>"; };
 		0591E8541C4F779B00793A9C /* testdim4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testdim4.h; sourceTree = "<group>"; };
@@ -4270,6 +4294,15 @@
 		05C265B0282C947C00232420 /* facetpairing2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing2.cpp; sourceTree = "<group>"; };
 		05C265B1282C947D00232420 /* facetpairing14.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing14.cpp; sourceTree = "<group>"; };
 		05C265B2282C947D00232420 /* facetpairing7.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing7.cpp; sourceTree = "<group>"; };
+		05C265C128307D0500232420 /* facetpairing-canonical-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "facetpairing-canonical-impl.h"; sourceTree = "<group>"; };
+		05C265C32830A4AD00232420 /* facetpairing2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing2.cpp; sourceTree = "<group>"; };
+		05C265C62830A4B800232420 /* facetpairing3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing3.cpp; sourceTree = "<group>"; };
+		05C265C92830A4CA00232420 /* facetpairing4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing4.cpp; sourceTree = "<group>"; };
+		05C265CC2830A4DC00232420 /* facetpairingtest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairingtest.h; sourceTree = "<group>"; };
+		05C278E528403312009A2DA1 /* tightencodingtest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tightencodingtest.h; sourceTree = "<group>"; };
+		05C278E728422B43009A2DA1 /* testdim3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testdim3.h; sourceTree = "<group>"; };
+		05C278E828422B53009A2DA1 /* isomorphism2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism2.cpp; sourceTree = "<group>"; };
+		05C278EB28422B5C009A2DA1 /* isomorphism4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isomorphism4.cpp; sourceTree = "<group>"; };
 		05CAE6002741C871007C93F3 /* validityconstraints.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = validityconstraints.cpp; sourceTree = "<group>"; };
 		05CAE60327427A8A007C93F3 /* ordering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ordering.cpp; sourceTree = "<group>"; };
 		05CAE60427427A8A007C93F3 /* maxadmissible.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = maxadmissible.cpp; sourceTree = "<group>"; };
@@ -4647,6 +4680,7 @@
 				057ED8EE2581B49E004F0068 /* QtSvg.framework in Frameworks */,
 				057EDBBF2581EA9D004F0068 /* libgmpxx.xcframework in Frameworks */,
 				057ED8F42581B49E004F0068 /* QtNetwork.framework in Frameworks */,
+				050302EE284DAE060050903D /* QtSvgWidgets.framework in Frameworks */,
 				05E0F1532582426400965440 /* libxml2.tbd in Frameworks */,
 				05E0F1432582426100965440 /* libz.tbd in Frameworks */,
 			);
@@ -6060,6 +6094,8 @@
 				05C1BE9A1DCA7C93007C946B /* explicit */,
 				054C6A831DCC212F005373F0 /* generic */,
 				052F9E30180600FB00FAE4DF /* CMakeLists.txt */,
+				05135ADF28347BF600C4BFDC /* cut.cpp */,
+				05135ADE28347BF600C4BFDC /* cut.h */,
 				05F09FBC1DBEF01800117BFC /* dim2.h */,
 				05F09FBD1DBEF01800117BFC /* dim3.h */,
 				05F09FBE1DBEF01800117BFC /* dim4.h */,
@@ -6118,7 +6154,10 @@
 				052F9E7B180600FB00FAE4DF /* stringutils-impl.h */,
 				052F9E7C180600FB00FAE4DF /* stringutils.cpp */,
 				052F9E7D180600FB00FAE4DF /* stringutils.h */,
+				05888BD0283F042400181D2D /* tight-notes.txt */,
 				057B0C9F26A2AB760017F5EA /* tightencoding.h */,
+				05888BD6283F0F8B00181D2D /* tightencoding-impl.h */,
+				05888BD5283F0F8B00181D2D /* tightencoding.cpp */,
 				052F9E75180600FB00FAE4DF /* trieset.h */,
 				0512E0A026DF356300DDB222 /* trieset.cpp */,
 				05199A5B25C63CCE0006B8FA /* typeutils.h */,
@@ -6132,6 +6171,7 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				050302ED284DAE060050903D /* QtSvgWidgets.framework */,
 				057EDA312581BC97004F0068 /* cppunit.xcframework */,
 				057ED9C32581BAAE004F0068 /* graphviz.xcframework */,
 				0567B49A2581AB9A0022EA5D /* jansson.xcframework */,
@@ -6203,9 +6243,6 @@
 				052FA0D11806088B00FAE4DF /* census2.cpp */,
 				052FA0D31806088B00FAE4DF /* census3.cpp */,
 				0591E8491C4F776A00793A9C /* census4.cpp */,
-				052FA0D21806088B00FAE4DF /* facetpairing2.cpp */,
-				052FA0D41806088B00FAE4DF /* facetpairing3.cpp */,
-				0591E84A1C4F776A00793A9C /* facetpairing4.cpp */,
 				052FA0D51806088B00FAE4DF /* testcensus.h */,
 			);
 			path = census;
@@ -6278,12 +6315,13 @@
 				052FA0F71806088B00FAE4DF /* CMakeLists.txt */,
 				052FA0F81806088B00FAE4DF /* connectedsumdecomp.cpp */,
 				052FA0F91806088B00FAE4DF /* eltmoves.cpp */,
+				05C265C62830A4B800232420 /* facetpairing3.cpp */,
 				05F904511F97F9F300893670 /* graph.cpp */,
 				052FA0FA1806088B00FAE4DF /* homologicaldata.cpp */,
 				052FA0FB1806088B00FAE4DF /* isomorphism.cpp */,
 				05C2659D2825FB0300232420 /* links.cpp */,
+				05C278E728422B43009A2DA1 /* testdim3.h */,
 				052FA0FC1806088B00FAE4DF /* triangulation3.cpp */,
-				052FA0FD1806088B00FAE4DF /* testtriangulation.h */,
 			);
 			path = dim3;
 			sourceTree = "<group>";
@@ -6295,6 +6333,8 @@
 				052FA1011806088B00FAE4DF /* bitmask.cpp */,
 				052FA1001806088B00FAE4DF /* CMakeLists.txt */,
 				052FA1021806088B00FAE4DF /* testutilities.h */,
+				05888BD1283F044900181D2D /* tightencoding.cpp */,
+				05C278E528403312009A2DA1 /* tightencodingtest.h */,
 			);
 			path = utilities;
 			sourceTree = "<group>";
@@ -6472,6 +6512,7 @@
 				054C6A7C1DCC20DA005373F0 /* example.h */,
 				05431F181C40F260009BC072 /* face.h */,
 				05431F191C40F260009BC072 /* facenumbering.h */,
+				05C265C128307D0500232420 /* facetpairing-canonical-impl.h */,
 				05431F1A1C40F260009BC072 /* facetpairing-impl.h */,
 				05431F1B1C40F260009BC072 /* facetpairing.h */,
 				05431F1D1C40F260009BC072 /* isosig-impl.h */,
@@ -6561,6 +6602,7 @@
 				059BC6691DC7F79600AB4206 /* boundarycomponent-bindings.h */,
 				05431FAC1C40F5CA009BC072 /* CMakeLists.txt */,
 				057EE4361C6009E600C4D155 /* component-bindings.h */,
+				05135ADB28347BDD00C4BFDC /* cut.cpp */,
 				054C6A4E1DCC1FE7005373F0 /* example-bindings.h */,
 				054C6A4F1DCC1FE7005373F0 /* example5.cpp */,
 				054C6A501DCC1FE7005373F0 /* example6.cpp */,
@@ -6640,6 +6682,7 @@
 				05199A2C25C63AED0006B8FA /* listview.h */,
 				05D81A8B1C66B0E500DDCE64 /* output.h */,
 				05772EDD270CFAB300D26D8A /* packet.h */,
+				0530FEFF284595580069B227 /* tightencoding.h */,
 			);
 			path = helpers;
 			sourceTree = "<group>";
@@ -6786,6 +6829,7 @@
 				0564A5EE1811D920002CC2AE /* reginapref.h */,
 				0564A5EF1811D920002CC2AE /* reginaprefset.cpp */,
 				0564A5F01811D920002CC2AE /* reginaprefset.h */,
+				050302F0284E17D40050903D /* reginaqt.h */,
 				0564A5F11811D920002CC2AE /* reginasupport.cpp */,
 				0564A5F21811D920002CC2AE /* reginasupport.h */,
 				0564A5F31811D920002CC2AE /* sharedtempfile.cpp */,
@@ -7231,6 +7275,8 @@
 			isa = PBXGroup;
 			children = (
 				0583656718DB88D9008B08D9 /* CMakeLists.txt */,
+				05C265C32830A4AD00232420 /* facetpairing2.cpp */,
+				05C278E828422B53009A2DA1 /* isomorphism2.cpp */,
 				0583656818DB88D9008B08D9 /* triangulation2.cpp */,
 				0583656918DB88D9008B08D9 /* testdim2.h */,
 			);
@@ -7292,6 +7338,8 @@
 			isa = PBXGroup;
 			children = (
 				0591E8521C4F779B00793A9C /* CMakeLists.txt */,
+				05C265C92830A4CA00232420 /* facetpairing4.cpp */,
+				05C278EB28422B5C009A2DA1 /* isomorphism4.cpp */,
 				0591E8531C4F779B00793A9C /* triangulation4.cpp */,
 				0591E8541C4F779B00793A9C /* testdim4.h */,
 			);
@@ -7437,6 +7485,7 @@
 			children = (
 				05A73CB419B2F1280099C617 /* CMakeLists.txt */,
 				05431F9B1C40F537009BC072 /* facenumbering.cpp */,
+				05C265CC2830A4DC00232420 /* facetpairingtest.h */,
 				0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */,
 				05431F9C1C40F537009BC072 /* testgeneric.h */,
 				05A73CB519B2F1280099C617 /* triangulationtest.h */,
@@ -7763,6 +7812,7 @@
 				05721EEA1F97153E00A83FFC /* graph.h in Headers */,
 				054208761DF0D0B50018AB24 /* definition.h in Headers */,
 				05A067251DFA68190047872E /* pluggedtorusbundle.h in Headers */,
+				05C265C228307D0600232420 /* facetpairing-canonical-impl.h in Headers */,
 				055115001DCDF63000EC753C /* isomorphism.h in Headers */,
 				05A0672F1DFA68190047872E /* satblocktypes.h in Headers */,
 				054209261DF28C990018AB24 /* keywordlist.h in Headers */,
@@ -7846,6 +7896,7 @@
 				055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */,
 				05B7002425AC2305003BAF5C /* face_lattice.h in Headers */,
 				05C1BE991DCA7C77007C946B /* skeleton-impl.h in Headers */,
+				05135AE028347BF600C4BFDC /* cut.h in Headers */,
 				0583656318DB8876008B08D9 /* end_namespace.h in Headers */,
 				05F0A00C1DBF078800117BFC /* vertex4.h in Headers */,
 				052F9EF5180600FB00FAE4DF /* treelp-impl.h in Headers */,
@@ -7865,6 +7916,7 @@
 				052FA066180600FB00FAE4DF /* facepair.h in Headers */,
 				055114CE1DCC476A00EC753C /* pachner.h in Headers */,
 				052F9F40180600FB00FAE4DF /* matrix2.h in Headers */,
+				05888BD8283F0F8B00181D2D /* tightencoding-impl.h in Headers */,
 				058C305F1DCAF6F8006162D2 /* forward.h in Headers */,
 				054209231DF28C990018AB24 /* context.h in Headers */,
 				05EDDA5527E31061001743C1 /* nmz_hash.h in Headers */,
@@ -8255,7 +8307,6 @@
 				052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */,
 				057ED8FC2581B49E004F0068 /* Embed Frameworks */,
 				052DB59E1D9E587C00EDEA68 /* Sign Utilities */,
-				0514CAE31D9C9A5800EDB2E6 /* Sign Qt */,
 				05B9295C259C148700A4503B /* Prepare and Sign Python */,
 			);
 			buildRules = (
@@ -8371,7 +8422,7 @@
 		0575E6511805F36D009E3FC4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1330;
+				LastUpgradeCheck = 1340;
 				ORGANIZATIONNAME = "Regina Development Team";
 				TargetAttributes = {
 					050F5CDC1B9BAAAA00C1F681 = {
@@ -8527,20 +8578,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\n\nfor i in __init__.py plainCompleter.py sageSetup.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
-		};
-		0514CAE31D9C9A5800EDB2E6 /* Sign Qt */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Sign Qt";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "# Qt was copied normally, but Xcode's code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n/usr/bin/codesign --force --sign '-' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
 		};
 		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8780,6 +8817,7 @@
 				05CAE66B2745256E007C93F3 /* gluingperms8.cpp in Sources */,
 				05CAE6152743F207007C93F3 /* bitmanip.cpp in Sources */,
 				05226DF027422C82000A45D5 /* hilbertdual.cpp in Sources */,
+				05135ADD28347BE300C4BFDC /* cut.cpp in Sources */,
 				050F5E311B9BAB9C00C1F681 /* pysubcomplex.cpp in Sources */,
 				05A0669F1DFA67D40047872E /* layeredloop.cpp in Sources */,
 				0550010A1C4D9EF900501C24 /* face6.cpp in Sources */,
@@ -8974,9 +9012,13 @@
 			files = (
 				05277ABE25CF9D16001E4134 /* snappea.cpp in Sources */,
 				051324F5258AF3FA001014F0 /* laurent.cpp in Sources */,
+				05C278E928422B53009A2DA1 /* isomorphism2.cpp in Sources */,
+				05C278EC28422B5C009A2DA1 /* isomorphism4.cpp in Sources */,
 				052FA11C1806088B00FAE4DF /* triangulation3.cpp in Sources */,
 				052FA10B1806088B00FAE4DF /* perm3.cpp in Sources */,
+				05C265CA2830A4CA00232420 /* facetpairing4.cpp in Sources */,
 				05277AC725CF9D16001E4134 /* intutils.cpp in Sources */,
+				05C265C42830A4AD00232420 /* facetpairing2.cpp in Sources */,
 				05FB46C81DD92CF900BB00E5 /* grouppresentation.cpp in Sources */,
 				052FA1121806088B00FAE4DF /* runalltests.cpp in Sources */,
 				05277B0225CF9D59001E4134 /* binom.cpp in Sources */,
@@ -8984,7 +9026,6 @@
 				052FA10C1806088B00FAE4DF /* perm4.cpp in Sources */,
 				052FA11B1806088B00FAE4DF /* isomorphism.cpp in Sources */,
 				052FA1161806088B00FAE4DF /* normalsurfaces.cpp in Sources */,
-				052FA1071806088B00FAE4DF /* facetpairing3.cpp in Sources */,
 				05A067611DFA69220047872E /* standardtriangulation.cpp in Sources */,
 				05277ACD25CF9D16001E4134 /* perm.cpp in Sources */,
 				052FA1191806088B00FAE4DF /* eltmoves.cpp in Sources */,
@@ -9003,7 +9044,6 @@
 				0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */,
 				052FA11D1806088B00FAE4DF /* base64.cpp in Sources */,
 				05277ACB25CF9D16001E4134 /* disctype.cpp in Sources */,
-				052FA1051806088B00FAE4DF /* facetpairing2.cpp in Sources */,
 				052FA1081806088B00FAE4DF /* exhaustive.cpp in Sources */,
 				052FA10F1806088B00FAE4DF /* rational.cpp in Sources */,
 				052FA1091806088B00FAE4DF /* matrixops.cpp in Sources */,
@@ -9013,6 +9053,7 @@
 				05C2659F2825FB0800232420 /* links.cpp in Sources */,
 				052FA10D1806088B00FAE4DF /* perm5.cpp in Sources */,
 				0591E84F1C4F777100793A9C /* census4.cpp in Sources */,
+				05888BD3283F045300181D2D /* tightencoding.cpp in Sources */,
 				0591E8571C4F77A400793A9C /* triangulation4.cpp in Sources */,
 				051FD39527257A9E00B3F60F /* callbacks.cpp in Sources */,
 				052FA1151806088B00FAE4DF /* incompressible.cpp in Sources */,
@@ -9027,9 +9068,9 @@
 				052FA1101806088B00FAE4DF /* numbertheory.cpp in Sources */,
 				052FA10E1806088B00FAE4DF /* primes.cpp in Sources */,
 				05A6A66D258AD0FB00A05E70 /* polynomial.cpp in Sources */,
-				0591E8501C4F777100793A9C /* facetpairing4.cpp in Sources */,
 				05431F971C40F527009BC072 /* perm.cpp in Sources */,
 				05E7DA312755019600B01C09 /* markedabeliangroup.cpp in Sources */,
+				05C265C72830A4B800232420 /* facetpairing3.cpp in Sources */,
 				052FA1061806088B00FAE4DF /* census3.cpp in Sources */,
 				05772F26270CFC3400D26D8A /* perm6.cpp in Sources */,
 				053CAB161DA4A50700A92F98 /* anglestructures.cpp in Sources */,
@@ -9054,6 +9095,7 @@
 				05249F651DBC1737001FE29E /* normalflags.cpp in Sources */,
 				05249EC51DBC16CA001FE29E /* triangulation4.cpp in Sources */,
 				05A067431DFA68470047872E /* blockedsfs.cpp in Sources */,
+				05135AE228347BFE00C4BFDC /* cut.cpp in Sources */,
 				05D1173C19EE0197003BEC55 /* perm4.cpp in Sources */,
 				055FF38819C044FB0057462A /* NewTri2Controller.mm in Sources */,
 				05937AD219CECF4300160F9A /* MDSpreadViewCell.m in Sources */,
@@ -9140,6 +9182,7 @@
 				05048A2326B274650088C978 /* perm6.cpp in Sources */,
 				052FA1EE1806129B00FAE4DF /* stdtoquad.cpp in Sources */,
 				05937A9A19CEC20900160F9A /* AngleViewController.mm in Sources */,
+				05888BD9283F0FA100181D2D /* tightencoding.cpp in Sources */,
 				052FA227180612DD00FAE4DF /* holonomy.c in Sources */,
 				052FA1A01806129B00FAE4DF /* perm5.cpp in Sources */,
 				05721EFC1F97156600A83FFC /* link.cpp in Sources */,
@@ -9151,6 +9194,7 @@
 				05226DF727422C82000A45D5 /* hilbertcd.cpp in Sources */,
 				05B7FFAF25AC22D2003BAF5C /* descent.cpp in Sources */,
 				05FB46EE1DD92D5100BB00E5 /* abeliangroup.cpp in Sources */,
+				05C278ED28422B5C009A2DA1 /* isomorphism4.cpp in Sources */,
 				05937AD619CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m in Sources */,
 				052FA214180612DD00FAE4DF /* canonize_result.c in Sources */,
 				054209081DF0DA450018AB24 /* graphloop.cpp in Sources */,
@@ -9188,7 +9232,6 @@
 				05F23E1319C1305A005B53B5 /* NewAnglesController.mm in Sources */,
 				050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */,
 				05721EF91F97156600A83FFC /* reidemeister.cpp in Sources */,
-				0591E84E1C4F777000793A9C /* facetpairing4.cpp in Sources */,
 				05F0A05D1DBF0B7000117BFC /* simplify.cpp in Sources */,
 				0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */,
 				05D1174319EE01A1003BEC55 /* census2.cpp in Sources */,
@@ -9234,6 +9277,7 @@
 				05A066BF1DFA67D50047872E /* pillowtwosphere.cpp in Sources */,
 				052FA1B31806129B00FAE4DF /* sigisomorphism.cpp in Sources */,
 				053CAB171DA4A50800A92F98 /* anglestructures.cpp in Sources */,
+				05888BD4283F045500181D2D /* tightencoding.cpp in Sources */,
 				05249EB71DBC16C4001FE29E /* example2.cpp in Sources */,
 				052FA19E1806129B00FAE4DF /* perm3.cpp in Sources */,
 				05277AC825CF9D16001E4134 /* intutils.cpp in Sources */,
@@ -9350,6 +9394,7 @@
 				05F0A0631DBF0B7000117BFC /* triangle3.cpp in Sources */,
 				054535B919D8EA7100BED767 /* TextPopover.mm in Sources */,
 				05A066BD1DFA67D50047872E /* layeredtorusbundle.cpp in Sources */,
+				05C265CB2830A4CA00232420 /* facetpairing4.cpp in Sources */,
 				05249ECB1DBC16D6001FE29E /* dehydration.cpp in Sources */,
 				054208911DF0D0CF0018AB24 /* rule.cpp in Sources */,
 				05A73C9F19B2EF5A0099C617 /* homology.c in Sources */,
@@ -9368,6 +9413,7 @@
 				05FB46D81DD92D2900BB00E5 /* homgrouppresentation.cpp in Sources */,
 				05CAE64F27450D89007C93F3 /* gluingperms6.cpp in Sources */,
 				052FA236180612DD00FAE4DF /* tables.c in Sources */,
+				05135ADC28347BE200C4BFDC /* cut.cpp in Sources */,
 				052FA19D1806129B00FAE4DF /* matrix2.cpp in Sources */,
 				052FA215180612DD00FAE4DF /* change_peripheral_curves.c in Sources */,
 				05F0A0141DBF079600117BFC /* subdivide.cpp in Sources */,
@@ -9377,7 +9423,6 @@
 				05F0A0181DBF079600117BFC /* vertex4.cpp in Sources */,
 				05772EFC270CFB3D00D26D8A /* sigcensus.cpp in Sources */,
 				052FA22F180612DD00FAE4DF /* peripheral_curves.c in Sources */,
-				05D1174619EE01A1003BEC55 /* facetpairing3.cpp in Sources */,
 				05249EDB1DBC16E4001FE29E /* face5.cpp in Sources */,
 				05249F2F1DBC1711001FE29E /* perm2.cpp in Sources */,
 				0542088E1DF0D0CF0018AB24 /* format.cpp in Sources */,
@@ -9391,7 +9436,6 @@
 				05C064691C56C2ED006E6483 /* EltMoves4.mm in Sources */,
 				05249EE81DBC16EA001FE29E /* facetpairing4.cpp in Sources */,
 				05249EBE1DBC16CA001FE29E /* component4.cpp in Sources */,
-				05D1174419EE01A1003BEC55 /* facetpairing2.cpp in Sources */,
 				05249F621DBC1737001FE29E /* disc.cpp in Sources */,
 				05D1173419EE0185003BEC55 /* exhaustive.cpp in Sources */,
 				05F09FE21DBF01D100117BFC /* triangulation2.cpp in Sources */,
@@ -9627,6 +9671,7 @@
 				05B7FF8925AC22AA003BAF5C /* automorph.cpp in Sources */,
 				05A066BE1DFA67D50047872E /* layering.cpp in Sources */,
 				05FB46D61DD92D2900BB00E5 /* abeliangroup.cpp in Sources */,
+				05C278EA28422B53009A2DA1 /* isomorphism2.cpp in Sources */,
 				05B7FFB025AC22D2003BAF5C /* cone.cpp in Sources */,
 				05AC685E1DFE729900FF1A4C /* layeredtorusbundle.cpp in Sources */,
 				05F0A0601DBF0B7000117BFC /* snappea.cpp in Sources */,
@@ -9658,6 +9703,7 @@
 				05249F291DBC1711001FE29E /* largeinteger.cpp in Sources */,
 				05226DF327422C82000A45D5 /* hilbertprimal.cpp in Sources */,
 				057B0CAC26A2ABF60017F5EA /* base64.cpp in Sources */,
+				05C265C82830A4B800232420 /* facetpairing3.cpp in Sources */,
 				05249EF71DBC16F1001FE29E /* isomorphism7.cpp in Sources */,
 				052FA217180612DD00FAE4DF /* choose_generators.c in Sources */,
 				052FA19F1806129B00FAE4DF /* perm4.cpp in Sources */,
@@ -9718,6 +9764,7 @@
 				05772EFE270CFB3D00D26D8A /* sigisomorphism.cpp in Sources */,
 				05D1172C19EE0169003BEC55 /* base64.cpp in Sources */,
 				052FA1AA1806129B00FAE4DF /* script.cpp in Sources */,
+				05C265C52830A4AD00232420 /* facetpairing2.cpp in Sources */,
 				05F2033520A17C2500FC74ED /* dt.cpp in Sources */,
 				05249F0F1DBC16F9001FE29E /* triangulation8.cpp in Sources */,
 				05C0645E1C56B1F7006E6483 /* Tri4ViewController.mm in Sources */,
@@ -10066,6 +10113,7 @@
 				052F9F76180600FB00FAE4DF /* core_geodesics.c in Sources */,
 				05754CE8258D7D6400236ED7 /* randutils.cpp in Sources */,
 				0591E7F31C4F75C300793A9C /* gluingpermsearcher4.cpp in Sources */,
+				05135AE128347BF600C4BFDC /* cut.cpp in Sources */,
 				05C265B9282C948700232420 /* facetpairing4.cpp in Sources */,
 				054208B91DF0D2740018AB24 /* lensspace.cpp in Sources */,
 				052F9F7C180600FB00FAE4DF /* cusps.c in Sources */,
@@ -10222,6 +10270,7 @@
 				054208C11DF0D2740018AB24 /* simplesurfacebundle.cpp in Sources */,
 				052FA065180600FB00FAE4DF /* facepair.cpp in Sources */,
 				05870CB31FAD250900835F9E /* modellinkgraph.cpp in Sources */,
+				05888BD7283F0F8B00181D2D /* tightencoding.cpp in Sources */,
 				05AA71EE1FB17E0100186E30 /* flype.cpp in Sources */,
 				052F9F5D180600FB00FAE4DF /* text.cpp in Sources */,
 				05FB46E81DD92D4A00BB00E5 /* homgrouppresentation.cpp in Sources */,
@@ -11345,10 +11394,11 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(HOME)/Qt/5.15.2-macos/lib",
+					"$(HOME)/Qt/6.3.0-macos/lib",
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks,
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -11364,10 +11414,11 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtCore.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtGui.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtSvg.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtCore.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtGui.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtSvg.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtSvgWidgets.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtWidgets.framework/Headers",
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
@@ -11399,10 +11450,11 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(HOME)/Qt/5.15.2-macos/lib",
+					"$(HOME)/Qt/6.3.0-macos/lib",
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks,
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -11416,10 +11468,11 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtCore.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtGui.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtSvg.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtCore.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtGui.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtSvg.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtSvgWidgets.framework/Headers",
+					"$(HOME)/Qt/6.3.0-macos/lib/QtWidgets.framework/Headers",
 					/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Headers,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
@@ -11459,6 +11512,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -11477,6 +11531,8 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -11518,6 +11574,7 @@
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -11531,6 +11588,8 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
@@ -11560,6 +11619,7 @@
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11592,6 +11652,7 @@
 					"$(USER_LIBRARY_DIR)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",

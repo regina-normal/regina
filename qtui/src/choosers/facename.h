@@ -37,6 +37,8 @@
 #ifndef __FACENAME_H
 #define __FACENAME_H
 
+#include "reginaqt.h"
+
 /**
  * Provides a dimension-specific English name for a subdim-face in a
  * triangulation.

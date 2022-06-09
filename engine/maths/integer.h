@@ -46,6 +46,7 @@
 #include <gmp.h>
 #include "regina-core.h"
 #include "utilities/exception.h"
+#include "utilities/intutils.h"
 #include "utilities/tightencoding.h"
 
 /**
@@ -111,6 +112,24 @@ template <>
 struct InfinityBase<false> {
 };
 #endif // __DOXYGEN
+
+namespace detail {
+    /**
+     * Returns a raw GMP integer holding the given value.
+     *
+     * @param value the value to assign to the new GMP integer.
+     * @return a corresponding newly created and initialised GMP integer.
+     */
+    mpz_ptr mpz_from_ll(long long value);
+
+    /**
+     * Returns a raw GMP integer holding the given value.
+     *
+     * @param value the value to assign to the new GMP integer.
+     * @return a corresponding newly created and initialised GMP integer.
+     */
+    mpz_ptr mpz_from_ull(unsigned long long value);
+}
 
 /**
  * Represents an arbitrary precision integer.
@@ -223,6 +242,24 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * @param value the new value of this integer.
          */
         IntegerBase(unsigned long value);
+        /**
+         * Initialises this integer to the given value.
+         *
+         * \ifacespython In Python, the only native-integer constructor
+         * is IntegerBase(long).
+         *
+         * @param value the new value of this integer.
+         */
+        IntegerBase(long long value);
+        /**
+         * Initialises this integer to the given value.
+         *
+         * \ifacespython In Python, the only native-integer constructor
+         * is IntegerBase(long).
+         *
+         * @param value the new value of this integer.
+         */
+        IntegerBase(unsigned long long value);
         /**
          * Initialises this integer to the given value.
          *
@@ -553,6 +590,20 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * @return a reference to this integer with its new value.
          */
         IntegerBase& operator =(unsigned long value);
+        /**
+         * Sets this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         * @return a reference to this integer with its new value.
+         */
+        IntegerBase& operator =(long long value);
+        /**
+         * Sets this integer to the given value.
+         *
+         * @param value the new value of this integer.
+         * @return a reference to this integer with its new value.
+         */
+        IntegerBase& operator =(unsigned long long value);
         /**
          * Sets this integer to the given value which is
          * represented as a string of digits in base 10.
@@ -1524,7 +1575,8 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * rvalue reference (since this const member function induces an extra
          * deep copy).
          *
-         * \ifacespython Not present; use tightEncoding() instead.
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
          *
          * @param out the output stream to which the encoded string will
          * be written.
@@ -1544,6 +1596,58 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * @return the resulting encoded string.
          */
         std::string tightEncoding() const;
+
+        /**
+         * Reconstructs an integer from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be given as a string.  If this string
+         * contains leading whitespace or any trailing characters at all
+         * (including trailing whitespace), then it will be treated as an
+         * invalid encoding (i.e., this routine will throw an exception).
+         *
+         * This routine does recognise infinity in the case where \a
+         * supportInfinity is \c true.
+         *
+         * This routine is identical to calling the global template routine
+         * regina::tightDecoding() with this type as the template argument.
+         *
+         * \exception InvalidArgument the given string is not a tight encoding
+         * of an integer of this type.
+         *
+         * @param enc the tight encoding for an integer.
+         * @return the integer represented by the given tight encoding.
+         */
+        static IntegerBase tightDecoding(const std::string& enc);
+
+        /**
+         * Reconstructs an integer from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.  If the
+         * input stream contains leading whitespace then it will be treated as
+         * an invalid encoding (i.e., this routine will throw an exception).
+         * The input routine \e may contain further data: if this routine is
+         * successful then the input stream will be left positioned immediately
+         * after the encoding, without skipping any trailing whitespace.
+         *
+         * This routine does recognise infinity in the case where \a
+         * supportInfinity is \c true.
+         *
+         * This routine is identical to calling the global template routine
+         * regina::tightDecode() with this type as the template argument.
+         *
+         * \exception InvalidInput the given input stream does not begin with
+         * a tight encoding of an integer of this type.
+         *
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
+         *
+         * @param input an input stream that begins with the tight encoding
+         * for an integer.
+         * @return the integer represented by the given tight encoding.
+         */
+        static IntegerBase tightDecode(std::istream& input);
 
     private:
         /**
@@ -2476,6 +2580,25 @@ inline IntegerBase<supportInfinity>::IntegerBase(unsigned long value) :
 }
 
 template <bool supportInfinity>
+inline IntegerBase<supportInfinity>::IntegerBase(long long value) :
+        small_(static_cast<long>(value)), large_(nullptr) {
+    // Detect overflow.
+    if constexpr (sizeof(long) < sizeof(long long))
+        if (small_ != value)
+            large_ = regina::detail::mpz_from_ll(value);
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity>::IntegerBase(unsigned long long value) :
+        small_(static_cast<long>(value)), large_(nullptr) {
+    // Detect overflow.
+    // This could occur even if long and long long have the same size,
+    // due to the discrepancy between signed and unsigned ranges.
+    if (small_ < 0 || static_cast<unsigned long long>(small_) != value)
+        large_ = regina::detail::mpz_from_ull(value);
+}
+
+template <bool supportInfinity>
 inline IntegerBase<supportInfinity>::IntegerBase(
         const IntegerBase<supportInfinity>& value) {
     if (value.isInfinite()) {
@@ -2524,7 +2647,8 @@ template <bool supportInfinity>
 template <int bytes>
 inline IntegerBase<supportInfinity>::IntegerBase(
         const NativeInteger<bytes>& value) :
-        small_(value.nativeValue()), large_(nullptr) {
+        // This cast may lose information, but we will fix this in a moment.
+        small_(static_cast<long>(value.nativeValue())), large_(nullptr) {
     static_assert(bytes % sizeof(long) == 0,
         "IntegerBase native constructor: native integer must partition exactly into long integers.");
     if (sizeof(long) < bytes && value.nativeValue() != static_cast<typename IntOfSize<bytes>::type>(small_)) {
@@ -2543,7 +2667,7 @@ inline IntegerBase<supportInfinity>::IntegerBase(
 
 template <bool supportInfinity>
 inline IntegerBase<supportInfinity>::IntegerBase(double value) :
-        small_(value), large_(nullptr) {
+        large_(nullptr) {
     // We start with a large representation, since we want to use GMP's
     // double-to-integer conversion.
     large_ = new __mpz_struct[1];
@@ -2828,6 +2952,41 @@ inline IntegerBase<supportInfinity>&
         // No overflow, but we must clear out any old large integer value.
         clearLarge();
     }
+    return *this;
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity>&
+        IntegerBase<supportInfinity>::operator =(long long value) {
+    makeFinite();
+    if (large_)
+        clearLarge();
+
+    small_ = value;
+
+    // Detect overflow.
+    if constexpr (sizeof(long) < sizeof(long long))
+        if (small_ != value)
+            large_ = regina::detail::mpz_from_ll(value);
+
+    return *this;
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity>&
+        IntegerBase<supportInfinity>::operator =(unsigned long long value) {
+    makeFinite();
+    if (large_)
+        clearLarge();
+
+    small_ = value;
+
+    // Detect overflow.
+    // This could occur even if long and long long have the same size,
+    // due to the discrepancy between signed and unsigned ranges.
+    if (small_ < 0 || static_cast<unsigned long long>(small_) != value)
+        large_ = regina::detail::mpz_from_ull(value);
+
     return *this;
 }
 
@@ -3457,6 +3616,26 @@ inline std::string IntegerBase<supportInfinity>::tightEncoding() const {
     std::ostringstream out;
     regina::detail::tightEncodeInteger(out, *this);
     return out.str();
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::tightDecoding(
+        const std::string& enc) {
+    return regina::detail::tightDecodeInteger<IntegerBase>(
+        enc.begin(), enc.end(), true);
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity> IntegerBase<supportInfinity>::tightDecode(
+        std::istream& input) {
+    try {
+        return regina::detail::tightDecodeInteger<IntegerBase>(
+            std::istreambuf_iterator<char>(input),
+            std::istreambuf_iterator<char>(), false);
+    } catch (const InvalidArgument& exc) {
+        // For input streams we use a different exception type.
+        throw InvalidInput(exc.what());
+    }
 }
 
 template <bool supportInfinity>

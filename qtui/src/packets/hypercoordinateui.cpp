@@ -265,7 +265,7 @@ bool HyperModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
 }
 
-unsigned HyperModel::propertyColCount() const {
+int HyperModel::propertyColCount() const {
     return (surfaces_->isEmbeddedOnly() ? 7 : 4);
 }
 

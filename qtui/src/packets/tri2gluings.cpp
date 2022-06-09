@@ -48,7 +48,7 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QProgressDialog>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QTextDocument>
 #include <QToolBar>
 #include <set>
@@ -60,7 +60,7 @@ namespace {
     /**
      * Represents a destination for a single edge gluing.
      */
-    QRegExp reEdgeGluing(
+    const QRegularExpression reEdgeGluing(
         "^\\s*"
         "(\\d+)"
         "(?:\\s*\\(\\s*|\\s+)"
@@ -70,7 +70,7 @@ namespace {
     /**
      * Represents a single triangle edge.
      */
-    QRegExp reEdge("^[0-2][0-2]$");
+    const QRegularExpression reEdge("^[0-2][0-2]$");
 }
 
 GluingsModel2::GluingsModel2(regina::Triangulation<2>* tri) : tri_(tri) {
@@ -171,30 +171,33 @@ bool GluingsModel2::setData(const QModelIndex& index, const QVariant& value,
     if (text.isEmpty()) {
         // Boundary edge.
         newAdjTri = -1;
-    } else if (! reEdgeGluing.exactMatch(text)) {
-        // Bad string.
-        showError(tr("<qt>The edge gluing should be of the "
-            "form: <i>triangle (edge)</i>.  An example is <i>5 (02)</i>, "
-            "which represents edge 02 of triangle 5.</qt>"));
-        return false;
     } else {
-        // Real edge.
-        newAdjTri = reEdgeGluing.cap(1).toInt();
-        QString triEdge = reEdgeGluing.cap(2);
-
-        // Check explicitly for a negative triangle number
-        // since isEdgeStringValid() takes an unsigned integer.
-        if (newAdjTri < 0 || newAdjTri >= tri_->size()) {
-            showError(tr("There is no triangle number %1.").arg(newAdjTri));
+        auto match = reEdgeGluing.match(text);
+        if (! match.hasMatch()) {
+            // Bad string.
+            showError(tr("<qt>The edge gluing should be of the "
+                "form: <i>triangle (edge)</i>.  An example is <i>5 (02)</i>, "
+                "which represents edge 02 of triangle 5.</qt>"));
             return false;
-        }
+        } else {
+            // Real edge.
+            newAdjTri = match.captured(1).toInt();
+            QString triEdge = match.captured(2);
 
-        // Do we have a valid gluing?
-        QString err = isEdgeStringValid(index.row(), edge, newAdjTri, triEdge,
-            &newAdjPerm);
-        if (! err.isNull()) {
-            showError(err);
-            return false;
+            // Check explicitly for a negative triangle number
+            // since isEdgeStringValid() takes an unsigned integer.
+            if (newAdjTri < 0 || newAdjTri >= tri_->size()) {
+                showError(tr("There is no triangle number %1.").arg(newAdjTri));
+                return false;
+            }
+
+            // Do we have a valid gluing?
+            QString err = isEdgeStringValid(index.row(), edge, newAdjTri, triEdge,
+                &newAdjPerm);
+            if (! err.isNull()) {
+                showError(err);
+                return false;
+            }
         }
     }
 
@@ -238,7 +241,7 @@ QString GluingsModel2::isEdgeStringValid(unsigned long srcTri, int srcEdge,
     if (destTri >= tri_->size())
         return tr("There is no triangle number %1.").arg(destTri);
 
-    if (! reEdge.exactMatch(destEdge))
+    if (! reEdge.match(destEdge).hasMatch())
         return tr("<qt>%1 is not a valid triangle edge.  A triangle "
             "edge must be described by a sequence of two vertices, each "
             "between 0 and 2 inclusive.  An example is <i>02</i>.</qt>").

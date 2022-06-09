@@ -58,6 +58,8 @@ template TreeDecomposition::TreeDecomposition(
     const FacetPairing<4>&, TreeDecompositionAlg);
 
 template void TreeDecomposition::reroot(const int*, const int*, const int*);
+template void TreeDecomposition::reroot(const size_t*, const size_t*,
+    const size_t*);
 
 bool TreeBag::contains(size_t element) const {
     return std::binary_search(elements_, elements_ + size_, element);
@@ -430,8 +432,8 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
     // little tweaking we can improve this.
 
     bool* used = new bool[graph.order_];
-    size_t* elimOrder = new size_t[graph.order_]; // Elimination stage -> vertex
-    size_t* elimStage = new size_t[graph.order_]; // Vertex -> elimination stage
+    auto* elimOrder = new size_t[graph.order_]; // Elimination stage -> vertex
+    auto* elimStage = new size_t[graph.order_]; // Vertex -> elimination stage
     auto* bags = new TreeBag*[graph.order_];
 
     std::fill(used, used + graph.order_, false);
@@ -474,7 +476,7 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
         elimOrder[stage] = bestElim;
         elimStage[bestElim] = stage;
 
-        if (bestElimBagSize > width_ + 1)
+        if (bestElimBagSize > static_cast<size_t>(width_ + 1))
             width_ = bestElimBagSize - 1;
 
         // Build the corresponding bag.
@@ -483,7 +485,7 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
         bags[stage] = new TreeBag(bestElimBagSize);
         size_t which = 0;
         for (size_t j = 0; j < graph.order_; ++j) {
-            if (j == bestElim) {
+            if (static_cast<ssize_t>(j) == bestElim) {
                 bags[stage]->elements_[which++] = j;
             } else if ((! used[j]) && graph.adj_[bestElim][j]) {
                 bags[stage]->elements_[which++] = j;
@@ -840,7 +842,7 @@ void TreeDecomposition::makeNice(const int* heightHint) {
             // b is a leaf node.
             // TODO: If b is empty, drop it.
             // Build a series of introduce nodes.
-            TreeBag* next = const_cast<TreeBag*>(b->nextPrefix());
+            auto* next = const_cast<TreeBag*>(b->nextPrefix());
 
             b->type_ = NICE_INTRODUCE;
             b->subtype_ = b->size_ - 1;

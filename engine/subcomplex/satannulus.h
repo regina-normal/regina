@@ -205,7 +205,7 @@ struct SatAnnulus {
      * @return the number of triangles of this annulus that lie on the boundary
      * of the triangulation; this will be 0, 1 or 2.
      */
-    unsigned meetsBoundary() const;
+    int meetsBoundary() const;
 
     /**
      * Converts this into a representation of the same annulus from the

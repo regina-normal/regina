@@ -38,6 +38,7 @@
 #ifndef __BIGWIDGET_H
 #define __BIGWIDGET_H
 
+#include "reginaqt.h"
 #include <QWidget>
 
 /**

@@ -31,8 +31,12 @@
 tricensus
 tricensus --threads 2 -2 -t4 -i -p
 tricensus --threads 0 -t2 -i -s @TESTOUT@
-# --- tricensus with signature output
+# --- tricensus with signature or tight encoding output
 tricensus -t2 -i -s @TESTOUT@
+tricensus -t2 -i -S @TESTOUT@
+tricensus -t2 -i -e @TESTOUT@
+tricensus -2 -t2 -S @TESTOUT@
+tricensus -2 -t2 -e @TESTOUT@
 # --- tricensus with Regina data output
 tricensus -t1 -i @TESTOUT@
 # --- allowing invalid triangulations:
@@ -49,14 +53,17 @@ tricensus -4 -t2 -i -s @TESTOUT@
 tricensus -4 -t2 -i -s --allowinvalid @TESTOUT@
 # --- using tricensus to generate pairings:
 tricensus -2 -t4 -i -p
+tricensus -2 -t4 -i -p --encodings
 tricensus -2 -t4 -b -p
 tricensus -2 -t4 -b -B2 -p
 tricensus -t3 -i -p
 tricensus -t3 -b -p
+tricensus -t3 -b -p --encodings
 tricensus -t3 -b -B2 -p
 tricensus -4 -t2 -i -p
 tricensus -4 -t2 -b -p
 tricensus -4 -t2 -b -B2 -p
+tricensus -4 -t2 -b -B2 -p --encodings
 # --- using tricensus to generate triangulations from pairings:
 tricensus -2 -s -o -P @TESTOUT@ < @TESTDIR@/dim2-bdry2-4.pairs
 tricensus -2 -s -o -P @TESTOUT@ < @TESTDIR@/dim2-internal-4.pairs

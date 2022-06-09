@@ -274,7 +274,7 @@
             goto cleanUpFilling;
         }
         
-        if (regina::gcd(m, l) != 1) {
+        if (std::gcd(m, l) != 1) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Filling Coefficients Must Be Coprime"
                                                             message:nil
                                                            delegate:nil

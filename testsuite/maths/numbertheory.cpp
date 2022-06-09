@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include <numeric> // for std::gcd()
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/numbertheory.h"
@@ -148,74 +149,80 @@ class NumberTheoryTest : public CppUnit::TestFixture {
         }
 
         void gcd() {
+            // Before Regina 7.1, these tests used to check regina::gcd().
+            //
+            // Now that has been replaced with the C++17 std::gcd(), so
+            // we are testing that instead.  Probably we can just trust
+            // the standard library and remove these gcd tests completely.
+
             // Boundary cases
-            CPPUNIT_ASSERT_EQUAL((long)0, regina::gcd(0, 0));
-            CPPUNIT_ASSERT_EQUAL(lOddLarge, regina::gcd(0, lOddLarge));
-            CPPUNIT_ASSERT_EQUAL(lOddLarge, regina::gcd(0, -lOddLarge));
-            CPPUNIT_ASSERT_EQUAL(lOddLarge, regina::gcd(lOddLarge, 0));
-            CPPUNIT_ASSERT_EQUAL(lOddLarge, regina::gcd(-lOddLarge, 0));
-            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(1, lOddLarge));
-            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(1, -lOddLarge));
-            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(-1, lOddLarge));
-            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(-1, -lOddLarge));
-            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(lOddLarge, 1));
-            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(-lOddLarge, 1));
-            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(lOddLarge, -1));
-            CPPUNIT_ASSERT_EQUAL((long)1, regina::gcd(-lOddLarge, -1));
+            CPPUNIT_ASSERT_EQUAL(0, std::gcd(0, 0));
+            CPPUNIT_ASSERT_EQUAL(lOddLarge, std::gcd(0, lOddLarge));
+            CPPUNIT_ASSERT_EQUAL(lOddLarge, std::gcd(0, -lOddLarge));
+            CPPUNIT_ASSERT_EQUAL(lOddLarge, std::gcd(lOddLarge, 0));
+            CPPUNIT_ASSERT_EQUAL(lOddLarge, std::gcd(-lOddLarge, 0));
+            CPPUNIT_ASSERT_EQUAL((long)1, std::gcd(1, lOddLarge));
+            CPPUNIT_ASSERT_EQUAL((long)1, std::gcd(1, -lOddLarge));
+            CPPUNIT_ASSERT_EQUAL((long)1, std::gcd(-1, lOddLarge));
+            CPPUNIT_ASSERT_EQUAL((long)1, std::gcd(-1, -lOddLarge));
+            CPPUNIT_ASSERT_EQUAL((long)1, std::gcd(lOddLarge, 1));
+            CPPUNIT_ASSERT_EQUAL((long)1, std::gcd(-lOddLarge, 1));
+            CPPUNIT_ASSERT_EQUAL((long)1, std::gcd(lOddLarge, -1));
+            CPPUNIT_ASSERT_EQUAL((long)1, std::gcd(-lOddLarge, -1));
 
             // Equality / multiple of
-            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(lEvenMed, lEvenMed));
-            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(-lEvenMed, lEvenMed));
-            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(lEvenMed, -lEvenMed));
-            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(-lEvenMed, -lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, std::gcd(lEvenMed, lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, std::gcd(-lEvenMed, lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, std::gcd(lEvenMed, -lEvenMed));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, std::gcd(-lEvenMed, -lEvenMed));
             CPPUNIT_ASSERT_EQUAL(lEvenMed,
-                regina::gcd(lEvenMed, lEvenMed * lEvenMed));
+                std::gcd(lEvenMed, lEvenMed * lEvenMed));
             CPPUNIT_ASSERT_EQUAL(lEvenMed,
-                regina::gcd(-lEvenMed, lEvenMed * lEvenMed));
+                std::gcd(-lEvenMed, lEvenMed * lEvenMed));
             CPPUNIT_ASSERT_EQUAL(lEvenMed,
-                regina::gcd(lEvenMed, -lEvenMed * lEvenMed));
+                std::gcd(lEvenMed, -lEvenMed * lEvenMed));
             CPPUNIT_ASSERT_EQUAL(lEvenMed,
-                regina::gcd(-lEvenMed, -lEvenMed * lEvenMed));
+                std::gcd(-lEvenMed, -lEvenMed * lEvenMed));
             CPPUNIT_ASSERT_EQUAL(lEvenMed,
-                regina::gcd(lEvenMed * lEvenMed, lEvenMed));
+                std::gcd(lEvenMed * lEvenMed, lEvenMed));
             CPPUNIT_ASSERT_EQUAL(lEvenMed,
-                regina::gcd(-lEvenMed * lEvenMed, lEvenMed));
+                std::gcd(-lEvenMed * lEvenMed, lEvenMed));
             CPPUNIT_ASSERT_EQUAL(lEvenMed,
-                regina::gcd(lEvenMed * lEvenMed, -lEvenMed));
+                std::gcd(lEvenMed * lEvenMed, -lEvenMed));
             CPPUNIT_ASSERT_EQUAL(lEvenMed,
-                regina::gcd(-lEvenMed * lEvenMed, -lEvenMed));
+                std::gcd(-lEvenMed * lEvenMed, -lEvenMed));
 
             // Miscellaneous cases.
-            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(96, 324));
-            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(96, -324));
-            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(-96, 324));
-            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(-96, -324));
-            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(324, 96));
-            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(324, -96));
-            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(-324, 96));
-            CPPUNIT_ASSERT_EQUAL((long)12, regina::gcd(-324, -96));
-            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(
+            CPPUNIT_ASSERT_EQUAL(12, std::gcd(96, 324));
+            CPPUNIT_ASSERT_EQUAL(12, std::gcd(96, -324));
+            CPPUNIT_ASSERT_EQUAL(12, std::gcd(-96, 324));
+            CPPUNIT_ASSERT_EQUAL(12, std::gcd(-96, -324));
+            CPPUNIT_ASSERT_EQUAL(12, std::gcd(324, 96));
+            CPPUNIT_ASSERT_EQUAL(12, std::gcd(324, -96));
+            CPPUNIT_ASSERT_EQUAL(12, std::gcd(-324, 96));
+            CPPUNIT_ASSERT_EQUAL(12, std::gcd(-324, -96));
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, std::gcd(
                 lEvenMed * (lEvenMed - 3),
                 lEvenMed * (lEvenMed - 1)));
-            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, std::gcd(
                 lEvenMed * (lEvenMed - 3),
                 -lEvenMed * (lEvenMed - 1)));
-            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, std::gcd(
                 -lEvenMed * (lEvenMed - 3),
                 lEvenMed * (lEvenMed - 1)));
-            CPPUNIT_ASSERT_EQUAL(lEvenMed, regina::gcd(
+            CPPUNIT_ASSERT_EQUAL(lEvenMed, std::gcd(
                 -lEvenMed * (lEvenMed - 3),
                 -lEvenMed * (lEvenMed - 1)));
-            CPPUNIT_ASSERT_EQUAL(lEvenMed * 2, regina::gcd(
+            CPPUNIT_ASSERT_EQUAL(lEvenMed * 2, std::gcd(
                 lEvenMed * (lEvenMed - 4),
                 lEvenMed * (lEvenMed - 2)));
-            CPPUNIT_ASSERT_EQUAL(lEvenMed * 2, regina::gcd(
+            CPPUNIT_ASSERT_EQUAL(lEvenMed * 2, std::gcd(
                 lEvenMed * (lEvenMed - 4),
                 -lEvenMed * (lEvenMed - 2)));
-            CPPUNIT_ASSERT_EQUAL(lEvenMed * 2, regina::gcd(
+            CPPUNIT_ASSERT_EQUAL(lEvenMed * 2, std::gcd(
                 -lEvenMed * (lEvenMed - 4),
                 lEvenMed * (lEvenMed - 2)));
-            CPPUNIT_ASSERT_EQUAL(lEvenMed * 2, regina::gcd(
+            CPPUNIT_ASSERT_EQUAL(lEvenMed * 2, std::gcd(
                 -lEvenMed * (lEvenMed - 4),
                 -lEvenMed * (lEvenMed - 2)));
         }
@@ -331,7 +338,7 @@ class NumberTheoryTest : public CppUnit::TestFixture {
 
             // All cases for a particular modular base.
             for (unsigned long k = 1; k < ulOddMed; k++) {
-                if (regina::gcd(k, ulOddMed) != 1)
+                if (std::gcd(k, ulOddMed) != 1)
                     continue;
 
                 // Element to invert within standard range.

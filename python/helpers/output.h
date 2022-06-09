@@ -101,10 +101,9 @@ void add_output(pybind11::class_<C, options...>& c,
         ReprStyle style = PYTHON_REPR_DETAILED) {
     // The messy std::conditional below is to resolve packets of type
     // PacketOf<...>, which inherit from Output<...> via both Packet and Held.
-    using BaseType = typename std::conditional<
-        std::is_base_of<regina::Packet, C>::value,
+    using BaseType = std::conditional_t<std::is_base_of_v<regina::Packet, C>,
         Output<regina::Packet> /* choose the Output that comes via Packet */,
-        typename regina::OutputBase<C>::type>::type;
+        typename regina::OutputBase<C>::type>;
     using OutputFunctionType = std::string (BaseType::*)() const;
 
     c.def("str", OutputFunctionType(&BaseType::str));

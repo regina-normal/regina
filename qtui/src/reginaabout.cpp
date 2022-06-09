@@ -39,10 +39,10 @@
 #include "reginasupport.h"
 
 #include <cstdlib>
-#include <qdatetime.h>
-#include <qfile.h>
 
+#include <QDateTime>
 #include <QDialogButtonBox>
+#include <QFile>
 #include <QLabel>
 #include <QScrollBar>
 #include <QTabWidget>
@@ -111,7 +111,7 @@ const QString ReginaAbout::regLicense( tr(
     "NORMALIZ LIBRARY:\n\n"
     "Regina includes a copy of libnormaliz, which it uses to help with the\n"
     "enumeration of fundamental normal surfaces.  Normaliz was written by\n"
-    "Winfried Bruns, Bogdan Ichim and Christof Soeger.  It is distributed\n"
+    "Winfried Bruns, Christof Soeger and others.  It is distributed\n"
     "under the terms of the GNU General Public License as published by the\n"
     "Free Software Foundation, either version 3 of the License, or (at your\n"
     "option) any later version.\n\n"
@@ -159,7 +159,7 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
     // Bundled software:
     bundled << SoftwareInfo("Normaliz", NMZ_VERSION_STRING,
-        "http://www.home.uni-osnabrueck.de/wbruns/normaliz/");
+        "https://www.normaliz.uni-osnabrueck.de/");
     bundled << SoftwareInfo("SnapPy", SNAPPY_VERSION,
         "http://snappy.computop.org/");
 
@@ -219,7 +219,6 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
     auto* titleGrid = new QGridLayout(title);
     titleGrid->setColumnStretch(1, 1);
-    titleGrid->setMargin(6);
 
     auto* titleIcon = new QLabel(this);
     titleIcon->setPixmap(IconCache::icon(IconCache::regina).pixmap(64));

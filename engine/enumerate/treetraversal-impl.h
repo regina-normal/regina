@@ -113,7 +113,7 @@ NormalSurface TreeTraversal<LPConstraint, BanConstraint, IntType>::
             for (int j = 0; j < 3; ++j)
                 an[6 * i + j] = v[3 * i + j];
         if (octLevel_ >= 0) {
-            unsigned octTet = (origTableaux_.columnPerm()[
+            size_t octTet = (origTableaux_.columnPerm()[
                 3 * typeOrder_[octLevel_]] / 3);
             unsigned octType = type_[typeOrder_[octLevel_]] - 4;
             an[6 * octTet + 3 + octType] = v[3 * octTet + (octType + 1) % 3];
@@ -127,7 +127,7 @@ NormalSurface TreeTraversal<LPConstraint, BanConstraint, IntType>::
             for (int j = 0; j < 7; ++j)
                 an[10 * i + j] = v[7 * i + j];
         if (octLevel_ >= 0) {
-            unsigned octTet = (origTableaux_.columnPerm()[
+            size_t octTet = (origTableaux_.columnPerm()[
                 3 * typeOrder_[octLevel_]] / 7);
             unsigned octType = type_[typeOrder_[octLevel_]] - 4;
             an[10 * octTet + 7 + octType] =
@@ -168,9 +168,9 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
                 (branchesPerTri - 1) * nTets_ * 4 + 1 :
             (branchesPerQuad - 1) * nTets_ + 1),
         type_(new char[nTypes_ + 1]),
-        typeOrder_(new int[nTypes_]),
+        typeOrder_(new size_t[nTypes_]),
         level_(0),
-        octLevel_(enc_.storesOctagons() ? -1 : nTypes_),
+        octLevel_(enc_.storesOctagons() ? -1 : static_cast<ssize_t>(nTypes_)),
         lp_(new LPData<LPConstraint, IntType>[nTableaux_]),
         lpSlot_(new LPData<LPConstraint, IntType>*[nTypes_ + 1]),
         nextSlot_(new LPData<LPConstraint, IntType>*[nTypes_ + 1]),
@@ -179,12 +179,11 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
     std::fill(type_, type_ + nTypes_ + 1, 0);
 
     // Set a default type order.
-    unsigned i;
-    for (i = 0; i < nTypes_; ++i)
+    for (size_t i = 0; i < nTypes_; ++i)
         typeOrder_[i] = i;
 
     // Reserve space for all the tableaux that we will ever need.
-    for (i = 0; i < nTableaux_; ++i)
+    for (size_t i = 0; i < nTableaux_; ++i)
         lp_[i].reserve(origTableaux_);
 
     // Mark the location of the initial tableaux at the root node.
@@ -212,22 +211,22 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::~TreeTraversal() {
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 void TreeTraversal<LPConstraint, BanConstraint, IntType>::setNext(
-        int nextType) {
-    int* pos = std::find(typeOrder_ + level_ + 1,
+        size_t nextType) {
+    auto pos = std::find(typeOrder_ + level_ + 1,
         typeOrder_ + nTypes_, nextType);
     if (pos != typeOrder_ + level_ + 1) {
         // Use memmove(), which is safe when the source and
         // destination ranges overlap.
         memmove(typeOrder_ + level_ + 2 /* dest */,
             typeOrder_ + level_ + 1 /* src */,
-            (pos - (typeOrder_ + level_ + 1)) * sizeof(int));
+            (pos - (typeOrder_ + level_ + 1)) * sizeof(*pos));
         typeOrder_[level_ + 1] = nextType;
     }
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 int TreeTraversal<LPConstraint, BanConstraint, IntType>::feasibleBranches(
-        int quadType) {
+        size_t quadType) {
     // Spin off clones for the new linear programs (reusing as much
     // work as possible).
     if (enc_.storesAngles()) {
@@ -302,11 +301,11 @@ template <class LPConstraint, typename BanConstraint, typename IntType>
 double TreeTraversal<LPConstraint, BanConstraint, IntType>::percent() const {
     double percent = 0.0;
     double range = 100.0;
-    unsigned den;
-    unsigned quadsRemaining = nTets_;
+    size_t den;
+    size_t quadsRemaining = nTets_;
     // Just check the first few types, until the margin of
     // error is sufficiently small.
-    for (unsigned i = 0; range > 0.01 && i < nTypes_; ++i) {
+    for (size_t i = 0; range > 0.01 && i < nTypes_; ++i) {
         if (enc_.storesAngles()) {
             // Angle structure coordinates.
             range /= 3.0;
@@ -319,11 +318,12 @@ double TreeTraversal<LPConstraint, BanConstraint, IntType>::percent() const {
             percent += (range * type_[typeOrder_[i]]);
         } else {
             // Quadrilateral or octagon coordinate.
-            if (octLevel_ == nTypes_ || octLevel_ < i) {
+            if (octLevel_ == static_cast<ssize_t>(nTypes_) ||
+                    octLevel_ < static_cast<ssize_t>(i)) {
                 // Octagons have already been used, or were never available.
                 range /= 4.0;
                 percent += (range * type_[typeOrder_[i]]);
-            } else if (octLevel_ == i) {
+            } else if (octLevel_ == static_cast<ssize_t>(i)) {
                 // This coordinate is an octagon coordinate.
                 den = 3 * quadsRemaining + 4;
                 range /= den;
@@ -393,7 +393,7 @@ bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
     }
 
     // And... continue the search!
-    unsigned idx; /* Index of the type we are currently choosing. */
+    size_t idx; /* Index of the type we are currently choosing. */
     bool outOfRange;
     while (true) {
         // Update the state of progress and test for cancellation.
@@ -642,7 +642,7 @@ bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
         // We could not do this earlier because, even if we have
         // the zero vector, we still needed to spin off clones
         // for type_[idx] = 1, 2 and 3.
-        if (lastNonZero_ < 0 && level_ == nTypes_ - 1) {
+        if (lastNonZero_ < 0 && level_ == static_cast<ssize_t>(nTypes_ - 1)) {
             // We failed the zero test.
             // Abandon this subtree, increment the type at the
             // current level, and continue searching.
@@ -661,7 +661,7 @@ bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
         // Now all our constraints are enforced, and we can
         // simply test the tableaux for feasibility.
         if (lpSlot_[level_ + 1]->isFeasible()) {
-            if (level_ < nTypes_ - 1) {
+            if (level_ < static_cast<ssize_t>(nTypes_ - 1)) {
                 // We pass the feasibility test, but we're
                 // not at a leaf node.
                 // Head deeper into the tree.
@@ -676,7 +676,7 @@ bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
                     // four separate branches (not the three merged
                     // branches 0=1, 2, 3 that we use in the actual
                     // search).
-                    int bestQuad = -1;
+                    ssize_t bestQuad = -1;
                     int minBranches = 5; // Greater than any soln.
                     int tmp;
                     for (int i = level_ + 1; i < nTypes_; ++i) {
@@ -768,7 +768,7 @@ bool TautEnumeration<LPConstraint, BanConstraint, IntType>::next(
     }
 
     // And... continue the search!
-    unsigned idx; /* Index of the type we are currently choosing. */
+    size_t idx; /* Index of the type we are currently choosing. */
     while (true) {
         // Update the state of progress and test for cancellation.
         if (tracker && ! tracker->setPercent(percent()))
@@ -863,7 +863,7 @@ bool TautEnumeration<LPConstraint, BanConstraint, IntType>::next(
         // Now all our constraints are enforced, and we can
         // simply test the tableaux for feasibility.
         if (lpSlot_[level_ + 1]->isFeasible()) {
-            if (level_ < nTypes_ - 1) {
+            if (level_ < static_cast<ssize_t>(nTypes_ - 1)) {
                 // We pass the feasibility test, but we're not at a leaf node.
                 // Head deeper into the tree.
                 ++level_;
@@ -927,7 +927,7 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
     //
     // Since setNext() works on typeOrder_[level_ + 1], we must
     // temporarily set level_ = -1 before we call it.
-    int useTriangle = nextUnmarkedTriangleType(nTets_);
+    ssize_t useTriangle = nextUnmarkedTriangleType(nTets_);
     if (useTriangle < 0) {
         // There are no triangle types available to set to zero!
         return false;
@@ -937,7 +937,7 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
     level_ = 0;
 
     // Run the search!
-    unsigned idx; /* Index of the type we are currently choosing. */
+    size_t idx; /* Index of the type we are currently choosing. */
     bool outOfRange;
     while (! cancelled()) {
         // We can safely return from this point.
@@ -1116,7 +1116,7 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
                 std::cout << f.str() << std::endl;
             }
 #endif
-            if (level_ < nTypes_ - 1) {
+            if (level_ < static_cast<ssize_t>(nTypes_ - 1)) {
                 // We pass the feasibility test, but we're
                 // not at a leaf node.
                 // Head deeper into the tree.
@@ -1172,10 +1172,10 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
                     // four separate branches (not the three merged
                     // branches 0=1, 2, 3 that we use in the actual
                     // search).
-                    int bestQuad = -1;
+                    ssize_t bestQuad = -1;
                     int minBranches = 5; // Greater than any soln.
                     int tmp;
-                    for (int i = level_ + 1; i < nTypes_; ++i) {
+                    for (size_t i = level_ + 1; i < nTypes_; ++i) {
                         if (typeOrder_[i] < nTets_) {
                             // It's an available quad type.
 #ifdef REGINA_NOOPT_MIN_FEASIBLE
@@ -1210,7 +1210,7 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
                 // constrainPositive() to enact the change of
                 // variable so that we can reconstruct the
                 // surface correctly.
-                for (int i = 0; i < nTets_; ++i) {
+                for (size_t i = 0; i < nTets_; ++i) {
                     if (type_[i] == 1) {
                         tmpLP_[0].initClone(*lpSlot_[level_ + 1]);
                         tmpLP_[0].constrainZero(3 * i);

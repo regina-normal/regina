@@ -41,6 +41,7 @@
 #include "packet/packet.h"
 #include "triangulation/forward.h"
 
+#include "reginaqt.h"
 #include <QDialog>
 #include <QComboBox>
 #include <vector>

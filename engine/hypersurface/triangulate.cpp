@@ -284,7 +284,7 @@ Triangulation<3> NormalHypersurface::triangulate() const {
     size_t nPents = outer.size();
 
     int type;
-    unsigned long pieceNumber;
+    long pieceNumber;
 
     DiscData* discData;
     TriangleData* triData;
@@ -562,9 +562,8 @@ Triangulation<3> NormalHypersurface::triangulate() const {
     int which;
     for (tet = 0; tet < nTets; ++tet)
         for (type = 0; type < 7; ++type)
-            for (pieceNumber = 0; pieceNumber < tetData[tet]->nDiscs(type);
-                    ++pieceNumber) {
-                discData = &tetData[tet]->data(type, pieceNumber);
+            for (unsigned long d = 0; d < tetData[tet]->nDiscs(type); ++d) {
+                discData = &tetData[tet]->data(type, d);
                 for (which = 0; which < (type < 4 ? 1 : 2); ++which) {
                     triData = discData->data + which;
                     assert(triData->nMaps == 1 || triData->nMaps == 2);

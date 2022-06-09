@@ -149,9 +149,10 @@ std::shared_ptr<Packet> open(std::istream& s) {
                 // Read in the next chunk.
                 try {
                     for (chunkRead = 0; chunkRead < regChunkSize; ++chunkRead) {
-                        buf[chunkRead] = static_cast<char>(in.get());
-                        if (in.eof())
+                        int c = in.get();
+                        if (c == EOF)
                             break;
+                        buf[chunkRead] = static_cast<char>(c);
                     }
                 } catch (const zstr::Exception& e) {
                     std::cerr << "ERROR: Could not read stream: "

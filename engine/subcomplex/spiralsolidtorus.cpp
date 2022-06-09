@@ -136,7 +136,7 @@ bool SpiralSolidTorus::isCanonical() const {
     if (vertexRoles_[0][0] > vertexRoles_[0][3])
         return false;
 
-    long baseIndex = tet_[0]->index();
+    size_t baseIndex = tet_[0]->index();
     for (size_t i = 1; i < nTet_; i++)
         if (tet_[i]->index() < baseIndex)
             return false;

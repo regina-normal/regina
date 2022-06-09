@@ -276,7 +276,7 @@ using Tri3Creator = regina::Triangulation<3>* (*)();
                 [alert show];
                 return nil;
             }
-            if (regina::gcd(a, b) != 1) {
+            if (std::gcd(a, b) != 1) {
                 UIAlertView* alert = [[UIAlertView alloc]
                                       initWithTitle:@"Invalid Parameters"
                                       message:@"The layered solid torus parameters a, b and c must be relatively prime."
@@ -341,7 +341,7 @@ using Tri3Creator = regina::Triangulation<3>* (*)();
                 [alert show];
                 return nil;
             }
-            if (regina::gcd(p, q) != 1) {
+            if (std::gcd(p, q) != 1) {
                 UIAlertView* alert = [[UIAlertView alloc]
                                       initWithTitle:@"Invalid Parameters"
                                       message:@"The lens space parameters p and q must be relatively prime."

@@ -46,7 +46,7 @@
 // When tracking progress for Kauffman's algorithm, we update our
 // progress after exactly PROGRESS_POS steps in the link traversal.
 static constexpr int PROGRESS_POS = std::min(20, int(8 * sizeof(int) - 2));
-static constexpr int PROGRESS_TOT = (1 << PROGRESS_POS);
+static constexpr long PROGRESS_TOT = ((long)1 << PROGRESS_POS);
 
 // When tracking progress for the treewidth-based algorithm, try to
 // give much more weight to larger bags.
@@ -123,6 +123,9 @@ namespace {
      * key is viable.  In other words, this tests whether the data from
      * a given key \e might survive all the way up to the root of the
      * tree decomposition.
+     *
+     * \pre Like homflyTreewidth(), this struct can only be used when the
+     * maximum possible strand ID can fit into a native C++ \c int.
      */
     struct ViabilityData {
         const Link* link;
@@ -135,8 +138,12 @@ namespace {
          *
          * This array is a function of the link only, and is initialised
          * in the ViabilityData constructor.
+         *
+         * We use \c ssize_t (not \c size_t) here because we will
+         * frequently compare elements of this array with the \a maxForget
+         * variable below which can legitimately take the value -1.
          */
-        int* forgetCrossing;
+        ssize_t* forgetCrossing;
 
         /**
          * An array that, for each strand ID, records which of the two
@@ -153,8 +160,12 @@ namespace {
          *
          * This array is a function of the link only, and is initialised
          * in the ViabilityData constructor.
+         *
+         * We use \c ssize_t (not \c size_t) here because we will
+         * frequently compare elements of this array with the \a maxForget
+         * variable below which can legitimately take the value -1.
          */
-        int* forgetStrand;
+        ssize_t* forgetStrand;
 
         /**
          * The first few steps of any link traversal are forced (for as
@@ -206,7 +217,7 @@ namespace {
          * This is only available for join bags, and is initialised by
          * initJoinBag().
          */
-        int pairs;
+        size_t pairs;
 
         /**
          * Contains copies of several local variables that are used
@@ -221,12 +232,13 @@ namespace {
          * keyViable().
          */
         struct LocalData {
-            int maxForget;
+            ssize_t maxForget;
             int needStartLoop;
             int couldEndLoop;
 
             inline void initRecursion() {
-                maxForget = needStartLoop = couldEndLoop = -1;
+                maxForget = -1;
+                needStartLoop = couldEndLoop = -1;
             }
         };
 
@@ -255,9 +267,9 @@ namespace {
 
         ViabilityData(const Link* l, const TreeDecomposition& d) :
                 link(l),
-                forgetCrossing(new int[l->size()]),
+                forgetCrossing(new ssize_t[l->size()]),
                 lastCrossing(new int[2 * l->size()]),
-                forgetStrand(new int[2 * l->size()]),
+                forgetStrand(new ssize_t[2 * l->size()]),
                 prefix(new int[2 * l->size()]),
                 mask(new char[l->size()]),
                 local(nullptr) {
@@ -267,10 +279,10 @@ namespace {
                     forgetCrossing[b->children()->element(b->subtype())] =
                         b->index();
 
-            int from, to;
-            for (int i = 0; i < 2 * l->size(); ++i) {
-                from = i / 2;
-                to = l->strand(i).next().crossing()->index();
+            for (int i = 0; i < static_cast<int>(2 * l->size()); ++i) {
+                int from = i / 2;
+                int to = static_cast<int>(
+                    l->strand(i).next().crossing()->index());
                 if (forgetCrossing[from] >= forgetCrossing[to]) {
                     lastCrossing[i] = from;
                     forgetStrand[i] = forgetCrossing[from];
@@ -296,7 +308,8 @@ namespace {
             } while (! (s == start /* finished a link component */ ||
                 (s.strand() == 0 && prefix[s.id() | 1] < 0) /* not a pass */));
 
-            firstChoice = (s == start ? -1 : s.crossing()->index());
+            firstChoice = (s == start ? -1 :
+                static_cast<int>(s.crossing()->index()));
         }
 
         ~ViabilityData() {
@@ -329,7 +342,8 @@ namespace {
                 }
 
                 // The strand survives through to this bag.
-                if (lastCrossing[strandID] == from.crossing()->index()) {
+                if (lastCrossing[strandID] ==
+                        static_cast<int>(from.crossing()->index())) {
                     // The strand runs from the bag into the forgotten zone.
                     if (from.strand() == 0)
                         mask[from.crossing()->index()] |= 4;
@@ -350,7 +364,8 @@ namespace {
             for (int i = 0; i < 2; ++i) {
                 // From newly-forgotten crossing into the bag:
                 to = forget->next(i);
-                if (forgetCrossing[to.crossing()->index()] > bag->index()) {
+                if (forgetCrossing[to.crossing()->index()] >
+                        static_cast<ssize_t>(bag->index())) {
                     if (to.strand() == 0)
                         mask[to.crossing()->index()] |= 1;
                     else
@@ -359,7 +374,8 @@ namespace {
 
                 // From the bag into the newly-forgotten crossing:
                 from = forget->prev(i);
-                if (forgetCrossing[from.crossing()->index()] > bag->index()) {
+                if (forgetCrossing[from.crossing()->index()] >
+                        static_cast<ssize_t>(bag->index())) {
                     if (from.strand() == 0)
                         mask[from.crossing()->index()] |= 4;
                     else
@@ -374,21 +390,17 @@ namespace {
 
             // Identify all strands where one crossing is forgotten and
             // the other is not.
-            int strandID;
-            StrandRef from, to;
-            int side, i;
-            for (side = 0; side < 2; ++side) {
+            for (int side = 0; side < 2; ++side) {
                 const auto* childKey =
                     (side == 0 ? &leftChildKey : &rightChildKey);
-                for (i = 0; i < childKey->size(); ++i) {
-                    strandID = (*childKey)[i];
-
+                for (int strandID : *childKey) {
                     // This strand runs between the bag and the forgotten zone.
 
-                    from = link->strand(strandID);
-                    to = from.next();
+                    StrandRef from = link->strand(strandID);
+                    StrandRef to = from.next();
 
-                    if (lastCrossing[strandID] == from.crossing()->index()) {
+                    if (lastCrossing[strandID] ==
+                            static_cast<int>(from.crossing()->index())) {
                         // The strand runs from the bag into the forgotten zone.
                         if (from.strand() == 0)
                             mask[from.crossing()->index()] |= 4;
@@ -488,7 +500,7 @@ namespace {
             // Of all the strands passed so far that run between a crossing c
             // and the forgotten zone, what is the highest bag at which we
             // forget such a crossing c?
-            int maxForget = -1;
+            ssize_t maxForget = -1;
 
             // If needStartLoop is non-negative, this means we are looking for
             // the beginning of a closed-off loop that starts and ends at that
@@ -513,7 +525,6 @@ namespace {
             // If firstCrossing is -1 then this remains always false.
             bool seenFirstChoice = false;
 
-            int c;
             auto pos = key.end();
             while (pos != key.begin()) {
                 // We decrement pos twice in each loop iteration.
@@ -552,7 +563,7 @@ namespace {
                     // the strand at pos+1 is the first that we see
                     // from some later closed loop in the link traversal.
                     if (pos + 1 != key.end()) {
-                        c = lastCrossing[*(pos + 1)];
+                        int c = lastCrossing[*(pos + 1)];
                         if ((mask[c] & 3) == 3) {
                             // We enter the forgotten zone from crossing c, and
                             // both incoming strands at c come back from the
@@ -578,7 +589,7 @@ namespace {
                         }
                     }
 
-                    c = lastCrossing[*pos];
+                    int c = lastCrossing[*pos];
                     if ((mask[c] & 12) == 12) {
                         // We exit the forgotten zone back into crossing c,
                         // and both outgoing strands at c lead back into the
@@ -683,7 +694,7 @@ namespace {
             if (key.size() > 0) {
                 // Check if the very first crossing must start a closed-off loop
                 // whose end should have been seen later in the key.
-                c = lastCrossing[*pos];
+                int c = lastCrossing[*pos];
                 if ((mask[c] & 3) == 3) {
                     if (couldEndLoop >> 1 != c)
                         return false;
@@ -814,10 +825,9 @@ namespace {
                         return false;
             }
 
-            int c;
             if (! couldConnect(key, pos + 2)) {
                 if (pos + 2 != key.end()) {
-                    c = lastCrossing[*(pos + 2)];
+                    int c = lastCrossing[*(pos + 2)];
                     if ((mask[c] & 3) == 3) {
                         if (data->couldEndLoop >> 1 == c) {
                             if (data->needStartLoop >= 0)
@@ -830,7 +840,7 @@ namespace {
                     }
                 }
 
-                c = lastCrossing[*(pos + 1)];
+                int c = lastCrossing[*(pos + 1)];
                 if ((mask[c] & 12) == 12) {
                     if (data->needStartLoop >= 0)
                         return false;
@@ -957,9 +967,9 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
     if (tracker)
         tracker->newStage("Enumerating traversals");
 
-    long comp = 0;
-    long splices = 0;
-    long splicesNeg = 0;
+    size_t comp = 0;
+    size_t splices = 0;
+    size_t splicesNeg = 0;
     long writheAdj = 0;
 
     // Count the number of 0-crossing unknot components separately.
@@ -989,11 +999,11 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
 
     Laurent2<Integer> term;
     s = start;
-    long pos = 0;
-    long branchDepth = 0;
+    ssize_t pos = 0;
+    int branchDepth = 0; // This is only ever compared against PROGRESS_POS.
     int progress = 0;
     bool progressAtLeaf = (2 * n <= PROGRESS_POS);
-    long posCancel = 2 * n - 10; /* Check after every 1024 solutions */
+    ssize_t posCancel = 2 * n - 10; /* Check after every 1024 solutions */
     bool backtrack;
     while (pos >= 0) {
         // We prepare to follow the (pos)th arc.
@@ -1014,7 +1024,7 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
         std::cerr << ' ';
         for (size_t i = 0; i < 2*n; ++i)
             std::cerr << (seen[i] ? 'X' : '_');
-        if (pos == 2 * n)
+        if (pos == static_cast<ssize_t>(2 * n))
             std::cerr << "  ***";
         std::cerr << std::endl;
 #endif
@@ -1024,7 +1034,7 @@ Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
             first[comp] = s;
             ++comp;
 
-            if (pos == 2 * n) {
+            if (pos == static_cast<ssize_t>(2 * n)) {
                 // We have completely determined a state.
                 if (tracker && progressAtLeaf) {
                     progress += (1 << (PROGRESS_POS - branchDepth));
@@ -1252,7 +1262,6 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     size_t nBags = d.size();
 
     const TreeBag *bag, *child, *sibling;
-    int index;
 
     size_t nEasyBags = 0;
     double hardBagWeightSum = 0;
@@ -1296,6 +1305,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     //
     // An important fact: each bag is guaranteed to have at least one solution,
     // since there is always some way to traverse the link.
+    //
+    // We will be using ints for strand IDs, since we will be storing
+    // exponentially many keys in our key-value map and so space is at a
+    // premium.  Having strand IDs that fit into an int is enforced through
+    // our preconditions.
 
     using Key = LightweightSequence<int>;
     using Value = Laurent2<Integer>;
@@ -1307,7 +1321,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     ViabilityData vData(this, d);
 
     for (bag = d.first(); bag; bag = bag->next()) {
-        index = bag->index();
+        size_t index = bag->index();
 #ifdef DUMP_STAGES
         std::cerr << "Bag " << index << " [" << bag->size() << "] ";
 #endif
@@ -1417,16 +1431,16 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             int i, j;
             char mask;
 
-            id[0][0] = c->prev(0).id();
-            id[0][1] = c->lower().id();
-            id[1][0] = c->prev(1).id();
-            id[1][1] = c->upper().id();
+            id[0][0] = static_cast<int>(c->prev(0).id());
+            id[0][1] = static_cast<int>(c->lower().id());
+            id[1][0] = static_cast<int>(c->prev(1).id());
+            id[1][1] = static_cast<int>(c->upper().id());
 
             const Key& kFirst = partial[child->index()]->begin()->first;
 
             pos[0][0] = pos[0][1] = pos[1][0] = pos[1][1] = -1;
             mask = 0;
-            for (i = 0; i < kFirst.size(); ++i) {
+            for (i = 0; i < static_cast<int>(kFirst.size()); ++i) {
                 if (kFirst[i] == id[0][0]) {
                     pos[0][0] = i;
                     mask |= 1;
@@ -1468,6 +1482,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                 const Key& kChild = soln.first;
                 const Value& vChild = soln.second;
+                // To avoid a ton of static_casts down to int later on:
+                const int sChild = static_cast<int>(kChild.size());
 
 #ifdef IDENTIFY_NONVIABLE_KEYS
                 vData.foundViable = false;
@@ -1476,7 +1492,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                 // Recompute the pos array.
                 // We don't need to reset it, since the same strands
                 // will be found each time.
-                for (i = 0; i < kChild.size(); ++i) {
+                for (i = 0; i < sChild; ++i) {
                     if (kChild[i] == id[0][0])
                         pos[0][0] = i;
                     else if (kChild[i] == id[0][1])
@@ -1500,7 +1516,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                     switch (mask) {
                         case 0:
                             // Neither strand is from the forgotten zone.
-                            for (i = 0; i <= kChild.size(); i += 2) {
+                            for (i = 0; i <= sChild; i += 2) {
                                 Key k(keySize,
                                     kChild.begin(), kChild.begin() + i,
                                     id[0][0], id[1][1],
@@ -1541,7 +1557,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             // Both strands are from the forgotten zone.
                             if (pos[1][1] + 1 == pos[0][0]) {
                                 // We are closing off a loop.
-                                if (pos[1][1] == kChild.size() - 2) {
+                                if (pos[1][1] == sChild - 2) {
                                     Key k(keySize,
                                         kChild.begin(), kChild.end() - 2);
 
@@ -1587,7 +1603,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                     switch (mask) {
                         case 0:
                             // Neither strand is from the forgotten zone.
-                            for (i = 0; i <= kChild.size(); i += 2) {
+                            for (i = 0; i <= sChild; i += 2) {
                                 Key k(keySize,
                                     kChild.begin(), kChild.begin() + i,
                                     id[1][0], id[0][1],
@@ -1625,7 +1641,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             // Both strands are from the forgotten zone.
                             if (pos[0][1] + 1 == pos[1][0]) {
                                 // We are closing off a loop.
-                                if (pos[0][1] == kChild.size() - 2) {
+                                if (pos[0][1] == sChild - 2) {
 #ifdef REPORT_TEST_PATHS
                                     std::cerr << "loop1b 6 pass" << std::endl;
 #endif
@@ -1672,8 +1688,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                         case 0:
                             // Case verified.
                             // No strands are from forgotten crossings.
-                            for (i = 0; i <= kChild.size(); i += 2)
-                                for (j = i; j <= kChild.size(); j += 2) {
+                            for (i = 0; i <= sChild; i += 2)
+                                for (j = i; j <= sChild; j += 2) {
                                     // Pass:
                                     Key k1(keySize,
                                         kChild.begin(), kChild.begin() + i,
@@ -1725,8 +1741,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     aggregate(partial[index], std::move(k),
                                         vChild);
                             }
-                            for (i = pos[0][0] + 1; i <= kChild.size();
-                                    i += 2) {
+                            for (i = pos[0][0] + 1; i <= sChild; i += 2) {
                                 // Switch:
                                 Key k1(keySize,
                                     kChild.begin(), kChild.begin() + pos[0][0],
@@ -1781,8 +1796,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     aggregate(partial[index], std::move(k2),
                                         spliceValue(vChild, c));
                             }
-                            for (i = pos[0][1] + 2; i <= kChild.size();
-                                    i += 2) {
+                            for (i = pos[0][1] + 2; i <= sChild; i += 2) {
                                 // Switch:
                                 Key k(keySize,
                                     kChild.begin(), kChild.begin() + pos[0][1],
@@ -1801,11 +1815,11 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             if (pos[0][1] + 1 == pos[0][0]) {
                                 // d=a
                                 // Pass:
-                                if (pos[0][1] == kChild.size() - 2) {
+                                if (pos[0][1] == sChild - 2) {
 #ifdef REPORT_TEST_PATHS
                                     std::cerr << "3a pass" << std::endl;
 #endif
-                                    for (i = 0; i < kChild.size(); i += 2) {
+                                    for (i = 0; i < sChild; i += 2) {
                                         Key k(keySize,
                                             kChild.begin(), kChild.begin() + i,
                                             id[1][0], id[1][1],
@@ -1840,8 +1854,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                             aggregate(partial[index],
                                                 std::move(k2), vChild);
                                     }
-                                    for (i = pos[0][1] + 2;
-                                            i <= kChild.size(); i += 2) {
+                                    for (i = pos[0][1] + 2; i <= sChild;
+                                            i += 2) {
                                         Key k2(keySize,
                                             kChild.begin(),
                                                 kChild.begin() + pos[0][0],
@@ -1886,8 +1900,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     aggregate(partial[index], std::move(k2),
                                         spliceValue(vChild, c));
                             }
-                            for (i = pos[1][0] + 1; i <= kChild.size();
-                                    i += 2) {
+                            for (i = pos[1][0] + 1; i <= sChild; i += 2) {
                                 // Pass:
                                 Key k(keySize,
                                     kChild.begin(), kChild.begin() + pos[1][0],
@@ -1947,9 +1960,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     aggregate(partial[index], std::move(k1),
                                         switchValue(vChild, c));
 
-                                if (pos[0][1] == kChild.size() - 2) {
+                                if (pos[0][1] == sChild - 2) {
                                     // Splice:
-                                    for (i = 0; i < kChild.size(); i += 2) {
+                                    for (i = 0; i < sChild; i += 2) {
                                         Key k2(keySize,
                                             kChild.begin(), kChild.begin() + i,
                                             id[0][0], id[1][1],
@@ -2017,7 +2030,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                         aggregate(partial[index], std::move(k),
                                             switchValue(vChild, c));
                                 }
-                                if (pos[0][1] == kChild.size() - 2) {
+                                if (pos[0][1] == sChild - 2) {
                                     Key k(keySize,
                                         kChild.begin(), kChild.end() - 2);
                                     k[pos[0][0]] = id[1][1];
@@ -2029,7 +2042,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             } else if (pos[0][1] + 1 == pos[0][0]) {
                                 // d=a
                                 // Pass:
-                                if (pos[0][1] == kChild.size() - 2) {
+                                if (pos[0][1] == sChild - 2) {
                                     Key k(keySize,
                                         kChild.begin(), kChild.end() - 2);
                                     k[pos[1][0]] = id[1][1];
@@ -2097,8 +2110,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     aggregate(partial[index], std::move(k),
                                         switchValue(vChild, c));
                             }
-                            for (i = pos[1][1] + 2; i <= kChild.size();
-                                    i += 2) {
+                            for (i = pos[1][1] + 2; i <= sChild; i += 2) {
                                 // Pass:
                                 Key k1(keySize,
                                     kChild.begin(), kChild.begin() + pos[1][1],
@@ -2158,8 +2170,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                     if (pos[0][0] + 1 == pos[1][1]) {
                                         // Splice:
-                                        for (i = pos[1][1] + 2;
-                                                i <= kChild.size(); i += 2) {
+                                        for (i = pos[1][1] + 2; i <= sChild;
+                                                i += 2) {
                                             Key k2(keySize,
                                                 kChild.begin(),
                                                     kChild.begin() + pos[0][0],
@@ -2215,7 +2227,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             if (pos[0][1] + 1 == pos[0][0]) {
                                 // d=a
                                 // Pass:
-                                if (pos[0][1] == kChild.size() - 2) {
+                                if (pos[0][1] == sChild - 2) {
                                     Key k(keySize,
                                         kChild.begin(), kChild.end() - 2);
                                     k[pos[1][1]] = id[1][0];
@@ -2293,9 +2305,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     aggregate(partial[index], std::move(k1),
                                         spliceValue(vChild, c));
 
-                                if (pos[1][1] == kChild.size() - 2) {
+                                if (pos[1][1] == sChild - 2) {
                                     // Switch:
-                                    for (i = 0; i < kChild.size(); i += 2) {
+                                    for (i = 0; i < sChild; i += 2) {
                                         Key k2(keySize,
                                             kChild.begin(), kChild.begin() + i,
                                             id[0][0], id[0][1],
@@ -2332,8 +2344,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                                 std::move(k),
                                                 switchValue(vChild, c));
                                     }
-                                    for (i = pos[1][1] + 2;
-                                            i <= kChild.size(); i += 2) {
+                                    for (i = pos[1][1] + 2; i <= sChild;
+                                            i += 2) {
                                         Key k(keySize,
                                             kChild.begin(),
                                                 kChild.begin() + pos[1][0],
@@ -2367,7 +2379,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             } else if (pos[1][1] + 1 == pos[1][0]) {
                                 // c=b
                                 // Switch and splice:
-                                if (pos[1][1] == kChild.size() - 2) {
+                                if (pos[1][1] == sChild - 2) {
                                     Key k(keySize,
                                         kChild.begin(), kChild.end() - 2);
                                     k[pos[0][0]] = id[0][1];
@@ -2445,7 +2457,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
                                             switchValue(vChild, c));
-                                } else if (pos[0][1] == kChild.size() - 2) {
+                                } else if (pos[0][1] == sChild - 2) {
                                     Key k(keySize,
                                         kChild.begin(), kChild.end() - 2);
                                     k[pos[1][1]] = id[0][0];
@@ -2467,7 +2479,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     if (vData.keyViable(k))
                                         aggregate(partial[index], std::move(k),
                                             spliceValue(vChild, c));
-                                } else if (pos[1][1] == kChild.size() - 2) {
+                                } else if (pos[1][1] == sChild - 2) {
                                     Key k(keySize,
                                         kChild.begin(), kChild.end() - 2);
                                     k[pos[0][1]] = id[0][0];
@@ -2526,8 +2538,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 if (pos[1][1] + 1 == pos[1][0]) {
                                     // d=a, c=b
                                     // Pass:
-                                    if (pos[1][1] == kChild.size() - 4 &&
-                                            pos[0][1] == kChild.size() - 2) {
+                                    if (pos[1][1] == sChild - 4 &&
+                                            pos[0][1] == sChild - 2) {
                                         Key k(keySize,
                                             kChild.begin(), kChild.end() - 4);
 
@@ -2550,7 +2562,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 } else {
                                     // d=a
                                     // Pass:
-                                    if (pos[0][1] == kChild.size() - 2 &&
+                                    if (pos[0][1] == sChild - 2 &&
                                             pos[1][0] + 1 == pos[1][1]) {
                                         Key k(keySize,
                                             kChild.begin(),
@@ -2566,8 +2578,8 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 if (pos[1][1] + 1 == pos[0][0]) {
                                     // d=b, c=a
                                     // Pass:
-                                    if (pos[1][1] == kChild.size() - 4 &&
-                                            pos[0][1] == kChild.size() - 2) {
+                                    if (pos[1][1] == sChild - 4 &&
+                                            pos[0][1] == sChild - 2) {
                                         Key k(keySize,
                                             kChild.begin(), kChild.end() - 4);
 
@@ -2601,7 +2613,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                                 std::move(k),
                                                 switchValue(vChild, c));
                                     } else if (pos[0][0] + 1 == pos[1][1] &&
-                                            pos[0][1] == kChild.size() - 2) {
+                                            pos[0][1] == sChild - 2) {
                                         Key k(keySize,
                                             kChild.begin(),
                                                 kChild.begin() + pos[0][0],
@@ -2618,7 +2630,7 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                     // c=b
                                     // Switch and splice:
                                     if (pos[0][0] + 1 == pos[0][1] &&
-                                            pos[1][1] == kChild.size() - 2) {
+                                            pos[1][1] == sChild - 2) {
                                         Key k(keySize,
                                             kChild.begin(),
                                                 kChild.begin() + pos[0][0],
@@ -2735,9 +2747,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             // The key size depends only on the bag, not the particular
             // key-value solution at that bag, and so we get this data
             // by looking at the first solution in each bag.
-            int pairs1 = partial[child->index()]->begin()->first.size()/2;
-            int pairs2 = partial[sibling->index()]->begin()->first.size()/2;
-            int pairs = pairs1 + pairs2;
+            size_t pairs1 = partial[child->index()]->begin()->first.size()/2;
+            size_t pairs2 = partial[sibling->index()]->begin()->first.size()/2;
+            size_t pairs = pairs1 + pairs2;
 
 #ifdef DUMP_STAGES
             std::cerr << "JOIN -> " <<
@@ -2793,10 +2805,6 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
             // means we take a pair from k2.
             Bitmask choice(pairs);
 
-            Key::iterator pos;
-            Key::const_iterator pos1, pos2;
-            int idx;
-
             for (auto& soln1 : *(partial[child->index()])) {
                 if (tracker) {
                     percent += increment;
@@ -2819,10 +2827,10 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                     // Fill the final key from the end to the beginning, so
                     // that we can more aggressively test for non-viable keys.
                     choice.reset();
-                    pos = kNew.end() - 2;
-                    pos1 = k1.end() - 2;
-                    pos2 = k2.end() - 2;
-                    idx = pairs - 1;
+                    Key::iterator pos = kNew.end() - 2;
+                    Key::const_iterator pos1 = k1.end() - 2;
+                    Key::const_iterator pos2 = k2.end() - 2;
+                    ssize_t idx = pairs - 1;
 
                     while (pos != kNew.end()) {
                         // We are about to try the current option for the pair
@@ -2978,6 +2986,10 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
             tracker->setFinished();
         return *homflyAZ_;
     }
+
+    if (size() > (INT_MAX >> 1))
+        throw NotImplemented("This link has so many crossings that "
+            "the largest strand ID cannot fit into a native C++ int");
 
     Laurent2<Integer> ans;
     switch (alg) {

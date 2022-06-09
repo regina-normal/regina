@@ -38,6 +38,7 @@
 #ifndef __PATIENCEDIALOG_H
 #define __PATIENCEDIALOG_H
 
+#include "reginaqt.h"
 #include <QDialog>
 
 

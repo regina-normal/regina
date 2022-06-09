@@ -53,6 +53,7 @@ class Perm3Test : public SmallPermTest<3> {
     CPPUNIT_TEST(rot);
     CPPUNIT_TEST(conjugacy);
     CPPUNIT_TEST(increment);
+    CPPUNIT_TEST(tightEncoding);
 
     // Tests specific to Perm<3>:
     CPPUNIT_TEST(productsViaPerm4);

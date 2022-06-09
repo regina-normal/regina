@@ -46,7 +46,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStackedWidget>
 
 using regina::ExampleLink;
@@ -86,7 +86,8 @@ namespace {
     /**
      * Regular expressions describing different sets of parameters.
      */
-    QRegExp reTorusParams(R"(^[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]*$)");
+    const QRegularExpression reTorusParams(
+        R"(^[^0-9\-]*(\d+)[^0-9\-]+(\d+)[^0-9\-]*$)");
 }
 
 LinkCreator::LinkCreator(ReginaMain*) {
@@ -189,7 +190,8 @@ LinkCreator::LinkCreator(ReginaMain*) {
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     torusParams = new QLineEdit();
-    torusParams->setValidator(new QRegExpValidator(reTorusParams, area));
+    torusParams->setValidator(new QRegularExpressionValidator(
+        reTorusParams, area));
     torusParams->setWhatsThis(expln);
     subLayout->addWidget(torusParams, 1);
     details->addWidget(area);//, LINK_TORUS);
@@ -271,7 +273,8 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
             return nullptr;
         }
     } else if (typeId == LINK_TORUS) {
-        if (! reTorusParams.exactMatch(torusParams->text())) {
+        auto match = reTorusParams.match(torusParams->text());
+        if (! match.hasMatch()) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("<qt>The torus link "
                 "parameters (<i>p</i>,<i>q</i>) "
@@ -281,8 +284,8 @@ std::shared_ptr<regina::Packet> LinkCreator::createPacket(
             return nullptr;
         }
 
-        unsigned long p = reTorusParams.cap(1).toULong();
-        unsigned long q = reTorusParams.cap(2).toULong();
+        unsigned long p = match.captured(1).toULong();
+        unsigned long q = match.captured(2).toULong();
 
         std::ostringstream label;
         label << "Torus(" << p << ", " << q << ')';

@@ -32,6 +32,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <numeric> // for std::gcd()
 #include <sstream>
 #include "algebra/abeliangroup.h"
 #include "manifold/lensspace.h"
@@ -1063,7 +1064,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
             // Orlik, p138, case M2.
             return out << (tex ? "K^2/n2 \\twisted S^1" : "KB/n2 x~ S1");
         } else if (nFibres_ == 3 && fibre[0] == two &&
-                gcd(fibre[2].alpha, fibre[2].beta) == 1 && b_ >= -1) {
+                std::gcd(fibre[2].alpha, fibre[2].beta) == 1 && b_ >= -1) {
             // [ S2 : (2,1), (...), (...) ]
 
             if (fibre[1] == two) {
@@ -1075,7 +1076,7 @@ std::ostream& SFSpace::writeCommonName(std::ostream& out, bool tex) const {
 
                 // Note that a,m >= 0.
 
-                if (gcd(m, 2 * a) == 1) {
+                if (std::gcd(m, 2 * a) == 1) {
                     // S3/Q{4a} x Z{m}.
                     if (tex)
                         out << "S^3/Q_{" << (a * 4) << '}';

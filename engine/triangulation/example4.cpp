@@ -165,7 +165,7 @@ namespace {
          * Create all remaining pentachora (80 of 82) within this prism.
          */
         inline void buildWalls(Triangulation<4>& tri) {
-            unsigned i, j, k, l;
+            int i, j, k, l;
             for (i = 0; i < 2; ++i)
                 for (j = 0; j < 4; ++j)
                     wallBase3[i][j] = tri.newPentachoron();
@@ -192,7 +192,7 @@ namespace {
         void glueInternally() {
             Perm<5> id;
 
-            unsigned i, j, k, l;
+            int i, j, k, l;
             for (i = 0; i < 2; ++i) {
                 for (j = 0; j < 4; ++j) {
                     wallBase3[i][j]->join(j, bdry[i], id);
@@ -236,9 +236,9 @@ namespace {
         /**
          * Glue the walls of two adjacent prisms together.
          */
-        void glueAdjacent(Prism& adj, unsigned face, const Perm<4>& gluing) {
+        void glueAdjacent(Prism& adj, int face, const Perm<4>& gluing) {
             Perm<5> gluing5 = Perm<5>::extend(gluing);
-            unsigned i, k, l;
+            int i, k, l;
             for (i = 0; i < 2; ++i) {
                 wallBase3[i][face]->join(4,
                     adj.wallBase3[i][gluing[face]],
@@ -271,7 +271,7 @@ Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
     // Ensure only one event pair is fired in this sequence of changes.
     Triangulation<4>::ChangeEventSpan span(ans);
 
-    unsigned long n = base.size();
+    size_t n = base.size();
     if (n == 0)
         return ans;
 
@@ -280,7 +280,7 @@ Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
 
     // Build the boundaries first so we get the relevant pentachora
     // numbered correctly within the final triangulation.
-    unsigned long i;
+    size_t i;
     for (i = 0; i < n; ++i)
         prism[i].buildBdry(ans, 0); // Pentachora 0..n-1
     for (i = 0; i < n; ++i)
@@ -293,18 +293,17 @@ Triangulation<4> Example<4>::iBundle(const Triangulation<3>& base) {
     }
 
     // Glue adjacent prisms together.
-    unsigned long adjIndex;
-    unsigned face;
+    size_t adjIndex;
     const Tetrahedron<3> *tet, *adj;
     for (i = 0; i < n; ++i) {
         tet = base.tetrahedron(i);
-        for (face = 0; face < 4; ++face) {
+        for (int face = 0; face < 4; ++face) {
             adj = tet->adjacentTetrahedron(face);
             if (! adj)
                 continue;
 
             // Make sure we haven't already glued this from the other side.
-            adjIndex = adj->markedIndex();
+            adjIndex = adj->index();
             if (adjIndex < i ||
                     (adjIndex == i && tet->adjacentFace(face) < face))
                 continue;
@@ -325,9 +324,8 @@ Triangulation<4> Example<4>::s1Bundle(const Triangulation<3>& base) {
     Triangulation<4>::ChangeEventSpan span(ans);
 
     Perm<5> id;
-    unsigned long n = base.size();
-    unsigned long i;
-    for (i = 0; i < n; ++i)
+    size_t n = base.size();
+    for (size_t i = 0; i < n; ++i)
         ans.pentachoron(i)->join(4, ans.pentachoron(i + n), id);
 
     return ans;

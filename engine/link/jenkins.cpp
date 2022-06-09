@@ -31,20 +31,25 @@
  **************************************************************************/
 
 #include "link.h"
+#include <climits>
 #include <iterator>
 #include <sstream>
 
 namespace regina {
 
 Link Link::fromJenkins(std::istream& in) {
-    return fromJenkins(std::istream_iterator<int>(in),
-        std::istream_iterator<int>());
+    // Work with the largest integer type that we could possibly need.
+    using Int = std::make_signed_t<size_t>;
+    return fromJenkins(std::istream_iterator<Int>(in),
+        std::istream_iterator<Int>());
 }
 
 Link Link::fromJenkins(const std::string& str) {
+    // Work with the largest integer type that we could possibly need.
+    using Int = std::make_signed_t<size_t>;
     std::istringstream in(str);
-    return fromJenkins(std::istream_iterator<int>(in),
-        std::istream_iterator<int>());
+    return fromJenkins(std::istream_iterator<Int>(in),
+        std::istream_iterator<Int>());
 }
 
 std::string Link::jenkins() const {
@@ -91,8 +96,15 @@ void Link::jenkins(std::ostream& out) const {
 }
 
 std::vector<int> Link::jenkinsData() const {
+    // Note: we explicitly write #components, but we only write indices
+    // of individual crossings, not #crossings.
+    if (components_.size() > INT_MAX ||
+            ((! crossings_.empty()) && crossings_.size() - 1 > INT_MAX))
+        throw NotImplemented("This Jenkins format has entries that cannot "
+            "fit into a C++ int");
+
     std::vector<int> ans;
-    ans.push_back(components_.size());
+    ans.push_back(static_cast<int>(components_.size()));
 
     StrandRef s;
     size_t len;
@@ -109,9 +121,12 @@ std::vector<int> Link::jenkinsData() const {
 
             // Output the component.
             // Note that s == start at this point.
-            ans.push_back(len);
+            if (len > INT_MAX)
+                throw NotImplemented("This Jenkins format has entries "
+                    "that cannot fit into a C++ int");
+            ans.push_back(static_cast<int>(len));
             do {
-                ans.push_back(s.crossing()->index());
+                ans.push_back(static_cast<int>(s.crossing()->index()));
                 ans.push_back(s.strand() == 1 ? 1 : -1);
                 ++s;
             } while (s != start);
@@ -119,7 +134,7 @@ std::vector<int> Link::jenkinsData() const {
     }
 
     for (auto c : crossings_) {
-        ans.push_back(c->index());
+        ans.push_back(static_cast<int>(c->index()));
         ans.push_back(c->sign());
     }
 

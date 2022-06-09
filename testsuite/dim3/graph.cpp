@@ -42,7 +42,7 @@
 #include "triangulation/dim3.h"
 #include "triangulation/example3.h"
 #include "triangulation/graph.h"
-#include "testsuite/dim3/testtriangulation.h"
+#include "testsuite/dim3/testdim3.h"
 
 using regina::Triangulation;
 

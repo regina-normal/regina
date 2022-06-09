@@ -126,7 +126,7 @@ class SatBlock : public ShortOutput<SatBlock> {
                  saturated blocks. */
 
     protected:
-        unsigned nAnnuli_;
+        size_t nAnnuli_;
             /**< The number of boundary annuli. */
         SatAnnulus* annulus_;
             /**< Details of each boundary annulus, as seen from the
@@ -139,7 +139,7 @@ class SatBlock : public ShortOutput<SatBlock> {
             /**< The saturated block joined to each boundary annulus;
                  this may be null if there is no adjacency or if this
                  information is not known. */
-        unsigned* adjAnnulus_;
+        size_t* adjAnnulus_;
             /**< Describes which specific annulus of the adjacent
                  saturated block is joined to each boundary annulus of this
                  block.  Values may be undefined if the corresponding
@@ -169,7 +169,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          *
          * @return the number of boundary annuli.
          */
-        unsigned countAnnuli() const;
+        size_t countAnnuli() const;
 
         /**
          * Returns details of the requested annulus on the boundary of
@@ -180,7 +180,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * this must be between 0 and countAnnuli()-1 inclusive.
          * @return a reference to the requested boundary annulus.
          */
-        const SatAnnulus& annulus(unsigned which) const;
+        const SatAnnulus& annulus(size_t which) const;
 
         /**
          * Is the ring of boundary annuli twisted to form a long Mobius
@@ -204,7 +204,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * @return \c true if the given boundary annulus has an adjacent
          * block listed, or \c false otherwise.
          */
-        bool hasAdjacentBlock(unsigned whichAnnulus) const;
+        bool hasAdjacentBlock(size_t whichAnnulus) const;
 
         /**
          * Returns the saturated block listed as being adjacent to the
@@ -216,7 +216,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * @return the other block adjacent along this annulus, or \c null
          * if there is no adjacent block listed.
          */
-        const SatBlock* adjacentBlock(unsigned whichAnnulus) const;
+        const SatBlock* adjacentBlock(size_t whichAnnulus) const;
 
         /**
          * Returns which specific annulus of the adjacent block is
@@ -232,7 +232,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * @return the corresponding annulus number on the other block
          * that is adjacent along this annulus.
          */
-        unsigned adjacentAnnulus(unsigned whichAnnulus) const;
+        size_t adjacentAnnulus(size_t whichAnnulus) const;
 
         /**
          * Returns whether the adjacency along the given boundary annulus
@@ -248,7 +248,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * @return \c true if the corresponding adjacency is reflected,
          * or \c false if it is not.
          */
-        bool adjacentReflected(unsigned whichAnnulus) const;
+        bool adjacentReflected(size_t whichAnnulus) const;
 
         /**
          * Returns whether the adjacency along the given boundary annulus
@@ -264,7 +264,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * @return \c true if the corresponding adjacency is backwards,
          * or \c false if it is not.
          */
-        bool adjacentBackwards(unsigned whichAnnulus) const;
+        bool adjacentBackwards(size_t whichAnnulus) const;
 
         /**
          * Adjusts the given Seifert fibred space to insert the contents
@@ -387,8 +387,8 @@ class SatBlock : public ShortOutput<SatBlock> {
          * reflected; and \a refHoriz is \c true iff the next annulus around
          * is horizontally reflected (see above for details on reflections).
          */
-        std::tuple<const SatBlock*, unsigned, bool, bool>
-            nextBoundaryAnnulus(unsigned thisAnnulus, bool followPrev) const;
+        std::tuple<const SatBlock*, size_t, bool, bool>
+            nextBoundaryAnnulus(size_t thisAnnulus, bool followPrev) const;
 
         /**
          * Returns an abbreviated name or symbol for this block.
@@ -508,7 +508,7 @@ class SatBlock : public ShortOutput<SatBlock> {
          * is twisted to form a long Mobius band, or \c false (the default)
          * if it is not.
          */
-        SatBlock(unsigned nAnnuli, bool twistedBoundary = false);
+        SatBlock(size_t nAnnuli, bool twistedBoundary = false);
         /**
          * Creates a new clone of the given block.
          *
@@ -740,8 +740,8 @@ class SatBlock : public ShortOutput<SatBlock> {
          * @param adjBackwards indicates whether the new adjacency is
          * backwards (see the class notes for details).
          */
-        void setAdjacent(unsigned whichAnnulus, SatBlock* adjBlock,
-                unsigned adjAnnulus, bool adjReflected, bool adjBackwards);
+        void setAdjacent(size_t whichAnnulus, SatBlock* adjBlock,
+                size_t adjAnnulus, bool adjReflected, bool adjBackwards);
 
     // The following classes are the only classes that are allowed to
     // manage a raw SatBlock pointer:
@@ -918,15 +918,15 @@ void swap(SatBlockModel& a, SatBlockModel& b) noexcept;
 
 // Inline functions for SatBlock
 
-inline SatBlock::SatBlock(unsigned nAnnuli, bool twistedBoundary) :
+inline SatBlock::SatBlock(size_t nAnnuli, bool twistedBoundary) :
         nAnnuli_(nAnnuli),
         annulus_(new SatAnnulus[nAnnuli]),
         twistedBoundary_(twistedBoundary),
         adjBlock_(new SatBlock*[nAnnuli]),
-        adjAnnulus_(new unsigned[nAnnuli]),
+        adjAnnulus_(new size_t[nAnnuli]),
         adjReflected_(new bool[nAnnuli]),
         adjBackwards_(new bool[nAnnuli]) {
-    for (unsigned i = 0; i < nAnnuli; i++)
+    for (size_t i = 0; i < nAnnuli; i++)
         adjBlock_[i] = nullptr;
 }
 
@@ -938,11 +938,11 @@ inline SatBlock::~SatBlock() {
     delete[] adjBackwards_;
 }
 
-inline unsigned SatBlock::countAnnuli() const {
+inline size_t SatBlock::countAnnuli() const {
     return nAnnuli_;
 }
 
-inline const SatAnnulus& SatBlock::annulus(unsigned which) const {
+inline const SatAnnulus& SatBlock::annulus(size_t which) const {
     return annulus_[which];
 }
 
@@ -950,28 +950,28 @@ inline bool SatBlock::twistedBoundary() const {
     return twistedBoundary_;
 }
 
-inline bool SatBlock::hasAdjacentBlock(unsigned whichAnnulus) const {
+inline bool SatBlock::hasAdjacentBlock(size_t whichAnnulus) const {
     return (adjBlock_[whichAnnulus] != nullptr);
 }
 
-inline const SatBlock* SatBlock::adjacentBlock(unsigned whichAnnulus) const {
+inline const SatBlock* SatBlock::adjacentBlock(size_t whichAnnulus) const {
     return adjBlock_[whichAnnulus];
 }
 
-inline unsigned SatBlock::adjacentAnnulus(unsigned whichAnnulus) const {
+inline size_t SatBlock::adjacentAnnulus(size_t whichAnnulus) const {
     return adjAnnulus_[whichAnnulus];
 }
 
-inline bool SatBlock::adjacentReflected(unsigned whichAnnulus) const {
+inline bool SatBlock::adjacentReflected(size_t whichAnnulus) const {
     return adjReflected_[whichAnnulus];
 }
 
-inline bool SatBlock::adjacentBackwards(unsigned whichAnnulus) const {
+inline bool SatBlock::adjacentBackwards(size_t whichAnnulus) const {
     return adjBackwards_[whichAnnulus];
 }
 
-inline void SatBlock::setAdjacent(unsigned whichAnnulus, SatBlock* adjBlock,
-        unsigned adjAnnulus, bool adjReflected, bool adjBackwards) {
+inline void SatBlock::setAdjacent(size_t whichAnnulus, SatBlock* adjBlock,
+        size_t adjAnnulus, bool adjReflected, bool adjBackwards) {
     adjBlock_[whichAnnulus] = adjBlock;
     adjAnnulus_[whichAnnulus] = adjAnnulus;
     adjReflected_[whichAnnulus] = adjReflected;

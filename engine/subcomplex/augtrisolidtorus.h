@@ -119,7 +119,7 @@ class AugTriSolidTorus : public StandardTriangulation {
                  <tt>i</tt>.  For permutation <tt>p</tt>, group <tt>p[0]</tt>
                  is glued to an axis edge, group <tt>p[1]</tt> is glued to a
                  major edge and group <tt>p[2]</tt> is glued to a minor edge. */
-        unsigned long chainIndex_;
+        size_t chainIndex_;
             /**< The number of tetrahedra in the layered chain if
                  present, or 0 if there is no layered chain. */
         int chainType_;
@@ -204,7 +204,7 @@ class AugTriSolidTorus : public StandardTriangulation {
          * @return the number of tetrahedra in the layered chain, or 0
          * if there is no layered chain linking two boundary annuli.
          */
-        unsigned long chainLength() const;
+        size_t chainLength() const;
 
         /**
          * Returns the way in which a layered chain links
@@ -382,7 +382,7 @@ inline const std::optional<LayeredSolidTorus>& AugTriSolidTorus::augTorus(
 inline Perm<3> AugTriSolidTorus::edgeGroupRoles(int annulus) const {
     return edgeGroupRoles_[annulus];
 }
-inline unsigned long AugTriSolidTorus::chainLength() const {
+inline size_t AugTriSolidTorus::chainLength() const {
     return chainIndex_;
 }
 inline int AugTriSolidTorus::chainType() const {

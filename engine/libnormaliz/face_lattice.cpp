@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
+ * Copyright (C) 2007-2022  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * As an exception, when this program is distributed through (i) the App Store
  * by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or (iii) Google Play
@@ -26,32 +26,33 @@
 #include "libnormaliz/vector_operations.h"
 
 namespace libnormaliz {
-    
+
 using namespace std;
-    
+
 template <typename Integer>
 FaceLattice<Integer>::FaceLattice() {
-    
 }
 
 // It is assumed that the matrices in the constructor are for the pointed quotient,
 // even if the names of the parameters don't indicate that.
-    
+
 template <typename Integer>
-FaceLattice<Integer>::FaceLattice(Matrix<Integer>& SupportHyperplanes, const Matrix<Integer>& VerticesOfPolyhedron, 
-        const Matrix<Integer>& ExtremeRaysRecCone, const bool cone_inhomogeneous, bool swap_allowed){
-    
+FaceLattice<Integer>::FaceLattice(Matrix<Integer>& SupportHyperplanes,
+                                  const Matrix<Integer>& VerticesOfPolyhedron,
+                                  const Matrix<Integer>& ExtremeRaysRecCone,
+                                  const bool cone_inhomogeneous,
+                                  bool swap_allowed) {
     inhomogeneous = cone_inhomogeneous;
-    
+
     nr_supphyps = SupportHyperplanes.nr_of_rows();
     nr_extr_rec_cone = ExtremeRaysRecCone.nr_of_rows();
     nr_vert = VerticesOfPolyhedron.nr_of_rows();
     nr_gens = nr_extr_rec_cone + nr_vert;
 
-    if(swap_allowed)
-        swap(SuppHyps,SupportHyperplanes); 
+    if (swap_allowed)
+        swap(SuppHyps, SupportHyperplanes);
     else
-        SuppHyps = SupportHyperplanes; 
+        SuppHyps = SupportHyperplanes;
     dim = SuppHyps[0].size();
 
     SuppHypInd.clear();
@@ -97,7 +98,7 @@ FaceLattice<Integer>::FaceLattice(Matrix<Integer>& SupportHyperplanes, const Mat
             }
 
             if (nr_gens_in_hyp == (int)(dim - 1))
-//#pragma omp atomic
+                //#pragma omp atomic
                 nr_simplial_facets++;
 
         } catch (const std::exception&) {
@@ -111,7 +112,6 @@ FaceLattice<Integer>::FaceLattice(Matrix<Integer>& SupportHyperplanes, const Mat
 
     // if (verbose)
     //    verboseOutput() << "Simplicial facets " << nr_simplial_facets << " of " << nr_supphyps << endl;
-    
 }
 
 struct FaceInfo {
@@ -128,11 +128,10 @@ bool face_compare(const pair<dynamic_bitset, FaceInfo>& a, const pair<dynamic_bi
 }
 
 template <typename Integer>
-void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbose, bool change_integer_type) {
-
+void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbose_, bool change_integer_type) {
     bool bound_codim = false;
     if (face_codim_bound >= 0)
-        bound_codim = true;    
+        bound_codim = true;
 
     dynamic_bitset SimpleVert(nr_gens);
     size_t nr_simpl = 0;
@@ -146,7 +145,7 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
             nr_simpl++;
         }
     }
-    if (verbose)
+    if (verbose_)
         verboseOutput() << "Cosimplicial gens " << nr_simpl << " of " << nr_gens << endl;
 
     bool use_simple_vert = (10 * nr_simpl > nr_gens);
@@ -171,7 +170,7 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
     }
 
     Matrix<MachineInteger> SuppHyps_MI;
-    if(change_integer_type)
+    if (change_integer_type)
         convert(SuppHyps_MI, SuppHyps);
 
     /*for(int i=0;i< 10000;++i){ // for pertubation of order of supphyps
@@ -210,7 +209,7 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
         if (bound_codim && codimension_so_far > face_codim_bound + 1)
             break;
         size_t nr_faces = WorkFaces.size();
-        if (verbose) {
+        if (verbose_) {
             if (report_written)
                 verboseOutput() << endl;
             verboseOutput() << "codim " << codimension_so_far - 1 << " faces to process " << nr_faces << endl;
@@ -218,7 +217,7 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
         }
 
         long step_x_size = nr_faces - VERBOSE_STEPS;
-        
+
         bool skip_remaining = false;
         std::exception_ptr tmp_exception;
 
@@ -244,7 +243,7 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
                 for (; kkk < Fpos; --Fpos, --F)
                     ;
 
-                if (verbose && nr_faces >= RepBound) {
+                if (verbose_ && nr_faces >= RepBound) {
 #pragma omp critical(VERBOSE)
                     while ((long)(kkk * VERBOSE_STEPS) >= step_x_size) {
                         step_x_size += nr_faces;
@@ -278,7 +277,7 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
                     // now we produce the intersections with facets
                     dynamic_bitset Intersect(nr_gens);
 
-                    int start;
+                    size_t start;
                     if (CCC)
                         start = 0;
                     else {
@@ -303,7 +302,7 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
 
                         Faces.splice(Faces.end(), FreeFaces, FreeFaces.begin());
                         Faces.back().first = Intersect;
-                        Faces.back().second.max_cutting_out = i;
+                        Faces.back().second.max_cutting_out = static_cast<int>(i);
                         Faces.back().second.max_subset = true;
                         // Faces.back().second.HypsContaining.reset();
                         // Faces.push_back(make_pair(Intersect,fr));
@@ -374,17 +373,17 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
                             simple = F_simple && !extra_hyp;
                         }
 
-                        int codim_of_face = 0;  // to make gcc happy
+                        long codim_of_face = 0;  // to make gcc happy
                         if (simple)
                             codim_of_face = codimension_so_far;
                         else {
-                            dynamic_bitset Containing(nr_supphyps);
+                            dynamic_bitset FaceContaining(nr_supphyps);
                             for (size_t j = 0; j < nr_supphyps; ++j) {  // beta_F
-                                if (Containing[j] == 0 && Fac->first.is_subset_of(SuppHypInd[j])) {
-                                    Containing[j] = 1;
+                                if (FaceContaining[j] == 0 && Fac->first.is_subset_of(SuppHypInd[j])) {
+                                    FaceContaining[j] = 1;
                                 }
                             }
-                            vector<bool> selection = bitset_to_bool(Containing);
+                            vector<bool> selection = bitset_to_bool(FaceContaining);
                             if (change_integer_type) {
                                 try {
                                     codim_of_face = SuppHyps_MI.submatrix(selection).rank();
@@ -456,7 +455,7 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
 
         // if (ToCompute.test(ConeProperty::FaceLattice))
         for (auto H = WorkFaces.begin(); H != WorkFaces.end(); ++H)
-            FaceLat[H->first] = codimension_so_far - 1;
+            FaceLat[H->first] = static_cast<int>(codimension_so_far - 1);
         WorkFaces.clear();
         if (NewFaces.empty())
             break;
@@ -467,13 +466,13 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
                                           // (never the case in homogeneous computations)
         dynamic_bitset NoGens(nr_gens);
         size_t codim_max_subspace = SuppHyps.rank();
-        FaceLat[AllFacets] = codim_max_subspace;
+        FaceLat[AllFacets] = static_cast<int>(codim_max_subspace);
         if (!(bound_codim && (int)codim_max_subspace > face_codim_bound))
             prel_f_vector[codim_max_subspace]++;
     }
 
     size_t total_nr_faces = 0;
-    for (int i = prel_f_vector.size() - 1; i >= 0; --i) {
+    for (ssize_t i = prel_f_vector.size() - 1; i >= 0; --i) {
         if (prel_f_vector[i] != 0) {
             f_vector.push_back(prel_f_vector[i]);
             total_nr_faces += prel_f_vector[i];
@@ -482,28 +481,25 @@ void FaceLattice<Integer>::compute(const long face_codim_bound, const bool verbo
 
     // cout << " Total " << FaceLattice.size() << endl;
 
-    if (verbose) {
+    if (verbose_) {
         verboseOutput() << endl << "Total number of faces computed " << total_nr_faces << endl;
         verboseOutput() << "f-vector " << f_vector;
     }
-
-    
 }
 
 template <typename Integer>
-vector<size_t> FaceLattice<Integer>::getFVector(){
-    return f_vector;    
+vector<size_t> FaceLattice<Integer>::getFVector() {
+    return f_vector;
 }
 
 template <typename Integer>
-void FaceLattice<Integer>::get(map<dynamic_bitset, int>& FaceLatticeOutput){
-    swap(FaceLat,FaceLatticeOutput);
-    
+void FaceLattice<Integer>::get(map<dynamic_bitset, int>& FaceLatticeOutput) {
+    swap(FaceLat, FaceLatticeOutput);
 }
 
 template <typename Integer>
-void FaceLattice<Integer>::get(vector<dynamic_bitset>& SuppHypIndOutput){
-    swap(SuppHypInd,SuppHypIndOutput);
+void FaceLattice<Integer>::get(vector<dynamic_bitset>& SuppHypIndOutput) {
+    swap(SuppHypInd, SuppHypIndOutput);
 }
 
 #ifndef NMZ_MIC_OFFLOAD  // offload with long is not supported

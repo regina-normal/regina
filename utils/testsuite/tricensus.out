@@ -37,6 +37,11 @@ Usage: tricensus <output-file>
                                     --bdryfaces counts boundary facets.
   -s, --sigs                        Write isomorphism signatures only, not
                                     full Regina data files.
+  -S, --canonical                   Write isomorphism signatures with matching
+                                    isomorphisms that yield canonical facet
+                                    pairings.
+  -e, --encodings                   Write tight encodings only, not full
+                                    Regina data files.
   -c, --subcontainers               For each face pairing, place resulting
                                     triangulations into different subcontainers
   -p, --genpairs                    Only generate face pairings, not
@@ -89,6 +94,11 @@ Usage: tricensus <output-file>
                                     --bdryfaces counts boundary facets.
   -s, --sigs                        Write isomorphism signatures only, not
                                     full Regina data files.
+  -S, --canonical                   Write isomorphism signatures with matching
+                                    isomorphisms that yield canonical facet
+                                    pairings.
+  -e, --encodings                   Write tight encodings only, not full
+                                    Regina data files.
   -c, --subcontainers               For each face pairing, place resulting
                                     triangulations into different subcontainers
   -p, --genpairs                    Only generate face pairings, not
@@ -141,6 +151,11 @@ Usage: tricensus <output-file>
                                     --bdryfaces counts boundary facets.
   -s, --sigs                        Write isomorphism signatures only, not
                                     full Regina data files.
+  -S, --canonical                   Write isomorphism signatures with matching
+                                    isomorphisms that yield canonical facet
+                                    pairings.
+  -e, --encodings                   Write tight encodings only, not full
+                                    Regina data files.
   -c, --subcontainers               For each face pairing, place resulting
                                     triangulations into different subcontainers
   -p, --genpairs                    Only generate face pairings, not
@@ -227,6 +242,208 @@ cPcbbbdei
 cPcbbbdxm
 cPcbbbcjt
 cPcbbbchw
+============================================================
+TEST: tricensus -t2 -i -S @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 1:0 1:1 | 0:2 0:3 1:3 1:2
+1:0 1:1 1:2 1:3 | 0:0 0:1 0:2 0:3
+Finished.
+Total triangulations: 61
+--------------------
+Exit code: 0
+--------------------
+Output:
+cMcabbjdw $"#'-
+cMcabbjds $"#'-
+cMcabbjqw $#"1+
+cMcabbjxr $"#!)
+cMcabbjij $"#'7
+cMcabbjik $"#'7
+cMcabbjaj $"#!1
+cMcabbjak $"#!1
+cMcabbjqs $"#!0
+cMcabbjmk $"#'2
+cMcabbidt $"#(0
+cMcabbidu $"#(0
+cMcabbifs $"#(0
+cMcabbifw $"#(0
+cMcabbiqt $"#(0
+cMcabbiqu $"#(0
+cMcabbijk $"#!)
+cMcabbijr $"#!)
+cMcabbile $"#!)
+cMcabbick $"#(8
+cMcabbicj $"#(8
+cMcabbiii $"#(8
+cMcabbiai $"#!1
+cMcabbgre $"#"%
+cMcabbgdv $"#(0
+cMcabbgds $"#(0
+cMcabbgci $"#'2
+cMcabbgqv $"#"4
+cMcabbgqs $"#"4
+cMcabbgqw $"#"4
+cMcabbgje $"#'$
+cMcabbgig $"#'7
+cMcabbgij $"#'7
+cMcabbgik $"#'7
+cMcabbgag $"#!1
+cMcabbgaj $"#!1
+cPcbbbaaa $"#!!
+cPcbbbaai $"#!!
+cPcbbbali $"#!!
+cPcbbbalm $"#!!
+cPcbbbabb $"#12
+cPcbbbdht $"#')
+cPcbbbdhq $"#')
+cPcbbbabk $"#,+
+cPcbbbcbd $"#73
+cPcbbbqxh $"#!#
+cPcbbbiht $"#&"
+cPcbbbihq $"#"$
+cPcbbbade $"#!"
+cPcbbbadh $"#!"
+cPcbbbadu $"#!"
+cPcbbbajk $"#!"
+cPcbbbajs $"#!"
+cPcbbbahh $"#!"
+cPcbbbcbt $"#')
+cPcbbbchn $"#')
+cPcbbbcbq $"#')
+cPcbbbdei $"#&#
+cPcbbbdxm $"##&
+cPcbbbcjt $"#57
+cPcbbbchw $"#64
+============================================================
+TEST: tricensus -t2 -i -e @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 1:0 1:1 | 0:2 0:3 1:3 1:2
+1:0 1:1 1:2 1:3 | 0:0 0:1 0:2 0:3
+Finished.
+Total triangulations: 61
+--------------------
+Exit code: 0
+--------------------
+Output:
+$"*#)###*
+$"*#)###.
+$"*#)#3#*
+$"*#)#3#.
+$"*#)#1#*
+$"*#)#1#.
+$"*#1#1#*
+$"*#1#1#.
+$"*#0#&#*
+$"*#0#8#*
+$")#)####
+$")#)###/
+$")#)#8#*
+$")#)#8#.
+$")#)#3##
+$")#)#3#/
+$")#)#.#*
+$")#)#.#.
+$")#)#1#/
+$")#1#&#*
+$")#1#&#.
+$")#1###/
+$")#1#1#/
+$"(#)#&##
+$"(#)###"
+$"(#)###*
+$"(#)#8##
+$"(#)#3#"
+$"(#)#3#*
+$"(#)#3#.
+$"(#)#.##
+$"(#)#1#"
+$"(#)#1#*
+$"(#)#1#.
+$"(#1#1#"
+$"(#1#1#*
+$#!#!#!#!
+$#!#!#!#)
+$#!#!#+#)
+$#!#!#+#-
+$#!#!#(#(
+$#!#/#+#)
+$#!#/#3#)
+$#!#0#+#0
+$#!#0#(#)
+$###5#+#-
+$###/#+#)
+$###/#+#-
+$#"#"#&#$
+$#"#"#&#(
+$#"#"#&#0
+$#"#"#+#)
+$#"#"#+#-
+$#"#"#(#(
+$#"#/#+#0
+$#"#/#(#)
+$#"#/#3#0
+$#"#0#&#$
+$#"#0#&#(
+$#"#0#+#)
+$#"#0#+#-
+============================================================
+TEST: tricensus -2 -t2 -S @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 1:0 | 0:2 1:2 1:1
+0:1 0:0 1:0 | 0:2 bdry bdry
+1:0 1:1 1:2 | 0:0 0:1 0:2
+1:0 1:1 bdry | 0:0 0:1 bdry
+1:0 bdry bdry | 0:0 bdry bdry
+Finished.
+Total triangulations: 13
+--------------------
+Exit code: 0
+--------------------
+Output:
+cMabdd $"#.
+cMabcc $"#.
+cMabcd $"#.
+cbcbd $#":
+cbcbb $#":
+cPbbaa $"#"
+cPbbac $"#"
+cPbbbe $"#1
+cPbbde $"#(
+cHaba $"#)
+cHabb $"#6
+cHabe $"##
+cba $"#"
+============================================================
+TEST: tricensus -2 -t2 -e @TESTOUT@
+--------------------
+Starting census generation...
+0:1 0:0 1:0 | 0:2 1:2 1:1
+0:1 0:0 1:0 | 0:2 bdry bdry
+1:0 1:1 1:2 | 0:0 0:1 0:2
+1:0 1:1 bdry | 0:0 0:1 bdry
+1:0 bdry bdry | 0:0 bdry bdry
+Finished.
+Total triangulations: 13
+--------------------
+Exit code: 0
+--------------------
+Output:
+$"#####
+$"$###"
+$"$####
+$"###!!
+$"$##!!
+$#!#!#!
+$#!#!#$
+$#!#&#$
+$#"#&#$
+$#!#!!!
+$#!#&!!
+$#"#&!!
+$#!!!!!
 ============================================================
 TEST: tricensus -t1 -i @TESTOUT@
 --------------------
@@ -524,6 +741,17 @@ Total edge pairings: 5
 --------------------
 Exit code: 0
 ============================================================
+TEST: tricensus -2 -t4 -i -p --encodings
+--------------------
+&#%()+-
+&#%(+*-
+&#%(+,-
+&%&(+,-
+&%(+),-
+Total edge pairings: 5
+--------------------
+Exit code: 0
+============================================================
 TEST: tricensus -2 -t4 -b -p
 --------------------
 0 1 0 0 1 0 0 2 2 0 2 1 1 1 1 2 3 0 2 2 4 0 4 0
@@ -599,6 +827,33 @@ Total face pairings: 21
 --------------------
 Exit code: 0
 ============================================================
+TEST: tricensus -t3 -b -p --encodings
+--------------------
+%#&'*+..
+%#&'*.,.
+%#&'*....
+%#&*(+..
+%#&*(.,.
+%#&*(....
+%#&*+,..
+%#&*+....
+%#&*......
+%#&.*+,.
+%#&.*+...
+%#&.*..,.
+%#&.*.....
+%&'(*+..
+%&'(*....
+%&'*+,..
+%&'*+....
+%&'*.+...
+%&'*......
+%&*..+....
+%&*........
+Total face pairings: 21
+--------------------
+Exit code: 0
+============================================================
 TEST: tricensus -t3 -b -B2 -p
 --------------------
 0 1 0 0 1 0 1 1 0 2 0 3 2 0 2 1 1 2 1 3 3 0 3 0
@@ -645,6 +900,16 @@ TEST: tricensus -4 -t2 -b -B2 -p
 0 1 0 0 1 0 1 1 1 2 0 2 0 3 0 4 2 0 2 0
 0 1 0 0 1 0 1 1 2 0 0 2 0 3 1 3 1 2 2 0
 1 0 1 1 1 2 1 3 2 0 0 0 0 1 0 2 0 3 2 0
+Total facet pairings: 4
+--------------------
+Exit code: 0
+============================================================
+TEST: tricensus -4 -t2 -b -B2 -p --encodings
+--------------------
+$#%'),,
+$#'(),,
+$#'(,*,
+$'()*,,
 Total facet pairings: 4
 --------------------
 Exit code: 0

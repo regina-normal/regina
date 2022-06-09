@@ -43,6 +43,7 @@
 #include "regina-core.h"
 #include "regina-config.h"
 #include <cstdint>
+#include <limits>
 #include <type_traits>
 
 namespace regina {
@@ -176,6 +177,42 @@ template <typename IntType>
 constexpr IntType nextPowerOfTwo(IntType n) {
     return (n <= 1 ? 1 : (nextPowerOfTwo((n + 1) / 2)) << 1);
 }
+
+/**
+ * The largest integer of the given type that can be multiplied by \a coeff
+ * without overflowing.
+ *
+ * The template parameter \a IntType may be any native C++ integer type, such
+ * as \c int, \c long, and so on.  This type may be either signed or unsigned,
+ * but it must be supported by std::numeric_limits.
+ *
+ * The template parameter \a coeff can be any positive integer.
+ *
+ * \ifacespython Not present, since Python does not support templates.
+ *
+ * \ingroup utilities
+ */
+template <typename IntType, IntType coeff>
+inline constexpr IntType maxSafeFactor =
+    std::numeric_limits<IntType>::max() / coeff;
+
+/**
+ * The largest integer of the given type that can be multiplied by \a coeff
+ * without overflowing.
+ *
+ * The template parameter \a IntType may be any native C++ integer type, such
+ * as \c int, \c long, and so on.  This type may be either signed or unsigned,
+ * but it must be supported by std::numeric_limits.
+ *
+ * The template parameter \a coeff can be any positive integer.
+ *
+ * \ifacespython Not present, since Python does not support templates.
+ *
+ * \ingroup utilities
+ */
+template <typename IntType, IntType coeff>
+inline constexpr IntType minSafeFactor =
+    std::numeric_limits<IntType>::min() / coeff;
 
 /**
  * Gives access to native integer types that hold \e exactly \a k bytes,

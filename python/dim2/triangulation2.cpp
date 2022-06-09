@@ -36,6 +36,7 @@
 #include "../helpers.h"
 #include "algebra/grouppresentation.h"
 #include "triangulation/dim2.h"
+#include "triangulation/facetpairing.h"
 #include "triangulation/isosigtype.h"
 #include "triangulation/detail/isosig-impl.h"
 #include "../generic/facehelper.h"
@@ -129,6 +130,7 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<2>::edge,
             pybind11::return_value_policy::reference_internal)
+        .def("pairing", &Triangulation<2>::pairing)
         .def("isIsomorphicTo", &Triangulation<2>::isIsomorphicTo)
         .def("findAllIsomorphisms", &Triangulation<2>::findAllIsomorphisms<
                 const std::function<bool(const Isomorphism<2>)>&>)
@@ -222,6 +224,7 @@ void addTriangulation2(pybind11::module_& m) {
         .def_readonly_static("dimension", &Triangulation<2>::dimension)
     ;
     regina::python::add_output(c);
+    regina::python::add_tight_encoding(c);
     regina::python::packet_eq_operators(c);
     regina::python::add_packet_data(c);
 

@@ -64,6 +64,7 @@ void addFacetSpec(pybind11::module_& m, const char* name) {
         .def(pybind11::self <= pybind11::self)
     ;
     regina::python::add_output_ostream(c);
+    regina::python::add_tight_encoding(c);
     regina::python::add_eq_operators(c);
 }
 

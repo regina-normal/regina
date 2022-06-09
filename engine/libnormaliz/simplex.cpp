@@ -1,6 +1,6 @@
 /*
  * Normaliz
- * Copyright (C) 2007-2021  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
+ * Copyright (C) 2007-2022  W. Bruns, B. Ichim, Ch. Soeger, U. v. d. Ohe
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  * As an exception, when this program is distributed through (i) the App Store
  * by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or (iii) Google Play
@@ -175,7 +175,7 @@ bool bottom_points_inner(Matrix<Integer>& gens,
 
     vector<Integer> grading = gens.find_linear_form();
     Integer volume;
-    int dim = gens[0].size();
+    size_t dim = gens[0].size();
     Matrix<Integer> Support_Hyperplanes = gens.invert(volume);
 
     if (volume < SubDivBound) {
@@ -200,7 +200,7 @@ bool bottom_points_inner(Matrix<Integer>& gens,
         Matrix<Integer> stellar_gens(gens);
 
         int nr_hyps = 0;
-        for (int i = 0; i < dim; ++i) {
+        for (size_t i = 0; i < dim; ++i) {
             if (v_scalar_product(Support_Hyperplanes[i], new_point) != 0) {
                 stellar_gens[i] = new_point;
                 local_q_gens.emplace_back(stellar_gens);
@@ -353,15 +353,15 @@ void SimplexEvaluator<Integer>::prepare_inclusion_exclusion_simpl(size_t Deg, Co
 //---------------------------------------------------------------------------
 
 template <typename Integer>
-void SimplexEvaluator<Integer>::update_inhom_hvector(long level_offset, size_t Deg, Collector<Integer>& Coll) {
-    if (level_offset == 1) {
+void SimplexEvaluator<Integer>::update_inhom_hvector(long level_offset_, size_t Deg, Collector<Integer>& Coll) {
+    if (level_offset_ == 1) {
         Coll.inhom_hvector[Deg]++;
         return;
     }
 
     size_t Deg_i;
 
-    assert(level_offset == 0);
+    assert(level_offset_ == 0);
 
     for (size_t i = 0; i < dim; ++i) {
         if (gen_levels[i] == 1) {
@@ -478,14 +478,14 @@ Integer SimplexEvaluator<Integer>::start_evaluation(SHORTSIMPLEX<Integer>& s, Co
     if (potentially_unimodular)
         for (i = 0; i < dim; i++)
             if (Indicator[i] == 0)
-                Ind0_key.push_back(i);
+                Ind0_key.push_back(static_cast<key_t>(i));
     if (!unimodular || Ind0_key.size() > 0) {
         if (Ind0_key.size() > 0) {
             RS_pointers = unit_matrix.submatrix_pointers(Ind0_key);
             LinSys.solve_system_submatrix(Generators, id_key, RS_pointers, GDiag, volume, 0, RS_pointers.size());
             // RS_pointers.size(): all columns of solution replaced by sign vevctors
-            for (size_t i = 0; i < dim; ++i)
-                for (size_t j = dim; j < dim + Ind0_key.size(); ++j)
+            for (i = 0; i < dim; ++i)
+                for (j = dim; j < dim + Ind0_key.size(); ++j)
                     InvGenSelCols[i][Ind0_key[j - dim]] = LinSys[i][j];
 
             v_abs(GDiag);
@@ -519,7 +519,7 @@ Integer SimplexEvaluator<Integer>::start_evaluation(SHORTSIMPLEX<Integer>& s, Co
     if (!unimodular) {
         for (i = 0; i < dim; ++i) {
             if (GDiag[i] > 1)
-                Last_key.push_back(i);
+                Last_key.push_back(static_cast<key_t>(i));
         }
 
         RS_pointers = unit_matrix.submatrix_pointers(Last_key);
@@ -550,12 +550,12 @@ Integer SimplexEvaluator<Integer>::start_evaluation(SHORTSIMPLEX<Integer>& s, Co
     if (!potentially_unimodular) {
         for (i = 0; i < dim; i++)
             if (Indicator[i] == 0)
-                Ind0_key.push_back(i);
+                Ind0_key.push_back(static_cast<key_t>(i));
         if (Ind0_key.size() > 0) {
             RS_pointers = unit_matrix.submatrix_pointers(Ind0_key);
             LinSys.solve_system_submatrix(Generators, id_key, RS_pointers, volume, 0, RS_pointers.size());
-            for (size_t i = 0; i < dim; ++i)
-                for (size_t j = dim; j < dim + Ind0_key.size(); ++j)
+            for (i = 0; i < dim; ++i)
+                for (j = dim; j < dim + Ind0_key.size(); ++j)
                     InvGenSelCols[i][Ind0_key[j - dim]] = LinSys[i][j];
         }
     }
@@ -563,9 +563,9 @@ Integer SimplexEvaluator<Integer>::start_evaluation(SHORTSIMPLEX<Integer>& s, Co
     // if (C.do_Hilbert_basis && C.descent_level > 0 && C.isComputed(ConeProperty::Grading)) {
     //    HB_bound = volume * C.God_Father->HB_bound;
     //    HB_bound_computed = true;
-        /* cout << "GF " << C.God_Father->HB_bound << " " << " VOL " << volume << " HB_bound " << HB_bound << endl;
-        cout << gen_degrees;
-        exit(0);*/
+    /* cout << "GF " << C.God_Father->HB_bound << " " << " VOL " << volume << " HB_bound " << HB_bound << endl;
+    cout << gen_degrees;
+    exit(0);*/
     // }
 
     /*  if(Ind0_key.size()>0){
@@ -643,7 +643,7 @@ void SimplexEvaluator<Integer>::take_care_of_0vector(Collector<Integer>& Coll) {
         convert(SimplStanley.offsets, offsets);
 #pragma omp critical(STANLEY)
         {
-            C_ptr->StanleyDec.emplace_back(SimplStanley);       // extend the Stanley dec by a new matrix
+            C_ptr->StanleyDec.emplace_back(SimplStanley);    // extend the Stanley dec by a new matrix
             StanleyMat = &C_ptr->StanleyDec.back().offsets;  // and use this matrix for storage
         }
         for (i = 0; i < dim; ++i)  // the first vector is 0+offset
@@ -710,7 +710,7 @@ void SimplexEvaluator<Integer>::evaluate_element(const vector<Integer>& element,
         }
     }
 
-    long level, level_offset = 0;
+    long level, level_offset_ = 0;
     Integer level_Int = 0;
 
     if (C.inhomogeneous) {
@@ -726,10 +726,10 @@ void SimplexEvaluator<Integer>::evaluate_element(const vector<Integer>& element,
         // cout << "Habe ihn" << endl;
 
         if (C.do_h_vector) {
-            level_offset = level;
+            level_offset_ = level;
             for (i = 0; i < dim; i++)
                 if (element[i] == 0 && Excluded[i])
-                    level_offset += gen_levels_long[i];
+                    level_offset_ += gen_levels_long[i];
         }
     }
 
@@ -743,8 +743,8 @@ void SimplexEvaluator<Integer>::evaluate_element(const vector<Integer>& element,
         }
 
         // count point in the h-vector
-        if (C.inhomogeneous && level_offset <= 1)
-            update_inhom_hvector(level_offset, Deg, Coll);
+        if (C.inhomogeneous && level_offset_ <= 1)
+            update_inhom_hvector(level_offset_, Deg, Coll);
         else
             Coll.hvector[Deg]++;
 
@@ -823,11 +823,11 @@ void SimplexEvaluator<Integer>::reduce_against_global(Collector<Integer>& Coll) 
             else
                 inserted = Coll.HB_Elements.reduce_by_and_insert(*jj, C, C.OldCandidates);
             // cout << "iiiii " << inserted << " -- " << *jj << endl;
-            
-            if(inserted && C.do_integrally_closed){ // we must safeduard against original generators
+
+            if (inserted && C.do_integrally_closed) {  // we must safeduard against original generators
                 auto gen = C.Generator_Set.find(*jj);  // that appear in the Hilbert basis of
-                if(gen != C.Generator_Set.end())       // this simplicial cone
-                    inserted = false;                
+                if (gen != C.Generator_Set.end())      // this simplicial cone
+                    inserted = false;
             }
 
             if (inserted) {
@@ -838,13 +838,13 @@ void SimplexEvaluator<Integer>::reduce_against_global(Collector<Integer>& Coll) 
                         C.do_Hilbert_basis = false;
                         C.Witness = *jj;
                         C.is_Computed.set(ConeProperty::WitnessNotIntegrallyClosed);
-                    } // critical
+                    }  // critical
                     if (!C.do_triangulation) {
                         throw NotIntegrallyClosedException();
                     }
                 }
-                
-                /* 
+
+                /*
                 if (C.God_Father->do_integrally_closed && C.is_simplicial) {
                     bool GF_inserted = Coll.HB_Elements.reduce_by_and_insert(*jj, *(C.God_Father), C.God_Father->OldCandidates);
                     if (GF_inserted) {
@@ -923,9 +923,9 @@ void SimplexEvaluator<Integer>::conclude_evaluation(Collector<Integer>& Coll) {
 //---------------------------------------------------------------------------
 
 long SimplexParallelEvaluationBound = 100000000;  // simplices larger than this bound/10
-                                                        // are evaluated by parallel threads
-                                                        // simplices larger than this bound  || (this bound/10 && Hilbert basis)
-                                                        // are tried for subdivision
+                                                  // are evaluated by parallel threads
+                                                  // simplices larger than this bound  || (this bound/10 && Hilbert basis)
+                                                  // are tried for subdivision
 
 //---------------------------------------------------------------------------
 
@@ -1013,7 +1013,7 @@ void SimplexEvaluator<Integer>::evaluation_loop_parallel() {
 
 #pragma omp parallel
             {
-                int tn = omp_get_thread_num();  // chooses the associated collector Results[tn]
+                int thread = omp_get_thread_num();  // chooses the associated collector Results[thread]
 
 #pragma omp for schedule(dynamic)
                 for (size_t i = 0; i < actual_nr_blocks; ++i) {
@@ -1029,8 +1029,8 @@ void SimplexEvaluator<Integer>::evaluation_loop_parallel() {
                         long block_end = block_start + block_length - 1;
                         if (block_end > (long)nr_elements)
                             block_end = nr_elements;
-                        evaluate_block(block_start, block_end, C_ptr->Results[tn]);
-                        if (C_ptr->Results[tn].candidates_size >= LocalReductionBound)  // >= (not > !! ) if
+                        evaluate_block(block_start, block_end, C_ptr->Results[thread]);
+                        if (C_ptr->Results[thread].candidates_size >= LocalReductionBound)  // >= (not > !! ) if
                             skip_remaining = true;  // LocalReductionBound==ParallelBlockLength
                     } catch (const std::exception&) {
                         tmp_exception = std::current_exception();
@@ -1060,7 +1060,7 @@ void SimplexEvaluator<Integer>::evaluation_loop_parallel() {
 }
 
 //---------------------------------------------------------------------------
-// runs the evaluation over all vectors in the basic parallelotope that are 
+// runs the evaluation over all vectors in the basic parallelotope that are
 // produced from block_start to block_end.
 template <typename Integer>
 void SimplexEvaluator<Integer>::evaluate_block(long block_start, long block_end, Collector<Integer>& Coll) {
@@ -1096,7 +1096,7 @@ void SimplexEvaluator<Integer>::evaluate_block(long block_start, long block_end,
     // now we  create the elements in par
     while (true) {
         last = dim;
-        for (int k = dim - 1; k >= 0; k--) {
+        for (ssize_t k = dim - 1; k >= 0; k--) {
             if (point[k] < GDiag[k] - 1) {
                 last = k;
                 break;
@@ -1126,9 +1126,7 @@ void SimplexEvaluator<Integer>::evaluate_block(long block_start, long block_end,
 
 template <>
 void SimplexEvaluator<renf_elem_class>::evaluate_block(long block_start, long block_end, Collector<renf_elem_class>& Coll) {
-    
     assert(false);
-    
 }
 
 //---------------------------------------------------------------------------
@@ -1195,8 +1193,8 @@ void SimplexEvaluator<Integer>::Simplex_parallel_evaluation() {
         if (!new_points.empty()) {
             C.triangulation_is_nested = true;
             // add new_points to the Top_Cone generators
-            int nr_new_points = new_points.size();
-            int nr_old_gen = C.nr_gen;
+            size_t nr_new_points = new_points.size();
+            size_t nr_old_gen = C.nr_gen;
             Matrix<Integer> new_points_mat(new_points);
             C.add_generators(new_points_mat);
             // remove this simplex from det_sum and multiplicity
@@ -1221,8 +1219,8 @@ void SimplexEvaluator<Integer>::Simplex_parallel_evaluation() {
             for (size_t i = 0; i < C.dim; ++i) {
                 subcone_key[i] = key[i];
             }
-            for (int i = 0; i < nr_new_points; ++i) {
-                subcone_key[C.dim + i] = nr_old_gen + i;
+            for (size_t i = 0; i < nr_new_points; ++i) {
+                subcone_key[C.dim + i] = static_cast<key_t>(nr_old_gen + i);
             }
             Matrix<Integer> polytope_gens(C.Generators.submatrix(subcone_key));
             polytope_gens.append_column(vector<Integer>(polytope_gens.nr_of_rows(), 1));

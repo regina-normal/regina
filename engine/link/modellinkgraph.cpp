@@ -37,13 +37,12 @@
 
 namespace regina {
 
-ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) :
-        cells_(nullptr) {
-    nodes_.reserve(cloneMe.nodes_.size());
-    for (ModelLinkGraphNode* n : cloneMe.nodes_)
+ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& copy) : cells_(nullptr) {
+    nodes_.reserve(copy.nodes_.size());
+    for (size_t i = 0; i < copy.nodes_.size(); ++i)
         nodes_.push_back(new ModelLinkGraphNode());
 
-    auto it = cloneMe.nodes_.begin();
+    auto it = copy.nodes_.begin();
     for (ModelLinkGraphNode* n : nodes_) {
         for (int i = 0; i < 4; ++i) {
             n->adj_[i].node_ = nodes_[(*it)->adj_[i].node_->index()];
@@ -57,6 +56,21 @@ ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) :
     // to copy it here.
 }
 
+ModelLinkGraph::ModelLinkGraph(const Link& link) : cells_(nullptr) {
+    nodes_.reserve(link.size());
+    for (size_t i = 0; i < link.size(); ++i)
+        nodes_.push_back(new ModelLinkGraphNode());
+
+    for (Crossing* c : link.crossings_) {
+        for (int strand = 0; strand < 2; ++strand) {
+            ModelLinkGraphArc out = outgoingArc(c->strand(strand));
+            ModelLinkGraphArc in = incomingArc(c->next(strand));
+            out.node_->adj_[out.arc_] = in;
+            in.node_->adj_[in.arc_] = out;
+        }
+    }
+}
+
 ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
     if (std::addressof(src) == this)
         return *this;
@@ -66,7 +80,7 @@ ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
     nodes_.clear();
 
     nodes_.reserve(src.nodes_.size());
-    for (ModelLinkGraphNode* n : src.nodes_)
+    for (size_t i = 0; i < src.nodes_.size(); ++i)
         nodes_.push_back(new ModelLinkGraphNode());
 
     auto it = src.nodes_.begin();
@@ -159,9 +173,9 @@ void ModelLinkGraph::writeTextLong(std::ostream& out) const {
     for (size_t i = 0; i < nodes_.size(); ++i) {
         auto n = nodes_[i];
         out << std::setw(6) << i << "  |           ";
-        for (int j = 0; j < 4; ++j)
-            out << "  " << std::setw(3) << n->adj_[j].node()->index() << " ("
-                << n->adj_[j].arc() << ')';
+        for (const auto& arc : n->adj_)
+            out << "  " << std::setw(3) << arc.node()->index() << " ("
+                << arc.arc() << ')';
         out << '\n';
     }
     out << std::endl;
@@ -186,8 +200,8 @@ std::string ModelLinkGraph::canonicalPlantri(bool useReflection,
 
     // The image and preimage for each node, and the image of arc 0
     // for each node:
-    auto* image = new ptrdiff_t[size()];
-    auto* preimage = new ptrdiff_t[size()];
+    auto* image = new ssize_t[size()];
+    auto* preimage = new ssize_t[size()];
     int* arcOffset = new int[size()];
 
     size_t nextUnusedNode, nodeImg, nodeSrc, adjSrcNode;
@@ -297,13 +311,13 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
     if (n > 26)
         throw InvalidArgument("fromPlantri(): more than 26 nodes");
 
-    size_t i, j;
+    size_t i;
     for (i = 0; i < plantri.size(); ++i)
         if ((! tight) && i % 5 == 4) {
             if (plantri[i] != ',')
                 throw InvalidArgument("fromPlantri(): missing comma");
         } else {
-            if (plantri[i] < 'a' || plantri[i] >= ('a' + n))
+            if (plantri[i] < 'a' || plantri[i] >= static_cast<char>('a' + n))
                 throw InvalidArgument("fromPlantri(): invalid node letter");
         }
 
@@ -328,7 +342,7 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
         g.nodes_[0]->adj_[0].arc_ = -1;
 
         for (i = 0; i < n; ++i)
-            for (j = 1; j < 4; ++j) {
+            for (int j = 1; j < 4; ++j) {
                 g.nodes_[i]->adj_[j].node_ =
                     g.nodes_[plantri[3 * i + j - 1] - 'a'];
                 if (! g.nodes_[i]->adj_[j].node_->adj_[0].node_) {
@@ -341,7 +355,7 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
             }
     } else {
         for (i = 0; i < n; ++i)
-            for (j = 0; j < 4; ++j) {
+            for (int j = 0; j < 4; ++j) {
                 g.nodes_[i]->adj_[j].node_ =
                     g.nodes_[plantri[5 * i + j] - 'a'];
                 g.nodes_[i]->adj_[j].arc_ = -1;
@@ -356,7 +370,7 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
     ModelLinkGraphNode *src, *dest;
     for (i = 0; i < n; ++i) {
         src = g.nodes_[i];
-        for (j = 0; j < 4; ++j) {
+        for (int j = 0; j < 4; ++j) {
             if (src->adj_[j].arc_ >= 0)
                 continue;
 
@@ -464,6 +478,24 @@ ModelLinkGraph ModelLinkGraph::fromPlantri(const std::string& plantri) {
     }
 
     return g;
+}
+
+ModelLinkGraphArc ModelLinkGraph::outgoingArc(const StrandRef& s) {
+    if (s.strand() == 0)
+        return { nodes_[s.crossing()->index()], 0 };
+    else if (s.crossing()->sign() > 0)
+        return { nodes_[s.crossing()->index()], 1 };
+    else
+        return { nodes_[s.crossing()->index()], 3 };
+}
+
+ModelLinkGraphArc ModelLinkGraph::incomingArc(const StrandRef& s) {
+    if (s.strand() == 0)
+        return { nodes_[s.crossing()->index()], 2 };
+    else if (s.crossing()->sign() > 0)
+        return { nodes_[s.crossing()->index()], 3 };
+    else
+        return { nodes_[s.crossing()->index()], 1 };
 }
 
 ModelLinkGraphCells::ModelLinkGraphCells(const ModelLinkGraphCells& c) :

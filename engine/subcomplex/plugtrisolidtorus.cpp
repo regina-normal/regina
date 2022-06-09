@@ -128,7 +128,7 @@ std::unique_ptr<PlugTriSolidTorus> PlugTriSolidTorus::recognise(
     if (comp->countVertices() > 1)
         return nullptr;
 
-    unsigned long nTet = comp->size();
+    size_t nTet = comp->size();
     if (nTet < 5)
         return nullptr;
 
@@ -137,7 +137,7 @@ std::unique_ptr<PlugTriSolidTorus> PlugTriSolidTorus::recognise(
 
     // Hunt for a core.  Make sure we find each triangular solid torus
     // just once.
-    unsigned long tetIndex;
+    size_t tetIndex;
     int coreIndex;
     std::unique_ptr<TriSolidTorus> core;
     Tetrahedron<3>* coreTet[3];

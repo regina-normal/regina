@@ -99,7 +99,7 @@ class TrieSet : public Output<TrieSet> {
                      prefixes \c P0 and \c P1 respectively.  If there are no
                      sets stored at or beneath a child node, then the
                      corresponding child pointer will be \c null. */
-            unsigned long descendants_;
+            size_t descendants_;
                 /**< The number of sets stored at or beneath this node in
                      the tree.  The number of sets stored \e precisely at
                      this node can be computed by subtracting the descendant
@@ -112,7 +112,7 @@ class TrieSet : public Output<TrieSet> {
             /**
              * Constructs a node filled with the given data.
              */
-            Node(Node* child0, Node* child1, unsigned long descendants);
+            Node(Node* child0, Node* child1, size_t descendants);
             /**
              * Destroys this node and all its descendants.
              */
@@ -238,7 +238,7 @@ class TrieSet : public Output<TrieSet> {
          * \return \c true if a subset was found, or \c false otherwise.
          */
         template <typename T>
-        bool hasSubset(const T& superset, unsigned long universeSize) const;
+        bool hasSubset(const T& superset, size_t universeSize) const;
 
         /**
          * Performs the particular superset search required by the double
@@ -279,7 +279,7 @@ class TrieSet : public Output<TrieSet> {
          */
         template <typename T>
         bool hasExtraSuperset(const T& subset, const T& exc1, const T& exc2,
-            unsigned long universeSize) const;
+            size_t universeSize) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -316,8 +316,7 @@ void swap(TrieSet& a, TrieSet& b) noexcept;
 inline TrieSet::Node::Node() : child_ { nullptr, nullptr }, descendants_(0) {
 }
 
-inline TrieSet::Node::Node(Node* child0, Node* child1,
-        unsigned long descendants) :
+inline TrieSet::Node::Node(Node* child0, Node* child1, size_t descendants) :
         child_ { child0, child1 }, descendants_(descendants) {
 }
 
@@ -354,12 +353,12 @@ template <typename T>
 void TrieSet::insert(const T& entry) {
     ++root_.descendants_;
 
-    long last = entry.lastBit();
+    ssize_t last = entry.lastBit();
     if (last < 0)
         return;
 
     Node* node = &root_;
-    for (long pos = 0; pos <= last; ++pos) {
+    for (ssize_t pos = 0; pos <= last; ++pos) {
         if (entry.get(pos)) {
             // Follow right branch.
             if (! node->child_[1])
@@ -376,10 +375,10 @@ void TrieSet::insert(const T& entry) {
 }
 
 template <typename T>
-bool TrieSet::hasSubset(const T& superset, unsigned long universeSize) const {
+bool TrieSet::hasSubset(const T& superset, size_t universeSize) const {
     const Node** node = new const Node*[universeSize + 2];
 
-    long level = 0;
+    ssize_t level = 0;
     node[0] = &root_;
     while (level >= 0) {
         if (! node[level]) {
@@ -394,7 +393,7 @@ bool TrieSet::hasSubset(const T& superset, unsigned long universeSize) const {
         }
 
         // Process the node at the current level.
-        if (level >= universeSize) {
+        if (level >= static_cast<ssize_t>(universeSize)) {
             // Our subtree is now a subset of the given superset.
             delete[] node;
             return true;
@@ -414,14 +413,14 @@ bool TrieSet::hasSubset(const T& superset, unsigned long universeSize) const {
 
 template <typename T>
 bool TrieSet::hasExtraSuperset(const T& subset,
-        const T& exc1, const T& exc2, unsigned long universeSize) const {
+        const T& exc1, const T& exc2, size_t universeSize) const {
     const Node** node = new const Node*[universeSize + 2];
 
-    long last = subset.lastBit();
+    ssize_t last = subset.lastBit();
 
-    long level = 0;
-    long prefixOfExc1 = 0; // Last layer for which this is true.
-    long prefixOfExc2 = 0; // Last layer for which this is true.
+    ssize_t level = 0;
+    ssize_t prefixOfExc1 = 0; // Last layer for which this is true.
+    ssize_t prefixOfExc2 = 0; // Last layer for which this is true.
 
     node[0] = &root_;
 

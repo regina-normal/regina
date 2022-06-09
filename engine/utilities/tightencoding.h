@@ -42,7 +42,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "utilities/intutils.h"
+#include "utilities/exception.h"
 
 namespace regina {
 
@@ -57,7 +57,11 @@ class IntegerBase;
  * Tight encodings have the following properties:
  *
  * - They use only printable ASCII characters (the 94 ASCII values from
- *   33 to 126 inclusive).
+ *   33 to 126 inclusive), and do not contain any whitespace.  This means
+ *   (for example) you can use them as whitespace-separated tokens in plain
+ *   text files.  However, they do make use of \e all of the ASCII punctuation
+ *   symbols, and so you must take care when (for example) trying to hard-code
+ *   them as strings in source code, or using them as components of filenames.
  *
  * - They aim to be short (typically much shorter than the usual human-readable
  *   representations, such as decimal representations of integers or full text
@@ -83,9 +87,9 @@ class IntegerBase;
  *   will have different encodings.
  *
  * A consequence of the last two points is that, if the \e type of an object
- * is known in advance, then its \e value can in theory be recovered from its
- * encoding.  However, the encoding does not contain enough information
- * to deduce the type if this is not already known.
+ * is known in advance, then its \e value can be recovered from its encoding.
+ * However, the encoding does not contain enough information to deduce the
+ * type if this is not already known.
  *
  * Because encodings contain enough information to identify where they end,
  * this means that you can encode a \e sequence of objects by concatenating
@@ -93,27 +97,130 @@ class IntegerBase;
  * of the objects are fixed) this will be enough to guarantee that
  * different \e sequences likewise have different encodngs.
  *
- * Regina does not provide \e decoding routines, though (as noted above) this
- * should be possible if the underlying types are known.  This is because
- * tight encodings were originally designed for applications such as
- * perfect hashing, where the aim is essentially to "compress" the data in a
- * short printable string whilst preserving the correctness of equality tests.
+ * Tight encodings were originally designed to support perfect hashing
+ * (essentially "compressing" data into a short printable string whilst
+ * preserving the correctness of equality tests).  As a result, they were
+ * originally intended to be used only in one direction.  However, Regina
+ * does provide matching \e decoding routines if you need to reconstruct
+ * objects from their tight encodings.
  *
- * For native C++ data types where tight encodings are supported, these
- * are provided in the header utilities/tightencoding.h through overloads of
- * the global functions tightEncoding() (which returns a string) and
- * tightEncode() (which writes to an output stream).
+ * For native C++ data types where tight encodings and decodings are supported,
+ * these are provided in the header utilities/tightencoding.h through overloads
+ * of the global functions tightEncoding() and tightDecoding() (which work
+ * with strings), and tightEncode() and tightDecode() (which work with
+ * input/output streams).
  *
- * For Regina's own data types where tight encodings are supported, these are
- * provided through tightEncode() and tightEncoding() member functions of the
- * corresopnding classes.
+ * For Regina's own data types where tight encodings and decodings are
+ * supported, these are provided through member functions tightEncoding(),
+ * tightEncode(), tightDecoding() and tightDecode() within the corresponding
+ * classes.
  */
+
+/**
+ * A base class that assists with support for tight encodings and
+ * corresponding decodings.
+ *
+ * If a class \a T supports tight encodings, then it \e may derive from
+ * TightEncodable<T>.  If it does, then your derived class must provide
+ * the following two functions, which implement tight encodings and decodings
+ * via input/output streams:
+ *
+ * - <tt>void tightEncode(std::ostream&) const</tt>, which writes a tight
+ *   encoding of the object to the given output stream.  This is allowed
+ *   to (but not required to) throw a FailedPrecondition if the object
+ *   is in an invalid state; if so then the exception should be documented
+ *   in this member function T::tightEncode().
+ *
+ * - <tt>static T tightDecode(std::istream&)</tt>, which reconstructs an
+ *   object of type \a T from a tight encoding that is read from the given
+ *   input stream.  This routine must not skip leading whitespace, and must
+ *   leave the input stream positioned immediately after the encoding
+ *   (without consuming any trailing whitespace or other characters).
+ *   This should throw an InvalidInput exception if the input stream
+ *   does not begin with a valid tight encoding of an object of type \a T.
+ *
+ * In return, this base class will provide the following two functions,
+ * both of which work with strings (and which are documented in full below):
+ *
+ * - <tt>std::string tightEncoding() const</tt>; and
+ *
+ * - <tt>static T tightDecoding(const std::string&)</tt>.
+ *
+ * A class \a T that supports tight encodings does not \e need to derive from
+ * TightEncodable.  However, if it does not then it should implement all four
+ * of the above functions itself.  Examples of this include the permutation
+ * classes (which have optimised implementations due to their very small space
+ * requirements), and the arbitrary-precision integer classes (which use the
+ * global integer encoding/decoding routines).
+ *
+ * \tparam T the type of object being encoded/decoded; this must derive
+ * from TightEncodable<T>.
+ *
+ * \note Every object of this class that is ever instantiated \e must be
+ * derived from the class \a T.  In other words, end users cannot
+ * construct objects of the parent class TightEncodable<T>.
+ *
+ * \ifacespython Not present, but the routines tightEncoding() and
+ * tightDecoding() will be provided directly through the various subclasses.
+ *
+ * \ingroup utilities
+ */
+template <class T>
+struct TightEncodable {
+    /**
+     * Returns the tight encoding of this object.
+     * See the page on \ref tight "tight encodings" for details.
+     *
+     * \exception FailedPrecondition This may be thrown for some classes
+     * \a T if the object is in an invalid state.  If this is possible, then
+     * a more detailed explanation of "invalid" can be found in the class
+     * documentation for \a T, under the member function T::tightEncode().
+     * See FacetPairing::tightEncode() for an example of this.
+     *
+     * @return the resulting encoded string.
+     */
+    std::string tightEncoding() const {
+        std::ostringstream out;
+        static_cast<const T*>(this)->tightEncode(out);
+        return out.str();
+    }
+
+    /**
+     * Reconstructs an object of type \a T from its given tight encoding.
+     * See the page on \ref tight "tight encodings" for details.
+     *
+     * The tight encoding should be given as a string.  If this string
+     * contains leading whitespace or any trailing characters at all
+     * (including trailing whitespace), then it will be treated as
+     * an invalid encoding (i.e., this routine will throw an exception).
+     *
+     * \exception InvalidArgument the given string is not a tight encoding
+     * of an object of type \a T.
+     *
+     * @param enc the tight encoding for an object of type \a T.
+     * @return the object represented by the given tight encoding.
+     */
+    static T tightDecoding(const std::string& enc) {
+        std::istringstream in(enc);
+        try {
+            T ans = T::tightDecode(in);
+            if (in.get() != EOF)
+                throw InvalidArgument(
+                    "The tight encoding has trailing characters");
+            return ans;
+        } catch (const InvalidInput& exc) {
+            // For string-based decoding we use a different exception type.
+            throw InvalidArgument(exc.what());
+        }
+    }
+};
 
 /**
  * Writes the tight encoding of the given signed integer to the given
  * output stream.  See the page on \ref tight "tight encodings" for details.
  *
- * \ifacespython Not present; use regina::tightEncoding(int) instead.
+ * \ifacespython Not present; use regina::tightEncoding(int) instead,
+ * which returns a string.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -137,7 +244,8 @@ std::string tightEncoding(int value);
  * Writes the tight encoding of the given signed long integer to the given
  * output stream.  See the page on \ref tight "tight encodings" for details.
  *
- * \ifacespython Not present; use regina::tightEncoding(long) instead.
+ * \ifacespython Not present; use regina::tightEncoding(long) instead,
+ * which returns a string.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -161,7 +269,8 @@ std::string tightEncoding(long value);
  * Writes the tight encoding of the given signed long long integer to the given
  * output stream.  See the page on \ref tight "tight encodings" for details.
  *
- * \ifacespython Not present; use regina::tightEncoding(long long) instead.
+ * \ifacespython Not present; use regina::tightEncoding(long long) instead,
+ * which returns a string.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -185,7 +294,8 @@ std::string tightEncoding(long long value);
  * Writes the tight encoding of the given unsigned integer to the given
  * output stream.  See the page on \ref tight "tight encodings" for details.
  *
- * \ifacespython Not present; use regina::tightEncoding(int) instead.
+ * \ifacespython Not present; use regina::tightEncoding(int) instead,
+ * which returns a string.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -209,7 +319,8 @@ std::string tightEncoding(unsigned value);
  * Writes the tight encoding of the given unsigned long integer to the given
  * output stream.  See the page on \ref tight "tight encodings" for details.
  *
- * \ifacespython Not present; use regina::tightEncoding(long) instead.
+ * \ifacespython Not present; use regina::tightEncoding(long) instead,
+ * which returns a string.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -234,7 +345,8 @@ std::string tightEncoding(unsigned long value);
  * given output stream.  See the page on \ref tight "tight encodings" for
  * details.
  *
- * \ifacespython Not present; use regina::tightEncoding(long long) instead.
+ * \ifacespython Not present; use regina::tightEncoding(long long) instead,
+ * which returns a string.
  *
  * @param out the output stream to which the encoded string will be written.
  * @param value the integer to encode.
@@ -254,6 +366,130 @@ void tightEncode(std::ostream& out, unsigned long long value);
  */
 std::string tightEncoding(unsigned long long value);
 
+/**
+ * Writes the tight encoding of the given boolean to the given
+ * output stream.  See the page on \ref tight "tight encodings" for details.
+ *
+ * The booleans \c true and \c false are guaranteed to have the same
+ * tight encodings as the integers 1 and 0 respectively.
+ *
+ * \ifacespython Not present; use regina::tightEncoding(bool) instead,
+ * which returns a string.
+ *
+ * @param out the output stream to which the encoded string will be written.
+ * @param value the boolean to encode.
+ *
+ * \ingroup utilities
+ */
+void tightEncode(std::ostream& out, bool value);
+
+/**
+ * Returns the tight encoding of the given boolean.
+ * See the page on \ref tight "tight encodings" for details.
+ *
+ * The booleans \c true and \c false are guaranteed to have the same
+ * tight encodings as the integers 1 and 0 respectively.
+ *
+ * @param value the boolean to encode.
+ * @return the resulting encoded string.
+ *
+ * \ingroup utilities
+ */
+std::string tightEncoding(bool value);
+
+/**
+ * Reconstructs an integer or boolean from its given tight encoding.
+ * See the page on \ref tight "tight encodings" for details.
+ *
+ * The tight encoding should be given as a string.  If this string contains
+ * leading whitespace or any trailing characters at all (including trailing
+ * whitespace), then it will be treated as an invalid encoding (i.e., this
+ * routine will throw an exception).
+ *
+ * This routine does recognise infinity in the case where \a Int is the type
+ * regina::LargeInteger.
+ *
+ * If \a Int is one of Regina's arbitrary precision integer types, then
+ * this routine is identical to calling Int::tightDecoding().
+ *
+ * \headers Some components of this routine are implemented in a separate
+ * header (tightencoding-impl.h), which is not included automatically by this
+ * file.  Most end users should not need this extra header, since Regina's
+ * calculation engine already includes explicit instantiations for all of the
+ * types that have corresponding global tightEncode() functions
+ * (i.e., \c bool; signed and unsigned \c int, \c long, and \c long \c long;
+ * and regina::Integer and regina::LargeInteger).
+ *
+ * \exception InvalidArgument the given string is not a tight encoding of an
+ * integer/boolean of type \a Int.  This includes the case where the encoding
+ * \e is a valid integer encoding but the integer itself is outside the
+ * allowed range for the \a Int type.
+ *
+ * \ifacespython Since Python does not support templates, the interface
+ * for this routine is a little different.  The global routine
+ * regina::tightDecoding() will return a Python integer; since these are
+ * arbitrary precision, the decoding will never encounter an out-of-range
+ * exceptions as it might with a native C++ integer type.  If you are trying
+ * to reconstruct a boolean, then the integer you receive will be either 1 or 0
+ * to represent \c true or \c false respectively.  If you are trying to
+ * reconstruct one of Regina's arbitrary precision integer types, you should
+ * instead call Integer::tightDecoding() or LargeInteger::tightDecoding(), which
+ * will return a Regina integer instead of a Python integer.
+ *
+ * \tparam Int The type of integer/boolean to reconstruct; this must be either
+ * (i) a native C++ integer type or \c bool, or (ii) one of Regina's arbitrary
+ * precision integer types (i.e., regina::Integer or regina::LargeInteger).
+ *
+ * @param enc the tight encoding for an integer or boolean.
+ * @return the integer or boolean represented by the given tight encoding.
+ */
+template<typename Int>
+Int tightDecoding(const std::string& enc);
+
+/**
+ * Reconstructs an integer or boolean from its given tight encoding.
+ * See the page on \ref tight "tight encodings" for details.
+ *
+ * The tight encoding will be read from the given input stream.  If the input
+ * stream contains leading whitespace then it will be treated as an invalid
+ * encoding (i.e., this routine will throw an exception).  The input routine
+ * \e may contain further data: if this routine is successful then the input
+ * stream will be left positioned immediately after the encoding, without
+ * skipping any trailing whitespace.
+ *
+ * This routine does recognise infinity in the case where \a Int is the type
+ * regina::LargeInteger.
+ *
+ * If \a Int is one of Regina's arbitrary precision integer types, then
+ * this routine is identical to calling Int::tightDecode().
+ *
+ * \headers Some components of this routine are implemented in a separate
+ * header (tightencoding-impl.h), which is not included automatically by this
+ * file.  Most end users should not need this extra header, since Regina's
+ * calculation engine already includes explicit instantiations for all of the
+ * types that have corresponding global tightEncode() functions
+ * (i.e., \c bool; signed and unsigned \c int, \c long, and \c long \c long;
+ * and regina::Integer and regina::LargeInteger).
+ *
+ * \exception InvalidInput the given input stream does not begin with a tight
+ * encoding of an integer/boolean of type \a Int.  This includes the case
+ * where the encoding \e is a valid integer encoding but the integer itself
+ * is outside the allowed range for the \a Int type.
+ *
+ * \ifacespython Not present; use regina::tightDecoding() instead, which
+ * takes a string as its argument.
+ *
+ * \tparam Int The type of integer/boolean to reconstruct; this must be either
+ * (i) a native C++ integer type or \c bool, or (ii) one of Regina's arbitrary
+ * precision integer types (i.e., regina::Integer or regina::LargeInteger).
+ *
+ * @param input an input stream that begins with the tight encoding for an
+ * integer or boolean.
+ * @return the integer or boolean represented by the given tight encoding.
+ */
+template<typename Int>
+Int tightDecode(std::istream& input);
+
 namespace detail {
     /**
      * Internal function that writes the tight encoding of the given integer
@@ -269,6 +505,7 @@ namespace detail {
      * \tparam Int The type of integer to encode; this must be either
      * (i) a native C++ integer type, or (ii) one of Regina's arbitrary
      * precision integer types (i.e., regina::Integer or regina::LargeInteger).
+     * In particular, \c bool is not allowed here.
      *
      * @param out the output stream to which the encoded string will be written.
      * @param value the integer to encode.
@@ -277,6 +514,129 @@ namespace detail {
      */
     template <typename Int>
     void tightEncodeInteger(std::ostream& out, Int value);
+
+    /**
+     * Internal function that reconstructs an integer from its given tight
+     * encoding.  This should not be called directly; its purpose is to provide
+     * a common implementation for tightDecoding() and tightDecode() for all
+     * integer types.
+     *
+     * The tight encoding will be extracted one character at a time
+     * beginning with the iterator \a start, in a single pass, without
+     * skipping any leading whitespace.  If the iterator ever reaches
+     * \a limit before the encoding is complete then the encoding is
+     * treated as invalid (i.e., this routine will throw an exception).
+     *
+     * If \a noTrailingData is \c true then the iterator is required to
+     * \e finish at \a limit, or else the encoding will be considered
+     * invalid also; if \a noTrailingData is \c false then there is no
+     * constraint on the final state of the iterator.
+     *
+     * \exception InvalidInput the given iterator does not point to
+     * a tight encoding of an integer of type \a Int.  This includes the
+     * case where the encoding \e is a valid integer encoding but the integer
+     * itself is outside the allowed range for the \a Int type.
+     *
+     * This routine does recognise infinity in the case where \a Int is
+     * the type regina::LargeInteger.
+     *
+     * \ifacespython Not present; use regina::tightDecoding() instead.
+     *
+     * \tparam Int The type of integer to reconstruct; this must be either
+     * (i) a native C++ integer type, or (ii) one of Regina's arbitrary
+     * precision integer types (i.e., regina::Integer or regina::LargeInteger).
+     * In particular, \c bool is not allowed here.
+     *
+     * \tparam iterator an input iterator type.
+     *
+     * @param start an iterator that points to the beginning of a
+     * tight encoding.
+     * @param limit an iterator that, if reached, indicates that no more
+     * characters are available.
+     * @param noTrailingData \c true if iteration should reach \a limit
+     * immediately after the encoding is read, or \c false if there is
+     * allowed to be additional unread data.
+     * @return the integer represented by the given tight encoding.
+     *
+     * \ingroup utilities
+     */
+    template <typename Int, typename iterator>
+    Int tightDecodeInteger(iterator start, iterator limit, bool noTrailingData);
+
+    /**
+     * Internal function that writes the tight encoding of an integer
+     * whose value is either non-negative or -1.
+     *
+     * This should \e not be used for encoding standalone integers, since it
+     * uses a more compact format that is not compatible with Regina's general
+     * integer encodings.  Instead, it is intended to be used as part of the
+     * encoding for larger objects (e.g., triangulations or isomorphisms).
+     *
+     * \exception InvalidArgument the given integer is less than -1.
+     *
+     * \ifacespython Not present.
+     *
+     * \tparam Int The type of integer to encode.  Currently this must be
+     * either \c ssize_t (the only allowed signed type), or one of the
+     * unsigned native C++ integer types that holds at least 16 bits.
+     * This list of types may be expanded in future versions of Regina.
+     *
+     * @param out the output stream to which the encoded string will be written.
+     * @param value the integer to encode.
+     *
+     * \ingroup utilities
+     */
+    template <typename Int>
+    void tightEncodeIndex(std::ostream& out, Int value);
+
+    /**
+     * Internal function that writes the tight encoding of -1, using an
+     * encoding that is compatible with tightEncodeIndex().  Note that this is
+     * \e not compatible with Regina's general integer encodings.
+     *
+     * This is identical to calling <tt>tightEncodeIndex<ssize_t>(out, -1)</tt>.
+     *
+     * \ifacespython Not present.
+     *
+     * @param out the output stream to which the encoded string will be written.
+     *
+     * \ingroup utilities
+     */
+    void tightEncodeNoIndex(std::ostream& out);
+
+    /**
+     * Internal function that reconstructs an integer that was encoded
+     * using tightEncodeIndex().  This encoding method is used for integers
+     * that are either non-negative or -1, and is not compatible with
+     * Regina's general integer encodings.
+     *
+     * The tight encoding will be read from the given input stream.  If the
+     * input stream contains leading whitespace then it will be treated as an
+     * invalid encoding (i.e., this routine will throw an exception).  The
+     * input routine \e may contain further data: if this routine is successful
+     * then the input stream will be left positioned immediately after the
+     * encoding, without skipping any trailing whitespace.
+     *
+     * \exception InvalidInput the given input stream does not begin with a
+     * tight encoding of an integer of type \a Int using the encoding scheme
+     * defined by tightEncodeIndex().  This includes the case where the
+     * encoding \e is a valid non-negative integer encoding but the integer
+     * itself is outside the allowed range for the \a Int type.
+     *
+     * \ifacespython Not present.
+     *
+     * \tparam Int The type of integer to reconstruct.  Currently this must be
+     * either \c ssize_t (the only allowed signed type), or one of the
+     * unsigned native C++ integer types that holds at least 16 bits.
+     * This list of types may be expanded in future versions of Regina.
+     *
+     * @param input an input stream that begins with a tight encoding.
+     * @return the integer represented by the given tight encoding.
+     *
+     * \ingroup utilities
+     */
+    template <typename Int>
+    Int tightDecodeIndex(std::istream& input);
 }
 
 // Inline functions:
@@ -341,186 +701,72 @@ inline std::string tightEncoding(unsigned long long value) {
     return out.str();
 }
 
-// Implementations of template functions:
+inline void tightEncode(std::ostream& out, bool value) {
+    if (value)
+        out << 'N'; // encoding of 1
+    else
+        out << 'M'; // encoding of 0
+}
 
-namespace detail {
-    template <typename Int>
-    void tightEncodeInteger(std::ostream& out, Int value) {
-        static_assert(std::is_integral_v<Int> ||
-                IsReginaArbitraryPrecisionInteger<Int>::value,
-            "tightEncodeInteger() requires either a native C++ integer type "
-            "or one of Regina's arbitrary precision integer types.");
+inline std::string tightEncoding(bool value) {
+    if (value)
+        return "N"; // encoding of 1
+    else
+        return "M"; // encoding of 0
+}
 
-        // Here we use the 90 values 33..122 as "digit" characters,
-        // and the four values 123..126 as different types of markers.
-        // As characters, the four markers are: { | } ~
+template <>
+inline bool tightDecoding<bool>(const std::string& enc) {
+    if (enc.empty())
+        throw InvalidArgument("The tight encoding is incomplete");
+    bool ans;
+    switch (enc.front()) {
+        case 'M': ans = false; break;
+        case 'N': ans = true; break;
+        default: throw InvalidInput("The tight encoding is invalid");
+    }
+    if (enc.length() > 1)
+        throw InvalidArgument("The tight encoding has trailing characters");
+    return ans;
+}
 
-        // Get the special case of infinity out of the way.
-        if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-            if (value.isInfinite()) {
-                out << "{}";
-                return;
-            }
-        }
-
-        // The best-case scenario: a single "digit" character.
-        if constexpr (std::is_unsigned_v<Int>) {
-            if (value <= 45) {
-                out << char(value + 77); // char <= 122
-                return;
-            }
-        } else {
-            if (value > -45 && value <= 45) {
-                if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                    out << char(value.longValue() + 77); // 33 <= char <= 122
-                } else {
-                    out << char(value + 77); // 33 <= char <= 122
-                }
-                return;
-            }
-        }
-
-        // From here, the original value must have been >= 2 decimal digits.
-        if (value < 0)
-            value += 45;
-        else
-            value -= 45;
-
-        // The next-best scenario: marker plus one "digit" character.
-        if constexpr (std::is_unsigned_v<Int>) {
-            if (value <= 45) {
-                out << '~' << char(value + 77);
-                return;
-            }
-        } else {
-            if (value > -45 && value <= 45) {
-                if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                    out << '~' << char(value.longValue() + 77);
-                } else {
-                    out << '~' << char(value + 77);
-                }
-                return;
-            }
-        }
-
-        // From here, the original value must have been >= 3 decimal digits.
-        if (value < 0)
-            value += 45;
-        else
-            value -= 45;
-
-        // The next-best scenario: marker plus two "digit" characters.
-        if constexpr (std::is_unsigned_v<Int>) {
-            if (value <= 4050) {
-                // Note: T could be char, so cast to an unsigned int before we
-                // start doing any arithmetic.
-                unsigned i = unsigned(value) + 4049; // i < 8100 = 90*90
-                out << '|' << char((i % 90) + 33) << char((i / 90) + 33);
-                return;
-            }
-        } else {
-            if (value > -4050 && value <= 4050) {
-                // Note: T could be char, so cast to an int before we
-                // start doing any arithmetic.
-                int i;
-                if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                    i = int(value.longValue()) + 4049; // 0 <= i < 8100 = 90*90
-                } else {
-                    i = int(value) + 4049; // 0 <= i < 8100 = 90*90
-                }
-                out << '|' << char((i % 90) + 33) << char((i / 90) + 33);
-                return;
-            }
-        }
-
-        // From here, the original value must have been >= 4 decimal digits,
-        // and the type T must be at least 16-bit.
-        if (value < 0)
-            value += 4050;
-        else
-            value -= 4050;
-
-        // The next-best scenario: marker plus three "digit" characters.
-        if constexpr (std::is_unsigned_v<Int>) {
-            if (value <= 364500) {
-                // Note: T could still be unsigned short, so cast to an
-                // unsigned long before we start doing any arithmetic.
-                unsigned long i =
-                    (unsigned long)(value) + 364499; // i < 729000 = 90^3
-                out << '}' << char((i % 90) + 33);
-                i /= 90;
-                out << char((i % 90) + 33) << char((i / 90) + 33);
-                return;
-            }
-        } else {
-            if (value > -364500 && value <= 364500) {
-                // Note: T could still be short int, so cast to a long before
-                // we start doing any arithmetic.
-                long i;
-                if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                    i = value.longValue() + 364499; // 0 <= i < 729000 = 90^3
-                } else {
-                    i = long(value) + 364499; // 0 <= i < 729000 = 90^3
-                }
-                out << '}' << char((i % 90) + 33);
-                i /= 90;
-                out << char((i % 90) + 33) << char((i / 90) + 33);
-                return;
-            }
-        }
-
-        // From here, the original value must have been >= 6 decimal digits,
-        // and the type T must be at least 32-bit.
-        if (value < 0)
-            value += 364500;
-        else
-            value -= 364500;
-
-        // From here we switch to a generic scheme:
-        // (1) marker
-        // (2) combined sign and digit mod 45
-        // (3) sequence of digits mod 90
-        // (4) marker to terminate
-
-        int next;
-        if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-            // value might be out of bounds for a native integer,
-            // but (value % 45) will not.
-            next = (value % 45).template nativeValue<sizeof(int)>();
-        } else {
-            next = value % 45;
-        }
-        if constexpr (std::is_unsigned_v<Int>) {
-            if (value > 0) {
-                value /= 45;
-            } else {
-                // value == 0, since the type is unsigned.
-                next = 45; // for consistency with the signed case
-            }
-        } else {
-            if (value > 0) {
-                value /= 45;
-            } else {
-                if (next < 0)
-                    next = -next;
-                next += 45;
-                value = -(value / 45);
-            }
-        }
-        out << '{' << char(next + 33);
-
-        while (value > 0) {
-            if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                out << char((value % 90).longValue() + 33);
-            } else {
-                out << char((value % 90) + 33);
-            }
-            value /= 90;
-        }
-
-        out << '}';
+template <>
+inline bool tightDecode<bool>(std::istream& input) {
+    int c = input.get();
+    if (c == EOF)
+        throw InvalidInput("The tight encoding is incomplete");
+    switch (c) {
+        case 'M': return false;
+        case 'N': return true;
+        default: throw InvalidInput("The tight encoding is invalid");
     }
 }
+
+template<typename Int>
+inline Int tightDecoding(const std::string& enc) {
+    try {
+        return regina::detail::tightDecodeInteger<Int>(
+            enc.begin(), enc.end(), true);
+    } catch (const InvalidInput& exc) {
+        // For strings we use a different exception type.
+        throw InvalidArgument(exc.what());
+    }
+}
+
+template<typename Int>
+inline Int tightDecode(std::istream& input) {
+    return regina::detail::tightDecodeInteger<Int>(
+        std::istreambuf_iterator<char>(input),
+        std::istreambuf_iterator<char>(), false);
+}
+
+namespace detail {
+
+inline void tightEncodeNoIndex(std::ostream& out) {
+    tightEncodeIndex<ssize_t>(out, -1);
+}
+
+} // namespace detail
 
 } // namespace regina
 

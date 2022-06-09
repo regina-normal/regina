@@ -38,6 +38,8 @@
 #define __GAPRUNNER_H
 
 #include "algebra/grouppresentation.h"
+
+#include "reginaqt.h"
 #include <QDialog>
 #include <QProcess>
 #include <map>

@@ -34,6 +34,7 @@
 #include "maths/numbertheory.h"
 #include "triangulation/dim3.h"
 #include <algorithm>
+#include <numeric> // for std::gcd()
 #include <sstream>
 
 namespace regina {
@@ -887,13 +888,11 @@ Link Link::parallel(int k, Framing framing) const {
     // grid configuration, and (ii) leave this configuration.
 
     StrandRef s;
-    int idx;
-    int enterL, exitL;
+    ssize_t enterL, exitL;
     int enterStrand, exitStrand;
-    int enterDelta, exitDelta;
-    int startL;
+    std::make_signed_t<size_t> enterDelta, exitDelta, startDelta;
+    ssize_t startL;
     int startStrand;
-    int startDelta;
 
     int writhe;
     bool* seen = new bool[crossings_.size()];
@@ -911,7 +910,7 @@ Link Link::parallel(int k, Framing framing) const {
         s = start;
         exitL = -1;
         do {
-            idx = s.crossing()->index();
+            ssize_t idx = s.crossing()->index();
             if (s.crossing()->sign() > 0) {
                 if (s.strand() == 1) {
                     enterL = k*k * (idx+1) - k;
@@ -1073,6 +1072,96 @@ Link Link::parallel(int k, Framing framing) const {
     return ans;
 }
 
+void Link::tightEncode(std::ostream& out) const {
+    regina::detail::tightEncodeIndex(out, size());
+
+    // Bit-pack the crossing signs, 6 per character.
+    {
+        char bits = 0;
+        int pos = 0;
+        for (auto* c : crossings_) {
+            if (c->sign() > 0)
+                bits |= (1 << pos);
+            if (pos < 5)
+                ++pos;
+            else {
+                out.put(bits + 33);
+                bits = 0;
+                pos = 0;
+            }
+        }
+        if (pos != 0)
+            out.put(bits + 33);
+    }
+
+    for (auto* c : crossings_)
+        for (int side = 0; side < 2; ++side)
+            regina::detail::tightEncodeIndex(out, c->next(side).id());
+
+    regina::detail::tightEncodeIndex(out, countComponents());
+
+    for (StrandRef s : components_)
+        regina::detail::tightEncodeIndex(out, s.id());
+}
+
+Link Link::tightDecode(std::istream& input) {
+    // Read size as a signed type, since this will make comparisons
+    // with (signed) strand IDs simpler.
+    auto size = regina::detail::tightDecodeIndex<ssize_t>(input);
+    if (size < 0)
+        throw InvalidInput("The tight encoding has a negative number "
+            "of crossings");
+
+    Link ans;
+    int pos = 0;
+    int bits;
+    for (ssize_t i = 0; i < size; ++i) {
+        if (pos == 0) {
+            bits = input.get();
+            if (bits == EOF)
+                throw InvalidInput("The tight encoding is incomplete");
+            bits -= 33;
+        }
+        ans.crossings_.push_back(new Crossing((bits & (1 << pos)) ? 1 : -1));
+        if (pos < 5)
+            ++pos;
+        else
+            pos = 0;
+    }
+
+    for (auto* c : ans.crossings_)
+        for (int side = 0; side < 2; ++side) {
+            auto id = regina::detail::tightDecodeIndex<ssize_t>(input);
+            if (id < 0 || id >= 2 * size)
+                throw InvalidInput("The tight encoding has invalid "
+                    "connections");
+
+            StrandRef dest = ans.strand(id);
+            if (dest.prev())
+                throw InvalidInput("The tight encoding has inconsistent "
+                    "connections");
+            join(StrandRef(c, side), dest);
+        }
+
+    auto cmpts = regina::detail::tightDecodeIndex<size_t>(input);
+    if (cmpts < 0)
+        throw InvalidInput("The tight encoding has a negative number "
+            "of components");
+    if (size > 0 && cmpts == 0)
+        throw InvalidInput("The tight encoding has an invalid number "
+            "of components");
+
+    for (size_t i = 0; i < cmpts; ++i) {
+        auto destID = regina::detail::tightDecodeIndex<ssize_t>(input);
+        if (destID >= 2 * size)
+            throw InvalidInput("The tight encoding contains an invalid "
+                "component");
+        ans.components_.push_back(ans.strand(destID));
+    }
+
+    return ans;
+}
+
 std::string Link::dumpConstruction() const {
     std::ostringstream out;
 
@@ -1211,7 +1300,7 @@ void Link::insertTorusLink(int p, int q, bool positive) {
     // Use the standard diagram with p(q-1) crossings.
 
     int n = p * (q - 1);
-    int nComp = regina::gcd(p, q);
+    int nComp = std::gcd(p, q);
 
     ChangeEventSpan span(*this);
 

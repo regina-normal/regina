@@ -33,13 +33,14 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/stl.h"
 #include "maths/numbertheory.h"
+#include <numeric>
 
 void addNumberTheory(pybind11::module_& m) {
     m.def("reducedMod", regina::reducedMod);
-    m.def("gcd", regina::gcd);
+    m.def("gcd", std::gcd<long, long>); // deprecated
     m.def("gcdWithCoeffs", pybind11::overload_cast<long, long>(
         &regina::gcdWithCoeffs));
-    m.def("lcm", regina::lcm);
+    m.def("lcm", std::lcm<long, long>); // deprecated
     m.def("modularInverse", regina::modularInverse);
 }
 

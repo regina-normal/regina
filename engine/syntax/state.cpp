@@ -71,7 +71,7 @@ void StateData::clear()
     m_contextStack.clear();
 }
 
-int StateData::size() const
+size_t StateData::size() const
 {
     return m_contextStack.size();
 }

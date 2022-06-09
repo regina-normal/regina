@@ -74,6 +74,7 @@ void addModelLinkGraph(pybind11::module_& m) {
 
     auto g = pybind11::class_<ModelLinkGraph>(m, "ModelLinkGraph")
         .def(pybind11::init<>())
+        .def(pybind11::init<const regina::Link&>())
         .def(pybind11::init<const ModelLinkGraph&>())
         .def("size", &ModelLinkGraph::size)
         .def("node", &ModelLinkGraph::node,

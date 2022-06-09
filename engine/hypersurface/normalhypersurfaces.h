@@ -616,7 +616,8 @@ class NormalHypersurfaces : public PacketData<NormalHypersurfaces>,
                     /**< Declares this to be a bidirectional iterator type. */
                 using value_type = Vector<LargeInteger>;
                     /**< Indicates what type the iterator points to. */
-                using difference_type = ptrdiff_t;
+                using difference_type = typename
+                    std::vector<NormalHypersurface>::const_iterator::difference_type;
                     /**< The type obtained by subtracting iterators. */
                 using pointer = const Vector<LargeInteger>*;
                     /**< A pointer to \a value_type. */

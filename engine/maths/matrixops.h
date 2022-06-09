@@ -181,7 +181,7 @@ void metricalSmithNormalForm(MatrixInt& matrix,
  *
  * \ingroup maths
  */
-unsigned long rowBasis(MatrixInt& matrix);
+size_t rowBasis(MatrixInt& matrix);
 
 /**
  * Finds a basis for the row space of the given matrix, as well as an
@@ -220,7 +220,7 @@ unsigned long rowBasis(MatrixInt& matrix);
  *
  * \ingroup maths
  */
-unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
+size_t rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
 
 /**
  * Transforms a given matrix into column echelon form with respect to a
@@ -283,7 +283,7 @@ unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
  * \ingroup maths
  */
 void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
-        const std::vector<unsigned> &rowList);
+        const std::vector<size_t> &rowList);
 
 /**
  * Given a homomorphism from Z^n to Z^k and a sublattice of Z^k,

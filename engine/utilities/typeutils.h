@@ -42,6 +42,7 @@
 #endif
 
 #include <functional>
+#include <variant>
 #include "regina-core.h"
 
 namespace regina {
@@ -93,6 +94,8 @@ struct EnableIf<false, T, defaultValue> {
  * @param action the body of the \c for loop; that is, the action to
  * perform for each integer \a i.  See above for the interface that
  * \a action should adhere to.
+ *
+ * \ingroup utilities
  */
 template <int from, int to, class Action>
 constexpr void for_constexpr(Action&& action) {
@@ -100,6 +103,111 @@ constexpr void for_constexpr(Action&& action) {
         action(std::integral_constant<int, from>());
         for_constexpr<from + 1, to>(std::forward<Action>(action));
     }
+}
+
+/**
+ * Implements a compile-time selection, where the runtime argument must belong
+ * to a compile-time range of integers, and the value of the argument
+ * determines what is returned.
+ *
+ * The action should be a templated callable object (e.g., a generic lambda)
+ * that takes a single argument.  If \a value is equal to the integer \a i,
+ * for some \a i in the range <i>from</i>, ..., (<i>to</i>-1) inclusive,
+ * then this function will return <tt>action(i)</tt>.  The argument \a i
+ * will be passed using the type <tt>std::integral_constant<int, i></tt>,
+ * which means that the value of \a i will be accessible to \a action as a
+ * compile-time constant.
+ *
+ * \exception std::runtime_error the given runtime value is not within the
+ * range <i>from</i>, ..., (<i>to</i>-1).
+ *
+ * \tparam Return the type to be returned from this function.
+ * Typically this will be the same as the return type from \a action,
+ * but it may differ (particuarly if the return type of \a action
+ * depends upon its integer argument).
+ *
+ * @param action the action to perform for whichever integer \a i matches
+ * the given runtime value.  See above for the interface that \a action
+ * should adhere to.
+ * @return the value returned from \a action.
+ *
+ * \ingroup utilities
+ */
+template <int from, int to, typename Return, class Action>
+constexpr Return select_constexpr(int value, Action&& action) {
+    if constexpr (from < to) {
+        if (value == from)
+            return action(std::integral_constant<int, from>());
+        else
+            return select_constexpr<from + 1, to, Return, Action>(value,
+                std::forward<Action>(action));
+    } else
+        throw std::runtime_error("select_constexpr(): value out of range");
+}
+
+#ifndef __DOXYGEN
+
+namespace detail {
+
+/**
+ * Implementation details for select_constexpr_as_variant.
+ * These declarations are used to pack together the correct std::variant
+ * return type.
+ */
+template <int from, class Action, int... arg /* 0,...,(to-from-1) */>
+auto seqToVariantHelper(std::integer_sequence<int, arg...>) ->
+    std::variant<decltype(std::declval<Action>()(
+        std::integral_constant<int, arg + from>()))...>;
+
+template <int from, int to, class Action>
+using SeqToVariant = decltype(seqToVariantHelper<from, Action>(
+    std::make_integer_sequence<int, to - from>()));
+
+} // namespace detail
+
+#endif
+
+/**
+ * A variant of select_constexpr() where the return type is a variant, built
+ * from the return types for all integers in the given compile-time range.
+ *
+ * See select_constexpr() for an overview of how Regina's compile-time
+ * selection function works.  This routine behaves exactly the same as
+ * select_constexpr(), except that you do not need to explicitly give
+ * the return type.  Instead, the return type will be
+ * <tt>std::variant<R(from), R(from+1), ..., R(to-1)></tt>, where each
+ * <tt>R(i)</tt> denotes the type returned by the corresponding call to
+ * <tt>action(i)</tt>.
+ *
+ * This is useful when the return \e type from \a action (not just the
+ * return value) depends on \a i.  An example of this is
+ * <tt>Triangulation::face(subdim, index)</tt>, whose return type
+ * would normally be <tt>Face<subdim>*</tt>, except for the fact that
+ * \a subdim is not known until runtime.  Therefore this function needs
+ * to return a std::variant, and so select_constexpr_as_variant()
+ * can be used for its internal implementation.
+ *
+ * See select_constexpr() for further details.
+ *
+ * \pre All of the possible return types <tt>R(from)</tt>,
+ * <tt>R(from+1)</tt>, ..., <tt>R(to-1)</tt> are different.
+ *
+ * \exception std::runtime_error the given runtime value is not within the
+ * range <i>from</i>, ..., (<i>to</i>-1).
+ *
+ * @param action the action to perform for whichever integer \a i matches
+ * the given runtime value.  See above for the interface that \a action
+ * should adhere to.
+ * @return the value returned from \a action, given as a variant that
+ * encapsulates all (\a to - \a from) possible return types.
+ *
+ * \ingroup utilities
+ */
+template <int from, int to, class Action>
+constexpr auto select_constexpr_as_variant(int value, Action&& action) {
+    return select_constexpr<from, to,
+        regina::detail::SeqToVariant<from, to, Action>, Action>(
+        value, std::forward<Action>(action));
 }
 
 #ifndef __DOXYGEN
@@ -114,12 +222,12 @@ namespace detail {
  * See safe_tuple_element below for details.
  */
 template <int pos, typename tuple, typename out_of_range,
-    bool pos_in_range = (pos >= 0 && pos < std::tuple_size<tuple>::value)>
+    bool pos_in_range = (pos >= 0 && pos < std::tuple_size_v<tuple>)>
 struct safe_tuple_element_impl;
 
 template <int pos, typename tuple, typename out_of_range>
 struct safe_tuple_element_impl<pos, tuple, out_of_range, true> {
-    using type = typename std::tuple_element<pos, tuple>::type;
+    using type = std::tuple_element_t<pos, tuple>;
 };
 
 template <int pos, typename tuple, typename out_of_range>

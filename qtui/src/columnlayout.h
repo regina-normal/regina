@@ -38,6 +38,7 @@
 #ifndef __COLUMNLAYOUT_H
 #define __COLUMNLAYOUT_H
 
+#include "reginaqt.h"
 #include <QBoxLayout>
 
 /**

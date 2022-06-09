@@ -288,12 +288,12 @@ inline void Perm<7>::clear(unsigned from) {
         case 3:
             // When rounded down to the nearest multiple of 24,
             // the code is the correct *ordered* S7 index.
-            code2_ = convOrderedUnordered(code2_ - (code2_ % 24));
+            code2_ = convOrderedUnordered<Code2>(code2_ - (code2_ % 24));
             break;
         case 4:
             // When rounded down to the nearest multiple of 6,
             // the code is the correct *ordered* S7 index.
-            code2_ = convOrderedUnordered(code2_ - (code2_ % 6));
+            code2_ = convOrderedUnordered<Code2>(code2_ - (code2_ % 6));
             break;
         case 5:
             if ((*this)[5] == 6)
@@ -338,6 +338,66 @@ constexpr Perm<n> Perm<n>::contract(Perm<k> p) {
         c |= (static_cast<Code>(p[i]) << (imageBits * i));
 
     return Perm<n>(c);
+}
+
+template <int n>
+void Perm<n>::tightEncode(std::ostream& out) const {
+    // Write the Sn index in base 94, least significant digit first.
+    Index idx = SnIndex();
+    for (int i = 0; i < tightChars_; ++i) {
+        out << static_cast<char>((idx % 94) + 33);
+        idx /= 94;
+    }
+}
+
+template <int n>
+std::string Perm<n>::tightEncoding() const {
+    // Write the Sn index in base 94, least significant digit first.
+    char ans[tightChars_ + 1];
+    Index idx = SnIndex();
+    for (int i = 0; i < tightChars_; ++i) {
+        ans[i] = static_cast<char>((idx % 94) + 33);
+        idx /= 94;
+    }
+    ans[tightChars_] = 0;
+    return ans;
+}
+
+template <int n>
+template <typename iterator>
+Perm<n> Perm<n>::tightDecode(iterator start, iterator limit,
+        bool noTrailingData) {
+    // Ensure that our calculations will not overflow, even when reading
+    // an *invalid* encoding.  Here we note that:
+    //   - 2^31 > 94^4;
+    //   - 2^63 > 94^7.
+    // We enforce this now so that we will notice that we could technically
+    // break things if we optimise the Index type at a later date.  (Though
+    // the only possible "breakage" is that an invalid encoding might be
+    // incorrectly recognised as valid due to an overflow wrap-around).
+    static_assert(sizeof(Index) >= (tightChars_ <= 4 ? 4 : 8),
+        "The Index type could potentially overflow when reading an "
+        "invalid tight encoding.");
+
+    Index idx = 0;
+    Index power = 1;
+    for (int i = 0; i < tightChars_; ++i) {
+        if (start == limit)
+            throw InvalidInput("The tight encoding is incomplete");
+        Index piece = (*start++) - 33;
+        // code >= 0 because we are using an unsigned data type.
+        if (piece > 94)
+            throw InvalidInput("The tight encoding is invalid");
+        idx += (piece * power);
+        power *= 94;
+    }
+
+    if (idx < 0 || idx >= nPerms)
+        throw InvalidInput("The tight encoding is invalid");
+    if (noTrailingData && (start != limit))
+        throw InvalidInput("The tight encoding has trailing characters");
+
+    return Sn[idx];
 }
 
 template <int n>

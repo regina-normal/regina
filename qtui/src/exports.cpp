@@ -44,7 +44,6 @@
 #include "reginafilter.h"
 
 #include <QFileDialog>
-#include <QTextCodec>
 
 void ReginaMain::exportCSVSurfaceList() {
     exportFile(CSVSurfaceHandler::instance, tr(FILTER_CSV),

@@ -224,7 +224,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * @param entry the type vector to insert.
          * @param len the number of elements in the given type vector.
          */
-        void insert(const char* entry, unsigned len);
+        void insert(const char* entry, size_t len);
 
         /**
          * Determines whether the given type vector dominates any vector
@@ -244,7 +244,7 @@ class TypeTrie : public Output<TypeTrie<nTypes>> {
          * @return \c true if and only if \a vec dominates some type
          * vector stored in this trie.
          */
-        bool dominates(const char* vec, unsigned len) const;
+        bool dominates(const char* vec, size_t len) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -396,7 +396,7 @@ inline void TypeTrie<nTypes>::clear() {
 }
 
 template <int nTypes>
-void TypeTrie<nTypes>::insert(const char* entry, unsigned len) {
+void TypeTrie<nTypes>::insert(const char* entry, size_t len) {
     // Strip off trailing zeroes.
     while (len > 0 && ! entry[len - 1])
         --len;
@@ -404,7 +404,7 @@ void TypeTrie<nTypes>::insert(const char* entry, unsigned len) {
     // Insert this type vector, creating new nodes only when required.
     Node* node = &root_;
     const char* next = entry;
-    for (int pos = 0; pos < len; ++pos, ++next) {
+    for (size_t pos = 0; pos < len; ++pos, ++next) {
         if (! node->child_[*next])
             node->child_[*next] = new Node();
         node = node->child_[*next];
@@ -413,7 +413,7 @@ void TypeTrie<nTypes>::insert(const char* entry, unsigned len) {
 }
 
 template <int nTypes>
-bool TypeTrie<nTypes>::dominates(const char* vec, unsigned len) const {
+bool TypeTrie<nTypes>::dominates(const char* vec, size_t len) const {
     // Strip off trailing zeroes.
     while (len > 0 && ! vec[len - 1])
         --len;
@@ -427,10 +427,10 @@ bool TypeTrie<nTypes>::dominates(const char* vec, unsigned len) const {
     // if we have exhausted our options at that level of the search.
     const Node** node = new const Node*[len + 2];
 
-    int level = 0;
+    ssize_t level = 0;
     node[0] = &root_;
     while (level >= 0) {
-        if ((! node[level]) || level > len) {
+        if ((! node[level]) || level > static_cast<ssize_t>(len)) {
             // If node[level] is 0, then we ran out of siblings
             // at this level.
             // If level > len, then any vector in this subtree

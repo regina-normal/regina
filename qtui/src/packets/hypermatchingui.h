@@ -42,7 +42,7 @@
 #include "../packettabui.h"
 
 #include <memory>
-#include <qabstractitemmodel.h>
+#include <QAbstractItemModel>
 
 class QTreeView;
 

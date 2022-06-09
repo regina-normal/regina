@@ -1,5 +1,6 @@
 # Files to compile
 SET ( FILES
+  cut.cpp
   example5.cpp
   example6.cpp
   example7.cpp

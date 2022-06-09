@@ -101,7 +101,7 @@ class PosOrder {
          * @return \c true if and only if the hyperplane described by
          * row \a i is smaller than the hyperplane described by row \a j.
          */
-        inline bool operator () (long i, long j) const;
+        inline bool operator () (size_t i, size_t j) const;
 
         // Make this class non-assignable, since \a matrix_ is a reference.
         PosOrder& operator = (const PosOrder&) = delete;
@@ -113,9 +113,8 @@ inline PosOrder::PosOrder(const MatrixInt& matrix) :
         matrix_(matrix) {
 }
 
-inline bool PosOrder::operator () (
-        long i, long j) const {
-    for (unsigned long c = 0; c < matrix_.columns(); ++c) {
+inline bool PosOrder::operator () (size_t i, size_t j) const {
+    for (size_t c = 0; c < matrix_.columns(); ++c) {
         if (matrix_.entry(i, c) == 0 && matrix_.entry(j, c) != 0)
             return true;
         if (matrix_.entry(i, c) != 0 && matrix_.entry(j, c) == 0)

@@ -39,6 +39,7 @@
 
 #include "packet/packet.h"
 
+#include "reginaqt.h"
 #include <QDialog>
 #include <QComboBox>
 #include <vector>

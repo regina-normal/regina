@@ -88,6 +88,9 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * This describes how the tetrahedron faces of the given triangulation
          * are joined together in pairs.
          *
+         * Calling <tt>FacetPairing<3>(tri)</tt> is equivalent to calling
+         * <tt>tri.pairing()</tt>.
+         *
          * \pre The given triangulation is not empty.
          *
          * @param tri the triangulation whose face pairing should be
@@ -97,7 +100,7 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
 
         /**
          * Reads a new facet pairing from the given input stream.  This
-         * routine reads data in the format written by toTextRep().
+         * routine reads data in the format written by textRep().
          *
          * This routine will skip any initial whitespace in the given input
          * stream.  Once it finds its first non-whitespace character,
@@ -190,7 +193,35 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
          * tetrahedron at which we begin.  This parameter will also be
          * modified directly by this routine as a way of returning results.
          */
-        void followChain(size_t& tet, FacePair& faces) const;
+        void followChain(ssize_t& tet, FacePair& faces) const;
+
+        /**
+         * Deprecated version of followChain() that uses an unsigned
+         * integer type.
+         *
+         * This routine behaves identically to followChain(size_t&, FacePair&),
+         * except that the tetrahedron index is passed using type \c size_t
+         * instead of \c ssize_t.  This was the behaviour of followChain()
+         * in Regina 7.0 and earlier.
+         *
+         * As of Regina 7.1, followChain() has been reimplemented using
+         * \c ssize_t, for consistency with the type used by FacetSpec<3>::simp.
+         *
+         * See followChain(size_t&, FacePair&) for further details.
+         *
+         * \deprecated Use \c ssize_t for the tetrahedron index instead.
+         * This routine is implemented by calling the \c ssize_t variant
+         * with some extra casts on either side that may add a tiny
+         * performance cost.
+         *
+         * @param tet the index in the underlying triangulation of the
+         * tetrahedron to begin at.  This parameter will be modified
+         * directly by this routine as a way of returning the results.
+         * @param faces the pair of face numbers in the given
+         * tetrahedron at which we begin.  This parameter will also be
+         * modified directly by this routine as a way of returning results.
+         */
+        [[deprecated]] void followChain(size_t& tet, FacePair& faces) const;
 
         /**
          * Determines whether this face pairing contains a triple edge.
@@ -568,8 +599,10 @@ class FacetPairing<3> : public detail::FacetPairingBase<3> {
     // Make sure the parent class can call the private constructor.
     friend class detail::FacetPairingBase<3>;
 
-    // Facet pairings are largely read-only: allow application of isomorphisms.
+    // Facet pairings are largely read-only: allow application of isomorphisms
+    // and graph cuts.
     friend class Isomorphism<3>;
+    friend class Cut;
 };
 
 // Inline functions for FacetPairing<3>
@@ -584,6 +617,12 @@ inline FacetPairing<3>::FacetPairing(std::istream& in) :
 
 inline FacetPairing<3>::FacetPairing(size_t size) :
         detail::FacetPairingBase<3>(size) {
+}
+
+inline void FacetPairing<3>::followChain(size_t& tet, FacePair& faces) const {
+    auto t = static_cast<ssize_t>(tet);
+    followChain(t, faces);
+    tet = static_cast<size_t>(t);
 }
 
 } // namespace regina

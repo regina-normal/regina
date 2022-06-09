@@ -38,10 +38,10 @@
 #ifndef __PACKETIMPORTER_H
 #define __PACKETIMPORTER_H
 
+#include "reginaqt.h"
 #include <memory>
 
 class QString;
-class QTextCodec;
 class ReginaMain;
 
 namespace regina {

@@ -1336,6 +1336,8 @@
     <arg><option>--allowinvalid</option></arg>
     <group>
      <arg><option>-s, --sigs</option></arg>
+     <arg><option>-S, --canonical</option></arg>
+     <arg><option>-e, --encodings</option></arg>
      <arg><option>-c, --subcontainers</option></arg>
     </group>
     <group>
@@ -1395,7 +1397,8 @@
     </para>
     <para>
      For very large census runs, it is <emphasis>highly recommended</emphasis>
-     that you use the <option>--sigs</option> option, which will keep
+     that you use the either the <option>--sigs</option> or
+     <option>--encodings</option> option, which will keep
      the output file small and significantly reduce the memory footprint.
     </para>
    </caution>
@@ -1671,7 +1674,7 @@
       </para>
       <para>
        The output file will be a plain text file.  Each line will be a
-       short string of letters, digits and punctuation that uniquely
+       short string of letters, digits and/or punctuation that uniquely
        encodes a triangulation up to combinatorial isomorphism.
        You can import this text file from within &regina; by selecting
        &menuimportsigs; from the menu.
@@ -1684,6 +1687,103 @@
        triangulations can be written to the output file and forgotten
        immediately, instead of being kept in memory to construct a final
        &regina; data file.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-S, --canonical</option></term>
+     <listitem>
+      <para>
+       A variant of <option>--sigs</option> that outputs a list of
+       isomorphism signatures along with matching isomorphisms.
+      </para>
+      <para>
+       The output file will be a plain text file.  Each line will
+       contain two short strings, separated by a single space.
+       The first string will be the same isomorphism signature that is
+       output by <option>--sigs</option>.  The second string encodes an
+       isomorphism <replaceable>F</replaceable> with the property that,
+       if we reconstruct a triangulation from the isomorphism signature
+       and apply the isomorphism <replaceable>F</replaceable>, then
+       the resulting triangulation will have a canonical facet pairing.
+      </para>
+      <para>
+       Here <firstterm>canonical</firstterm> has the same meaning as
+       described below under the <option>--usepairs</option> option:
+       a facet pairing is in canonical form if it is a minimal representative
+       of its isomorphism class.
+      </para>
+      <para>
+       The isomorphisms themselves will be encoded using
+       <firstterm>tight encodings</firstterm>, which (like isomorphisms
+       signatures) are short strings of letters, digits and/or punctuation.
+       Currently you will need to use either &cpp; or &python; to decode
+       these; for example, in dimension&nbsp;3 you would call
+       <literal>Isomorphism&lt;3&gt;::tightDecoding()</literal>.
+      </para>
+      <para>
+       If you do not need these isomorphisms, then you should use the
+       simpler (and slightly faster) option <option>--sigs</option>
+       instead.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-e, --encodings</option></term>
+     <listitem>
+      <para>
+       Instead of writing a full &regina; data file, just output a list
+       of tight encodings.
+      </para>
+      <para>
+       The output file will be a plain text file.  Each line will be a
+       short string of letters, digits and/or punctuation that uniquely
+       encodes a labelled triangulation as a
+       <firstterm>tight encoding</firstterm>.
+      </para>
+      <para>
+       Tight encodings differ from isomorphism signatures (as output by
+       <option>--sigs</option>) in the following ways:
+       <itemizedlist>
+        <listitem><para>
+         The main reason for using tight encodings is that they preserve the
+         labelling of simplices and their vertices (unlike isomorphism
+         signatures, which only encode a triangulation up to combinatorial
+         isomorphism).
+        </para></listitem>
+        <listitem><para>
+         In general, tight encodings use slightly more characters and
+         are slightly faster to compute than isomorphism signatures.
+        </para></listitem>
+        <listitem><para>
+         Tight encodings are more difficult to work with.  They use a
+         wider variety of punctuation symbols (which makes them
+         inappropriate for filenames, and awkward to use as hard-coded
+         strings in source code).  Moreover, at present you need to use
+         either &cpp; or &python; to reconstruct triangulations from them;
+         for example, in dimension&nbsp;3 you would call
+         <literal>Triangulation&lt;3&gt;::tightDecoding()</literal>.
+        </para></listitem>
+       </itemizedlist>
+       If you are not sure whether to use isomorphism signatures or
+       tight encodings, it is recommended that you choose isomorphism
+       signatures (<option>--sigs</option>).
+      </para>
+      <para>
+       Like <option>--sigs</option>, this option performs much better in
+       large census enumerations than saving a full &regina; data file:
+       the output file will be considerably smaller, and the memory footprint
+       of <command>tricensus</command> will also be much smaller.
+       See the <option>--sigs</option> option for further details.
+      </para>
+      <para>
+       You can also use <option>--encodings</option> with
+       <option>--genpairs</option>, in which case the facet pairings
+       will be written using tight encodings instead of human-readable
+       text representations.  Tight encodings of facet pairings cannot
+       be used as input with <option>--usepairs</option>, and again you
+       will need to use &cpp; or &python; to reconstruct facet pairings
+       from them.
       </para>
      </listitem>
     </varlistentry>
@@ -1701,7 +1801,8 @@
        facet pairings.
       </para>
       <para>
-       This option cannot be used with <option>--sigs</option>.
+       This option cannot be used with <option>--sigs</option>,
+       <option>--canonical</option> or <option>--encodings</option>.
       </para>
      </listitem>
     </varlistentry>
@@ -1733,12 +1834,23 @@
       </para>
       <para>
        The list of all facet pairings will be written to the given output
-       file in text format (though you may omit the output file from the
-       command line, in which case the facet pairings will be written to
+       file in a plain text format (though you may omit the output file from
+       the command line, in which case the facet pairings will be written to
        standard output).
-       If you are coordinating your sub-censuses manually, you can use
-       the option <option>--usepairs</option> to generate triangulations
-       from a subset of these facet pairings.
+       By default, the output format will be a space-separated
+       numerical format, suitable for use with
+       <option>--usepairs</option> (see below).  However, if you pass
+       <option>--encodings</option> then the output format will use
+       tight encodings (which are shorter, contain no spaces, and are
+       much harder for humans to read).  See <option>--encodings</option>
+       for further details on tight encodings.
+      </para>
+      <para>
+       If you are coordinating your sub-censuses manually, you can
+       use the option <option>--usepairs</option> to generate triangulations
+       from a subset of these facet pairings.  In this case, the facet
+       pairings will need to be presented using the default
+       space-separated numerical format (not tight encodings).
       </para>
       <para>
        Options for orientability, finiteness or minimality cannot be
@@ -1767,8 +1879,8 @@
       </para>
       <para>
        Facet pairings should be supplied on standard input, one per line.
-       They should be listed in the format produced by the option
-       <option>--genpairs</option>.
+       They should be presented using the space-separated numerical format
+       produced by the option <option>--genpairs</option>.
       </para>
       <para>
        This option effectively lets you run a subset of a larger census.

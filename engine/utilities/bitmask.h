@@ -496,7 +496,7 @@ class Bitmask {
          *
          * @return the index of the first \c true bit.
          */
-        long firstBit() const;
+        ssize_t firstBit() const;
 
         /**
          * Returns the index of the last \c true bit in this bitmask,
@@ -504,7 +504,7 @@ class Bitmask {
          *
          * @return the index of the last \c true bit.
          */
-        long lastBit() const;
+        ssize_t lastBit() const;
 
         /**
          * Determines whether at most one bit is set to \c true in this
@@ -939,7 +939,7 @@ class Bitmask1 {
          *
          * @return the index of the first \c true bit.
          */
-        inline long firstBit() const {
+        inline ssize_t firstBit() const {
             return BitManipulator<T>::firstBit(mask);
         }
 
@@ -949,7 +949,7 @@ class Bitmask1 {
          *
          * @return the index of the last \c true bit.
          */
-        inline long lastBit() const {
+        inline ssize_t lastBit() const {
             return BitManipulator<T>::lastBit(mask);
         }
 
@@ -1400,7 +1400,7 @@ class Bitmask2 {
          *
          * @return the index of the first \c true bit.
          */
-        inline long firstBit() const {
+        inline ssize_t firstBit() const {
             // -1 case does not work out of the box in the second IF branch
             // due to the 8 * sizeof(T).
             if (low)
@@ -1417,7 +1417,7 @@ class Bitmask2 {
          *
          * @return the index of the last \c true bit.
          */
-        inline long lastBit() const {
+        inline ssize_t lastBit() const {
             // -1 case works out of the box in the second IF branch.
             if (high)
                 return 8 * sizeof(T) + BitManipulator<U>::lastBit(high);
@@ -1576,7 +1576,7 @@ inline bool Bitmask::operator != (const Bitmask& other) const {
 }
 
 inline bool Bitmask::lessThan(const Bitmask& other) const {
-    for (long i = pieces - 1; i >= 0; --i)
+    for (ssize_t i = pieces - 1; i >= 0; --i)
         if (mask[i] < other.mask[i])
             return true;
         else if (mask[i] > other.mask[i])
@@ -1612,7 +1612,7 @@ inline size_t Bitmask::bits() const {
     return ans;
 }
 
-inline long Bitmask::firstBit() const {
+inline ssize_t Bitmask::firstBit() const {
     for (size_t i = 0; i < pieces; ++i)
         if (mask[i])
             return 8 * sizeof(Piece) * i +
@@ -1620,8 +1620,8 @@ inline long Bitmask::firstBit() const {
     return -1;
 }
 
-inline long Bitmask::lastBit() const {
-    for (long i = pieces - 1; i >= 0; --i)
+inline ssize_t Bitmask::lastBit() const {
+    for (ssize_t i = pieces - 1; i >= 0; --i)
         if (mask[i])
             return 8 * sizeof(Piece) * i +
                 BitManipulator<Piece>::lastBit(mask[i]);

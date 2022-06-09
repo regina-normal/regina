@@ -853,7 +853,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
                      This information is used to maintain the ranks correctly
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
-            unsigned char bdryEdges;
+            uint8_t bdryEdges;
                 /**< The number of edges of the triangular piece of vertex
                      link that are in fact boundary edges of the vertex link.
                      Equivalently, this measures the number of faces of this
@@ -1137,7 +1137,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
                  tetrahedron vertices.  See the TetVertexState description
                  for details.  This array has size 4n, where vertex v of
                  tetrahedron t has index 4t+v. */
-        ptrdiff_t* vertexStateChanged;
+        std::make_signed_t<size_t>* vertexStateChanged;
             /**< Tracks the way in which the vertexState[] array has been
                  updated over time.  This array has size 8n, where element
                  4i+v describes how the gluing for order[i] affects vertex v
@@ -1157,7 +1157,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
                  the array that correspond to gluings that have not yet been
                  made.
 
-                 This is of type \c ptrdiff_t, not \c ssize_t, since
+                 This uses a signed variant of \c size_t, since
                  it can take on several possible negative values (whereas
                  \c ssize_t only strictly supports -1). */
 
@@ -1673,7 +1673,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
                      This information is used to maintain the ranks correctly
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
-            unsigned char bdryEdges;
+            uint8_t bdryEdges;
                 /**< The number of edges of the triangular piece of vertex
                      link that are in fact boundary edges of the vertex link.
                      Equivalently, this measures the number of faces of this
@@ -2480,10 +2480,11 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
                  possible permutations for the previous face.  */
 
 #if PRUNE_HIGH_DEG_EDGE_SET
-        int highDegLimit;
+        size_t highDegLimit;
             /**< The lowest allowable edge degree.  If the underlying
                  face pairing graph supports a (1,3,4) layered solid
-                 torus, this will be 3.  Otherwise it will be 4. */
+                 torus, this will be 3.  Otherwise it will be 4.
+                 We use \c size_t for compatibilitywith \a highDegSum. */
         size_t highDegSum;
             /**< The sum of (\a degree - \a highDegLimit) over all edges whose
                  degree is \a highDegLimit or higher.  This sum is updated
@@ -2773,7 +2774,7 @@ inline void GluingPermSearcher<3>::partialSearch(long maxDepth,
 }
 
 inline bool GluingPermSearcher<3>::isComplete() const {
-    return (orderElt == orderSize);
+    return (orderElt == static_cast<ssize_t>(orderSize));
 }
 
 inline void GluingPermSearcher<3>::dumpTaggedData(std::ostream& out) const {

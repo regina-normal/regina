@@ -56,7 +56,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
                         throw regina::InvalidArgument(
                             "Element of type vector is out of range");
                     }
-                    c[len++] = type;
+                    c[len++] = static_cast<char>(type);
                 }
             } catch (pybind11::cast_error const&) {
                 delete[] c;
@@ -79,7 +79,7 @@ void addTypeTrieFor(pybind11::module_& m, const char* name) {
                         throw regina::InvalidArgument(
                             "Element of type vector is out of range");
                     }
-                    c[len++] = type;
+                    c[len++] = static_cast<char>(type);
                 }
             } catch (pybind11::cast_error const&) {
                 delete[] c;

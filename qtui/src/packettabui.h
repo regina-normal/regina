@@ -101,14 +101,14 @@ class PacketTabbedUI : public QObject, public PacketUI {
          * This is a reference to the corresponding member of the global
          * ReginaPrefSet instance.
          */
-        unsigned& indexPref_;
+        int& indexPref_;
         bool rememberTabSelection_;
 
     public:
         /**
          * Constructor and destructor.
          */
-        PacketTabbedUI(PacketPane* newEnclosingPane, unsigned& indexPref);
+        PacketTabbedUI(PacketPane* newEnclosingPane, int& indexPref);
         ~PacketTabbedUI() override;
 
         /**
@@ -300,14 +300,14 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
          * This is a reference to the corresponding member of the global
          * ReginaPrefSet instance.
          */
-        unsigned& indexPref_;
+        int& indexPref_;
         bool rememberTabSelection_;
 
     public:
         /**
          * Constructor and destructor.
          */
-        PacketTabbedViewerTab(PacketTabbedUI* useParentUI, unsigned& indexPref);
+        PacketTabbedViewerTab(PacketTabbedUI* useParentUI, int& indexPref);
         ~PacketTabbedViewerTab() override;
 
         /**

@@ -295,11 +295,11 @@ regina::syntax::MatchResult QtMatcher::match(regina::syntax::KeywordListRule& ru
         return offset;
 
     if (rule.caseSensitivity()) {
-        if (keywordList->contains(m_text.midRef(offset, newOffset - offset).toString().toUtf8().constData(), true))
+        if (keywordList->contains(m_text.mid(offset, newOffset - offset).toUtf8().constData(), true))
             return newOffset;
     } else {
         // We must convert the string to lower-case before calling contains().
-        if (keywordList->contains(m_text.midRef(offset, newOffset - offset).toString().toLower().toUtf8().constData(), false))
+        if (keywordList->contains(m_text.mid(offset, newOffset - offset).toLower().toUtf8().constData(), false))
             return newOffset;
     }
     return offset;
@@ -357,7 +357,7 @@ regina::syntax::MatchResult QtMatcher::match(regina::syntax::RegExpr& rule, int 
 regina::syntax::MatchResult QtMatcher::match(regina::syntax::StringDetect& rule, int offset)
 {
     QString pattern = QString::fromUtf8(rule.string().c_str());
-    if (m_text.midRef(offset, pattern.length()).compare(pattern, rule.caseSensitivity() ? Qt::CaseSensitive : Qt::CaseInsensitive) == 0)
+    if (m_text.mid(offset, pattern.length()).compare(pattern, rule.caseSensitivity() ? Qt::CaseSensitive : Qt::CaseInsensitive) == 0)
         return offset + pattern.size();
     return offset;
 }
@@ -370,7 +370,7 @@ regina::syntax::MatchResult QtMatcher::match(regina::syntax::WordDetect& rule, i
     if (offset > 0 && !isDelimiter(rule, m_text.at(offset - 1)))
         return offset;
 
-    if (m_text.midRef(offset, rule.word().length()).toString().toUtf8().constData() != rule.word())
+    if (m_text.mid(offset, rule.word().length()).toUtf8().constData() != rule.word())
         return offset;
 
     if (m_text.size() == offset + rule.word().length() || isDelimiter(rule, m_text.at(offset + rule.word().length())))

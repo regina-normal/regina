@@ -38,6 +38,7 @@
 #ifndef __NEWPACKETDIALOG_H
 #define __NEWPACKETDIALOG_H
 
+#include "reginaqt.h"
 #include <QDialog>
 #include <memory>
 

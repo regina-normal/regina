@@ -37,6 +37,7 @@
 #ifndef __EDITTABLEVIEW_H
 #define __EDITTABLEVIEW_H
 
+#include "reginaqt.h"
 #include <QTableView>
 
 /**

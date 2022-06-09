@@ -71,7 +71,7 @@ bool EulerSearcher::TetVertexState::readData(std::istream& in, size_t nStates) {
     // twistUp is a char, but we need to read it as an int.
     int twist;
     in >> twist;
-    twistUp = twist;
+    twistUp = static_cast<char>(twist);
 
     // hadEqualRank is a bool, but we need to read it as an int.
     int bRank;
@@ -81,13 +81,13 @@ bool EulerSearcher::TetVertexState::readData(std::istream& in, size_t nStates) {
     // More chars to ints coming.
     int bVal;
 
-    in >> bVal; bdryEdges = bVal;
+    in >> bVal; bdryEdges = static_cast<uint8_t>(bVal);
     in >> bdryNext[0] >> bdryNext[1];
-    in >> bVal; bdryTwist[0] = bVal;
-    in >> bVal; bdryTwist[1] = bVal;
+    in >> bVal; bdryTwist[0] = static_cast<char>(bVal);
+    in >> bVal; bdryTwist[1] = static_cast<char>(bVal);
     in >> bdryNextOld[0] >> bdryNextOld[1];
-    in >> bVal; bdryTwistOld[0] = bVal;
-    in >> bVal; bdryTwistOld[1] = bVal;
+    in >> bVal; bdryTwistOld[0] = static_cast<char>(bVal);
+    in >> bVal; bdryTwistOld[1] = static_cast<char>(bVal);
 
     if (parent < -1 || parent >= static_cast<ssize_t>(nStates))
         return false;
@@ -149,7 +149,7 @@ bool EulerSearcher::TetEdgeState::readData(std::istream& in, size_t nTets) {
     // twistUp is a char, but we need to read it as an int.
     int twist;
     in >> twist;
-    twistUp = twist;
+    twistUp = static_cast<char>(twist);
 
     // hadEqualRank is a bool, but we need to read it as an int.
     int bRank;
@@ -206,7 +206,7 @@ EulerSearcher::EulerSearcher(int useEuler, FacetPairing<3> pairing,
 
     nVertexClasses = nTets * 4;
     vertexState = new TetVertexState[nTets * 4];
-    vertexStateChanged = new ptrdiff_t[nTets * 8];
+    vertexStateChanged = new std::make_signed_t<size_t>[nTets * 8];
     std::fill(vertexStateChanged, vertexStateChanged + nTets * 8,
         VLINK_JOIN_INIT);
     for (size_t i = 0; i < nTets * 4; i++) {
@@ -272,7 +272,7 @@ void EulerSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
     }
 
     // Is it a partial search that has already finished?
-    if (orderElt == orderSize) {
+    if (orderElt == static_cast<ssize_t>(orderSize)) {
         if (isCanonical())
             action_(perms_);
         return;
@@ -349,7 +349,7 @@ void EulerSearcher::searchImpl(long maxDepth, ActionWrapper&& action_) {
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (orderElt == orderSize) {
+        if (orderElt == static_cast<ssize_t>(orderSize)) {
             // We in fact have an entire triangulation.
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.
@@ -538,10 +538,11 @@ EulerSearcher::EulerSearcher(std::istream& in) :
             throw InvalidInput("Invalid vertex state "
                 "while attempting to read EulerSearcher");
 
-    vertexStateChanged = new ptrdiff_t[8 * nTets];
+    using VertexStateChanged = std::make_signed_t<size_t>;
+    vertexStateChanged = new VertexStateChanged[8 * nTets];
     for (size_t i = 0; i < 8 * nTets; i++) {
         in >> vertexStateChanged[i];
-        if (vertexStateChanged[i] >= 4 * static_cast<ptrdiff_t>(nTets))
+        if (vertexStateChanged[i] >= 4 * static_cast<VertexStateChanged>(nTets))
             throw InvalidInput("Invalid vertex state changed "
                 "while attempting to read EulerSearcher");
     }

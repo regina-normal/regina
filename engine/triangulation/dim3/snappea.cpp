@@ -45,7 +45,6 @@ Triangulation<3> Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
 
     // Check that this is a SnapPea triangulation.
     char name[1001];
-    unsigned len;
     in.getline(name, 1000);
     if (in.fail() || in.eof())
         throw InvalidArgument("fromSnapPea(): unexpected end of string");
@@ -60,6 +59,7 @@ Triangulation<3> Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
     in.getline(name, 1000);
     if (in.fail() || in.eof())
         throw InvalidArgument("fromSnapPea(): unexpected end of string");
+    size_t len;
     if ((len = strlen(name)) > 0 && name[len - 1] == '\r')
         name[len - 1] = 0;
 
@@ -126,9 +126,18 @@ Triangulation<3> Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
         }
 
         // Perform the gluings.
-        for (j=0; j<4; j++)
-            tet[i]->join(j, tet[g[j]],
-                Perm<4>(p[j][0], p[j][1], p[j][2], p[j][3]));
+        for (j=0; j<4; j++) {
+            Perm<4> gluing(p[j][0], p[j][1], p[j][2], p[j][3]);
+            if (auto adj = tet[i]->adjacentSimplex(j)) {
+                // This gluing has already been made from the other side.
+                if (adj != tet[g[j]] || tet[i]->adjacentGluing(j) != gluing) {
+                    delete[] tet;
+                    throw InvalidArgument("fromSnapPea(): "
+                        "inconsistent tetrahedron gluings");
+                }
+            } else
+                tet[i]->join(j, tet[g[j]], gluing);
+        }
 
         // Read in junk.
         for (j=0; j<4; j++)

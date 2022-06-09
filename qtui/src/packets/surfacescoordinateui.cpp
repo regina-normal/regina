@@ -172,7 +172,6 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 6) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 4)) {
             const regina::Vertex<3>* v;
-            std::pair<const regina::Edge<3>*, const regina::Edge<3>*> e;
 
             if ((v = s.isVertexLink()))
                 return tr("Vertex %1").arg(v->index());
@@ -398,7 +397,7 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
 }
 
-unsigned SurfaceModel::propertyColCount() const {
+int SurfaceModel::propertyColCount() const {
     return (surfaces_->isEmbeddedOnly() ? 8 : 6) +
         (surfaces_->allowsAlmostNormal() ? 1 : 0);
 }

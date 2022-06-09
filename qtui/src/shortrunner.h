@@ -38,8 +38,9 @@
 #ifndef __SHORTRUNNER_H
 #define __SHORTRUNNER_H
 
+#include "reginaqt.h"
+#include <QMutex>
 #include <QProcess>
-#include <qmutex.h>
 
 /**
  * A one-shot class for running a process and collecting output.

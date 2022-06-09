@@ -44,9 +44,9 @@ std::string Perm<4>::str() const {
     return ans;
 }
 
-std::string Perm<4>::trunc(unsigned len) const {
+std::string Perm<4>::trunc(int len) const {
     char ans[5];
-    for (unsigned i = 0; i < len; ++i)
+    for (int i = 0; i < len; ++i)
         ans[i] = static_cast<char>('0' + imageTable[code_][i]);
     ans[len] = 0;
     return ans;

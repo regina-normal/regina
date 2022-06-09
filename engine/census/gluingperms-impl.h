@@ -102,7 +102,7 @@ typename GluingPerms<dim>::Index GluingPerms<dim>::gluingToIndex(
 
 template <int dim>
 void GluingPerms<dim>::dumpData(std::ostream& out) const {
-    out << pairing_.toTextRep() << std::endl;
+    out << pairing_.textRep() << std::endl;
 
     for (size_t simp = 0; simp < size(); ++simp)
         for (int facet = 0; facet <= dim; ++facet) {

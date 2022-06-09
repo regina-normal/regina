@@ -77,9 +77,9 @@ std::string Perm<7>::str() const {
     return ans;
 }
 
-std::string Perm<7>::trunc(unsigned len) const {
+std::string Perm<7>::trunc(int len) const {
     char ans[8];
-    for (unsigned i = 0; i < len; ++i)
+    for (int i = 0; i < len; ++i)
         ans[i] = static_cast<char>('0' + (*this)[i]);
     ans[len] = 0;
     return ans;

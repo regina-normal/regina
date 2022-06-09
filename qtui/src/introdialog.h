@@ -38,6 +38,7 @@
 #define __INTRODIALOG_H
 
 // UI includes:
+#include "reginaqt.h"
 #include <QDialog>
 
 class QPushButton;

@@ -79,10 +79,8 @@ Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
     // Determine which face gluings should involve new tetrahedra.
     bool* newTetGluings = new bool[2 * nTet];
 
-    unsigned val;
-    int i, j;
-    for (i = 0; i < lenNewTet; i++) {
-        val = VAL(proper[i + 1]);
+    for (unsigned i = 0; i < lenNewTet; i++) {
+        int val = VAL(proper[i + 1]);
         if (val > 15) {
             delete[] newTetGluings;
             throw InvalidArgument("rehydrate(): invalid letter "
@@ -91,11 +89,11 @@ Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
 
         if (i % 2 == 0) {
             // This letter stores values 4i+4 -> 4i+7.
-            for (j = 0; (j < 4) && (4*i + 4 + j < 2 * nTet); j++)
+            for (int j = 0; (j < 4) && (4*i + 4 + j < 2 * nTet); j++)
                 newTetGluings[4*i + 4 + j] = ((val & (1 << j)) != 0);
         } else {
             // This letter stores values 4i-4 -> 4i-1.
-            for (j = 0; (j < 4) && (4*i - 4 + j < 2 * nTet); j++)
+            for (int j = 0; (j < 4) && (4*i - 4 + j < 2 * nTet); j++)
                 newTetGluings[4*i - 4 + j] = ((val & (1 << j)) != 0);
         }
     }
@@ -106,7 +104,7 @@ Triangulation<3> Triangulation<3>::rehydrate(const std::string& dehydration) {
     ChangeEventSpan span(ans);
 
     auto* tet = new Tetrahedron<3>*[nTet];
-    for (i = 0; i < nTet; i++)
+    for (unsigned i = 0; i < nTet; i++)
         tet[i] = ans.newTetrahedron();
 
     unsigned currTet = 0;       // Tetrahedron of the next face to glue.
@@ -232,7 +230,7 @@ std::string Triangulation<3>::dehydrate() const {
     // describe whether the gluings for some corresponding 8 tetrahedron faces
     // point to previously-seen or previously-unseen tetrahedra.
     // See the Callahan, Hildebrand and Weeks paper for details.
-    unsigned nTets = simplices_.size();
+    auto nTets = static_cast<unsigned>(simplices_.size());
     int* image = new int[nTets];
     int* preImage = new int[nTets];
     auto* vertexMap = new Perm<4>[nTets];
@@ -246,25 +244,22 @@ std::string Triangulation<3>::dehydrate() const {
     unsigned currGluingPos = 0;
 
     unsigned nextUnused = 1;
-    unsigned tetIndex, tet, dest, faceIndex, face;
-    Perm<4> map;
-    unsigned mapIndex;
 
-    for (tet = 0; tet < nTets; tet++)
-        image[tet] = preImage[tet] = -1;
+    std::fill(image, image + nTets, -1);
+    std::fill(preImage, preImage + nTets, -1);
 
     image[0] = preImage[0] = 0;
     vertexMap[0] = Perm<4>();
     newTet[0] = 0;
 
-    for (tetIndex = 0; tetIndex < nTets; tetIndex++) {
+    for (unsigned tetIndex = 0; tetIndex < nTets; tetIndex++) {
         // We must run through the tetrahedra in image order, not
         // preimage order.
-        tet = preImage[tetIndex];
+        int tet = preImage[tetIndex];
 
-        for (faceIndex = 0; faceIndex < 4; faceIndex++) {
+        for (int faceIndex = 0; faceIndex < 4; faceIndex++) {
             // Likewise for faces.
-            face = vertexMap[tet].pre(faceIndex);
+            int face = vertexMap[tet].pre(faceIndex);
 
             // INVARIANTS (held while tet < nTets):
             // - nextUnused > tetIndex
@@ -272,7 +267,8 @@ std::string Triangulation<3>::dehydrate() const {
             //   all filled in.
             // These invariants are preserved because the triangulation is
             // connected.  They break when tet == nTets.
-            dest = simplices_[tet]->adjacentTetrahedron(face)->index();
+            int dest = static_cast<int>(
+                simplices_[tet]->adjacentTetrahedron(face)->index());
 
             // Is it a gluing we've already seen from the other side?
             if (image[dest] >= 0)
@@ -297,12 +293,13 @@ std::string Triangulation<3>::dehydrate() const {
                 // Don't forget that our permutation abcd becomes dcba
                 // in dehydration language.
                 destChars[currGluingPos] = LETTER(image[dest]);
-                map = vertexMap[dest] *
+                Perm<4> map = vertexMap[dest] *
                     simplices_[tet]->adjacentGluing(face) *
                     vertexMap[tet].inverse() * Perm<4>(3, 2, 1, 0);
                 // Just loop to find the index of the corresponding
                 // gluing permutation.  There's only 24 permutations and
                 // at most 25 tetrahedra; we'll live with it.
+                int mapIndex;
                 for (mapIndex = 0; mapIndex < 24; mapIndex++)
                     if (map == Perm<4>::orderedS4[mapIndex])
                         break;

@@ -38,6 +38,7 @@
 #ifndef __COMPATCANVAS_H
 #define __COMPATCANVAS_H
 
+#include "reginaqt.h"
 #include <QGraphicsScene>
 
 namespace regina {

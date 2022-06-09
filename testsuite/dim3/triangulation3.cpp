@@ -34,6 +34,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <numeric> // for std::gcd()
 #include <sstream>
 #include <unistd.h>
 #include <vector>
@@ -52,7 +53,7 @@
 
 #include "testsuite/exhaustive.h"
 #include "testsuite/generic/triangulationtest.h"
-#include "testsuite/dim3/testtriangulation.h"
+#include "testsuite/dim3/testdim3.h"
 
 using regina::AbelianGroup;
 using regina::BoundaryComponent;
@@ -138,6 +139,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(meridianLongitude);
     CPPUNIT_TEST(retriangulate);
     CPPUNIT_TEST(swapping);
+    CPPUNIT_TEST(tightEncoding);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -473,30 +475,49 @@ class Triangulation3Test : public TriangulationTest<3> {
         static void verifyMagic(const Triangulation<3>& t, const char* name) {
             std::string sig = t.isoSig();
 
-            {
+            try {
                 Triangulation<3> recon(sig);
                 if (recon.isoSig() != sig) {
                     std::ostringstream msg;
-                    msg << name << ": cannot reconstruct from "
+                    msg << name << ": cannot reconstruct correctly from "
                         "isomorphism signature using magic constructor.";
                     CPPUNIT_FAIL(msg.str());
                 }
+            } catch (const regina::InvalidArgument&) {
+                std::ostringstream msg;
+                msg << name << ": cannot reconstruct at all from "
+                    "isomorphism signature using magic constructor.";
+                CPPUNIT_FAIL(msg.str());
             }
             if (t.isConnected() && (! t.hasBoundaryTriangles()) &&
                     t.size() <= 25) {
-                Triangulation<3> recon(t.dehydrate());
-                if (recon.isoSig() != sig) {
+                try {
+                    Triangulation<3> recon(t.dehydrate());
+                    if (recon.isoSig() != sig) {
+                        std::ostringstream msg;
+                        msg << name << ": cannot reconstruct correctly from "
+                            "dehydration string using magic constructor.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } catch (const regina::InvalidArgument&) {
                     std::ostringstream msg;
-                    msg << name << ": cannot reconstruct from "
+                    msg << name << ": cannot reconstruct at all from "
                         "dehydration string using magic constructor.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
             if ((! t.isEmpty()) && t.isValid() && ! t.hasBoundaryTriangles()) {
-                Triangulation<3> recon(t.snapPea());
-                if (recon.isoSig() != sig) {
+                try {
+                    Triangulation<3> recon(t.snapPea());
+                    if (recon.isoSig() != sig) {
+                        std::ostringstream msg;
+                        msg << name << ": cannot reconstruct correctly from "
+                            "SnapPea data using magic constructor.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } catch (const regina::InvalidArgument&) {
                     std::ostringstream msg;
-                    msg << name << ": cannot reconstruct from "
+                    msg << name << ": cannot reconstruct at all from "
                         "SnapPea data using magic constructor.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -3553,7 +3574,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // and Viro.
             double expectedTV, tv;
             for (unsigned q0 = 1; q0 < 2 * r; q0++) {
-                if (regina::gcd(q0, r) > 1)
+                if (std::gcd(q0, r) > 1)
                     continue;
 
                 expectedTV = 2 * sin(M_PI * q0 / static_cast<double>(r));
@@ -3595,7 +3616,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // The expected values are described in the paper of Turaev
             // and Viro.
             for (unsigned q0 = 1; q0 < 2 * r; q0++) {
-                if (regina::gcd(q0, r) > 1)
+                if (std::gcd(q0, r) > 1)
                     continue;
 
                 double tv = rp3_2.turaevViroApprox(r, q0);
@@ -3626,7 +3647,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // The expected values are described in the paper of Turaev
             // and Viro.
             for (unsigned q0 = 1; q0 < 2 * r; q0++) {
-                if (regina::gcd(q0, r) > 1)
+                if (std::gcd(q0, r) > 1)
                     continue;
 
                 double tv = lens3_1.turaevViroApprox(r, q0);
@@ -3653,7 +3674,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // The expected values are described in the paper of Turaev
             // and Viro.
             for (unsigned q0 = 1; q0 < 2 * r; q0++) {
-                if (regina::gcd(q0, r) > 1)
+                if (std::gcd(q0, r) > 1)
                     continue;
 
                 double tv = sphereBundle.turaevViroApprox(r, q0);
@@ -5466,6 +5487,13 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(
                     "std::iter_swap() did not swap properties correctly.");
             }
+        }
+
+        void tightEncoding() {
+            testManualAll(verifyTightEncodingWithName);
+            runCensusAllClosed(verifyTightEncodingWithName);
+            runCensusAllBounded(verifyTightEncodingWithName);
+            runCensusAllIdeal(verifyTightEncodingWithName);
         }
 };
 

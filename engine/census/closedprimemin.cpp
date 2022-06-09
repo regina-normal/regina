@@ -332,7 +332,7 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
     }
 
     // Is it a partial search that has already finished?
-    if (orderElt == nTets * 2) {
+    if (orderElt == static_cast<ssize_t>(nTets * 2)) {
         if (isCanonical())
             action_(perms_);
         return;
@@ -471,7 +471,7 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
             // We closed off a vertex link, which means we will end up
             // with more than one vertex (unless this was our very last
             // gluing).
-            if (orderElt + 1 < nTets * 2) {
+            if (orderElt + 1 < static_cast<ssize_t>(nTets * 2)) {
                 splitVertexClasses();
                 splitEdgeClasses();
                 continue;
@@ -507,7 +507,7 @@ void ClosedPrimeMinSearcher::searchImpl(long maxDepth,
         orderElt++;
 
         // If we're at the end, try the solution and step back.
-        if (orderElt == nTets * 2) {
+        if (orderElt == static_cast<ssize_t>(nTets * 2)) {
             // We in fact have an entire triangulation.
             // Run through the automorphisms and check whether our
             // permutations are in canonical form.

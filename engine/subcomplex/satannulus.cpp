@@ -36,7 +36,7 @@
 
 namespace regina {
 
-unsigned SatAnnulus::meetsBoundary() const {
+int SatAnnulus::meetsBoundary() const {
     unsigned ans = 0;
     if (! tet[0]->adjacentTetrahedron(roles[0][3]))
         ans++;

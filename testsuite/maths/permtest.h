@@ -36,6 +36,7 @@
 #include <type_traits>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/perm.h"
+#include "testsuite/utilities/tightencodingtest.h"
 
 using regina::Perm;
 
@@ -74,8 +75,12 @@ template <> inline std::array<int, 7> miscPermImg<7> { 4, 6, 2, 3, 0, 5, 1 };
  * classes Perm<n> whose codes are indices into S_n.
  */
 template <int n>
-class SmallPermTest : public CppUnit::TestFixture {
+class SmallPermTest :
+        public CppUnit::TestFixture, public TightEncodingTest<Perm<n>> {
     static_assert(Perm<n>::codeType == regina::PERM_CODE_INDEX);
+
+    public:
+        using TightEncodingTest<Perm<n>>::verifyTightEncoding;
 
     private:
         static constexpr bool requiresPrecompute = (n == 6 || n == 7);
@@ -995,6 +1000,11 @@ class SmallPermTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL("Preincrement and postincrement do not "
                     "wrap around together.");
             }
+        }
+
+        void tightEncoding() {
+            for (Index i = 0; i < nPerms; ++i)
+                verifyTightEncoding(Perm<n>::Sn[i]);
         }
 };
 

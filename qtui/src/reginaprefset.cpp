@@ -41,17 +41,18 @@
 #include "shortrunner.h"
 
 #include <fstream>
-#include <qglobal.h>
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
-#include <QTextCodec>
 #include <QTextDocument>
 #include <QTextStream>
 #include <QDesktopServices>
 #include <QSettings>
 #include <QUrl>
+#if QT_VERSION < QT_VERSION_CHECK(6,0,0)
+#include <QTextCodec>
+#endif
 
 namespace {
     const QString INACTIVE("## INACTIVE ##");
@@ -297,19 +298,19 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("Tabs");
-    tabDim2Tri = settings.value("Dim2Tri", 0).toUInt();
-    tabDim2TriSkeleton = settings.value("Tri2Skeleton", 0).toUInt();
-    tabDim3Tri = settings.value("Dim3Tri", 0).toUInt();
-    tabDim3TriAlgebra = settings.value("Dim3TriAlgebra", 0).toUInt();
-    tabDim3TriSkeleton = settings.value("Dim3TriSkeleton", 0).toUInt();
-    tabDim4Tri = settings.value("Dim4Tri", 0).toUInt();
-    tabDim4TriAlgebra = settings.value("Tri4Algebra", 0).toUInt();
-    tabDim4TriSkeleton = settings.value("Tri4Skeleton", 0).toUInt();
-    tabHypersurfaceList = settings.value("HypersurfaceList", 0).toUInt();
-    tabLink = settings.value("Link", 0).toUInt();
-    tabSnapPeaTri = settings.value("SnapPeaTri", 0).toUInt();
-    tabSnapPeaTriAlgebra = settings.value("SnapPeaTriAlgebra", 0).toUInt();
-    tabSurfaceList = settings.value("SurfaceList", 0).toUInt();
+    tabDim2Tri = settings.value("Dim2Tri", 0).toInt();
+    tabDim2TriSkeleton = settings.value("Tri2Skeleton", 0).toInt();
+    tabDim3Tri = settings.value("Dim3Tri", 0).toInt();
+    tabDim3TriAlgebra = settings.value("Dim3TriAlgebra", 0).toInt();
+    tabDim3TriSkeleton = settings.value("Dim3TriSkeleton", 0).toInt();
+    tabDim4Tri = settings.value("Dim4Tri", 0).toInt();
+    tabDim4TriAlgebra = settings.value("Tri4Algebra", 0).toInt();
+    tabDim4TriSkeleton = settings.value("Tri4Skeleton", 0).toInt();
+    tabHypersurfaceList = settings.value("HypersurfaceList", 0).toInt();
+    tabLink = settings.value("Link", 0).toInt();
+    tabSnapPeaTri = settings.value("SnapPeaTri", 0).toInt();
+    tabSnapPeaTriAlgebra = settings.value("SnapPeaTriAlgebra", 0).toInt();
+    tabSurfaceList = settings.value("SurfaceList", 0).toInt();
     settings.endGroup();
 
     settings.beginGroup("Triangulation");
@@ -489,10 +490,17 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 }
 
-QTextCodec* ReginaPrefSet::importExportCodec() {
+ReginaPrefSet::Codec ReginaPrefSet::importExportCodec() {
+#if QT_VERSION >= QT_VERSION_CHECK(6,0,0)
+    auto enc = QStringConverter::encodingForName(global().fileImportExportCodec);
+    if (! enc)
+        enc = QStringConverter::Utf8;
+    return *enc;
+#else
     QTextCodec* ans = QTextCodec::codecForName(global().fileImportExportCodec);
     if (! ans)
         ans = QTextCodec::codecForName("UTF-8");
     return ans;
+#endif
 }
 

@@ -45,8 +45,11 @@
 
 #include <array>
 #include <cstdlib>
+#include <iostream>
+#include <iterator>
 #include <string>
 #include "regina-core.h"
+#include "utilities/exception.h"
 #include "utilities/intutils.h"
 #include "utilities/randutils.h"
 
@@ -69,7 +72,8 @@ namespace regina {
  * \ingroup maths
  */
 inline constexpr char digit(int i) {
-    return (i < 10 ? '0' + i : 'a' + i - 10);
+    return (i < 10 ? '0' + static_cast<char>(i) :
+        'a' + static_cast<char>(i) - 10);
 }
 
 /**
@@ -241,6 +245,16 @@ class Perm {
         static constexpr Index nPerms_1 = factorial(n-1);
 
     private:
+        /**
+         * The number of characters used in a tight encoding.
+         * This is the smallest exponent k for which 94^k >= n!.
+         *
+         * This is only relevant for the generic Perm<n> template, where
+         * tight encodings have a fixed length.
+         */
+        static constexpr int tightChars_ = (n == 8 || n == 9 ? 3 :
+             n == 10 || n == 11 ? 4 : n == 12 || n == 13 ? 5 : n == 14 ? 6 : 7);
+
         /**
          * An array-like object used to implement Perm<n>::Sn.
          */
@@ -671,7 +685,90 @@ class Perm {
          * @return the corresponding prefix of the string representation
          * of this permutation.
          */
-        std::string trunc(unsigned len) const;
+        std::string trunc(int len) const;
+
+        /**
+         * Writes the tight encoding of this permutation to the given output
+         * stream.  See the page on \ref tight "tight encodings" for details.
+         *
+         * For all permutation classes Perm<n>, the tight encoding is based on
+         * the index into the full permutation group \a S_n.  For smaller
+         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * work with since the \a S_n index is used as the internal permutation
+         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * the \a S_n index requires some non-trivial work to compute.
+         *
+         * \ifacespython Not present; use tightEncoding() instead, which
+         * returns a string.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
+
+        /**
+         * Returns the tight encoding of this permutation.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * For all permutation classes Perm<n>, the tight encoding is based on
+         * the index into the full permutation group \a S_n.  For smaller
+         * permutation classes (\a n &le; 7), such encodings are very fast to
+         * work with since the \a S_n index is used as the internal permutation
+         * code.  For larger permutation classes however (8 &le; \a n &le; 16),
+         * the \a S_n index requires some non-trivial work to compute.
+         *
+         * @return the resulting encoded string.
+         */
+        std::string tightEncoding() const;
+
+        /**
+         * Reconstructs a permutation from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be given as a string.  If this string
+         * contains leading whitespace or any trailing characters at all
+         * (including trailing whitespace), then it will be treated as
+         * an invalid encoding (i.e., this routine will throw an exception).
+         *
+         * Tight encodings are fast to work with for small permutation classes
+         * (\a n &le; 7), but slower for larger permutation classes
+         * (8 &le; \a n &le; 16).  See tightEncoding() for further details.
+         *
+         * \exception InvalidArgument the given string is not a tight encoding
+         * of an <i>n</i>-element permutation.
+         *
+         * @param enc the tight encoding for an <i>n</i>-element permutation.
+         * @return the permutation represented by the given tight encoding.
+         */
+        static Perm tightDecoding(const std::string& enc);
+
+        /**
+         * Reconstructs a permutation from its given tight encoding.
+         * See the page on \ref tight "tight encodings" for details.
+         *
+         * The tight encoding will be read from the given input stream.
+         * If the input stream contains leading whitespace then it will be
+         * treated as an invalid encoding (i.e., this routine will throw an
+         * exception).  The input routine \e may contain further data: if this
+         * routine is successful then the input stream will be left positioned
+         * immediately after the encoding, without skipping any trailing
+         * whitespace.
+         *
+         * Tight encodings are fast to work with for small permutation classes
+         * (\a n &le; 7), but slower for larger permutation classes
+         * (8 &le; \a n &le; 16).  See tightEncoding() for further details.
+         *
+         * \exception InvalidInput the given input stream does not begin with
+         * a tight encoding of an <i>n</i>-element permutation.
+         *
+         * \ifacespython Not present; use tightDecoding() instead, which takes
+         * a string as its argument.
+         *
+         * @param input an input stream that begins with the tight encoding
+         * for an <i>n</i>-element permutation.
+         * @return the permutation represented by the given tight encoding.
+         */
+        static Perm tightDecode(std::istream& input);
 
         /**
          * Resets the images of all integers from \a from onwards to the
@@ -739,6 +836,39 @@ class Perm {
          * will be created.
          */
         constexpr Perm(Code code);
+
+    private:
+        /**
+         * Reconstructs a permutation from its given tight encoding.
+         *
+         * The tight encoding will be extracted one character at a time
+         * beginning with the iterator \a start, in a single pass, without
+         * skipping any leading whitespace.  If the iterator ever reaches
+         * \a limit before the encoding is complete then the encoding is
+         * treated as invalid (i.e., this routine will throw an exception).
+         *
+         * If \a noTrailingData is \c true then the iterator is required to
+         * \e finish at \a limit, or else the encoding will be considered
+         * invalid also; if \a noTrailingData is \c false then there is no
+         * constraint on the final state of the iterator.
+         *
+         * \exception InvalidInput the given iterator does not point to
+         * a tight encoding of an <i>n</i>-element permutation.
+         *
+         * \tparam iterator an input iterator type.
+         *
+         * @param start an iterator that points to the beginning of a
+         * tight encoding.
+         * @param limit an iterator that, if reached, indicates that no more
+         * characters are available.
+         * @param noTrailingData \c true if iteration should reach \a limit
+         * immediately after the encoding is read, or \c false if there is
+         * allowed to be additional unread data.
+         * @return the permutation represented by the given tight encoding.
+         */
+        template <typename iterator>
+        static Perm tightDecode(iterator start, iterator limit,
+            bool noTrailingData);
 };
 
 /**
@@ -903,13 +1033,16 @@ template <int n>
 constexpr bool Perm<n>::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < n; ++i)
-        mask |= (1 << ((code >> (imageBits * i)) & imageMask));
+        mask |= ((unsigned)1 << ((code >> (imageBits * i)) & imageMask));
     if constexpr (n < 16) {
-        return (mask + 1 == (1 << n) && (code >> (imageBits * n)) == 0);
+        return (mask + 1 == ((unsigned)1 << n) &&
+            (code >> (imageBits * n)) == 0);
     } else {
-        // There are no "spare bits" beyond the 16 * 4 bits used in the code.
-        // This means no need to check if any unwanted extra bits are set.
-        return (mask + 1 == (1 << n));
+        // We should not increment mask, since this could overflow on
+        // some platforms (since unsigned might be only 16 bits long).
+        // Also: code has no "spare bits" beyond the 16 * 4 bits that we use,
+        // and so we do not need to check if any unwanted extra bits are set.
+        return mask == 0xffff;
     }
 }
 
@@ -1024,7 +1157,7 @@ constexpr typename Perm<n>::Index Perm<n>::orderedSnIndex() const {
     int p = 0, pos1 = 0;
     for ( ; p < n - 1; ++p, pos1 += imageBits) {
         // position pos1 holds the (p)th image
-        int pImg = (c >> pos1) & imageMask; // image at pos1
+        Code pImg = (c >> pos1) & imageMask; // image at pos1
         for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;
                 pos2 += imageBits)
             if (((c >> pos2) & imageMask) > pImg)
@@ -1043,7 +1176,7 @@ constexpr typename Perm<n>::Index Perm<n>::SnIndex() const {
     int p = 0, pos1 = 0;
     for ( ; p < n - 1; ++p, pos1 += imageBits) {
         // position pos1 holds the (p)th image
-        int pImg = (c >> pos1) & imageMask; // image at pos1
+        Code pImg = (c >> pos1) & imageMask; // image at pos1
         // The following loop preserves the relative order of the images
         // at positions *after* pos1.
         for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;
@@ -1077,10 +1210,10 @@ Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
     // requires the type argument to be one of short, int, long or long long.
     static_assert(sizeof(Index) <= sizeof(long long),
         "Permutation index cannot fit inside a long long");
-    using Arg = typename std::conditional<sizeof(Index) <= sizeof(short), short,
-        typename std::conditional<sizeof(Index) <= sizeof(int), int,
-        typename std::conditional<sizeof(Index) <= sizeof(long), long,
-        long long>::type>::type>::type;
+    using Arg = std::conditional_t<sizeof(Index) <= sizeof(short), short,
+        std::conditional_t<sizeof(Index) <= sizeof(int), int,
+        std::conditional_t<sizeof(Index) <= sizeof(long), long,
+        long long>>>;
 
     if (even) {
         std::uniform_int_distribution<Arg> d(0, (nPerms / 2) - 1);
@@ -1103,13 +1236,29 @@ std::string Perm<n>::str() const {
 }
 
 template <int n>
-std::string Perm<n>::trunc(unsigned len) const {
+std::string Perm<n>::trunc(int len) const {
     char ans[n + 1];
     for (int i = 0; i < len; ++i)
         ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask);
     ans[len] = 0;
 
     return ans;
+}
+
+template <int n>
+inline Perm<n> Perm<n>::tightDecoding(const std::string& enc) {
+    try {
+        return tightDecode(enc.begin(), enc.end(), true);
+    } catch (const InvalidInput& exc) {
+        // For strings we use a different exception type.
+        throw InvalidArgument(exc.what());
+    }
+}
+
+template <int n>
+inline Perm<n> Perm<n>::tightDecode(std::istream& input) {
+    return tightDecode(std::istreambuf_iterator<char>(input),
+        std::istreambuf_iterator<char>(), false);
 }
 
 } // namespace regina

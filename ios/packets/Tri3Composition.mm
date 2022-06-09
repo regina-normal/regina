@@ -338,7 +338,6 @@
     regina::SatAnnulus ann;
     unsigned nAnnuli;
     long b;
-    int a;
     bool ref, back;
     NSString *thisAnnulus, *adjAnnulus;
     for (b = region.countBlocks() - 1; b >= 0; b--) {
@@ -349,12 +348,12 @@
         
         [details appendString:@INDENT3 "Adjacencies:\n"];
         
-        for (a = nAnnuli - 1; a >= 0; a--) {
+        for (ssize_t a = nAnnuli - 1; a >= 0; a--) {
             thisAnnulus = [NSString stringWithFormat:@"Annulus %ld/%d", b, a];
             if (! spec.block->hasAdjacentBlock(a))
                 [details appendFormat:@INDENT4 "%@ → boundary\n", thisAnnulus];
             else {
-                adjAnnulus = [NSString stringWithFormat:@"Annulus %ld/%d",
+                adjAnnulus = [NSString stringWithFormat:@"Annulus %ld/%ld",
                               region.blockIndex(spec.block->adjacentBlock(a)),
                               spec.block->adjacentAnnulus(a)];
                 ref = spec.block->adjacentReflected(a);

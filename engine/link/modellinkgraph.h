@@ -52,6 +52,7 @@ class ModelLinkGraph;
 class ModelLinkGraphArc;
 class ModelLinkGraphCells;
 class ModelLinkGraphNode;
+class StrandRef;
 
 /**
  * A reference to an outgoing edge from a node of a model graph for a
@@ -378,7 +379,7 @@ class ModelLinkGraphNode : public MarkedElement,
          *
          * @return the index of this node.
          */
-        int index() const;
+        size_t index() const;
         /**
          * Returns a reference to one of the four arcs of the graph that
          * exit this node.  This is equivalent to directly constructing
@@ -472,6 +473,20 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * Constructs an empty graph.
          */
         ModelLinkGraph();
+        /**
+         * Constructs the graph that models the given link.
+         *
+         * Any zero-component unknot components of the link will be ignored.
+         *
+         * The nodes of this graph will be numbered in the same way as
+         * the crossings of \a link.  For each node, arc 0 will represent
+         * the outgoing lower strand of the corresponding crossing.
+         *
+         * Using this constructor is identical to calling Link::graph().
+         *
+         * @param link the link that this new graph will model.
+         */
+        ModelLinkGraph(const Link& link);
         /**
          * Constructs a new copy of the given graph.
          *
@@ -941,6 +956,21 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
             { -1, -1, -1, 0, -1, -1, 1, -1, -1, 3, -1, -1, 2 },
             { -1, -1, -1, 1, -1, -1, 2, -1, -1, 0, -1, -1, 3 }
         };
+
+        /**
+         * Internal to the constructor that takes a link to model.
+         *
+         * This function returns the outgoing arc of this graph that
+         * corresponds to the outgoing upper/lower strand at the given crossing.
+         */
+        ModelLinkGraphArc outgoingArc(const StrandRef& s);
+        /**
+         * Internal to the constructor that takes a link to model.
+         *
+         * This function returns the outgoing arc of this graph that
+         * corresponds to the incoming upper/lower strand at the given crossing.
+         */
+        ModelLinkGraphArc incomingArc(const StrandRef& s);
 };
 
 /**
@@ -1446,7 +1476,7 @@ inline std::ostream& operator << (std::ostream& out,
 
 // Inline functions for ModelLinkGraphNode
 
-inline int ModelLinkGraphNode::index() const {
+inline size_t ModelLinkGraphNode::index() const {
     return markedIndex();
 }
 

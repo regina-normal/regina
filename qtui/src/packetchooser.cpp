@@ -136,7 +136,7 @@ void PacketChooser::packetBeingDestroyed(regina::PacketShell toDestroy) {
         // Make sure the call to removeItem() comes last since it could
         // trigger a refreshContents().
         long destroyIndex = it - packets.begin();
-        long currIndex = currentIndex();
+        int currIndex = currentIndex();
 
         packets.erase(it);
         if (destroyIndex == currIndex) {

@@ -44,4 +44,5 @@
 
 void addBase64(CppUnit::TextUi::TestRunner& runner);
 void addBitmask(CppUnit::TextUi::TestRunner& runner);
+void addTightEncoding(CppUnit::TextUi::TestRunner& runner);
 

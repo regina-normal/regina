@@ -94,7 +94,7 @@ class LayeredChain : public StandardTriangulation {
             /**< The bottom tetrahedron of this layered chain. */
         Tetrahedron<3>* top_;
             /**< The top tetrahedron of this layered chain. */
-        unsigned long index_;
+        size_t index_;
             /**< The number of tetrahedra in this layered chain. */
         Perm<4> bottomVertexRoles_;
             /**< The permutation described by bottomVertexRoles(). */
@@ -153,7 +153,7 @@ class LayeredChain : public StandardTriangulation {
          *
          * @return the number of tetrahedra.
          */
-        unsigned long index() const;
+        size_t index() const;
 
         /**
          * Returns a permutation represeting the role that each vertex
@@ -334,7 +334,7 @@ inline Tetrahedron<3>* LayeredChain::bottom() const {
 inline Tetrahedron<3>* LayeredChain::top() const {
     return top_;
 }
-inline unsigned long LayeredChain::index() const {
+inline size_t LayeredChain::index() const {
     return index_;
 }
 

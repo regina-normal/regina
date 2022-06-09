@@ -164,10 +164,10 @@ SatRegion::SatRegion(const SatRegion& src) :
     }
 }
 
-std::tuple<const SatBlock*, unsigned, bool, bool>
+std::tuple<const SatBlock*, size_t, bool, bool>
         SatRegion::boundaryAnnulus(size_t which) const {
     for (const SatBlockSpec& b : blocks_)
-        for (unsigned ann = 0; ann < b.block()->countAnnuli(); ++ann)
+        for (size_t ann = 0; ann < b.block()->countAnnuli(); ++ann)
             if (! b.block()->hasAdjacentBlock(ann)) {
                 if (which == 0)
                     return { b.block(), ann, b.refVert(), b.refHoriz() };
@@ -197,7 +197,7 @@ bool SatRegion::operator == (const SatRegion& other) const {
     auto you = other.blocks_.begin();
     for ( ; me != blocks_.end(); ++me, ++you) {
         const SatBlock* b = me->block();
-        for (unsigned ann = 0; ann < b->countAnnuli(); ++ann) {
+        for (size_t ann = 0; ann < b->countAnnuli(); ++ann) {
             if (const SatBlock* adj = b->adjacentBlock(ann)) {
                 if (you->block()->adjacentBlock(ann) !=
                         other.blocks_[index.at(adj)].block())
@@ -223,7 +223,7 @@ bool SatRegion::operator == (const SatRegion& other) const {
 
 SFSpace SatRegion::createSFS(bool reflect) const {
     // Count boundary components.
-    unsigned untwisted, twisted;
+    size_t untwisted, twisted;
     countBoundaries(untwisted, twisted);
 
     // Go ahead and build the Seifert fibred space.
@@ -280,11 +280,6 @@ SFSpace SatRegion::createSFS(bool reflect) const {
 }
 
 bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
-    unsigned ann, adjAnn;
-    size_t adjPos;
-    bool currTwisted, currNor;
-    unsigned annBdryTriangles;
-
     // Try to push past the boundary annuli of all blocks present and future.
     // We rely on a vector data type for blocks_ here, since this
     // will keep the loop doing exactly what it should do even if new
@@ -300,12 +295,12 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
         bool currHoriz = currBlockSpec.refHoriz();
 
         // Run through each boundary annulus for this block.
-        for (ann = 0; ann < currBlock->countAnnuli(); ann++) {
+        for (size_t ann = 0; ann < currBlock->countAnnuli(); ann++) {
             if (currBlock->hasAdjacentBlock(ann))
                 continue;
 
             // Do we have one or two boundary triangles?
-            annBdryTriangles = currBlock->annulus(ann).meetsBoundary();
+            int annBdryTriangles = currBlock->annulus(ann).meetsBoundary();
             if (annBdryTriangles == 2) {
                 // The annulus lies completely on the triangulation
                 // boundary.  Just skip it.
@@ -346,6 +341,7 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
             // No adjacent block.
             // Perhaps it's joined to something we've already seen?
             // Only search forwards from this annulus.
+            size_t adjPos, adjAnn;
             if (ann + 1 < currBlock->countAnnuli()) {
                 adjPos = pos;
                 adjAnn = ann + 1;
@@ -366,9 +362,9 @@ bool SatRegion::expand(SatBlock::TetList& avoidTets, bool stopIfIncomplete) {
 
                         // See what kinds of inconsistencies this
                         // rejoining has caused.
-                        currNor = regXor(regXor(currHoriz,
+                        bool currNor = regXor(regXor(currHoriz,
                             blocks_[adjPos].refHoriz()), ! adjHoriz);
-                        currTwisted = regXor(regXor(currVert,
+                        bool currTwisted = regXor(regXor(currVert,
                             blocks_[adjPos].refVert()), adjVert);
 
                         if (currNor)
@@ -426,7 +422,7 @@ long SatRegion::blockIndex(const SatBlock* block) const {
 }
 
 void SatRegion::calculateBaseEuler() {
-    unsigned ann;
+    size_t ann;
 
     long faces = blocks_.size();
 
@@ -556,22 +552,22 @@ void SatRegion::writeTextShort(std::ostream& out) const {
     out << " ]";
 }
 
-void SatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {
+void SatRegion::countBoundaries(size_t& untwisted, size_t& twisted) const {
     untwisted = twisted = 0;
 
     // Just trace around each boundary component in turn.
     // Note that we are guaranteed that blocks_ is non-empty.
-    unsigned i, j;
+    size_t i, j;
 
     // Count annuli in each block, and work out how to index all annuli
     // from all blocks into a single monolithic array.
-    auto* nAnnuli = new unsigned[blocks_.size()];
-    auto* indexAnnuliFrom = new unsigned[blocks_.size()];
+    auto* nAnnuli = new size_t[blocks_.size()];
+    auto* indexAnnuliFrom = new size_t[blocks_.size()];
     for (i = 0; i < blocks_.size(); ++i) {
         nAnnuli[i] = blocks_[i].block()->countAnnuli();
         indexAnnuliFrom[i] = (i == 0 ? 0 : indexAnnuliFrom[i-1] + nAnnuli[i-1]);
     }
-    unsigned totAnnuli = indexAnnuliFrom[blocks_.size() - 1] +
+    size_t totAnnuli = indexAnnuliFrom[blocks_.size() - 1] +
         nAnnuli[blocks_.size() - 1];
 
     // Prepare to keep track of which annuli we've processed.
@@ -579,9 +575,6 @@ void SatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {
     std::fill(used, used + totAnnuli, false);
 
     // Off we go!
-    const SatBlock *currBlock;
-    unsigned currBlockIndex, currAnnulus;
-    bool hTwist, vTwist;
     for (i = 0; i < blocks_.size(); ++i) {
         const SatBlock* b = blocks_[i].block();
         for (j = 0; j < nAnnuli[i]; ++j) {
@@ -599,11 +592,11 @@ void SatRegion::countBoundaries(unsigned& untwisted, unsigned& twisted) const {
             // This annulus is on the boundary, and not yet processed.
             // Run around the entire boundary component, marking annuli
             // as processed, and testing whether we close with a twist.
-            currBlock = b;
-            currBlockIndex = i;
-            currAnnulus = j;
-            hTwist = false;
-            vTwist = false;
+            const SatBlock* currBlock = b;
+            size_t currBlockIndex = i;
+            size_t currAnnulus = j;
+            bool hTwist = false;
+            bool vTwist = false;
 
             while (true) {
                 used[indexAnnuliFrom[currBlockIndex] + currAnnulus] = true;

@@ -793,6 +793,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * <i>2r</i>th or <i>r</i>th root of unity, as described above.
          * @param alg the algorithm with which to compute the invariant.  If
          * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
+         * This should be treated as a hint only: if the algorithm you choose
+         * is not supported for the given parameters (\a r and \a parity),
+         * then Regina will use another algorithm instead.
          * @param tracker a progress tracker through will progress will
          * be reported, or \c nullptr if no progress reporting is required.
          * @return the requested Turaev-Viro invariant, or an uninitialised
@@ -847,6 +850,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * as described above.
          * @param alg the algorithm with which to compute the invariant.  If
          * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
+         * This should be treated as a hint only: if the algorithm you choose
+         * is not supported for the given parameters (\a r and \a whichRoot),
+         * then Regina will use another algorithm instead.
          * @return the requested Turaev-Viro invariant.
          *
          * @see allCalculatedTuraevViro
@@ -3585,7 +3591,7 @@ inline Triangulation<3>& Triangulation<3>::operator = (Triangulation&& src) {
 
     ChangeEventSpan span(*this);
 
-    TriangulationBase<3>::operator = (std::move(src));
+    // The parent class assignment goes last, since its move invalidates src.
 
     ideal_ = src.ideal_;
     standard_ = src.standard_;
@@ -3593,6 +3599,8 @@ inline Triangulation<3>& Triangulation<3>::operator = (Triangulation&& src) {
 
     strictAngleStructure_ = std::move(src.strictAngleStructure_);
     generalAngleStructure_ = std::move(src.generalAngleStructure_);
+
+    TriangulationBase<3>::operator = (std::move(src));
 
     return *this;
 }

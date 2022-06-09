@@ -99,7 +99,7 @@ class HyperModel : public QAbstractItemModel {
         /**
          * Information on the property (non-coordinate) columns.
          */
-        unsigned propertyColCount() const;
+        int propertyColCount() const;
         QString propertyColName(int whichCol) const;
         QString propertyColDesc(int whichCol) const;
 };

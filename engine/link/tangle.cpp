@@ -295,9 +295,8 @@ bool Tangle::operator == (const Tangle& other) const {
     if (crossings_.size() != other.crossings_.size())
         return false;
 
-    int i, j;
-    for (i = 0; i < 2; ++i)
-        for (j = 0; j < 2; ++j)
+    for (int i = 0; i < 2; ++i)
+        for (int j = 0; j < 2; ++j)
             if (end_[i][j] != translate(other.end_[i][j]))
                 return false;
 

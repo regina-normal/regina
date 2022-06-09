@@ -145,7 +145,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         std::vector<QListView*> componentLists;
             /**< One list for each component.  For a 0-crossing unknot
                  component, the corresponding list is \c nullptr. */
-        int useCrossing;
+        ssize_t useCrossing;
 
         /**
          * "What's this" texts that are created on demand.

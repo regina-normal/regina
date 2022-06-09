@@ -44,7 +44,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QPushButton>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QSize>
 #include <QStringList>
 #include <QWhatsThis>
@@ -65,25 +65,26 @@ enum { GAP_init,
 /**
  * Full matching regular expressions.
  */
-QRegExp reInt("^[0-9]+$");
-QRegExp reGAPPrompt("^gap>\\s*$");
-QRegExp reGAPGenerator("^f[0-9]+$");
+const QRegularExpression reInt("^[0-9]+$");
+const QRegularExpression reGAPPrompt("^gap>\\s*$");
+const QRegularExpression reGAPGenerator("^f[0-9]+$");
+const QRegularExpression reGAPTerm("^(f[0-9]+)(\\^(-?[0-9]+))?$");
 
 /**
  * Regular expressions for validity testing.  Note that each of these
  * should be able to valididate just the first line of output, even if
  * the groups involved are very large.
  */
-QRegExp reValInit("^GAP.*[Vv]ersion");
-QRegExp reValAckFreeGroup("^<free group on the generators");
-QRegExp reValAckFPGroup("^<fp group o[fn] ");
-QRegExp reValAckSimplify("^\\[");
-QRegExp reValRelator("^f[0-9]+");
+const QRegularExpression reValInit("^GAP.*[Vv]ersion");
+const QRegularExpression reValAckFreeGroup("^<free group on the generators");
+const QRegularExpression reValAckFPGroup("^<fp group o[fn] ");
+const QRegularExpression reValAckSimplify("^\\[");
+const QRegularExpression reValRelator("^f[0-9]+");
 
 /**
  * Miscellaneous regular expressions.
  */
-QRegExp reWhitespace("\\s");
+const QRegularExpression reWhitespace("\\s");
 
 const char* GAP_PROMPT = "gap> ";
 
@@ -175,21 +176,21 @@ bool GAPRunner::appearsValid(const QString& output) {
 
     switch (stage) {
         case GAP_init:
-            return (use.isEmpty() || reValInit.indexIn(use) == 0);
+            return (use.isEmpty() || reValInit.match(use).hasMatch());
         case GAP_oldgens:
-            return (reValAckFreeGroup.indexIn(use) == 0);
+            return (reValAckFreeGroup.match(use).hasMatch());
         case GAP_oldrels:
-            return (reValAckFPGroup.indexIn(use) == 0);
+            return (reValAckFPGroup.match(use).hasMatch());
         case GAP_simplify:
-            return (reValAckSimplify.indexIn(use) == 0);
+            return (reValAckSimplify.match(use).hasMatch());
         case GAP_newgenscount:
-            return reInt.exactMatch(use);
+            return reInt.match(use).hasMatch();
         case GAP_newgenseach:
-            return reGAPGenerator.exactMatch(use);
+            return reGAPGenerator.match(use).hasMatch();
         case GAP_newrelscount:
-            return reInt.exactMatch(use);
+            return reInt.match(use).hasMatch();
         case GAP_newrelseach:
-            return (reValRelator.indexIn(use) == 0);
+            return (reValRelator.match(use).hasMatch());
         case GAP_done:
             return (use.isEmpty());
     }
@@ -361,22 +362,20 @@ std::optional<regina::GroupExpression> GAPRunner::parseRelation(
 
     regina::GroupExpression ans;
 
-    // Make the regex local to this function since we're capturing text.
-    QRegExp reGAPTerm("(f[0-9]+)(\\^(-?[0-9]+))?");
-
     QString term;
     QString genStr;
     std::map<QString, unsigned long>::iterator genPos;
     unsigned long gen;
     long exp;
     for (const auto& t : terms) {
-        if (! reGAPTerm.exactMatch(t)) {
+        auto match = reGAPTerm.match(t);
+        if (! match.hasMatch()) {
             error(tr("GAP produced the following group relator, which could "
                 "not be understood:<p><tt>%1</tt>").arg(escape(reln)));
             return std::nullopt;
         }
 
-        genStr = reGAPTerm.cap(1);
+        genStr = match.captured(1);
         genPos = newGens.find(genStr);
         if (genPos == newGens.end()) {
             error(tr("GAP produced the following group relator, which "
@@ -387,10 +386,10 @@ std::optional<regina::GroupExpression> GAPRunner::parseRelation(
             gen = (*genPos).second;
         }
 
-        if (reGAPTerm.cap(2).isEmpty())
+        if (match.captured(2).isEmpty())
             exp = 1;
         else
-            exp = reGAPTerm.cap(3).toLong();
+            exp = match.captured(3).toLong();
 
         ans.addTermLast(gen, exp);
     }
@@ -446,7 +445,7 @@ void GAPRunner::readReady() {
             // If it's not our prompt, just wait for more.  It might be
             // partial output.
             partialLine += line;
-            if (reGAPPrompt.exactMatch(partialLine)) {
+            if (reGAPPrompt.match(partialLine).hasMatch()) {
                 // It's indeed a prompt.  Are we ready for one?
                 if (currOutput.isEmpty() && stage != GAP_init) {
                     error(tr("GAP asked for more input than we could "

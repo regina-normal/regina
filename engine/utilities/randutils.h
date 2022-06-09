@@ -196,20 +196,20 @@ Int RandomEngine::rand(Int range) {
     // A slight messiness here is that std::uniform_int_distribution
     // requires the type argument to be one of short, int, long or long long
     // (either signed or unsigned).
-    static_assert(std::is_integral<Int>::value,
+    static_assert(std::is_integral_v<Int>,
         "RandomEngine::rand() requires a native integer type");
     static_assert(sizeof(Int) <= sizeof(long long),
         "RandomEngine::rand() requires a type that can fit inside a long long");
 
-    using Arg = typename std::conditional<std::is_signed<Int>::value,
-        typename std::conditional<sizeof(Int) <= sizeof(short), short,
-        typename std::conditional<sizeof(Int) <= sizeof(int), int,
-        typename std::conditional<sizeof(Int) <= sizeof(long), long,
-        long long>::type>::type>::type,
-        typename std::conditional<sizeof(Int) <= sizeof(short), unsigned short,
-        typename std::conditional<sizeof(Int) <= sizeof(int), unsigned int,
-        typename std::conditional<sizeof(Int) <= sizeof(long), unsigned long,
-        unsigned long long>::type>::type>::type>::type;
+    using Arg = std::conditional_t<std::is_signed_v<Int>,
+        std::conditional_t<sizeof(Int) <= sizeof(short), short,
+        std::conditional_t<sizeof(Int) <= sizeof(int), int,
+        std::conditional_t<sizeof(Int) <= sizeof(long), long,
+        long long>>>,
+        std::conditional_t<sizeof(Int) <= sizeof(short), unsigned short,
+        std::conditional_t<sizeof(Int) <= sizeof(int), unsigned int,
+        std::conditional_t<sizeof(Int) <= sizeof(long), unsigned long,
+        unsigned long long>>>>;
 
     std::uniform_int_distribution<Arg> d(0, range - 1);
     std::scoped_lock<std::mutex> lock(mutex_);

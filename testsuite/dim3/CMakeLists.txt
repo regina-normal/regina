@@ -6,6 +6,7 @@
 SET ( FILES
   connectedsumdecomp.cpp
   eltmoves.cpp
+  facetpairing3.cpp
   homologicaldata.cpp
   isomorphism.cpp
   links.cpp
