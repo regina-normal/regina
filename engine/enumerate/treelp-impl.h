@@ -63,6 +63,7 @@
 #include "maths/matrixops.h"
 #include "surface/normalsurfaces.h"
 #include "triangulation/dim3.h"
+#include "utilities/bitmask.h"
 #include <cstring>
 
 namespace regina {
@@ -1248,8 +1249,6 @@ void LPData<LPConstraint, IntType>::makeFeasible() {
     // The bits in oldBasis are a snapshot of which variables were in
     // the basis at some point in the past, and the bits in currBasis
     // indicate which variables are in the basis right now.
-    // We store these using std::vector<bool>, which is typically a
-    // specialised bit-packed vector (just like the old regina::Bitmask).
     //
     // We use Brent's method for detecting cycles:
     // We store a snapshot in oldBasis after 2^k pivots, for all k.
@@ -1260,10 +1259,10 @@ void LPData<LPConstraint, IntType>::makeFeasible() {
     // overall is at most three times the total number of pivots
     // before the first repeated basis).
     size_t nCols = origTableaux_->columns();
-    std::vector<bool> currBasis(nCols, false);
+    Bitmask currBasis(nCols);
     for (size_t r = 0; r < rank_; ++r)
-        currBasis[basis_[r]] = true;
-    std::vector<bool> oldBasis = currBasis;
+        currBasis.set(basis_[r], true);
+    Bitmask oldBasis(currBasis);
     unsigned long pow2 = 1;
     unsigned long nPivots = 0;
 
@@ -1319,8 +1318,8 @@ void LPData<LPConstraint, IntType>::makeFeasible() {
         pivot(outCol, c);
 
         // Run our cycle-detection machinery.
-        currBasis[outCol] = false;
-        currBasis[c] = true;
+        currBasis.set(outCol, false);
+        currBasis.set(c, true);
 
         if (currBasis == oldBasis) {
             // We've cycled!
