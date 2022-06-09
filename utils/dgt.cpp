@@ -56,7 +56,7 @@ class graph {
 public:
     
     static int uniqueID() {
-        // TODO: Make thread safe but mutex seems to break things...
+        // TODO: Make thread safe, but mutex seems to break things...
         static int nextID = 0;
         return nextID++;
     }
