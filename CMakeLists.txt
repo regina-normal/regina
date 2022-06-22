@@ -504,6 +504,7 @@ ELSE(DISABLE_GUI)
     set(REGINA_QT 6)
     MESSAGE(STATUS "Found Qt6: ${Qt6_DIR}")
   else (Qt6Widgets_FOUND AND Qt6SvgWidgets_FOUND)
+    MESSAGE(STATUS "Qt6 not found: will look for Qt5 instead")
     FIND_PACKAGE(Qt5Widgets QUIET)
     FIND_PACKAGE(Qt5Svg QUIET)
     if (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
@@ -513,7 +514,7 @@ ELSE(DISABLE_GUI)
     else (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
       set(QT_FOUND FALSE)
       unset(REGINA_QT)
-      MESSAGE(STATUS "Qt6 or Qt5 not found")
+      MESSAGE(STATUS "Qt5 not found")
     endif (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
   endif (Qt6Widgets_FOUND AND Qt6SvgWidgets_FOUND)
 
@@ -606,7 +607,7 @@ ELSE(DISABLE_GUI)
   MACRO_LOG_FEATURE(QT_FOUND
     "Qt6 or Qt5"
     "Required for Regina's graphical user interface"
-    "http://qt-project.org/"
+    "https://www.qt.io/"
     TRUE ""
     "To disable the graphical user interface, run: cmake -DDISABLE_GUI=1")
 ENDIF()
