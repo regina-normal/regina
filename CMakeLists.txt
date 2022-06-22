@@ -300,8 +300,8 @@ MACRO_LOG_FEATURE(ICONV_FOUND
   TRUE)
 
 FIND_PACKAGE(Jansson)
-INCLUDE_DIRECTORIES(${JANSSON_INCLUDE_DIR})
-MACRO_LOG_FEATURE(JANSSON_FOUND
+INCLUDE_DIRECTORIES(${Jansson_INCLUDE_DIR})
+MACRO_LOG_FEATURE(Jansson_FOUND
   "Jansson"
   "Essential: JSON support"
   "http://www.digip.org/jansson/"
@@ -343,10 +343,10 @@ IF (NOT DISABLE_PYTHON)
 ENDIF (NOT DISABLE_PYTHON)
 
 FIND_PACKAGE(KVStore)
-MACRO_LOG_FEATURE(KVSTORE_FOUND
-  "${KVSTORE_DISPLAYNAME}"
+MACRO_LOG_FEATURE(KVStore_FOUND
+  "${KVStore_DISPLAYNAME}"
   "Essential: lightweight database library for census data"
-  "${KVSTORE_DISPLAYURL}"
+  "${KVStore_DISPLAYURL}"
   TRUE)
 
 # Dependencies used by only some components of Regina
@@ -497,19 +497,19 @@ ELSEIF(DISABLE_GUI)
 ELSE(DISABLE_GUI)
   set(CMAKE_AUTOMOC ON)
 
-  FIND_PACKAGE(Qt6Widgets)
-  FIND_PACKAGE(Qt6SvgWidgets)
+  FIND_PACKAGE(Qt6Widgets QUIET)
+  FIND_PACKAGE(Qt6SvgWidgets QUIET)
   if (Qt6Widgets_FOUND AND Qt6SvgWidgets_FOUND)
     set(QT_FOUND TRUE)
     set(REGINA_QT 6)
     MESSAGE(STATUS "Found Qt6: ${Qt6_DIR}")
   else (Qt6Widgets_FOUND AND Qt6SvgWidgets_FOUND)
-    FIND_PACKAGE(Qt5Widgets)
-    FIND_PACKAGE(Qt5Svg)
+    FIND_PACKAGE(Qt5Widgets QUIET)
+    FIND_PACKAGE(Qt5Svg QUIET)
     if (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
       set(QT_FOUND TRUE)
       set(REGINA_QT 5)
-      MESSAGE(STATUS "Found Qt5: ${Qt5_DIR}")
+      MESSAGE(STATUS "Found Qt5: ${Qt5Core_DIR}")
     else (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
       set(QT_FOUND FALSE)
       unset(REGINA_QT)
