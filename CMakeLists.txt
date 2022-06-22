@@ -300,8 +300,8 @@ MACRO_LOG_FEATURE(ICONV_FOUND
   TRUE)
 
 FIND_PACKAGE(Jansson)
-INCLUDE_DIRECTORIES(${JANSSON_INCLUDE_DIR})
-MACRO_LOG_FEATURE(JANSSON_FOUND
+INCLUDE_DIRECTORIES(${Jansson_INCLUDE_DIR})
+MACRO_LOG_FEATURE(Jansson_FOUND
   "Jansson"
   "Essential: JSON support"
   "http://www.digip.org/jansson/"
@@ -343,10 +343,10 @@ IF (NOT DISABLE_PYTHON)
 ENDIF (NOT DISABLE_PYTHON)
 
 FIND_PACKAGE(KVStore)
-MACRO_LOG_FEATURE(KVSTORE_FOUND
-  "${KVSTORE_DISPLAYNAME}"
+MACRO_LOG_FEATURE(KVStore_FOUND
+  "${KVStore_DISPLAYNAME}"
   "Essential: lightweight database library for census data"
-  "${KVSTORE_DISPLAYURL}"
+  "${KVStore_DISPLAYURL}"
   TRUE)
 
 # Dependencies used by only some components of Regina
