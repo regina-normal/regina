@@ -496,8 +496,26 @@ ELSEIF(DISABLE_GUI)
   MESSAGE(WARNING "User set DISABLE_GUI=1: graphical user interface disabled.")
 ELSE(DISABLE_GUI)
   set(CMAKE_AUTOMOC ON)
-  FIND_PACKAGE(Qt5Widgets)
-  FIND_PACKAGE(Qt5Svg)
+
+  FIND_PACKAGE(Qt6Widgets)
+  FIND_PACKAGE(Qt6Svg)
+  if (Qt6Widgets_FOUND AND Qt6Svg_FOUND)
+    set(QT_FOUND TRUE)
+    set(REGINA_QT 6)
+    MESSAGE(STATUS "Found Qt6: ${Qt6_DIR}")
+  else (Qt6Widgets_FOUND AND Qt6Svg_FOUND)
+    FIND_PACKAGE(Qt5Widgets)
+    FIND_PACKAGE(Qt5Svg)
+    if (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
+      set(QT_FOUND TRUE)
+      set(REGINA_QT 5)
+      MESSAGE(STATUS "Found Qt5: ${Qt5_DIR}")
+    else (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
+      set(QT_FOUND FALSE)
+      unset(REGINA_QT)
+      MESSAGE(STATUS "Qt6 or Qt5 not found")
+    endif (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
+  endif (Qt6Widgets_FOUND AND Qt6Svg_FOUND)
 
   IF (APPLE AND GRAPHVIZ_FRAMEWORK_PATH)
     # The GRAPHVIZ_FRAMEWORK_PATH option is a hack that allows you to link
@@ -581,15 +599,12 @@ ELSE(DISABLE_GUI)
 
   # This must come after SharedMimeInfo is included, since the qtui/
   # makefiles use SharedMimeInfo macros.
-  if (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
+  if (QT_FOUND)
     ADD_SUBDIRECTORY(qtui)
-    SET(QT5_FOUND TRUE)
-  else (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
-    SET(QT5_FOUND FALSE)
-  endif (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
+  endif (QT_FOUND)
 
-  MACRO_LOG_FEATURE(QT5_FOUND
-    "Qt5"
+  MACRO_LOG_FEATURE(QT_FOUND
+    "Qt6 or Qt5"
     "Required for Regina's graphical user interface"
     "http://qt-project.org/"
     TRUE ""
