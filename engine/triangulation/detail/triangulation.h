@@ -4609,6 +4609,8 @@ void TriangulationBase<dim>::barycentricSubdivision() {
         }
 
     // Delete the existing simplices and put in the new ones.
+    // TODO: If the skeleton has been calculated and we know the
+    // triangulation to be valid, then preserve vertex link properties.
     static_cast<Triangulation<dim>*>(this)->swap(staging);
     delete[] newSimp;
 }
