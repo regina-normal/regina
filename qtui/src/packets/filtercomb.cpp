@@ -142,7 +142,7 @@ FilterCombUI::FilterCombUI(SurfaceFilterCombination* packet,
     // Final tidying up.
     // Connect to the button group, so that we only get notified when a
     // user-initiated change occurs (i.e., not when refresh() changes things).
-    connect(boolType, SIGNAL(buttonClicked(int)),
+    connect(boolType, SIGNAL(buttonClicked(QAbstractButton*)),
         this, SLOT(notifyBoolTypeChanged()));
     filter->listen(this);
 }

@@ -315,7 +315,8 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent,
         SLOT(changedR2UpOver(int)));
     connect(buttons, SIGNAL(clicked(QAbstractButton*)), this,
         SLOT(clicked(QAbstractButton*)));
-    connect(moveTypes, SIGNAL(buttonClicked(int)), this, SLOT(updateApply()));
+    connect(moveTypes, SIGNAL(buttonClicked(QAbstractButton*)), this,
+        SLOT(updateApply()));
 
     packetWasRenamed(*link);
     packetWasChanged(*link);

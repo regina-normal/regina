@@ -338,7 +338,8 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent,
 
     connect(buttons, SIGNAL(clicked(QAbstractButton*)), this,
         SLOT(clicked(QAbstractButton*)));
-    connect(moveTypes, SIGNAL(buttonClicked(int)), this, SLOT(updateApply()));
+    connect(moveTypes, SIGNAL(buttonClicked(QAbstractButton*)), this,
+        SLOT(updateApply()));
 
     packetWasRenamed(*tri);
     packetWasChanged(*tri);
