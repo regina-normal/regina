@@ -154,7 +154,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
                 /**< Is this a triangulation of a 3-dimensional ball? */
             std::optional<bool> solidTorus_;
                 /**< Is this a triangulation of the solid torus? */
-            std::optional<int> handlebody_;
+            std::optional<ssize_t> handlebody_;
                 /**< Is this a triangulation of an orientable handlebody, and
                  *   if so what is its genus? */
             std::optional<bool> TxI_;
@@ -2434,7 +2434,7 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * @author Alex He
          */
-        int isHandlebody() const;
+        ssize_t isHandlebody() const;
         /**
          * Is it already known (or trivial to determine) whether or not this
          * is a triangulation of an orientable handlebody? See isHandlebody()

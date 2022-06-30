@@ -3403,7 +3403,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         }
 
         void verifyHandlebody( const Triangulation<3>& tri,
-                const char* triName, const unsigned genus ) {
+                const char* triName, ssize_t genus ) {
             Triangulation<3> bounded(tri);
             if ( bounded.isIdeal() ) {
                 bounded.idealToFinite();

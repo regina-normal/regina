@@ -530,7 +530,7 @@ bool Triangulation<3>::knowsSolidTorus() const {
     return false;
 }
 
-int Triangulation<3>::isHandlebody() const {
+ssize_t Triangulation<3>::isHandlebody() const {
     if ( prop_.handlebody_.has_value() ) {
         return *prop_.handlebody_;
     }
@@ -546,7 +546,7 @@ int Triangulation<3>::isHandlebody() const {
 
     // Determine the genus.
     // We can immediately check whether this is a 3-ball or a solid torus.
-    int genus = ( 2 - boundaryComponents().front()->eulerChar() ) / 2;
+    size_t genus = ( 2 - boundaryComponents().front()->eulerChar() ) / 2;
     if ( genus == 0 ) {
         prop_.solidTorus_ = false;
         if ( isBall() ) {
