@@ -312,6 +312,28 @@ class Example<3> : public detail::ExampleBase<3> {
         static Triangulation<3> lst(size_t a, size_t b);
 
         /**
+         * Returns a triangulation of the orientable handlebody with the
+         * given genus.
+         *
+         * For positive genus, this routine uses a minimal layered
+         * triangulation of the orientable handlebody. This is constructed by
+         * starting with a one-vertex triangulation of a once-punctured
+         * non-orientable surface with the given genus, and layering a
+         * tetrahedron onto each internal edge of this surface, yielding a
+         * (3*genus-2)-tetrahedron triangulation. For genus greater than one,
+         * there are many choices for how to do this; this routine makes an
+         * arbitrary choice.
+         *
+         * For genus 0, this routine uses the one-tetrahedron 3-ball.
+         *
+         * @param genus the genus of the handlebody.
+         * @return the orientable handlebody with the given genus.
+         *
+         * @author Alex He
+         */
+        static Triangulation<3> handlebody(size_t genus);
+
+        /**
          * Returns a triangulation of the solid Klein bottle.
          * This is isomorphic to the triangulation returned by the
          * generic routine twistedBallBundle().

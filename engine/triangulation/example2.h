@@ -88,6 +88,20 @@ class Example<2> : public detail::ExampleBase<2> {
             unsigned genus, unsigned punctures);
 
         /**
+         * Returns a one-vertex triangulation of the once-punctured
+         * non-orientable surface with the given genus.
+         *
+         * \pre \a genus is greater than or equal to one.
+         *
+         * @param genus the non-orientable genus of the surface (i.e., the
+         * number of crosscaps that it contains).
+         * @return the requested one-vertex once-punctured surface.
+         *
+         * @author Alex He
+         */
+        static Triangulation<2> oncePunctured( unsigned genus );
+
+        /**
          * Returns the four-triangle 2-sphere formed from the boundary
          * of a tetrahedron.  This is isomorphic to the triangulation
          * returned by the generic routine simplicialSphere().

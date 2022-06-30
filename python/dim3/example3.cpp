@@ -69,6 +69,7 @@ void addExample3(pybind11::module_& m) {
             &Example<3>::smallClosedNonOrblHyperbolic)
         .def_static("sphere600", &Example<3>::sphere600)
         .def_static("lst", &Example<3>::lst)
+        .def_static("handlebody", &Example<3>::handlebody)
         .def_static("solidKleinBottle", &Example<3>::solidKleinBottle)
         .def_static("figureEight", &Example<3>::figureEight)
         .def_static("trefoil", &Example<3>::trefoil)
