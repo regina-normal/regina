@@ -605,9 +605,9 @@ ssize_t Triangulation<3>::isHandlebody() const {
     //
     // Anyway, it's time to pull out normal surfaces.
     while ( not toProcess.empty() ) {
-        // INVARIANT: Our triangulation is an orientable handlebody if and
-        // only if every child of toProcess is an orientable handlebody with
-        // positive genus.
+        // INVARIANT: Our original triangulation is an orientable handlebody
+        // if and only if every triangulation in toProcess is an orientable
+        // handlebody with positive genus.
         Triangulation<3>& top = toProcess.top();
         if ( top.countVertices() > 1 ) {
             // Try *really* hard to get to a 1-vertex triangulation, since

@@ -2417,7 +2417,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
 
         /**
          * Determines whether this is a triangulation of an orientable
-         * handlebody; returns the genus if this is a handlebody, and returns
+         * handlebody, and if so, which genus.  Specifically, this routine
+         * returns the genus if this is indeed a handlebody, and returns
          * -1 otherwise. This routine can be used on a triangulation with
          * real boundary triangles, or on an ideal triangulation (in which
          * case all ideal vertices will be assumed to be truncated).
