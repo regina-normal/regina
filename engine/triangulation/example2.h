@@ -65,6 +65,10 @@ class Example<2> : public detail::ExampleBase<2> {
         /**
          * Returns a triangulation of the given orientable surface.
          *
+         * If the number of punctures is 0, then the resulting triangulation
+         * will be minimal (which, for positive genus, means there is exactly
+         * one vertex).
+         *
          * @param genus the genus of the surface; this must be greater
          * than or equal to zero.
          * @param punctures the number of punctures in the surface;
@@ -77,29 +81,21 @@ class Example<2> : public detail::ExampleBase<2> {
         /**
          * Returns a triangulation of the given non-orientable surface.
          *
+         * If the number of punctures is 0 or 1, then the resulting
+         * triangulation will be minimal (which, with the exception of
+         * the projective plane, means there is exactly one vertex).
+         *
          * @param genus the non-orientable genus of the surface, i.e.,
          * the number of crosscaps that it contains; this must be greater
          * than or equal to one.
          * @param punctures the number of punctures in the surface;
          * this must be greater than or equal to zero.
          * @return the requested non-orientable surface.
+         *
+         * @author Alex He, B.B.
          */
         static Triangulation<2> nonOrientable(
             unsigned genus, unsigned punctures);
-
-        /**
-         * Returns a one-vertex triangulation of the once-punctured
-         * non-orientable surface with the given genus.
-         *
-         * \pre \a genus is greater than or equal to one.
-         *
-         * @param genus the non-orientable genus of the surface (i.e., the
-         * number of crosscaps that it contains).
-         * @return the requested one-vertex once-punctured surface.
-         *
-         * @author Alex He
-         */
-        static Triangulation<2> oncePunctured( unsigned genus );
 
         /**
          * Returns the four-triangle 2-sphere formed from the boundary

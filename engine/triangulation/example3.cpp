@@ -342,10 +342,15 @@ Triangulation<3> Example<3>::handlebody(size_t genus) {
     if ( genus == 0 ) {
         return Example<3>::ball();
     }
+
     Triangulation<3> ans;
+
+    // Ensure only one event pair is fired in this sequence of changes.
+    Triangulation<3>::ChangeEventSpan span(ans);
+
     size_t n = 3*genus - 2;
     ans.newTetrahedra(n);
-    Triangulation<2> spine = Example<2>::oncePunctured(genus);
+    Triangulation<2> spine = Example<2>::nonOrientable(genus, 1);
 
     // Layer tetrahedra onto the internal edges of spine.
     // We need to keep track of which tetrahedron faces are supposed to be

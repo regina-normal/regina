@@ -48,7 +48,6 @@ void addExample2(pybind11::module_& m) {
         .def_static("twistedBallBundle", &Example<2>::twistedBallBundle)
         .def_static("orientable", &Example<2>::orientable)
         .def_static("nonOrientable", &Example<2>::nonOrientable)
-        .def_static("oncePunctured", &Example<2>::oncePunctured)
         .def_static("sphereTetrahedron", &Example<2>::sphereTetrahedron)
         .def_static("sphereOctahedron", &Example<2>::sphereOctahedron)
         .def_static("disc", &Example<2>::disc)

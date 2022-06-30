@@ -33,6 +33,12 @@ Version 7.1  [ TODO ]
         Class Edge<3>:
             - Now specialised (instead of using the generic Face template).
             - New routine linkingSurface().
+        Class Example<2>:
+            - Both orientable() and nonOrientable() now promise minimal
+              triangulations for small cases (0 and 0,1 punctures respectively).
+              Thanks to Alex He for the once-punctured non-orientable code.
+        Class Example<3>:
+            - New routine handlebody(), thanks to Alex He.
         Class Example<4>:
             - New routine k3().
             - Reflected the result of cp2() so that it has intersection
