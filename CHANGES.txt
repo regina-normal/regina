@@ -132,6 +132,8 @@ Version 7.1  [ TODO ]
             - The join() routine now checks all its preconditions, and
               throws an exception if any precondition fails.
         Class Triangulation<3>:
+            - New routines isHandlebody() and knowsHandlebody(), thanks to
+              Alex He.
             - The Turaev-Viro routines now reserve the right to use a
               different algorithm if your chosen algorithm does not
               support the given parameters (r, parity).  Currently this
