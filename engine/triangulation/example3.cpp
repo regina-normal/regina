@@ -350,9 +350,13 @@ Triangulation<3> Example<3>::handlebody(size_t genus) {
     // Layer tetrahedra onto the internal edges of spine.
     // We need to keep track of which tetrahedron faces are supposed to be
     // "glued" to triangular faces of spine.
-    Tetrahedron<3>* topTet[n] = {0};
-    Tetrahedron<3>* botTet[n] = {0};
-    Perm<4> topPerm[n], botPerm[n];
+    auto* topTet = new Tetrahedron<3>*[n];
+    auto* botTet = new Tetrahedron<3>*[n];
+    auto* topPerm = new Perm<4>[n];
+    auto* botPerm = new Perm<4>[n];
+    std::fill(topTet, topTet + n, nullptr);
+    std::fill(botTet, botTet + n, nullptr);
+
     size_t i = 0;
     for ( Edge<2>* e2 : spine.edges() ) {
         if ( e2->isBoundary() ) {
@@ -482,6 +486,11 @@ Triangulation<3> Example<3>::handlebody(size_t genus) {
     }
 
     // All done!
+    delete[] topTet;
+    delete[] botTet;
+    delete[] topPerm;
+    delete[] botPerm;
+
     return ans;
 }
 
