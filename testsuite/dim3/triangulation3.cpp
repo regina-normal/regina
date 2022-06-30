@@ -97,6 +97,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(dualToPrimal<1>);
     CPPUNIT_TEST(dualToPrimal<2>);
 
+    // Dimension-specific tests:
     CPPUNIT_TEST(zeroTwoMove);
     CPPUNIT_TEST(magic);
     CPPUNIT_TEST(events);
