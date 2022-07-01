@@ -41,6 +41,7 @@
 #include "examplecreator.h"
 #include "tri3creator.h"
 #include "reginasupport.h"
+#include "reginaprefset.h"
 
 #include <numeric> // for std::gcd()
 #include <QCheckBox>
@@ -323,8 +324,16 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     details->addWidget(hArea);//, TRI_EXAMPLE);
 
     // Tidy up.
-    type->setCurrentIndex(0);
-    details->setCurrentIndex((int)0);
+    {
+        int typeId = ReginaPrefSet::global().triDim3CreationType;
+        if (typeId >= 0 && typeId < type->count()) {
+            type->setCurrentIndex(typeId);
+            details->setCurrentIndex(typeId);
+        } else {
+            type->setCurrentIndex(0);
+            details->setCurrentIndex((int)0);
+        }
+    }
 
     QObject::connect(type, SIGNAL(activated(int)), details,
         SLOT(setCurrentIndex(int)));
@@ -337,6 +346,9 @@ QWidget* Tri3Creator::getInterface() {
 std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
         std::shared_ptr<regina::Packet>, QWidget* parentWidget) {
     int typeId = type->currentIndex();
+    // Remember our selection for next time.
+    ReginaPrefSet::global().triDim3CreationType = typeId;
+
     if (typeId == TRI_EMPTY) {
         auto ans = regina::make_packet<Triangulation<3>>();
         ans->setLabel("3-D triangulation");

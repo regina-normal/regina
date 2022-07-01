@@ -134,6 +134,10 @@ class ReginaPrefSet : public QObject {
                  enumerate in a 4-manifold triangulation. */
         LinkCodeType linkCodeType;
             /**< The export code to display for knots and links. */
+        int linkCreationType;
+            /**< The initial option to select in the list of link types
+                 when creating a new link.  This is given as an
+                 index into the list of options. */
         LinkCrossingsStyle linkCrossingsStyle;
             /**< The style for displaying crossings for knots and links. */
         LinkHomflyType linkHomflyType;
@@ -207,6 +211,18 @@ class ReginaPrefSet : public QObject {
         unsigned treeJumpSize;
             /**< The number of steps corresponding to a jump up or down in
                  the packet tree. */
+        int triDim2CreationType;
+            /**< The initial option to select in the list of triangulation
+                 types when creating a new 2-dimensional triangulation.
+                 This is given as an index into the list of options. */
+        int triDim3CreationType;
+            /**< The initial option to select in the list of triangulation
+                 types when creating a new 3-dimensional triangulation.
+                 This is given as an index into the list of options. */
+        int triDim4CreationType;
+            /**< The initial option to select in the list of triangulation
+                 types when creating a new 4-dimensional triangulation.
+                 This is given as an index into the list of options. */
         QString triGAPExec;
             /**< The executable for starting GAP.  This need not include a
                  directory (in which case the search path will be used). */

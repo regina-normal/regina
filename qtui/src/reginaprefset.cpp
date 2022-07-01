@@ -76,6 +76,7 @@ ReginaPrefSet::ReginaPrefSet() :
         hypersurfacesCreationCoords(regina::HS_STANDARD),
         hypersurfacesCreationList(regina::HS_LIST_DEFAULT),
         linkCodeType(Gauss),
+        linkCreationType(0),
         linkCrossingsStyle(PictorialCrossings),
         linkHomflyType(HomflyAZ),
         linkInitialGraphType(TreeDecomposition),
@@ -101,6 +102,9 @@ ReginaPrefSet::ReginaPrefSet() :
         tabSnapPeaTri(0),
         tabSnapPeaTriAlgebra(0),
         tabSurfaceList(0),
+        triDim2CreationType(0),
+        triDim3CreationType(0),
+        triDim4CreationType(0),
         triGAPExec(defaultGAPExec),
         triGraphvizLabels(true),
         triInitialGraphType(DualGraph),
@@ -236,6 +240,7 @@ void ReginaPrefSet::readInternal() {
         "CreationList", regina::HS_LIST_DEFAULT).toInt());
 
     settings.beginGroup("Link");
+    linkCreationType = settings.value("CreationType", 0).toInt();
     QString str = settings.value("CodeType").toString();
     if (str == "DowkerThistlethwaite")
         linkCodeType = ReginaPrefSet::DowkerThistlethwaite;
@@ -314,6 +319,9 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("Triangulation");
+    triDim2CreationType = settings.value("Dim2CreationType", 0).toInt();
+    triDim3CreationType = settings.value("Dim3CreationType", 0).toInt();
+    triDim4CreationType = settings.value("Dim4CreationType", 0).toInt();
     triGraphvizLabels = settings.value("GraphvizLabels", true).toBool();
 
     str = settings.value("InitialGraphType").toString();
@@ -379,6 +387,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("CreationList", hypersurfacesCreationList.intValue());
 
     settings.beginGroup("Link");
+    settings.setValue("CreationType", linkCreationType);
     switch (linkCodeType) {
         case ReginaPrefSet::DowkerThistlethwaite:
             settings.setValue("CodeType", "DowkerThistlethwaite"); break;
@@ -459,6 +468,9 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("Triangulation");
+    settings.setValue("Dim2CreationType", triDim2CreationType);
+    settings.setValue("Dim3CreationType", triDim3CreationType);
+    settings.setValue("Dim4CreationType", triDim4CreationType);
     settings.setValue("GraphvizLabels", triGraphvizLabels);
 
     switch (triInitialGraphType) {
