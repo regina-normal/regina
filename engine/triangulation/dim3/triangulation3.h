@@ -150,13 +150,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
 
             std::optional<bool> threeSphere_;
                 /**< Is this a triangulation of a 3-sphere? */
-            std::optional<bool> threeBall_;
-                /**< Is this a triangulation of a 3-dimensional ball? */
-            std::optional<bool> solidTorus_;
-                /**< Is this a triangulation of the solid torus? */
             std::optional<ssize_t> handlebody_;
-                /**< Is this a triangulation of an orientable handlebody, and
-                 *   if so what is its genus? */
+                /**< Is this a triangulation of an orientable handlebody?
+                     If so, this stores the genus; if not, this stores -1. */
             std::optional<bool> TxI_;
                 /**< Is this a triangulation of the product TxI? */
             std::optional<bool> irreducible_;

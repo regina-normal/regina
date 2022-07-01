@@ -339,14 +339,18 @@ bool Triangulation<3>::knowsSphere() const {
 }
 
 bool Triangulation<3>::isBall() const {
-    if (prop_.threeBall_.has_value())
-        return *prop_.threeBall_;
+    if (prop_.handlebody_.has_value())
+        return (*prop_.handlebody_ == 0);
 
     // Basic property checks.
-    if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
-            && countBoundaryComponents() == 1
-            && boundaryComponents().front()->eulerChar() == 2)) {
-        prop_.threeBall_ = false;
+    if (! (isValid() && isOrientable() && isConnected() &&
+            countBoundaryComponents() == 1)) {
+        // This cannot be a handlebody at all.
+        prop_.handlebody_ = -1;
+        return false;
+    }
+    if (boundaryComponents().front()->eulerChar() != 2) {
+        // It might be a handlebody, but it's not a 3-ball.
         return false;
     }
 
@@ -363,19 +367,32 @@ bool Triangulation<3>::isBall() const {
     // Simplify again in case our coning was inefficient.
     working.intelligentSimplify();
 
-    prop_.threeBall_ = working.isSphere();
-    return *prop_.threeBall_;
+    if (working.isSphere()) {
+        prop_.handlebody_ = 0;
+        return true;
+    } else {
+        // From what we know above, if it's not a 3-ball then it's not a
+        // handlebody of any genus.
+        prop_.handlebody_ = -1;
+        return false;
+    }
 }
 
 bool Triangulation<3>::knowsBall() const {
-    if (prop_.threeBall_.has_value())
+    if (prop_.handlebody_.has_value())
         return true;
 
     // Run some very fast prelimiary tests before we give up and say no.
-    if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
-            && countBoundaryComponents() == 1
-            && boundaryComponents().front()->eulerChar() == 2)) {
-        prop_.threeBall_ = false;
+    if (! (isValid() && isOrientable() && isConnected() &&
+            countBoundaryComponents() == 1)) {
+        // This cannot be a handlebody at all.
+        prop_.handlebody_ = -1;
+        return true;
+    }
+    if (boundaryComponents().front()->eulerChar() != 2) {
+        // It might be a handlebody, but it's not a 3-ball.
+        // Although we are not caching the result, we still return true
+        // because isBall() will nevertheless give a very fast "no" answer.
         return true;
     }
 
@@ -384,15 +401,23 @@ bool Triangulation<3>::knowsBall() const {
 }
 
 bool Triangulation<3>::isSolidTorus() const {
-    if (prop_.solidTorus_.has_value())
-        return *prop_.solidTorus_;
+    if (prop_.handlebody_.has_value())
+        return (*prop_.handlebody_ == 1);
 
     // Basic property checks.
     if (! (isValid() && isOrientable() && isConnected() &&
-            countBoundaryComponents() == 1 &&
-            boundaryComponents().front()->eulerChar() == 0 &&
-            boundaryComponents().front()->isOrientable()))
-        return *(prop_.solidTorus_ = false);
+            countBoundaryComponents() == 1)) {
+        // This cannot be a handlebody at all.
+        prop_.handlebody_ = -1;
+        return false;
+    }
+    if (boundaryComponents().front()->eulerChar() != 0) {
+        // It might be a handlebody, but it's not a solid torus.
+        return false;
+    }
+
+    // From here on, if we ever deduce this is not a solid torus, then
+    // we know it cannot be an orientable handlebody of *any* genus at all.
 
     // If it's ideal, make it a triangulation with real boundary.
     // If it's not ideal, clone it anyway so we can modify it.
@@ -404,8 +429,10 @@ bool Triangulation<3>::isSolidTorus() const {
     }
 
     // Check homology.
-    if (! (working.homology().isZ()))
-        return *(prop_.solidTorus_ = false);
+    if (! (working.homology().isZ())) {
+        prop_.handlebody_ = -1;
+        return false;
+    }
 
     // So:
     // We are valid, orientable, compact and connected, with H1 = Z.
@@ -435,7 +462,8 @@ bool Triangulation<3>::isSolidTorus() const {
         std::optional<NormalSurface> s = working.nonTrivialSphereOrDisc();
         if (! s) {
             // No non-trivial normal disc.  This cannot be a solid torus.
-            return *(prop_.solidTorus_ = false);
+            prop_.handlebody_ = -1;
+            return false;
         }
 
         // Crush it and see what happens.
@@ -457,7 +485,8 @@ bool Triangulation<3>::isSolidTorus() const {
                 // A closed piece.
                 // Must be a 3-sphere, or else we didn't have a solid torus.
                 if (! comp.isSphere()) {
-                    return *(prop_.solidTorus_ = false);
+                    prop_.handlebody_ = -1;
+                    return false;
                 }
             } else if (comp.countBoundaryComponents() > 1) {
                 // Multiple boundaries on the same component.
@@ -467,12 +496,14 @@ bool Triangulation<3>::isSolidTorus() const {
                     "isSolidTorus() that should not exist." << std::endl;
 
                 // At any rate, it means we did not have a solid torus.
-                return *(prop_.solidTorus_ = false);
+                prop_.handlebody_ = -1;
+                return false;
             } else if (comp.boundaryComponent(0)->eulerChar() == 2) {
                 // A component with sphere boundary.
                 // Must be a 3-ball, or else we didn't have a solid torus.
                 if (! comp.isBall()) {
-                    return *(prop_.solidTorus_ = false);
+                    prop_.handlebody_ = -1;
+                    return false;
                 }
             } else {
                 // The only other possibility is a component with torus
@@ -497,7 +528,8 @@ bool Triangulation<3>::isSolidTorus() const {
             // The only way this can happen is if we had a solid torus
             // (and we crushed and/or cut along a compressing disc
             // during the crushing operation).
-            return *(prop_.solidTorus_ = true);
+            prop_.handlebody_ = 1;
+            return true;
         }
 
         // We have the original manifold in working, but this time with
@@ -506,23 +538,21 @@ bool Triangulation<3>::isSolidTorus() const {
 }
 
 bool Triangulation<3>::knowsSolidTorus() const {
-    if (prop_.solidTorus_.has_value())
+    if (prop_.handlebody_.has_value())
         return true;
 
     // Run some very fast preliminary tests before we give up and say no.
-    if (! (isValid() && isOrientable() && isConnected())) {
-        prop_.solidTorus_ = false;
+    if (! (isValid() && isOrientable() && isConnected() &&
+            countBoundaryComponents() == 1)) {
+        // This cannot be a handlebody at all.
+        prop_.handlebody_ = -1;
         return true;
     }
-
-    if (countBoundaryComponents() != 1) {
-        prop_.solidTorus_ = false;
-        return true;
-    }
-
-    if (boundaryComponents().front()->eulerChar() != 0 ||
-            (! boundaryComponents().front()->isOrientable())) {
-        prop_.solidTorus_ = false;
+    if (boundaryComponents().front()->eulerChar() != 0) {
+        // It might be a handlebody, but it's not a solid torus.
+        // Although we are not caching the result, we still return true
+        // because isSolidTorus() will nevertheless give a very fast "no"
+        // answer.
         return true;
     }
 
@@ -536,11 +566,11 @@ ssize_t Triangulation<3>::isHandlebody() const {
     }
 
     // Basic property checks.
-    if ( not ( isValid() and isOrientable() and isConnected() and
-                countBoundaryComponents() == 1 and
-                boundaryComponents().front()->isOrientable() ) ) {
-        prop_.threeBall_ = false;
-        prop_.solidTorus_ = false;
+    // Note: an orientable 3-manifold implies that the boundary is also
+    // orientable (so we do not need to test that separately).
+    if (! (isValid() && isOrientable() && isConnected() &&
+            countBoundaryComponents() == 1)) {
+        // This cannot be a handlebody at all.
         return *(prop_.handlebody_ = -1);
     }
 
@@ -548,7 +578,6 @@ ssize_t Triangulation<3>::isHandlebody() const {
     // We can immediately check whether this is a 3-ball or a solid torus.
     size_t genus = ( 2 - boundaryComponents().front()->eulerChar() ) / 2;
     if ( genus == 0 ) {
-        prop_.solidTorus_ = false;
         if ( isBall() ) {
             // A 3-ball never has a compressing disc.
             prop_.compressingDisc_ = false;
@@ -558,7 +587,6 @@ ssize_t Triangulation<3>::isHandlebody() const {
         }
     }
     else if ( genus == 1 ) {
-        prop_.threeBall_ = false;
         if ( isSolidTorus() ) {
             // A solid torus always has a compressing disc.
             prop_.compressingDisc_ = true;
@@ -566,9 +594,6 @@ ssize_t Triangulation<3>::isHandlebody() const {
         } else {
             return *(prop_.handlebody_ = -1);
         }
-    } else {
-        prop_.threeBall_ = false;
-        prop_.solidTorus_ = false;
     }
 
     // We now know that if this is indeed an orientable handlebody, then it
@@ -764,11 +789,11 @@ bool Triangulation<3>::knowsHandlebody() const {
     }
 
     // Run some very fast preliminary tests before we give up and say no.
-    if ( not ( isValid() and isOrientable() and isConnected() and
-                countBoundaryComponents() == 1 and
-                boundaryComponents().front()->isOrientable() ) ) {
-        prop_.threeBall_ = false;
-        prop_.solidTorus_ = false;
+    // Note: an orientable 3-manifold implies that the boundary is also
+    // orientable (so we do not need to test that separately).
+    if (! (isValid() && isOrientable() && isConnected() &&
+            countBoundaryComponents() == 1)) {
+        // This cannot be a handlebody at all.
         prop_.handlebody_ = -1;
         return true;
     }

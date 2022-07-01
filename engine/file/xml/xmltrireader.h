@@ -497,14 +497,25 @@ inline XMLElementReader*
             bool b;
             if (valueOf(props.lookup("value"), b))
                 tri_->prop_.threeSphere_ = b;
+        } else if (subTagName == "handlebody") {
+            ssize_t genus;
+            if (valueOf(props.lookup("value"), genus))
+                if (genus >= -1)
+                    tri_->prop_.handlebody_ = genus;
         } else if (subTagName == "threeball") {
             bool b;
+            // If threeball is false, we don't do anything since this
+            // might or might not still be a handelbody of some other genus.
             if (valueOf(props.lookup("value"), b))
-                tri_->prop_.threeBall_ = b;
+                if (b)
+                    tri_->prop_.handlebody_ = 0;
         } else if (subTagName == "solidtorus") {
             bool b;
+            // If solidtorus is false, we don't do anything since this
+            // might or might not still be a handelbody of some other genus.
             if (valueOf(props.lookup("value"), b))
-                tri_->prop_.solidTorus_ = b;
+                if (b)
+                    tri_->prop_.handlebody_ = 1;
         } else if (subTagName == "txi") {
             bool b;
             if (valueOf(props.lookup("value"), b))

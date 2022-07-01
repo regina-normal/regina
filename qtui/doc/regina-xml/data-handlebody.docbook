@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-threeball">
+<refentry id="data-handlebody">
  <refmeta>
-  <refentrytitle>threeball</refentrytitle>
+  <refentrytitle>handlebody</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>threeball</refname>
-  <refpurpose>Replaced by &xml-handlebody;</refpurpose>
+  <refname>handlebody</refname>
+  <refpurpose>Does a triangulation represent an orientable handlebody?</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-threeball ::=</synopsis>
+handlebody ::=</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -35,32 +35,32 @@ threeball ::=</synopsis>
      </row>
      <row>
       <entry><sgmltag>value</sgmltag></entry>
-      <entry><type>CDATA</type> (required)</entry>
+      <entry><type>NUMBER</type> (required)</entry>
      </row>
     </tbody>
    </tgroup>
   </informaltable>
-  <para>&eltdepver;7.1</para>
+  <para>&eltaddedver;7.1</para>
  </refsynopsisdiv>
 
  <refsect1>
   <title>Description</title>
   <para>
-   This element was replaced by the more general &xml-handlebody;
-   element in &regina;&nbsp;7.1.
-   The old name &xml-threeball; has been kept for backward compatibility,
-   in that &regina; still understands it when reading data files; however,
-   any new code that writes data files should use &xml-handlebody; instead.
+   A &xml-handlebody; element stores whether or not the parent
+   triangulation is in fact a triangulation of an orientable handlebody,
+   and if so, of which genus.
   </para>
   <para>
-   A &xml-threeball; element stores whether or not the parent
-   triangulation is in fact a triangulation of the 3-dimensional ball.
+   This element both replaces and generalises the deprecated
+   &xml-threeball; and &xml-solidtorus; elements from &regina;&nbsp;7.0
+   and earlier (which correspond to orientable handlebodies of
+   genus 0 and 1 respectively).
   </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>threeball</sgmltag>:
+    The following elements contain <sgmltag>handlebody</sgmltag>:
     <simplelist type="inline">
      <member>&xml-tri;</member>
     </simplelist>.
@@ -70,7 +70,7 @@ threeball ::=</synopsis>
   <refsect2>
    <title>Children</title>
    <para>
-    Element <sgmltag>threeball</sgmltag> has no children.
+    Element <sgmltag>handlebody</sgmltag> has no children.
    </para>
   </refsect2>
  </refsect1>
@@ -82,9 +82,9 @@ threeball ::=</synopsis>
     <term><sgmltag>value</sgmltag></term>
     <listitem>
      <para>
-      Either <literal>T</literal> or <literal>F</literal>, according to
-      whether the parent triangulation does or does not represent the
-      3-dimensional ball.
+      If the parent triangulation represents an orientable handlebody,
+      then this attribute stores the genus as a non-negative integer.
+      Otherwise this attribute stores the integer -1.
      </para>
     </listitem>
    </varlistentry>

@@ -194,12 +194,9 @@ void XMLWriter<Triangulation<dim>>::writeContent() {
         if (data_.prop_.threeSphere_.has_value())
             out_ << "  " << xmlValueTag("threesphere",
                 *data_.prop_.threeSphere_) << '\n';
-        if (data_.prop_.threeBall_.has_value())
-            out_ << "  " << xmlValueTag("threeball",
-                *data_.prop_.threeBall_) << '\n';
-        if (data_.prop_.solidTorus_.has_value())
-            out_ << "  " << xmlValueTag("solidtorus",
-                *data_.prop_.solidTorus_) << '\n';
+        if (data_.prop_.handlebody_.has_value())
+            out_ << "  " << xmlValueTag("handlebody",
+                *data_.prop_.handlebody_) << '\n';
         if (data_.prop_.TxI_.has_value())
             out_ << "  " << xmlValueTag("txi", *data_.prop_.TxI_) << '\n';
         if (data_.prop_.irreducible_.has_value())

@@ -84,8 +84,6 @@ void Triangulation<3>::clearAllProperties() {
         prop_.twoSphereBoundaryComponents_.reset();
         prop_.negativeIdealBoundaryComponents_.reset();
         prop_.threeSphere_.reset();
-        prop_.threeBall_.reset();
-        prop_.solidTorus_.reset();
         prop_.handlebody_.reset();
         prop_.TxI_.reset();
         prop_.irreducible_.reset();
@@ -126,8 +124,6 @@ void Triangulation<3>::swap(Triangulation<3>& other) {
     prop_.splittingSurface_.swap(other.prop_.splittingSurface_);
 
     prop_.threeSphere_.swap(other.prop_.threeSphere_);
-    prop_.threeBall_.swap(other.prop_.threeBall_);
-    prop_.solidTorus_.swap(other.prop_.solidTorus_);
     prop_.handlebody_.swap(other.prop_.handlebody_);
     prop_.TxI_.swap(other.prop_.TxI_);
     prop_.irreducible_.swap(other.prop_.irreducible_);
