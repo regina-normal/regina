@@ -67,6 +67,7 @@ namespace {
         TRI_LAYERED_LENS_SPACE,
         TRI_SFS_SPHERE,
         TRI_LAYERED_SOLID_TORUS,
+        TRI_HANDLEBODY,
         TRI_ISOSIG,
         TRI_DEHYDRATION,
         TRI_SPLITTING_SURFACE,
@@ -217,6 +218,24 @@ Tri3Creator::Tri3Creator(ReginaMain*) {
     lstParams->setWhatsThis(expln);
     hLayout->addWidget(lstParams, 1);
     details->addWidget(hArea);//, TRI_LAYERED_SOLID_TORUS);
+
+    type->addItem(QObject::tr("Orientable handlebody"));
+    hArea = new QWidget();
+    hLayout = new QHBoxLayout();
+    hLayout->setContentsMargins(0, 0, 0, 0);
+    hArea->setLayout(hLayout);
+    expln = QObject::tr("<qt>The genus of the new orientable handlebody.  "
+        "This must be a non-negative integer.</qt>");
+    label = new QLabel(QObject::tr("Genus:"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
+    handlebodyGenus = new QLineEdit();
+    auto* val = new QIntValidator(hArea);
+    val->setBottom(0);
+    handlebodyGenus->setValidator(val);
+    handlebodyGenus->setWhatsThis(expln);
+    hLayout->addWidget(handlebodyGenus, 1);
+    details->addWidget(hArea);//, TRI_HANDLEBODY);
 
     type->addItem(QObject::tr("From isomorphism signature"));
     hArea = new QWidget();
@@ -406,6 +425,19 @@ std::shared_ptr<regina::Packet> Tri3Creator::createPacket(
 
         return regina::make_packet(Example<3>::lst(param[0], param[1]),
             s.str());
+    } else if (typeId == TRI_HANDLEBODY) {
+        if (handlebodyGenus->text().isEmpty()) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("Please enter a genus for the handlebody.  "
+                "This should be a non-negative integer."));
+            return nullptr;
+        }
+        unsigned long genus = handlebodyGenus->text().toULong();
+
+        std::ostringstream s;
+        s << "Handlebody of genus " << genus;
+
+        return regina::make_packet(Example<3>::handlebody(genus), s.str());
     } else if (typeId == TRI_SFS_SPHERE) {
         if (! reSFSAllParams.match(sfsParams->text()).hasMatch()) {
             ReginaSupport::sorry(parentWidget,

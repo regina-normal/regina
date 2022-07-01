@@ -355,6 +355,28 @@
     </para></tip>
    </sect3>
 
+   <sect3 id="tri-new-handlebody">
+    <title>Orientable handlebody (3-manifolds only)</title>
+
+    <para>
+     This will create an orientable handlebody of the given genus.
+     This is built by layering tetrahedra onto an appropriate one-vertex
+     once-punctured non-orientable surface (thus generalisating the
+     layered solid torus construction, which essentially layers tetrahedra
+     onto a one-vertex &mobius; band).
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata multires="newtri-handlebody"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     The genus may be any non-negative integer.
+    </para>
+   </sect3>
+
    <sect3 id="tri-new-dehydration">
     <title>Dehydration (3-manifolds only)</title>
 
@@ -2086,7 +2108,7 @@
    <para>
     You might see different properties appear on the
     <guilabel>Recognition</guilabel> tab, according to whether your
-    triangulation is closed, ideal, or has real boundary.
+    triangulation is closed and/or orientable.
     The different properties that you might see include:
    </para>
    <para>
@@ -2109,31 +2131,23 @@
        This property is only shown for closed 3-manifolds.
       </para></glossdef>
      </glossentry>
-     <glossentry id="tri-prop3ball">
-      <glossterm><guilabel>3-ball</guilabel></glossterm>
+     <glossentry id="tri-prophandlebody">
+      <glossterm><guilabel>Handlebody</guilabel></glossterm>
       <glossdef><para>
-       Determines whether this is a triangulation of the 3-dimensional ball.
+       Determines whether this is a triangulation of an orientable
+       handlebody.  This test includes 3-ball recognition (genus&nbsp;0)
+       as well as solid torus / unknot recognition (genus&nbsp;1).
+      </para><para>
+       If this triangulation <emphasis>is</emphasis> an orientable handlebody,
+       then the precise genus will be shown here.
+      </para><para>
        Again this uses a complete, exact algorithm that guarantees to
-       terminate with the correct result.
-       The algorithm is a simple modification of the 3-sphere recognition
-       algorithm as described above.
+       terminate with the correct result (a generalisation of the
+       algorithm described in <xref linkend="bib-bo-branching"/>).
       </para><para>
-       This property is only shown for 3-manifolds with real boundary
-       triangles and no ideal vertices.
-      </para></glossdef>
-     </glossentry>
-     <glossentry id="tri-propsolidtorus">
-      <glossterm><guilabel>Solid torus</guilabel></glossterm>
-      <glossdef><para>
-       Determines whether this is a triangulation of the solid torus,
-       or equivalently, the unknot complement.
-       Once again this uses a complete, exact algorithm that guarantees to
-       terminate with the correct result <xref linkend="bib-bo-branching"/>.
-      </para><para>
-       This property is shown for ideal triangulations as well as
-       3-manifolds with real boundary triangles.
-       For ideal triangulations, the ideal vertices will be treated as
-       though they were truncated.
+       This property is only shown for orientable triangulations with boundary.
+       Both real and ideal boundaries are understood here: any ideal
+       vertices will be treated as though they were truncated.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-proptxi">
@@ -2141,12 +2155,13 @@
       <glossdef><para>
        Determines whether this is a triangulation of the product of the
        torus with an interval.
-       Again this uses a complete, exact algorithm that guarantees to
+       Once again this uses a complete, exact algorithm that guarantees to
        terminate with the correct result; this is a modification of
        an algorithm due to Haraway <xref linkend="bib-txi"/>.
       </para><para>
-       This property is shown for ideal triangulations as well as
-       3-manifolds with real boundary triangles (or indeed any mix of the two).
+       This property is only shown for orientable triangulations with boundary.
+       Both real and ideal boundaries are understood here, and the boundary
+       may even be a mix of both.
        Any ideal vertices will be treated as though they were truncated.
       </para></glossdef>
      </glossentry>
@@ -2233,7 +2248,7 @@
        hyperbolic because it finds a strict angle stucture
        <xref linkend="bib-futer-angled"/>, or &regina; might certify that a
        3-manifold is non-hyperbolic because it passes
-       solid torus recognition as described above.
+       handlebody recognition as described above.
       </para><para>
        This property is only shown for ideal triangulations with no real
        boundary triangles.
@@ -2293,7 +2308,7 @@
    </para></tip>
    <tip><para>
     Unlike the exact algorithms such as 3-sphere recognition and
-    solid torus recognition (which may be slow but will
+    handlebody recognition (which may be slow but will
     work in all settings), the "opportunistic"
     combinatorial recognition and census lookup will benefit from a
     well-structured triangulation.  If &regina; does not recognise

@@ -82,8 +82,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-prop3ball">3-ball
-   recognition</link></primaryie>
+  <primaryie>3-ball recognition</primaryie>
+  <seeie>See: handlebody recognition</seeie>
  </indexentry>
 
  <indexentry>
@@ -892,6 +892,12 @@
  <indexentry>
   <primaryie><link linkend="tri-haken">Hakenness,
    testing</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>handlebodies</primaryie>
+  <secondaryie><link linkend="tri-new-handlebody">creation</link></secondaryie>
+  <secondaryie><link linkend="tri-prophandlebody">recognition</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1753,8 +1759,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-propsolidtorus">solid torus
-   recognition</link></primaryie>
+  <primaryie>solid torus recognition</primaryie>
+  <seeie>See: handlebody recognition</seeie>
  </indexentry>
 
  <indexentry>
@@ -1963,7 +1969,7 @@
    testing for</link></secondaryie>
   <secondaryie><link linkend="tri-make0eff">0-efficient triangulation,
    conversion to</link></secondaryie>
-  <secondaryie><link linkend="tri-prop3ball">3-ball
+  <secondaryie><link linkend="tri-prophandlebody">3-ball
    recognition</link></secondaryie>
   <secondaryie><link linkend="tri-recognition">3-manifold,
    recognising</link></secondaryie>
@@ -2018,6 +2024,8 @@
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-fund">fundamental
    group</link></secondaryie>
+  <secondaryie><link linkend="tri-prophandlebody">handlebody
+   recognition</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-homiform">homology
    groups</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">hyperbolic solution
@@ -2056,7 +2064,7 @@
    viewing details</link></secondaryie>
   <secondaryie><link linkend="snappea">&snappea;
    triangulations</link></secondaryie>
-  <secondaryie><link linkend="tri-propsolidtorus">solid torus
+  <secondaryie><link linkend="tri-prophandlebody">solid torus
    recognition</link></secondaryie>
   <secondaryie><link linkend="tri-new-splitting">splitting surface,
    reconstructing triangulation from</link></secondaryie>
@@ -2072,7 +2080,7 @@
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-turaevviro">Turaev-Viro
    invariants</link></secondaryie>
-  <secondaryie><link linkend="tri-propsolidtorus">unknot complement
+  <secondaryie><link linkend="tri-prophandlebody">unknot complement
    recognition</link></secondaryie>
   <secondaryie><link linkend="tri-propvalid">validity</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">volume</link></secondaryie>
@@ -2115,8 +2123,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-propsolidtorus">unknot
-   recognition</link></primaryie>
+  <primaryie>unknot recognition</primaryie>
+  <seeie>See: handlebody recognition</seeie>
  </indexentry>
 
  <indexentry id="idx-user-interface">

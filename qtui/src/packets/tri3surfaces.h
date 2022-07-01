@@ -78,10 +78,8 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         QLabel* titleSplitting;
         QLabel* threeSphere;
         QLabel* titleThreeSphere;
-        QLabel* threeBall;
-        QLabel* titleThreeBall;
-        QLabel* solidTorus;
-        QLabel* titleSolidTorus;
+        QLabel* handlebody;
+        QLabel* titleHandlebody;
         QLabel* TxI;
         QLabel* titleTxI;
         QLabel* irreducible;
@@ -95,8 +93,7 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         QAbstractButton* btnZeroEff;
         QAbstractButton* btnSplitting;
         QAbstractButton* btnThreeSphere;
-        QAbstractButton* btnThreeBall;
-        QAbstractButton* btnSolidTorus;
+        QAbstractButton* btnHandlebody;
         QAbstractButton* btnTxI;
         QAbstractButton* btnIrreducible;
         QAbstractButton* btnHaken;
@@ -127,6 +124,7 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         void calculateThreeSphere();
         void calculateThreeBall();
         void calculateSolidTorus();
+        void calculateHandlebody();
         void calculateTxI();
         void calculateIrreducible();
         void calculateHaken();

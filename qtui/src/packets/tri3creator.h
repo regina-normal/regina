@@ -62,6 +62,7 @@ class Tri3Creator : public PacketCreator {
         QLineEdit* lstParams;
         QLineEdit* lensParams;
         QLineEdit* sfsParams;
+        QLineEdit* handlebodyGenus;
         QLineEdit* isoSig;
         QLineEdit* dehydrationString;
         QLineEdit* splittingSignature;
