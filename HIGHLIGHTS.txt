@@ -14,6 +14,8 @@ Version 7.1  [ TODO ]
         - Computes intersection forms of closed orientable 4-manifolds.
         - Computes and recognises all normalised edge links (not just
           thin edge links).
+        - Expanded 3-ball and solid torus recognition to more general
+          handlebody recognition (thanks to Alex He).
         - The tricensus utility now supports multithreaded operation, and
           has a new output option that preserves simplex/vertex labelling.
         - Includes the standard K3 surface as a ready-made example 4-manifold.
