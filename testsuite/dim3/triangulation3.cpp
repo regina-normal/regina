@@ -136,6 +136,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
     CPPUNIT_TEST(minimiseBoundary);
+    CPPUNIT_TEST(minimiseVertices);
     CPPUNIT_TEST(fillTorus);
     CPPUNIT_TEST(meridianLongitude);
     CPPUNIT_TEST(retriangulate);
@@ -5237,6 +5238,132 @@ class Triangulation3Test : public TriangulationTest<3> {
             {
                 const char* sig = "gffjQafeefaaaa";
                 verifyMinimiseBoundary(Triangulation<3>::fromIsoSig(sig), sig);
+            }
+        }
+
+        static void verifyMinimiseVerticesDoesNothing(
+                const Triangulation<3>& tri, const char* name) {
+            Triangulation<3> copy(tri);
+            if (copy.minimiseVertices()) {
+                std::ostringstream msg;
+                msg << name << ": minimiseVertices() "
+                    "reported changes when it should not.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (copy != tri) {
+                std::ostringstream msg;
+                msg << name << ": minimiseVertices() "
+                    "made changes when it should not.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        static bool hasMinimalVertices(const Triangulation<3>& tri) {
+            for (auto c : tri.components())
+                if (c->isClosed()) {
+                    if (c->countVertices() != 1)
+                        return false;
+                } else {
+                    size_t expect = 0;
+                    for (auto b : c->boundaryComponents()) {
+                        if (b->countTriangles() > 2 && b->countVertices() > 1)
+                            return false;
+                        expect += b->countVertices();
+                    }
+                    if (c->countVertices() != expect)
+                        return false;
+                }
+            return true;
+        }
+
+        static void verifyMinimiseVertices(const Triangulation<3>& tri,
+                const char* name) {
+            if (hasMinimalVertices(tri)) {
+                verifyMinimiseVerticesDoesNothing(tri, name);
+                return;
+            }
+
+            Triangulation<3> copy(tri);
+            if (copy.isOrientable())
+                copy.orient();
+
+            if (! copy.minimiseVertices()) {
+                std::ostringstream msg;
+                msg << name << ": minimiseVertices() "
+                    "reported no changes when it should.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (copy.isIsomorphicTo(tri)) {
+                std::ostringstream msg;
+                msg << name << ": minimiseVertices() "
+                    "made no changes when it should.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! hasMinimalVertices(copy)) {
+                std::ostringstream msg;
+                msg << name << ": minimiseVertices() "
+                    "did not minimise the number of vertices.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.eulerCharTri() != copy.eulerCharTri()) {
+                std::ostringstream msg;
+                msg << name << ": minimiseVertices() changed "
+                    "Euler characteristic (triangulation).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.eulerCharManifold() != copy.eulerCharManifold()) {
+                std::ostringstream msg;
+                msg << name << ": minimiseVertices() changed "
+                    "Euler characteristic (manifold).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.isOrientable() != copy.isOriented()) {
+                std::ostringstream msg;
+                msg << name << ": minimiseVertices() broke orientation.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri.homology() != copy.homology()) {
+                std::ostringstream msg;
+                msg << name << ": minimiseVertices() changed homology.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void minimiseVertices() {
+            runCensusAllClosed(verifyMinimiseVertices);
+            runCensusAllIdeal(verifyMinimiseVertices);
+            runCensusAllBounded(verifyMinimiseVertices);
+
+            // The cone of a 6-triangle torus whose boundary has no
+            // close-book moves at the beginning (so a layering is required).
+            {
+                const char* sig = "gffjQafeefaaaa";
+                verifyMinimiseVertices(Triangulation<3>::fromIsoSig(sig), sig);
+            }
+
+            verifyMinimiseVertices(singleTet_bary, "Subdivided tetrahedron");
+            verifyMinimiseVertices(fig8_bary, "Subdivided figure eight");
+
+            {
+                Triangulation<3> t;
+                t.insertTriangulation(singleTet_bary);
+                t.insertTriangulation(fig8_bary);
+                verifyMinimiseVertices(t,
+                    "Subdivided disconnected triangulation");
+            }
+
+            {
+                Triangulation<3> t = disjoint2;
+                t.barycentricSubdivision();
+                verifyMinimiseVertices(t,
+                    "Subdivided Gieseking U (cusped genus 2 torus)");
             }
         }
 

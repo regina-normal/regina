@@ -331,6 +331,8 @@ void addTriangulation3(pybind11::module_& m) {
         })
         .def("minimiseBoundary", &Triangulation<3>::minimiseBoundary)
         .def("minimizeBoundary", &Triangulation<3>::minimizeBoundary)
+        .def("minimiseVertices", &Triangulation<3>::minimiseVertices)
+        .def("minimizeVertices", &Triangulation<3>::minimizeVertices)
         .def("pachner", &Triangulation<3>::pachner<3>,
             pybind11::arg(),
             pybind11::arg("check") = true,

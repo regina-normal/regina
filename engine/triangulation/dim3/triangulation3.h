@@ -1559,7 +1559,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * it is fine if the triangulation also contains ideal boundary
          * components (and these simply will be left alone).  If the
          * triangulation contains internal vertices, these will likewise
-         * be left untouched.
+         * be left untouched.  If you wish to remove internal vertices
+         * also, then you should call minimiseVertices() instead.
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
@@ -1586,6 +1587,63 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * every boundary component was already minimal to begin with.
          */
         bool minimizeBoundary();
+
+        /**
+         * Ensures that this triangulation contains the smallest possible
+         * number of vertices for the 3-manifold that it represents,
+         * potentially adding tetrahedra to do this.
+         *
+         * This routine is for use with algorithms that require a minimal
+         * number of vertices (e.g., one-vertex triangulations of closed
+         * manifolds, or <i>k</i>-vertex triangulations of the complements
+         * of <i>k</i>-component links).  As noted above, this routine may
+         * in fact increase the total number of tetrahedra in the triangulation
+         * (though the implementation does make efforts not to do this).
+         *
+         * Once this routine is finished:
+         *
+         * - every real boundary component will have exactly one vertex, except
+         *   for sphere and projective plane boundaries which will have three
+         *   and two vertices respectively (i.e., the minimum possible);
+         *
+         * - for each component of the triangulation that contains one or more
+         *   boundary components (either real and/or ideal), there will be
+         *   no internal vertices at all;
+         *
+         * - for each component of the triangulation that has no boundary
+         *   components (i.e., that represents a closed 3-manifold), there
+         *   will be precisely one vertex.
+         *
+         * The changes that this routine performs can always be expressed
+         * using only close book moves, layerings, collapse edge moves,
+         * and/or pinch edge moves.  In particular, this routine never
+         * creates new vertices.
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
+         * \pre This triangulation is valid.
+         *
+         * \exception FailedPrecondition this triangulation is not valid.
+         *
+         * @return \c true if the triangulation was changed, or \c false if
+         * the number of vertices was already minimal to begin with.
+         */
+        bool minimiseVertices();
+
+        /**
+         * A synonym for minimiseVertices().
+         * This ensures that the triangulation contains the smallest possible
+         * number of vertices, potentially adding tetrahedra to do this.
+         *
+         * See minimiseVertices() for further details.
+         *
+         * \pre This triangulation is valid.
+         *
+         * @return \c true if the triangulation was changed, or \c false if
+         * the number of vertices was already minimal to begin with.
+         */
+        bool minimizeVertices();
 
         /**
          * Checks the eligibility of and/or performs a 4-4 move
@@ -2116,7 +2174,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If you are trying to reduce the number of vertices without changing
          * the topology, and if \a e is an edge connecting an internal vertex
          * with some different vertex, then either collapseEdge() or pinchEdge()
-         * may be more appropriate for your situation.
+         * may be more appropriate for your situation (though you may find it
+         * easier just to call minimiseVertices() instead).
          *
          * - The advantage of collapseEdge() is that it decreases the
          *   number of tetrahedra, whereas pinchEdge() increases this
@@ -2810,7 +2869,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If you are trying to reduce the number of vertices without changing
          * the topology, and if \a e is an edge connecting an internal vertex
          * with some different vertex, then either collapseEdge() or pinchEdge()
-         * may be more appropriate for your situation.
+         * may be more appropriate for your situation (though you may find it
+         * easier just to call minimiseVertices() instead).
          *
          * - The advantage of collapseEdge() is that it decreases the
          *   number of tetrahedra, whereas pinchEdge() increases this
@@ -3763,6 +3823,10 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
 
 inline bool Triangulation<3>::minimizeBoundary() {
     return minimiseBoundary();
+}
+
+inline bool Triangulation<3>::minimizeVertices() {
+    return minimiseVertices();
 }
 
 inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()

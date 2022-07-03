@@ -141,6 +141,38 @@ startAgain:
     return changed;
 }
 
+bool Triangulation<3>::minimiseVertices() {
+    // Start by minimising the boundary.
+    // This also checks the validity precondition.
+    bool result = minimiseBoundary();
+
+    // All that remains now is to remove internal vertices.
+    // For this, we use collapseEdge() if we can, and pinchEdge() if we must.
+
+    // For now, we do a lot of looping through components, since each time we
+    // do a move the skeleton will be recomputed entirely.  Ideally we would
+    // try to remember what we have already looked at by using the more
+    // persistent tetrahedron pointers instead of edge pointers.
+
+    while (true) {
+startLoop:
+        for (auto* e : edges()) {
+            Vertex<3>* u = e->vertex(0);
+            Vertex<3>* v = e->vertex(1);
+            if (u != v && ! (u->isBoundary() && v->isBoundary())) {
+                // This edge needs to be pinched or collapsed.
+                if (! collapseEdge(e, true, true))
+                    pinchEdge(e);
+                result = true;
+                goto startLoop;
+            }
+        }
+
+        // No edges needed to be pinched or collapsed.
+        return result;
+    }
+}
+
 bool Triangulation<3>::intelligentSimplify() {
     bool changed;
 
