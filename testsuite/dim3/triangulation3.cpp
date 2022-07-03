@@ -98,7 +98,6 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(dualToPrimal<2>);
 
     // Dimension-specific tests:
-    CPPUNIT_TEST(zeroTwoMove);
     CPPUNIT_TEST(magic);
     CPPUNIT_TEST(events);
     CPPUNIT_TEST(validity);
@@ -127,6 +126,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(idealToFinite);
     CPPUNIT_TEST(finiteToIdeal);
+    CPPUNIT_TEST(zeroTwoMove);
     CPPUNIT_TEST(pinchEdge);
     CPPUNIT_TEST(puncture);
     CPPUNIT_TEST(connectedSumWithSelf);
@@ -4153,6 +4153,240 @@ class Triangulation3Test : public TriangulationTest<3> {
             testManualAll(verifyFiniteToIdeal);
         }
 
+        static void verifyZeroTwoMove(
+                const Triangulation<3>& tri, const char* name ) {
+            // Tests 0-2 moves.
+            Triangulation<3> oriented(tri);
+            if ( oriented.isOrientable() ) {
+                oriented.orient();
+            }
+            for ( int i = 0; i < tri.countEdges(); ++i ) {
+                size_t deg = oriented.edge(i)->degree();
+                for ( size_t j = 0; j <= deg; ++j ) {
+                    for ( size_t jj = j; jj <= deg; ++jj ) {
+                        Triangulation<3> newTri(oriented);
+                        bool legal = newTri.zeroTwoMove(
+                                newTri.edge(i), j, jj );
+                        clearProperties( newTri );
+
+                        // Check that different versions of zeroTwoMove give
+                        // isomorphic results.
+                        Triangulation<3> overloadTri(oriented);
+                        size_t num[2] = {j, jj};
+                        Triangle<3>* t[2];
+                        int e[2];
+                        for ( int k : {0, 1} ) {
+                            if ( num[k] == deg ) {
+                                auto emb = overloadTri.edge(i)->embedding(
+                                        deg - 1 );
+                                t[k] = emb.simplex()->triangle(
+                                        emb.vertices()[2] );
+                                e[k] = regina::TriangleEmbedding<3>(
+                                        emb.simplex(),
+                                        emb.simplex()->faceMapping<2>(
+                                            emb.vertices()[2] )
+                                        ).vertices().inverse()[
+                                        emb.vertices()[3] ];
+                            } else {
+                                auto emb = overloadTri.edge(i)->embedding(
+                                        num[k] );
+                                t[k] = emb.simplex()->triangle(
+                                        emb.vertices()[3] );
+                                e[k] = regina::TriangleEmbedding<3>(
+                                        emb.simplex(),
+                                        emb.simplex()->faceMapping<2>(
+                                            emb.vertices()[3] )
+                                        ).vertices().inverse()[
+                                        emb.vertices()[2] ];
+                            }
+                        }
+                        bool overloadLegal = overloadTri.zeroTwoMove(
+                                t[0], e[0], t[1], e[1] );
+                        if ( j < deg and jj < deg and
+                                overloadLegal != legal ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "disagreement about legality of 0-2 move.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( not legal ) {
+                            if ( newTri != oriented ) {
+                                std::ostringstream msg;
+                                msg << name << ", edge " << i
+                                    << ", triangles " << j
+                                    << " and " << jj << ": "
+                                    "disallowed 0-2 move is not "
+                                    "identical.";
+                                CPPUNIT_FAIL( msg.str() );
+                            }
+                            continue;
+                        }
+
+                        // The move was performed (hopefully correctly).
+
+                        if ( not newTri.isIsomorphicTo( overloadTri ) ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "different versions of 0-2 move give "
+                                "non-isomorphic results.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( newTri.size() != tri.size() + 2 ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move gives wrong triangulation size.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( newTri.isValid() != tri.isValid() ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move changes validity.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( newTri.isOrientable() !=
+                                tri.isOrientable() ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move changes orientability.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( tri.isOrientable() and
+                                not newTri.isOriented() ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move loses orientation.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( newTri.isClosed() != tri.isClosed() ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move loses closedness.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( newTri.countBoundaryComponents() !=
+                                tri.countBoundaryComponents() ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move changes # boundary components.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( newTri.eulerCharTri() !=
+                                tri.eulerCharTri() ) {
+                            std::ostringstream msg;
+                            msg << name << ", edge " << i
+                                << ", triangles " << j
+                                << " and " << jj << ": "
+                                "0-2 move changes Euler characteristic.";
+                            CPPUNIT_FAIL( msg.str() );
+                        }
+
+                        if ( tri.isValid() ) {
+                            if ( not ( newTri.homology() ==
+                                        tri.homology() ) ) {
+                                std::ostringstream msg;
+                                msg << name << ", edge " << i
+                                    << ", triangles " << j
+                                    << " and " << jj << ": "
+                                    "0-2 move changes H1.";
+                                CPPUNIT_FAIL( msg.str() );
+                            }
+
+                            if ( not ( newTri.homology<2>() ==
+                                        tri.homology<2>() ) ) {
+                                std::ostringstream msg;
+                                msg << name << ", edge " << i
+                                    << ", triangles " << j
+                                    << " and " << jj << ": "
+                                    "0-2 move changes H2.";
+                                CPPUNIT_FAIL( msg.str() );
+                            }
+                        }
+
+                        // Randomly relabel the tetrahedra, but preserve
+                        // orientation.
+                        Isomorphism<3> iso = Isomorphism<3>::random(
+                                newTri.size(), true );
+                        newTri = iso(newTri);
+                        clearProperties(newTri);
+
+                        // Test the inverse 2-0 move.
+                        {
+                            regina::Triangulation<3> copy(newTri);
+                            legal = copy.twoZeroMove( copy.tetrahedron(
+                                        iso.simpImage(
+                                            copy.size() - 1 ) )->edge(
+                                        iso.facetPerm(copy.size() - 1)[2],
+                                        iso.facetPerm(copy.size() - 1)[3] )
+                                    );
+                            clearProperties(copy);
+
+                            if ( not legal ) {
+                                std::ostringstream msg;
+                                msg << name << ", edge " << i
+                                    << ", triangles " << j
+                                    << " and " << jj << ": "
+                                    "could not undo 0-2 move with inverse "
+                                    "move.";
+                                CPPUNIT_FAIL( msg.str() );
+                            }
+
+                            if ( not copy.isIsomorphicTo(tri) ) {
+                                std::ostringstream msg;
+                                msg << name << ", edge " << i
+                                    << ", triangles " << j
+                                    << " and " << jj << ": "
+                                    "0-2 move followed by inverse move is "
+                                    "not isomorphic.";
+                                CPPUNIT_FAIL( msg.str() );
+                            }
+
+                            if ( tri.isOrientable() and
+                                    not copy.isOriented() ) {
+                                std::ostringstream msg;
+                                msg << name << ", edge " << i
+                                    << ", triangles " << j
+                                    << " and " << jj << ": "
+                                    "0-2 move followed by inverse move "
+                                    "loses orientation.";
+                                CPPUNIT_FAIL( msg.str() );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        void zeroTwoMove() {
+            testManualSmall( verifyZeroTwoMove );
+            runCensusAllClosed( verifyZeroTwoMove, true );
+            runCensusAllBounded( verifyZeroTwoMove, true );
+            runCensusAllIdeal( verifyZeroTwoMove, true );
+        }
+
         void pinchEdge() {
             // Start with the snapped 1-tetrahedron triangulation of the
             // 3-sphere.  Edges 0 and 2 make a Hopf link, and edge 1 is
@@ -4884,240 +5118,6 @@ class Triangulation3Test : public TriangulationTest<3> {
             runCensusAllBounded(verifyPachner<k>, true);
             runCensusAllIdeal(verifyPachner<k>, true);
             verifyPachnerSimplicial<k>();
-        }
-
-        static void verifyZeroTwoMove(
-                const Triangulation<3>& tri, const char* name ) {
-            // Tests 0-2 moves.
-            Triangulation<3> oriented(tri);
-            if ( oriented.isOrientable() ) {
-                oriented.orient();
-            }
-            for ( int i = 0; i < tri.countEdges(); ++i ) {
-                size_t deg = oriented.edge(i)->degree();
-                for ( size_t j = 0; j <= deg; ++j ) {
-                    for ( size_t jj = j; jj <= deg; ++jj ) {
-                        Triangulation<3> newTri(oriented);
-                        bool legal = newTri.zeroTwoMove(
-                                newTri.edge(i), j, jj );
-                        clearProperties( newTri );
-
-                        // Check that different versions of zeroTwoMove give
-                        // isomorphic results.
-                        Triangulation<3> overloadTri(oriented);
-                        size_t num[2] = {j, jj};
-                        Triangle<3>* t[2];
-                        int e[2];
-                        for ( int k : {0, 1} ) {
-                            if ( num[k] == deg ) {
-                                auto emb = overloadTri.edge(i)->embedding(
-                                        deg - 1 );
-                                t[k] = emb.simplex()->triangle(
-                                        emb.vertices()[2] );
-                                e[k] = regina::TriangleEmbedding<3>(
-                                        emb.simplex(),
-                                        emb.simplex()->faceMapping<2>(
-                                            emb.vertices()[2] )
-                                        ).vertices().inverse()[
-                                        emb.vertices()[3] ];
-                            } else {
-                                auto emb = overloadTri.edge(i)->embedding(
-                                        num[k] );
-                                t[k] = emb.simplex()->triangle(
-                                        emb.vertices()[3] );
-                                e[k] = regina::TriangleEmbedding<3>(
-                                        emb.simplex(),
-                                        emb.simplex()->faceMapping<2>(
-                                            emb.vertices()[3] )
-                                        ).vertices().inverse()[
-                                        emb.vertices()[2] ];
-                            }
-                        }
-                        bool overloadLegal = overloadTri.zeroTwoMove(
-                                t[0], e[0], t[1], e[1] );
-                        if ( j < deg and jj < deg and
-                                overloadLegal != legal ) {
-                            std::ostringstream msg;
-                            msg << name << ", edge " << i
-                                << ", triangles " << j
-                                << " and " << jj << ": "
-                                "disagreement about legality of 0-2 move.";
-                            CPPUNIT_FAIL( msg.str() );
-                        }
-
-                        if ( not legal ) {
-                            if ( newTri != oriented ) {
-                                std::ostringstream msg;
-                                msg << name << ", edge " << i
-                                    << ", triangles " << j
-                                    << " and " << jj << ": "
-                                    "disallowed 0-2 move is not "
-                                    "identical.";
-                                CPPUNIT_FAIL( msg.str() );
-                            }
-                            continue;
-                        }
-
-                        // The move was performed (hopefully correctly).
-
-                        if ( not newTri.isIsomorphicTo( overloadTri ) ) {
-                            std::ostringstream msg;
-                            msg << name << ", edge " << i
-                                << ", triangles " << j
-                                << " and " << jj << ": "
-                                "different versions of 0-2 move give "
-                                "non-isomorphic results.";
-                            CPPUNIT_FAIL( msg.str() );
-                        }
-
-                        if ( newTri.size() != tri.size() + 2 ) {
-                            std::ostringstream msg;
-                            msg << name << ", edge " << i
-                                << ", triangles " << j
-                                << " and " << jj << ": "
-                                "0-2 move gives wrong triangulation size.";
-                            CPPUNIT_FAIL( msg.str() );
-                        }
-
-                        if ( newTri.isValid() != tri.isValid() ) {
-                            std::ostringstream msg;
-                            msg << name << ", edge " << i
-                                << ", triangles " << j
-                                << " and " << jj << ": "
-                                "0-2 move changes validity.";
-                            CPPUNIT_FAIL( msg.str() );
-                        }
-
-                        if ( newTri.isOrientable() !=
-                                tri.isOrientable() ) {
-                            std::ostringstream msg;
-                            msg << name << ", edge " << i
-                                << ", triangles " << j
-                                << " and " << jj << ": "
-                                "0-2 move changes orientability.";
-                            CPPUNIT_FAIL( msg.str() );
-                        }
-
-                        if ( tri.isOrientable() and
-                                not newTri.isOriented() ) {
-                            std::ostringstream msg;
-                            msg << name << ", edge " << i
-                                << ", triangles " << j
-                                << " and " << jj << ": "
-                                "0-2 move loses orientation.";
-                            CPPUNIT_FAIL( msg.str() );
-                        }
-
-                        if ( newTri.isClosed() != tri.isClosed() ) {
-                            std::ostringstream msg;
-                            msg << name << ", edge " << i
-                                << ", triangles " << j
-                                << " and " << jj << ": "
-                                "0-2 move loses closedness.";
-                            CPPUNIT_FAIL( msg.str() );
-                        }
-
-                        if ( newTri.countBoundaryComponents() !=
-                                tri.countBoundaryComponents() ) {
-                            std::ostringstream msg;
-                            msg << name << ", edge " << i
-                                << ", triangles " << j
-                                << " and " << jj << ": "
-                                "0-2 move changes # boundary components.";
-                            CPPUNIT_FAIL( msg.str() );
-                        }
-
-                        if ( newTri.eulerCharTri() !=
-                                tri.eulerCharTri() ) {
-                            std::ostringstream msg;
-                            msg << name << ", edge " << i
-                                << ", triangles " << j
-                                << " and " << jj << ": "
-                                "0-2 move changes Euler characteristic.";
-                            CPPUNIT_FAIL( msg.str() );
-                        }
-
-                        if ( tri.isValid() ) {
-                            if ( not ( newTri.homology() ==
-                                        tri.homology() ) ) {
-                                std::ostringstream msg;
-                                msg << name << ", edge " << i
-                                    << ", triangles " << j
-                                    << " and " << jj << ": "
-                                    "0-2 move changes H1.";
-                                CPPUNIT_FAIL( msg.str() );
-                            }
-
-                            if ( not ( newTri.homology<2>() ==
-                                        tri.homology<2>() ) ) {
-                                std::ostringstream msg;
-                                msg << name << ", edge " << i
-                                    << ", triangles " << j
-                                    << " and " << jj << ": "
-                                    "0-2 move changes H2.";
-                                CPPUNIT_FAIL( msg.str() );
-                            }
-                        }
-
-                        // Randomly relabel the tetrahedra, but preserve
-                        // orientation.
-                        Isomorphism<3> iso = Isomorphism<3>::random(
-                                newTri.size(), true );
-                        newTri = iso(newTri);
-                        clearProperties(newTri);
-
-                        // Test the inverse 2-0 move.
-                        {
-                            regina::Triangulation<3> copy(newTri);
-                            legal = copy.twoZeroMove( copy.tetrahedron(
-                                        iso.simpImage(
-                                            copy.size() - 1 ) )->edge(
-                                        iso.facetPerm(copy.size() - 1)[2],
-                                        iso.facetPerm(copy.size() - 1)[3] )
-                                    );
-                            clearProperties(copy);
-
-                            if ( not legal ) {
-                                std::ostringstream msg;
-                                msg << name << ", edge " << i
-                                    << ", triangles " << j
-                                    << " and " << jj << ": "
-                                    "could not undo 0-2 move with inverse "
-                                    "move.";
-                                CPPUNIT_FAIL( msg.str() );
-                            }
-
-                            if ( not copy.isIsomorphicTo(tri) ) {
-                                std::ostringstream msg;
-                                msg << name << ", edge " << i
-                                    << ", triangles " << j
-                                    << " and " << jj << ": "
-                                    "0-2 move followed by inverse move is "
-                                    "not isomorphic.";
-                                CPPUNIT_FAIL( msg.str() );
-                            }
-
-                            if ( tri.isOrientable() and
-                                    not copy.isOriented() ) {
-                                std::ostringstream msg;
-                                msg << name << ", edge " << i
-                                    << ", triangles " << j
-                                    << " and " << jj << ": "
-                                    "0-2 move followed by inverse move "
-                                    "loses orientation.";
-                                CPPUNIT_FAIL( msg.str() );
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        void zeroTwoMove() {
-            testManualSmall( verifyZeroTwoMove );
-            runCensusAllClosed( verifyZeroTwoMove, true );
-            runCensusAllBounded( verifyZeroTwoMove, true );
-            runCensusAllIdeal( verifyZeroTwoMove, true );
         }
 
         template <int k>
