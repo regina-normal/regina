@@ -1328,13 +1328,13 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
 
         /**
          * Attempts to simplify the triangulation using fast and greedy
-         * heuristics.  This routine will attempt to reduce both the number
-         * of tetrahedra and the number of boundary triangles (with the
-         * number of tetrahedra as its priority).
+         * heuristics.  This routine will attempt to reduce the number
+         * of tetrahedra, the number of vertices and the number of
+         * boundary triangles (with the number of tetrahedra as its priority).
          *
-         * Currently this routine uses simplifyToLocalMinimum() in
-         * combination with random 4-4 moves, book opening moves and
-         * book closing moves.
+         * Currently this routine uses simplifyToLocalMinimum() and
+         * minimiseVertices() in combination with random 4-4 moves,
+         * book opening moves and book closing moves.
          *
          * Although intelligentSimplify() works very well most of the time,
          * it can occasionally get stuck; in such cases you may wish to try

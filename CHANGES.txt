@@ -150,6 +150,9 @@ Version 7.1  [ TODO ]
             - New routine hasMimimalBoundary().
             - Routine minimiseBoundary() now throws an exception if the
               triangulation is not valid.
+            - Routine intelligentSimplify() now explicitly aims to reduce
+              the number of vertices, as long as this does not increase
+              the number of tetrahedra.
         Class Triangulation<4>:
             - New routine intersectionForm().
             - New optimisations that reduce the need for 3-sphere/3-ball

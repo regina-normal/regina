@@ -183,6 +183,20 @@ bool Triangulation<3>::intelligentSimplify() {
         // Reduce to a local minimum.
         changed = simplifyToLocalMinimum(true);
 
+        // If we still haven't minimised vertices, try to do this now.
+        // We will throw this away if it increases the number of tetrahedra,
+        // but even if the size stays the same we will keep it since
+        // fewer vertices is generally better.
+        if (! hasMinimalVertices()) {
+            Triangulation<3> tmp(*this, false);
+            tmp.minimiseVertices();
+            tmp.simplifyToLocalMinimum(true);
+            if (tmp.size() <= size()) {
+                swap(tmp);
+                changed = true;
+            }
+        }
+
         // Clone to work with when we might want to roll back changes.
         Triangulation<3>* use;
 
