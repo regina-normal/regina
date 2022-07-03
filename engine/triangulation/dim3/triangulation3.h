@@ -1557,12 +1557,16 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * Although this routine only modifies real boundary components,
          * it is fine if the triangulation also contains ideal boundary
-         * components (and these simply will be left alone).
+         * components (and these simply will be left alone).  If the
+         * triangulation contains internal vertices, these will likewise
+         * be left untouched.
          *
          * If this triangulation is currently oriented, then this operation
          * will preserve the orientation.
          *
          * \pre This triangulation is valid.
+         *
+         * \exception FailedPrecondition this triangulation is not valid.
          *
          * @return \c true if the triangulation was changed, or \c false if
          * every boundary component was already minimal to begin with.

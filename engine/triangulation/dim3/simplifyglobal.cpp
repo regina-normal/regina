@@ -49,11 +49,9 @@ namespace regina {
 
 bool Triangulation<3>::minimiseBoundary() {
     // Regina doesn't usually check preconditions, but this one is trivial.
-    if (! isValid()) {
-        std::cerr << "ERROR: Calling minimiseBoundary() on an "
-            "invalid triangulation." << std::endl;
-        return false;
-    }
+    if (! isValid())
+        throw FailedPrecondition("minimiseBoundary() requires a "
+            "valid triangulation");
 
     TopologyLock lock(*this);
     // Ensure only one event pair is fired in this sequence of changes.

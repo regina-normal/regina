@@ -146,6 +146,8 @@ Version 7.1  [ TODO ]
               support the given parameters (r, parity).  Currently this
               only happens if you ask for ALG_TREEWIDTH and your value
               of r is so large that it cannot fit into a native C++ int.
+            - Routine minimiseBoundary() now throws an exception if the
+              triangulation is not valid.
         Class Triangulation<4>:
             - New routine intersectionForm().
             - New optimisations that reduce the need for 3-sphere/3-ball
