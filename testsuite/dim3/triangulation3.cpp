@@ -5329,7 +5329,16 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri.homology() != copy.homology()) {
+            // Simplify before computing homology, since we are running
+            // these tests on large subdivided triangulations.
+
+            Triangulation<3> simp1 = tri;
+            simp1.intelligentSimplify();
+
+            Triangulation<3> simp2 = copy;
+            simp2.intelligentSimplify();
+
+            if (simp1.homology() != simp2.homology()) {
                 std::ostringstream msg;
                 msg << name << ": minimiseVertices() changed homology.";
                 CPPUNIT_FAIL(msg.str());
