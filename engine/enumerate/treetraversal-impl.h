@@ -151,52 +151,6 @@ AngleStructure TreeTraversal<LPConstraint, BanConstraint, IntType>::
         lpSlot_[nTypes_]->template extractSolution<VectorInt>(type_));
 }
 
-template <class LPConstraint, typename BanConstraint, typename IntType>
-TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
-        const Triangulation<3>& tri, NormalEncoding enc,
-        int branchesPerQuad, int branchesPerTri, bool enumeration) :
-        origTableaux_(tri, enc, enumeration),
-        enc_(enc),
-        ban_(origTableaux_),
-        nTets_(tri.size()),
-        nTypes_(enc_.storesTriangles() ? 5 * nTets_ : nTets_),
-        /* Each time we branch, one LP can be solved in-place:
-           therefore we use branchesPerQuad-1 and branchesPerTri-1.
-           The final +1 is for the root node. */
-        nTableaux_(enc_.storesTriangles() ?
-            (branchesPerQuad - 1) * nTets_ +
-                (branchesPerTri - 1) * nTets_ * 4 + 1 :
-            (branchesPerQuad - 1) * nTets_ + 1),
-        type_(new char[nTypes_ + 1]),
-        typeOrder_(new size_t[nTypes_]),
-        level_(0),
-        octLevel_(enc_.storesOctagons() ? -1 : static_cast<ssize_t>(nTypes_)),
-        lp_(new LPData<LPConstraint, IntType>[nTableaux_]),
-        lpSlot_(new LPData<LPConstraint, IntType>*[nTypes_ + 1]),
-        nextSlot_(new LPData<LPConstraint, IntType>*[nTypes_ + 1]),
-        nVisited_(0) {
-    // Initialise the type vector to the zero vector.
-    std::fill(type_, type_ + nTypes_ + 1, 0);
-
-    // Set a default type order.
-    for (size_t i = 0; i < nTypes_; ++i)
-        typeOrder_[i] = i;
-
-    // Reserve space for all the tableaux that we will ever need.
-    for (size_t i = 0; i < nTableaux_; ++i)
-        lp_[i].reserve(origTableaux_);
-
-    // Mark the location of the initial tableaux at the root node.
-    lpSlot_[0] = lp_;
-    nextSlot_[0] = lp_ + 1;
-
-    // Reserve space for our additional temporary tableaux.
-    tmpLP_[0].reserve(origTableaux_);
-    tmpLP_[1].reserve(origTableaux_);
-    tmpLP_[2].reserve(origTableaux_);
-    tmpLP_[3].reserve(origTableaux_);
-}
-
 /**
  * Destroys this object.
  */

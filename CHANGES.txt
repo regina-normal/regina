@@ -24,6 +24,8 @@ Version 7.1  [ TODO ]
     ENGINE:
         Class AbelianGroup:
             - New tightDecoding() routines.
+        Class BanEdge:
+            - New ban constraint for use with the tree traversal classes.
         Class CallableArg<...>:
             - Now a public helper class in the main regina:: namespace.
             - Now behaves gracefully if the given index is out of range.
@@ -119,6 +121,11 @@ Version 7.1  [ TODO ]
         Class SnaPeaTriangulation:
             - The Link constructor now throws an exception if the link is so
               large that SnapPea cannot handle it.
+        Class TreeTraversal<...>, TreeEnumeration<...>, TautEnumeration<...>,
+                TreeSingleSoln<...>:
+            - Now supports ban constraints whose class constructors require
+              additional arguments.  These additional arguments are passed to
+              the TreeEnumeration/TautEnumeration/TreeSingleSoln constructor.
         Struct TightEncodable<T>:
             - New base class for classes that support tight encodings
               and decodings.

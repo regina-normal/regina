@@ -46,6 +46,7 @@ using regina::Triangulation;
 using regina::BanConstraintBase;
 using regina::BanNone;
 using regina::BanBoundary;
+using regina::BanEdge;
 using regina::BanTorusBoundary;
 
 using regina::LPConstraintNone;
@@ -89,14 +90,17 @@ void addLPConstraint(pybind11::module_& m, const char* name) {
     regina::python::no_eq_operators(c);
 }
 
-template <class BanConstraint>
+template <class BanConstraint, typename... BanArgs>
 void addBanConstraint(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<BanConstraint>(m, name)
-        .def(pybind11::init<const LPInitialTableaux<LPConstraintNone>&>())
         .def(pybind11::init<
-            const LPInitialTableaux<LPConstraintEulerPositive>&>())
-        .def(pybind11::init<const LPInitialTableaux<LPConstraintEulerZero>&>())
-        .def(pybind11::init<const LPInitialTableaux<LPConstraintNonSpun>&>())
+            const LPInitialTableaux<LPConstraintNone>&, BanArgs...>())
+        .def(pybind11::init<
+            const LPInitialTableaux<LPConstraintEulerPositive>&, BanArgs...>())
+        .def(pybind11::init<
+            const LPInitialTableaux<LPConstraintEulerZero>&, BanArgs...>())
+        .def(pybind11::init<
+            const LPInitialTableaux<LPConstraintNonSpun>&, BanArgs...>())
         .def("enforceBans",
             &BanConstraint::template enforceBans<LPConstraintNone, Integer>)
         .def("enforceBans",
@@ -122,6 +126,7 @@ void addTreeConstraint(pybind11::module_& m) {
 
     addBanConstraint<BanNone>(m, "BanNone");
     addBanConstraint<BanBoundary>(m, "BanBoundary");
+    addBanConstraint<BanEdge, regina::Edge<3>*>(m, "BanEdge");
     addBanConstraint<BanTorusBoundary>(m, "BanTorusBoundary");
 }
 

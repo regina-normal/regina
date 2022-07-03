@@ -635,11 +635,13 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  * coordinates).  See LPInitialTableaux for a more detailed discussion of this.
  *
  * This base class provides limited functionality (as documented below).
- * Subclasses \e must implement a constructor (which, like this base
- * class, takes an initial tableaux and determines which coordinates are
- * banned and/or marked), and must implement supported(), which indicates
- * which normal or angle structure coordinate system this constraint class
- * can work with.
+ * Subclasses \e must implement a constructor (which, like this base class,
+ * takes an initial tableaux and determines which coordinates are banned and/or
+ * marked), and must implement supported(), which indicates which normal or
+ * angle structure coordinate system this constraint class can work with.
+ * The constructor may take additional arguments beyond the initial tableaux;
+ * if so, then the tree traversal classes (mentioned below) will forward
+ * these arguments at runtime from their own class constructors.
  *
  * These ban constraint classes are designed mainly to act as C++ template
  * arguments, and end users will typically not need to construct their own
@@ -924,6 +926,70 @@ class BanBoundary : public BanConstraintBase {
 };
 
 /**
+ * A class that bans normal disc types that meet a particular edge of the
+ * underlying triangulation.  No disc types are marked at all.
+ *
+ * This class is only for use with normal or almost normal surfaces, not
+ * angle structures.
+ *
+ * \warning This class only works as expected with vector encodings that
+ * explicitly include triangles (e.g., encodings for standard normal or
+ * almost normal coordinates).  In quadrilateral or quadrilateral-octagon
+ * coordinates it will only ban quadrilaterals or octagons that meet the
+ * given edge, but it will still allow \e triangles that meet the edge
+ * (since triangle types are not counted in these coordinate systems).
+ * The supported() routine will only return \c true for encodings that
+ * include triangles.
+ *
+ * See the BanConstraintBase class notes for details on all member
+ * functions and structs.
+ *
+ * These ban constraint classes are designed mainly to act as C++ template
+ * arguments, and end users will typically not need to construct their own
+ * object of these classes.  Instead, to use a ban constraint class, pass it
+ * as a template parameter to one of the tree traversal subclasses
+ * (e.g., TreeEnumeration, TreeSingleSolution, or TautEnumeration).
+ *
+ * \headers Some templated parts of this class are implemented in a separate
+ * header (treeconstraint-impl.h), which is not included automatically by this
+ * file.  Most end users should not need this extra header, since Regina's
+ * calculation engine already includes explicit instantiations for common
+ * template arguments.
+ *
+ * \ifacespython It is rare that you would need to access this class directly
+ * through Python.  Instead, to use a ban constraint class, you would typically
+ * create a tree traversal object with the appropriate class suffix (e.g., one
+ * such Python class is \c TreeEnumeration_BanEdge).  See the
+ * BanConstraintBase class notes for further details.
+ *
+ * \apinotfinal
+ *
+ * \ingroup enumerate
+ */
+class BanEdge : public BanConstraintBase {
+    public:
+        /**
+         * Constructs a new set of banning and marking constraints.
+         *
+         * This base class constructor will construct the \a banned_ and
+         * \a marked_ arrays to be the correct size based on the given
+         * tableaux, and will initialise their contents to ban disc types
+         * that meet the given edge.
+         *
+         * No disc types will be marked.
+         *
+         * @param init the original starting tableaux being used for this
+         * enumeration task.  This tableaux must work with normal or almost
+         * normal surface coordinates (not angle structure coordinates).
+         * @param edge the specific edge that our normal discs must not meet.
+         */
+        template <class LPConstraint>
+        BanEdge(const LPInitialTableaux<LPConstraint>& init, Edge<3>* edge);
+
+        static bool supported(NormalEncoding enc);
+};
+
+/**
  * A class that bans and marks disc types associated with torus boundary
  * components.  Here we refer exclusively to real torus boundary
  * components (not ideal vertices with torus cusps).  Specifically:
@@ -1124,6 +1190,11 @@ inline bool BanConstraintBase::operator != (const BanConstraintBase& other)
 }
 
 inline bool BanBoundary::supported(NormalEncoding enc) {
+    // Note: storesTriangles() will ensure we are not using angle structures.
+    return enc.storesTriangles();
+}
+
+inline bool BanEdge::supported(NormalEncoding enc) {
     // Note: storesTriangles() will ensure we are not using angle structures.
     return enc.storesTriangles();
 }

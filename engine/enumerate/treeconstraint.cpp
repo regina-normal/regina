@@ -44,6 +44,14 @@ template BanBoundary::BanBoundary(
 template BanBoundary::BanBoundary(
     const LPInitialTableaux<LPConstraintNonSpun>&);
 
+template BanEdge::BanEdge(const LPInitialTableaux<LPConstraintNone>&, Edge<3>*);
+template BanEdge::BanEdge(const LPInitialTableaux<LPConstraintEulerPositive>&,
+    Edge<3>*);
+template BanEdge::BanEdge(const LPInitialTableaux<LPConstraintEulerZero>&,
+    Edge<3>*);
+template BanEdge::BanEdge(const LPInitialTableaux<LPConstraintNonSpun>&,
+    Edge<3>*);
+
 template BanTorusBoundary::BanTorusBoundary(
     const LPInitialTableaux<LPConstraintNone>&);
 template BanTorusBoundary::BanTorusBoundary(

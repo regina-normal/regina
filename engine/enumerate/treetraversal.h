@@ -457,13 +457,18 @@ class TreeTraversal : public ShortOutput<
          * (e.g., 2 for a vanilla normal surface tree traversal algorithm).
          * If the underlying coordinate system does not support triangles
          * then this argument will be ignored.
+         * @param banArgs any additional arguments to be passed to the
+         * BanConstraint constructor, after the initial starting tableaux.
+         * For most ban constrainst classes, this list of arguments is empty.
          * @param enumeration \c true if we should optimise the tableaux
          * for a full enumeration of vertex surfaces or taut angle structures,
          * or \c false if we should optimise the tableaux for an existence test
          * (such as searching for a non-trivial normal disc or sphere).
          */
+        template <typename... BanArgs>
         TreeTraversal(const Triangulation<3>& tri, NormalEncoding enc,
-                int branchesPerQuad, int branchesPerTri, bool enumeration);
+                int branchesPerQuad, int branchesPerTri, bool enumeration,
+                BanArgs&&... banArgs);
 
         /**
          * Rearranges the search tree so that \a nextType becomes the next
@@ -734,8 +739,13 @@ class TreeEnumeration :
          * vertex surfaces.
          * @param enc the normal (or almost normal) surface vector encoding
          * that we are working with.
+         * @param banArgs any additional arguments to be passed to the
+         * BanConstraint constructor, after the initial starting tableaux.
+         * For most ban constrainst classes, this list of arguments is empty.
          */
-        TreeEnumeration(const Triangulation<3>& tri, NormalEncoding enc);
+        template <typename... BanArgs>
+        TreeEnumeration(const Triangulation<3>& tri, NormalEncoding enc,
+            BanArgs&&... banArgs);
 
         /**
          * Returns the total number of vertex normal or almost normal surfaces
@@ -1049,8 +1059,12 @@ class TautEnumeration :
          *
          * @param tri the triangulation in which we wish to enumerate
          * taut angle structures.
+         * @param banArgs any additional arguments to be passed to the
+         * BanConstraint constructor, after the initial starting tableaux.
+         * For most ban constrainst classes, this list of arguments is empty.
          */
-        TautEnumeration(const Triangulation<3>& tri);
+        template <typename... BanArgs>
+        TautEnumeration(const Triangulation<3>& tri, BanArgs&&... banArgs);
 
         /**
          * Returns the total number of taut angle structures
@@ -1430,8 +1444,13 @@ class TreeSingleSoln :
          * non-trivial surface.
          * @param enc the normal (or almost normal) surface vector encoding
          * that we are working with.
+         * @param banArgs any additional arguments to be passed to the
+         * BanConstraint constructor, after the initial starting tableaux.
+         * For most ban constrainst classes, this list of arguments is empty.
          */
-        TreeSingleSoln(const Triangulation<3>& tri, NormalEncoding enc);
+        template <typename... BanArgs>
+        TreeSingleSoln(const Triangulation<3>& tri, NormalEncoding enc,
+            BanArgs&&... banArgs);
 
         /**
          * Runs the tree traversal algorithm until it finds some non-trivial
@@ -1533,6 +1552,54 @@ void TreeTraversal<LPConstraint, BanConstraint, IntType>::writeTextShort(
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename... BanArgs>
+TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
+        const Triangulation<3>& tri, NormalEncoding enc,
+        int branchesPerQuad, int branchesPerTri, bool enumeration,
+        BanArgs&&... banArgs) :
+        origTableaux_(tri, enc, enumeration),
+        enc_(enc),
+        ban_(origTableaux_, std::forward<BanArgs>(banArgs)...),
+        nTets_(tri.size()),
+        nTypes_(enc_.storesTriangles() ? 5 * nTets_ : nTets_),
+        /* Each time we branch, one LP can be solved in-place:
+           therefore we use branchesPerQuad-1 and branchesPerTri-1.
+           The final +1 is for the root node. */
+        nTableaux_(enc_.storesTriangles() ?
+            (branchesPerQuad - 1) * nTets_ +
+                (branchesPerTri - 1) * nTets_ * 4 + 1 :
+            (branchesPerQuad - 1) * nTets_ + 1),
+        type_(new char[nTypes_ + 1]),
+        typeOrder_(new size_t[nTypes_]),
+        level_(0),
+        octLevel_(enc_.storesOctagons() ? -1 : static_cast<ssize_t>(nTypes_)),
+        lp_(new LPData<LPConstraint, IntType>[nTableaux_]),
+        lpSlot_(new LPData<LPConstraint, IntType>*[nTypes_ + 1]),
+        nextSlot_(new LPData<LPConstraint, IntType>*[nTypes_ + 1]),
+        nVisited_(0) {
+    // Initialise the type vector to the zero vector.
+    std::fill(type_, type_ + nTypes_ + 1, 0);
+
+    // Set a default type order.
+    for (size_t i = 0; i < nTypes_; ++i)
+        typeOrder_[i] = i;
+
+    // Reserve space for all the tableaux that we will ever need.
+    for (size_t i = 0; i < nTableaux_; ++i)
+        lp_[i].reserve(origTableaux_);
+
+    // Mark the location of the initial tableaux at the root node.
+    lpSlot_[0] = lp_;
+    nextSlot_[0] = lp_ + 1;
+
+    // Reserve space for our additional temporary tableaux.
+    tmpLP_[0].reserve(origTableaux_);
+    tmpLP_[1].reserve(origTableaux_);
+    tmpLP_[2].reserve(origTableaux_);
+    tmpLP_[3].reserve(origTableaux_);
+}
+
+template <class LPConstraint, typename BanConstraint, typename IntType>
 inline ssize_t TreeTraversal<LPConstraint, BanConstraint, IntType>::
         nextUnmarkedTriangleType(size_t startFrom) {
     while (startFrom < nTypes_ && ban_.marked(2 * nTets_ + startFrom))
@@ -1545,12 +1612,14 @@ inline ssize_t TreeTraversal<LPConstraint, BanConstraint, IntType>::
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename... BanArgs>
 inline TreeEnumeration<LPConstraint, BanConstraint, IntType>::TreeEnumeration(
-        const Triangulation<3>& tri, NormalEncoding enc) :
+        const Triangulation<3>& tri, NormalEncoding enc, BanArgs&&... banArgs) :
         TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, enc,
             (enc.storesOctagons() ? 7 : 4) /* branches per quad */,
             2 /* branches per triangle */,
-            true /* enumeration */),
+            true /* enumeration */,
+            std::forward<BanArgs>(banArgs)...),
         nSolns_(0),
         lastNonZero_(-1) {
 }
@@ -1589,12 +1658,14 @@ inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename... BanArgs>
 inline TautEnumeration<LPConstraint, BanConstraint, IntType>::TautEnumeration(
-        const Triangulation<3>& tri) :
+        const Triangulation<3>& tri, BanArgs&&... banArgs) :
         TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, NS_ANGLE,
             3 /* branches per quad */,
             0 /* branches per triangle; irrelevant here */,
-            true /* enumeration */),
+            true /* enumeration */,
+            std::forward<BanArgs>(banArgs)...),
         nSolns_(0) {
 }
 
@@ -1632,12 +1703,14 @@ inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
+template <typename... BanArgs>
 inline TreeSingleSoln<LPConstraint, BanConstraint, IntType>::TreeSingleSoln(
-        const Triangulation<3>& tri, NormalEncoding enc) :
+        const Triangulation<3>& tri, NormalEncoding enc, BanArgs&&... banArgs) :
         TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, enc,
             (enc.storesOctagons() ? 6 : 3) /* branches per quad */,
             2 /* branches per triangle */,
-            false /* enumeration */),
+            false /* enumeration */,
+            std::forward<BanArgs>(banArgs)...),
         nextZeroLevel_(0),
         cancelled_(false) {
 }

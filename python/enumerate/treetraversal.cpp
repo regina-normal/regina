@@ -47,6 +47,7 @@ using regina::LPConstraintNonSpun;
 
 using regina::BanNone;
 using regina::BanBoundary;
+using regina::BanEdge;
 using regina::BanTorusBoundary;
 
 template <class LPConstraint, typename BanConstraint>
@@ -65,14 +66,15 @@ void addTreeTraversalBase(pybind11::module_& m, const char* name) {
     regina::python::add_eq_operators(c);
 }
 
-template <class LPConstraint, typename BanConstraint>
+template <class LPConstraint, typename BanConstraint, typename... BanArgs>
 void addTreeEnumeration(pybind11::module_& m, const char* name) {
     using Tree = regina::TreeEnumeration<LPConstraint, BanConstraint>;
     using Action = const std::function<bool(const Tree&)>&;
 
     auto c = pybind11::class_<Tree, regina::TreeTraversal<
             LPConstraint, BanConstraint, Integer>>(m, name)
-        .def(pybind11::init<const Triangulation<3>&, NormalEncoding>())
+        .def(pybind11::init<const Triangulation<3>&, NormalEncoding,
+            BanArgs...>())
         .def("solutions", &Tree::solutions)
         .def("run", &Tree::template run<Action>)
         .def("next", &Tree::next,
@@ -85,14 +87,14 @@ void addTreeEnumeration(pybind11::module_& m, const char* name) {
     regina::python::add_eq_operators(c);
 }
 
-template <class LPConstraint, typename BanConstraint>
+template <class LPConstraint, typename BanConstraint, typename... BanArgs>
 void addTautEnumeration(pybind11::module_& m, const char* name) {
     using Tree = regina::TautEnumeration<LPConstraint, BanConstraint>;
     using Action = const std::function<bool(const Tree&)>&;
 
     auto c = pybind11::class_<Tree, regina::TreeTraversal<
             LPConstraint, BanConstraint, Integer>>(m, name)
-        .def(pybind11::init<const Triangulation<3>&>())
+        .def(pybind11::init<const Triangulation<3>&, BanArgs...>())
         .def("solutions", &Tree::solutions)
         .def("run", &Tree::template run<Action>)
         .def("next", &Tree::next,
@@ -105,13 +107,14 @@ void addTautEnumeration(pybind11::module_& m, const char* name) {
     regina::python::add_eq_operators(c);
 }
 
-template <class LPConstraint, typename BanConstraint>
+template <class LPConstraint, typename BanConstraint, typename... BanArgs>
 void addTreeSingleSoln(pybind11::module_& m, const char* name) {
     using Tree = regina::TreeSingleSoln<LPConstraint, BanConstraint>;
 
     auto c = pybind11::class_<Tree, regina::TreeTraversal<
             LPConstraint, BanConstraint, Integer>>(m, name)
-        .def(pybind11::init<const Triangulation<3>&, NormalEncoding>())
+        .def(pybind11::init<const Triangulation<3>&, NormalEncoding,
+            BanArgs...>())
         .def("find", &Tree::find)
         .def("cancel", &Tree::cancel)
     ;
@@ -134,6 +137,12 @@ void addTreeTraversal(pybind11::module_& m) {
         m, "TreeTraversal_EulerPositive_BanBoundary");
     addTreeTraversalBase<LPConstraintEulerZero, BanBoundary>(
         m, "TreeTraversal_EulerZero_BanBoundary");
+    addTreeTraversalBase<LPConstraintNone, BanEdge>(
+        m, "TreeTraversal_BanEdge");
+    addTreeTraversalBase<LPConstraintEulerPositive, BanEdge>(
+        m, "TreeTraversal_EulerPositive_BanEdge");
+    addTreeTraversalBase<LPConstraintEulerZero, BanEdge>(
+        m, "TreeTraversal_EulerZero_BanEdge");
     addTreeTraversalBase<LPConstraintNone, BanTorusBoundary>(
         m, "TreeTraversal_BanTorusBoundary");
     addTreeTraversalBase<LPConstraintEulerPositive, BanTorusBoundary>(
@@ -155,6 +164,12 @@ void addTreeTraversal(pybind11::module_& m) {
         m, "TreeEnumeration_EulerPositive_BanBoundary");
     addTreeEnumeration<LPConstraintEulerZero, BanBoundary>(
         m, "TreeEnumeration_EulerZero_BanBoundary");
+    addTreeEnumeration<LPConstraintNone, BanEdge, regina::Edge<3>*>(
+        m, "TreeEnumeration_BanEdge");
+    addTreeEnumeration<LPConstraintEulerPositive, BanEdge, regina::Edge<3>*>(
+        m, "TreeEnumeration_EulerPositive_BanEdge");
+    addTreeEnumeration<LPConstraintEulerZero, BanEdge, regina::Edge<3>*>(
+        m, "TreeEnumeration_EulerZero_BanEdge");
     addTreeEnumeration<LPConstraintNone, BanTorusBoundary>(
         m, "TreeEnumeration_BanTorusBoundary");
     addTreeEnumeration<LPConstraintEulerPositive, BanTorusBoundary>(
@@ -179,6 +194,12 @@ void addTreeTraversal(pybind11::module_& m) {
         m, "TreeSingleSoln_EulerPositive_BanBoundary");
     addTreeSingleSoln<LPConstraintEulerZero, BanBoundary>(
         m, "TreeSingleSoln_EulerZero_BanBoundary");
+    addTreeSingleSoln<LPConstraintNone, BanEdge, regina::Edge<3>*>(
+        m, "TreeSingleSoln_BanEdge");
+    addTreeSingleSoln<LPConstraintEulerPositive, BanEdge, regina::Edge<3>*>(
+        m, "TreeSingleSoln_EulerPositive_BanEdge");
+    addTreeSingleSoln<LPConstraintEulerZero, BanEdge, regina::Edge<3>*>(
+        m, "TreeSingleSoln_EulerZero_BanEdge");
     addTreeSingleSoln<LPConstraintNone, BanTorusBoundary>(
         m, "TreeSingleSoln_BanTorusBoundary");
     addTreeSingleSoln<LPConstraintEulerPositive, BanTorusBoundary>(
