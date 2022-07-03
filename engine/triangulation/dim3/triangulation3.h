@@ -569,6 +569,52 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          */
         bool hasNegativeIdealBoundaryComponents() const;
 
+        /**
+         * Determines whether the boundary of this triangulation contains
+         * the smallest possible number of triangles.
+         *
+         * This is true if and only if, amongst all real boundary components,
+         * every sphere or projective plane boundary component has precisely
+         * two triangles, and every other boundary component has precisely
+         * one vertex.
+         *
+         * For the purposes of this routine, ideal boundary components
+         * are ignored.
+         *
+         * If this routine returns \c false, you can call minimiseBoundary()
+         * to make the number of boundary triangles minimal.
+         *
+         * \pre This triangulation is valid.
+         *
+         * @return \c true if and only if the boundary contains the
+         * smallest possible number of triangles.
+         */
+        bool hasMinimalBoundary() const;
+
+        /**
+         * Determines whether this triangulation contains the smallest possible
+         * number of vertices for the 3-manifold that it represents.
+         *
+         * This is true if and only if:
+         *
+         * - amongst all real boundary components, every sphere or projective
+         *   plane boundary component has precisely two triangles, and every
+         *   other boundary component has precisely one vertex;
+         *
+         * - amongst all connected components, every closed component
+         *   has precisely one vertex, and every component with real or
+         *   ideal boundary has no internal vertices at all.
+         *
+         * If this routine returns \c false, you can call minimiseVertices()
+         * to make the number of vertices minimal.
+         *
+         * \pre This triangulation is valid.
+         *
+         * @return \c true if and only if this triangulation contains
+         * the smallest possible number of vertices.
+         */
+        bool hasMinimalVertices() const;
+
         /*@}*/
         /**
          * \name Basic Properties

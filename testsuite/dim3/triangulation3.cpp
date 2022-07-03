@@ -5153,16 +5153,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        static bool hasMinimalBoundary(const Triangulation<3>& tri) {
-            for (auto b : tri.boundaryComponents())
-                if (b->countTriangles() > 2 && b->countVertices() > 1)
-                    return false;
-            return true;
-        }
-
         static void verifyMinimiseBoundary(const Triangulation<3>& tri,
                 const char* name) {
-            if (hasMinimalBoundary(tri)) {
+            if (tri.hasMinimalBoundary()) {
                 verifyMinimiseBoundaryDoesNothing(tri, name);
                 return;
             }
@@ -5185,7 +5178,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! hasMinimalBoundary(copy)) {
+            if (! copy.hasMinimalBoundary()) {
                 std::ostringstream msg;
                 msg << name << ": minimiseBoundary() "
                     "did not minimise boundary.";
@@ -5259,27 +5252,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
-        static bool hasMinimalVertices(const Triangulation<3>& tri) {
-            for (auto c : tri.components())
-                if (c->isClosed()) {
-                    if (c->countVertices() != 1)
-                        return false;
-                } else {
-                    size_t expect = 0;
-                    for (auto b : c->boundaryComponents()) {
-                        if (b->countTriangles() > 2 && b->countVertices() > 1)
-                            return false;
-                        expect += b->countVertices();
-                    }
-                    if (c->countVertices() != expect)
-                        return false;
-                }
-            return true;
-        }
-
         static void verifyMinimiseVertices(const Triangulation<3>& tri,
                 const char* name) {
-            if (hasMinimalVertices(tri)) {
+            if (tri.hasMinimalVertices()) {
                 verifyMinimiseVerticesDoesNothing(tri, name);
                 return;
             }
@@ -5302,7 +5277,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! hasMinimalVertices(copy)) {
+            if (! copy.hasMinimalVertices()) {
                 std::ostringstream msg;
                 msg << name << ": minimiseVertices() "
                     "did not minimise the number of vertices.";

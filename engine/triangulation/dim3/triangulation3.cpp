@@ -164,6 +164,31 @@ long Triangulation<3>::eulerCharManifold() const {
     return ans;
 }
 
+bool Triangulation<3>::hasMinimalBoundary() const {
+    for (auto b : boundaryComponents())
+        if (b->countTriangles() > 2 && b->countVertices() > 1)
+            return false;
+    return true;
+}
+
+bool Triangulation<3>::hasMinimalVertices() const {
+    for (auto c : components())
+        if (c->isClosed()) {
+            if (c->countVertices() != 1)
+                return false;
+        } else {
+            size_t expect = 0;
+            for (auto b : c->boundaryComponents()) {
+                if (b->countTriangles() > 2 && b->countVertices() > 1)
+                    return false;
+                expect += b->countVertices();
+            }
+            if (c->countVertices() != expect)
+                return false;
+        }
+    return true;
+}
+
 Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
         TriangulationBase<3>(X, cloneProps) {
     if (! cloneProps)

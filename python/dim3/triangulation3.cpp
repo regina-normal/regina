@@ -226,6 +226,8 @@ void addTriangulation3(pybind11::module_& m) {
             &Triangulation<3>::hasTwoSphereBoundaryComponents)
         .def("hasNegativeIdealBoundaryComponents",
             &Triangulation<3>::hasNegativeIdealBoundaryComponents)
+        .def("hasMinimalBoundary", &Triangulation<3>::hasMinimalBoundary)
+        .def("hasMinimalVertices", &Triangulation<3>::hasMinimalVertices)
         .def("isEmpty", &Triangulation<3>::isEmpty)
         .def("eulerCharTri", &Triangulation<3>::eulerCharTri)
         .def("eulerCharManifold", &Triangulation<3>::eulerCharManifold)
