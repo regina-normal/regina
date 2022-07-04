@@ -4255,8 +4255,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                             CPPUNIT_FAIL( msg.str() );
                         }
 
-                        if ( newTri.isOrientable() !=
-                                tri.isOrientable() ) {
+                        if ( newTri.isOrientable() != tri.isOrientable() ) {
                             std::ostringstream msg;
                             msg << name << ", edge " << i
                                 << ", triangles " << j
@@ -4265,8 +4264,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                             CPPUNIT_FAIL( msg.str() );
                         }
 
-                        if ( tri.isOrientable() and
-                                not newTri.isOriented() ) {
+                        if ( tri.isOrientable() and not newTri.isOriented() ) {
                             std::ostringstream msg;
                             msg << name << ", edge " << i
                                 << ", triangles " << j
@@ -4294,8 +4292,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                             CPPUNIT_FAIL( msg.str() );
                         }
 
-                        if ( newTri.eulerCharTri() !=
-                                tri.eulerCharTri() ) {
+                        if ( newTri.eulerCharTri() != tri.eulerCharTri() ) {
                             std::ostringstream msg;
                             msg << name << ", edge " << i
                                 << ", triangles " << j
@@ -4305,8 +4302,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                         }
 
                         if ( tri.isValid() ) {
-                            if ( not ( newTri.homology() ==
-                                        tri.homology() ) ) {
+                            if ( newTri.homology() != tri.homology() ) {
                                 std::ostringstream msg;
                                 msg << name << ", edge " << i
                                     << ", triangles " << j
@@ -4315,8 +4311,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                                 CPPUNIT_FAIL( msg.str() );
                             }
 
-                            if ( not ( newTri.homology<2>() ==
-                                        tri.homology<2>() ) ) {
+                            if ( newTri.homology<2>() != tri.homology<2>() ) {
                                 std::ostringstream msg;
                                 msg << name << ", edge " << i
                                     << ", triangles " << j
