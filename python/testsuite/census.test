@@ -76,6 +76,8 @@ print()
 
 def foundGluings3(g):
 	t = g.triangulate()
+	# Note: intelligentSimplify might reduce vertices but keep the
+	# same number of tetrahedra.
 	if not t.intelligentSimplify():
 		print(t.isoSig())
 

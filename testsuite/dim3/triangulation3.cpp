@@ -4866,6 +4866,46 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
         }
 
+        void verifySimplificationToIsoSig(const Triangulation<3>& tri,
+                const char* resultingIsoSig) {
+            Triangulation<3> t(tri);
+            if (t.isOrientable())
+                t.orient();
+
+            t.intelligentSimplify();
+            clearProperties(t);
+
+            if (t.isoSig() != resultingIsoSig) {
+                std::ostringstream msg;
+                msg << "Large triangulation should simplify to "
+                    << resultingIsoSig << ", but simplifies to "
+                    << t.isoSig() << " instead.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (tri.isOrientable() != t.isOriented()) {
+                std::ostringstream msg;
+                msg << "Simplification to " << resultingIsoSig
+                    << " breaks orientation.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Make sure it does not simplify any further.
+            Triangulation<3> t2(t);
+            if (t2.intelligentSimplify()) {
+                std::ostringstream msg;
+                msg << "The simple triangulation " << resultingIsoSig
+                    << " should not simplify any further, but it does.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (t2.dumpConstruction() != t.dumpConstruction()) {
+                std::ostringstream msg;
+                msg << "The simple triangulation " << resultingIsoSig
+                    << " should not change at all when simplified again, "
+                    "but it does.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void verifyNoSimplification(const Triangulation<3>& tri,
                 size_t size, const char* name) {
             if (tri.size() != size) {
@@ -4898,10 +4938,11 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Some triangulations that should not simplify.
 
-            // A triangulation with two degree two projective plane cusps
-            // (that should not be simplified away):
-            verifyNoSimplification(Triangulation<3>::rehydrate("cabbbbxww"), 2,
-                "Custom two-cusped triangluation");
+            // A triangulation with two degree two projective plane cusps.
+            // This has an internal vertex that should be removed,
+            // but the two projective plane cusps should not be simplified away.
+            verifySimplificationToIsoSig(
+                Triangulation<3>::rehydrate("cabbbbxww"), "cMcabbgci");
 
             {
                 // A triangulation with an invalid edge that simplifies
