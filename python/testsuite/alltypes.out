@@ -19,6 +19,9 @@ Equality type : EqualityType.BY_VALUE
 BanBoundary : class
 Equality type : EqualityType.BY_VALUE
 
+BanEdge : class
+Equality type : EqualityType.BY_VALUE
+
 BanNone : class
 Equality type : EqualityType.BY_VALUE
 
@@ -1342,6 +1345,9 @@ Equality type : EqualityType.BY_REFERENCE
 TreeEnumeration_BanBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
+TreeEnumeration_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
 TreeEnumeration_BanTorusBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1351,6 +1357,9 @@ Equality type : EqualityType.BY_REFERENCE
 TreeEnumeration_EulerPositive_BanBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
+TreeEnumeration_EulerPositive_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
 TreeEnumeration_EulerPositive_BanTorusBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1358,6 +1367,9 @@ TreeEnumeration_EulerZero : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeEnumeration_EulerZero_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeEnumeration_EulerZero_BanEdge : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeEnumeration_EulerZero_BanTorusBoundary : class
@@ -1372,6 +1384,9 @@ Equality type : EqualityType.BY_REFERENCE
 TreeSingleSoln_BanBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
+TreeSingleSoln_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
 TreeSingleSoln_BanTorusBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1381,6 +1396,9 @@ Equality type : EqualityType.BY_REFERENCE
 TreeSingleSoln_EulerPositive_BanBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
+TreeSingleSoln_EulerPositive_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
 TreeSingleSoln_EulerPositive_BanTorusBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1388,6 +1406,9 @@ TreeSingleSoln_EulerZero : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeSingleSoln_EulerZero_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeSingleSoln_EulerZero_BanEdge : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeSingleSoln_EulerZero_BanTorusBoundary : class
@@ -1402,6 +1423,9 @@ Equality type : EqualityType.BY_REFERENCE
 TreeTraversal_BanBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
+TreeTraversal_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
 TreeTraversal_BanTorusBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1411,6 +1435,9 @@ Equality type : EqualityType.BY_REFERENCE
 TreeTraversal_EulerPositive_BanBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
+TreeTraversal_EulerPositive_BanEdge : class
+Equality type : EqualityType.BY_REFERENCE
+
 TreeTraversal_EulerPositive_BanTorusBoundary : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1418,6 +1445,9 @@ TreeTraversal_EulerZero : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeTraversal_EulerZero_BanBoundary : class
+Equality type : EqualityType.BY_REFERENCE
+
+TreeTraversal_EulerZero_BanEdge : class
 Equality type : EqualityType.BY_REFERENCE
 
 TreeTraversal_EulerZero_BanTorusBoundary : class
