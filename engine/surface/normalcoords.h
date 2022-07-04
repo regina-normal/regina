@@ -524,6 +524,80 @@ class NormalEncoding {
                 return NormalEncoding((flags_ | STORES_TRIANGLES) + 4);
         }
         /**
+         * Returns a restricted version of this encoding that does not store
+         * triangle coordinates.
+         *
+         * Most other properties of the encoding will be copied across without
+         * changes (including "theoretical" properties such as whether the
+         * surface could be spun-normal).  However, since triangle coordinates
+         * will be excluded, the "could contain vertex linking components"
+         * property will be explicitly set to \c false.
+         *
+         * If this encoding already does not store triangle coordinates, then
+         * the result will be identical to this.
+         *
+         * \pre This is not the special angle structure encoding (see the
+         * class notes for details).
+         *
+         * @return a restriction of this encoding that does not store triangle
+         * coordinates.
+         */
+        constexpr NormalEncoding withoutTriangles() const {
+            if (storesTriangles())
+                return NormalEncoding(
+                    (flags_ & ~(STORES_TRIANGLES | COULD_BE_VERTEX_LINK)) - 4);
+            else
+                return NormalEncoding(flags_);
+        }
+        /**
+         * Returns an extension of this encoding that explicitly stores
+         * octagon coordinates.
+         *
+         * All other properties of the encoding will be copied across without
+         * changes (including "theoretical" properties such as whether the
+         * surface could have vertex linking components, or whether it
+         * could be spun-normal).
+         *
+         * If this encoding already stores octagon coordinates, then
+         * the result will be identical to this.
+         *
+         * \pre This is not the special angle structure encoding (see the
+         * class notes for details).
+         *
+         * @return an extension of this encoding that stores octagon
+         * coordinates.
+         */
+        constexpr NormalEncoding withOctagons() const {
+            if (storesOctagons())
+                return NormalEncoding(flags_);
+            else
+                return NormalEncoding((flags_ | STORES_OCTAGONS) + 3);
+        }
+        /**
+         * Returns a restricted version of this encoding that does not store
+         * octagon coordinates.
+         *
+         * All other properties of the encoding will be copied across without
+         * changes (including "theoretical" properties such as whether the
+         * surface could have vertex linking components, or whether it
+         * could be spun-normal).
+         *
+         * If this encoding already does not store octagon coordinates, then
+         * the result will be identical to this.
+         *
+         * \pre This is not the special angle structure encoding (see the
+         * class notes for details).
+         *
+         * @return a restriction of this encoding that does not store octagon
+         * coordinates.
+         */
+        constexpr NormalEncoding withoutOctagons() const {
+            if (storesOctagons())
+                return NormalEncoding((flags_ ^ STORES_OCTAGONS) - 3);
+            else
+                return NormalEncoding(flags_);
+        }
+        /**
          * Returns an encoding that could hold the sum of surfaces that
          * use this and the given encoding.
          *

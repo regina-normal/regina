@@ -104,6 +104,9 @@ Version 7.1  [ TODO ]
               over type U, where T and U are different types.
         Class ModelLinkGraph:
             - New constructor that takes a link to model.
+        Class NormalEncoding:
+            - New routines withoutTriangles(), withOctagons() and
+              withoutOctagons().
         Class NormalHypersurface:
             - New operators * and *= for taking integer multiples.  The old
               doubleHypersurface() is now deprecated.
