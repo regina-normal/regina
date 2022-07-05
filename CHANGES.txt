@@ -116,6 +116,7 @@ Version 7.1  [ TODO ]
               doubleSurface() is now deprecated.
             - New routine scaleDown().
             - New routine isNormalEdgeLink().
+            - New routine removeOcts().
         Class Perm<n>:
             - New routines for tight encodings and decodings.
         Type safe_tuple_element<...>:

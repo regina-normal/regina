@@ -598,5 +598,139 @@ LargeInteger NormalSurface::scaleDown() {
     return ans;
 }
 
+NormalSurface NormalSurface::removeOcts() const {
+    // Work out which tetrahedra will need to be expanded, and in which
+    // directions.
+
+    const Triangulation<3>& tri(*triangulation_);
+    size_t n = tri.size();
+
+    size_t nExpand = 0;
+    auto* expand = new std::pair<size_t, int>[n];
+
+    for (size_t i = 0; i < n; ++i)
+        for (int j = 0; j < 3; ++j)
+            if (octs(i, j) != 0) {
+                expand[nExpand++] = { i, j };
+                break;
+            }
+
+    // Prepare a new normal surface vector, and copy all the original
+    // triangle/quadrilateral coordinates across.
+    NormalEncoding newEnc = enc_.withoutOctagons();
+    int block = newEnc.block();
+    Vector<LargeInteger> v((tri.size() + 2 * nExpand) * block);
+
+    for (size_t i = 0; i < n; ++i) {
+        // The block for tetrahedron i in the new surface should be a
+        // prefix of the block for tetrahedron i in the original surface,
+        // since octagons are always stored last.
+        for (int j = 0; j < block; ++j)
+            v[block * i + j] = vector_[enc_.block() * i + j];
+    }
+
+    if (nExpand == 0) {
+        // We can just use the original triangulation.
+        delete[] expand;
+        return NormalSurface(triangulation_, newEnc, std::move(v));
+    }
+
+    // Now we retriangulate.
+    //
+    // For a tetrahedron T containing octagon type k, we replace it with
+    // three tetrahedra A=B=C:
+    // - Both A and C will follow the original vertex numbering of T;
+    // - A will contain the original edge k, and C will contain the original
+    //   edge (5-k);
+    // - The gluings A=B and B=C will each use a pair swap that exchanges
+    //   the vertex numbers of the internal degree two edge between A and B;
+    // - B will take the place of T in the original tetrahedron numbering,
+    //   and A and C will be appended to the end of the tetrahedron list.
+
+    Triangulation<3> retri(tri);
+
+    for (size_t i = 0; i < nExpand; ++i) {
+        Tetrahedron<3>* a = retri.newTetrahedron();
+        Tetrahedron<3>* b = retri.tetrahedron(expand[i].first);
+        Tetrahedron<3>* c = retri.newTetrahedron();
+
+        // The two faces on either side of edge k (where k is the oct type):
+        int aExt[2] = { Edge<3>::edgeVertex[5-expand[i].second][0],
+            Edge<3>::edgeVertex[5-expand[i].second][1] };
+
+        // The two faces on either side of edge 5-k:
+        int cExt[2] = { Edge<3>::edgeVertex[expand[i].second][0],
+            Edge<3>::edgeVertex[expand[i].second][1] };
+
+        // Fix the external gluings for a/c first.
+        for (int j = 0; j < 2; ++j) {
+            if (auto adj = b->adjacentTetrahedron(aExt[j])) {
+                auto gluing = b->adjacentGluing(aExt[j]);
+                b->unjoin(aExt[j]);
+                if (adj == b) {
+                    if (gluing[aExt[j]] == aExt[j ^ 1])
+                        a->join(aExt[j], a, gluing);
+                    else
+                        a->join(aExt[j], c, gluing);
+                } else
+                    a->join(aExt[j], adj, gluing);
+            }
+        }
+        for (int j = 0; j < 2; ++j) {
+            if (auto adj = b->adjacentTetrahedron(cExt[j])) {
+                auto gluing = b->adjacentGluing(cExt[j]);
+                b->unjoin(cExt[j]);
+                if (adj == b) {
+                    if (gluing[cExt[j]] == cExt[j ^ 1])
+                        c->join(cExt[j], c, gluing);
+                    else
+                        c->join(cExt[j], a, gluing);
+                } else
+                    c->join(cExt[j], adj, gluing);
+            }
+        }
+
+        // Now make the internal gluings to b.
+        Perm<4> bSwap(aExt[0], aExt[1]);
+        b->join(cExt[0], a, bSwap);
+        b->join(cExt[1], a, bSwap);
+        b->join(aExt[0], c, bSwap);
+        b->join(aExt[1], c, bSwap);
+
+        // Work out the corresponding coordinates for the isotopic surface.
+
+        // Remember:
+        // - Normal surfaces always explicitly store triangles and quads in
+        //   their internal vectors; see the NormalSurface docs for details.
+        // - We can assume that this surface does not have any *quads* in
+        //   the tetrahedron being processed, since it is known to have
+        //   octagons and the surface is assumed to be embedded.
+
+        LargeInteger nOcts = octs(expand[i].first, expand[i].second);
+
+        // First fix and propagate the triangle coordinates from the
+        // original tetrahedron.
+        for (int j = 0; j < 4; ++j)
+            v[block * a->index() + j] = v[block * c->index() + j] =
+                v[block * b->index() + j];
+        v[block * b->index() + aExt[0]].swap(v[block * b->index() + aExt[1]]);
+
+        // Now sort out the octagons of the original tetrahedron.
+        // These become quadrilaterals of b of the same type, as well as
+        // triangles of a/c.
+        v[block * b->index() + 4 + expand[i].second] += nOcts;
+        v[block * a->index() + cExt[0]] += nOcts;
+        v[block * a->index() + cExt[1]] += nOcts;
+        v[block * c->index() + aExt[0]] += nOcts;
+        v[block * c->index() + aExt[1]] += nOcts;
+    }
+
+    delete[] expand;
+
+    // At this point, retri will be destroyed but the surface ans will
+    // take a deep copy via the snapshot mechanism.
+    return NormalSurface(retri, newEnc, std::move(v));
+}
+
 } // namespace regina
 

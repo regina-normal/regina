@@ -137,6 +137,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(disjointCensus);
     CPPUNIT_TEST(cutAlongConstructed);
     CPPUNIT_TEST(cutAlongCensus);
+    CPPUNIT_TEST(removeOctsConstructed);
+    CPPUNIT_TEST(removeOctsCensus);
     CPPUNIT_TEST(copyMove);
 
     CPPUNIT_TEST_SUITE_END();
@@ -2351,6 +2353,176 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             runCensusAllClosed(&testCutAlong, true);
             runCensusAllBounded(&testCutAlong, true);
             runCensusAllIdeal(&testCutAlong, true);
+        }
+
+        static void testRemoveOctsInCoords(regina::NormalCoords coords,
+                const Triangulation<3>& tri, const char* name) {
+            NormalSurfaces list(tri, coords);
+
+            for (const NormalSurface& s : list) {
+                NormalSurface noOct = s.removeOcts();
+
+                if (noOct.encoding().storesOctagons()) {
+                    std::ostringstream msg;
+                    msg << "Removing octagons in surface " << s
+                        << " for " << name
+                        << " gives a surface vector that still encodes "
+                        "octagons.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (! noOct.normal()) {
+                    std::ostringstream msg;
+                    msg << "Removing octagons in surface " << s
+                        << " for " << name
+                        << " gives a surface that still contains octagons.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                // Internally, the no-octagon variants should always be
+                // stored using the standard matching equations.
+                regina::MatrixInt matching = regina::makeMatchingEquations(
+                    noOct.triangulation(), NS_STANDARD);
+                if (noOct.vector().size() != matching.columns()) {
+                    std::ostringstream msg;
+                    msg << "Removing octagons in surface " << s
+                        << " for " << name
+                        << " gives a surface vector of the incorrect size.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                // For non-compact surfaces we should test the quad
+                // matching equations, but for now we leave it.
+                // The standard matching equations will fail because
+                // infinity - infinity != 0.
+                if (s.isCompact())
+                    if (! (matching * noOct.vector()).isZero()) {
+                        std::ostringstream msg;
+                        msg << "Removing octagons in surface " << s
+                            << " for " << name
+                            << " gives a surface vector that fails the "
+                            "standard matching equations.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                if (noOct.isOrientable() != s.isOrientable()) {
+                    std::ostringstream msg;
+                    msg << "Removing octagons in surface " << s
+                        << " for " << name
+                        << " breaks orientability.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (noOct.isTwoSided() != s.isTwoSided()) {
+                    std::ostringstream msg;
+                    msg << "Removing octagons in surface " << s
+                        << " for " << name
+                        << " breaks two-sidedness.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (noOct.isCompact() != s.isCompact()) {
+                    std::ostringstream msg;
+                    msg << "Removing octagons in surface " << s
+                        << " for " << name
+                        << " breaks compactness.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (noOct.isConnected() != s.isConnected()) {
+                    std::ostringstream msg;
+                    msg << "Removing octagons in surface " << s
+                        << " for " << name
+                        << " breaks connectedness.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (noOct.hasRealBoundary() != s.hasRealBoundary()) {
+                    std::ostringstream msg;
+                    msg << "Removing octagons in surface " << s
+                        << " for " << name
+                        << " breaks the existence of real boundary.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (noOct.eulerChar() != s.eulerChar()) {
+                    std::ostringstream msg;
+                    msg << "Removing octagons in surface " << s
+                        << " for " << name
+                        << " breaks Euler characteristic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (noOct.countBoundaries() != s.countBoundaries()) {
+                    std::ostringstream msg;
+                    msg << "Removing octagons in surface " << s
+                        << " for " << name
+                        << " breaks the number of boundary curves.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                const Triangulation<3>& retri = noOct.triangulation();
+                if (std::addressof(retri) != std::addressof(tri)) {
+                    if (tri.isClosed() != retri.isClosed()) {
+                        std::ostringstream msg;
+                        msg << "Removing octagons in surface " << s
+                            << " for " << name
+                            << " yields a triangulation that breaks "
+                            "closedness.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (tri.isOrientable() != retri.isOrientable()) {
+                        std::ostringstream msg;
+                        msg << "Removing octagons in surface " << s
+                            << " for " << name
+                            << " yields a triangulation that breaks "
+                            "orientability.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (tri.countComponents() !=
+                            retri.countComponents()) {
+                        std::ostringstream msg;
+                        msg << "Removing octagons in surface " << s
+                            << " for " << name
+                            << " yields a triangulation that breaks "
+                            "the number of components.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (tri.countBoundaryComponents() !=
+                            retri.countBoundaryComponents()) {
+                        std::ostringstream msg;
+                        msg << "Removing octagons in surface " << s
+                            << " for " << name
+                            << " yields a triangulation that breaks "
+                            "the number of boundary components.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (tri.homology() != retri.homology()) {
+                        std::ostringstream msg;
+                        msg << "Removing octagons in surface " << s
+                            << " for " << name
+                            << " yields a triangulation that breaks "
+                            "homology.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
+        static void testRemoveOcts(const Triangulation<3>& tri,
+                const char* name) {
+            testRemoveOctsInCoords(NS_AN_STANDARD, tri, name);
+            testRemoveOctsInCoords(NS_AN_QUAD_OCT, tri, name);
+        }
+
+        void removeOctsConstructed() {
+            testRemoveOcts(oneTet, "Lone tetrahedron");
+            testRemoveOcts(figure8, "Figure eight");
+            testRemoveOcts(gieseking, "Gieseking");
+            testRemoveOcts(S3, "S3");
+            testRemoveOcts(loopC2, "C(2)");
+            testRemoveOcts(loopCtw3, "C~(3)");
+            testRemoveOcts(largeS3, "Large S3");
+            testRemoveOcts(largeRP3, "Large RP3");
+            testRemoveOcts(twistedKxI, "Twisted KxI");
+            testRemoveOcts(norSFS, "SFS [RP2: (2,1) (2,1) (2,1)]");
+        }
+
+        void removeOctsCensus() {
+            runCensusAllClosed(&testRemoveOcts, true);
+            runCensusAllBounded(&testRemoveOcts, true);
+            runCensusAllIdeal(&testRemoveOcts, true);
         }
 
         void testCopyMove(const Triangulation<3>& tri, const char* name) {

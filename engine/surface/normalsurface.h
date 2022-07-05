@@ -1337,6 +1337,42 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         Triangulation<3> crush() const;
 
         /**
+         * Returns an isotopic normal surface that contains no octagons,
+         * placed within a homeomorphic (but possibly different) triangulation.
+         *
+         * Specifically: this routine returns a surface \a s within a
+         * triangulation \a t, where \a t is homeomorphic to the triangulation
+         * containing this surface, and where \a s is a normal (not
+         * almost normal) surface isotopic to this.  Only the surface \a s is
+         * returned; you can access \a t by calling <tt>s.triangulation()</tt>.
+         *
+         * If this surface is already normal (i.e., it does not contain
+         * any octagons), then the surface returned will simply be a copy
+         * of this surface (but possibly using a different vector encoding),
+         * living within the same triangulation.
+         *
+         * If this surface does contain octagons, then the triangulation \a t
+         * will be obtained from the original by replacing each tetrahedron
+         * containing octagons with \e three tetrahedra (essentially
+         * performing a 0-2 move).  Each octagon can then be subdivided
+         * into a quadrilateral and four triangles.  If the original
+         * triangulation is oriented, then the new triangulation \a t will
+         * preserve this orientation.
+         *
+         * In all cases, the surface that is returned will use a vector
+         * encoding that does not store octagons.
+         *
+         * Note: this routine can happily cope with multiple octagons in the
+         * same tetrahedron, and/or multiple tetrahedra containing octagons.
+         *
+         * \pre This surface is embedded.
+         *
+         * @return an isotopic normal (not almost normal) surface \a s,
+         * as described above.
+         */
+        NormalSurface removeOcts() const;
+
+        /**
          * Determines whether this and the given surface in fact
          * represent the same normal (or almost normal) surface.
          *
