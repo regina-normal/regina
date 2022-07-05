@@ -709,11 +709,12 @@ void SurfacesCoordinateUI::crush() {
 }
 
 void SurfacesCoordinateUI::updateActionStates() {
-    bool canCrushOrCut = table->selectionModel()->hasSelection() &&
-        (! surfaces->allowsAlmostNormal()) && surfaces->isEmbeddedOnly();
+    bool canCut = table->selectionModel()->hasSelection() &&
+        surfaces->isEmbeddedOnly();
+    bool canCrush = canCut && (! surfaces->allowsAlmostNormal());
 
-    actCutAlong->setEnabled(canCrushOrCut);
-    actCrush->setEnabled(canCrushOrCut);
+    actCutAlong->setEnabled(canCut);
+    actCrush->setEnabled(canCrush);
 }
 
 void SurfacesCoordinateUI::columnResized(int section, int, int newSize) {

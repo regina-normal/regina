@@ -1288,11 +1288,15 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * operation will not change the topology of the underlying
          * 3-manifold beyond simply slicing along this surface.
          *
+         * As of Regina 7.1, this routine can happily cut along \e almost
+         * normal surfaces as well as normal surfaces.  That is, it can
+         * now handle octagons, including cases with multiple octagons in the
+         * same tetrahedron and/or octagons in multiple tetrahedra.
+         *
          * \warning The number of tetrahedra in the new triangulation
          * can be <i>very</i> large.
          *
          * \pre This normal surface is compact and embedded.
-         * \pre This normal surface contains no octagonal discs.
          *
          * @return the resulting cut-open triangulation.
          */

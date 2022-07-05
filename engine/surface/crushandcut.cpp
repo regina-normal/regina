@@ -1147,6 +1147,15 @@ namespace {
 // ------------------------------------------------------------------------
 
 Triangulation<3> NormalSurface::cutAlong() const {
+    if (! normal()) {
+        // The implementation of cutAlong() only knows how to handle
+        // triangles and quadrilaterals.
+        // By calling removeOcts() first, we will be able to use our
+        // triangle-quadrilateral implementation and still end up with
+        // the correct resulting 3-manifold(s).
+        return removeOcts().cutAlong();
+    }
+
     Triangulation<3> ans;
     // Ensure only one event pair is fired in this sequence of changes.
     Triangulation<3>::ChangeEventSpan span(ans);
