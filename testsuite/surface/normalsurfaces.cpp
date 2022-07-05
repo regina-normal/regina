@@ -2131,7 +2131,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
          */
         static void testCutAlong(const Triangulation<3>& tri,
                 const char* name) {
-            NormalSurfaces list(tri, NS_STANDARD);
+            NormalSurfaces list(tri, NS_AN_STANDARD);
 
             bool separating;
             unsigned long expected;
