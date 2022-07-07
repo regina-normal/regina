@@ -374,34 +374,33 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true)
         .def("zeroTwoMove",
-            overload_cast< regina::EdgeEmbedding<3>, int,
-            regina::EdgeEmbedding<3>, int, bool, bool >(
-                &Triangulation<3>::zeroTwoMove ),
+            overload_cast<regina::EdgeEmbedding<3>, int,
+                regina::EdgeEmbedding<3>, int, bool, bool>(
+                &Triangulation<3>::zeroTwoMove),
             pybind11::arg(),
             pybind11::arg(),
             pybind11::arg(),
             pybind11::arg(),
             pybind11::arg("check") = true,
-            pybind11::arg("perform") = true )
+            pybind11::arg("perform") = true)
         .def("zeroTwoMove",
-            overload_cast< regina::Edge<3>*, size_t, size_t,
-            bool, bool >(
-                &Triangulation<3>::zeroTwoMove ),
+            overload_cast<regina::Edge<3>*, size_t, size_t, bool, bool>(
+                &Triangulation<3>::zeroTwoMove),
             pybind11::arg(),
             pybind11::arg(),
             pybind11::arg(),
             pybind11::arg("check") = true,
-            pybind11::arg("perform") = true )
+            pybind11::arg("perform") = true)
         .def("zeroTwoMove",
-            overload_cast< regina::Triangle<3>*, int,
-            regina::Triangle<3>*, int, bool, bool >(
-                &Triangulation<3>::zeroTwoMove ),
+            overload_cast<regina::Triangle<3>*, int,
+                regina::Triangle<3>*, int, bool, bool>(
+                &Triangulation<3>::zeroTwoMove),
             pybind11::arg(),
             pybind11::arg(),
             pybind11::arg(),
             pybind11::arg(),
             pybind11::arg("check") = true,
-            pybind11::arg("perform") = true )
+            pybind11::arg("perform") = true)
         .def("openBook", &Triangulation<3>::openBook,
             pybind11::arg(),
             pybind11::arg("check") = true,
