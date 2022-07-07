@@ -1985,6 +1985,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * will label the new tetrahedra in a way that preserves the
          * orientation.
          *
+         * The implementation of this routine simply translates the given
+         * arguments to call the variant of zeroTwoMove() that takes a pair of
+         * edge embeddings (and other associated arguments).
+         *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)
@@ -2011,9 +2015,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * @author Alex He
          */
-        bool zeroTwoMove(
-                Edge<3>* e, size_t t0, size_t t1,
-                bool check = true, bool perform = true );
+        bool zeroTwoMove(Edge<3>* e, size_t t0, size_t t1,
+            bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a 0-2 move about the
          * (not necessarily distinct) triangles \a t0 and \a t1.
@@ -2034,6 +2037,10 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * If this triangulation is currently oriented, then this 0-2 move
          * will label the new tetrahedra in a way that preserves the
          * orientation.
+         *
+         * The implementation of this routine simply translates the given
+         * arguments to call the variant of zeroTwoMove() that takes a pair of
+         * edge embeddings (and other associated arguments).
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -2062,9 +2069,8 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          *
          * @author Alex He
          */
-        bool zeroTwoMove(
-                Triangle<3>* t0, int e0, Triangle<3>* t1, int e1,
-                bool check = true, bool perform = true );
+        bool zeroTwoMove(Triangle<3>* t0, int e0, Triangle<3>* t1, int e1,
+            bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a book opening move
          * about the given triangle.
