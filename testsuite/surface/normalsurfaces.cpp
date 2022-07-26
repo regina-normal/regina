@@ -2402,32 +2402,13 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                             "standard matching equations.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                if (noOct.isOrientable() != s.isOrientable()) {
-                    std::ostringstream msg;
-                    msg << "Removing octagons in surface " << s
-                        << " for " << name
-                        << " breaks orientability.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-                if (noOct.isTwoSided() != s.isTwoSided()) {
-                    std::ostringstream msg;
-                    msg << "Removing octagons in surface " << s
-                        << " for " << name
-                        << " breaks two-sidedness.";
-                    CPPUNIT_FAIL(msg.str());
-                }
+
+                // Properties that are available for all surfaces:
                 if (noOct.isCompact() != s.isCompact()) {
                     std::ostringstream msg;
                     msg << "Removing octagons in surface " << s
                         << " for " << name
                         << " breaks compactness.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-                if (noOct.isConnected() != s.isConnected()) {
-                    std::ostringstream msg;
-                    msg << "Removing octagons in surface " << s
-                        << " for " << name
-                        << " breaks connectedness.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (noOct.hasRealBoundary() != s.hasRealBoundary()) {
@@ -2437,19 +2418,44 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                         << " breaks the existence of real boundary.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (noOct.eulerChar() != s.eulerChar()) {
-                    std::ostringstream msg;
-                    msg << "Removing octagons in surface " << s
-                        << " for " << name
-                        << " breaks Euler characteristic.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-                if (noOct.countBoundaries() != s.countBoundaries()) {
-                    std::ostringstream msg;
-                    msg << "Removing octagons in surface " << s
-                        << " for " << name
-                        << " breaks the number of boundary curves.";
-                    CPPUNIT_FAIL(msg.str());
+
+                // Properties that are only available for compact surfaces:
+                if (s.isCompact()) {
+                    if (noOct.isOrientable() != s.isOrientable()) {
+                        std::ostringstream msg;
+                        msg << "Removing octagons in surface " << s
+                            << " for " << name
+                            << " breaks orientability.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (noOct.isTwoSided() != s.isTwoSided()) {
+                        std::ostringstream msg;
+                        msg << "Removing octagons in surface " << s
+                            << " for " << name
+                            << " breaks two-sidedness.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (noOct.isConnected() != s.isConnected()) {
+                        std::ostringstream msg;
+                        msg << "Removing octagons in surface " << s
+                            << " for " << name
+                            << " breaks connectedness.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (noOct.eulerChar() != s.eulerChar()) {
+                        std::ostringstream msg;
+                        msg << "Removing octagons in surface " << s
+                            << " for " << name
+                            << " breaks Euler characteristic.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (noOct.countBoundaries() != s.countBoundaries()) {
+                        std::ostringstream msg;
+                        msg << "Removing octagons in surface " << s
+                            << " for " << name
+                            << " breaks the number of boundary curves.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
                 }
 
                 const Triangulation<3>& retri = noOct.triangulation();
