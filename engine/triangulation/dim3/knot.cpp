@@ -133,11 +133,9 @@ Edge<3>* Triangulation<3>::longitude() {
     MatrixInt m(1, countEdges()); // Leave as (0,0,...,0)
     MatrixInt n(countEdges(), countTriangles());
 
-    int j;
-    size_t e;
     for (auto t : triangles()) {
-        for (j = 0; j < 3; ++j) {
-            e = t->edge(j)->index();
+        for (int j = 0; j < 3; ++j) {
+            size_t e = t->edge(j)->index();
             if (t->edgeMapping(j).sign() > 0)
                 ++n.entry(e, t->index());
             else
@@ -151,7 +149,7 @@ Edge<3>* Triangulation<3>::longitude() {
 
     long longCuts[3];
     Vector<Integer> v(countEdges()); // zero vector
-    for (j = 0; j < 3; ++j) {
+    for (int j = 0; j < 3; ++j) {
         v[bc->edge(j)->index()] = 1;
 
         // Fetch the number of times the longitude cuts this boundary
@@ -176,7 +174,7 @@ Edge<3>* Triangulation<3>::longitude() {
     // referencing edges and start referencing tetrahedra instead.
     Tetrahedron<3>* bdryTet[3];
     int bdryEdge[3];
-    for (j = 0; j < 3; ++j) {
+    for (int j = 0; j < 3; ++j) {
         bdryTet[j] = bc->edge(j)->front().simplex();
         bdryEdge[j] = bc->edge(j)->front().edge();
     }

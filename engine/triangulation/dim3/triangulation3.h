@@ -1023,9 +1023,9 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * These restrictions may be eased in future versions of Regina.
          *
          * If the meridian and algebraic longitude are already both represented
-         * by single boundary edges, then it is guaranteed that this routine
-         * will \e not modify the triangulation, and will simply return
-         * these two boundary edges.
+         * by single boundary edges, then it is guaranteed that, if this
+         * routine does terminate, it will \e not modify the triangulation,
+         * and will simply return these two boundary edges.
          *
          * \pre The underlying 3-manifold is known to be the complement
          * of a knot in the 3-sphere.
