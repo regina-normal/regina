@@ -159,6 +159,8 @@ Version 7.1  [ TODO ]
             - Routine intelligentSimplify() now explicitly aims to reduce
               the number of vertices, as long as this does not increase
               the number of tetrahedra.
+            - Routines longitude() and meridianLongitude() now throw
+              exceptions on error instead of returning null.
         Class Triangulation<4>:
             - New routine intersectionForm().
             - New optimisations that reduce the need for 3-sphere/3-ball

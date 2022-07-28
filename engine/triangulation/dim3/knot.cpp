@@ -115,19 +115,18 @@ namespace {
 Edge<3>* Triangulation<3>::longitude() {
     // Basic sanity checks.  Does this look like a 1-vertex knot
     // complement with real boundary?
-    if (! (isValid() && isOrientable()))
-        return nullptr;
-    if (countVertices() != 1)
-        return nullptr;
+    if (! (isValid() && isOrientable() && countVertices() == 1))
+        throw FailedPrecondition("longitude() requires a "
+            "valid orientable one-vertex triangulation");
 
     if (countBoundaryComponents() != 1)
-        return nullptr;
+        throw FailedPrecondition("longitude() requires a "
+            "triangulation with precisely one boundary component");
 
     BoundaryComponent<3>* bc = boundaryComponents_.front();
-    if (bc->countTriangles() != 2)
-        return nullptr;
-    if (bc->countEdges() != 3)
-        return nullptr;
+    if (bc->countTriangles() != 2 || bc->countEdges() != 3)
+        throw FailedPrecondition("longitude() requires a "
+            "triangulation whose boundary is a two-triangle torus");
 
     // Locate the longitude algebraically.
     MatrixInt m(1, countEdges()); // Leave as (0,0,...,0)
@@ -145,7 +144,8 @@ Edge<3>* Triangulation<3>::longitude() {
 
     MarkedAbelianGroup a(m, n);
     if (! a.isZ())
-        return nullptr;
+        throw FailedPrecondition("longitude() requires a triangulation "
+            "with homology Z, as expected for a knot complement in S^3");
 
     long longCuts[3];
     Vector<Integer> v(countEdges()); // zero vector
@@ -158,8 +158,7 @@ Edge<3>* Triangulation<3>::longitude() {
         tmp.tryReduce();
         if (! tmp.isNative()) {
             // The result does not fit into a C/C++ long.
-            std::cerr << "Overflow detected in longitude()." << std::endl;
-            return nullptr;
+            throw UnsolvedCase("longitude() detected an integer overflow");
         }
         longCuts[j] = tmp.longValue();
 
@@ -222,8 +221,6 @@ std::pair<Edge<3>*, Edge<3>*> Triangulation<3>::meridianLongitude() {
     // The easy part: find the algebraic longitude.
     // This routine also handles all our basic sanity checks.
     Edge<3>* l = longitude();
-    if (! l)
-        return std::make_pair(nullptr, nullptr);
 
     // Fetch the three boundary edges.
     // The longitude will be e[0].

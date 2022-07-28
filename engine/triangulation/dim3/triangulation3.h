@@ -984,10 +984,18 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * complement, you \e must first run idealToFinite() and then simplify
          * the resulting triangulation to have two boundary triangles.
          *
+         * \exception FailedPrecondition This triangulation is not a valid
+         * one-vertex orientable triangulation with homology \a Z, and with a
+         * two-triangle torus as its one and only boundary component.
+         * Note that this does not capture all of the preconditions for
+         * this routine, but it does capture those that are easy to test.
+         *
+         * \exception UnsolvedCase An integer overflow occurred during
+         * the computation.
+         *
          * @return the boundary edge representing the algebraic
          * longitude of the knot (after this triangulation has
-         * been modified if necessary), or \c null if an error (such as
-         * an integer overflow) occurred during the computation.
+         * been modified if necessary).
          */
         Edge<3>* longitude();
 
@@ -1040,12 +1048,19 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
          * complement, you \e must first run idealToFinite() and then simplify
          * the resulting triangulation to have two boundary triangles.
          *
+         * \exception FailedPrecondition This triangulation is not a valid
+         * one-vertex orientable triangulation with homology \a Z, and with a
+         * two-triangle torus as its one and only boundary component.
+         * Note that this does not capture all of the preconditions for
+         * this routine, but it does capture those that are easy to test.
+         *
+         * \exception UnsolvedCase An integer overflow occurred during
+         * the computation.
+         *
          * @return a pair (\a m, \a l), where \a m is the boundary edge
          * representing the meridian and \a l is the boundary edge representing
          * the algebraic longitude of the knot complement (after this
-         * triangulation has been modified if necessary).  If an error (such as
-         * an integer overflow) occurs during the computation, then this
-         * routine will return (\c null, \c null).
+         * triangulation has been modified if necessary).
          */
         std::pair<Edge<3>*, Edge<3>*> meridianLongitude();
 
