@@ -939,6 +939,52 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         const TuraevViroSet& allCalculatedTuraevViro() const;
 
         /**
+         * Identifies the algebraic longitude as a curve on the boundary of a
+         * triangulated knot complement.
+         *
+         * Specifically, assuming that this triangulation represents the
+         * complement of a knot in the 3-sphere, this routine identifies the
+         * non-trivial simple closed curve on the boundary whose homology in
+         * the 3-manifold is trivial.
+         *
+         * The curve will be returned as a triple of integers, indicating how
+         * many times the longitude intersects each of the three boundary edges.
+         * It is always true that the largest of these three integers will be
+         * the sum of the other two.
+         *
+         * At present this routine is fairly restrictive in what triangulations
+         * it can work with: it requires the triangulation to be one-vertex
+         * and have real (not ideal) boundary.
+         * These restrictions may be eased in future versions of Regina.
+         *
+         * \pre The underlying 3-manifold is known to be the complement
+         * of a knot in the 3-sphere.
+         * \pre This triangulation has precisely one vertex, and its
+         * (unique) boundary component is formed from two triangles.
+         *
+         * \warning If you have an \e ideal triangulation of a knot
+         * complement, you \e must first run idealToFinite() and then simplify
+         * the resulting triangulation to have two boundary triangles.
+         *
+         * \exception FailedPrecondition This triangulation is not a valid
+         * one-vertex orientable triangulation with homology \a Z, and with a
+         * two-triangle torus as its one and only boundary component.
+         * Note that this does not capture all of the preconditions for
+         * this routine, but it does capture those that are easy to test.
+         *
+         * \exception UnsolvedCase An integer overflow occurred during
+         * the computation.
+         *
+         * @return a triple of non-negative integers indicating how many
+         * times the longitude intersects each of the three boundary edges.
+         * Specifically, if the returned tuple is \a t and the unique boundary
+         * component is \a bc, then for each \a k = 0,1,2, the element
+         * <tt>t[k]</tt> indicates the (absolute) number of times that the
+         * longitude intersects the edge <tt>bc->edge(k)</tt>.
+         */
+        std::array<long, 3> longitudeCuts() const;
+
+        /**
          * Modifies a triangulated knot complement so that the algebraic
          * longitude follows a single boundary edge, and returns this edge.
          *

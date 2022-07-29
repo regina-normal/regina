@@ -112,20 +112,20 @@ namespace {
     }
 }
 
-Edge<3>* Triangulation<3>::longitude() {
+std::array<long, 3> Triangulation<3>::longitudeCuts() const {
     // Basic sanity checks.  Does this look like a 1-vertex knot
     // complement with real boundary?
     if (! (isValid() && isOrientable() && countVertices() == 1))
-        throw FailedPrecondition("longitude() requires a "
+        throw FailedPrecondition("longitudeCuts() requires a "
             "valid orientable one-vertex triangulation");
 
     if (countBoundaryComponents() != 1)
-        throw FailedPrecondition("longitude() requires a "
+        throw FailedPrecondition("longitudeCuts() requires a "
             "triangulation with precisely one boundary component");
 
     BoundaryComponent<3>* bc = boundaryComponents_.front();
     if (bc->countTriangles() != 2 || bc->countEdges() != 3)
-        throw FailedPrecondition("longitude() requires a "
+        throw FailedPrecondition("longitudeCuts() requires a "
             "triangulation whose boundary is a two-triangle torus");
 
     // Locate the longitude algebraically.
@@ -144,10 +144,10 @@ Edge<3>* Triangulation<3>::longitude() {
 
     MarkedAbelianGroup a(m, n);
     if (! a.isZ())
-        throw FailedPrecondition("longitude() requires a triangulation "
+        throw FailedPrecondition("longitudeCuts() requires a triangulation "
             "with homology Z, as expected for a knot complement in S^3");
 
-    long longCuts[3];
+    std::array<long, 3> longCuts;
     Vector<Integer> v(countEdges()); // zero vector
     for (int j = 0; j < 3; ++j) {
         v[bc->edge(j)->index()] = 1;
@@ -165,8 +165,17 @@ Edge<3>* Triangulation<3>::longitude() {
         v[bc->edge(j)->index()] = 0;
     }
 
+    return longCuts;
+}
+
+Edge<3>* Triangulation<3>::longitude() {
+    // The call to longitudeCuts() handles the necessary sanity checks.
+    std::array<long, 3> longCuts = longitudeCuts();
+
     // std::cerr << longCuts[0] << ',' << longCuts[1] << ',' << longCuts[2]
     //     << std::endl;
+
+    BoundaryComponent<3>* bc = boundaryComponents_.front();
 
     // Layer until the longitude is a boundary edge.
     // Since we are modifying the triangulation now, we must stop
@@ -178,7 +187,14 @@ Edge<3>* Triangulation<3>::longitude() {
         bdryEdge[j] = bc->edge(j)->front().edge();
     }
 
-    while (longCuts[0] > 0 && longCuts[1] > 0 && longCuts[2] > 0) {
+    while (true) {
+        if (longCuts[0] == 0)
+            return bdryTet[0]->edge(bdryEdge[0]);
+        if (longCuts[1] == 0)
+            return bdryTet[1]->edge(bdryEdge[1]);
+        if (longCuts[2] == 0)
+            return bdryTet[2]->edge(bdryEdge[2]);
+
         if (longCuts[0] == longCuts[1] + longCuts[2]) {
             // Layer over boundary edge 0.
             bdryTet[0] = layerOn(bdryTet[0]->edge(bdryEdge[0]));
@@ -196,25 +212,6 @@ Edge<3>* Triangulation<3>::longitude() {
             longCuts[2] = labs(longCuts[0] - longCuts[1]);
         }
     }
-
-    // std::cerr << longCuts[0] << ',' << longCuts[1] << ',' << longCuts[2]
-    //     << std::endl;
-
-    if (longCuts[1] == 0) {
-        std::swap(bdryTet[0], bdryTet[1]);
-        std::swap(bdryEdge[0], bdryEdge[1]);
-        std::swap(longCuts[0], longCuts[1]);
-    } else if (longCuts[2] == 0) {
-        std::swap(bdryTet[0], bdryTet[2]);
-        std::swap(bdryEdge[0], bdryEdge[2]);
-        std::swap(longCuts[0], longCuts[2]);
-    }
-
-    // std::cerr << longCuts[0] << ',' << longCuts[1] << ',' << longCuts[2]
-    //     << std::endl;
-
-    // The longitude is edge bdryEdge[0] of tetrahedron bdryTet[0].
-    return bdryTet[0]->edge(bdryEdge[0]);
 }
 
 std::pair<Edge<3>*, Edge<3>*> Triangulation<3>::meridianLongitude() {
