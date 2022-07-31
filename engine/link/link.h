@@ -982,8 +982,12 @@ class Link :
         StrandRef strand(ssize_t id) const;
 
         /**
-         * Translates a strand reference for some other link into the
-         * corresponding strand reference for this link.
+         * Translates a strand reference from some other link into the
+         * corresponding strand reference from this link.
+         *
+         * Typically this routine would be used when the given strand comes
+         * from a link that is combinatorially identical to this, and you wish
+         * to obtain the corresponding strand in this link.
          *
          * Specifically: if \a other refers to some strand (upper or lower)
          * of crossing number \a k of some other link, then the return
@@ -991,6 +995,10 @@ class Link :
          * crossing number \a k of this link.
          *
          * This routine behaves correctly even if \a other is a null reference.
+         *
+         * \pre This link contains at least as many crossings as the link
+         * containing \a other (though, as noted above, in typical scenarios
+         * both links would actually be combinatorially identical).
          *
          * @param other the strand reference to translate.
          * @return the corresponding strand reference for this link.

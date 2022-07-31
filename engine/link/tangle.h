@@ -342,8 +342,12 @@ class Tangle : public Output<Tangle> {
         bool operator != (const Tangle& other) const;
 
         /**
-         * Translates a strand reference for some other tangle into the
-         * corresponding strand reference for this tangle.
+         * Translates a strand reference from some other tangle into the
+         * corresponding strand reference from this tangle.
+         *
+         * Typically this routine would be used when the given strand comes
+         * from a tangle that is combinatorially identical to this, and you wish
+         * to obtain the corresponding strand in this tangle.
          *
          * Specifically: if \a other refers to some strand (upper or lower)
          * of crossing number \a k of some other tangle, then the return
@@ -351,6 +355,10 @@ class Tangle : public Output<Tangle> {
          * crossing number \a k of this tangle.
          *
          * This routine behaves correctly even if \a other is a null reference.
+         *
+         * \pre This tangle contains at least as many crossings as the tangle
+         * containing \a other (though, as noted above, in typical scenarios
+         * both tangles would actually be combinatorially identical).
          *
          * @param other the strand reference to translate.
          * @return the corresponding strand reference for this tangle.
