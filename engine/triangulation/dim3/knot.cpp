@@ -32,6 +32,7 @@
 
 #include "algebra/markedabeliangroup.h"
 #include "maths/matrix.h"
+#include "maths/numbertheory.h"
 #include "snappea/snappeatriangulation.h"
 #include <cstdlib>
 
@@ -214,6 +215,192 @@ Edge<3>* Triangulation<3>::longitude() {
     }
 }
 
+Edge<3>* Triangulation<3>::meridian() {
+    // First work out the longitude as a triple of edge weights.
+    // This call to longitudeCuts() handles the necessary sanity checks.
+    std::array<long, 3> longCuts = longitudeCuts();
+
+    // Fetch the three boundary edges, in the same order that
+    // corresponds to the triple longCuts.
+    BoundaryComponent<3>* bc = boundaryComponents_.front();
+    Edge<3>* e[3];
+    for (int i = 0; i < 3; ++i)
+        e[i] = bc->edge(i);
+
+    // Reorder the boundary edges so that longCuts is in ascending order.
+    // We do this using a trivial three-element bubblesort.
+    if (longCuts[0] > longCuts[1]) {
+        std::swap(longCuts[0], longCuts[1]);
+        std::swap(e[0], e[1]);
+    }
+    if (longCuts[1] > longCuts[2]) {
+        std::swap(longCuts[1], longCuts[2]);
+        std::swap(e[1], e[2]);
+    }
+    if (longCuts[0] > longCuts[1]) {
+        std::swap(longCuts[0], longCuts[1]);
+        std::swap(e[0], e[1]);
+    }
+
+    // At this point, longCuts[0] <= longCuts[1] <= longCuts[2].
+
+    // Now fetch the boundary edges in (tetrahedron, edge number) form,
+    // since this survives modifications to the triangulation.
+
+    Tetrahedron<3>* bdryTet[3];
+    int bdryEdge[3];
+    for (int i = 0; i < 3; ++i) {
+        bdryTet[i] = e[i]->front().simplex();
+        bdryEdge[i] = e[i]->front().edge();
+    }
+
+    // Next work out the meridian as triple of edge weights.
+    // It can be shown that:
+    // - If the longitude is (0,1,1), then the meridian must be of the form
+    //   (1,k,k+1) or (1,k+1,k).
+    // - If the longitude is (a,b,a+b) for a,b > 0, then the meridian must be
+    //   (x,y,x+y) where ay-bx = +/-1.
+    //
+    // We will treat these two cases separately.
+    // In each case, we identify the meridian by repeatedly filling along
+    // candidate curves until we obtain a 3-sphere.
+
+    long merCuts[3];
+
+    if (longCuts[0] == 0) {
+        // - The meridian is of the form (1,k,k+1) or (1,k+1,k).
+
+        merCuts[0] = 1;
+        for (long k = 0; ; ++k) {
+            {
+                Triangulation<3> t(*this);
+                t.fillTorus(
+                    t.simplex(bdryTet[0]->index())->edge(bdryEdge[0]),
+                    t.simplex(bdryTet[1]->index())->edge(bdryEdge[1]),
+                    t.simplex(bdryTet[2]->index())->edge(bdryEdge[2]),
+                    1, k, k + 1);
+                if (fastSphere(t)) {
+                    merCuts[1] = k;
+                    merCuts[2] = k + 1;
+                    break;
+                }
+            }
+            {
+                Triangulation<3> t(*this);
+                t.fillTorus(
+                    t.simplex(bdryTet[0]->index())->edge(bdryEdge[0]),
+                    t.simplex(bdryTet[1]->index())->edge(bdryEdge[1]),
+                    t.simplex(bdryTet[2]->index())->edge(bdryEdge[2]),
+                    1, k + 1, k);
+                if (fastSphere(t)) {
+                    merCuts[1] = k + 1;
+                    merCuts[2] = k;
+                    break;
+                }
+            }
+        }
+    } else {
+        // The meridian is of the form (x,y,x+y) where ay-bx = +/-1.
+
+        // First find *some* integer solution to give each of +1 or -1.
+        auto [d, u, v] = gcdWithCoeffs(longCuts[0], longCuts[1]);
+        // We should have a * u + b * v = 1.
+
+        // The pairs (x,y) that give +1 and -1 respectively:
+        long pos[2] = { -v, u };
+        long neg[2] = { v, -u };
+
+        // For each equation (+1 and -1), all solutions can be obtained
+        // from our initial solution by adding or subtracting multiples
+        // of (a,b) to (x,y).  We will find the smallest non-negative solution
+        // for each equation, and then iterate by repeatedly adding (a,b).
+
+        long k0, k1, k;
+
+        k0 = (longCuts[0] == 0 ? 0 :
+                pos[0] >= 0 ? -(pos[0] / longCuts[0]) :
+                -((pos[0] + 1) / longCuts[0]) + 1);
+        k1 = (longCuts[1] == 0 ? 0 :
+                pos[1] >= 0 ? -(pos[1] / longCuts[1]) :
+                -((pos[1] + 1) / longCuts[1]) + 1);
+        k = (longCuts[0] == 0 ? k1 : longCuts[1] == 0 ? k0 : std::max(k0, k1));
+        pos[0] += (k * longCuts[0]);
+        pos[1] += (k * longCuts[1]);
+
+        k0 = (longCuts[0] == 0 ? 0 :
+                neg[0] >= 0 ? -(neg[0] / longCuts[0]) :
+                -((neg[0] + 1) / longCuts[0]) + 1);
+        k1 = (longCuts[1] == 0 ? 0 :
+                neg[1] >= 0 ? -(neg[1] / longCuts[1]) :
+                -((neg[1] + 1) / longCuts[1]) + 1);
+        k = (longCuts[0] == 0 ? k1 : longCuts[1] == 0 ? k0 : std::max(k0, k1));
+        neg[0] += (k * longCuts[0]);
+        neg[1] += (k * longCuts[1]);
+
+        while (true) {
+            {
+                Triangulation<3> t(*this);
+                t.fillTorus(
+                    t.simplex(bdryTet[0]->index())->edge(bdryEdge[0]),
+                    t.simplex(bdryTet[1]->index())->edge(bdryEdge[1]),
+                    t.simplex(bdryTet[2]->index())->edge(bdryEdge[2]),
+                    pos[0], pos[1], pos[0] + pos[1]);
+                if (fastSphere(t)) {
+                    merCuts[0] = pos[0];
+                    merCuts[1] = pos[1];
+                    merCuts[2] = pos[0] + pos[1];
+                    break;
+                }
+            }
+            {
+                Triangulation<3> t(*this);
+                t.fillTorus(
+                    t.simplex(bdryTet[0]->index())->edge(bdryEdge[0]),
+                    t.simplex(bdryTet[1]->index())->edge(bdryEdge[1]),
+                    t.simplex(bdryTet[2]->index())->edge(bdryEdge[2]),
+                    neg[0], neg[1], neg[0] + neg[1]);
+                if (fastSphere(t)) {
+                    merCuts[0] = neg[0];
+                    merCuts[1] = neg[1];
+                    merCuts[2] = neg[0] + neg[1];
+                    break;
+                }
+            }
+            pos[0] += longCuts[0];
+            pos[1] += longCuts[1];
+            neg[0] += longCuts[0];
+            neg[1] += longCuts[1];
+        }
+    }
+
+    // Now layer so that the meridian is a boundary edge.
+    while (true) {
+        if (merCuts[0] == 0)
+            return bdryTet[0]->edge(bdryEdge[0]);
+        if (merCuts[1] == 0)
+            return bdryTet[1]->edge(bdryEdge[1]);
+        if (merCuts[2] == 0)
+            return bdryTet[2]->edge(bdryEdge[2]);
+
+        if (merCuts[0] == merCuts[1] + merCuts[2]) {
+            // Layer over boundary edge 0.
+            bdryTet[0] = layerOn(bdryTet[0]->edge(bdryEdge[0]));
+            bdryEdge[0] = 5;
+            merCuts[0] = labs(merCuts[1] - merCuts[2]);
+        } else if (merCuts[1] == merCuts[0] + merCuts[2]) {
+            // Layer over boundary edge 1.
+            bdryTet[1] = layerOn(bdryTet[1]->edge(bdryEdge[1]));
+            bdryEdge[1] = 5;
+            merCuts[1] = labs(merCuts[0] - merCuts[2]);
+        } else {
+            // Layer over boundary edge 2.
+            bdryTet[2] = layerOn(bdryTet[2]->edge(bdryEdge[2]));
+            bdryEdge[2] = 5;
+            merCuts[2] = labs(merCuts[0] - merCuts[1]);
+        }
+    }
+}
+
 std::pair<Edge<3>*, Edge<3>*> Triangulation<3>::meridianLongitude() {
     // The easy part: find the algebraic longitude.
     // This routine also handles all our basic sanity checks.
@@ -222,7 +409,7 @@ std::pair<Edge<3>*, Edge<3>*> Triangulation<3>::meridianLongitude() {
     // Fetch the three boundary edges.
     // The longitude will be e[0].
     // Since we are modifying the triangulation, we must not
-    // reference edge, but rather tetrahedra.
+    // reference edges, but rather tetrahedra.
     BoundaryComponent<3>* bc = boundaryComponents_.front();
     Edge<3>* e[3];
 

@@ -138,6 +138,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(minimiseBoundary);
     CPPUNIT_TEST(minimiseVertices);
     CPPUNIT_TEST(fillTorus);
+    CPPUNIT_TEST(meridian);
     CPPUNIT_TEST(meridianLongitude);
     CPPUNIT_TEST(retriangulate);
     CPPUNIT_TEST(swapping);
@@ -5574,6 +5575,73 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyFillTorus(1,3,2, 19,15,4, 42,11);
             verifyFillTorus(1,1,2, 19,23,4, 42,11);
             verifyFillTorus(1,1,0, 19,23,42, 42,11);
+        }
+
+        void verifyMeridian(const Triangulation<3>& orig, const char* name) {
+            Triangulation<3> t(orig); // something we can modify
+
+            if (t.isIdeal()) {
+                t.idealToFinite();
+                t.intelligentSimplify();
+            }
+
+            if (t.countVertices() != 1) {
+                std::ostringstream msg;
+                msg << name << ": cannot build a one-vertex triangulation.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            regina::Edge<3>* m = t.meridian();
+            regina::Edge<3>* other1 = nullptr;
+            regina::Edge<3>* other2 = nullptr;
+            for (auto e : t.boundaryComponent(0)->edges()) {
+                if (e != m) {
+                    if (other1)
+                        other2 = e;
+                    else
+                        other1 = e;
+                }
+            }
+
+            if ((! m) || (! other1) || (! other2)) {
+                std::ostringstream msg;
+                msg << name << ": boundary curves not identified.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! (m->isBoundary() && other1->isBoundary() &&
+                    other2->isBoundary())) {
+                std::ostringstream msg;
+                msg << name << ": boundary curves not marked as boundary.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            const auto& mEmb = m->front();
+            const auto& o1Emb = other1->front();
+            const auto& o2Emb = other2->front();
+
+            // To test the meridian, we use the fact that filling along
+            // the meridian produces the 3-sphere.
+            {
+                Triangulation<3> tmp(t);
+                tmp.fillTorus(
+                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
+                    tmp.simplex(o1Emb.simplex()->index())->edge(o1Emb.edge()),
+                    tmp.simplex(o2Emb.simplex()->index())->edge(o2Emb.edge()),
+                    0, 1, 1);
+                if (! tmp.isSphere()) {
+                    std::ostringstream msg;
+                    msg << name << ": filling along meridian "
+                        "does not give the 3-sphere.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void meridian() {
+            verifyMeridian(lst3_4_7, "LST(3,4,7)");
+            verifyMeridian(figure8, "Figure eight");
+            verifyMeridian(trefoil, "Trefoil");
+            verifyMeridian(knot18, "18-crossing knot");
         }
 
         void verifyMeridianLongitude(const Triangulation<3>& orig,

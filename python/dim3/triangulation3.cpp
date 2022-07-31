@@ -281,6 +281,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("longitudeCuts", &Triangulation<3>::longitudeCuts)
         .def("longitude", &Triangulation<3>::longitude,
             pybind11::return_value_policy::reference_internal)
+        .def("meridian", &Triangulation<3>::meridian,
+            pybind11::return_value_policy::reference_internal)
         .def("meridianLongitude", &Triangulation<3>::meridianLongitude,
             pybind11::return_value_policy::reference_internal)
         .def("isZeroEfficient", &Triangulation<3>::isZeroEfficient)

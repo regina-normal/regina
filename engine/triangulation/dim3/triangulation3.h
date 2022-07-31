@@ -1046,6 +1046,68 @@ class Triangulation<3> : public detail::TriangulationBase<3> {
         Edge<3>* longitude();
 
         /**
+         * Modifies a triangulated knot complement so that the meridian
+         * follows a single boundary edge, and returns this edge.
+         *
+         * Assuming that this triangulation represents the complement of
+         * a knot in the 3-sphere, this routine:
+         *
+         * - identifies the meridian of the knot complement;
+         *
+         * - layers additional tetrahedra on the boundary if necessary
+         *   so that this curve is represented by a single boundary edge;
+         *
+         * - returns that (possibly new) boundary edge.
+         *
+         * This routine uses fast heuristics to locate the meridian; as a
+         * result, <b>it does not guarantee to terminate</b> (but if you find
+         * a case where it does not, please let the Regina developers know!).
+         * If it does return then it guarantees that the result is correct.
+         *
+         * This routine uses a similar algorithm to meridianLongitude(),
+         * with the same problem that it could be slow and might not terminate.
+         * However, meridian() has the advantage that it might produce a
+         * smaller triangulation, since there is no need to arrange for the
+         * longitude to be a boundary edge also.
+         *
+         * At present this routine is fairly restrictive in what triangulations
+         * it can work with: it requires the triangulation to be one-vertex
+         * and have real (not ideal) boundary.
+         * These restrictions may be eased in future versions of Regina.
+         *
+         * If the meridian is already represented by a single boundary edge,
+         * then it is guaranteed that, if this routine does terminate,
+         * it will \e not modify the triangulation, and will simply return
+         * this boundary edge.
+         *
+         * \pre The underlying 3-manifold is known to be the complement
+         * of a knot in the 3-sphere.
+         * \pre This triangulation has precisely one vertex, and its
+         * (unique) boundary component is formed from two triangles.
+         *
+         * \warning This routine may modify the triangluation, as
+         * explained above, which will have the side-effect of
+         * invalidating any existing Vertex, Edge or Triangle references.
+         *
+         * \warning If you have an \e ideal triangulation of a knot
+         * complement, you \e must first run idealToFinite() and then simplify
+         * the resulting triangulation to have two boundary triangles.
+         *
+         * \exception FailedPrecondition This triangulation is not a valid
+         * one-vertex orientable triangulation with homology \a Z, and with a
+         * two-triangle torus as its one and only boundary component.
+         * Note that this does not capture all of the preconditions for
+         * this routine, but it does capture those that are easy to test.
+         *
+         * \exception UnsolvedCase An integer overflow occurred during
+         * the computation.
+         *
+         * @return the boundary edge representing the meridian (after this
+         * triangulation has been modified if necessary).
+         */
+        Edge<3>* meridian();
+
+        /**
          * Modifies a triangulated knot complement so that the meridian and
          * algebraic longitude each follow a single boundary edge, and returns
          * these two edges.
